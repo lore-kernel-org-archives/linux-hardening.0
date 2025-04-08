@@ -1,104 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBF6288B1;
-	Tue,  8 Apr 2025 13:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC591DF99C;
+	Tue,  8 Apr 2025 14:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744118035; cv=none; b=Uj/CtZMlZaKE3vuKD4OAPkWpVzMFHtfdYHVC3igH141TODvcOMmyasEYPTvUiASNPBJ0PpmdhKAAGDVxv8tkohqWR3wDanPh8KVZunoHvuCQedrt8nDeQjxZOHPJ1jTwKQfxvZ+Kx24QTy9a7gh3J9Q6f10HUoATWPHTijFrHuY=
+	t=1744122285; cv=none; b=FV4PtyBQWMKORxxfdxB2ya+T6qsf0xBjIOAB80/Itr8n06xhrNCNl8Hb+HVzP1txjuCqUOJfxApsrUsbZbNH1xtX8fekhoBYJBbkPXuc/mD+n3Pos67BTUG1ncGcNN/khkuL2BOTYRdittvGziou35OQRS3qpi0dvcnx/qMJzrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744118035; c=relaxed/simple;
-	bh=RtWJsLdfsF5FuefGDDBVSYMGNCOsbla7o3mG81ggG3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z02DNBHNjZxdpQbvFIox4jBF80o8TTOQezKkVHLvY7m38UxUZhQPyN+W0cqHMY8QwWiny5iRsIeyvepjoXIEmXdmnymGszCSQUc85/+e/UnZfDV2ZT7q2D3JIF9YPA2CzQyVfmx6tlZpeYleQBoWByS4qwoqExRl5DvcJbxbU3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FZPGEJlH; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744122285; c=relaxed/simple;
+	bh=xVFuMXsHme978IY/KLHqPnq9Gs5sHCEFkAwHkhU1IlI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eXUMcbk29R6l9BN7lqzmFOplKgFlEzuFlMNdAoUfSOgJ07dmCq/s1kBoTa80WHoUwwhjsYhBgrKUhHzW6fK4yRYacbKAC80X1agPZ9YW09Ra9MsM8LBrkP7SqTqQIH+SNMeQMl1Xunz8Te/aOv4O+Kz775i0zrnvM2WrcbFPN5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f1vkcoUI; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FZPGEJlH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744118034; x=1775654034;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RtWJsLdfsF5FuefGDDBVSYMGNCOsbla7o3mG81ggG3Q=;
-  b=FZPGEJlH95KWktQWP1tjKcPhe++OKe1w9JcRRtWBEVRNhFTLytN/FOsJ
-   rTZaFjcLHzKSjeuvteZI0kAQ7aPGv9j3PoFjhNkgfmXkx65lHKkPzElWq
-   2aJSY/CdnsNmtQ6ERvsP7ykgetWqxPihDa3QLDEzLNtNvxamKAi4QZWJR
-   nebX8F6v08Vbpkyac9rMyf3Ls4rMCMf0iWjHohb+hSNqrB0VwIuL9tucT
-   TpZPPNmvNAnFbsIFoTXlPc0OGZOtq4HdqE/F1AES7g4ERZHd7Vs37UbB/
-   mKnLMFfRT6VXBtaGD8nhujl3Ggl9xhIZyzwApjl4o6tkO5QraDDYYur+D
-   Q==;
-X-CSE-ConnectionGUID: 3t303aABSaCXFbwMg8O+Yg==
-X-CSE-MsgGUID: HOzs4p0TTNmdBwTwV+2TsA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45435772"
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="45435772"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 06:13:53 -0700
-X-CSE-ConnectionGUID: /a8O9W8cQo+w1L3WxOLlzw==
-X-CSE-MsgGUID: koJ63wdhTdqIZp1M6sJbqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="159263408"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 08 Apr 2025 06:13:51 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u28lw-0007PX-1B;
-	Tue, 08 Apr 2025 13:13:48 +0000
-Date: Tue, 8 Apr 2025 21:13:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Zijun Hu <zijun_hu@icloud.com>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Zijun Hu <zijun_hu@icloud.com>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, "Rob Herring (Arm)" <robh@kernel.org>
-Subject: Re: [PATCH 1/2] lib/string: Improve strstarts() performance
-Message-ID: <202504082037.VtV65Bnb-lkp@intel.com>
-References: <20250407-imp_str_perf-v1-1-ed95d52964a4@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1vkcoUI"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so859328466b.0;
+        Tue, 08 Apr 2025 07:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744122282; x=1744727082; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fKVAjikSlDmRp89nXnj0WKS+vYgTLsVIQjTDqAQvc3k=;
+        b=f1vkcoUIsoWKlGd6OLNWPUMaIdXHHLdtKxnME7TwLaun3XkNHVvcEN46kiz9EM+4Js
+         CcRxPZTIkPZdvDFE44bejau8V6aItu8c2tOtEoOkInT/e3ofih+BtTiETRvkwmbC3KNn
+         nJGwxjtLiexu4nLSwUuS+BDb1HAQAhnzHm7/x27wsIbT1dNazBTGHqBbLjMZeEfYOTRW
+         6n46ZoRuQuT35uoyf8A2PGzpwoxQBAYCO1wsJrcXmVhIlsPXwY9HeGNbthGfGMiw+l38
+         BVpWKY1sdteBGUDGxFNiQwjqkJMZlnDV7HG+7IpK9A+i6w6FDkld7/oaqX39BeHVQREQ
+         TZfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744122282; x=1744727082;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fKVAjikSlDmRp89nXnj0WKS+vYgTLsVIQjTDqAQvc3k=;
+        b=BwEgij/akk0g/SDm7xwMWQr6k48Ees+pggj1DU54CZckwsn78NtBHVitLn6ncyB1Zr
+         Fw3eohGhLmVb019B/aFLKnv0F/+yinP1IGOFT9C5KD+9GWN4i4bY6gt7Lu+FBb+CErMh
+         q7BeuWSddqWD0HArGYUbowjp8I6CblIyCJeNM1YlGxxeKgEzcdnMB+TzN4vsR9CCKv0v
+         f9Jxl5a8J3OpdKfAueMYCbYii8s4iwh2ST/+9InTMwM6OP1XprpjIUr00vsvPZzUJUkO
+         JdiM/BMRCM3P9qaaoDklhfOWzthJrE2ro4B7+WClHrz+sROPz9M4Ww2gTwKpGSRzO99f
+         rmdw==
+X-Forwarded-Encrypted: i=1; AJvYcCXnmcWbjW6aLh+5zCnSGwz6AdQI8AZwnzoavnarhcrEylV7MUK5sj7n4PlXUDr+C+aTKRBespbwdWaJ5ZTVjsCL@vger.kernel.org, AJvYcCXpGTywdMkVq4yRFC1Kq+1dUgMXJEsM6yB5/ysTcus7Egg0KBwWcX4VgRK1s96g4i6k1SMv1JKkl4RHcSTmPzI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwVxI4pJRS6N6jrQ3tWdP13vlNtM6bnA+v/OaTFFoBNwC2viP2
+	4uqrFPwUxl+3+zKOijf2ZMCAvSD4Qh4Wze0Rjg28z6zBQ5C/R6K9
+X-Gm-Gg: ASbGncv+4REHZejI9axuVjN+/x4C6nMPd/7vn5T4nuO//jYUN1cacs9YJxCPE6FZoJf
+	RRtCnHKbq96E207iAGDDuS9QS8ByNXzNnzEw25cEJiAO8sUOhRGYvjzrk9kiBe0NE/x1G4I4yaA
+	4/2x28wW3/yAlHtHa1AMlOBEuBAEayIc0SqNS8TG66mXADb3tyUoK4Bi2HIbiv/1yanvcUffLYI
+	S4YF4PTtCYHmXHhTZd+98QUc3ih2wTCS8/+gWrHAjmiAgtecwzL20xeZ6SMwhJY6ugcoAeIoC2p
+	hCjPTfK4I9Ax+LhQqKEetlYcCbrnbHu7AuOXsSmbjmKcIwn2t6upyWVUV16nuSXnmwDwh/Aj73x
+	CrmA9aBNKwOSrVyJ88KLrZ2dgI5PGk9RglJW/UmhH3oxPyvyNsGIFPDeU5qAN5SI=
+X-Google-Smtp-Source: AGHT+IFlZaybpe/j2Zow/p3HDFGofOuQSMcWsqmHQWMhOGtI9vBund4Q9QWMKTuUyBXPUyMoandRAA==
+X-Received: by 2002:a17:907:724f:b0:ac2:cdcb:6a85 with SMTP id a640c23a62f3a-ac7d6d2b3f4mr1401815466b.22.1744122281602;
+        Tue, 08 Apr 2025 07:24:41 -0700 (PDT)
+Received: from localhost.localdomain (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c1db6ea1sm928770066b.143.2025.04.08.07.24.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 07:24:40 -0700 (PDT)
+From: Eric Woudstra <ericwouds@gmail.com>
+To: Michal Ostrowski <mostrows@earthlink.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Simon Horman <horms@kernel.org>,
+	Nikolay Aleksandrov <razor@blackwall.org>
+Cc: netdev@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Eric Woudstra <ericwouds@gmail.com>
+Subject: [PATCH v11 nf-next 0/2] Add nf_flow_encap_push() for xmit direct
+Date: Tue,  8 Apr 2025 16:24:23 +0200
+Message-ID: <20250408142425.95437-1-ericwouds@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407-imp_str_perf-v1-1-ed95d52964a4@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Zijun,
+Patch to add nf_flow_encap_push(), see patch message.
 
-kernel test robot noticed the following build errors:
+Added patch to eliminate array of flexible structures warning.
 
-[auto build test ERROR on 0af2f6be1b4281385b618cb86ad946eded089ac8]
+Changed in v11:
+- Only push when tuple.out.ifidx == tuple.out.hw_ifidx
+- No changes in nft_dev_path_info()
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Zijun-Hu/lib-string-Improve-strstarts-performance/20250407-212519
-base:   0af2f6be1b4281385b618cb86ad946eded089ac8
-patch link:    https://lore.kernel.org/r/20250407-imp_str_perf-v1-1-ed95d52964a4%40quicinc.com
-patch subject: [PATCH 1/2] lib/string: Improve strstarts() performance
-config: riscv-randconfig-002-20250408 (https://download.01.org/0day-ci/archive/20250408/202504082037.VtV65Bnb-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250408/202504082037.VtV65Bnb-lkp@intel.com/reproduce)
+v10 split from patch-set: bridge-fastpath and related improvements v9
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504082037.VtV65Bnb-lkp@intel.com/
+Eric Woudstra (2):
+  net: pppoe: avoid zero-length arrays in struct pppoe_hdr
+  netfilter: nf_flow_table_offload: Add nf_flow_encap_push() for xmit
+    direct
 
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: undefined hidden symbol: __efistub_strstarts
-   >>> referenced by gop.c:119 (drivers/firmware/efi/libstub/gop.c:119)
-   >>>               gop.stub.o:(__efistub_efi_parse_option_graphics) in archive ./drivers/firmware/efi/libstub/lib.a
-   >>> referenced by gop.c:42 (drivers/firmware/efi/libstub/gop.c:42)
-   >>>               gop.stub.o:(__efistub_efi_parse_option_graphics) in archive ./drivers/firmware/efi/libstub/lib.a
-   >>> referenced by gop.c:42 (drivers/firmware/efi/libstub/gop.c:42)
-   >>>               gop.stub.o:(__efistub_efi_parse_option_graphics) in archive ./drivers/firmware/efi/libstub/lib.a
-   >>> referenced 3 more times
+ drivers/net/ppp/pppoe.c          |  2 +-
+ include/uapi/linux/if_pppox.h    |  4 ++
+ net/netfilter/nf_flow_table_ip.c | 97 +++++++++++++++++++++++++++++++-
+ 3 files changed, 100 insertions(+), 3 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.47.1
+
