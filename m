@@ -1,104 +1,174 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3240F1C84AD
-	for <linux-hardening@vger.kernel.org>; Tue,  8 Apr 2025 05:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B5D2046A5;
+	Tue,  8 Apr 2025 06:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744089611; cv=none; b=Fiwvm/0zBmdNWVeY3waioHq8sbLOMYMTbRS9MPfbE9nwZlJ8CVpikU0G4u3BXEFkCnj1NbCVvCRkx5iFnDOCeNrdggeilLhiDEeZVft3ZDnclbqS8dNg96qO1eh1nfJaNbCnKlYkFLBl26phzW72VIDJmXySlH/7rzYXp9A2xR4=
+	t=1744092485; cv=none; b=mTjWRKvQPKg+VXZTevQPT0gp15HKBrJCwAJEdJJOaOX9tK/+GfEQRYu5qFa83W241BO2IKkluyy9t4zz7Njr+kVmnHwAJzHesbtUlqXqOYjuQXkSpk23+CejHISeMxVyuo8ZoierYW/DTuHHJewQezl6Y4snP+lPiPgA9s+5ujg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744089611; c=relaxed/simple;
-	bh=cPWwWnJ7ViDkLl5MW+qHSwW3GfvvX0QdfidKESl6o9Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FZ3eUQ3wLWCzRcaUEuzBgnHET3mLhQyJ3DjuKy3Eu39sL7OFr0ULxMQMaIqEfsLQi+y23DE9k5AeY0nKBdr1jLGvjCWUb6gxSnOw3wHiBGX0dBqPDy+41S+01QvoSFqshPCn43sxFl86m3f+gxAApTr5edKUW4aBK83qU09mbB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ycp8js6V; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744092485; c=relaxed/simple;
+	bh=4EXbaWHpYi8DQSCUTq4v19YcmvFXSvgrzytJ0LYYrew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eXIyCEQB4q1LtfktkWRaczFhXbbASggsq2kIYKwF2A/2FFPa4i/FcaMZYF3Cn4sgRZJNVjm/2qILa08ptBO/ANXkj86hyJ259BMiUnnBEAOY+scB6nthzga6to2fmLh/epwWrsJoDlGwLmwwHe5i9BTaN+Lyd8uHOAECiTQHSqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8bAWxti; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ycp8js6V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744089609;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cPWwWnJ7ViDkLl5MW+qHSwW3GfvvX0QdfidKESl6o9Y=;
-	b=Ycp8js6VGyZT5BefndTNG8mFNiRC/GRFYarA5FTXwJq2A2bHQbRpuPHPRlzP2Ro8gxGR8P
-	ajX/97ZaXNM74o5/0gf5/Woeo5G5CvkkOtkdy45Z2C0oKoVUS6bCuyQWR9vmTX2oF90JL4
-	MB9+teaFTfJvxqFkAi2JwRIrzYMq3ws=
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
- [209.85.161.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-182-WZk1bl5FNs6EnCivDTJnAw-1; Tue, 08 Apr 2025 01:20:08 -0400
-X-MC-Unique: WZk1bl5FNs6EnCivDTJnAw-1
-X-Mimecast-MFC-AGG-ID: WZk1bl5FNs6EnCivDTJnAw_1744089607
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-601c2ff0a0dso714080eaf.1
-        for <linux-hardening@vger.kernel.org>; Mon, 07 Apr 2025 22:20:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744089607; x=1744694407;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cPWwWnJ7ViDkLl5MW+qHSwW3GfvvX0QdfidKESl6o9Y=;
-        b=W6ZxsTTENKx3yCpPNn2UWFirCgQeO6BAvP8o56ewZNvt+YQrIFR/EyE+V3S9iYWOuV
-         ZNJC+Hm8JmYDQYu/8JXogNZeCMWQdNOQqcwOUXupGmtRk0TGyaA6GzXEyJVn85nX87/A
-         IiAeMA4hdeYOsF203+JWlHM+5UlZAGBGruakjJZOvqVFK+ek0Trffnc7iL0ezZNfJkA6
-         VwB7KFVxynDZzbr1+MyrnAmsWXnY/xGDj5zJUjmFQgUq5aFVguEviTLu1PDsDzHsqdMF
-         AmFP08eAD2S8jiDzdqfuKE0OZmestz3XJqCQIPzowUDoMqx4RaNRqasWEG3xF60TJy66
-         BarA==
-X-Forwarded-Encrypted: i=1; AJvYcCWv3tLOdMKtVcDiJli5/m9ZP6HP7EAUrHEvUAuK83UYrV0H8to9t3/nyMhnBX9okpjkk1dmzpitN+gXfate3t8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQesZ7Rx6YKQbWsTr6+XYA49LZzz9kMixd/mhwoaGJik8XDXyp
-	oSeGMbPk4S66JBRMeKw9SA2LuBq4CC6sZNEOlK2jCPn//B0vyBGSDEk+kMyu0qh3PH9ModR2ReJ
-	xH5yH735Mb7a68Rj30jxAJKDP+UEaH4+NIdlGZyg/WnMY0IYYwpv3Yclp2InVGg6pIF8h2jQTV9
-	7uzYM+gCDh/77bmZEu3zSSZRc/1zBxjYbFksUUc1cf
-X-Gm-Gg: ASbGncvP9XOsAgJGQ/EDGcJNlfB8VEHco5xtDN6hD4jt7+y9WYMNAm4uKYHU1ctQkmu
-	ZXDWVNIXp0Yw9DU9ScfePlsRqu0Og9o5T2nWkcOV1//wREFt8xqYn8ERWLpHV53N8Uwgokr0=
-X-Received: by 2002:a05:6808:158d:b0:3f6:6dea:55ac with SMTP id 5614622812f47-400456a460fmr3391081b6e.9.1744089607266;
-        Mon, 07 Apr 2025 22:20:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFndQwFQTxqQbhh7/1XO26yh+0Bql7sVDUgvChNzviW902Do9tUiMP8jbpkd2ikbG9OPRvnppdBsFKJDjF8szQ=
-X-Received: by 2002:a05:6808:158d:b0:3f6:6dea:55ac with SMTP id
- 5614622812f47-400456a460fmr3391067b6e.9.1744089606990; Mon, 07 Apr 2025
- 22:20:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8bAWxti"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A54F9C4CEE5;
+	Tue,  8 Apr 2025 06:08:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744092485;
+	bh=4EXbaWHpYi8DQSCUTq4v19YcmvFXSvgrzytJ0LYYrew=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=i8bAWxtiJl/Zc9F70+mWYW1dpffCfK+raI81ht60ZhM7SQncYApnR86ZPj54cbPVm
+	 qx9IJjFyJ4OiHxWrooltbxV5F/NMxJ4A2e5miF30zZMvx9HzwW9yQlQoOM5bqYkzUr
+	 1RgKTWJKWIXrdiGUSwUbSvEaGizUSZxKwweIRZQSdgHzg3O+UyNNRt9mhcAms3LiW5
+	 ka2kCYVJdd61MiT8/vkhwvXd+gADMsKj8N/LFf58ZzbJdN9ZWdbLShjjlAI3j9yme3
+	 UZ5I92MnUfHw7AuuGdIZAYdfrsEs2GPC3aPR23fssng7r6mk1uZvAHvO2pBWzjvTey
+	 dWh3TVd4SKf5g==
+Message-ID: <83d17d6e-41c2-4729-94e6-5ccf480c766d@kernel.org>
+Date: Tue, 8 Apr 2025 08:07:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407172836.1009461-1-ivecera@redhat.com> <20250407173149.1010216-6-ivecera@redhat.com>
- <74172acd-e649-4613-a408-d1f61ceeba8b@kernel.org>
-In-Reply-To: <74172acd-e649-4613-a408-d1f61ceeba8b@kernel.org>
-From: Michal Schmidt <mschmidt@redhat.com>
-Date: Tue, 8 Apr 2025 07:19:55 +0200
-X-Gm-Features: ATxdqUE8CZctw0bSKyYLZFAm9WOiGKPiK7Kqb-GLiHvQfp2TsbW9P7zTG2qlt-E
-Message-ID: <CADEbmW3Byn8a4otcHqHr_=p4s5kKFq2D9N9xouWVr_0VX3ZikQ@mail.gmail.com>
-Subject: Re: [PATCH 15/28] dt-bindings: dpll: Add device tree bindings for
- DPLL device and pin
-To: Krzysztof Kozlowski <krzk@kernel.org>, Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: K6p_nTBoEm6v3XyFZamUu4aklz-M4SwjGRdxXDy0OGs_1744089607
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
+To: Aaron Kling <webgeek1234@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Thierry Reding
+ <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
+ <6920a557-9181-4c9c-98f4-a9be4e796a13@kernel.org>
+ <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 7, 2025 at 8:02=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
-> On 07/04/2025 19:31, Ivan Vecera wrote:
-> > This adds DT bindings schema for DPLL (device phase-locked loop)
-> > Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
->
-> Did this really happen?
+On 07/04/2025 18:00, Aaron Kling wrote:
+> On Mon, Apr 7, 2025 at 7:59 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 06/04/2025 23:12, Aaron Kling via B4 Relay wrote:
+>>> From: Aaron Kling <webgeek1234@gmail.com>
+>>>
+>>> This allows using pstore on all such platforms. There are some
+>>> differences per arch:
+>>>
+>>> * Tegra132: Flounder does not appear to enumerate pstore and I do not
+>>>   have access to norrin, thus Tegra132 is left out of this commit.
+>>> * Tegra210: Does not support ramoops carveouts in the bootloader, instead
+>>>   relying on a dowstream driver to allocate the carveout, hence this
+>>>   hardcodes a location matching what the downstream driver picks.
+>>> * Tegra186 and Tegra194 on cboot: Bootloader fills in the address and
+>>>   size in a node specifically named /reserved-memory/ramoops_carveout,
+>>>   thus these cannot be renamed.
+>>> * Tegra194 and Tegra234 on edk2: Bootloader looks up the node based on
+>>>   compatible, however the dt still does not know the address, so keeping
+>>>   the node name consistent on Tegra186 and newer.
+>>>
+>>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+>>> ---
+>>>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++++++
+>>>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
+>>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 +++++++++++++
+>>>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++++++
+>>>  4 files changed, 61 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+>>> index 2b3bb5d0af17bd521f87db0484fcbe943dd1a797..2e2b27deb957dfd754e42dd03f5a1da5079971dc 100644
+>>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+>>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+>>> @@ -2051,6 +2051,22 @@ pmu-denver {
+>>>               interrupt-affinity = <&denver_0 &denver_1>;
+>>>       };
+>>>
+>>> +     reserved-memory {
+>>> +             #address-cells = <2>;
+>>> +             #size-cells = <2>;
+>>> +             ranges;
+>>> +
+>>> +             ramoops_carveout {
+>>
+>> Please follow DTS coding style for name, so this is probably only ramoops.
+> 
+> As per the commit message regarding tegra186: bootloader fills in the
+> address and size in a node specifically named
+> /reserved-memory/ramoops_carveout, thus these cannot be renamed.
 
-We have been through several iterations of the patchset internally. I
-pointed out numerous bugs in the driver code and suggested cleanups.
-However, I know very little about DT, so in v2 we should omit my
-Reviewed-by on the DT patches.
-Michal
+That's not a reason to introduce issues. Bootloader is supposed to
+follow same conventions or use aliases or labels (depending on the node).
 
+If bootloader adds junk, does it mean we have to accept that junk?
+
+> 
+>>
+>> It does not look like you tested the DTS against bindings. Please run
+>> `make dtbs_check W=1` (see
+>> Documentation/devicetree/bindings/writing-schema.rst or
+>> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+>> for instructions).
+>> Maybe you need to update your dtschema and yamllint. Don't rely on
+>> distro packages for dtschema and be sure you are using the latest
+>> released dtschema.
+> 
+> The bot is reporting that the reg field is missing from the added
+> ramoops nodes on t186, t194, and t234. However, as also mentioned in
+> the commit message, this is intentional because it is expected for the
+> bootloader to fill that in. It is not known at dt compile time. Is
+> there a way to mark this as intentional, so dtschema doesn't flag it?
+
+Fix your bootloader or chain load some normal one, like U-Boot.
+
+Best regards,
+Krzysztof
