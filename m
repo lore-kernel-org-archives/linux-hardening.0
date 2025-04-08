@@ -1,111 +1,102 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from mr85p00im-zteg06021501.me.com (mr85p00im-zteg06021501.me.com [17.58.23.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C87F26773A
-	for <linux-hardening@vger.kernel.org>; Tue,  8 Apr 2025 10:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208C7268C79
+	for <linux-hardening@vger.kernel.org>; Tue,  8 Apr 2025 11:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744108226; cv=none; b=nWiSU9161/W6SKgPS3E7DWD3TAQfOCl+fivQ3IZsGWPxIyAHMANTfE4Phf5Qka/tmsZJAQWIcwc/2uvFSOP/BGIxFm8PoN+ZXeDkveU5dKUJa19z4xYSmdamOQjdzaD68UwmhuDcBeu/yHPIVNgnAOd8B3XbeisU8cmfKITQkVE=
+	t=1744112090; cv=none; b=Xwuc7szyq/OglJZ379s+H5/Sp0AlrjGQW3V/Cr1HBSSuS+mLurT5kgZhEWPOJ3D/Aa4u9Sf5zGfCa3zhrNtwcdrtDstpDrxvccsK49ckDZLuFRw4Py3p9FMEHidfYkLNylgOOta318+GRs2xaKN7hU/rI+rzzEa2d3CSC/1mGIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744108226; c=relaxed/simple;
-	bh=aRMWSg8X0oBFHmCqDJWVHgqDLlV+JdZbwSNHQo6deEk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ukQIB4KS/ldeu6AWEcb2CKf8n7PCiK1lD7Ue3bAdgzIaBLNq5USgA8EoioqPd1AkiZgaBRb+Vz8m+heL7JTvYsEizo65hw82lb840kdVM/s+9x/3jhdaKvZN3Fz19E8F4yqlt9tHUiMuGmS5T7B2YAAsYn4YTB+BZ/O3FLCRTCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=o/rCN22r; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744112090; c=relaxed/simple;
+	bh=SU1tu9za3zKIMyR4DCCKpc/LUgyMBmasXS8NSRu+YQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tzJ5Ws6H+dSLx5vxoCMzCPFEkKb9t6gDP2xpYQIbHpFSj52kqzKubg5RQMNHRAQ8ozcWZGU3XnHUeA9NvSCJk8nuu37pe217D43xa4oAbswsxwJd0Yjxw2mjVP1DHLLVuC01PSokrE40C0LikLUXvxfSyJxGE7YWk5cIKogsNmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=zPH8B84F; arc=none smtp.client-ip=17.58.23.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="o/rCN22r"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744108212;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=FLHb/ouI/NPQuiKkjHhPMowLOAqffxplBiQcA/sQ2k0=;
-	b=o/rCN22rmT7HcLQgjjPzVar7cA/2eXphkm9XO2KwmYVIrnOOAtBHaaj+tfC6s31D3QSCAB
-	n5T2v59c9bu467J+nsT3bJIPkJzJeZKmbpL0Axh7yRpjKJGAmDJimmTWhpb3fDP/Bv3IvG
-	1M2I9ojKHe2Axx4qUfbk8G9PUwAKDtI=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: James Smart <james.smart@broadcom.com>,
-	Ram Vegesna <ram.vegesna@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] scsi: elx: sli4: Replace deprecated strncpy() with strscpy()
-Date: Tue,  8 Apr 2025 12:28:40 +0200
-Message-ID: <20250408102843.804083-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="zPH8B84F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=elupXrputsiJWGq9GFuUlFEVg6AtQR2+rD/CZNF0CBE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=zPH8B84FXjG2vE0DyIEqwFLa88Ot7VxAM93/8nMPU5EuTAuERjPtnZWPY6dN8S4Tk
+	 LqCtnH31bgvRE/pWpuNHKgl/uIrG1gaZ36dsO8bTlqN+S1d5xTRL1WNfd/x8vGgCOO
+	 3WFgQ2oeNhipGP2WFpFDG/ATbtFUM2BYPL0tmh+fzGXPWwFb6/C6JzFMby7p9v3kJW
+	 V33lKz1k3z6BtdWe/e4S5m29cl+tblSqRuBQEIL1k4N1s8QMMRquAnmtFRbdFZq4cv
+	 PjrroAFmnCTb/Ozk5yun7YkvjxKT7pY/BUNMtR3pCrpAigve8+eNpyj58Pv590KZhe
+	 Z+WVRScPIXNVg==
+Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-zteg06021501.me.com (Postfix) with ESMTPSA id 132552793E6B;
+	Tue,  8 Apr 2025 11:34:44 +0000 (UTC)
+Message-ID: <1d2e9f40-708d-49b2-b0ee-a1d775f6fd23@icloud.com>
+Date: Tue, 8 Apr 2025 19:34:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] lib/string: Improve strstarts() performance
+To: Kees Cook <kees@kernel.org>
+Cc: Andy Shevchenko <andy@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>
+References: <20250407-imp_str_perf-v1-0-ed95d52964a4@quicinc.com>
+ <20250407-imp_str_perf-v1-1-ed95d52964a4@quicinc.com>
+ <202504070912.8BB9AD0AE@keescook>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <202504070912.8BB9AD0AE@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: ap5-sVUz9nY5FZREWQ4tl0WybHpSmoAY
+X-Proofpoint-GUID: ap5-sVUz9nY5FZREWQ4tl0WybHpSmoAY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_04,2025-04-08_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ phishscore=0 mlxscore=0 clxscore=1015 mlxlogscore=809 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2504080082
 
-strncpy() is deprecated for NUL-terminated destination buffers; use
-strscpy() instead.
+On 2025/4/8 00:17, Kees Cook wrote:
+>> strstarts() is frequently invoked to test if a string has another string
+>> as prefix, but its performance is degraded by the strlen() loop contained.
+>>
+>> Improve its performance by eliminating the strlen() loop.
+> So, as Andy already said: no, this is very unlikely to be a performance
+> improvement, and if it is, you'll need to show the numbers (and likely
+> the reason _why_, in the form of assembly output, etc).
+> 
 
-Since sli_config_cmd_init() already zeroes out the destination buffers,
-the potential NUL-padding by strncpy() is unnecessary. strscpy() copies
-only the required characters and guarantees NUL-termination.
+agree.
 
-And since all three destination buffers have a fixed length, strscpy()
-automatically determines their size using sizeof() when the argument is
-omitted. This makes any explicit sizeof() calls unnecessary.
+> The reason this isn't going to be an improvement is because
+> strlen($string_constant) is optimized by the compiler into a integral
+> constant value. So you'd be replacing a potentially inline constant with
 
-The source strings are also NUL-terminated and meet the __must_be_cstr()
-requirement of strscpy().
+will confirm if strlen() within strstarts() is compile-time constant.
 
-No functional changes intended.
+> an explicit function call. That will be much more expensive.
 
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Changes in v2:
-- Update patch description as suggested by Kees
-- Link to v1: https://lore.kernel.org/lkml/20250226185531.1092-2-thorsten.blum@linux.dev/
----
- drivers/scsi/elx/libefc_sli/sli4.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+strstarts() has a strncmp() function call as well even if it is inline
 
-diff --git a/drivers/scsi/elx/libefc_sli/sli4.c b/drivers/scsi/elx/libefc_sli/sli4.c
-index 5e7fb110bc3f..d9a231fc0e0d 100644
---- a/drivers/scsi/elx/libefc_sli/sli4.c
-+++ b/drivers/scsi/elx/libefc_sli/sli4.c
-@@ -3804,7 +3804,7 @@ sli_cmd_common_write_object(struct sli4 *sli4, void *buf, u16 noc,
- 	wr_obj->desired_write_len_dword = cpu_to_le32(dwflags);
- 
- 	wr_obj->write_offset = cpu_to_le32(offset);
--	strncpy(wr_obj->object_name, obj_name, sizeof(wr_obj->object_name) - 1);
-+	strscpy(wr_obj->object_name, obj_name);
- 	wr_obj->host_buffer_descriptor_count = cpu_to_le32(1);
- 
- 	bde = (struct sli4_bde *)wr_obj->host_buffer_descriptor;
-@@ -3833,7 +3833,7 @@ sli_cmd_common_delete_object(struct sli4 *sli4, void *buf, char *obj_name)
- 			 SLI4_SUBSYSTEM_COMMON, CMD_V0,
- 			 SLI4_RQST_PYLD_LEN(cmn_delete_object));
- 
--	strncpy(req->object_name, obj_name, sizeof(req->object_name) - 1);
-+	strscpy(req->object_name, obj_name);
- 	return 0;
- }
- 
-@@ -3856,7 +3856,7 @@ sli_cmd_common_read_object(struct sli4 *sli4, void *buf, u32 desired_read_len,
- 		cpu_to_le32(desired_read_len & SLI4_REQ_DESIRE_READLEN);
- 
- 	rd_obj->read_offset = cpu_to_le32(offset);
--	strncpy(rd_obj->object_name, obj_name, sizeof(rd_obj->object_name) - 1);
-+	strscpy(rd_obj->object_name, obj_name);
- 	rd_obj->host_buffer_descriptor_count = cpu_to_le32(1);
- 
- 	bde = (struct sli4_bde *)rd_obj->host_buffer_descriptor;
--- 
-2.49.0
+> 
+> With almost 300 users:
+> $ git grep 'strstarts' | wc -l
+> 198
+> 
+> Only 38 are _not_ using a string constant:
+> $ git grep 'strstarts' | grep -v '"' | wc -l
+> 38
+> 
+> Additionally, there is no "loop". strlen() of a runtime string would be
+> evaluated once.
+> 
+
+strlen() contains a loop which has strlen() char comparisons
+
+> -Kees
 
