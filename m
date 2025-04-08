@@ -1,102 +1,114 @@
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D175122D4F9;
-	Tue,  8 Apr 2025 16:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E06B256D;
+	Tue,  8 Apr 2025 18:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744128180; cv=none; b=kk/WQCzchByJMfjYaKTDToabeCKTytaRwC6+vag2pNywTM7i8VTnqdMB+/P7nYs8EZGj/mCbrjZJShhe2VxB/YjmNNp7q+HqA4Mg1hhf/C/fQSgToed9c4BaKq3y3GxAF6fZot7CxLXiu32hEyOgpMRQlJZ9pamwb2epWMqX9cI=
+	t=1744136365; cv=none; b=oWg+zDIKXus2i8/k/w/cgZzrYjxOPw1fRIdOIkOz+J4fs2rfKiIrWFm4Gy9qZQNm3mU0BQn8qSXoXNyr6XWYCZ/lgAv8vq/sMkrxXGtH85gBCqsJCJ9E+taPpJB6mzFHCv+5qCqL71u8sis81EtKtrM2rHMPfQfxnF9ohqHYwBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744128180; c=relaxed/simple;
-	bh=hZt3X6OvWRI5SH/sbZfJe+sNse4XUsMMIFUU1Z1QDtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ox1GflYq4VMyQWZ/eZlVMEiehzucBbBQ+DR+xlK0NVEdcTWUReTGDRCqPH2Z5dVBvDthkHJlcfuv+WiQ2wy8nwzMLBBO6/giXRHWF2VNVp3NiuEHg67bXL0CXIXQjmRHfSd+sOyOoAS7PWZHlmEcv14vExGVNOJcqWQYFwXJqCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=CT4QmlfR; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=f/FWUZle; arc=none smtp.client-ip=217.70.190.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
+	s=arc-20240116; t=1744136365; c=relaxed/simple;
+	bh=DhCoX1Om1GBukViz1M++rrfKjQ++dzj41kr7PwORWeQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gIgk6wV7BKe+ayACRvq8rF5dFN6MyHMBbVYSFPl1ihxE8VpKoze9SUmHhEvRDoGQhsvdKpsYeivCDW41j9BJuOyv4kUu2TYuzc/gtD2alRHk9UYKCkl7c7cQF9whQqvgr09tKXByFfIqX9PsoqVrgi0QJxpbUduAzqqrxqYdFmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aJQak5Vp; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="CT4QmlfR";
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="f/FWUZle"
-Received: by mail.netfilter.org (Postfix, from userid 109)
-	id D798B603AD; Tue,  8 Apr 2025 18:02:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1744128169;
-	bh=gJptIUWpJ6UzYtRB0CDxnMyOu8usVQL/RyAHJ2KjoT8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CT4QmlfRF8tqS695IN3rRFXuimmksjfHqU1bRJRHpUmbJJfh/exLTi9MsZLM2XPn8
-	 rP7lBrmoiwOGNy9+S0zH9laSNJEeCqc1tWOANyir4AE2y31M4TQtK8u2RyAMlwIMY0
-	 r2V2hlZGr7Het3gcXRpNEpIs2ZZNuJh6T1bC5G4t4kxvNA6Ig7g1OC2+qmFur+JXJx
-	 pLw7ZYluYfSLFtPveVlgZLq4xYKv5/IKG8lFNoBrAkAQZzAA4N8VUPB4fhgTzg5yhU
-	 QPrQCfJXkeDiAMiFdAOlFT+2Lz+ZQaV+P8p6vXj4DGlNM63Fn+d58XjSoG6H5yR6hf
-	 dEQbpSNY8KZHQ==
-X-Spam-Level: 
-Received: from netfilter.org (mail-agni [217.70.190.124])
-	by mail.netfilter.org (Postfix) with ESMTPSA id 6FA5860280;
-	Tue,  8 Apr 2025 18:02:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1744128167;
-	bh=gJptIUWpJ6UzYtRB0CDxnMyOu8usVQL/RyAHJ2KjoT8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f/FWUZleyb1H3NjvVG5hbGi3J1WYxnIe3cfT5MAeeJElzclT12Kfi/WIpq2xAcM/2
-	 5B3UmJw+6n+bWDa05vwGONRfEn+BTVvKinPQzOAqXoq8/guS7tVpDbI4M2ABzxotfd
-	 JdygmZlAFfy7p1YyIVs4XX+Rt/5oKdlO5/IKie8WFjMMO7eK8TrvtamK1Xlt4y15RJ
-	 CHnhh57raPF9LpePk4MCxiq8P+8nj0lkiui3k8YzoeSm9gwwIulZPh/KjweTi2b5Si
-	 xcjwBcifTMfYtq8lgLZV83SX/MJg5+iKan7SwJiKbTfqjBN0OiZNwus7yo8OXDBuHZ
-	 HYUuuPgVKMA3Q==
-Date: Tue, 8 Apr 2025 18:02:45 +0200
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Eric Woudstra <ericwouds@gmail.com>
-Cc: Michal Ostrowski <mostrows@earthlink.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Simon Horman <horms@kernel.org>,
-	Nikolay Aleksandrov <razor@blackwall.org>, netdev@vger.kernel.org,
-	netfilter-devel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v11 nf-next 0/2] Add nf_flow_encap_push() for xmit direct
-Message-ID: <Z_VIpa9SP05rsW18@calendula>
-References: <20250408142425.95437-1-ericwouds@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJQak5Vp"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e614da8615so6004890a12.1;
+        Tue, 08 Apr 2025 11:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744136362; x=1744741162; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zNORPrNxwkx4cAl/1tA8h4G6Spk016FAoAzvRh/FTVw=;
+        b=aJQak5VprQOhFmjn5het4Eg0VSdRKbEFed36OOxORkFyFl9y0n7rfrhwmbA4qLmApf
+         7RgPTBa2LEkYHIG9+7nuqk01klsvJWuSelpR3H/1Vax2x1YnL5hJZ2J5nbHOmV27lEw9
+         C13Rb7wDPARm7LyH726Cw1FtSPBwTp/OYOevSPHKYYeunKjsjLwLmBaUpWCyNvm9okuD
+         BsMw0Y6S+FV0hdQb9gRAuWGTzKIaJmWx2z92AQAh3sXUeRf+GsqFn5KHOgLHQlHhblof
+         U3Lkb3vIQFMhHbxwYanmhHJcO5PttGSRO76fZLEeLRx31mApcBR7L5RRX7avHqWEVV9T
+         MI7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744136362; x=1744741162;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zNORPrNxwkx4cAl/1tA8h4G6Spk016FAoAzvRh/FTVw=;
+        b=JQoSt/YW+O+gFMb0svb4qFyYjex291rc/AZQfcVYiG24FCn6fYFtFfet122A79KDWA
+         bq0eVXv+MqHkIsjnIEP7vFNnYydoj5T88gYvLe1U+MoLTOl2t6MGq0Txw5iNltKQRct/
+         7MLU4l7LXY8siiBiS765QyhuCP/cEbAebQWsFxpKzguLR+r67QA7Xvv3KUpGPwyVRqbt
+         2/OTLSLmtgEQojL9Q97E0OaO/9p4gDT614jW5d5VHEUcm7LYotRPayCce4xo0fW3s7Tb
+         MmoNDYZPb6va1OfWQxlEuXZUZjp9/XRWjIuX1SoUx57ecRMXOTKk0dEnY8ZYgMUeoOQK
+         p+ew==
+X-Forwarded-Encrypted: i=1; AJvYcCVyGYWMEzLCCJEyj17sAo1e9g0jUpS33YaHSh1z6JnWzTkUhab0+wVitjJZL0mzNgoKGPXC3Ce2QYh3tHUYOUHM@vger.kernel.org, AJvYcCWA6h2SBOQXF2oY/QSla/bSgaH7+rnhrocgbh2A13YzI31AAsnkHX8lcVCYTlj+UBnRyRynHxMr@vger.kernel.org, AJvYcCWAvk47lNgQob4oTpWImy5yQVnaVtS4erBWOQTvM+E3i7l56XKS2+4E09hETqorw3o87ZgEprrAk66lkZZXIoI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVCXznd6h4R3cV+axFhsCQ9Daq4Qrd2e6loHz8p0fnb3yid5RG
+	VoWAnf6L5sk/1qB26jgElONRPBGxHc19oA7idoFjzZH7oelIe3qR
+X-Gm-Gg: ASbGncuTvdOznnU5IcNJ2cbyN1FKnS7p8bpPj5Dg1dOmuCCjkc9Ioa1uf/Qpq5R6U8v
+	UxOq7+Z2KEb+k5hMCmapevK/RN4Cqc5qdQ5NtTlvbtWuIZKbypEe+gWbqGqbHBfoQU5U9tXaImt
+	esYWpwzjuwLKppfN/toYcesfQAN88NcG1RNta5QpfuUgU3HqZ4TE/kx/rhVaK21Lro43KzE5022
+	Daj72bpdr72L7bZeuRbfosrfEl4t46reTh6xE3J17/0ertz6MWzVabCe+X+88ycZp3NFwWrNrCH
+	1XUWxwuglzDwyvIL59/Ms+U69wJ0xftXDsu5KX1JXZLcrNj39lmSbPBhgN7Z9uWg7CHZP2+fLdO
+	jOaNkJMfDAGTjdAB5Y3Kn3rSPCn0xn0WAFOYG6peANLwR6qQ9mm+KgBT13m41b8/lXMg4qH7O1l
+	iTh1ZOMWzU7XRynU4e+V0=
+X-Google-Smtp-Source: AGHT+IG0N32kj2fVGY5ihLdMxtZfKugGqgZa3VNsCrizgxD5kPyBIBtPb74TE3tQ523G5LlfE7p24g==
+X-Received: by 2002:a05:6402:354a:b0:5e0:752a:1c7c with SMTP id 4fb4d7f45d1cf-5f1e3ca8f81mr4067983a12.1.1744136361630;
+        Tue, 08 Apr 2025 11:19:21 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:20d:1300:1b1c:4449:176a:89ea? (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087f0869csm8306969a12.38.2025.04.08.11.19.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 11:19:21 -0700 (PDT)
+Message-ID: <5ef69d2b-8be6-4d3d-bf1c-d6bdc9a21d95@gmail.com>
+Date: Tue, 8 Apr 2025 20:19:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250408142425.95437-1-ericwouds@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 nf-next 0/2] Add nf_flow_encap_push() for xmit direct
+To: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Michal Ostrowski <mostrows@earthlink.net>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Simon Horman <horms@kernel.org>,
+ Nikolay Aleksandrov <razor@blackwall.org>, netdev@vger.kernel.org,
+ netfilter-devel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250408142425.95437-1-ericwouds@gmail.com>
+ <Z_VIpa9SP05rsW18@calendula>
+From: Eric Woudstra <ericwouds@gmail.com>
+Content-Language: en-US
+In-Reply-To: <Z_VIpa9SP05rsW18@calendula>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-Please, one series at a time. You pick a good target to start with.
 
-I already provided a few suggestions on where to start from.
+On 4/8/25 6:02 PM, Pablo Neira Ayuso wrote:
+> Hi,
+> 
+> Please, one series at a time. You pick a good target to start with.
+> 
+> I already provided a few suggestions on where to start from.
+> 
 
-Thanks.
+Ok, I view the patch-set 'conntrack: bridge: add double vlan, pppoe and
+pppoe-in-q' more as an added bonus to the bridge-fastpath. It is quite
+separate from the rest. I would consider this patch-set as low priority.
 
-On Tue, Apr 08, 2025 at 04:24:23PM +0200, Eric Woudstra wrote:
-> Patch to add nf_flow_encap_push(), see patch message.
-> 
-> Added patch to eliminate array of flexible structures warning.
-> 
-> Changed in v11:
-> - Only push when tuple.out.ifidx == tuple.out.hw_ifidx
-> - No changes in nft_dev_path_info()
-> 
-> v10 split from patch-set: bridge-fastpath and related improvements v9
-> 
-> Eric Woudstra (2):
->   net: pppoe: avoid zero-length arrays in struct pppoe_hdr
->   netfilter: nf_flow_table_offload: Add nf_flow_encap_push() for xmit
->     direct
-> 
->  drivers/net/ppp/pppoe.c          |  2 +-
->  include/uapi/linux/if_pppox.h    |  4 ++
->  net/netfilter/nf_flow_table_ip.c | 97 +++++++++++++++++++++++++++++++-
->  3 files changed, 100 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 2.47.1
-> 
+May I suggest we focus on patch-sets:
+
+'Add nf_flow_encap_push() for xmit direct'
+
+and
+
+'netfilter: fastpath fixes'
+
+After these issues are addressed, only then it makes sense to add
+patch-set: 'netfilter: Add bridge-fastpath'.
+
+Thanks
+
