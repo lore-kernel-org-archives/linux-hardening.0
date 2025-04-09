@@ -1,173 +1,114 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECF22676DD
-	for <linux-hardening@vger.kernel.org>; Wed,  9 Apr 2025 15:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D271DFFD;
+	Wed,  9 Apr 2025 15:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212162; cv=none; b=EU259FEvZvijK//V+Fr/ZC+mRJGDBzx4HhHBSaDxtt13JavIaMdM62X97oLUTPUWlGx/mbcvbADSZvSG6jhvzY/nLuP8q9VAkceW+konBdIH+Z2xDn0V36+Go+ZWCCTFaTsDlqY9uW4T8gyAAOkOsXSQUZd7ytx3wKs/iwPkYVc=
+	t=1744212175; cv=none; b=BeoMfYr8BOurpN3hLw60yROh8+qlcu2FAQAHjDvQhYkjf5LOknmZfKiqr+tj4LLk7lKW0kI/GdDOg+79Zjs7woyiamu5GS/yJguWN04s8WNinMK0nx8aCxGGDOGdFstakWvZTXOhqapq7xPezRBqYNQDlASVXTbO+ajVH2hRF2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744212162; c=relaxed/simple;
-	bh=WLwrJq8MGT0Fpx4qdvhmpxgsjJjSZssAnDvzvvE/6wc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=he35QW9h9ZQxnf7is6HdUh5yiGJ4D4BDjHtH393VEv2VtF3ToThdSc9pYqbuSkMIcaG/sbD+i2obqwb7ICWndwk0ijgPfPb30qYt7SL1ggb/fsQXo5gN0Ari/OfJG8Twt69S2oz2DkC5GQkRorZDB1+uzarMXf3EMCq2p5qUycE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FWte/KnC; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744212175; c=relaxed/simple;
+	bh=oHhieYQ3u7Cu2t63oLzNOJtR2CvzcHlG6+SSCnb0daE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=qp4PPY5aTP+eCm3ZXWvb71sBC56LMnOVy+mENd4IzTGrFTRS1wr6NVoLbPuYmRnyrI13xIIsakWfEJHPpvnOR9qG22qzCf8NgR0HVUdLuYy425yn3WYVPk7Pn7gidPfDiGQbIXB4RuO2btKcWxPse7QznkKdmLwLswmoxRJz36M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=AOmDrUh7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GPuN3Mpt; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FWte/KnC"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5398a5kD007204
-	for <linux-hardening@vger.kernel.org>; Wed, 9 Apr 2025 15:22:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	iCuvAY1136gR39qITiq/pHL207Ayurzq2f2+DfiLkY8=; b=FWte/KnCblohf2nC
-	y2Vv4N1lU7dFggpsR0imf8eDB8KJptYiL0xhNftuZaEItLjxG8ewnvVIFZ2Iy0Op
-	AGeezaP9MxthirZHk7Lp2E+dmRvWXBcS39QJ+7bQ0iDPphp0gdbg1lG7sm3ows6p
-	qEVqF26UgPbhX7OCFdYoHoEPlUtLufIkEykMeK7FKXk31hd8xwg80S7K4p1DTcFa
-	7/lRpO4eYLmsN7PQyOF52HmMvt54VjTYp4LRVsafx8fSAiBqE1vq1OoZxuODsRzG
-	/eJaGSqaqN6Zec4tGCm/ywAskOF08oom6xvINDw12St3Cw3hkuzZvhBPA5HGzP7f
-	0lrrLg==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twg3kt1g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 09 Apr 2025 15:22:33 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5560e0893so56837185a.1
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Apr 2025 08:22:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744212152; x=1744816952;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iCuvAY1136gR39qITiq/pHL207Ayurzq2f2+DfiLkY8=;
-        b=EvaB9llSMIuR4IZTNtlcb8BSOzqDzHgbtGLz6xHh1GakhoJIqXqITEdPELPeOK+Z/i
-         +RYfPj3ju5uiaZa7WK4FkTDJKBrQlp35Yrm2X2RnL9igsuVROX2Wc0o+CbYc7rBTH63I
-         I9z81fqFoLjwoel1275dsu32j0cuGKx6GiCO6dhRos1sFTAnRCPCYBer/9io1kvGhK04
-         1S5zdoO18RpqZDbCNorPtzGeERqCQC1i2zRkxnQPQ7P7vhlHZXERUNtRJEzWfyFz4S8h
-         531HHehscJ0BRbN+VuuuQ70zwc67IQxrZZ8SDKNmJHQT/tY+dknHx4Pe10VOjyL+TvUX
-         9dBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUc/Nb257nddW+tUElbHzVK+5gFIQorylVcLCk2lXBkb3WMBQLgxZV1drB1a3piKm5Bz1j6+TMVvsk5b8BjUGQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwftqK18RAHXUBal5lmsQaU00T/euf+FWshzmJknHHpKsmLHri+
-	Wfj3ZNcB1ipUDT0G2HPhmjJUdxTLXQHJjnofgveBjH42Tm7xkoHa2gQFIq8cl+lF5HigjNQUW++
-	b0pyEHXLcii2w+aPQNdzLW4+mBiMP6cBu+RjSjV/YTN/SzpjdbRWAl4vJBoYrOYD1UrI=
-X-Gm-Gg: ASbGncvPUvxa0lyoA6hrPZ82AN9l3nnBD4jSSdhufpIS3++JKzzc+jzkbRnh3XAdet4
-	8UEfqLR9BEdjpqkdXQhGx8L/evpMEEhfn7Bi7+TO9EjZFI4lm4/IdG918MQWsbnD3PFwE5hm3qi
-	OwkIhceOVb6no2bRJhB0w4WmjEQ/kWSjSnFQIwNqMuBYrc+xqcRHLQn3LzSb1y9J62j/Wcx90E/
-	oGeKJWDwiW+aA4yKIGiOz/32F0khnMHeIyl84GJ6wq8Ya/6kB570p7XL04gfNjn/VU55zcBqDd8
-	o5ITSpcsyrdqgYDX3L8brQTspL+bmeAXS8+7ayqxxfJkpE3sL9/giVqiI0xB5Fjz5Q==
-X-Received: by 2002:a05:620a:2616:b0:7c0:add8:1736 with SMTP id af79cd13be357-7c79cc4b3f1mr182217785a.13.1744212152379;
-        Wed, 09 Apr 2025 08:22:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGu16PD6OWFhO9+2EVDMjvLbDZARn5f6zRS1+14nIt+zna7yAHulu/WcriBf7XUUO62wWUHLA==
-X-Received: by 2002:a05:620a:2616:b0:7c0:add8:1736 with SMTP id af79cd13be357-7c79cc4b3f1mr182216085a.13.1744212152091;
-        Wed, 09 Apr 2025 08:22:32 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb414dsm109595366b.121.2025.04.09.08.22.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 08:22:31 -0700 (PDT)
-Message-ID: <c2dac38b-bbe5-4cd1-9d33-b4bba629d54b@oss.qualcomm.com>
-Date: Wed, 9 Apr 2025 17:22:28 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="AOmDrUh7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GPuN3Mpt"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.stl.internal (Postfix) with ESMTP id BE95F1140103;
+	Wed,  9 Apr 2025 11:22:51 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-12.internal (MEProxy); Wed, 09 Apr 2025 11:22:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744212171;
+	 x=1744298571; bh=yuZmCfMgXvUIwnN64SS6KHwYGRZR2iDiBQ5BByDgfC8=; b=
+	AOmDrUh7XyQFaF71lhNUncQsvyBm47GhwBH4kyZMcnkf32xsGlUC/3wrupVT2/Xw
+	a8X8UGLuY50Oik+Oh41Swd3x22bhopkiHMZdMdmuohXMzFYbxCsHvpIQtHxEGUsx
+	3Ebx9upr4MxF6EofMqgER6GiUHFCiVTlJmTDSlvrLNaTPfW2MRpL4SuC8ovUnXcD
+	dZ/iCWOCVFZ3nETKSIivJ6xrEAsN9x3U3HoKjvk+wPvuVnhM5y7Atg3y+LATJqaM
+	qydic/ZF0Lc7MmIW3TezxPkeSzObNrhV6ei9XGU2FEugdub35EXsbV0o2TWsEyHl
+	7/5pvclCD7c9IiNOS+WdVA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744212171; x=
+	1744298571; bh=yuZmCfMgXvUIwnN64SS6KHwYGRZR2iDiBQ5BByDgfC8=; b=G
+	PuN3MptOcgZsxMfLQo58bRd2AMCrUesuWg/eku17kgi8FLV60UZNVpoqKaE85qww
+	awPEoUz10vDSVfnOmj+1qgBiWRDN9Q6FEJQrD1PLxClB5XuLRUddYUc4dLqStPkg
+	sXp6sqacS9nyL7G5sPAAaq204VOCg3rPYq7V1BBIOTrkrS69uVBoB9Ac+BWTbY2G
+	kaBdyCLjJGIouCsS/szBeutxGB2Rt44F18+WRTa74nKyWHkwa60pLNIZ34TlEJ+B
+	ASdcbOxW4L0roj/CfXe7nQbgWxhdDqiuiZNzk7W0hp5/oWcK7XvOBJWtDX1hWQop
+	dmsgn/Hgh6fVGMu6a9bzQ==
+X-ME-Sender: <xms:ypD2Z2hFzCQmWNRxy5wrLq3ZRWrIKEubaDQJSQZtU_rbOgpYdo59ag>
+    <xme:ypD2Z3AZK6Wr1AXl7Uz37-aICMvPpa25TTFr9wU7flGxlnEa_jYqSl634x1THxuye
+    WMZol6ZeRsx96skosE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeifeehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhepfefhheetffduvdfgieeghfejtedvkeetkeej
+    feekkeelffejteevvdeghffhiefhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
+    rghrnhgusgdruggvpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhhtpd
+    hrtghpthhtohepmhhitgesughighhikhhougdrnhgvthdprhgtphhtthhopehgnhhorggt
+    khesghhoohhglhgvrdgtohhmpdhrtghpthhtohepshgvrhhgvgeshhgrlhhlhihnrdgtoh
+    hmpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    ghhushhtrghvohgrrhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvggvsheskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhmohhrrhhishesnhgrmhgvihdrohhrghdp
+    rhgtphhtthhopehprghulhesphgruhhlqdhmohhorhgvrdgtohhmpdhrtghpthhtoheplh
+    hinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:ypD2Z-HM1Jaauxrekc682Rtj3ZlKjI-kN-NFgTtRAekkCKy6usoaTA>
+    <xmx:ypD2Z_TN_Kq7WORQXyjLWgLeVHbV9BK-KAGkn-mXmtszLe9MDXAL6Q>
+    <xmx:ypD2Zzyt4J_OaP0dS0q8U7N2CH5sEMt1IglS6wLzMz748xrn7_FXwA>
+    <xmx:ypD2Z95GhCo_c5_jGbyZ0h-JyyAB-sbu7qbEp7mLk4I3Lj9n0r9TpQ>
+    <xmx:y5D2Z5DQnlum0O2xoKsPYQTUqYsQnat8Z0-A3qb7hBBSYGAN4QhwdUyn>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 9595F2220073; Wed,  9 Apr 2025 11:22:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] drm/msm/a6xx: Get HBB dynamically, if available
-To: Connor Abbott <cwabbott0@gmail.com>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
- <20250409-topic-smem_dramc-v1-3-94d505cd5593@oss.qualcomm.com>
- <CACu1E7GMf0Mx2ZX_t76h+b1CPin49LGix7c5uvoWaJZC3dKyOw@mail.gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <CACu1E7GMf0Mx2ZX_t76h+b1CPin49LGix7c5uvoWaJZC3dKyOw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: Hq_MiCy6NqWd5bjJ39IHdvCXkZTvOALb
-X-Proofpoint-ORIG-GUID: Hq_MiCy6NqWd5bjJ39IHdvCXkZTvOALb
-X-Authority-Analysis: v=2.4 cv=I/9lRMgg c=1 sm=1 tr=0 ts=67f690b9 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=Z2wkywZrCN8y_YYJSgYA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
- clxscore=1015 malwarescore=0 adultscore=0 priorityscore=1501
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504090097
+X-ThreadId: T281fa94f3e1ea3ab
+Date: Wed, 09 Apr 2025 17:22:30 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Kees Cook" <kees@kernel.org>
+Cc: "Mark Brown" <broonie@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "Paul Moore" <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>, linux-hardening@vger.kernel.org,
+ linux-security-module@vger.kernel.org,
+ =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
+ linux-kernel@vger.kernel.org
+Message-Id: <37bccc57-01b2-46ab-b973-ad52590f4ca2@app.fastmail.com>
+In-Reply-To: <20250409151154.work.872-kees@kernel.org>
+References: <20250409151154.work.872-kees@kernel.org>
+Subject: Re: [PATCH] hardening: Disable GCC randstruct for COMPILE_TEST
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On 4/9/25 5:12 PM, Connor Abbott wrote:
-> On Wed, Apr 9, 2025 at 10:48 AM Konrad Dybcio <konradybcio@kernel.org> wrote:
->>
->> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>
->> The Highest Bank address Bit value can change based on memory type used.
->>
->> Attempt to retrieve it dynamically, and fall back to a reasonable
->> default (the one used prior to this change) on error.
->>
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->> ---
->>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 22 ++++++++++++++++------
->>  1 file changed, 16 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..0cc397378c99db35315209d0265ad9223e8b55c7 100644
->> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->> @@ -13,6 +13,7 @@
->>  #include <linux/firmware/qcom/qcom_scm.h>
->>  #include <linux/pm_domain.h>
->>  #include <linux/soc/qcom/llcc-qcom.h>
->> +#include <linux/soc/qcom/smem.h>
->>
->>  #define GPU_PAS_ID 13
->>
->> @@ -669,17 +670,22 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
->>  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
->>  {
->>         struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
->> +       u32 hbb = qcom_smem_dram_get_hbb();
->> +       u32 ubwc_mode = adreno_gpu->ubwc_config.ubwc_swizzle & 1;
->> +       u32 level2_swizzling_dis = !(adreno_gpu->ubwc_config.ubwc_swizzle & 2);
->> +       u32 hbb_hi, hbb_lo;
->> +
->>         /*
->>          * We subtract 13 from the highest bank bit (13 is the minimum value
->>          * allowed by hw) and write the lowest two bits of the remaining value
->>          * as hbb_lo and the one above it as hbb_hi to the hardware.
->>          */
->> -       BUG_ON(adreno_gpu->ubwc_config.highest_bank_bit < 13);
->> -       u32 hbb = adreno_gpu->ubwc_config.highest_bank_bit - 13;
->> -       u32 hbb_hi = hbb >> 2;
->> -       u32 hbb_lo = hbb & 3;
->> -       u32 ubwc_mode = adreno_gpu->ubwc_config.ubwc_swizzle & 1;
->> -       u32 level2_swizzling_dis = !(adreno_gpu->ubwc_config.ubwc_swizzle & 2);
->> +       if (hbb < 0)
->> +               hbb = adreno_gpu->ubwc_config.highest_bank_bit;
-> 
-> No. The value we expose to userspace must match what we program.
-> You'll break VK_EXT_host_image_copy otherwise.
+On Wed, Apr 9, 2025, at 17:11, Kees Cook wrote:
+> There is a GCC crash bug in the randstruct for latest GCC versions that
+> is being tickled by landlock[1]. Temporarily disable GCC randstruct for
+> COMPILE_TEST builds to unbreak CI systems for the coming -rc2. This can
+> be restored once the bug is fixed.
+>
+> Suggested-by: Mark Brown <broonie@kernel.org>
+> Link: 
+> https://lore.kernel.org/all/20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org/ 
+> [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-I didn't know that was exposed to userspace.
-
-The value must be altered either way - ultimately, the hardware must
-receive the correct information. ubwc_config doesn't seem to be const,
-so I can edit it there if you like it better.
-
-Konrad
+Acked-by: Arnd Bergmann <arnd@arndb.de>
