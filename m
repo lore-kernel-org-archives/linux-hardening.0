@@ -1,392 +1,284 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D2B1DE884
-	for <linux-hardening@vger.kernel.org>; Wed,  9 Apr 2025 06:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D56A1DE8A8
+	for <linux-hardening@vger.kernel.org>; Wed,  9 Apr 2025 06:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744180837; cv=none; b=qi9L6oyIKH3q1AGOy42jieUuIUm6g5HmCWdXjJDlsUTfTpD5wyRTsooBPqu6BKD/wy4DlfYkoMyNF3bldSvWHbCg5ETb0W3KQxB0UWBL9zI7OtFv/AwzzNkHq5rVAwxeCm1+aIH3h1uafIsVVwik6Ak13A7RhcH75MTePfiruOs=
+	t=1744180877; cv=none; b=WBwn/yVyzMfdWqD781La7tl/SqocF/R/FVEAOX043VX1wIb2adgf53EZKMLMqZewjy/w6CgPAuFrGOjV0TdCLy+bGQhn0wbCpWo94vWl1BYpICgqZfvuznXwY5r0UE6Vdg1Gh43+xyG3fRNJvbT+dqlfXttjVKc7TPfhW252Azs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744180837; c=relaxed/simple;
-	bh=fCEfYtmFH6rGKcVieG+9qEMAsfW+dbKvw5cxExd42eg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FUJ2BoXfe5+rl2WFqg0MfDGNQ2/5x5y4Q2JlpOgaWOdd6yAVHVo+VQ/ZaCQbrT55aj42ZLn+65GSgecc6V2A20fXuimYC4AZ+kIOKseHHQizWGFoHawwzKTa3NVlo+sYO+8f2NBo/YalO9GGyE8FpuxOQY0sgZWGdrP9/4uc/xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LuOHV+Pr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744180877; c=relaxed/simple;
+	bh=zGxwNnUmXMfwKZuG7h/jRUqwjfd847rvoRfhHknNCNg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QAHQO8ZMBhEwnnLXi/r7Z4Yia5nXIwobQ0Bo9cHwEyu8EXnzUEX9mAGIPCzoWTcWhj1v15oGnYDx/Gx2fmnn5ixGMaOHR3EpHm4i34TyWgwGq1BYPKCTldBKa3C99FY4pORWowW683hIKk7LTUmulAM4U61FzZmuvz/Nq85zlFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vJIsxAmt; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LuOHV+Pr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744180834;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lEq+Iv/LM2UETreZmi3CwTkcO/puV6AGdcdNXTDUug0=;
-	b=LuOHV+PrGFmf3ui/TQZGucgCO0k2Snir49DFdAfyTZkjX+ZTF9bGAho0tj6jcu1zPT5PUg
-	jqbAiI0QXcAX5tM4LMe6a99ygWByKA1oxNQ6nyyeYO2NPqiLMiWh0O2L+579ewyJjobixw
-	wi8cntaxsEKc+slA5Vv1CSTkKO0eMqE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-617-eJ9JksEPPwCt0cKWPUl8aA-1; Wed,
- 09 Apr 2025 02:40:30 -0400
-X-MC-Unique: eJ9JksEPPwCt0cKWPUl8aA-1
-X-Mimecast-MFC-AGG-ID: eJ9JksEPPwCt0cKWPUl8aA_1744180829
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8C0BD1800EC5;
-	Wed,  9 Apr 2025 06:40:28 +0000 (UTC)
-Received: from [10.44.32.72] (unknown [10.44.32.72])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1AB613001D0F;
-	Wed,  9 Apr 2025 06:40:23 +0000 (UTC)
-Message-ID: <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
-Date: Wed, 9 Apr 2025 08:40:22 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vJIsxAmt"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2c6f27599abso1806705fac.2
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Apr 2025 23:41:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744180874; x=1744785674; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lg1zubIIQ2f2lCdRuDMx0bvXEmWPDBNMHPp9FQ2hXHQ=;
+        b=vJIsxAmtHxGn6TgMJ0aYwAJWx2ql3iKMTxFGrgDMYj/PYs9KRyA2fx2FPbdwOQOhYb
+         Zq5d+1sL9DN2OmDK4Kd+apohS4Uy9if37x3IjiGMcEUrI19Y7/3jnkZ5CDk1HRqE1cp4
+         ukHtLeE9TlUhfMUfQ8UozTI6hcXjErCxW+Ogw8JrChWMl5jRVrC7Fwlm9+VjDx1j+5VC
+         4gzDUJIuUQqzRVl8kpyCWf3Lk7GZ9H6wtgZK/eW0WfQvQyEufl9HTMJ5l6czOTLVKQL6
+         jrlLDMPGtFhaVVLjLFnre8/gwMvMRtzuSWvs4TlorVZNJOV6urHP632GTw3ZWfGUqXrU
+         Tqiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744180874; x=1744785674;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lg1zubIIQ2f2lCdRuDMx0bvXEmWPDBNMHPp9FQ2hXHQ=;
+        b=w7v1UnXRFlwal1jawV9sQjCIOQ0VFgrOXSXxVYms6OWx2YqsP218D6fmJROe7+LdrX
+         ZJXdgdk238RgssvIHWEvMI+ofG9vP3CiJKuhRSFgKbYs8RQZFEdVzZMo+zYcDcI8jN2G
+         7p9cFzxArZ1rKt53gU/QM2LLtzARbEoB5Al8LDHnalBkTIiEGbHUjX7xBWGdLCNuMPBC
+         4WJFSVMCM4Z6JA65nuags0v/mwOGBacyC32l97MNLa+mhzFW0hAaIG5JnQRcMweCYJTb
+         MbO1cwZAHQI2jaTNGFmj4l7ni11tRxzUJ/Zk4p6jhzYpxnD280l7hBWlhXAtauVBq/xd
+         J81g==
+X-Forwarded-Encrypted: i=1; AJvYcCV3AzVn9xHYNCI0hDe3hPmTDd68wIeNpDVb+TJmWAFMGMJijFCgyA7q8vYm/CYdlqA+BgDv4C71iEBCdAnp1mw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPrihWQGBJZrAUdEaya+xCIyPca8MHDBY5kWHBC01jyGGMh+Uf
+	DPZWQnnFX9a5a23Ou1thd4xLeCHU0PkmkUZyCxQcBqy85MPUzqq7VMtnN6B2uQGdFeJf5BE3CXH
+	f1Eex+H9Ob9K+9bMNV+zHZTSSwd0Nzufj5XW7YQ==
+X-Gm-Gg: ASbGncu+F/jvRZgdLGFY7ZymWztWyORLLpSBHbjYlu2wSbQ1BnnLHMO3hoIQ1TtELtV
+	tvtj/SY0J7iG4PDWKgUtEPd6liPAcI6wPHpApZz/Kfdm+7mfw65roZCQVSoIeUMAxH/PSNwtyIY
+	nDnq9sXcsMKSLZ5G7alf7yOZ0=
+X-Google-Smtp-Source: AGHT+IEcOaeO7Dkm5yTCQ3Lz50IL70ppiKK0D3qC/MhJowKSiZsAxvldI+lzaOfmcOXeeFDEQzyNagex8XBOSbhG59c=
+X-Received: by 2002:a05:6871:618c:b0:297:c04:9191 with SMTP id
+ 586e51a60fabf-2d091733057mr659862fac.3.1744180874156; Tue, 08 Apr 2025
+ 23:41:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
-To: Andy Shevchenko <andy@kernel.org>
-Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250407172836.1009461-1-ivecera@redhat.com>
- <20250407172836.1009461-2-ivecera@redhat.com>
- <Z_QTzwXvxcSh53Cq@smile.fi.intel.com>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <Z_QTzwXvxcSh53Cq@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+References: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-0-7f457073282d@oss.qualcomm.com>
+ <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-3-7f457073282d@oss.qualcomm.com>
+ <CAHUa44GRBiRr6CsFWxJhyzf1cRSEP66m5K7uFntOv3oYWTHWgQ@mail.gmail.com> <5de2a378-77cf-4373-b3ae-faeebb931e2d@oss.qualcomm.com>
+In-Reply-To: <5de2a378-77cf-4373-b3ae-faeebb931e2d@oss.qualcomm.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Wed, 9 Apr 2025 08:41:02 +0200
+X-Gm-Features: ATxdqUGhoGZIEx3Ym3PuzG5zEQQIskuGmF1s73EkPFrW4w3uoAZ-oqJKPmuDlxQ
+Message-ID: <CAHUa44F-t29Hu0o3+0vFLjtrnA8ZGycPFcUTXEOmms9B=cZ6XA@mail.gmail.com>
+Subject: Re: [PATCH v3 03/11] tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+Cc: Sumit Garg <sumit.garg@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Apurupa Pattapu <quic_apurupa@quicinc.com>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07. 04. 25 8:05 odp., Andy Shevchenko wrote:
-> On Mon, Apr 07, 2025 at 07:28:28PM +0200, Ivan Vecera wrote:
->> This adds base MFD driver for Microchip Azurite ZL3073x chip family.
->> These chips provide DPLL and PHC (PTP) functionality and they can
->> be connected over I2C or SPI bus.
->>
->> The MFD driver provide basic communication and synchronization
->> over the bus and common functionality that are used by the DPLL
->> driver (later in this series) and by the PTP driver (will be
->> added later).
->>
->> The chip family is characterized by following properties:
->> * 2 separate DPLL units (channels)
->> * 5 synthesizers
->> * 10 input pins (references)
->> * 10 outputs
->> * 20 output pins (output pin pair shares one output)
->> * Each reference and output can act in differential or single-ended
->>    mode (reference or output in differential mode consumes 2 pins)
->> * Each output is connected to one of the synthesizers
->> * Each synthesizer is driven by one of the DPLL unit
-> .
-> The comments below are applicable to entire series, take your time and fix
-> *all* stylic and header issues before sending v2.
-> 
-> ...
-> 
-> + array_size.h
-> + bits.h
-> 
-> + device/devres.h
-> 
->> +#include <linux/module.h>
-> 
-> This file uses *much* amore than that.
-> 
-> + regmap.h
-> 
-> 
->> +#include "zl3073x.h"
-> 
-> ...
-> 
+Hi Amirreza,
 
-Will fix in the next series.
+On Wed, Apr 9, 2025 at 2:28=E2=80=AFAM Amirreza Zarrabi
+<amirreza.zarrabi@oss.qualcomm.com> wrote:
+>
+> Hi jens,
+>
+> On 4/8/2025 10:19 PM, Jens Wiklander wrote:
+>
+> Hi Amirreza,
+>
+> On Fri, Mar 28, 2025 at 3:48=E2=80=AFAM Amirreza Zarrabi
+> <amirreza.zarrabi@oss.qualcomm.com> wrote:
+>
+> For drivers that can transfer data to the TEE without using shared
+> memory from client, it is necessary to receive the user address
+> directly, bypassing any processing by the TEE subsystem. Introduce
+> TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT/OUTPUT/INOUT to represent
+> userspace buffers.
+>
+> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+> ---
+>  drivers/tee/tee_core.c   | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/tee_drv.h  |  6 ++++++
+>  include/uapi/linux/tee.h | 22 ++++++++++++++++------
+>  3 files changed, 55 insertions(+), 6 deletions(-)
+>
+> Is this patch needed now that the QCOMTEE driver supports shared
+> memory? I prefer keeping changes to the ABI to a minimum.
+>
+> Cheers,
+> Jens
+>
+> Unfortunately, this is still required. QTEE supports two types of data tr=
+ansfer:
+> (1) using UBUF and (2) memory objects. Even with memory object support, s=
+ome APIs still
+> expect to receive data using UBUF. For instance, to load a TA, QTEE offer=
+s two interfaces:
+> one where the TA binary is in UBUF and another where the TA binary is in =
+a memory object.
 
->> +/*
->> + * Regmap ranges
->> + */
->> +#define ZL3073x_PAGE_SIZE	128
->> +#define ZL3073x_NUM_PAGES	16
->> +#define ZL3073x_PAGE_SEL	0x7F
->> +
->> +static const struct regmap_range_cfg zl3073x_regmap_ranges[] = {
->> +	{
->> +		.range_min	= 0,
-> 
-> Are you sure you get the idea of virtual address pages here?
+Is this a limitation in the QTEE backend driver or on the secure side?
+Can it be fixed? I don't ask for changes in the ABI to the secure
+world since I assume you haven't made such changes while this patch
+set has evolved.
 
-What is wrong here?
+Cheers,
+Jens
 
-I have a device that uses 7-bit addresses and have 16 register pages.
-Each pages is from 0x00-0x7f and register 0x7f is used as page selector 
-where bits 0-3 select the page.
-
->> +		.range_max	= ZL3073x_NUM_PAGES * ZL3073x_PAGE_SIZE,
->> +		.selector_reg	= ZL3073x_PAGE_SEL,
->> +		.selector_mask	= GENMASK(3, 0),
->> +		.selector_shift	= 0,
->> +		.window_start	= 0,
->> +		.window_len	= ZL3073x_PAGE_SIZE,
->> +	},
->> +};
-> 
-> ...
-> 
->> +struct zl3073x_dev *zl3073x_dev_alloc(struct device *dev)
->> +{
->> +	struct zl3073x_dev *zldev;
->> +
->> +	return devm_kzalloc(dev, sizeof(*zldev), GFP_KERNEL);
->> +}
->> +EXPORT_SYMBOL_NS_GPL(zl3073x_dev_alloc, "ZL3073X");
->> +
->> +int zl3073x_dev_init(struct zl3073x_dev *zldev)
->> +{
->> +	devm_mutex_init(zldev->dev, &zldev->lock);
-> 
-> Missing check.
-
-Will fix.
-
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(zl3073x_dev_init, "ZL3073X");
->> +
->> +void zl3073x_dev_exit(struct zl3073x_dev *zldev)
->> +{
->> +}
->> +EXPORT_SYMBOL_NS_GPL(zl3073x_dev_exit, "ZL3073X");
-> 
-> What's the point in these stubs?
-
-This function is used and filled later. I will drop it here and 
-introduce when it will be necessary.
-
->> +#include <linux/i2c.h>
-> 
->> +#include <linux/kernel.h>
-> 
-> No usual driver should include kernel.h, please follow IWYU principle.
-
-Will follow IWYU in v2.
-
->> +#include <linux/module.h>
-> 
-> Again, this is just a random list of headers, see above and follow the IWYU
-> principle.
-
-Ditto.
-
->> +#include "zl3073x.h"
-> 
-> ...
-> 
->> +static const struct i2c_device_id zl3073x_i2c_id[] = {
->> +	{ "zl3073x-i2c", },
-> 
-> Redundant inner comma.
-
-Ack
-
->> +	{ /* sentinel */ },
-> 
-> No comma for the sentinel.
-> 
->> +};
-
-Ack
-
->> +static const struct of_device_id zl3073x_i2c_of_match[] = {
->> +	{ .compatible = "microchip,zl3073x-i2c" },
->> +	{ /* sentinel */ },
-
-Ack
-
->> +};
-> 
->> +static int zl3073x_i2c_probe(struct i2c_client *client)
->> +{
->> +	struct device *dev = &client->dev;
->> +	const struct i2c_device_id *id;
->> +	struct zl3073x_dev *zldev;
-> 
->> +	int rc = 0;
-> 
-> Useless assignment.
-
-Sorry for that, it was originally necessary.
-Will drop.
-
->> +	zldev = zl3073x_dev_alloc(dev);
->> +	if (!zldev)
->> +		return -ENOMEM;
->> +
->> +	id = i2c_client_get_device_id(client);
->> +	zldev->dev = dev;
->> +
->> +	zldev->regmap = devm_regmap_init_i2c(client,
->> +					     zl3073x_get_regmap_config());
-> 
-> It's perfectly a single line.
-
-I tried to follow strictly 80 chars/line. Will fix.
-
->> +	if (IS_ERR(zldev->regmap)) {
->> +		rc = PTR_ERR(zldev->regmap);
->> +		dev_err(dev, "Failed to allocate register map: %d\n", rc);
->> +		return rc;
-> 
-> 		return dev_err_probe(...);
-
-Will change.
-
->> +	}
->> +
->> +	i2c_set_clientdata(client, zldev);
->> +
->> +	return zl3073x_dev_init(zldev);
->> +}
-> 
-> ...
-> 
->> +static void zl3073x_i2c_remove(struct i2c_client *client)
->> +{
-> 
->> +	struct zl3073x_dev *zldev;
->> +
->> +	zldev = i2c_get_clientdata(client);
-> 
-> Just make it one line definition + assignment.
-
-Ack
-
->> +	zl3073x_dev_exit(zldev);
-> 
-> This is a red flag and because you haven't properly named the calls (i.e. devm
-> to show that they are only for probe stage and use managed resources) this is
-> not easy to catch.
-
-Will rename zl3073x_dev_alloc() to zl3073x_devm_alloc() to indicate that 
-devres is used... Probably will drop zl3073x_dev_exit() entirely and 
-take care of devlink unregistration by devres way.
-
->> +}
->> +
->> +static struct i2c_driver zl3073x_i2c_driver = {
->> +	.driver = {
->> +		.name = "zl3073x-i2c",
->> +		.of_match_table = of_match_ptr(zl3073x_i2c_of_match),
-> 
-> Please, never use of_match_ptr() or ACPI_PTR() in a new code.
-
-Ack
-
->> +	},
->> +	.probe = zl3073x_i2c_probe,
->> +	.remove = zl3073x_i2c_remove,
->> +	.id_table = zl3073x_i2c_id,
->> +};
-> 
->> +
-> 
-> Redundant blank line.
-> 
->> +module_i2c_driver(zl3073x_i2c_driver);
-> 
-> ...
-> 
->> +#include <linux/kernel.h>
-> 
-> Just no. You should know what you are doing in the driver.
-
-Will fix.
-
->> +#include <linux/module.h>
-> 
->> +#include <linux/of.h>
-
-Ack
-
->> +#include <linux/spi/spi.h>
->> +#include "zl3073x.h"
-> 
-> ...
-> 
->> +static const struct spi_device_id zl3073x_spi_id[] = {
->> +	{ "zl3073x-spi", },
->> +	{ /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(spi, zl3073x_spi_id);
->> +
->> +static const struct of_device_id zl3073x_spi_of_match[] = {
->> +	{ .compatible = "microchip,zl3073x-spi" },
->> +	{ /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, zl3073x_spi_of_match);
-> 
-> Move the above closer to its user.
-
-Ack
-
->> +static int zl3073x_spi_probe(struct spi_device *spidev)
-> 
-> Usual name is spi for the above, it's shorter and allows to tidy up the code.
-> 
-> And below same comments as for i2c part of the driver.
-
-OK, will fix.
-
->> +#ifndef __ZL3073X_CORE_H
->> +#define __ZL3073X_CORE_H
-> 
->> +#include <linux/mfd/zl3073x.h>
-> 
-> How is it used here, please?
-
-Will change to forward declaration.
-
->> +struct zl3073x_dev *zl3073x_dev_alloc(struct device *dev);
->> +int zl3073x_dev_init(struct zl3073x_dev *zldev);
->> +void zl3073x_dev_exit(struct zl3073x_dev *zldev);
->> +const struct regmap_config *zl3073x_get_regmap_config(void);
->> +
->> +#endif /* __ZL3073X_CORE_H */
-> 
-> ...
-> 
->> +#ifndef __LINUX_MFD_ZL3073X_H
->> +#define __LINUX_MFD_ZL3073X_H
-> 
->> +#include <linux/device.h>
->> +#include <linux/regmap.h>
-> 
-> Ditto. Two unused headers and one which must be included is missed.
-
-The same, forward declaration and inclusion of <linux/mutex.h>
-
->> +struct zl3073x_dev {
->> +	struct device		*dev;
->> +	struct regmap		*regmap;
->> +	struct mutex		lock;
->> +};
-
-Thank you Andy for the review.
-
-I.
-
+>
+> Best Regards,
+> Amir
+>
+> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> index 22cc7d624b0c..bc862a11d437 100644
+> --- a/drivers/tee/tee_core.c
+> +++ b/drivers/tee/tee_core.c
+> @@ -404,6 +404,17 @@ static int params_from_user(struct tee_context *ctx,=
+ struct tee_param *params,
+>                         params[n].u.value.b =3D ip.b;
+>                         params[n].u.value.c =3D ip.c;
+>                         break;
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+> +                       params[n].u.ubuf.uaddr =3D u64_to_user_ptr(ip.a);
+> +                       params[n].u.ubuf.size =3D ip.b;
+> +
+> +                       if (!access_ok(params[n].u.ubuf.uaddr,
+> +                                      params[n].u.ubuf.size))
+> +                               return -EFAULT;
+> +
+> +                       break;
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+> @@ -472,6 +483,11 @@ static int params_to_user(struct tee_ioctl_param __u=
+ser *uparams,
+>                             put_user(p->u.value.c, &up->c))
+>                                 return -EFAULT;
+>                         break;
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+> +                       if (put_user((u64)p->u.ubuf.size, &up->b))
+> +                               return -EFAULT;
+> +                       break;
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+>                         if (put_user((u64)p->u.memref.size, &up->b))
+> @@ -672,6 +688,13 @@ static int params_to_supp(struct tee_context *ctx,
+>                         ip.b =3D p->u.value.b;
+>                         ip.c =3D p->u.value.c;
+>                         break;
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+> +                       ip.a =3D (u64)p->u.ubuf.uaddr;
+> +                       ip.b =3D p->u.ubuf.size;
+> +                       ip.c =3D 0;
+> +                       break;
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+> @@ -774,6 +797,16 @@ static int params_from_supp(struct tee_param *params=
+, size_t num_params,
+>                         p->u.value.b =3D ip.b;
+>                         p->u.value.c =3D ip.c;
+>                         break;
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+> +                       p->u.ubuf.uaddr =3D u64_to_user_ptr(ip.a);
+> +                       p->u.ubuf.size =3D ip.b;
+> +
+> +                       if (!access_ok(params[n].u.ubuf.uaddr,
+> +                                      params[n].u.ubuf.size))
+> +                               return -EFAULT;
+> +
+> +                       break;
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+>                         /*
+> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
+> index ce23fd42c5d4..d773f91c6bdd 100644
+> --- a/include/linux/tee_drv.h
+> +++ b/include/linux/tee_drv.h
+> @@ -82,6 +82,11 @@ struct tee_param_memref {
+>         struct tee_shm *shm;
+>  };
+>
+> +struct tee_param_ubuf {
+> +       void * __user uaddr;
+> +       size_t size;
+> +};
+> +
+>  struct tee_param_value {
+>         u64 a;
+>         u64 b;
+> @@ -92,6 +97,7 @@ struct tee_param {
+>         u64 attr;
+>         union {
+>                 struct tee_param_memref memref;
+> +               struct tee_param_ubuf ubuf;
+>                 struct tee_param_value value;
+>         } u;
+>  };
+> diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
+> index d0430bee8292..3e9b1ec5dfde 100644
+> --- a/include/uapi/linux/tee.h
+> +++ b/include/uapi/linux/tee.h
+> @@ -151,6 +151,13 @@ struct tee_ioctl_buf_data {
+>  #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT        6
+>  #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT 7       /* input and outp=
+ut */
+>
+> +/*
+> + * These defines userspace buffer parameters.
+> + */
+> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT   8
+> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT  9
+> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT   10      /* input and outp=
+ut */
+> +
+>  /*
+>   * Mask for the type part of the attribute, leaves room for more types
+>   */
+> @@ -186,14 +193,17 @@ struct tee_ioctl_buf_data {
+>  /**
+>   * struct tee_ioctl_param - parameter
+>   * @attr: attributes
+> - * @a: if a memref, offset into the shared memory object, else a value p=
+arameter
+> - * @b: if a memref, size of the buffer, else a value parameter
+> + * @a: if a memref, offset into the shared memory object,
+> + *     else if a ubuf, address of the user buffer,
+> + *     else a value parameter
+> + * @b: if a memref or ubuf, size of the buffer, else a value parameter
+>   * @c: if a memref, shared memory identifier, else a value parameter
+>   *
+> - * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref or value is used=
+ in
+> - * the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value and
+> - * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref. TEE_PARAM_ATTR_TYPE_NO=
+NE
+> - * indicates that none of the members are used.
+> + * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref, ubuf, or value =
+is
+> + * used in the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value,
+> + * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref, and TEE_PARAM_ATTR_TYP=
+E_UBUF_*
+> + * indicates ubuf. TEE_PARAM_ATTR_TYPE_NONE indicates that none of the m=
+embers
+> + * are used.
+>   *
+>   * Shared memory is allocated with TEE_IOC_SHM_ALLOC which returns an
+>   * identifier representing the shared memory object. A memref can refere=
+nce
+>
+> --
+> 2.34.1
+>
