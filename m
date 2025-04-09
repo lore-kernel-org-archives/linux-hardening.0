@@ -1,103 +1,224 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65757267B00
-	for <linux-hardening@vger.kernel.org>; Wed,  9 Apr 2025 15:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A38226772C
+	for <linux-hardening@vger.kernel.org>; Wed,  9 Apr 2025 15:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212812; cv=none; b=Nv7nFZpmiySxWX+po3knQCayNEQUmwkrlHRwTrvsCb7XlkBRPI4u8UJYgHzkR5fbH7mM5yM4nW1Y+wiQk98Jfw19O/+/korkxCEX/76FIzbOP1zOSwwedL80lN+7/pJHSjdCKaSqfxn5FpTDaDguyIUiESyFMk2KpunLc2WdrxI=
+	t=1744213227; cv=none; b=t1i5iqONN4oAL1SCe9nEICOFRpMHZfElc6Rke/sklOob1+pzcJeGDW4O06+EYtbvVp7iB1ynRve3OX+SAndCRmsxoDDiVXXnYT/ThZu8deYLikbzOS11/ww4iVy9eI8rjNlNKRcOJpQYjV8pULGMi3jhfF1oFAoW8QHvmzWxGck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744212812; c=relaxed/simple;
-	bh=Q+E+gm5uopjkervKkp2H2F4qs52H2bSWJcrVdOv471I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rb2umJeQakW6tMH18vIC+4oii7ISbxSGQPTau2FmsA6Te3785987UnakmFQkaAwA+A+BtL9UsPgRyh3g6FxQUX1hgoMdCeJ6cQ3IY0m93u8JRjkGsm2VNiddXqmZNXZizH93c8+1SIDnJirEFLwSIh0X7SBmHW3akTIV4vNeqiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LdTC/CCz; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1744213227; c=relaxed/simple;
+	bh=sr5q1zh9NSGY7PcWnFatTToY1SiCtDSZEZ2M8GV9h0o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sieKjW2BxOk5O8J9BJk9+q3YyZ+aZprfBZmSRoO8ktYOo8eWB2jp/ZeA9ZRZi4hueDm4EgN0eyb3Q1quyQRhDfjJ0tcf0QUIfL7LQarkgJRxiHvV6QlNP7SikWVpFIsDAZbDFV2MAHfz2zJ5Lr3PZdaod65K0DuxAEHsMcCjavU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ObUY/g/I; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LdTC/CCz"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-523ed8ac2a3so3211516e0c.3
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Apr 2025 08:33:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1744212809; x=1744817609; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=TdxP6TrUHsK7q8J2aaqhZA0bVAluAt8YBqPZ1F5Nh/M=;
-        b=LdTC/CCzxEDHcpl+vmw0+nZoiNNPJWQyHMiRmY8lgDaIrVUH2KYHysKgMCUVVGO3f+
-         v8Ky9SFRkr9RVqGyMKdfGoP7wNDgazr9gi6y0n4BXaFJ6rLXHOgw/OCCYM9v7p4/t1Vk
-         0uuSEZVIuhlE6r48TQSRFYU3lbQ07Dt8XZNec=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ObUY/g/I"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5398xbI2002260
+	for <linux-hardening@vger.kernel.org>; Wed, 9 Apr 2025 15:40:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	K9BPk28PAc9fisqkhvrEcPgWYuoMztzSJu7m7KRysU8=; b=ObUY/g/IZ0oO6wDD
+	z6B3BmhNGOD2unIq3FYwV22xMwQXQmQgA7dbEF3FgKdNBj77UpJ7/LF3IYR+lVxD
+	uDxkDFLyUrSvm0ON0ukXup0Sxv606DVfH8SaZOPa7wVRFFBsvrrTcyL3scT1mXLg
+	qkZfYYHZkrSQQeCexNGm/Jfq2eC1CZjJmwmTcwFdQvT9bGwUQ/4R/SfKK6I9Qyjm
+	QEtTImpBUop7Grl/3EH9lL0irgqgKcfLbgkmXIYKjV8bIUdpuRClO78Mgc2encsm
+	Mk4z4hSgvgF9QHUR18j6xJ1NT7jF8IlJTMI8nrGU+MPm20mS5oGzZKvGR1QyYTjv
+	dT53Qw==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1krdt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Wed, 09 Apr 2025 15:40:22 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-476783cbdb8so17417671cf.1
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Apr 2025 08:40:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744212809; x=1744817609;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TdxP6TrUHsK7q8J2aaqhZA0bVAluAt8YBqPZ1F5Nh/M=;
-        b=drDX2le0NSH2N00SH163+qO5KlyLRNTaO6gXXMVaz8VDtPuW5FBsMdOcmks55mltaD
-         U0Ypaa727DwKrGksA9ZqUEZdzZOE1srKqXhy93WOzfS+C3WcVeBNSOWTU8iY0vb0N84J
-         3ltLOBl9c9BSCTR/sPRrkJ17GE3q3OvHKOFz2Qeo2wh4jJA7e4xtJOvlNAQ1g0I77Y7a
-         bqiE1RruTl4jLVYXqWlcaFsC8QecJLgFRvqY08DvqL6F+yrcCemD5nG9VL3Q0trGUCzW
-         aIBOfh89xpggTBoRK7ly6lpZKFVTU7Ge8/OQhO9Drt6AOzqPo2ZkqQKno0Hi20lKdTKD
-         fXFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUL4WgTbyDhrBAVeRwVMVlpzlY9bxF5R0j4cCcYNmBbZjGL2tw9VFqokNVgJpM8t/iMj8xIZC4lXrPKne00VhY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIE+38Hsnnl9zen0QXUcjgANJ79726JOQaFYasAp2aoaMUJ70g
-	r+UdicBdy/hyrWSp+29sKun8vNhXGnRE0puuualm0CxQ2Nzytm9D1/YBOriy6QHWoZu5dyL44MR
-	Bwc3Ujw==
-X-Gm-Gg: ASbGncvPUuJ8ccxEWAorRzHjlwUwE9/En67tAg52hqtFVenWQdXHO5PnWr3itdTJCAV
-	ZcltRGmTIFZ+l6CbDHzdWQge0rg89BK0WEsrMZ3MZuGU+nsfryg1yFcnUYqIgLX09a3mJl5uQLG
-	rsm0nIyAl7tRbJH83vkSneQe8C0ttKRGwrGFsurlhfRUNM6ZaBbu9hQX9PId8xPIQWlq2VBTe8X
-	jhZ33BXXE5D0e7IIvwf+UjcOI8Eoq4rKak9lCtotsc7+1s++0Fhu/1dMp61KeAlp0oI7JL/aGqo
-	bkxJtvgJE/hQIyOADZ8FUXHiC4AX+m3jc//w4K+uDlPoF3w1QC3Vr4zYHQBlCQswDpwjFm4rS51
-	hzbAUxId+2YiPLhU=
-X-Google-Smtp-Source: AGHT+IG5+gUgH6JZIp3pam8VkwhVigzLkUy41JOWpO2smKuLgGu3fBa5poDZrwHn2BRIr+twrLkzKg==
-X-Received: by 2002:a05:6122:3c81:b0:516:230b:eec with SMTP id 71dfb90a1353d-527a91a11e8mr2877495e0c.5.1744212809132;
-        Wed, 09 Apr 2025 08:33:29 -0700 (PDT)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd7495bsm259961e0c.14.2025.04.09.08.33.28
-        for <linux-hardening@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1744213222; x=1744818022;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K9BPk28PAc9fisqkhvrEcPgWYuoMztzSJu7m7KRysU8=;
+        b=OmGsSOmHSrHHSrPow0O3oJOZtVKjdqLi2xFrm7kDKYUsZb423P5ipzdHW1cZ84dt9q
+         D0ZUCzyjZYB+C9y43EU/10J3NGI0N5Lqupbes52pYsQUuelC5rN81OMfuro8sQrKVDq7
+         Ytwf2Kxie4fSerDQ8zJQnpSPyv8VxOlIPfzf3uD7Lfo3bG0zjqFzictkVvxPZ1JPEcA6
+         DcQfUXjpP8EQKsNv+akTnrLBIbfY9HTAj3lJ99/ugcN0A1gGxamkry77ypGJuiYz0EnA
+         m8yHrzR2rAiC+BxK7ajD6ZHQMQU9hQPb+X9MBuct49LNqr2TzhtE+RP4omwKa8uL44Ih
+         P8cw==
+X-Forwarded-Encrypted: i=1; AJvYcCWAz4bSPPPxfbV5SUZ9tqOxh5Sm7FIAZJSaw+m+pc5iC7e4NknyCQV0V4UZ2LVRgfWigr6G824IplBzJAlpt3I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu6untIdsA0xBB7P0bAP3R1sek3elR47/cf6t7ihMm5ZgnuiAj
+	UrTET5YMcpxTtmN4Aw+3SvPRzTImSyfj0J9qwhCzIaC8rVDmWaDb1ArCDz5vJc0nqW6x0Gdmvdg
+	W6kr9YaW3FaDdRwX/Osz7OmAF7ICJ2GzWlZoIf+QEy2hakSr9p8vodPug6Gq1Fv99hAo=
+X-Gm-Gg: ASbGncvqnBari/px+h9Vq2LsAHBDtdpOu6vBG2TE1lMhxbWOY51zJQoLQVHDu0lkqUc
+	H+dhCYm6oM5ao/UmS7uQU0CeLtqfcksOm/dzqjqCSQZCcwg0Hgubj60acJLU2CR791P/irW1WAE
+	Med/8b9/yDnfdU0D/8GzkAIY1kKLaTkHTbG5LpnWguL0t2TaF92p/kCiGBZLttwIOUwMc3DEtPU
+	GFG3kRza+0BuufF2NANjyuuGE7sLvltcfshMFsTxYcZlgu88H1Kz4lRfEvZC+ncafEWnBpG7sKv
+	rkqPP1wdnVTQfZBiCRw/0PpAwYV4ZPyOhwoGcrHv8vbEUih9x8gLG28mLmpLZC8EOQ==
+X-Received: by 2002:a05:620a:2845:b0:7c0:9ac5:7f96 with SMTP id af79cd13be357-7c79cb32476mr192356685a.0.1744213221710;
+        Wed, 09 Apr 2025 08:40:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF0y2JAYIsBZUZsxYlHzS9wyRxq0XZG+P+f9vATezBrv2Np+gMPt+9chspODJu7JrDLBQu+kA==
+X-Received: by 2002:a05:620a:2845:b0:7c0:9ac5:7f96 with SMTP id af79cd13be357-7c79cb32476mr192355385a.0.1744213221343;
+        Wed, 09 Apr 2025 08:40:21 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbd34dbcsm922827a12.66.2025.04.09.08.40.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 08:33:28 -0700 (PDT)
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86d3907524cso2927429241.0
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Apr 2025 08:33:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXI0JczYz/aNvbusQyWhIMFudBQhCLf3Yxqd7m/PncySL4I2ZN4PKNMpJ2ph/3WwGCQVT5Orhjrq8U0YLo3J9A=@vger.kernel.org
-X-Received: by 2002:a05:6102:91c:b0:4c1:6feb:83aa with SMTP id
- ada2fe7eead31-4c9c41a2f70mr3107478137.9.1744212808088; Wed, 09 Apr 2025
- 08:33:28 -0700 (PDT)
+        Wed, 09 Apr 2025 08:40:20 -0700 (PDT)
+Message-ID: <9a12e042-487b-4937-a583-709f0c37ab12@oss.qualcomm.com>
+Date: Wed, 9 Apr 2025 17:40:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
- <202504081630.4CE88E855@keescook> <db50faff-7290-4193-b861-f60e36f1d1e3@sirena.org.uk>
-In-Reply-To: <db50faff-7290-4193-b861-f60e36f1d1e3@sirena.org.uk>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 9 Apr 2025 08:33:03 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjc+piYyUw36s4ttEkY32jVkxhRtyrt431wew7XcDS2Qg@mail.gmail.com>
-X-Gm-Features: ATxdqUE2pdW27qPIvkrpo9DrN9_CijkuWYa_if9ESQH0ro1aFZDLb4UaGrE4hZA
-Message-ID: <CAHk-=wjc+piYyUw36s4ttEkY32jVkxhRtyrt431wew7XcDS2Qg@mail.gmail.com>
-Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
-To: Mark Brown <broonie@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] drm/msm/a6xx: Get HBB dynamically, if available
+To: Connor Abbott <cwabbott0@gmail.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org
+References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
+ <20250409-topic-smem_dramc-v1-3-94d505cd5593@oss.qualcomm.com>
+ <CACu1E7GMf0Mx2ZX_t76h+b1CPin49LGix7c5uvoWaJZC3dKyOw@mail.gmail.com>
+ <c2dac38b-bbe5-4cd1-9d33-b4bba629d54b@oss.qualcomm.com>
+ <CACu1E7F71M0Z5KUdArRYbLEMXoS3jQEtp=0-4LEYFRysOsYZfA@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <CACu1E7F71M0Z5KUdArRYbLEMXoS3jQEtp=0-4LEYFRysOsYZfA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: aVExGB17sTHP-SWRFB-7Nr_uFy16v77A
+X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f694e6 cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=RexmrgqQAhuxw17nEtEA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22
+X-Proofpoint-GUID: aVExGB17sTHP-SWRFB-7Nr_uFy16v77A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504090099
 
-On Wed, 9 Apr 2025 at 05:20, Mark Brown <broonie@kernel.org> wrote:
->
-> Note that the patch is only disabling for build coverage builds where
-> the resulting binaries generally aren't going to actually be run.
+On 4/9/25 5:30 PM, Connor Abbott wrote:
+> On Wed, Apr 9, 2025 at 11:22 AM Konrad Dybcio
+> <konrad.dybcio@oss.qualcomm.com> wrote:
+>>
+>> On 4/9/25 5:12 PM, Connor Abbott wrote:
+>>> On Wed, Apr 9, 2025 at 10:48 AM Konrad Dybcio <konradybcio@kernel.org> wrote:
+>>>>
+>>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>>
+>>>> The Highest Bank address Bit value can change based on memory type used.
+>>>>
+>>>> Attempt to retrieve it dynamically, and fall back to a reasonable
+>>>> default (the one used prior to this change) on error.
+>>>>
+>>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>> ---
+>>>>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 22 ++++++++++++++++------
+>>>>  1 file changed, 16 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>>>> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..0cc397378c99db35315209d0265ad9223e8b55c7 100644
+>>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>>>> @@ -13,6 +13,7 @@
+>>>>  #include <linux/firmware/qcom/qcom_scm.h>
+>>>>  #include <linux/pm_domain.h>
+>>>>  #include <linux/soc/qcom/llcc-qcom.h>
+>>>> +#include <linux/soc/qcom/smem.h>
+>>>>
+>>>>  #define GPU_PAS_ID 13
+>>>>
+>>>> @@ -669,17 +670,22 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>>>>  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+>>>>  {
+>>>>         struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+>>>> +       u32 hbb = qcom_smem_dram_get_hbb();
+>>>> +       u32 ubwc_mode = adreno_gpu->ubwc_config.ubwc_swizzle & 1;
+>>>> +       u32 level2_swizzling_dis = !(adreno_gpu->ubwc_config.ubwc_swizzle & 2);
+>>>> +       u32 hbb_hi, hbb_lo;
+>>>> +
+>>>>         /*
+>>>>          * We subtract 13 from the highest bank bit (13 is the minimum value
+>>>>          * allowed by hw) and write the lowest two bits of the remaining value
+>>>>          * as hbb_lo and the one above it as hbb_hi to the hardware.
+>>>>          */
+>>>> -       BUG_ON(adreno_gpu->ubwc_config.highest_bank_bit < 13);
+>>>> -       u32 hbb = adreno_gpu->ubwc_config.highest_bank_bit - 13;
+>>>> -       u32 hbb_hi = hbb >> 2;
+>>>> -       u32 hbb_lo = hbb & 3;
+>>>> -       u32 ubwc_mode = adreno_gpu->ubwc_config.ubwc_swizzle & 1;
+>>>> -       u32 level2_swizzling_dis = !(adreno_gpu->ubwc_config.ubwc_swizzle & 2);
+>>>> +       if (hbb < 0)
+>>>> +               hbb = adreno_gpu->ubwc_config.highest_bank_bit;
+>>>
+>>> No. The value we expose to userspace must match what we program.
+>>> You'll break VK_EXT_host_image_copy otherwise.
+>>
+>> I didn't know that was exposed to userspace.
+>>
+>> The value must be altered either way - ultimately, the hardware must
+>> receive the correct information. ubwc_config doesn't seem to be const,
+>> so I can edit it there if you like it better.
+>>
+>> Konrad
+> 
+> Yes, you should be calling qcom_smem_dram_get_hbb() in
+> a6xx_calc_ubwc_config(). You can already see there's a TODO there to
+> plug it in.
 
-Well, there's a reason we do build coverage - we also want to test
-that the non-build coverage case builds.
+Does this look good instead?
 
-And it's not actually obvious that it does - it's in fact rather
-likely that the gcc plugin is broken in general, and it just so
-happens that it's the build bots that find it.
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index 0cc397378c99..ae8dbc250e6a 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -588,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
+ 
+ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+ {
++       u8 hbb;
++
+        gpu->ubwc_config.rgb565_predicator = 0;
+        gpu->ubwc_config.uavflagprd_inv = 0;
+        gpu->ubwc_config.min_acc_len = 0;
+@@ -636,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+            adreno_is_a690(gpu) ||
+            adreno_is_a730(gpu) ||
+            adreno_is_a740_family(gpu)) {
+-               /* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
+                gpu->ubwc_config.highest_bank_bit = 16;
+                gpu->ubwc_config.amsbc = 1;
+                gpu->ubwc_config.rgb565_predicator = 1;
+@@ -665,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+                gpu->ubwc_config.highest_bank_bit = 14;
+                gpu->ubwc_config.min_acc_len = 1;
+        }
++
++       /* Attempt to retrieve HBB data from SMEM, keep the above defaults in case of error */
++       hbb = qcom_smem_dram_get_hbb();
++       if (hbb < 0)
++               return;
++
++       gpu->ubwc_config.highest_bank_bit = hbb;
+ }
+ 
+ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
 
-Which is why I honestly would prefer to just disable the plugins in general.
 
-Because the problem is the plugin, not the build coverage.
-
-             Linus
+Konrad
