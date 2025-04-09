@@ -1,224 +1,121 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A38226772C
-	for <linux-hardening@vger.kernel.org>; Wed,  9 Apr 2025 15:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C52817A319;
+	Wed,  9 Apr 2025 15:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744213227; cv=none; b=t1i5iqONN4oAL1SCe9nEICOFRpMHZfElc6Rke/sklOob1+pzcJeGDW4O06+EYtbvVp7iB1ynRve3OX+SAndCRmsxoDDiVXXnYT/ThZu8deYLikbzOS11/ww4iVy9eI8rjNlNKRcOJpQYjV8pULGMi3jhfF1oFAoW8QHvmzWxGck=
+	t=1744213406; cv=none; b=rxgMlwb3mpJUmn2rG9GEzwdtrRdk2fLnLAsoSaTKSfvCBMSG8jFRDTvZZeh+9LZaEhhIkFqSHo2nBB4DpWsdT79wZqv6+lVBVVthQY46m1I+b2XQQiT6O08WtjUq0xWBbetH3yJZrbt4o6KpNqfnj2BWwmbRZP8Pr8SI5O5CGL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744213227; c=relaxed/simple;
-	bh=sr5q1zh9NSGY7PcWnFatTToY1SiCtDSZEZ2M8GV9h0o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sieKjW2BxOk5O8J9BJk9+q3YyZ+aZprfBZmSRoO8ktYOo8eWB2jp/ZeA9ZRZi4hueDm4EgN0eyb3Q1quyQRhDfjJ0tcf0QUIfL7LQarkgJRxiHvV6QlNP7SikWVpFIsDAZbDFV2MAHfz2zJ5Lr3PZdaod65K0DuxAEHsMcCjavU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ObUY/g/I; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ObUY/g/I"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5398xbI2002260
-	for <linux-hardening@vger.kernel.org>; Wed, 9 Apr 2025 15:40:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	K9BPk28PAc9fisqkhvrEcPgWYuoMztzSJu7m7KRysU8=; b=ObUY/g/IZ0oO6wDD
-	z6B3BmhNGOD2unIq3FYwV22xMwQXQmQgA7dbEF3FgKdNBj77UpJ7/LF3IYR+lVxD
-	uDxkDFLyUrSvm0ON0ukXup0Sxv606DVfH8SaZOPa7wVRFFBsvrrTcyL3scT1mXLg
-	qkZfYYHZkrSQQeCexNGm/Jfq2eC1CZjJmwmTcwFdQvT9bGwUQ/4R/SfKK6I9Qyjm
-	QEtTImpBUop7Grl/3EH9lL0irgqgKcfLbgkmXIYKjV8bIUdpuRClO78Mgc2encsm
-	Mk4z4hSgvgF9QHUR18j6xJ1NT7jF8IlJTMI8nrGU+MPm20mS5oGzZKvGR1QyYTjv
-	dT53Qw==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1krdt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 09 Apr 2025 15:40:22 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-476783cbdb8so17417671cf.1
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Apr 2025 08:40:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744213222; x=1744818022;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K9BPk28PAc9fisqkhvrEcPgWYuoMztzSJu7m7KRysU8=;
-        b=OmGsSOmHSrHHSrPow0O3oJOZtVKjdqLi2xFrm7kDKYUsZb423P5ipzdHW1cZ84dt9q
-         D0ZUCzyjZYB+C9y43EU/10J3NGI0N5Lqupbes52pYsQUuelC5rN81OMfuro8sQrKVDq7
-         Ytwf2Kxie4fSerDQ8zJQnpSPyv8VxOlIPfzf3uD7Lfo3bG0zjqFzictkVvxPZ1JPEcA6
-         DcQfUXjpP8EQKsNv+akTnrLBIbfY9HTAj3lJ99/ugcN0A1gGxamkry77ypGJuiYz0EnA
-         m8yHrzR2rAiC+BxK7ajD6ZHQMQU9hQPb+X9MBuct49LNqr2TzhtE+RP4omwKa8uL44Ih
-         P8cw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAz4bSPPPxfbV5SUZ9tqOxh5Sm7FIAZJSaw+m+pc5iC7e4NknyCQV0V4UZ2LVRgfWigr6G824IplBzJAlpt3I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyu6untIdsA0xBB7P0bAP3R1sek3elR47/cf6t7ihMm5ZgnuiAj
-	UrTET5YMcpxTtmN4Aw+3SvPRzTImSyfj0J9qwhCzIaC8rVDmWaDb1ArCDz5vJc0nqW6x0Gdmvdg
-	W6kr9YaW3FaDdRwX/Osz7OmAF7ICJ2GzWlZoIf+QEy2hakSr9p8vodPug6Gq1Fv99hAo=
-X-Gm-Gg: ASbGncvqnBari/px+h9Vq2LsAHBDtdpOu6vBG2TE1lMhxbWOY51zJQoLQVHDu0lkqUc
-	H+dhCYm6oM5ao/UmS7uQU0CeLtqfcksOm/dzqjqCSQZCcwg0Hgubj60acJLU2CR791P/irW1WAE
-	Med/8b9/yDnfdU0D/8GzkAIY1kKLaTkHTbG5LpnWguL0t2TaF92p/kCiGBZLttwIOUwMc3DEtPU
-	GFG3kRza+0BuufF2NANjyuuGE7sLvltcfshMFsTxYcZlgu88H1Kz4lRfEvZC+ncafEWnBpG7sKv
-	rkqPP1wdnVTQfZBiCRw/0PpAwYV4ZPyOhwoGcrHv8vbEUih9x8gLG28mLmpLZC8EOQ==
-X-Received: by 2002:a05:620a:2845:b0:7c0:9ac5:7f96 with SMTP id af79cd13be357-7c79cb32476mr192356685a.0.1744213221710;
-        Wed, 09 Apr 2025 08:40:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF0y2JAYIsBZUZsxYlHzS9wyRxq0XZG+P+f9vATezBrv2Np+gMPt+9chspODJu7JrDLBQu+kA==
-X-Received: by 2002:a05:620a:2845:b0:7c0:9ac5:7f96 with SMTP id af79cd13be357-7c79cb32476mr192355385a.0.1744213221343;
-        Wed, 09 Apr 2025 08:40:21 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbd34dbcsm922827a12.66.2025.04.09.08.40.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 08:40:20 -0700 (PDT)
-Message-ID: <9a12e042-487b-4937-a583-709f0c37ab12@oss.qualcomm.com>
-Date: Wed, 9 Apr 2025 17:40:18 +0200
+	s=arc-20240116; t=1744213406; c=relaxed/simple;
+	bh=y9uebcKW8YvKkKHt4Ltu6yUEyYoT0rCBCLeMKwit3eM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e1LHJc0mICJSmKfo4rRy03rLUeDkSCraxXHHSCDrZ293tWHedFgMcyStL98ZAr1XpVCSX/QPSt/Ov46Qt2PSBOkIQFS/nWoL68SCmfVPGRv7P+FPCEw+2AhhnO0kPr/EqQujgtrHIDDmspd6fKLzXf/VovaxXCGR21W46AqYoGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: z09WTXwoSD6gInyYwOsg3w==
+X-CSE-MsgGUID: qBZiBJvZShqOzDg+fyM8rg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56330918"
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="56330918"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:43:23 -0700
+X-CSE-ConnectionGUID: jBz6NS4OR62aMwAXaezCtA==
+X-CSE-MsgGUID: Ckj9YI5xSyu3GY5GKOussQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="128540658"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:43:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u2Xa8-0000000AmY0-3UpM;
+	Wed, 09 Apr 2025 18:43:16 +0300
+Date: Wed, 9 Apr 2025 18:43:16 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 03/14] mfd: Add Microchip ZL3073x support
+Message-ID: <Z_aVlIiT07ZDE2Kf@smile.fi.intel.com>
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-4-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] drm/msm/a6xx: Get HBB dynamically, if available
-To: Connor Abbott <cwabbott0@gmail.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org
-References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
- <20250409-topic-smem_dramc-v1-3-94d505cd5593@oss.qualcomm.com>
- <CACu1E7GMf0Mx2ZX_t76h+b1CPin49LGix7c5uvoWaJZC3dKyOw@mail.gmail.com>
- <c2dac38b-bbe5-4cd1-9d33-b4bba629d54b@oss.qualcomm.com>
- <CACu1E7F71M0Z5KUdArRYbLEMXoS3jQEtp=0-4LEYFRysOsYZfA@mail.gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <CACu1E7F71M0Z5KUdArRYbLEMXoS3jQEtp=0-4LEYFRysOsYZfA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: aVExGB17sTHP-SWRFB-7Nr_uFy16v77A
-X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f694e6 cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=RexmrgqQAhuxw17nEtEA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22
-X-Proofpoint-GUID: aVExGB17sTHP-SWRFB-7Nr_uFy16v77A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
- malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504090099
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409144250.206590-4-ivecera@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 4/9/25 5:30 PM, Connor Abbott wrote:
-> On Wed, Apr 9, 2025 at 11:22 AM Konrad Dybcio
-> <konrad.dybcio@oss.qualcomm.com> wrote:
->>
->> On 4/9/25 5:12 PM, Connor Abbott wrote:
->>> On Wed, Apr 9, 2025 at 10:48 AM Konrad Dybcio <konradybcio@kernel.org> wrote:
->>>>
->>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>>>
->>>> The Highest Bank address Bit value can change based on memory type used.
->>>>
->>>> Attempt to retrieve it dynamically, and fall back to a reasonable
->>>> default (the one used prior to this change) on error.
->>>>
->>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>>> ---
->>>>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 22 ++++++++++++++++------
->>>>  1 file changed, 16 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->>>> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..0cc397378c99db35315209d0265ad9223e8b55c7 100644
->>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->>>> @@ -13,6 +13,7 @@
->>>>  #include <linux/firmware/qcom/qcom_scm.h>
->>>>  #include <linux/pm_domain.h>
->>>>  #include <linux/soc/qcom/llcc-qcom.h>
->>>> +#include <linux/soc/qcom/smem.h>
->>>>
->>>>  #define GPU_PAS_ID 13
->>>>
->>>> @@ -669,17 +670,22 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
->>>>  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
->>>>  {
->>>>         struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
->>>> +       u32 hbb = qcom_smem_dram_get_hbb();
->>>> +       u32 ubwc_mode = adreno_gpu->ubwc_config.ubwc_swizzle & 1;
->>>> +       u32 level2_swizzling_dis = !(adreno_gpu->ubwc_config.ubwc_swizzle & 2);
->>>> +       u32 hbb_hi, hbb_lo;
->>>> +
->>>>         /*
->>>>          * We subtract 13 from the highest bank bit (13 is the minimum value
->>>>          * allowed by hw) and write the lowest two bits of the remaining value
->>>>          * as hbb_lo and the one above it as hbb_hi to the hardware.
->>>>          */
->>>> -       BUG_ON(adreno_gpu->ubwc_config.highest_bank_bit < 13);
->>>> -       u32 hbb = adreno_gpu->ubwc_config.highest_bank_bit - 13;
->>>> -       u32 hbb_hi = hbb >> 2;
->>>> -       u32 hbb_lo = hbb & 3;
->>>> -       u32 ubwc_mode = adreno_gpu->ubwc_config.ubwc_swizzle & 1;
->>>> -       u32 level2_swizzling_dis = !(adreno_gpu->ubwc_config.ubwc_swizzle & 2);
->>>> +       if (hbb < 0)
->>>> +               hbb = adreno_gpu->ubwc_config.highest_bank_bit;
->>>
->>> No. The value we expose to userspace must match what we program.
->>> You'll break VK_EXT_host_image_copy otherwise.
->>
->> I didn't know that was exposed to userspace.
->>
->> The value must be altered either way - ultimately, the hardware must
->> receive the correct information. ubwc_config doesn't seem to be const,
->> so I can edit it there if you like it better.
->>
->> Konrad
+On Wed, Apr 09, 2025 at 04:42:39PM +0200, Ivan Vecera wrote:
+> Add base MFD driver for Microchip Azurite ZL3073x chip family.
+> These chips provide DPLL and PHC (PTP) functionality and they can
+> be connected over I2C or SPI bus.
 > 
-> Yes, you should be calling qcom_smem_dram_get_hbb() in
-> a6xx_calc_ubwc_config(). You can already see there's a TODO there to
-> plug it in.
+> The MFD driver provide basic communication and synchronization
+> over the bus and common functionality that are used by the DPLL
+> driver (later in this series) and by the PTP driver (will be
+> added later).
+> 
+> The chip family is characterized by following properties:
+> * 2 separate DPLL units (channels)
+> * 5 synthesizers
+> * 10 input pins (references)
+> * 10 outputs
+> * 20 output pins (output pin pair shares one output)
+> * Each reference and output can act in differential or single-ended
+>   mode (reference or output in differential mode consumes 2 pins)
+> * Each output is connected to one of the synthesizers
+> * Each synthesizer is driven by one of the DPLL unit
 
-Does this look good instead?
+...
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 0cc397378c99..ae8dbc250e6a 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -588,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
- 
- static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
- {
-+       u8 hbb;
-+
-        gpu->ubwc_config.rgb565_predicator = 0;
-        gpu->ubwc_config.uavflagprd_inv = 0;
-        gpu->ubwc_config.min_acc_len = 0;
-@@ -636,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
-            adreno_is_a690(gpu) ||
-            adreno_is_a730(gpu) ||
-            adreno_is_a740_family(gpu)) {
--               /* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
-                gpu->ubwc_config.highest_bank_bit = 16;
-                gpu->ubwc_config.amsbc = 1;
-                gpu->ubwc_config.rgb565_predicator = 1;
-@@ -665,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
-                gpu->ubwc_config.highest_bank_bit = 14;
-                gpu->ubwc_config.min_acc_len = 1;
-        }
-+
-+       /* Attempt to retrieve HBB data from SMEM, keep the above defaults in case of error */
-+       hbb = qcom_smem_dram_get_hbb();
-+       if (hbb < 0)
-+               return;
-+
-+       gpu->ubwc_config.highest_bank_bit = hbb;
- }
- 
- static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+> +/*
+> + * Regmap ranges
+> + */
+> +#define ZL3073x_PAGE_SIZE	128
+> +#define ZL3073x_NUM_PAGES	16
+> +#define ZL3073x_PAGE_SEL	0x7F
+> +
+> +/*
+> + * Regmap range configuration
+> + *
+> + * The device uses 7-bit addressing and has 16 register pages with
+> + * range 0x00-0x7f. The register 0x7f in each page acts as page
+> + * selector where bits 0-3 contains currently selected page.
+> + */
+> +static const struct regmap_range_cfg zl3073x_regmap_ranges[] = {
+> +	{
+> +		.range_min	= 0,
+
+This still has the same issue, you haven't given a chance to me to reply
+in v1 thread. I'm not going to review this as it's not settled down yet.
+Let's first discuss the questions you have in v1.
+
+> +		.range_max	= ZL3073x_NUM_PAGES * ZL3073x_PAGE_SIZE,
+> +		.selector_reg	= ZL3073x_PAGE_SEL,
+> +		.selector_mask	= GENMASK(3, 0),
+> +		.selector_shift	= 0,
+> +		.window_start	= 0,
+> +		.window_len	= ZL3073x_PAGE_SIZE,
+> +	},
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Konrad
