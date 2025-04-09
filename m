@@ -1,90 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F34225DAFC;
-	Wed,  9 Apr 2025 15:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC841482F5;
+	Wed,  9 Apr 2025 15:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211526; cv=none; b=E/VrrWM3UalNazvWnBbrS94SjDEROsupXbMFRCle8c9h79uPtGl1EQ56Qb44wW6WIz0oPtpujsEkF/8EcnL/h6k4BWp0EUwxRpwi2nNs/9ietIQEp0379pQop7Qb1GUEma3bLx4qqpBotsM8xN1W8czYOj+j9mgzT1cL8Z1vr60=
+	t=1744211566; cv=none; b=ZiG/rimj/lz9rjXYWqpA/plMfHqPAclvyemrdySfMnvfPj8raxv5qEWs+rTYuQKI+1bxP8bN5FXUB1tQYgFu4axqECFBLiXn1eZLxitq0xCzV2+R7xzAtWtJgL82mKVaYsVlUPLaDz6ygZtWS55RZPulZGtkeb2Ujdw7QRXw59Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211526; c=relaxed/simple;
-	bh=V9QuYbvBT5ghNE+9yNY1nau6WUkN8UbS/ahNkHmcztE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KmfBTT+iPHEHmJiSvj5FQsj9g91Rci5Gjmvq5GmJQNXULK5NYI4oKrYL4Ay29pUdckwZUIMU+i5sQij0z+m9Z5nl8djQtccimo+e1s+OHB1rHCw8xggm4sykJoQOCFUVoEM1/v93hMFpKXW2FuH9tM3nN1vUaEPcP8l9L9qjNIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUlciLw6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744211566; c=relaxed/simple;
+	bh=vu2exUFThJwbvoVqWPV9NMmJKB0SNuLELwxV1uAi9N0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OgqUFdQbBRl2M36iTy5sKYD6z/AxpEAbppYjuGojWALYuYEiTIOI6iKZba3SwsIBUCDk7sUmJx8JKhbimCNYg+qB2dyJ9eljvs+cbH4YMxYXgF7c0QFEyc4RXCYLHRPm52gN2NdTt0mul9hMCsMNMKczRnoOhWookXg24ABOkqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RTdF9M8r; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUlciLw6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88812C4CEE2;
-	Wed,  9 Apr 2025 15:12:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744211525;
-	bh=V9QuYbvBT5ghNE+9yNY1nau6WUkN8UbS/ahNkHmcztE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fUlciLw6EEtNwdC5sNo6FVFrvfsgc0ISvdpDykm0/QvlpZnC6qs40WTbaxwR90kJv
-	 foVcsjlQ2BX1HKVWHO/SVtG7XKOMirKHTLmAwyeHXPKcTB8Zw/K5QePEPQCl9CqOvN
-	 tdQ3i3MRlHoOJTnPP7+/wJCcCX5hFQNzFIXrI223analUDecLxCfhvYT3F08L3Ucgw
-	 GSFgXImNPYeWTa2GqDzKIs+KpvOEwGxI5vECmQnCUYnCFoypD7XNqxxXFe2NDFeQT3
-	 wvoe17Ta4MFkaqMwM7tnCbM12pIpflcgql44+LhJextOLb2VfJ4ba1YkaVPfnrDZq4
-	 O6v1BS/mZL1KA==
-From: Kees Cook <kees@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kees Cook <kees@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-hardening@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] hardening: Disable GCC randstruct for COMPILE_TEST
-Date: Wed,  9 Apr 2025 08:11:58 -0700
-Message-Id: <20250409151154.work.872-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RTdF9M8r"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7373aa99e2cso636611b3a.0;
+        Wed, 09 Apr 2025 08:12:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744211564; x=1744816364; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=spXIMkoF1Z09BVLFL9QdSknj0ntJh/yAq4L0FidyZ90=;
+        b=RTdF9M8rqk8EtRykJWwbrhflSXRWPCVk/F0iHzSuJXsoVk2CYUJE2pP8A4uXlbdb+h
+         qUqAWvc4Z1DDBx4obYB3nNwS3cSAIM8Kd+BZHaJKVxhCfPXs6glY0tUh8oDU4LkVsX7L
+         sORUb9Vrttkc9xhHg/KMO2vpVJLBVZwS58pAsQAMTAyERQLRYf/+2wuIXBUiyWZqDjb6
+         N4P4h/tQ+nvET9V6jF7mI/6lstYWLTOJyKXJ9rxY1seQm2h3KpwDf5ASeE0hgGq/xfkU
+         BM0cOZmUQgyrDFJUGJd0asRry7+E40Y8FpMcj/S3BDrKxa22Cmg+3VW/1SS159IfOYlQ
+         yEgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744211564; x=1744816364;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=spXIMkoF1Z09BVLFL9QdSknj0ntJh/yAq4L0FidyZ90=;
+        b=uRoY8TqETWJEZU8KLRoZvRxoxrgobsY2FkyygOdELDmK9u/Fa+ZrugulDyzVtN8usN
+         5oktAp9WJNWPvw8mRWJeg7uP9iiXup2EwY83ISQpJU+JFjHyDiFChP7Gg6MAmA7MtYsm
+         JL7V8WtQAwtNAQ2iPS8V3Iqt2OKtHaVpE5GLhudiJQE9dc2EUGhl4Vww8VaX04SOtilD
+         Qe10k8wYWKlgd+mNe6+Of1W2EUgsTEW2MdqQkCO95S2hqkwxy1aEn/YbZTqsB1g90J99
+         ozinZ8dnyrUm8JhNGJkcHQBopNAdr+G1sTaNoUmdTUB7STq4AhYGuFOl+d0+vH+ihAXc
+         fswA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+7ej9mnPvDUzD+qCpmvADmreGE1OMokwxYwVpNkToAvbPEi/5bQDeEYiUAG9V0m5NaO0sKszuASAlxyrMxujd@vger.kernel.org, AJvYcCUhanjA7ZZUp4oE4LykdBBpZ2uzF4Sj/S9KZtfPqyNHsZJGLh6CV0aiYclWuWM61i36j+WR5AAB8T0Z+uEc@vger.kernel.org, AJvYcCXMvNEgNybanVVp+Abk7jJ9Hes36/m5w/FBRZenqU8z0t9xgFN6owsezA/TAtorQqzKIQFMYJPm3rhkLeck@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCL2yAEaCGC/vkeKPOyn/6S02BBay8aggmjq02zEQeT5UrwxdT
+	ID3fXA+7ZLHJatXnFE/IjkEFmDfYdq4hIZj6ev80oa6Fgj7OMOQzWtbVu6FOwDMGuQcRc7vO9l6
+	HLJmiEiPkAQpG9H81S05ut/jfQtk=
+X-Gm-Gg: ASbGnctTp67n5n5eRWRKWU8D6Y/IQnEKAUjFhompe+BWWfXgJ6Fdpz8R8q5VECIKum3
+	8m065KPm76kNvq1N98pHSOw66T2N27sSkCHuWeMFcHoVTmNrWWdl3zxd1Kd8QZEECQt9WEV/hwg
+	wyXdMz82TYfKS8hlJyfovaMQ==
+X-Google-Smtp-Source: AGHT+IGmvjw/CZ0ahGJko3AXY/wq4QVFoHwj3QvuU8T+/npoxIO1lkE99naDDV8VaKBZcMlrX9YQHA07xRRq12EhXRk=
+X-Received: by 2002:a05:6a00:3c96:b0:730:8526:5db2 with SMTP id
+ d2e1a72fcca58-73bae54fb51mr1430135b3a.5.1744211563880; Wed, 09 Apr 2025
+ 08:12:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1392; i=kees@kernel.org; h=from:subject:message-id; bh=V9QuYbvBT5ghNE+9yNY1nau6WUkN8UbS/ahNkHmcztE=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnf+uwet/+4NUHquhfDu+dL1vKkWZ/xZ78rfaot93OIo Ygqc6d6RykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwEQEDzD8r9v+trQ57IEgk69U 3qUSmy32vyYUBt3JCt65NHuvYunJIwz/lI+9n17oo8w9rVD7TNJrrr03kl099/os3JZekGuXOkW YGwA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com> <20250409-topic-smem_dramc-v1-3-94d505cd5593@oss.qualcomm.com>
+In-Reply-To: <20250409-topic-smem_dramc-v1-3-94d505cd5593@oss.qualcomm.com>
+From: Connor Abbott <cwabbott0@gmail.com>
+Date: Wed, 9 Apr 2025 11:12:31 -0400
+X-Gm-Features: ATxdqUHV6LVmuZ52LZQ7mUM3HFrIL30_gejAbDkXbhXaGiKJi8H-XzjJ57AVTyE
+Message-ID: <CACu1E7GMf0Mx2ZX_t76h+b1CPin49LGix7c5uvoWaJZC3dKyOw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] drm/msm/a6xx: Get HBB dynamically, if available
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There is a GCC crash bug in the randstruct for latest GCC versions that
-is being tickled by landlock[1]. Temporarily disable GCC randstruct for
-COMPILE_TEST builds to unbreak CI systems for the coming -rc2. This can
-be restored once the bug is fixed.
+On Wed, Apr 9, 2025 at 10:48=E2=80=AFAM Konrad Dybcio <konradybcio@kernel.o=
+rg> wrote:
+>
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>
+> The Highest Bank address Bit value can change based on memory type used.
+>
+> Attempt to retrieve it dynamically, and fall back to a reasonable
+> default (the one used prior to this change) on error.
+>
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 22 ++++++++++++++++------
+>  1 file changed, 16 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/=
+adreno/a6xx_gpu.c
+> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..0cc397378c99db35315209d02=
+65ad9223e8b55c7 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/firmware/qcom/qcom_scm.h>
+>  #include <linux/pm_domain.h>
+>  #include <linux/soc/qcom/llcc-qcom.h>
+> +#include <linux/soc/qcom/smem.h>
+>
+>  #define GPU_PAS_ID 13
+>
+> @@ -669,17 +670,22 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu=
+ *gpu)
+>  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+>  {
+>         struct adreno_gpu *adreno_gpu =3D to_adreno_gpu(gpu);
+> +       u32 hbb =3D qcom_smem_dram_get_hbb();
+> +       u32 ubwc_mode =3D adreno_gpu->ubwc_config.ubwc_swizzle & 1;
+> +       u32 level2_swizzling_dis =3D !(adreno_gpu->ubwc_config.ubwc_swizz=
+le & 2);
+> +       u32 hbb_hi, hbb_lo;
+> +
+>         /*
+>          * We subtract 13 from the highest bank bit (13 is the minimum va=
+lue
+>          * allowed by hw) and write the lowest two bits of the remaining =
+value
+>          * as hbb_lo and the one above it as hbb_hi to the hardware.
+>          */
+> -       BUG_ON(adreno_gpu->ubwc_config.highest_bank_bit < 13);
+> -       u32 hbb =3D adreno_gpu->ubwc_config.highest_bank_bit - 13;
+> -       u32 hbb_hi =3D hbb >> 2;
+> -       u32 hbb_lo =3D hbb & 3;
+> -       u32 ubwc_mode =3D adreno_gpu->ubwc_config.ubwc_swizzle & 1;
+> -       u32 level2_swizzling_dis =3D !(adreno_gpu->ubwc_config.ubwc_swizz=
+le & 2);
+> +       if (hbb < 0)
+> +               hbb =3D adreno_gpu->ubwc_config.highest_bank_bit;
 
-Suggested-by: Mark Brown <broonie@kernel.org>
-Link: https://lore.kernel.org/all/20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org/ [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-hardening@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org
----
- security/Kconfig.hardening | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No. The value we expose to userspace must match what we program.
+You'll break VK_EXT_host_image_copy otherwise.
 
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index c17366ce8224..3fe9d7b945c4 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -344,7 +344,7 @@ config CC_HAS_RANDSTRUCT
- 
- choice
- 	prompt "Randomize layout of sensitive kernel structures"
--	default RANDSTRUCT_FULL if COMPILE_TEST && (GCC_PLUGINS || CC_HAS_RANDSTRUCT)
-+	default RANDSTRUCT_FULL if COMPILE_TEST && CC_HAS_RANDSTRUCT
- 	default RANDSTRUCT_NONE
- 	help
- 	  If you enable this, the layouts of structures that are entirely
--- 
-2.34.1
+Connor
 
+> +       hbb -=3D 13;
+> +       BUG_ON(hbb < 0);
+> +       hbb_hi =3D hbb >> 2;
+> +       hbb_lo =3D hbb & 3;
+>
+>         gpu_write(gpu, REG_A6XX_RB_NC_MODE_CNTL,
+>                   level2_swizzling_dis << 12 |
+> @@ -2467,6 +2473,10 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *d=
+ev)
+>         bool is_a7xx;
+>         int ret;
+>
+> +       /* We need data from SMEM to retrieve HBB in set_ubwc_config() */
+> +       if (!qcom_smem_is_available())
+> +               return ERR_PTR(-EPROBE_DEFER);
+> +
+>         a6xx_gpu =3D kzalloc(sizeof(*a6xx_gpu), GFP_KERNEL);
+>         if (!a6xx_gpu)
+>                 return ERR_PTR(-ENOMEM);
+>
+> --
+> 2.49.0
+>
