@@ -1,110 +1,190 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C5E1D90C8;
-	Wed,  9 Apr 2025 05:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B2E1D5AB7
+	for <linux-hardening@vger.kernel.org>; Wed,  9 Apr 2025 06:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744177454; cv=none; b=MbeLzWKe3W2BjscZpT4UHxrvxMVzScrVJ8QVO5eA6P4GJaosA87blA1yG32bY20BxqYC1uL0v+MB8Wy6iVRuHcueX1x1RCRmtcL/ThOcjJSScwOGsgrXYevTqCKM7Bzz5JbXlRL0NGJlK9acaH+vnfvVuKQM9wfBjNKQuHPXhb8=
+	t=1744180275; cv=none; b=OmnMz6DW/yr5PDqJk2bWp1C+eNH1JaXUoDsV+IShgZkgke1h6OqCHIONVSSWH0/UaGEd83e46dXt3qa9U4vHHDHuWUuPIeCRfZVXUkshVzky/mkNzADCpR/74KCE71AN4letxuEbALWZPE3bVpwQXfpaShfHASXIg5DDgdoJUAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744177454; c=relaxed/simple;
-	bh=lEYsufm0+7mvYuVM3gBjDtCxGFGACrLKvzyGryCbAnI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=rOOz0AuZauoWeHj6mhr+r1jGGsw4wdG82mHcDWSsxhoGD5pOSOA9bFRFhNiSEm3MYz5qJvHNYQQdvldUp/Onhvbygblj05jMyQTDWENVPMlHacDScSz+7b4b5gsyosRxEtiU3PaZxmvorlWFTiBF3RX7d98X+nlGxcWO5lKMNQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=YAtUPhmF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Z8iuNanf; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1744180275; c=relaxed/simple;
+	bh=c2PprSJYcvSOOVD7CPC11hdDQnxIfNPG8Zd5bRYVz0w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qIU6fTmHR48B+37KEcoSxcj9mOQkMGIiXmg3bV7DQXISZdgr3xD6XPxqHSdhBRkmhrBTq5HYQ3SKLRTPRkFuS2QNuPwkMkSSl5R2cYZrZQ0/nL4Zrz8m0RZzim0QCDNFmj/ekEGZqPAKGdmi8uLzQyMIjCYOA0KmR7bAZzz5y/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UhWb3kCB; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="YAtUPhmF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Z8iuNanf"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.phl.internal (Postfix) with ESMTP id C548B1380123;
-	Wed,  9 Apr 2025 01:44:09 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-12.internal (MEProxy); Wed, 09 Apr 2025 01:44:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1744177449;
-	 x=1744263849; bh=2rvvqH5wXGrIeZGfrzLbu4zZifmWg0jaJShmK4jU5Nc=; b=
-	YAtUPhmFi1ZU66qtkugwlCiKlphA4Y8eFVXCQVTHTXw0MRUKVNmK8qZffsu+N+SW
-	twzJ9GZkSGRjEb4QCtxAvoo+HJYHw1Pn4wVy+rklo/IM9N8ZSAO7gsZ4ikZNGbiE
-	IddMkcCvFMSXG5TdR4FXSuDiVeZXeq6EGFEXmoR05UEVIJFIbWjlqKbnJXDrIuPW
-	TbGT1D78GewxBIs/r4AcIYa1SByQagJoNCYl+/Eig2NLIy1zivd0w5ArZd3HzdTu
-	KD8r/730ykG9i4UowNM+8xZtlsq9L0vd4VvABgF8hFnE7C5sux8RnXhN5d0OmwrZ
-	5ULgIjMioKGe5l1TIPm65Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744177449; x=
-	1744263849; bh=2rvvqH5wXGrIeZGfrzLbu4zZifmWg0jaJShmK4jU5Nc=; b=Z
-	8iuNanf5/GSIPKG7mcIeYVIe0cQRfKSO1eW1nEpIH2qgZsF8oW/isDI+qwSRAceB
-	mlJxguvHPBF0yP6WQDKeVZSunmOrNfPKN0OPmbkvxOKMkcktfFTY3m4FWxzZ97C5
-	hMBZJ5vPKnRiBogSyTZWMYK6hMjK31M4PfLRG4pCvE+cma7sbcwor0wEAEkTYQTW
-	DA00WcwRK2dTuTlJGZfPlADVsrguJRLoHLW6SF/7dPibvyZ55M6/DqcocGK+rJ0X
-	RCiCSRn0n6QQL87B6zw6Uy5X4yPn1+LPKYz25YP9e5HjsZD3QGb3okgSbLx/PP9a
-	M52b7bgZhBOuH/fRklAsA==
-X-ME-Sender: <xms:KQn2Zx8vQeVL5gRSAgrdBLyizYmOW1D8zwKlXt2IQ_QB8fNdBci93Q>
-    <xme:KQn2Z1sGocdtkZ3CTqUSJA_xVvgCJjynmHuuRqIPZY8u2pAbZG0jHUa_5-XLOwncb
-    45VeFcPQ-0DyJtbpoY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdehudekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    kedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhitgesughighhikhhougdrnh
-    gvthdprhgtphhtthhopehgnhhorggtkhesghhoohhglhgvrdgtohhmpdhrtghpthhtohep
-    sghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvvghssehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggr
-    thhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvg
-    hrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsvggtuhhrihhthi
-    dqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:KQn2Z_DOiWjcg553ukFV597umIgqqXTJBzDkms_TnTgcwpvfGlqqsQ>
-    <xmx:KQn2Z1covHxfamwQ5Yxey7uAhHoH1n22acJtaJLsHXV-_de8qg5RzA>
-    <xmx:KQn2Z2Mb0wa4n0gSlgUubVn-kGp_54ImLjUsA3Cw0VIwTqQfUKyySg>
-    <xmx:KQn2Z3k3qCyiG6lBwKk5YAZhZEfkKh9C9-XgLECBn5vcWCOz_UYs2Q>
-    <xmx:KQn2Z03RjPxEO6ywmwKR3EpSREnhgrcnJ30ykf2PDUGBBqDGwRSd7KjH>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 1C9F42220073; Wed,  9 Apr 2025 01:44:09 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UhWb3kCB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744180272;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pxsCkg7T9hdK7RNaWY5esSIdR5AuOm6Jdp3figUFvGs=;
+	b=UhWb3kCBoTrTyrW2Xv88miMQPu5pfwZ+uBNXgT3aOEyh72qC5XdbW/DDj2iKBBVDniA1SP
+	MeCJZ2P0zs780e8oTPvlkJWpQkZGmBbuOkWTYxZL8WuQINY772eXwklKjdUuYyKxb+U3vU
+	NiYwnI/kawRixh3OvGBq2tDDSxvMxPA=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-17-RdlbYl45Mk6sCPkLfLCfvA-1; Wed,
+ 09 Apr 2025 02:31:09 -0400
+X-MC-Unique: RdlbYl45Mk6sCPkLfLCfvA-1
+X-Mimecast-MFC-AGG-ID: RdlbYl45Mk6sCPkLfLCfvA_1744180267
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6896A180035E;
+	Wed,  9 Apr 2025 06:31:06 +0000 (UTC)
+Received: from [10.44.32.72] (unknown [10.44.32.72])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DCB171955DCE;
+	Wed,  9 Apr 2025 06:31:01 +0000 (UTC)
+Message-ID: <333a12a8-157b-47f1-9602-e68e7d52b4c2@redhat.com>
+Date: Wed, 9 Apr 2025 08:31:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T00187b92ccd5616f
-Date: Wed, 09 Apr 2025 07:43:38 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <kees@kernel.org>, "Mark Brown" <broonie@kernel.org>
-Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
- =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org
-Message-Id: <a379dc7d-5bb0-415b-b690-1c2d9106d7ca@app.fastmail.com>
-In-Reply-To: <202504081630.4CE88E855@keescook>
-References: 
- <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
- <202504081630.4CE88E855@keescook>
-Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
+To: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org
+Cc: Michal Schmidt <mschmidt@redhat.com>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250407172836.1009461-1-ivecera@redhat.com>
+ <20250407172836.1009461-2-ivecera@redhat.com>
+ <9b38d033-72aa-4fb0-b1ee-41bbe3884040@kernel.org>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <9b38d033-72aa-4fb0-b1ee-41bbe3884040@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Wed, Apr 9, 2025, at 01:32, Kees Cook wrote:
 
-> I can reproduce this for GCC 14, but I can't reproduce this with GCC
-> 13. Which minor release is failing for you? My GCC 13 is:
-> gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
 
-I see it with "x86_64-linux-gnu-gcc-12 (Debian 12.2.0-14) 12.2.0"
-(cross-compiling from arm64).
+On 07. 04. 25 7:53 odp., Krzysztof Kozlowski wrote:
+> On 07/04/2025 19:28, Ivan Vecera wrote:
+>> This adds base MFD driver for Microchip Azurite ZL3073x chip family.
+> 
+> Please do not use "This commit/patch/change", but imperative mood. See
+> longer explanation here:
+> https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
 
-     Arnd
+Will fix in v2.
+
+>> These chips provide DPLL and PHC (PTP) functionality and they can
+>> be connected over I2C or SPI bus.
+>>
+> 
+> ...
+> 
+>> +/**
+>> + * zl3073x_get_regmap_config - return pointer to regmap config
+>> + *
+>> + * Returns pointer to regmap config
+>> + */
+>> +const struct regmap_config *zl3073x_get_regmap_config(void)
+>> +{
+>> +	return &zl3073x_regmap_config;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(zl3073x_get_regmap_config, "ZL3073X");
+>> +
+>> +struct zl3073x_dev *zl3073x_dev_alloc(struct device *dev)
+>> +{
+>> +	struct zl3073x_dev *zldev;
+>> +
+>> +	return devm_kzalloc(dev, sizeof(*zldev), GFP_KERNEL);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(zl3073x_dev_alloc, "ZL3073X");
+>> +
+>> +int zl3073x_dev_init(struct zl3073x_dev *zldev)
+>> +{
+>> +	devm_mutex_init(zldev->dev, &zldev->lock);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(zl3073x_dev_init, "ZL3073X");
+>> +
+>> +void zl3073x_dev_exit(struct zl3073x_dev *zldev)
+>> +{
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(zl3073x_dev_exit, "ZL3073X");
+> 
+> Why do you add empty exports?
+
+It is filled in the later commits but yeah I will include the function 
+once it will be necessary.
+
+>> diff --git a/drivers/mfd/zl3073x-spi.c b/drivers/mfd/zl3073x-spi.c
+>> new file mode 100644
+>> index 0000000000000..a6b9a366a7585
+>> --- /dev/null
+>> +++ b/drivers/mfd/zl3073x-spi.c
+>> @@ -0,0 +1,71 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/spi/spi.h>
+>> +#include "zl3073x.h"
+>> +
+>> +static const struct spi_device_id zl3073x_spi_id[] = {
+>> +	{ "zl3073x-spi", },
+>> +	{ /* sentinel */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(spi, zl3073x_spi_id);
+>> +
+>> +static const struct of_device_id zl3073x_spi_of_match[] = {
+>> +	{ .compatible = "microchip,zl3073x-spi" },
+> 
+> 
+> You need bindings. If they are somewhere in this patchset then you need
+> correct order so before users (see DT submitting patches).
+
+Yes, there are. I will reorder the patches in v2 and also split the 
+whole series into several ones.
+
+>> +static void zl3073x_spi_remove(struct spi_device *spidev)
+>> +{
+>> +	struct zl3073x_dev *zldev;
+>> +
+>> +	zldev = spi_get_drvdata(spidev);
+>> +	zl3073x_dev_exit(zldev);
+>> +}
+>> +
+>> +static struct spi_driver zl3073x_spi_driver = {
+>> +	.driver = {
+>> +		.name = "zl3073x-spi",
+>> +		.of_match_table = of_match_ptr(zl3073x_spi_of_match),
+> 
+> Drop of_match_ptr, you have warnings here.
+
+Ack, will avoid.
+
+>> +	},
+>> +	.probe = zl3073x_spi_probe,
+>> +	.remove = zl3073x_spi_remove,
+>> +	.id_table = zl3073x_spi_id,
+>> +};
+>> +
+> 
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
+
