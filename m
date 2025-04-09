@@ -1,154 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E056C276033;
-	Wed,  9 Apr 2025 14:48:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F34225DAFC;
+	Wed,  9 Apr 2025 15:12:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210088; cv=none; b=hrdV6BzMai8F3cVngkl9zxc0tZNem3ys6Jd/SZ6SnG10v3SVaUCBQyw0D2BR5V4NtFJZTLfcSsZa1eRLKrOAoR5Y4JXjWy712lJCZaLBaL5U4texbqdSPwVrXbWraZh/Py5sSvW+aNQwz1zf04LP/Gu2InccGnMTKBt5iY5tJwE=
+	t=1744211526; cv=none; b=E/VrrWM3UalNazvWnBbrS94SjDEROsupXbMFRCle8c9h79uPtGl1EQ56Qb44wW6WIz0oPtpujsEkF/8EcnL/h6k4BWp0EUwxRpwi2nNs/9ietIQEp0379pQop7Qb1GUEma3bLx4qqpBotsM8xN1W8czYOj+j9mgzT1cL8Z1vr60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744210088; c=relaxed/simple;
-	bh=rQBB6jbnrS8Sm508XLIWz1L1qf5uNl92Y7dQesXjv3k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Zt0Ir9qECjEh0tfYr4HO6MwM4D47oqRLEKrYEpVdZpPzLJeZq1Cwc40zmf5caMb+gz4r3xJ+gcu4roqh7+owPWZXukZJr7JADNEOFac6r5XEcWhz+Km6D6FaCr6dZk2to54S0vs06dozRxsMEqZC+mQzjs4nXdFd+v2wMjFb0wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WV0dZW4C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744211526; c=relaxed/simple;
+	bh=V9QuYbvBT5ghNE+9yNY1nau6WUkN8UbS/ahNkHmcztE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KmfBTT+iPHEHmJiSvj5FQsj9g91Rci5Gjmvq5GmJQNXULK5NYI4oKrYL4Ay29pUdckwZUIMU+i5sQij0z+m9Z5nl8djQtccimo+e1s+OHB1rHCw8xggm4sykJoQOCFUVoEM1/v93hMFpKXW2FuH9tM3nN1vUaEPcP8l9L9qjNIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUlciLw6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WV0dZW4C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1408AC4CEE7;
-	Wed,  9 Apr 2025 14:48:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUlciLw6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88812C4CEE2;
+	Wed,  9 Apr 2025 15:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744210087;
-	bh=rQBB6jbnrS8Sm508XLIWz1L1qf5uNl92Y7dQesXjv3k=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WV0dZW4CSd0AuRUJv0RUpzEH0MXFmfeLxiNdP3cvjgGNBxRndAsyi+4UKAtb3dqnx
-	 sKEB4iyR0FicQQGORRInrAsMAUNyleQCu9bPQ3njRkoI8tJWJpnGE+HBMTBfwOHS+b
-	 6BRF1cjnqroZ0B7FaWOYyBzds4od2K7NG6ag8RnzK05nVEiX9cHMYv+PNP+FMRMQzt
-	 51tvSyJPz0F/npR9jhrjuB3PD4lpsHIoA6mSJt8g6Dkcb20nvA+cJrNpBIlTbLdU5x
-	 xj/tCWPxN5PSAIyg8WAdonw4abN6SIS5LuLAn6SKKwzeFgaqLnR1WuBslAekCx6mr8
-	 P5uZb8U7MnGrQ==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Wed, 09 Apr 2025 16:47:32 +0200
-Subject: [PATCH 4/4] drm/msm/mdss: Get HBB dynamically, if available
+	s=k20201202; t=1744211525;
+	bh=V9QuYbvBT5ghNE+9yNY1nau6WUkN8UbS/ahNkHmcztE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fUlciLw6EEtNwdC5sNo6FVFrvfsgc0ISvdpDykm0/QvlpZnC6qs40WTbaxwR90kJv
+	 foVcsjlQ2BX1HKVWHO/SVtG7XKOMirKHTLmAwyeHXPKcTB8Zw/K5QePEPQCl9CqOvN
+	 tdQ3i3MRlHoOJTnPP7+/wJCcCX5hFQNzFIXrI223analUDecLxCfhvYT3F08L3Ucgw
+	 GSFgXImNPYeWTa2GqDzKIs+KpvOEwGxI5vECmQnCUYnCFoypD7XNqxxXFe2NDFeQT3
+	 wvoe17Ta4MFkaqMwM7tnCbM12pIpflcgql44+LhJextOLb2VfJ4ba1YkaVPfnrDZq4
+	 O6v1BS/mZL1KA==
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	linux-hardening@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] hardening: Disable GCC randstruct for COMPILE_TEST
+Date: Wed,  9 Apr 2025 08:11:58 -0700
+Message-Id: <20250409151154.work.872-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-topic-smem_dramc-v1-4-94d505cd5593@oss.qualcomm.com>
-References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
-In-Reply-To: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Dmitry Baryshkov <lumag@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744210063; l=3179;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=KAQqkKm/ZpU7QkabKJNN+6New53pE5zJNqI4Pg3sAhM=;
- b=5+hWG/GPJdQC6qZafGnzY1Y5DEOaRiytTwCA4reEDXK9gFZgHVE5c+Y1lKnKc7oFT/56MK5em
- ekBsY4I9fiMCQivNW6orLRhBfAHUyQQYjU1IGx/WmWy04i1dKtvC/Pr
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1392; i=kees@kernel.org; h=from:subject:message-id; bh=V9QuYbvBT5ghNE+9yNY1nau6WUkN8UbS/ahNkHmcztE=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnf+uwet/+4NUHquhfDu+dL1vKkWZ/xZ78rfaot93OIo Ygqc6d6RykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwEQEDzD8r9v+trQ57IEgk69U 3qUSmy32vyYUBt3JCt65NHuvYunJIwz/lI+9n17oo8w9rVD7TNJrrr03kl099/os3JZekGuXOkW YGwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+There is a GCC crash bug in the randstruct for latest GCC versions that
+is being tickled by landlock[1]. Temporarily disable GCC randstruct for
+COMPILE_TEST builds to unbreak CI systems for the coming -rc2. This can
+be restored once the bug is fixed.
 
-The Highest Bank address Bit value can change based on memory type used.
-
-Attempt to retrieve it dynamically, and fall back to a reasonable
-default (the one used prior to this change) on error.
-
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Suggested-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/all/20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org/ [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_mdss.c | 35 +++++++++++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 6 deletions(-)
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Paul Moore <paul@paul-moore.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: linux-hardening@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org
+---
+ security/Kconfig.hardening | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_mdss.c b/drivers/gpu/drm/msm/msm_mdss.c
-index dcb49fd30402b80edd2cb5971f95a78eaad6081f..c9b05c7cad9fcf3140ff994c1572c4f4cd508206 100644
---- a/drivers/gpu/drm/msm/msm_mdss.c
-+++ b/drivers/gpu/drm/msm/msm_mdss.c
-@@ -15,6 +15,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/reset.h>
-+#include <linux/soc/qcom/smem.h>
+diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+index c17366ce8224..3fe9d7b945c4 100644
+--- a/security/Kconfig.hardening
++++ b/security/Kconfig.hardening
+@@ -344,7 +344,7 @@ config CC_HAS_RANDSTRUCT
  
- #include "msm_mdss.h"
- #include "msm_kms.h"
-@@ -166,8 +167,14 @@ static int _msm_mdss_irq_domain_add(struct msm_mdss *msm_mdss)
- static void msm_mdss_setup_ubwc_dec_20(struct msm_mdss *msm_mdss)
- {
- 	const struct msm_mdss_data *data = msm_mdss->mdss_data;
--	u32 value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle) |
--		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit);
-+	u32 hbb = qcom_smem_dram_get_hbb() - 13;
-+	u32 value;
-+
-+	if (hbb < 0)
-+		hbb = data->highest_bank_bit;
-+
-+	value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle) |
-+		MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(hbb);
- 
- 	if (data->ubwc_bank_spread)
- 		value |= MDSS_UBWC_STATIC_UBWC_BANK_SPREAD;
-@@ -181,8 +188,14 @@ static void msm_mdss_setup_ubwc_dec_20(struct msm_mdss *msm_mdss)
- static void msm_mdss_setup_ubwc_dec_30(struct msm_mdss *msm_mdss)
- {
- 	const struct msm_mdss_data *data = msm_mdss->mdss_data;
--	u32 value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle & 0x1) |
--		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit);
-+	u32 hbb = qcom_smem_dram_get_hbb() - 13;
-+	u32 value;
-+
-+	if (hbb < 0)
-+		hbb = data->highest_bank_bit;
-+
-+	value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle & 0x1) |
-+		MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(hbb);
- 
- 	if (data->macrotile_mode)
- 		value |= MDSS_UBWC_STATIC_MACROTILE_MODE;
-@@ -199,8 +212,14 @@ static void msm_mdss_setup_ubwc_dec_30(struct msm_mdss *msm_mdss)
- static void msm_mdss_setup_ubwc_dec_40(struct msm_mdss *msm_mdss)
- {
- 	const struct msm_mdss_data *data = msm_mdss->mdss_data;
--	u32 value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle) |
--		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit);
-+	u32 hbb = qcom_smem_dram_get_hbb() - 13;
-+	u32 value;
-+
-+	if (hbb < 0)
-+		hbb = data->highest_bank_bit;
-+
-+	value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle) |
-+		MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(hbb);
- 
- 	if (data->ubwc_bank_spread)
- 		value |= MDSS_UBWC_STATIC_UBWC_BANK_SPREAD;
-@@ -538,6 +557,10 @@ static int mdss_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	int ret;
- 
-+	/* We need data from SMEM to retrieve HBB in _setup_ubwc_dec_() */
-+	if (!qcom_smem_is_available())
-+		return -EPROBE_DEFER;
-+
- 	mdss = msm_mdss_init(pdev, is_mdp5);
- 	if (IS_ERR(mdss))
- 		return PTR_ERR(mdss);
-
+ choice
+ 	prompt "Randomize layout of sensitive kernel structures"
+-	default RANDSTRUCT_FULL if COMPILE_TEST && (GCC_PLUGINS || CC_HAS_RANDSTRUCT)
++	default RANDSTRUCT_FULL if COMPILE_TEST && CC_HAS_RANDSTRUCT
+ 	default RANDSTRUCT_NONE
+ 	help
+ 	  If you enable this, the layouts of structures that are entirely
 -- 
-2.49.0
+2.34.1
 
