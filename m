@@ -1,55 +1,55 @@
 Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E5C1E5018;
-	Wed,  9 Apr 2025 19:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F7E165F1A;
+	Wed,  9 Apr 2025 19:29:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226797; cv=none; b=KPNKBPw5/XD1aTf67A2WEaNpC+215YIkKYcCbtsew8XfIxo6zs6AeKUeoFkQ9shMV8jBDAkywHhZ3rqyyfR90TQayzoFJkaW38KmtFOsNzgf8lh2hXLby79Sa7MhA5XGyQAmLqxsZ5LkpwcQlxYzuWEPj8XoJTdZkFj2fsrXPJQ=
+	t=1744226974; cv=none; b=hXWPSlxBOvygZmx7zTvoiOS6sljet0ZFkkF3hMbkaXxl/BG+hc1P+VnvtWtwiWoMGU/ip/9aOICMKw80Zz/qMOoQV55mAX36KYm/O2+QzPbBJiojYNgX+9lt1kB6GibIVHBvZ5EdwKJbJFDkJqS8qNebR88EW/lrw9+U2j3YpT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226797; c=relaxed/simple;
-	bh=X1SfMEfZvzUHxVnR6pOqX7AHRwOT8TnCctzXPRDQKLk=;
+	s=arc-20240116; t=1744226974; c=relaxed/simple;
+	bh=/33JDmW+PxsRyF3vd7Wh4tmmtBi36TC/ft8P/UrztgY=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=igYRKgYl9MQ6zBCMcD7phZLNm6kUcjMai7ReJmzcqr9fsZNtFvskMUcq4M5YZzyWOJqLa+WGAT9ccKYYcciejqEsSmhwniZW1R5L5z7X/g2rblJdsvOIfGCPaoqmU9i74LqdMVEjGZEL6bY2wzBiQUjfV4JzVfTdXP9GXE8ZChQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=COIQkGHh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HS/y6q1Q; arc=none smtp.client-ip=103.168.172.156
+	 Subject:Content-Type; b=SYXH4jG4yxkoF6EGSZmoOSXqCuwWCxTqnEUaIbjF2r9eEtd8h1dJomHZ0q6pwSEoqaeiqBlSO32TX09FpjNMHpKZTvi/vYWcYX4tFXmdLvVbejc0aVRGgJieb9bF1l/U6SSOR8INF3Lkvo5hpPnVMljnpdPfnLKdjGpY/53Gd2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=SZVS2X+S; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MGt2wZC/; arc=none smtp.client-ip=103.168.172.156
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="COIQkGHh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HS/y6q1Q"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="SZVS2X+S";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MGt2wZC/"
 Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id BEC7711401DD;
-	Wed,  9 Apr 2025 15:26:33 -0400 (EDT)
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 54F9D11401DF;
+	Wed,  9 Apr 2025 15:29:32 -0400 (EDT)
 Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-12.internal (MEProxy); Wed, 09 Apr 2025 15:26:33 -0400
+  by phl-compute-12.internal (MEProxy); Wed, 09 Apr 2025 15:29:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1744226793;
-	 x=1744313193; bh=ttmrteYlvyEshuI4BJblUw5d++ZbDVerZYrZVyNtdLQ=; b=
-	COIQkGHh5fvRVnMFnFjGz/DcmGmgVS+LK/tUjf+/XiIvNlXOgEdpI4YLFb8SNtNp
-	h8L3iFGO6CreCFn+MGuRsxoNq+v5Vv1gey6zPcP9DWYi2/Vr/hPwHLGZJFtPKyXF
-	0bCvkq65tKg49oE3vIs3Kzl/rgM288quqRbyifXhju4nMmfL7jhL6ou3/EHHgc9w
-	Umz5UGS/K0LqaeAHXC5f8cZmc/x2VyxN+idO69M5wG/BTs+V5JrGIcf4YJVTx1tg
-	zlZikYwCyXoeV0iG9WDOALbaMsDneDBbJbLsIZcLpIsIXLUpFuCeJtmv7AojECOL
-	V3I8xY235/cL81vlHa33vA==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744226972;
+	 x=1744313372; bh=7LeM8fTejAmZLunIFrf51zCFnY/PxkuNIPidaV8t9E8=; b=
+	SZVS2X+SXF/xI6ETW3YUrp1+nOPW3P3YCOXZsI99XSr4Oq0Bx+9o7wOiPyN9BUf5
+	QTTHK6Q5a30QD2kDE1P5bPi7NwKIepgeEyVeIlW7EaXedIJtXBITlVxx/88PHYH1
+	/pxoUji0xkGcF1viRLTQr3Wx7O8rRFgr7iup/SYaSgjn+8UWE6HpivjnTcbg57Bd
+	309apBy/Tzg/R5lJ/dxRZikefqgcx13YFwERlPRWVu0F+sCxAHM3QlynzVpj3K3a
+	UjCRcOD2FplJBSsDIVmz6RiTzqadQJcUf3XyqXWPSQjZZ0+sArIIflMj0+OqO10F
+	bBG9mB82FLJx72sGPDKVcA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744226793; x=
-	1744313193; bh=ttmrteYlvyEshuI4BJblUw5d++ZbDVerZYrZVyNtdLQ=; b=H
-	S/y6q1QLydTA19jhLtCx9n9xl/as+Xm2ddC1saP1X2d7/EqfU0v7BWDBhgW9vPo7
-	QsdDZvbW+go11uUnBq7YfmuE25YiRz7uDRuSy4cQVQBDVrT/Xf4M1IzdeQVTdm0j
-	Kky2Sy2N+j6X+MFLKvOeKVuPAoKLybxuqUUJPj+jFsO0UIExlmpFzo/G4he0hA27
-	7P/2sBsYH1K8c6WO8nAh0ygQl6fT1DOy21epV6Gntn4VbLChIaRFv/e6UpFS4P4c
-	EYbeWMLiDnpoGDRHcZ7oTeFkryRDJGruspU65w4isHMApzqdYfXyfvDgTuLz4Os1
-	EVDgccLWoTmP3vs3oCIBA==
-X-ME-Sender: <xms:6cn2Z1LtdPSto2YqEf9fYuN6j3_uoU6xCoZB_urDFpRnamfMrOTiUw>
-    <xme:6cn2ZxLUjk7rUNRf5QPwH1XxTd_2sMmWIYCPr0MQY7aRk-Ay2UxhWfwEALpsaH-T7
-    OIo-SEKTop1yr_0Tq8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeikeefucetufdoteggodetrf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744226972; x=
+	1744313372; bh=7LeM8fTejAmZLunIFrf51zCFnY/PxkuNIPidaV8t9E8=; b=M
+	Gt2wZC/Vedbg9H8OvDlh2J9HdQS9iF+dB5FYV520GjIY5bCcUKhBIejDGcL3YPwN
+	g0cPxl8uOwJaQ9OXZj1dep4PSZ2TZIJRJfPsIlSwwK7J7PkIR0EsTfZggMJDLaVb
+	5vvqLlchL5Mdqk1BNazl0+hXk25oyc8wtXkzFJ2lusR+jtKgryNfRyZiJL63q1Ah
+	A5K461r4GiDKHIYmaeg0e86RTU8lpnbt4Pwjiri0xRIYkrzj2PcXp1Qeh2uCDhrq
+	tIbYZsoCqrFLZV6zSZFU4OBx6muOKrCDkv9BeoLhIyJDFuggQtsXpQmj7PgvNLmr
+	V4E7gVKSY5tXEd8K5wykQ==
+X-ME-Sender: <xms:m8r2Z4IDKxBcEDfYGDYslx0jUkXueEdDQvXueMqzKLgGxpukJDjZLA>
+    <xme:m8r2Z4JmRcd0bWpheClZBW7M-qrnMDGY_tTENCYN2lm3Ttlyo4W2PVq_dGT2jclFj
+    M34ezDpy7nx5I609no>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeikeegucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
     gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
@@ -57,22 +57,22 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeikeefucetufdote
     gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
     fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
     hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    kedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhitgesughighhikhhougdrnh
-    gvthdprhgtphhtthhopehgnhhorggtkhesghhoohhglhgvrdgtohhmpdhrtghpthhtohep
-    sghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvvghssehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggr
-    thhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvg
-    hrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsvggtuhhrihhthi
-    dqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:6cn2Z9vPUNmhyu2XAMrgmvsqXs2T_Ua_IlQiq-8OLIB8fdAeb1zxMg>
-    <xmx:6cn2Z2au7u513ss2xv_dybWyNl98GaZIlxaDkA73CGhribHz3odJtA>
-    <xmx:6cn2Z8apm6La2l9U5REZnRRiI__0dF-6uLtPWBvVf6iHrQ02BrN-vA>
-    <xmx:6cn2Z6DJPc7_OsytJwJYrv2JunbkYFHWHrkKtXeYzjUjYhO8XC8pFA>
-    <xmx:6cn2Z8xLO1XmQQXRNfKKrhtE09ArOCDVMrWwo3YLvOGiJAUIHtTMx7bh>
+    udegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnihgtohhlrghssehfjhgrsh
+    hlvgdrvghupdhrtghpthhtoheprghnughrvgihkhhnvhhlsehgmhgrihhlrdgtohhmpdhr
+    tghpthhtohepughvhihukhhovhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepjhhush
+    htihhnshhtihhtthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepmhhorhgsohesghho
+    ohhglhgvrdgtohhmpdhrtghpthhtohepkhgrshgrnhdquggvvhesghhoohhglhgvghhroh
+    huphhsrdgtohhmpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehmrghsrghhihhrohihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnrghthh
+    grnheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:m8r2Z4vJ3WXAHXrvKXd5B3xKv4UAtE2V-BrbJEZAyq1B4dzTfpijvA>
+    <xmx:m8r2Z1YeiT1XCtilSnIsx6V2-MzbggW-b6mGOWfQy9AEZpRDFmlT5A>
+    <xmx:m8r2Z_byLixda4QM1ei16kxOQ2Y7JUi5RRFxBC3Vzf0ThsHM5YccDg>
+    <xmx:m8r2ZxAT9c3e6CGKtCSEv5jY1K8fvNyLiQKw-tehgk1U77NzNctBFg>
+    <xmx:nMr2Z5lFihtWtcgwl8O9IIHMPAftIujBP4HeUpKPp9ywwLH-kGjpPnka>
 Feedback-ID: i56a14606:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 0703C2220075; Wed,  9 Apr 2025 15:26:33 -0400 (EDT)
+	id 7B78D2220073; Wed,  9 Apr 2025 15:29:31 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -80,45 +80,47 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T00187b92ccd5616f
-Date: Wed, 09 Apr 2025 21:24:15 +0200
+X-ThreadId: T654dc7563e4388c4
+Date: Wed, 09 Apr 2025 21:28:22 +0200
 From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Mark Brown" <broonie@kernel.org>,
- "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc: "Kees Cook" <kees@kernel.org>,
- =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org
-Message-Id: <3c3365f2-96f8-40c1-ab8b-2bd17b9b7d87@app.fastmail.com>
-In-Reply-To: <815b2990-570a-4603-b33f-2af1f0851434@sirena.org.uk>
-References: 
- <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
- <202504081630.4CE88E855@keescook>
- <db50faff-7290-4193-b861-f60e36f1d1e3@sirena.org.uk>
- <CAHk-=wjc+piYyUw36s4ttEkY32jVkxhRtyrt431wew7XcDS2Qg@mail.gmail.com>
- <a9a459c2-674d-43dc-9e27-41de0471f602@sirena.org.uk>
- <CAHk-=whKEuQQh2JymabBQLrLs=pEfx0qYVmUnYZRq_tOFj90sA@mail.gmail.com>
- <815b2990-570a-4603-b33f-2af1f0851434@sirena.org.uk>
-Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
+To: "Kees Cook" <kees@kernel.org>
+Cc: "Andrew Morton" <akpm@linux-foundation.org>,
+ "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Nathan Chancellor" <nathan@kernel.org>,
+ "Nicolas Schier" <nicolas@fjasle.eu>, "Dmitry Vyukov" <dvyukov@google.com>,
+ "Andrey Konovalov" <andreyknvl@gmail.com>, linux-kbuild@vger.kernel.org,
+ linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
+ "Bill Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Message-Id: <6f7e3436-8ae8-473d-be64-c962366ca5c8@app.fastmail.com>
+In-Reply-To: <202504090919.6DE21CFA7A@keescook>
+References: <20250409160251.work.914-kees@kernel.org>
+ <32bb421a-1a9e-40eb-9318-d8ca1a0f407f@app.fastmail.com>
+ <202504090919.6DE21CFA7A@keescook>
+Subject: Re: [PATCH] gcc-plugins: Remove SANCOV plugin
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 9, 2025, at 20:09, Mark Brown wrote:
-> On Wed, Apr 09, 2025 at 10:42:19AM -0700, Linus Torvalds wrote:
+On Wed, Apr 9, 2025, at 18:19, Kees Cook wrote:
+> On Wed, Apr 09, 2025 at 06:16:58PM +0200, Arnd Bergmann wrote:
+>> On Wed, Apr 9, 2025, at 18:02, Kees Cook wrote:
+>> 
+>> >  config KCOV
+>> >  	bool "Code coverage for fuzzing"
+>> >  	depends on ARCH_HAS_KCOV
+>> > -	depends on CC_HAS_SANCOV_TRACE_PC || GCC_PLUGINS
+>> > +	depends on CC_HAS_SANCOV_TRACE_PC
+>> 
+>> So this dependency would also disappear. I think either way is fine.
+>> 
+>> The rest of the patch is again identical to my version.
 >
-> Yeah.  The other problem we have is that AFAIK unlike clang we don't
-> really have people actively working on GCC coverage specifically,
-> everyone mostly just assumes everyone else is doing it since GCC is the
-> default (me being as guilty of that as everyone else here).  The work
-> Arnd's doing is the nearest thing I'm aware of but that's more
-> intermittent and I gather his toolchains don't have plugins enabled
-> which wouldn't help here.
+> Ah! How about you keep the patch as part of your gcc-8.1 clean up, then?
+> That seems more clear, etc.
 
-Right, I don't think there is any sensible way to support plugins
-with my cross compilers, because that requires building the plugin
-on a developer's machine and link it against the compiler I statically
-linked against a specific libstdc++ to avoid runtime compatibility
-problems.
+Sure, I can probably keep that all in a branch of the asm-generic
+tree, or alternatively send it through the kbuild tree.
+
+Shall I include the patch to remove the structleak plugin as well?
 
        Arnd
