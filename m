@@ -1,49 +1,49 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA761E1E00
-	for <linux-hardening@vger.kernel.org>; Thu, 10 Apr 2025 10:23:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACDC28134D
+	for <linux-hardening@vger.kernel.org>; Thu, 10 Apr 2025 10:29:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744280633; cv=none; b=uN6stt4HnLD6EQN82hjXLJeIGkzOK8ySo+S32A6hw1wx2Q6ZkI1xm8yb/NNBKenCv3Tiy+XKqIB70P8yigpCVFYihpPtEwTw71Dpp1p/VG7ACaiztHI7EkOpW/N/ymvR5VMsSfGe/nZTiNM7ziPohqVjvm65+i1v4UZSKmEBcwU=
+	t=1744280956; cv=none; b=fFhUGxTS8kxfnTMbelg+c4W0gIYsYujLLERrZpvdZdz8nzhoBeH6eLEnTUiywsxBosIyAD4nBdOGOYpU3pb/iHY3xT51m0XpSVYlvFpBs4WLF/EvTK9qkIegiAtwijSRC31Er0a6EaZHKYc9y26NKmE1GwUwE/jkAoapjOr8gYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744280633; c=relaxed/simple;
-	bh=KFFGsaJ42NneK7JhtvnEybxvw/Sz33e6bm09QFRxBRc=;
+	s=arc-20240116; t=1744280956; c=relaxed/simple;
+	bh=T2YpW2T64hC3dx1YdyYMPNHuqxtbkydXN6gtVnUJ2Pw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OJgOHtFVusEgdiBtr7Hgbok+cTocmEsWHtBMBBq5eiZuETtz1R2XEk/2X+9OBDjw0SRrmpBRmgwlTMOoT+YTMQ+HVh/BzcMSaYvqsfPftRCHY+1pwVabMzHRncjFfRaR/2u5ZEwpr40855Ulpb7mfhI+ayTlDEVun4W67BYqH28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hocVkP6L; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=FCW/BNtJpn94AaViTnbbGua3lC74aPhjLtJiihd6QuzuH0TiM5kj48FpH722obJh/HTj+fgMf95Jwc4gX+XZLV+LmkJuIx6pzMHDwR+q6jYc1fLcKBbJa/3BwDKmRjjVrsktblG9AhpMdZQpKtkKDDDJdlbrtKMClKnUilD4F7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IYsFAeFT; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hocVkP6L"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IYsFAeFT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744280630;
+	s=mimecast20190719; t=1744280953;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5Cmcl/WkdnX++J14o4N9FMLdimmmWjtXNPGTUQE37cs=;
-	b=hocVkP6LqrthbNfl9whnd7wy3JhaKX6xulJKn3WL5oz6SO6IROsZNGTqOrGuldeQYrM/4+
-	bNkbRl23/1EAwC+gCRpLLcjZg4tm/ULS2DLUdP7bof01v31i0QHySk399EO7VGHaqWqAeR
-	JPaHWlqnvhBB2PKhbP2PDC9JElOmx8A=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=e1hKyPdATUu7KyOVtsLJLvQEfHei49HiqTvsEP6q4sI=;
+	b=IYsFAeFTTVXD/w+w+b0efwa83OdQpfi4Mf/BX2fFl9SqgKFDUc340IOUtxITxEXy3ilQh1
+	CfM5Zw2tuYuWK+Lx45jLk7UBqIJFm42Rxhvj2zMcTL4GH3WEeWCczyg2pwo9k4b2F/JMqM
+	7uPnf4WUoZELfNksK7TC18fxzGHMiNs=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-D1m_GYS7PTGtphfHMR4Rjg-1; Thu,
- 10 Apr 2025 06:23:47 -0400
-X-MC-Unique: D1m_GYS7PTGtphfHMR4Rjg-1
-X-Mimecast-MFC-AGG-ID: D1m_GYS7PTGtphfHMR4Rjg_1744280625
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-682-GkIFOQlDN2GVBVJp31Iz8A-1; Thu,
+ 10 Apr 2025 06:29:07 -0400
+X-MC-Unique: GkIFOQlDN2GVBVJp31Iz8A-1
+X-Mimecast-MFC-AGG-ID: GkIFOQlDN2GVBVJp31Iz8A_1744280945
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E51DC1809CA3;
-	Thu, 10 Apr 2025 10:23:44 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1AAEC1956087;
+	Thu, 10 Apr 2025 10:29:05 +0000 (UTC)
 Received: from [10.44.33.222] (unknown [10.44.33.222])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 07EC63001D11;
-	Thu, 10 Apr 2025 10:23:39 +0000 (UTC)
-Message-ID: <40239de9-7552-41d1-9ee4-152ece6f33bc@redhat.com>
-Date: Thu, 10 Apr 2025 12:23:38 +0200
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CCD7219560AD;
+	Thu, 10 Apr 2025 10:29:00 +0000 (UTC)
+Message-ID: <b4d22372-ae85-421c-8ce4-669787160da2@redhat.com>
+Date: Thu, 10 Apr 2025 12:28:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,9 +51,10 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/28] mfd: zl3073x: Add components versions register defs
-To: Krzysztof Kozlowski <krzk@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
+Subject: Re: [PATCH 16/28] dt-bindings: dpll: Add support for Microchip
+ Azurite chip family
+To: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org
+Cc: Michal Schmidt <mschmidt@redhat.com>,
  Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
  Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
@@ -64,121 +65,95 @@ Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
  <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 References: <20250407172836.1009461-1-ivecera@redhat.com>
- <20250407172836.1009461-6-ivecera@redhat.com>
- <a5d2e1eb-7b98-4909-9505-ec93fe0c3aac@lunn.ch>
- <22b9f197-2f98-43c7-9cc9-c748e80078b0@redhat.com>
- <5af77349-5a76-4557-839b-d9ac643f5368@kernel.org>
+ <20250407173149.1010216-7-ivecera@redhat.com>
+ <7dfede37-2434-4892-8c8d-4d005fa1072b@kernel.org>
+ <280e8a8e-b68f-4536-b9a4-4e924dde0783@redhat.com>
+ <b65daab2-8184-45f4-af18-8499e80fbc04@kernel.org>
 Content-Language: en-US
 From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <5af77349-5a76-4557-839b-d9ac643f5368@kernel.org>
+In-Reply-To: <b65daab2-8184-45f4-af18-8499e80fbc04@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
 
 
-On 10. 04. 25 9:11 dop., Krzysztof Kozlowski wrote:
-> On 09/04/2025 08:44, Ivan Vecera wrote:
->> On 07. 04. 25 11:09 odp., Andrew Lunn wrote:
->>> On Mon, Apr 07, 2025 at 07:28:32PM +0200, Ivan Vecera wrote:
->>>> Add register definitions for components versions and report them
->>>> during probe.
->>>>
->>>> Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
->>>> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
->>>> ---
->>>>    drivers/mfd/zl3073x-core.c | 35 +++++++++++++++++++++++++++++++++++
->>>>    1 file changed, 35 insertions(+)
->>>>
->>>> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
->>>> index 39d4c8608a740..b3091b00cffa8 100644
->>>> --- a/drivers/mfd/zl3073x-core.c
->>>> +++ b/drivers/mfd/zl3073x-core.c
->>>> @@ -1,10 +1,19 @@
->>>>    // SPDX-License-Identifier: GPL-2.0-only
->>>>    
->>>> +#include <linux/bitfield.h>
->>>>    #include <linux/module.h>
->>>>    #include <linux/unaligned.h>
->>>>    #include <net/devlink.h>
->>>>    #include "zl3073x.h"
->>>>    
->>>> +/*
->>>> + * Register Map Page 0, General
->>>> + */
->>>> +ZL3073X_REG16_DEF(id,			0x0001);
->>>> +ZL3073X_REG16_DEF(revision,		0x0003);
->>>> +ZL3073X_REG16_DEF(fw_ver,		0x0005);
->>>> +ZL3073X_REG32_DEF(custom_config_ver,	0x0007);
+On 10. 04. 25 9:01 dop., Krzysztof Kozlowski wrote:
+> On 09/04/2025 09:19, Ivan Vecera wrote:
 >>>> +
->>>>    /*
->>>>     * Regmap ranges
->>>>     */
->>>> @@ -159,10 +168,36 @@ EXPORT_SYMBOL_NS_GPL(zl3073x_dev_alloc, "ZL3073X");
->>>>    
->>>>    int zl3073x_dev_init(struct zl3073x_dev *zldev)
->>>>    {
->>>> +	u16 id, revision, fw_ver;
->>>>    	struct devlink *devlink;
->>>> +	u32 cfg_ver;
->>>> +	int rc;
->>>>    
->>>>    	devm_mutex_init(zldev->dev, &zldev->lock);
->>>>    
->>>> +	scoped_guard(zl3073x, zldev) {
+>>>> +maintainers:
+>>>> +  - Ivan Vecera <ivecera@redhat.com>
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    enum:
+>>>> +      - microchip,zl3073x-i2c
+>>>> +      - microchip,zl3073x-spi
 >>>
->>> Why the scoped_guard? The locking scheme you have seems very opaque.
+>>> 1. No, you do not get two compatibles. Only one.
 >>
->> We are read the HW registers in this block and the access is protected
->> by this device lock. Regmap locking will be disabled in v2 as this is
+>> Will split to two files, one for i2c and one for spi.
 > 
-> Reading ID must be protected by mutex? Why and how?
+> No. One device, one compatible.
 
-Yes, the ID is read from the hardware register and HW access functions 
-are protected by zl3073x_dev->lock. The access is not protected by 
-regmap locking schema. Set of registers are indirect and are accessed by 
-mailboxes where multiple register accesses need to be done atomically.
-This is the reason why regmap locking is not sufficient.
+OK, get it now. I thought that I need to have separate compatible for 
+each bus access type.
 
-> What is a "device lock"?
-
-zl3073x_dev->lock
-
-Sorry for confusing.
-
->> not sufficient.
+>>> 2. What is 'x'? Wildcard? If so, drop and use specific compatibles.
 >>
->>>> +		rc = zl3073x_read_id(zldev, &id);
->>>> +		if (rc)
->>>> +			return rc;
->>>> +		rc = zl3073x_read_revision(zldev, &revision);
->>>> +		if (rc)
->>>> +			return rc;
->>>> +		rc = zl3073x_read_fw_ver(zldev, &fw_ver);
->>>> +		if (rc)
->>>> +			return rc;
->>>> +		rc = zl3073x_read_custom_config_ver(zldev, &cfg_ver);
->>>> +		if (rc)
->>>> +			return rc;
->>>
->>> Could a parallel operation change the ID? Upgrade the firmware
->>> version?
->>>
->>> 	Andrew
->>
->> No, but register access functions require the device lock to be held.
->> See above.
+>> Microchip refers to the ZL3073x as a family of compatible DPLL chips
+>> with the same features. There is no need to introduce separate
+>> compatible string for each of them.
 > 
-> Andrew comments stay valid here. This is weird need of locking and your
-> explanation is very vague.
+> So a wildcard, thus drop. Use full product names. Google search gives me
+> no products for ZL3073x but gives me ZL30735.
 
-See above why custom locking schema is necessary.
+I will use more appropriate microchip,azurite compatible.
 
-> BTW, do not send v2 before people respond to your comments in reasonable
-> time. You just send 28 patchset and expect people to finish review after
-> one day.
+>>
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +required:
+>>>> +  - compatible
+>>>> +  - reg
+>>>> +
+>>>> +allOf:
+>>>> +  - $ref: /schemas/dpll/dpll-device.yaml
+>>>> +
+>>>> +unevaluatedProperties: false
+>>>> +
+>>>> +examples:
+>>>> +  - |
+>>>> +    i2c {
+>>>> +      #address-cells = <1>;
+>>>> +      #size-cells = <0>;
+>>>> +
+>>>> +      dpll@70 {
+>>>> +        compatible = "microchip,zl3073x-i2c";
+>>>
+>>>> +        #address-cells = <0>;
+>>>> +        #size-cells = <0>;
+>>>
+>>> Again, why do you need them if you are not using these two?
+>>
+>> The dpll-device.yaml defines them as required. Shouldn't they be
+>> specified explicitly?
+> 
+> But you do not use them. Where is any child node?
 
-I'm sorry... will wait.
+I though I have to specify this due to existence of 'input-pins' and 
+'output-pins' in the example.
+
+>>
+>>>> +        reg = <0x70>;
+>>>> +        status = "okay";
+>>>
+>>> Drop
+> Best regards,
+> Krzysztof
+> 
 
 Thanks,
 Ivan
