@@ -1,73 +1,75 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3D31EB18E;
-	Thu, 10 Apr 2025 17:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7C11E9B38;
+	Thu, 10 Apr 2025 17:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744307468; cv=none; b=XIDxaxRzssS4tOuCsp9gFqNd+9DSg1Xn6ayyOOywBhDvI7KOVeopJq7RyTEEmp2Qtryby9bZQrU2e4dY1pobCjsHCxu9COxJdg7p/9kMVYFUfLNrLOwgKjFKRGNKz7o+qf5jiP7el+eUcmHM/BszA4VFfaKEkCgN/qd7BOwuCg8=
+	t=1744307672; cv=none; b=TgE0Ybt8VB3BwycCKdR9d1k3TOKF5VXOy6WqreCLEPgXKrODnA3zcBFZSHMBuXP+jWapLGL7bsQvs1Dl9wIXfRgfLmaAlqOMhv4uKbVmH3tKbh4EuupZQP6ynar6EpOPRkdrelIB82FD/ypPVNU0TNXWVLgcTNX6L9hgJRQ+m+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744307468; c=relaxed/simple;
-	bh=wAIBZyScjM9GzfPH5lVVoYYeJAwv6s5c/MC2TR5jzRc=;
+	s=arc-20240116; t=1744307672; c=relaxed/simple;
+	bh=Pw/dJ+4Y5FkoPfIBpwwqEtEWe8AU90hgV2bIMaMLP00=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dO1w0sddwGh9FrOSrPquyDmvs6m6nQigtIQeGsjVEGvjhEauHHurnxHNAAVU/RjoKB0fHf3jA6vvQw5wJUcnlk53le4kU2WmL9NUUd3EeI7Mg66fHC1gUh6DQaAC4ILJNa9eXjim0lp0fCnJq/H28cCxTENMF0wV6dExeUZh0e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i+tERaep; arc=none smtp.client-ip=209.85.218.43
+	 To:Cc:Content-Type; b=CATnG6Fg72M/EmYZOs6HCrWd9d88/o6AZFwovx2R5viq4Ee0XLYdSmty/JN56Z6Vj0P3sBko4fe6fZQkJ/OOKfXMAl70yxb7PoYZkHzmRy3gVjVXxOuq+cV6gw3rDI9IoC28wuWa2fSCvB6+vBQ+lYCroHIbEhxJr3V1VEfbO9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F466lyYW; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+tERaep"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac29af3382dso199424366b.2;
-        Thu, 10 Apr 2025 10:51:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F466lyYW"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso208007066b.1;
+        Thu, 10 Apr 2025 10:54:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744307465; x=1744912265; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744307669; x=1744912469; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wAIBZyScjM9GzfPH5lVVoYYeJAwv6s5c/MC2TR5jzRc=;
-        b=i+tERaeplQ9gPo+qEg/wIzMyUcSAqBY4e9MAKonWeNzfRPypQ7hekX7QRgWl2L54mN
-         ZjNGPG+68bUh02ArzqH2GBvs0CsQpaUmFkZwq7yIYImK5yCSYvvJ4W8Vo/Fo07BXYD8w
-         aY9WYv0KEwUd4XSuL2Z70wnjOHn7kSSrkgR3PHKPR047/ePZ+add+GBJM6ZQ7psHRc70
-         Bg4r8V/jt5oT8ZOO4Rbxx+hVHc3MPeQFnK0PUUfvauiJiI61y/277M7qf0lrH0Eq386r
-         caF+YKIc5SAdG1PoGTRtVf2/lOD4IsL42rS4ETaEJ3Syu4QInKqF9zlYVKA23kLTZMvN
-         lsNw==
+        bh=5Q5k58HJPb9pkGfYBHMl8erz1pohoAN5Zh0An/lVPHk=;
+        b=F466lyYWBPmzIRgHdzUs2+IKV5uab5E8lPSvjwqz70mCGZt2FOm9ShMGzJJ6gZhmYd
+         TsmM/1p68/wY+KO2IDteEKOwS1IEF1B2ejqJqswkjtdFxCYdPfhZsASyyaXVIQg4gK8Y
+         fWGjH9IA8N29Gi3N/ofyTlKF4jQO5oesPmePzsF19u0+B18ng+J8rIFft8ZLRhIWoxMD
+         y0NziFOLHbJ1yArpOoZffcW67kInKimpC6TMwsk477K8KrN3aTCyGlqmm6XS4NbIxwJb
+         wd8M92jPcA6XMC7eMRkA/kMkYlgeMjlXzH+0XZYbpl4cpBK9t6sqI3KbnfLYTcIWz4ZU
+         mzUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744307465; x=1744912265;
+        d=1e100.net; s=20230601; t=1744307669; x=1744912469;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wAIBZyScjM9GzfPH5lVVoYYeJAwv6s5c/MC2TR5jzRc=;
-        b=sXn4li71FbsJiWzApQaH6K2MRFBqC65kC6WLIi57vQxCzgMYN6zuVkweDiZ5R+vJJz
-         KzdBUTyBytKIVRfh83UHaeRBCDW7n3XB3/qCM3WpgnYx/IPlfkLqUQUnNi/BTMSajmf1
-         Ydq0RIU4/OvXkzTwzMIq43gph4OLfmIo3puioz1iCEXq3KzApS+cVAoLOR2Uhu4dT/Xj
-         b80I+ycY+rUK5zSNmNLkyifErns+OzNb7vjKCEHSDurRoKQ/wWH+b//UD1uuOvlK97+B
-         YlqQuxAXFCmSmWzrMuTvjoai15qRalnl37kXA+7eeVQsDYRRdOfQIPaio2iR0mTLjReC
-         +wZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUE0Y7HVYMAGDicG3m0lUzQmP0NNiaPyvifLWC0k2G1gy4PLIyKfE14ppeSf6T0Y6G/3Ea3xN6HuzTyor+G@vger.kernel.org, AJvYcCXFcErOlAel+hQQW48c5eZ0DyPo/ihi0IePtCWD3Wf+2Xo5UQqQocKge0jMQivQBbTcpqga7PnMV/VJ@vger.kernel.org, AJvYcCXOYY6NkceSt+HgD5zeKlDEFRXfvxICD1nb3dULqhfR3yNpXOsvteqKkR/DGYuNVdIQ8sGBTHlavFl2I/y7DUhs@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVOmUYDO37QxHc8p222RKwEBWgQkg7hL7yTR2zJqFqrMfxMBuU
-	MNBMsgvQ6s876SLTh1IVCF5TkffEW2WbhjCWCElTSJh8m77pMUBcatvQzKQEPmbiMv73dND8G9P
-	IDyl+m7oDSeq9uRZunC7Jr1oRw2Q=
-X-Gm-Gg: ASbGncvQGyo5ldvxZG24g+n1z9YomVokJo7L79A82i+uYSkSE2PxeLMMP50ds+H0jHK
-	maTsKSO6FimMituHd2pk/n0pf9H8JTjiaM2lp2pR9UmpQjBNE6My7rzgT2x0FLS0nynZoM7gYVl
-	9zETkxvO2Hmzg5DSl1360hqQ==
-X-Google-Smtp-Source: AGHT+IFyvBWj7SK83evWaCD5ZdH9G9FA79VGWLwbbZLHVeXrUvYIpxpzA4VfWfkVoK7x3RPl/PY5yO58k51iqUYOMJ8=
-X-Received: by 2002:a17:907:2d21:b0:ac7:b368:b193 with SMTP id
- a640c23a62f3a-acac009efc5mr298604166b.27.1744307464559; Thu, 10 Apr 2025
- 10:51:04 -0700 (PDT)
+        bh=5Q5k58HJPb9pkGfYBHMl8erz1pohoAN5Zh0An/lVPHk=;
+        b=aphzToihHDmn8SLvmiOArAy6u/9as78KeJWKBajc2fuTIwBquRsGmN4AcCUfMEqJ3b
+         PrK/CO258MYbFqtFlXGU+J+9QRzYnxUJylDEpQPHAH/HjZuwYHacQxVVM3qEEWuUJLWa
+         hM0TwzaENucc8WX/cvYHw4mOvJKsESvCsWI1zE/htBzlSLDfa89R/snxsoloaUFsA8FO
+         Tth0uqaHCIrY/ZRDpQIBin8u1gikAYGAh7Pfw+Z2HJeUzyFq2Rn3C8wwHmT6ovj9qLvl
+         YBLu1SzA5G/jByMDtmv1+bch9weQCk/MSRLrAsWjd4vXeq80xTXxKXpmP6eNrVl6o1o2
+         BaHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVByLFNCXFbPuaqPn6beRy7tk5/Na5SMjor6a/0f8dn+QR0PSMwO9MjurrKbHG5BikvdI0Zz9SK@vger.kernel.org, AJvYcCWrON+/17lpkoCk7h0n+3HL2ObQYcPyVMI2c+XF3ckhuiL5suywsWsQhwfyrqJoKu/tn5WGUGebRh/Y@vger.kernel.org, AJvYcCX6D/i7g+1BXF6VWzJbxtDTConvl4E6yUusePfK1J0r0y7eZ1w8f/KAWyL9mtkF+xr7Z1vyOP4pibqeaaHW@vger.kernel.org, AJvYcCXmvoFyK468r//piqFDus8d8Ud5qNDT/AxhlT58ydK3buGd/zVdRnfH1sQBHug9vPgYU0z6bPEtL+/Q4t8JMezw@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxSOV4Z8rPo7IFpkSrC4z6ppRz3VxH/EjDt0EJfrKlIvuMdhYa
+	SbkZkfF0zSSbLgKiMeGnFFr4XwrYzFpXjfYf/88QQxjcZnCPKi6EoX5omXmhtkwNEXvkH+CdVTS
+	NdiNaM3KsS/EYrinuVQpRu9N9J0Y=
+X-Gm-Gg: ASbGncuwd+hgtah1yVb11YQwD+HJgwg2XvCiGieQMtWAVvduepJxB7RDXB06ueSzRLt
+	Qho5ZZF+4TCEvE80q5RHnF5eSmD3gtKUJx6IapiaC+QOjKHjXyFywWWFwbVb1a0x07UCuAC20F8
+	KP7IcmlQLb80KIEeC3ObI+1w==
+X-Google-Smtp-Source: AGHT+IFk57BaGI8RexVkNm+rOx5JzRlSl388aEL8hPkRZ3mtB/W+jjolkJ5nyPy44lQVI1rq5r2tU030TeCa7PM2WVs=
+X-Received: by 2002:a17:906:c156:b0:ac6:f4c1:b797 with SMTP id
+ a640c23a62f3a-acabd195902mr425726166b.19.1744307669164; Thu, 10 Apr 2025
+ 10:54:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409144250.206590-1-ivecera@redhat.com> <20250409144250.206590-8-ivecera@redhat.com>
-In-Reply-To: <20250409144250.206590-8-ivecera@redhat.com>
+References: <20250409144250.206590-1-ivecera@redhat.com> <20250409144250.206590-7-ivecera@redhat.com>
+ <3e12b213-db36-4a76-9a58-c62dc8b1b2ce@kernel.org> <b73e1103-a670-43da-8f1a-b9c99cd1a90d@redhat.com>
+In-Reply-To: <b73e1103-a670-43da-8f1a-b9c99cd1a90d@redhat.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 10 Apr 2025 20:50:27 +0300
-X-Gm-Features: ATxdqUEASyhvyAg9ecKZpV6uV51rmSBsvBIvrZWcXlI7KyAsqGTqNeEUAqZvRi0
-Message-ID: <CAHp75Ve4LO5rB3HLDV5XXMd4SihOQbPZBEZC8i1VY_Nz0E9tig@mail.gmail.com>
-Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register defs
+Date: Thu, 10 Apr 2025 20:53:51 +0300
+X-Gm-Features: ATxdqUEHCMWU8odrtfeCV4-CCxyAM1De6Fsa0no8YCkrp_fO_UC5x5S5KURglVQ
+Message-ID: <CAHp75VfR_6gQdcBU6YDTvtX0A2NDjto4LXyjTteGLmp-u1t2qA@mail.gmail.com>
+Subject: Re: [PATCH v2 06/14] mfd: zl3073x: Add macros for device registers access
 To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org, 
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
 	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Prathosh Satish <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, 
@@ -78,13 +80,30 @@ Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 9, 2025 at 5:43=E2=80=AFPM Ivan Vecera <ivecera@redhat.com> wro=
-te:
->
-> Add register definitions for components versions and report them
-> during probe.
+On Thu, Apr 10, 2025 at 11:21=E2=80=AFAM Ivan Vecera <ivecera@redhat.com> w=
+rote:
+> On 10. 04. 25 9:17 dop., Krzysztof Kozlowski wrote:
+> > On 09/04/2025 16:42, Ivan Vecera wrote:
 
-JFYI: disabling regmap lock (independently of having an additional one
-or not) is not recommended. With that you actually disable the useful
-debugging feature of regmap, your device will not be present in the
-(regmap) debugfs after that.
+...
+
+> >> +    WARN_ON(idx >=3D (_num));                                        =
+ \
+> >
+> > No need to cause panic reboots. Either review your code so this does no=
+t
+> > happen or properly handle.
+>
+> Ack, will replace by
+>
+> if (idx >=3D (_num))
+>         return -EINVAL
+
+If these functions are called under regmap_read() / regmap_write() the
+above is a dead code. Otherwise you need to configure regmap correctly
+(in accordance with the HW registers layout and their abilities to be
+written or read or reserved or special combinations).
+
+--=20
+With Best Regards,
+Andy Shevchenko
