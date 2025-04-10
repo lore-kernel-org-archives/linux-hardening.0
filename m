@@ -1,184 +1,285 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2467C28EA61;
-	Thu, 10 Apr 2025 17:44:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD51290085;
+	Thu, 10 Apr 2025 17:44:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744307059; cv=none; b=HzCeFsML3p0Ght8E/NgtZJ8EPTrwuaUmculYJAc+CWlRNoZOV7TRRBgmVsdmdHTdxZnuERZiPlGd+yFbsCUEZpU7iejZL5E8cpYKwvCukrsi00HvicHq+T07PW2BgwILrRhdBsrJTNbP+eXcGil4MVU4Ja4WzuFZVuLogdPqo8k=
+	t=1744307077; cv=none; b=psEURWXydCweSANbDwScWbQ80OVTnUFHP51tNDS8LVxdXvVQ6FZ9J88JQWOAA/2knIlNLBIbuVWSoVh3d2zXKtbSdUGzTcTWsY1FA13+etUA2KIg0NkQpFeaIr60Zav34Z+rkjT5pbmxbMnM6SwghAE4fAeZfwb8irTiOL5NvlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744307059; c=relaxed/simple;
-	bh=+TXOFnKqLNVBQVmqkqgvY5ByLqr5f+PoTrMrJaHt+f0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mUagLiGFyfkf1GM4CnbCq2p7nV3mL0ai5N6RE1HX8jXmjb6d89yz7O4XCUWmH3kN6/OyAVMjBvtkl56foS1zaJXdx+nOf51NLuNVJ8HO4Lmk9hiFEmblaVmbJH0qMMX6IaomhMwAnvLIpNGEkkqKfbMeLJG4iFPyHKl+IB+npsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qmRzQV63; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744307077; c=relaxed/simple;
+	bh=U3zcrDMRNTLqyiysE+pRfSO56yC9CZe65BpKpLcwg48=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jF/AJXPqnf2Pg6fpajQv+1t2tIkeORgsWyx4a2md5Jf8cCZBOgUqGg/EgCWkoMNvwhk0t8O8zL90YC3iOGxRFmlvn/bhxNowpCMImDrHDxUpvRK7v1hygDhTmrEuc2CUBqNDLcm+PZDAlaDIErUToWmDOV+giITpvbCnWG+cXSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkL6gQ/C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qmRzQV63"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84D5AC4CEDD;
-	Thu, 10 Apr 2025 17:44:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkL6gQ/C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B1EC4CEDD;
+	Thu, 10 Apr 2025 17:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744307059;
-	bh=+TXOFnKqLNVBQVmqkqgvY5ByLqr5f+PoTrMrJaHt+f0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qmRzQV63x24BdHYuCbf0feqPnRhvkGp7ijara0BP5bRFYo4YOPkyAna0d/zTm62u8
-	 QARlOg16vIeTi0OKaw7csqVnky4zmAw49LQlhaT7QNANIV17AsxA77lS2lbrzrI75P
-	 mUgea4RNJcqDyJTsDvmpyY1njeUrSb9mNAgNiCd6m8Uv5jAeOd7iYYbXm/lIYFQYhD
-	 CIDW+qJO07KessQEbatwVKncMIRzl13EjPoOvD3mtgk4W1z4nZYIaNR1sqS+EHRYfQ
-	 RBnbhgK0m3swrdUkOzd7rR05XoBaIZc8yRvkWmmKWie/zdIqD25U889Q9doLy0SjaJ
-	 L7LI1Df7sZNdA==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Thu, 10 Apr 2025 19:43:47 +0200
-Subject: [PATCH v2 4/4] drm/msm/mdss: Get HBB dynamically, if available
+	s=k20201202; t=1744307076;
+	bh=U3zcrDMRNTLqyiysE+pRfSO56yC9CZe65BpKpLcwg48=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CkL6gQ/CXEwaMTLfKs352BK3CXvgxsi3tGI7I+tfFnojuDI0EER10CvukR7m98w8a
+	 W+gJ0LJNgjkgG/Erl01c2NMiXcOgi75bKdaC8MgQS2ccGxpWqkENQ+OE1fj+FRgbsX
+	 oQj9A/kd+1jEWn5iYnEbjPUqLLVZD1YZk6zcFgnXcuzbSWZ/qw2ODbyFbafmaLLLBc
+	 mkNG3dvEuXLvm25WYMJJaLERy++ekRidod/03mveSfiZT8hmOhpt9FwMxf6WfPjlr6
+	 JqBMKFPZp11wFXr/A+urEba9fEZqaof60X3PovCVvnH3WeHQyJlPMiubmBUcuj3NpK
+	 mxLi09BSgkrPA==
+From: Kees Cook <kees@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Kees Cook <kees@kernel.org>,
+	Sergio Perez Gonzalez <sperezglz@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	linux-doc@vger.kernel.org,
+	linux-mm@kvack.org,
+	Thomas Huth <thuth@redhat.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Stephen Boyd <swboyd@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] slab: Decouple slab_debug and no_hash_pointers
+Date: Thu, 10 Apr 2025 10:44:31 -0700
+Message-Id: <20250410174428.work.488-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-topic-smem_dramc-v2-4-dead15264714@oss.qualcomm.com>
-References: <20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com>
-In-Reply-To: <20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Dmitry Baryshkov <lumag@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744307035; l=4364;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=u4DLQLo3tH5nr+Zi9TgIpdAPYpDHteGYc0a2ROXvGKs=;
- b=qS0K/ADcOWTRbVEPdzhzxqnyG+jDeryAle3FlGQNCiV5CAPeE2m8FrGGKr+AWeGLhnIyH8jGK
- 5UVo9E9N7HTB9iTPKVj7QOtQbnYkwxXHHLkyAVIt5JPF+B3MWCki/YP
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8377; i=kees@kernel.org; h=from:subject:message-id; bh=U3zcrDMRNTLqyiysE+pRfSO56yC9CZe65BpKpLcwg48=; b=owGbwMvMwCVmps19z/KJym7G02pJDOk/mOsna55L9qq9FZHnqH/b8Gs4x7EtF2s/CJeKbWGtu vWiUt66o5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCJnmhkZbuhKBYq46qw/URBU zL6p+Nqm+lOVZR7VRyZ77z/4sodtNyPDgkixOdWsH1b8u/51/sllTY97H/y0Pc9U4Ri3ja94UeN MTgA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Some system owners use slab_debug=FPZ (or similar) as a hardening option,
+but do not want to be forced into having kernel addresses exposed due
+to the implicit "no_hash_pointers" boot param setting.[1]
 
-The Highest Bank address Bit value can change based on memory type used.
+Introduce the "hash_pointers" boot param, which defaults to "auto"
+(the current behavior), but also includes "always" (forcing on hashing
+even when "slab_debug=..." is defined), and "never". The existing
+"no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
 
-Attempt to retrieve it dynamically, and fall back to a reasonable
-default (the one used prior to this change) on error.
+This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Link: https://github.com/KSPP/linux/issues/368 [1]
+Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
+Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_mdss.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Harry Yoo <harry.yoo@oracle.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alice Ryhl <aliceryhl@google.com>
+Cc: linux-doc@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ .../admin-guide/kernel-parameters.txt         | 34 ++++++++-----
+ include/linux/sprintf.h                       |  2 +-
+ lib/vsprintf.c                                | 51 +++++++++++++++++--
+ mm/slub.c                                     |  5 +-
+ 4 files changed, 72 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_mdss.c b/drivers/gpu/drm/msm/msm_mdss.c
-index dcb49fd30402b80edd2cb5971f95a78eaad6081f..3f5c60ce20c0b66160bcc9bf74bf8f86ab57e9a4 100644
---- a/drivers/gpu/drm/msm/msm_mdss.c
-+++ b/drivers/gpu/drm/msm/msm_mdss.c
-@@ -15,6 +15,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/reset.h>
-+#include <linux/soc/qcom/smem.h>
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 76e538c77e31..d0fd9c745db9 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1798,6 +1798,27 @@
+ 			backtraces on all cpus.
+ 			Format: 0 | 1
  
- #include "msm_mdss.h"
- #include "msm_kms.h"
-@@ -163,11 +164,11 @@ static int _msm_mdss_irq_domain_add(struct msm_mdss *msm_mdss)
++	hash_pointers=
++			[KNL,EARLY]
++			By default, when pointers are printed to the console
++			or buffers via the %p format string, that pointer is
++			"hashed", i.e. obscured by hashing the pointer value.
++			This is a security feature that hides actual kernel
++			addresses from unprivileged users, but it also makes
++			debugging the kernel more difficult since unequal
++			pointers can no longer be compared. The choices are:
++			Format: { auto | always | never }
++			Default: auto
++
++			auto   - Hash pointers unless slab_debug is enabled.
++			always - Always hash pointers (even if slab_debug is
++				 enabled).
++			never  - Never hash pointers. This option should only
++				 be specified when debugging the kernel. Do
++				 not use on production kernels. The boot
++				 param "no_hash_pointers" is an alias for
++				 this mode.
++
+ 	hashdist=	[KNL,NUMA] Large hashes allocated during boot
+ 			are distributed across NUMA nodes.  Defaults on
+ 			for 64-bit NUMA, off otherwise.
+@@ -4120,18 +4141,7 @@
+ 
+ 	no_hash_pointers
+ 			[KNL,EARLY]
+-			Force pointers printed to the console or buffers to be
+-			unhashed.  By default, when a pointer is printed via %p
+-			format string, that pointer is "hashed", i.e. obscured
+-			by hashing the pointer value.  This is a security feature
+-			that hides actual kernel addresses from unprivileged
+-			users, but it also makes debugging the kernel more
+-			difficult since unequal pointers can no longer be
+-			compared.  However, if this command-line option is
+-			specified, then all normal pointers will have their true
+-			value printed. This option should only be specified when
+-			debugging the kernel.  Please do not use on production
+-			kernels.
++			Alias for "hash_pointers=never".
+ 
+ 	nohibernate	[HIBERNATION] Disable hibernation and resume.
+ 
+diff --git a/include/linux/sprintf.h b/include/linux/sprintf.h
+index 51cab2def9ec..521bb2cd2648 100644
+--- a/include/linux/sprintf.h
++++ b/include/linux/sprintf.h
+@@ -22,7 +22,7 @@ __scanf(2, 0) int vsscanf(const char *, const char *, va_list);
+ 
+ /* These are for specific cases, do not use without real need */
+ extern bool no_hash_pointers;
+-int no_hash_pointers_enable(char *str);
++void hash_pointers_finalize(bool slub_debug);
+ 
+ /* Used for Rust formatting ('%pA') */
+ char *rust_fmt_argument(char *buf, char *end, const void *ptr);
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 01699852f30c..1762cbbe1f5d 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -60,6 +60,20 @@
+ bool no_hash_pointers __ro_after_init;
+ EXPORT_SYMBOL_GPL(no_hash_pointers);
+ 
++/*
++ * Hashed pointers policy selected by "hash_pointers=..." boot param
++ *
++ * `auto`   - Hashed pointers enabled unless disabled by slub_debug_enabled=true
++ * `always` - Hashed pointers enabled unconditionally
++ * `never`  - Hashed pointers disabled unconditionally
++ */
++enum hash_pointers_policy {
++	HASH_PTR_AUTO = 0,
++	HASH_PTR_ALWAYS,
++	HASH_PTR_NEVER
++};
++static enum hash_pointers_policy hash_pointers_mode __initdata;
++
+ noinline
+ static unsigned long long simple_strntoull(const char *startp, char **endp, unsigned int base, size_t max_chars)
+ {
+@@ -2271,12 +2285,13 @@ char *resource_or_range(const char *fmt, char *buf, char *end, void *ptr,
+ 	return resource_string(buf, end, ptr, spec, fmt);
+ }
+ 
+-int __init no_hash_pointers_enable(char *str)
++void __init hash_pointers_finalize(bool slub_debug)
+ {
+-	if (no_hash_pointers)
+-		return 0;
++	if (hash_pointers_mode == HASH_PTR_AUTO && slub_debug)
++		no_hash_pointers = true;
+ 
+-	no_hash_pointers = true;
++	if (!no_hash_pointers)
++		return;
+ 
+ 	pr_warn("**********************************************************\n");
+ 	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
+@@ -2289,11 +2304,39 @@ int __init no_hash_pointers_enable(char *str)
+ 	pr_warn("** the kernel, report this immediately to your system   **\n");
+ 	pr_warn("** administrator!                                       **\n");
+ 	pr_warn("**                                                      **\n");
++	pr_warn("** Use hash_pointers=always to force this mode off      **\n");
++	pr_warn("**                                                      **\n");
+ 	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
+ 	pr_warn("**********************************************************\n");
++}
++
++static int __init hash_pointers_mode_parse(char *str)
++{
++	if (!str) {
++		pr_warn("Hash pointers mode empty; falling back to auto.\n");
++		hash_pointers_mode = HASH_PTR_AUTO;
++	} else if (strncmp(str, "auto", 4) == 0)   {
++		pr_info("Hash pointers mode set to auto.\n");
++		hash_pointers_mode = HASH_PTR_AUTO;
++	} else if (strncmp(str, "never", 5) == 0) {
++		pr_info("Hash pointers mode set to never.\n");
++		hash_pointers_mode = HASH_PTR_NEVER;
++	} else if (strncmp(str, "always", 6) == 0) {
++		pr_info("Hash pointers mode set to always.\n");
++		hash_pointers_mode = HASH_PTR_ALWAYS;
++	} else {
++		pr_warn("Unknown hash_pointers mode '%s' specified; assuming auto.\n", str);
++		hash_pointers_mode = HASH_PTR_AUTO;
++	}
+ 
  	return 0;
  }
- 
--static void msm_mdss_setup_ubwc_dec_20(struct msm_mdss *msm_mdss)
-+static void msm_mdss_setup_ubwc_dec_20(struct msm_mdss *msm_mdss, int hbb)
- {
- 	const struct msm_mdss_data *data = msm_mdss->mdss_data;
- 	u32 value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle) |
--		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit);
-+		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(hbb);
- 
- 	if (data->ubwc_bank_spread)
- 		value |= MDSS_UBWC_STATIC_UBWC_BANK_SPREAD;
-@@ -178,11 +179,11 @@ static void msm_mdss_setup_ubwc_dec_20(struct msm_mdss *msm_mdss)
- 	writel_relaxed(value, msm_mdss->mmio + REG_MDSS_UBWC_STATIC);
- }
- 
--static void msm_mdss_setup_ubwc_dec_30(struct msm_mdss *msm_mdss)
-+static void msm_mdss_setup_ubwc_dec_30(struct msm_mdss *msm_mdss, int hbb)
- {
- 	const struct msm_mdss_data *data = msm_mdss->mdss_data;
- 	u32 value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle & 0x1) |
--		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit);
-+		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(hbb);
- 
- 	if (data->macrotile_mode)
- 		value |= MDSS_UBWC_STATIC_MACROTILE_MODE;
-@@ -196,11 +197,11 @@ static void msm_mdss_setup_ubwc_dec_30(struct msm_mdss *msm_mdss)
- 	writel_relaxed(value, msm_mdss->mmio + REG_MDSS_UBWC_STATIC);
- }
- 
--static void msm_mdss_setup_ubwc_dec_40(struct msm_mdss *msm_mdss)
-+static void msm_mdss_setup_ubwc_dec_40(struct msm_mdss *msm_mdss, int hbb)
- {
- 	const struct msm_mdss_data *data = msm_mdss->mdss_data;
- 	u32 value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle) |
--		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit);
-+		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(hbb);
- 
- 	if (data->ubwc_bank_spread)
- 		value |= MDSS_UBWC_STATIC_UBWC_BANK_SPREAD;
-@@ -287,7 +288,7 @@ const struct msm_mdss_data *msm_mdss_get_mdss_data(struct device *dev)
- 
- static int msm_mdss_enable(struct msm_mdss *msm_mdss)
- {
--	int ret, i;
-+	int hbb, ret, i;
- 
- 	/*
- 	 * Several components have AXI clocks that can only be turned on if
-@@ -317,6 +318,11 @@ static int msm_mdss_enable(struct msm_mdss *msm_mdss)
- 	if (msm_mdss->is_mdp5 || !msm_mdss->mdss_data)
- 		return 0;
- 
-+	/* Attempt to retrieve HBB data from SMEM, keep reasonable defaults in case of error */
-+	hbb = qcom_smem_dram_get_hbb() - 13;
-+	if (hbb < 0)
-+		hbb = msm_mdss->mdss_data->highest_bank_bit;
++early_param("hash_pointers", hash_pointers_mode_parse);
 +
- 	/*
- 	 * ubwc config is part of the "mdss" region which is not accessible
- 	 * from the rest of the driver. hardcode known configurations here
-@@ -330,14 +336,14 @@ static int msm_mdss_enable(struct msm_mdss *msm_mdss)
- 		/* do nothing */
- 		break;
- 	case UBWC_2_0:
--		msm_mdss_setup_ubwc_dec_20(msm_mdss);
-+		msm_mdss_setup_ubwc_dec_20(msm_mdss, hbb);
- 		break;
- 	case UBWC_3_0:
--		msm_mdss_setup_ubwc_dec_30(msm_mdss);
-+		msm_mdss_setup_ubwc_dec_30(msm_mdss, hbb);
- 		break;
- 	case UBWC_4_0:
- 	case UBWC_4_3:
--		msm_mdss_setup_ubwc_dec_40(msm_mdss);
-+		msm_mdss_setup_ubwc_dec_40(msm_mdss, hbb);
- 		break;
- 	default:
- 		dev_err(msm_mdss->dev, "Unsupported UBWC decoder version %x\n",
-@@ -538,6 +544,10 @@ static int mdss_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	int ret;
++static int __init no_hash_pointers_enable(char *str)
++{
++	return hash_pointers_mode_parse("never");
++}
+ early_param("no_hash_pointers", no_hash_pointers_enable);
  
-+	/* We need data from SMEM to retrieve HBB msm_mdss_enable() */
-+	if (!qcom_smem_is_available())
-+		return -EPROBE_DEFER;
-+
- 	mdss = msm_mdss_init(pdev, is_mdp5);
- 	if (IS_ERR(mdss))
- 		return PTR_ERR(mdss);
-
+ /*
+diff --git a/mm/slub.c b/mm/slub.c
+index b46f87662e71..f3d61b330a76 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -6314,9 +6314,8 @@ void __init kmem_cache_init(void)
+ 	if (debug_guardpage_minorder())
+ 		slub_max_order = 0;
+ 
+-	/* Print slub debugging pointers without hashing */
+-	if (__slub_debug_enabled())
+-		no_hash_pointers_enable(NULL);
++	/* Inform pointer hashing choice about slub debugging state. */
++	hash_pointers_finalize(__slub_debug_enabled());
+ 
+ 	kmem_cache_node = &boot_kmem_cache_node;
+ 	kmem_cache = &boot_kmem_cache;
 -- 
-2.49.0
+2.34.1
 
