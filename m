@@ -1,49 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05371F1306
-	for <linux-hardening@vger.kernel.org>; Thu, 10 Apr 2025 08:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BED1EB18D
+	for <linux-hardening@vger.kernel.org>; Thu, 10 Apr 2025 08:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273275; cv=none; b=LxwLP5jA0CIA9odeIb1/xVptxJ6nFZ/SgWycE+PSpE7mKFuUy0xp14Ifz0Gv9TEsBqmajTHdZo6j9uocjMd62ArGJzu0A2ZsYTl68pz2SKtiEjJJv/tKuNrhrI4ZJiOZvNrcbwvp23ghXTlXk8HQZZyisW+vrdsm2C9fxFd++xU=
+	t=1744273634; cv=none; b=KYQBZ1K1ojq2w2lai5zxJw92DjdG7vbFnWXyjkwMDQd/e+aHwSnytu+Zuloro3oBE2HmaETYdsb+GM4j8HjaTH6m45p9KOA8UgQJ0WlEUuQisq9D1VGBZXnWRILWzF4oXD4CtdE+qFULVazya3l+L7z2rwjJAjV9MqczvVqxsyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273275; c=relaxed/simple;
-	bh=VekH1TtvA9ycbAEh3GkwYb3Y2hHvnuv9qkqAOyAANBg=;
+	s=arc-20240116; t=1744273634; c=relaxed/simple;
+	bh=7OgjP2r1y+H3C98mILy/OyuBEWsNZ4LMB1R3QgFCf1k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mvw4U92AA8zse8B5+Rr1QYPeFwfxbTikChMwLW+v/wIs4iK/VZErmcOTYYFIOiH/R9pePUFxTQNtvxSRjf1rlEVO1Y8B3uYTOGGrD65avTVCTKmd0r1ril/Ve5KBFNJc68KN0gbojGv2wNTERTWIXe85Es5AoJapgoWHHQTQUnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Es0IANls; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=sf341PBVyiSXrvq9gxb1Gt45by7xmau6rMJI8Lqnzld+vpw0ynHGrIF+Ynh1wlHdwwh2tQLSwAVm1w593wsPGCiIWC7dPcv4hlA4PKDlSBeq7Wg9rhjn7kpn5SewbazVBqGQw1phbQg2g8ooFIJbRAYSkudkYcYjNgZA8Eso1kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yd6UoVMm; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Es0IANls"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yd6UoVMm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744273272;
+	s=mimecast20190719; t=1744273631;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+979veQE+KclGLEtYrkcPeF+CuZm6IpwHOpzDxyU3C4=;
-	b=Es0IANlsk+WvDNVXNQM5znPpnp9PWCy2OpfmRAVDqPNEHPWFdDR5/JJ3dHRiy4eraDS5Ps
-	BPoYaYDaOHHGHtFBoXAL5J3S0rss+ZYWYVrhb4sNzH3fqDIL1WXDBQCFj65BIRK8qtmpR0
-	Wg+0IAo5K4apOsMSUjwZ6MLFrR4D8Ro=
+	bh=OKzMCc0mBOI4figeschKj6q6v2G4wTIIAmTInqn3cTg=;
+	b=Yd6UoVMmOwcJadb73dYwNI9K01Gxk4Xh2UhLBbF9l/zCshuKMFEEqcBmVmL5yYf3dvjFYg
+	jIJkirLwFT1E72ZohXpXAPBY0aBVsIquqwihOIpsffIRm0xfY0ba3JKxLprY1e5hSoaM7u
+	0IYuqc6cSelny1QKv0RZNq5N4CmuWB4=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-520-SEnZhfAjOfi0dJpkj5e4Iw-1; Thu,
- 10 Apr 2025 04:21:06 -0400
-X-MC-Unique: SEnZhfAjOfi0dJpkj5e4Iw-1
-X-Mimecast-MFC-AGG-ID: SEnZhfAjOfi0dJpkj5e4Iw_1744273264
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-455-eakRA7OoMYml2AecDjx9QQ-1; Thu,
+ 10 Apr 2025 04:27:07 -0400
+X-MC-Unique: eakRA7OoMYml2AecDjx9QQ-1
+X-Mimecast-MFC-AGG-ID: eakRA7OoMYml2AecDjx9QQ_1744273625
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9902C1800A3E;
-	Thu, 10 Apr 2025 08:21:02 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C4D9D1800263;
+	Thu, 10 Apr 2025 08:27:04 +0000 (UTC)
 Received: from [10.44.33.222] (unknown [10.44.33.222])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A0F751955DCE;
-	Thu, 10 Apr 2025 08:20:57 +0000 (UTC)
-Message-ID: <b73e1103-a670-43da-8f1a-b9c99cd1a90d@redhat.com>
-Date: Thu, 10 Apr 2025 10:20:56 +0200
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1F9583001D0E;
+	Thu, 10 Apr 2025 08:26:59 +0000 (UTC)
+Message-ID: <c0ef6dad-ce7e-401c-9ae1-42105fcbf9c4@redhat.com>
+Date: Thu, 10 Apr 2025 10:26:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,8 +51,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/14] mfd: zl3073x: Add macros for device registers
- access
+Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
+ defs
 To: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org
 Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
@@ -65,102 +65,119 @@ Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
 References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-7-ivecera@redhat.com>
- <3e12b213-db36-4a76-9a58-c62dc8b1b2ce@kernel.org>
+ <20250409144250.206590-8-ivecera@redhat.com>
+ <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
 Content-Language: en-US
 From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <3e12b213-db36-4a76-9a58-c62dc8b1b2ce@kernel.org>
+In-Reply-To: <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-
-
-On 10. 04. 25 9:17 dop., Krzysztof Kozlowski wrote:
+On 10. 04. 25 9:13 dop., Krzysztof Kozlowski wrote:
 > On 09/04/2025 16:42, Ivan Vecera wrote:
->> Add several macros to access device registers. These macros
->> defines a couple of static inline functions to ease an access
->> device registers. There are two types of registers, the 1st type
->> is a simple one that is defined by an address and size and the 2nd
->> type is indexed register that is defined by base address, type,
->> number of register instances and address stride between instances.
->>
->> Examples:
->> __ZL3073X_REG_DEF(reg1, 0x1234, 4, u32);
->> __ZL3073X_REG_IDX_DEF(idx_reg2, 0x1234, 2, u16, 4, 0x10);
-> 
-> Why can't you use standard FIELD_ macros? Why inventing the wheel again?
-
-This is not about FIELD_* macros replacement. This is an abstraction to 
-access device registers in safe manner. Generated inline functions 
-ensures that proper value or pointer to value type is passed by caller.
-Also in case of arbitrary zl3073x_{read,write_{,idx}_reg() the does not 
-need to know what is the register address.
-
-If the caller just need to read regX or indexed regY it will call just
-
-zl3073x_read_regX(..., &value);
-zl3073x_read_regX(..., idx, &value);
-
-instead of
-
-zl3073x_read_reg(..., ZL3073x_REGX_ADDR, &value);
-zl3073x_read_reg(..., ZL3073x_REGY_ADDR + (idx * ZL3073X_REGY_STRIDE), 
-&value)
-
-The 1st variant is additionally type safe, the caller is warned if it is 
-passing u8 * instead of u32 *.
-
-I tried to take similar approach the mlxsw driver took to access device 
-registers.
-
-If you are only against such macro usage for static inline functions 
-generation, I can avoid them and pre-create them in separate include 
-file like zl3073x_regs.h
-
->> this defines the following functions:
->> int zl3073x_read_reg1(struct zl3073x_dev *dev, u32 *value);
->> int zl3073x_write_reg1(struct zl3073x_dev *dev, u32 value);
->> int zl3073x_read_idx_reg2(struct zl3073x_dev *dev, unsigned int idx,
->>                            u32 *value);
->> int zl3073x_write_idx_reg2(struct zl3073x_dev *dev, unsigned int idx,
->>                             u32 value);
-> 
-> Do not copy code into commit msg. I asked about this last time. Explain
-> why do you need it, why existing API is not good.
-
-Will drop... I wanted only show how the macros work and what is their output
-
->>
->> There are also several shortcut macros to define registers with
->> certain bit widths: 8, 16, 32 and 48 bits.
+>> Add register definitions for components versions and report them
+>> during probe.
 >>
 >> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 >> ---
-> 
-> 
-> ...
-> 
->> + *
->> + * Note that these functions have to be called with the device lock
->> + * taken.
+>>   drivers/mfd/zl3073x-core.c | 36 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 36 insertions(+)
+>>
+>> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
+>> index f0d85f77a7a76..28f28d00da1cc 100644
+>> --- a/drivers/mfd/zl3073x-core.c
+>> +++ b/drivers/mfd/zl3073x-core.c
+>> @@ -1,7 +1,9 @@
+>>   // SPDX-License-Identifier: GPL-2.0-only
+>>   
+>>   #include <linux/array_size.h>
+>> +#include <linux/bitfield.h>
+>>   #include <linux/bits.h>
+>> +#include <linux/cleanup.h>
+>>   #include <linux/dev_printk.h>
+>>   #include <linux/device.h>
+>>   #include <linux/export.h>
+>> @@ -13,6 +15,14 @@
+>>   #include <net/devlink.h>
+>>   #include "zl3073x.h"
+>>   
+>> +/*
+>> + * Register Map Page 0, General
 >> + */
->> +#define __ZL3073X_REG_IDX_DEF(_name, _addr, _len, _type, _num, _stride)	\
->> +typedef _type zl3073x_##_name##_t;					\
->> +static inline __maybe_unused						\
->> +int zl3073x_read_##_name(struct zl3073x_dev *zldev, unsigned int idx,	\
->> +			 _type * value)					\
->> +{									\
->> +	WARN_ON(idx >= (_num));						\
+>> +ZL3073X_REG16_DEF(id,			0x0001);
+>> +ZL3073X_REG16_DEF(revision,		0x0003);
+>> +ZL3073X_REG16_DEF(fw_ver,		0x0005);
+>> +ZL3073X_REG32_DEF(custom_config_ver,	0x0007);
+>> +
+>>   /*
+>>    * Regmap ranges
+>>    */
+>> @@ -196,7 +206,9 @@ static void zl3073x_devlink_unregister(void *ptr)
+>>    */
+>>   int zl3073x_dev_init(struct zl3073x_dev *zldev)
+>>   {
+>> +	u16 id, revision, fw_ver;
+>>   	struct devlink *devlink;
+>> +	u32 cfg_ver;
+>>   	int rc;
+>>   
+>>   	rc = devm_mutex_init(zldev->dev, &zldev->lock);
+>> @@ -205,6 +217,30 @@ int zl3073x_dev_init(struct zl3073x_dev *zldev)
+>>   		return rc;
+>>   	}
+>>   
+>> +	/* Take device lock */
 > 
-> No need to cause panic reboots. Either review your code so this does not
-> happen or properly handle.
+> What is a device lock? Why do you need to comment standard guards/mutexes?
 
-Ack, will replace by
+Just to inform code reader, this is a section that accesses device 
+registers that are protected by this zl3073x device lock.
 
-if (idx >= (_num))
-	return -EINVAL
+>> +	scoped_guard(zl3073x, zldev) {
+>> +		rc = zl3073x_read_id(zldev, &id);
+>> +		if (rc)
+>> +			return rc;
+>> +		rc = zl3073x_read_revision(zldev, &revision);
+>> +		if (rc)
+>> +			return rc;
+>> +		rc = zl3073x_read_fw_ver(zldev, &fw_ver);
+>> +		if (rc)
+>> +			return rc;
+>> +		rc = zl3073x_read_custom_config_ver(zldev, &cfg_ver);
+>> +		if (rc)
+>> +			return rc;
+>> +	}
+> 
+> Nothing improved here. Andrew comments are still valid and do not send
+> v3 before the discussion is resolved.
 
-Thanks,
-Ivan
+I'm accessing device registers here and they are protected by the device 
+lock. I have to take the lock, register access functions expect this by 
+lockdep_assert.
+
+>> +
+>> +	dev_info(zldev->dev, "ChipID(%X), ChipRev(%X), FwVer(%u)\n",
+>> +		 id, revision, fw_ver);
+>> +	dev_info(zldev->dev, "Custom config version: %lu.%lu.%lu.%lu\n",
+>> +		 FIELD_GET(GENMASK(31, 24), cfg_ver),
+>> +		 FIELD_GET(GENMASK(23, 16), cfg_ver),
+>> +		 FIELD_GET(GENMASK(15, 8), cfg_ver),
+>> +		 FIELD_GET(GENMASK(7, 0), cfg_ver));
+> 
+> 
+> Both should be dev_dbg. Your driver should be silent on success.
+
++1
+will change.
+
+>> +
+>>   	devlink = priv_to_devlink(zldev);
+>>   	devlink_register(devlink);
+>>   
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
 
