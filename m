@@ -1,159 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E5B28A410
-	for <linux-hardening@vger.kernel.org>; Thu, 10 Apr 2025 13:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1E81EB1AA;
+	Thu, 10 Apr 2025 15:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744292171; cv=none; b=fldv8psBksxXGcddsyzuCMHXsAEXaKxBvgQ3CNL61TV7XqlRa0YdsfNr87UNsXCDD8tX/bmZhACj+/U9cvlZ2WlVBhgRG5gKgSkxgLthHSVQPAvcVy9PRSSay3wI9+flfssUysD5V1+bxh9MMZQwMo42RSAXjiYRHGnfsr9a31Q=
+	t=1744299206; cv=none; b=XP7wD5bX0xDtpMJyPBxi10VWBYANdLKBsJSd0LTEWm7Fxir2xh/+q8McM+0Aq0qmKp6feuR92mPB/qmMdfUd6kjr+tk9f3ATKbPja26VBqbOw3z/0ykEWyYFbS4sYhtP9LXPnQploKoZDjFeRBeXekhIgX/dOKzZ/VvPU6ZYDN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744292171; c=relaxed/simple;
-	bh=5tYVFZIQYWA/C+9gLwzJ3xPs4I8Ri6YFpxx6K2/PD6U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h9ZFsWVor3pHidOMLz04nVSvfZ2xaY22+wg3QDqrkrFat5WCQyNI3xshGDiQ2Fmy3Pg1isrru8nqOVm2AD6orJ7ceEPmDVUZhB58N4+LUdJMZjzogACmXuIENE/g+vQ4OBrFDIz0SsrGmbTYgZ8kXpMCDkkXXXxrL8Il8jfv5FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EsmWT7nt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744299206; c=relaxed/simple;
+	bh=rqS2mgSGGMtXh0MDTyHoB5+bCseRAIgyQhVryVg3D+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OUvJOf3KbP2Xq/Bq9i1ryTt2XR2idi8Db8ZndmtKxEtIXN9z2GGvpZ9/Epg9uu46i2b1V3wf6/g6RiMTcodASAM7Ap/zYTIhTVDwDMRFXE9wd603IkQiHQI1ZTpJH1ZKH/mywc38FthUKECnBQkWuCYT92+zEJlUEXt19IjL/YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXsKzcVy; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EsmWT7nt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744292168;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KDNRXx/pLf3PiSQ+7oCQArk/I5u6Iz6jliw3UN4JAj8=;
-	b=EsmWT7nta/g1A5XG6S1gSad6L8iRueu/03Iy8MQFXZ6ohwf8CXjI/TZP6uTIw52istjF/g
-	UEZv5gWB4w8Sh9EnMzsnp9TvDG9TgH82+KXM8vPExpZYu0acIJ+S03KDIDABs91f/e3BT8
-	5fFXa28Zv3LmF0QuS+GdyuyCjTav6o8=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-544-Ah2_ozVZMqy_FIL9WYqSjw-1; Thu,
- 10 Apr 2025 09:36:05 -0400
-X-MC-Unique: Ah2_ozVZMqy_FIL9WYqSjw-1
-X-Mimecast-MFC-AGG-ID: Ah2_ozVZMqy_FIL9WYqSjw_1744292162
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A64EB19560AB;
-	Thu, 10 Apr 2025 13:36:01 +0000 (UTC)
-Received: from [10.45.225.124] (unknown [10.45.225.124])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2C18219560AD;
-	Thu, 10 Apr 2025 13:35:56 +0000 (UTC)
-Message-ID: <6dc1fdac-81cc-4f2c-8d07-8f39b9605e04@redhat.com>
-Date: Thu, 10 Apr 2025 15:35:55 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXsKzcVy"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so10427125e9.3;
+        Thu, 10 Apr 2025 08:33:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744299203; x=1744904003; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mufWQBCfhfh0Dd1cBFQEeIzlzzUVdMj6j6jZsR61Hv0=;
+        b=BXsKzcVyPz5yiV8SQeIFnAxdzZKQqytkvAQHR9yn62Wffw+P8vN2zkKT3EOTQnmN2N
+         ckKfkBdragTyTRoEbTh7vdmfRxjcLfQPey8/V3aMzapMFP3KJ3SvuyBs6zGT+iaDA5tF
+         5B1bifiMPOa5t7djwVStlEKPt8PFDUeYxhL9RlC3gxMYl1pSf3h940ny/BkPBzt7Q72J
+         hIBDPIwFYiQe7L1EsUXhDmyfj1RB4Q/L+/Ko+LwYFok/LcIrmtwdfQZXOa4MoiNP7BbS
+         yNlZtN+c3wU8M36Bxl439KuuwX301AGNil+yChXORjpw4fQ8VZVSO7DgxMSObg+nPGwL
+         cJDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744299203; x=1744904003;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mufWQBCfhfh0Dd1cBFQEeIzlzzUVdMj6j6jZsR61Hv0=;
+        b=UNeJJywidGN07Vh7iDG/W17Bwx7mmlxx+ToktMU3Pbt7JddNjhWgieGYKDoUc8v8D6
+         YnWecMEmTRwc/Rz9sk8k/PmXgQ+sb4CYT5WTbMnn3gzaPuzoUGh6GrkV/LfhPc53VaeL
+         pMPFSRaLvnOg4P5erPNdj57mHuC/4Dv8OwwrJMQn4ze/TcYgF9I/ZmqvKi/iQeWeCMB4
+         Cw7CjEN0tkkc8m7XiVh1w8fXMr9QMG61rC2b7ZQNz0+ctizB806IFD8/F/0CDrw7UftB
+         kQKejIkkHtLegpa9bwkd6hIGky7qdWf/qwIAyEgfFo/xUnNxBMpAqY3+LPJhwYK16gna
+         O+eA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuShI7wDFmjha823aKXFoU9UwBtTEaEZxR609EwEn9xQX7056qTeUiv0Wlsij13JYo43A6sMCdMoui0qIZ@vger.kernel.org, AJvYcCW3MhqI7h3IBZCmTeHsZ9tq3pBAyrTkvboMma8CzMceEpQIu437g55YpxasBzzepOYRdQO+OI1fWYHbACky@vger.kernel.org, AJvYcCWjaJVEoLTTPT7O1sw8KUqFFBTN+Ei75lci7+BMvqI+XucASGWaqzdxEwSaYknKhKWJscDf6NIgF/g9addJLyubA+9aLQec@vger.kernel.org, AJvYcCX1X7weWfKCjElCHOTUiXCU9rP7UA3EU3n4/IeLcQU+iJgEI86MrOKqGkT5gEN6r3ej/gxcuVWDwTCk30sy7R4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2pHfP/dH8CLQPoZ7ekeGwWUv3/r8E4emK5ALZaSY5X4PujJtx
+	Lui2IpiHpo3iUNVrws4peuzvDhcReMohynP+faKC86sYenJqsRCU
+X-Gm-Gg: ASbGncumS1KCYCt26TeDz//Ae/toAjkgEcehklhwhfUGQskTFcLINAyTOS1iQAfcKNB
+	ld3v/LQNTG0XxTEsVjUoj1NCxfXX6i8yNu1fmKPLrcssCR+NyZXEQ18vjYcqrUHPKpRVtRYuvXO
+	TGl9fP2X/2T+PCFp+TxpKk9aWTwP0GsDbkyCi5+HoTv64fUdUVZbCJn2UUQWpVntAmxlRyIDJvW
+	bUxSgkqZUMU+C7QPZvTIR5W2/rq1CH5UAY/XfdgI31teEkaK4rXkAENI34JhI+PglHVOeIPo19K
+	6c5F3r+yTNyoLvt3gjXkeCi2bPRjIdI8U52MfEpPZt5S9n4MTyDjJpNnzwAMXs2QLnI=
+X-Google-Smtp-Source: AGHT+IErpYp47RaPcYNUotAQy19lNREpqUTjnBlbW3tbQQAJj+KKVW6iLFYXKxgBNzOHVVtZNPx5rg==
+X-Received: by 2002:a05:600c:a087:b0:43c:fb95:c752 with SMTP id 5b1f17b1804b1-43f2d7ae775mr43635555e9.3.1744299202992;
+        Thu, 10 Apr 2025 08:33:22 -0700 (PDT)
+Received: from localhost (ip87-106-108-193.pbiaas.com. [87.106.108.193])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43f2075fc6dsm59209915e9.28.2025.04.10.08.33.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 08:33:22 -0700 (PDT)
+Date: Thu, 10 Apr 2025 17:33:21 +0200
+From: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack3000@gmail.com>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: mic@digikod.net, gnoack@google.com, paul@paul-moore.com,
+	jmorris@namei.org, serge@hallyn.com, kees@kernel.org,
+	masahiroy@kernel.org, nathan@kernel.org, nicolas@fjasle.eu,
+	linux-security-module@vger.kernel.org,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [Bug Report] A compilation failure occurs when landlock and
+ RANDSTRUCT are combined with GCC 14.2.0.
+Message-ID: <20250410.926dbc57c00b@gnoack.org>
+References: <337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
- Azurite chip family
-To: Conor Dooley <conor@kernel.org>,
- "Prathosh.Satish@microchip.com" <Prathosh.Satish@microchip.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-3-ivecera@redhat.com>
- <20250410-skylark-of-silent-symmetry-afdec9@shite>
- <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
- <20250410-puritan-flatbed-00bf339297c0@spud>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <20250410-puritan-flatbed-00bf339297c0@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
 
+Hello!
 
-
-On 10. 04. 25 3:18 odp., Conor Dooley wrote:
-> On Thu, Apr 10, 2025 at 09:45:47AM +0200, Ivan Vecera wrote:
->>
->>
->> On 10. 04. 25 9:06 dop., Krzysztof Kozlowski wrote:
->>> On Wed, Apr 09, 2025 at 04:42:38PM GMT, Ivan Vecera wrote:
->>>> Add DT bindings for Microchip Azurite DPLL chip family. These chips
->>>> provides 2 independent DPLL channels, up to 10 differential or
->>>> single-ended inputs and up to 20 differential or 20 single-ended outputs.
->>>> It can be connected via I2C or SPI busses.
->>>>
->>>> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
->>>> ---
->>>>    .../bindings/dpll/microchip,zl3073x-i2c.yaml  | 74 ++++++++++++++++++
->>>>    .../bindings/dpll/microchip,zl3073x-spi.yaml  | 77 +++++++++++++++++++
->>>
->>> No, you do not get two files. No such bindings were accepted since some
->>> years.
->>>
->>>>    2 files changed, 151 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
->>>>    create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
->>>> new file mode 100644
->>>> index 0000000000000..d9280988f9eb7
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
->>>> @@ -0,0 +1,74 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/dpll/microchip,zl3073x-i2c.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: I2C-attached Microchip Azurite DPLL device
->>>> +
->>>> +maintainers:
->>>> +  - Ivan Vecera <ivecera@redhat.com>
->>>> +
->>>> +description:
->>>> +  Microchip Azurite DPLL (ZL3073x) is a family of DPLL devices that
->>>> +  provides 2 independent DPLL channels, up to 10 differential or
->>>> +  single-ended inputs and up to 20 differential or 20 single-ended outputs.
->>>> +  It can be connected via multiple busses, one of them being I2C.
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    enum:
->>>> +      - microchip,zl3073x-i2c
->>>
->>> I already said: you have one compatible, not two. One.
->>
->> Ah, you mean something like:
->> iio/accel/adi,adxl313.yaml
->>
->> Do you?
->>
->>> Also, still wildcard, so still a no.
->>
->> This is not wildcard, Microchip uses this to designate DPLL devices with the
->> same characteristics.
+On Thu, Apr 10, 2025 at 04:11:15PM +0800, WangYuli wrote:
+> [ Compilation failure log: ]
 > 
-> That's the very definition of a wildcard, no? The x is matching against
-> several different devices. There's like 14 different parts matching
-> zl3073x, with varying numbers of outputs and channels. One compatible
-> for all of that hardly seems suitable.
+> *** WARNING *** there are active plugins, do not report this as a bug unless
+> you can reproduce it without enabling an
+> y plugins.
+> Event                            | Plugins
+> PLUGIN_FINISH_TYPE               | randomize_layout_plugin
+> PLUGIN_FINISH_DECL               | randomize_layout_plugin
+> PLUGIN_ATTRIBUTES                | latent_entropy_plugin
+> randomize_layout_plugin
+> PLUGIN_START_UNIT                | latent_entropy_plugin stackleak_plugin
+> PLUGIN_ALL_IPA_PASSES_START      | randomize_layout_plugin
+> security/landlock/fs.c:In function ‘hook_file_ioctl_common’:
+> security/landlock/fs.c:1745:61:internal compiler error: in
+> count_type_elements, at expr.cc:7075
+> 1745 |                         .u.op = &(struct lsm_ioctlop_audit) {
+>      |                                                             ^
+> 0x7f27fa6bdca7 __libc_start_call_main
+>        ../sysdeps/nptl/libc_start_call_main.h:58
+> 0x7f27fa6bdd64 __libc_start_main_impl
+>        ../csu/libc-start.c:360
+> Please submit a full bug report, with preprocessed source (by using
+> -freport-bug).
+> Please include the complete backtrace with any bug report.
+> See <file:///usr/share/doc/gcc-14/README.Bugs> for instructions.
+> make[4]: *** [scripts/Makefile.build:203: security/landlock/fs.o] Error 1
+> make[3]: *** [scripts/Makefile.build:461: security/landlock] Error 2
+> make[2]: *** [scripts/Makefile.build:461: security] Error 2
 
-Prathosh, could you please bring more light on this?
+Thank you for the report!
 
-Thanks.
-> 
->>
->> But I can use microchip,azurite, is it more appropriate?
-> 
-> No, I think that is worse actually.
+This is in my understanding a duplicate of the discussion in
+https://lore.kernel.org/all/20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org/
 
+–Günther
