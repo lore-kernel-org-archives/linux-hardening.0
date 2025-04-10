@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57DB206F36;
-	Thu, 10 Apr 2025 07:11:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4611D5CFE;
+	Thu, 10 Apr 2025 07:13:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744269102; cv=none; b=iJABAcM9ZkBct3mHjwl1vhl8ocWPvb+qV6DZgSjG678iDHJObC2Z6vI4/m0YmfHMEXULkQmPAkr0NtLUIRxxc/WuKQGnNcjAgZlFNb6HglD4Y66cz6zT4zFw+ROn0SyPFgO13Yenqv1isq5VlQSfDGY+2sYgRd0Vkbn+iNOvIjk=
+	t=1744269217; cv=none; b=O3yNGWfq6lCE4Ns+IxpmoTMGebwpf8g9dRaejWyZfg5Jk67n/qJyGEyDqIeSYVd+d/B6OrTXNYW9xh5DVwkOSVqJq9TlHp01f+M3Y3dbdhS60bAFlehuMkDbGgOqcrK32ICLWhg0WADYNIJyU4gPxEKnWBnWHUKoRAPgleT2XiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744269102; c=relaxed/simple;
-	bh=lOL/KYAQsMuPcvnLTzDBF0wRTP6K0klZk+sB5D8LC8Q=;
+	s=arc-20240116; t=1744269217; c=relaxed/simple;
+	bh=wEprt1V9FwlRv54AeVzv/QmIKFbiUarPRZDJwhM3Qrg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T0vjj4gt3a6lvzQ/hg4yKYQY2TL+DsZgp5wiLyEUlCfE8wraTGVW8ioO/RPNF9Z7dYHewukaYzgxPHpjDUSHnfUTYOUXJBJIV3uKrOdtdQvW9kuI788VZPfFovKD93tHG0jVY9YM471KjYVbWT1dzg2zV/SWlJnRS4VJJPgQynQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXFmO6Cl; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=EzaXKtAmrai5Re3jmtiSMZB/FXlbyJDggm4awH2VAqGcD6EOdxbpqVMyVOABWhz1poVRhVsx4LBZsp2hD0znZ+ZlG6oEvnyk1+MocsW+5dFtp/l8to4ENKaDNDwHijBhif5JxmRnXW/VD7t5lN/lI/6YayTA8v/Q2/qU2TjB4zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7eVjhap; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXFmO6Cl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E11AC4CEE3;
-	Thu, 10 Apr 2025 07:11:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7eVjhap"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A267FC4CEDD;
+	Thu, 10 Apr 2025 07:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744269102;
-	bh=lOL/KYAQsMuPcvnLTzDBF0wRTP6K0klZk+sB5D8LC8Q=;
+	s=k20201202; t=1744269216;
+	bh=wEprt1V9FwlRv54AeVzv/QmIKFbiUarPRZDJwhM3Qrg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VXFmO6Cll4GUdcWnsU6Vv9AjQGRoxVByRnHC3VmCoQy7gNY7D7NlKB/djhC7vjLJB
-	 3fMlAjLc+4rvScaHJu75gnx+pd/MCluP3ivbSYk5FEDrpPYlXa3jNqvMzPL9wuX5qk
-	 6jqbldMa/f27U0ASlhHkpKMkCXIQFMqhX/i7uFCE1papumh3q8tG8kVDW3oDNn+XhA
-	 t21zKo3T6YCdFgqUc1oibuQqL/+p3LZbX+efMW82va6i92f8CQpuPMMx09wWCHeqma
-	 BIC2W7h7Bm0R6CHCaGTHGtXCr7KS0UlZbNWSV1unx6FBQt1bKQHLpZvQc29uU3ViKC
-	 C40g3WKq9PNzA==
-Message-ID: <5af77349-5a76-4557-839b-d9ac643f5368@kernel.org>
-Date: Thu, 10 Apr 2025 09:11:36 +0200
+	b=j7eVjhapz6xOom/yV5R7ZMb5uI8G/cRGB+fn3rJA5bkidAdBPUjhNC4IqVO27dqsD
+	 /fvJlKHN8zoruwhDiGxISslNVRBI0Sbc3GG1JkK8+woxm0nMAcwFIIcgLYODguM4be
+	 1Mldtygh1RP/v1NpogiDsE9gEg+1le7Lg1Vx7kkr+kQYP1Su5sxpUKMFjljO+j027v
+	 2e5U5vcLS+Sf1AFryIIEOxTdxn5cpH7v7ILVEbLkXWT+Q9Qw29NxbQh6IZO4VD/umm
+	 YOM81fSF8eFKhTUbtMu1SrRXCrPBIW6xNX/yur5CKdpESgNqf3iiqJDQklOBQnZfSV
+	 ry45YCIHYO5Yg==
+Message-ID: <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
+Date: Thu, 10 Apr 2025 09:13:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,22 +35,21 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/28] mfd: zl3073x: Add components versions register defs
-To: Ivan Vecera <ivecera@redhat.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
+ defs
+To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
  Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
  Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
  Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250407172836.1009461-1-ivecera@redhat.com>
- <20250407172836.1009461-6-ivecera@redhat.com>
- <a5d2e1eb-7b98-4909-9505-ec93fe0c3aac@lunn.ch>
- <22b9f197-2f98-43c7-9cc9-c748e80078b0@redhat.com>
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-8-ivecera@redhat.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -96,97 +95,101 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <22b9f197-2f98-43c7-9cc9-c748e80078b0@redhat.com>
+In-Reply-To: <20250409144250.206590-8-ivecera@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 09/04/2025 08:44, Ivan Vecera wrote:
-> On 07. 04. 25 11:09 odp., Andrew Lunn wrote:
->> On Mon, Apr 07, 2025 at 07:28:32PM +0200, Ivan Vecera wrote:
->>> Add register definitions for components versions and report them
->>> during probe.
->>>
->>> Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
->>> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
->>> ---
->>>   drivers/mfd/zl3073x-core.c | 35 +++++++++++++++++++++++++++++++++++
->>>   1 file changed, 35 insertions(+)
->>>
->>> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
->>> index 39d4c8608a740..b3091b00cffa8 100644
->>> --- a/drivers/mfd/zl3073x-core.c
->>> +++ b/drivers/mfd/zl3073x-core.c
->>> @@ -1,10 +1,19 @@
->>>   // SPDX-License-Identifier: GPL-2.0-only
->>>   
->>> +#include <linux/bitfield.h>
->>>   #include <linux/module.h>
->>>   #include <linux/unaligned.h>
->>>   #include <net/devlink.h>
->>>   #include "zl3073x.h"
->>>   
->>> +/*
->>> + * Register Map Page 0, General
->>> + */
->>> +ZL3073X_REG16_DEF(id,			0x0001);
->>> +ZL3073X_REG16_DEF(revision,		0x0003);
->>> +ZL3073X_REG16_DEF(fw_ver,		0x0005);
->>> +ZL3073X_REG32_DEF(custom_config_ver,	0x0007);
->>> +
->>>   /*
->>>    * Regmap ranges
->>>    */
->>> @@ -159,10 +168,36 @@ EXPORT_SYMBOL_NS_GPL(zl3073x_dev_alloc, "ZL3073X");
->>>   
->>>   int zl3073x_dev_init(struct zl3073x_dev *zldev)
->>>   {
->>> +	u16 id, revision, fw_ver;
->>>   	struct devlink *devlink;
->>> +	u32 cfg_ver;
->>> +	int rc;
->>>   
->>>   	devm_mutex_init(zldev->dev, &zldev->lock);
->>>   
->>> +	scoped_guard(zl3073x, zldev) {
->>
->> Why the scoped_guard? The locking scheme you have seems very opaque.
+On 09/04/2025 16:42, Ivan Vecera wrote:
+> Add register definitions for components versions and report them
+> during probe.
 > 
-> We are read the HW registers in this block and the access is protected 
-> by this device lock. Regmap locking will be disabled in v2 as this is 
-
-Reading ID must be protected by mutex? Why and how?
-
-What is a "device lock"?
-
-> not sufficient.
+> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> ---
+>  drivers/mfd/zl3073x-core.c | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 > 
->>> +		rc = zl3073x_read_id(zldev, &id);
->>> +		if (rc)
->>> +			return rc;
->>> +		rc = zl3073x_read_revision(zldev, &revision);
->>> +		if (rc)
->>> +			return rc;
->>> +		rc = zl3073x_read_fw_ver(zldev, &fw_ver);
->>> +		if (rc)
->>> +			return rc;
->>> +		rc = zl3073x_read_custom_config_ver(zldev, &cfg_ver);
->>> +		if (rc)
->>> +			return rc;
->>
->> Could a parallel operation change the ID? Upgrade the firmware
->> version?
->>
->> 	Andrew
-> 
-> No, but register access functions require the device lock to be held. 
-> See above.
+> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
+> index f0d85f77a7a76..28f28d00da1cc 100644
+> --- a/drivers/mfd/zl3073x-core.c
+> +++ b/drivers/mfd/zl3073x-core.c
+> @@ -1,7 +1,9 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  
+>  #include <linux/array_size.h>
+> +#include <linux/bitfield.h>
+>  #include <linux/bits.h>
+> +#include <linux/cleanup.h>
+>  #include <linux/dev_printk.h>
+>  #include <linux/device.h>
+>  #include <linux/export.h>
+> @@ -13,6 +15,14 @@
+>  #include <net/devlink.h>
+>  #include "zl3073x.h"
+>  
+> +/*
+> + * Register Map Page 0, General
+> + */
+> +ZL3073X_REG16_DEF(id,			0x0001);
+> +ZL3073X_REG16_DEF(revision,		0x0003);
+> +ZL3073X_REG16_DEF(fw_ver,		0x0005);
+> +ZL3073X_REG32_DEF(custom_config_ver,	0x0007);
+> +
+>  /*
+>   * Regmap ranges
+>   */
+> @@ -196,7 +206,9 @@ static void zl3073x_devlink_unregister(void *ptr)
+>   */
+>  int zl3073x_dev_init(struct zl3073x_dev *zldev)
+>  {
+> +	u16 id, revision, fw_ver;
+>  	struct devlink *devlink;
+> +	u32 cfg_ver;
+>  	int rc;
+>  
+>  	rc = devm_mutex_init(zldev->dev, &zldev->lock);
+> @@ -205,6 +217,30 @@ int zl3073x_dev_init(struct zl3073x_dev *zldev)
+>  		return rc;
+>  	}
+>  
+> +	/* Take device lock */
 
-Andrew comments stay valid here. This is weird need of locking and your
-explanation is very vague.
+What is a device lock? Why do you need to comment standard guards/mutexes?
 
-BTW, do not send v2 before people respond to your comments in reasonable
-time. You just send 28 patchset and expect people to finish review after
-one day.
+> +	scoped_guard(zl3073x, zldev) {
+> +		rc = zl3073x_read_id(zldev, &id);
+> +		if (rc)
+> +			return rc;
+> +		rc = zl3073x_read_revision(zldev, &revision);
+> +		if (rc)
+> +			return rc;
+> +		rc = zl3073x_read_fw_ver(zldev, &fw_ver);
+> +		if (rc)
+> +			return rc;
+> +		rc = zl3073x_read_custom_config_ver(zldev, &cfg_ver);
+> +		if (rc)
+> +			return rc;
+> +	}
+
+Nothing improved here. Andrew comments are still valid and do not send
+v3 before the discussion is resolved.
+
+> +
+> +	dev_info(zldev->dev, "ChipID(%X), ChipRev(%X), FwVer(%u)\n",
+> +		 id, revision, fw_ver);
+> +	dev_info(zldev->dev, "Custom config version: %lu.%lu.%lu.%lu\n",
+> +		 FIELD_GET(GENMASK(31, 24), cfg_ver),
+> +		 FIELD_GET(GENMASK(23, 16), cfg_ver),
+> +		 FIELD_GET(GENMASK(15, 8), cfg_ver),
+> +		 FIELD_GET(GENMASK(7, 0), cfg_ver));
+
+
+Both should be dev_dbg. Your driver should be silent on success.
+
+> +
+>  	devlink = priv_to_devlink(zldev);
+>  	devlink_register(devlink);
+>  
+
 
 Best regards,
 Krzysztof
