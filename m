@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4611D5CFE;
-	Thu, 10 Apr 2025 07:13:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7CA2054E3;
+	Thu, 10 Apr 2025 07:17:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744269217; cv=none; b=O3yNGWfq6lCE4Ns+IxpmoTMGebwpf8g9dRaejWyZfg5Jk67n/qJyGEyDqIeSYVd+d/B6OrTXNYW9xh5DVwkOSVqJq9TlHp01f+M3Y3dbdhS60bAFlehuMkDbGgOqcrK32ICLWhg0WADYNIJyU4gPxEKnWBnWHUKoRAPgleT2XiU=
+	t=1744269436; cv=none; b=pbOkcLHZ5vw+mODpXlIlIk95cL0/Eo2nhoOxr0NXcmICH3R0vTtPn4vngiiUy4los5h7FU1c/1GmlfjOylMGuKs+IbWIsbnQlDFR8CZIaf9FhMYvTurxfKdYLXtAN3Gv98vXxlpshs6H4VTWmetVXWThdjooWCD5GOmq7SxlQVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744269217; c=relaxed/simple;
-	bh=wEprt1V9FwlRv54AeVzv/QmIKFbiUarPRZDJwhM3Qrg=;
+	s=arc-20240116; t=1744269436; c=relaxed/simple;
+	bh=Wc3WJaeq/lKJEglwuUmXcTJV3wqvUDyjphbnQot0QZw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EzaXKtAmrai5Re3jmtiSMZB/FXlbyJDggm4awH2VAqGcD6EOdxbpqVMyVOABWhz1poVRhVsx4LBZsp2hD0znZ+ZlG6oEvnyk1+MocsW+5dFtp/l8to4ENKaDNDwHijBhif5JxmRnXW/VD7t5lN/lI/6YayTA8v/Q2/qU2TjB4zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7eVjhap; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=SsVZ3qXRCDum4p0g2CWJGhCBgzrO9nlneSxBiUiCFff6LZfSJKDhWacVc+oZRsrb/KcT/qdn37Riagc96douisjLk9OMT3HyLNl4LSBVKxCnGHXaNi/vWoinIaZQY/g5/4gzq0Q2JXLn/KxvjA7g5yMrUD8VI8PWDeEWafwrvHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnzqE7ZT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7eVjhap"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A267FC4CEDD;
-	Thu, 10 Apr 2025 07:13:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnzqE7ZT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19DFBC4CEDD;
+	Thu, 10 Apr 2025 07:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744269216;
-	bh=wEprt1V9FwlRv54AeVzv/QmIKFbiUarPRZDJwhM3Qrg=;
+	s=k20201202; t=1744269435;
+	bh=Wc3WJaeq/lKJEglwuUmXcTJV3wqvUDyjphbnQot0QZw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j7eVjhapz6xOom/yV5R7ZMb5uI8G/cRGB+fn3rJA5bkidAdBPUjhNC4IqVO27dqsD
-	 /fvJlKHN8zoruwhDiGxISslNVRBI0Sbc3GG1JkK8+woxm0nMAcwFIIcgLYODguM4be
-	 1Mldtygh1RP/v1NpogiDsE9gEg+1le7Lg1Vx7kkr+kQYP1Su5sxpUKMFjljO+j027v
-	 2e5U5vcLS+Sf1AFryIIEOxTdxn5cpH7v7ILVEbLkXWT+Q9Qw29NxbQh6IZO4VD/umm
-	 YOM81fSF8eFKhTUbtMu1SrRXCrPBIW6xNX/yur5CKdpESgNqf3iiqJDQklOBQnZfSV
-	 ry45YCIHYO5Yg==
-Message-ID: <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
-Date: Thu, 10 Apr 2025 09:13:30 +0200
+	b=AnzqE7ZTj0oi8EyCS4Z5B7ZX0/Qs5y5/rohyro5oy2OWjfB4Ue0G7YINGrk6dz7fl
+	 wW1etv59ENn4jS++/Djy2R2w1cMgHdtCHh6cboZVlmSB50kCPTsT3RuW5GyL0v45FJ
+	 S5iuLBeoz5WfqNHbHTHJkZTlFLFlTZuPlQr540Mjv5rbb0YoVo+/5/wsMm3RX2sOaM
+	 qYHinVmq/fUT6larYiXaiqlFIxm5lmbiRaJ8IXqwf/Pd7nwA7D7lo27MQOYZLBUHV9
+	 +5YDMYdagnKCsRp2TE4vUcSl7MZnD7lwFfbl2ItpGwPfQ9OFOWx/hk5B8BBzgUI5Kb
+	 qnCYCb0pVY9GQ==
+Message-ID: <3e12b213-db36-4a76-9a58-c62dc8b1b2ce@kernel.org>
+Date: Thu, 10 Apr 2025 09:17:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
- defs
+Subject: Re: [PATCH v2 06/14] mfd: zl3073x: Add macros for device registers
+ access
 To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
 Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
@@ -49,7 +49,7 @@ Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
 References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-8-ivecera@redhat.com>
+ <20250409144250.206590-7-ivecera@redhat.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -95,101 +95,60 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250409144250.206590-8-ivecera@redhat.com>
+In-Reply-To: <20250409144250.206590-7-ivecera@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 09/04/2025 16:42, Ivan Vecera wrote:
-> Add register definitions for components versions and report them
-> during probe.
+> Add several macros to access device registers. These macros
+> defines a couple of static inline functions to ease an access
+> device registers. There are two types of registers, the 1st type
+> is a simple one that is defined by an address and size and the 2nd
+> type is indexed register that is defined by base address, type,
+> number of register instances and address stride between instances.
+> 
+> Examples:
+> __ZL3073X_REG_DEF(reg1, 0x1234, 4, u32);
+> __ZL3073X_REG_IDX_DEF(idx_reg2, 0x1234, 2, u16, 4, 0x10);
+
+Why can't you use standard FIELD_ macros? Why inventing the wheel again?
+
+> 
+> this defines the following functions:
+> int zl3073x_read_reg1(struct zl3073x_dev *dev, u32 *value);
+> int zl3073x_write_reg1(struct zl3073x_dev *dev, u32 value);
+> int zl3073x_read_idx_reg2(struct zl3073x_dev *dev, unsigned int idx,
+>                           u32 *value);
+> int zl3073x_write_idx_reg2(struct zl3073x_dev *dev, unsigned int idx,
+>                            u32 value);
+
+Do not copy code into commit msg. I asked about this last time. Explain
+why do you need it, why existing API is not good.
+
+> 
+> There are also several shortcut macros to define registers with
+> certain bit widths: 8, 16, 32 and 48 bits.
 > 
 > Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 > ---
->  drivers/mfd/zl3073x-core.c | 36 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
-> index f0d85f77a7a76..28f28d00da1cc 100644
-> --- a/drivers/mfd/zl3073x-core.c
-> +++ b/drivers/mfd/zl3073x-core.c
-> @@ -1,7 +1,9 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  
->  #include <linux/array_size.h>
-> +#include <linux/bitfield.h>
->  #include <linux/bits.h>
-> +#include <linux/cleanup.h>
->  #include <linux/dev_printk.h>
->  #include <linux/device.h>
->  #include <linux/export.h>
-> @@ -13,6 +15,14 @@
->  #include <net/devlink.h>
->  #include "zl3073x.h"
->  
-> +/*
-> + * Register Map Page 0, General
+
+
+...
+
+> + *
+> + * Note that these functions have to be called with the device lock
+> + * taken.
 > + */
-> +ZL3073X_REG16_DEF(id,			0x0001);
-> +ZL3073X_REG16_DEF(revision,		0x0003);
-> +ZL3073X_REG16_DEF(fw_ver,		0x0005);
-> +ZL3073X_REG32_DEF(custom_config_ver,	0x0007);
-> +
->  /*
->   * Regmap ranges
->   */
-> @@ -196,7 +206,9 @@ static void zl3073x_devlink_unregister(void *ptr)
->   */
->  int zl3073x_dev_init(struct zl3073x_dev *zldev)
->  {
-> +	u16 id, revision, fw_ver;
->  	struct devlink *devlink;
-> +	u32 cfg_ver;
->  	int rc;
->  
->  	rc = devm_mutex_init(zldev->dev, &zldev->lock);
-> @@ -205,6 +217,30 @@ int zl3073x_dev_init(struct zl3073x_dev *zldev)
->  		return rc;
->  	}
->  
-> +	/* Take device lock */
+> +#define __ZL3073X_REG_IDX_DEF(_name, _addr, _len, _type, _num, _stride)	\
+> +typedef _type zl3073x_##_name##_t;					\
+> +static inline __maybe_unused						\
+> +int zl3073x_read_##_name(struct zl3073x_dev *zldev, unsigned int idx,	\
+> +			 _type * value)					\
+> +{									\
+> +	WARN_ON(idx >= (_num));						\
 
-What is a device lock? Why do you need to comment standard guards/mutexes?
-
-> +	scoped_guard(zl3073x, zldev) {
-> +		rc = zl3073x_read_id(zldev, &id);
-> +		if (rc)
-> +			return rc;
-> +		rc = zl3073x_read_revision(zldev, &revision);
-> +		if (rc)
-> +			return rc;
-> +		rc = zl3073x_read_fw_ver(zldev, &fw_ver);
-> +		if (rc)
-> +			return rc;
-> +		rc = zl3073x_read_custom_config_ver(zldev, &cfg_ver);
-> +		if (rc)
-> +			return rc;
-> +	}
-
-Nothing improved here. Andrew comments are still valid and do not send
-v3 before the discussion is resolved.
-
-> +
-> +	dev_info(zldev->dev, "ChipID(%X), ChipRev(%X), FwVer(%u)\n",
-> +		 id, revision, fw_ver);
-> +	dev_info(zldev->dev, "Custom config version: %lu.%lu.%lu.%lu\n",
-> +		 FIELD_GET(GENMASK(31, 24), cfg_ver),
-> +		 FIELD_GET(GENMASK(23, 16), cfg_ver),
-> +		 FIELD_GET(GENMASK(15, 8), cfg_ver),
-> +		 FIELD_GET(GENMASK(7, 0), cfg_ver));
-
-
-Both should be dev_dbg. Your driver should be silent on success.
-
-> +
->  	devlink = priv_to_devlink(zldev);
->  	devlink_register(devlink);
->  
-
+No need to cause panic reboots. Either review your code so this does not
+happen or properly handle.
 
 Best regards,
 Krzysztof
