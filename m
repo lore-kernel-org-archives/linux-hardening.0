@@ -1,117 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993281E008B
-	for <linux-hardening@vger.kernel.org>; Thu, 10 Apr 2025 07:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301021C5D7B;
+	Thu, 10 Apr 2025 08:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744271577; cv=none; b=FAPzs1OfLm42tFcULf/k/ZWHaDjEcuMugPvLi1SM9AyjdX2q1ktywRY2r4MiBLHNo2L3MU5ngjTU1lcNysbo+cpHE6X0Q+fSHOSF1myfKF5KoaL/+xRTmKsb9P8X9SvOZk9pG+pkMokGIHh1RDVJ/kZBAzE65iIcA1hTKKDAZjo=
+	t=1744272021; cv=none; b=fYILRAOZgGP5y7UP9JZT7rnalxd22aTw2Xha4ZzDVNgftQ3oXmjh96eGUZG76AH1niNB3F27LdA640AgC95e5M8f6p3xue8a/2dC/LmGndH6NWNsl4dAVerAvxpAdzxjTT1mGczMBjzgZSuf1PQDyMtgStHUM3yyDytCMGwSp9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744271577; c=relaxed/simple;
-	bh=8W8A/ge74B5Up1+m3x8qVG/YMkIdKFsPE4oY8AXG+TU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e7D/U51+H+026RtRBm4fT4I07nCIi2ddAoXd77j0M0aobTp9pa4igjSevJWT25FcKeGKHJkZZf3pmjOCLDpwup1hOs+yCnXSjzz9bOSVZNWTvXtD28RHij+xBDiYtGfChCKEFsWRAkHH+Z7lFigvqKuLlKbesA5z3GkyTMZi/Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H//3yFOg; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744272021; c=relaxed/simple;
+	bh=BNs36cFblgpNUrlfgerskcnvl+4ODLGqjQaWjV2nbQk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=mv/N0Iqw6tvPQ9qiWIGve4vOcN+G9LB9wLhsmmH6ct3zk0jOu/WYWTvF/1j0PUvXTsw2L3tWkW3d/ZDTrAuU1RCMQjPzH3asxjG4XWgWXFWTRfyld3uaq6HQBOS0Cv4ylfcKgXW2dskP4QqPOIEnldNMWOPacQ4WeSRdJre7C80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Hx0NLMPi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fcPV92j9; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H//3yFOg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744271574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RRCyAMNNVq6+4i5409xIeFnFjYc/oiKQZz4zgkZf2gg=;
-	b=H//3yFOgujaNNcESIblPlqaIOoDFa6AZWc0N9pdz597wwIAPCsfHXaRIpyUcSHNwyxFU6l
-	RbmaQHJ3Yx81maF5WZD8ngt698xtX79S6Bp5O5F9cZix8sqGCBQc/WhWn6xIVUe0eC6UDg
-	1y1p9hKK33u9hIQ/5sLRjmiGco7qoCw=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-259-2qk4kd0TMyuB0dHyHAQAhw-1; Thu,
- 10 Apr 2025 03:52:48 -0400
-X-MC-Unique: 2qk4kd0TMyuB0dHyHAQAhw-1
-X-Mimecast-MFC-AGG-ID: 2qk4kd0TMyuB0dHyHAQAhw_1744271566
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C1F5D180034D;
-	Thu, 10 Apr 2025 07:52:45 +0000 (UTC)
-Received: from [10.44.33.222] (unknown [10.44.33.222])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0B1A71956094;
-	Thu, 10 Apr 2025 07:52:40 +0000 (UTC)
-Message-ID: <e760caeb-5c7b-4014-810c-c2a97b3bda28@redhat.com>
-Date: Thu, 10 Apr 2025 09:52:39 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Hx0NLMPi";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fcPV92j9"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id F114C2540229;
+	Thu, 10 Apr 2025 04:00:14 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Thu, 10 Apr 2025 04:00:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744272014;
+	 x=1744358414; bh=vqd+an8KzXjGcgrrzFgvmuFuLXgqiHUn3jGJ2YEVl6E=; b=
+	Hx0NLMPiXyE1YQ86SebCLF3W12WY1IioWIfq1mWquoe68p3aw/Ctw2gyCO7J1y4Y
+	nf6BFz7qOTjShAo18ecvfoZ1/LCrV8ZEIbcOWWmcLqtkGOh8otNwVtBh+sN1iE65
+	+N42IEp9dDn2KBXKnjrUk3g5O9RV2QStfAZWxGU7Jo7pGRLWH7SJ/whlm4rgniCC
+	Yjp6PrzfU0MHV0+pYz52ED6/C1uR4EIQD0CX8KZC6ymcVnpKv4AHAO0NnVhSY5fF
+	g0elQktLD7Pn7r1X/9lN19CNyZ+BtDEphyuqMND51CGbkbxeiZAEdC9G/2/8ox6a
+	NgeizINB+ai+CNy67L9xaw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744272014; x=
+	1744358414; bh=vqd+an8KzXjGcgrrzFgvmuFuLXgqiHUn3jGJ2YEVl6E=; b=f
+	cPV92j92d5IZn4lx+B99WEghiDBqzEeOqel+uV1ReDor5TexLY6BaLzYNdKH0WGZ
+	v5frIPWBSghVBd26sdbvvri0TksPiQ1EA1MEgXVy/Tdfmvn7C+d+/S/EvI2JfAKy
+	bSYEWQua7yDglmWGQBq2lSN4tBXjK2ZTgARwOI99QK0MuDRcbdDOrERefAkU5u6g
+	qPWf8moNR1sM1z3SqOPXNxEV68elS6kwMupJv10xMX/5w0OXNo6KtMifJhMciRlP
+	xFZ8ASzCg1ZrdhEz+bYadV7Kx3IUydYWz23DQDdy+3thMVCctobus66QbYGzIVvM
+	7IdrnPBrRUk2hJGCmG7/Q==
+X-ME-Sender: <xms:jnr3ZxRGQ9hMYMU9hy4gqbC9vI885ZxMpYJRNU_h6DxvJLzhR7r2nw>
+    <xme:jnr3Z6zqAMBSavjnMhslQk92V6alM0_ij0lIvIODZkCJEXq8JnkUSFqkTbCKRWMBm
+    vfc7ub9nPnx6imxaYE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekfeeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhepvefgieeugfffleekjeeiledtueduledtveej
+    uedtkeevleffjefhfeehlefhfffhnecuffhomhgrihhnpehphhhrrggtkhdrohhrghenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
+    rghrnhgusgdruggvpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehmihgtseguihhgihhkohgurdhnvghtpdhrtghpthhtohepghhnohgrtghk
+    sehgohhoghhlvgdrtghomhdprhgtphhtthhopegrrhgusgeskhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgv
+    vghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugi
+    dqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghn
+    ihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvg
+    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhs
+    vggtuhhrihhthidqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:jnr3Z23LKgl9hZ6QcREDgqwpMmhfLDt6lAALKbbCP_NoKIJCosyM-w>
+    <xmx:jnr3Z5D3W62L5bLVYc85RsVpiUQwOFJo2J_vLbJF9S1_XHi5k4SWLg>
+    <xmx:jnr3Z6iMl8WcJZv1cwMdAPotalW6C98EFI1qolSibGqvJc1TF1y8QQ>
+    <xmx:jnr3Z9pvrCW4jNtcNLIQICPw3jBIzR-q02jOyQYUSfID_ETX1mPU2g>
+    <xmx:jnr3Z-41hWrlmOzfeS929v4IhapaQuO_5TJksYkBKtYuUmpaadop9ZR6>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3BF582220073; Thu, 10 Apr 2025 04:00:14 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/14] mfd: Add Microchip ZL3073x support
-To: Krzysztof Kozlowski <krzk@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-4-ivecera@redhat.com>
- <Z_aVlIiT07ZDE2Kf@smile.fi.intel.com>
- <eecfb843-e9cd-4d07-bb72-15cf84a25706@kernel.org>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <eecfb843-e9cd-4d07-bb72-15cf84a25706@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ThreadId: T00187b92ccd5616f
+Date: Thu, 10 Apr 2025 09:58:13 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Kees Cook" <kees@kernel.org>, "Mark Brown" <broonie@kernel.org>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, "Ard Biesheuvel" <ardb@kernel.org>
+Message-Id: <657fd022-4056-4f7f-aaf2-b4bf88fbcb38@app.fastmail.com>
+In-Reply-To: <482D3DA9-7336-4D36-8758-4F8DB48EA8B9@kernel.org>
+References: 
+ <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
+ <CAHk-=wjTbWiYwfj2wF9iP8SSVk2A_cZFDr5hu1bgU_PfxhyiiA@mail.gmail.com>
+ <8cbe0cac-2952-47b6-9b0d-1400aec0bf25@sirena.org.uk>
+ <08393aa3-05a3-4e3f-8004-f374a3ec4b7e@app.fastmail.com>
+ <482D3DA9-7336-4D36-8758-4F8DB48EA8B9@kernel.org>
+Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
+On Tue, Apr 8, 2025, at 22:37, Kees Cook wrote:
+> On April 8, 2025 2:22:52 AM PDT, Arnd Bergmann <arnd@arndb.de> wrote:
+>>>
+>>> indicates that Talos 1.9.1 uses latent_entropy (but we didn't check how
+>>> accurate that survey is).
+>
+> The early RNG for small machines remains pretty bad, so I can 
+> understand wanting to keep that around. For bigger machines it's not as 
+> much of a benefit.
 
+Does "small machines" still mean those without a cycle counter
+as in the 2009 article [https://phrack.org/issues/66/15#article]
+or are you thinking of those that may have a working
+random_get_entropy() but that remains too predictable for
+add_device_randomness() because of the low frequency (e.g.
+19.2 MHz on many ARMv7/v8)?
 
-On 10. 04. 25 9:19 dop., Krzysztof Kozlowski wrote:
-> On 09/04/2025 17:43, Andy Shevchenko wrote:
->>> +/*
->>> + * Regmap range configuration
->>> + *
->>> + * The device uses 7-bit addressing and has 16 register pages with
->>> + * range 0x00-0x7f. The register 0x7f in each page acts as page
->>> + * selector where bits 0-3 contains currently selected page.
->>> + */
->>> +static const struct regmap_range_cfg zl3073x_regmap_ranges[] = {
->>> +	{
->>> +		.range_min	= 0,
->>
->> This still has the same issue, you haven't given a chance to me to reply
->> in v1 thread. I'm not going to review this as it's not settled down yet.
->> Let's first discuss the questions you have in v1.
->>
+The former (ARMv5, AMD Elan, Xburst) were still common back then
+but are mostly extinct now, while the latter obviously remain
+in wide use.
 
-Sorry for that but I don't understand where the issue is... Many drivers 
-uses this the same way.
-E.g.
-drivers/leds/leds-aw200xx.c
-drivers/mfd/rsmu_i2c.c
-sound/soc/codecs/tas2562.c
-...and many others
+>>Talos also uses stackleak. I also see that alpine and qubes have the
+>>same two gcc plugins enabled.
+>
+> Yeah, stackleak has no viable alternative. It's effectively 
+> init_on_free for stack. It's be nice if there were a way to do this 
+> with upstream compilers (track call depth).
 
-All of them uses selector register that is present on all pages, wide 
-range for register access <0, num_pages*window_size> and window <0, 
-window_size>
+I guess a simplified version could in theory be done in the kernel
+using _mcount without compiler help, but that would be much more
+expensive if every function entry has to call it, right?
 
-Do they also do incorrectly or am I missing something?
-
-I.
-> I already started reviewing v2, so now we have simultaneous discussions
-> in v1 and v2...
-> 
-> Best regards,
-> Krzysztof
-> 
-
+     Arnd
