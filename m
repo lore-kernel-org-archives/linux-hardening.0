@@ -1,33 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D42D283C9F;
-	Thu, 10 Apr 2025 12:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CBE2853E3
+	for <linux-hardening@vger.kernel.org>; Thu, 10 Apr 2025 12:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744287558; cv=none; b=feC2s8HsdhICC9i/sar/7qMmZfSZwzsiL+5/nUjuUtkCS+GaWqCUP31McxY+lv1lgUQlAm22I9eHZNFy2UgheyvnHEEDAur8HzPA2A46MLh87GfkP4h+qNfW3ftjQTS53ey065Upldoppq6I+Cb1qBHed848wkrJSk/Q8hqThIw=
+	t=1744288723; cv=none; b=Jo3Z0kh4DutPZ65J/CKjWl35Z349IEFJtiM1KIiXLuDDL2GwWt6rvOdBKfvN4+bRF+//X5Xc4ylYS+vmo2tNA+O6gtvJ1DO21/irbB6Smdq9h4EB8sraoAwKfP7+G0fPhqCc4dOUksxJhsSSTa1ZIiXEKDW2Hh0i4e31rK3egGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744287558; c=relaxed/simple;
-	bh=rJa9YkIp7H064dJyAxgUKpVWovBRYUB4q2laXDx+6Hk=;
+	s=arc-20240116; t=1744288723; c=relaxed/simple;
+	bh=O3N2BtvGK2gJmwWJnCkrJEaQrB/DtG48u01XU3dcyZQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DdM8kpzb2aIJ52S41271NItVQLH+XrqpBuxg4sNhqHBHQ/ooXBL/9dNGVI3a9GGMW3Th/KTkBM4q8ff6ox/rDfn7g+lMVxXxCBkJwN73gmtVtZeJCqfCyBArhRE+APKGqTBYLUiia0LE368faETWIhhFwtNqB+2RBKT6+yr0nOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNcDZ7ze; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Zj29U2GBxKimhg39SSy1ZWjXWQ3RIaDF/RNVsCFKforLdlmyJ8N1Pp/GxF3zuuc6Hzdww7UsE4qcfWzHmIrfxrTpsHq+ZpZcBD/WlmDtCfUtoCERErlmUiPMTGF0NbDlXZswEfjkcc78BlQvH4KlGs5XEWROz/1nVZ48cXwneSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UeaDkyTZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNcDZ7ze"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6B9CC4CEDD;
-	Thu, 10 Apr 2025 12:19:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744287557;
-	bh=rJa9YkIp7H064dJyAxgUKpVWovBRYUB4q2laXDx+6Hk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZNcDZ7zeGLAjOs0IUNTw68TCAeZu5T9MFU5IO2xMFhFFbnAnSph6oJKUV5Jn0ibWs
-	 PtB/DgowNBc4qLJBOrqoCd3Xj91tTCuC8kN4+xH+DLTuXMnfY+QMD8qUVXuvkAqrOF
-	 5TlLIt2kfs3V1SalL01iiT00s7s7rsEB1J39gkRXGhodPjvzzc9fX9aqHPQ8X7rSlE
-	 Wxu0NAlSVQgBmpl5SffvJAKt13l/bDk6xj5X0Q1rZ7eAlMP0Y5djCmfpNsc1aBfgFJ
-	 Vd6CTJUm8Ao2iCGByV5wy8o9/kBZsnbZIYFXz1Gfk6vL9Ibz84ztFE6sZG27havyI8
-	 5NeA99BLg1+MA==
-Message-ID: <ecde1c37-0fa2-4c2e-ad81-bee3cc7d58c0@kernel.org>
-Date: Thu, 10 Apr 2025 14:19:11 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UeaDkyTZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744288717;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/yPAXnrs3Gs5dvTBMjDIRB1XmlVJFG57qJldfBUqlIs=;
+	b=UeaDkyTZ2SwapsCy/+oDM97ddivlebhy1NjWvM7t6AKBqixyKWIX/bGX3NmwLyFGGHN5ze
+	h5e+C76sVh8tC/9aRqsLJXisEn3YJ0rt/LlNFFydEVGCmN4aCU3UHFZ6Q0gfpwLy0z6bsG
+	VVwvyaW1GjGDS4N3tJ84ihwuNTqfKfY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-43-RVSYrwK8M_qjKQRELUP2KA-1; Thu,
+ 10 Apr 2025 08:38:32 -0400
+X-MC-Unique: RVSYrwK8M_qjKQRELUP2KA-1
+X-Mimecast-MFC-AGG-ID: RVSYrwK8M_qjKQRELUP2KA_1744288710
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E9A251800259;
+	Thu, 10 Apr 2025 12:38:29 +0000 (UTC)
+Received: from [10.44.33.222] (unknown [10.44.33.222])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CC69A1956094;
+	Thu, 10 Apr 2025 12:38:24 +0000 (UTC)
+Message-ID: <905b14c0-2129-4dcf-b267-e66e23b6b236@redhat.com>
+Date: Thu, 10 Apr 2025 14:38:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -37,7 +53,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 16/28] dt-bindings: dpll: Add support for Microchip
  Azurite chip family
-To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org
 Cc: Michal Schmidt <mschmidt@redhat.com>,
  Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
@@ -54,110 +70,109 @@ References: <20250407172836.1009461-1-ivecera@redhat.com>
  <280e8a8e-b68f-4536-b9a4-4e924dde0783@redhat.com>
  <b65daab2-8184-45f4-af18-8499e80fbc04@kernel.org>
  <b4d22372-ae85-421c-8ce4-669787160da2@redhat.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <ecde1c37-0fa2-4c2e-ad81-bee3cc7d58c0@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <b4d22372-ae85-421c-8ce4-669787160da2@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <ecde1c37-0fa2-4c2e-ad81-bee3cc7d58c0@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 10/04/2025 12:28, Ivan Vecera wrote:
-> 
->>>> 2. What is 'x'? Wildcard? If so, drop and use specific compatibles.
->>>
->>> Microchip refers to the ZL3073x as a family of compatible DPLL chips
->>> with the same features. There is no need to introduce separate
->>> compatible string for each of them.
+
+
+On 10. 04. 25 2:19 odp., Krzysztof Kozlowski wrote:
+> On 10/04/2025 12:28, Ivan Vecera wrote:
 >>
->> So a wildcard, thus drop. Use full product names. Google search gives me
->> no products for ZL3073x but gives me ZL30735.
-> 
-> I will use more appropriate microchip,azurite compatible.
-
-Hm? What/who gave such hint? Please read writing bindings or any other
-guide/speech about it. If that's a zl30735 then use "zl30735" as device
-part. If you have more devices, use fallbacks. See writing bindings.
-
-> 
->>>
->>>>> +
->>>>> +  reg:
->>>>> +    maxItems: 1
->>>>> +
->>>>> +required:
->>>>> +  - compatible
->>>>> +  - reg
->>>>> +
->>>>> +allOf:
->>>>> +  - $ref: /schemas/dpll/dpll-device.yaml
->>>>> +
->>>>> +unevaluatedProperties: false
->>>>> +
->>>>> +examples:
->>>>> +  - |
->>>>> +    i2c {
->>>>> +      #address-cells = <1>;
->>>>> +      #size-cells = <0>;
->>>>> +
->>>>> +      dpll@70 {
->>>>> +        compatible = "microchip,zl3073x-i2c";
+>>>>> 2. What is 'x'? Wildcard? If so, drop and use specific compatibles.
 >>>>
->>>>> +        #address-cells = <0>;
->>>>> +        #size-cells = <0>;
->>>>
->>>> Again, why do you need them if you are not using these two?
+>>>> Microchip refers to the ZL3073x as a family of compatible DPLL chips
+>>>> with the same features. There is no need to introduce separate
+>>>> compatible string for each of them.
 >>>
->>> The dpll-device.yaml defines them as required. Shouldn't they be
->>> specified explicitly?
+>>> So a wildcard, thus drop. Use full product names. Google search gives me
+>>> no products for ZL3073x but gives me ZL30735.
 >>
->> But you do not use them. Where is any child node?
+>> I will use more appropriate microchip,azurite compatible.
 > 
-> I though I have to specify this due to existence of 'input-pins' and 
-> 'output-pins' in the example.
+> Hm? What/who gave such hint? Please read writing bindings or any other
+> guide/speech about it. If that's a zl30735 then use "zl30735" as device
+> part. If you have more devices, use fallbacks. See writing bindings.
+> 
+Something like this:
 
-They do not have addressing, so no need for cells.
+1)
+properties:
+   compatible:
+     enum:
+       - microchip,zl30731
+       - microchip,zl30732
+       - microchip,zl30732
+       - microchip,zl80032
+       - microchip,zl80732
 
-Best regards,
-Krzysztof
+or
+
+2)
+properties:
+   compatible:
+     items:
+       - enum:
+           - microchip,zl30731
+           - microchip,zl30732
+           - microchip,zl30732
+           - microchip,zl80032
+           - microchip,zl80732
+       - const: microchip,azurite
+
+If 1) what should be the filename ?
+
+Thanks for patience.
+
+Ivan
+
+>>
+>>>>
+>>>>>> +
+>>>>>> +  reg:
+>>>>>> +    maxItems: 1
+>>>>>> +
+>>>>>> +required:
+>>>>>> +  - compatible
+>>>>>> +  - reg
+>>>>>> +
+>>>>>> +allOf:
+>>>>>> +  - $ref: /schemas/dpll/dpll-device.yaml
+>>>>>> +
+>>>>>> +unevaluatedProperties: false
+>>>>>> +
+>>>>>> +examples:
+>>>>>> +  - |
+>>>>>> +    i2c {
+>>>>>> +      #address-cells = <1>;
+>>>>>> +      #size-cells = <0>;
+>>>>>> +
+>>>>>> +      dpll@70 {
+>>>>>> +        compatible = "microchip,zl3073x-i2c";
+>>>>>
+>>>>>> +        #address-cells = <0>;
+>>>>>> +        #size-cells = <0>;
+>>>>>
+>>>>> Again, why do you need them if you are not using these two?
+>>>>
+>>>> The dpll-device.yaml defines them as required. Shouldn't they be
+>>>> specified explicitly?
+>>>
+>>> But you do not use them. Where is any child node?
+>>
+>> I though I have to specify this due to existence of 'input-pins' and
+>> 'output-pins' in the example.
+> 
+> They do not have addressing, so no need for cells.
+
+Thanks for explanation.
+
+> 
+> Best regards,
+> Krzysztof
+> 
+
