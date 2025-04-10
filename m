@@ -1,170 +1,173 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525541D514E;
-	Thu, 10 Apr 2025 07:01:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1993620C03F;
+	Thu, 10 Apr 2025 07:06:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744268479; cv=none; b=XRLw01N8zUvru5YKakFvX4jjHGaUswjeefTUvGrTDlG/C4hfHSje1y1iWhUQjsDWlIjZJBr3ytindsdj41BHS3DjdiNKymncU10jlffaYb7rfsM+4T/XHhMcuj5gWTZWdwhXRBALQ+PzSwhP7CRpgZpCcjv5xc5q4MfrdhRH4PA=
+	t=1744268773; cv=none; b=jPgx6dlYFVVuItyUujO4OtN0/KxC1NHHHKClb1MM0WuOVvsGdv0b1lW5FbJxWoEG0hlk03d2r6HybS//7h88bWFuovJxNRslJF13NC/Maa4dUJqlOhK83nUSM4MftnYsdGHwFi2PmhgLaeSechuC9J6M+K5ReFOGo6bcCMmoRsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744268479; c=relaxed/simple;
-	bh=cndKrfqsoLhFCKFAJnehlzzLm/MrvvT4kxClKj+a0QE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TtMc2zO4LT8x/KA0p2kL/k0w+dK4zXsAz8opws9eQYoT+8yIC08vyN546TSDHZUdnOin5ddN/E3m7xkdMUiYQxy7Z9NuplYB14419PrzbRQsqQz5sZ3goBdmhGFe3wTPc7BqB9zcuvjnYC6lJEfkp7lJdcT77GCjhAGUiux7ZL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r4lusIJC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744268773; c=relaxed/simple;
+	bh=0FE4KejZnNKFUdq/4vRmfxEFMg4KkheeM5BLRqN6ylo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WLwmYocYasQ+dcfEOhu4MUQ9E1/jUvqkfDln71azUlbGb1MSfSaarHhxaDXifO7+ZbOdUEVFBpS9pHq0HAU0tDme4k447MJhytpnr7UyHfKjLM/5bnkWwVfQ3WJcXfw2mEBoCU0m91PiJRN8t2rSbppBix1EXQFkL02gZRSF18E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9rjA6p2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r4lusIJC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F77C4CEDD;
-	Thu, 10 Apr 2025 07:01:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9rjA6p2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB1FAC4CEDD;
+	Thu, 10 Apr 2025 07:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744268477;
-	bh=cndKrfqsoLhFCKFAJnehlzzLm/MrvvT4kxClKj+a0QE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r4lusIJChspQY0L6lXcQ1+MaW73V3F1ragryC9kYBkpvC3Fz5T4xDWdl4NiN5RB0J
-	 lRN9FVS+mZKa2mhfgMyRmJtrE5eAsSMOROqANr9VxY2uSgb2vtY+6m/gnlPz6NgBJG
-	 ULUdcoUaFJmtyrYrjMDQBan/TwABM8mvrrYV714S0xIpi1MX6IzicCkykMKSyVJJKV
-	 3qnnpqt7VeMlMwcyDQ1RQPIZMGPdiYiLLEv3MdGWu8IOpq4NQnS6fXoUAXg85+lu38
-	 hIOE1xT/jyh7oDUoUD+sIqUJGsXLqP12OGbgRNATfGrKfwJzS3ArXJnGYMDKctWUSh
-	 d054vUwpz6FyQ==
-Message-ID: <b65daab2-8184-45f4-af18-8499e80fbc04@kernel.org>
-Date: Thu, 10 Apr 2025 09:01:12 +0200
+	s=k20201202; t=1744268772;
+	bh=0FE4KejZnNKFUdq/4vRmfxEFMg4KkheeM5BLRqN6ylo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q9rjA6p2kngko4993Ebi0lKRc0pBQ/AY1UAfq1K0MPOGVYlo9cgvq05AK8F6D8B3Y
+	 kj5lhVoNQO9BhmJLcmMGJjH3cLw8GeB92RN468dj55YrIfEcCjacXloIqQHwvyul5/
+	 ORZk/shVaiiyXVC5jdEx7pnWQ+VYPtHdsQBHkglFUOwvBKLMj1FX7ZfA722dmTymE0
+	 kndmKSeuXib+2E947ZDy76JrScStSGaNYVB9Bx0RVzIEF6l2+oFzID1YHWT5Uh2TLL
+	 c80TwkGqQtTs8hR/fe1NNQ/YcbcM7Try8xlw73hSoshkkMez+zUUThpk3u1TNvWFOa
+	 MNQB9WSGPtYlA==
+Date: Thu, 10 Apr 2025 09:06:09 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Prathosh Satish <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
+ Azurite chip family
+Message-ID: <20250410-skylark-of-silent-symmetry-afdec9@shite>
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-3-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 16/28] dt-bindings: dpll: Add support for Microchip
- Azurite chip family
-To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
-Cc: Michal Schmidt <mschmidt@redhat.com>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250407172836.1009461-1-ivecera@redhat.com>
- <20250407173149.1010216-7-ivecera@redhat.com>
- <7dfede37-2434-4892-8c8d-4d005fa1072b@kernel.org>
- <280e8a8e-b68f-4536-b9a4-4e924dde0783@redhat.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <280e8a8e-b68f-4536-b9a4-4e924dde0783@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250409144250.206590-3-ivecera@redhat.com>
 
-On 09/04/2025 09:19, Ivan Vecera wrote:
->>> +
->>> +maintainers:
->>> +  - Ivan Vecera <ivecera@redhat.com>
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - microchip,zl3073x-i2c
->>> +      - microchip,zl3073x-spi
->>
->> 1. No, you do not get two compatibles. Only one.
+On Wed, Apr 09, 2025 at 04:42:38PM GMT, Ivan Vecera wrote:
+> Add DT bindings for Microchip Azurite DPLL chip family. These chips
+> provides 2 independent DPLL channels, up to 10 differential or
+> single-ended inputs and up to 20 differential or 20 single-ended outputs.
+> It can be connected via I2C or SPI busses.
 > 
-> Will split to two files, one for i2c and one for spi.
+> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> ---
+>  .../bindings/dpll/microchip,zl3073x-i2c.yaml  | 74 ++++++++++++++++++
+>  .../bindings/dpll/microchip,zl3073x-spi.yaml  | 77 +++++++++++++++++++
 
-No. One device, one compatible.
+No, you do not get two files. No such bindings were accepted since some
+years.
 
+>  2 files changed, 151 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
+>  create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
 > 
->> 2. What is 'x'? Wildcard? If so, drop and use specific compatibles.
-> 
-> Microchip refers to the ZL3073x as a family of compatible DPLL chips 
-> with the same features. There is no need to introduce separate 
-> compatible string for each of them.
+> diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
+> new file mode 100644
+> index 0000000000000..d9280988f9eb7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
+> @@ -0,0 +1,74 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dpll/microchip,zl3073x-i2c.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: I2C-attached Microchip Azurite DPLL device
+> +
+> +maintainers:
+> +  - Ivan Vecera <ivecera@redhat.com>
+> +
+> +description:
+> +  Microchip Azurite DPLL (ZL3073x) is a family of DPLL devices that
+> +  provides 2 independent DPLL channels, up to 10 differential or
+> +  single-ended inputs and up to 20 differential or 20 single-ended outputs.
+> +  It can be connected via multiple busses, one of them being I2C.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - microchip,zl3073x-i2c
 
-So a wildcard, thus drop. Use full product names. Google search gives me
-no products for ZL3073x but gives me ZL30735.
+I already said: you have one compatible, not two. One.
 
-> 
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +
->>> +allOf:
->>> +  - $ref: /schemas/dpll/dpll-device.yaml
->>> +
->>> +unevaluatedProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    i2c {
->>> +      #address-cells = <1>;
->>> +      #size-cells = <0>;
->>> +
->>> +      dpll@70 {
->>> +        compatible = "microchip,zl3073x-i2c";
->>
->>> +        #address-cells = <0>;
->>> +        #size-cells = <0>;
->>
->> Again, why do you need them if you are not using these two?
-> 
-> The dpll-device.yaml defines them as required. Shouldn't they be 
-> specified explicitly?
+Also, still wildcard, so still a no.
 
-But you do not use them. Where is any child node?
 
-> 
->>> +        reg = <0x70>;
->>> +        status = "okay";
->>
->> Drop
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +allOf:
+> +  - $ref: /schemas/dpll/dpll-device.yaml#
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      dpll@70 {
+> +        compatible = "microchip,zl3073x-i2c";
+> +        reg = <0x70>;
+> +        #address-cells = <0>;
+> +        #size-cells = <0>;
+
+Again, not used. Drop.
+
+
+> +        dpll-types = "pps", "eec";
+> +
+> +        input-pins {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          pin@0 { /* REF0P */
+> +            reg = <0>;
+> +            label = "Input 0";
+> +            supported-frequencies = /bits/ 64 <1 1000>;
+> +            type = "ext";
+> +          };
+> +        };
+> +
+> +        output-pins {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          pin@3 { /* OUT1N */
+> +            reg = <3>;
+> +            esync-control;
+> +            label = "Output 1";
+> +            supported-frequencies = /bits/ 64 <1 10000>;
+> +            type = "gnss";
+> +          };
+> +        };
+> +      };
+> +    };
+> +...
+> diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
+> new file mode 100644
+> index 0000000000000..7bd6e5099e1ce
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
+
+No, you do not get two files. Neither two compatibles, nor two files.
+Please look at existing bindings how they do it for such devices.
+
 Best regards,
 Krzysztof
+
