@@ -1,49 +1,37 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BED1EB18D
-	for <linux-hardening@vger.kernel.org>; Thu, 10 Apr 2025 08:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7381DF987
+	for <linux-hardening@vger.kernel.org>; Thu, 10 Apr 2025 08:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273634; cv=none; b=KYQBZ1K1ojq2w2lai5zxJw92DjdG7vbFnWXyjkwMDQd/e+aHwSnytu+Zuloro3oBE2HmaETYdsb+GM4j8HjaTH6m45p9KOA8UgQJ0WlEUuQisq9D1VGBZXnWRILWzF4oXD4CtdE+qFULVazya3l+L7z2rwjJAjV9MqczvVqxsyA=
+	t=1744273713; cv=none; b=jcNsPuoupig9HNlaIHNu2TrXhHvPRNtPyzjjgiSVDy/W8PxyiusAnL6X6Ks9brg8QxDHPbHh2TazMOj/rKr8lCc2UCb8MtSg2Tgap7Lb68dDo8/FVzYmSH1dpAuHwhXwv51NcV4iFB/ueaCFrF3ORrzDd8+BIlan7V0so06kPZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273634; c=relaxed/simple;
-	bh=7OgjP2r1y+H3C98mILy/OyuBEWsNZ4LMB1R3QgFCf1k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sf341PBVyiSXrvq9gxb1Gt45by7xmau6rMJI8Lqnzld+vpw0ynHGrIF+Ynh1wlHdwwh2tQLSwAVm1w593wsPGCiIWC7dPcv4hlA4PKDlSBeq7Wg9rhjn7kpn5SewbazVBqGQw1phbQg2g8ooFIJbRAYSkudkYcYjNgZA8Eso1kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yd6UoVMm; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744273713; c=relaxed/simple;
+	bh=h1003F0QZGmGgkXcaTbt5rlum3PQM14c1jtQvYoOmmI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=FEYlQcjyUSfrLlHKIrV6McODOJGLqKKUGzO5bLEvgdmdKnDe72SW3kRyq3FcwzRGr/bBE3h+/QNVT1Tn0cn9XXyDmhmnXcPPTXssBTueoKJBYW3xbfUapWlulAwD+3+zuI0pFSHE6k7VX6ydO30dIN1FbyBNbKPP82Z3Vk1f0Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=F+ZfJwuv; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yd6UoVMm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744273631;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OKzMCc0mBOI4figeschKj6q6v2G4wTIIAmTInqn3cTg=;
-	b=Yd6UoVMmOwcJadb73dYwNI9K01Gxk4Xh2UhLBbF9l/zCshuKMFEEqcBmVmL5yYf3dvjFYg
-	jIJkirLwFT1E72ZohXpXAPBY0aBVsIquqwihOIpsffIRm0xfY0ba3JKxLprY1e5hSoaM7u
-	0IYuqc6cSelny1QKv0RZNq5N4CmuWB4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-455-eakRA7OoMYml2AecDjx9QQ-1; Thu,
- 10 Apr 2025 04:27:07 -0400
-X-MC-Unique: eakRA7OoMYml2AecDjx9QQ-1
-X-Mimecast-MFC-AGG-ID: eakRA7OoMYml2AecDjx9QQ_1744273625
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C4D9D1800263;
-	Thu, 10 Apr 2025 08:27:04 +0000 (UTC)
-Received: from [10.44.33.222] (unknown [10.44.33.222])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1F9583001D0E;
-	Thu, 10 Apr 2025 08:26:59 +0000 (UTC)
-Message-ID: <c0ef6dad-ce7e-401c-9ae1-42105fcbf9c4@redhat.com>
-Date: Thu, 10 Apr 2025 10:26:58 +0200
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="F+ZfJwuv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744272682;
+	bh=h1003F0QZGmGgkXcaTbt5rlum3PQM14c1jtQvYoOmmI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To;
+	b=F+ZfJwuvy056XbUlsPO0cS7vmBHf9cUJXX7ggds0dwKmRnCkNf243hcaGOZNlQu9H
+	 bdL6gBOMWCVV3Qvi8hHNJY+PGG7sZFU76RqDjbW5+Lz8+UjgPWzodgjGypk30L/8Jn
+	 KK0RdclMUZjmF8aSIaXELJsYEbbOiso3VpgnuxAQ=
+X-QQ-mid: bizesmtpip2t1744272677ta87555
+X-QQ-Originating-IP: /h+wDAVJUlffUr78bBdsbBCNBZWqYQOKuYblzmS2FuQ=
+Received: from [IPV6:240e:668:120a::212:232] ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 10 Apr 2025 16:11:15 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 11749788466428975768
+Message-ID: <337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
+Date: Thu, 10 Apr 2025 16:11:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,133 +39,141 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
- defs
-To: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-8-ivecera@redhat.com>
- <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
 Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
+From: WangYuli <wangyuli@uniontech.com>
+Subject: [Bug Report] A compilation failure occurs when landlock and
+ RANDSTRUCT are combined with GCC 14.2.0.
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+To: mic@digikod.net, gnoack@google.com, paul@paul-moore.com,
+ jmorris@namei.org, serge@hallyn.com, kees@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, nicolas@fjasle.eu
+Cc: linux-security-module@vger.kernel.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------rkKKFJ8ZZADublAHtF5vsiAg"
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MQZ/dZQlO/THh3UJCihfMz999YL5l1BQuSyINAyHgpSlKiWJfEk7vjv/
+	yRGpmgRqJlQ3f80UqRxQadksN6SmlIeb04Kc+jCbIq3CdN2CR3uXrzK8E5C//hVLKuoqH+f
+	YXXzoggknlrQ7hnIeQvlx4QBg+blpjhSSNMYSgpN282yODrOFYcUtNRaCckQHa8iTcn/X9z
+	zsRjpjFn9gOHblIdKbwjU7/YI2sPxt9Ui3wsY/2gRmhHOFXPx0Hld9zPUjIjxlV550ON1NP
+	O8Amgv6cVuLcJVp1BFF6GoGWCbnqjQsci9acKtt20JqFkYeY4bYgZa5p5uwgvuaJLGSXrNn
+	Gp8lnCdCZ7eE8HHHF1EsXzs7xrYy+qLEnOWMCRo9S1Umj7OBEvzrlnexONr7wpQKKrazLDW
+	IldUzbjeaacGwPVlEtaugu62PsmERoPjmcYSXc2WAfL/LjcLUrSh0MgP+7YnKPK3feeyO2+
+	W5u6XBLedG2zENiN+k+OM+SsB2tz53dNUugswtxttZsKEBEvg9LY5r3/ptq+enVeoa8Tpr8
+	o4OsLcM0xLY8L0oz43F3eMe34qudrFwUdSbAw+C60YjtKsZgvRf3h5rSGX8JYx28Dp/cs3I
+	xr/tUkS0jnc3SFBMtVgp0gszHShhB8OBC36M9cScZCu0B0N6mwuyUAJy7qAUb0E33law8Gg
+	plLt0n4FAKvw8t/07TEsRhj0BfYlBN+JxgcnS/2Bsl/gicYcYGUj9LaKHQj7+M91IPc1x16
+	nN3PstUvzTn4L+ugKOtigcwORXFNY/GuJ/fB5kGZB41FdtMBmBVvXThMNnWzU44IDhciDYA
+	4oHEaVmRTgAiIHUNkytr0U/DEDI82rypS/YHVaQSSNp/UCxUNAg05lB98NBJ2b+xZB7dz7S
+	Ld0c1erqilw0Mpg65r80/GrDjTx+kHrUp5LXRUY07KeV9DpaS8a4WjJlbK/1Mo6pqlobpcO
+	9jouSZaxGKQrlPoh2bYcV4jlWBkLwbI6Z+84bh1kIHPKCYpmYnVs0WvqO
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-RECHKSPAM: 0
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------rkKKFJ8ZZADublAHtF5vsiAg
+Content-Type: multipart/mixed; boundary="------------4e5rwFPgEBCozYnellBD9s8v";
+ protected-headers="v1"
+From: WangYuli <wangyuli@uniontech.com>
+To: mic@digikod.net, gnoack@google.com, paul@paul-moore.com,
+ jmorris@namei.org, serge@hallyn.com, kees@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, nicolas@fjasle.eu
+Cc: linux-security-module@vger.kernel.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Message-ID: <3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
+Subject: [Bug Report] A compilation failure occurs when landlock and
+ RANDSTRUCT are combined with GCC 14.2.0.
+
+--------------4e5rwFPgEBCozYnellBD9s8v
+Content-Type: multipart/mixed; boundary="------------zGPahLwRiqRp0uKPNCcbdmlY"
+
+--------------zGPahLwRiqRp0uKPNCcbdmlY
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: base64
 
-On 10. 04. 25 9:13 dop., Krzysztof Kozlowski wrote:
-> On 09/04/2025 16:42, Ivan Vecera wrote:
->> Add register definitions for components versions and report them
->> during probe.
->>
->> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
->> ---
->>   drivers/mfd/zl3073x-core.c | 36 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 36 insertions(+)
->>
->> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
->> index f0d85f77a7a76..28f28d00da1cc 100644
->> --- a/drivers/mfd/zl3073x-core.c
->> +++ b/drivers/mfd/zl3073x-core.c
->> @@ -1,7 +1,9 @@
->>   // SPDX-License-Identifier: GPL-2.0-only
->>   
->>   #include <linux/array_size.h>
->> +#include <linux/bitfield.h>
->>   #include <linux/bits.h>
->> +#include <linux/cleanup.h>
->>   #include <linux/dev_printk.h>
->>   #include <linux/device.h>
->>   #include <linux/export.h>
->> @@ -13,6 +15,14 @@
->>   #include <net/devlink.h>
->>   #include "zl3073x.h"
->>   
->> +/*
->> + * Register Map Page 0, General
->> + */
->> +ZL3073X_REG16_DEF(id,			0x0001);
->> +ZL3073X_REG16_DEF(revision,		0x0003);
->> +ZL3073X_REG16_DEF(fw_ver,		0x0005);
->> +ZL3073X_REG32_DEF(custom_config_ver,	0x0007);
->> +
->>   /*
->>    * Regmap ranges
->>    */
->> @@ -196,7 +206,9 @@ static void zl3073x_devlink_unregister(void *ptr)
->>    */
->>   int zl3073x_dev_init(struct zl3073x_dev *zldev)
->>   {
->> +	u16 id, revision, fw_ver;
->>   	struct devlink *devlink;
->> +	u32 cfg_ver;
->>   	int rc;
->>   
->>   	rc = devm_mutex_init(zldev->dev, &zldev->lock);
->> @@ -205,6 +217,30 @@ int zl3073x_dev_init(struct zl3073x_dev *zldev)
->>   		return rc;
->>   	}
->>   
->> +	/* Take device lock */
-> 
-> What is a device lock? Why do you need to comment standard guards/mutexes?
+WyBDb21waWxhdGlvbiBmYWlsdXJlIGxvZzogXQ0KDQoqKiogV0FSTklORyAqKiogdGhlcmUg
+YXJlIGFjdGl2ZSBwbHVnaW5zLCBkbyBub3QgcmVwb3J0IHRoaXMgYXMgYSBidWcgDQp1bmxl
+c3MgeW91IGNhbiByZXByb2R1Y2UgaXQgd2l0aG91dCBlbmFibGluZyBhbg0KeSBwbHVnaW5z
+Lg0KRXZlbnTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgfCBQbHVnaW5zDQpQTFVHSU5fRklOSVNIX1RZUEXCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIHwgcmFuZG9taXplX2xheW91dF9wbHVnaW4NClBMVUdJTl9GSU5JU0hf
+REVDTMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCByYW5kb21pemVfbGF5b3V0X3Bs
+dWdpbg0KUExVR0lOX0FUVFJJQlVURVPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+fCBsYXRlbnRfZW50cm9weV9wbHVnaW4gDQpyYW5kb21pemVfbGF5b3V0X3BsdWdpbg0KUExV
+R0lOX1NUQVJUX1VOSVTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCBsYXRlbnRf
+ZW50cm9weV9wbHVnaW4gc3RhY2tsZWFrX3BsdWdpbg0KUExVR0lOX0FMTF9JUEFfUEFTU0VT
+X1NUQVJUwqDCoMKgwqDCoCB8IHJhbmRvbWl6ZV9sYXlvdXRfcGx1Z2luDQpzZWN1cml0eS9s
+YW5kbG9jay9mcy5jOkluIGZ1bmN0aW9uIOKAmGhvb2tfZmlsZV9pb2N0bF9jb21tb27igJk6
+DQpzZWN1cml0eS9sYW5kbG9jay9mcy5jOjE3NDU6NjE6aW50ZXJuYWwgY29tcGlsZXIgZXJy
+b3I6IGluIA0KY291bnRfdHlwZV9lbGVtZW50cywgYXQgZXhwci5jYzo3MDc1DQoxNzQ1IHzC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLnUub3Ag
+PSAmKHN0cnVjdCBsc21faW9jdGxvcF9hdWRpdCkgew0KIMKgwqDCoMKgIHzCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgXg0KMHg3ZjI3ZmE2YmRjYTcgX19saWJjX3N0YXJ0X2NhbGxfbWFpbg0KIMKgwqDCoMKg
+wqDCoCAuLi9zeXNkZXBzL25wdGwvbGliY19zdGFydF9jYWxsX21haW4uaDo1OA0KMHg3ZjI3
+ZmE2YmRkNjQgX19saWJjX3N0YXJ0X21haW5faW1wbA0KIMKgwqDCoMKgwqDCoCAuLi9jc3Uv
+bGliYy1zdGFydC5jOjM2MA0KUGxlYXNlIHN1Ym1pdCBhIGZ1bGwgYnVnIHJlcG9ydCwgd2l0
+aCBwcmVwcm9jZXNzZWQgc291cmNlIChieSB1c2luZyANCi1mcmVwb3J0LWJ1ZykuDQpQbGVh
+c2UgaW5jbHVkZSB0aGUgY29tcGxldGUgYmFja3RyYWNlIHdpdGggYW55IGJ1ZyByZXBvcnQu
+DQpTZWUgPGZpbGU6Ly8vdXNyL3NoYXJlL2RvYy9nY2MtMTQvUkVBRE1FLkJ1Z3M+IGZvciBp
+bnN0cnVjdGlvbnMuDQptYWtlWzRdOiAqKiogW3NjcmlwdHMvTWFrZWZpbGUuYnVpbGQ6MjAz
+OiBzZWN1cml0eS9sYW5kbG9jay9mcy5vXSBFcnJvciAxDQptYWtlWzNdOiAqKiogW3Njcmlw
+dHMvTWFrZWZpbGUuYnVpbGQ6NDYxOiBzZWN1cml0eS9sYW5kbG9ja10gRXJyb3IgMg0KbWFr
+ZVsyXTogKioqIFtzY3JpcHRzL01ha2VmaWxlLmJ1aWxkOjQ2MTogc2VjdXJpdHldIEVycm9y
+IDINCg0KDQoNClsgUmVwcm9kdWNpbmcgc3RlcHM6IF0NCg0Kb3MtcmVsZWFzZTogRGViaWFu
+IEdOVS9MaW51eCB0cml4aWUvc2lkDQoNCkNvbXBpbGVyOiBnY2MgdmVyc2lvbiAxNC4yLjAg
+KERlYmlhbiAxNC4yLjAtMTkpDQoNClRhcmdldDogeDg2XzY0LWxpbnV4LWdudQ0KDQpTdGVw
+OiBtYWtlIGFsbG1vZGNvbmZpZyAmJiBtYWtlIC1qJChucHJvYykNCg0KDQoNClsgRnVsbCBj
+b25maWcgXQ0KDQpXaWxsIGJlIHJlcGlsZWQgdG8gdGhpcyBtYWlsLg0KDQoNCg0KVGhhbmtz
+LA0KDQotLSANCg0KV2FuZ1l1bGkNCg==
+--------------zGPahLwRiqRp0uKPNCcbdmlY
+Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-Just to inform code reader, this is a section that accesses device 
-registers that are protected by this zl3073x device lock.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
->> +	scoped_guard(zl3073x, zldev) {
->> +		rc = zl3073x_read_id(zldev, &id);
->> +		if (rc)
->> +			return rc;
->> +		rc = zl3073x_read_revision(zldev, &revision);
->> +		if (rc)
->> +			return rc;
->> +		rc = zl3073x_read_fw_ver(zldev, &fw_ver);
->> +		if (rc)
->> +			return rc;
->> +		rc = zl3073x_read_custom_config_ver(zldev, &cfg_ver);
->> +		if (rc)
->> +			return rc;
->> +	}
-> 
-> Nothing improved here. Andrew comments are still valid and do not send
-> v3 before the discussion is resolved.
+xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
+P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
+FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
+AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
+bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
+AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
+GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
+7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
+/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
+=3DBlkq
+-----END PGP PUBLIC KEY BLOCK-----
 
-I'm accessing device registers here and they are protected by the device 
-lock. I have to take the lock, register access functions expect this by 
-lockdep_assert.
+--------------zGPahLwRiqRp0uKPNCcbdmlY--
 
->> +
->> +	dev_info(zldev->dev, "ChipID(%X), ChipRev(%X), FwVer(%u)\n",
->> +		 id, revision, fw_ver);
->> +	dev_info(zldev->dev, "Custom config version: %lu.%lu.%lu.%lu\n",
->> +		 FIELD_GET(GENMASK(31, 24), cfg_ver),
->> +		 FIELD_GET(GENMASK(23, 16), cfg_ver),
->> +		 FIELD_GET(GENMASK(15, 8), cfg_ver),
->> +		 FIELD_GET(GENMASK(7, 0), cfg_ver));
-> 
-> 
-> Both should be dev_dbg. Your driver should be silent on success.
+--------------4e5rwFPgEBCozYnellBD9s8v--
 
-+1
-will change.
+--------------rkKKFJ8ZZADublAHtF5vsiAg
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
->> +
->>   	devlink = priv_to_devlink(zldev);
->>   	devlink_register(devlink);
->>   
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
+-----BEGIN PGP SIGNATURE-----
 
+wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ/d9IwUDAAAAAAAKCRDF2h8wRvQL7tE7
+AQDZyqgD8aXHYKfx+cF74l182O189kgmRS9eNUrD4P5RTgD+PcQjU8QZ48YNG+PaCWj1HIrLv9wB
+dLzgpl4Tiru/uQA=
+=G0nq
+-----END PGP SIGNATURE-----
+
+--------------rkKKFJ8ZZADublAHtF5vsiAg--
