@@ -1,137 +1,166 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301021C5D7B;
-	Thu, 10 Apr 2025 08:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05371F1306
+	for <linux-hardening@vger.kernel.org>; Thu, 10 Apr 2025 08:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744272021; cv=none; b=fYILRAOZgGP5y7UP9JZT7rnalxd22aTw2Xha4ZzDVNgftQ3oXmjh96eGUZG76AH1niNB3F27LdA640AgC95e5M8f6p3xue8a/2dC/LmGndH6NWNsl4dAVerAvxpAdzxjTT1mGczMBjzgZSuf1PQDyMtgStHUM3yyDytCMGwSp9U=
+	t=1744273275; cv=none; b=LxwLP5jA0CIA9odeIb1/xVptxJ6nFZ/SgWycE+PSpE7mKFuUy0xp14Ifz0Gv9TEsBqmajTHdZo6j9uocjMd62ArGJzu0A2ZsYTl68pz2SKtiEjJJv/tKuNrhrI4ZJiOZvNrcbwvp23ghXTlXk8HQZZyisW+vrdsm2C9fxFd++xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744272021; c=relaxed/simple;
-	bh=BNs36cFblgpNUrlfgerskcnvl+4ODLGqjQaWjV2nbQk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=mv/N0Iqw6tvPQ9qiWIGve4vOcN+G9LB9wLhsmmH6ct3zk0jOu/WYWTvF/1j0PUvXTsw2L3tWkW3d/ZDTrAuU1RCMQjPzH3asxjG4XWgWXFWTRfyld3uaq6HQBOS0Cv4ylfcKgXW2dskP4QqPOIEnldNMWOPacQ4WeSRdJre7C80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Hx0NLMPi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fcPV92j9; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1744273275; c=relaxed/simple;
+	bh=VekH1TtvA9ycbAEh3GkwYb3Y2hHvnuv9qkqAOyAANBg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mvw4U92AA8zse8B5+Rr1QYPeFwfxbTikChMwLW+v/wIs4iK/VZErmcOTYYFIOiH/R9pePUFxTQNtvxSRjf1rlEVO1Y8B3uYTOGGrD65avTVCTKmd0r1ril/Ve5KBFNJc68KN0gbojGv2wNTERTWIXe85Es5AoJapgoWHHQTQUnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Es0IANls; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Hx0NLMPi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fcPV92j9"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id F114C2540229;
-	Thu, 10 Apr 2025 04:00:14 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Thu, 10 Apr 2025 04:00:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1744272014;
-	 x=1744358414; bh=vqd+an8KzXjGcgrrzFgvmuFuLXgqiHUn3jGJ2YEVl6E=; b=
-	Hx0NLMPiXyE1YQ86SebCLF3W12WY1IioWIfq1mWquoe68p3aw/Ctw2gyCO7J1y4Y
-	nf6BFz7qOTjShAo18ecvfoZ1/LCrV8ZEIbcOWWmcLqtkGOh8otNwVtBh+sN1iE65
-	+N42IEp9dDn2KBXKnjrUk3g5O9RV2QStfAZWxGU7Jo7pGRLWH7SJ/whlm4rgniCC
-	Yjp6PrzfU0MHV0+pYz52ED6/C1uR4EIQD0CX8KZC6ymcVnpKv4AHAO0NnVhSY5fF
-	g0elQktLD7Pn7r1X/9lN19CNyZ+BtDEphyuqMND51CGbkbxeiZAEdC9G/2/8ox6a
-	NgeizINB+ai+CNy67L9xaw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744272014; x=
-	1744358414; bh=vqd+an8KzXjGcgrrzFgvmuFuLXgqiHUn3jGJ2YEVl6E=; b=f
-	cPV92j92d5IZn4lx+B99WEghiDBqzEeOqel+uV1ReDor5TexLY6BaLzYNdKH0WGZ
-	v5frIPWBSghVBd26sdbvvri0TksPiQ1EA1MEgXVy/Tdfmvn7C+d+/S/EvI2JfAKy
-	bSYEWQua7yDglmWGQBq2lSN4tBXjK2ZTgARwOI99QK0MuDRcbdDOrERefAkU5u6g
-	qPWf8moNR1sM1z3SqOPXNxEV68elS6kwMupJv10xMX/5w0OXNo6KtMifJhMciRlP
-	xFZ8ASzCg1ZrdhEz+bYadV7Kx3IUydYWz23DQDdy+3thMVCctobus66QbYGzIVvM
-	7IdrnPBrRUk2hJGCmG7/Q==
-X-ME-Sender: <xms:jnr3ZxRGQ9hMYMU9hy4gqbC9vI885ZxMpYJRNU_h6DxvJLzhR7r2nw>
-    <xme:jnr3Z6zqAMBSavjnMhslQk92V6alM0_ij0lIvIODZkCJEXq8JnkUSFqkTbCKRWMBm
-    vfc7ub9nPnx6imxaYE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekfeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhepvefgieeugfffleekjeeiledtueduledtveej
-    uedtkeevleffjefhfeehlefhfffhnecuffhomhgrihhnpehphhhrrggtkhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
-    rghrnhgusgdruggvpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopehmihgtseguihhgihhkohgurdhnvghtpdhrtghpthhtohepghhnohgrtghk
-    sehgohhoghhlvgdrtghomhdprhgtphhtthhopegrrhgusgeskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgv
-    vghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugi
-    dqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghn
-    ihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvg
-    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhs
-    vggtuhhrihhthidqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:jnr3Z23LKgl9hZ6QcREDgqwpMmhfLDt6lAALKbbCP_NoKIJCosyM-w>
-    <xmx:jnr3Z5D3W62L5bLVYc85RsVpiUQwOFJo2J_vLbJF9S1_XHi5k4SWLg>
-    <xmx:jnr3Z6iMl8WcJZv1cwMdAPotalW6C98EFI1qolSibGqvJc1TF1y8QQ>
-    <xmx:jnr3Z9pvrCW4jNtcNLIQICPw3jBIzR-q02jOyQYUSfID_ETX1mPU2g>
-    <xmx:jnr3Z-41hWrlmOzfeS929v4IhapaQuO_5TJksYkBKtYuUmpaadop9ZR6>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 3BF582220073; Thu, 10 Apr 2025 04:00:14 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Es0IANls"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744273272;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+979veQE+KclGLEtYrkcPeF+CuZm6IpwHOpzDxyU3C4=;
+	b=Es0IANlsk+WvDNVXNQM5znPpnp9PWCy2OpfmRAVDqPNEHPWFdDR5/JJ3dHRiy4eraDS5Ps
+	BPoYaYDaOHHGHtFBoXAL5J3S0rss+ZYWYVrhb4sNzH3fqDIL1WXDBQCFj65BIRK8qtmpR0
+	Wg+0IAo5K4apOsMSUjwZ6MLFrR4D8Ro=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-520-SEnZhfAjOfi0dJpkj5e4Iw-1; Thu,
+ 10 Apr 2025 04:21:06 -0400
+X-MC-Unique: SEnZhfAjOfi0dJpkj5e4Iw-1
+X-Mimecast-MFC-AGG-ID: SEnZhfAjOfi0dJpkj5e4Iw_1744273264
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9902C1800A3E;
+	Thu, 10 Apr 2025 08:21:02 +0000 (UTC)
+Received: from [10.44.33.222] (unknown [10.44.33.222])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A0F751955DCE;
+	Thu, 10 Apr 2025 08:20:57 +0000 (UTC)
+Message-ID: <b73e1103-a670-43da-8f1a-b9c99cd1a90d@redhat.com>
+Date: Thu, 10 Apr 2025 10:20:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T00187b92ccd5616f
-Date: Thu, 10 Apr 2025 09:58:13 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <kees@kernel.org>, "Mark Brown" <broonie@kernel.org>,
- "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org, "Ard Biesheuvel" <ardb@kernel.org>
-Message-Id: <657fd022-4056-4f7f-aaf2-b4bf88fbcb38@app.fastmail.com>
-In-Reply-To: <482D3DA9-7336-4D36-8758-4F8DB48EA8B9@kernel.org>
-References: 
- <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
- <CAHk-=wjTbWiYwfj2wF9iP8SSVk2A_cZFDr5hu1bgU_PfxhyiiA@mail.gmail.com>
- <8cbe0cac-2952-47b6-9b0d-1400aec0bf25@sirena.org.uk>
- <08393aa3-05a3-4e3f-8004-f374a3ec4b7e@app.fastmail.com>
- <482D3DA9-7336-4D36-8758-4F8DB48EA8B9@kernel.org>
-Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 06/14] mfd: zl3073x: Add macros for device registers
+ access
+To: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-7-ivecera@redhat.com>
+ <3e12b213-db36-4a76-9a58-c62dc8b1b2ce@kernel.org>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <3e12b213-db36-4a76-9a58-c62dc8b1b2ce@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, Apr 8, 2025, at 22:37, Kees Cook wrote:
-> On April 8, 2025 2:22:52 AM PDT, Arnd Bergmann <arnd@arndb.de> wrote:
->>>
->>> indicates that Talos 1.9.1 uses latent_entropy (but we didn't check how
->>> accurate that survey is).
->
-> The early RNG for small machines remains pretty bad, so I can 
-> understand wanting to keep that around. For bigger machines it's not as 
-> much of a benefit.
 
-Does "small machines" still mean those without a cycle counter
-as in the 2009 article [https://phrack.org/issues/66/15#article]
-or are you thinking of those that may have a working
-random_get_entropy() but that remains too predictable for
-add_device_randomness() because of the low frequency (e.g.
-19.2 MHz on many ARMv7/v8)?
 
-The former (ARMv5, AMD Elan, Xburst) were still common back then
-but are mostly extinct now, while the latter obviously remain
-in wide use.
+On 10. 04. 25 9:17 dop., Krzysztof Kozlowski wrote:
+> On 09/04/2025 16:42, Ivan Vecera wrote:
+>> Add several macros to access device registers. These macros
+>> defines a couple of static inline functions to ease an access
+>> device registers. There are two types of registers, the 1st type
+>> is a simple one that is defined by an address and size and the 2nd
+>> type is indexed register that is defined by base address, type,
+>> number of register instances and address stride between instances.
+>>
+>> Examples:
+>> __ZL3073X_REG_DEF(reg1, 0x1234, 4, u32);
+>> __ZL3073X_REG_IDX_DEF(idx_reg2, 0x1234, 2, u16, 4, 0x10);
+> 
+> Why can't you use standard FIELD_ macros? Why inventing the wheel again?
 
->>Talos also uses stackleak. I also see that alpine and qubes have the
->>same two gcc plugins enabled.
->
-> Yeah, stackleak has no viable alternative. It's effectively 
-> init_on_free for stack. It's be nice if there were a way to do this 
-> with upstream compilers (track call depth).
+This is not about FIELD_* macros replacement. This is an abstraction to 
+access device registers in safe manner. Generated inline functions 
+ensures that proper value or pointer to value type is passed by caller.
+Also in case of arbitrary zl3073x_{read,write_{,idx}_reg() the does not 
+need to know what is the register address.
 
-I guess a simplified version could in theory be done in the kernel
-using _mcount without compiler help, but that would be much more
-expensive if every function entry has to call it, right?
+If the caller just need to read regX or indexed regY it will call just
 
-     Arnd
+zl3073x_read_regX(..., &value);
+zl3073x_read_regX(..., idx, &value);
+
+instead of
+
+zl3073x_read_reg(..., ZL3073x_REGX_ADDR, &value);
+zl3073x_read_reg(..., ZL3073x_REGY_ADDR + (idx * ZL3073X_REGY_STRIDE), 
+&value)
+
+The 1st variant is additionally type safe, the caller is warned if it is 
+passing u8 * instead of u32 *.
+
+I tried to take similar approach the mlxsw driver took to access device 
+registers.
+
+If you are only against such macro usage for static inline functions 
+generation, I can avoid them and pre-create them in separate include 
+file like zl3073x_regs.h
+
+>> this defines the following functions:
+>> int zl3073x_read_reg1(struct zl3073x_dev *dev, u32 *value);
+>> int zl3073x_write_reg1(struct zl3073x_dev *dev, u32 value);
+>> int zl3073x_read_idx_reg2(struct zl3073x_dev *dev, unsigned int idx,
+>>                            u32 *value);
+>> int zl3073x_write_idx_reg2(struct zl3073x_dev *dev, unsigned int idx,
+>>                             u32 value);
+> 
+> Do not copy code into commit msg. I asked about this last time. Explain
+> why do you need it, why existing API is not good.
+
+Will drop... I wanted only show how the macros work and what is their output
+
+>>
+>> There are also several shortcut macros to define registers with
+>> certain bit widths: 8, 16, 32 and 48 bits.
+>>
+>> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+>> ---
+> 
+> 
+> ...
+> 
+>> + *
+>> + * Note that these functions have to be called with the device lock
+>> + * taken.
+>> + */
+>> +#define __ZL3073X_REG_IDX_DEF(_name, _addr, _len, _type, _num, _stride)	\
+>> +typedef _type zl3073x_##_name##_t;					\
+>> +static inline __maybe_unused						\
+>> +int zl3073x_read_##_name(struct zl3073x_dev *zldev, unsigned int idx,	\
+>> +			 _type * value)					\
+>> +{									\
+>> +	WARN_ON(idx >= (_num));						\
+> 
+> No need to cause panic reboots. Either review your code so this does not
+> happen or properly handle.
+
+Ack, will replace by
+
+if (idx >= (_num))
+	return -EINVAL
+
+Thanks,
+Ivan
+
