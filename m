@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7CA2054E3;
-	Thu, 10 Apr 2025 07:17:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6B020B1F9;
+	Thu, 10 Apr 2025 07:19:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744269436; cv=none; b=pbOkcLHZ5vw+mODpXlIlIk95cL0/Eo2nhoOxr0NXcmICH3R0vTtPn4vngiiUy4los5h7FU1c/1GmlfjOylMGuKs+IbWIsbnQlDFR8CZIaf9FhMYvTurxfKdYLXtAN3Gv98vXxlpshs6H4VTWmetVXWThdjooWCD5GOmq7SxlQVw=
+	t=1744269567; cv=none; b=Vs9K28SgkRJhQ3qNf0vKzHdwZ9o2/Fz1a1DWiDYo+MEXl0gJuziOiS7e11ArqF3antjq9kEbe5PtgTKncTgcABeRo00k6Jh/P+ZwcPwIa98+2AgjpjGQcpBFALqY6KHRk0G5sPpYSF8s2T4TyPINuFKDtsoP3w34YupIIX0O/0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744269436; c=relaxed/simple;
-	bh=Wc3WJaeq/lKJEglwuUmXcTJV3wqvUDyjphbnQot0QZw=;
+	s=arc-20240116; t=1744269567; c=relaxed/simple;
+	bh=rxXXSqIXZBNHJqmd1FTQtUGE3vJtbMGUdcrgc/5WTk4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SsVZ3qXRCDum4p0g2CWJGhCBgzrO9nlneSxBiUiCFff6LZfSJKDhWacVc+oZRsrb/KcT/qdn37Riagc96douisjLk9OMT3HyLNl4LSBVKxCnGHXaNi/vWoinIaZQY/g5/4gzq0Q2JXLn/KxvjA7g5yMrUD8VI8PWDeEWafwrvHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnzqE7ZT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=sfK82DhG2eltDoqYBNz0TDdU30+Rtgp+fSYrlpuJPSpWd7hgX7TF6H4KtNutmnnlI91dpNIAGbYUjYMV9hh8H6Pu9047Cdu7LedtMz0lRdThrTR/EjosUWUg1sXUH+ErANLvngrbhuuVja1ayKkPU5zZTIpypoDyXXSoFYkm5oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFy0I/VY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnzqE7ZT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19DFBC4CEDD;
-	Thu, 10 Apr 2025 07:17:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFy0I/VY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 343D2C4CEDD;
+	Thu, 10 Apr 2025 07:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744269435;
-	bh=Wc3WJaeq/lKJEglwuUmXcTJV3wqvUDyjphbnQot0QZw=;
+	s=k20201202; t=1744269567;
+	bh=rxXXSqIXZBNHJqmd1FTQtUGE3vJtbMGUdcrgc/5WTk4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AnzqE7ZTj0oi8EyCS4Z5B7ZX0/Qs5y5/rohyro5oy2OWjfB4Ue0G7YINGrk6dz7fl
-	 wW1etv59ENn4jS++/Djy2R2w1cMgHdtCHh6cboZVlmSB50kCPTsT3RuW5GyL0v45FJ
-	 S5iuLBeoz5WfqNHbHTHJkZTlFLFlTZuPlQr540Mjv5rbb0YoVo+/5/wsMm3RX2sOaM
-	 qYHinVmq/fUT6larYiXaiqlFIxm5lmbiRaJ8IXqwf/Pd7nwA7D7lo27MQOYZLBUHV9
-	 +5YDMYdagnKCsRp2TE4vUcSl7MZnD7lwFfbl2ItpGwPfQ9OFOWx/hk5B8BBzgUI5Kb
-	 qnCYCb0pVY9GQ==
-Message-ID: <3e12b213-db36-4a76-9a58-c62dc8b1b2ce@kernel.org>
-Date: Thu, 10 Apr 2025 09:17:10 +0200
+	b=nFy0I/VYUAx3DHquq6OWyhRyPFgZp8Iua8C8ZsF+Cpxm1tNxA7E2v1kvk3O/zXqY6
+	 zcyjSmOC4H707LDj9n4cgI/xVxR04JZ0Ut0oHvImRGLWPM1D2dhBj+vm5O092iOYjr
+	 LOFegqbv9iwRBD1M+FB2bnwsAaR7bw9rO7K5Qo3634Y3bd+XryD+rWJwiET/AxHh49
+	 QfexVaRsCDeH4Nx0f29nm/O81UC0LSoMjuu9Lp1uOHctlnx86Hr5dsGblfNrnjz31k
+	 c7xHnunsTj8mtVbYHd8Ap2qvR0iJLZYcPJ992AaKVx8NixNYpZV3N0GsMEArXBN/zb
+	 noSPbbJfwbidA==
+Message-ID: <eecfb843-e9cd-4d07-bb72-15cf84a25706@kernel.org>
+Date: Thu, 10 Apr 2025 09:19:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,21 +35,20 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/14] mfd: zl3073x: Add macros for device registers
- access
-To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+Subject: Re: [PATCH v2 03/14] mfd: Add Microchip ZL3073x support
+To: Andy Shevchenko <andy@kernel.org>, Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
  Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
  Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
+ Andrew Morton <akpm@linux-foundation.org>,
+ Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-7-ivecera@redhat.com>
+ <20250409144250.206590-4-ivecera@redhat.com>
+ <Z_aVlIiT07ZDE2Kf@smile.fi.intel.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -95,60 +94,28 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250409144250.206590-7-ivecera@redhat.com>
+In-Reply-To: <Z_aVlIiT07ZDE2Kf@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 09/04/2025 16:42, Ivan Vecera wrote:
-> Add several macros to access device registers. These macros
-> defines a couple of static inline functions to ease an access
-> device registers. There are two types of registers, the 1st type
-> is a simple one that is defined by an address and size and the 2nd
-> type is indexed register that is defined by base address, type,
-> number of register instances and address stride between instances.
+On 09/04/2025 17:43, Andy Shevchenko wrote:
+>> +/*
+>> + * Regmap range configuration
+>> + *
+>> + * The device uses 7-bit addressing and has 16 register pages with
+>> + * range 0x00-0x7f. The register 0x7f in each page acts as page
+>> + * selector where bits 0-3 contains currently selected page.
+>> + */
+>> +static const struct regmap_range_cfg zl3073x_regmap_ranges[] = {
+>> +	{
+>> +		.range_min	= 0,
 > 
-> Examples:
-> __ZL3073X_REG_DEF(reg1, 0x1234, 4, u32);
-> __ZL3073X_REG_IDX_DEF(idx_reg2, 0x1234, 2, u16, 4, 0x10);
-
-Why can't you use standard FIELD_ macros? Why inventing the wheel again?
-
+> This still has the same issue, you haven't given a chance to me to reply
+> in v1 thread. I'm not going to review this as it's not settled down yet.
+> Let's first discuss the questions you have in v1.
 > 
-> this defines the following functions:
-> int zl3073x_read_reg1(struct zl3073x_dev *dev, u32 *value);
-> int zl3073x_write_reg1(struct zl3073x_dev *dev, u32 value);
-> int zl3073x_read_idx_reg2(struct zl3073x_dev *dev, unsigned int idx,
->                           u32 *value);
-> int zl3073x_write_idx_reg2(struct zl3073x_dev *dev, unsigned int idx,
->                            u32 value);
-
-Do not copy code into commit msg. I asked about this last time. Explain
-why do you need it, why existing API is not good.
-
-> 
-> There are also several shortcut macros to define registers with
-> certain bit widths: 8, 16, 32 and 48 bits.
-> 
-> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
-> ---
-
-
-...
-
-> + *
-> + * Note that these functions have to be called with the device lock
-> + * taken.
-> + */
-> +#define __ZL3073X_REG_IDX_DEF(_name, _addr, _len, _type, _num, _stride)	\
-> +typedef _type zl3073x_##_name##_t;					\
-> +static inline __maybe_unused						\
-> +int zl3073x_read_##_name(struct zl3073x_dev *zldev, unsigned int idx,	\
-> +			 _type * value)					\
-> +{									\
-> +	WARN_ON(idx >= (_num));						\
-
-No need to cause panic reboots. Either review your code so this does not
-happen or properly handle.
+I already started reviewing v2, so now we have simultaneous discussions
+in v1 and v2...
 
 Best regards,
 Krzysztof
