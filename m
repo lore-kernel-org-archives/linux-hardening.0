@@ -1,139 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF462989B5
-	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 09:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81ECCEEB1
+	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 09:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365391; cv=none; b=GqO9yZhb66op8ZkI+NSAH4WnK/x68fpm1tboemoIZFADBmnzNl7WwkbdIsvBXb0oGoKpbFIidN3AxJ1HoaQ75lL/uCpgdZnpmjYlwA2pBjP3MEOUrwgU/8vgEBuNeSeEP/ZHf/4RxeWnTBj9Ku3WL7avFShCZuKJPWAHiFoELMI=
+	t=1744365485; cv=none; b=fAdFqfgMvszga9ZWtFkySw5XNhZRMD8MrhUV/NrWUWhIhYQLRYK4MHSAgMGSfVf4eahj7yf5sa3FJ1u+/tgm/jBHAVOnvWQhM8XMPrzR0Dui7xR6TKY5prIeX7V3bnjiYEeKny3lluShv7mFdLBPq+Ni5+uMEt9izQEa5YdzOMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744365391; c=relaxed/simple;
-	bh=5Il5jcJw3FuAIORfi213Pt6kpRXF0u1YVGrWeMfFeSM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L6omMsrVYwgIllIwGTmlAGUL/VDbrsEr8znERA0hX3xgpcqGGtR8mqggSuiHL85we4EvvAszmCYJ871bQP1qhpUtlewlGVdviD6uVoCJREaMpW1pULjX6qN6g4JuE5qqlgd8VjnoLkgMWUIdw6Teugfj9YP1hORfwREQS1hGcSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QtKDWcE4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744365485; c=relaxed/simple;
+	bh=zsVOdD84X8pt+vFPxaVoFyBPCoT4S8sULlbK26J4FGc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JgqT4TVST78PZ0XJqRyJTTKywyZdyDVvko5tQ4Fn/fNTMfBUoIOcGF836hUImhvscNBzJT1cSpyhFTKDoZSYnDWIPZ+Ebhqqa6FW3v+6U4ezgyjw7ToRKIShopVmG/OSqCnEhGuHe+GzBr/AA4/Kgx8uWJslJjNH9fu/XqIMEKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hxOlhV7v; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QtKDWcE4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744365388;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ypViF9xwRKSdJxjymiRlr36Hbu2rzw35GmKD6sGYV+M=;
-	b=QtKDWcE4C6vRP/eubgCb1cNmzpqz/jf6Kg8VpGOQWkd8brVMJe/7soHIuSXOLXc1bg8aLT
-	vP00Oqcf1nLx3sLH45SBPH/WQGwab/gAPjltZjFe9As3PAOhGjofWeHFSdDsuI71B782TQ
-	PwqlA7Yp9OI0of8aNmrdAUQ4gA7Iqog=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-691-EcPimzzdMei2_fs4BcGaGQ-1; Fri,
- 11 Apr 2025 05:56:25 -0400
-X-MC-Unique: EcPimzzdMei2_fs4BcGaGQ-1
-X-Mimecast-MFC-AGG-ID: EcPimzzdMei2_fs4BcGaGQ_1744365383
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7225618007E1;
-	Fri, 11 Apr 2025 09:56:22 +0000 (UTC)
-Received: from [10.45.225.124] (unknown [10.45.225.124])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E0908180174E;
-	Fri, 11 Apr 2025 09:56:16 +0000 (UTC)
-Message-ID: <7e6bf69b-0916-4ad9-b42f-8645f5c95d5d@redhat.com>
-Date: Fri, 11 Apr 2025 11:56:15 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hxOlhV7v"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B0T2UK028318
+	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 09:58:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=k+idOG9XotOwye43x+aZtsKS
+	o5apYGkMFeSNzvPXUCA=; b=hxOlhV7v6VeJG+N0YGvU0gjoBJF6Yn4aA71CxGUC
+	GYcp9uaTYZ8g29UzU0rmK5BJD5j+vDiWoU2KJQ46ld+4CGyz7s+SZabxzo5R3wSi
+	Ybv/BUA3LcQp9THEOZFRn3n3IPkjSHa5cSAkHy76P+LvG6kcHQGxPXU2Pgq8SdsP
+	jczEm4Ovqw4/QP6hK6qoqFkgUWoahjNO4yrGpR8RoiQc9caWBFo6aQ+weEa4JQ/8
+	W52HPqmzJp4os2as8dyTd1cMESCp51Z0MYBw4Gzw88QkuzRzj6Psk1EZFXXB8k4S
+	bMvgexwmkHI3S9tQw2ot1G8+Dnv3u5Wvj+/WusbdwCXL1w==
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1stc1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 09:58:02 +0000 (GMT)
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-af423fb4f0eso1231723a12.0
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 02:58:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744365481; x=1744970281;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k+idOG9XotOwye43x+aZtsKSo5apYGkMFeSNzvPXUCA=;
+        b=a+ycWfDFPryfRazeYV3q3h05qHJlgcDDm91ktQzGLTZfqna9WiB/YdhJ56iYG62Is8
+         0p/6clQnyHRCY5YXI84dafi2Xf+Xh3FvarcrHJC9aE0ZQqGNgHuYkt4vqKz4QSq2XHlp
+         GkWBdjenHlcfygNNYBS671vyw9+ZT6fuLcj9pD6TUDyAeHuSNyVrG9S+4z0d3hbOl1qy
+         BTiVItXvqEjP/XpOuQG8B+i3SRa4KbjY3FSLHZCwUK2g0g0DTxmqyyVUFkJFg+LSntlz
+         zSnyri3MeeOdZ6eeDPqmzfMG62wQ07LGMy6etp5GYMIubDtQGWkgSGoj1DQDzZnH0a4d
+         /PZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWvY15s3N0h/pzRv4EOO7KJSs5czbB+ikGx3jaEH+zu4DlymaRUpHl1RZEGpNDdB+pneUgaNmHMznKlUtykVWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznjzTIavRegg0vza+hWmAjLORaTRMeb5PBLcdB3LUid0ak+Xov
+	PRsxfCXWFfxBJE47SUJQJDs5gwaFgo4wil0/MKgIWsMyHOgIDD7mfFe5s3snRWIsarOancW1Q5v
+	G/6lwM8c+2AKwrFEzZZVVHlrte+iNaJPOXxlURr5p9AAsOUfbOqWKCqmwgM7xNVG8d3SWs6iyNU
+	Bezt50Ho3WZ1mwCarm8dksbn0/ZspKZxJJXyh+rOemLQ==
+X-Gm-Gg: ASbGncsVZrdqLaicwGHjq0xrnd6FLQgMYjQJsdJXaz1tlVB/AciMU9s2qOM1Gtnbcwm
+	Fa1BTG/myKRFuP1dcSBXf5niDNTTbhbga7NI/quvx0BsK/eag6YaPT6EYzdKkL45q7iOl
+X-Received: by 2002:a17:90b:6ce:b0:2fe:b470:dde4 with SMTP id 98e67ed59e1d1-30823670b3dmr4001694a91.12.1744365480556;
+        Fri, 11 Apr 2025 02:58:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGI1n5Z8D5yvjCWkAaXY4/KGC/DQqzFnZDGgKLa+mNp2DTPuSUov3tYEUj2t2409SXNjrimJVcrKkNOiyzN9oY=
+X-Received: by 2002:a17:90b:6ce:b0:2fe:b470:dde4 with SMTP id
+ 98e67ed59e1d1-30823670b3dmr4001658a91.12.1744365480147; Fri, 11 Apr 2025
+ 02:58:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
- Azurite chip family
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Prathosh.Satish@microchip.com, conor@kernel.org, krzk@kernel.org,
- netdev@vger.kernel.org, vadim.fedorenko@linux.dev,
- arkadiusz.kubalewski@intel.com, jiri@resnulli.us, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org, kees@kernel.org,
- andy@kernel.org, akpm@linux-foundation.org, mschmidt@redhat.com,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-3-ivecera@redhat.com>
- <20250410-skylark-of-silent-symmetry-afdec9@shite>
- <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
- <20250410-puritan-flatbed-00bf339297c0@spud>
- <6dc1fdac-81cc-4f2c-8d07-8f39b9605e04@redhat.com>
- <CY5PR11MB6462412A953AF5D93D97DCE5ECB72@CY5PR11MB6462.namprd11.prod.outlook.com>
- <bd7d005b-c715-4fd9-9b0d-52956d28d272@lunn.ch>
- <7ab19530-d0d4-4df1-9f75-060c3055585b@redhat.com>
- <4e331736-36f2-4796-945f-613279329585@lunn.ch>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <4e331736-36f2-4796-945f-613279329585@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
+ <685e784c-3f36-4cd1-9c34-7f98c64d50f2@oss.qualcomm.com> <0bec3e62-0753-4c3d-abe1-1a43356afc80@oss.qualcomm.com>
+ <e7bd2840-dd93-40dd-a1bc-4cd606a34b44@oss.qualcomm.com>
+In-Reply-To: <e7bd2840-dd93-40dd-a1bc-4cd606a34b44@oss.qualcomm.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Fri, 11 Apr 2025 12:57:48 +0300
+X-Gm-Features: ATxdqUEgh6uca37YjS4OleFpbDuXY0MPOwXUGWqzyIIRj2finACospEgxJL2mn0
+Message-ID: <CAO9ioeUeNeSxz7ADZ-BbJbhEKkszVS+SmbqaZCgTpL=csak=hg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Retrieve information about DDR from SMEM
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-ORIG-GUID: oRNlFrIXp-CxIEYQl3p5NrE5nyqEwvVa
+X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f8e7aa cx=c_pps a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=aDpUdPclnTHmp7_NnesA:9 a=QEXdDO2ut3YA:10 a=_Vgx9l1VpLgwpw_dHYaR:22
+X-Proofpoint-GUID: oRNlFrIXp-CxIEYQl3p5NrE5nyqEwvVa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_03,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=812 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110062
+
+On Fri, 11 Apr 2025 at 12:49, Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
+>
+> On 4/9/25 5:49 PM, Konrad Dybcio wrote:
+> > On 4/9/25 5:44 PM, Dmitry Baryshkov wrote:
+> >> On 09/04/2025 17:47, Konrad Dybcio wrote:
+> >>> SMEM allows the OS to retrieve information about the DDR memory.
+> >>> Among that information, is a semi-magic value called 'HBB', or Highest
+> >>> Bank address Bit, which multimedia drivers (for hardware like Adreno
+> >>> and MDSS) must retrieve in order to program the IP blocks correctly.
+> >>>
+> >>> This series introduces an API to retrieve that value, uses it in the
+> >>> aforementioned programming sequences and exposes available DDR
+> >>> frequencies in debugfs (to e.g. pass to aoss_qmp debugfs). More
+> >>> information can be exposed in the future, as needed.
+> >>
+> >> I know that for some platforms HBB differs between GPU and DPU (as it's being programmed currently). Is there a way to check, which values are we going to program:
+> >>
+> >> - SM6115, SM6350, SM6375 (13 vs 14)
+>
+> SM6350 has INFO_V3
+> SM6375 has INFO_V3_WITH_14_FREQS
+
+I'm not completely sure what you mean here. I pointed out that these
+platforms disagreed upon the HBB value between the DPU/msm_mdss.c and
+a6xx_gpu.c.
+In some cases (a610/SM6115 and a619/SM6350) that was intentional to
+fix screen corruption issues. I don't remember if it was the case for
+QCM2290 or not.
+
+>
+> >> - SC8180X (15 vs 16)
+>
+> So I overlooked the fact that DDR info v3 (e.g. on 8180) doesn't provide
+> the HBB value.. Need to add some more sanity checks there.
+>
+> Maybe I can think up some fallback logic based on the DDR type reported.
+>
+> >> - QCM2290 (14 vs 15)
+>
+> I don't have one on hand, could you please give it a go on your RB1?
+> I would assume both it and SM6115 also provide v3 though..
+>
+> Konrad
 
 
 
-On 10. 04. 25 11:12 odp., Andrew Lunn wrote:
-> On Thu, Apr 10, 2025 at 08:33:31PM +0200, Ivan Vecera wrote:
->>
->>
->> On 10. 04. 25 7:36 odp., Andrew Lunn wrote:
->>>> Prathosh, could you please bring more light on this?
->>>>
->>>>> Just to clarify, the original driver was written specifically with 2-channel
->>>>> chips in mind (ZL30732) with 10 input and 20 outputs, which led to some confusion of using zl3073x as compatible.
->>>>> However, the final version of the driver will support the entire ZL3073x family
->>>>> ZL30731 to ZL30735 and some subset of ZL30732 like ZL80732 etc
->>>>> ensuring compatibility across all variants.
->>>
->>> Hi Prathosh
->>>
->>> Your email quoting is very odd, i nearly missed this reply.
->>>
->>> Does the device itself have an ID register? If you know you have
->>> something in the range ZL30731 to ZL30735, you can ask the hardware
->>> what it is, and the driver then does not need any additional
->>> information from DT, it can hard code it all based on the ID in the
->>> register?
->>>
->>> 	Andrew
->>>
->> Hi Andrew,
->> yes there is ID register that identifies the ID. But what compatible should
->> be used?
->>
->> microchip,zl3073x was rejected as wildcard and we should use all
->> compatibles.
-> 
-> You have two choices really:
-> 
-> 1) You list each device with its own compatible, because they are in
-> fact not compatible. You need to handle each one different, they have
-> different DT properties, etc. If you do that, please validate the ID
-> register against the compatible and return -ENODEV if they don't
-> match.
-> 
-> 2) You say the devices are compatible. So the DT compatible just
-> indicates the family, enough information for the driver to go find the
-> ID register. This does however require the binding is the same for all
-> devices. You cannot have one family member listing 10 inputs in its
-> binding, and another family member listing 20.
-> 
-> If you say your devices are incompatible, and list lots of
-> compatibles, you can then use constraints in the yaml, based on the
-> compatible, to limit each family member to what it supports.
-> 
-> My guess is, you are going to take the first route.
-
-Yes, this looks reasonable... in this case should I use 
-microchip,zl3073x.yaml like e.g. gpio/gpio-pca95xx.yaml?
-
-Ivan
-
+-- 
+With best wishes
+Dmitry
