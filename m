@@ -1,81 +1,49 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A5727D785
-	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 07:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231E727EC9D
+	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 08:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744357645; cv=none; b=intJcWT5YyVmr1tTJpkIKOiUhavmIWDu/Jv8QwtcZd1mXjiHvGXW7yhiLObzTbIUSNXYcaADnMnHVN7by+e3d1dQuZnMzK/LbC6v94D6wNsEbuEHuRhBOU5b2Lj6a/Mt+BG0gOxhwb7bmiBsuF89BPPBWSraSM1x3BYWGGHegeE=
+	t=1744358489; cv=none; b=EHSLvdNBwWiR7Bx4RgDihWNFTSjhWjd7qLdIN5bP4Jvx6MVPsmcYeU7bwjOpPcdk60z8UdNYDI6vKmLaEsNKvsFAjrWANGLZTF+QyqoGFqTfzeuAQOwtwypcobSirEhge48HMlITE4FpMtG/a8Wumf+G51ss+Z1Y95Az3feZOq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744357645; c=relaxed/simple;
-	bh=EAz6BYyegX9HsUVlO2LvtyL+bKqfENHOMQini843ORE=;
+	s=arc-20240116; t=1744358489; c=relaxed/simple;
+	bh=7HpYJ2qu2P7Z6iGhZXhWC2kKKmcV6NItufe2Jaqo0zk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BoDF2mvePHnjlS9OCT1T/5s861hE6YOq4pJk2eyWX8Q4WooTSWOlmiP6AUzurVbtKxw39KaJCJyjdhZTG8iJW8nY3yAgFHNyfbgXD1/SMf0G2rr3phHFKAfTtwObwAK9oZNr6kJdY2ERb2uSnvANAz7hYpTniiCAXzg+zUGIfQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3AzJ3xPt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y3PEkJOF; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3AzJ3xPt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y3PEkJOF; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=Bpa7bFx5oY9JDppLDlfCCxp9GNeKsDTQ/CXCNcKmScvBSH4MItlVj0ZqzdwgyjXKO3RfMMLV6R2VBl9Bo+Ge4+tJxH2N5S2958tr/kT4agPvJ2oSuYLVTwg5YY1bAPOSRj5Y0XEx9lx7o1uGT8WC1bhykJ1B4gzLDxabL9fj/VM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hWHJGG7M; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3AzJ3xPt";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y3PEkJOF";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3AzJ3xPt";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y3PEkJOF"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hWHJGG7M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744358487;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kuoOwVeCLC2BNxuJu8PYjCz8x0OZU31drELGm05wlM4=;
+	b=hWHJGG7MNDjzkDJhftdHuqs+LVy+xW83TClsQyNpC43QOZ/7ct0f58qNYlH93bT7EgZRB0
+	YlOS346EJcKRqcAloL97qMKpobekTyclAyDdk3LuiRG1PrkjyphUfd/oGmayZWz+p4IAVJ
+	ULJ40/XIPkq7821c7czC0bIpwtbHXZE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-133-MKaejLBYOtiCJIwWsZx4Dw-1; Fri,
+ 11 Apr 2025 04:01:20 -0400
+X-MC-Unique: MKaejLBYOtiCJIwWsZx4Dw-1
+X-Mimecast-MFC-AGG-ID: MKaejLBYOtiCJIwWsZx4Dw_1744358478
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3C0A821125;
-	Fri, 11 Apr 2025 07:47:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744357641; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G6aNx8roFs3brDqtJz4qS5Ktvp9IrPY2jgp3xIHvb3U=;
-	b=3AzJ3xPtXM9xl6A9NBybWV0Z+mdnzcsHM3ymLxCOl0O1rFgI1boQ3Vfk3y81515olX/b9Z
-	GJBdnvEpB3+a3m0kDO3vuJdQE5DA2jzsbgtkvpVGdiDc4PlhNPKpsMAtYWbMeOov+guYmH
-	f5rcCkufQ00ZcUrV+uQwWihxKDm1axY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744357641;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G6aNx8roFs3brDqtJz4qS5Ktvp9IrPY2jgp3xIHvb3U=;
-	b=Y3PEkJOFMDbn2b/M6sYqxko+XqKRr4dhrdZkciCJqVDGy7i2TKbC4ulkk5BifBd82OpI+G
-	WYDY7knV6nr0p2Dg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=3AzJ3xPt;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Y3PEkJOF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744357641; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G6aNx8roFs3brDqtJz4qS5Ktvp9IrPY2jgp3xIHvb3U=;
-	b=3AzJ3xPtXM9xl6A9NBybWV0Z+mdnzcsHM3ymLxCOl0O1rFgI1boQ3Vfk3y81515olX/b9Z
-	GJBdnvEpB3+a3m0kDO3vuJdQE5DA2jzsbgtkvpVGdiDc4PlhNPKpsMAtYWbMeOov+guYmH
-	f5rcCkufQ00ZcUrV+uQwWihxKDm1axY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744357641;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G6aNx8roFs3brDqtJz4qS5Ktvp9IrPY2jgp3xIHvb3U=;
-	b=Y3PEkJOFMDbn2b/M6sYqxko+XqKRr4dhrdZkciCJqVDGy7i2TKbC4ulkk5BifBd82OpI+G
-	WYDY7knV6nr0p2Dg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 013AB13886;
-	Fri, 11 Apr 2025 07:47:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Vax0OwjJ+GcJCAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 11 Apr 2025 07:47:20 +0000
-Message-ID: <472508e5-2b96-403b-9284-274c5bf587c9@suse.cz>
-Date: Fri, 11 Apr 2025 09:47:16 +0200
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 79C7A195606B;
+	Fri, 11 Apr 2025 08:01:18 +0000 (UTC)
+Received: from [10.45.225.124] (unknown [10.45.225.124])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9668E1809BF5;
+	Fri, 11 Apr 2025 08:01:13 +0000 (UTC)
+Message-ID: <c68dd22d-f9e3-43d0-8090-e7f53265ef89@redhat.com>
+Date: Fri, 11 Apr 2025 10:01:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -83,98 +51,125 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] slab: Decouple slab_debug and no_hash_pointers
+Subject: Re: [PATCH v2 00/14] Add Microchip ZL3073x support (part 1)
+To: Lee Jones <lee@kernel.org>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250411072616.GU372032@google.com>
 Content-Language: en-US
-To: Kees Cook <kees@kernel.org>, Petr Mladek <pmladek@suse.com>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: Sergio Perez Gonzalez <sperezglz@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>,
- Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
- Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>,
- "Paul E. McKenney" <paulmck@kernel.org>, Randy Dunlap
- <rdunlap@infradead.org>, Tamir Duberstein <tamird@gmail.com>,
- Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- linux-doc@vger.kernel.org, linux-mm@kvack.org, Thomas Huth
- <thuth@redhat.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Ard Biesheuvel <ardb@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Andreas Hindborg <a.hindborg@kernel.org>, Stephen Boyd
- <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250410174428.work.488-kees@kernel.org>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250410174428.work.488-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <20250411072616.GU372032@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 3C0A821125
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[30];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,lwn.net,linux.intel.com,rasmusvillemoes.dk,chromium.org,linux-foundation.org,linux.com,kernel.org,google.com,lge.com,linux.dev,oracle.com,infradead.org,vger.kernel.org,kvack.org,redhat.com,alien8.de,linuxfoundation.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	R_RATELIMIT(0.00)[to_ip_from(RLisu716frudqkg98kczdd9eac)];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 4/10/25 19:44, Kees Cook wrote:
-> Some system owners use slab_debug=FPZ (or similar) as a hardening option,
-> but do not want to be forced into having kernel addresses exposed due
-> to the implicit "no_hash_pointers" boot param setting.[1]
+On 11. 04. 25 9:26 dop., Lee Jones wrote:
+> On Wed, 09 Apr 2025, Ivan Vecera wrote:
 > 
-> Introduce the "hash_pointers" boot param, which defaults to "auto"
-> (the current behavior), but also includes "always" (forcing on hashing
-> even when "slab_debug=..." is defined), and "never". The existing
-> "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
+>> Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
+>> provides DPLL and PTP functionality. This series bring first part
+>> that adds the common MFD driver that provides an access to the bus
+>> that can be either I2C or SPI.
+>>
+>> The next series will bring the DPLL driver that will covers DPLL
+>> functionality. And another ones will bring PTP driver and flashing
+>> capability via devlink.
+>>
+>> Testing was done by myself and by Prathosh Satish on Microchip EDS2
+>> development board with ZL30732 DPLL chip connected over I2C bus.
+>>
+>> Patch breakdown
+>> ===============
+>> Patch 1 - Common DT schema for DPLL device and pin
+>> Patch 3 - Basic support for I2C, SPI and regmap
+>> Patch 4 - Devlink registration
+>> Patches 5-6 - Helpers for accessing device registers
+>> Patches 7-8 - Component versions reporting via devlink dev info
+>> Patches 9-10 - Helpers for accessing register mailboxes
+>> Patch 11 - Clock ID generation for DPLL driver
+>> Patch 12 - Export strnchrnul function for modules
+>>             (used by next patch)
+>> Patch 13 - Support for MFG config initialization file
+>> Patch 14 - Fetch invariant register values used by DPLL and later by
+>>             PTP driver
+>>
+>> Ivan Vecera (14):
+>>    dt-bindings: dpll: Add device tree bindings for DPLL device and pin
+>>    dt-bindings: dpll: Add support for Microchip Azurite chip family
+>>    mfd: Add Microchip ZL3073x support
+>>    mfd: zl3073x: Register itself as devlink device
+>>    mfd: zl3073x: Add register access helpers
+>>    mfd: zl3073x: Add macros for device registers access
+>>    mfd: zl3073x: Add components versions register defs
+>>    mfd: zl3073x: Implement devlink device info
+>>    mfd: zl3073x: Add macro to wait for register value bits to be cleared
+>>    mfd: zl3073x: Add functions to work with register mailboxes
+>>    mfd: zl3073x: Add clock_id field
+>>    lib: Allow modules to use strnchrnul
+>>    mfd: zl3073x: Load mfg file into HW if it is present
+>>    mfd: zl3073x: Fetch invariants during probe
+>>
+>>   .../devicetree/bindings/dpll/dpll-device.yaml |  76 ++
+>>   .../devicetree/bindings/dpll/dpll-pin.yaml    |  44 +
+>>   .../bindings/dpll/microchip,zl3073x-i2c.yaml  |  74 ++
+>>   .../bindings/dpll/microchip,zl3073x-spi.yaml  |  77 ++
+>>   MAINTAINERS                                   |  11 +
+>>   drivers/mfd/Kconfig                           |  32 +
+>>   drivers/mfd/Makefile                          |   5 +
+>>   drivers/mfd/zl3073x-core.c                    | 883 ++++++++++++++++++
+>>   drivers/mfd/zl3073x-i2c.c                     |  59 ++
+>>   drivers/mfd/zl3073x-spi.c                     |  59 ++
+>>   drivers/mfd/zl3073x.h                         |  14 +
+>>   include/linux/mfd/zl3073x.h                   | 363 +++++++
+>>   lib/string.c                                  |   1 +
+>>   13 files changed, 1698 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
+>>   create mode 100644 drivers/mfd/zl3073x-core.c
+>>   create mode 100644 drivers/mfd/zl3073x-i2c.c
+>>   create mode 100644 drivers/mfd/zl3073x-spi.c
+>>   create mode 100644 drivers/mfd/zl3073x.h
+>>   create mode 100644 include/linux/mfd/zl3073x.h
 > 
-> This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
-> 
-> Link: https://github.com/KSPP/linux/issues/368 [1]
-> Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
-> Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-> Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Not only are all of the added abstractions and ugly MACROs hard to read
+> and troublesome to maintain, they're also completely unnecessary at this
+> (driver) level.  Nicely authored, easy to read / maintain code wins over
+> clever code 95% of the time.  Exporting functions to pass around
+> pointers to private structures is also a non-starter.
 
-I like how this makes things more generic. Perhaps there are more debug
-boot/config options that could tie into the hash_pointers=auto and are even
-more obvious than slab_debug in the sense that you would really only enable
-them in debugging/CI runs when you do not care about the info leaks but want
-as much useful debug info as possible (KASAN etc?).
+If you mean regmap_config exported to zl3073x-i2c/spi modules then these 
+three modules could be squashed together into single module.
 
-Given how this changes mostly printk code and is in fact only a small change
-to slab, I'll wait first if printk maintainers want to take this patch. In
-that case please add
+> After looking at the code, there doesn't appear to be any inclusion of
+> the MFD core header.  How can this be an MFD if you do not use the MFD
+> API?  MFD is not a dumping area for common code and call-backs.  It's a
+> subsystem used to neatly separate out and share resources between
+> functionality that just happens to share the same hardware chip.
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+You are right, the v2 series was spliced into 2 separate series as the 
+bot warns about too big (>15 commits) series. The real MFD API usage is 
+present in the second one (or in patch 14 of the v1 patch-set) when MFD 
+cells are created for DPLL functional blocks.
 
-Thanks!
+And yes, I chose the MFD for the common part because DPLL and PTP 
+functions share the same registers concurrently. And MFD could be the 
+right place for exposing these shared resources and providing 
+synchronized access to them. The device has also GPIO functionality that 
+could be potentially covered in the future.
+
+Or would you prefer to implement all these functional block in one 
+monolithic driver? Would it be better for maintenance?
+
+Thanks,
+Ivan
 
