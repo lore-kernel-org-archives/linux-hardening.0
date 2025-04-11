@@ -1,49 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6902367C7
-	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 13:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6336B2AE99
+	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 13:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744377456; cv=none; b=G/BptVVuQeSy4pRODSNrBwYn/8Odr0vJttresNYjCD2uA0TwnJ/Svv7eFGSMXqGf2WpmVaPqNn4gJn41Iu2DsGNWAYYgKPGEed2mHF5AdAkPBT4Wvap4z6c0RZWqE65OOGK/vFn1+6rDIXoyHCZgDv3Yhzz7z9kZvL6cwAKeBV8=
+	t=1744377577; cv=none; b=t7nFghZVnizTjtAMwbMl3l4c87H0hjNcglJYZLQfjdX1nN2LAX4dFm3DorJ1C6tJtR8AEjMYINRbS+ZD+RrvfG+C7KkRXh/tXB9Q1Te5OYs7UlPDof5PCqp9aCiRbK7p90fAd+iQrV8hsNEqnWoEOcBJKi+YtbiBjt8v2YlLfUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744377456; c=relaxed/simple;
-	bh=0vAlQXUS7Qy2jeHeUT8fAxf4F02U5tCBQQ3d2Vwre84=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=I93s5ZF9KsnDjoLUyR+qPJGmngRaRgQqzKZTxwrdwmlSAneuca1UDQs00rKxj/1HkNbQh/evsuAoHBaQ7XsB7rTj/H65hgmHxrrMprc6wBZtHAHe0+oaPlgrLSA7StGecOwYAnx+aj+GeLT8eClwpO6wMd2EOdzDlFEH/QYZ42Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ibx6hWL6; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1744377577; c=relaxed/simple;
+	bh=DvdCNV3kj/5TD9O7DSU/WxOtcVOvJSx4AkDTYs+lxkM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JkRQt9Mmkp9dgSjtwXu6htoZ6UM5YBzUL5y8XJ7cqUnkusyPO3tTtHSJGJE9d+LGgTn8WMi1Q/7UlsSDbMUhxzlI7StGY3lu+tT9Gtgu6gtWtkoU0BWMZ0kZqh+0VyuDO2u9Dwk1z/XjME8FEbHsuAfLC1c68n+ophK0G+aaAr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aSNaIRsB; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ibx6hWL6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aSNaIRsB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744377454;
+	s=mimecast20190719; t=1744377575;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aAPMnr15UUC2IJaasw8kvWmrIDi+EshqBG8kRRliicc=;
-	b=Ibx6hWL6fMD24TVpGi6HtulSj5TBkPrlLPaVJGSFvNk12SeNJhmxctYCvorbkg/O9bpz81
-	qnc9Emc7xGJEadMTq4a0exImNZ2QFoEnuNHBiV0lLcgIZEhyeWVX0us10jADA6gwuRGxWO
-	fuZxCWXWa0YBgSxdhiVcq6Wnked3pAM=
+	bh=shuX7fon/hIq4duj4t+qKrqkD2Z+ua79QnTf8iIlD5c=;
+	b=aSNaIRsB0F44gThI3ZK/qVC1UaWLURlK6UWGR8WCfryV8Uzd67Xh4sL2nKdwTqd3ZfjlaW
+	EIks+tgG+Wu4J3ulQySWqNJzEeF3OSEfSjYlLUMQOfEYKqGm4zeg2UYnUsLlZB5IT7kKSc
+	DHvDBwLdOPkkcqsmGaQooW79cDM5Prc=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-104-xSJHeetwPd2MxncaHr6QqA-1; Fri,
- 11 Apr 2025 09:17:32 -0400
-X-MC-Unique: xSJHeetwPd2MxncaHr6QqA-1
-X-Mimecast-MFC-AGG-ID: xSJHeetwPd2MxncaHr6QqA_1744377442
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-15-7Bs_rkfVNzqHaoE-430wBA-1; Fri,
+ 11 Apr 2025 09:19:30 -0400
+X-MC-Unique: 7Bs_rkfVNzqHaoE-430wBA-1
+X-Mimecast-MFC-AGG-ID: 7Bs_rkfVNzqHaoE-430wBA_1744377568
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 863C81800EC5;
-	Fri, 11 Apr 2025 13:17:21 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2197C1801A1A;
+	Fri, 11 Apr 2025 13:19:28 +0000 (UTC)
 Received: from [10.45.225.124] (unknown [10.45.225.124])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 55E621828ABC;
-	Fri, 11 Apr 2025 13:17:16 +0000 (UTC)
-Message-ID: <46ff3480-caca-4e2c-9382-2897c611758a@redhat.com>
-Date: Fri, 11 Apr 2025 15:17:14 +0200
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B2043180B486;
+	Fri, 11 Apr 2025 13:19:22 +0000 (UTC)
+Message-ID: <e80b24f2-a936-4f7a-a86b-af3bc9b6a380@redhat.com>
+Date: Fri, 11 Apr 2025 15:19:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,9 +53,9 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
  defs
-From: Ivan Vecera <ivecera@redhat.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, netdev@vger.kernel.org,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
  Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -64,52 +64,37 @@ Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  Andy Shevchenko <andy@kernel.org>, Andrew Morton
  <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
+ linux-hardening@vger.kernel.org
 References: <20250409144250.206590-1-ivecera@redhat.com>
  <20250409144250.206590-8-ivecera@redhat.com>
  <CAHp75Ve4LO5rB3HLDV5XXMd4SihOQbPZBEZC8i1VY_Nz0E9tig@mail.gmail.com>
  <b7e223bd-d43b-4cdd-9d48-4a1f80a482e8@redhat.com>
+ <8c9e95e2-27da-4f3d-b277-ca8e98ab61ef@lunn.ch>
 Content-Language: en-US
-In-Reply-To: <b7e223bd-d43b-4cdd-9d48-4a1f80a482e8@redhat.com>
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <8c9e95e2-27da-4f3d-b277-ca8e98ab61ef@lunn.ch>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 11. 04. 25 1:19 odp., Ivan Vecera wrote:
-> The range for regmap 1: (registers 0x000-0x4FF)
-> regmap_range_cfg {
->      .range_min = 0,
->      .range_max = 10 * 128 - 1, /* 10 pages, 128 registers each */
->      .selector_reg = 0x7f,      /* page selector at each page */
->      .selector_shift = 0,       /* no shift in page selector */
->      .selector_mask = GENMASK(3, 0),    /* 4 bits for page sel */
->      .window_start = 0,         /* 128 regs from 0x00-0x7f */
->      .window_len = 128,
-> };
+
+
+On 11. 04. 25 2:31 odp., Andrew Lunn wrote:
+>> 2nd regmap for indirect registers (mailboxes) (pages 10-15) with disabled
+>> locking:
+>>
+>> regmap_config {
+>> 	...
+>> 	.disable_lock = true,
+>> 	...
+>> };
 > 
-> The range for regmap 2: (registers 0x500-0x77F)
-> regmap_range_cfg {
->      .range_min = 10 * 128,
->      .range_max = 15 * 128 - 1, /* 5 pages, 128 registers each */
->      .selector_reg = 0x7f,      /* page selector at each page */
->      .selector_shift = 0,       /* no shift in page selector */
->      .selector_mask = GENMASK(3, 0),    /* 4 bits for page sel */
->      .window_start = 0,         /* 128 regs from 0x00-0x7f */
->      .window_len = 128,
-> };
+> Do all registers in pages 10-15 need special locking? Or just a
+> subset?
 > 
-> Is it now OK?
-
-No this is not good... I cannot use 2 ranges.
-
-This is not safe... if the caller use regmap 2 to read/write something 
-below 0x500 (by mistake), no mapping is applied and value is directly 
-used as register number that's wrong :-(.
-
-Should I use rather single mapping range to cover all pages and ensure 
-at driver level that regmap 2 is not used for regs < 0x500?
--or-
-what would be the best approach?
+> 	Andrew
+> 
+All of them... 1 page (>=10) == 1 mailbox.
 
 I.
 
