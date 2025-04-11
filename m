@@ -1,72 +1,49 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6432238C23
-	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 10:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B176F278E4A
+	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 11:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744368760; cv=none; b=IIsKgegkJ8J/Ti4c1GyG5kBhW3vpMYkO3GInFghak8lUgrGjzf+qQcIEyP0sOwEj0lFRtt+rR1CU/jlEbhjCTmr7lFS3jS9p1BFFhrWRbrHOAyI80Qi7/7+MXPTy7Kt5TXOHlOQvNcN1GMYx7/0CeAm7lbv/xTuQEIDmOIc4jJg=
+	t=1744370394; cv=none; b=jyPyskc8In99s1IHDU/OqKSPWFNHX3sLPQ9rsq6xAY4p3t8HN8q/dPBSBVkNnSAVZFeeDAuPujM27DfQ6FyZGHDk7ekCB0CYbm+JvOtYTnKyW3rRXNkFi/GiGDxIJ58Xjjrcl4DwTjMANezWAYyPYvqycDRifvT7Hay1BDB0Xvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744368760; c=relaxed/simple;
-	bh=Tan3Av/Lm+z1Q9h4SrUceT5PuPf6lEEj6R73rpGAhlk=;
+	s=arc-20240116; t=1744370394; c=relaxed/simple;
+	bh=0r0XdZLQZTKCfWrlvdr3kIJq4bXiXhg9OZrf3YuzUpo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=io76ecW/gcyu0JLjeFsf5h780XD3Y5eb5uEiHF4SOf7SFGTEFZw16Z/B7/wX8WU7AxcNUe+NM1T/I6YNoO52nSmQ2V2Sb0CKkavgjmS4il7VFx8c9D+hiWgR8BpQxtDcQh2ZezryjIwHq69W1XnEiP71BYgqF73JLOhq15dCAWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OJe0pVHC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=iXWX6mtG/08xVEOjD5MzdqXGUZGlfXqxSxgzXIo64DmiCIRPgJU8vvloKhTHpmJLWEEKdqYTi4K+kvkWd72Oi8H8tLiNA+hEQK6Uxeyk5CkcP7hZ64q/NT1DUNN1pGYxa7cenLqin9pa28sMa5ouYm7B02iW1tD1XZipCkX16z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a2lkDOXj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OJe0pVHC"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B501xu013878
-	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 10:52:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fNXY9rYt/z3Q2Ub2AXLO/VnBcVUjSATOzGNm4ge035I=; b=OJe0pVHCljdmX1ri
-	cMA6O69qXk/bF3aoz7rXWnqHVtmj8eAFhoOzLphmmoLv9+p3nltv6Gu9P7KxMS8f
-	T42v2gRq1zrf3hFExbI6KpZS/IJTRcE9UMQnetzquTPtcn4IevTj3h93cZzuW0vr
-	0Kgx02LMvZPgNkwqvbtuYe6s9mHMqHMejK5C12q9dLkWNFuLHr3mFBosE95zj1IY
-	3LNhhKJA+jmgRa1se2w18qU4CuCx5zTyBpCO9G9ErhEQteE/ErZD43UWC1NQRi1s
-	FQ41FiP6OnHfuEm9ZoQ5y6X0SJDUNeEZnXjvqD8DICoXIt48s84C3VC73bz9fpTa
-	8gQ9NA==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbej6cq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 10:52:37 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c552802e9fso45695385a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 03:52:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744368756; x=1744973556;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fNXY9rYt/z3Q2Ub2AXLO/VnBcVUjSATOzGNm4ge035I=;
-        b=sCI8HB9vn6bF2ecJ6cN7j3r+HqRHwfzGiEIMhBErOsgRK+miT/vxztj/80pX/JrRbv
-         ME3sCTwm32j5Mgvcswvs9ZRd9X3AEZ6aaTdUv6J0T5r3+hRJ9Hp8/kidAHd/lcRiFDe3
-         8jneLwlmxesibUDZ+6kR2NteFQW882RO0WQFdfMIKtoDsFXIsKm4nMXKMMYo5oHIkO+L
-         CeaVzlbAoWjhSiIsw0y6nruxg58n8r91+jP01We1APlmpy1Tmy9kaxCKU9BcYEPVR7i0
-         9e049n5CMZzme2yy1HBrq2+lZ7DT6Qx0E6Gt7GrfPb28AFlxLZRxeTLdFIimXqIMJ30C
-         9wFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUe1EEvBcPeUmHB0KJfzPhhx/RExgUnAZzFYkK/pGoJpbLi0WFHP53Qk2MWtNYAsiLz4v47SO6f/ck0MadgtEk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGhsFRGw1MjIccfHoinZM9WAB1AIawAhcMTK8QZolG4fFtmBAz
-	YGC1a6kF7whPMENr7MDjf7Nq88QTM3j1xSy8Q4A8wvQ2o14L1QNj8zKt/0v2t+uk0wvfWz69iGL
-	ukwfkrs1gAO6bMftEDm2x48+QV6I69S9aN4DpDLKZryjRkYvQs5L2DXj+1L8ANKHbsv4=
-X-Gm-Gg: ASbGncvY8Y7v0qF8N57QpNlgWDciQba66a1KzY5emeEWgTAZD3gimEZ+Rj/1bx4aZ4/
-	fxqu3jcUjaL1DPxwSJZM1HRHyLW6YeC5KGN4f2TKSQ3+xGK8RlBEOjLUksISv4+P4c4muWnMA6p
-	zm3yyEfZB5qN27DlbpVI3PPFB/aFyIeHW4lLAPX3Bus9HnYJQTwmFqI7ULSZpJNBwtafVJI5a8m
-	5nv+DRW/g4uEi5I17OLCAnIR0/1PHGyL8Y8W01UDXH1EDxQjCOsqxm/T7M6paT2VztnLEQLX/0U
-	lnVevL6zmmc2qNCOccXoFNWWjxxB3FAOmn0yOVcxFJbB5loshIaG/+avC9cAlWQ5eQ==
-X-Received: by 2002:a05:620a:c53:b0:7c5:8f40:4d47 with SMTP id af79cd13be357-7c7af1dc318mr119455185a.13.1744368756353;
-        Fri, 11 Apr 2025 03:52:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFgpMoOoENvwdXllWONxEL3omMfIMcMMELpt2LzrD6jRvrCAkafmMSO9EYpuccU7DXY3huwRQ==
-X-Received: by 2002:a05:620a:c53:b0:7c5:8f40:4d47 with SMTP id af79cd13be357-7c7af1dc318mr119452585a.13.1744368755845;
-        Fri, 11 Apr 2025 03:52:35 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ccc2dcsm427286966b.132.2025.04.11.03.52.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 03:52:35 -0700 (PDT)
-Message-ID: <4e265348-3466-49fb-82e2-255205052d1e@oss.qualcomm.com>
-Date: Fri, 11 Apr 2025 12:52:32 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a2lkDOXj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744370391;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wzPWtVMosS8yz6213SvlQbIOghMt7zjrea3KyihzWNI=;
+	b=a2lkDOXj0AFt4P9dE18K3g9OlS+7zq1JhtU6ZbWPHIPtcvHMNYxLn2bX7KzrfveOdL+NQp
+	HaRZ6F6ftIXcWuBjW5y+Zti90jZXV5nmNq25EFamt/Z+JOvPIqZbHamo+3AerZMVdmt/nP
+	IgmiRBZUERwz/1o1QxW0WNNkLA3+lYI=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-321-afkO1osCNiOUWDbyswIf-A-1; Fri,
+ 11 Apr 2025 07:19:48 -0400
+X-MC-Unique: afkO1osCNiOUWDbyswIf-A-1
+X-Mimecast-MFC-AGG-ID: afkO1osCNiOUWDbyswIf-A_1744370386
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1DC2F1800257;
+	Fri, 11 Apr 2025 11:19:46 +0000 (UTC)
+Received: from [10.45.225.124] (unknown [10.45.225.124])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 68B621801A69;
+	Fri, 11 Apr 2025 11:19:40 +0000 (UTC)
+Message-ID: <b7e223bd-d43b-4cdd-9d48-4a1f80a482e8@redhat.com>
+Date: Fri, 11 Apr 2025 13:19:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -74,88 +51,92 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] Retrieve information about DDR from SMEM
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org
-References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
- <685e784c-3f36-4cd1-9c34-7f98c64d50f2@oss.qualcomm.com>
- <0bec3e62-0753-4c3d-abe1-1a43356afc80@oss.qualcomm.com>
- <e7bd2840-dd93-40dd-a1bc-4cd606a34b44@oss.qualcomm.com>
- <CAO9ioeUeNeSxz7ADZ-BbJbhEKkszVS+SmbqaZCgTpL=csak=hg@mail.gmail.com>
- <b04464b6-2ad9-4866-88e9-437e96645726@oss.qualcomm.com>
- <sgjporlde6bgcp2mhr3r5c6wj3a3u37s5nlrrokbutsyizixod@7shpt55muqki>
+Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
+ defs
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-8-ivecera@redhat.com>
+ <CAHp75Ve4LO5rB3HLDV5XXMd4SihOQbPZBEZC8i1VY_Nz0E9tig@mail.gmail.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <sgjporlde6bgcp2mhr3r5c6wj3a3u37s5nlrrokbutsyizixod@7shpt55muqki>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 0tL9Qj26iEztJQDW1K0PwyVsU0DqjG0_
-X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f8f475 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=E-cWInRRfnsFT7zTJZEA:9 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-ORIG-GUID: 0tL9Qj26iEztJQDW1K0PwyVsU0DqjG0_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=432 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110068
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <CAHp75Ve4LO5rB3HLDV5XXMd4SihOQbPZBEZC8i1VY_Nz0E9tig@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 4/11/25 12:50 PM, Dmitry Baryshkov wrote:
-> On Fri, Apr 11, 2025 at 12:03:03PM +0200, Konrad Dybcio wrote:
->> On 4/11/25 11:57 AM, Dmitry Baryshkov wrote:
->>> On Fri, 11 Apr 2025 at 12:49, Konrad Dybcio
->>> <konrad.dybcio@oss.qualcomm.com> wrote:
->>>>
->>>> On 4/9/25 5:49 PM, Konrad Dybcio wrote:
->>>>> On 4/9/25 5:44 PM, Dmitry Baryshkov wrote:
->>>>>> On 09/04/2025 17:47, Konrad Dybcio wrote:
->>>>>>> SMEM allows the OS to retrieve information about the DDR memory.
->>>>>>> Among that information, is a semi-magic value called 'HBB', or Highest
->>>>>>> Bank address Bit, which multimedia drivers (for hardware like Adreno
->>>>>>> and MDSS) must retrieve in order to program the IP blocks correctly.
->>>>>>>
->>>>>>> This series introduces an API to retrieve that value, uses it in the
->>>>>>> aforementioned programming sequences and exposes available DDR
->>>>>>> frequencies in debugfs (to e.g. pass to aoss_qmp debugfs). More
->>>>>>> information can be exposed in the future, as needed.
->>>>>>
->>>>>> I know that for some platforms HBB differs between GPU and DPU (as it's being programmed currently). Is there a way to check, which values are we going to program:
->>>>>>
->>>>>> - SM6115, SM6350, SM6375 (13 vs 14)
->>>>
->>>> SM6350 has INFO_V3
->>>> SM6375 has INFO_V3_WITH_14_FREQS
->>>
->>> I'm not completely sure what you mean here. I pointed out that these
->>> platforms disagreed upon the HBB value between the DPU/msm_mdss.c and
->>> a6xx_gpu.c.
->>> In some cases (a610/SM6115 and a619/SM6350) that was intentional to
->>> fix screen corruption issues. I don't remember if it was the case for
->>> QCM2290 or not.
+
+
+On 10. 04. 25 7:50 odp., Andy Shevchenko wrote:
+> On Wed, Apr 9, 2025 at 5:43 PM Ivan Vecera <ivecera@redhat.com> wrote:
 >>
->> As I said below, I couldn't get a good answer yet, as the magic value
->> is not provided explicitly and I'll hopefully be able to derive it from
->> the available data
+>> Add register definitions for components versions and report them
+>> during probe.
 > 
-> I see...
-> Is this data even supposed to be poked into? The foo_WITH_bar types
-> doesn't sound like a very stable API.
+> JFYI: disabling regmap lock (independently of having an additional one
+> or not) is not recommended. With that you actually disable the useful
+> debugging feature of regmap, your device will not be present in the
+> (regmap) debugfs after that.
+> 
 
-Yeah, it was designed with both the producer and consumer being part
-of a single codebase, always having the data structures in sync..
+I will follow Andrew's recommendation:
 
-Konrad
+1st regmap for direct registers (pages 0-9) with config like:
+
+regmap_config {
+	...
+	.lock = mutex_lock,
+	.unlock = mutex_unlock,
+	.lock_arg = &zl3073x_dev->lock
+	...
+};
+
+2nd regmap for indirect registers (mailboxes) (pages 10-15) with 
+disabled locking:
+
+regmap_config {
+	...
+	.disable_lock = true,
+	...
+};
+
+For direct registers the lock will be handled automatically by regmap 1.
+For indirect registers the lock will be managed explicitly by the driver 
+to ensure atomic access to mailbox.
+
+The range for regmap 1: (registers 0x000-0x4FF)
+regmap_range_cfg {
+	.range_min = 0,
+	.range_max = 10 * 128 - 1, /* 10 pages, 128 registers each */
+	.selector_reg = 0x7f,      /* page selector at each page */
+	.selector_shift = 0,       /* no shift in page selector */
+	.selector_mask = GENMASK(3, 0),	/* 4 bits for page sel */
+	.window_start = 0,         /* 128 regs from 0x00-0x7f */
+	.window_len = 128,
+};
+
+The range for regmap 2: (registers 0x500-0x77F)
+regmap_range_cfg {
+	.range_min = 10 * 128,
+	.range_max = 15 * 128 - 1, /* 5 pages, 128 registers each */
+	.selector_reg = 0x7f,      /* page selector at each page */
+	.selector_shift = 0,       /* no shift in page selector */
+	.selector_mask = GENMASK(3, 0),	/* 4 bits for page sel */
+	.window_start = 0,         /* 128 regs from 0x00-0x7f */
+	.window_len = 128,
+};
+
+Is it now OK?
+
+Thanks,
+Ivan
+
