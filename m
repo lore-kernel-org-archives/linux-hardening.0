@@ -1,49 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66F427E1CA
-	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 07:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A5727D785
+	for <linux-hardening@vger.kernel.org>; Fri, 11 Apr 2025 07:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744357527; cv=none; b=twZlBQl1LvrzT36NiOA/Js/51wgDh3G4PdK21v7wihxOnSwZHH07B7nbofkdEU9dBlGyoAD+93fpp5WB3qxvIvi1aSjy6TVMTsITKtlYHjz6i2lLiS2auiPHEf1XhlTpf6RGgbgpIChSEIt0H2ObAMXfASCfd8xQ2adn+MegJ50=
+	t=1744357645; cv=none; b=intJcWT5YyVmr1tTJpkIKOiUhavmIWDu/Jv8QwtcZd1mXjiHvGXW7yhiLObzTbIUSNXYcaADnMnHVN7by+e3d1dQuZnMzK/LbC6v94D6wNsEbuEHuRhBOU5b2Lj6a/Mt+BG0gOxhwb7bmiBsuF89BPPBWSraSM1x3BYWGGHegeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744357527; c=relaxed/simple;
-	bh=yFKMfa01fVvPA/+6vycPplB6hZ2RANSH3ciaj5Nszps=;
+	s=arc-20240116; t=1744357645; c=relaxed/simple;
+	bh=EAz6BYyegX9HsUVlO2LvtyL+bKqfENHOMQini843ORE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k2rCS8lgLihwUhq01Bs+73++qXtrhwoZB2+H5Zy6XO7WOMnMlTrHq78EcOKHL1Ms6cxoW/c0GnIUE19N3b+GEgD+JU1ZnNXEsf6Z2sSvr+JW1Msqoanxcf+pmNqThgpa5oUYwKDy4HlEcBvD+gT9XQnKPBCMPGbmVvHE7JIaLdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FTaFuD6j; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=BoDF2mvePHnjlS9OCT1T/5s861hE6YOq4pJk2eyWX8Q4WooTSWOlmiP6AUzurVbtKxw39KaJCJyjdhZTG8iJW8nY3yAgFHNyfbgXD1/SMf0G2rr3phHFKAfTtwObwAK9oZNr6kJdY2ERb2uSnvANAz7hYpTniiCAXzg+zUGIfQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3AzJ3xPt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y3PEkJOF; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3AzJ3xPt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y3PEkJOF; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FTaFuD6j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744357524;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3AzJ3xPt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y3PEkJOF";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3AzJ3xPt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y3PEkJOF"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3C0A821125;
+	Fri, 11 Apr 2025 07:47:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744357641; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CLsgjOWVS7DH/+x2sDLX0Yn/8o48chOiekDq1vSoRQw=;
-	b=FTaFuD6jKxDJqJbpUKuyaB6aWTxPu7cnSjTiL+JCD7CSEGKAowE4XortsKu+SvTRExtL58
-	Fsij/Cu4ta9r63Nt4hvmSC2a8DnR8/2uB00QDFht60gB7l4Uv8tkecQ18JDUqh88Z+5DKn
-	rT3MTKW8x4dCuTeCCLBy0M3EHVah9Vs=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-138-xey1FPZXNUSijoA8bZBwMQ-1; Fri,
- 11 Apr 2025 03:45:20 -0400
-X-MC-Unique: xey1FPZXNUSijoA8bZBwMQ-1
-X-Mimecast-MFC-AGG-ID: xey1FPZXNUSijoA8bZBwMQ_1744357518
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	bh=G6aNx8roFs3brDqtJz4qS5Ktvp9IrPY2jgp3xIHvb3U=;
+	b=3AzJ3xPtXM9xl6A9NBybWV0Z+mdnzcsHM3ymLxCOl0O1rFgI1boQ3Vfk3y81515olX/b9Z
+	GJBdnvEpB3+a3m0kDO3vuJdQE5DA2jzsbgtkvpVGdiDc4PlhNPKpsMAtYWbMeOov+guYmH
+	f5rcCkufQ00ZcUrV+uQwWihxKDm1axY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744357641;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G6aNx8roFs3brDqtJz4qS5Ktvp9IrPY2jgp3xIHvb3U=;
+	b=Y3PEkJOFMDbn2b/M6sYqxko+XqKRr4dhrdZkciCJqVDGy7i2TKbC4ulkk5BifBd82OpI+G
+	WYDY7knV6nr0p2Dg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=3AzJ3xPt;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Y3PEkJOF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744357641; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G6aNx8roFs3brDqtJz4qS5Ktvp9IrPY2jgp3xIHvb3U=;
+	b=3AzJ3xPtXM9xl6A9NBybWV0Z+mdnzcsHM3ymLxCOl0O1rFgI1boQ3Vfk3y81515olX/b9Z
+	GJBdnvEpB3+a3m0kDO3vuJdQE5DA2jzsbgtkvpVGdiDc4PlhNPKpsMAtYWbMeOov+guYmH
+	f5rcCkufQ00ZcUrV+uQwWihxKDm1axY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744357641;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G6aNx8roFs3brDqtJz4qS5Ktvp9IrPY2jgp3xIHvb3U=;
+	b=Y3PEkJOFMDbn2b/M6sYqxko+XqKRr4dhrdZkciCJqVDGy7i2TKbC4ulkk5BifBd82OpI+G
+	WYDY7knV6nr0p2Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C489F180025E;
-	Fri, 11 Apr 2025 07:45:16 +0000 (UTC)
-Received: from [10.45.225.124] (unknown [10.45.225.124])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CE9B8180B486;
-	Fri, 11 Apr 2025 07:45:10 +0000 (UTC)
-Message-ID: <b69e1d87-7c07-4482-b156-196cb60b1870@redhat.com>
-Date: Fri, 11 Apr 2025 09:45:09 +0200
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 013AB13886;
+	Fri, 11 Apr 2025 07:47:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Vax0OwjJ+GcJCAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 11 Apr 2025 07:47:20 +0000
+Message-ID: <472508e5-2b96-403b-9284-274c5bf587c9@suse.cz>
+Date: Fri, 11 Apr 2025 09:47:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,85 +83,98 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/14] Add Microchip ZL3073x support (part 1)
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409171713.6e9fb666@kernel.org>
- <889e68eb-d5b5-41ae-876d-9efc45416db6@redhat.com>
- <20250410155710.067a97f7@kernel.org>
+Subject: Re: [PATCH] slab: Decouple slab_debug and no_hash_pointers
 Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <20250410155710.067a97f7@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Kees Cook <kees@kernel.org>, Petr Mladek <pmladek@suse.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: Sergio Perez Gonzalez <sperezglz@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>,
+ Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
+ Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Randy Dunlap
+ <rdunlap@infradead.org>, Tamir Duberstein <tamird@gmail.com>,
+ Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ linux-doc@vger.kernel.org, linux-mm@kvack.org, Thomas Huth
+ <thuth@redhat.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Ard Biesheuvel <ardb@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Stephen Boyd
+ <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250410174428.work.488-kees@kernel.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250410174428.work.488-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Rspamd-Queue-Id: 3C0A821125
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,lwn.net,linux.intel.com,rasmusvillemoes.dk,chromium.org,linux-foundation.org,linux.com,kernel.org,google.com,lge.com,linux.dev,oracle.com,infradead.org,vger.kernel.org,kvack.org,redhat.com,alien8.de,linuxfoundation.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	R_RATELIMIT(0.00)[to_ip_from(RLisu716frudqkg98kczdd9eac)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-
-
-On 11. 04. 25 12:57 dop., Jakub Kicinski wrote:
-> On Thu, 10 Apr 2025 11:18:24 +0200 Ivan Vecera wrote:
->> On 10. 04. 25 2:17 dop., Jakub Kicinski wrote:
->>> On Wed,  9 Apr 2025 16:42:36 +0200 Ivan Vecera wrote:
->>>> Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
->>>> provides DPLL and PTP functionality. This series bring first part
->>>> that adds the common MFD driver that provides an access to the bus
->>>> that can be either I2C or SPI.
->>>>
->>>> The next series will bring the DPLL driver that will covers DPLL
->>>> functionality. And another ones will bring PTP driver and flashing
->>>> capability via devlink.
->>>>
->>>> Testing was done by myself and by Prathosh Satish on Microchip EDS2
->>>> development board with ZL30732 DPLL chip connected over I2C bus.
->>>
->>> The DPLL here is for timing, right? Not digital logic?
->>> After a brief glance I'm wondering why mfd, PHC + DPLL
->>> is a pretty common combo. Am I missing something?
->>
->> Well, you are right, this is not pretty common combo right now. But how
->> many DPLL implementations we have now in kernel?
->>
->> There are 3 mlx5, ice and ptp_ocp. The first two are ethernet NIC
->> drivers that re-expose (translate) DPLL API provided by their firmwares
->> and the 3rd timecard that acts primarily as PTP clock.
->>
->> Azurite is primarly the DPLL chip with multiple DPLL channels and one of
->> its use-case is time synchronization or signal synchronization. Other
->> one can be PTP clock and even GPIO controller where some of input or
->> output pins can be configured not to receive or send periodic signal but
->> can act is GPIO inputs or outputs (depends on wiring and usage).
->>
->> So I have taken an approach to have common MFD driver that provides a
->> synchronized access to device registers and to have another drivers for
->> particular functionality in well bounded manner (DPLL sub-device (MFD
->> cell) for each DPLL channel, PTP cell for channel that is configured to
->> provide PTP clock and potentially GPIO controller cell but this is
->> out-of-scope now).
+On 4/10/25 19:44, Kees Cook wrote:
+> Some system owners use slab_debug=FPZ (or similar) as a hardening option,
+> but do not want to be forced into having kernel addresses exposed due
+> to the implicit "no_hash_pointers" boot param setting.[1]
 > 
-> Okay, my understanding was that if you need to reuse the component
-> drivers across multiple different SoCs or devices, and there is no
-> "natural" bus then MFD is the go to. OTOH using MFD as a software
-> abstraction/to organize your code is a pointless complication.
-> (We're going to merge the MFD parts via Lee's tree and the all actual
-> drivers via netdev?) Admittedly that's just my feeling and not based
-> on any real info or experience. I defer to Lee and others to pass
-> judgment.
+> Introduce the "hash_pointers" boot param, which defaults to "auto"
+> (the current behavior), but also includes "always" (forcing on hashing
+> even when "slab_debug=..." is defined), and "never". The existing
+> "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
+> 
+> This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
+> 
+> Link: https://github.com/KSPP/linux/issues/368 [1]
+> Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
+> Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-I followed an example of rsmu mfd driver that provides an access to the 
-bus (i2c/spi) via regmap and ptp_clockmatrix platform driver for the PTP 
-functionality of the RSMU chip. The ptp_clockmatrix device is also 
-instantiated only from rsmu mfd and it is not shared by multiple mfd 
-drivers.
+I like how this makes things more generic. Perhaps there are more debug
+boot/config options that could tie into the hash_pointers=auto and are even
+more obvious than slab_debug in the sense that you would really only enable
+them in debugging/CI runs when you do not care about the info leaks but want
+as much useful debug info as possible (KASAN etc?).
 
-I.
+Given how this changes mostly printk code and is in fact only a small change
+to slab, I'll wait first if printk maintainers want to take this patch. In
+that case please add
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+Thanks!
 
