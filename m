@@ -1,111 +1,114 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7137D64A98;
-	Sun, 13 Apr 2025 19:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6DE14B965
+	for <linux-hardening@vger.kernel.org>; Sun, 13 Apr 2025 23:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744573869; cv=none; b=Pg4icViC7LCYVgUgMjcLNOB4g3TyIs9s52GkX+vp4Ck+bzSWCxFjwRVbYpjpyn+Ruw+Vtklhz0IC3QCJxDD/k24B7ddz00/9Q8iK1jI+NSSzhxMswXIZWM0tEUmp7Xc3DngtTslbrCRJsnZnr1IDAFDXa3Zw4wLHGSNEKiVXPxg=
+	t=1744585245; cv=none; b=u0nrfzVvn5RcyLqwrS9cJvswj8yyTon5zJDzCZOY9V6FlLpLJ3apVIzjVtxpiByT5QhLmhn+FHvLH/Ja8MS58wLed2xPB9sI6yqZuO58G1eCuwEOyQoIlkP4NRr0rmvLLsY7F6QJvcd+TvUYVXLI6JxmKdPTrHLL9JlrvwItsVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744573869; c=relaxed/simple;
-	bh=IRLaNQdb3TIWz0TX8veHTm12z8DUreWzQbAPozk2cUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oQjhxCRu+frYHqTj2I35Q6dC/Gd1HC3F1DP55vihgGtTJZuAZ3BAsbp51q9qo61j4J6BI6cWpkUaLwzLxTRfgtQwpnwqUQpKgNdWWJJb+tSx/DztpvEFV1ttSpBVnY2xHNrfrkTgrxBoU42EeweNoH1mHAmz8VHP/sVgp3agiG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=FDAD/u5Q; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744585245; c=relaxed/simple;
+	bh=ylMZa6Aq29j5mVRt3GE02Yo6uF53GO98O716dshVloI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=DnN/+sSO9Dgp1OAYZ5zF5h8o5iaYbNVOXqPA8AKMseuzFwhaDS0sjzTZvv3b8Jz6Z2wyJfCybOXB4pevt9aU8YRqCUclEh0FXjx1urd/QDddEBx///xfX2PkZx+5Ks5We/gXaB7X7n4++vVC+urKKlpnjtiyCbcqPhLbusGVi8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N/KwwQ4f; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FDAD/u5Q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=gk7+NueQV0rZfB0Vb9kEXe2k5hVrXUXOMr3/Bjby3Bw=; b=FD
-	AD/u5QyeIYJuWo3xHLH0qKp4HT6S10GFJi6yvcp1visS1XZQLaYnTtiYiq4vHuiKvttgnSaR/Csph
-	jZEUXQW3Hur7F9uzhZ09nxx5HtR/x7LBHCEU6M8WNg2MyMDLeGlEhAdRlFIYOuIRcnrMci6as30Kq
-	cZXXKVUZ2G17BaE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u43Ls-0095Ss-8s; Sun, 13 Apr 2025 21:50:48 +0200
-Date: Sun, 13 Apr 2025 21:50:48 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, netdev@vger.kernel.org,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
- defs
-Message-ID: <83f83841-fa10-422f-9b4b-625c678a4b5e@lunn.ch>
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-8-ivecera@redhat.com>
- <CAHp75Ve4LO5rB3HLDV5XXMd4SihOQbPZBEZC8i1VY_Nz0E9tig@mail.gmail.com>
- <b7e223bd-d43b-4cdd-9d48-4a1f80a482e8@redhat.com>
- <46ff3480-caca-4e2c-9382-2897c611758a@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N/KwwQ4f"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2242ac37caeso234835ad.1
+        for <linux-hardening@vger.kernel.org>; Sun, 13 Apr 2025 16:00:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744585243; x=1745190043; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZcijKGeNWU44eIj2ygDRvcCute3ez4NOIbDwZ6K3fSM=;
+        b=N/KwwQ4fi17xu5OR6p4eYhmXVWm4ewdg8Y0Ftd7cbzvpH35bQCpHAevKdt1CDcer2t
+         JvjdVpoYp/CqxG8Yhj5f/5CI3dgd2QNcsINovvpGZv/EqXpN3Rcx7OKbBGoO5CjCzAXt
+         6IpU7xDeF2+28OoMYNQ/2vXSsYzddVJV0JXKiRXWpj306vcu/sBuy+yZj9lu6XuH/Vho
+         picyRm+HwTg26US3D48WFOyA9IMiqOq0YB4ewd56AVq4ngX2RGnLd+hSsUDb4CThS7eY
+         OZ/cv8eD5KSAmrjgEnjwgQUyhyjnNfMA1O81hooBd0XYdQgf1uFQwCYZ48PFU3kRz6Mv
+         9clA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744585243; x=1745190043;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZcijKGeNWU44eIj2ygDRvcCute3ez4NOIbDwZ6K3fSM=;
+        b=FT8cOnhGlWxbvJjXc+5y28uBqTZ2Ecto7Xm99MqPSuYfl4XOBF+O8t2g1tPFgJk37/
+         qAUKL462Qdi3+blHbXw6O/hmButhj+DCMEyxCpdRVk4rB/Ns2kccVRyoN+AcpUPv3L6o
+         RY3Wyxj7aiXwZbkDoA1j7paAjO+SIdr0J6hfhK1b55VOEkiD8HI7Bxt2t5B005sxliOk
+         j0viYVP/uHYPmQ27BMBEEV1wbKXdeJqYCqODiEVuiN7NEJ0qwUZiQ5B6DC2IRTMXQ3UJ
+         DTt5hFdLVGafWoddFSycqmhu5nFDuN/2zRmnlGWYbCgOWzgWcBVJfWgGnz1wtaUFQcG7
+         v9Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCXZURHJJGnhkK+hqTLFpJMMNBxjoJilolgsZV62kKAhWykVq6cmnSe4xKanD1PzB/Rp4sp0NWpSfesHmJcwtkA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVqCp/Xs5UQvmlRi+Ng9VqyWvqmyXjmFXF7tuWQZZSpi6NWG6W
+	4X2lMp+Y5vfggtxTN5qhQb3IqMgCWVi1Y9uHPeNgjvWciJw7pbhCJkmfZYaflg==
+X-Gm-Gg: ASbGnculHVETjuDhyD/pELX3WiBzYYLWFwOJZYdJ0ErpOcIfIvU2TU730CiqazHg9j9
+	fMff+UATMUTvH8ulLtukEx9nO3Rvc7soUhhwOPdlA5Fsrfn4f0RRZ5OErDiyxOVhGWepxO3ddGm
+	kJCvnLbMBXs4g46HVGnn2Z9Uk09MHITFLIqMz2bTmTQv6DitjK5CiUYaZ/sBWvU91rosdSqc2hI
+	/0BkEBP4ZoHoA6yHghjvsaKBqC7eyMNPBx9obzeHf0a/W4Z1K/KwrdztFHFq6FpN/U9iD4/Afh0
+	MJ9AYwy4yQ1O8tuBIHuWZoF93YsAuHMz2BT1lp2uo/IQ/Q1n7dLF1WS1rb+gaT2lUIqLcWphI05
+	HIxhR1gi4tyDqFG+eaUZXnV7FVSxyi0Ne0Ec=
+X-Google-Smtp-Source: AGHT+IFx60v074gs4AMnQgafHZpx5rGmP/N6w9NBkIiYBjItVWW/1kCo6dcv+AZwAtWyGk9dPOEPQw==
+X-Received: by 2002:a17:903:32c9:b0:223:f479:3860 with SMTP id d9443c01a7336-22bf453906cmr2947865ad.18.1744585243089;
+        Sun, 13 Apr 2025 16:00:43 -0700 (PDT)
+Received: from [2a00:79e0:2eb0:8:f229:adb7:460c:4b5e] ([2a00:79e0:2eb0:8:f229:adb7:460c:4b5e])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a12c8ac4sm8257942a12.46.2025.04.13.16.00.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 16:00:42 -0700 (PDT)
+Date: Sun, 13 Apr 2025 16:00:41 -0700 (PDT)
+From: David Rientjes <rientjes@google.com>
+To: Kees Cook <kees@kernel.org>
+cc: Vlastimil Babka <vbabka@suse.cz>, 
+    Sergio Perez Gonzalez <sperezglz@gmail.com>, 
+    Jonathan Corbet <corbet@lwn.net>, Petr Mladek <pmladek@suse.com>, 
+    Steven Rostedt <rostedt@goodmis.org>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+    Sergey Senozhatsky <senozhatsky@chromium.org>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
+    Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
+    Roman Gushchin <roman.gushchin@linux.dev>, 
+    Harry Yoo <harry.yoo@oracle.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
+    Randy Dunlap <rdunlap@infradead.org>, Tamir Duberstein <tamird@gmail.com>, 
+    Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+    linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+    Thomas Huth <thuth@redhat.com>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
+    Ard Biesheuvel <ardb@kernel.org>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Andreas Hindborg <a.hindborg@kernel.org>, 
+    Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org, 
+    linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] slab: Decouple slab_debug and no_hash_pointers
+In-Reply-To: <20250410174428.work.488-kees@kernel.org>
+Message-ID: <f381d2f4-f86c-e714-c67a-1d060b8669d5@google.com>
+References: <20250410174428.work.488-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <46ff3480-caca-4e2c-9382-2897c611758a@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
 
+On Thu, 10 Apr 2025, Kees Cook wrote:
 
-61;8000;1cOn Fri, Apr 11, 2025 at 03:17:14PM +0200, Ivan Vecera wrote:
-> On 11. 04. 25 1:19 odp., Ivan Vecera wrote:
-> > The range for regmap 1: (registers 0x000-0x4FF)
-> > regmap_range_cfg {
-> >      .range_min = 0,
-> >      .range_max = 10 * 128 - 1, /* 10 pages, 128 registers each */
-> >      .selector_reg = 0x7f,      /* page selector at each page */
-> >      .selector_shift = 0,       /* no shift in page selector */
-> >      .selector_mask = GENMASK(3, 0),    /* 4 bits for page sel */
-> >      .window_start = 0,         /* 128 regs from 0x00-0x7f */
-> >      .window_len = 128,
-> > };
-> > 
-> > The range for regmap 2: (registers 0x500-0x77F)
-> > regmap_range_cfg {
-> >      .range_min = 10 * 128,
-> >      .range_max = 15 * 128 - 1, /* 5 pages, 128 registers each */
-> >      .selector_reg = 0x7f,      /* page selector at each page */
-> >      .selector_shift = 0,       /* no shift in page selector */
-> >      .selector_mask = GENMASK(3, 0),    /* 4 bits for page sel */
-> >      .window_start = 0,         /* 128 regs from 0x00-0x7f */
-> >      .window_len = 128,
-> > };
-> > 
-> > Is it now OK?
+> Some system owners use slab_debug=FPZ (or similar) as a hardening option,
+> but do not want to be forced into having kernel addresses exposed due
+> to the implicit "no_hash_pointers" boot param setting.[1]
 > 
-> No this is not good... I cannot use 2 ranges.
+> Introduce the "hash_pointers" boot param, which defaults to "auto"
+> (the current behavior), but also includes "always" (forcing on hashing
+> even when "slab_debug=..." is defined), and "never". The existing
+> "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
 > 
-> This is not safe... if the caller use regmap 2 to read/write something below
-> 0x500 (by mistake), no mapping is applied and value is directly used as
-> register number that's wrong :-(.
+> This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
 > 
-> Should I use rather single mapping range to cover all pages and ensure at
-> driver level that regmap 2 is not used for regs < 0x500?
+> Link: https://github.com/KSPP/linux/issues/368 [1]
+> Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
+> Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-I don't know regmap too well, but cannot your mailbox regmap have a
-reg_base of 10 * 128. Going blow that would then require a negative
-reg, but they are unsigned int.
-
-One of that things the core MFD driver is about is giving you safe
-access to shared registers on some sort of bus. So it could well be
-your MFD exports an higher level API for mailboxs, a mailbox read and
-mailbox write, etc. The regmap below it is not exposed outside of the
-MFD core. And the MFD core does all the locking.
-
-	Andrew
+Acked-by: David Rientjes <rientjes@google.com>
