@@ -1,123 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B0F56B81
-	for <linux-hardening@vger.kernel.org>; Sun, 13 Apr 2025 10:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650801A314F
+	for <linux-hardening@vger.kernel.org>; Sun, 13 Apr 2025 12:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744539504; cv=none; b=k37J9985idvnTVOMgC9OE0BN0EUCsm0nXY9idy+hi8JA+iPuyHXQP6u8oF4FbEFxl1nZApbXThqjv+e7xBLQSx4bXYK5hXElRQArKWExu6h3BUBITJGqac+eUIsQswL5inMgiCTCXdChqKrIOAI2GwfRRpVLaMNvUnx06xNYG3M=
+	t=1744548196; cv=none; b=p9TOrnAb3PwUoCsCfon6zMl+QNC5HmXWyB5dIt1SJYfg4b1HC2prkNm3wuYh4nnWict36WzDGLrrTLlLrNt5WIZk5rsg4F8yE6BafqztDm7mcKTe2isEaEEJTu52BXq5u9Uku8GOglmcUEmWAKqAPVttvZJOcKp++1l+ou+SWcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744539504; c=relaxed/simple;
-	bh=ErHM0KXBmIzSgllbEKAnlsbmbsSO3NBrDWRZS4AynPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=myF9WEzg3nzirTiZTTDvtxWOgDdD6lESfGx9ebQj6huSYvsVeLYM9JaCYy7x6GVrQUdOJ6oeeX4gK9eRbFAJgxomEHUXFAMC/SOciSpqr/ylDNd/bbq0wBgviglq9xQazU9en27GYFKCDbLHPl0yX2wB/6hmwlqB0zYcTHCiObA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BQK+zZZa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744548196; c=relaxed/simple;
+	bh=YBVrP0ioAfqFi7HGGInQPXg0PMtVOG28MGA1HhQi8zU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=qT4+yUpZVMRp+fDo8izPms1LKsdAZe+cV2fxyRsdxHiNktqqaybaObKur3H+RMVf3iR1OVmoq1N7ADg3KFDO1jZvZk6t9MtoBuvTV8Jupz2Wngj29t6jpsTNzDUDqI8QkVLrKftkPw+6Pok2HBL6sNthuYmqBH+RmPJBkgXTfKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cpL7bDRa; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BQK+zZZa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744539501;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cpL7bDRa"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744548181;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EBni/JY02a1CDsHN5yYPIoZRjHqyTeDi/pp/KcYRYRE=;
-	b=BQK+zZZaQUg5YxB9xe5xwJoHYmSdUaYrsv7URopAz36ftI5PuuQoLsiMGDkmoSEbWiLZgM
-	hZCtpIqlVj3T6dkgpTw75X3dTReL8xOrRP398hzPuj/qmdd5DTr+CkAh+KJYgzRrx3A3d/
-	KYi+CVB9NdhaSv/xvu9U/9SjvsChUw8=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-333-oZ5xsQ5jOJihTtK3kpZwHg-1; Sun,
- 13 Apr 2025 06:18:17 -0400
-X-MC-Unique: oZ5xsQ5jOJihTtK3kpZwHg-1
-X-Mimecast-MFC-AGG-ID: oZ5xsQ5jOJihTtK3kpZwHg_1744539495
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9075719560BC;
-	Sun, 13 Apr 2025 10:18:14 +0000 (UTC)
-Received: from [10.44.32.81] (unknown [10.44.32.81])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CF968180B487;
-	Sun, 13 Apr 2025 10:18:08 +0000 (UTC)
-Message-ID: <4f1633ca-bc75-4e81-8747-52605ce352d8@redhat.com>
-Date: Sun, 13 Apr 2025 12:18:07 +0200
+	bh=+g3tIT1J01F3PNxqjXfPswRzwcT32eu6uks0bITlMTA=;
+	b=cpL7bDRajhjTosoM/A/fZJh05HWg4SwWQJXrUDdpyQJcFJsGx6U0DrUQz/CglF16Z2pEIy
+	OcnHAUecAcd1vH7w5NRQW9GqqXSPOGhidBrIJwF/WuxptPTZGtPC6xTvqnOCXvNRQrYh64
+	y7k/djtKeN+CJbTOXaMomUe0ajizRGY=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/14] mfd: zl3073x: Add macros for device registers
- access
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
+Subject: Re: [RESEND PATCH] mux: Convert mux_control_ops to a flex array
+ member in mux_chip
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <202504071119.DB9497A510@keescook>
+Date: Sun, 13 Apr 2025 14:42:49 +0200
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Kees Cook <kees@kernel.org>,
+ linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-7-ivecera@redhat.com>
- <3e12b213-db36-4a76-9a58-c62dc8b1b2ce@kernel.org>
- <b73e1103-a670-43da-8f1a-b9c99cd1a90d@redhat.com>
- <CAHp75VfR_6gQdcBU6YDTvtX0A2NDjto4LXyjTteGLmp-u1t2qA@mail.gmail.com>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <CAHp75VfR_6gQdcBU6YDTvtX0A2NDjto4LXyjTteGLmp-u1t2qA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A6D52C12-29BF-4A51-B677-584EFC4F3823@linux.dev>
+References: <20250302230220.245739-3-thorsten.blum@linux.dev>
+ <202503031040.223DEF2781@keescook>
+ <785391F0-C381-47FE-89E7-6265F7761208@linux.dev>
+ <202504071119.DB9497A510@keescook>
+To: Peter Rosin <peda@axentia.se>
+X-Migadu-Flow: FLOW_OUT
 
+Hi Peter,
 
+On 7. Apr 2025, at 20:20, Kees Cook wrote:
+> On Fri, Mar 07, 2025 at 12:32:07PM +0100, Thorsten Blum wrote:
+>> On 3. Mar 2025, at 19:44, Kees Cook wrote:
+>>> On Mon, Mar 03, 2025 at 12:02:22AM +0100, Thorsten Blum wrote:
+>>>> Convert mux_control_ops to a flexible array member at the end of =
+the
+>>>> mux_chip struct and add the __counted_by() compiler attribute to
+>>>> improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+>>>> CONFIG_FORTIFY_SOURCE.
+>>>>=20
+>>>> Use struct_size() to calculate the number of bytes to allocate for =
+a new
+>>>> mux chip and to remove the following Coccinelle/coccicheck warning:
+>>>>=20
+>>>> WARNING: Use struct_size
+>>>>=20
+>>>> Use size_add() to safely add any extra bytes.
+>>>>=20
+>>>> Compile-tested only.
+>>>=20
+>>> I believe this will fail at runtime. Note that sizeof_priv follows =
+the
+>>> allocation, so at the very least, you'd need to update:
+>>>=20
+>>> static inline void *mux_chip_priv(struct mux_chip *mux_chip)
+>>> {
+>>>       return &mux_chip->mux[mux_chip->controllers];
+>>> }
+>>>=20
+>>> to not use the mux array itself as a location reference because it =
+will
+>>> be seen as out of bounds.
+>>>=20
+>>> To deal with this, the location will need to be calculated using
+>>> mux_chip as the base, not mux_chip->mux as the base. For example, =
+see
+>>> commit 838ae9f45c4e ("nouveau/gsp: Avoid addressing beyond end of =
+rpc->entries")
+>>=20
+>> Since this should work and is well-defined C code according to =
+[1][2],
+>> could you give this patch another look or should I still change it =
+and
+>> submit a v2?
+>=20
+> I think C is wrong here, but it seems it will continue to accidentally
+> work. I personally would like a v3 that fixes this, but I leave it to
+> Peter who is the MUX maintainer...
 
-On 10. 04. 25 7:53 odp., Andy Shevchenko wrote:
-> On Thu, Apr 10, 2025 at 11:21 AM Ivan Vecera <ivecera@redhat.com> wrote:
->> On 10. 04. 25 9:17 dop., Krzysztof Kozlowski wrote:
->>> On 09/04/2025 16:42, Ivan Vecera wrote:
-> 
-> ...
-> 
->>>> +    WARN_ON(idx >= (_num));                                         \
->>>
->>> No need to cause panic reboots. Either review your code so this does not
->>> happen or properly handle.
->>
->> Ack, will replace by
->>
->> if (idx >= (_num))
->>          return -EINVAL
-> 
-> If these functions are called under regmap_read() / regmap_write() the
-> above is a dead code. Otherwise you need to configure regmap correctly
-> (in accordance with the HW registers layout and their abilities to be
-> written or read or reserved or special combinations).
-> 
-Hi Andy,
-these functions are not called under regmap_{read,write} but above. Some 
-(non-mailboxed) registers are indexed.
+What's your take on this?
 
-E.g. register ref_freq is defined as 4-bytes for 10 input references:
-ref0: address 0x144-0x147
-ref1: address 0x148-0x14b
-...
-
-So the caller (this mfd driver or dpll driver) will access it as:
-zl3073x_read_ref_freq(zldev, idx, &value);
-
-and this helper then computes the addr value according base (0x144) and 
-provided index with ref number and then calls regmap_*read().
-
-And the 'if' check is just for a sanity check that the caller does not 
-provide wrong index and if so return -EINVAL.
-
-I.
+Thanks,
+Thorsten
 
