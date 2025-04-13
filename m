@@ -1,196 +1,129 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB56F2367C9;
-	Sat, 12 Apr 2025 01:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744422937; cv=fail; b=rmnT5zCKD0dvg/1YgJJpywcZeDufVw+7LEp0mXllvKu6KGO3na9N5xSRUrs7yPi6N3NUqlBjIf8cx1kea8dFPDHuAjvquSCJA6rCgBU+V8wX9bTLgm18degZUa4woXQOQdHMwhtv5z+qCNFO6Te18ovrYdzIOVY3Y7EOIwfUgmk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744422937; c=relaxed/simple;
-	bh=/HlBHyR9T679Yh/wYGPkeeOXE1VoFiR8TQAbhoZCbCU=;
-	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
-	 Content-Type:MIME-Version; b=DjmGEGI6GgZDuxOyrFkpuxkBmARafJT9Bgie3LIdQcmugDA42FI9tzX8p5LrPDJA7Z+5aPIukFJQpyOuhyN7bp5u8c/5deaR76fwHvJ3341heAij/Lb+jH2qAZE+kUh3EEl4tynCPWSRS6SrrDONB4/mNl16C3NNpgZDFXik1PY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=NGCNE5hj; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=jDJYcAJ3; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74ED17D2;
+	Sun, 13 Apr 2025 07:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744529232; cv=none; b=pxhkdVBELLQToVPcrfbJVPNjB+p++AuYF/4BZiwG/2fJ/EvA4N78vplPXKiaK1S3jEx+5qHvpy9nq7MuveCUI0uOFUFZSjZ1Uuh/htR7NvQi8T1EPQGAnfSN3u5eGT4NqxKQIR8+AoPyRgSjtwnXI2vzMZhlPL0E/Z7sFMJjGpA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744529232; c=relaxed/simple;
+	bh=NQU8rRlS9AgCe/UrflwbmWHGkEj8xOois/IFQOaeoHs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=URO38KG8oIGKBbv7UWxB2F265hTlj7N9rm5Mn/E3o/3Ojf/5CiM4329e8ahEfL9mNn8b/SVt/xSxzc8ZlzPAU82OJGtAblPxIK14kezahxY09LbkK9JeaZnbWkJUvxEHvR5AidfGgzz4XcrNLBTmVXsjXvm5vCFMAhuG9dSJk/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMsYVc8W; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NGCNE5hj";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="jDJYcAJ3"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53C1XvPQ006818;
-	Sat, 12 Apr 2025 01:55:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=b3AYFfj9ArYtXkZ+iT
-	gHbaqoGli6ataAJnc2mZhhIVk=; b=NGCNE5hjJjYPuAcel6dNI5VgQLHCEV/VrX
-	POIX+9sXXuIl58rw2NpsPyas95gF6FBO4l+ZXmarspLbpdFARsP19hlneGFwNg9h
-	H5l4wszzDlKVcW9dZaIv+zSLYaW3hMfPgbgsCjE2brA9xcfCvMH9DLouIU5TCJZx
-	E8mVvSRFPxqSXJitkkWpG+NYd4ohnm94aCQAL+u2Klk50TThrF0GI2nkU4BfTh70
-	qCXPZaVv6OcCjywW5sBfYupKNq7YRYElfKU2hiOIXd9I5Xb2ibitOfYTcJazPIBU
-	OFlYzXq3qeayJoj7NdhS1IdKc51Znd0SoOv2JK7omKOvq8VPWDwg==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45yekt80a5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 12 Apr 2025 01:55:30 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53C1XPAi009898;
-	Sat, 12 Apr 2025 01:55:29 GMT
-Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazlp17010005.outbound.protection.outlook.com [40.93.11.5])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45yem5raa0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 12 Apr 2025 01:55:29 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sb6/QpsYs3IPugj8hJCO8M3/tFHir90TiDOQ4CqaazFdb/2g0YNqxj7zkMPgAP3T4C5WH+3IyBJOUZRIaALZKtcd9zdlFKHpz8oLACnaCV1tgMtXavp63X3NP1c8EM02GY3qgd91ffsaj4RojtJXrGtFZQkUEdA+SKrlNTmBibPAWDgULIfjmAdQD1ZYoXPsC+IOYhEPwxyNgzw3pDBRJXr5PKLI/nixwZgYomFMx2pNB0/UikcTjQdlJSAMzyJ/NGfWrhVcAZ2OR32gKpbUqrPC+CTGspVlymi9mCEDYq2G+TrWY6Fnmf5fRE25Y+Hn9RS0xunit7p67cKoz04gnA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b3AYFfj9ArYtXkZ+iTgHbaqoGli6ataAJnc2mZhhIVk=;
- b=C9OyOW6yd+xr7LD0VX5NUwtIA2qOsuXFIeT2/6VcNWT6fSf16ConOrffQCbICPwxHUefg/M9hsmdNwdZsW11PEeuP1DvFFAmUzvIJkK/ulOM1MewqNcH3yHniUQOl+zTmGjnWdrpWA/nGBmFoxc3nLGdzBrHqq7Aqe8niz4X0rjK2W0o6tzAsk7doDeGqg+0aZtOsZ0MRyrKg0xczDMrwnbpcNMfAs/SnjMSA40Y6ToAX17mk5SD9pyeTjihFQvR8sxgDrgkah4NSauJQkdwXC1jjxVqr7PupvDGVjlj1Oh330igiwVvYQm6P2YBpvmj+ujA3Ik+ZjIdtn6U2sY5cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMsYVc8W"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22403cbb47fso34710315ad.0;
+        Sun, 13 Apr 2025 00:27:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b3AYFfj9ArYtXkZ+iTgHbaqoGli6ataAJnc2mZhhIVk=;
- b=jDJYcAJ30Xr02XbVaU6pcV9n6GQ7Cxm34hm7cOs9AzkXizrOHYFAu2fOFIOyldhUpUt7gEGk7D/IKisVe5kJ3+JoaP4Aeu4ilmlf8QV+XUKIvyHgIxy6nXpfempMwmnzAy2FHamQ5UuE0ZnQCGAyV5XJzdny1bfP5qKS6FnU0DY=
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
- by IA4PR10MB8374.namprd10.prod.outlook.com (2603:10b6:208:55c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Sat, 12 Apr
- 2025 01:55:27 +0000
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf%3]) with mapi id 15.20.8632.025; Sat, 12 Apr 2025
- 01:55:26 +0000
-To: Kees Cook <kees@kernel.org>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Jack Wang
- <jinpu.wang@cloud.ionos.com>,
-        "Martin K. Petersen"
- <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: pm80xx: Add __nonstring annotations for
- unterminated strings
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-In-Reply-To: <202504071136.73E5C22D0B@keescook> (Kees Cook's message of "Mon,
-	7 Apr 2025 11:37:54 -0700")
-Organization: Oracle Corporation
-Message-ID: <yq1lds6i1ol.fsf@ca-mkp.ca.oracle.com>
-References: <20250310222553.work.437-kees@kernel.org>
-	<98ca3727d65a418e403b03f6b17341dbcb192764.camel@HansenPartnership.com>
-	<202504071136.73E5C22D0B@keescook>
-Date: Fri, 11 Apr 2025 21:55:24 -0400
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR06CA0027.namprd06.prod.outlook.com
- (2603:10b6:a03:d4::40) To CH0PR10MB5338.namprd10.prod.outlook.com
- (2603:10b6:610:cb::8)
+        d=gmail.com; s=20230601; t=1744529230; x=1745134030; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YWYostWBKe0tIkuaeH+vuD5czF+yp5g20BCw9eDtc9s=;
+        b=IMsYVc8W5UJAKjXTEJlpJnLaQHq17NgLCSzFpMSMSHrIvi4YxDmhI4MbkB4ov/y1AO
+         f4GjWLR0tBpT+Tjp8SeUmInED+Auh6/apXn3A/7q9yGy3Hf9FUO4R6f+ZEutqIFhiB2D
+         5NT70MDp3EqDW9+bjiyRdPCkR3qPgr6lw6bv0N1iH3gfolLr8hBd26JH5XJd3rvZ6uJ7
+         YdFsp15Nr60Md4tvzsywxy+pnCuXQHA3MFFciyEKajsXdfzFwQR6rXKMdwCbxb/3ybIv
+         e2XEYj2A3TIVKK9bMkxD8yUKn104abvnY0tNx/r4BhKYzzPfZVzvTkjxG9/8/uAoVBgl
+         nVuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744529230; x=1745134030;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YWYostWBKe0tIkuaeH+vuD5czF+yp5g20BCw9eDtc9s=;
+        b=LNDJGU/7V6Z0g/UXml/qSgL5L6KKfUSur6dMOqpJb3jaN/HktbTh7fUOss2dq59dwP
+         DQT2rxy0BDbgQcwi4lWhfQXSSQd4HohIDOIngmbgRhFwA5Tk1O88l4C6YuE5DcPlCH39
+         SmO/5kFJD5NJn7G+G03qPKF1qs8D9/Jvlo9WU4blvWs2afHpJjp0bEN0BvIKI+sD/eoF
+         0NBAXugVTZvyBZ6sHvslJeB9OCU32PYU8uOKv5S2/d2lTF2YLw6q1gFmLcddByfTyNjr
+         7TT7ShT0R8A0GDssXAUbzAbOIWufpSFXPsbHMDYLxdsb0Z8Hnnnh5HlhGebeUSUr/fgm
+         v1pA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIuSESVorsb2gj/0NHJxtedo9X/BR8B2q9ElV5ruXo2mSaUCcjhCZJD1OFjtI7AY2d7H3YtfZ7FhFm9LU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdKIHc+R2BlwPNAVDWH4VPBkAuKrqn7FTycOYEcXZcJ5KhbliU
+	HzGmufdu8Y8K/XuJ4xrxSK/JERjtBiCsLalNI5Pka/vvB0TNp0Cu
+X-Gm-Gg: ASbGncv8A0XuLiNn8uhA49oOHRP/cRgDyFdxU8ukAdzlgxG/lt8nE9guqI9p79y+jum
+	jA0m75fnfLgZ+fmJ4WqbT4gE1NOKJDsYxKRL2fSBrdlhpqJnSqh7EJX3Mxyjfs0wHTYNWm5g4m4
+	T2nUxaG7mLyiVSbDBuDo0sGdFddMfggUYI9S/yRnp2tMmU9jrxgRFEoBcQHm9ql22sD3iinuBsH
+	I0l0ObdtJObOpXXR5NvmpAzIsjoEEC2KIQUUS3jegM8f6GIKpMRWtZUk6EJpJGX1c4DU1hWbrmd
+	4E8kY7+PzLStVF5TXkf/XEbVWHMPnHvTN66cvIDocg==
+X-Google-Smtp-Source: AGHT+IHm4WyCl30UTp+3sbvLd2G6aPuc4J3GTHBl8Er+Ytjg/SmBLcemafqlDWMCAbTyKFbTabd1uw==
+X-Received: by 2002:a17:902:e883:b0:224:1005:7280 with SMTP id d9443c01a7336-22bea500191mr125827835ad.38.1744529229958;
+        Sun, 13 Apr 2025 00:27:09 -0700 (PDT)
+Received: from hh.localdomain ([222.247.199.118])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b628a3sm77946835ad.45.2025.04.13.00.27.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Apr 2025 00:27:09 -0700 (PDT)
+From: hhtracer@gmail.com
+X-Google-Original-From: huhai@kylinos.cn
+To: kees@kernel.org,
+	tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	liaoweixiong@allwinnertech.com
+Cc: linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	huhai <huhai@kylinos.cn>
+Subject: [PATCH] pstore/zone: Fix return value in psz_init_zone() and psz_init_zones()
+Date: Sun, 13 Apr 2025 15:27:45 +0800
+Message-Id: <20250413072745.3949-1-huhai@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|IA4PR10MB8374:EE_
-X-MS-Office365-Filtering-Correlation-Id: ae90eac0-b9d8-4218-47ac-08dd79651880
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?vtd/hbaX5HYqqJxoXTELH52v/j/SYJKBZ5elb4WYlI6UZ1zHkbiTZqwAZgXF?=
- =?us-ascii?Q?0s0cuX0V07ymy8JP7JS7qwnz9s9GdqqL+6J4mo9KcsALUpjzeoCwYWcxbHiy?=
- =?us-ascii?Q?i6YrAJGU37yCV2XDxl24avSyEZGULGLThkWAZ62ipjEWcc6uONoKOerqJfRB?=
- =?us-ascii?Q?Jq4Sn9a512UvenD+xzp1rDn6ZtqwTbT9TKVIn+YI+mhXlqK4GBjUG57kL5qK?=
- =?us-ascii?Q?mG8LV9zVnL1gV73Vp9zaK+p3fZyJaGrQDdrRGlV291u1floDRdFX/x9EYs+I?=
- =?us-ascii?Q?ptHF3sweKf7+gK1MhEgX17ya5uJN5VDBa2oZK+nUW3CA2ScUDhQFNUbRSQfu?=
- =?us-ascii?Q?OMyaVCo4vXYuDDUgKvOGO1Z3nBeGMCZzoPIGCCq4zCyXzl+EHwzukF2UnMFY?=
- =?us-ascii?Q?uo6j/yAFqu/SyeGom05H5PAbvUsQxiTrYqxr4zA9aUqoY6cyCtiYcH/GFiMr?=
- =?us-ascii?Q?spF5TLb916QDv92edykWwmmMaWNr1eDn9ZpjVu+B4deXZ6P1sN+aKVW2ATPO?=
- =?us-ascii?Q?1yf4wX58z4obAUY3mBuZIJYtiIjhxkEwhSzQXN8gh4+jy99ohLEz4jh6rzaJ?=
- =?us-ascii?Q?CeTgbfoLCmeWdx+HN7ro9iSxeB/El7qF40I8bGJPxBLJQXyvtl5nU2/UGbMC?=
- =?us-ascii?Q?ewUOvAc4YedecCybGuKDUOhLGKIeKZmEsGKCRG23hmPkSfjDw3sh8jI6MUl7?=
- =?us-ascii?Q?axFmfwgZZys2tru3WhiHAg5Zzp2n/nIBuBJS6UELrHmNDXLy0rPy+umVHkJV?=
- =?us-ascii?Q?Bn/ly3gZfa1mMm4Oqte/jW+H3XxVVyhzQGi/UQA35Qy7fqTF002JEjL9SDTQ?=
- =?us-ascii?Q?9qSd4RucK5RoF6Nw/7ybtplum8Gh3peFacYyDmQ4iJoYem2suniQIDxIa493?=
- =?us-ascii?Q?Jt+G72Cn4RVv1452WjpKTdJjNCAH+qg1aDMNXhArjkaXJpPoFV3VLjCjg5dr?=
- =?us-ascii?Q?ZrdsU2bbiVnk1QeuQl5jfh4aj6tim5hlcIe+aszrQnk5t78WGjo9MhTLbYJI?=
- =?us-ascii?Q?4NHa+feB6AKSrjRCX/nKbn/l2ToUTldTR0VWLlaqUshEOyxbR+1+Xiz6sNLM?=
- =?us-ascii?Q?pIBtEwamGamVPGp+1iaPS40YzgPuOJASo6Lhq/wy1BwxCSrAAxQG/sOEteRO?=
- =?us-ascii?Q?68qbDq8JqSt6nvIru/w+bvgzNmR5uxJ/rFIu7MP3tQH3BN0cICLyRMLzAud5?=
- =?us-ascii?Q?A8EQW3qAyQ79grMPqov9yewQSK62ti5/CLuCsBqCtTF0VS1bal3sdlSfDUic?=
- =?us-ascii?Q?yYEHL+gUC9KkFGdIDGmb8uogeQwKfLL2AGcDU+dbJ4WN6rdN68jnV+XJLwA9?=
- =?us-ascii?Q?dQElhC2P3RExAYFsOlLsb7gMQHYMZWGj9SF9/Q4d4tG5d9MSPt2I/ZldRFF2?=
- =?us-ascii?Q?G1UXYt/P8XrvX/+kxxfaKqC8+OhbH8zcQth3vIXOD2KKtZfmoKutWXiU+I0j?=
- =?us-ascii?Q?nc4nx+w0tQ4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+1a7y5uBmaqCMwbCWmDImDOEvJ0E1KcSWXoUhkSY37NL4r6VUrKkzhQYlzf/?=
- =?us-ascii?Q?bDpOVYCEH7T4egc9YM0Re1bEarWd2K4v0NWC38V8cm+p7PKQs7G8i7STMHLh?=
- =?us-ascii?Q?nXOW/XVVfilvgp7NYZruT9PPHLfvzwWNyct3SOYYW2xGSUwamwW+4BpF/YYi?=
- =?us-ascii?Q?QLVDqPlYfvW17t+AxUn8H75ZQ9hw2N+e9H6AJWw2wC/9qaFA9e8rPPlEdapY?=
- =?us-ascii?Q?7kN5CNpXuaAuU2X1EVP8Wm/aSoGtV3wWalgnh5uIFdTl2V4F3zTyfQYsSLcO?=
- =?us-ascii?Q?O1qae7HlCOYSnxNwB4fsvYVBeg0isll+RKM7zg7PPp8A3ie6sW9lXCOX8gKG?=
- =?us-ascii?Q?QgvvNySpw+8Rtse/hFcr+WgZpZJLK6wOVezsEnX0fumluBLK7Eq3wFVJtu3M?=
- =?us-ascii?Q?3ir9cR47u/78w45d39aWiAY0wSuEKSs7QSh9xaTWdVwGWtXWXVN3y1d1QKz8?=
- =?us-ascii?Q?0X1hzh5UeXCylSHEcrCQVndBIMmdXcWvjo9UDy/yUjhLwQ7RPGb50MaLpS70?=
- =?us-ascii?Q?56OqdjnXW0T7k7XlI8+MP6UA+BOF0qIMC5Yk+13WYb0U6szcSlMNgn2RoGwc?=
- =?us-ascii?Q?eIOIuwoWb0Uh+F5Tu3Dtar3sChi15MuZP+YwCq2mCKtb5+Fr43NkP5NjGWxf?=
- =?us-ascii?Q?X4L2nP49SN87v1jHXDW2wTGRVH/SLNFLwkOoZWctOIbnbV6B7PUL2vMv6+3N?=
- =?us-ascii?Q?PW53Hz4x+8/XY3O0vc9AWSmR+WjHLiwf4XPStf9imRNVpUxxwN+5294JBufD?=
- =?us-ascii?Q?acqQpwyzhskiIWjIMdTTwdG/lW1enKQ+5E7MA7AUhTYH4Yg/hAHc3VpWpiNu?=
- =?us-ascii?Q?zrg/HyJ4ql//TRuRe2EG/kFThmTYb+qI4MOq2hjnpnhnZVxuvpwMJggumf1a?=
- =?us-ascii?Q?th1c05gxobzpdvkOWvXjiE68XEu+rFwJljJbJkRRsI0Qb0F4RDq+Dip5NxVT?=
- =?us-ascii?Q?Gwv02M9o/tWdqpxLdRUxDvall2RA3+yo2tzfoIZHq/gDOiNwpbgkF3lPkj89?=
- =?us-ascii?Q?UALPxHO5/tedOcsz/q5vgenEvmNKP6xfBRXsXXwAkO+2FuYt751kKPkmuraT?=
- =?us-ascii?Q?Oz7NYRIyv4jmNLosyZb6JqmxSvYicoIMLjqHLT3CETC2KfZMSzvYSNKd40tj?=
- =?us-ascii?Q?gR/9Gp4O+6HdhQ5jJ1FSA5q57EG0DuRDNbmdY0NKbsJfC3+LYz28UU+ZzUnU?=
- =?us-ascii?Q?jm3K2qAA7lyWFt6YQZOvR1vDyonfVAqDosSy/DCY3cSSu+BhGjSzg9grwjMf?=
- =?us-ascii?Q?FLyeAnM2gwzbL+VSoaYfiO6VLbr5ty3ayrUDjRQoqn6RkwkpQHcsuf5yCNWv?=
- =?us-ascii?Q?Fqrq8D5vRMb6eAC1YbIiIEny3J5aoNurhLDqik2CrUgNAgqYgmftg02CR+zW?=
- =?us-ascii?Q?+lM8wR0g5zbNqmHt1X0RpLz/RV2lbR03gWQPWw0dOgBiEnm8VaxJhFH3zWUL?=
- =?us-ascii?Q?luOHLEHGnWuB91iNAIRuq37/v7Na9n8hzGemhrRqOFzEgCtLU86YL3jMu84W?=
- =?us-ascii?Q?/tHRMSPzKTzgTo+m3msWZZO2eTLKFVEq/P83hO1ttvhmopu/GvMTPzNhyoMp?=
- =?us-ascii?Q?Wo0ANliduVB/Kv2APDITSZkD5TuYLsSykGMvRxwzXW0hFRFwIP94RgovvW+5?=
- =?us-ascii?Q?Bg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	2f1pSFTTxrW8+7AoDEA/jgO40DO2TCzlm5Cm3rNk5Bu3WzFSSlf8a+7WIGVqYaBdiT+HdqH+LKJqZhYpt80Yt0MuzYwWeh3hI7YLOadypUtM1OXHZ4ge8GUJNoQ0E/+vNYGciTYy1ow2CKTmOprdSRp9SuVehwSPLBUTX5n2wWJuePJ+E0HXfVO5PKmOZiXrOcx8ibHcnLXLY1QDJDpwq7g6I7Ssx3c50zLEGAbRbqS0eCaTosgpgimxAB7K7mZgiKXvn/CWoyRhGhwMSCpynNwd146C0mLivQjqAqWsmcm8wLj5+1ffvu4982HGQYwKs/f6oye2EqdvvzGAeeEhAryRIX3XbHuZn6njrN90UggGMRTvn5DmQX2YYBhez79lC0mEtuyknMpm9xDdmn5oKajq7aDM14jsGj7y/0nJtfPK+tIXR2cjk0Kj9rrL3aqrhjQSUdo3cpXrzoZ8BpzeCqb3wmE3T+qV9EuAOuMnnN4c3Ce7+beksbAuF0anlR2mXz9lsVRoRI48o9iI7v36gjPuA7MElzamGflX/EWH8Nasx9fXioFGFQc1kH0AOMvPM3czOt76woZwBG9Z0Q6BlzrIl1FZpjbM8Is7aJdyCv0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae90eac0-b9d8-4218-47ac-08dd79651880
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2025 01:55:26.7837
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zqH2cxxvOWSAootixiVbDWmAWaiWQIZcJg4SXeUs5dKhu4X1bob8ceJzAjs+JsWhEJJpzPlI7Rtj0Jea/Ze2QPeSUDhInDCqBnj99dxxU84=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR10MB8374
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-12_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
- malwarescore=0 mlxlogscore=656 phishscore=0 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504120012
-X-Proofpoint-GUID: -81RmWvhtUGC2mnhpCthnJq-ivLn_xo8
-X-Proofpoint-ORIG-GUID: -81RmWvhtUGC2mnhpCthnJq-ivLn_xo8
+Content-Transfer-Encoding: 8bit
 
+From: huhai <huhai@kylinos.cn>
 
-Kees,
+The psz_init_zone() and psz_init_zones() functions return NULL on error,
+but psz_alloc_zones() only checks the return value using IS_ERR(). Since
+NULL is not an error pointer, this causes psz_alloc_zones() to mistakenly
+treat a failure as success and return 0, which may lead to a NULL pointer
+dereference.
 
->> > When a character array without a terminating NUL character has a
->> > static initializer, GCC 15's -Wunterminated-string-initialization
->> > will only warn if the array lacks the "nonstring" attribute[1].
->> > Mark the arrays with __nonstring to and correctly identify the char
->> > array as "not a C string" and thereby eliminate the warning.
+Update both psz_init_zone() and psz_init_zones() to return proper error
+pointers using ERR_PTR() instead of NULL.
 
-Applied to 6.16/scsi-staging, thanks!
+Fixes: d26c3321fe18 ("pstore/zone: Introduce common layer to manage storage zones")
+Signed-off-by: huhai <huhai@kylinos.cn>
+---
+ fs/pstore/zone.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
+index ceb5639a0629..57ffcf76f254 100644
+--- a/fs/pstore/zone.c
++++ b/fs/pstore/zone.c
+@@ -1157,7 +1157,7 @@ static struct pstore_zone *psz_init_zone(enum pstore_type_id type,
+ 	const char *name = pstore_type_to_name(type);
+ 
+ 	if (!size)
+-		return NULL;
++		return ERR_PTR(-EINVAL);
+ 
+ 	if (*off + size > info->total_size) {
+ 		pr_err("no room for %s (0x%zx@0x%llx over 0x%lx)\n",
+@@ -1203,7 +1203,7 @@ static struct pstore_zone **psz_init_zones(enum pstore_type_id type,
+ 
+ 	*cnt = 0;
+ 	if (!total_size || !record_size)
+-		return NULL;
++		return ERR_PTR(-EINVAL);
+ 
+ 	if (*off + total_size > info->total_size) {
+ 		pr_err("no room for zones %s (0x%zx@0x%llx over 0x%lx)\n",
+@@ -1225,7 +1225,7 @@ static struct pstore_zone **psz_init_zones(enum pstore_type_id type,
+ 
+ 	for (i = 0; i < c; i++) {
+ 		zone = psz_init_zone(type, off, record_size);
+-		if (!zone || IS_ERR(zone)) {
++		if (IS_ERR(zone)) {
+ 			pr_err("initialize zones %s failed\n", name);
+ 			psz_free_zones(&zones, &i);
+ 			return (void *)zone;
 -- 
-Martin K. Petersen
+2.25.1
+
