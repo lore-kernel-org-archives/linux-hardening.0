@@ -1,145 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395571F236B;
-	Mon, 14 Apr 2025 17:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5DE28B4FA
+	for <linux-hardening@vger.kernel.org>; Mon, 14 Apr 2025 17:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744651188; cv=none; b=UvC30c+BF0elcM4NUSeaUBaozCaNSsJw6AySu6YNL5oMqlX6aB3o5qoti4j2JrHWd0YZV0DL1K67O8ryh9Y0/xRqhNjqf4Meh/M6r43hKkWH94UlkANzhmp3rhakXfqT4u+m+OP0DSt6+zGsTBkJVOq5TJ4hvXVtqLM0m/JcJYA=
+	t=1744652572; cv=none; b=VMyQbdpo6DarFSyVyu6mgGIxS3O16ZNP5PUWPN2e0wU26EgkA5EOM368yZ/oHoDngJKCFu/VPIje7PWfst1hEKi1QMCfXIAUFXb6j2Eo/6pspPMFrT8jj1+GXFYPfxYACQuLFJGykesT56jiStPczPW+SzzsT4nKGPUPN/WvXJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744651188; c=relaxed/simple;
-	bh=z37GMPLQfQqtOQrNOtRcvsIzo/ZNg3+Bc9JSK7Jgb08=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jylm6NB7eI/TvUC3ChU4FTrYAU1pip7n8ANijToTvFcrvOgY1qCfFuiISFjc2qOCF/KrG+RU8Gp/8xZI9Y1Nsf3Zcm5Gal/tFcJrlt+jLX8olI5HMUQJ0OJS43wkorImg/DieyEzZ/W3YxMUb9OlbTvuZbGl/PetOhvi6TcruG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZ8f2c9l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744652572; c=relaxed/simple;
+	bh=4kjXEbdhBm9JRfgtbuzoUGIO3kfVoOMeYuD+D2ETRJI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QTepDMJztq3wwM0sri6LemCiBSROe9PqhA18Q4I3xj6wlfaAqD7HCYt8axYWx9dR+rW0ty9Ywb0RfE6tU+8H+fKuefbRF6CbK5pmEL1UqI1t7AIt+Wus9RTPhsPx3WEfmeUbFPoaAETsqmdjA13NVhgYxNiCCpBqyGOv9RN++LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AYS9lwB5; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZ8f2c9l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C958C4CEE2;
-	Mon, 14 Apr 2025 17:19:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744651187;
-	bh=z37GMPLQfQqtOQrNOtRcvsIzo/ZNg3+Bc9JSK7Jgb08=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AZ8f2c9lqfQZuQfWRr3KwemWv7exS/LcHLgCoLIJY1DNeczSaMQ2+K/p3z/mVRHXf
-	 5fYgsygYh/xIH5tIyU6QCvN2kjL9ycG1XsUaTCvSMyNM4nLwmEiQOuIVQJBGnIU6Wi
-	 eH72/9HbUpRpNs98Zbzt7Vw2DVusLEdBAFtqH9l7CD88Y6x5GgcdBgeL04Bde+YmwC
-	 uvjY5W2kBUh85KIg46dZSjcc6e1uqYGFbQIOnKSpCtulOiaTYwdjG2KKrMZ9DZebqt
-	 cv8y7JFEPsnuR9d4g+wONPywfX0U+hqROxapwUq2PEVZlBBIUUt0Kmcio/GxuCMMnk
-	 0927u0k2ScVQw==
-Date: Mon, 14 Apr 2025 18:19:41 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Prathosh.Satish@microchip.com,
-	krzk@kernel.org, netdev@vger.kernel.org, vadim.fedorenko@linux.dev,
-	arkadiusz.kubalewski@intel.com, jiri@resnulli.us, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org,
-	kees@kernel.org, andy@kernel.org, akpm@linux-foundation.org,
-	mschmidt@redhat.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
- Azurite chip family
-Message-ID: <20250414-residual-unblended-c21c7bc6eeb2@spud>
-References: <20250409144250.206590-3-ivecera@redhat.com>
- <20250410-skylark-of-silent-symmetry-afdec9@shite>
- <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
- <20250410-puritan-flatbed-00bf339297c0@spud>
- <6dc1fdac-81cc-4f2c-8d07-8f39b9605e04@redhat.com>
- <CY5PR11MB6462412A953AF5D93D97DCE5ECB72@CY5PR11MB6462.namprd11.prod.outlook.com>
- <bd7d005b-c715-4fd9-9b0d-52956d28d272@lunn.ch>
- <7ab19530-d0d4-4df1-9f75-060c3055585b@redhat.com>
- <4e331736-36f2-4796-945f-613279329585@lunn.ch>
- <7e6bf69b-0916-4ad9-b42f-8645f5c95d5d@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AYS9lwB5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744652569;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eSpTUwU+7FESIVM4O59Wy17WDk2ETrjJCbiiZOcWCEc=;
+	b=AYS9lwB5ywIMIPV3deh8HgNud09+qF0XVLSjshdSpVUb9YdEkor+Y88GRjr+kjOG8c2SS8
+	auiaht9n31h4rZBe5IRSZkbRQGLmujQ2bRe7TJ5X31BUvWuSFUX4fCJiPgzv0gtBZTnywY
+	3PoUqv3Co8ZNGY2QQVnPKCSOAj26HBo=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-cj31dKMROfSDFEgPx825Kg-1; Mon,
+ 14 Apr 2025 13:42:46 -0400
+X-MC-Unique: cj31dKMROfSDFEgPx825Kg-1
+X-Mimecast-MFC-AGG-ID: cj31dKMROfSDFEgPx825Kg_1744652564
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E3DAD180AF6A;
+	Mon, 14 Apr 2025 17:42:43 +0000 (UTC)
+Received: from [10.44.32.81] (unknown [10.44.32.81])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9DF9619560AD;
+	Mon, 14 Apr 2025 17:42:38 +0000 (UTC)
+Message-ID: <00cf9bc9-073c-4a6b-8024-2103942fe5b1@redhat.com>
+Date: Mon, 14 Apr 2025 19:42:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2OKUgsrCAQgxlv5y"
-Content-Disposition: inline
-In-Reply-To: <7e6bf69b-0916-4ad9-b42f-8645f5c95d5d@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>, netdev@vger.kernel.org,
+ Michal Schmidt <mschmidt@redhat.com>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250407172836.1009461-1-ivecera@redhat.com>
+ <20250407172836.1009461-2-ivecera@redhat.com>
+ <Z_QTzwXvxcSh53Cq@smile.fi.intel.com>
+ <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
+ <Z_ys4Lo46KusTBIj@smile.fi.intel.com>
+ <f3fc9556-60ba-48c0-95f2-4c030e5c309e@redhat.com>
+ <79b9ee2f-091d-4e0f-bbe3-c56cf02c3532@redhat.com>
+ <b54e4da8-20a5-4464-a4b7-f4d8f70af989@redhat.com>
+ <CAHp75Ve2KwOEdd=6stm0VXPmuMG-ZRzp8o5PT_db_LYxStqEzg@mail.gmail.com>
+ <CAHp75Vc0p-dehdjyt9cDm6m72kGq5v5xW8=YRk27KNs5g-qgTw@mail.gmail.com>
+ <CAHp75Vej0MCAV7v7Zom8CXqh3F6f3QXevW93pOkXSLEZn7Yxfg@mail.gmail.com>
+ <ad5ada81-d611-41bb-8358-3675f90767f1@redhat.com>
+ <CAHp75VdkLnm42DS2+kebYUWyXAhyNgswwDNynNJ-weo3DZ=G+Q@mail.gmail.com>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <CAHp75VdkLnm42DS2+kebYUWyXAhyNgswwDNynNJ-weo3DZ=G+Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
+On 14. 04. 25 7:09 odp., Andy Shevchenko wrote:
+>> Now, get it...
+>>
+>> I was a little bit confused by code of _regmap_select_page() that takes
+>> care of selector_reg.
+>>
+>> Btw, why is this needed? why they cannot overlap?
+>>
+>> Let's say I have virtual range <0, 0xfff>, window <0, 0xff> and window
+>> selector 0xff>.
+>> 1. I'm calling regmap_read(regmap, 0x8f, ...)
+>> 2. The regmap looks for the range and it finds it (0..0xfff)
+>> 3. Then it calls _regmap_select_page() that computes:
+>>      window_offset = (0x8f - 0x000) % 0x100 = 0x8f
+>>      window_page = (0x8f - 0x000) / 0x100 = 0
+>> 4. _regmap_select_page() set window selector to 0 and reg is updated to
+>>      reg = window_start + window_offset = 0x8f
+>>
+>> And for window_selector value: regmap_read(regmap, 0xff, ...) is the
+>> same except _regmap_select_page() checks that the given address is
+>> selector_reg and won't perform page switching.
+>>
+>> When I think about it, in my case there is no normal page, there is only
+>> volatile register window <0x00-0x7e> and only single direct register
+>> that is page selector at 0x7f.
+> Because you are effectively messing up with cache. Also it's not
+> recommended in general to do such due to some registers that might
+> need to be accessed directly. And also note, that each time you access
+> this you will call a selector write_each_ time you want to write the
+> register in the map (if there is no cache, or if cache is messed up).
 
---2OKUgsrCAQgxlv5y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Get it fully now...
 
-On Fri, Apr 11, 2025 at 11:56:15AM +0200, Ivan Vecera wrote:
->=20
->=20
-> On 10. 04. 25 11:12 odp., Andrew Lunn wrote:
-> > On Thu, Apr 10, 2025 at 08:33:31PM +0200, Ivan Vecera wrote:
-> > >=20
-> > >=20
-> > > On 10. 04. 25 7:36 odp., Andrew Lunn wrote:
-> > > > > Prathosh, could you please bring more light on this?
-> > > > >=20
-> > > > > > Just to clarify, the original driver was written specifically w=
-ith 2-channel
-> > > > > > chips in mind (ZL30732) with 10 input and 20 outputs, which led=
- to some confusion of using zl3073x as compatible.
-> > > > > > However, the final version of the driver will support the entir=
-e ZL3073x family
-> > > > > > ZL30731 to ZL30735 and some subset of ZL30732 like ZL80732 etc
-> > > > > > ensuring compatibility across all variants.
-> > > >=20
-> > > > Hi Prathosh
-> > > >=20
-> > > > Your email quoting is very odd, i nearly missed this reply.
-> > > >=20
-> > > > Does the device itself have an ID register? If you know you have
-> > > > something in the range ZL30731 to ZL30735, you can ask the hardware
-> > > > what it is, and the driver then does not need any additional
-> > > > information from DT, it can hard code it all based on the ID in the
-> > > > register?
-> > > >=20
-> > > > 	Andrew
-> > > >=20
-> > > Hi Andrew,
-> > > yes there is ID register that identifies the ID. But what compatible =
-should
-> > > be used?
-> > >=20
-> > > microchip,zl3073x was rejected as wildcard and we should use all
-> > > compatibles.
-> >=20
-> > You have two choices really:
-> >=20
-> > 1) You list each device with its own compatible, because they are in
-> > fact not compatible. You need to handle each one different, they have
-> > different DT properties, etc. If you do that, please validate the ID
-> > register against the compatible and return -ENODEV if they don't
-> > match.
-> >=20
-> > 2) You say the devices are compatible. So the DT compatible just
-> > indicates the family, enough information for the driver to go find the
-> > ID register. This does however require the binding is the same for all
-> > devices. You cannot have one family member listing 10 inputs in its
-> > binding, and another family member listing 20.
-> >=20
-> > If you say your devices are incompatible, and list lots of
-> > compatibles, you can then use constraints in the yaml, based on the
-> > compatible, to limit each family member to what it supports.
-> >=20
-> > My guess is, you are going to take the first route.
->=20
-> Yes, this looks reasonable... in this case should I use
-> microchip,zl3073x.yaml like e.g. gpio/gpio-pca95xx.yaml?
+Thank you, Andy, for the explanation and for the patience.
 
-No, please pick one of the compatibles in the file and name the same as
-one of those.
+Will send v3 soon.
 
---2OKUgsrCAQgxlv5y
-Content-Type: application/pgp-signature; name="signature.asc"
+Ivan
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/1DrQAKCRB4tDGHoIJi
-0tgQAQDiMG2LA+SQ4PGFUrDaU4IzQmjpflF0phs6a37CN+1gnwEA/FHtd04YGCSz
-Oc9nrC2QJLVRLTQhkJ6c3IA9ypnSrwU=
-=DfiI
------END PGP SIGNATURE-----
-
---2OKUgsrCAQgxlv5y--
