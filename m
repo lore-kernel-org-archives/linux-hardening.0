@@ -1,136 +1,107 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C9B1DF98F
-	for <linux-hardening@vger.kernel.org>; Mon, 14 Apr 2025 21:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA741A0BFA;
+	Mon, 14 Apr 2025 22:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744666622; cv=none; b=BLRgWebMzDSfzljhOSj0qiJXbfsOi5nAAFkz9A87uLdBGlHkhThGUADtbRoYD/hTqgRk8pj56HPnA5NyQxfDe/tpczaEXr0mifbTDJaGXtcgKZm/D4Bv/sVKb1JvpTXx6Rpv3hDplmXmKfgzHZuWAZBfu9MY8DJBWLZXAi2tt+c=
+	t=1744668078; cv=none; b=ckx2XXB2YWweO4gbwcNf2pvsqmEPyu/76QIFoNuMH0U5SvCTdDnILWqPgDjJBAwDlJT/RlDMGWQggKRXQuMnatIZFHQO9NNbKqdfcWDVpZLNwFngwB3bpzFtpwvdXMrBGyfP6S555wfEwL4MhC8/3+e/yms0ZFM8MUs7dsS+JNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744666622; c=relaxed/simple;
-	bh=Tk24utghGkFplP4e4dv7/jYc7nM2GAMqLLXblA4mn+I=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BtB9YQOMPrJMuzuafYbphi+pIAqoNbG9vIqq83ghSfAmvtInxl51ZyJDkuODb88oyrVTOBvIxc8Cyk65MsI/sTVQuVvgRdFWwTAHb8ngIEYchcK/MSUJuKofBGKorFpphiagqRHcNaHVeWepe6uyH9XwwJCaxsFjHajxvvKwkxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i7ercoH+; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com
+	s=arc-20240116; t=1744668078; c=relaxed/simple;
+	bh=1l08P30O+lKCvZ5y1d3ISGQUNkb1SwA1W+kwuLxu/6E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Be1pYYg7al9sQElxyypCTkVAK6PbWPzq2v5siRPCxOSehq0QPSTNt3W8Ciz4GRaqFn5CmzxAxD8TbsnkxbsRkjXxAvnAOG+kZNlpgOwYAvtqzT3dHhxRtWXIJRJfML3vOjPay7t4zoxHecoH2mSCftTIcEfWknqvdStjzgBcqH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=avycfQ4/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i7ercoH+"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso30342545e9.0
-        for <linux-hardening@vger.kernel.org>; Mon, 14 Apr 2025 14:37:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744666619; x=1745271419; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jF2TNhYRLgqPg2GomnHoMsGcCSNdCtX7kL0R4HVOm0M=;
-        b=i7ercoH+Op01ort4BqMWo9I+4ZPYByFW6+JKc70Iio3f2FWriRQ9VsJFTG0VrRHYd/
-         Dq4ig4VHvZHR1l/TCuSVP48O5HoACH9grDkREHnxGFeDrLq1ssCN3fDsYSp8VVutY+b4
-         XC55p27CVIFhM3pIXF6KQGKTP0gia5M+HWPMndIYm9w0KmeJTtJemRThXj2r7UJ1fLFd
-         +xp2Ugv6yr9EZg3AUnYGQiS00ybabs79TRoZB8+/t3vckHvqRVd+C3unZddjIL4T8Gnp
-         sko90YuQ2kzXGst/0W3ilU7YsPa82b/hAIeCAe02Qph/HvGUraxgTtZHpumEmjv3wb7m
-         BwlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744666619; x=1745271419;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jF2TNhYRLgqPg2GomnHoMsGcCSNdCtX7kL0R4HVOm0M=;
-        b=dzwCm+fqGkHtXhkwt3OdMIEQWmfJSIqhnv6dRYjMN3wR1M4ZXqgZPB8inBttKOiQkK
-         Ia4IAHAosNbL/rgHXIuEpn2JYoR/a1dFAX5o1g7XLmyZKjEZD2FldO1wFgh8LoX6Cu7m
-         GeGb2rg+lOB9nmud3539Re4qnJvoYzffa+AwoJ9cd1RigovlYByXG3O66Ex+X7O5Jkvg
-         MxdHA7Yne3iOGhRNOWZ6D0rH7MTNo2jvJ3f48hiiC/KWN+7VM7J9++OYyQNK0yrKz8dr
-         i3jgg52tqeCzQ9gF7ozQKH1MwVkcBaQJMnVuExOAYsB8gmZpoxcFi0xzPAyjCZgY8agd
-         pkEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGb98YhKljzihbyMIpU490cASckqn1fd5f4e17QRmrF2/cNTwcVdRRn/rMCzDybMP9EecQLGRkotSb6bB3Pgk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzwea6ZKnE4+wgmHLqbcA6Q/JZ+XCB+6w5lm4f+tJlOQWMDM2zJ
-	f6J2pCIW2rba00n3doWoyp/hRXrG5QKBHOpz0ukvjlQ96JV1SzStv1qvn4cBvySvd0uOUKe2qMO
-	j9LDPTI2PMw==
-X-Google-Smtp-Source: AGHT+IGt6SdsBhDCC9mxwhOwKurQqfl47SwTpTcZcPKa30UdcdmeRTNfSJw4Tae6aDy5J+4zBAj0NpZLX6MBTw==
-X-Received: from wmsp9.prod.google.com ([2002:a05:600c:1d89:b0:43d:9595:9973])
- (user=smostafa job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:a04:b0:43d:42b:e186 with SMTP id 5b1f17b1804b1-43f3a93f257mr98041855e9.8.1744666619418;
- Mon, 14 Apr 2025 14:36:59 -0700 (PDT)
-Date: Mon, 14 Apr 2025 21:36:48 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="avycfQ4/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA36C4CEE5;
+	Mon, 14 Apr 2025 22:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744668076;
+	bh=1l08P30O+lKCvZ5y1d3ISGQUNkb1SwA1W+kwuLxu/6E=;
+	h=From:Date:Subject:To:Cc:From;
+	b=avycfQ4/0cG4DMg8yoIOazqlWCLis60DvfwmQwQ1vdOPuF6I2gjyJTxQ3zPOgTiM7
+	 cwCXLjU3lalJsXZnZEGzvUpDTmhfoleQf9Pjd8sN4z0VjmyCfEol/pcWG3GJpplFDq
+	 XdEwyzLslHTU7l7VVY3mcV+pmm6557XrN78FmvLYPkRy74y8pqUSUHJ3M5OcnZE0hu
+	 0NGecSiDdypE1ydyoyvvBCxc2BotJpGJvduTn8Pk3hPt8M39Dth+QVyzS/MBmsWKx4
+	 pz9decYhFN4GFA5xTiYXmb8ILHHXYeUeiDTWKYc7d3CUfAuCVrx849/J+a8PkmYLzZ
+	 j+z0azCYRu4Mg==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Mon, 14 Apr 2025 15:00:59 -0700
+Subject: [PATCH] lib/Kconfig.ubsan: Remove 'default UBSAN' from
+ UBSAN_INTEGER_WRAP
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250414213648.2660150-1-smostafa@google.com>
-Subject: [PATCH] lib/test_ubsan.c: Fix panic from test_ubsan_out_of_bounds
-From: Mostafa Saleh <smostafa@google.com>
-To: linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org
-Cc: akpm@linux-foundation.org, kees@kernel.org, elver@google.com, 
-	andreyknvl@gmail.com, ryabinin.a.a@gmail.com, 
-	Mostafa Saleh <smostafa@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250414-drop-default-ubsan-integer-wrap-v1-1-392522551d6b@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAJqF/WcC/x3NQQrCMBBG4auUWTuQhiroVcRFpvlTByQNk7YKp
+ XdvcPlt3tupwhSVHt1Ohk2rzrmhv3Q0vkOewBqbyTt/dUM/cLS5cEQK62fhVWrIrHnBBOOvhcK
+ SHOSGJP4u1CrFkPT3Pzxfx3ECt51ZE3EAAAA=
+X-Change-ID: 20250414-drop-default-ubsan-integer-wrap-bf0eb6efb29b
+To: Kees Cook <kees@kernel.org>
+Cc: Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+ Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
+ kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
+ stable@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1816; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=1l08P30O+lKCvZ5y1d3ISGQUNkb1SwA1W+kwuLxu/6E=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDOl/W1eWOfmu1DwxweuGvH3/Sf4k3X33El1u672ftf+R6
+ henoktLO0pZGMS4GGTFFFmqH6seNzScc5bxxqlJMHNYmUCGMHBxCsBElJgYGeYJHfpSVKezRjLY
+ 5psHd3usUePBLd6OTZ3hbaoW72cmWDIy7Hz4Penn6vQbBxLDUk+xfPrTVGl7w5jjnt4j/YUhAeq
+ tXAA=
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-Running lib_ubsan.ko on arm64 (without CONFIG_UBSAN_TRAP) panics the
-kernel
+CONFIG_UBSAN_INTEGER_WRAP is 'default UBSAN', which is problematic for a
+couple of reasons.
 
-[   31.616546] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: test_ubsan_out_of_bounds+0x158/0x158 [test_ubsan]
-[   31.646817] CPU: 3 UID: 0 PID: 179 Comm: insmod Not tainted 6.15.0-rc2 #1 PREEMPT
-[   31.648153] Hardware name: linux,dummy-virt (DT)
-[   31.648970] Call trace:
-[   31.649345]  show_stack+0x18/0x24 (C)
-[   31.650960]  dump_stack_lvl+0x40/0x84
-[   31.651559]  dump_stack+0x18/0x24
-[   31.652264]  panic+0x138/0x3b4
-[   31.652812]  __ktime_get_real_seconds+0x0/0x10
-[   31.653540]  test_ubsan_load_invalid_value+0x0/0xa8 [test_ubsan]
-[   31.654388]  init_module+0x24/0xff4 [test_ubsan]
-[   31.655077]  do_one_initcall+0xd4/0x280
-[   31.655680]  do_init_module+0x58/0x2b4
+The first is that this sanitizer is under active development on the
+compiler side to come up with a solution that is maintainable on the
+compiler side and usable on the kernel side. As a result of this, there
+are many warnings when the sanitizer is enabled that have no clear path
+to resolution yet but users may see them and report them in the meantime.
 
-That happens because the test corrupts other data in the stack:
-400:   d5384108        mrs     x8, sp_el0
-404:   f9426d08        ldr     x8, [x8, #1240]
-408:   f85f83a9        ldur    x9, [x29, #-8]
-40c:   eb09011f        cmp     x8, x9
-410:   54000301        b.ne    470 <test_ubsan_out_of_bounds+0x154>  // b.any
+The second is that this option was renamed from
+CONFIG_UBSAN_SIGNED_WRAP, meaning that if a configuration has
+CONFIG_UBSAN=y but CONFIG_UBSAN_SIGNED_WRAP=n and it is upgraded via
+olddefconfig (common in non-interactive scenarios such as CI),
+CONFIG_UBSAN_INTEGER_WRAP will be silently enabled again.
 
-As there is no guarantee the compiler will order the local variables
-as declared in the module:
-	volatile char above[4] = { }; /* Protect surrounding memory. */
-	volatile int arr[4];
-	volatile char below[4] = { }; /* Protect surrounding memory. */
+Remove 'default UBSAN' from CONFIG_UBSAN_INTEGER_WRAP until it is ready
+for regular usage and testing from a broader community than the folks
+actively working on the feature.
 
-So, instead of writing out-of-bound, we can read out-of-bound which
-still triggers UBSAN but doesn't corrupt the stack.
-
-Signed-off-by: Mostafa Saleh <smostafa@google.com>
+Cc: stable@vger.kernel.org
+Fixes: 557f8c582a9b ("ubsan: Reintroduce signed overflow sanitizer")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 ---
- lib/test_ubsan.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ lib/Kconfig.ubsan | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/lib/test_ubsan.c b/lib/test_ubsan.c
-index 8772e5edaa4f..0e5c18b32b2d 100644
---- a/lib/test_ubsan.c
-+++ b/lib/test_ubsan.c
-@@ -77,18 +77,15 @@ static void test_ubsan_shift_out_of_bounds(void)
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index 4216b3a4ff21..f6ea0c5b5da3 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -118,7 +118,6 @@ config UBSAN_UNREACHABLE
  
- static void test_ubsan_out_of_bounds(void)
- {
--	volatile int i = 4, j = 5, k = -1;
--	volatile char above[4] = { }; /* Protect surrounding memory. */
-+	volatile int j = 5, k = -1;
-+	volatile int scratch[4] = { };
- 	volatile int arr[4];
--	volatile char below[4] = { }; /* Protect surrounding memory. */
--
--	above[0] = below[0];
- 
- 	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "above");
--	arr[j] = i;
-+	scratch[1] = arr[j];
- 
- 	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "below");
--	arr[k] = i;
-+	scratch[2] = arr[k];
- }
- 
- enum ubsan_test_enum {
+ config UBSAN_INTEGER_WRAP
+ 	bool "Perform checking for integer arithmetic wrap-around"
+-	default UBSAN
+ 	depends on !COMPILE_TEST
+ 	depends on $(cc-option,-fsanitize-undefined-ignore-overflow-pattern=all)
+ 	depends on $(cc-option,-fsanitize=signed-integer-overflow)
+
+---
+base-commit: 26fe62cc5e8420d5c650d6b86fee061952d348cd
+change-id: 20250414-drop-default-ubsan-integer-wrap-bf0eb6efb29b
+
+Best regards,
 -- 
-2.49.0.604.gff1f9ca942-goog
+Nathan Chancellor <nathan@kernel.org>
 
