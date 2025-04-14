@@ -1,107 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA741A0BFA;
-	Mon, 14 Apr 2025 22:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46C8E571;
+	Mon, 14 Apr 2025 22:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744668078; cv=none; b=ckx2XXB2YWweO4gbwcNf2pvsqmEPyu/76QIFoNuMH0U5SvCTdDnILWqPgDjJBAwDlJT/RlDMGWQggKRXQuMnatIZFHQO9NNbKqdfcWDVpZLNwFngwB3bpzFtpwvdXMrBGyfP6S555wfEwL4MhC8/3+e/yms0ZFM8MUs7dsS+JNg=
+	t=1744668674; cv=none; b=rwVSNxFHxohxZkdh4XaGaWQJQXnOg+u24unz0qGStq31mYgQ2OyRGyQvJ6YEjcp/GTwjkYi96QTfd3bMhdJsZ+QKqH+0VsE2FVk6YNaEJT0OuIUwV8BOtW3TWo44OudOZiHgz/5Pck03K0rBX35yREwzAa4eHTV2/kxQMU4koh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744668078; c=relaxed/simple;
-	bh=1l08P30O+lKCvZ5y1d3ISGQUNkb1SwA1W+kwuLxu/6E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Be1pYYg7al9sQElxyypCTkVAK6PbWPzq2v5siRPCxOSehq0QPSTNt3W8Ciz4GRaqFn5CmzxAxD8TbsnkxbsRkjXxAvnAOG+kZNlpgOwYAvtqzT3dHhxRtWXIJRJfML3vOjPay7t4zoxHecoH2mSCftTIcEfWknqvdStjzgBcqH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=avycfQ4/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="avycfQ4/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA36C4CEE5;
-	Mon, 14 Apr 2025 22:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744668076;
-	bh=1l08P30O+lKCvZ5y1d3ISGQUNkb1SwA1W+kwuLxu/6E=;
-	h=From:Date:Subject:To:Cc:From;
-	b=avycfQ4/0cG4DMg8yoIOazqlWCLis60DvfwmQwQ1vdOPuF6I2gjyJTxQ3zPOgTiM7
-	 cwCXLjU3lalJsXZnZEGzvUpDTmhfoleQf9Pjd8sN4z0VjmyCfEol/pcWG3GJpplFDq
-	 XdEwyzLslHTU7l7VVY3mcV+pmm6557XrN78FmvLYPkRy74y8pqUSUHJ3M5OcnZE0hu
-	 0NGecSiDdypE1ydyoyvvBCxc2BotJpGJvduTn8Pk3hPt8M39Dth+QVyzS/MBmsWKx4
-	 pz9decYhFN4GFA5xTiYXmb8ILHHXYeUeiDTWKYc7d3CUfAuCVrx849/J+a8PkmYLzZ
-	 j+z0azCYRu4Mg==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Mon, 14 Apr 2025 15:00:59 -0700
-Subject: [PATCH] lib/Kconfig.ubsan: Remove 'default UBSAN' from
- UBSAN_INTEGER_WRAP
+	s=arc-20240116; t=1744668674; c=relaxed/simple;
+	bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=liVHONeZxNysIiRGnMEn13GW6vvYgJo8DwQhyCq4ljQg7P2nBH2N3H3/ONIUe15VRIPMCU8XK4NVqeiIcGYayr5Iq2Fa0QMhf5ZucpxSrGCtSyI8UEaAnMZwlwX+SQR0DQnJF4PUB1zKtGzqSnMp+Py2ace8TzyVHiNfj9s8brY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-399749152b4so2650551f8f.3;
+        Mon, 14 Apr 2025 15:11:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744668671; x=1745273471;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=Ztq5tZ7frTZbEQqdINrmGBnFXFESB2Sw78MF6fFsngit7qN/EaKGRlDRsBQt/RxibN
+         s30SlUiElmUsOWBRdUZwkTtPrwKNkkAAzJKGbefwGxSXSAwggcblnGuxLkogdVgMr4EK
+         tI/qdqo2831qKPSI4xunIT4UHyeyMqgFJs8BBtxSGWZxZQUo2KE7X/ilpZ2wUGpCNoyA
+         /JGE5Gs1T4j77aBcpB6x/zmYkr4Rb3EVBJdsKJ6fNseT6SunwABJkpajCEbprz9G5Lal
+         2yyyrdEU7chdj1qb+3fCY1Isp52Thery1Z1BUfPZMuXKPyQBNJiz9UQ3szNd+fL55N9N
+         YOGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcQWuOmdxOUD5F7jQvLujE0/HfXzY4wg3039pcTAyRNNJcDaP5SB0KklzQHGhJFXAGz7ers58/HM7WVz2QchQ=@vger.kernel.org, AJvYcCX2nIrRPAw84kDbhpGShvXu6JZ2P9qHVjnT2EOXWTpkLGYfy7TScHnHo2n2o8wU1n3ANjP8LyidLeyEfxGP@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCt5cOZAjAEpmBOHr+k+eQjk0l3a1TReJ3vzlWEpxSOGvdKQp4
+	ReT0p9cXCu4w3D77MoTBwqmrI8Ib3hro9SupYyUmlzgjSm5w1z89
+X-Gm-Gg: ASbGncus66quMbxY/cwzAP3sj0DubLJs/Nddzao197Wns1Rp/3KOj0UsL2BL67s7Tth
+	2vpidbL4v6KKxCoB3L+kHjBc1in7BXweoBRHmW578qvlVQqCea8IDPh1qA0hNFocfnp9/g7njq8
+	jdnWKFOjJp3YFqEnSs3L3bd4dwhuDPi04N2d6hIJ750jk0Jb2ovyg+73+iebdCpGPytq1K+v1hW
+	JXB3dvSGly4nXLz6GAejRUg/z/qBCrAA5SiCyfYE81aXom3THb61qUihziVPQGWd4QK0ZFF/stT
+	UV5G3BQ1CConvcLB2IuEx0zy/7KTqmQJZ1DjBLUoHM+s1rhbLiYSzNhckYMedyif1DTlIL5O
+X-Google-Smtp-Source: AGHT+IFCiTY/l8yOfCw5tgPLcaFmiVl0aCRjtPjcf+Zz6hNuEVn0GZMpZiy+vJzvhsh0z12ZqOmlkw==
+X-Received: by 2002:a05:6000:184e:b0:39c:cc7:3c5f with SMTP id ffacd0b85a97d-39eaaecdacemr12156572f8f.45.1744668671022;
+        Mon, 14 Apr 2025 15:11:11 -0700 (PDT)
+Received: from [10.10.9.121] (u-1j-178-175-199.4bone.mynet.it. [178.175.199.47])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae9640a9sm12253790f8f.10.2025.04.14.15.11.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 15:11:10 -0700 (PDT)
+Message-ID: <a3fa6c12-22d8-44da-82fb-ad4e044cfa25@grimberg.me>
+Date: Tue, 15 Apr 2025 01:11:09 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] nvme-loop: Avoid -Wflex-array-member-not-at-end
+ warning
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Chaitanya Kulkarni <kch@nvidia.com>
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <Z-axRObjXYjIHGQC@kspp>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <Z-axRObjXYjIHGQC@kspp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-drop-default-ubsan-integer-wrap-v1-1-392522551d6b@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAJqF/WcC/x3NQQrCMBBG4auUWTuQhiroVcRFpvlTByQNk7YKp
- XdvcPlt3tupwhSVHt1Ohk2rzrmhv3Q0vkOewBqbyTt/dUM/cLS5cEQK62fhVWrIrHnBBOOvhcK
- SHOSGJP4u1CrFkPT3Pzxfx3ECt51ZE3EAAAA=
-X-Change-ID: 20250414-drop-default-ubsan-integer-wrap-bf0eb6efb29b
-To: Kees Cook <kees@kernel.org>
-Cc: Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
- Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
- Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
- kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
- stable@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1816; i=nathan@kernel.org;
- h=from:subject:message-id; bh=1l08P30O+lKCvZ5y1d3ISGQUNkb1SwA1W+kwuLxu/6E=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDOl/W1eWOfmu1DwxweuGvH3/Sf4k3X33El1u672ftf+R6
- henoktLO0pZGMS4GGTFFFmqH6seNzScc5bxxqlJMHNYmUCGMHBxCsBElJgYGeYJHfpSVKezRjLY
- 5psHd3usUePBLd6OTZ3hbaoW72cmWDIy7Hz4Penn6vQbBxLDUk+xfPrTVGl7w5jjnt4j/YUhAeq
- tXAA=
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-CONFIG_UBSAN_INTEGER_WRAP is 'default UBSAN', which is problematic for a
-couple of reasons.
-
-The first is that this sanitizer is under active development on the
-compiler side to come up with a solution that is maintainable on the
-compiler side and usable on the kernel side. As a result of this, there
-are many warnings when the sanitizer is enabled that have no clear path
-to resolution yet but users may see them and report them in the meantime.
-
-The second is that this option was renamed from
-CONFIG_UBSAN_SIGNED_WRAP, meaning that if a configuration has
-CONFIG_UBSAN=y but CONFIG_UBSAN_SIGNED_WRAP=n and it is upgraded via
-olddefconfig (common in non-interactive scenarios such as CI),
-CONFIG_UBSAN_INTEGER_WRAP will be silently enabled again.
-
-Remove 'default UBSAN' from CONFIG_UBSAN_INTEGER_WRAP until it is ready
-for regular usage and testing from a broader community than the folks
-actively working on the feature.
-
-Cc: stable@vger.kernel.org
-Fixes: 557f8c582a9b ("ubsan: Reintroduce signed overflow sanitizer")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- lib/Kconfig.ubsan | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-index 4216b3a4ff21..f6ea0c5b5da3 100644
---- a/lib/Kconfig.ubsan
-+++ b/lib/Kconfig.ubsan
-@@ -118,7 +118,6 @@ config UBSAN_UNREACHABLE
- 
- config UBSAN_INTEGER_WRAP
- 	bool "Perform checking for integer arithmetic wrap-around"
--	default UBSAN
- 	depends on !COMPILE_TEST
- 	depends on $(cc-option,-fsanitize-undefined-ignore-overflow-pattern=all)
- 	depends on $(cc-option,-fsanitize=signed-integer-overflow)
-
----
-base-commit: 26fe62cc5e8420d5c650d6b86fee061952d348cd
-change-id: 20250414-drop-default-ubsan-integer-wrap-bf0eb6efb29b
-
-Best regards,
--- 
-Nathan Chancellor <nathan@kernel.org>
-
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
