@@ -1,94 +1,92 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD5A29C32A
-	for <linux-hardening@vger.kernel.org>; Mon, 14 Apr 2025 12:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D690192B81
+	for <linux-hardening@vger.kernel.org>; Mon, 14 Apr 2025 12:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744633726; cv=none; b=Hbqom9JM7OCsjuYIDGtOV0DQsExqbXEU5+/Cpmn7E3gSh9MXTAjWdSXprLgmsUIsGrETUNUoqJSlrelHg4NCIias1xTgrbMRraaSf28x4J0+RtKf4I6gjH5XZ/G9jOF23U6aeXJ1R4TCBtnzqWovWawsGHmjDx8LGYKQGe6VUAc=
+	t=1744633908; cv=none; b=jqHNcsZF6dawdJX1AaZ03LT0VsAz0FiOa4x+dLEeQyTdRViBnovQiAJ/0pbr4RGBe5HuQk0VBFPS5EvezsbsH2Q3pfMXdeBePyKl56VZGsnnmXAZRa2XVF6hOhLrfVBWpdtJd9mC5HfsUJ0U+c02WLmoMyRbT/H4sinqxDYIkSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744633726; c=relaxed/simple;
-	bh=yLMAV/ruHL+C9lrddVCJdOuY2FwYy7O7zZy7waKpQcY=;
+	s=arc-20240116; t=1744633908; c=relaxed/simple;
+	bh=Ub+bREUz26MZsF0p4MWug9Yo0djKeDcAZdv169/OOWY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mx8iPQeatWlkKD8AIKhyZsHARGFK9fpcUClkZKrpgsv7CVkEh7u9miyngbQ4xTtv/9kho8EqR+f7G+5sYMluQeKndXvnFRbKGCdGgh7O4Myou1Do2DIKo1wfZR3ELV/Oa839ho7D9NX7gGGB1KdqHIm6iFkMfeTwyJerV6jzA2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Yd+9BpfE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ojnMNUjlt5zagNk3De5fphSkfyQsO4JD6lj0cylu4AJJ9e1jyv0NwDacOrJ4BWotb59qd+27T29noGSfAYEUhNG8aV3P2Cxf7sDO4bFQ6yo/tPJWKd8zMKCCofAmRK7enorIxS3Tw743tJuqP9ADCOl1CnY5PiKKTLEL7CyC8tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=a4ktIU6o; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Yd+9BpfE"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E99qg6011402
-	for <linux-hardening@vger.kernel.org>; Mon, 14 Apr 2025 12:28:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=pcD1hnXGwP4oWvtyhTXiHED+
-	7VwXoSi69a6mb6yqA1g=; b=Yd+9BpfEuiDZ4o/Ei13vwKatWPUgywArkggTGnCI
-	aUqEK9J9iWqvBpLlxSiHIiQQq5PJg/vPsNHry2jB3eKMYj/wSY2m16gPSoy6SrAn
-	hNPTp5iVvDB9KiH4NXikB+J1aiQk9I7pOHGl2jCV12mTCbyDnL1rr41hr1+9h3wV
-	RUNUCh1oBMbfacU+FgGhTNHxEs22+Uql/ZBoqUJLm5/Kr48jRxmNQe2uG14YoYFB
-	4DL8er5NgTCnE8LEpuHwQBBArM49t9h30D13KxV509+j7X7Pw5FjpTKg/t0GRPUt
-	NlSf8BfEFiNA3jePsKh4MUpwx3yn1v7r2WCvwJUE01XksA==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wcg7a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Mon, 14 Apr 2025 12:28:42 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c0a3ff7e81so803734885a.3
-        for <linux-hardening@vger.kernel.org>; Mon, 14 Apr 2025 05:28:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="a4ktIU6o"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso46239675e9.0
+        for <linux-hardening@vger.kernel.org>; Mon, 14 Apr 2025 05:31:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744633905; x=1745238705; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UzE4G1qxViP6T7whIrLBrJ/GtgCmUCswBCy5CnSYKK8=;
+        b=a4ktIU6oo8d29Sp6sCAIT24lMqDriXd9ZZUgECccsJfYdmfc/f/HCyYYM4JD7imBoZ
+         YJSpOTdff2gjPjVk6J3Xobx4S29LiJoYiNlF0Elnu/hz7UP8cV5/lW/FFFjzlxNI7vUU
+         Vmiicm6DqLOvJMueP60uHUI1uAheQLsmzZDhgAKEIXWPpJdMIggK4phLjYKzTctKu3zF
+         G+Jd4rBQ0vIYmBRxxT1U8ojeVMPyzC4f32GDh4E8ekeqaxM1OLy+VAijqm+DWc9KadMr
+         omjUH3g5CGKy7WBotnY7/iuTXCcqyeQtWDExl9ZsqayKDR+Xz544YUVgYhbVVpAZHIpi
+         OYYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744633722; x=1745238522;
+        d=1e100.net; s=20230601; t=1744633905; x=1745238705;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pcD1hnXGwP4oWvtyhTXiHED+7VwXoSi69a6mb6yqA1g=;
-        b=lpUVDexOHIeQXohvq6i5uOHtfqrO3iru7qwdPqVy2YQ1ssGgtiEMFDmaZ9cU0W95oB
-         nFxGrxPnrBrvNWkRUpHHJNxJ8WPzGmAYiekTui7kiI398qkwnbDxAo1NOYwFIMc6vIhk
-         kczrIQ0rT03TQLWlUeKSEE5vovMGR0TU9qH39f7uRBO/8a7IKJ4bNh4UwZWcsvHx+k2O
-         Yma9GSfGsRe6FnjeLMe3OZAM15KLFoczw8POIcPaCYzFxnnEANe3qd2JB2ICnBkMCjqk
-         lsnnHNgR2aDbE2ajkTbW7T8h96gRhgbAiMg8IDGXG0U3KyTPqOO161JjrpbzuoK7+GTB
-         6eVg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5szm5VXXCrZG0n2CQDuVMTJM4IblF4rJcFlMt8f6X+XBVUxbzavuxQ3iTu8ZQ9HEdJ7iyWjpGpw2ddaYEByk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHk4cEyrjdjn9vqWCtgxjAumj2lW0UWUfNIbF79dPYbfpNhZCL
-	h2Tppa1tvMtfvPDJ1s7ZgzAh+em9Bryj46jtj3G49sPEEhPZYRNWLIOhftEwZvWCTVGrnsEpL35
-	fuatFZrGzb/W0wN16gadk++tJAaIwb6j2wsrjRgnXtOITXbK89P41OSNHV3KPonszSTY=
-X-Gm-Gg: ASbGncu4ZbuO84wmxrYqHktRgG3kDmYlKs4CT+VBneVL/ENd0/gq5bNNSQarxRO1TFz
-	Li1c4bAFoWp/6+8Wttp2ncc1kkNRAvntUK6bEN0z4RRMdUjloT3lJwwxow/u0JabcIqjLtg5qLR
-	cdyhmMKqoVtOs+wlIx/XvobQfBdMd1uErJh/KXrKuUe1qPrGjahX6lF0TojCDNMxX/xID/QuIhC
-	PlwG862NaW+CP+VKZQSDrzVDhOihtt1OpRsLIFA2R2vwcQTXKlQeadCyfpGMLLsLtwvODyDa5Ic
-	U6271QBA3ZNVzvS+vt/1rvGxqiYztROgPKU7VO2FgGsC9vd9YHsJfnMheVhQJuN2dtIkzoPZF78
-	=
-X-Received: by 2002:a05:620a:178d:b0:7c5:3c62:804c with SMTP id af79cd13be357-7c7af10c99cmr1793638085a.21.1744633722074;
-        Mon, 14 Apr 2025 05:28:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFsetSET612d6fMhQCBXpRJnTz65qWucBdrgE0bNMyx8ZlJtaAzw/28Nhs4mXaotD4AP0m9Gg==
-X-Received: by 2002:a05:620a:178d:b0:7c5:3c62:804c with SMTP id af79cd13be357-7c7af10c99cmr1793633485a.21.1744633721593;
-        Mon, 14 Apr 2025 05:28:41 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d238b8bsm1084415e87.88.2025.04.14.05.28.40
+        bh=UzE4G1qxViP6T7whIrLBrJ/GtgCmUCswBCy5CnSYKK8=;
+        b=rH9quNKlw6stRcPEVWPbDdNL5h6x9esvKrNP08FCxQY6JYWpP4ls1zQ/yZitfYEz4E
+         ZT/bpmxg3w8WbDtJ/CWE/qvyPFvd8gkW69twYJ64cx9FXAa9oNd9EQ/oBOBkpqub5p3d
+         +ltocrTI5XLqYYUXqOftoOs6a33/e8SUgKQ9jrBTzG1CZQuuUDVtOpiPRsmEQ/tPl21N
+         osf1GGWx0B7SnMRtlFrPRVSr3jQZbCoR2WU/SnQveDtLHHfSg4aaTTJwOpDdfrRbRHXI
+         gLGXuVAClUaQrULjAMHV1jOO/SA2/Rzz6BveBipBepz568dzsPeYgVqSXQ0Abb4T4RAU
+         sqbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIlco/8Dlj8NDgcm26+hqiiK25EeoiGHXvPyVDmh2sTi9GyXpjRjHMuNxGGIaprdI+24VliJaB0FTRbzGoJpk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzuxi+B8SaiGTZ3J8nzqaNLsodRW6VfZynU25tvYJEEEeVzQ09R
+	+a/e9nmg+6j2parer2vde5V/HBYk68CbG2Bc7F336Z3YRzb335u6MPqExZ/uJC4=
+X-Gm-Gg: ASbGncueVWdKQ5RP4jc+Igjkgh0YE8vuSp3I+0Jme7bMRjGerJYU5i06FWmNKT21D6b
+	7CDf8BwhGedrC3gwwcsf/1C5sVTlLe7lCx6P/bO0tWyHMWZkAGPaihkqX5mL4KwYvTYMQ4o25lI
+	rNAdklXTHi5o0ABBwaVvZR6zmLl8Li7LQQRoF3KMTD+uAFBx+qBOQv0tprj7b5GFFHCgn/bIPWd
+	UHIEjqJy81OzTeK01b2RvuB2gKEC/6RqNzcZI1h1Rr1p+b+IE9cYAtwjAp4oGDUtFxONB6Mpj8x
+	+5N7it1BXu9rp2w4Au9EGJZymladIAMEkW+k/hgJyiI=
+X-Google-Smtp-Source: AGHT+IGPx3FekDQBH+w1DRIhnhl/LKSHQTM4c3o3SlHgBBWG1pxWWapk3NPpkMv5AAzM/asN/sLGnA==
+X-Received: by 2002:a05:6000:2911:b0:391:1652:f0bf with SMTP id ffacd0b85a97d-39eaaea8c84mr8884498f8f.33.1744633904685;
+        Mon, 14 Apr 2025 05:31:44 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43d053sm11008797f8f.68.2025.04.14.05.31.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 05:28:40 -0700 (PDT)
-Date: Mon, 14 Apr 2025 15:28:38 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org
-Subject: Re: [PATCH 0/4] Retrieve information about DDR from SMEM
-Message-ID: <qdip4rtk2zusxkdlui4ujnybsh7jfqk25tazx477tueytp6cbm@dom2fduk2r6z>
-References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
- <685e784c-3f36-4cd1-9c34-7f98c64d50f2@oss.qualcomm.com>
- <0bec3e62-0753-4c3d-abe1-1a43356afc80@oss.qualcomm.com>
- <e7bd2840-dd93-40dd-a1bc-4cd606a34b44@oss.qualcomm.com>
- <CAO9ioeUeNeSxz7ADZ-BbJbhEKkszVS+SmbqaZCgTpL=csak=hg@mail.gmail.com>
- <b04464b6-2ad9-4866-88e9-437e96645726@oss.qualcomm.com>
- <sgjporlde6bgcp2mhr3r5c6wj3a3u37s5nlrrokbutsyizixod@7shpt55muqki>
- <4e265348-3466-49fb-82e2-255205052d1e@oss.qualcomm.com>
+        Mon, 14 Apr 2025 05:31:44 -0700 (PDT)
+Date: Mon, 14 Apr 2025 14:31:42 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Sergio Perez Gonzalez <sperezglz@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	Thomas Huth <thuth@redhat.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] slab: Decouple slab_debug and no_hash_pointers
+Message-ID: <Z_0AFjai6Bvg-YLD@pathway.suse.cz>
+References: <20250410174428.work.488-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -97,70 +95,175 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4e265348-3466-49fb-82e2-255205052d1e@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=67fcff7b cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=MwWKvEgEnNFHFowGc98A:9 a=CjuIK1q_8ugA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-ORIG-GUID: xbOyE9x0EUHKpJr9h9s0i62iD0qd36KO
-X-Proofpoint-GUID: xbOyE9x0EUHKpJr9h9s0i62iD0qd36KO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
- suspectscore=0 mlxlogscore=470 spamscore=0 priorityscore=1501
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140091
+In-Reply-To: <20250410174428.work.488-kees@kernel.org>
 
-On Fri, Apr 11, 2025 at 12:52:32PM +0200, Konrad Dybcio wrote:
-> On 4/11/25 12:50 PM, Dmitry Baryshkov wrote:
-> > On Fri, Apr 11, 2025 at 12:03:03PM +0200, Konrad Dybcio wrote:
-> >> On 4/11/25 11:57 AM, Dmitry Baryshkov wrote:
-> >>> On Fri, 11 Apr 2025 at 12:49, Konrad Dybcio
-> >>> <konrad.dybcio@oss.qualcomm.com> wrote:
-> >>>>
-> >>>> On 4/9/25 5:49 PM, Konrad Dybcio wrote:
-> >>>>> On 4/9/25 5:44 PM, Dmitry Baryshkov wrote:
-> >>>>>> On 09/04/2025 17:47, Konrad Dybcio wrote:
-> >>>>>>> SMEM allows the OS to retrieve information about the DDR memory.
-> >>>>>>> Among that information, is a semi-magic value called 'HBB', or Highest
-> >>>>>>> Bank address Bit, which multimedia drivers (for hardware like Adreno
-> >>>>>>> and MDSS) must retrieve in order to program the IP blocks correctly.
-> >>>>>>>
-> >>>>>>> This series introduces an API to retrieve that value, uses it in the
-> >>>>>>> aforementioned programming sequences and exposes available DDR
-> >>>>>>> frequencies in debugfs (to e.g. pass to aoss_qmp debugfs). More
-> >>>>>>> information can be exposed in the future, as needed.
-> >>>>>>
-> >>>>>> I know that for some platforms HBB differs between GPU and DPU (as it's being programmed currently). Is there a way to check, which values are we going to program:
-> >>>>>>
-> >>>>>> - SM6115, SM6350, SM6375 (13 vs 14)
-> >>>>
-> >>>> SM6350 has INFO_V3
-> >>>> SM6375 has INFO_V3_WITH_14_FREQS
-> >>>
-> >>> I'm not completely sure what you mean here. I pointed out that these
-> >>> platforms disagreed upon the HBB value between the DPU/msm_mdss.c and
-> >>> a6xx_gpu.c.
-> >>> In some cases (a610/SM6115 and a619/SM6350) that was intentional to
-> >>> fix screen corruption issues. I don't remember if it was the case for
-> >>> QCM2290 or not.
-> >>
-> >> As I said below, I couldn't get a good answer yet, as the magic value
-> >> is not provided explicitly and I'll hopefully be able to derive it from
-> >> the available data
-> > 
-> > I see...
-> > Is this data even supposed to be poked into? The foo_WITH_bar types
-> > doesn't sound like a very stable API.
+On Thu 2025-04-10 10:44:31, Kees Cook wrote:
+> Some system owners use slab_debug=FPZ (or similar) as a hardening option,
+> but do not want to be forced into having kernel addresses exposed due
+> to the implicit "no_hash_pointers" boot param setting.[1]
 > 
-> Yeah, it was designed with both the producer and consumer being part
-> of a single codebase, always having the data structures in sync..
+> Introduce the "hash_pointers" boot param, which defaults to "auto"
+> (the current behavior), but also includes "always" (forcing on hashing
+> even when "slab_debug=..." is defined), and "never". The existing
+> "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
+> 
+> This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
 
-I feel somewhat worried about parsing those structures then. But... the
-only viable alternative is to have an in-kernel list of possible
-platform configurations and parse the /memory@foo/ddr_device_type
-property.
+The idea makes sense. But it seems that the patch did not handle
+the "always" mode correctly, see below.
 
--- 
-With best wishes
-Dmitry
+
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -60,6 +60,20 @@
+>  bool no_hash_pointers __ro_after_init;
+>  EXPORT_SYMBOL_GPL(no_hash_pointers);
+>  
+> +/*
+> + * Hashed pointers policy selected by "hash_pointers=..." boot param
+> + *
+> + * `auto`   - Hashed pointers enabled unless disabled by slub_debug_enabled=true
+> + * `always` - Hashed pointers enabled unconditionally
+> + * `never`  - Hashed pointers disabled unconditionally
+> + */
+> +enum hash_pointers_policy {
+> +	HASH_PTR_AUTO = 0,
+> +	HASH_PTR_ALWAYS,
+> +	HASH_PTR_NEVER
+> +};
+> +static enum hash_pointers_policy hash_pointers_mode __initdata;
+> +
+>  noinline
+>  static unsigned long long simple_strntoull(const char *startp, char **endp, unsigned int base, size_t max_chars)
+>  {
+> @@ -2271,12 +2285,13 @@ char *resource_or_range(const char *fmt, char *buf, char *end, void *ptr,
+>  	return resource_string(buf, end, ptr, spec, fmt);
+>  }
+>  
+> -int __init no_hash_pointers_enable(char *str)
+> +void __init hash_pointers_finalize(bool slub_debug)
+>  {
+> -	if (no_hash_pointers)
+> -		return 0;
+> +	if (hash_pointers_mode == HASH_PTR_AUTO && slub_debug)
+> +		no_hash_pointers = true;
+>  
+> -	no_hash_pointers = true;
+> +	if (!no_hash_pointers)
+> +		return;
+>  
+>  	pr_warn("**********************************************************\n");
+>  	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
+
+
+The mode/policy is generic but this function is ready to be called
+only once. And we might actually want to call it twice, see below.
+
+I would suggest to use a generic names and allow to call it more
+times, something like:
+
+/**
+ * hash_pointers_update() - update the decision whether to hash
+ *	printed pointers
+ * @auto_disable: Disable hashing in auto mode
+ *
+ * The function allows to disable hashing printed pointers either
+ * when the global mode is HASH_PTR_NEVER or when the caller
+ * wants to disable it and the mode is HASH_PTR_AUTO.
+ */
+void __init hash_pointers_update(bool auto_disable)
+{
+	bool disable_hashing = false;
+
+	switch(hash_pointers_mode) {
+	case HASH_PTR_AUTO:
+		disable_hashing = auto_disable;
+		break;
+	case HASH_PTR_ALWAYS:
+		disable_hashing = true;
+		break;
+	case HASH_PTR_NEVER:
+		if (no_hash_pointers) {
+			pr_warn("Pointers were temporary printed without hashing. Force hashing again.\n");
+			no_hash_pointers = false;
+		}
+		break;
+	default:
+		pr_warn("Unknown hash_pointers mode '%d' specified; assuming auto.\n",
+			hash_pointers_mode);
+		disable_hashing = auto_disable;
+	}
+
+	/* Nope when no change requested. */
+	if (no_hash_pointers || !disable_hashing)
+		return;
+
+	no_hash_pointers = true;
+
+	pr_warn("**********************************************************\n");
+	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
+	pr_warn("**                                                      **\n");
+	pr_warn("** This system shows unhashed kernel memory addresses   **\n");
+	pr_warn("** via the console, logs, and other interfaces. This    **\n");
+	pr_warn("** might reduce the security of your system.            **\n");
+	pr_warn("**                                                      **\n");
+	pr_warn("** If you see this message and you are not debugging    **\n");
+	pr_warn("** the kernel, report this immediately to your system   **\n");
+	pr_warn("** administrator!                                       **\n");
+	pr_warn("**                                                      **\n");
+	pr_warn("** Use hash_pointers=always to force this mode off      **\n");
+	pr_warn("**                                                      **\n");
+	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
+	pr_warn("**********************************************************\n");
+}
+
+> @@ -2289,11 +2304,39 @@ int __init no_hash_pointers_enable(char *str)
+>  	pr_warn("** the kernel, report this immediately to your system   **\n");
+>  	pr_warn("** administrator!                                       **\n");
+>  	pr_warn("**                                                      **\n");
+> +	pr_warn("** Use hash_pointers=always to force this mode off      **\n");
+> +	pr_warn("**                                                      **\n");
+>  	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
+>  	pr_warn("**********************************************************\n");
+> +}
+> +
+> +static int __init hash_pointers_mode_parse(char *str)
+> +{
+> +	if (!str) {
+> +		pr_warn("Hash pointers mode empty; falling back to auto.\n");
+> +		hash_pointers_mode = HASH_PTR_AUTO;
+> +	} else if (strncmp(str, "auto", 4) == 0)   {
+> +		pr_info("Hash pointers mode set to auto.\n");
+> +		hash_pointers_mode = HASH_PTR_AUTO;
+> +	} else if (strncmp(str, "never", 5) == 0) {
+> +		pr_info("Hash pointers mode set to never.\n");
+> +		hash_pointers_mode = HASH_PTR_NEVER;
+> +	} else if (strncmp(str, "always", 6) == 0) {
+> +		pr_info("Hash pointers mode set to always.\n");
+> +		hash_pointers_mode = HASH_PTR_ALWAYS;
+
+This mode is not handled anywhere, see below.
+
+> +	} else {
+> +		pr_warn("Unknown hash_pointers mode '%s' specified; assuming auto.\n", str);
+> +		hash_pointers_mode = HASH_PTR_AUTO;
+> +	}
+
+We might handle HASH_PTR_ALWAYS by calling:
+
+	hash_pointers_update(false);
+
+>  	return 0;
+>  }
+> +early_param("hash_pointers", hash_pointers_mode_parse);
+> +
+> +static int __init no_hash_pointers_enable(char *str)
+> +{
+> +	return hash_pointers_mode_parse("never");
+> +}
+>  early_param("no_hash_pointers", no_hash_pointers_enable);
+>  
+>  /*
+
+Best Regards,
+Petr
