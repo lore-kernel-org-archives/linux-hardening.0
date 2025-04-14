@@ -1,58 +1,58 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9474F2957D6;
-	Mon, 14 Apr 2025 13:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E17274FE8;
+	Mon, 14 Apr 2025 13:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744638982; cv=none; b=bgIjapD0N3+iHc97+2HczfyMto7wFwPpTOlOwCHEV5uWO6u1cedMzLEjun2s7mqo+Ekv+BT/GQKfHrIXDguK+iPV00u4PLaCctJcLs5d5Zk0LZ5HoQ7YIvjPuEZfRWT7cRq+H9jyVTwv2Ny/JAtf4Qd0Cbb3fnFw6aPPoIp5+NI=
+	t=1744639148; cv=none; b=GjkVLBqDBYbxbjH1895C84PHWndhIwQZhsOGXt9FqSfAPsDHB1eQ0QbPivlaf5hvWsK60FavavGKwx3lMFIFM8uh7guoGYDRzng86BJdDJdGH7aNqVqzdmag1ahgH1gi0fVMqmtLbQ4fjwa/pAGWxdiubkx0GfdluaDUYMhfOUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744638982; c=relaxed/simple;
-	bh=byjSjrxCbhU5uc7aHlaZTnC0DJF5shLq5b+r4tgNpok=;
+	s=arc-20240116; t=1744639148; c=relaxed/simple;
+	bh=VEDOUNMnaxbsrmXycxHqrWIoLhEOlcx/tiT9QK99SsM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C0A69Anw0KTTDl9YQekvYT6SCZf666iz5i6rLjpNHQem8d09rpFEI86L/8gtVuHRVdJPvzYS1S1wpuVXZVGHt1VW6GIKwX+3ayOJl2zmsOzixFheoA/m8C6DAZ/8zEsxLFJp68xVATrLkktHrFRIwt40BZGrRerIDYs6MCrBW50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fyj4513e; arc=none smtp.client-ip=209.85.218.52
+	 To:Cc:Content-Type; b=vFF8nNz+WPIibxvrVLMkS7WLE73KQLyeGhKrZ4bH3DJG9gKwC5oL9ET0lhmaW8jB64asyU9vnaEaVIbfzQtjmcSmNqsoq9pbzoTf46SVPiaXp8NUudZitK7aE73LaTYtqzxH+rOAl6mChc1djTqkbUQGLUVoCkfEEQDmYoqdkP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YO13bMva; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyj4513e"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abbb12bea54so868665166b.0;
-        Mon, 14 Apr 2025 06:56:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YO13bMva"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e5e34f4e89so111936a12.1;
+        Mon, 14 Apr 2025 06:59:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744638978; x=1745243778; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744639145; x=1745243945; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BTeEt1RU6eyQY7vNutEMrHzrVqwSVTKDzRQxwATIcm8=;
-        b=fyj4513eKAzRE2++cFFBP/ezTSebu2fuyb03TwCaTTAQeUDBGv4Vq1/4p+LHZ9x7Pp
-         gMDLZDzcg8+VKTI/pgqJmuLczLvU2WsCdrMSPp0j/2grn5RI3N+P4dU/1spGIdQtylUV
-         sh0dBZ1OSyEwKtDoQSRY1LBCoDa0VLc1cIU0Et51xBPoOwx+E5aumkELhKgmY+Wqheph
-         25WDK2uaGV7wKKbtn3PftWUEqWWucxKDpX5XS850lOE6dOzV1M6gvZJ34JM2L6Wz5M1T
-         0l08NGiITuvRzRnsJMSH7kGqzdeagByDhHOGHtLAUeYnbzuoK9BwGkXzWMq8YOVccXtz
-         x3Pg==
+        bh=QacIaZLbaqsscws1AyL4TMSihH9iJ/fQvcmBOW8YP9Q=;
+        b=YO13bMvaNcXOSax82FCmOREJtfu7fUWhSu/pEex4Rokgu4wlBbrrC8bzzeyDhAB8Hg
+         1I8OGlkU6OSMUNJSHO/Lgpi3TOc7x6SOda+/Fj+ckZa9qUoN5syEohHXhz390gAapoDC
+         8Cxx6TzW3FAXZPyCvJvk5PxGj9uqZClkC9KV+JQEAWCoZ73HsBddPKMgxvqpeZgxyHNp
+         rfLm1jq4UHfB+c0fzsxLB+CInTVF/F6ZSgRmBdZYM0Rw4UaMtXjlNtSGuqctaHI7Cbyz
+         GMNgg8ElqNylgvxeWjc16eTa1TjIwS3Emg7mfKX2jSAxS0o4hEzMKr3m4gCiTXi++Llu
+         D7Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744638978; x=1745243778;
+        d=1e100.net; s=20230601; t=1744639145; x=1745243945;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BTeEt1RU6eyQY7vNutEMrHzrVqwSVTKDzRQxwATIcm8=;
-        b=koLZHG/JVoDeBVUkWlE0WOG9bfbFbbBm/2wNQvGXxU9N/QpqTpwvUcR2o56liIwbqP
-         Vy5WtZB6joKcPNgpvaeAJd07W+xxQJYq3AxPh2nTnGD4qW3ip6f1qVB5PGfQQ4owshuO
-         gEl7KSiZFTM8FEEPF/rd3KXKatMFvWdWyWSqF5bnvDSuP/iLxOpoolWAJxhReVyqfPp/
-         rfGXkL6oGoMjdsP6dWFGP5GpWEbSN5nfguuXqNqM92IJwQ6THs98KXN9Vb4KNIJ2La6N
-         Dl93mky2bSSd0LwGuON4mVWJZIIhDI0HrgqnJL2hhmFZ2Wkzgc9ZBtMQy3RQCjraOo3J
-         F4Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCWHIKX/cVPLto8NTBjmWKuxfrY1qGit7aDleuCmUEVUhXaTE+Rvu1HPdOZWqmX3MeIjbPc74wcE@vger.kernel.org, AJvYcCWdPibqy8wjdwJbvoYO0V77XeJl1YV+Q9RhQIILZ6xaZU7RSJ+i6HM1bje4DjUt0ns5BAGjmQGioLAB@vger.kernel.org, AJvYcCWzk1gYspYURUmwgignkbVOXdhTiTMNspAY05UntrrBG166teEI01BXIHBwDWRB3hlRVMvR54gS5wPCyKfbYB7p@vger.kernel.org, AJvYcCXWu+f/xmmsfHDhgOy40h/b2l2JOttC7Q/pI2p1wMRGLePrq94Y+F60pXI1MWdaMQkfCH6YXEzSoJcw3Y1M@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywv4Pu2z6Q4Fs3EASZzJa+nK8FO0N0GmY0jFgwz8sthx2k/DnYE
-	jgLlNERQrkm++6MZSDyPo/DqYl6mOMtMiDi7gqW4jPjU+BpvLBDtHw+JkHiYn1P6g8DQYlxXpzo
-	1h6spczlCBFo++niexNqTLkN1LT4=
-X-Gm-Gg: ASbGncs4an7WzsiapHDMMywd7dklSMGZ1ECh7GQWZLQzEdja+9PYg2qoVA1sTSV8pax
-	p43Y5RaDynjtkqPFllpIL61aGSleYxeQf6hybX2CE3Zyx7UgUqvm9usyYKZuE8hSMA9V+z3oATR
-	fvbYiy5lcoLyN9V7NApSm3+w==
-X-Google-Smtp-Source: AGHT+IFUEu21Nbm/up+QwdSenWnwKsVw3A+E365YsrpZGwvNI/jyUUt21jdvv4Cojd3nbC1DCrPVyWKa+GqwZyFv1UU=
-X-Received: by 2002:a17:907:2ce5:b0:ac3:49f0:4d10 with SMTP id
- a640c23a62f3a-acad359bc31mr910919266b.38.1744638977471; Mon, 14 Apr 2025
- 06:56:17 -0700 (PDT)
+        bh=QacIaZLbaqsscws1AyL4TMSihH9iJ/fQvcmBOW8YP9Q=;
+        b=XNvzQ4TNFhTuLuzxNI/LHpTwT8zmMte59VRh/BQWtqXOd9KCFDDhNk8AvTBLYczXsZ
+         8yUGr+umjOcZq8s62h6IGXLv4xk6zFLXNdsmcXPefGx3xZfCqB8rrEig9A76dhlwBywP
+         56w/yYBkt2Lc9EDoktPTPyZ/l06bNamrQA/YYUvO1MpJdsQCTSRyGAg7FFPtYU5yfu7k
+         12u0a/APWt00YHRY9supNfQ0CAc8SaaruowHFXApOXCZcTGeOOUwX5SNV+0lJ/SppunC
+         J4HM01hH9De2SvE/h/CTEYAfNCaeJSzRoLX9i87R4ngTvXe3Hv3lqXpI18DfPrD7Nqsi
+         0zjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVX57dfQE8Ew/rjh0yfvC1Yf8zhzQoxSEZCDBEwt4EZzjX/J3myEnNXJypZv+3jZPVo4aoXj1gA4A76UguF0g9d@vger.kernel.org, AJvYcCWO15AcfrJP9oISMgNr8dpxh7erR83J3/xeesmaJrs2vz2JKMRhesFoJdOQtd5iIReUEQMNuYKf@vger.kernel.org, AJvYcCWsLMRj130aECT77eikrcxXHNtDzao2oFBV+/0vkw+BOTjUFa03tSL4OyFCZ6N2ExVQE3vJPsi0EDrQ@vger.kernel.org, AJvYcCXpKLbApKM7VGbsfwlRCKzFvosGRuybVbtLyVBuks4E6y2/RmwzRJDTjDLXa1SmzP3qcmWnF922qfB1ox0z@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsJUy3OvM2loSz63Z3iFBB2qFNrZBPHotZSFQ4zg74IWicNTtq
+	I419A9bUUvTxVyDZcwdFxch4etzDnj/P5mSlhMIoIMJWv6RJnBukL5BqJohdIiiBUjkHfWaB4Y9
+	3b+6KR3eMaZOX9cIo/0AeFl0gmKw=
+X-Gm-Gg: ASbGncuEKG49eiVaFeN0TMh69s9HDd6mfCq3NkbVJVICHfmeDaYdSZWBE4btJJ8W1HO
+	vSkmhLJnEAPmWn+aTW3e8xhMgFAOMor6Nhi6SxY9aZYG0uZ3kO5RPsrYQr/YolYIUpgBduKOUWq
+	i6BEmNttllx31TlnJiFO0G4g==
+X-Google-Smtp-Source: AGHT+IFuXaUtcb1kNEwtSt0eSq3r2v9Vpj1oFgxM95yLqytmSAvykRAVk7wzhna1x5muWsxUC7LbOy0f3db5f9H++iw=
+X-Received: by 2002:a17:907:3d9f:b0:ac7:18c9:2975 with SMTP id
+ a640c23a62f3a-acad36a5dc4mr1100303566b.48.1744639145054; Mon, 14 Apr 2025
+ 06:59:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -62,12 +62,11 @@ MIME-Version: 1.0
 References: <20250407172836.1009461-1-ivecera@redhat.com> <20250407172836.1009461-2-ivecera@redhat.com>
  <Z_QTzwXvxcSh53Cq@smile.fi.intel.com> <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
  <Z_ys4Lo46KusTBIj@smile.fi.intel.com> <f3fc9556-60ba-48c0-95f2-4c030e5c309e@redhat.com>
- <79b9ee2f-091d-4e0f-bbe3-c56cf02c3532@redhat.com>
-In-Reply-To: <79b9ee2f-091d-4e0f-bbe3-c56cf02c3532@redhat.com>
+In-Reply-To: <f3fc9556-60ba-48c0-95f2-4c030e5c309e@redhat.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 14 Apr 2025 16:55:41 +0300
-X-Gm-Features: ATxdqUHTg1jcbOzMa7pipDhqGfFcA0usaAkeGfTb7SQC00-heg8_75ap0kABLcc
-Message-ID: <CAHp75VcumcH_9-2P2iayGWwD3Y87A7CZyO9vxqvbaUptS1FeQw@mail.gmail.com>
+Date: Mon, 14 Apr 2025 16:58:28 +0300
+X-Gm-Features: ATxdqUEVdYSimMgT8azBcfe7VnpzDgPZRtxxbhfjgZ33xxF6MeE0FgTvH7anJts
+Message-ID: <CAHp75VcZrop0tvyX4Z-Gm3uOUKMbrAWxir2THuBqg8DfhN=hmQ@mail.gmail.com>
 Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
 To: Ivan Vecera <ivecera@redhat.com>
 Cc: Andy Shevchenko <andy@kernel.org>, netdev@vger.kernel.org, 
@@ -80,63 +79,65 @@ Cc: Andy Shevchenko <andy@kernel.org>, netdev@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 2:52=E2=80=AFPM Ivan Vecera <ivecera@redhat.com> wr=
+On Mon, Apr 14, 2025 at 2:40=E2=80=AFPM Ivan Vecera <ivecera@redhat.com> wr=
 ote:
-> On 14. 04. 25 1:39 odp., Ivan Vecera wrote:
-> > On 14. 04. 25 8:36 dop., Andy Shevchenko wrote:
-> >>> What is wrong here?
-> >>>
-> >>> I have a device that uses 7-bit addresses and have 16 register pages.
-> >>> Each pages is from 0x00-0x7f and register 0x7f is used as page select=
-or
-> >>> where bits 0-3 select the page.
-> >> The problem is that you overlap virtual page over the real one (the
-> >> main one).
-> >>
-> >> The drivers you mentioned in v2 discussions most likely are also buggy=
-.
-> >> As I implied in the above question the developers hardly get the
-> >> regmap ranges
-> >> right. It took me quite a while to see the issue, so it's not
-> >> particularly your
-> >> fault.
-> > Hi Andy,
-> >
-> > thank you I see the point.
-> >
-> > Do you mean that the selector register should not be part of the range?
-> >
-> > If so, does it mean that I have to specify a range for each page? Like
-> > this:
-> >
-> >      {
-> >          /* Page 0 */
-> >          .range_min    =3D 0x000,
-> >          .range_max    =3D 0x07e,
-> >          .selector_reg    =3D ZL3073x_PAGE_SEL,
-> >          .selector_mask    =3D GENMASK(3, 0),
-> >          .selector_shift    =3D 0,
-> >          .window_start    =3D 0,
-> >          .window_len    =3D 0x7e,
-> >      },
-> >      {
-> >          /* Page 1 */
-> >          .range_min    =3D 0x080,
-> >          .range_max    =3D 0x0fe,
-> >          .selector_reg    =3D ZL3073x_PAGE_SEL,
-> >          .selector_mask    =3D GENMASK(3, 0),
-> >          .selector_shift    =3D 0,
-> >          .window_start    =3D 0,
-> >          .window_len    =3D 0x7e,
-> >      },
+> On 14. 04. 25 8:36 dop., Andy Shevchenko wrote:
 
 ...
 
-> Sorry,
-> .window_len =3D 0x7f /* Exclude selector reg */
+> >> What is wrong here?
+> >>
+> >> I have a device that uses 7-bit addresses and have 16 register pages.
+> >> Each pages is from 0x00-0x7f and register 0x7f is used as page selecto=
+r
+> >> where bits 0-3 select the page.
+> > The problem is that you overlap virtual page over the real one (the mai=
+n one).
+> >
+> > The drivers you mentioned in v2 discussions most likely are also buggy.
+> > As I implied in the above question the developers hardly get the regmap=
+ ranges
+> > right. It took me quite a while to see the issue, so it's not particula=
+rly your
+> > fault.
 
-It actually will make things worse. If selector register is accessible
-to all of the pages, it's better to include it in all pages.
+> thank you I see the point.
+>
+> Do you mean that the selector register should not be part of the range?
+
+No.
+
+> If so, does it mean that I have to specify a range for each page? Like th=
+is:
+
+No.
+
+Yes, tough thingy :-)
+
+>         {
+>                 /* Page 0 */
+>                 .range_min      =3D 0x000,
+>                 .range_max      =3D 0x07e,
+>                 .selector_reg   =3D ZL3073x_PAGE_SEL,
+>                 .selector_mask  =3D GENMASK(3, 0),
+>                 .selector_shift =3D 0,
+>                 .window_start   =3D 0,
+>                 .window_len     =3D 0x7e,
+>         },
+
+Page 0 shouldn't exist in your case in the *virtual* ranges. And this
+struct defines the *virtual* ranges.
+
+>         {
+>                 /* Page 1 */
+>                 .range_min      =3D 0x080,
+>                 .range_max      =3D 0x0fe,
+>                 .selector_reg   =3D ZL3073x_PAGE_SEL,
+>                 .selector_mask  =3D GENMASK(3, 0),
+>                 .selector_shift =3D 0,
+>                 .window_start   =3D 0,
+>                 .window_len     =3D 0x7e,
+>         },
 
 --=20
 With Best Regards,
