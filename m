@@ -1,269 +1,185 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D690192B81
-	for <linux-hardening@vger.kernel.org>; Mon, 14 Apr 2025 12:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC591A2380;
+	Mon, 14 Apr 2025 12:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744633908; cv=none; b=jqHNcsZF6dawdJX1AaZ03LT0VsAz0FiOa4x+dLEeQyTdRViBnovQiAJ/0pbr4RGBe5HuQk0VBFPS5EvezsbsH2Q3pfMXdeBePyKl56VZGsnnmXAZRa2XVF6hOhLrfVBWpdtJd9mC5HfsUJ0U+c02WLmoMyRbT/H4sinqxDYIkSs=
+	t=1744634553; cv=none; b=jFQpt1sYRY5qA/uJULxM5o9Bci+8htpJPpQbJAnYrU6Nz+g0GT+iNZnm5Wec0ibixUkg20UUh2Wp+VLGNw6mrOV82jzsDuTclOXRwrLoWgVFf0Ry1SzQ4FXUozeyN4iY3+utX6VppzR4rXr+LGmWhHXIlKlw4U/cNP+eWCqGydA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744633908; c=relaxed/simple;
-	bh=Ub+bREUz26MZsF0p4MWug9Yo0djKeDcAZdv169/OOWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ojnMNUjlt5zagNk3De5fphSkfyQsO4JD6lj0cylu4AJJ9e1jyv0NwDacOrJ4BWotb59qd+27T29noGSfAYEUhNG8aV3P2Cxf7sDO4bFQ6yo/tPJWKd8zMKCCofAmRK7enorIxS3Tw743tJuqP9ADCOl1CnY5PiKKTLEL7CyC8tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=a4ktIU6o; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744634553; c=relaxed/simple;
+	bh=o09OELAddsi8bCdV3+5IJmIdA4i1w0bEWAJwIwGctBk=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=iBVVE2eqIb4XQZ/m4SW6qUGxUkuCzGOlg81R8Wa1fMLiZmp5HuTsrzR7exyGnG1URFDBsWuJV/ntXDWYxJjS7WG0zjliQirAAHbJUfSpOdWI7rigklwu72TMVxghJjmqKXH2SOQjCkb6EQGI2HMgb+3NP3FiHfJvQpRcWbN+rzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufMWvOO5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="a4ktIU6o"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso46239675e9.0
-        for <linux-hardening@vger.kernel.org>; Mon, 14 Apr 2025 05:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744633905; x=1745238705; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UzE4G1qxViP6T7whIrLBrJ/GtgCmUCswBCy5CnSYKK8=;
-        b=a4ktIU6oo8d29Sp6sCAIT24lMqDriXd9ZZUgECccsJfYdmfc/f/HCyYYM4JD7imBoZ
-         YJSpOTdff2gjPjVk6J3Xobx4S29LiJoYiNlF0Elnu/hz7UP8cV5/lW/FFFjzlxNI7vUU
-         Vmiicm6DqLOvJMueP60uHUI1uAheQLsmzZDhgAKEIXWPpJdMIggK4phLjYKzTctKu3zF
-         G+Jd4rBQ0vIYmBRxxT1U8ojeVMPyzC4f32GDh4E8ekeqaxM1OLy+VAijqm+DWc9KadMr
-         omjUH3g5CGKy7WBotnY7/iuTXCcqyeQtWDExl9ZsqayKDR+Xz544YUVgYhbVVpAZHIpi
-         OYYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744633905; x=1745238705;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UzE4G1qxViP6T7whIrLBrJ/GtgCmUCswBCy5CnSYKK8=;
-        b=rH9quNKlw6stRcPEVWPbDdNL5h6x9esvKrNP08FCxQY6JYWpP4ls1zQ/yZitfYEz4E
-         ZT/bpmxg3w8WbDtJ/CWE/qvyPFvd8gkW69twYJ64cx9FXAa9oNd9EQ/oBOBkpqub5p3d
-         +ltocrTI5XLqYYUXqOftoOs6a33/e8SUgKQ9jrBTzG1CZQuuUDVtOpiPRsmEQ/tPl21N
-         osf1GGWx0B7SnMRtlFrPRVSr3jQZbCoR2WU/SnQveDtLHHfSg4aaTTJwOpDdfrRbRHXI
-         gLGXuVAClUaQrULjAMHV1jOO/SA2/Rzz6BveBipBepz568dzsPeYgVqSXQ0Abb4T4RAU
-         sqbw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIlco/8Dlj8NDgcm26+hqiiK25EeoiGHXvPyVDmh2sTi9GyXpjRjHMuNxGGIaprdI+24VliJaB0FTRbzGoJpk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzuxi+B8SaiGTZ3J8nzqaNLsodRW6VfZynU25tvYJEEEeVzQ09R
-	+a/e9nmg+6j2parer2vde5V/HBYk68CbG2Bc7F336Z3YRzb335u6MPqExZ/uJC4=
-X-Gm-Gg: ASbGncueVWdKQ5RP4jc+Igjkgh0YE8vuSp3I+0Jme7bMRjGerJYU5i06FWmNKT21D6b
-	7CDf8BwhGedrC3gwwcsf/1C5sVTlLe7lCx6P/bO0tWyHMWZkAGPaihkqX5mL4KwYvTYMQ4o25lI
-	rNAdklXTHi5o0ABBwaVvZR6zmLl8Li7LQQRoF3KMTD+uAFBx+qBOQv0tprj7b5GFFHCgn/bIPWd
-	UHIEjqJy81OzTeK01b2RvuB2gKEC/6RqNzcZI1h1Rr1p+b+IE9cYAtwjAp4oGDUtFxONB6Mpj8x
-	+5N7it1BXu9rp2w4Au9EGJZymladIAMEkW+k/hgJyiI=
-X-Google-Smtp-Source: AGHT+IGPx3FekDQBH+w1DRIhnhl/LKSHQTM4c3o3SlHgBBWG1pxWWapk3NPpkMv5AAzM/asN/sLGnA==
-X-Received: by 2002:a05:6000:2911:b0:391:1652:f0bf with SMTP id ffacd0b85a97d-39eaaea8c84mr8884498f8f.33.1744633904685;
-        Mon, 14 Apr 2025 05:31:44 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43d053sm11008797f8f.68.2025.04.14.05.31.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 05:31:44 -0700 (PDT)
-Date: Mon, 14 Apr 2025 14:31:42 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	Sergio Perez Gonzalez <sperezglz@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	Thomas Huth <thuth@redhat.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] slab: Decouple slab_debug and no_hash_pointers
-Message-ID: <Z_0AFjai6Bvg-YLD@pathway.suse.cz>
-References: <20250410174428.work.488-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufMWvOO5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24450C4CEE9;
+	Mon, 14 Apr 2025 12:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744634551;
+	bh=o09OELAddsi8bCdV3+5IJmIdA4i1w0bEWAJwIwGctBk=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=ufMWvOO54+JWbV2ME33aWUd0siSmj/zBYCbvPgoW/Fw1vAbRUoROWRAsmmD+pbH1q
+	 p6rS1yawyJ3TtwBPkIfhrH8e2nJSyhJgl/FKyur/zK8aqJm06EfMGxaHSunpjOe3J7
+	 aexYqDLN0zNkt3PPZx2N+FoPH7ysRlhdUE6dtgDU5aB08RXrsGKwSpBnwdnDRHuYsA
+	 RfRT4m9dbb2/3h0nJvYudqPI5Z4XSE3ziX3yf6pJM1rr2zRnKhyrp8pwa6MUY4c4Gm
+	 vPL0GYEF/j4VgvQfhnNLCnHMYSi66CyUkDhgld+AOGBqn2iQ4EV9TJyyC4odCHAWHE
+	 4+nlwJqjmnsHQ==
+Date: Mon, 14 Apr 2025 07:42:29 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410174428.work.488-kees@kernel.org>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, 
+ Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
+ linux-arm-kernel@lists.infradead.org, Kees Cook <kees@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ Tony Luck <tony.luck@intel.com>, linux-hardening@vger.kernel.org, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+In-Reply-To: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
+References: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
+Message-Id: <174463433283.154575.16025374701126076484.robh@kernel.org>
+Subject: Re: [PATCH v6 0/5] Add support for the Exynos7870 SoC, along with
+ three devices
 
-On Thu 2025-04-10 10:44:31, Kees Cook wrote:
-> Some system owners use slab_debug=FPZ (or similar) as a hardening option,
-> but do not want to be forced into having kernel addresses exposed due
-> to the implicit "no_hash_pointers" boot param setting.[1]
+
+On Mon, 14 Apr 2025 00:28:41 +0530, Kaustabh Chakraborty wrote:
+> Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
+> announced in 2016. The chipset was found in several popular mid-range to
+> low-end Samsung phones, released within 2016 to 2019.
 > 
-> Introduce the "hash_pointers" boot param, which defaults to "auto"
-> (the current behavior), but also includes "always" (forcing on hashing
-> even when "slab_debug=..." is defined), and "never". The existing
-> "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
+> This patch series aims to add support for Exynos 7870, starting with the
+> most basic yet essential components such as CPU, GPU, clock controllers,
+> PMIC, pin controllers, etc.
 > 
-> This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
+> Moreover, the series also adds support for three Exynos 7870 devices via
+> devicetree. The devices are:
+>  * Samsung Galaxy J7 Prime	- released 2016, codename on7xelte
+>  * Samsung Galaxy J6		- released 2018, codename j6lte
+>  * Samsung Galaxy A2 Core	- released 2019, codename a2corelte
+> 
+> Additional features implemented in this series include:
+>  * I2C	- touchscreen, IIO sensors, etc.
+>  * UART	- bluetooth and serial debugging
+>  * MMC	- eMMC, Wi-Fi SDIO, SDCard
+>  * USB	- micro-USB 2.0 interface
+> 
+> Build dependencies are in these sub-series:
+>  * pmu-clocks		A https://lore.kernel.org/all/20250301-exynos7870-pmu-clocks-v5-0-715b646d5206@disroot.org/
+> 
+> Other related sub-series:
+>  * gpu			A https://lore.kernel.org/all/20250318-exynos7870-gpu-v1-1-084863f28b5c@disroot.org/
+>  * i2c	      		A https://lore.kernel.org/all/20250204-exynos7870-i2c-v1-0-63d67871ab7e@disroot.org/
+>  * mmc			A https://lore.kernel.org/all/20250219-exynos7870-mmc-v2-0-b4255a3e39ed@disroot.org/
+>  * pinctrl	  	A https://lore.kernel.org/all/20250301-exynos7870-pinctrl-v3-0-ba1da9d3cd2f@disroot.org/
+>  * pmic-regulators	A https://lore.kernel.org/all/20250301-exynos7870-pmic-regulators-v3-0-808d0b47a564@disroot.org/
+>  * uart			A https://lore.kernel.org/all/20250318-exynos7870-uart-v2-1-b9dcf145ae87@disroot.org/
+>  * usb			A https://lore.kernel.org/all/20250301-exynos7870-usb-v3-0-f01697165d19@disroot.org/
+>  * usbphy		A https://lore.kernel.org/all/20250410-exynos7870-usbphy-v2-0-2eb005987455@disroot.org/
+> (Legend: [R]eviewed, [A]pplied)
+> 
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+> Changes in v6:
+> - Append the following trailers:
+>   [v5 1/5] dt-bindings: arm: samsung: add compatibles for exynos7870 devices
+>     Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> - Link to v5: https://lore.kernel.org/r/20250411-exynos7870-v5-0-6b319ae36c36@disroot.org
+> 
+> Changes in v5:
+> - Drop the exynos7870-bootmode patchset for now.
+> - Add card-detect-delay and cd-broken properties in sd-mmc nodes.
+> - Drop the following applied patches:
+>   [v4 1/7] dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
+>   [v4 3/7] soc: samsung: exynos-chipid: add support for exynos7870
+> - Link to v4: https://lore.kernel.org/r/20250301-exynos7870-v4-0-2925537f9b2a@disroot.org
+> 
+> Changes in v4:
+> - Drop merged [PATCH v3 1/7].
+> - Explicitly mention sub-series having build dependencies.
+> - Include the following patch from the pmu-clocks series:
+>   - dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
+> - Adjust clock header file name to match changes in pmu-clocks.
+> - Change regulator node names to match changes in pmic-regulators.
+> - Remove non-removable flag for the SDCard's mmc node.
+> - Link to v3: https://lore.kernel.org/r/20250219-exynos7870-v3-0-e384fb610cad@disroot.org
+> 
+> Changes in v3:
+> - Added patches from https://lore.kernel.org/all/20250204-exynos7870-chipid-v1-0-0bf2db08e621@disroot.org/
+> - Fix devicetree formatting according to the devicetree style guide.
+> - Take over ownership of patches by the co-author, upon their request.
+> - Link to v2: https://lore.kernel.org/r/20250204-exynos7870-v2-0-56313165ef0c@disroot.org
+> 
+> Changes in v2:
+> - Redo a few commit descriptions.
+> - Split patchsets into multiple sub-series, subsystem-wise.
+> - Link to v1: https://lore.kernel.org/r/20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org
+> 
+> ---
+> Kaustabh Chakraborty (5):
+>       dt-bindings: arm: samsung: add compatibles for exynos7870 devices
+>       arm64: dts: exynos: add initial devicetree support for exynos7870
+>       arm64: dts: exynos: add initial support for Samsung Galaxy J7 Prime
+>       arm64: dts: exynos: add initial support for Samsung Galaxy A2 Core
+>       arm64: dts: exynos: add initial support for Samsung Galaxy J6
+> 
+>  .../bindings/arm/samsung/samsung-boards.yaml       |    8 +
+>  arch/arm64/boot/dts/exynos/Makefile                |    3 +
+>  .../arm64/boot/dts/exynos/exynos7870-a2corelte.dts |  630 ++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts    |  618 ++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts |  666 +++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos7870-pinctrl.dtsi | 1022 ++++++++++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos7870.dtsi         |  713 ++++++++++++++
+>  7 files changed, 3660 insertions(+)
+> ---
+> base-commit: 29e7bf01ed8033c9a14ed0dc990dfe2736dbcd18
+> change-id: 20250201-exynos7870-049587e4b7df
+> 
+> Best regards,
+> --
+> Kaustabh Chakraborty <kauschluss@disroot.org>
+> 
+> 
+> 
 
-The idea makes sense. But it seems that the patch did not handle
-the "always" mode correctly, see below.
+
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
 
 
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -60,6 +60,20 @@
->  bool no_hash_pointers __ro_after_init;
->  EXPORT_SYMBOL_GPL(no_hash_pointers);
->  
-> +/*
-> + * Hashed pointers policy selected by "hash_pointers=..." boot param
-> + *
-> + * `auto`   - Hashed pointers enabled unless disabled by slub_debug_enabled=true
-> + * `always` - Hashed pointers enabled unconditionally
-> + * `never`  - Hashed pointers disabled unconditionally
-> + */
-> +enum hash_pointers_policy {
-> +	HASH_PTR_AUTO = 0,
-> +	HASH_PTR_ALWAYS,
-> +	HASH_PTR_NEVER
-> +};
-> +static enum hash_pointers_policy hash_pointers_mode __initdata;
-> +
->  noinline
->  static unsigned long long simple_strntoull(const char *startp, char **endp, unsigned int base, size_t max_chars)
->  {
-> @@ -2271,12 +2285,13 @@ char *resource_or_range(const char *fmt, char *buf, char *end, void *ptr,
->  	return resource_string(buf, end, ptr, spec, fmt);
->  }
->  
-> -int __init no_hash_pointers_enable(char *str)
-> +void __init hash_pointers_finalize(bool slub_debug)
->  {
-> -	if (no_hash_pointers)
-> -		return 0;
-> +	if (hash_pointers_mode == HASH_PTR_AUTO && slub_debug)
-> +		no_hash_pointers = true;
->  
-> -	no_hash_pointers = true;
-> +	if (!no_hash_pointers)
-> +		return;
->  
->  	pr_warn("**********************************************************\n");
->  	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
+This patch series was applied (using b4) to base:
+ Base: using specified base-commit 29e7bf01ed8033c9a14ed0dc990dfe2736dbcd18
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250414-exynos7870-v6-0-039bd5385411@disroot.org:
+
+arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dtb: /soc@0/phy@135c0000: failed to match any schema with compatible: ['samsung,exynos7870-usbdrd-phy']
+arch/arm64/boot/dts/exynos/exynos7870-a2corelte.dtb: /soc@0/phy@135c0000: failed to match any schema with compatible: ['samsung,exynos7870-usbdrd-phy']
+arch/arm64/boot/dts/exynos/exynos7870-j6lte.dtb: /soc@0/phy@135c0000: failed to match any schema with compatible: ['samsung,exynos7870-usbdrd-phy']
 
 
-The mode/policy is generic but this function is ready to be called
-only once. And we might actually want to call it twice, see below.
 
-I would suggest to use a generic names and allow to call it more
-times, something like:
 
-/**
- * hash_pointers_update() - update the decision whether to hash
- *	printed pointers
- * @auto_disable: Disable hashing in auto mode
- *
- * The function allows to disable hashing printed pointers either
- * when the global mode is HASH_PTR_NEVER or when the caller
- * wants to disable it and the mode is HASH_PTR_AUTO.
- */
-void __init hash_pointers_update(bool auto_disable)
-{
-	bool disable_hashing = false;
 
-	switch(hash_pointers_mode) {
-	case HASH_PTR_AUTO:
-		disable_hashing = auto_disable;
-		break;
-	case HASH_PTR_ALWAYS:
-		disable_hashing = true;
-		break;
-	case HASH_PTR_NEVER:
-		if (no_hash_pointers) {
-			pr_warn("Pointers were temporary printed without hashing. Force hashing again.\n");
-			no_hash_pointers = false;
-		}
-		break;
-	default:
-		pr_warn("Unknown hash_pointers mode '%d' specified; assuming auto.\n",
-			hash_pointers_mode);
-		disable_hashing = auto_disable;
-	}
-
-	/* Nope when no change requested. */
-	if (no_hash_pointers || !disable_hashing)
-		return;
-
-	no_hash_pointers = true;
-
-	pr_warn("**********************************************************\n");
-	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
-	pr_warn("**                                                      **\n");
-	pr_warn("** This system shows unhashed kernel memory addresses   **\n");
-	pr_warn("** via the console, logs, and other interfaces. This    **\n");
-	pr_warn("** might reduce the security of your system.            **\n");
-	pr_warn("**                                                      **\n");
-	pr_warn("** If you see this message and you are not debugging    **\n");
-	pr_warn("** the kernel, report this immediately to your system   **\n");
-	pr_warn("** administrator!                                       **\n");
-	pr_warn("**                                                      **\n");
-	pr_warn("** Use hash_pointers=always to force this mode off      **\n");
-	pr_warn("**                                                      **\n");
-	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
-	pr_warn("**********************************************************\n");
-}
-
-> @@ -2289,11 +2304,39 @@ int __init no_hash_pointers_enable(char *str)
->  	pr_warn("** the kernel, report this immediately to your system   **\n");
->  	pr_warn("** administrator!                                       **\n");
->  	pr_warn("**                                                      **\n");
-> +	pr_warn("** Use hash_pointers=always to force this mode off      **\n");
-> +	pr_warn("**                                                      **\n");
->  	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
->  	pr_warn("**********************************************************\n");
-> +}
-> +
-> +static int __init hash_pointers_mode_parse(char *str)
-> +{
-> +	if (!str) {
-> +		pr_warn("Hash pointers mode empty; falling back to auto.\n");
-> +		hash_pointers_mode = HASH_PTR_AUTO;
-> +	} else if (strncmp(str, "auto", 4) == 0)   {
-> +		pr_info("Hash pointers mode set to auto.\n");
-> +		hash_pointers_mode = HASH_PTR_AUTO;
-> +	} else if (strncmp(str, "never", 5) == 0) {
-> +		pr_info("Hash pointers mode set to never.\n");
-> +		hash_pointers_mode = HASH_PTR_NEVER;
-> +	} else if (strncmp(str, "always", 6) == 0) {
-> +		pr_info("Hash pointers mode set to always.\n");
-> +		hash_pointers_mode = HASH_PTR_ALWAYS;
-
-This mode is not handled anywhere, see below.
-
-> +	} else {
-> +		pr_warn("Unknown hash_pointers mode '%s' specified; assuming auto.\n", str);
-> +		hash_pointers_mode = HASH_PTR_AUTO;
-> +	}
-
-We might handle HASH_PTR_ALWAYS by calling:
-
-	hash_pointers_update(false);
-
->  	return 0;
->  }
-> +early_param("hash_pointers", hash_pointers_mode_parse);
-> +
-> +static int __init no_hash_pointers_enable(char *str)
-> +{
-> +	return hash_pointers_mode_parse("never");
-> +}
->  early_param("no_hash_pointers", no_hash_pointers_enable);
->  
->  /*
-
-Best Regards,
-Petr
