@@ -1,96 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F271ACECD;
-	Mon, 14 Apr 2025 09:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB9129C322
+	for <linux-hardening@vger.kernel.org>; Mon, 14 Apr 2025 11:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744623715; cv=none; b=dH9MhWhVwa0lr15Nfpre4QqtQs8AVwFKo3rWgR3OhTMAeJMpF1sG/+nScEormt2O1KjmIYH1c8JSq4pi10EGW1FPuUWrHRNZswRnUu3f3+pZy0lGF41MGNDlb3VNz7xTRk4EYRX4KMz9daJ+Y4pSLn09hkyJa8/ump6kp4FZbM8=
+	t=1744630803; cv=none; b=Fz7HmxOL3pn1xo+SWCR4zKxH8gHMcVyJig+IsDFNiq9chMYXWb30TbFCCpTSMV66GOZj9QEBTXhw8WpgblF0B2B6C0r1N0gmPpA5a2K+rej7zPss/dsmIgLpaE7gCJUOdOTJKc6CMqbe6wRt0845KfgCcRw3KJus0eTU0JUfA04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744623715; c=relaxed/simple;
-	bh=HESKiQDsGmkF6MyUv/is1NIBBgXIVGAlmjj3/sqJxdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kwlDmhpsxmU8+J8XqtocDkC1PBQQGTQXdBAboOliFBnl0gdCKCDH/kxPOvv7H9YaEhpGCkxS8zrAorR8ZAESTWhhuAZrv/ZboHGMY9E6P75H1bTwxL51ObFF2C1/tUdEUJgl0C/Izei29r5hR2j4KIOt1pLlmEG8ZIQa+kXLbhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SEHudgZN; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744630803; c=relaxed/simple;
+	bh=aN3vREgoyY+yv1yLBnetD/QJ1CV2mFTmNnwIKF2S5fQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ndNep3WXlcl9vGcfuFxaXp1eTwbs+yN6AMm5Tvjp75AUDeyNk0qxaAwxfdtwWnGyXnGIgqGqyDIC7hXS9qcHbAn5O3efpq7kyhFVLUoocgDrhbViT3tyPcpJrATgeTPXGOlaIMece8BjYAO+0SRHNA6ox3RBZXc9fxCo+nhMrG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X8/4OMsX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SEHudgZN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744623714; x=1776159714;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HESKiQDsGmkF6MyUv/is1NIBBgXIVGAlmjj3/sqJxdc=;
-  b=SEHudgZNlGmKDkEfL1yXHaxLxuNdhjIgn3GZeKTTaHJGSbElZuN7gbRp
-   UZf19ErBX6FqDYILWBGf1OCttMD6whLfNyy0GYfKvnOSQw9zOvU1K+bF6
-   U5objI1YgtkIsXzF4zV9T2IgTEZ3KWDxvKJ1w33E4iB/wChxgMjxgQ5Kl
-   4Ugg+YZlpxOm0YtXjaIck0JZfyChptCvnHHtvk9IemABLwKie5t+EDfV3
-   utUJuBnOWWyknQuMxqzUTJDqJ62Rpr9InVYskyr2khDiG3blpWOSEyH8M
-   yRt68lxAwx501MHxKuGtujBOrs6jc35BbHExo721SwEzkTeTzTFObckPL
-   g==;
-X-CSE-ConnectionGUID: b83k9IILRn+6ppILhZfGYQ==
-X-CSE-MsgGUID: xtlvsXquQDu03nqgiXr4FA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="57451976"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="57451976"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 02:41:53 -0700
-X-CSE-ConnectionGUID: QILs7P9hT2GdVjR+dt2dVQ==
-X-CSE-MsgGUID: ecnqt37XRxCTiivTMBJTZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="133871789"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP; 14 Apr 2025 02:41:50 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id F35AC8A2; Mon, 14 Apr 2025 12:41:48 +0300 (EEST)
-Date: Mon, 14 Apr 2025 12:41:48 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <kees@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 00/33] Implement kernel-doc in Python
-Message-ID: <Z_zYXAJcTD-c3xTe@black.fi.intel.com>
-References: <cover.1744106241.git.mchehab+huawei@kernel.org>
- <871pu1193r.fsf@trenco.lwn.net>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X8/4OMsX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744630800;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rIawZmBgOhpGYEhVsuU1W+uzBYpI/H/eKUzW5VGOfN4=;
+	b=X8/4OMsXDoFrMvf2MgHmccLLBNNw3Zmrivq28UwToNp0eSvJ+U+TfxMIHOV96NYAGcCZ+/
+	fWC6WxrSDYZiwrxH1q9bmrd64EMelj8J/rrSMs0dgtdVMSdHJNsvuEqk2coWNvigOtCTdX
+	MFMWZp6H4dNg3rL15FRn/58MRhyh3iM=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-194-EmvCNTGKPLODBxyGIK6-hQ-1; Mon,
+ 14 Apr 2025 07:39:55 -0400
+X-MC-Unique: EmvCNTGKPLODBxyGIK6-hQ-1
+X-Mimecast-MFC-AGG-ID: EmvCNTGKPLODBxyGIK6-hQ_1744630793
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 833F11801A1A;
+	Mon, 14 Apr 2025 11:39:52 +0000 (UTC)
+Received: from [10.44.32.81] (unknown [10.44.32.81])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CA494180175B;
+	Mon, 14 Apr 2025 11:39:47 +0000 (UTC)
+Message-ID: <f3fc9556-60ba-48c0-95f2-4c030e5c309e@redhat.com>
+Date: Mon, 14 Apr 2025 13:39:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <871pu1193r.fsf@trenco.lwn.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
+To: Andy Shevchenko <andy@kernel.org>
+Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250407172836.1009461-1-ivecera@redhat.com>
+ <20250407172836.1009461-2-ivecera@redhat.com>
+ <Z_QTzwXvxcSh53Cq@smile.fi.intel.com>
+ <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
+ <Z_ys4Lo46KusTBIj@smile.fi.intel.com>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <Z_ys4Lo46KusTBIj@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Wed, Apr 09, 2025 at 12:30:00PM -0600, Jonathan Corbet wrote:
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+
+
+On 14. 04. 25 8:36 dop., Andy Shevchenko wrote:
+>> What is wrong here?
+>>
+>> I have a device that uses 7-bit addresses and have 16 register pages.
+>> Each pages is from 0x00-0x7f and register 0x7f is used as page selector
+>> where bits 0-3 select the page.
+> The problem is that you overlap virtual page over the real one (the main one).
 > 
-> > This changeset contains the kernel-doc.py script to replace the verable
-> > kernel-doc originally written in Perl. It replaces the first version and the
-> > second series I sent on the top of it.
-> 
-> OK, I've applied it, looked at the (minimal) changes in output, and
-> concluded that it's good - all this stuff is now in docs-next.  Many
-> thanks for doing this!
-> 
-> I'm going to hold off on other documentation patches for a day or two
-> just in case anything turns up.  But it looks awfully good.
+> The drivers you mentioned in v2 discussions most likely are also buggy.
+> As I implied in the above question the developers hardly get the regmap ranges
+> right. It took me quite a while to see the issue, so it's not particularly your
+> fault.
+Hi Andy,
 
-This started well, until it becomes a scripts/lib/kdoc.
-So, it makes the `make O=...` builds dirty *). Please make sure this doesn't leave
-"disgusting turd" )as said by Linus) in the clean tree.
+thank you I see the point.
 
-*) it creates that __pycache__ disaster. And no, .gitignore IS NOT a solution.
+Do you mean that the selector register should not be part of the range?
 
--- 
-With Best Regards,
-Andy Shevchenko
+If so, does it mean that I have to specify a range for each page? Like this:
 
+	{
+		/* Page 0 */
+		.range_min	= 0x000,
+		.range_max	= 0x07e,
+		.selector_reg	= ZL3073x_PAGE_SEL,
+		.selector_mask	= GENMASK(3, 0),
+		.selector_shift	= 0,
+		.window_start	= 0,
+		.window_len	= 0x7e,
+	},
+	{
+		/* Page 1 */
+		.range_min	= 0x080,
+		.range_max	= 0x0fe,
+		.selector_reg	= ZL3073x_PAGE_SEL,
+		.selector_mask	= GENMASK(3, 0),
+		.selector_shift	= 0,
+		.window_start	= 0,
+		.window_len	= 0x7e,
+	},
+...
+
+
+Thank you,
+Ivan
 
