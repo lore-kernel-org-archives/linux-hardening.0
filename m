@@ -1,156 +1,145 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13D6270EA4;
-	Mon, 14 Apr 2025 17:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395571F236B;
+	Mon, 14 Apr 2025 17:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744650613; cv=none; b=eYHfZYBNnkLk2HcBbDTDRYNgtQF/G+u8WP0bByEIuecWMeXUroqNc0LrAg2WelTeTl+5w9n5fW0h2Yct4KtagSUqIUZ+vpK3h9TJU/rlzYC7ahyxFgDYVKic/gHZAT9AY4wQor/19KgMXGjvUKokg9yXwjMUM45GcZWDpdrAnDQ=
+	t=1744651188; cv=none; b=UvC30c+BF0elcM4NUSeaUBaozCaNSsJw6AySu6YNL5oMqlX6aB3o5qoti4j2JrHWd0YZV0DL1K67O8ryh9Y0/xRqhNjqf4Meh/M6r43hKkWH94UlkANzhmp3rhakXfqT4u+m+OP0DSt6+zGsTBkJVOq5TJ4hvXVtqLM0m/JcJYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744650613; c=relaxed/simple;
-	bh=FAlvD9qGBi/bC3IDlLdVswbdnPKWhDIbA50Ndmh/eMo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ivPG7D/WmYNZ5FI4PDr9sQ9CdN/u50Lut7lO7c27twd/Gc7umIMCBq2/+VuDVd9+rSX4b3BsHCOD45n02OK06EpbFcAcYVJkuKxPP5IoIQJvFdkgHpVf8LL4x+mivt1oMXMaMnW/e29qN7o7CjUwbI4ixg87IB6jWRzl3tCP+R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QiqoNO8c; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744651188; c=relaxed/simple;
+	bh=z37GMPLQfQqtOQrNOtRcvsIzo/ZNg3+Bc9JSK7Jgb08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jylm6NB7eI/TvUC3ChU4FTrYAU1pip7n8ANijToTvFcrvOgY1qCfFuiISFjc2qOCF/KrG+RU8Gp/8xZI9Y1Nsf3Zcm5Gal/tFcJrlt+jLX8olI5HMUQJ0OJS43wkorImg/DieyEzZ/W3YxMUb9OlbTvuZbGl/PetOhvi6TcruG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZ8f2c9l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QiqoNO8c"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so821626666b.1;
-        Mon, 14 Apr 2025 10:10:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744650610; x=1745255410; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ptCoH/mbfNPZTY4S28oJpjLyfUNDXfkMFU+31cHM30U=;
-        b=QiqoNO8cu/KHscIcPKEQ8JAlX09IRyr3Yd+g74Aaewpqgd4jZ6klgAbyjtCgMWkl8P
-         RgoD0jSxUX2gP18p8FDh+5xjoJQJVgZVMs1wWtJG0lJmYe41QbJ34BaAEcjEadcnOs24
-         QHvQ1j/kLmfkkj3yML/YhukyIkWk4i8k9uW1M0rJBJojyobfsc133kwlwc5XsRnO0Tdu
-         KxG/KEc1DDKYzhZo5rD8MUDl1RJX9QO9G6Gs9+QGj05LlWyPJxH8ytppHIqaUv+QJg2D
-         TaiKXJGjnB+TdA7+m6ZzwaJyYvC+R5hrdeVA7LG7yveqVR7RQnVfSMeKNyIWe8NVeTSs
-         E1rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744650610; x=1745255410;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ptCoH/mbfNPZTY4S28oJpjLyfUNDXfkMFU+31cHM30U=;
-        b=IAALv1Z+cCX2HXqm5BaVwhiCMdFa1KRsz9WySvBJQnM9gAz8z4066eLB3zsGJF6KZU
-         97/2l9hcPU1MqGVeKLOke/UUlwKDkc/xdk0nSBnu8nUQyo9FXscmssPvp8odg+If5D93
-         b/RtW+MaS4Wsm0WXGeQQ+6uqEjcJVXiyr7el+EDTaBW3el3tzEO877OhumEX2uKkWEvs
-         eEJ5P2Bmoalgw7Ms90dS89Wh2H7PBdmrW9pu+J4PvFvA3H0kcs3OeL41PED7OeNt96Ec
-         wAQDTAiDn51QRwyqABFxTku+yPQPhL469GMP8wPCK660t9mzkVapsABoTKmRnq4bDFDn
-         poxg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6A1ohmPbJQe7CqzUZrHHUMQg/tIxkZN6c3kvTRNMaBzMuTb2pNU76JReUyX+qaNdz5Eecj4PI@vger.kernel.org, AJvYcCVHtI8xzzmV2eSDW7bnxkZGrvQ9XS+I4soZoHDAqeJ9vQA0oihBvSfN7kZ3w8fZRqhXkBRXDAhXL/Li63PL@vger.kernel.org, AJvYcCWrmMMIlQMnlorpWCvr6+ZHO84mq1RTRJm1/0/EX5KXtHqSf3wMgnFgxUUwhpiSHnVClj0/LzMXF8jD@vger.kernel.org, AJvYcCXs4SbAGsE9g2f+eRKmyQn/Xpo2NCopNl/fgYT44ouvqhRIyuTQQWVspLGXf8lqv7lw+/TUgsa7fWYYpUldXyBZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgNWe6eT2MAXHeqrfpvawTWVMVSj8xIrRQVC9Wrle67RgOLKMm
-	6FZFfvP5q9cpDiCwopy6QLY6LXI4bf5+M8go0HNGbHA0NByZ+TYx+oqywBuBI4dYx2YAG+tUkXK
-	6F9f70T4+wSnd4oncNH5BzldPGe0YgiXVLFQ=
-X-Gm-Gg: ASbGncupgURfiLAMg+qTm9LT8p0Sq/bP3/pAqxuML8H0fANYv1Vlv1YmSNynj71fAiA
-	Skim+Dx2fVZync1L/eyW1S4Cl/stwuZIQQD03fZMid6kCmonNeVpR5Ui2oMK7NdPsj/b7q1pkVd
-	RkL1f6QwrO2eFoc+3Tq1fzHw==
-X-Google-Smtp-Source: AGHT+IE10rNQRIF2h7h0sW56pVRl3UH9iw/JjGfWGqw2oImvoIxqgE+Ipm7pwF2M/aj/ZmbfUKqcTh8LUsJ7g7ChCEE=
-X-Received: by 2002:a17:906:db05:b0:aca:c4a6:cd90 with SMTP id
- a640c23a62f3a-acad34395c7mr1288965866b.5.1744650609941; Mon, 14 Apr 2025
- 10:10:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZ8f2c9l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C958C4CEE2;
+	Mon, 14 Apr 2025 17:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744651187;
+	bh=z37GMPLQfQqtOQrNOtRcvsIzo/ZNg3+Bc9JSK7Jgb08=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AZ8f2c9lqfQZuQfWRr3KwemWv7exS/LcHLgCoLIJY1DNeczSaMQ2+K/p3z/mVRHXf
+	 5fYgsygYh/xIH5tIyU6QCvN2kjL9ycG1XsUaTCvSMyNM4nLwmEiQOuIVQJBGnIU6Wi
+	 eH72/9HbUpRpNs98Zbzt7Vw2DVusLEdBAFtqH9l7CD88Y6x5GgcdBgeL04Bde+YmwC
+	 uvjY5W2kBUh85KIg46dZSjcc6e1uqYGFbQIOnKSpCtulOiaTYwdjG2KKrMZ9DZebqt
+	 cv8y7JFEPsnuR9d4g+wONPywfX0U+hqROxapwUq2PEVZlBBIUUt0Kmcio/GxuCMMnk
+	 0927u0k2ScVQw==
+Date: Mon, 14 Apr 2025 18:19:41 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Prathosh.Satish@microchip.com,
+	krzk@kernel.org, netdev@vger.kernel.org, vadim.fedorenko@linux.dev,
+	arkadiusz.kubalewski@intel.com, jiri@resnulli.us, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org,
+	kees@kernel.org, andy@kernel.org, akpm@linux-foundation.org,
+	mschmidt@redhat.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
+ Azurite chip family
+Message-ID: <20250414-residual-unblended-c21c7bc6eeb2@spud>
+References: <20250409144250.206590-3-ivecera@redhat.com>
+ <20250410-skylark-of-silent-symmetry-afdec9@shite>
+ <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
+ <20250410-puritan-flatbed-00bf339297c0@spud>
+ <6dc1fdac-81cc-4f2c-8d07-8f39b9605e04@redhat.com>
+ <CY5PR11MB6462412A953AF5D93D97DCE5ECB72@CY5PR11MB6462.namprd11.prod.outlook.com>
+ <bd7d005b-c715-4fd9-9b0d-52956d28d272@lunn.ch>
+ <7ab19530-d0d4-4df1-9f75-060c3055585b@redhat.com>
+ <4e331736-36f2-4796-945f-613279329585@lunn.ch>
+ <7e6bf69b-0916-4ad9-b42f-8645f5c95d5d@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407172836.1009461-1-ivecera@redhat.com> <20250407172836.1009461-2-ivecera@redhat.com>
- <Z_QTzwXvxcSh53Cq@smile.fi.intel.com> <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
- <Z_ys4Lo46KusTBIj@smile.fi.intel.com> <f3fc9556-60ba-48c0-95f2-4c030e5c309e@redhat.com>
- <79b9ee2f-091d-4e0f-bbe3-c56cf02c3532@redhat.com> <b54e4da8-20a5-4464-a4b7-f4d8f70af989@redhat.com>
- <CAHp75Ve2KwOEdd=6stm0VXPmuMG-ZRzp8o5PT_db_LYxStqEzg@mail.gmail.com>
- <CAHp75Vc0p-dehdjyt9cDm6m72kGq5v5xW8=YRk27KNs5g-qgTw@mail.gmail.com>
- <CAHp75Vej0MCAV7v7Zom8CXqh3F6f3QXevW93pOkXSLEZn7Yxfg@mail.gmail.com> <ad5ada81-d611-41bb-8358-3675f90767f1@redhat.com>
-In-Reply-To: <ad5ada81-d611-41bb-8358-3675f90767f1@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 14 Apr 2025 20:09:32 +0300
-X-Gm-Features: ATxdqUFYN8tmWUda0Ypk9VQ3-hD55ed-lfLUKHgTNK0s5T1fXVI2QCwvL3PGsTc
-Message-ID: <CAHp75VdkLnm42DS2+kebYUWyXAhyNgswwDNynNJ-weo3DZ=G+Q@mail.gmail.com>
-Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: Andy Shevchenko <andy@kernel.org>, netdev@vger.kernel.org, 
-	Michal Schmidt <mschmidt@redhat.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2OKUgsrCAQgxlv5y"
+Content-Disposition: inline
+In-Reply-To: <7e6bf69b-0916-4ad9-b42f-8645f5c95d5d@redhat.com>
+
+
+--2OKUgsrCAQgxlv5y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 5:53=E2=80=AFPM Ivan Vecera <ivecera@redhat.com> wr=
-ote:
-> On 14. 04. 25 4:16 odp., Andy Shevchenko wrote:
-> > On Mon, Apr 14, 2025 at 5:13=E2=80=AFPM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> >> On Mon, Apr 14, 2025 at 5:10=E2=80=AFPM Andy Shevchenko
-> >> <andy.shevchenko@gmail.com> wrote:
-> >>> On Mon, Apr 14, 2025 at 5:07=E2=80=AFPM Ivan Vecera <ivecera@redhat.c=
-om> wrote:
-> >>>> On 14. 04. 25 1:52 odp., Ivan Vecera wrote:
-> >
-> > ...
-> >
-> >>>> Long story short, I have to move virtual range outside real address
-> >>>> range and apply this offset in the driver code.
-> >>>>
-> >>>> Is this correct?
-> >>>
-> >>> Bingo!
-> >>>
-> >>> And for the offsets, you form them as "page number * page offset +
-> >>> offset inside the page".
-> >>
-> >> Note, for easier reference you may still map page 0 to the virtual
-> >> space, but make sure that page 0 (or main page) is available outside
-> >> of the ranges, or i.o.w. ranges do not overlap the main page, even if
-> >> they include page 0.
-> >
-> > So, you will have the following layout
-> >
-> > 0x00 - 0xnn - real registers of page 0.
-> >
-> > 0x100 - 0xppp -- pages 0 ... N
-> >
-> > Register access either direct for when direct is required, or as
-> > 0x100 + PageSize * Index + RegOffset
->
-> Now, get it...
->
-> I was a little bit confused by code of _regmap_select_page() that takes
-> care of selector_reg.
->
-> Btw, why is this needed? why they cannot overlap?
->
-> Let's say I have virtual range <0, 0xfff>, window <0, 0xff> and window
-> selector 0xff>.
-> 1. I'm calling regmap_read(regmap, 0x8f, ...)
-> 2. The regmap looks for the range and it finds it (0..0xfff)
-> 3. Then it calls _regmap_select_page() that computes:
->     window_offset =3D (0x8f - 0x000) % 0x100 =3D 0x8f
->     window_page =3D (0x8f - 0x000) / 0x100 =3D 0
-> 4. _regmap_select_page() set window selector to 0 and reg is updated to
->     reg =3D window_start + window_offset =3D 0x8f
->
-> And for window_selector value: regmap_read(regmap, 0xff, ...) is the
-> same except _regmap_select_page() checks that the given address is
-> selector_reg and won't perform page switching.
->
-> When I think about it, in my case there is no normal page, there is only
-> volatile register window <0x00-0x7e> and only single direct register
-> that is page selector at 0x7f.
+On Fri, Apr 11, 2025 at 11:56:15AM +0200, Ivan Vecera wrote:
+>=20
+>=20
+> On 10. 04. 25 11:12 odp., Andrew Lunn wrote:
+> > On Thu, Apr 10, 2025 at 08:33:31PM +0200, Ivan Vecera wrote:
+> > >=20
+> > >=20
+> > > On 10. 04. 25 7:36 odp., Andrew Lunn wrote:
+> > > > > Prathosh, could you please bring more light on this?
+> > > > >=20
+> > > > > > Just to clarify, the original driver was written specifically w=
+ith 2-channel
+> > > > > > chips in mind (ZL30732) with 10 input and 20 outputs, which led=
+ to some confusion of using zl3073x as compatible.
+> > > > > > However, the final version of the driver will support the entir=
+e ZL3073x family
+> > > > > > ZL30731 to ZL30735 and some subset of ZL30732 like ZL80732 etc
+> > > > > > ensuring compatibility across all variants.
+> > > >=20
+> > > > Hi Prathosh
+> > > >=20
+> > > > Your email quoting is very odd, i nearly missed this reply.
+> > > >=20
+> > > > Does the device itself have an ID register? If you know you have
+> > > > something in the range ZL30731 to ZL30735, you can ask the hardware
+> > > > what it is, and the driver then does not need any additional
+> > > > information from DT, it can hard code it all based on the ID in the
+> > > > register?
+> > > >=20
+> > > > 	Andrew
+> > > >=20
+> > > Hi Andrew,
+> > > yes there is ID register that identifies the ID. But what compatible =
+should
+> > > be used?
+> > >=20
+> > > microchip,zl3073x was rejected as wildcard and we should use all
+> > > compatibles.
+> >=20
+> > You have two choices really:
+> >=20
+> > 1) You list each device with its own compatible, because they are in
+> > fact not compatible. You need to handle each one different, they have
+> > different DT properties, etc. If you do that, please validate the ID
+> > register against the compatible and return -ENODEV if they don't
+> > match.
+> >=20
+> > 2) You say the devices are compatible. So the DT compatible just
+> > indicates the family, enough information for the driver to go find the
+> > ID register. This does however require the binding is the same for all
+> > devices. You cannot have one family member listing 10 inputs in its
+> > binding, and another family member listing 20.
+> >=20
+> > If you say your devices are incompatible, and list lots of
+> > compatibles, you can then use constraints in the yaml, based on the
+> > compatible, to limit each family member to what it supports.
+> >=20
+> > My guess is, you are going to take the first route.
+>=20
+> Yes, this looks reasonable... in this case should I use
+> microchip,zl3073x.yaml like e.g. gpio/gpio-pca95xx.yaml?
 
-Because you are effectively messing up with cache. Also it's not
-recommended in general to do such due to some registers that might
-need to be accessed directly. And also note, that each time you access
-this you will call a selector write _each_ time you want to write the
-register in the map (if there is no cache, or if cache is messed up).
+No, please pick one of the compatibles in the file and name the same as
+one of those.
 
---=20
-With Best Regards,
-Andy Shevchenko
+--2OKUgsrCAQgxlv5y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/1DrQAKCRB4tDGHoIJi
+0tgQAQDiMG2LA+SQ4PGFUrDaU4IzQmjpflF0phs6a37CN+1gnwEA/FHtd04YGCSz
+Oc9nrC2QJLVRLTQhkJ6c3IA9ypnSrwU=
+=DfiI
+-----END PGP SIGNATURE-----
+
+--2OKUgsrCAQgxlv5y--
