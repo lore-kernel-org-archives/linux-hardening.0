@@ -1,58 +1,58 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814B723D2AF;
-	Mon, 14 Apr 2025 14:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808FBDF59;
+	Mon, 14 Apr 2025 14:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744639866; cv=none; b=qw/xBGJcke7Th8wUoJnRWHTk1g4cyPzJuZa0xbUzdjyoiVAhyuiNJjNCrpCVJZPemtdYPiDBVtFb5HVOtWmKkADR0c/+++cd8nIeOYSpifG9JSS6QcAqNrvJGrjK2vWtq9VSE4W/oGbfDPZXTsz8g1So7IXcLPgETlKAyDx8DxI=
+	t=1744640031; cv=none; b=b3u3vgvelwkWRhgIoEtgzK+B5RUvNHVQ87JU/uyo7lSUkPuSuBbKCs3aWOro0qnnCrrER8G8C5FCZOFCJfFQ9ah+TVEu5Kdqap2U1iLHB3uzJ/oZfYIQ1d4dxaCv3F69ji/UtNSV6DPenQ3MlSAKYZKkyM2lpLHaiDHiAjd08VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744639866; c=relaxed/simple;
-	bh=2UF1+d4niNyOW8VA+r1HnFvlvMrBYZBQGW+6Ol6wzTU=;
+	s=arc-20240116; t=1744640031; c=relaxed/simple;
+	bh=5yCWkL2WDN1lvZZXaXOpa4x+vmtWrwc1PsatHE9CvEw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UlBh/kyw75YekILOkiSORSRmIYgJs25bLrLCRFqjsqbvq4LfHeJbBpiaQMUcbPuh8dznqLYEzKMitZrZ1lh2UISRdH1ubeb+347BgmYWr803Pp7sagSXMypR2vfIgNHUiQlapa0QMJ+qTfHlaOqVa3j94CFEL8htnHaAcdUbvqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hBbBEZgz; arc=none smtp.client-ip=209.85.218.46
+	 To:Cc:Content-Type; b=MfDUvy+P+4qb7FG4f/hT7LuWRs78+rR3bi6XtN9rn/hX/cDcgI5PahbawNhDhItLbHobdCYfnWM6mcXQFmeQxFk08D9cGp4Q7i1rdGvAxKMd+yxuDyW7PlvAeXHwff9QMghRha2SC1Fbtb2R830PwPbwpk3xKeAXLzvP6Fzv1K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=USIirpXH; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBbBEZgz"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so860975966b.3;
-        Mon, 14 Apr 2025 07:11:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="USIirpXH"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so6382793a12.2;
+        Mon, 14 Apr 2025 07:13:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744639863; x=1745244663; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744640028; x=1745244828; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2UF1+d4niNyOW8VA+r1HnFvlvMrBYZBQGW+6Ol6wzTU=;
-        b=hBbBEZgzBI6VAJ6QJ6z801z8cKRKRp5BlHt0wxbfGYh1i/Ll3CxXYFDLVqysnVUP5z
-         JyQpuqDe9+x4JfPxkaABK7vFZyungHo24DmlP8b5bSKTqr6ndNvU2hUQ9oLvJkTpvBud
-         xe9IKcLwoA5yBapuHXNpuKTGt/NDBAreczuk6lzwroAj7IAFdmgDb7s3xYYC3SvJORRS
-         4fdDrF3mbGDbSe8wfzvYYsxaaXoA/R+IYO3Xy++YCCqKBc1O7JQ/J4Nle31grjiymSeB
-         AFPXF+5H5XeajHxGOb0ku04lPSb2qQie2s+ShQ8pcullZsHVZ5YP2x0ul9kaEC07xgCy
-         L0yA==
+        bh=5yCWkL2WDN1lvZZXaXOpa4x+vmtWrwc1PsatHE9CvEw=;
+        b=USIirpXHg/ExInu0LVNuboa1bDFdM2yFL6CzY1aeVsS3ADB3KF7Ln+nQuTEguptFYv
+         pY44zulvxFJMku6nCjKghYIw5OV6Ci8MSu/uJZFYCgi5NIOk2fXb+bPuc+EexqFVI5Sz
+         hwZw6QlhBjagGm8Y9GLRvN0Du08viqYgk67qTBnh77U7x9F7RAxQnIOFnPEayFDeAQar
+         3bT5EDx7uoxFXYhrqc7e4vw9y4oUFSJmV7oImcD1R5F7mFblErAUbonAxp/4onHTujle
+         RpvQEk6fSakK2HJSOWfBcr/6BsCLYYwN9y1zO4J52phZtmYNgBzrrOLT3Ja0rzGryFYm
+         DfmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744639863; x=1745244663;
+        d=1e100.net; s=20230601; t=1744640028; x=1745244828;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2UF1+d4niNyOW8VA+r1HnFvlvMrBYZBQGW+6Ol6wzTU=;
-        b=IRvP1J4IX+WVmW7iZtAB6gb5OdHMtsoB/kwW69Ndd1U8EfbX+/QowuxvVK6MvPOBPB
-         njk5cjVg1eb3Bpmiz9EXwg5QoI6YovFfad4O1oUtheYvLQnbp+aV4q3WCq6QvEG4JnTc
-         TcOINzO+7g4OQNc34kK7Nq1zmiuOib0A4iNvrxKgqdlqI8E8C0FZ5nj4uMl7OXXhygZX
-         UEdaL5QbR8XXmt7JW0QFK7ykksPIX3HG7/c9ecrL1wKXp9LFXYcopqAaddU1cEFwE9X7
-         codxZrKslJT1xr6wI0CbnFi2T9CA3MIk1zE0LJp1bKrX4Hb1zQXHPj90yElt3ZOk+5/C
-         xDog==
-X-Forwarded-Encrypted: i=1; AJvYcCVYaYylHIFMlOa1oorNbhHcM+TcGZFjrD2zKrTEwh/p2yuhKDBpzcW0nPMCjONf8+Gu30zeZexqFMANqmeIz8S+@vger.kernel.org, AJvYcCVnGs/s7NT/NBDmN5q0/LHH8rhx+ghYw2ZiVhPRZdPUWKUVmw1G5w5Avm8Ys3M1eAO6nXBbY9b6ZsizX8wj@vger.kernel.org, AJvYcCWz8+UJ+4Lc8y3ZC/PKML+lKOMh9JkXSO9lzdw1I72j6cHQIC1co2vbTMBHXqvGU61Zd3Pd6YjV@vger.kernel.org, AJvYcCX827BtMS4phjE+Xrm+BxwmiSXnAiVHnQfcW8rABY4lYLzgW1BxCRaVs4CooFIlGAGmFtQdlDlYfdyW@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTPTSV5vK8dc4rN6zGoEK2FiQGo5ivQlEel852BMhd1as+26ed
-	0X/D3iS2tfP3myfc8HW3L2jw4hhvWs+f0nExtY7iIYNgvErfuV0yaWe0pJKCYbpElBIiPqX40Au
-	0rfdV6P2/aeGWgOLYMDfzmvosR+Y=
-X-Gm-Gg: ASbGncuyfV11xZW2rPKbazH9qPAIQ8zuAKV54lnZ7s2nQ23wdzNYTqnyvi83ASBZ8hQ
-	H7OXuV1bpnlrfTVaKIo/GVHPMb3Mlv2k9HxxFOG1G+gyoKaYqry8O66fDerczsfo9LEkVAIjSQo
-	LjJ0A1A6yCEUDxIO0S1zgQTA==
-X-Google-Smtp-Source: AGHT+IFoPgrticcftSCZx1LGPInW+lGPNUg8jlDa6rvGb7o/dXr02rm19k0XwSHPZJei1J02/SX8L17QergcAsaWUv8=
-X-Received: by 2002:a17:907:728e:b0:ac7:391a:e158 with SMTP id
- a640c23a62f3a-acad36c3b7fmr979623666b.59.1744639862468; Mon, 14 Apr 2025
- 07:11:02 -0700 (PDT)
+        bh=5yCWkL2WDN1lvZZXaXOpa4x+vmtWrwc1PsatHE9CvEw=;
+        b=dmcMNQLXPVj/qrKa4HFOtNqtIp3xHUEkrYlcn9DTi1KA4Bz6t1oDaMscvxq/Hg8lz5
+         nzyQUS7d7E8T8l+J7H4OXZCG0m5VWQdGIhY2mvRHjotsuKKORZoQtk+ZjY3JiWb1L1SO
+         pP2+/JNYTXRyFlNVS8AcAUP9+f2kYKCBY+GUDW4+aB+H79WZ/RXv2bN7/W7GmQxEvo22
+         BYKcgOjiUDbz51gnRz/HYK2/q96ji+MlrtrAucmVpOImV3S7mvrzD6tgH5Xg6FT5nsYo
+         mFYsfGgkp3AK1I5Uge6W2N9K6DJHCvL9AlPPoGhtEM2pZmKrOTv1/4Xfln9P8CcVe5Ew
+         ejEg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8RTOPr1/CFf4WUF9kAOIyisi+sLdBFFNdsFpvLY0LHxLpixF9AJ2qWSo1yGkLqiazh9DjTmvM@vger.kernel.org, AJvYcCVdDVPfkN2KZdI2Zb3C/ywzogtJtAO+oTTt6Jyv+GcsXrCUozX8IIRRsvluoyxBDnKT7XdqlRIL8x84v1hs@vger.kernel.org, AJvYcCVlPcR4cS6mNcFpBY+toRb1p2pG4oE3YhsXyY844CLMYqKpAAitZDiqOlXxTSh4mWnCEvHObXVutZo3@vger.kernel.org, AJvYcCXlvm/toHTiMKm7SefouNkqVC92Ih99ir+PInYgie49g6TJZO20DIPL8q/i7DSLjYKv1rZd7PXAzXBMD05qQFxP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUy6egl206HdQGx4DNg7hFrk/M6/jVXMc5rcODCz2yVz3Hi7mv
+	e/GLqEvVxHhr+4dgpnyrhQ8iD1cAlMipCbF94kkUSB0ijzS16f+RSajqdzKucG5kw4Wzra+3L45
+	9+qnF/6NsNi+P1s4atgNEZpH4JRc=
+X-Gm-Gg: ASbGnctKNU6q4LZD3HSU/NVsW7lZakIU0a5Qrzt4RiaWXjVUk5il9OjPAYZik7uFfo+
+	x15kfKrnldxg7cqQvphJrdkOFxvEUjHsB1PaubCjAyBnDj94HAE6tVCiuyj3b786faD6Vv9FCLl
+	3n4oxdYK03Uzvzxo6QFkcZJg==
+X-Google-Smtp-Source: AGHT+IGdK2niE9kOGHFgz3phw2eDwIHKiIBcqYt3j2SaDWPRFCA778bk0mOPayv1vioSQfjlNmp5bZhvzgkDObcF5qg=
+X-Received: by 2002:a17:907:84a:b0:ac7:ceb5:d07d with SMTP id
+ a640c23a62f3a-acad34d8a43mr1173367966b.32.1744640027367; Mon, 14 Apr 2025
+ 07:13:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -63,11 +63,12 @@ References: <20250407172836.1009461-1-ivecera@redhat.com> <20250407172836.100946
  <Z_QTzwXvxcSh53Cq@smile.fi.intel.com> <eeddcda2-efe4-4563-bb2c-70009b374486@redhat.com>
  <Z_ys4Lo46KusTBIj@smile.fi.intel.com> <f3fc9556-60ba-48c0-95f2-4c030e5c309e@redhat.com>
  <79b9ee2f-091d-4e0f-bbe3-c56cf02c3532@redhat.com> <b54e4da8-20a5-4464-a4b7-f4d8f70af989@redhat.com>
-In-Reply-To: <b54e4da8-20a5-4464-a4b7-f4d8f70af989@redhat.com>
+ <CAHp75Ve2KwOEdd=6stm0VXPmuMG-ZRzp8o5PT_db_LYxStqEzg@mail.gmail.com>
+In-Reply-To: <CAHp75Ve2KwOEdd=6stm0VXPmuMG-ZRzp8o5PT_db_LYxStqEzg@mail.gmail.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 14 Apr 2025 17:10:25 +0300
-X-Gm-Features: ATxdqUEK9qElNdnTKa2QHn3BaDCna6lMjxXsS9Z11fOG73o2nUUr80_22U4xjJ8
-Message-ID: <CAHp75Ve2KwOEdd=6stm0VXPmuMG-ZRzp8o5PT_db_LYxStqEzg@mail.gmail.com>
+Date: Mon, 14 Apr 2025 17:13:10 +0300
+X-Gm-Features: ATxdqUFd1BVDkakdZ1-2ODqFPD3YDHM5A6s2w5TBHFylqqfB6-UoXfU_t2qH6C8
+Message-ID: <CAHp75Vc0p-dehdjyt9cDm6m72kGq5v5xW8=YRk27KNs5g-qgTw@mail.gmail.com>
 Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
 To: Ivan Vecera <ivecera@redhat.com>
 Cc: Andy Shevchenko <andy@kernel.org>, netdev@vger.kernel.org, 
@@ -80,21 +81,31 @@ Cc: Andy Shevchenko <andy@kernel.org>, netdev@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 5:07=E2=80=AFPM Ivan Vecera <ivecera@redhat.com> wr=
-ote:
-> On 14. 04. 25 1:52 odp., Ivan Vecera wrote:
-
-...
-
-> Long story short, I have to move virtual range outside real address
-> range and apply this offset in the driver code.
+On Mon, Apr 14, 2025 at 5:10=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Is this correct?
+> On Mon, Apr 14, 2025 at 5:07=E2=80=AFPM Ivan Vecera <ivecera@redhat.com> =
+wrote:
+> > On 14. 04. 25 1:52 odp., Ivan Vecera wrote:
+>
+> ...
+>
+> > Long story short, I have to move virtual range outside real address
+> > range and apply this offset in the driver code.
+> >
+> > Is this correct?
+>
+> Bingo!
+>
+> And for the offsets, you form them as "page number * page offset +
+> offset inside the page".
 
-Bingo!
+Note, for easier reference you may still map page 0 to the virtual
+space, but make sure that page 0 (or main page) is available outside
+of the ranges, or i.o.w. ranges do not overlap the main page, even if
+they include page 0.
 
-And for the offsets, you form them as "page number * page offset +
-offset inside the page".
+
 
 --=20
 With Best Regards,
