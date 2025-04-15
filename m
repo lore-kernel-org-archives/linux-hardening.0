@@ -1,104 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7608827FD68;
-	Tue, 15 Apr 2025 10:28:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A1219E7D1;
+	Tue, 15 Apr 2025 10:57:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744712938; cv=none; b=OAMUdiLxRXqVJNp/nbs6TTMBy5VfrALDlKhNCJkUqXq9SV+6RAnOd7PjkXXA9ClCBD3jloqPCe4/CyDLasKUR0L8BxlLFt06sP/8ZemRkIMGairmLiQAdgLjOC0oGPWJCc7Qf+INrjb3J7D2mZ/1vCWjiZ0fPicJoicTDn9JBSc=
+	t=1744714621; cv=none; b=GzPT7kdrCOoSEx0Uhv1ZLKqk6gYE/kAJM1CAlsdfcbjopm4MHixiEBhVagLWk3N1xaoE8s2zk+rRtD1g6GI6duMpxHYBkH9DO4+c4pjmQpxI4pXp2bPk4VeofdbDRMrcxk1doCp2419HV4L15DWmay2EZK2n0SUIbcTG5olL8LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744712938; c=relaxed/simple;
-	bh=TFPyhgsGRDnosn84OnM/M4JJ7OjbBdk0kl0ET0hNwlU=;
+	s=arc-20240116; t=1744714621; c=relaxed/simple;
+	bh=gncSXvctAfz3x+QPjq1GkzJ1RvaBWWsQilFS9Cal2Gw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GIMyV6xH+8tX7hc983Gd+bhj7U6HUFruy6CtRKql059yKJR89W05AiQiTMuuWeszR6O9a/XARv1W6Ed60NDYrOpa1Yaz9X2FTvxhAo3mWxJZjtVgJLOQY+KIa7umhlwkjYrFY0iUa43ntBnRFwyxUDQkC3zk47RtnL9IiP0N8QM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QDdh1x2G; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nvrLcgkPRX9dGErRVzwo+VvDpwQMbMWhqgF49Z9uBpuq7wCKgqyP2zz868ZouoDY0FBxn+ZrqOXPwNwQqcdJYsk9bldf3JYaidFAuP5h4eJUIDfcuLMyV8X1jvVFUERHxQAMMQajj7B9OnsDF1rH3NK+2TOl9nG9lcmpn9LB8ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0cQxFT3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QDdh1x2G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60F5C4CEDD;
-	Tue, 15 Apr 2025 10:28:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0cQxFT3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03F97C4CEDD;
+	Tue, 15 Apr 2025 10:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744712937;
-	bh=TFPyhgsGRDnosn84OnM/M4JJ7OjbBdk0kl0ET0hNwlU=;
+	s=k20201202; t=1744714621;
+	bh=gncSXvctAfz3x+QPjq1GkzJ1RvaBWWsQilFS9Cal2Gw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QDdh1x2GaXZcRWhfFUJgobXVRR91PkRv0JBrfzGNzef3yJQXWgy2Ku7hsv8Tvz3JQ
-	 dyB7GPPHuoy/ApxSZNNrBwpzYRVkUqJ0HWeiQBhfK01KtjYNG0JaoyhbJyHX0FTgp+
-	 uUxiBOEGoIUg+rdZZ68zHDNeVcERNyTOU0mfjSZrLMSzHD12dVlWY0+D6l6Hk9on0V
-	 qp4Po1G2TiUIozZUzy9xVYhClMNbkLl6QM9lpdemwio2UOxzPb3WUhzcaUhb/DMYSj
-	 qxY84kVjtoR7wm82cCcYSBYvxPvlROPsWgnLAaU4ZHm0ErpaZTG9oA9cyhGb4hhB9p
-	 yAAPjt9a7ovFw==
-Date: Tue, 15 Apr 2025 11:28:51 +0100
-From: Lee Jones <lee@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Michal Schmidt <mschmidt@redhat.com>, Ivan Vecera <ivecera@redhat.com>,
-	netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 00/14] Add Microchip ZL3073x support (part 1)
-Message-ID: <20250415102851.GW372032@google.com>
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250411072616.GU372032@google.com>
- <CADEbmW1XBDT39Cs5WcAP_GHJ+4_CTdgFA4yoyiTTnJfC7M2YVQ@mail.gmail.com>
- <20250411155816.GA3300495-robh@kernel.org>
+	b=i0cQxFT3RRZC8yY7ylivYIatGVbQknK/j3dArhiCBWdYQK0M5cnbXDEVPgMmVkCEY
+	 Rf2GlzRTd9nIl+G0oV4OnYZ07QOaNqFI4Xyc4+UlEgEJ5YGB/MJH54V8Ojh9WSyUfx
+	 J60+mnOIh5H50UoaQDRqGpcu+tJiDvlGghl1DWJv0puE1z9KQweQLUatXGVVIaUlW0
+	 o3dNgm6ccZivDdeb2nUNY3kFpbNLxmWj+F7fo2aGIRhwArzbblq/8e9q8U/10MJNwB
+	 Z+D1fpNYu0LpPpb5x3YkVrBDQrJLVPYACTGkxNKLbm99GweCc7EfKNlmpBUqT2a13k
+	 wvdcqt0l3mFSw==
+Date: Tue, 15 Apr 2025 11:56:56 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ASoC: cs-amp-lib: Annotate struct cirrus_amp_efi_data
+ with __counted_by()
+Message-ID: <9a0595a3-00c0-4006-bd54-99b938ee95bd@sirena.org.uk>
+References: <20250415090354.92211-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="/Ul50wVluqGlUpJm"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250411155816.GA3300495-robh@kernel.org>
+In-Reply-To: <20250415090354.92211-2-thorsten.blum@linux.dev>
+X-Cookie: 10.0 times 0.1 is hardly ever 1.0.
 
-On Fri, 11 Apr 2025, Rob Herring wrote:
 
-> On Fri, Apr 11, 2025 at 04:27:08PM +0200, Michal Schmidt wrote:
-> > On Fri, Apr 11, 2025 at 9:26 AM Lee Jones <lee@kernel.org> wrote:
-> > > On Wed, 09 Apr 2025, Ivan Vecera wrote:
-> > > > Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
-> > > > provides DPLL and PTP functionality. This series bring first part
-> > > > that adds the common MFD driver that provides an access to the bus
-> > > > that can be either I2C or SPI.
-> > > > [...]
-> > >
-> > > Not only are all of the added abstractions and ugly MACROs hard to read
-> > > and troublesome to maintain, they're also completely unnecessary at this
-> > > (driver) level.  Nicely authored, easy to read / maintain code wins over
-> > > clever code 95% of the time.
-> > 
-> > Hello Lee,
-> > 
-> > IMHO defining the registers with the ZL3073X_REG*_DEF macros is both
-> > clever and easy to read / maintain. On one line I can see the register
-> > name, size and address. For the indexed registers also their count and
-> > the stride. It's almost like looking at a datasheet. And the
-> > type-checking for accessing the registers using the correct size is
-> > nice. I even liked the paranoid WARN_ON for checking the index
-> > overflows.
-> 
-> If this is much better, define (and upstream) something for everyone to 
-> use rather than a one-off in some driver. It doesn't matter how great it 
-> is if it is different from everyone else. The last thing I want to do is 
-> figure out how register accesses work when looking at an unfamilar 
-> driver.
+--/Ul50wVluqGlUpJm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Exactly right.  The issue isn't that defining register accesses using
-MACROs is a bad idea generally.  I've seen it done before in downstream
-BSPs and the like.  It's that this solution isn't following the
-conventions already in carved for such things in the Mainline kernel.
-To engineers already used to the current conventions, this is much
-harder to follow and interact with.
+On Tue, Apr 15, 2025 at 11:03:55AM +0200, Thorsten Blum wrote:
+> Add the __counted_by() compiler attribute to the flexible array member
+> 'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
 
-As Rob says, if this is truly better, discuss the idea with a much
-wider audience and have it applied broadly across all areas.  We shall
-not be bucking the trend or trend setting here in MFD.
+As documented in submitting-patches.rst please send patches to the=20
+maintainers for the code you would like to change.  The normal kernel
+workflow is that people apply patches from their inboxes, if they aren't
+copied they are likely to not see the patch at all and it is much more
+difficult to apply patches.
 
--- 
-Lee Jones [李琼斯]
+--/Ul50wVluqGlUpJm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf+O3cACgkQJNaLcl1U
+h9DbuAf/R5ZPmY2sT7rqBcn+Ww2UqdNCX4IdMEqqO812LvTuNJ9NHTSUclfcVzZz
+BLkzNPiJzqiOEApU9dbCOCLOuSay9+jOrpuLdcOWCRQIZg1+GZam3VQsGsNsBx5Y
+Zs7Tu2P3M5XHHFtMLIO1KlmIt/4ACPDRwKsuS91OuT8DASckLF88pe4pbFB1PsMY
+1xaQwd6WXpM4v4+6JFIVJeWSwPJktIeEx8vRzmB8CjE1w83JdRdAgxWZFPronvMt
+RVAkyOejz6QmPPMvGjhECWWS5hhXp1e3mLvOWqM+dWV3ZlhPuB6Mql5PNX7SCQKt
+QvHY3jwQIJW9K3SYScftlCK34XbLIg==
+=K6sS
+-----END PGP SIGNATURE-----
+
+--/Ul50wVluqGlUpJm--
