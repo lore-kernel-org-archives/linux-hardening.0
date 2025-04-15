@@ -1,170 +1,102 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B45D2951A0
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Apr 2025 12:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9015828E61D;
+	Tue, 15 Apr 2025 12:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744718839; cv=none; b=naBeq/BL3U9xsM8Rt/rb4y0dxW9sdhwXFd8e4B87cdQRpHOR6fO/xoX7QyWqUazx7cTJSwjrQ7qEyLvHz5AFlHxSWzQltbplX109XikfanAgMJOKosqlsO2PRiKcdb8nPujCW9Es32iOA1Hvy8NirJFt3O4l3khDv79Gr9pmUg8=
+	t=1744721866; cv=none; b=fNvbsWM5DVlfHjyqaghmo/CDA+LWsxbGAMcMpoUO9J9lDPrT9B945vNciUO0zOP3Rr8FdLtHL1OsdUQIqMd8HbyLoYIqowljKcgNA84NMyT+8ZpvnyAmDr7Mb8/sSKEgo9o3bhByENJpmNce2m8/lsn1jhlXE+QObEl+DIYtswc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744718839; c=relaxed/simple;
-	bh=q+j/4ED7OV5YAKIOQeHEFisQ36G2XCfFbi7Gj0qZPAU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W8IojmIw78QF+Q7iEhNNvTwXuOgHJiQVH3hRigb38+tz1s57ZWPKbbmOImIcK6RADq4JFeAlbiK012DcA07jWG+BMh8vJjaAlvMrYgirQoBDgs7yFo/QZGwwj598uyaoCRKOxcZM4ZjfOxYgC9+DreF5yzZygqFkVvqqpadt1K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HscZcIib; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jKfp2OMp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HscZcIib; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jKfp2OMp; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744721866; c=relaxed/simple;
+	bh=2EOO+sAkwFqCxra83O6A2BDPgugA7NN6ZkUL1xXLrbY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iyy2K6Q48HZvngR1JjR12rQ5uh6kQf3Zw1Bf/FFKP5jXsjQDAjLMyZUjpypq5ePi4qr9mA6wcJ/9MIgKhGrUzJ5vEbLegvEu2sP96B7x+5m0i/o9fAVhFh+frvBA0CCHYBKz73tT4oMU9KB4GLAkt3MJ2Inn30YLXipJMfnU0lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=utNpLyac; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HscZcIib";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jKfp2OMp";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HscZcIib";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jKfp2OMp"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7F51921162;
-	Tue, 15 Apr 2025 12:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744718836; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tdU2b0wx3AY/sGHKBtE9YJt3OEIlLfZdeKx71zBsLgo=;
-	b=HscZcIibrchgL54J7kjebM5aQYOkiIwcEeGo+LJJSUcfUvYff/q4l+M0s0Ny6ynyagnr4Y
-	+VV/XcrpWUo2zDUlqI2AaElfbh/XDDmhBkdvt42hG+Ev9cd92i2A+dIf8uG27cYLD8QbjX
-	QnhNHO/09Ktecu0WMLqnsoq7LJP4KYM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744718836;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tdU2b0wx3AY/sGHKBtE9YJt3OEIlLfZdeKx71zBsLgo=;
-	b=jKfp2OMpJnyVN/PajLHi24Vmc/uvwHKp8Plut4YQlV82wdOiFkrpKZQBLT7JJ+pCFI6FKW
-	B79dKQQwjuKRZbDg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=HscZcIib;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=jKfp2OMp
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744718836; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tdU2b0wx3AY/sGHKBtE9YJt3OEIlLfZdeKx71zBsLgo=;
-	b=HscZcIibrchgL54J7kjebM5aQYOkiIwcEeGo+LJJSUcfUvYff/q4l+M0s0Ny6ynyagnr4Y
-	+VV/XcrpWUo2zDUlqI2AaElfbh/XDDmhBkdvt42hG+Ev9cd92i2A+dIf8uG27cYLD8QbjX
-	QnhNHO/09Ktecu0WMLqnsoq7LJP4KYM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744718836;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tdU2b0wx3AY/sGHKBtE9YJt3OEIlLfZdeKx71zBsLgo=;
-	b=jKfp2OMpJnyVN/PajLHi24Vmc/uvwHKp8Plut4YQlV82wdOiFkrpKZQBLT7JJ+pCFI6FKW
-	B79dKQQwjuKRZbDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2CD37139A1;
-	Tue, 15 Apr 2025 12:07:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id u1maCfRL/mdZDAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 15 Apr 2025 12:07:16 +0000
-Date: Tue, 15 Apr 2025 14:07:15 +0200
-Message-ID: <87ecxtzkzw.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Mark Brown <broonie@kernel.org>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ASoC: cs-amp-lib: Annotate struct cirrus_amp_efi_data with __counted_by()
-In-Reply-To: <c344e6bd-1a95-4982-927d-f679410c444b@opensource.cirrus.com>
-References: <20250415090354.92211-2-thorsten.blum@linux.dev>
-	<9a0595a3-00c0-4006-bd54-99b938ee95bd@sirena.org.uk>
-	<C0A89B4A-14BC-48F3-9D0F-31C8C0AF7ECE@linux.dev>
-	<c344e6bd-1a95-4982-927d-f679410c444b@opensource.cirrus.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="utNpLyac"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=/zg+4LuvKN2MfsYaYQDPTMDY3vRum1BuvjjkEVMSOMM=; b=utNpLyacBxVYcE4VG7k4ynrztr
+	ZBf69qa3y5t2IoS/iSjBwfypRhUnM3WBelKCWR4xODoRhm5+CZk6ukSO3TpymSQdE71yemvFAi49c
+	kmH2BrBhX4cgKRtWcDskgGDDpmfpX2xT/loN6Ucwmp+VuXQnUPSac8o1YhnyqNskJMBw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u4fr1-009RZD-DL; Tue, 15 Apr 2025 14:57:31 +0200
+Date: Tue, 15 Apr 2025 14:57:31 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
+ defs
+Message-ID: <e1389e78-ead0-4180-a652-5dc48a691548@lunn.ch>
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-8-ivecera@redhat.com>
+ <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
+ <c0ef6dad-ce7e-401c-9ae1-42105fcbf9c4@redhat.com>
+ <098b0477-3367-4f96-906b-520fcd95befb@lunn.ch>
+ <003bfece-7487-4c65-b4f1-2de59207bd5d@redhat.com>
+ <8c5fb149-af25-4713-a9c8-f49b516edbff@lunn.ch>
+ <9de10e97-d0fa-4dee-b98a-e4b2a3f7019c@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: 7F51921162
-X-Spam-Score: -3.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9de10e97-d0fa-4dee-b98a-e4b2a3f7019c@redhat.com>
 
-On Tue, 15 Apr 2025 14:03:18 +0200,
-Richard Fitzgerald wrote:
+> Hi Andrew,
+> the idea looks interesting but there are some caveats and disadvantages.
+> I thought about it but the idea with two regmaps (one for simple registers
+> and one for mailboxes) where the simple one uses implicit locking and
+> mailbox one has locking disabled with explicit locking requirement. There
+> are two main problems:
 > 
-> On 15/04/2025 12:51 pm, Thorsten Blum wrote:
-> > On 15. Apr 2025, at 12:56, Mark Brown wrote:
-> >> On Tue, Apr 15, 2025 at 11:03:55AM +0200, Thorsten Blum wrote:
-> >>> Add the __counted_by() compiler attribute to the flexible array member
-> >>> 'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> >>> CONFIG_FORTIFY_SOURCE.
-> >> 
-> >> As documented in submitting-patches.rst please send patches to the
-> >> maintainers for the code you would like to change.  The normal kernel
-> >> workflow is that people apply patches from their inboxes, if they aren't
-> >> copied they are likely to not see the patch at all and it is much more
-> >> difficult to apply patches.
-> > 
-> > I just use whatever scripts/get_maintainer.pl outputs. Maybe the
-> > MAINTAINERS file should be updated?
-> > 
-> > Best,
-> > Thorsten
-> > 
+> 1) Regmap cache has to be disabled as it cannot be shared between multiple
+> regmaps... so also page selector cannot be cached.
 > 
-> MAINTAINERS only lists Takashi and Jaroslav as maintainers of
-> include/sound/*.
+> 2) You cannot mix access to mailbox registers and to simple registers. This
+> means that mailbox accesses have to be wrapped e.g. inside scoped_guard()
 > 
-> A separate section lists Mark as maintainer of a specific set of files
-> within include/sound/
+> The first problem is really pain as I would like to extend later the driver
+> with proper caching (page selector for now).
+> The second one brings only confusions for a developer how to properly access
+> different types of registers.
 > 
-> I guess any files we put in include/sound that are for an ASoC driver
-> have to also be added to Mark's ASoC section of MAINTAINERS?
+> I think the best approach would be to use just single regmap for all
+> registers with implicit locking enabled and have extra mailbox mutex to
+> protect mailbox registers and ensure atomic operations with them.
+> This will allow to use regmap cache and also intermixing mailbox and simple
+> registers' accesses won't be an issue.
 
-Yes, it makes sense.
+As i said, it was just an idea, i had no idea if it was a good idea.
 
+What is important is that the scope of the locking becomes clear,
+unlike what the first version had. So locking has to be pushed down to
+the lower levels so you lock a single register access, or you lock an
+mailbox access.
 
-Takashi
+Also, you say this is an MFD partially because GPIOs could be added
+later. I assume that GPIO code would have the same locking issue,
+which suggests the locking should be in the MFD core, not the
+individual drivers stacked on top of it.
+
+	Andrew
