@@ -1,102 +1,75 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9015828E61D;
-	Tue, 15 Apr 2025 12:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A4A25771;
+	Tue, 15 Apr 2025 13:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744721866; cv=none; b=fNvbsWM5DVlfHjyqaghmo/CDA+LWsxbGAMcMpoUO9J9lDPrT9B945vNciUO0zOP3Rr8FdLtHL1OsdUQIqMd8HbyLoYIqowljKcgNA84NMyT+8ZpvnyAmDr7Mb8/sSKEgo9o3bhByENJpmNce2m8/lsn1jhlXE+QObEl+DIYtswc=
+	t=1744724094; cv=none; b=kKAGQi6xyWSUYWnSnTtW3yRWge/HN+Dz43l1VEDybOMNma7Pzw2DEQbuk0IYHkNgrKJ3Ia0vRnn7Vvtg5QGH53PhN0l1kfQtilALh5F/cfXIelCrifxyFXma7/iiH7LevsNEX98ZEqUN06NA/fi8CyQxbSG+Tv6FnecIoX3GdCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744721866; c=relaxed/simple;
-	bh=2EOO+sAkwFqCxra83O6A2BDPgugA7NN6ZkUL1xXLrbY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iyy2K6Q48HZvngR1JjR12rQ5uh6kQf3Zw1Bf/FFKP5jXsjQDAjLMyZUjpypq5ePi4qr9mA6wcJ/9MIgKhGrUzJ5vEbLegvEu2sP96B7x+5m0i/o9fAVhFh+frvBA0CCHYBKz73tT4oMU9KB4GLAkt3MJ2Inn30YLXipJMfnU0lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=utNpLyac; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744724094; c=relaxed/simple;
+	bh=ZbvVGnkFnCTdW8MWHN32kqUIqhHk59XjTd85RXWZa7w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kO8rRTZmRBKhgTvn0ZLh5dfBblaWbWHpv2sWp28EYMz9dz+2w93bzhlFhI+PWmqDvop6WCF9GOnARcy6uKvo05tJL8ioxjQ9D+DEDeZo8XOx78lGnSq5UC9TAheK+fVzqzByZyXbOCol1wUIUNYsAfMNSN3wQDZBMpE+YikRHco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=DDoY3gID; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="utNpLyac"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=/zg+4LuvKN2MfsYaYQDPTMDY3vRum1BuvjjkEVMSOMM=; b=utNpLyacBxVYcE4VG7k4ynrztr
-	ZBf69qa3y5t2IoS/iSjBwfypRhUnM3WBelKCWR4xODoRhm5+CZk6ukSO3TpymSQdE71yemvFAi49c
-	kmH2BrBhX4cgKRtWcDskgGDDpmfpX2xT/loN6Ucwmp+VuXQnUPSac8o1YhnyqNskJMBw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u4fr1-009RZD-DL; Tue, 15 Apr 2025 14:57:31 +0200
-Date: Tue, 15 Apr 2025 14:57:31 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
- defs
-Message-ID: <e1389e78-ead0-4180-a652-5dc48a691548@lunn.ch>
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-8-ivecera@redhat.com>
- <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
- <c0ef6dad-ce7e-401c-9ae1-42105fcbf9c4@redhat.com>
- <098b0477-3367-4f96-906b-520fcd95befb@lunn.ch>
- <003bfece-7487-4c65-b4f1-2de59207bd5d@redhat.com>
- <8c5fb149-af25-4713-a9c8-f49b516edbff@lunn.ch>
- <9de10e97-d0fa-4dee-b98a-e4b2a3f7019c@redhat.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="DDoY3gID"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net ED3CE41086
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1744724092; bh=qq2xMJBZXzE4K+QY6hdl58GPqersIi74JVHAVzQ7s9k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=DDoY3gIDfJxPZpUxEk7czh4g4VPoH6KuBIk8B0Ubx62VEFY9V5X7ZIu49/Owiz12G
+	 7FUD59tpDgpWxTZHHzfRKYxzn49Gbm3g0LsnA+P60ctkx5SmjOeMxHWH2rWsIuNtKl
+	 SDow1+t2psIiOdAe7lt7SB18VPmJof+j5kN4w/SsITMRsIqmAfP543rPYuVjt7ObEG
+	 m+gYUfigYs2gKi298yRmgWP3kunGSNkP4PgFqnR5jfJWvg6g8BCC89QWlaEgzEx84z
+	 /ZMGQJYP/V/FGuyBXwL4HFQOkV8F2N3aXjoj0AWJHPrnthbA1R3DUqX1x0HUDg1G4F
+	 BdZrDoZQnrL+w==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id ED3CE41086;
+	Tue, 15 Apr 2025 13:34:51 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@intel.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, Linux Doc Mailing List
+ <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, Kees Cook <kees@kernel.org>, Russell King
+ <linux@armlinux.org.uk>, linux-hardening@vger.kernel.org,
+ netdev@vger.kernel.org
+Subject: Re: [PATCH v3 00/33] Implement kernel-doc in Python
+In-Reply-To: <20250415180631.180e9a9f@sal.lan>
+References: <871pu1193r.fsf@trenco.lwn.net>
+ <Z_zYXAJcTD-c3xTe@black.fi.intel.com> <87mscibwm8.fsf@trenco.lwn.net>
+ <Z_4EL2bLm5Jva8Mq@smile.fi.intel.com>
+ <Z_4E0y07kUdgrGQZ@smile.fi.intel.com> <87v7r5sw3a.fsf@intel.com>
+ <Z_4WCDkAhfwF6WND@smile.fi.intel.com>
+ <Z_4Wjv0hmORIwC_Z@smile.fi.intel.com> <20250415164014.575c0892@sal.lan>
+ <Z_4sKaag1wZhME7B@smile.fi.intel.com>
+ <Z_4sxCFvpqs7qmcN@smile.fi.intel.com> <20250415180631.180e9a9f@sal.lan>
+Date: Tue, 15 Apr 2025 07:34:51 -0600
+Message-ID: <87bjsxblac.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9de10e97-d0fa-4dee-b98a-e4b2a3f7019c@redhat.com>
+Content-Type: text/plain
 
-> Hi Andrew,
-> the idea looks interesting but there are some caveats and disadvantages.
-> I thought about it but the idea with two regmaps (one for simple registers
-> and one for mailboxes) where the simple one uses implicit locking and
-> mailbox one has locking disabled with explicit locking requirement. There
-> are two main problems:
-> 
-> 1) Regmap cache has to be disabled as it cannot be shared between multiple
-> regmaps... so also page selector cannot be cached.
-> 
-> 2) You cannot mix access to mailbox registers and to simple registers. This
-> means that mailbox accesses have to be wrapped e.g. inside scoped_guard()
-> 
-> The first problem is really pain as I would like to extend later the driver
-> with proper caching (page selector for now).
-> The second one brings only confusions for a developer how to properly access
-> different types of registers.
-> 
-> I think the best approach would be to use just single regmap for all
-> registers with implicit locking enabled and have extra mailbox mutex to
-> protect mailbox registers and ensure atomic operations with them.
-> This will allow to use regmap cache and also intermixing mailbox and simple
-> registers' accesses won't be an issue.
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-As i said, it was just an idea, i had no idea if it was a good idea.
+> I'll try to craft a patch along the week to add
+> PYTHONDONTWRITEBYTECODE=1 to the places where kernel-doc
+> is called.
 
-What is important is that the scope of the locking becomes clear,
-unlike what the first version had. So locking has to be pushed down to
-the lower levels so you lock a single register access, or you lock an
-mailbox access.
+This may really be all we need.  It will be interesting to do some
+build-time tests; I don't really see this as making much of a
+difference.
 
-Also, you say this is an MFD partially because GPIOs could be added
-later. I assume that GPIO code would have the same locking issue,
-which suggests the locking should be in the MFD core, not the
-individual drivers stacked on top of it.
+Thanks,
 
-	Andrew
+jon
