@@ -1,145 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6542B156F45
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Apr 2025 14:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A434B28BA8D;
+	Tue, 15 Apr 2025 14:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744726850; cv=none; b=kQUh1qDtQnl/cDsXhz258h0B3pXz94ULx3whTiPuSZMBlAqIzvIme1IYRRdp+LPsm3QzoS+oL6UGPfVeCzGa8Xv7phPqerD9M509i0406obRwFDyTN8BzNmPhsHQioBVXAjTm9QL7b+XMxbFl8Ay+5xc1e5yinweoj4w6jKV81c=
+	t=1744727822; cv=none; b=ssXnhkM7N85fZx11yNOAlGeFs9zGOQLg677vmCrayhrgyd2NJKtNy4WxfLaY+k6SELH4SJqW2Gi3Jb34sFSz3syyNlrRV4BbZO+y5WrRsQlpNh904t5YUn4gopIe331dqzZpfQnwKX+ZhT9fgao1WPSoLqLgctz1wQf+yikh5vI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744726850; c=relaxed/simple;
-	bh=cwQOEcSZeCAijyUJW84gmALURPuFmOtOgI550pIO1BM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t/iOdHbS9I0IzVGJSNI7u7x20LetI3KnxpLZEQ/UwIVbIDuFDlaGITAQTYZYzBGLo5Hlcvfa2mMeTISbdDPuVUVGKjSFc5GmppHDuCbyIakfiOK7ODZw202xwyVqxcK69MM5MAcI/Xg0y/EEcNvFFId4Bbgrqw7d9Bnv4zjwzsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ItOew7mQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744727822; c=relaxed/simple;
+	bh=TvQnWFwdFpnb9SYNTlS+cB5AlPbPdOfp9gzg8DWDZWw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pPcnV57JMS0z0X0t5e3XIQCK6bAzh7a5ATy+LVbNhjc+OJV6lnDIf916kylOQD6Dr9Pc1aSvFoAoKpEZndYip5YBCm5CaYos22RgBXeLMlhWBsLrJ9BU5vjWSvy/+B8DluNYDzGP+8yskRhjWLKEk28FLZbzEuUWPJO3DxFN6Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dn07Cnu/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ItOew7mQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744726847;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LhJ8etOVT0e0dERbm/nij8W1gSDN13mH7LedwU7K4EI=;
-	b=ItOew7mQE1YqzaklSzAe64q5bMBWT6welOmNT/zCQax8u0ZH9RlHnOhUAFDYVx5ttppxty
-	R0SY1W+xMqkk2YEOIrHxyb6ryI/Bs7vTmi2DDAr/r2jRL1r6dS93QpToAOQeiWUrOLNI/n
-	m2SVjxCHTYlaMTuUEYCe2W3Bozm3i/Y=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-595-DXdQaDQOOR-mVA71-nnKJQ-1; Tue,
- 15 Apr 2025 10:20:46 -0400
-X-MC-Unique: DXdQaDQOOR-mVA71-nnKJQ-1
-X-Mimecast-MFC-AGG-ID: DXdQaDQOOR-mVA71-nnKJQ_1744726842
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 17AA41954B36;
-	Tue, 15 Apr 2025 14:20:42 +0000 (UTC)
-Received: from [10.45.224.188] (unknown [10.45.224.188])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7AE90180175D;
-	Tue, 15 Apr 2025 14:20:36 +0000 (UTC)
-Message-ID: <6369999d-26cb-4e9b-b129-ed89abf35277@redhat.com>
-Date: Tue, 15 Apr 2025 16:20:35 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dn07Cnu/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 195B3C4CEDD;
+	Tue, 15 Apr 2025 14:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744727822;
+	bh=TvQnWFwdFpnb9SYNTlS+cB5AlPbPdOfp9gzg8DWDZWw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Dn07Cnu/kFBVXv1Hr2tWaO28RVeoLvd4Fil9vomPeVAg5bMrmE7mR1SVX2XhyX9iO
+	 6VtAuaklZf9XVZpWUge9CpluAaK9gXzZYVG0IJrWKuk4w4koupzqLa6950XbGFGm6L
+	 2btuLdnnaLAcOTNaPCKykNKwulHlhm814Snyt0Au2cY/s3iO8PobHdC0TzDFrriML3
+	 S36Bd881s5cEQH0mLdjJXcBVAUpsTBOMdQAyOg6hvclOFVKjx7L1N5k7qxZ1Eqxg2U
+	 zEB7lV7JODSsMDNRQMQUhwTbL25z2JfZ/Ip9QiPz3M3Dgxk4YVtT/TvgziiaKfPpU/
+	 rH2c556UD42eg==
+From: Mark Brown <broonie@kernel.org>
+To: David Rhodes <david.rhodes@cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Thorsten Blum <thorsten.blum@linux.dev>
+Cc: linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <20250415090354.92211-2-thorsten.blum@linux.dev>
+References: <20250415090354.92211-2-thorsten.blum@linux.dev>
+Subject: Re: [PATCH] ASoC: cs-amp-lib: Annotate struct cirrus_amp_efi_data
+ with __counted_by()
+Message-Id: <174472781982.130155.12727122291223637995.b4-ty@kernel.org>
+Date: Tue, 15 Apr 2025 15:36:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
- defs
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andy Shevchenko <andy@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-8-ivecera@redhat.com>
- <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
- <c0ef6dad-ce7e-401c-9ae1-42105fcbf9c4@redhat.com>
- <098b0477-3367-4f96-906b-520fcd95befb@lunn.ch>
- <003bfece-7487-4c65-b4f1-2de59207bd5d@redhat.com>
- <8c5fb149-af25-4713-a9c8-f49b516edbff@lunn.ch>
- <9de10e97-d0fa-4dee-b98a-e4b2a3f7019c@redhat.com>
- <e1389e78-ead0-4180-a652-5dc48a691548@lunn.ch>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <e1389e78-ead0-4180-a652-5dc48a691548@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mailer: b4 0.15-dev-c25d1
 
-
-
-On 15. 04. 25 2:57 odp., Andrew Lunn wrote:
->> Hi Andrew,
->> the idea looks interesting but there are some caveats and disadvantages.
->> I thought about it but the idea with two regmaps (one for simple registers
->> and one for mailboxes) where the simple one uses implicit locking and
->> mailbox one has locking disabled with explicit locking requirement. There
->> are two main problems:
->>
->> 1) Regmap cache has to be disabled as it cannot be shared between multiple
->> regmaps... so also page selector cannot be cached.
->>
->> 2) You cannot mix access to mailbox registers and to simple registers. This
->> means that mailbox accesses have to be wrapped e.g. inside scoped_guard()
->>
->> The first problem is really pain as I would like to extend later the driver
->> with proper caching (page selector for now).
->> The second one brings only confusions for a developer how to properly access
->> different types of registers.
->>
->> I think the best approach would be to use just single regmap for all
->> registers with implicit locking enabled and have extra mailbox mutex to
->> protect mailbox registers and ensure atomic operations with them.
->> This will allow to use regmap cache and also intermixing mailbox and simple
->> registers' accesses won't be an issue.
+On Tue, 15 Apr 2025 11:03:55 +0200, Thorsten Blum wrote:
+> Add the __counted_by() compiler attribute to the flexible array member
+> 'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
 > 
-> As i said, it was just an idea, i had no idea if it was a good idea.
+> No functional changes intended.
 > 
-> What is important is that the scope of the locking becomes clear,
-> unlike what the first version had. So locking has to be pushed down to
-> the lower levels so you lock a single register access, or you lock an
-> mailbox access.
 > 
-> Also, you say this is an MFD partially because GPIOs could be added
-> later. I assume that GPIO code would have the same locking issue,
-> which suggests the locking should be in the MFD core, not the
-> individual drivers stacked on top of it.
+> [...]
 
-To work with GPIO block inside chip you use just simple registers not 
-mailboxes. But it does not matter. The approach above exposes for 
-individual sub-drivers an API (not direct usage of regmap (all registers 
-are exposed by function helpers), helpers to enter/leave "mailbox mode" 
-that locks/unlocks mailbox mutex)...
+Applied to
 
-Something like this
-{
-	...
-	rc = zl3073x_read_id(zldev, &id); // locked implicitly
-	...
-	scoped_guard(zl3073x_mailbox)(zldev) { // enter mailbox 'mode'
-		rc = zl3073x_mb_ref_set(zldev, ref_idx);
-		rc = zl3073x_mb_ref_op(zldev, REF_OP_READ);
-		regmap_wait_poll_timeout(...);
-		rc = zl3073x_mb_ref_freq(zldev, &freq);
-	} // leave mailbox access 'mode'
-	...
-	rc = zl3073x_write_blahblah(zldev, value);
-}
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: cs-amp-lib: Annotate struct cirrus_amp_efi_data with __counted_by()
+      commit: fcdf212fd9b36c299d90229e9546c077db2215ce
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Ivan
+Mark
 
