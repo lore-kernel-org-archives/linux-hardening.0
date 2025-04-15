@@ -1,151 +1,93 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E2A1537A7
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Apr 2025 20:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80F8148832;
+	Tue, 15 Apr 2025 20:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744749241; cv=none; b=n2MfCTrmyPHPvHZtXdRBDva05Jh9bP/qLYCjuwr/3IxrTxG08UuBt2mGOGOhcuChkyO8aqdC1r37Wis5o0v+B9cnf9RGbqitfVKX+E/dcjl/ScJqwd6QLEK4RNOhxzhDt3oqGLCCoxIvkRpEcQu8Pk5AfUHqFQc7t1aKIa74+bI=
+	t=1744749671; cv=none; b=oCpkcDEcOSLFAk2yC2zSb2ZfK2g6FhZpyUrBuZZ8SboGV9LcdpNXPsoxX+ZSGbSi6/+n8qEmZm73Z38D/mmdvGu7mMe/baUeBNPjku3lrlgCA+g5ps9pPaNccDLIA9VWghSftpSvuNlYLsKPwtr/ElxCtvfLKjMePrc6h0oVMgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744749241; c=relaxed/simple;
-	bh=bx1iKrdSrzWwm/Z1ftrLLfS3+M1pXWoevSNmsf2zLtw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=WlXraxFOKmwCxx7chZssVK+t2MZjGy2xcJmgBdHnasdSw4pHzw1sliSi3ZPkW4U3eZlfsa4qSO7PB4yii4zDfa2Z6T+stw7EWojNFsgbzhEdi9igSh3SFLHvc5pGIPApWt/uF32km+OyhgqnPaocAFCgj61H9xG9pma62KuRh2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WAlU6FjB; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com
+	s=arc-20240116; t=1744749671; c=relaxed/simple;
+	bh=Xujmcf0MnaYNwA9Y83KJUGceRZYh862QHOOGs5sRFF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q4Z5RIKLPDDeT5ScJrQ0Y1tJrjAz6thbYbG9VNBnPG9DHMPck8y8sejw0TqDNrxlMWjC6jSSCYPaRzW1QRJrT4/BkauAdEBd/3YchikkxJ1skQKbrxobxbLImRQwDwA6mx7SdeoFFF0hYyuShCeDhiPH7b+MvA/SMGGDGJVe3QU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMZvbxGn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WAlU6FjB"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43f251dc364so39800365e9.2
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Apr 2025 13:33:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744749238; x=1745354038; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IEKdMkwaC8ZVuzeK27ofbBSfYgZV8m32yzn+EY7u520=;
-        b=WAlU6FjBiwGQSiSmCH6WVvmRYp/nrxrQ04rFbtco7QHT+KuRfafjPBjl12+xb4qle0
-         vHLB+UhLhcXu+5JhgSlBUo8qSiw21fOgAYRb8NR6T55/TiUekRapPSY0qmOQ6dxM2x0M
-         UOU7PMJRaXdvKSgQOi19vxFUlE2s64cvaCStTKX+a7D6tRfaf9UhK6DWn9JTMMDsFKJM
-         IY6H2aX8Tq2RetoE8kNKXDqxE1iehrZBrtMeU7LLQLsQv4mrqYvA9b9+Xtv8EGrbbCd+
-         eg5Lj47PhkU/uvJcA/eQuvd/W/xiGSYzAhx0frMqpy7bwo7jbVd1+4923G2yv5kG0bxv
-         RuPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744749238; x=1745354038;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IEKdMkwaC8ZVuzeK27ofbBSfYgZV8m32yzn+EY7u520=;
-        b=R6z5//bzp2mLn0nyPjMBDR0ie0OqC+ILkclWCjWakMRrw4gmbaRbGj3i1TR2w2Y71+
-         Mo5wNtqbmotjSvNZVLK0gAToMh01WKood7YEMKkwziHJIZdVLQFcs1gJBEyf6TOloDzc
-         vLOTGqIWJ2sXib6hy2LSxczB8faYIVOdm2ajUu4NB9sqDIFbOIBqYcTb9IKpXLMmzrp2
-         p3GBgETFmjgJcejlMjDftjiVykcpWKm6PyXPwFX7d08JiWPadXCPq5luE4tQT/kcpzN8
-         LZoVZpGATimzWux2XGb/a7YtPMr4h9+SP6zsjWVNGutTAOb01BYKiPJPEwrlmlETf7wi
-         KgMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW80Ta+NTKs5JWN73HnUCjcy+YPYx3lw0Is0tqjvh2aG6EEGitResYuPHAuf1VWBe10ggAL/G3YAr37NqbKiFU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg9PKPAOlgUKpuqy/4vzm8CmjFgbMzZ83twlMDDjSdp4PLXA8r
-	upmTgWZ+6ZFZsPD48C9LL5FoLRJg+mu+onAWceyqnSXb0qE84adY1n+uTm8ZPkMI53FfoEiMpgP
-	FwCZMNuNzUw==
-X-Google-Smtp-Source: AGHT+IENnzOlV1ODYOpeVHVMRaRkJZcFtJId27vjFItTdwFcgI3VPSYpTFyt3sy2P89IAYGXhZHJCkY6z9VHrA==
-X-Received: from wmcn2.prod.google.com ([2002:a05:600c:c0c2:b0:43c:f7c3:c16e])
- (user=smostafa job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3ba2:b0:43d:1b95:6d0e with SMTP id 5b1f17b1804b1-4405a0a4136mr3880525e9.23.1744749237846;
- Tue, 15 Apr 2025 13:33:57 -0700 (PDT)
-Date: Tue, 15 Apr 2025 20:33:54 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMZvbxGn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D789C4CEE7;
+	Tue, 15 Apr 2025 20:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744749671;
+	bh=Xujmcf0MnaYNwA9Y83KJUGceRZYh862QHOOGs5sRFF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KMZvbxGnAcU/0LhQBLa/9BG47ab2wYqs+9twySee2VkeuUqYMg2zZz2W5I7tnVZGb
+	 p/tZv+4onoyVbP0dcOW3If88TGWnOROMEo5rv2zLERfhOM87kGa8qk/Gud3x6+5foy
+	 y+6yThVG+3JjHbM5Rtnt/UQKUy7Kfu2PBgVdTGZb9wNYShV3AHrywI90oXVsZAkO7c
+	 rWo1a+39SLw2NGQqESlntZAGeaLcY5+uRWyxg+KXr6vTjV7OeH3iMW/qxjowc7l4H/
+	 0n8GXwiEYMCcVr2CteqLs8s/JB1rPO/GbolK7xNdkQB7GfMKJ7Gn5x+J51M2FpQ7D5
+	 SbhSpNkan01PQ==
+Date: Tue, 15 Apr 2025 21:41:06 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, kees@kernel.org,
+	mic@digikod.net, gnoack@google.com, Arnd Bergmann <arnd@arndb.de>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
+Message-ID: <2a4a73bc-03a7-4bac-9d56-dad85df3e1b8@sirena.org.uk>
+References: <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
+ <mhng-812ee330-2f86-4561-8b88-cbb6a51f8515@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250415203354.4109415-1-smostafa@google.com>
-Subject: [PATCH v2] lib/test_ubsan.c: Fix panic from test_ubsan_out_of_bounds
-From: Mostafa Saleh <smostafa@google.com>
-To: linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org
-Cc: akpm@linux-foundation.org, kees@kernel.org, elver@google.com, 
-	andreyknvl@gmail.com, ryabinin.a.a@gmail.com, 
-	Mostafa Saleh <smostafa@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="AOZwQ0Y3QWlsCkP6"
+Content-Disposition: inline
+In-Reply-To: <mhng-812ee330-2f86-4561-8b88-cbb6a51f8515@palmer-ri-x1c9a>
+X-Cookie: 10.0 times 0.1 is hardly ever 1.0.
 
-Running lib_ubsan.ko on arm64 (without CONFIG_UBSAN_TRAP) panics the
-kernel
 
-[   31.616546] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: test_ubsan_out_of_bounds+0x158/0x158 [test_ubsan]
-[   31.646817] CPU: 3 UID: 0 PID: 179 Comm: insmod Not tainted 6.15.0-rc2 #1 PREEMPT
-[   31.648153] Hardware name: linux,dummy-virt (DT)
-[   31.648970] Call trace:
-[   31.649345]  show_stack+0x18/0x24 (C)
-[   31.650960]  dump_stack_lvl+0x40/0x84
-[   31.651559]  dump_stack+0x18/0x24
-[   31.652264]  panic+0x138/0x3b4
-[   31.652812]  __ktime_get_real_seconds+0x0/0x10
-[   31.653540]  test_ubsan_load_invalid_value+0x0/0xa8 [test_ubsan]
-[   31.654388]  init_module+0x24/0xff4 [test_ubsan]
-[   31.655077]  do_one_initcall+0xd4/0x280
-[   31.655680]  do_init_module+0x58/0x2b4
+--AOZwQ0Y3QWlsCkP6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That happens because the test corrupts other data in the stack:
-400:   d5384108        mrs     x8, sp_el0
-404:   f9426d08        ldr     x8, [x8, #1240]
-408:   f85f83a9        ldur    x9, [x29, #-8]
-40c:   eb09011f        cmp     x8, x9
-410:   54000301        b.ne    470 <test_ubsan_out_of_bounds+0x154>  // b.any
+On Tue, Apr 15, 2025 at 01:26:34PM -0700, Palmer Dabbelt wrote:
+> On Mon, 07 Apr 2025 13:57:32 PDT (-0700), broonie@kernel.org wrote:
 
-As there is no guarantee the compiler will order the local variables
-as declared in the module:
-        volatile char above[4] = { }; /* Protect surrounding memory. */
-        volatile int arr[4];
-        volatile char below[4] = { }; /* Protect surrounding memory. */
+> > In current mainline x86_64 allmodconfig builds done with tuxmake GCC 13
+> > and GCC 14 toolchains (which are Debian ones packaged up into containers)
+> > generate ICEs in landlock:
 
-There is another problem where the out-of-bound index is 5 which is larger
-than the extra surrounding memory for protection.
+> This one's been biting me too.  It manifests for me on gcc-12 and gcc-13
+> (both locally built toolchains off the release branches, cross compiling for
+> RISC-V).
 
-So, use a struct to enforce the ordering, and fix the index to be 4.
-Also, remove some of the volatiles and rely on OPTIMIZER_HIDE_VAR()
+> Tested-by: Palmer Dabbelt <palmer@rivosinc.com>
 
-Signed-off-by: Mostafa Saleh <smostafa@google.com>
+Kees has a narrower workaround for this:
 
----
-v2:
-- Use struct instead of reading.
-- remove some of the volatiles.
----
- lib/test_ubsan.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+    https://lore.kernel.org/all/20250409151154.work.872-kees@kernel.org/
 
-diff --git a/lib/test_ubsan.c b/lib/test_ubsan.c
-index 8772e5edaa4f..a4b6f52b9c57 100644
---- a/lib/test_ubsan.c
-+++ b/lib/test_ubsan.c
-@@ -77,18 +77,22 @@ static void test_ubsan_shift_out_of_bounds(void)
- 
- static void test_ubsan_out_of_bounds(void)
- {
--	volatile int i = 4, j = 5, k = -1;
--	volatile char above[4] = { }; /* Protect surrounding memory. */
--	volatile int arr[4];
--	volatile char below[4] = { }; /* Protect surrounding memory. */
-+	int i = 4, j = 4, k = -1;
-+	volatile struct {
-+		char above[4]; /* Protect surrounding memory. */
-+		int arr[4];
-+		char below[4]; /* Protect surrounding memory. */
-+	} data;
- 
--	above[0] = below[0];
-+	OPTIMIZER_HIDE_VAR(i);
-+	OPTIMIZER_HIDE_VAR(j);
-+	OPTIMIZER_HIDE_VAR(k);
- 
- 	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "above");
--	arr[j] = i;
-+	data.arr[j] = i;
- 
- 	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "below");
--	arr[k] = i;
-+	data.arr[k] = i;
- }
- 
- enum ubsan_test_enum {
--- 
-2.49.0.604.gff1f9ca942-goog
+It's in -next but not pending-fixes, I'm not sure what the plan is for
+getting this into mainline - Kees?  The commit log mentions getting it
+in for -rc2 so I think the plan is to merge it as a fix.
 
+--AOZwQ0Y3QWlsCkP6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf+xGEACgkQJNaLcl1U
+h9DFPwf+OYdfGrLD201NbAP7h2V0BlTol84qBYkpfizT6XKl3d7Qw0OkYMOND+em
+080if3UDivFR1Nr5i4oJ+JIyt4/1VZTteBrHiXJQABlpCw4EwIcUMGjNN1troCYK
+/fLl0X65CZBD6ESJ+HKh61xd4mJi/vZToOmYA9jrqwFOg/42lSjJmAeS6bdFI5Nc
+nEPDxsA5XgXleiWA6Zh0h7yxwq9RajtfXQuaa3qafu92v+PRcxflpElhpW+HPc0n
+IJFxd+gnsB7DFmUubz1HXPenOqixhj0KuSLdxgWlOOhjP/9AJ2YgcsbZAk/HHZoI
+5l01qe6SGWDCOtpvRM86iY1szKLVEA==
+=y8aF
+-----END PGP SIGNATURE-----
+
+--AOZwQ0Y3QWlsCkP6--
