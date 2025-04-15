@@ -1,126 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525C7253931;
-	Tue, 15 Apr 2025 23:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AE71C54B2;
+	Tue, 15 Apr 2025 23:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744758869; cv=none; b=E5mLD3AuRhWaoOW3mdJ7FLzcFph5tifKxcaX66sfqJg27/iWQo0vxesKjn/a30nxYK+g1bnwA6MEWN/9zhFc6cnjdSd3XmTTBA8iVwTeS76vfJ0ufRn3T/pysGqfH5qeLnq8KHoqEpCkO4GggDhNlYK0MQgjRgTe7DDdfBEF2gU=
+	t=1744759159; cv=none; b=Yphkon0vnjrgN6tQjtiBGsMnCidy5AGH5iY+oWp05lIJY1fxQ3DI+2BG9MO0mY+BbXcPjt2w6k51uqkzNbVmyNbQnZc7si5XOo9VOi9xic+4TwauRB7sxjQxOTEQSZ6R9auNhPlw/dcA+SLd0sFNBQ32nmSg9gJdPC8s9VN0F2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744758869; c=relaxed/simple;
-	bh=QmJhEr5w11nstQmKoltwJY506M/d/M2HxIyu1/NjuI0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F6mNz4wScoliragN+eAHNTM8MlQbgcIAdbCXkq1UuQ7+NNQD32LnNBq8M90wB2K1ZYBp68AiAVDVZAv62IPTuTkhLJ2xt586ua5IkV6PjqoLTi7pvKymC/NUKxupu5mcuFYtYM00IKI7lTUELR6JhGO5+LY/K6AqKaRV+aQJo1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJ/Wh0uv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744759159; c=relaxed/simple;
+	bh=D0lzXvZyHbFVtMo1SQrrYdaZBU12V8eTTa/+790spmY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pz4TsYjG7LuyjFesqzA8EmEXCdAWs1QVDGl0YvhPu2q5ORXz74Xi7voJL18CJ7V5+5jvlvM60Tr/p0xnCGLb0hzGtnvS1vJsg+2F7CEF4VwYv/1+A+S3r4pRZxSXmJNeK7v2p93rgoqGjuGy62qk09Y5SqsJ1MAwTDMqY/58Xa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZwmrLAYM; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJ/Wh0uv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C38E3C4CEE7;
-	Tue, 15 Apr 2025 23:14:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744758868;
-	bh=QmJhEr5w11nstQmKoltwJY506M/d/M2HxIyu1/NjuI0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZJ/Wh0uvmSLqLmS+Yt0BJLeV+O4cFAkGrsIJhJalzPjSpePJ7P/rdsYhQT20qB0vi
-	 PK0hCDaj93Cu/35cRclh96JcBwzHCkJOxNgDHU0YCH0ObMEsG+2PGd/AAPy+ktt77v
-	 L3OH7gcb17EjzgC2RyBXCmrvzhy6j80k5YcQvN5Sk1DiwEU1a28j6R6UJjr5Etv5un
-	 XPW8XGIWsJ6vOJy0Uo3SenlrCYK8Mxv2sirMzHbb4nuPwS+6HiAq+JV6dzz51yN6uu
-	 YWXbuhLP/UwZQrV6b5/z2NN+6oG9CCUoWp/J5vrrO/YD1VRK+vyqhfYbGuIGY2Q/8t
-	 KsybhVF4snLvg==
-From: Kees Cook <kees@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Pieter Jansen van Vuuren <pieter.jansen-van-vuuren@amd.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Wesley Cheng <quic_wcheng@quicinc.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] mod_devicetable: Enlarge the maximum platform_device_id name length
-Date: Tue, 15 Apr 2025 16:14:24 -0700
-Message-Id: <20250415231420.work.066-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZwmrLAYM"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2254e0b4b79so83728505ad.2;
+        Tue, 15 Apr 2025 16:19:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744759157; x=1745363957; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=6Uz8mwJwPHkVQCi8rBhtjOuyYKHaHwNNztNczM1D3jg=;
+        b=ZwmrLAYM9aFfEyQwgeexKGmX0/cahnOjPs1DHRs0WRgFCaP7UCDO0Nt1pfEe+dTv/K
+         XP2ArKCwYZHYIde8COFUJmVTX5bMbnE6mxWmgHRIqPX+fIHemZzgC9sFFbTN+ZwZqiV+
+         Z67njzsPwHWZFNb/twPV9FXbGuIk4VmjFbZRcEL9KMT94Nbi84BryvS9twmxarjmfxhM
+         Gs4FlNykYm4QgUtmp7D+6jdW3kQoUNGBNIVwlu9o9EPQjBJBhgAMeFJQIWhUyQHoCW2j
+         dfkyrbU1X7Pn7Kb60iVbX8P85Qt+p4vvydV40UukiqrYGZg7OUkryEDCziA1MW9jVfR6
+         P4cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744759157; x=1745363957;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Uz8mwJwPHkVQCi8rBhtjOuyYKHaHwNNztNczM1D3jg=;
+        b=SNdQMDy/rjToXxUrK8xGgJOxVm3Mx5HJVd3IICBqxodGpJzNIyRGI4taIOe7xY4pvG
+         kcwe1CDKqp4YFn2OMDwPPKjIyyXjRCvqFdPwi+yfExbxWc0COR8e+C+TycvlAtKKr/ji
+         IZd/PY4ZuVsEieTq/fA5zDlq9r3lfrI+tvu4WZe9O9zXHeX2y1v3FgFeOl9xj605nmz0
+         kEi5UmRS2dS4vhZzehk3y2Vnpu0oATuuoh6sKL/odcmcYPc8RY4Y0so6fnT5ct/kdD2H
+         A4PlfkY3w9bAfFum0u1Tl90fxBUu9l4q8Z6Z6Y3QAUTt/Zxm2oZJYgR75p2pGDKD8Z6o
+         w1iw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2zFFr6Hsl1cjXPit8BXAsjcTrpHV+LP7DfQHdSS2HmEy75AGFICcTEVREhS3jTuQ50i4+7OkgYCGu1cXb@vger.kernel.org, AJvYcCXo4TePHE5jK6skbZVZs7r8eibyXyBLzpoVxLMwqodyr05xuXK3X0WsCzHIk/SOChkqKH7BzVN6/VaTO6Vh5e0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyt5N3r18WBA3TBG1z2UWA+b/ihLd/VNw0eIY0szIBAnIAcwJtI
+	6rMenmsmcL/psxiMeRHgkQNDWtyJX5hDHQiR/P+5C6CVv6mzqudHeGkvWg==
+X-Gm-Gg: ASbGncvqFjB0qOClb+Tvt41gHi8uk485/M/jLvvMNQUkb9GhZg5kr57UghtTENyO8Zf
+	OF7uWSenhkPteRN4AiYAxDy1guqAOQMv4AnthoP5jQZKX0wiq8ML+kcqz81SrhWRF6jA2HTG9Cn
+	yHTvVV72PIA3M5gWSyp13HQ8LI/eJ7zNjXI6PeT0O6jnxf2puEOIS4jRRNynCAxtalYf7+8lesy
+	5LWof32TI0GWYis0yvyPAgLB/GUe/lzHCKyoO9B5jlOisSbdnBEdHvGX0ZgftT0YMsTtObslKUa
+	DzNvZWT0dM4h7PqMeGm42tj0pZbT3gfIzJ/qDVo7/bJLxgnES9JmBoyxGDaaUmgUXeHPT6Ojlds
+	X8dBmpi7bzh3obg==
+X-Google-Smtp-Source: AGHT+IEr1w8AewnfUi96g0d7L+sNevQaDEpx6nObcKwlsPmbGhuDLtAIO75xPJV0O8UtDw/711mczQ==
+X-Received: by 2002:a17:903:bd0:b0:224:192a:9154 with SMTP id d9443c01a7336-22c319f6538mr10489305ad.26.1744759156939;
+        Tue, 15 Apr 2025 16:19:16 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33f11a98sm968295ad.60.2025.04.15.16.19.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 16:19:16 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <e0976e69-1643-4b0b-a7a8-0495fb4e5dc6@roeck-us.net>
+Date: Tue, 15 Apr 2025 16:19:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3946; i=kees@kernel.org; h=from:subject:message-id; bh=QmJhEr5w11nstQmKoltwJY506M/d/M2HxIyu1/NjuI0=; b=owGbwMvMwCVmps19z/KJym7G02pJDOn/XgQ4fma0S075VbVe8dqT0OzNxkZrLh54xLs0vGmP6 h/LUKOKjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIn48DEybDX9YHPkZnBff/mx q6J9ysbWz8WXTji47tXB6MfVDY+1hBj+KfLdV7RPqv58+IiU4qk575ui9Kq1Zon9aMlJYhJp2m7 DBQA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] watchdog: exar: Shorten identity name to fit correctly
+To: Kees Cook <kees@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: linux-watchdog@vger.kernel.org, =?UTF-8?Q?David_M=C3=BCller?=
+ <d.mueller@elsoft.ch>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250415225246.work.458-kees@kernel.org>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250415225246.work.458-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The 20 byte length of struct platform_device_id::name is not long enough
-for many devices (especially regulators), where the string initialization
-is getting truncated and missing the trailing NUL byte. This is seen
-with GCC 15's -Wunterminated-string-initialization option:
+On 4/15/25 15:52, Kees Cook wrote:
+> The static initializer for struct watchdog_info::identity is too long
+> and gets initialized without a trailing NUL byte. Since the length
+> of "identity" is part of UAPI and tied to ioctls, just shorten
+> the name of the device. Avoids the warning seen with GCC 15's
+> -Wunterminated-string-initialization option:
+> 
+> drivers/watchdog/exar_wdt.c:224:27: warning: initializer-string for array of 'unsigned char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
+>    224 |         .identity       = "Exar/MaxLinear XR28V38x Watchdog",
+>        |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Fixes: 81126222bd3a ("watchdog: Exar/MaxLinear XR28V38x driver")
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-drivers/regulator/hi6421v530-regulator.c:189:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
-  189 |         { .name = "hi6421v530-regulator" },
-      |                   ^~~~~~~~~~~~~~~~~~~~~~
-drivers/regulator/hi6421v600-regulator.c:278:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
-  278 |         { .name = "hi6421v600-regulator" },
-      |                   ^~~~~~~~~~~~~~~~~~~~~~
-drivers/regulator/lp87565-regulator.c:233:11: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
-  233 |         { "lp87565-q1-regulator", },
-      |           ^~~~~~~~~~~~~~~~~~~~~~
-sound/soc/fsl/imx-pcm-rpmsg.c:818:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
-  818 |         { .name = "rpmsg-micfil-channel" },
-      |                   ^~~~~~~~~~~~~~~~~~~~~~
-drivers/iio/light/hid-sensor-als.c:457:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
-  457 |                 .name = "HID-SENSOR-LISS-0041",
-      |                         ^~~~~~~~~~~~~~~~~~~~~~
-drivers/iio/light/hid-sensor-prox.c:366:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
-  366 |                 .name = "HID-SENSOR-LISS-0226",
-      |                         ^~~~~~~~~~~~~~~~~~~~~~
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Increase the length to 24, slightly more than is currently being used by
-the affected drivers. The string is used in '%s' format strings and via
-the module code, which appears to do its own length encoding. This size
-was chosen because there was already a 4 byte hole in the structure:
-
-struct platform_device_id {
-        char                       name[20];             /*     0    20 */
-
-        /* XXX 4 bytes hole, try to pack */
-
-        kernel_ulong_t             driver_data;          /*    24     8 */
-
-        /* size: 32, cachelines: 1, members: 2 */
-        /* sum members: 28, holes: 1, sum holes: 4 */
-        /* last cacheline: 32 bytes */
-};
-
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Nipun Gupta <nipun.gupta@amd.com>
-Cc: Nikhil Agarwal <nikhil.agarwal@amd.com>
-Cc: "Borislav Petkov (AMD)" <bp@alien8.de>
-Cc: Pieter Jansen van Vuuren <pieter.jansen-van-vuuren@amd.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/mod_devicetable.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index dde836875deb..6077972e8b45 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -601,7 +601,7 @@ struct dmi_system_id {
- #define DMI_MATCH(a, b)	{ .slot = a, .substr = b }
- #define DMI_EXACT_MATCH(a, b)	{ .slot = a, .substr = b, .exact_match = 1 }
- 
--#define PLATFORM_NAME_SIZE	20
-+#define PLATFORM_NAME_SIZE	24
- #define PLATFORM_MODULE_PREFIX	"platform:"
- 
- struct platform_device_id {
--- 
-2.34.1
+> ---
+> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: linux-watchdog@vger.kernel.org
+> ---
+>   drivers/watchdog/exar_wdt.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/exar_wdt.c b/drivers/watchdog/exar_wdt.c
+> index 7c61ff343271..c2e3bb08df89 100644
+> --- a/drivers/watchdog/exar_wdt.c
+> +++ b/drivers/watchdog/exar_wdt.c
+> @@ -221,7 +221,7 @@ static const struct watchdog_info exar_wdt_info = {
+>   	.options	= WDIOF_KEEPALIVEPING |
+>   			  WDIOF_SETTIMEOUT |
+>   			  WDIOF_MAGICCLOSE,
+> -	.identity	= "Exar/MaxLinear XR28V38x Watchdog",
+> +	.identity	= "Exar XR28V38x Watchdog",
+>   };
+>   
+>   static const struct watchdog_ops exar_wdt_ops = {
 
