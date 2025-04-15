@@ -1,70 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B95619F11F;
-	Tue, 15 Apr 2025 16:29:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35CC2144DB;
+	Tue, 15 Apr 2025 17:00:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744734572; cv=none; b=fADH3iGzmMEgmmoeb85I2GKOkUBMhlCi7s6eSB6uWa5trm1R4GdvHIZ/aSsCvKb6n9K9XmalJfKc86qQ3g7vIJDkZHW//toKH080Sm8G3iGx5NPu6HmFilJRdIeTHBsuuUHNqecvxWq+kksl8lKlAOSf372Y1yLEBeqSH8i9DDI=
+	t=1744736403; cv=none; b=rtwfXCUqnS0uk4r6m2P8i+f/OaQmelsb4uMAyaamm9VfUFu9Q81ssMVa48Q6YXeN0lTSlgA1HZ+VGaGrmMQOUBl6dXRl8Jn4kmUkup+CjQo1kNrYjvZdHGenKHuws1hJ3y0HEWB1zPfLx8/gaJA9ItXJER9PAT1jB4bVGJ213GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744734572; c=relaxed/simple;
-	bh=N0EmEElYpU/e4cDljzDCDa5v6XT89r7iNvCAZRNdzxU=;
+	s=arc-20240116; t=1744736403; c=relaxed/simple;
+	bh=K5ffwUoIPZMzOdb9wN+7SAH5h6bX8pLcajxWE/Iis2s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IUwzydBirpHeqHDFyxmBOaV2P81qiN4pk88WqTQjRcyeMxp+JiYTC6GDQfDJxUBShKWtXwTTt1auK0mdZUvFDfcFPjSs+ID4aMTfF6u/b9OawBDVYHPqhPYqHS7CS8PvFjf6Zpy7aMiVhwQlTr69Q8MQ4be/2TpFLWlqM9BR9vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RC3prLA1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=W+cZInrMHxxNRqS7EdoO3CU+xQe3GkDAOx/yJJ0IJsMtHhGz5oR20nqQ6borrjWnkeMKhM28H5nO0gE69nAHR2wNwos2fEs5FH/PKooLTN2g7x43VlsSXCTeW1+kGOo1Fi+x9jaPN0RckhHJtM3JlDwQq30fofRr3zye/CHFzTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=edUbzBjj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RC3prLA1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 253D8C4CEEB;
-	Tue, 15 Apr 2025 16:29:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="edUbzBjj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12E4BC4CEE9;
+	Tue, 15 Apr 2025 17:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744734571;
-	bh=N0EmEElYpU/e4cDljzDCDa5v6XT89r7iNvCAZRNdzxU=;
+	s=k20201202; t=1744736403;
+	bh=K5ffwUoIPZMzOdb9wN+7SAH5h6bX8pLcajxWE/Iis2s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RC3prLA1Icp60GmlzXhlHlvfG5Fymk6EJ53q7SPjTFO91Ik/XUglo8irNzn4yJ/I/
-	 jdbjLAGb3OX6NJ3t6I4aGZF/GSm+OVfQoDYhiSPzylt+c4whDAIUdWgyiS3IMFH+e2
-	 V4kOm1pEbTBp4H3I8QXuwJuMnpCZ0subL8hJGbYxE0ZlB0KGPPLdSSWUow3bPNXUME
-	 KQYATuYAbrjdbWCWGWZE9J7zEY3nz5U1JME3MfNExXDOQJYciTFxwV3J5a4sUxa6qu
-	 F5Vc7Ye0Bc7qTcs33nVHGWWo7Li4GoZ9hjEACJK+PhQMty8KU5G6q65Zui4BS9Gw8y
-	 ohZvlKC+/y9jQ==
-Date: Tue, 15 Apr 2025 09:29:29 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: stable@vger.kernel.org, kernel test robot <lkp@intel.com>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-bluetooth@vger.kernel.org, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Manish Mandlik <mmandlik@google.com>, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Bluetooth: vhci: Avoid needless snprintf() calls
-Message-ID: <5b2vwh4a2gp25wovqx26rbeveo7q6nbwg7c5pnsbsddyg434yc@ug6zgdwg5xel>
-References: <20250415161518.work.889-kees@kernel.org>
+	b=edUbzBjjOmodaXj6JfbuCpTgUp2PWa37c1CGYhXKWoY0uDuA5eSN6qrmxKwUZOtZE
+	 iC/8CHBAPcHyDLW6By/H2BS/HBP1apDreRO0gpTS9DJM7ksbPOOHAN9GOoZIxl1NWl
+	 vloz5ui324K8NL3oA5ZCbY/daYek0pmLRc0k06EmM1LbbiJNFuW90CZJmqpAR70tuG
+	 PYKLbUaQIS9x9wLJpsuKmbFpTT8WTN9W7XCOdqZCaLKEZWuEF1GYUr3YTNxlbD1wGN
+	 /gCkpoDEHp/I1Edrp1av53pb84/+h59ZyzDgZD5tGBr5YcD2bo/3FzEVCOwIuoADYK
+	 pqtWr5YahT1UA==
+Date: Tue, 15 Apr 2025 10:00:00 -0700
+From: Kees Cook <kees@kernel.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Sergio Perez Gonzalez <sperezglz@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	Thomas Huth <thuth@redhat.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] slab: Decouple slab_debug and no_hash_pointers
+Message-ID: <202504150956.9AFF9545@keescook>
+References: <20250410174428.work.488-kees@kernel.org>
+ <Z_0AFjai6Bvg-YLD@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415161518.work.889-kees@kernel.org>
+In-Reply-To: <Z_0AFjai6Bvg-YLD@pathway.suse.cz>
 
-On Tue, Apr 15, 2025 at 09:15:19AM -0700, Kees Cook wrote:
-> Avoid double-copying of string literals. Use a "const char *" for each
-> string instead of copying from .rodata into stack and then into the skb.
-> We can go directly from .rodata to the skb.
+On Mon, Apr 14, 2025 at 02:31:42PM +0200, Petr Mladek wrote:
+> On Thu 2025-04-10 10:44:31, Kees Cook wrote:
+> > Some system owners use slab_debug=FPZ (or similar) as a hardening option,
+> > but do not want to be forced into having kernel addresses exposed due
+> > to the implicit "no_hash_pointers" boot param setting.[1]
+> > 
+> > Introduce the "hash_pointers" boot param, which defaults to "auto"
+> > (the current behavior), but also includes "always" (forcing on hashing
+> > even when "slab_debug=..." is defined), and "never". The existing
+> > "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
+> > 
+> > This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
 > 
-> This also works around a Clang bug (that has since been fixed[1]).
+> The idea makes sense. But it seems that the patch did not handle
+> the "always" mode correctly, see below.
+
+Actually, it was the "never" mode that was being ignored. Whoops! (The
+double negation language is a little odd.) I've fixed this for v2 with
+an explicit switch statement.
+
+> > -int __init no_hash_pointers_enable(char *str)
+> > +void __init hash_pointers_finalize(bool slub_debug)
+> >  {
+> > -	if (no_hash_pointers)
+> > -		return 0;
+> > +	if (hash_pointers_mode == HASH_PTR_AUTO && slub_debug)
+> > +		no_hash_pointers = true;
+> >  
+> > -	no_hash_pointers = true;
+> > +	if (!no_hash_pointers)
+> > +		return;
+> >  
+> >  	pr_warn("**********************************************************\n");
+> >  	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202401250927.1poZERd6-lkp@intel.com/
-> Fixes: ab4e4380d4e1 ("Bluetooth: Add vhci devcoredump support")
-> Link: https://github.com/llvm/llvm-project/commit/ea2e66aa8b6e363b89df66dc44275a0d7ecd70ce [1]
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> 
+> The mode/policy is generic but this function is ready to be called
+> only once. And we might actually want to call it twice, see below.
 
-Thanks!
+I'd like to keep it a single call. I feel this simplifies the reporting
+logic, keeps the selection logic in one place, and allows us to
+trivially examine that it is safe to use with __init.
 
-Reviewed-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Thanks for the review!
 
 -- 
-Josh
+Kees Cook
