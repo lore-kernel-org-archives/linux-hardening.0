@@ -1,40 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6019A25525E;
-	Tue, 15 Apr 2025 20:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495782550C6;
+	Tue, 15 Apr 2025 20:47:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744749819; cv=none; b=aGLhInv2FMLCv2teYgr+AAao6vvejE8FughIuOFl0TmsA33JuBgPP5fI1y5ISzeUlTWh5XBmiSpDyNtFU+fwPX6vojLIoYrJsfmDodQvRQOlU9TB7y1qbSghMTgjsslf9Vij5vq24gL3NRuFX8z+L6U+6+P6j5mAbHcaWWyV4/4=
+	t=1744750032; cv=none; b=NJSCeY0/0PMUZhfjU9spt9lS82ltGGBleL6SXbAjg1lsNzdxHFqmF1oyos8ucNiVAkBdgd34MFGcPy+DhUgqayZSBtx103sNtpQW6n3UN8sv+M2Tuc7dYmllXtsm89bsXQ5bSwVVlA8SbqmcvzpMLikEWkAJiEJdISK4NpixRew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744749819; c=relaxed/simple;
-	bh=1EYMhKxcRTGteJOZXgc+9Mq4KqYNF9X4ORio08rRZe0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AOipBuIarTTP/MW/LCXkV8+IybE5HjPnfaAcVk5xOmO0zf4Q4xcrSYykmfqq2p70Vk+QGquzCSwB6bv/0dTI00bh/Vj967FNptGdnid1LbQRflL1+utMfdZ3N5d2SpFYPifNBgk5AWLsxpgqyD2LN/zzH1rk17xWUG223QNGl54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yntpc1eL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744750032; c=relaxed/simple;
+	bh=r7uM/9g94EHTRq00KXQL6go1X6wAY1HdtWiU8hwnLzg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=c3AOkWdBBu3PT208XxGw3kjK1HoMfRsGEq/lAzCdFij6JxOrytvLqr+rfFY5VY2WNfoay/xKAKdFZzfAT6OJ0eZ29tFffQ7T0F+AZ270m2U5sT78QnWqqERqvkqPQI31EUXlENDynIB0av/ZwV8yZbXPWxu09Qm7jFcll48c3tY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qh1G5a9X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yntpc1eL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DED9C4CEE7;
-	Tue, 15 Apr 2025 20:43:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qh1G5a9X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD6BC4CEEB;
+	Tue, 15 Apr 2025 20:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744749819;
-	bh=1EYMhKxcRTGteJOZXgc+9Mq4KqYNF9X4ORio08rRZe0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yntpc1eLYzygWqALEt6TgeHFdDkjme0qwJLRDQQnmQQ4IBHNmsiLd3xYrcJPXAMdI
-	 Knng/iNI+DJ9PYj4LkXZGvXgn2NlZaEbo33Zwv8+EzwoJnO874IDL/xIsbAzMepcqe
-	 ieBsBctbhoZC93k+efuD8jcjBKo6C3I4ZJbNynJhBQEnutSbwEZP19qz9dfTWytMi/
-	 ySJ7qHEDtioOb8jZvH8kIzhhcncbaGkmTapHT6gnAkPZt56XeaT9ImOLfj/8AMsId4
-	 qCPZZvVFIAAhY394uS2y0iAL8CmjSAi45i7LR8AihNXvLRVFElghLMcKlfow1YYGLM
-	 ZPPpDJXQN16XQ==
-Date: Tue, 15 Apr 2025 13:43:36 -0700
+	s=k20201202; t=1744750031;
+	bh=r7uM/9g94EHTRq00KXQL6go1X6wAY1HdtWiU8hwnLzg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Qh1G5a9XxCtz6MRT8Zo6lIgGHQjZxEcb0C8pOjI2UPOcx52U6ZppVxifvvVG4Gkb8
+	 xc/3pD5slwUQdqKQB/YjtZeIYajZ31ZOKSbGSMw8JBUVe2tBpOKOdoRXaGgThJlERn
+	 LAL05IZ4b7h8lIFZqf98JsL4Y5+B9Z1wgKp9AYEIbpfSbg2kL9ZiBbSfkL7FNQd/Xj
+	 +zkE15wodl7NiyBSjGUuf8Cd0xN8Q9YgeJcJT87ASFKoADD64bwy4qv+oNn2D52Xi/
+	 H6JGVnilmy+X88w3OOlF0JCuHaNsFS92nzfxIjiACo9pZP4E9sQglQJSM9TAVGpDhy
+	 60oaaA2AhCvYg==
 From: Kees Cook <kees@kernel.org>
-To: Mostafa Saleh <smostafa@google.com>
-Cc: linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
-	elver@google.com, andreyknvl@gmail.com, ryabinin.a.a@gmail.com
-Subject: Re: [PATCH v2] lib/test_ubsan.c: Fix panic from
- test_ubsan_out_of_bounds
-Message-ID: <202504151343.794CF53@keescook>
+To: linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
+	Mostafa Saleh <smostafa@google.com>
+Cc: Kees Cook <kees@kernel.org>,
+	akpm@linux-foundation.org,
+	elver@google.com,
+	andreyknvl@gmail.com,
+	ryabinin.a.a@gmail.com
+Subject: Re: [PATCH v2] lib/test_ubsan.c: Fix panic from test_ubsan_out_of_bounds
+Date: Tue, 15 Apr 2025 13:46:51 -0700
+Message-Id: <174475000897.3429336.4470350657359091880.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250415203354.4109415-1-smostafa@google.com>
 References: <20250415203354.4109415-1-smostafa@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -42,11 +48,10 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415203354.4109415-1-smostafa@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 15, 2025 at 08:33:54PM +0000, Mostafa Saleh wrote:
+On Tue, 15 Apr 2025 20:33:54 +0000, Mostafa Saleh wrote:
 > Running lib_ubsan.ko on arm64 (without CONFIG_UBSAN_TRAP) panics the
 > kernel
 > 
@@ -64,30 +69,15 @@ On Tue, Apr 15, 2025 at 08:33:54PM +0000, Mostafa Saleh wrote:
 > [   31.655077]  do_one_initcall+0xd4/0x280
 > [   31.655680]  do_init_module+0x58/0x2b4
 > 
-> That happens because the test corrupts other data in the stack:
-> 400:   d5384108        mrs     x8, sp_el0
-> 404:   f9426d08        ldr     x8, [x8, #1240]
-> 408:   f85f83a9        ldur    x9, [x29, #-8]
-> 40c:   eb09011f        cmp     x8, x9
-> 410:   54000301        b.ne    470 <test_ubsan_out_of_bounds+0x154>  // b.any
-> 
-> As there is no guarantee the compiler will order the local variables
-> as declared in the module:
->         volatile char above[4] = { }; /* Protect surrounding memory. */
->         volatile int arr[4];
->         volatile char below[4] = { }; /* Protect surrounding memory. */
-> 
-> There is another problem where the out-of-bound index is 5 which is larger
-> than the extra surrounding memory for protection.
-> 
-> So, use a struct to enforce the ordering, and fix the index to be 4.
-> Also, remove some of the volatiles and rely on OPTIMIZER_HIDE_VAR()
-> 
-> Signed-off-by: Mostafa Saleh <smostafa@google.com>
+> [...]
 
-Looks good; thanks!
+Applied to for-linus/hardening, thanks!
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+[1/1] lib/test_ubsan.c: Fix panic from test_ubsan_out_of_bounds
+      https://git.kernel.org/kees/c/7fd007c84e4b
+
+Take care,
 
 -- 
 Kees Cook
+
