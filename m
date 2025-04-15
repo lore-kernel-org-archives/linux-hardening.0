@@ -1,111 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF0A4A23;
-	Tue, 15 Apr 2025 00:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66CD2DFA34;
+	Tue, 15 Apr 2025 07:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744675456; cv=none; b=iHbiDX/ljAF2Ck0+HA0GIgIb9cRuKY3EWWh4cfzrzVHx4WLAaCmR0rRfero7XOHFcnqOcIttXD7dBMrj9KhIIQIoFCL0B8f63FiM9z8y/a+r85rKVp+eQlJjUvw9QJn3Dd//352aBN95frr4PYOo6BC8h/+FjoMjJ3/EgeJGzr0=
+	t=1744700473; cv=none; b=byB5AGN24aa+PO1VFDc9pWKfepFzr9xj743ZNcomygD0hGv/CPM1Kl2UE41+V0LWE/nf8EpRUMbGMffsdmwj8UDo/+rB9rjK1dROWuP32dFMSeWO0xXTsP5IKtgDGKEyvNxOLE8paOoahh15ZpDzFh6XZKtDHGajdZc0F+jQhco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744675456; c=relaxed/simple;
-	bh=lifbmNCQmU9zh2B3tmcVoijI433snnQDoYy9dEDxz28=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=M3EQ26tW1bJgvuY4WayYBalgZ4ohqMVD0CONPEAC6ecCMfvtFvA1XceSi1XuzL8L/4ihO3Qwn4y2ymYUuAfWAB9FpEmFCHAquaye6xsT4tojhb+sr4WFFzOlDmNDbTw8ggfkG/MW7MC1Wc1/LM1NWiQPHioTYjaKSabt6ephGpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KMQ3JZY8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744700473; c=relaxed/simple;
+	bh=tP1nLNEOryZ2Rfki3LWUs8Eu0CqMBbLY8xZy7cXBm1M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qkf/lOSOyTBFmzjXZmz+U7xBq44JTFS37ib3JvAewk26CyZSDlUOfR3iAoM9WLvecfJCVNUOGjWWQulgzdVpOvi93tzJ/ZzyTklKRqHC7gVj9qq6Afx4gan7C6PfBWZSozwcxrcoKiqn+s2u2rfOhhkV/vup9OanmHlgE7QTE6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KM18OPyt; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KMQ3JZY8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3EFDC4CEE2;
-	Tue, 15 Apr 2025 00:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744675456;
-	bh=lifbmNCQmU9zh2B3tmcVoijI433snnQDoYy9dEDxz28=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=KMQ3JZY8G8JX5h1ArhbPlvN9ZBlJZp5m5Ed9WPLttWLYSU8bps0lDdTxHm+PZDane
-	 z4a08HxJ3lTPcWLdU04ZKydOpJum82B74lLRr40O9ku39CweW2kgBZMee/F8Uj/EFZ
-	 hiXHMd70BbJBnpBQfkZi0oRrevKksyvo3wMg0dQc=
-Date: Mon, 14 Apr 2025 17:04:14 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Mostafa Saleh <smostafa@google.com>
-Cc: linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
- linux-hardening@vger.kernel.org, kees@kernel.org, elver@google.com,
- andreyknvl@gmail.com, ryabinin.a.a@gmail.com
-Subject: Re: [PATCH] lib/test_ubsan.c: Fix panic from
- test_ubsan_out_of_bounds
-Message-Id: <20250414170414.74f1c4e3542b1f10c8b24d90@linux-foundation.org>
-In-Reply-To: <20250414213648.2660150-1-smostafa@google.com>
-References: <20250414213648.2660150-1-smostafa@google.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KM18OPyt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744700471; x=1776236471;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tP1nLNEOryZ2Rfki3LWUs8Eu0CqMBbLY8xZy7cXBm1M=;
+  b=KM18OPytoj12OMm8L7QAJ8kgYc8yLznReoS8MSs+G5sRmABv8xGrNTSk
+   KJnColaZQvQ5VUj4SuWFzyuNmu/8OX2FE/FD5JBrbJ7ILU/lGexHninDr
+   +AVoLVy/tbCmYA3Kgx6jdLNAccOZBZwtEgGwn3wmX0+c5KjPLDq2XCJ6I
+   o3A4zlRPK5+SVzEPxCCKIPkAZgGD7Jc+zxadfPWqBe0fV3o6auRJE+TQH
+   WS41PuXsSL9b/6/81StljZxqy+it8t/o+ZPnRdpa/1y+1GPB+jwWu5bFs
+   096jdz7qkGwpjLuXzpG/uaibaWHwPTxQOPxOApHFhJ2lQZQXxnCKwLKMm
+   A==;
+X-CSE-ConnectionGUID: L8W0ygYzRlGp1Gf/wHN25A==
+X-CSE-MsgGUID: JIRDwf/oRBunTN4nGlb4lA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="49845957"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="49845957"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:01:10 -0700
+X-CSE-ConnectionGUID: pMPcLX8ESJ22RSF9di3EvQ==
+X-CSE-MsgGUID: MoBCwUo+Tl+cMeqTJnpNSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="129999895"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:01:07 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u4aI4-0000000CT86-0em2;
+	Tue, 15 Apr 2025 10:01:04 +0300
+Date: Tue, 15 Apr 2025 10:01:03 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <kees@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 00/33] Implement kernel-doc in Python
+Message-ID: <Z_4EL2bLm5Jva8Mq@smile.fi.intel.com>
+References: <cover.1744106241.git.mchehab+huawei@kernel.org>
+ <871pu1193r.fsf@trenco.lwn.net>
+ <Z_zYXAJcTD-c3xTe@black.fi.intel.com>
+ <87mscibwm8.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87mscibwm8.fsf@trenco.lwn.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, 14 Apr 2025 21:36:48 +0000 Mostafa Saleh <smostafa@google.com> wrote:
-
-> Running lib_ubsan.ko on arm64 (without CONFIG_UBSAN_TRAP) panics the
-> kernel
+On Mon, Apr 14, 2025 at 09:17:51AM -0600, Jonathan Corbet wrote:
+> Andy Shevchenko <andriy.shevchenko@intel.com> writes:
+> > On Wed, Apr 09, 2025 at 12:30:00PM -0600, Jonathan Corbet wrote:
+> >> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> >> 
+> >> > This changeset contains the kernel-doc.py script to replace the verable
+> >> > kernel-doc originally written in Perl. It replaces the first version and the
+> >> > second series I sent on the top of it.
+> >> 
+> >> OK, I've applied it, looked at the (minimal) changes in output, and
+> >> concluded that it's good - all this stuff is now in docs-next.  Many
+> >> thanks for doing this!
+> >> 
+> >> I'm going to hold off on other documentation patches for a day or two
+> >> just in case anything turns up.  But it looks awfully good.
+> >
+> > This started well, until it becomes a scripts/lib/kdoc.
+> > So, it makes the `make O=...` builds dirty *). Please make sure this doesn't leave
+> > "disgusting turd" )as said by Linus) in the clean tree.
+> >
+> > *) it creates that __pycache__ disaster. And no, .gitignore IS NOT a solution.
 > 
-> [   31.616546] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: test_ubsan_out_of_bounds+0x158/0x158 [test_ubsan]
-> [   31.646817] CPU: 3 UID: 0 PID: 179 Comm: insmod Not tainted 6.15.0-rc2 #1 PREEMPT
-> [   31.648153] Hardware name: linux,dummy-virt (DT)
-> [   31.648970] Call trace:
-> [   31.649345]  show_stack+0x18/0x24 (C)
-> [   31.650960]  dump_stack_lvl+0x40/0x84
-> [   31.651559]  dump_stack+0x18/0x24
-> [   31.652264]  panic+0x138/0x3b4
-> [   31.652812]  __ktime_get_real_seconds+0x0/0x10
-> [   31.653540]  test_ubsan_load_invalid_value+0x0/0xa8 [test_ubsan]
-> [   31.654388]  init_module+0x24/0xff4 [test_ubsan]
-> [   31.655077]  do_one_initcall+0xd4/0x280
-> [   31.655680]  do_init_module+0x58/0x2b4
+> If nothing else, "make cleandocs" should clean it up, certainly.
 > 
-> That happens because the test corrupts other data in the stack:
-> 400:   d5384108        mrs     x8, sp_el0
-> 404:   f9426d08        ldr     x8, [x8, #1240]
-> 408:   f85f83a9        ldur    x9, [x29, #-8]
-> 40c:   eb09011f        cmp     x8, x9
-> 410:   54000301        b.ne    470 <test_ubsan_out_of_bounds+0x154>  // b.any
-> 
-> As there is no guarantee the compiler will order the local variables
-> as declared in the module:
+> We can also tell CPython to not create that directory at all.  I'll run
+> some tests to see what the effect is on the documentation build times;
+> I'm guessing it will not be huge...
 
-argh.
+I do not build documentation at all, it's just a regular code build that leaves
+tree dirty.
 
-> 	volatile char above[4] = { }; /* Protect surrounding memory. */
-> 	volatile int arr[4];
-> 	volatile char below[4] = { }; /* Protect surrounding memory. */
-> 
-> So, instead of writing out-of-bound, we can read out-of-bound which
-> still triggers UBSAN but doesn't corrupt the stack.
+$ python3 --version
+Python 3.13.2
 
-Would it be better to put the above three items into a struct, so we
-specify the layout?
+It's standard Debian testing distribution, no customisation in the code.
 
-> --- a/lib/test_ubsan.c
-> +++ b/lib/test_ubsan.c
-> @@ -77,18 +77,15 @@ static void test_ubsan_shift_out_of_bounds(void)
->  
->  static void test_ubsan_out_of_bounds(void)
->  {
-> -	volatile int i = 4, j = 5, k = -1;
-> -	volatile char above[4] = { }; /* Protect surrounding memory. */
-> +	volatile int j = 5, k = -1;
-> +	volatile int scratch[4] = { };
->  	volatile int arr[4];
-> -	volatile char below[4] = { }; /* Protect surrounding memory. */
-> -
-> -	above[0] = below[0];
->  
->  	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "above");
-> -	arr[j] = i;
-> +	scratch[1] = arr[j];
->  
->  	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "below");
-> -	arr[k] = i;
-> +	scratch[2] = arr[k];
->  }
+To reproduce.
+1) I have just done a new build to reduce the churn, so, running make again does nothing;
+2) The following snippet in shell shows the issue
+
+$ git clean -xdf
+$ git status --ignored
+On branch ...
+nothing to commit, working tree clean
+
+$ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
+make[1]: Entering directory '...'
+  GEN     Makefile
+  DESCEND objtool
+  CALL    .../scripts/checksyscalls.sh
+  INSTALL libsubcmd_headers
+.pylintrc: warning: ignored by one of the .gitignore files
+Kernel: arch/x86/boot/bzImage is ready  (#23)
+make[1]: Leaving directory '...'
+
+$ touch drivers/gpio/gpiolib-acpi.c
+
+$ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
+make[1]: Entering directory '...'
+  GEN     Makefile
+  DESCEND objtool
+  CALL    .../scripts/checksyscalls.sh
+  INSTALL libsubcmd_headers
+...
+  OBJCOPY arch/x86/boot/setup.bin
+  BUILD   arch/x86/boot/bzImage
+Kernel: arch/x86/boot/bzImage is ready  (#24)
+make[1]: Leaving directory '...'
+
+$ git status --ignored
+On branch ...
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	scripts/lib/kdoc/__pycache__/
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+It's 100% reproducible on my side. I am happy to test any patches to fix this.
+It's really annoying "feature" for `make O=...` builds. Also note that
+theoretically the Git worktree may be located on read-only storage / media
+and this can induce subtle issues.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
