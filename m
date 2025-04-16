@@ -1,81 +1,78 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9E02236F4
-	for <linux-hardening@vger.kernel.org>; Wed, 16 Apr 2025 19:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6FC28373;
+	Wed, 16 Apr 2025 19:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744830634; cv=none; b=dpChndSyrzQclJEGRNKLCXezcOD797b09pltua47CC/TTK7J+cOd+gmMoYv8nh6YTkce+9nye87+XZ+DrvPx0nHrzG+z4QX3fW3M96cZyiJCMUH0gWgruGeWdNAXbqz2gcJpKcAnKE3QcvDYGSte03cwH5s4gpgsnkjAoncAFtk=
+	t=1744831799; cv=none; b=TY1H1QZND0yNJmbcHV3kQlUzmUrZrIJ+DI+g8eOC3QQ8Ivid6cLho/pBvJhjGtrzqHo+EJHFj1US9kMVDFsYj98iecdzC5OqWOWiRkMOmwffn2+lMSYk8Ar/u2cGYcPlrcNBntz1vrALEI5+JfOrEOycd2/fXLrWYhAqcn0mpus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744830634; c=relaxed/simple;
-	bh=NYcXxrwtogTaNVEDhGFmHHFJqW4cwC8+ZiQeJ7XxKfc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mDWcA9++t4RL6dGUqwC6aFaHJ8b9OEZHb8JFhzCxOBWSR+r4OQGB92EYV2JcAxJZNOHluIqM+psOsOAqV2oaFjfBu1iH9a3MNbyAFnW3IgQGaFw3ZaAPUA5BoPKMChnyMFcgT6/l/Q5gqGUJ/q1eaQsxacRUbqokVBzVDWLFkhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FTLN0vhH; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744831799; c=relaxed/simple;
+	bh=Dp9xsrRHfTCGaPrVBtmOH3bhHIpWaLITX6fhTfah+Fc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fj6jsOHrPmnaNA2hoXdZFiTF0uZKBLP78AQ2N2fc+cuM65W7mIV9a+Z97UP5MLIypkw+lDNma+ZGXbseeF757dAatDgKIaIM9d04nSiQMXDE5ufmbxEwoK3LLPsv8uTLJsFEJJcruWCRHQkhOCtrb5b2bZbx+NNbCJhr7mo/l5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+1sDu4N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FTLN0vhH"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744830620;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ah8gXRejPfDI4sv7sqjLt/LNTQ/T0TzBT0ooaVXKL8c=;
-	b=FTLN0vhHYwuWObPszCflRy8pJJ3dCNL0xSurgNG/cX0OpdICaaiEHVtv/ogsMjk3i76nbu
-	Dx60Gbrwp1fkKy+tlDthZXn4g8/k6XU5EyE4NMEQIH3l5J3pUAUv9HedCosrkFbNNa9NwZ
-	vqoj8iWDBaTPuZHZz5c7Xn6SMGqtumE=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Dinh Nguyen <dinguyen@kernel.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] nios2: Replace strcpy() with strscpy() and simplify setup_cpuinfo()
-Date: Wed, 16 Apr 2025 21:09:07 +0200
-Message-ID: <20250416190908.15263-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+1sDu4N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EB6FC4CEE2;
+	Wed, 16 Apr 2025 19:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744831799;
+	bh=Dp9xsrRHfTCGaPrVBtmOH3bhHIpWaLITX6fhTfah+Fc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=E+1sDu4NPecnwL4gjR+TbsptTGOygfUtfBgtv5FchhZdt2Mou4+D3iSPBTI12Z+7s
+	 VflUkDkA858S9A1NYYa+5kDL9z+DnggybcjRv9GLAgFdQjeRx1OX3S6wKcHrGz+uzT
+	 ZxI4zYo10IHQKXVldiAhwAUBFh5lsf9yF/iUVWV4GMiJ1qBZfunjRvNsJFgBD58Ixd
+	 5O19+Hj4PpO29tpscRTBR4qXn9C10BeX40iuhLjOATES9ZaslXNA9FWLirWz6uhPif
+	 /gNSdMc+75Z32JL4STWAVL62bkUTWK3tdKAZ3f6YSoyNcFjSsyVO9rl5GtUzmPAj6d
+	 h8IdZFyd0t/pg==
+From: Kees Cook <kees@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Kees Cook <kees@kernel.org>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Marco Elver <elver@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	llvm@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Tony Ambardar <tony.ambardar@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] compiler_types: Identify compiler versions for __builtin_dynamic_object_size
+Date: Wed, 16 Apr 2025 12:29:46 -0700
+Message-Id: <174483177862.740549.10024436361838890808.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250416172016.work.154-kees@kernel.org>
+References: <20250416172016.work.154-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-strcpy() is deprecated; use strscpy() instead.
+On Wed, 16 Apr 2025 10:20:20 -0700, Kees Cook wrote:
+> Clarify when __builtin_dynamic_object_size() is available. All our
+> supported Clang versions support it. GCC 12 and later support it. Link
+> to documentation for both.
+> 
+> 
 
-Since the destination buffer has a fixed length, strscpy() automatically
-determines its size using sizeof() when the size argument is omitted.
-This makes the explicit size argument unnecessary - remove it.
+Applied to for-next/hardening, thanks!
 
-Now, combine both if-else branches using strscpy() and the same buffer
-into a single statement to simplify the code.
+[1/1] compiler_types: Identify compiler versions for __builtin_dynamic_object_size
+      https://git.kernel.org/kees/c/833dd6a6a1b1
 
-No functional changes intended.
+Take care,
 
-Link: https://github.com/KSPP/linux/issues/88
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/nios2/kernel/cpuinfo.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/arch/nios2/kernel/cpuinfo.c b/arch/nios2/kernel/cpuinfo.c
-index 7b1e8f9128e9..55882feb6249 100644
---- a/arch/nios2/kernel/cpuinfo.c
-+++ b/arch/nios2/kernel/cpuinfo.c
-@@ -46,10 +46,7 @@ void __init setup_cpuinfo(void)
- 	cpuinfo.cpu_clock_freq = fcpu(cpu, "clock-frequency");
- 
- 	str = of_get_property(cpu, "altr,implementation", &len);
--	if (str)
--		strscpy(cpuinfo.cpu_impl, str, sizeof(cpuinfo.cpu_impl));
--	else
--		strcpy(cpuinfo.cpu_impl, "<unknown>");
-+	strscpy(cpuinfo.cpu_impl, str ?: "<unknown>");
- 
- 	cpuinfo.has_div = of_property_read_bool(cpu, "altr,has-div");
- 	cpuinfo.has_mul = of_property_read_bool(cpu, "altr,has-mul");
 -- 
-2.49.0
+Kees Cook
 
