@@ -1,113 +1,179 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADB222154C
-	for <linux-hardening@vger.kernel.org>; Wed, 16 Apr 2025 18:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E98219A68
+	for <linux-hardening@vger.kernel.org>; Wed, 16 Apr 2025 18:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744826729; cv=none; b=eq+pycTMT4LjznJF65PYqW1an34FGvXe9hhYFfwTcIiaYHxQcHTRuEJ9wRex+7LwLOSDawO5oeyh3U21XdiExfa4URbyNXE0IHkBXYUppGzZJxxaCk5e3YqYhruSXxLpHxAnm4NZgdci0Tp5o58rrPz8ZuXcNO4xkFLKGLABrSY=
+	t=1744828095; cv=none; b=ZT/6dRlckYoAxX+CwikonrBzFswTMlrVkagGBTZRpAPDgCM4CJHbabRNkAQJqsDmdaE6yNW7hOeAWlf77HFGv/B6elzRLZOCVxgcI7uNFe0T/KuGfa/Ghd+H6DVMYNgciRA4apborfsgXopquPHUOLkuDE8iq68Kd+z0r6v9VOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744826729; c=relaxed/simple;
-	bh=YF46acwvxQZbvh+RKbVxSqYbt3n7AeN8CBy/samnYi8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MOI1pMvisIjrpTpReeFhUUAzuVRt23MqRb8fOC6PHKYbMTMRAviNI15bDZgodm5ta0m75RkdKBWEoII8UTThUFu0pS7tTM8cCl8+kNocYzPvgDgdSI7GUgHtLPrQ1qgD2zj87VdhvIZ+jmp4jv6OUQ3/mELT10vWXrVFqoDmssg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cC7883lH; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com
+	s=arc-20240116; t=1744828095; c=relaxed/simple;
+	bh=bUBb5mFoJb9G5BgJnxotUeKRdbd+vsxPnYgjdZX4OYs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AVbtUgHM3aX5fx552Jow6JeAoC5sIVuUGaiUdT54VDEg7DbETcOjWE803ykzj+yC00qIS1F6qBR3HYMVXitocAV5M6IGBaTZs9eXYvshkBL/sG4glEH8xpcaaXRKWvLHNOrfLWhQXeJRRZNyHYSZNmTs8aWjLwEJDe91G/DDKWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N/jKgODi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cC7883lH"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso5746565e9.1
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Apr 2025 11:05:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744826726; x=1745431526; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xO8p3wWnMTFzkHmEwWDOeYMg/xjqFsfP9HNTtGIh/qY=;
-        b=cC7883lHchJz5AIkmC44j1rVv/r6Bw0NPOcQ1H5ZyOvmAcWVDQbM5vjbnN56z2QpGt
-         cthSuDEUo8FNq26kjHgIzeZRqRlGlnZTnuMM83e0uCjjK4gIsqTW8JUvVqxO2M9i6zA9
-         1RR8Kin0REtCRasGEQ7s/OJf65oEmFOh4QW1zuoSmzUHpxPXgvlf/fMg7WWPcjndob1m
-         inXL26z767k60cOHd/45GA1WqGDkEdskt+tENXh9rY6DRXVvbqm5MP4lo3VZaV1IL3rs
-         kNzImyGxAFZidg1rkTaUkAMMm0CYOXD02MvDBIp/UO/AjG1zBDaJ8JeDqCmgfG1yiOGT
-         XhOQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N/jKgODi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744828092;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HqpDy6pI/eQq6luBbGPAlrOSVzuf9WMRWlny/FPlhAY=;
+	b=N/jKgODiMfC3vcx8z2fi3OkMZvH6OKmjaXhJ8990sU4cBUhu3QhkhaF+0ymz+aymWfN077
+	2pNGDXKteyA8s5Xs30JTXIM0eBo/e63ffK0zTZ4hUaN8pfjUb3VKqIgL5UKYCzpkvwnvuD
+	9jpR8YySGDuNvRKyql2NC50eP/Cf7XY=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-411-_t4_xbggNLqykm0mQ2elIA-1; Wed, 16 Apr 2025 14:28:11 -0400
+X-MC-Unique: _t4_xbggNLqykm0mQ2elIA-1
+X-Mimecast-MFC-AGG-ID: _t4_xbggNLqykm0mQ2elIA_1744828090
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac3e0c13278so633321466b.1
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Apr 2025 11:28:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744826726; x=1745431526;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xO8p3wWnMTFzkHmEwWDOeYMg/xjqFsfP9HNTtGIh/qY=;
-        b=wpEqk2Fz9Gn84uOvNHPYjpYHguT7fn/uRwUd9/puiwrBrf8aekaZMsC2AlbiChmM0+
-         DbTTfgUKeKyoJlXPaH+a7IpA7PKx7Soba5uDbIVBjkwZjAC7m6oGJs3Xr70xS+vFJQvq
-         m4/IfnZJCjoBkV4++7dM3iVbH+/azLYXhhfhjbzdasNsfUiqtdRjTRXOOLbMqmXEkDqE
-         8pSawyXVI1v7yUhYiJMCx8WBIHuJyvMXn4UqC+ICfxyBMfHgFronuiGRiNHKZRCXQ9+D
-         AldiKf7AjFBQv36mT9en0vZOKpQv+lE/mTKWCmSDV+WghbvMhsKpmbUENF9sguwxjWC5
-         Vk3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXGlyDbN71hJUFDJfqjNxdbZxaJSK0Ahik6WaJklS+C5qWp6E79aCSPWoRsudrVIp7YXIPsYqGOKD36wQBkpaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmy1WEctb9dHKa1ViFUGlifKTGF+b04po9M7J2PuQILii7lA1q
-	XQjFKLrcgPupVS20Dr2PTFgzF4Bez5TWW06LSyBUMSfLesPr7etg9jbsN5oPO+Oww5KCJIcLUIn
-	rfTLqpmVELw==
-X-Google-Smtp-Source: AGHT+IFu4srZxpATOjlO2rI6vko1n4XKZtERHwJbfnOezh1jE9LHVVBUHBqm8Y3anm1ST1HCKXtYf3N4xz9VaA==
-X-Received: from wmbh25.prod.google.com ([2002:a05:600c:a119:b0:43d:586a:9bcb])
- (user=smostafa job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:a4b:b0:43b:4829:8067 with SMTP id 5b1f17b1804b1-44062421bd7mr3209925e9.6.1744826726256;
- Wed, 16 Apr 2025 11:05:26 -0700 (PDT)
-Date: Wed, 16 Apr 2025 18:04:34 +0000
-In-Reply-To: <20250416180440.231949-1-smostafa@google.com>
+        d=1e100.net; s=20230601; t=1744828090; x=1745432890;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HqpDy6pI/eQq6luBbGPAlrOSVzuf9WMRWlny/FPlhAY=;
+        b=dG9xqNqseVTyoJNEVMti4rfhhxn8mTJ5jK6vtFjkAbV56btoaAwwuYt7fo8uRQu0KA
+         CQis7UPheGWKYw5T7UiuDVS3/Q9x0bsww7xVQaKy84T9G/ues78yqU7vkwiQAwkQZ/ci
+         6lYRbgTM48Gtv24Lhre4DsmT5TQHO0hQiMf9boxeFXW+E7iZWXFwtSCQ+Cml9A/biJ6g
+         VDEMLIluSEyDvzl7BYLcChqPqcCe+3LBEbs2Lx9NBwS+OhGUW8l/amNrhdKoKV9a8O7B
+         JvsKRZWoaSveBE9U67xiEIIYyVTQdfdo41qpuMEA2EARnWsjq9+Cf9SGWkxRg7DiWF7Z
+         L/LA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7Dt7jlV/UXQrWBjZHNPttVv3BwvWTByTX8p/0kKhoSY0kejpQwXyIw7q9hIizqwIFDBfxNOSxlLBW1Shk4UE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPZnso8wpFQQbBia1SCAgtPDYTBbCEXtuY3A/bKtf475kA5IKQ
+	Vdu6GFdEd/Sjnn5sxYXVSXRAey8ApdQ7ybhvZo/gw7QgdGYNncn2PcZbQO4hgt7toEM3UDS24Y2
+	N+kb1KVmZ4tGdJ4f/rDcapddFHglu1R972Ovex7MpeQAmJK1JILMBFRNWQUUieBTbbtELY3jtyI
+	8VqA91wxkmNpyuWLiQZx3vtvgyib1jC6zZ857g+aSs
+X-Gm-Gg: ASbGncsBeVMM4Qvgeva5RcvVJopGxaC+c7p3dekjLanvmZIl1vS6+gL+1MZMGEfjsfh
+	NgP5hs4+QhzH/FHkSggeW0yTPnuQpjbPdHlyrMfZWqLnR5ZoCXT9pJBHIAcxHoPpzfaDB+4doHR
+	HBv+kL8bVPGzURx5Bs/H1KbRM=
+X-Received: by 2002:a17:907:dab:b0:acb:35e6:eacf with SMTP id a640c23a62f3a-acb42870b74mr259874666b.4.1744828090403;
+        Wed, 16 Apr 2025 11:28:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSoF42j4ymXh4k2DWlxZNaW5OkZRSSUqi4pxp1gEEVEvZ1VJluzXf3BKzOlO4E7zUkwC3XtYHE9JkFfyjbrOY=
+X-Received: by 2002:a17:907:dab:b0:acb:35e6:eacf with SMTP id
+ a640c23a62f3a-acb42870b74mr259872766b.4.1744828090052; Wed, 16 Apr 2025
+ 11:28:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250416180440.231949-1-smostafa@google.com>
-X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
-Message-ID: <20250416180440.231949-5-smostafa@google.com>
-Subject: [PATCH 4/4] KVM: arm64: Handle UBSAN faults
-From: Mostafa Saleh <smostafa@google.com>
-To: kvmarm@lists.linux.dev, kasan-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
-	broonie@kernel.org, catalin.marinas@arm.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, kees@kernel.org, elver@google.com, andreyknvl@gmail.com, 
-	ryabinin.a.a@gmail.com, akpm@linux-foundation.org, yuzenghui@huawei.com, 
-	suzuki.poulose@arm.com, joey.gouly@arm.com, masahiroy@kernel.org, 
-	nathan@kernel.org, nicolas.schier@linux.dev, 
-	Mostafa Saleh <smostafa@google.com>
+MIME-Version: 1.0
+References: <20250416162144.670760-1-ivecera@redhat.com> <20250416162144.670760-6-ivecera@redhat.com>
+ <d286dec9-a544-409d-bf62-d2b84ef6ecd4@lunn.ch>
+In-Reply-To: <d286dec9-a544-409d-bf62-d2b84ef6ecd4@lunn.ch>
+From: Ivan Vecera <ivecera@redhat.com>
+Date: Wed, 16 Apr 2025 20:27:46 +0200
+X-Gm-Features: ATxdqUE-ky5T4DA1oVeKdaFaD--po_j_TkYXO-lqG89DNt53ozs0tBAdouq5muw
+Message-ID: <CAAVpwAvVO7RGLGMXCBxCD35kKCLmZEkeXuERG0C2GHP54kCGJw@mail.gmail.com>
+Subject: Re: [PATCH v3 net-next 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Prathosh Satish <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: MX2C2Vxy03H79vlzx64MD-LRxU6pEUmtvLJknSUi29w_1744828090
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-As now UBSAN can be enabled, handle brk64 exits from UBSAN.
-Re-use the decoding code from the kernel, and panic with
-UBSAN message.
+On Wed, Apr 16, 2025 at 7:32=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > +/**
+> > + * zl3073x_mb_dpll_read - read given DPLL configuration to mailbox
+> > + * @zldev: pointer to device structure
+> > + * @index: DPLL index
+> > + *
+> > + * Reads configuration of given DPLL into DPLL mailbox.
+> > + *
+> > + * Context: Process context. Expects zldev->regmap_lock to be held by =
+caller.
+> > + * Return: 0 on success, <0 on error
+> > + */
+> > +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index)
+> > +{
+> > +     int rc;
+>
+> lockdep_assert_held(zldev->regmap_lock) is stronger than having a
+> comment. When talking about i2c and spi devices, it costs nothing, and
+> catches bugs early.
 
-Signed-off-by: Mostafa Saleh <smostafa@google.com>
----
- arch/arm64/kvm/handle_exit.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Makes sense to put the assert here...
 
-diff --git a/arch/arm64/kvm/handle_exit.c b/arch/arm64/kvm/handle_exit.c
-index b73dc26bc44b..5c49540883e3 100644
---- a/arch/arm64/kvm/handle_exit.c
-+++ b/arch/arm64/kvm/handle_exit.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
-+#include <linux/ubsan.h>
- 
- #include <asm/esr.h>
- #include <asm/exception.h>
-@@ -474,6 +475,11 @@ void __noreturn __cold nvhe_hyp_panic_handler(u64 esr, u64 spsr,
- 			print_nvhe_hyp_panic("BUG", panic_addr);
- 	} else if (IS_ENABLED(CONFIG_CFI_CLANG) && esr_is_cfi_brk(esr)) {
- 		kvm_nvhe_report_cfi_failure(panic_addr);
-+	} else if (IS_ENABLED(CONFIG_UBSAN_KVM_EL2) &&
-+		   ESR_ELx_EC(esr) == ESR_ELx_EC_BRK64 &&
-+		   esr_is_ubsan_brk(esr)) {
-+		print_nvhe_hyp_panic(report_ubsan_failure(esr & UBSAN_BRK_MASK),
-+				     panic_addr);
- 	} else {
- 		print_nvhe_hyp_panic("panic", panic_addr);
- 	}
--- 
-2.49.0.604.gff1f9ca942-goog
+Will add.
+
+>
+> > +/*
+> > + * Mailbox operations
+> > + */
+> > +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index);
+>
+> I assume these are the only valid ways to access a mailbox?
+>
+> If so:
+>
+> > +static inline __maybe_unused int
+> > +zl3073x_mb_read_ref_mb_mask(struct zl3073x_dev *zldev, u16 *value)
+> > +{
+> > +     __be16 temp;
+> > +     int rc;
+> > +
+> > +     lockdep_assert_held(&zldev->mailbox_lock);
+> > +     rc =3D regmap_bulk_read(zldev->regmap, ZL_REG_REF_MB_MASK, &temp,
+> > +                           sizeof(temp));
+> > +     if (rc)
+> > +             return rc;
+> > +
+> > +     *value =3D be16_to_cpu(temp);
+> > +     return rc;
+> > +}
+>
+> These helpers can be made local to the core. You can then drop the
+> lockdep_assert_held() from here, since the only way to access them is
+> via the API you defined above, and add the checks in those API
+> functions.
+
+This cannot be done this way... the above API just simplifies the
+operation of read and write latch registers from/to mailbox.
+
+Whole operation is described in the commit description.
+
+E.g. read something about DPLL1
+1. Call zl3073x_mb_dpll_read(..., 1)
+   This selects DPLL1 in the DPLL mailbox and performs read operation
+and waits for finish
+2. Call zl3073x_mb_read_dpll_mode()
+   This reads dpll_mode latch register
+
+write:
+1. Call zl3073x_mb_write_dpll_mode(...)
+   This writes mode to dpll_mode latch register
+2. Call zl3073x_mb_dpll_read(..., 1)
+   This writes all info from latch registers to DPLL1
+
+The point is that between step 1 and 2 nobody else cannot touch
+latch_registers or mailbox select register and op semaphore.
+
+Thanks,
+Ivan
 
