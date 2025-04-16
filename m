@@ -1,46 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86CF014B950;
-	Wed, 16 Apr 2025 22:10:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72791C5D72;
+	Wed, 16 Apr 2025 22:16:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744841433; cv=none; b=XPclIf44Z9uR+7ZJAj9xjmJhIcLH2SGeYn4XXb2n6OW8lN+zSdON4sjLH+4mGCfYL9stPQnoKyPtEArGTpuKSXgEXJb3mWhsnN1wsOJXoBisRe370v/GZjmQKXftYJbTClnj8uGXEG6StvUIccJmWoeQboIqYysbq+v6EHBfb98=
+	t=1744841819; cv=none; b=iAuh5KCuvj9jsS+D7KwsUf4T0DQqkN23PoboYde3RTbAVcOZr6843WTId7YAmRzr50+H+ofoQP0Yotnk9gJul2LxdC+oOIjeiy98awGbDwDhqVqkEGLtTHCvP6BHiZTtyOAPwXGXYRf0IdElvMvPE43L8gaVhcg9mTzXGyLK/xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744841433; c=relaxed/simple;
-	bh=Y5AU4mf8TUi/WGax8QOVgpoVXa9qANocM2ytobVxq90=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jHXqmVlDToY8iqwW4mRpc6NJD8KqT892nP+k5BKBBqMM0nswXurUmWczsShP4RB5wlirJ2/mEYyZki15ZJ9Siwe0disyO5iYuk80B3BirhrP7VZHx3LjU3YL7OZ7scrFFYVckigbHMTleCnLyix+EL4BaJTklheS0werNMHwXMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SyrZe/5y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744841819; c=relaxed/simple;
+	bh=97bRWU25PgosLRHpJQ6h3zrlFJwdICKzb3byRPrU8mE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ru23lif6CRwVsat1luBhB4NZh/vJNzKcIXlEv2KIgCRQe9Y3Z8yTvOlSgq13rrc2wNfOI1nTB/K0PlystQOu1hh5EPQV3vFVFGiHQdN8PiWU/ySDow5qZrFPIknteaihbTFCU6WxZ/XzMS758FhSLvmxai/rs/djpvWz8ryNPRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1ASBuan; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SyrZe/5y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50179C4CEE2;
-	Wed, 16 Apr 2025 22:10:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1ASBuan"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DA76C4CEE2;
+	Wed, 16 Apr 2025 22:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744841433;
-	bh=Y5AU4mf8TUi/WGax8QOVgpoVXa9qANocM2ytobVxq90=;
+	s=k20201202; t=1744841819;
+	bh=97bRWU25PgosLRHpJQ6h3zrlFJwdICKzb3byRPrU8mE=;
 	h=From:To:Cc:Subject:Date:From;
-	b=SyrZe/5yZ9BYxUqVV0dSXe8nmVrIxdksnf4SVPWdNkcNrk35XnLSv4KQqHp+yyBwq
-	 CD7wLEFBuTPUo9wq294Dzl6wF/jQ2nFyawCY1TZo2KWpR+evktMnh8BO5/497Or0eB
-	 uMO7izgT+pNbjVqVQAKKdgdAebCnD6o1DzCjb5KCfiJASuMpYkUzco+G1DVXMbPl9M
-	 fMU5VUkgcYqkyu8TBNl8GHHrDdQEt79KXu7UpfD1E5ZAPzjZIpTQ3wd6rmtu2EWtbx
-	 OiSGTSPx/1MPZgaiGbCwqdydAwz5NPzsEdUl2tDDLPN7z0VFMenSWXEYEWiJoNNAsj
-	 JgNUXMT6sOpBw==
+	b=i1ASBuanlv2WTlRNG19Vpk1JVfFJqxb7MN6czXwNZMTo3g8BA11pln/dH7njEEb1W
+	 YHd2sTme/2hHYndVgPPONRFTCw+zUN7PkvMN8aIeU13EWsEohEERtrJAKsbUM8IMeN
+	 aAqASj77aSrNyGLedLa3LLAcPE0TO4ZdmpyBx++6UFdyxSqKO7sZGoE2VIKIPDJgcO
+	 ReoFfNoaRfgHI3XEr/TGqiJLY4sLpMQkqdZkMHW+AzMZIMpkJvp5wfCM9VnZ10N34a
+	 k3SCrF2fRlwW3ehvEMMJMA5nWkotcfNAr6WPr2LR+0JwDRXcgFVeKLkmeUZoGDr3wU
+	 jgF4j6hZf12qA==
 From: Kees Cook <kees@kernel.org>
-To: Ajit Khaparde <ajit.khaparde@broadcom.com>
+To: David Howells <dhowells@redhat.com>
 Cc: Kees Cook <kees@kernel.org>,
-	Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-	Somnath Kotur <somnath.kotur@broadcom.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
+	Paulo Alcantara <pc@manguebit.com>,
+	Christian Brauner <brauner@kernel.org>,
+	netfs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] emulex/benet: Annotate flash_cookie as nonstring
-Date: Wed, 16 Apr 2025 15:10:29 -0700
-Message-Id: <20250416221028.work.967-kees@kernel.org>
+Subject: [PATCH] netfs: Mark __nonstring lookup tables
+Date: Wed, 16 Apr 2025 15:16:55 -0700
+Message-Id: <20250416221654.work.028-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -48,69 +44,61 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2658; i=kees@kernel.org; h=from:subject:message-id; bh=Y5AU4mf8TUi/WGax8QOVgpoVXa9qANocM2ytobVxq90=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkMWlc37BIsktx2QbF9tv++hYmVIf9ea5rb9LydEHpt7 qPXJxtOdJSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAExEVIaR4UJWQpnYoX6jzvS7 154dn9LGKjFzzZonnabW/m2bNXfyPGT4p7v8dV3RwXXf9rVM4txU5HjmAX+QYJOQaMp1rp0pnCp +HAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2697; i=kees@kernel.org; h=from:subject:message-id; bh=97bRWU25PgosLRHpJQ6h3zrlFJwdICKzb3byRPrU8mE=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkMOuGbOa9fEP7j8tf6ZevfUy/0bvjwtv4pDp7KfzCxK unVgyWNHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABOJZWRkOBtgyft8k1ZQ1r29 RwwMOQUOLGqVjf9fPXt/2HZxpuAdHQz/DJmzTet+v5v1qJ6/59efv+8L2ypf/57gzLeNIea4Xu4 KRgA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-GCC 15's new -Wunterminated-string-initialization notices that the 32
-character "flash_cookie" (which is not used as a C-String)
-needs to be marked as "nonstring":
+GCC 15's new -Wunterminated-string-initialization notices that the
+character lookup tables "fscache_cache_states" and "fscache_cookie_states"
+(which are not used as a C-String) need to be marked as "nonstring":
 
-drivers/net/ethernet/emulex/benet/be_cmds.c:2618:51: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (17 chars into 16 available) [-Wunterminated-string-initialization]
- 2618 | static char flash_cookie[2][16] = {"*** SE FLAS", "H DIRECTORY *** "};
-      |                                                   ^~~~~~~~~~~~~~~~~~
+fs/netfs/fscache_cache.c:375:67: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (6 chars into 5 available) [-Wunterminated-string-initialization]
+  375 | static const char fscache_cache_states[NR__FSCACHE_CACHE_STATE] = "-PAEW";
+      |                                                                   ^~~~~~~
+fs/netfs/fscache_cookie.c:32:69: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (11 chars into 10 available) [-Wunterminated-string-initialization]
+   32 | static const char fscache_cookie_states[FSCACHE_COOKIE_STATE__NR] = "-LCAIFUWRD";
+      |                                                                     ^~~~~~~~~~~~
 
-Add this annotation, avoid using a multidimensional array, but keep the
-string split (with a comment about why). Additionally mark it const
-and annotate the "cookie" member that is being memcmp()ed against as
-nonstring too.
+Annotate the arrays.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Ajit Khaparde <ajit.khaparde@broadcom.com>
-Cc: Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
-Cc: Somnath Kotur <somnath.kotur@broadcom.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>
+Cc: Paulo Alcantara <pc@manguebit.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: netfs@lists.linux.dev
+Cc: linux-fsdevel@vger.kernel.org
 ---
- drivers/net/ethernet/emulex/benet/be_cmds.c | 6 +++++-
- drivers/net/ethernet/emulex/benet/be_cmds.h | 2 +-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ fs/netfs/fscache_cache.c  | 2 +-
+ fs/netfs/fscache_cookie.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/emulex/benet/be_cmds.c b/drivers/net/ethernet/emulex/benet/be_cmds.c
-index 51b8377edd1d..adb441b36581 100644
---- a/drivers/net/ethernet/emulex/benet/be_cmds.c
-+++ b/drivers/net/ethernet/emulex/benet/be_cmds.c
-@@ -2615,7 +2615,11 @@ static int be_cmd_get_flash_crc(struct be_adapter *adapter, u8 *flashed_crc,
- 	return status;
- }
+diff --git a/fs/netfs/fscache_cache.c b/fs/netfs/fscache_cache.c
+index 9397ed39b0b4..8f70f8da064b 100644
+--- a/fs/netfs/fscache_cache.c
++++ b/fs/netfs/fscache_cache.c
+@@ -372,7 +372,7 @@ void fscache_withdraw_cache(struct fscache_cache *cache)
+ EXPORT_SYMBOL(fscache_withdraw_cache);
  
--static char flash_cookie[2][16] = {"*** SE FLAS", "H DIRECTORY *** "};
-+/*
-+ * Since the cookie is text, add a parsing-skipped space to keep it from
-+ * ever being matched on storage holding this source file.
-+ */
-+static const char flash_cookie[32] __nonstring = "*** SE FLAS" "H DIRECTORY *** ";
+ #ifdef CONFIG_PROC_FS
+-static const char fscache_cache_states[NR__FSCACHE_CACHE_STATE] = "-PAEW";
++static const char fscache_cache_states[NR__FSCACHE_CACHE_STATE] __nonstring = "-PAEW";
  
- static bool phy_flashing_required(struct be_adapter *adapter)
- {
-diff --git a/drivers/net/ethernet/emulex/benet/be_cmds.h b/drivers/net/ethernet/emulex/benet/be_cmds.h
-index d70818f06be7..5e2d3ddb5d43 100644
---- a/drivers/net/ethernet/emulex/benet/be_cmds.h
-+++ b/drivers/net/ethernet/emulex/benet/be_cmds.h
-@@ -1415,7 +1415,7 @@ struct flash_section_entry {
- } __packed;
+ /*
+  * Generate a list of caches in /proc/fs/fscache/caches
+diff --git a/fs/netfs/fscache_cookie.c b/fs/netfs/fscache_cookie.c
+index d4d4b3a8b106..3d56fc73435f 100644
+--- a/fs/netfs/fscache_cookie.c
++++ b/fs/netfs/fscache_cookie.c
+@@ -29,7 +29,7 @@ static LIST_HEAD(fscache_cookie_lru);
+ static DEFINE_SPINLOCK(fscache_cookie_lru_lock);
+ DEFINE_TIMER(fscache_cookie_lru_timer, fscache_cookie_lru_timed_out);
+ static DECLARE_WORK(fscache_cookie_lru_work, fscache_cookie_lru_worker);
+-static const char fscache_cookie_states[FSCACHE_COOKIE_STATE__NR] = "-LCAIFUWRD";
++static const char fscache_cookie_states[FSCACHE_COOKIE_STATE__NR] __nonstring = "-LCAIFUWRD";
+ static unsigned int fscache_lru_cookie_timeout = 10 * HZ;
  
- struct flash_section_info {
--	u8 cookie[32];
-+	u8 cookie[32] __nonstring;
- 	struct flash_section_hdr fsec_hdr;
- 	struct flash_section_entry fsec_entry[32];
- } __packed;
+ void fscache_print_cookie(struct fscache_cookie *cookie, char prefix)
 -- 
 2.34.1
 
