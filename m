@@ -1,269 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4D7219A8B;
-	Wed, 16 Apr 2025 18:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA83219A63
+	for <linux-hardening@vger.kernel.org>; Wed, 16 Apr 2025 18:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744826446; cv=none; b=VXFLZLId327iPg9/B/n8d3XmEKG0HJXXYJ6zlMn+fjJ+NvJk9WpBtenZn5GaErOKLpGaF4pH+QqbLUnUeo8gUztLmUVQszuubnQT4yDrqlfVBXmACc2bpfBcbqHDxZoyyCeteHtiM9GAo9Gf5qKcO+VHrKfVLwaINb1+yIA4o/U=
+	t=1744826721; cv=none; b=GjtUee1AL3MzO9LpGEbXUv5wN+HEElRr4L82RtiG8N5DH3UNNAx1UyL+Zl6xLXLxO5gBPIF8cG/Hpz533uXAZzAllNQ0/Jd2Nj4AMRcLRH8gtq9yr/QfvNrJQ2Rp/Iwyf4QHRiBHz7jL+m8XprowpRAgCa9KL8s6gqRI3XBcfSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744826446; c=relaxed/simple;
-	bh=SJY0xG1DrlZDBeIQmUalS9GpwgIa3ejXcZ6rQbeRQtY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mcD6EapdmOn3WzlMT2eIIl1iO8ENz0b/if8FujSseazpiZgbJRuatgTk3sfKpUvyYO1/8GHoMRBu5HyP82gb32CX6PaexIHviOclNIX45X6ycrRlG8b+oYc3wSd+Puqeso88ozwO+u2VIrlP1KEjPk4VbWUcLUbTDFU1lEVUUa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cPUs/7SD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744826721; c=relaxed/simple;
+	bh=mwforEguNwh38hMZjlrNS8MyeAClbrwYJZ9ftBkHh9E=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fJuV1pu/Q4jXhV5pI4JByp4GFodx9cACdsI9+fPDow7wycxQDOjVbAvqbS4BvAb4Wmijb///IppENrcds9Bz/1Z4ejRU9hfeW42nP3nMIAwTxDfD3db6OhoXyBzDbLQpHerhqZRTwiXXpGR3jgZMYZUsJ7CG4TRX8fj3nRKZ7BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4ccveUvO; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cPUs/7SD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6E7CC4CEE2;
-	Wed, 16 Apr 2025 18:00:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744826446;
-	bh=SJY0xG1DrlZDBeIQmUalS9GpwgIa3ejXcZ6rQbeRQtY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=cPUs/7SDgeiM0HerpNhmtjeKguIPd24msJJ+OoUVpI5Lf0fu53ldSmmleu5CyF1b7
-	 x4EQX4drBvPa95+a7mnx6zF7ODs+HXvY35mqHNw4IhlHtCrML2g/+5cKCxtvWfYYF7
-	 8yT9fMJ6NKQjyqJAplFZRM12GeK0WX5GlEIX0wkaxnwlH8291ky9nWrIG5P/k42KBZ
-	 zTJMz1nexk4QIopQ9yFSLhghFwYJZkrc7LXL/cCcYVCz5lE470veypc3LfpoVJRMSE
-	 k/Yd7mfKb6MMsDS5NKVBfc+4k+h+4jrEE5p6L+Nja2/8Kok9ZmPxiYcCJp66Yu1Hr3
-	 PbbcKOUgU9GJA==
-Date: Wed, 16 Apr 2025 12:00:42 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: [PATCH v2][next] drm/nouveau: chan: Avoid
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z__wSgHK5_lHw8x9@kspp>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4ccveUvO"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43e9a3d2977so54948125e9.1
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Apr 2025 11:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744826717; x=1745431517; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=l4zrBJJLCZeJhENR6VmafxLFJBE/IGwmNNec6pbe9xA=;
+        b=4ccveUvOiBwOPn0uDqEmaB7W5LeeSUTOYLJ/vmPh/zaKnzABhIDT4fqjW4X/cNfjsw
+         eV+RQ0v//aXWmQptHR13fxBvqjfU0YP+7NOQ5SG5jX+c/gb+cUsRKA1UsItB6skcKW5o
+         W8KwDBpc/TnejASWv7zPXDIs9rJtnavPqjeBC/Ao3l+VwnH+f8AmPAIvPm+Ftl3EXEJY
+         LPthhpOvJ8BPIxNl6RjUD6/zRHiQi+06UhZc6VRmYiMelorISSj6m1vf/rMTn1MAWUHM
+         bh4YV4TrTHz2jQlpVd/DDJJRfor1gWIHZIy7+R8KmsIrCQI1G/ZHswlESTud8JcHQqRW
+         U9og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744826717; x=1745431517;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l4zrBJJLCZeJhENR6VmafxLFJBE/IGwmNNec6pbe9xA=;
+        b=uO7d2xH2arQeyxgmK1Vk62ybixQkatYzoKUjMTiu+NzEL+RN/6aNswvj2HLrEai3k6
+         DUjFy18daczHVr0PdtA7o3W4PkgTWzEM9U8CQnWNZGejQvndR5ITqGimQNehTOArYqPl
+         3Mv/VKQ+ONiqRpgKYTKCU7kHUYHVsblLTEM50TdqkKX5F10lg2Et8LQSF2x4HN7yLTv8
+         lqjm9g83vQ6i23sX3+vHKWMCcqwHxUD+E1hDf690eCzOPJmmnKiWUO08HtCoQRNlZybn
+         au7m6bxBGv9drelEl3RLmjuXI9OdHuuVYJb1hooKvxXDno3uAbkdjkEZnNuwpmWePtPu
+         tIng==
+X-Forwarded-Encrypted: i=1; AJvYcCUPLd3Mo38PTYg5EHVe394lvsWc1v6YwBaozpIdzFYOLpobfZscUDlu0NJsmIjUFW/CgZwGEO2lhTzMgWPAfVo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDx263GcFqrTNF78axiUR+I8Mr5X3yAv0L4qf2zelCzWLj7oEH
+	O7VzVcDHWxNapHqBSOsdwG0WEQwVnjQEXhyjgVPNDttyswMcnjXebo5Djoan16gYBIGphAo2EDv
+	TgdrZBGy7EA==
+X-Google-Smtp-Source: AGHT+IG37/jJdPo16ODppABBlkwhdau6i150sm+0uUTYuYiDLU7nXYICCYXasqDCVq/D4SyObvt76W48aTqKsA==
+X-Received: from wmbbi11.prod.google.com ([2002:a05:600c:3d8b:b0:43b:bf16:d6be])
+ (user=smostafa job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1ca3:b0:43c:fe85:e4ba with SMTP id 5b1f17b1804b1-4405d637b49mr28449355e9.15.1744826717658;
+ Wed, 16 Apr 2025 11:05:17 -0700 (PDT)
+Date: Wed, 16 Apr 2025 18:04:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
+Message-ID: <20250416180440.231949-1-smostafa@google.com>
+Subject: [PATCH 0/4] KVM: arm64: UBSAN at EL2
+From: Mostafa Saleh <smostafa@google.com>
+To: kvmarm@lists.linux.dev, kasan-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
+	broonie@kernel.org, catalin.marinas@arm.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, kees@kernel.org, elver@google.com, andreyknvl@gmail.com, 
+	ryabinin.a.a@gmail.com, akpm@linux-foundation.org, yuzenghui@huawei.com, 
+	suzuki.poulose@arm.com, joey.gouly@arm.com, masahiroy@kernel.org, 
+	nathan@kernel.org, nicolas.schier@linux.dev, 
+	Mostafa Saleh <smostafa@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Many of the sanitizers the kernel supports are disabled when running
+in EL2 with nvhe/hvhe/proctected modes, some of those are easier
+(and makes more sense) to integrate than others.
+Last year, kCFI support was added in [1]
 
-Use the `DEFINE_RAW_FLEX()` helper for a few on-stack definitions
-of a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+This patchset adds support for UBSAN in EL2.
+UBSAN can run in 2 modes:
+  1) =E2=80=9CNormal=E2=80=9D (CONFIG_UBSAN_TRAP=3Dn): In this mode the com=
+piler will
+  do the UBSAN checks and insert some function calls in case of
+  failures, it can provide more information(ex: what is the value of
+  the out of bound) about the failures through those function arguments,
+  and those functions(implemented in lib/ubsan.c) will print a report with
+  such errors.
 
-So, with these changes, fix the following warnings:
+  2) Trap (CONFIG_UBSAN_TRAP=3Dy): This is a minimal mode, where similarly,
+  the compiler will do the checks, but instead of doing function calls,
+  it would do a =E2=80=9Cbrk #imm=E2=80=9D (for ARM64) with a unique code w=
+ith the failure
+  type, but without any extra information (ex: only print the out-bound lin=
+e
+  but not the index)
 
-drivers/gpu/drm/nouveau/nouveau_chan.c:274:37: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/gpu/drm/nouveau/nouveau_chan.c:371:46: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/gpu/drm/nouveau/nouveau_chan.c:524:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+For nvhe/hvhe/proctected modes, #2 would be suitable, as there is no way to
+print reports from EL2, so similarly to kCFI(even with permissive) it would
+cause the hypervisor to panic.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Use __member_size() instead of __struct_size() to get the
-   compile-time size of the flexible array.
+But that means that for EL2 we need to compile the code with the same optio=
+ns
+as used by =E2=80=9CCONFIG_UBSAN_TRAP=E2=80=9D independently from the kerne=
+l config.
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/Z-67Hm9uHEJs0RGw@kspp/
+This patch series adds a new KCONFIG for ARM64 to choose to enable UBSAN
+separately for the modes mentioned.
 
- drivers/gpu/drm/nouveau/nouveau_chan.c | 114 ++++++++++++-------------
- 1 file changed, 55 insertions(+), 59 deletions(-)
+The same logic decoding the kernel UBSAN is reused, so the messages from
+the hypervisor will look similar as:
+[   29.215332] kvm [190]: nVHE hyp UBSAN: array index out of bounds at: [<f=
+fff8000811f2344>] __kvm_nvhe_handle___pkvm_init_vm+0xa8/0xac!
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_chan.c b/drivers/gpu/drm/nouveau/nouveau_chan.c
-index cd659b9fd1d9..1286a664f688 100644
---- a/drivers/gpu/drm/nouveau/nouveau_chan.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_chan.c
-@@ -270,10 +270,7 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
- 		{    NV03_CHANNEL_DMA     , 0 },
- 		{}
- 	};
--	struct {
--		struct nvif_chan_v0 chan;
--		char name[TASK_COMM_LEN+16];
--	} args;
-+	DEFINE_RAW_FLEX(struct nvif_chan_v0, args, name, TASK_COMM_LEN + 16);
- 	struct nvif_device *device = &cli->device;
- 	struct nouveau_channel *chan;
- 	const u64 plength = 0x10000;
-@@ -298,28 +295,28 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
- 		return ret;
- 
- 	/* create channel object */
--	args.chan.version = 0;
--	args.chan.namelen = sizeof(args.name);
--	args.chan.runlist = __ffs64(runm);
--	args.chan.runq = 0;
--	args.chan.priv = priv;
--	args.chan.devm = BIT(0);
-+	args->version = 0;
-+	args->namelen = __member_size(args->name);
-+	args->runlist = __ffs64(runm);
-+	args->runq = 0;
-+	args->priv = priv;
-+	args->devm = BIT(0);
- 	if (hosts[cid].oclass < NV50_CHANNEL_GPFIFO) {
--		args.chan.vmm = 0;
--		args.chan.ctxdma = nvif_handle(&chan->push.ctxdma);
--		args.chan.offset = chan->push.addr;
--		args.chan.length = 0;
-+		args->vmm = 0;
-+		args->ctxdma = nvif_handle(&chan->push.ctxdma);
-+		args->offset = chan->push.addr;
-+		args->length = 0;
- 	} else {
--		args.chan.vmm = nvif_handle(&chan->vmm->vmm.object);
-+		args->vmm = nvif_handle(&chan->vmm->vmm.object);
- 		if (hosts[cid].oclass < FERMI_CHANNEL_GPFIFO)
--			args.chan.ctxdma = nvif_handle(&chan->push.ctxdma);
-+			args->ctxdma = nvif_handle(&chan->push.ctxdma);
- 		else
--			args.chan.ctxdma = 0;
--		args.chan.offset = ioffset + chan->push.addr;
--		args.chan.length = ilength;
-+			args->ctxdma = 0;
-+		args->offset = ioffset + chan->push.addr;
-+		args->length = ilength;
- 	}
--	args.chan.huserd = 0;
--	args.chan.ouserd = 0;
-+	args->huserd = 0;
-+	args->ouserd = 0;
- 
- 	/* allocate userd */
- 	if (hosts[cid].oclass >= VOLTA_CHANNEL_GPFIFO_A) {
-@@ -329,27 +326,28 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
- 		if (ret)
- 			return ret;
- 
--		args.chan.huserd = nvif_handle(&chan->mem_userd.object);
--		args.chan.ouserd = 0;
-+		args->huserd = nvif_handle(&chan->mem_userd.object);
-+		args->ouserd = 0;
- 
- 		chan->userd = &chan->mem_userd.object;
- 	} else {
- 		chan->userd = &chan->user;
- 	}
- 
--	snprintf(args.name, sizeof(args.name), "%s[%d]", current->comm, task_pid_nr(current));
-+	snprintf(args->name, __member_size(args->name), "%s[%d]",
-+		 current->comm, task_pid_nr(current));
- 
- 	ret = nvif_object_ctor(&device->object, "abi16ChanUser", 0, hosts[cid].oclass,
--			       &args, sizeof(args), &chan->user);
-+			       args, __struct_size(args), &chan->user);
- 	if (ret) {
- 		nouveau_channel_del(pchan);
- 		return ret;
- 	}
- 
--	chan->runlist = args.chan.runlist;
--	chan->chid = args.chan.chid;
--	chan->inst = args.chan.inst;
--	chan->token = args.chan.token;
-+	chan->runlist = args->runlist;
-+	chan->chid = args->chid;
-+	chan->inst = args->inst;
-+	chan->token = args->token;
- 	return 0;
- }
- 
-@@ -367,17 +365,17 @@ nouveau_channel_init(struct nouveau_channel *chan, u32 vram, u32 gart)
- 		return ret;
- 
- 	if (chan->user.oclass >= FERMI_CHANNEL_GPFIFO) {
--		struct {
--			struct nvif_event_v0 base;
--			struct nvif_chan_event_v0 host;
--		} args;
-+		DEFINE_RAW_FLEX(struct nvif_event_v0, args, data,
-+				sizeof(struct nvif_chan_event_v0));
-+		struct nvif_chan_event_v0 *host =
-+				(struct nvif_chan_event_v0 *)args->data;
- 
--		args.host.version = 0;
--		args.host.type = NVIF_CHAN_EVENT_V0_KILLED;
-+		host->version = 0;
-+		host->type = NVIF_CHAN_EVENT_V0_KILLED;
- 
- 		ret = nvif_event_ctor(&chan->user, "abi16ChanKilled", chan->chid,
- 				      nouveau_channel_killed, false,
--				      &args.base, sizeof(args), &chan->kill);
-+				      args, __struct_size(args), &chan->kill);
- 		if (ret == 0)
- 			ret = nvif_event_allow(&chan->kill);
- 		if (ret) {
-@@ -520,46 +518,44 @@ nouveau_channels_fini(struct nouveau_drm *drm)
- int
- nouveau_channels_init(struct nouveau_drm *drm)
- {
--	struct {
--		struct nv_device_info_v1 m;
--		struct {
--			struct nv_device_info_v1_data channels;
--			struct nv_device_info_v1_data runlists;
--		} v;
--	} args = {
--		.m.version = 1,
--		.m.count = sizeof(args.v) / sizeof(args.v.channels),
--		.v.channels.mthd = NV_DEVICE_HOST_CHANNELS,
--		.v.runlists.mthd = NV_DEVICE_HOST_RUNLISTS,
--	};
-+	DEFINE_RAW_FLEX(struct nv_device_info_v1, args, data, 2);
-+	struct nv_device_info_v1_data *channels = &args->data[0];
-+	struct nv_device_info_v1_data *runlists = &args->data[1];
- 	struct nvif_object *device = &drm->client.device.object;
- 	int ret, i;
- 
--	ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, &args, sizeof(args));
-+	args->version = 1;
-+	args->count = __member_size(args->data) / sizeof(*args->data);
-+	channels->mthd = NV_DEVICE_HOST_CHANNELS;
-+	runlists->mthd = NV_DEVICE_HOST_RUNLISTS;
-+
-+	ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, args,
-+			       __struct_size(args));
- 	if (ret ||
--	    args.v.runlists.mthd == NV_DEVICE_INFO_INVALID || !args.v.runlists.data ||
--	    args.v.channels.mthd == NV_DEVICE_INFO_INVALID)
-+	    runlists->mthd == NV_DEVICE_INFO_INVALID || !runlists->data ||
-+	    channels->mthd == NV_DEVICE_INFO_INVALID)
- 		return -ENODEV;
- 
--	drm->chan_nr = drm->chan_total = args.v.channels.data;
--	drm->runl_nr = fls64(args.v.runlists.data);
-+	drm->chan_nr = drm->chan_total = channels->data;
-+	drm->runl_nr = fls64(runlists->data);
- 	drm->runl = kcalloc(drm->runl_nr, sizeof(*drm->runl), GFP_KERNEL);
- 	if (!drm->runl)
- 		return -ENOMEM;
- 
- 	if (drm->chan_nr == 0) {
- 		for (i = 0; i < drm->runl_nr; i++) {
--			if (!(args.v.runlists.data & BIT(i)))
-+			if (!(runlists->data & BIT(i)))
- 				continue;
- 
--			args.v.channels.mthd = NV_DEVICE_HOST_RUNLIST_CHANNELS;
--			args.v.channels.data = i;
-+			channels->mthd = NV_DEVICE_HOST_RUNLIST_CHANNELS;
-+			channels->data = i;
- 
--			ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, &args, sizeof(args));
--			if (ret || args.v.channels.mthd == NV_DEVICE_INFO_INVALID)
-+			ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, args,
-+					       __struct_size(args));
-+			if (ret || channels->mthd == NV_DEVICE_INFO_INVALID)
- 				return -ENODEV;
- 
--			drm->runl[i].chan_nr = args.v.channels.data;
-+			drm->runl[i].chan_nr = channels->data;
- 			drm->runl[i].chan_id_base = drm->chan_total;
- 			drm->runl[i].context_base = dma_fence_context_alloc(drm->runl[i].chan_nr);
- 
--- 
-2.43.0
+In this patch set, the same UBSAN options(for check types) are used for bot=
+h
+EL1/EL2, although a case can be made to have separate options (leading to
+totally separate CFLAGS) if we want EL2 to be compiled with stricter checks
+for something as protected mode.
+However, re-using the current flags, makes code re-use easier for
+report_ubsan_failure() and  Makefile.ubsan
+
+[1] https://lore.kernel.org/all/20240610063244.2828978-1-ptosi@google.com/
+
+
+Mostafa Saleh (4):
+  arm64: Introduce esr_is_ubsan_brk()
+  ubsan: Remove regs from report_ubsan_failure()
+  KVM: arm64: Introduce CONFIG_UBSAN_KVM_EL2
+  KVM: arm64: Handle UBSAN faults
+
+ arch/arm64/include/asm/esr.h     | 5 +++++
+ arch/arm64/kernel/traps.c        | 4 ++--
+ arch/arm64/kvm/handle_exit.c     | 6 ++++++
+ arch/arm64/kvm/hyp/nvhe/Makefile | 6 ++++++
+ arch/x86/kernel/traps.c          | 2 +-
+ include/linux/ubsan.h            | 6 +++---
+ lib/Kconfig.ubsan                | 9 +++++++++
+ lib/ubsan.c                      | 8 +++++---
+ scripts/Makefile.ubsan           | 5 ++++-
+ 9 files changed, 41 insertions(+), 10 deletions(-)
+
+--=20
+2.49.0.604.gff1f9ca942-goog
 
