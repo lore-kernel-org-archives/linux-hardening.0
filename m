@@ -1,128 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA1422A4E5;
-	Wed, 16 Apr 2025 06:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D4A229B02;
+	Wed, 16 Apr 2025 07:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744785961; cv=none; b=sDX9D1GOSr6OMA6TNH2fTukNacjX5QXUKNcHvSp0uzIwidtX4asEcEOeNewflFivbvTdQDcapITqCf17XzWqwtWL0BGjG47mRzAoqYE0108WIs3coFYViTuelN/6ehWkp5jwlSRVj1hUPCwckFJTD4jlM2G63dKcbU0sUuUUCHc=
+	t=1744787692; cv=none; b=FTtn3w0RW0TsFQkGXSfXuj5cBtHiFiVEH3yhuv4a/CZKfeFtQjSdFwLv6TIOopmcDw9OZ7nbS/NbAlRETrtWS++xOHZhLUTh51IGiH5J0bYHMq1BhgZzhCfN3FcyVjGb1VOnup7NThkt6QsxIWltq9i2YmGj+AX3MpQ67vaGqxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744785961; c=relaxed/simple;
-	bh=jGokpnFOqE6CW4PQnkZgtiGtX+d0K4vFQAPTpPYAqCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JhREzrhpBkGyWozoq8kOwXc1vSuIwgev09XUjv6WSqkQQbhhD2sMSDsIyMIkWC4NILPs06+0In2pdEySarRfqGLTitkqDcn/H0ka5zz6WGAAr7WHiv9EuRUsN8X75g7VyEXN5zKYVMWbdMcUQDk4/KJ8C87m7zo7KSYIzeiQUnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n+4KlJdn; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744787692; c=relaxed/simple;
+	bh=xF6PsLMmPgmr1v5TguY+yXouQOHNvNH/VcEL1T2xkTk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bwTHsd638oo04RUTYRPmRuhEZbl+YvebndcnCputFjGBzOeV+6PN5+6miQ80T/6juKTkua+Ur+5xxAdQDDYWHaXXLzDAFdIRSySzUXhwJ6NxwjPHKOO5r2Z+ijIZau9OH6pNM9PQkFAMkU7UD0QDnLtzokJ9cpiRvnxjYbbOebk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+tfxDbA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n+4KlJdn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744785960; x=1776321960;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jGokpnFOqE6CW4PQnkZgtiGtX+d0K4vFQAPTpPYAqCE=;
-  b=n+4KlJdnMOn9y68xAWOM4bDVmGJV7Tk1npwb1ucifzE8b5ynYLnqA6AG
-   o1iSLtpmpCw4MSIhMnLCCkxVGuHKaUgEvSzxLdYLqDBtvfk3elLX13L0d
-   QLOWm+bNDOSZ5gjsxb8Re0TJ3Fu7g+LnXe7sDLf96ebExVmVqZmVv8eaJ
-   FtzxKd47RSKpiNLIyLWgK26G5IXNidxXtcVZucoATrJmeIVJzjV9Hh6qX
-   px+xv5pcwfrBI196BCLP2K77Iqn24Hp6DL0NU3ZUE9yWhtw/8ffsoobeI
-   DxYeqZ4hB/E1HrKSS8TBGO2fRN3vFuwZdDtBPFcqZJCZF+wvp/mL9zljw
-   Q==;
-X-CSE-ConnectionGUID: FQU8xltQS/GVcW2CpXa/iA==
-X-CSE-MsgGUID: skH2XKWlQcmIr5r8jb7Igg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46408901"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="46408901"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:45:59 -0700
-X-CSE-ConnectionGUID: 8nE96dtOSQu/lMLES/GcLQ==
-X-CSE-MsgGUID: yciDKKQQRaWVp0Ux3mGmwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="130201223"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:45:55 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4wWu-0000000Clkq-33e2;
-	Wed, 16 Apr 2025 09:45:52 +0300
-Date: Wed, 16 Apr 2025 09:45:52 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Pieter Jansen van Vuuren <pieter.jansen-van-vuuren@amd.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Wesley Cheng <quic_wcheng@quicinc.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mod_devicetable: Enlarge the maximum platform_device_id
- name length
-Message-ID: <Z_9SIBPsf4_cQ77Y@smile.fi.intel.com>
-References: <20250415231420.work.066-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+tfxDbA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78900C4CEE2;
+	Wed, 16 Apr 2025 07:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744787691;
+	bh=xF6PsLMmPgmr1v5TguY+yXouQOHNvNH/VcEL1T2xkTk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=W+tfxDbA/0zmes1Ir7E8uvaR9LBIY/RAqGbxEsemJzbOaY+D0xA2gZxDzNhgCjQhw
+	 ajgjN7fTKU2w7KH47Uf0bFoiSxxx1hajNoKzELr4E3dYAFjSqbUVqZopHQReUv1BKe
+	 jTXWMgjXniSIO9woe95dWfAGiSLBJouugUMXPn5+Cz+1Se2wYAGLRJIXevRutqql9b
+	 cpovayRIhyzEereGtHmTJsBJl6TcqgWccola4bJNbC0vW6Q5vKXBafeAsoAX0VAPFy
+	 e5l9m2ynQGDZtGXQ8Z/C4uL9aiEJOQiVtM2yd1FKa2x6vrhPK/I11U1LBGzxNcgMDe
+	 qaAwylM7DgeFw==
+Message-ID: <22b58ea6-0416-461f-b1b3-b2c7a3e87b1e@kernel.org>
+Date: Wed, 16 Apr 2025 09:14:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415231420.work.066-kees@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/5] Add support for the Exynos7870 SoC, along with
+ three devices
+To: Kaustabh Chakraborty <kauschluss@disroot.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 04:14:24PM -0700, Kees Cook wrote:
-> The 20 byte length of struct platform_device_id::name is not long enough
-> for many devices (especially regulators), where the string initialization
-> is getting truncated and missing the trailing NUL byte. This is seen
-> with GCC 15's -Wunterminated-string-initialization option:
+On 13/04/2025 20:58, Kaustabh Chakraborty wrote:
+> Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
+> announced in 2016. The chipset was found in several popular mid-range to
+> low-end Samsung phones, released within 2016 to 2019.
 > 
-> drivers/regulator/hi6421v530-regulator.c:189:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
->   189 |         { .name = "hi6421v530-regulator" },
->       |                   ^~~~~~~~~~~~~~~~~~~~~~
-> drivers/regulator/hi6421v600-regulator.c:278:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
->   278 |         { .name = "hi6421v600-regulator" },
->       |                   ^~~~~~~~~~~~~~~~~~~~~~
-> drivers/regulator/lp87565-regulator.c:233:11: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
->   233 |         { "lp87565-q1-regulator", },
->       |           ^~~~~~~~~~~~~~~~~~~~~~
-> sound/soc/fsl/imx-pcm-rpmsg.c:818:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
->   818 |         { .name = "rpmsg-micfil-channel" },
->       |                   ^~~~~~~~~~~~~~~~~~~~~~
-> drivers/iio/light/hid-sensor-als.c:457:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
->   457 |                 .name = "HID-SENSOR-LISS-0041",
->       |                         ^~~~~~~~~~~~~~~~~~~~~~
-> drivers/iio/light/hid-sensor-prox.c:366:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
->   366 |                 .name = "HID-SENSOR-LISS-0226",
->       |                         ^~~~~~~~~~~~~~~~~~~~~~
+> This patch series aims to add support for Exynos 7870, starting with the
+> most basic yet essential components such as CPU, GPU, clock controllers,
+> PMIC, pin controllers, etc.
 > 
-> Increase the length to 24, slightly more than is currently being used by
-> the affected drivers. The string is used in '%s' format strings and via
-> the module code, which appears to do its own length encoding. This size
-> was chosen because there was already a 4 byte hole in the structure:
+> Moreover, the series also adds support for three Exynos 7870 devices via
+> devicetree. The devices are:
+>  * Samsung Galaxy J7 Prime	- released 2016, codename on7xelte
+>  * Samsung Galaxy J6		- released 2018, codename j6lte
+>  * Samsung Galaxy A2 Core	- released 2019, codename a2corelte
 > 
-> struct platform_device_id {
->         char                       name[20];             /*     0    20 */
+> Additional features implemented in this series include:
+>  * I2C	- touchscreen, IIO sensors, etc.
+>  * UART	- bluetooth and serial debugging
+>  * MMC	- eMMC, Wi-Fi SDIO, SDCard
+>  * USB	- micro-USB 2.0 interface
 > 
->         /* XXX 4 bytes hole, try to pack */
+> Build dependencies are in these sub-series:
+>  * pmu-clocks		A https://lore.kernel.org/all/20250301-exynos7870-pmu-clocks-v5-0-715b646d5206@disroot.org/
 > 
->         kernel_ulong_t             driver_data;          /*    24     8 */
+> Other related sub-series:
+>  * gpu			A https://lore.kernel.org/all/20250318-exynos7870-gpu-v1-1-084863f28b5c@disroot.org/
+>  * i2c	      		A https://lore.kernel.org/all/20250204-exynos7870-i2c-v1-0-63d67871ab7e@disroot.org/
+>  * mmc			A https://lore.kernel.org/all/20250219-exynos7870-mmc-v2-0-b4255a3e39ed@disroot.org/
+>  * pinctrl	  	A https://lore.kernel.org/all/20250301-exynos7870-pinctrl-v3-0-ba1da9d3cd2f@disroot.org/
+>  * pmic-regulators	A https://lore.kernel.org/all/20250301-exynos7870-pmic-regulators-v3-0-808d0b47a564@disroot.org/
+>  * uart			A https://lore.kernel.org/all/20250318-exynos7870-uart-v2-1-b9dcf145ae87@disroot.org/
+>  * usb			A https://lore.kernel.org/all/20250301-exynos7870-usb-v3-0-f01697165d19@disroot.org/
+>  * usbphy		A https://lore.kernel.org/all/20250410-exynos7870-usbphy-v2-0-2eb005987455@disroot.org/
+> (Legend: [R]eviewed, [A]pplied)
 > 
->         /* size: 32, cachelines: 1, members: 2 */
->         /* sum members: 28, holes: 1, sum holes: 4 */
->         /* last cacheline: 32 bytes */
-> };
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+> Changes in v6:
+> - Append the following trailers:
+>   [v5 1/5] dt-bindings: arm: samsung: add compatibles for exynos7870 devices
+>     Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> - Link to v5: https://lore.kernel.org/r/20250411-exynos7870-v5-0-6b319ae36c36@disroot.org
+This is not the reason to send new version. It only creates unnecessary
+traffic and more effort on my side to filter out versions. Read
+submitting patches regarding handling the tags.
 
-Since there is no even potential ABI breakage, I'm fine with the change.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Best regards,
+Krzysztof
