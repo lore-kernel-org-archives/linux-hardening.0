@@ -1,127 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E49B2DFA5C;
-	Wed, 16 Apr 2025 07:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F45522A801
+	for <linux-hardening@vger.kernel.org>; Wed, 16 Apr 2025 07:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744787755; cv=none; b=RT4145croSchGFUpGKmRJ6Xp1ZN0bY5Fdv1TEdBSkIVB4Focr7UJ7NNBBIFS4e/r8F+d7dKnUfM0njU/GhD+0V9VZFLA8ZO0gAHfU9SI477tZFvAai9LtxcIxRPbx6dsh4yvQe6gnUHFWBLD4TyjM956Ki9WBuVDrzddNh8Vwx4=
+	t=1744789074; cv=none; b=E67kD7gip68Kk9atC7EK9X8KSAiFr4I1fdOuIRrhnUeDHvDNQb1nLB0VN6oZqSw/6+Uwvywt55iy9HPt82G++a8qqKkG8ec8VFA15KWfi1UKkc6t7JdhFrre4QuHqO4sJMREz52HeFTCbMKrOaOinpxf8dNpPD6ShmFFX0AciQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744787755; c=relaxed/simple;
-	bh=O7NeWb4hRL+v6GegfMRWzmm5CQt/BYUNuJRAt83Zy20=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VGbb68AIG28LtXPqIHgnoS103WdtPIefktY/B92dAC46vt7xcLjtXKTTo++WRg5Y0TPQz1tO4mhmpS3uQbsH9Qru27eqmJxW6Zbl19swPRaAgrZ+zIfhIgi8JazCaXl0y7sBJwC5QPApj9k0hZpS7VQLWEiwJoWiLw2drm31UKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQAcbGOX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744789074; c=relaxed/simple;
+	bh=/dHTnIqKv1XUtEnnIqSrU6JfGL02W+RqBJVzPOERN8c=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=hUeNgxFskwsYJzhYZ/YWSSWUecZoowlqQ5XLTLSfjVZ3AI3UFc6ttCPvimDMftbCgb/crxCpVrHcPnohlZA0PFcpM8cZZ4OJc8fsjUH5/Z/lNxa2g166hQesFYEjX5FBr0S4DmZPY6opB4qwECURZnBuR6BoTctEYcOinb1L9sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=edj2n6gq; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQAcbGOX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 745CBC4CEE2;
-	Wed, 16 Apr 2025 07:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744787754;
-	bh=O7NeWb4hRL+v6GegfMRWzmm5CQt/BYUNuJRAt83Zy20=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WQAcbGOXai0E98KBkRRHrQL9ZEl7JmemAKBVIr/Soakg79DJFfrHc2z6VQKTdEzAt
-	 JekDTI6yCrPYynNGfp7iDYB9V48izGqsDDqgdVL551+JG7hj2yXZwKC4mfzH+eE3o0
-	 hq40pPq9z5G2fZqASmmTkSjMkk6xaCSP5JuTxF3drUfSkSh5CFoxt6Ik4aV75WYzHY
-	 6JgmvefvUXHrNxOUh7vrJL9GMe5Wa8hlWS4mddEzAZ8IasbqdryrehAUv9i08B1X85
-	 f1Ww9ZrEGQTKvMXUUdTrl86d83UdWSMTIp4UZvM1TIq08PtM6oDUXAv8tXN8gdllP7
-	 GFGIP3mwaP5qQ==
-Message-ID: <9362d6b4-890a-4364-8e51-71ad6fc1e107@kernel.org>
-Date: Wed, 16 Apr 2025 09:15:47 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="edj2n6gq"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac3f58b9156so74961866b.1
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Apr 2025 00:37:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744789070; x=1745393870; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PRYgw5eO5GQxlUJX50lZgpjYD+AakSIe/1el8VkKu44=;
+        b=edj2n6gqCJS9T3K0oXcdFhpiPIngSGM7tur1SQw569jiQaoG1CKU3Y6BqeoaoTAJK2
+         P1AGfGBwH+hOBJgDaf8/TF6jYQqCeVUBR2ixlR9GLa8fFwZat+m/7WjZkh1BNHD9Dnzb
+         dKlPuLUAxN8XsHEPa2JR6UsETg/RAsHnQlpoStDb++XSTfPv5yJ8TI8R1IiqAC6O4UuN
+         dGeWDWhFfd6Pc43ROLY3d+/BMAFOpQi+qGYiGabHUOqMvmzIRZA/YQrMsH7ZXBpJlV/r
+         iV4jqZ4iDYudLsMCQEpRCfysxXZ8aNc3hGY09Yqz8mxQ905xzDVlqVI/OiCOiD4NKFmF
+         jpOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744789070; x=1745393870;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PRYgw5eO5GQxlUJX50lZgpjYD+AakSIe/1el8VkKu44=;
+        b=mcxXyv6l+FnSHLfxPggO+mJBp/kjvpXuVg4mZwHcyNT7yNZalxVCUoOO/RRPWcsHNC
+         ZGOti4gGDnOS/a9tuo67UiW5GP+3cldHIt5SF37IDomosdE35/4VbpJHL9911gQj2WC1
+         cMmnrUVUlW/WtEwNUUjUl4r+B1ls5xqMt5gn4eJQid4HFzAvURiglb/AIrB1gUvtvupg
+         njAOY/sYKDLAtE40M90MRHOyFtxkfaChLLRcyRj7gvBUG6noC8LOi6fBbxS262OZhLsY
+         v9CQ90/csMJ0YopY8lz23klSXwcIkcz1xyGC3C/pNCeJ8tIw/Vpf+QiY4OXzO5O4sGkG
+         e7oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9vMkgHTDzGxOdx04TWPsT5KIzauhoIacPFhe84V7CHAf0tEOzU+1s4yMtJqdb6XTNGTMWqE8kbgKnPv2MeIY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkmF3ID6xGr9UJWlQnfVFaIuEVr1g8ZjCtu430qG+dl2QhqMRz
+	dF8gjqwCJ5LLc0onOkWJfnVJqbQj3TsLjgHW4dzxiwJ/rBUzXI8s1GtBpGVvCHM=
+X-Gm-Gg: ASbGncutJWk4ECNQRCeKcs3aKqmCS7IfTNopvoQ2si0dm0JMqvJJb3MUqEW+qe3GyV2
+	rjYVEh5L7BczagXxMgyz6d3s/LtQZUw58Spk9X6NYnzuQAVe2/dJD5BK5UfNq6NcrwUVI3FBMoi
+	Pdoh0ZcMnWVmK5yIqB7nlOs9FQpt2+7ugcXAdN0AWeLU/r8MuTzF/gdW3qK2qafFcBtiBx7h34a
+	WWDDbwJNgYMNsn0I3D/hrUHe6nKwSd7LmIOGGiDS6BYegTTOMSg2sA0obbOCLRzDvOzGKdSrSZ7
+	BDGX2AG9BOCgE4WXsOnPBuw/kGna3L0WaDG20f1mKXSaqDVpphYoWpWLo3SH5T2ABjCY2Kciz5a
+	JMUOY5mnabhiZWjI=
+X-Google-Smtp-Source: AGHT+IGGDPu8p/m7Rp/p9mRRBOni1XiQkV2RaJnHLAJhksBbAx8CjdUPnxxzVfx8pJ0atl4HAQG9Tw==
+X-Received: by 2002:a17:907:86a3:b0:ac2:1d34:44ff with SMTP id a640c23a62f3a-acb428ef998mr22714466b.4.1744789070418;
+        Wed, 16 Apr 2025 00:37:50 -0700 (PDT)
+Received: from [192.168.1.26] (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d1c849dsm75324966b.147.2025.04.16.00.37.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 00:37:49 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <Z_RflBe5iDGTMFjV@kspp>
+References: <Z_RflBe5iDGTMFjV@kspp>
+Subject: Re: [PATCH v3][next] w1: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-Id: <174478906927.19176.15442189860155457011.b4-ty@linaro.org>
+Date: Wed, 16 Apr 2025 09:37:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/5] Add support for the Exynos7870 SoC, along with
- three devices
-To: Kaustabh Chakraborty <kauschluss@disroot.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On 13/04/2025 20:58, Kaustabh Chakraborty wrote:
-> Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
-> announced in 2016. The chipset was found in several popular mid-range to
-> low-end Samsung phones, released within 2016 to 2019.
-> 
-> This patch series aims to add support for Exynos 7870, starting with the
-> most basic yet essential components such as CPU, GPU, clock controllers,
-> PMIC, pin controllers, etc.
-> 
-> Moreover, the series also adds support for three Exynos 7870 devices via
-> devicetree. The devices are:
->  * Samsung Galaxy J7 Prime	- released 2016, codename on7xelte
->  * Samsung Galaxy J6		- released 2018, codename j6lte
->  * Samsung Galaxy A2 Core	- released 2019, codename a2corelte
-> 
-> Additional features implemented in this series include:
->  * I2C	- touchscreen, IIO sensors, etc.
->  * UART	- bluetooth and serial debugging
->  * MMC	- eMMC, Wi-Fi SDIO, SDCard
->  * USB	- micro-USB 2.0 interface
-> 
-> Build dependencies are in these sub-series:
->  * pmu-clocks		A https://lore.kernel.org/all/20250301-exynos7870-pmu-clocks-v5-0-715b646d5206@disroot.org/
 
-So this patchset waits? Ping me or resend when your dependencies are
-merged. If resending then of course explain why and update dependencies
-list.
+On Mon, 07 Apr 2025 17:28:20 -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] w1: Avoid -Wflex-array-member-not-at-end warnings
+      https://git.kernel.org/krzk/linux-w1/c/a9b3ecc7bcf6cb8d3c4947a7ae260f508c4c5fd1
 
 Best regards,
-Krzysztof
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
