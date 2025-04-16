@@ -1,257 +1,289 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B69C1C5F06
-	for <linux-hardening@vger.kernel.org>; Wed, 16 Apr 2025 00:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C60F1FCFE9;
+	Wed, 16 Apr 2025 01:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744763439; cv=none; b=RHl3q5LjFPtha3ydrWY//l6/39dvb6hfaj3nq6ZVKlpucesSPBztfgzr+BL8LDHt9SgFyPhaNW3YTFZc36h8u616jooxZ5RcAXD8Z08IHs5lnl63ttE+FWlr+zhQENR8weMWiAZpW9Ur/Kyzx2WumCIf1uOh4YzYbbkdnRuCvww=
+	t=1744765341; cv=none; b=r2xJqdLkDHV7RV9ec9TAXI+Wm4UYUiUOwfZlhtTPl/OgVqKUGy9J93fyxrFuciVADZgIAPevkj8QvIgArj8QAFNPcakjDNiT6Q/v4Y1p0PSLPcB8sC/a0tbVt5Q7NJzZCU8apVbjjFcpwjVYY9khqHI02bYC+c4IYhwaOk3dZNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744763439; c=relaxed/simple;
-	bh=HlhF/jbUbz4RAdgHqaJ9DfiS4pZHWIUF3+q6s2w6WZE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=iDgWtc9ZrUtU5YYKWzDkHhXXkBxFFIYb4iOhoeQMPU2f9oIzPMUllXxj77eBUl2QCmoglIj3WilH5hlwIugiW/1pgdWLgLdLPax3gWUiEfnep9aTNgNFlMOJX45XBohrrdWyIYJ6p2quK3zpmoClopuoDwqdupXgVY4xzgG80WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ZOv3TV2n; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1744765341; c=relaxed/simple;
+	bh=pxx/BrdLMS5Mul/HFokaPLtg/6DDJYpnVXSSateVRNs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QEb4+zOCtxPlrG2DUp4d/iwVONzxH/CVOUVUBWfVlBJymeGnQKENuqDvjbLW622WDCBn5zStajG01itCxe4TxCMaxKAMT8Q8YyxNjzSwaPxtXNoHq5VDmOxjJX2uaEGv0lXoW78wGvQTAo0CtZetsq1y/W/tbroJxAZ9qUoKnfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ls4HvtgK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZOv3TV2n"
-Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
-	by cmsmtp with ESMTPS
-	id 4m7LuWPAgWuHK4qffui2jx; Wed, 16 Apr 2025 00:30:31 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 4qffuh4PMgFaX4qffuXGzH; Wed, 16 Apr 2025 00:30:31 +0000
-X-Authority-Analysis: v=2.4 cv=DbzcqetW c=1 sm=1 tr=0 ts=67fefa27
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=UN1T-_8jpz6L_PNgig8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=oKBjP8juYoC9d3TnLW3yOOR8GjWDwl8kbWpULuM2oic=; b=ZOv3TV2nYLymDuavxSj0Plctwq
-	cl+gt/u9mnaX9R+CgiRs/33/m3ra+AjnxHukcNnk2YrHM6/hXfTsu6V+3OG/OaTvOQ03fP0CGy3AD
-	OvXhqNwFtnInRtk78ljEiM0tWzvUysYI+0M7xSuxJhrH7hFd2JKAVi5EwoAEX5zbSinEulAPeZqWh
-	sDVzgh05jTDi9sfyqfHOUvOAn314Xbx0eH0G9OSeEOPrsaxrDDRnuq9pLYw/9NxiMiPpQtIUJeMV5
-	ovMswtsbAyrAvsX3HNk/ihoZfZj+zI6f96ss1JmZ9EPsN+cu5B+dagInndCHoAVVpnMslRlxOl0TB
-	ZIFK4Xmg==;
-Received: from [201.172.174.147] (port=43583 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1u4qfc-00000001dP6-3MLK;
-	Tue, 15 Apr 2025 19:30:29 -0500
-Message-ID: <217b00f5-d03d-4624-9ba9-d838199ef7b9@embeddedor.com>
-Date: Tue, 15 Apr 2025 18:30:20 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ls4HvtgK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78E76C4CEE7;
+	Wed, 16 Apr 2025 01:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744765339;
+	bh=pxx/BrdLMS5Mul/HFokaPLtg/6DDJYpnVXSSateVRNs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ls4HvtgK/y+KTLUCOZzykdiJaX8cTl1dQ4ZonA75BNbJjzCHmKVHV+wUH2bR+QVw9
+	 My8lEaDI8qdNDQaxpFoq/u8x4e5nkqt2ClaWt/DIcnolEblHSKQ+3osoGqwoTqa/+3
+	 Dm+qqHGJsW+YwVaoL4gWUrTTZBn7zdN/JwcO4/CL8QzG2M7ytRbWf9GPtP3pIQihSz
+	 yJVsIaqL3csj9ZvXmN972Ikyq346YVGfEx0kY0YP65BfXFB82aXBjYWZQf1r3G/1ik
+	 KF8Z+vjR8RM41fNhwWOpHZWQuWgo7GWS6gMfNZF7UqMmVXQVxE1fKWRmWRk+PXnigZ
+	 flOePqbJby6Yw==
+From: Kees Cook <kees@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Wei Fang <wei.fang@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Ido Schimmel <idosch@nvidia.com>,
+	Petr Machata <petrm@nvidia.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Simon Horman <horms@kernel.org>,
+	Geoff Levand <geoff@infradead.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Joshua Washington <joshwash@google.com>,
+	Furong Xu <0x1207@gmail.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Petr Tesarik <petr@tesarici.cz>,
+	netdev@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Richard Cochran <richardcochran@gmail.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Ziwei Xiao <ziweixiao@google.com>,
+	Shailend Chand <shailend@google.com>,
+	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] net: ethtool: Adjust exactly ETH_GSTRING_LEN-long stats to use memcpy
+Date: Tue, 15 Apr 2025 18:02:15 -0700
+Message-Id: <20250416010210.work.904-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/amd/pm: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kenneth Feng <kenneth.feng@amd.com>, Alex Deucher
- <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
- <christian.koenig@amd.com>, Xinhui Pan <Xinhui.Pan@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- Kees Cook <keescook@chromium.org>
-References: <Z678TNhCbTk363Tw@kspp>
- <864c7dd5-0deb-4adb-a1cf-c8a809514d7e@embeddedor.com>
-Content-Language: en-US
-In-Reply-To: <864c7dd5-0deb-4adb-a1cf-c8a809514d7e@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10779; i=kees@kernel.org; h=from:subject:message-id; bh=pxx/BrdLMS5Mul/HFokaPLtg/6DDJYpnVXSSateVRNs=; b=owGbwMvMwCVmps19z/KJym7G02pJDOn/Gad1NGVU6W/WfyJdUZi984XlOb31Yrwd+hLp+axH9 u1gm7m7o5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCKyuxn+l0wtitpevZL7p9xZ h031fhFrzGxyj9pc/ryRMzivRZF7KSPDBwFbj8yl7DXPpy6+d6LaOubjukXbu7+YHxBqkfaXm1X PAAA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.147
-X-Source-L: No
-X-Exim-ID: 1u4qfc-00000001dP6-3MLK
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.174.147]:43583
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfEMarehh/NuDJUkdqh9RlTdLMFDkfFck9cci2tWwYobGAd1FKsVri8wuGMPCwMfJD4tgrMh0n1hAloUEQnHvjQ+BV9itVTJxOsZgyMuZ98dHCj43PHsk
- phSlMuqknQhdKhg0r5MPWoowbMWk3cyW5PVrgYA75/M5rSzIzYNyvrfthbPuz168z9tqY9PanCFWi389bsWGlKywQCA3KinJFvIFyvvsTckbqZAP7IFMRavO
 
-Hi all,
+Many drivers populate the stats buffer using C-String based APIs (e.g.
+ethtool_sprintf() and ethtool_puts()), usually when building up the
+list of stats individually (i.e. with a for() loop). This, however,
+requires that the source strings be populated in such a way as to have
+a terminating NUL byte in the source.
 
-Friendly ping (second one): who can take this patch, please? 🙂
+Other drivers populate the stats buffer directly using one big memcpy()
+of an entire array of strings. No NUL termination is needed here, as the
+bytes are being directly passed through. Yet others will build up the
+stats buffer individually, but also use memcpy(). This, too, does not
+need NUL termination of the source strings.
 
-Thanks!
--Gustavo
+However, there are cases where the strings that populate the
+source stats strings are exactly ETH_GSTRING_LEN long, and GCC
+15's -Wunterminated-string-initialization option complains that the
+trailing NUL byte has been truncated. This situation is fine only if the
+driver is using the memcpy() approach. If the C-String APIs are used,
+the destination string name will have its final byte truncated by the
+required trailing NUL byte applied by the C-string API.
 
-On 11/03/25 02:10, Gustavo A. R. Silva wrote:
-> Hi all,
-> 
-> Friendly ping: who can take this, please? :)
-> 
-> Thanks!
-> -- 
-> Gustavo
-> 
-> On 14/02/25 18:48, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> So, in order to avoid ending up with a flexible-array member in the
->> middle of other structs, we use the `struct_group_tagged()` helper
->> to create a new tagged `struct NISLANDS_SMC_SWSTATE_HDR` (and `struct
->> SISLANDS_SMC_SWSTATE_HDR`). This structures group together all the
->> members of the flexible `struct NISLANDS_SMC_SWSTATE` (and `struct
->> SISLANDS_SMC_SWSTATE`) except the flexible array.
->>
->> As a result, the array is effectively separated from the rest of the
->> members without modifying the memory layout of the flexible structure.
->> We then change the type of the middle struct members currently causing
->> trouble from `struct NISLANDS_SMC_SWSTATE` to `struct
->> NISLANDS_SMC_SWSTATE_HDR` (and from `struct SISLANDS_SMC_SWSTATE` to
->> `struct SISLANDS_SMC_SWSTATE_HDR`).
->>
->> We also want to ensure that when new members need to be added to the
->> flexible structure, they are always included within the newly created
->> tagged struct. For this, we use `static_assert()`. This ensures that
->> the memory layout for both the flexible structure and the new tagged
->> struct is the same after any changes.
->>
->> This approach avoids having to implement `struct NISLANDS_SMC_SWSTATE_HDR`
->> (and `struct SISLANDS_SMC_SWSTATE_HDR`) as a completely separate structure,
->> thus preventing having to maintain two independent but basically identical
->> structures, closing the door to potential bugs in the future.
->>
->> We also use `container_of()` whenever we need to retrieve a pointer to
->> the flexible structure, through which we can access the flexible-array
->> member, if necessary.
->>
->> So, with this changes, fix the following warnings:
->>
->> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/sislands_smc.h:218:49: warning: structure containing a flexible array member is not at the end of another 
->> structure [-Wflex-array-member-not-at-end]
->> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:819:41: warning: structure containing a flexible array member is not at the end of another structure [- 
->> Wflex-array-member-not-at-end]
->> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:818:41: warning: structure containing a flexible array member is not at the end of another structure [- 
->> Wflex-array-member-not-at-end]
->> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:817:41: warning: structure containing a flexible array member is not at the end of another structure [- 
->> Wflex-array-member-not-at-end]
->> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:816:41: warning: structure containing a flexible array member is not at the end of another structure [- 
->> Wflex-array-member-not-at-end]
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c    |  7 ++++--
->>   drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h    | 23 +++++++++++--------
->>   .../gpu/drm/amd/pm/legacy-dpm/sislands_smc.h  | 15 ++++++++----
->>   3 files changed, 29 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c
->> index a87dcf0974bc..2c9d473d122f 100644
->> --- a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c
->> +++ b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c
->> @@ -5234,7 +5234,8 @@ static int si_init_smc_table(struct amdgpu_device *adev)
->>       table->driverState.flags = table->initialState.flags;
->>       table->driverState.levelCount = table->initialState.levelCount;
->> -    table->driverState.levels[0] = table->initialState.level;
->> +    container_of(&table->driverState, SISLANDS_SMC_SWSTATE, __hdr)->levels[0] =
->> +                                table->initialState.level;
->>       ret = si_do_program_memory_timing_parameters(adev, amdgpu_boot_state,
->>                                SISLANDS_INITIAL_STATE_ARB_INDEX);
->> @@ -5755,7 +5756,9 @@ static int si_upload_sw_state(struct amdgpu_device *adev,
->>       int ret;
->>       u32 address = si_pi->state_table_start +
->>           offsetof(SISLANDS_SMC_STATETABLE, driverState);
->> -    SISLANDS_SMC_SWSTATE *smc_state = &si_pi->smc_statetable.driverState;
->> +    SISLANDS_SMC_SWSTATE *smc_state =
->> +        container_of(&si_pi->smc_statetable.driverState,
->> +                 SISLANDS_SMC_SWSTATE, __hdr);
->>       size_t state_size = struct_size(smc_state, levels,
->>                       new_state->performance_level_count);
->>       memset(smc_state, 0, state_size);
->> diff --git a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h
->> index 11cb7874a6bb..62530f89ebdf 100644
->> --- a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h
->> +++ b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h
->> @@ -784,12 +784,17 @@ typedef struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL NISLANDS_SMC_HW_PERFORMANCE_LEV
->>   struct NISLANDS_SMC_SWSTATE
->>   {
->> -    uint8_t                             flags;
->> -    uint8_t                             levelCount;
->> -    uint8_t                             padding2;
->> -    uint8_t                             padding3;
->> -    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
->> +    /* New members MUST be added within the struct_group() macro below. */
->> +    struct_group_tagged(NISLANDS_SMC_SWSTATE_HDR, __hdr,
->> +        uint8_t                             flags;
->> +        uint8_t                             levelCount;
->> +        uint8_t                             padding2;
->> +        uint8_t                             padding3;
->> +    );
->> +    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
->>   };
->> +static_assert(offsetof(struct NISLANDS_SMC_SWSTATE, levels) == sizeof(struct NISLANDS_SMC_SWSTATE_HDR),
->> +          "struct member likely outside of struct_group_tagged()");
->>   typedef struct NISLANDS_SMC_SWSTATE NISLANDS_SMC_SWSTATE;
->> @@ -813,10 +818,10 @@ struct NISLANDS_SMC_STATETABLE
->>       uint32_t                            lowSMIO[NISLANDS_MAX_NO_VREG_STEPS];
->>       NISLANDS_SMC_VOLTAGEMASKTABLE       voltageMaskTable;
->>       PP_NIslands_DPM2Parameters          dpm2Params;
->> -    NISLANDS_SMC_SWSTATE                initialState;
->> -    NISLANDS_SMC_SWSTATE                ACPIState;
->> -    NISLANDS_SMC_SWSTATE                ULVState;
->> -    NISLANDS_SMC_SWSTATE                driverState;
->> +    struct NISLANDS_SMC_SWSTATE_HDR        initialState;
->> +    struct NISLANDS_SMC_SWSTATE_HDR        ACPIState;
->> +    struct NISLANDS_SMC_SWSTATE_HDR        ULVState;
->> +    struct NISLANDS_SMC_SWSTATE_HDR        driverState;
->>       NISLANDS_SMC_HW_PERFORMANCE_LEVEL   dpmLevels[NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE - 1];
->>   };
->> diff --git a/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h b/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h
->> index 90ec411c5029..1711e3e35e80 100644
->> --- a/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h
->> +++ b/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h
->> @@ -172,12 +172,17 @@ struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL {
->>   typedef struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL SISLANDS_SMC_HW_PERFORMANCE_LEVEL;
->>   struct SISLANDS_SMC_SWSTATE {
->> -    uint8_t                             flags;
->> -    uint8_t                             levelCount;
->> -    uint8_t                             padding2;
->> -    uint8_t                             padding3;
->> +    /* New members MUST be added within the struct_group() macro below. */
->> +    struct_group_tagged(SISLANDS_SMC_SWSTATE_HDR, __hdr,
->> +        uint8_t                             flags;
->> +        uint8_t                             levelCount;
->> +        uint8_t                             padding2;
->> +        uint8_t                             padding3;
->> +    );
->>       SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
->>   };
->> +static_assert(offsetof(struct SISLANDS_SMC_SWSTATE, levels) == sizeof(struct SISLANDS_SMC_SWSTATE_HDR),
->> +          "struct member likely outside of struct_group_tagged()");
->>   typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
->> @@ -215,7 +220,7 @@ struct SISLANDS_SMC_STATETABLE {
->>       struct SISLANDS_SMC_SWSTATE_SINGLE    initialState;
->>       struct SISLANDS_SMC_SWSTATE_SINGLE    ACPIState;
->>       struct SISLANDS_SMC_SWSTATE_SINGLE    ULVState;
->> -    SISLANDS_SMC_SWSTATE            driverState;
->> +    struct SISLANDS_SMC_SWSTATE_HDR        driverState;
->>       SISLANDS_SMC_HW_PERFORMANCE_LEVEL    dpmLevels[SISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE];
->>   };
-> 
+For drivers that are already using memcpy() but have initializers that
+truncate the NUL terminator, mark their source strings as __nonstring to
+silence the GCC warnings.
+
+For drivers that have initializers that truncate the NUL terminator and
+are using the C-String APIs, switch to memcpy() to avoid destination
+string truncation and mark their source strings as __nonstring to silence
+the GCC warnings. (Also introduce ethtool_cpy() as a helper to make this
+an easy replacement).
+
+Specifically the following warnings were investigated and addressed:
+
+../drivers/net/ethernet/chelsio/cxgb/cxgb2.c:364:9: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
+  364 |         "TxFramesAbortedDueToXSCollisions",
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/freescale/enetc/enetc_ethtool.c:165:33: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
+  165 |         { ENETC_PM_R1523X(0),   "MAC rx 1523 to max-octet packets" },
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/freescale/enetc/enetc_ethtool.c:190:33: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
+  190 |         { ENETC_PM_T1523X(0),   "MAC tx 1523 to max-octet packets" },
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/google/gve/gve_ethtool.c:76:9: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
+   76 |         "adminq_dcfg_device_resources_cnt", "adminq_set_driver_parameter_cnt",
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c:117:53: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
+  117 |         STMMAC_STAT(ptp_rx_msg_type_pdelay_follow_up),
+      |                                                     ^
+../drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c:46:12: note: in definition of macro 'STMMAC_STAT'
+   46 |         { #m, sizeof_field(struct stmmac_extra_stats, m),       \
+      |            ^
+../drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c:328:24: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
+  328 |                 .str = "a_mac_control_frames_transmitted",
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c:340:24: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
+  340 |                 .str = "a_pause_mac_ctrl_frames_received",
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Claudiu Manoil <claudiu.manoil@nxp.com>
+Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Wei Fang <wei.fang@nxp.com>
+Cc: Clark Wang <xiaoning.wang@nxp.com>
+Cc: Jeroen de Borst <jeroendb@google.com>
+Cc: Harshitha Ramamurthy <hramamurthy@google.com>
+Cc: Ido Schimmel <idosch@nvidia.com>
+Cc: Petr Machata <petrm@nvidia.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: Simon Horman <horms@kernel.org>
+Cc: Geoff Levand <geoff@infradead.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Praveen Kaligineedi <pkaligineedi@google.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Cc: Joshua Washington <joshwash@google.com>
+Cc: Furong Xu <0x1207@gmail.com>
+Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: Jisheng Zhang <jszhang@kernel.org>
+Cc: Petr Tesarik <petr@tesarici.cz>
+Cc: netdev@vger.kernel.org
+Cc: imx@lists.linux.dev
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ drivers/net/ethernet/chelsio/cxgb/cxgb2.c             |  2 +-
+ drivers/net/ethernet/freescale/enetc/enetc_ethtool.c  |  4 ++--
+ drivers/net/ethernet/google/gve/gve_ethtool.c         |  4 ++--
+ .../net/ethernet/mellanox/mlxsw/spectrum_ethtool.c    |  2 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c  |  2 +-
+ include/linux/ethtool.h                               | 11 +++++++++++
+ 6 files changed, 18 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/chelsio/cxgb/cxgb2.c b/drivers/net/ethernet/chelsio/cxgb/cxgb2.c
+index 3b7068832f95..4a0e2d2eb60a 100644
+--- a/drivers/net/ethernet/chelsio/cxgb/cxgb2.c
++++ b/drivers/net/ethernet/chelsio/cxgb/cxgb2.c
+@@ -351,7 +351,7 @@ static void set_msglevel(struct net_device *dev, u32 val)
+ 	adapter->msg_enable = val;
+ }
+ 
+-static const char stats_strings[][ETH_GSTRING_LEN] = {
++static const char stats_strings[][ETH_GSTRING_LEN] __nonstring_array = {
+ 	"TxOctetsOK",
+ 	"TxOctetsBad",
+ 	"TxUnicastFramesOK",
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c b/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
+index ece3ae28ba82..f47c8b6cc511 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
+@@ -141,7 +141,7 @@ static const struct {
+ 
+ static const struct {
+ 	int reg;
+-	char name[ETH_GSTRING_LEN];
++	char name[ETH_GSTRING_LEN] __nonstring;
+ } enetc_port_counters[] = {
+ 	{ ENETC_PM_REOCT(0),	"MAC rx ethernet octets" },
+ 	{ ENETC_PM_RALN(0),	"MAC rx alignment errors" },
+@@ -264,7 +264,7 @@ static void enetc_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
+ 			break;
+ 
+ 		for (i = 0; i < ARRAY_SIZE(enetc_port_counters); i++)
+-			ethtool_puts(&data, enetc_port_counters[i].name);
++			ethtool_cpy(&data, enetc_port_counters[i].name);
+ 
+ 		break;
+ 	}
+diff --git a/drivers/net/ethernet/google/gve/gve_ethtool.c b/drivers/net/ethernet/google/gve/gve_ethtool.c
+index eae1a7595a69..3c1da0cf3f61 100644
+--- a/drivers/net/ethernet/google/gve/gve_ethtool.c
++++ b/drivers/net/ethernet/google/gve/gve_ethtool.c
+@@ -67,7 +67,7 @@ static const char gve_gstrings_tx_stats[][ETH_GSTRING_LEN] = {
+ 	"tx_xsk_sent[%u]", "tx_xdp_xmit[%u]", "tx_xdp_xmit_errors[%u]"
+ };
+ 
+-static const char gve_gstrings_adminq_stats[][ETH_GSTRING_LEN] = {
++static const char gve_gstrings_adminq_stats[][ETH_GSTRING_LEN] __nonstring_array = {
+ 	"adminq_prod_cnt", "adminq_cmd_fail", "adminq_timeouts",
+ 	"adminq_describe_device_cnt", "adminq_cfg_device_resources_cnt",
+ 	"adminq_register_page_list_cnt", "adminq_unregister_page_list_cnt",
+@@ -113,7 +113,7 @@ static void gve_get_strings(struct net_device *netdev, u32 stringset, u8 *data)
+ 						i);
+ 
+ 		for (i = 0; i < ARRAY_SIZE(gve_gstrings_adminq_stats); i++)
+-			ethtool_puts(&s, gve_gstrings_adminq_stats[i]);
++			ethtool_cpy(&s, gve_gstrings_adminq_stats[i]);
+ 
+ 		break;
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c
+index 3f64cdbabfa3..0a8fb9c842d3 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c
+@@ -262,7 +262,7 @@ static int mlxsw_sp_port_set_pauseparam(struct net_device *dev,
+ }
+ 
+ struct mlxsw_sp_port_hw_stats {
+-	char str[ETH_GSTRING_LEN];
++	char str[ETH_GSTRING_LEN] __nonstring;
+ 	u64 (*getter)(const char *payload);
+ 	bool cells_bytes;
+ };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+index 918a32f8fda8..844f7d516a40 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+@@ -37,7 +37,7 @@
+ #define ETHTOOL_DMA_OFFSET	55
+ 
+ struct stmmac_stats {
+-	char stat_string[ETH_GSTRING_LEN];
++	char stat_string[ETH_GSTRING_LEN] __nonstring;
+ 	int sizeof_stat;
+ 	int stat_offset;
+ };
+diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+index 013d25858642..7edb5f5e7134 100644
+--- a/include/linux/ethtool.h
++++ b/include/linux/ethtool.h
+@@ -1330,6 +1330,17 @@ extern __printf(2, 3) void ethtool_sprintf(u8 **data, const char *fmt, ...);
+  */
+ extern void ethtool_puts(u8 **data, const char *str);
+ 
++/**
++ * ethtool_cpy - Write possibly-not-NUL-terminated string to ethtool string data
++ * @data: Pointer to a pointer to the start of string to write into
++ * @str: NUL-byte padded char array of size ETH_GSTRING_LEN to copy from
++ */
++#define ethtool_cpy(data, str)	do {				\
++	BUILD_BUG_ON(sizeof(str) != ETH_GSTRING_LEN);		\
++	memcpy(*(data), str, ETH_GSTRING_LEN);			\
++	*(data) += ETH_GSTRING_LEN;				\
++} while (0)
++
+ /* Link mode to forced speed capabilities maps */
+ struct ethtool_forced_speed_map {
+ 	u32		speed;
+-- 
+2.34.1
 
