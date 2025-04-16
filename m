@@ -1,99 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F0E202C42;
-	Wed, 16 Apr 2025 17:42:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08FD154C17;
+	Wed, 16 Apr 2025 17:45:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744825323; cv=none; b=IHGIwZm8D38s1s4gaFdB0Sa+pgOwHuqzBLQSjTrbBn5SyeR1N5YRYUSGO74Ae09fO3/L+3kWJTL4xTfEatAI0vpCfk4YYp5reSRgxp5bszcwzTd2OZE4jmQKWDENRbYlH8//SbgNsC8i9N4GuEuPcKfhaTos+tZgxn+MdniLa8o=
+	t=1744825521; cv=none; b=m3cLa/OVoVUNddwMeDW7ikewV0kGchHbEklOAHs7+gP1MH4u1gt4DCl9Ilt0sCcJGAmGJFCg/h0QA40C+/itKTvMQapvFSTy3hsMmhiP1Jtxm5QGAK1JYqcso9zcdiqvjcZctp7Perm0PnxWBAhlV/yfDOUFGeOwixJCT1qnmkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744825323; c=relaxed/simple;
-	bh=fzzjNsTOIQf2qJggT3eDFAxMy7Vwudm1uX77sPkiASo=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=VwlqA4RjNyUWJCObGVwrkeNt2y+ktKpxeDR1uNiUmJfBH4IuOiKl5aU3F7Ju2kpDCWFSXsPJX/Iqs51m4WdHlneGTIc7/WhX8iDm7hJ5OKODJ2iaqmXjrNuAxKmleVaXHTIkhstGZukWI5OwS9Gc65ZhKRbgzNtndbA827LcOgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPQ4W11s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744825521; c=relaxed/simple;
+	bh=INhAtgzTbo+H9P90iWeVT1I+06inDlWJEEG+41qUq1c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WALEuYm0Ob+Kcc/EPAlp73B6ygXUpfhmhsBNHLFL/2u+V3yitXLU/U7ojknTj4vIJgW9gJ1a9As7HEaooJVnx/P0HhuYDlpJ+fikzvSMKOkAgdN5kUPWTj4OKswTITEtnAcpQPDS5h07nWhNMHjs3OHe7uTXkSRWwmwZjV5sfWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poVs4j1q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPQ4W11s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8008BC4CEE2;
-	Wed, 16 Apr 2025 17:42:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poVs4j1q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44402C4CEE2;
+	Wed, 16 Apr 2025 17:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744825322;
-	bh=fzzjNsTOIQf2qJggT3eDFAxMy7Vwudm1uX77sPkiASo=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=WPQ4W11sZS7Jytt53u2ONx7nl2wIRp0aH2Zb1OKbhyv8Rt3hDjMSAwFznOcm3Ot1Q
-	 VP+AqIOIPUuGBzA4z8oBagF3RX0Tgtze3hCEmvgBG7COkU/pq7l1K/QuOGqFBaGzHj
-	 cDftwuODppthjlk0wQgUfOM/HvOOXxTszo8i0KA71CX0Mo0NFQfLfSf4tQKXTmHs79
-	 IFMvYU9bsa+Vse+nx6j54L33WIPyzpfWSFRujxwvtrAKBEcQKGj4keg6x86xY1oD/4
-	 bmI2JPF8r0UUSYp00OGoPjmyCfPVWo2vfDH01pE9vJfYhvHPTK+G+thF2E1fRiFtxk
-	 vBcUiNlTY+zOA==
-Date: Wed, 16 Apr 2025 12:42:01 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1744825521;
+	bh=INhAtgzTbo+H9P90iWeVT1I+06inDlWJEEG+41qUq1c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=poVs4j1qzHaSgPNBoCaQY9VleGrtK4KIDHxrF6jDFV7guhXfUwtBKNgFVC6Cp02qX
+	 jfi+S7SUHj03VvAO1of9wiNMODEwfSbra9N6Q5hj25QxFiZpYq3MBvQXZ8yMU4vyyG
+	 REtrao/EpwYsQiwVi8NSaJaIBXSHu+HtTmE4ySOsglj/7lYyD0CLnApZrOBcDdHEM7
+	 3gXfZnF4V+TxWBQLq6Ei/Lqp+1jlRgRjodIIgV4ghW+vaYUjQgvGIuaFz5fRTAC6gv
+	 AWGwheJPReFqrCotJa+w/BD7bVd9H/YXdQXE70uM6DmAmSu5YQLG2eI7L1OvIV1RLT
+	 TKoiuzYPGu1Qw==
+From: Kees Cook <kees@kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Erick Archer <erick.archer@outlook.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] input/joystick: magellan: Mark __nonstring look-up table
+Date: Wed, 16 Apr 2025 10:45:17 -0700
+Message-Id: <20250416174513.work.662-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, netdev@vger.kernel.org, 
- Prathosh Satish <Prathosh.Satish@microchip.com>, 
- Vadim Fedorenko <vadim.fedorenko@linux.dev>, Kees Cook <kees@kernel.org>, 
- Michal Schmidt <mschmidt@redhat.com>, Conor Dooley <conor+dt@kernel.org>, 
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, 
- linux-hardening@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
- linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, 
- Jiri Pirko <jiri@resnulli.us>, Andy Shevchenko <andy@kernel.org>, 
- devicetree@vger.kernel.org
-To: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <20250416162144.670760-3-ivecera@redhat.com>
-References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-3-ivecera@redhat.com>
-Message-Id: <174482532098.3485034.14305412993449574460.robh@kernel.org>
-Subject: Re: [PATCH v3 net-next 2/8] dt-bindings: dpll: Add support for
- Microchip Azurite chip family
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1560; i=kees@kernel.org; h=from:subject:message-id; bh=INhAtgzTbo+H9P90iWeVT1I+06inDlWJEEG+41qUq1c=; b=owGbwMvMwCVmps19z/KJym7G02pJDOn/36x5tEVfWlVaPPLcvdbjK+TuXFZzNdtyacfem9cSG i7e0fgwraOUhUGMi0FWTJElyM49zsXjbXu4+1xFmDmsTCBDGLg4BWAiQV8Z/vBaZcebzA5JE793 oPLCjGNLs48HHziXvWjF/+cJaxNrdYoZ/tmrSHxObAn8lnLodIpyYuPpjEP61xLfGBzfGqrZdfX dRSYA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
+GCC 15's new -Wunterminated-string-initialization notices that the
+16 character lookup table "nibbles" (which is not used as a C-String)
+needs to be marked as "nonstring":
 
-On Wed, 16 Apr 2025 18:21:38 +0200, Ivan Vecera wrote:
-> Add DT bindings for Microchip Azurite DPLL chip family. These chips
-> provides up to 5 independent DPLL channels, 10 differential or
-> single-ended inputs and 10 differential or 20 single-ended outputs.
-> It can be connected via I2C or SPI busses.
-> 
-> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
-> ---
-> v1->v3:
-> * single file for both i2c & spi
-> * 5 compatibles for all supported chips from the family
-> ---
->  .../bindings/dpll/microchip,zl30731.yaml      | 115 ++++++++++++++++++
->  1 file changed, 115 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
-> 
+drivers/input/joystick/magellan.c: In function 'magellan_crunch_nibbles':
+drivers/input/joystick/magellan.c:51:44: warning: initializer-string for array of 'unsigned char' truncates NUL terminator but destination lacks 'nonstring' attribute (17 chars into 16 available) [-Wunterminated-string-initialization]
+   51 |         static unsigned char nibbles[16] = "0AB3D56GH9:K<MN?";
+      |                                            ^~~~~~~~~~~~~~~~~~
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Add the annotation and While at it, mark the table as const too.
 
-yamllint warnings/errors:
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Erick Archer <erick.archer@outlook.com>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-input@vger.kernel.org
+---
+ drivers/input/joystick/magellan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml: $id: Cannot determine base path from $id, relative path/filename doesn't match actual path or filename
- 	 $id: http://devicetree.org/schemas/dpll/microchip,zl3073x.yaml
- 	file: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250416162144.670760-3-ivecera@redhat.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/drivers/input/joystick/magellan.c b/drivers/input/joystick/magellan.c
+index 2eaa25c9c68c..7622638e5bb8 100644
+--- a/drivers/input/joystick/magellan.c
++++ b/drivers/input/joystick/magellan.c
+@@ -48,7 +48,7 @@ struct magellan {
+ 
+ static int magellan_crunch_nibbles(unsigned char *data, int count)
+ {
+-	static unsigned char nibbles[16] = "0AB3D56GH9:K<MN?";
++	static const unsigned char nibbles[16] __nonstring = "0AB3D56GH9:K<MN?";
+ 
+ 	do {
+ 		if (data[count] == nibbles[data[count] & 0xf])
+-- 
+2.34.1
 
