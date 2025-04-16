@@ -1,86 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08FD154C17;
-	Wed, 16 Apr 2025 17:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D1F215F42;
+	Wed, 16 Apr 2025 17:48:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744825521; cv=none; b=m3cLa/OVoVUNddwMeDW7ikewV0kGchHbEklOAHs7+gP1MH4u1gt4DCl9Ilt0sCcJGAmGJFCg/h0QA40C+/itKTvMQapvFSTy3hsMmhiP1Jtxm5QGAK1JYqcso9zcdiqvjcZctp7Perm0PnxWBAhlV/yfDOUFGeOwixJCT1qnmkQ=
+	t=1744825728; cv=none; b=M4/jKtEAcclRuxO3szEucFJ2/RiDrzwm72BTqFF2xqfoOvWZLRExNvdgElyrgV2n7B1sz6rI6OVKVLN2HgW+E85NnnpFkTYUH3l4VkvFr6htFT5OavAPYik96GZD/OsGHMOrs1BbSB+vejanCAcmVJeiBkcHT4R3H2yI0nCSqbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744825521; c=relaxed/simple;
-	bh=INhAtgzTbo+H9P90iWeVT1I+06inDlWJEEG+41qUq1c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WALEuYm0Ob+Kcc/EPAlp73B6ygXUpfhmhsBNHLFL/2u+V3yitXLU/U7ojknTj4vIJgW9gJ1a9As7HEaooJVnx/P0HhuYDlpJ+fikzvSMKOkAgdN5kUPWTj4OKswTITEtnAcpQPDS5h07nWhNMHjs3OHe7uTXkSRWwmwZjV5sfWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poVs4j1q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744825728; c=relaxed/simple;
+	bh=v4XwhaUeZk3BYsAXaR29UkZdFjLWFGa044ZokdLWR8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nz7VWr1tycKxD89N08ox1V7PAHE7egYE1f8UeFFrI9FyO8SYVxNAR3Hb6SubB/0Tl+9MWprqHLA1oQWkIahH8w7Vo13Ii9u2dTe0I5Z9KSAE6ac1rn7VvwSef2H8ffOmJPokMAEshLmWEBxWW70WNptWjVUySJwJ13YSfK5Ofaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GdBVAovm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poVs4j1q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44402C4CEE2;
-	Wed, 16 Apr 2025 17:45:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GdBVAovm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0408C4CEE2;
+	Wed, 16 Apr 2025 17:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744825521;
-	bh=INhAtgzTbo+H9P90iWeVT1I+06inDlWJEEG+41qUq1c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=poVs4j1qzHaSgPNBoCaQY9VleGrtK4KIDHxrF6jDFV7guhXfUwtBKNgFVC6Cp02qX
-	 jfi+S7SUHj03VvAO1of9wiNMODEwfSbra9N6Q5hj25QxFiZpYq3MBvQXZ8yMU4vyyG
-	 REtrao/EpwYsQiwVi8NSaJaIBXSHu+HtTmE4ySOsglj/7lYyD0CLnApZrOBcDdHEM7
-	 3gXfZnF4V+TxWBQLq6Ei/Lqp+1jlRgRjodIIgV4ghW+vaYUjQgvGIuaFz5fRTAC6gv
-	 AWGwheJPReFqrCotJa+w/BD7bVd9H/YXdQXE70uM6DmAmSu5YQLG2eI7L1OvIV1RLT
-	 TKoiuzYPGu1Qw==
+	s=k20201202; t=1744825727;
+	bh=v4XwhaUeZk3BYsAXaR29UkZdFjLWFGa044ZokdLWR8A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GdBVAovmhB1UljmHHNyLhF0hxqGhhRuRKXZwqcyO/adBY48zZBRbdDbJB9M7PJs+9
+	 0j2ko3cmHZdfFrkH5ZvxYdo9QFPEclZ3dj/jgrPIp3sr9duFHwG5JT2pijcIt27V07
+	 ZNX2u2l/RkL/hLsy/MtGuWmctwaG39Vfk7ejLVl+rzVAMCzANGUNVa9rlfzZYwIuNl
+	 AxFhvAvI0iDRRAQnzJZ3nFXpyy0F9M4Jmp8pKWFsEjPqMUDzjlZl99QnYpNx1IAIHf
+	 xvazOMDRyHkBglCDin7oFj4gJXMJRW+IYMi4GP7mzpkt1qGQpeus7aotP6Kaj8CDgY
+	 wlFKWO6r1sP8A==
+Date: Wed, 16 Apr 2025 10:48:45 -0700
 From: Kees Cook <kees@kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Erick Archer <erick.archer@outlook.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Wei Fang <wei.fang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Simon Horman <horms@kernel.org>, Geoff Levand <geoff@infradead.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Joshua Washington <joshwash@google.com>,
+	Furong Xu <0x1207@gmail.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Jisheng Zhang <jszhang@kernel.org>, Petr Tesarik <petr@tesarici.cz>,
+	netdev@vger.kernel.org, imx@lists.linux.dev,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Richard Cochran <richardcochran@gmail.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Ziwei Xiao <ziweixiao@google.com>,
+	Shailend Chand <shailend@google.com>,
+	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+	Andrew Halaney <ahalaney@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] input/joystick: magellan: Mark __nonstring look-up table
-Date: Wed, 16 Apr 2025 10:45:17 -0700
-Message-Id: <20250416174513.work.662-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] net: ethtool: Adjust exactly ETH_GSTRING_LEN-long stats
+ to use memcpy
+Message-ID: <202504161047.79ED8EF5@keescook>
+References: <20250416010210.work.904-kees@kernel.org>
+ <20250416110351.1dbb7173@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1560; i=kees@kernel.org; h=from:subject:message-id; bh=INhAtgzTbo+H9P90iWeVT1I+06inDlWJEEG+41qUq1c=; b=owGbwMvMwCVmps19z/KJym7G02pJDOn/36x5tEVfWlVaPPLcvdbjK+TuXFZzNdtyacfem9cSG i7e0fgwraOUhUGMi0FWTJElyM49zsXjbXu4+1xFmDmsTCBDGLg4BWAiQV8Z/vBaZcebzA5JE793 oPLCjGNLs48HHziXvWjF/+cJaxNrdYoZ/tmrSHxObAn8lnLodIpyYuPpjEP61xLfGBzfGqrZdfX dRSYA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416110351.1dbb7173@kmaincent-XPS-13-7390>
 
-GCC 15's new -Wunterminated-string-initialization notices that the
-16 character lookup table "nibbles" (which is not used as a C-String)
-needs to be marked as "nonstring":
+On Wed, Apr 16, 2025 at 11:03:51AM +0200, Kory Maincent wrote:
+> On Tue, 15 Apr 2025 18:02:15 -0700
+> Kees Cook <kees@kernel.org> wrote:
+> 
+> > Many drivers populate the stats buffer using C-String based APIs (e.g.
+> > ethtool_sprintf() and ethtool_puts()), usually when building up the
+> > list of stats individually (i.e. with a for() loop). This, however,
+> > requires that the source strings be populated in such a way as to have
+> > a terminating NUL byte in the source.
+> > 
+> > Other drivers populate the stats buffer directly using one big memcpy()
+> > of an entire array of strings. No NUL termination is needed here, as the
+> > bytes are being directly passed through. Yet others will build up the
+> > stats buffer individually, but also use memcpy(). This, too, does not
+> > need NUL termination of the source strings.
+> > 
+> > However, there are cases where the strings that populate the
+> > source stats strings are exactly ETH_GSTRING_LEN long, and GCC
+> > 15's -Wunterminated-string-initialization option complains that the
+> > trailing NUL byte has been truncated. This situation is fine only if the
+> > driver is using the memcpy() approach. If the C-String APIs are used,
+> > the destination string name will have its final byte truncated by the
+> > required trailing NUL byte applied by the C-string API.
+> > 
+> > For drivers that are already using memcpy() but have initializers that
+> > truncate the NUL terminator, mark their source strings as __nonstring to
+> > silence the GCC warnings.
+> 
+> Shouldn't we move on to ethtool_cpy in these drivers too to unify the code?
 
-drivers/input/joystick/magellan.c: In function 'magellan_crunch_nibbles':
-drivers/input/joystick/magellan.c:51:44: warning: initializer-string for array of 'unsigned char' truncates NUL terminator but destination lacks 'nonstring' attribute (17 chars into 16 available) [-Wunterminated-string-initialization]
-   51 |         static unsigned char nibbles[16] = "0AB3D56GH9:K<MN?";
-      |                                            ^~~~~~~~~~~~~~~~~~
+I decided that the code churn wasn't worth it. Perhaps in a follow-up
+patch if folks want to see the removal of the explicit memcpy() uses?
 
-Add the annotation and While at it, mark the table as const too.
-
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Erick Archer <erick.archer@outlook.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux-input@vger.kernel.org
----
- drivers/input/joystick/magellan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/input/joystick/magellan.c b/drivers/input/joystick/magellan.c
-index 2eaa25c9c68c..7622638e5bb8 100644
---- a/drivers/input/joystick/magellan.c
-+++ b/drivers/input/joystick/magellan.c
-@@ -48,7 +48,7 @@ struct magellan {
- 
- static int magellan_crunch_nibbles(unsigned char *data, int count)
- {
--	static unsigned char nibbles[16] = "0AB3D56GH9:K<MN?";
-+	static const unsigned char nibbles[16] __nonstring = "0AB3D56GH9:K<MN?";
- 
- 	do {
- 		if (data[count] == nibbles[data[count] & 0xf])
 -- 
-2.34.1
-
+Kees Cook
