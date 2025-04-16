@@ -1,152 +1,97 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8422215F58;
-	Wed, 16 Apr 2025 17:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB162153D2;
+	Wed, 16 Apr 2025 17:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744823486; cv=none; b=e2sNykYsv+ukjkdAbzHyZaTCaVodg8J51cuoNr8bNE856HE2eQTW18fz07gY+3ovIn6in3Ly6OMfN7eC1saQwbbleTd0tu6NEJfc91ACz3YETe2dueMiDDqrDWLJbmXMc0mpUpIBU0nNRkmbd9MdWDGhm/2SEnnln3PUKn3gDJA=
+	t=1744824030; cv=none; b=LrJ5xADgyEyU+9YKK2mFZ0DL2b9bNY3VYrEMwT5DzN351QtAUR3It0juqJUOg3ptyPmEo7Z56FvfLHS8Qp7qu5RGvM/dECtEJWGbnLSTz7sjmMqi4s4cbAIdNsOe/fsx+gv1Lx+r1GQujGgjaVsjqusIivp5QsvHZJ1gOdwxntg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744823486; c=relaxed/simple;
-	bh=skWqHxqYGGmOuvoixGIuo+FphnkgtdJftOmi9b4Z+4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f+kkIaWqucbCUNzB9s6DWx1MUC7eFg+jXfm10kQooJ1S1Tdi/yZVNV51loDzuEatH07kZZcy6I/nd6mF6rllaFgYnd7LwA65NqM6c8pqQqVz7vL+5CNKJzh8YPJZ6hilw89g5yhSiuM/Zc3yMng607o177KQnLjDXMWFqIjbGdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=FKV154VC; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744824030; c=relaxed/simple;
+	bh=JkQc01G33utQwTTvGf9JQj+ZoRf8sigUW1uHVbU6Vn4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k6hCEX9BgP/3q14qC9h/CJ8qQqZEH74Yx4xYn8gsjRT30K3BbJdyiEcvTxtAcpfF5qWW7cmZ7yU+NFY5LoZYYbvRvH8coxr9QvWkJ3LeyYDjzQuvMcftvsEAIeZ7BNopMaZEIMIvbxFa4XdLkOok+JK16riyamWJYIZFPA+tQsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUW5oIFL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FKV154VC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=PwH0xQ4TGHfYspbMLh4NhtU8AvejjRlDTyqMnMx+8PA=; b=FKV154VCzY5M6jCgFvLpavuq5M
-	ptyRaHLtLQ6QPAP3fVgzkmxeuejMrccAq+aNcewvAK73Xr/jarzm3G/L6gTC8VO/iV0XseXlJfMe9
-	VJt58BSvwSMKuWWw55ps1PZmH2tcyNXld0OwxMJw4DhyQs1xy7vqFSsW0crGYeP4Shh4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u56I1-009g7N-O3; Wed, 16 Apr 2025 19:11:09 +0200
-Date: Wed, 16 Apr 2025 19:11:09 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUW5oIFL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4A06C4CEE2;
+	Wed, 16 Apr 2025 17:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744824029;
+	bh=JkQc01G33utQwTTvGf9JQj+ZoRf8sigUW1uHVbU6Vn4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DUW5oIFLQ2+UIcz2mNwofou4olw/+wEiiJBU+/45omnMiI7oAonFkbCWM/ZxpGs1k
+	 3gm9iFmSbokM5Vn5owAVVm+WI4iNZUgjZfDaoAn7mVdtD4DdZ1Uj57YwFfJhnVDnZH
+	 BR9Dg4AqvVCRSc+f2Gj1CjkfFWh/y4dhAQLUcxyyFyXMHXGNIWJzi028GY4vhdrUFD
+	 ZuZENRxRePAKHWW1vlmbQ96pTx4FXMS8TDtoRGbH/7/RG6EFQZForp1hIt+lHHPmG6
+	 PP0YUgxFL6FnyM/OurA+AKk9SKBFUyG9w6z7ppK4mcgeOvy8q4icZhBsR9M5QqTmU7
+	 mLDoySUL8UH8A==
+From: Kees Cook <kees@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Marco Elver <elver@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	llvm@lists.linux.dev,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 3/8] mfd: Add Microchip ZL3073x support
-Message-ID: <8fc9856a-f2be-4e14-ac15-d2d42efa9d5d@lunn.ch>
-References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-4-ivecera@redhat.com>
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Tony Ambardar <tony.ambardar@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] compiler_types: Identify compiler versions for __builtin_dynamic_object_size
+Date: Wed, 16 Apr 2025 10:20:20 -0700
+Message-Id: <20250416172016.work.154-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416162144.670760-4-ivecera@redhat.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1422; i=kees@kernel.org; h=from:subject:message-id; bh=JkQc01G33utQwTTvGf9JQj+ZoRf8sigUW1uHVbU6Vn4=; b=owGbwMvMwCVmps19z/KJym7G02pJDOn/n11JnzfvUAGPv2hUUV/MOqVYCe/ofc/msN+12nHx2 3udNr+CjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIl8287wP38j8/ZjzyMe5275 dFCO/6/D3lWxMY9rAjhXhd9Xl5x8U42RYePZesaqFs7euAXKQvd2pjWZF9WuDwg5lfm68V/Dsek HeAE=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-> +++ b/include/linux/mfd/zl3073x_regs.h
-> @@ -0,0 +1,105 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +
-> +#ifndef __LINUX_MFD_ZL3073X_REGS_H
-> +#define __LINUX_MFD_ZL3073X_REGS_H
-> +
-> +#include <asm/byteorder.h>
-> +#include <linux/lockdep.h>
+Clarify when __builtin_dynamic_object_size() is available. All our
+supported Clang versions support it. GCC 12 and later support it. Link
+to documentation for both.
 
-lockdep?
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+Cc: Bill Wendling <morbo@google.com>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc: llvm@lists.linux.dev
+---
+ include/linux/compiler_types.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> +#include <linux/mfd/zl3073x.h>
-> +#include <linux/regmap.h>
-> +#include <linux/types.h>
-> +#include <linux/unaligned.h>
-> +
-> +/* Registers are mapped at offset 0x100 */
-> +#define ZL_RANGE_OFF	       0x100
-> +#define ZL_PAGE_SIZE	       0x80
-> +#define ZL_REG_ADDR(_pg, _off) (ZL_RANGE_OFF + (_pg) * ZL_PAGE_SIZE + (_off))
-> +
-> +/**************************
-> + * Register Page 0, General
-> + **************************/
-> +
-> +/*
-> + * Register 'id'
-> + * Page: 0, Offset: 0x01, Size: 16 bits
-> + */
-> +#define ZL_REG_ID ZL_REG_ADDR(0, 0x01)
-> +
-> +static inline __maybe_unused int
-> +zl3073x_read_id(struct zl3073x_dev *zldev, u16 *value)
-> +{
-> +	__be16 temp;
-> +	int rc;
-> +
-> +	rc = regmap_bulk_read(zldev->regmap, ZL_REG_ID, &temp, sizeof(temp));
-> +	if (rc)
-> +		return rc;
-> +
-> +	*value = be16_to_cpu(temp);
-> +	return rc;
-> +}
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 501cffddc2f4..20881cc761fa 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -449,6 +449,11 @@ struct ftrace_likely_data {
+ /*
+  * When the size of an allocated object is needed, use the best available
+  * mechanism to find it. (For cases where sizeof() cannot be used.)
++ *
++ * Optional: only supported since gcc >= 12
++ *
++ *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
++ * clang: https://clang.llvm.org/docs/LanguageExtensions.html#evaluating-object-size
+  */
+ #if __has_builtin(__builtin_dynamic_object_size)
+ #define __struct_size(p)	__builtin_dynamic_object_size(p, 0)
+-- 
+2.34.1
 
-It seems odd these are inline functions in a header file.
-
-> +
-> +/*
-> + * Register 'revision'
-> + * Page: 0, Offset: 0x03, Size: 16 bits
-> + */
-> +#define ZL_REG_REVISION ZL_REG_ADDR(0, 0x03)
-> +
-> +static inline __maybe_unused int
-> +zl3073x_read_revision(struct zl3073x_dev *zldev, u16 *value)
-> +{
-> +	__be16 temp;
-> +	int rc;
-> +
-> +	rc = regmap_bulk_read(zldev->regmap, ZL_REG_REVISION, &temp,
-> +			      sizeof(temp));
-> +	if (rc)
-> +		return rc;
-> +
-> +	*value = be16_to_cpu(temp);
-> +	return rc;
-> +}
-> +
-> +/*
-> + * Register 'fw_ver'
-> + * Page: 0, Offset: 0x05, Size: 16 bits
-> + */
-> +#define ZL_REG_FW_VER ZL_REG_ADDR(0, 0x05)
-> +
-> +static inline __maybe_unused int
-> +zl3073x_read_fw_ver(struct zl3073x_dev *zldev, u16 *value)
-> +{
-> +	__be16 temp;
-> +	int rc;
-> +
-> +	rc = regmap_bulk_read(zldev->regmap, ZL_REG_FW_VER, &temp,
-> +			      sizeof(temp));
-> +	if (rc)
-> +		return rc;
-> +
-> +	*value = be16_to_cpu(temp);
-> +	return rc;
-> +}
-
-Seems like it would make sense to add a zl3073x_read_b16() helper.
-Then all these functions become one liners.
-
-	Andrew
