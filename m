@@ -1,70 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D1F215F42;
-	Wed, 16 Apr 2025 17:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200E321576A;
+	Wed, 16 Apr 2025 17:52:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744825728; cv=none; b=M4/jKtEAcclRuxO3szEucFJ2/RiDrzwm72BTqFF2xqfoOvWZLRExNvdgElyrgV2n7B1sz6rI6OVKVLN2HgW+E85NnnpFkTYUH3l4VkvFr6htFT5OavAPYik96GZD/OsGHMOrs1BbSB+vejanCAcmVJeiBkcHT4R3H2yI0nCSqbM=
+	t=1744825933; cv=none; b=t6VWSGd99uQ0N74ajzd9wjM6daNTpBxiwRBox+P5362KHlia+gUY70uLJ4q86xOH6X4HAxAMXAHEZIUDPbkVqA5YzPmS22qoXxTrf5+VnSQL3I9sQLetMZ2bBpZkW+mTvh5rAykTh9qaXG4ylEYEo/NteiPk0FQvPchqanw4208=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744825728; c=relaxed/simple;
-	bh=v4XwhaUeZk3BYsAXaR29UkZdFjLWFGa044ZokdLWR8A=;
+	s=arc-20240116; t=1744825933; c=relaxed/simple;
+	bh=MGg7zlY8w1c4ygae3wQmVztn9Aa9+X7cqIum9lXVmSk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nz7VWr1tycKxD89N08ox1V7PAHE7egYE1f8UeFFrI9FyO8SYVxNAR3Hb6SubB/0Tl+9MWprqHLA1oQWkIahH8w7Vo13Ii9u2dTe0I5Z9KSAE6ac1rn7VvwSef2H8ffOmJPokMAEshLmWEBxWW70WNptWjVUySJwJ13YSfK5Ofaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GdBVAovm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=H2emrMv6NsRoItQd7oILCe9T32hZa0r2Sld5tHW9btbgGdpe6X4ijPHvkEU/kNo8/ZsuresofKkjpY4jmeS0n4O77Am/A8rENmlug6DVcvcStl5LazDrIkzoaM95+zVMgjz/qMTZPrFZDe+WnLSobtopCB9Qq1ljN0cP0U+ipJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bRYvgBTH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GdBVAovm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0408C4CEE2;
-	Wed, 16 Apr 2025 17:48:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bRYvgBTH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 768B8C4CEE2;
+	Wed, 16 Apr 2025 17:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744825727;
-	bh=v4XwhaUeZk3BYsAXaR29UkZdFjLWFGa044ZokdLWR8A=;
+	s=k20201202; t=1744825932;
+	bh=MGg7zlY8w1c4ygae3wQmVztn9Aa9+X7cqIum9lXVmSk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GdBVAovmhB1UljmHHNyLhF0hxqGhhRuRKXZwqcyO/adBY48zZBRbdDbJB9M7PJs+9
-	 0j2ko3cmHZdfFrkH5ZvxYdo9QFPEclZ3dj/jgrPIp3sr9duFHwG5JT2pijcIt27V07
-	 ZNX2u2l/RkL/hLsy/MtGuWmctwaG39Vfk7ejLVl+rzVAMCzANGUNVa9rlfzZYwIuNl
-	 AxFhvAvI0iDRRAQnzJZ3nFXpyy0F9M4Jmp8pKWFsEjPqMUDzjlZl99QnYpNx1IAIHf
-	 xvazOMDRyHkBglCDin7oFj4gJXMJRW+IYMi4GP7mzpkt1qGQpeus7aotP6Kaj8CDgY
-	 wlFKWO6r1sP8A==
-Date: Wed, 16 Apr 2025 10:48:45 -0700
+	b=bRYvgBTHPEyRc9yOHaQf4+d3mlyza5BchLoQ8UCuMfTwuI4nBe49tu4eOGOLMokZu
+	 dnOv938m1QVM2RnTc74JIR5fmJn2r4uVtnqGJgBtVhizCaf+buQaxaSakDKDFlXKLu
+	 Ib8HEx/wA8nS1mSs7VWbsrlx36rNG/YJ4RJoJg/ep5lLVgvMRoxlCeo19gSTZjASS+
+	 ddCuPrBo2TD8Nyu+j12gGkILvQU4hKvRfp6jvbDYNNtq0I7iB7zY/hTujOzrr6Lc9V
+	 nqhoSAxh0TZo6ae8WfyhUzo6DCBglvi0A7ASJ2iT78PXFiFRXxHmyccoZvSVusPp1b
+	 qU58RTAJW0sMw==
+Date: Wed, 16 Apr 2025 10:52:09 -0700
 From: Kees Cook <kees@kernel.org>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Wei Fang <wei.fang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Simon Horman <horms@kernel.org>, Geoff Levand <geoff@infradead.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Joshua Washington <joshwash@google.com>,
-	Furong Xu <0x1207@gmail.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Jisheng Zhang <jszhang@kernel.org>, Petr Tesarik <petr@tesarici.cz>,
-	netdev@vger.kernel.org, imx@lists.linux.dev,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	Richard Cochran <richardcochran@gmail.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Ziwei Xiao <ziweixiao@google.com>,
-	Shailend Chand <shailend@google.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Andrew Halaney <ahalaney@redhat.com>, linux-kernel@vger.kernel.org,
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sergio Perez Gonzalez <sperezglz@gmail.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	David Rientjes <rientjes@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	Thomas Huth <thuth@redhat.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: ethtool: Adjust exactly ETH_GSTRING_LEN-long stats
- to use memcpy
-Message-ID: <202504161047.79ED8EF5@keescook>
-References: <20250416010210.work.904-kees@kernel.org>
- <20250416110351.1dbb7173@kmaincent-XPS-13-7390>
+Subject: Re: [PATCH v2] slab: Decouple slab_debug and no_hash_pointers
+Message-ID: <202504161048.B7A4CAFB@keescook>
+References: <20250415170232.it.467-kees@kernel.org>
+ <Z_-dPcdiGW0fo8Ji@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -73,40 +67,61 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250416110351.1dbb7173@kmaincent-XPS-13-7390>
+In-Reply-To: <Z_-dPcdiGW0fo8Ji@pathway.suse.cz>
 
-On Wed, Apr 16, 2025 at 11:03:51AM +0200, Kory Maincent wrote:
-> On Tue, 15 Apr 2025 18:02:15 -0700
-> Kees Cook <kees@kernel.org> wrote:
+On Wed, Apr 16, 2025 at 02:06:21PM +0200, Petr Mladek wrote:
+> On Tue 2025-04-15 10:02:33, Kees Cook wrote:
+> > Some system owners use slab_debug=FPZ (or similar) as a hardening option,
+> > but do not want to be forced into having kernel addresses exposed due
+> > to the implicit "no_hash_pointers" boot param setting.[1]
+> > 
+> > Introduce the "hash_pointers" boot param, which defaults to "auto"
+> > (the current behavior), but also includes "always" (forcing on hashing
+> > even when "slab_debug=..." is defined), and "never". The existing
+> > "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
+> > 
+> > This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
+> > 
+> > Link: https://github.com/KSPP/linux/issues/368 [1]
+> > Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
+> > Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> > Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> > Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> > Acked-by: David Rientjes <rientjes@google.com>
+> > Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> > Signed-off-by: Kees Cook <kees@kernel.org>
 > 
-> > Many drivers populate the stats buffer using C-String based APIs (e.g.
-> > ethtool_sprintf() and ethtool_puts()), usually when building up the
-> > list of stats individually (i.e. with a for() loop). This, however,
-> > requires that the source strings be populated in such a way as to have
-> > a terminating NUL byte in the source.
-> > 
-> > Other drivers populate the stats buffer directly using one big memcpy()
-> > of an entire array of strings. No NUL termination is needed here, as the
-> > bytes are being directly passed through. Yet others will build up the
-> > stats buffer individually, but also use memcpy(). This, too, does not
-> > need NUL termination of the source strings.
-> > 
-> > However, there are cases where the strings that populate the
-> > source stats strings are exactly ETH_GSTRING_LEN long, and GCC
-> > 15's -Wunterminated-string-initialization option complains that the
-> > trailing NUL byte has been truncated. This situation is fine only if the
-> > driver is using the memcpy() approach. If the C-String APIs are used,
-> > the destination string name will have its final byte truncated by the
-> > required trailing NUL byte applied by the C-string API.
-> > 
-> > For drivers that are already using memcpy() but have initializers that
-> > truncate the NUL terminator, mark their source strings as __nonstring to
-> > silence the GCC warnings.
+> Tested-by: Petr Mladek <pmladek@suse.com>
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
 > 
-> Shouldn't we move on to ethtool_cpy in these drivers too to unify the code?
+> I am going to wait few more days for a potential feedback.
+> I'll queue it for 6.16 unless anyone complains.
 
-I decided that the code churn wasn't worth it. Perhaps in a follow-up
-patch if folks want to see the removal of the explicit memcpy() uses?
+Thanks very much!
+
+> See a rant below ;-)
+> [...]
+> I personally do not like that these two parameters do not have the
+> real effect until hash_pointers_finalize() is called at some
+> "random" "unrelated" location, namely kmem_cache_init().
+> But I could live with it.
+
+Yeah, this is mainly due to slab_debug wanting to be able to control it.
+I'd prefer they weren't linked at all, but it's also not too
+unreasonable.
+
+> But the alternative solution proposed at
+> https://lore.kernel.org/r/Z_0AFjai6Bvg-YLD@pathway.suse.cz
+> was hairy another way.
+> 
+> We could always improve it when it causes troubles.
+
+Right. My thinking is that if another subsystem comes along with the
+same compelling complaint as kmem, we can look at it again then. IMO,
+really only an allocator should be in charge of such a large knob --
+its whole job is managing pointers. :)
+
+-Kees
 
 -- 
 Kees Cook
