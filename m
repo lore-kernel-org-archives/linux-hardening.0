@@ -1,39 +1,33 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197B5253956;
-	Thu, 17 Apr 2025 15:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5580253B7E;
+	Thu, 17 Apr 2025 15:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744905229; cv=none; b=Fyw3hL2+VXVV+8i4mlPO81r6C992VcF9jwduiCzT4XiiTwr5Z1BrWzr5YBpgClDfv6dBaXRvNKHiLapjEFu6nMTb30O0p7lv0mCLsMjoEdFmBdIyawNHjIJD7QI/qL8/anOqSuQO2v7SGUQDw1Qgam1TpWdOGB2x2/1Zw3oIMcE=
+	t=1744905485; cv=none; b=el6NHnNfHlkt98969nWX/+qz5oKIH7pSqlo8omZ7UDJEkLMrPrm/MwVg3jNf+2VyebX9ya1GJTBW+o7opxd69HCKWc2gCmKyTE10X9P1HwJEIaP+AYiyytyRhLGy4vN/ebMlFJoCsg6xgK+9f8mqPFpulrP6i8g3SBexhd5h4Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744905229; c=relaxed/simple;
-	bh=7pkkB8jiphZ1tt+fGYzi1eQrIinGLTSIKkVgKhP56fU=;
+	s=arc-20240116; t=1744905485; c=relaxed/simple;
+	bh=GllX0jW++yamnFVlA/TohYrJ14gAk/iVgW+F+LU/2Cc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AkOdVSmdn90ctilLjZQfxzBx32bOYS5GJccZ/HnfbHlF7SJ/ln5K9PmGMkLr3lJIS69yGWoQxcle82nZbhCSBJKO9QDPlhltuGKePmKtSphN0SX8wOIsxZS+exJ0OZSF1K/Ys3+mHd7gbRNJ2z4TfO9n0emDys+HCHyr0siDZnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: oKQ2u1d1Qpisw9B440VFxQ==
-X-CSE-MsgGUID: NXQ8KRx0SDKUYHiMSO/7Eg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="46628147"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="46628147"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:53:47 -0700
-X-CSE-ConnectionGUID: k9AqzmaWTIan+SgfNXdEdw==
-X-CSE-MsgGUID: FHF73yGfQSqk3fwljmHODw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="154024564"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 08:53:44 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u5RYb-0000000DFA1-0OGW;
-	Thu, 17 Apr 2025 18:53:41 +0300
-Date: Thu, 17 Apr 2025 18:53:40 +0300
-From: Andy Shevchenko <andy@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gxP/gUS/R2zEnrZ8W6P7+8CBAP3UI2Qvs3a4YKJdQuAkhl0tHoHNfH59qgOfU9tYb+3t9ONGe2CLKX484Hg4XecrunU4GShA0cclfQ2ztKcmv6rDPZKoenpO3coddhSCTKYEcyNtVcGN10JfjI0sHf6w4kdQMAPieqjvd4uM40Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fQ0V1oRD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fQ0V1oRD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7547C4CEE4;
+	Thu, 17 Apr 2025 15:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744905484;
+	bh=GllX0jW++yamnFVlA/TohYrJ14gAk/iVgW+F+LU/2Cc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fQ0V1oRDvX24v/6RSZVX66S7ccPqodVfH7RslUxpcOoTtqkMoEJDxvFR29+yhds0M
+	 bH4uNHhstKLZo00EpHHQUhQquo+924EbRJCudhWW48H393FbRiJAvKeAfaS7Z+veUq
+	 lrraP3NIejIzAWPe/gywCRA+27TZeTpjCvjKY/xYfCvpVcKfhRuw8cUvLo1Oa8CdbT
+	 YiQXxO2QE0DATOljVbMwW2qezlgo0rx9nCIQptqiTlZo+5aSXtJJkqEMadO+LmsqLr
+	 ktcl6P90ENpas3AIy+0lPBNBnHdNG45t5h3LsUEGIungpodbooJpUz2ZQtNtDPbxdZ
+	 8LUqEPSf0/ITg==
+Date: Thu, 17 Apr 2025 16:57:57 +0100
+From: Mark Brown <broonie@kernel.org>
 To: Ivan Vecera <ivecera@redhat.com>
 Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
@@ -42,72 +36,58 @@ Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Prathosh Satish <Prathosh.Satish@microchip.com>,
 	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 4/8] mfd: zl3073x: Add support for devlink
- device info
-Message-ID: <aAEkBOSQRoYXxcIB@smile.fi.intel.com>
+Subject: Re: [PATCH v3 net-next 3/8] mfd: Add Microchip ZL3073x support
+Message-ID: <4324af33-4be7-45bc-b7d2-b400a7865319@sirena.org.uk>
 References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-5-ivecera@redhat.com>
+ <20250416162144.670760-4-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yqusERaWlBR5Yr5t"
+Content-Disposition: inline
+In-Reply-To: <20250416162144.670760-4-ivecera@redhat.com>
+X-Cookie: Put your trust in those who are worthy.
+
+
+--yqusERaWlBR5Yr5t
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250416162144.670760-5-ivecera@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 16, 2025 at 06:21:40PM +0200, Ivan Vecera wrote:
-> Use devlink_alloc() to alloc zl3073x_dev structure, register the device
-> as a devlink device and add devlink callback to provide devlink device
-> info.
+On Wed, Apr 16, 2025 at 06:21:39PM +0200, Ivan Vecera wrote:
 
-...
+> +static const struct regmap_config zl3073x_regmap_config = {
+> +	.reg_bits	= 8,
+> +	.val_bits	= 8,
+> +	.max_register	= ZL_RANGE_OFF + ZL_NUM_REGS - 1,
+> +	.ranges		= &zl3073x_regmap_range,
+> +	.num_ranges	= 1,
+> +	.cache_type	= REGCACHE_RBTREE,
 
->  /**
->   * zl3073x_devm_alloc - allocates zl3073x device structure
->   * @dev: pointer to device structure
-> @@ -124,12 +204,18 @@ static const struct regmap_config zl3073x_regmap_config = {
->  struct zl3073x_dev *zl3073x_devm_alloc(struct device *dev)
->  {
->  	struct zl3073x_dev *zldev;
-> +	struct devlink *devlink;
->  	int rc;
->  
-> -	zldev = devm_kzalloc(dev, sizeof(*zldev), GFP_KERNEL);
-> -	if (!zldev)
-> +	devlink = devlink_alloc(&zl3073x_devlink_ops, sizeof(*zldev), dev);
-> +	if (!devlink)
->  		return ERR_PTR(-ENOMEM);
->  
-> +	/* Add devres action to free devlink device */
-> +	if (devm_add_action_or_reset(dev, zl3073x_devlink_free, devlink))
-> +		return ERR_PTR(-ENOMEM);
+Unless you have a specific reason to use something else you should
+probably use _MAPLE these days, it's a more modern data structure and
+makes choices more suited to current hardware.
 
-Please, do not shadow the error codes. You might miss something. Shadowing
-error codes needs a good justification.
+--yqusERaWlBR5Yr5t
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +	zldev = devlink_priv(devlink);
->  	zldev->dev = dev;
+-----BEGIN PGP SIGNATURE-----
 
->  }
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgBJQUACgkQJNaLcl1U
+h9DwRQf/WkJ1VCnbTK4RrOyMtq2TWaDZ4zhsQwJE3IcTykdPOLVVa0c8Jn48Jgz/
+cpRTJ7e1sMujvXUVP+HpjYmdp7WdF6ddRwuQMwFEdjYqDInna46avYqJ47WHUrQF
+E2ItuXZ3U8q7IY1SahwTVg2wI8WlAkEoSMAQQD21RzJi4/PmjfUUvj0sE4mlxc3J
+VLmpdAsrJax0Rmzez2M8POGApjt+JuQdj4+pI3VGc+KnwTbuOVzx2XZiOIb7l8ry
+EDy5XWfZb/Zh9qVHr+d9SgCKujv8VynRVRjmn/X/wTCyTAXeKg9cKhsKJs4/uGee
+9g/fKvZ5awzkWWgfgBq53cFs3MkMpw==
+=q/zk
+-----END PGP SIGNATURE-----
 
-...
-
-> +	/* Add devres action to unregister devlink device */
-> +	rc = devm_add_action_or_reset(zldev->dev, zl3073x_devlink_unregister,
-> +				      devlink);
-> +	if (rc)
-> +		return rc;
-
-The code is even inconsistent in one patch!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--yqusERaWlBR5Yr5t--
