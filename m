@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5580253B7E;
-	Thu, 17 Apr 2025 15:58:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17841F463D;
+	Thu, 17 Apr 2025 16:14:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744905485; cv=none; b=el6NHnNfHlkt98969nWX/+qz5oKIH7pSqlo8omZ7UDJEkLMrPrm/MwVg3jNf+2VyebX9ya1GJTBW+o7opxd69HCKWc2gCmKyTE10X9P1HwJEIaP+AYiyytyRhLGy4vN/ebMlFJoCsg6xgK+9f8mqPFpulrP6i8g3SBexhd5h4Gk=
+	t=1744906440; cv=none; b=loAt+4f2GN+ARWQB7wJcFZBGoBsqpj4DS/S/kLNRXaAnndQG5GoD7MVcDFrZAIno0vqdb+E4eXWT1W96MnxdwhB3ws94CFkrE7rTZx2nHP/QI2Or8RirnIQyR3CQt/+cqboqLWiqBWybRyM5rc3TSF+htgvnmjBOFrFRFiu98sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744905485; c=relaxed/simple;
-	bh=GllX0jW++yamnFVlA/TohYrJ14gAk/iVgW+F+LU/2Cc=;
+	s=arc-20240116; t=1744906440; c=relaxed/simple;
+	bh=dF5zKEgbrCzKFWBhVkcf46aE/op9JDA8TSByk+hkA4U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gxP/gUS/R2zEnrZ8W6P7+8CBAP3UI2Qvs3a4YKJdQuAkhl0tHoHNfH59qgOfU9tYb+3t9ONGe2CLKX484Hg4XecrunU4GShA0cclfQ2ztKcmv6rDPZKoenpO3coddhSCTKYEcyNtVcGN10JfjI0sHf6w4kdQMAPieqjvd4uM40Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fQ0V1oRD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bVCvlmd/aBVNAd6B/nZWXmrjPbNg/lt1KasP5hwY6CN6GG2qNzR0z1jW6QRA7kdaXqEdsC1tn4rvfeTxH9RaXUH/h5CqmkBEAzKjvKTqLE5/s7jJLYyoqAoTybi8a/lYPz1ZX5XoXS/Rz3apjfTf5mN271cDIwFG70mUE37OHUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3t5H8dG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fQ0V1oRD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7547C4CEE4;
-	Thu, 17 Apr 2025 15:58:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3t5H8dG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F09C4CEE4;
+	Thu, 17 Apr 2025 16:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744905484;
-	bh=GllX0jW++yamnFVlA/TohYrJ14gAk/iVgW+F+LU/2Cc=;
+	s=k20201202; t=1744906440;
+	bh=dF5zKEgbrCzKFWBhVkcf46aE/op9JDA8TSByk+hkA4U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fQ0V1oRDvX24v/6RSZVX66S7ccPqodVfH7RslUxpcOoTtqkMoEJDxvFR29+yhds0M
-	 bH4uNHhstKLZo00EpHHQUhQquo+924EbRJCudhWW48H393FbRiJAvKeAfaS7Z+veUq
-	 lrraP3NIejIzAWPe/gywCRA+27TZeTpjCvjKY/xYfCvpVcKfhRuw8cUvLo1Oa8CdbT
-	 YiQXxO2QE0DATOljVbMwW2qezlgo0rx9nCIQptqiTlZo+5aSXtJJkqEMadO+LmsqLr
-	 ktcl6P90ENpas3AIy+0lPBNBnHdNG45t5h3LsUEGIungpodbooJpUz2ZQtNtDPbxdZ
-	 8LUqEPSf0/ITg==
-Date: Thu, 17 Apr 2025 16:57:57 +0100
-From: Mark Brown <broonie@kernel.org>
+	b=n3t5H8dGUaUqklAbXEvHhseo4XcV2hw4gHpfEy/k0DfICyQ3QTeK21zwgNv0rV/u0
+	 yl4kozrNVlNxW2kq+kVmAR5w7Y8GfVOCnqpfhjQO2DMMT3/wPB8A+18HYYd+9ZhgHv
+	 kjF4qe+Cwcnh136y2EZQEOJm/myjBBo+YpxCbZ/erXNsTh8As0oGeQUdtWuTGEj3A7
+	 5ADgnr/fInKHi5oIvH0T4+pfhbJa9nKFGRF/e34RW0X1h9HdqNn9JsT5EKKgJuw5p6
+	 crYScCIzN2fcDXjTWcuQcgQz1PWP4SPzdMRjkpKz2runtZ+i5KFLZXaWQG7T32zqNh
+	 RgGYGohFwDnhw==
+Date: Thu, 17 Apr 2025 17:13:54 +0100
+From: Lee Jones <lee@kernel.org>
 To: Ivan Vecera <ivecera@redhat.com>
 Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
@@ -35,59 +35,80 @@ Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 3/8] mfd: Add Microchip ZL3073x support
-Message-ID: <4324af33-4be7-45bc-b7d2-b400a7865319@sirena.org.uk>
+Subject: Re: [PATCH v3 net-next 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+Message-ID: <20250417161354.GF372032@google.com>
 References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-4-ivecera@redhat.com>
+ <20250416162144.670760-6-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yqusERaWlBR5Yr5t"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250416162144.670760-4-ivecera@redhat.com>
-X-Cookie: Put your trust in those who are worthy.
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250416162144.670760-6-ivecera@redhat.com>
 
+On Wed, 16 Apr 2025, Ivan Vecera wrote:
 
---yqusERaWlBR5Yr5t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Registers present in page 10 and higher are called mailbox type
+> registers. Each page represents a mailbox and is used to read and write
+> configuration of particular object (dpll, output, reference & synth).
+> 
+> The mailbox page contains mask register that is used to select an index of
+> requested object to work with and semaphore register to indicate what
+> operation is requested.
+> 
+> The rest of registers in the particular register page are latch
+> registers that are filled by the firmware during read operation or by
+> the driver prior write operation.
+> 
+> For read operation the driver...
+> 1) ... updates the mailbox mask register with index of particular object
+> 2) ... sets the mailbox semaphore register read bit
+> 3) ... waits for the semaphore register read bit to be cleared by FW
+> 4) ... reads the configuration from latch registers
+> 
+> For write operation the driver...
+> 1) ... writes the requested configuration to latch registers
+> 2) ... sets the mailbox mask register for the DPLL to be updated
+> 3) ... sets the mailbox semaphore register bit for the write operation
+> 4) ... waits for the semaphore register bit to be cleared by FW
+> 
+> Add functions to read and write mailboxes for all supported object types.
+> 
+> All these functions as well as functions accessing mailbox latch registers
+> (zl3073x_mb_* functions) have to be called with zl3073x_dev->mailbox_lock
+> held and a caller is responsible to take this lock.
+> 
+> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> v1->v3:
+> * dropped ZL3073X_MB_OP macro usage
+> ---
+>  drivers/mfd/zl3073x-core.c       | 232 +++++++++++++++++++++++
+>  include/linux/mfd/zl3073x.h      |  12 ++
+>  include/linux/mfd/zl3073x_regs.h | 304 +++++++++++++++++++++++++++++++
+>  3 files changed, 548 insertions(+)
 
-On Wed, Apr 16, 2025 at 06:21:39PM +0200, Ivan Vecera wrote:
+> +/*
+> + * Mailbox operations
+> + */
+> +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index);
 
-> +static const struct regmap_config zl3073x_regmap_config = {
-> +	.reg_bits	= 8,
-> +	.val_bits	= 8,
-> +	.max_register	= ZL_RANGE_OFF + ZL_NUM_REGS - 1,
-> +	.ranges		= &zl3073x_regmap_range,
-> +	.num_ranges	= 1,
-> +	.cache_type	= REGCACHE_RBTREE,
+Why aren't these being placed into drivers/mailbox?
 
-Unless you have a specific reason to use something else you should
-probably use _MAPLE these days, it's a more modern data structure and
-makes choices more suited to current hardware.
-
---yqusERaWlBR5Yr5t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgBJQUACgkQJNaLcl1U
-h9DwRQf/WkJ1VCnbTK4RrOyMtq2TWaDZ4zhsQwJE3IcTykdPOLVVa0c8Jn48Jgz/
-cpRTJ7e1sMujvXUVP+HpjYmdp7WdF6ddRwuQMwFEdjYqDInna46avYqJ47WHUrQF
-E2ItuXZ3U8q7IY1SahwTVg2wI8WlAkEoSMAQQD21RzJi4/PmjfUUvj0sE4mlxc3J
-VLmpdAsrJax0Rmzez2M8POGApjt+JuQdj4+pI3VGc+KnwTbuOVzx2XZiOIb7l8ry
-EDy5XWfZb/Zh9qVHr+d9SgCKujv8VynRVRjmn/X/wTCyTAXeKg9cKhsKJs4/uGee
-9g/fKvZ5awzkWWgfgBq53cFs3MkMpw==
-=q/zk
------END PGP SIGNATURE-----
-
---yqusERaWlBR5Yr5t--
+-- 
+Lee Jones [李琼斯]
