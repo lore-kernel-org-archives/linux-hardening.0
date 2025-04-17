@@ -1,34 +1,33 @@
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2829524BC18;
-	Thu, 17 Apr 2025 13:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0055124BBE0;
+	Thu, 17 Apr 2025 13:22:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744895617; cv=none; b=K3I73XM1OG2EurnkJNoUu75uudC4SQGeqqj5c6sAzhnI/BWDI+PTPQd5O7wZiB65Lsw56xVc+/11c/2KfrO82SQJF4NDTr2lQTRHYR+fN4ArfTvy05ee7MHyQv2028tGSq1GIw8wYwTVyAucINixAaWK0wQCBmTmW65qOzwTf2c=
+	t=1744896144; cv=none; b=rHW2EtIBaKRwt2OMpn+aFZhiNSZnrXzoTsaih6MSjb2j1/XRwRreFwHvPnXSRTmWI6HB+xTRQ2kO34E15Cku7i4ypqeXM3huqdhV4eURTfEKOHJH3j+jT084C4Z2okZe4l5Pgs/cS7juWjAMsUTsUWifwnLbrrDwrb/oXsGEoT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744895617; c=relaxed/simple;
-	bh=DzWIUMgO/0aqjQKZLGHzjTpbRlPFNCqYf5Es4PwWA00=;
+	s=arc-20240116; t=1744896144; c=relaxed/simple;
+	bh=9q45jsPx00bo1vLeH9HM+/YCz9B4wS4P7ar954yTx20=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I+encc8OXags7JTMhyKuZcu3S/sMTYufXKCh1f3+9U66/JUXkE0SALEQlpBpiRbHWdbxUCnngsVVxNt8qhWp6dK27YZ4D1xr/xu3Y92gMMV+Th4nned+/lCt57TBQytRqiCfaHKW9TdRefvzlNNTdIQLkrkIVPh/FX/ET+39BEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=GzO0IxHX; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=Evs+hlRNlD3YaxlVZ+YDoR/1eGnmXgK9Qv23P+w001Dlrtd3JKdYbTkqI/xp9ASe0Xi3iB1cuGgWNKbpiX+D9vHuJWIbQdmwvU7CSxrLY3ZTch+LSkWXj8sz057/vmgG9zx5CyJ3KuvobuSlTw4TkpZNRG3hJWwxS4ZYQ55Ny+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=mAd01pPq; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GzO0IxHX"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mAd01pPq"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=kqSGBFvBco4jOMm/RXWM5jN0BSdqtnNtjafj4ponO5E=; b=Gz
-	O0IxHXQWLgWcGyU7z2o4uuOqx/kIuEPNQdLAVlq0CotfEkWnsIPQTIuvoCEKb4Of9OSgaLZidYGav
-	aQeF/gRXD9syYuO/WRiLA60LEu+NEYuFCqu3dDhxsJQ0ltZ4TL9c4RNPRVyGh6mJtsM7hu9PJUc/+
-	KG963Pq+b22gzAg=;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=MCamaocuimbhmfsH5oDiWfOn4qDIn9MqndMJRqcqllc=; b=mAd01pPqpppMGiM+2D+IT1BnSt
+	JwoiZDe5+gIvYpl7dFSOPo3p7FfddwdWTMHdASmG6X4oTKsXL9VzgRIf1pGRckynurZG1cvAXu/Kr
+	Twdq37wNUT+JQ+0TFCV/bbeJey7TBRWdJOlkPC5V1ouCuIV2sHtTgM4L8j8JGFP/ivdU=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1u5P3J-009mjg-HR; Thu, 17 Apr 2025 15:13:13 +0200
-Date: Thu, 17 Apr 2025 15:13:13 +0200
+	id 1u5PC0-009mnk-N8; Thu, 17 Apr 2025 15:22:12 +0200
+Date: Thu, 17 Apr 2025 15:22:12 +0200
 From: Andrew Lunn <andrew@lunn.ch>
 To: Ivan Vecera <ivecera@redhat.com>
 Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
@@ -42,101 +41,90 @@ Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 3/8] mfd: Add Microchip ZL3073x support
-Message-ID: <894d4209-4933-49bf-ae4c-34d6a5b1c9f1@lunn.ch>
+Subject: Re: [PATCH v3 net-next 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+Message-ID: <8802b276-b6dd-4235-87dd-18b835edb196@lunn.ch>
 References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-4-ivecera@redhat.com>
- <8fc9856a-f2be-4e14-ac15-d2d42efa9d5d@lunn.ch>
- <CAAVpwAsw4-7n_iV=8aXp7=X82Mj7M-vGAc3f-fVbxxg0qgAQQA@mail.gmail.com>
+ <20250416162144.670760-6-ivecera@redhat.com>
+ <d286dec9-a544-409d-bf62-d2b84ef6ecd4@lunn.ch>
+ <CAAVpwAvVO7RGLGMXCBxCD35kKCLmZEkeXuERG0C2GHP54kCGJw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAVpwAsw4-7n_iV=8aXp7=X82Mj7M-vGAc3f-fVbxxg0qgAQQA@mail.gmail.com>
+In-Reply-To: <CAAVpwAvVO7RGLGMXCBxCD35kKCLmZEkeXuERG0C2GHP54kCGJw@mail.gmail.com>
 
-On Wed, Apr 16, 2025 at 08:19:25PM +0200, Ivan Vecera wrote:
-> On Wed, Apr 16, 2025 at 7:11 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> > > +/*
+> > > + * Mailbox operations
+> > > + */
+> > > +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index);
+> > > +int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index);
+> > > +int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index);
+> > > +int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index);
+> > > +int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index);
+> > > +int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index);
+> > > +int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index);
+> > > +int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index);
+> >
+> > I assume these are the only valid ways to access a mailbox?
+> >
+> > If so:
+> >
+> > > +static inline __maybe_unused int
+> > > +zl3073x_mb_read_ref_mb_mask(struct zl3073x_dev *zldev, u16 *value)
+> > > +{
+> > > +     __be16 temp;
+> > > +     int rc;
+> > > +
+> > > +     lockdep_assert_held(&zldev->mailbox_lock);
+> > > +     rc = regmap_bulk_read(zldev->regmap, ZL_REG_REF_MB_MASK, &temp,
+> > > +                           sizeof(temp));
+> > > +     if (rc)
+> > > +             return rc;
+> > > +
+> > > +     *value = be16_to_cpu(temp);
+> > > +     return rc;
+> > > +}
+> >
+> > These helpers can be made local to the core. You can then drop the
+> > lockdep_assert_held() from here, since the only way to access them is
+> > via the API you defined above, and add the checks in those API
+> > functions.
 > 
->     > +++ b/include/linux/mfd/zl3073x_regs.h
->     > @@ -0,0 +1,105 @@
->     > +/* SPDX-License-Identifier: GPL-2.0-only */
->     > +
->     > +#ifndef __LINUX_MFD_ZL3073X_REGS_H
->     > +#define __LINUX_MFD_ZL3073X_REGS_H
->     > +
->     > +#include <asm/byteorder.h>
->     > +#include <linux/lockdep.h>
+> This cannot be done this way... the above API just simplifies the
+> operation of read and write latch registers from/to mailbox.
 > 
->     lockdep?
+> Whole operation is described in the commit description.
 > 
+> E.g. read something about DPLL1
+> 1. Call zl3073x_mb_dpll_read(..., 1)
+>    This selects DPLL1 in the DPLL mailbox and performs read operation
+> and waits for finish
+> 2. Call zl3073x_mb_read_dpll_mode()
+>    This reads dpll_mode latch register
 > 
-> lockdep_assert*() is used in later introduced helpers.
+> write:
+> 1. Call zl3073x_mb_write_dpll_mode(...)
+>    This writes mode to dpll_mode latch register
+> 2. Call zl3073x_mb_dpll_read(..., 1)
+>    This writes all info from latch registers to DPLL1
+> 
+> The point is that between step 1 and 2 nobody else cannot touch
+> latch_registers or mailbox select register and op semaphore.
 
-nitpicking, but you generally add headers as they are needed.
+Again, think about your layering. What does your lower level mailbox
+API look like? What does the MFD need to export for a safe API?
 
->     > +#include <linux/mfd/zl3073x.h>
->     > +#include <linux/regmap.h>
->     > +#include <linux/types.h>
->     > +#include <linux/unaligned.h>
->     > +
->     > +/* Registers are mapped at offset 0x100 */
->     > +#define ZL_RANGE_OFF        0x100
->     > +#define ZL_PAGE_SIZE        0x80
->     > +#define ZL_REG_ADDR(_pg, _off) (ZL_RANGE_OFF + (_pg) * ZL_PAGE_SIZE +
->     (_off))
->     > +
->     > +/**************************
->     > + * Register Page 0, General
->     > + **************************/
->     > +
->     > +/*
->     > + * Register 'id'
->     > + * Page: 0, Offset: 0x01, Size: 16 bits
->     > + */
->     > +#define ZL_REG_ID ZL_REG_ADDR(0, 0x01)
->     > +
->     > +static inline __maybe_unused int
->     > +zl3073x_read_id(struct zl3073x_dev *zldev, u16 *value)
->     > +{
->     > +     __be16 temp;
->     > +     int rc;
->     > +
->     > +     rc = regmap_bulk_read(zldev->regmap, ZL_REG_ID, &temp, sizeof
->     (temp));
->     > +     if (rc)
->     > +             return rc;
->     > +
->     > +     *value = be16_to_cpu(temp);
->     > +     return rc;
->     > +}
-> 
->     It seems odd these are inline functions in a header file.
-> 
-> 
-> There are going to be used by dpll_zl3073x sub-driver in series part 2.
+So maybe you need zl3073x_mb_read_u8(), zl3073x_mb_read_u16(),
+zl3073x_mb_read_u32(), as part of your mailbox API. These assert the
+lock is held.
 
-The subdriver needs to know the ID, firmware version, etc?
-
-Anyway, look around. How many other MFD, well actually, any sort of
-driver at all, have a bunch of low level helpers as inline functions
-in a header? You are aiming to write a plain boring driver which looks
-like every other driver in Linux....
-
-Think about your layering. What does the MFD need to offer to sub
-drivers so they can work? For lower registers, maybe just
-zl3073x_read_u8(), zl3073x_read_u16() & zl3073x_read_read_u32(). Write
-variants as well. Plus the API needed to safely access the mailbox.
-Export these using one of the EXPORT_SYMBOL_GPL() variants, so the sub
-drivers can access them. The #defines for the registers numbers can be
-placed into a shared header file.
-
-The MFD needs to read the ID, firmware version etc, so it can have
-local implementations of these, but if the sub drivers don't need
-them, don't make them global scope.
+You could even make zl3073x_mb_read_u8() validate the register is in
+the upper range, and that zl3073x_read_u8() the register is in the
+lower range.
 
 	Andrew
