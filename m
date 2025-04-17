@@ -1,108 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B712153DA;
-	Thu, 17 Apr 2025 07:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD3AA937;
+	Thu, 17 Apr 2025 07:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744873857; cv=none; b=KioZ4Rh3xUxq47ZU++wrF0dRTipUrtG9xXn96gZt0qQHepXxHeGfRdlvpfBQKU4aC+8s6qh3T7R5eU/85QIsabkLaB+eAc5jcWEl6aem+w862DMEHOuKQZM1JpQsnREE7HgBLfAvDgrjHgqLZ7zOJD9W1BXypZXvstE/15kKtUE=
+	t=1744875945; cv=none; b=i2hbW+jWGbJIVN+nHTciAHYwhJfe4X+nhWUbF0X9ItfeTW/AMy2EqfW7HI82xTI0WTEkZNFE4gihvqtMmFczKyVE91c4SUsKuMBKsfWR4AED8LOkdH3jTNb7ww9dKJCZ68QElmcS9rEfxleEMgiIaQaqNdxum22v8gPNtkqyOBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744873857; c=relaxed/simple;
-	bh=aYAuIo7LVdzgQM2/Cl+IsgbnZZ20GzAjup2iniRCGwQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=emH0iyCmmWNBRqndV0111rk0gnIAMMP195Fw7IikegLK/ikFXoAqmvyOoItwhWxjFT726sCrRD1ffJIWy94vuv+TqoMABpi738y4MSh0Q27/gcqrtKGKD3Hscjs46q54d3v7IZXgNnWb9QsLUZ4fbXnd8mvbG6Mh7fuCg7TVS4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ux08j7+l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744875945; c=relaxed/simple;
+	bh=hkTrmrFOU7GxX5XLjscCU+8EFaktWa03BbxcL95VB4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XgJ13yM1aSbwgAcLpekO9CFxNcSYdt6qlJUW6/+7TEcKQ+7dnaOxlzw48whMlVi6ZeI18iW/+Naqezl9bl8AMt17nXCJG4gA9pP2y+jiVNMgD0JGx4rdoRT5axGRj4nefWbGHcB3/A6Ot4MsXc/KT9EMfoRj7xinRmj9DOU41pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oau3UoiT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ux08j7+l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5799C4CEE4;
-	Thu, 17 Apr 2025 07:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744873856;
-	bh=aYAuIo7LVdzgQM2/Cl+IsgbnZZ20GzAjup2iniRCGwQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Ux08j7+ly7IeXhweuU6V9uUOKO6RsQHdFsue+IwskLBT5r7fZOtcpUqk9+ws3xJqF
-	 UcKZv4To/uPjMzxp30mllzIZ0YqldDdZ1J5epKuTM3ep04/F1WwrxwA6yCGnSKMKxh
-	 2yA2bGlSyfrpjs/Q6Od3xZz8C0GPl1R1XGdKjYOUIIDYwxidores7ok/V6c21mQ9k6
-	 dqVLUkYK0QsZohYzfpa54i+fBpKL2fgV28mvSwrBI0M/fdtGc94g/efRmid3DEc/6E
-	 55zGn2kiZ7tj7CUhcGvJcfoXLVtCKN3vg5H8vaL0JGCCVnazLHb0Zs6QWj7v3zL4P1
-	 Y/x3LNePlQEbw==
-Date: Thu, 17 Apr 2025 00:10:53 -0700
-From: Kees Cook <kees@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-CC: Coly Li <colyli@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>,
- linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] md/bcache: Mark __nonstring look-up table
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
-References: <20250416220135.work.394-kees@kernel.org> <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
-Message-ID: <994E520B-64B1-4387-8DFF-88755346FE55@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oau3UoiT"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53H5lcgf022725;
+	Thu, 17 Apr 2025 07:45:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ohJkgmWZHjmK4M5DZdPTsNUzOeS2abtFjmhwenkskEc=; b=oau3UoiTvvy4N648
+	rymPTp/G3vCBhichF4Cgs9jULAoIgrpEKYsgvhj+glpsD5+6UN0U/onQslTUCSBS
+	NA7J9nx9wz4zS16Z/pk5wH84seSVjmOY4EHxoj9ZApXLxkgc7R1HpnokW8uADoYg
+	bstEtcomebkTyPFlXCDCh46pQa+Wmcoqlbf6R4iradSy/4inHSebdpLDezG09Iu/
+	S8iyBueVAba0fvTdJ1ZRD2d7g6cD6XbAw9r3nPc7+BEt+EADKzgSczkHZYtS/jvn
+	EuxzP67ocEln9HrV3MZItP+9zE6s8x4uiPYn/2r2K9j/NkmhghfuGdvJIkjpJK8B
+	KiOBWg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yhbpwvkm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 07:45:29 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53H7jS2b028358
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 07:45:28 GMT
+Received: from [10.216.6.49] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 17 Apr
+ 2025 00:45:22 -0700
+Message-ID: <20911703-ab4e-4eb2-8611-294730a06d2f@quicinc.com>
+Date: Thu, 17 Apr 2025 13:15:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] drm/msm/a6xx: Get HBB dynamically, if available
+To: Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul
+	<sean@poorly.run>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Dmitry
+ Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov
+	<lumag@kernel.org>
+CC: Marijn Suijten <marijn.suijten@somainline.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>
+References: <20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com>
+ <20250410-topic-smem_dramc-v2-3-dead15264714@oss.qualcomm.com>
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <20250410-topic-smem_dramc-v2-3-dead15264714@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Spj1uZnIe82_3M7CjYuxQzY3doSiZGES
+X-Proofpoint-GUID: Spj1uZnIe82_3M7CjYuxQzY3doSiZGES
+X-Authority-Analysis: v=2.4 cv=I+plRMgg c=1 sm=1 tr=0 ts=6800b199 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=tRh8Vh706W9Pm3wTBG4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_01,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 mlxlogscore=999 clxscore=1011 impostorscore=0 malwarescore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170059
 
+On 4/10/2025 11:13 PM, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> The Highest Bank address Bit value can change based on memory type used.
+> 
+> Attempt to retrieve it dynamically, and fall back to a reasonable
+> default (the one used prior to this change) on error.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..a6232b382bd16319f20ae5f8f5e57f38ecc62d9f 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/firmware/qcom/qcom_scm.h>
+>  #include <linux/pm_domain.h>
+>  #include <linux/soc/qcom/llcc-qcom.h>
+> +#include <linux/soc/qcom/smem.h>
+>  
+>  #define GPU_PAS_ID 13
+>  
+> @@ -587,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
+>  
+>  static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>  {
+> +	int hbb;
+> +
+>  	gpu->ubwc_config.rgb565_predicator = 0;
+>  	gpu->ubwc_config.uavflagprd_inv = 0;
+>  	gpu->ubwc_config.min_acc_len = 0;
+> @@ -635,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>  	    adreno_is_a690(gpu) ||
+>  	    adreno_is_a730(gpu) ||
+>  	    adreno_is_a740_family(gpu)) {
+> -		/* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
+>  		gpu->ubwc_config.highest_bank_bit = 16;
+>  		gpu->ubwc_config.amsbc = 1;
+>  		gpu->ubwc_config.rgb565_predicator = 1;
+> @@ -664,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>  		gpu->ubwc_config.highest_bank_bit = 14;
+>  		gpu->ubwc_config.min_acc_len = 1;
+>  	}
+> +
+> +	/* Attempt to retrieve the data from SMEM, keep the above defaults in case of error */
+> +	hbb = qcom_smem_dram_get_hbb();
+> +	if (hbb < 0)
+> +		return;
+> +
+> +	gpu->ubwc_config.highest_bank_bit = hbb;
 
+I am worried about blindly relying on SMEM data directly for HBB for
+legacy chipsets. There is no guarantee it is accurate on every chipset
+and every version of firmware. Also, until recently, this value was
+hardcoded in Mesa which matched the value in KMD. So it is better to
+make this opt in, for newer chipsets or those which somebody can verify.
+We can invert this logic to something like this:
 
-On April 16, 2025 11:16:45 PM PDT, Ard Biesheuvel <ardb@kernel=2Eorg> wrot=
-e:
->On Thu, 17 Apr 2025 at 00:01, Kees Cook <kees@kernel=2Eorg> wrote:
->>
->> GCC 15's new -Wunterminated-string-initialization notices that the 16
->> character lookup table "zero_uuid" (which is not used as a C-String)
->> needs to be marked as "nonstring":
->>
->> drivers/md/bcache/super=2Ec: In function 'uuid_find_empty':
->> drivers/md/bcache/super=2Ec:549:43: warning: initializer-string for arr=
-ay of 'char' truncates NUL terminator but destination lacks 'nonstring' att=
-ribute (17 chars into 16 available) [-Wunterminated-string-initialization]
->>   549 |         static const char zero_uuid[16] =3D "\0\0\0\0\0\0\0\0\0=
-\0\0\0\0\0\0\0";
->>       |                                           ^~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~
->>
->> Add the annotation to silence the GCC warning=2E
->>
->> Signed-off-by: Kees Cook <kees@kernel=2Eorg>
->> ---
->> Cc: Coly Li <colyli@kernel=2Eorg>
->> Cc: Kent Overstreet <kent=2Eoverstreet@linux=2Edev>
->> Cc: linux-bcache@vger=2Ekernel=2Eorg
->> ---
->>  drivers/md/bcache/super=2Ec | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/md/bcache/super=2Ec b/drivers/md/bcache/super=2Ec
->> index e42f1400cea9=2E=2E577d048170fe 100644
->> --- a/drivers/md/bcache/super=2Ec
->> +++ b/drivers/md/bcache/super=2Ec
->> @@ -546,7 +546,7 @@ static struct uuid_entry *uuid_find(struct cache_se=
-t *c, const char *uuid)
->>
->>  static struct uuid_entry *uuid_find_empty(struct cache_set *c)
->>  {
->> -       static const char zero_uuid[16] =3D "\0\0\0\0\0\0\0\0\0\0\0\0\0=
-\0\0\0";
->> +       static const char zero_uuid[] __nonstring =3D "\0\0\0\0\0\0\0\0=
-\0\0\0\0\0\0\0\0";
->>
->
->Just
->
->static const char zero_uuid[16] =3D {};
->
->should work fine here too=2E No need for the initializer=2E
+if (!gpu->ubwc_config.highest_bank_bit)
+    gpu->ubwc_config.highest_bank_bit = qcom_smem_dram_get_hbb();
 
-=F0=9F=A4=A6 Yes=2E This is what I get for fixing dozens of these=2E I'll =
-send a v2=2E=2E=2E
+>  }
+>  
+>  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+> @@ -2467,6 +2476,10 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
+>  	bool is_a7xx;
+>  	int ret;
+>  
+> +	/* We need data from SMEM to retrieve HBB in calc_ubwc_config() */
+> +	if (!qcom_smem_is_available())
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
 
--Kees
+We should add "depends on QCOM_SMEM" to Kconfig. Is SMEM device present
+in all Qcom SoC devicetrees? I wonder if there is a scenario where there
+might be an infinite EPROBE_DEFER here.
 
+-Akhil.
 
---=20
-Kees Cook
+>  	a6xx_gpu = kzalloc(sizeof(*a6xx_gpu), GFP_KERNEL);
+>  	if (!a6xx_gpu)
+>  		return ERR_PTR(-ENOMEM);
+> 
+
