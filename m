@@ -1,165 +1,157 @@
-Received: from mail57.out.titan.email (mail57.out.titan.email [209.209.25.125])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB25AF9EC
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Apr 2025 14:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.209.25.125
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597BB21A44F
+	for <linux-hardening@vger.kernel.org>; Thu, 17 Apr 2025 14:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744899468; cv=none; b=HnCyoLjpL8G2yurXPTVTwUU4kU4+NNiPNZ7v34f/OMH4gMAiiBzgdf5Qig3yZCmM0QRNC9yOjovBzIlXecXft7k6hu9ZJBJcnxbdsaiPCbNqWH0V0y9Rc75bHjpoQEWEjUrZEK1RG8HmdU4WGEE+x4+bEMCsLYUtP1OK7PD150g=
+	t=1744899540; cv=none; b=sFM1R+KLtLiuK64DwzVchRi9Pg6poYnQev/NrxLnODphLYW8rw9j4i0qDqV9XVE0cTtPMV20AqQJjrn5pAvSARoWhkFI5lqhVWqxril2f7CdrVB/K9jsmBIi3vle7VLx4zdICOxQJ13XYyB4IKiBAfoQ8yLJSL35t6c0rrHFvBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744899468; c=relaxed/simple;
-	bh=j/PfWcvOdvDX/QR5kqDYMnCt+/AXcLPVxvAygbwKZpU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ipRW6cuPQv4ZQnik+CKWZpN5XkLIkLsBwojDjv9+FtxDze9P4JxwlGvpVc0JxqQ16cbgLUYxxmuHHLdjqHY1l8Rut/TN5ZPev7p+JDz/wdVDsb9tR8Fv2jbWuHTnfXt9LEpFKac9QQpYQvkQqOvOp0lhaLnrE+a66nzFlo7YlQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=YfXiimzx; arc=none smtp.client-ip=209.209.25.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+	s=arc-20240116; t=1744899540; c=relaxed/simple;
+	bh=qquF4gAWxlLcl0NloBMan4FuZEm0GYnvDkpACC9vTGA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SbHui3WXn1Fm8tZKK1r9Rz2x+kPUG9yHejFYRsVa7tuQm0iq2gGYn0ScBISIxNanJB4brSRLVBLmrD/u6jvyBTCaDlBKqLnZlXlTbLYbuoJXOkDwi5mfBOZlDjNWzgRnO/jeqCIDyZV3zpuEEmffpomkaGSG6/Gn/TmetjqYhRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PIGnuc9s; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="YfXiimzx"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id B35D260359;
-	Thu, 17 Apr 2025 14:17:45 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=XnB24iAeGbj6B5uP93ZICmKOLHtGxbBDP9NdC4vj7ME=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=mime-version:from:references:subject:in-reply-to:cc:date:message-id:to:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1744899465; v=1;
-	b=YfXiimzxGicQ+epEfxkoqE365IAHrB4fVc8Fd5giar6CaO/7iG4idJ/+6Yw4Mdn8geGnIOWH
-	hS4Ypf64Oejd5sT66e0zCtGUokHfo+Db8lKA0mY42PuxMrW2H9P+n+39xXyz1gxK2nnPBNzflPC
-	fw8hXNNAgstZe9sCdwLigDqM=
-Received: from smtpclient.apple (unknown [141.11.218.23])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id 1262F6020D;
-	Thu, 17 Apr 2025 14:17:42 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PIGnuc9s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744899537;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kzF6UYdjczKDEkThEfvJNGwHGPfnks2hj7tHch2bIQQ=;
+	b=PIGnuc9sO3Kgl2ujCeIoeIDoQECd8K8/S7T49cAgt3E30VDvgCbbY7EdND9YcM59xQ6zUV
+	ePMVLWda/Htp/5kXPxZpyZdDE2PRbuWqWqMgQGATkRsMdsFYZhMGJTN6zw+OU47PmaxIC9
+	ubUqnLZZNrZkNyEFGDTJ8UyCxHi4ksE=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-450-XFk4lmz7PRSOlAP3HKoenA-1; Thu,
+ 17 Apr 2025 10:18:55 -0400
+X-MC-Unique: XFk4lmz7PRSOlAP3HKoenA-1
+X-Mimecast-MFC-AGG-ID: XFk4lmz7PRSOlAP3HKoenA_1744899533
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4AD4C180056F;
+	Thu, 17 Apr 2025 14:18:52 +0000 (UTC)
+Received: from [10.44.33.28] (unknown [10.44.33.28])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E3CA419560BA;
+	Thu, 17 Apr 2025 14:18:46 +0000 (UTC)
+Message-ID: <ee0b1569-1c01-4e7b-b4a0-ec1de4634e89@redhat.com>
+Date: Thu, 17 Apr 2025 16:18:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH] md/bcache: Mark __nonstring look-up table
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-In-Reply-To: <CAMj1kXHwBKu1K=yjJprnEArZFKphvDPsfZzA5KgTtyo5L866=w@mail.gmail.com>
-Date: Thu, 17 Apr 2025 22:17:30 +0800
-Cc: Kees Cook <kees@kernel.org>,
- Coly Li <colyli@kernel.org>,
- linux-bcache@vger.kernel.org,
- linux-kernel@vger.kernel.org,
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 net-next 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A64AEAB9-9C41-408E-8B51-F2F58882CFBE@coly.li>
-References: <20250416220135.work.394-kees@kernel.org>
- <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
- <994E520B-64B1-4387-8DFF-88755346FE55@kernel.org>
- <208BFA1D-F3E9-4D9F-A4A1-4E4C3F4CA309@coly.li>
- <CAMj1kXHwBKu1K=yjJprnEArZFKphvDPsfZzA5KgTtyo5L866=w@mail.gmail.com>
-To: Ard Biesheuvel <ardb@kernel.org>,
- Kent Overstreet <kent.overstreet@linux.dev>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1744899465573767940.5242.3803715497672975691@prod-use1-smtp-out1001.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=fZxXy1QF c=1 sm=1 tr=0 ts=68010d89
-	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=VwQbUJbxAAAA:8
-	a=bNni2TGrO3FHrKkdXQAA:9 a=QEXdDO2ut3YA:10 a=2sD_2MczOTEKGp_KAmFJ:22
+References: <20250416162144.670760-1-ivecera@redhat.com>
+ <20250416162144.670760-6-ivecera@redhat.com>
+ <d286dec9-a544-409d-bf62-d2b84ef6ecd4@lunn.ch>
+ <CAAVpwAvVO7RGLGMXCBxCD35kKCLmZEkeXuERG0C2GHP54kCGJw@mail.gmail.com>
+ <8802b276-b6dd-4235-87dd-18b835edb196@lunn.ch>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <8802b276-b6dd-4235-87dd-18b835edb196@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
 
 
-> 2025=E5=B9=B44=E6=9C=8817=E6=97=A5 22:08=EF=BC=8CArd Biesheuvel =
-<ardb@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On Thu, 17 Apr 2025 at 15:12, Coly Li <i@coly.li> wrote:
->>=20
->>=20
->>=20
->>> 2025=E5=B9=B44=E6=9C=8817=E6=97=A5 15:10=EF=BC=8CKees Cook =
-<kees@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
->>>=20
->>>=20
->>>=20
->>> On April 16, 2025 11:16:45 PM PDT, Ard Biesheuvel <ardb@kernel.org> =
-wrote:
->>>> On Thu, 17 Apr 2025 at 00:01, Kees Cook <kees@kernel.org> wrote:
->>>>>=20
->>>>> GCC 15's new -Wunterminated-string-initialization notices that the =
-16
->>>>> character lookup table "zero_uuid" (which is not used as a =
-C-String)
->>>>> needs to be marked as "nonstring":
->>>>>=20
->>>>> drivers/md/bcache/super.c: In function 'uuid_find_empty':
->>>>> drivers/md/bcache/super.c:549:43: warning: initializer-string for =
-array of 'char' truncates NUL terminator but destination lacks =
-'nonstring' attribute (17 chars into 16 available) =
-[-Wunterminated-string-initialization]
->>>>> 549 |         static const char zero_uuid[16] =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
->>>>>     |                                           =
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>>>>=20
->>>>> Add the annotation to silence the GCC warning.
->>>>>=20
->>>>> Signed-off-by: Kees Cook <kees@kernel.org>
->>>>> ---
->>>>> Cc: Coly Li <colyli@kernel.org>
->>>>> Cc: Kent Overstreet <kent.overstreet@linux.dev>
->>>>> Cc: linux-bcache@vger.kernel.org
->>>>> ---
->>>>> drivers/md/bcache/super.c | 2 +-
->>>>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>=20
->>>>> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
->>>>> index e42f1400cea9..577d048170fe 100644
->>>>> --- a/drivers/md/bcache/super.c
->>>>> +++ b/drivers/md/bcache/super.c
->>>>> @@ -546,7 +546,7 @@ static struct uuid_entry *uuid_find(struct =
-cache_set *c, const char *uuid)
->>>>>=20
->>>>> static struct uuid_entry *uuid_find_empty(struct cache_set *c)
->>>>> {
->>>>> -       static const char zero_uuid[16] =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
->>>>> +       static const char zero_uuid[] __nonstring =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
->>>>>=20
->>>>=20
->>>> Just
->>>>=20
->>>> static const char zero_uuid[16] =3D {};
->>>>=20
->>>> should work fine here too. No need for the initializer.
->>>=20
->>> =F0=9F=A4=A6 Yes. This is what I get for fixing dozens of these. =
-I'll send a v2...
->>=20
->>=20
->> Can we do this,
->>=20
->> static const char zero_uuid[16] =3D {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, =
-0, 0, 0, 0, 0};
->>=20
->> I like the explicit array element number 16, and the explicit uuid =
-content by obvious zero (=E2=80=980=E2=80=99) symbols. They provide =
-redundant information.
->> Not sure whether GCC 15 complains or not.
->>=20
->=20
-> Even the {} initializer is entirely redundant, given that the variable
-> has static linkage, and so C guarantees that it will be zero
-> initialized.
->=20
-> Could you use NULL_GUID and be done with it?
+On 17. 04. 25 3:22 odp., Andrew Lunn wrote:
+>>>> +/*
+>>>> + * Mailbox operations
+>>>> + */
+>>>> +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index);
+>>>> +int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index);
+>>>> +int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index);
+>>>> +int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index);
+>>>> +int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index);
+>>>> +int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index);
+>>>> +int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index);
+>>>> +int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index);
+>>>
+>>> I assume these are the only valid ways to access a mailbox?
+>>>
+>>> If so:
+>>>
+>>>> +static inline __maybe_unused int
+>>>> +zl3073x_mb_read_ref_mb_mask(struct zl3073x_dev *zldev, u16 *value)
+>>>> +{
+>>>> +     __be16 temp;
+>>>> +     int rc;
+>>>> +
+>>>> +     lockdep_assert_held(&zldev->mailbox_lock);
+>>>> +     rc = regmap_bulk_read(zldev->regmap, ZL_REG_REF_MB_MASK, &temp,
+>>>> +                           sizeof(temp));
+>>>> +     if (rc)
+>>>> +             return rc;
+>>>> +
+>>>> +     *value = be16_to_cpu(temp);
+>>>> +     return rc;
+>>>> +}
+>>>
+>>> These helpers can be made local to the core. You can then drop the
+>>> lockdep_assert_held() from here, since the only way to access them is
+>>> via the API you defined above, and add the checks in those API
+>>> functions.
+>>
+>> This cannot be done this way... the above API just simplifies the
+>> operation of read and write latch registers from/to mailbox.
+>>
+>> Whole operation is described in the commit description.
+>>
+>> E.g. read something about DPLL1
+>> 1. Call zl3073x_mb_dpll_read(..., 1)
+>>     This selects DPLL1 in the DPLL mailbox and performs read operation
+>> and waits for finish
+>> 2. Call zl3073x_mb_read_dpll_mode()
+>>     This reads dpll_mode latch register
+>>
+>> write:
+>> 1. Call zl3073x_mb_write_dpll_mode(...)
+>>     This writes mode to dpll_mode latch register
+>> 2. Call zl3073x_mb_dpll_read(..., 1)
+>>     This writes all info from latch registers to DPLL1
+>>
+>> The point is that between step 1 and 2 nobody else cannot touch
+>> latch_registers or mailbox select register and op semaphore.
+> 
+> Again, think about your layering. What does your lower level mailbox
+> API look like? What does the MFD need to export for a safe API?
+> 
+> So maybe you need zl3073x_mb_read_u8(), zl3073x_mb_read_u16(),
+> zl3073x_mb_read_u32(), as part of your mailbox API. These assert the
+> lock is held.
+> 
+> You could even make zl3073x_mb_read_u8() validate the register is in
+> the upper range, and that zl3073x_read_u8() the register is in the
+> lower range.
 
-I feel the =E2=80=9Cstatic=E2=80=9D here is an optimization to avoid =
-initializing zero_uuid again =E2=80=A6.
+Yes, this LGTM... Anyway if the MB API would provide reading and writing 
+MBs at once then zl3073x_mb_{read,write}_u* are not necessary as the 
+only caller of these functions is MFD itself and they would be called 
+under MB API that holds the lock.
 
-Kent,
-
-Am I right?
-
-Coly Li
-
-
+Ivan
 
