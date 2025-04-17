@@ -1,133 +1,140 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail112.out.titan.email (mail112.out.titan.email [34.197.244.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F47C145B24;
-	Thu, 17 Apr 2025 13:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA9D23FC55
+	for <linux-hardening@vger.kernel.org>; Thu, 17 Apr 2025 13:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.197.244.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744896479; cv=none; b=TLTS9avybp3bwaAO+NOnnwo3QM2x3babqFqGS4NhyPuzanUCFmqOHs5x5zJXLl9KcJCYNGJE2JqEoPDrbIjeRyPVKRVSBrhj2ZEP6vPIcgF8xjhvFvpo2upysPGV2ofFH9hZyOfpA+/JKaE3Cuf1F5cCdwWE/MSWT7xKqLL/794=
+	t=1744897804; cv=none; b=JUbLL1O6JnHjB2OVtXhB8Eukqb7O+u4tigUqE4sOkhACPeRJp5xU5ojhWO2Aro1cC0JorngPkQOkjxUgPXpyY6IbaxNheWYmlCx7X8HHKKZ3KacCYUkJBKLjKiae8SLGIho0Tv5QOmJrGx7qZ5m+7BU3gcC6zI3l5idYPOhrC+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744896479; c=relaxed/simple;
-	bh=l5TPKEBA5ZuQO87D/xku61a7xBIQtvTjQwvx/XVDRZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j2jRFcZBXrIdw7dNFjdKr9omcJzsWg6/hSZ0may3K41EgVfJXAmSDfAxz3nPfieIwZK2CsiwFhyRb2jvCBdd7nzodBFT1CBsNuHb1Zujw2JQBeY4C0tgzbzHLmqi3r3kWUktFrinWcfpPVDJE03QzsH00zAGmv06VBos7g5gwJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=LrWD0/Ln; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744897804; c=relaxed/simple;
+	bh=dtb9K8lcpmys1W32pb4Durrh6XWu23sh+YsgDer1diQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=QmQ8Btx4bnFShGGdZZyXfJxAWlAemUmUV/YVjuQ0Xno/rdz896soHFsRkTDOK43OrqUG6P9gS7wT2yob9Zkizqu9YmUAoD+GakHNo5CNEy7AchsPLSVnKeazWSNj93yrz5W+4/yYYrvJrCSzjxt91b6tteYAQA5WMBkTFEX0lKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=A5ElI5kj; arc=none smtp.client-ip=34.197.244.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="LrWD0/Ln"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=OtjfNcK8nf/oL7Io05d9rm6yCGzKjtQGJGfg5Tphs4M=; b=LrWD0/LnUmxjKJBDEZus3atGbA
-	hyccSUwWOlK4gHnMOeKVfos4Y1xRkBByNZbhTtgdMTA6XP6SoZFEpfH+imdqZEHzPFS038JWRL4CZ
-	lgUTPxTh7Z9PkYSeOgPUl4px4n6RfSZMKNu/DhPhe2Mx6G6wN8/NQr9WLr7HZsmWkHu0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5PHM-009mr7-TJ; Thu, 17 Apr 2025 15:27:44 +0200
-Date: Thu, 17 Apr 2025 15:27:44 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 5/8] mfd: zl3073x: Add functions to work with
- register mailboxes
-Message-ID: <09c3730a-f6f1-4226-ae29-fe02b1663fe7@lunn.ch>
-References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-6-ivecera@redhat.com>
- <d286dec9-a544-409d-bf62-d2b84ef6ecd4@lunn.ch>
- <CAAVpwAvVO7RGLGMXCBxCD35kKCLmZEkeXuERG0C2GHP54kCGJw@mail.gmail.com>
- <e22193d6-8d00-4dbc-99be-55a9d6429730@redhat.com>
+	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="A5ElI5kj"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp-out.flockmail.com (Postfix) with ESMTP id 2E995E03F8;
+	Thu, 17 Apr 2025 13:11:55 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; bh=JSduZ8d++wQ3nvXz3tNF7pbhlQZRllEIV6azsHZ8TPo=;
+	c=relaxed/relaxed; d=t12smtp-sign004.email;
+	h=in-reply-to:cc:references:subject:from:date:to:mime-version:message-id:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1744895515; v=1;
+	b=A5ElI5kjlOJ1vwK7+UoOWh5AWqnuoXJWfAXWbNTJjHiyfHrj0hIAKYYk8jeJuSh4s++5cR2X
+	po6CPLW9b7C8k0walzZAL4Z37+v2Qa4eTwftjYlewD78oNYBUSUbzQavghNw40aXMU1shIh9lMU
+	43/xEmyTzkfzN93p77Dq3w5A=
+Received: from smtpclient.apple (unknown [141.11.218.23])
+	by smtp-out.flockmail.com (Postfix) with ESMTPA id 4A185E02FF;
+	Thu, 17 Apr 2025 13:11:51 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e22193d6-8d00-4dbc-99be-55a9d6429730@redhat.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH] md/bcache: Mark __nonstring look-up table
+Feedback-ID: :i@coly.li:coly.li:flockmailId
+From: Coly Li <i@coly.li>
+In-Reply-To: <994E520B-64B1-4387-8DFF-88755346FE55@kernel.org>
+Date: Thu, 17 Apr 2025 21:11:39 +0800
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+ Coly Li <colyli@kernel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ linux-bcache@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <208BFA1D-F3E9-4D9F-A4A1-4E4C3F4CA309@coly.li>
+References: <20250416220135.work.394-kees@kernel.org>
+ <CAMj1kXHfearSZG6TFTxxX87qmRkUmAefQm-TfPNS8j09kWxujQ@mail.gmail.com>
+ <994E520B-64B1-4387-8DFF-88755346FE55@kernel.org>
+To: Kees Cook <kees@kernel.org>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-F-Verdict: SPFVALID
+X-Titan-Src-Out: 1744895514990706196.26132.3658974856431284874@prod-use1-smtp-out1004.
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.4 cv=fZxXy1QF c=1 sm=1 tr=0 ts=6800fe1b
+	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
+	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=VwQbUJbxAAAA:8
+	a=dxI0GJXRgo0QjBsCUv0A:9 a=QEXdDO2ut3YA:10 a=UZE0bJQDkNwXTw_to89n:22
 
-> Anyway, I have a different idea... completely abstract mailboxes from the
-> caller. The mailbox content can be large and the caller is barely interested
-> in all registers from the mailbox but this could be resolved this way:
-> 
-> The proposed API e.g for Ref mailbox:
-> 
-> int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index,
->                         struct zl3073x_mb_ref *mb);
-> int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index,
->                          struct zl3073x_mb_ref *mb);
-> 
-> struct zl3073x_mb_ref {
-> 	u32	flags;
-> 	u16	freq_base;
-> 	u16	freq_mult;
-> 	u16	ratio_m;
-> 	u16	ratio_n;
-> 	u8	config;
-> 	u64	phase_offset_compensation;
-> 	u8	sync_ctrl;
-> 	u32	esync_div;
-> }
-> 
-> #define ZL3073X_MB_REF_FREQ_BASE			BIT(0)
-> #define ZL3073X_MB_REF_FREQ_MULT			BIT(1)
-> #define ZL3073X_MB_REF_RATIO_M				BIT(2)
-> #define ZL3073X_MB_REF_RATIO_N			 	BIT(3)
-> #define ZL3073X_MB_REF_CONFIG			 	BIT(4)
-> #define ZL3073X_MB_REF_PHASE_OFFSET_COMPENSATION 	BIT(5)
-> #define ZL3073X_MB_REF_SYNC_CTRL			BIT(6)
-> #define ZL3073X_MB_REF_ESYNC_DIV			BIT(7)
-> 
-> Then a reader can read this way (read freq and ratio of 3rd ref):
-> {
-> 	struct zl3073x_mb_ref mb;
-> 	...
-> 	mb.flags = ZL3073X_MB_REF_FREQ_BASE |
-> 		   ZL3073X_MB_REF_FREQ_MULT |
-> 		   ZL3073X_MB_REF_RATIO_M |
-> 		   ZL3073X_MB_REF_RATIO_N;
-> 	rc = zl3073x_mb_ref_read(zldev, 3, &mb);
-> 	if (rc)
-> 		return rc;
-> 	/* at this point mb fields requested via flags are filled */
-> }
-> A writer similarly (write config of 5th ref):
-> {
-> 	struct zl3073x_mb_ref mb;
-> 	...
-> 	mb.flags = ZL3073X_MB_REF_CONFIG;
-> 	mb.config = FIELD_PREP(SOME_MASK, SOME_VALUE);
-> 	rc = zl3073x_mb_ref_write(zldev, 5, &mb);
-> 	...
-> 	/* config of 5th ref was commited */
-> }
-> 
-> The advantages:
-> * no explicit locking required from the callers
-> * locking is done inside mailbox API
-> * each mailbox type can have different mutex so multiple calls for
->   different mailbox types (e.g ref & output) can be done in parallel
-> 
-> WDYT about this approach?
 
-I would say this is actually your next layer on top of the basic
-mailbox API. This makes it more friendly to your sub driver and puts
-all the locking in one place where it can easily be reviewed.
 
-One question would be, where does this code belong. Is it in the MFD,
-or in the subdrivers? I guess it is in the subdrivers.
+> 2025=E5=B9=B44=E6=9C=8817=E6=97=A5 15:10=EF=BC=8CKees Cook =
+<kees@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+>=20
+>=20
+> On April 16, 2025 11:16:45 PM PDT, Ard Biesheuvel <ardb@kernel.org> =
+wrote:
+>> On Thu, 17 Apr 2025 at 00:01, Kees Cook <kees@kernel.org> wrote:
+>>>=20
+>>> GCC 15's new -Wunterminated-string-initialization notices that the =
+16
+>>> character lookup table "zero_uuid" (which is not used as a C-String)
+>>> needs to be marked as "nonstring":
+>>>=20
+>>> drivers/md/bcache/super.c: In function 'uuid_find_empty':
+>>> drivers/md/bcache/super.c:549:43: warning: initializer-string for =
+array of 'char' truncates NUL terminator but destination lacks =
+'nonstring' attribute (17 chars into 16 available) =
+[-Wunterminated-string-initialization]
+>>>  549 |         static const char zero_uuid[16] =3D =
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+>>>      |                                           =
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>=20
+>>> Add the annotation to silence the GCC warning.
+>>>=20
+>>> Signed-off-by: Kees Cook <kees@kernel.org>
+>>> ---
+>>> Cc: Coly Li <colyli@kernel.org>
+>>> Cc: Kent Overstreet <kent.overstreet@linux.dev>
+>>> Cc: linux-bcache@vger.kernel.org
+>>> ---
+>>> drivers/md/bcache/super.c | 2 +-
+>>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>>=20
+>>> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+>>> index e42f1400cea9..577d048170fe 100644
+>>> --- a/drivers/md/bcache/super.c
+>>> +++ b/drivers/md/bcache/super.c
+>>> @@ -546,7 +546,7 @@ static struct uuid_entry *uuid_find(struct =
+cache_set *c, const char *uuid)
+>>>=20
+>>> static struct uuid_entry *uuid_find_empty(struct cache_set *c)
+>>> {
+>>> -       static const char zero_uuid[16] =3D =
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+>>> +       static const char zero_uuid[] __nonstring =3D =
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+>>>=20
+>>=20
+>> Just
+>>=20
+>> static const char zero_uuid[16] =3D {};
+>>=20
+>> should work fine here too. No need for the initializer.
+>=20
+> =F0=9F=A4=A6 Yes. This is what I get for fixing dozens of these. I'll =
+send a v2...
 
-	Andrew
+
+Can we do this,
+
+static const char zero_uuid[16] =3D {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, =
+0, 0, 0, 0};
+
+I like the explicit array element number 16, and the explicit uuid =
+content by obvious zero (=E2=80=980=E2=80=99) symbols. They provide =
+redundant information.
+Not sure whether GCC 15 complains or not.
+
+Thanks.
+
+Coly Li=
