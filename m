@@ -1,122 +1,97 @@
-Received: from mail73.out.titan.email (mail73.out.titan.email [3.216.99.53])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5EE187553
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Apr 2025 04:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.216.99.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2941DE4C8;
+	Thu, 17 Apr 2025 05:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744863679; cv=none; b=arnzlQ1B2SjZQtMQ5B0jmXdqwnJIf6Jkb3G8rcW4EWpUBxZcy2/k5J+g8yoyzgwGr/kqhUvDq3RyNdeAiIkG0mNEGsNMpUK2c1794XRt8BIxjAUhA0IEvVXTe7K7mfkzzdSuGgd0xtNm6Wfk9XrvSI13wM2lK1fGhCqkY2r90Gw=
+	t=1744869255; cv=none; b=jj1UFXMOPhhVoqwdfwtqjdXJP6ChDGjcjQdT7LEmVzyyh3xR5vjXaQ6JSMK/Sel9NBW3XM5KmCNBHAgVm4BTdFowe2mZU/slkM0SKAtpVkFSUtNF/tPHvtc1HKT1oBgTXEqapcnRqDPRSZrrV/PLFEZbe2VTPf+xFn4/diHtXjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744863679; c=relaxed/simple;
-	bh=je5kHSSnufjqTKCgwgXuGoPvDg8Uz6nSgVL5zslmj6E=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=o3gtL1O5laxebKbRTKV/Mmb12Eg47VnxBl9qmkJhFlW8Hym2QoSiuf4ePu1pEqLixLXVs8Sz39479WxkorIAOeF2IlGHuj2djZnUT3OIMgZeztQO2/MNaFn80PrXRd339Z6crwBDVpWUQDt4H/LZzHkHBAc4RmvqHJOB9Wd04tA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=HoNHf5di; arc=none smtp.client-ip=3.216.99.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+	s=arc-20240116; t=1744869255; c=relaxed/simple;
+	bh=K56yBMbgQGqljUDT9Hv9xg/jrxYHjS/4JS/AZXqh1NQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fR2ncDl85E64wiwiYGE5hLAfxoCvf4wQ6UEG4rYSqX9w0tyDStjflkTBGTc8BAma/cNGppk/vskbeiRuanqA3A6BI/1qiDqUJk4ybcykuVX/lVMi2sRlOKCR9+jAGfq+P5AF26bNdxskWwai9aVwK/gP0Z+yNgP0GJ/pM38eTj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDz4BW+w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="HoNHf5di"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id 7D2AF600FF;
-	Thu, 17 Apr 2025 04:13:27 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=bonw2XKlbtQF6o1d2G05Q1zuohCV/u+ShQz20KaAxq0=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=date:subject:to:in-reply-to:cc:references:from:message-id:mime-version:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1744863207; v=1;
-	b=HoNHf5dig4nrUUVShSL+/oYC5WP0DwlrfLH8UAo0ggu4o0BSSBsgfSmMZlkoQcyyA34PlaTo
-	c/HvT+FX2ejX0dOxCGAGFcfHt9huJqLHMsWvXFS7vHmXU+BCmJn65ChdWjaadmbxu5w59PxYX4n
-	RDkGq00FOCJxZlanjE4MTdR0=
-Received: from smtpclient.apple (unknown [141.11.218.23])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id 22D556006D;
-	Thu, 17 Apr 2025 04:13:24 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDz4BW+w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 449B8C4CEE4;
+	Thu, 17 Apr 2025 05:54:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744869254;
+	bh=K56yBMbgQGqljUDT9Hv9xg/jrxYHjS/4JS/AZXqh1NQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WDz4BW+w38peZmiAvsJJ0jOI3cOSWwnlLdeCnuh9/hErkGh5mFB0jQcHTLLznPSvv
+	 Elqy4aILvNhnKYoPVE3TT2qdXlsGrZP1LfR7p+nOrGBMOxYhT+Ppxv74SZ9cRlg+VU
+	 fCZflPW/IXpvtPVjCOoJb+b8cCFRfwbO5LWTDmA4QUV+9KD2x6DYTG0WhGkvOVQ+Ne
+	 gXK3WoRLaKr8ztyzzMoq0SklQ+1aKyaw5XyKw5Vwz49d0uqhyEDBj32H3J4gk9cZRe
+	 VEvqV64S7dlf7jMjilqZkt69bKHigdE9FKFY4iRinV4j/N+9qQDBz/E4qBb2hbZTf4
+	 AY5R65rI6zDCQ==
+Date: Thu, 17 Apr 2025 07:54:12 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: "Rob Herring (Arm)" <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, netdev@vger.kernel.org, 
+	Prathosh Satish <Prathosh.Satish@microchip.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
+	Kees Cook <kees@kernel.org>, Michal Schmidt <mschmidt@redhat.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, 
+	linux-hardening@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, Jiri Pirko <jiri@resnulli.us>, 
+	Andy Shevchenko <andy@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 net-next 2/8] dt-bindings: dpll: Add support for
+ Microchip Azurite chip family
+Message-ID: <20250417-warping-weightless-puffin-d1c9c8@shite>
+References: <20250416162144.670760-1-ivecera@redhat.com>
+ <20250416162144.670760-3-ivecera@redhat.com>
+ <174482532098.3485034.14305412993449574460.robh@kernel.org>
+ <CAAVpwAurYhW1Eyw7C_gPY0cTrQJrw7o_FL3-npLdWsxE=FGXkg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH] md/bcache: Mark __nonstring look-up table
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-In-Reply-To: <20250416220135.work.394-kees@kernel.org>
-Date: Thu, 17 Apr 2025 12:13:12 +0800
-Cc: Coly Li <colyli@kernel.org>,
- Kent Overstreet <kent.overstreet@linux.dev>,
- linux-bcache@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <24407A22-09EF-4A40-A624-181EBC28D35B@coly.li>
-References: <20250416220135.work.394-kees@kernel.org>
-To: Kees Cook <kees@kernel.org>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1744863207368998089.5242.1435551937388604544@prod-use1-smtp-out1001.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=O7TDvA9W c=1 sm=1 tr=0 ts=68007fe7
-	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=VwQbUJbxAAAA:8
-	a=HI0Xfd1PG7h-CoJmVSkA:9 a=QEXdDO2ut3YA:10 a=dkNG5E8fUEMMZBEGMw6M:22
+In-Reply-To: <CAAVpwAurYhW1Eyw7C_gPY0cTrQJrw7o_FL3-npLdWsxE=FGXkg@mail.gmail.com>
 
-
-
-> 2025=E5=B9=B44=E6=9C=8817=E6=97=A5 06:01=EF=BC=8CKees Cook =
-<kees@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
+On Wed, Apr 16, 2025 at 08:29:33PM GMT, Ivan Vecera wrote:
+> On Wed, Apr 16, 2025 at 7:42=E2=80=AFPM Rob Herring (Arm) <robh@kernel.or=
+g> wrote:
+> >
+> >
+> > On Wed, 16 Apr 2025 18:21:38 +0200, Ivan Vecera wrote:
+> > > Add DT bindings for Microchip Azurite DPLL chip family. These chips
+> > > provides up to 5 independent DPLL channels, 10 differential or
+> > > single-ended inputs and 10 differential or 20 single-ended outputs.
+> > > It can be connected via I2C or SPI busses.
+> > >
+> > > Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> > > ---
+> > > v1->v3:
+> > > * single file for both i2c & spi
+> > > * 5 compatibles for all supported chips from the family
+> > > ---
+> > >  .../bindings/dpll/microchip,zl30731.yaml      | 115 ++++++++++++++++=
+++
+> > >  1 file changed, 115 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/dpll/microchip,=
+zl30731.yaml
+> > >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > yamllint warnings/errors:
+> >
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings=
+/dpll/microchip,zl30731.yaml: $id: Cannot determine base path from $id, rel=
+ative path/filename doesn't match actual path or filename
+> >          $id: http://devicetree.org/schemas/dpll/microchip,zl3073x.yaml
 >=20
-> GCC 15's new -Wunterminated-string-initialization notices that the 16
-> character lookup table "zero_uuid" (which is not used as a C-String)
-> needs to be marked as "nonstring":
->=20
-> drivers/md/bcache/super.c: In function 'uuid_find_empty':
-> drivers/md/bcache/super.c:549:43: warning: initializer-string for =
-array of 'char' truncates NUL terminator but destination lacks =
-'nonstring' attribute (17 chars into 16 available) =
-[-Wunterminated-string-initialization]
->  549 |         static const char zero_uuid[16] =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
->      |                                           =
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->=20
-> Add the annotation to silence the GCC warning.
->=20
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Coly Li <colyli@kernel.org>
-> Cc: Kent Overstreet <kent.overstreet@linux.dev>
-> Cc: linux-bcache@vger.kernel.org <mailto:linux-bcache@vger.kernel.org> =
- =20
+> Oops, my bad... I forgot to update $id after rename of the file...
+> Will fix.
 
-It looks good to me. Thanks for the fix up.
-
-
-Coly Li
-
-
-
-> ---
-> drivers/md/bcache/super.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> index e42f1400cea9..577d048170fe 100644
-> --- a/drivers/md/bcache/super.c
-> +++ b/drivers/md/bcache/super.c
-> @@ -546,7 +546,7 @@ static struct uuid_entry *uuid_find(struct =
-cache_set *c, const char *uuid)
->=20
-> static struct uuid_entry *uuid_find_empty(struct cache_set *c)
-> {
-> - static const char zero_uuid[16] =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-> + static const char zero_uuid[] __nonstring =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
->=20
-> return uuid_find(c, zero_uuid);
-> }
-> --=20
-> 2.34.1
->=20
->=20
-
+No, you forgot to test. You are expected to build your code (and this is
+here testing) BEFORE you post, not after or not through community
+resources.
