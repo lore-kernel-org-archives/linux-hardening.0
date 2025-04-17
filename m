@@ -1,85 +1,232 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31FC225785;
-	Thu, 17 Apr 2025 08:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29A622576A
+	for <linux-hardening@vger.kernel.org>; Thu, 17 Apr 2025 10:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744877644; cv=none; b=CdnLV2dBjOtpmTnbJtwEGZN+VJ19/SjoAcSLeC0vzoxEPJXAd7Lt3kXVz5e9H22xVBv/y3Gdpa1DmcOIGPTGTXKnnd/NPa6bKcxwspuXOeF/XZm6SlTlJG6YXT0Su8TK89UBzlClFqLPr+Gd7VGavufOGTJouJKhgUbUje12sEY=
+	t=1744884140; cv=none; b=pJhmtxvzSgHnrKeEw+krNS5E2KkAcAflD85GrKtKBM60DKFSPLMgFeCGMtzNAqbCiAuqJnDadq3kiLkgEFAVVvjxjNljcFjB6io9yKu6DSppOtJvNCBVeOQbA4/LHDjweRx+aGl0UIr3i936hrH2yJD4jhg/cjxRk8XA4AVa4nE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744877644; c=relaxed/simple;
-	bh=MwepOx7zs2heluVdedWctNgQH1Q2ccAbcwPdl6bA4tw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fTo5XhYMM+t6vky5pnzcFeE92fcMImw2anAm8+0GPAHXNcqnjkV++JWvKC7B+kc/Tn8HjUXP3tDkJkZx8HUASjVCRjiia8ea17BQTzFiJ3Glab4sPdp+Nvios2hfXpnMYYqq9+xaKw1C+cl3sOv8bub4guNWE2TPZQHm3kUbco0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cld+u/Jc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744884140; c=relaxed/simple;
+	bh=nXDID1eMf4+9FTefmpLhDygBj6jexx1U5/4QE4JA044=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=GcUjfg0olDU5NueNsoUP3WKZU/wD1MjEmjUh84FDK9R2HKSD8wxJos7ZQr/2nXyt+pSb3K3ngWzltlmhK4VBaOwd1NihpPnoLT/QMu+dzVQKB266qM7E0ovXeJlhV3Zlru3todZKKl39h/CrEML0LAbfDgolRWt4sSe3EHoghnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zj0mc2Mz; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cld+u/Jc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE08C4CEE4;
-	Thu, 17 Apr 2025 08:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744877643;
-	bh=MwepOx7zs2heluVdedWctNgQH1Q2ccAbcwPdl6bA4tw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Cld+u/JcLCjQWyrbdYUIkrIg1xfu7iOwxBuvjfwhvqCVcPHsz/LMH28VMEpv/8TqL
-	 NIORsv1kGbMwhKtx8lFXopYH1tJUpqLqK5dwFT+oTfokwGgSHAgRliQJh37bE8A0YJ
-	 wnxNTGWwF0bhH+4TqxuJylD0cuyd+i0AJPtvMZY94gmeacL6ZlZYhrjgJOWOvTBsHk
-	 GBMNhSKM1WjQuslSganp33+9nl4+IWnolDyHfrEhvt+4dHXysan2LC22CirdgTNTSJ
-	 HpwXfS05v3BgJl0fbRuOHTDx6xR8WmDy89GVwXRbnnq2qsug3QFHTbaiThsvwcee5m
-	 1dCKgFX8SFp4A==
-From: Christian Brauner <brauner@kernel.org>
-To: David Howells <dhowells@redhat.com>,
-	Kees Cook <kees@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	netfs@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] netfs: Mark __nonstring lookup tables
-Date: Thu, 17 Apr 2025 10:13:57 +0200
-Message-ID: <20250417-manchmal-verbal-7f84877a2c63@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250416221654.work.028-kees@kernel.org>
-References: <20250416221654.work.028-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zj0mc2Mz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744884137;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yI0SZWzvsCLbIwOjEZSyeILvw7T7+gy7laNbgKsObFs=;
+	b=Zj0mc2MzLgiUqQp86HgpSoIDDJfpLKFO9vp5eUiO+noDGXK/etdTMJiAJpLwVaS7wR2tLD
+	Cyz3SrauYbPq4YvHqXeBnNEJnM3lzBFPNRV4xFDkSZnSdTISyrggbEgdFiuCJZA71slRIF
+	mZ/Sb3jHTPWSYUv8IAH/8FmSC1wXwE4=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-606-Kzb09-GOOyCBMq31B9DTKQ-1; Thu,
+ 17 Apr 2025 06:02:14 -0400
+X-MC-Unique: Kzb09-GOOyCBMq31B9DTKQ-1
+X-Mimecast-MFC-AGG-ID: Kzb09-GOOyCBMq31B9DTKQ_1744884132
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BA2E019560AE;
+	Thu, 17 Apr 2025 10:02:11 +0000 (UTC)
+Received: from [10.44.33.28] (unknown [10.44.33.28])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6654B30002C2;
+	Thu, 17 Apr 2025 10:02:05 +0000 (UTC)
+Message-ID: <e22193d6-8d00-4dbc-99be-55a9d6429730@redhat.com>
+Date: Thu, 17 Apr 2025 12:02:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1839; i=brauner@kernel.org; h=from:subject:message-id; bh=MwepOx7zs2heluVdedWctNgQH1Q2ccAbcwPdl6bA4tw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQw7HDzmua4Xa0lvovN5u2fGmlee4v3aQs+ya7dvmHP9 v0J9fccOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACYio8Pw33OzUMSFtfrJGuun rtU1KT7U/Yrvfr3W78DfSt92vb82rZiR4VpwYe+Gtau6o9f/Nay6ZfXz2d+uh8oXKmau8WIUeK1 +jRsA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 net-next 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+From: Ivan Vecera <ivecera@redhat.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250416162144.670760-1-ivecera@redhat.com>
+ <20250416162144.670760-6-ivecera@redhat.com>
+ <d286dec9-a544-409d-bf62-d2b84ef6ecd4@lunn.ch>
+ <CAAVpwAvVO7RGLGMXCBxCD35kKCLmZEkeXuERG0C2GHP54kCGJw@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CAAVpwAvVO7RGLGMXCBxCD35kKCLmZEkeXuERG0C2GHP54kCGJw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Wed, 16 Apr 2025 15:16:55 -0700, Kees Cook wrote:
-> GCC 15's new -Wunterminated-string-initialization notices that the
-> character lookup tables "fscache_cache_states" and "fscache_cookie_states"
-> (which are not used as a C-String) need to be marked as "nonstring":
+
+
+On 16. 04. 25 8:27 odp., Ivan Vecera wrote:
+> On Wed, Apr 16, 2025 at 7:32 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>>
+>>> +/**
+>>> + * zl3073x_mb_dpll_read - read given DPLL configuration to mailbox
+>>> + * @zldev: pointer to device structure
+>>> + * @index: DPLL index
+>>> + *
+>>> + * Reads configuration of given DPLL into DPLL mailbox.
+>>> + *
+>>> + * Context: Process context. Expects zldev->regmap_lock to be held by caller.
+>>> + * Return: 0 on success, <0 on error
+>>> + */
+>>> +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index)
+>>> +{
+>>> +     int rc;
+>>
+>> lockdep_assert_held(zldev->regmap_lock) is stronger than having a
+>> comment. When talking about i2c and spi devices, it costs nothing, and
+>> catches bugs early.
 > 
-> fs/netfs/fscache_cache.c:375:67: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (6 chars into 5 available) [-Wunterminated-string-initialization]
->   375 | static const char fscache_cache_states[NR__FSCACHE_CACHE_STATE] = "-PAEW";
->       |                                                                   ^~~~~~~
-> fs/netfs/fscache_cookie.c:32:69: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (11 chars into 10 available) [-Wunterminated-string-initialization]
->    32 | static const char fscache_cookie_states[FSCACHE_COOKIE_STATE__NR] = "-LCAIFUWRD";
->       |                                                                     ^~~~~~~~~~~~
+> Makes sense to put the assert here...
 > 
-> [...]
+> Will add.
+> 
+>>
+>>> +/*
+>>> + * Mailbox operations
+>>> + */
+>>> +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index);
+>>> +int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index);
+>>> +int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index);
+>>> +int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index);
+>>> +int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index);
+>>> +int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index);
+>>> +int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index);
+>>> +int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index);
+>>
+>> I assume these are the only valid ways to access a mailbox?
+>>
+>> If so:
+>>
+>>> +static inline __maybe_unused int
+>>> +zl3073x_mb_read_ref_mb_mask(struct zl3073x_dev *zldev, u16 *value)
+>>> +{
+>>> +     __be16 temp;
+>>> +     int rc;
+>>> +
+>>> +     lockdep_assert_held(&zldev->mailbox_lock);
+>>> +     rc = regmap_bulk_read(zldev->regmap, ZL_REG_REF_MB_MASK, &temp,
+>>> +                           sizeof(temp));
+>>> +     if (rc)
+>>> +             return rc;
+>>> +
+>>> +     *value = be16_to_cpu(temp);
+>>> +     return rc;
+>>> +}
+>>
+>> These helpers can be made local to the core. You can then drop the
+>> lockdep_assert_held() from here, since the only way to access them is
+>> via the API you defined above, and add the checks in those API
+>> functions.
+> 
+> This cannot be done this way... the above API just simplifies the
+> operation of read and write latch registers from/to mailbox.
+> 
+> Whole operation is described in the commit description.
+> 
+> E.g. read something about DPLL1
+> 1. Call zl3073x_mb_dpll_read(..., 1)
+>     This selects DPLL1 in the DPLL mailbox and performs read operation
+> and waits for finish
+> 2. Call zl3073x_mb_read_dpll_mode()
+>     This reads dpll_mode latch register
+> 
+> write:
+> 1. Call zl3073x_mb_write_dpll_mode(...)
+>     This writes mode to dpll_mode latch register
+> 2. Call zl3073x_mb_dpll_read(..., 1)
+>     This writes all info from latch registers to DPLL1
+> 
+> The point is that between step 1 and 2 nobody else cannot touch
+> latch_registers or mailbox select register and op semaphore.
+> 
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+Anyway, I have a different idea... completely abstract mailboxes from 
+the caller. The mailbox content can be large and the caller is barely 
+interested in all registers from the mailbox but this could be resolved 
+this way:
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+The proposed API e.g for Ref mailbox:
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index,
+                         struct zl3073x_mb_ref *mb);
+int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index,
+                          struct zl3073x_mb_ref *mb);
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+struct zl3073x_mb_ref {
+	u32	flags;
+	u16	freq_base;
+	u16	freq_mult;
+	u16	ratio_m;
+	u16	ratio_n;
+	u8	config;
+	u64	phase_offset_compensation;
+	u8	sync_ctrl;
+	u32	esync_div;
+}
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
+#define ZL3073X_MB_REF_FREQ_BASE			BIT(0)
+#define ZL3073X_MB_REF_FREQ_MULT			BIT(1)
+#define ZL3073X_MB_REF_RATIO_M				BIT(2)
+#define ZL3073X_MB_REF_RATIO_N			 	BIT(3)
+#define ZL3073X_MB_REF_CONFIG			 	BIT(4)
+#define ZL3073X_MB_REF_PHASE_OFFSET_COMPENSATION 	BIT(5)
+#define ZL3073X_MB_REF_SYNC_CTRL			BIT(6)
+#define ZL3073X_MB_REF_ESYNC_DIV			BIT(7)
 
-[1/1] netfs: Mark __nonstring lookup tables
-      https://git.kernel.org/vfs/vfs/c/58db1c3cd0ce
+Then a reader can read this way (read freq and ratio of 3rd ref):
+{
+	struct zl3073x_mb_ref mb;
+	...
+	mb.flags = ZL3073X_MB_REF_FREQ_BASE |
+		   ZL3073X_MB_REF_FREQ_MULT |
+		   ZL3073X_MB_REF_RATIO_M |
+		   ZL3073X_MB_REF_RATIO_N;
+	rc = zl3073x_mb_ref_read(zldev, 3, &mb);
+	if (rc)
+		return rc;
+	/* at this point mb fields requested via flags are filled */
+}
+A writer similarly (write config of 5th ref):
+{
+	struct zl3073x_mb_ref mb;
+	...
+	mb.flags = ZL3073X_MB_REF_CONFIG;
+	mb.config = FIELD_PREP(SOME_MASK, SOME_VALUE);
+	rc = zl3073x_mb_ref_write(zldev, 5, &mb);
+	...
+	/* config of 5th ref was commited */
+}
+
+The advantages:
+* no explicit locking required from the callers
+* locking is done inside mailbox API
+* each mailbox type can have different mutex so multiple calls for
+   different mailbox types (e.g ref & output) can be done in parallel
+
+WDYT about this approach?
+
+Thanks,
+Ivan
+
