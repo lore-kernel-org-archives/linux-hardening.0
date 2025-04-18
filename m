@@ -1,154 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D3141760;
-	Fri, 18 Apr 2025 21:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8EA1A2658;
+	Fri, 18 Apr 2025 23:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745012364; cv=none; b=pphn8enxvvdTTYQhYeIeQ3S88jcVayEVGsvB7OjmY0nVpX4ZM4SUVgZqcVIIEhcrusJiIWAkhXRzuhCZweH5gw4upF2FC1tkbFN3XCgRJOc+5Po6qkE1fTh6d2S24gjAYwHOHxNHclB3/TlbKHS6MwQijuxwDg3irVkeLXJVPGs=
+	t=1745017281; cv=none; b=n8zqJxLbxb4W4UhWFNBXSLHQ4kbxXOQyZto8oo6QzGW4Rv4ZrjAyqDUy10BHe6cHeEVOfws+6vkQ3zwORiWPBz9lOoWIv9XCGNioZDD/LC91DIJSbn/AXrLukkh7dwiJcWzhx+h+4p9D2Czxsfgcyd3sGP86XZGyiqlFO/Ch7DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745012364; c=relaxed/simple;
-	bh=Dxddxm0RejabRVjCTL14ao3nM8RrH3k/YV8zdVVdCso=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BgPN8fECWa+fK2V4c1S6Gt4K1PPghNA8RAH8ChoThdUvREQUKfZ7p5InceAF2GIKL6G53XvXg4NTQQ7rUUoHX1n8TdBdvl46nI0Hgpou+e0TJMtpEsSqwqq44KQcoC+JFf+3M6yWGunOs/skZNcWJ4ZXYP/HV8ao6BsrLtQ4PI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2WCddnk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745017281; c=relaxed/simple;
+	bh=VQy0mOHcY16VbiuCnUNEHdfMlg4Hjotj7KFV8oi5pL4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dPNL1OCqkoSQbtG4CYOYQd8ap4Mbnnlib9WXxH6dBzukAYw5ydZXyIPwWRtsFw/e6P5Kk27VskKYtD/A+0k617FwDY8RCfaIHFBJ61mD2fgzjugA8Z+pwhXW8NEOwaNkaO1GdIe/dSf/PaDssi42vEjTjLvqC6s2zt3P7mrY0O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IE5w0CiF; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2WCddnk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B194C4CEE2;
-	Fri, 18 Apr 2025 21:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745012364;
-	bh=Dxddxm0RejabRVjCTL14ao3nM8RrH3k/YV8zdVVdCso=;
-	h=From:To:Cc:Subject:Date:From;
-	b=G2WCddnkCUd9nuX4LNZaI9Bc6KvI6JUPHUd7atC1tG4qG8yCRUmD3UBZewEiLJ+cS
-	 tp/eU62QRFVpv+UR2Y5SadYgnWE4h9m2J04MizlxXOFzq098DtDK7MBA+aK2mc96+H
-	 tfbawR1cbyMP7vu6WBeQ2hZNQJOYTIscf3PkJsQJY77JGJuctcfP5fKPWe5A/U39jM
-	 qA8yu+v7E5GksMxIGucwygtHLtyy/+yfVU/7UvBi+eg3Tbbf4//3PEbpKy6NRtCRyR
-	 264rLnzRFaknCTjvmRXOk0mNw7P564ZdWP0NSGSTjhCBrlpEt1jm97yP9Kn2STR45Y
-	 MFgOU73WviJbg==
-From: Kees Cook <kees@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Kees Cook <kees@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	kasan-dev@googlegroups.com,
-	linux-mm@kvack.org,
-	linux-kbuild@vger.kernel.org,
-	llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] kbuild: Switch from -Wvla to -Wvla-larger-than=0
-Date: Fri, 18 Apr 2025 14:32:39 -0700
-Message-Id: <20250418213235.work.532-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IE5w0CiF"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bf1d48843so20123711fa.2;
+        Fri, 18 Apr 2025 16:01:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745017277; x=1745622077; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VQy0mOHcY16VbiuCnUNEHdfMlg4Hjotj7KFV8oi5pL4=;
+        b=IE5w0CiF58pQbpPTuhMRSWmf1dEK8w+gFf7VQkf3C/FuVY7MwZ8tLq6jjPGUiqlYPS
+         gYE4lBvB2cpVHCAcL0fpaFwMOAN73dzf4GBKA1GqbBwrTcw0MKLaRi+VuQyajBSNcvSY
+         6hg1DyF63NBmOeQWfkZT/KDDnwuCfnKt3eMFmIOJYyKToxQErDin0M2yLOF2BmGEathM
+         fQkCzf+mlvpGze4NosIPMeGWMhd/lVcUpCw8ebLDuExDboFvLpyfFijIVQ/O9cJawjQg
+         5rBMn6GtzU0EZ3sujCF/cD5+G+Ypo9GqQyuiGd7r5EOu8GOghMQdZItNiEV6gah14/rW
+         bliA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745017277; x=1745622077;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VQy0mOHcY16VbiuCnUNEHdfMlg4Hjotj7KFV8oi5pL4=;
+        b=oLvgzUZvzgtQJNT0ku5fllDHE3j1EgTIsLE51tPOYkzGdioSJhkXDPK7B5cGIIXYZZ
+         aRxCP6cymOHPxj6ekOHJcElOGNf2KdeKs05j6vBsR+rc7AAst1Y42KOSzflz8o5rel1d
+         al2tQYChN/JohCKFo/LImtu4FVIt0Dhh25cFPyT8p9hqy2G8tJfxWvosHgiUkxUOB6Lq
+         z+kJ4GSMuJsUWpVg7OyjuGDQ1CVYCzPVf18vCMPN9WXlsfJlTg4hf23FzanaBEwq9JUK
+         3oIe2Mh4fRAL7kU2bDuOXO+PWq7ZKzfPs8TjBYgnva+clP69G6jWnZ28bl6vVdGensN0
+         c75A==
+X-Forwarded-Encrypted: i=1; AJvYcCUD4Lw36BeLlJLYjqNqTDSXXSKSGMktVbJW9pQniYQ3a0qECX9vLWxIpm0nCQU758q7TlGDd4aEgXYut3Y2@vger.kernel.org, AJvYcCUrNTP6oTcqJdGOjZ8i00edOwaJg+wJbg/6vwislt5PUxatzS3HH7GPbzUsU6LJfvX5RFYq0/DS1yilb0tvyWrO@vger.kernel.org, AJvYcCVvRvyg5UYmE1yqYtPmKcGE143OJ+b8md3b3FjaTA5dpsDxBsjpP/tZ3CVYNC8qwWbVWcT8DP9IY9g6jg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1cZ4s2/iwhHtVcfrhPmt3Ww0OeX7fahHb1iLWUF1yzuS9QAiU
+	c4GxK12IC8l4CiRYue9Z+qS0ffJkh0uYxR+rfjOaTVuNb+APJYHzLfY0h6DogeCnGitYHTJcupn
+	bfzoVnf4Jd1b44DjvnMO68nCHobuWJw==
+X-Gm-Gg: ASbGnctxAq+UttX9WAdXoAsyDKr1rCEdoRLjnwkrCoOI5P1YCtioVW05vQ5l0I6jXDl
+	wk0LUl3p2S/BMlUNgm2dFOVRf+NLWYrrip6HfcDpUa5PRbDBLWrqlJhLla32FtEp/faPy+ohq/I
+	+NnQkk2ErYpUy9Q7yIaJXCd2z2JfAtLYTDNh4=
+X-Google-Smtp-Source: AGHT+IFFJTxHPf+5+iXd4c3XocplOZE+gYZTmqAwnMiWmgDb0xL1UfWTnq5s+7K4B1jUk0E4pd13T5jtylfmkSUIvVE=
+X-Received: by 2002:a05:651c:19ac:b0:30b:f775:bae0 with SMTP id
+ 38308e7fff4ca-31090559978mr14231121fa.36.1745017276927; Fri, 18 Apr 2025
+ 16:01:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3972; i=kees@kernel.org; h=from:subject:message-id; bh=Dxddxm0RejabRVjCTL14ao3nM8RrH3k/YV8zdVVdCso=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlMR75tUNcXehp4aNuTF9IufZcazwSYsVpMuhT1SYfV7 DZjXfTDjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlU6zD8sxcrPZD7z3HyfV5/ l5P7Zidtu6JR9j1/s8OLWSp8sROaOxkZ7tvemrNQJZAjpFqnUJfJSVdjfeDhLfxyf09LOTKE/fv OCwA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20250417192054.69663-2-thorsten.blum@linux.dev>
+ <202504181322.5D3B93E93@keescook> <ABD8884A-36DF-457C-83D4-49F4F63C339F@linux.dev>
+In-Reply-To: <ABD8884A-36DF-457C-83D4-49F4F63C339F@linux.dev>
+From: Matt Turner <mattst88@gmail.com>
+Date: Fri, 18 Apr 2025 19:01:03 -0400
+X-Gm-Features: ATxdqUFOZ5fvGt_IXXw9Q6D-_eoT7DrRF9bpv9M2IsYXr8gmnLcbrV2Ee9atLLM
+Message-ID: <CAEdQ38E4Hks+m=srZsuuu7g8N2z_hJT7oxyF_Nz3MYsm8wx9YQ@mail.gmail.com>
+Subject: Re: [PATCH] smp: Replace deprecated strcpy() with strscpy()
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Kees Cook <kees@kernel.org>, Richard Henderson <richard.henderson@linaro.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Arnd Bergmann <arnd@arndb.de>, linux-hardening@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Variable Length Arrays (VLAs) on the stack must not be used in the kernel.
-Function parameter VLAs[1] should be usable, but -Wvla will warn for
-those. For example, this will produce a warning but it is not using a
-stack VLA:
+On Fri, Apr 18, 2025 at 5:11=E2=80=AFPM Thorsten Blum <thorsten.blum@linux.=
+dev> wrote:
+>
+> On 18. Apr 2025, at 22:23, Kees Cook wrote:
+> > On Thu, Apr 17, 2025 at 09:20:52PM +0200, Thorsten Blum wrote:
+> >> strcpy() is deprecated; use strscpy() instead.
+> >
+> > Are there more strcpy() uses in arch/alpha? Maybe do all of them and
+> > give the Subject prefix as "alpha:". If not, the "smp:" prefix is likel=
+y
+> > to non-specific. Maybe "alpha: smp:".
+>
+> There are a handful left, but they're not as straightforward as this
+> one - so I'd prefer to keep them separate.
+>
+> Could the committer change the subject to "alpha: smp:" or should I
+> submit a v2 just for the title?
 
-    int something(size_t n, int array[n]) { ...
+I'll fix it up when I add it to my tree.
 
-Clang has no way yet to distinguish between the VLA types[2], so
-depend on GCC for now to keep stack VLAs out of the tree by using GCC's
--Wvla-larger-than=0 option (though GCC may split -Wvla[3] similarly to
-how Clang is planning to).
-
-Switch to -Wvla-larger-than=0 and adjust the two VLA-checking selftests
-to disable the updated option name.
-
-Link: https://en.cppreference.com/w/c/language/array [1]
-Link: https://github.com/llvm/llvm-project/issues/57098 [2]
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=98217 [3]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nicolas.schier@linux.dev>
-Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-Cc: Bill Wendling <morbo@google.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: <kasan-dev@googlegroups.com>
-Cc: <linux-mm@kvack.org>
-Cc: <linux-kbuild@vger.kernel.org>
-Cc: <llvm@lists.linux.dev>
----
- lib/Makefile               | 2 +-
- mm/kasan/Makefile          | 2 +-
- scripts/Makefile.extrawarn | 9 +++++++--
- 3 files changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/lib/Makefile b/lib/Makefile
-index f07b24ce1b3f..37b6e5782ecb 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -71,7 +71,7 @@ CFLAGS_test_bitops.o += -Werror
- obj-$(CONFIG_TEST_SYSCTL) += test_sysctl.o
- obj-$(CONFIG_TEST_IDA) += test_ida.o
- obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
--CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
-+CFLAGS_test_ubsan.o += $(call cc-option, -Wno-vla-larger-than)
- CFLAGS_test_ubsan.o += $(call cc-disable-warning, unused-but-set-variable)
- UBSAN_SANITIZE_test_ubsan.o := y
- obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
-diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
-index 1a958e7c8a46..0e326116a70b 100644
---- a/mm/kasan/Makefile
-+++ b/mm/kasan/Makefile
-@@ -35,7 +35,7 @@ CFLAGS_shadow.o := $(CC_FLAGS_KASAN_RUNTIME)
- CFLAGS_hw_tags.o := $(CC_FLAGS_KASAN_RUNTIME)
- CFLAGS_sw_tags.o := $(CC_FLAGS_KASAN_RUNTIME)
- 
--CFLAGS_KASAN_TEST := $(CFLAGS_KASAN) $(call cc-disable-warning, vla)
-+CFLAGS_KASAN_TEST := $(CFLAGS_KASAN) $(call cc-option, -Wno-vla-larger-than)
- ifndef CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX
- # If compiler instruments memintrinsics by prefixing them with __asan/__hwasan,
- # we need to treat them normally (as builtins), otherwise the compiler won't
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index d75897559d18..0229b10c5d81 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -45,8 +45,13 @@ endif
- # These result in bogus false positives
- KBUILD_CFLAGS += $(call cc-disable-warning, dangling-pointer)
- 
--# Variable Length Arrays (VLAs) should not be used anywhere in the kernel
--KBUILD_CFLAGS += -Wvla
-+# Stack Variable Length Arrays (VLAs) must not be used in the kernel.
-+# Function array parameters should, however, be usable, but -Wvla will
-+# warn for those. Clang has no way yet to distinguish between the VLA
-+# types, so depend on GCC for now to keep stack VLAs out of the tree.
-+# https://github.com/llvm/llvm-project/issues/57098
-+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=98217
-+KBUILD_CFLAGS += $(call cc-option,-Wvla-larger-than=0)
- 
- # disable pointer signed / unsigned warnings in gcc 4.0
- KBUILD_CFLAGS += -Wno-pointer-sign
--- 
-2.34.1
-
+Thanks!
+Matt
