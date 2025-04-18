@@ -1,90 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF4878F29;
-	Fri, 18 Apr 2025 20:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B09378F29;
+	Fri, 18 Apr 2025 20:23:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745007702; cv=none; b=Rp1jNJbtgzTtzRuj4JQoICZncPefNiqR0yc8QZQZ5x0rZf6/vh1DwsAmYwjBItXV8tLCxj/Mq9bvjx0+LlWmG1BWC5X/9geHiUZKnA2mxeE/5COAwGIzMhgof6UsFmoTC+5eVAgGcr5ND16SL98GMo1zJUrYsLLHIQX4yI6OLcQ=
+	t=1745007808; cv=none; b=BB65Jy7UhcwXlHqbIb02BbS7/pdGhYSgZrSPft829gY9B3MDr79oeEifM5qhkBYa8ek2knCEx4HBqFTNX4n2YKbeD405LqR6rP/y1LHJljNK4aet4NCC3UugK9BIGaEXCrHWkldUhNEgwNtAGDesEMq7QfXA/1T9IullMrLXZ8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745007702; c=relaxed/simple;
-	bh=ejGqMxBwLKw1sJ1i/ZxUZ+LGirhTccZnFytelkYVwuI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dnXC2pu+IsPiO7l4nReI0RuMJ/3t7sqUFbm6GO9YMVF6AyVlL3KOrGVYyOxh37FkDi+r68RURPcQ4MdmZ7n4f7GPL6vTUZL9wuT+UBRV1lrH5KIfrd1EhNdkhWcdX4Ysju5s8MQgs3ypYFusxcx/K8HH718NDzGA1tTyTU2CeMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hr8afw54; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745007808; c=relaxed/simple;
+	bh=5oHiRtO67AjFam0SoxSr2Ft9xzH28e8c4XBaEze+ANk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CxdQtt8DQAKVExfSlUgPXt+33hfMc0JnaKu2Mptu8dMSRahL8YuDKSvxU49GZHfzqmFeyGa0p94DGlu1FbHm7xUMmX1W/GgW7X93YuikKrzuL/DbyXGcZU4OUX2nTh4tvd6cFllsJYEmojzM4gfAs97F743rpO+7vYgMu/ZOwLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CQeuMgNE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hr8afw54"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3355AC4CEE2;
-	Fri, 18 Apr 2025 20:21:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CQeuMgNE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 638A8C4CEE2;
+	Fri, 18 Apr 2025 20:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745007702;
-	bh=ejGqMxBwLKw1sJ1i/ZxUZ+LGirhTccZnFytelkYVwuI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Hr8afw54ncK1nddacm/HaH2IvzmGtQ5de4Y5qp/hEL+zRmNWuh/LfCQ8plPxkLNoE
-	 pSL4Fudc2BdNNtyuJCVv5VY5o1g5zyu5XKSxXSzF4P//LujEgf94L4hG9x71PHu453
-	 ijQWTfRXk1TrTGHzpuUOtsc62SCbowj3vfdq93GF6T88W7OPVOd6KIg6i7bcQ9L0Ld
-	 8KPHO5ISTv4NyLSgwYbjOzovGnFE+5wC8tNIaQUw87F5C4GlR6Z6ouCPpN9FhxPoxl
-	 ZEa6+U/0lovUNfe/rAPivjy3InWKFLTN2ib4OgIkVvkqTwfFrsitolUV3bRS4n/cVF
-	 CQTyqCVwnTLgQ==
+	s=k20201202; t=1745007807;
+	bh=5oHiRtO67AjFam0SoxSr2Ft9xzH28e8c4XBaEze+ANk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CQeuMgNE75YcFr98Olbzgm9sInrTSIPbz6I+Wj+u8v1l1XulLVGQ8yYoBWBhE1ElE
+	 fgouiOXlvG8+prp5PxbWQBxnag75HcEt57cM/zASw7t2utECeHIpg+lIVf5J4qxRo5
+	 y4WDZOsL9qyj4L7/KSpmmHe1xn7oN9TEfTW5GcntbZGjxskE7t0h08/uvwqQzzNwyO
+	 qXE/RhHCaTWzyZB4+KGp2ZuPelHX6SryXcMzBVy8VD1HXe0hW62Rg/ru/xRr5YcswU
+	 s11eqo7RgjCU8iiSFbkXbqgHlvPE/67LKGEMdnyWdwHvEKpkx6xuKSuZEN6dqiUkEB
+	 K6gPYzGxy/ySw==
+Date: Fri, 18 Apr 2025 13:23:24 -0700
 From: Kees Cook <kees@kernel.org>
-To: Coly Li <colyli@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-bcache@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] md/bcache: Mark __nonstring look-up table
-Date: Fri, 18 Apr 2025 13:21:36 -0700
-Message-Id: <20250418202130.it.887-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
+	linux-hardening@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] smp: Replace deprecated strcpy() with strscpy()
+Message-ID: <202504181322.5D3B93E93@keescook>
+References: <20250417192054.69663-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1729; i=kees@kernel.org; h=from:subject:message-id; bh=ejGqMxBwLKw1sJ1i/ZxUZ+LGirhTccZnFytelkYVwuI=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlMWwLKdu898ifiXN2Kdv+XT474Nf2vmMQ8YbH3tye3F wqocl2X6yhlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZhIz2VGhu4Dylu4VB3jajO3 8jPOTfgpyvhh1f3Fjjv3bb4Vaq7L+4jhf1SKYETSp58Jy05ej3vJXDrj++6i9l9dIRzXTr122S6 6lAMA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417192054.69663-2-thorsten.blum@linux.dev>
 
-GCC 15's new -Wunterminated-string-initialization notices that the 16
-character lookup table "zero_uuid" (which is not used as a C-String)
-needs to be marked as "nonstring":
+On Thu, Apr 17, 2025 at 09:20:52PM +0200, Thorsten Blum wrote:
+> strcpy() is deprecated; use strscpy() instead.
 
-drivers/md/bcache/super.c: In function 'uuid_find_empty':
-drivers/md/bcache/super.c:549:43: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (17 chars into 16 available) [-Wunterminated-string-initialization]
-  549 |         static const char zero_uuid[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Are there more strcpy() uses in arch/alpha? Maybe do all of them and
+give the Subject prefix as "alpha:". If not, the "smp:" prefix is likely
+to non-specific. Maybe "alpha: smp:".
 
-Add the annotation (since it is not used as a C-String), and switch the
-initializer to an array of bytes.
+-Kees
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- v2: use byte array initializer (colyli)
- v1: https://lore.kernel.org/all/20250416220135.work.394-kees@kernel.org/
-Cc: Coly Li <colyli@kernel.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-bcache@vger.kernel.org
----
- drivers/md/bcache/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> Link: https://github.com/KSPP/linux/issues/88
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  arch/alpha/kernel/smp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/alpha/kernel/smp.c b/arch/alpha/kernel/smp.c
+> index ed06367ece57..56155b988b9c 100644
+> --- a/arch/alpha/kernel/smp.c
+> +++ b/arch/alpha/kernel/smp.c
+> @@ -262,7 +262,7 @@ recv_secondary_console_msg(void)
+>  
+>  		cnt = cpu->ipc_buffer[0] >> 32;
+>  		if (cnt <= 0 || cnt >= 80)
+> -			strcpy(buf, "<<< BOGUS MSG >>>");
+> +			strscpy(buf, "<<< BOGUS MSG >>>");
+>  		else {
+>  			cp1 = (char *) &cpu->ipc_buffer[1];
+>  			cp2 = buf;
+> -- 
+> 2.49.0
+> 
+> 
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index e42f1400cea9..a76ce92502ed 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -546,7 +546,8 @@ static struct uuid_entry *uuid_find(struct cache_set *c, const char *uuid)
- 
- static struct uuid_entry *uuid_find_empty(struct cache_set *c)
- {
--	static const char zero_uuid[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-+	static const char zero_uuid[] __nonstring =
-+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
- 
- 	return uuid_find(c, zero_uuid);
- }
 -- 
-2.34.1
-
+Kees Cook
