@@ -1,77 +1,90 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7424F2A1C9;
-	Fri, 18 Apr 2025 20:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF4878F29;
+	Fri, 18 Apr 2025 20:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745007521; cv=none; b=Qt20eBUowZvegcdjvyu2Hg8qNWZNr+BGyKHbgdjI08eGkYqjwZqZtHM+m6DRQ/8QQVh/p/Tcm7kBv1CQZYCDikCy3qv07jL+o2zLFhM24RhiElPGx24RQHHrBrGG2cIzGhZr8EpOHAUalhrHrPUT6QY40GaHfDh+4KsnUi5bHvk=
+	t=1745007702; cv=none; b=Rp1jNJbtgzTtzRuj4JQoICZncPefNiqR0yc8QZQZ5x0rZf6/vh1DwsAmYwjBItXV8tLCxj/Mq9bvjx0+LlWmG1BWC5X/9geHiUZKnA2mxeE/5COAwGIzMhgof6UsFmoTC+5eVAgGcr5ND16SL98GMo1zJUrYsLLHIQX4yI6OLcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745007521; c=relaxed/simple;
-	bh=c8nxojaQOgQcyXY1gD2OR0f7FP2pwNRSCMcMPyqrfEA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dLYDa6Bf4zkBDCABDSa+mEKd4Oc+0kpiDr+TLt6Q0JtjLKeXsnJd8soiv9lRozAZvXyGMn7rGxS0iAW7lLMiIME0ZIoskpBSrUSKAjniH9L/bsQkKceKYWAHol3+dValmWTM09Ic3b1TzNCBTjiZJXfDr/6ATLm7bDwm+KLBAnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=C4Hwted9; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1745007702; c=relaxed/simple;
+	bh=ejGqMxBwLKw1sJ1i/ZxUZ+LGirhTccZnFytelkYVwuI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dnXC2pu+IsPiO7l4nReI0RuMJ/3t7sqUFbm6GO9YMVF6AyVlL3KOrGVYyOxh37FkDi+r68RURPcQ4MdmZ7n4f7GPL6vTUZL9wuT+UBRV1lrH5KIfrd1EhNdkhWcdX4Ysju5s8MQgs3ypYFusxcx/K8HH718NDzGA1tTyTU2CeMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hr8afw54; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="C4Hwted9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=QwFKe2ISZRDD95Kaksh0NVFyftzgKAb4kAfOTZyXfEY=; b=C4Hwted9QqiCwBlRns8C6ZEFw/
-	tIIAU0L98GYbB6GCZr21h9IL/Qwu0SLqQSVk2ZQa8OcCU7ugu5bcerksfMNb19KVO8uHnw3ZWNkYd
-	hQIWV2G3n0bwhnJJMoreBk8hlXEd9WJV8kE5H6WAjPg063RVGpDIU5JZYkEFuBQ2gI94=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5sAI-009w9h-4G; Fri, 18 Apr 2025 22:18:22 +0200
-Date: Fri, 18 Apr 2025 22:18:22 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 3/8] mfd: Add Microchip ZL3073x support
-Message-ID: <5a360c39-405c-4108-9800-0f71307804a0@lunn.ch>
-References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-4-ivecera@redhat.com>
- <8fc9856a-f2be-4e14-ac15-d2d42efa9d5d@lunn.ch>
- <CAAVpwAsw4-7n_iV=8aXp7=X82Mj7M-vGAc3f-fVbxxg0qgAQQA@mail.gmail.com>
- <894d4209-4933-49bf-ae4c-34d6a5b1c9f1@lunn.ch>
- <03afdbe9-8f55-4e87-bec4-a0e69b0e0d86@redhat.com>
- <eb4b9a30-0527-4fa0-b3eb-c886da31cc80@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hr8afw54"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3355AC4CEE2;
+	Fri, 18 Apr 2025 20:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745007702;
+	bh=ejGqMxBwLKw1sJ1i/ZxUZ+LGirhTccZnFytelkYVwuI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Hr8afw54ncK1nddacm/HaH2IvzmGtQ5de4Y5qp/hEL+zRmNWuh/LfCQ8plPxkLNoE
+	 pSL4Fudc2BdNNtyuJCVv5VY5o1g5zyu5XKSxXSzF4P//LujEgf94L4hG9x71PHu453
+	 ijQWTfRXk1TrTGHzpuUOtsc62SCbowj3vfdq93GF6T88W7OPVOd6KIg6i7bcQ9L0Ld
+	 8KPHO5ISTv4NyLSgwYbjOzovGnFE+5wC8tNIaQUw87F5C4GlR6Z6ouCPpN9FhxPoxl
+	 ZEa6+U/0lovUNfe/rAPivjy3InWKFLTN2ib4OgIkVvkqTwfFrsitolUV3bRS4n/cVF
+	 CQTyqCVwnTLgQ==
+From: Kees Cook <kees@kernel.org>
+To: Coly Li <colyli@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-bcache@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] md/bcache: Mark __nonstring look-up table
+Date: Fri, 18 Apr 2025 13:21:36 -0700
+Message-Id: <20250418202130.it.887-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb4b9a30-0527-4fa0-b3eb-c886da31cc80@redhat.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1729; i=kees@kernel.org; h=from:subject:message-id; bh=ejGqMxBwLKw1sJ1i/ZxUZ+LGirhTccZnFytelkYVwuI=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlMWwLKdu898ifiXN2Kdv+XT474Nf2vmMQ8YbH3tye3F wqocl2X6yhlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZhIz2VGhu4Dylu4VB3jajO3 8jPOTfgpyvhh1f3Fjjv3bb4Vaq7L+4jhf1SKYETSp58Jy05ej3vJXDrj++6i9l9dIRzXTr122S6 6lAMA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-> > > Anyway, look around. How many other MFD, well actually, any sort of
-> > > driver at all, have a bunch of low level helpers as inline functions
-> > > in a header? You are aiming to write a plain boring driver which looks
-> > > like every other driver in Linux....
-> > 
-> > Well, I took inline functions approach as this is safer than macro usage
-> > and each register have own very simple implementation with type and
-> > range control (in case of indexed registers).
+GCC 15's new -Wunterminated-string-initialization notices that the 16
+character lookup table "zero_uuid" (which is not used as a C-String)
+needs to be marked as "nonstring":
 
-Sorry, i was a bit ambiguous. Why inline? Why not just plain
-functions. Are there lots of other drivers with a large number of
-inline functions? No. inline functions are typically only used for
-stubs when code is not being built due to CONFIG_ settings.
+drivers/md/bcache/super.c: In function 'uuid_find_empty':
+drivers/md/bcache/super.c:549:43: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (17 chars into 16 available) [-Wunterminated-string-initialization]
+  549 |         static const char zero_uuid[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	Andrew
+Add the annotation (since it is not used as a C-String), and switch the
+initializer to an array of bytes.
+
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ v2: use byte array initializer (colyli)
+ v1: https://lore.kernel.org/all/20250416220135.work.394-kees@kernel.org/
+Cc: Coly Li <colyli@kernel.org>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-bcache@vger.kernel.org
+---
+ drivers/md/bcache/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index e42f1400cea9..a76ce92502ed 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -546,7 +546,8 @@ static struct uuid_entry *uuid_find(struct cache_set *c, const char *uuid)
+ 
+ static struct uuid_entry *uuid_find_empty(struct cache_set *c)
+ {
+-	static const char zero_uuid[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
++	static const char zero_uuid[] __nonstring =
++		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+ 
+ 	return uuid_find(c, zero_uuid);
+ }
+-- 
+2.34.1
+
