@@ -1,131 +1,100 @@
-Received: from mail1.out.flockmail.com (mail1.out.flockmail.com [35.175.0.24])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF24954654
-	for <linux-hardening@vger.kernel.org>; Sat, 19 Apr 2025 03:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.175.0.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD02F26AF3
+	for <linux-hardening@vger.kernel.org>; Sat, 19 Apr 2025 11:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745034934; cv=none; b=qyZkiGSh/mHh/CNcRf/pcBKOZO/3i7U1LZRlXVhND8O4OUzSl8+m88in2jxrxWnk1EAfCU2zYbo1sM8Muuhmi5xoBjK3wWzyxpSCVK6RX+SAdI04t1LiSltFGX4vpwX096FIIrQlG0XE8smzeMMhmwWWdVK5c44qJpCAVhm8L6Y=
+	t=1745063015; cv=none; b=B3mEr0/DnQg2esbR1igvB+gLYUU3+JPwVNu2tUDJ6FY/ItGa1VF7x4d5tDhU4LC4d8B0mKCJHr5NoxPhXWSCUo6P/fkCMsB9Ss/kl+k2XVTQGnZblcM/eAbaKh7iutFAfOSNQMu84ivmmcXriTTeUCbYOzci28EFdsq9mkCyTnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745034934; c=relaxed/simple;
-	bh=8vsWUbNInXOmJ6LkU6uCbJfr9BGsN9vSttRt6BzaTnU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=FQv8cWcdIECneI1YiZKfBvhsigalpMZJz0GkuCKQ+B+Su1yhTRFvxebWTW4vqXq1DY8mApLaksAMKVT8oEzSdawpbU4XrvWvvQP9+PfMAZG6RDyBui+oZlRtE7YuRRysqGTgxkyPdAqnLKaXjdLtCdqRCEUgceHvGKMWVXjZ/cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=oJhOnwfe; arc=none smtp.client-ip=35.175.0.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+	s=arc-20240116; t=1745063015; c=relaxed/simple;
+	bh=TUleW9KRGX0FGrCbp8T9MpS2ex+KPStgayd09seZX9k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cr9ngbPiYYuhP+TewQUhhL5LTMHBT2wZH9UPjyyFblDBZjHoi7wJ1RWpNkpEBK8nwVHzbmp2pvCuPChpM26jU22HYV9lY5hLdbSHM0eu0vR8+51aruNVkG7vwcb7ve77R7n2W3STQWjV96iOoI04K8sqsVt7jrnJ1iEyB7SUwno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=blwLTlLt; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="oJhOnwfe"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id D13B760059;
-	Sat, 19 Apr 2025 03:55:26 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=bAvYi5ImaoxjDMe4vzylBlBmlqcUZYzHCYPKwoB87qI=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=from:in-reply-to:cc:to:mime-version:subject:references:date:message-id:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1745034926; v=1;
-	b=oJhOnwfeVOG8XG2+ePu+rd/hidWNokUuygMfqtb86FuyRwQz7ETjQwhTBXb7BCwtnAY3iYwH
-	Yh1+xXALoOaA+3snTLim7K46mUvpB+x3mwVCC6wrPZiKcHLJZgeMtxiTfm/uHx9NomZibAM/Ar/
-	VJgUsYz0lAVs9qpKOELp5Qy4=
-Received: from smtpclient.apple (unknown [43.161.241.230])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id C447160038;
-	Sat, 19 Apr 2025 03:55:23 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="blwLTlLt"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745063000;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QowPVoBoSNnEHK0cULG/V4c+a1cIPM2plKANNmK/tiU=;
+	b=blwLTlLtzlO6QHzgtCzVoPdEcKjZ9Iwa+POC7b+NgZOj9Ttmk+F2LvFhqK5C60dHGJTt/u
+	ij3VB7YvmsEO5Mt4gAUVl7FAh3lHuQ6VAhNR2LI0MmdiI1DoSfy7Ahd6jNshsjXH5BWoAc
+	uGoFUo+a/cHAsu3IiMHRMOUGH/daJ0g=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Guo Weikang <guoweikang.kernel@gmail.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] alpha: Replace sprintf()/strcpy() with scnprintf()/strscpy()
+Date: Sat, 19 Apr 2025 13:40:11 +0200
+Message-ID: <20250419114011.164512-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH v2] md/bcache: Mark __nonstring look-up table
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-In-Reply-To: <20250418202130.it.887-kees@kernel.org>
-Date: Sat, 19 Apr 2025 11:55:10 +0800
-Cc: Coly Li <colyli@kernel.org>,
- Kent Overstreet <kent.overstreet@linux.dev>,
- Ard Biesheuvel <ardb@kernel.org>,
- linux-bcache@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <389A9925-0990-422C-A1B3-0195FAA73288@coly.li>
-References: <20250418202130.it.887-kees@kernel.org>
-To: Kees Cook <kees@kernel.org>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1745034926648469019.5242.7544881322108761200@prod-use1-smtp-out1001.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=RvE/LDmK c=1 sm=1 tr=0 ts=68031eae
-	a=sdR4fqZNG57T/J2FY8bnUA==:117 a=sdR4fqZNG57T/J2FY8bnUA==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=VwQbUJbxAAAA:8
-	a=BDcCamcCxTd4Ojxa7JYA:9 a=QEXdDO2ut3YA:10 a=FvX_cx3yyqDC_9C4kSCW:22
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+Replace sprintf() with the safer variant scnprintf() and use its return
+value instead of calculating the string length again using strlen().
 
+Use strscpy() instead of the deprecated strcpy().
 
-> 2025=E5=B9=B44=E6=9C=8819=E6=97=A5 04:21=EF=BC=8CKees Cook =
-<kees@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> GCC 15's new -Wunterminated-string-initialization notices that the 16
-> character lookup table "zero_uuid" (which is not used as a C-String)
-> needs to be marked as "nonstring":
->=20
-> drivers/md/bcache/super.c: In function 'uuid_find_empty':
-> drivers/md/bcache/super.c:549:43: warning: initializer-string for =
-array of 'char' truncates NUL terminator but destination lacks =
-'nonstring' attribute (17 chars into 16 available) =
-[-Wunterminated-string-initialization]
->  549 |         static const char zero_uuid[16] =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
->      |                                           =
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->=20
-> Add the annotation (since it is not used as a C-String), and switch =
-the
-> initializer to an array of bytes.
->=20
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> v2: use byte array initializer (colyli)
-> v1: =
-https://lore.kernel.org/all/20250416220135.work.394-kees@kernel.org/
-> Cc: Coly Li <colyli@kernel.org>
-> Cc: Kent Overstreet <kent.overstreet@linux.dev>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: linux-bcache@vger.kernel.org
-> ---
-> drivers/md/bcache/super.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> index e42f1400cea9..a76ce92502ed 100644
-> --- a/drivers/md/bcache/super.c
-> +++ b/drivers/md/bcache/super.c
-> @@ -546,7 +546,8 @@ static struct uuid_entry *uuid_find(struct =
-cache_set *c, const char *uuid)
->=20
-> static struct uuid_entry *uuid_find_empty(struct cache_set *c)
-> {
-> - static const char zero_uuid[16] =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-> + static const char zero_uuid[] __nonstring =3D
+No functional changes intended.
 
-I notice zero_uuid[16] changes to zero_uuid[], then the element number =
-information is removed.
+Link: https://github.com/KSPP/linux/issues/88
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/alpha/kernel/core_marvel.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Is it OK for GCC 15 to only add __nonstring and keep zero_uuid[16]?
-
-Thanks.
-
-Coly Li=20
-
-
-> + { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
->=20
-> return uuid_find(c, zero_uuid);
-> }
-> --=20
-> 2.34.1
->=20
->=20
+diff --git a/arch/alpha/kernel/core_marvel.c b/arch/alpha/kernel/core_marvel.c
+index b1bfbd11980d..d38f4d6759e4 100644
+--- a/arch/alpha/kernel/core_marvel.c
++++ b/arch/alpha/kernel/core_marvel.c
+@@ -17,6 +17,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/mc146818rtc.h>
+ #include <linux/rtc.h>
++#include <linux/string.h>
+ #include <linux/module.h>
+ #include <linux/memblock.h>
+ 
+@@ -79,10 +80,12 @@ mk_resource_name(int pe, int port, char *str)
+ {
+ 	char tmp[80];
+ 	char *name;
+-	
+-	sprintf(tmp, "PCI %s PE %d PORT %d", str, pe, port);
+-	name = memblock_alloc_or_panic(strlen(tmp) + 1, SMP_CACHE_BYTES);
+-	strcpy(name, tmp);
++	size_t sz;
++
++	sz = scnprintf(tmp, sizeof(tmp), "PCI %s PE %d PORT %d", str, pe, port);
++	sz += 1; /* NUL terminator */
++	name = memblock_alloc_or_panic(sz, SMP_CACHE_BYTES);
++	strscpy(name, tmp, sz);
+ 
+ 	return name;
+ }
+-- 
+2.49.0
 
