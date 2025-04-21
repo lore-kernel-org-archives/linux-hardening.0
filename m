@@ -1,51 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAD71CAA79;
-	Mon, 21 Apr 2025 16:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30A51D54E3;
+	Mon, 21 Apr 2025 16:39:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745252252; cv=none; b=hnfrRZBCyrs7p1U6AabQeLdGvXfcM9vZJ3wXO1HcCtJ0cyPJG+DrOYSVfvBITQqiisjL3TjmS9JLtDBovgPDx1oqDYM/jJRpIPlLavPkPcXZ3Yi6dVp2LABnKtam9xdhhDYChyDxibmyMJ69BnpMy0VeHrTMVTRs+XAC9hf85UY=
+	t=1745253551; cv=none; b=Z0pZHt9UXAW/C1t7SKrsb/reJVAmyGO/eOW+T6VL25C+A+pRbV4KZ6gwf6I0s29AaU81fi6QYNTbqj8NBx/wedVUVj8Se8VNHIsozDE4VLUZUcSYKmghmlTozJe/8GMEmp3SHVuFeWa2HX3rZrD6KaFgxnf3qyKBSsSQhmIjncA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745252252; c=relaxed/simple;
-	bh=zZjJug2ojlk7B/L1/Ay2G/DAGNeupwICVA+YK/CB0Ng=;
+	s=arc-20240116; t=1745253551; c=relaxed/simple;
+	bh=rlF7RX5n2a2mK17OOJE7rTy8NtTk6ZIM9tzAsu8dJws=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xqqtss7oR6NIEyv7pMUjZddx3wvjw96byKDJgNTJyKnoxbmrUzWD/bLPaUVDerrnECFnY2CzvKIN8I+fMPpQpCKa581IqyIzSGR/mPO/TR0guLPY9n+j8niU53v/hI/OG+oY56snzDDenuIfH9Hb2htXZk5LWT5Eg2xFR+qqJ5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkEOPtLM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MA1cj8NQyu9aPh2oaLcPyBFPvimDHzcPcPwUCg/xBC+xE9PZiiyg+6Lv7cYwfcaF/jzUHp4cB/jjffCwApMkY3f2iQQk721xTZQX67UbnPwsdv1ATw6E4h8UdlenkucF9/PKreLk+1xKIGjcskwxO225H17bI96/u3G2/j8Mf4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPGMQ69+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkEOPtLM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE144C4CEE4;
-	Mon, 21 Apr 2025 16:17:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPGMQ69+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D6B3C4CEE4;
+	Mon, 21 Apr 2025 16:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745252251;
-	bh=zZjJug2ojlk7B/L1/Ay2G/DAGNeupwICVA+YK/CB0Ng=;
+	s=k20201202; t=1745253551;
+	bh=rlF7RX5n2a2mK17OOJE7rTy8NtTk6ZIM9tzAsu8dJws=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RkEOPtLMEvJT0lnK8J8+VHN4kf4nhgwNj6DETp7+HlYoJEdJ+b9Hey4FsCSv1s5ym
-	 Bq1DqzrRtCxIcCRvwaWFNaPwYarfJXzFTyUrz68mYLrSnwNWs8yYjGcn4VnNFCGeje
-	 I9Vz9HK7PcdIYjVR+K7OvHg0UMOhzPEvoEZvzRplEmGWdt+rDgQ/eOEbbYw2sT4igJ
-	 M05A5+SbFbSvdYHS6SykX/UHmm1HYeGCBoavZSPBwOgvizlV36aWXysKehqpahNZ6K
-	 Qpv+p9coAmfOHWOTj8iMNHa0w6SthNyNUXUPL92YjEuMGyxnbt71f8G6vAIZCZ6gSs
-	 dA0DlW+yXI2Bw==
-Date: Mon, 21 Apr 2025 09:17:25 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Masahiro Yamada <masahiroy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, kasan-dev@googlegroups.com,
-	linux-mm@kvack.org, linux-kbuild@vger.kernel.org,
-	llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kbuild: Switch from -Wvla to -Wvla-larger-than=0
-Message-ID: <20250421161725.GA3253782@ax162>
-References: <20250418213235.work.532-kees@kernel.org>
+	b=EPGMQ69+1a7lvC/dSvRfw5vuTqYLjGlwF1lLonH/4r3INbLxo9AHMUX9MX8aqv0bu
+	 Scgu8ryMTUMz/nIi8yQlpK0BGloMSErSRBaLxSoRSI+XJC0AbFWa1J6BpmUIRERScH
+	 Tjm5Q0aoNdO6fxRDrLENMgPKnZtPIL0m8im9SfFZcP4op82BXDvO2IdF9i/UDlEikT
+	 Fmv8o0c6DioPpBi6O5cOlkBN4NE/lnN98kgBZsactm3bqDpzCUSE/wCRsTqKJDTvWC
+	 yKz4U5WzbpHHhMt8VMzZduoe7ufoMAHiWzP+VHPSdhkQieXepI+iWbLcS2F1j9bntn
+	 TN+PLBE2ufFiQ==
+Date: Mon, 21 Apr 2025 09:39:07 -0700
+From: Kees Cook <kees@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] gcc-15: acpi: sprinkle random '__nonstring' crumbles
+ around
+Message-ID: <202504210909.D4EAB689@keescook>
+References: <4f941c51-784a-4f10-8df5-6bd103d1d80e@roeck-us.net>
+ <202504201840.3C1F04B09@keescook>
+ <CAHk-=whryuuKnd_5w6169EjfRr_f+t5BRmKt+qfjALFzfKQNvQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,82 +46,36 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250418213235.work.532-kees@kernel.org>
+In-Reply-To: <CAHk-=whryuuKnd_5w6169EjfRr_f+t5BRmKt+qfjALFzfKQNvQ@mail.gmail.com>
 
-On Fri, Apr 18, 2025 at 02:32:39PM -0700, Kees Cook wrote:
-> Variable Length Arrays (VLAs) on the stack must not be used in the kernel.
-> Function parameter VLAs[1] should be usable, but -Wvla will warn for
-> those. For example, this will produce a warning but it is not using a
-> stack VLA:
+On Sun, Apr 20, 2025 at 09:33:19PM -0700, Linus Torvalds wrote:
+> On Sun, 20 Apr 2025 at 18:52, Kees Cook <kees@kernel.org> wrote:
+> >
+> > Can you please revert this mess and use what has already been planned
+> > for this warning? It is, once again, really frustrating when you update
+> > to unreleased compiler versions. :(
 > 
->     int something(size_t n, int array[n]) { ...
-> 
-> Clang has no way yet to distinguish between the VLA types[2], so
-> depend on GCC for now to keep stack VLAs out of the tree by using GCC's
-> -Wvla-larger-than=0 option (though GCC may split -Wvla[3] similarly to
-> how Clang is planning to).
-> 
-> Switch to -Wvla-larger-than=0 and adjust the two VLA-checking selftests
-> to disable the updated option name.
-> 
-> Link: https://en.cppreference.com/w/c/language/array [1]
-> Link: https://github.com/llvm/llvm-project/issues/57098 [2]
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=98217 [3]
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Ehh. Kees, that's the compiler in F42.
+> Really. It's not some "unreleased compiler version".
+> It's the main compiler in one of the biggest Linux distributions, out now.
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Fine, perhaps I'm nitpicking the fact. F42 made an unreleased compiler
+their default, so it is technically "released".
 
->  lib/Makefile               | 2 +-
->  mm/kasan/Makefile          | 2 +-
->  scripts/Makefile.extrawarn | 9 +++++++--
->  3 files changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/lib/Makefile b/lib/Makefile
-> index f07b24ce1b3f..37b6e5782ecb 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -71,7 +71,7 @@ CFLAGS_test_bitops.o += -Werror
->  obj-$(CONFIG_TEST_SYSCTL) += test_sysctl.o
->  obj-$(CONFIG_TEST_IDA) += test_ida.o
->  obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
-> -CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
-> +CFLAGS_test_ubsan.o += $(call cc-option, -Wno-vla-larger-than)
->  CFLAGS_test_ubsan.o += $(call cc-disable-warning, unused-but-set-variable)
->  UBSAN_SANITIZE_test_ubsan.o := y
->  obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
-> diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
-> index 1a958e7c8a46..0e326116a70b 100644
-> --- a/mm/kasan/Makefile
-> +++ b/mm/kasan/Makefile
-> @@ -35,7 +35,7 @@ CFLAGS_shadow.o := $(CC_FLAGS_KASAN_RUNTIME)
->  CFLAGS_hw_tags.o := $(CC_FLAGS_KASAN_RUNTIME)
->  CFLAGS_sw_tags.o := $(CC_FLAGS_KASAN_RUNTIME)
->  
-> -CFLAGS_KASAN_TEST := $(CFLAGS_KASAN) $(call cc-disable-warning, vla)
-> +CFLAGS_KASAN_TEST := $(CFLAGS_KASAN) $(call cc-option, -Wno-vla-larger-than)
->  ifndef CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX
->  # If compiler instruments memintrinsics by prefixing them with __asan/__hwasan,
->  # we need to treat them normally (as builtins), otherwise the compiler won't
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index d75897559d18..0229b10c5d81 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -45,8 +45,13 @@ endif
->  # These result in bogus false positives
->  KBUILD_CFLAGS += $(call cc-disable-warning, dangling-pointer)
->  
-> -# Variable Length Arrays (VLAs) should not be used anywhere in the kernel
-> -KBUILD_CFLAGS += -Wvla
-> +# Stack Variable Length Arrays (VLAs) must not be used in the kernel.
-> +# Function array parameters should, however, be usable, but -Wvla will
-> +# warn for those. Clang has no way yet to distinguish between the VLA
-> +# types, so depend on GCC for now to keep stack VLAs out of the tree.
-> +# https://github.com/llvm/llvm-project/issues/57098
-> +# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=98217
-> +KBUILD_CFLAGS += $(call cc-option,-Wvla-larger-than=0)
->  
->  # disable pointer signed / unsigned warnings in gcc 4.0
->  KBUILD_CFLAGS += -Wno-pointer-sign
-> -- 
-> 2.34.1
-> 
+> Why do you think I made the change? Because the kernel DID NOT BUILD
+> without those changes.
+
+Yes, I understand that, but you didn't coordinate with anyone. You
+didn't search lore for the warning strings, you didn't even check -next
+where you've now created merge conflicts. You put insufficiently tested
+patches into the tree at the last minute and cut an rc release that broke
+for everyone using GCC <15. You mercilessly flame maintainers for much
+much less.
+
+Why make compiler version upgrades a surprise? I'm hardly the only person
+who was working to make the GCC 15 transition smooth. This made more
+work for people, wasted your time to recreate existing patches, and broke
+the build. I am hardly being unreasonable in asking you to do better.
+
+-- 
+Kees Cook
