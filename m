@@ -1,94 +1,93 @@
 Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id AD6C219ABB6;
-	Mon, 21 Apr 2025 07:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 79D8B13C3F6;
+	Mon, 21 Apr 2025 08:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745221431; cv=none; b=oLnic7KTXyl8hM+HyCuEg7dY42ZL5v1lfm/2PkwILO23RI8xW+vVcODAzjm0Bh8J8eTYsMNlx2en+mWcBujPSzFwvQvYDtvoMCq2pRjlq4oQP0e4pNxIxKqDbd4NAU5Mct04MEvk6qGqBBFgBGjmgjUjF9IOV947zX6KR10fMP0=
+	t=1745224306; cv=none; b=VC8bFzxHOX5vvFhN6Z9VyF0/IKGuZ3G/+kmzDqTF8ymERGUUm83x6EK0EbR22euxrqIH10skgxVEAhnl4kvSr9WRNtX0mzDQikbFmwiQ34/kRIOPywOn5T/TGRPbRV/wMHnGCVj0yhyrIROAbCEX1zQ1+smkLUKZGYfuAf732G8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745221431; c=relaxed/simple;
-	bh=9mr/4ygQi24ODHbaZeN0vo/LVPGCcnhTa5BHpr99sRM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type; b=dt1umVfZjN87aAtXiIbjY2RdNOkQkTv5abpXdvYZ2B88C5ziPFbL8i/g1mDAnbS3aHDQ9QfA+j+iBY+PVAX0Qe8S6DqmkrcoFa9p1gKAoF3UIKp7/KQyCeLYCnZMTGskFqWCEHQ7tJmlHQ2auO8xG7cjGpR0g+2y3/GdHDD/Skk=
+	s=arc-20240116; t=1745224306; c=relaxed/simple;
+	bh=SuprFvyqOOqRDNuoKe72pzRM0BLb5KK2WvwZPlimvrY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version; b=AMAsc8njDyU3dkYdC5ek67SlvLGw9zMGxLtGs2KarRPVCSSAW4PA1Xs2ntnrOKDNK4vq7Hmqb0q+slok+e+54IRT+Glp/CFzfoR9G2QeD303vvcVHA4es39E8D1SzaL4ZWMrTr1pF9gVgxfb0yDve3Eji+wWIyeQFZCBCyaxeoQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from [172.30.20.101] (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id C17DE60252AD4;
-	Mon, 21 Apr 2025 15:43:38 +0800 (CST)
-Message-ID: <bade4ad1-2be7-45a4-8232-0be5fe2e7ef7@nfschina.com>
-Date: Mon, 21 Apr 2025 15:43:37 +0800
+Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 371EA60260752;
+	Mon, 21 Apr 2025 16:31:38 +0800 (CST)
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+To: herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	christophe.jaillet@wanadoo.fr
+Cc: Su Hui <suhui@nfschina.com>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 1/2] crypto: using size_add() for kmalloc()
+Date: Mon, 21 Apr 2025 16:31:16 +0800
+Message-Id: <20250421083116.1161805-2-suhui@nfschina.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20250421083116.1161805-1-suhui@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crypto: using size_add() for kmalloc()
-Content-Language: en-US
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, davem@davemloft.net,
- herbert@gondor.apana.org.au
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-In-Reply-To: <c86fcb5b-73d0-4d55-833f-26a16713e325@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 2025/4/21 15:10, Christophe JAILLET wrote:
-> Le 21/04/2025 à 07:51, Su Hui a écrit :
->> It's safer to use size_add() to replace open-coded aithmetic in 
->> allocator
->> arguments, because size_add() can prevent possible overflow problem.
->>
->> Signed-off-by: Su Hui <suhui@nfschina.com>
->> ---
->>   include/crypto/aead.h     | 3 ++-
->>   include/crypto/akcipher.h | 4 +++-
->>   include/crypto/kpp.h      | 3 ++-
->>   3 files changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/include/crypto/aead.h b/include/crypto/aead.h
->> index 0e8a41638678..cf212d28fe18 100644
->> --- a/include/crypto/aead.h
->> +++ b/include/crypto/aead.h
->> @@ -10,6 +10,7 @@
->>     #include <linux/atomic.h>
->>   #include <linux/container_of.h>
->> +#include <linux/overflow.h>
->
-> You could move this 1 line below, to keep alphabetical order.
-> And why do you say that it is redundant in your follow-up mail?
-Thanks for your suggestion, I didn't notice this alphabetical order at 
-first :( .
-Because I found that  <linux/crypto.h> includes <linux/slab.h>, and
-<linux/slab.h> includes <linux/overflow.h>, so this overflow.h is 
-redundant.
->
->>   #include <linux/crypto.h>
->>   #include <linux/slab.h>
-And I also found these <linux/{atomic,container_of,slab,types,list}.h> 
-is included by
-<linux/crypto.h>, I am trying to remove these redundant headers in v2 patch.
+It's safer to use size_add() to replace open-coded aithmetic in allocator
+arguments, because size_add() can prevent possible overflow problem.
 
-It's sad that remving these duplicate header files didn't save any 
-compilation time,
-only save some code space.
->>   #include <linux/types.h>
->> @@ -433,7 +434,7 @@ static inline struct aead_request 
->> *aead_request_alloc(struct crypto_aead *tfm,
->> --- a/include/crypto/kpp.h
->> +++ b/include/crypto/kpp.h
->> @@ -11,6 +11,7 @@
->>     #include <linux/atomic.h>
->>   #include <linux/container_of.h>
->> +#include <linux/overflow.h>
->
-> You could move this 1 line below, to keep alphabetical order.
-This overflow.h is redundant too.
->
->>   #include <linux/crypto.h>
->>
->
+Signed-off-by: Su Hui <suhui@nfschina.com>
+---
+ include/crypto/aead.h     | 2 +-
+ include/crypto/akcipher.h | 3 ++-
+ include/crypto/kpp.h      | 2 +-
+ 3 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/include/crypto/aead.h b/include/crypto/aead.h
+index 0e8a41638678..8df3d112bf6a 100644
+--- a/include/crypto/aead.h
++++ b/include/crypto/aead.h
+@@ -433,7 +433,7 @@ static inline struct aead_request *aead_request_alloc(struct crypto_aead *tfm,
+ {
+ 	struct aead_request *req;
+ 
+-	req = kmalloc(sizeof(*req) + crypto_aead_reqsize(tfm), gfp);
++	req = kmalloc(size_add(sizeof(*req), crypto_aead_reqsize(tfm)), gfp);
+ 
+ 	if (likely(req))
+ 		aead_request_set_tfm(req, tfm);
+diff --git a/include/crypto/akcipher.h b/include/crypto/akcipher.h
+index cdf7da74bf2f..6927664bc3d7 100644
+--- a/include/crypto/akcipher.h
++++ b/include/crypto/akcipher.h
+@@ -184,7 +184,8 @@ static inline struct akcipher_request *akcipher_request_alloc(
+ {
+ 	struct akcipher_request *req;
+ 
+-	req = kmalloc(sizeof(*req) + crypto_akcipher_reqsize(tfm), gfp);
++	req = kmalloc(size_add(sizeof(*req),
++			       crypto_akcipher_reqsize(tfm)), gfp);
+ 	if (likely(req))
+ 		akcipher_request_set_tfm(req, tfm);
+ 
+diff --git a/include/crypto/kpp.h b/include/crypto/kpp.h
+index 2d9c4de57b69..ad120bbc8b7c 100644
+--- a/include/crypto/kpp.h
++++ b/include/crypto/kpp.h
+@@ -182,7 +182,7 @@ static inline struct kpp_request *kpp_request_alloc(struct crypto_kpp *tfm,
+ {
+ 	struct kpp_request *req;
+ 
+-	req = kmalloc(sizeof(*req) + crypto_kpp_reqsize(tfm), gfp);
++	req = kmalloc(size_add(sizeof(*req), crypto_kpp_reqsize(tfm)), gfp);
+ 	if (likely(req))
+ 		kpp_request_set_tfm(req, tfm);
+ 
+-- 
+2.30.2
+
