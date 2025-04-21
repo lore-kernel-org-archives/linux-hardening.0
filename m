@@ -1,35 +1,35 @@
 Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 79D8B13C3F6;
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 79D36288D2;
 	Mon, 21 Apr 2025 08:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745224306; cv=none; b=VC8bFzxHOX5vvFhN6Z9VyF0/IKGuZ3G/+kmzDqTF8ymERGUUm83x6EK0EbR22euxrqIH10skgxVEAhnl4kvSr9WRNtX0mzDQikbFmwiQ34/kRIOPywOn5T/TGRPbRV/wMHnGCVj0yhyrIROAbCEX1zQ1+smkLUKZGYfuAf732G8=
+	t=1745224306; cv=none; b=G+rMPiPN0pnjlXq5oq1qZY6hvJorn9qZvR66oJfhBmagrXFV9j9LBpBAovpouJuRHoWAY+BzmJfG5OSyQrorXru4jDWrsC382TULnB2IHchPw12dloxFOSojUhTFFUfKS9+wyUgWshmF3WJ9kxsJzmk/lQXcIfLbrhtzcdN53DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745224306; c=relaxed/simple;
-	bh=SuprFvyqOOqRDNuoKe72pzRM0BLb5KK2WvwZPlimvrY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version; b=AMAsc8njDyU3dkYdC5ek67SlvLGw9zMGxLtGs2KarRPVCSSAW4PA1Xs2ntnrOKDNK4vq7Hmqb0q+slok+e+54IRT+Glp/CFzfoR9G2QeD303vvcVHA4es39E8D1SzaL4ZWMrTr1pF9gVgxfb0yDve3Eji+wWIyeQFZCBCyaxeoQ=
+	bh=BA7VZdnswUJ0BTvh/DJPgGayChaPc3t2wYtkXj3cQEA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PsEeeTPrIDZxTf/JzFbYSOBWqS+iVEql0cOF+vuRTgO0avfHI68cUT1wMFn23Jbe7RIHiN/HRaIIy7ZhrsVBmVS7STJl6zIziD5TbIlEiytrWnk0yQxEi1IVcuihvQdj3BGhC1FgCC9m63YGallnHLUa8gjNiQU9ZwtA7+R93YY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
 Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 371EA60260752;
-	Mon, 21 Apr 2025 16:31:38 +0800 (CST)
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 886DF60260748;
+	Mon, 21 Apr 2025 16:31:37 +0800 (CST)
 X-MD-Sfrom: suhui@nfschina.com
 X-MD-SrcIP: 180.167.10.98
 From: Su Hui <suhui@nfschina.com>
 To: herbert@gondor.apana.org.au,
 	davem@davemloft.net,
+	steffen.klassert@secunet.com,
 	christophe.jaillet@wanadoo.fr
 Cc: Su Hui <suhui@nfschina.com>,
 	linux-crypto@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 1/2] crypto: using size_add() for kmalloc()
-Date: Mon, 21 Apr 2025 16:31:16 +0800
-Message-Id: <20250421083116.1161805-2-suhui@nfschina.com>
+Subject: [PATCH v2 0/2] crypto: some cleanup and hardening
+Date: Mon, 21 Apr 2025 16:31:15 +0800
+Message-Id: <20250421083116.1161805-1-suhui@nfschina.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20250421083116.1161805-1-suhui@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -38,56 +38,43 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It's safer to use size_add() to replace open-coded aithmetic in allocator
-arguments, because size_add() can prevent possible overflow problem.
+using size_add() to hardening kmalloc() and remove some redundant include
+headers.
+Compile test only.
 
-Signed-off-by: Su Hui <suhui@nfschina.com>
----
- include/crypto/aead.h     | 2 +-
- include/crypto/akcipher.h | 3 ++-
- include/crypto/kpp.h      | 2 +-
- 3 files changed, 4 insertions(+), 3 deletions(-)
+v2:
+ - remove redundant include headers in v1 (<linux/overflow.h>).
+ - add a patch to remove other redundant headers.
 
-diff --git a/include/crypto/aead.h b/include/crypto/aead.h
-index 0e8a41638678..8df3d112bf6a 100644
---- a/include/crypto/aead.h
-+++ b/include/crypto/aead.h
-@@ -433,7 +433,7 @@ static inline struct aead_request *aead_request_alloc(struct crypto_aead *tfm,
- {
- 	struct aead_request *req;
- 
--	req = kmalloc(sizeof(*req) + crypto_aead_reqsize(tfm), gfp);
-+	req = kmalloc(size_add(sizeof(*req), crypto_aead_reqsize(tfm)), gfp);
- 
- 	if (likely(req))
- 		aead_request_set_tfm(req, tfm);
-diff --git a/include/crypto/akcipher.h b/include/crypto/akcipher.h
-index cdf7da74bf2f..6927664bc3d7 100644
---- a/include/crypto/akcipher.h
-+++ b/include/crypto/akcipher.h
-@@ -184,7 +184,8 @@ static inline struct akcipher_request *akcipher_request_alloc(
- {
- 	struct akcipher_request *req;
- 
--	req = kmalloc(sizeof(*req) + crypto_akcipher_reqsize(tfm), gfp);
-+	req = kmalloc(size_add(sizeof(*req),
-+			       crypto_akcipher_reqsize(tfm)), gfp);
- 	if (likely(req))
- 		akcipher_request_set_tfm(req, tfm);
- 
-diff --git a/include/crypto/kpp.h b/include/crypto/kpp.h
-index 2d9c4de57b69..ad120bbc8b7c 100644
---- a/include/crypto/kpp.h
-+++ b/include/crypto/kpp.h
-@@ -182,7 +182,7 @@ static inline struct kpp_request *kpp_request_alloc(struct crypto_kpp *tfm,
- {
- 	struct kpp_request *req;
- 
--	req = kmalloc(sizeof(*req) + crypto_kpp_reqsize(tfm), gfp);
-+	req = kmalloc(size_add(sizeof(*req), crypto_kpp_reqsize(tfm)), gfp);
- 	if (likely(req))
- 		kpp_request_set_tfm(req, tfm);
- 
+v1:
+ - https://lore.kernel.org/all/20250421055104.663552-1-suhui@nfschina.com/
+
+Su Hui (2):
+  crypto: using size_add() for kmalloc()
+  crypto: remove some redundant include headers
+
+ include/crypto/acompress.h    | 4 ----
+ include/crypto/aead.h         | 6 +-----
+ include/crypto/aes.h          | 1 -
+ include/crypto/akcipher.h     | 4 ++--
+ include/crypto/algapi.h       | 3 ---
+ include/crypto/blowfish.h     | 1 -
+ include/crypto/cast5.h        | 1 -
+ include/crypto/cast6.h        | 1 -
+ include/crypto/drbg.h         | 2 --
+ include/crypto/hash.h         | 2 --
+ include/crypto/internal/des.h | 1 -
+ include/crypto/kpp.h          | 5 +----
+ include/crypto/krb5.h         | 1 -
+ include/crypto/pcrypt.h       | 1 -
+ include/crypto/poly1305.h     | 1 -
+ include/crypto/polyval.h      | 1 -
+ include/crypto/rng.h          | 2 --
+ include/crypto/serpent.h      | 1 -
+ include/crypto/skcipher.h     | 4 ----
+ include/crypto/sm4.h          | 1 -
+ 20 files changed, 4 insertions(+), 39 deletions(-)
+
 -- 
 2.30.2
 
