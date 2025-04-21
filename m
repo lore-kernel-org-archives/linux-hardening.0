@@ -1,51 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4742DBA53;
-	Mon, 21 Apr 2025 10:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94261CAA62;
+	Mon, 21 Apr 2025 12:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745232148; cv=none; b=oPkMNtDChFPNEQGaVjV5jE2Ljw+op955bAnz46nTOniguDtzxCx+fRt1kkLOiaQCWaC5hW/yeuXOG696ejKwdfjmdaVg9ebCemlstOgIjczcehSs6jJYbZ3mJPUo91w3oju7CVcLoooKvIno+aAcmiCYNAgfrwxe1OeqBzavEko=
+	t=1745237163; cv=none; b=JkjeOUVx+tZg0LS+m9EZsFQE7Ooshj5qUL2eYxqEKROrKwS+4RSbVsIjNM1L7DQ+4SuSRQm64mSVz9VCyC+uiMDX3UGyHk99WrEuLzz+toxnC1/+E5+NsVv1vRRnj4TDICxwsARX8+p5GDqTS9DT2CnyELcvwAekXAlYkdHopTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745232148; c=relaxed/simple;
-	bh=xT7PnaTlh1xLrB/kDiy/+78LloWAc27/D5zrJIW/rYA=;
+	s=arc-20240116; t=1745237163; c=relaxed/simple;
+	bh=1dCc6mOczHaHKNhgjTG1vfLZU1G4PKkgRIurjo4wHZg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I4lTiYgjGKTwIWdC0h1TEma/SNGqbHFbwQElHr5Cdqrj7jZOqVeTU41DXTCiUQgPu91dFpJfweAJyx1yYx8vcFMMkaTUnt6mShZVwELYr+abtVrpBs+LSs5OBr5tLN6PzPoqnxBu6jpaETUtGXe1sDYtcmlqthca+8owE6t6FR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=of5unEST; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LPsVgtftaR+byWAX0q/SZzv/PLZ+1pQ0LIwsNO6ipvoyhVQ02IIfTv47dc5tTXp1pcH02AELubzMrXEtiUgJa1/QUM+Z0QEvZKzHBqzQ/VkQMKBncGvj7hEuBqZ3GCXnSJYsDBgnZXIQfFkR1r/O/VVNE4awN92e1hW5GHNO5/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=GrGMcmr8; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="of5unEST"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A79C4CEE4;
-	Mon, 21 Apr 2025 10:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745232147;
-	bh=xT7PnaTlh1xLrB/kDiy/+78LloWAc27/D5zrJIW/rYA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=of5unESTI9fOzX515uJlYR8s2BP1S8AaCCuikOMQuoXHcmARe+XJjVCUaapvH/8W8
-	 EVTBEUubD0ZG/L8ICdd71XchxAuqy7AsYfITuLteyLgWFKZ4WwTa+/bR7CEtRV9lZk
-	 aTBW6LQU2C0l/nFacyOQJApGdknoamfRBHcbRhq65NmSixegRE10bOX9Jojc3jGs+u
-	 fwXgec7D1lJSqNKLdTBseKqUCUGiBSI21sPC9knPTZ3mrYcJFJVxNOoL0gVTPWO7rh
-	 r+qoeDf+rkF2jJZUCvWuUuDWNRDqxBp90UfVqMwgBypJgEaNQN2iXBuqwtS1giDunh
-	 G8JiznRgBG+0g==
-Date: Mon, 21 Apr 2025 16:12:18 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Apurupa Pattapu <quic_apurupa@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 02/11] tee: add close_context to TEE driver operation
-Message-ID: <aAYhCg6XOeZm7jqq@sumit-X1>
-References: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-0-7f457073282d@oss.qualcomm.com>
- <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-2-7f457073282d@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="GrGMcmr8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=VDKHNDkjFMnK/p2S73Tig7JwCYw2XzJyuUxjtUmiwc8=; b=GrGMcmr8X6hW0Ul8qcDjhsBQtg
+	zZVLkcOVhByCGXnbcKm8CjM1fuHsQCIPgfJ7koZ2Wf4LCCzz1Z7MQjRXmRUFUY10A8xH1hembpXPR
+	BwovjdcHMT8Czh4DIUO7FzYZZQWCQLf/cJBu5sdoFmAde3o+mnO5wXq/7+Im8lRNMuo7BsgL5PrUk
+	nWdVKoWHqVgzggJjn3IHvrkuW3AH3qo4wgox6PWDvz1rJNQtpT0ks5xurASqF4IYfzTF5CNeKUzKH
+	jrCq1IzwP1mp5PtlsvuzzQ4aiQZOaR3gIfIQSXEZ6jLcGzCaRuJHs4SdHQ6raWJ9JmajIGoKzSvBa
+	ocCF+cLQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u6puB-00HJo0-1R;
+	Mon, 21 Apr 2025 20:05:44 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 21 Apr 2025 20:05:43 +0800
+Date: Mon, 21 Apr 2025 20:05:43 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Su Hui <suhui@nfschina.com>
+Cc: davem@davemloft.net, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] crypto: using size_add() for kmalloc()
+Message-ID: <aAY0lyWzsRVDge_f@gondor.apana.org.au>
+References: <20250421055104.663552-1-suhui@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,250 +50,30 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-2-7f457073282d@oss.qualcomm.com>
+In-Reply-To: <20250421055104.663552-1-suhui@nfschina.com>
 
-On Thu, Mar 27, 2025 at 07:47:24PM -0700, Amirreza Zarrabi wrote:
-> The tee_context can be used to manage TEE user resources, including
-> those allocated by the driver for the TEE on behalf of the user.
-> The release() callback is invoked only when all resources, such as
-> tee_shm, are released and there are no references to the tee_context.
-> 
-> When a user closes the device file, the driver should notify the
-> TEE to release any resources it may hold and drop the context
-> references. To achieve this, a close_context() callback is
-> introduced to initiate resource release in the TEE driver when
-> the device file is closed.
-
-Can you ellaborate more as to whether the TEE driver will release
-resources corresponding to a particular user or all the users?
-
-> 
-> Relocate teedev_ctx_get, teedev_ctx_put, tee_device_get, and
-> tee_device_get functions to tee_drv.h to make them accessible
-> outside the TEE subsystem.
-
-These should rather be relocated to tee_core.h as tee_drv.h is rather
-meant for kernel TEE client drivers.
-
-> 
-> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-> ---
->  drivers/tee/tee_core.c    | 39 +++++++++++++++++++++++++++++++++++++++
->  drivers/tee/tee_private.h |  6 ------
->  include/linux/tee_core.h  | 11 +++++++++--
->  include/linux/tee_drv.h   | 40 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 88 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-> index 24edce4cdbaa..22cc7d624b0c 100644
-> --- a/drivers/tee/tee_core.c
-> +++ b/drivers/tee/tee_core.c
-> @@ -72,6 +72,20 @@ struct tee_context *teedev_open(struct tee_device *teedev)
->  }
->  EXPORT_SYMBOL_GPL(teedev_open);
->  
-> +/**
-> + * teedev_ctx_get() - Increment the reference count of a context
-> + *
-> + * This function increases the refcount of the context, which is tied to
-> + * resources shared by the same tee_device. During the unregistration process,
-> + * the context may remain valid even after tee_device_unregister() has returned.
-> + *
-> + * Users should ensure that the context's refcount is properly decreased before
-> + * calling tee_device_put(), typically within the context's release() function.
-> + * Alternatively, users can call tee_device_get() and teedev_ctx_get() together
-> + * and release them simultaneously (see shm_alloc_helper()).
-> + *
-> + * @ctx: Pointer to the context
-> + */
-
-Let's not duplicate the documentation here when it has already been
-documented in the header file.
-
-Same for other places below.
-
--Sumit
-
->  void teedev_ctx_get(struct tee_context *ctx)
+On Mon, Apr 21, 2025 at 01:51:06PM +0800, Su Hui wrote:
+>
+> @@ -433,7 +434,7 @@ static inline struct aead_request *aead_request_alloc(struct crypto_aead *tfm,
 >  {
->  	if (ctx->releasing)
-> @@ -79,6 +93,7 @@ void teedev_ctx_get(struct tee_context *ctx)
+>  	struct aead_request *req;
 >  
->  	kref_get(&ctx->refcount);
->  }
-> +EXPORT_SYMBOL_GPL(teedev_ctx_get);
->  
->  static void teedev_ctx_release(struct kref *ref)
->  {
-> @@ -89,6 +104,10 @@ static void teedev_ctx_release(struct kref *ref)
->  	kfree(ctx);
->  }
->  
-> +/**
-> + * teedev_ctx_put() - Decrease reference count on a context
-> + * @ctx: pointer to the context
-> + */
->  void teedev_ctx_put(struct tee_context *ctx)
->  {
->  	if (ctx->releasing)
-> @@ -96,11 +115,15 @@ void teedev_ctx_put(struct tee_context *ctx)
->  
->  	kref_put(&ctx->refcount, teedev_ctx_release);
->  }
-> +EXPORT_SYMBOL_GPL(teedev_ctx_put);
->  
->  void teedev_close_context(struct tee_context *ctx)
->  {
->  	struct tee_device *teedev = ctx->teedev;
->  
-> +	if (teedev->desc->ops->close_context)
-> +		teedev->desc->ops->close_context(ctx);
-> +
->  	teedev_ctx_put(ctx);
->  	tee_device_put(teedev);
->  }
-> @@ -1024,6 +1047,10 @@ int tee_device_register(struct tee_device *teedev)
->  }
->  EXPORT_SYMBOL_GPL(tee_device_register);
->  
-> +/**
-> + * tee_device_put() - Decrease the user count for a tee_device
-> + * @teedev: pointer to the tee_device
-> + */
->  void tee_device_put(struct tee_device *teedev)
->  {
->  	mutex_lock(&teedev->mutex);
-> @@ -1037,7 +1064,18 @@ void tee_device_put(struct tee_device *teedev)
->  	}
->  	mutex_unlock(&teedev->mutex);
->  }
-> +EXPORT_SYMBOL_GPL(tee_device_put);
->  
-> +/**
-> + * tee_device_get() - Increment the user count for a tee_device
-> + * @teedev: Pointer to the tee_device
-> + *
-> + * If tee_device_unregister() has been called and the final user of @teedev
-> + * has already released the device, this function will fail to prevent new users
-> + * from accessing the device during the unregistration process.
-> + *
-> + * Returns: true if @teedev remains valid, otherwise false
-> + */
->  bool tee_device_get(struct tee_device *teedev)
->  {
->  	mutex_lock(&teedev->mutex);
-> @@ -1049,6 +1087,7 @@ bool tee_device_get(struct tee_device *teedev)
->  	mutex_unlock(&teedev->mutex);
->  	return true;
->  }
-> +EXPORT_SYMBOL_GPL(tee_device_get);
->  
->  /**
->   * tee_device_unregister() - Removes a TEE device
-> diff --git a/drivers/tee/tee_private.h b/drivers/tee/tee_private.h
-> index 9bc50605227c..d3f40a03de36 100644
-> --- a/drivers/tee/tee_private.h
-> +++ b/drivers/tee/tee_private.h
-> @@ -14,12 +14,6 @@
->  
->  int tee_shm_get_fd(struct tee_shm *shm);
->  
-> -bool tee_device_get(struct tee_device *teedev);
-> -void tee_device_put(struct tee_device *teedev);
-> -
-> -void teedev_ctx_get(struct tee_context *ctx);
-> -void teedev_ctx_put(struct tee_context *ctx);
-> -
->  struct tee_shm *tee_shm_alloc_user_buf(struct tee_context *ctx, size_t size);
->  struct tee_shm *tee_shm_register_user_buf(struct tee_context *ctx,
->  					  unsigned long addr, size_t length);
-> diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
-> index a38494d6b5f4..8a4c9e30b652 100644
-> --- a/include/linux/tee_core.h
-> +++ b/include/linux/tee_core.h
-> @@ -65,8 +65,9 @@ struct tee_device {
->  /**
->   * struct tee_driver_ops - driver operations vtable
->   * @get_version:	returns version of driver
-> - * @open:		called when the device file is opened
-> - * @release:		release this open file
-> + * @open:		called for a context when the device file is opened
-> + * @close_context:	called when the device file is closed
-> + * @release:		called to release the context
->   * @open_session:	open a new session
->   * @close_session:	close a session
->   * @system_session:	declare session as a system session
-> @@ -76,11 +77,17 @@ struct tee_device {
->   * @supp_send:		called for supplicant to send a response
->   * @shm_register:	register shared memory buffer in TEE
->   * @shm_unregister:	unregister shared memory buffer in TEE
-> + *
-> + * The context given to @open might last longer than the device file if it is
-> + * tied to other resources in the TEE driver. @close_context is called when the
-> + * client closes the device file, even if there are existing references to the
-> + * context. The TEE driver can use @close_context to start cleaning up.
->   */
->  struct tee_driver_ops {
->  	void (*get_version)(struct tee_device *teedev,
->  			    struct tee_ioctl_version_data *vers);
->  	int (*open)(struct tee_context *ctx);
-> +	void (*close_context)(struct tee_context *ctx);
->  	void (*release)(struct tee_context *ctx);
->  	int (*open_session)(struct tee_context *ctx,
->  			    struct tee_ioctl_open_session_arg *arg,
-> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
-> index a54c203000ed..ce23fd42c5d4 100644
-> --- a/include/linux/tee_drv.h
-> +++ b/include/linux/tee_drv.h
-> @@ -96,6 +96,46 @@ struct tee_param {
->  	} u;
->  };
->  
-> +/**
-> + * tee_device_get() - Increment the user count for a tee_device
-> + * @teedev: Pointer to the tee_device
-> + *
-> + * If tee_device_unregister() has been called and the final user of @teedev
-> + * has already released the device, this function will fail to prevent new users
-> + * from accessing the device during the unregistration process.
-> + *
-> + * Returns: true if @teedev remains valid, otherwise false
-> + */
-> +bool tee_device_get(struct tee_device *teedev);
-> +
-> +/**
-> + * tee_device_put() - Decrease the user count for a tee_device
-> + * @teedev: pointer to the tee_device
-> + */
-> +void tee_device_put(struct tee_device *teedev);
-> +
-> +/**
-> + * teedev_ctx_get() - Increment the reference count of a context
-> + *
-> + * This function increases the refcount of the context, which is tied to
-> + * resources shared by the same tee_device. During the unregistration process,
-> + * the context may remain valid even after tee_device_unregister() has returned.
-> + *
-> + * Users should ensure that the context's refcount is properly decreased before
-> + * calling tee_device_put(), typically within the context's release() function.
-> + * Alternatively, users can call tee_device_get() and teedev_ctx_get() together
-> + * and release them simultaneously (see shm_alloc_helper()).
-> + *
-> + * @ctx: Pointer to the context
-> + */
-> +void teedev_ctx_get(struct tee_context *ctx);
-> +
-> +/**
-> + * teedev_ctx_put() - Decrease reference count on a context
-> + * @ctx: pointer to the context
-> + */
-> +void teedev_ctx_put(struct tee_context *ctx);
-> +
->  /**
->   * tee_shm_alloc_kernel_buf() - Allocate kernel shared memory for a
->   *                              particular TEE client driver
-> 
-> -- 
-> 2.34.1
-> 
-> 
+> -	req = kmalloc(sizeof(*req) + crypto_aead_reqsize(tfm), gfp);
+> +	req = kmalloc(size_add(sizeof(*req), crypto_aead_reqsize(tfm)), gfp);
+
+This is just wrong.  You should fail the allocation altogether
+rather than proceeding with a length that is insufficient.
+
+However, reqsize shouldn't be anywhere near overflowing in the
+first place.  If you're truly worried about this, you should
+change the algorithm registration code to check whether reqsize
+is sane.
+
+And that needs to wait until the algorithms are fixed to not use
+dynamic reqsizes.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
