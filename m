@@ -1,47 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49342397BE;
-	Tue, 22 Apr 2025 02:16:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785FA23E344;
+	Tue, 22 Apr 2025 02:16:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288185; cv=none; b=LOllEG60vRcLec/L91fZ1RNu1qll5DE+s8Oicp8gLibd8bcHCKbOjiOdCh/q/eEMNR0CHTyWzltpNnktC1nV/J6iurK40XKEuPH5Pl1fk7JCe038l4A5ZhiUag392TgvMF81q3vWVlaRKyW4E5AiIABrfJVAvorEQG7lTpFk1PY=
+	t=1745288187; cv=none; b=PBo2dcOoPCoZHhc9+KpJtklXrm1coLsL0PuPR7HvTDIer8mFied4l4vb72po+JSkzB0LX6spzoWabDotneCpybyA6txesmeT07QrZRoxGEIeIAZXQ9uE3l7gGmy6X6/lLBofojoLqvyxhp46MceDBIVVHy3/HldSuetJ7xJEu1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288185; c=relaxed/simple;
-	bh=0238oT80ZRbDUPcDv23xV+rQAWCGsjssH4Cychfl15Y=;
+	s=arc-20240116; t=1745288187; c=relaxed/simple;
+	bh=Bajci9RVViShoHebpmmjyMnZxE/rkvpjN1R1FfxX0Sw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PWUbnZcyuYoTB7gm5Pzq5FWGM+RwDDpJl0jKgzJUxHy0ovWgxz241lgrkCfA98U5h9dBZ37Nup4Gt/NnZqz6d+pSTEJ3PKcAlhYubBg3NXBTzEz650ic2PvTdUb0Y78nQUvAn0Vwp4/FFfhVXSrU531Q8Um8o5NM2/0/atwX6BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAJdgTPg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ss15rv25Y6g8jwxV4xgg5m+bgCJRit0b9jGQ1dcPPx2bq2MBGq+xe6fWcMoe8jJ/Zhe0ilfnRU4Z1RAwyfeR6C9XLBFQsS6rpZw5aYhsWzyK9U6M+6s4f8G44UbHM1fMQU2oXn0buvZtywF0vkOk0aACyEyOPpLux+ghQ6j/G34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ST5r1nIy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAJdgTPg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AED8C4CEE4;
-	Tue, 22 Apr 2025 02:16:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ST5r1nIy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2379DC4CEE4;
+	Tue, 22 Apr 2025 02:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745288185;
-	bh=0238oT80ZRbDUPcDv23xV+rQAWCGsjssH4Cychfl15Y=;
+	s=k20201202; t=1745288186;
+	bh=Bajci9RVViShoHebpmmjyMnZxE/rkvpjN1R1FfxX0Sw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sAJdgTPgK18vDD0lpWULXcrgp4KStFYJaC0XT3INz3fgTKtfuu5DxxyLaW881IBdc
-	 QgOYYtgtpL0ej4DrK+GeG8rQ/Iu+dlosWmGzFtWSYUAb68uGa0Kfmib+pFU+XaqukV
-	 oIZ0VF4cjVHZEcuA/c/HyT+fDlvYqySi4a8QIZUybQTwAQHkH/YMV06CHH4fYFnH2o
-	 KrUpI+z0bCdO5sBNNgsb5YXok6PFI+6RWouiCZTEVzM3vBK5Yjd3N45eestCUciNsr
-	 8eTQM6RrmezqoRJe1vL3BzcJEIgoJig4tlUleHsWooco8VBtqmp88Rj9E9YbE6mvcx
-	 ehC+mRQ9ww4Ew==
+	b=ST5r1nIyoA9oY/HJl0h/ujkUdTAqJQ5dxCmwQNcxmrbVNZseN0ifZKdoiVcM+neZe
+	 Ruq/P1vKenubpv4PNJnmVcqmwWjGj+LRqTwCj7huqBZS4mV45KhILo/WgHCuqPLA8A
+	 8/reejL/ccY6mkKvUyvjgusJBydne7YcoMvju2rz0g9PYEsJBBjDRn4wia3H8PajQP
+	 BlVoIoAmpFxyOBAm07Oqcre5HfEDyj1ay3XfMCu0ZsvkcwvCN8GV0ZIOGE1YbeEbY+
+	 AlnZzqbQ8GHuFHipU0HyzgBrtG4rVyLzJFmFj/kATM+CADpSlhuKy3aDuh+YFj7Nxo
+	 BwxRBARzxOIvw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kees Cook <kees@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
+Cc: Mostafa Saleh <smostafa@google.com>,
+	Kees Cook <kees@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	mic@digikod.net,
-	linux-hardening@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 19/30] hardening: Disable GCC randstruct for COMPILE_TEST
-Date: Mon, 21 Apr 2025 22:15:39 -0400
-Message-Id: <20250422021550.1940809-19-sashal@kernel.org>
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 20/30] ubsan: Fix panic from test_ubsan_out_of_bounds
+Date: Mon, 21 Apr 2025 22:15:40 -0400
+Message-Id: <20250422021550.1940809-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250422021550.1940809-1-sashal@kernel.org>
 References: <20250422021550.1940809-1-sashal@kernel.org>
@@ -56,39 +51,88 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.3
 Content-Transfer-Encoding: 8bit
 
-From: Kees Cook <kees@kernel.org>
+From: Mostafa Saleh <smostafa@google.com>
 
-[ Upstream commit f5c68a4e84f9feca3be578199ec648b676db2030 ]
+[ Upstream commit 9b044614be12d78d3a93767708b8d02fb7dfa9b0 ]
 
-There is a GCC crash bug in the randstruct for latest GCC versions that
-is being tickled by landlock[1]. Temporarily disable GCC randstruct for
-COMPILE_TEST builds to unbreak CI systems for the coming -rc2. This can
-be restored once the bug is fixed.
+Running lib_ubsan.ko on arm64 (without CONFIG_UBSAN_TRAP) panics the
+kernel:
 
-Suggested-by: Mark Brown <broonie@kernel.org>
-Link: https://lore.kernel.org/all/20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org/ [1]
-Acked-by: Mark Brown <broonie@kernel.org>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20250409151154.work.872-kees@kernel.org
+[   31.616546] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: test_ubsan_out_of_bounds+0x158/0x158 [test_ubsan]
+[   31.646817] CPU: 3 UID: 0 PID: 179 Comm: insmod Not tainted 6.15.0-rc2 #1 PREEMPT
+[   31.648153] Hardware name: linux,dummy-virt (DT)
+[   31.648970] Call trace:
+[   31.649345]  show_stack+0x18/0x24 (C)
+[   31.650960]  dump_stack_lvl+0x40/0x84
+[   31.651559]  dump_stack+0x18/0x24
+[   31.652264]  panic+0x138/0x3b4
+[   31.652812]  __ktime_get_real_seconds+0x0/0x10
+[   31.653540]  test_ubsan_load_invalid_value+0x0/0xa8 [test_ubsan]
+[   31.654388]  init_module+0x24/0xff4 [test_ubsan]
+[   31.655077]  do_one_initcall+0xd4/0x280
+[   31.655680]  do_init_module+0x58/0x2b4
+
+That happens because the test corrupts other data in the stack:
+400:   d5384108        mrs     x8, sp_el0
+404:   f9426d08        ldr     x8, [x8, #1240]
+408:   f85f83a9        ldur    x9, [x29, #-8]
+40c:   eb09011f        cmp     x8, x9
+410:   54000301        b.ne    470 <test_ubsan_out_of_bounds+0x154>  // b.any
+
+As there is no guarantee the compiler will order the local variables
+as declared in the module:
+        volatile char above[4] = { }; /* Protect surrounding memory. */
+        volatile int arr[4];
+        volatile char below[4] = { }; /* Protect surrounding memory. */
+
+There is another problem where the out-of-bound index is 5 which is larger
+than the extra surrounding memory for protection.
+
+So, use a struct to enforce the ordering, and fix the index to be 4.
+Also, remove some of the volatiles and rely on OPTIMIZER_HIDE_VAR()
+
+Signed-off-by: Mostafa Saleh <smostafa@google.com>
+Link: https://lore.kernel.org/r/20250415203354.4109415-1-smostafa@google.com
 Signed-off-by: Kees Cook <kees@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/Kconfig.hardening | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/test_ubsan.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index b56e001e0c6a9..10be745c13ba5 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -311,7 +311,7 @@ config CC_HAS_RANDSTRUCT
+diff --git a/lib/test_ubsan.c b/lib/test_ubsan.c
+index 5d7b10e986107..63b7566e78639 100644
+--- a/lib/test_ubsan.c
++++ b/lib/test_ubsan.c
+@@ -68,18 +68,22 @@ static void test_ubsan_shift_out_of_bounds(void)
  
- choice
- 	prompt "Randomize layout of sensitive kernel structures"
--	default RANDSTRUCT_FULL if COMPILE_TEST && (GCC_PLUGINS || CC_HAS_RANDSTRUCT)
-+	default RANDSTRUCT_FULL if COMPILE_TEST && CC_HAS_RANDSTRUCT
- 	default RANDSTRUCT_NONE
- 	help
- 	  If you enable this, the layouts of structures that are entirely
+ static void test_ubsan_out_of_bounds(void)
+ {
+-	volatile int i = 4, j = 5, k = -1;
+-	volatile char above[4] = { }; /* Protect surrounding memory. */
+-	volatile int arr[4];
+-	volatile char below[4] = { }; /* Protect surrounding memory. */
++	int i = 4, j = 4, k = -1;
++	volatile struct {
++		char above[4]; /* Protect surrounding memory. */
++		int arr[4];
++		char below[4]; /* Protect surrounding memory. */
++	} data;
+ 
+-	above[0] = below[0];
++	OPTIMIZER_HIDE_VAR(i);
++	OPTIMIZER_HIDE_VAR(j);
++	OPTIMIZER_HIDE_VAR(k);
+ 
+ 	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "above");
+-	arr[j] = i;
++	data.arr[j] = i;
+ 
+ 	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "below");
+-	arr[k] = i;
++	data.arr[k] = i;
+ }
+ 
+ enum ubsan_test_enum {
 -- 
 2.39.5
 
