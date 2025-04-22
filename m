@@ -1,45 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475EC266B77;
-	Tue, 22 Apr 2025 02:18:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B82D26A1B1;
+	Tue, 22 Apr 2025 02:18:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288300; cv=none; b=A2mRGRJy/BnT6FahNUHoMi+p+zoXSu1J7dchlN3Rk8ktfT1LlalWiHXVV4Bya7mxCsYV74RTQBmj3XzLuB+D7GYlVmM1dpxVz2i6rD7CC90RdKj6IiYv0T/IJ1H1jotF8GszJsA9+RvLvNGJ/lLJZkvK9UZU7QPKexzWrUJZtnk=
+	t=1745288320; cv=none; b=dZAbv2bf34AX1TD4me01hFwd4aP+nHRCWpfrd1KpKdfNEj5ZosT9TgXQ6Ww0UqOMM44Af6JLzXm8mOtnkqCkjayZgtZOAL21D//46xLXupnl1VQhJl3siChnC5nA8mvbx0zkQ75dthtSLmxWWq5TJx2WlNYTF5Z5rXt33Ls53ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288300; c=relaxed/simple;
-	bh=M8lStOqI4Gjp03xyOAbijLlG+Tsrjyhn2vf4gqu6O7E=;
+	s=arc-20240116; t=1745288320; c=relaxed/simple;
+	bh=EiBywMglqTtZn0m2XECVj77kVL4VtMf5fxBX/VdScno=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C27lPMz4RjOQvUd7DyelLxNKd0D9JvogHzSqE30TkgUiDtwTes+CJ/4ByYutM/7sK7SWfZvvpVXvVQ/LwSxKY0cirTyOG/5FG4i6m5ACpx7mBVGzHI1LNtPtp4FxeyRDFDNCRMxlZEYxcdoih01RBV+E28cmqw2nBjNlc7KCoTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7ddVIeC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TNPVKcMRC5CYs2zOuzKjpDK6U80HgdKAoQGu8u9PUnUVo2ITbazS4jJfH1LA1R7dkNKT1llT62HCuQtvnp/VmZXCCqbJKcevM/EqZDe9oC+7mtSOTp/riekLnRlzqwuJPAepzSZg5krhPWyuxlty8KmdagRsgLpHvaTSA9tJJkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WIUlAawY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7ddVIeC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4E3DC4CEE4;
-	Tue, 22 Apr 2025 02:18:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WIUlAawY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EC14C4CEEF;
+	Tue, 22 Apr 2025 02:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745288298;
-	bh=M8lStOqI4Gjp03xyOAbijLlG+Tsrjyhn2vf4gqu6O7E=;
+	s=k20201202; t=1745288320;
+	bh=EiBywMglqTtZn0m2XECVj77kVL4VtMf5fxBX/VdScno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W7ddVIeCtYhTMDLNKoPhW6nMZbML/wY6cdi04GKG+YJVJGwvM8/LovM6tula/hNnw
-	 utjidLUE9MFApjg4Q1q56PdXLxpnwKIZkDL5xXIFA3kieXZqIximRQ+x06NV6Ohj1L
-	 dWATZUuc0Pkc/RQNpScqFdIaT8LeVDGWGZXUbPTnGXuNSDV9mo9mJHofHw4y1ectdc
-	 khKTlsD6LpeDXqxsj6AfNXtJxxBoGIbpMWZZzLrWKHmlpnaGpZHYLOsM59jVdVUFb2
-	 hreZxVnKE4b5BTp876N/b5hgk6y/oNdsPi3VbY30RxwIE7KLQUpD2xE1pHplc98wLG
-	 dBloE+8hdqB/w==
+	b=WIUlAawYaOcDR3z8p8NVLjKENJcRcJND2RgYVr5tTS8nuP8nMEpMWKvgZblVGrAAt
+	 PWnRrVMDzSDU6KzJvMfV//0KSW9esb8sI20DcALVO0uiYC6Le5p7CsgvOm0Wx84hdH
+	 EBpYD4vFlHCtLG2QZGubbs2Jlxq5LWLw3n1vfkRDR08A7ciRysYwi/Wof397rhbfep
+	 PI30TKOa7x2F3GCxeUN08ga4dRZd4Nix5jcEVjwoEVrMa25BBRkmo9MzoWz9qulC3M
+	 pFpVltWzUMv1y+CXGESo2OKIPVm3UKUNL7TLSsuYRy+7wEldJ8oMlrnXqezih+KyBv
+	 v8VAezwt1yHyg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mostafa Saleh <smostafa@google.com>,
-	Kees Cook <kees@kernel.org>,
+Cc: Kees Cook <kees@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
 	Sasha Levin <sashal@kernel.org>,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 11/15] ubsan: Fix panic from test_ubsan_out_of_bounds
-Date: Mon, 21 Apr 2025 22:17:55 -0400
-Message-Id: <20250422021759.1941570-11-sashal@kernel.org>
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	mic@digikod.net,
+	linux-hardening@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 08/12] hardening: Disable GCC randstruct for COMPILE_TEST
+Date: Mon, 21 Apr 2025 22:18:22 -0400
+Message-Id: <20250422021826.1941778-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250422021759.1941570-1-sashal@kernel.org>
-References: <20250422021759.1941570-1-sashal@kernel.org>
+In-Reply-To: <20250422021826.1941778-1-sashal@kernel.org>
+References: <20250422021826.1941778-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,91 +53,42 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.87
+X-stable-base: Linux 6.1.134
 Content-Transfer-Encoding: 8bit
 
-From: Mostafa Saleh <smostafa@google.com>
+From: Kees Cook <kees@kernel.org>
 
-[ Upstream commit 9b044614be12d78d3a93767708b8d02fb7dfa9b0 ]
+[ Upstream commit f5c68a4e84f9feca3be578199ec648b676db2030 ]
 
-Running lib_ubsan.ko on arm64 (without CONFIG_UBSAN_TRAP) panics the
-kernel:
+There is a GCC crash bug in the randstruct for latest GCC versions that
+is being tickled by landlock[1]. Temporarily disable GCC randstruct for
+COMPILE_TEST builds to unbreak CI systems for the coming -rc2. This can
+be restored once the bug is fixed.
 
-[   31.616546] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: test_ubsan_out_of_bounds+0x158/0x158 [test_ubsan]
-[   31.646817] CPU: 3 UID: 0 PID: 179 Comm: insmod Not tainted 6.15.0-rc2 #1 PREEMPT
-[   31.648153] Hardware name: linux,dummy-virt (DT)
-[   31.648970] Call trace:
-[   31.649345]  show_stack+0x18/0x24 (C)
-[   31.650960]  dump_stack_lvl+0x40/0x84
-[   31.651559]  dump_stack+0x18/0x24
-[   31.652264]  panic+0x138/0x3b4
-[   31.652812]  __ktime_get_real_seconds+0x0/0x10
-[   31.653540]  test_ubsan_load_invalid_value+0x0/0xa8 [test_ubsan]
-[   31.654388]  init_module+0x24/0xff4 [test_ubsan]
-[   31.655077]  do_one_initcall+0xd4/0x280
-[   31.655680]  do_init_module+0x58/0x2b4
-
-That happens because the test corrupts other data in the stack:
-400:   d5384108        mrs     x8, sp_el0
-404:   f9426d08        ldr     x8, [x8, #1240]
-408:   f85f83a9        ldur    x9, [x29, #-8]
-40c:   eb09011f        cmp     x8, x9
-410:   54000301        b.ne    470 <test_ubsan_out_of_bounds+0x154>  // b.any
-
-As there is no guarantee the compiler will order the local variables
-as declared in the module:
-        volatile char above[4] = { }; /* Protect surrounding memory. */
-        volatile int arr[4];
-        volatile char below[4] = { }; /* Protect surrounding memory. */
-
-There is another problem where the out-of-bound index is 5 which is larger
-than the extra surrounding memory for protection.
-
-So, use a struct to enforce the ordering, and fix the index to be 4.
-Also, remove some of the volatiles and rely on OPTIMIZER_HIDE_VAR()
-
-Signed-off-by: Mostafa Saleh <smostafa@google.com>
-Link: https://lore.kernel.org/r/20250415203354.4109415-1-smostafa@google.com
+Suggested-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/all/20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org/ [1]
+Acked-by: Mark Brown <broonie@kernel.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20250409151154.work.872-kees@kernel.org
 Signed-off-by: Kees Cook <kees@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_ubsan.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ security/Kconfig.hardening | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/test_ubsan.c b/lib/test_ubsan.c
-index 2062be1f2e80f..f90f2b9842ec4 100644
---- a/lib/test_ubsan.c
-+++ b/lib/test_ubsan.c
-@@ -35,18 +35,22 @@ static void test_ubsan_shift_out_of_bounds(void)
+diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+index 0f295961e7736..12e7e836a3f12 100644
+--- a/security/Kconfig.hardening
++++ b/security/Kconfig.hardening
+@@ -287,7 +287,7 @@ config CC_HAS_RANDSTRUCT
  
- static void test_ubsan_out_of_bounds(void)
- {
--	volatile int i = 4, j = 5, k = -1;
--	volatile char above[4] = { }; /* Protect surrounding memory. */
--	volatile int arr[4];
--	volatile char below[4] = { }; /* Protect surrounding memory. */
-+	int i = 4, j = 4, k = -1;
-+	volatile struct {
-+		char above[4]; /* Protect surrounding memory. */
-+		int arr[4];
-+		char below[4]; /* Protect surrounding memory. */
-+	} data;
- 
--	above[0] = below[0];
-+	OPTIMIZER_HIDE_VAR(i);
-+	OPTIMIZER_HIDE_VAR(j);
-+	OPTIMIZER_HIDE_VAR(k);
- 
- 	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "above");
--	arr[j] = i;
-+	data.arr[j] = i;
- 
- 	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "below");
--	arr[k] = i;
-+	data.arr[k] = i;
- }
- 
- enum ubsan_test_enum {
+ choice
+ 	prompt "Randomize layout of sensitive kernel structures"
+-	default RANDSTRUCT_FULL if COMPILE_TEST && (GCC_PLUGINS || CC_HAS_RANDSTRUCT)
++	default RANDSTRUCT_FULL if COMPILE_TEST && CC_HAS_RANDSTRUCT
+ 	default RANDSTRUCT_NONE
+ 	help
+ 	  If you enable this, the layouts of structures that are entirely
 -- 
 2.39.5
 
