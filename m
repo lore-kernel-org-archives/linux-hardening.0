@@ -1,98 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFA928F951;
-	Tue, 22 Apr 2025 18:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47096A59;
+	Tue, 22 Apr 2025 18:23:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745345493; cv=none; b=hJQhRuCsZKIXUAoW9qlR3S7t11hQvtFAj9PnSl/tyuXGbdcnXiwUetyM1uzrzkCCVkdnIwzrRGAn37noZwVuRBlaadlc1R7O8jO31veu9EM33eb9hgmL0avLjRj1sK6ZdWCmbPgR/3dDW7BTuCZh3VmHwcULGqvIS+jUzdQ5FF8=
+	t=1745346215; cv=none; b=BbwZ5ss0Bhv8RBHsYegmcisidDQWC/95IhWrhMrIN4Ny19/2k1nl77jvFMcxlmxpppUov8lQqeM2cnPwZRO1gxWnfC+HrdK0tqcodKtaMWQys3uat2+IP/rw1dlcQftZgESHnsjRSMZUjMykrk5ajlCnB86V/cinbu0SNDsOfRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745345493; c=relaxed/simple;
-	bh=SvIx++S80MJoaUoA5eJ5m1Ia0u1LVuwEpWYTiDTazoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O5fGS9GcLTk07uMc3RsCH/rVMS9kiMiV3un+G8bE15E3+z88uPpL0bLWH0jvYvSwWU+fYay5M4neEPnTZo6rtslms7OWnT8tXWN1laJ3CKOIxQ5Kr6K/2zDyHvhgbHP0VDv0QTJ8bDe0d3cgrHHUpLWlPjGmZANnlkyHGcD2dLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qg+meklA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745346215; c=relaxed/simple;
+	bh=GGXktewUewz/nCPocxoFhsFF9bvV8KlcmNW4nrQWjcc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=hBKlxxG6RKHzT1e641TNHRDsmzx+dmMuX5lCTZxXOD5KuoRqx4ewQGqTwaytLbwSBsrnzzHSt9lKn4tOHt62ZTZTEdy7rh9m/1SJ7WlFSTZmdrseVjQXcdDMb1pePauKJiYeMI69TrLh/kybXysfzwX5Lm3Bg+sr9VvHt/5IDBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVuGwvnM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qg+meklA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5AC0C4CEE9;
-	Tue, 22 Apr 2025 18:11:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVuGwvnM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DADDC4CEE9;
+	Tue, 22 Apr 2025 18:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745345493;
-	bh=SvIx++S80MJoaUoA5eJ5m1Ia0u1LVuwEpWYTiDTazoQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qg+meklA55nJle1d4hOos2AcPWg5lPvSi7s7fzxNRS4iy0iHG9UMDijMRHc7eq9Z2
-	 4uFUaZfbTdC8UuKFJC0Hx2uPRGdCwvZ59+U9Bzgi+1Dzo0dUkrHsNDnxFRT5PJjC9Z
-	 kQv7XW288krqJBCx0+YeB710x4vj3d8jgEaRaQSm9kkPim1ujpQlBq3mwuzQjWWU0D
-	 7LizaJwIZfiwpw6wL76S43FyRsly6ZnJ6wbjEc7XINpQdAEMu5Vva/P/P2J8uJJW6a
-	 VYpHCfeFmr3ynaVC4Zengu5OsByeMdd7FmmQhheTikCy2c7SPsPn3G6wyyXEeoTQq0
-	 idM6hE2hZGhLg==
-Date: Tue, 22 Apr 2025 19:11:26 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Lars-Peter Clausen
- <lars@metafoo.de>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iio: magnetometer: ak8974: Add __nonstring annotations
- for unterminated strings
-Message-ID: <20250422191126.53eb61ed@jic23-huawei>
-In-Reply-To: <202503151455.B8E9F6F1@keescook>
-References: <20250310222346.work.810-kees@kernel.org>
-	<CACRpkdbUk8bVWLPwVRq0qzaKRC80=bV1Wd01h+5xfH1O7-BVaQ@mail.gmail.com>
-	<20250315183125.40f9c566@jic23-huawei>
-	<202503151455.B8E9F6F1@keescook>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1745346214;
+	bh=GGXktewUewz/nCPocxoFhsFF9bvV8KlcmNW4nrQWjcc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kVuGwvnMr+u4BSDFaJL/SXFU1tLN3/lIs8TFy9Cp/fEd2OvgyB5p7cFFlAuGwT25E
+	 RCpYhsm7RHsum7fe1q5P9CLJ/RUn2MgPSqJRHqsE0nmPv0mSCoigwSkkhUO+RVAVGR
+	 aQTEio9Jjves6Dw+qpggK2wB5EYeDL/+JRRkhw0HcEQq6gvG6of3aJfLld1Ew1coOI
+	 YKVJESESm9ImKsIRyq8zfK7nZh2HWi5nYuqiP0qmmX7MuMXRHENXmclpbP4K7WgtkI
+	 53CuTReAorBsHbfTiFf/4vGeATfOqDyDp3AJxxHYXnmy+T+EZ5nG3Hbti3T5XS4VEy
+	 oQUWAJEAfYjkA==
+From: SeongJae Park <sj@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	Su Hui <suhui@nfschina.com>,
+	akpm@linux-foundation.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] mm/damon/sysfs-schemes: using kmalloc_array() and size_add()
+Date: Tue, 22 Apr 2025 11:23:31 -0700
+Message-Id: <20250422182331.59651-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <adbc06d8-1a6c-4279-9596-d743505d64dd@stanley.mountain>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, 15 Mar 2025 14:56:02 -0700
-Kees Cook <kees@kernel.org> wrote:
+On Tue, 22 Apr 2025 13:44:39 +0300 Dan Carpenter <dan.carpenter@linaro.org> wrote:
 
-> On Sat, Mar 15, 2025 at 06:31:25PM +0000, Jonathan Cameron wrote:
-> > On Fri, 14 Mar 2025 11:31:09 +0100
-> > Linus Walleij <linus.walleij@linaro.org> wrote:
-> >  =20
-> > > On Mon, Mar 10, 2025 at 11:23=E2=80=AFPM Kees Cook <kees@kernel.org> =
-wrote:
-> > >  =20
-> > > > When a character array without a terminating NUL character has a st=
-atic
-> > > > initializer, GCC 15's -Wunterminated-string-initialization will only
-> > > > warn if the array lacks the "nonstring" attribute[1]. Mark the arra=
-ys
-> > > > with __nonstring to and correctly identify the char array as "not a=
- C
-> > > > string" and thereby eliminate the warning.
-> > > >
-> > > > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D117178 [1]
-> > > > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > > Cc: Jonathan Cameron <jic23@kernel.org>
-> > > > Cc: Lars-Peter Clausen <lars@metafoo.de>
-> > > > Cc: linux-iio@vger.kernel.org
-> > > > Signed-off-by: Kees Cook <kees@kernel.org>   =20
-> > >=20
-> > > Fair enough,
-> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > >  =20
-> > Kees,
-> >=20
-> > I've currently queued this for next cycle as it doesn't feel like a fix
-> > as such and I've already sent my pull request for the merge window.
-> >=20
-> > Is it worth rushing it in, or is a fully cycle delay an issue? (6.16)
-> >=20
-> > If slow is fine, applied to the testing branch of iio.git which gets
-> > 0-day bot exposure. =20
->=20
-> No rush needed at all. This is just for cleaning up warnings for the
-> coming releases of GCC 15 in couple months. Thanks for picking it up!
->=20
+> On Tue, Apr 22, 2025 at 01:38:05PM +0300, Dan Carpenter wrote:
+> > On Mon, Apr 21, 2025 at 02:24:24PM +0800, Su Hui wrote:
+> > > It's safer to using kmalloc_array() and size_add() because it can
+> > > prevent possible overflow problem.
+> > > 
+> > > Signed-off-by: Su Hui <suhui@nfschina.com>
+[...]
+> > > --- a/mm/damon/sysfs-schemes.c
+> > > +++ b/mm/damon/sysfs-schemes.c
+> > > @@ -465,7 +465,8 @@ static ssize_t memcg_path_store(struct kobject *kobj,
+> > >  {
+> > >  	struct damon_sysfs_scheme_filter *filter = container_of(kobj,
+> > >  			struct damon_sysfs_scheme_filter, kobj);
+> > > -	char *path = kmalloc(sizeof(*path) * (count + 1), GFP_KERNEL);
+> > > +	char *path = kmalloc_array(size_add(count, 1), sizeof(*path),
+> > > +				   GFP_KERNEL);
+> > 
+> > Count is clamped in rw_verify_area().
+> > 
+> > Smatch does a kind of ugly hack to handle rw_verify_area() which is that
+> > it says neither the count nor the pos can be more than 1G.  And obviously
+> > files which are larger than 2GB exist but pretending they don't silences
+> > all these integer overflow warnings.
+> > 
+> 
+> Actually rw_verify_area() ensures that "pos + count" can't overflow.  But
+> here we are multiplying.  Fortunately, we are multiplying by 1 so that's
+> safe and also count can't be larger than PAGE_SIZE here which is safe as
+> well.
 
-Dropped because it clashes with:
+Thank you for adding these details, Dan.  I understand the size_add() change
+can make warnings slience, though it is not really fixing a real bug.  So I
+believe there is no action item to make a change to this patch.  Maybe making
+the commit message more clarified can be helpful, though?
 
-  05e8d261a34e ("gcc-15: add '__nonstring' markers to byte arrays")
+Please let me know if I'm misunderstanding your point and/or you want some
+changes.
+
+
+Thanks,
+SJ
+
+> 
+> regards,
+> dan carpenter
