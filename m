@@ -1,108 +1,98 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663D228CF45
-	for <linux-hardening@vger.kernel.org>; Tue, 22 Apr 2025 14:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C998935949;
+	Tue, 22 Apr 2025 14:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745333929; cv=none; b=TfSUebhf3gj5abK5cLPy8xhrIzjWyWMq/oYYDCTHZWMHM0GPtnbAezHfLmWtayxldWen31SZ54WwVsvGiL0r6Gu4HYGV5QMKoV3v+RF+awFQHr7GmfJa05rEG/M7gnPsvUrY8hZxlSRUr6qkAX5+Xr2XW579wOd6JsfkGOHFoXY=
+	t=1745333951; cv=none; b=chNuTfpDjNpsioHvgw2QMUNeM/wJjQ0DWcOe02Q+QruXYaQdoE495/8QfouESeNwD2qjksLvl1kFXEhkgDk+ZShYiAHVuxNAwtSG/JFNSl60pBkHNR+Ygv4iG6LXOung0HiY7DfNbzwKSEGSsQD1MXtWaqXA/KQLrIzEJEdXiJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745333929; c=relaxed/simple;
-	bh=362QBWDd5ZiO6ndloP1DpdL86Gvb0ZeD5+An3yP217A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VY6+juJPK5qQNaawDu98Rf5sPGRc7Oo/Gd3OTIhm1qGfI1p6JdyZJ6bipcPe04kYNbbD+FPdeETu3BdGoAuQ9dw1HTUCS/ndUOEgtIwnQzHDoQ0R+KA8x6xXUovSzRFm+0kqG+4NCH2uVbTAybAchg/+v+weC/lcU8jiGMuEHIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=PsnDhtPJ; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1745333951; c=relaxed/simple;
+	bh=QfUbRAUwdvLjnyJ6+Xvv7d9sVZwBvQJv2ePW9+tPj10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N3eiZyfeFsR7Y0OnvyDVbnbqNqn0WWYteoX3tSYaLEL8CD0cHko3NnsXgcRYxZtl72YA8LLoGcfa54Tyu7x8j5UvUdxs4G5oCOFixczBgy9FYtVi8IJmBByVaNqiTG/8SN+aLo1ifnPdYbMHNJaMWke9qlbmvSz3zFyC2Hbq88w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QyG2Bm/q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="PsnDhtPJ"
-Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
-	by cmsmtp with ESMTPS
-	id 6wqBuWiBkMETl7F57uIcmY; Tue, 22 Apr 2025 14:58:41 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 7F56uMTXh7b2o7F56uoOYj; Tue, 22 Apr 2025 14:58:40 +0000
-X-Authority-Analysis: v=2.4 cv=EZXOQumC c=1 sm=1 tr=0 ts=6807aea0
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=DefJii25N9YVshmqbOOoLg==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10
- a=PSu1ETixf5sBndSe_uoA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=362QBWDd5ZiO6ndloP1DpdL86Gvb0ZeD5+An3yP217A=; b=PsnDhtPJq1bDwtmaYnpreoHLlv
-	C4KLDwbCRKFfmzeJlQInWUm9SAZVI14Segt9eVRE1tTKN79QBcfeg8geq/H9BMGFFdNCKNoaENe3K
-	D61LSeoOQ0XciiRq8kbeICHVonQOX3RmVWj9mFGiT6/FvnkkjGSoB1okrR+QmXCy8w5lMILysxdju
-	o0s4u79iVDzCcUIPoDxG2/auA9PlCU27824AHu93nr9YAxffUxxz7dFUsFKnIWs8QXRkH5FKrr/7E
-	/OLuvdd2vVapd4msIxcFjjx1qaVwAIjj0ypNvAJAAoYzwIZ+s53Ww3vfDZub7wz56xDZOiH47Ha8I
-	fkSI6Gog==;
-Received: from [201.172.174.139] (port=39278 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1u7F53-00000003gRD-3TRS;
-	Tue, 22 Apr 2025 09:58:38 -0500
-Message-ID: <d07b4edc-6048-4c10-b8ac-dcccd5a932d3@embeddedor.com>
-Date: Tue, 22 Apr 2025 08:58:21 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QyG2Bm/q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14895C4CEF2;
+	Tue, 22 Apr 2025 14:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745333951;
+	bh=QfUbRAUwdvLjnyJ6+Xvv7d9sVZwBvQJv2ePW9+tPj10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QyG2Bm/qoPGNuAUbAiF1AQkcOgcNEsKa93jlRy5IEX7m6ar4tMwTFnQvWJvgtfuaj
+	 uWfuVB2V2/Ip9q7i0A8P4zQstRDP9vYGibvlwA7kc1KHvTYGAPc6epYVCamctZOMxF
+	 coSO6iaeLqSJN1iXoVlp6LRI8+dc0s9fULdzXMSz1mzANS2EeWpFvaI7i7MZa1MfC8
+	 UX6j4arl9enjTUkaj4Y0ol24nqiJ9/PiOCq/5/PKzWOc1OuUuaAINcDkDdILbIkmSK
+	 rXMc1h05OiAyCm6GVxGia5bzP8y6O+qhKwzhxwJqcjRy1esHt7oksRdc+Q4dauQilb
+	 KTISmvEkJa2og==
+Date: Tue, 22 Apr 2025 07:59:07 -0700
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	linux <linux@treblig.org>, Mark Brown <broonie@kernel.org>,
+	WangYuli <wangyuli@uniontech.com>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] landlock: Work around randstruct unnamed static
+ initializer support
+Message-ID: <202504220756.4DD4BAD@keescook>
+References: <20250421000854.work.572-kees@kernel.org>
+ <20250422.eetheiPu6aiH@digikod.net>
+ <ccdfe9c0-7c28-4ecf-a7da-95c9a20eead7@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/amd/pm: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kenneth Feng <kenneth.feng@amd.com>, Alex Deucher
- <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
- <christian.koenig@amd.com>, Xinhui Pan <Xinhui.Pan@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- Kees Cook <keescook@chromium.org>
-References: <Z678TNhCbTk363Tw@kspp>
- <864c7dd5-0deb-4adb-a1cf-c8a809514d7e@embeddedor.com>
- <217b00f5-d03d-4624-9ba9-d838199ef7b9@embeddedor.com>
- <CADnq5_M5Jv4A5CXAKY2Qd-dhrfmecnauRtVY_ghSsut7i=KNww@mail.gmail.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <CADnq5_M5Jv4A5CXAKY2Qd-dhrfmecnauRtVY_ghSsut7i=KNww@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.139
-X-Source-L: No
-X-Exim-ID: 1u7F53-00000003gRD-3TRS
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.174.139]:39278
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfH82/bG8bHWcNZrSk/yhp7ZkLrDx3PAgcIfyVc2M/SLZ7bhuafSibkZqjeq5wi10hHJwm43K1CSGU9+RmjYHwq1vSqimL4FyWhctYirvuRO+Mv/fDBt2
- xMn3ZgHs0B0GpMhGro+KZJ8YvxYvso9IpvsKtR2PUdQIoh313Sf/OFgLps+IHdiWXx3Ez0o+FaDVdgPYayNrpwMerrwHWRe+z4fF3bzEEh+XrZoHfM3qfVvd
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ccdfe9c0-7c28-4ecf-a7da-95c9a20eead7@app.fastmail.com>
 
+On Tue, Apr 22, 2025 at 02:53:05PM +0200, Arnd Bergmann wrote:
+> On Tue, Apr 22, 2025, at 14:25, Mickaël Salaün wrote:
+> > On Sun, Apr 20, 2025 at 05:08:59PM -0700, Kees Cook wrote:
+> >> Unnamed static initializers aren't supported by the randstruct GCC
+> >> plugin. Quoting the plugin, "set up a bogus anonymous struct field
+> >> designed to error out on unnamed struct initializers as gcc provides
+> >> no other way to detect such code". That is exactly what happens
+> >> with the landlock code, so adjust the static initializers for structs
+> >> lsm_ioctlop_audit and landlock_request that contain a randomized structure
+> >> (struct path) to use named variables, which avoids the intentional
+> >> GCC crashes:
+> >
+> > This is not a sustainable solution.  Could we fix the plugin instead?
+> > This new Landlock change may be the first to trigger this plugin bug but
+> > it will probably not be the last to use unnamed static initializers.
+> > Forbidding specific C constructs should be documented.
+> 
+> I think the version from Kees' patch looks more readable than
+> the version with the compound literal, so it certainly seems appropriate
+> as an immediate regression fix, even if it's possible to fix the
+> plugin later.
+> 
+> >> We went 8 years before tripping over this! 
+> 
+> Right, it's probably enough to revisit the plugin code after
+> it happens again.
 
+Yeah, that's my thinking as well.
 
-On 16/04/25 09:04, Alex Deucher wrote:
-> Can you resend, I can't seem to find the original emails.
-> Additionally, all of the NISLANDS structures are unused in amdgpu, so
-> those could be removed.
+> >> Closes: https://lore.kernel.org/lkml/337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com/
+> >> Signed-off-by: Kees Cook <kees@kernel.org>
+> 
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Okay, I'll take a look.
+Thanks! Mickaël, are you good with this for now, and if so, do you want
+to carry it or shall I?
 
-Thanks
+-Kees
 
--Gustavo
+-- 
+Kees Cook
