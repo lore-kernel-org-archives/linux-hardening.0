@@ -1,71 +1,92 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9C822A1ED
-	for <linux-hardening@vger.kernel.org>; Tue, 22 Apr 2025 08:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306461EE008;
+	Tue, 22 Apr 2025 10:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745310474; cv=none; b=o2pXb7c0Y0mGqkbQxDhmU52TbEUzPhIhTpLwxkm+iwv+TSYfe0hYfv9lZCF05X80uXTM6lCGAQn4Cu2v00FqYiMnjMhL2B3huNxUIcSqYnK/LKG+FzCsP27cSRZw5QBRHcvPylOo8hLQOgh49qOInQQjNLYu10ehURN35BdubjQ=
+	t=1745317059; cv=none; b=YTHr7eO4eQ9Ydij6J6HrM19w+CK5GDq3IE00Edi/u7JcV1sA8+2RgYapMghqomLVCJhsuBxqOj/5YvF6RYTEnyY7KRPIYZCnVtHL9WjglBROFlC+JsUwpFU9JiYds+oADlL5lzdPMazucjuIaRix6fgNnNbOUgD0fyIzZnT5ZNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745310474; c=relaxed/simple;
-	bh=g7KAwgL/rpqtApo9wTdj7rOSNNxCdAiqVKAXiRg3rEI=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=q30L7FOEJoEvK4qo318uNASXbCuDA2QJMI+f1+AEXd+NCQ4JT2F9WURAgazRGM68kf99O4Cltfk0ryfB3LoqIB3GTrnk/tcLPCwGO6rCEfYtTpIJJ0Iso0dwZ/221kIEhkiv5Dp3LY+HgynhR2byibfXyUaOrYOa3EA/miTu+Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=haFfUafN; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745317059; c=relaxed/simple;
+	bh=ICn3ej4bYqpepjVRI/bsdzwHSJX/XypuJfJ4hGas654=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WHIm09tWrSmxzKuOnn6V/RTd4W/sbAATotaD5+x4JrKvpU6+FrJxFNRdmJXrj4rOp9iyRXxi0dT38cqSkFKpEAoS9V3jmAp7BriGYsRIxA1EEDmWdIvCaQ9DPoBhmfGVkXJMmETf5gPmZiHIDxCHxw3RrREVaEU5e58SlJkaPu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U6Tu+Zty; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="haFfUafN"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745310468;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g7KAwgL/rpqtApo9wTdj7rOSNNxCdAiqVKAXiRg3rEI=;
-	b=haFfUafNn1BVvts0BQ/RQh+FwaYBNl7W+BWb+sA8S612uVHLCDiHJ8fsk4btLET4GWS6Og
-	6qgdXpc+oQzp5COgyYjuS7ChnOCIZK0CrN/b4Z9uuK9Nue9pQfDX/OfM9xoD6MBxQyNZPT
-	1MsLaLIBqclM8tfPCiz7rjuE0MqYjWg=
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U6Tu+Zty"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745317058; x=1776853058;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ICn3ej4bYqpepjVRI/bsdzwHSJX/XypuJfJ4hGas654=;
+  b=U6Tu+ZtyA9FND2p3yNdnwSB5TzGG6A4UacSTXqAy1F2LvXefoT8AA5RG
+   xlMHd9+/4a1Z/c+WUIO2wsrUCU9qtAcSFri3MWa/bI/7sWHgBr96gT9ZE
+   56SckPP3g25UMElv+LonmUdXzWgjmuGglU2p49tslgUL8udEed1X3n8Tr
+   WHWWgN1nZfAJ3ZbyKfVKCtgo2mdBfHw8GvDjDQI8AUHVUS9JaKCiEbgQX
+   +CSJFrYgEG/S9Zs/KLaXVL9aN8W3DpPRZuIiXEN5l1GUCNrAeOMN4HWw0
+   4V477I3q4ptj9+pah46Rigj/62+NZ7Uo2vgjxcbUK9rH3XWRlbECHmOSp
+   g==;
+X-CSE-ConnectionGUID: fT1G4+4YSgasd7zQhjaOcg==
+X-CSE-MsgGUID: OKmcZGPTQWe49FCXDpDvHw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="46749585"
+X-IronPort-AV: E=Sophos;i="6.15,230,1739865600"; 
+   d="scan'208";a="46749585"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 03:17:37 -0700
+X-CSE-ConnectionGUID: Z4imsfK6Q3yLgapJRD6PdA==
+X-CSE-MsgGUID: UhWr/HJZSS6ONrcSceSTmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,230,1739865600"; 
+   d="scan'208";a="136764804"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 03:17:35 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u7Ah2-0000000EhKO-453j;
+	Tue, 22 Apr 2025 13:17:32 +0300
+Date: Tue, 22 Apr 2025 13:17:32 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-hardening@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: BCM63XX: Replace strcpy() with strscpy() in
+ board_prom_init()
+Message-ID: <aAdsvNKuPd-qPuE4@smile.fi.intel.com>
+References: <20250422074257.544016-2-thorsten.blum@linux.dev>
+ <aAdNVAzu0rmIfGGC@smile.fi.intel.com>
+ <86E5AC5D-11BC-4B4E-B08E-845F59AACF6C@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
-Subject: Re: [PATCH] MIPS: BCM63XX: Replace strcpy() with strscpy() in
- board_prom_init()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <aAdNVAzu0rmIfGGC@smile.fi.intel.com>
-Date: Tue, 22 Apr 2025 10:27:33 +0200
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Alexander Sverdlin <alexander.sverdlin@gmail.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- linux-hardening@vger.kernel.org,
- linux-mips@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <86E5AC5D-11BC-4B4E-B08E-845F59AACF6C@linux.dev>
-References: <20250422074257.544016-2-thorsten.blum@linux.dev>
- <aAdNVAzu0rmIfGGC@smile.fi.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86E5AC5D-11BC-4B4E-B08E-845F59AACF6C@linux.dev>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Andy,
+On Tue, Apr 22, 2025 at 10:27:33AM +0200, Thorsten Blum wrote:
+> On 22. Apr 2025, at 10:03, Andy Shevchenko wrote:
+> > Can you use --cc OR put this line...
+> 
+> Yes, will do next time.
+> 
+> > Have you compiled this with `make W=1` with recent GCCs?
+> 
+> Yes, I compile-tested it with W=1 and mips64-linux-gnu-gcc 14.2.1.
 
-On 22. Apr 2025, at 10:03, Andy Shevchenko wrote:
+Cool, no warnings?
 
-> Can you use --cc OR put this line...
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yes, will do next time.
-
-> Have you compiled this with `make W=1` with recent GCCs?
-
-Yes, I compile-tested it with W=1 and mips64-linux-gnu-gcc 14.2.1.
-
-Thanks,
-Thorsten
 
