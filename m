@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A402A1C9;
-	Tue, 22 Apr 2025 15:45:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1042E28FFC0;
+	Tue, 22 Apr 2025 15:49:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745336743; cv=none; b=dTOLTxVvBTZqmOeFaLm7E6MGccrc+Bxcyy+lCJem4rwXqt+feUvuV8gewXR+Q0LCXwTIiP890hlLRQqJuAMyzXnK5csagcomw6+My834hfG6ysYUnDFLP5tmBV3RIelXkrlqRqAeJjew2V74fCzG9YXMtAZhgPXiFVq61po2mOI=
+	t=1745336966; cv=none; b=sT8A/aiTsg5UjZeyT4/Qbr8oDeqEel4C/E5DleX7BfhobbhWluJoa3gV8CzCYxwCKZ/G23jaGsxrYcpgxZ6jGWjwL57d+qWmdWsJA+qpeaMG7tNrGUngbLPYgf2MD/AckORUCKr5/0mXknXqazMAfD/O0sGgsODU4Dsu2nMbtNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745336743; c=relaxed/simple;
-	bh=AQ3QsuJzqsXDOuPwebgmAuhLJTmlqdcm16p+q8/eKg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=e3ZVzBYbtuykA+88xiKYjssG0igD65TcBbmdJtowxvyqg8v3kvQwe2KVP9QArB7YrRGSipeCGY1yfO/22Ky1o6gKP+utlm69W0Hp3xAlgXeyAiJxZvMyuuwspu/B5vHto8A/K/yqAFihGWukfEmSYGUMzOBFSfNucmW7pkLKtqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdFvTKkL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745336966; c=relaxed/simple;
+	bh=F8r3LMqn4Bi/IWC6gn/fsQt778NPJ8n3QrgvX+Iq9C0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sqVBeZKeSlaSP7XEgIDw3c5WtdtPKgQ1kKFaQHE1KTUz0ueVmpIWTLgyHS+JCJ4+J1T00iwmC02M8EqDA+RT8GmlKMkbDv4OEG2eZElNqnXQZP/+KGJ+LSqvIJac/pGph43T65qHR257+gF9wCxHjFwjZQAkeZM5LqAQ12IUjwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mgvmWMH+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdFvTKkL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B01E4C4CEE9;
-	Tue, 22 Apr 2025 15:45:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mgvmWMH+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3EA3C4CEE9;
+	Tue, 22 Apr 2025 15:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745336742;
-	bh=AQ3QsuJzqsXDOuPwebgmAuhLJTmlqdcm16p+q8/eKg0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=mdFvTKkLX518afKh11/wv6csLYyBhnDcBQb9sprOcGKVtA+O045c2Kp65JFVAJk25
-	 ptAv+/YLZ+CxGqqBtdmZXyiXVZdG0EjstnvM/uUyTujF7jai3IPQkAvtQm1mAfI4XJ
-	 NPD22rjlX7TlfRJN3F6MteVfn5WaKAEnmufyilXVUIVmwxW58z9c2MBE9kGZ4spMMr
-	 BDkI0soAoP4+B7r3czp+a6Rm+plGPk9asPhRYHPDBy4yJjfOaeXwQmk6I25RedZL7r
-	 LrgBznndeFW4qcTlvabEPPPk6dsth0Um1pWPca1JIdigb22W6VUpHTBsviLrLb6ZtT
-	 3ID3PNKq+825A==
-Date: Tue, 22 Apr 2025 09:45:39 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/nouveau: outp: Use __member_size() helper
-Message-ID: <aAe5o_-f5OYSTXjZ@kspp>
+	s=k20201202; t=1745336965;
+	bh=F8r3LMqn4Bi/IWC6gn/fsQt778NPJ8n3QrgvX+Iq9C0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mgvmWMH+IDP1nMUfhkQDwf7RRMKP0kemox5om1901k7NzTYJ3JBXH3EpnFSFRG3d9
+	 x8+cLHcG1hJxPPSS9o/jrePHanM18OqeKp1fvc8O5cNGjn9HsmEkyZ//1IVe2dg1bd
+	 /kwNRDq+np5LP1U9NR/EWkNJtpfiMtxwfWxUoOv/gS+B29sxFcW3PWbmeTciiuSxr4
+	 DXlVnx/18NDQadYi5A+Qt7TaDvLyNRPNpQo3toqGG9p7uQCa/I6H+tv7RDNu2U0+sl
+	 dVwF/892EzGUuZkAG5hALymoMku2+CvTSYmVVEtBYS5GMTZxlhxQOSWHMmzTq5TwO+
+	 GrmLtL5uVYsLQ==
+Date: Tue, 22 Apr 2025 08:49:23 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] drm/nouveau: disp: Use __member_size() helper
+Message-ID: <202504220849.A8A9B1D31@keescook>
+References: <aAe5eNDnRyGnxLMX@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,28 +44,15 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <aAe5eNDnRyGnxLMX@kspp>
 
-Use __member_size() to get the size of the flex-array member at compile
-time, instead of the convoluted expression `__struct_size(p) - sizeof(*p)`
+On Tue, Apr 22, 2025 at 09:44:56AM -0600, Gustavo A. R. Silva wrote:
+> Use __member_size() to get the size of the flex-array member at compile
+> time, instead of the convoluted expression `__struct_size(p) - sizeof(*p)`
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/gpu/drm/nouveau/nvif/outp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Kees Cook <kees@kernel.org>
 
-diff --git a/drivers/gpu/drm/nouveau/nvif/outp.c b/drivers/gpu/drm/nouveau/nvif/outp.c
-index 1ea20b2bdd29..32f6c5eb92af 100644
---- a/drivers/gpu/drm/nouveau/nvif/outp.c
-+++ b/drivers/gpu/drm/nouveau/nvif/outp.c
-@@ -198,7 +198,7 @@ nvif_outp_hda_eld(struct nvif_outp *outp, int head, void *data, u32 size)
- 	DEFINE_RAW_FLEX(struct nvif_outp_hda_eld_v0, mthd, data, 128);
- 	int ret;
- 
--	if (WARN_ON(size > (__struct_size(mthd) - sizeof(*mthd))))
-+	if (WARN_ON(size > __member_size(mthd->data)))
- 		return -EINVAL;
- 
- 	mthd->version = 0;
 -- 
-2.43.0
-
+Kees Cook
