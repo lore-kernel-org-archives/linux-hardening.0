@@ -1,67 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306461EE008;
-	Tue, 22 Apr 2025 10:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BC92153E7
+	for <linux-hardening@vger.kernel.org>; Tue, 22 Apr 2025 10:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317059; cv=none; b=YTHr7eO4eQ9Ydij6J6HrM19w+CK5GDq3IE00Edi/u7JcV1sA8+2RgYapMghqomLVCJhsuBxqOj/5YvF6RYTEnyY7KRPIYZCnVtHL9WjglBROFlC+JsUwpFU9JiYds+oADlL5lzdPMazucjuIaRix6fgNnNbOUgD0fyIzZnT5ZNI=
+	t=1745317469; cv=none; b=uidQQzW7QJNs9aTUULn3fcMtwKWbscPpMoYWwONSMlmHpuuowkbNycMbNcNeJZiWYAe8ZI6RFhwHapchb6sprMlValbqgwQ/sf+X7xBWymQUViA3nbKFCf+wfcShill+UEx7x/TxX/KPmkrH/KJ6HMPny+tcWPC6QzaJYOM3gpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317059; c=relaxed/simple;
-	bh=ICn3ej4bYqpepjVRI/bsdzwHSJX/XypuJfJ4hGas654=;
+	s=arc-20240116; t=1745317469; c=relaxed/simple;
+	bh=SgCvUZ2Dp0RNubBkgcpghs+gpJMLGKE0/0/7IcZzQyc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WHIm09tWrSmxzKuOnn6V/RTd4W/sbAATotaD5+x4JrKvpU6+FrJxFNRdmJXrj4rOp9iyRXxi0dT38cqSkFKpEAoS9V3jmAp7BriGYsRIxA1EEDmWdIvCaQ9DPoBhmfGVkXJMmETf5gPmZiHIDxCHxw3RrREVaEU5e58SlJkaPu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U6Tu+Zty; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YefIR3VgfhkCMR5jSsfjHwMPK364S6k1UfLrYBBLXJeaR6ZuQyVascNcV4ylx/CQqQ7yDSbcRF9PvKQcN2/3UTcKUJpDo5JEYsZIWNb+bXCWpYzteWaOMNioU9xPfRX5hReUC/AltNOrY0tBnxNKF7KVQPfNIaj4PlZaS98xtrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QpWEkbCG; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U6Tu+Zty"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745317058; x=1776853058;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ICn3ej4bYqpepjVRI/bsdzwHSJX/XypuJfJ4hGas654=;
-  b=U6Tu+ZtyA9FND2p3yNdnwSB5TzGG6A4UacSTXqAy1F2LvXefoT8AA5RG
-   xlMHd9+/4a1Z/c+WUIO2wsrUCU9qtAcSFri3MWa/bI/7sWHgBr96gT9ZE
-   56SckPP3g25UMElv+LonmUdXzWgjmuGglU2p49tslgUL8udEed1X3n8Tr
-   WHWWgN1nZfAJ3ZbyKfVKCtgo2mdBfHw8GvDjDQI8AUHVUS9JaKCiEbgQX
-   +CSJFrYgEG/S9Zs/KLaXVL9aN8W3DpPRZuIiXEN5l1GUCNrAeOMN4HWw0
-   4V477I3q4ptj9+pah46Rigj/62+NZ7Uo2vgjxcbUK9rH3XWRlbECHmOSp
-   g==;
-X-CSE-ConnectionGUID: fT1G4+4YSgasd7zQhjaOcg==
-X-CSE-MsgGUID: OKmcZGPTQWe49FCXDpDvHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="46749585"
-X-IronPort-AV: E=Sophos;i="6.15,230,1739865600"; 
-   d="scan'208";a="46749585"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 03:17:37 -0700
-X-CSE-ConnectionGUID: Z4imsfK6Q3yLgapJRD6PdA==
-X-CSE-MsgGUID: UhWr/HJZSS6ONrcSceSTmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,230,1739865600"; 
-   d="scan'208";a="136764804"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 03:17:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u7Ah2-0000000EhKO-453j;
-	Tue, 22 Apr 2025 13:17:32 +0300
-Date: Tue, 22 Apr 2025 13:17:32 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-hardening@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: BCM63XX: Replace strcpy() with strscpy() in
- board_prom_init()
-Message-ID: <aAdsvNKuPd-qPuE4@smile.fi.intel.com>
-References: <20250422074257.544016-2-thorsten.blum@linux.dev>
- <aAdNVAzu0rmIfGGC@smile.fi.intel.com>
- <86E5AC5D-11BC-4B4E-B08E-845F59AACF6C@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QpWEkbCG"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfe574976so35883285e9.1
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Apr 2025 03:24:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745317466; x=1745922266; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rGpR7DHAu3crb15D4InspITnPezktxxxhM+Ewq44KWQ=;
+        b=QpWEkbCGp9JY5duWuwOyD42AjKuQA6fT9QrM03bAUHnjjVoiYU4PYVG1GjMKBd2Exy
+         pN99M/rhjZiVpTIhA7m6I8HlXU1J6fhOtPrNcU0VW0Jlqvjnic4+WE7IXsL8iiqgiL29
+         X35JdXg0HxAd1gQ9vZlXHH1y6dvGQmcrXye8VtJowOIaj/MBEUMwi8yrmUhfhOM+fLM1
+         1Og8a+ArJCxPmipkYE9GDAjUT3UkNMQKAuPRnc25wpF1nPWkLTUvIa4lwAOlytk9rl+B
+         1fy9JqNj7XiYzwQCa+i2wMxEKZA66p3MjAxgA6C+UsrWkXmeuynXictud6uwrAfXaZo1
+         oO1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745317466; x=1745922266;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rGpR7DHAu3crb15D4InspITnPezktxxxhM+Ewq44KWQ=;
+        b=nn8NCh8/ne5TpcNrcL4ac1YFS8yJD2J5/6Aomlwgo5n/x+w/tcmkgzJXFD0EVGy27A
+         YweY+UxryC6MBCu919FfnD5XcOlimjJQDengciEif23E3Wp1KvhVKMJr+mtTlQ10lbj9
+         +SWTt1OUX8v/69DP5wuTZHAOpKjq0nXMrc74/1EMpRxGbzcB87B2zyqpoglgSA9V6jyF
+         83A5BiG+RtTfa15MV9oLw2ksypNZsabkD3JfQP62qq0C/tLPk2K5iETOJpHPGjlGgVeW
+         +F6DdXrkAn1VS5eFGuvmh2BfesNR8kxasWEsuiyhWUJ7hjThyVhuFk7oAgl6v0lEZlat
+         OReQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV6Pvd1q+GUvCXhC66tjcqXdnhXtJKRzhIy4w3B0CecJ9gXB12bSszcQoJwtEXSzE3o1SSOhtGsyZCBQjUoz/U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQLkllAsdMuQ0LGUnhcVxxui67O/0sHWRo/5CwLid2le0q4lNb
+	jenz0/VAn5XBeFC42cArOAqzYeURckl4YaqJFlkXbnlQacpCPQdUzUjOHI6bMqUpWscI81zagqV
+	T
+X-Gm-Gg: ASbGncvFyv9W15U4mXqdnScTD8I+vsb+4CKY4rRWvZqjlZLl7zjI0NXZA/wvOJa7g6F
+	Ff9F+5q+oEdYUcOXhNj725D71QLGjzj+WNqDB081/PpW+ZpYrYQ9LlYDXVlhnNy7eBbNuKhJQXq
+	41j+zri2veuXA0hfA1IuIgeMpjplrmQPPWHB7tGe1i5PUnRSs4+TC7GqqepxYXnp/+PuLYhspTS
+	SCGNS4lLKtrHdGZc80gs9IAEomSm22P224WKFm3vnSpsjcP7tKfO7haVvonKN+wzCCkxC+xVrLS
+	+bMKGbuU2Nq09bNgz/uuoGsOqK8PHiX2VmLij8wo05LBlQ==
+X-Google-Smtp-Source: AGHT+IHutLphGbGE1hCdZLvaGiMQTDK82f9s6pbuK+KpdDS9Fqw1DprMwHPrbtUhvJfTJXHudGQhPw==
+X-Received: by 2002:a05:6000:40df:b0:391:ab2:9e80 with SMTP id ffacd0b85a97d-39efba51048mr10695810f8f.24.1745317465705;
+        Tue, 22 Apr 2025 03:24:25 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa43330esm14497713f8f.21.2025.04.22.03.24.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 03:24:25 -0700 (PDT)
+Date: Tue, 22 Apr 2025 13:24:22 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Su Hui <suhui@nfschina.com>, davem@davemloft.net,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] crypto: using size_add() for kmalloc()
+Message-ID: <2169828c-127c-4bf7-b953-2f1194b72830@stanley.mountain>
+References: <20250421055104.663552-1-suhui@nfschina.com>
+ <aAY0lyWzsRVDge_f@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,23 +75,31 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <86E5AC5D-11BC-4B4E-B08E-845F59AACF6C@linux.dev>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <aAY0lyWzsRVDge_f@gondor.apana.org.au>
 
-On Tue, Apr 22, 2025 at 10:27:33AM +0200, Thorsten Blum wrote:
-> On 22. Apr 2025, at 10:03, Andy Shevchenko wrote:
-> > Can you use --cc OR put this line...
+On Mon, Apr 21, 2025 at 08:05:43PM +0800, Herbert Xu wrote:
+> On Mon, Apr 21, 2025 at 01:51:06PM +0800, Su Hui wrote:
+> >
+> > @@ -433,7 +434,7 @@ static inline struct aead_request *aead_request_alloc(struct crypto_aead *tfm,
+> >  {
+> >  	struct aead_request *req;
+> >  
+> > -	req = kmalloc(sizeof(*req) + crypto_aead_reqsize(tfm), gfp);
+> > +	req = kmalloc(size_add(sizeof(*req), crypto_aead_reqsize(tfm)), gfp);
 > 
-> Yes, will do next time.
-> 
-> > Have you compiled this with `make W=1` with recent GCCs?
-> 
-> Yes, I compile-tested it with W=1 and mips64-linux-gnu-gcc 14.2.1.
+> This is just wrong.  You should fail the allocation altogether
+> rather than proceeding with a length that is insufficient.
 
-Cool, no warnings?
+When size_add() overflows then it returns SIZE_MAX.  None of the
+allocation functions can allocate SIZE_MAX bytes so kmalloc() will
+fail and that's already handled correctly.  Meanwhile if
+"sizeof(*req) + crypto_aead_reqsize(tfm)" overflows then the
+allocation will succeed and it results in memory corruption.
 
--- 
-With Best Regards,
-Andy Shevchenko
+This is exactly what Kees did with the mass conversion to
+struct_size().  I occasionally run across places where Kees's mass
+conversion patches did fix real integer overflow bugs.
 
+regards,
+dan carpenter
 
