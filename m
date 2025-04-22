@@ -1,117 +1,164 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F8113B59B
-	for <linux-hardening@vger.kernel.org>; Tue, 22 Apr 2025 10:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E499327C165
+	for <linux-hardening@vger.kernel.org>; Tue, 22 Apr 2025 12:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745318687; cv=none; b=FDYX0SJRJ+LBBz0vwfjB9DDI9MeowIZAlWBAAbQCh9D+xrZRlO7TQBp9yBNoHoUv+CzvNcgD58B3hLAhp8nh70Bsfoq2wYXXIXo0nmCnubYz69JAoGeaEA+rcR/Qt1g9p+BKktR871A3w8GPhuNrjw4le5E3GpKqjL5mtWpL/Hw=
+	t=1745326224; cv=none; b=BAAMl5FSMBQl2czVAH0wILye3hMX8ZHFGAKSHEvz0MkNw2ycXgICdyIXbQE8ZgZT+U94n76rFS40kkQMkmosYD/tABhHddadq/B6CbL4ZWTJlUoHrrK++rZ4lIEMZ+JpFRtlIaTYJGnmuZ3cy6I0eaCptCkSSAsojYxI19Bbd3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745318687; c=relaxed/simple;
-	bh=jaIK3y9skttjOZKNe7Pdvk/sD+BmWmSRwYZmKO1UDRw=;
+	s=arc-20240116; t=1745326224; c=relaxed/simple;
+	bh=BndmB68+WTOPz76lUuk2umSP58GYXSUlLi0x/lVTbT0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V4tlijQaXbGkLyjO6JhkQYmUkyET8ZQlpHB1VqlxWp28tZjhXkfuwISi3P1BFv3CDmyConn7eL1m9rh2O3rENv/wCam4CdCQ8FQsIUkrG0cDAADbn/K1IRtxTF0B2Ufu553fd6Xw6zn1kwTG3rmAVWQCDpICCavOVXXczQ3OWHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=arkE2kQy; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=jQcFvSk/xnEXXfZEKVib/sYO2febF4Vwms4YHJSVqIKio/cs/KyVHOM31Zt/G/TaaLNdW7JmGUbYwR0k9Q54tLZ7m9LgE7VxzhOnB9dGSRNUlmp+XQjmfoGZaFz2C5OL1Snc/9WTuxaceX/NJTO2xYO9nSzi6R2JHfHXYCgKzlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=SPtgWurB; arc=none smtp.client-ip=45.157.188.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="arkE2kQy"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so37001525e9.0
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Apr 2025 03:44:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745318683; x=1745923483; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E2ZlSb8C4TopIE9lOnaluqGxSWa7ZTy/niRKFxlJXsg=;
-        b=arkE2kQyThHt6WlohJEBhCB+n9V6jgMfdVhAL0onHrxt8jDojvTT72F8LICuqzKnxy
-         PrAmNgkUH4RjEQyPcgntght4KJJKzxOGBQTgY6bCDcVSnZndZ0O5kwEpAgY1ufMAcvwi
-         iVqFim2NvgAICptpF1nU+WJDPIWHyHPTjK5dQzSeLrZotitKcSc2xsKZtMgmKJp6wMqo
-         BtxUZIROgAA+TQAz7q4Tfd7wiRjsTMxhqd6Dfomp/bP3z6Pb8ULex1Es3XfpgzeW8ETi
-         pncbEMQFyjRNyjik7akh3J7p2G41smDEAZvIA7JimPSQfSr5cP4O7KcG6xhWulVriLH6
-         vyoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745318683; x=1745923483;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E2ZlSb8C4TopIE9lOnaluqGxSWa7ZTy/niRKFxlJXsg=;
-        b=d2i91rXx/POtqRrnH9wP45GAchbVvbw2ibNhQlmP3ZTnTRMpZnIquephdmq1PC35Dt
-         PfixwbiyRfFb0n0ggJKQcMt+R7tZ5l4G87jZOEx5/hN1iu5YjuXkdMqAX6cXZbmPcsOs
-         r8M+YKpf3dHJcumcLtW1/GRrgUqjdQVK2DqQU19SisRj1m+okGrY69IjbYBQourshNe2
-         JxktML4VSNSyrcW/ZOguGn1Wm/nE/9L8tB7P+8rZtHZhgRFsatvIJlsufvxMKLtlgjYJ
-         Dt8vfLmdGBOWjABvAJGvUdOR9oadkEYlHyygYYAC9NyByYALdWdXN65zTyhZ76cOg2LW
-         fa/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUQf67axHCZTaU5UzgvzVq+l4PSJhhAqiMDPfov6TyqosSAyqJ3oixItZQkYNbF2+emyD2TJAU0Ykg551G2KWE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyfxt9+dvgeR1izWdO9UpBEzqyJKVj+a2msb9t9+5hgG8JdBu6S
-	YOlhKM0s450ew979cv3hpjJyJus9zM/C5VcZE+eaA4oM+lM70UUyANzhsbvIkE8=
-X-Gm-Gg: ASbGncu77I9oxOSqbp4m7cGgffSSe+dkK50XWJ4PV+EATD90VrL4cI2kSH9lGRntcBq
-	QHE1YQtuwcM3sjV8uXlWoCxL77inKH74bEDWRaSdQJbhHo6ErmNkDhEKanO6cuiGpHQj/pw/67m
-	1LWHQnZd9H4kQag/Ey2ChPQowg9SiN10acpiXB09POQ6hYGD7e36ZRWV87ueFm3BFBV8aU8YDEy
-	IJMIFW9QDJQ/172senK7Tvs+oPYF/dPzo0rvmYHzkse5BLduIBV30JsjQqCi4mhDvha3l07HNAc
-	2NIe6IiSBusVr+cJYtUXB87Euzhd7IQHw0Jy89lPs3VTEEMsV3Xu2yn4
-X-Google-Smtp-Source: AGHT+IGmQB87kk25ssevPLdZ7b8PjzlRTbK4qnCrbpA2fIVwAWfGo22Ft+WhXErpVr6BVQJ+4nZjZg==
-X-Received: by 2002:a05:600c:5395:b0:43d:db5:7b1a with SMTP id 5b1f17b1804b1-4406ab96f63mr141741765e9.12.1745318683311;
-        Tue, 22 Apr 2025 03:44:43 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4406d5d712esm166577665e9.36.2025.04.22.03.44.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 03:44:42 -0700 (PDT)
-Date: Tue, 22 Apr 2025 13:44:39 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Su Hui <suhui@nfschina.com>
-Cc: sj@kernel.org, akpm@linux-foundation.org, damon@lists.linux.dev,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mm/damon/sysfs-schemes: using kmalloc_array() and
- size_add()
-Message-ID: <adbc06d8-1a6c-4279-9596-d743505d64dd@stanley.mountain>
-References: <20250421062423.740605-1-suhui@nfschina.com>
- <2713f419-760b-4ccc-aeed-de9c4c899506@stanley.mountain>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="SPtgWurB"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZhhJw5mS6zf50;
+	Tue, 22 Apr 2025 14:25:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1745324720;
+	bh=TuQI9VlwlZ1zmKAB0H8z02ZGDpIYuqGGocpb7abx7+o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SPtgWurBT9pgo6SoDu4+z5OhPDY/gJexApxrsD7I+iWYaMRhxkGZRQAXuwKFTs/cZ
+	 +Tau1Kzk7U1Aax3g/GZrnHhrEfO2Mi/5oAZBVWfKprRs/Hy0kpQXcD615l+NfUN4oY
+	 uULHFghfIoX6R4ULeaTK2m40o7p0VHGbY1CaES6M=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZhhJt3Qnqzh0k;
+	Tue, 22 Apr 2025 14:25:18 +0200 (CEST)
+Date: Tue, 22 Apr 2025 14:25:13 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Kees Cook <kees@kernel.org>
+Cc: "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Mark Brown <broonie@kernel.org>, WangYuli <wangyuli@uniontech.com>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Arnd Bergmann <arnd@arndb.de>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] landlock: Work around randstruct unnamed static
+ initializer support
+Message-ID: <20250422.eetheiPu6aiH@digikod.net>
+References: <20250421000854.work.572-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2713f419-760b-4ccc-aeed-de9c4c899506@stanley.mountain>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250421000854.work.572-kees@kernel.org>
+X-Infomaniak-Routing: alpha
 
-On Tue, Apr 22, 2025 at 01:38:05PM +0300, Dan Carpenter wrote:
-> On Mon, Apr 21, 2025 at 02:24:24PM +0800, Su Hui wrote:
-> > It's safer to using kmalloc_array() and size_add() because it can
-> > prevent possible overflow problem.
-> > 
-> > Signed-off-by: Su Hui <suhui@nfschina.com>
-> > ---
-> >  mm/damon/sysfs-schemes.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/mm/damon/sysfs-schemes.c b/mm/damon/sysfs-schemes.c
-> > index 23b562df0839..79220aba436f 100644
-> > --- a/mm/damon/sysfs-schemes.c
-> > +++ b/mm/damon/sysfs-schemes.c
-> > @@ -465,7 +465,8 @@ static ssize_t memcg_path_store(struct kobject *kobj,
-> >  {
-> >  	struct damon_sysfs_scheme_filter *filter = container_of(kobj,
-> >  			struct damon_sysfs_scheme_filter, kobj);
-> > -	char *path = kmalloc(sizeof(*path) * (count + 1), GFP_KERNEL);
-> > +	char *path = kmalloc_array(size_add(count, 1), sizeof(*path),
-> > +				   GFP_KERNEL);
+On Sun, Apr 20, 2025 at 05:08:59PM -0700, Kees Cook wrote:
+> Unnamed static initializers aren't supported by the randstruct GCC
+> plugin. Quoting the plugin, "set up a bogus anonymous struct field
+> designed to error out on unnamed struct initializers as gcc provides
+> no other way to detect such code". That is exactly what happens
+> with the landlock code, so adjust the static initializers for structs
+> lsm_ioctlop_audit and landlock_request that contain a randomized structure
+> (struct path) to use named variables, which avoids the intentional
+> GCC crashes:
+
+This is not a sustainable solution.  Could we fix the plugin instead?
+This new Landlock change may be the first to trigger this plugin bug but
+it will probably not be the last to use unnamed static initializers.
+Forbidding specific C constructs should be documented.
+
+As a temporary solution (not sure if it's worth it, nor a good idea),
+could handling of types used in unnamed static initializers be ignored
+by this plugin?  I guess [1] is already a temporary solution though.
+[1] https://lore.kernel.org/all/20250409151154.work.872-kees@kernel.org/
+
 > 
-> Count is clamped in rw_verify_area().
+> security/landlock/fs.c: In function 'hook_file_ioctl_common':
+> security/landlock/fs.c:1745:61: internal compiler error: in count_type_elements, at expr.cc:7092
+>  1745 |                         .u.op = &(struct lsm_ioctlop_audit) {
+>       |                                                             ^
 > 
-> Smatch does a kind of ugly hack to handle rw_verify_area() which is that
-> it says neither the count nor the pos can be more than 1G.  And obviously
-> files which are larger than 2GB exist but pretending they don't silences
-> all these integer overflow warnings.
+> security/landlock/fs.c: In function 'log_fs_change_topology_path':
+> security/landlock/fs.c:1379:65: internal compiler error: in count_type_elements, at expr.cc:7092
+>  1379 |         landlock_log_denial(subject, &(struct landlock_request) {
+>       |                                                                 ^
 > 
-
-Actually rw_verify_area() ensures that "pos + count" can't overflow.  But
-here we are multiplying.  Fortunately, we are multiplying by 1 so that's
-safe and also count can't be larger than PAGE_SIZE here which is safe as
-well.
-
-regards,
-dan carpenter
-
+> We went 8 years before tripping over this! With this patch landed,
+> we can enable COMPILE_TEST builds with the randstruct GCC plugin again.
+> 
+> Reported-by: "Dr. David Alan Gilbert" <linux@treblig.org>
+> Closes: https://lore.kernel.org/lkml/Z_PRaKx7q70MKgCA@gallifrey/
+> Reported-by: Mark Brown <broonie@kernel.org>
+> Closes: https://lore.kernel.org/lkml/20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org/
+> Reported-by: WangYuli <wangyuli@uniontech.com>
+> Closes: https://lore.kernel.org/lkml/337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com/
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: "Mickaël Salaün" <mic@digikod.net>
+> Cc: "Günther Noack" <gnoack@google.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: <linux-security-module@vger.kernel.org>
+> ---
+>  security/landlock/fs.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+> index 6fee7c20f64d..b2818afb0503 100644
+> --- a/security/landlock/fs.c
+> +++ b/security/landlock/fs.c
+> @@ -1376,14 +1376,14 @@ static void
+>  log_fs_change_topology_path(const struct landlock_cred_security *const subject,
+>  			    size_t handle_layer, const struct path *const path)
+>  {
+> -	landlock_log_denial(subject, &(struct landlock_request) {
+> +	struct landlock_request request = {
+>  		.type = LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
+> -		.audit = {
+> -			.type = LSM_AUDIT_DATA_PATH,
+> -			.u.path = *path,
+> -		},
+> +		.audit.type = LSM_AUDIT_DATA_PATH,
+>  		.layer_plus_one = handle_layer + 1,
+> -	});
+> +	};
+> +	request.audit.u.path = *path;
+> +
+> +	landlock_log_denial(subject, &request);
+>  }
+>  
+>  static void log_fs_change_topology_dentry(
+> @@ -1720,6 +1720,7 @@ static int hook_file_truncate(struct file *const file)
+>  static int hook_file_ioctl_common(const struct file *const file,
+>  				  const unsigned int cmd, const bool is_compat)
+>  {
+> +	struct lsm_ioctlop_audit audit_log;
+>  	access_mask_t allowed_access = landlock_file(file)->allowed_access;
+>  
+>  	/*
+> @@ -1738,14 +1739,13 @@ static int hook_file_ioctl_common(const struct file *const file,
+>  				  is_masked_device_ioctl(cmd))
+>  		return 0;
+>  
+> +	audit_log.path = file->f_path;
+> +	audit_log.cmd = cmd;
+>  	landlock_log_denial(landlock_cred(file->f_cred), &(struct landlock_request) {
+>  		.type = LANDLOCK_REQUEST_FS_ACCESS,
+>  		.audit = {
+>  			.type = LSM_AUDIT_DATA_IOCTL_OP,
+> -			.u.op = &(struct lsm_ioctlop_audit) {
+> -				.path = file->f_path,
+> -				.cmd = cmd,
+> -			},
+> +			.u.op = &audit_log,
+>  		},
+>  		.all_existing_optional_access = _LANDLOCK_ACCESS_FS_OPTIONAL,
+>  		.access = LANDLOCK_ACCESS_FS_IOCTL_DEV,
+> -- 
+> 2.34.1
+> 
+> 
