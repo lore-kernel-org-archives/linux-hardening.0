@@ -1,105 +1,144 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BC92153E7
-	for <linux-hardening@vger.kernel.org>; Tue, 22 Apr 2025 10:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A212D38B
+	for <linux-hardening@vger.kernel.org>; Tue, 22 Apr 2025 10:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317469; cv=none; b=uidQQzW7QJNs9aTUULn3fcMtwKWbscPpMoYWwONSMlmHpuuowkbNycMbNcNeJZiWYAe8ZI6RFhwHapchb6sprMlValbqgwQ/sf+X7xBWymQUViA3nbKFCf+wfcShill+UEx7x/TxX/KPmkrH/KJ6HMPny+tcWPC6QzaJYOM3gpE=
+	t=1745317750; cv=none; b=X08qkHUQxwk6kiSgMauWFZmGHFKNZccth25aOn2hIDZi7Um1ml9nL0q8ogV+YSMYYffpyRN1UXfpkzhFPC/UGficIfuzLJjj4U+tQdOaQHtUb8p+f3FDhn8wo/zq7iWcWc4VdDmJh/lVB/NUCSVV6w8JK4/NnEA657Ybg5tAddM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317469; c=relaxed/simple;
-	bh=SgCvUZ2Dp0RNubBkgcpghs+gpJMLGKE0/0/7IcZzQyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YefIR3VgfhkCMR5jSsfjHwMPK364S6k1UfLrYBBLXJeaR6ZuQyVascNcV4ylx/CQqQ7yDSbcRF9PvKQcN2/3UTcKUJpDo5JEYsZIWNb+bXCWpYzteWaOMNioU9xPfRX5hReUC/AltNOrY0tBnxNKF7KVQPfNIaj4PlZaS98xtrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QpWEkbCG; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745317750; c=relaxed/simple;
+	bh=OtKUFMsCCXQuyXdiECTB3D04cRKpceApukek+qlG2Xk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DkTIYp9aoHK8XfEU3VVte/LP3wi/n5gyU6jfQWEJ5zsfAlYsum5KGgvbHKpPJjV08VVf6oQJbS+MGc7IxfuZp3pj3gU7x/nbkvvX573g1g/8JltTfl3Badnhjz7O1oAX3T0XVg1eJ7egDITKSW4QkJUJHQI2ujQDWXwTTCecGPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com; spf=pass smtp.mailfrom=inventec.com; dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b=QKymG9BT; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inventec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QpWEkbCG"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfe574976so35883285e9.1
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Apr 2025 03:24:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b="QKymG9BT"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so5171304b3a.0
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Apr 2025 03:29:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745317466; x=1745922266; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rGpR7DHAu3crb15D4InspITnPezktxxxhM+Ewq44KWQ=;
-        b=QpWEkbCGp9JY5duWuwOyD42AjKuQA6fT9QrM03bAUHnjjVoiYU4PYVG1GjMKBd2Exy
-         pN99M/rhjZiVpTIhA7m6I8HlXU1J6fhOtPrNcU0VW0Jlqvjnic4+WE7IXsL8iiqgiL29
-         X35JdXg0HxAd1gQ9vZlXHH1y6dvGQmcrXye8VtJowOIaj/MBEUMwi8yrmUhfhOM+fLM1
-         1Og8a+ArJCxPmipkYE9GDAjUT3UkNMQKAuPRnc25wpF1nPWkLTUvIa4lwAOlytk9rl+B
-         1fy9JqNj7XiYzwQCa+i2wMxEKZA66p3MjAxgA6C+UsrWkXmeuynXictud6uwrAfXaZo1
-         oO1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745317466; x=1745922266;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=inventec.com; s=google; t=1745317746; x=1745922546; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rGpR7DHAu3crb15D4InspITnPezktxxxhM+Ewq44KWQ=;
-        b=nn8NCh8/ne5TpcNrcL4ac1YFS8yJD2J5/6Aomlwgo5n/x+w/tcmkgzJXFD0EVGy27A
-         YweY+UxryC6MBCu919FfnD5XcOlimjJQDengciEif23E3Wp1KvhVKMJr+mtTlQ10lbj9
-         +SWTt1OUX8v/69DP5wuTZHAOpKjq0nXMrc74/1EMpRxGbzcB87B2zyqpoglgSA9V6jyF
-         83A5BiG+RtTfa15MV9oLw2ksypNZsabkD3JfQP62qq0C/tLPk2K5iETOJpHPGjlGgVeW
-         +F6DdXrkAn1VS5eFGuvmh2BfesNR8kxasWEsuiyhWUJ7hjThyVhuFk7oAgl6v0lEZlat
-         OReQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV6Pvd1q+GUvCXhC66tjcqXdnhXtJKRzhIy4w3B0CecJ9gXB12bSszcQoJwtEXSzE3o1SSOhtGsyZCBQjUoz/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQLkllAsdMuQ0LGUnhcVxxui67O/0sHWRo/5CwLid2le0q4lNb
-	jenz0/VAn5XBeFC42cArOAqzYeURckl4YaqJFlkXbnlQacpCPQdUzUjOHI6bMqUpWscI81zagqV
-	T
-X-Gm-Gg: ASbGncvFyv9W15U4mXqdnScTD8I+vsb+4CKY4rRWvZqjlZLl7zjI0NXZA/wvOJa7g6F
-	Ff9F+5q+oEdYUcOXhNj725D71QLGjzj+WNqDB081/PpW+ZpYrYQ9LlYDXVlhnNy7eBbNuKhJQXq
-	41j+zri2veuXA0hfA1IuIgeMpjplrmQPPWHB7tGe1i5PUnRSs4+TC7GqqepxYXnp/+PuLYhspTS
-	SCGNS4lLKtrHdGZc80gs9IAEomSm22P224WKFm3vnSpsjcP7tKfO7haVvonKN+wzCCkxC+xVrLS
-	+bMKGbuU2Nq09bNgz/uuoGsOqK8PHiX2VmLij8wo05LBlQ==
-X-Google-Smtp-Source: AGHT+IHutLphGbGE1hCdZLvaGiMQTDK82f9s6pbuK+KpdDS9Fqw1DprMwHPrbtUhvJfTJXHudGQhPw==
-X-Received: by 2002:a05:6000:40df:b0:391:ab2:9e80 with SMTP id ffacd0b85a97d-39efba51048mr10695810f8f.24.1745317465705;
-        Tue, 22 Apr 2025 03:24:25 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa43330esm14497713f8f.21.2025.04.22.03.24.24
+        bh=Wtwwt/qGVMfOAJ61/DZj57iTfzywR/wMkolYpyXZwMg=;
+        b=QKymG9BTaQM/G9cl6fJZmX1DLUhOVviZlTuu7TEKn/JLEzF1C1oBOCeG7qYH7i9fmv
+         CX1ciJbvdYkLqUj2qDmGnQjr/NjYTseiG3TQs9jDGD1q75jhbpXyx+IVe9hLIyKAJuPN
+         2Wmrxxc+WlY4HnZnm3acXCvQpv+RaD8MA9EbNzCN0tDgwmdZa+b260/7OkQGncMoh8Jg
+         diTGNiXX/w5uoOpGcerSSWr49haDExVjHl4FRYMKUc6ZXU8WMHjnuGMPxFEUJCJcTPq5
+         N2tAJjHRQg1uuUoaPIapfIOu4YcmWjvHdyCZIFwGMwu68SfMqasogjvnZPE6J5s3Nh1E
+         yjIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745317746; x=1745922546;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wtwwt/qGVMfOAJ61/DZj57iTfzywR/wMkolYpyXZwMg=;
+        b=PrcfJs5rcBlCu6PBOT+vemZ4LUkAsh5pWDC+7l9c+nUUhOtom2bB8fG080bIHpa0vC
+         wPyJm/xce2Vbz4KR2eerWV8jEqvwYp39uyEs+5BQcUW/hTLJME7D3z1fKfiaZpEOBS7a
+         Vke8qwUATzUpV0moMrLBDWAdgfkyBIrIUhz/pj3Kywx8ZfebEnCiawNSO46JjZeNu0UG
+         5Inzv4/+HWPq4fw/DRJBhbMBNthPiZ04GexboK+h1EsaUsGVxiGhB8ONgxkCvkZE8Vz/
+         90BOV8rG6xHVE2ig4MA0+mMZ0qD1Op7NLQFaDif8KOxHdbN9fTFmQs+O+9tSDYGX61N7
+         tUog==
+X-Forwarded-Encrypted: i=1; AJvYcCWYzxCbUTgrJ0TIgvoyAyvD3ju3BclChKgaSp8GahhRGp06m1Lrq3khYXZWolatzUaLUIN8uyj5RU5ejLgja28=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3RC5BLB6nABARMS5y8KBVH1/Z7uIQqoGPTzwbjiIWMvlFEr/h
+	NugF+UlSypb8GIHPaRg8jsv+JgogzmouVZ7dg2E7LX3S7oPzDz9ml070E126FSE=
+X-Gm-Gg: ASbGncs1FQw2W2XZQuBbulTG8eIkyzHH1DaBPjCf0woUqeYx37qLqNoJOyvX+hj2hnR
+	x8x9/UAXqIMryS9cB/pNGN3opfJwY71TycHJJweg7RWDLesPhxuQKeqkmrFRta9cMc7NiuhWPJ6
+	fryKTzXY0ipQ2kBy2hA/xzvKfOppkLIJUvR4smeCioUdkwdsOVe7AgQ/zaPjgJZuNdf+xJEr6D2
+	NM48CSdAc1eOPZ30uNJ+eGBXd1sTRjtBkbd/oETQAjR2BNJ9zfW8PZ4RINpzLiRgbd5vLFFAFtD
+	oZnOJE3RZW5uEhKXyxUHF9T7bw02VY0CCCmf+ERtqGx4dOklk+5FX3MgLm9tANnpdrcjw8pCpYs
+	UZTQipBnYKjf10LdXK+aMq4i4hx2pZ7czrc2dW5sq9K00VfoPAeBN3EPPN2c=
+X-Google-Smtp-Source: AGHT+IGWvQiFpLLb/JnK+vxMBI1uFfmAhPCio9warje9sSHRSfH/F8j7WFctbSygpqJcvFqmOTJrmg==
+X-Received: by 2002:a05:6a21:3a83:b0:1e1:9e9f:ae4 with SMTP id adf61e73a8af0-203cc6e03e3mr20985847637.13.1745317745940;
+        Tue, 22 Apr 2025 03:29:05 -0700 (PDT)
+Received: from localhost.localdomain (60-250-242-163.hinet-ip.hinet.net. [60.250.242.163])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db13c1c40sm5541763a12.33.2025.04.22.03.29.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 03:24:25 -0700 (PDT)
-Date: Tue, 22 Apr 2025 13:24:22 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Su Hui <suhui@nfschina.com>, davem@davemloft.net,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] crypto: using size_add() for kmalloc()
-Message-ID: <2169828c-127c-4bf7-b953-2f1194b72830@stanley.mountain>
-References: <20250421055104.663552-1-suhui@nfschina.com>
- <aAY0lyWzsRVDge_f@gondor.apana.org.au>
+        Tue, 22 Apr 2025 03:29:05 -0700 (PDT)
+From: Chiang Brian <chiang.brian@inventec.com>
+X-Google-Original-From: Chiang Brian <chiang.brian@inventec.corp-partner.google.com>
+To: linux@roeck-us.net
+Cc: chiang.brian@inventec.com,
+	gnoack@google.com,
+	gpiccoli@igalia.com,
+	jdelvare@suse.com,
+	kees@kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	mic@digikod.net,
+	tony.luck@intel.com
+Subject: Re: [PATCH v5] hwmon: (pmbus/tps53679) Add support for TPS53685
+Date: Tue, 22 Apr 2025 18:20:57 +0800
+Message-Id: <20250422102057.2846899-1-chiang.brian@inventec.corp-partner.google.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <2628dd1f-1b8f-478a-aa89-4c0f78b27962@roeck-us.net>
+References: <2628dd1f-1b8f-478a-aa89-4c0f78b27962@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAY0lyWzsRVDge_f@gondor.apana.org.au>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 21, 2025 at 08:05:43PM +0800, Herbert Xu wrote:
-> On Mon, Apr 21, 2025 at 01:51:06PM +0800, Su Hui wrote:
-> >
-> > @@ -433,7 +434,7 @@ static inline struct aead_request *aead_request_alloc(struct crypto_aead *tfm,
-> >  {
-> >  	struct aead_request *req;
-> >  
-> > -	req = kmalloc(sizeof(*req) + crypto_aead_reqsize(tfm), gfp);
-> > +	req = kmalloc(size_add(sizeof(*req), crypto_aead_reqsize(tfm)), gfp);
+On 3/14/25 10:44, Guenter Roeck wrote:
+> On 3/13/25 20:30, Chiang Brian wrote:
+> > The TPS53685 is a fully AMD SVI3 compliant step down
+> > controller with trans-inductor voltage regulator
+> > (TLVR) topology support, dual channels, built-in
+> > non-volatile memory (NVM), PMBus interface, and
+> > full compatible with TI NexFET smart power
+> > stages.
+> > Add support for it to the tps53679 driver.
+> > 
+> > Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
+> > ---
+> > v4 -> V5:
+> >      1. document the compatible of tps53685 into dt-bindings
+> > 	2. add the buffer length as argument for %*ph
+> > 	3. Add Changelog
+> > v3 -> V4:
+> >      1. Add length comparison into the comparison of "id",or it may be true when
+> > 	   the substring of "id" matches device id.
+> > 	2. Restore `return 0;` in `tps53679_identify_chip()`
+> > V2 -> V3:
+> >      1. Remove the length comparsion in the comparison of "id".
+> > V1 -> V2:
+> > 	1. Modify subject and description to meet requirements
+> > 	2. Add "tps53685" into enum chips with numeric order
+> > 	3. Modify the content of marco "TPS53681_DEVICE_ID" from 0x81 to "\x81"
+> > 	   Add marco "TPS53685_DEVICE_ID" with content "TIShP"
+> > 	4. Modify the type of "id" from u16 to char* in `tps53679_identify_chip()`
+> > 	5. Modify the comparison of "id". It will be true if the string "id" matches
+> > 	   device ID and compare with type char*,
+> > 	6. Add the length comparsion into the comparison of "id".
+> > 	7. Modify "len" as return code in `tps53679_identify_chip()`
+> > 	8. Output device error log with %*ph, instead of 0x%x\n"
+> >      9. Use existing tps53679_identify_multiphase() with argument
+> > 	   "TPS53685_DEVICE_ID" in tps53685_identify() rather than creating one
+> > 	   tps53685_identify_multiphase()
+> > 
+> > boot-log:
 > 
-> This is just wrong.  You should fail the allocation altogether
-> rather than proceeding with a length that is insufficient.
+> This is completely useless noise.
 
-When size_add() overflows then it returns SIZE_MAX.  None of the
-allocation functions can allocate SIZE_MAX bytes so kmalloc() will
-fail and that's already handled correctly.  Meanwhile if
-"sizeof(*req) + crypto_aead_reqsize(tfm)" overflows then the
-allocation will succeed and it results in memory corruption.
+Sorry for the delay, I've got the approval for posting the boot-log from our 
+customer. I was afraid that there's any confidential information in the boot-log
+of our project. So, I decided to post a boot-log with my laptop then, and I'll 
+append a new one once new patch has been finished and uploaded. 
 
-This is exactly what Kees did with the mass conversion to
-struct_size().  I occasionally run across places where Kees's mass
-conversion patches did fix real integer overflow bugs.
+And thanks for the suggestion of adding a buffer length for %*ph.
+The kernel crashes and keeps rebooting without adding that.
 
-regards,
-dan carpenter
+In addition, should I in-reply-to the existing thread or create a new one 
+since the dt-bindings should be included in the same thread as well?
 
+Thank you.
+
+Best Regards,
+Brian Chiang
