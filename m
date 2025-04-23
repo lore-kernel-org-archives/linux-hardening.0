@@ -1,147 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-8fa9.mail.infomaniak.ch (smtp-8fa9.mail.infomaniak.ch [83.166.143.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0725139566;
-	Wed, 23 Apr 2025 20:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32639191F6D
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 20:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745438659; cv=none; b=DSisdWlDxxWBUFN7qFbqgb+V34RMPG9yV2drxZ2a7/9J2xHvZBnj6gCqOS+/hWlxViA4rmj4Po4+NpFn9idGbC16iYsK+anZ0sgQSB9Gg0OrD9e6Vpbxvu8D6tb3ec83oymxwuqXX81E0mUtJZJIWoUpjAfLteFI0WqyGNwlQ1w=
+	t=1745439915; cv=none; b=RlHUWU6wJbaK+gsuAItSlvcjWy7TfJdomG+cUTPjY0Pou1zgKK0At/lXAOmC42+7UZ3IwL5iBqUjF2hJQ5S66Na/QSyeYSjkD1LwVspDTTA2qdPKBcX77PAkM7H7a7eQOY4dYbdv89AhTLxXMgty3GtBo5IHT25ZoSKDtRgPN1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745438659; c=relaxed/simple;
-	bh=cxaMvVcBVtdfwqKCy8tAu7BZLGaLreXc/92Wi3OWRRU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nxHnCUTUM1EW+c7kWVJVI9DNub4Kj/nTDijtgWCYd7/VG9ZXmsVdONpRs0FESO+iSPLe9d6HRHbDBZAhlPW/1gQLTf2i57Ru4XB0wM7XeLiY/Bk3zT2ro683SDAf+0JFEG7gH9TFdTFs4zvuZSfcv20Z6EFbMI8bKhtWtfozGdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QFIS7+7v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745439915; c=relaxed/simple;
+	bh=H+qfChid8MZRcIUe+CmM5TpMvrRUtQpTYrMmvncAATU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QJDWewLs17HLXt8MR9plVSKmqMI7daHKMzDscPPx2g9P9BZQ4P/iJC2vOTpLfaraZlLHXhkiwP8ilGTmzvp/e9VLMAaLlyzgKs8idtztW3hWzH3unYDDkrFWJwJmXxWDUg3WwxjRf6R5pSQcH6u/xL60LzvaN9+zrAYdQx8A1Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=kZBPfPkT; arc=none smtp.client-ip=83.166.143.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFIS7+7v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D4C0C4CEEC;
-	Wed, 23 Apr 2025 20:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745438658;
-	bh=cxaMvVcBVtdfwqKCy8tAu7BZLGaLreXc/92Wi3OWRRU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QFIS7+7vOH3mbByJthVS5BZpFzinoka2fvXZ7pReRxqDjEFvnruht/1pgcQtrj4NL
-	 wUAC4kiXVPAwiDSuhxUjFsBKFGPa3YDb2cJ8AFSGYdb2POvVcY6rslkUSYzGJhIIfb
-	 /SzT8Ga4winbAy6Q+XRK0yRw1iK1f3OXcVCyygrZ9KJB/KTEM2OeGpr4nTA8fDNxJr
-	 k3S8r7ELcpWP9HUuXetm/XFS0U9cyr9UQ+8Fd2d9bpCOrla/lGqviFe6gIcXXfVSOe
-	 OeSqw94ylOqgR0YIsH6LjAer6E0kBh3ZE+W80E2Un8uRxgwxohSl6loATz43ojoXPl
-	 GO3rFI+HCnxjQ==
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2c2504fa876so46830fac.0;
-        Wed, 23 Apr 2025 13:04:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUsIGG2Y58HojE90CfQlOvghnSIjN+J/gb4iS41obdqa6bbuwRdajY2vzoKxImPVmfLL0r98JJ5knpfL1kA16Yz@vger.kernel.org, AJvYcCWvWC6rQc6LmZrdfA+DbSVrME0XVmLvttKmCqQL4EKaZNPuxeycI6sMm8+NUv3G+x6t0haiM0E1RI1y@vger.kernel.org, AJvYcCXDrfSLZQyhwGO+Sp7N/G6746uOKtwXpUNEq+nfZqkV2E54QUhoFZrp+OKGKN0aJooLhevo7gdWgyccAscn@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmnyV2YCGxWeh/wni2Pbw/lJC8hDjGBCFwgre13w8P6naVnmRM
-	X2sLHiXbYse+aZK0WTO/sfZsD65CkW0wwAf9C33n2q14CIE4AOYo9HdknMPhvDpf3c90qSRTata
-	NIXi5j7kn2UctVR734Al7wV1MGTk=
-X-Google-Smtp-Source: AGHT+IGNdK95WXoJNH2YFoPShvcuAWCN+P/w+m/y1K2Oby12AFZZkHdCKndMaq8lzZJIhc5cb8euX9kuVjrYL073DuA=
-X-Received: by 2002:a05:6870:9127:b0:2d8:957a:5176 with SMTP id
- 586e51a60fabf-2d96e19b0camr50460fac.5.1745438657751; Wed, 23 Apr 2025
- 13:04:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="kZBPfPkT"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZjSY01rfxzCKV;
+	Wed, 23 Apr 2025 20:38:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1745433508;
+	bh=/4V+XPxzzcoQzqWEANF53l/uZ/DfVypkRjYToFa1+Tg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kZBPfPkTIuPicmAjA3eASpg/zXg6FIyfr8TCyCodBjtgYXRwXkGrxBC8DaWpaUcPO
+	 ffL2qCzc9tgSMsZ+wfqi6BEW3ONXUkJ5QlXW8lhFfi1g7I2J8+XTWV0gxy0on3wDOt
+	 l+WhKfSv1yCHiBilm2Un3YCrDm/NTo1BJPBW6uDc=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZjSXy4Ym9z2Z6;
+	Wed, 23 Apr 2025 20:38:26 +0200 (CEST)
+Date: Wed, 23 Apr 2025 20:38:25 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Kees Cook <kees@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux <linux@treblig.org>, 
+	Mark Brown <broonie@kernel.org>, WangYuli <wangyuli@uniontech.com>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] landlock: Work around randstruct unnamed static
+ initializer support
+Message-ID: <20250423.phe6choh9AiN@digikod.net>
+References: <20250421000854.work.572-kees@kernel.org>
+ <20250422.eetheiPu6aiH@digikod.net>
+ <ccdfe9c0-7c28-4ecf-a7da-95c9a20eead7@app.fastmail.com>
+ <202504220756.4DD4BAD@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415232028.work.843-kees@kernel.org>
-In-Reply-To: <20250415232028.work.843-kees@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 23 Apr 2025 22:04:06 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j9xA0rj3QFD6jv+vabRtgFqa2nza_RFjq=c5=ds9yCNg@mail.gmail.com>
-X-Gm-Features: ATxdqUHRYTqya0acLc4Hb2cQFkwS76MbdgHgn_ewJ3DBhKc43JCe7GYCZZj2Vbg
-Message-ID: <CAJZ5v0j9xA0rj3QFD6jv+vabRtgFqa2nza_RFjq=c5=ds9yCNg@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: tables: Add __nonstring annotations for
- unterminated strings
-To: Kees Cook <kees@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Robert Moore <robert.moore@intel.com>, linux-acpi@vger.kernel.org, 
-	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202504220756.4DD4BAD@keescook>
+X-Infomaniak-Routing: alpha
 
-On Wed, Apr 16, 2025 at 1:20=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
->
-> When a character array without a terminating NUL character has a static
-> initializer, GCC 15's -Wunterminated-string-initialization will only
-> warn if the array lacks the "nonstring" attribute[1]. Mark the 4-byte
-> ACPI identifier arrays with __nonstring (and the new __nonstring_array)
-> to correctly identify the char arrays as "not C strings" and thereby
-> eliminate the many warnings like this:
->
-> In file included from include/acpi/actbl.h:371,
->                  from include/acpi/acpi.h:26,
->                  from include/linux/acpi.h:26,
->                  from drivers/acpi/tables.c:19:
-> include/acpi/actbl1.h:30:33: warning: initializer-string for array of 'ch=
-ar' truncates NUL terminator but destination lacks 'nonstring' attribute (5=
- chars into 4 available) [-Wunterminated-string-initialization]
->    30 | #define ACPI_SIG_BERT           "BERT"  /* Boot Error Record Tabl=
-e */
->       |                                 ^~~~~~
-> drivers/acpi/tables.c:400:9: note: in expansion of macro 'ACPI_SIG_BERT'
->   400 |         ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECD=
-T,
->       |         ^~~~~~~~~~~~~
->
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D117178 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Robert Moore <robert.moore@intel.com>
-> Cc: linux-acpi@vger.kernel.org
-> Cc: acpica-devel@lists.linux.dev
-> ---
->  drivers/acpi/tables.c | 2 +-
->  include/acpi/actbl.h  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-> index 2295abbecd14..0a9ade7117bd 100644
-> --- a/drivers/acpi/tables.c
-> +++ b/drivers/acpi/tables.c
-> @@ -396,7 +396,7 @@ static u8 __init acpi_table_checksum(u8 *buffer, u32 =
-length)
->  }
->
->  /* All but ACPI_SIG_RSDP and ACPI_SIG_FACS: */
-> -static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst =3D {
-> +static const char table_sigs[][ACPI_NAMESEG_SIZE] __nonstring_array __in=
-itconst =3D {
->         ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECDT,
->         ACPI_SIG_EINJ, ACPI_SIG_ERST, ACPI_SIG_HEST, ACPI_SIG_MADT,
->         ACPI_SIG_MSCT, ACPI_SIG_SBST, ACPI_SIG_SLIT, ACPI_SIG_SRAT,
-> diff --git a/include/acpi/actbl.h b/include/acpi/actbl.h
-> index 451f6276da49..2fc89704be17 100644
-> --- a/include/acpi/actbl.h
-> +++ b/include/acpi/actbl.h
-> @@ -66,7 +66,7 @@
->   ***********************************************************************=
-*******/
->
->  struct acpi_table_header {
-> -       char signature[ACPI_NAMESEG_SIZE];      /* ASCII table signature =
-*/
-> +       char signature[ACPI_NAMESEG_SIZE] __nonstring;  /* ASCII table si=
-gnature */
->         u32 length;             /* Length of table in bytes, including th=
-is header */
->         u8 revision;            /* ACPI Specification minor version numbe=
-r */
->         u8 checksum;            /* To make sum of entire table =3D=3D 0 *=
-/
-> --
+On Tue, Apr 22, 2025 at 07:59:07AM -0700, Kees Cook wrote:
+> On Tue, Apr 22, 2025 at 02:53:05PM +0200, Arnd Bergmann wrote:
+> > On Tue, Apr 22, 2025, at 14:25, Mickaël Salaün wrote:
+> > > On Sun, Apr 20, 2025 at 05:08:59PM -0700, Kees Cook wrote:
+> > >> Unnamed static initializers aren't supported by the randstruct GCC
+> > >> plugin. Quoting the plugin, "set up a bogus anonymous struct field
+> > >> designed to error out on unnamed struct initializers as gcc provides
+> > >> no other way to detect such code". That is exactly what happens
+> > >> with the landlock code, so adjust the static initializers for structs
+> > >> lsm_ioctlop_audit and landlock_request that contain a randomized structure
+> > >> (struct path) to use named variables, which avoids the intentional
+> > >> GCC crashes:
+> > >
+> > > This is not a sustainable solution.  Could we fix the plugin instead?
+> > > This new Landlock change may be the first to trigger this plugin bug but
+> > > it will probably not be the last to use unnamed static initializers.
+> > > Forbidding specific C constructs should be documented.
+> > 
+> > I think the version from Kees' patch looks more readable than
+> > the version with the compound literal, so it certainly seems appropriate
+> > as an immediate regression fix, even if it's possible to fix the
+> > plugin later.
+> > 
+> > >> We went 8 years before tripping over this! 
+> > 
+> > Right, it's probably enough to revisit the plugin code after
+> > it happens again.
+> 
+> Yeah, that's my thinking as well.
+> 
+> > >> Closes: https://lore.kernel.org/lkml/337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com/
+> > >> Signed-off-by: Kees Cook <kees@kernel.org>
+> > 
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> Thanks! Mickaël, are you good with this for now, and if so, do you want
+> to carry it or shall I?
 
-Applied as 6.16 material.
-
-I've rebased it on top of
-
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/?id=3D9d7a0577c9db35c4cc52db90bc415ea248446472
-
-so basically the hunk in actbl.h is gone.  Please see
-
-https://web.git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/com=
-mit/?h=3Dbleeding-edge&id=3D18eb45b67544b995a8a6f48a72b816fd75776f52
-
-Thanks!
+I don't like this kind of change but I'm OK with it if it comes with
+documentation explaining what construct should not be used in the kernel
+(and even better, updating checkpatch.pl accordingly), or if it's a
+temporary workaround and someone is working on fixing the plugin.  Are
+you or someone else working on it?  In the meantime, feel free to carry
+this patch.
