@@ -1,102 +1,107 @@
-Received: from smtp-8fa9.mail.infomaniak.ch (smtp-8fa9.mail.infomaniak.ch [83.166.143.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32639191F6D
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 20:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA1F4A07;
+	Wed, 23 Apr 2025 21:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745439915; cv=none; b=RlHUWU6wJbaK+gsuAItSlvcjWy7TfJdomG+cUTPjY0Pou1zgKK0At/lXAOmC42+7UZ3IwL5iBqUjF2hJQ5S66Na/QSyeYSjkD1LwVspDTTA2qdPKBcX77PAkM7H7a7eQOY4dYbdv89AhTLxXMgty3GtBo5IHT25ZoSKDtRgPN1E=
+	t=1745444122; cv=none; b=WagLZxc3m/o9lKzMwOzKj+8SojJtqUWkj815YlHmdbUcdACT0313o4b6ySR38jvnZ0HwKLyeEteZBHiOlrXRzjDRrIMa2MP0q6lXThfCEbV6w9FaY0kn99oCOjKiMCGcHOprEtgOr9cEwWOCeMJTr95e5EJ/VOVaSecVKyqkdSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745439915; c=relaxed/simple;
-	bh=H+qfChid8MZRcIUe+CmM5TpMvrRUtQpTYrMmvncAATU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QJDWewLs17HLXt8MR9plVSKmqMI7daHKMzDscPPx2g9P9BZQ4P/iJC2vOTpLfaraZlLHXhkiwP8ilGTmzvp/e9VLMAaLlyzgKs8idtztW3hWzH3unYDDkrFWJwJmXxWDUg3WwxjRf6R5pSQcH6u/xL60LzvaN9+zrAYdQx8A1Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=kZBPfPkT; arc=none smtp.client-ip=83.166.143.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1745444122; c=relaxed/simple;
+	bh=ZOMahnqwK2czE5+AzFT6MW14Dv/ZxeTxkD1jEiJ1lNc=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PWEigMzK1MLqxzPxAPT2EFX9cbjNPDgIGYbgNUaWoyAYej7QSXUQp+0Od9e0QEr9Ia0qfB+HhbFqA5rGYPiewAtTTmEO11DhEI8x0DMBL5d8HAjfsCWycWZF2ZM31MV4sPBVWTeFFB18ww2q0/qsXE3ENGOdky40kkpPNiNU65o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jfn3r4vW; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="kZBPfPkT"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZjSY01rfxzCKV;
-	Wed, 23 Apr 2025 20:38:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1745433508;
-	bh=/4V+XPxzzcoQzqWEANF53l/uZ/DfVypkRjYToFa1+Tg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kZBPfPkTIuPicmAjA3eASpg/zXg6FIyfr8TCyCodBjtgYXRwXkGrxBC8DaWpaUcPO
-	 ffL2qCzc9tgSMsZ+wfqi6BEW3ONXUkJ5QlXW8lhFfi1g7I2J8+XTWV0gxy0on3wDOt
-	 l+WhKfSv1yCHiBilm2Un3YCrDm/NTo1BJPBW6uDc=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZjSXy4Ym9z2Z6;
-	Wed, 23 Apr 2025 20:38:26 +0200 (CEST)
-Date: Wed, 23 Apr 2025 20:38:25 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux <linux@treblig.org>, 
-	Mark Brown <broonie@kernel.org>, WangYuli <wangyuli@uniontech.com>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] landlock: Work around randstruct unnamed static
- initializer support
-Message-ID: <20250423.phe6choh9AiN@digikod.net>
-References: <20250421000854.work.572-kees@kernel.org>
- <20250422.eetheiPu6aiH@digikod.net>
- <ccdfe9c0-7c28-4ecf-a7da-95c9a20eead7@app.fastmail.com>
- <202504220756.4DD4BAD@keescook>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jfn3r4vW"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c266c1389so203589f8f.1;
+        Wed, 23 Apr 2025 14:35:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745444119; x=1746048919; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=itX3NOYXWOyXJnbtbmqeBCVY1jsU6HXNt/e9Gv22P6g=;
+        b=Jfn3r4vWM5vt5+VRvRjeu4eOyyg8XAosTk2sGUEHjWl6v0SjVVB8sYRTi/0GEsEOYp
+         NJB4+MLMxwZK5+kfCW+lq8Fx/jp1Arvbpox1v9PV0tp3xAAO7yAsm+YOAp+LLg27cMnu
+         vza8cditKZaYrZ40+gVp8ZVTSlSs1I4ToYeje4voPrJ6ugW4R7mvqs6HNGGYWlt5JaB6
+         yxCVl70zwR8CrXN7+93uCLJzn1SbDFt0Kag1ngXcmTtOZkbBKty7yp7NHxY6R9CjG1P7
+         X6O5BPr8mzOeFdzQRbP0dGL9Gq48ENZXgKu8QVKlIlZ+GPVbPRjG1FT0gcCswcV+/rHN
+         D7Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745444119; x=1746048919;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=itX3NOYXWOyXJnbtbmqeBCVY1jsU6HXNt/e9Gv22P6g=;
+        b=Q0pKNgZOuIiqPJhK02YFlKVy/fuF+mss3Uq8lGjEEkJok/X959bsf9AXgsyNobuPfv
+         dvnxliVPDecdzZCGC1k32shS3whJqVhXzsWS/gOzII02IoNLqecH2ieDPBCVujNUOue0
+         hipwboAtpjFnIzTTabZJsBCTFKxMOoeYGBXx716i1uB893+FUnWTHgxz1/hO0sPlClPE
+         MOY350oOhp4sA7dVwOBMAAGjF+zaFCm9/lrO7z1fKS/nbv0QxbQzKah0K5xQYNTs2dzq
+         f062RWOimyEceKHLgh2s3ueIe6+1q/aowBa1ES9JpnBsv4KFzJGa4HZgopwdkiYrec3e
+         QJjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU08zAxH5NpCL1F6A2myjgUlG9sQJayZyhbByZdDZ+BCOCVIIeIh/q8vcovRuHJdu5ErIGAMRsWT2LTnlL9Qw==@vger.kernel.org, AJvYcCVQg30SjAtm6gIzOMNfP/MqJA+HD4ncanzZEO8pel+Lamv1hAv3uRvgYcAxuEcV3I3I1zk97rqKQ7kcyfjUpA==@vger.kernel.org, AJvYcCW7YIYJCmLsRGPoD4tC4rRgiBsosoC6aV9cnV0gIljfajsRypinPLfFwUqO/0Y2vttt9uaiI7Yc1QkF1kG8CFlo@vger.kernel.org, AJvYcCWKJeRUl6fXMiVWzDDlhFO+WtB8jloTvCt3du+tY5aT0XL6zPTnS/UQhT0swNbvxw/WxFW2Yxz2GChbEokV@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhxXdlcchvUvyQ2Oz98uPtik1tJ+LsbWd0vEkpo9mzURaAPcCX
+	B4dhSWr8P8qS/DCc0evDxxUAsPewMYm37WvRfHk0WdXSCDAeDYkHu0xbiWvIjaSHzdjQ8/GWs2L
+	0tcpYj7bnnjTFLNNvG3mO5g5eFag=
+X-Gm-Gg: ASbGncsZsmfcHW2HPYuoefsxjFHjA8AupKowStZNAdCEeOP5/MIXRo7+SL1cS5kB/4P
+	1HbWYGSd01e0ve4D7PWY8Wpgku6XUz9DhvZCKLTJA8Dtf7oEINoUE/I/WDWDXjjICsHclbqAMTj
+	s+ZCy2yJ5eELqKTeVPS2fritc=
+X-Google-Smtp-Source: AGHT+IEk58+6+Z8AY7dKKKI99YvdIThZGBgtaiZlaQ0+clqFup0opkmpEozBJaew3HhxREGTabJMb/2OD7j1BlA4mfY=
+X-Received: by 2002:a05:6000:2486:b0:39e:cbca:7156 with SMTP id
+ ffacd0b85a97d-3a06cf4f24amr55773f8f.1.1745444119284; Wed, 23 Apr 2025
+ 14:35:19 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 23 Apr 2025 14:35:18 -0700
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 23 Apr 2025 14:35:18 -0700
+From: Kane York <kanepyork@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <202504202008.533326EF4@keescook>
+References: <202504202008.533326EF4@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202504220756.4DD4BAD@keescook>
-X-Infomaniak-Routing: alpha
+Date: Wed, 23 Apr 2025 14:35:18 -0700
+X-Gm-Features: ATxdqUGGIPDI-VW9u9YHXcVHw682anBK-WlDW0KOLAEZB08mhUTLWij8yQDEYp0
+Message-ID: <CABeNrKWW6P0STsmxyL7yOASn63fKyLrCqv=ksomqOJP+ry8PPw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] enumarated refcounts, for debugging refcount issues
+To: kees@kernel.org
+Cc: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 22, 2025 at 07:59:07AM -0700, Kees Cook wrote:
-> On Tue, Apr 22, 2025 at 02:53:05PM +0200, Arnd Bergmann wrote:
-> > On Tue, Apr 22, 2025, at 14:25, Mickaël Salaün wrote:
-> > > On Sun, Apr 20, 2025 at 05:08:59PM -0700, Kees Cook wrote:
-> > >> Unnamed static initializers aren't supported by the randstruct GCC
-> > >> plugin. Quoting the plugin, "set up a bogus anonymous struct field
-> > >> designed to error out on unnamed struct initializers as gcc provides
-> > >> no other way to detect such code". That is exactly what happens
-> > >> with the landlock code, so adjust the static initializers for structs
-> > >> lsm_ioctlop_audit and landlock_request that contain a randomized structure
-> > >> (struct path) to use named variables, which avoids the intentional
-> > >> GCC crashes:
+On Sun, 20 Apr 2025 20:09:50 -0700, Kees Cook wrote:
+> On Sun, Apr 20, 2025 at 09:27:26PM -0400, Kent Overstreet wrote:
+> > On Sun, Apr 20, 2025 at 06:08:41PM -0700, Kees Cook wrote:
+> > > On Sun, Apr 20, 2025 at 11:59:13AM -0400, Kent Overstreet wrote:
+> > > > Not sure we have a list for library code, but this might be of interest
+> > > > to anyone who's had to debug refcount issues on refs with lots of users
+> > > > (filesystem people), and I know the hardening folks deal with refcounts
+> > > > a lot.
 > > >
-> > > This is not a sustainable solution.  Could we fix the plugin instead?
-> > > This new Landlock change may be the first to trigger this plugin bug but
-> > > it will probably not be the last to use unnamed static initializers.
-> > > Forbidding specific C constructs should be documented.
-> > 
-> > I think the version from Kees' patch looks more readable than
-> > the version with the compound literal, so it certainly seems appropriate
-> > as an immediate regression fix, even if it's possible to fix the
-> > plugin later.
-> > 
-> > >> We went 8 years before tripping over this! 
-> > 
-> > Right, it's probably enough to revisit the plugin code after
-> > it happens again.
-> 
-> Yeah, that's my thinking as well.
-> 
-> > >> Closes: https://lore.kernel.org/lkml/337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com/
-> > >> Signed-off-by: Kees Cook <kees@kernel.org>
-> > 
-> > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> 
-> Thanks! Mickaël, are you good with this for now, and if so, do you want
-> to carry it or shall I?
+> > > Why not use refcount_t instead of atomic_t?
+> > Out of curiousity, has overflow of an atomic_long_t refcount ever been
+> > observed?
+>
+> Not to my knowledge. :)
 
-I don't like this kind of change but I'm OK with it if it comes with
-documentation explaining what construct should not be used in the kernel
-(and even better, updating checkpatch.pl accordingly), or if it's a
-temporary workaround and someone is working on fixing the plugin.  Are
-you or someone else working on it?  In the meantime, feel free to carry
-this patch.
+Equivalent systems have observed it, but only in the presence of compiler
+optimizations that deduce they could increment the refcount multiple times.
+
+  NEVER_INLINE void naughty_ref_increment(ref* ref) {
+    long i;
+    for (i = 0; i < LONG_MAX/2; i++) {
+      ref_get(ref);
+    }
+  }
+
+Running the above code 3 times will saturate the refcount, if it ever
+terminates in our lifetimes (due to being optimized into an
+atomic_fetch_add(LONG_MAX/2)).
+
+So: don't write the above code!
