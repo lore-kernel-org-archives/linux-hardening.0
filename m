@@ -1,156 +1,211 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A401A23AC
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 13:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68288143736;
+	Wed, 23 Apr 2025 14:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745415798; cv=none; b=MA2IhtV/BNOwvyYTjOkSVzINAo+Bqk4qgtCu5ro6/GAnby7LAip4N27Dkic8Ojlm6LQi6KIcltNatmZ1kG8iqN7949DKNQNxdmKfXEDLQSl+LMyjxRIOvc6jJLPqN0otEZ12RLGjqNbkPImCOMkT6s85k0Rl1STZ6Gnr0yYvmPY=
+	t=1745420156; cv=none; b=JXxePK92pjtlfUIhL36ZtF+wqBDBSs7Ld53UMInX0aIKBzppzgYhtc773kIJhF56YEGqOpKk+c/UF8KI8dBvYmeLdTpW52w7vFyH/xEAZLfA++qNZH4zBmlrGmeASWCKhS97CaDCB1WpeL85anT11IPo61g8wcV1TvcfgGSnAtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745415798; c=relaxed/simple;
-	bh=2oNxgFh7wQy3eSTXUuVVZ5YrZWKlKCIvbcZjJzlgFfk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=d9vMbiGXuwPzKVw60f8Vey4ABTGuitw524djmSWCTIRDPoFLAR40Oy8wch8xXGrdutNCtd1rV1rcEwJwX98cUHBKW9iMohtV8o5afd1+9en4bWuLSseQJGkX6kjC4BgxIyi7APPPRKhsB6FYWRRetyuE2ofdQGs9DiJDV80rU1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i45NS8VH; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745420156; c=relaxed/simple;
+	bh=oy2rWzpZW0dwz08a8V5Sf9Lmno1gccMy0jYnU3T9mcQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CxF5q2RHuEZPm9d1+nFHf/dCHZbIGYx+GEhNJNGos1bSlg54Kalo6GkSSmatabmil4RBpDm5x1hcXtsKtnI+QErreyw05ioT1bEl5qFqALsoS6reBMhcmMVCJ2vdKCKvfY5pUkrWoG8R7Wd423v6wITDh5juaa+msluTYz1MFB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O+tZeBBe; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i45NS8VH"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-440685d6afcso60758075e9.0
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 06:43:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+tZeBBe"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-861d7a09c88so126399639f.2;
+        Wed, 23 Apr 2025 07:55:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745415792; x=1746020592; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FfrnhMcNKf5rCGWHGoNIZp7mNgbnWoHESdB7RpEhfqo=;
-        b=i45NS8VH9j1Oz0y0h9MAM2BESfQeaGh+Dh+a6FJhpDkpc/b5nSBZi6eUChnC3FtqOB
-         h9RYFH9VVn2NY3O6feDekcZTqtzU81CFECv4chNYTcRWpXluuaXpyhvsUJrIwD3lvj0i
-         g541zgQKukKKx5+D2EpbjzeO6J/1nFSeAOSvvyYJxVgmqlHzBUegXZf2/O1wUR5QnTKL
-         etVuKR5KPf5z13JejwrvSqbRsCW4zFAUwncAbqrA9TIS7dVdUaGFDyNAeWQ/6swPf5U3
-         0bD/tIlq0iMfTnvTVLaD15P8xHbFsCCKpyh6UgibOswlmcmWqOM6njeJJ+ECcYGXv+aY
-         XnHw==
+        d=gmail.com; s=20230601; t=1745420152; x=1746024952; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7m0UzjQSlAnchYu9ifeHwkg6qMlyGsq9HZFdL9+SCys=;
+        b=O+tZeBBeJK48Bo5maE7I1JB8l/o5SEWChRWtrTuTS/kyFSNwxEngQ1V04wGiwXnnBI
+         6R73xnRBTYA7jScCh2To8OpbdInx0jTaMEDvpmhdm3Qt5BNPbLZaatRzuCGerJJEIZD4
+         zFymSNCVuCkfR/U4NyEc+yEhfQA8hgj+dTyd5kIEouFvsGeofJvLKRX1hGjfqkLMfP14
+         F6c/T/RS2Bz5akTcCc927iEbBjaM7+A0PFuFq0JRKOWvUyOmNeEV+dTvhMZLYfrd+0Fi
+         EOZNhAjL7gGaAXmIG6rQkj8xcAt4nAqBU9IDBIJJ6vm/q0jQ0Xi5hiqaTldk+AM11dI7
+         4Upw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745415792; x=1746020592;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FfrnhMcNKf5rCGWHGoNIZp7mNgbnWoHESdB7RpEhfqo=;
-        b=TOqjoJ3lYvTwcYmvwv9eO1ALIgCkVJ73DMiCS8WzFaSVVxFWgpLMgoABcF/Jwsvdm3
-         1yvu+Vgw400b1GVar8IV/NNDeLLV3iNDXYrdGdWoYERyl9wVwr1n75pohaYR6aZPiXdI
-         FwTcREICbAVBy4f5Z/L8j89RpHfmxeQCVHKWJc+o11A8Y7jL9y1hV1/YVAnXIYz4D6hN
-         MrpWp0oGBb0oZotkkwcPZneO7NF9VRkoEIcZvk+z7i+uMIJnOtNQISQidzRfOMhUVF+a
-         WZPDpPAFEFzTt80Hej4wmODuYpUIfA1LBxcVxp+HByenshgjtVF5Xd5GMJZ9HyHmIGLy
-         A44A==
-X-Forwarded-Encrypted: i=1; AJvYcCW7cgzx7fnbibN3TW+5ZGw2ziaGplLcEC4b5Ui3ZfqpGgB27nYf8iekFUH01d+nwQuX34Edg6IpNJORxMz57Xg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPKKfyX6rWZmdkfTAXaUbnhzl4EqqYREAy81qf5ygoMw58kFVW
-	nzExspp3EQgAEl4Yi/z3B3pGVpchslHq9kviLhnq2zfg0r/jriD4hbXYP6X3spA=
-X-Gm-Gg: ASbGnctgYhAq45JBM6v3fTes6VMVR32+3RnjYRolnHZeJdAw2q4U/P5hPDyHfI/ESH9
-	fxjb0b1u2pWv9nOD3p/vr2GEWjfK+NMsmPMxNsshPOEutRRFJiB/a65Jx/XsRIATOW+WM9S8GOJ
-	Njj0srBg/yIIleCrGdydNkNvXOdRKzuGfAlz1vaW5+pKRwUhGGMp3H8ac2kx6whrpWECaRuat7w
-	aEikY9L16iAZeFcMZecKXgaKOEzg29RLhL6SyN9ZG0Kf8l6eU6tWKt8ihesqu/QhkKG1whWL2fA
-	jgmdu1Ei/+iZHgcHkuadJFsFJZTFZRyt/0L8lT+9J1HYO6pqNdl2O1QKMw9L17bH8aTkkU7CiMY
-	/czLW+YU+EBXlAZpRMQ==
-X-Google-Smtp-Source: AGHT+IHnS/+w8vgB7Qer4VFmmeqW2fg9vqIPQjMtQu2PKuXwZePY3kDPFYEnC2G7XWePQ888jen21Q==
-X-Received: by 2002:a05:600c:5027:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-4406abfa6bcmr157183955e9.20.1745415792377;
-        Wed, 23 Apr 2025 06:43:12 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:2835:c2f4:c226:77dd? ([2a01:e0a:3d9:2080:2835:c2f4:c226:77dd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44092db2ba6sm26108245e9.31.2025.04.23.06.43.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 06:43:11 -0700 (PDT)
-Message-ID: <1acbe9dc-02ca-4233-a79a-901e714f5c9c@linaro.org>
-Date: Wed, 23 Apr 2025 15:43:08 +0200
+        d=1e100.net; s=20230601; t=1745420152; x=1746024952;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7m0UzjQSlAnchYu9ifeHwkg6qMlyGsq9HZFdL9+SCys=;
+        b=TSF1gTqkCtHXgcvMFHueg5WBWecH1AAGl8WoB/G/ByOZ5imNZ8estHxtLzKP8QRkhr
+         Wq/IBq4Ui7hnmPsYtuIvPU7OAxXOSFEQ+na3SOLh7MzLpIEA75agce4Q1/Y5EZfzkb8D
+         69m4sNUNQfpdkgIfC7cWPYKFa3yKMMi8mq1lZyi5ngkk0+RQXpurkwueoWzFOZWtHLcg
+         qP3+Bqqr8v2VThgkcd5L1TJ7a7XgDJ/O7rlkIKBVfaWf9j4+KKWjG4f6vRV28lVBMrLC
+         /rvosND3wpvQS9N7qKcqfxKzpEKEYzxNqXtyQyAOhH1rhivNI5WR5EvB0Ic4WNBKPYmr
+         z9ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV6MB2bT6puhNdZx2foclg37eY9rxKzMhtkFTPaSguuyscv/6etPz6Zn43SlpWgMMXyUHRWr5sO49KP7NdQ@vger.kernel.org, AJvYcCVVBr8aNT94Q5xfMDxRY054FKZF35tSuhGwoZgew5yjMfsu+jTvCZnI/0K+DIqa4SWjqcugcESvyryQbtJY@vger.kernel.org, AJvYcCX8AA52YlUeevOEkwCbl8TTnSj7Bb5PCKn5hXJ/pJIU5VPQ7lh0kaMXHcZbDuXqqN/bwmbgvMUYM9nZKTJGgZgA@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIpjCeYEtmgJe88ZOcO3RoEjRWy/Ce5h5K6hflbqOZXcxWzXh7
+	WEvDHg8LcJg0e+ZXz9sUlUBHLaoDoWLnAcFvghe1E2X3CT8IuBrmcmAB32sWIsr+5ZVkyPBGyJD
+	2ACtCJtKmV1RCSdLDQ+XRKi5lxhw=
+X-Gm-Gg: ASbGnctekuBmFaRCaVYEmBXgMky146fxV5Q1oiTBqWuk5wvEj0XGzEdj6tsTsILTDo2
+	9+zsrzsb+B8lJ27XXmn+tYmwL96TZD8k60jv2Ps2ZpoM/PfD72EjS4dVgr1iwvG3J4pP/PAHSv3
+	dvvtz/XcsqGRVnQ8R7zYayIOLuafIEhHJy/k/J7wWtncq4ORi9jkF5
+X-Google-Smtp-Source: AGHT+IH/HosXjxOmwFPtGeWQfhxekC8P6qoxTmos7b0mOc58p0+QS9G2JnlqUawjIQiGiopnQR3O+V/TuYdD8NWDOvo=
+X-Received: by 2002:a92:ca48:0:b0:3d0:47cf:869c with SMTP id
+ e9e14a558f8ab-3d8942886e8mr197937005ab.19.1745420152327; Wed, 23 Apr 2025
+ 07:55:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 32/33] dt-bindings: display: panel: samsung,ams581vf01:
- Add google,sunfish
-To: Danila Tikhonov <danila@jiaxyga.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org,
- netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-hardening@vger.kernel.org, linux@mainlining.org,
- ~postmarketos/upstreaming@lists.sr.ht
-References: <20250422213137.80366-1-danila@jiaxyga.com>
- <20250422213137.80366-16-danila@jiaxyga.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250422213137.80366-16-danila@jiaxyga.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com>
+ <20250410-topic-smem_dramc-v2-3-dead15264714@oss.qualcomm.com>
+ <20911703-ab4e-4eb2-8611-294730a06d2f@quicinc.com> <CACu1E7HDmQXDNtEQCXpHXsOKPCOgrWgo+_kcgizo9Mp1ntjDbA@mail.gmail.com>
+ <1282bf58-e431-4a07-97e5-628437e7ce5f@quicinc.com> <CACu1E7GwMCt6+JJQGgSvJObTMMWYLPd69owyFo7S=sxu_EEsUw@mail.gmail.com>
+ <16845de2-a40a-4e3d-b3aa-c91e7072b57f@quicinc.com> <CAF6AEGvyeRLHFBYmxkevgT+hosXGiH_w8Z+UjQmL+LdbNfVZ+w@mail.gmail.com>
+ <acd1c8dd-286b-40b7-841d-e53e2d155a61@oss.qualcomm.com>
+In-Reply-To: <acd1c8dd-286b-40b7-841d-e53e2d155a61@oss.qualcomm.com>
+From: Rob Clark <robdclark@gmail.com>
+Date: Wed, 23 Apr 2025 07:55:39 -0700
+X-Gm-Features: ATxdqUHj4F4rmzIJwqK9WlP6_xORQ21GMzISXDUuQYh93b8M4VTvVt2-yaAaxlY
+Message-ID: <CAF6AEGts5rWvgyZy8RtAaUOsad362AG-uNjxF9vyj4szg=b5Bw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] drm/msm/a6xx: Get HBB dynamically, if available
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Akhil P Oommen <quic_akhilpo@quicinc.com>, Connor Abbott <cwabbott0@gmail.com>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Sean Paul <sean@poorly.run>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-hardening@vger.kernel.org, 
+	dri-devel <dri-devel@lists.freedesktop.org>, freedreno@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 22/04/2025 23:31, Danila Tikhonov wrote:
-> This panel is used in Google Pixel 4a (google,sunfish). Document the
-> corresponding string.
-> 
-> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
-> ---
->   .../bindings/display/panel/samsung,ams581vf01.yaml        | 8 +++++++-
->   1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/samsung,ams581vf01.yaml b/Documentation/devicetree/bindings/display/panel/samsung,ams581vf01.yaml
-> index 70dff9c0ef2b..a3a1de32d8be 100644
-> --- a/Documentation/devicetree/bindings/display/panel/samsung,ams581vf01.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/samsung,ams581vf01.yaml
-> @@ -17,7 +17,13 @@ allOf:
->   
->   properties:
->     compatible:
-> -    const: samsung,ams581vf01
-> +    oneOf:
-> +      - enum:
-> +          - samsung,ams581vf01
-> +      - items:
-> +          - enum:
-> +              - google,ams581vf01-sunfish
-> +          - const: samsung,ams581vf01
+On Tue, Apr 22, 2025 at 4:57=E2=80=AFPM Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
+>
+> On 4/21/25 10:13 PM, Rob Clark wrote:
+> > On Fri, Apr 18, 2025 at 9:00=E2=80=AFAM Akhil P Oommen <quic_akhilpo@qu=
+icinc.com> wrote:
+> >>
+> >> On 4/18/2025 6:40 AM, Connor Abbott wrote:
+> >>> On Thu, Apr 17, 2025, 1:50=E2=80=AFPM Akhil P Oommen <quic_akhilpo@qu=
+icinc.com> wrote:
+> >>>>
+> >>>> On 4/17/2025 9:02 PM, Connor Abbott wrote:
+> >>>>> On Thu, Apr 17, 2025 at 3:45=E2=80=AFAM Akhil P Oommen <quic_akhilp=
+o@quicinc.com> wrote:
+> >>>>>>
+> >>>>>> On 4/10/2025 11:13 PM, Konrad Dybcio wrote:
+> >>>>>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >>>>>>>
+> >>>>>>> The Highest Bank address Bit value can change based on memory typ=
+e used.
+> >>>>>>>
+> >>>>>>> Attempt to retrieve it dynamically, and fall back to a reasonable
+> >>>>>>> default (the one used prior to this change) on error.
+> >>>>>>>
+> >>>>>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >>>>>>> ---
+> >>>>>>>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 15 ++++++++++++++-
+> >>>>>>>  1 file changed, 14 insertions(+), 1 deletion(-)
+> >>>>>>>
+> >>>>>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/=
+drm/msm/adreno/a6xx_gpu.c
+> >>>>>>> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..a6232b382bd16319f=
+20ae5f8f5e57f38ecc62d9f 100644
+> >>>>>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> >>>>>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> >>>>>>> @@ -13,6 +13,7 @@
+> >>>>>>>  #include <linux/firmware/qcom/qcom_scm.h>
+> >>>>>>>  #include <linux/pm_domain.h>
+> >>>>>>>  #include <linux/soc/qcom/llcc-qcom.h>
+> >>>>>>> +#include <linux/soc/qcom/smem.h>
+> >>>>>>>
+> >>>>>>>  #define GPU_PAS_ID 13
+> >>>>>>>
+> >>>>>>> @@ -587,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gp=
+u *gpu)
+> >>>>>>>
+> >>>>>>>  static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+> >>>>>>>  {
+> >>>>>>> +     int hbb;
+> >>>>>>> +
+> >>>>>>>       gpu->ubwc_config.rgb565_predicator =3D 0;
+> >>>>>>>       gpu->ubwc_config.uavflagprd_inv =3D 0;
+> >>>>>>>       gpu->ubwc_config.min_acc_len =3D 0;
+> >>>>>>> @@ -635,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adre=
+no_gpu *gpu)
+> >>>>>>>           adreno_is_a690(gpu) ||
+> >>>>>>>           adreno_is_a730(gpu) ||
+> >>>>>>>           adreno_is_a740_family(gpu)) {
+> >>>>>>> -             /* TODO: get ddr type from bootloader and use 2 for=
+ LPDDR4 */
+> >>>>>>>               gpu->ubwc_config.highest_bank_bit =3D 16;
+> >>>>>>>               gpu->ubwc_config.amsbc =3D 1;
+> >>>>>>>               gpu->ubwc_config.rgb565_predicator =3D 1;
+> >>>>>>> @@ -664,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adr=
+eno_gpu *gpu)
+> >>>>>>>               gpu->ubwc_config.highest_bank_bit =3D 14;
+> >>>>>>>               gpu->ubwc_config.min_acc_len =3D 1;
+> >>>>>>>       }
+> >>>>>>> +
+> >>>>>>> +     /* Attempt to retrieve the data from SMEM, keep the above d=
+efaults in case of error */
+> >>>>>>> +     hbb =3D qcom_smem_dram_get_hbb();
+> >>>>>>> +     if (hbb < 0)
+> >>>>>>> +             return;
+> >>>>>>> +
+> >>>>>>> +     gpu->ubwc_config.highest_bank_bit =3D hbb;
+> >>>>>>
+> >>>>>> I am worried about blindly relying on SMEM data directly for HBB f=
+or
+> >>>>>> legacy chipsets. There is no guarantee it is accurate on every chi=
+pset
+> >>>>>> and every version of firmware. Also, until recently, this value wa=
+s
+> >>>>>> hardcoded in Mesa which matched the value in KMD.
+> >>>>>
+> >>>>> To be clear about this, from the moment we introduced host image
+> >>>>> copies in Mesa we added support for querying the HBB from the kerne=
+l,
+> >>>>> explicitly so that we could do what this series does without Mesa e=
+ver
+> >>>>> breaking. Mesa will never assume the HBB unless the kernel is too o=
+ld
+> >>>>> to support querying it. So don't let Mesa be the thing that stops u=
+s
+> >>>>> here.
+> >>>>
+> >>>> Thanks for clarifying about Mesa. I still don't trust a data source =
+that
+> >>>> is unused in production.
+> >>>
+> >>> Fair enough, I'm not going to argue with that part. Just wanted to
+> >>> clear up any confusion about Mesa.
+> >>>
+> >>> Although, IIRC kgsl did set different values for a650 depending on
+> >>> memory type... do you know what source that used?
+> >>
+> >> KGSL relies on an undocumented devicetree node populated by bootloader
+> >> to detect ddrtype and calculates the HBB value based on that.
+> >
+> > Would it be reasonable to use the smem value, but if we find the
+> > undocumented dt property, WARN_ON() if it's value disagrees with smem?
+> >
+> > That would at least give some confidence, or justified un-confidence
+> > about the smem values
+>
+> The aforementioned value is populated based on the data that this
+> driver reads out, and only on the same range of platforms that this
+> driver happens to cater to
 
+Did I understand that correctly to mean that the dt property is based
+on the same smem value that you are using?  In that case, there should
+be no argument against using the smem value as the source of truth.
 
-Why do you introduce a new compatible ? using samsung,ams581vf01 is prefectly fine
-if it's same panel.
-
-Neil
-
->   
->     reg:
->       maxItems: 1
-
+BR,
+-R
