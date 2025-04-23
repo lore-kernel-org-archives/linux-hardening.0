@@ -1,115 +1,82 @@
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 6F0B119A288;
-	Wed, 23 Apr 2025 02:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9869B25F7AD;
+	Wed, 23 Apr 2025 02:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745373905; cv=none; b=HveHvm2J1mpicwN26xZ/Xrvf9jEoy3rP2Vm5bQ0iSXStfYHXrg13k62OvgLN/nbvJwb9CQRn0EP5LASexz7QZIdd2LwQ/TeEAxT6PjPVaaAq+2lZ8ZmaBN1PksAm1D9YlV839YqAb3/kJP0/ip0DSacdUq6LHyGoCEuuOp/Wklk=
+	t=1745375873; cv=none; b=EeSrC7TKP4uafl0WpZWb7T4FM+gRJk8/dDbH6Dcz0xpc5EFk+BgWdNafRxQUSMU0IXjFRTYSJq9V1itl4CkZ09T7Fw7y1Cc+1tACQ/yo83UQKUm68OMjeKue9wCUMCUNuXc6KyBycLPmdm1ycZRgOs9JCl9oKFWj/TBdfQfl9TI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745373905; c=relaxed/simple;
-	bh=yZJ7jR/aZW12eQ5iq+8UpKsm9trXaGEY8ZAigEhAObE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type; b=YFPut3euEaeNgjmroUh1pfoErGA5me91yph77luNP1SrvwFn0hxKnZObS6kzmljpxfZ/36c/JF+TMmkuJW5uEmAR3mXrV/Q4JG/pMoWaowOxQIKNFNj1549hBG/PeG9iUoDmlFXk3GTIDEMuL3KodAftEdkm1dL4kDXR3w8jvjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from [172.30.20.101] (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 3A5DD6018E571;
-	Wed, 23 Apr 2025 10:04:57 +0800 (CST)
-Message-ID: <21407408-78e4-48eb-8296-fcddc702ae25@nfschina.com>
-Date: Wed, 23 Apr 2025 10:04:56 +0800
+	s=arc-20240116; t=1745375873; c=relaxed/simple;
+	bh=PI0TRCaYpM1s692ZlvDtK0ScW8lDaLDSxH9CQpk5K1Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TXi7NDEtbclXAEDt65f7VivyEQq1C6RseoFZ73eQePy2bKowfCJQc6dvplFeybIhc8d24hYfqp7Efgj3w1RuMKUmEPu9INtkUv8hSZoQxmRs4aMlGU5OLUyDOH1pxkL84r6QzFtifPw3G9mg3ohbT3hwH2KLciN1578MzKSfj3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2xNEtGW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2xNEtGW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 132E2C4CEE9;
+	Wed, 23 Apr 2025 02:37:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745375873;
+	bh=PI0TRCaYpM1s692ZlvDtK0ScW8lDaLDSxH9CQpk5K1Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=V2xNEtGWF9hvwtDdGNIio0gDYFM90HshyGdAMOmIqJ5X6O66UNKUuu04tb9PBEDH9
+	 q6FuE4Sfm+L3eCjh+pALQBwfOjMpdhCoQFLr86BjWfMJoGhJgd6WQIKsTM+HDI/uIM
+	 zpgnSRiq8zbNlO6GZZlIrDDK7tkiZZJGy42U5qew6HHdz5iKaFeuIxQ+LXP5LG2VBr
+	 l5KC0/c7a6eWs/+ee8XeHWbT7gLpmHjBWs9AAlp1sIor9bb1uy0S2b9whV4EjUMjBV
+	 k6TAC0EvGP8JnAD414l0QX7HR8ofXc6IvgUq5uk8kGkOm+BJCcQSz6h+FKg1qVRytY
+	 1yueKmJF29Jgw==
+From: Kees Cook <kees@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Alejandro Colomar <alx@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] EISA: Move devlist.h out of obj to always
+Date: Tue, 22 Apr 2025 19:37:47 -0700
+Message-Id: <20250423023743.work.350-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/damon/sysfs-schemes: using kmalloc_array() and
- size_add()
-Content-Language: en-US
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- SeongJae Park <sj@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Su Hui <suhui@nfschina.com>, akpm@linux-foundation.org,
- damon@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-In-Reply-To: <501ea9b1-017b-4517-8de4-7056803e7127@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1222; i=kees@kernel.org; h=from:subject:message-id; bh=PI0TRCaYpM1s692ZlvDtK0ScW8lDaLDSxH9CQpk5K1Q=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkcQdVWT1tuPOJd7VKiajnRrfxx+JQzHOyTpggvivsvY 3JsjSdzRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwESS9zEyLGSaorfLRfZpjr2r wKyH5Y6X2K5F6rY8/ml9JF5UJyR/AsN/F2uv7KK56Ys/nH8mxmy0SKbhcEiUjM28T8wVz4/zCZU yAQA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-On 2025/4/23 02:50, Christophe JAILLET wrote:
-> Le 22/04/2025 à 20:23, SeongJae Park a écrit :
->> On Tue, 22 Apr 2025 13:44:39 +0300 Dan Carpenter 
->> <dan.carpenter@linaro.org> wrote:
->>
->>> On Tue, Apr 22, 2025 at 01:38:05PM +0300, Dan Carpenter wrote:
->>>> On Mon, Apr 21, 2025 at 02:24:24PM +0800, Su Hui wrote:
->>>>> It's safer to using kmalloc_array() and size_add() because it can
->>>>> prevent possible overflow problem.
->>>>>
->>>>> Signed-off-by: Su Hui <suhui@nfschina.com>
->> [...]
->>>>> --- a/mm/damon/sysfs-schemes.c
->>>>> +++ b/mm/damon/sysfs-schemes.c
->>>>> @@ -465,7 +465,8 @@ static ssize_t memcg_path_store(struct kobject 
->>>>> *kobj,
->>>>>   {
->>>>>       struct damon_sysfs_scheme_filter *filter = container_of(kobj,
->>>>>               struct damon_sysfs_scheme_filter, kobj);
->>>>> -    char *path = kmalloc(sizeof(*path) * (count + 1), GFP_KERNEL);
->>>>> +    char *path = kmalloc_array(size_add(count, 1), sizeof(*path),
->>>>> +                   GFP_KERNEL);
->>>>
->>>> Count is clamped in rw_verify_area().
->>>>
->>>> Smatch does a kind of ugly hack to handle rw_verify_area() which is 
->>>> that
->>>> it says neither the count nor the pos can be more than 1G. And 
->>>> obviously
->>>> files which are larger than 2GB exist but pretending they don't 
->>>> silences
->>>> all these integer overflow warnings.
->>>>
->>>
->>> Actually rw_verify_area() ensures that "pos + count" can't 
->>> overflow.  But
->>> here we are multiplying.  Fortunately, we are multiplying by 1 so 
->>> that's
->>> safe and also count can't be larger than PAGE_SIZE here which is 
->>> safe as
->>> well.
->>
->> Thank you for adding these details, Dan.  I understand the size_add() 
->> change
->> can make warnings slience, though it is not really fixing a real 
->> bug.  So I
->> believe there is no action item to make a change to this patch. Maybe 
->> making
->> the commit message more clarified can be helpful, though?
->>
->> Please let me know if I'm misunderstanding your point and/or you want 
->> some
->> changes.
->
-> As sizeof(*path) = 1, maybe, just change it to:
->     char *path = kmalloc(count + 1, GFP_KERNEL);
-Maybe nothing should change?
-Thanks for Dan's explanation again.
-I send this patch because  it is mentioned in 
-Documentation/process/deprecated.rst that:
+I put devlist.h into the wrong Makefile macro ("obj") to get it included
+in "targets". Put it into "always" so nothing tries to link against it.
+Solves CONFIG_EISA=y i386 build failure:
 
-"
-Dynamic size calculations (especially multiplication) should not be
-performed in memory allocator (or similar) function arguments due to the
-risk of them overflowing.
-"
+ld: vmlinux.a: member drivers/eisa/devlist.h in archive is not an object
 
-Although in this case, this dynamic size calculations is  safe.
-But it's also fine for me to change this patch or discard this patch 
-because there is no
-bug really fixed.
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Closes: https://lore.kernel.org/all/4a8ba1d0-d2d9-41f8-abf1-d45ec8996d10@infradead.org
+Fixes: dd09eb0e2cc4 ("EISA: Increase length of device names")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alejandro Colomar <alx@kernel.org>
+---
+ drivers/eisa/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Su Hui
+diff --git a/drivers/eisa/Makefile b/drivers/eisa/Makefile
+index f0d6cf7d1f32..552bd9478340 100644
+--- a/drivers/eisa/Makefile
++++ b/drivers/eisa/Makefile
+@@ -1,7 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for the Linux device tree
+ 
+-obj-$(CONFIG_EISA)	        += devlist.h eisa-bus.o
++always-$(CONFIG_EISA)		+= devlist.h
++obj-$(CONFIG_EISA)	        += eisa-bus.o
+ obj-${CONFIG_EISA_PCI_EISA}     += pci_eisa.o
+ 
+ # virtual_root.o should be the last EISA root device to initialize,
+-- 
+2.34.1
 
