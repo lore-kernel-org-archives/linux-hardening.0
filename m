@@ -1,71 +1,71 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38B6155316
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 13:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D4A19F121
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 13:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745415085; cv=none; b=VtLMBlzN4gVPDcZLZ29Re5+S9lDzwg5ChaXRQPo9xTcFgQ5GfcAk4fDic7CMvGGiOuJ2oRy0kNPmLD66WgKMQVZdxKlkBUHSBamg/TCqvcBX/XlZ9C6Zl/kQwdCbxncRnkDoqN+cltIR9rQD3JwS94WqojwzHeCKWENbKD9O8LM=
+	t=1745415534; cv=none; b=D72bIEw3ebxv+JEuXtQrD7LfXszQ/Q/0FdPgMOcn8u8JztGsJKY/4aqakd2pv0sP+Y0YcWfURoWHbFtOXFhNPYppSrxUpMK/3UC8X6rs1FmFud3mMwYZ0+T/SdYeIxH579hfrLqFed6kwAcWVJj3uslrPny+dzsTxRsfsMp+l6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745415085; c=relaxed/simple;
-	bh=YPWbosimC3qPkFIdP63gOcohPto8jVI/bjwvfdxo1T0=;
+	s=arc-20240116; t=1745415534; c=relaxed/simple;
+	bh=lPJJwHKGCbJcWTOy/W2KqY1hoahEC6Ch3aeOkRUot7I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GCXqG7+TkJjnegeDze7E3rmng44jyQxO8rEgYt013y3rGD8+k3JOTzdVDbE0xpGW/JZKtecyxkOILKI1FW9h4l2PBy+DDGq1h6iu/kRVmzZ8zs76p7TZugpjTQsxTyS7pMUcoNRQ7BbNRrXpR9WN2qJ4qvMAil8qeDTV4C7dLWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aRFmbBeB; arc=none smtp.client-ip=205.220.168.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sb3IxALoW3D/yAbf5o6RPkAlnOvdsyffduZ6LlZ08QegqezCY0sgnG4dqEBo7dxLbQ/83mPHtRUMK3lAOeF3ty5b/0LYaDmlEe83RjyhlfnOLFomWQpviX7PBJ5aJ+fQT96U6CFrZYgkcZm2ayqDb3sVF+LMN6TSTc4IkJpW9UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lln9v1Oc; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aRFmbBeB"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAOGnH021333
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 13:31:22 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lln9v1Oc"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAkCUa022002
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 13:38:52 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=dZWmP9gM06dWmEKtYYm5mxy3
-	nQnWFD6fy7umPVrKHi0=; b=aRFmbBeByAGZvNocZKi/oi6Wq9yS71NB7meeiNC5
-	6VkTz4uk1rAlDwQDYkckfe+r/03dNhtgy7dh+2+Iin9RD7qbRHx4v3mwbz8Ow97h
-	ejZTDBqmtXWtDK+WEkkHf15QK+jfNOnAAQXhFkEjaaxpfGWCEyay7Mt/FAf72jw0
-	F3IeOZ8obV2qKlRVtyVqR5wLUIBRsGu+Q26lSN1UbKtQkAYB9rBL2DwdnrGHAgnc
-	hTIHQdArOuO3M5xjZ5odE/21yDszB7JUx3h2mWIQSALFgyWOlqgUKlB804XHgytT
-	avZVqKi6iPhVByNXlcHdavlosu/o2JgNgovILUgMNI6MHA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh228yh-1
+	:references:subject:to; s=qcppdkim1; bh=wj+FtiAGAkQ5P/5zChODPkrm
+	ZAMKKPl/2U1Ld2vwF7E=; b=lln9v1Oc1wNdBAOcxgSa0NUOSO3GeARiFX0pWfBT
+	TB72Ue87DJnryx3NjX+fkfljwpPeSHEttfHNXIMW0hMXfAWmCQz30Qfnr39qHxoj
+	Lsz8T5pDCCM45mCE0VL7jq/tReu41HvWK7/F0k9p7WykLE8P6KYjRbdAbVTBQo7A
+	RPpPQOoEZPn1+toa5OKpsOVAoTp02EWXjAQ2jnwOR+1nGzmnsNxXz5/jRHpWaMO6
+	ZKUigtfJs+ZRGywq+p3Sl08dmcM8y4u+3rlYlzQjQ99zakY39vFtej73yslL+a4i
+	J87Hg6K/1RRqiO4kV189DUnc/+QfgYfnPwl/yelkdOc3Ow==
+Received: from mail-ua1-f72.google.com (mail-ua1-f72.google.com [209.85.222.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh128ef-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 13:31:22 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c54e9f6e00so151207685a.0
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 06:31:22 -0700 (PDT)
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 13:38:51 +0000 (GMT)
+Received: by mail-ua1-f72.google.com with SMTP id a1e0cc1a2514c-85c8a0d07f2so7670532241.0
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 06:38:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745415081; x=1746019881;
+        d=1e100.net; s=20230601; t=1745415531; x=1746020331;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dZWmP9gM06dWmEKtYYm5mxy3nQnWFD6fy7umPVrKHi0=;
-        b=kZH2Mb0iLeVFcYLVF2fBdn3xEAttyb92w32rmQhoK7rJ9C7enZj6eZtcniJ7P860fs
-         ZtIZrpxFCPx6be5rS52eY7kj8SydoWn6/8Yat1AhE2l47bnLjvfH6tOXeGUfNiUUshXO
-         4z/Hp7OmP3WcDbD8qCKA5+gT35YEfvkvGRjCJ7ft9TUS4ORdJp0In4+kU9qBD1tAdqyw
-         cKUGZPe2QVtuaueEz/6zajF51iKIpaoatDU66KoLjggg6j5nWq0lx0uSTt3hg4z5KOnP
-         lOadpXjZjg94Rz5KfzWhORqV4Xw6+vgEv6dxP0NKO+Tj4JUhd4S+FgQHpLoi7NDnJ7ie
-         xn2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXrj3zpJ0e3WEyIpcymENzX9TzRWpKppr5lsQFtbgGr4DQTl6ZIAxgZ0/x1pMoTbcbraEthJ6lDbNt4zoDigho=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYeEX1o98yM6325/KrLurDsE+ahFRO8vDUFpgszpWJIYwsLjB7
-	RGH4YdImAZ7wm6PzL6fizMKigayf4xNUNPATA14DJt0nqbeNSLYEyJ6skbF52pLba4GDOwDRrXz
-	ChsySxVAVMNoMKx6h1H8neitGHLlJoBB10TREqMMhlR5aCVEZOOr7s9RP4Fs0F+hEoXQ=
-X-Gm-Gg: ASbGncvSvWpv4YE6VFjSzfxoyAyrPTBgVxSO8yI2WQWRia4DaQl/P04qHY7HTIYhSzC
-	ctiIt2b7yMuDUW/GDkY2u9zAc79CXZS91fM/5+U1NmhHL+74Pl4LsQVn12dd+aWcTeunrA5PflJ
-	LZyLVEhWlSXsNWe89WrnyzNUFOzOWy8f5EZxowYxQRhPoz7ZfV6vaOzNDLej0HGnGrs3xkhVkkq
-	uy8O3lJRbpR09F1NQkpw2Mcy2Hy24BsZsDyqOojLu+TIrOq43TWIRdoD3871HqQe0uOQWglRtZ5
-	SBB15E7j1nGq3pjfaGn20OdvhPo9OrvTQwL0oRqhgczFY8l4gXN7ANPKN+ZiHG5KnWuSihp69MY
+        bh=wj+FtiAGAkQ5P/5zChODPkrmZAMKKPl/2U1Ld2vwF7E=;
+        b=ej7BGr1s9tWY5Oq1MRhE4PisxQ5NTzRztgTidJ1YoCDw6wXO3TevT7Xw8O6FJ9fyEE
+         FiXfY1p+Xr2cZPx5pwkUfQQ2YGoA2QPswJUThY/D0uroD3Az8IEoP+Q/N8mkwCPcwZe7
+         PfeJhRRHmwDQK0EZNexbzcSxTgrpi1kq42iOrJF5h4I0xwer62NzSGD1erFV9/+e7Pv9
+         Lc4NXTpRWm1MWRRfwseepPpDyMKtpJOV52fx0b17rx/pGX6TmxOeJMJ/a72HVCCFu1GE
+         qRY7LYTRxrl3PF5DS7jXFR27SzsqWIDaWAriUAZKXZkwrj6ZF2mmwSod9RhfokBd3qtw
+         X1Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCX9R2gJph3EqKBSkF6LlKFbJO/bZ6Yyzy2sWstPVKVsAVt5a4G2N4neJJPqKDKqkO7LNj7e9z8RCuhYiFCBaIM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybQFl3fuINpJT1+ZjQUu2N/G8AUoE6PD6PTYBvekjNwU+GqqFc
+	/WDfDyAbCAbIqVTBXpMBY6LIzBgEhrln5xk1LIoPOy68dfm7dsE6Wz/1gotT+m03mC6b/kys8fB
+	DiP58yfTIQHraGEFWdpP0wu+LqoXOVktJwLLKGOE9ZXERt2rvZcHmKXRP/LlJy1hzHWo=
+X-Gm-Gg: ASbGncsyMiIGBZ5W6jx3N9s4zsvVRvpfACHWMe+cc/qZjXgc45XERl1CrmH20AXJW8p
+	DEPjYuLrXf1vjuwjPgKuVlISknveX+lc9QFwYojHdJ4kfeXdogn9bx4SrM1YxAAUX+9+IbRSIY9
+	NQ2/kq7XdtvomiQY30kfTZuKfqo1I2sz8GwPk11mn32e6V4zI/kIm9M57Q5wq5GK6IeKUogJ1fM
+	5W8xhi/LWM7cW3KhaTCtla4/R5sxTTtPcFvf2CdX/gc2kRdKUWBo/Oo95+HNgYzKXAoOOpRd/Sb
+	bnlHQBDo4uOJ7AfiijyMofCfcqDaGxbv/Jb2QdeJGFMMtMshBdskxVuPQTwZxQwcSP5NCMV/I6A
 	=
-X-Received: by 2002:a05:620a:24c5:b0:7c3:dd2d:c0e2 with SMTP id af79cd13be357-7c94d83dee5mr484770385a.13.1745415080690;
-        Wed, 23 Apr 2025 06:31:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFpfJbI+AgBKtKkvkNrS86sfl4ggqkejOcLK4vPJLKCGSN66njI9kIk5rDo+YJT0RY1DWgIxg==
-X-Received: by 2002:a05:620a:24c5:b0:7c3:dd2d:c0e2 with SMTP id af79cd13be357-7c94d83dee5mr484758485a.13.1745415079978;
-        Wed, 23 Apr 2025 06:31:19 -0700 (PDT)
+X-Received: by 2002:a05:6808:6a84:b0:400:fa6b:5dfb with SMTP id 5614622812f47-401c0ca677amr12197831b6e.36.1745415056339;
+        Wed, 23 Apr 2025 06:30:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGDEi3rdB2ep6R+cK4PHyu/fZwFAeRdF3OHYastR6zA3OEKUX6hMlxowo/Y01S4Kl8W7OZkVg==
+X-Received: by 2002:a05:6808:6a84:b0:400:fa6b:5dfb with SMTP id 5614622812f47-401c0ca677amr12197723b6e.36.1745415055890;
+        Wed, 23 Apr 2025 06:30:55 -0700 (PDT)
 Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5f61afsm1578477e87.246.2025.04.23.06.31.18
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3109084e434sm18283881fa.104.2025.04.23.06.30.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 06:31:18 -0700 (PDT)
-Date: Wed, 23 Apr 2025 16:31:16 +0300
+        Wed, 23 Apr 2025 06:30:54 -0700 (PDT)
+Date: Wed, 23 Apr 2025 16:30:52 +0300
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 To: Danila Tikhonov <danila@jiaxyga.com>
 Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -130,10 +130,10 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
         iommu@lists.linux.dev, linux-remoteproc@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org,
         linux@mainlining.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 29/33] firmware: qcom: tzmem: disable sm7150 platform
-Message-ID: <3skwipkunn6dw4xtzyx4vdiqiwtu2qgezbel3vcu5k4cxk65yi@csi6xun5nlyj>
+Subject: Re: [PATCH 28/33] cpufreq: Add SM7150 to cpufreq-dt-platdev blocklist
+Message-ID: <pywgehih5yrxbnzyjtufkh52xiuonsjv7wougvbauiw2yd3mpy@imcguzi5f7fm>
 References: <20250422213137.80366-1-danila@jiaxyga.com>
- <20250422213137.80366-13-danila@jiaxyga.com>
+ <20250422213137.80366-12-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -142,37 +142,35 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250422213137.80366-13-danila@jiaxyga.com>
-X-Authority-Analysis: v=2.4 cv=EtLSrTcA c=1 sm=1 tr=0 ts=6808ebaa cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=7ibcVnAUAAAA:8 a=EUspDBNiAAAA:8 a=UlxMoeSB6LsTFmt9i7YA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=HywIFdX19-EX8Ph82vJO:22
-X-Proofpoint-GUID: AJcKcpFTGI3fbnEo7gfrNgNLEsLWFcV8
-X-Proofpoint-ORIG-GUID: AJcKcpFTGI3fbnEo7gfrNgNLEsLWFcV8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA5NSBTYWx0ZWRfX2mojZyR9KfXB pBxPIYd702eDvS2/QV47GAuD3RpzquhnHeJq4NmJkkJRxSJdLbSknAazyX62GDTBwkTVcctU80K quAx1N0i/GYc2RV71MZ/QSZirNlsJzTlmsGjqwD32dxnUXadROjJSVfK8YvdihuJY1+fkETQRHQ
- veTAiSN9xIAzCdZs6h7bkqZ6ZrrI6W+DuAohtDt5WqluQO3wU7i2lz2snFwpDiIBVYGstpFg4fZ bZ3I91iS0DCLe+ipBJ8wjxpYN0jaZxJFA6DOfpuF2G3Ob+GMKhtt2rsnKSvWy1UBrPtk4hVyRfy XBPV+kt739nNs6ks8eRAYx3TZDu69k1AfsPPbEv/aImke32KpED3JgkLuddxKhXaGQgxGnuBHRs
- n4PpvoC7X1igYVilccIsOps8EpP7KpFW559K+Eu/qdcJspOPAdzPiA4Mndt2XgHFOQGbYWJv
+In-Reply-To: <20250422213137.80366-12-danila@jiaxyga.com>
+X-Proofpoint-GUID: PCw3Zrml6Lvn8MekAUjLYWzF_7dmcTtv
+X-Authority-Analysis: v=2.4 cv=OY6YDgTY c=1 sm=1 tr=0 ts=6808ed6c cx=c_pps a=ULNsgckmlI/WJG3HAyAuOQ==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=7ibcVnAUAAAA:8 a=EUspDBNiAAAA:8 a=KMkCwTOw-m2sBZ1LepcA:9 a=CjuIK1q_8ugA:10
+ a=1WsBpfsz9X-RYQiigVTh:22 a=HywIFdX19-EX8Ph82vJO:22
+X-Proofpoint-ORIG-GUID: PCw3Zrml6Lvn8MekAUjLYWzF_7dmcTtv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA5NSBTYWx0ZWRfX1RywoqvHt8aG h30eQEaT6a2PceK+OgKaJ3uqtpETQ6T2C4ixU8utlanBc2bcMpeqLTk7ccaOFhLorVGFX0tQtJn 1QuLVxUJ9RKukuubOycA3pbZGIKzNjX8NPG18VkkwR4n2FJY4wgjazWSM7ndUJ3DfvHwGkI8DTl
+ 5bqdyyLnZn+EKT+4MbJlbgv9KsRydgGLkleh0C68/+zxCeAB4NwJ/x7vdpsejLjp10W2sOJZScZ yZwGt0TUUxE7j+Vl16Bldl3nabZZ4yczebh/2YemG267esh+11AVnB2nbcC5/q2UEPpbxRUz6pY FChQTIzTW96YlAhSBx7M600OsKlU7YOykaZ7znO2P7MoMcsOsO+JM3tAR4zXXSxNOO59MrQw+pf
+ J9Ul6l58d4XJBu87JpOYfoEHCEIyiY7Ld1IZyaLybuSYRpEN/Kv28PQlHj6Wq89FUUANwr5G
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
  definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- suspectscore=0 mlxscore=0 clxscore=1015 spamscore=0 mlxlogscore=856
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 clxscore=1015 malwarescore=0
+ mlxlogscore=611 phishscore=0 priorityscore=1501 spamscore=0 adultscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
  adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504230095
 
-On Wed, Apr 23, 2025 at 12:31:33AM +0300, Danila Tikhonov wrote:
-> The SHM bridge makes the SM7150 devices reset while probing the RMTFS
-> (in qcom_scm_assign_mem()). Blacklist the SHM Bridge on corresponding
-> platforms using SoC-level compat string.
+On Wed, Apr 23, 2025 at 12:31:32AM +0300, Danila Tikhonov wrote:
+> The Qualcomm SM7150 platform uses the qcom-cpufreq-hw driver, so add
+> it to the cpufreq-dt-platdev driver's blocklist.
 > 
 > Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
 > ---
->  drivers/firmware/qcom/qcom_tzmem.c | 1 +
+>  drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
 >  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
 -- 
 With best wishes
 Dmitry
