@@ -1,55 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1C428B51F;
-	Wed, 23 Apr 2025 15:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF7228D847
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Apr 2025 18:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745422521; cv=none; b=cusutiDrKh7XN8TO2XzFgt5jHws62oVJeGBQ+jC/pg/JOXZ3A06WZwMbHySFxfctax79doIFKRkgcrj8qbJLN/TTQ369qAtGyLo6vBY+rP8gMqyi/9bI7DQP48FBN845y/+bOI6iIQ73Ro516TbUc5+7MtpRWt0+59fUE3OQxDE=
+	t=1745432450; cv=none; b=YKseQgYuInXbklRgYhQiieeZQAVTywn5sCDzm9nZ+gU1y7EjGGrtjsQ+1N0BMGZRLSXdM0gxzYXMFLVe2WGlvuOxWxi/ExBR6y7btObigRYplWdjifVMLjXyWa8dkCzFSQNxAE+lBqs+eeEIxCS5a2C6pb2mRfNaDXZpodNSKFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745422521; c=relaxed/simple;
-	bh=//m8VnyHey5kZRFQFNZt9DP8+X2ITGVIWL9+APTAHNU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PSiwXXvr6H/2MRnYxJFrbJuoZO2Hn67bwfMdtEOt3MckinkS69RWZqJAbCeh1v6HZqsG2DT8kmqBqLW3n/r5R9kpnwEMfCt5f7qAzJ+gT/isEoi8WLUiKeBDwbAE0Cpt0OwD/pDa+BAvn6RGD7RXch/hVuIPT2PYbm+feDxRNd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hooqSaCw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hooqSaCw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD814C4CEE3;
-	Wed, 23 Apr 2025 15:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745422521;
-	bh=//m8VnyHey5kZRFQFNZt9DP8+X2ITGVIWL9+APTAHNU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hooqSaCw0kWAuhSqnJSDCEvzqQ60ibLr8/gaspSWdPYbFHALwCx9EVFOsYVkaqhTw
-	 CW6F6M9Mr4Sm2qdxM9J5Ct0tQmkzRZasatLvc7wYhiTymVgbpZVuZ6nKmZOYaXyCWl
-	 nrM6H3TZOplq03906zpjZ8tIUKA0ROZ1L6OW9Bw43n/S4dr/uUyOG9Ttlbsu7IZjDU
-	 zF/A7r20qxNmQL7jkNpnr/IMITb7VMI3kzzNm9R2TknJW375c5Xm/kGDkaoZ9TOy3S
-	 +IT4NdJdT1NVlWnWevKdcR2Znh3cpMhOfsSOR4ESrsFjsdtjMm/zWLkCs8wHtGm0Py
-	 7M+GP1DXPuZ7A==
-Date: Wed, 23 Apr 2025 17:35:17 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] drm/nouveau: outp: Use __member_size() helper
-Message-ID: <aAkItcD5VuDg1Qt-@pollux>
-References: <aAe5o_-f5OYSTXjZ@kspp>
+	s=arc-20240116; t=1745432450; c=relaxed/simple;
+	bh=BXomuzHUN126JCY1qWIkZJBlPF7DBcz84bj7SMVpS5A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l5TKWcCZJVXm3YXSaXcTVnfE2SDp018bF6EYg5U9Q4QPwrOXNSRaucRe/mBPj64UHhk+0nWe6Z7YPZCQvtFcseKNUC0vjKxYLb6Uhg/ooiMbmnUg46bid5hyb7n6TPuPCXv5CSPaXcCfcMhVH6efqs/qdYOGkkJfOQekafMC2S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-82-148.bstnma.fios.verizon.net [173.48.82.148])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 53NIKdV8005122
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 14:20:40 -0400
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 503922E00EA; Wed, 23 Apr 2025 14:20:39 -0400 (EDT)
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ext4: Avoid -Wflex-array-member-not-at-end warning
+Date: Wed, 23 Apr 2025 14:20:32 -0400
+Message-ID: <174543076506.1215499.12197124623558022635.b4-ty@mit.edu>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <Z-SF97N3AxcIMlSi@kspp>
+References: <Z-SF97N3AxcIMlSi@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAe5o_-f5OYSTXjZ@kspp>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 22, 2025 at 09:45:39AM -0600, Gustavo A. R. Silva wrote:
-> Use __member_size() to get the size of the flex-array member at compile
-> time, instead of the convoluted expression `__struct_size(p) - sizeof(*p)`
+
+On Wed, 26 Mar 2025 16:55:51 -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> [...]
 
-Applied to drm-misc-next, thanks!
+Applied, thanks!
+
+[1/1] ext4: Avoid -Wflex-array-member-not-at-end warning
+      commit: 7e50bbb134aba1df0854f171b596b3a42d35605a
+
+(Apologies for sending this late; I've been dealing with a family
+medical emergency.  In any case, the patch landed in v6.16-rc2.)
+
+Best regards,
+-- 
+Theodore Ts'o <tytso@mit.edu>
