@@ -1,100 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339322147F6;
-	Thu, 24 Apr 2025 09:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1882222C8;
+	Thu, 24 Apr 2025 09:31:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745485913; cv=none; b=SdyZT28xP4FszBNi8ZgfOkPDCvaHkbRomYe0jt4wMNZD+8joqbVOA4wseu3VibtP/8o979iqBj0taZ+qRS46magM7mrnePi+e355zdHYE21kQtrXgTAmlhodCjTp3BLw7EL605rkRNnZtExSO0ReAZD1awdblgNJSh2tO6bvIEc=
+	t=1745487113; cv=none; b=CC5m3B+ntqJoW8gU5uxd/eEiha3dxCoCASuL9/I8ArQZCDmmZFST90TZ8IbyCHachnyAiZPoyNZyAPakZmEwPKVX8dtImJuJ+GTcoIQK7ObKhD4RpQlJFyY2EFXmO8cpG46a15ff6qYK7wpZitblwzwGyxzmYo7pnKYOLQDDGIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745485913; c=relaxed/simple;
-	bh=15vRsUE0bDXeqQTgh2kUDIT+VRozCY31BdgeStUR/M8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nION++yxj5aB09oS+c89ruiNmhYz56XTqzHXP5Jf3eAFI7AuhnL6H8sszHqzcSbwT4iEYCFfa/KCi/hexH9lYL24dG8bd4ibWLS2sb16xBxC+a52sCHMPGSLRJrRYayD4sxeScSU7BqUMmUbRfxxz0bqNQYqSgtdwbZzMr6OU3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIOomLFT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745487113; c=relaxed/simple;
+	bh=qCufCvxDi1+MqzijsET6fq/x9n2E81MIiZiD/rfpgRk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VoWE+LdQ9CjBYr22ySwzNQ8VL7k8NTTTmhZ5pYGNibKQls8qdEmUrMTCfmDDW4xKca476+SGae+c0+cOr15VRBmFZlG0IEXdQpPkfXdJb+LWJrvYCJBiqDaPsJQKJDy+/3VbgYXTbLDMJl/0bgb9aoD4DUsSBYivbIOVCpo6p0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNiXQcRY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIOomLFT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7193C4CEE3;
-	Thu, 24 Apr 2025 09:11:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNiXQcRY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F085C4CEE3;
+	Thu, 24 Apr 2025 09:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745485912;
-	bh=15vRsUE0bDXeqQTgh2kUDIT+VRozCY31BdgeStUR/M8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dIOomLFTA32COw9i8Mv1mpV5Y4V63i1JGQc6qx8dJ9njwQwWpAnkL6ThhOAtCg8dH
-	 2fQmcOS9B80t5Q8s9cFqB/tTu/9iOKjsfDL8VUzoLss+2r2Zb5bDLwNo5DwcW9nipx
-	 RoY4qWXhiK8btBDAeFRWR0T28PeS8qITapO12PN6HIPz8m+hqGienY+sr9k9X/etyb
-	 oU0tmOKsdEG/X7IimcgLEsJiWKxM7ULVhBZkvHVsG3kKnLW3obx2Wq6QMn5y5PheDn
-	 pdr0glpa1vkwoxidfVrxXaMYlGlBS5kpimxy1ISQNcihWrQmTeqSyvjO7Lh8JVNFvm
-	 hakoQIDL9XSuw==
-Date: Thu, 24 Apr 2025 11:11:47 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Erhard Furtner <erhard_f@mailbox.org>,
-	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mm: vmalloc: Support more granular vrealloc() sizing
-Message-ID: <aAoAU4vhrpxiXaLF@pollux>
-References: <20250424023119.work.333-kees@kernel.org>
+	s=k20201202; t=1745487112;
+	bh=qCufCvxDi1+MqzijsET6fq/x9n2E81MIiZiD/rfpgRk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=tNiXQcRYE3abNCB8tT3I2WPZjSHSXQis/7GPR5re2Tl55/j7D1jxysGcXfrdRWRsb
+	 vEtgABQcd7bgXpaFmStU5vvaVgPFiRaf8IY1YRGQJF4A9VtNSpOnAlPhPmnF9hdq+x
+	 yUD2xatpyMO6hu1ehVIWDnecG94LYsywNvd13DhC5relKlk+DwD73iyotc+5j2kEd+
+	 Qpc3vHX3ivVHpUg60TXqlXH87n50QLmg8CuDpSf0Sm1UcXWKWqTFhbvKHXv83ezEws
+	 hhlgelXlovG+5lHW2bnmnLzbf+ztABNSu17futNGiD7oeQZqWIujutByW+m193AkA4
+	 5DcO1DS2aKKXA==
+Date: Thu, 24 Apr 2025 11:31:49 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Terry Junge <linuxhid@cosmicgizmosystems.com>
+cc: Benjamin Tissoires <bentiss@kernel.org>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Nikita Zhandarovich <n.zhandarovich@fintech.ru>, 
+    Alan Stern <stern@rowland.harvard.edu>, Kees Cook <kees@kernel.org>, 
+    "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-input@vger.kernel.org, 
+    linux-usb@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+    syzkaller-bugs@googlegroups.com, lvc-project@linuxtesting.org, 
+    syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com, 
+    stable@vger.kernel.org
+Subject: Re: [PATCH v2] HID: usbhid: Eliminate recurrent out-of-bounds bug
+ in usbhid_parse()
+In-Reply-To: <20250312222333.2296363-1-linuxhid@cosmicgizmosystems.com>
+Message-ID: <727o0521-q24p-s0qq-66n0-sn436rpqqr1p@xreary.bet>
+References: <20250307045449.745634-1-linuxhid@cosmicgizmosystems.com> <20250312222333.2296363-1-linuxhid@cosmicgizmosystems.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424023119.work.333-kees@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Apr 23, 2025 at 07:31:23PM -0700, Kees Cook wrote:
-> Introduce struct vm_struct::requested_size so that the requested
-> (re)allocation size is retained separately from the allocated area
-> size. This means that KASAN will correctly poison the correct spans
-> of requested bytes. This also means we can support growing the usable
-> portion of an allocation that can already be supported by the existing
-> area's existing allocation.
+On Wed, 12 Mar 2025, Terry Junge wrote:
+
+> Update struct hid_descriptor to better reflect the mandatory and
+> optional parts of the HID Descriptor as per USB HID 1.11 specification.
+> Note: the kernel currently does not parse any optional HID class
+> descriptors, only the mandatory report descriptor.
 > 
-> Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-> Closes: https://lore.kernel.org/all/20250408192503.6149a816@outsider.home/
-> Fixes: 3ddc2fefe6f3 ("mm: vmalloc: implement vrealloc()")
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Update all references to member element desc[0] to rpt_desc.
+> 
+> Add test to verify bLength and bNumDescriptors values are valid.
+> 
+> Replace the for loop with direct access to the mandatory HID class
+> descriptor member for the report descriptor. This eliminates the
+> possibility of getting an out-of-bounds fault.
+> 
+> Add a warning message if the HID descriptor contains any unsupported
+> optional HID class descriptors.
+> 
+> Reported-by: syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=c52569baf0c843f35495
+> Fixes: f043bfc98c19 ("HID: usbhid: fix out-of-bounds bug")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Terry Junge <linuxhid@cosmicgizmosystems.com>
 
-Good catch!
+Applied, thanks.
 
-One question below, otherwise
+-- 
+Jiri Kosina
+SUSE Labs
 
-	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-
-> @@ -4088,14 +4093,27 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
->  	 * would be a good heuristic for when to shrink the vm_area?
->  	 */
->  	if (size <= old_size) {
-> -		/* Zero out spare memory. */
-> -		if (want_init_on_alloc(flags))
-> +		/* Zero out "freed" memory. */
-> +		if (want_init_on_free())
->  			memset((void *)p + size, 0, old_size - size);
-> +		vm->requested_size = size;
->  		kasan_poison_vmalloc(p + size, old_size - size);
->  		kasan_unpoison_vmalloc(p, size, KASAN_VMALLOC_PROT_NORMAL);
->  		return (void *)p;
->  	}
->  
-> +	/*
-> +	 * We already have the bytes available in the allocation; use them.
-> +	 */
-> +	if (size <= alloced_size) {
-> +		kasan_unpoison_vmalloc(p, size, KASAN_VMALLOC_PROT_NORMAL);
-> +		/* Zero out "alloced" memory. */
-> +		if (want_init_on_alloc(flags))
-> +			memset((void *)p + old_size, 0, size - old_size);
-> +		vm->requested_size = size;
-> +		kasan_poison_vmalloc(p + size, alloced_size - size);
-
-Do we need this? We know that old_size < size <= alloced_size. And since
-previously [p + old_size, p + alloced_size) must have been poisoned,
-[p + size, p + alloced_size) must be poisoned already?
-
-Maybe there was a reason, since in the above (size <= old_size) case
-kasan_unpoison_vmalloc() seems unnecessary too.
