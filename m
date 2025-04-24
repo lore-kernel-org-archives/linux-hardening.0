@@ -1,78 +1,99 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C27F1A5BB6;
-	Thu, 24 Apr 2025 19:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE94D28C5DB
+	for <linux-hardening@vger.kernel.org>; Thu, 24 Apr 2025 19:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745522327; cv=none; b=up2VzLJO4ikuijr28ApLvHqT1oUCk0UlfFVGN0Qi0AS7I+rYotpZqKfhr6vsu5g+NidUX4gbG1Okbr1Ek6QGXZlQIQGjWfvI0Aoxk1FXrGBK1Ora9ffcrDo/k/a/ckpE2lO/3scizF5Ip9n/T9nwq9zn6ffzKDYHyIgm6uh0YRc=
+	t=1745522779; cv=none; b=a0RyRaGGxxCks9l8lQV23KgxOKHFzfDq0jstSqHoteILi5P7HzMSo9BdZJGVa8duD91MuwKy3XZ91MILv5cmM0/+FZVxZFK2VfTOz/REDE3doknT1bTpYbH8HjbVFpNajzGj1Z5GbyiHsYaTIFe5YuNN9tvr57B4Fl70decCgUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745522327; c=relaxed/simple;
-	bh=5legdItJ0q6EqH5Fk5QJFNo2Mp5z6Cfpb77dkDQyYd4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=svfzedzHj36dK9ZWSTIpq2osUjvig9jEJvd1+Yj064e080xlf6A5GXQQE19KDK51IdFy4BXOpRJm8+le45CWY7zrpgG2UI18+lRL/yX/akvc7StR+/Jj4p2YDygHmLbmYHX2g2cR53BgsP324U05hgvPRgFaDz/Bb6vgM9R4l7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ZpkTmzFb; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1745522779; c=relaxed/simple;
+	bh=bu059oOGZ2b1GzECqaoT83+HulR1dptsnBlbt42RbG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AG0TYNo4NqJELP1D2byMoHqrzlDRfTXfcn0BInz576ktLmN4YpaJsU//N9cAd/TPAqUBUy1U3BmGV2IxZCmujTL1TRKO5s2ZxyZN7qLScI0N1wL3C/BwBdPgUgMwKffNx4iaG/h0Sl+kSniM1qkPIBFjOp9aYB5eWuu46mtLS7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=fail smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OvYEhLwZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZpkTmzFb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=8m9rwFWK2GB+1BAEonxrPntgARL+u2AKlrZ41aTOYIY=; b=ZpkTmzFbhoJFbm6pny0uunJg/x
-	TyJkle2WGU+QBJ55+h4L63yWqqgQtDqLW333EkUm1hS8FW7R9Gb2lSYBo8wmKKuZgNs/sciMhKWQ/
-	qDt8k1vOdu/ROX2vDQqQOjkhq7mxDPhIhBdVeWKM8YxBb2RIDP6A8blwl8c9ZBS42zPM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u825h-00AVJi-7R; Thu, 24 Apr 2025 21:18:33 +0200
-Date: Thu, 24 Apr 2025 21:18:33 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v4 5/8] mfd: zl3073x: Add functions to work with
- register mailboxes
-Message-ID: <8082254c-01a6-4aca-84de-76083fdcbb3b@lunn.ch>
-References: <20250424154722.534284-1-ivecera@redhat.com>
- <20250424154722.534284-6-ivecera@redhat.com>
- <5094e051-5504-48a5-b411-ed1a0d949eeb@lunn.ch>
- <bd645425-b9cb-454d-8971-646501704697@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OvYEhLwZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745522773;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TXxRuxHtNOEgElVP80hKhstwAJQ4wypAH+ISjl66nlw=;
+	b=OvYEhLwZ951MRpYQCJu/ww0fer+8xu+19SOzJI41pJ4+nf+/JM3GrK+lXGl2IiIVWY/2KG
+	gQqQhioceuM7okzWYN2eIlDU6ciEpq2uoxP2QJq0wRRH2KCLW9KNFbJN/ruACj7auR+een
+	RwHf3IZB25OX5AtHGM81rKKzbtj+4J0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-370-jm5CuxR5NgiLIg5U_j-wPA-1; Thu,
+ 24 Apr 2025 15:26:11 -0400
+X-MC-Unique: jm5CuxR5NgiLIg5U_j-wPA-1
+X-Mimecast-MFC-AGG-ID: jm5CuxR5NgiLIg5U_j-wPA_1745522769
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B105D1800877;
+	Thu, 24 Apr 2025 19:26:08 +0000 (UTC)
+Received: from [10.44.32.28] (unknown [10.44.32.28])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2AA6C19560A3;
+	Thu, 24 Apr 2025 19:26:02 +0000 (UTC)
+Message-ID: <458254c7-da05-4b27-870d-08458eb89ba6@redhat.com>
+Date: Thu, 24 Apr 2025 21:26:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bd645425-b9cb-454d-8971-646501704697@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250424154722.534284-1-ivecera@redhat.com>
+ <20250424154722.534284-6-ivecera@redhat.com>
+ <5094e051-5504-48a5-b411-ed1a0d949eeb@lunn.ch>
+ <bd645425-b9cb-454d-8971-646501704697@redhat.com>
+ <d36c34f8-f67a-40ac-a317-3b4e717724ce@lunn.ch>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <d36c34f8-f67a-40ac-a317-3b4e717724ce@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-> During taking 613cbb91e9ce ("media: Add MIPI CCI register access helper
-> functions") approach I found they are using for these functions u64
-> regardless of register size... Just to accommodate the biggest
-> possible value. I know about weakness of 'void *' usage but u64 is not
-> also ideal as the caller is forced to pass always 8 bytes for reading
-> and forced to reserve 8 bytes for each read value on stack.
+On 24. 04. 25 9:10 odp., Andrew Lunn wrote:
+>> Each sequence has to be protected by some lock and this lock needs to be
+>> placed in MFD. Yes the routines for MB access can be for example in DPLL
+>> driver but still the locks have to be inside MFD. So they have to be
+>> exposed to sub-devices.
+> 
+> The point of using MFD was gpio? Does the gpio driver need access to
+> the mailboxes? Does any other sub driver other than DPLL need to
+> access mailboxes?
 
-In this device, how are the u48s used? Are they actually u48s, or are
-they just u8[6], for example a MAC address? The network stack has lots
-of functions like:
+Yes, PHC (PTP) sub-driver is using mailboxes as well. Gpio as well for 
+some initial configuration.
 
-eth_hw_addr_set(struct net_device *dev, const u8 *addr)
+> The mutex needs to be shared, but that could be in the common data
+> structure.
 
-and it is assumed that *addr is ETH_ALEN bytes in length. There is no
-direct typing checking for this by the compiler, but the compiler is
-getting smarter at checking for buffer overruns over function calls.
+Do you mean that sub-device would access mutexes placed in zl3073x_dev 
+which is parent (mfd) driver structure?
 
-	Andrew
+Ivan
+
