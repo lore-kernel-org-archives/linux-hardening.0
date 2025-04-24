@@ -1,43 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF13F17A2EA;
-	Thu, 24 Apr 2025 18:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCF828A1D5;
+	Thu, 24 Apr 2025 19:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745520162; cv=none; b=YzUwzyuSUdJr43oludvv0HleypN1egw13xecF4BNrPnyZAK2M/dMi4b13g00sro7jQVWfaHZIIQ3wPggnoJ9v0m4fa29UyktRdKcGTpvphwxW5hDqh070V6U06ONPVv7TTlIVS7WhgTgYyA3M1cei3Yn8qfptaGqygjb1kAGf6g=
+	t=1745521850; cv=none; b=LIzwhEHof2iz/wzQIds+q5v89T/Kdf++BqQDUSas+CGsEDURYxVdBOTSeUY4nLOv0X/OUuVJxrVnV782OyYgUwoQ2HY5odEF8URUGWO/uG59PSOor9yta54Uoe1f5kTZbwkni0dt+4NHfwlg/J93Ydta3pgMn2vdmxh2UzAvTUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745520162; c=relaxed/simple;
-	bh=2qdkE4x2W0dSoJvO6MDB0Uk8zlBi3N+zDnj/Znpt48Y=;
+	s=arc-20240116; t=1745521850; c=relaxed/simple;
+	bh=zjZGmkNGmVx6n9NCm1AAvtiC+dGjo2oHGosb2SRKtNY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r7MjRP6MHuldFbc/Bat4fGFUFOZDfwageTwsZlI6sJ5JNlEpMgw7WdrabQaruC3Z7S4TfWf6a3PvI3BtXzz0B2eaC4d+vV+AgyaJ9bEbaLqtyGHqm3wc/F5S68NQsPa0UoHLP/wjHD+cbu0UP2jm24ZdNlWpUA15JtF3VFgNYzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTMSNTZX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dlz0cbLoKMFq95e+LnBxPE/hPzMWMUB7qe3yUlh5K9mmrY5Eiq3gNVd548ZCuXoiTsGncxCB0V+zkXyELniVn7USRSy1l7wZ2m6n/X+VL+I0d0EvEz0sfLXHkIa/5Rw33VvalzvgyRNOPytBQjw5XheD9DDT9eJo3bqPA9ghUik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=XMs9inTw; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTMSNTZX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 232CAC4CEE3;
-	Thu, 24 Apr 2025 18:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745520162;
-	bh=2qdkE4x2W0dSoJvO6MDB0Uk8zlBi3N+zDnj/Znpt48Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FTMSNTZX8kORLzAsEEIX5Ti4RgZXoKJwhdVWVtI24hgp01OaWheb1weeKKyJB23KW
-	 Xhd3E/Fc4yQ0NGYhb7tJLVAKCA3URPXG7P0GRbu61HCzOtTcFTDpzXS7X6TyRQFd3y
-	 TkdoRkHvUUMIv2z6tgsqktbcAXoqCmXQprReq1EQLidWND6DDcuktfmKGXxu26drCl
-	 wTv1+CoLP6os8Nz4YJYlZlj48ok4+TXIgtIkObA0JuvMI29TtKGWdqkHmR9EdIO5WC
-	 ClmhduuEkBYFznTm3FstgsRQVbs3AtVUGyI8S7bm//qcehRJxMumicZbIKpfCH+QqU
-	 oDXvRl5ppTFdQ==
-Date: Thu, 24 Apr 2025 11:42:39 -0700
-From: Kees Cook <kees@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Erhard Furtner <erhard_f@mailbox.org>,
-	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XMs9inTw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=1HEngV8H+adMANThMLFm2yWWuH7aQ7Ckddb5hLkgTK0=; b=XMs9inTwIvMKgKHxsnRWAA2AEt
+	uuzi+3OYLiyqGinITG1iTeR/8B3hSm2mL8/ULsqC3nIZoQBL6jRFgVil3axcaVrleyHl3nQ3BwX8i
+	kEzYIOLCtsodCwpVrSJZnTiruOzJ9CjQqS9OHd2S7mVVBU2MQ10eqiLzN5jWD8azgekk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u81xq-00AVDl-BL; Thu, 24 Apr 2025 21:10:26 +0200
+Date: Thu, 24 Apr 2025 21:10:26 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mm: vmalloc: Support more granular vrealloc() sizing
-Message-ID: <202504241136.8B4E729@keescook>
-References: <20250424023119.work.333-kees@kernel.org>
- <aAoAU4vhrpxiXaLF@pollux>
+Subject: Re: [PATCH net-next v4 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+Message-ID: <d36c34f8-f67a-40ac-a317-3b4e717724ce@lunn.ch>
+References: <20250424154722.534284-1-ivecera@redhat.com>
+ <20250424154722.534284-6-ivecera@redhat.com>
+ <5094e051-5504-48a5-b411-ed1a0d949eeb@lunn.ch>
+ <bd645425-b9cb-454d-8971-646501704697@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,80 +56,19 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAoAU4vhrpxiXaLF@pollux>
+In-Reply-To: <bd645425-b9cb-454d-8971-646501704697@redhat.com>
 
-On Thu, Apr 24, 2025 at 11:11:47AM +0200, Danilo Krummrich wrote:
-> On Wed, Apr 23, 2025 at 07:31:23PM -0700, Kees Cook wrote:
-> > Introduce struct vm_struct::requested_size so that the requested
-> > (re)allocation size is retained separately from the allocated area
-> > size. This means that KASAN will correctly poison the correct spans
-> > of requested bytes. This also means we can support growing the usable
-> > portion of an allocation that can already be supported by the existing
-> > area's existing allocation.
-> > 
-> > Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-> > Closes: https://lore.kernel.org/all/20250408192503.6149a816@outsider.home/
-> > Fixes: 3ddc2fefe6f3 ("mm: vmalloc: implement vrealloc()")
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> 
-> Good catch!
-> 
-> One question below, otherwise
-> 
-> 	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-> 
-> > @@ -4088,14 +4093,27 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-> >  	 * would be a good heuristic for when to shrink the vm_area?
-> >  	 */
-> >  	if (size <= old_size) {
-> > -		/* Zero out spare memory. */
-> > -		if (want_init_on_alloc(flags))
-> > +		/* Zero out "freed" memory. */
-> > +		if (want_init_on_free())
-> >  			memset((void *)p + size, 0, old_size - size);
-> > +		vm->requested_size = size;
-> >  		kasan_poison_vmalloc(p + size, old_size - size);
-> >  		kasan_unpoison_vmalloc(p, size, KASAN_VMALLOC_PROT_NORMAL);
-> >  		return (void *)p;
-> >  	}
-> >  
-> > +	/*
-> > +	 * We already have the bytes available in the allocation; use them.
-> > +	 */
-> > +	if (size <= alloced_size) {
-> > +		kasan_unpoison_vmalloc(p, size, KASAN_VMALLOC_PROT_NORMAL);
-> > +		/* Zero out "alloced" memory. */
-> > +		if (want_init_on_alloc(flags))
-> > +			memset((void *)p + old_size, 0, size - old_size);
-> > +		vm->requested_size = size;
-> > +		kasan_poison_vmalloc(p + size, alloced_size - size);
-> 
-> Do we need this? We know that old_size < size <= alloced_size. And since
-> previously [p + old_size, p + alloced_size) must have been poisoned,
-> [p + size, p + alloced_size) must be poisoned already?
-> 
-> Maybe there was a reason, since in the above (size <= old_size) case
-> kasan_unpoison_vmalloc() seems unnecessary too.
+> Each sequence has to be protected by some lock and this lock needs to be
+> placed in MFD. Yes the routines for MB access can be for example in DPLL
+> driver but still the locks have to be inside MFD. So they have to be
+> exposed to sub-devices.
 
-Honestly I was just copying the logic from the prior case. But yeah, it
-should be possible (in both cases) to just apply the changed span. For
-the "size <= old_size" case, it would just be:
+The point of using MFD was gpio? Does the gpio driver need access to
+the mailboxes? Does any other sub driver other than DPLL need to
+access mailboxes?
 
-	kasan_poison_vmalloc(p + size, old_size - size);
+The mutex needs to be shared, but that could be in the common data
+structure.
 
-(i.e. the kasan_unpoison_vmalloc() call isn't needed at all, as you say.)
+	Andrew
 
-And in the "size <= alloced_size" case, it would just be:
-
-	kasan_unpoison_vmalloc(p + old_size, size - old_size, KASAN_VMALLOC_PROT_NORMAL);
-
-and no kasan_poison_vmalloc() should be needed.
-
-Do the KASAN folks on CC have any opinion on best practices here?
-
-Thanks for looking it over!
-
--Kees
-
--- 
-Kees Cook
