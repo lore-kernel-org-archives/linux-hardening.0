@@ -1,371 +1,427 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26450221DBC
-	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 21:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86611224B08;
+	Fri, 25 Apr 2025 21:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745616008; cv=none; b=KUU/gEnoaGE5ReWkwIoWExpE6lJAbAfe1cjcQwWKJincugGfvRrNl412nGso70RiBprw/l0ir0FbQ/kKmHNVND685sAgCHZT7NRLicoilxUlWcNuNiHyn1P9mn9TJrBveVubdZB7lVjKr67OfDFZT7uqJKQrdp39TGwVKdvYRhI=
+	t=1745617960; cv=none; b=Owt1hTyMrnoLB5ToKSmLwx8QDwEzmT4PVyTtEwGQCD13PC85TmBeU3wZIBGkk/vfZGu/9kw6nArvuHSmIIfA8sTViTQb+LmVThKnvynrx6b9Iui31k4cPJ92n82F4avUk/HKrFfaBrPe0rflno+Ztx1WtGGVcXE7B3hsrc7jqa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745616008; c=relaxed/simple;
-	bh=5PGQf5CYKhZIeygAkVsRvmYn/oKBPV/lzLk/AA67Ql8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jA832yrxMg9dY7dvAj+u6GDHFip2+Ae62WAcegZPZ14Ee35pUCxsqq1kvKwFfEGmJ4DDCsHz8Ltlfa3niVkjfBc5/aipvHZCpLM/I1Rk7xDbLuEvPNbrm1tceOyWasf+iNkAOBca9KMkXF4McAviskvrTNo4oPAtV83IQhEeiJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=oxub/gKq; arc=none smtp.client-ip=44.202.169.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1745617960; c=relaxed/simple;
+	bh=tTOcQye2Ek0OQqamysTFi7cL1ijJ4+/RHhoS54Zzjts=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Iq56p5+zS9A/gZFKynr4oUq4+t/WFNBiH0PFQltcPXPu4fXw0YUwesnnNEUXN8rzUOAes6dUO1/AwSPBTKBIExqDpa306QcM2HpL6Ttn6IYKMuy4wKqEwPSxtHUM52hSBu/IU6PgJtTNwHTBmWZqLDHZ0uOk55i0eHPAA3MiZb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fvIC6jFJ; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="oxub/gKq"
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTPS
-	id 8N7SuS0WOXshw8QSluckmL; Fri, 25 Apr 2025 21:19:59 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 8QSju7KfqUxvT8QSkueO2K; Fri, 25 Apr 2025 21:19:58 +0000
-X-Authority-Analysis: v=2.4 cv=SqKW6uO0 c=1 sm=1 tr=0 ts=680bfc7e
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=Q5GphUb1KYWObyZPT8MA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FWBkTosPAfafQbTlH5RFqaJwuvOFaIPLrV8UbOnE3VY=; b=oxub/gKq6JOKxxZh0/pWp1L8ie
-	1IN006+2qC74Q/MdHmPz6/9tjVJIGvzVNiD+A6x8ux4Bj9bgWhVrN9MlLiZiv5Y88oh8NiCrCpo9y
-	STXuTWu6LOsZNJ8qFeTrZizaLrcSYWV5wjdEEuuTl0qUY8+nKaFumfeQaetRiAja+VnuUDU7IHizH
-	LiMkQ4DRTfZRh8aqNkYTawDvvQg8YOPFJ+8AdqKR+xoodY3VSJqBBZDM6FJgc/NJS1k2NtqjALtFS
-	Wd08HlMvMgI+/wG+LnB/mxqYVUjV7iXu5nPR/tNoxPE/nxe6IuzjR5P4dpPFJALESSkEWuXCdqLy5
-	N9NxJumA==;
-Received: from [177.238.17.151] (port=9122 helo=[192.168.0.102])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1u8QSi-00000003XlN-0Cmt;
-	Fri, 25 Apr 2025 16:19:57 -0500
-Message-ID: <ce8dc422-4567-42c8-80a4-515085d40a66@embeddedor.com>
-Date: Fri, 25 Apr 2025 15:19:45 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fvIC6jFJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745617959; x=1777153959;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=tTOcQye2Ek0OQqamysTFi7cL1ijJ4+/RHhoS54Zzjts=;
+  b=fvIC6jFJRsZlYApLcgYkJQCRBGOeFObzq3BUdra91cs1EvdvmP6WUwvf
+   BJ+SMdA8smijY/byzU6rg9dZdsk64FUs4+4BBSwUCtdMPjn3a76bH4KQ5
+   1WhaXU6pXckoxA/+LMshVB0jZc9cnx7iotfk6IsQbWJK3OiVq2QIzZCM1
+   eAxbDWg7zvR+3RML3j8JF5Ra/RMoxbiWQqRdyvf9QD8ZFsO3MSQCLk84C
+   mrQW5r92A/ULFTEBuQPdNRq7iP5N2f5Thq/nRCbMoClm0nHfTRkDFWnQm
+   wTYcXXRZ1SvpC8ieKTFIiLSZ7Qqt/opjpa1ebU7xRCG364xXxVPq/aweq
+   g==;
+X-CSE-ConnectionGUID: sk1hI55fTKCxJb2P8Dv0/g==
+X-CSE-MsgGUID: PX3XgqWvQ1aDBHKk40akpg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="69784542"
+X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
+   d="scan'208";a="69784542"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 14:52:36 -0700
+X-CSE-ConnectionGUID: wasnrluWSyGiKUQwv2iK/A==
+X-CSE-MsgGUID: qGd2klOFTDq1pArXnnawfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
+   d="scan'208";a="163973511"
+Received: from anguy11-upstream.jf.intel.com ([10.166.9.133])
+  by orviesa002.jf.intel.com with ESMTP; 25 Apr 2025 14:52:36 -0700
+From: Tony Nguyen <anthony.l.nguyen@intel.com>
+To: davem@davemloft.net,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	andrew+netdev@lunn.ch,
+	netdev@vger.kernel.org
+Cc: Milena Olech <milena.olech@intel.com>,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	jacob.e.keller@intel.com,
+	richardcochran@gmail.com,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	linux-hardening@vger.kernel.org,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Mina Almasry <almasrymina@google.com>,
+	Samuel Salin <Samuel.salin@intel.com>
+Subject: [PATCH net-next v2 03/11] virtchnl: add PTP virtchnl definitions
+Date: Fri, 25 Apr 2025 14:52:17 -0700
+Message-ID: <20250425215227.3170837-4-anthony.l.nguyen@intel.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250425215227.3170837-1-anthony.l.nguyen@intel.com>
+References: <20250425215227.3170837-1-anthony.l.nguyen@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] wifi: iwlwifi: mvm: d3: Avoid
- -Wflex-array-member-not-at-end warnings
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Miri Korenblit <miriam.rachel.korenblit@intel.com>,
- Johannes Berg <johannes.berg@intel.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Z_FxXjiMvG5u73fi@kspp>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <Z_FxXjiMvG5u73fi@kspp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.17.151
-X-Source-L: No
-X-Exim-ID: 1u8QSi-00000003XlN-0Cmt
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.102]) [177.238.17.151]:9122
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPixlGKAX7qMkK26IdChY3IdHw0VfjlBX6mfnleb54CAtbTC7c6DCEdHpi4QxlsmqW2Mzf0KfqgLMej8s4CyWQdv15jaKTgySNdLmvx33RGIGw0pZZ4v
- AGaSG3YmraGsWDxFP00tIkhicoIpytHsHzxNrBQB4fmJ65wD0929QBjs8SewY0x/juqTYmueYhHl8tp04Wpy0Fe5u/nT06usoMc/5hffv7Jlt9H1FpBWX/q/
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+From: Milena Olech <milena.olech@intel.com>
 
-Friendly ping: who can take this, please? :)
+PTP capabilities are negotiated using virtchnl commands. There are two
+available modes of the PTP support: direct and mailbox. When the direct
+access to PTP resources is negotiated, virtchnl messages returns a set
+of registers that allow read/write directly. When the mailbox access to
+PTP resources is negotiated, virtchnl messages are used to access
+PTP clock and to read the timestamp values.
 
-Thanks!
--Gustavo
+Virtchnl API covers both modes and exposes a set of PTP capabilities.
 
-On 05/04/25 12:07, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> So, with these changes, fix the following warnings:
-> 
-> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:124:52: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2067:51: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2162:43: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2225:43: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 129 +++++++++-----------
->   1 file changed, 61 insertions(+), 68 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-> index 3e8b7168af01..3e95799208fc 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-> @@ -120,19 +120,17 @@ static void iwl_mvm_wowlan_program_keys(struct ieee80211_hw *hw,
->   	switch (key->cipher) {
->   	case WLAN_CIPHER_SUITE_WEP40:
->   	case WLAN_CIPHER_SUITE_WEP104: { /* hack it for now */
-> -		struct {
-> -			struct iwl_mvm_wep_key_cmd wep_key_cmd;
-> -			struct iwl_mvm_wep_key wep_key;
-> -		} __packed wkc = {
-> -			.wep_key_cmd.mac_id_n_color =
-> -				cpu_to_le32(FW_CMD_ID_AND_COLOR(mvmvif->id,
-> -								mvmvif->color)),
-> -			.wep_key_cmd.num_keys = 1,
-> -			/* firmware sets STA_KEY_FLG_WEP_13BYTES */
-> -			.wep_key_cmd.decryption_type = STA_KEY_FLG_WEP,
-> -			.wep_key.key_index = key->keyidx,
-> -			.wep_key.key_size = key->keylen,
-> -		};
-> +		DEFINE_RAW_FLEX(struct iwl_mvm_wep_key_cmd, wkc, wep_key, 1);
-> +		struct iwl_mvm_wep_key *wep_key = wkc->wep_key;
-> +
-> +		wkc->mac_id_n_color =
-> +			cpu_to_le32(FW_CMD_ID_AND_COLOR(mvmvif->id,
-> +							mvmvif->color));
-> +		wkc->num_keys = 1;
-> +		/* firmware sets STA_KEY_FLG_WEP_13BYTES */
-> +		wkc->decryption_type = STA_KEY_FLG_WEP;
-> +		wep_key->key_index = key->keyidx;
-> +		wep_key->key_size = key->keylen;
->   
->   		/*
->   		 * This will fail -- the key functions don't set support
-> @@ -142,18 +140,19 @@ static void iwl_mvm_wowlan_program_keys(struct ieee80211_hw *hw,
->   		if (key->flags & IEEE80211_KEY_FLAG_PAIRWISE)
->   			break;
->   
-> -		memcpy(&wkc.wep_key.key[3], key->key, key->keylen);
-> +		memcpy(&wep_key->key[3], key->key, key->keylen);
->   		if (key->keyidx == mvmvif->tx_key_idx) {
->   			/* TX key must be at offset 0 */
-> -			wkc.wep_key.key_offset = 0;
-> +			wep_key->key_offset = 0;
->   		} else {
->   			/* others start at 1 */
->   			data->wep_key_idx++;
-> -			wkc.wep_key.key_offset = data->wep_key_idx;
-> +			wep_key->key_offset = data->wep_key_idx;
->   		}
->   
->   		mutex_lock(&mvm->mutex);
-> -		ret = iwl_mvm_send_cmd_pdu(mvm, WEP_KEY, 0, sizeof(wkc), &wkc);
-> +		ret = iwl_mvm_send_cmd_pdu(mvm, WEP_KEY, 0,
-> +					   __struct_size(wkc), wkc);
->   		data->error = ret != 0;
->   
->   		mvm->ptk_ivlen = key->iv_len;
-> @@ -2063,10 +2062,8 @@ static bool iwl_mvm_mlo_gtk_rekey(struct iwl_wowlan_status_data *status,
->   		struct iwl_wowlan_mlo_gtk *mlo_key = &status->mlo_keys[i];
->   		struct ieee80211_key_conf *key, *old_key;
->   		struct ieee80211_key_seq seq;
-> -		struct {
-> -			struct ieee80211_key_conf conf;
-> -			u8 key[32];
-> -		} conf = {};
-> +		DEFINE_RAW_FLEX(struct ieee80211_key_conf, conf, key,
-> +				WOWLAN_KEY_MAX_SIZE);
->   		u16 flags = le16_to_cpu(mlo_key->flags);
->   		int j, link_id, key_id, key_type;
->   
-> @@ -2083,40 +2080,40 @@ static bool iwl_mvm_mlo_gtk_rekey(struct iwl_wowlan_status_data *status,
->   			    key_type >= WOWLAN_MLO_GTK_KEY_NUM_TYPES))
->   			continue;
->   
-> -		conf.conf.cipher = old_keys->cipher[link_id][key_type];
-> +		conf->cipher = old_keys->cipher[link_id][key_type];
->   		/* WARN_ON? */
-> -		if (!conf.conf.cipher)
-> +		if (!conf->cipher)
->   			continue;
->   
-> -		conf.conf.keylen = 0;
-> -		switch (conf.conf.cipher) {
-> +		conf->keylen = 0;
-> +		switch (conf->cipher) {
->   		case WLAN_CIPHER_SUITE_CCMP:
->   		case WLAN_CIPHER_SUITE_GCMP:
-> -			conf.conf.keylen = WLAN_KEY_LEN_CCMP;
-> +			conf->keylen = WLAN_KEY_LEN_CCMP;
->   			break;
->   		case WLAN_CIPHER_SUITE_GCMP_256:
-> -			conf.conf.keylen = WLAN_KEY_LEN_GCMP_256;
-> +			conf->keylen = WLAN_KEY_LEN_GCMP_256;
->   			break;
->   		case WLAN_CIPHER_SUITE_BIP_GMAC_128:
-> -			conf.conf.keylen = WLAN_KEY_LEN_BIP_GMAC_128;
-> +			conf->keylen = WLAN_KEY_LEN_BIP_GMAC_128;
->   			break;
->   		case WLAN_CIPHER_SUITE_BIP_GMAC_256:
-> -			conf.conf.keylen = WLAN_KEY_LEN_BIP_GMAC_256;
-> +			conf->keylen = WLAN_KEY_LEN_BIP_GMAC_256;
->   			break;
->   		case WLAN_CIPHER_SUITE_AES_CMAC:
-> -			conf.conf.keylen = WLAN_KEY_LEN_AES_CMAC;
-> +			conf->keylen = WLAN_KEY_LEN_AES_CMAC;
->   			break;
->   		case WLAN_CIPHER_SUITE_BIP_CMAC_256:
-> -			conf.conf.keylen = WLAN_KEY_LEN_BIP_CMAC_256;
-> +			conf->keylen = WLAN_KEY_LEN_BIP_CMAC_256;
->   			break;
->   		}
->   
-> -		if (WARN_ON(!conf.conf.keylen ||
-> -			    conf.conf.keylen > sizeof(conf.key)))
-> +		if (WARN_ON(!conf->keylen ||
-> +			    conf->keylen > WOWLAN_KEY_MAX_SIZE))
->   			continue;
->   
-> -		memcpy(conf.conf.key, mlo_key->key, conf.conf.keylen);
-> -		conf.conf.keyidx = key_id;
-> +		memcpy(conf->key, mlo_key->key, conf->keylen);
-> +		conf->keyidx = key_id;
->   
->   		old_key = old_keys->key[link_id][key_id];
->   		if (old_key) {
-> @@ -2128,7 +2125,7 @@ static bool iwl_mvm_mlo_gtk_rekey(struct iwl_wowlan_status_data *status,
->   
->   		IWL_DEBUG_WOWLAN(mvm, "Add MLO key id %d, link id %d\n",
->   				 key_id, link_id);
-> -		key = ieee80211_gtk_rekey_add(vif, &conf.conf, link_id);
-> +		key = ieee80211_gtk_rekey_add(vif, conf, link_id);
->   		if (WARN_ON(IS_ERR(key))) {
->   			ret = false;
->   			goto out;
-> @@ -2158,30 +2155,28 @@ static bool iwl_mvm_gtk_rekey(struct iwl_wowlan_status_data *status,
->   {
->   	int i, j;
->   	struct ieee80211_key_conf *key;
-> -	struct {
-> -		struct ieee80211_key_conf conf;
-> -		u8 key[32];
-> -	} conf = {
-> -		.conf.cipher = gtk_cipher,
-> -	};
-> +	DEFINE_RAW_FLEX(struct ieee80211_key_conf, conf, key,
-> +			WOWLAN_KEY_MAX_SIZE);
->   	int link_id = vif->active_links ? __ffs(vif->active_links) : -1;
->   
-> +	conf->cipher = gtk_cipher;
-> +
->   	BUILD_BUG_ON(WLAN_KEY_LEN_CCMP != WLAN_KEY_LEN_GCMP);
-> -	BUILD_BUG_ON(sizeof(conf.key) < WLAN_KEY_LEN_CCMP);
-> -	BUILD_BUG_ON(sizeof(conf.key) < WLAN_KEY_LEN_GCMP_256);
-> -	BUILD_BUG_ON(sizeof(conf.key) < WLAN_KEY_LEN_TKIP);
-> -	BUILD_BUG_ON(sizeof(conf.key) < sizeof(status->gtk[0].key));
-> +	BUILD_BUG_ON(WOWLAN_KEY_MAX_SIZE < WLAN_KEY_LEN_CCMP);
-> +	BUILD_BUG_ON(WOWLAN_KEY_MAX_SIZE < WLAN_KEY_LEN_GCMP_256);
-> +	BUILD_BUG_ON(WOWLAN_KEY_MAX_SIZE < WLAN_KEY_LEN_TKIP);
-> +	BUILD_BUG_ON(WOWLAN_KEY_MAX_SIZE < sizeof(status->gtk[0].key));
->   
->   	switch (gtk_cipher) {
->   	case WLAN_CIPHER_SUITE_CCMP:
->   	case WLAN_CIPHER_SUITE_GCMP:
-> -		conf.conf.keylen = WLAN_KEY_LEN_CCMP;
-> +		conf->keylen = WLAN_KEY_LEN_CCMP;
->   		break;
->   	case WLAN_CIPHER_SUITE_GCMP_256:
-> -		conf.conf.keylen = WLAN_KEY_LEN_GCMP_256;
-> +		conf->keylen = WLAN_KEY_LEN_GCMP_256;
->   		break;
->   	case WLAN_CIPHER_SUITE_TKIP:
-> -		conf.conf.keylen = WLAN_KEY_LEN_TKIP;
-> +		conf->keylen = WLAN_KEY_LEN_TKIP;
->   		break;
->   	default:
->   		WARN_ON(1);
-> @@ -2191,14 +2186,14 @@ static bool iwl_mvm_gtk_rekey(struct iwl_wowlan_status_data *status,
->   		if (!status->gtk[i].len)
->   			continue;
->   
-> -		conf.conf.keyidx = status->gtk[i].id;
-> +		conf->keyidx = status->gtk[i].id;
->   		IWL_DEBUG_WOWLAN(mvm,
->   				 "Received from FW GTK cipher %d, key index %d\n",
-> -				 conf.conf.cipher, conf.conf.keyidx);
-> -		memcpy(conf.conf.key, status->gtk[i].key,
-> +				 conf->cipher, conf->keyidx);
-> +		memcpy(conf->key, status->gtk[i].key,
->   		       sizeof(status->gtk[i].key));
->   
-> -		key = ieee80211_gtk_rekey_add(vif, &conf.conf, link_id);
-> +		key = ieee80211_gtk_rekey_add(vif, conf, link_id);
->   		if (IS_ERR(key))
->   			return false;
->   
-> @@ -2220,42 +2215,40 @@ iwl_mvm_d3_igtk_bigtk_rekey_add(struct iwl_wowlan_status_data *status,
->   				struct ieee80211_vif *vif, u32 cipher,
->   				struct iwl_multicast_key_data *key_data)
->   {
-> +	DEFINE_RAW_FLEX(struct ieee80211_key_conf, conf, key,
-> +			WOWLAN_KEY_MAX_SIZE);
->   	struct ieee80211_key_conf *key_config;
-> -	struct {
-> -		struct ieee80211_key_conf conf;
-> -		u8 key[WOWLAN_KEY_MAX_SIZE];
-> -	} conf = {
-> -		.conf.cipher = cipher,
-> -		.conf.keyidx = key_data->id,
-> -	};
->   	struct ieee80211_key_seq seq;
->   	int link_id = vif->active_links ? __ffs(vif->active_links) : -1;
->   
-> +	conf->cipher = cipher;
-> +	conf->keyidx = key_data->id;
-> +
->   	if (!key_data->len)
->   		return true;
->   
-> -	iwl_mvm_d3_set_igtk_bigtk_ipn(key_data, &seq, conf.conf.cipher);
-> +	iwl_mvm_d3_set_igtk_bigtk_ipn(key_data, &seq, conf->cipher);
->   
->   	switch (cipher) {
->   	case WLAN_CIPHER_SUITE_BIP_GMAC_128:
-> -		conf.conf.keylen = WLAN_KEY_LEN_BIP_GMAC_128;
-> +		conf->keylen = WLAN_KEY_LEN_BIP_GMAC_128;
->   		break;
->   	case WLAN_CIPHER_SUITE_BIP_GMAC_256:
-> -		conf.conf.keylen = WLAN_KEY_LEN_BIP_GMAC_256;
-> +		conf->keylen = WLAN_KEY_LEN_BIP_GMAC_256;
->   		break;
->   	case WLAN_CIPHER_SUITE_AES_CMAC:
-> -		conf.conf.keylen = WLAN_KEY_LEN_AES_CMAC;
-> +		conf->keylen = WLAN_KEY_LEN_AES_CMAC;
->   		break;
->   	case WLAN_CIPHER_SUITE_BIP_CMAC_256:
-> -		conf.conf.keylen = WLAN_KEY_LEN_BIP_CMAC_256;
-> +		conf->keylen = WLAN_KEY_LEN_BIP_CMAC_256;
->   		break;
->   	default:
->   		WARN_ON(1);
->   	}
-> -	BUILD_BUG_ON(sizeof(conf.key) < sizeof(key_data->key));
-> -	memcpy(conf.conf.key, key_data->key, conf.conf.keylen);
-> +	BUILD_BUG_ON(WOWLAN_KEY_MAX_SIZE < sizeof(key_data->key));
-> +	memcpy(conf->key, key_data->key, conf->keylen);
->   
-> -	key_config = ieee80211_gtk_rekey_add(vif, &conf.conf, link_id);
-> +	key_config = ieee80211_gtk_rekey_add(vif, conf, link_id);
->   	if (IS_ERR(key_config))
->   		return false;
->   	ieee80211_set_key_rx_seq(key_config, 0, &seq);
+Using virtchnl API, the driver recognizes also HW abilities - maximum
+adjustment of the clock and the basic increment value.
+
+Additionally, API allows to configure the secondary mailbox, dedicated
+exclusively for PTP purposes.
+
+Reviewed-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Signed-off-by: Milena Olech <milena.olech@intel.com>
+Tested-by: Mina Almasry <almasrymina@google.com>
+Tested-by: Samuel Salin <Samuel.salin@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+---
+ drivers/net/ethernet/intel/idpf/virtchnl2.h | 302 ++++++++++++++++++++
+ 1 file changed, 302 insertions(+)
+
+diff --git a/drivers/net/ethernet/intel/idpf/virtchnl2.h b/drivers/net/ethernet/intel/idpf/virtchnl2.h
+index 63deb120359c..db9523ef3fa7 100644
+--- a/drivers/net/ethernet/intel/idpf/virtchnl2.h
++++ b/drivers/net/ethernet/intel/idpf/virtchnl2.h
+@@ -68,6 +68,16 @@ enum virtchnl2_op {
+ 	VIRTCHNL2_OP_ADD_MAC_ADDR		= 535,
+ 	VIRTCHNL2_OP_DEL_MAC_ADDR		= 536,
+ 	VIRTCHNL2_OP_CONFIG_PROMISCUOUS_MODE	= 537,
++
++	/* TimeSync opcodes */
++	VIRTCHNL2_OP_PTP_GET_CAPS			= 541,
++	VIRTCHNL2_OP_PTP_GET_VPORT_TX_TSTAMP		= 542,
++	VIRTCHNL2_OP_PTP_GET_DEV_CLK_TIME		= 543,
++	VIRTCHNL2_OP_PTP_GET_CROSS_TIME			= 544,
++	VIRTCHNL2_OP_PTP_SET_DEV_CLK_TIME		= 545,
++	VIRTCHNL2_OP_PTP_ADJ_DEV_CLK_FINE		= 546,
++	VIRTCHNL2_OP_PTP_ADJ_DEV_CLK_TIME		= 547,
++	VIRTCHNL2_OP_PTP_GET_VPORT_TX_TSTAMP_CAPS	= 548,
+ };
+ 
+ /**
+@@ -1270,4 +1280,296 @@ struct virtchnl2_promisc_info {
+ };
+ VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_promisc_info);
+ 
++/**
++ * enum virtchnl2_ptp_caps - PTP capabilities
++ * @VIRTCHNL2_CAP_PTP_GET_DEVICE_CLK_TIME: direct access to get the time of
++ *					   device clock
++ * @VIRTCHNL2_CAP_PTP_GET_DEVICE_CLK_TIME_MB: mailbox access to get the time of
++ *					      device clock
++ * @VIRTCHNL2_CAP_PTP_GET_CROSS_TIME: direct access to cross timestamp
++ * @VIRTCHNL2_CAP_PTP_GET_CROSS_TIME_MB: mailbox access to cross timestamp
++ * @VIRTCHNL2_CAP_PTP_SET_DEVICE_CLK_TIME: direct access to set the time of
++ *					   device clock
++ * @VIRTCHNL2_CAP_PTP_SET_DEVICE_CLK_TIME_MB: mailbox access to set the time of
++ *					      device clock
++ * @VIRTCHNL2_CAP_PTP_ADJ_DEVICE_CLK: direct access to adjust the time of device
++ *				      clock
++ * @VIRTCHNL2_CAP_PTP_ADJ_DEVICE_CLK_MB: mailbox access to adjust the time of
++ *					 device clock
++ * @VIRTCHNL2_CAP_PTP_TX_TSTAMPS: direct access to the Tx timestamping
++ * @VIRTCHNL2_CAP_PTP_TX_TSTAMPS_MB: mailbox access to the Tx timestamping
++ *
++ * PF/VF negotiates a set of supported PTP capabilities with the Control Plane.
++ * There are two access methods - mailbox (_MB) and direct.
++ * PTP capabilities enables Main Timer operations: get/set/adjust Main Timer,
++ * cross timestamping and the Tx timestamping.
++ */
++enum virtchnl2_ptp_caps {
++	VIRTCHNL2_CAP_PTP_GET_DEVICE_CLK_TIME		= BIT(0),
++	VIRTCHNL2_CAP_PTP_GET_DEVICE_CLK_TIME_MB	= BIT(1),
++	VIRTCHNL2_CAP_PTP_GET_CROSS_TIME		= BIT(2),
++	VIRTCHNL2_CAP_PTP_GET_CROSS_TIME_MB		= BIT(3),
++	VIRTCHNL2_CAP_PTP_SET_DEVICE_CLK_TIME		= BIT(4),
++	VIRTCHNL2_CAP_PTP_SET_DEVICE_CLK_TIME_MB	= BIT(5),
++	VIRTCHNL2_CAP_PTP_ADJ_DEVICE_CLK		= BIT(6),
++	VIRTCHNL2_CAP_PTP_ADJ_DEVICE_CLK_MB		= BIT(7),
++	VIRTCHNL2_CAP_PTP_TX_TSTAMPS			= BIT(8),
++	VIRTCHNL2_CAP_PTP_TX_TSTAMPS_MB			= BIT(9),
++};
++
++/**
++ * struct virtchnl2_ptp_clk_reg_offsets - Offsets of device and PHY clocks
++ *					  registers.
++ * @dev_clk_ns_l: Device clock low register offset
++ * @dev_clk_ns_h: Device clock high register offset
++ * @phy_clk_ns_l: PHY clock low register offset
++ * @phy_clk_ns_h: PHY clock high register offset
++ * @cmd_sync_trigger: The command sync trigger register offset
++ * @pad: Padding for future extensions
++ */
++struct virtchnl2_ptp_clk_reg_offsets {
++	__le32 dev_clk_ns_l;
++	__le32 dev_clk_ns_h;
++	__le32 phy_clk_ns_l;
++	__le32 phy_clk_ns_h;
++	__le32 cmd_sync_trigger;
++	u8 pad[4];
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(24, virtchnl2_ptp_clk_reg_offsets);
++
++/**
++ * struct virtchnl2_ptp_cross_time_reg_offsets - Offsets of the device cross
++ *						 time registers.
++ * @sys_time_ns_l: System time low register offset
++ * @sys_time_ns_h: System time high register offset
++ * @cmd_sync_trigger: The command sync trigger register offset
++ * @pad: Padding for future extensions
++ */
++struct virtchnl2_ptp_cross_time_reg_offsets {
++	__le32 sys_time_ns_l;
++	__le32 sys_time_ns_h;
++	__le32 cmd_sync_trigger;
++	u8 pad[4];
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_cross_time_reg_offsets);
++
++/**
++ * struct virtchnl2_ptp_clk_adj_reg_offsets - Offsets of device and PHY clocks
++ *					      adjustments registers.
++ * @dev_clk_cmd_type: Device clock command type register offset
++ * @dev_clk_incval_l: Device clock increment value low register offset
++ * @dev_clk_incval_h: Device clock increment value high registers offset
++ * @dev_clk_shadj_l: Device clock shadow adjust low register offset
++ * @dev_clk_shadj_h: Device clock shadow adjust high register offset
++ * @phy_clk_cmd_type: PHY timer command type register offset
++ * @phy_clk_incval_l: PHY timer increment value low register offset
++ * @phy_clk_incval_h: PHY timer increment value high register offset
++ * @phy_clk_shadj_l: PHY timer shadow adjust low register offset
++ * @phy_clk_shadj_h: PHY timer shadow adjust high register offset
++ */
++struct virtchnl2_ptp_clk_adj_reg_offsets {
++	__le32 dev_clk_cmd_type;
++	__le32 dev_clk_incval_l;
++	__le32 dev_clk_incval_h;
++	__le32 dev_clk_shadj_l;
++	__le32 dev_clk_shadj_h;
++	__le32 phy_clk_cmd_type;
++	__le32 phy_clk_incval_l;
++	__le32 phy_clk_incval_h;
++	__le32 phy_clk_shadj_l;
++	__le32 phy_clk_shadj_h;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(40, virtchnl2_ptp_clk_adj_reg_offsets);
++
++/**
++ * struct virtchnl2_ptp_tx_tstamp_latch_caps - PTP Tx timestamp latch
++ *					       capabilities.
++ * @tx_latch_reg_offset_l: Tx timestamp latch low register offset
++ * @tx_latch_reg_offset_h: Tx timestamp latch high register offset
++ * @index: Latch index provided to the Tx descriptor
++ * @pad: Padding for future extensions
++ */
++struct virtchnl2_ptp_tx_tstamp_latch_caps {
++	__le32 tx_latch_reg_offset_l;
++	__le32 tx_latch_reg_offset_h;
++	u8 index;
++	u8 pad[7];
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_tx_tstamp_latch_caps);
++
++/**
++ * struct virtchnl2_ptp_get_vport_tx_tstamp_caps - Structure that defines Tx
++ *						   tstamp entries.
++ * @vport_id: Vport number
++ * @num_latches: Total number of latches
++ * @tstamp_ns_lo_bit: First bit for nanosecond part of the timestamp
++ * @tstamp_ns_hi_bit: Last bit for nanosecond part of the timestamp
++ * @pad: Padding for future tstamp granularity extensions
++ * @tstamp_latches: Capabilities of Tx timestamp entries
++ *
++ * PF/VF sends this message to negotiate the Tx timestamp latches for each
++ * Vport.
++ *
++ * Associated with VIRTCHNL2_OP_PTP_GET_VPORT_TX_TSTAMP_CAPS.
++ */
++struct virtchnl2_ptp_get_vport_tx_tstamp_caps {
++	__le32 vport_id;
++	__le16 num_latches;
++	u8 tstamp_ns_lo_bit;
++	u8 tstamp_ns_hi_bit;
++	u8 pad[8];
++
++	struct virtchnl2_ptp_tx_tstamp_latch_caps tstamp_latches[]
++						  __counted_by_le(num_latches);
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_get_vport_tx_tstamp_caps);
++
++/**
++ * struct virtchnl2_ptp_get_caps - Get PTP capabilities
++ * @caps: PTP capability bitmap. See enum virtchnl2_ptp_caps
++ * @max_adj: The maximum possible frequency adjustment
++ * @base_incval: The default timer increment value
++ * @peer_mbx_q_id: ID of the PTP Device Control daemon queue
++ * @peer_id: Peer ID for PTP Device Control daemon
++ * @secondary_mbx: Indicates to the driver that it should create a secondary
++ *		   mailbox to inetract with control plane for PTP
++ * @pad: Padding for future extensions
++ * @clk_offsets: Main timer and PHY registers offsets
++ * @cross_time_offsets: Cross time registers offsets
++ * @clk_adj_offsets: Offsets needed to adjust the PHY and the main timer
++ *
++ * PF/VF sends this message to negotiate PTP capabilities. CP updates bitmap
++ * with supported features and fulfills appropriate structures.
++ * If HW uses primary MBX for PTP: secondary_mbx is set to false.
++ * If HW uses secondary MBX for PTP: secondary_mbx is set to true.
++ *	Control plane has 2 MBX and the driver has 1 MBX, send to peer
++ *	driver may be used to send a message using valid ptp_peer_mb_q_id and
++ *	ptp_peer_id.
++ * If HW does not use send to peer driver: secondary_mbx is no care field and
++ * peer_mbx_q_id holds invalid value (0xFFFF).
++ *
++ * Associated with VIRTCHNL2_OP_PTP_GET_CAPS.
++ */
++struct virtchnl2_ptp_get_caps {
++	__le32 caps;
++	__le32 max_adj;
++	__le64 base_incval;
++	__le16 peer_mbx_q_id;
++	u8 peer_id;
++	u8 secondary_mbx;
++	u8 pad[4];
++
++	struct virtchnl2_ptp_clk_reg_offsets clk_offsets;
++	struct virtchnl2_ptp_cross_time_reg_offsets cross_time_offsets;
++	struct virtchnl2_ptp_clk_adj_reg_offsets clk_adj_offsets;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(104, virtchnl2_ptp_get_caps);
++
++/**
++ * struct virtchnl2_ptp_tx_tstamp_latch - Structure that describes tx tstamp
++ *					  values, index and validity.
++ * @tstamp: Timestamp value
++ * @index: Timestamp index from which the value is read
++ * @valid: Timestamp validity
++ * @pad: Padding for future extensions
++ */
++struct virtchnl2_ptp_tx_tstamp_latch {
++	__le64 tstamp;
++	u8 index;
++	u8 valid;
++	u8 pad[6];
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_tx_tstamp_latch);
++
++/**
++ * struct virtchnl2_ptp_get_vport_tx_tstamp_latches - Tx timestamp latches
++ *						      associated with the vport.
++ * @vport_id: Number of vport that requests the timestamp
++ * @num_latches: Number of latches
++ * @get_devtime_with_txtstmp: Flag to request device time along with Tx timestamp
++ * @pad: Padding for future extensions
++ * @device_time: device time if get_devtime_with_txtstmp was set in request
++ * @tstamp_latches: PTP TX timestamp latch
++ *
++ * PF/VF sends this message to receive a specified number of timestamps
++ * entries.
++ *
++ * Associated with VIRTCHNL2_OP_PTP_GET_VPORT_TX_TSTAMP.
++ */
++struct virtchnl2_ptp_get_vport_tx_tstamp_latches {
++	__le32 vport_id;
++	__le16 num_latches;
++	u8 get_devtime_with_txtstmp;
++	u8 pad[1];
++	__le64 device_time;
++
++	struct virtchnl2_ptp_tx_tstamp_latch tstamp_latches[]
++					     __counted_by_le(num_latches);
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_get_vport_tx_tstamp_latches);
++
++/**
++ * struct virtchnl2_ptp_get_dev_clk_time - Associated with message
++ *					   VIRTCHNL2_OP_PTP_GET_DEV_CLK_TIME.
++ * @dev_time_ns: Device clock time value in nanoseconds
++ *
++ * PF/VF sends this message to receive the time from the main timer.
++ */
++struct virtchnl2_ptp_get_dev_clk_time {
++	__le64 dev_time_ns;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_ptp_get_dev_clk_time);
++
++/**
++ * struct virtchnl2_ptp_get_cross_time: Associated with message
++ *					VIRTCHNL2_OP_PTP_GET_CROSS_TIME.
++ * @sys_time_ns: System counter value expressed in nanoseconds, read
++ *		 synchronously with device time
++ * @dev_time_ns: Device clock time value expressed in nanoseconds
++ *
++ * PF/VF sends this message to receive the cross time.
++ */
++struct virtchnl2_ptp_get_cross_time {
++	__le64 sys_time_ns;
++	__le64 dev_time_ns;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_get_cross_time);
++
++/**
++ * struct virtchnl2_ptp_set_dev_clk_time: Associated with message
++ *					  VIRTCHNL2_OP_PTP_SET_DEV_CLK_TIME.
++ * @dev_time_ns: Device time value expressed in nanoseconds to set
++ *
++ * PF/VF sends this message to set the time of the main timer.
++ */
++struct virtchnl2_ptp_set_dev_clk_time {
++	__le64 dev_time_ns;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_ptp_set_dev_clk_time);
++
++/**
++ * struct virtchnl2_ptp_adj_dev_clk_fine: Associated with message
++ *					  VIRTCHNL2_OP_PTP_ADJ_DEV_CLK_FINE.
++ * @incval: Source timer increment value per clock cycle
++ *
++ * PF/VF sends this message to adjust the frequency of the main timer by the
++ * indicated increment value.
++ */
++struct virtchnl2_ptp_adj_dev_clk_fine {
++	__le64 incval;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_ptp_adj_dev_clk_fine);
++
++/**
++ * struct virtchnl2_ptp_adj_dev_clk_time: Associated with message
++ *					  VIRTCHNL2_OP_PTP_ADJ_DEV_CLK_TIME.
++ * @delta: Offset in nanoseconds to adjust the time by
++ *
++ * PF/VF sends this message to adjust the time of the main timer by the delta.
++ */
++struct virtchnl2_ptp_adj_dev_clk_time {
++	__le64 delta;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_ptp_adj_dev_clk_time);
++
+ #endif /* _VIRTCHNL_2_H_ */
+-- 
+2.47.1
 
