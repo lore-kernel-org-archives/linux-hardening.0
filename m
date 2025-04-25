@@ -1,119 +1,381 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F442472A0
-	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 13:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B4919A2A3;
+	Fri, 25 Apr 2025 16:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745586297; cv=none; b=FjQIMpw+hGCdWFz/Oh7I+qInIvQ43nEzhHCn6kDlB9lbA6uDGNV+/mzZ30SidJ6pFlFwqLxoq/ut4b+neZwF8zq2DZ/yATWEDo/CoCfHKgUshSEeakSb5NmGqd9UWn+CI/aF1N1ISs+UVDmC7h9NR8GbHjsTjZMpaOiZMWD8Vvs=
+	t=1745599671; cv=none; b=oQseGlJJuyNa9bUZvk1lp9b4gFa2VxWI/eLyKlP6NlXdgCyNuTpL4iXfVFEprCEWFMbosuEMXQzxMRwUrYXOY46lA7uZUqLBig3SjMjv0MXy/uiYjlyytEdurXfBjrlVIAGW195EwAMP5fCEriyE88Bt/e5mE028gVdpz7WfWLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745586297; c=relaxed/simple;
-	bh=rPaDqGzlo8kKc7078BfnnKIU+GVWwOACSGFFD9+ZYOk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FbGaNKdwKmSIqwBoDshzL0X8iAWlChbicnL/eYAjad79Ge14EMhA8SHqNCPbuNUyUC/i/IgDe8jDcU/LVZidWsFeVxhCdzoT3+HcKtLpwjKvFij5yPcVoNdfn/L6H9thoAv79JX0WNKi0WqVnXqqhonAf+ISneWitvZy9kNjCNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b94EqMNe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745599671; c=relaxed/simple;
+	bh=FFxelLyQhizUrgBRLtTl6Mt5QLcllVjsjcCtcjbSdXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=j4bs5n4IG3NrbHC7VXb0mUcej+RaUZLjZ4xsve/b++5h3aBTyu+6PESO/CWX0E7OW2azUvagU6n9IEbHTS7xqkBkgb3v2FwVAiZ5R/3dAWegsRPsn+ixwt4r/o+IXvIWxYo0mcMlWvMT5bcWm9HLAYwZ0A42M5zPXbroYFK7g7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLQOU3uM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b94EqMNe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745586294;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RRT3RKx4TZ+P54S/HXqOrC/ht/rfJMrgmNz4iAs0uEQ=;
-	b=b94EqMNebeq3zTCT28AhhHKWtHBdoor3A73ZU66DphKq2v9MNbN+UsdPFuHrWZ7rt+y0Ye
-	WIHTCwiU6/9GU0KJAbacO43cBdzTdVdvCd4AbQXDfwe+BW154fUuZxxL3T9ga3sC3zufr8
-	/DN7vhFbcrEUTQJcpqfTjoD/hDLEFx4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-295-_3s_6pwmPWC8mVY-6ElxbQ-1; Fri,
- 25 Apr 2025 09:04:51 -0400
-X-MC-Unique: _3s_6pwmPWC8mVY-6ElxbQ-1
-X-Mimecast-MFC-AGG-ID: _3s_6pwmPWC8mVY-6ElxbQ_1745586289
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A1CFA1800264;
-	Fri, 25 Apr 2025 13:04:48 +0000 (UTC)
-Received: from [10.44.33.33] (unknown [10.44.33.33])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B090918002AD;
-	Fri, 25 Apr 2025 13:04:42 +0000 (UTC)
-Message-ID: <1ba66392-f41d-4ffa-9952-900b6856e861@redhat.com>
-Date: Fri, 25 Apr 2025 15:04:41 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLQOU3uM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBFA6C4CEE4;
+	Fri, 25 Apr 2025 16:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745599671;
+	bh=FFxelLyQhizUrgBRLtTl6Mt5QLcllVjsjcCtcjbSdXk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=kLQOU3uMw/G3uqOs1AQd6/lwKpto5Wrl14h7srjhGFHtQVxqzUOWPG+vXU3CbR99G
+	 V4Gnb7Uz/7mIiJNTCeyQ9jtsz6G2nfMqk7P4gw1hNB2pPAoEzP+FZGhgut8w6eH/eS
+	 LeqwQ2ufHSQMxT6rfASiuEKW7KHsnY9ua/9czMX2GRJ0ooR/Gu2Py3bM+tt9tVWri4
+	 OJPQZcABe9/SthiqNQ+gEB7w/AEBgHHxqf1mTsrcOrRCX89iGQGR0a71bm8y8QCRja
+	 0Fu5h7+iMX9Pz+IgHbTG4KGdvpIY2++XDY2V90TkbTkjoaTZIi113VqmAFrRTOp1+9
+	 ksrxgr/6aJvew==
+Date: Fri, 25 Apr 2025 10:47:38 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] PCI: hv: Avoid multiple -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <aAu8qsMQlbgH82iN@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 5/8] mfd: zl3073x: Add functions to work with
- register mailboxes
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250424154722.534284-1-ivecera@redhat.com>
- <20250424154722.534284-6-ivecera@redhat.com>
- <5094e051-5504-48a5-b411-ed1a0d949eeb@lunn.ch>
- <bd645425-b9cb-454d-8971-646501704697@redhat.com>
- <8082254c-01a6-4aca-84de-76083fdcbb3b@lunn.ch>
- <ea9cd028-3d74-4d46-b355-a74ad549269b@redhat.com>
- <34f29b17-dc68-4005-b2da-95fde34117a0@lunn.ch>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <34f29b17-dc68-4005-b2da-95fde34117a0@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
+Use the `DEFINE_RAW_FLEX()` helper for a few on-stack definitions
+of a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-On 24. 04. 25 9:57 odp., Andrew Lunn wrote:
-> On Thu, Apr 24, 2025 at 09:53:39PM +0200, Ivan Vecera wrote:
->>
->>
->> On 24. 04. 25 9:18 odp., Andrew Lunn wrote:
->>>> During taking 613cbb91e9ce ("media: Add MIPI CCI register access helper
->>>> functions") approach I found they are using for these functions u64
->>>> regardless of register size... Just to accommodate the biggest
->>>> possible value. I know about weakness of 'void *' usage but u64 is not
->>>> also ideal as the caller is forced to pass always 8 bytes for reading
->>>> and forced to reserve 8 bytes for each read value on stack.
->>>
->>> In this device, how are the u48s used? Are they actually u48s, or are
->>> they just u8[6], for example a MAC address? The network stack has lots
->>> of functions like:
->>>
->>> eth_hw_addr_set(struct net_device *dev, const u8 *addr)
->>
->> u48 registers always represent 48bit integer... they read from device using
->> bulk read as big-endian 48bit int. The same is valid also for u16
->> and u32.
-> 
-> Then a u64 makes sense, plus on write to hardware a check the upper
-> bits are 0. These u48s are going to be stored in a u64 anyway, since C
-> does not have a u48 type.
+So, with these changes, fix the following warnings:
 
-Just note that some of 48bit registers uses signed values so the check
-should be:
+drivers/pci/controller/pci-hyperv.c:3809:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pci/controller/pci-hyperv.c:2831:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pci/controller/pci-hyperv.c:2468:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pci/controller/pci-hyperv.c:1830:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pci/controller/pci-hyperv.c:1593:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pci/controller/pci-hyperv.c:1504:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pci/controller/pci-hyperv.c:1424:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-x is in <S48_MIN, U48_MAX>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/pci/controller/pci-hyperv.c | 126 ++++++++++++----------------
+ 1 file changed, 55 insertions(+), 71 deletions(-)
 
-this could be done using bit operations:
-
-(!(GENMASK_ULL(63, 49) & ((u64)(x) + BIT_ULL(47))))
-
-Ivan
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index e1eaa24559a2..f2b5036bcf64 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1420,10 +1420,8 @@ static int hv_read_config_block(struct pci_dev *pdev, void *buf,
+ 	struct hv_pcibus_device *hbus =
+ 		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
+ 			     sysdata);
+-	struct {
+-		struct pci_packet pkt;
+-		char buf[sizeof(struct pci_read_block)];
+-	} pkt;
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message,
++			sizeof(struct pci_read_block));
+ 	struct hv_read_config_compl comp_pkt;
+ 	struct pci_read_block *read_blk;
+ 	int ret;
+@@ -1435,17 +1433,16 @@ static int hv_read_config_block(struct pci_dev *pdev, void *buf,
+ 	comp_pkt.buf = buf;
+ 	comp_pkt.len = len;
+ 
+-	memset(&pkt, 0, sizeof(pkt));
+-	pkt.pkt.completion_func = hv_pci_read_config_compl;
+-	pkt.pkt.compl_ctxt = &comp_pkt;
+-	read_blk = (struct pci_read_block *)&pkt.pkt.message;
++	pkt->completion_func = hv_pci_read_config_compl;
++	pkt->compl_ctxt = &comp_pkt;
++	read_blk = (struct pci_read_block *)pkt->message;
+ 	read_blk->message_type.type = PCI_READ_BLOCK;
+ 	read_blk->wslot.slot = devfn_to_wslot(pdev->devfn);
+ 	read_blk->block_id = block_id;
+ 	read_blk->bytes_requested = len;
+ 
+ 	ret = vmbus_sendpacket(hbus->hdev->channel, read_blk,
+-			       sizeof(*read_blk), (unsigned long)&pkt.pkt,
++			       sizeof(*read_blk), (unsigned long)pkt,
+ 			       VM_PKT_DATA_INBAND,
+ 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+ 	if (ret)
+@@ -1500,11 +1497,8 @@ static int hv_write_config_block(struct pci_dev *pdev, void *buf,
+ 	struct hv_pcibus_device *hbus =
+ 		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
+ 			     sysdata);
+-	struct {
+-		struct pci_packet pkt;
+-		char buf[sizeof(struct pci_write_block)];
+-		u32 reserved;
+-	} pkt;
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message,
++			sizeof(struct pci_write_block) + sizeof(u32));
+ 	struct hv_pci_compl comp_pkt;
+ 	struct pci_write_block *write_blk;
+ 	u32 pkt_size;
+@@ -1515,10 +1509,9 @@ static int hv_write_config_block(struct pci_dev *pdev, void *buf,
+ 
+ 	init_completion(&comp_pkt.host_event);
+ 
+-	memset(&pkt, 0, sizeof(pkt));
+-	pkt.pkt.completion_func = hv_pci_write_config_compl;
+-	pkt.pkt.compl_ctxt = &comp_pkt;
+-	write_blk = (struct pci_write_block *)&pkt.pkt.message;
++	pkt->completion_func = hv_pci_write_config_compl;
++	pkt->compl_ctxt = &comp_pkt;
++	write_blk = (struct pci_write_block *)pkt->message;
+ 	write_blk->message_type.type = PCI_WRITE_BLOCK;
+ 	write_blk->wslot.slot = devfn_to_wslot(pdev->devfn);
+ 	write_blk->block_id = block_id;
+@@ -1532,10 +1525,10 @@ static int hv_write_config_block(struct pci_dev *pdev, void *buf,
+ 	 * and new hosts, because, on them, what really matters is the length
+ 	 * specified in write_blk->byte_count.
+ 	 */
+-	pkt_size += sizeof(pkt.reserved);
++	pkt_size += sizeof(u32);
+ 
+ 	ret = vmbus_sendpacket(hbus->hdev->channel, write_blk, pkt_size,
+-			       (unsigned long)&pkt.pkt, VM_PKT_DATA_INBAND,
++			       (unsigned long)pkt, VM_PKT_DATA_INBAND,
+ 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+ 	if (ret)
+ 		return ret;
+@@ -1589,17 +1582,14 @@ static void hv_int_desc_free(struct hv_pci_dev *hpdev,
+ 			     struct tran_int_desc *int_desc)
+ {
+ 	struct pci_delete_interrupt *int_pkt;
+-	struct {
+-		struct pci_packet pkt;
+-		u8 buffer[sizeof(struct pci_delete_interrupt)];
+-	} ctxt;
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message,
++			sizeof(struct pci_delete_interrupt));
+ 
+ 	if (!int_desc->vector_count) {
+ 		kfree(int_desc);
+ 		return;
+ 	}
+-	memset(&ctxt, 0, sizeof(ctxt));
+-	int_pkt = (struct pci_delete_interrupt *)&ctxt.pkt.message;
++	int_pkt = (struct pci_delete_interrupt *)pkt->message;
+ 	int_pkt->message_type.type =
+ 		PCI_DELETE_INTERRUPT_MESSAGE;
+ 	int_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+@@ -1798,6 +1788,12 @@ static u32 hv_compose_msi_req_v3(
+ 	return sizeof(*int_pkt);
+ }
+ 
++union int_pkts {
++	struct pci_create_interrupt v1;
++	struct pci_create_interrupt2 v2;
++	struct pci_create_interrupt3 v3;
++};
++
+ /**
+  * hv_compose_msi_msg() - Supplies a valid MSI address/data
+  * @data:	Everything about this MSI
+@@ -1811,6 +1807,13 @@ static u32 hv_compose_msi_req_v3(
+  */
+ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ {
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message, sizeof(union int_pkts));
++	struct pci_create_interrupt *pkt_v1 =
++				(struct pci_create_interrupt *)pkt->message;
++	struct pci_create_interrupt2 *pkt_v2 =
++				(struct pci_create_interrupt2 *)pkt->message;
++	struct pci_create_interrupt3 *pkt_v3 =
++				(struct pci_create_interrupt3 *)pkt->message;
+ 	struct hv_pcibus_device *hbus;
+ 	struct vmbus_channel *channel;
+ 	struct hv_pci_dev *hpdev;
+@@ -1826,14 +1829,6 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	 */
+ 	u16 vector_count;
+ 	u32 vector;
+-	struct {
+-		struct pci_packet pci_pkt;
+-		union {
+-			struct pci_create_interrupt v1;
+-			struct pci_create_interrupt2 v2;
+-			struct pci_create_interrupt3 v3;
+-		} int_pkts;
+-	} __packed ctxt;
+ 	bool multi_msi;
+ 	u64 trans_id;
+ 	u32 size;
+@@ -1910,14 +1905,13 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	 * can't exceed u8. Cast 'vector' down to u8 for v1/v2 explicitly
+ 	 * for better readability.
+ 	 */
+-	memset(&ctxt, 0, sizeof(ctxt));
+ 	init_completion(&comp.comp_pkt.host_event);
+-	ctxt.pci_pkt.completion_func = hv_pci_compose_compl;
+-	ctxt.pci_pkt.compl_ctxt = &comp;
++	pkt->completion_func = hv_pci_compose_compl;
++	pkt->compl_ctxt = &comp;
+ 
+ 	switch (hbus->protocol_version) {
+ 	case PCI_PROTOCOL_VERSION_1_1:
+-		size = hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
++		size = hv_compose_msi_req_v1(pkt_v1,
+ 					hpdev->desc.win_slot.slot,
+ 					(u8)vector,
+ 					vector_count);
+@@ -1925,7 +1919,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 
+ 	case PCI_PROTOCOL_VERSION_1_2:
+ 	case PCI_PROTOCOL_VERSION_1_3:
+-		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
++		size = hv_compose_msi_req_v2(pkt_v2,
+ 					cpu,
+ 					hpdev->desc.win_slot.slot,
+ 					(u8)vector,
+@@ -1933,7 +1927,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		break;
+ 
+ 	case PCI_PROTOCOL_VERSION_1_4:
+-		size = hv_compose_msi_req_v3(&ctxt.int_pkts.v3,
++		size = hv_compose_msi_req_v3(pkt_v3,
+ 					cpu,
+ 					hpdev->desc.win_slot.slot,
+ 					vector,
+@@ -1950,8 +1944,8 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		goto free_int_desc;
+ 	}
+ 
+-	ret = vmbus_sendpacket_getid(hpdev->hbus->hdev->channel, &ctxt.int_pkts,
+-				     size, (unsigned long)&ctxt.pci_pkt,
++	ret = vmbus_sendpacket_getid(hpdev->hbus->hdev->channel, pkt->message,
++				     size, (unsigned long)pkt,
+ 				     &trans_id, VM_PKT_DATA_INBAND,
+ 				     VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+ 	if (ret) {
+@@ -2034,7 +2028,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	 *
+ 	 * Cf. hv_pci_onchannelcallback().
+ 	 */
+-	vmbus_request_addr_match(channel, trans_id, (unsigned long)&ctxt.pci_pkt);
++	vmbus_request_addr_match(channel, trans_id, (unsigned long)pkt);
+ free_int_desc:
+ 	kfree(int_desc);
+ drop_reference:
+@@ -2464,10 +2458,8 @@ static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hbus,
+ 	struct hv_pci_dev *hpdev;
+ 	struct pci_child_message *res_req;
+ 	struct q_res_req_compl comp_pkt;
+-	struct {
+-		struct pci_packet init_packet;
+-		u8 buffer[sizeof(struct pci_child_message)];
+-	} pkt;
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message,
++			sizeof(struct pci_child_message));
+ 	unsigned long flags;
+ 	int ret;
+ 
+@@ -2477,18 +2469,17 @@ static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hbus,
+ 
+ 	hpdev->hbus = hbus;
+ 
+-	memset(&pkt, 0, sizeof(pkt));
+ 	init_completion(&comp_pkt.host_event);
+ 	comp_pkt.hpdev = hpdev;
+-	pkt.init_packet.compl_ctxt = &comp_pkt;
+-	pkt.init_packet.completion_func = q_resource_requirements;
+-	res_req = (struct pci_child_message *)&pkt.init_packet.message;
++	pkt->compl_ctxt = &comp_pkt;
++	pkt->completion_func = q_resource_requirements;
++	res_req = (struct pci_child_message *)pkt->message;
+ 	res_req->message_type.type = PCI_QUERY_RESOURCE_REQUIREMENTS;
+ 	res_req->wslot.slot = desc->win_slot.slot;
+ 
+ 	ret = vmbus_sendpacket(hbus->hdev->channel, res_req,
+-			       sizeof(struct pci_child_message),
+-			       (unsigned long)&pkt.init_packet,
++			       __member_size(pkt->message),
++			       (unsigned long)pkt,
+ 			       VM_PKT_DATA_INBAND,
+ 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+ 	if (ret)
+@@ -2827,10 +2818,8 @@ static void hv_eject_device_work(struct work_struct *work)
+ 	struct pci_dev *pdev;
+ 	unsigned long flags;
+ 	int wslot;
+-	struct {
+-		struct pci_packet pkt;
+-		u8 buffer[sizeof(struct pci_eject_response)];
+-	} ctxt;
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message,
++			sizeof(struct pci_eject_response));
+ 
+ 	hpdev = container_of(work, struct hv_pci_dev, wrk);
+ 	hbus = hpdev->hbus;
+@@ -2859,8 +2848,7 @@ static void hv_eject_device_work(struct work_struct *work)
+ 	if (hpdev->pci_slot)
+ 		pci_destroy_slot(hpdev->pci_slot);
+ 
+-	memset(&ctxt, 0, sizeof(ctxt));
+-	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
++	ejct_pkt = (struct pci_eject_response *)pkt->message;
+ 	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
+ 	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+ 	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
+@@ -3805,10 +3793,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ {
+ 	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+ 	struct vmbus_channel *chan = hdev->channel;
+-	struct {
+-		struct pci_packet teardown_packet;
+-		u8 buffer[sizeof(struct pci_message)];
+-	} pkt;
++	DEFINE_RAW_FLEX(struct pci_packet, pkt, message, 1);
+ 	struct hv_pci_compl comp_pkt;
+ 	struct hv_pci_dev *hpdev, *tmp;
+ 	unsigned long flags;
+@@ -3850,15 +3835,14 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ 		return ret;
+ 	}
+ 
+-	memset(&pkt.teardown_packet, 0, sizeof(pkt.teardown_packet));
+ 	init_completion(&comp_pkt.host_event);
+-	pkt.teardown_packet.completion_func = hv_pci_generic_compl;
+-	pkt.teardown_packet.compl_ctxt = &comp_pkt;
+-	pkt.teardown_packet.message[0].type = PCI_BUS_D0EXIT;
++	pkt->completion_func = hv_pci_generic_compl;
++	pkt->compl_ctxt = &comp_pkt;
++	pkt->message[0].type = PCI_BUS_D0EXIT;
+ 
+-	ret = vmbus_sendpacket_getid(chan, &pkt.teardown_packet.message,
+-				     sizeof(struct pci_message),
+-				     (unsigned long)&pkt.teardown_packet,
++	ret = vmbus_sendpacket_getid(chan, pkt->message,
++				     __member_size(pkt->message),
++				     (unsigned long)pkt,
+ 				     &trans_id, VM_PKT_DATA_INBAND,
+ 				     VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+ 	if (ret)
+@@ -3873,7 +3857,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ 		 * Cf. hv_pci_onchannelcallback().
+ 		 */
+ 		vmbus_request_addr_match(chan, trans_id,
+-					 (unsigned long)&pkt.teardown_packet);
++					 (unsigned long)pkt);
+ 		return -ETIMEDOUT;
+ 	}
+ 
+-- 
+2.43.0
 
