@@ -1,427 +1,239 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86611224B08;
-	Fri, 25 Apr 2025 21:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4805B2957B6;
+	Fri, 25 Apr 2025 22:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745617960; cv=none; b=Owt1hTyMrnoLB5ToKSmLwx8QDwEzmT4PVyTtEwGQCD13PC85TmBeU3wZIBGkk/vfZGu/9kw6nArvuHSmIIfA8sTViTQb+LmVThKnvynrx6b9Iui31k4cPJ92n82F4avUk/HKrFfaBrPe0rflno+Ztx1WtGGVcXE7B3hsrc7jqa0=
+	t=1745621111; cv=none; b=N7WTT7BXTpnPxNDcJkgF2Q6xdIwANasda/BIULkvirqRcTkiIRUcABnXs5KfqKhLWQKIctcAvYTHgUKlQwS3TdMgK6CXEfbPBEfszRr623Vr3HYT5W9o6zsaQ8ciAJvK+tGosHe6tAgS0x25O52cpYriR7t6PEaymOLCZ4KFe0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745617960; c=relaxed/simple;
-	bh=tTOcQye2Ek0OQqamysTFi7cL1ijJ4+/RHhoS54Zzjts=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Iq56p5+zS9A/gZFKynr4oUq4+t/WFNBiH0PFQltcPXPu4fXw0YUwesnnNEUXN8rzUOAes6dUO1/AwSPBTKBIExqDpa306QcM2HpL6Ttn6IYKMuy4wKqEwPSxtHUM52hSBu/IU6PgJtTNwHTBmWZqLDHZ0uOk55i0eHPAA3MiZb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fvIC6jFJ; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745621111; c=relaxed/simple;
+	bh=m1yupztsyxl7cQ4kn1kX9OLaeAaGqeyZCazZnJSh7Sw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MuCRw+2e1eixfUsaF6ThxDkfICUPCoWsnWfbcK1+X1I4Gp5GyR+Sc6Vwi5ErehzDWGJ4xYxYF9xAKNHv0OGYfpO9qi7UHn6IT1UmpOHFOq8zBAG/qt4NQ83T9BDGUM3ggNHo/ebQuwZKCC1zCHQrqAgg3gXqjpEKti0mXXp0K9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNPpmPBi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fvIC6jFJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745617959; x=1777153959;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tTOcQye2Ek0OQqamysTFi7cL1ijJ4+/RHhoS54Zzjts=;
-  b=fvIC6jFJRsZlYApLcgYkJQCRBGOeFObzq3BUdra91cs1EvdvmP6WUwvf
-   BJ+SMdA8smijY/byzU6rg9dZdsk64FUs4+4BBSwUCtdMPjn3a76bH4KQ5
-   1WhaXU6pXckoxA/+LMshVB0jZc9cnx7iotfk6IsQbWJK3OiVq2QIzZCM1
-   eAxbDWg7zvR+3RML3j8JF5Ra/RMoxbiWQqRdyvf9QD8ZFsO3MSQCLk84C
-   mrQW5r92A/ULFTEBuQPdNRq7iP5N2f5Thq/nRCbMoClm0nHfTRkDFWnQm
-   wTYcXXRZ1SvpC8ieKTFIiLSZ7Qqt/opjpa1ebU7xRCG364xXxVPq/aweq
-   g==;
-X-CSE-ConnectionGUID: sk1hI55fTKCxJb2P8Dv0/g==
-X-CSE-MsgGUID: PX3XgqWvQ1aDBHKk40akpg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="69784542"
-X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
-   d="scan'208";a="69784542"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 14:52:36 -0700
-X-CSE-ConnectionGUID: wasnrluWSyGiKUQwv2iK/A==
-X-CSE-MsgGUID: qGd2klOFTDq1pArXnnawfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
-   d="scan'208";a="163973511"
-Received: from anguy11-upstream.jf.intel.com ([10.166.9.133])
-  by orviesa002.jf.intel.com with ESMTP; 25 Apr 2025 14:52:36 -0700
-From: Tony Nguyen <anthony.l.nguyen@intel.com>
-To: davem@davemloft.net,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	andrew+netdev@lunn.ch,
-	netdev@vger.kernel.org
-Cc: Milena Olech <milena.olech@intel.com>,
-	anthony.l.nguyen@intel.com,
-	przemyslaw.kitszel@intel.com,
-	jacob.e.keller@intel.com,
-	richardcochran@gmail.com,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	linux-hardening@vger.kernel.org,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Samuel Salin <Samuel.salin@intel.com>
-Subject: [PATCH net-next v2 03/11] virtchnl: add PTP virtchnl definitions
-Date: Fri, 25 Apr 2025 14:52:17 -0700
-Message-ID: <20250425215227.3170837-4-anthony.l.nguyen@intel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250425215227.3170837-1-anthony.l.nguyen@intel.com>
-References: <20250425215227.3170837-1-anthony.l.nguyen@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNPpmPBi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A732EC4CEE4;
+	Fri, 25 Apr 2025 22:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745621110;
+	bh=m1yupztsyxl7cQ4kn1kX9OLaeAaGqeyZCazZnJSh7Sw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JNPpmPBitNtn+f5UEYrD0AXc7Y1JyYzO7kUbgoGuf23ddRWjLn5QemhzLtDQgfghF
+	 QQwwKYXYCWiLc8Kr5V/QuMRDj/+q1O1lU+ExVlQQCBND+cXjdvnMBv+Qk0oADCnNOz
+	 y0omoEiMxsuKUv1yEr1qp/6aL/QLnfcxxyVeZu7OBrDqaBEuPJdirQR5LPF5dZuHGd
+	 7zkCE4y8wO2JEWhSruV03CJ/w53TZ6i57BGby0QC5DOGMCzMa1fcOAFc86Kx5Ykei9
+	 t7shHKl0MAx53zvNQCIVu53t/CgCihb3I1ak1lPkJFXf9ECj0aqS38T3AqjoeYful2
+	 8T6erUcjDFJYQ==
+From: Kees Cook <kees@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ali Saidi <alisaidi@amazon.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] binfmt_elf: Move brk for static PIE even if ASLR disabled
+Date: Fri, 25 Apr 2025 15:45:06 -0700
+Message-Id: <20250425224502.work.520-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8271; i=kees@kernel.org; h=from:subject:message-id; bh=m1yupztsyxl7cQ4kn1kX9OLaeAaGqeyZCazZnJSh7Sw=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk8AoX8CtlHZqZG7zo3I4XhzIFZf72yUp3/TD0a/Er2e +D8w9nMHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABPJqmNkWG4wyXB153vzueuW zLnxMSMpsPPS7p4+5/5cJ/GkX5PmtTP8D97fmN3SapG+4XjMv0cXD5+Z+PvuNaEFz/kf/RGZs3x +Ey8A
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-From: Milena Olech <milena.olech@intel.com>
+In commit bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
+direct loader exec"), the brk was moved out of the mmap region when
+loading static PIE binaries (ET_DYN without INTERP). The common case
+for these binaries was testing new ELF loaders, so the brk needed to
+be away from mmap to avoid colliding with stack, future mmaps (of the
+loader-loaded binary), etc. But this was only done when ASLR was enabled,
+in an attempt to minimize changes to memory layouts.
 
-PTP capabilities are negotiated using virtchnl commands. There are two
-available modes of the PTP support: direct and mailbox. When the direct
-access to PTP resources is negotiated, virtchnl messages returns a set
-of registers that allow read/write directly. When the mailbox access to
-PTP resources is negotiated, virtchnl messages are used to access
-PTP clock and to read the timestamp values.
+After adding support to respect alignment requirements for static PIE
+binaries in commit 3545deff0ec7 ("binfmt_elf: Honor PT_LOAD alignment
+for static PIE"), it became possible to have a large gap after the
+final PT_LOAD segment and the top of the mmap region. This means that
+future mmap allocations might go after the last PT_LOAD segment (where
+brk might be if ASLR was disabled) instead of before them (where they
+traditionally ended up).
 
-Virtchnl API covers both modes and exposes a set of PTP capabilities.
+On arm64, running with ASLR disabled, Ubuntu 22.04's "ldconfig" binary,
+a static PIE, has alignment requirements that leaves a gap large enough
+after the last PT_LOAD segment to fit the vdso and vvar, but still leave
+enough space for the brk (which immediately follows the last PT_LOAD
+segment) to be allocated by the binary.
 
-Using virtchnl API, the driver recognizes also HW abilities - maximum
-adjustment of the clock and the basic increment value.
+fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /home/ubuntu/glibc-2.35/build/elf/ldconfig
+fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /home/ubuntu/glibc-2.35/build/elf/ldconfig
+fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
+***[brk will go here at fffff7ffa000]***
+fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
+fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
+fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
 
-Additionally, API allows to configure the secondary mailbox, dedicated
-exclusively for PTP purposes.
+After commit 0b3bc3354eb9 ("arm64: vdso: Switch to generic storage
+implementation"), the arm64 vvar grew slightly, and suddenly the brk
+collided with the allocation.
 
-Reviewed-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Signed-off-by: Milena Olech <milena.olech@intel.com>
-Tested-by: Mina Almasry <almasrymina@google.com>
-Tested-by: Samuel Salin <Samuel.salin@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /home/ubuntu/glibc-2.35/build/elf/ldconfig
+fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /home/ubuntu/glibc-2.35/build/elf/ldconfig
+fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
+***[oops, no room any more, vvar is at fffff7ffa000!]***
+fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
+fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
+fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
+
+The solution is to unconditionally move the brk out of the mmap region
+for static PIE binaries. Whether ASLR is enabled or not does not change if
+there may be future mmap allocation collisions with a growing brk region.
+
+Update memory layout comments (with kernel-doc headings), consolidate
+the setting of mm->brk to later (it isn't needed early), move static PIE
+brk out of mmap unconditionally, and make sure brk(2) knows to base brk
+position off of mm->start_brk not mm->end_data no matter what the cause of
+moving it is (via current->brk_randomized). (Though why isn't this always
+just start_brk? More research is needed, but leave that alone for now.)
+
+Reported-by: Ryan Roberts <ryan.roberts@arm.com>
+Closes: https://lore.kernel.org/lkml/f93db308-4a0e-4806-9faf-98f890f5a5e6@arm.com/
+Fixes: bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing direct loader exec")
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- drivers/net/ethernet/intel/idpf/virtchnl2.h | 302 ++++++++++++++++++++
- 1 file changed, 302 insertions(+)
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: <linux-fsdevel@vger.kernel.org>
+Cc: <linux-mm@kvack.org>
+---
+ fs/binfmt_elf.c | 67 +++++++++++++++++++++++++++++++------------------
+ 1 file changed, 43 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/idpf/virtchnl2.h b/drivers/net/ethernet/intel/idpf/virtchnl2.h
-index 63deb120359c..db9523ef3fa7 100644
---- a/drivers/net/ethernet/intel/idpf/virtchnl2.h
-+++ b/drivers/net/ethernet/intel/idpf/virtchnl2.h
-@@ -68,6 +68,16 @@ enum virtchnl2_op {
- 	VIRTCHNL2_OP_ADD_MAC_ADDR		= 535,
- 	VIRTCHNL2_OP_DEL_MAC_ADDR		= 536,
- 	VIRTCHNL2_OP_CONFIG_PROMISCUOUS_MODE	= 537,
-+
-+	/* TimeSync opcodes */
-+	VIRTCHNL2_OP_PTP_GET_CAPS			= 541,
-+	VIRTCHNL2_OP_PTP_GET_VPORT_TX_TSTAMP		= 542,
-+	VIRTCHNL2_OP_PTP_GET_DEV_CLK_TIME		= 543,
-+	VIRTCHNL2_OP_PTP_GET_CROSS_TIME			= 544,
-+	VIRTCHNL2_OP_PTP_SET_DEV_CLK_TIME		= 545,
-+	VIRTCHNL2_OP_PTP_ADJ_DEV_CLK_FINE		= 546,
-+	VIRTCHNL2_OP_PTP_ADJ_DEV_CLK_TIME		= 547,
-+	VIRTCHNL2_OP_PTP_GET_VPORT_TX_TSTAMP_CAPS	= 548,
- };
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 584fa89bc877..26c87d076adb 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -830,6 +830,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
+ 	struct elf_phdr *elf_property_phdata = NULL;
+ 	unsigned long elf_brk;
++	bool brk_moved = false;
+ 	int retval, i;
+ 	unsigned long elf_entry;
+ 	unsigned long e_entry;
+@@ -1097,15 +1098,19 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 			/* Calculate any requested alignment. */
+ 			alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
  
- /**
-@@ -1270,4 +1280,296 @@ struct virtchnl2_promisc_info {
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_promisc_info);
+-			/*
+-			 * There are effectively two types of ET_DYN
+-			 * binaries: programs (i.e. PIE: ET_DYN with PT_INTERP)
+-			 * and loaders (ET_DYN without PT_INTERP, since they
+-			 * _are_ the ELF interpreter). The loaders must
+-			 * be loaded away from programs since the program
+-			 * may otherwise collide with the loader (especially
+-			 * for ET_EXEC which does not have a randomized
+-			 * position). For example to handle invocations of
++			/**
++			 * DOC: PIE handling
++			 *
++			 * There are effectively two types of ET_DYN ELF
++			 * binaries: programs (i.e. PIE: ET_DYN with
++			 * PT_INTERP) and loaders (i.e. static PIE: ET_DYN
++			 * without PT_INTERP, usually the ELF interpreter
++			 * itself). Loaders must be loaded away from programs
++			 * since the program may otherwise collide with the
++			 * loader (especially for ET_EXEC which does not have
++			 * a randomized position).
++			 *
++			 * For example, to handle invocations of
+ 			 * "./ld.so someprog" to test out a new version of
+ 			 * the loader, the subsequent program that the
+ 			 * loader loads must avoid the loader itself, so
+@@ -1118,6 +1123,9 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 			 * ELF_ET_DYN_BASE and loaders are loaded into the
+ 			 * independently randomized mmap region (0 load_bias
+ 			 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
++			 *
++			 * See below for "brk" handling details, which is
++			 * also affected by program vs loader and ASLR.
+ 			 */
+ 			if (interpreter) {
+ 				/* On ET_DYN with PT_INTERP, we do the ASLR. */
+@@ -1234,8 +1242,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	start_data += load_bias;
+ 	end_data += load_bias;
  
-+/**
-+ * enum virtchnl2_ptp_caps - PTP capabilities
-+ * @VIRTCHNL2_CAP_PTP_GET_DEVICE_CLK_TIME: direct access to get the time of
-+ *					   device clock
-+ * @VIRTCHNL2_CAP_PTP_GET_DEVICE_CLK_TIME_MB: mailbox access to get the time of
-+ *					      device clock
-+ * @VIRTCHNL2_CAP_PTP_GET_CROSS_TIME: direct access to cross timestamp
-+ * @VIRTCHNL2_CAP_PTP_GET_CROSS_TIME_MB: mailbox access to cross timestamp
-+ * @VIRTCHNL2_CAP_PTP_SET_DEVICE_CLK_TIME: direct access to set the time of
-+ *					   device clock
-+ * @VIRTCHNL2_CAP_PTP_SET_DEVICE_CLK_TIME_MB: mailbox access to set the time of
-+ *					      device clock
-+ * @VIRTCHNL2_CAP_PTP_ADJ_DEVICE_CLK: direct access to adjust the time of device
-+ *				      clock
-+ * @VIRTCHNL2_CAP_PTP_ADJ_DEVICE_CLK_MB: mailbox access to adjust the time of
-+ *					 device clock
-+ * @VIRTCHNL2_CAP_PTP_TX_TSTAMPS: direct access to the Tx timestamping
-+ * @VIRTCHNL2_CAP_PTP_TX_TSTAMPS_MB: mailbox access to the Tx timestamping
-+ *
-+ * PF/VF negotiates a set of supported PTP capabilities with the Control Plane.
-+ * There are two access methods - mailbox (_MB) and direct.
-+ * PTP capabilities enables Main Timer operations: get/set/adjust Main Timer,
-+ * cross timestamping and the Tx timestamping.
-+ */
-+enum virtchnl2_ptp_caps {
-+	VIRTCHNL2_CAP_PTP_GET_DEVICE_CLK_TIME		= BIT(0),
-+	VIRTCHNL2_CAP_PTP_GET_DEVICE_CLK_TIME_MB	= BIT(1),
-+	VIRTCHNL2_CAP_PTP_GET_CROSS_TIME		= BIT(2),
-+	VIRTCHNL2_CAP_PTP_GET_CROSS_TIME_MB		= BIT(3),
-+	VIRTCHNL2_CAP_PTP_SET_DEVICE_CLK_TIME		= BIT(4),
-+	VIRTCHNL2_CAP_PTP_SET_DEVICE_CLK_TIME_MB	= BIT(5),
-+	VIRTCHNL2_CAP_PTP_ADJ_DEVICE_CLK		= BIT(6),
-+	VIRTCHNL2_CAP_PTP_ADJ_DEVICE_CLK_MB		= BIT(7),
-+	VIRTCHNL2_CAP_PTP_TX_TSTAMPS			= BIT(8),
-+	VIRTCHNL2_CAP_PTP_TX_TSTAMPS_MB			= BIT(9),
-+};
+-	current->mm->start_brk = current->mm->brk = ELF_PAGEALIGN(elf_brk);
+-
+ 	if (interpreter) {
+ 		elf_entry = load_elf_interp(interp_elf_ex,
+ 					    interpreter,
+@@ -1291,27 +1297,40 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	mm->end_data = end_data;
+ 	mm->start_stack = bprm->p;
+ 
+-	if ((current->flags & PF_RANDOMIZE) && (snapshot_randomize_va_space > 1)) {
++	/**
++	 * DOC: "brk" handling
++	 *
++	 * For architectures with ELF randomization, when executing a
++	 * loader directly (i.e. static PIE: ET_DYN without PT_INTERP),
++	 * move the brk area out of the mmap region and into the unused
++	 * ELF_ET_DYN_BASE region. Since "brk" grows up it may collide
++	 * early with the stack growing down or other regions being put
++	 * into the mmap region by the kernel (e.g. vdso).
++	 */
++	if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
++	    elf_ex->e_type == ET_DYN && !interpreter) {
++		elf_brk = ELF_ET_DYN_BASE;
++		/* This counts as moving the brk, so let brk(2) know. */
++		brk_moved = true;
++	}
++	mm->start_brk = mm->brk = ELF_PAGEALIGN(elf_brk);
 +
-+/**
-+ * struct virtchnl2_ptp_clk_reg_offsets - Offsets of device and PHY clocks
-+ *					  registers.
-+ * @dev_clk_ns_l: Device clock low register offset
-+ * @dev_clk_ns_h: Device clock high register offset
-+ * @phy_clk_ns_l: PHY clock low register offset
-+ * @phy_clk_ns_h: PHY clock high register offset
-+ * @cmd_sync_trigger: The command sync trigger register offset
-+ * @pad: Padding for future extensions
-+ */
-+struct virtchnl2_ptp_clk_reg_offsets {
-+	__le32 dev_clk_ns_l;
-+	__le32 dev_clk_ns_h;
-+	__le32 phy_clk_ns_l;
-+	__le32 phy_clk_ns_h;
-+	__le32 cmd_sync_trigger;
-+	u8 pad[4];
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(24, virtchnl2_ptp_clk_reg_offsets);
++	if ((current->flags & PF_RANDOMIZE) && snapshot_randomize_va_space > 1) {
+ 		/*
+-		 * For architectures with ELF randomization, when executing
+-		 * a loader directly (i.e. no interpreter listed in ELF
+-		 * headers), move the brk area out of the mmap region
+-		 * (since it grows up, and may collide early with the stack
+-		 * growing down), and into the unused ELF_ET_DYN_BASE region.
++		 * If we didn't move the brk to ELF_ET_DYN_BASE (above),
++		 * leave a gap between .bss and brk.
+ 		 */
+-		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
+-		    elf_ex->e_type == ET_DYN && !interpreter) {
+-			mm->brk = mm->start_brk = ELF_ET_DYN_BASE;
+-		} else {
+-			/* Otherwise leave a gap between .bss and brk. */
++		if (!brk_moved)
+ 			mm->brk = mm->start_brk = mm->brk + PAGE_SIZE;
+-		}
+ 
+ 		mm->brk = mm->start_brk = arch_randomize_brk(mm);
++		brk_moved = true;
++	}
 +
-+/**
-+ * struct virtchnl2_ptp_cross_time_reg_offsets - Offsets of the device cross
-+ *						 time registers.
-+ * @sys_time_ns_l: System time low register offset
-+ * @sys_time_ns_h: System time high register offset
-+ * @cmd_sync_trigger: The command sync trigger register offset
-+ * @pad: Padding for future extensions
-+ */
-+struct virtchnl2_ptp_cross_time_reg_offsets {
-+	__le32 sys_time_ns_l;
-+	__le32 sys_time_ns_h;
-+	__le32 cmd_sync_trigger;
-+	u8 pad[4];
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_cross_time_reg_offsets);
-+
-+/**
-+ * struct virtchnl2_ptp_clk_adj_reg_offsets - Offsets of device and PHY clocks
-+ *					      adjustments registers.
-+ * @dev_clk_cmd_type: Device clock command type register offset
-+ * @dev_clk_incval_l: Device clock increment value low register offset
-+ * @dev_clk_incval_h: Device clock increment value high registers offset
-+ * @dev_clk_shadj_l: Device clock shadow adjust low register offset
-+ * @dev_clk_shadj_h: Device clock shadow adjust high register offset
-+ * @phy_clk_cmd_type: PHY timer command type register offset
-+ * @phy_clk_incval_l: PHY timer increment value low register offset
-+ * @phy_clk_incval_h: PHY timer increment value high register offset
-+ * @phy_clk_shadj_l: PHY timer shadow adjust low register offset
-+ * @phy_clk_shadj_h: PHY timer shadow adjust high register offset
-+ */
-+struct virtchnl2_ptp_clk_adj_reg_offsets {
-+	__le32 dev_clk_cmd_type;
-+	__le32 dev_clk_incval_l;
-+	__le32 dev_clk_incval_h;
-+	__le32 dev_clk_shadj_l;
-+	__le32 dev_clk_shadj_h;
-+	__le32 phy_clk_cmd_type;
-+	__le32 phy_clk_incval_l;
-+	__le32 phy_clk_incval_h;
-+	__le32 phy_clk_shadj_l;
-+	__le32 phy_clk_shadj_h;
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(40, virtchnl2_ptp_clk_adj_reg_offsets);
-+
-+/**
-+ * struct virtchnl2_ptp_tx_tstamp_latch_caps - PTP Tx timestamp latch
-+ *					       capabilities.
-+ * @tx_latch_reg_offset_l: Tx timestamp latch low register offset
-+ * @tx_latch_reg_offset_h: Tx timestamp latch high register offset
-+ * @index: Latch index provided to the Tx descriptor
-+ * @pad: Padding for future extensions
-+ */
-+struct virtchnl2_ptp_tx_tstamp_latch_caps {
-+	__le32 tx_latch_reg_offset_l;
-+	__le32 tx_latch_reg_offset_h;
-+	u8 index;
-+	u8 pad[7];
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_tx_tstamp_latch_caps);
-+
-+/**
-+ * struct virtchnl2_ptp_get_vport_tx_tstamp_caps - Structure that defines Tx
-+ *						   tstamp entries.
-+ * @vport_id: Vport number
-+ * @num_latches: Total number of latches
-+ * @tstamp_ns_lo_bit: First bit for nanosecond part of the timestamp
-+ * @tstamp_ns_hi_bit: Last bit for nanosecond part of the timestamp
-+ * @pad: Padding for future tstamp granularity extensions
-+ * @tstamp_latches: Capabilities of Tx timestamp entries
-+ *
-+ * PF/VF sends this message to negotiate the Tx timestamp latches for each
-+ * Vport.
-+ *
-+ * Associated with VIRTCHNL2_OP_PTP_GET_VPORT_TX_TSTAMP_CAPS.
-+ */
-+struct virtchnl2_ptp_get_vport_tx_tstamp_caps {
-+	__le32 vport_id;
-+	__le16 num_latches;
-+	u8 tstamp_ns_lo_bit;
-+	u8 tstamp_ns_hi_bit;
-+	u8 pad[8];
-+
-+	struct virtchnl2_ptp_tx_tstamp_latch_caps tstamp_latches[]
-+						  __counted_by_le(num_latches);
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_get_vport_tx_tstamp_caps);
-+
-+/**
-+ * struct virtchnl2_ptp_get_caps - Get PTP capabilities
-+ * @caps: PTP capability bitmap. See enum virtchnl2_ptp_caps
-+ * @max_adj: The maximum possible frequency adjustment
-+ * @base_incval: The default timer increment value
-+ * @peer_mbx_q_id: ID of the PTP Device Control daemon queue
-+ * @peer_id: Peer ID for PTP Device Control daemon
-+ * @secondary_mbx: Indicates to the driver that it should create a secondary
-+ *		   mailbox to inetract with control plane for PTP
-+ * @pad: Padding for future extensions
-+ * @clk_offsets: Main timer and PHY registers offsets
-+ * @cross_time_offsets: Cross time registers offsets
-+ * @clk_adj_offsets: Offsets needed to adjust the PHY and the main timer
-+ *
-+ * PF/VF sends this message to negotiate PTP capabilities. CP updates bitmap
-+ * with supported features and fulfills appropriate structures.
-+ * If HW uses primary MBX for PTP: secondary_mbx is set to false.
-+ * If HW uses secondary MBX for PTP: secondary_mbx is set to true.
-+ *	Control plane has 2 MBX and the driver has 1 MBX, send to peer
-+ *	driver may be used to send a message using valid ptp_peer_mb_q_id and
-+ *	ptp_peer_id.
-+ * If HW does not use send to peer driver: secondary_mbx is no care field and
-+ * peer_mbx_q_id holds invalid value (0xFFFF).
-+ *
-+ * Associated with VIRTCHNL2_OP_PTP_GET_CAPS.
-+ */
-+struct virtchnl2_ptp_get_caps {
-+	__le32 caps;
-+	__le32 max_adj;
-+	__le64 base_incval;
-+	__le16 peer_mbx_q_id;
-+	u8 peer_id;
-+	u8 secondary_mbx;
-+	u8 pad[4];
-+
-+	struct virtchnl2_ptp_clk_reg_offsets clk_offsets;
-+	struct virtchnl2_ptp_cross_time_reg_offsets cross_time_offsets;
-+	struct virtchnl2_ptp_clk_adj_reg_offsets clk_adj_offsets;
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(104, virtchnl2_ptp_get_caps);
-+
-+/**
-+ * struct virtchnl2_ptp_tx_tstamp_latch - Structure that describes tx tstamp
-+ *					  values, index and validity.
-+ * @tstamp: Timestamp value
-+ * @index: Timestamp index from which the value is read
-+ * @valid: Timestamp validity
-+ * @pad: Padding for future extensions
-+ */
-+struct virtchnl2_ptp_tx_tstamp_latch {
-+	__le64 tstamp;
-+	u8 index;
-+	u8 valid;
-+	u8 pad[6];
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_tx_tstamp_latch);
-+
-+/**
-+ * struct virtchnl2_ptp_get_vport_tx_tstamp_latches - Tx timestamp latches
-+ *						      associated with the vport.
-+ * @vport_id: Number of vport that requests the timestamp
-+ * @num_latches: Number of latches
-+ * @get_devtime_with_txtstmp: Flag to request device time along with Tx timestamp
-+ * @pad: Padding for future extensions
-+ * @device_time: device time if get_devtime_with_txtstmp was set in request
-+ * @tstamp_latches: PTP TX timestamp latch
-+ *
-+ * PF/VF sends this message to receive a specified number of timestamps
-+ * entries.
-+ *
-+ * Associated with VIRTCHNL2_OP_PTP_GET_VPORT_TX_TSTAMP.
-+ */
-+struct virtchnl2_ptp_get_vport_tx_tstamp_latches {
-+	__le32 vport_id;
-+	__le16 num_latches;
-+	u8 get_devtime_with_txtstmp;
-+	u8 pad[1];
-+	__le64 device_time;
-+
-+	struct virtchnl2_ptp_tx_tstamp_latch tstamp_latches[]
-+					     __counted_by_le(num_latches);
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_get_vport_tx_tstamp_latches);
-+
-+/**
-+ * struct virtchnl2_ptp_get_dev_clk_time - Associated with message
-+ *					   VIRTCHNL2_OP_PTP_GET_DEV_CLK_TIME.
-+ * @dev_time_ns: Device clock time value in nanoseconds
-+ *
-+ * PF/VF sends this message to receive the time from the main timer.
-+ */
-+struct virtchnl2_ptp_get_dev_clk_time {
-+	__le64 dev_time_ns;
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_ptp_get_dev_clk_time);
-+
-+/**
-+ * struct virtchnl2_ptp_get_cross_time: Associated with message
-+ *					VIRTCHNL2_OP_PTP_GET_CROSS_TIME.
-+ * @sys_time_ns: System counter value expressed in nanoseconds, read
-+ *		 synchronously with device time
-+ * @dev_time_ns: Device clock time value expressed in nanoseconds
-+ *
-+ * PF/VF sends this message to receive the cross time.
-+ */
-+struct virtchnl2_ptp_get_cross_time {
-+	__le64 sys_time_ns;
-+	__le64 dev_time_ns;
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_get_cross_time);
-+
-+/**
-+ * struct virtchnl2_ptp_set_dev_clk_time: Associated with message
-+ *					  VIRTCHNL2_OP_PTP_SET_DEV_CLK_TIME.
-+ * @dev_time_ns: Device time value expressed in nanoseconds to set
-+ *
-+ * PF/VF sends this message to set the time of the main timer.
-+ */
-+struct virtchnl2_ptp_set_dev_clk_time {
-+	__le64 dev_time_ns;
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_ptp_set_dev_clk_time);
-+
-+/**
-+ * struct virtchnl2_ptp_adj_dev_clk_fine: Associated with message
-+ *					  VIRTCHNL2_OP_PTP_ADJ_DEV_CLK_FINE.
-+ * @incval: Source timer increment value per clock cycle
-+ *
-+ * PF/VF sends this message to adjust the frequency of the main timer by the
-+ * indicated increment value.
-+ */
-+struct virtchnl2_ptp_adj_dev_clk_fine {
-+	__le64 incval;
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_ptp_adj_dev_clk_fine);
-+
-+/**
-+ * struct virtchnl2_ptp_adj_dev_clk_time: Associated with message
-+ *					  VIRTCHNL2_OP_PTP_ADJ_DEV_CLK_TIME.
-+ * @delta: Offset in nanoseconds to adjust the time by
-+ *
-+ * PF/VF sends this message to adjust the time of the main timer by the delta.
-+ */
-+struct virtchnl2_ptp_adj_dev_clk_time {
-+	__le64 delta;
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_ptp_adj_dev_clk_time);
-+
- #endif /* _VIRTCHNL_2_H_ */
+ #ifdef compat_brk_randomized
++	if (brk_moved)
+ 		current->brk_randomized = 1;
+ #endif
+-	}
+ 
+ 	if (current->personality & MMAP_PAGE_ZERO) {
+ 		/* Why this, you ask???  Well SVr4 maps page 0 as read-only,
 -- 
-2.47.1
+2.34.1
 
