@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8241EA7D3
-	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 17:09:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D141F09B0
+	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 17:09:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745600998; cv=none; b=WveTzPU2DGHhSFs5W6Xh6pPXJsOdR1AJqc8w5ghnB027V99NCfemoLWIOpkRR7QIAU8DG0etsSdRzxGL3XhQIwhKuLZGLKrrJInqSNQBWpcNisGmvwcV8u8KsLqQ4kgdYoKhA51RlHAxii/BF86d2upUaX3NqpXnUWREABK6rW8=
+	t=1745601000; cv=none; b=et22pUalHhqTfqKAG2G34iS5ZJSz6ekMEcNw88vONBqmtIopcQsgBNd70soTrC2xd6mWCsQO/YoSPJlP8EdcXBs7T5zJQqIGhZk2ZdK7B7sFnheaztXX5Wxp/7fxQXTupmLzOVS1MVgDfKO4qrdIJLrhNod65HcZB3+301o70fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745600998; c=relaxed/simple;
-	bh=aaNRp+LkD5C08qPIniTTpwGlVUav8oRfuPwLfJ88m80=;
+	s=arc-20240116; t=1745601000; c=relaxed/simple;
+	bh=DciTJaRm7DGg3I9gZE4J3T39Ysb3C1JromC0yRlbfvA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hgVMJYXW6kvaY+tLsGKsy5vUHf2kZ3CEgPXPPuUZz3IASB4xsh15Il5cmAmIv+3a0VxCOa81L7s0lnJLu0Hko/fnnDzpvkVJWXzPKx3gH5uUgJnRPNLWT9hTPVd3lP+kR4mk6MyJAkdEqJTot2hLU8L225LBQ26H0VD3Og1Mdq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T1sKrKme; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=HHkVXEKcv+V0UkYHE9wAyVw/tUjrydC1xz+LhDgwTtFniPC49Bti3ZYvSUR79ZMtjlp9oE0VoI3PR2VaY5SG7sThnxqEBesVOvKPttmAIDPeCatpUygv5xS4pyX5IdJ+BqJinvC4xzgp6PI+hdoJZAhAceKK/uOSIT/Fl/pse/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lml7NkxA; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T1sKrKme"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lml7NkxA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745600995;
+	s=mimecast20190719; t=1745600997;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CTMg/MYJLKhcyh8k3KJLgFH1/uH5k2yVmG6e/Zxp/KQ=;
-	b=T1sKrKme7JuDk2/Yzojp11zX9Yugx6tkoDkrEh05oyeKYJ7Kg3+m+PwuDAZtVtXTPAWkmZ
-	1GWZCjlOM8iu9v/U11frFKpynd8H2GlPOHY3Hl9FBx9LyxzWqqseBBi9aFiuzLMHJHxaX6
-	JHh2QXnql1GwUYcUh7khSJ4oCfHksbo=
+	bh=a098JNBt01UrV9dk7g52h5zH5zs0OxsxWoIdz9lDtIM=;
+	b=Lml7NkxAfHvZO1ajI1xB6ogSmN2CrHJNPx7QGsXdZpSvCdnACNKMI1roNxwLff0hcHwYtI
+	jOspzXhCD04NXuRYRJDbsvzaquplBak/rl4Ca2XfBfoX/S4tt4h2e8XagMKtX7qEDZ6hIN
+	/tU/4PnDa+GeChZRwyDWwMFZNPPiCmg=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-287-CVCK21osP_K35wwDxDCBUw-1; Fri,
- 25 Apr 2025 13:09:50 -0400
-X-MC-Unique: CVCK21osP_K35wwDxDCBUw-1
-X-Mimecast-MFC-AGG-ID: CVCK21osP_K35wwDxDCBUw_1745600988
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-317-QnfWmOHTOEqZBZHBlRfjPg-1; Fri,
+ 25 Apr 2025 13:09:55 -0400
+X-MC-Unique: QnfWmOHTOEqZBZHBlRfjPg-1
+X-Mimecast-MFC-AGG-ID: QnfWmOHTOEqZBZHBlRfjPg_1745600993
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 922421801A0F;
-	Fri, 25 Apr 2025 17:09:47 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EDF081800ECA;
+	Fri, 25 Apr 2025 17:09:52 +0000 (UTC)
 Received: from p16v.redhat.com (unknown [10.44.33.33])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 90F171800378;
-	Fri, 25 Apr 2025 17:09:42 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0CFF71800D9F;
+	Fri, 25 Apr 2025 17:09:47 +0000 (UTC)
 From: Ivan Vecera <ivecera@redhat.com>
 To: netdev@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
@@ -60,9 +60,9 @@ Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH net-next v5 1/8] dt-bindings: dpll: Add DPLL device and pin
-Date: Fri, 25 Apr 2025 19:09:28 +0200
-Message-ID: <20250425170935.740102-2-ivecera@redhat.com>
+Subject: [PATCH net-next v5 2/8] dt-bindings: dpll: Add support for Microchip Azurite chip family
+Date: Fri, 25 Apr 2025 19:09:29 +0200
+Message-ID: <20250425170935.740102-3-ivecera@redhat.com>
 In-Reply-To: <20250425170935.740102-1-ivecera@redhat.com>
 References: <20250425170935.740102-1-ivecera@redhat.com>
 Precedence: bulk
@@ -74,22 +74,10 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Add a common DT schema for DPLL device and its associated pins.
-The DPLL (device phase-locked loop) is a device used for precise clock
-synchronization in networking and telecom hardware.
-
-The device includes one or more DPLLs (channels) and one or more
-physical input/output pins.
-
-Each DPLL channel is used either to provide a pulse-per-clock signal or
-to drive an Ethernet equipment clock.
-
-The input and output pins have the following properties:
-* label: specifies board label
-* connection type: specifies its usage depending on wiring
-* list of supported or allowed frequencies: depending on how the pin
-  is connected and where)
-* embedded sync capability: indicates whether the pin supports this
+Add DT bindings for Microchip Azurite DPLL chip family. These chips
+provide up to 5 independent DPLL channels, 10 differential or
+single-ended inputs and 10 differential or 20 single-ended outputs.
+They can be connected via I2C or SPI busses.
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Ivan Vecera <ivecera@redhat.com>
@@ -97,168 +85,137 @@ Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 v4->v5:
 * removed compilation output from the description
 v3->v4:
-* dropped $Ref from dpll-pin reg property
-* added maxItems to dpll-pin reg property
-* fixed paragraph in dpll-pin desc
-* dpll-pin type property renamed to connection-type
+* fixed $Id
+* dpll-pin type property renamed to connection type
 v1->v3:
-* rewritten description for both device and pin
-* dropped num-dplls property
-* supported-frequencies property renamed to supported-frequencies-hz
+* single file for both i2c & spi
+* 5 compatibles for all supported chips from the family
 ---
- .../devicetree/bindings/dpll/dpll-device.yaml | 76 +++++++++++++++++++
- .../devicetree/bindings/dpll/dpll-pin.yaml    | 45 +++++++++++
- MAINTAINERS                                   |  2 +
- 3 files changed, 123 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
- create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+ .../bindings/dpll/microchip,zl30731.yaml      | 115 ++++++++++++++++++
+ 1 file changed, 115 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
 
-diff --git a/Documentation/devicetree/bindings/dpll/dpll-device.yaml b/Documentation/devicetree/bindings/dpll/dpll-device.yaml
+diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
 new file mode 100644
-index 0000000000000..fb8d7a9a3693f
+index 0000000000000..17747f754b845
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/dpll/dpll-device.yaml
-@@ -0,0 +1,76 @@
++++ b/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+@@ -0,0 +1,115 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/dpll/dpll-device.yaml#
++$id: http://devicetree.org/schemas/dpll/microchip,zl30731.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Digital Phase-Locked Loop (DPLL) Device
++title: Microchip Azurite DPLL device
 +
 +maintainers:
 +  - Ivan Vecera <ivecera@redhat.com>
 +
 +description:
-+  Digital Phase-Locked Loop (DPLL) device is used for precise clock
-+  synchronization in networking and telecom hardware. The device can
-+  have one or more channels (DPLLs) and one or more physical input and
-+  output pins. Each DPLL channel can either produce pulse-per-clock signal
-+  or drive ethernet equipment clock. The type of each channel can be
-+  indicated by dpll-types property.
++  Microchip Azurite DPLL (ZL3073x) is a family of DPLL devices that
++  provides up to 5 independent DPLL channels, up to 10 differential or
++  single-ended inputs and 10 differential or 20 single-ended outputs.
++  These devices support both I2C and SPI interfaces.
 +
 +properties:
-+  $nodename:
-+    pattern: "^dpll(@.*)?$"
++  compatible:
++    enum:
++      - microchip,zl30731
++      - microchip,zl30732
++      - microchip,zl30733
++      - microchip,zl30734
++      - microchip,zl30735
 +
-+  "#address-cells":
-+    const: 0
-+
-+  "#size-cells":
-+    const: 0
-+
-+  dpll-types:
-+    description: List of DPLL channel types, one per DPLL instance.
-+    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+    items:
-+      enum: [pps, eec]
-+
-+  input-pins:
-+    type: object
-+    description: DPLL input pins
-+    unevaluatedProperties: false
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+      "#size-cells":
-+        const: 0
-+
-+    patternProperties:
-+      "^pin@[0-9a-f]+$":
-+        $ref: /schemas/dpll/dpll-pin.yaml
-+        unevaluatedProperties: false
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+
-+  output-pins:
-+    type: object
-+    description: DPLL output pins
-+    unevaluatedProperties: false
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+      "#size-cells":
-+        const: 0
-+
-+    patternProperties:
-+      "^pin@[0-9]+$":
-+        $ref: /schemas/dpll/dpll-pin.yaml
-+        unevaluatedProperties: false
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+
-+additionalProperties: true
-diff --git a/Documentation/devicetree/bindings/dpll/dpll-pin.yaml b/Documentation/devicetree/bindings/dpll/dpll-pin.yaml
-new file mode 100644
-index 0000000000000..51db93b77306f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dpll/dpll-pin.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dpll/dpll-pin.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DPLL Pin
-+
-+maintainers:
-+  - Ivan Vecera <ivecera@redhat.com>
-+
-+description: |
-+  The DPLL pin is either a physical input or output pin that is provided
-+  by a DPLL( Digital Phase-Locked Loop) device. The pin is identified by
-+  its physical order number that is stored in reg property and can have
-+  an additional set of properties like supported (allowed) frequencies,
-+  label, type and may support embedded sync.
-+
-+  Note that the pin in this context has nothing to do with pinctrl.
-+
-+properties:
 +  reg:
-+    description: Hardware index of the DPLL pin.
 +    maxItems: 1
 +
-+  connection-type:
-+    description: Connection type of the pin
-+    $ref: /schemas/types.yaml#/definitions/string
-+    enum: [ext, gnss, int, mux, synce]
-+
-+  esync-control:
-+    description: Indicates whether the pin supports embedded sync functionality.
-+    type: boolean
-+
-+  label:
-+    description: String exposed as the pin board label
-+    $ref: /schemas/types.yaml#/definitions/string
-+
-+  supported-frequencies-hz:
-+    description: List of supported frequencies for this pin, expressed in Hz.
-+
 +required:
++  - compatible
 +  - reg
 +
-+additionalProperties: false
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a7545b5abef92..1477fbda73787 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7195,6 +7195,8 @@ M:	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
- M:	Jiri Pirko <jiri@resnulli.us>
- L:	netdev@vger.kernel.org
- S:	Supported
-+F:	Documentation/devicetree/bindings/dpll/dpll-device.yaml
-+F:	Documentation/devicetree/bindings/dpll/dpll-pin.yaml
- F:	Documentation/driver-api/dpll.rst
- F:	drivers/dpll/*
- F:	include/linux/dpll.h
++allOf:
++  - $ref: /schemas/dpll/dpll-device.yaml#
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      dpll@70 {
++        compatible = "microchip,zl30732";
++        reg = <0x70>;
++        dpll-types = "pps", "eec";
++
++        input-pins {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pin@0 { /* REF0P */
++            reg = <0>;
++            connection-type = "ext";
++            label = "Input 0";
++            supported-frequencies-hz = /bits/ 64 <1 1000>;
++          };
++        };
++
++        output-pins {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pin@3 { /* OUT1N */
++            reg = <3>;
++            connection-type = "gnss";
++            esync-control;
++            label = "Output 1";
++            supported-frequencies-hz = /bits/ 64 <1 10000>;
++          };
++        };
++      };
++    };
++  - |
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      dpll@70 {
++        compatible = "microchip,zl30731";
++        reg = <0x70>;
++        spi-max-frequency = <12500000>;
++
++        dpll-types = "pps";
++
++        input-pins {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pin@0 { /* REF0P */
++            reg = <0>;
++            connection-type = "ext";
++            label = "Input 0";
++            supported-frequencies-hz = /bits/ 64 <1 1000>;
++          };
++        };
++
++        output-pins {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pin@3 { /* OUT1N */
++            reg = <3>;
++            connection-type = "gnss";
++            esync-control;
++            label = "Output 1";
++            supported-frequencies-hz = /bits/ 64 <1 10000>;
++          };
++        };
++      };
++    };
++...
 -- 
 2.49.0
 
