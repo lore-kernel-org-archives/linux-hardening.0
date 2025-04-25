@@ -1,242 +1,139 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C08514A4DF
-	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 10:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5963723236D
+	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 10:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575439; cv=none; b=DfOGLfoLG2fbent7xgZAuQntA2QoNyE3g8a02Pdi4d1eMTkbh7UhYDC3fEsts+HyvulfAQfiQt0LOqQDcheHEkRqVKFapvDG1btLHXysEqW1ravpgzBzpVDUv8MhMX/ct0XU+EyoNSR6QGQXfYGe2K0nlHi+nb7po6j6iOja4TU=
+	t=1745575999; cv=none; b=WKk3lJacTAp+QDi45NvdeIpE4+OSTT8RudBrDfKMaqxDHtmvBtF9P6qw7UUAtNg3tp6KT2YRd4E2kKewxnZFYKLYPpruk4jHQwrU1wjaokqCm5kL9BGImwn2taT68Yy0POmPq/igGyLWsZYm+DU5OsSJSE+HNzFT7hoKwU49EgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575439; c=relaxed/simple;
-	bh=V85Lh/RAji9ar+Y+fOgWNG8zxLuq01/h9bKkCgnTLuU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Fa+IgOQAwmTmPbwyzy+2KrUOpbVzIV/PCjAjXblA425o3lE4uxF0EzAbtXulYTjLbivD+27m7FqUtbY5rs53WvRT8eAEF823ybPbpNXvgeHSSVsrR9o/Y0XbwJe5yE/5LsSk3BiKVcPXz4bZd815rmAARUJGRwQdXtfl8oUcV+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bCeRm97x; arc=none smtp.client-ip=209.85.208.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
+	s=arc-20240116; t=1745575999; c=relaxed/simple;
+	bh=R9HHXp4+WPKRcDY98kPzN+e6xRzDIvxgQM+D3RFQeyQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HaEce8SIVyX5Lg0vlEwl1BFM/hnqnZoyXTh9a66a7cFOt8e5SeVZBEwH85sKEHIA7BxsAIirq/9c7ZJUFsK21BY/kmfTe5++RB5IDq08XbwPNZpr7xWyVGRGpYOXoK9XFyLyl4cKnS2YFJqNH2q0RiXqumXtlAZma0gf2lEFGNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SiQ4dqG3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bCeRm97x"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5e5d9682f53so1810185a12.2
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 03:03:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745575434; x=1746180234; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a7rlen12ejE7Kp6bXJDjpGGuWlo+Ue7G8fz3prA3Prw=;
-        b=bCeRm97x8y+5K1KxqWUHmnCm7DX70KPMbfupJ+3sp1DmMF9/NEGXWIIwMjt5ZoBDHB
-         Meb+n+ZYnDNPYA9fGmbfbsHPBizlqB5j0Y8Tu4MZLLVNm4NoAkTvxw7N0HAZM2kQe3Sn
-         vI+0fS3thHdEpjAom2BGpYcCo5Bl1RZM8QxItySsVy1f8YtZ/ubPkslj3/4hFlyRU4rQ
-         Zcl58T0UgnJ9EISXiD38znfk9olyAUHsh9rDrwkxo05AbyxzLCpxgk1Jkgo6HyPF8GR9
-         XicxHvcSDS3PultE5bfYsif5xSigoSx/WD9X/OyimQgboKxt8KK54aPXRyygtgtNCShZ
-         LUiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745575434; x=1746180234;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=a7rlen12ejE7Kp6bXJDjpGGuWlo+Ue7G8fz3prA3Prw=;
-        b=T6/tc0L+mUzzjbTtyZUfWRBVQySrLxzkJPKZsjPr+rYTh4zwmN92JTI6qTsKNvczAp
-         DL+xkCAXZHdnY9RiQKpTloAYp3XSbD8GSgDwZTgpX5Ap/82kkkMbBVfo6Zbuf/2AAGKV
-         bQVyadrGGwe4Wz1tAtpxnZb65UmbT5jbvrKDmocaaS5mwZkfwxp1QwU/T2jwvSU8Gm+J
-         CRbPMitcVAmAFQq83nuAlEy0a9AWFfT/EWgNSbcugLl9a7LZ7Bgvq1n4MP4jZm2ZbMAS
-         ybsyoo6kl9urkbZ8J/gB6NCxr6fy+sqDbWeZdV5E1QGgx2K0KmIznTNYYFGRpZ32Zam0
-         AKDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgy6BEB2nR/XXfbCckaHhJhi82zb1yLt2gtw62x9oLgvwt7yUVr1/OT21ldxS7RpMZT70Rrc5tld3CMYvC1WQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycPEMuSugFLdnrKl/RmykiWa2A9fQQtFdTRiYy1kJaXsUL9VBL
-	jrnt2aCAzV+x9U6PJiBaU3XueLSRGkXS1F2wuYnQ8ZBtStAqqSpI0AkB0vfxrO4OEuNISTI4XLI
-	5LQ==
-X-Google-Smtp-Source: AGHT+IHG5TA+QmbLDKkJMCAyUg3PjwW2vK849Wb9XZvQnRm50YUN7ROfE0bAGC+b4L9PnTOmviRtp5MKGwk=
-X-Received: from edr2.prod.google.com ([2002:a05:6402:44c2:b0:5ec:a0fe:757a])
- (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:27d3:b0:5f6:59e5:5c8a
- with SMTP id 4fb4d7f45d1cf-5f722671d91mr1323489a12.5.1745575434691; Fri, 25
- Apr 2025 03:03:54 -0700 (PDT)
-Date: Fri, 25 Apr 2025 10:03:52 +0000
-In-Reply-To: <20250421000854.work.572-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SiQ4dqG3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745575996;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pw9QCpCjs2zCbHjb9QyW1AL2e3Rd0H7rcNPzyrHOhpk=;
+	b=SiQ4dqG37qMaxQCEesgPw2rJVj6c8zT/3o/wlC8PbcZFqQ+ikCU2EDGXdO7PQzxAqwB8zI
+	0Ii1lqGJWnpdlioKVOpR63YC+ypdkJuKnDNk0ImINn0FUKLMpUbYejiKTrVqK0APgK9tvy
+	6IRDrDlJv0kgCKtaHBK5KjYO+BQLzXo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-371-rj20FwBbPbS_Gr9fXFYPqQ-1; Fri,
+ 25 Apr 2025 06:13:13 -0400
+X-MC-Unique: rj20FwBbPbS_Gr9fXFYPqQ-1
+X-Mimecast-MFC-AGG-ID: rj20FwBbPbS_Gr9fXFYPqQ_1745575991
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C49D1956088;
+	Fri, 25 Apr 2025 10:13:10 +0000 (UTC)
+Received: from [10.44.33.33] (unknown [10.44.33.33])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6B11A195608D;
+	Fri, 25 Apr 2025 10:13:05 +0000 (UTC)
+Message-ID: <98e471cc-ec66-4c89-af9a-57625c0c2873@redhat.com>
+Date: Fri, 25 Apr 2025 12:13:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250421000854.work.572-kees@kernel.org>
-Message-ID: <aAtd9UvrHWBy454j@google.com>
-Subject: Re: [PATCH] landlock: Work around randstruct unnamed static
- initializer support
-From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
-To: Kees Cook <kees@kernel.org>
-Cc: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>, "Dr. David Alan Gilbert" <linux@treblig.org>, Mark Brown <broonie@kernel.org>, 
-	WangYuli <wangyuli@uniontech.com>, Arnd Bergmann <arnd@arndb.de>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hello Kees!
-
-On Sun, Apr 20, 2025 at 05:08:59PM -0700, Kees Cook wrote:
-> Unnamed static initializers aren't supported by the randstruct GCC
-> plugin. Quoting the plugin, "set up a bogus anonymous struct field
-> designed to error out on unnamed struct initializers as gcc provides
-> no other way to detect such code". That is exactly what happens
-> with the landlock code, so adjust the static initializers for structs
-> lsm_ioctlop_audit and landlock_request that contain a randomized structur=
-e
-> (struct path) to use named variables, which avoids the intentional
-> GCC crashes:
->=20
-> security/landlock/fs.c: In function 'hook_file_ioctl_common':
-> security/landlock/fs.c:1745:61: internal compiler error: in count_type_el=
-ements, at expr.cc:7092
->  1745 |                         .u.op =3D &(struct lsm_ioctlop_audit) {
->       |                                                             ^
->=20
-> security/landlock/fs.c: In function 'log_fs_change_topology_path':
-> security/landlock/fs.c:1379:65: internal compiler error: in count_type_el=
-ements, at expr.cc:7092
->  1379 |         landlock_log_denial(subject, &(struct landlock_request) {
->       |                                                                 ^
->=20
-> We went 8 years before tripping over this! With this patch landed,
-> we can enable COMPILE_TEST builds with the randstruct GCC plugin again.
-
-I am still struggling to understand the boundaries of what the randstruct p=
-lugin
-supports and what it fails on.  Could you please clarify?  (Specific questi=
-ons
-below.)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+To: Lee Jones <lee@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250424154722.534284-1-ivecera@redhat.com>
+ <20250424154722.534284-6-ivecera@redhat.com>
+ <5094e051-5504-48a5-b411-ed1a0d949eeb@lunn.ch>
+ <bd645425-b9cb-454d-8971-646501704697@redhat.com>
+ <d36c34f8-f67a-40ac-a317-3b4e717724ce@lunn.ch>
+ <458254c7-da05-4b27-870d-08458eb89ba6@redhat.com>
+ <98ae9365-423c-4c7e-8b76-dcea3762ce79@lunn.ch>
+ <7d96b3a4-9098-4ffa-be51-4ce5dd64a112@redhat.com>
+ <20250425065558.GP8734@google.com>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <20250425065558.GP8734@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
 
-> Reported-by: "Dr. David Alan Gilbert" <linux@treblig.org>
-> Closes: https://lore.kernel.org/lkml/Z_PRaKx7q70MKgCA@gallifrey/
-> Reported-by: Mark Brown <broonie@kernel.org>
-> Closes: https://lore.kernel.org/lkml/20250407-kbuild-disable-gcc-plugins-=
-v1-1-5d46ae583f5e@kernel.org/
-> Reported-by: WangYuli <wangyuli@uniontech.com>
-> Closes: https://lore.kernel.org/lkml/337D5D4887277B27+3c677db3-a8b9-47f0-=
-93a4-7809355f1381@uniontech.com/
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: "Micka=C3=ABl Sala=C3=BCn" <mic@digikod.net>
-> Cc: "G=C3=BCnther Noack" <gnoack@google.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: James Morris <jmorris@namei.org>
-> Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> Cc: <linux-security-module@vger.kernel.org>
-> ---
->  security/landlock/fs.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
->=20
-> diff --git a/security/landlock/fs.c b/security/landlock/fs.c
-> index 6fee7c20f64d..b2818afb0503 100644
-> --- a/security/landlock/fs.c
-> +++ b/security/landlock/fs.c
-> @@ -1376,14 +1376,14 @@ static void
->  log_fs_change_topology_path(const struct landlock_cred_security *const s=
-ubject,
->  			    size_t handle_layer, const struct path *const path)
->  {
-> -	landlock_log_denial(subject, &(struct landlock_request) {
-> +	struct landlock_request request =3D {
->  		.type =3D LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
-> -		.audit =3D {
-> -			.type =3D LSM_AUDIT_DATA_PATH,
-> -			.u.path =3D *path,
-> -		},
-> +		.audit.type =3D LSM_AUDIT_DATA_PATH,
->  		.layer_plus_one =3D handle_layer + 1,
-> -	});
-> +	};
-> +	request.audit.u.path =3D *path;
-> +
-> +	landlock_log_denial(subject, &request);
->  }
 
-If I understood the commit message correctly, we are giving a name ("reques=
-t")
-to the struct landlock_request here, because the randstruct plugin needs th=
-at if
-the constructed struct (recursively?) contains a randstruct-enabled member,=
- like
-.audit.u.path in this case?
+On 25. 04. 25 8:55 dop., Lee Jones wrote:
+> On Thu, 24 Apr 2025, Ivan Vecera wrote:
+> 
+>>
+>>
+>> On 24. 04. 25 9:29 odp., Andrew Lunn wrote:
+>>>> Yes, PHC (PTP) sub-driver is using mailboxes as well. Gpio as well for some
+>>>> initial configuration.
+>>>
+>>> O.K, so the mailbox code needs sharing. The question is, where do you
+>>> put it.
+>>
+>> This is crucial question... If I put the MB API into DPLL sub-driver
+>> then PTP sub-driver will depend on it. Potential GPIO sub-driver as
+>> well.
+>>
+>> There could be some special library module to provide this for
+>> sub-drivers but is this what we want? And if so where to put it?
+> 
+> MFD is designed to take potentially large, monolithic devices and split
+> them up into smaller, more organised chunks, then Linusify them.  This
+> way, area experts (subsystem maintainers) get to concern themselves only
+> with the remit to which they are most specialised / knowledgable.  MFD
+> will handle how each of these areas are divided up and create all of the
+> shared resources for them.  On the odd occasion it will also provide a
+> _small_ API that the children can use to talk to the parent device.
+> 
+> However .... some devices, like yours, demand an API which is too
+> complex to reside in the MFD subsystem itself.  This is not the first
+> time this has happened and I doubt it will be the last.  My first
+> recommendation is usually to place all of the comms in drivers/platform,
+> since, at least in my own mind, if a complex API is required, then the
+> device has become almost platform-like.  There are lots of examples of
+> H/W comm APIs in there already for you to peruse.
 
-I am surprised that you pulled the assignment to "request.audit.u.path" out=
- of
-the struct initialization expression though.  Was that also necessary for
-randstruct to work?
+OK, I will do it differently... Will drop MB API at all from MFD and
+just expose the additional mutex from MFD for multi-op access.
+Mailboxes will be handled directly by sub-devices.
 
-Would it have worked to initialize it inline instead, like this?
+Short description:
+MFD exposes:
+zl3073x_{read,write}_u{8,16,32,48}() & zl3073x_poll_u8()
+- to read/write/poll registers
+- they checks that multiop_lock is taken when caller is accessing
+   registers from Page 10 and above
 
-	struct landlock_request request =3D {
-		.type           =3D LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
-		.audit.type     =3D LSM_AUDIT_DATA_PATH,
-    .audit.u.path   =3D *path,
-		.layer_plus_one =3D handle_layer + 1,
-	};
+zl3073x_multiop_{lock,unlock}()
+- to protect operation where multiple reads, writes and poll is required
+   to be done atomically
 
+Is this OK for you?
 
-> =20
->  static void log_fs_change_topology_dentry(
-> @@ -1720,6 +1720,7 @@ static int hook_file_truncate(struct file *const fi=
-le)
->  static int hook_file_ioctl_common(const struct file *const file,
->  				  const unsigned int cmd, const bool is_compat)
->  {
-> +	struct lsm_ioctlop_audit audit_log;
->  	access_mask_t allowed_access =3D landlock_file(file)->allowed_access;
-> =20
->  	/*
-> @@ -1738,14 +1739,13 @@ static int hook_file_ioctl_common(const struct fi=
-le *const file,
->  				  is_masked_device_ioctl(cmd))
->  		return 0;
-> =20
-> +	audit_log.path =3D file->f_path;
-> +	audit_log.cmd =3D cmd;
+Thanks,
+Ivan
 
-Same question here, I guess. This could not have been written like this?
-
-  struct lsm_ioctlop_audit audit_log =3D {
-    .path =3D file->f_path,
-    .cmd  =3D cmd,
-  };
-
-
->  	landlock_log_denial(landlock_cred(file->f_cred), &(struct landlock_requ=
-est) {
->  		.type =3D LANDLOCK_REQUEST_FS_ACCESS,
->  		.audit =3D {
->  			.type =3D LSM_AUDIT_DATA_IOCTL_OP,
-> -			.u.op =3D &(struct lsm_ioctlop_audit) {
-> -				.path =3D file->f_path,
-> -				.cmd =3D cmd,
-> -			},
-> +			.u.op =3D &audit_log,
->  		},
->  		.all_existing_optional_access =3D _LANDLOCK_ACCESS_FS_OPTIONAL,
->  		.access =3D LANDLOCK_ACCESS_FS_IOCTL_DEV,
-> --=20
-> 2.34.1
->=20
-
-That being said, the code transformation in this patch is obviously correct=
-, and
-it's good to fix the build, so looks good:
-
-Reviewed-by: G=C3=BCnther Noack <gnoack@google.com>
-
-But as Micka=C3=ABl also said, it seems worrying that otherwise correct C c=
-ode does
-not compile with that plugin, especially when the conditions under which th=
-at
-happens are not clear.
-
-I would also like to understand this better, so that we can avoid tripping =
-over
-it in the future.
-
-Thanks!
--G=C3=BCnther
