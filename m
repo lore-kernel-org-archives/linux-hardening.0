@@ -1,124 +1,242 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4672367A7;
-	Fri, 25 Apr 2025 09:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C08514A4DF
+	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 10:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745574009; cv=none; b=rQT5eOMKrhXqTZNDDwVNMWJAOQwQ4ou/0+3Gs80x4+jgi3oAQaU/2mSjsnVBny1ht0Ni9H+yICNmqMGD4vqVUQobJk5tHBTr0mL313LPtB8rTmgvMvXC84DQf1OyBoTsE5toiluDj1DLVl7oGHz8k/vGWoIQJADRC3sx4RCbDm8=
+	t=1745575439; cv=none; b=DfOGLfoLG2fbent7xgZAuQntA2QoNyE3g8a02Pdi4d1eMTkbh7UhYDC3fEsts+HyvulfAQfiQt0LOqQDcheHEkRqVKFapvDG1btLHXysEqW1ravpgzBzpVDUv8MhMX/ct0XU+EyoNSR6QGQXfYGe2K0nlHi+nb7po6j6iOja4TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745574009; c=relaxed/simple;
-	bh=bRt7XPKW9i4BWzArQjxLQ2RfDMPwgG+tmEWHd6D3ajI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TRO5Cp3ntuTKVWy4+/3C95YChSTFCzhvpWjo/Ge+6YdynIt58LUznEtqH02hk83eh4RgNUOq76BYUKBz3+KO1M4AHhjzZNKbEgC53HhplHLr9MGJxypJ5Ua/8Axe01aCxXE+c9z9T2DiamcJHYJaFdyE7WCDqezBiB6FLdrw1nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZuiHaRb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745575439; c=relaxed/simple;
+	bh=V85Lh/RAji9ar+Y+fOgWNG8zxLuq01/h9bKkCgnTLuU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Fa+IgOQAwmTmPbwyzy+2KrUOpbVzIV/PCjAjXblA425o3lE4uxF0EzAbtXulYTjLbivD+27m7FqUtbY5rs53WvRT8eAEF823ybPbpNXvgeHSSVsrR9o/Y0XbwJe5yE/5LsSk3BiKVcPXz4bZd815rmAARUJGRwQdXtfl8oUcV+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bCeRm97x; arc=none smtp.client-ip=209.85.208.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZuiHaRb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 837FBC4CEE4;
-	Fri, 25 Apr 2025 09:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745574008;
-	bh=bRt7XPKW9i4BWzArQjxLQ2RfDMPwgG+tmEWHd6D3ajI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nZuiHaRbDlUTqyFAqPsUzi1F8HUScC4uS7RvpJF2RFS/xE4CWj9pYCv22a/5YVyLV
-	 Jz/5NAXlZ85976ozWoGeK6ridZlApAsxQR9+GqiC5BTt83aqV6jp1yYLowI8Zu5oOH
-	 xM2SKBHXt814tltu5rh6snvCLNLoOND6ZsVozYUAh6kxL+lH6atLhWnGPlRit6FiTH
-	 847GejqMvEu3UO3xw5t36G20WAml+GqQf/i9f+gVpkbrXkQWBBmCBsvOEnO64sULa2
-	 8vv2VatrwWSWAk792g6dYMz3KL2M9UxZ1L/MwpMTeeHe8P0OJDWefbwVx9a8xddAgh
-	 klbcv6dEdC6Dw==
-Message-ID: <f2f156e0-5321-4d6c-ae00-9ec5d148e3bb@kernel.org>
-Date: Fri, 25 Apr 2025 11:40:02 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bCeRm97x"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5e5d9682f53so1810185a12.2
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 03:03:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745575434; x=1746180234; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a7rlen12ejE7Kp6bXJDjpGGuWlo+Ue7G8fz3prA3Prw=;
+        b=bCeRm97x8y+5K1KxqWUHmnCm7DX70KPMbfupJ+3sp1DmMF9/NEGXWIIwMjt5ZoBDHB
+         Meb+n+ZYnDNPYA9fGmbfbsHPBizlqB5j0Y8Tu4MZLLVNm4NoAkTvxw7N0HAZM2kQe3Sn
+         vI+0fS3thHdEpjAom2BGpYcCo5Bl1RZM8QxItySsVy1f8YtZ/ubPkslj3/4hFlyRU4rQ
+         Zcl58T0UgnJ9EISXiD38znfk9olyAUHsh9rDrwkxo05AbyxzLCpxgk1Jkgo6HyPF8GR9
+         XicxHvcSDS3PultE5bfYsif5xSigoSx/WD9X/OyimQgboKxt8KK54aPXRyygtgtNCShZ
+         LUiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745575434; x=1746180234;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=a7rlen12ejE7Kp6bXJDjpGGuWlo+Ue7G8fz3prA3Prw=;
+        b=T6/tc0L+mUzzjbTtyZUfWRBVQySrLxzkJPKZsjPr+rYTh4zwmN92JTI6qTsKNvczAp
+         DL+xkCAXZHdnY9RiQKpTloAYp3XSbD8GSgDwZTgpX5Ap/82kkkMbBVfo6Zbuf/2AAGKV
+         bQVyadrGGwe4Wz1tAtpxnZb65UmbT5jbvrKDmocaaS5mwZkfwxp1QwU/T2jwvSU8Gm+J
+         CRbPMitcVAmAFQq83nuAlEy0a9AWFfT/EWgNSbcugLl9a7LZ7Bgvq1n4MP4jZm2ZbMAS
+         ybsyoo6kl9urkbZ8J/gB6NCxr6fy+sqDbWeZdV5E1QGgx2K0KmIznTNYYFGRpZ32Zam0
+         AKDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXgy6BEB2nR/XXfbCckaHhJhi82zb1yLt2gtw62x9oLgvwt7yUVr1/OT21ldxS7RpMZT70Rrc5tld3CMYvC1WQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycPEMuSugFLdnrKl/RmykiWa2A9fQQtFdTRiYy1kJaXsUL9VBL
+	jrnt2aCAzV+x9U6PJiBaU3XueLSRGkXS1F2wuYnQ8ZBtStAqqSpI0AkB0vfxrO4OEuNISTI4XLI
+	5LQ==
+X-Google-Smtp-Source: AGHT+IHG5TA+QmbLDKkJMCAyUg3PjwW2vK849Wb9XZvQnRm50YUN7ROfE0bAGC+b4L9PnTOmviRtp5MKGwk=
+X-Received: from edr2.prod.google.com ([2002:a05:6402:44c2:b0:5ec:a0fe:757a])
+ (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:27d3:b0:5f6:59e5:5c8a
+ with SMTP id 4fb4d7f45d1cf-5f722671d91mr1323489a12.5.1745575434691; Fri, 25
+ Apr 2025 03:03:54 -0700 (PDT)
+Date: Fri, 25 Apr 2025 10:03:52 +0000
+In-Reply-To: <20250421000854.work.572-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 1/8] dt-bindings: dpll: Add DPLL device and
- pin
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250424154722.534284-1-ivecera@redhat.com>
- <20250424154722.534284-2-ivecera@redhat.com>
- <20250425-manul-of-undeniable-refinement-dc6cdc@kuoka>
- <bc28ca3e-6ccd-4d43-8a51-eb4563a6ed06@redhat.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <bc28ca3e-6ccd-4d43-8a51-eb4563a6ed06@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250421000854.work.572-kees@kernel.org>
+Message-ID: <aAtd9UvrHWBy454j@google.com>
+Subject: Re: [PATCH] landlock: Work around randstruct unnamed static
+ initializer support
+From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
+To: Kees Cook <kees@kernel.org>
+Cc: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>, "Dr. David Alan Gilbert" <linux@treblig.org>, Mark Brown <broonie@kernel.org>, 
+	WangYuli <wangyuli@uniontech.com>, Arnd Bergmann <arnd@arndb.de>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25/04/2025 11:36, Ivan Vecera wrote:
->>> +    const: 0
->>> +
->>> +  dpll-types:
->>> +    description: List of DPLL channel types, one per DPLL instance.
->>> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
->>> +    items:
->>> +      enum: [pps, eec]
->>
->> Do channels have other properties as well in general?
-> 
-> No, other characteristics should be deducible either from compatible or
-> in runtime.
-> 
-OK, with fixes in commit msg:
+Hello Kees!
+
+On Sun, Apr 20, 2025 at 05:08:59PM -0700, Kees Cook wrote:
+> Unnamed static initializers aren't supported by the randstruct GCC
+> plugin. Quoting the plugin, "set up a bogus anonymous struct field
+> designed to error out on unnamed struct initializers as gcc provides
+> no other way to detect such code". That is exactly what happens
+> with the landlock code, so adjust the static initializers for structs
+> lsm_ioctlop_audit and landlock_request that contain a randomized structur=
+e
+> (struct path) to use named variables, which avoids the intentional
+> GCC crashes:
+>=20
+> security/landlock/fs.c: In function 'hook_file_ioctl_common':
+> security/landlock/fs.c:1745:61: internal compiler error: in count_type_el=
+ements, at expr.cc:7092
+>  1745 |                         .u.op =3D &(struct lsm_ioctlop_audit) {
+>       |                                                             ^
+>=20
+> security/landlock/fs.c: In function 'log_fs_change_topology_path':
+> security/landlock/fs.c:1379:65: internal compiler error: in count_type_el=
+ements, at expr.cc:7092
+>  1379 |         landlock_log_denial(subject, &(struct landlock_request) {
+>       |                                                                 ^
+>=20
+> We went 8 years before tripping over this! With this patch landed,
+> we can enable COMPILE_TEST builds with the randstruct GCC plugin again.
+
+I am still struggling to understand the boundaries of what the randstruct p=
+lugin
+supports and what it fails on.  Could you please clarify?  (Specific questi=
+ons
+below.)
 
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Reported-by: "Dr. David Alan Gilbert" <linux@treblig.org>
+> Closes: https://lore.kernel.org/lkml/Z_PRaKx7q70MKgCA@gallifrey/
+> Reported-by: Mark Brown <broonie@kernel.org>
+> Closes: https://lore.kernel.org/lkml/20250407-kbuild-disable-gcc-plugins-=
+v1-1-5d46ae583f5e@kernel.org/
+> Reported-by: WangYuli <wangyuli@uniontech.com>
+> Closes: https://lore.kernel.org/lkml/337D5D4887277B27+3c677db3-a8b9-47f0-=
+93a4-7809355f1381@uniontech.com/
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: "Micka=C3=ABl Sala=C3=BCn" <mic@digikod.net>
+> Cc: "G=C3=BCnther Noack" <gnoack@google.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: <linux-security-module@vger.kernel.org>
+> ---
+>  security/landlock/fs.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+> index 6fee7c20f64d..b2818afb0503 100644
+> --- a/security/landlock/fs.c
+> +++ b/security/landlock/fs.c
+> @@ -1376,14 +1376,14 @@ static void
+>  log_fs_change_topology_path(const struct landlock_cred_security *const s=
+ubject,
+>  			    size_t handle_layer, const struct path *const path)
+>  {
+> -	landlock_log_denial(subject, &(struct landlock_request) {
+> +	struct landlock_request request =3D {
+>  		.type =3D LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
+> -		.audit =3D {
+> -			.type =3D LSM_AUDIT_DATA_PATH,
+> -			.u.path =3D *path,
+> -		},
+> +		.audit.type =3D LSM_AUDIT_DATA_PATH,
+>  		.layer_plus_one =3D handle_layer + 1,
+> -	});
+> +	};
+> +	request.audit.u.path =3D *path;
+> +
+> +	landlock_log_denial(subject, &request);
+>  }
 
-Best regards,
-Krzysztof
+If I understood the commit message correctly, we are giving a name ("reques=
+t")
+to the struct landlock_request here, because the randstruct plugin needs th=
+at if
+the constructed struct (recursively?) contains a randstruct-enabled member,=
+ like
+.audit.u.path in this case?
+
+I am surprised that you pulled the assignment to "request.audit.u.path" out=
+ of
+the struct initialization expression though.  Was that also necessary for
+randstruct to work?
+
+Would it have worked to initialize it inline instead, like this?
+
+	struct landlock_request request =3D {
+		.type           =3D LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
+		.audit.type     =3D LSM_AUDIT_DATA_PATH,
+    .audit.u.path   =3D *path,
+		.layer_plus_one =3D handle_layer + 1,
+	};
+
+
+> =20
+>  static void log_fs_change_topology_dentry(
+> @@ -1720,6 +1720,7 @@ static int hook_file_truncate(struct file *const fi=
+le)
+>  static int hook_file_ioctl_common(const struct file *const file,
+>  				  const unsigned int cmd, const bool is_compat)
+>  {
+> +	struct lsm_ioctlop_audit audit_log;
+>  	access_mask_t allowed_access =3D landlock_file(file)->allowed_access;
+> =20
+>  	/*
+> @@ -1738,14 +1739,13 @@ static int hook_file_ioctl_common(const struct fi=
+le *const file,
+>  				  is_masked_device_ioctl(cmd))
+>  		return 0;
+> =20
+> +	audit_log.path =3D file->f_path;
+> +	audit_log.cmd =3D cmd;
+
+Same question here, I guess. This could not have been written like this?
+
+  struct lsm_ioctlop_audit audit_log =3D {
+    .path =3D file->f_path,
+    .cmd  =3D cmd,
+  };
+
+
+>  	landlock_log_denial(landlock_cred(file->f_cred), &(struct landlock_requ=
+est) {
+>  		.type =3D LANDLOCK_REQUEST_FS_ACCESS,
+>  		.audit =3D {
+>  			.type =3D LSM_AUDIT_DATA_IOCTL_OP,
+> -			.u.op =3D &(struct lsm_ioctlop_audit) {
+> -				.path =3D file->f_path,
+> -				.cmd =3D cmd,
+> -			},
+> +			.u.op =3D &audit_log,
+>  		},
+>  		.all_existing_optional_access =3D _LANDLOCK_ACCESS_FS_OPTIONAL,
+>  		.access =3D LANDLOCK_ACCESS_FS_IOCTL_DEV,
+> --=20
+> 2.34.1
+>=20
+
+That being said, the code transformation in this patch is obviously correct=
+, and
+it's good to fix the build, so looks good:
+
+Reviewed-by: G=C3=BCnther Noack <gnoack@google.com>
+
+But as Micka=C3=ABl also said, it seems worrying that otherwise correct C c=
+ode does
+not compile with that plugin, especially when the conditions under which th=
+at
+happens are not clear.
+
+I would also like to understand this better, so that we can avoid tripping =
+over
+it in the future.
+
+Thanks!
+-G=C3=BCnther
