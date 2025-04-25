@@ -1,253 +1,286 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE8B1BD9E3
-	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 19:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52D54414;
+	Fri, 25 Apr 2025 21:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745608622; cv=none; b=oTuDxpBC5IG5WkCcOD9e1Ao1iB0k/A8RnurZgzT/2s5CQ5uJcZkP8v1mJd/hR9LhOCDI7P8Bnz1oygMkG5aQfsvh9fVWnl6SVCRje/Nm5BWmglZCMi32r++X9TFfTd4+nK1hvFkI39r3mGo4xko9L1ZnUXor9Mu2tHkmuy1IuUw=
+	t=1745615697; cv=none; b=k7A6/tCsXMiASQOq13b3vSwNbYgNBfZ2343/s+KxWgb+zv4dFeKaIPps4ycHPH1DGGdW2IlyT/tzU+/yr1FrGVN6861IoYDx7cMYXo98UGkQoa7vG62xxL28sj4L2SkRIUicgWz7DdvMkDHPWXjgCh3gDIO8s8rq9uq7Y2Ao/U8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745608622; c=relaxed/simple;
-	bh=0gGZ81N4A9C8aEn4uz+ebR5itI9/Zkg/y5zmyTShTrY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WqJBEbnv+Y9rJw9oQ/FddQv2jwzwy8YeKDZa5wvw3PD7b3bPiEKabXAjhtpaPFRF7cziT8JYvBsx6kShCSy1ltWa7t2wKZ0TG7wcI9uWCCgPtXol55KaFV/7cjlfwVNm6d7VqIq2abX9Mr39dSLvW0v7z2OJYUGCbDAh81c8j2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=j/Z0vcEy; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745615697; c=relaxed/simple;
+	bh=r+3wvAfEXNH49zoyFrf7Nft/Q0LQoNU+eZCW8b2HZik=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Yshs4LGu6edrte4PVuqEhr+dP5rufOcCQD9Rl+pMF3lkKltMFnjXDgxJD3JvlnXb8n/orkBKVVzmsJFUFHp6xmujSrJ9DVXyhCr94zXA8gObCEv8Yiz6EXokXIJozcxx+PbZYAwe4+rMfxGZZVShQEVMJIehwl3PAj80Ja7CtoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBj8cZGQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="j/Z0vcEy"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJqcS012798
-	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 19:16:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	AvM+02wHKQUUk7PA7Mt2UgaPJ57vrere5Ms7BkW9B8I=; b=j/Z0vcEyWcQcdfKe
-	tQH6rGJ0IjjjqbKQoer2edUDnY0/djYpqywKNHBhTYgQo+U1lPaE4GO4+TaDBvBv
-	7BWgLmNKwM0ebitgBqbBIRNZN5DK/ZKJuvsJaX+P5WBBvfwM8cSAZTyn8mUvt6pE
-	4sfLjIq2F7SlZhM+ENM8EZ5jYoCkbqkPCoauKmGee55Q3ntEqUdMgfb7hh8A5xVJ
-	LuhULkZ8RNdR2QImBQQ5EfseG5Fwe8JiV9K4Fgbac0kRrsYGz1N2zvO7zRNcqu6i
-	Rf47di1mRAqqTW2OqhR13bH5D8Hq9CDoHFHj9ZgpHxnBD5dBZl5aA+K/D2ZUf9gR
-	QIgJpQ==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh1t4na-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 19:16:59 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5c77aff55so667019085a.3
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 12:16:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745608617; x=1746213417;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AvM+02wHKQUUk7PA7Mt2UgaPJ57vrere5Ms7BkW9B8I=;
-        b=Yp6nCLv3sw57bvjwvB/Je4cExeMdBv0XW/IYigDYsPqhaNRTfhCXDtPz6yc7BPViuI
-         +U4H1o361dgfygRIr0QspQ4jdt5qjj353yjZt3btF+XvBM9HqwToThRLsDI4ctVTUG7U
-         lOrbudoIDXEOliIfCjei11TXuDAP5Se1VgJsKxTsixaipnM+tM+e2vmyM+LbKGM09bkT
-         pxKqnyXKK8NLgB6v3DdbqCeQMAEnyHm5q92tbRBNzkobs1Xl2HKNupEAu9Liv4q0J6wE
-         KOIqNXbaJNyuXRRHdfQO+IYNPNvTLpxFAT9cbktsQxkQLoX16CzYCfmINbhVMBghp1d2
-         wXmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZQ0CJwpc4I2RqmnoCagSAAK1GSBBDjGeTYy+dCrT9aJHKjLBiIWygJXtqcnMRLBSdozkYixZfZdGirX1MKkA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNJ9KBH3WAmzFcVkW09snzag3pwwbyPJsONm4XWfqFbZWjUko9
-	r8npd4KdAYwf5N/Z+PChcS3UoEInyY1UQIJ0ALDM3vsiqnnwO5Q5BextVUozpnjb2ILg7j5uChh
-	hWRor0yaAdiBwhT2xwxD2bOr54TY0s0JHOTVbFBEyqQMXz7Ou2n1HLovfGOXnliMwNZuqe3gRsR
-	o=
-X-Gm-Gg: ASbGnctHA50Ln/zzgD+P+ndL2JDOo/YZdtbKMAieuI8AoNEnP1y95uzMxj6SGADvZ+J
-	8h5a9U1EO/4mA9migrCPZNS8FHbaQki3TVE5ErIDAlx9c6aVH6LpLySzwU4J1BVuyYRfUbHnxtT
-	qdmcMZlkf5YCNMGH0JnnBZE+wSrljviYYBbLi2dHwsIaTKRp9DcF52rjDCh1ESF0zYBk7BpSWje
-	4f91UHaO2tXKxjk/3fz2hanqCATkfXkAFqs+HyMrhKPhjdPaunJff/MNuuYsy+KNboBTL8x/rB4
-	x1ENeiOH5GFnKgGWNGDDpzPYGXZEYaHX7LxL4vqIAtyt/CS1VE902dm9iq7vDpcBXifZ86RWOfQ
-	=
-X-Received: by 2002:a05:620a:439b:b0:7c7:b60f:ebd8 with SMTP id af79cd13be357-7c9668711bdmr135699885a.24.1745608617665;
-        Fri, 25 Apr 2025 12:16:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGLvVYIuCfd7N47SYf7k0yis4BdYavV24mRBREqRBvjDFmYGO5KeapM1HaXCAvzIXJi0HNW8A==
-X-Received: by 2002:a05:620a:439b:b0:7c7:b60f:ebd8 with SMTP id af79cd13be357-7c9668711bdmr135694085a.24.1745608617219;
-        Fri, 25 Apr 2025 12:16:57 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb3983fsm706745e87.60.2025.04.25.12.16.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 12:16:55 -0700 (PDT)
-Date: Fri, 25 Apr 2025 22:16:53 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Rob Clark <robdclark@gmail.com>, Akhil P Oommen <quic_akhilpo@quicinc.com>,
-        Connor Abbott <cwabbott0@gmail.com>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Sean Paul <sean@poorly.run>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno@lists.freedesktop.org
-Subject: Re: [PATCH v2 3/4] drm/msm/a6xx: Get HBB dynamically, if available
-Message-ID: <dhn55tynono5lvk7sxhcrww37mfty6pyzn52oaoyefmbm3ivh4@6qzhjyte6ntv>
-References: <20911703-ab4e-4eb2-8611-294730a06d2f@quicinc.com>
- <CACu1E7HDmQXDNtEQCXpHXsOKPCOgrWgo+_kcgizo9Mp1ntjDbA@mail.gmail.com>
- <1282bf58-e431-4a07-97e5-628437e7ce5f@quicinc.com>
- <CACu1E7GwMCt6+JJQGgSvJObTMMWYLPd69owyFo7S=sxu_EEsUw@mail.gmail.com>
- <16845de2-a40a-4e3d-b3aa-c91e7072b57f@quicinc.com>
- <CAF6AEGvyeRLHFBYmxkevgT+hosXGiH_w8Z+UjQmL+LdbNfVZ+w@mail.gmail.com>
- <acd1c8dd-286b-40b7-841d-e53e2d155a61@oss.qualcomm.com>
- <CAF6AEGts5rWvgyZy8RtAaUOsad362AG-uNjxF9vyj4szg=b5Bw@mail.gmail.com>
- <6233171a-2964-4d57-986c-d3f1725eacd6@oss.qualcomm.com>
- <eac33841-4796-43bf-affe-31901344c5ff@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBj8cZGQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60D3C4CEE4;
+	Fri, 25 Apr 2025 21:14:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745615695;
+	bh=r+3wvAfEXNH49zoyFrf7Nft/Q0LQoNU+eZCW8b2HZik=;
+	h=Date:From:To:Cc:Subject:From;
+	b=qBj8cZGQ3+xOfPms6geCdlYy1Eei5EYZ1trUXtF3HHNomrQxtocf71Hpx0nIHq1bL
+	 KSmrZiskH+tBUaUx7xqqsnftWmgM5DwyCrnnM7VWw7pfFg4cH8tbcyTJ2ByROBZJls
+	 VUpC20rza7EZC4+en/zAM0T95iUmqZMpjL5/bs4dA1QEr1s3KSc4Jm+BTmWgDJswOP
+	 fJsSzUgqOoP86UBoHDD2sK+IvxNiSNkSUJUPdum0qhOWpjwp6iWu9RbonCzHiAowJ/
+	 H4uUgRTenNGpa4IHdlRvE8CpFyBz0Su+JfU453uJM+WSU7wHogHRroYsJ2Tfg57oWo
+	 PDixFkHEMQBQA==
+Date: Fri, 25 Apr 2025 15:14:46 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: [PATCH v2][next] wifi: iwlwifi: mvm/fw: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <aAv7RiLsmXq5d0ge@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <eac33841-4796-43bf-affe-31901344c5ff@oss.qualcomm.com>
-X-Proofpoint-GUID: VaCjKo5cBXaoYPavJgcHTFAAp06saSMx
-X-Proofpoint-ORIG-GUID: VaCjKo5cBXaoYPavJgcHTFAAp06saSMx
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDEzNyBTYWx0ZWRfX1gh5d+j13Jpr nS6NhOPj9Uk8mtNnUTCh+hxES7BKUFZoiCMTSIRglwHAwxMx5z7f6fLOR5rd+XZmwtPf9wDhyrY vFsttxMnvkuWlAa7rPzzaklT75lfU1us9iZXEzZUWnLETVyAMEx9/5A76D7yHqwi06sfZ458EIm
- q0ISxK9tdtlwzHUg0fdx4TwU+E5Ur74HPAypvDcXszo/CvIUivgxXIDXHmxG8wyPOz9V89sa/YD SqyQ0WwNsXZFK/L09qHiMssOOAOAMZ0mRyjHjolzQUfrNcjvJXmQzgLMIz9ziLtEjYsdSDogscH q96C8TNz33I7ZbOB/phMD1tGSypnIDNlLhAbMP8UdCMOX+ELE1S2f9NO2uvz41uSgqQNM7LZ3mP
- CZ9rVmt5qKv8dgdyHZptB+S0AwwJOv4FDSwSTQqZb6xTMmvU9LZAbjoBN0KOC3Nla4fivFU0
-X-Authority-Analysis: v=2.4 cv=ZpjtK87G c=1 sm=1 tr=0 ts=680bdfab cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=qLch0_GepN5255_xqOIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 clxscore=1015
- bulkscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 impostorscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250137
 
-On Thu, Apr 24, 2025 at 10:28:58PM +0200, Konrad Dybcio wrote:
-> On 4/23/25 5:23 PM, Dmitry Baryshkov wrote:
-> > On 23/04/2025 17:55, Rob Clark wrote:
-> >> On Tue, Apr 22, 2025 at 4:57 PM Konrad Dybcio
-> >> <konrad.dybcio@oss.qualcomm.com> wrote:
-> >>>
-> >>> On 4/21/25 10:13 PM, Rob Clark wrote:
-> >>>> On Fri, Apr 18, 2025 at 9:00 AM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
-> >>>>>
-> >>>>> On 4/18/2025 6:40 AM, Connor Abbott wrote:
-> >>>>>> On Thu, Apr 17, 2025, 1:50 PM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
-> >>>>>>>
-> >>>>>>> On 4/17/2025 9:02 PM, Connor Abbott wrote:
-> >>>>>>>> On Thu, Apr 17, 2025 at 3:45 AM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
-> >>>>>>>>>
-> >>>>>>>>> On 4/10/2025 11:13 PM, Konrad Dybcio wrote:
-> >>>>>>>>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>>>>>>>>>
-> >>>>>>>>>> The Highest Bank address Bit value can change based on memory type used.
-> >>>>>>>>>>
-> >>>>>>>>>> Attempt to retrieve it dynamically, and fall back to a reasonable
-> >>>>>>>>>> default (the one used prior to this change) on error.
-> >>>>>>>>>>
-> >>>>>>>>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>>>>>>>>> ---
-> >>>>>>>>>>   drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 15 ++++++++++++++-
-> >>>>>>>>>>   1 file changed, 14 insertions(+), 1 deletion(-)
-> >>>>>>>>>>
-> >>>>>>>>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >>>>>>>>>> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..a6232b382bd16319f20ae5f8f5e57f38ecc62d9f 100644
-> >>>>>>>>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >>>>>>>>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >>>>>>>>>> @@ -13,6 +13,7 @@
-> >>>>>>>>>>   #include <linux/firmware/qcom/qcom_scm.h>
-> >>>>>>>>>>   #include <linux/pm_domain.h>
-> >>>>>>>>>>   #include <linux/soc/qcom/llcc-qcom.h>
-> >>>>>>>>>> +#include <linux/soc/qcom/smem.h>
-> >>>>>>>>>>
-> >>>>>>>>>>   #define GPU_PAS_ID 13
-> >>>>>>>>>>
-> >>>>>>>>>> @@ -587,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
-> >>>>>>>>>>
-> >>>>>>>>>>   static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
-> >>>>>>>>>>   {
-> >>>>>>>>>> +     int hbb;
-> >>>>>>>>>> +
-> >>>>>>>>>>        gpu->ubwc_config.rgb565_predicator = 0;
-> >>>>>>>>>>        gpu->ubwc_config.uavflagprd_inv = 0;
-> >>>>>>>>>>        gpu->ubwc_config.min_acc_len = 0;
-> >>>>>>>>>> @@ -635,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
-> >>>>>>>>>>            adreno_is_a690(gpu) ||
-> >>>>>>>>>>            adreno_is_a730(gpu) ||
-> >>>>>>>>>>            adreno_is_a740_family(gpu)) {
-> >>>>>>>>>> -             /* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
-> >>>>>>>>>>                gpu->ubwc_config.highest_bank_bit = 16;
-> >>>>>>>>>>                gpu->ubwc_config.amsbc = 1;
-> >>>>>>>>>>                gpu->ubwc_config.rgb565_predicator = 1;
-> >>>>>>>>>> @@ -664,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
-> >>>>>>>>>>                gpu->ubwc_config.highest_bank_bit = 14;
-> >>>>>>>>>>                gpu->ubwc_config.min_acc_len = 1;
-> >>>>>>>>>>        }
-> >>>>>>>>>> +
-> >>>>>>>>>> +     /* Attempt to retrieve the data from SMEM, keep the above defaults in case of error */
-> >>>>>>>>>> +     hbb = qcom_smem_dram_get_hbb();
-> >>>>>>>>>> +     if (hbb < 0)
-> >>>>>>>>>> +             return;
-> >>>>>>>>>> +
-> >>>>>>>>>> +     gpu->ubwc_config.highest_bank_bit = hbb;
-> >>>>>>>>>
-> >>>>>>>>> I am worried about blindly relying on SMEM data directly for HBB for
-> >>>>>>>>> legacy chipsets. There is no guarantee it is accurate on every chipset
-> >>>>>>>>> and every version of firmware. Also, until recently, this value was
-> >>>>>>>>> hardcoded in Mesa which matched the value in KMD.
-> >>>>>>>>
-> >>>>>>>> To be clear about this, from the moment we introduced host image
-> >>>>>>>> copies in Mesa we added support for querying the HBB from the kernel,
-> >>>>>>>> explicitly so that we could do what this series does without Mesa ever
-> >>>>>>>> breaking. Mesa will never assume the HBB unless the kernel is too old
-> >>>>>>>> to support querying it. So don't let Mesa be the thing that stops us
-> >>>>>>>> here.
-> >>>>>>>
-> >>>>>>> Thanks for clarifying about Mesa. I still don't trust a data source that
-> >>>>>>> is unused in production.
-> >>>>>>
-> >>>>>> Fair enough, I'm not going to argue with that part. Just wanted to
-> >>>>>> clear up any confusion about Mesa.
-> >>>>>>
-> >>>>>> Although, IIRC kgsl did set different values for a650 depending on
-> >>>>>> memory type... do you know what source that used?
-> >>>>>
-> >>>>> KGSL relies on an undocumented devicetree node populated by bootloader
-> >>>>> to detect ddrtype and calculates the HBB value based on that.
-> >>>>
-> >>>> Would it be reasonable to use the smem value, but if we find the
-> >>>> undocumented dt property, WARN_ON() if it's value disagrees with smem?
-> >>>>
-> >>>> That would at least give some confidence, or justified un-confidence
-> >>>> about the smem values
-> >>>
-> >>> The aforementioned value is populated based on the data that this
-> >>> driver reads out, and only on the same range of platforms that this
-> >>> driver happens to cater to
-> >>
-> >> Did I understand that correctly to mean that the dt property is based
-> >> on the same smem value that you are using?  In that case, there should
-> >> be no argument against using the smem value as the source of truth.
-> > 
-> > It is, but is done by the bootloader that knows exact format of the data.
-> 
-> Right, so the only point of concern here is the handwavy matching-by-size
-> logic.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Kind of. The other issue is several cases where GPU and MDSS drivers
-disagree about UBWC config. I think the plan might be:
-- Introduce UBWC config database, ruling out incoherences between these
-  drivers
-- Parse SMEM and the non-standard OF property, verify both against each
-  other and against the UBWC database
-- One-by-one drop entries from UBWC database as they are verified
-  against the readout values.
+So, in order to avoid ending up with a flexible-array member in the
+middle of multiple other structs, we use the `__struct_group()`
+helper to create a new tagged `struct iwl_tx_cmd_hdr`. This structure
+groups together all the members of the flexible `struct iwl_tx_cmd`
+except the flexible array.
 
-I understand that it is a long-term plan, but granted the issues we've
-had before (tiling screen corruptions, which was fixed / worked around
-by lowering HBB) I think this is the most viable path forward.
+As a result, the array is effectively separated from the rest of the
+members without modifying the memory layout of the flexible structure.
+We then change the type of the middle struct members currently causing
+trouble from `struct iwl_tx_cmd` to `struct iwl_tx_cmd_hdr`.
 
+We also want to ensure that when new members need to be added to the
+flexible structure, they are always included within the newly created
+tagged struct. For this, we use `static_assert()`. This ensures that the
+memory layout for both the flexible structure and the new tagged struct
+is the same after any changes.
+
+This approach avoids having to implement `struct iwl_tx_cmd_hdr`
+as a completely separate structure, thus preventing having to maintain
+two independent but basically identical structures, closing the door
+to potential bugs in the future.
+
+We also use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure, through which we can access the flexible-array
+member, if necessary.
+
+Also, as part of the refactoring required to use `__struct_group()`,
+remove unused flex array `payload`.
+
+So, with these changes, fix the following warnings:
+
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tdls.h:134:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tdls.h:53:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tx.h:745:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tx.h:764:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:134:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:53:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:745:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:764:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Update changelog text - mention removal of flex array `payload`.
+   (Kees)
+ - Fix kernel-doc block. (Johannes).
+ - Add RB tag.
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/Z-9G-GHufhXKeYft@kspp/
+
+ .../net/wireless/intel/iwlwifi/fw/api/tdls.h  |  4 +-
+ .../net/wireless/intel/iwlwifi/fw/api/tx.h    | 63 ++++++++++---------
+ .../net/wireless/intel/iwlwifi/mvm/mac-ctxt.c |  8 ++-
+ drivers/net/wireless/intel/iwlwifi/mvm/tdls.c | 10 +--
+ 4 files changed, 45 insertions(+), 40 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
+index cfa6532a3cdd..02198bc37f8c 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
+@@ -50,7 +50,7 @@ struct iwl_tdls_channel_switch_timing {
+  */
+ struct iwl_tdls_channel_switch_frame {
+ 	__le32 switch_time_offset;
+-	struct iwl_tx_cmd tx_cmd;
++	struct iwl_tx_cmd_hdr tx_cmd;
+ 	u8 data[IWL_TDLS_CH_SW_FRAME_MAX_SIZE];
+ } __packed; /* TDLS_STA_CHANNEL_SWITCH_FRAME_API_S_VER_1 */
+ 
+@@ -131,7 +131,7 @@ struct iwl_tdls_config_cmd {
+ 	struct iwl_tdls_sta_info sta_info[IWL_TDLS_STA_COUNT];
+ 
+ 	__le32 pti_req_data_offset;
+-	struct iwl_tx_cmd pti_req_tx_cmd;
++	struct iwl_tx_cmd_hdr pti_req_tx_cmd;
+ 	u8 pti_req_template[];
+ } __packed; /* TDLS_CONFIG_CMD_API_S_VER_1 */
+ 
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+index 0a39e4b6eb62..dba18d898ea2 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+@@ -205,8 +205,7 @@ enum iwl_tx_offload_assist_flags_pos {
+  * @tid_tspec: TID/tspec
+  * @pm_frame_timeout: PM TX frame timeout
+  * @reserved4: reserved
+- * @payload: payload (same as @hdr)
+- * @hdr: 802.11 header (same as @payload)
++ * @hdr: 802.11 header
+  *
+  * The byte count (both len and next_frame_len) includes MAC header
+  * (24/26/30/32 bytes)
+@@ -222,34 +221,36 @@ enum iwl_tx_offload_assist_flags_pos {
+  * and then the actial payload.
+  */
+ struct iwl_tx_cmd {
+-	__le16 len;
+-	__le16 offload_assist;
+-	__le32 tx_flags;
+-	struct {
+-		u8 try_cnt;
+-		u8 btkill_cnt;
+-		__le16 reserved;
+-	} scratch; /* DRAM_SCRATCH_API_U_VER_1 */
+-	__le32 rate_n_flags;
+-	u8 sta_id;
+-	u8 sec_ctl;
+-	u8 initial_rate_index;
+-	u8 reserved2;
+-	u8 key[16];
+-	__le32 reserved3;
+-	__le32 life_time;
+-	__le32 dram_lsb_ptr;
+-	u8 dram_msb_ptr;
+-	u8 rts_retry_limit;
+-	u8 data_retry_limit;
+-	u8 tid_tspec;
+-	__le16 pm_frame_timeout;
+-	__le16 reserved4;
+-	union {
+-		DECLARE_FLEX_ARRAY(u8, payload);
+-		DECLARE_FLEX_ARRAY(struct ieee80211_hdr, hdr);
+-	};
++	/* New members MUST be added within the __struct_group() macro below. */
++	__struct_group(iwl_tx_cmd_hdr, __hdr, __packed,
++		__le16 len;
++		__le16 offload_assist;
++		__le32 tx_flags;
++		struct {
++			u8 try_cnt;
++			u8 btkill_cnt;
++			__le16 reserved;
++		} scratch; /* DRAM_SCRATCH_API_U_VER_1 */
++		__le32 rate_n_flags;
++		u8 sta_id;
++		u8 sec_ctl;
++		u8 initial_rate_index;
++		u8 reserved2;
++		u8 key[16];
++		__le32 reserved3;
++		__le32 life_time;
++		__le32 dram_lsb_ptr;
++		u8 dram_msb_ptr;
++		u8 rts_retry_limit;
++		u8 data_retry_limit;
++		u8 tid_tspec;
++		__le16 pm_frame_timeout;
++		__le16 reserved4;
++	);
++	struct ieee80211_hdr hdr[];
+ } __packed; /* TX_CMD_API_S_VER_6 */
++static_assert(offsetof(struct iwl_tx_cmd, hdr) == sizeof(struct iwl_tx_cmd_hdr),
++	      "struct member likely outside of __struct_group()");
+ 
+ struct iwl_dram_sec_info {
+ 	__le32 pn_low;
+@@ -742,7 +743,7 @@ struct iwl_compressed_ba_notif {
+  * @frame: the template of the beacon frame
+  */
+ struct iwl_mac_beacon_cmd_v6 {
+-	struct iwl_tx_cmd tx;
++	struct iwl_tx_cmd_hdr tx;
+ 	__le32 template_id;
+ 	__le32 tim_idx;
+ 	__le32 tim_size;
+@@ -761,7 +762,7 @@ struct iwl_mac_beacon_cmd_v6 {
+  * @frame: the template of the beacon frame
+  */
+ struct iwl_mac_beacon_cmd_v7 {
+-	struct iwl_tx_cmd tx;
++	struct iwl_tx_cmd_hdr tx;
+ 	__le32 template_id;
+ 	__le32 tim_idx;
+ 	__le32 tim_size;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
+index bec18d197f31..f010e68b4a55 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
+@@ -1032,7 +1032,9 @@ static int iwl_mvm_mac_ctxt_send_beacon_v6(struct iwl_mvm *mvm,
+ 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+ 	struct iwl_mac_beacon_cmd_v6 beacon_cmd = {};
+ 
+-	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon, &beacon_cmd.tx);
++	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon,
++				container_of(&beacon_cmd.tx,
++					     struct iwl_tx_cmd, __hdr));
+ 
+ 	beacon_cmd.template_id = cpu_to_le32((u32)mvmvif->id);
+ 
+@@ -1052,7 +1054,9 @@ static int iwl_mvm_mac_ctxt_send_beacon_v7(struct iwl_mvm *mvm,
+ 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+ 	struct iwl_mac_beacon_cmd_v7 beacon_cmd = {};
+ 
+-	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon, &beacon_cmd.tx);
++	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon,
++				container_of(&beacon_cmd.tx,
++					     struct iwl_tx_cmd, __hdr));
+ 
+ 	beacon_cmd.template_id = cpu_to_le32((u32)mvmvif->id);
+ 
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c b/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
+index 36379b738de1..bcfae05192ad 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
+@@ -342,6 +342,8 @@ iwl_mvm_tdls_config_channel_switch(struct iwl_mvm *mvm,
+ 	struct iwl_tdls_channel_switch_cmd_tail *tail =
+ 		iwl_mvm_chan_info_cmd_tail(mvm, &cmd.ci);
+ 	u16 len = sizeof(cmd) - iwl_mvm_chan_info_padding(mvm);
++	struct iwl_tx_cmd *tx_cmd =
++		container_of(&tail->frame.tx_cmd, struct iwl_tx_cmd, __hdr);
+ 	int ret;
+ 
+ 	lockdep_assert_held(&mvm->mutex);
+@@ -410,14 +412,12 @@ iwl_mvm_tdls_config_channel_switch(struct iwl_mvm *mvm,
+ 			ret = -EINVAL;
+ 			goto out;
+ 		}
+-		iwl_mvm_set_tx_cmd_ccmp(info, &tail->frame.tx_cmd);
++		iwl_mvm_set_tx_cmd_ccmp(info, tx_cmd);
+ 	}
+ 
+-	iwl_mvm_set_tx_cmd(mvm, skb, &tail->frame.tx_cmd, info,
+-			   mvmsta->deflink.sta_id);
++	iwl_mvm_set_tx_cmd(mvm, skb, tx_cmd, info, mvmsta->deflink.sta_id);
+ 
+-	iwl_mvm_set_tx_cmd_rate(mvm, &tail->frame.tx_cmd, info, sta,
+-				hdr->frame_control);
++	iwl_mvm_set_tx_cmd_rate(mvm, tx_cmd, info, sta, hdr->frame_control);
+ 	rcu_read_unlock();
+ 
+ 	memcpy(tail->frame.data, skb->data, skb->len);
 -- 
-With best wishes
-Dmitry
+2.43.0
+
