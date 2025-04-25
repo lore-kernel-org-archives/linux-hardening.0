@@ -1,49 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1114021ABA7
-	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 09:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4672367A7;
+	Fri, 25 Apr 2025 09:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745573934; cv=none; b=g7GjO0Tq5Xq0mTjj5sVqFgYOXwhc6pqC3FvIMMRVmkptkWm1s1wHZxtJTnWbVHERsBJfTxRG4+HjoU/w6gfHGpJQfkqKhmWKxeLEYPy+XCu+DoOunwJItYUsfPyeTfr/IoGBTMFIkbcr5+QbQVc28H4HVpWY2PcTYRoBvaZtAXE=
+	t=1745574009; cv=none; b=rQT5eOMKrhXqTZNDDwVNMWJAOQwQ4ou/0+3Gs80x4+jgi3oAQaU/2mSjsnVBny1ht0Ni9H+yICNmqMGD4vqVUQobJk5tHBTr0mL313LPtB8rTmgvMvXC84DQf1OyBoTsE5toiluDj1DLVl7oGHz8k/vGWoIQJADRC3sx4RCbDm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745573934; c=relaxed/simple;
-	bh=6/MSYSEzUT2rOHj+kI9Bo+sA+NM6tn1iylQKFbt8kwQ=;
+	s=arc-20240116; t=1745574009; c=relaxed/simple;
+	bh=bRt7XPKW9i4BWzArQjxLQ2RfDMPwgG+tmEWHd6D3ajI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l1QeLM2tZCTHfxqMFYMSdpgZHPdGSkjwIkUrZggLUCdYz4Vpum9+/8Da4f6qdPLvNUMRkUs5g/b2atMGX9spmPHWmxxP4n9huwalwR+At4+RGT98WiJC6UJAYevLcgDE0npzf9Ml+zgdrPhkg4IR7p/gYQk7lAQ+tx7eFxTmizY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NXemKJyx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=TRO5Cp3ntuTKVWy4+/3C95YChSTFCzhvpWjo/Ge+6YdynIt58LUznEtqH02hk83eh4RgNUOq76BYUKBz3+KO1M4AHhjzZNKbEgC53HhplHLr9MGJxypJ5Ua/8Axe01aCxXE+c9z9T2DiamcJHYJaFdyE7WCDqezBiB6FLdrw1nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZuiHaRb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NXemKJyx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745573931;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yeTi2beNeT6GEnAy7Gy8MR4veB063ayGsd3BpNX5h+0=;
-	b=NXemKJyx8SnD7h7xLjWO+RtuqcJVVB75kvDD5owSYFZn0E2p0Y1+l2FfoVoZhQXpi0QRaF
-	+OMdgLd1dXB544gN/tuBlTPR163+oKv0U2O4w6YStECMRHGeFXX3TCwmXJS2PS45cX4bOo
-	tqTWWueaCiF2czWMblEwpZ9/ZR7mI/c=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-428-ZEycNmyVMfqWBHWwWZlrxg-1; Fri,
- 25 Apr 2025 05:38:48 -0400
-X-MC-Unique: ZEycNmyVMfqWBHWwWZlrxg-1
-X-Mimecast-MFC-AGG-ID: ZEycNmyVMfqWBHWwWZlrxg_1745573926
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D620F1800873;
-	Fri, 25 Apr 2025 09:38:45 +0000 (UTC)
-Received: from [10.44.33.33] (unknown [10.44.33.33])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5659819560A3;
-	Fri, 25 Apr 2025 09:38:40 +0000 (UTC)
-Message-ID: <7d203d86-86b9-451c-9c49-5dd1c0e6626b@redhat.com>
-Date: Fri, 25 Apr 2025 11:38:38 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZuiHaRb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 837FBC4CEE4;
+	Fri, 25 Apr 2025 09:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745574008;
+	bh=bRt7XPKW9i4BWzArQjxLQ2RfDMPwgG+tmEWHd6D3ajI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nZuiHaRbDlUTqyFAqPsUzi1F8HUScC4uS7RvpJF2RFS/xE4CWj9pYCv22a/5YVyLV
+	 Jz/5NAXlZ85976ozWoGeK6ridZlApAsxQR9+GqiC5BTt83aqV6jp1yYLowI8Zu5oOH
+	 xM2SKBHXt814tltu5rh6snvCLNLoOND6ZsVozYUAh6kxL+lH6atLhWnGPlRit6FiTH
+	 847GejqMvEu3UO3xw5t36G20WAml+GqQf/i9f+gVpkbrXkQWBBmCBsvOEnO64sULa2
+	 8vv2VatrwWSWAk792g6dYMz3KL2M9UxZ1L/MwpMTeeHe8P0OJDWefbwVx9a8xddAgh
+	 klbcv6dEdC6Dw==
+Message-ID: <f2f156e0-5321-4d6c-ae00-9ec5d148e3bb@kernel.org>
+Date: Fri, 25 Apr 2025 11:40:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,9 +35,9 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 2/8] dt-bindings: dpll: Add support for
- Microchip Azurite chip family
-To: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH net-next v4 1/8] dt-bindings: dpll: Add DPLL device and
+ pin
+To: Ivan Vecera <ivecera@redhat.com>
 Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
  Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
@@ -65,69 +49,76 @@ Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
 References: <20250424154722.534284-1-ivecera@redhat.com>
- <20250424154722.534284-3-ivecera@redhat.com>
- <20250425-hopeful-dexterous-ibex-b9adce@kuoka>
+ <20250424154722.534284-2-ivecera@redhat.com>
+ <20250425-manul-of-undeniable-refinement-dc6cdc@kuoka>
+ <bc28ca3e-6ccd-4d43-8a51-eb4563a6ed06@redhat.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <20250425-hopeful-dexterous-ibex-b9adce@kuoka>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <bc28ca3e-6ccd-4d43-8a51-eb4563a6ed06@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-
-
-On 25. 04. 25 9:41 dop., Krzysztof Kozlowski wrote:
-> On Thu, Apr 24, 2025 at 05:47:16PM GMT, Ivan Vecera wrote:
->> Add DT bindings for Microchip Azurite DPLL chip family. These chips
->> provide up to 5 independent DPLL channels, 10 differential or
->> single-ended inputs and 10 differential or 20 single-ended outputs.
->> They can be connected via I2C or SPI busses.
+On 25/04/2025 11:36, Ivan Vecera wrote:
+>>> +    const: 0
+>>> +
+>>> +  dpll-types:
+>>> +    description: List of DPLL channel types, one per DPLL instance.
+>>> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+>>> +    items:
+>>> +      enum: [pps, eec]
 >>
->> Check:
->> $ make dt_binding_check DT_SCHEMA_FILES=/dpll/
+>> Do channels have other properties as well in general?
 > 
-> None of these commands belong to the commit msg. Look at all other
-> commits: do you see it anywhere?
+> No, other characteristics should be deducible either from compatible or
+> in runtime.
+> 
+OK, with fixes in commit msg:
 
-+1
 
->>    SCHEMA  Documentation/devicetree/bindings/processed-schema.json
->> /home/cera/devel/kernel/linux-2.6/Documentation/devicetree/bindings/net/snps,dwmac.yaml: mac-mode: missing type definition
->>    CHKDT   ./Documentation/devicetree/bindings
->>    LINT    ./Documentation/devicetree/bindings
->>    DTC [C] Documentation/devicetree/bindings/dpll/dpll-pin.example.dtb
->>    DTEX    Documentation/devicetree/bindings/dpll/microchip,zl30731.example.dts
->>    DTC [C] Documentation/devicetree/bindings/dpll/microchip,zl30731.example.dtb
->>    DTC [C] Documentation/devicetree/bindings/dpll/dpll-device.example.dtb
->>
-> 
-> With above fixed:
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thank you.
-
-I.
-> ---
-> 
-> <form letter>
-> This is an automated instruction, just in case, because many review tags
-> are being ignored. If you know the process, you can skip it (please do
-> not feel offended by me posting it here - no bad intentions intended).
-> If you do not know the process, here is a short explanation:
-> 
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> versions of patchset, under or above your Signed-off-by tag, unless
-> patch changed significantly (e.g. new properties added to the DT
-> bindings). Tag is "received", when provided in a message replied to you
-> on the mailing list. Tools like b4 can help here. However, there's no
-> need to repost patches *only* to add the tags. The upstream maintainer
-> will do that for tags received on the version they apply.
-> 
-> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-> </form letter>
-> 
-> Best regards,
-> Krzysztof
-> 
-
+Best regards,
+Krzysztof
