@@ -1,49 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AA3242D67
-	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 09:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1114021ABA7
+	for <linux-hardening@vger.kernel.org>; Fri, 25 Apr 2025 09:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745573795; cv=none; b=KWBL9rknykyeQufbEmLObfLPrytDi1GTNG8Nj3UpP74+Q8pG2efcEOC2C9nzGcVtuBYCKodr4EeL7BGNL6hfhZBdMQIFllAVwvw5NnMjU9QYrR6szkWTmYNoQOmi1J19bHKkm8SZxsVBaivBTtmgHnubbhBsDOV2RacMddtjnlk=
+	t=1745573934; cv=none; b=g7GjO0Tq5Xq0mTjj5sVqFgYOXwhc6pqC3FvIMMRVmkptkWm1s1wHZxtJTnWbVHERsBJfTxRG4+HjoU/w6gfHGpJQfkqKhmWKxeLEYPy+XCu+DoOunwJItYUsfPyeTfr/IoGBTMFIkbcr5+QbQVc28H4HVpWY2PcTYRoBvaZtAXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745573795; c=relaxed/simple;
-	bh=ioigkbjdcAhl3Sy/dq3GwJMrCQmcZVCmohh2bSLTNL8=;
+	s=arc-20240116; t=1745573934; c=relaxed/simple;
+	bh=6/MSYSEzUT2rOHj+kI9Bo+sA+NM6tn1iylQKFbt8kwQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o01Ws4Lcp0P4lIiRfwaezE3WcaMpsnY33AmJYY+HovtBX5j7mzGM6/hHgsmk1Zunpj6dFWl4dlN2QkQG8WwMJs3DxX0yp5UtXb7bo/G1PkEwxL5FMOM0UlF6oHNrEzAaKzo4lR5xu90V2upmAzgDsM5hnlp1PnOqNnvRDeNAIkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q6mosuPd; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=l1QeLM2tZCTHfxqMFYMSdpgZHPdGSkjwIkUrZggLUCdYz4Vpum9+/8Da4f6qdPLvNUMRkUs5g/b2atMGX9spmPHWmxxP4n9huwalwR+At4+RGT98WiJC6UJAYevLcgDE0npzf9Ml+zgdrPhkg4IR7p/gYQk7lAQ+tx7eFxTmizY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NXemKJyx; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q6mosuPd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NXemKJyx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745573792;
+	s=mimecast20190719; t=1745573931;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0lD/LvDHoI9QqH/8Vxi3D6OYMYIKwTaooepYa8dn5Hs=;
-	b=Q6mosuPdUaSllb2r1ZTZvopy588O1ex5sWsYeCH14zTlU/51WPkSIj5f1ISR9Sa4zpoml8
-	GlPm2p7POxowZy1EtfBQijhQEwclODqGbRw+7Tn4z92Cq+RuJdLTH9PR2FoQMd5te98wky
-	IPivWeMxvYeffdP5yd8UbQtAWtWXA/A=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=yeTi2beNeT6GEnAy7Gy8MR4veB063ayGsd3BpNX5h+0=;
+	b=NXemKJyx8SnD7h7xLjWO+RtuqcJVVB75kvDD5owSYFZn0E2p0Y1+l2FfoVoZhQXpi0QRaF
+	+OMdgLd1dXB544gN/tuBlTPR163+oKv0U2O4w6YStECMRHGeFXX3TCwmXJS2PS45cX4bOo
+	tqTWWueaCiF2czWMblEwpZ9/ZR7mI/c=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-67-akjxUarnOKu0tpay3pBj0A-1; Fri,
- 25 Apr 2025 05:36:27 -0400
-X-MC-Unique: akjxUarnOKu0tpay3pBj0A-1
-X-Mimecast-MFC-AGG-ID: akjxUarnOKu0tpay3pBj0A_1745573785
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-428-ZEycNmyVMfqWBHWwWZlrxg-1; Fri,
+ 25 Apr 2025 05:38:48 -0400
+X-MC-Unique: ZEycNmyVMfqWBHWwWZlrxg-1
+X-Mimecast-MFC-AGG-ID: ZEycNmyVMfqWBHWwWZlrxg_1745573926
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 971FD1956088;
-	Fri, 25 Apr 2025 09:36:24 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D620F1800873;
+	Fri, 25 Apr 2025 09:38:45 +0000 (UTC)
 Received: from [10.44.33.33] (unknown [10.44.33.33])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3A67B19560AB;
-	Fri, 25 Apr 2025 09:36:18 +0000 (UTC)
-Message-ID: <bc28ca3e-6ccd-4d43-8a51-eb4563a6ed06@redhat.com>
-Date: Fri, 25 Apr 2025 11:36:17 +0200
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5659819560A3;
+	Fri, 25 Apr 2025 09:38:40 +0000 (UTC)
+Message-ID: <7d203d86-86b9-451c-9c49-5dd1c0e6626b@redhat.com>
+Date: Fri, 25 Apr 2025 11:38:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,8 +51,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 1/8] dt-bindings: dpll: Add DPLL device and
- pin
+Subject: Re: [PATCH net-next v4 2/8] dt-bindings: dpll: Add support for
+ Microchip Azurite chip family
 To: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
@@ -65,92 +65,67 @@ Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
 References: <20250424154722.534284-1-ivecera@redhat.com>
- <20250424154722.534284-2-ivecera@redhat.com>
- <20250425-manul-of-undeniable-refinement-dc6cdc@kuoka>
+ <20250424154722.534284-3-ivecera@redhat.com>
+ <20250425-hopeful-dexterous-ibex-b9adce@kuoka>
 Content-Language: en-US
 From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <20250425-manul-of-undeniable-refinement-dc6cdc@kuoka>
+In-Reply-To: <20250425-hopeful-dexterous-ibex-b9adce@kuoka>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
 
 
-On 25. 04. 25 9:39 dop., Krzysztof Kozlowski wrote:
-> On Thu, Apr 24, 2025 at 05:47:15PM GMT, Ivan Vecera wrote:
->> Add a common DT schema for DPLL device and its associated pins.
->> The DPLL (device phase-locked loop) is a device used for precise clock
->> synchronization in networking and telecom hardware.
->>
->> The device includes one or more DPLLs (channels) and one or more
->> physical input/output pins.
->>
->> Each DPLL channel is used either to provide a pulse-per-clock signal or
->> to drive an Ethernet equipment clock.
->>
->> The input and output pins have the following properties:
->> * label: specifies board label
->> * connection type: specifies its usage depending on wiring
->> * list of supported or allowed frequencies: depending on how the pin
->>    is connected and where)
->> * embedded sync capability: indicates whether the pin supports this
+On 25. 04. 25 9:41 dop., Krzysztof Kozlowski wrote:
+> On Thu, Apr 24, 2025 at 05:47:16PM GMT, Ivan Vecera wrote:
+>> Add DT bindings for Microchip Azurite DPLL chip family. These chips
+>> provide up to 5 independent DPLL channels, 10 differential or
+>> single-ended inputs and 10 differential or 20 single-ended outputs.
+>> They can be connected via I2C or SPI busses.
 >>
 >> Check:
-> 
-> This does not belong to commit msg. You do not add compile commands of C
-> files, do you?
-> 
-> Whatever you want to inform and is not relevant in the Git history
-> should be in changelog part.
-
-OK
-
 >> $ make dt_binding_check DT_SCHEMA_FILES=/dpll/
+> 
+> None of these commands belong to the commit msg. Look at all other
+> commits: do you see it anywhere?
+
++1
+
 >>    SCHEMA  Documentation/devicetree/bindings/processed-schema.json
 >> /home/cera/devel/kernel/linux-2.6/Documentation/devicetree/bindings/net/snps,dwmac.yaml: mac-mode: missing type definition
 >>    CHKDT   ./Documentation/devicetree/bindings
 >>    LINT    ./Documentation/devicetree/bindings
->>    DTEX    Documentation/devicetree/bindings/dpll/dpll-pin.example.dts
 >>    DTC [C] Documentation/devicetree/bindings/dpll/dpll-pin.example.dtb
->>    DTEX    Documentation/devicetree/bindings/dpll/dpll-device.example.dts
+>>    DTEX    Documentation/devicetree/bindings/dpll/microchip,zl30731.example.dts
+>>    DTC [C] Documentation/devicetree/bindings/dpll/microchip,zl30731.example.dtb
 >>    DTC [C] Documentation/devicetree/bindings/dpll/dpll-device.example.dtb
 >>
->> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
->> ---
->> v3->v4:
->> * dropped $Ref from dpll-pin reg property
->> * added maxItems to dpll-pin reg property
->> * fixed paragraph in dpll-pin desc
 > 
-> ...
+> With above fixed:
 > 
->> +
->> +properties:
->> +  $nodename:
->> +    pattern: "^dpll(@.*)?$"
->> +
->> +  "#address-cells":
->> +    const: 0
->> +
->> +  "#size-cells":
->> +    const: 0
->> +
->> +  dpll-types:
->> +    description: List of DPLL channel types, one per DPLL instance.
->> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
->> +    items:
->> +      enum: [pps, eec]
-> 
-> Do channels have other properties as well in general?
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-No, other characteristics should be deducible either from compatible or
-in runtime.
+Thank you.
 
->> +
->> +  input-pins:
->> +    type: object
->> +    description: DPLL input pins
->> +    unevaluatedProperties: false
+I.
+> ---
+> 
+> <form letter>
+> This is an automated instruction, just in case, because many review tags
+> are being ignored. If you know the process, you can skip it (please do
+> not feel offended by me posting it here - no bad intentions intended).
+> If you do not know the process, here is a short explanation:
+> 
+> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+> versions of patchset, under or above your Signed-off-by tag, unless
+> patch changed significantly (e.g. new properties added to the DT
+> bindings). Tag is "received", when provided in a message replied to you
+> on the mailing list. Tools like b4 can help here. However, there's no
+> need to repost patches *only* to add the tags. The upstream maintainer
+> will do that for tags received on the version they apply.
+> 
+> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+> </form letter>
 > 
 > Best regards,
 > Krzysztof
