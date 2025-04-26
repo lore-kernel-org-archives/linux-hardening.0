@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3C41C3BE2;
-	Sat, 26 Apr 2025 06:22:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F704414;
+	Sat, 26 Apr 2025 06:23:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745648540; cv=none; b=d4LRkG+K+R2NFNglr1Dl8qYc8XAmWAj6NW2MnLXv+KJS04ACxqP1LrSPWfPkxByz838TxKT6U3w5KAGL7yKZ+dix3AUxRV7X/i6RTqh+sFMm6UMBmFf82xxZayVBIcCiGyvcQkk4m3FJ9jspgkbqZwsdIEBKLR7G5ORnfdxOZSU=
+	t=1745648590; cv=none; b=S4cq9WL9SgRSzDmU4Nne6TwQ+0JNjPUVYLobAp/0CEcpvXfEEP8f8f/5vnpNUjXCaCHtkhbkcIRLIowtIPJxs0Whw71zNuBoKZ8F2S4mnmAsQe2rHnC9+pc0bicDWY0ztAlXVY1vgW6S/5CgSmu5Hse/XDeZTxG6oVOJth9AM80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745648540; c=relaxed/simple;
-	bh=Lo+Lep6sLWcNZQlhzW2ZLVGNj1PKx63G6pOoiymrW44=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=nww7MIkgRcnM4x1V7mD3x4o+u8ia6ViyfXOCUE4YmBrQWnQq9l4tfAZxBFr5esj4uxGngK3lDKp8MBjJ/8vyk4hPq8H6TwG7Lus9NkP4rvS95zqzZyl2kYSmRbdO8rvKWcm7OGrezZRiHq+IcqE0wgAERAUAI9SQ248p6l+03fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j4XHQ5Fo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745648590; c=relaxed/simple;
+	bh=27+zMyxeObnY+2ZctN5Kd1JdUG7p8OUHfohFohgaffs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UQVIutxqLq16pdfWL0VUtGCHR/YRxjQZlVC/2EQJgXTcb2xQuvZ0xmaW+2tu3S2UOwVIMQQBJ7aE+Sw51xDm50cu+MqRbLcCDi2zZL8fAmlF9nPfnI2TAX8ZoVAgwWjvywZfnun/DL06Sv84sQwI7ukU89smsPD03eH6dfq7kxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHo9/Fab; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j4XHQ5Fo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEC3AC4CEE2;
-	Sat, 26 Apr 2025 06:22:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHo9/Fab"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 455B5C4CEE2;
+	Sat, 26 Apr 2025 06:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745648538;
-	bh=Lo+Lep6sLWcNZQlhzW2ZLVGNj1PKx63G6pOoiymrW44=;
+	s=k20201202; t=1745648590;
+	bh=27+zMyxeObnY+2ZctN5Kd1JdUG7p8OUHfohFohgaffs=;
 	h=From:To:Cc:Subject:Date:From;
-	b=j4XHQ5Fo43R4aDcWfCMlvLBN0zM3OPp+ZDW5gF6L/lHqgam/+2zxOnFwUwkIjQ+Mv
-	 24D1Q+rklx6t4vcYYl8Pwfk84naXxJH/DclSvgS+11VTiV0+eecuB6AMse2zBfnJcF
-	 Vtof75JQu/6GPTN51hVrBFX+9DFMbw+xrDBO4b2vs+U5fVLXWLa1l/JNBUVD0c0Agy
-	 fXtFyjfQs6y8nTcHVBYt0EcZ3XxBm55S5euefCl+ia63sfW7NLPJe9EzSQMUDxpkBT
-	 fwJE99AqDNczAOqXJFOMlhq40GXkQuZH1sKrMJVnnlO/uiXsPtD72XsvpjAbxaYctT
-	 SjpfwjEfGarQA==
+	b=aHo9/FabE7ZQa+vos7KsSZ4IJeQlktU6shV39qpD4mWsp2zFVhGZs6e02/MoMZtSB
+	 jH3fwcdHt9avgFrD0P9elk2pPCYbhJdzeaEmIEYpHBnL21CNLVxOkwfTDimBSJKj3F
+	 kFXpHC7K6HfNgKtrbkcPZ6cP8MH+S/5/xMfvJlB/4i2u/cY11YIdxsYszcP1uE7Ep7
+	 +sPhzEVBw1U3+A7FRptQLwD2zx7Z/jkVlT//0lPYwJvgQln4EUELfSATEp2yKrOD7S
+	 yS22uIeTcf02PyK2V1rnfWuHLFQ4yjv/J8PV7wNzPzr95PzN/TrugIv+nCr5lc5FH2
+	 ASxErqEnFUjHA==
 From: Kees Cook <kees@kernel.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
+To: Helge Deller <deller@gmx.de>
 Cc: Kees Cook <kees@kernel.org>,
-	Jason Wang <jasowang@redhat.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	kvm@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	netdev@vger.kernel.org,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Zheyu Ma <zheyuma97@gmail.com>,
+	Samuel Thibault <samuel.thibault@ens-lyon.org>,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] vhost: vringh: Use matching allocation type in resize_iovec()
-Date: Fri, 25 Apr 2025 23:22:15 -0700
-Message-Id: <20250426062214.work.334-kees@kernel.org>
+Subject: [PATCH] video: fbdev: arkfb: Cast ics5342_init() allocation type
+Date: Fri, 25 Apr 2025 23:23:06 -0700
+Message-Id: <20250426062305.work.819-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -45,8 +47,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1839; i=kees@kernel.org; h=from:subject:message-id; bh=Lo+Lep6sLWcNZQlhzW2ZLVGNj1PKx63G6pOoiymrW44=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk81dNuFBpufLHrwPyoyU7n1c8+i6/ib9l5IPb66gbFq yrO3g+rOkpZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACaS1cLI8GJtRHayxrrOtztP 8mndKm66prJO09jxsHfNjLUaE+bLGzH8T/4qsE/k1HYhhtA91o3Hjup8PHny8Yy48jN1m3boChY fZwcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1621; i=kees@kernel.org; h=from:subject:message-id; bh=27+zMyxeObnY+2ZctN5Kd1JdUG7p8OUHfohFohgaffs=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk81ac+X1l5T0tgY5HOHT/tEy84W2w//dh8pP/bOpule SF5y/av7ihlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZiIfDYjwz6/cN0C0apLb6pZ YvsP2eewrMh87lYp8vPjNr81aWorMhkZNvU6MrntOe/1YgJ7WvbOUAeX9K1zPI2/8z3TLD4x41c LDwA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -55,52 +56,38 @@ we need to make sure that the returned type from the allocation matches
 the type of the variable being assigned. (Before, the allocator would
 always return "void *", which can be implicitly cast to any pointer type.)
 
-The assigned type is "struct kvec *", but the returned type will be
-"struct iovec *". These have the same allocation size, so there is no
-bug:
-
-struct kvec {
-        void *iov_base; /* and that should *never* hold a userland pointer */
-        size_t iov_len;
-};
-
-struct iovec
-{
-        void __user *iov_base;  /* BSD uses caddr_t (1003.1g requires void *) */
-        __kernel_size_t iov_len; /* Must be size_t (1003.1g) */
-};
-
-Adjust the allocation type to match the assignment.
+The assigned type is "struct dac_info *" but the returned type will be
+"struct ics5342_info *", which has a larger allocation size. This is
+by design, as struct ics5342_info contains struct dac_info as its first
+member. Cast the allocation type to match the assignment.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: "Eugenio Pérez" <eperezma@redhat.com>
-Cc: <kvm@vger.kernel.org>
-Cc: <virtualization@lists.linux.dev>
-Cc: <netdev@vger.kernel.org>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Javier Martinez Canillas <javierm@redhat.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Zheyu Ma <zheyuma97@gmail.com>
+Cc: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Cc: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: <linux-fbdev@vger.kernel.org>
+Cc: <dri-devel@lists.freedesktop.org>
 ---
- drivers/vhost/vringh.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/video/fbdev/arkfb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
-index 73e153f9b449..93735fc5c5b4 100644
---- a/drivers/vhost/vringh.c
-+++ b/drivers/vhost/vringh.c
-@@ -225,10 +225,9 @@ static int resize_iovec(struct vringh_kiov *iov, gfp_t gfp)
+diff --git a/drivers/video/fbdev/arkfb.c b/drivers/video/fbdev/arkfb.c
+index 082501feceb9..7d131e3d159a 100644
+--- a/drivers/video/fbdev/arkfb.c
++++ b/drivers/video/fbdev/arkfb.c
+@@ -431,7 +431,7 @@ static struct dac_ops ics5342_ops = {
  
- 	flag = (iov->max_num & VRINGH_IOV_ALLOCATED);
- 	if (flag)
--		new = krealloc_array(iov->iov, new_num,
--				     sizeof(struct iovec), gfp);
-+		new = krealloc_array(iov->iov, new_num, sizeof(*new), gfp);
- 	else {
--		new = kmalloc_array(new_num, sizeof(struct iovec), gfp);
-+		new = kmalloc_array(new_num, sizeof(*new), gfp);
- 		if (new) {
- 			memcpy(new, iov->iov,
- 			       iov->max_num * sizeof(struct iovec));
+ static struct dac_info * ics5342_init(dac_read_regs_t drr, dac_write_regs_t dwr, void *data)
+ {
+-	struct dac_info *info = kzalloc(sizeof(struct ics5342_info), GFP_KERNEL);
++	struct dac_info *info = (struct dac_info *)kzalloc(sizeof(struct ics5342_info), GFP_KERNEL);
+ 
+ 	if (! info)
+ 		return NULL;
 -- 
 2.34.1
 
