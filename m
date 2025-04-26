@@ -1,53 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B772F56;
-	Sat, 26 Apr 2025 06:08:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179C62F56;
+	Sat, 26 Apr 2025 06:09:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745647726; cv=none; b=bDLYOCrI4fGF+yvJr+nvO8eNvCDueRRwAtPVCKOttZ47VtGY67L38YD5qkDB84JTr1Xu+FNMoKdYJmUQzzOKg/8BMdvY/FtD2dIEb1TSRj8cxZygCtCOsHC8hg5Z8Kk+t4B0sAp+y3xMSmfybLXyPemvTnvvfwVJhlRdtp5pRSE=
+	t=1745647781; cv=none; b=BZcrP2SZtHkTMsJPdFoQS5GEyWqkW9ttjppQIxzSsZ3No/fy5jeRhB4fAE3zu8eKnIB7isKt5RZHTOeCALpnYpapMcdDezBqx4T5FwfpIpzbU9qsRemJUB1pYPGGtWD9sa1uKv6APuKa1V1uGn2tlO/XoJht/K/6ABKySB8eQ5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745647726; c=relaxed/simple;
-	bh=pDmSWif2PnPHWTzoG2vW+Qv4Dur2nh7NwT4S/9B8lEw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FDkYYxiZgjzOmPgsO9vBedGZqOKxIeEPCL2uKmqs/XSq9KdGFf2b5y1uEkYIdU2ZGBm6yL5JQBep2/YK6c9fwZKFOqBh0Jmlk36hzaSwbOiUogM0iG4XJUBxx+iMpILWs9xBEwVHM/GDflhkHWdh+iVNEnbc+6fH/Lrjrs2nCMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKpAYcXh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745647781; c=relaxed/simple;
+	bh=4TMaCYRtXdLs2mtxZ3wa8KEQeMZjc4VukWX9LxoX40Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lEb0I4NDBXwkRKOYjCLTwwtMLyWPc7l+mrCSSuouiHA1Sz51x/pXWdoPZqlhOWksRAcfxKfID79UdeZgEt/msxZtjN8Mly6dJKdnlUkyvfSfRFKgOtie7ZnttjLqRy9P49tiW3bJhqXz8jWjl3C14hhQkYLXwcKtT/qBfkoVqjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUJE9DtM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKpAYcXh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C673DC4CEE2;
-	Sat, 26 Apr 2025 06:08:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUJE9DtM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 896A4C4CEE2;
+	Sat, 26 Apr 2025 06:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745647725;
-	bh=pDmSWif2PnPHWTzoG2vW+Qv4Dur2nh7NwT4S/9B8lEw=;
+	s=k20201202; t=1745647780;
+	bh=4TMaCYRtXdLs2mtxZ3wa8KEQeMZjc4VukWX9LxoX40Y=;
 	h=From:To:Cc:Subject:Date:From;
-	b=qKpAYcXhKhiBzho9FjLElV+K0BR7tLgY8kts7P2ssnvVeYWOupImQaoIfZM9RFjol
-	 mSJGRt07+bpKKUOQbEk2DBzlxFKhtlZdKDfd9ewrcWK0qL3xst4MIaOTTkqae5Way9
-	 +TCrRaMzscSd6urm2AMOeBrXIj7g7vU4I31OstuVFl2fkuWC5w+iyXKdanCWvLznsQ
-	 wFp1LjbeCjj/K8RlGFX5WnjTg0QOV9vMzxIN+dumyIV49AqTKWrPYNlpHooeXobCgX
-	 Q2smoDqxd0JUyAORAUd2KZ4oeXRpTf28kcTj4+T0axMyr6OLl34S6/ByHiOp5SNrAu
-	 jRbHefZT+e+OA==
+	b=AUJE9DtMjRABgBccdSJ3AEIQzTlsolUXOqM/rIxmKwXWdcs/A8m/Gma7VL4TYQ5OH
+	 IbXplzIAoWFTKq/6ZGu0j2KmePOf/vKHdc04Y2r6R1rA05A4jETMj27tiyBhaBOXVA
+	 DNf29iLEP2gw/z9NjnTDAiLZBAlNsqyclLnRPOJfjl3HSLFtNkc80A+gqLLc+QTuth
+	 EP3QwDigRz/xk7Zqu08ZeZLEPLizyUEh4Tx4voy+MYhBSmrBI3B3G6u7Hr5lSYFNPi
+	 J45bycISURg0zJalL3cESk+EZG+xLWz/GqLV+UDYsE02YlNNOD87zWe+FCRvAH/Xcc
+	 50bAM9eEbyaNQ==
 From: Kees Cook <kees@kernel.org>
-To: Louis Peens <louis.peens@corigine.com>
+To: Ping-Ke Shih <pkshih@realtek.com>
 Cc: Kees Cook <kees@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Yinjun Zhang <yinjun.zhang@corigine.com>,
-	Diana Wang <na.wang@corigine.com>,
-	oss-drivers@corigine.com,
-	netdev@vger.kernel.org,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Easwar Hariharan <eahariha@linux.microsoft.com>,
-	Mohammad Heib <mheib@redhat.com>,
+	linux-wireless@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] nfp: xsk: Adjust allocation type for nn->dp.xsk_pools
-Date: Fri, 25 Apr 2025 23:08:42 -0700
-Message-Id: <20250426060841.work.016-kees@kernel.org>
+Subject: [PATCH] wifi: rtw89: fw: Remove "const" on allocation type
+Date: Fri, 25 Apr 2025 23:09:36 -0700
+Message-Id: <20250426060935.work.049-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -55,7 +41,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1818; i=kees@kernel.org; h=from:subject:message-id; bh=pDmSWif2PnPHWTzoG2vW+Qv4Dur2nh7NwT4S/9B8lEw=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk8FZlLvpZZubMoqUYlr+iI8/yja1trfDbq8dYtv+YUb M1QjV3fUcrCIMbFICumyBJk5x7n4vG2Pdx9riLMHFYmkCEMXJwCMJHrFxkZFi9IE9XK3vPOyebp pqpVgZseM/c/SJqtz/rg4ZNmQcM/rowMC1ZMvuyjdCZm+vaeEAPd3erBmwyNCyUW2dYqSC/t3Xe MFQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1343; i=kees@kernel.org; h=from:subject:message-id; bh=4TMaCYRtXdLs2mtxZ3wa8KEQeMZjc4VukWX9LxoX40Y=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk8FQt2balQfeHfvvGP5r6PRj+5HsYKOa5++an3sex7r cfL6+drdZSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAEwkpI2R4fJCwbPLSzS65zrd kQ27PPFb/OpGlVy2RLmzDHPkK5ccEWFkmC5WILPD5uvbdf3n9kxl9DHc/i1+asUyecHbsXO+84d +YQMA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -64,41 +50,32 @@ we need to make sure that the returned type from the allocation matches
 the type of the variable being assigned. (Before, the allocator would
 always return "void *", which can be implicitly cast to any pointer type.)
 
-The assigned type "struct xsk_buff_pool **", but the returned type will be
-"struct xsk_buff_pool ***". These are the same allocation size (pointer
-size), but the types don't match. Adjust the allocation type to match
-the assignment.
+The assigned type is "struct rtw89_reg2_def *" but the returned type,
+while technically matching, will be const qualified. As there isn't a
+general way to discard "const" qualifiers, adjust the returned type to
+match the assigned type. No change in allocation size results.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Louis Peens <louis.peens@corigine.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <horms@kernel.org>
-Cc: Yinjun Zhang <yinjun.zhang@corigine.com>
-Cc: Diana Wang <na.wang@corigine.com>
-Cc: <oss-drivers@corigine.com>
-Cc: <netdev@vger.kernel.org>
+Cc: Ping-Ke Shih <pkshih@realtek.com>
+Cc: <linux-wireless@vger.kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/nfp_net_common.c | 2 +-
+ drivers/net/wireless/realtek/rtw89/fw.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-index 95514fabadf2..28997ddab966 100644
---- a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-@@ -2538,7 +2538,7 @@ nfp_net_alloc(struct pci_dev *pdev, const struct nfp_dev_info *dev_info,
- 				  nn->dp.num_r_vecs, num_online_cpus());
- 	nn->max_r_vecs = nn->dp.num_r_vecs;
+diff --git a/drivers/net/wireless/realtek/rtw89/fw.c b/drivers/net/wireless/realtek/rtw89/fw.c
+index 8643b17866f8..3836813c50e9 100644
+--- a/drivers/net/wireless/realtek/rtw89/fw.c
++++ b/drivers/net/wireless/realtek/rtw89/fw.c
+@@ -1018,7 +1018,7 @@ int rtw89_build_phy_tbl_from_elm(struct rtw89_dev *rtwdev,
+ 	}
  
--	nn->dp.xsk_pools = kcalloc(nn->max_r_vecs, sizeof(nn->dp.xsk_pools),
-+	nn->dp.xsk_pools = kcalloc(nn->max_r_vecs, sizeof(*nn->dp.xsk_pools),
- 				   GFP_KERNEL);
- 	if (!nn->dp.xsk_pools) {
- 		err = -ENOMEM;
+ 	n_regs = le32_to_cpu(elm->size) / sizeof(tbl->regs[0]);
+-	regs = kcalloc(n_regs, sizeof(tbl->regs[0]), GFP_KERNEL);
++	regs = kcalloc(n_regs, sizeof(*regs), GFP_KERNEL);
+ 	if (!regs)
+ 		goto out;
+ 
 -- 
 2.34.1
 
