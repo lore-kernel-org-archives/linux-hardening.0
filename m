@@ -1,46 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28556FC3;
-	Sat, 26 Apr 2025 06:19:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E93F6FC3;
+	Sat, 26 Apr 2025 06:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745648344; cv=none; b=tEvn2DxkEwG730xaC1PpQfhFPWf7vfVTgjrDEN9edXU3uZNFmkamu/zyiYbNYQKW+uGi+hRjTYAGBqw9oGkRolcwqFbNpeMME7XJG6burAUPVROXH56k45ML8UZyksP49xD60OVnzOgQJ4pe8jrHaPBITBc4PVvtl0t7isdU9Ls=
+	t=1745648396; cv=none; b=OmacnC9pdn3OUXJwi1NzvK102j6YdANPj+tOP3pn35DfrYCqMJNfBasB2uF22x9kV1smD+x+8tTN+M1EkRIn5/tYWM7TZbPbyiwQVN+bFNwA+7zwUBimWxbPVwJb4JGB7aT/8Q2pmh35pcvjEzKrKFrTJgUbBZD4giBUKv+Gp3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745648344; c=relaxed/simple;
-	bh=XBG+4wFnujKiBtnv5lY/gekFYJMd/l6RllW7ek1RzSM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nLj1mvdehALusNmaVkj/Ixs/SoWKcI0VMVn1OEreWcrJiaQBEZ7XEE/BfTkgC2vo2ziAkfcvnsfH7s1s9WHD8V8GsbIIx5kw53to04UAKp67+Aa0aALXtwzqX14wRssYOHFbcG5xAX3TN8ilDEVALf0J9xTVo5kVrtua/rtFRDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSQEqieT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745648396; c=relaxed/simple;
+	bh=x+wjGCxq6CdZEfzj11+IBzAkoE449GT6JMAUDrUw0OU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oE4hKkZlk+4HPavs/bb2ekbwxbhOsD4o68WgcAMUdl0VGwWadoZT/sWwKvysvi/703A4ANEaovSk1yyGHCitRu5b93w+W1VaI5YySMsIu0YrWlZ0euH9tjvXaW96e8jieV+3FaWpuACJrtR8ZseYk/UYzNuPkfHUV5WDwnYD7Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=np/IU0g7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSQEqieT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE2BDC4CEE2;
-	Sat, 26 Apr 2025 06:19:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="np/IU0g7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00781C4CEE2;
+	Sat, 26 Apr 2025 06:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745648343;
-	bh=XBG+4wFnujKiBtnv5lY/gekFYJMd/l6RllW7ek1RzSM=;
+	s=k20201202; t=1745648396;
+	bh=x+wjGCxq6CdZEfzj11+IBzAkoE449GT6JMAUDrUw0OU=;
 	h=From:To:Cc:Subject:Date:From;
-	b=PSQEqieTcAc2O0zsM8DHXhV5CcHJVgsAkoawjak0F2NEmC7Ig5sStWeJxyZRWrmpI
-	 kp7ysY+lRuu5c7Z+ZZJyPhsrARQXtcF4tx8fMbUtIRccQIo65NwBV8McrYbJT2TdzD
-	 ToJjSHskrQDMLqgx6bsB/SivwKRSbNCHf4qvssYJ172vUoQtokSO1PjXUVlMqckA0b
-	 B4AhmKfSiBNtX3afp/TsHOvhKtLJQlTcjy5cVkkrkLqwKRDqldgn90DGnA3exL7v3D
-	 kGadZLFDGUNF5YSs+GrpvTE5vPHGlP0IDAsaWvq8mzaDLah0CVGHehKB/w0zkXkAVq
-	 6KUNgE/bxdNUA==
+	b=np/IU0g7FT3imZCnYT5lawGi45+ka2Uay8DuA+dvxERUE9O7gkCYbQxEGkUpAQb9t
+	 w3HUORylDb3DyFi2BoYHTPt2vJpmC9PC3Hwe1I8mb0PF6vqEF9ZH/K6hpPTXAhMyFm
+	 0XvPEg1yLtWZRWIYuLnDDvZxgqWPbvi8668p9K29aojMo9PujgsMZePyB3u7aI7ztz
+	 xG4hyDU+YYAU2bCCOUtSkotZQEXRxqnJfV7WoBec7aYWF2hEXCrERM7JX7cKFYeu3w
+	 tfcZAJW6MhVqvP8d4pU8GOl/5paUA4fiHXvqFYS4IpFIVO/bb8mWm1oeXBpU+a6OEd
+	 rZ/QjRmhsYAOA==
 From: Kees Cook <kees@kernel.org>
-To: Jonathan Lemon <jonathan.lemon@gmail.com>
+To: Nilesh Javali <njavali@marvell.com>
 Cc: Kees Cook <kees@kernel.org>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] ptp: ocp: Add const to bp->attr_group allocation type
-Date: Fri, 25 Apr 2025 23:18:59 -0700
-Message-Id: <20250426061858.work.470-kees@kernel.org>
+Subject: [PATCH] scsi: qla2xxx: Remove duplicate struct crb_addr_pair
+Date: Fri, 25 Apr 2025 23:19:52 -0700
+Message-Id: <20250426061951.work.272-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -48,7 +44,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1551; i=kees@kernel.org; h=from:subject:message-id; bh=XBG+4wFnujKiBtnv5lY/gekFYJMd/l6RllW7ek1RzSM=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk8VZfdGZw/nOf6tKyuQoF7w6lTN5RCj3R9l66wmHHd7 MRLdzXOjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIls7GJkmK6b+Xn+RX4/8UOP Hp6+ftllm3lq8c6OpKadJVvad82cKcTI8DVCM+7v9Tu7dh5MuC24T8HSMz/z3dez/z72L90Zlu4 gwwcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1373; i=kees@kernel.org; h=from:subject:message-id; bh=x+wjGCxq6CdZEfzj11+IBzAkoE449GT6JMAUDrUw0OU=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk81eyal94sbD/Hv2iPyusPfkKNT6fm1Nk+Spwml3LUc cEmdiWnjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIkwaDMybPNTZFzL+1ZAfEEr Q/36vImHYq98TzONbcs72NkYfv3iTUaGqWnFdrevnV6yaX1mnMA1LTUTWXnuc0Es7kzdFuYem/x YAA==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -57,39 +53,37 @@ we need to make sure that the returned type from the allocation matches
 the type of the variable being assigned. (Before, the allocator would
 always return "void *", which can be implicitly cast to any pointer type.)
 
-The assigned type is "const struct attribute_group **", but the returned
-type, while technically matching, will be not const qualified. As there is
-no general way to safely add const qualifiers, adjust the allocation type
-to match the assignment.
+The assigned type is "struct crb_addr_pair *" and the returned type will
+be a _different_ "struct crb_addr_pair *", causing a warning. This really
+stumped me for a bit. :) Drop the redundant declaration.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Jonathan Lemon <jonathan.lemon@gmail.com>
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: <netdev@vger.kernel.org>
+Cc: Nilesh Javali <njavali@marvell.com>
+Cc: <GR-QLogic-Storage-Upstream@marvell.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: <linux-scsi@vger.kernel.org>
 ---
- drivers/ptp/ptp_ocp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_nx.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-index faf6e027f89a..ed5968a3ea5a 100644
---- a/drivers/ptp/ptp_ocp.c
-+++ b/drivers/ptp/ptp_ocp.c
-@@ -2372,7 +2372,7 @@ ptp_ocp_attr_group_add(struct ptp_ocp *bp,
- 		if (attr_tbl[i].cap & bp->fw_cap)
- 			count++;
+diff --git a/drivers/scsi/qla2xxx/qla_nx.c b/drivers/scsi/qla2xxx/qla_nx.c
+index 6dfb70edb9a6..470fe1d38973 100644
+--- a/drivers/scsi/qla2xxx/qla_nx.c
++++ b/drivers/scsi/qla2xxx/qla_nx.c
+@@ -1099,11 +1099,6 @@ qla82xx_pinit_from_rom(scsi_qla_host_t *vha)
+ 	unsigned offset, n;
+ 	struct qla_hw_data *ha = vha->hw;
  
--	bp->attr_group = kcalloc(count + 1, sizeof(struct attribute_group *),
-+	bp->attr_group = kcalloc(count + 1, sizeof(*bp->attr_group),
- 				 GFP_KERNEL);
- 	if (!bp->attr_group)
- 		return -ENOMEM;
+-	struct crb_addr_pair {
+-		long addr;
+-		long data;
+-	};
+-
+ 	/* Halt all the individual PEGs and other blocks of the ISP */
+ 	qla82xx_rom_lock(ha);
+ 
 -- 
 2.34.1
 
