@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA00211C;
-	Sat, 26 Apr 2025 06:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98C76FC3;
+	Sat, 26 Apr 2025 06:16:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745648132; cv=none; b=ts8S4XtDbxSeDYbm6TOoLIkFNmPZ1YWJlSmsv7l53oU6APE0VswnQRxXS9/6ZymQ2yQosA5DqRbIZgjE6JizDDE+a3k7EZa7GIKtwD9EEFprD681s+ZnF7JvP7Ww9pn4ajb7ydVUJYdTw3fcjneCXROwgsQFf6/8gZZOiApa/hA=
+	t=1745648196; cv=none; b=MKN30Df6Nex8DKGznWIwz1V9JsrNhaNJEEOp0Z9LK7wZct3sBixM+3tBKvmZ1rJXxFypn4hlpT6NEaZhSt9aV6SQUkXAFDyp4oR1eGFzhI4KhhYVWqazNnGPzAcf5mVsSe65fjngGc9QyNLh0z5K892FX5dy6Yf3Vnvbm+gCjdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745648132; c=relaxed/simple;
-	bh=mxCUaaqj8mwcZsewtRcy5pF5fmWFDs+r5MaxX0wTrqc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g++8uhXMpKmYBKrPmdEy2uQLWWbwce4LDXdSEPAHRSqaYJ2D/zB8x2LELQNmRwcb2f28gt9cBYkKbPVR/Y6ObFttFdCMkN1tbu8D9coJEpjPvAIrKaTLRxTcJz6WTZkcFLhgL4zUu3RnD1gvdyJ1nQJBptCwhq7I6axDuui78pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kkFI1IrL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745648196; c=relaxed/simple;
+	bh=g1amRiEi0rCq459NzFvEeN+2l2KIeSBh+7TMm0FVGqc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Zo1vokcXCPqYx+I2cPy0QFgg9ooDrZ0INLBCCOZM2DC/MES1oC86Kth7BZ3UiX6LAo3JhUs3fLCOWz8KUFAXvnLK4p/pNu7JO+gWDrQKvK9UvrkRrPJJ7hbWn2dbK4x5os9nomNkDdXIkEdDer7aRaJyrXYr7D7MsIic4xFJv90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TT4tRDQR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kkFI1IrL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A9BBC4CEE2;
-	Sat, 26 Apr 2025 06:15:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TT4tRDQR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60CBDC4CEE2;
+	Sat, 26 Apr 2025 06:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745648131;
-	bh=mxCUaaqj8mwcZsewtRcy5pF5fmWFDs+r5MaxX0wTrqc=;
+	s=k20201202; t=1745648194;
+	bh=g1amRiEi0rCq459NzFvEeN+2l2KIeSBh+7TMm0FVGqc=;
 	h=From:To:Cc:Subject:Date:From;
-	b=kkFI1IrLTK0aACJ7gZ/yLEFFfaa+kNZAVkalayMKjTEutDzdEFjbKfOc6k11cF3YO
-	 f9D7W+VHPCZxh6zbj8Q00oAWB25M6c5DduTy4gaf97L3DYscuoR2dLwVnGlpYZj/xb
-	 Vpkf3a/gAOrHb9Y7ilOiAAq3D4KZ03gtZBY2p9+UlPifeafFCbDLWvz9zn2ijdw9yK
-	 9SaALKojSTRb9Vun73p+fZOB0nKh6k8g13K9bcfZkiIJ3OpsQNLqu1xRwMvAR1+ugy
-	 1zH1hTQHEoQuic1L4ns51BmidwYAN6YY18/k8gnHLn3JntxRqti3dBERrrcw0WRrWY
-	 jH4uWwuZltRcA==
+	b=TT4tRDQRPaFHHwyPh+79foeWmTvStxiMseZeIUxpeBepiqHaUJm/Xtol/mLcqVUpp
+	 AXh2QX96v6ujmWKdvhVnHg2p3bnMKZ6et33RCZsrKM3mKi9ADs/LItQE3x0kq1jGZ7
+	 rNZnnQuo0ojm1LnycClFAt/y8x69jC1eG0aQMBjwmWrg7gDigFc28Cz4X+6HOBL2tD
+	 OpgVl1fIjosATKpPWv9RIiC/3vVcOUej9I6Q06i1E1+hvvGz56QdLxZNS4NMmVCp3x
+	 r6OiiuJYq5qo98jhdcOOPMCcPs9l0WeIF+WUVZlpl1UpzkP2ksedMNnM5Vnmukij54
+	 WWvzy5rpBRKQg==
 From: Kees Cook <kees@kernel.org>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>
+To: Alasdair Kergon <agk@redhat.com>
 Cc: Kees Cook <kees@kernel.org>,
-	Dikshita Agarwal <quic_dikshita@quicinc.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
+	Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	dm-devel@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] media: iris: Cast iris_hfi_gen2_get_instance() allocation type
-Date: Fri, 25 Apr 2025 23:15:27 -0700
-Message-Id: <20250426061526.work.106-kees@kernel.org>
+Subject: [PATCH] dm-crypt: Adjust crypt_alloc_tfms_aead() allocation type
+Date: Fri, 25 Apr 2025 23:16:30 -0700
+Message-Id: <20250426061629.work.266-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -45,7 +43,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1624; i=kees@kernel.org; h=from:subject:message-id; bh=mxCUaaqj8mwcZsewtRcy5pF5fmWFDs+r5MaxX0wTrqc=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk8lf8/L1zdfnqr/7SgAl+WQ4e2Ploz1zio/0rkxk4e2 wNL70/I6ChlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZjIz5+MDDdOF5+KsT/2Obd6 8yX53/pB0m4rmiZulxKdO61pa9HNDQUMv9mPme83m7covjxsRss16Yuz56Uy/d6mlfbx2/mAA3K SEzgB
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1315; i=kees@kernel.org; h=from:subject:message-id; bh=g1amRiEi0rCq459NzFvEeN+2l2KIeSBh+7TMm0FVGqc=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk8VbbVFlPkq47Hzdi24ba98tY7Vm9P9Z3LdVvf+eriT 4GDb3+97ShlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZjIy/2MDAcM+yyPJPkZFLic nKwYvVa3rcQ07NWigJO5SevfHdxxrpThf8jMF487Rdyeruw9u//+p6jPktPWT7XQeZB+9Ln01wn ZjAwA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -54,34 +52,34 @@ we need to make sure that the returned type from the allocation matches
 the type of the variable being assigned. (Before, the allocator would
 always return "void *", which can be implicitly cast to any pointer type.)
 
-The assigned type is "struct iris_inst *", but the returned type is
-"struct iris_inst_hfi_gen2 *". The allocation is intentionally larger as
-the first member of struct iris_inst_hfi_gen2 is struct iris_inst, so
-this is by design. Cast the allocation type to match the assignment.
+The assigned type is "struct crypto_skcipher **" but the returned type
+will be "struct crypto_aead **". These are the same allocation size
+(pointer size), but the types don't match. Adjust the allocation type
+to match the assignment.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Vikash Garodia <quic_vgarodia@quicinc.com>
-Cc: Dikshita Agarwal <quic_dikshita@quicinc.com>
-Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: <linux-media@vger.kernel.org>
-Cc: <linux-arm-msm@vger.kernel.org>
+Cc: Alasdair Kergon <agk@redhat.com>
+Cc: Mike Snitzer <snitzer@kernel.org>
+Cc: Mikulas Patocka <mpatocka@redhat.com>
+Cc: <dm-devel@lists.linux.dev>
 ---
- drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c | 2 +-
+ drivers/md/dm-crypt.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
-index a908b41e2868..351820deb893 100644
---- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
-+++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
-@@ -953,5 +953,5 @@ void iris_hfi_gen2_command_ops_init(struct iris_core *core)
- 
- struct iris_inst *iris_hfi_gen2_get_instance(void)
+diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+index 9dfdb63220d7..8134f56a471b 100644
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -2383,7 +2383,7 @@ static int crypt_alloc_tfms_aead(struct crypt_config *cc, char *ciphermode)
  {
--	return kzalloc(sizeof(struct iris_inst_hfi_gen2), GFP_KERNEL);
-+	return (struct iris_inst *)kzalloc(sizeof(struct iris_inst_hfi_gen2), GFP_KERNEL);
- }
+ 	int err;
+ 
+-	cc->cipher_tfm.tfms = kmalloc(sizeof(struct crypto_aead *), GFP_KERNEL);
++	cc->cipher_tfm.tfms = kmalloc(sizeof(*cc->cipher_tfm.tfms), GFP_KERNEL);
+ 	if (!cc->cipher_tfm.tfms)
+ 		return -ENOMEM;
+ 
 -- 
 2.34.1
 
