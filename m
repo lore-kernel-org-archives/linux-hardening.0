@@ -1,42 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981924414;
-	Sat, 26 Apr 2025 06:24:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3EF1C84B1;
+	Sat, 26 Apr 2025 06:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745648678; cv=none; b=F1VK8rdrCqMSevvcAs17gYF6FXPh4njH8DGmmyw88UHYpUb/Oq5vLgYgo2iQ3hsnV21xee4zK9p0HjUFfpVDDLHyL1C5gsOYE5ZZJEDcCLQwWrXWtEohKDp45OwS5g992kteLe887bK7GOV2ACGADRK4JJM2Ymyrlv6kNsBar94=
+	t=1745648716; cv=none; b=hS7WWtQ/5Gi92Nq/jyFmoehBebWgzXhcVPa9g/RJzeDXy4a3VrJNKrXb8tM8C24Hg/prcz3SKG8eXoJabUHxulOnbpS0uVCYlnlWxjl6qbsdEtDA0aTN767GO5M8K0Fws8mTxnA47rT07U8DlpIvPMATmbU5oMqP+atOjxYRNok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745648678; c=relaxed/simple;
-	bh=Qze9nAZSQ1I6xgR9vshAeYnvUlrjmo6wnxtuAdSnIBw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZFknLLauARw8iHDqcuV1dWtRW3Q41MX3V4zxrtZKXIyKn6cO1sv4racUL8Xwl/IyPVjJjRf/nJ7NZR++t2F2x+IIM93/EtZrQ++3OClb9TLDf2tZ5sdRo72ukSbi7jF9i1ZtOKGCgm5a3UoqeKLBlteSi7n+BCD7xQEt0qlh+c8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YACXIfsL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745648716; c=relaxed/simple;
+	bh=nOvxE2xAszz5gyreKreyxMrZjWoFYII8OmNUfDX/+Pw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MsmFp9NVHSUVEXTR0YKGRo2V8zD8u+yOXq9lE56rNMPZQr0oZRTcXRr1DvmFMqxzvg5O7n8A1dDwAaEtdnoKjHgj0bd0yNxEgDFmMeJp1BjwhQvwbcLXVxo831huI1Dwi2b01Xsqf+lQN7JX+un3eEXj0mxtP6P+8ZTKpR1kwbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rv4wsgCT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YACXIfsL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C550C4CEE2;
-	Sat, 26 Apr 2025 06:24:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rv4wsgCT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92736C4CEE2;
+	Sat, 26 Apr 2025 06:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745648678;
-	bh=Qze9nAZSQ1I6xgR9vshAeYnvUlrjmo6wnxtuAdSnIBw=;
+	s=k20201202; t=1745648715;
+	bh=nOvxE2xAszz5gyreKreyxMrZjWoFYII8OmNUfDX/+Pw=;
 	h=From:To:Cc:Subject:Date:From;
-	b=YACXIfsLLd0ezCa/kgcZ1zVhji+Ms8ePeU2oczqsV9QSPNbbIrvZCX83ZAL/u5zXi
-	 EpBA9dVPSLm4thCA+GhwFofONhDoxbuOK05qoAeW4lF/dYyoCxOJ244JbvNsgENFFU
-	 6dL7BML6H88b+KGkSmN1SZdpzq6Q0JTeTLy8y+EvLrI/dkbkEWZCjI7oHem+YGH32d
-	 eVMh885NQTB1E9uwz+tR1HisCjaTvjmhi7IpJEs+tkvv4b15JruouO0n35ncxEMB/C
-	 F4syJ6YOF5dRrEesNZ8/6Tut3BQarM131xpZxBARnD+5Evx2SlTzx6fEwVPFuVMGHw
-	 AphrRSJOs0tPg==
+	b=rv4wsgCTjShjOBARaEV+cIDQN7GhrEJBOS2505g3tKRZOYfx9xgbkUA0IjBcPLgEb
+	 p455N8QLqiIc8KxuT/HVqAASeH9sewxn/i3R4mdsusV+Hj15dyGbt8o0KVKnAEKODw
+	 0HXxjmq4FKWnZkZX7liNgDGMkgjdflwFUVLvrkYYbce1v/7pdVU/M5D123+9SC14oz
+	 gZRq6/kW9tQVbiwgk0YKddCK0LACg84L5FZIIx9NfM1O6SWNnNyRnCFEl3qgc87wBE
+	 ZyKORh7olBRAi1Nws+qLq79qJdw5r6f/DDPkngW3vfv9jdL0ATbbWj+XX6JrLQqzTB
+	 yUNsaAPkOTS6A==
 From: Kees Cook <kees@kernel.org>
-To: Brendan Higgins <brendan.higgins@linux.dev>
+To: Liam Girdwood <lgirdwood@gmail.com>
 Cc: Kees Cook <kees@kernel.org>,
-	David Gow <davidgow@google.com>,
-	Rae Moar <rmoar@google.com>,
-	linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	sound-open-firmware@alsa-project.org,
+	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] kunit: executor: Remove const from kunit_filter_suites() allocation type
-Date: Fri, 25 Apr 2025 23:24:34 -0700
-Message-Id: <20250426062433.work.124-kees@kernel.org>
+Subject: [PATCH] ASoC: SOF: ipc4-pcm: Adjust pipeline_list->pipelines allocation type
+Date: Fri, 25 Apr 2025 23:25:12 -0700
+Message-Id: <20250426062511.work.859-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -44,7 +51,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1374; i=kees@kernel.org; h=from:subject:message-id; bh=Qze9nAZSQ1I6xgR9vshAeYnvUlrjmo6wnxtuAdSnIBw=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk8NYqdH866fBBOjrFOOOxgtLOmabNT3WP2Q5Uqgt++H lN7eP9ZRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwERW7mVkuDNv4cQ3XzaITFh5 8vVH1fSu7sjTLaef7C+cbxRYfZYxuoyRYbbk99ocRvVHTi92yjhPiej68+v85YKnR6Te+uocMX5 3jAkA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1856; i=kees@kernel.org; h=from:subject:message-id; bh=nOvxE2xAszz5gyreKreyxMrZjWoFYII8OmNUfDX/+Pw=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk8Ne4PWRozb7i1bo1TaI7TrYiOneJ2/6bC6y3PJhXLR 0jdTtjRUcrCIMbFICumyBJk5x7n4vG2Pdx9riLMHFYmkCEMXJwCMJFPegz/TOQaHscvWpTNsk6w +pCCGnPjr/q6/pmCfNN8tAQ5S751MvxPDe07HWfDtX6v8lWTaZe0qpV/63wLWbtqt8bRmTsmBP/ kAQA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -53,35 +60,43 @@ we need to make sure that the returned type from the allocation matches
 the type of the variable being assigned. (Before, the allocator would
 always return "void *", which can be implicitly cast to any pointer type.)
 
-The assigned type is "struct kunit_suite **" but the returned type will
-be "struct kunit_suite * const *". Since it isn't generally possible
-to remove the const qualifier, adjust the allocation type to match
-the assignment.
+The assigned type is "struct snd_sof_pipeline **", but the returned type
+will be "struct snd_sof_widget **". These are the same size allocation
+(pointer size) but the types don't match. Adjust the allocation type to
+match the assignment.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Brendan Higgins <brendan.higgins@linux.dev>
-Cc: David Gow <davidgow@google.com>
-Cc: Rae Moar <rmoar@google.com>
-Cc: <linux-kselftest@vger.kernel.org>
-Cc: <kunit-dev@googlegroups.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Cc: Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: <sound-open-firmware@alsa-project.org>
+Cc: <linux-sound@vger.kernel.org>
 ---
- lib/kunit/executor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sof/ipc4-pcm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
-index 3f39955cb0f1..0061d4c7e351 100644
---- a/lib/kunit/executor.c
-+++ b/lib/kunit/executor.c
-@@ -177,7 +177,7 @@ kunit_filter_suites(const struct kunit_suite_set *suite_set,
+diff --git a/sound/soc/sof/ipc4-pcm.c b/sound/soc/sof/ipc4-pcm.c
+index 1a2841899ff5..52903503cf3b 100644
+--- a/sound/soc/sof/ipc4-pcm.c
++++ b/sound/soc/sof/ipc4-pcm.c
+@@ -784,7 +784,8 @@ static int sof_ipc4_pcm_setup(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm
  
- 	const size_t max = suite_set->end - suite_set->start;
- 
--	copy = kcalloc(max, sizeof(*filtered.start), GFP_KERNEL);
-+	copy = kcalloc(max, sizeof(*copy), GFP_KERNEL);
- 	if (!copy) { /* won't be able to run anything, return an empty set */
- 		return filtered;
- 	}
+ 		/* allocate memory for max number of pipeline IDs */
+ 		pipeline_list->pipelines = kcalloc(ipc4_data->max_num_pipelines,
+-						   sizeof(struct snd_sof_widget *), GFP_KERNEL);
++						   sizeof(*pipeline_list->pipelines),
++						   GFP_KERNEL);
+ 		if (!pipeline_list->pipelines) {
+ 			sof_ipc4_pcm_free(sdev, spcm);
+ 			return -ENOMEM;
 -- 
 2.34.1
 
