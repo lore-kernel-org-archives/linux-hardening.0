@@ -1,74 +1,115 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B1A925178E;
-	Sun, 27 Apr 2025 08:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E3B10E0;
+	Sun, 27 Apr 2025 11:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745743729; cv=none; b=KcJlSMjGhmYSyrXwotRdH1ZD6AmZ+MWBidgBL+8Gt1WyEAHJvNAgN6rik7foozgwv3y//DEwOMV7geBMX51B05HL/2/aTemSIU9YUiJfJRAjG7rKWqkltAxe4L5nfvIsvqtA+xu8zufm02CyfHDvFLFr0QJWdORO7+Qe6Z2N2oo=
+	t=1745753047; cv=none; b=KauuP8fiDtTKU79xLtg5NhYsf9L0I3NlpKe1p/TIopcDJr9vu6mv/ElMqNC1FoWlk+HBtjGSa77bEACHxuyu+jfNddWz4bKRMK6eXdebWE/eq1Lwec9b93TuSpGJu9fkYkjfe/twHyLpHEpD2Dh2856ZZhd+4JlGBWcb9Xky250=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745743729; c=relaxed/simple;
-	bh=R/i3UWuvMC8Y8kBqHMrj/K8JCWtfnW6Fo6LEyskQU1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kWFdgnYWEAqRSNJfpNCi4NlOVbnuWu1wWDry86ptPT0oK8YDkZTWtMxmSe++ADis9CFiM16SrAIB4Yx1DriDyiFA7kywEqLRHa5L1RpVVT4zK1sZmtrs3kVrPLnkNQBl2xMpBRMLCFo/yE3vACy6P0TbRS81ZnGbylccy7qQWsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1u8wse-0007Ks-00; Sun, 27 Apr 2025 09:56:52 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 4479CC0B2A; Sun, 27 Apr 2025 09:55:58 +0200 (CEST)
-Date: Sun, 27 Apr 2025 09:55:58 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-hardening@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: BCM63XX: Replace strcpy() with strscpy() in
- board_prom_init()
-Message-ID: <aA3jDmwoeobJRShD@alpha.franken.de>
-References: <20250422074257.544016-2-thorsten.blum@linux.dev>
+	s=arc-20240116; t=1745753047; c=relaxed/simple;
+	bh=K5NgWw5pu+JTeuRT/s5Guk8+KrTWalNfn9lv7uBpLKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HMrEQl1za+JQe1D3Tpt+q45/WhYUHbSQH8X37KJDPioTMeDgfAEugcHTlkwkwT6wQwNbOdm0sTDzJSoSX1rNE+Px6fpIjnOK5YKuPh4mFNQxrzcy99qRN0IjGABzTobLXGwMRW0DLkSMTvaf8r1Co/4E+cLtdjSX/1oNH8+LSaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cfsZeIhp; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfsZeIhp"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so25044245e9.1;
+        Sun, 27 Apr 2025 04:24:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745753044; x=1746357844; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8GmhtR5XyoizgspWHGu3E6zXm514utYLd+OlCOs/2I8=;
+        b=cfsZeIhpjvD5UCTi9FFMCetqrh1OiCkMDssHApv7Y9jJAEqGYT2FsfF/lQx2+2E5US
+         ILFtgGc7bzqcn4JaOQSa7NnJQg25kJoD/35NXcWKSEhLusO04vUTjAkt5qMIV+HXBQB+
+         3iJ6TTY9H+iUnOuYRdrO1P0c1qGge27Xe4Ay3d5Y1SlgpZibNDl+rx7amLQoEfPu3NtF
+         bWzkny0NqXWz/urZB/aGRLAvOIS2ZkZjfn09/N6o8rDfRU7vb2BqL7OjIAbLwkvpYx6y
+         iuD7gJW36jzD74y8NxPhAFDn6u4Sq35sla7GIWxZrGzCuEpVZ1YypQ+YuHdVnkcgVnaF
+         ZJtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745753044; x=1746357844;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8GmhtR5XyoizgspWHGu3E6zXm514utYLd+OlCOs/2I8=;
+        b=m6HsSczbESlx2UASH6DwzU57dcOgvGzTQj5pyF2kyeFmykkZ1XjgCvwypHI8wtQ+d7
+         V11CULUahjb9MVg5Ni9U4q0QI652qJiNvN0bu+AveBEHm1EOJWbiCCzs7npqf2LFzPPn
+         E/HNmGg9Vf5Fy4UI73w1JPqUQ4FFGMEpve9FFG4epwMPuiF6/jATX1CClOv6/Tn/Acxy
+         W/tWAd9R5oe35KDEwj0a/vl7m8AnOzVdIT5CDb8P782AtGiZQaJ2dhfnzuagOMlM8Nbv
+         ClKyn8Ts3vUI5DQ6i8GYflEPbeD87Bu+gUFba/MdQiz4puY45jTZtLQvs7ByIWsxLduB
+         n0Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPYFIek7DFParSMwZgtMNgPCFemY8vGZ9kCe/Xw1xPOn1FmV5R23nQmkO25hndkSu5I5a4WKnzd//cwv3K@vger.kernel.org, AJvYcCVFypfMgb9jZU3Abjpy5eNmb2WEV2A8lPlI9RJecUuSTKrI9gnX5FnQxZylm/482fiHRTQMEkA7EQa7uqjCseQe@vger.kernel.org, AJvYcCX+l3V7Kaq+wy4wvqOBUPXqwhSrrAOCJnhWKC7Xf94/WGm6MS2MAVDq+HnPE/sYz5i3XONrbPrAcsUd@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRdbEzbZiaulYxh4BgXIQV6MzUuQ0seNXS6tY3TZza7n15kkSX
+	eQLpl608Jj6tZQxJmPmQ/QB1dQwBOlPYnI17F8ha6pquLFAClqZiG00KZA==
+X-Gm-Gg: ASbGncsx+yp3g8pLU1FLKNSdCZU0GIJkWZ9+yxp+UDT7pz7wtvvoFlmcH6tErEAxThB
+	8h2L5+rCMtLC8SJ8ybn8xzzJ7DuLLqlNY8fTOHKGfNFPVTbV1ziwhA12+Np6CqUStrm5PYW/ybF
+	v9fCx8++/5BcKS1rlb12b1hW6aRLQRMJR/qSfub7S1Mky1VkSnLYA+VVe5breCR2u/1XFrR2O2B
+	Z6M8xe2xuOSPB9U66giiAD/bRKttNH/l4EOxLNUO/m4p5gq/m2gdq/+j6YgW/oLQ8PfiNjsvE6L
+	I/HZwJqVERujpoCCzzmr1oj+0sTP0hdr4kO7Rp4f+ZR0dBy6f2vqb74cdtp0xt/osqkWM+YfD3t
+	zgm0=
+X-Google-Smtp-Source: AGHT+IEJOYBdNlxOe3Vm4WcACkiF6uqe+uQDSlsIGpWsTHEbpT8FWvRz7QRfM070LidEpAOO0rephw==
+X-Received: by 2002:a05:600c:8505:b0:440:6a68:826a with SMTP id 5b1f17b1804b1-440a66a0e7emr79136995e9.13.1745753043952;
+        Sun, 27 Apr 2025 04:24:03 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a5369cdasm91777655e9.31.2025.04.27.04.24.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 04:24:03 -0700 (PDT)
+Date: Sun, 27 Apr 2025 12:24:02 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] gcc-15: acpi: sprinkle random '__nonstring' crumbles
+ around
+Message-ID: <20250427122402.4f4fbfa8@pumpkin>
+In-Reply-To: <CAHk-=whryuuKnd_5w6169EjfRr_f+t5BRmKt+qfjALFzfKQNvQ@mail.gmail.com>
+References: <4f941c51-784a-4f10-8df5-6bd103d1d80e@roeck-us.net>
+	<202504201840.3C1F04B09@keescook>
+	<CAHk-=whryuuKnd_5w6169EjfRr_f+t5BRmKt+qfjALFzfKQNvQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422074257.544016-2-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025 at 09:42:55AM +0200, Thorsten Blum wrote:
-> strcpy() is deprecated; use strscpy() instead.
+On Sun, 20 Apr 2025 21:33:19 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> On Sun, 20 Apr 2025 at 18:52, Kees Cook <kees@kernel.org> wrote:
+> >
+> > Can you please revert this mess and use what has already been planned
+> > for this warning? It is, once again, really frustrating when you update
+> > to unreleased compiler versions. :(  
 > 
-> Link: https://github.com/KSPP/linux/issues/88
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  arch/mips/bcm63xx/boards/board_bcm963xx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Ehh. Kees, that's the compiler in F42.
 > 
-> diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-> index 9cc8fbf218a5..c5617b889b1c 100644
-> --- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
-> +++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-> @@ -764,7 +764,7 @@ void __init board_prom_init(void)
->  			snprintf(cfe_version, 12, "%s", (char *) &cfe[4]);
->  		}
->  	} else {
-> -		strcpy(cfe_version, "unknown");
-> +		strscpy(cfe_version, "unknown");
->  	}
->  	pr_info("CFE version: %s\n", cfe_version);
->  
-> -- 
-> 2.49.0
+> Really. It's not some "unreleased compiler version".
 
-applied to mips-next.
+Would it make sens to disable the warning on versions of gcc 15 that don't
+contain all the 'fixes'?
 
-Thomas.
+After all they are compile time checks so only need to be detected
+by one person doing a build - not everyone.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+	David
+
+> 
+> It's the main compiler in one of the biggest Linux distributions, out now.
+> 
+> Why do you think I made the change? Because the kernel DID NOT BUILD
+> without those changes.
+> 
+> So no. This was not some kind of "solved problem". Quite the reverse.
+> 
+>          Linus
+> 
+
