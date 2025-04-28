@@ -1,143 +1,96 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D09027CB18
-	for <linux-hardening@vger.kernel.org>; Mon, 28 Apr 2025 16:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E46E27A931
+	for <linux-hardening@vger.kernel.org>; Mon, 28 Apr 2025 16:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745857329; cv=none; b=fmek2oTm5YAYMz7mVG1XIc4US+/71rpZFVUX9VP9UmfG7PKmEXPUalku3MDmt2VT6hq7PCoqPvQFJZHBHLfdF32D89UBDKOi4IVr196HojUDpc3B/izLP62vE9kcCXyl29EhNwaWeff7cS2EzLP+NZbNaHghdTbFJ2tcdFCrLyE=
+	t=1745857454; cv=none; b=kxYzqPR/A97x3j2qRYSGFwBNPoRReiYLL3ihrzQQP6/oj3eGl9g5kCtjwcBFaqfMhNRhcKb88YzJDaDDmLEk9ChEeSEKRVRhm4EE2mI9HP11RqIPfOMuoDJHYtMAutEDXwfGbfpHSvpb+u3kiIotMbA5HrFhtYqz3KNv3FghIWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745857329; c=relaxed/simple;
-	bh=Vw4DlImvgesrbSAsVdwb6vTeImKi0Z4LGtqXAOAB+Nk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CLEDEKEaGY/2fmHKdNWS2WOag1IPZLiKAtB9WLpxg2jj37VPRPvnA7yedpRCO/zUrqDT9lMWSYgNPYXuIs/C8H3KJJrIlIoFRW53zEqaT8CUgWTe+UMvihgsLef3Rdpzal5pF5ytugNhwUif9sN8+u9uYWa0OBJz1HfgUEZ/dAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VstnMOO9; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745857454; c=relaxed/simple;
+	bh=PUu0P3HzJn7npJCKzCZvn5kF2vMg/9wHpvycDSZJKHs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T+CFtpfkBJ7eid3yv1Oq+gCqIwxDKfp2mswnA2LILWUHRTIBnf3aeN08EnxG2YD661ogVnfHv5tzPguaXuwxW3FLKm7fnkfDu+40crlroVcDN7AMpreYT3K/17/MbmmZ01i3aVoLvwFhGfqAZzAMzekV5hcPJ1v4Yp73h7hANbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lC/6+TIt; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VstnMOO9"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-70427fb838cso40942857b3.2
-        for <linux-hardening@vger.kernel.org>; Mon, 28 Apr 2025 09:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745857326; x=1746462126; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kjtfgNYAyQgaIv+6+gwAi/DXzlNfZQv9vmE2wR+LnUU=;
-        b=VstnMOO9OIpDzRVxGmD9lmKOmGsdXuocbVU9WCF4GNr0cPoaTl+FvxFER6+gxTX01g
-         l0lPgxqzmL4GI0JX2UiIFXcAiIS68xq+DKCjIKxCbmShJ71tf7eFQmLqy1OOwC5ZqDYz
-         zsKcS742SGFGoG5pLeeNUgEUQ28vlxoWIQa7wjfNDKi/ALdT3FLf6nIpQcw1FnW5H55G
-         6L/vMsGOdDkcpUMzmI3uLgqcHkhrY2S8ZeRgkF+AJZBbdJqT77kL0zGKpLFWCm3PHB+a
-         E1qqVEe0tr6wcHtDoZAR8pMkiR4kpbeZqwXtzijE3XqLWKv99PcQujVmOdxowxweiEl2
-         H5XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745857326; x=1746462126;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kjtfgNYAyQgaIv+6+gwAi/DXzlNfZQv9vmE2wR+LnUU=;
-        b=ZvORisTNcxE/4afa1p5Gl3s+6/3ndVFsDLc80rBPxvyjgX6ig+zWeFAoV1ANeqc52K
-         sQtZMBbOlrYRst7cFvx0LCjRBYHURQ0PLLsmlJ2SN/qbAoIfx/qZTEWym3wdAhPIP6O9
-         4YXftnT8x4PItzZDqEgOBm1WYjKg7gEqq//UbiEAFt+QRojFOea5hmWU27fKmfl9FLPb
-         Htfv6PKfAb4P2+DGVHysd1hp9I454MI5G4Vy4DHew7fUNq5KreJ9C/swnLPWAfjUveQE
-         DWWhFsecyRWuPGfjChljMbrQ+NdfGV8JcK85p9VZoAbMNKXVrKROLQP3J8yZcmRJZ0+p
-         mLoA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6XkIoe8ygdrMsxMiHgPsF7ZXnvaAXTs6ptBwyGDtRt+CKxU5XpCDCcdYNOBo6lYSBmYZWlEt2dQ9mZ7LOweY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyfh2SjcHLviUplQLjifUHAdrL9tmf8YaexF6TO+PogLmvaVEvY
-	ljvMMQgTToS6b8LjFA/j6TYkKD/o6aQDti66PYDvp8zSuwpxqFdeieutz6VSU8qnaL8EB5c+wX4
-	1B+9xkDOMgfNw16TH/BQ00UztPI8ngVjt3zzUyA==
-X-Gm-Gg: ASbGncsq6LarZTr1s80xCvbBLg/64ufFEZnI/n0N6sMsrQBOfDkAQeRv+41s6osK4hs
-	nql2SG0owGDodsqy1O3XQK/Xr12MWo9q6bGJTifQwpSJ2rCBbOwa0RSJe5++eqWPmYOmnuevSB5
-	Wu4d8rNnCejJoSdK4M20WbhGo+jtCAE+yhhQ==
-X-Google-Smtp-Source: AGHT+IHJ8fzCsar22nWRrLuqubA/nW5PD6Isexezh6U72gKuIl5N70HEwT9JTNXKPWmpqHrpu7bpAGC2DT3kmga/dpo=
-X-Received: by 2002:a05:690c:67c6:b0:708:3532:ec94 with SMTP id
- 00721157ae682-70853f752e9mr174343137b3.0.1745857326167; Mon, 28 Apr 2025
- 09:22:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lC/6+TIt"
+Message-ID: <1fd10ea8-335b-4007-b188-4cf29e050000@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745857439;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9xn0bwQwZAI0jPlbIx71YpyFO57juxn0vKvp4yU6pKE=;
+	b=lC/6+TItCORORvDwzFiePtRQ+mE3J6MRZOqi7jvD/4dOxM6KOkVC4nWdKRFiRymI6VkURD
+	cMYmdfofesL0ppCZuLmLQI3uwR63HMP32pgF0pOzTL2BSrCTxoViSaXP5QXzGsTO/EbvQE
+	9yN21nqnj+fL+I99dBis0cz64//HpoY=
+Date: Mon, 28 Apr 2025 17:23:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com> <20250422-sm7150-upstream-v1-11-bf9a9081631d@jiaxyga.com>
-In-Reply-To: <20250422-sm7150-upstream-v1-11-bf9a9081631d@jiaxyga.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 28 Apr 2025 18:21:30 +0200
-X-Gm-Features: ATxdqUFknbhFgOKvNVOI3-s43pP4YH55pKLNf_KwLrUaeaEizalUr2MLUM3sfs8
-Message-ID: <CAPDyKFqPpqDj+DKT=nJrTS8iDUx_8scnLreUQ99byDHEdBeiww@mail.gmail.com>
-Subject: Re: [PATCH 11/33] dt-bindings: mmc: sdhci-msm: Add the SM7150 compatible
-To: Danila Tikhonov <danila@jiaxyga.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Rajendra Nayak <quic_rjendra@quicinc.com>, Jassi Brar <jassisinghbrar@gmail.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wesley Cheng <quic_wcheng@quicinc.com>, 
-	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Souradeep Chowdhury <quic_schowdhu@quicinc.com>, Lee Jones <lee@kernel.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alex Elder <elder@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, Andy Gross <agross@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Georgi Djakov <djakov@kernel.org>, 
-	Loic Poulain <loic.poulain@oss.qualcomm.com>, Robert Foss <rfoss@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Taniya Das <quic_tdas@quicinc.com>, 
-	Sibi Sankar <quic_sibis@quicinc.com>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, 
-	Imran Shaik <quic_imrashai@quicinc.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Kees Cook <kees@kernel.org>, 
-	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	David Wronek <david@mainlining.org>, Jens Reidel <adrian@mainlining.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	linux-usb@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, 
-	linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-hardening@vger.kernel.org, linux@mainlining.org, 
-	~postmarketos/upstreaming@lists.sr.ht
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] ptp: ocp: Add const to bp->attr_group allocation type
+To: Kees Cook <kees@kernel.org>, Jonathan Lemon <jonathan.lemon@gmail.com>
+Cc: Richard Cochran <richardcochran@gmail.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250426061858.work.470-kees@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250426061858.work.470-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 22 Apr 2025 at 22:24, Danila Tikhonov <danila@jiaxyga.com> wrote:
->
-> Add compatible for the SDHCI block found in SM7150.
->
-> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
-
-Applied for next, thanks!
-
-Kind regards
-Uffe
-
-
+On 26/04/2025 07:18, Kees Cook wrote:
+> In preparation for making the kmalloc family of allocators type aware,
+> we need to make sure that the returned type from the allocation matches
+> the type of the variable being assigned. (Before, the allocator would
+> always return "void *", which can be implicitly cast to any pointer type.)
+> 
+> The assigned type is "const struct attribute_group **", but the returned
+> type, while technically matching, will be not const qualified. As there is
+> no general way to safely add const qualifiers, adjust the allocation type
+> to match the assignment.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> index eed9063e9bb352b5c8dac10ae2d289c5ca17f81b..2b2cbce2458b70b96b98c042109b10ead26e2291 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> @@ -60,6 +60,7 @@ properties:
->                - qcom,sm6125-sdhci
->                - qcom,sm6350-sdhci
->                - qcom,sm6375-sdhci
-> +              - qcom,sm7150-sdhci
->                - qcom,sm8150-sdhci
->                - qcom,sm8250-sdhci
->                - qcom,sm8350-sdhci
->
-> --
-> 2.49.0
->
+> Cc: Jonathan Lemon <jonathan.lemon@gmail.com>
+> Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+> Cc: Richard Cochran <richardcochran@gmail.com>
+> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: <netdev@vger.kernel.org>
+> ---
+>   drivers/ptp/ptp_ocp.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+> index faf6e027f89a..ed5968a3ea5a 100644
+> --- a/drivers/ptp/ptp_ocp.c
+> +++ b/drivers/ptp/ptp_ocp.c
+> @@ -2372,7 +2372,7 @@ ptp_ocp_attr_group_add(struct ptp_ocp *bp,
+>   		if (attr_tbl[i].cap & bp->fw_cap)
+>   			count++;
+>   
+> -	bp->attr_group = kcalloc(count + 1, sizeof(struct attribute_group *),
+> +	bp->attr_group = kcalloc(count + 1, sizeof(*bp->attr_group),
+>   				 GFP_KERNEL);
+>   	if (!bp->attr_group)
+>   		return -ENOMEM;
+
+Thanks,
+
+Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
