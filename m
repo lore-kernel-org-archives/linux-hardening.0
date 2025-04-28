@@ -1,136 +1,168 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CF719AD5C;
-	Mon, 28 Apr 2025 06:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F4A25E47E;
+	Mon, 28 Apr 2025 08:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745822220; cv=none; b=Cpm5s+a/2zNu9RXPcdOWI9V3lNvvwY7BiESbwgIw3AZt1+B01iGohP+H0WubXufHRtklcKtchCB5YUGIAb+erhOaEy9zRG3dWkgbcFgyVfGBpwWIwVQVCoo0XzXAuvT1HmZ/T9X6ahiPVwxOcZNfy6DAtkH4GDz3Lo+4CS/gNYE=
+	t=1745828326; cv=none; b=lZlF8+Njuc1GN1pK+HuqG+Ta4Bgn1J/RSSlZilGDsV+uwyLcf2Hy9tPdM4DynOkBjum8DLgFG4FAiSAnzMyKZhntpAZDjE/9Gs7Ixu0oRwZ7T6k4xCjoN/Slen+07HDhuwVHIKOKgBYSMYeP890cGsq5k0cOC6bw9uqfOVvMXXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745822220; c=relaxed/simple;
-	bh=Am3ATgqCXM7Z1F6TVuGcXo9TdrT/FcOarhjRMiPCh3g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gUXCXEvcMf0tA7AltVVfjI5cdcOd72BuMVTYEDO8nOKR5TTKnjVx7uPEfdrI8+zseec+frQ2XFECV92WpuNoX3aL+R51aK4tY09ix4ocv44hEZh2uRg8wrRqjTASslbr/Wp9lRXtJe0PRpwe/of1T0J23cyWSSMoXyr7BlkXMBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso1744651241.1;
-        Sun, 27 Apr 2025 23:36:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745822213; x=1746427013;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4HxYx13nksu5xy2CnHaN8inhIAqufNq0pgtm+B7CBB0=;
-        b=toGcj6SMoqNISv51bLdmL5FzIFUuIhNx4htUeYUUpk9ietwH62Yly77/aiHzCCNnDC
-         8FYuKRXG2kPKhyrXXZ9uK469B4KwIvAXYy6mSGu4bTwEFQ2G7A2MKGgqLfvVhGIyllTA
-         i7h1AscXv40PJEzeRE6sNAYLjI7+bpM1oMHUR7MSJkuaZM64daESpnDmIFQV39UZGfGZ
-         E4ge2/WiwUQuVkgmD7CNvq0QPrPYM++eN6nIg2rueL1v9J/9GlKOLD2dV9zzk+NlOK2y
-         2ioZki1QwW6cSFBAuGManQ1P4g5qmj1hl3K2ngZ/z5rVkpNc2+UOowpXYADzLPREKYd0
-         chuw==
-X-Forwarded-Encrypted: i=1; AJvYcCV84LG14XLYXfmGzvPpxA6j20p1kNjSxBts7rs+JsfHlorWcO21cdFMjBYWcIf0NHPkvrRGczeMk4JCYFy8@vger.kernel.org, AJvYcCXsFp3bLRsmrJfAXk2koMbceq5HHUq0KRZSGTtTotlshQinleWxhUzRfJKfelC5lmDQ2Cwwk71w5LGbrw==@vger.kernel.org, AJvYcCXyu0ta7+ZAh1rdMVZZeDh4xUcbB23jK4bfGBfL3afD7HAdjqlT3T4Qu41XLphm53B9Ci5JKzdzx+NuqS+etqgv@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBM0/6TVfrPbdB8EUKbZXL1pZvDEk8znUZWnOGoeaZWN5Qr1Kh
-	qzKN+iUPSvEKp2e2FR8affuQ5YexPEST2FvyS5LL6eguVy3iDPhCawtdz0Fa
-X-Gm-Gg: ASbGnctTqvcNPREmo7rQbIwD9lxKI5XubIXbeufhNsrBjexz8vcXjlTM/BTmwcLbNR1
-	oO4yKAZGb6zwi2C9+JJYVhh82x1Zuf8aVOoWZREjHzCtVTZBOe0Vyh+LrEwON6LPYWU5Bylzldy
-	6TQMclpsEQLZbHqo2CryxLE8Pq5ySJCUhyghsqGw5mPkyywaJTOkzuqp31mE/LJiIup+Lazh1ct
-	uz+Vq72anxcPBeDCvAoacArwCbtquh6fTncyONrd1cfIQ7H6dLXDmKb6CgNldX73kLqb+E4D7zN
-	Brei/1XhDG5NnBaJVEdywVqqc8ch4xAJujKkgNhpGl2SmCRIVquoCNYFlzDcrOWUnXe+X9TfKp2
-	Dmdg=
-X-Google-Smtp-Source: AGHT+IEPTqWYz3bezSuvlBSjtra/w8wLuQXmDuFE8sHZ2XmylGgU1c3DARkidytYE/KTDopn4TLc8Q==
-X-Received: by 2002:a05:6102:15ab:b0:4c4:fdb9:2ea with SMTP id ada2fe7eead31-4d640698094mr5235709137.7.1745822213301;
-        Sun, 27 Apr 2025 23:36:53 -0700 (PDT)
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4d3d5662e5dsm1756433137.18.2025.04.27.23.36.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Apr 2025 23:36:52 -0700 (PDT)
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso1744645241.1;
-        Sun, 27 Apr 2025 23:36:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUgl8XbjL7+wtgktsxTSj8Em/3o62Z8ioj7meeZKbIIkyXEhrR2mxLwZBk57FNX1riXfrc9TiCoA6b/9Q==@vger.kernel.org, AJvYcCW6PaKSbYhPAhl+bNXZlp+tDIdOILARxjUTC8Y8FzkbVTM8nnaUj2d1A8nm1REipRpz3isgsNFvQ2uieFAE@vger.kernel.org, AJvYcCWdG/6wtAXmi+s0fI5+yKt5vJplncF77BQabwLa3rYtcjAJOT2NtQutoN6q0aercSuQz+3/5s6IEo3I0jiUgRdz@vger.kernel.org
-X-Received: by 2002:a05:6102:32d4:b0:4c4:e414:b4eb with SMTP id
- ada2fe7eead31-4d640d802fcmr4616539137.12.1745822212499; Sun, 27 Apr 2025
- 23:36:52 -0700 (PDT)
+	s=arc-20240116; t=1745828326; c=relaxed/simple;
+	bh=ciRTzwTD6czKOCbSsZO7wWnRwr4FT1Ezx9ne3KWUQgA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C0Au++5dg805yAoDuKhjICWtTngfJq2KTAShgFCO/1XdGVaiLo/MyO1LRICEWY/nCXk2gz02e8fuvDoCL2K0NVyMcwgpc1D9w3DsaAwrTO+roWNv4JIleTgxHd4WeYjsZT6u74flSWRD2jQzhuyTF3MwCeGKwLoPK5ZRdW+kPXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ce08QcIo; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ce08QcIo"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F37481FD42;
+	Mon, 28 Apr 2025 08:18:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745828316;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fBChbg8ZivUvBoE28brXLCEm1yU6k3LPyQKRm49KqPU=;
+	b=ce08QcIopAUYMleYELqXIL0FTG4h4DUyl9NOGFXVa2nxWyN+3WY0ZijwkFuvGqWuiCo4Ii
+	VlWalZw3gJciSnkT5DlgaiDRPNtybtFW7x8Dp5lgzUZVgBXMuD847+AUcpedQtja+fC0kp
+	ee1xvIfAzLFA7x+b3FPURcZaqOR2iBiR1QWKN0Arv4kVfj4NhM0Oyk+q1cnXTm04FhAFUe
+	KADa9UnKz88r+TtKmF3zONBxPZProdPgbCTvYvdhvFPkkMK0EZ6T/E5lAREpJDDYOFUX3E
+	69SkzjUaG+d2bW25Tc5AK7CPw/kMtp8l25oXXUDHTtYJTPT3pTAuZxUwndZpGA==
+Message-ID: <823d4d24-da80-4834-95ca-d5698edfe18f@bootlin.com>
+Date: Mon, 28 Apr 2025 10:18:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250426062305.work.819-kees@kernel.org> <b982d4f1-6ed8-490b-8d47-6dc5231913e7@gmx.de>
-In-Reply-To: <b982d4f1-6ed8-490b-8d47-6dc5231913e7@gmx.de>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 28 Apr 2025 08:36:40 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVY1_gEqULGD0BzdTd05OAkodhk+RXKRAy-T-0+RJt7yQ@mail.gmail.com>
-X-Gm-Features: ATxdqUETGiqKKLP9sekTsuKQhnr5eXZt4XYi72gcVaTSzgLI84_ILYIl_9rFvl8
-Message-ID: <CAMuHMdVY1_gEqULGD0BzdTd05OAkodhk+RXKRAy-T-0+RJt7yQ@mail.gmail.com>
-Subject: Re: [PATCH] video: fbdev: arkfb: Cast ics5342_init() allocation type
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/vkms: Adjust vkms_state->active_planes allocation
+ type
 To: Kees Cook <kees@kernel.org>
-Cc: Javier Martinez Canillas <javierm@redhat.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Zheyu Ma <zheyuma97@gmail.com>, Samuel Thibault <samuel.thibault@ens-lyon.org>, 
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Helge Deller <deller@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
+Cc: Haneen Mohammed <hamohammed.sa@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Melissa Wen <melissa.srw@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250426061431.work.304-kees@kernel.org>
+Content-Language: en-US
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
+ 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
+In-Reply-To: <20250426061431.work.304-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtgeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekieevtdefgedtkeehteehtddttdefhffhgeejleejjeeluddvhfdugedvkeehveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddupdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrn
+ hhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-Hi Kees,
 
-On Sat, 26 Apr 2025 at 13:33, Helge Deller <deller@gmx.de> wrote:
-> On 4/26/25 08:23, Kees Cook wrote:
-> > In preparation for making the kmalloc family of allocators type aware,
-> > we need to make sure that the returned type from the allocation matches
-> > the type of the variable being assigned. (Before, the allocator would
-> > always return "void *", which can be implicitly cast to any pointer type.)
-> >
-> > The assigned type is "struct dac_info *" but the returned type will be
-> > "struct ics5342_info *", which has a larger allocation size. This is
-> > by design, as struct ics5342_info contains struct dac_info as its first
-> > member. Cast the allocation type to match the assignment.
-> >
-> > Signed-off-by: Kees Cook <kees@kernel.org>
 
-Thanks for your patch, which is now commit 8d2f0f5bbac87b9d ("fbdev:
-arkfb: Cast ics5342_init() allocation type") in fbdev/for-next.
+Le 26/04/2025 à 08:14, Kees Cook a écrit :
+> In preparation for making the kmalloc family of allocators type aware,
+> we need to make sure that the returned type from the allocation matches
+> the type of the variable being assigned. (Before, the allocator would
+> always return "void *", which can be implicitly cast to any pointer type.)
+> 
+> The assigned type is "struct vkms_plane_state **", but the returned type
+> will be "struct drm_plane **". These are the same size (pointer size), but
+> the types don't match. Adjust the allocation type to match the assignment.
 
-> I applied your patch, but wouldn't this untested patch be cleaner and fulfill the
-> same purpose to match a kzalloc return type?
->
-> diff --git a/drivers/video/fbdev/arkfb.c b/drivers/video/fbdev/arkfb.c
-> index 7d131e3d159a..a57c8a992e11 100644
-> --- a/drivers/video/fbdev/arkfb.c
-> +++ b/drivers/video/fbdev/arkfb.c
-> @@ -431,7 +431,8 @@ static struct dac_ops ics5342_ops = {
->
->   static struct dac_info * ics5342_init(dac_read_regs_t drr, dac_write_regs_t dwr, void *data)
->   {
-> -       struct dac_info *info = (struct dac_info *)kzalloc(sizeof(struct ics5342_info), GFP_KERNEL);
-> +       struct ics5342_info *ics_info = kzalloc(sizeof(struct ics5342_info), GFP_KERNEL);
+I think this is an issue, can you add the proper Fixup tag in this commit?
 
-sizeof(*ics_info)?
+With this:
 
-> +       struct dac_info *info = &ics_info->dac;
+Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
 
-Exactly my thought when I noticed this commit.  Adding casts makes
-it harder to notice any future discrepancies.
-
-> > --- a/drivers/video/fbdev/arkfb.c
-> > +++ b/drivers/video/fbdev/arkfb.c
-> > @@ -431,7 +431,7 @@ static struct dac_ops ics5342_ops = {
-> >
-> >   static struct dac_info * ics5342_init(dac_read_regs_t drr, dac_write_regs_t dwr, void *data)
-> >   {
-> > -     struct dac_info *info = kzalloc(sizeof(struct ics5342_info), GFP_KERNEL);
-> > +     struct dac_info *info = (struct dac_info *)kzalloc(sizeof(struct ics5342_info), GFP_KERNEL);
-> >
-> >       if (! info)
-> >               return NULL;
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Louis Chauvet <louis.chauvet@bootlin.com>
+> Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
+> Cc: Simona Vetter <simona@ffwll.ch>
+> Cc: Melissa Wen <melissa.srw@gmail.com>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: <dri-devel@lists.freedesktop.org>
+> ---
+>   drivers/gpu/drm/vkms/vkms_crtc.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> index 12034ec12029..8c9898b9055d 100644
+> --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> @@ -194,7 +194,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
+>   		i++;
+>   	}
+>   
+> -	vkms_state->active_planes = kcalloc(i, sizeof(plane), GFP_KERNEL);
+> +	vkms_state->active_planes = kcalloc(i, sizeof(*vkms_state->active_planes), GFP_KERNEL);
+>   	if (!vkms_state->active_planes)
+>   		return -ENOMEM;
+>   	vkms_state->num_active_planes = i;
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
