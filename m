@@ -1,43 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24ACE296D28;
-	Mon, 28 Apr 2025 20:02:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AE52951DF;
+	Mon, 28 Apr 2025 20:05:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745870563; cv=none; b=qQA1r7EPkRkrBrlr+XjlBheSvEADbE6zbGPNrFL2XaSAM2y1ZcPfTtn2Jb3lQ4KqgwmeOeAsxT03m9PbYer4P1pUxNYp4K4Slbas+ZZLQbBfwtpFdv5arxbyJPs481hLrNhBi8cEzjhpMqibrB7+dTuMdJKMZVKWJXxaDXCl+OE=
+	t=1745870704; cv=none; b=HdK16UQSiR6RWVOymLj27qYJyGbIwdWhRRkSpB8h4mH2DBczJTauqA4GjK/cZi1IwVWdJlT+0zvwXvxVmeJTvgoOKuUQFHONUHj+x6B2rM4TOtcPzRgV0bzyHVevaGluHLfiV/L2PmOPACPgenbEHEmyWAUOb04uJXDSljtO+wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745870563; c=relaxed/simple;
-	bh=sPOKmHpYLj3q6unUZiWkI91AaSj64FZDZIrt2rWwoGQ=;
+	s=arc-20240116; t=1745870704; c=relaxed/simple;
+	bh=JUAjh8uOOoE92HNSZYb4XPtIiW2gP/0nvsrvkA3azJM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e2ATGoOvmCV+4ygLySCl6p2g/VbTB0zAn3lgbcC6xrlNb6WDRpUzY7SABqFRMli7awsSnDrJGroidqddX8NlwFPzYOqRwdto1XAifrv+eK0NWW8PTlBc+7NAa7tP4CI2v+KSUTalb50S+q9nxzLgbcpM7j3Lguev2k5XRaYGUOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dvheEwLV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Im17sjgIH1916pwGcRc/MC25kzDGIHiX9tscLQNmcRAs2bj+a2e8D4DFy6oWYRn9B/OGnMgEFzmCEJg5J7vnuLL6tQ/NAb9sGJnXb3xzjHligFVFNY14v5R5bda/RVuCaFHFHE6Le773X7/0NhSTBjhoonHNK0Fmobr+vkgOLrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mLDdoZvV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dvheEwLV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F2BC4CEE4;
-	Mon, 28 Apr 2025 20:02:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLDdoZvV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12790C4CEE4;
+	Mon, 28 Apr 2025 20:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745870561;
-	bh=sPOKmHpYLj3q6unUZiWkI91AaSj64FZDZIrt2rWwoGQ=;
+	s=k20201202; t=1745870703;
+	bh=JUAjh8uOOoE92HNSZYb4XPtIiW2gP/0nvsrvkA3azJM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dvheEwLVCj4UsyUHZoyLPmAQH2QqmaO3bpIgaUJ8D25Tl1yF+IGiM8UUzq9fORaMC
-	 8G6dRgT2FZFzhh62mt6BqcBHY2EdI/3msjDZKUTf7OFg3Z17ygMfiUCWupnsih0UN/
-	 lV2FS8nX/5pDqXAfbFKPLYlYxE44KpAOXJRWTHD9eGqMBFLsy7tKWHHVtGDLx4BUOE
-	 WdZXtDB1DgsoXUt9ZlSPrFYtG61C1oMX6esyJkVRnFEzvquSM0USl8h1vxWKyPGE8C
-	 iUHoxmIYvgRF48WTocMSqqDazDnK810nNNVxJszWO1rEoVQkSmbRNXeayo8HCVrjz8
-	 ZjEsUpngVSWgA==
-Date: Mon, 28 Apr 2025 21:02:37 +0100
+	b=mLDdoZvViSQNZPCmbGifNhqt9CXGbVsj9eUXgNyeb5QuiGBxuE9QF+Qb5o4fbDtY5
+	 vcsOdQL8wHDEb+3phfeG892at01UvRYBh+xm+dnNIEupXien9CUOoSL84zK4dlLTID
+	 zfaKaaUWGIG+dPCJCcokl/hah7XZSTwUjTbCI1yQFk3JRK/onh5i7O5wwewgAYwevR
+	 jat2bT5V6wUzAMsWdt1Kxg2U5kruLKKsOWEoHT7a3GEEPyuCzD3EnO7WpTVomQnGds
+	 qWLYSJFkdrFvtOiYNStk4E6l8tPa+fUPhEp//eqduWVAJeIorGG1iQjzX9cFqpBz0e
+	 HZt9mqSnA5suQ==
+Date: Mon, 28 Apr 2025 21:04:57 +0100
 From: Simon Horman <horms@kernel.org>
 To: Kees Cook <kees@kernel.org>
-Cc: Tariq Toukan <tariqt@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+Cc: Louis Peens <louis.peens@corigine.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
 	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net/mlx4_core: Adjust allocation type for buddy->bits
-Message-ID: <20250428200237.GM3339421@horms.kernel.org>
-References: <20250426060757.work.865-kees@kernel.org>
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Yinjun Zhang <yinjun.zhang@corigine.com>,
+	Diana Wang <na.wang@corigine.com>, oss-drivers@corigine.com,
+	netdev@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Easwar Hariharan <eahariha@linux.microsoft.com>,
+	Mohammad Heib <mheib@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] nfp: xsk: Adjust allocation type for nn->dp.xsk_pools
+Message-ID: <20250428200457.GN3339421@horms.kernel.org>
+References: <20250426060841.work.016-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,19 +53,19 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250426060757.work.865-kees@kernel.org>
+In-Reply-To: <20250426060841.work.016-kees@kernel.org>
 
-On Fri, Apr 25, 2025 at 11:07:58PM -0700, Kees Cook wrote:
+On Fri, Apr 25, 2025 at 11:08:42PM -0700, Kees Cook wrote:
 > In preparation for making the kmalloc family of allocators type aware,
 > we need to make sure that the returned type from the allocation matches
 > the type of the variable being assigned. (Before, the allocator would
 > always return "void *", which can be implicitly cast to any pointer type.)
 > 
-> The assigned type is "unsigned long **", but the returned type will be
-> "long **". These are the same size allocation (pointer size) but the
-> types do not match. Adjust the allocation type to match the assignment.
+> The assigned type "struct xsk_buff_pool **", but the returned type will be
+> "struct xsk_buff_pool ***". These are the same allocation size (pointer
+> size), but the types don't match. Adjust the allocation type to match
+> the assignment.
 > 
 > Signed-off-by: Kees Cook <kees@kernel.org>
 
 Reviewed-by: Simon Horman <horms@kernel.org>
-
