@@ -1,132 +1,144 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C762676CF
-	for <linux-hardening@vger.kernel.org>; Mon, 28 Apr 2025 11:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F971757F3
+	for <linux-hardening@vger.kernel.org>; Mon, 28 Apr 2025 12:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745841302; cv=none; b=oXvFTzce13gcrEQOS4SegBQ36vyLF07C3uv09pGY0WngRGUFRakmB+R7NwCe7l7m0fwJDDNszHFz4Eyg3SL98661bqqtnwfypbxwFDNJQ+kZpEl9kz57UBGACEK0l+r8aglSLzzr4Dn0yBFg4EaC1lELGZkMkQye4jFpiFNxc9s=
+	t=1745842191; cv=none; b=Eh/nOtimkAmMgz8aAGN8cCOv85NR9CTBwGGVGcJqs7Ag4uSXQrNSE7ofdx4yQ/pHTqCwv2TL7RymfoSvNmCTOCUqppJTEb5g4cZl+guiD/lGGBdobnfmfHdYPo2FCn/Sx8g9ifI+SdcUS1xvv8sP53CTq8zAntTZisYfJ62o2+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745841302; c=relaxed/simple;
-	bh=dF1jVHWmjbKqqo+EJfyQwXDZ3U69f8KTOGtxyvNJ0mg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HNfizTfkEG1OKUNFvHjBzxMuWudE5PoBr87jaslB65LCaPOUFrzu8SYhBbizjByt7qNdPsPLYHM5JdxZCOw30sy/bNK1FCZMQ1/1Kn9XJg6G3SVP4mPVnFk4Jdf6LK9UwPnH4vqCRsc4AjijhXRP40Qqgmd4EhHWOctZkUyHER8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ba1DLWn0; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745842191; c=relaxed/simple;
+	bh=TMmQi99kL2+atqpYCG6LfV/8nmQkDwBk0pQNwYV4mE0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FhHLJKn87ykFHqNGcMwvkiILXhpKuG6alC0VTBjFGuEGXBnGOvTYs5P9rEdVOY8owbryY8nUdyDCkTw4f1gnXYhqaiOEWKfxiOvcpQcGDLkOfG4Pfz98Wmwk0IDjpkhYqhTisTutXESLhPyv0zul460H+C84jLtO9xWYq1rfJWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net; spf=none smtp.mailfrom=ursulin.net; dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b=x+8+Idho; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ursulin.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ba1DLWn0"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43690d4605dso34591015e9.0
-        for <linux-hardening@vger.kernel.org>; Mon, 28 Apr 2025 04:54:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b="x+8+Idho"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c1efc457bso3324275f8f.2
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Apr 2025 05:09:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745841298; x=1746446098; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dF1jVHWmjbKqqo+EJfyQwXDZ3U69f8KTOGtxyvNJ0mg=;
-        b=ba1DLWn08sYg1j7byJwZnLxbDxPtd51mzWKTGURkLUxAbcRrd2MaPTP1+y6tWChmSz
-         vxf3ka9WNUKi1g+wvCEOq7ZJ5A1yyq7bwwpALnnxeDcVxMS1emvEq7kGiVM/UyqG/3yV
-         VKphvi1G7gPG3Xs+Nx6vUtzFUp0sxVcaA5+OsAj7RoN9WIq3pmrgbqDvT+x6eKrwMDse
-         SvqipAxT9X0dLtAOzVWWJGvwzlEF+hU5ZZnDKVQY0kH1sYDQpA1LJ4t0YxALtU1fU4pd
-         jx/Q059OrnH3kFssZgY5yelKwkIBaNI4AhSf5yFgXLLQlBHE/icXZBaJK7E3biBjBhyd
-         VkJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745841298; x=1746446098;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=ursulin-net.20230601.gappssmtp.com; s=20230601; t=1745842188; x=1746446988; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=dF1jVHWmjbKqqo+EJfyQwXDZ3U69f8KTOGtxyvNJ0mg=;
-        b=Nl8QsDX9959rRGK8jAA5BYBCFmiS61LMgMkSw2ES8tDQ9XEN6nr5fblDm8oIzyJU94
-         1tUsrQGHXfl+Y6GhzFhzpDTOjGz7f2wQGnUScfqPWb4LvzJ8v0yg8CRuwFdL3EK0EKxz
-         ShHwZEiO2BUnSaVJ5mMjhuuv+7Csw37r9MMipbV7dOm1EsLFkCJFGkqzreyBgqnl5SJe
-         OJGdPoDBg0pGE0DHGsSKSFj29e9iTqSoNOduMhgzQrwv2yZ4xEku+Jad5iYdVK0PrABZ
-         mmGFMuDkBeA/wbCt4hVuOEn9P/xMbt5kG9RnI3KiSAAahwR353EA3+E1XE+4jRziX6OS
-         4zlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWl2NHoeGdzHTUnot7qNudKKVCVHj43SVMYsHBP6YvajJ1mSoDkrEcgNkZwxjoZ0OjqbfXqYMNRajr13T59QyY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsISrH4U/VXcPW4HF1xExnp3Kr+cYWdi4PDuu1KE5BqES+irxC
-	yAbBNvV5L1IVCdPGMiXbJ+JDDO28+cesixfKVs/pMiMle73dLQGjbE5hORLxQhY=
-X-Gm-Gg: ASbGncu7+LhQmDU3EGQai+rDczUVYpekC5nnPAmuKf5PdKq+8zY5iJgZORfCVLcEMt7
-	b6Uxs+eecpjpfYbtUjcz32iE3aUTZh2EGMzLXXUV3o6LE/m7LfOolevdexgQYPAdnBwl8sSuPVX
-	gMtpPOjlpE5zIBQWx9abDSgcawBiaO/3P6ScSsegWo7NNhlxjJ4GDF+HuhkgwuXMzMssbzh1NXg
-	kie0LkbvQRanIoEEnCHp894/E2FLj7pnMqh2iXJ+Oyg4tvwCcser3rKfzYRvGdQ3KjlbkEmvosV
-	SiiaCoYsEUreaTO6/+Lfw56G/9Jdixl3NxM6t6JipqCw
-X-Google-Smtp-Source: AGHT+IEBcPzlcTmJtEtdW5Ozka0R7E2yC2SNtOU96655gZWCsIYU9mMeiYm5x9urXTEOXj7XnSxR1w==
-X-Received: by 2002:a05:600c:1e04:b0:43c:eeee:b70a with SMTP id 5b1f17b1804b1-440ab846cecmr67580645e9.22.1745841298305;
-        Mon, 28 Apr 2025 04:54:58 -0700 (PDT)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a536a1ddsm122802275e9.30.2025.04.28.04.54.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 04:54:56 -0700 (PDT)
-Message-ID: <a365be041bab36fe20e1e5d34b583d3b350a488d.camel@linaro.org>
-Subject: Re: [PATCH v7 5/6] gpio: max77759: add Maxim MAX77759 gpio driver
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Linus
- Walleij	 <linus.walleij@linaro.org>, Kees Cook <kees@kernel.org>, "Gustavo
- A. R. Silva"	 <gustavoars@kernel.org>, Srinivas Kandagatla
- <srini@kernel.org>, Peter Griffin	 <peter.griffin@linaro.org>, Tudor
- Ambarus <tudor.ambarus@linaro.org>, Will McVicker
- <willmcvicker@google.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org, Bartosz
- Golaszewski	 <bartosz.golaszewski@linaro.org>
-Date: Mon, 28 Apr 2025 12:54:55 +0100
-In-Reply-To: <CAMRc=MdDH7UPkhjBKr6hO-j2J158_u4Mp=++hjh=V0OtoJHX1g@mail.gmail.com>
-References: <20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.org>
-	 <20250428-max77759-mfd-v7-5-edfe40c16fe8@linaro.org>
-	 <CAMRc=MdDH7UPkhjBKr6hO-j2J158_u4Mp=++hjh=V0OtoJHX1g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3-2+build1 
+        bh=/JmJKZuEpq5UN0wmEtOpCzeCBmpLeQy7dV9yrtIP3UA=;
+        b=x+8+IdhoIFUboPYxukP9QIORk4wT3AOzni+YA6ts9E2F6LSEb6ViaAmWxn6Eii2Brj
+         ovjAt7hVkChwx35f5PVG3lpPa85SdgdmCiRrgrQJ7ROgcAGeZyobMhVhUi2dDJyPI8iZ
+         HOmWPSl/hjZdpC6Gcj/kqgpKW6AzZ4U7Vl/b7GqDcUVBJtOBj0OhL6DTj6fUs1ySzBJa
+         J+dBwIGJ7Rtud7Cv7T+AhY1cofPgeXdIyUgIIz3A+Ltrs38YK/gQobS7KAzA1Sl8GVsY
+         thSWTulg5N4Z0TKFoZrtubIjdG8Wpz+/KNv56WR18CYxNNCl5yZkqNCnt3tKMV9uNS8l
+         neDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745842188; x=1746446988;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/JmJKZuEpq5UN0wmEtOpCzeCBmpLeQy7dV9yrtIP3UA=;
+        b=ahnt/NSTUw5Qi0nXVhISBMhC34uaqF5foeQJLHBBORpELGnXhvvbHlAuf+fgAaN9mn
+         4A47Z0TBzxiw4Z/S22SgB5+ixeqZ1kAM9kEBg4AUQhuYCPfPvkRWvYlP5HtAs6mSSrJ2
+         wmv2ngLr9dVDfjJBT2Md4jzQtAhalRx768hkkhCIesZ27JbCzeUcqufzBns4MORm5OVH
+         XTYS5+NyxHT5B0hZmvXIhmbG+PXwXFHVvrwX5gphWqXRFNiQgnaGkgkaDx+d0+coBvKp
+         riT7QHbOluF+m75T6BWBqbGcaVVDkIGhButqIyQhnjW6A0b1Wnt30ggSqcLPyhg+jHA/
+         wMuw==
+X-Forwarded-Encrypted: i=1; AJvYcCWaADYYgQju0/Vj7kFX7uYi3B/GPW95p9Sa5ov1Mkr9iaLsRCfGQPDdG4ihL4jVASnZXfC/o3ieDj9zWhjz4ME=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUOpdxkkK3k5rsbelJve28U9/9Vvo+e7jLILdeB3RWg++X/KTX
+	MRu8eJNwAE/jhtfO4fFHAnzOELlxdCTAYoRg+bShIZi68qDtuiTnOTwpcUJ++Xo=
+X-Gm-Gg: ASbGnctnRU3snF1eqz/teshFa/V+Mvkdv6AfByegRWFkhiOq5mNulHgJzr932Tk+IuU
+	nazaDEZzJ1Njq/TTHbyzx23csnsoVbhP1aMRkA5lxJGKrDuHZN/t7N270Nxcs9tjO0dzmqp5igI
+	4+pGIBLgpzhNraEN0oGioi4Wd28eoMzAKO5BTEWiE9mOwifZ6ZB/BQC8p8hagbG3eIwBC92Exm0
+	cEON6FpdrhqXyF/NDXFHn3ciQUkC52bVOduwrSPFeq3rPDLxskv9eIuh1oa/iIMLLz5AN6ncbwT
+	hoUk69bjWd8Ecf3WNrjf9A2YiKV7yI46YDKcRbOzmDCcFctiYtxKVK0=
+X-Google-Smtp-Source: AGHT+IHqEv8cFeHZNO066YOoWB8BFD6tcgESusNCDp7OcqCCqOLYefsxt5CXNgjV3wL2bS4dyhsh5Q==
+X-Received: by 2002:a05:6000:1a8e:b0:391:3b11:d604 with SMTP id ffacd0b85a97d-3a07adb1d30mr7133747f8f.54.1745842187842;
+        Mon, 28 Apr 2025 05:09:47 -0700 (PDT)
+Received: from [192.168.0.101] ([81.79.92.254])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d88cdsm153399285e9.25.2025.04.28.05.09.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 05:09:47 -0700 (PDT)
+Message-ID: <7f1ad610-5a37-4f74-8eee-5f37556d9576@ursulin.net>
+Date: Mon, 28 Apr 2025 13:09:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/i915/gt: Remove const from struct i915_wa list
+ allocation
+To: Kees Cook <kees@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>,
+ Gustavo Sousa <gustavo.sousa@intel.com>,
+ Andi Shyti <andi.shyti@linux.intel.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, Gnattu OC <gnattuoc@me.com>,
+ Nitin Gote <nitin.r.gote@intel.com>, Ranu Maurya <ranu.maurya@intel.com>,
+ =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+ Angus Chen <angus.chen@intel.com>,
+ Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+ Yu Jiaoliang <yujiaoliang@vivo.com>,
+ Dnyaneshwar Bhadane <dnyaneshwar.bhadane@intel.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250426061357.work.749-kees@kernel.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tursulin@ursulin.net>
+In-Reply-To: <20250426061357.work.749-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Bartosz,
 
-On Mon, 2025-04-28 at 13:43 +0200, Bartosz Golaszewski wrote:
-> On Mon, Apr 28, 2025 at 1:36=E2=80=AFPM Andr=C3=A9 Draszik <andre.draszik=
-@linaro.org> wrote:
-> >=20
-> > The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-> > includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> > Port Controller (TCPC), NVMEM, and a GPIO expander.
-> >=20
-> > This driver supports the GPIO functions using the platform device
-> > registered by the core MFD driver.
-> >=20
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > ---
->=20
-> [snip]
->=20
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.names =3D max77759_gpio_=
-line_names;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.ngpio =3D MAX77759_N_GPI=
-OS;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.get_direction =3D max777=
-59_gpio_get_direction;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.direction_input =3D max7=
-7759_gpio_direction_input;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.direction_output =3D max=
-77759_gpio_direction_output;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.get =3D max77759_gpio_ge=
-t_value;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.set =3D max77759_gpio_se=
-t_value;
->=20
-> Please use the set_rv variant now, the old set is deprecated. Until
-> that's changed, my Ack is revoked.
+On 26/04/2025 07:13, Kees Cook wrote:
+> In preparation for making the kmalloc family of allocators type aware,
+> we need to make sure that the returned type from the allocation matches
+> the type of the variable being assigned. (Before, the allocator would
+> always return "void *", which can be implicitly cast to any pointer type.)
+> 
+> The assigned type is "struct i915_wa *". The returned type, while
+> technically matching, will be const qualified. As there is no general
+> way to remove const qualifiers, adjust the allocation type to match
+> the assignment.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Cc: Tvrtko Ursulin <tursulin@ursulin.net>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Simona Vetter <simona@ffwll.ch>
+> Cc: Matt Roper <matthew.d.roper@intel.com>
+> Cc: Gustavo Sousa <gustavo.sousa@intel.com>
+> Cc: Andi Shyti <andi.shyti@linux.intel.com>
+> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> Cc: <intel-gfx@lists.freedesktop.org>
+> Cc: <dri-devel@lists.freedesktop.org>
+> ---
+>   drivers/gpu/drm/i915/gt/intel_workarounds.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/gt/intel_workarounds.c b/drivers/gpu/drm/i915/gt/intel_workarounds.c
+> index 116683ebe074..b37e400f74e5 100644
+> --- a/drivers/gpu/drm/i915/gt/intel_workarounds.c
+> +++ b/drivers/gpu/drm/i915/gt/intel_workarounds.c
+> @@ -156,7 +156,7 @@ static void _wa_add(struct i915_wa_list *wal, const struct i915_wa *wa)
+>   	if (IS_ALIGNED(wal->count, grow)) { /* Either uninitialized or full. */
+>   		struct i915_wa *list;
+>   
+> -		list = kmalloc_array(ALIGN(wal->count + 1, grow), sizeof(*wa),
+> +		list = kmalloc_array(ALIGN(wal->count + 1, grow), sizeof(*list),
 
-Thanks Bartosz for pointing this out, will update.
+Will the sizeof stay, and if so, how will kmalloc be able to distinguish 
+the type? Or we expect one more churn on the same line?
 
-Cheers,
-Andre'
+Regards,
+
+Tvrtko
+
+>   				     GFP_KERNEL);
+>   		if (!list) {
+>   			drm_err(&i915->drm, "No space for workaround init!\n");
 
