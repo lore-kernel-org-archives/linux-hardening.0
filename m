@@ -1,64 +1,50 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F971757F3
-	for <linux-hardening@vger.kernel.org>; Mon, 28 Apr 2025 12:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C367E268FFF;
+	Mon, 28 Apr 2025 12:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745842191; cv=none; b=Eh/nOtimkAmMgz8aAGN8cCOv85NR9CTBwGGVGcJqs7Ag4uSXQrNSE7ofdx4yQ/pHTqCwv2TL7RymfoSvNmCTOCUqppJTEb5g4cZl+guiD/lGGBdobnfmfHdYPo2FCn/Sx8g9ifI+SdcUS1xvv8sP53CTq8zAntTZisYfJ62o2+A=
+	t=1745843845; cv=none; b=KP+QNu7Y8qnkeC6JACnv1Wb5A/qOOG+a+cSK/6vvOqGwua2hWiYOUZlrkFGtlJcDqn8In5Tiqz++eknmFao+v9DyK/Cljk7fSuqjoAEapNqTKtBkW0ZB61uibzmt9dQJdCOJ1FxHKyGHg/vnu1H3L71jngntw64FNO5Vkldp2Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745842191; c=relaxed/simple;
-	bh=TMmQi99kL2+atqpYCG6LfV/8nmQkDwBk0pQNwYV4mE0=;
+	s=arc-20240116; t=1745843845; c=relaxed/simple;
+	bh=lemq0WlyiYPKOz4ZlJK1Z0Iz2kxrqAihbWSTOP9Bc/w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FhHLJKn87ykFHqNGcMwvkiILXhpKuG6alC0VTBjFGuEGXBnGOvTYs5P9rEdVOY8owbryY8nUdyDCkTw4f1gnXYhqaiOEWKfxiOvcpQcGDLkOfG4Pfz98Wmwk0IDjpkhYqhTisTutXESLhPyv0zul460H+C84jLtO9xWYq1rfJWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net; spf=none smtp.mailfrom=ursulin.net; dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b=x+8+Idho; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ursulin.net
+	 In-Reply-To:Content-Type; b=Rt8/+X6SkzTBju8wZV7j5ET1OLKF6ms02DfHTptrRnpbqGdhBAGkPOpv5uU+ex2OHN0RKk4bNS9iddHJdKp1zMmP62SmQ+jJuKHB1bBz/ztok1TF1UEC1ntXNaYSVvb/HrNUc3qm/dALHVwfDLT43cLN8kGTdTZYXOwDBEn2ugE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KCyfF1SN; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b="x+8+Idho"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c1efc457bso3324275f8f.2
-        for <linux-hardening@vger.kernel.org>; Mon, 28 Apr 2025 05:09:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ursulin-net.20230601.gappssmtp.com; s=20230601; t=1745842188; x=1746446988; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/JmJKZuEpq5UN0wmEtOpCzeCBmpLeQy7dV9yrtIP3UA=;
-        b=x+8+IdhoIFUboPYxukP9QIORk4wT3AOzni+YA6ts9E2F6LSEb6ViaAmWxn6Eii2Brj
-         ovjAt7hVkChwx35f5PVG3lpPa85SdgdmCiRrgrQJ7ROgcAGeZyobMhVhUi2dDJyPI8iZ
-         HOmWPSl/hjZdpC6Gcj/kqgpKW6AzZ4U7Vl/b7GqDcUVBJtOBj0OhL6DTj6fUs1ySzBJa
-         J+dBwIGJ7Rtud7Cv7T+AhY1cofPgeXdIyUgIIz3A+Ltrs38YK/gQobS7KAzA1Sl8GVsY
-         thSWTulg5N4Z0TKFoZrtubIjdG8Wpz+/KNv56WR18CYxNNCl5yZkqNCnt3tKMV9uNS8l
-         neDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745842188; x=1746446988;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/JmJKZuEpq5UN0wmEtOpCzeCBmpLeQy7dV9yrtIP3UA=;
-        b=ahnt/NSTUw5Qi0nXVhISBMhC34uaqF5foeQJLHBBORpELGnXhvvbHlAuf+fgAaN9mn
-         4A47Z0TBzxiw4Z/S22SgB5+ixeqZ1kAM9kEBg4AUQhuYCPfPvkRWvYlP5HtAs6mSSrJ2
-         wmv2ngLr9dVDfjJBT2Md4jzQtAhalRx768hkkhCIesZ27JbCzeUcqufzBns4MORm5OVH
-         XTYS5+NyxHT5B0hZmvXIhmbG+PXwXFHVvrwX5gphWqXRFNiQgnaGkgkaDx+d0+coBvKp
-         riT7QHbOluF+m75T6BWBqbGcaVVDkIGhButqIyQhnjW6A0b1Wnt30ggSqcLPyhg+jHA/
-         wMuw==
-X-Forwarded-Encrypted: i=1; AJvYcCWaADYYgQju0/Vj7kFX7uYi3B/GPW95p9Sa5ov1Mkr9iaLsRCfGQPDdG4ihL4jVASnZXfC/o3ieDj9zWhjz4ME=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUOpdxkkK3k5rsbelJve28U9/9Vvo+e7jLILdeB3RWg++X/KTX
-	MRu8eJNwAE/jhtfO4fFHAnzOELlxdCTAYoRg+bShIZi68qDtuiTnOTwpcUJ++Xo=
-X-Gm-Gg: ASbGnctnRU3snF1eqz/teshFa/V+Mvkdv6AfByegRWFkhiOq5mNulHgJzr932Tk+IuU
-	nazaDEZzJ1Njq/TTHbyzx23csnsoVbhP1aMRkA5lxJGKrDuHZN/t7N270Nxcs9tjO0dzmqp5igI
-	4+pGIBLgpzhNraEN0oGioi4Wd28eoMzAKO5BTEWiE9mOwifZ6ZB/BQC8p8hagbG3eIwBC92Exm0
-	cEON6FpdrhqXyF/NDXFHn3ciQUkC52bVOduwrSPFeq3rPDLxskv9eIuh1oa/iIMLLz5AN6ncbwT
-	hoUk69bjWd8Ecf3WNrjf9A2YiKV7yI46YDKcRbOzmDCcFctiYtxKVK0=
-X-Google-Smtp-Source: AGHT+IHqEv8cFeHZNO066YOoWB8BFD6tcgESusNCDp7OcqCCqOLYefsxt5CXNgjV3wL2bS4dyhsh5Q==
-X-Received: by 2002:a05:6000:1a8e:b0:391:3b11:d604 with SMTP id ffacd0b85a97d-3a07adb1d30mr7133747f8f.54.1745842187842;
-        Mon, 28 Apr 2025 05:09:47 -0700 (PDT)
-Received: from [192.168.0.101] ([81.79.92.254])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d88cdsm153399285e9.25.2025.04.28.05.09.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 05:09:47 -0700 (PDT)
-Message-ID: <7f1ad610-5a37-4f74-8eee-5f37556d9576@ursulin.net>
-Date: Mon, 28 Apr 2025 13:09:46 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KCyfF1SN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745843844; x=1777379844;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lemq0WlyiYPKOz4ZlJK1Z0Iz2kxrqAihbWSTOP9Bc/w=;
+  b=KCyfF1SNbR6sqyK1f4qJqD5z7YC6jJfcxgqZ9z+jNq9H3OAGHTnLroR3
+   EpSUeyyGF7UjgdhpEhQ5Sg86xzlUx4qUkvaRtFeNKapedcs4GSFXZcBKL
+   9fUS1By2t8f2lRbcsSE/Zey4PQyCGvKPw5yOMmKzKwdxHKnZRvRiBBWW4
+   bBp+Nw3CTHndOX/uqrL4TqA3LPIvSy0Q0E3Bhr87NDqM8Ao+z/VyWaHyp
+   SBzOmyG2uW8FgjNLTKfFNYBOz5UmjjLszemw2LZXHQxXs8Yek3OckoFk8
+   v8HK1wK9KpyCIoM3wDIO1o3PkYnBiT22vwNrzcZXBDryMU28+1PgnGBZC
+   w==;
+X-CSE-ConnectionGUID: u4ijRB9nTay3v0B14fJFVA==
+X-CSE-MsgGUID: 2FdgqztvSBeq5pcHV6zQQw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="47520774"
+X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
+   d="scan'208";a="47520774"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 05:37:23 -0700
+X-CSE-ConnectionGUID: xxjgWQxfQBa2LbEbvdEngw==
+X-CSE-MsgGUID: N2DtIr1zTu2/5Z4md6qsKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
+   d="scan'208";a="133479337"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO [10.245.249.122]) ([10.245.249.122])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 05:37:18 -0700
+Message-ID: <a154e7eb-2708-411d-a494-868abe7052b7@linux.intel.com>
+Date: Mon, 28 Apr 2025 15:38:30 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,79 +52,79 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/i915/gt: Remove const from struct i915_wa list
- allocation
-To: Kees Cook <kees@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>,
- Gustavo Sousa <gustavo.sousa@intel.com>,
- Andi Shyti <andi.shyti@linux.intel.com>,
- Lucas De Marchi <lucas.demarchi@intel.com>, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Gnattu OC <gnattuoc@me.com>,
- Nitin Gote <nitin.r.gote@intel.com>, Ranu Maurya <ranu.maurya@intel.com>,
- =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
- Angus Chen <angus.chen@intel.com>,
- Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
- Yu Jiaoliang <yujiaoliang@vivo.com>,
- Dnyaneshwar Bhadane <dnyaneshwar.bhadane@intel.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250426061357.work.749-kees@kernel.org>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tursulin@ursulin.net>
-In-Reply-To: <20250426061357.work.749-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ASoC: SOF: ipc4-pcm: Adjust pipeline_list->pipelines
+ allocation type
+To: Kees Cook <kees@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, sound-open-firmware@alsa-project.org,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250426062511.work.859-kees@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
+In-Reply-To: <20250426062511.work.859-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-On 26/04/2025 07:13, Kees Cook wrote:
+
+On 26/04/2025 09:25, Kees Cook wrote:
 > In preparation for making the kmalloc family of allocators type aware,
 > we need to make sure that the returned type from the allocation matches
 > the type of the variable being assigned. (Before, the allocator would
 > always return "void *", which can be implicitly cast to any pointer type.)
 > 
-> The assigned type is "struct i915_wa *". The returned type, while
-> technically matching, will be const qualified. As there is no general
-> way to remove const qualifiers, adjust the allocation type to match
-> the assignment.
-> 
+> The assigned type is "struct snd_sof_pipeline **", but the returned type
+> will be "struct snd_sof_widget **". These are the same size allocation
+> (pointer size) but the types don't match. Adjust the allocation type to
+> match the assignment.
+
+It looks like that this is indeed an oversight and a bug introduced by a
+mostly mechanical change (introduced in v6.3).
+
+Can you add:
+Fixes: 9c04363d222b ("ASoC: SOF: Introduce struct snd_sof_pipeline")
+
+and:
+Acked-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
 > Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Cc: Tvrtko Ursulin <tursulin@ursulin.net>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: Simona Vetter <simona@ffwll.ch>
-> Cc: Matt Roper <matthew.d.roper@intel.com>
-> Cc: Gustavo Sousa <gustavo.sousa@intel.com>
-> Cc: Andi Shyti <andi.shyti@linux.intel.com>
-> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-> Cc: <intel-gfx@lists.freedesktop.org>
-> Cc: <dri-devel@lists.freedesktop.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+> Cc: Bard Liao <yung-chuan.liao@linux.intel.com>
+> Cc: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+> Cc: Daniel Baluta <daniel.baluta@nxp.com>
+> Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: <sound-open-firmware@alsa-project.org>
+> Cc: <linux-sound@vger.kernel.org>
 > ---
->   drivers/gpu/drm/i915/gt/intel_workarounds.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  sound/soc/sof/ipc4-pcm.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/i915/gt/intel_workarounds.c b/drivers/gpu/drm/i915/gt/intel_workarounds.c
-> index 116683ebe074..b37e400f74e5 100644
-> --- a/drivers/gpu/drm/i915/gt/intel_workarounds.c
-> +++ b/drivers/gpu/drm/i915/gt/intel_workarounds.c
-> @@ -156,7 +156,7 @@ static void _wa_add(struct i915_wa_list *wal, const struct i915_wa *wa)
->   	if (IS_ALIGNED(wal->count, grow)) { /* Either uninitialized or full. */
->   		struct i915_wa *list;
->   
-> -		list = kmalloc_array(ALIGN(wal->count + 1, grow), sizeof(*wa),
-> +		list = kmalloc_array(ALIGN(wal->count + 1, grow), sizeof(*list),
+> diff --git a/sound/soc/sof/ipc4-pcm.c b/sound/soc/sof/ipc4-pcm.c
+> index 1a2841899ff5..52903503cf3b 100644
+> --- a/sound/soc/sof/ipc4-pcm.c
+> +++ b/sound/soc/sof/ipc4-pcm.c
+> @@ -784,7 +784,8 @@ static int sof_ipc4_pcm_setup(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm
+>  
+>  		/* allocate memory for max number of pipeline IDs */
+>  		pipeline_list->pipelines = kcalloc(ipc4_data->max_num_pipelines,
+> -						   sizeof(struct snd_sof_widget *), GFP_KERNEL);
+> +						   sizeof(*pipeline_list->pipelines),
+> +						   GFP_KERNEL);
+>  		if (!pipeline_list->pipelines) {
+>  			sof_ipc4_pcm_free(sdev, spcm);
+>  			return -ENOMEM;
 
-Will the sizeof stay, and if so, how will kmalloc be able to distinguish 
-the type? Or we expect one more churn on the same line?
-
-Regards,
-
-Tvrtko
-
->   				     GFP_KERNEL);
->   		if (!list) {
->   			drm_err(&i915->drm, "No space for workaround init!\n");
+-- 
+Péter
 
