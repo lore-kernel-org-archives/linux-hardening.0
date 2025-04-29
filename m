@@ -1,124 +1,116 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B32118F2FC;
-	Tue, 29 Apr 2025 19:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DB9254B19;
+	Tue, 29 Apr 2025 20:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745956420; cv=none; b=meVc7m7NeCZXV/xPSpNmn1AUqBlsZyAabW6MO+yDkaCYCMUMOtcIzZb17061TicnO2beE5WxgaOezLmzW0DBkjYdYKHgHh1Fxw8raBdCttkIcmh5yK5IxBAD7/3lXvqQ4D4Iobmk5KyCmXMrDghQgpFLPgxJ2kZGH+uFyJjFd6I=
+	t=1745957026; cv=none; b=VM+xIrveotyBi0b0l/Ym/M/bA5jgR+yY+/F8bqW0OmFozPnbTztYGxIV8NeQlhO9Ec0MoVLw8VX/I4yiAVsZUs1tuDjmgyI86/S5sacOSOHyLotqb89/YOmLQ/WnjRkIkBwzibfy5txnlmreiRglftY7ojtjdPy+yXsacjJNzEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745956420; c=relaxed/simple;
-	bh=/m2f5glFJoqPUvsL1MCDWCg8ycsdqZ8UzASsUMK5Y2c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L5iFgpWoMz4YpacbLJ5Xo0DRYLWOPlzHziZsboiVaIkvNsLdi+Py3+R9MbutrWh61rEhEdwn4/etgHcfzHMCD1eSVFJ4Qt7ryKWK5nV5vcARbKcK8JTzpEW56zupCP4YabOJ8ruBMGK++WtrWJQS0Spaw9GD1ZLQ9Itsbqc+axI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BwUD7d8M; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745957026; c=relaxed/simple;
+	bh=OcNmXWcVfN2D2A9bVDTuH9ng9jsYPZRLKck1S3I/5wY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=EB7f1axxXs4KuDig0gV9ZkR+0hLuIoy+EasoEzVqcyTepiXcbr4+GgIbZ+IxMeD2nkXPSGYy4YBcE/oY2ifhj0guZyPQ/TSsgXCQ70nm6FZuHEIIWfbtlsOZy7PIa2inrkFwy0qU/1BYvxu/YOiS4i9+J+VZF7cVNSMBaJMxfaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/3rIbRl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BwUD7d8M"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5f7ec0e4978so5916488a12.1;
-        Tue, 29 Apr 2025 12:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745956417; x=1746561217; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=amJhdD4Bfh27xkAj5s99YtoTbehGVcO5N5MkHcm2+9g=;
-        b=BwUD7d8MUnGUOQxJ0cGcJWZjnWtwjNxhzDsE4Eg5nClNkFQp79PGbicC9f45E30ke8
-         +raFb+Hl9F/5tit0bgXz/myLYR4LnWtdrp1tlDudy0wjyCGek+J9YLpDX6M7W1gGfOT0
-         ZDZnSxp7eww1PlR/or+CrSo8AoSGoB/k/TiAE2U2R4o41IaI4n6DsxQu+g9qC+l4v15J
-         sSstmC4647xN2z0aIosiWqD6ZV4FGFIeophuYk3qZH59rDYE4AwbET8M8TSdZMCIYuo1
-         b+WVUM1/DlcxXVsPpEtMrQ5ZXmzggcWmj7Iy+omhrTCgpPmb/9WQ3i6UIXTDStfEAGgE
-         5ocA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745956417; x=1746561217;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=amJhdD4Bfh27xkAj5s99YtoTbehGVcO5N5MkHcm2+9g=;
-        b=Ejxq5+OLcbr4VJqo2VlekwsELzcvHZsNFqjDhMaTKY98Ewm+9Nr3rfJHcfvoKBQXjZ
-         d5KTp4hWDl4QU/qMWHopR4FXrJoN06qBatG+D0GWDqGYNFvyasdTsFhNkazShU1/qQsQ
-         gId8PRCIvun7KEzCiDQKTBCd6qnDIHgYdJkHmHX3U2D8MSeH2z1YZ/GYG7Uk2amLb3P0
-         2oljAUTss0kejcMOAK67nofvQX2Ygn5REhtlbBIE7Hy+8WEZ2f+nqt8TVT9RwMcy8+8l
-         JChqgZ0Q88jZorB3t6wH+SrPenOmPXbzvnRQnDkvu/w5WEAjnYyrXi6cRN0D/8pNtRU+
-         bEWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWnNlaGSbQp4HYldFcc3SZ0yJBQbACLDBs9u8uyXco6q3R9sttOg2Zx0yAsIxs6+z0eg72GR0dfWQZZ+9RlffYb@vger.kernel.org, AJvYcCXYkcTqgeR8Nrw6PI56Q/J8faBJdYstNQCs0znTbZleZPuuxfkxmjJTojYl8/cRaMb6EVlPrbC9rkAxkAPY@vger.kernel.org, AJvYcCXzZe54mymnDE6RciwXJ2sbcxCAgeSydvPBavGthDX8mBvSIUGThaWJZCRkCc0HNEGLb3W6A9xaD2mg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyrmme8RCU1M3CnaAwzj+OpLBI4ngkoyy5uvOJjScUhOSweaE53
-	O/aUDNerYPnFkI3a8OUg8CjcpegsWxnZ0/gCOO96XjM89ejtbIN1e6p1JfVLg+PnEEuWfu2BUi1
-	PXPeyDX6rkeMG+9RDzBUnI/yAnO3z6dSO
-X-Gm-Gg: ASbGncvPeWXtNkCDsYlVhMI2JxWQT02Jx92T+mZEILLCUUwcC1vZpCh6aiQwvbmDQi0
-	pQXdgvdsokhcK3e3RWA82arTQ/KBddNQkDHs57D2eiqwzf1HsPaAxMqi87VqFbetmeOEyqkGJYi
-	WH4xGBbEftOhxbKHYtmw5vxA==
-X-Google-Smtp-Source: AGHT+IFn+Ny7vYGospb10UuJ4S9bFcXHWzs+HDCP+yYxtmh3gLnLEIb7H9zLRBUWbVIgjB5NrwRSq66TQfIqBMNO99g=
-X-Received: by 2002:a17:906:1119:b0:acb:bbc4:3344 with SMTP id
- a640c23a62f3a-acedc5e042cmr50004466b.22.1745956416638; Tue, 29 Apr 2025
- 12:53:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/3rIbRl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14BB7C4CEE3;
+	Tue, 29 Apr 2025 20:03:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745957025;
+	bh=OcNmXWcVfN2D2A9bVDTuH9ng9jsYPZRLKck1S3I/5wY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=T/3rIbRlMtLhstfSA8xy2NAdq1w+elubtky19lTsnOqKFaZgoJKRKfq+ohnrpg+LW
+	 MTbPH9bE1P5f/8e4oc6Yd0uozAe+24FN5apRFu0gRKEzzVkRRPFRhdSnlC5x6Qa8pv
+	 A2l9lyuFd7s5M1HRhjKykKIOtvV5cVV24rbFXmIHKRnmWiDE31mKZWke0zrjwkkWbu
+	 66ze56nA3UN13NTz8//KPzcSIZImRJnvmFJMJ9UA7GmBXvKL/ZBMd6TuCA3S3b+lvX
+	 4huVx6JBFG4M43bGuRmHr7E4U/jFoIBZWd2x/U4qxL5aiDl35QfG0fTW5Zg/cHK5ws
+	 yu7er2ll2Fm4g==
+Date: Tue, 29 Apr 2025 14:03:40 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Sebastian Reichel <sre@kernel.org>
+Cc: chrome-platform@lists.linux.dev, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2][next] power: supply: cros_charge-control: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <aBEwnKtUOTYzS7C3@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
- <20250429-aaeon-up-board-pinctrl-support-v4-3-b3fffc11417d@bootlin.com>
-In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-3-b3fffc11417d@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 29 Apr 2025 22:53:00 +0300
-X-Gm-Features: ATxdqUFIOUQJascpH7Q4rydZ5qHH4jZYeeXXhuypZCuHlgQ4MyZpT2gNs5uAOio
-Message-ID: <CAHp75VfM7hw7LLkZ8_oXj2WsWJKyr+yYq38csYYczqNo2qV63A@mail.gmail.com>
-Subject: Re: [PATCH v4 03/12] pinctrl: core: add devm_pinctrl_register_mappings()
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025 at 5:08=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> Using devm_pinctrl_register_mappings(), the core can automatically
-> unregister pinctrl mappings.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-...
+Replace an on-stack definition of a flexible structure with a call
+to utility function cros_ec_cmd().
 
-> +static void devm_pinctrl_unregister_mappings(void *data)
+So, with these changes, fix the following warning:
 
-data --> maps
+drivers/power/supply/cros_charge-control.c:57:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-> +{
-> +       pinctrl_unregister_mappings(*(const struct pinctrl_map **)data);
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Use utility function cros_ec_cmd() instead of DEFINE_RAW_FLEX(). (Thomas Weißschuh)
 
-Why can't you use the 'maps' pointer directly here?
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/aBEmk6ixfrQ2XpTw@kspp/
 
-> +}
-> +
-> +/**
-> + * devm_pinctrl_register_mappings() - Resource managed pinctrl_register_=
-mappings()
-> + * @dev: device for which mappings are registered
-> + * @maps: the pincontrol mappings table to register. Note the pinctrl-co=
-re
-> + *     keeps a reference to the passed in maps, so they should _not_ be
-> + *     marked with __initdata.
-> + * @num_maps: the number of maps in the mapping table
+ drivers/power/supply/cros_charge-control.c | 23 +++++++---------------
+ 1 file changed, 7 insertions(+), 16 deletions(-)
 
-Missing Return: section. Please, validate the kernel doc.
+diff --git a/drivers/power/supply/cros_charge-control.c b/drivers/power/supply/cros_charge-control.c
+index 02d5bdbe2e8d..53e6a77e03fc 100644
+--- a/drivers/power/supply/cros_charge-control.c
++++ b/drivers/power/supply/cros_charge-control.c
+@@ -47,29 +47,20 @@ struct cros_chctl_priv {
+ static int cros_chctl_send_charge_control_cmd(struct cros_ec_device *cros_ec,
+ 					      u8 cmd_version, struct ec_params_charge_control *req)
+ {
++	int ret;
+ 	static const u8 outsizes[] = {
+ 		[1] = offsetof(struct ec_params_charge_control, cmd),
+ 		[2] = sizeof(struct ec_params_charge_control),
+ 		[3] = sizeof(struct ec_params_charge_control),
+ 	};
+ 
+-	struct {
+-		struct cros_ec_command msg;
+-		union {
+-			struct ec_params_charge_control req;
+-			struct ec_response_charge_control resp;
+-		} __packed data;
+-	} __packed buf = {
+-		.msg = {
+-			.command = EC_CMD_CHARGE_CONTROL,
+-			.version = cmd_version,
+-			.insize  = 0,
+-			.outsize = outsizes[cmd_version],
+-		},
+-		.data.req = *req,
+-	};
++	ret = cros_ec_cmd(cros_ec, cmd_version, EC_CMD_CHARGE_CONTROL, req,
++			  outsizes[cmd_version], NULL, 0);
++
++	if (ret < 0)
++		return ret;
+ 
+-	return cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
++	return 0;
+ }
+ 
+ static int cros_chctl_configure_ec(struct cros_chctl_priv *priv)
+-- 
+2.43.0
 
-> + */
-
-...
-
->  void pinctrl_provide_dummies(void);
-> +
->  #else
-
-Stray change.
-
-
---=20
-With Best Regards,
-Andy Shevchenko
