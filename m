@@ -1,116 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DB9254B19;
-	Tue, 29 Apr 2025 20:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06CE25A2DE;
+	Tue, 29 Apr 2025 20:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745957026; cv=none; b=VM+xIrveotyBi0b0l/Ym/M/bA5jgR+yY+/F8bqW0OmFozPnbTztYGxIV8NeQlhO9Ec0MoVLw8VX/I4yiAVsZUs1tuDjmgyI86/S5sacOSOHyLotqb89/YOmLQ/WnjRkIkBwzibfy5txnlmreiRglftY7ojtjdPy+yXsacjJNzEU=
+	t=1745957173; cv=none; b=eicDFrjdokioDyBm8zZ+C0wnU59aiBEsLGHTaYxQ3yKeyUnCDSR5lRBkNAk9l9BzKgMddEPCcbZRist5m4zWH/vUyKtf7eXOC3tlxW/OJUbtnQaOE/TiwT0ev3LWT0joRb0MernFoDMgqj2VI4WuiDv2sQUTwWm5Y2COncU1hWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745957026; c=relaxed/simple;
-	bh=OcNmXWcVfN2D2A9bVDTuH9ng9jsYPZRLKck1S3I/5wY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=EB7f1axxXs4KuDig0gV9ZkR+0hLuIoy+EasoEzVqcyTepiXcbr4+GgIbZ+IxMeD2nkXPSGYy4YBcE/oY2ifhj0guZyPQ/TSsgXCQ70nm6FZuHEIIWfbtlsOZy7PIa2inrkFwy0qU/1BYvxu/YOiS4i9+J+VZF7cVNSMBaJMxfaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/3rIbRl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745957173; c=relaxed/simple;
+	bh=ROrues9ocYSCTDxwHhiyyawG8Ax3bIuGP081rEw54HM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TvKep+lW1Le0WLEjZSvERQH0dtoswmjS3U6ZV+YaC0EDbQ8C53iqpQYHUcFrPVWTlccIekX8hiN+3b3YLGFKfq35lp1LsjHtSP/WOpTSwpx87F7WNOyDi7BoaeQSp32KR2b2h6MzevB/yXnes8hvcuJfZbTIwc7sTNN5UkcUIxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M0wtL3hD; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/3rIbRl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14BB7C4CEE3;
-	Tue, 29 Apr 2025 20:03:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745957025;
-	bh=OcNmXWcVfN2D2A9bVDTuH9ng9jsYPZRLKck1S3I/5wY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=T/3rIbRlMtLhstfSA8xy2NAdq1w+elubtky19lTsnOqKFaZgoJKRKfq+ohnrpg+LW
-	 MTbPH9bE1P5f/8e4oc6Yd0uozAe+24FN5apRFu0gRKEzzVkRRPFRhdSnlC5x6Qa8pv
-	 A2l9lyuFd7s5M1HRhjKykKIOtvV5cVV24rbFXmIHKRnmWiDE31mKZWke0zrjwkkWbu
-	 66ze56nA3UN13NTz8//KPzcSIZImRJnvmFJMJ9UA7GmBXvKL/ZBMd6TuCA3S3b+lvX
-	 4huVx6JBFG4M43bGuRmHr7E4U/jFoIBZWd2x/U4qxL5aiDl35QfG0fTW5Zg/cHK5ws
-	 yu7er2ll2Fm4g==
-Date: Tue, 29 Apr 2025 14:03:40 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Sebastian Reichel <sre@kernel.org>
-Cc: chrome-platform@lists.linux.dev, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] power: supply: cros_charge-control: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <aBEwnKtUOTYzS7C3@kspp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0wtL3hD"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so809632166b.1;
+        Tue, 29 Apr 2025 13:06:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745957168; x=1746561968; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VnhlweQrbulpbYz5+ddzD9VuCBmMsdNLumZo0g6Oc68=;
+        b=M0wtL3hDfy74tnGFqJtumgEzOHtgnURSZkVIXvRW7DmTLCuL1ANlVku/XLXZ5g7o4k
+         rjQpL4x08/Uu1UfqiTfcPZsC1qUhJ2/SJcdCHrgLr32Ubk8IiyZhKXSpKvxt++rcPRJq
+         z/K283/3R+E6FPXBersEyce+W+H/oc3MUsjSxPQLrPEij6S7MeaUKw3sSpDSrWm2i28s
+         0uvOnDRU/2J1zPa0BWUx+UaKZwlZC6cDvi8+DIuMlKd8vaF1v1B3U67142XQ7UYS8myM
+         8CJuYHwyooEJuVyVNUGq4so3FoGG1ZaMSJP3DWzwL7LUGQiHU/rtkyTbQrV93QJMEIMy
+         eXWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745957168; x=1746561968;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VnhlweQrbulpbYz5+ddzD9VuCBmMsdNLumZo0g6Oc68=;
+        b=dtGgkGKrgMT6agmVCVJGMynUARRd8FbnWYw/LN+iNNyflXOohAiDNdKNyb9JDqSie6
+         jA/3Viv/8Uldvut1eLcPYmChgN7L3O1WP9yGjQi/geq+rx6gy5Cg0MG/aWg4nI5RW+ri
+         aIDLvpdLoVtmxPM1yCZejtQT+pwE5do+Eq1X4t62mCUQDRlJio05Onb8uemoL7xygpkT
+         entB3t01TOGRP12+IX5k8bGJ74JfJ2FCV4HCOkZ57fjg1WsqUqwn7JzVskvcN4x3kn7e
+         PymJcTm323UB6s82iaxBQ1RtX2m6h31W33abOBFTDmhg7dcn79j9Jq1dOu7Kg67Hucvx
+         WY8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWEeXnmYIOarM07EjwQKaBnnS5ucpt0Yd9znFu5mFUInSrsswMo5JKOx2DDwl58zURD9Zkj4frQufuy@vger.kernel.org, AJvYcCWkED/XKHVb9hyvVxclqQjAu2w2dKco7/1f/5oh16a/F67OzZolmuBG9Xxkb5DYBqpF2D7kJqrdgcKWL9PTteWT@vger.kernel.org, AJvYcCXyn8J0trxmlzldVRNA7IOyDWdt06xpftDDpJPfZyNpsQK1m1jOlNxGkftNyhmteS3PnKK0zNLp09ZG9+3/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY7hvKAqKQ4mA4sj4w9IMdLQwIUc6Ogfq//wRgvoIbWUaut5z2
+	XUDokxqBNBbb+toJDvCq/DZyD2tsXi9+Sbo8XXKca+WZBowP6ENMt5JP10jW0jpmkN6KWUhhyoK
+	EQohLpEaDUgyy5EPnLnAWCsXgvYc=
+X-Gm-Gg: ASbGncs4V5wQLolJ6kxR7IyZCCBZhUaY4ZHVVVhxpqqiyeQu2w76mWniFJwEM8TP+ce
+	B3qXb8xJL15FZnVy+oJkqJOUN4XSIFQDPLpC9w5ElzQAobF3xnRoCN28G6Ffwi6C5MUUrczBMbl
+	0SNlMap2HEENMY9npZjKeB2g==
+X-Google-Smtp-Source: AGHT+IHzBwENZySO+iABPSOfF0pbPLTD2vHtSSYYLyk7Rh9/rw8P+me+a0xt/eolP/8YcUIxAVbgjbLl+erCtG37oR0=
+X-Received: by 2002:a17:907:72c1:b0:ac2:9683:ad25 with SMTP id
+ a640c23a62f3a-acedc62278fmr64758766b.34.1745957167963; Tue, 29 Apr 2025
+ 13:06:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
+ <20250429-aaeon-up-board-pinctrl-support-v4-5-b3fffc11417d@bootlin.com>
+In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-5-b3fffc11417d@bootlin.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 29 Apr 2025 23:05:31 +0300
+X-Gm-Features: ATxdqUH3j5SoOveEZ_BcoQGg8gt0PoLFQ9rwxHPs1rQsev2JxgqaatDygJT-ZVg
+Message-ID: <CAHp75Vehui8wJPvX=wn78eQYVSYk3h0WqiEtczAS81qtuWsYzA@mail.gmail.com>
+Subject: Re: [PATCH v4 05/12] gpio: aggregator: refactor the code to add GPIO
+ desc in the forwarder
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Tue, Apr 29, 2025 at 5:08=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+>
+> Create a dedicated function to add a GPIO desc in the forwarder. Instead =
+of
+> passing an array of GPIO desc, now the GPIO desc are passed on by one to
 
-Replace an on-stack definition of a flexible structure with a call
-to utility function cros_ec_cmd().
+GPIO desc:s
+GPIO desc:s
 
-So, with these changes, fix the following warning:
+> the forwarder.
 
-drivers/power/supply/cros_charge-control.c:57:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+...
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Use utility function cros_ec_cmd() instead of DEFINE_RAW_FLEX(). (Thomas Weißschuh)
+> +static int gpiochip_fwd_gpio_add(struct gpiochip_fwd *fwd,
+> +                                struct gpio_desc *desc,
+> +                                unsigned int offset)
+> +{
+> +       struct gpio_chip *parent =3D gpiod_to_chip(desc);
+> +       struct gpio_chip *chip =3D &fwd->chip;
+> +
+> +       if (offset > chip->ngpio)
+> +               return -EINVAL;
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/aBEmk6ixfrQ2XpTw@kspp/
+> +       if (fwd->descs[offset])
+> +               return -EEXIST;
 
- drivers/power/supply/cros_charge-control.c | 23 +++++++---------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+If we still need this, it shouldn't be in this patch. This change
+doesn't require the check.
 
-diff --git a/drivers/power/supply/cros_charge-control.c b/drivers/power/supply/cros_charge-control.c
-index 02d5bdbe2e8d..53e6a77e03fc 100644
---- a/drivers/power/supply/cros_charge-control.c
-+++ b/drivers/power/supply/cros_charge-control.c
-@@ -47,29 +47,20 @@ struct cros_chctl_priv {
- static int cros_chctl_send_charge_control_cmd(struct cros_ec_device *cros_ec,
- 					      u8 cmd_version, struct ec_params_charge_control *req)
- {
-+	int ret;
- 	static const u8 outsizes[] = {
- 		[1] = offsetof(struct ec_params_charge_control, cmd),
- 		[2] = sizeof(struct ec_params_charge_control),
- 		[3] = sizeof(struct ec_params_charge_control),
- 	};
- 
--	struct {
--		struct cros_ec_command msg;
--		union {
--			struct ec_params_charge_control req;
--			struct ec_response_charge_control resp;
--		} __packed data;
--	} __packed buf = {
--		.msg = {
--			.command = EC_CMD_CHARGE_CONTROL,
--			.version = cmd_version,
--			.insize  = 0,
--			.outsize = outsizes[cmd_version],
--		},
--		.data.req = *req,
--	};
-+	ret = cros_ec_cmd(cros_ec, cmd_version, EC_CMD_CHARGE_CONTROL, req,
-+			  outsizes[cmd_version], NULL, 0);
-+
-+	if (ret < 0)
-+		return ret;
- 
--	return cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
-+	return 0;
- }
- 
- static int cros_chctl_configure_ec(struct cros_chctl_priv *priv)
--- 
-2.43.0
+> +       /*
+> +        * If any of the GPIO lines are sleeping, then the entire forward=
+er
+> +        * will be sleeping.
+> +        * If any of the chips support .set_config(), then the forwarder =
+will
+> +        * support setting configs.
+> +        */
+> +       if (gpiod_cansleep(desc))
+> +               chip->can_sleep =3D true;
+> +
+> +       if (parent && parent->set_config)
+> +               chip->set_config =3D gpio_fwd_set_config;
+> +
+> +       fwd->descs[offset] =3D desc;
+> +
+> +       dev_dbg(chip->parent, "%u =3D> gpio %d irq %d\n", offset,
+> +               desc_to_gpio(desc), gpiod_to_irq(desc));
+> +
+> +       return 0;
+> +}
 
+--=20
+With Best Regards,
+Andy Shevchenko
