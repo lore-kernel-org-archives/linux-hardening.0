@@ -1,249 +1,198 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E446433C4;
-	Tue, 29 Apr 2025 01:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745889731; cv=none; b=HRXLwMQZ+cvw29wA/Mi9K7WT77LbaNeI//t5w6stLblvZjuhVEet8nmM3x20mG44dx2N//rW9peAq7r9KDCUa6feqrygRoCKvnrMwcluQGt7tYOBpbPnjcYUfx2iBxGjVEGlZQ5dwZ/Po8t1fUzIbv2hwuLfT7bepAkR/h4OFVw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745889731; c=relaxed/simple;
-	bh=cVg5GwXF+As3agQ4in7fyi3zb96mbkAD6agfPrPwiKo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=olpEFp6YQV2a2YtdZ83xs0lDQvYK7uUEsTjcVAN6RYU8HxeMJlF1cBUp8DTydDOP+HmzTSaewxoUy5nz8neQVnwKWqmzoCySnF/7fpN4dB1uHIoEUUfLrLGCwNfWOMc/u5aYUDOxPNszXkfFJ7YJHg3XftRFHaQezA4+yjshpEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z2aw+Gpp; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAB4C2D1;
+	Tue, 29 Apr 2025 01:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745890303; cv=fail; b=bt+/qjiLjbcbc3DLiH/W+2grTZ/ckzE9/FZG5mBs0/mNrWzL4e29hyQyJNvAKG6QTbFK6x7tPYc+CdJEH54uSrFrXdiiu1+Vb8U5b3kP6F8IjDtE6C/eCIZkBwoPhjq8U6FPNnode5HzxcS3ccLtWM+uwRsNBHlfyCZTz+77xYs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745890303; c=relaxed/simple;
+	bh=l5V2nPtFvdvQBw7oYzegAnJZefVxNxw6sBgtCAlQQwY=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=jZGxxH6R7/Z5AA+TDBhAaMBUscop0Jux2Hd/WA5YOXWFUbC2Tv3AmNe3T37zVAVZIFXXs0aY6QDSib7Gdstx0laavU93PDYFgGNUOVhTdzItSCSjDwt27NIARKp6J3xD4fQDzEUUntwe2KHig9RKFlTv56M03yMkCrH5Zxslw+c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=JVPttgzG; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=yucW1dAV; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2aw+Gpp"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30ddad694c1so60188731fa.2;
-        Mon, 28 Apr 2025 18:22:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JVPttgzG";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="yucW1dAV"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T12IDL014079;
+	Tue, 29 Apr 2025 01:31:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=Etqs3p7bP6oqVa8aMn
+	y0VJTZveydRFqB7BGm2D5ytKE=; b=JVPttgzGIdWQw+RXCumd6BGnakkL19djsb
+	J7gRAwaP0yiO1PGWW1LucHoQ/2m4HeczpTK+ULh22qLa0q9wYD3Z5xMsbhOQ4CEq
+	QywElPqsVN/VUVIqsQf7AcZ5q9MpxTE2XbN0f9P38u+c8++grQgdqCp1BpAzqTRO
+	5Rh65rySnDKSQZGsbLjXHeIp2bBIBNLGBVbfwu0I/tObXAE1PLom3iWj3MWJySiL
+	hEivlb9WFTRcpwEM7EuH1SevLfc83xIZubzRYiZf/kl5fqRQrEwquVKQBpPPxgnu
+	lV0bdakxPW/s8/HWzQc70XPeSCMJiW9aGCuZyfBflLK4DHVbQEfg==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46amrer0px-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 01:31:36 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53T0ZA4D033376;
+	Tue, 29 Apr 2025 01:31:22 GMT
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2047.outbound.protection.outlook.com [104.47.57.47])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 468nx96p98-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 01:31:22 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PR0E2UGyYstJA42ReKJGlSUFq30oM7+D+aqKbPdRWq7YoQ2iMyHLTfmqcQsmhC3/UrXAyjIStdYtTi9Z2g7Bu5hJwPWF03yTHn610r/KZSRahxnRdGn1bWZAkTiQjiAsiOFOWnLsPuHC3WzX2Xdyv7FnHSzviNEm1JN4X/+E2/03x6NwfNhwWCqATzGplagOkMLaVdei7QNqpzz73o8h9tIGgOJKAVyogQ9ObEUuPmquyvh0jFNW+ETG4DuSomdSVs51+P/QFEl+FA/mUlC1NOpsgA8UZnwcSGsoxhYEl1esv5oDbhuSyy9W896CdT1th03q9rBfgkIr9fhAiaPodw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Etqs3p7bP6oqVa8aMny0VJTZveydRFqB7BGm2D5ytKE=;
+ b=spI2kk8UNiv6YCOoPOi5HO0Mj4R2xlBEUJEhl58Wdk5sjm2WZzUU7p0QBYWhGGy0xqTFPghl4Yo3T/oVsk4xoTMYwFx87kILhItjDJKvTL6PCCB6lLPDHTIMuUMcrwAKzkGvLfrGLmsWeCwXD9rWt2YKt5GHyfAWSD55y/zhtasDl4MGJokiGhqCZnIe8hHqz0wapc2K9BwCHTFYFWmbe7nu7s0vf0wfKTJRZlUG1GCVxmBzEZI92+f0nS5hR1OZ9ugbhGer9oA8IyLlu77cZtkmCCk8qyyBBVNc8+hajxZON20vaQBJ08o5WgRzh2imWNOjMk3MoQjfQPTOvHAsng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745889727; x=1746494527; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ubb+K4fWJbldGK6UGeJkIvEmFdoGer7C910vjm4ulPU=;
-        b=Z2aw+GpptSsiB8KBQBLxHp7q+cWXE1CFFd5vEjfIO4jjDjb+kaK1hORMsWkgLQt6Yh
-         IbXjxq8KRKfMnGir5UT3ugBi6f/TOSte0wbq6FJ/5vbrIazNlu7iGWTFFjKJEJdk6vd1
-         FvT6k2kQqQPXpUx5KO9HpuWYPNoh3tytfTvIa6h0h/WpdxME2qcBubgnO9HH08+CBe/c
-         C42mdS8FdbJsxSDLpY7lH03W60+XlZ1bbgJQ33DCkl/JntRf8Si7MntpTXx8ZFWYe4YA
-         5pY7D1xIIvBhgc/dXwmzvLogPJKRVx0sx8HyT8XvEyiFOqB8Rb2x3Gfh9V/znM33xdWI
-         153A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745889727; x=1746494527;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ubb+K4fWJbldGK6UGeJkIvEmFdoGer7C910vjm4ulPU=;
-        b=qV24x44NM+a+o3bDm/vt5rSWNRpVp/1+cnMchqAkHm4wEuEPp8qje2AEYfeqQEK0O/
-         cy2Wo8wjh6KjCbvqtmAFk7woZWe/1e3BYb6JQX0j8Tz2KOACxCkQRbMf8/qutzUi5Cjq
-         PnHBeEim3O7IvIJQD73ymonRplnOmK1/oxHt/Zz+lQIUtRvsOrUg6RXNakTNoS9U/wtw
-         p28OOYyIgoMX/YgoS0QwY1bYIpoqLv450oA7tb8+KPwb9Iqoj8Mw/YNFtldpBQqcL7Ps
-         XXtbv56/X0PIT/zdFibW1rjP2I8tmLd1D9zUq4NkmpOqbRbTGL2Faf9jXeI1tjuNC/vb
-         YVFw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1XWIDIEmumQyd9rl/VOz64GIZJEO3lwjYVimpvDV4pcS8qUyleL/axY70yl7LIwwuUnLVtsQGRqbMxTc=@vger.kernel.org, AJvYcCVawOdyKd5RtDe3S7qzuYBEFtZgTmB7r9KlYLdsZDwgDlUqpeaYTxxGE2BdbS1MadX7CzEj3QWvMKN5Jd6f44Lo@vger.kernel.org, AJvYcCWb2iU4FlvlcAKIXWlpEIPViAd8bonUWh5vzMneAoxAHYlB7XrMMkDjZ7zgQIUmCSB7znCZpwA+Y5JZjTNt@vger.kernel.org, AJvYcCWlKvaq39Sdoq3mKp8BGThrLs0RoQoXhHcQ0QXmxsGmV3haKWLapcjDUvE9eiUz4PfuHmsKspXINFXM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxA2f+cOFMFWOduXpendcg9LFhJNviE2ee1y/WbwhWGburrsMd
-	TJGxeG2GPLo2mZ9X1Q7S8noMtlwreNwXEYn20XNUEP+ZoqQFqRw8s04cif7dv0X7K9d5ow/7eHl
-	Q4R0SJHc74IgVeXniMbDL7PY1wdtT7ivsrn+Szw==
-X-Gm-Gg: ASbGnctwAYYga6bi+fwA6LkkCWdUSf/EdhORtcEn7J6xTMgZ9VliFppbSQA9MvT62ld
-	eRZNGg7RoelnU8LAxvYom36vf99rQpE9G9zDDcDORlvpwisIOx8OgbVoC9ua+/HJkcqC0R71Rbq
-	4OlOR+JULeQSzoLXce8ZtFBQ==
-X-Google-Smtp-Source: AGHT+IGnkjEigT4yy4paszArYbJh9yCH5Txz4mV4DGyIa5fE9bALLBqfcFcgPDPkgfc3ub7dVNlOGmA8zR6Oo9YVCMU=
-X-Received: by 2002:a05:651c:1142:b0:30c:2e22:c893 with SMTP id
- 38308e7fff4ca-31d34c6104fmr4626501fa.23.1745889726849; Mon, 28 Apr 2025
- 18:22:06 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Etqs3p7bP6oqVa8aMny0VJTZveydRFqB7BGm2D5ytKE=;
+ b=yucW1dAV8oGeNXvpVry8tn3HYKFBBHTN1vtFda/sgJti0GC/n22Xlzllg6G634Pdilx+2BLT27k3C1Atb6lJij90rZp+83fyUJeB2HcJjtgY8Z8aeJHotK4lPCHWnKpx0HWGA77tED3nxCJtpi07F67JbIDwrtY3K2DbwQyTCog=
+Received: from DS7PR10MB5344.namprd10.prod.outlook.com (2603:10b6:5:3ab::6) by
+ MN0PR10MB5910.namprd10.prod.outlook.com (2603:10b6:208:3d2::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Tue, 29 Apr
+ 2025 01:31:19 +0000
+Received: from DS7PR10MB5344.namprd10.prod.outlook.com
+ ([fe80::b527:ca1f:1129:a680]) by DS7PR10MB5344.namprd10.prod.outlook.com
+ ([fe80::b527:ca1f:1129:a680%5]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
+ 01:31:19 +0000
+To: Kees Cook <kees@kernel.org>
+Cc: Nilesh Javali <njavali@marvell.com>,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>,
+        "Martin K. Petersen"
+ <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scsi: qla2xxx: Remove duplicate struct crb_addr_pair
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20250426061951.work.272-kees@kernel.org> (Kees Cook's message of
+	"Fri, 25 Apr 2025 23:19:52 -0700")
+Organization: Oracle Corporation
+Message-ID: <yq1msbz3g9x.fsf@ca-mkp.ca.oracle.com>
+References: <20250426061951.work.272-kees@kernel.org>
+Date: Mon, 28 Apr 2025 21:31:17 -0400
+Content-Type: text/plain
+X-ClientProxiedBy: BN9PR03CA0308.namprd03.prod.outlook.com
+ (2603:10b6:408:112::13) To DS7PR10MB5344.namprd10.prod.outlook.com
+ (2603:10b6:5:3ab::6)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
- <6920a557-9181-4c9c-98f4-a9be4e796a13@kernel.org> <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
- <83d17d6e-41c2-4729-94e6-5ccf480c766d@kernel.org> <CALHNRZ8+vnXrx7xw=qjpB34MX32hW_m7k+=CdePJpErBPPzv-g@mail.gmail.com>
- <53c943dc-5ea6-456b-a289-08212fc01d5d@kernel.org> <CALHNRZ8+X61YzQ_gYRkuAZrz2XFiZK36GDgk=801+384y2KnOQ@mail.gmail.com>
- <CALHNRZ-YZg3cKzRBMGaxRpejFMLSpOOz-FPQEaQVXFpFao40WA@mail.gmail.com>
-In-Reply-To: <CALHNRZ-YZg3cKzRBMGaxRpejFMLSpOOz-FPQEaQVXFpFao40WA@mail.gmail.com>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Mon, 28 Apr 2025 20:21:55 -0500
-X-Gm-Features: ATxdqUFnRPs_QMsfLRvY1R6ZIrGYNdwq99bfTGl5CnY2zOSdxheyqbcR5pFPcek
-Message-ID: <CALHNRZ-jxC5PXqiG4tNShybaU9gZjTz4YT+VXgfQFNQ-Ox7crg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5344:EE_|MN0PR10MB5910:EE_
+X-MS-Office365-Filtering-Correlation-Id: d8401115-6dbe-4072-f57b-08dd86bd8ae6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?BWoWoIV+nazdUEz7HLyp8nQXmOTTXE5diy+JG8rqEWforG9g07gPsL43RGJK?=
+ =?us-ascii?Q?ukdmb8vVg17GBV0DfFIeqdlalqxWahxGH2FrlM0ngiIkrAwH6wfioIeWwnr6?=
+ =?us-ascii?Q?G6jjn20zfltKfduy61Uxoy2LMUaaB2EwYVLUlpzRSNW0s6NG5izpkVaNZwl0?=
+ =?us-ascii?Q?GqHc1Gx9cyAcvMW1B1AkeBHVzS0TmFthdlvElK6EaadGVbFvX8MNzKSz/Q9/?=
+ =?us-ascii?Q?G0fy1rsZ8kb3S3DKqFjXb6XnFJYNV4agjgRkAQuF6TKpCytAwwPDh3yNvlOO?=
+ =?us-ascii?Q?aU7Kg7kf1bQOeDD30xq+mH0EM6k5BOwD3nS39uJAKbyb7B9Z3SJzyTjtKkp3?=
+ =?us-ascii?Q?AMTJEBAvcFk+HxP0Q5gWw+pN/uOaDFbVOzknWCgk/Cu7GFd9NMPtQImpXtgh?=
+ =?us-ascii?Q?j70l1+2K23ySQL7Y6u6s6mdAyvfZVQFR9W+Rrfc8ZIlJmU1VlS1sHZ19muH2?=
+ =?us-ascii?Q?yYKltiqPgzc1Vb51pq3vitnJNzOC5XG2XrPOiqo9pjrzHKRbhorv6XVeS8UV?=
+ =?us-ascii?Q?165sCo6utoruBVo4E86Yl4tGP5pKKkgPE1Sdb2uDbKpucjwak6BQ9jvHMiIS?=
+ =?us-ascii?Q?NlG1wbcKwePbTYAcxn9X0vsw97Juu74Dy8DsRdqcnRm78A/nynWlO3pVs9EN?=
+ =?us-ascii?Q?Gy2eS36+6jAQFzOHmMhPcZZ6rZdp6hriQ6vKgbUSJkpGDX07WqL0RP/g6JnF?=
+ =?us-ascii?Q?kkxq2wAbni921pnzF7cprbpeeS2uHo/fkxkjfqfgv7OlE3YBiYPNMsSjMADk?=
+ =?us-ascii?Q?vKNyeFENeP3Kz8hFn+eUDdRTvJWuJ6FcTC5CyvqGOzVZ/aifa6HdUlf8+YKF?=
+ =?us-ascii?Q?rzM01w/8xXCEb2qE3oyOp7bSon/IpdixzC3OoKtPWIZ3VGsGOoC8rJ9OO1BK?=
+ =?us-ascii?Q?dcMbjTC1ndioXWSIM6VU26xLhyxcF371CQNHPvoDkNnNvgmphZaAgdl/Ra3V?=
+ =?us-ascii?Q?cZWCZFA2pemQTHeykhFdyzz/z+IKArbrxdRzYfzwztWi8mUik+hanm9DsR8N?=
+ =?us-ascii?Q?YkkFczi7gj2yME6TLhId6NWyyKnM7ly5U6RRsr5uaDtsMRhsa2wZGeww2ueA?=
+ =?us-ascii?Q?eZIjjcmh6AYYhBkGFo2HOrXVOgzqwKluaElxJt+Y3YZPYa6avkNszToQomjr?=
+ =?us-ascii?Q?Oyjdp5pYoenix2TGOdaPE+djHLqqXiZMU75fE3jL840TvT8oD4PIAd89eDOL?=
+ =?us-ascii?Q?O2/q2SRsB8WwcHcVR9IlhHcCCaB5nRcYmT3SefReiObPW//gOzsqfZ7mvFyB?=
+ =?us-ascii?Q?IZSLlyQD2eqF5cab51hLlhPNOkHoKH9xN94D3RhfIiAsolEXRCasIVWs+wR/?=
+ =?us-ascii?Q?IQKWwZs4WEmGrmIXHYhV8B9rh4nN0w14TOxewrfI9kOPgkz9npGetm2SicTR?=
+ =?us-ascii?Q?bTW4YEKKLcOlS9hLQ1HLiXe0ZKeshXHRHMZq1Lqiw2FJEEVsmtRxp1HUOzAm?=
+ =?us-ascii?Q?adzjCWloSLE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5344.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?x6fx5NgzoO0Ou2dC17lYm+CKnhROzbsvkKjuTzgV5/HjTejuXV6uLVQqEGHe?=
+ =?us-ascii?Q?qJPfJtd9IJ+uEb5fRiBjGUz1aM2tl9wJj0bZpkyTgmhr67IN2+tqdynZlp21?=
+ =?us-ascii?Q?Jg39faDNYglABWGTds/iFQyn2ra5IoSl2oweSKSG25EOrMNv5qWARaWlyaZ/?=
+ =?us-ascii?Q?p1Z1bMfUrFNZ24OqLQtU+qn7mESHwWV5KalwVGBc1N8aA/FlBCqha6ey0wDs?=
+ =?us-ascii?Q?MJZHVaQdlesZudukEv7kn1hfrhKN8mHFNNyK9nLQdXQqr2vq7O2vYAv2Gzri?=
+ =?us-ascii?Q?Z4ZlA/BrTDQw8Uo11NIsgnkdfpeXHSpUt6nLfYKjK6tNMyJSxy30gBWPsa33?=
+ =?us-ascii?Q?ib1k7oyQtmk8uTx/HwtG1K0PvZQyZldVYNm4+PRiET2vDGwCbr1tNej4NO8t?=
+ =?us-ascii?Q?WGjf+yeo+BaR4jYG8OfYpKkuNIq3PWCOk2W1qGRasDViPabEk+FU+59ChM06?=
+ =?us-ascii?Q?36PA8jvrvxjY2puJLFuBizbieKdJlLKhLpS2KtrcsAuQd8RU8cIeiA4U6Zst?=
+ =?us-ascii?Q?tHMVOxvH21ExEkhKJ9QkcrF2rXBJnyypZ4YhhmxJwtDBcsCWGy+vTtSnoM0p?=
+ =?us-ascii?Q?c1m4cAKwJtwwmRRd4CEnvNijRf0oKLfWN0pc1BMVKFmQgmUI0VYp/zSw4MZ9?=
+ =?us-ascii?Q?xPapB0tlSjpd4Ml55TiNjLEqpgM5sl8f2DtjGFrSmta3RTXZ2AGfn3prUITa?=
+ =?us-ascii?Q?xkivJsnJTyfHhh6Lo3dfEmYIu1iJQ2VXb29v27dRNjvkyfU1+6e6llCGR0Q/?=
+ =?us-ascii?Q?kIYgjSpgEnyu/hwr42Q83JSjoq+0XmlIlH22wKjdM/D2L2nwx+cvMvUvmc48?=
+ =?us-ascii?Q?nRA98fMdQ0Ko2iemUZX4erZhGFPdkRvDaZtxPWerAZMfQZ5AJmAUesnP39hK?=
+ =?us-ascii?Q?IVddjLcof+l/ouHWtpWMSQZGnUIYz5NgpsYdbva8qq98xN9m2uYVKkyqYkSb?=
+ =?us-ascii?Q?nB9kg3TktP+0u0/VdeFWwwyxz9/yCaGsVmzVFxm+ft6PjZGVWhpGKKlQ2Oyo?=
+ =?us-ascii?Q?IknG/8RmvEs3yeJpDLS9keN+H7yOEa3/47q8siTw8eIUzoCFv8747zPiYw8Q?=
+ =?us-ascii?Q?o1mwx5aR0gyALxCic1nUqNkxC3Jb9CKft54eqNJbbJ03XAQtWXKBZ7KZs0hg?=
+ =?us-ascii?Q?WEWmvE0ZBR5lNXgGQNC9sQpZBeqbG+OGN89L2cf+p+8hrBWKUm1wYbJhR9Lx?=
+ =?us-ascii?Q?I8yISHt45ZVGiU4J1NpML/YH+xJMcwhSpGzElAlN7rchtVFmzMeOLko+EPqH?=
+ =?us-ascii?Q?qDNGzLsuL91uGs283BjNm0JT7UM/XHUuGgA1op4xRhoh0V9Qp/omJ2YXEA2X?=
+ =?us-ascii?Q?9priEM0vVeOsTD1d+AJzNMVWKfOeMLlZGpNsJt7L9remBuJBxQ0Ioyfgq/uw?=
+ =?us-ascii?Q?DBltx0l9+4/YQAKgjLvHQLkBC8K5d5ETktj2oHfZfI+MWwNCIEwVHCyzHGJs?=
+ =?us-ascii?Q?kH4BPc8tYRIDQzkENJmq3sm+fclDspUMHDdEHDbWeBqEy+fxeIk+uuuVsV5W?=
+ =?us-ascii?Q?iBKZTPB/h0tbxMQpn9iGw7zy45KRYHJS1ilJ2O8NsSPhotcPkYQWJC6cmlqL?=
+ =?us-ascii?Q?6JEoi3C0VBMeQXKyluX+lfIdPx4xvix35eJNv5Pz0NDO3NKtvyekhoz2SLVP?=
+ =?us-ascii?Q?ag=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	pK3DcotSvYHEVr+B1uefk72+o1oMJr9pPc3q6dFoeCxE8glUjMkN0NyPe2wB4//orYCX6Dt/jC7eGp3Rvo4eed1NHHdDnFDwD7ZvKSbi8etFiwp0etDOLON4eGRIEiXdvo5cH8B9IYodBeAtaWNvG178VTfAdlroKppUcNIe7OgvcgHCMBvue3cK6GMbc0cO1zClaKQBBlLIzVIzhGG/M/Fbbc3IWW9mvqK64R9bw5SieEsKDYSGSUhaM8QujAa7RwR8402SgRetIrL2o41/RN5WmohTlvEmg2RZSDF27a/hEPw4J7z2krifx/yWiv8ItB7WW+Geg3Tgz8One9MAsCFDwxYubZQ8/lob49xo0ROV4Oyww06p5t6cI5cUu38nNZqHonlh1fg97mYeZA2sJgFvfa2x60jN8TmQxTqPVo3A/QQWLHetGNSvzD5IZTok2lYXuMqhA0Gl3XvcOYCFMcI23d9mTvHnVMBURXcpdWW03dJ43l6OgHCywsbXl/MFlDDmP3xl0l1GA8ZHtE35Sjd1817cybcjUvDAl5y6+KwJEhFuadV4HWQSwGTau+K7bry5Ad7mAjtP786Mc+ORQp56jJSKPdS1RZP2ROTKpTg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8401115-6dbe-4072-f57b-08dd86bd8ae6
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5344.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 01:31:19.4789
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yD4FuC8cECK6XHDf/FyjrThG4qSFtMa4XJrjzMne+k9FQ6undMdTjs3T9lX2W7NJKZzwmZguuCQDLlHXbtaPMt+e5ZZ5b1FDx5a53ARmYvo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR10MB5910
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ malwarescore=0 mlxscore=0 bulkscore=0 phishscore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2504070000 definitions=main-2504290009
+X-Authority-Analysis: v=2.4 cv=O6k5vA9W c=1 sm=1 tr=0 ts=68102bf8 cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
+ a=XR8D0OoHHMoA:10 a=GoEa3M9JfhUA:10 a=cNMCkp2XhuoQE_LABBQA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDAxMCBTYWx0ZWRfX1zQa0rwhMvuE 9slqfO9b/3KsK9NGm9/meixubSHoTWRiTh8tb+YVK9dMlo45I7nXNM7Tn1PXEDYz7XUSgyiQ9kY 6j7oAag8E/d9vxviGEG8RTd6O7bV5aAQxF/H6nhWIs3KMTCEs9EL9yhN3vJ+AF48DRh5nt6JO1O
+ AYIxAlFOBJZDliGYL2Zax2/+MbDJ1HUTRXc54Qgu331QpOX9Nr+4jNSkqiBchol1p60peyNH8yb kMl1Nma58o+i+nqK0yzrpKztp0cRMniP0jdld0Ttjox43xvXf69Z64Q1nf6Na4s8Uk6fRqzNn8Y iDehaxxNp0Qu0dhJhPkMDxnc+GEVMn/VYx14hZ1Mebw1CGXkWT6YcTLLhcXSObYx7cuki6Bxx5b pFFWsAn3
+X-Proofpoint-ORIG-GUID: cOR541ZGPN08zC5vdX9tptpmlIzPhsKV
+X-Proofpoint-GUID: cOR541ZGPN08zC5vdX9tptpmlIzPhsKV
 
-On Sun, Apr 20, 2025 at 8:45=E2=80=AFPM Aaron Kling <webgeek1234@gmail.com>=
- wrote:
->
-> On Tue, Apr 8, 2025 at 3:49=E2=80=AFAM Aaron Kling <webgeek1234@gmail.com=
-> wrote:
-> >
-> > On Tue, Apr 8, 2025 at 3:17=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel=
-.org> wrote:
-> > >
-> > > On 08/04/2025 09:35, Aaron Kling wrote:
-> > > > On Tue, Apr 8, 2025 at 1:08=E2=80=AFAM Krzysztof Kozlowski <krzk@ke=
-rnel.org> wrote:
-> > > >>
-> > > >> On 07/04/2025 18:00, Aaron Kling wrote:
-> > > >>> On Mon, Apr 7, 2025 at 7:59=E2=80=AFAM Krzysztof Kozlowski <krzk@=
-kernel.org> wrote:
-> > > >>>>
-> > > >>>> On 06/04/2025 23:12, Aaron Kling via B4 Relay wrote:
-> > > >>>>> From: Aaron Kling <webgeek1234@gmail.com>
-> > > >>>>>
-> > > >>>>> This allows using pstore on all such platforms. There are some
-> > > >>>>> differences per arch:
-> > > >>>>>
-> > > >>>>> * Tegra132: Flounder does not appear to enumerate pstore and I =
-do not
-> > > >>>>>   have access to norrin, thus Tegra132 is left out of this comm=
-it.
-> > > >>>>> * Tegra210: Does not support ramoops carveouts in the bootloade=
-r, instead
-> > > >>>>>   relying on a dowstream driver to allocate the carveout, hence=
- this
-> > > >>>>>   hardcodes a location matching what the downstream driver pick=
-s.
-> > > >>>>> * Tegra186 and Tegra194 on cboot: Bootloader fills in the addre=
-ss and
-> > > >>>>>   size in a node specifically named /reserved-memory/ramoops_ca=
-rveout,
-> > > >>>>>   thus these cannot be renamed.
-> > > >>>>> * Tegra194 and Tegra234 on edk2: Bootloader looks up the node b=
-ased on
-> > > >>>>>   compatible, however the dt still does not know the address, s=
-o keeping
-> > > >>>>>   the node name consistent on Tegra186 and newer.
-> > > >>>>>
-> > > >>>>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > > >>>>> ---
-> > > >>>>>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++++++
-> > > >>>>>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
-> > > >>>>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 +++++++++++++
-> > > >>>>>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++++++
-> > > >>>>>  4 files changed, 61 insertions(+)
-> > > >>>>>
-> > > >>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/ar=
-m64/boot/dts/nvidia/tegra186.dtsi
-> > > >>>>> index 2b3bb5d0af17bd521f87db0484fcbe943dd1a797..2e2b27deb957dfd=
-754e42dd03f5a1da5079971dc 100644
-> > > >>>>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> > > >>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> > > >>>>> @@ -2051,6 +2051,22 @@ pmu-denver {
-> > > >>>>>               interrupt-affinity =3D <&denver_0 &denver_1>;
-> > > >>>>>       };
-> > > >>>>>
-> > > >>>>> +     reserved-memory {
-> > > >>>>> +             #address-cells =3D <2>;
-> > > >>>>> +             #size-cells =3D <2>;
-> > > >>>>> +             ranges;
-> > > >>>>> +
-> > > >>>>> +             ramoops_carveout {
-> > > >>>>
-> > > >>>> Please follow DTS coding style for name, so this is probably onl=
-y ramoops.
-> > > >>>
-> > > >>> As per the commit message regarding tegra186: bootloader fills in=
- the
-> > > >>> address and size in a node specifically named
-> > > >>> /reserved-memory/ramoops_carveout, thus these cannot be renamed.
-> > > >>
-> > > >> That's not a reason to introduce issues. Bootloader is supposed to
-> > > >> follow same conventions or use aliases or labels (depending on the=
- node).
-> > > >>
-> > > >> If bootloader adds junk, does it mean we have to accept that junk?
-> > > >>
-> > > >>>
-> > > >>>>
-> > > >>>> It does not look like you tested the DTS against bindings. Pleas=
-e run
-> > > >>>> `make dtbs_check W=3D1` (see
-> > > >>>> Documentation/devicetree/bindings/writing-schema.rst or
-> > > >>>> https://www.linaro.org/blog/tips-and-tricks-for-validating-devic=
-etree-sources-with-the-devicetree-schema/
-> > > >>>> for instructions).
-> > > >>>> Maybe you need to update your dtschema and yamllint. Don't rely =
-on
-> > > >>>> distro packages for dtschema and be sure you are using the lates=
-t
-> > > >>>> released dtschema.
-> > > >>>
-> > > >>> The bot is reporting that the reg field is missing from the added
-> > > >>> ramoops nodes on t186, t194, and t234. However, as also mentioned=
- in
-> > > >>> the commit message, this is intentional because it is expected fo=
-r the
-> > > >>> bootloader to fill that in. It is not known at dt compile time. I=
-s
-> > > >>> there a way to mark this as intentional, so dtschema doesn't flag=
- it?
-> > > >>
-> > > >> Fix your bootloader or chain load some normal one, like U-Boot.
-> > > > How would chainloading a second bootloader 'fix' previous stage
-> > > > bootloaders trampling on an out-of-sync hardcoded reserved-memory
-> > > > address? It's possible for carveout addresses and sizes to change. =
-Not
-> > > > from boot to boot on the same version of the Nvidia bootloader, but
-> > > > potentially from one version to another. Depending on if the
-> > > > bootloader was configured with different carveout sizes.
-> > > >
-> > > > There is precedence for this. When blind cleanup was done on arm
-> > > > device trees, a chromebook broke because the memory node has to be
-> > > > named exactly '/memory' [0]. How is this any different from that ca=
-se?
-> > >
-> > > That was an existing node, so ABI.
-> > >
-> > > > These nodes are an ABI to an existing bootloader. Carveouts on thes=
-e
-> > >
-> > > You add new ABI, which I object to.
-> > >
-> > > > archs are set up in bl1 or bl2, which are not source available. I
-> > > > could potentially hardcode things for myself in bl33, which is sour=
-ce
-> > > > available, but the earlier stages could still overwrite any chosen
-> > > > block depending on how carveouts are configured. But even then, tha=
-t
-> > > > will not change the behaviour of the vast majority of units that us=
-e a
-> > > > fully prebuilt boot stack direct from Nvidia. My intent here is for
-> > > > pstore to work on such units without users needing to use a custom
-> > > > bootloader.
-> > > I understand your goal. What I still do not understand, why bootloade=
-r
-> > > even bothers with ramoops carveout. It shouldn't and you should just
-> > > ignore whatever bootloader provides, no?
-> >
-> > Mmm, I actually don't have the answer to this. Ramoops carveout
-> > handling was added to t186 and t194 in cboot for L4T r32.7.3, fairly
-> > late in the life cycle. But it has always been in edk2 for t194 and
-> > t234 afaik. I could hazard some guesses, but don't have any
-> > documentation on why the decision was made. Maybe Thierry or Jonathan
-> > could chime in on why this was done.
-> >
->
-> Friendly reminder to the Tegra maintainers about this question.
->
-In lieu of a response from the Tegra subsystem maintainers, I can only
-hazard an assumption, Krzysztof. I presume the pstore carveout is
-bootloader controlled because various stages of the boot stack can
-dynamically allocate memory, and this became bootloader controlled to
-prevent any of those from overwriting pstore. I worry about hardcoding
-an address in the kernel dt, then finding out later that there's an
-in-use configuration that overwrites or corrupts that section of ram
-during boot. What are your thoughts on this? And is there any way for
-this patch to proceed?
 
-Sincerely,
-Aaron
+Kees,
+
+> In preparation for making the kmalloc family of allocators type aware,
+> we need to make sure that the returned type from the allocation
+> matches the type of the variable being assigned. (Before, the
+> allocator would always return "void *", which can be implicitly cast
+> to any pointer type.)
+
+Applied to 6.16/scsi-staging, thanks!
+
+-- 
+Martin K. Petersen
