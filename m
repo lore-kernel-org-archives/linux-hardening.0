@@ -1,110 +1,102 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5AB24C083;
-	Tue, 29 Apr 2025 19:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745BD25E804;
+	Tue, 29 Apr 2025 19:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745954726; cv=none; b=XCXBEyA0r25W9dNLEuO3BpbSzPmA2OF8sbGuTjD9kmaXSKQ2wTzmHG6t3qvLWF8jV+L1E74kLXxm3pXgvn3EGefNbSTL2T0ZXYHvUesTyreYftpGMuMJaAlnYKNJjnLBUA1YNHNkfdFMiFKsuh/gyaoJONPbUCfFu+//JuoI+Cg=
+	t=1745956205; cv=none; b=MsexXXlJw6fWpec9Cp23VVKvCGOIiE0KP4+SI/Yy/5heQcuaiGUtKVUYGBoJRsVv9LZDiNfjsJ+oin/4FCQ7vAoLTuffo+fDuKpnW8yZ25ACAECc8tc9FuO1IvI7DLc8FKlZaIOeD3VV/OQPjWsSohELjzjlFgtBt3Mvhi6teyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745954726; c=relaxed/simple;
-	bh=mUFSIbOh0ZERHVxEyLTbjHnLuloD8xCAXL6STo3jemc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UqtD0Ig0zCQVhxK7mXNtO3br9G53FchYEbG9YoNc3wcD53/ypv1KNbIKK0EQpBlgn/uVoWn7W4hIkheaEMMTNz0Ocwcdof1I4g2uJuH8x7y/9rvjYLzSI+TmU5z54uJ9nNU38uuZprM9u4LPIU4/YNEeeE9NLbvXXZoM3UFzHps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=X1Gp4j+j; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1745956205; c=relaxed/simple;
+	bh=rxQV+B09cZpKnArsylLSchYzK1z1cTKsP3tBIcuV+hI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S1ypZskdEVxLvcE3fI2P09na36IjOFxyQxtchejSLOU121l0thrgfzlR3N8qVi+2OJV5ZW0BbJalmWmZr1CZqh6mxkfgjoy6Wjv3/V+0cVMkaYCl2ciI6uMBvzP4uFlJlwXoe74xXxXLz+VheaFVpX1C8bQ6hFJIyfRgPhwvKfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AbASlLEr; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="X1Gp4j+j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1745954719;
-	bh=mUFSIbOh0ZERHVxEyLTbjHnLuloD8xCAXL6STo3jemc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X1Gp4j+jtE+7s/Ln2koM142muoh0/5BNh7S7VjLubaJbjhYFz7qx9Vc79AJv9GTVS
-	 xj/uwv6z5jntVBafphaqZpQ9NCXAH168NHBgQr4aeicnwW0q9Fs150smmJXz16UsI5
-	 1xP/Hj2jkzBPaeRwfqkISrL/D7wyExEknEssH7Io=
-Date: Tue, 29 Apr 2025 21:25:18 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, Sebastian Reichel <sre@kernel.org>, 
-	chrome-platform@lists.linux.dev, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] power: supply: cros_charge-control: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <084dfe42-8aa7-415f-8435-f1310be89747@t-8ch.de>
-References: <aBEmk6ixfrQ2XpTw@kspp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbASlLEr"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso10017231a12.0;
+        Tue, 29 Apr 2025 12:50:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745956202; x=1746561002; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vD1YAn8CAvm0h+/6JzAGzl8A57FhZyZFee4OCIIGKBA=;
+        b=AbASlLErF+Ug7Pp8Nlz5uZmFhvJwI8m5v0tuTJE502Do92ie4GoMv/FQIhal+D4YjE
+         01x/gjjrNpERM0/fCduGdrte4KHamhaY0KsJnQk5Fxl6rOInsArd2i4KPcwz0M9Ye1Sj
+         /aFyah4unnQZTAKBY0b9S1cFrz6iizYFzo9jHC0x+xTJgNEYooTu+vqM5Rh3ep2DO1ue
+         M9OnNy4Z6Sx7wPOV4wt42n0NAotHWRrl5T/BVZ805rkhpNbVO1Cf86x5HFDxh/6ximAj
+         88M7dvT4XFJcSGG/LqFXN38s4Q4jEA0UHoGR7d1psRbMwx3Fo/E5Ntb4Oi5kCCUoslsd
+         2+AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745956202; x=1746561002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vD1YAn8CAvm0h+/6JzAGzl8A57FhZyZFee4OCIIGKBA=;
+        b=Ri44AvMGC09KtYfvcgV+MOyiP+eGXSqR0L9efgDSOMn+cf+93v39uT65j8SUjx74oM
+         917du0NYVBHJyfMfIG8ctWsyZpI/5LrzOpvxjqcjAtYCguzAQKrzXeQQNQ/105349AQg
+         MXyLJlFaz+mVCG38GWa/sCyrhGfOWdVNzy0qnWBTNQxjn0ynluRYzfpzoRn2ow20lY/X
+         QbEe+zYV4ViWX8iQ2TF1Jxod6VHk69/W3OinnZB0x4vBK8vM/ITiLiEEXhvipwgd/mfq
+         hV9okxo/GQXOmuK/8cOiPyitbBSIlH8o87903Dz5X13pQGF5DSUXBo9h5LQ+irrCoqw6
+         CecQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+ZoKfgV2+OW5IEWTV9KcoGAg2cUIVyPF9l9Gqen66U9X1tJRiC/RbL0t+cTfkD2DTzc8bdmBEe3OQ@vger.kernel.org, AJvYcCVPIeIaSVfOQiapdzopQhHHGQJ94lQ1p5M8LoKeN5LyXbhfYajkSgYZGXkPsN0ZVgCiK6NGkUgSoIWnWGgNuI/D@vger.kernel.org, AJvYcCXjlmXNPOg8eBdyfLqsvKnxTWprjNT3CP7bxCWW9R2Ip8PjELbXBIeml7gqfKhY3ec+fSUGpH0VL5Vha99X@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx3bVizX1g9p5fG3ayb9XiiZAID6J3FqTDPWeD+epH2xUJ3yDt
+	r6ZYsUQrHzOlpafJgeqD/Fghm99advReQCh/JUImlxQl6dAEHv+9qFoGOYZ8eCLba8oXmMpFDR+
+	7QgxGX8HlRWeowrJQCqhq6ZUdaC8=
+X-Gm-Gg: ASbGnctYqjPIdBfy6NhJswP/SM0ZmyDDP7TMt1OkprLjcrt6TQlb+u50xI5XcXyXqnW
+	BSCfgcqaetHXxk4YmSF0iqyYO9Tivjk3IQOZHVPD8YOtCWkqAXlUNtwNKBaXUOdi8eYcqQKS587
+	0X2/fgnKkZ/Qt3gBixy7rSyw==
+X-Google-Smtp-Source: AGHT+IEUzFIo3b0L4aXqgoV444s05OuZpnNTBUTUqCoyUFdKydQUdpip0ILc9B6HJvuemsUHctOi8vEgkoRpMDf4RAQ=
+X-Received: by 2002:a17:906:4fca:b0:aca:d54d:a1f8 with SMTP id
+ a640c23a62f3a-acedc6229cemr61982366b.31.1745956201478; Tue, 29 Apr 2025
+ 12:50:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBEmk6ixfrQ2XpTw@kspp>
+References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
+ <20250429-aaeon-up-board-pinctrl-support-v4-2-b3fffc11417d@bootlin.com>
+In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-2-b3fffc11417d@bootlin.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 29 Apr 2025 22:49:25 +0300
+X-Gm-Features: ATxdqUHSfG0vNdIwi2jFrwaCEV7cRWEDDe8ST1XH67uD4-tJhqxBIKpIR6Y0sMI
+Message-ID: <CAHp75VcRYE6meHB9+MhcH242eXbA0jzYXhL-+WidvvLXiLX=MQ@mail.gmail.com>
+Subject: Re: [PATCH v4 02/12] pinctrl: remove extern specifier for functions
+ in machine.h
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-04-29 13:20:51-0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of a
-> flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> So, with these changes, fix the following warning:
-> 
-> drivers/power/supply/cros_charge-control.c:57:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/power/supply/cros_charge-control.c | 26 +++++++++-------------
->  1 file changed, 10 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/power/supply/cros_charge-control.c b/drivers/power/supply/cros_charge-control.c
-> index 02d5bdbe2e8d..e33bc4c55bcc 100644
-> --- a/drivers/power/supply/cros_charge-control.c
-> +++ b/drivers/power/supply/cros_charge-control.c
-> @@ -53,23 +53,17 @@ static int cros_chctl_send_charge_control_cmd(struct cros_ec_device *cros_ec,
->  		[3] = sizeof(struct ec_params_charge_control),
->  	};
->  
-> -	struct {
-> -		struct cros_ec_command msg;
-> -		union {
-> -			struct ec_params_charge_control req;
-> -			struct ec_response_charge_control resp;
-> -		} __packed data;
-> -	} __packed buf = {
-> -		.msg = {
-> -			.command = EC_CMD_CHARGE_CONTROL,
-> -			.version = cmd_version,
-> -			.insize  = 0,
-> -			.outsize = outsizes[cmd_version],
-> -		},
-> -		.data.req = *req,
-> -	};
-> +	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-> +			MAX(sizeof(struct ec_params_charge_control),
-> +			    sizeof(struct ec_response_charge_control)));
-> +
-> +	msg->command = EC_CMD_CHARGE_CONTROL;
-> +	msg->version = cmd_version;
-> +	msg->insize  = 0;
-> +	msg->outsize = outsizes[cmd_version];
-> +	*(struct ec_params_charge_control *)msg->data = *req;
+On Tue, Apr 29, 2025 at 5:08=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+>
+> Extern is the default specifier for a function, no need to define it.
 
-Please use cros_ec_cmd() like the LED driver.
+Suggested-by ?
 
-https://lore.kernel.org/lkml/Z-rKcgFjsyKvd58q@kspp/
+...
 
->  
-> -	return cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
-> +	return cros_ec_cmd_xfer_status(cros_ec, msg);
->  }
->  
->  static int cros_chctl_configure_ec(struct cros_chctl_priv *priv)
-> -- 
-> 2.43.0
-> 
+> +int pinctrl_register_mappings(const struct pinctrl_map *map,
+> +                             unsigned int num_maps);
+
+Now it can be on one line.
+
+...
+
+With the above being addressed,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+
+--=20
+With Best Regards,
+Andy Shevchenko
