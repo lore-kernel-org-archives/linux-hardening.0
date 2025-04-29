@@ -1,131 +1,121 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37CC275876
-	for <linux-hardening@vger.kernel.org>; Tue, 29 Apr 2025 07:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE9C275849
+	for <linux-hardening@vger.kernel.org>; Tue, 29 Apr 2025 07:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745912333; cv=none; b=moOj60VegiZKupIjEohaG5f/7riFS25USF0dhJIvxuusldWkQCCeXfUYQ++j3mK6eUblsQcmwAszzBUq3G4qLRrEb6OlSQ92tFzSc5HgILROks4r198kGVweRBvRDoAYKK+hsWW8FWgPat4GsOYUypF6Ih2IVoMa0WbFoWzd1m8=
+	t=1745912656; cv=none; b=kPk+4T3MUSPfCe40TMvzPbM1dbsPRd9GUtR5FJvgWErshMXCobycdnWDA/lIIalCncGhf23Lxctx7s4N0ud66nF8K17oGgDcYY1cFAOVdcCPTcuaVWMN9MWg8VnkhEvF2OW8xAaL3kFTbJP9OJEIxc4dYcx0+dD7nDn9mJvXjj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745912333; c=relaxed/simple;
-	bh=1lbCn1S1UFcWV8wlG1YPQzbxQhGpd30vQno6GZdltJE=;
+	s=arc-20240116; t=1745912656; c=relaxed/simple;
+	bh=Uz3adLpT1K4bsS/LjgsvDIt1SCMsQoHMiqR3BRBMocM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EhunpFmO9fwcT29uTvJozsIQov93PRmvlmNW7vlcqldnm/K+w/D8RwFXeqcKeiRoCvvaXClB26ZJd1rGQL0G9u7Dj11o3a4HGYZRsw4C6DVisMHBLcdNnBKTQ4UOktC/N+ncTb3YQyntZ7nMrW/fTpk+Ob7moxscp2LfFy3RQqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=urt2I7Jq; arc=none smtp.client-ip=209.85.219.42
+	 To:Cc:Content-Type; b=f542pbM/3fHV7r+A4mQWX9t6pD1cbsECrz6oktwiILwlWj3fnYSHJXNaPpaVGNzFB91YFoLy7g+5PSB8OklWoT5rmOkhILfQ7dkj5Zku4U+fAbsI1Uwlvq6BqoDZIesVu15w/K5L2W5heDKVVR5cIKwkswiFaFIqIEmKicUjLac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1REOl5c0; arc=none smtp.client-ip=209.85.219.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="urt2I7Jq"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6f2b04a6169so63266116d6.1
-        for <linux-hardening@vger.kernel.org>; Tue, 29 Apr 2025 00:38:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1REOl5c0"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e8f8657f29so56269636d6.3
+        for <linux-hardening@vger.kernel.org>; Tue, 29 Apr 2025 00:44:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745912331; x=1746517131; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745912653; x=1746517453; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ayaEnkAvM5LDZe5VRiccMkro/BiBbbDAikHT6JbgdRg=;
-        b=urt2I7JqiiM8iA5GgAhdlP7txweSjwHw1pCUHJpYK5+yTsKuVykW5Kh4Bqwun1w48V
-         Yv+a0eb8CrcBQgh7afgfORq6COG1DGrvXIWioPDD9+fB6Ox8ROFn9RP8si2WOgmsX5MV
-         zasohy30Sj862F8ILtyxqRwJpPrwpAJoWnAHQUDgaBEhDc6yiKwgNtwH8YqFFOeSCBgb
-         Yoy6kL3MSn9JiXLaq9jWQiOJNKJxpZZyECqZpLmsnGq498VEB7VYTbP1CwhEoOEqM+lh
-         pKqTQ+YBsNurMvBYYH3nii/sdfYjUUEjjzZCO7oiZKv7uRNwrhgXXYexAcxTDw0Dmzlz
-         yNVw==
+        bh=S70XKGWxcSEfTn7qvW9Q4bvt4sDvuIuNYX/4iPHhjqs=;
+        b=1REOl5c0pubQv2Z/0q1ewTVGNJ03YAnv3hyBnC8rMaxqU2Tkg9zGL6TpHrZUoMfIFN
+         g8gMuMUPkwScYdwgBfxYmlqqwfumlQXHyM1/CZpoUPjn8Pxitm3rDaNYsOM320hTqcrE
+         k/+IfSZUiDDsCFaOrVmztVhN8eJBa0ssX0bdRFBN3KsTIwdgciaz+lYWcN+8c3d8kJTK
+         5a3wfZGBn3S6iPm4Tfr5wvM/p6bj9NX7H89kZrVKS3Nv1qfDXdzWVD/GnmU+D5B5JDDS
+         ap2N/LwFjyWHaaRTgjxfIORRN/aVPIqVRQjIaPkPskT5qfQLqLi6PBOtydGdCtISFOsd
+         mH8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745912331; x=1746517131;
+        d=1e100.net; s=20230601; t=1745912653; x=1746517453;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ayaEnkAvM5LDZe5VRiccMkro/BiBbbDAikHT6JbgdRg=;
-        b=cMPbOrQBZyjjjYvwyBDQjI+67NOkwJ7y/uCJUxQ+h7h1e8WCGcUmxYIq+1FeWNI7li
-         a/CniNVs8vPs5EX/Od5f6Sna5RJGLKJz56m0XET6817kCsj5uIeIK3aSAKrZmo6wqw7A
-         3cFxrufLucVW/HMHbPUYob7Rwc5F+e+sxPWzbkqLd9iy/LPBpn5zGwPeeONeSfR1YGiM
-         UbWgFj93bAiPQuAXnbITVQJYk6brPqQGbZypTbuGueh2XsExTrgyzrgnZrako0iVxOGJ
-         Zuwn58in24PeumrnirghbQ8FI5iPoxC//ei2tOAoSyxZwvsQxY1JMEQkT36zpIaag1SM
-         5l2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVhwqcQyj9/LQYSRlfxKUAcCcRUQPtIgkhs2CPurM7HtaXHFKJEivd1k2BtU1Emg0nh2QCVGBUQhQHRVteaqTs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqoCrtTtivRfA+p4gck+xLc69fW8g1Pby7eokuNdmq8IPU70V3
-	hY1M2oSwU4GQQGj3dhsQQPqiXYymZbG3GmecIBbxNmPY7+OkGzyxIYv/JBmVygmRQCkS85wJjGJ
-	KGxzxlcpmEBLpTt0czWX4y2UTOglYcfaF1GHG
-X-Gm-Gg: ASbGncurzAdJ3JjREBS04p5M+RoUzTf/6142mT69GO40j0pXS8fnjYFcgyiHMBKToh3
-	n5mC45eOMPmRNvRX+sGi5LyEI0VJ0uXVfkzN5GSWaqP7fb49Yg/DA4cfOUnKhiiu+B9nRyrVs7+
-	8ZC3uiVb80VJPxBVmgXxJ0XCTlbjkkX8iDdQ==
-X-Google-Smtp-Source: AGHT+IH0IvC7+3WS6KCNvcU9PwllwnO9oM4zyimDUtoUP04e8WdMZbRoyHmm6x5xn1Fbb6kyiTI9IaILB2iFafpgl70=
-X-Received: by 2002:a05:6214:2464:b0:6d1:7433:3670 with SMTP id
- 6a1803df08f44-6f4d1eeebf7mr199891486d6.4.1745912330529; Tue, 29 Apr 2025
- 00:38:50 -0700 (PDT)
+        bh=S70XKGWxcSEfTn7qvW9Q4bvt4sDvuIuNYX/4iPHhjqs=;
+        b=MAFfldIuqsNDbwL3L3DVJXaqWevcDRyLRkp7z59eOcwJGWD9LMg70CZ4G84XETJW8i
+         sPGrRyKWtt7pGcKlMdhRTC8CbTH8+QDI/x+Vd8MkN+toQDdsjeuVLVTVHVqzHay4Z/0G
+         MFmCPt/vtHdx1nKHyAEomfvbrP/7nhJQlxm92fKWa/Dco8m9GIjHupWr7u6IPkvJ58DU
+         weHNIQzMfuofMbVOQHmZykZY+6DYGOvL1wAsFdRhSVZF/J6lgfkMgycWLgWm00vjdZeC
+         mK1nhh7YwkmH9QeYWBASukRb0WZ8Q+IjdH35vpiwZ7F9KkIZ51eEj8Hb9IGSRpudQnk3
+         MyEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXciDwCr5oJgtnW2gkpazZSzpLYXVh9Ufkdy9zGZAOlJhaPRm6I2VapLrPST4Yr3U8OXPiPZefHDKD4JALEcGE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8d4Hrj2lXw0MHeb+sCn18gdcKIzz4Ud0bRhxqafh1QAIoNVmK
+	vEVP1tBblBtVjKJlWt8rBCPox9BNYhxNdI3hj6t30sq7j6OMZtgt+yGPfO5aMw8fF/lpHDyKbLQ
+	aK2mdKf6U9fh2i6cuKWOiIUnE5H2XAXtwqleV
+X-Gm-Gg: ASbGncu1uCcgxwH1o2brN5SLxj6IvVXJpRP5zT5HT1G8Tw7ifsZbcZb8/83/tmbIr5A
+	BysXeYhMUCxkQEWSTHI1b8+Ax/SQ59K0csGmqfXrs72su78Odrd4GD0uY3xZRv5Fdpsp4BOpzCh
+	uo40S0dG9YpgorF+yv9Sq7xEwEYYyf+ghSkg==
+X-Google-Smtp-Source: AGHT+IHelUEyscyQarKuoY3t912ti4kNs8ODnZYdtusFfqBwbQeE4DfZslv6ZALn4IcIacFakO1rKniYgGz4FVzHgK8=
+X-Received: by 2002:a05:6214:c2a:b0:6e6:65a6:79a4 with SMTP id
+ 6a1803df08f44-6f4d1f9e216mr186361416d6.44.1745912653232; Tue, 29 Apr 2025
+ 00:44:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250426062433.work.124-kees@kernel.org>
-In-Reply-To: <20250426062433.work.124-kees@kernel.org>
+References: <20250427013604.work.926-kees@kernel.org> <20250427013836.877214-2-kees@kernel.org>
+In-Reply-To: <20250427013836.877214-2-kees@kernel.org>
 From: David Gow <davidgow@google.com>
-Date: Tue, 29 Apr 2025 15:38:37 +0800
-X-Gm-Features: ATxdqUHUPwrWmXyZjAfktdiWppbVxqa8474Ym4cUeRRX-J9dj7BVdKCQQLjToS8
-Message-ID: <CABVgOSkJ+8zTo5S-ri7PTfa4DzaC59CkmOROBjt_i2OOxLM_Ww@mail.gmail.com>
-Subject: Re: [PATCH] kunit: executor: Remove const from kunit_filter_suites()
- allocation type
+Date: Tue, 29 Apr 2025 15:44:01 +0800
+X-Gm-Features: ATxdqUH8o73n3_NAeG1RX1Q730xFJQWSEjihUzU_Ax5GFg7DEM9ErC40vXwR-Sc
+Message-ID: <CABVgOSn1Lrkp96tucPniwPkVbpsBvTRZey=mCVDw7xS+Jro_AA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] lib/tests: Add randstruct KUnit test
 To: Kees Cook <kees@kernel.org>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Bill Wendling <morbo@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
+	Petr Mladek <pmladek@suse.com>, Rae Moar <rmoar@google.com>, Tamir Duberstein <tamird@gmail.com>, 
+	Diego Vieira <diego.daniel.professional@gmail.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	llvm@lists.linux.dev, "Dr. David Alan Gilbert" <linux@treblig.org>, Mark Brown <broonie@kernel.org>, 
+	WangYuli <wangyuli@uniontech.com>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-security-module@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000004cd5e60633e5e4fc"
+	boundary="000000000000884add0633e5f773"
 
---0000000000004cd5e60633e5e4fc
+--000000000000884add0633e5f773
 Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 26 Apr 2025 at 14:24, Kees Cook <kees@kernel.org> wrote:
+On Sun, 27 Apr 2025 at 09:38, Kees Cook <kees@kernel.org> wrote:
 >
-> In preparation for making the kmalloc family of allocators type aware,
-> we need to make sure that the returned type from the allocation matches
-> the type of the variable being assigned. (Before, the allocator would
-> always return "void *", which can be implicitly cast to any pointer type.)
+> Perform basic validation about layout randomization and initialization
+> tracking when using CONFIG_RANDSTRUCT=y. Tested using:
 >
-> The assigned type is "struct kunit_suite **" but the returned type will
-> be "struct kunit_suite * const *". Since it isn't generally possible
-> to remove the const qualifier, adjust the allocation type to match
-> the assignment.
+> $ ./tools/testing/kunit/kunit.py run \
+>         --kconfig_add CONFIG_RANDSTRUCT_FULL=y \
+>         randstruct
+> [17:22:30] ================= randstruct (2 subtests) ==================
+> [17:22:30] [PASSED] randstruct_layout
+> [17:22:30] [PASSED] randstruct_initializers
+> [17:22:30] =================== [PASSED] randstruct ====================
+> [17:22:30] ============================================================
+> [17:22:30] Testing complete. Ran 2 tests: passed: 2
+> [17:22:30] Elapsed time: 5.091s total, 0.001s configuring, 4.974s building, 0.086s running
+>
+> Adding "--make_option LLVM=1" can be used to test Clang, which also
+> passes.
 >
 > Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
-> Cc: Brendan Higgins <brendan.higgins@linux.dev>
-> Cc: David Gow <davidgow@google.com>
-> Cc: Rae Moar <rmoar@google.com>
-> Cc: <linux-kselftest@vger.kernel.org>
-> Cc: <kunit-dev@googlegroups.com>
-> ---
 
-Nice catch!
+This works here for me. I'm a little wary of the prospect of the
+"unlucky or broken" message making the test fail if we're just
+unlucky, but it seems unlikely enough that we can deal with it later
+if it ever becomes a problem.
 
-Reviewed-by: David Gow <davidgow@google.com>
+Acked-by: David Gow <davidgow@google.com>
 
 Cheers,
 -- David
 
-
->  lib/kunit/executor.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
-> index 3f39955cb0f1..0061d4c7e351 100644
-> --- a/lib/kunit/executor.c
-> +++ b/lib/kunit/executor.c
-> @@ -177,7 +177,7 @@ kunit_filter_suites(const struct kunit_suite_set *suite_set,
->
->         const size_t max = suite_set->end - suite_set->start;
->
-> -       copy = kcalloc(max, sizeof(*filtered.start), GFP_KERNEL);
-> +       copy = kcalloc(max, sizeof(*copy), GFP_KERNEL);
->         if (!copy) { /* won't be able to run anything, return an empty set */
->                 return filtered;
->         }
-> --
-> 2.34.1
->
-
---0000000000004cd5e60633e5e4fc
+--000000000000884add0633e5f773
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -215,13 +205,13 @@ uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
 PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
 Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
 BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQgM8jC//a4wtMQHInqgKwgsHsMeeAe
-FGksWdJAQLRaSAMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-NDI5MDczODUxWjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQgkIMqUYidz4o/0sJ+mN0/dJbN3qrU
+/IumZytD/S5ndhowGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
+NDI5MDc0NDEzWjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
 YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
-AQEBBQAEggEAVWeFgwKf1fHRKkty8wRDr+D2O5wllgSZ7v70s5ia6cJC3T4bfrmqLZBUKtD94QfM
-v9ywIP6ZYQ+sH9uzCaRBFutjZk1Iflh5+GZ/POzkZ7Q+LKRPyolp4goK6yjFCa3DuSD0DipTZvJf
-Qfg/qnplJLeza0xSVPASQIRqFkh4aqbWoUS/9dju3py4GZpgPsm6h1xcYjxrtnS8T+OhUi6Sjo7P
-v4MB5NN9eBmLgHIswaU8ODEBpNad+OtyjSvKtMD/VbqA4IJHPkqH4AyMgyCAD++Q28X+DJLo4mCU
-gg7MMILFZ6kjWzPoFb0fHYoEbJdYo1cXDb5CkPvMA0hB+WAr9g==
---0000000000004cd5e60633e5e4fc--
+AQEBBQAEggEAWewXsFFpcHfRhoG9w061vBrnUwxhXCWI7ZR3AtqzrCpKXVvFTp2v5czKPq1u4Uik
+JixGBG37AjqBEPlkeHJhV+62IYp7AlQA9nRidqPEmYLLrXotGPeSDiFqVgnHAAPXrs3jltKJcf5t
+7rsQpdSvID43tVk5dvhQoKvX9oO+13kqm/eyHg46cEg/rUpUJcWXx9qgBKBufy8mZVmrtAWRSWu5
+SWCIKiAkk16NyErKokleQ09sDwm92JvSfr4EJczEGThDIrHo+xFAS39ZgJTtgcHTsq8lDarHHrc3
+bjJ9ceP2E5dhOyX2WWXvXvbj/HneGTpa35uuK3dHfuXEb8B/yQ==
+--000000000000884add0633e5f773--
