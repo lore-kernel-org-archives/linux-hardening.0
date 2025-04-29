@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A8A248883;
-	Tue, 29 Apr 2025 17:59:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CE524E4BF;
+	Tue, 29 Apr 2025 18:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745949590; cv=none; b=ER7JUI8m+EPeoTVQS++ugVe9H/MEDrXvLBaUIvf57qod6w3QiZNxNYRFJCE1iiqRU3x1Mvd0clX2eauHbHAdDGEJLDEuMQ02k/YhaP/zeAittuzSchPevrvWPdngHtfhr4iEH8zB15C55GtYwxs5+rm5tXoDhoV9vcLJx3sxr2Y=
+	t=1745950796; cv=none; b=Az/3rtKdCClFygiYVNmzZVmK1P/ISrk8vGCLNH+AfvcoSJOhFPV4fRL/CdR5D71Qh0/oipe3Lu3rJjMDXi611eLdQSInBLvLPOUx3D3St0LEpacu1up+mnRR79tjLv+VSzTo9gt5oTOOZCIp3k5TdJCLmsXrP3OMV3Va8qSIM8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745949590; c=relaxed/simple;
-	bh=Mlv5QPLKqqnLLlp3l4YB9mb0TbR4nnACnfhCeWOJ2qA=;
+	s=arc-20240116; t=1745950796; c=relaxed/simple;
+	bh=3a6w/lSHks9lO8ZwVHvxh7X9aJKafUhqyBOW7U3BCFs=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ZsLTwHop0rjL122qlo4gv18tsGEYj2CaPiNCB577iFAvFPBqYF8Lk5WaXo7FKEl/Sp/rFIoGz3RLWkerz12m4H5WaiRrVAKdLSqt8hKDnIhnXrsB7pq/L2mFFe+6WeDin3k/bKFaWPqHHpZrgCZXXzMwJQJHYVHI6JAKkz8t1+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdypGX9E; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=eXkIttJbZLwOSYc9NOBWLFK2WRWRhumCToIkdP4LKH7oZddlm51NU7VBOP9M/yBsfSihvtOvDvTqRG3E0E7+Gk4XbHJvkq9xQ5AwHGd+tmm7Dp9uT4h+Pg6ujffTAXKfNNm8NuxfMT7WQz4rwgOmmXnemNzfFYkfQaF3rbXEPPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAmsNx82; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdypGX9E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4733EC4CEE3;
-	Tue, 29 Apr 2025 17:59:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAmsNx82"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81B64C4CEE3;
+	Tue, 29 Apr 2025 18:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745949590;
-	bh=Mlv5QPLKqqnLLlp3l4YB9mb0TbR4nnACnfhCeWOJ2qA=;
+	s=k20201202; t=1745950796;
+	bh=3a6w/lSHks9lO8ZwVHvxh7X9aJKafUhqyBOW7U3BCFs=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=jdypGX9EoMqhhPmCwvvegpsjmhqEgXTFWnH4WpuPGQ4+/8hsuc1tcsk2l0TpBC/zF
-	 AHgeIkuc+4KzHbJWvcqnnv/0Aq578yjcI/+Jt5KQD1JRNOWfKVV8QrN6KDXYSxIK9O
-	 zv1BJoArVE6EoVUSz+4Q5LSEL5B51N/2tegpShYs70D5B3iAf5BupfX8jSh3J8hXVp
-	 K6rG/19hqLBSA9SL8C6Igw7FoG2/pvd5+VEDrAU6mHMzL1+lTWNvvoVU/puLKUNLQn
-	 qPXonvrb5MCSQIu+XsTpNiR1vL9NT+X1Azoi/dY5zTnxIFx7tKlC9Xev74XhLUWlnX
-	 xvmwew0w3wu+g==
+	b=VAmsNx82FDfKH1VBhRLzHH8303uuCC8Oh/6zIwGQPTkEoa7Rnw0miJFoWJLXEJbDq
+	 8+qV4or5U/0orZ7L1kUeDpzuH+YZ758lJqi0JYMIvEVrte92cbtpYFy2SsxPWu5Gl0
+	 zR3YVeoOKHTcG0WO9AknBl5s1dRII54+N+HpEx/b4nQIRMwsnAnFTfxjpve9aMPjjl
+	 UIUmupmmSKmvLiTFYpkXNT8s31SO+IDxreJ52FIe1NApqKtR23BT9Mq6MktiIkqY9D
+	 LP5Ihn9oDCAZOC6GsqI98DW6Rq2kc6RjDrkpS+/GjadiFC37PVrH+YM8Ssbqmpf3Ai
+	 wYeYyJeSJMDEw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D7E3822D4C;
-	Tue, 29 Apr 2025 18:00:30 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD703822D4C;
+	Tue, 29 Apr 2025 18:20:36 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -37,38 +37,41 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] ipv4: fib: Fix fib_info_hash_alloc() allocation type
+Subject: Re: [PATCH] pds_core: Allocate pdsc_viftype_defaults copy with
+ ARRAY_SIZE()
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174594962925.1753982.13626856832986893239.git-patchwork-notify@kernel.org>
-Date: Tue, 29 Apr 2025 18:00:29 +0000
-References: <20250426060529.work.873-kees@kernel.org>
-In-Reply-To: <20250426060529.work.873-kees@kernel.org>
+ <174595083551.1759531.11864469944201656091.git-patchwork-notify@kernel.org>
+Date: Tue, 29 Apr 2025 18:20:35 +0000
+References: <20250426060712.work.575-kees@kernel.org>
+In-Reply-To: <20250426060712.work.575-kees@kernel.org>
 To: Kees Cook <kees@kernel.org>
-Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: shannon.nelson@amd.com, brett.creeley@amd.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 25 Apr 2025 23:05:30 -0700 you wrote:
+On Fri, 25 Apr 2025 23:07:13 -0700 you wrote:
 > In preparation for making the kmalloc family of allocators type aware,
 > we need to make sure that the returned type from the allocation matches
 > the type of the variable being assigned. (Before, the allocator would
 > always return "void *", which can be implicitly cast to any pointer type.)
 > 
-> This was allocating many sizeof(struct hlist_head *) when it actually
-> wanted sizeof(struct hlist_head). Luckily these are the same size.
-> Adjust the allocation type to match the assignment.
+> This is allocating a copy of pdsc_viftype_defaults, which is an array of
+> struct pdsc_viftype. To correctly return "struct pdsc_viftype *" in the
+> future, adjust the allocation to allocating ARRAY_SIZE-many entries. The
+> resulting allocation size is the same.
 > 
 > [...]
 
 Here is the summary with links:
-  - ipv4: fib: Fix fib_info_hash_alloc() allocation type
-    https://git.kernel.org/netdev/net-next/c/fca6170f5a03
+  - pds_core: Allocate pdsc_viftype_defaults copy with ARRAY_SIZE()
+    https://git.kernel.org/netdev/net-next/c/2eea791a7554
 
 You are awesome, thank you!
 -- 
