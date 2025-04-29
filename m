@@ -1,145 +1,205 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF6D247299;
-	Tue, 29 Apr 2025 20:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB6D270ECD;
+	Tue, 29 Apr 2025 20:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745957829; cv=none; b=mDrabITQk5Cd1mMG8T1MMDynZvWI2Hl09VDMnva6Sebu91sMEhzmdFpLWwKmacvZEpQofnTYKWoecphC021ZsqNLuMblYI3SHtpvPoX7byrm6lEi+tij4z3edRK2idPyffQdljMiDZXltRxNpy7Zo4xk4ckSI0+I2ocr291inyo=
+	t=1745957864; cv=none; b=mJ8+t6UX7uB+nV0XV49hnIZ7z/SCiIJ7nbOLvWfAvWpck+wFqyzcBUEFM5HU1HhhLEoF22Rdsg0iJV5ahtz+s2x7+Ilg7fO6QDh6oZYLqcmwxWdQVG/7v0D0w4VyEoP22vnWbGjwqY80N0Qx7vU7lfr0HWXdM3Jdn53E8TRUh5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745957829; c=relaxed/simple;
-	bh=6DWRXDALV0I4nuC8h/CIkcOoGX8VxJnH78KniDKRbXQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kb71DhQnhEmliInYb5fPLZCnueYc1LbUt7xHHGKhwDz8liQ5bSijBDDvtkSFmGp4dgQUwficD4yUVoyJ8/EaCUuW4ujyEQVv32xyFK5xkGAI92PC78W78XinVsUBi8lIREtiaYDN/OPhyCyeXXf4Xs4a42ee1qT+0iVo0kFNFVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMHP+HVN; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745957864; c=relaxed/simple;
+	bh=57G6+sYgoPGvBp3XvDWaCzrP6B3TqYTwiNHfa7VcEN0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fUfQ2Jib3PyZdUoIms6mqck+K+h9lC7TmR8hj2f9aFWiswQD7rvmwjn8i2w82qvD7kgBcxAuCQ5WcWqLstN+dHB0eo4HYz2l7d6LVYscjZfChC0mXEyA432PCKPVilaZWM2eNxQxpc4twuppqWT2Dg6YszfLyaiVstdecWQedIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=GQ9pi4lc; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMHP+HVN"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac25d2b2354so978837366b.1;
-        Tue, 29 Apr 2025 13:17:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745957826; x=1746562626; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YQRVatuVGssaljJ3vn1XVB7mibjnfMqkqmo6NMljCtY=;
-        b=IMHP+HVNl3nVFRKWz9+Eo0kSUAudwD16mN5lYEDre2NU41shCrtkR73rJsM9hA+s4N
-         u0hjDYeSAcTE0cyGbNrPcEqd2rkbJB8ky3QYCm+JLGYuy/9lHat3SuEV2W9E1HPb9AnL
-         RKiUiP9kren+/YpYaybFTTSxyZ352BqbpsIvC6jMMntn4ZZOY8EnbA23LpfaEsKg9k1H
-         ys1EHtyJ27Fg5hkiuwY8b+uHOHdq9ORsUjMfzrbX6IkaGArs+/phlI4t9SMYUlz+4+6b
-         gPIP/TOWSyoYaVohQxK2KJlmjN4/pls/vVNv/WJx9kDkcr9muEPhl1ztSDnC2yQZ4mMY
-         t7wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745957826; x=1746562626;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YQRVatuVGssaljJ3vn1XVB7mibjnfMqkqmo6NMljCtY=;
-        b=XdI//PrtMMtwHNu70sYSKc2MpDuF3jsyN133FviHkbNl91r2raszfnqwcPz/m/gO6h
-         6i3cvWWq6ERtVwajg4t/6ElVyWBkfgPCrd4sX1fFe9NM2vw5pP2DIbvIV5dkzQbRburB
-         tDoNTZ1RGvmzz2Kq6TIxQwU12OYw9DjD2wuIm+HKsLt/FCua1G1112Rp/cPwv2IiILpw
-         RVBkA2FG1v+lUHVU8TlQBBOIlVAQ/hIP9NJavS2WY7v8zJSrPWvT6H5sf8wUwM60ySb/
-         /G3vCAyUdyapJrLYOgsUyGWCzgJJVUMDNgUOYw0sdTGVYLTiqleGi2KwMiPmjLwAllxu
-         AMqw==
-X-Forwarded-Encrypted: i=1; AJvYcCU//u/apKVSpD3gU0T84JZqQuVt4IZ+9d3fDI/4OTR8nRwUZLBV1Oo2a1JN5EFzGnyHZL5h7/3Kk0HmqxnvAjdc@vger.kernel.org, AJvYcCWcrVeaH4JhvfhaFuXsdZpKB4OdP/KN0UgP9Ux1vTzvoscTKom+MRUbC/oN59T9ybG5owQeaa58udlGWKdf@vger.kernel.org, AJvYcCXuoqLMhS8UDkOW2XSPSEr6ntQpd3FVJoR+f3FJUu5orglnXLwSDqKLz8kwBEUhdPHsvBwSA0mhFANW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWR2iujT93ABoeKhbSzu/yXdXnwz6xqZNqlUvaOJK3XDtBCY/Q
-	djylVuFzVF2fT0W2+CpnF2mXXGkpAe2JCfBzBeFKFyLcDNxLtkKmGtBsW0fichcwIDDiFLzCeHK
-	fnA95WNmqMnQf6l/rDjRYJvCZaPs=
-X-Gm-Gg: ASbGncuIXsq9xjQ7AdGUCmB7qn71fREb2yG7q911DV76f9iB7OcMlhoXkwX/WaezNX1
-	/HS2j8OC9VVHbesedHDSQfSzk2KlAWZyQQ9GnUeQIm76uZQalGjsTCy9Xf8KJqP32wsH5D7XJ9b
-	21xC8CTovT62WVf52d/o607w==
-X-Google-Smtp-Source: AGHT+IFyurlfvu16SmPM/yw/ilbCRD/q3MCYHhD5Mop7BCqBbkkR+ZwU+3v5Ak8z+QVin8zET+u+tTLjJGtLEGNaJEI=
-X-Received: by 2002:a17:907:9628:b0:abf:6f87:c720 with SMTP id
- a640c23a62f3a-acedc62902cmr75910866b.29.1745957826131; Tue, 29 Apr 2025
- 13:17:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="GQ9pi4lc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1745957848; x=1746562648; i=deller@gmx.de;
+	bh=Iowk4z8QtWkm4Y0YZCudQi3a8iJL7SyIX74+qCqJ5JY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=GQ9pi4lcu5J0lZxU5aw/2jpoKMS6q9j1vV0YEJFkGcbrVN7seuWV7hTH3FlrFrm/
+	 T10XqhfnpKp7TZFZt8x6Yrt5CiBYKmiDL/QfZThA6ZNFr9iFQ1mPl94Ibr3X1X7Cc
+	 1p1tVmHdsFnZlVH+RRtvX8kDpy8AvE2uHCqY/Fgsl8z2SAWBvAQeF3HEU0gZ5urMb
+	 18eHeP+msw2sfMb0ZshEggVsdFNumbVZQoGR7RotGmWOFYhBpxtIbievEvazARSfg
+	 qKoGTb3I8XIqNjx00v/NPm1oM8KomG2e/B4WqDQL8r9dCY7mfdG1HJql1GmUsOdWJ
+	 dZLTgr20FvWiLb981w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.173] ([109.250.63.181]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MYvY2-1uVsMK1tJ2-00Xq2X; Tue, 29
+ Apr 2025 22:17:28 +0200
+Message-ID: <e68c6218-6055-45a6-b96e-9c8381a4b409@gmx.de>
+Date: Tue, 29 Apr 2025 22:17:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
- <20250429-aaeon-up-board-pinctrl-support-v4-8-b3fffc11417d@bootlin.com>
-In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-8-b3fffc11417d@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 29 Apr 2025 23:16:30 +0300
-X-Gm-Features: ATxdqUE5acEB1xrMK5E7nyagKS4Tz7U_FxTUq5xl43Dr7iKXNYtpLlJTCatOTkk
-Message-ID: <CAHp75VcgQcMjFe5NOpdU9Lm_rHBWWMzPFX5197uDofFrk-yn5w@mail.gmail.com>
-Subject: Re: [PATCH v4 08/12] gpio: aggregator: export symbols of the GPIO
- forwarder library
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] video: fbdev: arkfb: Cast ics5342_init() allocation type
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Kees Cook <kees@kernel.org>
+Cc: Javier Martinez Canillas <javierm@redhat.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Zheyu Ma <zheyuma97@gmail.com>,
+ Samuel Thibault <samuel.thibault@ens-lyon.org>,
+ Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250426062305.work.819-kees@kernel.org>
+ <b982d4f1-6ed8-490b-8d47-6dc5231913e7@gmx.de>
+ <CAMuHMdVY1_gEqULGD0BzdTd05OAkodhk+RXKRAy-T-0+RJt7yQ@mail.gmail.com>
+Content-Language: en-US
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <CAMuHMdVY1_gEqULGD0BzdTd05OAkodhk+RXKRAy-T-0+RJt7yQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:OD3iOLWk7bbSwxeCWT3VGHi1hyS4DZIvlVShNIzJqeeJmM+HjLy
+ ehQQmTvkg8wqUAnyL+ObCFaxRWjtUvoFBf8KtPMLsZc+pnhf+G3KqR+zAOfOu6bUHBA5B7W
+ 80sGo7htpuyJ+pUZ7j2KtgjWAdh8yRsrgS5xkiW6Sr0vXZFdyeSnpFBQuUvFCI7fL1VIhvQ
+ QFzr3Nfuj1Q+D5s5tqZhA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:oKxxmtUB4NI=;2Hq7UhfBDuuwJzLSfqtaxRLznMd
+ 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
+ iQQXUFQNy4SUM20mTc00y8=
 
-On Tue, Apr 29, 2025 at 5:08=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> Export all symbols and create header file for the GPIO forwarder library.
+On 4/28/25 08:36, Geert Uytterhoeven wrote:
+> Hi Kees,
+>=20
+> On Sat, 26 Apr 2025 at 13:33, Helge Deller <deller@gmx.de> wrote:
+>> On 4/26/25 08:23, Kees Cook wrote:
+>>> In preparation for making the kmalloc family of allocators type aware,
+>>> we need to make sure that the returned type from the allocation matche=
+s
+>>> the type of the variable being assigned. (Before, the allocator would
+>>> always return "void *", which can be implicitly cast to any pointer ty=
+pe.)
+>>>
+>>> The assigned type is "struct dac_info *" but the returned type will be
+>>> "struct ics5342_info *", which has a larger allocation size. This is
+>>> by design, as struct ics5342_info contains struct dac_info as its firs=
+t
+>>> member. Cast the allocation type to match the assignment.
+>>>
+>>> Signed-off-by: Kees Cook <kees@kernel.org>
+>=20
+> Thanks for your patch, which is now commit 8d2f0f5bbac87b9d ("fbdev:
+> arkfb: Cast ics5342_init() allocation type") in fbdev/for-next.
+>=20
+>> I applied your patch, but wouldn't this untested patch be cleaner and f=
+ulfill the
+>> same purpose to match a kzalloc return type?
+>>
+>> diff --git a/drivers/video/fbdev/arkfb.c b/drivers/video/fbdev/arkfb.c
+>> index 7d131e3d159a..a57c8a992e11 100644
+>> --- a/drivers/video/fbdev/arkfb.c
+>> +++ b/drivers/video/fbdev/arkfb.c
+>> @@ -431,7 +431,8 @@ static struct dac_ops ics5342_ops =3D {
+>>
+>>    static struct dac_info * ics5342_init(dac_read_regs_t drr, dac_write=
+_regs_t dwr, void *data)
+>>    {
+>> -       struct dac_info *info =3D (struct dac_info *)kzalloc(sizeof(str=
+uct ics5342_info), GFP_KERNEL);
+>> +       struct ics5342_info *ics_info =3D kzalloc(sizeof(struct ics5342=
+_info), GFP_KERNEL);
+>=20
+> sizeof(*ics_info)?
+>=20
+>> +       struct dac_info *info =3D &ics_info->dac;
+>=20
+> Exactly my thought when I noticed this commit.  Adding casts makes
+> it harder to notice any future discrepancies.
 
-It will be used in the next changes.
+I've changed it accordingly.
 
-...
-
-> +int gpio_fwd_direction_output(struct gpio_chip *chip,
-> +                             unsigned int offset, int value)
-
-Is there room for offset in the previous line? (Looking at other
-changes, seems to me so)
-But probably you want to keep a logical split, so the current approach
-is fine to me in this sense.
-
-...
-
-> +int gpio_fwd_set_multiple_locked(struct gpio_chip *chip,
-> +                                unsigned long *mask, unsigned long *bits=
-)
-
-Ditto, and okay to have this logical split.
-
-...
-
-> +int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
-> +                       unsigned long config)
-
-But this seems to be on one line, no?
-
-...
-
-> +struct gpiochip_fwd *
-> +devm_gpio_fwd_alloc(struct device *dev, unsigned int ngpios)
-
-Now one line?
-
-...
-
-> +#ifndef __LINUX_GPIO_FORWARDER_H
-> +#define __LINUX_GPIO_FORWARDER_H
-
-...
-
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/mutex.h>
-> +#include <linux/spinlock_types.h>
-> +#include <linux/types.h>
-
-Too many not used inclusions, please add them only when they are needed.
-Actually it seems none of them is used, But there are absent forward
-declarations:
-
-struct device;
-struct gpio_chip;
-
-> +#endif
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+Helge
