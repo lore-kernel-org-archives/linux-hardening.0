@@ -1,147 +1,103 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.120])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC653B2A0;
-	Tue, 29 Apr 2025 13:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2888BEE;
+	Tue, 29 Apr 2025 13:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745931905; cv=none; b=hLP1eYHjJnvv6ibE0hml8qUXzwZTNJ2bx5nLUiTltJkhT8ajFFPn2GNOgevO6qEFvO576afzmjnENvnUIW5rF4uvV5RLyTnHbJykVKltHLY+LaSY2QY+jeochFHKZkFdka8bndrqXF5D+4VlVY4FagvprfDjTwnKyLHkS/MeIsc=
+	t=1745932318; cv=none; b=iHuagFis7/4LOAgvosc4MWedEB0PjAFsAwqN5gAQaDlrS361EK0/SVJ0MgLEQwcMNon2aQ1fVkIF5DMPT53U/UlB+SZGpB/X0BZjjj38zX6PgdjVIzbtWF+3rrdWfSioEkXqpf0PQSr+vQZYNaWJNkK+c1xXis5JCbEb74qrxH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745931905; c=relaxed/simple;
-	bh=2oCW7m9ifAETTD8BGa4ZwZTAQDr4NgniCQNg5GmjRAw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DTO7atwnFl63Nrno0xHjx7mVTAuecGrXrvipfBrg36ycMN4Q6ME7uEDBgN+uW6MIgACeojoyHA2/xXCgmM/b+mYOwY+XuMjk0WxOJrUniEKo+KG5gt9X+FSDioe/nXE4iogqnI6WHa2jl4zT82sRpHyipifkXcxWQLi1umbpMuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=YjFoloqp; arc=none smtp.client-ip=212.42.244.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+	s=arc-20240116; t=1745932318; c=relaxed/simple;
+	bh=W0nWnrPzLDrG8cZECSn+fC2yohEG2rWvuQPpI5s95bU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D7pVcvrCO6NSodNtp+1F+eByJpOnmFpoEAaYxFxtybN2XpMnYM4x4r2y58U4de48Kv422OTHNJrf9nQ6ttZivr37qrUi5KhpvYTJveNkRt01k6R4bMK2Q+cRwos/JajvQbEMpJ0rxl1Nngj/7hDMMKfxbf/zbSi0RuHfLgR20kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gb6Xbg6o; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="YjFoloqp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1745931564; bh=2oCW7m9ifAETTD8BGa4ZwZTAQDr4NgniCQNg5GmjRAw=;
-	h=From:Date:Subject:To:Cc:From;
-	b=YjFoloqpivBQWbE2WbnVfmpW9INRZv5pF97PSlPvPpjYmE5QnLma127gievqZpwLn
-	 awLAmpdVAlI9GiNBwWETkl2DXJgX4SvT7RRiDrXZk+iHRj6wOaYXbcG3GDYhj3xn/F
-	 hxDj6DBJ+so86j1avhozwnD2lEFWKcIDlSvnawCE=
-Received: from [212.42.244.71] (helo=mail.avm.de)
-	by mail.avm.de with ESMTP (eXpurgate 4.52.1)
-	(envelope-from <n.schier@avm.de>)
-	id 6810cd2c-0395-7f0000032729-7f000001d2ce-1
-	for <multiple-recipients>; Tue, 29 Apr 2025 14:59:24 +0200
-Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Tue, 29 Apr 2025 14:59:24 +0200 (CEST)
-Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
-	by mail-auth.avm.de (Postfix) with ESMTPA id 3397880838;
-	Tue, 29 Apr 2025 14:59:25 +0200 (CEST)
-Received: from l-nschier-z2.ads.avm.de (unknown [IPv6:fde4:4c1b:acd5:7792::1])
-	by buildd.core.avm.de (Postfix) with ESMTP id 1038F181BA4;
-	Tue, 29 Apr 2025 14:59:24 +0200 (CEST)
-Received: from localhost ([::1] helo=l-nschier-z2.ads.avm.de)
-	by l-nschier-z2.ads.avm.de with esmtp (Exim 4.98.2)
-	(envelope-from <n.schier@avm.de>)
-	id 1u9kYh-000000089kf-3Z1r;
-	Tue, 29 Apr 2025 14:59:23 +0200
-From: Nicolas Schier <n.schier@avm.de>
-Date: Tue, 29 Apr 2025 14:59:13 +0200
-Subject: [PATCH] randstruct: Rebuild completely if randstruct.seed changes
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gb6Xbg6o"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3032a9c7cfeso613827a91.1;
+        Tue, 29 Apr 2025 06:11:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745932316; x=1746537116; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=umQgHyre2tiOiZl8qW8J0femlvihd42d02KPN7CGp1E=;
+        b=Gb6Xbg6oL5Ck9/UvVkktgRWBugPcvT4830mtILZwjbjWQnCHDxD+mAwRTQwaxIt5Co
+         5652ejlZgSskJ/eguSU9CR9DAUEgdflpnT9YwmHR7B5mAFdTwc9GMulwOFBD0sEvq/hL
+         ivJHP6rplShA8P3jACZtJLZOY2ZKBbxNZ/ZF0WtBooUHir0sY/xh5bhbYbb9WM+Qyob/
+         4RmWVXhcWa/FpeKi1T7H8oFWV912DQwCHN3eXB6n4ls/GlliGo95dIcUuHc1K14w+05w
+         7TA5z9USuuQX2+UHMuxER1/Z6YLMIiOIfJK39+ad4J7nj2EvTh9mJXt+G/om/vzgQyrN
+         C4iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745932316; x=1746537116;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=umQgHyre2tiOiZl8qW8J0femlvihd42d02KPN7CGp1E=;
+        b=Wsb52JLBaQ3a+2xPKjZvReHyK1VxWm6zbwNDDawI4t0uqgsx/3ObwYlrm0aqeAsokx
+         aDOv03dZdWu23IYUx/9HLmuEf+iuRvTNK4u3fLvY13my1XtukkXCJy/SmllufoHK5kir
+         RGoG2ROKuPqcbsedV0pjHqfdJ8QEZZPPLjOJJLLfqeAugYLfeekRxS+xP5MpNVNYp1W8
+         kuClh72UN8D86OLREYpno2tMep387pOmwNE4x1ZGFoDhbwaEqmj0xJ7xbl1zoMeAaqvT
+         BbMtgra85ThkqG0mQrzL5TQ3KSdHOJqs0hwPQZi/iO5kqe/v/Rf19krXq/eWGosA7yDt
+         Su6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUICkUWij+uVXGly4SGL+tp91fT4nP9hYJufYNhn4o5N5L71ALSvGtiSRBoaVE4rIkgxKpUHfnUNvl5+0oDtjQ=@vger.kernel.org, AJvYcCVbiI9W1wb9IvpOrhdYrT7M6pFWqsPH0xMNt+i2LUyR7yyj0iNkxS/se0OX8jSEzBo0fq+8bKupegPO7HRb@vger.kernel.org, AJvYcCW5TlQSVeu5GSMaOpE+S1Sy3ZfUnp9lczM29bDXThbLhxKv9QHlUGckoZ7bbklL+/drDGR8VX4FtwGXv5nNlDg=@vger.kernel.org, AJvYcCW9UbcE6lYmhFPHNo3FCfRnMQfuRk97214geVi/uho2/+uKuU93yKM6HqdIbEdjA3t8JQfyr0GpOYi11kFW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzvzq9VAQQyoC8sI+cVpztGn7Xft0U0oOl292LPMNEUFCzOeRp4
+	HCTG8ZmQ+6/9jH9eCk4KslBEW1IUqxgcukobLAPkF6A8lRZKUsgcw0anbo5+9LKHIMC7IO8gMfG
+	6dlPgExbSnlOzuYiWQkIW/w94yc0=
+X-Gm-Gg: ASbGnctissz95ftZMhJ0LtyR1iw/kJOWytnEpxh5SqXUsXD1KljQ3MclIXhCmFYIHTM
+	cTRDGiAYufyd976tJVXnzxoaDQr7rEXEr5gUHnfzbB1oT+ldVX137Td3Ajq6oEgQZ/aWmiGMkFq
+	5ldKYnCBczCvAl3/RAx0rnyXhybD/ngAY4
+X-Google-Smtp-Source: AGHT+IFvNh6FYW0Q6QQ2aHh2nvJkzrPHR2X/BnAtoaKgSyWdJLiF6HNVtbUTddRoJR2HgdrhRcU1oXuddB3KnCzYJyM=
+X-Received: by 2002:a17:90b:38c9:b0:2ff:4be6:c5bd with SMTP id
+ 98e67ed59e1d1-309f7ec76f5mr8492166a91.8.1745932315976; Tue, 29 Apr 2025
+ 06:11:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-rebuild-on-randstruct-seed-changes-v1-1-16a74fe65538@avm.de>
-X-B4-Tracking: v=1; b=H4sIACHNEGgC/yWNwQqDQAwFf0VybkBXrdhfKT247rMGZC2JFkH8d
- xc9zmFmdjKowOiV7aT4i8kcExSPjPqxi1+whMTkclfnlWtZ4VeZAs+RtYvBFl37hQ0IfAvGT1/
- VKF0z+LKgFPopBtmuyftzHCfjBAZUdAAAAA==
-X-Change-ID: 20250429-rebuild-on-randstruct-seed-changes-6b45e327fb31
-To: Kees Cook <kees@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, 
- Nicolas Schier <nicolas.schier@linux.dev>, linux-hardening@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, Nicolas Schier <nicolas.schier@linux.dev>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2055; i=n.schier@avm.de;
- h=from:subject:message-id; bh=2oCW7m9ifAETTD8BGa4ZwZTAQDr4NgniCQNg5GmjRAw=;
- b=owEBbQKS/ZANAwAIAYjGvJyImm24AcsmYgBoEM0r7k1GoafcbnAfvnDJSYJVnnD7bEOXWjP81
- 0bR68QzE3aJAjMEAAEIAB0WIQQO/4WJ63TpgecLpGmIxryciJptuAUCaBDNKwAKCRCIxryciJpt
- uIRGEACOJz1v3io+I/0Iq/QaOAt9e5NEWGXdxwDGtLA7Y2x68gbBJ/vP8LbsdBaWWsxB/UFbrQY
- vvKHTmvRJAS3/giVw19jr/D/Owa5/B6r3AtW4mFjot52X021vK4TjKgQGpeW6c3qiSJGaMx8K4J
- X8eeq1HaBiXV8TEBW/eTOL4fX/OtkdP0T9wNRkccBc+u9eVFX0PUSGt/6i/CrvbV76FGBDE76rI
- SsIB/gWyB13ao6UrnTjnubpLsff+3B5kOV57e6kpDNmv0tqDsWa8X25IaDJrB8s3rGHo0AFhXWF
- trhjeBANONIXzGZlzbpR6KYx3a2nJwB3INiQOxp1iLrPUohT4bky0u8OOArvzfBvTzmMlOvAsXh
- nViGbseZ6QVGYU6UIlf/o/zMXQyrZJ1htk9lbHXWGCryqLxK0XxxYxMRQcey+QFzzmU9wEhoua6
- klLOyP9K5U0Wh0cpUOxt6dZxA3H2b+IMtdPhstfopAk1j0/dIe4gpKW5b91VlXTBThesRZXMfTQ
- 1pfz+D3NnkU84IWXW2XzSU4wTNkjtnd/1ljrM0vkc8i8ulMtbAGJMScE4CoAxf6mxwMeJiGSfTf
- CY+XVxQcmGdVtMfUtCj7E/TGWWmdVFjcFz//pCo1cGQrcMnRQNWXTaGBywMoHr2lfAMmkWXUlKw
- om2l5UNdKfJ8Ekg==
-X-Developer-Key: i=n.schier@avm.de; a=openpgp;
- fpr=7CF67EF8868721AFE53D73FDBDE3A6CC4E333CC8
-X-purgate-ID: 149429::1745931564-2D629E09-1E870DB7/0/0
-X-purgate-type: clean
-X-purgate-size: 2057
-X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
-X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
-X-purgate: clean
+References: <20250429-rebuild-on-randstruct-seed-changes-v1-1-16a74fe65538@avm.de>
+In-Reply-To: <20250429-rebuild-on-randstruct-seed-changes-v1-1-16a74fe65538@avm.de>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 29 Apr 2025 15:11:43 +0200
+X-Gm-Features: ATxdqUFAsiIlFf1IXb2fAukN7QwlMmMJqoiiI4yhCrjomEu6uiKCMCJAawHA7GY
+Message-ID: <CANiq72mwYbg_L8u9NEfRD0Fp9E_zhCi=t=U2jyjsZe_Ls306hw@mail.gmail.com>
+Subject: Re: [PATCH] randstruct: Rebuild completely if randstruct.seed changes
+To: Nicolas Schier <n.schier@avm.de>
+Cc: Kees Cook <kees@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, linux-hardening@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Include generated/randstruct_hash.h in linux/compiler-version.h to force
-a complete rebuild if CONFIG_RANDSTRUCT is enabled and randstruct.seed
-changes.
+On Tue, Apr 29, 2025 at 2:59=E2=80=AFPM Nicolas Schier <n.schier@avm.de> wr=
+ote:
+>
+> As I have no rust experience at all, yet: Do we have to consider
+> something for rust?
 
-Removal or change of scripts/basic/randstruct.seed leads to a remake of
-generated/randstruct_hash.h.  As linux/compiler-version.h is a
-hard-coded include for every kbuild induced compilation, conditionally
-adding generated/randstruct_hash.h there adds it as build-dependency to
-each object file.
+It cannot be enabled yet together with Rust, so no worries, but I need
+to remember to update this patch:
 
-Reported-by: Kees Cook <kees@kernel.org>
-Closes: https://lore.kernel.org/linux-kbuild/202504161928.17A90D9B@keescook/
-Signed-off-by: Nicolas Schier <n.schier@avm.de>
----
-As I have no rust experience at all, yet: Do we have to consider
-something for rust?
----
- include/linux/compiler-version.h | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+    https://lore.kernel.org/rust-for-linux/20241119185747.862544-1-ojeda@ke=
+rnel.org/
 
-diff --git a/include/linux/compiler-version.h b/include/linux/compiler-version.h
-index 573fa85b6c0cd314dfeec66e8c77342798aa7e62..523eacf80c1a6149c513dccfd0dd9fd388e909a4 100644
---- a/include/linux/compiler-version.h
-+++ b/include/linux/compiler-version.h
-@@ -6,9 +6,19 @@
- #define __LINUX_COMPILER_VERSION_H
- 
- /*
-- * This header exists to force full rebuild when the compiler is upgraded.
-+ * This header exists to force full rebuild when the compiler is upgraded or
-+ * the randstruct is changed.
-  *
-  * When fixdep scans this, it will find this string "CONFIG_CC_VERSION_TEXT"
-  * and add dependency on include/config/CC_VERSION_TEXT, which is touched
-  * by Kconfig when the version string from the compiler changes.
-  */
-+#ifdef CONFIG_RANDSTRUCT
-+/*
-+ * If CONFIG_RANDSTRUCT is enabled and scripts/basic/randstruct.seed changes,
-+ * randstruct_hash.h is updated.  Including it here, makes it a build
-+ * dependency for all build objects.
-+ */
-+#include <generated/randstruct_hash.h>
-+#undef RANDSTRUCT_HASHED_SEED
-+#endif
+So I will reply there with a backlink to this.
 
----
-base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
-change-id: 20250429-rebuild-on-randstruct-seed-changes-6b45e327fb31
+I guess since we need to rebuild even `core`, I may need to add
+something like the `fixdep` workaround we have to rebuild on
+`RUSTC_VERSION_TEXT` changes.
 
-Best regards,
--- 
-Nicolas Schier
+Thanks!
 
+Cheers,
+Miguel
