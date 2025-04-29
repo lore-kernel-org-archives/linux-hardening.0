@@ -1,94 +1,75 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586171B043C;
-	Tue, 29 Apr 2025 20:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E3326ACD;
+	Tue, 29 Apr 2025 20:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745958629; cv=none; b=VlBB/3ZjILySnvpmaBgU603TpqIstWeXmB5SUGG6YyUF1K02Lf4e4CDrRWv1/GbPsKIufpMmrG5DZqNHGEbWtth30q7lkklXgeREF2IRfH3uapAmyuJKzYI8mzWip1vJs/jXha5NMt8844V5oB96l+oWCOZ961RfQFvjEF2jGGA=
+	t=1745959101; cv=none; b=UHFApDpLpimhHicN//UxTNjuP4mIUD68maDx/1nr9M0JJuP654szmS5qJmS2H2KJusM9LDoMFeNI8p/xGQnhgt+OUlJDeIunnFZqr9EaLfxEcT2MObIzWtSjZqdY//EuHslpVZSMTpuXp+XJ/oT5LWiNGHSIYPUuf4K1dsuGViA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745958629; c=relaxed/simple;
-	bh=QIDDEQs1Gmfq8nL4ROK79rDLFy3b/ikbmtUTE8FWJAo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NnmE4Q1DmQxRZJMr3VzooZjtfw6SFoA6nuKvM7gMy0qCGyzGi1vhiSTnNjwclG/yBLfzWYU8dcjRyoDyK6rWdKfDbHAbo2q7y35Epkb/M8eBAaTmRA+ys2K2REk6bpUFyi58Ntp2T3emXEV/m8F9UH4cZjfhThzMzETVpMfXTyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VfnUx5l1; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745959101; c=relaxed/simple;
+	bh=/eWBP36b0R6vQ02TvTg1IX/OQuDQ0fjODeXqIrCufOQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HTwJnP8RjhQKeBb6aRk5yUY8toEvJ0JDUaupXvPj4sDqIYCIVyfitW/aprFoOlNVyAIgabGziBsR5DFal5gSQHh42nNjPRmFKnn872y+Vvh+3PKImOjolYj8VX28qYjoFSwKzmmz280y8H9wGpf05i8WBAzRgMgyqGoSpXYRP3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=F1KxhSkH; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfnUx5l1"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f6fb95f431so455952a12.0;
-        Tue, 29 Apr 2025 13:30:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745958625; x=1746563425; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QIDDEQs1Gmfq8nL4ROK79rDLFy3b/ikbmtUTE8FWJAo=;
-        b=VfnUx5l1SUiRL2L8Icfi/NK7Uovllt/7SuTVuYrpwbC7W/fV1TvS/gALUTLuskwnii
-         bQU1WyiAfY4C8/BoRBOnyQXq0NS+FoZ8YZ/TpxXyfiH4VgoKLC9S9zxYIX/Oj2NWSBzm
-         m1gCl+MfAQirOhEZtPa5T8hgqASdh/dcDiKk1Ikwm3j1LSG7k/w5eVb7fjFRm+eHvqPf
-         4DHaTusWkb3lkbyybmvsXVuBlXVjX/VqaTXe5iZaUcbVSbXtMvNAFk+SIEocz1f+cuyX
-         b/sJOSMIg/oWqG+xgIJcv9mx561tOK5HyBMjue5VAJOzsuDjNLx5OOTwseXG3cXet2pN
-         Ldmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745958625; x=1746563425;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QIDDEQs1Gmfq8nL4ROK79rDLFy3b/ikbmtUTE8FWJAo=;
-        b=FKIZU8eNO7R1KBBTmzLPTpwGafn3h+ABqWU0YjFhEz9iMd35xPzeA6kKM7a4COB69o
-         eH6yIZlIlDkmw3aybHbzOEwnCf0OQJxwM6XDd9gOJYc3b5kdKQ7iPoO3DuRZc1DAXNCh
-         h5/mfKDzE8EVW6tlRkgIMEflMCdDjP5lWZMznVQ7nQOQRKWPXo60tDQcfhbW2W8qwPGM
-         hevEDCwE9nIrf825SJiXBUxInGhLjY8NrWsa8Tei/jnaLX6hU199cB3wm2apB8bmdwYX
-         usmWfDvFmI+w6BHzPvbsSCBfmPy9GuLzUVRvWtJ7+hMXORPv5jPOVoxLPM/nnp6l7kQf
-         p2lA==
-X-Forwarded-Encrypted: i=1; AJvYcCUS+5MYWzEyB89iP2Y2YB/OgYIvV0XtjOdE/SemCA+mzEaRBsFOrorWz+sMtbDGRnG+79WtbfBlqNVVJPKa@vger.kernel.org, AJvYcCUuR58fL9UsRZG8LTiT2GuPYISjwLHPKuNRl1yGbMvqC5H8JBzbPItxJ8XPmZGnxW95Vms2yZNVt0if@vger.kernel.org, AJvYcCWK0vHt10HWLoW9A8PsL99zMmLRkJM61srsCQxHvaX8kxky8+8x2D6Q9zbyNx4s8QXwJDoSLw49LVIkRbqG+luN@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3jjCzpKuVhgYKl0p9EW23PRtRBGzLlIjU0MMwh+hvqXfqLyzg
-	lyX8JW3RPKpApzLEPr1dws7i3b4lnKPPuP/pHpAoYe3FtUsxY24HXbqCWbp1GvqcH1NiB0MVUVK
-	K18bWjOGTmFEsfLUVxxmDE0oH0I5evy66
-X-Gm-Gg: ASbGncuxqOA1pcoeOdv0VML8L//FfJmd2jNvoZLc+9FE1Z0JPBhugOroAW1yzwWQqWt
-	Z/hKGp0tg0IT1k6ktkQpd04FcH8Q1atKR/Y/yrUSpsh45SP1ygur7e1KM2GLiv7vXKjP90ikBRy
-	4+06iHYzlKXJaVjl1QD9OjB83YhCZF64JT
-X-Google-Smtp-Source: AGHT+IFZ+tPuhr4u0amL2o7GidiSohH6Utv5H0SUA5jmFzCgFcP74FND3D4ktHuU5vmLfiR56Xoev8wi90p9wd9PQ/E=
-X-Received: by 2002:a17:907:d64a:b0:aca:c67d:eac0 with SMTP id
- a640c23a62f3a-acedf34991amr31962366b.0.1745958625432; Tue, 29 Apr 2025
- 13:30:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="F1KxhSkH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1745959097;
+	bh=/eWBP36b0R6vQ02TvTg1IX/OQuDQ0fjODeXqIrCufOQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F1KxhSkHutUmilajknwg+FUaRBHlfgi8EAHlRtfKQGWf4PPdvz/xb+5FHc0rtJX5r
+	 BvZDkqwQjhQfiBo6mdBeRICLEyXGOTgDD5K5t9cNcrnuOQ6Gzqo/UupaO+GpKuHeSX
+	 kILIEEc3GwPenxaL5E7k3mDevKdS/D/jGQPld0x0=
+Date: Tue, 29 Apr 2025 22:38:16 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, Sebastian Reichel <sre@kernel.org>, 
+	chrome-platform@lists.linux.dev, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] power: supply: cros_charge-control: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <f920aa2d-b180-4532-bd29-d8740883617f@t-8ch.de>
+References: <aBEwnKtUOTYzS7C3@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
- <CAMRc=MfpE6M28P6jxFgs6K6Tf84LRhmaw5U4s8WgciF815M7Bg@mail.gmail.com>
-In-Reply-To: <CAMRc=MfpE6M28P6jxFgs6K6Tf84LRhmaw5U4s8WgciF815M7Bg@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 29 Apr 2025 23:29:49 +0300
-X-Gm-Features: ATxdqUG081dIkUKH47U4BcogKwVitG0L5aZWFuMYNfSzSFmwm44JDwqa1h18v0o
-Message-ID: <CAHp75VfkJAG6EKf94NFKVKRgKiRKxB7WER_UXcY7sGMOqA=YNg@mail.gmail.com>
-Subject: Re: [PATCH v4 00/12] Add pinctrl support for the AAEON UP board FPGA
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Thomas Richard <thomas.richard@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBEwnKtUOTYzS7C3@kspp>
 
-On Tue, Apr 29, 2025 at 9:43=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
-> On Tue, Apr 29, 2025 at 4:08=E2=80=AFPM Thomas Richard
-> <thomas.richard@bootlin.com> wrote:
+On 2025-04-29 14:03:40-0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Replace an on-stack definition of a flexible structure with a call
+> to utility function cros_ec_cmd().
+> 
+> So, with these changes, fix the following warning:
+> 
+> drivers/power/supply/cros_charge-control.c:57:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-...
+Thanks,
 
-> This looks pretty good now. Who should take it - Linus or I?
+Acked-by: Thomas Weißschuh <linux@weissschuh.net>
 
-I agree, but it still has a few issues that need to be corrected.
-I believe the next version will be final.
+> ---
+> Changes in v2:
+>  - Use utility function cros_ec_cmd() instead of DEFINE_RAW_FLEX(). (Thomas Weißschuh)
+> 
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/aBEmk6ixfrQ2XpTw@kspp/
+> 
+>  drivers/power/supply/cros_charge-control.c | 23 +++++++---------------
+>  1 file changed, 7 insertions(+), 16 deletions(-)
 
---=20
-With Best Regards,
-Andy Shevchenko
+<snip>
