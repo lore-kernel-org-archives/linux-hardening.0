@@ -1,81 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1328D78F58;
-	Tue, 29 Apr 2025 17:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A8A248883;
+	Tue, 29 Apr 2025 17:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745947742; cv=none; b=JxtcfOmgmV8wY3CHM+ZvKkfGNG2KjkTeuqIkCUjl5yYWd6v7ofCpx+rxwyiDYn2qQFBvuR7UxYbpS1pOtZQUfR/jdV4a0P+j5cZadAzU+IbrR2cU192AraO6FHqVs2yFfIsNVcWw0TDQxqOm9Se6jQB0+FhVOrxOqkwgc1H4eeM=
+	t=1745949590; cv=none; b=ER7JUI8m+EPeoTVQS++ugVe9H/MEDrXvLBaUIvf57qod6w3QiZNxNYRFJCE1iiqRU3x1Mvd0clX2eauHbHAdDGEJLDEuMQ02k/YhaP/zeAittuzSchPevrvWPdngHtfhr4iEH8zB15C55GtYwxs5+rm5tXoDhoV9vcLJx3sxr2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745947742; c=relaxed/simple;
-	bh=8xfiJRm4IrwupfThxxvWEdxfv+b8w/tb3J7jTDqosac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OLqh/Or7FDDWdSdXfWGAWcFCVAxK4NQZHA7E6JI9vDUfBvn9La44wF6lzQQde6wSPl+DyosbmihWgmLgzAC7YITDTdcr4RPlkMLSzjXVnC6UYkxaDmxyCnies48icG4ribwrxegYGKP4Wbs953OYHNjhvmZ5zQayLFGW9Evo4v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ER/9RRUS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745949590; c=relaxed/simple;
+	bh=Mlv5QPLKqqnLLlp3l4YB9mb0TbR4nnACnfhCeWOJ2qA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ZsLTwHop0rjL122qlo4gv18tsGEYj2CaPiNCB577iFAvFPBqYF8Lk5WaXo7FKEl/Sp/rFIoGz3RLWkerz12m4H5WaiRrVAKdLSqt8hKDnIhnXrsB7pq/L2mFFe+6WeDin3k/bKFaWPqHHpZrgCZXXzMwJQJHYVHI6JAKkz8t1+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdypGX9E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ER/9RRUS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4079C4CEE9;
-	Tue, 29 Apr 2025 17:29:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdypGX9E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4733EC4CEE3;
+	Tue, 29 Apr 2025 17:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745947741;
-	bh=8xfiJRm4IrwupfThxxvWEdxfv+b8w/tb3J7jTDqosac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ER/9RRUSbbvw04ZwEowWxEX5SqfJ7eX7rKJnItQ1hn4vAx68iDSMCTU44Gm+Pk0Vn
-	 zDMoAZCkt/+sBqbHwDKOXMwb23EnSLvU51CY6dW16/30bb/twBuZK98mJYdDfBnuq3
-	 qijuhrUNllvkFw7wycTEN7Iizunamz/JyZb8jOCAachSVdTJ+3+Wz4AmC8j1X3J24v
-	 SZtkVLYvipdhCaeI/1IVJH2SzDaCxf89WetmkTgcY/wSm3lnxqLiIP1q5Aoj0AJtwx
-	 Q8xsHkZa58wqJfr9UcO6HRWKr7rw2fS6kQLNhJ1uATRyTN7hL5NTeyOdS9x8/+lrJI
-	 p8X3Jpgyxd+6Q==
-Date: Tue, 29 Apr 2025 10:28:58 -0700
-From: Kees Cook <kees@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Mike Rapoport <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	Maxime Ripard <mripard@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Natalie Vock <natalie.vock@gmx.de>, Xavier <xavier_qy@163.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Maarten Lankhorst <dev@lankhorst.se>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kernel-doc: Add initial binfmt docs
-Message-ID: <202504291028.523CF77C@keescook>
-References: <20250426000704.work.637-kees@kernel.org>
- <87selrrhnw.fsf@trenco.lwn.net>
+	s=k20201202; t=1745949590;
+	bh=Mlv5QPLKqqnLLlp3l4YB9mb0TbR4nnACnfhCeWOJ2qA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=jdypGX9EoMqhhPmCwvvegpsjmhqEgXTFWnH4WpuPGQ4+/8hsuc1tcsk2l0TpBC/zF
+	 AHgeIkuc+4KzHbJWvcqnnv/0Aq578yjcI/+Jt5KQD1JRNOWfKVV8QrN6KDXYSxIK9O
+	 zv1BJoArVE6EoVUSz+4Q5LSEL5B51N/2tegpShYs70D5B3iAf5BupfX8jSh3J8hXVp
+	 K6rG/19hqLBSA9SL8C6Igw7FoG2/pvd5+VEDrAU6mHMzL1+lTWNvvoVU/puLKUNLQn
+	 qPXonvrb5MCSQIu+XsTpNiR1vL9NT+X1Azoi/dY5zTnxIFx7tKlC9Xev74XhLUWlnX
+	 xvmwew0w3wu+g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D7E3822D4C;
+	Tue, 29 Apr 2025 18:00:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87selrrhnw.fsf@trenco.lwn.net>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] ipv4: fib: Fix fib_info_hash_alloc() allocation type
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174594962925.1753982.13626856832986893239.git-patchwork-notify@kernel.org>
+Date: Tue, 29 Apr 2025 18:00:29 +0000
+References: <20250426060529.work.873-kees@kernel.org>
+In-Reply-To: <20250426060529.work.873-kees@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 
-On Mon, Apr 28, 2025 at 05:27:15PM -0600, Jonathan Corbet wrote:
-> Kees Cook <kees@kernel.org> writes:
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Fri, 25 Apr 2025 23:05:30 -0700 you wrote:
+> In preparation for making the kmalloc family of allocators type aware,
+> we need to make sure that the returned type from the allocation matches
+> the type of the variable being assigned. (Before, the allocator would
+> always return "void *", which can be implicitly cast to any pointer type.)
 > 
-> > Adds a framework to hold the initial exec.c and binfmt_elf.c
-> > kernel-docs. Updates scripts/kernel-doc to allow leading whitespace so
-> > that embedded "DOC:" tags can be found that aren't at the start of a
-> > line so that in-function documentation can be found, like that recently
-> > marked up in binfmt_elf.c[1].
+> This was allocating many sizeof(struct hlist_head *) when it actually
+> wanted sizeof(struct hlist_head). Luckily these are the same size.
+> Adjust the allocation type to match the assignment.
 > 
-> Just one tiny little problem ... when you weren't looking, Mauro snuck
-> in and replaced scripts/kernel-doc with a shiny new Python
-> implementation.  So that part of the patch won't apply to docs-next; if
-> you apply it somewhere else, the change will get lost.
-> 
-> I figured we were going to run into at least one of these ... sorry ...
+> [...]
 
-Oh duh, yeah, I will go re-do this with -next.
+Here is the summary with links:
+  - ipv4: fib: Fix fib_info_hash_alloc() allocation type
+    https://git.kernel.org/netdev/net-next/c/fca6170f5a03
 
--Kees
-
+You are awesome, thank you!
 -- 
-Kees Cook
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
