@@ -1,103 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2477D2BE0E1;
-	Tue, 29 Apr 2025 09:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69ED21FFC4F;
+	Tue, 29 Apr 2025 11:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745919876; cv=none; b=nC33pclWjGj7OAvuMgvi5X1YA9b01RaTlhsl1jfF0/e1iIlUEs7kggP6vgSS9NeXjnHjpqREzSc0kuvpAzKwcPgNk2hs6MCUhmdI6HZTdSKfsv+6MK7Tveiz6qa1hR2afKooHNJ+AfB/N6C3YPNxM1jYqaI++w0veWNliZI7jzo=
+	t=1745925817; cv=none; b=IBFU+YwdGTAzrbfJKfgY6K4gL5oZkEgDJcBw8PJg6M4H+k3r8/x372HM5tZD2HKhE60RFdCVC4FIUcXFHo+T/pUtMnP8Bksqyl0gZTqeO/UEuc1l9JAnkC3WM/JH7qR/c+vBGdfjZVdIvMmQnx9F+OAa+kWn/mh905EISECEfz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745919876; c=relaxed/simple;
-	bh=tjyIOBp2pVvC/RTZRsqbz2Va8h4MtD0qw3IcJi/tjuw=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=jKDEuCFWu+Y2OhIYX8N9wNmasG29odIOrNZDT2u6tmc4QlUccQX46FSQA+qLgqIQf26fLT6CEzvVAt6TwfhupH7SmLBREbTFNDlzzc5/c/MAYU3GwZkd8yRcEka153Ieuxhpm2w2pTtk+AxkqiWuRxizxeuNg/rpr671xwqETFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqq0LuxO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745925817; c=relaxed/simple;
+	bh=ZaACI4uc7FoYi8HueqmWpcR7iEQtfmo0xIZ9yivuGDQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OnySs17l2XFPXHctfn48Ac2ZqxSD6E9JzZxgYfZ/Ofk+ng9rgwQqdEfqkT4D86CDQywpA68cictynyiWxH6zY90sHfKDVm8UBijfAXg30pxmwgXjn03YrMkueJVmWJ/Udm1hI/1uECE2msAf0Ovey3QwJ+8xtjyPtMVCUduB8Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qb5AL2d/; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqq0LuxO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BDD6C4CEE3;
-	Tue, 29 Apr 2025 09:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745919875;
-	bh=tjyIOBp2pVvC/RTZRsqbz2Va8h4MtD0qw3IcJi/tjuw=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=qqq0LuxOtnslY2NsfByYMNGgwEYpTe4O1FH0Z7jRLLw/83sBZQXvK2AtBce4Rp4Vh
-	 RRrtZvgAm0KTtAM0dRR8FFZgHbOD74cY1fwp0+m1BStKwH9OMAJ1tbqqIR7WGEvUdy
-	 Huyn7q3PO4Mv0wgzElunEnlSH92XNipiFYAiNmwm+IgYpOMXVtNpPKws8k1uLWotFd
-	 bLzen+59z9PDBxxLRsVdAJi0M12GVCctM+AfbOEhsog6AmtYp83tU9BbOND/6NJ39Z
-	 SmgGYl/arNHXgMI/+FwQQhyjYWUUy6Pc/LQYLIt0QdAnK+H5mCgCkdkTfMANoEpT74
-	 1X0lz/It9jpaA==
-Date: Tue, 29 Apr 2025 04:44:34 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qb5AL2d/"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso39439215e9.2;
+        Tue, 29 Apr 2025 04:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745925814; x=1746530614; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=enRMFP1jlisurkqMhlaiJRbAzlhVsmC7ZkoRkqihn6k=;
+        b=Qb5AL2d/LgydMr4yVaw9gss8y0gnvFZ0qTNrVA+Fyks3/9qKPo2+hot6tYD5iwbjYJ
+         2SIOoGUDeK11JqUpB+lQcyZ1WtUPe9hjKy39oH8VHHJ84ioX4yhA78Cw1ZU45nUuSCM2
+         ccVwk+WF0ddFcdV60w2ykPA+oEMP8fKq4EdyYjbywO2pw+kom0rKz2uTNLvV3pKQ57II
+         NE1U335yW2oLM3DCbP61DDBM5aOwc3Ujh/UXKBEYBJ7gkcUMT4I/A8Y80Qy4jfylQuTb
+         rfYWODsRn0xg6JGwbZDw+LXnGhVO6qDZ9HgWTlIY55RJ2GQmN9eqBnVVevP/qQFoTLmN
+         v6HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745925814; x=1746530614;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=enRMFP1jlisurkqMhlaiJRbAzlhVsmC7ZkoRkqihn6k=;
+        b=u3Q71RgwyBOvn2nkjl/6ivw16Yzo0wJT7aKzfeePBHjXUgDog+N/h4aVhLM489rCLL
+         3eCKsH6sh8Qz+eIGFi2XYAJkrZ8GMwd2vF46lYfuPoS15pWXiL2vjtBbwS2YT8cfV1SB
+         npdeXAB3HDLkj8LQkEvcIxZnymKauIr7/lWsL9dA+S/CzLI0ysFow6pAaVbsAhyEHUY8
+         zgJ6JiF8WchI445SNdL5szSWkcl1qURYS4ssaXHTfgTGp/Y0JeHE7EMqWhkNq6GhmiRZ
+         mmfPLaJHvaAayh7lKts19JCYREpFm1hxOsf5lZ8tThNAgZOTv4mOqhZZdIOuJ2Txd3Lg
+         Xd0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUttdFVsCt8eCp1Mg4bt+6ZLoCoBxBL2izeN3XtrhkSHLvsaAqjqqVVaA29+Sc2/0wsDy3BAM1YcJZdnA==@vger.kernel.org, AJvYcCVDMFyJbfznL9NTCH/RodeMKqjN7/H2lyBDmI3q46lyi15blmfY2UR8IJt0fFduhTeLuJdLNOh7N7nnasrE0Ys=@vger.kernel.org, AJvYcCWr75alvlMA9O7sihDIJW3LN5oj4yJHf7AHbsNinRolRpiDv8S+cGXEgDw0aQUq2iScrMo0cCnC@vger.kernel.org, AJvYcCXQIvGTDAzHwHmfxnWi8Cjdi0uBrRWcjEe9HomlPe10Bt7QSz6MxnOGiRpuzi/VoWzG3ue56XYYGDX00o6/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQwjIjyi6XPI4ej/oDlvQA9mfs1n1usazs7QAbhqUqcgGF3gBe
+	b8Vgt8QmVUYDonkMOD6UvovHTOFsd5rUkS3dI8yWKoKgez6at1ts
+X-Gm-Gg: ASbGncui01xrc3SCdxFdW2JCvCkYVybogYj7ZsCKYJ6Z0qHHYFcmQjK2AyqGVveKE4b
+	Bk7W6FH6VRY68a2oV/UOpUCD0r+wwTw46KYk69zn3HdQDzJ388PpqwVDub6RCV+IDjhBCdjOd5y
+	vo6lBV7Xt/ECaKAR8TGXcFdoCIjKrEu6a34j552lH0X9fj6bHvsknvegXZatr7LwzCqsYvouTja
+	+WZkE0bM/3LTPL6yYDnmVZJv2GHV5xSKNrzuKqo4Tn+Fge+aJyFVtnaDXGZBgaac5ihExSAlKZf
+	mCq5Lk76gF3K3sCmaHTqGvvDR5E9sMOsE84gC7gwojhuoEJ3sOWZA3+ZTB4nLw==
+X-Google-Smtp-Source: AGHT+IF3ez3RvSlwwNz2iFhvs7yuu6LPcQghwcJs7BvAS2GzjMT+coF7zcPbbGeD44XcuYjlawqZCg==
+X-Received: by 2002:a05:6000:2212:b0:39e:cbe0:4f3c with SMTP id ffacd0b85a97d-3a08a348367mr2147937f8f.8.1745925813206;
+        Tue, 29 Apr 2025 04:23:33 -0700 (PDT)
+Received: from [172.27.34.251] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a07a7c39a0sm10754303f8f.101.2025.04.29.04.23.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 04:23:32 -0700 (PDT)
+Message-ID: <c805775c-9729-4090-9d09-eec9b14874e6@gmail.com>
+Date: Tue, 29 Apr 2025 14:23:30 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, kernel-team@android.com, 
- linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
- Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org, 
- Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Srinivas Kandagatla <srini@kernel.org>, 
- Peter Griffin <peter.griffin@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Will McVicker <willmcvicker@google.com>, linux-hardening@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>
-To: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-In-Reply-To: <20250429-max77759-mfd-v8-2-72d72dc79a1f@linaro.org>
-References: <20250429-max77759-mfd-v8-0-72d72dc79a1f@linaro.org>
- <20250429-max77759-mfd-v8-2-72d72dc79a1f@linaro.org>
-Message-Id: <174591987220.3132987.2369994359468543666.robh@kernel.org>
-Subject: Re: [PATCH v8 2/6] dt-bindings: nvmem: add max77759 binding
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net/mlx4_core: Adjust allocation type for buddy->bits
+To: Kees Cook <kees@kernel.org>, Tariq Toukan <tariqt@nvidia.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250426060757.work.865-kees@kernel.org>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <20250426060757.work.865-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-On Tue, 29 Apr 2025 09:21:38 +0100, André Draszik wrote:
-> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> Port Controller (TCPC), NVMEM, and a GPIO expander.
+
+On 26/04/2025 9:07, Kees Cook wrote:
+> In preparation for making the kmalloc family of allocators type aware,
+> we need to make sure that the returned type from the allocation matches
+> the type of the variable being assigned. (Before, the allocator would
+> always return "void *", which can be implicitly cast to any pointer type.)
 > 
-> This describes its storage module (NVMEM).
+> The assigned type is "unsigned long **", but the returned type will be
+> "long **". These are the same size allocation (pointer size) but the
+> types do not match. Adjust the allocation type to match the assignment.
 > 
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
-> v2:
-> * drop example as the MFD binding has a complete one (Rob)
-> 
-> Note: MAINTAINERS doesn't need updating, the binding update for the
-> first leaf device (gpio) adds a wildcard matching all max77759 bindings
+> Cc: Tariq Toukan <tariqt@nvidia.com>
+> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: <netdev@vger.kernel.org>
+> Cc: <linux-rdma@vger.kernel.org>
 > ---
->  .../bindings/nvmem/maxim,max77759-nvmem.yaml       | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+>   drivers/net/ethernet/mellanox/mlx4/mr.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/drivers/net/ethernet/mellanox/mlx4/mr.c b/drivers/net/ethernet/mellanox/mlx4/mr.c
+> index d7444782bfdd..698a5d1f0d7e 100644
+> --- a/drivers/net/ethernet/mellanox/mlx4/mr.c
+> +++ b/drivers/net/ethernet/mellanox/mlx4/mr.c
+> @@ -106,7 +106,7 @@ static int mlx4_buddy_init(struct mlx4_buddy *buddy, int max_order)
+>   	buddy->max_order = max_order;
+>   	spin_lock_init(&buddy->lock);
+>   
+> -	buddy->bits = kcalloc(buddy->max_order + 1, sizeof(long *),
+> +	buddy->bits = kcalloc(buddy->max_order + 1, sizeof(*buddy->bits),
+>   			      GFP_KERNEL);
+>   	buddy->num_free = kcalloc(buddy->max_order + 1, sizeof(*buddy->num_free),
+>   				  GFP_KERNEL);
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-
-
-doc reference errors (make refcheckdocs):
-Warning: Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
-Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250429-max77759-mfd-v8-2-72d72dc79a1f@linaro.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Thanks.
