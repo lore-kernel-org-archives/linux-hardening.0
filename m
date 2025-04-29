@@ -1,217 +1,177 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE9C275849
-	for <linux-hardening@vger.kernel.org>; Tue, 29 Apr 2025 07:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9669F2951A6
+	for <linux-hardening@vger.kernel.org>; Tue, 29 Apr 2025 08:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745912656; cv=none; b=kPk+4T3MUSPfCe40TMvzPbM1dbsPRd9GUtR5FJvgWErshMXCobycdnWDA/lIIalCncGhf23Lxctx7s4N0ud66nF8K17oGgDcYY1cFAOVdcCPTcuaVWMN9MWg8VnkhEvF2OW8xAaL3kFTbJP9OJEIxc4dYcx0+dD7nDn9mJvXjj8=
+	t=1745914932; cv=none; b=heUSckbmSdbM6ROXCjRA92whW76c8PSNM/YaMvv5K/WtVzal3BYPNtqtV/Vbin1tu8xxSAzG71WXlqMdXhrlKz53QLHXI2C96o7O9MQqhGxkAKL9oClDpDRfabqu1lpsmYs528cFDwdj1Eh6wlG2qhOs2tmd7KY9YcYegTTXEWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745912656; c=relaxed/simple;
-	bh=Uz3adLpT1K4bsS/LjgsvDIt1SCMsQoHMiqR3BRBMocM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f542pbM/3fHV7r+A4mQWX9t6pD1cbsECrz6oktwiILwlWj3fnYSHJXNaPpaVGNzFB91YFoLy7g+5PSB8OklWoT5rmOkhILfQ7dkj5Zku4U+fAbsI1Uwlvq6BqoDZIesVu15w/K5L2W5heDKVVR5cIKwkswiFaFIqIEmKicUjLac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1REOl5c0; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745914932; c=relaxed/simple;
+	bh=4SBDb8RMix1AfTeAapS22vbsprNHW5kDlKivkfzgJb4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Atikxw2PyWY6Xo74zZ9aL2ZGgNiYq4s+9cXbNAKSguDHvbF3WLudwTw3hf+cimy+We2LgxK02K4iWVJ1kRy3tSDtCIIztXgE6WgT+QzjgdAR34kztZxFzknyusVBU1mF0TrWjacNMLNnPqoGj/FY8Y8HUBZPzURlqA01okHnqH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V213g7fd; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1REOl5c0"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e8f8657f29so56269636d6.3
-        for <linux-hardening@vger.kernel.org>; Tue, 29 Apr 2025 00:44:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V213g7fd"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5f5bef591d6so10957480a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 29 Apr 2025 01:22:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745912653; x=1746517453; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=S70XKGWxcSEfTn7qvW9Q4bvt4sDvuIuNYX/4iPHhjqs=;
-        b=1REOl5c0pubQv2Z/0q1ewTVGNJ03YAnv3hyBnC8rMaxqU2Tkg9zGL6TpHrZUoMfIFN
-         g8gMuMUPkwScYdwgBfxYmlqqwfumlQXHyM1/CZpoUPjn8Pxitm3rDaNYsOM320hTqcrE
-         k/+IfSZUiDDsCFaOrVmztVhN8eJBa0ssX0bdRFBN3KsTIwdgciaz+lYWcN+8c3d8kJTK
-         5a3wfZGBn3S6iPm4Tfr5wvM/p6bj9NX7H89kZrVKS3Nv1qfDXdzWVD/GnmU+D5B5JDDS
-         ap2N/LwFjyWHaaRTgjxfIORRN/aVPIqVRQjIaPkPskT5qfQLqLi6PBOtydGdCtISFOsd
-         mH8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745912653; x=1746517453;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1745914928; x=1746519728; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=S70XKGWxcSEfTn7qvW9Q4bvt4sDvuIuNYX/4iPHhjqs=;
-        b=MAFfldIuqsNDbwL3L3DVJXaqWevcDRyLRkp7z59eOcwJGWD9LMg70CZ4G84XETJW8i
-         sPGrRyKWtt7pGcKlMdhRTC8CbTH8+QDI/x+Vd8MkN+toQDdsjeuVLVTVHVqzHay4Z/0G
-         MFmCPt/vtHdx1nKHyAEomfvbrP/7nhJQlxm92fKWa/Dco8m9GIjHupWr7u6IPkvJ58DU
-         weHNIQzMfuofMbVOQHmZykZY+6DYGOvL1wAsFdRhSVZF/J6lgfkMgycWLgWm00vjdZeC
-         mK1nhh7YwkmH9QeYWBASukRb0WZ8Q+IjdH35vpiwZ7F9KkIZ51eEj8Hb9IGSRpudQnk3
-         MyEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXciDwCr5oJgtnW2gkpazZSzpLYXVh9Ufkdy9zGZAOlJhaPRm6I2VapLrPST4Yr3U8OXPiPZefHDKD4JALEcGE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8d4Hrj2lXw0MHeb+sCn18gdcKIzz4Ud0bRhxqafh1QAIoNVmK
-	vEVP1tBblBtVjKJlWt8rBCPox9BNYhxNdI3hj6t30sq7j6OMZtgt+yGPfO5aMw8fF/lpHDyKbLQ
-	aK2mdKf6U9fh2i6cuKWOiIUnE5H2XAXtwqleV
-X-Gm-Gg: ASbGncu1uCcgxwH1o2brN5SLxj6IvVXJpRP5zT5HT1G8Tw7ifsZbcZb8/83/tmbIr5A
-	BysXeYhMUCxkQEWSTHI1b8+Ax/SQ59K0csGmqfXrs72su78Odrd4GD0uY3xZRv5Fdpsp4BOpzCh
-	uo40S0dG9YpgorF+yv9Sq7xEwEYYyf+ghSkg==
-X-Google-Smtp-Source: AGHT+IHelUEyscyQarKuoY3t912ti4kNs8ODnZYdtusFfqBwbQeE4DfZslv6ZALn4IcIacFakO1rKniYgGz4FVzHgK8=
-X-Received: by 2002:a05:6214:c2a:b0:6e6:65a6:79a4 with SMTP id
- 6a1803df08f44-6f4d1f9e216mr186361416d6.44.1745912653232; Tue, 29 Apr 2025
- 00:44:13 -0700 (PDT)
+        bh=UsPhnEzsIjMyr2jWNVlW883QIlYElONTjUn31M/bDFU=;
+        b=V213g7fdjlzD8p0pydscPcSBtYQ2ey2pm02mGAtkuCKZXE+ufB8hHmidHEagPvSaqB
+         FrJLdOpLwBOQ6dXgdxqqXYwE0/OnHZji3bdHZMPLlMyKPpYimz9V1poORaD40BEqrJe3
+         zmJY+cAIbo2sfibyutyrhgttEVVkonQwPhnO66DqCkJcZpvPUA89Apy7h3lpygYGCzG9
+         VkEBKxVgtcz2Ezw3fXK7gcEVo7UDZ4YTVhuIiU3JYb1E0AJyb2jhty9Y3jt/rEWhTQvU
+         cEK5thfDTyEhid5YZlAO+w5j+PKktAiecXDVoli65xBQv7YonqrHPEmZgTFn5Wqd1iK3
+         5eUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745914928; x=1746519728;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UsPhnEzsIjMyr2jWNVlW883QIlYElONTjUn31M/bDFU=;
+        b=HXnW0T/CGfHg3ovbm9Prk0qBx0RxWsOZx+/74ZIf7F+Xoab069sl8SMp6pWTzv6WEE
+         LQuhESH6DATbBvlgquQ1Y7/kFWGldlnuqibV5ufPlBYVJF1swJXKYrUr2XITFKu2pBU9
+         p5hNq5PVRcgG9S/iUnKeBrRdYudR37ec4KmrDOWdjwAQXx2UXLYYnx1RBJC6dFs+1ko3
+         4OUM8+/qBFJrW0tMB3ReUaPnfod2n2td7C13IxzAqX+EGRtkxMYnV0FqQsopYQWM32Lq
+         xs+ixlmg3lLuvaTIEGe8X3qtStBB4YNOpsWN6gds0MjB9l0Y/Eh12Noom05sdVvSHyhe
+         25YA==
+X-Forwarded-Encrypted: i=1; AJvYcCULfYURVqZReikcR186H8xs0iAlOxaX+K/+l0afrcAGsjWgWP/TrL8sUcd8EG13CY/CcBujdwR5ZrgP0yOw18A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5BPT57LPNU3mPv4R5vS0pduHbJa5fUh7FhfgNJH4V7Wlb1o3i
+	3xiYe39vWgxIfHhxalRpDnRSt2Q3zEpfyYzLRUlWKWiRB8LloK5u5tqKgXKKeYY=
+X-Gm-Gg: ASbGnct0Lk5/kt3R7wpH00xcgT1vThw7hVfdbspEDEA115AHMRA7UvZRho1E8ky5eS+
+	pU30PZzsoBZWs6lAqb1n9XHN7SgQSQ2f/gMlt0Bg0pHgMPqWsqzN1gZzBRJHPTelzYuThiUzIgQ
+	twGpFq4r+BLHG/qOQE82vjXePJ6aFdmdFylBZTAzkpgjc03R/dkqKeL/n8K97Bk7u7E5CnGEu6X
+	ObmVEne6qL9Gw4s2GWosupXAh3LDvEMT1b9UdycKqU8VaJjXAGDADDY3Mf4mjL2XXNaWHdQxpLV
+	1t1YMWIbmT8eBopcmdLouSvpEbwa8VMe4zKdeGWakeHbuXRgk5/L2kXWjBEOTTrFQBR2S3dnNPq
+	aI1Vgznw2jcXSI3x7zxPjGtYV
+X-Google-Smtp-Source: AGHT+IFKdKniSEsGUnq1iYx8etj6NA6NxBliPsow0jh+bOsIlETHYTkVhBYFIQ8GlA5A8lzlAc2nDA==
+X-Received: by 2002:a17:907:7b9a:b0:aca:c924:c14 with SMTP id a640c23a62f3a-acec69721e7mr248138766b.17.1745914927654;
+        Tue, 29 Apr 2025 01:22:07 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41bbf4sm737905466b.36.2025.04.29.01.22.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 01:22:07 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Tue, 29 Apr 2025 09:21:37 +0100
+Subject: [PATCH v8 1/6] dt-bindings: gpio: add max77759 binding
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250427013604.work.926-kees@kernel.org> <20250427013836.877214-2-kees@kernel.org>
-In-Reply-To: <20250427013836.877214-2-kees@kernel.org>
-From: David Gow <davidgow@google.com>
-Date: Tue, 29 Apr 2025 15:44:01 +0800
-X-Gm-Features: ATxdqUH8o73n3_NAeG1RX1Q730xFJQWSEjihUzU_Ax5GFg7DEM9ErC40vXwR-Sc
-Message-ID: <CABVgOSn1Lrkp96tucPniwPkVbpsBvTRZey=mCVDw7xS+Jro_AA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] lib/tests: Add randstruct KUnit test
-To: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Bill Wendling <morbo@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
-	Petr Mladek <pmladek@suse.com>, Rae Moar <rmoar@google.com>, Tamir Duberstein <tamird@gmail.com>, 
-	Diego Vieira <diego.daniel.professional@gmail.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	llvm@lists.linux.dev, "Dr. David Alan Gilbert" <linux@treblig.org>, Mark Brown <broonie@kernel.org>, 
-	WangYuli <wangyuli@uniontech.com>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-security-module@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000884add0633e5f773"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250429-max77759-mfd-v8-1-72d72dc79a1f@linaro.org>
+References: <20250429-max77759-mfd-v8-0-72d72dc79a1f@linaro.org>
+In-Reply-To: <20250429-max77759-mfd-v8-0-72d72dc79a1f@linaro.org>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Srinivas Kandagatla <srini@kernel.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
 
---000000000000884add0633e5f773
-Content-Type: text/plain; charset="UTF-8"
+The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+Port Controller (TCPC), NVMEM, and a GPIO expander.
 
-On Sun, 27 Apr 2025 at 09:38, Kees Cook <kees@kernel.org> wrote:
->
-> Perform basic validation about layout randomization and initialization
-> tracking when using CONFIG_RANDSTRUCT=y. Tested using:
->
-> $ ./tools/testing/kunit/kunit.py run \
->         --kconfig_add CONFIG_RANDSTRUCT_FULL=y \
->         randstruct
-> [17:22:30] ================= randstruct (2 subtests) ==================
-> [17:22:30] [PASSED] randstruct_layout
-> [17:22:30] [PASSED] randstruct_initializers
-> [17:22:30] =================== [PASSED] randstruct ====================
-> [17:22:30] ============================================================
-> [17:22:30] Testing complete. Ran 2 tests: passed: 2
-> [17:22:30] Elapsed time: 5.091s total, 0.001s configuring, 4.974s building, 0.086s running
->
-> Adding "--make_option LLVM=1" can be used to test Clang, which also
-> passes.
->
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
+This describes its GPIO module.
 
-This works here for me. I'm a little wary of the prospect of the
-"unlucky or broken" message making the test fail if we're just
-unlucky, but it seems unlikely enough that we can deal with it later
-if it ever becomes a problem.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
+---
+v2:
+* drop 'interrupts' property and sort properties alphabetically
+---
+ .../bindings/gpio/maxim,max77759-gpio.yaml         | 44 ++++++++++++++++++++++
+ MAINTAINERS                                        |  6 +++
+ 2 files changed, 50 insertions(+)
 
-Acked-by: David Gow <davidgow@google.com>
+diff --git a/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml b/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..55734190d5ebdbc351e1f91675dddd8a9db80cd7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/maxim,max77759-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Maxim Integrated MAX77759 GPIO
++
++maintainers:
++  - André Draszik <andre.draszik@linaro.org>
++
++description: |
++  This module is part of the MAX77759 PMIC. For additional information, see
++  Documentation/devicetree/bindings/mfd/maxim,max77759.yaml.
++
++  The MAX77759 is a PMIC integrating, amongst others, a GPIO controller
++  including interrupt support for 2 GPIO lines.
++
++properties:
++  compatible:
++    const: maxim,max77759-gpio
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++
++  gpio-line-names:
++    minItems: 1
++    maxItems: 2
++
++  "#interrupt-cells":
++    const: 2
++
++  interrupt-controller: true
++
++required:
++  - compatible
++  - "#gpio-cells"
++  - gpio-controller
++  - "#interrupt-cells"
++  - interrupt-controller
++
++additionalProperties: false
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 906881b6c5cb6ff743e13b251873b89138c69a1c..0c7bf694468e9798946baecdfd03d6eacdba2ce3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14663,6 +14663,12 @@ F:	Documentation/devicetree/bindings/mfd/maxim,max77714.yaml
+ F:	drivers/mfd/max77714.c
+ F:	include/linux/mfd/max77714.h
+ 
++MAXIM MAX77759 PMIC MFD DRIVER
++M:	André Draszik <andre.draszik@linaro.org>
++L:	linux-kernel@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/*/maxim,max77759*.yaml
++
+ MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
+ M:	Javier Martinez Canillas <javier@dowhile0.org>
+ L:	linux-kernel@vger.kernel.org
 
-Cheers,
--- David
+-- 
+2.49.0.901.g37484f566f-goog
 
---000000000000884add0633e5f773
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIUnQYJKoZIhvcNAQcCoIIUjjCCFIoCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
-4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
-mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
-KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
-VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
-ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
-vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
-BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
-OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
-1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
-ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
-BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
-18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
-bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
-AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
-BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
-A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
-MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
-jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
-0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
-jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
-jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
-C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
-NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
-zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
-A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
-hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
-NjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UEAxMKR2xvYmFsU2lnbjAeFw0xNDEyMTAwMDAw
-MDBaFw0zNDEyMTAwMDAwMDBaMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9vdCBDQSAtIFI2MRMw
-EQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMIICIjANBgkqhkiG9w0BAQEF
-AAOCAg8AMIICCgKCAgEAlQfoc8pm+ewUyns89w0I8bRFCyyCtEjG61s8roO4QZIzFKRvf+kqzMaw
-iGvFtonRxrL/FM5RFCHsSt0bWsbWh+5NOhUG7WRmC5KAykTec5RO86eJf094YwjIElBtQmYvTbl5
-KE1SGooagLcZgQ5+xIq8ZEwhHENo1z08isWyZtWQmrcxBsW+4m0yBqYe+bnrqqO4v76CY1DQ8BiJ
-3+QPefXqoh8q0nAue+e8k7ttU+JIfIwQBzj/ZrJ3YX7g6ow8qrSk9vOVShIHbf2MsonP0KBhd8hY
-dLDUIzr3XTrKotudCd5dRC2Q8YHNV5L6frxQBGM032uTGL5rNrI55KwkNrfw77YcE1eTtt6y+OKF
-t3OiuDWqRfLgnTahb1SK8XJWbi6IxVFCRBWU7qPFOJabTk5aC0fzBjZJdzC8cTflpuwhCHX85mEW
-P3fV2ZGXhAps1AJNdMAU7f05+4PyXhShBLAL6f7uj+FuC7IIs2FmCWqxBjplllnA8DX9ydoojRoR
-h3CBCqiadR2eOoYFAJ7bgNYl+dwFnidZTHY5W+r5paHYgw/R/98wEfmFzzNI9cptZBQselhP00sI
-ScWVZBpjDnk99bOMylitnEJFeW4OhxlcVLFltr+Mm9wT6Q1vuC7cZ27JixG1hBSKABlwg3mRl5HU
-Gie/Nx4yB9gUYzwoTK8CAwEAAaNjMGEwDgYDVR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8w
-HQYDVR0OBBYEFK5sBaOTE+Ki5+LXHNbH8H/IZ1OgMB8GA1UdIwQYMBaAFK5sBaOTE+Ki5+LXHNbH
-8H/IZ1OgMA0GCSqGSIb3DQEBDAUAA4ICAQCDJe3o0f2VUs2ewASgkWnmXNCE3tytok/oR3jWZZip
-W6g8h3wCitFutxZz5l/AVJjVdL7BzeIRka0jGD3d4XJElrSVXsB7jpl4FkMTVlezorM7tXfcQHKs
-o+ubNT6xCCGh58RDN3kyvrXnnCxMvEMpmY4w06wh4OMd+tgHM3ZUACIquU0gLnBo2uVT/INc053y
-/0QMRGby0uO9RgAabQK6JV2NoTFR3VRGHE3bmZbvGhwEXKYV73jgef5d2z6qTFX9mhWpb+Gm+99w
-MOnD7kJG7cKTBYn6fWN7P9BxgXwA6JiuDng0wyX7rwqfIGvdOxOPEoziQRpIenOgd2nHtlx/gsge
-/lgbKCuobK1ebcAF0nu364D+JTf+AptorEJdw+71zNzwUHXSNmmc5nsE324GabbeCglIWYfrexRg
-emSqaUPvkcdM7BjdbO9TLYyZ4V7ycj7PVMi9Z+ykD0xF/9O5MCMHTI8Qv4aW2ZlatJlXHKTMuxWJ
-U7osBQ/kxJ4ZsRg01Uyduu33H68klQR4qAO77oHl2l98i0qhkHQlp7M+S8gsVr3HyO844lyS8Hn3
-nIS6dC1hASB+ftHyTwdZX4stQ1LrRgyU4fVmR3l31VRbH60kN8tFWk6gREjI2LCZxRWECfbWSUnA
-ZbjmGnFuoKjxguhFPmzWAtcKZ4MFWsmkEDCCBeQwggPMoAMCAQICEAHAzCnLVtRkCgyqhFEoeKYw
-DQYJKoZIhvcNAQELBQAwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2Ex
-KjAoBgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMzAeFw0yNTAxMTAxODI1
-MTFaFw0yNTA3MDkxODI1MTFaMCQxIjAgBgkqhkiG9w0BCQEWE2RhdmlkZ293QGdvb2dsZS5jb20w
-ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCoH0MspP58MiGTPha+mn1WzCI23OgX5wLB
-sXU0Br/FkQPM9EXOhArvxMOyFi0Sfz0HX20qlaIHxviaVNYpVMgmQO8x3Ww9zBVF9wpTnF6HSZ8s
-ZK7KHZhg43rwOEmRoA+3JXcgbmZqmZvLQwkGMld+HnQzJrvuFwXPlQt38yzNtRjWR2JmNn19OnEH
-uBaFE7b0Pl93kJE60o561TAoFS8AoP4rZFUSqtCL7LD2JseW1+SaJcUhJzLxStodIIc6hQbzOQ/f
-EvWDWbXF7nZWcQ5RDe7KgHIqwT8/8zsdCNiB2WW7SyjRRVL1CuoqCbhtervvgZmB3EXbLpXyNsoW
-YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
-/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
-N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
-BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
-MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
-LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
-bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
-FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
-exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
-+ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
-XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
-QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
-TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
-oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
-cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
-uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
-PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
-Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
-BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQgkIMqUYidz4o/0sJ+mN0/dJbN3qrU
-/IumZytD/S5ndhowGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-NDI5MDc0NDEzWjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
-YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
-AQEBBQAEggEAWewXsFFpcHfRhoG9w061vBrnUwxhXCWI7ZR3AtqzrCpKXVvFTp2v5czKPq1u4Uik
-JixGBG37AjqBEPlkeHJhV+62IYp7AlQA9nRidqPEmYLLrXotGPeSDiFqVgnHAAPXrs3jltKJcf5t
-7rsQpdSvID43tVk5dvhQoKvX9oO+13kqm/eyHg46cEg/rUpUJcWXx9qgBKBufy8mZVmrtAWRSWu5
-SWCIKiAkk16NyErKokleQ09sDwm92JvSfr4EJczEGThDIrHo+xFAS39ZgJTtgcHTsq8lDarHHrc3
-bjJ9ceP2E5dhOyX2WWXvXvbj/HneGTpa35uuK3dHfuXEb8B/yQ==
---000000000000884add0633e5f773--
