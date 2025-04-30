@@ -1,70 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9333289E1D;
-	Wed, 30 Apr 2025 21:29:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83561B644;
+	Wed, 30 Apr 2025 21:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746048590; cv=none; b=M1eEf2dpek5Lva9JdzHm/V97rqA4ipfBFaqtGESg+QkNv6YGvLBumtblBjHNWg8zEr9ey5li/+2h9I1U9ERtQ8+x/ppmUTFtDZvZq4bybMBTYomVq7uiesdynJhbOtuJR8Tvq4OTefrfPMtf3hR8/915VcxUFYMkDLa/b52dfJE=
+	t=1746048783; cv=none; b=F3f9bg2SWAbJebpiZV5vWOr3L9jIMLc1qOo6iyUXvK5EkBbd3mm0lMBARa5Pza7bEhl/QxznuGFIOU2TkNcrXNJoXVZau01CsdiP0UhbjXo7FcwBWBxbcPEU1B/3tQEj3srGzj7Ix0fk7rX8Hu5D6YFKr8kx8DCD0Hm9Mnq0D0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746048590; c=relaxed/simple;
-	bh=7w+2AcVNV8cwYsv87wYRODQWo0TVjU31TU/EloMlJtw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=si2ew8Q96j6gZ+7xpxdmHb4NxdUoua0ig4+BW923nzLkkjQRT3VcrXtqtn1FzEmSplGreda58ea+bmhiWor6tpFxSdDQvpH2uVA10GEMSKzF6Y4AbGtgZ4b+C09Nz0m+I+q3nAUqldBg7jjJdbY7m3sQDRS40W34olViWcXnwbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZoMdgNt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746048783; c=relaxed/simple;
+	bh=VsGVHtp+9q6RGn5BQWuGa91tLEpsT3A6cFMcod1nM8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PRnuBYxwL2kIwfL1nelZgGwBdX0gwfs2L8tHIBXCUUgZBV0zIQdwsDTJUa0BVOTPDg49KwqIelLcvoarsKl11GgM14swnrrjOPYPOxA14+ciBHyU6M8UQfE0w6I9ZCIY6VIeMs2/lTpIK9WCLB9QgpD7UOf9RXh9WhCHK7PEw7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8n0hbSS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZoMdgNt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CFB0C4CEE7;
-	Wed, 30 Apr 2025 21:29:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8n0hbSS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8A49C4CEE7;
+	Wed, 30 Apr 2025 21:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746048590;
-	bh=7w+2AcVNV8cwYsv87wYRODQWo0TVjU31TU/EloMlJtw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bZoMdgNtl8OPg6o32CpHCd9m9+Kad9/CpzDMFwUp2DXvW7/oD3B1Tw+PT7a0b5rCN
-	 BxxUl6gBcjPbVo/Zt9QUHKUIdgZtBiwaB1MjKdAVXR7cp1zrOgp/t09Uq93sY/PhIR
-	 3XFR6t0URvecAM0nxz1QSEY+BAT7VP4terGWC7dYj7yKVZtJItHdXJ9SGViafCAmIL
-	 fFp7ldVW01NaR4ndgm/bEuLV9AmCP9dgMN1mPWmmEjT6NRztp5qbaqtLh0hSTu67RV
-	 V9jtGJGYXlITaMIo2c38H288egVDvKgAwpWTuJ6GfbzD98dm0mmGCqlVhyJVdikH7I
-	 6+TRrEh/Gnt4g==
+	s=k20201202; t=1746048783;
+	bh=VsGVHtp+9q6RGn5BQWuGa91tLEpsT3A6cFMcod1nM8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M8n0hbSSdpyf1eIRlQ4DZlDTX6/nX9eZuzO5RwegBTytZUR5gsvTB0LhZE3b2zArW
+	 2/atCY8Al5muERExki99lrnsZE5ErgoFDPKO4PsKYJC8zeN3c0NsdG6xF2EKvko4LV
+	 ggqL1QW+jfBfJgQLc8jqwjfKiOi7V2P675phjacsVMCCh/Zqbz4UZ7fjeNUzO7cFqC
+	 JAfarQ2JPYoTIy0nIiFdIWUSKnWWhOOrTZ79VV85VdrEy1c23r0qkScFmu6sTqnLX6
+	 uxTcaXn4wGqf7zul7MtQ/nzfj4fH2yEe5oAZi9Pd0Jes1G+PFdLGWufvLqfpLwQKWa
+	 QhHToo1n4o3WQ==
+Date: Wed, 30 Apr 2025 14:32:59 -0700
 From: Kees Cook <kees@kernel.org>
 To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2][next] Add STACK_FLEX_ARRAY_SIZE() helper
-Date: Wed, 30 Apr 2025 14:29:44 -0700
-Message-Id: <174604858214.2106605.8316005070173016427.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1745355442.git.gustavoars@kernel.org>
-References: <cover.1745355442.git.gustavoars@kernel.org>
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] scsi: sd: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <202504301432.3A737A3B8F@keescook>
+References: <aAwos0mLxneG9R_t@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAwos0mLxneG9R_t@kspp>
 
-On Tue, 22 Apr 2025 15:04:48 -0600, Gustavo A. R. Silva wrote:
-> Add new STACK_FLEX_ARRAY_SIZE() helper to get the size of a
-> flexible-array member defined using DEFINE_FLEX()/DEFINE_RAW_FLEX()
-> at compile time.
+On Fri, Apr 25, 2025 at 06:28:35PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> This is essentially the same as ARRAY_SIZE() but for on-stack
-> flexible-array members.
+> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
 > 
-> [...]
+> Also, there is no need to use the DECLARE_FLEX_ARRAY() helper.
+> Replace it with a regular flexible-array member declaration
+> instead.
+> 
+> So, with these changes, fix the following warning:
+> 
+> drivers/scsi/sd.c:3195:50: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Applied to for-next/hardening, thanks!
+Looks good; thanks!
 
-[1/2] overflow: Add STACK_FLEX_ARRAY_SIZE() helper
-      https://git.kernel.org/kees/c/9cc4498acf3e
-[2/2] kunit/overflow: Add tests for STACK_FLEX_ARRAY_SIZE() helper
-      https://git.kernel.org/kees/c/90961958f48f
-
-Take care,
+Reviewed-by: Kees Cook <kees@kernel.org>
 
 -- 
 Kees Cook
-
