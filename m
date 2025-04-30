@@ -1,101 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34CC2980DD;
-	Wed, 30 Apr 2025 20:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BF828468E
+	for <linux-hardening@vger.kernel.org>; Wed, 30 Apr 2025 20:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746043587; cv=none; b=fI0cS1Ai59I1s6X+fJYRVf/2SeFVFvK/coSl1FFuXBSb0RmjTeaeQMB9HKIkquD7BqLxOhXcNjyNjLksbnZoLrAz/6WBPlJw5BG7DNJddEKwLIuj3nRLIGNTzlAhWAJ7DXmWAHJWXgNST+Vebwk82pNU36wewD4o/Ftzofcaovc=
+	t=1746043766; cv=none; b=ZD39e2eRYDRXvI6W++jvWYTEmzmT0tLbARAgn14wXcjZJl5bLHMSqXF/9NU0IUR4h/XQ+zWAFGPnFdOW284zK4R+kHReWb5bhz6RcbqckzQfTKY0fXDhaLeAh2F630XcRqFuquMpT76duUyjq25BbB3w1x8BDbeDVrrlUALlLSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746043587; c=relaxed/simple;
-	bh=iZIMCppN1Ev0tPCOUt0ZBGp5W6iVvPZP4no8Hky88Dw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ecA+XfEGTNk8jfxIbqPI8ri4PXTnNIyENKEh63j+HTSRS8kZ2d9rlQt6J3+cgl75+a1lbTemBaHC6CHBH60QyvJZ7+Z9Jjf0RmFm9e/nL2wjSkOZqZP6ElVoGhiHnhRQJ8+Bl0EK0yLrehg7h6WzSmEJ4h6qoPQqgsHm3OVpE2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R5syfOcP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746043766; c=relaxed/simple;
+	bh=/014ig/vOtXLleLlc5POQLGIpZfKag2WAJwe0NM0ssg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=quJXwKC0GIKFabZZUqkfYalg+Ewk0gHyaK4Z1iQ2aJ/EY2uiHrEWrRxJ7bucNwf+a/NkcS9Qq1+3OEcHZ4WZ8l2btCqmuRHtHrg3C0fS4xLVoe9b+r1t/bAZ7wCbwA1R6k4mifUS0EhKS9XTc7ZJi/cPSbX+UEhn4HdCzMLt6rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=cIYp2AOr; arc=none smtp.client-ip=44.202.169.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5syfOcP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44B60C4CEE7;
-	Wed, 30 Apr 2025 20:06:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746043587;
-	bh=iZIMCppN1Ev0tPCOUt0ZBGp5W6iVvPZP4no8Hky88Dw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R5syfOcPY2POt/ZJvF9cL+XB3hlalp94tlny8tHbD6yPBLvSZLfW/NO0hq2BF5tYz
-	 wvQp93q9uZqRIdmrrYxP0nB1alymdp7ohuOrEjMLabHaMzKV91R+HKwIzgRA3O6xMd
-	 0cHMTQi7c94h0sRxsulxU8eOuByBUgVuhYNf9g6teJehRHQXTcI96c6dSnpStF55Cs
-	 et00A5E77jU1qU7v0Vu4TPk4OxRFPUrgPfKC42KpKR2TPk3inimxP8JTOoKMhZRQzp
-	 O5r0ddvRiyxIgopT+Qnk4oiYoVmp1dgNoWjgoP6Ayqqwv/BrrRQeebnmN0GkGhvpO/
-	 7MYEyc4exNdUg==
-Date: Wed, 30 Apr 2025 13:06:24 -0700
-From: Kees Cook <kees@kernel.org>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] module/decompress: Adjust module_extend_max_pages()
- allocation type
-Message-ID: <202504301305.2A0CD4E8@keescook>
-References: <20250426062359.work.358-kees@kernel.org>
- <d7382c8a-cfb2-4389-b120-f01a17e248ab@suse.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cIYp2AOr"
+Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
+	by cmsmtp with ESMTPS
+	id 9zYDup5tgXshwADieuGQVn; Wed, 30 Apr 2025 20:07:48 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id ADidu4vv7Z6h1ADiduzS44; Wed, 30 Apr 2025 20:07:47 +0000
+X-Authority-Analysis: v=2.4 cv=ergUzZpX c=1 sm=1 tr=0 ts=68128313
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=oxfijZKff90vd35IHugA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=h2tkyVN64pIV8hWBO6rBTclvumzy8P9/KwD3hFpi4zU=; b=cIYp2AOrhsxIemYqDaRuFpGrUh
+	bJfgWLnX+phxwlnYRTtMhW7GEMI2zjMZjy2NEia5ZnZMzo/jDnxaap5ZuoYxRjdSHv712CVjFs/N5
+	6gJtMU4fIwZmfBt+qdWXhqlbl4lPZWqMEnkGgTGonu2CnkeP7a17k+Kj9hGTphKfKtTiR+GT3m6c5
+	9BHkWIrA24bJUVfJhv2EhbnygO5ySM2KcWosv3FrtpmWd93keddzE8HczLETO7riL0fuU/VxtIED/
+	+bk+hxUCVEaZ9JCbxySs61qCBHLjxcAIY6nqdFO/UNKFUu/eROWKpgPuNLRUs0uLH4St//wyjSggv
+	n+AZC9yg==;
+Received: from [177.238.17.151] (port=47562 helo=[192.168.0.101])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1uADib-00000003MZY-0Vw0;
+	Wed, 30 Apr 2025 15:07:45 -0500
+Message-ID: <c4828c41-e46c-43c9-a73a-38ce8ab2c1c4@embeddedor.com>
+Date: Wed, 30 Apr 2025 14:07:24 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d7382c8a-cfb2-4389-b120-f01a17e248ab@suse.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2][next] acpi: nfit: intel: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>
+Cc: nvdimm@lists.linux.dev, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z-QpUcxFCRByYcTA@kspp>
+ <67e55ac4dfa2e_13cb29410@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <df338a70-fdfc-427e-9915-8b9e50de93ad@embeddedor.com>
+Content-Language: en-US
+In-Reply-To: <df338a70-fdfc-427e-9915-8b9e50de93ad@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.17.151
+X-Source-L: No
+X-Exim-ID: 1uADib-00000003MZY-0Vw0
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.101]) [177.238.17.151]:47562
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfAxt7SBpfF4VK5ck56cFfAO6V5jejorZ35MkO+8+ttWrok/eOefi1UrHhmX/9B+8bzOaaf9T5DlcbPlLb7/QrNvzuVN4FvpHKt2WBrvou0qg5huLwBj0
+ 3hLDYibfZJcXm8qvF6rs7gUXU/iJsOn1dOiFoB7/3exBkcpmBwjX60ZivVHEQQzBHqoiZsG9n90LFoBTndusAET/KD8fb16p8u63QEKC8gBwVoSlrHIS8Gs5
 
-On Mon, Apr 28, 2025 at 12:30:03PM +0200, Petr Pavlu wrote:
-> On 4/26/25 08:24, Kees Cook wrote:
-> > In preparation for making the kmalloc family of allocators type aware,
-> > we need to make sure that the returned type from the allocation matches
-> > the type of the variable being assigned. (Before, the allocator would
-> > always return "void *", which can be implicitly cast to any pointer type.)
-> > 
-> > The assigned type is "struct page **" but the returned type will be
-> > "struct page ***". These have the same allocation size (pointer size), but
-> > the types don't match. Adjust the allocation type to match the assignment.
-> > 
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> > Cc: Luis Chamberlain <mcgrof@kernel.org>
-> > Cc: Petr Pavlu <petr.pavlu@suse.com>
-> > Cc: Sami Tolvanen <samitolvanen@google.com>
-> > Cc: Daniel Gomez <da.gomez@samsung.com>
-> > Cc: <linux-modules@vger.kernel.org>
-> > ---
-> >  kernel/module/decompress.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/module/decompress.c b/kernel/module/decompress.c
-> > index 474e68f0f063..bbb2a55568cd 100644
-> > --- a/kernel/module/decompress.c
-> > +++ b/kernel/module/decompress.c
-> > @@ -19,7 +19,7 @@ static int module_extend_max_pages(struct load_info *info, unsigned int extent)
-> >  	struct page **new_pages;
-> >  
-> >  	new_pages = kvmalloc_array(info->max_pages + extent,
-> > -				   sizeof(info->pages), GFP_KERNEL);
-> > +				   sizeof(*new_pages), GFP_KERNEL);
-> >  	if (!new_pages)
-> >  		return -ENOMEM;
-> >  
-> 
-> The function has a similar type mismatch a few lines below:
-> 
-> memcpy(new_pages, info->pages, info->max_pages * sizeof(info->pages));
-> 
-> The sizeof operator is used on 'struct page **', but it should be really
-> on 'struct page *'.
-> 
-> Could you please fix this as well? For consistency with your patch,
-> I suggest changing it to 'sizeof(*new_pages)'.
 
-Actually, this whole function is basically just open-coded kvrealloc...
-I will send a v2.
 
--- 
-Kees Cook
+On 30/04/25 13:41, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 27/03/25 08:03, Dan Williams wrote:
+>> Gustavo A. R. Silva wrote:
+>>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>>> getting ready to enable it, globally.
+>>>
+>>> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+>>> a flexible structure where the size of the flexible-array member
+>>> is known at compile-time, and refactor the rest of the code,
+>>> accordingly.
+>>>
+>>> So, with these changes, fix a dozen of the following warnings:
+>>>
+>>> drivers/acpi/nfit/intel.c:692:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>>
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> ---
+>>> Changes in v2:
+>>>   - Use DEFINE_RAW_FLEX() instead of __struct_group().
+>>>
+>>> v1:
+>>>   - Link: https://lore.kernel.org/linux-hardening/Z618ILbAR8YAvTkd@kspp/
+>>>
+>>>   drivers/acpi/nfit/intel.c | 388 ++++++++++++++++++--------------------
+>>>   1 file changed, 179 insertions(+), 209 deletions(-)
+>>>
+>>> diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
+>>> index 3902759abcba..114d5b3bb39b 100644
+>>> --- a/drivers/acpi/nfit/intel.c
+>>> +++ b/drivers/acpi/nfit/intel.c
+>>> @@ -55,21 +55,17 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
+>>>   {
+>>>       struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
+>>>       unsigned long security_flags = 0;
+>>> -    struct {
+>>> -        struct nd_cmd_pkg pkg;
+>>> -        struct nd_intel_get_security_state cmd;
+>>> -    } nd_cmd = {
+>>> -        .pkg = {
+>>> -            .nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
+>>> -            .nd_family = NVDIMM_FAMILY_INTEL,
+>>> -            .nd_size_out =
+>>> -                sizeof(struct nd_intel_get_security_state),
+>>> -            .nd_fw_size =
+>>> -                sizeof(struct nd_intel_get_security_state),
+>>> -        },
+>>> -    };
+>>> +    DEFINE_RAW_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
+>>> +            sizeof(struct nd_intel_get_security_state));
+>>> +    struct nd_intel_get_security_state *cmd =
+>>> +            (struct nd_intel_get_security_state *)nd_cmd->nd_payload;
+>>>       int rc;
+>>> +    nd_cmd->nd_command = NVDIMM_INTEL_GET_SECURITY_STATE;
+>>> +    nd_cmd->nd_family = NVDIMM_FAMILY_INTEL;
+>>> +    nd_cmd->nd_size_out = sizeof(struct nd_intel_get_security_state);
+>>> +    nd_cmd->nd_fw_size = sizeof(struct nd_intel_get_security_state);
+>>
+>> Can this keep the C99 init-style with something like (untested):
+>>
+>> _DEFINE_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
+>>               sizeof(struct nd_intel_get_security_state), {
+>>         .pkg = {
+>>                 .nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
+>>                 .nd_family = NVDIMM_FAMILY_INTEL,
+>>                 .nd_size_out =
+>>                         sizeof(struct nd_intel_get_security_state),
+>>                 .nd_fw_size =
+>>                         sizeof(struct nd_intel_get_security_state),
+>>         },
+>>     });
+>>
+>>
+>> ?
+> 
+> The code below works - however, notice that in this case we should
+> go through 'obj', which is an object defined in _DEFINE_FLEX().
+> 
+>          _DEFINE_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
+>                          sizeof(struct nd_intel_get_security_state), = {
+>                  .obj = {
+>                          .nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
+>                          .nd_family = NVDIMM_FAMILY_INTEL,
+>                          .nd_size_out =
+>                                  sizeof(struct nd_intel_get_security_state),
+>                          .nd_fw_size =
+>                                  sizeof(struct nd_intel_get_security_state),
+>                  },
+>          });
+> 
+
+Now, I can modify the helper like this:
+
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index 69533e703be5..170d3cfe7ecc 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -404,7 +404,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+         union {                                                                 \
+                 u8 bytes[struct_size_t(type, member, count)];                   \
+                 type obj;                                                       \
+-       } name##_u initializer;                                                 \
++       } name##_u = { .obj initializer };                                      \
+         type *name = (type *)&name##_u
+
+  /**
+
+and then we can use the helper as follows:
+
+         _DEFINE_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
+                         sizeof(struct nd_intel_get_security_state), = {
+                         .nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
+                         .nd_family = NVDIMM_FAMILY_INTEL,
+                         .nd_size_out =
+                                 sizeof(struct nd_intel_get_security_state),
+                         .nd_fw_size =
+                                 sizeof(struct nd_intel_get_security_state),
+         });
+
+OK, I'll go and update the helper.
+
+-Gustavo
+
