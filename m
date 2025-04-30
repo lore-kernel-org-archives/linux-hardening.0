@@ -1,187 +1,168 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5361411DE
-	for <linux-hardening@vger.kernel.org>; Wed, 30 Apr 2025 19:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06761EF09B;
+	Wed, 30 Apr 2025 19:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746042123; cv=none; b=FeMFCxZ483B1xSesog/S0lLGzdGPK4jqnqj1uXptJpF/KD19jUog55T+U8ddYDJOm8XjEUVhLgQcSoJ55uuE+91o0hNy8xGQYXuQV7Idwm3Y2B+83Z/YEGhvg5TzE8sHchV13XT0dzXA2wFJoFkssIjW8m7VV+FBpv3BHMI6R3E=
+	t=1746042156; cv=none; b=s3RM7aX/lu2c1CHsBb0xVoDC4PxLsVlLbSFrH9y6Oc3dwCCNG26/joNNuGGFWNXoA7OXCMOvF2GDWlJn3A3hTRWDvxrl851qsRfOmPjE8pRaJdnh5ZCuJon/MGqPBrRZccEkEvNxV12TrLADzdelUez1Pw4lGlQfzxaASMbCsAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746042123; c=relaxed/simple;
-	bh=aNlI5doREuFnpNBygwYJ3vVeRE4exj3jm3zEaNbahzw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IwP5t34BhcKFo0cgyoeznj1bOQvvPoANMiry8C7sXc9JZ499dhXqVmXKRFi2TisoYqrHxIseopiNVaveJjRvGjmj64ETHTz0wMKVZg5HW7luRa9UXlhO8L+XrnFc+umO8Sn5qpazECMhCq9Ph1MGhXlwksNb5KgeTk6B/+I3hxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Mj/tOxD9; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Mj/tOxD9"
-Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
-	by cmsmtp with ESMTPS
-	id 9zYDu62I9f1UXADJbuqNFI; Wed, 30 Apr 2025 19:41:55 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id ADJauGsWURxIGADJaunMaw; Wed, 30 Apr 2025 19:41:54 +0000
-X-Authority-Analysis: v=2.4 cv=N/viFH9B c=1 sm=1 tr=0 ts=68127d02
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=pWlpG66K428ilhL_DWUA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=bjBrQjQU2afaw/LgDKWhKIXfjuWHuTWx5Msxh3WnN5Y=; b=Mj/tOxD9PutqF7L7pmpkZUOujQ
-	zUq/sOjq3INBElVfO+dyqRIfdtf2RIGY61ahoAUVv8w1oNhos33PUewqsonq7E0ZPAGBqwKXYn2us
-	0IOsf9uqAhD2HT1cySyw7qUzw8qgvMAhB942pmYdS0qvXG8utkUxxS3zgFttrThCStSu+eRBGgMrx
-	ZYosA+tTCQYsfjprs7rs8CqstKr581CVKlzgp6XDUq16w7IRZSL81ezZ0U4TIYLR5efgCBLKNnLFR
-	EgcsyglBIC7px8NLYB4Mn8z9wID9TL6B0Osuyg/8Rxo3LaWLiz5+/j64OagP8OYi+udUQZXNNvW3J
-	dJLLsdoA==;
-Received: from [177.238.17.151] (port=23848 helo=[192.168.0.101])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1uADJY-00000002pqq-0b9b;
-	Wed, 30 Apr 2025 14:41:52 -0500
-Message-ID: <df338a70-fdfc-427e-9915-8b9e50de93ad@embeddedor.com>
-Date: Wed, 30 Apr 2025 13:41:39 -0600
+	s=arc-20240116; t=1746042156; c=relaxed/simple;
+	bh=m2le8MbqpO1CEE28derdicybxKozm8oIgSSxhBO1DF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DpwArWhNlvBI4UgoDlm0CWJv7eeLGenzwpv26kFaky36LAHgGX4qf+1suXhSL1OVFB1N3XtTGdHzmcD9fxGNgDw9pin3lQcZ4+UpCejsSr6GmBoETqHwzBKPLFh+OkKVb+LfA2Dod4PbTttA6cRuwoV21G/rR9iZgR6UjJEW418=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A76CC4CEE7;
+	Wed, 30 Apr 2025 19:42:24 +0000 (UTC)
+Date: Wed, 30 Apr 2025 15:42:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>, Marcelo Tosatti
+ <mtosatti@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Daniel Wagner <dwagner@suse.de>, Petr Tesarik
+ <ptesarik@suse.com>, Nicolas Saenz Julienne <nsaenz@amazon.com>, Frederic
+ Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H.
+ Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Naveen N
+ Rao <naveen@kernel.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>, Josh
+ Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda
+ <ojeda@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Rong Xu
+ <xur@google.com>, Rafael Aquini <aquini@redhat.com>, Song Liu
+ <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, Benjamin Berg
+ <benjamin.berg@intel.com>, Vishal Annapurve <vannapurve@google.com>, Randy
+ Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>, Tiezhu
+ Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+Message-ID: <20250430154228.1d6306b4@gandalf.local.home>
+In-Reply-To: <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+	<fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+	<20250430132047.01d48647@gandalf.local.home>
+	<019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] acpi: nfit: intel: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-To: Dan Williams <dan.j.williams@intel.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>
-Cc: nvdimm@lists.linux.dev, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z-QpUcxFCRByYcTA@kspp>
- <67e55ac4dfa2e_13cb29410@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <67e55ac4dfa2e_13cb29410@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.17.151
-X-Source-L: No
-X-Exim-ID: 1uADJY-00000002pqq-0b9b
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.101]) [177.238.17.151]:23848
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJs4kUQQd/fmpu32zZQADv57dzqR2X8u/zPKThK8MByzl70bgCDG7bEExA0C9pfwMGuPS12XNvYBwSx+tmpD0r6oKUp2jvY6/Plcp/xltqPt8zKy0q/e
- A6GlvTZ0RQZVSKsZj/FLwCogP6TiKXM5u6h2Gppie7+KHs3Qt3Tpir+GRGfj088/AYc1FStKs3lhlBBizzMRC5wEkLGNn+8I/sV2pPinDtPACbZV75T7fHpm
 
+On Wed, 30 Apr 2025 11:07:35 -0700
+Dave Hansen <dave.hansen@intel.com> wrote:
 
-
-On 27/03/25 08:03, Dan Williams wrote:
-> Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
->> a flexible structure where the size of the flexible-array member
->> is known at compile-time, and refactor the rest of the code,
->> accordingly.
->>
->> So, with these changes, fix a dozen of the following warnings:
->>
->> drivers/acpi/nfit/intel.c:692:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->> Changes in v2:
->>   - Use DEFINE_RAW_FLEX() instead of __struct_group().
->>
->> v1:
->>   - Link: https://lore.kernel.org/linux-hardening/Z618ILbAR8YAvTkd@kspp/
->>
->>   drivers/acpi/nfit/intel.c | 388 ++++++++++++++++++--------------------
->>   1 file changed, 179 insertions(+), 209 deletions(-)
->>
->> diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
->> index 3902759abcba..114d5b3bb39b 100644
->> --- a/drivers/acpi/nfit/intel.c
->> +++ b/drivers/acpi/nfit/intel.c
->> @@ -55,21 +55,17 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
->>   {
->>   	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->>   	unsigned long security_flags = 0;
->> -	struct {
->> -		struct nd_cmd_pkg pkg;
->> -		struct nd_intel_get_security_state cmd;
->> -	} nd_cmd = {
->> -		.pkg = {
->> -			.nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
->> -			.nd_family = NVDIMM_FAMILY_INTEL,
->> -			.nd_size_out =
->> -				sizeof(struct nd_intel_get_security_state),
->> -			.nd_fw_size =
->> -				sizeof(struct nd_intel_get_security_state),
->> -		},
->> -	};
->> +	DEFINE_RAW_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
->> +			sizeof(struct nd_intel_get_security_state));
->> +	struct nd_intel_get_security_state *cmd =
->> +			(struct nd_intel_get_security_state *)nd_cmd->nd_payload;
->>   	int rc;
->>   
->> +	nd_cmd->nd_command = NVDIMM_INTEL_GET_SECURITY_STATE;
->> +	nd_cmd->nd_family = NVDIMM_FAMILY_INTEL;
->> +	nd_cmd->nd_size_out = sizeof(struct nd_intel_get_security_state);
->> +	nd_cmd->nd_fw_size = sizeof(struct nd_intel_get_security_state);
+> On 4/30/25 10:20, Steven Rostedt wrote:
+> > On Tue, 29 Apr 2025 09:11:57 -0700
+> > Dave Hansen <dave.hansen@intel.com> wrote:
+> >   
+> >> I don't think we should do this series.  
+> > 
+> > Could you provide more rationale for your decision.  
 > 
-> Can this keep the C99 init-style with something like (untested):
+> I talked about it a bit in here:
 > 
-> _DEFINE_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
->               sizeof(struct nd_intel_get_security_state), {
-> 		.pkg = {
-> 		        .nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
-> 		        .nd_family = NVDIMM_FAMILY_INTEL,
-> 		        .nd_size_out =
-> 		                sizeof(struct nd_intel_get_security_state),
-> 		        .nd_fw_size =
-> 		                sizeof(struct nd_intel_get_security_state),
-> 		},
-> 	});
-> 	
+> > https://lore.kernel.org/all/408ebd8b-4bfb-4c4f-b118-7fe853c6e897@intel.com/  
+
+Hmm, that's easily missed. But thanks for linking it.
+
 > 
-> ?
+> But, basically, this series puts a new onus on the entry code: it can't
+> touch the vmalloc() area ... except the LDT ... and except the PEBS
+> buffers. If anyone touches vmalloc()'d memory (or anything else that
+> eventually gets deferred), they crash. They _only_ crash on these
+> NOHZ_FULL systems.
+> 
+> Putting new restrictions on the entry code is really nasty. Let's say a
+> new hardware feature showed up that touched vmalloc()'d memory in the
+> entry code. Probably, nobody would notice until they got that new
+> hardware and tried to do a NOHZ_FULL workload. It might take years to
+> uncover, once that hardware was out in the wild.
+> 
+> I have a substantial number of gray hairs from dealing with corner cases
+> in the entry code.
+> 
+> You _could_ make it more debuggable. Could you make this work for all
+> tasks, not just NOHZ_FULL? The same logic _should_ apply. It would be
+> inefficient, but would provide good debugging coverage.
+> 
+> I also mentioned this earlier, but PTI could be leveraged here to ensure
+> that the TLB is flushed properly. You could have the rule that anything
+> mapped into the user page table can't have a deferred flush and then do
+> deferred flushes at SWITCH_TO_KERNEL_CR3 time. Yeah, that's in
+> arch-specific assembly, but it's a million times easier to reason about
+> because the window where a deferred-flush allocation might bite you is
+> so small.
+> 
+> Look at the syscall code for instance:
+> 
+> > SYM_CODE_START(entry_SYSCALL_64)
+> >         swapgs
+> >         movq    %rsp, PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
+> >         SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp  
+> 
+> You can _trivially_ audit this and know that swapgs doesn't touch memory
+> and that as long as PER_CPU_VAR()s and the process stack don't have
+> their mappings munged and flushes deferred that this would be correct.
 
-The code below works - however, notice that in this case we should
-go through 'obj', which is an object defined in _DEFINE_FLEX().
+Hmm, so there is still a path for this?
 
-         _DEFINE_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
-                         sizeof(struct nd_intel_get_security_state), = {
-                 .obj = {
-                         .nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
-                         .nd_family = NVDIMM_FAMILY_INTEL,
-                         .nd_size_out =
-                                 sizeof(struct nd_intel_get_security_state),
-                         .nd_fw_size =
-                                 sizeof(struct nd_intel_get_security_state),
-                 },
-         });
+At least if it added more ways to debug it, and some other changes to make
+the locations where vmalloc is dangerous smaller?
 
-Thanks
--Gustavo
+> 
+> >> If folks want this functionality, they should get a new CPU that can
+> >> flush the TLB without IPIs.  
+> > 
+> > That's a pretty heavy handed response. I'm not sure that's always a
+> > feasible solution.
+> > 
+> > From my experience in the world, software has always been around to fix the
+> > hardware, not the other way around ;-)  
+> 
+> Both AMD and Intel have hardware to do it. ARM CPUs do it too, I think.
+> You can go buy the Intel hardware off the shelf today.
 
+Sure, but changing CPUs on machines is not always that feasible either.
+
+-- Steve
