@@ -1,149 +1,152 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C7819F135;
-	Wed, 30 Apr 2025 12:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA7E2609C8
+	for <linux-hardening@vger.kernel.org>; Wed, 30 Apr 2025 16:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746017282; cv=none; b=Hw5aWQTufZHP1PzhQOYKCHb6awI5o3jNPlhtL0x4VKhG2tXbe6tTYxKqqCXGvhBikRorI4zd4YQoBjaFkF3DRuxVAcAxqjrsFVIXfN71NGynlAbij0Q6HNj6TTdhASObzQ67+Z4q4egzErkq2RwbbD6BtW30M6d6fvJ7elVFIro=
+	t=1746030447; cv=none; b=auElaPGCqJ+LNPA0WbnlZX/5JE2Ygeg+KjuTK3BWxwEUha2582J5go3eunSSzv5sdOGpRR9FF9rXUqQM1grpKQWjVDeoVy1F4mV5HuKMhu+fYEdJwx/7AsP6Zv7P/AOITU//zvZi4yVcXT1clB96IdxyP/c75YOT5g1PxUg8l0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746017282; c=relaxed/simple;
-	bh=U6QZenkf6jdbisYQhbMfwrHTpFbBNEtT4NQJE+pFW4U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JT4AGtwDggpi1O67PBmAd3HHtMIRjwSav7PjAIIGfCvrEoBzQeVuEa+w/+2okOTOLAAjFp06wHW3XCX5gY6o6Rnwh6oS/EAHGuxxuSOUK4PzzymHTAkzIY08QKCX5sbAGLMl/hfm23N8LsWSWbjQNJAoDeuvSwMiGBsLDYuKvuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CkTOKCTu; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1746030447; c=relaxed/simple;
+	bh=SLuh1vXjFWArp9DGV88WbiawPX5gMpDl3YY+JUPkHDc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=JxKNpzUz7g31ixAmCmcOBc+NCB+41gEickKWVHPXRE+Ils38MDjrlF+OWBZMFryBbq1n/sLcKnXT2Erlj0xtTPOgSN9Fm+1V+nJuo2tor3QnzLxhbYq+MrNEkIFWc3RsceMobQMC8Xo5eOPWrNlo/a/xnnwxZ/dEY3wvogoewMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c2nmLJ7J; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CkTOKCTu"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D757C40E0214;
-	Wed, 30 Apr 2025 12:47:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 6ZDrEEMDyFL4; Wed, 30 Apr 2025 12:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746017273; bh=l4rDJaOTk4RX7FoHJnTSsKAbG34bCLAXiDBoAAm9OcM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CkTOKCTu6r9r7oTTgdAtjKYYLKzO7MAayVNsqYCb+LF6qA5CtYCFurnaHYsbnI41f
-	 UJj/PsWAXJsq/uyZNTClJ5zMaRzJGHvV/ejIqju502V2xCzPeeEqyscUkDo3ZeDEQ5
-	 iBNZjQ6q27YQCbxAw3nSw3eALjegi5UCf+bY0pOO5OvMJ79WLVZSbg5apeZbS9S8aB
-	 HUa0xpyNtvx8uBD+WWzH0zSkei6D8lu0sUTqB1uuws+etTH1DBY4TLjWtF46s9N98y
-	 1DCSKreREjQlPt8lTx/iZIMHOxg7EBsqmFoTwa9bM06E88mjD/ZrH+0HR4rgSgvXAF
-	 qlvs8Zt27laVfQFKLmnbZSZznx+cSEdoXEjNLPZs67vcLxifs2Z49frZoij8ouB4ki
-	 hbKcL66canvNhpAcSzQcOUj6CKJFRwnnj3CZmgzW0/W1hjhI6Nl8CihFyxrLXIr+wX
-	 yJsjXUuzwKUOSmILxo2nsicbyERq7WVbI6ndQXVYhqTBipUlWQC7d+thj+OylOPxxv
-	 R8yqu9SipOYpZOzU9RFddmpY+vX51Y9pJm4X3BS4+dS9Ff1EU12hv4STnb8rXgMjRq
-	 YOFLz3GQSbXQySFNrkYme3kwWyG6n0jpig92FaDliNo6Z8wITA0rhf72PhZYactIGM
-	 nzyCZYzlcgTKqxRsAmTVf+nQ=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DF8CF40E0174;
-	Wed, 30 Apr 2025 12:47:33 +0000 (UTC)
-Date: Wed, 30 Apr 2025 14:47:28 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, thomas.lendacky@amd.com, hpa@zytor.com,
-	kees@kernel.org, michael.roth@amd.com, nikunj@amd.com,
-	seanjc@google.com, ardb@kernel.org, gustavoars@kernel.org,
-	sgarzare@redhat.com, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev
-Subject: Re: [PATCH v3] x86/sev: Do not touch VMSA pages during kdump of SNP
- guest memory
-Message-ID: <20250430124728.GDaBIb4JTMxW2zO9gB@fat_crate.local>
-References: <20250428214151.155464-1-Ashish.Kalra@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c2nmLJ7J"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43efa869b0aso46041635e9.3
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Apr 2025 09:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746030443; x=1746635243; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=son2TtAYXWFKHIb+qv3GEJQE2heH3nn7VYU4EbNQqf8=;
+        b=c2nmLJ7Jm644UDF1RUPqiucbqQDkKwhkeUzEIF0y0GXgqC5SYDpKxzKKrIBMotk/ml
+         wdVhx9A3vqVu8HBNNgoWvavob6SjLtSFU5lHn/lfumi2GDxLHusUQNO+d+RdhNSjev+t
+         0O3Wlzlj/dphlcYpSVDzHwXebtWkC38iSHabHjIJTFX7FB/1R7/9g+DXDkVQ/Ym8T3Nv
+         m2Ry0fRq0u4gaQl8xyyY9ahiBg+Wz5XlkeoTi0F3izgnv4TtQHbuOFn9PQEmp75QTC8G
+         +zXORXLZBHmz6AuWmnFDdyLMcteXhzGRHAwxKFcpphRWu0utU1qZAy70OPXCmBN650ob
+         kMmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746030443; x=1746635243;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=son2TtAYXWFKHIb+qv3GEJQE2heH3nn7VYU4EbNQqf8=;
+        b=XgjypHd1o/2gmxWFemSpfJqg7L8xzVmGaFoqJ3oA7GuJm2mGmT0Y3WWVie5LSg2Oxx
+         9SnH01w5lXtYFaPl4VRIdYQA80OHafUWdJkRe/4pu/gOWWI+nkAyqhF23GW+SUyH5+Vx
+         e2fTSt+pagUofSQpFDiLXkCY/HWP5NgpF3MrwfCmDofSsHrA7IWNvK8g033/EF7//gRd
+         B5nbTeFlsLvkL573EbLqhQQV1mCGNp9feOi+3XBXip6vEgMPrqqnHd4ewxhxbDYwbq14
+         lGddzfLCIMw9KNIQyI4x5eMvLwAQHEFpFNyk6WNFzik+0e6SMEILzZ+HEm6SFHHwHLht
+         SBQg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2bFhTrVan7OzRPdfwd2TfGFEz+7C7+/eIRFr5o+AVR69Ae7GAcSOEK8D0v2dpu1T7A2ExFrz8oSXdXnpo3OY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDBb289XkSDne+QRv2bxX8XpOEZgbSxH3hlLN0KvmCw//5RyzO
+	RieLzJ4bhSie4DZ3qXSp3aSjOOmf+QeuL4qsgYG8jHR27BJisJAPAe6Ll8DEMIQNF3d0rvuP5TR
+	MRrjPEGdtjw==
+X-Google-Smtp-Source: AGHT+IFQ2Mdes0eRtKfnxWeLvHYhOcWYODGlYYFwAfRst9gZKnEGAYllVA7JEZatII5sz3zXBjKQtfWJvzFPDQ==
+X-Received: from wmqb17.prod.google.com ([2002:a05:600c:4e11:b0:440:5e10:a596])
+ (user=smostafa job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1f0c:b0:43d:b51:46fb with SMTP id 5b1f17b1804b1-441b1f31004mr39397195e9.2.1746030443778;
+ Wed, 30 Apr 2025 09:27:23 -0700 (PDT)
+Date: Wed, 30 Apr 2025 16:27:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250428214151.155464-1-Ashish.Kalra@amd.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
+Message-ID: <20250430162713.1997569-1-smostafa@google.com>
+Subject: [PATCH v2 0/4] KVM: arm64: UBSAN at EL2
+From: Mostafa Saleh <smostafa@google.com>
+To: kvmarm@lists.linux.dev, kasan-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
+	broonie@kernel.org, catalin.marinas@arm.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, kees@kernel.org, elver@google.com, andreyknvl@gmail.com, 
+	ryabinin.a.a@gmail.com, akpm@linux-foundation.org, yuzenghui@huawei.com, 
+	suzuki.poulose@arm.com, joey.gouly@arm.com, masahiroy@kernel.org, 
+	nathan@kernel.org, nicolas.schier@linux.dev, 
+	Mostafa Saleh <smostafa@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2025 at 09:41:51PM +0000, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
-> 
-> When kdump is running makedumpfile to generate vmcore and dumping SNP
-> guest memory it touches the VMSA page of the vCPU executing kdump which
-> then results in unrecoverable #NPF/RMP faults as the VMSA page is
-> marked busy/in-use when the vCPU is running and subsequently causes
-> guest softlockup/hang.
-> 
-> Additionally other APs may be halted in guest mode and their VMSA pages
-> are marked busy and touching these VMSA pages during guest memory dump
-> will also cause #NPF.
-> 
-> Issue AP_DESTROY GHCB calls on other APs to ensure they are kicked out
-> of guest mode and then clear the VMSA bit on their VMSA pages.
-> 
-> If the vCPU running kdump is an AP, mark it's VMSA page as offline to
-> ensure that makedumpfile excludes that page while dumping guest memory.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->  arch/x86/coco/sev/core.c | 241 +++++++++++++++++++++++++--------------
->  1 file changed, 155 insertions(+), 86 deletions(-)
+Many of the sanitizers the kernel supports are disabled when running
+in EL2 with nvhe/hvhe/proctected modes, some of those are easier
+(and makes more sense) to integrate than others.
+Last year, kCFI support was added in [1]
 
-Some minor cleanups ontop:
+This patchset adds support for UBSAN in EL2.
+UBSAN can run in 2 modes:
+  1) =E2=80=9CNormal=E2=80=9D (CONFIG_UBSAN_TRAP=3Dn): In this mode the com=
+piler will
+  do the UBSAN checks and insert some function calls in case of
+  failures, it can provide more information(ex: what is the value of
+  the out of bound) about the failures through those function arguments,
+  and those functions(implemented in lib/ubsan.c) will print a report with
+  such errors.
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index b031cabb2ccf..9ac902d022bf 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -961,6 +961,7 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
- 
- static int vmgexit_ap_control(u64 event, struct sev_es_save_area *vmsa, u32 apic_id)
- {
-+	bool create = event == SVM_VMGEXIT_AP_CREATE;
- 	struct ghcb_state state;
- 	unsigned long flags;
- 	struct ghcb *ghcb;
-@@ -971,8 +972,10 @@ static int vmgexit_ap_control(u64 event, struct sev_es_save_area *vmsa, u32 apic
- 	ghcb = __sev_get_ghcb(&state);
- 
- 	vc_ghcb_invalidate(ghcb);
--	if (event == SVM_VMGEXIT_AP_CREATE)
-+
-+	if (create)
- 		ghcb_set_rax(ghcb, vmsa->sev_features);
-+
- 	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
- 	ghcb_set_sw_exit_info_1(ghcb,
- 				((u64)apic_id << 32)	|
-@@ -985,7 +988,7 @@ static int vmgexit_ap_control(u64 event, struct sev_es_save_area *vmsa, u32 apic
- 
- 	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
- 	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
--		pr_err("SNP AP %s error\n", (event == SVM_VMGEXIT_AP_CREATE ? "CREATE" : "DESTROY"));
-+		pr_err("SNP AP %s error\n", (create ? "CREATE" : "DESTROY"));
- 		ret = -EINVAL;
- 	}
- 
-@@ -1168,8 +1171,8 @@ static void shutdown_all_aps(void)
- 		vmsa = per_cpu(sev_vmsa, cpu);
- 
- 		/*
--		 * BSP does not have guest allocated VMSA and there is no need
--		 * to clear the VMSA tag for this page.
-+		 * The BSP or offlined APs do not have guest allocated VMSA
-+		 * and there is no need  to clear the VMSA tag for this page.
- 		 */
- 		if (!vmsa)
- 			continue;
+  2) Trap (CONFIG_UBSAN_TRAP=3Dy): This is a minimal mode, where similarly,
+  the compiler will do the checks, but instead of doing function calls,
+  it would do a =E2=80=9Cbrk #imm=E2=80=9D (for ARM64) with a unique code w=
+ith the failure
+  type, but without any extra information (ex: only print the out-bound lin=
+e
+  but not the index)
 
--- 
-Regards/Gruss,
-    Boris.
+For nvhe/hvhe/proctected modes, #2 would be suitable, as there is no way to
+print reports from EL2, so similarly to kCFI(even with permissive) it would
+cause the hypervisor to panic.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+But that means that for EL2 we need to compile the code with the same optio=
+ns
+as used by =E2=80=9CCONFIG_UBSAN_TRAP=E2=80=9D independently from the kerne=
+l config.
+
+This patch series adds a new KCONFIG for ARM64 to choose to enable UBSAN
+separately for the modes mentioned.
+
+The same logic decoding the kernel UBSAN is reused, so the messages from
+the hypervisor will look similar as:
+[   29.215332] kvm [190]: nVHE hyp UBSAN: array index out of bounds at: [<f=
+fff8000811f2344>] __kvm_nvhe_handle___pkvm_init_vm+0xa8/0xac!
+
+In this patch set, the same UBSAN options(for check types) are used for bot=
+h
+EL1/EL2, although a case can be made to have separate options (leading to
+totally separate CFLAGS) if we want EL2 to be compiled with stricter checks
+for something as protected mode.
+However, re-using the current flags, makes code re-use easier for
+report_ubsan_failure() and  Makefile.ubsan
+
+[1] https://lore.kernel.org/all/20240610063244.2828978-1-ptosi@google.com/
+
+Changes from v1:
+- https://lore.kernel.org/all/20250416180440.231949-1-smostafa@google.com/
+- Collected Kees Acked-By
+- Rename CFLAGS flag to CFLAGS_UBSAN_TRAP
+- Small comment fix
+
+Mostafa Saleh (4):
+  arm64: Introduce esr_is_ubsan_brk()
+  ubsan: Remove regs from report_ubsan_failure()
+  KVM: arm64: Introduce CONFIG_UBSAN_KVM_EL2
+  KVM: arm64: Handle UBSAN faults
+
+ arch/arm64/include/asm/esr.h     | 5 +++++
+ arch/arm64/kernel/traps.c        | 4 ++--
+ arch/arm64/kvm/handle_exit.c     | 6 ++++++
+ arch/arm64/kvm/hyp/nvhe/Makefile | 6 ++++++
+ arch/x86/kernel/traps.c          | 2 +-
+ include/linux/ubsan.h            | 6 +++---
+ lib/Kconfig.ubsan                | 9 +++++++++
+ lib/ubsan.c                      | 8 +++++---
+ scripts/Makefile.ubsan           | 5 ++++-
+ 9 files changed, 41 insertions(+), 10 deletions(-)
+
+--=20
+2.49.0.967.g6a0df3ecc3-goog
+
