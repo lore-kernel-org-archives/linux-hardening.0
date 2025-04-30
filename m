@@ -1,1073 +1,482 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2048.outbound.protection.outlook.com [40.107.100.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D42E22172D
-	for <linux-hardening@vger.kernel.org>; Wed, 30 Apr 2025 09:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746003802; cv=none; b=ItFEfqzM26vj+Jk5JjSqrpAgq1+i3gnA+dFQbwiktCrJ2ERoeBK9V12uIvxmYJ6yGUlcg0ujfmJfodtbJ0hTuJzCXVV5mlwHswIX3kbw6iIDm5ZgrM7RVYPLUqX/dGb9gO/dvu6yAXh3FTwNaWs422J2+4vR9/7QIZiYXEPzzps=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746003802; c=relaxed/simple;
-	bh=ETC0/fQ2J0eodVufxbigax62gsNYjoMjRIRivyab6iI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YGKMe02QZuwubgSagxaM8zINxJojgA5l/BM4oNLO2yETWq52IKokzb+6O79qa257kjX5ufZ1PwcljvSwSUt+xWuYckJnXigEAmaDAMh0ScUwhsT+HBW5z3qwarcOfOi5JAohpYk2IkAFRjON0u571/fuROsyNGKJygr97iPQfAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dkbHDhYW; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4190F221F27;
+	Wed, 30 Apr 2025 09:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746004901; cv=fail; b=nCGj+rz7AciopvCoucWKjKBr2Q6nplHtSE6hMHhLgnqCX8l/CQokQOzdQpbWphQtjzyJO3Pf10qGWTlS7Ohrsk7kio+jgmbvvt2YKnHiQS0ibbsX4DsdyBirhca0r59DRokwB1AmaNOEw8Z8xnKDTnclSSvLVw8P1G2D6FvLHtA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746004901; c=relaxed/simple;
+	bh=AFN9PoPOopX7t5JizsHHEN3GFrClvGCrliOLeehnhzQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=egjOjwOzmVKrylXF2e7EXDJ1pFO6P6m4oTrvfRg8O+VcLfw3/3mr36TbRaHBH9uBfZ8ly6uY9SAkwCZTAcIDhAn2TKxboGg7QFCGxqA8cTZ8amBY5iUAJClWUKjc4iHP/9OmSlJlfgLUV7eDp1Bp3bhXxgbziZthaENqLkvBuKg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=okEkWw8e; arc=fail smtp.client-ip=40.107.100.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dkbHDhYW"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5dce099f4so9044128a12.1
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Apr 2025 02:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746003794; x=1746608594; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RNMGX8xTAJV03xiy4EuyoYxFrFzL7vnGQ/tRNVy0Y60=;
-        b=dkbHDhYWh0bNQlMpBWv5Ic/XqAHVpI9VTjakHzLIcdHi33tuZJGEo3yH02huttpbCM
-         LeismXr9SBPHq/zt0trVMgWp74Fnz49i/1KBP1CUV7OMkxGvRBWKOkZx2fpstNZWb1BF
-         06tiQ/eU55XlPhh24asFxnJw6TQqeHXMKz82t4p4g4fnzbJR42aDWtK14c8lc7L5kdhc
-         EapGD1PlOe7OueaBEgiznFYBTWAVRlYx8AfaSqvbuSnANCUVNxob1rvGiuHkTs0q/ACu
-         nBLyLSYhe0VHeCJC4XhEAg3ijI6an6n3eUEU9nPJXXR1OayLR2n5FgU2mppnUfaxPt94
-         445Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746003794; x=1746608594;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RNMGX8xTAJV03xiy4EuyoYxFrFzL7vnGQ/tRNVy0Y60=;
-        b=n2TW1cEGDKgteIe9AMiqMsrPAyFIqTKmKB1XOb989Ki9RepM34vvSnM+p51UXyH/9f
-         CneIs2WpFBeWg96BLTVUqoXoMWe7zN2v7FbsQpFXi42fnft9veOBDlczX8al3QSWrbVF
-         eVg+v5JYIt0+hlxREOznnAdzMazx17nObxbaus3NJhjhfvwArcyPHJFPWL8kbvUQIwju
-         28u55i/880kCgAR+Lk3e5ufnqbSHhtyE8fv9g1+V6yBpFbHyF4F786RqIX4YBl9XHpyi
-         hGiWmMAogRmuugEBiFQZx8528kGkQxOr5TXIfMdUtMUEfgqj6m8tQlN+OSeT5OarVG3d
-         3LVg==
-X-Forwarded-Encrypted: i=1; AJvYcCX76Rz2Hfw+qpesQcKQtA0PdksS6RrY97gfW7GXzes7bZu0ibIGf1Ll48YqFb1BCDci9RYxRVtDjH8JdUL3NXE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1hGyLqxjZfhnQvM+c5lqJaHSZE5WSlCXS0CPXrnbHC2oa0LrC
-	GBvttHk/An/Ubg0l4nzhjSgn3Du4tXYzmmmMhy0INWqPfKdDGROTKdL4pmnw6UE=
-X-Gm-Gg: ASbGncvLCmrIXaHAOZYp9keNzVaWTu62pC0ryaFd7KL7dlKbxbHfnSs3BlolrXk+R4t
-	F6NyKuioMPs//vvQKrGJowVJVS8F+7zzjKmYg/JTgtF6K0O7gjsNkKHEil00qw/TzwPHp+TLH4Q
-	z274vldUyIWplni4aYlzzOi8XLcT0cOhrUYEOX5We0JCk5demFktVUw0HotaJJCDWR1+YIbA8fX
-	NjDqMiYEjdv7C3eYs4tTT3zB5sbPnRoMczUw3GK8XRrDUCGT8gyW4Xn6G4MsaQhXopb+qcD8dhd
-	eEjn/ZWG1jVAi/l/XPp8utsl0D9A1oa4hTrkoPYJHKqeqKOoEO9F48bUSeXb85Oc/iq1M5VKZC8
-	1iaNSyxXPlhjtn9kzgcV7UeoO
-X-Google-Smtp-Source: AGHT+IFAKZJgrGytc8p4FJx6aqGbMB48BeNTMcYuI/vUNSt+ICPVaY4i5o4gaGYHt1kjsryp7gGWDQ==
-X-Received: by 2002:a17:907:728f:b0:aca:b45a:7c86 with SMTP id a640c23a62f3a-acedc579956mr228442066b.1.1746003794311;
-        Wed, 30 Apr 2025 02:03:14 -0700 (PDT)
-Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41bbb6sm889676766b.28.2025.04.30.02.03.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 02:03:13 -0700 (PDT)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Wed, 30 Apr 2025 10:03:11 +0100
-Subject: [PATCH v9 4/6] mfd: max77759: add Maxim MAX77759 core mfd driver
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="okEkWw8e"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IgQJKs1S1h01q0fMdC7lSnm8TEbomJIHYT18k5QnX0/IMYDKjIWOlaYUy8KuKyAHvMYnIk2luGzkU3N58riYHXHk7RFRLJg7Xx19nr4AvZU3cxIhDvisRBqIdq3lT5R4QuzvYrZELOhjRUPU5HmYgNAnSHVRs6e8Mr3l+M6d0sOnsG1d2sQB3AiR+wZ3TPn80cesOlCeMRbpgSbejukf/7B+r4lKwq2qPHjb5QKa2q4VzZdcTooXGFNvQ0qx15mjkQoAg5lJ/JgmWE6eLHZsH/QfsxVkB4F2l4BQv9P7nq2cMbWt+5USugrT8i8I8FG4B5Ssrm3SwtFbBTu72Jp4dQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kCMkMVnQuNspJ3mIBdgoKNyjifFVods7xrapzIHTeQA=;
+ b=O3HBUK0ac3tCsZnOfKxBsJ8DHKt73kaLnOaxYzvTB/9i/eLETKRawDvbBqnpgme3tX5COTH+ZlhpAxwycxGGnadrM8hqhybhPoDPLgNSUXlHbKoRNbjIw5ZdbQTgdZ1L5P1T0KNMudJYPNRJP+aaNK3onpA6tkLpJSz584KysK8tE7Qevh26ddtClbm8XOQuMet5Bn6obFtSrPwoMMeY4KNdCgpg7Ie6bC6YmpHQJocbKjU4OEyKi3BiAy/44selKp1ygHYDJ+aKB3LMFWeB5InPlgY3C401PnN97roAYEU3O3ware02G5dlSMPACrHxf3UnU+DoRfwI/nM0fVA0Pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kCMkMVnQuNspJ3mIBdgoKNyjifFVods7xrapzIHTeQA=;
+ b=okEkWw8ews/aQE2/ifYcrAEgqH2BNU3eUMZmOzOP6MQBfJn8xptyn/RsVfpM6+WY6bL2v2Rgr/8DqwdBT+Azm3xjqKDCUdr8HvBMT9jvx7qsPddJ2nTTS6TXFghlK5eNo33+dQcf1dAT3vdeKc/BVu6gE1Q7+e4i2/A3FKZrcvY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB8189.namprd12.prod.outlook.com (2603:10b6:208:3f0::13)
+ by DS5PPFEC0C6BDA1.namprd12.prod.outlook.com (2603:10b6:f:fc00::668) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Wed, 30 Apr
+ 2025 09:21:32 +0000
+Received: from IA1PR12MB8189.namprd12.prod.outlook.com
+ ([fe80::193b:bbfd:9894:dc48]) by IA1PR12MB8189.namprd12.prod.outlook.com
+ ([fe80::193b:bbfd:9894:dc48%5]) with mapi id 15.20.8699.019; Wed, 30 Apr 2025
+ 09:21:31 +0000
+Message-ID: <a7856b43-a198-477b-9a3b-d32b1730b76c@amd.com>
+Date: Wed, 30 Apr 2025 11:21:25 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] x86/sev: Do not touch VMSA pages during kdump of SNP
+ guest memory
+To: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de,
+ mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, bp@alien8.de,
+ thomas.lendacky@amd.com, hpa@zytor.com
+Cc: kees@kernel.org, michael.roth@amd.com, nikunj@amd.com, seanjc@google.com,
+ ardb@kernel.org, gustavoars@kernel.org, sgarzare@redhat.com,
+ stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, kexec@lists.infradead.org,
+ linux-coco@lists.linux.dev
+References: <20250428214151.155464-1-Ashish.Kalra@amd.com>
+Content-Language: en-US
+From: "Gupta, Pankaj" <pankaj.gupta@amd.com>
+In-Reply-To: <20250428214151.155464-1-Ashish.Kalra@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0184.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:ca::19) To IA1PR12MB8189.namprd12.prod.outlook.com
+ (2603:10b6:208:3f0::13)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250430-max77759-mfd-v9-4-639763e23598@linaro.org>
-References: <20250430-max77759-mfd-v9-0-639763e23598@linaro.org>
-In-Reply-To: <20250430-max77759-mfd-v9-0-639763e23598@linaro.org>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Srinivas Kandagatla <srini@kernel.org>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-X-Mailer: b4 0.14.2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB8189:EE_|DS5PPFEC0C6BDA1:EE_
+X-MS-Office365-Filtering-Correlation-Id: f7bbd32c-9eee-4b92-949a-08dd87c864dc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dDdpZUFLQ29YbGJ6THZOaTNWRkxodnB1MlIwb3RjNzlseVA2OUdDVEhxWlJF?=
+ =?utf-8?B?dFh6VFFJUkVuaTd0M0ZVK0FTUHRaUE94OUZoczZEb0pyaTVLOWFvS2FpSlEw?=
+ =?utf-8?B?S2M2ZzlySmxPTFBac0lyc0VTbkMxY0RML1krSzVld0tOUDFPWmxsUWZRZHhZ?=
+ =?utf-8?B?R2szZUpyQkRkc08wajhSS01EcXk1TThnRU9UNlF1cWQ3RTRYcFZ2Qk1sbFU3?=
+ =?utf-8?B?ZDVVTTJXRGNXWWpXNWI1UkdNYkVFTzhyWDVjL3F4eElWcDA1QU5Jd3Nqa3k2?=
+ =?utf-8?B?Q1B3UmJ2MHJPb204M2syU0kyZGhIUXR1Q1F5aFpjNzNGQlhOWm9rM3dud25P?=
+ =?utf-8?B?SDFWZUhjMm9qVEdyY1pyZnNJd2h0YlhjdTl4RFNZcytSeFBDbGF1NHQza2h6?=
+ =?utf-8?B?MDJaT3VkV215TzdzSWRxRmg5WWoxM3g5Q3hxd2tESVBwbDRrWUpCRDFqV2Ev?=
+ =?utf-8?B?LzFRVVZVTnYvSVgyeWhrSVJwOTVsNDlNWng3S2VHQWZKdGF4ZlpEMmRQcVQr?=
+ =?utf-8?B?QmNoM0FmRVFXd3JzWGRoVWdlZ2ovck91UkRCU3loaDFOSndveWRRcHRzZ0xL?=
+ =?utf-8?B?OFNDOHlNWTE3OFFHSk5KM2pId0loeEJOL21FZkJ3WWlBbWlQVDcrU1VTN1BU?=
+ =?utf-8?B?a2ZkMmcvUEVyQU1DVU5xSVEwb1FLMzMzYS9BMzBrNUpTaEV3eS9lVnV4eSta?=
+ =?utf-8?B?ZXZVamlRTFlTWUR3VFR1TmxUaGdRWHZoL00wbGphL2pBSC9HQVN5MGpXWE9a?=
+ =?utf-8?B?dk45WHRseU5wQ29YMGpMd2FRRzkvclBZVXZydEVYYXE0WHlIdG83RkFmWWV6?=
+ =?utf-8?B?dElrSEFZZVAwcXFTZ3VVMDJsaHBEcnJUamN2MXVmZ3l3dE53SGJpQkJld2ZC?=
+ =?utf-8?B?Y0dlY25EVnVpL1dSN01DQnBwUS9WY05HbFNZa01YdlJNemxTQS9UcTJGclZ0?=
+ =?utf-8?B?bUtxN2RuQnJyM0lGb2hlR0svbURhcFBtTXBRaDdTcDZzdmhUcUJZL1FlSzk2?=
+ =?utf-8?B?bnZ3Q01vcEh5U3hyenFtUnhzZ2o1VmNPdGVqT21kYWcrd2hMbTBuK1ZPRmFl?=
+ =?utf-8?B?cXA0TnhxbkZMeHppeFh3aEpKaVhKc0dLZnVUZUZiY21KeXkwQXZDZlVHbTRE?=
+ =?utf-8?B?aW5XUWpxOVUzNW01bG1JeGlxdW91aE90VDZiYUlscUp0V2xqWkN2UVpYUkhO?=
+ =?utf-8?B?dzM0bkU0WEdBdmxKL2RpcTRFVDgyRjBoMTlvK3lIT1U3MlNMbzZJc0ZqN0Ex?=
+ =?utf-8?B?eTd1WTZpOU1ldnBVSjExd1JwMmFJSmhaRnhXSlNhdFFUOHJiaklHYmJoRFZj?=
+ =?utf-8?B?UFBQbFBvSllrcjB5ZHJiSU96WmdNYlkrREFvZUoyQkFuaWZ1VklaZHBsdVJs?=
+ =?utf-8?B?YTN5TVRldW5vNE1LOWszaVJJMDZNYmZ2VXVDRHU4aGZ3M0VCelNRMWJJSC9v?=
+ =?utf-8?B?VEdSTkxGMGlCRWRzYWlaWHFFd2lzKyt6b2ZMcVNBVmc3Wnh2VWkrcDd5aENa?=
+ =?utf-8?B?WHM4b3NFLzFZdmg1WXVXRWg0bnV4RXpuZTZINkFMc1RWc3RqU1BPTER6VGxG?=
+ =?utf-8?B?clNEYVA1UExXS3F1US9VVTRPazNTNFFkM1hwZHFWbFJQRTRiQzFWSXRKcGMv?=
+ =?utf-8?B?VnVERmZJL3dnOHplamp1YU9ZcnQ4U0p0MXBHQVB2TERIbndSVC9XbzhUMHNt?=
+ =?utf-8?B?WEFyVFMzajRXeGFuOFB5Wnlub1FGL24wVUxQd0plMzF3ZzZmNS8xL0dua2ty?=
+ =?utf-8?B?VkJ1d2crdFVOcllxY20zZVo1VHVLYTZteXFuN2l0RWllN0NibkFkSU9Mc3FG?=
+ =?utf-8?B?TnRUYTdxS2NyRXMrc2QrTGx6N0VwM3JmR3VCOEpDUmZnS1FyY1lNN3FpTHlU?=
+ =?utf-8?B?Ukp1SmY4SldHZ1JLOUhBajltcHpSNFFaM3RTcWNMQ0x2TVk3NkdtV1Y0eWRq?=
+ =?utf-8?Q?mF/ieuMjQjE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB8189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?anJyU1FOc3BkNVZPeUMxTDFmR1Ura3ZpOHV1QU1rMGoxQ2RPOWpqZmo2cFVC?=
+ =?utf-8?B?ZTQ5OUd5WW01dnZEcHZzMkc0aHBuY1IxWUVWU0hZVTQ4cGJ4MXhHSnIrdkF4?=
+ =?utf-8?B?RmlnRmNaRnA0Z0ZZbkpFOWdscmxMSUFWTDA2KzUvSlJybEFGTzN0NUhIdTZv?=
+ =?utf-8?B?NUJFeEtaa05zRjRLSTFyTjVWTVZFZS8zeXdpTVpISHNCcnVGN1kyK0g2bHJp?=
+ =?utf-8?B?L3hXL21nM2FyOUlBYlVLelc5Vkt0RUorM2phbytxTTIrY3l4SERtazc5bXZR?=
+ =?utf-8?B?b0d3SUNPZ0N2b084WkE1bXRySEM5ekRTT0NSVlgwQTRMd2ZZM1dHbEkwNGJp?=
+ =?utf-8?B?OHhFY2RHNHp5SFBoS3NiS2l0NFQyN1p4K1dvdWRVR1YzdzZwbUYvWVU1czFC?=
+ =?utf-8?B?TzZiSGNGWVh0SzZ6eldpSDFTZGQ4TEczbUtZUnVsc2VoVStpbGFIMWdocUFO?=
+ =?utf-8?B?NWdtL3h0VHpiTGFCU0dpMEFacUV5VFEzRFB1bytJQ1EyVEdLaUhRMTkrU0NQ?=
+ =?utf-8?B?SVBBamZSN2V0c1o3SXcyWFJPSnF5aytpWHlrZVIyRnRmaDIvVEtJRkQ5WU1q?=
+ =?utf-8?B?Q21BSXBWZ25FM1BWRERVVER3dTlkMVl4Ni8vRnQ3eTdseW9CMFdZMHhkcVdt?=
+ =?utf-8?B?NnliMi9NV2Q0MHZ6aDg2UFB4aGY2WGZKMmRjUkxOSmU1dWs5MzB3S05MK1FM?=
+ =?utf-8?B?bzRzcE43ZnBLd0VBQ2g3U3RwaGpVcjRhd1Q4OTBSWGxsNUR1b0IvUU9RQkZW?=
+ =?utf-8?B?dnBLZGZJVmpoQnNNVE5wLzRWMDJtZWk3T1NJeUtjdTNmY1F2YzVYc0Jpdnhh?=
+ =?utf-8?B?Nzc0M2tUQTdSbUNjTjdFSnRQWWptOUs4T0JGWVY0YXQwMUpuTTQzU0hYcEJa?=
+ =?utf-8?B?djd0OEE4YXBpM1FKQjUrU2pNcmtMV3BQdWk1U1NaUjN6ckRvVWRJQ2pRK1ZK?=
+ =?utf-8?B?OUZ0ZjdYcDNhaWdpVkhHaElPUjRXejVERnp6OUUvN2xDQ3VxbW5uYnhrTkJj?=
+ =?utf-8?B?RkhuNy9YQTBqVDBjbHpha25kNUYwSDN2TktEcTlleHJsTzAwTmk2VXpIS24v?=
+ =?utf-8?B?L2VlYXJkRXVkVFpacDFEeUtzcWxwU0lvUUlva0Rsbm95NFFBYjl0a0duNEYx?=
+ =?utf-8?B?WVdkd29wSXNyYlh3aml0cUJzMFZac0FDRDJIcUdheW9SRk40OTlXbEYwZFdu?=
+ =?utf-8?B?QWNTSUV3dWJPVmY3b3pJQ2s5dlNIRVduYW9OTWRZZ3c3TVA5M0VqTWFTbVBk?=
+ =?utf-8?B?a0t4UWl2K0RYdmt6L0cvUXJ1dUlpM0JMbmNadkExT0dLZ0Z4dGJ3aUN1YkFq?=
+ =?utf-8?B?aEhJc2VSNkxvZ2lENmFETXBEMmhRTlpkR0FXMDBiVllOVHluZGZ4RGhZSDA4?=
+ =?utf-8?B?bUZ5ckRrU2hZQk5XQ3ArRjNHYjEwTkxBNS9PdTB5T0pES25DazNZcjJkNjFC?=
+ =?utf-8?B?T1F6RUtycWVYTTErYnFMR09PSjA4YjJCZ05BVmQ3NjJpbXNyZERsc0dsSjFN?=
+ =?utf-8?B?YmNGUXpJRnFiSVE5K1p6cTBXS1VzaHFmVEpERzZoa2hrM0xva1dMdVEyb1hD?=
+ =?utf-8?B?dmE3U0tiMEtWS2o2MUhxUm5Td1J4UDFKZ05MZE9lVkthNXhCUVI4MlQwZVlt?=
+ =?utf-8?B?dlZsZHNVdzdDcTlPcnJPaHVWY3IrNTNBZ2tmbFlZOElTRnBoKytRb2pGc2Yv?=
+ =?utf-8?B?akl5bDh0Ly9iUDNoZUI3dzQzZndsM3VFWSsrV21ZQ0JxT21lMU9Od05XbTg4?=
+ =?utf-8?B?dUhTTDA3bXlKWGdvMG9JazlidDN4M3paSlFHSHZWd3BqWk4vVWFRZjJJTEdw?=
+ =?utf-8?B?cVlSL1cxUGo1OGFWVkZqQytreTQ3TW5xSzBMMGN3QWJhRkl0cE9zVnVYZmNT?=
+ =?utf-8?B?dm0wQ2gvaWhoSE9CQ1V2L1BFZVNtVGorRTBlRHB4aWVieTBhb2dWNC9ZbjU4?=
+ =?utf-8?B?ajB4UHRHN05nb1pobE9BZERuQk85ck5WS3VXV1dTaWhkSkV3SFU4MU1qMWMy?=
+ =?utf-8?B?UnB3eSszaWdHd2dmbkRGcjR6dEJTcG5jNG9JeU1kYXJlT3VZTHZsMndEdEhT?=
+ =?utf-8?B?OUQwcU1UQ2l1WmVGbFBJV25BUW5pVFJDazdGN3padndvMEZPL3JHbTU1dUcw?=
+ =?utf-8?Q?URAa3W1FyhePIS5voB79WBHqO?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7bbd32c-9eee-4b92-949a-08dd87c864dc
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB8189.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 09:21:31.4327
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VV2yjzelBDaVAXHR15q2qD2ZcEBo7TjZ8GTO9wSwbyEqTkIrS+aqIRBstyZYV8A0qVzrLCNArpXlA/JnwY4GmA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPFEC0C6BDA1
 
-The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-Port Controller (TCPC), NVMEM, and a GPIO expander.
 
-Fuel Gauge and TCPC have separate and independent I2C addresses,
-register maps, and interrupt lines and are therefore excluded from the
-MFD core device driver here.
+> When kdump is running makedumpfile to generate vmcore and dumping SNP
+> guest memory it touches the VMSA page of the vCPU executing kdump which
+> then results in unrecoverable #NPF/RMP faults as the VMSA page is
+> marked busy/in-use when the vCPU is running and subsequently causes
+> guest softlockup/hang.
+> 
+> Additionally other APs may be halted in guest mode and their VMSA pages
+> are marked busy and touching these VMSA pages during guest memory dump
+> will also cause #NPF.
+> 
+> Issue AP_DESTROY GHCB calls on other APs to ensure they are kicked out
+> of guest mode and then clear the VMSA bit on their VMSA pages.
+> 
+> If the vCPU running kdump is an AP, mark it's VMSA page as offline to
+> ensure that makedumpfile excludes that page while dumping guest memory.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
-The GPIO and NVMEM interfaces are accessed via specific commands to the
-built-in microprocessor. This driver implements an API that client
-drivers can use for accessing those.
+Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
 
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
-
----
-v6: really use postinc
-
-v5:
-* update all (I hope) of Lee's comments:
-* file header C comment (not C++)
-* drop references to 'MFD'
-* extra indent register bit definitions
-* make 'struct max77759' public
-* drop comments that were used for visual separation only
-* drop MAX77759_*_REG_LAST_REGISTER defines
-* add comments to regmap ranges
-* use longer lines
-* sort local variable in reverse christmas tree order
-* update comments in max77759_maxq_command()
-* drop BUILD_BUG_ON()
-* use dev_err() in max77759_maxq_command()
-* reflow max77759_create_i2c_subdev() slightly and update error messages
-* drop useless comment in max77759_add_chained_maxq()
-* reflow max77759_probe()
-* consistent upper-/lower-case in messages
-
-v4:
-* add missing build_bug.h include
-* update an irq chip comment
-* fix a whitespace in register definitions
-
-v2:
-* add kernel doc for max77759_maxq_command() and related structs
-* fix an msec / usec typo
-* add missing error handling of devm_mutex_init() (Christophe)
-* align sentinel in max77759_of_id[] with max77759_i2c_id[]
-  (Christophe)
-* some tidy-ups in max77759_maxq_command() (Christophe)
-
-max77759 Lee's updates
----
- MAINTAINERS                  |   2 +
- drivers/mfd/Kconfig          |  20 ++
- drivers/mfd/Makefile         |   1 +
- drivers/mfd/max77759.c       | 690 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/max77759.h | 165 +++++++++++
- 5 files changed, 878 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0c7bf694468e9798946baecdfd03d6eacdba2ce3..1259d09e700a21215e8ae2facef858df5304346e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14668,6 +14668,8 @@ M:	André Draszik <andre.draszik@linaro.org>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/*/maxim,max77759*.yaml
-+F:	drivers/mfd/max77759.c
-+F:	include/linux/mfd/max77759.h
- 
- MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
- M:	Javier Martinez Canillas <javier@dowhile0.org>
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 22b93631003943c393d9fe704748bc23f1905397..96992af22565205716d72db0494c7bf2567b045e 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -943,6 +943,26 @@ config MFD_MAX77714
- 	  drivers must be enabled in order to use each functionality of the
- 	  device.
- 
-+config MFD_MAX77759
-+	tristate "Maxim Integrated MAX77759 PMIC"
-+	depends on I2C
-+	depends on OF
-+	select IRQ_DOMAIN
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	select REGMAP_IRQ
-+	help
-+	  Say yes here to add support for Maxim Integrated MAX77759.
-+	  This is a companion Power Management IC for USB Type-C applications
-+	  with Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-+	  Port Controller (TCPC), NVMEM, and additional GPIO interfaces.
-+	  This driver provides common support for accessing the device;
-+	  additional drivers must be enabled in order to use the functionality
-+	  of the device.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called max77759.
-+
- config MFD_MAX77843
- 	bool "Maxim Semiconductor MAX77843 PMIC Support"
- 	depends on I2C=y
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 948cbdf42a18b22a826f0b17fb8d5796a7ec8ba6..5e5cc279af6036a6b3ea1f1f0feeddf45b85f15c 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -169,6 +169,7 @@ obj-$(CONFIG_MFD_MAX77686)	+= max77686.o
- obj-$(CONFIG_MFD_MAX77693)	+= max77693.o
- obj-$(CONFIG_MFD_MAX77705)	+= max77705.o
- obj-$(CONFIG_MFD_MAX77714)	+= max77714.o
-+obj-$(CONFIG_MFD_MAX77759)	+= max77759.o
- obj-$(CONFIG_MFD_MAX77843)	+= max77843.o
- obj-$(CONFIG_MFD_MAX8907)	+= max8907.o
- max8925-objs			:= max8925-core.o max8925-i2c.o
-diff --git a/drivers/mfd/max77759.c b/drivers/mfd/max77759.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..15723ac3ef49771eafd5c2e9984abc550eec7aa1
---- /dev/null
-+++ b/drivers/mfd/max77759.c
-@@ -0,0 +1,690 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright 2020 Google Inc
-+ * Copyright 2025 Linaro Ltd.
-+ *
-+ * Core driver for Maxim MAX77759 companion PMIC for USB Type-C
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/cleanup.h>
-+#include <linux/completion.h>
-+#include <linux/dev_printk.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/jiffies.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/max77759.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/overflow.h>
-+#include <linux/regmap.h>
-+
-+/* Chip ID as per MAX77759_PMIC_REG_PMIC_ID */
-+enum {
-+	MAX77759_CHIP_ID = 59,
-+};
-+
-+enum max77759_i2c_subdev_id {
-+	/*
-+	 * These are arbitrary and simply used to match struct
-+	 * max77759_i2c_subdev entries to the regmap pointers in struct
-+	 * max77759 during probe().
-+	 */
-+	MAX77759_I2C_SUBDEV_ID_MAXQ,
-+	MAX77759_I2C_SUBDEV_ID_CHARGER,
-+};
-+
-+struct max77759_i2c_subdev {
-+	enum max77759_i2c_subdev_id id;
-+	const struct regmap_config *cfg;
-+	u16 i2c_address;
-+};
-+
-+static const struct regmap_range max77759_top_registers[] = {
-+	regmap_reg_range(0x00, 0x02), /* PMIC_ID / PMIC_REVISION / OTP_REVISION */
-+	regmap_reg_range(0x22, 0x24), /* INTSRC / INTSRCMASK / TOPSYS_INT */
-+	regmap_reg_range(0x26, 0x26), /* TOPSYS_INT_MASK */
-+	regmap_reg_range(0x40, 0x40), /* I2C_CNFG */
-+	regmap_reg_range(0x50, 0x51), /* SWRESET / CONTROL_FG */
-+};
-+
-+static const struct regmap_range max77759_top_ro_registers[] = {
-+	regmap_reg_range(0x00, 0x02),
-+	regmap_reg_range(0x22, 0x22),
-+};
-+
-+static const struct regmap_range max77759_top_volatile_registers[] = {
-+	regmap_reg_range(0x22, 0x22),
-+	regmap_reg_range(0x24, 0x24),
-+};
-+
-+static const struct regmap_access_table max77759_top_wr_table = {
-+	.yes_ranges = max77759_top_registers,
-+	.n_yes_ranges = ARRAY_SIZE(max77759_top_registers),
-+	.no_ranges = max77759_top_ro_registers,
-+	.n_no_ranges = ARRAY_SIZE(max77759_top_ro_registers),
-+};
-+
-+static const struct regmap_access_table max77759_top_rd_table = {
-+	.yes_ranges = max77759_top_registers,
-+	.n_yes_ranges = ARRAY_SIZE(max77759_top_registers),
-+};
-+
-+static const struct regmap_access_table max77759_top_volatile_table = {
-+	.yes_ranges = max77759_top_volatile_registers,
-+	.n_yes_ranges = ARRAY_SIZE(max77759_top_volatile_registers),
-+};
-+
-+static const struct regmap_config max77759_regmap_config_top = {
-+	.name = "top",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = MAX77759_PMIC_REG_CONTROL_FG,
-+	.wr_table = &max77759_top_wr_table,
-+	.rd_table = &max77759_top_rd_table,
-+	.volatile_table = &max77759_top_volatile_table,
-+	.num_reg_defaults_raw = MAX77759_PMIC_REG_CONTROL_FG + 1,
-+	.cache_type = REGCACHE_FLAT,
-+};
-+
-+static const struct regmap_range max77759_maxq_registers[] = {
-+	regmap_reg_range(0x60, 0x73), /* Device ID, Rev, INTx, STATUSx, MASKx */
-+	regmap_reg_range(0x81, 0xa1), /* AP_DATAOUTx */
-+	regmap_reg_range(0xb1, 0xd1), /* AP_DATAINx */
-+	regmap_reg_range(0xe0, 0xe0), /* UIC_SWRST */
-+};
-+
-+static const struct regmap_range max77759_maxq_ro_registers[] = {
-+	regmap_reg_range(0x60, 0x63), /* Device ID, Rev */
-+	regmap_reg_range(0x68, 0x6f), /* STATUSx */
-+	regmap_reg_range(0xb1, 0xd1),
-+};
-+
-+static const struct regmap_range max77759_maxq_volatile_registers[] = {
-+	regmap_reg_range(0x64, 0x6f), /* INTx, STATUSx */
-+	regmap_reg_range(0xb1, 0xd1),
-+	regmap_reg_range(0xe0, 0xe0),
-+};
-+
-+static const struct regmap_access_table max77759_maxq_wr_table = {
-+	.yes_ranges = max77759_maxq_registers,
-+	.n_yes_ranges = ARRAY_SIZE(max77759_maxq_registers),
-+	.no_ranges = max77759_maxq_ro_registers,
-+	.n_no_ranges = ARRAY_SIZE(max77759_maxq_ro_registers),
-+};
-+
-+static const struct regmap_access_table max77759_maxq_rd_table = {
-+	.yes_ranges = max77759_maxq_registers,
-+	.n_yes_ranges = ARRAY_SIZE(max77759_maxq_registers),
-+};
-+
-+static const struct regmap_access_table max77759_maxq_volatile_table = {
-+	.yes_ranges = max77759_maxq_volatile_registers,
-+	.n_yes_ranges = ARRAY_SIZE(max77759_maxq_volatile_registers),
-+};
-+
-+static const struct regmap_config max77759_regmap_config_maxq = {
-+	.name = "maxq",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = MAX77759_MAXQ_REG_UIC_SWRST,
-+	.wr_table = &max77759_maxq_wr_table,
-+	.rd_table = &max77759_maxq_rd_table,
-+	.volatile_table = &max77759_maxq_volatile_table,
-+	.num_reg_defaults_raw = MAX77759_MAXQ_REG_UIC_SWRST + 1,
-+	.cache_type = REGCACHE_FLAT,
-+};
-+
-+static const struct regmap_range max77759_charger_registers[] = {
-+	regmap_reg_range(0xb0, 0xcc),
-+};
-+
-+static const struct regmap_range max77759_charger_ro_registers[] = {
-+	regmap_reg_range(0xb4, 0xb8), /* INT_OK, DETAILS_0x */
-+};
-+
-+static const struct regmap_range max77759_charger_volatile_registers[] = {
-+	regmap_reg_range(0xb0, 0xb1), /* INTx */
-+	regmap_reg_range(0xb4, 0xb8),
-+};
-+
-+static const struct regmap_access_table max77759_charger_wr_table = {
-+	.yes_ranges = max77759_charger_registers,
-+	.n_yes_ranges = ARRAY_SIZE(max77759_charger_registers),
-+	.no_ranges = max77759_charger_ro_registers,
-+	.n_no_ranges = ARRAY_SIZE(max77759_charger_ro_registers),
-+};
-+
-+static const struct regmap_access_table max77759_charger_rd_table = {
-+	.yes_ranges = max77759_charger_registers,
-+	.n_yes_ranges = ARRAY_SIZE(max77759_charger_registers),
-+};
-+
-+static const struct regmap_access_table max77759_charger_volatile_table = {
-+	.yes_ranges = max77759_charger_volatile_registers,
-+	.n_yes_ranges = ARRAY_SIZE(max77759_charger_volatile_registers),
-+};
-+
-+static const struct regmap_config max77759_regmap_config_charger = {
-+	.name = "charger",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = MAX77759_CHGR_REG_CHG_CNFG_19,
-+	.wr_table = &max77759_charger_wr_table,
-+	.rd_table = &max77759_charger_rd_table,
-+	.volatile_table = &max77759_charger_volatile_table,
-+	.num_reg_defaults_raw = MAX77759_CHGR_REG_CHG_CNFG_19 + 1,
-+	.cache_type = REGCACHE_FLAT,
-+};
-+
-+/*
-+ * Interrupts - with the following interrupt hierarchy:
-+ *   pmic IRQs (INTSRC)
-+ *     - MAXQ_INT: MaxQ IRQs
-+ *       - UIC_INT1
-+ *         - APCmdResI
-+ *         - SysMsgI
-+ *         - GPIOxI
-+ *     - TOPSYS_INT: topsys
-+ *       - TOPSYS_INT
-+ *         - TSHDN_INT
-+ *         - SYSOVLO_INT
-+ *         - SYSUVLO_INT
-+ *         - FSHIP_NOT_RD
-+ *     - CHGR_INT: charger
-+ *       - CHG_INT
-+ *       - CHG_INT2
-+ */
-+enum {
-+	MAX77759_INT_MAXQ,
-+	MAX77759_INT_TOPSYS,
-+	MAX77759_INT_CHGR,
-+};
-+
-+enum {
-+	MAX77759_TOPSYS_INT_TSHDN,
-+	MAX77759_TOPSYS_INT_SYSOVLO,
-+	MAX77759_TOPSYS_INT_SYSUVLO,
-+	MAX77759_TOPSYS_INT_FSHIP_NOT_RD,
-+};
-+
-+enum {
-+	MAX77759_MAXQ_INT_APCMDRESI,
-+	MAX77759_MAXQ_INT_SYSMSGI,
-+	MAX77759_MAXQ_INT_GPIO,
-+	MAX77759_MAXQ_INT_UIC1,
-+	MAX77759_MAXQ_INT_UIC2,
-+	MAX77759_MAXQ_INT_UIC3,
-+	MAX77759_MAXQ_INT_UIC4,
-+};
-+
-+enum {
-+	MAX77759_CHARGER_INT_1,
-+	MAX77759_CHARGER_INT_2,
-+};
-+
-+static const struct regmap_irq max77759_pmic_irqs[] = {
-+	REGMAP_IRQ_REG(MAX77759_INT_MAXQ, 0, MAX77759_PMIC_REG_INTSRC_MAXQ),
-+	REGMAP_IRQ_REG(MAX77759_INT_TOPSYS, 0, MAX77759_PMIC_REG_INTSRC_TOPSYS),
-+	REGMAP_IRQ_REG(MAX77759_INT_CHGR, 0, MAX77759_PMIC_REG_INTSRC_CHGR),
-+};
-+
-+static const struct regmap_irq max77759_maxq_irqs[] = {
-+	REGMAP_IRQ_REG(MAX77759_MAXQ_INT_APCMDRESI, 0, MAX77759_MAXQ_REG_UIC_INT1_APCMDRESI),
-+	REGMAP_IRQ_REG(MAX77759_MAXQ_INT_SYSMSGI, 0, MAX77759_MAXQ_REG_UIC_INT1_SYSMSGI),
-+	REGMAP_IRQ_REG(MAX77759_MAXQ_INT_GPIO, 0, GENMASK(1, 0)),
-+	REGMAP_IRQ_REG(MAX77759_MAXQ_INT_UIC1, 0, GENMASK(5, 2)),
-+	REGMAP_IRQ_REG(MAX77759_MAXQ_INT_UIC2, 1, GENMASK(7, 0)),
-+	REGMAP_IRQ_REG(MAX77759_MAXQ_INT_UIC3, 2, GENMASK(7, 0)),
-+	REGMAP_IRQ_REG(MAX77759_MAXQ_INT_UIC4, 3, GENMASK(7, 0)),
-+};
-+
-+static const struct regmap_irq max77759_topsys_irqs[] = {
-+	REGMAP_IRQ_REG(MAX77759_TOPSYS_INT_TSHDN, 0, MAX77759_PMIC_REG_TOPSYS_INT_TSHDN),
-+	REGMAP_IRQ_REG(MAX77759_TOPSYS_INT_SYSOVLO, 0, MAX77759_PMIC_REG_TOPSYS_INT_SYSOVLO),
-+	REGMAP_IRQ_REG(MAX77759_TOPSYS_INT_SYSUVLO, 0, MAX77759_PMIC_REG_TOPSYS_INT_SYSUVLO),
-+	REGMAP_IRQ_REG(MAX77759_TOPSYS_INT_FSHIP_NOT_RD, 0, MAX77759_PMIC_REG_TOPSYS_INT_FSHIP),
-+};
-+
-+static const struct regmap_irq max77759_chgr_irqs[] = {
-+	REGMAP_IRQ_REG(MAX77759_CHARGER_INT_1, 0, GENMASK(7, 0)),
-+	REGMAP_IRQ_REG(MAX77759_CHARGER_INT_2, 1, GENMASK(7, 0)),
-+};
-+
-+static const struct regmap_irq_chip max77759_pmic_irq_chip = {
-+	.name = "max77759-pmic",
-+	/* INTSRC is read-only and doesn't require clearing */
-+	.status_base = MAX77759_PMIC_REG_INTSRC,
-+	.mask_base = MAX77759_PMIC_REG_INTSRCMASK,
-+	.num_regs = 1,
-+	.irqs = max77759_pmic_irqs,
-+	.num_irqs = ARRAY_SIZE(max77759_pmic_irqs),
-+};
-+
-+/*
-+ * We can let regmap-irq auto-ack the topsys interrupt bits as required, but
-+ * for all others the individual drivers need to know which interrupt bit
-+ * exactly is set inside their interrupt handlers, and therefore we can not set
-+ * .ack_base for those.
-+ */
-+static const struct regmap_irq_chip max77759_maxq_irq_chip = {
-+	.name = "max77759-maxq",
-+	.domain_suffix = "MAXQ",
-+	.status_base = MAX77759_MAXQ_REG_UIC_INT1,
-+	.mask_base = MAX77759_MAXQ_REG_UIC_INT1_M,
-+	.num_regs = 4,
-+	.irqs = max77759_maxq_irqs,
-+	.num_irqs = ARRAY_SIZE(max77759_maxq_irqs),
-+};
-+
-+static const struct regmap_irq_chip max77759_topsys_irq_chip = {
-+	.name = "max77759-topsys",
-+	.domain_suffix = "TOPSYS",
-+	.status_base = MAX77759_PMIC_REG_TOPSYS_INT,
-+	.mask_base = MAX77759_PMIC_REG_TOPSYS_INT_MASK,
-+	.ack_base = MAX77759_PMIC_REG_TOPSYS_INT,
-+	.num_regs = 1,
-+	.irqs = max77759_topsys_irqs,
-+	.num_irqs = ARRAY_SIZE(max77759_topsys_irqs),
-+};
-+
-+static const struct regmap_irq_chip max77759_chrg_irq_chip = {
-+	.name = "max77759-chgr",
-+	.domain_suffix = "CHGR",
-+	.status_base = MAX77759_CHGR_REG_CHG_INT,
-+	.mask_base = MAX77759_CHGR_REG_CHG_INT_MASK,
-+	.num_regs = 2,
-+	.irqs = max77759_chgr_irqs,
-+	.num_irqs = ARRAY_SIZE(max77759_chgr_irqs),
-+};
-+
-+static const struct max77759_i2c_subdev max77759_i2c_subdevs[] = {
-+	{
-+		.id = MAX77759_I2C_SUBDEV_ID_MAXQ,
-+		.cfg = &max77759_regmap_config_maxq,
-+		/* I2C address is same as for sub-block 'top' */
-+	},
-+	{
-+		.id = MAX77759_I2C_SUBDEV_ID_CHARGER,
-+		.cfg = &max77759_regmap_config_charger,
-+		.i2c_address = 0x69,
-+	},
-+};
-+
-+static const struct resource max77759_gpio_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(MAX77759_MAXQ_INT_GPIO, "GPI"),
-+};
-+
-+static const struct resource max77759_charger_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(MAX77759_CHARGER_INT_1, "INT1"),
-+	DEFINE_RES_IRQ_NAMED(MAX77759_CHARGER_INT_2, "INT2"),
-+};
-+
-+static const struct mfd_cell max77759_cells[] = {
-+	MFD_CELL_OF("max77759-nvmem", NULL, NULL, 0, 0,
-+		    "maxim,max77759-nvmem"),
-+};
-+
-+static const struct mfd_cell max77759_maxq_cells[] = {
-+	MFD_CELL_OF("max77759-gpio", max77759_gpio_resources, NULL, 0, 0,
-+		    "maxim,max77759-gpio"),
-+};
-+
-+static const struct mfd_cell max77759_charger_cells[] = {
-+	MFD_CELL_RES("max77759-charger", max77759_charger_resources),
-+};
-+
-+int max77759_maxq_command(struct max77759 *max77759,
-+			  const struct max77759_maxq_command *cmd,
-+			  struct max77759_maxq_response *rsp)
-+{
-+	DEFINE_FLEX(struct max77759_maxq_response, _rsp, rsp, length, 1);
-+	struct device *dev = regmap_get_device(max77759->regmap_maxq);
-+	static const unsigned int timeout_ms = 200;
-+	int ret;
-+
-+	if (cmd->length > MAX77759_MAXQ_OPCODE_MAXLENGTH)
-+		return -EINVAL;
-+
-+	/*
-+	 * As a convenience for API users when issuing simple commands, rsp is
-+	 * allowed to be NULL. In that case we need a temporary here to write
-+	 * the response to, as we need to verify that the command was indeed
-+	 * completed correctly.
-+	 */
-+	if (!rsp)
-+		rsp = _rsp;
-+
-+	if (!rsp->length || rsp->length > MAX77759_MAXQ_OPCODE_MAXLENGTH)
-+		return -EINVAL;
-+
-+	guard(mutex)(&max77759->maxq_lock);
-+
-+	reinit_completion(&max77759->cmd_done);
-+
-+	/*
-+	 * MaxQ latches the message when the DATAOUT32 register is written. If
-+	 * cmd->length is shorter we still need to write 0 to it.
-+	 */
-+	ret = regmap_bulk_write(max77759->regmap_maxq,
-+				MAX77759_MAXQ_REG_AP_DATAOUT0, cmd->cmd,
-+				cmd->length);
-+	if (!ret && cmd->length < MAX77759_MAXQ_OPCODE_MAXLENGTH)
-+		ret = regmap_write(max77759->regmap_maxq,
-+				   MAX77759_MAXQ_REG_AP_DATAOUT32, 0);
-+	if (ret) {
-+		dev_err(dev, "writing command failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* wait for response from MaxQ */
-+	if (!wait_for_completion_timeout(&max77759->cmd_done,
-+					 msecs_to_jiffies(timeout_ms))) {
-+		dev_err(dev, "timed out waiting for response\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	ret = regmap_bulk_read(max77759->regmap_maxq,
-+			       MAX77759_MAXQ_REG_AP_DATAIN0,
-+			       rsp->rsp, rsp->length);
-+	if (ret) {
-+		dev_err(dev, "reading response failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * As per the protocol, the first byte of the reply will match the
-+	 * request.
-+	 */
-+	if (cmd->cmd[0] != rsp->rsp[0]) {
-+		dev_err(dev, "unexpected opcode response for %#.2x: %*ph\n",
-+			cmd->cmd[0], (int)rsp->length, rsp->rsp);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(max77759_maxq_command);
-+
-+static irqreturn_t apcmdres_irq_handler(int irq, void *irq_data)
-+{
-+	struct max77759 *max77759 = irq_data;
-+
-+	regmap_write(max77759->regmap_maxq, MAX77759_MAXQ_REG_UIC_INT1,
-+		     MAX77759_MAXQ_REG_UIC_INT1_APCMDRESI);
-+
-+	complete(&max77759->cmd_done);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int max77759_create_i2c_subdev(struct i2c_client *client,
-+				      struct max77759 *max77759,
-+				      const struct max77759_i2c_subdev *sd)
-+{
-+	struct i2c_client *sub;
-+	struct regmap *regmap;
-+	int ret;
-+
-+	/*
-+	 * If 'sd' has an I2C address, 'sub' will be assigned a new 'dummy'
-+	 * device, otherwise use it as-is.
-+	 */
-+	sub = client;
-+	if (sd->i2c_address) {
-+		sub = devm_i2c_new_dummy_device(&client->dev,
-+						client->adapter,
-+						sd->i2c_address);
-+
-+		if (IS_ERR(sub))
-+			return dev_err_probe(&client->dev, PTR_ERR(sub),
-+					"failed to claim I2C device %s\n",
-+					sd->cfg->name);
-+	}
-+
-+	regmap = devm_regmap_init_i2c(sub, sd->cfg);
-+	if (IS_ERR(regmap))
-+		return dev_err_probe(&sub->dev, PTR_ERR(regmap),
-+				     "regmap init for '%s' failed\n",
-+				     sd->cfg->name);
-+
-+	ret = regmap_attach_dev(&client->dev, regmap, sd->cfg);
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "regmap attach of '%s' failed\n",
-+				     sd->cfg->name);
-+
-+	if (sd->id == MAX77759_I2C_SUBDEV_ID_MAXQ)
-+		max77759->regmap_maxq = regmap;
-+	else if (sd->id == MAX77759_I2C_SUBDEV_ID_CHARGER)
-+		max77759->regmap_charger = regmap;
-+
-+	return 0;
-+}
-+
-+static int max77759_add_chained_irq_chip(struct device *dev,
-+					 struct regmap *regmap,
-+					 int pirq,
-+					 struct regmap_irq_chip_data *parent,
-+					 const struct regmap_irq_chip *chip,
-+					 struct regmap_irq_chip_data **data)
-+{
-+	int irq, ret;
-+
-+	irq = regmap_irq_get_virq(parent, pirq);
-+	if (irq < 0)
-+		return dev_err_probe(dev, irq,
-+				     "failed to get parent vIRQ(%d) for chip %s\n",
-+				     pirq, chip->name);
-+
-+	ret = devm_regmap_add_irq_chip(dev, regmap, irq,
-+				       IRQF_ONESHOT | IRQF_SHARED, 0, chip,
-+				       data);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to add %s IRQ chip\n",
-+				     chip->name);
-+
-+	return 0;
-+}
-+
-+static int max77759_add_chained_maxq(struct i2c_client *client,
-+				     struct max77759 *max77759,
-+				     struct regmap_irq_chip_data *parent)
-+{
-+	struct regmap_irq_chip_data *irq_chip_data;
-+	int apcmdres_irq;
-+	int ret;
-+
-+	ret = max77759_add_chained_irq_chip(&client->dev,
-+					    max77759->regmap_maxq,
-+					    MAX77759_INT_MAXQ,
-+					    parent,
-+					    &max77759_maxq_irq_chip,
-+					    &irq_chip_data);
-+	if (ret)
-+		return ret;
-+
-+	init_completion(&max77759->cmd_done);
-+	apcmdres_irq = regmap_irq_get_virq(irq_chip_data,
-+					   MAX77759_MAXQ_INT_APCMDRESI);
-+
-+	ret = devm_request_threaded_irq(&client->dev, apcmdres_irq,
-+					NULL, apcmdres_irq_handler,
-+					IRQF_ONESHOT | IRQF_SHARED,
-+					dev_name(&client->dev), max77759);
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "MAX77759_MAXQ_INT_APCMDRESI failed\n");
-+
-+	ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
-+				   max77759_maxq_cells,
-+				   ARRAY_SIZE(max77759_maxq_cells),
-+				   NULL, 0,
-+				   regmap_irq_get_domain(irq_chip_data));
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "failed to add child devices (MaxQ)\n");
-+
-+	return 0;
-+}
-+
-+static int max77759_add_chained_topsys(struct i2c_client *client,
-+				       struct max77759 *max77759,
-+				       struct regmap_irq_chip_data *parent)
-+{
-+	struct regmap_irq_chip_data *irq_chip_data;
-+	int ret;
-+
-+	ret = max77759_add_chained_irq_chip(&client->dev,
-+					    max77759->regmap_top,
-+					    MAX77759_INT_TOPSYS,
-+					    parent,
-+					    &max77759_topsys_irq_chip,
-+					    &irq_chip_data);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int max77759_add_chained_charger(struct i2c_client *client,
-+					struct max77759 *max77759,
-+					struct regmap_irq_chip_data *parent)
-+{
-+	struct regmap_irq_chip_data *irq_chip_data;
-+	int ret;
-+
-+	ret = max77759_add_chained_irq_chip(&client->dev,
-+					    max77759->regmap_charger,
-+					    MAX77759_INT_CHGR,
-+					    parent,
-+					    &max77759_chrg_irq_chip,
-+					    &irq_chip_data);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
-+				   max77759_charger_cells,
-+				   ARRAY_SIZE(max77759_charger_cells),
-+				   NULL, 0,
-+				   regmap_irq_get_domain(irq_chip_data));
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "failed to add child devices (charger)\n");
-+
-+	return 0;
-+}
-+
-+static int max77759_probe(struct i2c_client *client)
-+{
-+	struct regmap_irq_chip_data *irq_chip_data_pmic;
-+	struct irq_data *irq_data;
-+	struct max77759 *max77759;
-+	unsigned long irq_flags;
-+	unsigned int pmic_id;
-+	int ret;
-+
-+	max77759 = devm_kzalloc(&client->dev, sizeof(*max77759), GFP_KERNEL);
-+	if (!max77759)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, max77759);
-+
-+	max77759->regmap_top = devm_regmap_init_i2c(client,
-+						    &max77759_regmap_config_top);
-+	if (IS_ERR(max77759->regmap_top))
-+		return dev_err_probe(&client->dev, PTR_ERR(max77759->regmap_top),
-+				     "regmap init for '%s' failed\n",
-+				     max77759_regmap_config_top.name);
-+
-+	ret = regmap_read(max77759->regmap_top,
-+			  MAX77759_PMIC_REG_PMIC_ID, &pmic_id);
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "unable to read device ID\n");
-+
-+	if (pmic_id != MAX77759_CHIP_ID)
-+		return dev_err_probe(&client->dev, -ENODEV,
-+				     "unsupported device ID %#.2x (%d)\n",
-+				     pmic_id, pmic_id);
-+
-+	ret = devm_mutex_init(&client->dev, &max77759->maxq_lock);
-+	if (ret)
-+		return ret;
-+
-+	for (int i = 0; i < ARRAY_SIZE(max77759_i2c_subdevs); i++) {
-+		ret = max77759_create_i2c_subdev(client, max77759,
-+						 &max77759_i2c_subdevs[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	irq_data = irq_get_irq_data(client->irq);
-+	if (!irq_data)
-+		return dev_err_probe(&client->dev, -EINVAL,
-+				     "invalid IRQ: %d\n", client->irq);
-+
-+	irq_flags = IRQF_ONESHOT | IRQF_SHARED;
-+	irq_flags |= irqd_get_trigger_type(irq_data);
-+
-+	ret = devm_regmap_add_irq_chip(&client->dev, max77759->regmap_top,
-+				       client->irq, irq_flags, 0,
-+				       &max77759_pmic_irq_chip,
-+				       &irq_chip_data_pmic);
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "failed to add IRQ chip '%s'\n",
-+				     max77759_pmic_irq_chip.name);
-+
-+	ret = max77759_add_chained_maxq(client, max77759, irq_chip_data_pmic);
-+	if (ret)
-+		return ret;
-+
-+	ret = max77759_add_chained_topsys(client, max77759, irq_chip_data_pmic);
-+	if (ret)
-+		return ret;
-+
-+	ret = max77759_add_chained_charger(client, max77759, irq_chip_data_pmic);
-+	if (ret)
-+		return ret;
-+
-+	return devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
-+				    max77759_cells, ARRAY_SIZE(max77759_cells),
-+				    NULL, 0,
-+				    regmap_irq_get_domain(irq_chip_data_pmic));
-+}
-+
-+static const struct i2c_device_id max77759_i2c_id[] = {
-+	{ "max77759" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, max77759_i2c_id);
-+
-+static const struct of_device_id max77759_of_id[] = {
-+	{ .compatible = "maxim,max77759", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max77759_of_id);
-+
-+static struct i2c_driver max77759_i2c_driver = {
-+	.driver = {
-+		.name = "max77759",
-+		.of_match_table = max77759_of_id,
-+	},
-+	.probe = max77759_probe,
-+	.id_table = max77759_i2c_id,
-+};
-+module_i2c_driver(max77759_i2c_driver);
-+
-+MODULE_AUTHOR("André Draszik <andre.draszik@linaro.org>");
-+MODULE_DESCRIPTION("Maxim MAX77759 core driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/max77759.h b/include/linux/mfd/max77759.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..c6face34e38555cbc09db4131925b6ed781af511
---- /dev/null
-+++ b/include/linux/mfd/max77759.h
-@@ -0,0 +1,165 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright 2020 Google Inc.
-+ * Copyright 2025 Linaro Ltd.
-+ *
-+ * Maxim MAX77759 core driver
-+ */
-+
-+#ifndef __LINUX_MFD_MAX77759_H
-+#define __LINUX_MFD_MAX77759_H
-+
-+#include <linux/completion.h>
-+#include <linux/mutex.h>
-+#include <linux/regmap.h>
-+
-+#define MAX77759_PMIC_REG_PMIC_ID               0x00
-+#define MAX77759_PMIC_REG_PMIC_REVISION         0x01
-+#define MAX77759_PMIC_REG_OTP_REVISION          0x02
-+#define MAX77759_PMIC_REG_INTSRC                0x22
-+#define MAX77759_PMIC_REG_INTSRCMASK            0x23
-+#define   MAX77759_PMIC_REG_INTSRC_MAXQ         BIT(3)
-+#define   MAX77759_PMIC_REG_INTSRC_TOPSYS       BIT(1)
-+#define   MAX77759_PMIC_REG_INTSRC_CHGR         BIT(0)
-+#define MAX77759_PMIC_REG_TOPSYS_INT            0x24
-+#define MAX77759_PMIC_REG_TOPSYS_INT_MASK       0x26
-+#define   MAX77759_PMIC_REG_TOPSYS_INT_TSHDN    BIT(6)
-+#define   MAX77759_PMIC_REG_TOPSYS_INT_SYSOVLO  BIT(5)
-+#define   MAX77759_PMIC_REG_TOPSYS_INT_SYSUVLO  BIT(4)
-+#define   MAX77759_PMIC_REG_TOPSYS_INT_FSHIP    BIT(0)
-+#define MAX77759_PMIC_REG_I2C_CNFG              0x40
-+#define MAX77759_PMIC_REG_SWRESET               0x50
-+#define MAX77759_PMIC_REG_CONTROL_FG            0x51
-+
-+#define MAX77759_MAXQ_REG_UIC_INT1              0x64
-+#define   MAX77759_MAXQ_REG_UIC_INT1_APCMDRESI  BIT(7)
-+#define   MAX77759_MAXQ_REG_UIC_INT1_SYSMSGI    BIT(6)
-+#define   MAX77759_MAXQ_REG_UIC_INT1_GPIO6I     BIT(1)
-+#define   MAX77759_MAXQ_REG_UIC_INT1_GPIO5I     BIT(0)
-+#define   MAX77759_MAXQ_REG_UIC_INT1_GPIOxI(offs, en)  (((en) & 1) << (offs))
-+#define   MAX77759_MAXQ_REG_UIC_INT1_GPIOxI_MASK(offs) \
-+				MAX77759_MAXQ_REG_UIC_INT1_GPIOxI(offs, ~0)
-+#define MAX77759_MAXQ_REG_UIC_INT2              0x65
-+#define MAX77759_MAXQ_REG_UIC_INT3              0x66
-+#define MAX77759_MAXQ_REG_UIC_INT4              0x67
-+#define MAX77759_MAXQ_REG_UIC_UIC_STATUS1       0x68
-+#define MAX77759_MAXQ_REG_UIC_UIC_STATUS2       0x69
-+#define MAX77759_MAXQ_REG_UIC_UIC_STATUS3       0x6a
-+#define MAX77759_MAXQ_REG_UIC_UIC_STATUS4       0x6b
-+#define MAX77759_MAXQ_REG_UIC_UIC_STATUS5       0x6c
-+#define MAX77759_MAXQ_REG_UIC_UIC_STATUS6       0x6d
-+#define MAX77759_MAXQ_REG_UIC_UIC_STATUS7       0x6f
-+#define MAX77759_MAXQ_REG_UIC_UIC_STATUS8       0x6f
-+#define MAX77759_MAXQ_REG_UIC_INT1_M            0x70
-+#define MAX77759_MAXQ_REG_UIC_INT2_M            0x71
-+#define MAX77759_MAXQ_REG_UIC_INT3_M            0x72
-+#define MAX77759_MAXQ_REG_UIC_INT4_M            0x73
-+#define MAX77759_MAXQ_REG_AP_DATAOUT0           0x81
-+#define MAX77759_MAXQ_REG_AP_DATAOUT32          0xa1
-+#define MAX77759_MAXQ_REG_AP_DATAIN0            0xb1
-+#define MAX77759_MAXQ_REG_UIC_SWRST             0xe0
-+
-+#define MAX77759_CHGR_REG_CHG_INT               0xb0
-+#define MAX77759_CHGR_REG_CHG_INT2              0xb1
-+#define MAX77759_CHGR_REG_CHG_INT_MASK          0xb2
-+#define MAX77759_CHGR_REG_CHG_INT2_MASK         0xb3
-+#define MAX77759_CHGR_REG_CHG_INT_OK            0xb4
-+#define MAX77759_CHGR_REG_CHG_DETAILS_00        0xb5
-+#define MAX77759_CHGR_REG_CHG_DETAILS_01        0xb6
-+#define MAX77759_CHGR_REG_CHG_DETAILS_02        0xb7
-+#define MAX77759_CHGR_REG_CHG_DETAILS_03        0xb8
-+#define MAX77759_CHGR_REG_CHG_CNFG_00           0xb9
-+#define MAX77759_CHGR_REG_CHG_CNFG_01           0xba
-+#define MAX77759_CHGR_REG_CHG_CNFG_02           0xbb
-+#define MAX77759_CHGR_REG_CHG_CNFG_03           0xbc
-+#define MAX77759_CHGR_REG_CHG_CNFG_04           0xbd
-+#define MAX77759_CHGR_REG_CHG_CNFG_05           0xbe
-+#define MAX77759_CHGR_REG_CHG_CNFG_06           0xbf
-+#define MAX77759_CHGR_REG_CHG_CNFG_07           0xc0
-+#define MAX77759_CHGR_REG_CHG_CNFG_08           0xc1
-+#define MAX77759_CHGR_REG_CHG_CNFG_09           0xc2
-+#define MAX77759_CHGR_REG_CHG_CNFG_10           0xc3
-+#define MAX77759_CHGR_REG_CHG_CNFG_11           0xc4
-+#define MAX77759_CHGR_REG_CHG_CNFG_12           0xc5
-+#define MAX77759_CHGR_REG_CHG_CNFG_13           0xc6
-+#define MAX77759_CHGR_REG_CHG_CNFG_14           0xc7
-+#define MAX77759_CHGR_REG_CHG_CNFG_15           0xc8
-+#define MAX77759_CHGR_REG_CHG_CNFG_16           0xc9
-+#define MAX77759_CHGR_REG_CHG_CNFG_17           0xca
-+#define MAX77759_CHGR_REG_CHG_CNFG_18           0xcb
-+#define MAX77759_CHGR_REG_CHG_CNFG_19           0xcc
-+
-+/* MaxQ opcodes for max77759_maxq_command() */
-+#define MAX77759_MAXQ_OPCODE_MAXLENGTH (MAX77759_MAXQ_REG_AP_DATAOUT32 - \
-+					MAX77759_MAXQ_REG_AP_DATAOUT0 + \
-+					1)
-+
-+#define MAX77759_MAXQ_OPCODE_GPIO_TRIGGER_READ   0x21
-+#define MAX77759_MAXQ_OPCODE_GPIO_TRIGGER_WRITE  0x22
-+#define MAX77759_MAXQ_OPCODE_GPIO_CONTROL_READ   0x23
-+#define MAX77759_MAXQ_OPCODE_GPIO_CONTROL_WRITE  0x24
-+#define MAX77759_MAXQ_OPCODE_USER_SPACE_READ     0x81
-+#define MAX77759_MAXQ_OPCODE_USER_SPACE_WRITE    0x82
-+
-+/**
-+ * struct max77759 - core max77759 internal data structure
-+ *
-+ * @regmap_top: Regmap for accessing TOP registers
-+ * @maxq_lock: Lock for serializing access to MaxQ
-+ * @regmap_maxq: Regmap for accessing MaxQ registers
-+ * @cmd_done: Used to signal completion of a MaxQ command
-+ * @regmap_charger: Regmap for accessing charger registers
-+ *
-+ * The MAX77759 comprises several sub-blocks, namely TOP, MaxQ, Charger,
-+ * Fuel Gauge, and TCPCI.
-+ */
-+struct max77759 {
-+	struct regmap *regmap_top;
-+
-+	/* This protects MaxQ commands - only one can be active */
-+	struct mutex maxq_lock;
-+	struct regmap *regmap_maxq;
-+	struct completion cmd_done;
-+
-+	struct regmap *regmap_charger;
-+};
-+
-+/**
-+ * struct max77759_maxq_command - structure containing the MaxQ command to
-+ * send
-+ *
-+ * @length: The number of bytes to send.
-+ * @cmd: The data to send.
-+ */
-+struct max77759_maxq_command {
-+	u8 length;
-+	u8 cmd[] __counted_by(length);
-+};
-+
-+/**
-+ * struct max77759_maxq_response - structure containing the MaxQ response
-+ *
-+ * @length: The number of bytes to receive.
-+ * @rsp: The data received. Must have at least @length bytes space.
-+ */
-+struct max77759_maxq_response {
-+	u8 length;
-+	u8 rsp[] __counted_by(length);
-+};
-+
-+/**
-+ * max77759_maxq_command() - issue a MaxQ command and wait for the response
-+ * and associated data
-+ *
-+ * @max77759: The core max77759 device handle.
-+ * @cmd: The command to be sent.
-+ * @rsp: Any response data associated with the command will be copied here;
-+ *     can be %NULL if the command has no response (other than ACK).
-+ *
-+ * Return: 0 on success, a negative error number otherwise.
-+ */
-+int max77759_maxq_command(struct max77759 *max77759,
-+			  const struct max77759_maxq_command *cmd,
-+			  struct max77759_maxq_response *rsp);
-+
-+#endif /* __LINUX_MFD_MAX77759_H */
-
--- 
-2.49.0.901.g37484f566f-goog
+> ---
+>   arch/x86/coco/sev/core.c | 241 +++++++++++++++++++++++++--------------
+>   1 file changed, 155 insertions(+), 86 deletions(-)
+> 
+> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+> index dcfaa698d6cf..f4eb5b645239 100644
+> --- a/arch/x86/coco/sev/core.c
+> +++ b/arch/x86/coco/sev/core.c
+> @@ -877,6 +877,99 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
+>   	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
+>   }
+>   
+> +static int vmgexit_ap_control(u64 event, struct sev_es_save_area *vmsa, u32 apic_id)
+> +{
+> +	struct ghcb_state state;
+> +	unsigned long flags;
+> +	struct ghcb *ghcb;
+> +	int ret = 0;
+> +
+> +	local_irq_save(flags);
+> +
+> +	ghcb = __sev_get_ghcb(&state);
+> +
+> +	vc_ghcb_invalidate(ghcb);
+> +	if (event == SVM_VMGEXIT_AP_CREATE)
+> +		ghcb_set_rax(ghcb, vmsa->sev_features);
+> +	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
+> +	ghcb_set_sw_exit_info_1(ghcb,
+> +				((u64)apic_id << 32)	|
+> +				((u64)snp_vmpl << 16)	|
+> +				event);
+> +	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
+> +
+> +	sev_es_wr_ghcb_msr(__pa(ghcb));
+> +	VMGEXIT();
+> +
+> +	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
+> +	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
+> +		pr_err("SNP AP %s error\n", (event == SVM_VMGEXIT_AP_CREATE ? "CREATE" : "DESTROY"));
+> +		ret = -EINVAL;
+> +	}
+> +
+> +	__sev_put_ghcb(&state);
+> +
+> +	local_irq_restore(flags);
+> +
+> +	return ret;
+> +}
+> +
+> +static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
+> +{
+> +	int ret;
+> +
+> +	if (snp_vmpl) {
+> +		struct svsm_call call = {};
+> +		unsigned long flags;
+> +
+> +		local_irq_save(flags);
+> +
+> +		call.caa = this_cpu_read(svsm_caa);
+> +		call.rcx = __pa(va);
+> +
+> +		if (make_vmsa) {
+> +			/* Protocol 0, Call ID 2 */
+> +			call.rax = SVSM_CORE_CALL(SVSM_CORE_CREATE_VCPU);
+> +			call.rdx = __pa(caa);
+> +			call.r8  = apic_id;
+> +		} else {
+> +			/* Protocol 0, Call ID 3 */
+> +			call.rax = SVSM_CORE_CALL(SVSM_CORE_DELETE_VCPU);
+> +		}
+> +
+> +		ret = svsm_perform_call_protocol(&call);
+> +
+> +		local_irq_restore(flags);
+> +	} else {
+> +		/*
+> +		 * If the kernel runs at VMPL0, it can change the VMSA
+> +		 * bit for a page using the RMPADJUST instruction.
+> +		 * However, for the instruction to succeed it must
+> +		 * target the permissions of a lesser privileged (higher
+> +		 * numbered) VMPL level, so use VMPL1.
+> +		 */
+> +		u64 attrs = 1;
+> +
+> +		if (make_vmsa)
+> +			attrs |= RMPADJUST_VMSA_PAGE_BIT;
+> +
+> +		ret = rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
+> +{
+> +	int err;
+> +
+> +	err = snp_set_vmsa(vmsa, NULL, apic_id, false);
+> +	if (err)
+> +		pr_err("clear VMSA page failed (%u), leaking page\n", err);
+> +	else
+> +		free_page((unsigned long)vmsa);
+> +}
+> +
+>   static void set_pte_enc(pte_t *kpte, int level, void *va)
+>   {
+>   	struct pte_enc_desc d = {
+> @@ -973,6 +1066,65 @@ void snp_kexec_begin(void)
+>   		pr_warn("Failed to stop shared<->private conversions\n");
+>   }
+>   
+> +/*
+> + * Shutdown all APs except the one handling kexec/kdump and clearing
+> + * the VMSA tag on AP's VMSA pages as they are not being used as
+> + * VMSA page anymore.
+> + */
+> +static void shutdown_all_aps(void)
+> +{
+> +	struct sev_es_save_area *vmsa;
+> +	int apic_id, this_cpu, cpu;
+> +
+> +	this_cpu = get_cpu();
+> +
+> +	/*
+> +	 * APs are already in HLT loop when enc_kexec_finish() callback
+> +	 * is invoked.
+> +	 */
+> +	for_each_present_cpu(cpu) {
+> +		vmsa = per_cpu(sev_vmsa, cpu);
+> +
+> +		/*
+> +		 * BSP does not have guest allocated VMSA and there is no need
+> +		 * to clear the VMSA tag for this page.
+> +		 */
+> +		if (!vmsa)
+> +			continue;
+> +
+> +		/*
+> +		 * Cannot clear the VMSA tag for the currently running vCPU.
+> +		 */
+> +		if (this_cpu == cpu) {
+> +			unsigned long pa;
+> +			struct page *p;
+> +
+> +			pa = __pa(vmsa);
+> +			/*
+> +			 * Mark the VMSA page of the running vCPU as offline
+> +			 * so that is excluded and not touched by makedumpfile
+> +			 * while generating vmcore during kdump.
+> +			 */
+> +			p = pfn_to_online_page(pa >> PAGE_SHIFT);
+> +			if (p)
+> +				__SetPageOffline(p);
+> +			continue;
+> +		}
+> +
+> +		apic_id = cpuid_to_apicid[cpu];
+> +
+> +		/*
+> +		 * Issue AP destroy to ensure AP gets kicked out of guest mode
+> +		 * to allow using RMPADJUST to remove the VMSA tag on it's
+> +		 * VMSA page.
+> +		 */
+> +		vmgexit_ap_control(SVM_VMGEXIT_AP_DESTROY, vmsa, apic_id);
+> +		snp_cleanup_vmsa(vmsa, apic_id);
+> +	}
+> +
+> +	put_cpu();
+> +}
+> +
+>   void snp_kexec_finish(void)
+>   {
+>   	struct sev_es_runtime_data *data;
+> @@ -987,6 +1139,8 @@ void snp_kexec_finish(void)
+>   	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
+>   		return;
+>   
+> +	shutdown_all_aps();
+> +
+>   	unshare_all_memory();
+>   
+>   	/*
+> @@ -1008,51 +1162,6 @@ void snp_kexec_finish(void)
+>   	}
+>   }
+>   
+> -static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
+> -{
+> -	int ret;
+> -
+> -	if (snp_vmpl) {
+> -		struct svsm_call call = {};
+> -		unsigned long flags;
+> -
+> -		local_irq_save(flags);
+> -
+> -		call.caa = this_cpu_read(svsm_caa);
+> -		call.rcx = __pa(va);
+> -
+> -		if (make_vmsa) {
+> -			/* Protocol 0, Call ID 2 */
+> -			call.rax = SVSM_CORE_CALL(SVSM_CORE_CREATE_VCPU);
+> -			call.rdx = __pa(caa);
+> -			call.r8  = apic_id;
+> -		} else {
+> -			/* Protocol 0, Call ID 3 */
+> -			call.rax = SVSM_CORE_CALL(SVSM_CORE_DELETE_VCPU);
+> -		}
+> -
+> -		ret = svsm_perform_call_protocol(&call);
+> -
+> -		local_irq_restore(flags);
+> -	} else {
+> -		/*
+> -		 * If the kernel runs at VMPL0, it can change the VMSA
+> -		 * bit for a page using the RMPADJUST instruction.
+> -		 * However, for the instruction to succeed it must
+> -		 * target the permissions of a lesser privileged (higher
+> -		 * numbered) VMPL level, so use VMPL1.
+> -		 */
+> -		u64 attrs = 1;
+> -
+> -		if (make_vmsa)
+> -			attrs |= RMPADJUST_VMSA_PAGE_BIT;
+> -
+> -		ret = rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
+> -	}
+> -
+> -	return ret;
+> -}
+> -
+>   #define __ATTR_BASE		(SVM_SELECTOR_P_MASK | SVM_SELECTOR_S_MASK)
+>   #define INIT_CS_ATTRIBS		(__ATTR_BASE | SVM_SELECTOR_READ_MASK | SVM_SELECTOR_CODE_MASK)
+>   #define INIT_DS_ATTRIBS		(__ATTR_BASE | SVM_SELECTOR_WRITE_MASK)
+> @@ -1084,24 +1193,10 @@ static void *snp_alloc_vmsa_page(int cpu)
+>   	return page_address(p + 1);
+>   }
+>   
+> -static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
+> -{
+> -	int err;
+> -
+> -	err = snp_set_vmsa(vmsa, NULL, apic_id, false);
+> -	if (err)
+> -		pr_err("clear VMSA page failed (%u), leaking page\n", err);
+> -	else
+> -		free_page((unsigned long)vmsa);
+> -}
+> -
+>   static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+>   {
+>   	struct sev_es_save_area *cur_vmsa, *vmsa;
+> -	struct ghcb_state state;
+>   	struct svsm_ca *caa;
+> -	unsigned long flags;
+> -	struct ghcb *ghcb;
+>   	u8 sipi_vector;
+>   	int cpu, ret;
+>   	u64 cr4;
+> @@ -1215,33 +1310,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+>   	}
+>   
+>   	/* Issue VMGEXIT AP Creation NAE event */
+> -	local_irq_save(flags);
+> -
+> -	ghcb = __sev_get_ghcb(&state);
+> -
+> -	vc_ghcb_invalidate(ghcb);
+> -	ghcb_set_rax(ghcb, vmsa->sev_features);
+> -	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
+> -	ghcb_set_sw_exit_info_1(ghcb,
+> -				((u64)apic_id << 32)	|
+> -				((u64)snp_vmpl << 16)	|
+> -				SVM_VMGEXIT_AP_CREATE);
+> -	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
+> -
+> -	sev_es_wr_ghcb_msr(__pa(ghcb));
+> -	VMGEXIT();
+> -
+> -	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
+> -	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
+> -		pr_err("SNP AP Creation error\n");
+> -		ret = -EINVAL;
+> -	}
+> -
+> -	__sev_put_ghcb(&state);
+> -
+> -	local_irq_restore(flags);
+> -
+> -	/* Perform cleanup if there was an error */
+> +	ret = vmgexit_ap_control(SVM_VMGEXIT_AP_CREATE, vmsa, apic_id);
+>   	if (ret) {
+>   		snp_cleanup_vmsa(vmsa, apic_id);
+>   		vmsa = NULL;
 
