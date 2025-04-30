@@ -1,49 +1,40 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA2B23182B
-	for <linux-hardening@vger.kernel.org>; Wed, 30 Apr 2025 09:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C722223184F;
+	Wed, 30 Apr 2025 09:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746005121; cv=none; b=K+3AfvUfHrVhSXuAsqImMLKE86HEfvfMbwRrjStwLzPmCpzbZ71zZhxMt4TkEkcUJLUZLZHv8x1QCkN78i1fe4EBywGVQfI0j4HpySrPBf6X5EvWx7+vj1/VQtM2lWniK/W1OlzL8L7M7maaLh6B3rIuFiJcDJaIER/6B2QDo/Q=
+	t=1746006845; cv=none; b=kkFmZ91BAK9cp/WBZdKIOuV9rWFo36irjpnBtnLS0F5OTcOdSvnMowSjQGGKeM79fP83KPTH+jfp/uIgRc2w3M2uE3JEL8ssHLgn7z+l1F4/LTMHhOjQpFGjc+D4PzsAApvnrfLLXcb1b8nBobr9k9lW4ghvFuwGk62efpSw0G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746005121; c=relaxed/simple;
-	bh=L/S/cstdhaw0q/9+lapFQUBWguY35JuC/j0+aEzJZXM=;
+	s=arc-20240116; t=1746006845; c=relaxed/simple;
+	bh=r06vbbdYSeyDhKUVj0TSgJTSH4wivO5RW6Zk56/fEZk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QkcmmAVmQ22doFeKOnG/HYy0itv7M++jkrkvTnlwQynZMeIQmk19lvnp/iUdY+ugjer/q3pCVW4rJm3YCsljgmjR2PkC34d/4Kh3u8QCvQi1iNPVy7f+m4tp1LwB5qTTae/S0bRNfUqXyOPAVoTbieHa+PlDnN/t12OOnHm1C2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AoiEfcyx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=r6HO6bZuwBFMoqSwBIxnyMQW3OAb3ig79v+NbDG7oCqFRmEJwtGud4B5wcGy6sZHmcn0a8XVVvUrrWn004FLb8aj8uAOb5hq47rmfvuoRFykEgn2J8b4K2s9orATMEl4GRLcYCwNCRAfO9vlEYrOMDded8/C5YSwxB8JoOvbxOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=f0CXsBPi; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AoiEfcyx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746005119;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="f0CXsBPi"
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id A039B5850FF;
+	Wed, 30 Apr 2025 09:33:53 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4642B4331A;
+	Wed, 30 Apr 2025 09:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746005625;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+volEyBef2ye7NUghL7e/PLx9YGoFozJlvYKJwtiFcg=;
-	b=AoiEfcyxZprVaLTx4JiGm8IEKc8ccVShEHSTZzomUFTHhCSgBGzJ3bt7yNDlfRgBJxILri
-	L+PVPKETlnIdyKu6pqL28YDHzF8pliP5SJcSTLXJiRARbZ9BeDdTw1V7khloxXoUKXq2lr
-	zYdr5s4AnjqtaNU8WaL7yg8uJG8Fvbk=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-677-Z5mF4TYpPjOcm2gJr7Qjjg-1; Wed,
- 30 Apr 2025 05:25:14 -0400
-X-MC-Unique: Z5mF4TYpPjOcm2gJr7Qjjg-1
-X-Mimecast-MFC-AGG-ID: Z5mF4TYpPjOcm2gJr7Qjjg_1746005112
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2FAF41800980;
-	Wed, 30 Apr 2025 09:25:11 +0000 (UTC)
-Received: from [10.44.33.50] (unknown [10.44.33.50])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3A7E219560A3;
-	Wed, 30 Apr 2025 09:25:06 +0000 (UTC)
-Message-ID: <c6a24765-2b9d-4e64-a139-d2c3ddcc7b89@redhat.com>
-Date: Wed, 30 Apr 2025 11:25:04 +0200
+	bh=KQ8rQQEEj/pGpG4T8FIv47iidj+XTjL64Au76KsPOSU=;
+	b=f0CXsBPiFX0HawPxuZE3wtGbYmyChyVKoPw2z9vegzKah9s0+NLUYqCaq+xi5Gmtk2NNGg
+	BvZwvqWageoMCQpSEXLqf54axgiVZ4TeucppIJadSb1ZbfFmlIxAGOquuB6N/R3n+eW3zh
+	vTG4wD6Iev39dfna3+P35FZtbQ6pSUyhz58CdgZToR0FTNrC0DfGi3SFQVEVxQzFi/YpHG
+	ZcYcSTLTEPzwk5ouKXNScKIhZu7OzP5kgFUg9rFatsDKh1JUatY2rWC3AJyj2BjQQoiwmr
+	eOVGXTQ/1srPsbwyuXV3UbD17wQtq7nKx6cjxxssTXZlgZaxB/y2jBUSKPnijA==
+Message-ID: <752fb7bc-8666-4912-aac1-9778f8779067@bootlin.com>
+Date: Wed, 30 Apr 2025 11:33:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,104 +42,39 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 4/8] mfd: zl3073x: Add support for devlink
- device info
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250425170935.740102-1-ivecera@redhat.com>
- <20250425170935.740102-5-ivecera@redhat.com>
- <20250429115933.53a1914c@kernel.org>
+Subject: Re: [PATCH v4 02/12] pinctrl: remove extern specifier for functions
+ in machine.h
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
+References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
+ <20250429-aaeon-up-board-pinctrl-support-v4-2-b3fffc11417d@bootlin.com>
+ <CAHp75VcRYE6meHB9+MhcH242eXbA0jzYXhL-+WidvvLXiLX=MQ@mail.gmail.com>
 Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <20250429115933.53a1914c@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <CAHp75VcRYE6meHB9+MhcH242eXbA0jzYXhL-+WidvvLXiLX=MQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeifeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehudehuddvgfdvfeetgffgleeuveejgfejtdehkeetheevheevgedujefgvddtteenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheprghnugihrdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghro
+ hdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: thomas.richard@bootlin.com
 
-
-
-On 29. 04. 25 8:59 odp., Jakub Kicinski wrote:
-> On Fri, 25 Apr 2025 19:09:31 +0200 Ivan Vecera wrote:
->> +static int zl3073x_devlink_info_get(struct devlink *devlink,
->> +				    struct devlink_info_req *req,
->> +				    struct netlink_ext_ack *extack)
->> +{
->> +	struct zl3073x_dev *zldev = devlink_priv(devlink);
->> +	u16 id, revision, fw_ver;
->> +	char buf[16];
->> +	u32 cfg_ver;
->> +	int rc;
->> +
->> +	rc = zl3073x_read_u16(zldev, ZL_REG_ID, &id);
->> +	if (rc)
->> +		return rc;
->> +
->> +	snprintf(buf, sizeof(buf), "%X", id);
->> +	rc = devlink_info_version_fixed_put(req,
->> +					    DEVLINK_INFO_VERSION_GENERIC_ASIC_ID,
->> +					    buf);
->> +	if (rc)
->> +		return rc;
->> +
->> +	rc = zl3073x_read_u16(zldev, ZL_REG_REVISION, &revision);
->> +	if (rc)
->> +		return rc;
->> +
->> +	snprintf(buf, sizeof(buf), "%X", revision);
->> +	rc = devlink_info_version_fixed_put(req,
->> +					    DEVLINK_INFO_VERSION_GENERIC_ASIC_REV,
->> +					    buf);
->> +	if (rc)
->> +		return rc;
->> +
->> +	rc = zl3073x_read_u16(zldev, ZL_REG_FW_VER, &fw_ver);
->> +	if (rc)
->> +		return rc;
->> +
->> +	snprintf(buf, sizeof(buf), "%u", fw_ver);
->> +	rc = devlink_info_version_fixed_put(req,
->> +					    DEVLINK_INFO_VERSION_GENERIC_FW,
+On 4/29/25 21:49, Andy Shevchenko wrote:
+> On Tue, Apr 29, 2025 at 5:08 PM Thomas Richard
+> <thomas.richard@bootlin.com> wrote:
+>>
+>> Extern is the default specifier for a function, no need to define it.
 > 
-> Are you sure FW version is fixed? Fixed is for unchangeable
-> properties like ASIC revision or serial numbers.
+> Suggested-by ?
+Oh yes, sorry about that. And also for patch 11/12.
 
-Hmm, should be running. Thanks for pointing out.
+Regards,
 
->> +					    buf);
->> +	if (rc)
->> +		return rc;
->> +
->> +	rc = zl3073x_read_u32(zldev, ZL_REG_CUSTOM_CONFIG_VER, &cfg_ver);
->> +	if (rc)
->> +		return rc;
->> +
->> +	/* No custom config version */
->> +	if (cfg_ver == U32_MAX)
->> +		return 0;
->> +
->> +	snprintf(buf, sizeof(buf), "%lu.%lu.%lu.%lu",
->> +		 FIELD_GET(GENMASK(31, 24), cfg_ver),
->> +		 FIELD_GET(GENMASK(23, 16), cfg_ver),
->> +		 FIELD_GET(GENMASK(15, 8), cfg_ver),
->> +		 FIELD_GET(GENMASK(7, 0), cfg_ver));
->> +
->> +	return devlink_info_version_running_put(req, "cfg.custom_ver", buf);
-> 
-> You need to document the custom versions and properties in a driver
-> specific file under Documentation/networking/device_drivers/
-
-Will add.
-
-Thanks for the review, Jakub.
-
-Ivan
-
+Thomas
