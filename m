@@ -1,71 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550F1221555;
-	Thu,  1 May 2025 23:30:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2BD26FD8B;
+	Thu,  1 May 2025 23:49:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746142233; cv=none; b=QoTqsVphoJ6rht/duWNcBK2YUl6pd+RXc898qLlKrL+wjLzLIyVYFC7mOPrxEYpCXl2khhV+q0Ru4IovQfWZCMWiWSny1mI7fmFIKsFxJ5FUF4MvKbM9LuM0vw8p2NAZlEpIE6QIAcggtfy0HMNEaCKyF2OW6BbzTYI2gG9KA+E=
+	t=1746143358; cv=none; b=nrBqlnmY76hVrmCFURosC08U5xAWqy0BET03N7aS6J2SN9HDI1zDqHzEaYQFJS0aHI0s4nORKIx6yXODivwxJGOMxCPHHE9iV6H4exwgD1NzXB9GnE++t8LHEbJYaz/vbUb/2VVDr/Hkg5MqRtyM+RnhuaZ+DwhC+/fQI0Dou7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746142233; c=relaxed/simple;
-	bh=On5UJDuuIt1L/XGDUZtnR1mOZhoQpq5RQPaGc48KlUg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FOQWEFoxzHEAj9+5QMFv/8l2tdvRfyqeSxix1xz/BYVmXwJwZE+vuM8ZTPeWAH7Fnlsg4EziKFE1PXWyX0Wje/OvrlhUpe0HnIV4PzK/vD+27ZaocDu78Zz+J+oGrPiAtWmuc1fqwDT4lAY7FwaTiVYT7JMsRag55Mjauia9buY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qpUaK1Ow; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746143358; c=relaxed/simple;
+	bh=oBb30km4rgKn4We1YO6LEEYryPCsN9axqOjf65m6cV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YxG2Hn4MQZgOxfr1eVGdkX7HgtfP3wHOEFXHlLcTU5Dr0IriLPn9Mq07NOTZTHeM+L6VR45Nz/+C67O8BSlj4R2D4AwC2smUi6xIBCgtvxyZnMPVdY+xaT11hb6vdRD+Z897xHDByw8BnJYSWfgp16A42uqNvhL+ksffKQB4s5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dsr2AkHa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qpUaK1Ow"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF6D1C4CEED;
-	Thu,  1 May 2025 23:30:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dsr2AkHa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83409C4CEED;
+	Thu,  1 May 2025 23:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746142232;
-	bh=On5UJDuuIt1L/XGDUZtnR1mOZhoQpq5RQPaGc48KlUg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qpUaK1Owmp4QUw2VM/3T5qQuVDKjR5PnnwI2O6yHjLW6uy6P/a4kU7gBT3eNqnt+4
-	 WH2cEyvbhupUSCjuTdvdIN3WTI61BiKO38ZXHtnHMdD6tg0d227TPUYij8nHgh/lNG
-	 z/Q7CA/hj9OqkEL9F55c6Av4nPxOX0Dg6Fmk81tVHgyEcF7bBIubLeoF4NmdTIcoXK
-	 TLWbC+2UJLFyX6tEDTzh8c1w6N8Ej/WjF3cE6oYLn1tNIoOkvtjgL4pK6zMI0Ck6xp
-	 /WMgwKtF8Y9iIvd5z4/2HGVTdVFu8Kc3mMKACRNLzA+xCBb+vecM1j9ah6vquCeNLt
-	 WJwJHoYS/wubA==
+	s=k20201202; t=1746143354;
+	bh=oBb30km4rgKn4We1YO6LEEYryPCsN9axqOjf65m6cV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dsr2AkHaUNLtlqO3Grbv5Rh/u8s8h80+GON71LhmZjrpojXzovUSv4b4g+w6lBWkV
+	 55V3QLUfZD2fcFYSza2TxHUFzJ5A0SiDS3j68+vyr7hh/Al3+z8sEDZunMNkdUghLQ
+	 qdOgeTd8+w+aYvUthj9TTfBI/jE/cxMtZie9HgTeubAuC5FLsKZGVROANb6xuslCQ3
+	 hF3qNtD65MwY5yAjZZOLaNo8PmRIsibLgWNLSeehpU43q10qbvTZHYT9qgnsfHTdsl
+	 vajS7mk/6OjI4Ln5khTAIc9AXi9JwbuH04ztxwA97YFuaXbHv8Y5Egk0gyxxkpYCsN
+	 c2iWSCDrsS60A==
+Date: Thu, 1 May 2025 16:49:11 -0700
 From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2][next] overflow: Fix direct struct member initialization in _DEFINE_FLEX()
-Date: Thu,  1 May 2025 16:30:28 -0700
-Message-Id: <174614222758.3007271.6106298572453987854.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <aBP0b3gfurLFDlwY@kspp>
-References: <aBP0b3gfurLFDlwY@kspp>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] binfmt_elf: Move brk for static PIE even if ASLR disabled
+Message-ID: <202505011633.82A962A7@keescook>
+References: <20250425224502.work.520-kees@kernel.org>
+ <ad6b492c-cf5e-42ec-b772-52e74238483b@arm.com>
+ <202504301207.BCE7A96@keescook>
+ <a6696d0f-3c5a-46a8-8d38-321292dac83d@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a6696d0f-3c5a-46a8-8d38-321292dac83d@arm.com>
 
-On Thu, 01 May 2025 16:23:43 -0600, Gustavo A. R. Silva wrote:
-> Currently, to statically initialize the struct members of the `type`
-> object created by _DEFINE_FLEX(), the internal object `obj` must be
-> explicitly referenced at the call site. See:
+On Thu, May 01, 2025 at 12:03:32PM +0100, Ryan Roberts wrote:
+> I agree, as long as COMPAT_BRK is not set (which is the common case IFAICT).
+> When COMPAT_BRK is enabled, I think you are breaking the purpose of that
+> Kconfig? Perhaps it's not a real-world problem though...
+
+When you turned off ASLR, what mechanism did you use? Personality or
+randomize_va_space=0?
+
+> > It's possible it could break running the loader directly against some
+> > libc5-based binaries. If this turns out to be a real-world issue, we can
+> > find a better solution (perhaps pre-allocating a large brk).
 > 
-> struct flex {
->         int a;
->         int b;
->         struct foo flex_array[];
-> };
-> 
-> [...]
+> But how large is large enough...
 
-Applied to for-next/hardening, thanks!
+Right -- Chrome has a 500MB brk on my laptop. :P Or with randomization
+off, it could allocate to the top of the mmap space just to keep
+"future" mmap allocations from landing in any holes...
 
-[1/1] overflow: Fix direct struct member initialization in _DEFINE_FLEX()
-      https://git.kernel.org/kees/c/d2e95bf39497
+> Perhaps it is safer to only move the brk if !IS_ENABLED(CONFIG_COMPAT_BRK) ?
+> Then wait to see if there are any real-world COMPAT_BRK users that hit the issue?
 
-Take care,
+Yeah, that might be the best middle-ground.
 
 -- 
 Kees Cook
-
