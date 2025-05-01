@@ -1,109 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E755E3D561;
-	Wed, 30 Apr 2025 23:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6411F2DC76D;
+	Thu,  1 May 2025 08:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746056786; cv=none; b=fcYeZukWQhss6PuFD2iKKvFyLwi2jJ/m8FeZOPgpayebO2ozUfxaLBA+St4jATqt1dBFakU4fqJKFj8U6BOS6gXsM1Ofvni+EO8AN3j7BVUZuYI9hnRlAPNWDSIPpKBU+NxyQBgqnS8M+RlsjvcHxD3hNZg1TANlrMFL98qyb58=
+	t=1746086618; cv=none; b=TcQeMOib+THqI27MrkZOMjfwRwmVluvGs+27ES1IrvpYTm38ni9X903njHmlgTVozQ5LsDhJdlbhR8CfADPZ/fk1ApZ19nAnjuiHtvr3OLbML1npBRZU4QpAftzoEuUv3dvqMNjjboPMrAlhYpc/NTnl9UcMHZFEAbTlUYB0eWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746056786; c=relaxed/simple;
-	bh=ag4v8mPOKJ4KE3uAXjKPV01w+5GzpXiyNxIrjQkGTs4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CzJIe/yY4E1i5lWIXo3Y9M8fqeR2E2iyGcBPSw+9ElPgbTDTicKZ/fu+sOGHDOYW9ymUR/E4QWhXVwsz/wu4ig2CGX0shd2bM9LEk42sbzcow2hynTP8/qAMviBIf/lykdK4DWRSP2akLePHGAK82SJmXdEU2agdZfNGDGQPxdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqINPp+1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746086618; c=relaxed/simple;
+	bh=CapM8cFQ+34osfR/nGJn+yrSPaGS7Fi3qUNlij2E3TU=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=gW3GHAmPQhzl9dBbx9ZSrJfviXTpHpJAAsjnnc2OMBr3Jm93V+1rvJsezAt2cTKP+GWBpWcJ8mXytBemHp4dKOjy0yj7YoQGfpUldBH7X6r97ScZnjcHibgZ4i03wpOXv+/Mt9yUdxjbHLgcxxVS60sZSva4FGHnWNRhIC/MOz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=TPMOVxPp; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqINPp+1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 602C2C4CEE7;
-	Wed, 30 Apr 2025 23:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746056785;
-	bh=ag4v8mPOKJ4KE3uAXjKPV01w+5GzpXiyNxIrjQkGTs4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=KqINPp+1XSlQnZ7XPsBYydoVksJCGTH441fSEJGBjMQYn4b3oyXg6uUhst1YxllTJ
-	 /3gLbgI7KO9kgJweooY4NZ6aPyJNCZooeCTYGH5xn8msAhFZK2igUrFdAGgAKGVcIW
-	 qTEV/FZFG520gOYGOtYRJQTfYnW0EgeMY2rdVqfpgnJo1ICLbvrDuVVRL8bXCRsjyW
-	 Kj+RpEVsQ/yVcf0a3J9l/9D1bj8WsXNJ+pqVAtLZr7az0bXfTkwuGn0uMYYlVrozix
-	 1RkO86AzNbmoEZ0mfqATstCEoiowg8kgaILkY4kAzXhfMy74krCgY03ebGkJj693iM
-	 yFMshz4e/kTyw==
-Date: Wed, 30 Apr 2025 17:46:21 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] overflow: Fix direct struct member initialization in
- _DEFINE_FLEX()
-Message-ID: <aBK2TUEeQfCFop9Y@kspp>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="TPMOVxPp"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 5D21B25CCA;
+	Thu,  1 May 2025 10:03:32 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id nN5rKr4dkGB7; Thu,  1 May 2025 10:03:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1746086611; bh=CapM8cFQ+34osfR/nGJn+yrSPaGS7Fi3qUNlij2E3TU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=TPMOVxPpnvJbac+WIRnf5SfCs7yLNJnJUK/nnthIjQNNa/4XOsyTvx032ly3BLwhO
+	 fXaXxSNf13jkS4M9YE+mDvAAYKCGp9mR7qK8/cQ71m5eNSmmIpFfGZDjerYbo5DwNf
+	 6Pu9oPhPyl0R8H4YBiU6p5LOsjAQrbSvd6F9hSV9IvFzBW8DPnDakpfsnd/BqVu9Ka
+	 8v+gMXaKuzLVeIaubS/8rfnU0goHq3/8BeGJDtdbSMmXAdSg7eHIR93jQ0WbrKGYUF
+	 CSpbi0vXckfih6HRa1sykUZMkvqtCJzx0EHctVaJAvxqQszfcMQADD777SVAYs8nYH
+	 nVAt/l5RRGgAw==
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Date: Thu, 01 May 2025 08:03:31 +0000
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, Ivaylo Ivanov
+ <ivo.ivanov.ivanov1@gmail.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v6 0/5] Add support for the Exynos7870 SoC, along with
+ three devices
+In-Reply-To: <9362d6b4-890a-4364-8e51-71ad6fc1e107@kernel.org>
+References: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
+ <9362d6b4-890a-4364-8e51-71ad6fc1e107@kernel.org>
+Message-ID: <ef733cebf014ef3dff1a0d780d289784@disroot.org>
+X-Sender: kauschluss@disroot.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Currently, to statically initialize the struct members of the `type`
-object created by _DEFINE_FLEX(), the internal `obj` member must be
-explicitly referenced at the call site. See:
+On 2025-04-16 07:15, Krzysztof Kozlowski wrote:
+> On 13/04/2025 20:58, Kaustabh Chakraborty wrote:
+>> Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
+>> announced in 2016. The chipset was found in several popular mid-range to
+>> low-end Samsung phones, released within 2016 to 2019.
+>> 
+>> This patch series aims to add support for Exynos 7870, starting with the
+>> most basic yet essential components such as CPU, GPU, clock controllers,
+>> PMIC, pin controllers, etc.
+>> 
+>> Moreover, the series also adds support for three Exynos 7870 devices via
+>> devicetree. The devices are:
+>>  * Samsung Galaxy J7 Prime	- released 2016, codename on7xelte
+>>  * Samsung Galaxy J6		- released 2018, codename j6lte
+>>  * Samsung Galaxy A2 Core	- released 2019, codename a2corelte
+>> 
+>> Additional features implemented in this series include:
+>>  * I2C	- touchscreen, IIO sensors, etc.
+>>  * UART	- bluetooth and serial debugging
+>>  * MMC	- eMMC, Wi-Fi SDIO, SDCard
+>>  * USB	- micro-USB 2.0 interface
+>> 
+>> Build dependencies are in these sub-series:
+>>  * pmu-clocks		A https://lore.kernel.org/all/20250301-exynos7870-pmu-clocks-v5-0-715b646d5206@disroot.org/
+> 
+> So this patchset waits? Ping me or resend when your dependencies are
+> merged. If resending then of course explain why and update dependencies
+> list.
 
-struct flex {
-	int a;
-	int b;
-	struct foo flex_array[];
-};
+Hi, all dependencies are now available in next. I believe you should
+be able to merge it now.
 
-_DEFINE_FLEX(struct flex, instance, flex_array,
-	     FIXED_SIZE, = {
-		.obj = {
-			.a = 0,
-			.b = 1,
-		},
-	});
+Thanks a lot!
 
-This leaks _DEFINE_FLEX() internal implementation details and make
-the helper harder to use and read.
-
-Fix this and allow for a more natural and intuitive C99 init-style:
-
-_DEFINE_FLEX(struct flex, instance, flex_array,
-	     FIXED_SIZE, = {
-		.a = 0,
-		.b = 1,
-	});
-
-Also, update "counter" member initialization in DEFINE_FLEX().
-
-Fixes: 26dd68d293fd ("overflow: add DEFINE_FLEX() for on-stack allocs")
-Link: https://lore.kernel.org/linux-hardening/c4828c41-e46c-43c9-a73a-38ce8ab2c1c4@embeddedor.com/
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/linux/overflow.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 69533e703be5..170d3cfe7ecc 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -404,7 +404,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
- 	union {									\
- 		u8 bytes[struct_size_t(type, member, count)];			\
- 		type obj;							\
--	} name##_u initializer;							\
-+	} name##_u = { .obj initializer };					\
- 	type *name = (type *)&name##_u
- 
- /**
-@@ -444,7 +444,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
-  * elements in array @member.
-  */
- #define DEFINE_FLEX(TYPE, NAME, MEMBER, COUNTER, COUNT)	\
--	_DEFINE_FLEX(TYPE, NAME, MEMBER, COUNT, = { .obj.COUNTER = COUNT, })
-+	_DEFINE_FLEX(TYPE, NAME, MEMBER, COUNT, = { .COUNTER = COUNT, })
- 
- /**
-  * STACK_FLEX_ARRAY_SIZE() - helper macro for DEFINE_FLEX() family.
--- 
-2.43.0
-
+> 
+> Best regards,
+> Krzysztof
