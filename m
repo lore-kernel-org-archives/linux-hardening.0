@@ -1,33 +1,33 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B2E20C476
-	for <linux-hardening@vger.kernel.org>; Thu,  1 May 2025 20:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E0221884B
+	for <linux-hardening@vger.kernel.org>; Thu,  1 May 2025 20:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746130114; cv=none; b=Y9D4eaK52qHL2+xY8HQgs88SG/Mm77DATpX9Pbt1SwagaTjgXeWyvXmXOntsJ9Pij4BvASH4cWSTHU47CUwDNMZrzDLcz4dV0ySMzTqSVf9HUNyGFyr5Rjdr936fKolc7i1sk6C6o4iCcdsHRRLelvV2USWsWMyDgJGDfIrw6mU=
+	t=1746130335; cv=none; b=uPXfd6zHdaaUyGyOXEXujAh+zpa118NFnb4IS7wDCKtjaFV/KROIMsmoZhPVNhHakHKiOFJRdEnJlnl/OcUWWjHuQWVlsjP3qEWNw7nlH58/biG5Pvk+s93uZRy6u1Zxzyv0XD4obtvhUcpT/KQ/9C8Ei2wEN0D0DLeHsrpl83U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746130114; c=relaxed/simple;
-	bh=zIT82q0xOWN2Kfxl78y1LoY6g39Aaj5yrr5D5afBc6A=;
+	s=arc-20240116; t=1746130335; c=relaxed/simple;
+	bh=GfNxm9SoS0WiJCAolHiTCfNgdi97giXoY29wlpEiBhg=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=m2qzhRJ0EJFIUkSi50p52ei1zaYI2FbjYC4U15y2pAgvDRioVmpuHWW2gppAhZCC0ZwP5BcxvMrSuQ0q9q/JnDhEKdk3ZJXUW0H1YLW4tigxFGpZd2BKWC9jtgWM2gp3YZIdW2hM2jIKrEH0AuF+zppY420DmSpjRXAK94KaP20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=neIReg5d; arc=none smtp.client-ip=95.215.58.173
+	 Message-Id:References:To; b=HNF/7s5kz9BV/ka38j3Sxa7lu2EuHRK0MipOuNz164U5a8ldR7AMl8pRaeTTtAISt2FW8NSGkfIIXKp8f9UlPQfDxmL1Z0ROjKrw3A8lFW15FyfPH+FNZMw7YjjOIvjrbJrjbaNEhcIWaZj0IT6CfQ+u/Slk3wjPe4qgILDoJdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=g3bMEWut; arc=none smtp.client-ip=91.218.175.185
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="neIReg5d"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g3bMEWut"
 Content-Type: text/plain;
 	charset=us-ascii
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746130109;
+	t=1746130320;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zBPt1lsPWxu7zJxsnqvH2FKn0STz5XFj+pS6Scgq+Ug=;
-	b=neIReg5diK6P893HuCjyEtF6FUxtmKc99ooVzmqWL38G6z8DNez4SGspQgr/CcgGZzi/Fq
-	2tSqgA1Xd78EAnVs7V0TkG927H6qT8U9XYs45YDHIEV6CP0dtOaFBeCPBrgk7tUNIaLgW5
-	6oOxIufITBiubIvzH7Jxa01x+7KK1ak=
+	bh=GfNxm9SoS0WiJCAolHiTCfNgdi97giXoY29wlpEiBhg=;
+	b=g3bMEWutCQ5spMfx8WorcXszSGtf0Kts1kopfp6FjiHH4w9lAiCGM3gD9XTExpTQe0SDMt
+	cdUsfCjAYUEULGSjO/5Gx0URtjDsSVt5DXqvzWxBDmof4gRhg0MUPvN8cnmRidT8EgvSDW
+	8EPzjXpjEeIR8YCEGWp+5Mk0KuDmyO0=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -37,29 +37,22 @@ Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
 Subject: Re: [PATCH 1/2] bcachefs: Remove incorrect __counted_by annotation
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <20250501200132.216859-1-mmpgouride@gmail.com>
-Date: Thu, 1 May 2025 22:08:16 +0200
+In-Reply-To: <9BACA2F2-D306-46BA-ACBE-E06460E11FA0@linux.dev>
+Date: Thu, 1 May 2025 22:11:48 +0200
 Cc: kent.overstreet@linux.dev,
  Kees Cook <kees@kernel.org>,
  "Gustavo A. R. Silva" <gustavoars@kernel.org>,
  linux-bcachefs@vger.kernel.org,
  linux-hardening@vger.kernel.org
 Content-Transfer-Encoding: 7bit
-Message-Id: <9BACA2F2-D306-46BA-ACBE-E06460E11FA0@linux.dev>
+Message-Id: <565BE763-1464-4D36-8EBC-E106B4AE378C@linux.dev>
 References: <20250501200132.216859-1-mmpgouride@gmail.com>
+ <9BACA2F2-D306-46BA-ACBE-E06460E11FA0@linux.dev>
 To: Alan Huang <mmpgouride@gmail.com>
 X-Migadu-Flow: FLOW_OUT
 
-On 1. May 2025, at 22:01, Alan Huang wrote:
-> +	/*
-> +	 * x_name contains the name and value counted by
-> +	 * x_name_len + x_val_len. The introduction of
-> +	 * __counted_by(x_name_len) caused a false positive
-> +	 * detection of an out of bounds write.
-> +	 */
+On 1. May 2025, at 22:08, Thorsten Blum wrote:
+> Instead of removing it, would __counted_by(x_name_len + x_val_len) work?
 
-Instead of removing it, would __counted_by(x_name_len + x_val_len) work?
-
-Best,
-Thorsten
+Ah sorry, never mind, that obviously doesn't work.
 
