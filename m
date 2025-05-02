@@ -1,140 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1369B1EA7F1;
-	Fri,  2 May 2025 10:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C881E5B62;
+	Fri,  2 May 2025 11:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746182723; cv=none; b=Ye7q207cj0y07UVaL5RfqvwMZty1IZMWGj31VnXVEtPo2Sy7fCkKLHyy93sx0aQzQ/RKvdSbJsxHSXzse5yVo4IYJKEouDuoEQ7T0oM64ji/7Nr0s/c7T4MZwUNAZXuBmN0jC5ufvR5HGxr8kjWcDlhZpt9YFa9h5bMXm7tOQUU=
+	t=1746185014; cv=none; b=osDXjMz7z3TvR5RrTV/Pr9VN+i+4UsqNkekmmHrcX8UD7kONHuXPO59sxibhAp05FwEE9AkRCpGa3Oz1MqB7oMnm9SIYUUKehsyyOi6aFqsZLNuzxKIfnatunEPPGzT8pxsbi4w9Opvd/JQGZEPx0lIN3hmjD7f9NK9FWnFEKno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746182723; c=relaxed/simple;
-	bh=kabmlv0KkQDAyrTzn6zjy1nl1svXPwvfHYYf/932dMc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YVHZWcnkOUWYwM3jPLdWVUuivz5NulA8S1gDMdJLafpyzvqe5fUBw2q71HlUmC7VUrQQggY2cDcA+YUt79jhEa55sELJU74z31ADlN03sKxjKIFApOk3J2edoNnVgiZeBiMKua9nShWll2z/vHyRK9+xMcGPt3ZePEhfMcpGdsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SQnSjer3; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746185014; c=relaxed/simple;
+	bh=PRPW/uDt3qcKT5KOPbhmERJnNbucXaeqN2L1IjyyPX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aUCWQpoSrcP0KEtS9ljATKEOt7WiXA5RQ2z+e0iHBPRJeKQCPi3tt0EeYalYNgp2ATSgIPh+L2QvHQlqOv9R+GpI/hsa+uZofrQvEZLA+bgRvMLfVVWYFA+fIWQ5+1a1mWqy87yKc5dwVNsHTfdkX6Kp7houkXPsPp4kxzVElJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lmV94JNE; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SQnSjer3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746182723; x=1777718723;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=kabmlv0KkQDAyrTzn6zjy1nl1svXPwvfHYYf/932dMc=;
-  b=SQnSjer3b2rqwHtCYrKVHoRNTidB87lFiYNv3v2HN2q5AxL0BtQKelSW
-   bpl1SBy0Fml08FfYopmhytfxGXLH3UmZ4qdzdup8oQV1S8QdzZihbbtLc
-   VekMclL26bUwS59Vtp8DZutndCBTpxz+muC1M6DtXWzu55XZHHFiqe6jJ
-   UX5QGj1nNms22OVZp6/BTx+yz+2zyNDfh0DqtOhu4AKukJzQKtFN0HWzA
-   fDUXFoMQSpLi5d3RWNUMi6ZH9SXa+JxuEX/dCN0NZSinERNWDBSCa3drD
-   JcNK/eEbiNA3j1hs62JfOQQfHJi8dQdETDcJOTb445abet1zV39Qy4yrT
-   g==;
-X-CSE-ConnectionGUID: Srfaajz8ScC1ik+6FKrqGA==
-X-CSE-MsgGUID: siakygFkSFqdOaQXCePIvQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47874582"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="47874582"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:45:22 -0700
-X-CSE-ConnectionGUID: xCwqsuJUQiCqtrX/wmzsYw==
-X-CSE-MsgGUID: Dr+n9SJTRY+OMs3pDcKF5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="139612566"
-Received: from sschumil-mobl2.ger.corp.intel.com (HELO [10.245.246.151]) ([10.245.246.151])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:45:17 -0700
-Message-ID: <9c8dbbafdaf9f3f089da2cde5a772d69579b3795.camel@linux.intel.com>
-Subject: Re: [PATCH v2] drm/ttm: Silence randstruct warning about casting
- struct file
-From: Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Al Viro
-	 <viro@zeniv.linux.org.uk>, Matthew Brost <matthew.brost@intel.com>
-Cc: Kees Cook <kees@kernel.org>, Somalapuram Amaranath	
- <Amaranath.Somalapuram@amd.com>, Huang Rui <ray.huang@amd.com>, Matthew
- Auld	 <matthew.auld@intel.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>,  Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, 	linux-hardening@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Christian Brauner <brauner@kernel.org>, Jan
- Kara <jack@suse.cz>
-Date: Fri, 02 May 2025 12:44:26 +0200
-In-Reply-To: <da694af6-1a9a-4cee-86b7-1da97e1e91de@amd.com>
-References: <20250502002437.it.851-kees@kernel.org>
-	 <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com>
-	 <20250502023447.GV2023217@ZenIV>
-	 <aBRJcXfBuK29mVP+@lstrano-desk.jf.intel.com>
-	 <20250502043149.GW2023217@ZenIV>
-	 <aBRPeLVgG5J5P8SL@lstrano-desk.jf.intel.com>
-	 <20250502053303.GX2023217@ZenIV>
-	 <da694af6-1a9a-4cee-86b7-1da97e1e91de@amd.com>
-Organization: Intel Sweden AB, Registration Number: 556189-6027
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lmV94JNE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PRPW/uDt3qcKT5KOPbhmERJnNbucXaeqN2L1IjyyPX4=; b=lmV94JNEzV4MsUJuxpPUrg3Bax
+	VPmVO1/zySgMAd5F2IJnFvPiwZNPECAQ1noECVKMioFjFmA+n5SOAzV+kGbk/f9S1iWtVP9rLg6cZ
+	hHF7SAR0m7IaJh5tCHy2qA/R/vkevPz7ZR3+xa+Zh5GSLdg0ezbI6iHsuifF9HE00+OjyODMdnQyb
+	JkPl44vhH6EmamOKaWacZeeUgT5U6RxA5F79Ex/83F13pJOquOWPbK7ely8gHy1uVeRQNWbA0aBQP
+	f+nYHty39Jk6K+NlHv/lPYoCn7B5BgUPqoEMb82IHPQShd8FJim54uJ17ucrfOJGKm432KMXzRw1R
+	RwhYSB9w==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAoTJ-0000000FKnO-0XWf;
+	Fri, 02 May 2025 11:22:27 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6C1A530057C; Fri,  2 May 2025 13:22:16 +0200 (CEST)
+Date: Fri, 2 May 2025 13:22:16 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
+	Nicolas Saenz Julienne <nsaenz@amazon.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Rong Xu <xur@google.com>, Rafael Aquini <aquini@redhat.com>,
+	Song Liu <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Vishal Annapurve <vannapurve@google.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	John Stultz <jstultz@google.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+Message-ID: <20250502112216.GZ4198@noisy.programming.kicks-ass.net>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+ <20250430132047.01d48647@gandalf.local.home>
+ <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
 
-On Fri, 2025-05-02 at 09:49 +0200, Christian K=C3=B6nig wrote:
-> On 5/2/25 07:33, Al Viro wrote:
-> > On Thu, May 01, 2025 at 09:52:08PM -0700, Matthew Brost wrote:
-> > > On Fri, May 02, 2025 at 05:31:49AM +0100, Al Viro wrote:
-> > > > On Thu, May 01, 2025 at 09:26:25PM -0700, Matthew Brost wrote:
-> >=20
-> > > > And what is the lifecycle of that thing?=C2=A0 E.g. what is
-> > > > guaranteed about
-> > > > ttm_backup_fini() vs. functions accessing the damn thing?=C2=A0 Are
-> > > > they
-> > > > serialized on something/tied to lifecycle stages of struct
-> > > > ttm_tt?
-> > >=20
-> > > I believe the life cycle is when ttm_tt is destroyed or api
-> > > allows
-> > > overriding the old backup with a new one (currently unused).
-> >=20
-> > Umm...=C2=A0 So can ttm_tt_setup_backup() be called in the middle of
-> > e.g. ttm_backup_drop() or ttm_backup_{copy,backup}_page(), etc.?
-> >=20
-> > I mean, if they had been called by ttm_backup.c internals, it would
-> > be an internal business of specific implementation, with all
-> > serialization, etc. warranties being its responsibility;
-> > but if it's called by other code that is supposed to be isolated
-> > from details of what ->backup is pointing to...
-> >=20
-> > Sorry for asking dumb questions, but I hadn't seen the original
-> > threads.=C2=A0 Basically, what prevents the underlying shmem file
-> > getting
-> > torn apart while another operation is using it?=C2=A0 It might very wel=
-l
-> > be simple, but I had enough "it's because of... oh, bugger" moments
-> > on the receiving end of such questions...
->=20
-> It's the outside logic which makes sure that the backup structure
-> stays around as long as the BO or the device which needs it is
-> around.
->=20
-> But putting that aside I was not very keen about the whole idea of
-> never defining the ttm_backup structure and just casting it to a file
-> in the backend either.
->=20
-> So I would just completely nuke that unnecessary abstraction and just
-> use a pointer to a file all around.
+On Wed, Apr 30, 2025 at 11:07:35AM -0700, Dave Hansen wrote:
 
-Hmm, yes there were early the series a number of different
-implementations of the struct ttm_backup. Initially because previous
-attempts of using a shmem object failed but now that we've landed on a
-shmem object, We should be able to replace it with a struct file
-pointer.
+> Both AMD and Intel have hardware to do it. ARM CPUs do it too, I think.
+> You can go buy the Intel hardware off the shelf today.
 
-Let me take a look at this.=20
+To be fair, the Intel RAR thing is pretty horrific :-( Definitely
+sub-par compared to the AMD and ARM things.
 
-/Thomas
+Furthermore, the paper states it is a uarch feature for SPR with no
+guarantee future uarchs will get it (and to be fair, I'd prefer it if
+they didn't).
 
->=20
-> Regards,
-> Christian.
-
+Furthermore, I suspect it will actually be slower than IPIs for anything
+with more than 64 logical CPUs due to reduced parallelism.
