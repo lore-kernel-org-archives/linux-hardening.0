@@ -1,129 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F44021518F;
-	Fri,  2 May 2025 22:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D976EB79;
+	Fri,  2 May 2025 22:57:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746226460; cv=none; b=fcCxi8/7eHWWdVB0graxkwE9l0+QZXRc1hoA94T+5eLYwsDWqG7QB7gtKirU9JOmNjVJPBJ7AUrCpgmUM04ouLAOqZZtmgWHp2TEtU3N35Rh9tuam+2UZRzhgQOQDT+H1Dx/HQpr5brGu56UcA1P7A6MUprAy5RyMYzSLnsAVNU=
+	t=1746226636; cv=none; b=fsRUBsddPUVoa15J/TlRpDZMmC0HKEy/TCIDpZ/Of/HXxw/tupJzscZhw4SXU2JubSJdRLU/bMzH6Ln44ADNCu7IE4ZEhm6SMORV8uEY8xC1XAhocAj2qgFsTrrqTdl4JiLC+qwW4hroJ+uWbyOLcfeIE1Lpi5hjdYBToeN9WPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746226460; c=relaxed/simple;
-	bh=WdmZa5l99Vhwe/hFJDeUIG6hQ5O76/7JBHbFIhtajXs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AeOD/ocp0XhwBnY3HHhhu6Qw3KSJInyrD9KXXhurt+q+1x7wwalIamaZP1UHcAhkxNA0MmPIHyW5u0kisXmBQ3UKp2QUKG3ie9WPegO8lUcjro3kmLIQETFj0Qji8bQ/cvAL0C5wd4Y8nCxDC+cBoDl7nGvZNE3oPD0dTZkO27Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mosauOqk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746226636; c=relaxed/simple;
+	bh=uCx5v4Wr0SWlA5nPTbbhMhDY/egC5u+xm1ompeTsJ6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b9+HKH41DsVv6KhdhsrTTDW9oqits8Fd/15CnyRBj8wctTt+QvA8uLGjchGL51OdRcRWqHDZZU9MtJCQfYr3eN1VMmb5uMypXfCzI9I7aF13CVhzNrtoRMiHWsLxNcwr97OZ6lQBeeRxuM4tLcMqFeUbudLer7CecXGs655ZVeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDDD+ufi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mosauOqk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C407DC4AF0B;
-	Fri,  2 May 2025 22:54:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDDD+ufi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B3BC4CEE4;
+	Fri,  2 May 2025 22:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746226459;
-	bh=WdmZa5l99Vhwe/hFJDeUIG6hQ5O76/7JBHbFIhtajXs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mosauOqkxwLCmrF6kKUM0Ys45QpPFJotZsAsfrJWceDUgkC5uIJ/Rxh6TUpH8Emrq
-	 7H0gfHbVxPbigbxSx08rlCCOSJFIomzKDzsINhG1PzkXhVwh+0mDXfiZAN79x2ih2I
-	 WHnfFIMnVaoE81Ivdex81HcLXf5mRDyvuVvC3chp7Bst2V4beOikMiJsy7IuDiPu7F
-	 wZOQ877oEHqjOAwM0MrKFcL5exqAhEvl6ZCB3XOkTK/x8snrF4WtHYuDUnQgpY4D4G
-	 QAppMMclUn/+cWRO0+OyXP/XjNfalLChyp7pPSrOYYqE5QsCXyxoHYxp5c9IGfP+7L
-	 E9Mewxx5aoTsg==
+	s=k20201202; t=1746226636;
+	bh=uCx5v4Wr0SWlA5nPTbbhMhDY/egC5u+xm1ompeTsJ6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UDDD+ufiwF5kRqz0eVCPfiyuCdZADYeen1Qf4Q11hMQ8g9mxOzpDJ7P6s0BJdaFRs
+	 gORHmtyRQ/mP+pH0lIUUMWEwJ7jOhHxyXCh+tg1G26PFGysnI1pgepFk2AyRjcNO5Z
+	 p1F27+5jqLtSEIezMf3bE0T7Zyic7YHh7zKlAGt9tb7C5Ngb+hT+JRBzACvoJkmBGA
+	 3m5qRhBNhb8j2gPxdvZAtpHHrZw/RbaN1VIrB7zltyQdUConv0m9Hnsn0/mt2YsCZm
+	 WXO0+O6xH7Y+03dyO0OG64CGKuup9TUlOl0N28VkKA/9kwC4w3LmeM/wlxH9uzjOWO
+	 qiB7UG7ETGx+w==
+Date: Fri, 2 May 2025 15:57:13 -0700
 From: Kees Cook <kees@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
 	Nicolas Schier <nicolas.schier@linux.dev>,
 	Petr Pavlu <petr.pavlu@suse.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Justin Stitt <justinstitt@google.com>,
+	linux-kbuild@vger.kernel.org, Justin Stitt <justinstitt@google.com>,
 	Marco Elver <elver@google.com>,
 	Andrey Konovalov <andreyknvl@gmail.com>,
 	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-um@lists.infradead.org
-Subject: [PATCH v2 0/3] Detect changed compiler dependencies for full rebuild
-Date: Fri,  2 May 2025 15:54:12 -0700
-Message-Id: <20250502224512.it.706-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kasan-dev@googlegroups.com
+Subject: Re: [PATCH 2/3] randstruct: Force full rebuild when seed changes
+Message-ID: <202505021555.A74E678976@keescook>
+References: <20250501193839.work.525-kees@kernel.org>
+ <20250501194826.2947101-2-kees@kernel.org>
+ <20250502161209.GA2850065@ax162>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2704; i=kees@kernel.org; h=from:subject:message-id; bh=WdmZa5l99Vhwe/hFJDeUIG6hQ5O76/7JBHbFIhtajXs=; b=owGbwMvMwCVmps19z/KJym7G02pJDBmivmLBof3JZfffi9rwZtw7k6/bbaezi+3JSpdr0XPDs s7wqC3uKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmEi1HiND56y7zgsOn5/caBvL LfxQ6GifRFBVWdwigd+l/Ac1fQtuMvx34tjpIpfatU6iObfAvlz2Uh5X7+Vuc869+hoTXMp+JLI DAA==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250502161209.GA2850065@ax162>
 
- v2:
-  - switch from -include to -I with a -D gated include compiler-version.h
- v1: https://lore.kernel.org/lkml/20250501193839.work.525-kees@kernel.org/
+On Fri, May 02, 2025 at 09:12:09AM -0700, Nathan Chancellor wrote:
+> Hi Kees,
+> 
+> On Thu, May 01, 2025 at 12:48:17PM -0700, Kees Cook wrote:
+> > While the randstruct GCC plugin was being rebuilt if the randstruct
+> > seed changed, Clangs build did not notice the change. Include the hash
+> > header directly so that it becomes a universal build dependency and full
+> > rebuilds will happen if it changes.
+> > 
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> > Cc: Masahiro Yamada <masahiroy@kernel.org>
+> > Cc: Nathan Chancellor <nathan@kernel.org>
+> > Cc: Nicolas Schier <nicolas.schier@linux.dev>
+> > Cc: Petr Pavlu <petr.pavlu@suse.com>
+> > Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > Cc: <linux-kbuild@vger.kernel.org>
+> > ---
+> >  include/linux/vermagic.h    |  1 -
+> >  scripts/Makefile.randstruct |  3 ++-
+> >  scripts/basic/Makefile      | 11 ++++++-----
+> >  3 files changed, 8 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/include/linux/vermagic.h b/include/linux/vermagic.h
+> > index 939ceabcaf06..335c360d4f9b 100644
+> > --- a/include/linux/vermagic.h
+> > +++ b/include/linux/vermagic.h
+> > @@ -33,7 +33,6 @@
+> >  #define MODULE_VERMAGIC_MODVERSIONS ""
+> >  #endif
+> >  #ifdef RANDSTRUCT
+> > -#include <generated/randstruct_hash.h>
+> >  #define MODULE_RANDSTRUCT "RANDSTRUCT_" RANDSTRUCT_HASHED_SEED
+> >  #else
+> >  #define MODULE_RANDSTRUCT
+> > diff --git a/scripts/Makefile.randstruct b/scripts/Makefile.randstruct
+> > index 24e283e89893..ab87219c6149 100644
+> > --- a/scripts/Makefile.randstruct
+> > +++ b/scripts/Makefile.randstruct
+> > @@ -12,6 +12,7 @@ randstruct-cflags-y	\
+> >  	+= -frandomize-layout-seed-file=$(objtree)/scripts/basic/randstruct.seed
+> >  endif
+> >  
+> > -export RANDSTRUCT_CFLAGS := $(randstruct-cflags-y)
+> > +export RANDSTRUCT_CFLAGS := $(randstruct-cflags-y) \
+> > +			    -include $(objtree)/scripts/basic/randstruct_hash.h
+> 
+> As the kernel test robot points out (on a report that you weren't
+> included on for some reason...), this breaks the build in several
+> places on next-20250502.
+> 
+> https://lore.kernel.org/202505021409.yC9C70lH-lkp@intel.com/
+> 
+>   $ make -skj"$(nproc)" ARCH=arm LLVM=1 clean allmodconfig arch/arm/vdso/vgettimeofday.o
+>   clang: error: cannot specify -o when generating multiple output files
+> 
+> There are places in the kernel that filter out RANDSTRUCT_CFLAGS and
+> this appears to cause other '-include' flags to be filtered out as well,
+> such as the one in the efistub that includes hidden.h.
 
-Hi,
+Thanks! Yeah, I have been poking at it for most of today. 😭
 
-This is my attempt to introduce dependencies that track the various
-compiler behaviors that may globally change the build that aren't
-represented by either compiler flags nor the compiler version
-(CC_VERSION_TEXT). Namely, this is to detect when the contents of a
-file the compiler uses changes. We have 3 such situations currently in
-the tree:
-
-- If any of the GCC plugins change, we need to rebuild everything that
-  was built with them, as they may have changed their behavior and those
-  behaviors may need to be synchronized across all translation units.
-  (The most obvious of these is the randstruct GCC plugin, but is true
-  for most of them.)
-
-- If the randstruct seed itself changes (whether for GCC plugins or
-  Clang), the entire tree needs to be rebuilt since the randomization of
-  structures may change between compilation units if not.
-
-- If the integer-wrap-ignore.scl file for Clang's integer wrapping
-  sanitizer changes, a full rebuild is needed as the coverage for wrapping
-  types may have changed, once again cause behavior differences between
-  compilation units.
-
-The best way I found to deal with this is to:
-- Generate a .h file that is updated when the specific dependencies change.
-  e.g.: randstruct_hash.h depends on randstruct.seed
-
-- Add a -I argument globally to be able to locate the .h file.
-  e.g.: -I$(objtree)/scripts/basic
-
-- Add a conditional -D argument for each separate case
-  e.g.: RANDSTRUCT_CFLAGS += -DRANDSTRUCT
-
-- Include the .h file from compiler-version.h through an #ifdef for the define
-  e.g.:
-  #ifdef RANDSTUCT
-  #include "randstruct_hash.h"
-  #endif
-
-This means that all targets gain the dependency (via fixdep), but only
-when the defines are active, which means they are trivially controlled
-by the existing CFLAGS removal mechanisms that are already being used
-to turn off each of the above features.
-
--Kees
-
-Kees Cook (3):
-  gcc-plugins: Force full rebuild when plugins change
-  randstruct: Force full rebuild when seed changes
-  integer-wrap: Force full rebuild when .scl file changes
-
- Makefile                         |  1 +
- arch/um/Makefile                 |  2 ++
- include/linux/compiler-version.h | 10 ++++++++++
- include/linux/vermagic.h         |  1 -
- scripts/Makefile.gcc-plugins     |  2 +-
- scripts/Makefile.ubsan           |  1 +
- scripts/basic/Makefile           | 20 +++++++++++++++-----
- scripts/gcc-plugins/Makefile     |  8 ++++++++
- 8 files changed, 38 insertions(+), 7 deletions(-)
+I think I have a viable solution, that I actually end up liking a bit
+better, which I just sent out:
+https://lore.kernel.org/lkml/20250502224512.it.706-kees@kernel.org/
 
 -- 
-2.34.1
-
+Kees Cook
