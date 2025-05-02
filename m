@@ -1,219 +1,254 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0861D554;
-	Fri,  2 May 2025 01:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746151000; cv=none; b=aFRyXhAxFJc7Y+kiRlyquNwR999p4jlLFnqJ3+KeOLrb1bmTp27dAnBdSZRq+YqCYsRHVHbv96mL5Qh18Md9ROuJbyeezTwut+Km8MXD4mfZlLsK4+4xH4KK8u1DBgOCLpusmBGLAp4IQYvtGMDswTINLAv54vwNE7xP86x7c9I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746151000; c=relaxed/simple;
-	bh=oIAA241I10bL+UcbexuTYjT4ifhRDzrM/O1Ae9pQ040=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AgYJK2pKcrsrBLvsHD7giV8n57J0LOGR1ADUl5AeqcyudmvUobRPd8vwb9mUPiR5IzE1PqocaTWjOgOJvUmWFsSeL8Ak1hYk1FooqbP6dtv23+ZJ/N98vBZgfIUGJroqQgnWCqetKHzVrxfobfte2vW5LiUstXEVeflOai/Vmrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=NiPfbSem; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=sjXWJkAt; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5184645;
+	Fri,  2 May 2025 02:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746151933; cv=fail; b=Q1ndkPQaKSxPZiN7oVOcKWHN/OlXgiCH5EEUmQKV1yA3qc46mMIWknvBSsEsd95EBge2Fn3R2U3ziUl+IAg1y+N+URdKb19GR2Hd3s2K4VUNsrwD8uAn2bWAF92KuFjgim2JOmDqJor5x3mVR4r57dOzOsdGxaLDtpJRYcg++KI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746151933; c=relaxed/simple;
+	bh=IRPMBMHkp3oOLuxQoGUnp22xmtrAPYr5Z7p8hBw2qpk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=XS6740RVy5/scTSHfZsL3/Yj+pKTlgnpwD2/ABANGe9DnaRBbJavWPpJFTUC2glb3nMrt9QrH2RtjtrnHQDRfmc+fPCvNVIGoXoPwocY4Junb5ulVeIPt8xaY5wKg53QHRBvBLvWau0/puegNy7F2YbOXgThhOEGcNX/UzoBKJc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P0fbCd8+; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="NiPfbSem";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sjXWJkAt"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 1427A11401FB;
-	Thu,  1 May 2025 21:56:38 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Thu, 01 May 2025 21:56:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1746150998; x=1746237398; bh=CqPLmB/osf
-	3U7LXU6ml8lh57mZM1Snh5zBF/nbIIAeI=; b=NiPfbSemoq7mp0e31OWCFvEyJ5
-	UxtVqO48F5AHHJwEUV0YjrCrMprm0NS9pUzt/G3q6u5cJ3X8nrZt8RY0R8l7JPns
-	jU5v+uxD/fEnsaZQvVaZYYkSwOhbLv0rrEwHeA1GMcTC3Dj9wQP8DDtUlag6bDzV
-	qLeaMM+6FHqifl079Hl4TQsoh1+eiNdHRBfRayqcI4zI8I46VI2UjYnIAJTfdWFb
-	DAvpZ5MUNpe4bO9IZdmxuZvS7+2dGcvWzpSXw+QtSqUMxwKZctskQL7vrThbU2K2
-	enX9FvzEpeeIqplJkEWbMZsIBg7/gknenIukx6gXy3I7rXPQNV7ZphsAx8BQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1746150998; x=1746237398; bh=CqPLmB/osf3U7LXU6ml8lh57mZM1Snh5zBF
-	/nbIIAeI=; b=sjXWJkAtkN+VRgcQomaIcg5aDdDUvRPtjQGGtiA4xhuQlcEUXRf
-	QKy17qwbHc2D8/C1trHSti8phBfAmPvNLOygluAonBRdXmlWIzI/h0I/9C3jxNpZ
-	eieeMS2SI1X7vIK5l62H6pPou0um7ckOAxVfx8KEKLDqNrUPUAkTGaIQ6zIVYheO
-	qMNeZLzvAFCArdoepRWnLdMavAXZ0AG/RPMeyi2b2kIOzSX7Tv/rksTX6rhcN/jY
-	+CMn60mQsnD/HqWnceO+hnVm7qLig9ZrbRSECQSjafWppwP6y3URsjO6gsQ+JbRF
-	vFto1gUhb7xPJvcQitvQZ1xd4ooivwd4QNg==
-X-ME-Sender: <xms:VSYUaCWmR_7xh1Li7Q--snBH4rqU9eoY9_CBspHZZdhcGecEdF6apQ>
-    <xme:VSYUaOkX2SvEQw4MRly5W7t_vsft-q9myozf3cUrtrNsRAJuImrESd8Tm3i8RizWY
-    RU_ugUldm_EN5JNTu8>
-X-ME-Received: <xmr:VSYUaGbcFsdb8xC3odfuPSzg-l_80A_p9AKQRKDuiENYd00CyfPX87LAh7OtfJaVaBpJQWwZFOsnY1yFYurfFeLncGFl>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjeduudelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffuc
-    dlfedtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhm
-    peflrghnucfjvghnughrihhkucfhrghrrhcuoehkvghrnhgvlhesjhhfrghrrhdrtggtqe
-    enucggtffrrghtthgvrhhnpedukeegffdtfeeihfehteevvdeiueetteelgfefvdfhleeu
-    feegieduieduhfekieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehkvghrnhgvlhesjhhfrghrrhdrtggtpdhnsggprhgtphhtthhopeejpdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopehmmhhpghhouhhrihguvgesghhmrghilh
-    drtghomhdprhgtphhtthhopehkvghnthdrohhvvghrshhtrhgvvghtsehlihhnuhigrdgu
-    vghvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehguh
-    hsthgrvhhorghrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhrshhtvghn
-    rdgslhhumhesthhosghluhigrdgtohhmpdhrtghpthhtoheplhhinhhugidqsggtrggthh
-    gvfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqhhgr
-    rhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:VSYUaJXnqjWQ46tM2yh3u48vc83bJIO25Yj_fwWAlfqfVvh0gKGVEQ>
-    <xmx:VSYUaMk8dFWhjExSqq1Wjmsrle9XSwGk594_V9ST6vymdtM0HuCCjQ>
-    <xmx:VSYUaOcTTalJlKzH2miIKaBC3DNrGjiO4LSw6jQDy4BtoFjRtqFBSA>
-    <xmx:VSYUaOGURHOAAx-5jPs_oOAsboQWB7LYCvCFW6fj4LXEeCCIs6uTTg>
-    <xmx:ViYUaF3Rjjj311UZ3LaKZN9LSiH3bppdj2_IwKtHmotMmw2dGOlZtgnE>
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 1 May 2025 21:56:36 -0400 (EDT)
-Date: Fri, 2 May 2025 03:56:35 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Alan Huang <mmpgouride@gmail.com>
-Cc: kent.overstreet@linux.dev, kees@kernel.org, gustavoars@kernel.org,
-	thorsten.blum@toblux.com, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2] bcachefs: Rename x_name to x_name_and_value
-Message-ID: <aBQmU9xS0exdHoDk@archlinux>
-References: <20250501200132.216859-1-mmpgouride@gmail.com>
- <20250501200132.216859-2-mmpgouride@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P0fbCd8+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746151933; x=1777687933;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=IRPMBMHkp3oOLuxQoGUnp22xmtrAPYr5Z7p8hBw2qpk=;
+  b=P0fbCd8+VRAsG1cxUvUsRCrsl0Gtn521DdxNW4u7ydBB7R4pQKlK0KRV
+   t34YAHSi+GyQhjhV+dLZW8zc6vuesgGkZlxu30dZnF/n3Mw8CT+zU08hQ
+   swNQKvwRmViLtP0pN1TEh2++kV63A6SnqSdeXpGgopjDWbMzlp+FkApjB
+   tIEqhlo5EfBYUWnJ0VdXouCz9NpL3dWAmCbnFwnrqm9ELE0zyfPFDOLLj
+   48Rw1bGh/7WV2VdqCipTHPtZFYlnuLZQPkwwexp1hY2tFyfuXUrPUcD2G
+   xoh0bpwBOwb3Ui4f/ZakynmN2hWFNT2C3fYA3pQEQsrC4cpWpJrJPCszl
+   A==;
+X-CSE-ConnectionGUID: 3Xk5mpz1S8GZsAQNKkALAw==
+X-CSE-MsgGUID: TP1rq0pITh6qIl0qiQkq9g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47923806"
+X-IronPort-AV: E=Sophos;i="6.15,255,1739865600"; 
+   d="scan'208";a="47923806"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 19:12:11 -0700
+X-CSE-ConnectionGUID: AO1Yj6RLSUWnlf1sLOXiDg==
+X-CSE-MsgGUID: IeL7DvE3QpOD5F9wWpSrcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,255,1739865600"; 
+   d="scan'208";a="157762271"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 19:11:53 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 1 May 2025 19:11:52 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 1 May 2025 19:11:52 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.42) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 1 May 2025 19:11:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PerJ6FbJLL3GmV0Z1IO+G73ghMgFLSNqbJXiKFjFh2jZxLF9aJEv8kRLLRn4/Ect8jMDHpiwzC5f1zMWpdC6hKvbZxf/XOrVohI6RWVU7+mJr1NmDS7lgTNkVtW76ggoSeL/1MdjOFzCRnNkQafSwo5IHpefJ54s49AcTi+NwrZFfFdIeK/1fH+1sA4ogvKE8wDCS8IvluHuudSTNnVyVIHVPF+sdDtzCBiEo/006tXoHSRfSd99k7eovRdq15Ytp7iiUu4NMBu85JihJlZf48CdRtEJc4cNq306W1hbvdArSwBVabFXeO/NUfcWzvbBnVKI6RGTUI/uQuR0Yv3xAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QOobMhlo6nX93XhMS+XAQZvatfyOPdO9fYgw64RCNh4=;
+ b=DebNQ5LILyh2nfocIAVtyf87HemDsYxhrPe5OdKXnNsONtQY2y1dI+/jaMM/2xtsrzdAkbVBd0z9y1DmYl3L8JPhYQ2OyTUORSmkElGsKgYqbR9J9ljA/PXzgljT1ayWirVwiFE3S/ruqsdoEfG8yt7OW2d6FR3/X4Kr5w7Ik/U/Hkt9zykjmwhkt42e4KkTsGt9Dbw/FJpVmBjrIF4nn0fegflqHf0VrYjkPzR2tro4k46M8SLrWEcty6T46tP1kWV/ME7kJfWDJua5AFDftBNHbgG6Lf8qbLdspZk6HZgV6QoJ5UOmgO26JI0HQD6cMJpbWeX2WvAE5CFB7gziTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
+ by PH3PPFDC3198517.namprd11.prod.outlook.com (2603:10b6:518:1::d55) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Fri, 2 May
+ 2025 02:11:50 +0000
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332%4]) with mapi id 15.20.8699.012; Fri, 2 May 2025
+ 02:11:50 +0000
+Date: Thu, 1 May 2025 19:13:12 -0700
+From: Matthew Brost <matthew.brost@intel.com>
+To: Kees Cook <kees@kernel.org>
+CC: Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Christian Koenig <christian.koenig@amd.com>, Somalapuram Amaranath
+	<Amaranath.Somalapuram@amd.com>, Huang Rui <ray.huang@amd.com>, Matthew Auld
+	<matthew.auld@intel.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v2] drm/ttm: Silence randstruct warning about casting
+ struct file
+Message-ID: <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com>
+References: <20250502002437.it.851-kees@kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250502002437.it.851-kees@kernel.org>
+X-ClientProxiedBy: BYAPR02CA0009.namprd02.prod.outlook.com
+ (2603:10b6:a02:ee::22) To PH7PR11MB6522.namprd11.prod.outlook.com
+ (2603:10b6:510:212::12)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250501200132.216859-2-mmpgouride@gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|PH3PPFDC3198517:EE_
+X-MS-Office365-Filtering-Correlation-Id: 33d44f87-5ba6-454c-0b8e-08dd891eb2c3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?fgSHd32saPfwZH/xU9Y/R3t+FN4OIr8wAQF7g2V+vF+VTf4+KYO/qnFxo7?=
+ =?iso-8859-1?Q?E0vjFKpbZGRmtcrMcJgRJai9UoZ4kbwOKpJKqEaV0w+3HdYoaXaE/6A9tj?=
+ =?iso-8859-1?Q?lcrz6eyOq52wBbhIsh0ieY8GOqR77Hh3DNsEBcrX/IJpb31u6lj7XW9ixX?=
+ =?iso-8859-1?Q?Z15RK4jwuGlAw/YCH2NCAdlhFe2SkomEIjpDlqxoXWJA0StuMplbJ+f2vM?=
+ =?iso-8859-1?Q?++dnCQi/gK2naoUW/zl0CTTbHNGwDlQC++QMwJRpbF+qsl0j5YoHmtuk2i?=
+ =?iso-8859-1?Q?nnXOji+iotqBoM95jbvT32Wluvp2PyaTteFLBv4VHYsnsV0nz1YIgISpXa?=
+ =?iso-8859-1?Q?gDU9hl3gQJZ33hOH8wcW/RJVVwOfz1r8l+cFCq8zZjEK/JOPLCKO6+L+VN?=
+ =?iso-8859-1?Q?c5QN0W/yJrXj5u+uSsEvg0P9jXPAwhOpLw3Uo+W05rDW/Vu2fHy8IZ8KM+?=
+ =?iso-8859-1?Q?tWCCmCRBW6DexkfXZWThM2tEKccbj7RUYkXzuRHTPNf+Dit0eAeNoEwn3i?=
+ =?iso-8859-1?Q?jGxVroGCvCtiP5GRMARRnLi+UY6UgAxyLlEos74+M8wR/viJeqFJVx9Fok?=
+ =?iso-8859-1?Q?CcQLaJbWH9mkyt6EmS9Rpu2wT7hSI24mq3atUsrfkBNhzWxlNZD06jL1o4?=
+ =?iso-8859-1?Q?8ojtC9aeruu2TXscf9dZxYbiuuRSLVkd/nlvCjom+QRdbkyfcmlIpYr1o4?=
+ =?iso-8859-1?Q?qiBFVl66ezKwpRiNWLkfotsTVtbV3+7ke8YpGaoPXpMnRM2QjTQIgCRRBb?=
+ =?iso-8859-1?Q?Mii1Q+Qro0lq7jBC03qomMwphOXRMc0NecnroxlxIuzPowpo7jNh9wg6/t?=
+ =?iso-8859-1?Q?fKLtIbBTJW3oec9595lvJ8u0zmQ2D5lKiD5hYYr666FHi9Vq8d8YbUGdiL?=
+ =?iso-8859-1?Q?wE9z8zgHt4Y5WznMRTY4tlcafFoaGFtuIxYJNMKJGyDAMsHn5Bplnul+ew?=
+ =?iso-8859-1?Q?aQVXmn4BOjwFlQiy621eVZX1iVabpmBGAxHdugeBXnAT2hQI6Lh7MwpQnm?=
+ =?iso-8859-1?Q?GgceCi/3+6+axxh6q9aLaH+6Cm/NReW01JAn7eVWOTzpecYrxevtUZ0J6N?=
+ =?iso-8859-1?Q?13WuWhYHIjnjf+rp/fGvX/It9FyGOrcrONePu3f/ZBRZAyJILTP6rwa4jV?=
+ =?iso-8859-1?Q?VYS24j07JegRREfw1i5UTPCrr0k6KY3mb/HXQGIR8kr0YHWWPeIC3dc38T?=
+ =?iso-8859-1?Q?/Eo8Tb+jgMjC7P1XR7dVtfn1LauYetBO1W5/Dz1G1ySuydUFXEm7oU9Qz7?=
+ =?iso-8859-1?Q?Lb6C4DDEMV7w4ObgMwUg1jDpd74G31wTRgDHg9kWXMDVif8+TFOXTNzECr?=
+ =?iso-8859-1?Q?dM8aUJy8AybQ34dRW7Dn64IjDg+u2+UgDxd+nhGGkf9R0dtS93RW1VKavo?=
+ =?iso-8859-1?Q?VZXGuJweHsvuN2y+wmL2QcoLHHFt0BANMEca56ocMTeiiIrGfRebnRCWCc?=
+ =?iso-8859-1?Q?TNnpIclDkQSdxwHUxWlyAzdxqCI9JZeBOjDsuJqNa/Gew5rV727qLO1M69?=
+ =?iso-8859-1?Q?U=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?ZhCUYtmvcxvAbIp2nePqjkEqBiwCIg0IAQloYxpDH4PBsf5YJ4pyHP8pUq?=
+ =?iso-8859-1?Q?ErVaTh6xjMVK47RYC35QFW+GGLH2Td5Jf7eE3ntHUbBfpcOJB1Z455Nx9q?=
+ =?iso-8859-1?Q?Wa1TNXtfvzQhNZpzQIUSvau1IJjKEDW49K9W5ozfFFT/TlKBXliqHM2/eo?=
+ =?iso-8859-1?Q?02DBrSE0mhwK2j5AmPeCuahgtxiTv+hNHwnOCGSQnWSJphg4dYYl5O368w?=
+ =?iso-8859-1?Q?TwlP9XSpvC/N9RcTo5QTs0zCXLWtVRXscW2TYj97MW+Vl1RXJ/ALp3u102?=
+ =?iso-8859-1?Q?MZBqsGW0kivx+WWaB14XohJYGvWmmXtonPcNiTAlZyUivdWlSekeKnJbaN?=
+ =?iso-8859-1?Q?S9M+LYWjScFt97B/swVTNh16VLRyrOG+HDcqTcjckX8CkrnD2dnL3waO0H?=
+ =?iso-8859-1?Q?S1soZ4mRJVi1m/wGKqXqg8qZy5CwYnlLEVWF+dagGiCj+VPJ9I36Nhr86c?=
+ =?iso-8859-1?Q?OupCBnIfryadJT0re4dlIoDd62kgh6ZwhRSSnyqAQoe9tqz36TB2DjUdYD?=
+ =?iso-8859-1?Q?9H0hOmN13TpRXNUg9lSet7Hsz1XsV+CrcNGBGyIv9Kyg/Mbd++qxlKPQxj?=
+ =?iso-8859-1?Q?H07fN1SiNL4Zr36m169daHCSmc6p4GWjub6PYNrMtOe6b2MYK3xZid+5Qc?=
+ =?iso-8859-1?Q?JCsM1lO4gFtok71X69pQ68z0py6Ngb4f+tW2m2/lxwL8Ap3FuVDBRMRl/3?=
+ =?iso-8859-1?Q?5uBOiZdHblSeldD4ZhupjGq6GK2B5ARKmaBI5d54tnUtshsWSuZu/zeA4T?=
+ =?iso-8859-1?Q?u1qXJAlikGDhNeMhGxeIr7TCpjzaJB8tDUBcPsEV9Q0o+oUs45YJbzHD+J?=
+ =?iso-8859-1?Q?Kd8iTvJKuNvHSURYfIewKe3GWLq6xGfW/nKqxD8BNQmVB6MdhxLcutl5i1?=
+ =?iso-8859-1?Q?ZwzFG2AoJ9JrxzCyCeJ23yYesdIWuHJdpOpAB9cnRdWUbyamoU4q4Nww2j?=
+ =?iso-8859-1?Q?fQsca/SYMmfs6dd5Am5vfiO2npUrqK1h+Q43UiLudpKeoiG7eMVp1+u70i?=
+ =?iso-8859-1?Q?8vuIZhWwt2xMx59pN9Z8ueUhW5VPU7xhzI/NsTIH7uyJtYhKy2CCYplqr7?=
+ =?iso-8859-1?Q?J1w/V5z2kw2p4A3erlxkRAoiNZjtel/zyqJcDJVVwjaourFDljOmugLX7m?=
+ =?iso-8859-1?Q?2K4R688T3qbLP6UoFN953xayzWTbEq4WUySb90PIkcIHJQWsEk+xxAa3EA?=
+ =?iso-8859-1?Q?tYWDugjbQ9DovrTyg0Y6dMExKHav8yfdlBKXcs0kFESicIqfLZkxT3hY4V?=
+ =?iso-8859-1?Q?Cyj7IqtITnrwyWx+rZxeDMVu1+5UPsAxRl6zKWB/ktNVP/e1z+0uhriR08?=
+ =?iso-8859-1?Q?2GMnHIF2WRZY7HwHVn8paMS6dpc7KniEzXhBEFenZCBqtPYfpHnUCQDEpk?=
+ =?iso-8859-1?Q?XVyRKInXCym+lYVYfHc9Bo93bWZd0Rc7+IXM0uTdanBacL+21FtGQ5K0vv?=
+ =?iso-8859-1?Q?O2GqUiD0SrFMlWGsgpnJz2+H/wgaq4zWLnAtpw/5DzComKKI/IYWe2gFGc?=
+ =?iso-8859-1?Q?vRTxak1Go0r4uSTHJVSAgt8jU/oHqurkuabvZzW+gGwaipJsqCXwchg6cZ?=
+ =?iso-8859-1?Q?cuGEB5soxhX8LRM7YLn9wbkt3H8SuWBJelHBd9n4RZznnwLAS0gu65ewcc?=
+ =?iso-8859-1?Q?VUIyV6rcLithJ1pwDOnpBdgDnnWwTrAiryBNyTKUYLQYFzkuFZnq70Ow?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33d44f87-5ba6-454c-0b8e-08dd891eb2c3
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 02:11:49.9853
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8MS4FOwzPGMPKcM3+ez6lISWLDH5VpZ+atwZL/otOz68S+Z+pBUvJvx7ab/I/0dqhIzjBZb3eUqQTT59fzY2hg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPFDC3198517
+X-OriginatorOrg: intel.com
 
-On 02 04:01:32, Alan Huang wrote:
-> The flexible array contains name and value, the x_name is misleading.
+On Thu, May 01, 2025 at 05:24:38PM -0700, Kees Cook wrote:
+> Casting through a "void *" isn't sufficient to convince the randstruct
+> GCC plugin that the result is intentional. Instead operate through an
+> explicit union to silence the warning:
 > 
-> Signed-off-by: Alan Huang <mmpgouride@gmail.com>
+> drivers/gpu/drm/ttm/ttm_backup.c: In function 'ttm_file_to_backup':
+> drivers/gpu/drm/ttm/ttm_backup.c:21:16: note: randstruct: casting between randomized structure pointer types (ssa): 'struct ttm_backup' and 'struct file'
+>    21 |         return (void *)file;
+>       |                ^~~~~~~~~~~~
+> 
+> Suggested-by: Matthew Brost <matthew.brost@intel.com>
 
-Reviewed-by: Jan Hendrik Farr <kernel@jfarr.cc>
+I forgot the policy if suggest-by but will add:
+Reviewed-by: Matthew Brost <matthew.brost@intel.com>
 
+Thomas was out today I suspect he will look at this tomorrow when he is
+back too.
+
+Matt
+
+> Fixes: e7b5d23e5d47 ("drm/ttm: Provide a shmem backup implementation")
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
->  fs/bcachefs/xattr.c        | 16 ++++++++--------
->  fs/bcachefs/xattr.h        |  4 ++--
->  fs/bcachefs/xattr_format.h |  4 ++--
->  3 files changed, 12 insertions(+), 12 deletions(-)
+>  v2: use struct and container_of (matthew)
+>  v1: https://lore.kernel.org/all/20250501195859.work.107-kees@kernel.org/
+> Cc: Thomas Hellström <thomas.hellstrom@linux.intel.com>
+> Cc: Christian Koenig <christian.koenig@amd.com>
+> Cc: Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>
+> Cc: Matthew Brost <matthew.brost@intel.com>
+> Cc: Huang Rui <ray.huang@amd.com>
+> Cc: Matthew Auld <matthew.auld@intel.com>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Simona Vetter <simona@ffwll.ch>
+> Cc: <dri-devel@lists.freedesktop.org>
+> ---
+>  drivers/gpu/drm/ttm/ttm_backup.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 > 
-> diff --git a/fs/bcachefs/xattr.c b/fs/bcachefs/xattr.c
-> index 3d324e485ee9..b8bc2fb04f15 100644
-> --- a/fs/bcachefs/xattr.c
-> +++ b/fs/bcachefs/xattr.c
-> @@ -38,7 +38,7 @@ static u64 xattr_hash_bkey(const struct bch_hash_info *info, struct bkey_s_c k)
->  	struct bkey_s_c_xattr x = bkey_s_c_to_xattr(k);
+> diff --git a/drivers/gpu/drm/ttm/ttm_backup.c b/drivers/gpu/drm/ttm/ttm_backup.c
+> index 93c007f18855..60cff6c60db4 100644
+> --- a/drivers/gpu/drm/ttm/ttm_backup.c
+> +++ b/drivers/gpu/drm/ttm/ttm_backup.c
+> @@ -9,16 +9,21 @@
 >  
->  	return bch2_xattr_hash(info,
-> -		 &X_SEARCH(x.v->x_type, x.v->x_name, x.v->x_name_len));
-> +		 &X_SEARCH(x.v->x_type, x.v->x_name_and_value, x.v->x_name_len));
->  }
->  
->  static bool xattr_cmp_key(struct bkey_s_c _l, const void *_r)
-> @@ -48,7 +48,7 @@ static bool xattr_cmp_key(struct bkey_s_c _l, const void *_r)
->  
->  	return l.v->x_type != r->type ||
->  		l.v->x_name_len != r->name.len ||
-> -		memcmp(l.v->x_name, r->name.name, r->name.len);
-> +		memcmp(l.v->x_name_and_value, r->name.name, r->name.len);
->  }
->  
->  static bool xattr_cmp_bkey(struct bkey_s_c _l, struct bkey_s_c _r)
-> @@ -58,7 +58,7 @@ static bool xattr_cmp_bkey(struct bkey_s_c _l, struct bkey_s_c _r)
->  
->  	return l.v->x_type != r.v->x_type ||
->  		l.v->x_name_len != r.v->x_name_len ||
-> -		memcmp(l.v->x_name, r.v->x_name, r.v->x_name_len);
-> +		memcmp(l.v->x_name_and_value, r.v->x_name_and_value, r.v->x_name_len);
->  }
->  
->  const struct bch_hash_desc bch2_xattr_hash_desc = {
-> @@ -96,7 +96,7 @@ int bch2_xattr_validate(struct bch_fs *c, struct bkey_s_c k,
->  			 c, xattr_invalid_type,
->  			 "invalid type (%u)", xattr.v->x_type);
->  
-> -	bkey_fsck_err_on(memchr(xattr.v->x_name, '\0', xattr.v->x_name_len),
-> +	bkey_fsck_err_on(memchr(xattr.v->x_name_and_value, '\0', xattr.v->x_name_len),
->  			 c, xattr_name_invalid_chars,
->  			 "xattr name has invalid characters");
->  fsck_err:
-> @@ -120,13 +120,13 @@ void bch2_xattr_to_text(struct printbuf *out, struct bch_fs *c,
->  	unsigned name_len = xattr.v->x_name_len;
->  	unsigned val_len  = le16_to_cpu(xattr.v->x_val_len);
->  	unsigned max_name_val_bytes = bkey_val_bytes(xattr.k) -
-> -		offsetof(struct bch_xattr, x_name);
-> +		offsetof(struct bch_xattr, x_name_and_value);
->  
->  	val_len  = min_t(int, val_len, max_name_val_bytes - name_len);
->  	name_len = min(name_len, max_name_val_bytes);
->  
->  	prt_printf(out, "%.*s:%.*s",
-> -		   name_len, xattr.v->x_name,
-> +		   name_len, xattr.v->x_name_and_value,
->  		   val_len,  (char *) xattr_val(xattr.v));
->  
->  	if (xattr.v->x_type == KEY_TYPE_XATTR_INDEX_POSIX_ACL_ACCESS ||
-> @@ -202,7 +202,7 @@ int bch2_xattr_set(struct btree_trans *trans, subvol_inum inum,
->  		xattr->v.x_type		= type;
->  		xattr->v.x_name_len	= namelen;
->  		xattr->v.x_val_len	= cpu_to_le16(size);
-> -		memcpy(xattr->v.x_name, name, namelen);
-> +		memcpy(xattr->v.x_name_and_value, name, namelen);
->  		memcpy(xattr_val(&xattr->v), value, size);
->  
->  		ret = bch2_hash_set(trans, bch2_xattr_hash_desc, hash_info,
-> @@ -270,7 +270,7 @@ static int bch2_xattr_emit(struct dentry *dentry,
->  	if (!prefix)
->  		return 0;
->  
-> -	return __bch2_xattr_emit(prefix, xattr->x_name, xattr->x_name_len, buf);
-> +	return __bch2_xattr_emit(prefix, xattr->x_name_and_value, xattr->x_name_len, buf);
->  }
->  
->  static int bch2_xattr_list_bcachefs(struct bch_fs *c,
-> diff --git a/fs/bcachefs/xattr.h b/fs/bcachefs/xattr.h
-> index 132fbbd15a66..1139bf345f70 100644
-> --- a/fs/bcachefs/xattr.h
-> +++ b/fs/bcachefs/xattr.h
-> @@ -18,12 +18,12 @@ void bch2_xattr_to_text(struct printbuf *, struct bch_fs *, struct bkey_s_c);
->  
->  static inline unsigned xattr_val_u64s(unsigned name_len, unsigned val_len)
+>  /*
+>   * Casting from randomized struct file * to struct ttm_backup * is fine since
+> - * struct ttm_backup is never defined nor dereferenced.
+> + * struct ttm_backup is never defined nor dereferenced. Use a single-member
+> + * struct to avoid cast warnings.
+>   */
+> +struct ttm_backup {
+> +	struct file file;
+> +};
+> +
+>  static struct file *ttm_backup_to_file(struct ttm_backup *backup)
 >  {
-> -	return DIV_ROUND_UP(offsetof(struct bch_xattr, x_name) +
-> +	return DIV_ROUND_UP(offsetof(struct bch_xattr, x_name_and_value) +
->  			    name_len + val_len, sizeof(u64));
+> -	return (void *)backup;
+> +	return &backup->file;
 >  }
 >  
->  #define xattr_val(_xattr)					\
-> -	((void *) (_xattr)->x_name + (_xattr)->x_name_len)
-> +	((void *) (_xattr)->x_name_and_value + (_xattr)->x_name_len)
+>  static struct ttm_backup *ttm_file_to_backup(struct file *file)
+>  {
+> -	return (void *)file;
+> +	return container_of(file, struct ttm_backup, file);
+>  }
 >  
->  struct xattr_search_key {
->  	u8		type;
-> diff --git a/fs/bcachefs/xattr_format.h b/fs/bcachefs/xattr_format.h
-> index 67426e33d04e..4121b78d9a92 100644
-> --- a/fs/bcachefs/xattr_format.h
-> +++ b/fs/bcachefs/xattr_format.h
-> @@ -16,10 +16,10 @@ struct bch_xattr {
->  	/*
->  	 * x_name contains the name and value counted by
->  	 * x_name_len + x_val_len. The introduction of
-> -	 * __counted_by(x_name_len) caused a false positive
-> +	 * __counted_by(x_name_len) previously caused a false positive
->  	 * detection of an out of bounds write.
->  	 */
-> -	__u8			x_name[];
-> +	__u8			x_name_and_value[];
->  } __packed __aligned(8);
->  
->  #endif /* _BCACHEFS_XATTR_FORMAT_H */
+>  /*
 > -- 
-> 2.48.1
+> 2.34.1
 > 
