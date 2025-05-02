@@ -1,208 +1,242 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC012367B3
-	for <linux-hardening@vger.kernel.org>; Fri,  2 May 2025 09:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 615E123A995;
+	Fri,  2 May 2025 10:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746179732; cv=none; b=QSHVr8Dme8jMtlXxxWqfqOFkugpMhkg8KkaY/LQcvQPGdqcrY+rRma85LNAI5yuB0CHafEItFe3SKuw5LvPibe88YF9da/5FbFXZIWLRrJYM3W3oJPFtRI5gF1vvgx8z2f7CbffbG/kqXP50wzU4YxG92Vl834jROeO87nDjqj4=
+	t=1746180079; cv=none; b=PKg32VaCKw4JoWS1Bhtg/gXbHYNgpTgiFBEXlBFUvRC2nMVmYaBAT+XuACWzYuyjWakl/7oBOBI92axaBfwxwX/MG9UG6ii7S1annc/jDwYX8cwCVQK0XQVdfb6x4fQSjJhRpIvW9SFw5DefpJV4dYHKy5kRR75eEGfd0bHN70k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746179732; c=relaxed/simple;
-	bh=DbOmruiDXqyCFuxtwBSQJBYz2MVx6spaIxjAgcz+Oj8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=P3zHLu20V+QYjekwQP8wRJZhV6/RZcSDn3FPqW4215hCzbPXXAZgfMFvq0KF1F9eKd19cgRPPkfEVVOeWqoUHsR6uZ4ypzAN8ypT4LZTfKQVzrMa+miwSdxE9nkPPZ163HwqkMOJWpCS7ksPLR06cEf/pDE2135r4028ZY18UxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ps0a/pQe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ps0a/pQe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746179730;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lg/z+bj6Vp6Uwot26MZjMyBdidDV8u4Eq/gx3z2pwHw=;
-	b=Ps0a/pQesLF8F5yLiRCaUhNXAAhG63LpBcCl4H7wWuA4Rde2d6914NNrgifZrJpJHr/36e
-	0yHxhChhNb/pkGLfwZTZ+oOiZlvzjB2HGAMfhmDtBGAN7w4SLQwBKRwGoMeOpxLFhN8y28
-	6+R2HvntTVo/YmQFAxGcUmu7hWJ9Bds=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-421-TVWN07ruMDqHGgBeAeqVHg-1; Fri, 02 May 2025 05:55:27 -0400
-X-MC-Unique: TVWN07ruMDqHGgBeAeqVHg-1
-X-Mimecast-MFC-AGG-ID: TVWN07ruMDqHGgBeAeqVHg_1746179726
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39130f02631so496910f8f.2
-        for <linux-hardening@vger.kernel.org>; Fri, 02 May 2025 02:55:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746179726; x=1746784526;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lg/z+bj6Vp6Uwot26MZjMyBdidDV8u4Eq/gx3z2pwHw=;
-        b=qJalQt/j55tCTUFEbUhgmw9z6+rVcNThlTq/dSFviExDgxpf0qBhVnZWwh1NzyYfyp
-         lfbNa8PZNRP38yzi541H/Py6Zcfn5sTLndMQ63C/W36MhkYABZWHs6o5fxcwu3HUeom9
-         G5SYydwVv1TcweQ7y27b+JGucxAu6IPQIQ7PSW6tedGZ0+vsSJwVkskWINx39AVS42Hn
-         9j2Sb7DPoliLcjLBPKib/oAwnb6Ov13SEIHuISxfWd3TFSa0QyzWbBkT+dCnljjv8uuk
-         HKpHSHJ9ZMbxap48lWEqoVfibMnYnTa0Kp5EPTWap4pnWsa242zDBf9Atceu7k2pwv/X
-         fLJg==
-X-Forwarded-Encrypted: i=1; AJvYcCXhQyGNm0NJ3zvZkCrBugRB2sdzyJ2tljQ/OKkQWzeuPDI1zqcoKUkKAHnVbqEpJRm9QnMeofgNZRlHPwqHn94=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySaXDnbp9SQXrhNSBY6jcOz/0QeEvtw8zAo4fwQpmVC9ve2b5G
-	49snrnkVXXpHrTE1dQz+5FU1iTEhl2XGLoDVaD6LZ+O9jyjc6yT24tn7/oawMMcVbw1PFuDEZ8A
-	bn0b4FlKt60mP9ZZ3a4VBkywcMDYciuCquH23gmHvUtIpqApaWxZZSaEXUGrmRJIvAw==
-X-Gm-Gg: ASbGncv3140FVY7dz8KDTZptMHwRauQK+B3+4ea1jeyv1AGIQJEr8tDdEstiHW4/8+k
-	ZL4AF0lSbh+UJiCA3jK0uZLGHGeuK9oV0Wi/VUivVdUzBqsX6v4QB2kcAbXyj6xlXsJEYzL6IhW
-	X1/eEZSzcF8N2wmc6sQf1bSfj2xfnFYtvZUe8QGsk/gwa32/N7PfBynFJAPGs2P8cLGX5ZU8qyg
-	woTUj67xbs46Y+BfFsRdv6fEOP7FH49kEocrICu0dHDJhLQfyBNmNfqZnIn4Y2OP7fPbBEVT08x
-	boJj4I84ClEYg5s5kNSJASN3ZopdBF3scCEMlve8QeEPJ5W7
-X-Received: by 2002:a05:6000:40cd:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3a099aef847mr1613275f8f.54.1746179725795;
-        Fri, 02 May 2025 02:55:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGpWssSttWyCeyGY3CsU2VpUSZWAU4rNhFXcV+QIILeKOWgOhhc72G0KBYplClE77XLY5f7yg==
-X-Received: by 2002:a05:6000:40cd:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3a099aef847mr1613170f8f.54.1746179725069;
-        Fri, 02 May 2025 02:55:25 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb ([2001:861:43c1:5950:3e51:b684:9982:d4a2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae3ccdsm1693329f8f.38.2025.05.02.02.55.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 02:55:24 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Dave Hansen <dave.hansen@intel.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, Juri Lelli
- <juri.lelli@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Yair
- Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>, Nicolas
- Saenz Julienne <nsaenz@amazon.com>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Dave
- Hansen <dave.hansen@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
- <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
- Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H.
- Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
- <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain
- <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
- <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Naveen N
- Rao <naveen@kernel.org>, Anil S Keshavamurthy
- <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
- Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Masahiro Yamada
- <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda
- <ojeda@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Rong Xu
- <xur@google.com>, Rafael Aquini <aquini@redhat.com>, Song Liu
- <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
- <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, Benjamin Berg
- <benjamin.berg@intel.com>, Vishal Annapurve <vannapurve@google.com>, Randy
- Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>, Tiezhu
- Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-In-Reply-To: <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
-References: <20250429113242.998312-1-vschneid@redhat.com>
- <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
- <20250430132047.01d48647@gandalf.local.home>
- <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
- <20250430154228.1d6306b4@gandalf.local.home>
- <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
-Date: Fri, 02 May 2025 11:55:21 +0200
-Message-ID: <xhsmhr0179w1i.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	s=arc-20240116; t=1746180079; c=relaxed/simple;
+	bh=vJOvnivph6oCb2dMXGXiOHXi7mT7HtXtJsbbfl4ZPcs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JoQofrHb3GSskepbnOisSwLPbgAdAQwz9NuaBxJus5/kJi1pg1YyohWjlYxEr5QwPB5KnweQPbEJPc/I4wtjSYaLqOI/RiKCgo9R790bK+QTcjeI9o4WzMxp0e9HZ7Jci0JBMEaGKt9H0cwZp1S2yzBgtTdw5jf8+tl32ZcZB64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69BCD168F;
+	Fri,  2 May 2025 03:01:05 -0700 (PDT)
+Received: from [10.57.93.118] (unknown [10.57.93.118])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4C7B3F66E;
+	Fri,  2 May 2025 03:01:10 -0700 (PDT)
+Message-ID: <87f80506-eeb3-4848-adc9-8a030b5f4136@arm.com>
+Date: Fri, 2 May 2025 11:01:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Ciz4DxrPGegbWn4ROkB3fsHDol6suiSmG17BtS1oNBE_1746179726
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] binfmt_elf: Move brk for static PIE even if ASLR
+ disabled
+To: Kees Cook <kees@kernel.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Ali Saidi <alisaidi@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-hardening@vger.kernel.org
+References: <20250502001820.it.026-kees@kernel.org>
+Content-Language: en-GB
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250502001820.it.026-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 30/04/25 13:00, Dave Hansen wrote:
-> On 4/30/25 12:42, Steven Rostedt wrote:
->>> Look at the syscall code for instance:
->>>
->>>> SYM_CODE_START(entry_SYSCALL_64)
->>>>         swapgs
->>>>         movq    %rsp, PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
->>>>         SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
->>> You can _trivially_ audit this and know that swapgs doesn't touch memory
->>> and that as long as PER_CPU_VAR()s and the process stack don't have
->>> their mappings munged and flushes deferred that this would be correct.
->> Hmm, so there is still a path for this?
->>
->> At least if it added more ways to debug it, and some other changes to make
->> the locations where vmalloc is dangerous smaller?
->
-> Being able to debug it would be a good start. But, more generally, what
-> we need is for more people to be able to run the code in the first
-> place. Would a _normal_ system (without setups that are trying to do
-> NOHZ_FULL) ever be able to defer TLB flush IPIs?
->
-> If the answer is no, then, yeah, I'll settle for some debugging options.
->
-> But if you shrink the window as small as I'm talking about, it would
-> look very different from this series.
->
-> For instance, imagine when a CPU goes into the NOHZ mode. Could it just
-> unconditionally flush the TLB on the way back into the kernel (in the
-> same SWITCH_TO_KERNEL_CR3 spot)? Yeah, it'll make entry into the kernel
-> expensive for NOHZ tasks, but it's not *THAT* bad. And if the entire
-> point of a NOHZ_FULL task is to minimize the number of kernel entries
-> then a little extra overhead there doesn't sound too bad.
->
+On 02/05/2025 01:18, Kees Cook wrote:
+> In commit bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
+> direct loader exec"), the brk was moved out of the mmap region when
+> loading static PIE binaries (ET_DYN without INTERP). The common case
+> for these binaries was testing new ELF loaders, so the brk needed to
+> be away from mmap to avoid colliding with stack, future mmaps (of the
+> loader-loaded binary), etc. But this was only done when ASLR was enabled,
+> in an attempt to minimize changes to memory layouts.
+> 
+> After adding support to respect alignment requirements for static PIE
+> binaries in commit 3545deff0ec7 ("binfmt_elf: Honor PT_LOAD alignment
+> for static PIE"), it became possible to have a large gap after the
+> final PT_LOAD segment and the top of the mmap region. This means that
+> future mmap allocations might go after the last PT_LOAD segment (where
+> brk might be if ASLR was disabled) instead of before them (where they
+> traditionally ended up).
+> 
+> On arm64, running with ASLR disabled, Ubuntu 22.04's "ldconfig" binary,
+> a static PIE, has alignment requirements that leaves a gap large enough
+> after the last PT_LOAD segment to fit the vdso and vvar, but still leave
+> enough space for the brk (which immediately follows the last PT_LOAD
+> segment) to be allocated by the binary.
+> 
+> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
+> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
+> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
+> ***[brk will go here at fffff7ffa000]***
+> fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
+> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
+> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
+> 
+> After commit 0b3bc3354eb9 ("arm64: vdso: Switch to generic storage
+> implementation"), the arm64 vvar grew slightly, and suddenly the brk
+> collided with the allocation.
+> 
+> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
+> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
+> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
+> ***[oops, no room any more, vvar is at fffff7ffa000!]***
+> fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
+> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
+> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
+> 
+> The solution is to unconditionally move the brk out of the mmap region
+> for static PIE binaries. Whether ASLR is enabled or not does not change if
+> there may be future mmap allocation collisions with a growing brk region.
+> 
+> Update memory layout comments (with kernel-doc headings), consolidate
+> the setting of mm->brk to later (it isn't needed early), move static PIE
+> brk out of mmap unconditionally, and make sure brk(2) knows to base brk
+> position off of mm->start_brk not mm->end_data no matter what the cause of
+> moving it is (via current->brk_randomized).
+> 
+> For the CONFIG_COMPAT_BRK case, though, leave the logic unchanged, as we
+> can never safely move the brk. These systems, however, are not using
+> specially aligned static PIE binaries.
+> 
+> Reported-by: Ryan Roberts <ryan.roberts@arm.com>
+> Closes: https://lore.kernel.org/lkml/f93db308-4a0e-4806-9faf-98f890f5a5e6@arm.com/
+> Fixes: bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing direct loader exec")
+> Link: https://lore.kernel.org/r/20250425224502.work.520-kees@kernel.org
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Right, so my thought per your previous comments was to special case the
-TLB flush, depend on kPTI and do it uncondtionally in SWITCH_TO_KERNEL_CR3
-just like you've described - but keep the context tracking mechanism for
-other deferrable operations.
+It's a shame we can't figure out a universal solution that would work for
+CONFIG_COMPAT_BRK too, but I can't think of anything. So as you say, let's worry
+about that in the unlikely event that an issue is reported.
 
-My gripe with that was having two separate mechanisms
-- super early entry around SWITCH_TO_KERNEL_CR3)
-- later entry at context tracking
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+Tested-by: Ryan Roberts <ryan.roberts@arm.com>
 
-Shifting everything to SWITCH_TO_KERNEL_CR3 means we lose the
-context_tracking infra to dynamically defer operations (atomically reading
-and writing to context_tracking.state), which means we unconditionally run
-all possible deferrable operations. This doesn't scream scalable, even
-though as you say NOHZ_FULL kernel entry is already a "you lose" situation.
+Thanks for sorting this out! Would be great to get it into v6.15.
 
-Yet another option is to duplicate the context tracking state specifically
-for IPI deferral and have it driven in/by SWITCH_TO_KERNEL_CR3, which is
-also not super savoury.
-
-I suppose I can start poking around running deferred ops in that
-SWITCH_TO_KERNEL_CR3 region, and add state/infra on top. Let's see where
-this gets me :-)
-
-Again, thanks for the insight and the suggestions Dave!
-
-> Also, about the new hardware, I suspect there's some mystery customer
-> lurking in the shadows asking folks for this functionality. Could you at
-> least go _talk_ to the mystery customer(s) and see which hardware they
-> care about? They might already even have the magic CPUs they need for
-> this, or have them on the roadmap. If they've got Intel CPUs, I'd be
-> happy to help figure it out.
+> ---
+>  v2: exclude CONFIG_COMPAT_BRK (ryan)
+>  v1: https://lore.kernel.org/all/20250425224502.work.520-kees@kernel.org/
+> ---
+>  fs/binfmt_elf.c | 71 ++++++++++++++++++++++++++++++++-----------------
+>  1 file changed, 47 insertions(+), 24 deletions(-)
+> 
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index 584fa89bc877..4c1ea6b52a53 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -830,6 +830,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
+>  	struct elf_phdr *elf_property_phdata = NULL;
+>  	unsigned long elf_brk;
+> +	bool brk_moved = false;
+>  	int retval, i;
+>  	unsigned long elf_entry;
+>  	unsigned long e_entry;
+> @@ -1097,15 +1098,19 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  			/* Calculate any requested alignment. */
+>  			alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
+>  
+> -			/*
+> -			 * There are effectively two types of ET_DYN
+> -			 * binaries: programs (i.e. PIE: ET_DYN with PT_INTERP)
+> -			 * and loaders (ET_DYN without PT_INTERP, since they
+> -			 * _are_ the ELF interpreter). The loaders must
+> -			 * be loaded away from programs since the program
+> -			 * may otherwise collide with the loader (especially
+> -			 * for ET_EXEC which does not have a randomized
+> -			 * position). For example to handle invocations of
+> +			/**
+> +			 * DOC: PIE handling
+> +			 *
+> +			 * There are effectively two types of ET_DYN ELF
+> +			 * binaries: programs (i.e. PIE: ET_DYN with
+> +			 * PT_INTERP) and loaders (i.e. static PIE: ET_DYN
+> +			 * without PT_INTERP, usually the ELF interpreter
+> +			 * itself). Loaders must be loaded away from programs
+> +			 * since the program may otherwise collide with the
+> +			 * loader (especially for ET_EXEC which does not have
+> +			 * a randomized position).
+> +			 *
+> +			 * For example, to handle invocations of
+>  			 * "./ld.so someprog" to test out a new version of
+>  			 * the loader, the subsequent program that the
+>  			 * loader loads must avoid the loader itself, so
+> @@ -1118,6 +1123,9 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  			 * ELF_ET_DYN_BASE and loaders are loaded into the
+>  			 * independently randomized mmap region (0 load_bias
+>  			 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
+> +			 *
+> +			 * See below for "brk" handling details, which is
+> +			 * also affected by program vs loader and ASLR.
+>  			 */
+>  			if (interpreter) {
+>  				/* On ET_DYN with PT_INTERP, we do the ASLR. */
+> @@ -1234,8 +1242,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  	start_data += load_bias;
+>  	end_data += load_bias;
+>  
+> -	current->mm->start_brk = current->mm->brk = ELF_PAGEALIGN(elf_brk);
+> -
+>  	if (interpreter) {
+>  		elf_entry = load_elf_interp(interp_elf_ex,
+>  					    interpreter,
+> @@ -1291,27 +1297,44 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  	mm->end_data = end_data;
+>  	mm->start_stack = bprm->p;
+>  
+> -	if ((current->flags & PF_RANDOMIZE) && (snapshot_randomize_va_space > 1)) {
+> +	/**
+> +	 * DOC: "brk" handling
+> +	 *
+> +	 * For architectures with ELF randomization, when executing a
+> +	 * loader directly (i.e. static PIE: ET_DYN without PT_INTERP),
+> +	 * move the brk area out of the mmap region and into the unused
+> +	 * ELF_ET_DYN_BASE region. Since "brk" grows up it may collide
+> +	 * early with the stack growing down or other regions being put
+> +	 * into the mmap region by the kernel (e.g. vdso).
+> +	 *
+> +	 * In the CONFIG_COMPAT_BRK case, though, everything is turned
+> +	 * off because we're not allowed to move the brk at all.
+> +	 */
+> +	if (!IS_ENABLED(CONFIG_COMPAT_BRK) &&
+> +	    IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
+> +	    elf_ex->e_type == ET_DYN && !interpreter) {
+> +		elf_brk = ELF_ET_DYN_BASE;
+> +		/* This counts as moving the brk, so let brk(2) know. */
+> +		brk_moved = true;
+> +	}
+> +	mm->start_brk = mm->brk = ELF_PAGEALIGN(elf_brk);
+> +
+> +	if ((current->flags & PF_RANDOMIZE) && snapshot_randomize_va_space > 1) {
+>  		/*
+> -		 * For architectures with ELF randomization, when executing
+> -		 * a loader directly (i.e. no interpreter listed in ELF
+> -		 * headers), move the brk area out of the mmap region
+> -		 * (since it grows up, and may collide early with the stack
+> -		 * growing down), and into the unused ELF_ET_DYN_BASE region.
+> +		 * If we didn't move the brk to ELF_ET_DYN_BASE (above),
+> +		 * leave a gap between .bss and brk.
+>  		 */
+> -		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
+> -		    elf_ex->e_type == ET_DYN && !interpreter) {
+> -			mm->brk = mm->start_brk = ELF_ET_DYN_BASE;
+> -		} else {
+> -			/* Otherwise leave a gap between .bss and brk. */
+> +		if (!brk_moved)
+>  			mm->brk = mm->start_brk = mm->brk + PAGE_SIZE;
+> -		}
+>  
+>  		mm->brk = mm->start_brk = arch_randomize_brk(mm);
+> +		brk_moved = true;
+> +	}
+> +
+>  #ifdef compat_brk_randomized
+> +	if (brk_moved)
+>  		current->brk_randomized = 1;
+>  #endif
+> -	}
+>  
+>  	if (current->personality & MMAP_PAGE_ZERO) {
+>  		/* Why this, you ask???  Well SVr4 maps page 0 as read-only,
 
