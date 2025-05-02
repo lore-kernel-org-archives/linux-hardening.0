@@ -1,312 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49B08635D
-	for <linux-hardening@vger.kernel.org>; Fri,  2 May 2025 01:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F92B1D554;
+	Fri,  2 May 2025 01:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746148393; cv=none; b=nZDn3Hx1b6RgkHzV7n1ls1KEWlZiIibuEZPjvyOGl5Xpwe/9ht1Kq/VH6Ehut8FzrGiVGPS9+uu7O0sTATe9r/qVyoMMXdRULbDUBv83NbNsuwu3GeZykEosER7oyEa+qhXbooN30lTEgCJ2MuT2bwbJT5MNpF23CTiTeTku3L4=
+	t=1746150956; cv=none; b=MYbS/aGKg0NxXF30TYcf7xqrKGXc3fnRsYbn2GBxcy/j8wGPwVzgCsy7Tv4b7D9pu3JuQ9EkVXPJY0/J5rZrTUS8xVrldrsF5Z1crQ/866JcCF7WUU4GPlICb1fKiUDTNp7mbtRSU5BYhLA07V7mfIR/ARoWEjs9qg+E45Tx1NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746148393; c=relaxed/simple;
-	bh=xGq6E1Xm4xowTjcw7xDmWLNzTZI63dDxQ9UmgG7Pajo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=IkcdKzaiiCpEiu6PShUaABHEj/Y4xd37NzZyVZJF/gzNav1kTYTY7HyvSygfWb3/kQRMf3mDUYbHfNmphwHPresU1IgBybZSt5XNaBlfQjvxvGaLF3nMZVU0XO+2MaxdgPOf28UMGnp7W/GjZeUGKTniT/RXz6Z3EToOhJ6t9EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GiR65Xy9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746150956; c=relaxed/simple;
+	bh=z3rdCUvpte8A7S4AviTyKEtkjzCDVLldKOS5YgSi2Dc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X2IjPANa7bo9L4v2+dQbH2EiiYZdSEhBsLnIGki2H8KwPl3CXi5rpg/I1XhC1XQlvKMoL0qo+QNfftfQ6YuRlDlLTwFDcCap6bGZDkNxfWcU9Sq4cGwPPaIyQxUTWOVZzz8nC4SFhNt6GeAHzu5W/EJSsdvSCbsZm5HBhI8mxEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=LCqVvfRv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=W596VzjR; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GiR65Xy9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746148390;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GBWfvLJxb5OXrN8DqbQaSB09FpR8x5OxSi6J4jIJ0dk=;
-	b=GiR65Xy9GudezOJwIjRligP5jYtllLovq63adXuKBSVGKq0MYAIPxVUcLNznLIyLZApekQ
-	duqGq4yZDZzVxS21/SC2e+hQUlJyeJmIncUyhsZXG5Y/9Ma8cCycy5zf3YO0/Qc9IsxmN2
-	LvblP5TslguhFiK1LCSZ30GstgV/Uow=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-326-Fy2DpaNqOhWKFEPWblKGrQ-1; Thu, 01 May 2025 21:13:09 -0400
-X-MC-Unique: Fy2DpaNqOhWKFEPWblKGrQ-1
-X-Mimecast-MFC-AGG-ID: Fy2DpaNqOhWKFEPWblKGrQ_1746148388
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-73c205898aaso1134446b3a.2
-        for <linux-hardening@vger.kernel.org>; Thu, 01 May 2025 18:13:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746148387; x=1746753187;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GBWfvLJxb5OXrN8DqbQaSB09FpR8x5OxSi6J4jIJ0dk=;
-        b=oCZQXATdPMT7JOwbv3DxkqeBa/M8/mGq++MUlsVlpRe5gCEb6i3X5VqQOTHiBvvgDV
-         GeEODFaHXAkj33J/mV+FBYageZ7vSu6rm99bd5KLABrpEFxQEpBO4q2icuZ92559E32k
-         Si669QPzOkaikF2KmiBFJByy/XeLp2/fqthpCdtIwwsc79XSabq1MYC1rpOlwBkeO7JM
-         ke59cUEdTqbngpu1tOnEHvJRlBXkgD2gfMszaAtidthgjSZk3tHEGBMpcgL45lQt0ghO
-         8W/uV/3OPAB16FUD1s1CEpYTdLNO/zgyz1YOUEN1aI8H732nDeXBaSy5xJZ8s0iHimyM
-         /h5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVP/haHfk4n/Ph8UF/2a2ZEz5tC3r+ttnLnC8zuXvBaO7X5YL1ekdDaXWvnroZh5+1YMkGrvrxwFEOqfvZDQxw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtHIlY8rrZJVwrZxjPR/XILWn3qtCfXUHHWUdbM0fg+a2qM4sG
-	nW+5I43es4LWbdE08ITvywpgfO2O3QshOu+9ABIZfDFRSKtvskbdaVxyFQ6As6XHsqbZEGQgn0m
-	/f4Ram+zqKBcqMRs3jLEk8/3xQIbirGE1x7OqteWAtKSyCoPPSQvYQQ+YYZ6mhY5x7A==
-X-Gm-Gg: ASbGnctz/SPAVEiw4k9hVQXryJ1eV5ZbreAH6D00mb5ckhKSh36gX+gydbZmN5H7SOR
-	u+N3SwNLk4b7uYKZJ/mPlG/rzVR4zy3xccWt036goAlg88q5x3RftrdVIFBvaJxP5yNqPxKQlxM
-	If4xf7MorCUT4xgcloRVcQ9NsXZc46nMe0gtaSUmqBCthTUIAp3XSmfCqRjI9TkFGFY8BqL3ONl
-	3StxoOgnpG5qm3oWWwwE19qvek9kmO5FH+3uvukhwTx2HbOD8qU0z8rVBoScndsFA+pUBlG175+
-	a3Q=
-X-Received: by 2002:a05:6a00:ab01:b0:730:9801:d3e2 with SMTP id d2e1a72fcca58-74058a1af41mr1713814b3a.8.1746148387363;
-        Thu, 01 May 2025 18:13:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWrlVfaGnH2bAuy9TSvG0bRVxSTF2k5lzCQyD8yusIUmdWs3IYHq0T9Uk0I4GD24HMDP8szQ==
-X-Received: by 2002:a05:6a00:ab01:b0:730:9801:d3e2 with SMTP id d2e1a72fcca58-74058a1af41mr1713773b3a.8.1746148387017;
-        Thu, 01 May 2025 18:13:07 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058d7adc9sm347612b3a.30.2025.05.01.18.13.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 18:13:06 -0700 (PDT)
-From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	=?UTF-8?q?Daniel=20P=20=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Pingfan Liu <kernelfans@gmail.com>,
-	Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH v9 3/8] crash_dump: store dm crypt keys in kdump reserved memory
-Date: Fri,  2 May 2025 09:12:37 +0800
-Message-ID: <20250502011246.99238-4-coxu@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250502011246.99238-1-coxu@redhat.com>
-References: <20250502011246.99238-1-coxu@redhat.com>
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="LCqVvfRv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W596VzjR"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id 06B541380FA2;
+	Thu,  1 May 2025 21:55:52 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Thu, 01 May 2025 21:55:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1746150952; x=1746237352; bh=2ZvaVB/aFJ
+	pZ0cfeauWW5J7RW8vTa4RcSV8JmZ3BCRk=; b=LCqVvfRv9YOwUEcQBiuJYJ22MF
+	s/FjpN9vDzqjLpyCrdS2c97SAQ4PnmpQ8IQ5nR++fY/51/puE/cBRdbXf8PGjn3s
+	gCgfXRYXiES+opuosVZTSqKIVMOTphTWNK0gk+cLrhk6ZrMj+M98ozD88lD/UbT1
+	Nji37ImQXOfZFick1/408vvnby7xqGJSKELo45qPnwy/D0dG27/m7tWzF0kI9laX
+	2ePDppiCFS0j2JyWyvIjmoyg6TWROM1LxsvSev6sWY+rKonACR4apW7l7xnezRRi
+	DXuTMTgdlj5tN2RGn8l0NbTdFqr05/21E1mZsDruvtp4ZX0DJ6ko3KnpqRiQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1746150952; x=1746237352; bh=2ZvaVB/aFJpZ0cfeauWW5J7RW8vTa4RcSV8
+	JmZ3BCRk=; b=W596VzjRVa+LY6Q4HCtwtIxaAvRHidR/4OmNxZyP28Z5aCTmSr+
+	GyznZlTSkztnzieqDYmHrh+w49kbvWwFFMSerP5LpbFh/G4qmfzYKY7D7vMjVV4+
+	DYRx8mm1yXVjzswHBHdBR3xyqrNojA1LEDWz5ZEzZv63v8kTimBD7+kqIO2dRw6Z
+	3JhjJsRqcMqVhOj+d9/G6hxDoqlQh95jSJ3OWn3ey7/P/xQlDNgIIPRLfRG9zSst
+	wO7xTHtCDJ6PrMWjSDhx2PTi78yz044M3H7RDUBGxTJZ0o8gWk+g4/RaD3JEdziT
+	/Uv5NdzqH6wZkkYRLQVRkXEG0vfHgkcgYOA==
+X-ME-Sender: <xms:JyYUaJubht81BeADGEWbwJZ-nKDGC3428bkhnRBgrig1-3t0O81TnQ>
+    <xme:JyYUaCef90BP8KaUbE9DCvvf2QEZDm7kkXaaz2X2zjjuY7JVIJ1jR5q36Ui0ZhxmH
+    liCAksy3vRZl4nQBLo>
+X-ME-Received: <xmr:JyYUaMwlwKPWHpCt9diPDs4BqzhsISYvYXTt0Vhr3BT7-_byHzEUjpPZvC6DIAyYCFIjDeDP2pNpGXUtPvPSh_TnJTFV>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjeduudelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffuc
+    dluddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhm
+    peflrghnucfjvghnughrihhkucfhrghrrhcuoehkvghrnhgvlhesjhhfrghrrhdrtggtqe
+    enucggtffrrghtthgvrhhnpeegveffgfelkeeludejtedujeetuddtveetieevleelleef
+    kefhkeetkeefkeefffenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhprhhivhgrth
+    gvsghinhdrnhgvthdpghhouggsohhlthdrohhrghenucevlhhushhtvghrufhiiigvpedt
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghrnhgvlhesjhhfrghrrhdrtggtpdhnsg
+    gprhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmmhhpghho
+    uhhrihguvgesghhmrghilhdrtghomhdprhgtphhtthhopehkvghnthdrohhvvghrshhtrh
+    gvvghtsehlihhnuhigrdguvghvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehguhhsthgrvhhorghrsheskhgvrhhnvghlrdhorhhgpdhrtghpth
+    htohepthhhohhrshhtvghnrdgslhhumhesthhosghluhigrdgtohhmpdhrtghpthhtohep
+    lhhinhhugidqsggtrggthhgvfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpth
+    htoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:JyYUaAPMuF_bBnSl17HY4aF_MhGv-muGp7jPho1J3-l655zXQ3c-hg>
+    <xmx:JyYUaJ9TAbJt_xIzUm2SVvzErcCPHWuo6D0ek2CRJkZD0JFgZNVNpA>
+    <xmx:JyYUaAURLHU5rZ48l1oWb426dNFHk0_UNA-CjAlX5bu6TuPPK7fTFQ>
+    <xmx:JyYUaKdOR_S8RgTAzoOt0U-PYbxrucOd3oZBcnLDTR6w1guxsW9N9w>
+    <xmx:JyYUaGtmJPVXkcxpKLCqC20H-gkWSQjfmUJgPu_7nm55VfO_OphSjg4N>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 1 May 2025 21:55:50 -0400 (EDT)
+Date: Fri, 2 May 2025 03:55:48 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: Alan Huang <mmpgouride@gmail.com>
+Cc: kent.overstreet@linux.dev, kees@kernel.org, gustavoars@kernel.org,
+	thorsten.blum@toblux.com, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] bcachefs: Remove incorrect __counted_by annotation
+Message-ID: <aBQmJIXygwIwj5Yy@archlinux>
+References: <20250501200132.216859-1-mmpgouride@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: TbvKFSa3i-iMh7VHh4r4ZfYCmavmUBGSYl_xPrvG4v0_1746148388
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250501200132.216859-1-mmpgouride@gmail.com>
 
-When the kdump kernel image and initrd are loaded, the dm crypts keys
-will be read from keyring and then stored in kdump reserved memory.
+On 02 04:01:31, Alan Huang wrote:
+> This actually reverts 86e92eeeb237 ("bcachefs: Annotate struct bch_xattr
+> with __counted_by()").
+> 
+> After the x_name, there is a value. According to the disscussion[1],
+> __counted_by assumes that the flexible array member contains exactly
+> the amount of elements that are specified. Now there are users came across
+> a false positive detection of an out of bounds write caused by
+> the __counted_by here[2], so revert that.
+> 
+> [1] https://lore.kernel.org/lkml/Zv8VDKWN1GzLRT-_@archlinux/T/#m0ce9541c5070146320efd4f928cc1ff8de69e9b2
+> [2] https://privatebin.net/?a0d4e97d590d71e1#9bLmp2Kb5NU6X6cZEucchDcu88HzUQwHUah8okKPReEt
+> 
+> Signed-off-by: Alan Huang <mmpgouride@gmail.com>
 
-Assume a key won't exceed 256 bytes thus MAX_KEY_SIZE=256 according to
-"cryptsetup benchmark".
+Reviewed-by: Jan Hendrik Farr <kernel@jfarr.cc>
 
-Signed-off-by: Coiby Xu <coxu@redhat.com>
-Acked-by: Baoquan He <bhe@redhat.com>
----
- include/linux/crash_core.h   |   6 +-
- include/linux/kexec.h        |   4 ++
- kernel/crash_dump_dm_crypt.c | 133 +++++++++++++++++++++++++++++++++++
- 3 files changed, 142 insertions(+), 1 deletion(-)
+> ---
+>  fs/bcachefs/xattr_format.h | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/bcachefs/xattr_format.h b/fs/bcachefs/xattr_format.h
+> index c7916011ef34..67426e33d04e 100644
+> --- a/fs/bcachefs/xattr_format.h
+> +++ b/fs/bcachefs/xattr_format.h
+> @@ -13,7 +13,13 @@ struct bch_xattr {
+>  	__u8			x_type;
+>  	__u8			x_name_len;
+>  	__le16			x_val_len;
+> -	__u8			x_name[] __counted_by(x_name_len);
+> +	/*
+> +	 * x_name contains the name and value counted by
+> +	 * x_name_len + x_val_len. The introduction of
+> +	 * __counted_by(x_name_len) caused a false positive
+> +	 * detection of an out of bounds write.
+> +	 */
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 44305336314e..2e6782239034 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -34,7 +34,11 @@ static inline void arch_kexec_protect_crashkres(void) { }
- static inline void arch_kexec_unprotect_crashkres(void) { }
- #endif
- 
--
-+#ifdef CONFIG_CRASH_DM_CRYPT
-+int crash_load_dm_crypt_keys(struct kimage *image);
-+#else
-+static inline int crash_load_dm_crypt_keys(struct kimage *image) {return 0; }
-+#endif
- 
- #ifndef arch_crash_handle_hotplug_event
- static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 1871eaa95432..6e688c5d8e4d 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -405,6 +405,10 @@ struct kimage {
- 	void *elf_headers;
- 	unsigned long elf_headers_sz;
- 	unsigned long elf_load_addr;
-+
-+	/* dm crypt keys buffer */
-+	unsigned long dm_crypt_keys_addr;
-+	unsigned long dm_crypt_keys_sz;
- };
- 
- /* kexec interface functions */
-diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-index 62a3c47d8b3b..fb25f55f1512 100644
---- a/kernel/crash_dump_dm_crypt.c
-+++ b/kernel/crash_dump_dm_crypt.c
-@@ -1,14 +1,62 @@
- // SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/key.h>
-+#include <linux/keyctl.h>
- #include <keys/user-type.h>
- #include <linux/crash_dump.h>
- #include <linux/configfs.h>
- #include <linux/module.h>
- 
- #define KEY_NUM_MAX 128	/* maximum dm crypt keys */
-+#define KEY_SIZE_MAX 256	/* maximum dm crypt key size */
- #define KEY_DESC_MAX_LEN 128	/* maximum dm crypt key description size */
- 
- static unsigned int key_count;
- 
-+struct dm_crypt_key {
-+	unsigned int key_size;
-+	char key_desc[KEY_DESC_MAX_LEN];
-+	u8 data[KEY_SIZE_MAX];
-+};
-+
-+static struct keys_header {
-+	unsigned int total_keys;
-+	struct dm_crypt_key keys[] __counted_by(total_keys);
-+} *keys_header;
-+
-+static size_t get_keys_header_size(size_t total_keys)
-+{
-+	return struct_size(keys_header, keys, total_keys);
-+}
-+
-+static int read_key_from_user_keying(struct dm_crypt_key *dm_key)
-+{
-+	const struct user_key_payload *ukp;
-+	struct key *key;
-+
-+	kexec_dprintk("Requesting logon key %s", dm_key->key_desc);
-+	key = request_key(&key_type_logon, dm_key->key_desc, NULL);
-+
-+	if (IS_ERR(key)) {
-+		pr_warn("No such logon key %s\n", dm_key->key_desc);
-+		return PTR_ERR(key);
-+	}
-+
-+	ukp = user_key_payload_locked(key);
-+	if (!ukp)
-+		return -EKEYREVOKED;
-+
-+	if (ukp->datalen > KEY_SIZE_MAX) {
-+		pr_err("Key size %u exceeds maximum (%u)\n", ukp->datalen, KEY_SIZE_MAX);
-+		return -EINVAL;
-+	}
-+
-+	memcpy(dm_key->data, ukp->data, ukp->datalen);
-+	dm_key->key_size = ukp->datalen;
-+	kexec_dprintk("Get dm crypt key (size=%u) %s: %8ph\n", dm_key->key_size,
-+		      dm_key->key_desc, dm_key->data);
-+	return 0;
-+}
-+
- struct config_key {
- 	struct config_item item;
- 	const char *description;
-@@ -130,6 +178,91 @@ static struct configfs_subsystem config_keys_subsys = {
- 	},
- };
- 
-+static int build_keys_header(void)
-+{
-+	struct config_item *item = NULL;
-+	struct config_key *key;
-+	int i, r;
-+
-+	if (keys_header != NULL)
-+		kvfree(keys_header);
-+
-+	keys_header = kzalloc(get_keys_header_size(key_count), GFP_KERNEL);
-+	if (!keys_header)
-+		return -ENOMEM;
-+
-+	keys_header->total_keys = key_count;
-+
-+	i = 0;
-+	list_for_each_entry(item, &config_keys_subsys.su_group.cg_children,
-+			    ci_entry) {
-+		if (item->ci_type != &config_key_type)
-+			continue;
-+
-+		key = to_config_key(item);
-+
-+		if (!key->description) {
-+			pr_warn("No key description for key %s\n", item->ci_name);
-+			return -EINVAL;
-+		}
-+
-+		strscpy(keys_header->keys[i].key_desc, key->description,
-+			KEY_DESC_MAX_LEN);
-+		r = read_key_from_user_keying(&keys_header->keys[i]);
-+		if (r != 0) {
-+			kexec_dprintk("Failed to read key %s\n",
-+				      keys_header->keys[i].key_desc);
-+			return r;
-+		}
-+		i++;
-+		kexec_dprintk("Found key: %s\n", item->ci_name);
-+	}
-+
-+	return 0;
-+}
-+
-+int crash_load_dm_crypt_keys(struct kimage *image)
-+{
-+	struct kexec_buf kbuf = {
-+		.image = image,
-+		.buf_min = 0,
-+		.buf_max = ULONG_MAX,
-+		.top_down = false,
-+		.random = true,
-+	};
-+	int r;
-+
-+
-+	if (key_count <= 0) {
-+		kexec_dprintk("No dm-crypt keys\n");
-+		return -ENOENT;
-+	}
-+
-+	image->dm_crypt_keys_addr = 0;
-+	r = build_keys_header();
-+	if (r)
-+		return r;
-+
-+	kbuf.buffer = keys_header;
-+	kbuf.bufsz = get_keys_header_size(key_count);
-+
-+	kbuf.memsz = kbuf.bufsz;
-+	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	r = kexec_add_buffer(&kbuf);
-+	if (r) {
-+		kvfree((void *)kbuf.buffer);
-+		return r;
-+	}
-+	image->dm_crypt_keys_addr = kbuf.mem;
-+	image->dm_crypt_keys_sz = kbuf.bufsz;
-+	kexec_dprintk(
-+		"Loaded dm crypt keys to kexec_buffer bufsz=0x%lx memsz=0x%lx\n",
-+		kbuf.bufsz, kbuf.memsz);
-+
-+	return r;
-+}
-+
- static int __init configfs_dmcrypt_keys_init(void)
- {
- 	int ret;
--- 
-2.49.0
+In my estimation the comment isn't strictly needed with the name
+change in Patch 2/2, but it can also stay.
+
+> +	__u8			x_name[];
+>  } __packed __aligned(8);
+>  
+>  #endif /* _BCACHEFS_XATTR_FORMAT_H */
+> -- 
+> 2.48.1
+> 
+
+I was able to reproduce this issue with gcc 15.1.1 and bcachefs as
+rootfs (and verify that this fixes it), but wasn't able to reproduce
+using clang 19.1.7. Turns out there is one more difference in how
+gcc and clang do __bdos. clang apparantly doesn't handle pointer
+arithmetic done using + symbol instead of [] for the __counted_by
+case. Here's a reproducer:
+https://godbolt.org/z/136T98Wdz
+
+Best Regards
+Jan
 
