@@ -1,204 +1,208 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2089.outbound.protection.outlook.com [40.107.92.89])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F0120C02D;
-	Fri,  2 May 2025 07:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746172203; cv=fail; b=XY4gjIB8LPgoFwOnq63hFW/Zv8l/JYGoMQ6/4GicTd0Nil4W81jy0sZIT7sDdqDsYOmTmWN2pkbPPMi8H5Y2DXKDZ1ThK3iFMFi08Zg4Bn4dsTbpFqIZG1AEC/hgWFs7hk0Mzt2cLSa/2XGkhuux19ahBLyUtVpVzHo3k74f4/A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746172203; c=relaxed/simple;
-	bh=GOyB4i9BLqrjMaHx8nxlFQqMVEvoI+0gIRprYeDOYds=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IZQ639LkCVm9zqCmQTUbMc1wu8rVI9172G00LzmLBs3lJYjzjULtCa5/A9vkfW0KcF2SsZVLstZxEFbIVBWc3nP6S/UWG07jFR30S+l3YrsoNJECyP20uKFo4usdz9SHtex1i1nhFa/blyYN5pXBK9BRYhqZiyiOmzoj5e5BBUI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zvBaGafd; arc=fail smtp.client-ip=40.107.92.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC012367B3
+	for <linux-hardening@vger.kernel.org>; Fri,  2 May 2025 09:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746179732; cv=none; b=QSHVr8Dme8jMtlXxxWqfqOFkugpMhkg8KkaY/LQcvQPGdqcrY+rRma85LNAI5yuB0CHafEItFe3SKuw5LvPibe88YF9da/5FbFXZIWLRrJYM3W3oJPFtRI5gF1vvgx8z2f7CbffbG/kqXP50wzU4YxG92Vl834jROeO87nDjqj4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746179732; c=relaxed/simple;
+	bh=DbOmruiDXqyCFuxtwBSQJBYz2MVx6spaIxjAgcz+Oj8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=P3zHLu20V+QYjekwQP8wRJZhV6/RZcSDn3FPqW4215hCzbPXXAZgfMFvq0KF1F9eKd19cgRPPkfEVVOeWqoUHsR6uZ4ypzAN8ypT4LZTfKQVzrMa+miwSdxE9nkPPZ163HwqkMOJWpCS7ksPLR06cEf/pDE2135r4028ZY18UxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ps0a/pQe; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zvBaGafd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=l/PpXkSAOhyrAHMkgMWZMnZo0gDuQ4RvSTJnX2XUrqCirSNOxmSstQynkwxBbSYgLQ6NKPdP9e3wmUEqc97KA6cjyA70++JiTsRZffpYh8IK2JTuk2Wa9o9mU2gdsqi75njiIOomITGJ0xzypEcenABvVlxkDROvGooAgZfvaZswy1yYm11BK/2wz6BmtwtRBwlix9VHANLtZor9YsRy5IUiuARgxGSezH3x8m80b5s078DjOF7/knh0KzqzkOwMvP56gwa5xntmW9ppUbAXLIWEgdUAU+ATio3WokMLoEgbmJyZJP2h0e3FXG+l52kXU9WAnQGSWscY0j1ApY9pvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3iKyMnR0ns1Sz1FtOgMHPfnf8jUJVUkXamPdg8NuT2w=;
- b=AtGfuNqdTcLmcJabVtYaguqjLUX3A8sdcE2uioFGdJwV2lfYyLpauTGPPT8FFJwWT5qOqWGqVAkDdOU7KdiCNZY+5E0hB1HOtrvn0kpWVMqQp4b/kwUDD9ECRLKCan8gEGksDSAjYFBOB4QKitX1nT+3zTudyEjOiZdsrMKOIwSRZVeDYvov9twTGKkawE1SBMmmz4ve7xcJbak9yUfLug3ysR7AzrDMAzuRikHV98Ap1+hWsp2N7hSaEGiMymyO/l6FwXIkrAfGTaBaDDZhfrgQSInKtqZ3DkvNcfe++8EVrzOkmUqesuSzvw/wy4nlJF/2jG4HGxbMCG1w94XwIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3iKyMnR0ns1Sz1FtOgMHPfnf8jUJVUkXamPdg8NuT2w=;
- b=zvBaGafdxgc0pou2qArovgeXdT2M73/sHEpYZe6eGWDF6FOEtxokQc22NpcfLtGwBWp57hRBxKZ7uehqJPM/LyCdhCL1+YmLZnn60m/lRHfmzmqQFicXuDqyJapmWnUQ29XML2Z3ICcy+T0b9N8AnooIptR6BjlQ7qB14kaHYUw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by CY1PR12MB9674.namprd12.prod.outlook.com (2603:10b6:930:106::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Fri, 2 May
- 2025 07:49:58 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8678.028; Fri, 2 May 2025
- 07:49:58 +0000
-Message-ID: <da694af6-1a9a-4cee-86b7-1da97e1e91de@amd.com>
-Date: Fri, 2 May 2025 09:49:52 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/ttm: Silence randstruct warning about casting
- struct file
-To: Al Viro <viro@zeniv.linux.org.uk>, Matthew Brost <matthew.brost@intel.com>
-Cc: Kees Cook <kees@kernel.org>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
- Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-References: <20250502002437.it.851-kees@kernel.org>
- <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com> <20250502023447.GV2023217@ZenIV>
- <aBRJcXfBuK29mVP+@lstrano-desk.jf.intel.com> <20250502043149.GW2023217@ZenIV>
- <aBRPeLVgG5J5P8SL@lstrano-desk.jf.intel.com> <20250502053303.GX2023217@ZenIV>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20250502053303.GX2023217@ZenIV>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR4P281CA0283.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:e6::12) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ps0a/pQe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746179730;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lg/z+bj6Vp6Uwot26MZjMyBdidDV8u4Eq/gx3z2pwHw=;
+	b=Ps0a/pQesLF8F5yLiRCaUhNXAAhG63LpBcCl4H7wWuA4Rde2d6914NNrgifZrJpJHr/36e
+	0yHxhChhNb/pkGLfwZTZ+oOiZlvzjB2HGAMfhmDtBGAN7w4SLQwBKRwGoMeOpxLFhN8y28
+	6+R2HvntTVo/YmQFAxGcUmu7hWJ9Bds=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-421-TVWN07ruMDqHGgBeAeqVHg-1; Fri, 02 May 2025 05:55:27 -0400
+X-MC-Unique: TVWN07ruMDqHGgBeAeqVHg-1
+X-Mimecast-MFC-AGG-ID: TVWN07ruMDqHGgBeAeqVHg_1746179726
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39130f02631so496910f8f.2
+        for <linux-hardening@vger.kernel.org>; Fri, 02 May 2025 02:55:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746179726; x=1746784526;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lg/z+bj6Vp6Uwot26MZjMyBdidDV8u4Eq/gx3z2pwHw=;
+        b=qJalQt/j55tCTUFEbUhgmw9z6+rVcNThlTq/dSFviExDgxpf0qBhVnZWwh1NzyYfyp
+         lfbNa8PZNRP38yzi541H/Py6Zcfn5sTLndMQ63C/W36MhkYABZWHs6o5fxcwu3HUeom9
+         G5SYydwVv1TcweQ7y27b+JGucxAu6IPQIQ7PSW6tedGZ0+vsSJwVkskWINx39AVS42Hn
+         9j2Sb7DPoliLcjLBPKib/oAwnb6Ov13SEIHuISxfWd3TFSa0QyzWbBkT+dCnljjv8uuk
+         HKpHSHJ9ZMbxap48lWEqoVfibMnYnTa0Kp5EPTWap4pnWsa242zDBf9Atceu7k2pwv/X
+         fLJg==
+X-Forwarded-Encrypted: i=1; AJvYcCXhQyGNm0NJ3zvZkCrBugRB2sdzyJ2tljQ/OKkQWzeuPDI1zqcoKUkKAHnVbqEpJRm9QnMeofgNZRlHPwqHn94=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySaXDnbp9SQXrhNSBY6jcOz/0QeEvtw8zAo4fwQpmVC9ve2b5G
+	49snrnkVXXpHrTE1dQz+5FU1iTEhl2XGLoDVaD6LZ+O9jyjc6yT24tn7/oawMMcVbw1PFuDEZ8A
+	bn0b4FlKt60mP9ZZ3a4VBkywcMDYciuCquH23gmHvUtIpqApaWxZZSaEXUGrmRJIvAw==
+X-Gm-Gg: ASbGncv3140FVY7dz8KDTZptMHwRauQK+B3+4ea1jeyv1AGIQJEr8tDdEstiHW4/8+k
+	ZL4AF0lSbh+UJiCA3jK0uZLGHGeuK9oV0Wi/VUivVdUzBqsX6v4QB2kcAbXyj6xlXsJEYzL6IhW
+	X1/eEZSzcF8N2wmc6sQf1bSfj2xfnFYtvZUe8QGsk/gwa32/N7PfBynFJAPGs2P8cLGX5ZU8qyg
+	woTUj67xbs46Y+BfFsRdv6fEOP7FH49kEocrICu0dHDJhLQfyBNmNfqZnIn4Y2OP7fPbBEVT08x
+	boJj4I84ClEYg5s5kNSJASN3ZopdBF3scCEMlve8QeEPJ5W7
+X-Received: by 2002:a05:6000:40cd:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3a099aef847mr1613275f8f.54.1746179725795;
+        Fri, 02 May 2025 02:55:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpWssSttWyCeyGY3CsU2VpUSZWAU4rNhFXcV+QIILeKOWgOhhc72G0KBYplClE77XLY5f7yg==
+X-Received: by 2002:a05:6000:40cd:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3a099aef847mr1613170f8f.54.1746179725069;
+        Fri, 02 May 2025 02:55:25 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb ([2001:861:43c1:5950:3e51:b684:9982:d4a2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae3ccdsm1693329f8f.38.2025.05.02.02.55.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 02:55:24 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, Juri Lelli
+ <juri.lelli@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>, Nicolas
+ Saenz Julienne <nsaenz@amazon.com>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Dave
+ Hansen <dave.hansen@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H.
+ Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Naveen N
+ Rao <naveen@kernel.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda
+ <ojeda@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Rong Xu
+ <xur@google.com>, Rafael Aquini <aquini@redhat.com>, Song Liu
+ <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, Benjamin Berg
+ <benjamin.berg@intel.com>, Vishal Annapurve <vannapurve@google.com>, Randy
+ Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>, Tiezhu
+ Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+In-Reply-To: <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+ <20250430132047.01d48647@gandalf.local.home>
+ <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+ <20250430154228.1d6306b4@gandalf.local.home>
+ <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
+Date: Fri, 02 May 2025 11:55:21 +0200
+Message-ID: <xhsmhr0179w1i.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CY1PR12MB9674:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb6a652c-52a5-4fde-d1f3-08dd894def4d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aXoxNlNNU00zRVZMaFRRVlJyNWZENzFhWGdQa2FpZUlXY2l4dkxqZDdUaHdX?=
- =?utf-8?B?eW5sZHRYVkM2bnV0OHhOQnlrTWFJMFpLQ0pEL0Rtc21qZ1k1dVRmUVp1Snk4?=
- =?utf-8?B?N3krVy9tNnR4OVJSZm1nNDlxR1BmVmZlemFpbWNHMlBlSnNQWnJueTZYMFBX?=
- =?utf-8?B?eldLUHdmcTUrbXdCaTBXOVVhMVNSenE3QjhpNDAydXNwTEkzakNscmp6TGtZ?=
- =?utf-8?B?b3FTVUIzTmlSbEErbGVWMHU5dUxadUxxZ2loSDhJdDVtZWdJc1RMZmlQTi8r?=
- =?utf-8?B?SzJrcStFU0FvbzNvWGxIUk4ydHYyUDlMeElCTHYvdklwTFl5TVRRZUw4OWZR?=
- =?utf-8?B?ZFZHcTdHZUZQbEE5b0QyTWJRalQrYXJMNFh5RG1YVnZuVVBLSHNRT1RnZGk3?=
- =?utf-8?B?eE96YytJeWdBcFZMMDNwb0ZONXc0SXZNNFUwMWpkYjdEajFlM1dlSFpuOHZX?=
- =?utf-8?B?TFdWQi82SjJrRk5jdjhQbEExemZLK01zbm1sb0tFYm1wZVhpTmFqN1ZhSFVP?=
- =?utf-8?B?WlV1cVVjTm12dUlEK2VleXZ3MVZ6em9tR2FxdE11ODRvcGpLT1J2eWc4QVdV?=
- =?utf-8?B?QUhUUks1UkhGeVQrQ0ZENHJMWmhJd0ZIS0w4Nm9ZY09FZ0NMTGxOUGNVTkcx?=
- =?utf-8?B?eHdyZkhyL2dnK2pIeUxzcnpWc28wZWtLZ1FEVWVMVXVpNVh4MjhKOHpIdXV4?=
- =?utf-8?B?aEpiUk1ZT05ETG5Scy9obDhleVE4RDByN3oyUWVqemFpTzlFbU5BUmloT3dI?=
- =?utf-8?B?VnVhbVJ0ejIzVWtMbUdSVUl6S1NhQW1od01pY25ndVVnL2NtVXZwMTBnTVh4?=
- =?utf-8?B?WFg0VUIvYk1uY2JRUytBSy90R1ZIKy8zdGZQYmIrT1R1aHpsVEpVd1c0Y25G?=
- =?utf-8?B?Q1g4MVVIVXVlb1AzUkJHTFNJWlVXVkRIZTlXSmpFWUlkZmwwYU9qUndkTlpr?=
- =?utf-8?B?YzF2NUFyWnRHbkpaU0VaY1VBTmhUdDc4M1BNay92TjNOU3g5eDV2ZmlDVmtS?=
- =?utf-8?B?b1BTZXVOREpRNWxYODhiWjBVT0t1emR4STBPLzhZUmV2bGNGVkNtM2E0WVBW?=
- =?utf-8?B?MDRycGFTT2NpelVyK0kxRXJiWHJQVG1xSDZDb20vT1g3RjQ3VXoydzlCaVhp?=
- =?utf-8?B?MWxSbWR1VkdMUW1GUFZXVkJCaXQ5NFRxV0h4Ujh5OTZESlFuYlRQOS96Wmo0?=
- =?utf-8?B?cGpNUEhnTXJxcnROdGxnZWxNSWZNNHpRYUFEMU1VcEZNRlo2Uy9NMVBFZTRh?=
- =?utf-8?B?RE5sRGkzNVM2dGMzZFlXa3BIeXVpUUlwajRQOVRlNDdOZHVqd3VicUpMVGp5?=
- =?utf-8?B?SzFxVE9jYWZ6RjRaYU1LSzZlSWtQVkRuWlpBY2NLemRJcTdaWkNobTRhdFpO?=
- =?utf-8?B?Z2VaK3piVDRSVTVIcDkraXQydGwweWVmc29WbkNsdnhIc1YreTN1VmdWeUF5?=
- =?utf-8?B?d1JBRFpDMGt3LzVYTzZlMHYxRXdYd1h4cEpSZ3ZiamRvZHcrUm9vZ1Nma1JY?=
- =?utf-8?B?Unh2cFRubDlYbjRMWGFramhBb2o1N1JzUGIrcTBUWVBjTnVMZ3NZMUx5MTJW?=
- =?utf-8?B?U3ZSOHMzUWJKR1dpRzcxRWhRQmxOTG1JNFdXMjNmbnlCUmFVQjVnVDMvVHF1?=
- =?utf-8?B?QVlqQ1dPSjFwUDJFQTdkNW9TV2xxSy96anNzb3NQWDc0V05DL3g4WW1QczdN?=
- =?utf-8?B?RE9JUzYvTzJBR3BlZkY5TXdwYzN2T0lPMHROb1RHNmhwcDNMWTN1N2VoLzJk?=
- =?utf-8?B?cGRFTm1oTHBjcG11SWpNTUczS0JjU2dRa0RRTUNLNjJYckdEWEUyZXBwTHh5?=
- =?utf-8?B?YjM5bXJLNzZSYkJUYXd4ZlFQVUJXdVg0Q3FTSktJUlJjcEtQK0tNRVFrc044?=
- =?utf-8?B?bW9vVjU3TXZoNkNPUDZPeXEvaTZlVHNtWWpCVHZCVHJwdlcxVlFIZzE5UXF1?=
- =?utf-8?Q?vYU4/y6MVAg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cnlIK1NzalhsbFJFSEluS0RHeHhodzhmTU95R0lhQWNPdmRRckNyT1dlcERG?=
- =?utf-8?B?V3lkSWZGZVBjU0ZaUTh6VmdwMjA5c1JlRFZmeHQ4OElDOVN2b2YvekNxd1Iv?=
- =?utf-8?B?UFZXN0NmYzNVOVpoclJqM091aUp0akUzUUhoczhCMnRBM0FrdUJjdVh5NVlk?=
- =?utf-8?B?NUtxZDBBclVOcUlJUG9TYXM2dVZLVlViNUQ4MXhId3hEWCtnUlh2b0MzN0Yv?=
- =?utf-8?B?djJoL2ZmOGRqVE5SQ0Z3b1JxdkJaaktBUVFJT3hWSi9Td2RTSDZ6dkROdmlE?=
- =?utf-8?B?VzFMSytwREN3RWhML1NINnNsdlNKbFVZcForWkRjQUZUeTdVeGV1QVVpbnB4?=
- =?utf-8?B?Zlk4RC9YZThjaVUxb0NzTWN2TUJYNTJDTFhTYjBON3lBd0laL1pmRC8vaXRW?=
- =?utf-8?B?eUo0UVBxYWRKd0dFVjBvU1Rkc3VnTzduQitUNDF1Q2JQeUhqa213WGhTWGhD?=
- =?utf-8?B?b1JTZitDWUVIdU8reHIrSzlDS01HMWsrNlF5ZmJ1RldJL29zQWUwY2hEU1dN?=
- =?utf-8?B?Y2NNbVJGSVpnR1pxS1JSeVdVcmZ6cTBjSGZ1aDJINm85VHJ6Q0dqOW14MGNY?=
- =?utf-8?B?Z3o0WWNCVkRoVDY2S3FhaThzUjZQSXRiNnRyQ1U5d0RDTTByWGozRDN5WmNR?=
- =?utf-8?B?MUtVczZTSHN2R3lpNElFRXJjTk1vaFg5SWxIY0ZjWERmaWkxVFpMUmpwMEV5?=
- =?utf-8?B?cllzQldSRVhYbXo3WTMraWpiQWRLRlNhUUpmSitDaVNuelNVSVViR2lXWXRs?=
- =?utf-8?B?ZTNJSHNOaEpRcS9PclRIcTUrQmtEUjZzL3VGNmVJNWVWMEhmSEt2VnNPZ09J?=
- =?utf-8?B?L0hram5XSEI5SVpyaDRhcGwvaUV4eGNNNm1QZEZvbnlQT1l0akVKOGNxM0RR?=
- =?utf-8?B?YVdXeVpKVm9qWStxdXhNWXVDc1ltTkFIQVBHbDFYck9XWUJNQURDeFk3QTVk?=
- =?utf-8?B?WWlZdEwwYkxGMnJCT0dpUFowMEZCQTZIRkU1VE5Sd3JPWmppQkY1OFlHQmQ5?=
- =?utf-8?B?bDJCTmJxdlgvT2ErMzBBeXlQaFJsb1hnWVdkSnhsajZGWDhDa3JldEtNRmov?=
- =?utf-8?B?ZVRMQlNWMDlBM3BkRUJLRVdHNnBrNEx5RTBSbExROEZpdk02SE5BL3RRWnNU?=
- =?utf-8?B?RlNoMGRXM3gzamRCK0cwdTl6bWtTU1liQXVWQWRXd0lJZCs3M0hhUDdqWUxJ?=
- =?utf-8?B?UHNZU1p1U08rZXBvL1pkTmFjOFBlLy9wY0xxUHFzb1d4amlRZHUrQUxTYXRz?=
- =?utf-8?B?b3dOSTVIQmRRdWdHNFpkbTlveHMrSXhDYm1iTUN4cXR2UnVTV1dZK09WRktK?=
- =?utf-8?B?cGQzSUhRTE9SYjNMN1NGOStITmd1ODNWd2lSMEdnelord0hLWW0zTjFWNFJP?=
- =?utf-8?B?akJLTXBua0FTcjBqUjdlbDlRZG1PTjFROVhpRzF1OTJ6Z0VxNTRka3pzaUl1?=
- =?utf-8?B?ZlErdGlmdjZBZm8zaDVpWS9mcHZBajBHMy95MHdFVm0vZHgzeEFmdHNDcmIx?=
- =?utf-8?B?aVRzRDhXQno4WW1HSmg2MnFwbGJ5QUo1MnEzcWVYeUJIc1VUUlcwMVVRNG5u?=
- =?utf-8?B?KzlINHU5Vmc3YVR5SzkxRFJGMEpYdDl3dHhZZTUySXJDR2hKbzV3dXhoR0F1?=
- =?utf-8?B?b2h6dzJ3MHhZd2dFL3VGWjlSdGpJZk9DbmdkdmRnY3hXamtrcDU4UHFzQm43?=
- =?utf-8?B?N0E4eWpHMTFjL3U1SG11V0ZIdnFqSW41d2cxRWhMUjJBdzViaUhtdUowSUVz?=
- =?utf-8?B?anNLU3pyb21qTk1zUmdQMEg4clQxR1pBUjU1UjU4VWEvcmYzTU5SZ2M1UDRK?=
- =?utf-8?B?YVRBV0xaMFFYRUs5ZlUrNGUvYXJGR1A0cGl2M01sdTRDYXBiUEtBekdYbjlC?=
- =?utf-8?B?VXNMdlhEenJyTFVqenJpN2d5bWY2ak9PNGxSejR4U0hmVldINmEzSUQvNlgz?=
- =?utf-8?B?aEhNS3VnaHZGMzgwdXNBekNLM2VVYnpEOXVSNkFvYU1nMnVDaW9xVEFRbndo?=
- =?utf-8?B?eDNnZkxGb2ViTXh1a0JhUXpNY2hJNmMrcTFUYmVJckpIUHRlZWdGTkVEV1lo?=
- =?utf-8?B?WU4rQlovMXp4czZHcEJjTHZKaU1CcUtlVkxidXE4cGpPRWs0cVBqa2lXZTZO?=
- =?utf-8?Q?lpJU=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb6a652c-52a5-4fde-d1f3-08dd894def4d
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 07:49:58.0245
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7+9tVKNwq4qZgDDCTFqGAmaZ9vvTc5uKceRRZQ3nG2PpUWkrfwh9B1fatkW/pcAO
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR12MB9674
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Ciz4DxrPGegbWn4ROkB3fsHDol6suiSmG17BtS1oNBE_1746179726
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On 5/2/25 07:33, Al Viro wrote:
-> On Thu, May 01, 2025 at 09:52:08PM -0700, Matthew Brost wrote:
->> On Fri, May 02, 2025 at 05:31:49AM +0100, Al Viro wrote:
->>> On Thu, May 01, 2025 at 09:26:25PM -0700, Matthew Brost wrote:
-> 
->>> And what is the lifecycle of that thing?  E.g. what is guaranteed about
->>> ttm_backup_fini() vs. functions accessing the damn thing?  Are they
->>> serialized on something/tied to lifecycle stages of struct ttm_tt?
+On 30/04/25 13:00, Dave Hansen wrote:
+> On 4/30/25 12:42, Steven Rostedt wrote:
+>>> Look at the syscall code for instance:
+>>>
+>>>> SYM_CODE_START(entry_SYSCALL_64)
+>>>>         swapgs
+>>>>         movq    %rsp, PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
+>>>>         SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
+>>> You can _trivially_ audit this and know that swapgs doesn't touch memory
+>>> and that as long as PER_CPU_VAR()s and the process stack don't have
+>>> their mappings munged and flushes deferred that this would be correct.
+>> Hmm, so there is still a path for this?
 >>
->> I believe the life cycle is when ttm_tt is destroyed or api allows
->> overriding the old backup with a new one (currently unused).
-> 
-> Umm...  So can ttm_tt_setup_backup() be called in the middle of
-> e.g. ttm_backup_drop() or ttm_backup_{copy,backup}_page(), etc.?
-> 
-> I mean, if they had been called by ttm_backup.c internals, it would
-> be an internal business of specific implementation, with all
-> serialization, etc. warranties being its responsibility;
-> but if it's called by other code that is supposed to be isolated
-> from details of what ->backup is pointing to...
-> 
-> Sorry for asking dumb questions, but I hadn't seen the original
-> threads.  Basically, what prevents the underlying shmem file getting
-> torn apart while another operation is using it?  It might very well
-> be simple, but I had enough "it's because of... oh, bugger" moments
-> on the receiving end of such questions...
+>> At least if it added more ways to debug it, and some other changes to make
+>> the locations where vmalloc is dangerous smaller?
+>
+> Being able to debug it would be a good start. But, more generally, what
+> we need is for more people to be able to run the code in the first
+> place. Would a _normal_ system (without setups that are trying to do
+> NOHZ_FULL) ever be able to defer TLB flush IPIs?
+>
+> If the answer is no, then, yeah, I'll settle for some debugging options.
+>
+> But if you shrink the window as small as I'm talking about, it would
+> look very different from this series.
+>
+> For instance, imagine when a CPU goes into the NOHZ mode. Could it just
+> unconditionally flush the TLB on the way back into the kernel (in the
+> same SWITCH_TO_KERNEL_CR3 spot)? Yeah, it'll make entry into the kernel
+> expensive for NOHZ tasks, but it's not *THAT* bad. And if the entire
+> point of a NOHZ_FULL task is to minimize the number of kernel entries
+> then a little extra overhead there doesn't sound too bad.
+>
 
-It's the outside logic which makes sure that the backup structure stays around as long as the BO or the device which needs it is around.
+Right, so my thought per your previous comments was to special case the
+TLB flush, depend on kPTI and do it uncondtionally in SWITCH_TO_KERNEL_CR3
+just like you've described - but keep the context tracking mechanism for
+other deferrable operations.
 
-But putting that aside I was not very keen about the whole idea of never defining the ttm_backup structure and just casting it to a file in the backend either.
+My gripe with that was having two separate mechanisms
+- super early entry around SWITCH_TO_KERNEL_CR3)
+- later entry at context tracking
 
-So I would just completely nuke that unnecessary abstraction and just use a pointer to a file all around.
+Shifting everything to SWITCH_TO_KERNEL_CR3 means we lose the
+context_tracking infra to dynamically defer operations (atomically reading
+and writing to context_tracking.state), which means we unconditionally run
+all possible deferrable operations. This doesn't scream scalable, even
+though as you say NOHZ_FULL kernel entry is already a "you lose" situation.
 
-Regards,
-Christian.
+Yet another option is to duplicate the context tracking state specifically
+for IPI deferral and have it driven in/by SWITCH_TO_KERNEL_CR3, which is
+also not super savoury.
+
+I suppose I can start poking around running deferred ops in that
+SWITCH_TO_KERNEL_CR3 region, and add state/infra on top. Let's see where
+this gets me :-)
+
+Again, thanks for the insight and the suggestions Dave!
+
+> Also, about the new hardware, I suspect there's some mystery customer
+> lurking in the shadows asking folks for this functionality. Could you at
+> least go _talk_ to the mystery customer(s) and see which hardware they
+> care about? They might already even have the magic CPUs they need for
+> this, or have them on the roadmap. If they've got Intel CPUs, I'd be
+> happy to help figure it out.
+
