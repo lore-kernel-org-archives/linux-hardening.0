@@ -1,93 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD24205AD0;
-	Fri,  2 May 2025 22:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2526EB79;
+	Fri,  2 May 2025 22:54:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746225721; cv=none; b=ebVzRPw25Ez+bOOoRXN78K94GFyMMfciaMhrq0kd81/ddZdx5sUfcm+1iRI0nS19OdPE+OGHCqN0FhG/EOIwX4abdS6/wM2RPBu2/JJ/t7eNJQ3NAe6Mfl6ikkHwZKc+0uii9eps0qsv9f7f8uZBVz0S37gBr5o/6q64HlIDL0c=
+	t=1746226460; cv=none; b=Cl0C1Fc/yNv77o5+WKvyhvB+ZkIGtiglpibvZbmyZIrPdgIBIkIC9XWDhFlo60FzGu8rW1YRPAZ5mA5BpzZOyB/tX4BuYN7NDlNi9IAGm0fq0pz2MH85ttkrjy1XcS3CXt3/oyMGQsodHbWQlIe4SGBhRfwGohs4yfH6NFkC/xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746225721; c=relaxed/simple;
-	bh=pQj86fi+y58xx2m3KZLT/z77OBsLn8M0nibe3HnDK7U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jGtQLaXbCbAAkX3Lcv7c4KfmZDVmPrnTS2/YCE2j+uDsDkpbxLndmFq7thRMF0mwLdcCxry+2UguDjh/YhW+ghm893Ol+GXXg/u1AbOVptMYtQ+tXn3b8RcgYC4cTeE7eLO2MzNSKTmEqjck7jEemC/zRYmoRim+O9t2DxXiOeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSxZY+rZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746226460; c=relaxed/simple;
+	bh=p3LCBG41fA+N9OOg7h+A3NTLbRHrJjxplvYJ9i2fjRY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=D/jQ2i9VO2sAV+mTr8bQpn8VfLPpVkCMbuF7qeCEWSt5Ry9JD7DksQdnM1TMqKHJqxupsX9/JBWR0gbC/CooIMPS1LFII1Qza6uNb1yiw+pKCuzWN+yHhpN7yhlT27+Nykmk5chEgQ5NDtSWtCyeJrIvVTMkTc6Z07dKnV2IaaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ssm7w/5O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSxZY+rZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82EFEC4CEE4;
-	Fri,  2 May 2025 22:42:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ssm7w/5O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6EC5C4AF0C;
+	Fri,  2 May 2025 22:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746225721;
-	bh=pQj86fi+y58xx2m3KZLT/z77OBsLn8M0nibe3HnDK7U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NSxZY+rZq9oWnD7JrCGpyizGSeRNouZrQ1dmNPdnqfeuhFRKI3xaHzmqg9xwmrYbx
-	 8EWa8lhojJVY6/yRZLZwDTcbEPoqNmTEG2j3Sxoo0G/B/plyC+OniRxE7SH/OMDYV+
-	 plXH1rkvv/xOjXWK9GzES6HjsaExh3lvElJKxCutrPPznZmtyPrqhDfiYzbnXwKp17
-	 T4n5fyBlDqPQzJFeKmsFmfiK0yciBnAZ03Be5ya0TzF2xIMPMfgB00Uu7hQWy4v4oq
-	 suUmuZMmyR+711PWq11Muzuc1epCzorfMHelTdlEpGiNBeu8oZa+APbmFrXCs1vtcF
-	 loBmGOZRaUDHQ==
+	s=k20201202; t=1746226459;
+	bh=p3LCBG41fA+N9OOg7h+A3NTLbRHrJjxplvYJ9i2fjRY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ssm7w/5OZHMhxTzwMP4B4UgKSyqDS49B4LzQoeqpM6gq8fFj67ZCjSc9HH7u9EGhG
+	 D5p6tcYMU1FvQqDasRC4ueS8g3cJQLabkV4DBDMSf01s2i9Hqb+fvrMZz/vhZiCjbl
+	 q59u9hK4c9qNtDCDZ/PpSnmg/qgPvpx/tJl0NjdeXCX7d1aZedvHwOSQpBvN8Ot1RM
+	 MZhVSvW4V7VSJzDtAz9K89UvV2KYeqFIRjRnRE7Wm5dT3nPJxX49BpoHcA+33YS0tT
+	 zEUc00UOuVESsiTC5v26JvoMPHZwyD+mRB4CfW5ctFR+Wkhez7Dx3Pynf+GjMni1S1
+	 fSpRGPEgXylIg==
 From: Kees Cook <kees@kernel.org>
-To: Saurav Kashyap <skashyap@marvell.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
-	Javed Hasan <jhasan@marvell.com>,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	WangYuli <wangyuli@uniontech.com>,
-	Mark Brown <broonie@kernel.org>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] scsi: qedf: Use designated initializer for struct qed_fcoe_cb_ops
-Date: Fri,  2 May 2025 15:41:57 -0700
-Message-Id: <20250502224156.work.617-kees@kernel.org>
+	kasan-dev@googlegroups.com,
+	linux-um@lists.infradead.org
+Subject: [PATCH v2 1/3] gcc-plugins: Force full rebuild when plugins change
+Date: Fri,  2 May 2025 15:54:13 -0700
+Message-Id: <20250502225416.708936-1-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250502224512.it.706-kees@kernel.org>
+References: <20250502224512.it.706-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1485; i=kees@kernel.org; h=from:subject:message-id; bh=pQj86fi+y58xx2m3KZLT/z77OBsLn8M0nibe3HnDK7U=; b=owGbwMvMwCVmps19z/KJym7G02pJDBmiXqbRW+858Tw8Ii8nZtjQf76adbfHWRN/rZcViwp+H +pw9TLrKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmMhnLkaGP1EW0ltS1ANcF7sU s9y89vaph4fVn/DLQVFPqsTNG+u5GRk2bX4o/a4x2uCblSPH+ianaY+n+CyK2xYZ/MZyvWClnCs LAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3599; i=kees@kernel.org; h=from:subject; bh=p3LCBG41fA+N9OOg7h+A3NTLbRHrJjxplvYJ9i2fjRY=; b=owGbwMvMwCVmps19z/KJym7G02pJDBmivmJ2fLZvdZtuL3ln0FN9zyeba4Wj2k17D3nRxQXrd vdMr2PqKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmEjGNEaG31vtb+Y+u61978cH qSv9Qt/MA2r2XlX+dImj81RrVk9POMP/KOPbz/fsmLXErj3kugvzgqC892Eblgc1Mnx9/1GLbac cJwA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Recent fixes to the randstruct GCC plugin allowed it to notice
-that this structure is entirely function pointers and is therefore
-subject to randomization, but doing so requires that it always use
-designated initializers. Explicitly specify the "common" member as being
-initialized. Silences:
+There was no dependency between the plugins changing and the rest of the
+kernel being built. Enforce this by including a synthetic header file
+when using plugins, that is regenerated any time the plugins are built.
 
-drivers/scsi/qedf/qedf_main.c:702:9: error: positional initialization of field in 'struct' declared with 'designated_init' attribute [-Werror=designated-init]
-  702 |         {
-      |         ^
+This cannot be included via '-include ...' because Makefiles use the
+"filter-out" string function, which removes individual words. Removing
+all instances of "-include" from the CFLAGS will cause a lot of
+problems. :)
 
-Fixes: c2ea09b193d2 ("randstruct: gcc-plugin: Remove bogus void member")
+Instead, use -I to include the gcc-plugins directory, and depend on the
+new -DGCC_PLUGINS_ENABLED flag to include the generated header file via
+include/linux/compiler-version.h, which is already being used to control
+full rebuilds. The UM build requires that the -I be explicitly added.
+
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Saurav Kashyap <skashyap@marvell.com>
-Cc: Javed Hasan <jhasan@marvell.com>
-Cc: <GR-QLogic-Storage-Upstream@marvell.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: <linux-scsi@vger.kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas.schier@linux.dev>
+Cc: <linux-hardening@vger.kernel.org>
+Cc: <linux-kbuild@vger.kernel.org>
 ---
- drivers/scsi/qedf/qedf_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/um/Makefile                 | 1 +
+ include/linux/compiler-version.h | 4 ++++
+ scripts/Makefile.gcc-plugins     | 2 +-
+ scripts/gcc-plugins/Makefile     | 8 ++++++++
+ 4 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
-index 436bd29d5eba..6b1ebab36fa3 100644
---- a/drivers/scsi/qedf/qedf_main.c
-+++ b/drivers/scsi/qedf/qedf_main.c
-@@ -699,7 +699,7 @@ static u32 qedf_get_login_failures(void *cookie)
- }
+diff --git a/arch/um/Makefile b/arch/um/Makefile
+index 1d36a613aad8..8cc0f22ebefa 100644
+--- a/arch/um/Makefile
++++ b/arch/um/Makefile
+@@ -72,6 +72,7 @@ USER_CFLAGS = $(patsubst $(KERNEL_DEFINES),,$(patsubst -I%,,$(KBUILD_CFLAGS))) \
+ 		$(ARCH_INCLUDE) $(MODE_INCLUDE) $(filter -I%,$(CFLAGS)) \
+ 		-D_FILE_OFFSET_BITS=64 -idirafter $(srctree)/include \
+ 		-idirafter $(objtree)/include -D__KERNEL__ -D__UM_HOST__ \
++		-I$(objtree)/scripts/gcc-plugins \
+ 		-include $(srctree)/include/linux/compiler-version.h \
+ 		-include $(srctree)/include/linux/kconfig.h
  
- static struct qed_fcoe_cb_ops qedf_cb_ops = {
--	{
-+	.common = {
- 		.link_update = qedf_link_update,
- 		.bw_update = qedf_bw_update,
- 		.schedule_recovery_handler = qedf_schedule_recovery_handler,
+diff --git a/include/linux/compiler-version.h b/include/linux/compiler-version.h
+index 573fa85b6c0c..08943df04ebb 100644
+--- a/include/linux/compiler-version.h
++++ b/include/linux/compiler-version.h
+@@ -12,3 +12,7 @@
+  * and add dependency on include/config/CC_VERSION_TEXT, which is touched
+  * by Kconfig when the version string from the compiler changes.
+  */
++
++#ifdef GCC_PLUGINS_ENABLED
++#include "gcc-plugins-deps.h"
++#endif
+diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+index 5b8a8378ca8a..468bb8faa9d1 100644
+--- a/scripts/Makefile.gcc-plugins
++++ b/scripts/Makefile.gcc-plugins
+@@ -38,7 +38,7 @@ export DISABLE_STACKLEAK_PLUGIN
+ 
+ # All the plugin CFLAGS are collected here in case a build target needs to
+ # filter them out of the KBUILD_CFLAGS.
+-GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
++GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y)) -I$(objtree)/scripts/gcc-plugins -DGCC_PLUGINS_ENABLED
+ export GCC_PLUGINS_CFLAGS
+ 
+ # Add the flags to the build!
+diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
+index 320afd3cf8e8..24671d39ec90 100644
+--- a/scripts/gcc-plugins/Makefile
++++ b/scripts/gcc-plugins/Makefile
+@@ -66,3 +66,11 @@ quiet_cmd_plugin_cxx_o_c = HOSTCXX $@
+ 
+ $(plugin-objs): $(obj)/%.o: $(src)/%.c FORCE
+ 	$(call if_changed_dep,plugin_cxx_o_c)
++
++quiet_cmd_gcc_plugins_updated = UPDATE  $@
++      cmd_gcc_plugins_updated = echo '/* $^ */' > $(obj)/gcc-plugins-deps.h
++
++$(obj)/gcc-plugins-deps.h: $(plugin-single) $(plugin-multi) FORCE
++	$(call if_changed,gcc_plugins_updated)
++
++always-y += gcc-plugins-deps.h
 -- 
 2.34.1
 
