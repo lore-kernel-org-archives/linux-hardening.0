@@ -1,128 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5A816B3B7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E64318DB26;
 	Sat,  3 May 2025 18:46:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746297987; cv=none; b=MevFtRfGT6hrJoRnHPKEiJTnZcBJHcFXZF3AzvJUefLvvo7K9tV1XDZFHFUwn9i7u6JRjLwZ+P3DP721R3eQT1ZMAJkCL2iSC/6iEDTut+hwqVP7XyKuiB3f545BIXCOoILYVz4MnZozImItichc6S1VvsvMXZzXLVTsW2zERUg=
+	t=1746297987; cv=none; b=rLcsXZIXkCLKjqyR6sdVzWpyV9w+mOJ0eHPmtUVDDR9Bdqaow5LgEPOhliXKVoKRKIXdu/G3o9KRGWf+MlhoQL4uWAG+nBhUuxf2QhUQ8eiNJsuyDl9Aw6gldGjnP+vGhlA+PXEG0/XS+RQDXUpBZ7gj1aYHrtckzNFl3j7tdYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746297987; c=relaxed/simple;
-	bh=+tpyu2HU8spYPzq1uf4EZ3SloA5fFEfjRjUkQSozF1w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fjbT93gRYUDiYUD+tPQ7YKhAkvdjUvpcYA6BjePGEYqkTlHAeKE6/9ZefTte7SlyZ/hEulsq86nnqYWBDM4Ujg4y7lIv/Dw/R8E+OdNO6MVOrJHs+GTprqfhP94LoHBrf+45kGtsPEWXhO1tDZRrKbNPoGeh8Ox7q9ozOBCNiso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMyiXwu5; arc=none smtp.client-ip=10.30.226.201
+	bh=cmrsue879i0SFR336+VtZOxozOZsiQ5dawHHXzQfCT4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T9AhQnonm/GNlmUaroFxPOEU+gGetMB4MrXqVyKoQ607UrNUeNyQW4T5QJAiDdHxx240nFNY8xUYOlVbyw0Xf/TqBS19Qc2zFQhwiv2olwGs7FssotVytrpQUlDoRhyZ4tnfWyZhMCVWrG+8K0JCaXUb9/w/WOi4F/BvV0aWiEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HX/h4kW+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMyiXwu5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C232C4CEEE;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HX/h4kW+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E05C4AF0C;
 	Sat,  3 May 2025 18:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746297986;
-	bh=+tpyu2HU8spYPzq1uf4EZ3SloA5fFEfjRjUkQSozF1w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nMyiXwu5nh0hGSlwFkUAtV2aMl6hkBcXj2nYBXc1EZfem3afnc7pOIoxQnegM+UtO
-	 AQIX/rgsH46feRTLVDVOdcfOdx7+h/S9GGAdOepB6Iak/4D6EZ7JHv1Ng8aNV3qeE/
-	 fEROiBke/e8y7Ef8ZrA7MekJgwyKG3eJuSMnANJcB5+kaWC45hvJfC3IsQhqx1s81z
-	 aoTZHdunenePfUBV7z3DDmdXUK5vADwMNnESZDl3o7C16DkfgDUBxS0fTgZyN1LSym
-	 RL9viwL9YsPstWtVkqXz7gqeZoyz4nucQhW4q3HhvUpRAOXGQs5X6JGm0/uCgtog5E
-	 DyVYWt6phyH7Q==
+	bh=cmrsue879i0SFR336+VtZOxozOZsiQ5dawHHXzQfCT4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HX/h4kW+u8OZY9JS4fM+MlUY7L/Ak8WJyQo+O4GNTudETJI8GY5bBDV6qOrAkkb+0
+	 Wr4tfa64vxTlZLrGbKjCrFW0iyj9i07s/alc81j6pkgGawterXu8/CQQ4GznnafBPU
+	 eZ2J200gjP/oOKTGn/kQd9QMjx8wzdMXqmU5RZc/X0at/kS/dyJGIICuRtEC1NBKPW
+	 JFZ6/jeCpkj/V1m+xefEsgh/iAzgMSA0lGdKwsdYNOLaR2Uzv3NX+o8TMqLE0j6jHI
+	 FMeJpetJqfdQO+/L6UD2nRDK/8g6nwdzrq449L8pKbebcS/vQQ5o90clk3Z3dHNNRl
+	 iIBWfwlc8lBAw==
 From: Kees Cook <kees@kernel.org>
 To: Masahiro Yamada <masahiroy@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
 	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Justin Stitt <justinstitt@google.com>,
 	Marco Elver <elver@google.com>,
 	Andrey Konovalov <andreyknvl@gmail.com>,
 	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	linux-kbuild@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
 	Bill Wendling <morbo@google.com>,
 	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	kasan-dev@googlegroups.com,
 	llvm@lists.linux.dev
-Subject: [PATCH v3 3/3] integer-wrap: Force full rebuild when .scl file changes
-Date: Sat,  3 May 2025 11:46:20 -0700
-Message-Id: <20250503184623.2572355-3-kees@kernel.org>
+Subject: [PATCH v3 0/3] Detect changed compiler dependencies for full rebuild
+Date: Sat,  3 May 2025 11:46:17 -0700
+Message-Id: <20250503184001.make.594-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250503184001.make.594-kees@kernel.org>
-References: <20250503184001.make.594-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2674; i=kees@kernel.org; h=from:subject; bh=+tpyu2HU8spYPzq1uf4EZ3SloA5fFEfjRjUkQSozF1w=; b=owGbwMvMwCVmps19z/KJym7G02pJDBliyft7n2QtDHVZzPzT7voxVRX9o38qkjOX/vRYvIpJI GFTQFxERykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwETSDRj+Z68L0rBx8nkQ1vFK /Z3w59knAyKm/q25XLPDJ3Wd/pPO+4wMr37EPn6zUEbQ81Oxn66L3YPZSxqD1p88miN63FK3vj+ FDQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2613; i=kees@kernel.org; h=from:subject:message-id; bh=cmrsue879i0SFR336+VtZOxozOZsiQ5dawHHXzQfCT4=; b=owGbwMvMwCVmps19z/KJym7G02pJDBliKex5Glf6uqY79um+fzhV7e/G6CI/q6v1Lx66z1du+ s798NWZjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgInM72L4nxz345rV9LzVEx9G C8dp7Dd573ZI0O22kPspF4NEW7NvPxkZTh+XTkr8kxx4LV9zV9vpe5JsjydbFx5Njs65wCubOOc mCwA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Since the integer wrapping sanitizer's behavior depends on its associated
-.scl file, we must force a full rebuild if the file changes. If not,
-instrumentation may differ between targets based on when they were built.
+ v3: move to include/generated, add touch helper
+ v2: https://lore.kernel.org/lkml/20250502224512.it.706-kees@kernel.org/
+ v1: https://lore.kernel.org/lkml/20250501193839.work.525-kees@kernel.org/
 
-Generate a new header file, integer-wrap.h, any time the Clang .scl
-file changes. Include the header file in compiler-version.h when its
-associated feature name, INTEGER_WRAP, is defined. This will be picked
-up by fixdep and force rebuilds where needed.
+Hi,
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nicolas.schier@linux.dev>
-Cc: Marco Elver <elver@google.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: <linux-kbuild@vger.kernel.org>
-Cc: <kasan-dev@googlegroups.com>
-Cc: <linux-hardening@vger.kernel.org>
----
- include/linux/compiler-version.h | 3 +++
- scripts/Makefile.ubsan           | 1 +
- scripts/basic/Makefile           | 5 +++++
- 3 files changed, 9 insertions(+)
+This is my attempt to introduce dependencies that track the various
+compiler behaviors that may globally change the build that aren't
+represented by either compiler flags nor the compiler version
+(CC_VERSION_TEXT). Namely, this is to detect when the contents of a
+file the compiler uses changes. We have 3 such situations currently in
+the tree:
 
-diff --git a/include/linux/compiler-version.h b/include/linux/compiler-version.h
-index 69b29b400ce2..187e749f9e79 100644
---- a/include/linux/compiler-version.h
-+++ b/include/linux/compiler-version.h
-@@ -19,3 +19,6 @@
- #ifdef RANDSTRUCT
- #include <generated/randstruct_hash.h>
- #endif
-+#ifdef INTEGER_WRAP
-+#include <generated/integer-wrap.h>
-+#endif
-diff --git a/scripts/Makefile.ubsan b/scripts/Makefile.ubsan
-index 9e35198edbf0..653f7117819c 100644
---- a/scripts/Makefile.ubsan
-+++ b/scripts/Makefile.ubsan
-@@ -15,6 +15,7 @@ ubsan-cflags-$(CONFIG_UBSAN_TRAP)		+= $(call cc-option,-fsanitize-trap=undefined
- export CFLAGS_UBSAN := $(ubsan-cflags-y)
- 
- ubsan-integer-wrap-cflags-$(CONFIG_UBSAN_INTEGER_WRAP)     +=	\
-+	-DINTEGER_WRAP						\
- 	-fsanitize-undefined-ignore-overflow-pattern=all	\
- 	-fsanitize=signed-integer-overflow			\
- 	-fsanitize=unsigned-integer-overflow			\
-diff --git a/scripts/basic/Makefile b/scripts/basic/Makefile
-index dd289a6725ac..fb8e2c38fbc7 100644
---- a/scripts/basic/Makefile
-+++ b/scripts/basic/Makefile
-@@ -14,3 +14,8 @@ cmd_create_randstruct_seed = \
- $(obj)/randstruct.seed: $(gen-randstruct-seed) FORCE
- 	$(call if_changed,create_randstruct_seed)
- always-$(CONFIG_RANDSTRUCT) += randstruct.seed
-+
-+# integer-wrap: if the .scl file changes, we need to do a full rebuild.
-+$(obj)/../../include/generated/integer-wrap.h: $(srctree)/scripts/integer-wrap-ignore.scl FORCE
-+	$(call if_changed,touch)
-+always-$(CONFIG_UBSAN_INTEGER_WRAP) += ../../include/generated/integer-wrap.h
+- If any of the GCC plugins change, we need to rebuild everything that
+  was built with them, as they may have changed their behavior and those
+  behaviors may need to be synchronized across all translation units.
+  (The most obvious of these is the randstruct GCC plugin, but is true
+  for most of them.)
+
+- If the randstruct seed itself changes (whether for GCC plugins or
+  Clang), the entire tree needs to be rebuilt since the randomization of
+  structures may change between compilation units if not.
+
+- If the integer-wrap-ignore.scl file for Clang's integer wrapping
+  sanitizer changes, a full rebuild is needed as the coverage for wrapping
+  types may have changed, once again cause behavior differences between
+  compilation units.
+
+The current solution is to:
+- Touch a .h file in include/generated that is updated when the specific
+  dependencies change.
+  e.g.: randstruct_hash.h depends on randstruct.seed
+
+- Add a conditional -D argument for each separate case
+  e.g.: RANDSTRUCT_CFLAGS += -DRANDSTRUCT
+
+- Include the .h file from compiler-version.h through an #ifdef for the define
+  e.g.:
+  #ifdef RANDSTUCT
+  #include <generated/randstruct_hash.h>
+  #endif
+
+This means that all targets gain the dependency (via fixdep), but only
+when the defines are active, which means they are trivially controlled
+by the existing CFLAGS removal mechanisms that are already being used
+to turn off each of the above features.
+
+-Kees
+
+Kees Cook (3):
+  gcc-plugins: Force full rebuild when plugins change
+  randstruct: Force full rebuild when seed changes
+  integer-wrap: Force full rebuild when .scl file changes
+
+ include/linux/compiler-version.h | 10 ++++++++++
+ include/linux/vermagic.h         |  1 -
+ scripts/Makefile.gcc-plugins     |  2 +-
+ scripts/Makefile.lib             | 18 ++++++++++++++++++
+ scripts/Makefile.ubsan           |  1 +
+ scripts/basic/Makefile           |  5 +++++
+ scripts/gcc-plugins/Makefile     |  4 ++++
+ 7 files changed, 39 insertions(+), 2 deletions(-)
+
 -- 
 2.34.1
 
