@@ -1,73 +1,110 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F1F1EB1B7
-	for <linux-hardening@vger.kernel.org>; Sat,  3 May 2025 13:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CBB199938;
+	Sat,  3 May 2025 17:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746278798; cv=none; b=TQhqj/PSZlDYzOTZVuapzCkmhBYXbTop9vrjRxggT4JKXgbUPBbbzOG7Mke+cOrn6GfyeQ1INhuiiXp8az4IlVfoEWMagnuwL6wi9bOHvmA6UzOpmVrXqx7wXqTvZqxzcKvlN1M8qrc5NC2fbFPExoyycWWhcIO+lKCskP6TZgw=
+	t=1746293160; cv=none; b=FtaIvkjdx9xjreN+YPU7zI9M6U5ym4ELRClpDBL2oQxh9bMJ4Xwb6vlO12QVUzVeFM3WntOet+qKQCjdpyunB1QiVAbfnq5gtsAEkOJBhAMbrAQI3vXi1OrYVCw3JvAc9I77IrRBWxG8RVJjsVWRww8CkZegMVmbgeuXO3lwV2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746278798; c=relaxed/simple;
-	bh=zFz7W87tRbM4TJFTmR0zPkVWfwg7WoDQnmpho5Kw6a8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CWzri7v8gEoCgDtuiZPF49yadIZFKz1SUiO2p4VsMQy3AMVJTHK0pgXpSYUWS2qNR7V/C6UrvYe91d/H34V3XjDv4bufptaqz3EmzVRvCkiEWZXst7YQUZU7lJYADUP18nWiV6IwFwnbnWYTPaAAud3HkkwgY7lrs5q8us8y5Qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=q3RMNEZj; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746293160; c=relaxed/simple;
+	bh=1aNojnjh6f9aU4lE8/vPeP3Xp57U1BRGOjwQrSWxDeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UVcm6yOzoIvfRIg/ph+NSMIesC7pM9tiDHvKcJk5kdPGyQWgBAyutxd9yW30jVnP3q81YIA4gczhOWO53kb8watZcK7rM3hlBkYJhcdaDnn05xlLXSIM9Drr/ECa4aHKj/1X6cf9yRJwrVP+1XzN2XPgjtJtiJiRDXxNU7X2WZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JdNJhVm6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="q3RMNEZj"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746278783;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MpqJ2xhiGc3MNQIlCoyC543UAV+C7aQQFpSzMtqzOHM=;
-	b=q3RMNEZjE/g+HJjD1MiV97P9MqziDWA9xA0U9NNA0yMM9hlgmf9n7SVg6LvP4FbwfwNuZq
-	tDh+BdxWE5a4k255MOJ02UB7kb3rqEP3ORSPRosCV/Ur4VrIgWfQQ4KTP0Ikiofs+0nRoi
-	aT2UGHa4g3Fsmi0EnzSa01NcM4oKbNQ=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-unionfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] ovl: Annotate struct ovl_entry with __counted_by()
-Date: Sat,  3 May 2025 15:25:36 +0200
-Message-ID: <20250503132537.343082-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JdNJhVm6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80E39C4CEE3;
+	Sat,  3 May 2025 17:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746293159;
+	bh=1aNojnjh6f9aU4lE8/vPeP3Xp57U1BRGOjwQrSWxDeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JdNJhVm6jdIKAVlpABA8UMGIS8+VUrbTFo5CUu7dgwPhmWSYSYKfXJKKXj4K1S2g7
+	 Uqs08o5DPnzAMA6R1xzjtUyDfs1gcOUs3kv6HcIjJAdxMxc8dcCY0hw29/r1F5V7mG
+	 rDbTnKkslrFMEGYI8UeS5XgghGCc6pBWGbU5fmuz0Z1XUXDlxKLX6UqEC3p69eDtGg
+	 QW7dcHB1Rs6aCsi9DHe8nImjWWi0OjTYSzTLxXRyERcHCshNiCU/b/zFaFQQ6hHXrt
+	 5xgtnE6RDWzSaroCCZIUkb0w+na1w4fZhxnVxN1n5cnlTx/cwi1qLQuG/5t14gupN5
+	 tGHSIclpEysNw==
+Date: Sat, 3 May 2025 10:25:57 -0700
+From: Kees Cook <kees@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-um@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] gcc-plugins: Force full rebuild when plugins
+ change
+Message-ID: <202505031023.BC44DC842@keescook>
+References: <20250502224512.it.706-kees@kernel.org>
+ <20250502225416.708936-1-kees@kernel.org>
+ <CAK7LNATs4uHnNHgESXcUEjpONZra=GvkuHMaDwsx0hbyUGY99w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <CAK7LNATs4uHnNHgESXcUEjpONZra=GvkuHMaDwsx0hbyUGY99w@mail.gmail.com>
 
-Add the __counted_by() compiler attribute to the flexible array member
-'__lowerstack' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS
-and CONFIG_FORTIFY_SOURCE.
+On Sat, May 03, 2025 at 03:12:23PM +0900, Masahiro Yamada wrote:
+> On Sat, May 3, 2025 at 7:54 AM Kees Cook <kees@kernel.org> wrote:
+> > +quiet_cmd_gcc_plugins_updated = UPDATE  $@
+> > +      cmd_gcc_plugins_updated = echo '/* $^ */' > $(obj)/gcc-plugins-deps.h
+> 
+> I think 'touch' should be enough.
+> 
+> If some plugins are disabled, it is detected by the normal if_changed rule.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- fs/overlayfs/ovl_entry.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I kind of likely having the active plugins show up in there, but yes,
+"touch" is enough (it's what I started with originally).
 
-diff --git a/fs/overlayfs/ovl_entry.h b/fs/overlayfs/ovl_entry.h
-index cb449ab310a7..afb7762f873f 100644
---- a/fs/overlayfs/ovl_entry.h
-+++ b/fs/overlayfs/ovl_entry.h
-@@ -51,7 +51,7 @@ struct ovl_path {
- 
- struct ovl_entry {
- 	unsigned int __numlower;
--	struct ovl_path __lowerstack[];
-+	struct ovl_path __lowerstack[] __counted_by(__numlower);
- };
- 
- /* private information held for overlayfs's superblock */
+> > +$(obj)/gcc-plugins-deps.h: $(plugin-single) $(plugin-multi) FORCE
+> > +       $(call if_changed,gcc_plugins_updated)
+> > +
+> > +always-y += gcc-plugins-deps.h
+> > --
+> > 2.34.1
+> >
+> 
+> 
+> I think it is simpler to place the header
+> in include/generated/.
+
+I couldn't figure out how to do this, but thankfully you did! :)
+
+> I attached my suggestion below:
+> [...]
+> -quiet_cmd_gcc_plugins_updated = UPDATE  $@
+> -      cmd_gcc_plugins_updated = echo '/* $^ */' > $(obj)/gcc-plugins-deps.h
+> +quiet_cmd_gcc_plugins_updated = TOUCH   $@
+> +      cmd_gcc_plugins_updated = touch $@
+> 
+> -$(obj)/gcc-plugins-deps.h: $(plugin-single) $(plugin-multi) FORCE
+> +$(obj)/../../include/generated/gcc-plugins-deps.h: $(plugin-single)
+> $(plugin-multi) FORCE
+>         $(call if_changed,gcc_plugins_updated)
+> 
+> -always-y += gcc-plugins-deps.h
+> +always-y += ../../include/generated/gcc-plugins-deps.h
+
+Aaagh, thank you! I didn't even consider trying ".." for targets!
+
+Yes, this is SO much better! I will read your other replies and work on
+v3...
+
 -- 
-2.49.0
-
+Kees Cook
