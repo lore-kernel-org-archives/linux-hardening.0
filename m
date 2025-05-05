@@ -1,81 +1,155 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C98214B950;
-	Mon,  5 May 2025 01:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1CC1459F7;
+	Mon,  5 May 2025 06:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746409215; cv=none; b=VrmkDQApPjwxfTesrEshDtHIvS35m1pPNLiEuAwYaGqd6nWP2y4hagPcos1sDP8uHvn8z9KFqwq9Jg7d2kXZjSKQDhPaUdUxGEsQgBzaTmWasQQlkjsWDRrvVNyhMT9qIzIqNQJ4uzuYVO5YqkoYiEHh8nBbQjJYSk0tkcwd+gM=
+	t=1746426178; cv=none; b=bSsZmHWu3HT6F7dG9kgWoamofmH7VE5cy5/JBvwQFjXV6G/SZYag8oWMwEYgkppzpt/HlFhTCatuRO9HjtcLpKJQR0nFft5rdUM12h7E3VpgJKME2uF5LRMkiEruUQgesnZjnOx8Aw2XssqnO2SHrUzUvQepurlpbZ+Q5Uq6y7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746409215; c=relaxed/simple;
-	bh=4sCB9tgQppUJl7cUoS9258sEW/5by1jhCOsqXVeoQSM=;
-	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
-	 Content-Type:Message-ID:Date; b=XnpZCzbYnEefp5Hg6nAcXmsKBZz8bBUVK9om2YFCD3cqk8sHXUKEKwfclcxT891NBLSbi+iVeacuTqYtNbc39CN/sZpp9jAxFl4wHbsaW6gXVHUTojnp136Dq/iPhNf/iyZwoI2rddBFkFeVM2Mu5S2H5zW9CJ6tkXJXq0zgs58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=HybIZt8p; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1746426178; c=relaxed/simple;
+	bh=MPUs4KraZc3aeghxZP54Y8ZKgxtKYIoo7VWIRHwCrow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CKjtLrsepv8wV2fwGQdoV/1FMqD8JZPGyU04pB6LTDtvmKgg+/J/cEKTEF29rM9fgUeFup2JrbpwzxB2z336v7xZ1u+ECr0qk3mg5gXU6AQuLoPtJIYnmIf5xe8C/TatXqc/cvt3gFa69x5VTrG49uqEhdrD/oN8z+YMDDscdag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QiylwdGt; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="HybIZt8p"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 5451e0Sw93384589, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1746409201; bh=4sCB9tgQppUJl7cUoS9258sEW/5by1jhCOsqXVeoQSM=;
-	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
-	 Content-Type:Message-ID:Date;
-	b=HybIZt8pV89odwUMc16CA/n0RF2oapZEhJ01aeNv3Xtz+bJ7TVMQUGvLLJ1v5JV8+
-	 CUrhmMvbSFK3qiF13CAq8Vzr2RCQXiijDuPLu4f/ClIjYfXeyp9/OFSVlaxzTOiW94
-	 3Q2CqHdE9rzJilZQ+v2eIcQEAoVNMX8PW277Q6pQsPWwPFULYbWKjzcxRvY8X5jc1Q
-	 2do5IVkAItQYrcsY3PbGWtEon0RkkEtt4WkFAKe+Tt0xCa2etaNpYbu8S5rkl9xQox
-	 sWQt68WyOGO4h6Ajd7KG0YUYDdDgDPgDPT93UXhEsc1gPTrlA++zFFLWTErOyiYrlI
-	 cqGhgtqh+Sa8w==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 5451e0Sw93384589
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 5 May 2025 09:40:00 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 5 May 2025 09:40:00 +0800
-Received: from [127.0.1.1] (172.21.69.94) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 5 May
- 2025 09:40:00 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Kees Cook <kees@kernel.org>, Ping-Ke Shih <pkshih@realtek.com>
-CC: Kees Cook <kees@kernel.org>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] wifi: rtw89: fw: Remove "const" on allocation type
-In-Reply-To: <20250426060935.work.049-kees@kernel.org>
-References: <20250426060935.work.049-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QiylwdGt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=6crzyY4cRgs7sWNOVET6cPYOHzfjUqNaeeku35IfyF4=; b=QiylwdGt65nFPM0JNR3fMaNZuA
+	Xt3wXttqIBV3/rty7gejWyvvemGT5SH2vSDn5Qluc7xEDj53AAe9vdBzFp2LafK41wer+kAOwa7lS
+	hcQ/AeWxm4afC9iOx/WaIgLg2QiEsXz1QkJ1gdpHzklRuEFe3KuhHliuSnrsTqh0+5uRRvR+EmTHS
+	EV+l2EpTFT2Vrn3NB1HsFwRgXT9euCn51TzRMEgI4LdZlhhAojDAr93gj232XyNxadj2mTML7MRjl
+	SDoQe6HJaGd80Fz5l2g8xHunE4wLV32VIsy/10lNAelvJebRrI3jjdY2Qnxsmphn7DPNBtq9nkH8u
+	L1x+mcFg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uBpE6-00000006Vu5-3QMm;
+	Mon, 05 May 2025 06:22:54 +0000
+Date: Sun, 4 May 2025 23:22:54 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] scsi: sd: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <aBhZPm28c6Yn5KH2@infradead.org>
+References: <aBO_32OsMj3hsJsv@kspp>
+ <aBRrP8EuNkeAtPC9@infradead.org>
+ <33d7a1b3-4bf7-4337-ba82-dbd4b95ad0b8@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Message-ID: <501a4bd4-cb49-45f7-b47e-7f59f80a497f@RTEXMBS04.realtek.com.tw>
-Date: Mon, 5 May 2025 09:40:00 +0800
-X-ClientProxiedBy: RTEXMBS02.realtek.com.tw (172.21.6.95) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <33d7a1b3-4bf7-4337-ba82-dbd4b95ad0b8@acm.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Kees Cook <kees@kernel.org> wrote:
-
-> In preparation for making the kmalloc family of allocators type aware,
-> we need to make sure that the returned type from the allocation matches
-> the type of the variable being assigned. (Before, the allocator would
-> always return "void *", which can be implicitly cast to any pointer type.)
+On Sat, May 03, 2025 at 12:08:23PM -0700, Bart Van Assche wrote:
+> On 5/1/25 11:50 PM, Christoph Hellwig wrote:
+> > (I still wish we'd kill the stupid struct and this test and just used
+> > the simpler and cleaner bitshifting and masking)
 > 
-> The assigned type is "struct rtw89_reg2_def *" but the returned type,
-> while technically matching, will be const qualified. As there isn't a
-> general way to discard "const" qualifiers, adjust the returned type to
-> match the assigned type. No change in allocation size results.
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Bit-shifting and masking results in faster code. For slow path code I
+> prefer bitfields because this results in much more compact source code.
 
-1 patch(es) applied to rtw-next branch of rtw.git, thanks.
+Despite claims to the contrary bit tests and masking are often a lot
+simpler, and you don't need the duplicate struct layouts and tests
+verifying that you get them right as it is almost impossible to write
+code that only works on LE or BE.  E.g. the patch below would simplify
+the stream status quite a bit.  It also fixes the assumption that the
+bitfield endianess is the same as the byte endianess, which is not
+true in general (although I think it is for all Linux supported
+architectures).
 
-5b8dfb75b2c7 wifi: rtw89: fw: Remove "const" on allocation type
-
----
-https://github.com/pkshih/rtw.git
-
+diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
+index f0eec4708ddd..41ed22f1ad0b 100644
+--- a/drivers/scsi/scsi_debug.c
++++ b/drivers/scsi/scsi_debug.c
+@@ -5528,7 +5528,8 @@ static int resp_get_stream_status(struct scsi_cmnd *scp,
+ 	     offset += 8, stream_id++) {
+ 		struct scsi_stream_status *stream_status = (void *)arr + offset;
+ 
+-		stream_status->perm = stream_id < PERMANENT_STREAM_COUNT;
++		if (stream_id < PERMANENT_STREAM_COUNT)
++			stream_status->flags |= SCSI_STREAM_STATUS_PERM;
+ 		put_unaligned_be16(stream_id,
+ 				   &stream_status->stream_identifier);
+ 		stream_status->rel_lifetime = stream_id + 1;
+diff --git a/drivers/scsi/scsi_proto_test.c b/drivers/scsi/scsi_proto_test.c
+index c093389edabb..d61302e7715a 100644
+--- a/drivers/scsi/scsi_proto_test.c
++++ b/drivers/scsi/scsi_proto_test.c
+@@ -22,15 +22,6 @@ static void test_scsi_proto(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, d.desc.params[0] + 0, 0xe4);
+ 	KUNIT_EXPECT_EQ(test, d.desc.params[1] + 0, 0xe3);
+ 
+-	static const union {
+-		struct scsi_stream_status s;
+-		u8 arr[sizeof(struct scsi_stream_status)];
+-	} ss = { .arr = { 0x80, 0, 0x12, 0x34, 0x3f } };
+-	KUNIT_EXPECT_EQ(test, ss.s.perm + 0, 1);
+-	KUNIT_EXPECT_EQ(test, get_unaligned_be16(&ss.s.stream_identifier),
+-			0x1234);
+-	KUNIT_EXPECT_EQ(test, ss.s.rel_lifetime + 0, 0x3f);
+-
+ 	static const union {
+ 		struct scsi_stream_status_header h;
+ 		u8 arr[sizeof(struct scsi_stream_status_header)];
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 3f6e87705b62..deb8af152f13 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3215,7 +3215,7 @@ static bool sd_is_perm_stream(struct scsi_disk *sdkp, unsigned int stream_id)
+ 		return false;
+ 	if (get_unaligned_be32(&buf.h.len) < sizeof(struct scsi_stream_status))
+ 		return false;
+-	return buf.s.perm;
++	return buf.s.flags & SCSI_STREAM_STATUS_PERM;
+ }
+ 
+ static void sd_read_io_hints(struct scsi_disk *sdkp, unsigned char *buffer)
+diff --git a/include/scsi/scsi_proto.h b/include/scsi/scsi_proto.h
+index f64385cde5b9..88c1d950be54 100644
+--- a/include/scsi/scsi_proto.h
++++ b/include/scsi/scsi_proto.h
+@@ -319,26 +319,10 @@ static_assert(sizeof(struct scsi_io_group_descriptor) == 16);
+ 
+ /* SCSI stream status descriptor */
+ struct scsi_stream_status {
+-#if defined(__BIG_ENDIAN)
+-	u8 perm: 1;
+-	u8 reserved1: 7;
+-#elif defined(__LITTLE_ENDIAN)
+-	u8 reserved1: 7;
+-	u8 perm: 1;
+-#else
+-#error
+-#endif
+-	u8 reserved2;
++	u8 flags;
++#define SCSI_STREAM_STATUS_PERM		(1u << 7)
+ 	__be16 stream_identifier;
+-#if defined(__BIG_ENDIAN)
+-	u8 reserved3: 2;
+-	u8 rel_lifetime: 6;
+-#elif defined(__LITTLE_ENDIAN)
+-	u8 rel_lifetime: 6;
+-	u8 reserved3: 2;
+-#else
+-#error
+-#endif
++	u8 rel_lifetime;
+ 	u8 reserved4[3];
+ };
+ 
