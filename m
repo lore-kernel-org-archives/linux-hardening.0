@@ -1,79 +1,157 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900CA24BCF5;
-	Mon,  5 May 2025 12:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F3C502BE
+	for <linux-hardening@vger.kernel.org>; Mon,  5 May 2025 14:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746448139; cv=none; b=aAQV6vXm/6N+Er+ZVBqeA3+FOnjTilhB44EEZ6bzQ+ZzA2GkWWPgBnMlcjqhT7eAg/lUivvnH3VuuThXwxp9uVD8D/RgBbHgvGe7uPafifBOpyfYix+e61CqxzHXqd/iZBAEYQbsIqKYtjvfb+6PHWtOjvTJG1G+x6SpMVQF6M4=
+	t=1746455282; cv=none; b=BWx6ZtRRfOmkVK8v+OHTjx6AO2/Br8iP1eXeQk1CnTHios6NDEQEZ11hqq736E4YDQJMrmIwkOftcssgeLUonZ0K1SldZi+FAS94dj7keZWdr2o1rmgSS5/McuhjohOZxMV6/NUNyH3vGUKo7ubRfrbE6BT7jt4lO2eemgpuQNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746448139; c=relaxed/simple;
-	bh=kcxGWvgQ7OS5T5as6+IFxw5ad5yP5FYRncsZMv/ZIl0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OBJg2DyLK45h3eshTxG6ImRHcA1K3yYqkXHFm4uhtbMstvrfieBTKV2y1SvwAr3wZwBWreKqf9caq6EykUvwM7CYrwEsm4UEKfY/KK3o+nRMOdYWTBzVF5M4QEVNCe+pDdZDK+vQ6SUbaEHK7Jtt7zcPmHDBghdzNaW/kaiGq48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=W20ITmkf; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1746455282; c=relaxed/simple;
+	bh=8bG+q9cvIxNRKMt+IdST9BOBQGsJ4SSG4cIoMmhVp70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UhMlJacUF852ywzAE032KTizsiSa0s+/xNWnSXUfKwm3NkH5+COgEE8hu7gksYKrSw09oU464dF4GyEeRKm4LCGiyAJ+iaWwbAbUqy3BhFG+gFdMtz0bOGnwpW9nJSdrHcaIIPI2sVjrgTlCNw8QVFwxyRT3KsNw49FTXHCVt1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FAEmofIC; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="W20ITmkf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Ca8e9Y3sNqfrAp3cjUV9l5KRXpSXCvVgQ6g+oU+iRkE=; b=W20ITmkf0tV7tzMIkpptoasgb5
-	eZXZz15xpfCV19thXd+8BNpmCUqVjFSzy3+EZ5GhOGH+P3r3jANACcCo8E5bEycaVmG/74hgDDPDT
-	HV4Ck6NHCU8idIiU1ZYz1lwVfp5fx+7RdUv/XNHxsT9JUFlUEYCBqjlQ8UMlEpKJDqnqkjvU2Cl4C
-	da6uXwPIeaFFqclFfCRNPFAQ3slX+idpBwjX/tNzO+WzWbJXDS9vs6yF/ovsAPw5NdSDOQwAgBpLf
-	htgkPUavh2xRIwmZIeq3WbIh8I4TOQtNhjz6H1GNjzWlvESlHxsSDZeH9Xgc5vSaUtogh61D27EAK
-	DvILk6UQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uBuvs-003YIl-2N;
-	Mon, 05 May 2025 20:28:29 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 05 May 2025 20:28:28 +0800
-Date: Mon, 5 May 2025 20:28:28 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Ethan Carter Edwards <ethan@ethancedwards.com>
-Cc: Weili Qian <qianweili@huawei.com>, Zhou Wang <wangzhou1@hisilicon.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/2] crypto: hisilicon/qm - memory allocation cleanups
-Message-ID: <aBiu7EeisHseyDgU@gondor.apana.org.au>
-References: <20250503-hisilicon_qm-v1-0-d4ebc242bc8a@ethancedwards.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FAEmofIC"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5c7d6b96fso8325534a12.3
+        for <linux-hardening@vger.kernel.org>; Mon, 05 May 2025 07:27:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1746455278; x=1747060078; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VBzMpH2jBdczGJAGi07riCizg5SErgbDrt1biXSYE6I=;
+        b=FAEmofIC0oMM+HqGX1QdwjAskqxFoWHqsDymqlRLBS/KhXeZxE+mwWfJq29JUleahh
+         vKT2odpe77T24da5PV0EMgZ19hC2eRe4ZrMkJVRQRz0eIKE20NtNaupb7t2dlnTladb6
+         4mHbjKw5IN4P2WzraDyaCPW1q3P+ecfzDwBrl6jMs7w3fpy/jYI+5rBEE66Agxn9GF77
+         g4Y8NWq5b6bnb9NlFU8Pc/my94E230XqMhM79g5fUvX3TSlwsiVK2ibWES8kafcBxZG4
+         tnLTBER/EMzZktt84zMYVCpiHMTBHreMBiFItt1ZWyOn+8aGousocxWBWePautMA2OGz
+         bc2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746455278; x=1747060078;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VBzMpH2jBdczGJAGi07riCizg5SErgbDrt1biXSYE6I=;
+        b=rQaqm+x/9OvKTB3DWT41COxQEcprNfp1LThV9xrLmjf+BuQBCTJ+pRR4IoXCTH/CB1
+         zK3NHCeGx9oGb0bt/Fj+wJLUa3FuE9jvIm7AMlanN39FQ80U2TvxWe+FR5LP95paKBB7
+         7I9RJF6oFfiexFMoBvjOYqsJhqpcJ9namzsVazHJGubelN2wn41sawD+0uKx3kT4sB3/
+         8BwmQr400yuikuSITKyHKHx9x6+XCyQJ/j7PcdHgOE3ri8mTHtMUdPhvt9GgvDLSolQ1
+         6oTJyimF1pW5WleyQY/Cn+BOx86MfPiV8Q0iGa2DauZGfuneTZGNECuD8v5sHvwmP0kN
+         yqvg==
+X-Forwarded-Encrypted: i=1; AJvYcCV6p0JOq6P3vZ3LbQwpL7G97eMDzU4Yf92UU0Ucrz4jJcWeX51Vm9AUhXOGYEbC1GAyLadDpDMlVuVjeutP3ZQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXTgnjtpo48REVHgIHhH7lEp/4A8LruCAupoKjOWsb+JFrlsTY
+	Fk/JwI+yvSKWX2ay54qDcojj/xhI2jfT/gEwDVhN6dpWCrzf7LePjHybwSc9tGg=
+X-Gm-Gg: ASbGncvhASJPNmf19ItdikqOwUFs2RKQVyAeIJBWLVbmZZt2NXLxRU+7jJNiHFSdarP
+	4AGsJZNTXjefFp4kV9DapqvN3N9ZQOVWtjBXw4hxJTLccnNnr22Gpkes4GSNisenrDpAmUyXuKP
+	DwaFJi1urxYD0GHpXJymwmLwgddvJjcpkMngav3GU1odNc+CuAnV1qg1BKUvyZxvpqlm4vgJuVH
+	Dm8+nzhyHj9D1xUI9RaZ1merm6a/3IGlsOZ4VnVxdfsuqOf5So0L6dvzW06fcRqLVOdVVX+LF4l
+	LVubr/w+Vzoc1LXGTV5Nf/uyEjp+E5hBHH76lQUsRKHIpSCmLSEhKg==
+X-Google-Smtp-Source: AGHT+IExfE0hcX78gw0nn1iPLAnLmMN0HdxWQnnSN8VNB89rL2yQ8NHWy4t+WCuJ1B8DNVSnVHuwAg==
+X-Received: by 2002:a17:906:c115:b0:ad0:c6ae:c0c9 with SMTP id a640c23a62f3a-ad1a4ab7f0dmr731420066b.40.1746455277537;
+        Mon, 05 May 2025 07:27:57 -0700 (PDT)
+Received: from [10.100.51.48] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a1f2dsm498974566b.40.2025.05.05.07.27.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 07:27:57 -0700 (PDT)
+Message-ID: <68e762ec-d320-4077-b321-63eefefe6d7d@suse.com>
+Date: Mon, 5 May 2025 16:27:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250503-hisilicon_qm-v1-0-d4ebc242bc8a@ethancedwards.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 22/25] module: Remove outdated comment about text_size
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ Juri Lelli <juri.lelli@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
+ Yair Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
+ Nicolas Saenz Julienne <nsaenz@amazon.com>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Sean Christopherson <seanjc@google.com>, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+ Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>,
+ Daniel Gomez <da.gomez@samsung.com>, Naveen N Rao <naveen@kernel.org>,
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Miguel Ojeda <ojeda@kernel.org>, "Mike Rapoport (Microsoft)"
+ <rppt@kernel.org>, Rong Xu <xur@google.com>,
+ Rafael Aquini <aquini@redhat.com>, Song Liu <song@kernel.org>,
+ Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Benjamin Berg <benjamin.berg@intel.com>,
+ Vishal Annapurve <vannapurve@google.com>,
+ Randy Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <20250429113242.998312-23-vschneid@redhat.com>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250429113242.998312-23-vschneid@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 03, 2025 at 04:21:26PM -0400, Ethan Carter Edwards wrote:
-> This series contains two small cleanups to improve code quality and
-> readability. One removes a sizeof(char) piece of code (because it
-> evaluates to 1 anyways) and one switches to the helper function
-> devm_kcalloc.
+On 4/29/25 13:32, Valentin Schneider wrote:
+> The text_size bit referred to by the comment has been removed as of commit
 > 
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> ---
-> Ethan Carter Edwards (2):
->       crypto: hisilicon/qm - remove sizeof(char)
->       crypto: hisilicon/qm - replace devm_kzalloc with devm_kcalloc
+>   ac3b43283923 ("module: replace module_layout with module_memory")
 > 
->  drivers/crypto/hisilicon/qm.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> ---
-> base-commit: 37ff6e9a2ce321b7932d3987701757fb4d87b0e6
-> change-id: 20250503-hisilicon_qm-7b581a9b3799
+> and is thus no longer relevant. Remove it and comment about the contents of
+> the masks array instead.
+> 
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 
-All applied.  Thanks.
+This comment cleanup is independent of the rest of the series. I've
+picked it separately on modules-next.
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks,
+Petr
