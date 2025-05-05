@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C5532E4C7;
-	Mon,  5 May 2025 22:35:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3FC220F58;
+	Mon,  5 May 2025 23:04:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484528; cv=none; b=CQxJ3Dqsr5H6D8J4OGP95DK7XFuZ+r4Oq+JH1kOGBtypblZ6BkyWvcTLB4oVgVuwoLxDf/PUvnW6OwOH79BFJ3MV2NvWtOPsQfFNJrXm2AdiVuuwKRUTQIwsDD3kffxZpJRg6i61A3mQUwOLPyQ+SpApi6iaBbFDBzdcbiSOtd0=
+	t=1746486298; cv=none; b=A+iMVPr1i/vmm6PSJvfyc2BFJny9UALgT+UpYdyxv3estTvPhKqwU+NQ12NgMmRhxBTjdCGP9W03TERE/rwmtLGGfWQGbF1BS+JTib8rcgdgfPmq15P52IU6WvyrV10RkN7CsrnGeIZJOfRyLDnz39xpwOdAfrZaQbXjKqxDWwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484528; c=relaxed/simple;
-	bh=+wZxgz632sHvnLOgr6eoUPj4ket6MHQdjGTN8+zbFzE=;
+	s=arc-20240116; t=1746486298; c=relaxed/simple;
+	bh=p1tWwLTEwtmM348okM6+B0W4ZIm2SvTTJ7PBqopISuA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=c5bhTZUlJBecEM45EX/+el7L9dvQvXTMn7hS0Y7T5sK8nGyCdbphOVE05bXb1eIBLTAzGnGxqstOOze9kgTrx18ysAoVnD+nmPQUIXqvjlgAgjlB9cE+rxnHPq85agCYcr9UJoyCqNI0tzOEMqMIHmcMvg622eFJBKOgONTUJFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tG7SRIiB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=N0wCJjUUhQIss1Qya0uACIklHc2ct2Y8KNG8TVWfT4nV2ocHbpyR9UnGIKoheRpE9wI0Psx0+jrY5Np4S1p6PhBsPkQkpdrqh3nhIUfMDCYEH8wnrCvuIRh1ycJ7lTjwX5MInK1541CttVx2N4za9uK74j409TVj2KWq4VWSzds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QJ7/gLDu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tG7SRIiB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC41EC4CEEF;
-	Mon,  5 May 2025 22:35:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QJ7/gLDu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE04C4CEED;
+	Mon,  5 May 2025 23:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484527;
-	bh=+wZxgz632sHvnLOgr6eoUPj4ket6MHQdjGTN8+zbFzE=;
+	s=k20201202; t=1746486297;
+	bh=p1tWwLTEwtmM348okM6+B0W4ZIm2SvTTJ7PBqopISuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tG7SRIiBxS4ydm5qug+F+IkvcAbUX5+XDmJWIFEDjAPMe90TVGObpPXcMtvJolNTI
-	 B60VheVlgFnWnJoU3hVGOFA0DNiSvBqkoYeu2p4+UV4cqtg9qDB2LzRjpHPCAYuylI
-	 uQNkNlpixTeWfjgFQ8drfZPhxFGAYV6Cvb2Dt7EPUPZdm3tSAc312mEpFjVXL/bvHY
-	 P75HJmjMaFYlsb0TaoTMZuKP1JRIxVR1YrAjrfm2GCP/0G4yQ7oq+tOEX/mrOWiF4Z
-	 oslSHTGS7UOu1/z1bMLbsZY9iISBtPmoDfkJn3N4NhxGO9NsqOASvmLmqAeHPsp+u9
-	 H85ujlaPM078Q==
+	b=QJ7/gLDudAgKl4GN/05ipD6oh6eMSqtObiw2io9UiAAhibFZOepE3GKBgZgvM1AQW
+	 3qRF9cTNEIzugSen+5fLJLmHfrTH1hydEWxOCuPUzMrDBUPUmRtDlPCqRBWUsmZi7V
+	 Tr/Usn9XHT0h9arfj0pbGyMhz9IVnU0GNojFezVU+MMbyy9xZ5gRy4MCrHy8SNHwGl
+	 naxirk+orxl1zzDbVvmEe0UgcYcsb3fqbKrhvo3umP6KXS/TveMiRBdG3rn5+ED2Og
+	 doEHJgHvuIniJ07Z3S+/BTM97hwnGF6Ti/kvUhJCUcL4DJ4R+RA780BLniBH8ckZgm
+	 PuqVpKV4RJhIQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Kees Cook <kees@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 516/642] pstore: Change kmsg_bytes storage size to u32
-Date: Mon,  5 May 2025 18:12:12 -0400
-Message-Id: <20250505221419.2672473-516-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 244/294] pstore: Change kmsg_bytes storage size to u32
+Date: Mon,  5 May 2025 18:55:44 -0400
+Message-Id: <20250505225634.2688578-244-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
-References: <20250505221419.2672473-1-sashal@kernel.org>
+In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
+References: <20250505225634.2688578-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,7 +46,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.5
+X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
 From: Kees Cook <kees@kernel.org>
@@ -71,10 +71,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  3 files changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index 56815799ce798..9de6b280c4f41 100644
+index 7dbbf3b6d98d3..a1c97cd2720a6 100644
 --- a/fs/pstore/inode.c
 +++ b/fs/pstore/inode.c
-@@ -265,7 +265,7 @@ static void parse_options(char *options)
+@@ -264,7 +264,7 @@ static void parse_options(char *options)
  static int pstore_show_options(struct seq_file *m, struct dentry *root)
  {
  	if (kmsg_bytes != CONFIG_PSTORE_DEFAULT_KMSG_BYTES)
@@ -106,7 +106,7 @@ index 801d6c0b170c3..a0fc511969100 100644
  extern void	pstore_get_backend_records(struct pstore_info *psi,
  					   struct dentry *root, int quiet);
 diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index f56b066ab80ce..557cf9d40177f 100644
+index 03425928d2fb3..ef62389212b60 100644
 --- a/fs/pstore/platform.c
 +++ b/fs/pstore/platform.c
 @@ -92,8 +92,8 @@ module_param(compress, charp, 0444);
@@ -133,7 +133,7 @@ index f56b066ab80ce..557cf9d40177f 100644
  
  /* Tag each group of saved records with a sequence number */
 @@ -278,6 +278,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 			struct kmsg_dump_detail *detail)
+ 			enum kmsg_dump_reason reason)
  {
  	struct kmsg_dump_iter iter;
 +	unsigned int	remaining = READ_ONCE(kmsg_bytes);
