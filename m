@@ -1,94 +1,143 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3EF34CF5;
-	Mon,  5 May 2025 09:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9D11922FA;
+	Mon,  5 May 2025 10:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746436537; cv=none; b=tjLVCdVQfH+0J/zb0IttumbsOMlm0d3QtbeVKWxtVWj3hgcf79EeO/ZiWbr85+ooSisov8HQBwdlCcTbst6SO8wexnujKswXzgb8vzB1BIfkwJ3LCztSvRoNc8GAAuRA1saqEaO+2KgnsZ1B2pktEfRUdD4su/WjOv5scArcKzI=
+	t=1746442769; cv=none; b=dAoqkjHCJPF0yLoeDSVop+pv2HgstfhyyCixguujws/PVcd1QK/qZ2H/Onso3dx6XVSbgxrxPsk7HyD1qeRxyj3YWewO+qJNdaxqRtJBDQ97F30+8NSXwz6nnmBqaea+NeDaRFKiSMaUOZkbFLuFSRBUkxSEkI0iUtGxDNuiF28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746436537; c=relaxed/simple;
-	bh=s4VxeVBfwf/lRLGakeQu23tOiUQkM//ukgN3I6WbC4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eOD94N/9DYbpoYhFNO5ZV17QjpbYo5rrXu1w4tYgmBUzJZPpZs1gXkFmdJBNwQGhReH4J8ygx9enWcm+rCKudAG02kzKtmJ3yAK8+V3FbYioBTYCv0Rq1kV0CPSRXxlfp723wm/Iqc39JLL1BqHlyF7ldrqLft3hv5r1D8V3M44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=hvMKDAzX; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1746442769; c=relaxed/simple;
+	bh=J9KrXamGHyza0/Hx3OOj8gFfveIOH/IiN7QHVFOUOnk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FjQPrCBMPoiB92FUB8zM/SlE7krmRJL5kwoa3ivY5rVXg10sBTH8vjR/S+17D4AWi8bE324FT97AsUo9BdkGNTRklqGxizG5BwD8DrtqViySafG7uwLtZZmVVPhzvKp7uykGzKei+tM/xP1GHG1/YdLCT8pnmC6DN3YDcgpgsW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=maF+NlbW; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="hvMKDAzX"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B2DBE40E0196;
-	Mon,  5 May 2025 09:15:32 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id u9a81fp4maJu; Mon,  5 May 2025 09:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746436528; bh=ur1FAHlE7mVM+br0+9PR3Ei9FD4ZGrriHb4DVevVmw8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hvMKDAzXnbBX1Og5eM0r1OUQHVx6GOJzl/BYTFggLjJhLA+NugURwT5F7vbeZ1GCX
-	 M/DnSmo7UMf0CFUdZrmqpcOc4lI99KD9DdXuQkPqLLRXQ3CAy7Wvk48Q9/9/BFeE7S
-	 DeVcPjXhu5yukIN2dxU8IbNvzv4UoPNEwseYR24QDFnds9VN5vQrdkmGz9puViUID5
-	 ojG9uKkPXphkHX/jlERvfVfYA4TCY1siCA3xtY1mGc98FyvEoSINIJvg4k20s239io
-	 FY94tUrQUQk2DPfuIvi/ApLoeuyNz0fhlJIwEpLfJMhgSaSBgBfxKE7wGBmWLThgXx
-	 ypM72gF/6y3jSBmyvG0CGFUg+wYs4J5q+vxfTrtNlpXH0fXfIUYXadxYWayagd5GnG
-	 wXgo9FDtQs0GWBN5uWRwLW/DOz5AZyagmtRQsFpWsHuwP1yp0bYECxqSc7Mk+pd+QV
-	 flSSqpDrwQe68e/TSJ2wxR/lZq63kvyrWJquZBSLV+8dPyus0qijdvWuFrKSfYA2b7
-	 LowU0lD7U+tjSFKqYHvyIJke7YZHs5ElVHvz+ygMwE04zqUnhzaKD2dvKunupNfd8+
-	 VSphlwt91tHCRVwIN0csW01QJTiGoNJRwIlPkDnYdqaLgaJEkyj9WvfoJA9Ru3GoJq
-	 zmZHGl2wnNM+guynzrwlQhUo=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2202940E01FA;
-	Mon,  5 May 2025 09:15:16 +0000 (UTC)
-Date: Mon, 5 May 2025 11:15:15 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Kees Cook <kees@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-tip-commits@vger.kernel.org,
-	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
-	"Chang S. Bae" <chang.seok.bae@intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-Subject: Re: hardened_usercopy 32-bit (was: Re: [tip: x86/merge] x86/fpu:
- Make task_struct::thread constant size)
-Message-ID: <20250505091515.GDaBiBo_1ywZciEMt1@fat_crate.local>
-References: <20250503120712.GJaBYG8A-D77MllFZ3@fat_crate.local>
- <202505041418.F47130C4C8@keescook>
- <202505041541.C3D97BE@keescook>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="maF+NlbW"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544NLVAx032287;
+	Mon, 5 May 2025 10:59:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	NMGMuOMP0NOStNdPXxMCsLdoVkdF+VlLfbEBaduUM3c=; b=maF+NlbWY9nk/Yew
+	ro6ddW/oBlEwYYu7iVQG1wXAtd+fefPu+TYPVrzsXbsKNDWEvQHb/ykSBmQpZMAz
+	6iI3+XOj5Cme5y1cKHv0EEGnfGqONJy325wqCbKJLXhSeGqxE78v8tt6e5BrEcVp
+	9+r92OFHhzKFbbFko37hcq8R+ToEI2llyLpF6lHD45spgEGCwwumoq3/1B+VtHLu
+	jcidX2dE80gLEyEXzZi12GqfAiwaDbOfLTrvLwDZ6UGbAONQS44mbOOsnqEaJprP
+	xRq/T55q67nmuxVr8ACjkGzry7ieWUNgqqVecpt8aM7YXoZG9QtoD5GuoG9sBNHZ
+	nHRhnA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dce9brj7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 May 2025 10:59:18 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 545AxHxZ002374
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 5 May 2025 10:59:17 GMT
+Received: from [10.218.44.178] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 5 May 2025
+ 03:59:12 -0700
+Message-ID: <246da659-2add-4ccf-b914-f737fb93f3f2@quicinc.com>
+Date: Mon, 5 May 2025 16:28:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202505041541.C3D97BE@keescook>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 06/11] firmware: qcom: scm: remove unused arguments to
+ the shm_brige
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
+        Jens Wiklander
+	<jens.wiklander@linaro.org>,
+        Sumit Garg <sumit.garg@kernel.org>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Apurupa Pattapu
+	<quic_apurupa@quicinc.com>,
+        Kees Cook <kees@kernel.org>,
+        "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+CC: <linux-arm-msm@vger.kernel.org>, <op-tee@lists.trustedfirmware.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
+        <linux-doc@vger.kernel.org>
+References: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-0-6a143640a6cb@oss.qualcomm.com>
+ <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-6-6a143640a6cb@oss.qualcomm.com>
+Content-Language: en-US
+From: Kuldeep Singh <quic_kuldsing@quicinc.com>
+In-Reply-To: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-6-6a143640a6cb@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDEwNCBTYWx0ZWRfX5wp0kqaare0R
+ +pntLJOWwO+utGzzTx42W3hgP9uuXtlrAdyezkvc7+TlcItOvMZgPYJcVg6ebpAEWjvxx5kA6aN
+ jZGLBCAdT8wkakazGXs/leuWIRMfg7rCMFM+LLAxpUOwYMBQGNcxFhbhjEB95EfSQkLP22aKt6O
+ wb1BS5uLR3ryeZT95EFrhfrzH4E3Mgk5WlKzF96Q0sigKTX+px1RRAQer4vDa+LUeKXlHgMxVYx
+ b24B8+TSKL+dRcQUEB0lxjwUpwMLJOCTqfTpsxB7yiQnigbe62WCCwjiI3oxGV+xtVSIizoocfd
+ Jmd9UDTCTG27ZHGKtGvwUXaMpqNPhP6MZSLBLsfiZImaQ8nYUzr5gMIbgvuhLKiENstzp9tq2DM
+ 4fEJGGgtv44YP6G8KVKS0+PSCg5Afmohc1tHDmgvEF88uX1OTyXLYlSo0dp0HurZS+OnpRWw
+X-Proofpoint-ORIG-GUID: jDqxW_-Q_cnftiAtwzc2XbtlK_MxbWAN
+X-Authority-Analysis: v=2.4 cv=Qope3Uyd c=1 sm=1 tr=0 ts=68189a06 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=P-IC7800AAAA:8
+ a=EUspDBNiAAAA:8 a=JvMDD0_PEK43moPAXCcA:9 a=QEXdDO2ut3YA:10
+ a=d3PnA9EDa4IxuAV0gXij:22
+X-Proofpoint-GUID: jDqxW_-Q_cnftiAtwzc2XbtlK_MxbWAN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-05_05,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1011
+ malwarescore=0 bulkscore=0 suspectscore=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505050104
 
-On Sun, May 04, 2025 at 03:43:07PM -0700, Kees Cook wrote:
-> On Sun, May 04, 2025 at 03:30:38PM -0700, Kees Cook wrote:
-> > However, I can't test this patch -- I'm not able to reproduce the problem
-> > either, even with your .config. What hardware are you using?
+
+
+On 4/29/2025 11:36 AM, Amirreza Zarrabi wrote:
+> shm_bridge create/delete functions always use the scm device.
+> There is no need to pass it as an argument.
 > 
-> Oh, wait, yes, I reproduced it. I just didn't actually log in or wait for
-> complex daemons to start. Without my patch I quickly see the crashes. With
-> my patch, everything is fine. So, I can confirm that fixes it.
+> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
 
-I can confirm your patch fixes the boot here too - thanks for the
-debugging and fixing!
 
-Reported-by: Borislav Petkov (AMD) <bp@alien8.de>
-Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
+There are 2 type of APIs exposed by tzmem driver for pool creation.
+devm_qcom_tzmem_pool_new and qcom_tzmem_pool_new.
+
+Device managed pool is created with devm_qcom_tzmem_pool_new but
+currently qcom_scm is using it's own dev to create/delete bridge which
+is problamatic here.
+
+https://elixir.bootlin.com/linux/v6.14.5/source/drivers/firmware/qcom/qcom_scm.c#L1653
+
+If pool is device managed, same dev should be used in qcom_scm to
+create/delete bridge rather than using qcom_scm dev.
+The dev passed as an argument to function should be used instead of
+__scm->dev.
+https://elixir.bootlin.com/linux/v6.14.5/source/drivers/firmware/qcom/qcom_scm.c#L1634
+
+To summarize, I believe correct solution should be to pass corresponding
+dev to bridge create/delete APIs instead of always assuming to be
+qcom_scm dev for devm_qcom_tzmem_pool_new scenarios.
+For qcom_tzmem_pool_new, qcom_scm/qcom_tzmem_dev can be used.
+
+Bartosz/Amirreza, please share your thoughts as well.
 
 -- 
-Regards/Gruss,
-    Boris.
+Regards
+Kuldeep
 
-https://people.kernel.org/tglx/notes-about-netiquette
