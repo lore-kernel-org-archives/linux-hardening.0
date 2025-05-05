@@ -1,166 +1,154 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83F33AC5A3
-	for <linux-hardening@vger.kernel.org>; Mon,  5 May 2025 23:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131E12D47CD;
+	Mon,  5 May 2025 22:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487144; cv=none; b=mMNmE/1tSMt2gdUAepBKWOflzVczhLn/JFWqHBGmFfZaYEDnAm6qTz4dXatN6Nnj0QyJpbKZPN43MmYA9sdVEe19qPufnUfFXhZ/ViHThr4ejyiw0svpLBUJ91jGhE0v5aL5F4c8xJaXjEMkAvzaHRHJaeo+3RRY28ZL9THj08U=
+	t=1746485641; cv=none; b=gkJQ16uLKlNjOMRfFq91sOE2l+7SJEvwfDpWCQwDk7IeijRtexbkwb0ELN71FV187MsFo0qhz4yKf6kxkYadPopcTNkCxWKx3g/uWdCyBF/SV9wt36rQZHvnt/wxTIArBSviNBeHPIRhp46Rg4KN9Brco2aNvKqHGVtqNRfBnWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487144; c=relaxed/simple;
-	bh=szSy1DusHGWtdc5DBdNxGyYxoEy8zsXq36nE02dq3Dw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tATVukQQhMBxy114N5tCcxwQr4/dC5B/AWdPYQTvWrs4Axl+im9ZQkAxu/dllZOXZuHQEWMwEdAfNKrDB4k/pIbwpipwCib+5q0WPpSuTfzR22dDM4lMfXvpWs6w00j0lF9Dk/F0ZNeRn5MJW112kZG4W4dDwQfyLwkvwqGBGIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oy84eHsy; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746485641; c=relaxed/simple;
+	bh=+wZxgz632sHvnLOgr6eoUPj4ket6MHQdjGTN8+zbFzE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=m5fWVpr9b/ME7ZwjpYgPAXsyYVC4yj6OlqO/Da8suzNL3caMdOLMJVRPqIGQqYTywfTIcdNCEt0CZtXQwO92/Tq+bXiISXUvoIjCkDPqzVXJJzCXaTmyst4KVBOJZoaSTiexxuJXArHCPqwdjcQtFN5lm6fNfY9VTcGk6FpwspA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fGtDIoeh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oy84eHsy"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545KTZsp007915
-	for <linux-hardening@vger.kernel.org>; Mon, 5 May 2025 23:19:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	egliTNxrRWezR2u6nVEeNELYig/MxmMlQ01oFG+bL58=; b=oy84eHsyzw4cIS4t
-	IbPIQBGACmEjACW5IsGawddvbVqI3FFn1seYPXHPptK9aK0cX84nidWwqwuonHVD
-	yMve+Sosb0N8+Kfh2UNdHWK86ZhqRJj6oV9VqndrIEsP3x/GNOmkWWnAPMNzuH/M
-	AL8M9xwo2k9cIRvghPBeEu7PVTNlMQxSfEwWTiNI2bCxvMvpwNuQPvNOvlYEyd/5
-	cGSBjVDx1pdRIbUsQdwNKnTg5KCFk/BNC2V88A+4EvHfFb1QPy/4vEBaG/gFNYjz
-	Bjm5J54h3/Jf3v/q59zx4SzPLVXtb9msx0BQ+irCq8F0p31wiIOXflDDOiJR/kDL
-	D9rRGA==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46d9ep5nus-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Mon, 05 May 2025 23:19:00 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-22c31b55ac6so70048145ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 05 May 2025 16:19:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746487139; x=1747091939;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=egliTNxrRWezR2u6nVEeNELYig/MxmMlQ01oFG+bL58=;
-        b=U3CyFUIu46hdLmVWLCAesoVYt1EbHB693H3UxsVyK+q1YWZ5YSpQl5Ah/ofidMduPJ
-         UIwMUIjjq58y9bBzEZpwkma+fE2GykJZuSrRkxhNSCjmhaXeTqXeh1FNJEa5jgnrwuUG
-         VQ2awJPcyd/TH5t5PIosar7KDU9GA9KDXWPFS+/hrjJD5AcSpufkTw/G01HZnk+AIGTA
-         Cgk+bnm/dY2TSFUoyvBnvzyACabd8kvSuBTMqUd6DtvD/MAe08bELKbSn+nwP2zES+e/
-         /j3Rpt17Y4jo3RIKbT1sg/lS4XsrgFa/Q+ImIGLn6zdymVgluvNjSgihbVl4CE1mCxj8
-         s3og==
-X-Forwarded-Encrypted: i=1; AJvYcCVYCg0kNV4RHhPWjcJIrtS01iM9jmhG3tFhgHl/61+pmYipvGikItjN9XRmZvYHNFWJol1LbxIOdLfePgGn7BM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6AFbNyuJLbQRuF9MkJQza2RrEb2r6iH0VKl1cwsAnNDDEZ67Z
-	M/IeVk/wB+SRGHyaGEfxb8GkgG3IV0HkptpxZR3SsR+YTzVeyv+GP3KcXYhdJtpTtHxjCceNLSV
-	Rb8/I34vnmPR4kR6W71qb5cEYpsI8Mr1V5vFnUt+Kwkd2yTCey0stUiRvpa16xi/mrA==
-X-Gm-Gg: ASbGncsb2hLkIfm6dIN9hd7zkPmuqf4Wb9ZNrBJ/czDmBcWuQmhAjBV1M8NQ7vGDL7n
-	PPT5gfZrq0MpHzMSmWp058eL3rX9U/syj8FE8wEHj/7ls/hVQhNsRFu+0p3zQXdkLIfysm8Pro/
-	Y69TicTG9jNwjBopQ22kjjv8sPKAb4tqlC+ZWrH9Eb+c4IAuLPuOCsYt+vm2vqUTJ3FOVf8aJav
-	UpGdxSEHhB9XeZ1Xt3mpDcHMIqVsBOkTGMTSX+r7f+c+08xZctf9ANFlOmYqkulToiAtgmYrQh9
-	VDvp2FTgU7gMI1npPhBQpEOFct9EABAXS4H0iKukWht5a2CyQt1oh0jPxm0aOScUDfeVbOvpHcv
-	UzMMVSafK9g==
-X-Received: by 2002:a17:903:11ce:b0:215:a179:14ca with SMTP id d9443c01a7336-22e35fa48edmr11374145ad.2.1746487138868;
-        Mon, 05 May 2025 16:18:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEdqr8QmR5hHl03YHuIdiZ5XDPvQLzJ8NRfBgcXvm6h4rkFqPZiU9iHtAyIKS5UBK5d6Ay3DA==
-X-Received: by 2002:a17:903:11ce:b0:215:a179:14ca with SMTP id d9443c01a7336-22e35fa48edmr11373785ad.2.1746487138404;
-        Mon, 05 May 2025 16:18:58 -0700 (PDT)
-Received: from [192.168.0.74] (n1-41-240-65.bla22.nsw.optusnet.com.au. [1.41.240.65])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1521fb3esm60612335ad.121.2025.05.05.16.18.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 16:18:57 -0700 (PDT)
-Message-ID: <2a0df02a-1657-4b59-8f31-791a8aff523e@oss.qualcomm.com>
-Date: Tue, 6 May 2025 09:18:49 +1000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fGtDIoeh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 496FAC4CEED;
+	Mon,  5 May 2025 22:53:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746485639;
+	bh=+wZxgz632sHvnLOgr6eoUPj4ket6MHQdjGTN8+zbFzE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fGtDIoehVn0264eGyISR/0K7vi68gTim5Dz8QBX00ajpppAhpgiDCyxpKs9VX3OnV
+	 XucYYZ6BQDjwekdF5W1rQn8DXRQPCE8RWTFb4/cCCNv66ikxqN9uygr3gQURrVk5Y6
+	 /X9Y/B4tggTtkNv2VWB+TxJtsA035QmA/KHvMf7332e3E2sMm6CECKwCJwfI00GFKW
+	 f8UPhxVtw1fcJVWBEkl21606AdJqg8yee2+df5cO16cyA4oanHKpM1tPmHU8jgB0WR
+	 b0XqBMrqS6M+v1tGlr+SjlERShzGQqTNsR/mipTqGgh18nKHFu6tP7/cnXeGqS58iz
+	 KkZAFYsrCurHw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Kees Cook <kees@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 400/486] pstore: Change kmsg_bytes storage size to u32
+Date: Mon,  5 May 2025 18:37:56 -0400
+Message-Id: <20250505223922.2682012-400-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
+References: <20250505223922.2682012-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/11] firmware: qcom: scm: remove unused arguments to
- the shm_brige
-To: Kuldeep Singh <quic_kuldsing@quicinc.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Sumit Garg <sumit.garg@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Apurupa Pattapu <quic_apurupa@quicinc.com>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-doc@vger.kernel.org
-References: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-0-6a143640a6cb@oss.qualcomm.com>
- <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-6-6a143640a6cb@oss.qualcomm.com>
- <246da659-2add-4ccf-b914-f737fb93f3f2@quicinc.com>
-Content-Language: en-US
-From: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-In-Reply-To: <246da659-2add-4ccf-b914-f737fb93f3f2@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=EOUG00ZC c=1 sm=1 tr=0 ts=68194764 cx=c_pps
- a=IZJwPbhc+fLeJZngyXXI0A==:117 a=hi51d+lTLNy/RbqRqnOomQ==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=P-IC7800AAAA:8 a=EUspDBNiAAAA:8
- a=S5yCOARCkap2nlZrFcEA:9 a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
- a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-ORIG-GUID: pzwkVFeMaDMxygNppekAZy9HktW4aFaB
-X-Proofpoint-GUID: pzwkVFeMaDMxygNppekAZy9HktW4aFaB
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDIyMCBTYWx0ZWRfX439sYm8M59Er
- LPHWbo14eTJd7PGMkSoO+cmdVFJiFwVny+BjZSaClzYbi1D/s6ASrqIj+DKiKfdpOsVxyWXvPV5
- 6w3r/b+/q/u0zlSkZkkJ0c7dbIwveEr+W+mLqmTonpIUqDhk/1P5J12HBPTdI9ao9lS6fzX2kF0
- nkWr8P+gfFkZ9L248V8adNBWgY2vP7wrWKHBjtmScgPwnbSEymFEBd8FQ0mHJ4S/QQ3eHf4ugqJ
- uBOl0Gl8+RMB3p1/MorBynWVAJQ9ANloS0Ln2TfAVj5wTfoDbDxKeYzZXEHsoqTonSXQwwl6bOJ
- rAue/DpEVbUau/Kjw+hDBN3a/Jogp0GmOVx8J8c7qA4IT/QF1Tlo3zmaJ8+wd258fdiDt+/lurJ
- CLBnDVpEmgc4EWevOnIn9wqC/ZpK/eiHla9O0Ty+Z6Ys3RzcV8DGY7APB1oPS2KMygGlkdSk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_10,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 clxscore=1015 impostorscore=0 spamscore=0 lowpriorityscore=0
- bulkscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505050220
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.26
+Content-Transfer-Encoding: 8bit
 
+From: Kees Cook <kees@kernel.org>
 
+[ Upstream commit 5674609535bafa834ab014d90d9bbe8e89223a0b ]
 
-On 5/5/2025 8:58 PM, Kuldeep Singh wrote:
-> 
-> 
-> On 4/29/2025 11:36 AM, Amirreza Zarrabi wrote:
->> shm_bridge create/delete functions always use the scm device.
->> There is no need to pass it as an argument.
->>
->> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-> 
-> 
-> There are 2 type of APIs exposed by tzmem driver for pool creation.
-> devm_qcom_tzmem_pool_new and qcom_tzmem_pool_new.
-> 
-> Device managed pool is created with devm_qcom_tzmem_pool_new but
-> currently qcom_scm is using it's own dev to create/delete bridge which
-> is problamatic here.
-> 
-> https://elixir.bootlin.com/linux/v6.14.5/source/drivers/firmware/qcom/qcom_scm.c#L1653
-> 
-> If pool is device managed, same dev should be used in qcom_scm to
-> create/delete bridge rather than using qcom_scm dev.
-> The dev passed as an argument to function should be used instead of
-> __scm->dev.
-> https://elixir.bootlin.com/linux/v6.14.5/source/drivers/firmware/qcom/qcom_scm.c#L1634
-> 
-> To summarize, I believe correct solution should be to pass corresponding
-> dev to bridge create/delete APIs instead of always assuming to be
-> qcom_scm dev for devm_qcom_tzmem_pool_new scenarios.
-> For qcom_tzmem_pool_new, qcom_scm/qcom_tzmem_dev can be used.
-> 
-> Bartosz/Amirreza, please share your thoughts as well.
-> 
+The types around kmsg_bytes were inconsistent. The global was unsigned
+long, the argument to pstore_set_kmsg_bytes() was int, and the filesystem
+option was u32. Given other internal limits, there's not much sense
+in making a single pstore record larger than INT_MAX and it can't be
+negative, so use u32 everywhere. Additionally, use READ/WRITE_ONCE and a
+local variable in pstore_dump() to avoid kmsg_bytes changing during a
+dump.
 
-It is not true.
-Why should shmbridge need to have access to random devices, while the resources
-are obtained from the scm device, if any?
+Link: https://lore.kernel.org/r/20250206191655.work.798-kees@kernel.org
+Signed-off-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/pstore/inode.c    |  2 +-
+ fs/pstore/internal.h |  4 ++--
+ fs/pstore/platform.c | 11 ++++++-----
+ 3 files changed, 9 insertions(+), 8 deletions(-)
 
-- Amir
+diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+index 56815799ce798..9de6b280c4f41 100644
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -265,7 +265,7 @@ static void parse_options(char *options)
+ static int pstore_show_options(struct seq_file *m, struct dentry *root)
+ {
+ 	if (kmsg_bytes != CONFIG_PSTORE_DEFAULT_KMSG_BYTES)
+-		seq_printf(m, ",kmsg_bytes=%lu", kmsg_bytes);
++		seq_printf(m, ",kmsg_bytes=%u", kmsg_bytes);
+ 	return 0;
+ }
+ 
+diff --git a/fs/pstore/internal.h b/fs/pstore/internal.h
+index 801d6c0b170c3..a0fc511969100 100644
+--- a/fs/pstore/internal.h
++++ b/fs/pstore/internal.h
+@@ -6,7 +6,7 @@
+ #include <linux/time.h>
+ #include <linux/pstore.h>
+ 
+-extern unsigned long kmsg_bytes;
++extern unsigned int kmsg_bytes;
+ 
+ #ifdef CONFIG_PSTORE_FTRACE
+ extern void pstore_register_ftrace(void);
+@@ -35,7 +35,7 @@ static inline void pstore_unregister_pmsg(void) {}
+ 
+ extern struct pstore_info *psinfo;
+ 
+-extern void	pstore_set_kmsg_bytes(int);
++extern void	pstore_set_kmsg_bytes(unsigned int bytes);
+ extern void	pstore_get_records(int);
+ extern void	pstore_get_backend_records(struct pstore_info *psi,
+ 					   struct dentry *root, int quiet);
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index f56b066ab80ce..557cf9d40177f 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -92,8 +92,8 @@ module_param(compress, charp, 0444);
+ MODULE_PARM_DESC(compress, "compression to use");
+ 
+ /* How much of the kernel log to snapshot */
+-unsigned long kmsg_bytes = CONFIG_PSTORE_DEFAULT_KMSG_BYTES;
+-module_param(kmsg_bytes, ulong, 0444);
++unsigned int kmsg_bytes = CONFIG_PSTORE_DEFAULT_KMSG_BYTES;
++module_param(kmsg_bytes, uint, 0444);
+ MODULE_PARM_DESC(kmsg_bytes, "amount of kernel log to snapshot (in bytes)");
+ 
+ static void *compress_workspace;
+@@ -107,9 +107,9 @@ static void *compress_workspace;
+ static char *big_oops_buf;
+ static size_t max_compressed_size;
+ 
+-void pstore_set_kmsg_bytes(int bytes)
++void pstore_set_kmsg_bytes(unsigned int bytes)
+ {
+-	kmsg_bytes = bytes;
++	WRITE_ONCE(kmsg_bytes, bytes);
+ }
+ 
+ /* Tag each group of saved records with a sequence number */
+@@ -278,6 +278,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
+ 			struct kmsg_dump_detail *detail)
+ {
+ 	struct kmsg_dump_iter iter;
++	unsigned int	remaining = READ_ONCE(kmsg_bytes);
+ 	unsigned long	total = 0;
+ 	const char	*why;
+ 	unsigned int	part = 1;
+@@ -300,7 +301,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
+ 	kmsg_dump_rewind(&iter);
+ 
+ 	oopscount++;
+-	while (total < kmsg_bytes) {
++	while (total < remaining) {
+ 		char *dst;
+ 		size_t dst_size;
+ 		int header_size;
+-- 
+2.39.5
+
