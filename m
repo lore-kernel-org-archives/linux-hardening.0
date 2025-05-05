@@ -1,155 +1,94 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1CC1459F7;
-	Mon,  5 May 2025 06:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3EF34CF5;
+	Mon,  5 May 2025 09:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746426178; cv=none; b=bSsZmHWu3HT6F7dG9kgWoamofmH7VE5cy5/JBvwQFjXV6G/SZYag8oWMwEYgkppzpt/HlFhTCatuRO9HjtcLpKJQR0nFft5rdUM12h7E3VpgJKME2uF5LRMkiEruUQgesnZjnOx8Aw2XssqnO2SHrUzUvQepurlpbZ+Q5Uq6y7g=
+	t=1746436537; cv=none; b=tjLVCdVQfH+0J/zb0IttumbsOMlm0d3QtbeVKWxtVWj3hgcf79EeO/ZiWbr85+ooSisov8HQBwdlCcTbst6SO8wexnujKswXzgb8vzB1BIfkwJ3LCztSvRoNc8GAAuRA1saqEaO+2KgnsZ1B2pktEfRUdD4su/WjOv5scArcKzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746426178; c=relaxed/simple;
-	bh=MPUs4KraZc3aeghxZP54Y8ZKgxtKYIoo7VWIRHwCrow=;
+	s=arc-20240116; t=1746436537; c=relaxed/simple;
+	bh=s4VxeVBfwf/lRLGakeQu23tOiUQkM//ukgN3I6WbC4k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CKjtLrsepv8wV2fwGQdoV/1FMqD8JZPGyU04pB6LTDtvmKgg+/J/cEKTEF29rM9fgUeFup2JrbpwzxB2z336v7xZ1u+ECr0qk3mg5gXU6AQuLoPtJIYnmIf5xe8C/TatXqc/cvt3gFa69x5VTrG49uqEhdrD/oN8z+YMDDscdag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QiylwdGt; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=eOD94N/9DYbpoYhFNO5ZV17QjpbYo5rrXu1w4tYgmBUzJZPpZs1gXkFmdJBNwQGhReH4J8ygx9enWcm+rCKudAG02kzKtmJ3yAK8+V3FbYioBTYCv0Rq1kV0CPSRXxlfp723wm/Iqc39JLL1BqHlyF7ldrqLft3hv5r1D8V3M44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=hvMKDAzX; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QiylwdGt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6crzyY4cRgs7sWNOVET6cPYOHzfjUqNaeeku35IfyF4=; b=QiylwdGt65nFPM0JNR3fMaNZuA
-	Xt3wXttqIBV3/rty7gejWyvvemGT5SH2vSDn5Qluc7xEDj53AAe9vdBzFp2LafK41wer+kAOwa7lS
-	hcQ/AeWxm4afC9iOx/WaIgLg2QiEsXz1QkJ1gdpHzklRuEFe3KuhHliuSnrsTqh0+5uRRvR+EmTHS
-	EV+l2EpTFT2Vrn3NB1HsFwRgXT9euCn51TzRMEgI4LdZlhhAojDAr93gj232XyNxadj2mTML7MRjl
-	SDoQe6HJaGd80Fz5l2g8xHunE4wLV32VIsy/10lNAelvJebRrI3jjdY2Qnxsmphn7DPNBtq9nkH8u
-	L1x+mcFg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uBpE6-00000006Vu5-3QMm;
-	Mon, 05 May 2025 06:22:54 +0000
-Date: Sun, 4 May 2025 23:22:54 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="hvMKDAzX"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B2DBE40E0196;
+	Mon,  5 May 2025 09:15:32 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id u9a81fp4maJu; Mon,  5 May 2025 09:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746436528; bh=ur1FAHlE7mVM+br0+9PR3Ei9FD4ZGrriHb4DVevVmw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hvMKDAzXnbBX1Og5eM0r1OUQHVx6GOJzl/BYTFggLjJhLA+NugURwT5F7vbeZ1GCX
+	 M/DnSmo7UMf0CFUdZrmqpcOc4lI99KD9DdXuQkPqLLRXQ3CAy7Wvk48Q9/9/BFeE7S
+	 DeVcPjXhu5yukIN2dxU8IbNvzv4UoPNEwseYR24QDFnds9VN5vQrdkmGz9puViUID5
+	 ojG9uKkPXphkHX/jlERvfVfYA4TCY1siCA3xtY1mGc98FyvEoSINIJvg4k20s239io
+	 FY94tUrQUQk2DPfuIvi/ApLoeuyNz0fhlJIwEpLfJMhgSaSBgBfxKE7wGBmWLThgXx
+	 ypM72gF/6y3jSBmyvG0CGFUg+wYs4J5q+vxfTrtNlpXH0fXfIUYXadxYWayagd5GnG
+	 wXgo9FDtQs0GWBN5uWRwLW/DOz5AZyagmtRQsFpWsHuwP1yp0bYECxqSc7Mk+pd+QV
+	 flSSqpDrwQe68e/TSJ2wxR/lZq63kvyrWJquZBSLV+8dPyus0qijdvWuFrKSfYA2b7
+	 LowU0lD7U+tjSFKqYHvyIJke7YZHs5ElVHvz+ygMwE04zqUnhzaKD2dvKunupNfd8+
+	 VSphlwt91tHCRVwIN0csW01QJTiGoNJRwIlPkDnYdqaLgaJEkyj9WvfoJA9Ru3GoJq
+	 zmZHGl2wnNM+guynzrwlQhUo=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2202940E01FA;
+	Mon,  5 May 2025 09:15:16 +0000 (UTC)
+Date: Mon, 5 May 2025 11:15:15 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Kees Cook <kees@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] scsi: sd: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <aBhZPm28c6Yn5KH2@infradead.org>
-References: <aBO_32OsMj3hsJsv@kspp>
- <aBRrP8EuNkeAtPC9@infradead.org>
- <33d7a1b3-4bf7-4337-ba82-dbd4b95ad0b8@acm.org>
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-tip-commits@vger.kernel.org,
+	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+	"Chang S. Bae" <chang.seok.bae@intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
+Subject: Re: hardened_usercopy 32-bit (was: Re: [tip: x86/merge] x86/fpu:
+ Make task_struct::thread constant size)
+Message-ID: <20250505091515.GDaBiBo_1ywZciEMt1@fat_crate.local>
+References: <20250503120712.GJaBYG8A-D77MllFZ3@fat_crate.local>
+ <202505041418.F47130C4C8@keescook>
+ <202505041541.C3D97BE@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <33d7a1b3-4bf7-4337-ba82-dbd4b95ad0b8@acm.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <202505041541.C3D97BE@keescook>
 
-On Sat, May 03, 2025 at 12:08:23PM -0700, Bart Van Assche wrote:
-> On 5/1/25 11:50 PM, Christoph Hellwig wrote:
-> > (I still wish we'd kill the stupid struct and this test and just used
-> > the simpler and cleaner bitshifting and masking)
+On Sun, May 04, 2025 at 03:43:07PM -0700, Kees Cook wrote:
+> On Sun, May 04, 2025 at 03:30:38PM -0700, Kees Cook wrote:
+> > However, I can't test this patch -- I'm not able to reproduce the problem
+> > either, even with your .config. What hardware are you using?
 > 
-> Bit-shifting and masking results in faster code. For slow path code I
-> prefer bitfields because this results in much more compact source code.
+> Oh, wait, yes, I reproduced it. I just didn't actually log in or wait for
+> complex daemons to start. Without my patch I quickly see the crashes. With
+> my patch, everything is fine. So, I can confirm that fixes it.
 
-Despite claims to the contrary bit tests and masking are often a lot
-simpler, and you don't need the duplicate struct layouts and tests
-verifying that you get them right as it is almost impossible to write
-code that only works on LE or BE.  E.g. the patch below would simplify
-the stream status quite a bit.  It also fixes the assumption that the
-bitfield endianess is the same as the byte endianess, which is not
-true in general (although I think it is for all Linux supported
-architectures).
+I can confirm your patch fixes the boot here too - thanks for the
+debugging and fixing!
 
-diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
-index f0eec4708ddd..41ed22f1ad0b 100644
---- a/drivers/scsi/scsi_debug.c
-+++ b/drivers/scsi/scsi_debug.c
-@@ -5528,7 +5528,8 @@ static int resp_get_stream_status(struct scsi_cmnd *scp,
- 	     offset += 8, stream_id++) {
- 		struct scsi_stream_status *stream_status = (void *)arr + offset;
- 
--		stream_status->perm = stream_id < PERMANENT_STREAM_COUNT;
-+		if (stream_id < PERMANENT_STREAM_COUNT)
-+			stream_status->flags |= SCSI_STREAM_STATUS_PERM;
- 		put_unaligned_be16(stream_id,
- 				   &stream_status->stream_identifier);
- 		stream_status->rel_lifetime = stream_id + 1;
-diff --git a/drivers/scsi/scsi_proto_test.c b/drivers/scsi/scsi_proto_test.c
-index c093389edabb..d61302e7715a 100644
---- a/drivers/scsi/scsi_proto_test.c
-+++ b/drivers/scsi/scsi_proto_test.c
-@@ -22,15 +22,6 @@ static void test_scsi_proto(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, d.desc.params[0] + 0, 0xe4);
- 	KUNIT_EXPECT_EQ(test, d.desc.params[1] + 0, 0xe3);
- 
--	static const union {
--		struct scsi_stream_status s;
--		u8 arr[sizeof(struct scsi_stream_status)];
--	} ss = { .arr = { 0x80, 0, 0x12, 0x34, 0x3f } };
--	KUNIT_EXPECT_EQ(test, ss.s.perm + 0, 1);
--	KUNIT_EXPECT_EQ(test, get_unaligned_be16(&ss.s.stream_identifier),
--			0x1234);
--	KUNIT_EXPECT_EQ(test, ss.s.rel_lifetime + 0, 0x3f);
--
- 	static const union {
- 		struct scsi_stream_status_header h;
- 		u8 arr[sizeof(struct scsi_stream_status_header)];
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 3f6e87705b62..deb8af152f13 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3215,7 +3215,7 @@ static bool sd_is_perm_stream(struct scsi_disk *sdkp, unsigned int stream_id)
- 		return false;
- 	if (get_unaligned_be32(&buf.h.len) < sizeof(struct scsi_stream_status))
- 		return false;
--	return buf.s.perm;
-+	return buf.s.flags & SCSI_STREAM_STATUS_PERM;
- }
- 
- static void sd_read_io_hints(struct scsi_disk *sdkp, unsigned char *buffer)
-diff --git a/include/scsi/scsi_proto.h b/include/scsi/scsi_proto.h
-index f64385cde5b9..88c1d950be54 100644
---- a/include/scsi/scsi_proto.h
-+++ b/include/scsi/scsi_proto.h
-@@ -319,26 +319,10 @@ static_assert(sizeof(struct scsi_io_group_descriptor) == 16);
- 
- /* SCSI stream status descriptor */
- struct scsi_stream_status {
--#if defined(__BIG_ENDIAN)
--	u8 perm: 1;
--	u8 reserved1: 7;
--#elif defined(__LITTLE_ENDIAN)
--	u8 reserved1: 7;
--	u8 perm: 1;
--#else
--#error
--#endif
--	u8 reserved2;
-+	u8 flags;
-+#define SCSI_STREAM_STATUS_PERM		(1u << 7)
- 	__be16 stream_identifier;
--#if defined(__BIG_ENDIAN)
--	u8 reserved3: 2;
--	u8 rel_lifetime: 6;
--#elif defined(__LITTLE_ENDIAN)
--	u8 rel_lifetime: 6;
--	u8 reserved3: 2;
--#else
--#error
--#endif
-+	u8 rel_lifetime;
- 	u8 reserved4[3];
- };
- 
+Reported-by: Borislav Petkov (AMD) <bp@alien8.de>
+Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
