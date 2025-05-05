@@ -1,143 +1,124 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9D11922FA;
-	Mon,  5 May 2025 10:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D0D211C;
+	Mon,  5 May 2025 11:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746442769; cv=none; b=dAoqkjHCJPF0yLoeDSVop+pv2HgstfhyyCixguujws/PVcd1QK/qZ2H/Onso3dx6XVSbgxrxPsk7HyD1qeRxyj3YWewO+qJNdaxqRtJBDQ97F30+8NSXwz6nnmBqaea+NeDaRFKiSMaUOZkbFLuFSRBUkxSEkI0iUtGxDNuiF28=
+	t=1746444725; cv=none; b=uGys8pe2q4+XBpkNW05Q9J7yD9molBwOLycsZnTKjSq46cpnWfLlCI/Wn7Sk+DA9zYdHQyLCOkpGxxZ3wZh/NWsB0ILaZR++h/sdGoCYvpEnz8YcWvMXx8F6Pb+xCu1M687fkm0cCOy/GmMfDPS2Wq8SdXXrHaxE3RE2952AWtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746442769; c=relaxed/simple;
-	bh=J9KrXamGHyza0/Hx3OOj8gFfveIOH/IiN7QHVFOUOnk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FjQPrCBMPoiB92FUB8zM/SlE7krmRJL5kwoa3ivY5rVXg10sBTH8vjR/S+17D4AWi8bE324FT97AsUo9BdkGNTRklqGxizG5BwD8DrtqViySafG7uwLtZZmVVPhzvKp7uykGzKei+tM/xP1GHG1/YdLCT8pnmC6DN3YDcgpgsW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=maF+NlbW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746444725; c=relaxed/simple;
+	bh=sSbIcbJAsWOp8UQ8YetgntsO4PWlZoiT+/z23PFgjSs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CHffrpxV9cYHCAxU+pCPi1b1XaC7Vp/Y6Ll8V75q09YmWHsW0lbGc/U4OcZgTikkQSoweoL6FuaQy7Jl8v8C9IskbM+qGH9szW5G8aLTJQtZ9+ID7jVBuM25pwEvvJhLo8okznuwL6pd09UzuPIzTcrHuv6LDLj7NhgsqmcZmp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fsxm77yl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="maF+NlbW"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544NLVAx032287;
-	Mon, 5 May 2025 10:59:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	NMGMuOMP0NOStNdPXxMCsLdoVkdF+VlLfbEBaduUM3c=; b=maF+NlbWY9nk/Yew
-	ro6ddW/oBlEwYYu7iVQG1wXAtd+fefPu+TYPVrzsXbsKNDWEvQHb/ykSBmQpZMAz
-	6iI3+XOj5Cme5y1cKHv0EEGnfGqONJy325wqCbKJLXhSeGqxE78v8tt6e5BrEcVp
-	9+r92OFHhzKFbbFko37hcq8R+ToEI2llyLpF6lHD45spgEGCwwumoq3/1B+VtHLu
-	jcidX2dE80gLEyEXzZi12GqfAiwaDbOfLTrvLwDZ6UGbAONQS44mbOOsnqEaJprP
-	xRq/T55q67nmuxVr8ACjkGzry7ieWUNgqqVecpt8aM7YXoZG9QtoD5GuoG9sBNHZ
-	nHRhnA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dce9brj7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 May 2025 10:59:18 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 545AxHxZ002374
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 5 May 2025 10:59:17 GMT
-Received: from [10.218.44.178] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 5 May 2025
- 03:59:12 -0700
-Message-ID: <246da659-2add-4ccf-b914-f737fb93f3f2@quicinc.com>
-Date: Mon, 5 May 2025 16:28:51 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fsxm77yl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A687EC4CEE4;
+	Mon,  5 May 2025 11:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746444724;
+	bh=sSbIcbJAsWOp8UQ8YetgntsO4PWlZoiT+/z23PFgjSs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fsxm77yl/0UYSuPasfDxI0DDQ+yQgUblo+5EapHuBNXJHYnucDYSJ/3hUfz81Bk/s
+	 iMyH/ZJiwgV7ue7soUxQtthKJpmfahf2b7o6rYv3tmBmpij0fqaADOb4YGUYd5f0jM
+	 hGvOJS28faIDNxA80AladUNM3gwLOdwkviZArL19O8EA3xXan0q2sWPKQp64cpCUzA
+	 qB5QZw14PoAeLNN9gtXpKlZU10s8HWaF7eO1IB96/LXUuDwXaCzEaYn3fWSVX1SthS
+	 MWNOFW9w/ihSvubKHq+knSw9OnT+7+2c4vSdcS3fvXTO4EhsQO2j4WNppI9VQNpqpN
+	 TOz0WXvOm5E7A==
+Date: Mon, 5 May 2025 13:31:59 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-tip-commits@vger.kernel.org,
+	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+	"Chang S. Bae" <chang.seok.bae@intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
+Subject: Re: hardened_usercopy 32-bit (was: Re: [tip: x86/merge] x86/fpu:
+ Make task_struct::thread constant size)
+Message-ID: <aBihr1qRFBm1xj3_@gmail.com>
+References: <20250503120712.GJaBYG8A-D77MllFZ3@fat_crate.local>
+ <202505041418.F47130C4C8@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/11] firmware: qcom: scm: remove unused arguments to
- the shm_brige
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-        Jens Wiklander
-	<jens.wiklander@linaro.org>,
-        Sumit Garg <sumit.garg@kernel.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Apurupa Pattapu
-	<quic_apurupa@quicinc.com>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R.
- Silva" <gustavoars@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-CC: <linux-arm-msm@vger.kernel.org>, <op-tee@lists.trustedfirmware.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
-        <linux-doc@vger.kernel.org>
-References: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-0-6a143640a6cb@oss.qualcomm.com>
- <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-6-6a143640a6cb@oss.qualcomm.com>
-Content-Language: en-US
-From: Kuldeep Singh <quic_kuldsing@quicinc.com>
-In-Reply-To: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-6-6a143640a6cb@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDEwNCBTYWx0ZWRfX5wp0kqaare0R
- +pntLJOWwO+utGzzTx42W3hgP9uuXtlrAdyezkvc7+TlcItOvMZgPYJcVg6ebpAEWjvxx5kA6aN
- jZGLBCAdT8wkakazGXs/leuWIRMfg7rCMFM+LLAxpUOwYMBQGNcxFhbhjEB95EfSQkLP22aKt6O
- wb1BS5uLR3ryeZT95EFrhfrzH4E3Mgk5WlKzF96Q0sigKTX+px1RRAQer4vDa+LUeKXlHgMxVYx
- b24B8+TSKL+dRcQUEB0lxjwUpwMLJOCTqfTpsxB7yiQnigbe62WCCwjiI3oxGV+xtVSIizoocfd
- Jmd9UDTCTG27ZHGKtGvwUXaMpqNPhP6MZSLBLsfiZImaQ8nYUzr5gMIbgvuhLKiENstzp9tq2DM
- 4fEJGGgtv44YP6G8KVKS0+PSCg5Afmohc1tHDmgvEF88uX1OTyXLYlSo0dp0HurZS+OnpRWw
-X-Proofpoint-ORIG-GUID: jDqxW_-Q_cnftiAtwzc2XbtlK_MxbWAN
-X-Authority-Analysis: v=2.4 cv=Qope3Uyd c=1 sm=1 tr=0 ts=68189a06 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=P-IC7800AAAA:8
- a=EUspDBNiAAAA:8 a=JvMDD0_PEK43moPAXCcA:9 a=QEXdDO2ut3YA:10
- a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-GUID: jDqxW_-Q_cnftiAtwzc2XbtlK_MxbWAN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_05,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1011
- malwarescore=0 bulkscore=0 suspectscore=0 impostorscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505050104
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202505041418.F47130C4C8@keescook>
 
 
+* Kees Cook <kees@kernel.org> wrote:
 
-On 4/29/2025 11:36 AM, Amirreza Zarrabi wrote:
-> shm_bridge create/delete functions always use the scm device.
-> There is no need to pass it as an argument.
+> But as reported above, there *is* a copy in copy_uabi_to_xstate(). (It
+> seems there are several, actually.)
 > 
-> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+> int copy_sigframe_from_user_to_xstate(struct task_struct *tsk,
+>                                       const void __user *ubuf)
+> {
+>         return copy_uabi_to_xstate(x86_task_fpu(tsk)->fpstate, NULL, ubuf, &tsk->thread.pkru);
+> }
+> 
+> This appears to be writing into x86_task_fpu(tsk)->fpstate. With or
+> without CONFIG_X86_DEBUG_FPU, this resolves to:
+> 
+> 	((struct fpu *)((void *)(task) + sizeof(*(task))))
+> 
+> i.e. the memory "after task_struct" is cast to "struct fpu", and the
+> uses the "fpstate" pointer. How that pointer gets set looks to be
+> variable, but I think the one we care about here is:
+> 
+>         fpu->fpstate = &fpu->__fpstate;
+> 
+> And struct fpu::__fpstate says:
+> 
+>         struct fpstate                  __fpstate;
+>         /*
+>          * WARNING: '__fpstate' is dynamically-sized.  Do not put
+>          * anything after it here.
+>          */
+> 
+> So we're still dealing with a dynamically sized thing, even if it's not
+> within the literal struct task_struct -- it's still in the kmem cache,
+> though.
 
+Indeed!
 
-There are 2 type of APIs exposed by tzmem driver for pool creation.
-devm_qcom_tzmem_pool_new and qcom_tzmem_pool_new.
+> So, this is still copying out of the kmem cache for task_struct, and the
+> window seems unchanged (still fpu regs). This is what the window was
+> before:
+> 
+> void fpu_thread_struct_whitelist(unsigned long *offset, unsigned long *size)
+> {
+>         *offset = offsetof(struct thread_struct, fpu.__fpstate.regs);
+>         *size = fpu_kernel_cfg.default_size;
+> }
+> 
+> And the same commit I mentioned above removed it.
+> 
+> I think the misunderstanding is here:
+> 
+> >    The fpu_thread_struct_whitelist() quirk to hardened usercopy can be removed,
+> >    now that the FPU structure is not embedded in the task struct anymore, which
+> >    reduces text footprint a bit.
+> 
+> Yes, FPU is no longer in task_struct, but it IS in the kmem cache named
+> "task_struct", since the fpstate is still being allocated there.
 
-Device managed pool is created with devm_qcom_tzmem_pool_new but
-currently qcom_scm is using it's own dev to create/delete bridge which
-is problamatic here.
+Thank you for this fantastic explanation and the bug fix!
 
-https://elixir.bootlin.com/linux/v6.14.5/source/drivers/firmware/qcom/qcom_scm.c#L1653
+Since IMHO it would be a shame to lose all these explanations, and 
+because it's been exposed to -next for weeks without getting reported, 
+I've applied your fix to tip:x86/fpu after changeloggifying it. I've 
+also added your SOB, if that's fine with you. Let's not destroy genuine 
+Git history, let's not lose credit and let's not lose all these details 
+by squashing this fix into the buggy commit...
 
-If pool is device managed, same dev should be used in qcom_scm to
-create/delete bridge rather than using qcom_scm dev.
-The dev passed as an argument to function should be used instead of
-__scm->dev.
-https://elixir.bootlin.com/linux/v6.14.5/source/drivers/firmware/qcom/qcom_scm.c#L1634
+Thanks,
 
-To summarize, I believe correct solution should be to pass corresponding
-dev to bridge create/delete APIs instead of always assuming to be
-qcom_scm dev for devm_qcom_tzmem_pool_new scenarios.
-For qcom_tzmem_pool_new, qcom_scm/qcom_tzmem_dev can be used.
-
-Bartosz/Amirreza, please share your thoughts as well.
-
--- 
-Regards
-Kuldeep
-
+	Ingo
