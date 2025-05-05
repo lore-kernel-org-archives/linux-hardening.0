@@ -1,131 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECDB204840;
-	Mon,  5 May 2025 21:09:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C5532E4C7;
+	Mon,  5 May 2025 22:35:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746479366; cv=none; b=T8EjTFqrNCIDd2MOkDYn/wMrZBX4GTXZs3f7TQM9IoQbXlEEn0fbE/zrTgZAWUgOnixWd7cRAHDK46b4z8IBM/bcumanxVnuLP1d24iUpLiz40qZcC7O4C0RoMBShCd4AlSqLdXq1X30DOkXKPURqDwVoHKKirHIgWweNCa9mjY=
+	t=1746484528; cv=none; b=CQxJ3Dqsr5H6D8J4OGP95DK7XFuZ+r4Oq+JH1kOGBtypblZ6BkyWvcTLB4oVgVuwoLxDf/PUvnW6OwOH79BFJ3MV2NvWtOPsQfFNJrXm2AdiVuuwKRUTQIwsDD3kffxZpJRg6i61A3mQUwOLPyQ+SpApi6iaBbFDBzdcbiSOtd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746479366; c=relaxed/simple;
-	bh=KV7fCtsVdiotwii6ldKNDZX/3Xgo8iGcftnuvms2J2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fZq/RVpmrFDggm0RGe2iCMuHzoTj7majkazJVWIHsYhVb8cmTx5MGd5QVhZWyz+5Iprn93tYEl3I+Jat4lsp+gqj8JFaesWfQHDmSasJL3nDM7rqdxujaeFPgkZuG5sspKzR3+odnq99Pq8iCOA9F8zVkSqQoDaALDTuu0KJw/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8wyIb9j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746484528; c=relaxed/simple;
+	bh=+wZxgz632sHvnLOgr6eoUPj4ket6MHQdjGTN8+zbFzE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=c5bhTZUlJBecEM45EX/+el7L9dvQvXTMn7hS0Y7T5sK8nGyCdbphOVE05bXb1eIBLTAzGnGxqstOOze9kgTrx18ysAoVnD+nmPQUIXqvjlgAgjlB9cE+rxnHPq85agCYcr9UJoyCqNI0tzOEMqMIHmcMvg622eFJBKOgONTUJFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tG7SRIiB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8wyIb9j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F1AC4CEE4;
-	Mon,  5 May 2025 21:09:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tG7SRIiB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC41EC4CEEF;
+	Mon,  5 May 2025 22:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746479365;
-	bh=KV7fCtsVdiotwii6ldKNDZX/3Xgo8iGcftnuvms2J2U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N8wyIb9jdd0hoqMgI1FEsIWrhzJauWDjedt8eLP9JQk3x9ogATs6BH5PYCL0ALjjy
-	 Jfe6IFLrH/ysp5JmEx48t91Ah0dd0ktEDNV1Kyz6BRvIAskm44Dxf6OGIF/SpLJDAW
-	 EpH4IUzWhN2REicwH0WPD7tUsQ5VCT51LWE/7z+uxQ5mIY2WwMLuMykbFyBzQWBybl
-	 m/p3r1wXdBYPMIEcG53ew+vihSqXluvsBK3DTpq8DB9baCXGFpV+ptIzXGszKiICEt
-	 4XCb9J/MmWQj5MVrWbK3ciyJ3ZvJVZrqhOuB2KBmk81nZtGbyUrdCK1elvpZOad3av
-	 aAAtBZ+QUrk0Q==
-Date: Mon, 5 May 2025 14:09:21 -0700
-From: Kees Cook <kees@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-tip-commits@vger.kernel.org,
-	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
-	"Chang S. Bae" <chang.seok.bae@intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-Subject: Re: hardened_usercopy 32-bit (was: Re: [tip: x86/merge] x86/fpu:
- Make task_struct::thread constant size)
-Message-ID: <202505051408.7CABD131@keescook>
-References: <20250503120712.GJaBYG8A-D77MllFZ3@fat_crate.local>
- <202505041418.F47130C4C8@keescook>
- <aBihr1qRFBm1xj3_@gmail.com>
+	s=k20201202; t=1746484527;
+	bh=+wZxgz632sHvnLOgr6eoUPj4ket6MHQdjGTN8+zbFzE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tG7SRIiBxS4ydm5qug+F+IkvcAbUX5+XDmJWIFEDjAPMe90TVGObpPXcMtvJolNTI
+	 B60VheVlgFnWnJoU3hVGOFA0DNiSvBqkoYeu2p4+UV4cqtg9qDB2LzRjpHPCAYuylI
+	 uQNkNlpixTeWfjgFQ8drfZPhxFGAYV6Cvb2Dt7EPUPZdm3tSAc312mEpFjVXL/bvHY
+	 P75HJmjMaFYlsb0TaoTMZuKP1JRIxVR1YrAjrfm2GCP/0G4yQ7oq+tOEX/mrOWiF4Z
+	 oslSHTGS7UOu1/z1bMLbsZY9iISBtPmoDfkJn3N4NhxGO9NsqOASvmLmqAeHPsp+u9
+	 H85ujlaPM078Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Kees Cook <kees@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 516/642] pstore: Change kmsg_bytes storage size to u32
+Date: Mon,  5 May 2025 18:12:12 -0400
+Message-Id: <20250505221419.2672473-516-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
+References: <20250505221419.2672473-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBihr1qRFBm1xj3_@gmail.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.5
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 05, 2025 at 01:31:59PM +0200, Ingo Molnar wrote:
-> 
-> * Kees Cook <kees@kernel.org> wrote:
-> 
-> > But as reported above, there *is* a copy in copy_uabi_to_xstate(). (It
-> > seems there are several, actually.)
-> > 
-> > int copy_sigframe_from_user_to_xstate(struct task_struct *tsk,
-> >                                       const void __user *ubuf)
-> > {
-> >         return copy_uabi_to_xstate(x86_task_fpu(tsk)->fpstate, NULL, ubuf, &tsk->thread.pkru);
-> > }
-> > 
-> > This appears to be writing into x86_task_fpu(tsk)->fpstate. With or
-> > without CONFIG_X86_DEBUG_FPU, this resolves to:
-> > 
-> > 	((struct fpu *)((void *)(task) + sizeof(*(task))))
-> > 
-> > i.e. the memory "after task_struct" is cast to "struct fpu", and the
-> > uses the "fpstate" pointer. How that pointer gets set looks to be
-> > variable, but I think the one we care about here is:
-> > 
-> >         fpu->fpstate = &fpu->__fpstate;
-> > 
-> > And struct fpu::__fpstate says:
-> > 
-> >         struct fpstate                  __fpstate;
-> >         /*
-> >          * WARNING: '__fpstate' is dynamically-sized.  Do not put
-> >          * anything after it here.
-> >          */
-> > 
-> > So we're still dealing with a dynamically sized thing, even if it's not
-> > within the literal struct task_struct -- it's still in the kmem cache,
-> > though.
-> 
-> Indeed!
-> 
-> > So, this is still copying out of the kmem cache for task_struct, and the
-> > window seems unchanged (still fpu regs). This is what the window was
-> > before:
-> > 
-> > void fpu_thread_struct_whitelist(unsigned long *offset, unsigned long *size)
-> > {
-> >         *offset = offsetof(struct thread_struct, fpu.__fpstate.regs);
-> >         *size = fpu_kernel_cfg.default_size;
-> > }
-> > 
-> > And the same commit I mentioned above removed it.
-> > 
-> > I think the misunderstanding is here:
-> > 
-> > >    The fpu_thread_struct_whitelist() quirk to hardened usercopy can be removed,
-> > >    now that the FPU structure is not embedded in the task struct anymore, which
-> > >    reduces text footprint a bit.
-> > 
-> > Yes, FPU is no longer in task_struct, but it IS in the kmem cache named
-> > "task_struct", since the fpstate is still being allocated there.
-> 
-> Thank you for this fantastic explanation and the bug fix!
-> 
-> Since IMHO it would be a shame to lose all these explanations, and 
-> because it's been exposed to -next for weeks without getting reported, 
-> I've applied your fix to tip:x86/fpu after changeloggifying it. I've 
-> also added your SOB, if that's fine with you. Let's not destroy genuine 
-> Git history, let's not lose credit and let's not lose all these details 
-> by squashing this fix into the buggy commit...
+From: Kees Cook <kees@kernel.org>
 
-Okay, sounds good. :) Yeah, please consider it:
+[ Upstream commit 5674609535bafa834ab014d90d9bbe8e89223a0b ]
 
+The types around kmsg_bytes were inconsistent. The global was unsigned
+long, the argument to pstore_set_kmsg_bytes() was int, and the filesystem
+option was u32. Given other internal limits, there's not much sense
+in making a single pstore record larger than INT_MAX and it can't be
+negative, so use u32 everywhere. Additionally, use READ/WRITE_ONCE and a
+local variable in pstore_dump() to avoid kmsg_bytes changing during a
+dump.
+
+Link: https://lore.kernel.org/r/20250206191655.work.798-kees@kernel.org
 Signed-off-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/pstore/inode.c    |  2 +-
+ fs/pstore/internal.h |  4 ++--
+ fs/pstore/platform.c | 11 ++++++-----
+ 3 files changed, 9 insertions(+), 8 deletions(-)
 
-Thanks!
-
+diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+index 56815799ce798..9de6b280c4f41 100644
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -265,7 +265,7 @@ static void parse_options(char *options)
+ static int pstore_show_options(struct seq_file *m, struct dentry *root)
+ {
+ 	if (kmsg_bytes != CONFIG_PSTORE_DEFAULT_KMSG_BYTES)
+-		seq_printf(m, ",kmsg_bytes=%lu", kmsg_bytes);
++		seq_printf(m, ",kmsg_bytes=%u", kmsg_bytes);
+ 	return 0;
+ }
+ 
+diff --git a/fs/pstore/internal.h b/fs/pstore/internal.h
+index 801d6c0b170c3..a0fc511969100 100644
+--- a/fs/pstore/internal.h
++++ b/fs/pstore/internal.h
+@@ -6,7 +6,7 @@
+ #include <linux/time.h>
+ #include <linux/pstore.h>
+ 
+-extern unsigned long kmsg_bytes;
++extern unsigned int kmsg_bytes;
+ 
+ #ifdef CONFIG_PSTORE_FTRACE
+ extern void pstore_register_ftrace(void);
+@@ -35,7 +35,7 @@ static inline void pstore_unregister_pmsg(void) {}
+ 
+ extern struct pstore_info *psinfo;
+ 
+-extern void	pstore_set_kmsg_bytes(int);
++extern void	pstore_set_kmsg_bytes(unsigned int bytes);
+ extern void	pstore_get_records(int);
+ extern void	pstore_get_backend_records(struct pstore_info *psi,
+ 					   struct dentry *root, int quiet);
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index f56b066ab80ce..557cf9d40177f 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -92,8 +92,8 @@ module_param(compress, charp, 0444);
+ MODULE_PARM_DESC(compress, "compression to use");
+ 
+ /* How much of the kernel log to snapshot */
+-unsigned long kmsg_bytes = CONFIG_PSTORE_DEFAULT_KMSG_BYTES;
+-module_param(kmsg_bytes, ulong, 0444);
++unsigned int kmsg_bytes = CONFIG_PSTORE_DEFAULT_KMSG_BYTES;
++module_param(kmsg_bytes, uint, 0444);
+ MODULE_PARM_DESC(kmsg_bytes, "amount of kernel log to snapshot (in bytes)");
+ 
+ static void *compress_workspace;
+@@ -107,9 +107,9 @@ static void *compress_workspace;
+ static char *big_oops_buf;
+ static size_t max_compressed_size;
+ 
+-void pstore_set_kmsg_bytes(int bytes)
++void pstore_set_kmsg_bytes(unsigned int bytes)
+ {
+-	kmsg_bytes = bytes;
++	WRITE_ONCE(kmsg_bytes, bytes);
+ }
+ 
+ /* Tag each group of saved records with a sequence number */
+@@ -278,6 +278,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
+ 			struct kmsg_dump_detail *detail)
+ {
+ 	struct kmsg_dump_iter iter;
++	unsigned int	remaining = READ_ONCE(kmsg_bytes);
+ 	unsigned long	total = 0;
+ 	const char	*why;
+ 	unsigned int	part = 1;
+@@ -300,7 +301,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
+ 	kmsg_dump_rewind(&iter);
+ 
+ 	oopscount++;
+-	while (total < kmsg_bytes) {
++	while (total < remaining) {
+ 		char *dst;
+ 		size_t dst_size;
+ 		int header_size;
 -- 
-Kees Cook
+2.39.5
+
