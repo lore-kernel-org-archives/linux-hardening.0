@@ -1,126 +1,180 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734C7A32;
-	Tue,  6 May 2025 19:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C9D192D97;
+	Tue,  6 May 2025 20:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746559055; cv=none; b=jf6rdBmS1VIVooUD9vj3Q1kH94geN+OgfpotI7POVbR2NWTNjblWEyl/uURUc5hXYfTudPQWJ/JfKm73jNeLaFStnq/9x90D9tb5GbcfQM8vCKRBIes2sfyQbnKTmg/bbbSs/Jp7Vwr3Aw4UH+47cWyVUveRvpKHkSHAGIixwUM=
+	t=1746565108; cv=none; b=pjDoi1uM7mOOCc/YDft7ibDfAEU5Trnl+vp8bMXPRMH2gDTO2LLViNbdaLZ0+mjrlJX5HStVdLMPuVj3eZuaAoHaGlka1u7Ch1jPA5I5XuYuRU08VGuosl8KFj51v3X7hiq5yVroOIXFSVocpnkvt3W81dt3Nn6LmYQkCEjsDKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746559055; c=relaxed/simple;
-	bh=8BlyK5eXUTdeNKvLgCmdPxuJcObOmDDC6s9tJUGFIF0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=URPaywCQsg3z4E/vpFBdYUKhyuTWAyX3oiMLN02/T9nAcS9KZNqxWQ0DDV+bXi6BpKSz7oup/OA9A8X86kHVSUIGtLxWTyVf75ndY4A05URGul7FI2Ol5PuiY9CEXF9eyXhQ8MTLE/UeyNB2Ph0cMS6BRbi5zQW6k7ugUQorQSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=H0OOSffG; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746565108; c=relaxed/simple;
+	bh=4MJdmu2/9mzLIGHSnCNkfggi3H4p+mI6NxWvDR7pXIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=PK7mpV9XuVEtYNBTPq+alp2cNlnXo6aYimdfWmaGriGzUxga4rQ1dcr1wK6ZA4wla7k7SMD/0r9siTi/QNhGmI+nbLxctJja7JPHjDT6OfI+gLaYh8ns1BPLVvcnCIDwen4fdf/ORn7J3mtIGfp5AZmZEwnpS6yWXntFTlslhhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OLC6OPm1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H0OOSffG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=e100PB9nq3NLfBr33oPYoZ10gO09AjlSnyIs6ceFKRI=; b=H0OOSffGfqgfszCZyN5QW1HE1R
-	PwwQME4mJWNgl80eg/AwHVBeA5LyudWqRsPmpXPet2e3PF0GtnaD8iOdSiQkKKwx1fpV6mUA2xdab
-	Eho/WpTIoe19aYcaIfc694yUG5t0vNqNsFkQcqiok0vczH8xlKYD4KUHUNVJSdANGfY29t1+tydcz
-	f1AzzhkmdxdXfoPnwlJKf0Qwl8FV76oOXW1dAfm3Xyjvfu6TTRXGVm5yn35rphwVZs8d9EjAQPWWh
-	C3t2KVhDi7F37NPlfqZp8O2/U9QctBktGIB8O+x7kE6OPy2n4L3kMm2REr5EGkZPE/WSss3/Ny9Wr
-	O8q9ym7g==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uCNnG-0000000FgNU-2Bab;
-	Tue, 06 May 2025 19:17:31 +0000
-Message-ID: <9b50a71c-4106-438b-b475-592a60307a68@infradead.org>
-Date: Tue, 6 May 2025 12:17:27 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLC6OPm1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E35FC4CEE4;
+	Tue,  6 May 2025 20:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746565106;
+	bh=4MJdmu2/9mzLIGHSnCNkfggi3H4p+mI6NxWvDR7pXIA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=OLC6OPm18yQuxU0vh7rnffrP1+05W9PgdONdh1+HOVPlNYipnT5yAzLI5Dgmsim6n
+	 eUQybGPQS9cQxzmlQ0/be2h0VL4zUpQFq8obtMBQW8rcanmRUtojAicQfXFjS9XMVn
+	 Vtb67S5lzxTBKEqNfC7A3Khv1nASEdTIEDbTZF9jWcT8IjmmbbTF+NYc+pFRO51/gw
+	 MLh10+IdWjym74HR1ln+2T45H5WTzjfmXeZEzUo73mj7kqHVSKjYvoQSzZYZLJxZE7
+	 j+hf/10hovEMs/5CTJrdXdqEgviHYELr3J/GnvJnL2lcc5GHlglZ9GzjI42+1awIsF
+	 O3/M48+L/wP7A==
+Date: Tue, 6 May 2025 14:58:21 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] NFSD: Avoid multiple -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <aBp37ZXBJM09yAXp@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] EISA: Move devlist.h out of obj to always
-To: Kees Cook <kees@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alejandro Colomar <alx@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250423023743.work.350-kees@kernel.org>
- <1f7c8220-09e8-42ae-a611-9a21779badaf@infradead.org>
- <98d34958-e57e-40df-9196-920d40fd57f9@infradead.org>
- <202505061150.4B9A78AC13@keescook>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <202505061150.4B9A78AC13@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
+Move the conflicting declaration to the end of the corresponding
+structures. Notice that `struct knfsd_fh` is a flexible structure --a
+structure that contains a flexible-array member.
 
-On 5/6/25 11:51 AM, Kees Cook wrote:
-> On Tue, May 06, 2025 at 08:54:29AM -0700, Randy Dunlap wrote:
->> Hi Kees,
->>
->> On 4/22/25 8:50 PM, Randy Dunlap wrote:
->>>
->>>
->>> On 4/22/25 7:37 PM, Kees Cook wrote:
->>>> I put devlist.h into the wrong Makefile macro ("obj") to get it included
->>>> in "targets". Put it into "always" so nothing tries to link against it.
->>>> Solves CONFIG_EISA=y i386 build failure:
->>>>
->>>> ld: vmlinux.a: member drivers/eisa/devlist.h in archive is not an object
->>>>
->>>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
->>>> Closes: https://lore.kernel.org/all/4a8ba1d0-d2d9-41f8-abf1-d45ec8996d10@infradead.org
->>>> Fixes: dd09eb0e2cc4 ("EISA: Increase length of device names")
->>>> Signed-off-by: Kees Cook <kees@kernel.org>
->>>
->>> Acked-by: Randy Dunlap <rdunlap@infradead.org>
->>> Tested-by: Randy Dunlap <rdunlap@infradead.org>
->>>
->>> Thanks.
->>>
->>
->> Please merge this patch. The build failure is killing lots of i386 builds.
->> Thanks.
-> 
-> AFAIK, this needs to go via Greg's tree, but I can see if I can send it
-> to Linus directly.
-> 
-> -Kees
+Fix the following warnings:
 
-Greg told me that it belongs to one of your trees, but Greg did
-merge the previous eisa/Makefile patch.
-> 
->>
->>>> ---
->>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> Cc: Alejandro Colomar <alx@kernel.org>
->>>> ---
->>>>  drivers/eisa/Makefile | 3 ++-
->>>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/eisa/Makefile b/drivers/eisa/Makefile
->>>> index f0d6cf7d1f32..552bd9478340 100644
->>>> --- a/drivers/eisa/Makefile
->>>> +++ b/drivers/eisa/Makefile
->>>> @@ -1,7 +1,8 @@
->>>>  # SPDX-License-Identifier: GPL-2.0
->>>>  # Makefile for the Linux device tree
->>>>  
->>>> -obj-$(CONFIG_EISA)	        += devlist.h eisa-bus.o
->>>> +always-$(CONFIG_EISA)		+= devlist.h
->>>> +obj-$(CONFIG_EISA)	        += eisa-bus.o
->>>>  obj-${CONFIG_EISA_PCI_EISA}     += pci_eisa.o
->>>>  
->>>>  # virtual_root.o should be the last EISA root device to initialize,
->>>
->>
->> -- 
->> ~Randy
->>
-> 
+fs/nfsd/nfsfh.h:79:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/nfsd/state.h:763:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/nfsd/state.h:669:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/nfsd/state.h:549:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/nfsd/xdr4.h:705:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/nfsd/xdr4.h:678:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/nfsd/nfsfh.h |  4 +++-
+ fs/nfsd/state.h | 12 +++++++++---
+ fs/nfsd/xdr4.h  |  8 ++++++--
+ 3 files changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+index 5103c2f4d225..bbee43674a2a 100644
+--- a/fs/nfsd/nfsfh.h
++++ b/fs/nfsd/nfsfh.h
+@@ -76,7 +76,6 @@ static inline ino_t u32_to_ino_t(__u32 uino)
+  * pre_mtime/post_version will be used to support wcc_attr's in NFSv3.
+  */
+ typedef struct svc_fh {
+-	struct knfsd_fh		fh_handle;	/* FH data */
+ 	int			fh_maxsize;	/* max size for fh_handle */
+ 	struct dentry *		fh_dentry;	/* validated dentry */
+ 	struct svc_export *	fh_export;	/* export pointer */
+@@ -107,6 +106,9 @@ typedef struct svc_fh {
+ 	/* Post-op attributes saved in fh_fill_post_attrs() */
+ 	struct kstat		fh_post_attr;	/* full attrs after operation */
+ 	u64			fh_post_change; /* nfsv4 change; see above */
++
++	/* Must be last -ends in a flexible-array member. */
++	struct knfsd_fh		fh_handle;	/* FH data */
+ } svc_fh;
+ #define NFSD4_FH_FOREIGN (1<<0)
+ #define SET_FH_FLAG(c, f) ((c)->fh_flags |= (f))
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 1995bca158b8..ffd3fd8c34a0 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -546,9 +546,11 @@ struct nfs4_replay {
+ 	__be32			rp_status;
+ 	unsigned int		rp_buflen;
+ 	char			*rp_buf;
+-	struct knfsd_fh		rp_openfh;
+ 	int			rp_locked;
+ 	char			rp_ibuf[NFSD4_REPLAY_ISIZE];
++
++	/* Must be last -ends in a flexible-array member. */
++	struct knfsd_fh		rp_openfh;
+ };
+ 
+ struct nfs4_stateowner;
+@@ -666,12 +668,14 @@ struct nfs4_file {
+ 	u32			fi_share_deny;
+ 	struct nfsd_file	*fi_deleg_file;
+ 	int			fi_delegees;
+-	struct knfsd_fh		fi_fhandle;
+ 	bool			fi_had_conflict;
+ #ifdef CONFIG_NFSD_PNFS
+ 	struct list_head	fi_lo_states;
+ 	atomic_t		fi_lo_recalls;
+ #endif
++
++	/* Must be last -ends in a flexible-array member. */
++	struct knfsd_fh		fi_fhandle;
+ };
+ 
+ /*
+@@ -760,9 +764,11 @@ struct nfsd4_blocked_lock {
+ 	struct list_head	nbl_lru;
+ 	time64_t		nbl_time;
+ 	struct file_lock	nbl_lock;
+-	struct knfsd_fh		nbl_fh;
+ 	struct nfsd4_callback	nbl_cb;
+ 	struct kref		nbl_kref;
++
++	/* Must be last -ends in a flexible-array member. */
++	struct knfsd_fh		nbl_fh;
+ };
+ 
+ struct nfsd4_compound_state;
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index aa2a356da784..e453ea5ebab6 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -675,11 +675,13 @@ struct nfsd4_cb_offload {
+ 	struct nfsd42_write_res	co_res;
+ 	__be32			co_nfserr;
+ 	unsigned int		co_retries;
+-	struct knfsd_fh		co_fh;
+ 
+ 	struct nfs4_sessionid	co_referring_sessionid;
+ 	u32			co_referring_slotid;
+ 	u32			co_referring_seqno;
++
++	/* Must be last -ends in a flexible-array member. */
++	struct knfsd_fh		co_fh;
+ };
+ 
+ struct nfsd4_copy {
+@@ -702,7 +704,6 @@ struct nfsd4_copy {
+ 	/* response */
+ 	__be32			nfserr;
+ 	struct nfsd42_write_res	cp_res;
+-	struct knfsd_fh		fh;
+ 
+ 	/* offload callback */
+ 	struct nfsd4_cb_offload	cp_cb_offload;
+@@ -723,6 +724,9 @@ struct nfsd4_copy {
+ 	struct nfs_fh		c_fh;
+ 	nfs4_stateid		stateid;
+ 	struct nfsd_net		*cp_nn;
++
++	/* Must be last -ends in a flexible-array member. */
++	struct knfsd_fh		fh;
+ };
+ 
+ static inline void nfsd4_copy_set_sync(struct nfsd4_copy *copy, bool sync)
 -- 
-~Randy
+2.43.0
 
