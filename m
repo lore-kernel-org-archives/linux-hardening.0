@@ -1,88 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65170A32;
-	Tue,  6 May 2025 21:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAF81946DF;
+	Tue,  6 May 2025 23:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746566047; cv=none; b=MgoGmjddfCu0Wnq5XrkJ2hl3pf1RMKo+qpOfzLa/s2BjcLBqPeoSOfGCMSua1nSu6LVqsLQC+tpjuAw0SXuJDHj9lfGGeny2+Tkdn/U1asuz/AkmjoH/WxPblhc40faQ96b8xH0GIcslqd05KRArh3fHyLJclatEYrBoyK9H/v4=
+	t=1746574329; cv=none; b=qaEKvjcoCioD4TWVAXDKb+iKV27h/fWiamJ97sgFVAjGXrZ8izPdtr01X2xFtxLudp68/knyyf1SnhJJ83qJpnz7Ji6CflUFbl9sntnJIy5BoxkhPZ8y8VIxwdIScKlozemo0FTKcAks1Rx9F0rJoKtBMJhg+jGU+NzOW42feA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746566047; c=relaxed/simple;
-	bh=a76spNwHqt4oaRtq0+HT1IMg+SPd9AC58bwiWAm/D5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=O4F9k/LI2LrXk56uu39tENUGvldnwi+pOOMNMswc+/snvxPUjK0rtKi/vYxbXo7veq5eifFDNirMUD/fhZ2iHtkm/jTvm0Oyb6aB4f1fuvTpv+x65t+HQIiIcU14bd+LTC2C+wkoHnSU4WcQhaeGyfKIUg+RU0yRRlZlI7l72o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=od34i7o9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="od34i7o9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82598C4CEE4;
-	Tue,  6 May 2025 21:14:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746566045;
-	bh=a76spNwHqt4oaRtq0+HT1IMg+SPd9AC58bwiWAm/D5E=;
-	h=Date:From:To:Cc:Subject:From;
-	b=od34i7o9rz5LtxsYSVnMTBVjyTE4j6QwzJxetiUBOSKR5pW8JyjvTspVXC2lIcFXz
-	 EXGAftVux93BVzWXC4kkJhPD7uaTsYqkZFLEXlakdXv99Fyi1cOMyCw9Z0R7pSOEn5
-	 jYYm0lowUWDmfnNNf4UdkSqF20RllsKUcq/NJuFB3BbNr+XoImS+ThMGsAJGfkLlYP
-	 HCFV/q22laLUuYBOJXpSLpAzENxJQIObTVqD9oWyw6W+kh1dsn2Fmbqc8+fJClkqna
-	 +C98XOAlOotxMaJ9XleFNwk65FhO9T4AgkyALA26VuH6rm6vv8Y+XUyVjMFW7P1R48
-	 r+goKOZAKW40A==
-Date: Tue, 6 May 2025 15:14:01 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>
-Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] platform/chrome: Avoid -Wflex-array-member-not-at-end
-Message-ID: <aBp7mZ8kj9w4CKkl@kspp>
+	s=arc-20240116; t=1746574329; c=relaxed/simple;
+	bh=EjYpyGTdyfHof6vjooW7NmR45Eqt6Kg37CzQ3jVtnY4=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=hyUYzMhw+aUY3BpozgXz4Vmcj4dGIJoKt6N5575iv8kvAM+pws0XaBybGCs33v/tXuVfDhtD8fWooypfQAC32AaiwJ9NxuFySD6U50bpUVDGWniIcHt/NvYDkplqju/SZr8jn2fFFjZxkeIytzG+VQRvpD0jUwJCG7k3vVkhnuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uCRlU-00FkjU-PZ;
+	Tue, 06 May 2025 23:31:56 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From: "NeilBrown" <neil@brown.name>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] NFSD: Avoid multiple -Wflex-array-member-not-at-end
+ warnings
+In-reply-to: <aBp37ZXBJM09yAXp@kspp>
+References: <aBp37ZXBJM09yAXp@kspp>
+Date: Wed, 07 May 2025 09:31:56 +1000
+Message-id: <174657431631.3924073.6654014165534485350@noble.neil.brown.name>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Wed, 07 May 2025, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+>=20
+> Move the conflicting declaration to the end of the corresponding
+> structures. Notice that `struct knfsd_fh` is a flexible structure --a
+> structure that contains a flexible-array member.
 
-Move the conflicting declaration to the end of the structure. Notice
-that `struct cros_ec_command` is a flexible structure --a structure
-that contains a flexible-array member.
+I don't really like this solution.
 
-Fix the following warning:
+struct knfsd_fh has a fixed size determined by NFS4_FHSIZE.
+The fact that fh_fsid is "flexible" doesn't mean it is unlimited in
+size.  So moving it to the end of other structures is silencing a
+warning but leaving the code as potentially confusing.
 
-drivers/platform/chrome/cros_ec_proto_test_util.h:16:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Maybe just make it
+    u32 fh_fsid[4]; /* in practice the size varies but is always
+                     * limited by fh_raw above
+                     */
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/platform/chrome/cros_ec_proto_test_util.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+There are places was [0] [1] and [2] are explictly indexed, so size
+needs to be atleast 3 else we invite warnings.  But maybe other memcpy
+etc will trigger warnings anyway??
+Maybe
+    u32 fh_fsid[NFS4_FHSIZE/4-1];
+That will always fit in the available space and we never use anywhere
+close to that size.
 
-diff --git a/drivers/platform/chrome/cros_ec_proto_test_util.h b/drivers/platform/chrome/cros_ec_proto_test_util.h
-index 414002271c9c..b17239f052c2 100644
---- a/drivers/platform/chrome/cros_ec_proto_test_util.h
-+++ b/drivers/platform/chrome/cros_ec_proto_test_util.h
-@@ -13,7 +13,6 @@ struct ec_xfer_mock {
- 	struct kunit *test;
- 
- 	/* input */
--	struct cros_ec_command msg;
- 	void *i_data;
- 
- 	/* output */
-@@ -21,6 +20,10 @@ struct ec_xfer_mock {
- 	int result;
- 	void *o_data;
- 	u32 o_data_len;
-+
-+	/* input */
-+	/* Must be last -ends in a flexible-array member. */
-+	struct cros_ec_command msg;
- };
- 
- extern int cros_kunit_ec_xfer_mock_default_result;
--- 
-2.43.0
+I'd really rather use [] and have some way to tell the compiler that we
+have the size under control and it doesn't need to worry.
+
+Thanks,
+NeilBrown
+
+
+>=20
+> Fix the following warnings:
+>=20
+> fs/nfsd/nfsfh.h:79:33: warning: structure containing a flexible array membe=
+r is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/state.h:763:33: warning: structure containing a flexible array memb=
+er is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/state.h:669:33: warning: structure containing a flexible array memb=
+er is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/state.h:549:33: warning: structure containing a flexible array memb=
+er is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/xdr4.h:705:33: warning: structure containing a flexible array membe=
+r is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/xdr4.h:678:33: warning: structure containing a flexible array membe=
+r is not at the end of another structure [-Wflex-array-member-not-at-end]
+>=20
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  fs/nfsd/nfsfh.h |  4 +++-
+>  fs/nfsd/state.h | 12 +++++++++---
+>  fs/nfsd/xdr4.h  |  8 ++++++--
+>  3 files changed, 18 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+> index 5103c2f4d225..bbee43674a2a 100644
+> --- a/fs/nfsd/nfsfh.h
+> +++ b/fs/nfsd/nfsfh.h
+> @@ -76,7 +76,6 @@ static inline ino_t u32_to_ino_t(__u32 uino)
+>   * pre_mtime/post_version will be used to support wcc_attr's in NFSv3.
+>   */
+>  typedef struct svc_fh {
+> -	struct knfsd_fh		fh_handle;	/* FH data */
+>  	int			fh_maxsize;	/* max size for fh_handle */
+>  	struct dentry *		fh_dentry;	/* validated dentry */
+>  	struct svc_export *	fh_export;	/* export pointer */
+> @@ -107,6 +106,9 @@ typedef struct svc_fh {
+>  	/* Post-op attributes saved in fh_fill_post_attrs() */
+>  	struct kstat		fh_post_attr;	/* full attrs after operation */
+>  	u64			fh_post_change; /* nfsv4 change; see above */
+> +
+> +	/* Must be last -ends in a flexible-array member. */
+> +	struct knfsd_fh		fh_handle;	/* FH data */
+>  } svc_fh;
+>  #define NFSD4_FH_FOREIGN (1<<0)
+>  #define SET_FH_FLAG(c, f) ((c)->fh_flags |=3D (f))
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index 1995bca158b8..ffd3fd8c34a0 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -546,9 +546,11 @@ struct nfs4_replay {
+>  	__be32			rp_status;
+>  	unsigned int		rp_buflen;
+>  	char			*rp_buf;
+> -	struct knfsd_fh		rp_openfh;
+>  	int			rp_locked;
+>  	char			rp_ibuf[NFSD4_REPLAY_ISIZE];
+> +
+> +	/* Must be last -ends in a flexible-array member. */
+> +	struct knfsd_fh		rp_openfh;
+>  };
+> =20
+>  struct nfs4_stateowner;
+> @@ -666,12 +668,14 @@ struct nfs4_file {
+>  	u32			fi_share_deny;
+>  	struct nfsd_file	*fi_deleg_file;
+>  	int			fi_delegees;
+> -	struct knfsd_fh		fi_fhandle;
+>  	bool			fi_had_conflict;
+>  #ifdef CONFIG_NFSD_PNFS
+>  	struct list_head	fi_lo_states;
+>  	atomic_t		fi_lo_recalls;
+>  #endif
+> +
+> +	/* Must be last -ends in a flexible-array member. */
+> +	struct knfsd_fh		fi_fhandle;
+>  };
+> =20
+>  /*
+> @@ -760,9 +764,11 @@ struct nfsd4_blocked_lock {
+>  	struct list_head	nbl_lru;
+>  	time64_t		nbl_time;
+>  	struct file_lock	nbl_lock;
+> -	struct knfsd_fh		nbl_fh;
+>  	struct nfsd4_callback	nbl_cb;
+>  	struct kref		nbl_kref;
+> +
+> +	/* Must be last -ends in a flexible-array member. */
+> +	struct knfsd_fh		nbl_fh;
+>  };
+> =20
+>  struct nfsd4_compound_state;
+> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+> index aa2a356da784..e453ea5ebab6 100644
+> --- a/fs/nfsd/xdr4.h
+> +++ b/fs/nfsd/xdr4.h
+> @@ -675,11 +675,13 @@ struct nfsd4_cb_offload {
+>  	struct nfsd42_write_res	co_res;
+>  	__be32			co_nfserr;
+>  	unsigned int		co_retries;
+> -	struct knfsd_fh		co_fh;
+> =20
+>  	struct nfs4_sessionid	co_referring_sessionid;
+>  	u32			co_referring_slotid;
+>  	u32			co_referring_seqno;
+> +
+> +	/* Must be last -ends in a flexible-array member. */
+> +	struct knfsd_fh		co_fh;
+>  };
+> =20
+>  struct nfsd4_copy {
+> @@ -702,7 +704,6 @@ struct nfsd4_copy {
+>  	/* response */
+>  	__be32			nfserr;
+>  	struct nfsd42_write_res	cp_res;
+> -	struct knfsd_fh		fh;
+> =20
+>  	/* offload callback */
+>  	struct nfsd4_cb_offload	cp_cb_offload;
+> @@ -723,6 +724,9 @@ struct nfsd4_copy {
+>  	struct nfs_fh		c_fh;
+>  	nfs4_stateid		stateid;
+>  	struct nfsd_net		*cp_nn;
+> +
+> +	/* Must be last -ends in a flexible-array member. */
+> +	struct knfsd_fh		fh;
+>  };
+> =20
+>  static inline void nfsd4_copy_set_sync(struct nfsd4_copy *copy, bool sync)
+> --=20
+> 2.43.0
+>=20
+>=20
 
