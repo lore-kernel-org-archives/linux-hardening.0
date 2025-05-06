@@ -1,112 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAAD19D892;
-	Tue,  6 May 2025 08:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11925264A9E;
+	Tue,  6 May 2025 09:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746520608; cv=none; b=L+ZJha/DPauISbBv7FThQMncn/1pC4vgf8dzOJgM+89cZQ7/O8qm6V4BU5AkydaSkTmpceEPu56XK/ZHrgy3OplYu1u4ke9u2GRC+XkmuCYwNNR5ZOOl8/7OvBpFZD2mz7BkOU5zr4mGuW6caHMFJfv4YkI6NFDaGstsFB7YzMw=
+	t=1746522559; cv=none; b=MEX/J6ruz2kfqXJi3CY81PuLzgR6tXMRJ/KyXaRJnYurf16Pvr+0TUDaGKnQBrXpzwnlB0snSrneRGcJDHt2plpv7J7g/4XHK3ilRi1BSIOzRenWH36rH0O3sfkiEz5Z0f2pEY0vsFhKhMS5VP9tC2l6W3LWEy5FNiz179eR0Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746520608; c=relaxed/simple;
-	bh=9VOMYTlC6ALS5IdAgzBAWP1xvgjsjQLiqbJ2O0ZhVHc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CNztpUsBHipjkw6DyCBfSg2tEsysDazJ01wSGYNsyShSU2ahL5YzRMROz/UG19xPdrq2ij3SFuukrksbboGWIDZlQMEBuzSS8LJFOruTL/sUdP2HVE3iBFCxaxkrgrx7gw0aIAI5G6ldT+ogPztxvSIeMwkQLfoijlVEcDNJ0P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2RqhqDT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2RqhqDT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65BFFC4CEE4;
-	Tue,  6 May 2025 08:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746520607;
-	bh=9VOMYTlC6ALS5IdAgzBAWP1xvgjsjQLiqbJ2O0ZhVHc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=G2RqhqDT+gZcdaDr4WlZdP0vofL3oNiEIDADXbadpArkaiurY9O2NUT46rZO3n8HL
-	 jheqZY23TyYhxAdGoyvOBgunYrbJggEAmbLA6prLdruFjdxUVZK+Fdj4BLg+/be53X
-	 ljTpmaR8UBdsVD0pU8pxIlLg2i+N/VYk06hW7XmwZB8a7kC58GIBqOxd90gR3K15t4
-	 mZS8hULgWZ050J/nBHpd3DhBjt2ikA0BHa1pZbWQDcIkT/0j5oRrxDepWyb2lqQWk7
-	 wpKD8UXmWU7x5bd1cFOUj72v+j9pbH3QdzheDN1EVmX9M899aGKEM9buy6Yewu3pjJ
-	 UhkhI1czrIBAw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uCDnA-00C97H-GY;
-	Tue, 06 May 2025 09:36:45 +0100
-Date: Tue, 06 May 2025 09:36:44 +0100
-Message-ID: <86h61ygmoz.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Mostafa Saleh <smostafa@google.com>,
-	kvmarm@lists.linux.dev,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
+	s=arc-20240116; t=1746522559; c=relaxed/simple;
+	bh=vSUbMIpTRLHktM0iNQa7tKGDC2wPWrqGiVyANR5NiNI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i4yfLeEQ/nDQ7uuHpVy806NTDTkFml+sEP4jIhvxug9OZeXiQOd67rgGHx94+h/ajxsQSMtht5sjuv1UeffCpGMjGPxjLZ66oVKlJ/o+9zM+RsQBAq9rSoSHGEonKT3GzIYon0Z8K3+rp+P+ev1r9Egq1q+oIsKPxF2AGghgt/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
+	by app1 (Coremail) with SMTP id TAJkCgBHXg+f0RloSiViAA--.38522S2;
+	Tue, 06 May 2025 17:08:49 +0800 (CST)
+From: luyulin <luyulin@eswincomputing.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	will@kernel.org,
-	oliver.upton@linux.dev,
-	broonie@kernel.org,
-	catalin.marinas@arm.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	elver@google.com,
-	andreyknvl@gmail.com,
-	ryabinin.a.a@gmail.com,
-	akpm@linux-foundation.org,
-	yuzenghui@huawei.com,
-	suzuki.poulose@arm.com,
-	joey.gouly@arm.com,
-	masahiroy@kernel.org,
-	nathan@kernel.org,
-	nicolas.schier@linux.dev
-Subject: Re: [PATCH v2 0/4] KVM: arm64: UBSAN at EL2
-In-Reply-To: <202504301131.3C1CBCA8@keescook>
-References: <20250430162713.1997569-1-smostafa@google.com>
-	<202504301131.3C1CBCA8@keescook>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	brgl@bgdev.pl,
+	linux-hardening@vger.kernel.org
+Cc: zhengyu@eswincomputing.com,
+	ningyu@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	linmin@eswincomputing.com,
+	fenglin@eswincomputing.com,
+	lianghujun@eswincomputing.com,
+	luyulin <luyulin@eswincomputing.com>
+Subject: [PATCH 0/2]
+Date: Tue,  6 May 2025 17:08:44 +0800
+Message-Id: <20250506090844.1516-1-luyulin@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: kees@kernel.org, smostafa@google.com, kvmarm@lists.linux.dev, kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, will@kernel.org, oliver.upton@linux.dev, broonie@kernel.org, catalin.marinas@arm.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, elver@google.com, andreyknvl@gmail.com, ryabinin.a.a@gmail.com, akpm@linux-foundation.org, yuzenghui@huawei.com, suzuki.poulose@arm.com, joey.gouly@arm.com, masahiroy@kernel.org, nathan@kernel.org, nicolas.schier@linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgBHXg+f0RloSiViAA--.38522S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr17AF4UWF45tr18Gw45KFg_yoW8XrWDpF
+	43GF1rtrn8XFZrXa47Jw4FkrW3Ga1xAr1a9ayft347XFs8A348AF15K3W5XrWDWF48JrnI
+	yryYgryUuF1DArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRidbbtUUUUU==
+X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
 
-On Wed, 30 Apr 2025 19:32:23 +0100,
-Kees Cook <kees@kernel.org> wrote:
-> 
-> On Wed, Apr 30, 2025 at 04:27:07PM +0000, Mostafa Saleh wrote:
-> > Many of the sanitizers the kernel supports are disabled when running
-> > in EL2 with nvhe/hvhe/proctected modes, some of those are easier
-> > (and makes more sense) to integrate than others.
-> > Last year, kCFI support was added in [1]
-> > 
-> > This patchset adds support for UBSAN in EL2.
-> 
-> This touches both UBSAN and arm64 -- I'm happy to land this via the
-> hardening tree, but I expect the arm64 folks would rather take it via
-> their tree. What would people like to have happen?
+  This patch introduces a driver for the Eswin eic7700 SoC pinctrl
+  controller, adding support for the pinctrl functionality in the Linux
+  kernel. The driver provides basic functionality to manage and control
+  the pinctrl signals for the eic7700 SoC.
 
-I don't mind either way, but in any case I'd like a stable branch with
-that code so that I can merge it if any conflict occurs in -next.
+  The driver integrates with the Linux pinctrl subsystem, enabling kernel
+  code to trigger pinctrl operations on hardware and ensuring support for
+  pin multiplexing and pin configuration.
 
-Alternatively, I can take it via the kvmarm tree, and publish a stable
-branch for anyone to pick and resolve conflicts ahead of the merge
-window.
+  Features:
 
-Thanks,
+    Implements support for the Eswin eic7700 SoC pinctrl controller.
+    Provides API to manage pinctrl for the eic7700 SoC.
+    Integration with the Linux pinctrl subsystem for consistency and
+    scalability.
 
-	M.
+  Supported chips:
+    Eswin eic7700 SoC.
+
+  Test:
+    I tested this patch on the Sifive HiFive Premier P550 (which uses
+    the EIC7700 SoC), including system boot, networking, EMMC, display,
+    and other peripherals. The drivers for these modules all use the
+    pinctrl module, so this verifies that this pinctrl driver
+    patch is working properly.
+
+luyulin (2):
+  dt-bindings: pinctrl: eswin: Document for eic7700 SoC
+  pinctrl: eswin: Add eic7700 pinctrl driver
+
+ .../pinctrl/eswin,eic7700-pinctrl.yaml        | 156 ++++
+ drivers/pinctrl/Kconfig                       |  11 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-eic7700.c             | 701 ++++++++++++++++++
+ 4 files changed, 869 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
 
 -- 
-Without deviation from the norm, progress is not possible.
+2.25.1
+
