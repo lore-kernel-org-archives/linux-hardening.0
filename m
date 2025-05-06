@@ -1,37 +1,39 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0D3283691;
-	Tue,  6 May 2025 15:21:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D8B283C9C;
+	Tue,  6 May 2025 15:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746544896; cv=none; b=VdO4aAngM2QTKUVzcOwuSazgwThBlRXiBgmA9Y2P0l/2BUeuLAN2gjOxcv4GoHEU9gHgTvZp4ClJFCh0Fi1Hn5rZ5XCgXj7uou4GAHZRU+f+QAFYt+WENme/nKLfMTBGUy4HSCkV1AD68KIpiy8C1zO3BbAAJq3FVgQsVHENEVE=
+	t=1746544896; cv=none; b=crxMcYY92qrpeQj1F3bcSL5KcjiPIvx7NhmEcAOPc7Q7nl7AIFZV/c6F92TR+9OcnXG1EQ/TMrda+Lsv0Hexm/zx4rkwipLWYmDIt5y2Gx8gUSTD1aE8eBAyG3rtxhHUlUbw9RoSBOu0xkDNFb65KmHSeghhM75FNgVX8EGGOgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746544896; c=relaxed/simple;
-	bh=zMCM2LXONnAXgynSB3na2oliewdtsC40ahhF6rCZb7E=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aoz8+LiIjtLO5Pq9IZl8rv3ZhnbAbJdIwJuyCkLY7hoe7PWbFLwBqcWdRnyoLH4pUgUgpLMAxzwzjEPklDc0nv7QM9B3Kk8Bk8ndVJ21O6Eto96W4RkIa9KIxL2rW5QVc9mnfaqmU2xOGVkFRe8BuJpvaHBGhr6aAuHx/2E/bAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Zsc5RUK/; arc=none smtp.client-ip=217.70.183.201
+	bh=56bTPPIQLXvmsf5LCAJEmK7HEvsdxzS94R86YuQfSm4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=FJHd692mx9SeOkC8bfaN3dfeeRvZvYy9AZDMgvFxW2R3P6CzCysj7tVXfie7wug707UkwbyT6WyKeBEtqyz/Qjiq2NVyUF9rueA4H91egvBZsEt53j5xC2B8uv3au0LHNvXk7kWMeZthUmoHE9D3SBcBd1JAf3duTs8cP4CqlmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PESKl44y; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Zsc5RUK/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 149FE43B38;
-	Tue,  6 May 2025 15:21:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PESKl44y"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2B1A543B14;
+	Tue,  6 May 2025 15:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746544885;
+	t=1746544886;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=5VPfO0mn7Fq1tR36iPFGt0D7txALo69kG+JP+mgsXAM=;
-	b=Zsc5RUK/jY6zqCKVUF7yWw8MHSJTM7rCwpt/ykApeG2/2gtXen9g+ZS5y98zsoQcPQi5L7
-	8jutME8+nmMHnY+o5b3OhxS1cmObwO9qzQAJz3GYMT8WBT2amrQV+pFhG7DWeKVcc36BnA
-	GlkDjKuu1/3NhJ23Fj7ZtQBSRFXd++1fxD82BOvVBGjSPvvhHHD26XPQoRB3wKF91h1Prx
-	6OEALhlfjYJaUzp4YNLqd5ydGY2YMQbVJsFprAGgdRku+tdTtG9Zws4Aq1ha+T0mNOKmHA
-	h795RNCYUWYS0OlcE+JGAGeL+BX2e7062eR404hXRT87TvL/1FLqPJsDxRH2/w==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tMK78815Dg1a0/PXJsktZUNkpbltOz6RRsoWHHtQeSE=;
+	b=PESKl44yc/qxdRkT+sa9wKWPVbjllfX1DMQidHwLf4HWWwtF4fuqUMoUI4L7UCgBCbkEcJ
+	+P3UEjNtz/7fo9dijkFNFqIQ4XR67wdsi+fwBD/2ZJdvPuw9hBjEoK53nmSEVsTQl/yYVw
+	5vv6WgY7e26it+6v2XfG6YvJJNuhZplAd1AElvPilkhMHH9Ze6ZLs8HvHUfoE7xhmhZR6Z
+	NlS766fl2Uc2/QMTpppyFiaaDhOI0SKoUCFhnanLy7hLhuDwNpde4XApFqqVoPfulLyLRP
+	coW09WqtHrgViL/5juPiaS0ONmXEcH3DD5z9ePWi4asm2K8sOxGPFwR9jEhFDg==
 From: Thomas Richard <thomas.richard@bootlin.com>
-Subject: [PATCH v5 00/12] Add pinctrl support for the AAEON UP board FPGA
-Date: Tue, 06 May 2025 17:21:18 +0200
-Message-Id: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
+Date: Tue, 06 May 2025 17:21:20 +0200
+Subject: [PATCH v5 02/12] pinctrl: remove extern specifier for functions in
+ machine.h
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -40,11 +42,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAO4oGmgC/4XOQW7DIBAF0KtYrEvEDBjqrHqPqguwhwYpMS5gq
- 1Xku5c4qtoqCy//aPT+v7JMKVBmx+bKEi0hhzjW0D41rD/Z8Z14GGpmKFCJTgpuLcWRzxN30aa
- BT2HsSzrzPE9TTIV3z94qK6RQnWAVmRL58LkVvL7dc6KPufaU+5E5m4n38XIJ5dgs+gAtTz2y2
- /Mp5BLT1zZuge37tgMQYG/HAlxwVAY6R2i0hBcXYzmH8VCrNnzBH7AVEswuiBWUGlCTFNZqfAT
- lL6hA74Kygl4JY7QbhCZ6BNUfELtdUFXQSe99D6DADP/BdV2/ASC0NWruAQAA
+Message-Id: <20250506-aaeon-up-board-pinctrl-support-v5-2-3906529757d2@bootlin.com>
+References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
+In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
  Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
  Bartosz Golaszewski <brgl@bgdev.pl>, 
@@ -57,117 +57,38 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
 X-Mailer: b4 0.14.1
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeegfeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteeijeduffelvdevuedvieeuvdeugfekgeehjedufefgkedtueduvdffhffggfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgdphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrt
- ghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeegfeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeektdehvdeiteehtdelteffheduveelgeelvdetgedvueejgefhhfekgefgfeduveenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvt
+ ghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
 X-GND-Sasl: thomas.richard@bootlin.com
 
-This is the fifth version of this series, addressing the few remaining
-issues identified by Andy.
+Extern is the default specifier for a function, no need to define it.
 
+Suggested-by: Andy Shevchenko <andy@kernel.org>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
-Changes in v5:
-- all: improve commit messages, fix some typos and nitpicks.
-- pinctrl: machine.h: add "Suggested-by: Andy Shevchenko <andy@kernel.org>"
-  and "Reviewed-by: Andy Shevchenko <andy@kernel.org>" tags.
-- pinctrl: core: fix kernel doc for devm_pinctrl_register_mappings().
-- pinctrl: core: do not cast pointer in devm_pinctrl_unregister_mappings().
-- gpio: aggregator: remove a useless check in patch 5/12.
-- gpio: aggregator: fix condition to identify if the gpiochip forwarder can
-  sleep or not.
-- gpio: aggregator: add "Reviewed-by: Andy Shevchenko <andy@kernel.org>" tag
-  in patch 10/12
-- string_choices: add "Suggested-by: Andy Shevchenko <andy@kernel.org>" and
-  "Reviewed-by: Andy Shevchenko <andy@kernel.org>" tags.
-- string_choices: add missing parameter for str_output_input() macro.
-- Link to v4: https://lore.kernel.org/r/20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com
+ include/linux/pinctrl/machine.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Changes in v4:
-- gpiolib: use positive conditonal in gpiochip_add_pin_range_with_pins().
-- pinctrl: fix warning reported by kernel robot in
-  include/linux/pinctrl/machine.h.
-- pinctrl: add a patch to remove the extern specifier in machine.h.
-- pinctrl: use devm_add_action_or_reset() in
-  devm_pinctrl_register_mappings().
-- string_choices: add a patch to define str_input_output() and
-  str_output_input() helpers.
-- gpio: aggregator: set gpiochip_fwd as opaque and define getters
-  gpio_fwd_get_gpiochip() and gpio_fwd_get_data().
-- gpio: aggregator: add valid_mask in gpiochip_fwd struct to track already
-  registered gpio descs.
-- gpio: aggregator: add gpio_fwd_gpio_free() helper.
-- gpio: aggregator: add kdoc sections for exported functions.
-- gpio: aggregator: fix some nitpicks.
-- pinctrl-upboard: use str_input_output() helper.
-- pinctrl-upboard: fix some nitpicks.
-- pinctrl-upboard: add missing headers stddef.h and types.h.
-- pinctrl-upboard: add intermediate cast (unsigned long) for dmi_id->driver_data.
-- pinctrl-upboard: use getter gpio_fwd_get_gpiochip() and
-  gpio_fwd_get_data().
-- pinctrl-upboard: fix kernel robot warning 'unmet direct dependencies detected
-  for GPIO_AGGREGATOR when selected by PINCTRL_UPBOARD'.
-- pinctrl-upboard: use gpio_fwd_gpio_free() helper.
-- Link to v3: https://lore.kernel.org/r/20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com
+diff --git a/include/linux/pinctrl/machine.h b/include/linux/pinctrl/machine.h
+index 673e96df453b..93aceb92681b 100644
+--- a/include/linux/pinctrl/machine.h
++++ b/include/linux/pinctrl/machine.h
+@@ -153,10 +153,9 @@ struct pinctrl_map;
+ 
+ #ifdef CONFIG_PINCTRL
+ 
+-extern int pinctrl_register_mappings(const struct pinctrl_map *map,
+-				     unsigned int num_maps);
+-extern void pinctrl_unregister_mappings(const struct pinctrl_map *map);
+-extern void pinctrl_provide_dummies(void);
++int pinctrl_register_mappings(const struct pinctrl_map *map, unsigned int num_maps);
++void pinctrl_unregister_mappings(const struct pinctrl_map *map);
++void pinctrl_provide_dummies(void);
+ #else
+ 
+ static inline int pinctrl_register_mappings(const struct pinctrl_map *map,
 
-Changes in v3:
-- pinctrl: add devm_pinctrl_register_mappings()
-- gpiolib: rename gpiochip_add_pin_range() to
-  gpiochip_add_pin_range_with_pins() and add pins parameter
-- gpiolib: add stubs gpiochip_add_pin_range() and 
-  gpiochip_add_sparse_pin_range()
-- aggregator: split to more simpler patches
-- aggregator: add a namespace for the forwarder library
-- aggregator: rename header file to forwarder.h
-- aggregator: add some missing headers and declaration in forwarder.h
-- aggregator: forwarder.h provides consumer.h and driver.h
-- aggregator: fix error code returned by gpio_fwd_request()
-- pinctrl-upboard: fix order of header files
-- pinctrl-upboard: fix some nitpicks
-- pinctrl-upboard: rework macros to define pin groups
-- pinctrl-upboard: add missing container_of.h and err.h header files
-- pinctrl-upboard: handle correctly pointer returned by dmi_first_match()
-- pinctrl-upboard: use devm_pinctrl_register_mappings()
-- pinctrl-upboard: import GPIO_FORWARDER namespace
-- Link to v2: https://lore.kernel.org/r/20250317-aaeon-up-board-pinctrl-support-v2-0-36126e30aa62@bootlin.com
-
-Changes in v2:
-- mfd: removed driver (already merged)
-- led: removed driver (already merged)
-- gpio-aggregator: refactor code to create a gpio-fwd library
-- pinctrl: refactor gpio part to use the gpio-fwd library
-- pinctrl: add pinctrl mappings for each board
-
----
-Thomas Richard (12):
-      gpiolib: add support to register sparse pin range
-      pinctrl: remove extern specifier for functions in machine.h
-      pinctrl: core: add devm_pinctrl_register_mappings()
-      gpio: aggregator: move GPIO forwarder allocation in a dedicated function
-      gpio: aggregator: refactor the code to add GPIO desc in the forwarder
-      gpio: aggregator: refactor the forwarder registration part
-      gpio: aggregator: update gpiochip_fwd_setup_delay_line() parameters
-      gpio: aggregator: export symbols of the GPIO forwarder library
-      gpio: aggregator: handle runtime registration of gpio_desc in gpiochip_fwd
-      gpio: aggregator: add possibility to attach data to the forwarder
-      lib/string_choices: Add str_input_output() helper
-      pinctrl: Add pin controller driver for AAEON UP boards
-
- drivers/gpio/gpio-aggregator.c    |  343 +++++++++---
- drivers/gpio/gpiolib.c            |   29 +-
- drivers/pinctrl/Kconfig           |   19 +
- drivers/pinctrl/Makefile          |    1 +
- drivers/pinctrl/core.c            |   29 +
- drivers/pinctrl/pinctrl-upboard.c | 1068 +++++++++++++++++++++++++++++++++++++
- include/linux/gpio/driver.h       |   51 +-
- include/linux/gpio/forwarder.h    |   48 ++
- include/linux/pinctrl/machine.h   |   18 +-
- include/linux/string_choices.h    |    6 +
- 10 files changed, 1534 insertions(+), 78 deletions(-)
----
-base-commit: 8a834b0ac9ceb354a6e0b8cf5b363edca8221bdd
-change-id: 20240930-aaeon-up-board-pinctrl-support-98fa4a030490
-
-Best regards,
 -- 
-Thomas Richard <thomas.richard@bootlin.com>
+2.39.5
 
