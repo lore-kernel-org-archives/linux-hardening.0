@@ -1,92 +1,58 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF552135B8;
-	Wed,  7 May 2025 06:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7F923CB;
+	Wed,  7 May 2025 07:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746601181; cv=none; b=gT9yacGVKYgbi+XuEX52nnGE7gpduyG3R6JIIHcDW+APVYrtV/oxglxGzkRFMed3Pl6Zmzeik0R3YwIcetibvZ41F3egKoJLjD+vsDb+DAQ8ra1mzr0ri1JgaBxTWJQYSdlfY3dN7k1VwzEedKv23m6haeqzi4B0nO0bwaAA4v0=
+	t=1746601493; cv=none; b=W4y2HMX93hyHiIRlhpIIVqEUI8eXifQqDTmAX6Hvtia2cPIlviLy6n2MdAxU1p4NgZDQDR77R7LX4jqby7WSXyCM7IQn675isI+xqIei0QeRm4eVD2lUomlEw4sMk1W4tyxxkVZeKkL0vrgpuI6B4gkURnK2MFElJDCyVPD5SJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746601181; c=relaxed/simple;
-	bh=SwahXcMqx4G/lamObKis0IYDh70MhysmwuIhsqcDBuY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sKToSDsvRCei5McPE9TVNuTpuZB9o+jomw6MTankFgI+eTm0PbrnCwwEJTMap9jMZZFDCgrNjuZJRqZE4smVRwRBcl8RSs1cBXqtyMvMAGslOH8k5097bOy5K7RKuPYiY5QGpo1K+XjYNqY27zjQRE34SCnEWnpGEQG9ldf132E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nhof3Fs5; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhof3Fs5"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acb39c45b4eso1028291966b.1;
-        Tue, 06 May 2025 23:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746601178; x=1747205978; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SwahXcMqx4G/lamObKis0IYDh70MhysmwuIhsqcDBuY=;
-        b=nhof3Fs5678GQQd3tLsBvoeHLWP+VEAFXKxVcsRGBtgTYWR7Lx6o4knXdcU6DHp6rA
-         eC9Gv8nU8QI4nlUta2iFuuGBuPaO8BbhA2XP7Jij0H4QcdpOvRtXEFSmWKwhOw3k4Pct
-         VBpr34jXPJ3u+m8FvXgmu2Fi0yUwiNu9Lup8qSoGDmU1ZxZdQwCN+wHyxFSEGk9ynDOH
-         Q/TwhlV+SiiyPEbMI2flWbtazbLVSvjvSTnyok42MDD9b52VVGTj2uy9B2TCicANFS6e
-         J1yNISF7qYRyupofhMh0t/F8c9YWylBraEATT2M1pwb9nkahiIIt3HYnjAz+rpBk144y
-         Hw/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746601178; x=1747205978;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SwahXcMqx4G/lamObKis0IYDh70MhysmwuIhsqcDBuY=;
-        b=L2zzbY8dVr/9HqDtWJ2f2JMjUO96S7Pd18eN6FzJovW9QFh9cVtUerIIE1ovkbjHEh
-         XDV92zJQdghSOhqLeY+VIAWm/PLYnObBoxo+MmwlkjkX6KGrfLntfRQ/0ZIUUD7zdIdz
-         qw1iM/Le0q+Qr6xS++Wx/6Mz8A8EGFeUMPIFad6vckqNNEPgBBgd5etLXKyhpjPrUSuL
-         pG/nEiWh7TdW/U4RTOtxqqTUfA5tj6WPjnjpmVHsDS7WUj5halifSHu06Pz9tAzuwHnW
-         wT7I4XDFU2rrjpMN1aatqQShGzFXEPwQTFT6frvipyyoC3IRprTm7HGRTA9iOZGm2j8A
-         oFSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXjb2q7avL1UhpdiRr8Ka5sVSMBO3TyHSYQlqSDDJWE2KyExiXX9CTLdhqPL54YX/8rmXpfWu1tq+D@vger.kernel.org, AJvYcCWta4TP+5Fa7088DymvbwPHJ+ojb9QCoeULqBGXp4/aYaSM0ikb56plgZtqfw68k1he3E305M3NUimD/VPD@vger.kernel.org, AJvYcCXM9Ei78toX6oaXMEqeR9eh+goWJ1UgVxd4oDVojQvZTEFI61gOlqrKwiTK6R5i32HWZJ2GwTtUtQ6Bwpv0qQ8e@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz4tyr3b5iQ2ZZme9WaNt3oYX7oU9EsWHg3kbrv6LmjgMdL94D
-	yaGsnZm8NfxU+CbQPNDMQyUiqRxVnZP0gI/oX+BPixoMGLs0RjU5iFHrJGLY2omwCARCtis3mYB
-	NyL1QvjHCu3F9tn6y+oNc9fm61yY=
-X-Gm-Gg: ASbGnctBrF3BBsPq2BNTnmfU6q8daVNKw0VAoEXR8znaOg3/dGaPw4LLlU6T1oLOl4q
-	+FhsSC7iOGSYzN6bZ7/zu2sbPYa4IBpyJWiEwXy6YpJQxo+ivqPYI0QjRnzONqAVdms23kRBS3K
-	80IN/kVWqm1VlrPtkInbi0yw==
-X-Google-Smtp-Source: AGHT+IE8DKbrimrtdsItEPL5aMaWNUWXC3ZTJTFEXrviI9KZnSYxAw8eGv/Y0aTNLCM02R66GVEGf35ty+ZSx5XGZqc=
-X-Received: by 2002:a17:907:c016:b0:ace:ca87:2306 with SMTP id
- a640c23a62f3a-ad1e8bf6a2fmr191446066b.34.1746601178038; Tue, 06 May 2025
- 23:59:38 -0700 (PDT)
+	s=arc-20240116; t=1746601493; c=relaxed/simple;
+	bh=vAVFj6V13VH/4TS+igp6AT9Z2x39sJU9bJZyQAnqT9I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SL3rIMUQPQqZRg0+R15XpLUcVPPMIy1PJD9Xn+ioA+KTesGKveCPHTXIqE1cE4OlDDyqRpgfDigY4ebIgLOAVE2QGtlGUVsdqw6GxnBFhJkN7bU9RN1jMSORZjOAdzlZDhhZLV+PUM4t6wY2F9Xn4i0ec1nkiA5yKGgG0FYYwt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id C8A1868C7B; Wed,  7 May 2025 08:59:14 +0200 (CEST)
+Date: Wed, 7 May 2025 08:59:13 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Kees Cook <kees@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+	kernel test robot <lkp@intel.com>, Jens Axboe <axboe@kernel.dk>,
+	Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
+	Chaitanya Kulkarni <kch@nvidia.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] nvme-pci: Make nvme_pci_npages_prp() __always_inline
+Message-ID: <20250507065913.GA31959@lst.de>
+References: <20250507033536.work.088-kees@kernel.org> <20250507044754.GC28402@lst.de> <202505062255.130383D3B7@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
-In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 7 May 2025 09:59:01 +0300
-X-Gm-Features: ATxdqUEsmCS8k6lrTHepQQNIqW01WadwCjMiJKv-YOeOc-NwT5ZimtrL5nqQhrE
-Message-ID: <CAHp75VcOxtr1o+YEkQURYGk+Aisk2nZhx7698hbaOen_5EXpyA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/12] Add pinctrl support for the AAEON UP board FPGA
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202505062255.130383D3B7@keescook>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, May 6, 2025 at 6:21=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> This is the fifth version of this series, addressing the few remaining
-> issues identified by Andy.
+On Tue, May 06, 2025 at 10:55:31PM -0700, Kees Cook wrote:
+> On Wed, May 07, 2025 at 06:47:54AM +0200, Christoph Hellwig wrote:
+> > On Tue, May 06, 2025 at 08:35:40PM -0700, Kees Cook wrote:
+> > > The only reason nvme_pci_npages_prp() could be used as a compile-time
+> > > known result in BUILD_BUG_ON() is because the compiler was always choosing
+> > > to inline the function. Under special circumstances (sanitizer coverage
+> > > functions disabled for __init functions on ARCH=um), the compiler decided
+> > > to stop inlining it:
+> > 
+> > Can we place just fix um to still force inlining inline functions instead
+> > of needing these workarounds?
+> 
+> Oh, I don't have the history here. Is there something about UM and
+> forcing off inlining?
 
-Thanks for the updated version! We are all good now, but I have a few
-nit-picks and one small thing to fix, i.e. the constifying of the
-driver_data in GPIO forwarder.
-(Yes, yes, spelling is another thing, but not so critical).
+Maybe I'm misunderstandng your report, but what causes the failure
+to inline?
 
---=20
-With Best Regards,
-Andy Shevchenko
