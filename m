@@ -1,131 +1,89 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889DC25E462
-	for <linux-hardening@vger.kernel.org>; Wed,  7 May 2025 12:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B8278F2B;
+	Wed,  7 May 2025 13:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746620527; cv=none; b=KU5TnXq+asw75FjCTxDb8Ps1QSWazsQ0kyzpPExKUIQFDD4TgcDRWglSLDh7LEnckS13EAq12ktsQaGoUpg6/efZ+hC7FbMgyQ8IINuH3gS5vVOUiAl8xXKasH8LfJN1PwDvM5HcUmhDS4Q2MtUHgHKbezB6UgF2Kq3+79MBijE=
+	t=1746623113; cv=none; b=uC4B6hLg/KehbdiKLosDfXQo3hN/nsDobNxAi2Rzw1EXU4+hSLzdZ7gRIgIP7r8I4pmuKJVBnHtkQiqlIwFfJu0GdTbWdycmwwpl62SYsO+Zv+Mr2N48tmar8TzZ8xS274g0L7EYYnFiQ40d7xtRTdoEokETPpZ7zWMN6UXx5lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746620527; c=relaxed/simple;
-	bh=OrVUBAduC66EM+Jy5ubOZJRLtPoNQLKUZOMruFW9g5k=;
+	s=arc-20240116; t=1746623113; c=relaxed/simple;
+	bh=cOphO8kdIIdjDJfxtzOIl/hmgUWGRqUT9UT27a8b/EE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b5XKEZJ+B532DSYovx2EQ9/kya9eHVMjgorC7ErMx7llQ7p6sYShYk7zN1ngMbmLIStYfnsZYCBk5j/WVqkOd/XpI8Dk7aDup+UWvNBsrhHZ6yZQa0I05ewWNAVAJnDVjFB3p7zaiqgprCnmrU2BUx4bLV7X7Mgpds65Lo92RVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=miau027A; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=GMaDT5P3ANW+BYXivQzcr86+m0YUcN8Cyo4Y4+pN3To1aV0nfGD5uqFiIufD5O551fFQXAY+GHYxgF/gPwlLXgQN5Bstybidy4HujpVQbohu1Xzf+jv+r6Qd9mI59Bm3lGSDQELU1GZaSfUiQ2CGa7wLaI9GxQRbS7yWOAAUFHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uatWKlfe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="miau027A"
-Date: Wed, 7 May 2025 14:21:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746620512;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DpPHSAGatCtkUGCaP/yd2Qyr3LuW/jp4fovDif5/S4M=;
-	b=miau027A/ds+uz1cHnS94jFw15X1wRBY3OGmNorw1Q5T0CDrb9MfiGEUwixSA4NcBf5fSh
-	U0/lnSeOScqRZQE5E5E9JVBQnkLcpbv5EELOm/sVPMXKnMgi0Dlqw0hK4bukgvlf7R6Koo
-	jScoCjrpPLs11OO6fs5Fm8t3UFHHyAo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Nicolas Schier <nicolas.schier@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uatWKlfe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA24C4CEE7;
+	Wed,  7 May 2025 13:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746623112;
+	bh=cOphO8kdIIdjDJfxtzOIl/hmgUWGRqUT9UT27a8b/EE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uatWKlfenxOYO4eAFxV9xnzAZqD7v38oUoRy++yzo2iZcwvmcwFUVYDPdsfw2lyZH
+	 8FDJJxHGP5FVcjaZrNDHBDX6+dFGcMGi3ap85yRyVZjVspJe0MvmtoBCCSs2u2yd5D
+	 f6N6Trmhb3Wpe1wfDYpvLIeulX+XS2XYOqi2HC8KD36hnSqtDz40QvPt9laljO8sF5
+	 vz4F1PbarwAVh/tH/5MeYTa6xJRwNw0ksEHeLQ4W3qv9bwX6PHeljLpkOEdv29WZXF
+	 RUxPX1XvuB0Yne8z8ZWe4EwKm+PvtH5KD3eQsrhFDcPlZj5g4AIQ69B85Itj1kLUYB
+	 ilD7NjcAbOkjw==
+Date: Wed, 7 May 2025 15:05:07 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
 To: Kees Cook <kees@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	linux-kbuild@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, Petr Pavlu <petr.pavlu@suse.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v3 3/3] integer-wrap: Force full rebuild when .scl file
- changes
-Message-ID: <20250507-piquant-fascinating-pug-7ce4cd@l-nschier-aarch64>
-References: <20250503184001.make.594-kees@kernel.org>
- <20250503184623.2572355-3-kees@kernel.org>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>, 
+	Gustavo Sousa <gustavo.sousa@intel.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
+	Lucas De Marchi <lucas.demarchi@intel.com>, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	Gnattu OC <gnattuoc@me.com>, Nitin Gote <nitin.r.gote@intel.com>, 
+	Ranu Maurya <ranu.maurya@intel.com>, Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
+	Angus Chen <angus.chen@intel.com>, Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>, 
+	Yu Jiaoliang <yujiaoliang@vivo.com>, Dnyaneshwar Bhadane <dnyaneshwar.bhadane@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] drm/i915/gt: Remove const from struct i915_wa list
+ allocation
+Message-ID: <yafhn4afqcwki3mbcozixqa2xqcd5d7crbn6guyb5zlxt3z7h6@riboytoxpcp4>
+References: <20250426061357.work.749-kees@kernel.org>
+ <874iy8y0nz.fsf@intel.com>
+ <202504301356.CB1EEC719@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250503184623.2572355-3-kees@kernel.org>
-Organization: AVM GmbH
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <202504301356.CB1EEC719@keescook>
 
-On Sat, 03 May 2025, Kees Cook wrote:
+Hi,
 
-> Since the integer wrapping sanitizer's behavior depends on its associated
-> .scl file, we must force a full rebuild if the file changes. If not,
-> instrumentation may differ between targets based on when they were built.
-> 
-> Generate a new header file, integer-wrap.h, any time the Clang .scl
-> file changes. Include the header file in compiler-version.h when its
-> associated feature name, INTEGER_WRAP, is defined. This will be picked
-> up by fixdep and force rebuilds where needed.
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nicolas Schier <nicolas.schier@linux.dev>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> Cc: <linux-kbuild@vger.kernel.org>
-> Cc: <kasan-dev@googlegroups.com>
-> Cc: <linux-hardening@vger.kernel.org>
-> ---
->  include/linux/compiler-version.h | 3 +++
->  scripts/Makefile.ubsan           | 1 +
->  scripts/basic/Makefile           | 5 +++++
->  3 files changed, 9 insertions(+)
-> 
-> diff --git a/include/linux/compiler-version.h b/include/linux/compiler-version.h
-> index 69b29b400ce2..187e749f9e79 100644
-> --- a/include/linux/compiler-version.h
-> +++ b/include/linux/compiler-version.h
-> @@ -19,3 +19,6 @@
->  #ifdef RANDSTRUCT
->  #include <generated/randstruct_hash.h>
->  #endif
-> +#ifdef INTEGER_WRAP
-> +#include <generated/integer-wrap.h>
-> +#endif
-> diff --git a/scripts/Makefile.ubsan b/scripts/Makefile.ubsan
-> index 9e35198edbf0..653f7117819c 100644
-> --- a/scripts/Makefile.ubsan
-> +++ b/scripts/Makefile.ubsan
-> @@ -15,6 +15,7 @@ ubsan-cflags-$(CONFIG_UBSAN_TRAP)		+= $(call cc-option,-fsanitize-trap=undefined
->  export CFLAGS_UBSAN := $(ubsan-cflags-y)
->  
->  ubsan-integer-wrap-cflags-$(CONFIG_UBSAN_INTEGER_WRAP)     +=	\
-> +	-DINTEGER_WRAP						\
->  	-fsanitize-undefined-ignore-overflow-pattern=all	\
->  	-fsanitize=signed-integer-overflow			\
->  	-fsanitize=unsigned-integer-overflow			\
-> diff --git a/scripts/basic/Makefile b/scripts/basic/Makefile
-> index dd289a6725ac..fb8e2c38fbc7 100644
-> --- a/scripts/basic/Makefile
-> +++ b/scripts/basic/Makefile
-> @@ -14,3 +14,8 @@ cmd_create_randstruct_seed = \
->  $(obj)/randstruct.seed: $(gen-randstruct-seed) FORCE
->  	$(call if_changed,create_randstruct_seed)
->  always-$(CONFIG_RANDSTRUCT) += randstruct.seed
-> +
-> +# integer-wrap: if the .scl file changes, we need to do a full rebuild.
-> +$(obj)/../../include/generated/integer-wrap.h: $(srctree)/scripts/integer-wrap-ignore.scl FORCE
-> +	$(call if_changed,touch)
-> +always-$(CONFIG_UBSAN_INTEGER_WRAP) += ../../include/generated/integer-wrap.h
-> -- 
-> 2.34.1
-> 
+On Wed, Apr 30, 2025 at 01:56:51PM -0700, Kees Cook wrote:
+> On Mon, Apr 28, 2025 at 02:40:16PM +0300, Jani Nikula wrote:
+> > On Fri, 25 Apr 2025, Kees Cook <kees@kernel.org> wrote:
+> > > In preparation for making the kmalloc family of allocators type aware,
+> > > we need to make sure that the returned type from the allocation matches
+> > > the type of the variable being assigned. (Before, the allocator would
+> > > always return "void *", which can be implicitly cast to any pointer type.)
+> > >
+> > > The assigned type is "struct i915_wa *". The returned type, while
+> > > technically matching, will be const qualified. As there is no general
+> > > way to remove const qualifiers, adjust the allocation type to match
+> > > the assignment.
+> > >
+> > > Signed-off-by: Kees Cook <kees@kernel.org>
 
-Reviewed-by: Nicolas Schier <n.schier@avm.de>
+Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com>
 
+...
+
+> > for merging via whichever tree you find best; please let us know if you
+> > want us to pick this up via drm-intel.
+> 
+> I was figuring each subsystem would want these individually, so please
+> take this via drm-intel. (Or I can take it if you'd rather not.)
+
+Because I don't see this patch applied anywhere, and, given the
+file changed, I am merging it in drm-intel-gt-next.
+
+Andi
