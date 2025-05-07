@@ -1,109 +1,129 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A19280325;
-	Wed,  7 May 2025 14:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C441118EB0;
+	Wed,  7 May 2025 15:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746629586; cv=none; b=fAsVUEjW3fLgz3yT2p1I760DxkSi9frWMNwxCuEut+iVcplCa700RLU6sHQtwT4Oas5atvAdeX49F8TJs4iKdfOl5+j98qDQCljraACurGszFVSf8GpBjEj190o2xO5PsN5cGh1888m7q2jD5QrRQu5t5VQOFk5vwoNOCg3sRzU=
+	t=1746631358; cv=none; b=VPiZqeaOZJR6Gbu3p1aW1OB/mYs7ZKYufZgzmI/cc1y0j/wc+bM+62D9hDj8BsMnVKbJDgqeaoTOqKEBSQ3Ovz+ejljy66vfGwEhv6wyrTNcjp9INUrPeNcjytOSVJkSWeY83HwzFoiIdOsMa1SlSeF/1BfXZy7UnUDyISmZE78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746629586; c=relaxed/simple;
-	bh=860Cy43wuTr4BOgz0A4KfUV5gGHRPzJ3YR2WV8WhSsI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mniFi0XeKNKzl7j8Imzn/6UEr9FUPOE56Q5tRf+db9vRVr0qIh2UgojWlHJ6HGB6etw2NIIfRryISJ6+7QnwxkQjSepqaBMJz9oqDxZDRfTGk8phEqNNOhQdNVOahoqAKdXeU5x5eNHNGV/Yhj/jW4G0rc+AZfq87ey6c78cmWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UHwThykS; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746631358; c=relaxed/simple;
+	bh=G6GIobQZjGbAv136r9m+tdpjpUDEpPUBOIo+rwGG/qE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BfdULuT2ElLYtGRv9poViQWfMfQo5E/08+0Zo0aO9i9A2iDSloJiM6Th2AOi0WdBPkUZ/wn/Z2cSWQW8hlp3xuYgqJKMQ+u34PU7xaEV+Oj6CaGBZfQPpqTyjTD6DklR3xCE0Ed54U10R5kvCe1VxveJwwvm61xoq8Zxm6lZcFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J7uU6SRX; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UHwThykS"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 995D743B65;
-	Wed,  7 May 2025 14:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746629582;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v4rUVGQTujMSoZ9NRNRI+654RlT+kaV4WAhwcUmLWZg=;
-	b=UHwThykSJ0NH1IOwHYI5CzrYbN0nKFD4xzMPYJwiSPLJ3e40RyCrPf9UNHoCsKsoyuqocI
-	ucQJ1UQapCw1SG9aGJaUlztolZ6fweCYP3u7cB4bfTnryItp+5PLT3eG7iHJE+bNHAnT/n
-	mj7RxO/XkDvlFEe42D/3L3hVvNqsViUeHN/0Xf72rSpdKjzkp/HFfCVfF9WqOze1HwkUs5
-	O1S7twaHz9//1TbEE5s2L8Uja2wvaKS8g+uuf52ML5z4mAWEk/quEI4HZyt49Eauzk0yIM
-	2WhmQC6mvg2Y/Tjvrk8j8vK7GmIrTN0/uggVmTWDkQ7yiOXyDCj/pTH+nyuFrA==
-Message-ID: <cb98bec7-748c-4e00-aa9f-b5075bebb5b2@bootlin.com>
-Date: Wed, 7 May 2025 16:53:00 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7uU6SRX"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5fbe7a65609so2196524a12.0;
+        Wed, 07 May 2025 08:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746631355; x=1747236155; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QLt5UoHo/uyFct2KVPgAYy9QmHAyTkt3+bUdcit5PVs=;
+        b=J7uU6SRXzQE6EccKmf+j9MC5sVrPjP/hHsf/+5oUdQMT2wUU+UQNETSuasmGSBfliJ
+         cBTitvTwzNzrT2+iQPC1SnlZV5QySgocAodPI6/zApjgXWkk2L2iKFHGJKORj8YzETrS
+         C7u9JXnUfqYCRSHCld63rwpfV2bI8eXaEkPFbt73xm/7a94HyUo513a3yRn2hVj8U8cm
+         cJH4z0WkjuFjUToZGzOYXHyrsfkZfJ4uoDXTFT3xZGsjEuEmDr82uUhJyrBRZvOvXNas
+         YRZyrZCL5cXfiAI76Fz40SCEIwhPMX/URTy6m50iNS9+vapAqZYn0fkvQVe+fQk5aU6T
+         0JqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746631355; x=1747236155;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QLt5UoHo/uyFct2KVPgAYy9QmHAyTkt3+bUdcit5PVs=;
+        b=mTSt8fDbvGD5ui+4Gts8PeifmPNGQ72+GYkI+aVJxMHuKU2gwC/Mh0krQyWBHg2afN
+         fWHTgravKDAkP81VUTU3Kh6SiGyBcafQW6I7ekdk4BZaTW98dDbfDkiOF69DdLtFBrFa
+         SbLBpjHEokpaXavDHM/rbX0ak4E1N2IniI2SMTdMJpDOxaqG3wfPDg4JvdwTfISSEqGd
+         go5HKMAekyZVTH0OSXwQSz9PPnnAvghFLzl8cimCgWcOcJ4GVCWwlReb7mt3PtMNDU+x
+         H9+EyR4HGixPmw/N0uApenTe27sVYLkvtdmOwnJMtSHcYahlqSRpdTAYMCIcClSyqqqR
+         MrNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUH0fRzwwKuUgmm3SSxyWa2SGAwtRUWS9JHwZDVX66fn2msknHi/yFjM6HMn0cwPsjczbFd0I6GVDeBJ7a23i17@vger.kernel.org, AJvYcCVk9Yko2L8Xa73xHa+y2Wd+GktuJeq/HiACPBsI3vLo8HEx/YTS9Zzk8Xeyd8IQ9n3whRxeN8OCDAbje6yZ@vger.kernel.org, AJvYcCW9TA6WQWdBHBUa91OHE4d1evuzaq5vdwYNGPdlKSs2CEYcuZ/AvAV8+SGlGYIP70AZvQ3FmNw1h1xk@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBCbTCt9I+LJKm+VLWO2hngHvac/tEw61Q9IFgjB71VEvPpVc+
+	4adzpY4d8Y24ZpdGb/xaFoSd+7Ih8cAOQkDOHcAdsrz3cUDMSI+s2JprQ2CgQnQHmnK1VLEdFhA
+	yN4pq7wcZ66dAYKQqA6F9NOyZVEc=
+X-Gm-Gg: ASbGncshpWr9BKs9Zum60GEc+sfcC4RJzKvUltFMO2oj/opeL7BQJiZe8AR6+AyAa6B
+	9Lc1AqmHNEhOycEIABQLYwclpb46P9JTbeVo6XFYnMZhH9iU3hNBelvlosbZ/zO87v/3CVYm48e
+	1iY0oxFN/DWwUggDTmhc0MtdgG
+X-Google-Smtp-Source: AGHT+IENrHBhDJ6QmCIALW/trOZbo+S+uz/FTJiKIkupIyaB84PssD8rkhzD5vVURdYtZ1ValTicpx4mnni9dTZkiMw=
+X-Received: by 2002:a17:907:7f1f:b0:acb:88ac:e30f with SMTP id
+ a640c23a62f3a-ad1e8bd008dmr427685966b.20.1746631354904; Wed, 07 May 2025
+ 08:22:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
- forwarder library
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
 References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
  <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
- <CAHp75VdRp7RG-YCAL2Jx4uXsT2RVQNeu-MxPB5pWRq8TqtsSXw@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAHp75VdRp7RG-YCAL2Jx4uXsT2RVQNeu-MxPB5pWRq8TqtsSXw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejudehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheprghnugihrdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghro
- hdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: thomas.richard@bootlin.com
+ <CAHp75VdRp7RG-YCAL2Jx4uXsT2RVQNeu-MxPB5pWRq8TqtsSXw@mail.gmail.com> <cb98bec7-748c-4e00-aa9f-b5075bebb5b2@bootlin.com>
+In-Reply-To: <cb98bec7-748c-4e00-aa9f-b5075bebb5b2@bootlin.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 7 May 2025 18:21:58 +0300
+X-Gm-Features: ATxdqUGUzY3A4zHzeU_ubjrnOY2zfB9ZK-KToR7BIUdNK8ReLiEBIkmZ9i8rOpA
+Message-ID: <CAHp75Ve_oM6NyvLGsBK4CddEEv=cafw_VfONKwEBX2CBdNxJmA@mail.gmail.com>
+Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
+ forwarder library
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/7/25 08:29, Andy Shevchenko wrote:
->> +/**
->> + * gpio_fwd_gpio_add - Add a GPIO in the forwarder
-> 
-> forwarder
+On Wed, May 7, 2025 at 5:53=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+> On 5/7/25 08:29, Andy Shevchenko wrote:
+> >> +/**
+> >> + * gpio_fwd_gpio_add - Add a GPIO in the forwarder
+> >
+> > forwarder
+>
+> Sorry I do not see the typo :)
 
-Sorry I do not see the typo :)
+Your original piece of the code. Please look better.
 
-> 
->> + * @fwd: GPIO forwarder
->> + * @desc: GPIO decriptor to register
-> 
-> descriptor
-> 
->> + * @offset: offset for the GPIO in the forwarder
->> + *
->> + * Returns: 0 on success, or negative errno on failure.
->> + */
-> 
-> Please, spellcheck all of the comments.
+-static int gpiochip_fwd_gpio_add(struct gpiochip_fwd *fwd,
+-                                struct gpio_desc *desc,
+-                                unsigned int offset)
++/**
++ * gpio_fwd_gpio_add - Add a GPIO in the forwader
 
-Ditto
 
-> 
-> ...
-> 
->> +#ifndef __LINUX_GPIO_FORWARDER_H
->> +#define __LINUX_GPIO_FORWARDER_H
-> 
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/gpio/driver.h>
-> 
-> These are not used (at least as of this patch).
+> >> + * @fwd: GPIO forwarder
+> >> + * @desc: GPIO decriptor to register
+> >
+> > descriptor
 
-Indeed they are only needed in the pinctrl driver.
+Ditto.
 
-> 
-> + struct gpio_chip;
+> >> + * @offset: offset for the GPIO in the forwarder
+> >> + *
+> >> + * Returns: 0 on success, or negative errno on failure.
+> >> + */
+> >
+> > Please, spellcheck all of the comments.
+>
+> Ditto
 
-And also struct gpio_desc;
+See above and spell check. Thank you.
 
-Regards,
+...
 
-Thomas
+> > + struct gpio_chip;
+>
+> And also struct gpio_desc;
+
+Yes. :-)
+
+--=20
+With Best Regards,
+Andy Shevchenko
