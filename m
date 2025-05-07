@@ -1,111 +1,117 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB2638F9C;
-	Wed,  7 May 2025 10:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5655120E315;
+	Wed,  7 May 2025 10:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746612650; cv=none; b=RVc0JKbCjV5s1FwgSuo9mr+dyBWIbRiG7X0T2oEowu5ei0MbKBJK9xY+IJ7IIIPfgSEX2vIHC+S83Y7r4ZLAJiMIhsghGy0wEHwoz3SB96/osacvPo1/km7AnTp5WLjagx8Dv8/zSPMScffqliK7lUeFCyWqHV0FkFhh7W04ofw=
+	t=1746614122; cv=none; b=Mx81mwva/oyJTTW9Ewm0MaxerSkFpMqz5aEaakfCRIHG3yNFISkOXV78k8la3PIW8K9Cjvzal1mVPY+t/KzRKmr5FTOUZZn0Cd0kK82EBIPvZNQfO2NoX2EqAQcx40H+lZECHpu2FdYsYoWkyzkuq4Vbc/nbR1mTWHigSVX32kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746612650; c=relaxed/simple;
-	bh=gza/MOq50ChUay0E0DpEA6I4RfwVm/dyTI5sPhwVRY4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p+mpMkbdfTa2QnK49+dez6oK7WZ39MRccOYY7GwncNkeH6vxlgq7Lm5zT8BMYlJbQ7ME/38m/LG7j1oVwBJgUgOk3fGidOKy/ofIJglhjLuki/p5N+XxGKaALmtRr4bC7k0YUZzYFV+XTXH1iAc8QY6AnNCWw03rtHNQ3SockAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CEapo+ua; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746614122; c=relaxed/simple;
+	bh=C42TwOzo4bEYHYaWCns3jFUDVHKAdqG/MYS13QYBCAw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iZjd4vRughvpvhPwqP/A2yqzIJ5+GNMrirTwGGQnYDZSNss6JZ/hX/gdIChocyovyoS+32B4DIFX06NZ09ivgzxjTKwnijJ8++Y4SotXPh4ExiVcCzYk13SlQ0sZ+pH1wpyAyurAP7U/nC31Ns5oUw/Hxu8SEmnk1y5cSS6TUcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=quH70Q9F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CEapo+ua"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BE0FF43196;
-	Wed,  7 May 2025 10:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746612646;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vBBo8w/w0Mv2gCQOaR7DDY38mmWSZESYCGslHTTWp6Y=;
-	b=CEapo+uaeI/8s9l4kL5cMd+py3hRodTLtFh3o+l0+a66QwzIvdRTQeyuKd4B8N1betfShT
-	bgY5r1gfYyhoaDVutAlf96JOA4t2ImnXtMTKoEmObt7AMG2LRX9BYs6Xp1cChQqyupaLGi
-	rZpks8oUcZEKrDsqoK94mIvwdCfLCpux3Ruo5KSNQMiwYMFjmSgKTbZ7w1uaB4XRf3boDd
-	G0JQy0V46OdI5PgyCOe+KU+6UjagXDX120xg44kxBVHyk2qzbUv+rj0DUzwM3jcth956jH
-	fHsB4Vv85IkdLFRAujNOOf5aWvwjEXGhkDwxekkc1J4V4r5ydqFAzIT8azJkfA==
-Message-ID: <c3b9c494-599e-4d99-8645-589c1c0c106c@bootlin.com>
-Date: Wed, 7 May 2025 12:10:44 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="quH70Q9F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2307C4CEE7;
+	Wed,  7 May 2025 10:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746614121;
+	bh=C42TwOzo4bEYHYaWCns3jFUDVHKAdqG/MYS13QYBCAw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=quH70Q9Fpoe9vAziyUtIBxQQtxnGpYfbU6W/Eirh09Tjozp544MEEIwc3HkLxjgV2
+	 Lw7lITivj0HEGdf/mp9ZcZaxzGBdP8eboO50fRe3YrGaAFZUnz2CASP0N3BCr4noSs
+	 ZxLIta2lC0oGZHTAzym8G0Ch+qZPrboV6sjEQpHIkKuLtQP/822WW9vlr1v5M6/VwT
+	 pqSbEthg5ytcaacEqU++prwb0MNRQutN4BQI0Ra8vPhIADzNAr7LCa3CszncwaQwf0
+	 21nIG2zwDWI9PO2SFG0Tep1s+UnE/HFk7450PhNVQgmhGU9idWpIvG6YZagXHSd15s
+	 NlgN/n3U/arhw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uCc7T-00CZoF-93;
+	Wed, 07 May 2025 11:35:19 +0100
+From: Marc Zyngier <maz@kernel.org>
+To: kvmarm@lists.linux.dev,
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Mostafa Saleh <smostafa@google.com>
+Cc: will@kernel.org,
+	oliver.upton@linux.dev,
+	broonie@kernel.org,
+	catalin.marinas@arm.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	kees@kernel.org,
+	elver@google.com,
+	andreyknvl@gmail.com,
+	ryabinin.a.a@gmail.com,
+	akpm@linux-foundation.org,
+	yuzenghui@huawei.com,
+	suzuki.poulose@arm.com,
+	joey.gouly@arm.com,
+	masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas.schier@linux.dev
+Subject: Re: [PATCH v2 0/4] KVM: arm64: UBSAN at EL2
+Date: Wed,  7 May 2025 11:35:13 +0100
+Message-Id: <174661410588.354102.12581614598575589637.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250430162713.1997569-1-smostafa@google.com>
+References: <20250430162713.1997569-1-smostafa@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 09/12] gpio: aggregator: handle runtime registration of
- gpio_desc in gpiochip_fwd
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-9-3906529757d2@bootlin.com>
- <CAHp75Vdg2LE885+qjpYLkQrdNqaahJc3=Ki7op=6jJUJfJM+sw@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAHp75Vdg2LE885+qjpYLkQrdNqaahJc3=Ki7op=6jJUJfJM+sw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeiheekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetueefgeetveffheevkedvffeugfevhefgueegieelveejjeefgfeigefggfdvkeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheprghnugihrdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomhdprhgtphhtthhop
- ehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: thomas.richard@bootlin.com
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: kvmarm@lists.linux.dev, kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, smostafa@google.com, will@kernel.org, oliver.upton@linux.dev, broonie@kernel.org, catalin.marinas@arm.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, kees@kernel.org, elver@google.com, andreyknvl@gmail.com, ryabinin.a.a@gmail.com, akpm@linux-foundation.org, yuzenghui@huawei.com, suzuki.poulose@arm.com, joey.gouly@arm.com, masahiroy@kernel.org, nathan@kernel.org, nicolas.schier@linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Andy,
-
-Thanks again for the review.
-
-On 5/7/25 08:34, Andy Shevchenko wrote:
-> On Tue, May 6, 2025 at 6:21 PM Thomas Richard
-> <thomas.richard@bootlin.com> wrote:
->>
->> Add request() callback to check if the GPIO descriptor was well registered
->> in the gpiochip_fwd before using it. This is done to handle the case where
->> GPIO descriptor is added at runtime in the forwarder.
->>
->> If at least one GPIO descriptor was not added before the forwarder
->> registration, we assume the forwarder can sleep as if a GPIO is added at
->> runtime it may sleep.
+On Wed, 30 Apr 2025 16:27:07 +0000, Mostafa Saleh wrote:
+> Many of the sanitizers the kernel supports are disabled when running
+> in EL2 with nvhe/hvhe/proctected modes, some of those are easier
+> (and makes more sense) to integrate than others.
+> Last year, kCFI support was added in [1]
 > 
-> ...
+> This patchset adds support for UBSAN in EL2.
+> UBSAN can run in 2 modes:
+>   1) “Normal” (CONFIG_UBSAN_TRAP=n): In this mode the compiler will
+>   do the UBSAN checks and insert some function calls in case of
+>   failures, it can provide more information(ex: what is the value of
+>   the out of bound) about the failures through those function arguments,
+>   and those functions(implemented in lib/ubsan.c) will print a report with
+>   such errors.
 > 
->>  {
->>         struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
->>
->> +       /*
->> +        * get_direction() is called during gpiochip registration, return input
->> +        * direction if there is no descriptor for the line.
->> +        */
->> +       if (!test_bit(offset, fwd->valid_mask))
->> +               return GPIO_LINE_DIRECTION_IN;
-> 
-> Can you remind me why we choose a valid return for invalid line? From
-> a pure code perspective this should return an error.
+> [...]
 
-I reproduced gpiolib behavior. During gpiochip registration, we get the
-direction of all lines. In the case the line is not valid, it is marked
-as input if direction_input operation exists, otherwise it is marked as
-output. [1]
+Applied to next, thanks!
 
-But in fact we could return an error and the core will mark the line as
-input. Maybe ENODEV ?
+[1/4] arm64: Introduce esr_is_ubsan_brk()
+      commit: dc1fd37a7f501731e488c1c6f86b2f591632a4ad
+[2/4] ubsan: Remove regs from report_ubsan_failure()
+      commit: d683a8561889c1813fe2ad6082769c91e3cb71b3
+[3/4] KVM: arm64: Introduce CONFIG_UBSAN_KVM_EL2
+      commit: 61b38f7591fb434fce326c1d686a9793c7f418bc
+[4/4] KVM: arm64: Handle UBSAN faults
+      commit: 446692759b0732ef2d9a93b7e6730aa762ccf0ab
 
-[1]
-https://elixir.bootlin.com/linux/v6.15-rc5/source/drivers/gpio/gpiolib.c#L1105-L1123
+Cheers,
 
-Regards,
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
 
-Thomas
 
