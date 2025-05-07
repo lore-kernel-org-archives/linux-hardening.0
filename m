@@ -1,97 +1,63 @@
-Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F8328C004;
-	Wed,  7 May 2025 15:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C997928C5A7;
+	Wed,  7 May 2025 16:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746633195; cv=none; b=TxqdQKnt8+G2pXb2YRswtXJTzsucMYlrzxawSv/qLhlpQxkDlnW4Z1RBrx058KcBjB62BTueZOViVojqGynXtx/TqiHgvAAc/fQ2WefFTAk+WUxgHCcxP9CXxIld/Ojn/BlEtFlFH6lW6UXfvFkwM6dBcdNEO8Emtq7YR26Kx0A=
+	t=1746633645; cv=none; b=reVvD7W2kWMSqW8ekGStN1qWldv6sC85SdtHJzYTUTS6TLtVFvtnpuFyCAdTERjfmRkOyJMxTNuzCXTNPX24F/i6DUQdTZbULTFsUMxgfevq+9x+ZOU8OV9Q+zRUnB1u8s1GC+UKiovXCX6WXLSVsDDtWNIJkl2ET/j27n9vCow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746633195; c=relaxed/simple;
-	bh=Nz0Ht5MdPONTxqjo5zO+b49OL16Vd73xW9XFTTKBs3g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DyVmt4DjnV7zSXr3dxgi70AlqChCQVk4pn5MH6ZID9vt8GV0v4w9zjF2JHXgHPUTtcIwr3qeDRUmrgW+xDpXQQfaFmYrXNBnA8UQQXMJn4rkP9qaRry8k7zymJQ4DU1PYx6GxrZZ+F8kdyS6g9bRNt63TN+6lrjOEmCtTMPBJqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MJYCS9l7; arc=none smtp.client-ip=217.70.178.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746633645; c=relaxed/simple;
+	bh=murxxHC0F5RAJmpzPBp2DaXWwoLRB/TK3/yjau/uW6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T4wBY+7xYcaKiG+48el9zoLHbsqA9obBz6JAlW1prn1zzXh9I7Cv8RDNLXLlfUDEsPDdxXmixiY21xbxb2OCxOHW9jKLtQdF5u1l0KOmoyiXL4dag3+JoK0ltIxMiHSGf/pQR/dF850WuwUKWuQV+jddQHVxQT+tbKyTQK1Qios=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GxsMPIvt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MJYCS9l7"
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
-	by mslow3.mail.gandi.net (Postfix) with ESMTP id BB3255874A9;
-	Wed,  7 May 2025 15:29:41 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EDE34439D8;
-	Wed,  7 May 2025 15:29:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746631774;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1o57JF9PGVkQw/jNDzy0IcTujjaomhdNiAGR1gzT3vI=;
-	b=MJYCS9l7pqPRQTGgAtuQdJxrMSOJyf6Pv4mgh4CS65FwbbsMvGFHyBmxIrFvCVj3pYY2ED
-	PraV3Jqnm+Mx/C25w/ydaO9c8ELmavwLQ75ap3zkeUyDk+9UwqS0m9HWL2KSpQfpX0K6Xp
-	Yh8paIBDVG7pvHJohZPJiimUbR2+HjgcNIaKWBS9TlBvWjgDZxTIzJcf2uedCDQAbTeIPY
-	6NZR/Bj09qzsxvYdxEZjP5maEtrnzyKTo39lAuWd58xFKKgibbQYfznhvqcF/KFFO6JBt0
-	froYZIAeYx5zLLN4Q708XexzLNViLEaYmQqJ4YlpQ+70r4N/nuOkHieRw+XGYQ==
-Message-ID: <cacda1ba-03f7-42e1-a898-9cdb0f19edf5@bootlin.com>
-Date: Wed, 7 May 2025 17:29:32 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GxsMPIvt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CE4FC4CEE2;
+	Wed,  7 May 2025 16:00:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746633645;
+	bh=murxxHC0F5RAJmpzPBp2DaXWwoLRB/TK3/yjau/uW6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GxsMPIvt9XtPhNQPKET9an+XAjBYSr4fQyjqvqgA51KIDoAvTcnWiGK0bKO3yWGan
+	 uwN2fS3Tkxh4JIU/mH7k2rRMZQtLRpDu4qf3+rZjCLEdFNbNzRkvxzkgBWfpW9mufD
+	 VRZclSlRzEqjCrugLqpcZwF3CZYfhn22KGPx16qR4+4YZTsodpxnFq/JH0+YAyavCa
+	 0A6azIbv/aEAnw7lC0rOc7E2NhiZ8lUJyl3AMXtj2VvMvUmRQ+K/PK0T4PPyi7fwsD
+	 vxU50Q9g9jp6SV4AxBBRkg/R/Edr7W9ZYh86R/rFLUzNMnJXYCqFVwAkq5oTEtDl7Y
+	 K5ziO15epg6QQ==
+Date: Wed, 7 May 2025 10:00:42 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, kernel test robot <lkp@intel.com>,
+	Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
+	linux-nvme@lists.infradead.org, Chaitanya Kulkarni <kch@nvidia.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] nvme-pci: Make nvme_pci_npages_prp() __always_inline
+Message-ID: <aBuDqr-9YCcVfAPi@kbusch-mbp.dhcp.thefacebook.com>
+References: <20250507033536.work.088-kees@kernel.org>
+ <20250507044754.GC28402@lst.de>
+ <202505062255.130383D3B7@keescook>
+ <20250507065913.GA31959@lst.de>
+ <202505070849.1F48789B6@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
- forwarder library
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
- <CAHp75VdRp7RG-YCAL2Jx4uXsT2RVQNeu-MxPB5pWRq8TqtsSXw@mail.gmail.com>
- <cb98bec7-748c-4e00-aa9f-b5075bebb5b2@bootlin.com>
- <CAHp75Ve_oM6NyvLGsBK4CddEEv=cafw_VfONKwEBX2CBdNxJmA@mail.gmail.com>
- <CAHp75VeBBG-2OZ6fDDJMdZ=SGZRWyaL71nTXaHx7Pyr1PLME2w@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAHp75VeBBG-2OZ6fDDJMdZ=SGZRWyaL71nTXaHx7Pyr1PLME2w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejvddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehudehuddvgfdvfeetgffgleeuveejgfejtdehkeetheevheevgedujefgvddtteenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheprghnugihrdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghro
- hdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202505070849.1F48789B6@keescook>
 
-On 5/7/25 17:23, Andy Shevchenko wrote:
-> On Wed, May 7, 2025 at 6:21 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> On Wed, May 7, 2025 at 5:53 PM Thomas Richard
->> <thomas.richard@bootlin.com> wrote:
->>> On 5/7/25 08:29, Andy Shevchenko wrote:
+On Wed, May 07, 2025 at 08:53:06AM -0700, Kees Cook wrote:
 > 
-> ...
-> 
->>>>> + * gpio_fwd_gpio_add - Add a GPIO in the forwarder
->>>>
->>>> forwarder
->>>
->>> Sorry I do not see the typo :)
->>
->> Your original piece of the code. Please look better.
-> 
-> Ah, it was probably me mistakenly fixing the original text :-) It has
-> a typo there.
-> 
+> So, the solution for the "accidentally depending on a function to be
+> inlined by the compiler" is to mark it as _required_ to be inlined,
+> which given its singular use in BUILD_BUG_ON(), looks like the correct
+> solution.
 
-Oh I get it.
-Yes you fixed the original text.
-But I checked in my code and I missed it :)
-
-Thomas
+That sounds fine to me. Or maybe this should be a #define instead. It
+looks like this nvme function evolved from a very different purpose when
+it wasn't an integer constant expression, and the comment above it is
+outdated.
