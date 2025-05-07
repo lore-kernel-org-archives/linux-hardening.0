@@ -1,37 +1,37 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EED628936D;
-	Wed,  7 May 2025 13:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A19280325;
+	Wed,  7 May 2025 14:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746626072; cv=none; b=XqnupDncxV9KAoKqbNRRnh1wEjIOB4YbaiT3dnhMLPyOKKA7JLG6FH9ViE79H3xhQsvXQ/66o94v/gkO0B2aSfgBgivUt+kSuj0Gv0NXwu92QqYhfEfZ7vw2t8r0N89JoliWOd/u6n7wTbkl6r5QwkwDUQfUwG4UmSEIhcgsgi8=
+	t=1746629586; cv=none; b=fAsVUEjW3fLgz3yT2p1I760DxkSi9frWMNwxCuEut+iVcplCa700RLU6sHQtwT4Oas5atvAdeX49F8TJs4iKdfOl5+j98qDQCljraACurGszFVSf8GpBjEj190o2xO5PsN5cGh1888m7q2jD5QrRQu5t5VQOFk5vwoNOCg3sRzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746626072; c=relaxed/simple;
-	bh=C02ObScTFbiaNdWfFXvVyCLtKf11sLD6lCT0jJlOvwE=;
+	s=arc-20240116; t=1746629586; c=relaxed/simple;
+	bh=860Cy43wuTr4BOgz0A4KfUV5gGHRPzJ3YR2WV8WhSsI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lGTLDcCDBu3RL5ZtFKPJxAUMy+kRaIBsMRN0bqVTnUScfLvIg5oHEy0Gw0/UEEGY3Akfhp8bt5jkcWBBlKGe2BuzuFVZWaGelUBe2CJaeDeouIx0LpMqpYiWxufYDyw1c84LjlWa3q+pfDfAahQUP2E5r6Zjq+uvZ0vRBSt8/vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RWcUEBVG; arc=none smtp.client-ip=217.70.183.198
+	 In-Reply-To:Content-Type; b=mniFi0XeKNKzl7j8Imzn/6UEr9FUPOE56Q5tRf+db9vRVr0qIh2UgojWlHJ6HGB6etw2NIIfRryISJ6+7QnwxkQjSepqaBMJz9oqDxZDRfTGk8phEqNNOhQdNVOahoqAKdXeU5x5eNHNGV/Yhj/jW4G0rc+AZfq87ey6c78cmWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UHwThykS; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RWcUEBVG"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 437C843989;
-	Wed,  7 May 2025 13:54:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UHwThykS"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 995D743B65;
+	Wed,  7 May 2025 14:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746626068;
+	t=1746629582;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CZ2N7o6h8qE4U3KVspLCs0bJ9tD0zoPZrZLgbdQrquw=;
-	b=RWcUEBVGojXNeqqjDdOmecevKuK2UFooi2yT5TIDhRowDMIgazVgUuwKMhr/r+ueMjOgBh
-	bjBNvV8U0XZFFeMhSBSeISa1ovvPbc17tqHTYWbe2h3wBQ17twTcwtbRwU8RnO4qbLuaLN
-	dZFwwu030ylFvHVWZUIrUZbdC/bqbktpAI65Y4cVqzXLKJ2PnO8aNUN5AKGy8gakvMsZ6z
-	JPVEJlYSFiklVxTGPeIOqKKiWJD89ZuUN4f5bhr5vEKAqfvwMuWYd+KDDkLK0nrgMKH88x
-	CWZP+eHSlnXJ5gWrva4cv0O4vpq2+w/VjtacPF9c/lMHzc3G95M4EJP7MG7/SQ==
-Message-ID: <2f02284d-2922-4bc3-ab2a-8848023019b7@bootlin.com>
-Date: Wed, 7 May 2025 15:54:26 +0200
+	bh=v4rUVGQTujMSoZ9NRNRI+654RlT+kaV4WAhwcUmLWZg=;
+	b=UHwThykSJ0NH1IOwHYI5CzrYbN0nKFD4xzMPYJwiSPLJ3e40RyCrPf9UNHoCsKsoyuqocI
+	ucQJ1UQapCw1SG9aGJaUlztolZ6fweCYP3u7cB4bfTnryItp+5PLT3eG7iHJE+bNHAnT/n
+	mj7RxO/XkDvlFEe42D/3L3hVvNqsViUeHN/0Xf72rSpdKjzkp/HFfCVfF9WqOze1HwkUs5
+	O1S7twaHz9//1TbEE5s2L8Uja2wvaKS8g+uuf52ML5z4mAWEk/quEI4HZyt49Eauzk0yIM
+	2WhmQC6mvg2Y/Tjvrk8j8vK7GmIrTN0/uggVmTWDkQ7yiOXyDCj/pTH+nyuFrA==
+Message-ID: <cb98bec7-748c-4e00-aa9f-b5075bebb5b2@bootlin.com>
+Date: Wed, 7 May 2025 16:53:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,8 +39,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 09/12] gpio: aggregator: handle runtime registration of
- gpio_desc in gpiochip_fwd
+Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
+ forwarder library
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>,
  Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -50,64 +50,59 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
  linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
  DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
 References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-9-3906529757d2@bootlin.com>
- <CAHp75Vdg2LE885+qjpYLkQrdNqaahJc3=Ki7op=6jJUJfJM+sw@mail.gmail.com>
- <c3b9c494-599e-4d99-8645-589c1c0c106c@bootlin.com>
- <CAHp75VcKsq5_+uwwVKeq8++H+Rw1giH-TKUErsFmdKPiu5kY+A@mail.gmail.com>
+ <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
+ <CAHp75VdRp7RG-YCAL2Jx4uXsT2RVQNeu-MxPB5pWRq8TqtsSXw@mail.gmail.com>
 Content-Language: en-US
 From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAHp75VcKsq5_+uwwVKeq8++H+Rw1giH-TKUErsFmdKPiu5kY+A@mail.gmail.com>
+In-Reply-To: <CAHp75VdRp7RG-YCAL2Jx4uXsT2RVQNeu-MxPB5pWRq8TqtsSXw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejtdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetueefgeetveffheevkedvffeugfevhefgueegieelveejjeefgfeigefggfdvkeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheprghnugihrdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomhdprhgtphhtthhop
- ehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejudehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheprghnugihrdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghro
+ hdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhg
 X-GND-Sasl: thomas.richard@bootlin.com
 
-On 5/7/25 15:24, Andy Shevchenko wrote:
-> On Wed, May 7, 2025 at 1:10 PM Thomas Richard
-> <thomas.richard@bootlin.com> wrote:
->> On 5/7/25 08:34, Andy Shevchenko wrote:
->>> On Tue, May 6, 2025 at 6:21 PM Thomas Richard
->>> <thomas.richard@bootlin.com> wrote:
+On 5/7/25 08:29, Andy Shevchenko wrote:
+>> +/**
+>> + * gpio_fwd_gpio_add - Add a GPIO in the forwarder
+> 
+> forwarder
+
+Sorry I do not see the typo :)
+
+> 
+>> + * @fwd: GPIO forwarder
+>> + * @desc: GPIO decriptor to register
+> 
+> descriptor
+> 
+>> + * @offset: offset for the GPIO in the forwarder
+>> + *
+>> + * Returns: 0 on success, or negative errno on failure.
+>> + */
+> 
+> Please, spellcheck all of the comments.
+
+Ditto
+
 > 
 > ...
 > 
->>>> +       /*
->>>> +        * get_direction() is called during gpiochip registration, return input
->>>> +        * direction if there is no descriptor for the line.
->>>> +        */
->>>> +       if (!test_bit(offset, fwd->valid_mask))
->>>> +               return GPIO_LINE_DIRECTION_IN;
->>>
->>> Can you remind me why we choose a valid return for invalid line? From
->>> a pure code perspective this should return an error.
->>
->> I reproduced gpiolib behavior. During gpiochip registration, we get the
->> direction of all lines. In the case the line is not valid, it is marked
->> as input if direction_input operation exists, otherwise it is marked as
->> output. [1]
->>
->> But in fact we could return an error and the core will mark the line as
->> input. Maybe ENODEV ?
+>> +#ifndef __LINUX_GPIO_FORWARDER_H
+>> +#define __LINUX_GPIO_FORWARDER_H
 > 
-> I am fine with this error code, but do we have similar cases already
-> in the kernel? Do they use the same or different error code(s)?
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/gpio/driver.h>
+> 
+> These are not used (at least as of this patch).
 
-I dumped all get_direction() operations in drivers/gpio and
-drivers/pinctrl and returned values are:
-- GPIO_LINE_DIRECTION_OUT and GPIO_LINE_DIRECTION_IN (make sense).
-- -EINVAL (for example [1]).
-- -EBADE in gpiochip_get_direction() [2].
-- regmap_read() return code.
+Indeed they are only needed in the pinctrl driver.
 
-But from my point of view -EINVAL and -EBADE do not match our case.
+> 
+> + struct gpio_chip;
 
-[1]
-https://elixir.bootlin.com/linux/v6.15-rc5/source/drivers/gpio/gpio-cros-ec.c#L70
-[2]
-https://elixir.bootlin.com/linux/v6.15-rc5/source/drivers/gpio/gpiolib.c#L359
+And also struct gpio_desc;
 
 Regards,
 
