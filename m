@@ -1,61 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2DE1714B3;
-	Wed,  7 May 2025 19:39:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF0528ECCB;
+	Wed,  7 May 2025 20:22:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746646798; cv=none; b=P+loQ7Rf3ixmUZRyh/pMNnaegh7deQENdXfqFOamWbN/NyvTxXfsmJNVcW+h3kp0CCs6JmfwBTTvZstPP0gpgXYopmUZGLOMtDDy6jC6F7td4VlKhqV1utT5kvEIc0wpa/mVW18jYKLnRXhx3WPN2cxT0DTT/xVlzfM4yRA/UDU=
+	t=1746649356; cv=none; b=lLXcO4ab3ma+ZDIWumBxcwRCOxjcor/JgTeU/jroUlYY4mVgQY5rNnwT887XfmdgokdjRl86q1gN4Ay16VQkACqowE/oOH5OC3Auzw8HH9zLqEHFih2n36UOnHBvrubMr1jyKPeyKuPF2JIy0/7HnJOjC6RYQrhnMaCaWwABd2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746646798; c=relaxed/simple;
-	bh=5I7Y42gv0Xc24O6cWYZHG0MvTqIyPfed5hpojVV46Cs=;
+	s=arc-20240116; t=1746649356; c=relaxed/simple;
+	bh=ciZk+xzvWcfZ7+r0pbXbKYyfhFmvz0llK0OmkK7d/sM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jXPW9zEpl8KlEWWKnwa5MunoNr+YZgmHiqsk0Ui/hwgw274qZ78fegm0CKnlrFyQihtWK8UzLCHiUc1j2pdVap2FMdUBBP4xD6dqYzZuRkpep0RdmreV2Oowf4VLp7v4cn/pm+oXxg5vFtYei3N8Bs218H19sVFLiuZedKHLYuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1SqsDxB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uKL+v44nYKSkBy0B2dXC65h92xpZrqZ8+/VhQJoQ284o/Sc8UqC4Txqk4IIUYaMvolLaqpC5TBbVK3U4Du5NmS0bDyUI1kub9pEwshHMd23v3jJkZT8SNX3LaeYfS0JAAmG+21yUlT1JG03a2rYNIbyexp5nLr08pgpujjjgsXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MhjgPwuF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1SqsDxB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0DA0C4CEE2;
-	Wed,  7 May 2025 19:39:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MhjgPwuF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BA76C4AF0B;
+	Wed,  7 May 2025 20:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746646796;
-	bh=5I7Y42gv0Xc24O6cWYZHG0MvTqIyPfed5hpojVV46Cs=;
+	s=k20201202; t=1746649355;
+	bh=ciZk+xzvWcfZ7+r0pbXbKYyfhFmvz0llK0OmkK7d/sM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u1SqsDxB/g600BTu4sky4DKUVjfl1oDoOHSjos3OglBUO3r5ziZEUSYrGhQEJbIGc
-	 /hgDGGywWZjMgVHBWxIKFxid7W3NlXGhudDVowJiD8A7xtMyHlDtVXGX4dR2D++Xv3
-	 BSgZR4gzpPkvKRUJ3mqOJY76mhFzdikOJ1pam4u+BpTPzRaGrv+6RT1oIQ2SfBv0eK
-	 6yflLpCPdfQXrNcxLl52iB/aS5GNE124Nm8Llx95t7b46xZUQIJi/xCMvyN/LsRTGn
-	 zqQ1gCN6R7qB0uIhywhZ7QC1LmeWo55N1MJoJW7lvm+Lhk4UkrEorBUDm9BVmEvaZj
-	 /eDEXU4AwO0ng==
-Date: Wed, 7 May 2025 21:39:48 +0200
-From: Ingo Molnar <mingo@kernel.org>
+	b=MhjgPwuFH+7DBpOqYm32xk99kKFmA4jpsHEk7mqQj34YfIWemSeMT01gvO1Q3nDl8
+	 /WE0i/TEkulifvYOh7TRHFDnG+s4HpvXEA4+L7r3RgEOXPdUuiR75xd1Pd5XxRxnWh
+	 o52h4fdFyqgHIH1vyvJfZ8VbxBLhB+Qkb2rpwYhZHzaPXVRhTev4hI9tY29ebyydtt
+	 pK+wrXBuotkg9P26axhg+36cbl/mge1YiJl7W0ytfh/fV4hDVSO2HtvG4VZF26h9ns
+	 qJW1RgDEn5EGYOfXTyaQdjwqIL3RA6ctv/g05JdGvryWvZ2hh4UBTgazbLHRB10WHt
+	 GW2keA5vrEHOA==
+Date: Wed, 7 May 2025 21:22:30 +0100
+From: Nathan Chancellor <nathan@kernel.org>
 To: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, sparclinux@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH 3/8] stackleak: Rename CONFIG_GCC_PLUGIN_STACKLEAK to
- CONFIG_STACKLEAK
-Message-ID: <aBu3BNS60PEw5Uwu@gmail.com>
-References: <20250507180852.work.231-kees@kernel.org>
- <20250507181615.1947159-3-kees@kernel.org>
- <aBuqO9BVlIV3oA2M@gmail.com>
- <202505071236.AC25A6CC2@keescook>
+Cc: Saurav Kashyap <skashyap@marvell.com>, Javed Hasan <jhasan@marvell.com>,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org, WangYuli <wangyuli@uniontech.com>,
+	Mark Brown <broonie@kernel.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scsi: qedf: Use designated initializer for struct
+ qed_fcoe_cb_ops
+Message-ID: <20250507202230.GA3536142@ax162>
+References: <20250502224156.work.617-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -64,31 +49,58 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202505071236.AC25A6CC2@keescook>
+In-Reply-To: <20250502224156.work.617-kees@kernel.org>
 
-
-* Kees Cook <kees@kernel.org> wrote:
-
-> On Wed, May 07, 2025 at 08:45:15PM +0200, Ingo Molnar wrote:
-> > 
-> > * Kees Cook <kees@kernel.org> wrote:
-> > 
-> > > -	  The STACKLEAK gcc plugin instruments the kernel code for tracking
-> > > +	  The STACKLEAK options instruments the kernel code for tracking
-> > 
-> > speling.
+On Fri, May 02, 2025 at 03:41:57PM -0700, Kees Cook wrote:
+> Recent fixes to the randstruct GCC plugin allowed it to notice
+> that this structure is entirely function pointers and is therefore
+> subject to randomization, but doing so requires that it always use
+> designated initializers. Explicitly specify the "common" member as being
+> initialized. Silences:
 > 
-> Thanks!
+> drivers/scsi/qedf/qedf_main.c:702:9: error: positional initialization of field in 'struct' declared with 'designated_init' attribute [-Werror=designated-init]
+>   702 |         {
+>       |         ^
 > 
-> > Also, any chance to fix this terrible name? Should be something like 
-> > KSTACKZERO or KSTACKCLEAR, to tell people that it doesn't leak the 
-> > stack but prevents leaks on the stack by clearing it, and that it's 
-> > about the kernel stack, not any other stack.
+> Fixes: c2ea09b193d2 ("randstruct: gcc-plugin: Remove bogus void member")
+
+For the record, this is also needed after your recent change to clang to
+do the same thing as the plugin:
+
+  drivers/scsi/qedf/qedf_main.c:702:2: error: a randomized struct can only be initialized with a designated initializer
+  702 |         {
+      |         ^
+
+so this should probably have
+
+  Cc: stable@vger.kernel.org
+  Fixes: 035f7f87b729 ("randstruct: Enable Clang support")
+
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Saurav Kashyap <skashyap@marvell.com>
+> Cc: Javed Hasan <jhasan@marvell.com>
+> Cc: <GR-QLogic-Storage-Upstream@marvell.com>
+> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Cc: <linux-scsi@vger.kernel.org>
+> ---
+>  drivers/scsi/qedf/qedf_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Yeah, better to name it for what it does rather than want to protects
-> against. The internal naming for what it does is "stack erase", so
-> perhaps KSTACK_ERASE ?
-
-That's even better, and I like the word separation as well. Thanks!
-
-	Ingo
+> diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
+> index 436bd29d5eba..6b1ebab36fa3 100644
+> --- a/drivers/scsi/qedf/qedf_main.c
+> +++ b/drivers/scsi/qedf/qedf_main.c
+> @@ -699,7 +699,7 @@ static u32 qedf_get_login_failures(void *cookie)
+>  }
+>  
+>  static struct qed_fcoe_cb_ops qedf_cb_ops = {
+> -	{
+> +	.common = {
+>  		.link_update = qedf_link_update,
+>  		.bw_update = qedf_bw_update,
+>  		.schedule_recovery_handler = qedf_schedule_recovery_handler,
+> -- 
+> 2.34.1
+> 
