@@ -1,135 +1,201 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874B822126C;
-	Thu,  8 May 2025 21:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D9A22E41D;
+	Thu,  8 May 2025 23:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746740030; cv=none; b=PQN+MN8isXIqIrIJsYsrftLJsLgFJbUsHkWfnyH0clu3OFPO4J4t9H+O5KPb2ldOGAPxOufVyXTdTW4OY21nf5qppLJyzJX+itZkAPFWzgS6KwNzaN2pKZX0t8JniLN8P/vJ4RIJPL7FypcK4NeFJ+X60elHWk2VQtwfui9YWSk=
+	t=1746746037; cv=none; b=Ox02LLvexvXkdpd0aiazW8qI+/36FTJe0jIUD0dqAHB3lDZx+sBfqzDVo7v/IA4QaqrUZR1YHLNVwl0PdToRwALrvJ3aeYoOcv2bzBvF4/Vhj0pNTau8lyMOVV8hlo2Qo7/27kxY7gGc2O1zdCk6NKhnqPDxTmxMMoGr2k/lf1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746740030; c=relaxed/simple;
-	bh=Gt643+XOpj3YUSLm+T9MTBAY+4CT7TNy7FH4Rv9wbNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nns3IAT3+EryD7k1MmVGkomzp+iYww9Iq4RoTrUTbpsyOksyTVDGnY8FkVv4edSUyH7SIWwzKP2Y8FvCSrtQDhAUF6W2wk4ieA386ail8Um1wUPqk6fc2rMlKINW+SyVQ9Oq7Hu/YuL16mBvaQUkZEI0WPnFDXv42oTrWqT2G9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XHhThTBv; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746746037; c=relaxed/simple;
+	bh=hjPlZNVH1QsTW+M1ibi+er/DnxeysWRGy0qKT0ckYOM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hz2th+yhjSiIHVbDlGEPzuYlbhJKIzqU34smcllrw5wKbvYbmP63ZaGU8zpbKIN+3zjfe9jLyKuBKJlu/V4LhNsV6tsQ8JUGNMJDnfVlhn2njNDzp6Bt++Pk6Mi9napHJ3eBuUKcAhAfNh//FXx5HZalotYxGIgBteXzVPidxP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X22twWfq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHhThTBv"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a1d8c09674so375377f8f.1;
-        Thu, 08 May 2025 14:33:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746740027; x=1747344827; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ekzs1X0X/D60ZifoKK/5HXD3yGLQFiQxyn4NnumYgtE=;
-        b=XHhThTBv56R/DEkEf2xsFulV6QvZ/IcvUS0Hf4dl2gAFDsDcwcZefhIQ+lq2gkTyjr
-         0EysCz6/AOQ8XPtQLArzSIZHCLkj0XmPw9FQo2nTT6Y8cvxYUjJTlRh5DF54LL2bK7Mx
-         eYHSElj6DB5biMPdZLCUm9iUyh0p0mRNtk817tl+3BqWKkHGHLA+iSQMpKjQDWb1nE4H
-         yFZBCfuxHtUB/Bj+GmGIAbABAP1Ut8hAcyW/Uolv2gOPf0mfQ+p+g7J+2E0MqAJ6U3hj
-         0HjD/Q5LuQr2aOg1CJot0CR6AWwHxFn16cBJUDE+n7WU/mNZpmTl1GVBbDE2nZxdtnMX
-         Vygw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746740027; x=1747344827;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ekzs1X0X/D60ZifoKK/5HXD3yGLQFiQxyn4NnumYgtE=;
-        b=WaYFXfNnOBNzbdBbnJs/F/L/JTGyPGgbL+s1REpUMs9hq/2MDIgzBoMBGaAx93BDfl
-         l/7qmPf0snUtkLsoFS8TCjQgKc97YTErSdptZiWuqg7uBFhhSzfEMXnTNfTwpmy2+Xxz
-         hzQx00mGVweXmCelYmmBlSyF4nl00nL1c/EKTq62DfDGRYWbbujtKVIxEo0H7lZ8tFlT
-         y+6rtLztg6Gqd1Z+FdV3yV9WVmUiu4qOnvU0xoUNuOsdD6LbRQ1AkO8xsGfz4fsyeslD
-         nCIj15WGdccpzTB8G9ZXCFoQd7yDrLWg9QV0Hjawg6c4laZi3MRo34KXG21s2anziOrW
-         N6qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3uaszVt8PThteFVOBanelNYFrsN/H0vBqojitTJphMwAbDzion52pmfL9H+tuEVAHQMdzzOoqkOE7@vger.kernel.org, AJvYcCUcjUSzn7R/vvdbPLJWF2cjl+rNOIcMD9QXJr1unBSlZOoCVkdwnfQZZEuGX4elBO16XlV7EsI7S6KzmD7r@vger.kernel.org, AJvYcCXf3BI6m8cAm8kh7Gn6Z758At8tUbkUZ26UNAXyj8EHLtLldh0rfUP9tOtnvfHtZ86laJtsf1HnFFcFMg8=@vger.kernel.org, AJvYcCXrIJzibA8axMAJG4Uk07ZI1c4F9WFFyLHtbLVhpHvPDoCC2KIXdv63SZ7wDfGIs1kR+sCuh5PvvROKTEtGy9u4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzo9wjFAwoq4kV0or+IYBBxxHuFjmrcLWo5k6UVuyUnLggEB+fV
-	sFQFYnNrd57cbvBPtIym36Vx6I685BruCten4dw8/ZamGCTBCe8t
-X-Gm-Gg: ASbGnctfWT+qImoe1E4TCGEM1keENTL2TbMY06UOTkXsGhJXX4RQEyCGvtecVgl7GPk
-	hgzXhgyWCmzLsdoGG5QHUz1As756wBrSNJlSkNvXbh3BucmzZHVLVFi5DXeQXhYM7LsIj2LZRX6
-	7Ct/91sBGBZ1b6d6KxbQY+gwv2NweovWvvsRtrSsEZBOrhavfaKEPJH3OAT4Q/CwkGf6mSTNj+k
-	Grk5aErQdpfMrxU/HvOrBaasu2RkUXi6XvgpTSbz+aGJzQu4fKnW3BQHRDWJQY5ET/Vp6zwN+p7
-	tn0/8vPKDuoU+yVoqmOwZDTeGw0IvCPjyasjSKcPKyqjRVJioIQHqSkNF/Q053skVI2EfbKb5dE
-	+lTGg7p0wTqUCFWXbdsBZQGyXov0=
-X-Google-Smtp-Source: AGHT+IH7PO9f1D8ovSb4BPWRTI5JVj76Pxngzc30voAwyey70hCqkwppA9RC4pCB/2HY7GPE6zzeCg==
-X-Received: by 2002:a05:6000:2902:b0:3a0:b4f1:8a63 with SMTP id ffacd0b85a97d-3a1f6427506mr716221f8f.11.1746740026731;
-        Thu, 08 May 2025 14:33:46 -0700 (PDT)
-Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c7a5sm1095814f8f.98.2025.05.08.14.33.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 14:33:45 -0700 (PDT)
-Date: Thu, 8 May 2025 23:33:43 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: webgeek1234@gmail.com
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
-Message-ID: <nkiug3lhqe46vl2zyb5apyqytjeqv2vhoolqj6y5u3kjqpahel@qsdveuomrk4g>
-References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X22twWfq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64CC9C4AF0B;
+	Thu,  8 May 2025 23:13:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746746036;
+	bh=hjPlZNVH1QsTW+M1ibi+er/DnxeysWRGy0qKT0ckYOM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=X22twWfqpG/sexlXNvqcCxlAW9uJ79XhHp4dG+/sdAiHQso1qB7pv6RIgcn3pOoQp
+	 RpAacMWsrPVTImWA47j99b63RKUeobPa/JwWeBGiT1144He1IzOYBdA7SARMGmKrYX
+	 65EJZ7d90Cp6E9iiHwEs0z6T/BpU+q99yjhDPHIX6351IRF+mtGYIYJWJE72V5X3sN
+	 B0pLO92w7nyRLhjlVobOl5IPwEHUofH4wsG+hGsl92jVFuW9AhckxAmi3AO7unuZ73
+	 1Lgy2FbvbzB/tsRSxjQksdOMh7ZrVku6saq5wF7NZ4tUJuGJo4UkndrE8aZ5ZcIH0+
+	 4kzXGXA6VLbEw==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54d65cb6e8aso1930584e87.1;
+        Thu, 08 May 2025 16:13:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU3nMTR72MHBo9LEWcSWPn+u1eUuXTtzARiNdj2RoCQ//SexhOiHB2gEReV7cBVuf/2qWVBeXGcnf1Dlbcj1LQ=@vger.kernel.org, AJvYcCUT++TYQxQqw3HfC1RCsFSeqQba4jc2T6npHRhDtkzgSY9XI0CXnMywdtg1h9R+O3TIh+LvsaEGwAcVCQBB@vger.kernel.org, AJvYcCVyYKwT9WXTmrB7V8blFone1iSIIvjTB1g5RJUDDL5+N6GDj6JGQTWr48tCDjrChCQlSMsAIDIg+fAly0vk@vger.kernel.org
+X-Gm-Message-State: AOJu0YznBxj5fik5Qht+fI32CEPIQ9QK6aY6aHvuuyZ4ZfE0W8vs4X3y
+	MK+ZRTKyLnWE5lgf2iSKMySBPLW3KE+gdxFmfmg2kZmlTviCbKiGNeckk9ytKzxBuYodCbIHjuA
+	G3IKF5qeZPCvtgsA6C3RnXAO3epI=
+X-Google-Smtp-Source: AGHT+IEu52aNEDzMGo5FyZKwbvtEiRvPDMJolT/k9kW20bfY6GvKL48TekDncNdE3idOerShQ5l7uSs7KgVNI0hwK08=
+X-Received: by 2002:a05:6512:4201:b0:54e:81ec:2c83 with SMTP id
+ 2adb3069b0e04-54fc67c2180mr349351e87.18.1746746035073; Thu, 08 May 2025
+ 16:13:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="taubdhxeu2mngrhx"
-Content-Disposition: inline
-In-Reply-To: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
-
-
---taubdhxeu2mngrhx
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20250502224512.it.706-kees@kernel.org> <CAK7LNAQCZMmAGfPTr1kgp5cNSdnLWMU5kC_duU0WzWnwZrqt2A@mail.gmail.com>
+ <202505031028.7022F10061@keescook> <CAK7LNAQehmFgB3kJtrkVhUKM1NEXGQrfJ3v3piToh7YV7-3ccw@mail.gmail.com>
+ <202505080953.789B3381@keescook>
+In-Reply-To: <202505080953.789B3381@keescook>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 9 May 2025 08:13:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQpGXmWNhoE9wLoP01dn2o7KjhedoqHXm474CoCgwHp2Q@mail.gmail.com>
+X-Gm-Features: ATxdqUFSFahQS2gL_GajBAPbhaxcYoPZIWvSTLFfjfLaxGsmrigaOf0HpL69dgs
+Message-ID: <CAK7LNAQpGXmWNhoE9wLoP01dn2o7KjhedoqHXm474CoCgwHp2Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Detect changed compiler dependencies for full rebuild
+To: Kees Cook <kees@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Petr Pavlu <petr.pavlu@suse.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Justin Stitt <justinstitt@google.com>, Marco Elver <elver@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	kasan-dev@googlegroups.com, linux-um@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
-MIME-Version: 1.0
 
-On Sun, Apr 06, 2025 at 04:12:43PM -0500, Aaron Kling via B4 Relay wrote:
-> From: Aaron Kling <webgeek1234@gmail.com>
->=20
-> This allows using pstore on all such platforms. There are some
-> differences per arch:
->=20
-> * Tegra132: Flounder does not appear to enumerate pstore and I do not
->   have access to norrin, thus Tegra132 is left out of this commit.
-> * Tegra210: Does not support ramoops carveouts in the bootloader, instead
->   relying on a dowstream driver to allocate the carveout, hence this
->   hardcodes a location matching what the downstream driver picks.
-> * Tegra186 and Tegra194 on cboot: Bootloader fills in the address and
->   size in a node specifically named /reserved-memory/ramoops_carveout,
->   thus these cannot be renamed.
-> * Tegra194 and Tegra234 on edk2: Bootloader looks up the node based on
->   compatible, however the dt still does not know the address, so keeping
->   the node name consistent on Tegra186 and newer.
+On Fri, May 9, 2025 at 1:56=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+>
+> On Fri, May 09, 2025 at 01:44:09AM +0900, Masahiro Yamada wrote:
+> > On Sun, May 4, 2025 at 2:37=E2=80=AFAM Kees Cook <kees@kernel.org> wrot=
+e:
+> > >
+> > > On Sat, May 03, 2025 at 06:39:28PM +0900, Masahiro Yamada wrote:
+> > > > On Sat, May 3, 2025 at 7:54=E2=80=AFAM Kees Cook <kees@kernel.org> =
+wrote:
+> > > > >
+> > > > >  v2:
+> > > > >   - switch from -include to -I with a -D gated include compiler-v=
+ersion.h
+> > > > >  v1: https://lore.kernel.org/lkml/20250501193839.work.525-kees@ke=
+rnel.org/
+> > > >
+> > > >
+> > > > What do you think of my patch as a prerequisite?
+> > > > https://lore.kernel.org/linux-kbuild/20250503084145.1994176-1-masah=
+iroy@kernel.org/T/#u
+> > > > Perhaps, can you implement this series more simply?
+> > > >
+> > > > My idea is to touch a single include/generated/global-rebuild.h
+> > > > rather than multiple files such as gcc-plugins-deps.h, integer-wrap=
+.h, etc.
+> > > >
+> > > > When the file is touched, the entire kernel source tree will be reb=
+uilt.
+> > > > This may rebuild more than needed (e.g. vdso) but I do not think
+> > > > it is a big deal.
+> > >
+> > > This is roughly where I started when trying to implement this, but I
+> > > didn't like the ergonomics of needing to scatter "touch" calls all ov=
+er,
+> > > which was especially difficult for targets that shared a build rule b=
+ut
+> > > may not all need to trigger a global rebuild. But what ultimately pus=
+hed
+> > > me away from it was when I needed to notice if a non-built source fil=
+e
+> > > changed (the Clang .scl file), and I saw that I need to be dependency
+> > > driven rather than target driven. (Though perhaps there is a way to
+> > > address this with your global-rebuild.h?)
+> > >
+> > > As far as doing a full rebuild, if it had been available last week, I
+> > > probably would have used it, but now given the work that Nicolas, you=
+,
+> > > and I have put into this, we have a viable way (I think) to make this
+> > > more specific. It does end up being a waste of time/resources to rebu=
+ild
+> > > stuff that doesn't need to be (efi-stub, vdso, boot code, etc), and t=
+hat
+> > > does add up when I'm iterating on something that keeps triggering a f=
+ull
+> > > rebuild. We already have to do the argument filtering for targets tha=
+t
+> > > don't want randstruct, etc, so why not capitalize on that and make th=
+e
+> > > rebuild avoid those files too?
+> >
+> >
+> > efi-stub, vdso are very small.
+> >
+> > Unless this turns out to be painful, I prefer
+> > a simpler implementation.
+> >
+> > You will see how .scl file is handled.
+> >
+> > See the below code:
+> >
+> >
+> > diff --git a/Kbuild b/Kbuild
+> > index f327ca86990c..85747239314c 100644
+> > --- a/Kbuild
+> > +++ b/Kbuild
+> > @@ -67,10 +67,20 @@ targets +=3D $(atomic-checks)
+> >  $(atomic-checks): $(obj)/.checked-%: include/linux/atomic/%  FORCE
+> >         $(call if_changed,check_sha1)
+> >
+> > +rebuild-$(CONFIG_GCC_PLUGINS)          +=3D $(addprefix
+> > scripts/gcc-plugins/, $(GCC_PLUGIN))
+> > +rebuild-$(CONFIG_RANDSTRUCT)           +=3D include/generated/randstru=
+ct_hash.h
+>
+> These are in $(objtree)
 
-In order for this to be compatible with the standard bindings, all that
-edk2 would need to do is add the unit-address, correct? I think that's
-something we could probably get done since we do this for framebuffer
-carveouts already.
+Yes.
 
-Thierry
+> > +rebuild-$(CONFIG_UBSAN_INTEGER_WRAP)   +=3D scripts/integer-wrap-ignor=
+e.scl
+>
+> This is in $(srctree)
 
---taubdhxeu2mngrhx
-Content-Type: application/pgp-signature; name="signature.asc"
+Yes.
 
------BEGIN PGP SIGNATURE-----
+> > +
+> > +quiet_cmd_touch =3D TOUCH   $@
+> > +      cmd_touch =3D touch $@
+> > +
+> > +include/generated/global-rebuild.h: $(rebuild-y)
+> > +       $(call cmd,touch)
+>
+> Is this rule going to find the right versions of the dependencies?
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgdIzcACgkQ3SOs138+
-s6FlVQ/8CeRKDXGRZlaBeE31HRP9B8ML+KHgGbP4eFu+2wmNgVUD6nuYuHOtTdGm
-psmw7dverFLWdWf3GsdWooyEP3OYNJvvJSAvwVywhvP8d3L3TG5ngjX2vvOsO3Mp
-10zdG2Mjrsg3igswPlhPjZ5Gq0tkzrH0fShEaoFePrTA/PfJtyRM9wUgIufKy9qa
-aCP3J220urbohrPgg7DGh12rXSajn9GkPfuTrMVE2njNGrEU56HhTCgYFCTSuZd4
-qyf7hK7EgLZ17b7/Y7PgQL1rVcTJrJfsz30/jCJQgGQ4kxlD5O742Z9mNvPsZUDJ
-UWvaaKKk3cYsFX1YpTpqSGT3OOw9MoGftMEc/hdFSED3iGWlkFyt3tUvOUvK88Jp
-OXCYKUdRKpu96FI2QdYCwFepJjksyAz4jHjGs1hbWPOoSv4cXK93m47G5YMvHHK9
-87QW5D9TFoJWlWZ89FdszITcprIxRwfgqIeyFuTS9MeP3OXIV0SyRpRYMOx7DQC4
-wxaFmbhKWQXBEIr3Ko9dDlprK/xrqw3wilCrKfuUGqjrU8LbbTE4OKSq8/NFMXUQ
-UIlU0RV2H3PSUMraYxbPuafu7OqaREl3uCNe/ctvmFFJcPWhstE/baEaT9KnOC7W
-+3xg3srCGeuli60Df7jUAOJDj7xspLIxnCiqF3BeiANO65or3e8=
-=da1W
------END PGP SIGNATURE-----
+I think so, but please test it.
 
---taubdhxeu2mngrhx--
+
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -558,7 +558,8 @@ USERINCLUDE    :=3D \
+> >                 -I$(srctree)/include/uapi \
+> >                 -I$(objtree)/include/generated/uapi \
+> >                  -include $(srctree)/include/linux/compiler-version.h \
+> > -                -include $(srctree)/include/linux/kconfig.h
+> > +                -include $(srctree)/include/linux/kconfig.h \
+> > +                -include $(objtree)/include/generated/global-rebuild.h
+>
+> Instead of adding a new file, why not just touch compiler-version.h?
+
+Because the compiler-version.h is in $(srctree), which might be
+in the read-only file system.
+
+
+> But whatever the case, sure, I can live with this. :)
+>
+> -Kees
+>
+> --
+> Kees Cook
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
