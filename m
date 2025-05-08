@@ -1,100 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F372253345;
-	Thu,  8 May 2025 15:56:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C21227A127;
+	Thu,  8 May 2025 15:58:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746719771; cv=none; b=umSURqfOtXR/acLabm795p9L+EZAawLrSeE9nEGM3WnoHZWO/a+/39VYvg/1F5shft7g1Eez93UflSnsv+Rj5UcIT6McvOufBEQjPEjR1W0f0ynWt07cXAozOLICa1iCoVkPbNydYR77lXS8p2v1NqqtaZuQXQIPHN4xhakpYr8=
+	t=1746719933; cv=none; b=KwCnJjf1aCA6uGgQ6WiCzvDhy6+ZIS5CDubm3TFyygM0HNAzCOOpZvyo7AletXicjz8PMfOw4YwAhUeIGFM4ff2H+b0+kFAU/o1WgC25cNJ1K0RR4/Ph2yemzWnyFLAFORRXMBGWs3Km0nJ+LJFgn8f6fYQOsjmwffgQ+5T307o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746719771; c=relaxed/simple;
-	bh=R8fdD9fVl6RxUXNhfszFi2YhYgJUMsMcmvmKFfo7eO0=;
+	s=arc-20240116; t=1746719933; c=relaxed/simple;
+	bh=8jYZVX0/2dxdtW2AwtBMm0nQOTU2ozp7HEs7ay7+F5g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UCbMxpMVmOgha1purwJhklbt1OmIXxaYCwKwCb6LPzIr9o8hjZLjjQXRsgzAchY0j2KdR+IxkcXk3ZKnrAn/sHGpXmajyrzEpZEmrIJMkOxFM9anc015TWikDoEhyEobml6/I4f+46z52/jln2nVDuP2NrKOFKb6mzd9QpBeqCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Efx2VuLZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tWWo5UVwN1fqysG/VeHzbi06yaF9wLFzibHefp6ouh4OzlMrrsTMrLntidxNvTts5Z2wspwkBben28DH4CyPnxVzKJ/p/+ZpEARYhAGe5tFG3voWQK2DeuONSmsRJWoxTQwWdiCWZZI9TQDSybHyiD9QnqcVOOhr1s0dpxexK78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QqVYuR8f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Efx2VuLZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E297BC4CEE7;
-	Thu,  8 May 2025 15:56:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QqVYuR8f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA38EC4CEE7;
+	Thu,  8 May 2025 15:58:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746719771;
-	bh=R8fdD9fVl6RxUXNhfszFi2YhYgJUMsMcmvmKFfo7eO0=;
+	s=k20201202; t=1746719931;
+	bh=8jYZVX0/2dxdtW2AwtBMm0nQOTU2ozp7HEs7ay7+F5g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Efx2VuLZYAAyMVp4ltoAba2BeKO0tyJr98h3ceIl1h13nU7z/gI3ndFDWQyss61zj
-	 BC44B4WEkjweiTRy6gq6u/YIydERCC1oDgT4T55mvzhYB8iAJ8Apw41+n38GWMoamE
-	 ubbh1aoM55vFQwTINJ2ZGi+rPGYeV9STqkp75HOEe7v+NBKfZ7HSjnVqipsts1ST4N
-	 lLrhH+fNWSNjqsNEgrp7YxVweRBc8EWOf11lTdEaTJPtrzot3LqugqrBJK1Sd1PzK6
-	 i/bBQ/fHFjrkXD+jrWKROlyk6BQZ/BhPqxErDKMtUfnudVuiQn5QQPrb4DTaz/HvJO
-	 84Gh0lFBROq9Q==
-Date: Thu, 8 May 2025 08:56:07 -0700
+	b=QqVYuR8f9MAE6X0M+Ea5uUkt3BwJhEeAVhK5N9Yat9xDZzbF8VVkdoMEn4Goh4A1Z
+	 ZEpAvA5i2+y0R8R7Y2mQRlht2k25qEfWDFexE6AyD/cKh0JaF9+A2sEFf9GzBJXRDj
+	 LrbHXVruSyA5zXfVv9zY2a1GaeGANKjrBwYToBymmz4qY2/i8TgtlydHsrUK/Y9lmw
+	 SCOcIhQXDgFyXLJyxoE+3APIM8l6+JueosfnWznRJVivvQ7K+uHlm4oVs0OB7LHrMr
+	 MN09X8O0PSPGs10h1UKbT9ehMf1v6HI9UUQSgCBHaJVrd7PHL25FswAC/ysHTVSeMJ
+	 d0mobG3Pwsnaw==
+Date: Thu, 8 May 2025 08:58:48 -0700
 From: Kees Cook <kees@kernel.org>
-To: Nicolas Schier <nicolas.schier@linux.dev>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Justin Stitt <justinstitt@google.com>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	kasan-dev@googlegroups.com, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 0/3] Detect changed compiler dependencies for full
- rebuild
-Message-ID: <202505080855.DF4FB68A@keescook>
-References: <20250503184001.make.594-kees@kernel.org>
- <20250507-mature-idealistic-toad-59c15f@l-nschier-aarch64>
+To: Coly Li <i@coly.li>
+Cc: Coly Li <colyli@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-bcache@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] md/bcache: Mark __nonstring look-up table
+Message-ID: <202505080844.DD7F50F0A@keescook>
+References: <20250418202130.it.887-kees@kernel.org>
+ <389A9925-0990-422C-A1B3-0195FAA73288@coly.li>
+ <851B250D-A22C-4B47-BBAC-55284B5B5790@coly.li>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250507-mature-idealistic-toad-59c15f@l-nschier-aarch64>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <851B250D-A22C-4B47-BBAC-55284B5B5790@coly.li>
 
-On Wed, May 07, 2025 at 02:02:42PM +0200, Nicolas Schier wrote:
-> On Sat, 03 May 2025, Kees Cook wrote:
+On Thu, May 08, 2025 at 11:01:34AM +0800, Coly Li wrote:
 > 
-> >  v3: move to include/generated, add touch helper
-> >  v2: https://lore.kernel.org/lkml/20250502224512.it.706-kees@kernel.org/
-> >  v1: https://lore.kernel.org/lkml/20250501193839.work.525-kees@kernel.org/
+> > 2025年4月19日 11:55，Coly Li <i@coly.li> 写道：
 > > 
-> > Hi,
 > > 
-> > This is my attempt to introduce dependencies that track the various
-> > compiler behaviors that may globally change the build that aren't
-> > represented by either compiler flags nor the compiler version
-> > (CC_VERSION_TEXT). Namely, this is to detect when the contents of a
-> > file the compiler uses changes. We have 3 such situations currently in
-> > the tree:
 > > 
-> > - If any of the GCC plugins change, we need to rebuild everything that
-> >   was built with them, as they may have changed their behavior and those
-> >   behaviors may need to be synchronized across all translation units.
-> >   (The most obvious of these is the randstruct GCC plugin, but is true
-> >   for most of them.)
+> >> 2025年4月19日 04:21，Kees Cook <kees@kernel.org> 写道：
+> >> 
+> >> GCC 15's new -Wunterminated-string-initialization notices that the 16
+> >> character lookup table "zero_uuid" (which is not used as a C-String)
+> >> needs to be marked as "nonstring":
+> >> 
+> >> drivers/md/bcache/super.c: In function 'uuid_find_empty':
+> >> drivers/md/bcache/super.c:549:43: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (17 chars into 16 available) [-Wunterminated-string-initialization]
+> >> 549 |         static const char zero_uuid[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+> >>     |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >> 
+> >> Add the annotation (since it is not used as a C-String), and switch the
+> >> initializer to an array of bytes.
+> >> 
+> >> Signed-off-by: Kees Cook <kees@kernel.org>
+> >> ---
+> >> v2: use byte array initializer (colyli)
+> >> v1: https://lore.kernel.org/all/20250416220135.work.394-kees@kernel.org/
+> >> Cc: Coly Li <colyli@kernel.org>
+> >> Cc: Kent Overstreet <kent.overstreet@linux.dev>
+> >> Cc: Ard Biesheuvel <ardb@kernel.org>
+> >> Cc: linux-bcache@vger.kernel.org
+> >> ---
+> >> drivers/md/bcache/super.c | 3 ++-
+> >> 1 file changed, 2 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+> >> index e42f1400cea9..a76ce92502ed 100644
+> >> --- a/drivers/md/bcache/super.c
+> >> +++ b/drivers/md/bcache/super.c
+> >> @@ -546,7 +546,8 @@ static struct uuid_entry *uuid_find(struct cache_set *c, const char *uuid)
+> >> 
+> >> static struct uuid_entry *uuid_find_empty(struct cache_set *c)
+> >> {
+> >> - static const char zero_uuid[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+> >> + static const char zero_uuid[] __nonstring =
 > > 
-> > - If the randstruct seed itself changes (whether for GCC plugins or
-> >   Clang), the entire tree needs to be rebuilt since the randomization of
-> >   structures may change between compilation units if not.
-> > 
-> > - If the integer-wrap-ignore.scl file for Clang's integer wrapping
-> >   sanitizer changes, a full rebuild is needed as the coverage for wrapping
-> >   types may have changed, once again cause behavior differences between
-> >   compilation units.
 > 
-> I am unsure if it is too much detail, but I'd like to see some of these 
-> infos in include/linux/compiler-version.h, too.
+> Hi Kees,
+> 
+> > I notice zero_uuid[16] changes to zero_uuid[], then the element number information is removed.
+> > 
+> > Is it OK for GCC 15 to only add __nonstring and keep zero_uuid[16]?
 
-Yeah, that's a good idea. No reason to make people dig for the commit
-logs, etc -- it should be immediately discoverable. I've updated the
-patches to include the (slight rephrased) text above.
+Either way is fine. I can update the patch to use the "[16]" again if
+you'd like?
 
-Thanks!
+-Kees
+
+> Ping ?
+> 
+> You are expert here, I need your opinion.
+> 
+> Thanks.
+> 
+> Coly Li
+> 
+> 
+> 
+> >> + { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+> >> 
+> >> return uuid_find(c, zero_uuid);
+> >> }
+> >> -- 
+> >> 2.34.1
+> 
+> 
 
 -- 
 Kees Cook
