@@ -1,176 +1,190 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12321DED57
-	for <linux-hardening@vger.kernel.org>; Thu,  8 May 2025 12:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8E722D9F7;
+	Thu,  8 May 2025 14:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746707129; cv=none; b=IAS8xZMrLydA4Tgi7Vg36lV0DnjTe3+7p1wwfnzWPjHSLQ6JsrtEb0hozY2sSQTB1+toNDetD/ghyFe0AYGNvsVt5Zrk458Zssz3QWTbvfmIf3f/PUc6a+liJcUQkvfuM75kmEhVjMtIlg3bU1jROOaMxG88NqIb9TTWZh2u5r8=
+	t=1746712985; cv=none; b=u47xmWkY8KaqLlnakWTTSCfBpdJdkGKgyIAtZXvmPVyv/vb2H8ccES9uo70lHdMTQcxNgfWXEB1dN+eRrf1idIbmj2aHNpUSOLOoN8c5uHkx/zE3GKkGaBfmee2AAvOteL3mXxYIldIz9R+KPABY7twja8K0Lg6ybt9mOVKCfb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746707129; c=relaxed/simple;
-	bh=GSPlMkE9xl1CKG6+aR4Lnpqmp6kkUaBOsXBjm7FdCs8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HJvmq3fiJdbeY+9m8tKpSaxFvUYV+RtmVJ/v/zeUBenUnAXaqzZBxzfoF7LPSbRlRXRn3cUfwSAPTOw+InTxLGHB5lkfgRup3gXjmV1EA6Ud76R3DOOPCvV97fNE9jcgs10vQ6Ks9vQfO/TpqTQRRYbjTl/uaGYOeSOP2kck9tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ONaTa7mk; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746712985; c=relaxed/simple;
+	bh=C/L/pftHGTCWGdWgJfT7sKUaqugtRJmVqtPPXBpoS98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U3Ozt6/MRLk4X1MA0hJG3/K1kCqyQBYhzjQLapcHh1RpvUyNuYBBs0oYWXVOF1t8j3rG0jSV0/KsOwYl1F277yul1/2s5hBM4zKtcnUN/vtD0SKXdUxmQz0Nn7OVnfQPIL3N4Bg2+lghTJtIBTeKmM15Fg6ZuvlwTQQLDJUlPQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4wet2nT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ONaTa7mk"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-31062172698so9762061fa.0
-        for <linux-hardening@vger.kernel.org>; Thu, 08 May 2025 05:25:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746707126; x=1747311926; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SGXUIdTFQac7mJFRH+e+84EpMzV6neC01o/VEUKascg=;
-        b=ONaTa7mkd9jVBDhTxOiNjDB9oo7ZjFFzBT97onAVuG9S+UwGeCqO4hXZK/nqbJUC5t
-         2yJo4mux/6GIOUCviWK0mKOKdELAH4WroXckzdLgoeA5rmJ9Vq3E7TZrudMSm4/XLMSU
-         We0MQ/50Ns1jLNJ1iFHhLDLCobMR3pRT7CER365RgfcCCqK8pTxwLAVzHwOrcAfmrnQ3
-         p55KROtV+WfTFr2ua2Su1IXybLXufIrUacbo2ZwHgI97BYK6FDd2/vSDIXqjm9ApLE/e
-         zGp0bwKQ9lPRKEKvymtb7m/acWfQ8mZ/3YlUcbNuGnYsvDhvWBDj/BS03V+9LKduDxhs
-         jkNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746707126; x=1747311926;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SGXUIdTFQac7mJFRH+e+84EpMzV6neC01o/VEUKascg=;
-        b=ppPq3Mx/B6RTg6/gd30XTIEA+USnopSvaVNQnKX3gGl2gUAkOhYnPiI/Nqb+mnSqaI
-         k2QcCqpLpCNH+erdNwN+A6gYDauzIAt0xqKsEP3TkSIvcoLAi08wNwup338svscAOimi
-         MN7AR+14kn21Bk852zgjx5fnlIcRlNXwsn6LCN25fkBGBvEJHS0sK/a3emIjFoQ6a7hr
-         ugDoBbZlBnnFsN9rfctDBLNuOX6jcsmo3WPLVUC7Ua0hqxirbfKBZOFxsPpU+jWiD66U
-         zJlvLzcS64ARrbSrITSZS8SRNQYfr0mTAO92VkT9DONK+NZDROwNBshYg6PF2Mc+bStB
-         O91w==
-X-Forwarded-Encrypted: i=1; AJvYcCVrwsHuVzvx6ECnCsiSinHHKww9kmXHP19pw5UMZh5dNyl0b9ri7wfMKmfv9+qLsSsQ7qfFSdIV1vGMXv0dLAg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG9NUN0mAHsiN7vbo+mNeMkH6GwUXYFJepcXaCEJcrkb1h4+34
-	BS2y4ypGjGw9vaS94+uvzQCjXb7Ae6fyLP8hDRvtuP/H87l49Gw91QN12Irz18JQEa380Fpkaqh
-	dr0uVYxN8YXAFGOoMak4dJfy40qlEjjPqCkCr
-X-Gm-Gg: ASbGncteyLA9iclg21yvpGJsKqzg///Qimgf0TXxN6sccHzjSoSsbLUkhzKUZcfwAsF
-	zf/AXdXzK2L3aUnuV4bERt+v+oEXnA9MsSA5PTpQmLYTduA110okZBJF9Hs2aPEdZ3df6OmBnWm
-	TGhk6Hxfc/qLmyK+4t5UscxUORBMjSHwB4RdD89XcK1sNsdamdCnC2
-X-Google-Smtp-Source: AGHT+IHELJP6PjDmjgnoQ+DcewZezMvkPDTBk3DlAEgOIW2HtUu14uSoRBVrm2tBSd/cEMjU36ADUjG1Ap9y8UFRrr8=
-X-Received: by 2002:a05:651c:b11:b0:30b:f006:3f5 with SMTP id
- 38308e7fff4ca-326b87dacdfmr7793251fa.15.1746707125568; Thu, 08 May 2025
- 05:25:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4wet2nT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3777C4CEE7;
+	Thu,  8 May 2025 14:03:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746712985;
+	bh=C/L/pftHGTCWGdWgJfT7sKUaqugtRJmVqtPPXBpoS98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S4wet2nTFae/hq0ivrloA8WadwPEauM183hm9+Bu4YlWD2GkEMsbffzfnzdIYa8iy
+	 XUsPA30tiKJodYhuowT1dMdJWwlU3+XOnO/P6qK6MajeIsJzWIcopRtYo7mnp9LtIo
+	 2IE51HXnnaP3GYIFFO/fh8+OBvQtunqBJgkllvPicUyT2b2+jyO8gmIOGfkkp3taBP
+	 reI2//D4TvUWuAwwJklHmqglJe2fLRaPBiNohoQqJIXM2y2Ws6h4THDRxQ7mSUndyl
+	 2yakR5t27fi+iNZ75/KgbctlgpbjHN2yMe6t5fj9HchbYtEYh7xJa9VcAPnH+un7jB
+	 Ix8+r/CvflXYQ==
+Date: Thu, 8 May 2025 15:02:59 +0100
+From: Lee Jones <lee@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v9 4/6] mfd: max77759: add Maxim MAX77759 core mfd driver
+Message-ID: <20250508140259.GN3865826@google.com>
+References: <20250430-max77759-mfd-v9-0-639763e23598@linaro.org>
+ <20250430-max77759-mfd-v9-4-639763e23598@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507180852.work.231-kees@kernel.org> <20250507181615.1947159-2-kees@kernel.org>
- <CANpmjNPcYPvnQzMT3p+Vc2=EiEbR1WnykUEjuYc0bH2HOFi6HQ@mail.gmail.com>
-In-Reply-To: <CANpmjNPcYPvnQzMT3p+Vc2=EiEbR1WnykUEjuYc0bH2HOFi6HQ@mail.gmail.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Thu, 8 May 2025 14:25:13 +0200
-X-Gm-Features: ATxdqUEOMWVMkXbvXQaHqruZq4t8-pmXFLrRyvMg5ohXOpGrzDC1z300bwlcEE0
-Message-ID: <CACT4Y+betRmieWEHBdEf=gOLhWiNVRH5CSDeN6ykBtoP1GrzLA@mail.gmail.com>
-Subject: Re: [PATCH 2/8] init.h: Disable sanitizer coverage for __init and __head
-To: Marco Elver <elver@google.com>
-Cc: Kees Cook <kees@kernel.org>, Alexander Potapenko <glider@google.com>, 
-	Aleksandr Nogikh <nogikh@google.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Hou Wenlong <houwenlong.hwl@antgroup.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	kasan-dev@googlegroups.com, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Christoph Hellwig <hch@lst.de>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	sparclinux@vger.kernel.org, llvm@lists.linux.dev, 
-	syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250430-max77759-mfd-v9-4-639763e23598@linaro.org>
 
-On Thu, 8 May 2025 at 14:23, Marco Elver <elver@google.com> wrote:
->
-> +Cc KCOV maintainers
->
-> On Wed, 7 May 2025 at 20:16, Kees Cook <kees@kernel.org> wrote:
-> >
-> > While __noinstr already contained __no_sanitize_coverage, it needs to
-> > be added to __init and __head section markings to support the Clang
-> > implementation of CONFIG_STACKLEAK. This is to make sure the stack depth
-> > tracking callback is not executed in unsupported contexts.
-> >
-> > The other sanitizer coverage options (trace-pc and trace-cmp) aren't
-> > needed in __head nor __init either ("We are interested in code coverage
-> > as a function of a syscall inputs"[1]), so this appears safe to disable
-> > for them as well.
->
-> @ Dmitry, Aleksandr - Will this produce some unwanted side-effects for
-> syzbot? I also think it's safe, but just double checking.
+On Wed, 30 Apr 2025, André Draszik wrote:
 
-I do not see any problems with this.
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
+> 
+> Fuel Gauge and TCPC have separate and independent I2C addresses,
+> register maps, and interrupt lines and are therefore excluded from the
+> MFD core device driver here.
+> 
+> The GPIO and NVMEM interfaces are accessed via specific commands to the
+> built-in microprocessor. This driver implements an API that client
+> drivers can use for accessing those.
+> 
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> 
+> ---
+> v6: really use postinc
+> 
+> v5:
+> * update all (I hope) of Lee's comments:
+> * file header C comment (not C++)
+> * drop references to 'MFD'
+> * extra indent register bit definitions
+> * make 'struct max77759' public
+> * drop comments that were used for visual separation only
+> * drop MAX77759_*_REG_LAST_REGISTER defines
+> * add comments to regmap ranges
+> * use longer lines
+> * sort local variable in reverse christmas tree order
+> * update comments in max77759_maxq_command()
+> * drop BUILD_BUG_ON()
+> * use dev_err() in max77759_maxq_command()
+> * reflow max77759_create_i2c_subdev() slightly and update error messages
+> * drop useless comment in max77759_add_chained_maxq()
+> * reflow max77759_probe()
+> * consistent upper-/lower-case in messages
+> 
+> v4:
+> * add missing build_bug.h include
+> * update an irq chip comment
+> * fix a whitespace in register definitions
+> 
+> v2:
+> * add kernel doc for max77759_maxq_command() and related structs
+> * fix an msec / usec typo
+> * add missing error handling of devm_mutex_init() (Christophe)
+> * align sentinel in max77759_of_id[] with max77759_i2c_id[]
+>   (Christophe)
+> * some tidy-ups in max77759_maxq_command() (Christophe)
+> 
+> max77759 Lee's updates
+> ---
+>  MAINTAINERS                  |   2 +
+>  drivers/mfd/Kconfig          |  20 ++
+>  drivers/mfd/Makefile         |   1 +
+>  drivers/mfd/max77759.c       | 690 +++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/max77759.h | 165 +++++++++++
+>  5 files changed, 878 insertions(+)
 
-> > Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/kcov.c?h=v6.14#n179 [1]
-> > Signed-off-by: Kees Cook <kees@kernel.org>
->
-> Acked-by: Marco Elver <elver@google.com>
->
-> > ---
-> > Cc: Marco Elver <elver@google.com>
-> > Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> > Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Cc: <x86@kernel.org>
-> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> > Cc: Hou Wenlong <houwenlong.hwl@antgroup.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> > Cc: Luis Chamberlain <mcgrof@kernel.org>
-> > Cc: Sami Tolvanen <samitolvanen@google.com>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> > Cc: <kasan-dev@googlegroups.com>
-> > ---
-> >  arch/x86/include/asm/init.h | 2 +-
-> >  include/linux/init.h        | 4 +++-
-> >  2 files changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
-> > index 8b1b1abcef15..6bfdaeddbae8 100644
-> > --- a/arch/x86/include/asm/init.h
-> > +++ b/arch/x86/include/asm/init.h
-> > @@ -5,7 +5,7 @@
-> >  #if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 170000
-> >  #define __head __section(".head.text") __no_sanitize_undefined __no_stack_protector
-> >  #else
-> > -#define __head __section(".head.text") __no_sanitize_undefined
-> > +#define __head __section(".head.text") __no_sanitize_undefined __no_sanitize_coverage
-> >  #endif
-> >
-> >  struct x86_mapping_info {
-> > diff --git a/include/linux/init.h b/include/linux/init.h
-> > index ee1309473bc6..c65a050d52a7 100644
-> > --- a/include/linux/init.h
-> > +++ b/include/linux/init.h
-> > @@ -49,7 +49,9 @@
-> >
-> >  /* These are for everybody (although not all archs will actually
-> >     discard it in modules) */
-> > -#define __init         __section(".init.text") __cold  __latent_entropy __noinitretpoline
-> > +#define __init         __section(".init.text") __cold __latent_entropy \
-> > +                                               __noinitretpoline       \
-> > +                                               __no_sanitize_coverage
-> >  #define __initdata     __section(".init.data")
-> >  #define __initconst    __section(".init.rodata")
-> >  #define __exitdata     __section(".exit.data")
-> > --
-> > 2.34.1
-> >
+This looks okay to me now.
+
+I assume the other patches depend on this one?
+
+[...]
+
+> diff --git a/drivers/mfd/max77759.c b/drivers/mfd/max77759.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..15723ac3ef49771eafd5c2e9984abc550eec7aa1
+> --- /dev/null
+> +++ b/drivers/mfd/max77759.c
+> @@ -0,0 +1,690 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright 2020 Google Inc
+> + * Copyright 2025 Linaro Ltd.
+> + *
+> + * Core driver for Maxim MAX77759 companion PMIC for USB Type-C
+> + */
+
+[...]
+
+> +int max77759_maxq_command(struct max77759 *max77759,
+> +			  const struct max77759_maxq_command *cmd,
+> +			  struct max77759_maxq_response *rsp)
+> +{
+> +	DEFINE_FLEX(struct max77759_maxq_response, _rsp, rsp, length, 1);
+> +	struct device *dev = regmap_get_device(max77759->regmap_maxq);
+> +	static const unsigned int timeout_ms = 200;
+> +	int ret;
+> +
+> +	if (cmd->length > MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * As a convenience for API users when issuing simple commands, rsp is
+> +	 * allowed to be NULL. In that case we need a temporary here to write
+> +	 * the response to, as we need to verify that the command was indeed
+> +	 * completed correctly.
+> +	 */
+> +	if (!rsp)
+> +		rsp = _rsp;
+> +
+> +	if (!rsp->length || rsp->length > MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&max77759->maxq_lock);
+> +
+> +	reinit_completion(&max77759->cmd_done);
+> +
+> +	/*
+> +	 * MaxQ latches the message when the DATAOUT32 register is written. If
+> +	 * cmd->length is shorter we still need to write 0 to it.
+> +	 */
+> +	ret = regmap_bulk_write(max77759->regmap_maxq,
+> +				MAX77759_MAXQ_REG_AP_DATAOUT0, cmd->cmd,
+> +				cmd->length);
+> +	if (!ret && cmd->length < MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> +		ret = regmap_write(max77759->regmap_maxq,
+> +				   MAX77759_MAXQ_REG_AP_DATAOUT32, 0);
+> +	if (ret) {
+> +		dev_err(dev, "writing command failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* wait for response from MaxQ */
+
+If you have to respin this patch, please s/wait/Wait/.
+
+If not, please send a subsequent patch.
+
+-- 
+Lee Jones [李琼斯]
