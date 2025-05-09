@@ -1,107 +1,240 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9DE269CF1
-	for <linux-hardening@vger.kernel.org>; Fri,  9 May 2025 06:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC9E26F453
+	for <linux-hardening@vger.kernel.org>; Fri,  9 May 2025 06:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746771946; cv=none; b=bQIsRfINuCthLfKO5YVo/7qxDrL3fl4KYLBZrRzd7Z+y7vaJNmcSox827FILeXN39DFbw8wTZag30pQErsn3qtrscZEL6z55ViXKWWnBHnQ33vI7OtTAJLOLCOdq9No7KLNV2xvduOghovlpXkLB8qWAIu3n826tvsXSqs9ytsw=
+	t=1746773118; cv=none; b=p0ZSou6qL3cJixXyoSJdpUKCCPWGiZR4hsbyimIJkKVUsQbARfzLI/qs3aRGJ/Pv432n/M2letE990JHsjiyEvmE9+t1N0Jej+BZklcPu5wc3p1AW6MvKrvgat5Cn8MkW+PvTqb18/4qU8hwMLrySGAyXQolpGk6Fa5AtFM5tmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746771946; c=relaxed/simple;
-	bh=sT78nN+pkguiIepeHcI/OhL3YYwqizIKDFZ8qkd6c8o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ePdV6ZeGMHEKLIlTCgZEVuTpFsn1HGV6iXkq9tF5CIx11uX3wl2rpB2GmZ5FuzsN7DBU8EuthVIgTRElIKlcyy9kF8YOn+cUQ4cRL+TrcKjQvp/Tdwo3xxOa6JCsY1snuEQLWTYaz13uI4kgJ3HMGmod7EU3ekogTOF9nC/q4R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wX2BB27V; arc=none smtp.client-ip=209.85.218.48
+	s=arc-20240116; t=1746773118; c=relaxed/simple;
+	bh=27kGMBB3C0h9ODtKKrLc1VupFSWATrFKfY3kj/JBugQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bMi3p/mb578RyvV1TGd9BNRi+fzY0EfxspwfcfZYFpunZES8wORYQFw3N6bRtMy/l43ffWFlL8swyr8hvojWFLKqgMeA42gGHZ84i3a8qxopCPa3AOscqH4cjhJ82VBIqg+myeTKuj6GL0Z15iaYNyFXwcX42rGwU7EYNTnc5Eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gBKQArXb; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wX2BB27V"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so244706566b.1
-        for <linux-hardening@vger.kernel.org>; Thu, 08 May 2025 23:25:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gBKQArXb"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a0b7fbdde7so1547938f8f.2
+        for <linux-hardening@vger.kernel.org>; Thu, 08 May 2025 23:45:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746771942; x=1747376742; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=J2sBRlj94okcxqPX5H1gKCJTax9lnG2hxBuhlKbj+a4=;
-        b=wX2BB27Vx43IPn2aYK0lKLCtuCYeGDal9fuuR+ZZd9vX3WnekUtbFpkDYMBDwkdrFF
-         1RSdMeNVicaNWzy8Sdh92oUk8iYdEixVdxbWDxTTHHpvY/V12+fz369NgojlyppkayjX
-         MKkmLMeSY35587rMLQOsHIccvcoWRiVXSsW2OdCct3FIYcg2RWepxGcS+myeZTJBxMmE
-         jIB+iFiJJCcft+YiaAf4dghTa7DOMHEjESEeLPN4S5uRkJSZd2HNvIc97zFApPwNohSe
-         UvWJfxuTnt3LZajz8iL3UQ+XKLaiQVvJBmnWLQ15XkGy4THz/2MazC9Jm+9w9QJbbEJY
-         VUWQ==
+        d=linaro.org; s=google; t=1746773114; x=1747377914; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UVJ2TuNUBUpO94IHTiYXs30ZxdePvcvCPymvMj2I2OQ=;
+        b=gBKQArXbZYzhy6ncASQWGKwcq4h7+Eags9bxpk5gVSOz2TXAV+OT1chirGqpK9XcNU
+         jhBQ0zsiMDqEQc6yD8NBC0d5J+EHhWiJ+NtywTApGVCrzKmsptuBhuV4QfP5ueTTJv1s
+         eCW8hYB/p3ADp5TeXFdXDVHf2ZjN4ktecvEF3bFXy2GztWSgVeARyMmeEkt6NhhTGKiJ
+         uh80Ns+ZR7mWdwHWzGCQzrDi/UoA2xb8fhMDZrUbZjkxXiWqgdUsMJaoVa+YsWmcBQpr
+         WBMfMG8z9Dj/cfU6Tc3468u9rRMx0FyWSdRniU8hgODh/k7IFaqtSLPtmssWWxylnpTX
+         0ytg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746771942; x=1747376742;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J2sBRlj94okcxqPX5H1gKCJTax9lnG2hxBuhlKbj+a4=;
-        b=ANxkFCcVXKJ7iT2WfOziWhRGskpkrXIapzWdgT7rTIQO+fjgjIWYNsknAStLJPH1Bl
-         nuBHtyvdcCm5ZrZGhsSLmKFkUB1GuYDPOaQlEZxjGDZVPPkuZTyD2tGLrHT3zScOkNC/
-         +w8E5PXlGzGWSMyMDjpeDZu/Gk9MW+gU2qndaeKAvwP1lMTGx59AO5arnM3m/enz6gGx
-         5Bqe8LOGrfygR8pQ6PYGqcJOMPbnyKtcAPyZ7w0cADOba3wvg85pflqp3L2gdEZroqKz
-         sAJw96Jv9v/Dh6PFbJQWGA1FxVsLRrSPN+yEqJblkv8j0gDY4LJTqy+uPRcSxqbEtMxd
-         9yrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6a/zbJpMZZsX3fSXbE5GVSRLcZODyVEL1MxLsIVf3QxuqKqzniatnl7++iD9adqRSPZsHk/fqU8UiFTnar/Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6LY2JBZaqUcw0cML7Xy4ouPXRWmHMX4mVqm9C9gcjJlq7Iemh
-	w7D5eJE+/WpRQcqNG/RFyuyrPwattqDZKig/hRY/qzElsM3BALhNXnAHeCXHZmY=
-X-Gm-Gg: ASbGncsY0r5UR58JLcVWMev/lXQDBlLpxaqHeiMGJMfsBiRu5fFlAqZv3lLIwVkddK/
-	EjpWIbyUKrq7p5m7utPJ/Fb5PRmXSx2D3mS8q4C34xPI+wN+4PXoO2OuZZPBB2/3ANU0BtLedeN
-	CmW9oHV4WYFmaGfipIQyGY8Qa3QnKXJwBwA3JPtK+Zq4qNXcsuiCCnkpjostdqM9IKQOaQY+/3S
-	0VCMaf0lqT+U39RRgc9dV1JtnMITjVnlgO48Z3v0AOLtoeZj/fi6e0iHzP5EZzJKZywAkDdGlQ8
-	U7yEvO3p1xJ9JIftCgAkhcDVhrz1749ZQZ+pWou2c0GWki5T
-X-Google-Smtp-Source: AGHT+IFMIuFKiOjLQ3eIogAmMtah9CU+aZgki/iojua/5RZ6ucOc6hJ3VkVi8yBlgIxrbQ2NIDXCJA==
-X-Received: by 2002:a17:907:d9e:b0:ad1:dbec:44d3 with SMTP id a640c23a62f3a-ad218f79625mr256897766b.27.1746771942340;
-        Thu, 08 May 2025 23:25:42 -0700 (PDT)
-Received: from [192.168.0.32] ([82.76.24.202])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197bd2a8sm101212866b.145.2025.05.08.23.25.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 23:25:41 -0700 (PDT)
-Message-ID: <e03d3e18-9868-4896-a8fc-1443372c0c5b@linaro.org>
-Date: Fri, 9 May 2025 09:25:41 +0300
+        d=1e100.net; s=20230601; t=1746773114; x=1747377914;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UVJ2TuNUBUpO94IHTiYXs30ZxdePvcvCPymvMj2I2OQ=;
+        b=uYGkhp1vlZwYd6Qxx94rIjO4greiZojjurv9oCKdkTAQAsvua7xiuB2+eCljmV5skZ
+         2nng2oMSCTcNLssE2j9QL9GkotVxXFRkKefYsW8NXCYsOoNW59xzsPecHy6nQJwBSZQx
+         jn+Z0MHmCeFPkzxjMukHKt5gI0ADvgoPmOErTglLDvSPo2d+YmixncBq0Lk4/g0e+azU
+         mf7gNgpUqHvfy0ex39Hp5cFObqdQf0wEtbASgPFGlDWUMt4ay0QJ46mIxE+zCeYX4ggL
+         0vG84eC+8KtG6DjB1car87s9IvueNni7wlrvdvtfmlRnGZJGv6ow7qpIvuvwKoKx5AqK
+         LYuw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5AvT5OHycxdGfS85bVRogQKLcOzyQsssMUeCtf3fN+QEfbZ6pbgtgE/9otBoiVrW8QEiGcXMGK/2enix87us=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfDh0glVG8OQgtV7oHFZVwxdqrOdv1huV+i47YTVzliPHPpyL5
+	K5JjW12JOBEI6xjdGJwYFpYx74B7Rm5aUBreeTqqJa/SHUx1XbVZFNxDnnROztsX9wICt6k1mgs
+	jmjw=
+X-Gm-Gg: ASbGncv53WZngQYPrIQYIf+ike3rmUqn6wxuAPFNYsmGNKGYkIFy8tlbPoKsNCl0ldj
+	XZR8eM+2KAv1q4gfRDdlaIgzZz6UUBQ6FOhogEcfmahkCi2Yu101i/3hUMcjSDwG9jEY2BQTrCc
+	Cw9q/ChrVhGQFQ2RaCxAHowvNCAQwTbaWx4uuJ1ouCNhzvqOy9w0xgOYrGCqz2uOHqipsvVvhgX
+	PZ8lW0pD57SqoOwJDeDZoBJav71niqkFslGqH7SoKsJfj2Zy6pT9/OTqF3mb0muSkq1EFfQB7UL
+	cTkcJE1uLQZZxCb49vgvQ7nAgljNKf1sua3GJQbIMZLA
+X-Google-Smtp-Source: AGHT+IH18FSd6kFBMFpH6Tgr5SOpt1kgXIcmqF5vBZmAhp4BLHkkT7JEQaYeI4Zj3eGt5omTIFhStw==
+X-Received: by 2002:a5d:59a7:0:b0:3a0:8325:8090 with SMTP id ffacd0b85a97d-3a1f64374d6mr1856560f8f.18.1746773114003;
+        Thu, 08 May 2025 23:45:14 -0700 (PDT)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddde0sm2302928f8f.14.2025.05.08.23.45.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 23:45:12 -0700 (PDT)
+Message-ID: <eb8c820c864717d6348cd11f16e6899c744a92ed.camel@linaro.org>
+Subject: Re: [PATCH v9 4/6] mfd: max77759: add Maxim MAX77759 core mfd driver
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Srinivas
+ Kandagatla <srini@kernel.org>, Kees Cook	 <kees@kernel.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, Peter Griffin	 <peter.griffin@linaro.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker
+ <willmcvicker@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org
+Date: Fri, 09 May 2025 07:45:11 +0100
+In-Reply-To: <20250508140259.GN3865826@google.com>
+References: <20250430-max77759-mfd-v9-0-639763e23598@linaro.org>
+	 <20250430-max77759-mfd-v9-4-639763e23598@linaro.org>
+	 <20250508140259.GN3865826@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.55.2-1 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pstore/zone: fix trivial comment typo
-To: kees@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20241224154405.295840-1-eugen.hristev@linaro.org>
-Content-Language: en-US
-From: Eugen Hristev <eugen.hristev@linaro.org>
-In-Reply-To: <20241224154405.295840-1-eugen.hristev@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+Hi Lee,
 
+On Thu, 2025-05-08 at 15:02 +0100, Lee Jones wrote:
+> On Wed, 30 Apr 2025, Andr=C3=A9 Draszik wrote:
+>=20
+> > The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> > includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> > Port Controller (TCPC), NVMEM, and a GPIO expander.
+> >=20
+> > Fuel Gauge and TCPC have separate and independent I2C addresses,
+> > register maps, and interrupt lines and are therefore excluded from the
+> > MFD core device driver here.
+> >=20
+> > The GPIO and NVMEM interfaces are accessed via specific commands to the
+> > built-in microprocessor. This driver implements an API that client
+> > drivers can use for accessing those.
+> >=20
+> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> >=20
+> > ---
+> > v6: really use postinc
+> >=20
+> > v5:
+> > * update all (I hope) of Lee's comments:
+> > * file header C comment (not C++)
+> > * drop references to 'MFD'
+> > * extra indent register bit definitions
+> > * make 'struct max77759' public
+> > * drop comments that were used for visual separation only
+> > * drop MAX77759_*_REG_LAST_REGISTER defines
+> > * add comments to regmap ranges
+> > * use longer lines
+> > * sort local variable in reverse christmas tree order
+> > * update comments in max77759_maxq_command()
+> > * drop BUILD_BUG_ON()
+> > * use dev_err() in max77759_maxq_command()
+> > * reflow max77759_create_i2c_subdev() slightly and update error message=
+s
+> > * drop useless comment in max77759_add_chained_maxq()
+> > * reflow max77759_probe()
+> > * consistent upper-/lower-case in messages
+> >=20
+> > v4:
+> > * add missing build_bug.h include
+> > * update an irq chip comment
+> > * fix a whitespace in register definitions
+> >=20
+> > v2:
+> > * add kernel doc for max77759_maxq_command() and related structs
+> > * fix an msec / usec typo
+> > * add missing error handling of devm_mutex_init() (Christophe)
+> > * align sentinel in max77759_of_id[] with max77759_i2c_id[]
+> > =C2=A0 (Christophe)
+> > * some tidy-ups in max77759_maxq_command() (Christophe)
+> >=20
+> > max77759 Lee's updates
+> > ---
+> > =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
+> > =C2=A0drivers/mfd/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 20 ++
+> > =C2=A0drivers/mfd/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0 1 +
+> > =C2=A0drivers/mfd/max77759.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 690 =
++++++++++++++++++++++++++++++++++++++++++++
+> > =C2=A0include/linux/mfd/max77759.h | 165 +++++++++++
+> > =C2=A05 files changed, 878 insertions(+)
+>=20
+> This looks okay to me now.
 
-On 12/24/24 17:44, Eugen Hristev wrote:
-> s/conpressed/compressed
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
-> ---
->  fs/pstore/zone.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
-> index 694db616663f..a4ee4e04d1cd 100644
-> --- a/fs/pstore/zone.c
-> +++ b/fs/pstore/zone.c
-> @@ -43,7 +43,7 @@ struct psz_buffer {
->   *
->   * @magic: magic num for kmsg dump header
->   * @time: kmsg dump trigger time
-> - * @compressed: whether conpressed
-> + * @compressed: whether compressed
->   * @counter: kmsg dump counter
->   * @reason: the kmsg dump reason (e.g. oops, panic, etc)
->   * @data: pointer to log data
+Thanks :-)
 
-Hi Kees,
+> I assume the other patches depend on this one?
 
-While you are at it, there is also this trivial typo
+Yes, that is correct.
+>=20
+> [...]
+>=20
+> > diff --git a/drivers/mfd/max77759.c b/drivers/mfd/max77759.c
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..15723ac3ef49771eafd5c2e=
+9984abc550eec7aa1
+> > --- /dev/null
+> > +++ b/drivers/mfd/max77759.c
+> > @@ -0,0 +1,690 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright 2020 Google Inc
+> > + * Copyright 2025 Linaro Ltd.
+> > + *
+> > + * Core driver for Maxim MAX77759 companion PMIC for USB Type-C
+> > + */
+>=20
+> [...]
+>=20
+> > +int max77759_maxq_command(struct max77759 *max77759,
+> > +			=C2=A0 const struct max77759_maxq_command *cmd,
+> > +			=C2=A0 struct max77759_maxq_response *rsp)
+> > +{
+> > +	DEFINE_FLEX(struct max77759_maxq_response, _rsp, rsp, length, 1);
+> > +	struct device *dev =3D regmap_get_device(max77759->regmap_maxq);
+> > +	static const unsigned int timeout_ms =3D 200;
+> > +	int ret;
+> > +
+> > +	if (cmd->length > MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * As a convenience for API users when issuing simple commands, rsp i=
+s
+> > +	 * allowed to be NULL. In that case we need a temporary here to write
+> > +	 * the response to, as we need to verify that the command was indeed
+> > +	 * completed correctly.
+> > +	 */
+> > +	if (!rsp)
+> > +		rsp =3D _rsp;
+> > +
+> > +	if (!rsp->length || rsp->length > MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> > +		return -EINVAL;
+> > +
+> > +	guard(mutex)(&max77759->maxq_lock);
+> > +
+> > +	reinit_completion(&max77759->cmd_done);
+> > +
+> > +	/*
+> > +	 * MaxQ latches the message when the DATAOUT32 register is written. I=
+f
+> > +	 * cmd->length is shorter we still need to write 0 to it.
+> > +	 */
+> > +	ret =3D regmap_bulk_write(max77759->regmap_maxq,
+> > +				MAX77759_MAXQ_REG_AP_DATAOUT0, cmd->cmd,
+> > +				cmd->length);
+> > +	if (!ret && cmd->length < MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> > +		ret =3D regmap_write(max77759->regmap_maxq,
+> > +				=C2=A0=C2=A0 MAX77759_MAXQ_REG_AP_DATAOUT32, 0);
+> > +	if (ret) {
+> > +		dev_err(dev, "writing command failed: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	/* wait for response from MaxQ */
+>=20
+> If you have to respin this patch, please s/wait/Wait/.
+>=20
+> If not, please send a subsequent patch.
 
-Eugen
+I guess I might as well send another version, given this series is still
+waiting for Srini's ACK.
+
+Cheers,
+Andre'
+
