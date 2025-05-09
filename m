@@ -1,121 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5CE25E836;
-	Fri,  9 May 2025 20:06:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C83261565;
+	Fri,  9 May 2025 22:13:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746821211; cv=none; b=He+R67R1Y2yFR1GE0UE4YjsK42M+vJQ8LufZsH1fYOW+IW98bP94t1HQ6e+I57xQvTfm5PaEZWoXe6OHGAn5eZWwV+LfE1DT1MN016SOCEVjHUs4PQVC3I8BmZtiyFxPyOaBlWfz3Ohni1lyOgfjeY+CLzq9BfFUnl50HUzEZoQ=
+	t=1746828817; cv=none; b=YDFZ0pGErLwGJLhJ/LSfHLRVM3XfzkR8lT03RmKoqlxwZySE4eUwUU+nie+gvAVp7e+FRDLPUHcPSSN4INqbXBlxBmhZgHExtUeQy98hXMDrRfx6IASFxSTymrN7z5XN6K346FZipInFEJ231U6xmv2IxqhikbTTRc1xNHWXZKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746821211; c=relaxed/simple;
-	bh=c4N2IUsmCh9moub2+ZGNMBv0CyfWrRcXPTvqAC6Ij/I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rGAE/rpiyqlm4cG7jEhKnMmSAh37aIsqSMIyC3l+vpgpCJVU29ikvNTgY0WwFfGKnWDgt1bKHp5H80iEqLxy+2OlkzX8vCireSdGLi0juH+w8UlMGAFOD4pEAhUZR3BqMITQLWKMnzg4aHgHwHsg6pATeuIZS1UB6FYQsLIwrWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iy/5oKN4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746828817; c=relaxed/simple;
+	bh=JEtojtxozBeZKb4L4slRczK0pe/giC0x9qDchrNk1q8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DMEZicljxU4WleBdeNhhJlfDS5+SiICeb0rhebwqK3gwI8QV05POED5l11jsjITj966Kw1MdswzGyyfmKqy7XiUrvfjRJbAgKlnw+2AcMyKLfBL3F1636/0eQvZb9ebwsu/hOkJQ5mUHePloSwt1BK+Mx8QHL4vgy+2lL8Nklvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IYKV3aNs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iy/5oKN4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04EB6C4CEE4;
-	Fri,  9 May 2025 20:06:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYKV3aNs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 862ABC4CEEE;
+	Fri,  9 May 2025 22:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746821211;
-	bh=c4N2IUsmCh9moub2+ZGNMBv0CyfWrRcXPTvqAC6Ij/I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=iy/5oKN4Rax6mwtekgtc7DQfTrvQ+wam5Jjx0PiEo57N2FQa4laN6F5Pf713nTxcz
-	 rJEKhMVmFHqunx+dD0tttYsmVTr3ljhtZkRRXt72Eyp6MN40bBWGnd7jPE51VFcuy0
-	 i7gZuoE0yo8pyIk39tDuTrZhCRcj6Eef1sSRKhrUiN8a5ZXpazJ7IgDWPySCEmQLHJ
-	 MPbITL1LhxUGGm/K+byLzshRh6tfymDBT3+MV8td9nOUqPPHF2aV8LZdCkhjTvjYoq
-	 T1y0I6GYGXjkCfNWD6FfzmSHmMSfr9Cf/S1pIjYJdyfeipJ60e9WNd90d6m0jzRCif
-	 kAwjMTPHPtD2g==
-From: Kees Cook <kees@kernel.org>
-To: Simona Vetter <simona@ffwll.ch>
-Cc: Kees Cook <kees@kernel.org>,
-	syzbot+a7d4444e7b6e743572f7@syzkaller.appspotmail.com,
-	Helge Deller <deller@gmx.de>,
+	s=k20201202; t=1746828816;
+	bh=JEtojtxozBeZKb4L4slRczK0pe/giC0x9qDchrNk1q8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IYKV3aNsMm0whQPXKjXlBEOn2trCbtazdDfHlO5yPtdyE5J3GweuFhzrUbr7Snoww
+	 qqZF7RYOoIR380q1jSD71Ck0351FOW3wBU334Ik2Q8iw6QLTEG3x62c0dOEubnlHGU
+	 uDwQ2z3vTuJcEfDVgiuuK7uYNS+RlyuRpoFTmbRRkVTsb++SFB42yPStgJALge6Uh1
+	 iF8eehmqqX8IawRvuD2N01tJxqP6opnaPgKie0o23LHTLxL8bziAXGZWya9r08SVRj
+	 YaudW4inWVVWlif6YhdroDU16ct+tjyIvqBrqpaI4K+X8q6bXBgXXjr35mKh6wnh0W
+	 8QSTtY9VxavPA==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Amit Kucheria <amitk@kernel.org>,
+	Thara Gopinath <thara.gopinath@gmail.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Shixiong Ou <oushixiong@kylinos.cn>,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	Qianqiang Liu <qianqiang.liu@163.com>,
-	Jocelyn Falempe <jfalempe@redhat.com>,
-	Zsolt Kajtar <soci@c64.rulez.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Souradeep Chowdhury <quic_schowdhu@quicinc.com>,
+	Lee Jones <lee@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alex Elder <elder@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Avri Altman <avri.altman@wdc.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Andy Gross <agross@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Georgi Djakov <djakov@kernel.org>,
+	Loic Poulain <loic.poulain@oss.qualcomm.com>,
+	Robert Foss <rfoss@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Imran Shaik <quic_imrashai@quicinc.com>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+	David Wronek <david@mainlining.org>,
+	Jens Reidel <adrian@mainlining.org>,
+	Danila Tikhonov <danila@jiaxyga.com>
+Cc: devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	syzbot+3d613ae53c031502687a@syzkaller.appspotmail.com,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] fbdev: fbcon: Make sure modelist not set on unregistered console
-Date: Fri,  9 May 2025 13:06:47 -0700
-Message-Id: <20250509200643.work.355-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	linux-pm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	linux-mmc@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev,
+	linux-remoteproc@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hardening@vger.kernel.org,
+	linux@mainlining.org,
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: (subset) [PATCH 17/33] dt-bindings: nvmem: qfprom: Add the SM7150 compatible
+Date: Fri,  9 May 2025 17:13:23 -0500
+Message-ID: <174682880484.49052.7211478690993150122.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250422213137.80366-1-danila@jiaxyga.com>
+References: <20250422213137.80366-1-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2305; i=kees@kernel.org; h=from:subject:message-id; bh=c4N2IUsmCh9moub2+ZGNMBv0CyfWrRcXPTvqAC6Ij/I=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlyCWH//WaueRBfJHD5a+nhDd/L42/f/L542tUJ0+wrn q/LdFl3oKOUhUGMi0FWTJElyM49zsXjbXu4+1xFmDmsTCBDGLg4BWAiy3IY/vsXvG2+e+HLYqtZ s3c+nt0XKsTc77J8XhOHfXjeZU7Ody4M/2v/VTEwFcQLZcqcWP5U1fes1kHGJ0HbGN4e2f3j5/e p/rwA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-It looks like attempting to write to the "store_modes" sysfs node will
-run afoul of unregistered consoles:
 
-UBSAN: array-index-out-of-bounds in drivers/video/fbdev/core/fbcon.c:122:28
-index -1 is out of range for type 'fb_info *[32]'
-...
- fbcon_info_from_console+0x192/0x1a0 drivers/video/fbdev/core/fbcon.c:122
- fbcon_new_modelist+0xbf/0x2d0 drivers/video/fbdev/core/fbcon.c:3048
- fb_new_modelist+0x328/0x440 drivers/video/fbdev/core/fbmem.c:673
- store_modes+0x1c9/0x3e0 drivers/video/fbdev/core/fbsysfs.c:113
- dev_attr_store+0x55/0x80 drivers/base/core.c:2439
+On Wed, 23 Apr 2025 00:31:21 +0300, Danila Tikhonov wrote:
+> Document QFPROM compatible for SM7150.
+> 
+> 
 
-static struct fb_info *fbcon_registered_fb[FB_MAX];
-...
-static signed char con2fb_map[MAX_NR_CONSOLES];
-...
-static struct fb_info *fbcon_info_from_console(int console)
-...
-        return fbcon_registered_fb[con2fb_map[console]];
+Applied, thanks!
 
-If con2fb_map contains a -1 things go wrong here. Instead, return NULL,
-as callers of fbcon_info_from_console() are trying to compare against
-existing "info" pointers, so error handling should kick in correctly.
+[31/33] dt-bindings: arm: qcom: Add SM7150 Google Pixel 4a
+        commit: bd4718d97d308fdc20ddcd471444b3e398ce877d
 
-Reported-by: syzbot+a7d4444e7b6e743572f7@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/679d0a8f.050a0220.163cdc.000c.GAE@google.com/
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Simona Vetter <simona@ffwll.ch>
-Cc: Helge Deller <deller@gmx.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: Javier Martinez Canillas <javierm@redhat.com>
-Cc: Shixiong Ou <oushixiong@kylinos.cn>
-Cc: <linux-fbdev@vger.kernel.org>
-Cc: <dri-devel@lists.freedesktop.org>
----
- drivers/video/fbdev/core/fbcon.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index ac3c99ed92d1..2df48037688d 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -117,9 +117,14 @@ static signed char con2fb_map_boot[MAX_NR_CONSOLES];
- 
- static struct fb_info *fbcon_info_from_console(int console)
- {
-+	signed char fb;
- 	WARN_CONSOLE_UNLOCKED();
- 
--	return fbcon_registered_fb[con2fb_map[console]];
-+	fb = con2fb_map[console];
-+	if (fb < 0 || fb >= ARRAY_SIZE(fbcon_registered_fb))
-+		return NULL;
-+
-+	return fbcon_registered_fb[fb];
- }
- 
- static int logo_lines;
+Best regards,
 -- 
-2.34.1
-
+Bjorn Andersson <andersson@kernel.org>
