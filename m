@@ -1,83 +1,96 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39491DE4F3
-	for <linux-hardening@vger.kernel.org>; Fri,  9 May 2025 16:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6626222D9E3;
+	Fri,  9 May 2025 18:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746808743; cv=none; b=FUUPIupyi1IH2mVPA1XcYrqaSTQ5a5SapjS8xs80kFuK7un4EE8Iif3UA1IbOIdnM9x8WL26q6P/yFpWViZBVUCduojN/Vs1aDLXeWRmTsGvWQqdSz/pPJ7gXzREiAz8271PwGN3x0BMRQuLT4aWo2yrSZiqEC1dQz7wGyoB+P0=
+	t=1746816410; cv=none; b=khxEvTLjNjH0xbXNCS4nLaV5qk/JeR5kH7NQmqZKX4vUSX5KzcxyGxoMsZCsrhnYXiB+ETxMhW9ypE7YCwjIQoJcW6PN+nUWUZgj2tAiZmhgHQ9LFv3O0OGIyMcWEQC+c3eZQnvh0tGpB0XBhJ+Fak2qgVFHiJG2rFkU/PGb1TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746808743; c=relaxed/simple;
-	bh=9Iop83tVkN6TLPTJ48kV73FWPiLDox8v+XHK5UmF86Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PJ8ODfJNciIS0UvO9PDC9HBxLsIrH51qCbS/iaA1Q6pj9XDE3pEm1ts6gHFk1f7cd2yTTkYnXIF2/NeYhEX3+Mh6uC/z+HKA5ZoCEt4bgpug2R9dusaD6WZduym8r7/r8WgxK58Tc/r+8xofrsz1Z2kQGBpPalGRj21Lw2eoEa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cxs8fDwy; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746816410; c=relaxed/simple;
+	bh=0IYSJZP+vopsl32QzxWaoWc4qSlTuODcE7niYwOvhOo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M8HTBArHNG+oI5LdJwMPbuyM6pZhrVM16RWs6ju19imQyijH784JOGA5NtvkkREXpPfBql7S9zo17GH0MK7VPfz5fKVF8SVQ5aminuPyqMjEqHOKwSTAJOLMoIhP+1n7WdoRO7ODSmD5G5BkoRKECwLsRqeOnvzkixtaxXM4mMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8GPCl+Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cxs8fDwy"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746808729;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=kM5Cn6zHq5ti+9ezEeBk+ms6OE/NRCXX5zfHP0XAkh8=;
-	b=cxs8fDwyHGlZq892v+nWpGGWWwGEXLmeXP4/bozufOjUc2gtGUGb6SYJcTwouaKZPisffB
-	57NwERaRVIcRUYkD3DeRF/Ot83sh30hAzPB8phyXflmAmZ/WDYK2T1GO3iUkFfuxjzL1F3
-	ykIAEYbapW1BpPgBA42aZXwXNdv+Hhk=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Dinh Nguyen <dinguyen@kernel.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>
-Cc: linux-hardening@vger.kernel.org,
-	Kees Cook <kees@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] nios2: Replace strcpy() with strscpy() and simplify setup_cpuinfo()
-Date: Fri,  9 May 2025 18:38:37 +0200
-Message-ID: <20250509163840.171521-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8GPCl+Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBBF5C4CEE4;
+	Fri,  9 May 2025 18:46:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746816409;
+	bh=0IYSJZP+vopsl32QzxWaoWc4qSlTuODcE7niYwOvhOo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=G8GPCl+Q3sgiAMDhd3tWe0A8LycYxWsh2q1C2WpY8OGgIuufqCRhtLy0Dtw+Lhqhm
+	 th6OXOHYPF13Blt1VSlVzXRHPnw3JDM4v92tMWIOMLSEMjui5HG+hNmCC5eT/e/49p
+	 S42Jz2on+vEnkheol2VrO/suB+JPJOO1KWcyMhPgQlDtC4ysmo8ll8wG+p9VtRzqUe
+	 onnqW31yjswAhU8nIzZwRrL1UV91kutDiFq/psBxsRZMiHg8Plmlq+KPo8uXG+V3jh
+	 lQO/9eIivT/m49zSza47xhL4WvxeSYU6bf1fFn/WSQlQaj0KMsbC/2Cw13HafOvcHe
+	 9voL87X0tsMJg==
+From: Kees Cook <kees@kernel.org>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: Kees Cook <kees@kernel.org>,
+	syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com,
+	Johannes Berg <johannes@sipsolutions.net>,
+	linux-wireless@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] wifi: mac80211: Set n_channels after allocating struct cfg80211_scan_request
+Date: Fri,  9 May 2025 11:46:45 -0700
+Message-Id: <20250509184641.work.542-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1707; i=kees@kernel.org; h=from:subject:message-id; bh=0IYSJZP+vopsl32QzxWaoWc4qSlTuODcE7niYwOvhOo=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlyvlNLTmRsD+08cH+pk1j7qvjzFQEGp846yvwXNJqf8 4ObOelhRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwESOfGL4nzXvAP/Ju49F5VR+ 5eUwyaze1nrtNWP9uXW90ge3p/4KCWdkOM/Ac/3f9weuT9mi4iqELvyfG2lWrJPKbVNgIRcyM6K HAwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-strcpy() is deprecated; use strscpy() instead.
+Make sure that n_channels is set after allocating the
+struct cfg80211_registered_device::int_scan_req member. Seen with
+syzkaller:
 
-Since the destination buffer has a fixed length, strscpy() automatically
-determines its size using sizeof() when the size argument is omitted.
-This makes the explicit size argument unnecessary - remove it.
+UBSAN: array-index-out-of-bounds in net/mac80211/scan.c:1208:5
+index 0 is out of range for type 'struct ieee80211_channel *[] __counted_by(n_channels)' (aka 'struct ieee80211_channel *[]')
 
-Now, combine both if-else branches using strscpy() and the same buffer
-into a single statement to simplify the code.
+This was missed in the initial conversions because I failed to locate
+the allocation likely due to the "sizeof(void *)" not matching the
+"channels" array type.
 
-No functional changes intended.
-
-Link: https://github.com/KSPP/linux/issues/88
-Cc: linux-hardening@vger.kernel.org
-Reviewed-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Reported-by: syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/lkml/680fd171.050a0220.2b69d1.045e.GAE@google.com/
+Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct cfg80211_scan_request with __counted_by")
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- arch/nios2/kernel/cpuinfo.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Cc: Edward Adam Davis <eadavis@qq.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: <linux-wireless@vger.kernel.org>
+---
+ net/mac80211/main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/nios2/kernel/cpuinfo.c b/arch/nios2/kernel/cpuinfo.c
-index 7b1e8f9128e9..55882feb6249 100644
---- a/arch/nios2/kernel/cpuinfo.c
-+++ b/arch/nios2/kernel/cpuinfo.c
-@@ -46,10 +46,7 @@ void __init setup_cpuinfo(void)
- 	cpuinfo.cpu_clock_freq = fcpu(cpu, "clock-frequency");
+diff --git a/net/mac80211/main.c b/net/mac80211/main.c
+index 741e6c7edcb7..6b6de43d9420 100644
+--- a/net/mac80211/main.c
++++ b/net/mac80211/main.c
+@@ -1354,10 +1354,12 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
+ 	hw->wiphy->software_iftypes |= BIT(NL80211_IFTYPE_MONITOR);
  
- 	str = of_get_property(cpu, "altr,implementation", &len);
--	if (str)
--		strscpy(cpuinfo.cpu_impl, str, sizeof(cpuinfo.cpu_impl));
--	else
--		strcpy(cpuinfo.cpu_impl, "<unknown>");
-+	strscpy(cpuinfo.cpu_impl, str ?: "<unknown>");
  
- 	cpuinfo.has_div = of_property_read_bool(cpu, "altr,has-div");
- 	cpuinfo.has_mul = of_property_read_bool(cpu, "altr,has-mul");
+-	local->int_scan_req = kzalloc(sizeof(*local->int_scan_req) +
+-				      sizeof(void *) * channels, GFP_KERNEL);
++	local->int_scan_req = kzalloc(struct_size(local->int_scan_req,
++						  channels, channels),
++				      GFP_KERNEL);
+ 	if (!local->int_scan_req)
+ 		return -ENOMEM;
++	local->int_scan_req->n_channels = channels;
+ 
+ 	eth_broadcast_addr(local->int_scan_req->bssid);
+ 
 -- 
-2.49.0
+2.34.1
 
