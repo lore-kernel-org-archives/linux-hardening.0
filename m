@@ -1,46 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BF52185BC;
-	Mon, 12 May 2025 20:40:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2118B253F2D;
+	Mon, 12 May 2025 23:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747082447; cv=none; b=lQgW/ssg9kIbCH5VeWxDl4RTq3oVbB0rFxtCviawhdCEAHCQfYmM+W+FLrafZlcvKYQC5ZvarhDRkpIQKD/BNko9mfqqeRDiD9rtIi12qMaIMLFr2mTVXcCSKlhzMhGcABGvZ3d2j/W72enDFpdjkeLFr164F8uYzqaUcKJe7os=
+	t=1747092910; cv=none; b=S4qkvB86TNUBq9b6yqtwlpeG4mBBfmQGWII1Bh21HgXod3nOGRet9aJrAuXg8XWhj7yRJRVTcgmTizjKg05wSgr01VQh9qi02tG1/a5ivqepOpAOrGONy6Wa7huquF67VrHD88tRMReQufqa4DaPgFLLu2O4jjAS3Grt0eZmXoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747082447; c=relaxed/simple;
-	bh=bf5PIRNk9xJap20uZgQzAP7S5TiH/EgmMIGZvh3z444=;
+	s=arc-20240116; t=1747092910; c=relaxed/simple;
+	bh=5d7ulaWu8eLuk9+FYkxlpsohVPqS7lsPmXK7MdtDv/s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aa4/6IKZMM6f6uo4a0+7TkzwpZun0SNcmCM6gjcdcepdVy1yH62rT6mqZOs0xKqZr2Tu1CiOkDBcAZDeAUDqR+W3auHwiAoMwGAOE/GDTi2BmesGzfs8ptGqpLMbhror5FATe4KMfDm1w5j9raUNGtj1b9cH/qEkdJRcI1eihiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i6m4aQvr; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=I73wKUJRiZ6p3LlhwJtvgQMh0gfgxJ2LLpClOPva6GabMDQHHAuEs/3/R3Mqn8TN0PbmrBi4W5fGN5gImvj7kEy4pjZ8f8ZMtpNYNYL59k5wvT77ldAhTL08/Jd+/4ZNztAumZlJtb/g5km2jS9CcO4SbipOSl4U13+C5+6DcBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYziXmCW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i6m4aQvr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA003C4CEE7;
-	Mon, 12 May 2025 20:40:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYziXmCW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8802C4CEE7;
+	Mon, 12 May 2025 23:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747082446;
-	bh=bf5PIRNk9xJap20uZgQzAP7S5TiH/EgmMIGZvh3z444=;
+	s=k20201202; t=1747092909;
+	bh=5d7ulaWu8eLuk9+FYkxlpsohVPqS7lsPmXK7MdtDv/s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i6m4aQvrd6TLCpXv8P4z74bpm8a6flnmv2MsHpjztJTaUKYwJWnIR0P39740sP39M
-	 Gj1E+DeExSU8PhNNJXxDGBPl7g8z3EPtGUnRtVIWX2jQ5zbrnNRijtNcm5roFBDk37
-	 fayuA+aMQFo8HAz2xhA3mYsI39fO+VY1T3dRl2tzlku1feXUNeAsIqRXFHPfyoAgPd
-	 BGxHei/iCuj+GuYDx40SVK24QuS+Bl0uXwCGMS4qJ9MiOTjBSnt9Y8Qb/3qjvxCETJ
-	 Nv525B5gzF76FqoPoZ7ErA6kyaW+mVukXNut5aDUiqRzUeAkTNHWdB7jsmcolmIl2Z
-	 4C5cSv2B5zxzg==
-Date: Mon, 12 May 2025 13:40:44 -0700
-From: Kees Cook <kees@kernel.org>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Ali Saidi <alisaidi@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] binfmt_elf: Move brk for static PIE even if ASLR
- disabled
-Message-ID: <202505121340.7CA14D4C@keescook>
-References: <20250502001820.it.026-kees@kernel.org>
- <87f80506-eeb3-4848-adc9-8a030b5f4136@arm.com>
- <a786b348-7622-4c62-bfdc-f04e05066184@arm.com>
+	b=kYziXmCWJ/OtT/sjFSI8Qr9gwTNkyWj4GklD96Ui5yO8DqP8A6gZ70UIrRrhgtfOo
+	 7asY8czIfUUM1QV8BL12++wFoKahmsEVE0zdi4/IBtRl9V4bwGAR5VOmcl0Zm6+2kP
+	 MLdKBy0LBtwA0tA+XrXH32a1QRleYOslACSlemqRDDd6OsB1E80IURoZsKFHU8UUjH
+	 X88e7KI24/bgDqAKo3UqPeZzSQzFt4E0qwEYABe/sHIlGYvoxmj6fI0LwxKASDg39R
+	 9fRl7Tq2b1YnlyzCWpJM6shKn18JvMoSKVE/Ft3yzmkxZOY71kxb8t5YKVAxHbL9As
+	 dxyvA4g6X3T4w==
+Date: Tue, 13 May 2025 01:35:05 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Danila Tikhonov <danila@jiaxyga.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Rajendra Nayak <quic_rjendra@quicinc.com>, Jassi Brar <jassisinghbrar@gmail.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wesley Cheng <quic_wcheng@quicinc.com>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Souradeep Chowdhury <quic_schowdhu@quicinc.com>, 
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alex Elder <elder@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, 
+	Bart Van Assche <bvanassche@acm.org>, Andy Gross <agross@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Georgi Djakov <djakov@kernel.org>, 
+	Loic Poulain <loic.poulain@oss.qualcomm.com>, Robert Foss <rfoss@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Taniya Das <quic_tdas@quicinc.com>, Sibi Sankar <quic_sibis@quicinc.com>, 
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Joerg Roedel <joro@8bytes.org>, Imran Shaik <quic_imrashai@quicinc.com>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>, David Wronek <david@mainlining.org>, 
+	Jens Reidel <adrian@mainlining.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-scsi@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, linux-remoteproc@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org, linux@mainlining.org, 
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 20/33] dt-bindings: i2c: qcom-cci: Add the SM7150
+ compatible
+Message-ID: <5smj66yzv2xnfdsiedrkivxxebhm2pbbwjjsbiwxhmxr5n4fns@vugxqsm32abk>
+References: <20250422213137.80366-1-danila@jiaxyga.com>
+ <20250422213137.80366-4-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,63 +81,16 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a786b348-7622-4c62-bfdc-f04e05066184@arm.com>
+In-Reply-To: <20250422213137.80366-4-danila@jiaxyga.com>
 
-On Mon, May 12, 2025 at 04:17:12PM +0100, Ryan Roberts wrote:
-> Hi Andrew,
-> 
-> 
-> On 02/05/2025 11:01, Ryan Roberts wrote:
-> > On 02/05/2025 01:18, Kees Cook wrote:
-> >> In commit bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
-> >> direct loader exec"), the brk was moved out of the mmap region when
-> >> loading static PIE binaries (ET_DYN without INTERP). The common case
-> >> for these binaries was testing new ELF loaders, so the brk needed to
-> >> be away from mmap to avoid colliding with stack, future mmaps (of the
-> >> loader-loaded binary), etc. But this was only done when ASLR was enabled,
-> >> in an attempt to minimize changes to memory layouts.
-> >>
-> >> After adding support to respect alignment requirements for static PIE
-> >> binaries in commit 3545deff0ec7 ("binfmt_elf: Honor PT_LOAD alignment
-> >> for static PIE"), it became possible to have a large gap after the
-> >> final PT_LOAD segment and the top of the mmap region. This means that
-> >> future mmap allocations might go after the last PT_LOAD segment (where
-> >> brk might be if ASLR was disabled) instead of before them (where they
-> >> traditionally ended up).
-> >>
-> >> On arm64, running with ASLR disabled, Ubuntu 22.04's "ldconfig" binary,
-> >> a static PIE, has alignment requirements that leaves a gap large enough
-> >> after the last PT_LOAD segment to fit the vdso and vvar, but still leave
-> >> enough space for the brk (which immediately follows the last PT_LOAD
-> >> segment) to be allocated by the binary.
-> >>
-> >> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
-> >> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
-> >> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
-> >> ***[brk will go here at fffff7ffa000]***
-> >> fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
-> >> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
-> >> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
-> >>
-> >> After commit 0b3bc3354eb9 ("arm64: vdso: Switch to generic storage
-> >> implementation"), the arm64 vvar grew slightly, and suddenly the brk
-> >> collided with the allocation.
-> >>
-> >> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
-> >> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
-> >> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
-> >> ***[oops, no room any more, vvar is at fffff7ffa000!]***
-> >> fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
-> >> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
-> >> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
-> 
-> This change is fixing a pretty serious bug that appeared in v6.15-rc1 so I was
-> hoping it would make it into the v6.15 final release. I'm guessing mm is the
-> correct route in? But I don't currently see this in linus's tree or in any of
-> your mm- staging branches. Is there still time to get this in?
+Hi Danila,
 
-I'll be sending it to Linus this week. I've been letting it bake in
--next for a while just to see if anything shakes out.
+On Wed, Apr 23, 2025 at 12:31:24AM +0300, Danila Tikhonov wrote:
+> Add the SM7150 CCI device string compatible.
+> 
+> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
 
--- 
-Kees Cook
+Acked-by: Andi Shyti <andi.shyti@kernel.org>
+
+Thanks,
+Andi
