@@ -1,156 +1,86 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D7F230BF5;
-	Mon, 12 May 2025 15:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DC225A2C7;
+	Mon, 12 May 2025 16:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747064039; cv=none; b=BA7WGfZCcGSjRwynb9GB7oWfyqRoTP8W892JP0JYZl/BrPAlFTHaUDb8cAWPBlm/g9MtTNSTN3pPUL4CuZHXiL6t2IKMA4+VQalL00RLWmqfGEy1QpGU77AVFjJ1gX/ovGqAsLKICjN6SOpI/z3fIpysJqCuO5y9ggzlFByQPUs=
+	t=1747068886; cv=none; b=gNNFWj6AnUW+n8BfJtVDLe9VdQp5Pv3F2eYbi+zyEMV2bBngfs1QdD2vv01wrQ3ElRcbntLhxMUUayv+C31Ct4MKEqHK8e5BSHm98GYrFIISHYM6Dj8dqWGgXg1SktidNW097xTIAXYJ1bttu4B0Bq20ekJyuBkWfxLxbGiiX54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747064039; c=relaxed/simple;
-	bh=8kFDe70qaBxmc6z/Z1gNuXvdsiYl3WM8puv+RKmDiaU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UkjC9Yck9YaH/YV8swH0pvnYsnuXvaKMGvHbpGDgWl2Y0RbQhh/gGENIxO+gv2ZSD1yig+D3blkgNfYPY/VOWl92D2J5ohjS4R5eNQRfYQ/30MuTyKnCzuUjN8SeNuKFn+WTnckIDSJJYU1J4sJQLa7ltIwAw06VT+lGOdKLDD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jWDU0Cf2; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jWDU0Cf2"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A3ABC43B3A;
-	Mon, 12 May 2025 15:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747064035;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tqr4mwpC62OuBMSttBJ++MLfd/oZaeC/h6MdIt4o6Dg=;
-	b=jWDU0Cf2tHPFa1T6VvkLpuRitJNsHihmOOifZKfM3nHDGeYcC8zu5J6wdAL9JpNhXfkwLd
-	9lG1Ee+LZwBf77xLTsNxW+4SCAp8xs7IGbhx4w+CjRxKvHnpAOmOECqN4vC9XXhMs28M6K
-	gv2iuARfeRGeHHRylgy+7mR6Pupk/P9T6U39LsPp1EldOZf5Nf6yeoyvISZZ34xJovJK4N
-	zdAimCXdjmjR+zVzZkDo54YbqQPXbHDjC97KRTs1QN+8GmN/ShCMMehV2cEZ9uuOsPIN9m
-	5ZdrdVLoiVVVF5n4y3QOIj+VwrBGyjjwWSBQ1wmRLPPGI0oXGd7Nn838n17vSw==
-Message-ID: <5030b353-85ba-40d7-9b87-619787d99061@bootlin.com>
-Date: Mon, 12 May 2025 17:33:53 +0200
+	s=arc-20240116; t=1747068886; c=relaxed/simple;
+	bh=GHfBzMz6hvOT4FNqopeQP9A6JOY7MLEh312/qsRWIQc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qaLWhraFrr2QZyd1mkAQStejcCw2GGOniGUG+Cie5HWijvECIklSw4E9wDuS9uoboGFB9N/JSCae7dhcIoiPbxh4v+5szCS8LUj4C6vkNzlyemRLh+WRepX8PiSf1OyJUrR6p/BK4kxr6Hc67mR9YQzedwPwZSaHAgFZLssBXOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F219FC4CEE7;
+	Mon, 12 May 2025 16:54:44 +0000 (UTC)
+Date: Mon, 12 May 2025 18:54:43 +0200
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Danila Tikhonov <danila@jiaxyga.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Rajendra Nayak <quic_rjendra@quicinc.com>, Jassi Brar <jassisinghbrar@gmail.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wesley Cheng <quic_wcheng@quicinc.com>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Souradeep Chowdhury <quic_schowdhu@quicinc.com>, 
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alex Elder <elder@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, 
+	Bart Van Assche <bvanassche@acm.org>, Andy Gross <agross@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Georgi Djakov <djakov@kernel.org>, Loic Poulain <loic.poulain@oss.qualcomm.com>, 
+	Robert Foss <rfoss@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Taniya Das <quic_tdas@quicinc.com>, Sibi Sankar <quic_sibis@quicinc.com>, 
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Joerg Roedel <joro@8bytes.org>, Imran Shaik <quic_imrashai@quicinc.com>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>, David Wronek <david@mainlining.org>, 
+	Jens Reidel <adrian@mainlining.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-scsi@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, linux-remoteproc@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org, linux@mainlining.org, 
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 20/33] dt-bindings: i2c: qcom-cci: Add the SM7150
+ compatible
+Message-ID: <20250512-incredible-radiant-jackrabbit-d0c77b@kuoka>
+References: <20250422213137.80366-1-danila@jiaxyga.com>
+ <20250422213137.80366-4-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
- forwarder library
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
- <CAMuHMdXzU1k_JZ0UhUh33XCq_zpq6MBJgAjo9F9Cw4gckA12EQ@mail.gmail.com>
- <c10b7752-cec5-483c-90a9-ada16aa0904a@bootlin.com>
- <CAMuHMdUtEtZH0MuS7TA6RTa1-LB=K47sEGzo9BJM_RvfCRmRAw@mail.gmail.com>
- <93425f2f-9496-4d18-ad7d-7e631a80e6cf@bootlin.com>
- <CAMuHMdUMVFk+-3akj6nj+XCya9zj_FqkbnpOT1Wc4wSsgttiww@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAMuHMdUMVFk+-3akj6nj+XCya9zj_FqkbnpOT1Wc4wSsgttiww@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduieefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepghgvvghrtheslhhinhhugidqmheikehkrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgp
- dhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250422213137.80366-4-danila@jiaxyga.com>
 
-On 5/12/25 17:14, Geert Uytterhoeven wrote:
-> Hi Thomas,
+On Wed, Apr 23, 2025 at 12:31:24AM GMT, Danila Tikhonov wrote:
+> Add the SM7150 CCI device string compatible.
 > 
-> On Mon, 12 May 2025 at 17:01, Thomas Richard <thomas.richard@bootlin.com> wrote:
->> On 5/12/25 16:39, Geert Uytterhoeven wrote:
->>> On Mon, 12 May 2025 at 16:08, Thomas Richard <thomas.richard@bootlin.com> wrote:
->>>> On 5/9/25 11:07, Geert Uytterhoeven wrote:
->>>>> On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
->>>>>> Export all symbols and create header file for the GPIO forwarder library.
->>>>>> It will be used in the next changes.
->>>>>>
->>>>>> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
->>>>
->>>> ...
->>>>
->>>>>> +
->>>>>> +int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
->>>>>> +                       unsigned long config);
->>>>>> +
->>>>>> +int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset);
->>>>>
->>>>> I would expect all of these to take gpiochip_fwd pointers instead of
->>>>> gpio_chip pointers.  What prevents you from passing a gpio_chip pointer
->>>>> that does not correspond to a gpiochip_fwd object, causing a crash?
->>>>
->>>> Indeed nothing prevents from passing gpio_chip pointer which does not
->>>> correspond to a gpiochip_fwd object.
->>>> And it is also a bit weird to pass a gpiochip_fwd pointer in some cases
->>>> (for example gpio_fwd_gpio_add()) and a gpio_chip in other cases.
->>>>
->>>> I can keep GPIO operations as is, and create exported wrappers which
->>>> take a gpiochip_fwd pointer as parameter, for example:
->>>>
->>>> int gpiochip_fwd_get_multiple(struct gpiochip_fwd *fwd,
->>>>                               unsigned long *mask,
->>>>                               unsigned long *bits)
->>>> {
->>>>         struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
->>>>
->>>>         return gpio_fwd_get_multiple_locked(chip, mask, bits);
->>>> }
->>>> EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_get_multiple, "GPIO_FORWARDER");
->>>>
->>>> So exported functions are gpiochip_fwd_*().
->>>
->>> That sounds fine to me.
->>>
->>> BTW, do you need to use these functions as gpio_chip callbacks?
->>> If that is the case, they do no need to take struct gpio_chip pointers.
->>>
->> I'm not sure to understand the question, or the idea behind the question.
-> 
-> Do users of the forwarder library want to use these functions directly
-> as callbacks in their own gpiochip?
-> E.g. do they want to use:
-> 
->     chip->get_multiple_rv = gpiochip_fwd_get_multiple;
-> 
-> I hope my question is more clear now.
+> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Oh ok I understand now.
-The answer is no (gpiochip_fwd_get_multiple() is already by default the
-get_multiple_rv operation of the forwarder).
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-My use case (patch 12/12) is:
-I have a pinctrl driver (for a FPGA) which registers a gpiochip_fwd. The
-driver has to drive in tandem its configuration and SoC GPIOs (which are
-added in the gpiochip_fwd).
-During the probe, the driver will change gpiochip operation to use its
-own operation.
+Best regards,
+Krzysztof
 
-gc = gpiochip_fwd_get_gpiochip(fwd)
-gc->direction_input = my_direction_input;
-
-This function does some custom things and them call
-gpiochip_fwd_gpio_direction_input().
-
-my_direction_input()
-{
-	do_something()
-	gpiochip_fwd_gpio_direction_input()
-}
-
-It allows you to add custom action before/after default operation.
-
-Regards,
-
-Thomas
