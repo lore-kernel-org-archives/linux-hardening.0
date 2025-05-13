@@ -1,155 +1,98 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E11213E7B;
-	Tue, 13 May 2025 13:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECABF28DB70
+	for <linux-hardening@vger.kernel.org>; Tue, 13 May 2025 13:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747141568; cv=none; b=mHDKCvoF+Le1ezBPq0XAeKFH6ef88l/lHcMmMiN+mH+tOjdjbohoepjA6mAtc/erKIzyILuMPf12yhDtVKhMAgk2fkpItpvitb//hw1Rv5JxE4k7RIdZhLJZVISL4snan/fAUEY7EH7WNoq77jntKQsJ4/RUZBwUcJpLV3+9hfw=
+	t=1747142651; cv=none; b=MJpgVIDrb1hxCuDt2qYO2PLb1JQyk7y9LrsaW1O3C0VmlUNiha5YjRl0crLcVk0EGKoTmGxbnogQc7983xybXcBTCPskjg+Dt3rLh2pHt6bTXPqBe+VQCEtRuSfY4qZJxBaXlSWk8Ib19OkPCpEAebipS0Di+Y3PSeJSJfsdWDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747141568; c=relaxed/simple;
-	bh=4fLD3IdpP6vVXk5/ruBLYk1VyIiGZZJk/ofEm9ybJRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NoxqzNqeYJRbm7WXcCa9WSdVDD3Y+X5S/+jbQHmRQnnimF5+/ZKvJF55lq5NmtgNSLpWZKJXOo+77C2WdQ5mB9+ylhmFO5sZRmvK9RwJOxlDLj4Tx6O633WP5S30bq/fvOG+IiOlMkOkk1WaIQWwD6LmbcAig+zDYPtblT/RBlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b1uTxtXd; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747142651; c=relaxed/simple;
+	bh=5eKxaIX3fw3jx/+XOFOXndB/4SjWjO6DJ61Rmj65mQw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HqcIuwF+xWyDwRKcViFybM50xjsrYfdQ6yu63p4L75nwMV8SkifXUjw1mkzhfKlrJcphXMecxPzSIUiUJhmaX+iMtBxXXjlgDPSyxX5f90ReR0WKvrdCQWWl76MJdDk3TkeSZ4kfCtwSfeZX+H4CJf5z9aEIdyfd747cu1UXdvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DbwhB7RF; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1uTxtXd"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so60229885e9.3;
-        Tue, 13 May 2025 06:06:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DbwhB7RF"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54e9021d2b5so8190981e87.1
+        for <linux-hardening@vger.kernel.org>; Tue, 13 May 2025 06:24:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747141565; x=1747746365; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZRH4yaq02O4BeoAY/f143mbK8AEXX3uy5ZGAgLBp4KM=;
-        b=b1uTxtXdEL1CpB9GB9s/MxPZooV74EiNWTkmBIyRmFx+WivrFCOa31emAxZgdeByUH
-         czRXlcm3yilGhLl1kGSUoAqxcne7UjheRZi0kTY8/yq2YvVfu6JRQGLBlEZyjxH4sYOI
-         rSLXo291wCzaOmXcmip3uHWqkB0oey1pho3SWBHQOwwCr5FimFbe+vpno0Y+fAwEVlyq
-         In2Y/DlZy2y4pw2aNnqhsZjST0k7nS8oSTlwe3cUTI6pBkOOkE6fVoY4NC8psJElB57Z
-         PlQPwg3H1S4EtNzF7nNHbjDGwmznBQ7RJdHAmWpft7GSeq8Jj1kBVJDJ/kZiSmADtgKu
-         +1LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747141565; x=1747746365;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1747142647; x=1747747447; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZRH4yaq02O4BeoAY/f143mbK8AEXX3uy5ZGAgLBp4KM=;
-        b=vXYwy691JWJQHFtl0Ygndj5I8rCES7a9XSF0fspTgv3RY6ZnVeKdcJcDdb3ZTFX9Sj
-         mVCvhzmPvIqs9p1RuDvl5T49e4XVvQXIIRbY3b8tGJZLRr0Q3dsFtV1Y+ZbZle6H2pbg
-         PzPYqepL5InfO/4SQHBoxxTT9ng1vEMpb2p7WWBCuykqlQe+pTM4Coi+DHFj8lbRvxP3
-         lYVdFDteCz75EYI/l/ZAAhWzpKaR/Jz9F9ud67kPFAWG2vawZFQuj0t4xzUitOXd99YF
-         ILG1DtyZoIu0XMXxkWJGI9B19/fXYFhUiujrDUOJQrLajaTzPFv9YktxGVbx440YJpjD
-         47NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQj1AqNjfbShJPeuBRR3he6ldDnjmFw0bNnvQY+vKJkHrsnC70XiQJejxrW2R5eo5N6PEshIobFQ==@vger.kernel.org, AJvYcCUrRoHuvBMJm6MewTz/+ucP/USOSWhzs5fzWYIE/NME0hpo+9bpBGfFEZpbpeskJGmUQEL6v8v00phQMYwVvOJT9P51aAHZ@vger.kernel.org, AJvYcCV27BitRMclAabnLBhxFlC5YeIAslDtiKTshl3PW1YyZI47djPROpw+zdaTiOH5RSOdjwC1OaL43oQhtN26@vger.kernel.org, AJvYcCW6EPEpNpkBvbs3cJLTH0heEhkSKJOp/R3K8vHwSlwvglRX9LEsn0J7iruVwib3glPZPrw15CSWF0VOw6lMNzKG@vger.kernel.org, AJvYcCX4PoeikKYvo5jEogD3efWqeZzBBGontK9LesojPOw2vFsuJm+xt50XGzg/ENaG8M46uTlqoZPuARooAAIN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJvl3MzTPi5ZAFCws0LAeGyXtUW8Fhhadv9dYhEsiK17KslpIP
-	H97BNdG6N2/WnKbUFEqIAGUtaz9ocvcxhxj7YIpq1ELAfrnuPi8Q
-X-Gm-Gg: ASbGnctw8DIkJfG6mnWVAdBH/y9iPaqqCc2bbEgsTDLyx/71U2QYvbDFsqolt3UZ78g
-	GsSMOVNRr3bOh7ALwEGrI63K1tymd6XsOr1pBCM/FUi1yUXoDul56rpZuJ/JGBsxkb1GfXfejqq
-	ZVkHfML2YZWRVvl3lfVrjOT7FdR22YDzzmcw1Hp1eCDYK3RtQ554pBO4UQt8uieT6IEwrWUbonD
-	qq31RS3UQEM1oontSWYViBVfHm8pbx9PIFbEtTYwQvBLQ8CPjBFQffNSu/H43OSaPXU3M71OoZ2
-	yNTUTL4IaAdJHYJxOSgEHL1AxKW2TKzUIFgSIaPpD0YJDyN1Op/tzT5Gi/wy4HyF
-X-Google-Smtp-Source: AGHT+IEHBhhE7TvsAD/FnNo4BJJ0fgMjXWx6eOMY8JlawqVvxffhuMX7kttizQAJ+g7X01ahmWKKUQ==
-X-Received: by 2002:a05:600c:3587:b0:43c:fdbe:43be with SMTP id 5b1f17b1804b1-442d6dd216fmr140842115e9.27.1747141561377;
-        Tue, 13 May 2025 06:06:01 -0700 (PDT)
-Received: from f (cst-prg-88-99.cust.vodafone.cz. [46.135.88.99])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f3c2sm209934765e9.15.2025.05.13.06.05.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 06:06:00 -0700 (PDT)
-Date: Tue, 13 May 2025 15:05:45 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: Jann Horn <jannh@google.com>, Christian Brauner <brauner@kernel.org>, 
-	Eric Biederman <ebiederm@xmission.com>, Jorge Merlino <jorge.merlino@canonical.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andy Lutomirski <luto@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Eric Paris <eparis@parisplace.org>, 
-	Richard Haines <richard_c_haines@btinternet.com>, Casey Schaufler <casey@schaufler-ca.com>, 
-	Xin Long <lucien.xin@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Todd Kjos <tkjos@google.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Prashanth Prahlad <pprahlad@redhat.com>, Micah Morton <mortonm@chromium.org>, 
-	Fenghua Yu <fenghua.yu@intel.com>, Andrei Vagin <avagin@gmail.com>, linux-kernel@vger.kernel.org, 
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, oleg@redhat.com
-Subject: Re: [PATCH 1/2] fs/exec: Explicitly unshare fs_struct on exec
-Message-ID: <h65sagivix3zbrppthcobnysgnlrnql5shiu65xyg7ust6mc54@cliutza66zve>
-References: <20221006082735.1321612-1-keescook@chromium.org>
- <20221006082735.1321612-2-keescook@chromium.org>
- <20221006090506.paqjf537cox7lqrq@wittgenstein>
- <CAG48ez0sEkmaez9tYqgMXrkREmXZgxC9fdQD3mzF9cGo_=Tfyg@mail.gmail.com>
- <86CE201B-5632-4BB7-BCF6-7CB2C2895409@chromium.org>
+        bh=5eKxaIX3fw3jx/+XOFOXndB/4SjWjO6DJ61Rmj65mQw=;
+        b=DbwhB7RF1JQqu3Vx8YErtq3rTPzu9DrvuTZHBpumUlQ9Fqckpe1d5klxFnDVlvW9a0
+         mbStNuiJFw6GfBvu77Ue2MiUVYjGnhfDkvYoBPIMkNngWUkdhBZXjME64mxikNmE9Obl
+         Bx6okDN+VXaiokTpeMVKPodEUSYw7zYVqSwGTEaDg0KBuIMuEVTI8rbJ6jNHXfC0JJNX
+         dBwe8fYiS2PsBI2LA87kD88l/WduHaiVSySc6bJYyqGQwtAF0gt4vSo2bG7RupqrIt0i
+         P4v1bE3w+K2sqOjV/XJOYUMhzq9cJZChC3eoTF8Ug7CPfW77rOzm6g3EUgOlE3oJw2G8
+         PoGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747142647; x=1747747447;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5eKxaIX3fw3jx/+XOFOXndB/4SjWjO6DJ61Rmj65mQw=;
+        b=uK+hsoc6XkcTy91jbGShCin7qyqx18hzRK2hhnBw8mBpv3SkGmZZEaXhEZQ2jAjLed
+         E1omThALM4p3WiWccRGdObFzy9sOVg/JkyMD7iE1POnsp4nrjBa2EEumrmcmm0LI0Qew
+         mWgaXdGzwgUw6gL3JCnXoXCnuo6DQHBfH55HLjEHTBtahsS2+Co0zSuKB0ZK/tLRmI4t
+         uiX3Q4fnMDbCOwTVGrrRTAW6VDZoGNXhNDhjbaxTSQyPTcH6BUfM8WuvlCuAVworYWP+
+         UpBeVLpAeITStsKFAjNHqtEHADzpQq8UqozknDWnQez6HL6OBrArkeieE1RL1klX3dgm
+         iCwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9p5jYLHeU/ztyTL3ER6mgoDXUgovHWghD9YiUN8WI4ovChuVX0S1ai2O8c/dNZLWRQL+/oTkzV40J3W0Xsgs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKPSyyfhkJ++QZH/so3YqEzMd3PNcNpcWTo55lAe/wHT0RjFWS
+	xXUEijzqaLYnXh9zw+qoWOi33Rd5KSuX9Lqf9rb3D8w6XFvJLCde+l2nIo5SQmgai1WwBIJH9nU
+	VZBKQlfIL+gwk0k5OmUbifr/j1T0PcGH6ydV3TA==
+X-Gm-Gg: ASbGnctj9xeGKd9J3CxQC6W5S30+CChHiCr5PErjL4IxkIvEMmb30Hc+5HzOE4xvhBh
+	CMHKkVeoCdNhYL9bxplAgBomDYmQB/3e9jBqXIKGqxyiRYro48eDNnRXzMh3KT8wWQQJQq7Csk+
+	G9nxpZ4Pa27W6+gFOYq5gtWErckWVpLzpv
+X-Google-Smtp-Source: AGHT+IFQKowijPtKxWmuvEciX1nJf+TDzv0WZoqM/uKvRSmSrIT4h7hRJwXNUJZcQ/uYhV04L0dGE2029I5lSw65p/4=
+X-Received: by 2002:a05:6512:2586:b0:54a:cc10:1050 with SMTP id
+ 2adb3069b0e04-550d0bc78b3mr1158871e87.15.1747142647002; Tue, 13 May 2025
+ 06:24:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <86CE201B-5632-4BB7-BCF6-7CB2C2895409@chromium.org>
+References: <20250509-max77759-mfd-v10-0-962ac15ee3ef@linaro.org> <20250509-max77759-mfd-v10-2-962ac15ee3ef@linaro.org>
+In-Reply-To: <20250509-max77759-mfd-v10-2-962ac15ee3ef@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 13 May 2025 15:23:55 +0200
+X-Gm-Features: AX0GCFvUasElVjJYv3I7eVQPe0A6FsXnY_zILsVN3taTVIhvI167ZdVbaeRULuk
+Message-ID: <CACRpkdZg0ZLcmGbFPqUmRpkw8DJYe5bY8yEDe5+KrnzTWxeXFQ@mail.gmail.com>
+Subject: Re: [PATCH v10 2/3] gpio: max77759: add Maxim MAX77759 gpio driver
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
+	Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 06, 2022 at 08:25:01AM -0700, Kees Cook wrote:
-> On October 6, 2022 7:13:37 AM PDT, Jann Horn <jannh@google.com> wrote:
-> >On Thu, Oct 6, 2022 at 11:05 AM Christian Brauner <brauner@kernel.org> wrote:
-> >> On Thu, Oct 06, 2022 at 01:27:34AM -0700, Kees Cook wrote:
-> >> > The check_unsafe_exec() counting of n_fs would not add up under a heavily
-> >> > threaded process trying to perform a suid exec, causing the suid portion
-> >> > to fail. This counting error appears to be unneeded, but to catch any
-> >> > possible conditions, explicitly unshare fs_struct on exec, if it ends up
-> >>
-> >> Isn't this a potential uapi break? Afaict, before this change a call to
-> >> clone{3}(CLONE_FS) followed by an exec in the child would have the
-> >> parent and child share fs information. So if the child e.g., changes the
-> >> working directory post exec it would also affect the parent. But after
-> >> this change here this would no longer be true. So a child changing a
-> >> workding directoro would not affect the parent anymore. IOW, an exec is
-> >> accompanied by an unshare(CLONE_FS). Might still be worth trying ofc but
-> >> it seems like a non-trivial uapi change but there might be few users
-> >> that do clone{3}(CLONE_FS) followed by an exec.
-> >
-> >I believe the following code in Chromium explicitly relies on this
-> >behavior, but I'm not sure whether this code is in active use anymore:
-> >
-> >https://source.chromium.org/chromium/chromium/src/+/main:sandbox/linux/suid/sandbox.c;l=101?q=CLONE_FS&sq=&ss=chromium
-> 
-> Oh yes. I think I had tried to forget this existed. Ugh. Okay, so back to the drawing board, I guess. The counting will need to be fixed...
-> 
-> It's possible we can move the counting after dethread -- it seems the early count was just to avoid setting flags after the point of no return, but it's not an error condition...
-> 
+On Fri, May 9, 2025 at 3:22=E2=80=AFPM Andr=C3=A9 Draszik <andre.draszik@li=
+naro.org> wrote:
 
-I landed here from git blame.
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
+>
+> This driver supports the GPIO functions using the platform device
+> registered by the core MFD driver.
+>
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
 
-I was looking at sanitizing shared fs vs suid handling, but the entire
-ordeal is so convoluted I'm confident the best way forward is to whack
-the problem to begin with.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Per the above link, the notion of a shared fs struct across different
-processes is depended on so merely unsharing is a no-go.
-
-However, the shared state is only a problem for suid/sgid.
-
-Here is my proposal: *deny* exec of suid/sgid binaries if fs_struct is
-shared. This will have to be checked for after the execing proc becomes
-single-threaded ofc.
-
-While technically speaking this does introduce a change in behavior,
-there is precedent for doing it and seeing if anyone yells.
-
-With this in place there is no point maintainig ->in_exec or checking
-the flag.
-
-There is the known example of depending on shared fs_struct across exec.
-Hopefully there is no example of depending on execing a suid/sgid binary
-in such a setting -- it would be quite a weird setup given that for
-security reasons the perms must not be changed.
-
-The upshot of this method is that any breakage will be immediately
-visible in the form of a failed exec.
-
-Another route would be to do the mandatory unshare but only for
-suid/sgid, except that would have a hidden failure (if you will).
-
-Comments?
+Yours,
+Linus Walleij
