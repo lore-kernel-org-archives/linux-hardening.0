@@ -1,134 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953681DDC28;
-	Tue, 13 May 2025 16:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD4F1C84D5;
+	Tue, 13 May 2025 17:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747154709; cv=none; b=BLmku2NEL3eK5elc+e5yy7U67WdaXrbkqxGsKQFmPN2EzagJvMw/PEJBA/ejs9ENZ0TyEzMZNH4xRzcu6IJgWi1Xs7JegHTg/0icGxsi0E2DIo9Xd5CXX1xoAGav5U2U7ckeP2T5nfq0soX5r328ngmgGdvpFBXcgYCRwhEcOZc=
+	t=1747158038; cv=none; b=mn/vpKJTqod7eMYFnUfzgqbLli2xqK3c55iUayBdSSRFmGjK8OT0XcnSf2J+RhVwKsv/IXb6ca7TLYU0ObSXyCyYQ1CMEyB8eIoVJm7k/W0EOkkDHS/yUD1xJu4QGt9lujOiBC0CQZMNuysfQxBDRIF/EJJkzv+zqrNlm0QR6Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747154709; c=relaxed/simple;
-	bh=9qNt2vvTJ8vncwwFBakHVgY0+vXZKoSXtrmG1BSclXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=En2S/0MZDO4dn5TGaradHI+iiGt4tkawVJyo3nuzqOViv6FAPEz8hLKbml6WeCdb1b89AuS9e/SR4wBbNV6pXg5Tfr0MXX561BmJTvoMvw3gyaMKiGSYY/mP/SdR7XRV2FBqFFnrRUAzJnlzNQchPkXkMXfW18zuosS6vJajn78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Edjxddpo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747158038; c=relaxed/simple;
+	bh=t0/XpU4JadBJ6GwKFenplEEaSC5kW1qBslh+Bi3T1kw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pbpICbJ1AtdLrByyTGTKibhu1kVv2GBTn5OwtjB8WFj2/jBqndx4s66khA7abSOVTeyoDRrxNVH0OsWopyN2cU6Uo/kPy7r/PNTWxOQx1o4kjxLPVwnLcT3xgGi941JetLbTOwYP9MG7YVxH0n6WytashQitVBJ/l2hQtAShcEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Er91PvWy; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Edjxddpo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCBC7C4CEE4;
-	Tue, 13 May 2025 16:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747154709;
-	bh=9qNt2vvTJ8vncwwFBakHVgY0+vXZKoSXtrmG1BSclXQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EdjxddpojJLkHNXEKf4SNDvhSbdPn4MGNdTfRNKe6PNXXYUIC7NTLm2hMYj2Z5/6y
-	 WqQ0FoQDs4UMpOgrmLdwyMvOo2OZRj9u745CBFtKXaXs0TChFW9KqVYNLF36kKc1+k
-	 hHbWGRrx+jQmrPneAzC1aM6/INbcK/X6WPCi9DYpPiy7J5EIYv97PSuCAaFURLMn3W
-	 R/ofKjCnMvgknvFJz7eolbYdlOcEjhry+XCLDGz4z91Rr4y9/vWjnzGoVsfP5x0MIp
-	 ud+NFf8ABf57KuUncbjMiaFV4WqMjKyjjHC0QE8meIYRHM2YfK+ZvcPurMNmbGmAet
-	 xpA7gEp4Lv9VA==
-Date: Tue, 13 May 2025 16:45:07 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH][next] PCI: hv: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <aCN3E7pQc5UHJ-4w@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <aAu8qsMQlbgH82iN@kspp>
- <SN6PR02MB41574AAF7B468757A9F9ED79D4862@SN6PR02MB4157.namprd02.prod.outlook.com>
- <SN6PR02MB4157E7C91785BEA1E597B0EAD496A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Er91PvWy"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747158032;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=irfEXLRw0ePs++TyHy3Fjxp4dBF0FDMvktUtW0vNle4=;
+	b=Er91PvWyG3UWI/YZeVJk6w7xuxXsoKWTWlIMFXqE2iiM/bQsCjGydokq5f3OoaXsb01m3w
+	1vWQwbH6IU976N3JmZG6bLSGFDTHO4Rzu7Cr8gko/3wwXcT16IqZw2jr670kSiK4W08LDI
+	XVgzUvwv/pKaDl/TQr6Vw9PHQbfQGdo=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] powerpc/rtas: Replace one-element array with flexible array member
+Date: Tue, 13 May 2025 19:40:01 +0200
+Message-ID: <20250513174003.335857-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157E7C91785BEA1E597B0EAD496A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 13, 2025 at 02:07:45AM +0000, Michael Kelley wrote:
-> From: Michael Kelley <mhklinux@outlook.com> Sent: Sunday, April 27, 2025 8:22 AM
-> > 
-> > From: Gustavo A. R. Silva <gustavoars@kernel.org> Sent: Friday, April 25, 2025 9:48
-> > AM
-> > >
-> > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> > > getting ready to enable it, globally.
-> > >
-> > > Use the `DEFINE_RAW_FLEX()` helper for a few on-stack definitions
-> > > of a flexible structure where the size of the flexible-array member
-> > > is known at compile-time, and refactor the rest of the code,
-> > > accordingly.
-> > >
-> > > So, with these changes, fix the following warnings:
-> > >
-> > > drivers/pci/controller/pci-hyperv.c:3809:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > drivers/pci/controller/pci-hyperv.c:2831:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > drivers/pci/controller/pci-hyperv.c:2468:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > drivers/pci/controller/pci-hyperv.c:1830:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > drivers/pci/controller/pci-hyperv.c:1593:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > drivers/pci/controller/pci-hyperv.c:1504:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > drivers/pci/controller/pci-hyperv.c:1424:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > 
-> > I'm supportive of cleaning up these warnings. I've worked with the pci-hyperv.c
-> > code a fair amount over the years, but never had looked closely at the on-stack
-> > structs that are causing the warnings. The current code is a bit unusual and
-> > perhaps unnecessarily obtuse.
-> > 
-> > Rather than the approach you've taken below, I tried removing the flex array
-> > entirely from struct pci_packet. In all cases except one, it was used only to
-> > locate the end of struct pci_packet, which is the beginning of the follow-on
-> > message. Locating that follow-on message can easily be done by just referencing
-> > the "buf" field in the on-stack structs, or as (pkt + 1) in the dynamically allocated
-> > case. In both cases, there's no need for the flex array. In the one exception, a
-> > couple of minor tweaks avoids the need for the flex array as well.
-> > 
-> > So here's an alternate approach to solving the problem. This approach is
-> > 14 insertions and 15 deletions, so it's a lot less change than your approach.
-> > I still don't understand why the on-stack struct are declared as (for example):
-> > 
-> > 	struct {
-> > 		struct pci_packet pkt;
-> > 		char buf[sizeof(struct pci_read_block)];
-> > 	} pkt;
-> > 
-> > instead of just:
-> > 
-> > 	struct {
-> > 		struct pci_packet pkt;
-> > 		struct pci_read_block msg;
-> > 	} pkt;
-> > 
-> > but that's a topic for another time.  Anyway, here's my proposed diff, which I've
-> > compiled and smoke-tested in a VM in the Azure cloud:
-> > 
-> 
-> Gustavo -- Are you waiting for me to submit a patch with my alternate proposal?
-> I had not seen any follow up, so wanted to make sure we have clarity on who
-> has the next action. Thx.
+Replace the deprecated one-element array with a modern flexible array
+member in the struct rtas_error_log and add the __counted_by_be()
+compiler attribute to improve access bounds-checking via
+CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE.
 
-Michael, I prefer your approach. Please send a patch.
+No functional changes intended.
 
-Thanks,
-Wei.
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/83
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/powerpc/include/asm/rtas-types.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> 
-> Michael
+diff --git a/arch/powerpc/include/asm/rtas-types.h b/arch/powerpc/include/asm/rtas-types.h
+index 9d5b16803cbb..5d40d187b965 100644
+--- a/arch/powerpc/include/asm/rtas-types.h
++++ b/arch/powerpc/include/asm/rtas-types.h
+@@ -42,8 +42,9 @@ struct rtas_error_log {
+ 	 */
+ 	u8		byte3;			/* General event or error*/
+ 	__be32		extended_log_length;	/* length in bytes */
+-	unsigned char	buffer[1];		/* Start of extended log */
+-						/* Variable length.      */
++
++	/* Start of extended log, variable length */
++	unsigned char	buffer[] __counted_by_be(extended_log_length);
+ };
+ 
+ /* RTAS general extended event log, Version 6. The extended log starts
+-- 
+2.49.0
+
