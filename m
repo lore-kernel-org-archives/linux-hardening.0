@@ -1,252 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775861C84A0;
-	Tue, 13 May 2025 14:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FA02EB1D;
+	Tue, 13 May 2025 16:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747148005; cv=none; b=BOCRR1O8HrzIl2Z69NGQs034Mzx1GXxzO26k+uHcgymTnMjoR9r3DDRnWVebuD/08lKo2a/JgwFmFh6fl5msqqS5DDN3sC5RMYCxfhuBmpWFBkxQOW/N9KXNdP6d9imTfb1PJfDpTNqlwGU74b+jiWVp0OojBhZL+zrBUV3ATmA=
+	t=1747153000; cv=none; b=gweGf6yj/xQOyQRohtm5bHA+gRkVhH8A5bT/vKIXQ6x12Wumc+VvFuj4Cnw2qUqlFtjpAIZFaGR72G1aZ0CxK6ifX6NrAj7tfMy+g947DQLAd9uJWGfztiJhVu/YqGJSozsHhg/y164U9P6ZDpZ1b6/AicKp+oiweQPRwhZJbIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747148005; c=relaxed/simple;
-	bh=RhDtWE1dVV9lPXiQK9A9HDu8CZaHny/NUuaK7oa/KgU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ct88rRKGiEgDlIQ52lzfFyK9goXGjWP0ILr/+32mOlMQ2SZE8CsgNJ3yUAK7dt7at35D76fW0E0JSnBPZ70kHtxPKQc/MUDlQUnnyPghyW2UUrPucI/CcAg64cB5hgJeTQDZ2nYLGubPUeDEVlx4JD5+sHpPG7ySoq9GT6pM5YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Idosnr1F; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Idosnr1F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5A18C4CEF4;
-	Tue, 13 May 2025 14:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747148004;
-	bh=RhDtWE1dVV9lPXiQK9A9HDu8CZaHny/NUuaK7oa/KgU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Idosnr1FBh/PpuspF5gsgf+OXpLUJk7tk7G9iyI7eXjt8+5sI0Jj3i7yS3nrtjZD4
-	 OE1qCdYVmdc2Rdz5+/DKeuRDlgxg2RVSar2Mtr9O9qsWC+FqVXcUsofMBImGYpmGrM
-	 PJUKx4G5GTAXfFOCFXLIma+rTTxwHc6bpupNg5q9Mwgk2VYUxJQqvNW1j/1HBB6LSF
-	 fUUH/0YwbwVnwh9UzDf/qT6wb/uqU9CLHM5HcvWcQH1+VT9013b9kpFko+P51TY4td
-	 otQR8NOFk1f+Lz+UOOQJLcUjwsIvc25o4hOp7aPqlOxyuT0MrlOjXVuZ3CfZrn8ZlL
-	 phAoY/akZusPQ==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-550d4b7a076so186702e87.2;
-        Tue, 13 May 2025 07:53:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVLl1PFlbQ5gy3Xgab5MAywkS2p73dfGryD5hMSurxAiou0C/gZmufINnpKH7LCJQCP/wAHezBg0b0oL3ag@vger.kernel.org, AJvYcCX0lI5RdycgFr31m53eKQ4PQm5vCz3GbhebkAzXGGyJSE6Z0VPYAkE5wwn9LhiR7a2jy+Ql2IfPXiMC3s3R@vger.kernel.org, AJvYcCXncjo9N9P2j4OsY0kDsFfJUzcWzWE8u7tb8RaoIh/I/supa8mzyvUh4SUrDQ8s5750E7gdwNRAIW2IUT5tXfY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6RABQRqiKoXWGaKi+/jqikuMKEh8jSwcbPWp9HbAbxwJLcY1e
-	0TWPDKaDEiKsT8lOnCGVsOa21sS8ZUj4ZBKzW0Jnu2q+f8VRipNfcAneOHjIL4djFeNSJMQb0bV
-	Gze94QYW+Pw7I+A9jyRB+ekFB7h0=
-X-Google-Smtp-Source: AGHT+IHK50oaHFtMBbMleHyqUaAbKlFx84gNC0cIJBrr7mvss1OwFx5aKOvcnFFtEC9IKk6w4XcLUT3LfIl4bLObABQ=
-X-Received: by 2002:a05:6512:2619:b0:545:4cb:b25d with SMTP id
- 2adb3069b0e04-54fc67b7bb6mr4265580e87.13.1747148003495; Tue, 13 May 2025
- 07:53:23 -0700 (PDT)
+	s=arc-20240116; t=1747153000; c=relaxed/simple;
+	bh=zV40bY8h3kW0Hy4xgRE4IG3svvmYOVPxkHpIL4ByJ/M=;
+	h=From:To:Cc:In-Reply-To:References:Date:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=PAkTnORWSUEbaJ2hD2euZEPa9ZvZ/TJqV6W+loQRZ+q8pbySWpl5WrSw7KQkwb53JngDtHEIIuKN1Nr3kJAvhyFg5FPB3GsjvvlaIzuXEFRYRocd7ufFwoQFo6xYuTA3mVw1c1PTJRBZhFk2sBOnJuWEhJyd1LE2U1DvqVqRGYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in02.mta.xmission.com ([166.70.13.52]:58534)
+	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1uEraV-0057bO-9O; Tue, 13 May 2025 09:30:35 -0600
+Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:59502 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1uEraS-00FteB-TR; Tue, 13 May 2025 09:30:34 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>,  Jann Horn <jannh@google.com>,
+  Christian Brauner <brauner@kernel.org>,  Jorge Merlino
+ <jorge.merlino@canonical.com>,  Alexander Viro <viro@zeniv.linux.org.uk>,
+  Thomas Gleixner <tglx@linutronix.de>,  Andy Lutomirski <luto@kernel.org>,
+  Sebastian Andrzej Siewior <bigeasy@linutronix.de>,  Andrew Morton
+ <akpm@linux-foundation.org>,  linux-mm@kvack.org,
+  linux-fsdevel@vger.kernel.org,  John Johansen
+ <john.johansen@canonical.com>,  Paul Moore <paul@paul-moore.com>,  James
+ Morris <jmorris@namei.org>,  "Serge E. Hallyn" <serge@hallyn.com>,
+  Stephen Smalley <stephen.smalley.work@gmail.com>,  Eric Paris
+ <eparis@parisplace.org>,  Richard Haines
+ <richard_c_haines@btinternet.com>,  Casey Schaufler
+ <casey@schaufler-ca.com>,  Xin Long <lucien.xin@gmail.com>,  "David S.
+ Miller" <davem@davemloft.net>,  Todd Kjos <tkjos@google.com>,  Ondrej
+ Mosnacek <omosnace@redhat.com>,  Prashanth Prahlad <pprahlad@redhat.com>,
+  Micah Morton <mortonm@chromium.org>,  Fenghua Yu <fenghua.yu@intel.com>,
+  Andrei Vagin <avagin@gmail.com>,  linux-kernel@vger.kernel.org,
+  apparmor@lists.ubuntu.com,  linux-security-module@vger.kernel.org,
+  selinux@vger.kernel.org,  linux-hardening@vger.kernel.org,
+  oleg@redhat.com
+In-Reply-To: <h65sagivix3zbrppthcobnysgnlrnql5shiu65xyg7ust6mc54@cliutza66zve>
+	(Mateusz Guzik's message of "Tue, 13 May 2025 15:05:45 +0200")
+References: <20221006082735.1321612-1-keescook@chromium.org>
+	<20221006082735.1321612-2-keescook@chromium.org>
+	<20221006090506.paqjf537cox7lqrq@wittgenstein>
+	<CAG48ez0sEkmaez9tYqgMXrkREmXZgxC9fdQD3mzF9cGo_=Tfyg@mail.gmail.com>
+	<86CE201B-5632-4BB7-BCF6-7CB2C2895409@chromium.org>
+	<h65sagivix3zbrppthcobnysgnlrnql5shiu65xyg7ust6mc54@cliutza66zve>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+Date: Tue, 13 May 2025 10:29:47 -0500
+Message-ID: <87o6vw1qc4.fsf@email.froward.int.ebiederm.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502224512.it.706-kees@kernel.org> <CAK7LNAQCZMmAGfPTr1kgp5cNSdnLWMU5kC_duU0WzWnwZrqt2A@mail.gmail.com>
- <202505031028.7022F10061@keescook> <CAK7LNAQehmFgB3kJtrkVhUKM1NEXGQrfJ3v3piToh7YV7-3ccw@mail.gmail.com>
- <202505080953.789B3381@keescook> <CAK7LNAQpGXmWNhoE9wLoP01dn2o7KjhedoqHXm474CoCgwHp2Q@mail.gmail.com>
- <202505081651.EAF0C6B@keescook>
-In-Reply-To: <202505081651.EAF0C6B@keescook>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 13 May 2025 23:52:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQa_ZX=ULUgu+_YNe=A+4kgaZakzdM2Y6QPSWWfnEA2JQ@mail.gmail.com>
-X-Gm-Features: AX0GCFuWQSZF1ok9-cTyrGeb3aw8P4Ea1DCgPaNu4qIZQbEPezGGKicgvHdcmqc
-Message-ID: <CAK7LNAQa_ZX=ULUgu+_YNe=A+4kgaZakzdM2Y6QPSWWfnEA2JQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Detect changed compiler dependencies for full rebuild
-To: Kees Cook <kees@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Justin Stitt <justinstitt@google.com>, Marco Elver <elver@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	kasan-dev@googlegroups.com, linux-um@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-XM-SPF: eid=1uEraS-00FteB-TR;;;mid=<87o6vw1qc4.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1+f5aQcvtD7cJuBfQzEABOE535sdGOGPWo=
+X-Spam-Level: ****
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.4970]
+	*  1.5 XMNoVowels Alpha-numberic number with no vowels
+	*  0.7 XMSubLong Long Subject
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa07 1397; Body=1 Fuz1=1 Fuz2=1]
+	*  1.0 XMGenDplmaNmb Diploma spam phrases+possible phone number
+	*  0.2 XM_B_SpammyWords One or more commonly used spammy words
+	*  1.0 XM_B_Phish_Phrases Commonly used Phishing Phrases
+	*  0.0 T_TooManySym_01 4+ unique symbols in subject
+X-Spam-DCC: XMission; sa07 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: ****;Mateusz Guzik <mjguzik@gmail.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 787 ms - load_scoreonly_sql: 0.04 (0.0%),
+	signal_user_changed: 11 (1.4%), b_tie_ro: 10 (1.2%), parse: 1.65
+	(0.2%), extract_message_metadata: 21 (2.6%), get_uri_detail_list: 4.8
+	(0.6%), tests_pri_-2000: 13 (1.6%), tests_pri_-1000: 6 (0.7%),
+	tests_pri_-950: 1.33 (0.2%), tests_pri_-900: 1.08 (0.1%),
+	tests_pri_-90: 143 (18.2%), check_bayes: 139 (17.7%), b_tokenize: 15
+	(1.9%), b_tok_get_all: 14 (1.8%), b_comp_prob: 7 (0.8%),
+	b_tok_touch_all: 99 (12.6%), b_finish: 0.93 (0.1%), tests_pri_0: 574
+	(72.9%), check_dkim_signature: 0.63 (0.1%), check_dkim_adsp: 2.5
+	(0.3%), poll_dns_idle: 0.46 (0.1%), tests_pri_10: 2.3 (0.3%),
+	tests_pri_500: 10 (1.2%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH 1/2] fs/exec: Explicitly unshare fs_struct on exec
+X-SA-Exim-Connect-IP: 166.70.13.52
+X-SA-Exim-Rcpt-To: too long (recipient list exceeded maximum allowed size of 512 bytes)
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
 
-On Fri, May 9, 2025 at 8:59=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
->
-> On Fri, May 09, 2025 at 08:13:18AM +0900, Masahiro Yamada wrote:
-> > On Fri, May 9, 2025 at 1:56=E2=80=AFAM Kees Cook <kees@kernel.org> wrot=
-e:
-> > >
-> > > On Fri, May 09, 2025 at 01:44:09AM +0900, Masahiro Yamada wrote:
-> > > > On Sun, May 4, 2025 at 2:37=E2=80=AFAM Kees Cook <kees@kernel.org> =
-wrote:
-> > > > >
-> > > > > On Sat, May 03, 2025 at 06:39:28PM +0900, Masahiro Yamada wrote:
-> > > > > > On Sat, May 3, 2025 at 7:54=E2=80=AFAM Kees Cook <kees@kernel.o=
-rg> wrote:
-> > > > > > >
-> > > > > > >  v2:
-> > > > > > >   - switch from -include to -I with a -D gated include compil=
-er-version.h
-> > > > > > >  v1: https://lore.kernel.org/lkml/20250501193839.work.525-kee=
-s@kernel.org/
-> > > > > >
-> > > > > >
-> > > > > > What do you think of my patch as a prerequisite?
-> > > > > > https://lore.kernel.org/linux-kbuild/20250503084145.1994176-1-m=
-asahiroy@kernel.org/T/#u
-> > > > > > Perhaps, can you implement this series more simply?
-> > > > > >
-> > > > > > My idea is to touch a single include/generated/global-rebuild.h
-> > > > > > rather than multiple files such as gcc-plugins-deps.h, integer-=
-wrap.h, etc.
-> > > > > >
-> > > > > > When the file is touched, the entire kernel source tree will be=
- rebuilt.
-> > > > > > This may rebuild more than needed (e.g. vdso) but I do not thin=
-k
-> > > > > > it is a big deal.
-> > > > >
-> > > > > This is roughly where I started when trying to implement this, bu=
-t I
-> > > > > didn't like the ergonomics of needing to scatter "touch" calls al=
-l over,
-> > > > > which was especially difficult for targets that shared a build ru=
-le but
-> > > > > may not all need to trigger a global rebuild. But what ultimately=
- pushed
-> > > > > me away from it was when I needed to notice if a non-built source=
- file
-> > > > > changed (the Clang .scl file), and I saw that I need to be depend=
-ency
-> > > > > driven rather than target driven. (Though perhaps there is a way =
-to
-> > > > > address this with your global-rebuild.h?)
-> > > > >
-> > > > > As far as doing a full rebuild, if it had been available last wee=
-k, I
-> > > > > probably would have used it, but now given the work that Nicolas,=
- you,
-> > > > > and I have put into this, we have a viable way (I think) to make =
-this
-> > > > > more specific. It does end up being a waste of time/resources to =
-rebuild
-> > > > > stuff that doesn't need to be (efi-stub, vdso, boot code, etc), a=
-nd that
-> > > > > does add up when I'm iterating on something that keeps triggering=
- a full
-> > > > > rebuild. We already have to do the argument filtering for targets=
- that
-> > > > > don't want randstruct, etc, so why not capitalize on that and mak=
-e the
-> > > > > rebuild avoid those files too?
-> > > >
-> > > >
-> > > > efi-stub, vdso are very small.
-> > > >
-> > > > Unless this turns out to be painful, I prefer
-> > > > a simpler implementation.
-> > > >
-> > > > You will see how .scl file is handled.
-> > > >
-> > > > See the below code:
-> > > >
-> > > >
-> > > > diff --git a/Kbuild b/Kbuild
-> > > > index f327ca86990c..85747239314c 100644
-> > > > --- a/Kbuild
-> > > > +++ b/Kbuild
-> > > > @@ -67,10 +67,20 @@ targets +=3D $(atomic-checks)
-> > > >  $(atomic-checks): $(obj)/.checked-%: include/linux/atomic/%  FORCE
-> > > >         $(call if_changed,check_sha1)
-> > > >
-> > > > +rebuild-$(CONFIG_GCC_PLUGINS)          +=3D $(addprefix
-> > > > scripts/gcc-plugins/, $(GCC_PLUGIN))
-> > > > +rebuild-$(CONFIG_RANDSTRUCT)           +=3D include/generated/rand=
-struct_hash.h
-> > >
-> > > These are in $(objtree)
-> >
-> > Yes.
-> >
-> > > > +rebuild-$(CONFIG_UBSAN_INTEGER_WRAP)   +=3D scripts/integer-wrap-i=
-gnore.scl
-> > >
-> > > This is in $(srctree)
-> >
-> > Yes.
-> >
-> > > > +
-> > > > +quiet_cmd_touch =3D TOUCH   $@
-> > > > +      cmd_touch =3D touch $@
-> > > > +
-> > > > +include/generated/global-rebuild.h: $(rebuild-y)
-> > > > +       $(call cmd,touch)
-> > >
-> > > Is this rule going to find the right versions of the dependencies?
-> >
-> > I think so, but please test it.
->
-> The patch was white-space damaged and wrapped, but I rebuilt it manually
-> and it mostly works. There still seems to be some ordering issues, as
-> some stuff gets rebuilt on a record build:
->
-> # Clean the tree and pick an "everything" build
-> $ make O=3Dgcc-test clean allmodconfig -s
->
-> # Make a target normally
-> $ make O=3Dgcc-test kernel/seccomp.o -s
->
-> # Touch a gcc plugin that was in .config
-> $ touch scripts/gcc-plugins/stackleak_plugin.c
->
-> # Build and a full rebuild is triggered (good)
-> $ make O=3Dgcc-test kernel/seccomp.o
-> make[1]: Entering directory '/srv/code/gcc-test'
->   GEN     Makefile
->   DESCEND objtool
->   HOSTCXX scripts/gcc-plugins/stackleak_plugin.so
->   INSTALL libsubcmd_headers
->   TOUCH   include/generated/global-rebuild.h
->   CC      kernel/bounds.s
->   CC      arch/x86/kernel/asm-offsets.s
->   CALL    ../scripts/checksyscalls.sh
->   CC      kernel/seccomp.o
-> make[1]: Leaving directory '/srv/code/gcc-test'
->
-> # Build again, but more stuff gets built
-> $ make O=3Dgcc-test kernel/seccomp.o
-> make[1]: Entering directory '/srv/code/gcc-test'
->   GEN     Makefile
->   DESCEND objtool
->   CC      scripts/mod/empty.o
->   CC      scripts/mod/devicetable-offsets.s
->   INSTALL libsubcmd_headers
->   MKELF   scripts/mod/elfconfig.h
->   HOSTCC  scripts/mod/modpost.o
->   HOSTCC  scripts/mod/sumversion.o
->   HOSTCC  scripts/mod/symsearch.o
->   HOSTCC  scripts/mod/file2alias.o
->   HOSTLD  scripts/mod/modpost
->   CALL    ../scripts/checksyscalls.sh
-> make[1]: Leaving directory '/srv/code/gcc-test'
->
-> # Third time finally everything is stable
-> $ hmake O=3Dgcc-test kernel/seccomp.o
-> make[1]: Entering directory '/srv/code/gcc-test'
->   GEN     Makefile
->   DESCEND objtool
->   CALL    ../scripts/checksyscalls.sh
->   INSTALL libsubcmd_headers
-> make[1]: Leaving directory '/srv/code/gcc-test'
->
->
-> Note that scripts/mod/* gets rebuilt on the second rebuild.
+Mateusz Guzik <mjguzik@gmail.com> writes:
 
-Hmm.
-OK, my code did not work.
+> On Thu, Oct 06, 2022 at 08:25:01AM -0700, Kees Cook wrote:
+>> On October 6, 2022 7:13:37 AM PDT, Jann Horn <jannh@google.com> wrote:
+>> >On Thu, Oct 6, 2022 at 11:05 AM Christian Brauner <brauner@kernel.org> wrote:
+>> >> On Thu, Oct 06, 2022 at 01:27:34AM -0700, Kees Cook wrote:
+>> >> > The check_unsafe_exec() counting of n_fs would not add up under a heavily
+>> >> > threaded process trying to perform a suid exec, causing the suid portion
+>> >> > to fail. This counting error appears to be unneeded, but to catch any
+>> >> > possible conditions, explicitly unshare fs_struct on exec, if it ends up
+>> >>
+>> >> Isn't this a potential uapi break? Afaict, before this change a call to
+>> >> clone{3}(CLONE_FS) followed by an exec in the child would have the
+>> >> parent and child share fs information. So if the child e.g., changes the
+>> >> working directory post exec it would also affect the parent. But after
+>> >> this change here this would no longer be true. So a child changing a
+>> >> workding directoro would not affect the parent anymore. IOW, an exec is
+>> >> accompanied by an unshare(CLONE_FS). Might still be worth trying ofc but
+>> >> it seems like a non-trivial uapi change but there might be few users
+>> >> that do clone{3}(CLONE_FS) followed by an exec.
+>> >
+>> >I believe the following code in Chromium explicitly relies on this
+>> >behavior, but I'm not sure whether this code is in active use anymore:
+>> >
+>> >https://source.chromium.org/chromium/chromium/src/+/main:sandbox/linux/suid/sandbox.c;l=101?q=CLONE_FS&sq=&ss=chromium
+>> 
+>> Oh yes. I think I had tried to forget this existed. Ugh. Okay, so back to the drawing board, I guess. The counting will need to be fixed...
+>> 
+>> It's possible we can move the counting after dethread -- it seems the early count was just to avoid setting flags after the point of no return, but it's not an error condition...
+>> 
+>
+> I landed here from git blame.
+>
+> I was looking at sanitizing shared fs vs suid handling, but the entire
+> ordeal is so convoluted I'm confident the best way forward is to whack
+> the problem to begin with.
+>
+> Per the above link, the notion of a shared fs struct across different
+> processes is depended on so merely unsharing is a no-go.
+>
+> However, the shared state is only a problem for suid/sgid.
+>
+> Here is my proposal: *deny* exec of suid/sgid binaries if fs_struct is
+> shared. This will have to be checked for after the execing proc becomes
+> single-threaded ofc.
+>
+> While technically speaking this does introduce a change in behavior,
+> there is precedent for doing it and seeing if anyone yells.
+>
+> With this in place there is no point maintainig ->in_exec or checking
+> the flag.
+>
+> There is the known example of depending on shared fs_struct across exec.
+> Hopefully there is no example of depending on execing a suid/sgid binary
+> in such a setting -- it would be quite a weird setup given that for
+> security reasons the perms must not be changed.
+>
+> The upshot of this method is that any breakage will be immediately
+> visible in the form of a failed exec.
+>
+> Another route would be to do the mandatory unshare but only for
+> suid/sgid, except that would have a hidden failure (if you will).
+>
+> Comments?
 
-I accept your patch set (although I am not a big fan
-of the added complexity...)
+What is the problem that is trying to be fixed?
 
-Could you move the normalize_path macro
-to scripts/Kbuild?
+A uapi change to not allow sharing a fs_struct for processes that change
+their cred on exec seems possible.
+
+I said changing cred instead of suid/sgid because there are capabilities
+and LSM labels that we probably want this to apply to as well.
+
+I think such a limitation can be justified based upon having a shared
+fs_struct is likely to allow confuse suid executables.
 
 
---=20
-Best Regards
-Masahiro Yamada
+Earlier in the thread there was talk about the refcount for fs_struct.
+I don't see that problem at the moment, and I don't see how dealing with
+suid+sgid exectuables will have any bearing on how the refcount works.
+
+Eric
+
+
