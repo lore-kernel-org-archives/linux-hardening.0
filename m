@@ -1,106 +1,98 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62D6A21ADB5;
-	Tue, 13 May 2025 09:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27149216396
+	for <linux-hardening@vger.kernel.org>; Tue, 13 May 2025 09:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747127986; cv=none; b=n9MMp8dPKWI4f5sqG4NRdUEtnv/niyA0qUDWdFxW22A4cTvh7sbfdKgeInmLfyrBwAvvJPLETe4ZA6JP54sL9krFHdA/cYVAECtfQJPkB32lF7G6m6VqGCDPO52czkvKR4zlMsHIT35qwTAS99bOY/nkUa8WAkbZKYctSumV2ow=
+	t=1747128068; cv=none; b=C+uzsccDgWjRzXz0QN1UNVj56bTUIGHDWBqJbo7MJcX9GhqNHo9YBHYfMYd5+QKI2PBaaeS4LMe4rWfbZ8o6zEfGBMnT+HrK9sTSx9xVavH8T5h+Cqvkj5iCKPhHcMHoy9v00Vc+8to9uiprypYNMSHxaSDbl0Uz6AmAFkMFu8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747127986; c=relaxed/simple;
-	bh=5YrABFzbKb8Src/u5OGMIShsQQLYX37Y/4zalAnMTa8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UI9czNUJWj6BG7JbSM7BgDwrpGUwfg2Rn4LAZgVT5nCWjvYgnuw1MTq1XW4loreCqfGZSsA2J8J8BCv2q5FeHC8GfQrrIG8CJ2etUMNTg+IDfHJ0qk3Scc8WvbeGJGxK7IHMlZk2y5ggGlGbtoA98HcjVuu8wtPPMQzQSqmGCqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0522168F;
-	Tue, 13 May 2025 02:19:32 -0700 (PDT)
-Received: from [10.57.90.222] (unknown [10.57.90.222])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09E603F673;
-	Tue, 13 May 2025 02:19:41 -0700 (PDT)
-Message-ID: <56655ac1-a650-43d8-8080-a03c250474d3@arm.com>
-Date: Tue, 13 May 2025 10:19:40 +0100
+	s=arc-20240116; t=1747128068; c=relaxed/simple;
+	bh=jAG6UOMOffV3gCVoCmbgmLMxOpZlx9u8Ad39RHvZ1TI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S0+Ng3A282gbeidTxShIKSHxEz6vxBT/WsDWMbqm8YLaNzl47rjYeGDvB/TmfUaslYwsyEUlqbt8rIu6TdnnUSEOLazVjHNpoynsJXDLSyp40Y/N/3Gt7x9Gfx6fRc3dajqWTgs4hmUWv/qEvK9Pe5hG9x/v5oPb6bhQ+ttTAKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zxy+1epp; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zxy+1epp"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54298ec925bso7782410e87.3
+        for <linux-hardening@vger.kernel.org>; Tue, 13 May 2025 02:21:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747128064; x=1747732864; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jAG6UOMOffV3gCVoCmbgmLMxOpZlx9u8Ad39RHvZ1TI=;
+        b=zxy+1eppz0AOm1YjT6rvKlsa5iMWWAkQC3+DLhyvnNkmS5KdD+kIjB7uDdODpZoBPO
+         MTttUZ5XI9A0q9ACZ43hFuXk5aU7I9Fr6gVn9WvjDbi0p4Hp5ht+6vtgvWJ2nhwnHFTJ
+         VNkmbpN5Y1Um747b7nCwGKbjz+/mzN/A2b8gxSjh+g86/iz+aWgrdGoihG04Ks9g6AON
+         bwWF3mI57wxnODdicxu8jx3SWtApeVvgvaKbSSOniRlJAGVhNn1G0bi2PEkDdrJDsH08
+         zju4mwRXBPHAtigQ7RlYRAr2veYMcd8TUJ0qkzlJ0P+cGor00OjKAXE5u7CYcjxkGiDQ
+         +7qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747128064; x=1747732864;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jAG6UOMOffV3gCVoCmbgmLMxOpZlx9u8Ad39RHvZ1TI=;
+        b=SW59iBH8I9a08/0HF7WhouRgVOHYN0Gznw42Cng+FT1HPttWYlG68NDWYf3EMmbWEk
+         Ry5rdIwDxileemDKpGZWynO75fAK3agzwinqQAACZ0biIO2TF3GqUSNDrX4+UnxVYb3A
+         B0EkbU6be354aFZITuNK+cUYglu54jWqWpYzmgUpskymSWsT867zPd9eR31kcuc66O/9
+         v07zEKbUgOhs36VELudwLHkoeJHnSKpGtXKMzMZv1hLYbRWolAwru8ovsJsIvodOCFNq
+         s7DiKmZ+haudR8hXV9sk/brAZdZAGSU2IKf0sCzhzPUN0YxPrFIzrrI9cI5GLyIlA0ot
+         Lrtw==
+X-Forwarded-Encrypted: i=1; AJvYcCW3GXNkuMeZnHOLkw7oaLHmjiGwUKYrjld5VwE+SY/lvoxex3UTqT1hc65FdvlqcjmgdF4ET90RFQI6qupryh0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcHCLACDro2xa6MD7GfIDe77gC6ryVDBH4q5d/ZFF4YanDhbe9
+	UyVIKsZSZXi5X6Zd1f6tONSXMcjlh98fTFB4h+jz5bebaE+55RGOFSF1qGJVKlNq45c/TNcXKvo
+	s7zXFlRbuKlHbaT5/uwLPJMSFygvZQ3GZHToU1A==
+X-Gm-Gg: ASbGncu7nT8t6kGkH+ySfg9jbzb2zunFHY+EwZ4nc3rN1Sv02iT7rSjWZYl2mM1nKMN
+	tqmM7CyMnClsi7xFkSa/f9EAnvh2jfslnmoWrj0D2XVqm65iBW4cHl4kqwVI3Y+WU9iCUhmVoY0
+	YmjMfClrBZ+lQFeJZlqC2VFtsBHu5pYgpq
+X-Google-Smtp-Source: AGHT+IGKvl0a9PYMoR7pe3tZ5kyPbARxdNFLenyjWORpsYZx6Qr+/V56jGkku8jVsQAW4x2zH8hvY9ZJIUWfZ8j8uTg=
+X-Received: by 2002:a05:6512:6408:b0:545:f1d:6f2c with SMTP id
+ 2adb3069b0e04-54fc67c37b8mr5182580e87.18.1747128064206; Tue, 13 May 2025
+ 02:21:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] binfmt_elf: Move brk for static PIE even if ASLR
- disabled
-Content-Language: en-GB
-To: Kees Cook <kees@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Ali Saidi <alisaidi@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org
-References: <20250502001820.it.026-kees@kernel.org>
- <87f80506-eeb3-4848-adc9-8a030b5f4136@arm.com>
- <a786b348-7622-4c62-bfdc-f04e05066184@arm.com>
- <202505121340.7CA14D4C@keescook>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <202505121340.7CA14D4C@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250430-max77759-mfd-v9-0-639763e23598@linaro.org> <20250430-max77759-mfd-v9-5-639763e23598@linaro.org>
+In-Reply-To: <20250430-max77759-mfd-v9-5-639763e23598@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 13 May 2025 11:20:53 +0200
+X-Gm-Features: AX0GCFux1HtYoXX3UiKQeMd3kDVZuoIvGECfOVBviXvO98OxIVsjOGF-W-k86hk
+Message-ID: <CACRpkdY15L5PpV9ah_0R3ZPZVMh18OR+Dg2qXiBG=8Kq79-rjA@mail.gmail.com>
+Subject: Re: [PATCH v9 5/6] gpio: max77759: add Maxim MAX77759 gpio driver
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
+	Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/05/2025 21:40, Kees Cook wrote:
-> On Mon, May 12, 2025 at 04:17:12PM +0100, Ryan Roberts wrote:
->> Hi Andrew,
->>
->>
->> On 02/05/2025 11:01, Ryan Roberts wrote:
->>> On 02/05/2025 01:18, Kees Cook wrote:
->>>> In commit bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
->>>> direct loader exec"), the brk was moved out of the mmap region when
->>>> loading static PIE binaries (ET_DYN without INTERP). The common case
->>>> for these binaries was testing new ELF loaders, so the brk needed to
->>>> be away from mmap to avoid colliding with stack, future mmaps (of the
->>>> loader-loaded binary), etc. But this was only done when ASLR was enabled,
->>>> in an attempt to minimize changes to memory layouts.
->>>>
->>>> After adding support to respect alignment requirements for static PIE
->>>> binaries in commit 3545deff0ec7 ("binfmt_elf: Honor PT_LOAD alignment
->>>> for static PIE"), it became possible to have a large gap after the
->>>> final PT_LOAD segment and the top of the mmap region. This means that
->>>> future mmap allocations might go after the last PT_LOAD segment (where
->>>> brk might be if ASLR was disabled) instead of before them (where they
->>>> traditionally ended up).
->>>>
->>>> On arm64, running with ASLR disabled, Ubuntu 22.04's "ldconfig" binary,
->>>> a static PIE, has alignment requirements that leaves a gap large enough
->>>> after the last PT_LOAD segment to fit the vdso and vvar, but still leave
->>>> enough space for the brk (which immediately follows the last PT_LOAD
->>>> segment) to be allocated by the binary.
->>>>
->>>> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
->>>> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
->>>> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
->>>> ***[brk will go here at fffff7ffa000]***
->>>> fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
->>>> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
->>>> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
->>>>
->>>> After commit 0b3bc3354eb9 ("arm64: vdso: Switch to generic storage
->>>> implementation"), the arm64 vvar grew slightly, and suddenly the brk
->>>> collided with the allocation.
->>>>
->>>> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
->>>> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
->>>> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
->>>> ***[oops, no room any more, vvar is at fffff7ffa000!]***
->>>> fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
->>>> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
->>>> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
->>
->> This change is fixing a pretty serious bug that appeared in v6.15-rc1 so I was
->> hoping it would make it into the v6.15 final release. I'm guessing mm is the
->> correct route in? But I don't currently see this in linus's tree or in any of
->> your mm- staging branches. Is there still time to get this in?
-> 
-> I'll be sending it to Linus this week. I've been letting it bake in
-> -next for a while just to see if anything shakes out.
+On Wed, Apr 30, 2025 at 11:03=E2=80=AFAM Andr=C3=A9 Draszik <andre.draszik@=
+linaro.org> wrote:
 
-Sorry, Kees - my bad! For some reason, I thought this would go via the mm tree.
-Thanks again for jumping on this.
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
+>
+> This driver supports the GPIO functions using the platform device
+> registered by the core MFD driver.
+>
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
