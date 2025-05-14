@@ -1,223 +1,290 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC4125D550;
-	Wed, 14 May 2025 15:42:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55EB221F35;
+	Wed, 14 May 2025 21:42:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747237345; cv=none; b=OhkUilWjhYW2rOSL0hi3zxFra4KRZUe4gM2OMc8ahjZp3/N7vEwLRP69M6YkgunzIw9VJKpndXakcuJ+c+4WPoCTtjj8klHnoswsl3J2+F9M7O0QGWW6DmjfCo2B2rpEkyQmxGJ+aR7z/SBVNgSy545Eazjn5b2OVspdqny7L3c=
+	t=1747258953; cv=none; b=Kx96Po81wQcebc2Ybti7X+7AtWEyEeEWcnBnDBuLc4AhIjFGV9kxXBkMe67ogG+P/NorTcsvZ/MOUlSGCTRYm+oxTGoYu2Tg7Uh0iqbhXdQsNxdUVdaKYluq9xqWVUfZhsPu4+YO/tgpqmX0xe7TjboPTR6CpPHOnE3fUkMR0uQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747237345; c=relaxed/simple;
-	bh=Q/a6cQKz1u3FABKvdOLs1BTFjrBS9xo3VS6yf8DUyaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G0fX/hPEt1L06g9fGtn2JzUBugZGgdg15rCKfwns7+JVRrEZI1MyHoug0DXPO1WsMoA7RDrAteDHNJG6/cURIuqC7lKICzyCnBk/GjA2tov5fgzhEWEFkzduvTh9bwpApha5prpdEw/TqaaZxwZmu3j0v5wN5DVKTR4Fh6M+eNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7JHteJB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747258953; c=relaxed/simple;
+	bh=TasTW5iZCDuPstVF8wJUlKJ9vaBQQ1wm4aP4Dzf3XPM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BQHt+gP3O8qRnLBK+APpNf/2Lq2xpbmyJNTRBAxF6TrcJxgk/iIuDyzy7tVum9nMtEDBhIDx4SV4h0PKYH7++/wYbP3VJDbvjvVOmjZRoVXKw0IroFOGx3yJ5ZTUJYT3N1B+BqFagYska993qSpJmGbdZ7jM9e95p94LbfOn1P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhijWoAy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7JHteJB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99FEEC4CEE3;
-	Wed, 14 May 2025 15:42:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhijWoAy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F158DC4CEE3;
+	Wed, 14 May 2025 21:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747237345;
-	bh=Q/a6cQKz1u3FABKvdOLs1BTFjrBS9xo3VS6yf8DUyaU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C7JHteJBR7doFhyrzMuEXW2wmLeyQXbDHsOzSSFmidGMsT2DcWkptVtQbsxDjHHYs
-	 Kjw600rDwGpLwIeRA5v2pRV27VJu7SPCqSk1RyTO0TEVlzlAGHMfuWUFZFdAZI0uQ3
-	 TL8zZAjJ9pnksAZRWg7REJS3gBLFihieHfwrJraklAeAUsTXhh95FH4ApDm9Nd260P
-	 ml0QvWdSmKwesrXwvMNNAVIzAIpPee0/8P2pwfwfbIK0yhiWLYjqvjDopOQ5dUvQMP
-	 3mnedQJDeqjw+XaNeWbKhoUUdmD0MPQjly5S3hf96VOYuEZy40BDq82gaeX85sF6zK
-	 KGXlreeK/N0ng==
-Date: Wed, 14 May 2025 08:42:22 -0700
-From: Kees Cook <kees@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
-	Jann Horn <jannh@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Jorge Merlino <jorge.merlino@canonical.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andy Lutomirski <luto@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Eric Paris <eparis@parisplace.org>,
-	Richard Haines <richard_c_haines@btinternet.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Todd Kjos <tkjos@google.com>, Ondrej Mosnacek <omosnace@redhat.com>,
-	Prashanth Prahlad <pprahlad@redhat.com>,
-	Micah Morton <mortonm@chromium.org>,
-	Fenghua Yu <fenghua.yu@intel.com>, Andrei Vagin <avagin@gmail.com>,
-	linux-kernel@vger.kernel.org, apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-	linux-hardening@vger.kernel.org, oleg@redhat.com
-Subject: Re: [PATCH 1/2] fs/exec: Explicitly unshare fs_struct on exec
-Message-ID: <202505140822.6AB755B6@keescook>
-References: <20221006082735.1321612-1-keescook@chromium.org>
- <20221006082735.1321612-2-keescook@chromium.org>
- <20221006090506.paqjf537cox7lqrq@wittgenstein>
- <CAG48ez0sEkmaez9tYqgMXrkREmXZgxC9fdQD3mzF9cGo_=Tfyg@mail.gmail.com>
- <86CE201B-5632-4BB7-BCF6-7CB2C2895409@chromium.org>
- <h65sagivix3zbrppthcobnysgnlrnql5shiu65xyg7ust6mc54@cliutza66zve>
- <D03AE210-6874-43B6-B917-80CD259AE2AC@kernel.org>
- <CAG48ez0aP8LaGppy6Yon7xcFbQa1=CM-HXSZChvXYV2VJZ8y7g@mail.gmail.com>
- <871pss17hq.fsf@email.froward.int.ebiederm.org>
- <CAGudoHH-Jn5_4qnLV3qwzjTi2ZgfmfaO0qVSWW5gqdqkvchnDQ@mail.gmail.com>
+	s=k20201202; t=1747258953;
+	bh=TasTW5iZCDuPstVF8wJUlKJ9vaBQQ1wm4aP4Dzf3XPM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=qhijWoAyAjAF/hRTtKYyCog7hVOuPqhfGN1rwXLTEiw4JKiOoDnRFJHGxyncUFubS
+	 fHStjRJ1rsQfd+suHaOIto4lEQgHOwuNXdP2USXAAS6eWUcEbsS6JzjzDYhU+u8loN
+	 o6NX2WCw59OFbVTDOrPGW8h0+04hXz0joXUGyPwy/NKFzDjPoFjsZKarJUDF8KDoT3
+	 ON2I9MMfbXVCvbpg298I/z4YFw1ZLyhc5mRnWRiDWCxcW7yCX+Rb4Zlcm6pCmHBUf0
+	 rhRwATsNsxmvHf6J7+A3T/nRpTK7H0Is8roTCFsHXe0f47Y27B5PwXl4/5ZlRZ78Bb
+	 QRtsgT+MOU+YA==
+Date: Wed, 14 May 2025 15:42:27 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: [PATCH v3][next] wifi: iwlwifi: mvm/fw: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <aCUOQ6wdD1jQjO36@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGudoHH-Jn5_4qnLV3qwzjTi2ZgfmfaO0qVSWW5gqdqkvchnDQ@mail.gmail.com>
 
-On Wed, May 14, 2025 at 02:03:31AM +0200, Mateusz Guzik wrote:
-> On Wed, May 14, 2025 at 12:17 AM Eric W. Biederman
-> <ebiederm@xmission.com> wrote:
-> >
-> > Jann Horn <jannh@google.com> writes:
-> >
-> > > On Tue, May 13, 2025 at 10:57 PM Kees Cook <kees@kernel.org> wrote:
-> > >> On May 13, 2025 6:05:45 AM PDT, Mateusz Guzik <mjguzik@gmail.com> wrote:
-> > >> >Here is my proposal: *deny* exec of suid/sgid binaries if fs_struct is
-> > >> >shared. This will have to be checked for after the execing proc becomes
-> > >> >single-threaded ofc.
-> > >>
-> > >> Unfortunately the above Chrome helper is setuid and uses CLONE_FS.
-> > >
-> > > Chrome first launches a setuid helper, and then the setuid helper does
-> > > CLONE_FS. Mateusz's proposal would not impact this usecase.
-> > >
-> > > Mateusz is proposing to block the case where a process first does
-> > > CLONE_FS, and *then* one of the processes sharing the fs_struct does a
-> > > setuid execve(). Linux already downgrades such an execve() to be
-> > > non-setuid, which probably means anyone trying to do this will get
-> > > hard-to-understand problems. Mateusz' proposal would just turn this
-> > > hard-to-debug edgecase, which already doesn't really work, into a
-> > > clean error; I think that is a nice improvement even just from the
-> > > UAPI standpoint.
-> > >
-> > > If this change makes it possible to clean up the kernel code a bit, even better.
-> >
-> > What has brought this to everyone's attention just now?  This is
-> > the second mention of this code path I have seen this week.
-> >
-> 
-> There is a syzkaller report concerning ->in_exec handling, for example:
-> https://lore.kernel.org/all/67dc67f0.050a0220.25ae54.001f.GAE@google.com/#t
->
-> [...]
-> > It looks like most of the lsm's also test bprm->unsafe.
-> >
-> > So I imagine someone could very carefully separate the non-ptrace case
-> > from the ptrace case but *shrug*.
-> >
-> > Perhaps:
-> >
-> >         if ((is_setid || __cap_gained(permitted, new_old)) &&
-> >             ((bprm->unsafe & ~LSM_UNSAFE_PTRACE) ||
-> >              !ptracer_capable(current, new->user_ns))) {
-> > +               if (!(bprm->unsafe & LSM_UNSAFE_PTRACE)) {
-> > +                       return -EPERM;
-> > +               }
-> >                 /* downgrade; they get no more than they had, and maybe less */
-> >                 if (!ns_capable(new->user_ns, CAP_SETUID) ||
-> >                     (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS)) {
-> >                         new->euid = new->uid;
-> >                         new->egid = new->gid;
-> >                 }
-> >                 new->cap_permitted = cap_intersect(new->cap_permitted,
-> >                                                    old->cap_permitted);
-> >          }
-> >
-> > If that is what you want that doesn't look to scary.  I don't think
-> > it simplifies anything about fs->in_exec.  As fs->in_exec is set when
-> > the processing calling exec is the only process that owns the fs_struct.
-> > With fs->in_exec just being a flag that doesn't allow another thread
-> > to call fork and start sharing the fs_struct during exec.
-> >
-> > *Shrug*
-> >
-> > I don't see why anyone would care.  It is just a very silly corner case.
-> 
-> Well I don't see how ptrace factors into any of this, apart from being
-> a different case of ignoring suid/sgid.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-I actually think we might want to expand the above bit of logic to use
-an explicit tests of each LSM_UNSAFE case -- the merged
-logic is very difficult to read currently. Totally untested expansion,
-if I'm reading everything correctly:
+So, in order to avoid ending up with a flexible-array member in the
+middle of multiple other structs, we use the `__struct_group()`
+helper to create a new tagged `struct iwl_tx_cmd_v6_hdr`. This
+structure groups together all the members of the flexible `struct
+iwl_tx_cmd_v6` except the flexible array.
 
-	if (bprm->unsafe &&
-	    (is_setid || __cap_gained(permitted, new_old))) {
-		bool limit_caps = false;
-		bool strip_eid = false;
-		unsigned int unsafe = bprm->unsafe;
-		/* Check each bit */
+As a result, the array is effectively separated from the rest of the
+members without modifying the memory layout of the flexible structure.
+We then change the type of the middle struct members currently causing
+trouble from `struct iwl_tx_cmd_v6` to `struct iwl_tx_cmd_v6_hdr`.
 
-		if (unsafe & LSM_UNSAFE_PTRACE) {
-			if (!ptracer_capable(current, new->user_ns))
-				limit_caps = true;
-			unsafe &= ~LSM_UNSAFE_PTRACE;
-		}
-		if (unsafe & LSM_UNSAFE_SHARE) {
-			limit_caps = true;
-			if (!ns_capable(new->user_ns, CAP_SETUID))
-				strip_eid = true;
-			unsafe &= ~LSM_UNSAFE_SHARE;
-		}
-		if (unsafe & LSM_UNSAFE_NO_NEW_PRIVS) {
-			limit_caps = true;
-			if (!ns_capable(new->user_ns, CAP_SETUID))
-				strip_eid = true;
-			unsafe &= ~LSM_UNSAFE_NO_NEW_PRIVS;
-		}
+We also want to ensure that when new members need to be added to the
+flexible structure, they are always included within the newly created
+tagged struct. For this, we use `static_assert()`. This ensures that the
+memory layout for both the flexible structure and the new tagged struct
+is the same after any changes.
 
-		if (WARN(unsafe, "Unhandled LSM_UNSAFE flag: %u?!\n", unsafe))
-			return -EINVAL;
+This approach avoids having to implement `struct iwl_tx_cmd_v6_hdr`
+as a completely separate structure, thus preventing having to maintain
+two independent but basically identical structures, closing the door
+to potential bugs in the future.
 
-		if (limit_caps) {
-			new->cap_permitted = cap_intersect(new->cap_permitted,
-							   old->cap_permitted);
-		}
-		if (strip_eid) {
-			new->euid = new->uid;
-			new->egid = new->gid;
-		}
-	}
+We also use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure, through which we can access the flexible-array
+member, if necessary.
 
-> I can agree the suid/sgid situation vs CLONE_FS is a silly corner
-> case, but one which needs to be handled for security reasons and which
-> currently has weirdly convoluted code to do it.
-> 
-> The intent behind my proposal is very much to get the crapper out of
-> the way in a future-proof and simple manner.
-> 
-> In check_unsafe_exec() you can find a nasty loop over threads in the
-> group to find out if the fs struct is used by anyone outside of said
-> group. Since fs struct users are not explicitly tracked and any of
-> them can have different creds than the current thread, the kernel opts
-> to ignore suid/sgid if there are extra users found (for security
-> reasons). The loop depends on no new threads showing up as the list is
-> being walked, to that end copy_fs() can transiently return an error if
-> it spots ->in_exec.
-> 
-> The >in_exec field is used as a boolean/flag, but parallel execs using
-> the same fs struct from different thread groups don't look serialized.
-> This is supposed to be fine as in this case ->in_exec is not getting
-> set to begin with, but it gets unconditionally unset on all execs.
-> 
-> And so on. It's all weird af.
+Also, as part of the refactoring required to use `__struct_group()`,
+remove unused flex array `payload`.
 
-100% :)
+So, with these changes, fix the following warnings:
 
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tdls.h:134:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tdls.h:53:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tx.h:745:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tx.h:764:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:134:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:53:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:745:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:764:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
+Reviewed-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v3:
+ - Rebase on top of commit e4248670c0ae ("wifi: iwlwifi: use normal versioning convention for iwl_tx_cmd")
+
+Changes in v2:
+ - Update changelog text - mention removal of flex array `payload`.
+   (Kees)
+ - Fix kernel-doc block. (Johannes).
+ - Add RB tag.
+ - Link: https://lore.kernel.org/linux-hardening/aAv7RiLsmXq5d0ge@kspp/
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/Z-9G-GHufhXKeYft@kspp/
+
+ .../net/wireless/intel/iwlwifi/fw/api/tdls.h  |  4 +-
+ .../net/wireless/intel/iwlwifi/fw/api/tx.h    | 63 ++++++++++---------
+ .../net/wireless/intel/iwlwifi/mvm/mac-ctxt.c |  8 ++-
+ drivers/net/wireless/intel/iwlwifi/mvm/tdls.c | 10 +--
+ 4 files changed, 45 insertions(+), 40 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
+index 58d5a6ef633e..84cb7faac647 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
+@@ -50,7 +50,7 @@ struct iwl_tdls_channel_switch_timing {
+  */
+ struct iwl_tdls_channel_switch_frame {
+ 	__le32 switch_time_offset;
+-	struct iwl_tx_cmd_v6 tx_cmd;
++	struct iwl_tx_cmd_v6_hdr tx_cmd;
+ 	u8 data[IWL_TDLS_CH_SW_FRAME_MAX_SIZE];
+ } __packed; /* TDLS_STA_CHANNEL_SWITCH_FRAME_API_S_VER_1 */
+ 
+@@ -131,7 +131,7 @@ struct iwl_tdls_config_cmd {
+ 	struct iwl_tdls_sta_info sta_info[IWL_TDLS_STA_COUNT];
+ 
+ 	__le32 pti_req_data_offset;
+-	struct iwl_tx_cmd_v6 pti_req_tx_cmd;
++	struct iwl_tx_cmd_v6_hdr pti_req_tx_cmd;
+ 	u8 pti_req_template[];
+ } __packed; /* TDLS_CONFIG_CMD_API_S_VER_1 */
+ 
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+index 557832563f89..05860687aba0 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+@@ -205,8 +205,7 @@ enum iwl_tx_offload_assist_flags_pos {
+  * @tid_tspec: TID/tspec
+  * @pm_frame_timeout: PM TX frame timeout
+  * @reserved4: reserved
+- * @payload: payload (same as @hdr)
+- * @hdr: 802.11 header (same as @payload)
++ * @hdr: 802.11 header
+  *
+  * The byte count (both len and next_frame_len) includes MAC header
+  * (24/26/30/32 bytes)
+@@ -222,34 +221,36 @@ enum iwl_tx_offload_assist_flags_pos {
+  * and then the actial payload.
+  */
+ struct iwl_tx_cmd_v6 {
+-	__le16 len;
+-	__le16 offload_assist;
+-	__le32 tx_flags;
+-	struct {
+-		u8 try_cnt;
+-		u8 btkill_cnt;
+-		__le16 reserved;
+-	} scratch; /* DRAM_SCRATCH_API_U_VER_1 */
+-	__le32 rate_n_flags;
+-	u8 sta_id;
+-	u8 sec_ctl;
+-	u8 initial_rate_index;
+-	u8 reserved2;
+-	u8 key[16];
+-	__le32 reserved3;
+-	__le32 life_time;
+-	__le32 dram_lsb_ptr;
+-	u8 dram_msb_ptr;
+-	u8 rts_retry_limit;
+-	u8 data_retry_limit;
+-	u8 tid_tspec;
+-	__le16 pm_frame_timeout;
+-	__le16 reserved4;
+-	union {
+-		DECLARE_FLEX_ARRAY(u8, payload);
+-		DECLARE_FLEX_ARRAY(struct ieee80211_hdr, hdr);
+-	};
++	/* New members MUST be added within the __struct_group() macro below. */
++	__struct_group(iwl_tx_cmd_v6_hdr, __hdr, __packed,
++		__le16 len;
++		__le16 offload_assist;
++		__le32 tx_flags;
++		struct {
++			u8 try_cnt;
++			u8 btkill_cnt;
++			__le16 reserved;
++		} scratch; /* DRAM_SCRATCH_API_U_VER_1 */
++		__le32 rate_n_flags;
++		u8 sta_id;
++		u8 sec_ctl;
++		u8 initial_rate_index;
++		u8 reserved2;
++		u8 key[16];
++		__le32 reserved3;
++		__le32 life_time;
++		__le32 dram_lsb_ptr;
++		u8 dram_msb_ptr;
++		u8 rts_retry_limit;
++		u8 data_retry_limit;
++		u8 tid_tspec;
++		__le16 pm_frame_timeout;
++		__le16 reserved4;
++	);
++	struct ieee80211_hdr hdr[];
+ } __packed; /* TX_CMD_API_S_VER_6 */
++static_assert(offsetof(struct iwl_tx_cmd_v6, hdr) == sizeof(struct iwl_tx_cmd_v6_hdr),
++	      "struct member likely outside of __struct_group()");
+ 
+ struct iwl_dram_sec_info {
+ 	__le32 pn_low;
+@@ -748,7 +749,7 @@ struct iwl_compressed_ba_notif {
+  * @frame: the template of the beacon frame
+  */
+ struct iwl_mac_beacon_cmd_v6 {
+-	struct iwl_tx_cmd_v6 tx;
++	struct iwl_tx_cmd_v6_hdr tx;
+ 	__le32 template_id;
+ 	__le32 tim_idx;
+ 	__le32 tim_size;
+@@ -767,7 +768,7 @@ struct iwl_mac_beacon_cmd_v6 {
+  * @frame: the template of the beacon frame
+  */
+ struct iwl_mac_beacon_cmd_v7 {
+-	struct iwl_tx_cmd_v6 tx;
++	struct iwl_tx_cmd_v6_hdr tx;
+ 	__le32 template_id;
+ 	__le32 tim_idx;
+ 	__le32 tim_size;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
+index 9098a36530cc..67139f704e2c 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
+@@ -1039,7 +1039,9 @@ static int iwl_mvm_mac_ctxt_send_beacon_v6(struct iwl_mvm *mvm,
+ 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+ 	struct iwl_mac_beacon_cmd_v6 beacon_cmd = {};
+ 
+-	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon, &beacon_cmd.tx);
++	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon,
++				container_of(&beacon_cmd.tx,
++					     struct iwl_tx_cmd_v6, __hdr));
+ 
+ 	beacon_cmd.template_id = cpu_to_le32((u32)mvmvif->id);
+ 
+@@ -1059,7 +1061,9 @@ static int iwl_mvm_mac_ctxt_send_beacon_v7(struct iwl_mvm *mvm,
+ 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+ 	struct iwl_mac_beacon_cmd_v7 beacon_cmd = {};
+ 
+-	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon, &beacon_cmd.tx);
++	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon,
++				container_of(&beacon_cmd.tx,
++					     struct iwl_tx_cmd_v6, __hdr));
+ 
+ 	beacon_cmd.template_id = cpu_to_le32((u32)mvmvif->id);
+ 
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c b/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
+index 36379b738de1..d475a2fb9c59 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
+@@ -342,6 +342,8 @@ iwl_mvm_tdls_config_channel_switch(struct iwl_mvm *mvm,
+ 	struct iwl_tdls_channel_switch_cmd_tail *tail =
+ 		iwl_mvm_chan_info_cmd_tail(mvm, &cmd.ci);
+ 	u16 len = sizeof(cmd) - iwl_mvm_chan_info_padding(mvm);
++	struct iwl_tx_cmd_v6 *tx_cmd =
++		container_of(&tail->frame.tx_cmd, struct iwl_tx_cmd_v6, __hdr);
+ 	int ret;
+ 
+ 	lockdep_assert_held(&mvm->mutex);
+@@ -410,14 +412,12 @@ iwl_mvm_tdls_config_channel_switch(struct iwl_mvm *mvm,
+ 			ret = -EINVAL;
+ 			goto out;
+ 		}
+-		iwl_mvm_set_tx_cmd_ccmp(info, &tail->frame.tx_cmd);
++		iwl_mvm_set_tx_cmd_ccmp(info, tx_cmd);
+ 	}
+ 
+-	iwl_mvm_set_tx_cmd(mvm, skb, &tail->frame.tx_cmd, info,
+-			   mvmsta->deflink.sta_id);
++	iwl_mvm_set_tx_cmd(mvm, skb, tx_cmd, info, mvmsta->deflink.sta_id);
+ 
+-	iwl_mvm_set_tx_cmd_rate(mvm, &tail->frame.tx_cmd, info, sta,
+-				hdr->frame_control);
++	iwl_mvm_set_tx_cmd_rate(mvm, tx_cmd, info, sta, hdr->frame_control);
+ 	rcu_read_unlock();
+ 
+ 	memcpy(tail->frame.data, skb->data, skb->len);
 -- 
-Kees Cook
+2.43.0
+
