@@ -1,80 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6162D202C48;
-	Wed, 14 May 2025 06:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from azure-sdnproxy.icoremail.net (l-sdnproxy.icoremail.net [20.188.111.126])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2D2E206F2A;
+	Wed, 14 May 2025 08:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.188.111.126
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747205025; cv=none; b=tuOimvVqNjpoNKpcwbWTvwsAGEWTR0ZiaElKN3nBETbM+7dMo9oJ2n5x6QBAIuIHZwP1oDWLKWlP9evQwG6j/zyua8XDFjD7Dlv6zhmi/aWRr+mZq8HkY2dSHjX0xjWubIGFuz1fZSlTq3hKGGY+7kNLsS14MCkOnKqwWYSAB4c=
+	t=1747210241; cv=none; b=G8FKggS+mTCBDY/UGLBgNqoUGMr3dBErE18R6fe05ZKdoYwKt0pu8imKeLTc+k86RYd/C/a2s582GgIO2n2WcKr7pNbKxc1RoMGkpQDWAlH+qJ47tcYhybvMWq5Oo/11G9E/Gh6yMg88g8uG4OU9o2h9i5vSKMPoHGYg8rdJsVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747205025; c=relaxed/simple;
-	bh=/eoA5dRABAipZwS2W69m2xusqSWbSukOX37lspQwxio=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gPdsdrMkvdCN/IeGuZ6AHfIXfyXWm9/2BSLNWDlkNqfRX4gjJiGJXPsytB0HcJxQ9dLg/ppdSJX8dAGcce8hPT3oUltPxYxFQ4VUOfz5bXTXYq+fj6m/wgpKDIcZuXk4vokwJEL9jqgDc45iKTuKHFEFEfFxxf8nopRtU1JtOZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DH8hEszT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DH8hEszT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97E58C4CEF1;
-	Wed, 14 May 2025 06:43:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747205024;
-	bh=/eoA5dRABAipZwS2W69m2xusqSWbSukOX37lspQwxio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DH8hEszTfhPNBZsTgxUhCicwevzYt8FEfgGsdStnQDZSAjbbqBpLqTdGSLohfY/vE
-	 mVduQP6eLlGxuB5xdGMRRRacNloj0e7GQzlbMRSTqJfgHnr+cf1qaMqp3HbJC+Ne/N
-	 QOSvuCTx79v4PBj5rnYiZA3Huf+1WcvkxeGwIJkiCQb4oRkl0SBl0AY8+7B0MG5jRV
-	 6OUlpCxtyyxDZC8QPATKQN8ataRqQ3YsAatJfD8fHEXIoPA9HEE6KRO+qyrd10LCqB
-	 7qYTK8LdZB0+UQxkAg3m1ImElPA5pkO4cy18VZ5GA6H14XB/MLM6Ezj22R/FeBV589
-	 JXdjipGWmPj7g==
-Date: Wed, 14 May 2025 06:43:43 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: mhklinux@outlook.com
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, gustavoars@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI: hv: Remove unnecessary flex array in struct
- pci_packet
-Message-ID: <aCQ7n4U55j6dvkzl@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250514044440.48924-1-mhklinux@outlook.com>
+	s=arc-20240116; t=1747210241; c=relaxed/simple;
+	bh=DIQPaVMfUbgq6kQYMxZsdkh+L/DpHHl1WE0gt7iVMU0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=edePX8QLWAZ12XQcYg9vVw/70ombYoVbf8vfjmx2+fzx4Fblei5sLHH5K0vrkO11im6UZSbjUhGejSVPN5qXckgIJfJ/XyJV5RisTV94ZNroJldEcJKZLblP8KsgNNIiS/E8veWrMYzbJq3vpWmZCPGm168KCIPSLUyK6egKoB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=20.188.111.126
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
+	by app2 (Coremail) with SMTP id TQJkCgDXaJLuTyRoDL15AA--.31835S2;
+	Wed, 14 May 2025 16:10:25 +0800 (CST)
+From: Yulin Lu <luyulin@eswincomputing.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	brgl@bgdev.pl,
+	linux-hardening@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	zhengyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	fenglin@eswincomputing.com,
+	lianghujun@eswincomputing.com,
+	Yulin Lu <luyulin@eswincomputing.com>
+Subject: [PATCH v3 0/2] ESWIN EIC7700 pinctrl driver
+Date: Wed, 14 May 2025 16:09:28 +0800
+Message-Id: <20250514080928.385-1-luyulin@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514044440.48924-1-mhklinux@outlook.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TQJkCgDXaJLuTyRoDL15AA--.31835S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cry7KF4fAFWUKFWkJFWkZwb_yoW8Ar1DpF
+	43GFn5Grs8Jr47Ja4xJa109rW3Gan7Ar1a9w4Sg347XFs8Aw1UJr4rKF1YqrZrCr48J34Y
+	yF15Kryj9F1DAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRidbbtUUUUU==
+X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
 
-On Tue, May 13, 2025 at 09:44:40PM -0700, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
-> 
-> struct pci_packet contains a "message" field that is a flex array
-> of struct pci_message. struct pci_packet is usually followed by a
-> second struct in a containing struct that is defined locally in
-> individual functions in pci-hyperv.c. As such, the compiler
-> flag -Wflex-array-member-not-at-end (introduced in gcc-14) generates
-> multiple warnings such as:
-> 
-> drivers/pci/controller/pci-hyperv.c:3809:35: warning: structure
->     containing a flexible array member is not at the end of another
->     structure [-Wflex-array-member-not-at-end]
-> 
-> The Linux kernel intends to introduce this compiler flag in standard
-> builds, so the current code is problematic in generating these warnings.
-> 
-> The "message" field is used only to locate the start of the second
-> struct, and not as an array. Because the second struct can be
-> addressed directly, the "message" field is not really necessary.
-> Rather than try to fix its usage to meet the requirements of
-> -Wflex-array-member-not-at-end, just eliminate the field and
-> either directly reference the second struct, or use "pkt + 1"
-> when "pkt" is dynamically allocated.
-> 
-> Reported-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+  Implements support for the Eswin eic7700 SoC pinctrl controller.
+  Provides API to manage pinctrl for the eic7700 SoC.
+  Integration with the Linux pinctrl subsystem for consistency and
+  scalability.
 
-Queued. Thanks.
+  Supported chips:
+    Eswin eic7700 SoC.
+
+  Test:
+    Tested this patch on the Sifive HiFive Premier P550 (which uses
+    the EIC7700 SoC), including system boot, networking, EMMC, display,
+    and other peripherals. The drivers for these modules all use the
+    pinctrl module, so this verifies that this pinctrl driver
+    patch is working properly.
+
+---
+Changes since V2:
+- Address the comments from Krzysztof Kozlowski, some commit information are modified.
+- Fixed some errors and warnings reported by the kernel test robot.
+- Modified the usage of some labels and syntax in the YAML file, as well as the usage
+  of the dev_err_probe function, to make their application scenarios more accurate.
+- Link: https://lore.kernel.org/all/20250506090844.1516-1-luyulin@eswincomputing.com/
+
+Changes since V1:
+- Made overall modifications to the driver structure and the DTS writing style.
+- Link: https://lore.kernel.org/all/20250325141311.758787-1-emil.renner.berthing@canonical.com/
+
+Yulin Lu (2):
+  dt-bindings: pinctrl: eswin: Document for EIC7700 SoC
+  pinctrl: eswin: Add EIC7700 pinctrl driver
+
+ .../pinctrl/eswin,eic7700-pinctrl.yaml        | 157 ++++
+ drivers/pinctrl/Kconfig                       |  11 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-eic7700.c             | 702 ++++++++++++++++++
+ 4 files changed, 871 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
+
+-- 
+2.25.1
+
