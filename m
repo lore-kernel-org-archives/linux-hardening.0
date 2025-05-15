@@ -1,51 +1,34 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04921F5827;
-	Thu, 15 May 2025 20:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABC21922C4;
+	Thu, 15 May 2025 21:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747340774; cv=none; b=a7XLOIdfFLAei99TpkXyDJvDNBZCxxFpoi5fYWmlJ7aD8ZAizjYbs8I8RrDOr6oxg5XkCGCONlSJI5ztkh/J7ZumRP1WXGsFaVOI62XHS0Cy1aFe3Eg72a1JZVthzRmiNIQDY1Vdv/w917bhG9by3IPJSAaRbd6u/A5YwCOF7LM=
+	t=1747344983; cv=none; b=RnMQgi7ItnGEP24TwfeKMB3Qk+yeb5Wm7VOEz+gNb4Z52lmKVZn9bJ/XGHbfWsWBPt0GpSmpms1iGY+yMfnVSmpUf78pwl94wJ5k14BkoAeJSZGs8PEyzZJQGLZReckhkDQejby5K6AhVhTLckKw/1yVogpdU4Fjw0G2RjrAfZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747340774; c=relaxed/simple;
-	bh=TxY7a/noT4+XphSwUtR0Qw3R/xm0x/v1iIZu5905ch8=;
+	s=arc-20240116; t=1747344983; c=relaxed/simple;
+	bh=SeYwRuis/az6deX8AL3u4+LQM8L5xEuFWIqWaKOTXMo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uYmH1T3l6j9Cdx84hzIbtU9+uMbWcJRWNBWu9rZ59W8RZWp932OkBjx/UcNi+Am1GFrXH26QhqjXpArCYxpIz/R9mOyPlWiPq9deRO5ygCqqAu0WFJxHMVhczIElsmKfJr7WXOH6IIDdQBa6LPcz/qzP6OQdTYyB2NalKkQxPJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wdc3ReDq; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NR3weyH+vSXjpZwb8SzZcF3wC8kZBwq6kCZHNthLUgiuZ32aesbAhKISYxBlquzv81VxSyHjXsPsriRiT/T49rY/QGTHfBGtPQ3dmSYRZZnALrfds/HDRgQ7VXhdrn0NTjxCD4/wEmg731A7cmuBSC8kuLqhp1oCZ3tmjO8S2a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9y3q0MK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wdc3ReDq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747340772; x=1778876772;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TxY7a/noT4+XphSwUtR0Qw3R/xm0x/v1iIZu5905ch8=;
-  b=Wdc3ReDq+4VORUT8hc5BF66A7E9XrMEaOYgSM+eai2Tk5fF+VNUAPX+7
-   tVeTQxPlCcGfDuMRMq/WMbcP39L6wHSzj1/1femB2fwDX/qShDvlQ46E/
-   1ylVGcWvO/riWpmWOrlB+5RTVAZlSpdDaOfY1wN2weSMV5T5gUDTYsiIz
-   XGbGj0rJPY+ga5NGrn5frV/4LJj0oz59oLXI3hBY5H2cY7S0EEDg9ql/b
-   66V8whVExSXprsb7yLtmID7cvNCQqtuC4Wqmnau4zdXZeOnjsBpvw0foS
-   kqsu/Ub5rLdy5qF/cMf64erqJ8/CWB/OQxlt5ccA3q7w5gJYmn8uZcLuO
-   g==;
-X-CSE-ConnectionGUID: t1TP3vtuSXyKYvxqFe4gPA==
-X-CSE-MsgGUID: oJjOmh72QiCcWxUCfmQKqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="59938533"
-X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
-   d="scan'208";a="59938533"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 13:26:11 -0700
-X-CSE-ConnectionGUID: vUztFMGqQJi1FIgG+GTGMA==
-X-CSE-MsgGUID: iraNBp1BRJCATn9l8/pqmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
-   d="scan'208";a="138977709"
-Received: from gkhatri-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.13])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 13:26:11 -0700
-Date: Thu, 15 May 2025 13:26:03 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9y3q0MK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60BCCC4CEE7;
+	Thu, 15 May 2025 21:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747344982;
+	bh=SeYwRuis/az6deX8AL3u4+LQM8L5xEuFWIqWaKOTXMo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B9y3q0MK/zbiEU/HAxlbPGU73uzBL5vYTiUT+rCbyxgIL9AuxVykDRbstUpE6XU7x
+	 RXlB02xpxW3eJJI6gj0q9SIZYYH6RwHimPp/9mJEPL7A+co9VxQkSSBHQCNFfMrU/D
+	 shHcTlTkawpaTvtS5i6WngH3uaFb5Qz8qFAX7JAe8x+d9wlOc11hg5xeEARkIhBMM/
+	 pF0mbwrjXD2QExW3Vq5qISkPQ/jNbE+AiaXpVR4ZJlqpT5B6sWf/6Enn7nvhF4gvQm
+	 1IUJbVpRx6O71EaqR7GVFI6MychgN6K8wbin3rOOEV1hMFmujOdhwMj802ggKl3luU
+	 ps01aja+qBRig==
+Date: Thu, 15 May 2025 14:36:19 -0700
+From: Kees Cook <kees@kernel.org>
+To: Eduard Zingerman <eddyz87@gmail.com>
 Cc: Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
 	linux-mm@kvack.org, Andrii Nakryiko <andrii@kernel.org>,
 	Ihor Solodrai <ihor.solodrai@linux.dev>,
@@ -56,16 +39,13 @@ Cc: Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
-	Eduard Zingerman <eddyz87@gmail.com>
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Subject: Re: [REGRESSION] bpf verifier slowdown due to vrealloc() change
  since 6.15-rc6
-Message-ID: <20250515202552.znxvzcnhpdjqmlbm@desk>
+Message-ID: <202505151435.ECC98E09@keescook>
 References: <20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg>
- <C66C764E-C898-457D-93F0-A680983707F0@kernel.org>
- <202505150911.1254C695D@keescook>
- <20250515171821.6je7a4uvmttcdiia@desk>
- <202505151039.DAA202A@keescook>
- <20250515175205.th7pjvord6fum35a@desk>
+ <202505150845.0F9E154@keescook>
+ <c36245a48149a12180ec710c65d317a12cdfa020.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -74,66 +54,23 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250515175205.th7pjvord6fum35a@desk>
+In-Reply-To: <c36245a48149a12180ec710c65d317a12cdfa020.camel@gmail.com>
 
-On Thu, May 15, 2025 at 10:52:13AM -0700, Pawan Gupta wrote:
-> On Thu, May 15, 2025 at 10:41:41AM -0700, Kees Cook wrote:
-> > On Thu, May 15, 2025 at 10:18:21AM -0700, Pawan Gupta wrote:
-> > > On Thu, May 15, 2025 at 09:51:15AM -0700, Kees Cook wrote:
-> > > > On Thu, May 15, 2025 at 07:51:26AM -0700, Kees Cook wrote:
-> > > > > On May 15, 2025 6:12:25 AM PDT, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
-> > > > > >There is an observable slowdown when running BPF selftests on 6.15-rc6
-> > > > > >kernel[1] built with tools/testing/selftests/bpf/{config,config.x86_64}.
-> > > > > [...]
-> > > > > Where can I find the .config for the slow runs?
-> > > > 
-> > > > Oops, I can read. :) Doing a build now...
-> > > > 
-> > > > > And how do I run the test myself directly?
-> > > > 
-> > > > I found:
-> > > > https://docs.kernel.org/bpf/bpf_devel_QA.html
-> > > > 
-> > > > But it doesn't seem to cover a bunch of stuff (no way to prebuild the
-> > > > tests, no info on building the test modules).
-> > > > 
-> > > > This seems to be needed:
-> > > > 
-> > > > make O=regression-bug -C tools/testing/selftests/bpf/test_kmods
-> > > > 
-> > > > But then the booted kernel doesn't load it (missing signatures?)
-> > > > 
-> > > > Anyway, I'll keep digging...
-> > > 
-> > > After struggling with this for a while, I figured vmtest.sh is the easiest
-> > > way to test bpf:
-> > > 
-> > > ./tools/testing/selftests/bpf/vmtest.sh -i ./test_progs
+On Thu, May 15, 2025 at 11:31:09AM -0700, Eduard Zingerman wrote:
+> On Thu, 2025-05-15 at 08:47 -0700, Kees Cook wrote:
+> > On Thu, May 15, 2025 at 09:12:25PM +0800, Shung-Hsi Yu wrote:
+> > > Bisect was done by Pawan and got to commit a0309faf1cb0 "mm: vmalloc:
+> > > support more granular vrealloc() sizing"[2]. To further zoom in the
 > > 
-> > I can't even build the test_progs. :(
-> > 
-> > $ make test_progs
-> > ...
-> >   CLNG-BPF [test_progs] bpf_iter_tasks.bpf.o
-> > progs/bpf_iter_tasks.c:98:8: error: call to undeclared function 'bpf_copy_from_user_task_str'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-> >    98 |         ret = bpf_copy_from_user_task_str((char *)task_str1, sizeof(task_str1), ptr, task, 0
-> > );
-> >       |               ^
-> > 1 error generated.
+> > Can you try this patch? It's a clear bug fix, but if it doesn't improve
+> > things, I have another idea to rearrange the memset.
 > 
-> I just tried on the latest upstream, and I am getting the same error. My
-> earlier bisection was on a stable-rc for 6.14.y:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-6.14.y
-> 
-> ... where it was first reported:
-> 
-> https://lore.kernel.org/stable/20250515041659.smhllyarxdwp7cav@desk/
+> I tried this patch on top of the commit 82f2b0b97b36 ("Linux 6.15-rc6").
+> W/o the patch I observe the slowdown, test times out after 120 seconds,
+> with the patch test finishes in 3 seconds.
 
-I can confirm on v6.14.7-rc2 the test verif_scale_loop3_fail is now
-passing(in <10 secs) after applying your first patch (mm: vmalloc: Actually
-use the in-place vrealloc region). The the test passes after applying your
-second patch also.
+Well that's pretty definitive! Thank you! I'll send out a properly
+formatted patch. May I add your Tested-by?
 
-For some reason I am unable to build the bpf selftests on latest upstream.
-I may be missing something that is required on latest upstream :-(
+-- 
+Kees Cook
