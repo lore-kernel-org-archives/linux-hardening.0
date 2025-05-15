@@ -1,74 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94794B1E64;
-	Thu, 15 May 2025 02:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5639E182D0;
+	Thu, 15 May 2025 05:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747277903; cv=none; b=niKR8ZKuUmHqwxCUXJZOKtyGZmvUkPBtx4Iqz6o3YOmqLv0pclu4uY0LLejLKjwVroFUZ9GundoQqImMCAKk6U/XLzwSh/L7Z1zOHOuFJFcmU1vn2X0FASYnwjsx51nzUcLgmYAidYNAl7Q6Nh3U5NjnPY0ijcHXQWXlBSWcrjY=
+	t=1747287948; cv=none; b=n73Ter30Q/PW1l23pIb5Y3BUvi/eBAoePVGTw+S1X9GkO2BVr0i7t4Y9053aPX7fsUV+GgU4aHi+2Z72oa4bdgILyyrp96d4RZd0lL3a2cG1fnhkeok7IB3SZ09IQC9qGXBXsVsupsoLrMftle7ki0HrotagRuv6+4LUr0iHv0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747277903; c=relaxed/simple;
-	bh=MJ9NvK4x6c2IC/ufJ5Ze19JfDwJVE60QHIw713vLMMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mll7JiXCGYMS4ietcnJpI0VmP/dMN0kXQbKPgjJ0SZaTaCdpwJrrEFQcHRj7cCfMjNlRUdP0gebNPjg/IoDTHVvcpRkn3P1LgGatcwJnp8fkn1Zp2v64nsuLaAN7kqT9Qxmvc0QAEnZOFYqoxfpRKRPaB233yzl1znnKPlVwtvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zif55Efl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zif55Efl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFB59C4CEE3;
-	Thu, 15 May 2025 02:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747277902;
-	bh=MJ9NvK4x6c2IC/ufJ5Ze19JfDwJVE60QHIw713vLMMg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Zif55EflQ/wfoyYxuzgJJHSrnBUs8bX4XFTCXmCfL2k4nVxfdZptpbnKhsYTGJHyW
-	 RRWNbiS2iBt8i59yMtTwmGao/t3SUPhPkA5QpG/g8f5xrhYrwb0lj3ahw7sEv4pOvM
-	 WNFJgauzbDhZyMYy68n2w/6tSa+mYfoGNC513s65H1XAQr5JXbJwKjAzQ1iXB93pAA
-	 0T38+OzdVR3/lPkJlJq3ES50zfLllMLDQHrmSN2znHIrqOZqEqfk5MqjgqxZ5VOwal
-	 4Wq37MTo19nZeTjMzkfgnuAh31jvNex/owxuodR9jRj1cQweyyN6qZkhFDyC0abGkf
-	 dfW4bO91okreQ==
-Date: Wed, 14 May 2025 19:58:21 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Luo Jie <quic_luoj@quicinc.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lei Wei
- <quic_leiwei@quicinc.com>, Suruchi Agarwal <quic_suruchia@quicinc.com>,
- Pavithra R <quic_pavir@quicinc.com>, "Simon Horman" <horms@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>, "Gustavo A.
- R. Silva" <gustavoars@kernel.org>, "Philipp Zabel"
- <p.zabel@pengutronix.de>, <linux-arm-msm@vger.kernel.org>,
- <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <linux-hardening@vger.kernel.org>, <quic_kkumarcs@quicinc.com>,
- <quic_linchen@quicinc.com>, <srinivas.kandagatla@linaro.org>,
- <bartosz.golaszewski@linaro.org>, <john@phrozen.org>
-Subject: Re: [PATCH net-next v4 00/14] Add PPE driver for Qualcomm IPQ9574
- SoC
-Message-ID: <20250514195821.56df5c60@kernel.org>
-In-Reply-To: <20250513-qcom_ipq_ppe-v4-0-4fbe40cbbb71@quicinc.com>
-References: <20250513-qcom_ipq_ppe-v4-0-4fbe40cbbb71@quicinc.com>
+	s=arc-20240116; t=1747287948; c=relaxed/simple;
+	bh=G8PxSbjudY3z4EDo1xicx/6tvedxmx2GC5dxBsTHKZo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hgtCsLYZcvsJGVZCCaH2lsE7A+ZAT752UwtX0XNQDEF0Fou2gRpAfdNew7FWieYKxvpNhU0vZXU7CfwtkwvrknkCwVO5AGzsgM+wg+VU0DGdY40mJbQYNuvs1RDtbfp9g727UA4WDx2wAsKueRZ3HQjVUJ2p0NMQrGIih2a/zwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
+	by app2 (Coremail) with SMTP id TQJkCgAXtpR2fyVojQl8AA--.60958S2;
+	Thu, 15 May 2025 13:45:28 +0800 (CST)
+From: Yulin Lu <luyulin@eswincomputing.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	brgl@bgdev.pl,
+	linux-hardening@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	zhengyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	fenglin@eswincomputing.com,
+	lianghujun@eswincomputing.com,
+	Yulin Lu <luyulin@eswincomputing.com>
+Subject: [PATCH v4 0/2] ESWIN EIC7700 pinctrl driver
+Date: Thu, 15 May 2025 13:45:24 +0800
+Message-Id: <20250515054524.390-1-luyulin@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TQJkCgAXtpR2fyVojQl8AA--.60958S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cry7KF4fAFWUKFWkJFWkZwb_yoW8ZF1kpa
+	13G3Z5Arn8Jr47ta4xJa1j9ry3Wan7Ar1a9w1Fg347XFs8Aw1UJrWSgF1YgFZrur4kG34r
+	tF13Kryj9Fn8ArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRidbbtUUUUU==
+X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
 
-On Tue, 13 May 2025 17:58:20 +0800 Luo Jie wrote:
-> The PPE (packet process engine) hardware block is available in Qualcomm
-> IPQ chipsets that support PPE architecture, such as IPQ9574 and IPQ5332.
-> The PPE in the IPQ9574 SoC includes six ethernet ports (6 GMAC and 6
-> XGMAC), which are used to connect with external PHY devices by PCS. The
-> PPE also includes packet processing offload capabilities for various
-> networking functions such as route and bridge flows, VLANs, different
-> tunnel protocols and VPN. It also includes an L2 switch function for
-> bridging packets among the 6 ethernet ports and the CPU port. The CPU
-> port enables packet transfer between the ethernet ports and the ARM
-> cores in the SoC, using the ethernet DMA.
+  Implements support for the Eswin eic7700 SoC pinctrl controller.
+  Provides API to manage pinctrl for the eic7700 SoC.
+  Integration with the Linux pinctrl subsystem for consistency and
+  scalability.
 
-Please make sure the code builds cleanly with W=1.
+  Supported chips:
+    Eswin eic7700 SoC.
+
+  Test:
+    Tested this patch on the Sifive HiFive Premier P550 (which uses
+    the EIC7700 SoC), including system boot, networking, EMMC, display,
+    and other peripherals. The drivers for these modules all use the
+    pinctrl module, so this verifies that this pinctrl driver
+    patch is working properly.
+
+---
+Changes since V3:
+- Added "Reviewed-by" tag of "Krzysztof Kozlowski"
+- Corrected some incorrect spaces and blank lines in the YAML file.
+- Link: https://lore.kernel.org/all/20250514080928.385-1-luyulin@eswincomputing.com/
+
+Changes since V2:
+- Added "Reviewed-by" tag of "Krzysztof Kozlowski"
+- Address the comments from Krzysztof Kozlowski, some commit information are modified.
+- Fixed some errors and warnings reported by the kernel test robot.
+- Modified the usage of some labels and syntax in the YAML file, as well as the usage
+  of the dev_err_probe function, to make their application scenarios more accurate.
+- Link: https://lore.kernel.org/all/20250506090844.1516-1-luyulin@eswincomputing.com/
+
+Changes since V1:
+- Made overall modifications to the driver structure and the DTS writing style.
+- Link: https://lore.kernel.org/all/20250325141311.758787-1-emil.renner.berthing@canonical.com/
+
+Yulin Lu (2):
+  dt-bindings: pinctrl: eswin: Document for EIC7700 SoC
+  pinctrl: eswin: Add EIC7700 pinctrl driver
+
+ .../pinctrl/eswin,eic7700-pinctrl.yaml        | 156 ++++
+ drivers/pinctrl/Kconfig                       |  11 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-eic7700.c             | 702 ++++++++++++++++++
+ 4 files changed, 870 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
+
 -- 
-pw-bot: cr
+2.25.1
+
