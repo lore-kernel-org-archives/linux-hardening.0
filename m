@@ -1,129 +1,427 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DF52376E1;
-	Fri, 16 May 2025 10:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18160153BED;
+	Fri, 16 May 2025 17:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747393194; cv=none; b=mMeCWskXm+L+RKjiVKDeT0BYDIeBJ+YcctEkx3go19V4ORuP4pI5eGjE3lDXKuyjbBaSF9MAoxtchq22oKiJLpQDuRACJ5ipS0PtvmkvE/w5hbHdkPGLGIgkaeIJ0oh/EmomJQOK+DjiiXp6VLbdPi4e+3y7LkgMe8InIojq5aw=
+	t=1747415223; cv=none; b=LJeLjFfCvSuNfAouMO59x073/HlCyPmU1ASQwvND19TkpdVMTHD9MyTA9AP5JJMMndQnul2vqhnvqXh1g1oo+cqyEpR//ISCeinLb0zxzgYyoYTTTI1dpZIEsusl2i4365JLGjtHARkfDl4CtD9EXI1gUD9lLPEg8PNCwSzq1L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747393194; c=relaxed/simple;
-	bh=ceUyDP/AgA4ZYlbwY1o6qyfuzkXQjy3vPbxZDljfKSI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=oA4cqxrd6OduWpnyOQKB1D/SOuBTtrLZChmW1Ir5oufR+fD3iRffAHgq//9dqo11+8n5N4ymr5BdXt3etVWr5F4CkH2rgjg41EMX3eIYwxzmmlmutZDdjIS+i7oDXWZQfTgHDjmaYLTMG+ekobk0ZSwYWnsMJnjQUs1Um0xhh6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=N8yXsf+x; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747415223; c=relaxed/simple;
+	bh=tTOcQye2Ek0OQqamysTFi7cL1ijJ4+/RHhoS54Zzjts=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=t1N5ot8hxyBp2gPnEPXxBMDhU/NI5UYa7LlOqhgsQY2ZjISlIGj4A8Qf0aLsugmlrDGMJGehVWAYeZ8o3Azjc7AurEns/OHERl+BZOEod+BnSVweWxf0zhcWlrmQnT7ZTwsGmNoOIqF9I2fttJ3mmIzg7EiMnQODwVAaN1Ovy20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JUQ9Y2rw; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="N8yXsf+x"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G40WwO001795;
-	Fri, 16 May 2025 10:59:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xhaje0yiLVs8KTTuPDwpOOOKiFeWxe8la47MOEnCjPY=; b=N8yXsf+xUqA9EoaK
-	6EjIH2jJmh0YJV9bc/ogXPhMMXeWhKt0gqo2ne7TveBjXd5cthxLh3iU1SC83aFM
-	VlNOQDFOq5/Yk/qmMG7WhVDDbezuQt8BBTC7aaPxZXPrZxLyMrYhxzRIBI4LcFps
-	Optdn1xjHwvzkcfOHs5xQxzfQ5y7Taqxiud0ZqSJwfINricfN/WqddCxbEch+R+Z
-	zUQ+PhNNQ9EV1eppZoh4tCSfBrrszfAUnT8pjusjyRwI3gEloxplso9kVRZkrXYc
-	qFnwOmoD8rsE1CoGL4I1Wfv3x0rbNm1H4aGC71Yj71kAsYPkZbdat/yp0603CfEF
-	KyWr/w==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcrhht8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 May 2025 10:59:35 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54GAxYV7007898
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 May 2025 10:59:34 GMT
-Received: from [10.253.77.60] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 16 May
- 2025 03:59:28 -0700
-Message-ID: <1b209aa2-6399-40d5-9fa9-70a712a57aa2@quicinc.com>
-Date: Fri, 16 May 2025 18:59:26 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JUQ9Y2rw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747415221; x=1778951221;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=tTOcQye2Ek0OQqamysTFi7cL1ijJ4+/RHhoS54Zzjts=;
+  b=JUQ9Y2rwPmItY4qgjVMPFixB1jqkUOSQSZ2xGxM1vDPv1Up9/zTIOUhB
+   5nELS7cNHLPrvwwxkvBGljWPwsFvsoRZ8dHLKeLEYadp/I5Uadeho3DuM
+   hoGIUHEqNhiyk8o7lOh76ymCSbtO4qRZq1LIW5veEu5sX04D12eU1yEwU
+   s4XTeJ1vcgotf8Zimaj2gfaRrteUHGw9CXVRlazXqHesWU8dxkxltQsLC
+   nBiEPHuTeAzRrpLPzyRZIVIut3shy38FUcyPYu16AEywLo5+4lifb7eP4
+   7YT6OniE2hqG4YKTK3GtJFG4EY4rn5QTDtnshAD5mkOS7GhVszfFDAIUO
+   A==;
+X-CSE-ConnectionGUID: hm7Cqn/QSuGHW5732d1OMQ==
+X-CSE-MsgGUID: hhD/fCYtSV67XD+e9djrVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49270923"
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="49270923"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 10:06:54 -0700
+X-CSE-ConnectionGUID: M/hyt8xMTrucQ7ty692XsQ==
+X-CSE-MsgGUID: IyPpFovwTC2GVxEUfFFrtw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="143868374"
+Received: from anguy11-upstream.jf.intel.com ([10.166.9.133])
+  by orviesa005.jf.intel.com with ESMTP; 16 May 2025 10:06:53 -0700
+From: Tony Nguyen <anthony.l.nguyen@intel.com>
+To: davem@davemloft.net,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	andrew+netdev@lunn.ch,
+	netdev@vger.kernel.org
+Cc: Milena Olech <milena.olech@intel.com>,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	jacob.e.keller@intel.com,
+	richardcochran@gmail.com,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	linux-hardening@vger.kernel.org,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Mina Almasry <almasrymina@google.com>,
+	Samuel Salin <Samuel.salin@intel.com>
+Subject: [PATCH net-next v3 03/10] virtchnl: add PTP virtchnl definitions
+Date: Fri, 16 May 2025 10:06:37 -0700
+Message-ID: <20250516170645.1172700-4-anthony.l.nguyen@intel.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250516170645.1172700-1-anthony.l.nguyen@intel.com>
+References: <20250516170645.1172700-1-anthony.l.nguyen@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 00/14] Add PPE driver for Qualcomm IPQ9574 SoC
-To: Jakub Kicinski <kuba@kernel.org>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Paolo Abeni
-	<pabeni@redhat.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lei Wei
-	<quic_leiwei@quicinc.com>,
-        Suruchi Agarwal <quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R.
- Silva" <gustavoars@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <john@phrozen.org>
-References: <20250513-qcom_ipq_ppe-v4-0-4fbe40cbbb71@quicinc.com>
- <20250514195821.56df5c60@kernel.org>
- <27cf4b47-2ded-4a37-9717-1ede521d8639@quicinc.com>
- <20250515072457.55902bfd@kernel.org>
-Content-Language: en-US
-From: Luo Jie <quic_luoj@quicinc.com>
-In-Reply-To: <20250515072457.55902bfd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: pfhM-R8RXIFjm-mBw1jDByh1m__v2JJD
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDEwNCBTYWx0ZWRfX8NcUXlfSgtIq
- BsgRb/eajTwvEIyApnmNql3ET2SJJy+asmjXa+Rv2Hvz6xEfeBDF5URip8FI8aIBEIjs02xbj0o
- 7LmKKQFAFoJq8EPy7ToHLE/+quoMWEPs/BuBL0OgHY8ZZBBH/genym4AVieq37OodVUgmRr6RHK
- adADn0NCitY6bIFzYHAnKczZ5kejOoZkk867L8PND2nkkTlxqe5Q9zz7e4OhA/rXQqrCj63RoMN
- Enpd2ULUasfP7qXiw1zIxK12TjRwdJhlBOhTLxQenRiiucmm8pTr7tFwGzMoj+w0uYLZTe+8K0k
- CiJ5Jy1DlcEILE8R16yiQYLWLnFdD7s20cVqDt6JMcCVCGDTBxSCJ+oG+wyvYfca/ly9EIsesB9
- MmQWt6IVKNNbcNypJokSAg/gkjW9NiMaURe2I5nRo62ELazwV/GrQkPsmlH9wcSSfj7+vFYR
-X-Authority-Analysis: v=2.4 cv=K7UiHzWI c=1 sm=1 tr=0 ts=68271a97 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=Ht6I3Yxflf12Oa7PA1sA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: pfhM-R8RXIFjm-mBw1jDByh1m__v2JJD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-16_04,2025-05-16_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 malwarescore=0
- phishscore=0 mlxlogscore=906 clxscore=1015 bulkscore=0 impostorscore=0
- lowpriorityscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505160104
+Content-Transfer-Encoding: 8bit
 
+From: Milena Olech <milena.olech@intel.com>
 
+PTP capabilities are negotiated using virtchnl commands. There are two
+available modes of the PTP support: direct and mailbox. When the direct
+access to PTP resources is negotiated, virtchnl messages returns a set
+of registers that allow read/write directly. When the mailbox access to
+PTP resources is negotiated, virtchnl messages are used to access
+PTP clock and to read the timestamp values.
 
-On 5/15/2025 10:24 PM, Jakub Kicinski wrote:
-> On Thu, 15 May 2025 22:19:11 +0800 Luo Jie wrote:
->> However, from the patchwork result as below, it seems the dependent
->> patch series (for FIELD_MODIFY() macro) did not get picked to validate
->> the PPE driver patch series together. This dependency is mentioned in
->> the cover letter. Could you advise what could be wrong here, which is
->> preventing the dependent patch to be picked up? Thanks.
-> 
-> Please try to read more about kernel development process.
-> These patches are not in Linus's tree or the networking tree.
-> If you want to use them you have to wait with your submission
-> until after the next merge window.
+Virtchnl API covers both modes and exposes a set of PTP capabilities.
 
-OK, understand now. I will push the new version after the next
-merge window. Thanks for the information.
+Using virtchnl API, the driver recognizes also HW abilities - maximum
+adjustment of the clock and the basic increment value.
+
+Additionally, API allows to configure the secondary mailbox, dedicated
+exclusively for PTP purposes.
+
+Reviewed-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Signed-off-by: Milena Olech <milena.olech@intel.com>
+Tested-by: Mina Almasry <almasrymina@google.com>
+Tested-by: Samuel Salin <Samuel.salin@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+---
+ drivers/net/ethernet/intel/idpf/virtchnl2.h | 302 ++++++++++++++++++++
+ 1 file changed, 302 insertions(+)
+
+diff --git a/drivers/net/ethernet/intel/idpf/virtchnl2.h b/drivers/net/ethernet/intel/idpf/virtchnl2.h
+index 63deb120359c..db9523ef3fa7 100644
+--- a/drivers/net/ethernet/intel/idpf/virtchnl2.h
++++ b/drivers/net/ethernet/intel/idpf/virtchnl2.h
+@@ -68,6 +68,16 @@ enum virtchnl2_op {
+ 	VIRTCHNL2_OP_ADD_MAC_ADDR		= 535,
+ 	VIRTCHNL2_OP_DEL_MAC_ADDR		= 536,
+ 	VIRTCHNL2_OP_CONFIG_PROMISCUOUS_MODE	= 537,
++
++	/* TimeSync opcodes */
++	VIRTCHNL2_OP_PTP_GET_CAPS			= 541,
++	VIRTCHNL2_OP_PTP_GET_VPORT_TX_TSTAMP		= 542,
++	VIRTCHNL2_OP_PTP_GET_DEV_CLK_TIME		= 543,
++	VIRTCHNL2_OP_PTP_GET_CROSS_TIME			= 544,
++	VIRTCHNL2_OP_PTP_SET_DEV_CLK_TIME		= 545,
++	VIRTCHNL2_OP_PTP_ADJ_DEV_CLK_FINE		= 546,
++	VIRTCHNL2_OP_PTP_ADJ_DEV_CLK_TIME		= 547,
++	VIRTCHNL2_OP_PTP_GET_VPORT_TX_TSTAMP_CAPS	= 548,
+ };
+ 
+ /**
+@@ -1270,4 +1280,296 @@ struct virtchnl2_promisc_info {
+ };
+ VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_promisc_info);
+ 
++/**
++ * enum virtchnl2_ptp_caps - PTP capabilities
++ * @VIRTCHNL2_CAP_PTP_GET_DEVICE_CLK_TIME: direct access to get the time of
++ *					   device clock
++ * @VIRTCHNL2_CAP_PTP_GET_DEVICE_CLK_TIME_MB: mailbox access to get the time of
++ *					      device clock
++ * @VIRTCHNL2_CAP_PTP_GET_CROSS_TIME: direct access to cross timestamp
++ * @VIRTCHNL2_CAP_PTP_GET_CROSS_TIME_MB: mailbox access to cross timestamp
++ * @VIRTCHNL2_CAP_PTP_SET_DEVICE_CLK_TIME: direct access to set the time of
++ *					   device clock
++ * @VIRTCHNL2_CAP_PTP_SET_DEVICE_CLK_TIME_MB: mailbox access to set the time of
++ *					      device clock
++ * @VIRTCHNL2_CAP_PTP_ADJ_DEVICE_CLK: direct access to adjust the time of device
++ *				      clock
++ * @VIRTCHNL2_CAP_PTP_ADJ_DEVICE_CLK_MB: mailbox access to adjust the time of
++ *					 device clock
++ * @VIRTCHNL2_CAP_PTP_TX_TSTAMPS: direct access to the Tx timestamping
++ * @VIRTCHNL2_CAP_PTP_TX_TSTAMPS_MB: mailbox access to the Tx timestamping
++ *
++ * PF/VF negotiates a set of supported PTP capabilities with the Control Plane.
++ * There are two access methods - mailbox (_MB) and direct.
++ * PTP capabilities enables Main Timer operations: get/set/adjust Main Timer,
++ * cross timestamping and the Tx timestamping.
++ */
++enum virtchnl2_ptp_caps {
++	VIRTCHNL2_CAP_PTP_GET_DEVICE_CLK_TIME		= BIT(0),
++	VIRTCHNL2_CAP_PTP_GET_DEVICE_CLK_TIME_MB	= BIT(1),
++	VIRTCHNL2_CAP_PTP_GET_CROSS_TIME		= BIT(2),
++	VIRTCHNL2_CAP_PTP_GET_CROSS_TIME_MB		= BIT(3),
++	VIRTCHNL2_CAP_PTP_SET_DEVICE_CLK_TIME		= BIT(4),
++	VIRTCHNL2_CAP_PTP_SET_DEVICE_CLK_TIME_MB	= BIT(5),
++	VIRTCHNL2_CAP_PTP_ADJ_DEVICE_CLK		= BIT(6),
++	VIRTCHNL2_CAP_PTP_ADJ_DEVICE_CLK_MB		= BIT(7),
++	VIRTCHNL2_CAP_PTP_TX_TSTAMPS			= BIT(8),
++	VIRTCHNL2_CAP_PTP_TX_TSTAMPS_MB			= BIT(9),
++};
++
++/**
++ * struct virtchnl2_ptp_clk_reg_offsets - Offsets of device and PHY clocks
++ *					  registers.
++ * @dev_clk_ns_l: Device clock low register offset
++ * @dev_clk_ns_h: Device clock high register offset
++ * @phy_clk_ns_l: PHY clock low register offset
++ * @phy_clk_ns_h: PHY clock high register offset
++ * @cmd_sync_trigger: The command sync trigger register offset
++ * @pad: Padding for future extensions
++ */
++struct virtchnl2_ptp_clk_reg_offsets {
++	__le32 dev_clk_ns_l;
++	__le32 dev_clk_ns_h;
++	__le32 phy_clk_ns_l;
++	__le32 phy_clk_ns_h;
++	__le32 cmd_sync_trigger;
++	u8 pad[4];
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(24, virtchnl2_ptp_clk_reg_offsets);
++
++/**
++ * struct virtchnl2_ptp_cross_time_reg_offsets - Offsets of the device cross
++ *						 time registers.
++ * @sys_time_ns_l: System time low register offset
++ * @sys_time_ns_h: System time high register offset
++ * @cmd_sync_trigger: The command sync trigger register offset
++ * @pad: Padding for future extensions
++ */
++struct virtchnl2_ptp_cross_time_reg_offsets {
++	__le32 sys_time_ns_l;
++	__le32 sys_time_ns_h;
++	__le32 cmd_sync_trigger;
++	u8 pad[4];
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_cross_time_reg_offsets);
++
++/**
++ * struct virtchnl2_ptp_clk_adj_reg_offsets - Offsets of device and PHY clocks
++ *					      adjustments registers.
++ * @dev_clk_cmd_type: Device clock command type register offset
++ * @dev_clk_incval_l: Device clock increment value low register offset
++ * @dev_clk_incval_h: Device clock increment value high registers offset
++ * @dev_clk_shadj_l: Device clock shadow adjust low register offset
++ * @dev_clk_shadj_h: Device clock shadow adjust high register offset
++ * @phy_clk_cmd_type: PHY timer command type register offset
++ * @phy_clk_incval_l: PHY timer increment value low register offset
++ * @phy_clk_incval_h: PHY timer increment value high register offset
++ * @phy_clk_shadj_l: PHY timer shadow adjust low register offset
++ * @phy_clk_shadj_h: PHY timer shadow adjust high register offset
++ */
++struct virtchnl2_ptp_clk_adj_reg_offsets {
++	__le32 dev_clk_cmd_type;
++	__le32 dev_clk_incval_l;
++	__le32 dev_clk_incval_h;
++	__le32 dev_clk_shadj_l;
++	__le32 dev_clk_shadj_h;
++	__le32 phy_clk_cmd_type;
++	__le32 phy_clk_incval_l;
++	__le32 phy_clk_incval_h;
++	__le32 phy_clk_shadj_l;
++	__le32 phy_clk_shadj_h;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(40, virtchnl2_ptp_clk_adj_reg_offsets);
++
++/**
++ * struct virtchnl2_ptp_tx_tstamp_latch_caps - PTP Tx timestamp latch
++ *					       capabilities.
++ * @tx_latch_reg_offset_l: Tx timestamp latch low register offset
++ * @tx_latch_reg_offset_h: Tx timestamp latch high register offset
++ * @index: Latch index provided to the Tx descriptor
++ * @pad: Padding for future extensions
++ */
++struct virtchnl2_ptp_tx_tstamp_latch_caps {
++	__le32 tx_latch_reg_offset_l;
++	__le32 tx_latch_reg_offset_h;
++	u8 index;
++	u8 pad[7];
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_tx_tstamp_latch_caps);
++
++/**
++ * struct virtchnl2_ptp_get_vport_tx_tstamp_caps - Structure that defines Tx
++ *						   tstamp entries.
++ * @vport_id: Vport number
++ * @num_latches: Total number of latches
++ * @tstamp_ns_lo_bit: First bit for nanosecond part of the timestamp
++ * @tstamp_ns_hi_bit: Last bit for nanosecond part of the timestamp
++ * @pad: Padding for future tstamp granularity extensions
++ * @tstamp_latches: Capabilities of Tx timestamp entries
++ *
++ * PF/VF sends this message to negotiate the Tx timestamp latches for each
++ * Vport.
++ *
++ * Associated with VIRTCHNL2_OP_PTP_GET_VPORT_TX_TSTAMP_CAPS.
++ */
++struct virtchnl2_ptp_get_vport_tx_tstamp_caps {
++	__le32 vport_id;
++	__le16 num_latches;
++	u8 tstamp_ns_lo_bit;
++	u8 tstamp_ns_hi_bit;
++	u8 pad[8];
++
++	struct virtchnl2_ptp_tx_tstamp_latch_caps tstamp_latches[]
++						  __counted_by_le(num_latches);
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_get_vport_tx_tstamp_caps);
++
++/**
++ * struct virtchnl2_ptp_get_caps - Get PTP capabilities
++ * @caps: PTP capability bitmap. See enum virtchnl2_ptp_caps
++ * @max_adj: The maximum possible frequency adjustment
++ * @base_incval: The default timer increment value
++ * @peer_mbx_q_id: ID of the PTP Device Control daemon queue
++ * @peer_id: Peer ID for PTP Device Control daemon
++ * @secondary_mbx: Indicates to the driver that it should create a secondary
++ *		   mailbox to inetract with control plane for PTP
++ * @pad: Padding for future extensions
++ * @clk_offsets: Main timer and PHY registers offsets
++ * @cross_time_offsets: Cross time registers offsets
++ * @clk_adj_offsets: Offsets needed to adjust the PHY and the main timer
++ *
++ * PF/VF sends this message to negotiate PTP capabilities. CP updates bitmap
++ * with supported features and fulfills appropriate structures.
++ * If HW uses primary MBX for PTP: secondary_mbx is set to false.
++ * If HW uses secondary MBX for PTP: secondary_mbx is set to true.
++ *	Control plane has 2 MBX and the driver has 1 MBX, send to peer
++ *	driver may be used to send a message using valid ptp_peer_mb_q_id and
++ *	ptp_peer_id.
++ * If HW does not use send to peer driver: secondary_mbx is no care field and
++ * peer_mbx_q_id holds invalid value (0xFFFF).
++ *
++ * Associated with VIRTCHNL2_OP_PTP_GET_CAPS.
++ */
++struct virtchnl2_ptp_get_caps {
++	__le32 caps;
++	__le32 max_adj;
++	__le64 base_incval;
++	__le16 peer_mbx_q_id;
++	u8 peer_id;
++	u8 secondary_mbx;
++	u8 pad[4];
++
++	struct virtchnl2_ptp_clk_reg_offsets clk_offsets;
++	struct virtchnl2_ptp_cross_time_reg_offsets cross_time_offsets;
++	struct virtchnl2_ptp_clk_adj_reg_offsets clk_adj_offsets;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(104, virtchnl2_ptp_get_caps);
++
++/**
++ * struct virtchnl2_ptp_tx_tstamp_latch - Structure that describes tx tstamp
++ *					  values, index and validity.
++ * @tstamp: Timestamp value
++ * @index: Timestamp index from which the value is read
++ * @valid: Timestamp validity
++ * @pad: Padding for future extensions
++ */
++struct virtchnl2_ptp_tx_tstamp_latch {
++	__le64 tstamp;
++	u8 index;
++	u8 valid;
++	u8 pad[6];
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_tx_tstamp_latch);
++
++/**
++ * struct virtchnl2_ptp_get_vport_tx_tstamp_latches - Tx timestamp latches
++ *						      associated with the vport.
++ * @vport_id: Number of vport that requests the timestamp
++ * @num_latches: Number of latches
++ * @get_devtime_with_txtstmp: Flag to request device time along with Tx timestamp
++ * @pad: Padding for future extensions
++ * @device_time: device time if get_devtime_with_txtstmp was set in request
++ * @tstamp_latches: PTP TX timestamp latch
++ *
++ * PF/VF sends this message to receive a specified number of timestamps
++ * entries.
++ *
++ * Associated with VIRTCHNL2_OP_PTP_GET_VPORT_TX_TSTAMP.
++ */
++struct virtchnl2_ptp_get_vport_tx_tstamp_latches {
++	__le32 vport_id;
++	__le16 num_latches;
++	u8 get_devtime_with_txtstmp;
++	u8 pad[1];
++	__le64 device_time;
++
++	struct virtchnl2_ptp_tx_tstamp_latch tstamp_latches[]
++					     __counted_by_le(num_latches);
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_get_vport_tx_tstamp_latches);
++
++/**
++ * struct virtchnl2_ptp_get_dev_clk_time - Associated with message
++ *					   VIRTCHNL2_OP_PTP_GET_DEV_CLK_TIME.
++ * @dev_time_ns: Device clock time value in nanoseconds
++ *
++ * PF/VF sends this message to receive the time from the main timer.
++ */
++struct virtchnl2_ptp_get_dev_clk_time {
++	__le64 dev_time_ns;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_ptp_get_dev_clk_time);
++
++/**
++ * struct virtchnl2_ptp_get_cross_time: Associated with message
++ *					VIRTCHNL2_OP_PTP_GET_CROSS_TIME.
++ * @sys_time_ns: System counter value expressed in nanoseconds, read
++ *		 synchronously with device time
++ * @dev_time_ns: Device clock time value expressed in nanoseconds
++ *
++ * PF/VF sends this message to receive the cross time.
++ */
++struct virtchnl2_ptp_get_cross_time {
++	__le64 sys_time_ns;
++	__le64 dev_time_ns;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_ptp_get_cross_time);
++
++/**
++ * struct virtchnl2_ptp_set_dev_clk_time: Associated with message
++ *					  VIRTCHNL2_OP_PTP_SET_DEV_CLK_TIME.
++ * @dev_time_ns: Device time value expressed in nanoseconds to set
++ *
++ * PF/VF sends this message to set the time of the main timer.
++ */
++struct virtchnl2_ptp_set_dev_clk_time {
++	__le64 dev_time_ns;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_ptp_set_dev_clk_time);
++
++/**
++ * struct virtchnl2_ptp_adj_dev_clk_fine: Associated with message
++ *					  VIRTCHNL2_OP_PTP_ADJ_DEV_CLK_FINE.
++ * @incval: Source timer increment value per clock cycle
++ *
++ * PF/VF sends this message to adjust the frequency of the main timer by the
++ * indicated increment value.
++ */
++struct virtchnl2_ptp_adj_dev_clk_fine {
++	__le64 incval;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_ptp_adj_dev_clk_fine);
++
++/**
++ * struct virtchnl2_ptp_adj_dev_clk_time: Associated with message
++ *					  VIRTCHNL2_OP_PTP_ADJ_DEV_CLK_TIME.
++ * @delta: Offset in nanoseconds to adjust the time by
++ *
++ * PF/VF sends this message to adjust the time of the main timer by the delta.
++ */
++struct virtchnl2_ptp_adj_dev_clk_time {
++	__le64 delta;
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_ptp_adj_dev_clk_time);
++
+ #endif /* _VIRTCHNL_2_H_ */
+-- 
+2.47.1
+
