@@ -1,72 +1,77 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9C4217737
-	for <linux-hardening@vger.kernel.org>; Fri, 16 May 2025 06:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D921FF7DC;
+	Fri, 16 May 2025 06:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747375362; cv=none; b=EM1SWdzyymp+aenz277QZOZX37/lyFNI8B8ffOPch5Rqv8t9qwmffM9sm5P6us/reFKaEO2UH8NK7KU9MYHWl7HX4MEFwegZtbUULW0VOWQbfCl2sXEAoDtKwjvW+OjecR8bCF3Ntonj/gQlCoyUY/yQp8pecj+VhkVEwyzCMQQ=
+	t=1747377176; cv=none; b=Rf5hyJ4MHik0Ky87cH5XoPhG1uwIsbK97tMXmOV8u+M9eljuiFcNzhV0dDHh+1jeSb8QoF77oNHOLCli8H6paOHmE0S7/YczoNss+W+tYd2dpsNC73qkyBNJ39vQEuNM0k19z0Abmzg3mhF3imm34N2pbLnzN19KrFc2LuYbREA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747375362; c=relaxed/simple;
-	bh=FFW0hqGTqpSSQEt0oM9VrJkvsbPrdiAwXszFH8NO5sc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tebmnd6+l6pyOp88aCkIx4TMoqwFZv4LMnWw7P5IKgZttxBZFZYtCqTawlNScrorwJqPoNsqSqbKBhqqUITGIglQliK2qgibtAUV5qIcr/L1OQRK980KmDnCP4CPOJnMOIIhGWAavGk7ONtCz6Bp9GA0jny7cYa9SfpwPz0svwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dwOsgyFC; arc=none smtp.client-ip=209.85.221.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747377176; c=relaxed/simple;
+	bh=NtEGmOTZqNuMiz2OCMtuAQv0Feqa6Dit7H5OY+B8VmM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZMYQPpnKCM3t0sSUkK6EMRTsIt4nQLOyBLpKnhOk1OZdVMIV3VrZj70rQSnUu9qF2wJw6LQ6+fBpaXymSNPn6d+jURd0eNMtyuexoNMi2r/5a5rHxvJwbj6F/egzeeuijJ+38J3pDZPk7u9m9/jNAsW7ieAIQAvUt7rfTk1fs8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wqr4JEkB; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dwOsgyFC"
-Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-3a108684f90so1100784f8f.1
-        for <linux-hardening@vger.kernel.org>; Thu, 15 May 2025 23:02:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wqr4JEkB"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-550d09d4daaso1669835e87.2;
+        Thu, 15 May 2025 23:32:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747375358; x=1747980158; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747377173; x=1747981973; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YRCpYLM2KigShkSCMx1Qo6LnPBeFu9CM55DsyR/vk34=;
-        b=dwOsgyFCqUtAcxaArAly5u3HlrR0tZeCOZA5XgIZrvlgwqzqD8uisx2IOdMkXBU49w
-         W1DzTjO/Hhg4Av5PY5hNm/SeQ1V5J6IH/7ZLOPBZJJ8g/2ZTcZuxIRqFOJW3J/Z/ZJH4
-         ewH3fpXljxZToAHhvsKJ/AebACnS37CgT1HU8oJz7kNpDCpZF5MiYoJ2kTBkRn/VorzC
-         0bQ0M+wUYBpa0WvNBbk8TJEGU2QItB0RNlqzb20EJ6wQ4dDrwQ5lTTgiWfUGZv0lN5Op
-         ixN7sFbfiuQJONpzX9jtJegEwuserDLS6C233GiEx/Wh2F5fAjCE+IDslThlgd6QQScP
-         HmFQ==
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KUJKtPVwdVcpqXmFstCnFFaHnVm1C/pmwz6nmZZHgzI=;
+        b=Wqr4JEkBgQvfK/neI+C1bIzjlWhCLxhRUmlxm8ixsHSQ61qJ9Ku+U69mbPyA1MAqdW
+         DFmBoRjKdR6XucjBQMsGHaw0mRXsl7JHVG2MOnSBm3gehOIGbitrBYLRFAx8TmZFf/Xx
+         OvdTMpDnumb6AR/InivmA1Nd3/28lj3k2c57454Vc6MbGNGiu9/HzQupPQewhFrIH+Ky
+         VEE3XH3Obf9u6pg+okOatnVWxSEz8pbE+xB77J/60fcWrb75PciaNLaqYVsSs2Fp4uzO
+         ID7Gk3ChFDF+dWAxteBhaNxHShnY303uDiUiKy7LhO9uVF3jrGeWj9akLZU4DVdTqXQk
+         kwMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747375358; x=1747980158;
+        d=1e100.net; s=20230601; t=1747377173; x=1747981973;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YRCpYLM2KigShkSCMx1Qo6LnPBeFu9CM55DsyR/vk34=;
-        b=aM25xprLJSy4tslANn2EcCrgC4PM3EmS+I36CVHJuyuUScAbbW8t2KxpHBQclQUQF7
-         uR6TiRY9e66OkdBAStLls/r3EFmHw2/3F0PvwCrp2DIxpTZa7ERnHBnmZ96WzOn+Vqxq
-         fhoULBlX99c+Ov1LvkHld83GE5KX/Crwh1Be/eKlz9qnS8d436IX36FG/2rWS8lGDkaX
-         3istdIOeBQLzs7a0VwathTFCDOz/qhSN0Hcx+Y+nhmvArBczTTAhH160yoL+v+H9RAmg
-         F6Hr9HaThYnhIVHwB9Qmxl87AgeB3TTJ6V8i2KPrFQpLz7kwssEQAzcLNZBtw4x1MowO
-         U4NA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9vGUKOu6qGhFFCiJBGhOPMoNslQJL8U3nu06kKCafLKR9SWslCeokUdUEiHDBXO5hDusSMwyZEqK/hxKNmBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3Jce2KYAAqKK7r5LlriZEU27FR52gI3lph2YXPzsFThJx0Ncg
-	CDQwKLO0iaYuKlvoWs3xURKUmHsXVA3g04HtCS/ngG1a5ZdZ5VwHOjIOwDD1yL4Ddig=
-X-Gm-Gg: ASbGncvTP5dNhjfz4yDV/0lKiSiMDEl8H4fOIkz3BucCAmTsYZW5R4+FVtNycnmIvff
-	xujlkl/iRfFT4wiGoN7rGBFsf+gEIrwfil7Npo+UjSpSqy5SHnnqOJPK70DUS42PoE8jIJ7Etfm
-	bJ5JS3cdJG9to9v1Y4Db4TXaofavJ9udrVL+LzMfkn8jbetONRqQ0nqVHFBaAp1pICO9RDtJZJy
-	pQILVinVubklpdFwRKLU3TIY8qn0WKbhKhIkJ/AU4z2iwfu2JMoHU4ubXsIkPTboYIuUtJwkSP/
-	SOYTyLT2BOU6HpfKP0hVDR3KUro7pp5NSw3xwuMIXoTs8/INXS/Ibjlokkfqy9t53g5NCJE=
-X-Google-Smtp-Source: AGHT+IExAX5L6jhpudxoopt/jOxKXl18l7eevqO0BjrQScjyjlt4zB8dW0pf982EIRtAZl2LOgjSqw==
-X-Received: by 2002:a5d:4567:0:b0:391:4999:778b with SMTP id ffacd0b85a97d-3a35c84428fmr1663501f8f.28.1747375357714;
-        Thu, 15 May 2025 23:02:37 -0700 (PDT)
-Received: from u94a (27-51-34-195.adsl.fetnet.net. [27.51.34.195])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec12287esm1112560241.10.2025.05.15.23.02.29
+        bh=KUJKtPVwdVcpqXmFstCnFFaHnVm1C/pmwz6nmZZHgzI=;
+        b=GhW/7g5D0luU25JvO3IJSYXEHmXo8nRpEqRaboYWRS9oAFm+Ekd5WIM7H8O0xoeASS
+         Pi/LO0GgsqwNAUPFOmQ04Cux91VRp3vaaQj4PqZygmHsNO+ayB0w7mM18Ie8bhK+Yj0G
+         GjAwGFfuydD3ecw85wA/kaF0BTCD8JCNtmKHgc9naAvAa8jOj/aRKhxhri9qWfr+NeDM
+         rNzFh8mWTPJQcmc+2o6FlMujjAMdzjVGsnmoTVVK/SaC3VXdQy4huGF/bJfsjzyozEb0
+         hD+P46fY3nGG+uET87aitFVrJ39WgMZHdNxfWiy6dlPfm9N0OXB1ltqOqWSS6y67UKJP
+         88EA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEG3ZuHSN4vEFmbr6AOKVVrEkv0XdT0wrPk2Eh1dt+GLYYb/SwmzZiI2U66ifhgDwMb0C621knmG2sllkQ5af7@vger.kernel.org, AJvYcCVjJz2/375EyI+jINf9FuBcmcVmwXwdiX3D3/FI7caCgQRjxdx5GbCYf8++hWCt4vsXO1g=@vger.kernel.org, AJvYcCWG7KygT2JqvUX6VMMDAoFgrCCGImT+SKiYNXb62Ic1tfg4MuwGwbOuaI39K/W7lc+//0QAwkW0wZP3naEL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvIZZ4kD2ngrBWmyvCs2fQMmt/Xm2rIE+GgynfDJntzfTtTXW4
+	GEVtJIXaf4QANJEdN9PDeqkX/9jEvayrqZbAKs8HPSm5Va214mNQ8lsF
+X-Gm-Gg: ASbGncusXpTSnj2hvnR1Ao5DPckkYofLYXTIakgmOnNFc/ViesgZdr/5Dm2NnreAjem
+	YL8c//xsx8taDZw+8LP9Lgde2BokGld1igwzFENB3CY2qzcFUVSh2H4CGXnLAMWIJt5PfERCKc5
+	8m9se6XkGT714OLfE4ow053zjqVEiho8cscIPXTXnnwe+mlLpsq5+jaUPyPJVpyTTP9NUiLmJSO
+	Xeaic5y5s5hZdIYK9hiMo+e0UIZUaUWf/nNQ2L/6Pf35Y1g/p3iS/LMowkl+E6cjIBdhtUA7nkj
+	OuzyYuwyCgtZkCaT3A==
+X-Google-Smtp-Source: AGHT+IFRP/vXmfI6lHLwDlzDmnD+1TtQ98Hefzc+j7BWdek+k9pG/xT4EAPbSUkky9UNn9GYhdpyww==
+X-Received: by 2002:a05:6512:6501:b0:550:e147:8165 with SMTP id 2adb3069b0e04-550e71d0bf3mr569220e87.24.1747377172352;
+        Thu, 15 May 2025 23:32:52 -0700 (PDT)
+Received: from pc636 ([2001:9b1:d5a0:a500::800])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703c2f3sm275344e87.214.2025.05.15.23.32.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 23:02:37 -0700 (PDT)
-Date: Fri, 16 May 2025 14:02:22 +0800
-From: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+        Thu, 15 May 2025 23:32:51 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Fri, 16 May 2025 08:32:49 +0200
 To: Kees Cook <kees@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Uladzislau Rezki <urezki@gmail.com>, Erhard Furtner <erhard_f@mailbox.org>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	bpf@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Erhard Furtner <erhard_f@mailbox.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, bpf@vger.kernel.org,
+	linux-hardening@vger.kernel.org
 Subject: Re: [PATCH 0/2] mm: vmalloc: Actually use the in-place vrealloc
  region
-Message-ID: <yw7aumjfrefi5cdejjgtjfeusaihfh5yjuhry3xvetjld36fgi@ob4a6lwdlqt4>
+Message-ID: <aCbcEWR9RbjFjXV9@pc636>
 References: <20250515214020.work.519-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -94,11 +99,13 @@ On Thu, May 15, 2025 at 02:42:14PM -0700, Kees Cook wrote:
 > Kees Cook (2):
 >   mm: vmalloc: Actually use the in-place vrealloc region
 >   mm: vmalloc: Only zero-init on vrealloc shrink
+> 
+>  mm/vmalloc.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+Looks good to me both.
 
-Thank you for the prompt fix! I'll remember to include a more thorough
-note on reproducing the issue next time.
+Reviewed-by: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
-With the patchset applied, BPF selftests on both 6.15-rc6 and 6.14.7-rc2
-passes successfully.
-
-Tested-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+--
+Uladzislau Rezki
