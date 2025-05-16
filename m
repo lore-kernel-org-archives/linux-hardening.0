@@ -1,61 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777E12AE8D;
-	Fri, 16 May 2025 08:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DF52376E1;
+	Fri, 16 May 2025 10:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747384127; cv=none; b=F0Af+3okrey2OnKcI2joGyFDSEmKBf6bf/OuYVxbEuJnd1g+j/thyRlsuglyJ3kDxKeWvbCqNr4PUL874s7LSjoG8zbrOFHboBqMTtRHU3LWZSjbntb4cwB7gMzfCU7NSqOwmikGX44yXhBnjp12L6sD2C6C47TKpXfogXxEei8=
+	t=1747393194; cv=none; b=mMeCWskXm+L+RKjiVKDeT0BYDIeBJ+YcctEkx3go19V4ORuP4pI5eGjE3lDXKuyjbBaSF9MAoxtchq22oKiJLpQDuRACJ5ipS0PtvmkvE/w5hbHdkPGLGIgkaeIJ0oh/EmomJQOK+DjiiXp6VLbdPi4e+3y7LkgMe8InIojq5aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747384127; c=relaxed/simple;
-	bh=YScwtIGquvvK5uBmUhitVD00LyH92SDWUWsk5swDC4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tRnE+yVU2+wqKD9Msvle7zX1JymnvZ1C7nG6PnXZ5HKjAi+cNlV0Hvb8u9gZFpvg1Lmnou3mXnWGTh6d/jcltMuNSv+53FHHwpSc7XDJ7UdZnpEAGkAs4VODFtwE7VE99Fbu6T6zdKYqy2DJQfS5mBXRTgsyXNFjy8Ky1ck9QwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=av0rKnCA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747393194; c=relaxed/simple;
+	bh=ceUyDP/AgA4ZYlbwY1o6qyfuzkXQjy3vPbxZDljfKSI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oA4cqxrd6OduWpnyOQKB1D/SOuBTtrLZChmW1Ir5oufR+fD3iRffAHgq//9dqo11+8n5N4ymr5BdXt3etVWr5F4CkH2rgjg41EMX3eIYwxzmmlmutZDdjIS+i7oDXWZQfTgHDjmaYLTMG+ekobk0ZSwYWnsMJnjQUs1Um0xhh6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=N8yXsf+x; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="av0rKnCA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94D61C4CEE4;
-	Fri, 16 May 2025 08:28:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747384126;
-	bh=YScwtIGquvvK5uBmUhitVD00LyH92SDWUWsk5swDC4w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=av0rKnCAfoh9IWDyyUGpquUt99bYJqIsvKp3IcSy5SSgc9BmTXqumw9zj9wOajt3J
-	 9DddRwouC7FG4GXXvohR0zc69Yt6zT+hegtgTrwiOCfz9TNcONwTFF3ur9AD0phAti
-	 1A1ELq+Es+ypNdrpGi4JvMBja8Ms3VAFb2Ub2GitWhfL0wa0KluO3zmrW3Z9wHO2Vo
-	 C86yy7AwlJfThTdsHFhahtZ1CvimiQWL6ATdIiK62VT0htJ8iutVYtGENhk1l0dzWv
-	 BamaW8Z4uyQ1pBGFuLuDkJ3Yjrsqn+ZZ/Aaez16A8xzfxNudrRydcaDbbMWB8RZj+r
-	 6gOgRyxBpM2FA==
-Date: Fri, 16 May 2025 10:28:41 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Erhard Furtner <erhard_f@mailbox.org>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, bpf@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/2] mm: vmalloc: Actually use the in-place vrealloc
- region
-Message-ID: <aCb3OTZ1tLfEJIkC@pollux>
-References: <20250515214020.work.519-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="N8yXsf+x"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G40WwO001795;
+	Fri, 16 May 2025 10:59:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	xhaje0yiLVs8KTTuPDwpOOOKiFeWxe8la47MOEnCjPY=; b=N8yXsf+xUqA9EoaK
+	6EjIH2jJmh0YJV9bc/ogXPhMMXeWhKt0gqo2ne7TveBjXd5cthxLh3iU1SC83aFM
+	VlNOQDFOq5/Yk/qmMG7WhVDDbezuQt8BBTC7aaPxZXPrZxLyMrYhxzRIBI4LcFps
+	Optdn1xjHwvzkcfOHs5xQxzfQ5y7Taqxiud0ZqSJwfINricfN/WqddCxbEch+R+Z
+	zUQ+PhNNQ9EV1eppZoh4tCSfBrrszfAUnT8pjusjyRwI3gEloxplso9kVRZkrXYc
+	qFnwOmoD8rsE1CoGL4I1Wfv3x0rbNm1H4aGC71Yj71kAsYPkZbdat/yp0603CfEF
+	KyWr/w==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcrhht8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 10:59:35 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54GAxYV7007898
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 10:59:34 GMT
+Received: from [10.253.77.60] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 16 May
+ 2025 03:59:28 -0700
+Message-ID: <1b209aa2-6399-40d5-9fa9-70a712a57aa2@quicinc.com>
+Date: Fri, 16 May 2025 18:59:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515214020.work.519-kees@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 00/14] Add PPE driver for Qualcomm IPQ9574 SoC
+To: Jakub Kicinski <kuba@kernel.org>
+CC: Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Paolo Abeni
+	<pabeni@redhat.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lei Wei
+	<quic_leiwei@quicinc.com>,
+        Suruchi Agarwal <quic_suruchia@quicinc.com>,
+        Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
+        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
+        <john@phrozen.org>
+References: <20250513-qcom_ipq_ppe-v4-0-4fbe40cbbb71@quicinc.com>
+ <20250514195821.56df5c60@kernel.org>
+ <27cf4b47-2ded-4a37-9717-1ede521d8639@quicinc.com>
+ <20250515072457.55902bfd@kernel.org>
+Content-Language: en-US
+From: Luo Jie <quic_luoj@quicinc.com>
+In-Reply-To: <20250515072457.55902bfd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: pfhM-R8RXIFjm-mBw1jDByh1m__v2JJD
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDEwNCBTYWx0ZWRfX8NcUXlfSgtIq
+ BsgRb/eajTwvEIyApnmNql3ET2SJJy+asmjXa+Rv2Hvz6xEfeBDF5URip8FI8aIBEIjs02xbj0o
+ 7LmKKQFAFoJq8EPy7ToHLE/+quoMWEPs/BuBL0OgHY8ZZBBH/genym4AVieq37OodVUgmRr6RHK
+ adADn0NCitY6bIFzYHAnKczZ5kejOoZkk867L8PND2nkkTlxqe5Q9zz7e4OhA/rXQqrCj63RoMN
+ Enpd2ULUasfP7qXiw1zIxK12TjRwdJhlBOhTLxQenRiiucmm8pTr7tFwGzMoj+w0uYLZTe+8K0k
+ CiJ5Jy1DlcEILE8R16yiQYLWLnFdD7s20cVqDt6JMcCVCGDTBxSCJ+oG+wyvYfca/ly9EIsesB9
+ MmQWt6IVKNNbcNypJokSAg/gkjW9NiMaURe2I5nRo62ELazwV/GrQkPsmlH9wcSSfj7+vFYR
+X-Authority-Analysis: v=2.4 cv=K7UiHzWI c=1 sm=1 tr=0 ts=68271a97 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=Ht6I3Yxflf12Oa7PA1sA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: pfhM-R8RXIFjm-mBw1jDByh1m__v2JJD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_04,2025-05-16_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 malwarescore=0
+ phishscore=0 mlxlogscore=906 clxscore=1015 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505160104
 
-On Thu, May 15, 2025 at 02:42:14PM -0700, Kees Cook wrote:
-> Hi,
+
+
+On 5/15/2025 10:24 PM, Jakub Kicinski wrote:
+> On Thu, 15 May 2025 22:19:11 +0800 Luo Jie wrote:
+>> However, from the patchwork result as below, it seems the dependent
+>> patch series (for FIELD_MODIFY() macro) did not get picked to validate
+>> the PPE driver patch series together. This dependency is mentioned in
+>> the cover letter. Could you advise what could be wrong here, which is
+>> preventing the dependent patch to be picked up? Thanks.
 > 
-> This fixes a performance regression[1] with vrealloc(). This needs to
-> get into v6.15, which is where the regression originates, and then it'll
-> get backport to the -stable releases as well.
+> Please try to read more about kernel development process.
+> These patches are not in Linus's tree or the networking tree.
+> If you want to use them you have to wait with your submission
+> until after the next merge window.
 
-Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+OK, understand now. I will push the new version after the next
+merge window. Thanks for the information.
