@@ -1,146 +1,225 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04401FAA;
-	Mon, 19 May 2025 03:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F191F463E;
+	Mon, 19 May 2025 05:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747626883; cv=none; b=emDil6nI+8/WfrpRzZnAy03etLwPtZx8k35e2Q7m7aEsA4seda1wL9f7fPKtxV8GLqFZhVASWYYaOcJ2ZlutKX4JbUKTjglvKEksDR4fSNcm5PSK2nKa3vtF93Elqerz5hCqF2F3lAP3aXbsSDNAf/VesrIBFiSVAg5+1F6SMoQ=
+	t=1747634335; cv=none; b=kQkG5yW5BXpFM3kXDPpksXPxyzxMT+LLpUnW1vmxbd5SCqt1P23k9vBgR+l4wXziUcH7c4mJ0WEya0hmj/uiYsvSfp9/P/x1daoNJHrSojYguE6Mi5uZd09F7xkpEQ5MtzXFzaFEYdffhWV4kWiEP584U9vJNf3ZO/MfWaM+TPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747626883; c=relaxed/simple;
-	bh=7Ra3K2OwzVwWKet+svJjlzEF0rBmYKmRsd0XFB87m84=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=G38nRRD/pOTFaXLkwUAxQD15sHtNgG72RNY0jfiOwbsvFo1ePq/w9yfw54tq8tAGqc5x8PPL+EyaN8U7INkivg/7W2f64M/3l6CbqspVDLmpyezQ4kTIEHd+EUG31MajJkBTFF2uHw2JhWAXfYMiHcg62UK4YCiEFTr8eW3gdkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=hrBdJGZ3; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1747634335; c=relaxed/simple;
+	bh=Jw6mXfv00dMuD2c25uxnyya946iEO7Hvz29jpU+3oL8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Enez7zZUYZMC3AElB2fxrWxNtjpbocBjF6UW3fqevu1UgVzOivZyZLZZoeN6h4eKYxrLBxRZYWPKavD9A2eYhrlTnRpR1dGzgAdKg8xAh71k9rd0ye3DhBRgakqEx7MXNH0DmSdYtpvobtwIGZTXbYcCXYUGSwhkOVFdT3JE0/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lkaGnUkL; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="hrBdJGZ3"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b13j25GPsz9sv1;
-	Mon, 19 May 2025 05:54:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1747626871;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UeDu8PHSWuuIHAbS2PGJQ9cJz+KEZFn/PW/D40Wbw0k=;
-	b=hrBdJGZ3dy7w3pB4OAEc6WggTg+nsmMyToqVjzr7rMnHz3NdEJsZ9b6RROXL3O0gsidOby
-	OoJSx7/kYD9YCUUZoRUcFUt1j4XZWGOyHP7O85Q79XWucPT8YDBjyJUhwts9HCYKLNDKbV
-	gzBc5sHwzARIAkAm/gSl96wM5IXLsuAe7Pojhigk09mcdBbKrGolq3VKqLgb+5Q+EmZBdS
-	6PrHVnHjh18hOVEkzXZKNfbeqDPOp08IchNUPDXaQ1ZapUa7EPwo89RWgmSD8J9/cS19//
-	oZ7TeaCrO/Y0ce6g6mZJdIGNIjlmrUm5qtMmfgoYot/asIxmaskil4JvV/e2TA==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Sun, 18 May 2025 23:54:21 -0400
-Subject: [PATCH v2] ext4: replace strcpy() with '.' assignment
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lkaGnUkL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747634333; x=1779170333;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Jw6mXfv00dMuD2c25uxnyya946iEO7Hvz29jpU+3oL8=;
+  b=lkaGnUkL6Q/TdJ4CVTBWBFLE9i3ZcKXqPRtIn3QFU8hFitLWiFiE8Brz
+   U/xn/WM79yaJTwwdHyeLNTMncgnM5+NZZtgZSDQ7D1qtcpBfoa8UD7lT6
+   Ueuq2OM/mYYGFEeDBFEEtaYqSJJgS3n+bKSE49oFbUp/qGMNA9FCfmoEG
+   AoF1mfc0LCzfUOhL5dbpPdf+gFA8bwAGxsK4MYz03xExvq2qbNAp5nqTY
+   6aAQm3/4/7ZhbEqd/qU+MCd4oLMOPFgVEADn7fDQkrZr8No/9coGrk81E
+   Cl+zsq5+S/wUHHy7eFmEdFfjT7S0l5CZj5s6EfjzjfRYapSMYAZGVwXK/
+   w==;
+X-CSE-ConnectionGUID: qpSJtAPyQem1KHIuQhOaAQ==
+X-CSE-MsgGUID: TSMTpPgKQbWX2Ilo42cU9A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="53336326"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="53336326"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 22:58:52 -0700
+X-CSE-ConnectionGUID: An3UK/4URmqvVNZz1hw2Yg==
+X-CSE-MsgGUID: kiA2wLPiT0iC3b1BcrBj7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="139766798"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 18 May 2025 22:58:49 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGtWR-000LB5-0G;
+	Mon, 19 May 2025 05:58:47 +0000
+Date: Mon, 19 May 2025 13:58:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: oe-kbuild-all@lists.linux.dev, linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Ethan Carter Edwards <ethan@ethancedwards.com>
+Subject: Re: [PATCH v2] ext4: replace strcpy() with '.' assignment
+Message-ID: <202505191321.ZwdQZhut-lkp@intel.com>
+References: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIAGyrKmgC/22NwQ6DIBAFf8XsuTRARGlP/kfjgS5L5VA1QKjG8
- O+lnnucSd68AyIFTxHuzQGBso9+mSvISwM4mflFzNvKILlUXAnNaEstiyngujOhWoWd629PJaA
- u1kDOb2ftMVaefExL2M94Fj/7v5MFE6xDbbR0jvfaDZTqOZL9mGDjFZc3jKWUL/OmnWCuAAAA
-X-Change-ID: 20250518-ext4-strcpy-1545c6f79b51
-To: Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2895;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=7Ra3K2OwzVwWKet+svJjlzEF0rBmYKmRsd0XFB87m84=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeFpHaXRMbDU3OXVQT0pydXk5Vnd2Q3BXOGI4aEVuYnFuCktCYngrcnRTZFRNdnB6N3oz
- QmNkcFN3TVlsd01zbUtLTFA5emxOTWVhczVRMlBuWHBRbG1EaXNUeUJBR0xrNEIKbUVpbkdpUER
- yS01XMVp2dTVaYitFNWhiTWFYbTlqeEZ2ZzJyR2VXaUtpVHE0MjJjajF3NHcvQlB4Mzl4NjFueg
- oyWnRqbkQwRGs5NjlNVGt2dVY3V21rT0NNLy92emV1NVRSTzVBTHd0U2swPQo9bk9IOQotLS0tL
- UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
 
-strcpy() is deprecated; assignment can be used instead which
-theoretically/potentially increases speed as a function call is removed.
+Hi Ethan,
 
-Straight assignment works because the strings are not null-terminated
-which means they don't strictly require a str(s)cpy call.
+kernel test robot noticed the following build warnings:
 
-No functional changes intended.
+[auto build test WARNING on 5723cc3450bccf7f98f227b9723b5c9f6b3af1c5]
 
-Link: https://github.com/KSPP/linux/issues/88
-Suggested-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
-There's an ongoing effort to remove calls to strcpy throughout the
-kernel.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ethan-Carter-Edwards/ext4-replace-strcpy-with-assignment/20250519-115601
+base:   5723cc3450bccf7f98f227b9723b5c9f6b3af1c5
+patch link:    https://lore.kernel.org/r/20250518-ext4-strcpy-v2-1-80d316325046%40ethancedwards.com
+patch subject: [PATCH v2] ext4: replace strcpy() with '.' assignment
+config: csky-randconfig-001-20250519 (https://download.01.org/0day-ci/archive/20250519/202505191321.ZwdQZhut-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505191321.ZwdQZhut-lkp@intel.com/reproduce)
 
-Link: https://github.com/KSPP/linux/issues/88
----
-Changes in v2:
-- completely remove the call to strcpy and replace it with assignment
-  off of Theo's suggestion. Thanks.
-- Link to v1: https://lore.kernel.org/r/20250518-ext4-strcpy-v1-1-6c8a82ff078f@ethancedwards.com
----
- fs/ext4/inline.c | 4 ++--
- fs/ext4/namei.c  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505191321.ZwdQZhut-lkp@intel.com/
 
-diff --git a/fs/ext4/inline.c b/fs/ext4/inline.c
-index 2c9b762925c72f2ff5a402b02500370bc1eb0eb1..f3bc8b3904a8a9b55162f002b5bd63a527b290a5 100644
---- a/fs/ext4/inline.c
-+++ b/fs/ext4/inline.c
-@@ -1314,7 +1314,7 @@ int ext4_inlinedir_to_tree(struct file *dir_file,
- 		if (pos == 0) {
- 			fake.inode = cpu_to_le32(inode->i_ino);
- 			fake.name_len = 1;
--			strcpy(fake.name, ".");
-+			fake.name[0] = ".";
- 			fake.rec_len = ext4_rec_len_to_disk(
- 					  ext4_dir_rec_len(fake.name_len, NULL),
- 					  inline_size);
-@@ -1324,7 +1324,7 @@ int ext4_inlinedir_to_tree(struct file *dir_file,
- 		} else if (pos == EXT4_INLINE_DOTDOT_OFFSET) {
- 			fake.inode = cpu_to_le32(parent_ino);
- 			fake.name_len = 2;
--			strcpy(fake.name, "..");
-+			fake.name[0] = fake.name[1] = ".";
- 			fake.rec_len = ext4_rec_len_to_disk(
- 					  ext4_dir_rec_len(fake.name_len, NULL),
- 					  inline_size);
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index e9712e64ec8f04586f5ebcd332431e6af92e4f36..c7d7c46a0b18ae109d30358c157812ac2ded200e 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -2926,7 +2926,7 @@ struct ext4_dir_entry_2 *ext4_init_dot_dotdot(struct inode *inode,
- 	de->name_len = 1;
- 	de->rec_len = ext4_rec_len_to_disk(ext4_dir_rec_len(de->name_len, NULL),
- 					   blocksize);
--	strcpy(de->name, ".");
-+	de->name[0] = '.';
- 	ext4_set_de_type(inode->i_sb, de, S_IFDIR);
- 
- 	de = ext4_next_entry(de, blocksize);
-@@ -2940,7 +2940,7 @@ struct ext4_dir_entry_2 *ext4_init_dot_dotdot(struct inode *inode,
- 		de->rec_len = ext4_rec_len_to_disk(
- 					ext4_dir_rec_len(de->name_len, NULL),
- 					blocksize);
--	strcpy(de->name, "..");
-+	de->name[0] = de->name[1] = '.';
- 	ext4_set_de_type(inode->i_sb, de, S_IFDIR);
- 
- 	return ext4_next_entry(de, blocksize);
+All warnings (new ones prefixed by >>):
 
----
-base-commit: 5723cc3450bccf7f98f227b9723b5c9f6b3af1c5
-change-id: 20250518-ext4-strcpy-1545c6f79b51
+   fs/ext4/inline.c: In function 'ext4_inlinedir_to_tree':
+>> fs/ext4/inline.c:1317:17: warning: assignment to 'char' from 'char *' makes integer from pointer without a cast [-Wint-conversion]
+    1317 |    fake.name[0] = ".";
+         |                 ^
+   fs/ext4/inline.c:1327:32: warning: assignment to 'char' from 'char *' makes integer from pointer without a cast [-Wint-conversion]
+    1327 |    fake.name[0] = fake.name[1] = ".";
+         |                                ^
 
-Best regards,
+
+vim +1317 fs/ext4/inline.c
+
+  1259	
+  1260	/*
+  1261	 * This function fills a red-black tree with information from an
+  1262	 * inlined dir.  It returns the number directory entries loaded
+  1263	 * into the tree.  If there is an error it is returned in err.
+  1264	 */
+  1265	int ext4_inlinedir_to_tree(struct file *dir_file,
+  1266				   struct inode *dir, ext4_lblk_t block,
+  1267				   struct dx_hash_info *hinfo,
+  1268				   __u32 start_hash, __u32 start_minor_hash,
+  1269				   int *has_inline_data)
+  1270	{
+  1271		int err = 0, count = 0;
+  1272		unsigned int parent_ino;
+  1273		int pos;
+  1274		struct ext4_dir_entry_2 *de;
+  1275		struct inode *inode = file_inode(dir_file);
+  1276		int ret, inline_size = 0;
+  1277		struct ext4_iloc iloc;
+  1278		void *dir_buf = NULL;
+  1279		struct ext4_dir_entry_2 fake;
+  1280		struct fscrypt_str tmp_str;
+  1281	
+  1282		ret = ext4_get_inode_loc(inode, &iloc);
+  1283		if (ret)
+  1284			return ret;
+  1285	
+  1286		down_read(&EXT4_I(inode)->xattr_sem);
+  1287		if (!ext4_has_inline_data(inode)) {
+  1288			up_read(&EXT4_I(inode)->xattr_sem);
+  1289			*has_inline_data = 0;
+  1290			goto out;
+  1291		}
+  1292	
+  1293		inline_size = ext4_get_inline_size(inode);
+  1294		dir_buf = kmalloc(inline_size, GFP_NOFS);
+  1295		if (!dir_buf) {
+  1296			ret = -ENOMEM;
+  1297			up_read(&EXT4_I(inode)->xattr_sem);
+  1298			goto out;
+  1299		}
+  1300	
+  1301		ret = ext4_read_inline_data(inode, dir_buf, inline_size, &iloc);
+  1302		up_read(&EXT4_I(inode)->xattr_sem);
+  1303		if (ret < 0)
+  1304			goto out;
+  1305	
+  1306		pos = 0;
+  1307		parent_ino = le32_to_cpu(((struct ext4_dir_entry_2 *)dir_buf)->inode);
+  1308		while (pos < inline_size) {
+  1309			/*
+  1310			 * As inlined dir doesn't store any information about '.' and
+  1311			 * only the inode number of '..' is stored, we have to handle
+  1312			 * them differently.
+  1313			 */
+  1314			if (pos == 0) {
+  1315				fake.inode = cpu_to_le32(inode->i_ino);
+  1316				fake.name_len = 1;
+> 1317				fake.name[0] = ".";
+  1318				fake.rec_len = ext4_rec_len_to_disk(
+  1319						  ext4_dir_rec_len(fake.name_len, NULL),
+  1320						  inline_size);
+  1321				ext4_set_de_type(inode->i_sb, &fake, S_IFDIR);
+  1322				de = &fake;
+  1323				pos = EXT4_INLINE_DOTDOT_OFFSET;
+  1324			} else if (pos == EXT4_INLINE_DOTDOT_OFFSET) {
+  1325				fake.inode = cpu_to_le32(parent_ino);
+  1326				fake.name_len = 2;
+  1327				fake.name[0] = fake.name[1] = ".";
+  1328				fake.rec_len = ext4_rec_len_to_disk(
+  1329						  ext4_dir_rec_len(fake.name_len, NULL),
+  1330						  inline_size);
+  1331				ext4_set_de_type(inode->i_sb, &fake, S_IFDIR);
+  1332				de = &fake;
+  1333				pos = EXT4_INLINE_DOTDOT_SIZE;
+  1334			} else {
+  1335				de = (struct ext4_dir_entry_2 *)(dir_buf + pos);
+  1336				pos += ext4_rec_len_from_disk(de->rec_len, inline_size);
+  1337				if (ext4_check_dir_entry(inode, dir_file, de,
+  1338						 iloc.bh, dir_buf,
+  1339						 inline_size, pos)) {
+  1340					ret = count;
+  1341					goto out;
+  1342				}
+  1343			}
+  1344	
+  1345			if (ext4_hash_in_dirent(dir)) {
+  1346				hinfo->hash = EXT4_DIRENT_HASH(de);
+  1347				hinfo->minor_hash = EXT4_DIRENT_MINOR_HASH(de);
+  1348			} else {
+  1349				err = ext4fs_dirhash(dir, de->name, de->name_len, hinfo);
+  1350				if (err) {
+  1351					ret = err;
+  1352					goto out;
+  1353				}
+  1354			}
+  1355			if ((hinfo->hash < start_hash) ||
+  1356			    ((hinfo->hash == start_hash) &&
+  1357			     (hinfo->minor_hash < start_minor_hash)))
+  1358				continue;
+  1359			if (de->inode == 0)
+  1360				continue;
+  1361			tmp_str.name = de->name;
+  1362			tmp_str.len = de->name_len;
+  1363			err = ext4_htree_store_dirent(dir_file, hinfo->hash,
+  1364						      hinfo->minor_hash, de, &tmp_str);
+  1365			if (err) {
+  1366				ret = err;
+  1367				goto out;
+  1368			}
+  1369			count++;
+  1370		}
+  1371		ret = count;
+  1372	out:
+  1373		kfree(dir_buf);
+  1374		brelse(iloc.bh);
+  1375		return ret;
+  1376	}
+  1377	
+
 -- 
-Ethan Carter Edwards <ethan@ethancedwards.com>
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
