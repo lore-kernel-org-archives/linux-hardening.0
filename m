@@ -1,225 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CD12010EE;
-	Mon, 19 May 2025 05:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97789153BD9;
+	Mon, 19 May 2025 08:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747634337; cv=none; b=VxPoSknqn8c6Kx4Zfo7AczqZsv/8T1RTklvdpI3Ntl9h2brg10YaJacLbkOnhaXDAg611NFXEcBOQMZeIcyaChpjk9/L1jZdvNs0RMIqo0cu8XfKvAZrqV/sYV1clxU/CztGeYqHcIaK07F8YLLppwaVVoAriEXeTTEKYVgUM+w=
+	t=1747642581; cv=none; b=G2J8ANA4+9FMgkIrgkcu3RsXXGSJcnqtL/yB7Fu60UAkXjEEj7Mrf5fImQH5bdfQWm5mVVHEwH6Gqd1Cc5GGatfWzz19cSDxDodZ3tcKC+rg2lH1x78ihV+gRuGncvVcOPxIsAVsf2CCyZPRtJaxBnzh2dvyQZzqeudd8NwtDac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747634337; c=relaxed/simple;
-	bh=3wasfJW/xX5FRh3O7lZ3XUUxGYvh0e3c3h0KW84orOk=;
+	s=arc-20240116; t=1747642581; c=relaxed/simple;
+	bh=DvnlKbccpce+ZLmY4HBn+RM09MSGUVos8+IsFw28Ywc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=azZVPTHUHjIkFw4wOEqtyHKat/HEUIA5rhPzI+Nt0tMj1f0ox5xPhsmL2pExRAI3FII67SMEh16pxYBfV+13M3G+RjMd2i1jYm2geBfTGBcM5wWRIYrbZSM7rbqTdqOnwLQfSbqvTRId2xvYWeCwVrfPyZAlzpCAfyWr9oDl02s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mf/ADbis; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QLqHnS+tzM/1VOVJglViWY4xmEJsZDRYmyAnIpQMRDmYk9Kq3GqB4fgVzMO+y0zw0MmkuktXn87/X3IZWKVlRGDbkzaMgjZJp8b3mdQJOHa3SmtSdv3Qjox8UkV+N2npi29LG4J303MT3exnVvxaTG8MErQiZ7+RRRE3kTmxPuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hpGTNOOr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mf/ADbis"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747634336; x=1779170336;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3wasfJW/xX5FRh3O7lZ3XUUxGYvh0e3c3h0KW84orOk=;
-  b=mf/ADbisur+or0hhfAl59mPHN+tOIIuMnXLMYrf1vOBpDD9D/G/c/R/E
-   McUYCbySDlHwWU0ZR1AsJGsfvXPFi8+zaeUzIKY4w1ydTkYlKosnzlEJu
-   7H8GmV4qua58ckerB6HqQv4E71CQbumfWc8Cf+6hSHQNA8pBS3lpNX/UO
-   P4ZxNtBPb2J5rO8z8Ixw/oP9aMafsI+XX/Va4WVlAY482pk6sUQyZGl6C
-   qdFwio924rwBTqK96p6C5ckNuGNCWjJxGwDpk9wGW0TS1Gu5IhIu3iGMS
-   DWctMbbwxDk4Us2oy/smRLBAtA+NZbg/DaHLdhOxNdobTN5BG6DA0aIez
-   g==;
-X-CSE-ConnectionGUID: QD+1dBm1RBG3pfaAld0jbA==
-X-CSE-MsgGUID: UR4vXq3SRUmK/Eiw7RWT8Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="53336335"
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="53336335"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 22:58:53 -0700
-X-CSE-ConnectionGUID: +9soHTPkR4iIHLdsbmCuhw==
-X-CSE-MsgGUID: gPgM6GY/QaudTFnlSKFbNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
-   d="scan'208";a="139766797"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 18 May 2025 22:58:49 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGtWR-000LB3-0C;
-	Mon, 19 May 2025 05:58:47 +0000
-Date: Mon, 19 May 2025 13:58:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ethan Carter Edwards <ethan@ethancedwards.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>
-Cc: oe-kbuild-all@lists.linux.dev, linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Ethan Carter Edwards <ethan@ethancedwards.com>
-Subject: Re: [PATCH v2] ext4: replace strcpy() with '.' assignment
-Message-ID: <202505191316.JJMnPobO-lkp@intel.com>
-References: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hpGTNOOr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D460C4CEE4;
+	Mon, 19 May 2025 08:16:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747642578;
+	bh=DvnlKbccpce+ZLmY4HBn+RM09MSGUVos8+IsFw28Ywc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hpGTNOOrWSFUDHgI6XCMYfrSYWMtBuqAWnHne0vqSTAMz/FBpZvw7dBI3hnI7zVit
+	 Bw+B76++GEnYckqbgpz62CuGsKPWxRq8Ad/h+iK801pGqx2ZEOH5XMyNmIHkUaMTnK
+	 DqDDpg4H5gHNzU/rdbfdR45Mm2bOb1FSh+wM65K8Ra+0arTgLFSxs+xM+urN6jpJ5B
+	 SXNfRI3G4IAN/D5QOckZK+JAdEQEoMc2o2TGD052ElTEFKKeiMjBsIqTNotj2jHwMv
+	 /WLvjXccX53XD9XK9LYtht1CjnW3S/aNMWASi0PFoXJLU+4uRXmHCExfI/O9A91Li+
+	 rCDlE+Dkwbmxg==
+Date: Mon, 19 May 2025 10:16:15 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Luo Jie <quic_luoj@quicinc.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lei Wei <quic_leiwei@quicinc.com>, Suruchi Agarwal <quic_suruchia@quicinc.com>, 
+	Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com, srinivas.kandagatla@linaro.org, 
+	bartosz.golaszewski@linaro.org, john@phrozen.org
+Subject: Re: [PATCH net-next v4 01/14] dt-bindings: net: Add PPE for Qualcomm
+ IPQ9574 SoC
+Message-ID: <20250519-garrulous-monumental-shrimp-94ad70@kuoka>
+References: <20250513-qcom_ipq_ppe-v4-0-4fbe40cbbb71@quicinc.com>
+ <20250513-qcom_ipq_ppe-v4-1-4fbe40cbbb71@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
+In-Reply-To: <20250513-qcom_ipq_ppe-v4-1-4fbe40cbbb71@quicinc.com>
 
-Hi Ethan,
+On Tue, May 13, 2025 at 05:58:21PM GMT, Luo Jie wrote:
+> The PPE (packet process engine) hardware block is available in Qualcomm
+> IPQ chipsets that support PPE architecture, such as IPQ9574. The PPE in
+> the IPQ9574 SoC includes six ethernet ports (6 GMAC and 6 XGMAC), which
+> are used to connect with external PHY devices by PCS. It includes an L2
+> switch function for bridging packets among the 6 ethernet ports and the
+> CPU port. The CPU port enables packet transfer between the ethernet
+> ports and the ARM cores in the SoC, using the ethernet DMA.
+> 
+> The PPE also includes packet processing offload capabilities for various
+> networking functions such as route and bridge flows, VLANs, different
+> tunnel protocols and VPN.
+> 
+> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> ---
+>  .../devicetree/bindings/net/qcom,ipq9574-ppe.yaml  | 406 +++++++++++++++++++++
+>  1 file changed, 406 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml b/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml
+> new file mode 100644
+> index 000000000000..f36f4d180674
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml
+> @@ -0,0 +1,406 @@
+> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/qcom,ipq9574-ppe.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm IPQ packet process engine (PPE)
+> +
+> +maintainers:
+> +  - Luo Jie <quic_luoj@quicinc.com>
+> +  - Lei Wei <quic_leiwei@quicinc.com>
+> +  - Suruchi Agarwal <quic_suruchia@quicinc.com>
+> +  - Pavithra R <quic_pavir@quicinc.com>>
 
-kernel test robot noticed the following build errors:
+Double >>
 
-[auto build test ERROR on 5723cc3450bccf7f98f227b9723b5c9f6b3af1c5]
+> +
+> +description:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ethan-Carter-Edwards/ext4-replace-strcpy-with-assignment/20250519-115601
-base:   5723cc3450bccf7f98f227b9723b5c9f6b3af1c5
-patch link:    https://lore.kernel.org/r/20250518-ext4-strcpy-v2-1-80d316325046%40ethancedwards.com
-patch subject: [PATCH v2] ext4: replace strcpy() with '.' assignment
-config: csky-randconfig-002-20250519 (https://download.01.org/0day-ci/archive/20250519/202505191316.JJMnPobO-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505191316.JJMnPobO-lkp@intel.com/reproduce)
+You got here comment didn't you?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505191316.JJMnPobO-lkp@intel.com/
+> +  The Ethernet functionality in the PPE (Packet Process Engine) is comprised
+> +  of three components, the switch core, port wrapper and Ethernet DMA.
+> +
+> +  The Switch core in the IPQ9574 PPE has maximum of 6 front panel ports and
+> +  two FIFO interfaces. One of the two FIFO interfaces is used for Ethernet
+> +  port to host CPU communication using Ethernet DMA. The other is used
+> +  communicating to the EIP engine which is used for IPsec offload. On the
+> +  IPQ9574, the PPE includes 6 GMAC/XGMACs that can be connected with external
+> +  Ethernet PHY. Switch core also includes BM (Buffer Management), QM (Queue
+> +  Management) and SCH (Scheduler) modules for supporting the packet processing.
 
-All errors (new ones prefixed by >>):
+...
 
-   fs/ext4/inline.c: In function 'ext4_inlinedir_to_tree':
->> fs/ext4/inline.c:1317:38: error: assignment to 'char' from 'char *' makes integer from pointer without a cast [-Wint-conversion]
-    1317 |                         fake.name[0] = ".";
-         |                                      ^
-   fs/ext4/inline.c:1327:53: error: assignment to 'char' from 'char *' makes integer from pointer without a cast [-Wint-conversion]
-    1327 |                         fake.name[0] = fake.name[1] = ".";
-         |                                                     ^
+> +  clock-names:
+> +    items:
+> +      - const: ppe
+> +      - const: apb
+> +      - const: ipe
+> +      - const: btq
+> +
+> +  resets:
+> +    maxItems: 1
+> +    description: PPE reset, which is necessary before configuring PPE hardware
+> +
+> +  interconnects:
+> +    items:
+> +      - description: Clock path leading to PPE switch core function
+> +      - description: Clock path leading to PPE register access
+> +      - description: Clock path leading to QoS generation
+> +      - description: Clock path leading to timeout reference
+> +      - description: Clock path leading to NSS NOC from memory NOC
+> +      - description: Clock path leading to memory NOC from NSS NOC
+> +      - description: Clock path leading to enhanced memory NOC from NSS NOC
+> +
+> +  interconnect-names:
+> +    items:
+> +      - const: ppe
+> +      - const: ppe_cfg
+> +      - const: qos_gen
+> +      - const: timeout_ref
+> +      - const: nssnoc_memnoc
+> +      - const: memnoc_nssnoc
+> +      - const: memnoc_nssnoc_1
+> +
+> +  ethernet-dma:
 
+I don't get why this is a separate node.
 
-vim +1317 fs/ext4/inline.c
+> +    type: object
+> +    additionalProperties: false
+> +    description:
+> +      EDMA (Ethernet DMA) is used to transmit packets between PPE and ARM
+> +      host CPU. There are 32 TX descriptor rings, 32 TX completion rings,
+> +      24 RX descriptor rings and 8 RX fill rings supported.
+> +
+> +    properties:
+> +      clocks:
+> +        items:
+> +          - description: EDMA system clock from NSS Clock Controller
+> +          - description: EDMA APB (Advanced Peripheral Bus) clock from
+> +              NSS Clock Controller
+> +
+> +      clock-names:
+> +        items:
+> +          - const: sys
+> +          - const: apb
+> +
+> +      resets:
+> +        maxItems: 1
+> +        description: EDMA reset from NSS clock controller
+> +
+> +      interrupts:
+> +        minItems: 29
+> +        maxItems: 57
 
-  1259	
-  1260	/*
-  1261	 * This function fills a red-black tree with information from an
-  1262	 * inlined dir.  It returns the number directory entries loaded
-  1263	 * into the tree.  If there is an error it is returned in err.
-  1264	 */
-  1265	int ext4_inlinedir_to_tree(struct file *dir_file,
-  1266				   struct inode *dir, ext4_lblk_t block,
-  1267				   struct dx_hash_info *hinfo,
-  1268				   __u32 start_hash, __u32 start_minor_hash,
-  1269				   int *has_inline_data)
-  1270	{
-  1271		int err = 0, count = 0;
-  1272		unsigned int parent_ino;
-  1273		int pos;
-  1274		struct ext4_dir_entry_2 *de;
-  1275		struct inode *inode = file_inode(dir_file);
-  1276		int ret, inline_size = 0;
-  1277		struct ext4_iloc iloc;
-  1278		void *dir_buf = NULL;
-  1279		struct ext4_dir_entry_2 fake;
-  1280		struct fscrypt_str tmp_str;
-  1281	
-  1282		ret = ext4_get_inode_loc(inode, &iloc);
-  1283		if (ret)
-  1284			return ret;
-  1285	
-  1286		down_read(&EXT4_I(inode)->xattr_sem);
-  1287		if (!ext4_has_inline_data(inode)) {
-  1288			up_read(&EXT4_I(inode)->xattr_sem);
-  1289			*has_inline_data = 0;
-  1290			goto out;
-  1291		}
-  1292	
-  1293		inline_size = ext4_get_inline_size(inode);
-  1294		dir_buf = kmalloc(inline_size, GFP_NOFS);
-  1295		if (!dir_buf) {
-  1296			ret = -ENOMEM;
-  1297			up_read(&EXT4_I(inode)->xattr_sem);
-  1298			goto out;
-  1299		}
-  1300	
-  1301		ret = ext4_read_inline_data(inode, dir_buf, inline_size, &iloc);
-  1302		up_read(&EXT4_I(inode)->xattr_sem);
-  1303		if (ret < 0)
-  1304			goto out;
-  1305	
-  1306		pos = 0;
-  1307		parent_ino = le32_to_cpu(((struct ext4_dir_entry_2 *)dir_buf)->inode);
-  1308		while (pos < inline_size) {
-  1309			/*
-  1310			 * As inlined dir doesn't store any information about '.' and
-  1311			 * only the inode number of '..' is stored, we have to handle
-  1312			 * them differently.
-  1313			 */
-  1314			if (pos == 0) {
-  1315				fake.inode = cpu_to_le32(inode->i_ino);
-  1316				fake.name_len = 1;
-> 1317				fake.name[0] = ".";
-  1318				fake.rec_len = ext4_rec_len_to_disk(
-  1319						  ext4_dir_rec_len(fake.name_len, NULL),
-  1320						  inline_size);
-  1321				ext4_set_de_type(inode->i_sb, &fake, S_IFDIR);
-  1322				de = &fake;
-  1323				pos = EXT4_INLINE_DOTDOT_OFFSET;
-  1324			} else if (pos == EXT4_INLINE_DOTDOT_OFFSET) {
-  1325				fake.inode = cpu_to_le32(parent_ino);
-  1326				fake.name_len = 2;
-  1327				fake.name[0] = fake.name[1] = ".";
-  1328				fake.rec_len = ext4_rec_len_to_disk(
-  1329						  ext4_dir_rec_len(fake.name_len, NULL),
-  1330						  inline_size);
-  1331				ext4_set_de_type(inode->i_sb, &fake, S_IFDIR);
-  1332				de = &fake;
-  1333				pos = EXT4_INLINE_DOTDOT_SIZE;
-  1334			} else {
-  1335				de = (struct ext4_dir_entry_2 *)(dir_buf + pos);
-  1336				pos += ext4_rec_len_from_disk(de->rec_len, inline_size);
-  1337				if (ext4_check_dir_entry(inode, dir_file, de,
-  1338						 iloc.bh, dir_buf,
-  1339						 inline_size, pos)) {
-  1340					ret = count;
-  1341					goto out;
-  1342				}
-  1343			}
-  1344	
-  1345			if (ext4_hash_in_dirent(dir)) {
-  1346				hinfo->hash = EXT4_DIRENT_HASH(de);
-  1347				hinfo->minor_hash = EXT4_DIRENT_MINOR_HASH(de);
-  1348			} else {
-  1349				err = ext4fs_dirhash(dir, de->name, de->name_len, hinfo);
-  1350				if (err) {
-  1351					ret = err;
-  1352					goto out;
-  1353				}
-  1354			}
-  1355			if ((hinfo->hash < start_hash) ||
-  1356			    ((hinfo->hash == start_hash) &&
-  1357			     (hinfo->minor_hash < start_minor_hash)))
-  1358				continue;
-  1359			if (de->inode == 0)
-  1360				continue;
-  1361			tmp_str.name = de->name;
-  1362			tmp_str.len = de->name_len;
-  1363			err = ext4_htree_store_dirent(dir_file, hinfo->hash,
-  1364						      hinfo->minor_hash, de, &tmp_str);
-  1365			if (err) {
-  1366				ret = err;
-  1367				goto out;
-  1368			}
-  1369			count++;
-  1370		}
-  1371		ret = count;
-  1372	out:
-  1373		kfree(dir_buf);
-  1374		brelse(iloc.bh);
-  1375		return ret;
-  1376	}
-  1377	
+Why is this flexible on the same SoC?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Krzysztof
+
