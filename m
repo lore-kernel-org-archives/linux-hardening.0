@@ -1,148 +1,91 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB2D2AC17;
-	Mon, 19 May 2025 12:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5B427FD40;
+	Mon, 19 May 2025 13:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747656068; cv=none; b=OJ8/PrZ+dumJxvjq2smsJNL+PPCbwZArdjLo0pW2lpJ/N8vmU7ifMHPw7EKlL3+EEIt+oYVaQ1D1rfzHLmvsMrsp8I6dk2OxxpFCOD6YSCfdRUOkB5UqX4BGa3XYZRFUuPELTgoDiv8HMJt7RBcmMQHa2K0wV9ZziS//4ybWIG0=
+	t=1747662739; cv=none; b=AiRZXaoZGMm8zxUPfDOzrFkkrcSTVIefT8y77Sl6taJq9YuUqVupoI5CbE5Yk+HKDGkYYq+pIPPH3u0DMtPEde9efF0JQWZTzLZMN+4e2hvWCpG8G/rCWEjYB2rPX2tNDk4C9+dNKmBbg7c6CKwV3fFDE1pxzZKj3KlMRh8U2fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747656068; c=relaxed/simple;
-	bh=6FQZCmbqhYBvGYMZKrSz23qP8S75tNvXJkLejE2PXIc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Rm8tFD9ehH+TvjaD5MThAlwOEzkSCdOUcpkSBr3210kWcqzfM8tZkY/dFzp7nEC67Sqgh8qsUcK4HlhiIqVpcswC8bVlyTFDwI1CV+7DIFOPV6/8o2jotNfuMIstI9S4aWim2LCTI6y2CWMtkw8i6xZ2dty0w3dP/6vZuU9cDOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=E55L1Do9; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1747662739; c=relaxed/simple;
+	bh=s0l9iW5KbP0oGFXHuUopMWX9GgpNakrOf3mX2mmZPdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gCHt0Jb54awFSM26hmfN1TpsFjYQPP4g1DdW3h8tBL8dvwCSpfj5lMEmcnNYOp2RCQPFXHoPIE8BIUn763s4VwQbV0q48+1BnjsXOrfxPzKu53EbqFnSz0u3K8SEA6A8VNCEyRZeJnJB2bNh7yh//xjzkIW3Tzg5JKFkc0L0WYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6PfRF78; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="E55L1Do9"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4b1GVP64tMz9tVZ;
-	Mon, 19 May 2025 14:01:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1747656062;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OmBSswFk2f6Bhh6ty+jXPF6BtXUnOS/D9iXCBGxUOhk=;
-	b=E55L1Do9xNxNDkE9rcMwOaGdqVZZNEtZTNgXXSBFn9lbYWevmzxHryrE0pxght18pw5QT4
-	/ueZC19Nk0Ktrv+id7H2uFbOjjw9OwkNN/HDhpOm/E05Qqoc8OnkdTr5q3QnizDdm51HCP
-	r3rEQq0PrO4uwzEnCco/GNHR/AkxaveVgszkhT7PGOcmk/Dw+F2gHiRd4TOBhvZYa/rBWA
-	aEyQK8wcaQrfyGC6Dk/2VY3RR6Rngu1ZkaoiCFwm4MU7wuujUE8OhHmXJSM2fpJFeqYC1O
-	9NhCWnVCPhT+TM6/LaP7CqJNrF2J0tu52JuLIzlYPpbSQ3sohY6pE6pqh06xbw==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Mon, 19 May 2025 08:00:57 -0400
-Subject: [PATCH v3] ext4: replace strcpy() with '.' assignment
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6PfRF78"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9A28C4CEE4;
+	Mon, 19 May 2025 13:52:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747662737;
+	bh=s0l9iW5KbP0oGFXHuUopMWX9GgpNakrOf3mX2mmZPdU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k6PfRF78+nFF4s8WR0BjPyklkba+iUPaDHORSi+0smpSxInC2zZIOKgIMGqfVa8km
+	 IcP56CPWlXY8lAR5uOXT+PCNUbf7Y3gOBbhijentbVd5HlaAWPKZT37Q4ciAbgA8D2
+	 qep/QHachguy4h0T9tqsiLjAyLYDN6ITsyokZBABxTIIc4GadJVY2ExJqNJQ4kSfQ8
+	 zFrfIMjL7kmQZVDdpTarewd8VVTS8TNHyIN9EUad4+B7OxsjT/Jurgwnq4fXJFNJKM
+	 iusLK9+p68gb0ahhQwxkMAKaoQQkPAjTSTM0GNWFtXTqEG0nnJyJgg8VcT5dpS+CEl
+	 OVc5rCufc+BDw==
+Date: Mon, 19 May 2025 06:52:13 -0700
+From: Kees Cook <kees@kernel.org>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] ext4: replace strcpy() with '.' assignment
+Message-ID: <202505190651.943F729@keescook>
+References: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250519-ext4-strcpy-v3-1-d6518a5f3d47@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIAHgdK2gC/33NwQ6DIAyA4VcxnMdCUZDttPdYdnBQJodNA4Rpj
- O++6tns+Lfp14UljAETu1YLi1hCCsOHoj5VzPbd54U8OGomhVRCgeE45YanHO04c1CNstq3l6c
- CRhdjRB+mXbs/qPuQ8hDnHS+wTY+dAhy4tqYz0nvRGn/DTM8tum8XXTrb4c02r8g/hiTDCFeDr
- mnd6CNjXdcf1NGNJfIAAAA=
-X-Change-ID: 20250518-ext4-strcpy-1545c6f79b51
-To: Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>
-Cc: Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-ext4@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2922;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=6FQZCmbqhYBvGYMZKrSz23qP8S75tNvXJkLejE2PXIc=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeFpHakxWamIxemhXT1lGWmZxdExTc2lqNzhhdkY2VXRxCkVscldXTWszQkhiNFdhOWQ1
- TmxSeXNJZ3hzVWdLNmJJOGo5SE9lMmg1Z3lGblg5ZG1tRG1zREtCREdIZzRoU0EKaVp5NnpNaXd
- hVloxemJJZC96NjlLQW85RWZQa2c1WklsUm1mS05zelo4T1h6anBuOG93bEdmNUs1OHcrTENyTg
- pZUlc3eFR4Z0IwdUNyTXF0YXhXTUU3Y3RQK1hOZThYTi9qOC9BUG56U0E4PQo9QzBxKwotLS0tL
- UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
-X-Rspamd-Queue-Id: 4b1GVP64tMz9tVZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
 
-strcpy() is deprecated; assignment can be used instead which
-theoretically/potentially increases speed as a function call is removed.
+On Sun, May 18, 2025 at 11:54:21PM -0400, Ethan Carter Edwards wrote:
+> strcpy() is deprecated; assignment can be used instead which
+> theoretically/potentially increases speed as a function call is removed.
+> 
+> Straight assignment works because the strings are not null-terminated
+> which means they don't strictly require a str(s)cpy call.
+> 
+> No functional changes intended.
+> 
+> Link: https://github.com/KSPP/linux/issues/88
+> Suggested-by: Theodore Ts'o <tytso@mit.edu>
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+> There's an ongoing effort to remove calls to strcpy throughout the
+> kernel.
+> 
+> Link: https://github.com/KSPP/linux/issues/88
+> ---
+> Changes in v2:
+> - completely remove the call to strcpy and replace it with assignment
+>   off of Theo's suggestion. Thanks.
+> - Link to v1: https://lore.kernel.org/r/20250518-ext4-strcpy-v1-1-6c8a82ff078f@ethancedwards.com
+> ---
+>  fs/ext4/inline.c | 4 ++--
+>  fs/ext4/namei.c  | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/ext4/inline.c b/fs/ext4/inline.c
+> index 2c9b762925c72f2ff5a402b02500370bc1eb0eb1..f3bc8b3904a8a9b55162f002b5bd63a527b290a5 100644
+> --- a/fs/ext4/inline.c
+> +++ b/fs/ext4/inline.c
+> @@ -1314,7 +1314,7 @@ int ext4_inlinedir_to_tree(struct file *dir_file,
+>  		if (pos == 0) {
+>  			fake.inode = cpu_to_le32(inode->i_ino);
+>  			fake.name_len = 1;
+> -			strcpy(fake.name, ".");
+> +			fake.name[0] = ".";
 
-Straight assignment works because the strings are not null-terminated
-which means they don't strictly require a str(s)cpy call.
+This means the trailing NUL byte isn't being copied any more? That seems
+like a big change, even if name_len is being used for length tracking.
 
-No functional changes intended.
-
-Link: https://github.com/KSPP/linux/issues/88
-Suggested-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
-Changes in v3:
-- Fix typo of "." instead of '.'. Sorry!
-- Link to v2: https://lore.kernel.org/r/20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com
-
-Changes in v2:
-- completely remove the call to strcpy and replace it with assignment
-  off of Theo's suggestion. Thanks.
-- Link to v1: https://lore.kernel.org/r/20250518-ext4-strcpy-v1-1-6c8a82ff078f@ethancedwards.com
----
- fs/ext4/inline.c | 4 ++--
- fs/ext4/namei.c  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/fs/ext4/inline.c b/fs/ext4/inline.c
-index 2c9b762925c72f2ff5a402b02500370bc1eb0eb1..7ba6220f92ee4e1b817bc9b47ec229050af3dde7 100644
---- a/fs/ext4/inline.c
-+++ b/fs/ext4/inline.c
-@@ -1314,7 +1314,7 @@ int ext4_inlinedir_to_tree(struct file *dir_file,
- 		if (pos == 0) {
- 			fake.inode = cpu_to_le32(inode->i_ino);
- 			fake.name_len = 1;
--			strcpy(fake.name, ".");
-+			fake.name[0] = '.';
- 			fake.rec_len = ext4_rec_len_to_disk(
- 					  ext4_dir_rec_len(fake.name_len, NULL),
- 					  inline_size);
-@@ -1324,7 +1324,7 @@ int ext4_inlinedir_to_tree(struct file *dir_file,
- 		} else if (pos == EXT4_INLINE_DOTDOT_OFFSET) {
- 			fake.inode = cpu_to_le32(parent_ino);
- 			fake.name_len = 2;
--			strcpy(fake.name, "..");
-+			fake.name[0] = fake.name[1] = '.';
- 			fake.rec_len = ext4_rec_len_to_disk(
- 					  ext4_dir_rec_len(fake.name_len, NULL),
- 					  inline_size);
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index e9712e64ec8f04586f5ebcd332431e6af92e4f36..c7d7c46a0b18ae109d30358c157812ac2ded200e 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -2926,7 +2926,7 @@ struct ext4_dir_entry_2 *ext4_init_dot_dotdot(struct inode *inode,
- 	de->name_len = 1;
- 	de->rec_len = ext4_rec_len_to_disk(ext4_dir_rec_len(de->name_len, NULL),
- 					   blocksize);
--	strcpy(de->name, ".");
-+	de->name[0] = '.';
- 	ext4_set_de_type(inode->i_sb, de, S_IFDIR);
- 
- 	de = ext4_next_entry(de, blocksize);
-@@ -2940,7 +2940,7 @@ struct ext4_dir_entry_2 *ext4_init_dot_dotdot(struct inode *inode,
- 		de->rec_len = ext4_rec_len_to_disk(
- 					ext4_dir_rec_len(de->name_len, NULL),
- 					blocksize);
--	strcpy(de->name, "..");
-+	de->name[0] = de->name[1] = '.';
- 	ext4_set_de_type(inode->i_sb, de, S_IFDIR);
- 
- 	return ext4_next_entry(de, blocksize);
-
----
-base-commit: 5723cc3450bccf7f98f227b9723b5c9f6b3af1c5
-change-id: 20250518-ext4-strcpy-1545c6f79b51
-
-Best regards,
 -- 
-Ethan Carter Edwards <ethan@ethancedwards.com>
-
+Kees Cook
