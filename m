@@ -1,58 +1,58 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2678E211A05
-	for <linux-hardening@vger.kernel.org>; Mon, 19 May 2025 20:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC5D1F1319
+	for <linux-hardening@vger.kernel.org>; Mon, 19 May 2025 20:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747685407; cv=none; b=IrQIsQ0stQ06iGM9W1tchO1sTM933KuXmaVFruHcQ1+rRNJrMwSqGdE8hK9C4svymKb8xte0zdm46BZk3KreI+jZeHqoZxJNj++lfrcTtdQlIHeadAc/k+08EBkjEu1Xc8U5kSzcuYdbiMzt731kqk+UfOrXUVOoIoBAc6xgkbc=
+	t=1747687052; cv=none; b=SlsiCZPkDw85S/b/wN9h7eT9gAADDiYsjEbz7/V43bO7PTvkbM2gzr7XNDmreypcxOPK3tWhOw3reeFFjaBTANF0vVilXJ4uBDGfuidnQUl8aTdk8RTT/YB3JSnkQqI37BaHqP7KHGpLIL/i67nLGjtIdoPTs9w5Q6bJmR/eBkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747685407; c=relaxed/simple;
-	bh=K65/qfJWkrN5GNeUHzcLgVlSWQLaboVUibSZE7gM0W8=;
+	s=arc-20240116; t=1747687052; c=relaxed/simple;
+	bh=SC3p5hC8hMDNnCQGdXHPO8UFcYi9C6ed8jvNAt2Ai+8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G+Zc+zjdB9hHAz71FiOKKfV1rL+4wNQh3Ggpc7uuNDZRzHv3Yq9uibQbBO3Qch/7+yN26Ud4LFciZV/k3LoUh2yOJRga6C4aT8uyI9BuRvco3oZ59RaK6ecS7QrY7QbJgPnF0RLEaNpTq+Kdoc3DBPmK185R4E/apwzX/6htJ+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oaF1kBqi; arc=none smtp.client-ip=209.85.160.52
+	 To:Cc:Content-Type; b=IcBn9ONm559PFj+NSzct1H85E2GGADJhv5iK7vvi/1s04nlgjk75h5W2Ks0rroI5EXvCMFPA5ZsGvi9qvtIqGEQmhSkz9x+ZUbo5KVj1I5nRJtFIsS72tf3ANtGx6jX6tm3JfU8W4YmoGEZgaK/+5ZDtTABBAiYwUwl7I6ZSzcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WD1EOKB8; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oaF1kBqi"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2d0920ce388so1605540fac.0
-        for <linux-hardening@vger.kernel.org>; Mon, 19 May 2025 13:10:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WD1EOKB8"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6000791e832so17347a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 19 May 2025 13:37:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747685405; x=1748290205; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747687049; x=1748291849; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=K65/qfJWkrN5GNeUHzcLgVlSWQLaboVUibSZE7gM0W8=;
-        b=oaF1kBqiZjZRuW4ykTPJe38SZaPBr0wmxQvjsVUFz88JR7YAV4gbKwlsVBzKIrOxw9
-         Rchlj4/+xeCnGp9+cr3zgDxwu9Z8V6Jq87KdkTMQPokm6OtsdNvHVxIscflRh+nRsj+a
-         AmhngwxIKOmyVvFi/VUsbU9eh5aPUDVCVTD6FiFIxZg2kYNXhfEt9A73TKsirUP+BIAe
-         2MoB92FwAfwaS9OY6ZKDgFpAP0cbCwkRbyU6j47Z8S8b+14ACBR7QLrGSFQqTT4Lo1hg
-         qOXw6I0N2qeB4tqv67PBG94tjTEMV8Fg7MEw96siQiqnm3OIue4PF77wSjG57yAHuti8
-         eM9g==
+        bh=iwjd8j4QyED9qdYBTT0Bo1zt4l0EzpY7sgoCO0roN34=;
+        b=WD1EOKB8s4rDAq2mwVZDLVhzZfbvcn6jjqKwOWtSz9mKpgG9eJO2epK83AdgbM3hCF
+         7+ec6fmypxjnG2UiK/bVtoOt1/GAat/FPbic5XW3ft8z5dIFoO/JgQyhUzXIocqu1lSw
+         obrEpl+Iupb0GcoP2tJfIruDtWr/Xu+g1hKdcUMgT+H6oQSfG4nSJEnsET33LYoPEw4s
+         y2Mp0/YUi/J8g/xAPt74yZY/MCG7nFk3aTFA28SVUSkuaDj5ovmUIZwPz17WPzhg5OkW
+         KyCd9Uv5bkhNq5E7duV5CijT3OOw6WwvpXWVHykMDB3Dk9lQZDKNG+FcQkLyCsHOs3us
+         Kglw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747685405; x=1748290205;
+        d=1e100.net; s=20230601; t=1747687049; x=1748291849;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=K65/qfJWkrN5GNeUHzcLgVlSWQLaboVUibSZE7gM0W8=;
-        b=PowhXfbIAUTxRjWg7n6o8EF9EZxS0l99xrGv3pwaHbNxRbTybMw3jF1E90lWS2yfbV
-         M/qGGqWVACH9Zq/5APDu3sjFxlDwq9sgqo5lIXesU9fZUbM4MzKlOwt/2QMbE4QSwf3z
-         wDIhBATiOCT5AlXIm6dlyL+k4SWue2lC3zpMNaynhdmEriRquKKcV6iLJqQwBgzUYIlF
-         mBf0/hwaJegkuGsJbLldbR6JeeSxyHXZJ3Hh5UY0Rh6GUggazxLFF83q00MlTIuX6mJb
-         7OjZOCBd3h2hjvq0qkEJRA+dI/JIf17Po7UAH+7VUtBtxDUgtQ4d71MaOxcdUv2lPBp+
-         V1EA==
-X-Forwarded-Encrypted: i=1; AJvYcCVo/DcPCSFtKPVUgyXH+ABYFf++DlbOsPg/DNtuoCTeDyo1khugsTvZpJF6hDPaZVxb0bTYUgKUfXGsetArq7E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQhgbaj+/SzuqEzl+OBeYgXZ5f94Fl6TCcoezO2MNX1iFRGUjb
-	bOFdO2zi+sd997Zi55BVGnWRzeu8xU+A9U6bV4lEn4Ke4CKWGG+w9Ua7gWD6rCV5BJjmSbNpVWU
-	aelxhge3SbkU4x7HCV/ucNxxkpe8wX0bxv4EpuhYf
-X-Gm-Gg: ASbGncs8n0gTJyPALT4/1jCkYEmT4kTz753GOG5gndRC/hOxuNmw9y1wf0nc4WH2yzq
-	aoF2c1CjglBptjncLTyTZVivWPiCLa9P8nZVKwApZcxqLLqaM+fFYrcECvFPZKxeakd0J9Pa/aT
-	PbRnFt1MfMWMptDVR7VmLPxUm860lp0A8q+4xAe7k22bJuL3qMDAjSuSXc0AXz
-X-Google-Smtp-Source: AGHT+IEZo6X1kK4PkhIGjc5tX5uLYslHsEyE72DrL/tgweT/Ie6dZbl0uvi0BaTmW1YxQGePtYntcG6LBZDAjWJB/aA=
-X-Received: by 2002:a05:6870:1703:b0:2d5:ba2d:80da with SMTP id
- 586e51a60fabf-2e3c1fa723dmr8876678fac.36.1747685404855; Mon, 19 May 2025
- 13:10:04 -0700 (PDT)
+        bh=iwjd8j4QyED9qdYBTT0Bo1zt4l0EzpY7sgoCO0roN34=;
+        b=pLE2EQnUEmBbXcMksfr9IXLxTF14G3Jdk+CXqIMOeWiTt8JUhAobm17l/avP4vA05j
+         gS1p6SbzVgwwPk/JjlRBusSU0Xb7njbLN5Xd9DRlETb0bbjMJ6OLo23xan04PibEiZsF
+         TPhADH1T3ozmhA1sAFtk5W72vNiFHcv7U8MF9g2ptOQ/9uVKx31UDiSCxO/2N0X2yIFg
+         C8R0YB3OoolECgxu40zcXxnT089PzwaP+5PrpSmrCAck5OfLwJnQu8N1YL55PRBnCWGO
+         kSrjgWQaj3u5cV6cEB1tr8GOlzETBZ+XKifoA9v7agyfR3QAWvP6Xwz2pjEjyRB0F03c
+         K0Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCWWU96D6pTwgmieelh/ZHAPJN2HuGpYueR6rVwO2C0quHBHsgwVG+0B3zC7wZTDl40ORHBfOWvXn5PiRrt//JM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM5A/QEoT8jJXi8iAVkK6fn1uz3H2C5hNECZsAG70ounM4KPSx
+	om6vUzXe0EaFMt6pan/r3g3Qw1r0tEZbN9EqFVu4K1DY40f2isCCo8OCPpYwTLjYgs6cJ6hM5nB
+	Y4MtTFTupAhpgZfuHD91HgKlq/RcvFchlf3jmCBE5
+X-Gm-Gg: ASbGncsdKPhPKLbv94NlE1jEdiXJrdM4dDHrRX2xscWxHIzVu0T0jgxeQIZUNhBnhAi
+	BldZXu/aawFOoJmuZtm8aGVuDXMsviP1hp/LRWqZFRYD9cXjzAnlzF1xtvnZ85JTfgzR80Pdipx
+	Kgpc2lcbn0YYZfVueSMAeYyAQnL9XEh5xNbna3UeTsvAnU9W5tCrQUHHpLPIc=
+X-Google-Smtp-Source: AGHT+IH/u+qfIXXPEN3rnOUSM7iuh6vPNGj/l4Qc8eijLUmuYTxdqiITZPnWGZ6jYGmXZIBgL5nCJB7y+EVSlPfjHBg=
+X-Received: by 2002:a50:9f08:0:b0:601:f23b:a377 with SMTP id
+ 4fb4d7f45d1cf-601f23ba435mr105591a12.6.1747687048635; Mon, 19 May 2025
+ 13:37:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -62,12 +62,12 @@ MIME-Version: 1.0
 References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-4-bqe@google.com>
  <CAG48ez0rGwFeVtj6AKg8YY=D9Atvp1h5FdW3szswEJsRmkR86A@mail.gmail.com> <CACQBu=UNAFjKw_m8oE5Mst_eThEf36zqgUWZ3a0u1m4zr6MoJw@mail.gmail.com>
 In-Reply-To: <CACQBu=UNAFjKw_m8oE5Mst_eThEf36zqgUWZ3a0u1m4zr6MoJw@mail.gmail.com>
-From: Burak Emir <bqe@google.com>
-Date: Mon, 19 May 2025 22:09:53 +0200
-X-Gm-Features: AX0GCFv2e4Qgo0_ldeq5x0ML84MbwuQKliPxpr57_FhrZXPi6YvY6lR_y1GeBmk
-Message-ID: <CACQBu=WNdmxqOY6FYiKZm2kxACoKMnusngMexhW-=xHkGbzVLQ@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 19 May 2025 22:36:52 +0200
+X-Gm-Features: AX0GCFvbm9GK3YytAYW5KkKwW8G7S0FDKQ4iXt9eAphqt0Pv4tDqgAplSmqLVuU
+Message-ID: <CAG48ez32BYaor4pWcG4+X6zqXgdskeC2UR3Kte_pp09-LeKMug@mail.gmail.com>
 Subject: Re: [PATCH v8 3/5] rust: add bitmap API.
-To: Jann Horn <jannh@google.com>
+To: Burak Emir <bqe@google.com>
 Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
 	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -80,23 +80,45 @@ Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 10:07=E2=80=AFPM Burak Emir <bqe@google.com> wrote:
->
+On Mon, May 19, 2025 at 10:08=E2=80=AFPM Burak Emir <bqe@google.com> wrote:
 > On Mon, May 19, 2025 at 9:01=E2=80=AFPM Jann Horn <jannh@google.com> wrot=
 e:
+> > On Mon, May 19, 2025 at 6:24=E2=80=AFPM Burak Emir <bqe@google.com> wro=
+te:
+> > > +    /// Set bit with index `index`, atomically.
+> > > +    ///
+> > > +    /// ATTENTION: The naming convention differs from C, where the c=
+orresponding
+> > > +    /// function is called `set_bit`.
+> > > +    ///
+> > > +    /// # Safety
+> > > +    ///
+> > > +    /// This is a relaxed atomic operation (no implied memory barrie=
+rs, no
+> > > +    /// ordering guarantees). The caller must ensure that this is sa=
+fe, as
+> > > +    /// the compiler cannot prevent code with an exclusive reference=
+ from
+> > > +    /// calling atomic operations.
 > >
-> > I don't understand what's going on here, unless you're saying that
-> > Rust does not enforce that an object ownership transfer between
-> > threads has proper RELEASE/ACQUIRE (or RELEASE/CONSUME) memory
-> > ordering or something like that?
+> > How can atomic operations through an exclusive reference be unsafe?
+> > You can't have a data race between two atomic operations, and an
+> > exclusive reference should anyway prevent any concurrency, right?
 >
-> Indeed without the Sync implementation, it does not make sense to have
-> atomic ops that take &self.
-> Sorry for the confusion, I should have added the Sync implementation.
+> The atomic operations take a &self (shared reference).
+>
+> The patch is missing the implementation of Sync for now. With that,
+> one would get concurrent write access through shared references.
+>
+> The "unsafe" here should serve as reminder to argue why it is ok to
+> not have any ordering guarantees.
+>
+> The last sentence is supposed to say: when you have a &mut bitmap, you
+> can reborrow it as &bitmap, and then happily call this atomic op.
+> Even though it is unnecessary.
 
-Hang on, the Sync implementation is actually there in this patch! It
-was missing previously.
-Does that clarify things?
-
-cheers,
-Burak
+But using an atomic op when you have a &mut reference is not a safety
+issue, right? You wrote a comment about behavior with exclusive
+references in the "# Safety" comment block. If that's not supposed to
+be a safety problem, this should probably not be in the "# Safety"
+section?
