@@ -1,425 +1,170 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61861C8604;
-	Mon, 19 May 2025 19:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9D514F104
+	for <linux-hardening@vger.kernel.org>; Mon, 19 May 2025 20:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747683982; cv=none; b=kDL4FnkyeOwhaPTN3BnboE6F78xLVAyAIGVuSWZv+e02Z5fql0C+EYDoF+eShPUVe4ntmPTgf7T1NLhxRNKpZcwmH77DlAQ47Ebq1RloRLfOy6wI8fNDfBGD8WaoM4cYqm96zzRpJIGH+kySiKtOgZySlBgm2lgbQc6quXvG1WU=
+	t=1747685293; cv=none; b=A8fH29bN1Acct6DoDP4b/IKSNZpe4E/owBAYNnVtxT1WaNP8d4EQOAuE0kkW07fQwzhTVkOvKkcw2NoW1nv1a0TIehPmVcpfukdmzO1xWSyuj+NXbg9f2pm84LCgzgsbTWyonElJKifzkclgf0Fjfer02HVD/PNVKbBk7O3sIM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747683982; c=relaxed/simple;
-	bh=dzyHX1BH4jllE8WUig5qynLGWjQ6ogLV5kDKWaSFo7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DFamSIDsEff3Fp+oiqYMj7mI7ff4PVFKinQDs+bBiNSuRtLp1Vz7FqtuubSEuDU7U29cxn81HFJxItobAQ7RckwrrnvZCQpVkN1ayaF/iirKUKUkSIE8yWvHyt4eY/G/WWtITmMhBlVOmrgDcXRz+fYXYtHMdC/pxTzEmzVGSHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UTBcjZAX; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747685293; c=relaxed/simple;
+	bh=HjtgYC529yhheRDeyA7Y6pIa1ry09o9OXj3kNK1/7F0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FpRodbDHqxxOlzpf8l0+SZskuASMG8DTbAE45lllPQR/nyVdw+sFjypal7KdA4mHdOPTbSSdzpVmBHgUNudZGY/om1KDYBexNbI8EgLI+2kkzpR9agz4bXxsZUFQ0KhqtBws13mfLDmChclBJSLFUSmMfvQuWMo/zgPtbjlXse8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AmPIdqcY; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTBcjZAX"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742c2ed0fe1so2291000b3a.1;
-        Mon, 19 May 2025 12:46:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AmPIdqcY"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-60634f82c77so1381413eaf.1
+        for <linux-hardening@vger.kernel.org>; Mon, 19 May 2025 13:08:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747683979; x=1748288779; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0KYRU02TVq8/dirxnlanJGcUcoUt7XKR8bCEBfMqNk4=;
-        b=UTBcjZAXafO6xHWw+MHWm6spI3qkdxcUnvV7RqSDp+ADqOMbQtF7OewtprLJmlWBON
-         HaZ1NEZxTpDqpaNFd3m0XizGG4nJe0XuYR5fGqm9rWCsdiPfWergfamK4UsR7J3WmuxE
-         nLN64x54SEyz0TcLCn4f0JK2S5iiB64C+4M5eJPOhDFPqhV/Cq2xqXG3uiF6HowODPGi
-         7HWBiDUb9LgLUUpogahxBhWW6m64LXCos8YsBqviNLRX3jvFS9AUGsZMFjSJSdksR21A
-         djMea5oOxQLGm92c7NlfbSK16w76QkZK1XzN94TAofii9RyED78YRg0eo/NJMqYtz8UR
-         o6sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747683979; x=1748288779;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1747685291; x=1748290091; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0KYRU02TVq8/dirxnlanJGcUcoUt7XKR8bCEBfMqNk4=;
-        b=NF5m7vUePM3NUzGsqyeWjhRBBgvch81TdbpUjmJnGq4mSsr6y2cDOO3dESVuVn7xO7
-         LuWBEpgjzEKU6A7VD5OymT79dNGd/ECSDdLt3PkPyoWaIZSvB3FoxHpSR8KatehfDaZn
-         iVrnsCK4TCvZJI7goTPKX4s5n2L0mXQgIP1MghrGYgpD9H/Djw45DZWdXpgfORmXqPCR
-         v9Fim+25CjLzvFrqIbCia0f8aL9CGwp+xdiGXzJMnUkUYk55R/wpO82tcgRymYZdhQEr
-         IZceVSFYyIV0z36F/vEZDOtTQv0BhcGdVBcoJctJU5GH87e/IvT/YpkpZj47xEbd4SgT
-         4T3g==
-X-Forwarded-Encrypted: i=1; AJvYcCU5ikdi/r8/ekMjXSyRipwwxqZQMtUoI/8/J5hGkjjQCXLeouYTN64Vos5pSVCVBuo+c0WnL15+5q0RSYpg@vger.kernel.org, AJvYcCUjURdvGgLxC5jfqLX13vb/6DU9xIHJTHPlHhItNpkJ5WMo798KR1hOlhqJ5KNxF3SCVMJ+fVdUMPyPDhJPpno=@vger.kernel.org, AJvYcCXfiXJeMSzz8/I6/pe4xIIpjbU5q8JF5VuphaU7MtStBsiTsoSs3YMpz5AUvOIl4BtDlYbTuV51pex1ESF3X6I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZZUewcdyukRHElzeJ7xHpMyC08lp9K5IhZvos95h0wgkC+bs7
-	wUjHeTuCBYlC78nKAIMgTjdWlPCfhxp/NxM8FRC/Gq0SRVCIU1OvQwkw
-X-Gm-Gg: ASbGncs9OMo1MsI8x/BXpn6gyVsHMDHubowGkOzLBQuxFoFl4TbilJm6rE9cFvjUBPE
-	SPuvmu33O3ZFquPQFzL6XnY4fcdfOl96alAwpb9qs216RTO4woGEsx8xOyIfvnkOI+dtpIN/4AO
-	MjByS2Z7ABsRR8sUuYi/VhbZAFe3FVltrIqK2FwoqULOhA9zPw6pTm/P0ig0W+58VvGd6nrdd1o
-	/DJBCwobOvmXXkk6E+/yVnQdB7Mu4HS0gSMrq4MYSd4dHfnd6uRE4QCsZZ2TuIXnkRh00Ck6E97
-	7wR5Rh0haHLR1YVWoy2yELtxqCIifquCeu720aQ1RUo1j1+kvFM=
-X-Google-Smtp-Source: AGHT+IFutdp9LZlElMzmD02VLuMhE/QQCDxrbRn3fz6st4/yEgVGZwT2cdz2JQmceVk3HE1ze+S3+w==
-X-Received: by 2002:a05:6a00:3c89:b0:742:9cdc:5cbd with SMTP id d2e1a72fcca58-742a98abc68mr16835272b3a.17.1747683978939;
-        Mon, 19 May 2025 12:46:18 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf6dc3csm6611780a12.24.2025.05.19.12.46.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 12:46:18 -0700 (PDT)
-Date: Mon, 19 May 2025 15:46:15 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Burak Emir <bqe@google.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
-Message-ID: <aCuKh0VLh4oUbdv0@yury>
-References: <20250519161712.2609395-1-bqe@google.com>
- <20250519161712.2609395-6-bqe@google.com>
+        bh=2lwV4LLzeGsIDMU8ys7dX22YnefI6DwFNd5lUXaoiKQ=;
+        b=AmPIdqcYpnm9ZlWbJKZOAAMR5jbwRcld11Taf9rNPE0/XavfsK41h+UgSQCCP1KdCf
+         WoL4P20yUBpJodn4V2B6tCJmaWTn+Pp00K45SPmBdchSd1TLK1DnUC7tMp738i6gKP1V
+         lSVQixfmRyHL/Wvf+JTN6wie/g5sAQIWDf5jLIPF7IWCEnCn9pPy4Jo/6KEvHi6Z+s2D
+         2+SmwqyJtl8i60keRlYDziWTnNjgn/W2t0I2ZqifWSRg7rkx4jI82xBAlUeaIOSO8xGH
+         UdLKf1Mu/dBDhRAbSWIQvO3f8wU9toA8TJFVGLhDmrJMqwyy/HfsLGbePNGxWub9XHc1
+         Su7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747685291; x=1748290091;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2lwV4LLzeGsIDMU8ys7dX22YnefI6DwFNd5lUXaoiKQ=;
+        b=ul2MmDtemxcVpjWeAzI70IPgC5/PfRFwIewAFuLbALdmVD/u5TmouzwOh8dAe7gyr5
+         DbuGmF1zLUaL2y3XFs0ussZ9C5NM+sDOyRlUBpJ/TpOxgjtgSiIibKFeXrvPZ4VmMSTy
+         YKxV8IPJ5MsJnZsNRXLxVh45iPcyegFmO4LDD00Hu7q2VnmkfWm4TEBTFS69ln4lS9k2
+         AnSwdk1r8HNh3BAtfw7CLLXDFBhJRtz2o0Xqe4a+lT8KNY17z5trQtAM61ufSiBiEoFO
+         8cxjRM81wepcIqV1YmGWQ91GvO4WN2YyZGx9zej4p2zPJxuWkERJY2cHacwQu/GXhHeI
+         Pxfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIP3a63awpm9Sc3OIka21OydUV2w77WxCWLGeF9csHlsfKckF8WNOd4UpeA6+E6HYIdUwGr/TtbQhf6jKL7PQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywqj3tApmuqSwAgJvorerLiRqy9porQOi/p54FL1ip7+NCtcHHy
+	xS0XMU0wlMuOeVxRd3MZLx0zhUk89j3D2SLjT6lyK/ZDVAc3rt8R3OXdBWEdJPwYhiOqmNpG0UP
+	8pmiwjqdRDGah2+90cFoKNMu432Inc+lvQRP8fWFW
+X-Gm-Gg: ASbGnctn38GkeqMAkZYDqCw0xyuHweG0CKzMWs5TEc1hVYboH6MNQrdHGHg74wskKN+
+	n7pluSFj73in8fXB48rZNVFMBb1r7Zb5AZQtt0L84kHX8ASFnaob3gVONEunw0RQEJbczyxcFFa
+	dc40t8qK/zns6eaeBHdjtqCPf7Z2/5i4ZLhFBi3FGZX/ztkLlSLMhqFgVaV5Qm
+X-Google-Smtp-Source: AGHT+IHCuwjQRNB6puPQEmq9ITHiNTeXys1I0czYfkt1yU/t2YS1V/y1seg5JemoLl3V5eI2g7tl+T3NOwmUzG4xA4s=
+X-Received: by 2002:a05:6870:8301:b0:29e:40f8:ad9b with SMTP id
+ 586e51a60fabf-2e3c8216676mr8263787fac.14.1747685290483; Mon, 19 May 2025
+ 13:08:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519161712.2609395-6-bqe@google.com>
+References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-4-bqe@google.com>
+ <CAG48ez0rGwFeVtj6AKg8YY=D9Atvp1h5FdW3szswEJsRmkR86A@mail.gmail.com>
+In-Reply-To: <CAG48ez0rGwFeVtj6AKg8YY=D9Atvp1h5FdW3szswEJsRmkR86A@mail.gmail.com>
+From: Burak Emir <bqe@google.com>
+Date: Mon, 19 May 2025 22:07:59 +0200
+X-Gm-Features: AX0GCFuY1miW4cxuYN_xPChpbf5zBWtSWp1x6spMU0BwT4d7_xRxItEC1vtlcPY
+Message-ID: <CACQBu=UNAFjKw_m8oE5Mst_eThEf36zqgUWZ3a0u1m4zr6MoJw@mail.gmail.com>
+Subject: Re: [PATCH v8 3/5] rust: add bitmap API.
+To: Jann Horn <jannh@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 04:17:05PM +0000, Burak Emir wrote:
-> This is a port of the Binder data structure introduced in commit
-> 15d9da3f818c ("binder: use bitmap for faster descriptor lookup") to
-> Rust.
-> 
-> Like drivers/android/dbitmap.h, the ID pool abstraction lets
-> clients acquire and release IDs. The implementation uses a bitmap to
-> know what IDs are in use, and gives clients fine-grained control over
-> the time of allocation. This fine-grained control is needed in the
-> Android Binder. We provide an example that release a spinlock for
-> allocation and unit tests (rustdoc examples).
-> 
-> The implementation is not aware that the underlying Bitmap abstraction
-> handles lengths below BITS_PER_LONG without allocation.
-> 
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Suggested-by: Yury Norov <yury.norov@gmail.com>
-> Signed-off-by: Burak Emir <bqe@google.com>
-> ---
->  MAINTAINERS            |   1 +
->  rust/kernel/id_pool.rs | 201 +++++++++++++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs     |   1 +
->  3 files changed, 203 insertions(+)
->  create mode 100644 rust/kernel/id_pool.rs
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 943d85ed1876..bc95d98f266b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4134,6 +4134,7 @@ R:	Yury Norov <yury.norov@gmail.com>
->  S:	Maintained
->  F:	lib/find_bit_benchmark_rust.rs
->  F:	rust/kernel/bitmap.rs
-> +F:	rust/kernel/id_pool.rs
->  
->  BITOPS API
->  M:	Yury Norov <yury.norov@gmail.com>
-> diff --git a/rust/kernel/id_pool.rs b/rust/kernel/id_pool.rs
-> new file mode 100644
-> index 000000000000..8f07526bb580
-> --- /dev/null
-> +++ b/rust/kernel/id_pool.rs
-> @@ -0,0 +1,201 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +// Copyright (C) 2025 Google LLC.
-> +
-> +//! Rust API for an ID pool backed by a `Bitmap`.
-> +
-> +use crate::alloc::{AllocError, Flags};
-> +use crate::bitmap::Bitmap;
-> +
-> +/// Represents a dynamic ID pool backed by a `Bitmap`.
-> +///
-> +/// Clients acquire and release IDs from zero bits in a bitmap.
+On Mon, May 19, 2025 at 9:01=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
+>
+> On Mon, May 19, 2025 at 6:24=E2=80=AFPM Burak Emir <bqe@google.com> wrote=
+:
+> > +    /// Set bit with index `index`, atomically.
+> > +    ///
+> > +    /// ATTENTION: The naming convention differs from C, where the cor=
+responding
+> > +    /// function is called `set_bit`.
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// This is a relaxed atomic operation (no implied memory barriers=
+, no
+> > +    /// ordering guarantees). The caller must ensure that this is safe=
+, as
+> > +    /// the compiler cannot prevent code with an exclusive reference f=
+rom
+> > +    /// calling atomic operations.
+>
+> How can atomic operations through an exclusive reference be unsafe?
+> You can't have a data race between two atomic operations, and an
+> exclusive reference should anyway prevent any concurrency, right?
 
-Maybe 'unset' or 'free' instead of 'zero'?
+The atomic operations take a &self (shared reference).
 
-> +///
-> +/// The ID pool can grow or shrink as needed. It has been designed
+The patch is missing the implementation of Sync for now. With that,
+one would get concurrent write access through shared references.
 
-s/can/may/. You don't implement automatic adjustment of a pool
-capacity, but from this comment one may conclude that the pool  
-may grow or shrink by itself. Can you instead say: the Capacity
-of IDs may be adjusted by user as needed. Or something like that.
+The "unsafe" here should serve as reminder to argue why it is ok to
+not have any ordering guarantees.
 
-> +/// to support the scenario where users need to control the time
-> +/// of allocation of a new backing bitmap, which may require release
-> +/// of locks.
-> +/// These operations then, are verified to determine if the grow or
-> +/// shrink is sill valid.
-> +///
-> +/// # Examples
-> +///
-> +/// Basic usage
-> +///
-> +/// ```
-> +/// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-> +/// use kernel::id_pool::IdPool;
-> +///
-> +/// let mut pool = IdPool::new(64, GFP_KERNEL)?;
-> +/// for i in 0..64 {
-> +///   assert_eq!(i, pool.acquire_next_id(i).ok_or(ENOSPC)?);
-> +/// }
-> +///
-> +/// pool.release_id(23);
-> +/// assert_eq!(23, pool.acquire_next_id(0).ok_or(ENOSPC)?);
-> +///
-> +/// assert_eq!(None, pool.acquire_next_id(0));  // time to realloc.
-> +/// let resizer = pool.grow_alloc().alloc(GFP_KERNEL)?;
-> +/// pool.grow(resizer);
-> +///
-> +/// assert_eq!(pool.acquire_next_id(0), Some(64));
-> +/// # Ok::<(), Error>(())
-> +/// ```
-> +///
-> +/// Releasing spinlock to grow the pool
-> +///
-> +/// ```no_run
-> +/// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-> +/// use kernel::sync::{new_spinlock, SpinLock};
-> +/// use kernel::id_pool::IdPool;
-> +///
-> +/// fn get_id_maybe_alloc(guarded_pool: &SpinLock<IdPool>) -> Result<usize, AllocError> {
-> +///   let mut pool = guarded_pool.lock();
-> +///   loop {
-> +///     match pool.acquire_next_id(0) {
-> +///       Some(index) => return Ok(index),
-> +///       None => {
-> +///         let alloc_request = pool.grow_alloc();
-> +///         drop(pool);
-> +///         let resizer = alloc_request.alloc(GFP_KERNEL)?;
-> +///         pool = guarded_pool.lock();
-> +///         pool.grow(resizer)
-> +///       }
-> +///     }
-> +///   }
-> +/// }
-> +/// ```
-> +pub struct IdPool {
-> +    map: Bitmap,
-> +}
-> +
-> +/// Returned when the `IdPool` should change size.
-> +pub struct AllocRequest {
-> +    nbits: usize,
-> +}
-> +
-> +/// Contains an allocated `Bitmap` for resizing `IdPool`.
-> +pub struct PoolResizer {
-> +    new: Bitmap,
-> +}
-> +
-> +impl AllocRequest {
-> +    /// Allocates a new `Bitmap` for `IdPool`.
-> +    pub fn alloc(&self, flags: Flags) -> Result<PoolResizer, AllocError> {
-> +        let new = Bitmap::new(self.nbits, flags)?;
-> +        Ok(PoolResizer { new })
-> +    }
-> +}
-> +
-> +impl IdPool {
-> +    /// Constructs a new `[IdPool]`.
-> +    #[inline]
-> +    pub fn new(nbits: usize, flags: Flags) -> Result<Self, AllocError> {
+The last sentence is supposed to say: when you have a &mut bitmap, you
+can reborrow it as &bitmap, and then happily call this atomic op.
+Even though it is unnecessary.
 
-Those 'bits' are 'IDs' now. I think the 1st parameter name should
-reflect that: num_ids, or something.
+It is unsafe because if one has shared refs on multiple threads, one
+needs to be ready to observe updates in any order.
 
-> +        let map = Bitmap::new(nbits, flags)?;
-> +        Ok(Self { map })
-> +    }
-
-What for do you split new() and alloc()? When I call 'new()' method, I
-expect it will initialize all the fields.
-
-Or I misunderstand something?
-
-> +
-> +    /// Returns how many IDs this pool can currently have.
-> +    #[inline]
-> +    pub fn len(&self) -> usize {
-> +        self.map.len()
-> +    }
-> +
-> +    /// Returns an [`AllocRequest`] if the [`IdPool`] can be shrunk, [`None`] otherwise.
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```
-> +    /// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-> +    /// use kernel::id_pool::{AllocRequest, IdPool};
-> +    ///
-> +    /// let mut pool = IdPool::new(1024, GFP_KERNEL)?;
-> +    /// let alloc_request = pool.shrink_alloc().ok_or(AllocError)?;
-> +    /// let resizer = alloc_request.alloc(GFP_KERNEL)?;
-> +    /// pool.shrink(resizer);
-> +    /// assert_eq!(pool.len(), kernel::bindings::BITS_PER_LONG as usize);
-> +    /// # Ok::<(), AllocError>(())
+Does it make more sense now? I am open to ideas how to describe this better=
+.
 
 
-So, I don't understand what for do you have this 'pool.shrink_alloc()'
-line after the 'new()' call. Thinking object-oriented, when I create
-a new object, and receive OK, I can use it immediately. IIUC, I can't
-request an ID immediately after creating an IdPool.
+> > +    ///
+> > +    /// # Panics
+> > +    ///
+> > +    /// Panics if `index` is greater than or equal to `self.nbits`.
+> > +    #[inline]
+> > +    pub unsafe fn set_bit_atomic(&self, index: usize) {
+> > +        assert!(
+> > +            index < self.nbits,
+> > +            "Bit `index` must be < {}, was {}",
+> > +            self.nbits,
+> > +            index
+> > +        );
+> > +        // SAFETY: `index` is within bounds and the caller has ensured=
+ that
+> > +        // there is no mix of non-atomic and atomic operations.
+>
+> Aren't non-atomic operations only possible through a mutable
+> reference? And doesn't the rust compiler enforce that, if someone
+> holds a mutable reference, nobody else can hold any reference at all?
+>
+> You wrote yourself above: "all (non-atomic) mutating operations
+> require a &mut reference which amounts to exclusive access."
 
-> +    /// ```
-> +    #[inline]
-> +    pub fn shrink_alloc(&self) -> Option<AllocRequest> {
-> +        let len = self.map.len();
-> +        if len <= bindings::BITS_PER_LONG as usize {
-> +            return None;
-> +        }
+As noted above, an exclusive ref can always be reborrowed as a shared ref.
 
-How that? If I want to shrink from 60 to say 30 IDs, I expect that
-you will not allow me to allocate 31st ID. But the above code makes
-the whole function a no-op...
+> I don't understand what's going on here, unless you're saying that
+> Rust does not enforce that an object ownership transfer between
+> threads has proper RELEASE/ACQUIRE (or RELEASE/CONSUME) memory
+> ordering or something like that?
 
-> +        /*
-> +         * Determine if the bitmap can shrink based on the position of
-> +         * its last set bit. If the bit is within the first quarter of
-> +         * the bitmap then shrinking is possible. In this case, the
-> +         * bitmap should shrink to half its current size.
-> +         */
-> +        match self.map.last_bit() {
-> +            Some(bit) => {
-> +                if bit < (len >> 2) {
-> +                    Some(AllocRequest { nbits: len >> 1 })
+Indeed without the Sync implementation, it does not make sense to have
+atomic ops that take &self.
+Sorry for the confusion, I should have added the Sync implementation.
 
-Can you use the 'a/2' style instead of this shifts?
+The normal scenario is that concurrent access would be accompanied by
+synchronization through a lock.
+For things where the order does not matter, something like counters,
+using the atomic ops would be ok.
 
-> +                } else {
-> +                    None
-> +                }
-> +            }
-> +            None => Some(AllocRequest {
-> +                nbits: bindings::BITS_PER_LONG as usize,
-> +            }),
+Ownership transfer between threads (sending) is not possible right
+now, unless we implement also `Send`.
 
-Can you reorder the logic such that non-error path will have no extra
-indentations?
-
-> +        }
-> +    }
-> +
-> +    /// Shrinks pool by using a new `Bitmap`, if still possible.
-> +    #[inline]
-
-I don't understand it. You have shrink_alloc(), which indeed allocates
-something, and you have just 'shrink(). And it also allocates before
-using the copy_and_extend().
-
-Can you elaborate what for do you need 2 versions of 'shrink'?
-
-> +    pub fn shrink(&mut self, mut resizer: PoolResizer) {
-
-I believe your users will be more thankful if you just allow them to
-shrink their ID pools without all that intermediate objects, like:
-        my_pool.shrink(100);
-
-> +        // Verify that shrinking is still possible. The `resizer`
-> +        // bitmap might have been allocated without locks, so this call
-> +        // could now be outdated. In this case, drop `resizer` and move on.
-> +        if let Some(AllocRequest { nbits }) = self.shrink_alloc() {
-> +            if nbits <= resizer.new.len() {
-> +                resizer.new.copy_and_extend(&self.map);
-> +                self.map = resizer.new;
-> +                return;
-
-Again, can you please have non-error path as non-indented as possible?
-
-> +            }
-> +        }
-> +    }
-> +
-> +    /// Returns an `AllocRequest` for growing this `IdPool`.
-> +    #[inline]
-> +    pub fn grow_alloc(&self) -> AllocRequest {
-> +        AllocRequest {
-> +            nbits: self.map.len() << 1,
-> +        }
-> +    }
-> +
-> +    /// Grows pool by using a new `Bitmap`, if still necessary.
-> +    #[inline]
-> +    pub fn grow(&mut self, mut resizer: PoolResizer) {
-> +        // `resizer` bitmap might have been allocated without locks,
-> +        // so this call could now be outdated. In this case, drop
-> +        // `resizer` and move on.
-> +        if resizer.new.len() <= self.map.len() {
-> +            return;
-> +        }
-> +
-> +        resizer.new.copy_and_extend(&self.map);
-> +        self.map = resizer.new;
-> +    }
-> +
-> +    /// Acquires a new ID by finding and setting the next zero bit in the
-> +    /// bitmap. Upon success, returns its index. Otherwise, returns `None`
-> +    /// to indicate that a `grow_alloc` is needed.
-> +    #[inline]
-> +    pub fn acquire_next_id(&mut self, offset: usize) -> Option<usize> {
-> +        match self.map.next_zero_bit(offset) {
-> +            res @ Some(nr) => {
-> +                self.map.set_bit(nr);
-> +                res
-> +            }
-> +            None => None,
-> +        }
-> +    }
-> +
-> +    /// Releases an ID.
-> +    #[inline]
-> +    pub fn release_id(&mut self, id: usize) {
-> +        self.map.clear_bit(id);
-
-What if I release an empty ID? Maybe emit a warning?
-
-> +    }
-> +}
-
-I think I totally miss the idea of PoolResizers here. The standard
-dynamic array API looks like this:
-
-        new(capacity)     -> IdPool
-        drop(IdPool)      -> void
-        acquire()         -> int
-        release(id)       -> bool       // True if had been allocated
-        acquire_next(id)* -> int        
-        get_capacity()    -> int
-        set_capacity(cap) -> bool
-        num_ids()         -> int
-
- * This one is pretty rare.  Are you sure you need it?
-
-Your API looks weird with those AllocRequests and PoolResizers,
-and TBH I don't understand how that would help your users.
-
-Can you please consider a more standard API?
-
-Thanks,
-Yury
-
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 8c4161cd82ac..d7def807900a 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -54,6 +54,7 @@
->  #[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
->  pub mod firmware;
->  pub mod fs;
-> +pub mod id_pool;
->  pub mod init;
->  pub mod io;
->  pub mod ioctl;
-> -- 
-> 2.49.0.1101.gccaa498523-goog
+> > +        unsafe { bindings::set_bit(index as u32, self.as_ptr() as *mut=
+ usize) };
+> > +    }
