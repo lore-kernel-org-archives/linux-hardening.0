@@ -1,176 +1,156 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C746217705;
-	Mon, 19 May 2025 20:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83242219A80
+	for <linux-hardening@vger.kernel.org>; Mon, 19 May 2025 20:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747687770; cv=none; b=rhEebsmY19dwzAN7KtQrls0R9SKFlD5Q/tGcb14RyICLDX6XSoccI1ivvKZ4YLFDGVIYgAVkpJH4mkv2vtLZjLihDtW2MdSb2jkBIAixnVmTZD9NFUzXf5T64SuFmNMui4MoNUmvJIpllh4xUiO4Lns/Xllp8T1VwYJF+AQrzW4=
+	t=1747687941; cv=none; b=Wydh3/8jtoJ5E+vmAso+fn/qFLxcH0+BH0hZrNrVZp73VkWh7DUEHm2bBkaJcxg/dp+OJ14toYiSM8t5gWMlq//vZBzP8RjkJ5yw31EV17hzzlzZETlh0TKi4yBxtnQyDTOIKyDi7gfBWC8ebrVuXtoxhTn4mjwm8Pihg9PeFNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747687770; c=relaxed/simple;
-	bh=61QUkV6FFeafFq9O8dDnfMdlriHIrLQIZlsBf0U+ry0=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o05/q2QGfBsC/lxK66fSGJkTWsCr/+ArfvfVXRKwt5I4boQjk26FR3pi8gyNMb1DlgmmnaPCnGKZ7neTEHtbOLxSC/yc/PdMqK+rxctZZ0o3/FD/d9ExbbjEDu7jkp/rSKA2XEzQZ48CNd8y7Fadq1CbL6ruGb3ytbkH1Yjs0sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hR4VYt8V; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747687941; c=relaxed/simple;
+	bh=gotcqngVU/LNJrmk3BD7vjAbx35qGYtgx6w9I0sm2iM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ku9yhK0864raBLgUgPu4ZhFErCZ3l+5VA0ZjeWhz3XbV3W17iYHKezaYpiOGkYwdq7pRtf8ClCAvoC0Z/Ad3MZuYfryaXemwYbg7QafY+O6fkpEz2A50bYWBucbXNRXw5sLtPzaeB1w6o6GDzWfX7IzW1thCDhbJ4d6WsUlK3NQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JQSVDob+; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hR4VYt8V"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c546334bdeso436016385a.2;
-        Mon, 19 May 2025 13:49:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JQSVDob+"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-231f37e114eso524175ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 19 May 2025 13:52:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747687768; x=1748292568; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=TmUS+xqCVn16FoWqjtvNjGBaJ530wNpl6spKg06DASg=;
-        b=hR4VYt8VeXaTYTkGgzVqFEw7YLZyMEEA7lQ/O5Vu4Ak+QmoPPOAJElCqZ9lW1AarXD
-         /2KD47TZQwxYUjYDTsQacy+vXDNGAlLLSqPx15H9JBHmGSDTZf0+VPDvQutf/3lNCYaG
-         fh5GUBXUt0HUCd6ZmIjjZvaegUZ4hJIoUOEtBRCHij7h1oF07yAh5Q0fNv008MWyynEv
-         GBKG8mScLRUJb+OUaIyPvo4b3NwgzQRNyLc4iVJTmaP+jfpCIbAL2qKYtqHwPKzG6VxX
-         nD8umy34eug+WX86rKFhyYEdyApLhfZl0zdYSPOkK5JaFLyq3E2wMkc6EfiTsUwS4/xo
-         a3Lg==
+        d=google.com; s=20230601; t=1747687937; x=1748292737; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OIiiqJ1mq9rZeGtSY2YNeLL5YQTHcmPfr7M6A0TZvU0=;
+        b=JQSVDob+80I+UwecKk4nVlrMKhK/JY2SI6BE9gzqU46mGZ78YUIOStmJvHxwJIpAiy
+         dGTpZdI442S6LTyR/atNJR3zkKQX8R65OmwS+Y1deCiHGIivo95nMfJd3y3gOt9ESOow
+         GWwTaOu7/sjqiPN9G1Ni713v5OSP0BpLkeokjLA0zQ6L7dIMZmg7bwcrYEhpywU7YkgR
+         eschxmfoIOuDqeWdXEUrHZV4D5zYNKIS9QR9O6eniUUG5iTAxqI9BMUwCkNFXaYWnl0/
+         1SHQn3ho9cnrILVGuZgby/J0jNC1fH825MTvFOu5yGKLDyNJD5v6mtPtwh/fCcxvsMdw
+         w6XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747687768; x=1748292568;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TmUS+xqCVn16FoWqjtvNjGBaJ530wNpl6spKg06DASg=;
-        b=rBbRY6aMyuDq68rLZbLZfyZAqVInQc3iNKpIb45Syfl0I0YRRTL725WNsN187foknb
-         OuZThXwLTwdNmAByisySq9NReDhr/Y2EyGOiguG1P+vX85Zh82MZjYLb+hbdZ4YlcElU
-         HqnO3OWOlWxSuK3E0KlLL21YPbl3YM4P0+MseWCl7V25LbLC2NKvolT2x1Yu7hdcKgVN
-         53kjna398xtINwu3DE+OpaSvayfioUKL1R61EvcbFvceAhPWPxvh7LaBFqbRisC9IwM6
-         xON0yFiAQdLFUX7EaN5AQk0tVM0DdAETWqW+fzPYN2OE6z2b+PbCyW88MSiLZmIVM0dR
-         uxkw==
-X-Forwarded-Encrypted: i=1; AJvYcCUELYcRj1Re5xK+MnC6YyLzSOyrrvGZW3pkObnvzLmIIWatNwcVpeUtpqc4UUuhO6gkg+habpZ5tPa8AAbz@vger.kernel.org, AJvYcCVnSJLGXJJrXmzuHq7e8pgVoyX9euItjqbCbm2jOPwWlgHEGnqtvB997+D59iMAFgs9sCl7mQVO48wJHtdB/8s=@vger.kernel.org, AJvYcCVz1ZdXes8svOgQZaFMlnsIkXuwOBS9/UmX93CDthtlB3sCdmCQjvy5qb7Lu+8JKwOtmmoVNL1spLXU7Stvyqg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKkTzorOpptirh7hDK9F9qI8iG6hawOFvNotJqG9oXI0jW5kPp
-	sSRbAn3BzOkXE5lNpgBkinHmv26BHr/BciRv+9MiG8Ne9FXATcIJQ72e
-X-Gm-Gg: ASbGncvlttstIjQ9/KsZMTkHLVE3SFW3Pw9zd2p5hQIlwHZyxqlNjZFkKBPgbyQrRoh
-	0Sw+Pd460zMBfcQ8ynnDEwf65K26nLYNRtuSHOjbeRAqKsiFYQE+h8SgMzH4rwAMrrSsBjkNBvN
-	QAZ01/9yGLOrp1PE8RDbONLgMg/7MSO2qO8eGW6+BTCUIdVqJjlJkLWtQjuqk/iMCPDlpI2b15y
-	/vfDlWRxu7iev0dx60w/LFNWX9pH9K+KJbRmcqM1rotJKOoQEv/WkiCuu+EKXDahQJVMTfVClqh
-	FCd2Zn7D8jnKgjUlRixVwrBBSDzoOpbUSR7h2X2NjfPTn4MA0cqVpNOCsFObHLH7eOzq4W/I5uB
-	djBdmAB1qxjcMLYtaA7TJjI8CvKhwEJXs0N/MJL3iQNgERQDIJIbH
-X-Google-Smtp-Source: AGHT+IE8WGoO383xB7RHGc6KxOPQi6O8WNGtDC2weY3CkPEhoXPFQzoQ0sLYxMGfAqd6kBPycEKSig==
-X-Received: by 2002:a05:620a:318d:b0:7c5:5670:bd6f with SMTP id af79cd13be357-7cd47fee743mr2454708985a.53.1747687768078;
-        Mon, 19 May 2025 13:49:28 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd468b69fcsm630949385a.81.2025.05.19.13.49.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 13:49:27 -0700 (PDT)
-Message-ID: <682b9957.050a0220.3d035.a5e1@mx.google.com>
-X-Google-Original-Message-ID: <aCuZVb6Lcdj4jyiP@winterfell.>
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 0E06A1200043;
-	Mon, 19 May 2025 16:49:27 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Mon, 19 May 2025 16:49:27 -0400
-X-ME-Sender: <xms:VpkraN7_1N5IrJGIFx0w1hL2NIn13XfDxGlQMEvHKq3o1U8j2bsi-g>
-    <xme:VpkraK6BMOsdDMK0qVtClB8U9ZU84N9pElqQ54E6GXk--G103_MRbn0aHDo0F6F1M
-    lQqgeiC29cN-EXO0w>
-X-ME-Received: <xmr:VpkraEfj8R_LC71r5PjNRP_nCY3igq-nCR6Ls_k1fU0fSGQzsj3omE-BPX8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddvfeekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tdejnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrg
-    hilhdrtghomheqnecuggftrfgrthhtvghrnhepvefghfeuveekudetgfevudeuudejfeel
-    tdfhgfehgeekkeeigfdukefhgfegleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
-    rghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpe
-    epghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeduledp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhgrnhhnhhesghhoohhglhgvrdgtoh
-    hmpdhrtghpthhtohepsghqvgesghhoohhglhgvrdgtohhmpdhrtghpthhtohephihurhih
-    rdhnohhrohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhgvvghssehkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehlihhnuhigsehrrghsmhhushhvihhllhgvmhhovghsrdgu
-    khdprhgtphhtthhopehvihhrvghshhdrkhhumhgrrheslhhinhgrrhhordhorhhgpdhrtg
-    hpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhg
-    rgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuoh
-    drnhgvth
-X-ME-Proxy: <xmx:VpkraGL7hkjiZULRWkD-QemorhG_a92lkYfZjA32f1_Va26vjY7Scw>
-    <xmx:VpkraBLZ7h3dcSLrDc3sm-jnpZRd63fjqBZSWznAfyojztB5EYaFnw>
-    <xmx:VpkraPw0N4-l3z_DLPJiMLtS2ZQZpWE8hFH59j22ysPkuglM-zrezw>
-    <xmx:VpkraNKICWeJi3sSAUm8Ai0N9ZEl5f4JSwlLEh9uKPXgIUt48Gdx9A>
-    <xmx:V5kraEa6RLYP7LcH6f8v81o53ZiEBgEjxFrp5tM6LfYULPgjZyU5RSu3>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 19 May 2025 16:49:26 -0400 (EDT)
-Date: Mon, 19 May 2025 13:49:25 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Jann Horn <jannh@google.com>
-Cc: Burak Emir <bqe@google.com>, Yury Norov <yury.norov@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v8 3/5] rust: add bitmap API.
-References: <20250519161712.2609395-1-bqe@google.com>
- <20250519161712.2609395-4-bqe@google.com>
- <CAG48ez0rGwFeVtj6AKg8YY=D9Atvp1h5FdW3szswEJsRmkR86A@mail.gmail.com>
- <CACQBu=UNAFjKw_m8oE5Mst_eThEf36zqgUWZ3a0u1m4zr6MoJw@mail.gmail.com>
- <CAG48ez32BYaor4pWcG4+X6zqXgdskeC2UR3Kte_pp09-LeKMug@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1747687937; x=1748292737;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OIiiqJ1mq9rZeGtSY2YNeLL5YQTHcmPfr7M6A0TZvU0=;
+        b=DIXY1im8ID63P/qimIdYJQeL0wpQrdT49HpmAfGtYeQPUaGYJlUfyfaGwjCeUr3HuP
+         GqJ/2TG3sZOBYxIWhDd/f7GhemC9mHvzyWXTiCNmpo6080c3p3BLtTaQW4fo1RX1uywG
+         WZ/Dfdf90Z/t9zVZnH3YZjmtVEt6UwsIgrDTLMlXk3QVrUTPTOrzMUbz2uUURgFKmQ9O
+         yGgJc9tUKXVVz7uAC/NMLgdePJOvY9QG7FkqnfOo4e2T2ZkHMVMQohsJlv4ytD+YCGMW
+         s/8YrghpOJ1zwGwSVXq7U/536dKmj4XrREajT9VcATOFb4MezgZTHYe+rUnrsJKf8CmF
+         2XgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSfziT6ee3Me/hMbTk7CJ/6QzMk+bikBciwc8LYZllyRitRQAKPoLoKFTzVwjhbWtAfVFElDJ5ml1m6Qbvnkk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz72pvlCfqZ62J52KYkEBWYRUCmJemjD4Ws/9qnEFc15L3RlCUI
+	98F0arKa5Ada88ttU1HdPi/9NLdHbb3EeWO6dDU2XeZPO3gRJKYDk6pcXxpopOWTpvBOmYMSyZy
+	819Dix9BVC6KwWDjQs3t8vi48/FWv2/y2+pEbNc4Jz9zZkuslphQihXD2
+X-Gm-Gg: ASbGncu6JmWic52TdjBuxGeMej6aIw0a/1yXVklrh9lHEur/X08PdLjKQNf9w9S9ENC
+	NcKIbfJky4wpH6yWETqpbhT1T4YDXHrhhG8DxdcHSIT7WqOjcCrpb422jYFkhgFbb4iUtegk15N
+	aUNtQof+UjG7U+356Bfkmf8d9Y0g5jpkf0Xvn8XEqeKiz7QNkNyGzjUu9BMoU=
+X-Google-Smtp-Source: AGHT+IGxZCvW5ilyWe4G2aJ3s73rSdZKGMvO3ZakFJUNOl2mQD609UI/QNd6ant0eUVyMVuoIqykCtNvIgjuCK3LvWk=
+X-Received: by 2002:a17:902:eccb:b0:223:ff93:322f with SMTP id
+ d9443c01a7336-231ffd192c0mr5758425ad.2.1747687936496; Mon, 19 May 2025
+ 13:52:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez32BYaor4pWcG4+X6zqXgdskeC2UR3Kte_pp09-LeKMug@mail.gmail.com>
+References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-4-bqe@google.com>
+ <aCt23djKOzUiP9L4@yury> <CACQBu=XQ9QrHwzfXZiJf6-uSLTucpr2k=BwRhrDCkVA3wX7-ug@mail.gmail.com>
+In-Reply-To: <CACQBu=XQ9QrHwzfXZiJf6-uSLTucpr2k=BwRhrDCkVA3wX7-ug@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 19 May 2025 22:51:38 +0200
+X-Gm-Features: AX0GCFvywXFtRKxlB3xYrJMhJn5q7nT3YMayIgLVBsF9n18XEC45GTPOn8bRz1I
+Message-ID: <CAG48ez1NM7B8Vk7GOwhsitCipmfHi9eK6JNb3ve8aR4m8Cj0gA@mail.gmail.com>
+Subject: Re: [PATCH v8 3/5] rust: add bitmap API.
+To: Burak Emir <bqe@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 10:36:52PM +0200, Jann Horn wrote:
-> On Mon, May 19, 2025 at 10:08 PM Burak Emir <bqe@google.com> wrote:
-> > On Mon, May 19, 2025 at 9:01 PM Jann Horn <jannh@google.com> wrote:
-> > > On Mon, May 19, 2025 at 6:24 PM Burak Emir <bqe@google.com> wrote:
-> > > > +    /// Set bit with index `index`, atomically.
-> > > > +    ///
-> > > > +    /// ATTENTION: The naming convention differs from C, where the corresponding
-> > > > +    /// function is called `set_bit`.
-> > > > +    ///
-> > > > +    /// # Safety
-> > > > +    ///
-> > > > +    /// This is a relaxed atomic operation (no implied memory barriers, no
-> > > > +    /// ordering guarantees). The caller must ensure that this is safe, as
-> > > > +    /// the compiler cannot prevent code with an exclusive reference from
-> > > > +    /// calling atomic operations.
-> > >
-> > > How can atomic operations through an exclusive reference be unsafe?
-> > > You can't have a data race between two atomic operations, and an
-> > > exclusive reference should anyway prevent any concurrency, right?
+On Mon, May 19, 2025 at 10:42=E2=80=AFPM Burak Emir <bqe@google.com> wrote:
+> On Mon, May 19, 2025 at 8:22=E2=80=AFPM Yury Norov <yury.norov@gmail.com>=
+ wrote:
+> > On Mon, May 19, 2025 at 04:17:03PM +0000, Burak Emir wrote:
+> > > +    /// Set bit with index `index`.
+> > > +    ///
+> > > +    /// ATTENTION: `set_bit` is non-atomic, which differs from the n=
+aming
+> > > +    /// convention in C code. The corresponding C function is `__set=
+_bit`.
+> > > +    ///
+> > > +    /// # Panics
+> > > +    ///
+> > > +    /// Panics if `index` is greater than or equal to `self.nbits`.
+> > > +    #[inline]
+> > > +    pub fn set_bit(&mut self, index: usize) {
+> > > +        assert!(
+> > > +            index < self.nbits,
+> > > +            "Bit `index` must be < {}, was {}",
+> > > +            self.nbits,
+> > > +            index
+> > > +        );
 > >
-> > The atomic operations take a &self (shared reference).
-> >
-> > The patch is missing the implementation of Sync for now. With that,
-> > one would get concurrent write access through shared references.
-> >
-> > The "unsafe" here should serve as reminder to argue why it is ok to
-> > not have any ordering guarantees.
+> > Shouldn't this assertion be protected with hardening too? I already
+> > said that: panicking on  out-of-boundary access with hardening
+> > disabled is a wrong way to go.
+>
+> I considered it, but could not convince myself that __set_bit etc are
+> actually always safe.
+> For the methods that have the hardening assert, I was sure, but for
+> this one, not.
+>
+> Are all bit ops guaranteed to handle out-of-bounds gracefully?
+>
+> > Can you turn your bitmap_hardening_assert() to just bitmap_assert(),
+> > which panics only if hardening is enabled, and otherwise just prints
+> > error with pr_err()?
+>
+> If there is no risk of undefined behavior, then I agree that checking
+> bounds is hardening.
+> If a missing bounds check loses safety, we then we should not skip it.
 
-I don't think ordering is safety related. For example, relaxed atomics
-are still safe function. I think it's wrong to mark this as unsafe, do
-you have an example that you can construct an UB with pure safe code?
+There are no bounds checks in these C APIs, and there can't be,
+because the C side does not store a length. bitmap_zalloc() just gives
+you a raw array of bits (represented in C as an array of unsigned
+longs), it's a very lightweight wrapper around kmalloc_array().
 
-Regards,
-Boqun
+And if you expand __set_bit(nr, addr), you'll see that it turns into:
 
-> >
-> > The last sentence is supposed to say: when you have a &mut bitmap, you
-> > can reborrow it as &bitmap, and then happily call this atomic op.
-> > Even though it is unnecessary.
-> 
-> But using an atomic op when you have a &mut reference is not a safety
-> issue, right? You wrote a comment about behavior with exclusive
-> references in the "# Safety" comment block. If that's not supposed to
-> be a safety problem, this should probably not be in the "# Safety"
-> section?
+bitop(___set_bit, nr, addr)
+
+which turns into:
+
+((__builtin_constant_p(nr) &&
+  __builtin_constant_p((uintptr_t)(addr) !=3D (uintptr_t)NULL) &&
+  (uintptr_t)(addr) !=3D (uintptr_t)NULL &&
+  __builtin_constant_p(*(const unsigned long *)(addr))) ?
+const___set_bit(nr, addr) : ___set_bit(nr, addr))
+
+which (assuming a non-constant index) is:
+
+___set_bit(nr, addr)
+
+which is a debug-instrumented wrapper around
+
+arch___set_bit(nr, addr)
+
+which just leads to a raw assembly instruction (example from x86):
+
+static __always_inline void
+arch___set_bit(unsigned long nr, volatile unsigned long *addr)
+{
+    asm volatile(__ASM_SIZE(bts) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
+}
