@@ -1,111 +1,78 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A977B21CC55;
-	Sun, 18 May 2025 16:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7C51E377F
+	for <linux-hardening@vger.kernel.org>; Mon, 19 May 2025 03:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747586947; cv=none; b=VSlT3Isq/onTBRh7eW3tVoPtHUsSkQnklab59gEp/FMQ1zfYrZYqmX4Ds6irntevkFA/ogh40Hc+q//vH6FzGw+yZvSGVcj98R0qnmvY/XP1qDdXxVv950OHGtfZKpVKHsbe+pKsFjc/oiubN8/kA2gmXTfvmYZvNs3twX3MlZc=
+	t=1747625233; cv=none; b=Th0QVLa0X2BPh2DTkrOwL2OVsuG7iCZumm7UQunstQByOteelzuZKhniUQ4YeSnFQ5LNH7OeuAKLSaomCGormuYmc7GFM4Vv0WOICq53MIEvUVtURa0S344R1b194QmGiqN1fEcp5Fd+qSp5ymd+VTfRgV50IEohN4WJ3eSCn3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747586947; c=relaxed/simple;
-	bh=nURDTX3oA98c5WUnqRp3AZaFPfTyYRIqNcyheLeZwxA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Q/usRjNv47ZxU9ifk/vZcixmnmJeYUh3YprQm37uQ0ECtwlsw8/iNYsVGppwfGhdZv7pAh09hpI8xHNEBXqwbKXpytmQq4tLJk0FHHrNWTRsR9dmNGsuAJ3eBeyZZp/o5OyE9fbTQLHG4gk61UHUjcTeXbIVbvwOj1ydyX6VP60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=Vk7FKQQQ; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="Vk7FKQQQ"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4b0mx30FQmz9sqg;
-	Sun, 18 May 2025 18:48:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1747586935;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=BxmCFkZ1O7ZrSEj+Oaqix6KX/+I1cvs+0DgBW5fJd/s=;
-	b=Vk7FKQQQUFXwhl984H2BQO7pMrnxjtp4l3luxEV1p4zQArh0CAlXnixe/30rcyRIEfkoUn
-	rmuAmfT7LShJ3v7OgDfHBbL9X8RiCRb/+KSNrNAh5LQN/ekIt3dWp/xdvNQO0FGILHkBY7
-	jHejUTA4bKKbcRtoJBeuOC9QVHEYfJ1o4j5LQwR2JBnqTvMW8Ov6qloGiA9FACsD+sPIyv
-	q3yOS1jp2/gBbgBc1WU9bpahmiYUw11gtyeR2s6r5jWFW6igIHwazuNU8bw2HsBR4Iym7W
-	7lcFrq8CqkhgjgnVYd1rAcSQ+9Tb1XWSOiB5KTkx4+mD+jW8ypo/KHWy6pu/dg==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Sun, 18 May 2025 12:48:50 -0400
-Subject: [PATCH] ext4: replace strcpy() with strscpy() in
+	s=arc-20240116; t=1747625233; c=relaxed/simple;
+	bh=MnHL586hl1+9lImPZNL2KvXxymDu5tTM7SgU9zbzoXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DdkRnwHrdmmEAFjnNIiLmt5OzfxO96Wjt1fzvccSwxZcyYGua2w1JfLdkcr61N89Klmzx1sCszSTbyu5ogdQ0VKxO8CdTgE1EG+IbpH62uAPYFvStuZU8K0dERzdwBr4S07DzKZtK1X0/z+FFZABP/q9WgwZXzuS7oht4xJqI98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-112-151.bstnma.fios.verizon.net [173.48.112.151])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 54J3QgfD013812
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 18 May 2025 23:26:43 -0400
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 7A8222E00DD; Sun, 18 May 2025 23:26:42 -0400 (EDT)
+Date: Sun, 18 May 2025 23:26:42 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: Andreas Dilger <adilger.kernel@dilger.ca>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ext4: replace strcpy() with strscpy() in
  ext4_init_dot_dotdot()
+Message-ID: <20250519032642.GB158804@mit.edu>
+References: <20250518-ext4-strcpy-v1-1-6c8a82ff078f@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250518-ext4-strcpy-v1-1-6c8a82ff078f@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIAHEPKmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDU0ML3dSKEhPd4pKi5IJKXUNTE9NkszRzyyRTQyWgjoKi1LTMCrBp0bG
- 1tQC9rjcTXQAAAA==
-X-Change-ID: 20250518-ext4-strcpy-1545c6f79b51
-To: Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1378;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=nURDTX3oA98c5WUnqRp3AZaFPfTyYRIqNcyheLeZwxA=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeFpHanhGd1YvQ04vMWMwWDUwVGplcTZ4Skhvd3NvamZGCnJJNDd2SXJlMWFYVnQwSzRN
- cnlqbElWQmpJdEJWa3lSNVgrT2N0cER6UmtLTy8rNk5NSE1ZV1VDR2NMQXhTa0EKRTNHTlptUTR
- 5OVFiZmJwbGNrV3hkT2pMSlAzUVRWZi81TWQ4NlJBMFdkbDFmTEo0d2hzRmh2OStqdXlwNzRXeQ
- pOOXlhTFRRbk43bHkrYW1HSU9jM0tpLzNpMCtlMUZsMnJwZ2RBS2ZGU1ZnPQo9clN6MAotLS0tL
- UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
-X-Rspamd-Queue-Id: 4b0mx30FQmz9sqg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250518-ext4-strcpy-v1-1-6c8a82ff078f@ethancedwards.com>
 
-strcpy() is deprecated; use strscpy() instead.
+On Sun, May 18, 2025 at 12:48:50PM -0400, Ethan Carter Edwards wrote:
+> strcpy() is deprecated; use strscpy() instead.
 
-No functional changes intended.
+We never actually needed to use strcpy here, actually, becase de->name
+is not NUL-terminated.  Instead, we have de->name_len which tells us
+how many characters are in a directory entry's name.
 
-Link: https://github.com/KSPP/linux/issues/88
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
- fs/ext4/namei.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+So we could just as easily replace:
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index e9712e64ec8f04586f5ebcd332431e6af92e4f36..85df7fbf8ebd2c5b2aa3a20813f5f8a1aec7f5b7 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -2926,7 +2926,7 @@ struct ext4_dir_entry_2 *ext4_init_dot_dotdot(struct inode *inode,
- 	de->name_len = 1;
- 	de->rec_len = ext4_rec_len_to_disk(ext4_dir_rec_len(de->name_len, NULL),
- 					   blocksize);
--	strcpy(de->name, ".");
-+	strscpy(de->name, ".");
- 	ext4_set_de_type(inode->i_sb, de, S_IFDIR);
- 
- 	de = ext4_next_entry(de, blocksize);
-@@ -2940,7 +2940,7 @@ struct ext4_dir_entry_2 *ext4_init_dot_dotdot(struct inode *inode,
- 		de->rec_len = ext4_rec_len_to_disk(
- 					ext4_dir_rec_len(de->name_len, NULL),
- 					blocksize);
--	strcpy(de->name, "..");
-+	strscpy(de->name, "..");
- 	ext4_set_de_type(inode->i_sb, de, S_IFDIR);
- 
- 	return ext4_next_entry(de, blocksize);
+	strcpy(de->name, ".")
 
----
-base-commit: 5723cc3450bccf7f98f227b9723b5c9f6b3af1c5
-change-id: 20250518-ext4-strcpy-1545c6f79b51
+with
 
-Best regards,
--- 
-Ethan Carter Edwards <ethan@ethancedwards.com>
+	de->name[0] = '.'
 
+
+and
+
+	strcpy(de->name, ".")
+with
+
+	de->name[0] = de->name[1] = '.'
+
+.... if you really want to get rid of the evil strcpy call.  As it
+turns out, it's super easy to assure oneself of why what's currently
+there is safe, but you really want it to go away for religious reasons
+then you might as well do it in a more performant way.
+
+Also note that there is a similar use of strcpy() in fs/ext4/inline.c.
+If you really want to "fix" things in fs/ext4/inode.c, you might as
+well fix it in all of sources files in fs/ext4.
+
+Cheeres,
+
+					- Ted
