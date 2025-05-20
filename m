@@ -1,38 +1,39 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5885D242D94;
-	Tue, 20 May 2025 13:28:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FA2242D8D;
+	Tue, 20 May 2025 13:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747747736; cv=none; b=aMmeOBePhegEQlnGOUop2cQCTgofVp99yh1d/eFGsGyj0fzvNdgf1xQYlrrN5siMBXzQkwVZLD+5wM2SqCZNBW323fvqEuTEbtWm3p0966sAw1jNL0SS86ZwMIGvj2utygJQBEPgKA7nntb38xvCloYJ2Ey0BTvUdIBesmNbbIo=
+	t=1747747736; cv=none; b=c4okl2zbjAvPvmaPxuRT9tO0foy0r1RFDCooymafKQUY3aerx12XtBQd2BzhV+1lbd6hKWohV21d6rrG7HNJGYAdwNv/wnMPmEaPs3sYF/qO6riWtgxqu7/DB91LkR7gdLVa3lnhjgv+nlVjiihIT43jVDqqCm8CmLOgK5AOOE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747747736; c=relaxed/simple;
-	bh=c/VjgngVldLlTaqu+7JoDMmHcqtvz8kBdxTEdrJXtao=;
+	bh=0dKwVVxTFbuERDVfIQsuNw6xLxNSwbcveYgMiYLFAes=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=A4Q42Dp//YQjYsYXK0q3TfM1IvKQy+kAFWmUD2MVw27eKwwmuPRJ7P7rT4f9BpsC7DuojbpPO4l6tumv1Xm9A5BquA5ArZF+9U9D5pqCdxf/XiJPsBTDZECsF5kALi/2jWPj5NgYVbvluTzNL+hj6nVWq23qsAGnd3QmXGBessQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=F0wx2kNc; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=MhzacvC4EH4HQlljBGpLkq/wNI4J1HXROA80/CgtCS9r1LoOUSU3Bw6Rh4d54dRsw/7KSvWsIghBo6YDW98MxYMkpsmGuvmWxwHPyUgT/KjBMwmRtTSmLtmaOYqwX43g0t3LJtOpLeCnmAXmN2Omln6NIpM4yHmoUIbB6pChx68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DcK+kvr9; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="F0wx2kNc"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6084443B80;
-	Tue, 20 May 2025 13:28:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DcK+kvr9"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E311943B65;
+	Tue, 20 May 2025 13:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747747731;
+	t=1747747727;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8+O5hiCoC5alHeoniheaAHRlGSS5BBU+n2qDYbHK6bQ=;
-	b=F0wx2kNcqdZ3ONTi+6PVT/wBs1BIt0iDn0+Z/zB+LbjI3pcQCJhcZXa/BQDzpZu2Fl2s2d
-	b2sXE0UtV/XcUdWrw3oBpRJ+RpIOmeFCUbgf32SPVXzuj+350rDSfbery4bHAVXVcKpwop
-	qoxyfSMp+tPYyV1aQPsg+uxfOYsxf/x9zYHmYj23Tgv0E/wFCvYGKdL8qiQs0kKFKtwnzA
-	8HvI5boIMM+LoqdfQmkhksrXklOwUgzKQlgeqs3qQwWzm0x+mkyuc9W0pJgNnWQqKUrhfV
-	Si0YSiA2rmREssXS13K4zDEQBqhMR2LGizdIv2HT1paWWdjNSviRTcM8SxHJIQ==
+	bh=lcNHm5z8ozWFaCp6iHOGdp6n4XI5+GhgZ4Xwe4UzJcY=;
+	b=DcK+kvr9psYA6fbwh8sj23/FgyonnHYgT4khOVyYAQDGYRizjIMayklfaOY5HMFrZ+k73I
+	luZCOSK2MjcHb2lOVnOjH4wjoLFLb3uEldQX+TtFxMWe1FprA3URoQjHq8+8cTolmL9mqW
+	dVRPEfU4W97S2VhaCgudyOJXQlwOUnzeUUZNn9GMt9CQj4UIke3ImPCRu12sZ1M+7mShwN
+	Kn1ByclyJAuCdpIbjqfstDvce5cutdhJNAGM6cs2+3oyaQxCV4DCt24d9JXPln1MILLBGH
+	rbFdOVe5/g2q4k53qIPxs1SPOI7DQAWkVov2tdH31lhcZOfpsfnQT4yZEb6y1w==
 From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Tue, 20 May 2025 15:28:35 +0200
-Subject: [PATCH v6 11/12] lib/string_choices: Add str_input_output() helper
+Date: Tue, 20 May 2025 15:28:30 +0200
+Subject: [PATCH v6 06/12] gpio: aggregator: refactor the forwarder
+ registration part
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-aaeon-up-board-pinctrl-support-v6-11-dcb3756be3c6@bootlin.com>
+Message-Id: <20250520-aaeon-up-board-pinctrl-support-v6-6-dcb3756be3c6@bootlin.com>
 References: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
 In-Reply-To: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -56,37 +57,63 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
 X-Mailer: b4 0.14.1
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkedthedvieethedtleetffehudevleegledvteegvdeujeeghffhkeeggfefudevnecukfhppedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiieenucevlhhushhtvghrufhiiigvpeeknecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeffrghnihgvlhgvvehlvghrihesrggrvghonhdrvghupdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrt
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkedthedvieethedtleetffehudevleegledvteegvdeujeeghffhkeeggfefudevnecukfhppedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeffrghnihgvlhgvvehlvghrihesrggrvghonhdrvghupdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrt
  ghpthhtohepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopefirghrhighrghnghesrggrvghonhdrtghomhdrthifpdhrtghpthhtoheprghnugihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
 X-GND-Sasl: thomas.richard@bootlin.com
 
-Add str_input_output() helper to return 'input' or 'output' string literal.
-Also add the inversed variant str_output_input().
+Add a new function gpiochip_fwd_register(), which finalizes the
+initialization of the forwarder and registers the corresponding gpiochip.
 
-Suggested-by: Andy Shevchenko <andy@kernel.org>
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- include/linux/string_choices.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpio/gpio-aggregator.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/string_choices.h b/include/linux/string_choices.h
-index f3ba4f52ff26..a27c87c954ae 100644
---- a/include/linux/string_choices.h
-+++ b/include/linux/string_choices.h
-@@ -41,6 +41,12 @@ static inline const char *str_high_low(bool v)
+diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+index ed3fb6abec09..3a10291fcc61 100644
+--- a/drivers/gpio/gpio-aggregator.c
++++ b/drivers/gpio/gpio-aggregator.c
+@@ -561,6 +561,18 @@ static int gpiochip_fwd_desc_add(struct gpiochip_fwd *fwd,
+ 	return 0;
  }
- #define str_low_high(v)		str_high_low(!(v))
  
-+static inline const char *str_input_output(bool v)
++static int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
 +{
-+	return v ? "input" : "output";
-+}
-+#define str_output_input(v)	str_input_output(!(v))
++	struct gpio_chip *chip = &fwd->chip;
 +
- static inline const char *str_on_off(bool v)
- {
- 	return v ? "on" : "off";
++	if (chip->can_sleep)
++		mutex_init(&fwd->mlock);
++	else
++		spin_lock_init(&fwd->slock);
++
++	return devm_gpiochip_add_data(chip->parent, chip, fwd);
++}
++
+ /**
+  * gpiochip_fwd_create() - Create a new GPIO forwarder
+  * @dev: Parent device pointer
+@@ -598,18 +610,13 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
+ 			return ERR_PTR(error);
+ 	}
+ 
+-	if (chip->can_sleep)
+-		mutex_init(&fwd->mlock);
+-	else
+-		spin_lock_init(&fwd->slock);
+-
+ 	if (features & FWD_FEATURE_DELAY) {
+ 		error = gpiochip_fwd_setup_delay_line(dev, chip, fwd);
+ 		if (error)
+ 			return ERR_PTR(error);
+ 	}
+ 
+-	error = devm_gpiochip_add_data(dev, chip, fwd);
++	error = gpiochip_fwd_register(fwd);
+ 	if (error)
+ 		return ERR_PTR(error);
+ 
 
 -- 
 2.39.5
