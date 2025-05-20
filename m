@@ -1,204 +1,131 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9D3280CE8
-	for <linux-hardening@vger.kernel.org>; Tue, 20 May 2025 18:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D6B25A645
+	for <linux-hardening@vger.kernel.org>; Tue, 20 May 2025 19:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747766578; cv=none; b=HzbIk+jYu9AcLR28IuVnHvRn4ErpuAtmGO6E6IFGWnWHZT28tyKtcq/1526JGxZiMN078AxwTWHVmKyRhIx4LtUmma8pcSeB9UYfZLMJYBh0P+t45k/mZTSXyw4nl8BNKMUYsenYZGgLKBbf9LwiZhMVNcGw2Ie8UY8Es+udAK4=
+	t=1747770220; cv=none; b=hXtmL4+NhOrLMGxX6pVqlCVMtZANSczCU0WNSl/oyIElWSiDm2LTWN6y80vCTEAjkw79GSXnlKkp6lSUtcebMWFXE7pd3rQzhMvcNj7N37k+AK/Bd7FBKr8/tpVtOUv74vAxI34OzhJ4lLinYXPvudvD2+FqcM1EuDs/Htqj38A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747766578; c=relaxed/simple;
-	bh=8NDAFaoY4CqzYnfhfFAD3AQ34cruUoT80RLVRAu4SrE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QJh6VzHBvbvFUQ/iKSk39qfabfYrKzobM68WzGjdgJ8EPFbx1VJHGmRKTeKqUpp9WUZIcgIOra7h95Y2K2vL3i9vRsIf+0PVg4I0uM+YxKjXmuc89FmCSzqHEnq/jR++fu9r1S31owKiSZxaKetc3QemRFh/NjP9wIVDg/9LPN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=YIoakkFv; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1747770220; c=relaxed/simple;
+	bh=7iMP3VzOA6iwjrwMuGY+lRy6An1jzocIfGU1h7/Ibj8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JmzkOB7qGV7LFfvIaSIuZYOY3O3bD4iCiwW28N/DxXzizcWNrHJefpTyZijSlNHleeYH0LOt2sWClWBIoklD6KEZv3TK2oL5r3H284JZZarObolRFMXpgzDznva0pCBPTlfAoG9HbN0NNL9AkLzV8amb5yo2luKvifsHAlr+T+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=myc/QjjK; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="YIoakkFv"
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
-	by cmsmtp with ESMTPS
-	id HBL6urLxbMETlHRvOuzzR4; Tue, 20 May 2025 18:42:50 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id HRvNubMqRsI0JHRvOuaQ5Z; Tue, 20 May 2025 18:42:50 +0000
-X-Authority-Analysis: v=2.4 cv=G5caEck5 c=1 sm=1 tr=0 ts=682ccd2a
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=TLs6ZzWtG3X6MRFYV_cA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xz4Zcy3wg7L8EA60dL5kL3syhAWL+nrdXMPY6Ck3yHQ=; b=YIoakkFv4seIF+yMGlaRLcNGrI
-	l3l0xC027wrcy0Qg+FT8igN3CCT7GJUa/qMLf8xi2TDRXKH8GSvMfMMMDt2x7Cc8U4cB9kyDWsaaU
-	MizEPCYURIAfdYqGeccbzAQXl9Qv/GvybwRkQOPDSDYKUD3of3B39KwCHx0J06/WUiXs/gdfMDUiq
-	X4gNH4WfLxr1xoF1fCMN7K4XglqZYZkB5pqxMWpZsViH0Ylw6E/0h8uxZFjLu9r/5qtIKvt4caWKa
-	frijC9r8UNTA0WM7FLnFNDcxW1WMAtQqy3zng8yzsfSx3JaGWzxZl66xycKol6tqg2et8fEhSy1Em
-	okewS4tw==;
-Received: from [177.238.17.151] (port=7880 helo=[192.168.0.27])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1uHRvK-00000001Zig-0gAj;
-	Tue, 20 May 2025 13:42:46 -0500
-Message-ID: <34aa97a5-745f-4207-8869-be846a42b8ce@embeddedor.com>
-Date: Tue, 20 May 2025 12:42:27 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="myc/QjjK"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso26064a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 20 May 2025 12:43:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747770217; x=1748375017; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uVuh6S3J1F9TaWrAVLril0Q/q54OEZ/trnQNfVZ1jAY=;
+        b=myc/QjjKPiVbzbJi+G0r12g+wecVjA+RRokdhOJ4Me3p6toFfP+v9qZbNudpaUufzK
+         oizrnKy3Exm+0ZxqRt9tZihRG3QeJ2YxyOO8lqKwMQqc/XYEIWbhVPcHtlMHXXE57zj9
+         oSc3sm7nGb6y5TYUyD7EtLxFQ5B7GYkvCCv/BA8sDgCDedTdKy0bBYZpRmd0pFcu83fg
+         2fOmxP+QiZA6/UpSUSHKqmjoHZ6IDrpScISBLQ0uaCRx7+mEnrPd+j9R96I+TxLlG1y/
+         ing7GUV7tFFKZ7SxpMChRtls48HBi1w/5bUGocL4EWyY64Wgv1vhXWhni/5zIBaNv6/C
+         6TNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747770217; x=1748375017;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uVuh6S3J1F9TaWrAVLril0Q/q54OEZ/trnQNfVZ1jAY=;
+        b=VDj4dM0chN29QSwPo+1qVntz6dSiOBJS75Kv95x9O65D1kyHq9VJb2FbAsMpwjYjR8
+         SBM0ZBIT89+UNMxuZs125NU344QTmALw676muyc9n/GGt4LEqBTlAEwC53DLVV2qWaqm
+         2nihpPb8BufENi2tUo9p+o40Z40EKvskVyR5WgW4ws9vVOJHRS+XuNHIPkd2sEZ+558S
+         UuO8cSpeExHdpjSAiivDt+y3g7FkzyqnyppjgeimjE1v2VWGjC2rhUJ7DrEWAZLV19mb
+         Rh0rgVLXZgraUbrEkeqQgtetL5E6z37ar8oWdR3Wk8f8EiFE7SBPPuSk3Lh9j+LXXY84
+         /Ejw==
+X-Forwarded-Encrypted: i=1; AJvYcCWyTKWhp4R/DRqACsLA6ZYB+at4Bag48onh1PX7HKry2z87izqQOS3JD2BUI8cdPnSiijSXA/Mo1Ox6HEsZTDg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUT6hp2dOWc/sMuryz7oSBmdOVqo+DfdNTA9zGhhiUE69hdvD7
+	bkLDaz89HcdKtKFgfm5EhS0gjkbJLmMAMzy4K57jeNtPuXXPTjIeO5ecPk3AOcpcsgirBfDqsTg
+	+egxzjNpk6vBM0paoaj3qHLvDJrEFaVMmGrRkhkCx
+X-Gm-Gg: ASbGnctTuThPhM73FeXBDI6D8jnOac6czxJtc+KjsdTfpiXiD4wGioxWZAa+SrIRx2R
+	8kfKcaQmPWZV6b1UgqPV+sCJc6FcBXlWK2GovuqKzH78inZh8JCfMGgwYCRXCfnEeiDvHsr+bj0
+	pq+m9GYqRGvzg5iOUTQ9mt/YhLMi8ieySxFRWqpHZMPbiRlQ+/awQZjo7vJ/UxgpROmW3oVzFQO
+	JEjor68Sw==
+X-Google-Smtp-Source: AGHT+IHJvX9YjDx2d3c583rLSRmMUshXchB5sWSCQCJw3GuXnKAXqOqVSJqf4TKJyzYdOkmw2CS439Nybj4XBPXOmMI=
+X-Received: by 2002:a05:6402:368:b0:5fc:e6a6:6a34 with SMTP id
+ 4fb4d7f45d1cf-6019c7917b7mr327364a12.6.1747770216674; Tue, 20 May 2025
+ 12:43:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3] net: core: Convert inet_addr_is_any() to
- sockaddr_storage
-To: Kees Cook <kees@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Simon Horman <horms@kernel.org>,
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Dmitry Bogdanov <d.bogdanov@yadro.com>,
- Maurizio Lombardi <mlombard@redhat.com>,
- "Dr. David Alan Gilbert" <linux@treblig.org>,
- Eric Biggers <ebiggers@google.com>, Al Viro <viro@zeniv.linux.org.uk>,
- linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
- linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
- netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250520173437.make.907-kees@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20250520173437.make.907-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.17.151
-X-Source-L: No
-X-Exim-ID: 1uHRvK-00000001Zig-0gAj
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.27]) [177.238.17.151]:7880
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfMhmNLWIRvvPKr5WXDO3BbY6566O8eJSKxwuzFJwLsnWhIxDV2s2E7Q1M5o6GvYC4A5lvcsk1PpJKm6gVEbohVJ7spNmwjIGBhKVHDmC4CIArHG7VQEP
- FcIFRdF8Y9WAVwy1WTKv2jpYorj5Y+ZNGfdq5RhyE1aR0+PHJq2NfDN4obb7Id4F4qkj9pZbOTXB0t99iV5To5ZO5IBdOs5wUZI4zFeNHMPMjSbVyIx50GjB
+References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-6-bqe@google.com>
+In-Reply-To: <20250519161712.2609395-6-bqe@google.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 20 May 2025 21:43:00 +0200
+X-Gm-Features: AX0GCFud_K6kp4jeZEy1YtPgHu6MpFW_3N3hcU-WCHo0eBEV6HSTF1SnPHjVTps
+Message-ID: <CAG48ez1vpyAARm-fk1GBfm-Dq-+W1CpCtYiGJm9ZQFq-pDKoQA@mail.gmail.com>
+Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
+To: Burak Emir <bqe@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 19, 2025 at 6:20=E2=80=AFPM Burak Emir <bqe@google.com> wrote:
+> +/// fn get_id_maybe_alloc(guarded_pool: &SpinLock<IdPool>) -> Result<usi=
+ze, AllocError> {
+> +///   let mut pool =3D guarded_pool.lock();
+> +///   loop {
+> +///     match pool.acquire_next_id(0) {
+> +///       Some(index) =3D> return Ok(index),
+> +///       None =3D> {
+> +///         let alloc_request =3D pool.grow_alloc();
+> +///         drop(pool);
+> +///         let resizer =3D alloc_request.alloc(GFP_KERNEL)?;
+> +///         pool =3D guarded_pool.lock();
+> +///         pool.grow(resizer)
+> +///       }
+> +///     }
+> +///   }
+> +/// }
+> +/// ```
 
+Hmm, I think I just understood a bit better than before what's
+actually going on in the C binder code... the reason why you have this
+complicated API for reallocation here in Rust is that you want the
+guarded_pool to not have its own lock, but a lock provided by the
+caller? And so pool functions are unable to take/drop the lock that
+protects the pool?
 
-On 20/05/25 11:34, Kees Cook wrote:
-> All the callers of inet_addr_is_any() have a sockaddr_storage-backed
-> sockaddr. Avoid casts and switch prototype to the actual object being
-> used.
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> Signed-off-by: Kees Cook <kees@kernel.org>
+This is just me idly wondering, and I know I tend to come up with
+overcomplicated approaches and I'm bad at Rust - please just ignore
+this message if you think it's not a good idea.
 
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+I wonder if there is a way in Rust to address this kind of situation
+that looks nicer. Maybe you could have a function as part of the
+IdPool implementation that operates on an IdPool, but instead of an
+IdPool as parameter, the parameter is something like a function that
+can be called to obtain a guard that gives you a mutable reference?
+Could you maybe have some lock trait whose implementations store a
+pointer to something like a SpinLock, with a "lock()" method that
+first locks the SpinLock (creating a Guard), then looks up a specific
+member of the data contained inside the SpinLock, and returns a
+mutable pointer to that? Basically a subset view of the SpinLock. Then
+the IdPool implementation would be able to internally do this pattern
+of alternating lock/unlock. Though this way you'd still have to not
+hold the lock when calling into this.
 
-Thanks!
--Gustavo
-
-> ---
->   include/linux/inet.h                | 2 +-
->   drivers/nvme/target/rdma.c          | 2 +-
->   drivers/nvme/target/tcp.c           | 2 +-
->   drivers/target/iscsi/iscsi_target.c | 2 +-
->   net/core/utils.c                    | 8 ++++----
->   5 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/inet.h b/include/linux/inet.h
-> index bd8276e96e60..9158772f3559 100644
-> --- a/include/linux/inet.h
-> +++ b/include/linux/inet.h
-> @@ -55,6 +55,6 @@ extern int in6_pton(const char *src, int srclen, u8 *dst, int delim, const char
->   
->   extern int inet_pton_with_scope(struct net *net, unsigned short af,
->   		const char *src, const char *port, struct sockaddr_storage *addr);
-> -extern bool inet_addr_is_any(struct sockaddr *addr);
-> +bool inet_addr_is_any(struct sockaddr_storage *addr);
->   
->   #endif	/* _LINUX_INET_H */
-> diff --git a/drivers/nvme/target/rdma.c b/drivers/nvme/target/rdma.c
-> index 2a4536ef6184..79a5aad2e9d0 100644
-> --- a/drivers/nvme/target/rdma.c
-> +++ b/drivers/nvme/target/rdma.c
-> @@ -1999,7 +1999,7 @@ static void nvmet_rdma_disc_port_addr(struct nvmet_req *req,
->   	struct nvmet_rdma_port *port = nport->priv;
->   	struct rdma_cm_id *cm_id = port->cm_id;
->   
-> -	if (inet_addr_is_any((struct sockaddr *)&cm_id->route.addr.src_addr)) {
-> +	if (inet_addr_is_any(&cm_id->route.addr.src_addr)) {
->   		struct nvmet_rdma_rsp *rsp =
->   			container_of(req, struct nvmet_rdma_rsp, req);
->   		struct rdma_cm_id *req_cm_id = rsp->queue->cm_id;
-> diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-> index 12a5cb8641ca..5cd1cf74f8ff 100644
-> --- a/drivers/nvme/target/tcp.c
-> +++ b/drivers/nvme/target/tcp.c
-> @@ -2194,7 +2194,7 @@ static void nvmet_tcp_disc_port_addr(struct nvmet_req *req,
->   {
->   	struct nvmet_tcp_port *port = nport->priv;
->   
-> -	if (inet_addr_is_any((struct sockaddr *)&port->addr)) {
-> +	if (inet_addr_is_any(&port->addr)) {
->   		struct nvmet_tcp_cmd *cmd =
->   			container_of(req, struct nvmet_tcp_cmd, req);
->   		struct nvmet_tcp_queue *queue = cmd->queue;
-> diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-> index 620ba6e0ab07..a2dde08c8a62 100644
-> --- a/drivers/target/iscsi/iscsi_target.c
-> +++ b/drivers/target/iscsi/iscsi_target.c
-> @@ -3419,7 +3419,7 @@ iscsit_build_sendtargets_response(struct iscsit_cmd *cmd,
->   					}
->   				}
->   
-> -				if (inet_addr_is_any((struct sockaddr *)&np->np_sockaddr))
-> +				if (inet_addr_is_any(&np->np_sockaddr))
->   					sockaddr = &conn->local_sockaddr;
->   				else
->   					sockaddr = &np->np_sockaddr;
-> diff --git a/net/core/utils.c b/net/core/utils.c
-> index 27f4cffaae05..e47feeaa5a49 100644
-> --- a/net/core/utils.c
-> +++ b/net/core/utils.c
-> @@ -399,9 +399,9 @@ int inet_pton_with_scope(struct net *net, __kernel_sa_family_t af,
->   }
->   EXPORT_SYMBOL(inet_pton_with_scope);
->   
-> -bool inet_addr_is_any(struct sockaddr *addr)
-> +bool inet_addr_is_any(struct sockaddr_storage *addr)
->   {
-> -	if (addr->sa_family == AF_INET6) {
-> +	if (addr->ss_family == AF_INET6) {
->   		struct sockaddr_in6 *in6 = (struct sockaddr_in6 *)addr;
->   		const struct sockaddr_in6 in6_any =
->   			{ .sin6_addr = IN6ADDR_ANY_INIT };
-> @@ -409,13 +409,13 @@ bool inet_addr_is_any(struct sockaddr *addr)
->   		if (!memcmp(in6->sin6_addr.s6_addr,
->   			    in6_any.sin6_addr.s6_addr, 16))
->   			return true;
-> -	} else if (addr->sa_family == AF_INET) {
-> +	} else if (addr->ss_family == AF_INET) {
->   		struct sockaddr_in *in = (struct sockaddr_in *)addr;
->   
->   		if (in->sin_addr.s_addr == htonl(INADDR_ANY))
->   			return true;
->   	} else {
-> -		pr_warn("unexpected address family %u\n", addr->sa_family);
-> +		pr_warn("unexpected address family %u\n", addr->ss_family);
->   	}
->   
->   	return false;
-
+It might be an even better fit for a 1:1 translation of the C code if
+you could then combine this with some kind of SpinLockUnlockGuard that
+mutably borrows a SpinLockGuard; releases the underlying lock when it
+is created; and reacquires the lock when it is dropped... but that's
+maybe taking things too far.
