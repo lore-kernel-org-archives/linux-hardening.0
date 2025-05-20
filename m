@@ -1,125 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83B325C701;
-	Tue, 20 May 2025 06:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478981B392B
+	for <linux-hardening@vger.kernel.org>; Tue, 20 May 2025 12:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747720807; cv=none; b=DghKTPMdlJ3ky/rQSGyTQ0eVn1YtPHMvTWGgVXZODRC8Q6RiqL+PbFhCzmL+XzYF9LOQ1t5G1sT58omrxZVrapy5PSuBTBbeOVclliaa4CTzJy4hMPMLbJGrYfkI5YMB1iIJKydi1JwaCGgI6qbgYhfAryhFqwB/Br2biTYcUCY=
+	t=1747744987; cv=none; b=VlrPox/R+x4bOW8uWWUcAK7XQrn7On+7t4nfaGzHDampAIsdpE6K4SbIF938iACtJmu2VmcsfiqSkJeUBvzlc95uDdRO9QYvsAkCNK05qUpeKzsV0LDhUb13hM3Z7i+PCZ5G94Y2KL1fIrbbeFeMVjhwkcWaQKNkr32zJ/82Kx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747720807; c=relaxed/simple;
-	bh=dMgMAG9XNL5bV4MfmNIisiKf+nZMmc8QZRDWJohNcMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E66lqnCGNkIAHtpfHS901puGzMatMQjzzuOBa12ve/iETw/rgMpenzsE53fmt9n+KN6aRJz7G9mx4JjmY7kN1LfYefr72lQlAnYZYt92qa7N5Hn0eKNAD3HP9JsX7by7sKQ5v8knjgnacfZRkNfSweTLUEXcGljtRrb3pl4X5i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MrNDBxoX; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747744987; c=relaxed/simple;
+	bh=EAHzzRlqwHD0tyyHiLnOawAa1WH6/3DVglP+aReQHPc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ynjb5PhEW10jVgIO7XHjwEz5/NbkbAvZiK3bZ0oyOWI4g+TTslOZRZXV9TiHiVFMTfbnbEoF1WbsIbh3xNEqzpjZ7hHOqc40ZAPQYC4YoT/iw9/46onNBbcNn0vbSijIt38jMgugFItEiI1oOgTp7GF/OFQliWN5BJrUdYvqi+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B1VMsJdU; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MrNDBxoX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747720805; x=1779256805;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dMgMAG9XNL5bV4MfmNIisiKf+nZMmc8QZRDWJohNcMw=;
-  b=MrNDBxoXUZjf+2WBklhv9tpSqdRTcPZU2P2U6No0GJkrcI6ru5Euc8rn
-   0DdAemL+efa2QhP2xYeSASStFQooYXYCytQf8A5ka7uoxz6z4gWiAty5O
-   aMwr6I1p+l+f7Mx8Of58N84GnT31w6ha/BH768jx/5AgMuoGSpFYV6AZW
-   vi0ReD+cd1CdBJ8ieUoG6dTnhxAhX2wZean0YBzHHk+RN1Dz+wt7JcJCx
-   56v0N5JDreLUqzXXIhF6MMcAgMgQD4WJ+NTydaHVuM5ZH3U19Td2nMj9x
-   jaHRI+QerLrqB4n47o6Xb8ItZNBLGOoAon8tOEAyYV24ue5AxNosDjKFj
-   g==;
-X-CSE-ConnectionGUID: rzzfhikNQhyNJ2oECw+9CA==
-X-CSE-MsgGUID: ZNq+v3DrRHWxcvuaDNTC1w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="75040140"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="75040140"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 22:59:59 -0700
-X-CSE-ConnectionGUID: V6IWy+CVSQKKPzFwODsdSw==
-X-CSE-MsgGUID: gWNRCweFRyOb2wsc97k3Xw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="139472155"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 19 May 2025 22:59:55 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHG12-000MCm-2W;
-	Tue, 20 May 2025 05:59:52 +0000
-Date: Tue, 20 May 2025 13:59:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Burak Emir <bqe@google.com>, Yury Norov <yury.norov@gmail.com>,
-	Kees Cook <kees@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v8 3/5] rust: add bitmap API.
-Message-ID: <202505201339.bUfYKFye-lkp@intel.com>
-References: <20250519161712.2609395-4-bqe@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B1VMsJdU"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a36e0d22c1so1666316f8f.2
+        for <linux-hardening@vger.kernel.org>; Tue, 20 May 2025 05:43:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747744983; x=1748349783; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EAHzzRlqwHD0tyyHiLnOawAa1WH6/3DVglP+aReQHPc=;
+        b=B1VMsJdUTtNZ5AeibbEr7PXGb+bgZA78QdWsAheDRcoVinv9wUHKmtW7183x/7R0Q7
+         77EZ2RqvZSAyd1Mht6XSmypEFCwYBLIbqobkXmRcFX8xPvUOGZh3Ip54AT205WhRjxzR
+         eaQ7jG6lgIEFdQX5KmLB1Pf+hjwX1x9FD0E/0hcvkbOm/4lVfm13L+ekdVyvp4l3zgD7
+         Li5wKHHeOy+310BDqvSE8RjphNofrdvBrZZP1E8AojPm495mntqF+qc5p+iA7h05mJ4F
+         vv3Iwd2Zn/cSuN959zeQ6lm9B9oZ0pSGWgudpYIRT5U59PA1KEvZXDXl5skAM1R49jQ5
+         XeRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747744983; x=1748349783;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EAHzzRlqwHD0tyyHiLnOawAa1WH6/3DVglP+aReQHPc=;
+        b=WaXU/AlXyzktGfmTTNW+w6b1UwJyBpyMLi2+DD/4QItVGo9xH8OHGTlDOR5YfHI36+
+         hJ2o5RZ2Dtmiqx8KJbeJ3bcNQBVSu7UG0CfK5R9ojeLVX/O2QgZqVo5pHIYUb0TD4nhd
+         HXM2zj2Yqk1HUBm+r8KDu8rNGdvk8jK5L9M9tCt5JNR48+gOe2E7vrkJutRl+wUSRDo0
+         /v8OgNyG3M0AiLScQDo50N2tJ1x05O6LxE3gkJUU3mp4i9lehhKKB3ynVwbKcj2IIUB+
+         uo05OevUYknmceavRmAcFVFBvOIP1b+e/CeFysA6iOGO/S0TmZ3VleuwMkLc79qNFEa6
+         YXIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFka6s5aFMiVkxp7ci1SYTQorbm+2jcjMEEzGkWCSzrpzI6BRjNxGqlhm9VBNzDe0eNWXJP2w8YnZ+VLXQDcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA0hEQv+WYYfmbGhtaiREWTid3jFgisbj0WZXO2UtF7hYeLqZs
+	dhtTbZMltfPS8NEvTmIk7VnVUSdgh8I89pfsAhLu28ZBFHTFR2itpTr5SxXPxN2qomAP4sOwgYg
+	CeZsmcgezkREI8dXriM4Wx/5xeor+x4RTCUImFys4
+X-Gm-Gg: ASbGncvaXxxgEkf1w35DWotf5sqw+9EfRty6yCEjeUzgCl3W9nJ/HoXfxRm55hEOqfg
+	C30DaPv56AhDARHB4HUd5284S0miqKGRanqZwqd5L/hYKPP4h2o9SegWaJcsu2CN4x5L/GpQIW+
+	tJo4twgYh34t2TF8btbIQ40BkoIoHL4nYrl9hfIz2t9gk9
+X-Google-Smtp-Source: AGHT+IHS0wTiDrmTRT4pPLA0kd7EuOcSAEADiFb2xPxNv7tTT14Pcvfk2m6J1zKafjkxbkm02/1Z8djAmA08uVBrLX8=
+X-Received: by 2002:a05:6000:40e0:b0:3a0:b733:f264 with SMTP id
+ ffacd0b85a97d-3a35fe5ba7amr14020745f8f.11.1747744983401; Tue, 20 May 2025
+ 05:43:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519161712.2609395-4-bqe@google.com>
+References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-6-bqe@google.com>
+ <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com>
+ <682bc528.c80a0220.13f632.9ec0@mx.google.com> <CAH5fLghNJYjxPFUc2E4-2pJpGT5umUr1EJstZvs88ox3MsXDGQ@mail.gmail.com>
+ <aCwRZlkBWekRmDg7@Mac.home>
+In-Reply-To: <aCwRZlkBWekRmDg7@Mac.home>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 20 May 2025 05:42:51 -0700
+X-Gm-Features: AX0GCFvPyNIDsyx7gzZx16RwjzE4BKj1SXehnk-VJvEazvtsPhKBabrEv6qfeaI
+Message-ID: <CAH5fLgj1NVodPy-95CFUygGO7WC0siNEKSyEhgLvpX-1zMXErQ@mail.gmail.com>
+Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Jann Horn <jannh@google.com>, Burak Emir <bqe@google.com>, Yury Norov <yury.norov@gmail.com>, 
+	Kees Cook <kees@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Burak,
+On Mon, May 19, 2025 at 10:21=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> =
+wrote:
+>
+> On Mon, May 19, 2025 at 08:46:37PM -0700, Alice Ryhl wrote:
+> > On Mon, May 19, 2025 at 4:56=E2=80=AFPM Boqun Feng <boqun.feng@gmail.co=
+m> wrote:
+> > >
+> > > On Tue, May 20, 2025 at 12:51:07AM +0200, Jann Horn wrote:
+> > > > On Mon, May 19, 2025 at 6:20=E2=80=AFPM Burak Emir <bqe@google.com>=
+ wrote:
+> > > > > This is a port of the Binder data structure introduced in commit
+> > > > > 15d9da3f818c ("binder: use bitmap for faster descriptor lookup") =
+to
+> > > > > Rust.
+> > > >
+> > > > Stupid high-level side comment:
+> > > >
+> > > > That commit looks like it changed a simple linear rbtree scan (whic=
+h
+> > > > is O(n) with slow steps) into a bitmap thing. A more elegant option
+> > > > might have been to use an augmented rbtree, reducing the O(n) rbtre=
+e
+> > > > scan to an O(log n) rbtree lookup, just like how finding a free are=
+a
+> > >
+> > > I think RBTree::cursor_lower_bound() [1] does exactly what you said
+> >
+> > We need the smallest ID without a value, not the smallest ID in use.
+> >
+>
+> Ok, but it shouldn't be hard to write a Rust function that search that,
+> right? My point was mostly the Rust rbtree binding can do O(log n)
+> search. I have no idea about "even so, should we try something like Jann
+> suggested". And I think your other reply basically says no.
 
-kernel test robot noticed the following build errors:
+We would need to store additional data in the r/b tree to know whether
+to go left or right, so it would be somewhat tricky. We don't have an
+implementation of that in Rust.
 
-[auto build test ERROR on rust/rust-next]
-[also build test ERROR on akpm-mm/mm-nonmm-unstable kees/for-next/hardening kees/for-next/pstore kees/for-next/kspp linus/master v6.15-rc7]
-[cannot apply to next-20250516]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Burak-Emir/rust-add-bindings-for-bitmap-h/20250520-002216
-base:   https://github.com/Rust-for-Linux/linux rust-next
-patch link:    https://lore.kernel.org/r/20250519161712.2609395-4-bqe%40google.com
-patch subject: [PATCH v8 3/5] rust: add bitmap API.
-config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250520/202505201339.bUfYKFye-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250520/202505201339.bUfYKFye-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505201339.bUfYKFye-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> error[E0061]: this method takes 0 arguments but 1 argument was supplied
-   --> rust/kernel/bitmap.rs:396:28
-   |
-   396 |         assert_eq!(None, b.last_bit(2048));
-   |                            ^^^^^^^^ ----
-   |                                     |
-   |                                     unexpected argument of type `{integer}`
-   |                                     help: remove the extra argument
-   |
-   note: method defined here
-   --> rust/kernel/bitmap.rs:301:12
-   |
-   301 |     pub fn last_bit(&self) -> Option<usize> {
-   |            ^^^^^^^^
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Alice
