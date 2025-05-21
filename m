@@ -1,64 +1,64 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913A8283691
-	for <linux-hardening@vger.kernel.org>; Wed, 21 May 2025 14:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F91F19F135
+	for <linux-hardening@vger.kernel.org>; Wed, 21 May 2025 14:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836634; cv=none; b=aR7LQgeG9T0Okawu7/QpWQMfksGFMBKZDUM3CrpJ3PhMkzAk5MviJKBDPQG7YtezW5o2zWFhJlDK1dXuiGgM1NWMO9v2Wty5STbDh4p5uK0IsAprZZcVmH0wyeHOTwqICmYHCM9irGZTN2HPP10URemrkB2gviPC5xpMxnbl/1w=
+	t=1747836643; cv=none; b=Dd9Eoere0GLABcunXhsu9UmzUOkPavKpfKhWu8K5ShKcV0PKvEz0SseSvg9o2dNEfY64n55NKVlfoxTuLmp8x43JKUeMhA9+Rip0p3sIUrygx5yziBXQFv+vngokvR65G0Hxm2fZ6nolncB+UCT3Q1HSRQEz1T2DVgmlushej1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836634; c=relaxed/simple;
-	bh=XODCdlQ9JYoDDsNnzBn69mhkXEts4CheV3BPuja6CXk=;
+	s=arc-20240116; t=1747836643; c=relaxed/simple;
+	bh=OQ1NjhaRqgeRJck8clk8hAkhTOm7Z0typP+i2KOU6uY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LAfPLv0GCqvQFjo6/aT+NQPJe3sG4sPjz7w6EUwcpS+w/GZihb9Qw9nca0ARiZq4YxBpg1ONC68PZ8MsIhNY9R4oxp5E3EQ6LofRXURe915L6GGJ81YOP58z/n9+wm5lRXZuNmBuTVyKchykFUVOq0mlXfwOlTmH/i8pnVSGlnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=kiCJzjj1; arc=none smtp.client-ip=209.85.218.52
+	 MIME-Version; b=JVDoZJ+l/Wj4XOKoHU/PdaCB+slBHYe7b1/ob6hSsST1j+AWeqFodXk7kgpt4euoooNhNqiJ+TC4UkkMSKzZ4XoefsARNsmY2+Gebcl5pfbbMaOYNE1rxZ8W2qGKfG440tQiqKqVIflADT5Nkp4Wvivp415L5E0pv4ZEhFgISZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=VjfA0xGd; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="kiCJzjj1"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ace94273f0dso1181276866b.3
-        for <linux-hardening@vger.kernel.org>; Wed, 21 May 2025 07:10:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="VjfA0xGd"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54b10594812so8057817e87.1
+        for <linux-hardening@vger.kernel.org>; Wed, 21 May 2025 07:10:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1747836630; x=1748441430; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1747836639; x=1748441439; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Cl9iumKUHycZw2LuiJs/rBHFbGkhee2I0sRJSJxgwN8=;
-        b=kiCJzjj1+b+2gshqh1BVowefGSNh+DS6L/pt6DEPRyETPwmwA0qcIFqCjO1CLp7b7S
-         kXr33Wea03BSdAjgRwHAlgPwPWuBtnpZH2vxpXNdoo1a7bWeo5FPC5Uv66RLKQoRZfGC
-         FOAgKtHDbafA2wTOhv/3DPSaMWPqCpk3cCxZtce+CY9mLc/2NXwv8WvNZi/30v7vVdhH
-         pSorLwMSQtLhqPLK7X5sYdC7RhFO/IPqmawM02ZrmIn9ilOGN1pmxC3UH8bIZwyXxJF2
-         R+0Ye1UV5ctyPEu1ZYU4XpdfdTSVilJBexErKYTGFu/t8BFaF/QIOV582aXYceRSkwPe
-         3Mlw==
+        bh=j2m/AQHhUKCMB2ooeH4OXmkM2QdyDkeRoTJbiJc49Qw=;
+        b=VjfA0xGdXDoWq9hSZ2KqMc3b7yEDYNdulcYH+LMi+10GXsb7u7OU/QZpubAOvuf3o1
+         hkn0s+Gfz3NAGOUnGJSbNm039VM+MMpQIJLry1M47eJIbV+moaFrgNxG1rzqRnpvFOv8
+         CbxU2X/KeA6Z5Wo581riRsjyuRoCY75pEGfABGEZ+MhhkHGYC4tdPqNWbpW+bY/9XU9q
+         7V1KQlkomcrDxazHXO3RR5JC2c5LLM+WnCXI+86584dgzytyKqUH/g12GDc5ix6bOns+
+         YJ0K+tp7pvvvT90m7FwqPMJLboR+oZvN/3MWXKqE//6aeD+lazcckOawDAVTdm6Y2iKe
+         tMXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747836630; x=1748441430;
+        d=1e100.net; s=20230601; t=1747836639; x=1748441439;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Cl9iumKUHycZw2LuiJs/rBHFbGkhee2I0sRJSJxgwN8=;
-        b=VLkIQ1wGWd49L/+v/VZfl/zD/nQcUbYOWzW/A819w32mrdlTfhdtQ+a23oRLDcHPeG
-         wfcj3vZzDKAwm26VCs1Ju0Vp/DpSvcTu9HKgXGNWyMe7aXhcVsT9RwYcb2NzrciMwb5Y
-         PjJV8WXGwZnETvTNN2FjhZmmrIjfxXHQk7U4HItvF63ecsTBWx5vN5FOdLvFvj9XKUZl
-         EzXvhw2XFWdRIHjIVwu+jATbir3HQcNy8B/FTeyHpFJiOovgE7qvBujMHktOXZrtINBU
-         +ml2FkK3loq3u+gFhjarnYNBsea1IkWXjs/jqexoU78biBjTaMhO7OPv5HQL5I+jPYTM
-         8jQg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJIVToKQvwlfCTMNNHC+45yn7pMTtufqb47za+IAs9FRcXuV4DgTrJ+gVQLkznZg+E2kf9e3MgzstZCZUF2FQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRhniBb5uRA/w4p7nKjYTduBRXsMNAh2A5DHxeyehi7Ro8dj68
-	Ee2rTPF0rEgSGuP1f5lmQ03z6tENw/WLYAVb4MjsdJWqFhe3MC7A/xbaH85uLjd4YExvHjfGxs4
-	5Bzvw
-X-Gm-Gg: ASbGnctgOX3cqm9V0YX57sTereUnbwZ0Z9I8P208oSc+CFTJWN+6/N1aIRpO5otFL7J
-	BwDfX7ThZ+c+BUwPXbh1YtbjHxfSxBKtwDayZKSxKdSB3VuL6Ta6KqPZx7KY3SZD+S1f9m1C28B
-	NZrmwGq2sw83sV11MjfG8JbaggviYCF/Is1HovTYKwD2yYLVwvA5RRODRGiI5LWjRAe0G7lYVVV
-	3ioVA5/3T6pbGI3xB1TuBY28CwZ9+Uy2VRXhsq3OnIQry3UkYIcXWL0Wk1kBiQmJ3rexyP/rzSJ
-	nPzRy84K3eOdv8afjOGmacRn1g8KDvZiEoz4DPi2Msw1WZqkEuEoFCLE/6KsrSQpbv2cNSfO1AF
-	8Usqc2pi1W4BX6Gs=
-X-Google-Smtp-Source: AGHT+IGD2TFDUAmZSCVXr+Ck8MJMzjDFoIU+oJlf9NZINhEoKVsrTuMXHWv6l6Kj+MwSbuL8IYJrfQ==
-X-Received: by 2002:a17:907:968f:b0:ad2:53fc:a884 with SMTP id a640c23a62f3a-ad52d549101mr2012530866b.29.1747836601240;
-        Wed, 21 May 2025 07:10:01 -0700 (PDT)
+        bh=j2m/AQHhUKCMB2ooeH4OXmkM2QdyDkeRoTJbiJc49Qw=;
+        b=lDynYd5ses8/Y+WI6gfvX/0rsFIqWwc8Xm/Hv0eCu1SqQOjwqOCjCndaGcAi2UPLAo
+         OXiuKBxRwy+kvIGHSsbUvFNIbUtckDeYIoDzhb/yVnQ/Z8e6FVsoAE4Hof0P/m/nBIMI
+         4aJ6z6kF3SEcMBhKDkVG3R82aJntou6C8Kt411RkHspHT/SGJWvVPGzPEi1bIsL6KVm/
+         uO93hduFs/M5uY1im/qntAO0B0kQGK9OFXJ3OFRGRaIT/rLn6LoOmrZ1WTZ+hr2S0nKe
+         dec95tnGd7XKu45mso2lrxQrNt2Ag2tZ1LvjE2LiLIQYOmDjcBgB35LPTgEa7C1iLrFN
+         FGvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxgclMcwRfK6Oj9lRn+aU8vifgK9G4R8FgZOReUI8byOiwHbL8mz7xcDXnl5fGnzb0Dr93uTgpNN7ZzeVN/3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcAbzbRUtLiZTUnD2Vg9+itxwU1S6MbwGLWMjAq9pApJ/ZeYaY
+	Yef3xnfmjmr+qG/5FZPHNWnIOJQCQ741IG1d93FOzcRjFR+ybl7xoxEEhJZ36efjT8mudMxhnz+
+	fOsaw
+X-Gm-Gg: ASbGncvjd0fNTR1ISelMYkF+jHMM2KuPe+wyaAq8rl9dc+yN0QU3BejfDJneuQzFH5K
+	dDkyNwoQNjIxPIJMS27z9HKIo75iqmdvYt7oV3PmlnmNeZYTujFBe3HdYf0JBfCO6tK6wkgOEBI
+	8wBBgXoyMlN/OBie3GwObAwcnwFYE59Hlm/OAq7zQSRnIP5XhlxBytkimZxQnVjYPGD9/v8P4Qp
+	ME1K0rQfEbtHg/qn36aHlWI2SGbAErB8ebgqb+NDjO6vJxEHk9gbElNaU6NTDzy5qCwopid88qg
+	SZb/N7eCmLLoWoId2mA3TXfI2GqNb+NovxOElyU0xoyAcyF4yYJkwU2Px/YC/boCiYTyUym+383
+	Xv9y+
+X-Google-Smtp-Source: AGHT+IGdD+yAG7ixkuPBvb5SmYpr1MB+zCBzWTmXhHcnzFLU4L4Om8QGyJVgnGJCce8K1qT9dbWwIA==
+X-Received: by 2002:a17:907:968f:b0:ad2:53fc:a884 with SMTP id a640c23a62f3a-ad52d549101mr2013009566b.29.1747836628448;
+        Wed, 21 May 2025 07:10:28 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.58])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d271916sm914552866b.69.2025.05.21.07.09.59
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d271916sm914552866b.69.2025.05.21.07.10.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 07:10:00 -0700 (PDT)
+        Wed, 21 May 2025 07:10:27 -0700 (PDT)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: vkoul@kernel.org,
@@ -80,11 +80,10 @@ Cc: claudiu.beznea@tuxon.dev,
 	linux-renesas-soc@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
 	john.madieu.xa@bp.renesas.com,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v3 04/12] dt-bindings: phy: renesas,usb2-phy: Mark resets as required for RZ/G3S
-Date: Wed, 21 May 2025 17:09:35 +0300
-Message-ID: <20250521140943.3830195-5-claudiu.beznea.uj@bp.renesas.com>
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v3 12/12] arm64: dts: renesas: rzg3s-smarc: Enable USB support
+Date: Wed, 21 May 2025 17:09:43 +0300
+Message-ID: <20250521140943.3830195-13-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
@@ -98,39 +97,108 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-The reset lines are mandatory for the Renesas RZ/G3S platform and must be
-explicitly defined in device tree.
+Enable USB support (host, device, USB PHYs).
 
-Fixes: f3c849855114 ("dt-bindings: phy: renesas,usb2-phy: Document RZ/G3S phy bindings")
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
 
 Changes in v3:
 - collected tags
-- rebased on top of latest version of renesas,usb2-phy.yaml;
-  Conor, Geert: I kept your tags; please let me know if you consider it
-  otherwise
 
 Changes in v2:
-- none; this patch is new
+- this was patch 15/16 in v1:
+- dropped sysc enablement as it is now done in SoC dtsi file
 
- Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi | 57 ++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
-index 2822dce8d9f4..12f8d5d8af55 100644
---- a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
-@@ -108,6 +108,7 @@ allOf:
-           contains:
-             enum:
-               - renesas,usb2-phy-r9a09g057
-+              - renesas,usb2-phy-r9a08g045
-               - renesas,rzg2l-usb2-phy
-     then:
-       properties:
+diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
+index 5e044a4d0234..5586dd43c4d5 100644
+--- a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
++++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
+@@ -92,6 +92,20 @@ &audio_clk2 {
+ 	clock-frequency = <12288000>;
+ };
+ 
++&ehci0 {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&hsusb {
++	dr_mode = "otg";
++	status = "okay";
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+@@ -132,6 +146,15 @@ power-monitor@44 {
+ 	};
+ };
+ 
++&ohci0 {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
+ &pinctrl {
+ 	audio_clock_pins: audio-clock {
+ 		pins = "AUDIO_CLK1", "AUDIO_CLK2";
+@@ -207,6 +230,27 @@ ssi3_pins: ssi3 {
+ 			 <RZG2L_PORT_PINMUX(18, 4, 8)>, /* TXD */
+ 			 <RZG2L_PORT_PINMUX(18, 5, 8)>; /* RXD */
+ 	};
++
++	usb0_pins: usb0 {
++		peri {
++			pinmux = <RZG2L_PORT_PINMUX(5, 0, 1)>, /* VBUS */
++				 <RZG2L_PORT_PINMUX(5, 2, 1)>; /* OVC */
++		};
++
++		otg {
++			pinmux = <RZG2L_PORT_PINMUX(5, 3, 1)>; /* OTG_ID */
++			bias-pull-up;
++		};
++	};
++
++	usb1_pins: usb1 {
++		pinmux = <RZG2L_PORT_PINMUX(5, 4, 5)>, /* OVC */
++			 <RZG2L_PORT_PINMUX(6, 0, 1)>; /* VBUS */
++	};
++};
++
++&phyrst {
++	status = "okay";
+ };
+ 
+ &scif0 {
+@@ -242,3 +286,16 @@ &ssi3 {
+ 	pinctrl-0 = <&ssi3_pins>, <&audio_clock_pins>;
+ 	status = "okay";
+ };
++
++&usb2_phy0 {
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++	vbus-supply = <&usb0_vbus_otg>;
++	status = "okay";
++};
++
++&usb2_phy1 {
++	pinctrl-0 = <&usb1_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++};
 -- 
 2.43.0
 
