@@ -1,94 +1,90 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DCB2356C7
-	for <linux-hardening@vger.kernel.org>; Wed, 21 May 2025 08:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1413C253B5E;
+	Wed, 21 May 2025 10:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747815087; cv=none; b=I1GDPefXi8rb+akaJIfBLRYGfSU9qtj/nMf9YwgonXQ9BK9C+laTKvbZ7n/HEvIxV8kSsIFrCxugWl3gSeTlqKCDpjqr3WLevMGRdC0wC0aSZg9GoCtm+39dXNMT5L9jYkO0XVBNCVDSHGJtr+k3OFkFrKDJybeRSk3H94OlWQI=
+	t=1747825154; cv=none; b=dLENtx0ekZA+E/88OUz9IDYfSR8Wa7FopBEvIg/7TcPideILwiyB3DoeVhzeqDM4xTIQL+EEPHkF3Ev9VwW4+cMl6AL7rlbxayPcyO63AJAB3N59W6XR5AKyaGBcoONVpAX/+I/xBB1ISM0JU1YNxi5cvSinmbz5+6Oh1FtdnTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747815087; c=relaxed/simple;
-	bh=b4Ig0XOyQfEMoUAAjNHDQhh7+S48zOrx5dD261ukggw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W2ltKnD0P3Icqi/lSlVS4SbZnJdXO5t7MJLf4+SVfWTtcDwBU3P7EFKlaTkFBvWokXFkzUq861bppsMbbJ8n3l2w5USjpb+izOFIr0x1tcw5ICTbi1q+P6C6NTYYEvoIRdis+Hc4sW8o8YwbZEPmiV8T5f3XFuHG460/ZtJa/Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M+Fgxv0d; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747825154; c=relaxed/simple;
+	bh=OAPtjhvGq2rqLYOSN3p3U2UsnP7gFs9SLcjeVDkoB/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NPalB9NUrUGm6e8N8UpuLsrokSuPsbpv9uMwJNmw/BA2TR/+kWvNK61U991PbO1QNn6+Lml4Xq6ni8UTyFboijnwP7XJ9qkvgP25hGCYRXPVwBH0H6fXttshdAZmFzsfs5xuHtPhkWH+88hBao5khCcWql/9UNiZG+d8Aj9Ye70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=M3RALjd4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M+Fgxv0d"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54d98aa5981so9608989e87.0
-        for <linux-hardening@vger.kernel.org>; Wed, 21 May 2025 01:11:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747815083; x=1748419883; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b4Ig0XOyQfEMoUAAjNHDQhh7+S48zOrx5dD261ukggw=;
-        b=M+Fgxv0d/2YG9yBWAIwiGJ3yUSceU3ihyYgjTqSSntnF0Xk+Mc9NXHb3vvPbdQ8t9t
-         FimB5zEjkRpL4lpZ5yeYgp5xGwmQyYLNerQslNakuU1iJ72gpWmNMmmPLOSX+u8XvXet
-         TIp/0IK+e5vf9+4+l+pdNwVIf7wl8kZY9TdoMckfIoO5Xj4AhxaLn3putFT3sS2IklwD
-         Pdid5pZg/QbI54rO7xYJ7y2l0G0gPk5rgWiEWrLO+ZkvKQpvxndigkZOOIMh2NDARsO/
-         JPZGEn9YjiBNlGc7eOfDyjs1Mi3vTJ69QRkp1jupRoSiB7MH4roQhLkoV5b9bAL14U2B
-         zplg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747815083; x=1748419883;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b4Ig0XOyQfEMoUAAjNHDQhh7+S48zOrx5dD261ukggw=;
-        b=AEnx9uEO+0d0dMdAuAYIbV7pffDiha2SMUxvM3Rvi4ONmzkuELQ2qX+os6WOLBzT5p
-         kxed7skNB6WDme21fBTaJ6vbL4esHdkFxaMGEXsZGtsJmpxti2pRaLDOoj8RW4dtIi1/
-         O+KSqa3jHF0aPK04O9qKSAtOA34TuIS83zABk9Op4DPWxUZiPP+XyAI5RqSsJV6oKYbp
-         zP0uhqUJJYFHEQfZGQTMHo3zAF1wwWBny4McVW7eBvGtRrYOGcP/B9nSuPO2DkE33Mhf
-         CGyPg/lKyxgLzz5t5Dwwe16PhETnxFUgtWFaWW1iMCF9GjZfGWAuJEsfQ+Yirsj/yuxO
-         Xiww==
-X-Forwarded-Encrypted: i=1; AJvYcCVb2fB9SW4YWleZCLqMZAf/cPqZNWKwfT9KMYJu0+Efc920WsiWuqQu+Ry6l/3baMKC6ntlK8bTGCq5FZdn+mU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYeYWG7X1Y6hb6aFTKaiHzBFHYHH4PgmOx5I25AfLTHjRigziY
-	OYSczQTlzyztkfAVGpgeNpcQSLrQti0gwCtLLmfcmuG1/P9nKcsV6OGxeh908Rs1sj39AgCRqMg
-	Rnc19oU7bUFDetNJTlB0W4UGJwEtr9wDJgVZo+sPvlA==
-X-Gm-Gg: ASbGncux0gOZCwrugOI3FUCYcf/Q5kLDhBdkZ4iiFmxPoUI/vXeThpGUvEQ9RmGG5Q2
-	KCvdlx2CB00fO3Q45Wylp7WLHQTZDcHId8ws8/oF4ZjswP2vyHosM7Sw9KJz+K/ckJzxQvYEJiS
-	4bgn601XnZFJNemqoxpHCJtMkaqx1KBTbl
-X-Google-Smtp-Source: AGHT+IHr3PWCQAtuLgEYwRwwW4iRxfUP3QxoUSfN1BXwa21y3iPHsi32IWoXuUCO745fcwdxDECQuaLmM/WWBqdXJzk=
-X-Received: by 2002:a05:651c:421b:b0:30b:a20d:1c06 with SMTP id
- 38308e7fff4ca-328075fafd4mr52461801fa.0.1747815083428; Wed, 21 May 2025
- 01:11:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="M3RALjd4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2B4DC4CEED;
+	Wed, 21 May 2025 10:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747825153;
+	bh=OAPtjhvGq2rqLYOSN3p3U2UsnP7gFs9SLcjeVDkoB/w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M3RALjd4MZ6xII4SHpXnUz/mbl1P+P6a6UUibxCyRdMuN5yZqkZnZutqsVGCAv/vR
+	 nJOjQYrs76Y0llc6g+8rpiOrob2kXzWXVODvK7ubB9ghsPmVrp7c87WE3Ksi+iqj57
+	 kruH+X8BD4pV87/VXXNqrWPrOrHyIdD4mgdduJwo=
+Date: Wed, 21 May 2025 12:59:10 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: misc: adutux: replace kmalloc() with kmalloc_array()
+Message-ID: <2025052111-able-unfocused-cdcf@gregkh>
+References: <20250503-adutux_kmalloc_array-v1-1-80c74c4bd3e7@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
-In-Reply-To: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 21 May 2025 10:11:12 +0200
-X-Gm-Features: AX0GCFtgrsoYedOY9iI8wKVEZEWG9oGL9tXc9fGDI2DAkg_LOqFcWmofxbD1UNI
-Message-ID: <CACRpkdbCUPQT60-bqLhgYHLLUYd3ZcihZ9PV-x__UGPArgbnkg@mail.gmail.com>
-Subject: Re: [PATCH v6 00/12] Add pinctrl support for the AAEON UP board FPGA
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250503-adutux_kmalloc_array-v1-1-80c74c4bd3e7@ethancedwards.com>
 
-On Tue, May 20, 2025 at 3:28=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
+On Sat, May 03, 2025 at 04:43:21PM -0400, Ethan Carter Edwards wrote:
+> Replace kmalloc with internal multiplication with kmalloc_array to
+> improve code readability and prevent potential overflows.
 
-> This is the sixth version of this series. The main change is the rework o=
-f
-> the GPIO forwarder API as requested by Geert to have more consistent nami=
-ng
-> and parameters.
+But this is not an array of a structure size.
 
-As Bartosz said it's too late for v6.16.
+> 
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+>  drivers/usb/misc/adutux.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/misc/adutux.c b/drivers/usb/misc/adutux.c
+> index ed6a19254d2ff9fead898adad0b3996822e10167..000a3ade743258f381d85397395a43c28a8481cc 100644
+> --- a/drivers/usb/misc/adutux.c
+> +++ b/drivers/usb/misc/adutux.c
+> @@ -680,7 +680,7 @@ static int adu_probe(struct usb_interface *interface,
+>  	in_end_size = usb_endpoint_maxp(dev->interrupt_in_endpoint);
+>  	out_end_size = usb_endpoint_maxp(dev->interrupt_out_endpoint);
+>  
+> -	dev->read_buffer_primary = kmalloc((4 * in_end_size), GFP_KERNEL);
+> +	dev->read_buffer_primary = kmalloc_array(4, in_end_size, GFP_KERNEL);
 
-But I applied patches 2 & 3 to the pin control tree so we will get
-down your patch stack a bit and less cross-subsystem noise in
-the next kernel cycle.
+This is a buffer and you need the size to be correct based on the
+commands, right?  It's not an array of a structure, but rather a stream
+of bytes.
 
-Yours,
-Linus Walleij
+
+>  	if (!dev->read_buffer_primary)
+>  		goto error;
+>  
+> @@ -690,7 +690,7 @@ static int adu_probe(struct usb_interface *interface,
+>  	memset(dev->read_buffer_primary + (2 * in_end_size), 'c', in_end_size);
+>  	memset(dev->read_buffer_primary + (3 * in_end_size), 'd', in_end_size);
+>  
+> -	dev->read_buffer_secondary = kmalloc((4 * in_end_size), GFP_KERNEL);
+> +	dev->read_buffer_secondary = kmalloc_array(4, in_end_size, GFP_KERNEL);
+
+Same here.
+
+I think the original code is just fine as there's no bug here or way it
+can overflow, right?
+
+thanks,
+
+greg k-h
