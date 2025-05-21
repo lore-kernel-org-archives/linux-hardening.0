@@ -1,204 +1,219 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F91F19F135
-	for <linux-hardening@vger.kernel.org>; Wed, 21 May 2025 14:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2B31D7989;
+	Wed, 21 May 2025 14:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836643; cv=none; b=Dd9Eoere0GLABcunXhsu9UmzUOkPavKpfKhWu8K5ShKcV0PKvEz0SseSvg9o2dNEfY64n55NKVlfoxTuLmp8x43JKUeMhA9+Rip0p3sIUrygx5yziBXQFv+vngokvR65G0Hxm2fZ6nolncB+UCT3Q1HSRQEz1T2DVgmlushej1o=
+	t=1747838582; cv=none; b=LqoGPvVwa/kYXsKvSKsxcMvkjyNPf8yep7fSxvpr31kcALg5XPunCW36FgrB2lM9yCD4F2/W8waP5rwVXIGf6gxBYt/Ine3rykrA7U8GBfeMcYL5XrFqWekaMU1mR3vGgID9hatXdr2pE7NTtYLSltaJY+fWpwaKutKEUVpxuUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836643; c=relaxed/simple;
-	bh=OQ1NjhaRqgeRJck8clk8hAkhTOm7Z0typP+i2KOU6uY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JVDoZJ+l/Wj4XOKoHU/PdaCB+slBHYe7b1/ob6hSsST1j+AWeqFodXk7kgpt4euoooNhNqiJ+TC4UkkMSKzZ4XoefsARNsmY2+Gebcl5pfbbMaOYNE1rxZ8W2qGKfG440tQiqKqVIflADT5Nkp4Wvivp415L5E0pv4ZEhFgISZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=VjfA0xGd; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="VjfA0xGd"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54b10594812so8057817e87.1
-        for <linux-hardening@vger.kernel.org>; Wed, 21 May 2025 07:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1747836639; x=1748441439; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j2m/AQHhUKCMB2ooeH4OXmkM2QdyDkeRoTJbiJc49Qw=;
-        b=VjfA0xGdXDoWq9hSZ2KqMc3b7yEDYNdulcYH+LMi+10GXsb7u7OU/QZpubAOvuf3o1
-         hkn0s+Gfz3NAGOUnGJSbNm039VM+MMpQIJLry1M47eJIbV+moaFrgNxG1rzqRnpvFOv8
-         CbxU2X/KeA6Z5Wo581riRsjyuRoCY75pEGfABGEZ+MhhkHGYC4tdPqNWbpW+bY/9XU9q
-         7V1KQlkomcrDxazHXO3RR5JC2c5LLM+WnCXI+86584dgzytyKqUH/g12GDc5ix6bOns+
-         YJ0K+tp7pvvvT90m7FwqPMJLboR+oZvN/3MWXKqE//6aeD+lazcckOawDAVTdm6Y2iKe
-         tMXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747836639; x=1748441439;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j2m/AQHhUKCMB2ooeH4OXmkM2QdyDkeRoTJbiJc49Qw=;
-        b=lDynYd5ses8/Y+WI6gfvX/0rsFIqWwc8Xm/Hv0eCu1SqQOjwqOCjCndaGcAi2UPLAo
-         OXiuKBxRwy+kvIGHSsbUvFNIbUtckDeYIoDzhb/yVnQ/Z8e6FVsoAE4Hof0P/m/nBIMI
-         4aJ6z6kF3SEcMBhKDkVG3R82aJntou6C8Kt411RkHspHT/SGJWvVPGzPEi1bIsL6KVm/
-         uO93hduFs/M5uY1im/qntAO0B0kQGK9OFXJ3OFRGRaIT/rLn6LoOmrZ1WTZ+hr2S0nKe
-         dec95tnGd7XKu45mso2lrxQrNt2Ag2tZ1LvjE2LiLIQYOmDjcBgB35LPTgEa7C1iLrFN
-         FGvA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxgclMcwRfK6Oj9lRn+aU8vifgK9G4R8FgZOReUI8byOiwHbL8mz7xcDXnl5fGnzb0Dr93uTgpNN7ZzeVN/3g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcAbzbRUtLiZTUnD2Vg9+itxwU1S6MbwGLWMjAq9pApJ/ZeYaY
-	Yef3xnfmjmr+qG/5FZPHNWnIOJQCQ741IG1d93FOzcRjFR+ybl7xoxEEhJZ36efjT8mudMxhnz+
-	fOsaw
-X-Gm-Gg: ASbGncvjd0fNTR1ISelMYkF+jHMM2KuPe+wyaAq8rl9dc+yN0QU3BejfDJneuQzFH5K
-	dDkyNwoQNjIxPIJMS27z9HKIo75iqmdvYt7oV3PmlnmNeZYTujFBe3HdYf0JBfCO6tK6wkgOEBI
-	8wBBgXoyMlN/OBie3GwObAwcnwFYE59Hlm/OAq7zQSRnIP5XhlxBytkimZxQnVjYPGD9/v8P4Qp
-	ME1K0rQfEbtHg/qn36aHlWI2SGbAErB8ebgqb+NDjO6vJxEHk9gbElNaU6NTDzy5qCwopid88qg
-	SZb/N7eCmLLoWoId2mA3TXfI2GqNb+NovxOElyU0xoyAcyF4yYJkwU2Px/YC/boCiYTyUym+383
-	Xv9y+
-X-Google-Smtp-Source: AGHT+IGdD+yAG7ixkuPBvb5SmYpr1MB+zCBzWTmXhHcnzFLU4L4Om8QGyJVgnGJCce8K1qT9dbWwIA==
-X-Received: by 2002:a17:907:968f:b0:ad2:53fc:a884 with SMTP id a640c23a62f3a-ad52d549101mr2013009566b.29.1747836628448;
-        Wed, 21 May 2025 07:10:28 -0700 (PDT)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.58])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d271916sm914552866b.69.2025.05.21.07.10.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 07:10:27 -0700 (PDT)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: vkoul@kernel.org,
-	kishon@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	p.zabel@pengutronix.de,
-	geert+renesas@glider.be,
-	magnus.damm@gmail.com,
-	yoshihiro.shimoda.uh@renesas.com,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	biju.das.jz@bp.renesas.com
-Cc: claudiu.beznea@tuxon.dev,
-	linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	john.madieu.xa@bp.renesas.com,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v3 12/12] arm64: dts: renesas: rzg3s-smarc: Enable USB support
-Date: Wed, 21 May 2025 17:09:43 +0300
-Message-ID: <20250521140943.3830195-13-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
+	s=arc-20240116; t=1747838582; c=relaxed/simple;
+	bh=D5RhzRWw4d0omBLnLJq7eWCJqJ16WamE4002P45GfM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FifzLXnliZkE2mSQ1tJqm/WoD8LnE6cJmn1N6RWCiyrZt4cPE/FzvgqFFApl4zOJxxUFXiFPGP+7sRJvIQmDBAYJQCs88V1FBsDCap2nbcU5EBH8sLo+VnBQQK7aMfD7ULdZI6S1E908973Hbim84zSjL6ubBUAONluwuyfSBnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AEF7A43137;
+	Wed, 21 May 2025 14:42:56 +0000 (UTC)
+Message-ID: <3be862ef-f8b7-40d6-a3b1-5e8161801ba1@ghiti.fr>
+Date: Wed, 21 May 2025 16:42:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: enable mseal sysmap for RV64
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>
+Cc: jeffxu@chromium.org, jszhang@kernel.org, akpm@linux-foundation.org,
+ Liam.Howlett@oracle.com, kees@kernel.org,
+ Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-hardening@vger.kernel.org
+References: <5e7f2acd-2eef-4e69-9c11-ba8d1ec0bbc5@lucifer.local>
+ <mhng-db41d38d-d3ec-4515-99f9-7368c82d46ca@palmer-ri-x1c9a>
+ <26e04390-058f-4174-ad6f-3f0afd803fb1@lucifer.local>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <26e04390-058f-4174-ad6f-3f0afd803fb1@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeffeehucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeefueejtdegkedvhefhudfhgeefieevheeugeehgedvgfejhfetjeeiudelvdefteenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghdpihhnfhhrrgguvggrugdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeduheehvdemtgdviedvmegvsgejsgemvdhfudefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeduheehvdemtgdviedvmegvsgejsgemvdhfudefpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeduheehvdemtgdviedvmegvsgejsgemvdhfudefngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehlohhrvghniihordhsthhorghkvghssehorhgrtghlvgdrt
+ ghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopehjvghffhiguhestghhrhhomhhiuhhmrdhorhhgpdhrtghpthhtohepjhhsiihhrghngheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopefnihgrmhdrjfhofihlvghtthesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomh
+X-GND-Sasl: alex@ghiti.fr
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Hi Lorenzo,
 
-Enable USB support (host, device, USB PHYs).
+On 5/8/25 20:08, Lorenzo Stoakes wrote:
+> On Thu, May 08, 2025 at 10:39:35AM -0700, Palmer Dabbelt wrote:
+>> On Wed, 07 May 2025 09:22:09 PDT (-0700), lorenzo.stoakes@oracle.com wrote:
+>>> On Wed, May 07, 2025 at 09:18:31AM -0700, Jeff Xu wrote:
+>>>> Hi Jisheng
+>>>>
+>>>> It seems mm maintainers might prefer arch change reviewed by arch
+>>>> maintainer and goes to arch tree, according to discussion in [1], I
+>>>> don't have an opinion on this,  adding mm maintainers as FYI.
+>>> Thanks Jeff, appreciate the ping!
+>>>
+>>> Jisheng - the main point here is to ensure that the arch doesn't rely in any way
+>>> on, within the arch code itself, relocating any of these mappings. It's pretty
+>>> easy to eyeball it and get a sense.
+>>>
+>>> Because if this is the case, the arch will be broken by this change should a
+>>> user enable it, and obviously we'd rather avoid that! :)
+>>>
+>>> It's really likely that you're fine, as it'd be unusual for an arch to do this,
+>>> but I strongly suggest you do so.
+>>>
+>>> And yes, I think these should really go through arch trees as explicitly arch
+>>> code.
+>>>
+>>> Thanks, Lorenzo
+>>>
+>>>> On Sat, Apr 26, 2025 at 7:16 AM Jisheng Zhang <jszhang@kernel.org> wrote:
+>>>>> Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS for RV64, covering the
+>>>>> vdso, vvar.
+>>>>>
+>>>>> Passed sysmap_is_sealed and mseal_test self tests.
+>>>>> Passed booting a buildroot rootfs image and a cli debian rootfs image.
+>>>>>
+>>>> mm maintainers like to get confirmation that the arch doesn't rely on
+>>>> remapping the VDSO, VVAR, or any other special mappings, see
+>>>> discussion in [2]
+>> Do you have some description of what remapping is disallowed here?  There's
+>> not a ton in that referenced thread.
+> Any remapping of these special VMAs that would be disallowed by mseal that is
+> being performed by kernel code.
+>
+>> We play a few tricks with remapping, including some aliasing to handle
+>> different VA widths and text patching (via poke pages).  IIRC those are
+>> similar in spirit to what's going on in x86/arm64 land, though sometimes the
+>> exact flavor of the trick matters.  If you've got something I can look at it
+>> might save me from having to read though the mm code...
+> To risk sounding grumpy, and it's not your fault of course, but... this is
+> the... fifth? Architecture where somebody's enabled this without seeming to
+> understand what the feature does, and I'm a bit tired of it. And every time it's
+> been _me_ who goes to check :)
+>
+> Anyway, I guess let me go check again.
+>
+> So it looks fine to me - the initial mapping to mm->context.vdso done by
+> __setup_additional_pages() in arch/riscv/kernel/vdso.c appears to be final,
+> except when vdso_mremap() is invoked, but that's when _userland_ does it,
+> which this feature strictly disables, but that's fine.
+>
+> Note that the patch simply indicates that the architecture _supports_ this
+> feature, the feature itself is disabled by default as it breaks a bunch of
+> userland, which is why I insisted on it being put behind a config flag for
+> users who really know what they're doing.
+>
+> So perhaps I can link to this again in future, what I'm talking about is:
+>
+> - Any instance of the architecture code, NOT at the behest of userland
+>    (which we expect the sealing to break), but for its OWN purposes, for
+>    whatever reason, moving the VDSO, VVAR or other special mapping around in
+>    virtual memory.
+>
+> - So you'd really need to be doing something _weird_ for this to be the
+>    case. It's unlikely but until each architecture is checked we are being
+>    conservative - so as not to break the kernel (!) - and disabling
+>    architectures until we know they're safe.
+>
+> - Sending a patch setting ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS is _very
+>    explicitly_ stating that you have checked and are certain there are _no
+>    problems_ with the architecture doing this.
+>
+> So this is why it's quite annoying to have people enable this with a commit
+> message like 'enable mseal system mappings' rather than 'I have carefully
+> checked the architecture code and the architecture does not manipulate the
+> VDSO, VVAR or special mappings after establishing them, I have also tested
+> the feature in practice'.
+>
+> I feel like anybody setting 'ARCH_SUPPORTS_xxx' should - you know - have
+> determined that the architecture supports xxx. But maybe that's
+> unreasonable...
+>
+>> and ya, we'll pick it up through the arch tree once one of us can be
+>> convinced this works ;)
+>>
+> Thanks! :) Your skepticism is appropriate. But I do think this will be fine
+> for risc v.
+>
+> I'd ideally like to hear from somebody who's checked this on a risc v
+> system with CONFIG_MSEAL_SYSTEM_MAPPINGS enabled just to be doubly sure.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
 
-Changes in v3:
-- collected tags
+So I double checked and tested this so I'll merge it for 6.16 and:
 
-Changes in v2:
-- this was patch 15/16 in v1:
-- dropped sysc enablement as it is now done in SoC dtsi file
+Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
- arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi | 57 ++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+Thanks,
 
-diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-index 5e044a4d0234..5586dd43c4d5 100644
---- a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-@@ -92,6 +92,20 @@ &audio_clk2 {
- 	clock-frequency = <12288000>;
- };
- 
-+&ehci0 {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&hsusb {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-@@ -132,6 +146,15 @@ power-monitor@44 {
- 	};
- };
- 
-+&ohci0 {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	audio_clock_pins: audio-clock {
- 		pins = "AUDIO_CLK1", "AUDIO_CLK2";
-@@ -207,6 +230,27 @@ ssi3_pins: ssi3 {
- 			 <RZG2L_PORT_PINMUX(18, 4, 8)>, /* TXD */
- 			 <RZG2L_PORT_PINMUX(18, 5, 8)>; /* RXD */
- 	};
-+
-+	usb0_pins: usb0 {
-+		peri {
-+			pinmux = <RZG2L_PORT_PINMUX(5, 0, 1)>, /* VBUS */
-+				 <RZG2L_PORT_PINMUX(5, 2, 1)>; /* OVC */
-+		};
-+
-+		otg {
-+			pinmux = <RZG2L_PORT_PINMUX(5, 3, 1)>; /* OTG_ID */
-+			bias-pull-up;
-+		};
-+	};
-+
-+	usb1_pins: usb1 {
-+		pinmux = <RZG2L_PORT_PINMUX(5, 4, 5)>, /* OVC */
-+			 <RZG2L_PORT_PINMUX(6, 0, 1)>; /* VBUS */
-+	};
-+};
-+
-+&phyrst {
-+	status = "okay";
- };
- 
- &scif0 {
-@@ -242,3 +286,16 @@ &ssi3 {
- 	pinctrl-0 = <&ssi3_pins>, <&audio_clock_pins>;
- 	status = "okay";
- };
-+
-+&usb2_phy0 {
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
-+	vbus-supply = <&usb0_vbus_otg>;
-+	status = "okay";
-+};
-+
-+&usb2_phy1 {
-+	pinctrl-0 = <&usb1_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
--- 
-2.43.0
+Alex
 
+
+>
+> Thanks, Lorenzo
+>
+>>>>> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+>>>>> Cc: Jeff Xu <jeffxu@chromium.org>
+>>>>> ---
+>>>>>   arch/riscv/Kconfig       | 1 +
+>>>>>   arch/riscv/kernel/vdso.c | 2 +-
+>>>>>   2 files changed, 2 insertions(+), 1 deletion(-)
+>>>> Please consider updating document as part of your patch:
+>>>> features/core/mseal_sys_mappings/arch-support.txt
+>>>> Documentation/userspace-api/mseal.rst
+>>>>
+>>>> Sample change in [3]
+>>>>
+>>>>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>>>>> index bbec87b79309..3cb0b05eef62 100644
+>>>>> --- a/arch/riscv/Kconfig
+>>>>> +++ b/arch/riscv/Kconfig
+>>>>> @@ -70,6 +70,7 @@ config RISCV
+>>>>>          # LLD >= 14: https://github.com/llvm/llvm-project/issues/50505
+>>>>>          select ARCH_SUPPORTS_LTO_CLANG if LLD_VERSION >= 140000
+>>>>>          select ARCH_SUPPORTS_LTO_CLANG_THIN if LLD_VERSION >= 140000
+>>>>> +       select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS if 64BIT && MMU
+>>>> The "if 64BIT && MMU" are not needed here.
+>>>>
+>>>> MMU is not checked by MSEAL_SYSTEM_MAPPINGS, which we should,  this
+>>>> can go to security/Kconfig separately. If you'd like, please submit a
+>>>> fix to mm tree directly.
+>>>>
+>>>> [1] https://lore.kernel.org/all/7EB087B72C4FBDD3+20250417132410.404043-1-wangyuli@uniontech.com/,
+>>>> [2] https://lore.kernel.org/all/3de559d6-be19-44bc-ba8f-4c52d4bca684@lucifer.local/
+>>>> [3] https://lore.kernel.org/all/648AB3031B5618C0+20250415153903.570662-1-wangyuli@uniontech.com/
+>>>>
+>>>> Thanks
+>>>> -Jeff
+>>>>
+>>>>>          select ARCH_SUPPORTS_PAGE_TABLE_CHECK if MMU
+>>>>>          select ARCH_SUPPORTS_PER_VMA_LOCK if MMU
+>>>>>          select ARCH_SUPPORTS_RT
+>>>>> diff --git a/arch/riscv/kernel/vdso.c b/arch/riscv/kernel/vdso.c
+>>>>> index cc2895d1fbc2..3a8e038b10a2 100644
+>>>>> --- a/arch/riscv/kernel/vdso.c
+>>>>> +++ b/arch/riscv/kernel/vdso.c
+>>>>> @@ -136,7 +136,7 @@ static int __setup_additional_pages(struct mm_struct *mm,
+>>>>>
+>>>>>          ret =
+>>>>>             _install_special_mapping(mm, vdso_base, vdso_text_len,
+>>>>> -               (VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC),
+>>>>> +               (VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC | VM_SEALED_SYSMAP),
+>>>>>                  vdso_info->cm);
+>>>>>
+>>>>>          if (IS_ERR(ret))
+>>>>> --
+>>>>> 2.47.2
+>>>>>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
