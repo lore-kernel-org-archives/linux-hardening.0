@@ -1,91 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425341A5B85;
-	Wed, 21 May 2025 05:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DCB2356C7
+	for <linux-hardening@vger.kernel.org>; Wed, 21 May 2025 08:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747804697; cv=none; b=PcLhupM+bXFWp+COW4I8ygZiU5AeZCBMgCpp/TZTGSWW4qFubLTs9kh7iqHyksLhdp+656kh/RCpQjLbJHFn4FF5QK0+aQmTVVHLStMUL9v5cYGy6IwK8dBDvBRW5Ct2ZJAqyJaKCnQMhizmIbQfKfAygo/DSLLII9ktB5M3Z+Y=
+	t=1747815087; cv=none; b=I1GDPefXi8rb+akaJIfBLRYGfSU9qtj/nMf9YwgonXQ9BK9C+laTKvbZ7n/HEvIxV8kSsIFrCxugWl3gSeTlqKCDpjqr3WLevMGRdC0wC0aSZg9GoCtm+39dXNMT5L9jYkO0XVBNCVDSHGJtr+k3OFkFrKDJybeRSk3H94OlWQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747804697; c=relaxed/simple;
-	bh=u7/3KY1Kz6KkAfhTKudlFFJOir6E8UHZ7GaPRxnGVG0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=STEQVYShTCUat/lFDOWX5pXy0pH7zXc4G/ifE3591082TLvwjZ3rvSo/NFCwDmqqcx/asQAiLuUNLr236/AtPc2iqxgY3bULAvm3FnMOe8H802/TRzdLVXuVGpn8S130QRFkAKaA8rhBketzFLsv0h5wspz5o7OyYqBw8ry9jRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EgLmllFK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747815087; c=relaxed/simple;
+	bh=b4Ig0XOyQfEMoUAAjNHDQhh7+S48zOrx5dD261ukggw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W2ltKnD0P3Icqi/lSlVS4SbZnJdXO5t7MJLf4+SVfWTtcDwBU3P7EFKlaTkFBvWokXFkzUq861bppsMbbJ8n3l2w5USjpb+izOFIr0x1tcw5ICTbi1q+P6C6NTYYEvoIRdis+Hc4sW8o8YwbZEPmiV8T5f3XFuHG460/ZtJa/Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M+Fgxv0d; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EgLmllFK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85763C4CEE4;
-	Wed, 21 May 2025 05:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747804695;
-	bh=u7/3KY1Kz6KkAfhTKudlFFJOir6E8UHZ7GaPRxnGVG0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=EgLmllFK8fwvA9p9id9HO7R4iI6aKQsfDw/X/h2+hfPmpkQ4DxvO881/tl+XpcCJC
-	 5oQFMAy3BrZh7rbm2O7tXqo70WumhO6wz3lSF/pIcmWHDahcv04G7RVxIAqRu6ZRzy
-	 BpDwShIP2aI5p40uo2K/YjKCMk4xjVe051SnhFz58o6blPfFVcx8jNTp8Y9LLln2nO
-	 SD/q1UOiIcM8zkEg6kY9MJBgaBL/tbj9Y6SdzEe3Mi8iGLrVxlnVueP7SM/LQXqAsn
-	 fw5T9KMJ7HjPfWWxACu/HIAdhc/hnY4EyLwE2uXwdONaICh7Iq84FBAhHkuR7NljEV
-	 uupqc0PXuoqjw==
-Date: Tue, 20 May 2025 22:18:10 -0700
-From: Kees Cook <kees@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: Kuniyuki Iwashima <kuniyu@amazon.com>, ahmed.zaki@intel.com,
- aleksander.lobakin@intel.com, alex.aring@gmail.com, andrew+netdev@lunn.ch,
- ardb@kernel.org, christophe.leroy@csgroup.eu, cratiu@nvidia.com,
- d.bogdanov@yadro.com, davem@davemloft.net, decui@microsoft.com,
- dianders@chromium.org, ebiggers@google.com, edumazet@google.com,
- fercerpav@gmail.com, gmazyland@gmail.com, grundler@chromium.org,
- haiyangz@microsoft.com, hayeswang@realtek.com, hch@lst.de, horms@kernel.org,
- idosch@nvidia.com, jiri@resnulli.us, jv@jvosburgh.net, kch@nvidia.com,
- kys@microsoft.com, leiyang@redhat.com, linux-hardening@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-wpan@vger.kernel.org, linux@treblig.org,
- martin.petersen@oracle.com, mgurtovoy@nvidia.com,
- michael.christie@oracle.com, mingzhe.zou@easystack.cn,
- miquel.raynal@bootlin.com, mlombard@redhat.com, netdev@vger.kernel.org,
- pabeni@redhat.com, phahn-oss@avm.de, sagi@grimberg.me, sam@mendozajonas.com,
- sdf@fomichev.me, shaw.leon@gmail.com, stefan@datenfreihafen.org,
- target-devel@vger.kernel.org, viro@zeniv.linux.org.uk, wei.liu@kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_0/7=5D_net=3A_Convert_dev=5Fset=5Fm?=
- =?US-ASCII?Q?ac=5Faddress=28=29_to_struct_sockaddr=5Fstorage?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250520200929.1b9ae5ec@kernel.org>
-References: <20250520222452.work.063-kees@kernel.org> <20250521001931.7761-1-kuniyu@amazon.com> <202505201741.AFA146E7F6@keescook> <20250520200929.1b9ae5ec@kernel.org>
-Message-ID: <935B5950-190B-47D8-BF45-1CBAE904DB71@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M+Fgxv0d"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54d98aa5981so9608989e87.0
+        for <linux-hardening@vger.kernel.org>; Wed, 21 May 2025 01:11:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747815083; x=1748419883; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b4Ig0XOyQfEMoUAAjNHDQhh7+S48zOrx5dD261ukggw=;
+        b=M+Fgxv0d/2YG9yBWAIwiGJ3yUSceU3ihyYgjTqSSntnF0Xk+Mc9NXHb3vvPbdQ8t9t
+         FimB5zEjkRpL4lpZ5yeYgp5xGwmQyYLNerQslNakuU1iJ72gpWmNMmmPLOSX+u8XvXet
+         TIp/0IK+e5vf9+4+l+pdNwVIf7wl8kZY9TdoMckfIoO5Xj4AhxaLn3putFT3sS2IklwD
+         Pdid5pZg/QbI54rO7xYJ7y2l0G0gPk5rgWiEWrLO+ZkvKQpvxndigkZOOIMh2NDARsO/
+         JPZGEn9YjiBNlGc7eOfDyjs1Mi3vTJ69QRkp1jupRoSiB7MH4roQhLkoV5b9bAL14U2B
+         zplg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747815083; x=1748419883;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b4Ig0XOyQfEMoUAAjNHDQhh7+S48zOrx5dD261ukggw=;
+        b=AEnx9uEO+0d0dMdAuAYIbV7pffDiha2SMUxvM3Rvi4ONmzkuELQ2qX+os6WOLBzT5p
+         kxed7skNB6WDme21fBTaJ6vbL4esHdkFxaMGEXsZGtsJmpxti2pRaLDOoj8RW4dtIi1/
+         O+KSqa3jHF0aPK04O9qKSAtOA34TuIS83zABk9Op4DPWxUZiPP+XyAI5RqSsJV6oKYbp
+         zP0uhqUJJYFHEQfZGQTMHo3zAF1wwWBny4McVW7eBvGtRrYOGcP/B9nSuPO2DkE33Mhf
+         CGyPg/lKyxgLzz5t5Dwwe16PhETnxFUgtWFaWW1iMCF9GjZfGWAuJEsfQ+Yirsj/yuxO
+         Xiww==
+X-Forwarded-Encrypted: i=1; AJvYcCVb2fB9SW4YWleZCLqMZAf/cPqZNWKwfT9KMYJu0+Efc920WsiWuqQu+Ry6l/3baMKC6ntlK8bTGCq5FZdn+mU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYeYWG7X1Y6hb6aFTKaiHzBFHYHH4PgmOx5I25AfLTHjRigziY
+	OYSczQTlzyztkfAVGpgeNpcQSLrQti0gwCtLLmfcmuG1/P9nKcsV6OGxeh908Rs1sj39AgCRqMg
+	Rnc19oU7bUFDetNJTlB0W4UGJwEtr9wDJgVZo+sPvlA==
+X-Gm-Gg: ASbGncux0gOZCwrugOI3FUCYcf/Q5kLDhBdkZ4iiFmxPoUI/vXeThpGUvEQ9RmGG5Q2
+	KCvdlx2CB00fO3Q45Wylp7WLHQTZDcHId8ws8/oF4ZjswP2vyHosM7Sw9KJz+K/ckJzxQvYEJiS
+	4bgn601XnZFJNemqoxpHCJtMkaqx1KBTbl
+X-Google-Smtp-Source: AGHT+IHr3PWCQAtuLgEYwRwwW4iRxfUP3QxoUSfN1BXwa21y3iPHsi32IWoXuUCO745fcwdxDECQuaLmM/WWBqdXJzk=
+X-Received: by 2002:a05:651c:421b:b0:30b:a20d:1c06 with SMTP id
+ 38308e7fff4ca-328075fafd4mr52461801fa.0.1747815083428; Wed, 21 May 2025
+ 01:11:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
+In-Reply-To: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 21 May 2025 10:11:12 +0200
+X-Gm-Features: AX0GCFtgrsoYedOY9iI8wKVEZEWG9oGL9tXc9fGDI2DAkg_LOqFcWmofxbD1UNI
+Message-ID: <CACRpkdbCUPQT60-bqLhgYHLLUYd3ZcihZ9PV-x__UGPArgbnkg@mail.gmail.com>
+Subject: Re: [PATCH v6 00/12] Add pinctrl support for the AAEON UP board FPGA
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+On Tue, May 20, 2025 at 3:28=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 
+> This is the sixth version of this series. The main change is the rework o=
+f
+> the GPIO forwarder API as requested by Geert to have more consistent nami=
+ng
+> and parameters.
 
-On May 20, 2025 8:09:29 PM PDT, Jakub Kicinski <kuba@kernel=2Eorg> wrote:
->On Tue, 20 May 2025 17:42:32 -0700 Kees Cook wrote:
->> Ah yes, I can include that in the next version if you want? I was tryin=
-g
->> to find a stopping point since everything kind of touches everything =
-=2E=2E=2E
->
->Looks like the build considers -Wincompatible-pointer-types to always
->imply -Werror or some such? We explicitly disable CONFIG_WERROR in our
->CI, but we still get:
->
->drivers/net/macvlan=2Ec:1302:34: error: incompatible pointer types passin=
-g 'struct sockaddr *' to parameter of type 'struct __kernel_sockaddr_storag=
-e *' [-Werror,-Wincompatible-pointer-types]
-> 1302 |                 dev_set_mac_address(port->dev, &sa, NULL);
->      |                                                ^~~
->
->on this series :(
+As Bartosz said it's too late for v6.16.
 
-I'll get this fixed and add dev_set_mac_address_user() for v3=2E=2E=2E
+But I applied patches 2 & 3 to the pin control tree so we will get
+down your patch stack a bit and less cross-subsystem noise in
+the next kernel cycle.
 
-
---=20
-Kees Cook
+Yours,
+Linus Walleij
