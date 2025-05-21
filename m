@@ -1,175 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C641EA7C6;
-	Wed, 21 May 2025 15:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CA4233156;
+	Wed, 21 May 2025 20:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841587; cv=none; b=mny5YhJw4JZoMiNkpyIqSe+Kyg/4mPOqN7gjfE30sTGAyud5M+qHVgo347hf5lR7V+d1Srfh8fGb9U/bkzseMo1b+BCOj/UoLPOAv9xQAbZWQsSohYSw89ZLivYxxAgzx1tp4enL/YgcuePCLxZNWAstCDb7hjMraQ4j1rhfoos=
+	t=1747860383; cv=none; b=V4Qn1oqDLrO03jJYQg1v8gcU50i0gkFmje1r92NiVIa++CidQiXKzW15hz8aGVrM+0uNjeLhVg0eX0vPmcVUdoQuCLpol0HsYJRjPs+j6ciCRJLA0eP5N2EQaCBVJfpQA5ntuVctM9m35r2SMY6UJCW9QY1kv2Pp1BuZGOMoVpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841587; c=relaxed/simple;
-	bh=GW8fSJtIIcQfrlBHzwFuPMtHkQZy1wmn2vANi12FPSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nZmAsV+X8XTCDgjF5NbDWF4nHe0ifxI2RonJdIJy0p9jVom8RAljKGfbhfz9btKQi9Iisyq4wRgJN+zL12cjH/Daxx8QpGRBaSmvLyxr0lTloPU0kXbka3fQxo0UpfCHCKgnOgO9s+iV5B2GXOl9kUpVPGJk3LgylW034dgykiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MEQ5S6Ze; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747860383; c=relaxed/simple;
+	bh=TB5RrtCE3tLkkWSSZvlSdGdEuB83W94mJusyAgZ8cTE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AHrxqXsKYCQOc2NSsYaWeiWFYFoWSZaF6hX0Wbr2toFpzE33rpo99nc/ezDZgspFdnuW7jX5YoZTIhQ0yUcft6yERPT7HM8BT4ruw4NwGIkdQDhTBNWsgnzRC6R4biMde+zbRlBm26EDUPV4WMNuprISR3x8dIJZ+62qQ5lgooo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azKxmU9y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MEQ5S6Ze"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747841586; x=1779377586;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GW8fSJtIIcQfrlBHzwFuPMtHkQZy1wmn2vANi12FPSw=;
-  b=MEQ5S6ZeVrA9ikBXytNAwjRI/oEFpM61UO9N79vPumUHKs8Fcabc1Tf9
-   8Strvm2ulOuyU8B0+ompKRPTARZkdihw2kWsIahLB80uhG87qB8BPoSGx
-   82REDkb7jqijcieHjl+1fyv+3XeYa9zzUqEI1kf6Rr4UDUPq+C61cOuvy
-   HYT33HSi/D/io1jX/8oTd/3Nto+qP+S8OP/OS6Yd2Zcp7u8rlUX9whMlg
-   0K2vDiIEgAGAZvwKj6gtV4umyVnjWqYLmNT8DRrM/Uoqr4cMKMYE4f1G6
-   qZrkibiaQpc9uzH4G68/4rJmsSVbuGJWK3zcaTy84ae8uCFrPG25qNUYS
-   A==;
-X-CSE-ConnectionGUID: /NlwuTENTMyvUoQTCQk15g==
-X-CSE-MsgGUID: jYIgMtlCTIyhaiPH9tW3Ag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="72345621"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="72345621"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:33:04 -0700
-X-CSE-ConnectionGUID: /0j+tz1wRYKNB1/qh7Axyg==
-X-CSE-MsgGUID: osH+72QJRYGme7yAqVUxjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="141046554"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:33:00 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uHlRB-00000003fEh-41bz;
-	Wed, 21 May 2025 18:32:57 +0300
-Date: Wed, 21 May 2025 18:32:57 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azKxmU9y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17535C4CEE4;
+	Wed, 21 May 2025 20:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747860383;
+	bh=TB5RrtCE3tLkkWSSZvlSdGdEuB83W94mJusyAgZ8cTE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=azKxmU9yy7Izy99ARGU0CwcQd4sF4KPMD1aOQ//cIUDTuPCHSVJo6VQexSwPahcCY
+	 RaB+/ec6twf4muJqtblNNKS/GpDDD2XG3WtK/YVf5pHdY030dyLCSc8h4ij0bAqyxG
+	 XhMzcNbqL8jIseK0RS+FeGkfPecDLFgtEPxMgAOfvEscrYZNh+S4Apfj3U9piEHogG
+	 y9AGdGlc3O0MHidOMqYgAwp7Okoo3zWYOYIkWqEJ9lP3XE3rJP/2gpLAJ+KJG3hZi0
+	 kPJez90sL/EYEcH5kWO6CvWwcrgZuWC6+OgAByhtJvtb+9BzJ98rYQ164KEaiHbnwN
+	 Wk4GR0fftc4bQ==
+From: Kees Cook <kees@kernel.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	Max Gurtovoy <mgurtovoy@nvidia.com>,
+	Maurizio Lombardi <mlombard@redhat.com>,
+	Dmitry Bogdanov <d.bogdanov@yadro.com>,
+	Mingzhe Zou <mingzhe.zou@easystack.cn>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Simon Horman <horms@kernel.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Cosmin Ratiu <cratiu@nvidia.com>,
+	Lei Yang <leiyang@redhat.com>,
+	Ido Schimmel <idosch@nvidia.com>,
+	Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+	Paul Fertser <fercerpav@gmail.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Hayes Wang <hayeswang@realtek.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Grant Grundler <grundler@chromium.org>,
+	Jay Vosburgh <jv@jvosburgh.net>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Jason Wang <jasowang@redhat.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Maxim Georgiev <glipus@gmail.com>,
+	Aleksander Jan Bajkowski <olek2@wp.pl>,
+	Philipp Hahn <phahn-oss@avm.de>,
+	Eric Biggers <ebiggers@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Ahmed Zaki <ahmed.zaki@intel.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Xiao Liang <shaw.leon@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
+	linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-wpan@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v6 12/12] pinctrl: Add pin controller driver for AAEON UP
- boards
-Message-ID: <aC3yKaCNZA8H2KPt@smile.fi.intel.com>
-References: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
- <20250520-aaeon-up-board-pinctrl-support-v6-12-dcb3756be3c6@bootlin.com>
+Subject: [PATCH net-next v2 0/8] net: Convert dev_set_mac_address() to struct sockaddr_storage
+Date: Wed, 21 May 2025 13:46:08 -0700
+Message-Id: <20250521204310.it.500-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520-aaeon-up-board-pinctrl-support-v6-12-dcb3756be3c6@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2500; i=kees@kernel.org; h=from:subject:message-id; bh=TB5RrtCE3tLkkWSSZvlSdGdEuB83W94mJusyAgZ8cTE=; b=owGbwMvMwCVmps19z/KJym7G02pJDBl61lMn8Rlk/WQ5tG/fnM3cc3mE/hqzZ3+yr2D0L1GRf iekt16jo5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCIe3Az//f2rG3P6DZ5UOD7/ tuvKqRbdCQfV0q4oJrdt32d7xpNJhZFhldYdQ86QnhUK32dnBp/7eZFtyvJNKkZbN6/8239RZs9 5TgA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 03:28:36PM +0200, Thomas Richard wrote:
-> This enables the pin control support of the onboard FPGA on AAEON UP
-> boards.
-> 
-> This FPGA acts as a level shifter between the Intel SoC pins and the pin
-> header, and also as a mux or switch.
-> 
-> +---------+          +--------------+             +---+
->           |          |              |             |   |
->           | PWM0     |       \      |             | H |
->           |----------|------  \-----|-------------| E |
->           | I2C0_SDA |              |             | A |
-> Intel SoC |----------|------\       |             | D |
->           | GPIO0    |       \------|-------------| E |
->           |----------|------        |             | R |
->           |          |     FPGA     |             |   |
-> ----------+          +--------------+             +---+
-> 
-> For most of the pins, the FPGA opens/closes a switch to enable/disable
-> the access to the SoC pin from a pin header.
-> Each switch, has a direction flag that is set depending the status of the
-> SoC pin.
-> 
-> For some other pins, the FPGA acts as a mux, and routes one pin (or the
-> other one) to the header.
-> 
-> The driver also provides a GPIO chip. It requests SoC pins in GPIO mode,
-> and drives them in tandem with FPGA pins (switch/mux direction).
-> 
-> This commit adds support only for UP Squared board.
+ v2:
+  - add conversion of dev_set_mac_address_user() (kuniyu)
+  - fix missed sockaddr/sockaddr_storage conversion (kuba)
+ v1: https://lore.kernel.org/all/20250520222452.work.063-kees@kernel.org/
 
-...
+Hi,
 
-> +static int upboard_pinctrl_pin_get_mode(struct pinctrl_dev *pctldev, unsigned int pin)
-> +{
-> +	struct upboard_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-> +	struct upboard_pin *p = &pctrl->pins[pin];
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	if (p->funcbit) {
-> +		ret = regmap_field_read(p->funcbit, &val);
-> +		if (ret)
-> +			return ret;
-> +		if (val)
-> +			return UPBOARD_PIN_MODE_FUNCTION;
-> +	}
-> +
-> +	ret = regmap_field_read(p->enbit, &val);
-> +	if (ret)
-> +		return ret;
-> +	if (!val)
-> +		return UPBOARD_PIN_MODE_DISABLED;
-> +
-> +	ret = regmap_field_read(p->dirbit, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return val ? UPBOARD_PIN_MODE_GPIO_IN : UPBOARD_PIN_MODE_GPIO_OUT;
-> +}
-> +
-> +static void upboard_pinctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
-> +				     unsigned int offset)
-> +{
-> +	int ret;
-> +
-> +	ret = upboard_pinctrl_pin_get_mode(pctldev, offset);
-> +	if (ret == UPBOARD_PIN_MODE_FUNCTION)
-> +		seq_puts(s, "mode function ");
-> +	else if (ret == UPBOARD_PIN_MODE_DISABLED)
-> +		seq_puts(s, "HIGH-Z ");
+As part of the effort to allow the compiler to reason about object sizes,
+we need to deal with the problematic variably sized struct sockaddr,
+which has no internal runtime size tracking. In much of the network
+stack the use of struct sockaddr_storage has been adopted. Continue the
+transition toward this for more of the internal APIs. Specifically:
 
-> +	else
-> +		seq_printf(s, "GPIO (%s) ", str_input_output(ret == UPBOARD_PIN_MODE_GPIO_IN));
+- inet_addr_is_any()
+- netif_set_mac_address()
+- dev_set_mac_address()
+- dev_set_mac_address_user()
 
-Actually this should be
+Only a few callers of dev_set_mac_address() needed adjustment; all others
+were already using struct sockaddr_storage internally.
 
-	else if (ret < 0)
-		seq_printf(s, "N/A "); // or similar text
-	else
-		seq_printf(s, "GPIO (%s) ", str_input_output(ret == UPBOARD_PIN_MODE_GPIO_IN));
+-Kees
 
-as the above may return a negative error code which is not listed here.
+Kees Cook (8):
+  net: core: Convert inet_addr_is_any() to sockaddr_storage
+  net: core: Switch netif_set_mac_address() to struct sockaddr_storage
+  net/ncsi: Use struct sockaddr_storage for pending_mac
+  ieee802154: Use struct sockaddr_storage with dev_set_mac_address()
+  net: usb: r8152: Convert to use struct sockaddr_storage internally
+  net: core: Convert dev_set_mac_address() to struct sockaddr_storage
+  rtnetlink: do_setlink: Use struct sockaddr_storage
+  net: core: Convert dev_set_mac_address_user() to use struct
+    sockaddr_storage
 
-> +}
-
-With the above being addressed,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-...
-
-Thanks for doing this driver, eventually we will have it working
-out-of-the-box. Do you have any plans for enabling HSI and SIM card
-slot on UP Squared 7000?
+ include/linux/inet.h                |  2 +-
+ include/linux/netdevice.h           |  6 ++--
+ net/ncsi/internal.h                 |  2 +-
+ drivers/net/bonding/bond_alb.c      |  8 ++---
+ drivers/net/bonding/bond_main.c     | 15 ++++-----
+ drivers/net/hyperv/netvsc_drv.c     |  6 ++--
+ drivers/net/macvlan.c               | 18 +++++-----
+ drivers/net/tap.c                   | 14 +++++---
+ drivers/net/team/team_core.c        |  2 +-
+ drivers/net/tun.c                   |  8 ++++-
+ drivers/net/usb/r8152.c             | 52 +++++++++++++++--------------
+ drivers/nvme/target/rdma.c          |  2 +-
+ drivers/nvme/target/tcp.c           |  2 +-
+ drivers/target/iscsi/iscsi_target.c |  2 +-
+ net/core/dev.c                      | 11 +++---
+ net/core/dev_api.c                  | 11 +++---
+ net/core/dev_ioctl.c                |  6 ++--
+ net/core/rtnetlink.c                | 19 +++--------
+ net/core/utils.c                    |  8 ++---
+ net/ieee802154/nl-phy.c             |  6 ++--
+ net/ncsi/ncsi-rsp.c                 | 18 +++++-----
+ 21 files changed, 109 insertions(+), 109 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
