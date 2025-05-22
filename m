@@ -1,111 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4401AF0B5;
-	Thu, 22 May 2025 05:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1799D517;
+	Thu, 22 May 2025 07:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747893073; cv=none; b=AKFoN5I8/wD4Dqpyy6kNMFhsfy3KxFBTnm4hI8dJYE2LDdB/jWUGUWb4ZWn9Ds3DJ4TBm6AA7QIVwmsqVTFBK6YFwTvdp5LZxmbG0mHRo5mXY4UAq6rSgAAfk5xv0rwiOQlpKKBViFauha+Oeb0yP/2bn3XwVgZidkuz6oFQ9k8=
+	t=1747897424; cv=none; b=qBdJ/QABVhR7ygA2PHpxlVW7sXyaMgwywVnGBg37B6l5diwyzQArUQw8TxmuKhqKW2r1oCIAwivnX0XBUzcB8BTXOc1WwELiSBKJ7kaENCXv5kFiLsRREGulJr2mZIHFnrxGyz5XXwpGKFcHtg4MyYb4AivJOLqP2XMetXO177k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747893073; c=relaxed/simple;
-	bh=wo0GrAIDnNGwKbCU5YwR5h8YPBDNfUgDDwhK7IutCPQ=;
+	s=arc-20240116; t=1747897424; c=relaxed/simple;
+	bh=O6hy5R2mjeBm5Vf7qI0qCm2aawLVKSqcX2UGvROau3E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hTikXO5itjLQsF2CfZd9nsi+UoFC0blCgEWdeZvL4R0susqIleCA2q1w88dtpzdUUjgPzR7fyYUuEtlZd15yeu4mFURf/GhwRYaTCjEzxDKFFWOBV7CQuJmFVxYglTtbj1I+Ma1xlE8dH9ehcfaVDHfCNYn+oGf7NQKKGdCQHsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bKn3IGfc; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=R74E1eSNNC5NLKDKjdV3LZjP0XiZu+T6RY0eJD93HV8tcH8lZB9MbJ/Hka02Lt1QWdH/5dytPbRJ3s/QmzAOdcku4TWdhDQ+INnCsU8XD+2VFhLjTnmFE3gD9exmcgJ/P77a45BRBpId9gVfd8WdYwAEIXkVHz/Z4nGRh+vI91Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZL/UWwA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bKn3IGfc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747893070; x=1779429070;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wo0GrAIDnNGwKbCU5YwR5h8YPBDNfUgDDwhK7IutCPQ=;
-  b=bKn3IGfcuwhPmH3Ex/xqnwMqS2pXeorApksNraMO0tj/2iq1JWnKqrg2
-   Sapfl+Q94SnZ7yxBAVk/U6uoL17KEF/4ppFkP52AT+c4qUaMNhm1IrGBu
-   IfvhGJYJaO+uMBp6MmXUf3Fxz59rfjZ2i/NmNU16XR/h/3cE2gXIHc6qc
-   0Bl01rHYPFcQ0kPcoJyxOr5xBAXAwDNaATrI1VzZPtv85H8lKxKqv3zay
-   8yyJdgqYm1gw+F1uoR6Twpt3ypT8JM2p/Pa2MaG4jiZfJToHRoxtCB8Vp
-   Lpc9/ddaKjLQOvHojlu3RM8RgB5dQyKLyWT/9exBasvV/0Wp/1Hfb2HIE
-   g==;
-X-CSE-ConnectionGUID: qi7r7bAyTlKBQloZPrLIlw==
-X-CSE-MsgGUID: 8YVi7VM4S6aHRVecQ+HMoQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="72427103"
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="72427103"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 22:51:09 -0700
-X-CSE-ConnectionGUID: HxbXkY2RRvSVagwRKRFk3g==
-X-CSE-MsgGUID: o+hJjS+yQou7exiCuk2NqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="140952649"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 21 May 2025 22:51:05 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHypa-000OxY-33;
-	Thu, 22 May 2025 05:51:02 +0000
-Date: Thu, 22 May 2025 13:50:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yulin Lu <luyulin@eswincomputing.com>, linus.walleij@linaro.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kees@kernel.org,
-	gustavoars@kernel.org, brgl@bgdev.pl,
-	linux-hardening@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, ningyu@eswincomputing.com,
-	zhengyu@eswincomputing.com, linmin@eswincomputing.com,
-	huangyifeng@eswincomputing.com, fenglin@eswincomputing.com,
-	lianghujun@eswincomputing.com,
-	Yulin Lu <luyulin@eswincomputing.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v4 2/2] pinctrl: eswin: Add EIC7700 pinctrl driver
-Message-ID: <202505221319.lOivf9w0-lkp@intel.com>
-References: <20250515054736.922-1-luyulin@eswincomputing.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZL/UWwA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B36F8C4CEE4;
+	Thu, 22 May 2025 07:03:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747897424;
+	bh=O6hy5R2mjeBm5Vf7qI0qCm2aawLVKSqcX2UGvROau3E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fZL/UWwA/7tkx6NstZdnvbhwIWCrU73q8YG0aG1/UrAqmcMMGFdf894Mlc35zIA5N
+	 9A3H8i5D17sWmSuQGEsbxcOToAu4VnQ+4UElCFbRAIiKZf/oWgyDfRiNF5kqWAA1Bp
+	 oOdPwsto9MwtR5h4u9fDcQheSwnZ3NoRahzeEOfba4ngyC8pJgZ6Br803HkimFxu0W
+	 ZSDM59lny5ynGEH99GghKoELpLnV34SmygdhxzcCT1P0TGzgZCohB+PRqFOrUnUWz0
+	 yctyVaW/Sqjovf0ryejXlkDcvlZ6Ph62sFnOMONasMB4zzaOs2Qne+5xNG8GEtTmae
+	 8Qt/RbKxCvJsw==
+Date: Thu, 22 May 2025 09:03:41 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, p.zabel@pengutronix.de, 
+	geert+renesas@glider.be, magnus.damm@gmail.com, yoshihiro.shimoda.uh@renesas.com, 
+	kees@kernel.org, gustavoars@kernel.org, biju.das.jz@bp.renesas.com, 
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-hardening@vger.kernel.org, john.madieu.xa@bp.renesas.com, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v3 05/12] dt-bindings: phy: renesas,usb2-phy: Add
+ renesas,sysc-signals
+Message-ID: <20250522-evasive-unyielding-quoll-dbc9b2@kuoka>
+References: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250521140943.3830195-6-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250515054736.922-1-luyulin@eswincomputing.com>
+In-Reply-To: <20250521140943.3830195-6-claudiu.beznea.uj@bp.renesas.com>
 
-Hi Yulin,
+On Wed, May 21, 2025 at 05:09:36PM GMT, Claudiu wrote:
+>  .../bindings/phy/renesas,usb2-phy.yaml        | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> index 12f8d5d8af55..e1e773cba847 100644
+> --- a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> @@ -86,6 +86,16 @@ properties:
+>  
+>    dr_mode: true
+>  
+> +  renesas,sysc-signals:
+> +    description: System controller phandle, specifying the register
+> +      offset and bitmask associated with a specific system controller signal
 
-kernel test robot noticed the following build errors:
+This is 100% redundant information. system controller specifying system
+controller signal.
 
-[auto build test ERROR on linusw-pinctrl/devel]
-[also build test ERROR on linusw-pinctrl/for-next robh/for-next linus/master v6.15-rc7 next-20250521]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Drop.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Yulin-Lu/dt-bindings-pinctrl-eswin-Document-for-EIC7700-SoC/20250515-134847
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20250515054736.922-1-luyulin%40eswincomputing.com
-patch subject: [PATCH v4 2/2] pinctrl: eswin: Add EIC7700 pinctrl driver
-config: s390-randconfig-r132-20250522 (https://download.01.org/0day-ci/archive/20250522/202505221319.lOivf9w0-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce: (https://download.01.org/0day-ci/archive/20250522/202505221319.lOivf9w0-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505221319.lOivf9w0-lkp@intel.com/
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    items:
+> +      - items:
+> +          - description: system controller phandle
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+What for? Explain the usage. How is ut used by this hardware.
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-mgr-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-bridge-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-region-test.o
->> ERROR: modpost: "pinconf_generic_dt_node_to_map" [drivers/pinctrl/pinctrl-eic7700.ko] undefined!
->> ERROR: modpost: "pinconf_generic_dt_free_map" [drivers/pinctrl/pinctrl-eic7700.ko] undefined!
+> +          - description: register offset associated with a signal
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+What signal? That's a phy.
+
+> +          - description: register bitmask associated with a signal
+> +
+>  if:
+>    properties:
+>      compatible:
+> @@ -117,6 +127,18 @@ allOf:
+>        required:
+>          - resets
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: renesas,usb2-phy-r9a08g045
+> +    then:
+> +      required:
+> +        - renesas,sysc-signals
+
+That's ABI break.
+
+Best regards,
+Krzysztof
+
