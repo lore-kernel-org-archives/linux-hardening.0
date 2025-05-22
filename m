@@ -1,105 +1,213 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBCF1EEA28;
-	Thu, 22 May 2025 11:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7BB7D098;
+	Thu, 22 May 2025 12:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747913386; cv=none; b=X3L1/iZcclhFsv32y/KRwK+I7bk2esNGmA53QeaJ/wIESSyH9f3DEVvxg1pmYMlAUoAL4ozb+YJu5yc8HtICLsBzx9C9fQOnkqbiy8el11tSE7fdkMWqXXEPy2YYLd6mkI9vcVGsy1+JdX+REAObbu9+BQVBh/JCGzGAkk9YqrE=
+	t=1747918007; cv=none; b=bagyZhZ/JgOmRqyj2uTYO4OTwEYA8NmhwwnACoyRDpDtYMdCKiFCW22dFM94NNopbiyGeFX05AS14ltQoM/fCJ6fJnYmQ6cZT0bFwMdPsAmKXK6DkYoqqvVgVvOY77QiR6uAezFlKgS+1XJt0QZmGmRZe6yXu4L6jAlMETC5rHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747913386; c=relaxed/simple;
-	bh=kA/1F2Zfzqa6vgUg26NcIoNzYwbZOoIGvMHQ8DxxvUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o1Ajv6VZge9+43PSm5Wg6VYZKNLyOVOhNfOTBK8lo/x1I6EHHu92DwEPt1GH9RfoJQY9vCUSTfW6wO1cMdJW0dC7iRUVrsLF4ddJWrqFCPalfgwx+7ETB2EIyDgp07lkntokCbDUM9TPE+THhWmo+S48QASXyPVY5HwEIo2AsT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FyemD12N; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747918007; c=relaxed/simple;
+	bh=yqdBkbrJxcadoEyqCSoaqj5nw4PAHonI4ZHJExMHUws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k8hGqJDTKb3YSKItuQOrkxMR66uR1YiLr7lG17VR+D+prA4C6d43sFA0fzT8BrGpewAO365EnHmRoAjDQDaZzCEjqZlqO6jZX3svtpNfd4fYPWvipmnhpazdbpd2zcASRqyYme5F3/jFOTbu+PYE4oFyZisS9QMWGO9c7fcXKPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTariqT/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FyemD12N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747913384; x=1779449384;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kA/1F2Zfzqa6vgUg26NcIoNzYwbZOoIGvMHQ8DxxvUc=;
-  b=FyemD12NUSzddYW6tTb+naE+TY25hTkrRTr6cRjBRoihYCmENYAX3zMp
-   KZ3gOjCefPD1htf1sS3NTw28CAOL2+Xv+C+H9B6HcZRZdrWFhfAlObgD0
-   sDTUU1gIzD64zUrwhP+4d9sC1404RHH2+ZIwDe1QubV0n2HPB3hz2IJvi
-   Xfv2jLPkEJ3xYlfKrZmDTgXWn9IeUFcFwhPHgG7FXLzTCN1FsbHJoOZ9+
-   l9bzv3Z+woNzJF2/60oedEhXt0PMzzobgM2SUov+CfvwIeuT39jud/iBi
-   sDULRCl39IlIklcS5P4lfBN55TBBNz6XNWwj2yEFOYz7kkf+uXE1VI2F7
-   Q==;
-X-CSE-ConnectionGUID: DRY1Y9JxTB2WUG3hrWDrxw==
-X-CSE-MsgGUID: dJ7Xe5coQ2yOWLhHXKhdEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49051500"
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="49051500"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 04:29:43 -0700
-X-CSE-ConnectionGUID: alwEKqmtQ/S93/wdYInrtQ==
-X-CSE-MsgGUID: GuAsb9XpR8mMwN2bOSSLzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="141090681"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 22 May 2025 04:29:38 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uI47D-000PHI-2i;
-	Thu, 22 May 2025 11:29:35 +0000
-Date: Thu, 22 May 2025 19:29:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Claudiu <claudiu.beznea@tuxon.dev>, vkoul@kernel.org, kishon@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	p.zabel@pengutronix.de, geert+renesas@glider.be,
-	magnus.damm@gmail.com, yoshihiro.shimoda.uh@renesas.com,
-	kees@kernel.org, gustavoars@kernel.org, biju.das.jz@bp.renesas.com
-Cc: oe-kbuild-all@lists.linux.dev, claudiu.beznea@tuxon.dev,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-hardening@vger.kernel.org, john.madieu.xa@bp.renesas.com,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH v3 08/12] reset: rzg2l-usbphy-ctrl: Add support for USB
- PWRRDY signal
-Message-ID: <202505221929.nUHscY04-lkp@intel.com>
-References: <20250521140943.3830195-9-claudiu.beznea.uj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTariqT/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93BD8C4CEE4;
+	Thu, 22 May 2025 12:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747918007;
+	bh=yqdBkbrJxcadoEyqCSoaqj5nw4PAHonI4ZHJExMHUws=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CTariqT/8tuu/mTASNwunqzewr0WtcYQnYTakNEibAYGinNJLlsTabyXvOdjgAE6L
+	 cqnWvyEk9s5wQ1d3g9H3Qio5tLSjuYLRh0R+gMoUMLhYIn9irt6EmXJ8ygMgHPbrfL
+	 xIBiCa85kXohpUdIm1cGheitMKPQHSpnQmHxjydoQQ7nOt3MQq79dWaxnCCe6Zr+YF
+	 6N6o/LyrmxCLmEijNuxh+CActfXwKJEzc80JAWm5o+RilcB8Acg9b1pN/x2GG5j9FZ
+	 HfB23NWfZQPHQdca3ahIxMh0ddg+oXTqr4fWvzaGXOxS9zp+Cs8qJCYQcEIuefijkV
+	 8dJd2gmJXD2Sg==
+Message-ID: <4a07048a-c55a-4fd3-b4e5-7f9d218de76f@kernel.org>
+Date: Thu, 22 May 2025 14:46:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521140943.3830195-9-claudiu.beznea.uj@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/12] dt-bindings: phy: renesas,usb2-phy: Add
+ renesas,sysc-signals
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, p.zabel@pengutronix.de, geert+renesas@glider.be,
+ magnus.damm@gmail.com, yoshihiro.shimoda.uh@renesas.com, kees@kernel.org,
+ gustavoars@kernel.org, biju.das.jz@bp.renesas.com,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-hardening@vger.kernel.org, john.madieu.xa@bp.renesas.com,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250521140943.3830195-6-claudiu.beznea.uj@bp.renesas.com>
+ <20250522-evasive-unyielding-quoll-dbc9b2@kuoka>
+ <b22e7a46-7e35-4840-aae3-a855c97fbde4@tuxon.dev>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <b22e7a46-7e35-4840-aae3-a855c97fbde4@tuxon.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Claudiu,
+On 22/05/2025 12:26, Claudiu Beznea wrote:
+> Hi, Krzysztof,
+> 
+> On 22.05.2025 10:03, Krzysztof Kozlowski wrote:
+>> On Wed, May 21, 2025 at 05:09:36PM GMT, Claudiu wrote:
+>>>  .../bindings/phy/renesas,usb2-phy.yaml        | 22 +++++++++++++++++++
+>>>  1 file changed, 22 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+>>> index 12f8d5d8af55..e1e773cba847 100644
+>>> --- a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+>>> +++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+>>> @@ -86,6 +86,16 @@ properties:
+>>>  
+>>>    dr_mode: true
+>>>  
+>>> +  renesas,sysc-signals:
+>>> +    description: System controller phandle, specifying the register
+>>> +      offset and bitmask associated with a specific system controller signal
+>>
+>> This is 100% redundant information. system controller specifying system
+>> controller signal.
+>>
+>> Drop.
+>>
+>>
+>>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>>> +    items:
+>>> +      - items:
+>>> +          - description: system controller phandle
+>>
+>> What for? Explain the usage. How is ut used by this hardware.
+> 
+> OK, I though I've explained in the renesas,sysc-signals description
+> section. I'll adjust it and move it here.
 
-kernel test robot noticed the following build errors:
+That description did not explain me at all. I mean really, which parts
+explains the usage by hardware?
 
-[auto build test ERROR on next-20250521]
-[cannot apply to geert-renesas-devel/next pza/reset/next robh/for-next linus/master pza/imx-drm/next v6.15-rc7 v6.15-rc6 v6.15-rc5 v6.15-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Claudiu/soc-renesas-rz-sysc-Add-syscon-regmap-support/20250521-221703
-base:   next-20250521
-patch link:    https://lore.kernel.org/r/20250521140943.3830195-9-claudiu.beznea.uj%40bp.renesas.com
-patch subject: [PATCH v3 08/12] reset: rzg2l-usbphy-ctrl: Add support for USB PWRRDY signal
-config: sparc-randconfig-r111-20250522 (https://download.01.org/0day-ci/archive/20250522/202505221929.nUHscY04-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 12.4.0
-reproduce: (https://download.01.org/0day-ci/archive/20250522/202505221929.nUHscY04-lkp@intel.com/reproduce)
+> 
+>>
+>>> +          - description: register offset associated with a signal
+>>
+>> What signal? That's a phy.
+> 
+> Would you like me to specify here exactly the signal name? I tried to made
+> it generic as the system controller provides other signals to other IPs,
+> the intention was to use the same property for other IPs, if any. And kept
+> it generic in the idea it could be used in future, if any, for other
+> signals provided by the system controller to the USB PHY.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505221929.nUHscY04-lkp@intel.com/
+Bindings are not generic, so yes, you must explain here what hardware
+aspect this is relevant to. What signal? Between whom?
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+> 
+> As explained in the commit description, on the Renesas RZ/G3S SoC, the USB
+> PHY receives a signal from the system controller that need to be
 
->> ERROR: modpost: "rz_sysc_get_signal_map" [drivers/reset/reset-rzg2l-usbphy-ctrl.ko] undefined!
+Interrupt? Some pin changes state? What is a signal? This property is in
+the USB PHY device, not system controller.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> de-asserted/asserted when power is turned on/off. This signal, called
+> PWRRDY, is controlled through a specific register in the system controller
+> memory space.
+> 
+> With this property the intention is to specify to the USB PHY driver the
+> phandle to the SYSC, register offset within SYSC address space in charge of
+
+This is obvious from the schema and I asked to drop redundant parts.
+
+> controlling the USB PWRRDY signal and the bitmask within this register.
+
+So basically this last piece describes what this hardware needs to do
+with system controller? Change some register?
+
+> 
+> The PHY driver parse this information and set the signal at proper moments.
+> 
+> 
+>>
+>>> +          - description: register bitmask associated with a signal
+>>> +
+>>>  if:
+>>>    properties:
+>>>      compatible:
+>>> @@ -117,6 +127,18 @@ allOf:
+>>>        required:
+>>>          - resets
+>>>  
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: renesas,usb2-phy-r9a08g045
+>>> +    then:
+>>> +      required:
+>>> +        - renesas,sysc-signals
+>>
+>> That's ABI break.
+> 
+> There is no in kernel device tree users of "renesas,usb2-phy-r9a08g045"
+> compatible. It is introduced in patch 11/12 from this series. With this do
+> you still consider it ABI break?
+
+Then this patch cannot be split from binding introducing the user. Don't
+add unused/undocumented compatibles.
+
+
+
+Best regards,
+Krzysztof
