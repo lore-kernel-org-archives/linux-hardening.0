@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7BB7D098;
-	Thu, 22 May 2025 12:46:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C910714F70;
+	Thu, 22 May 2025 12:48:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747918007; cv=none; b=bagyZhZ/JgOmRqyj2uTYO4OTwEYA8NmhwwnACoyRDpDtYMdCKiFCW22dFM94NNopbiyGeFX05AS14ltQoM/fCJ6fJnYmQ6cZT0bFwMdPsAmKXK6DkYoqqvVgVvOY77QiR6uAezFlKgS+1XJt0QZmGmRZe6yXu4L6jAlMETC5rHM=
+	t=1747918107; cv=none; b=FkidfwQuMVBt+vuVCOwr32WAebIbmJzgUEfNySlx4t2FQj1FCgMV4MXVoyYadHdh7EpZQ7mqtF6/vgYUzCzR569IQayTv7aFSklXthgIGujjSpOA7TLD0Szj5ZrZmMd1omzaCasKKS1Qnn5z7sn4+9sEjrOhp4I8p72I0Cue4zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747918007; c=relaxed/simple;
-	bh=yqdBkbrJxcadoEyqCSoaqj5nw4PAHonI4ZHJExMHUws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k8hGqJDTKb3YSKItuQOrkxMR66uR1YiLr7lG17VR+D+prA4C6d43sFA0fzT8BrGpewAO365EnHmRoAjDQDaZzCEjqZlqO6jZX3svtpNfd4fYPWvipmnhpazdbpd2zcASRqyYme5F3/jFOTbu+PYE4oFyZisS9QMWGO9c7fcXKPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTariqT/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747918107; c=relaxed/simple;
+	bh=4PIVLiUX6c71M/3O4E763dPbAWA+r9An+3OzWuc0Inw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZHhLaarnEpBog+FTwrHab3CoKoF19xxMK4v7doLp3IrkvaWQxQ96ZX35mWL0wrnFazK4SJONo0UUKziGGdWk2NLBtIRUn6F/58T4ZKwOsXhpAv+LSrQMtrofMvmMiF55OG456qG3NuX+T8sG1Q+KRyawT8QQZv8OwJsGDW+Q/bU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hwGy/TTv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTariqT/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93BD8C4CEE4;
-	Thu, 22 May 2025 12:46:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hwGy/TTv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3762BC4CEEB;
+	Thu, 22 May 2025 12:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747918007;
-	bh=yqdBkbrJxcadoEyqCSoaqj5nw4PAHonI4ZHJExMHUws=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CTariqT/8tuu/mTASNwunqzewr0WtcYQnYTakNEibAYGinNJLlsTabyXvOdjgAE6L
-	 cqnWvyEk9s5wQ1d3g9H3Qio5tLSjuYLRh0R+gMoUMLhYIn9irt6EmXJ8ygMgHPbrfL
-	 xIBiCa85kXohpUdIm1cGheitMKPQHSpnQmHxjydoQQ7nOt3MQq79dWaxnCCe6Zr+YF
-	 6N6o/LyrmxCLmEijNuxh+CActfXwKJEzc80JAWm5o+RilcB8Acg9b1pN/x2GG5j9FZ
-	 HfB23NWfZQPHQdca3ahIxMh0ddg+oXTqr4fWvzaGXOxS9zp+Cs8qJCYQcEIuefijkV
-	 8dJd2gmJXD2Sg==
-Message-ID: <4a07048a-c55a-4fd3-b4e5-7f9d218de76f@kernel.org>
-Date: Thu, 22 May 2025 14:46:40 +0200
+	s=k20201202; t=1747918107;
+	bh=4PIVLiUX6c71M/3O4E763dPbAWA+r9An+3OzWuc0Inw=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=hwGy/TTvhCEiFNrjef+/E1DRiMPajXi6Jaw2J15Zxj4g0FDAiPYIv32/5j64u1hwF
+	 4D0BCmRzhXX6/NliLQn23UpV39lITYTqpXvHQJk+c9Mu4D6UOQnFr74XjEGtU4WNTC
+	 GgY4wozecx+WS8i6XvQ+6+PL4ccvf1psnLRf02OnjqWg47E7fwatUfIOuvDKu/4UuM
+	 aoZur98p7l8vh6cW5orVs7TvGcELw46nds2pGjgs4x7q5IGOtlIl0QlGMd1ElWnYT8
+	 wOkTEJ5qAnMz59EvalTIPUlkJxq3LnAkUD06XFuot/rvfIOJIleOo8qjnlOsUdzk12
+	 39yybLELpFe+w==
+Message-ID: <68d83aaf-280a-4c19-becf-c6e1d9c2432b@kernel.org>
+Date: Thu, 22 May 2025 14:48:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -37,6 +37,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 05/12] dt-bindings: phy: renesas,usb2-phy: Add
  renesas,sysc-signals
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, p.zabel@pengutronix.de, geert+renesas@glider.be,
@@ -50,7 +51,7 @@ References: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
  <20250521140943.3830195-6-claudiu.beznea.uj@bp.renesas.com>
  <20250522-evasive-unyielding-quoll-dbc9b2@kuoka>
  <b22e7a46-7e35-4840-aae3-a855c97fbde4@tuxon.dev>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <4a07048a-c55a-4fd3-b4e5-7f9d218de76f@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -95,119 +96,33 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <b22e7a46-7e35-4840-aae3-a855c97fbde4@tuxon.dev>
+In-Reply-To: <4a07048a-c55a-4fd3-b4e5-7f9d218de76f@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/05/2025 12:26, Claudiu Beznea wrote:
-> Hi, Krzysztof,
-> 
-> On 22.05.2025 10:03, Krzysztof Kozlowski wrote:
->> On Wed, May 21, 2025 at 05:09:36PM GMT, Claudiu wrote:
->>>  .../bindings/phy/renesas,usb2-phy.yaml        | 22 +++++++++++++++++++
->>>  1 file changed, 22 insertions(+)
+On 22/05/2025 14:46, Krzysztof Kozlowski wrote:
+>>>>  
+>>>> +  - if:
+>>>> +      properties:
+>>>> +        compatible:
+>>>> +          contains:
+>>>> +            const: renesas,usb2-phy-r9a08g045
+>>>> +    then:
+>>>> +      required:
+>>>> +        - renesas,sysc-signals
 >>>
->>> diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
->>> index 12f8d5d8af55..e1e773cba847 100644
->>> --- a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
->>> +++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
->>> @@ -86,6 +86,16 @@ properties:
->>>  
->>>    dr_mode: true
->>>  
->>> +  renesas,sysc-signals:
->>> +    description: System controller phandle, specifying the register
->>> +      offset and bitmask associated with a specific system controller signal
+>>> That's ABI break.
 >>
->> This is 100% redundant information. system controller specifying system
->> controller signal.
->>
->> Drop.
->>
->>
->>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->>> +    items:
->>> +      - items:
->>> +          - description: system controller phandle
->>
->> What for? Explain the usage. How is ut used by this hardware.
+>> There is no in kernel device tree users of "renesas,usb2-phy-r9a08g045"
+>> compatible. It is introduced in patch 11/12 from this series. With this do
+>> you still consider it ABI break?
 > 
-> OK, I though I've explained in the renesas,sysc-signals description
-> section. I'll adjust it and move it here.
-
-That description did not explain me at all. I mean really, which parts
-explains the usage by hardware?
-
-
+> Then this patch cannot be split from binding introducing the user. Don't
+> add unused/undocumented compatibles.
 > 
->>
->>> +          - description: register offset associated with a signal
->>
->> What signal? That's a phy.
-> 
-> Would you like me to specify here exactly the signal name? I tried to made
-> it generic as the system controller provides other signals to other IPs,
-> the intention was to use the same property for other IPs, if any. And kept
-> it generic in the idea it could be used in future, if any, for other
-> signals provided by the system controller to the USB PHY.
-
-Bindings are not generic, so yes, you must explain here what hardware
-aspect this is relevant to. What signal? Between whom?
-
-> 
-> As explained in the commit description, on the Renesas RZ/G3S SoC, the USB
-> PHY receives a signal from the system controller that need to be
-
-Interrupt? Some pin changes state? What is a signal? This property is in
-the USB PHY device, not system controller.
-
-> de-asserted/asserted when power is turned on/off. This signal, called
-> PWRRDY, is controlled through a specific register in the system controller
-> memory space.
-> 
-> With this property the intention is to specify to the USB PHY driver the
-> phandle to the SYSC, register offset within SYSC address space in charge of
-
-This is obvious from the schema and I asked to drop redundant parts.
-
-> controlling the USB PWRRDY signal and the bitmask within this register.
-
-So basically this last piece describes what this hardware needs to do
-with system controller? Change some register?
-
-> 
-> The PHY driver parse this information and set the signal at proper moments.
-> 
-> 
->>
->>> +          - description: register bitmask associated with a signal
->>> +
->>>  if:
->>>    properties:
->>>      compatible:
->>> @@ -117,6 +127,18 @@ allOf:
->>>        required:
->>>          - resets
->>>  
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            const: renesas,usb2-phy-r9a08g045
->>> +    then:
->>> +      required:
->>> +        - renesas,sysc-signals
->>
->> That's ABI break.
-> 
-> There is no in kernel device tree users of "renesas,usb2-phy-r9a08g045"
-> compatible. It is introduced in patch 11/12 from this series. With this do
-> you still consider it ABI break?
-
-Then this patch cannot be split from binding introducing the user. Don't
-add unused/undocumented compatibles.
-
-
+Or you meant DTS? I asked about ABI which is not about in-kernel users.
+You can always change in-kernel users, so what would be any point of a
+binding and its ABI?
 
 Best regards,
 Krzysztof
