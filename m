@@ -1,80 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A863322338;
-	Fri, 23 May 2025 20:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BFB211A0C
+	for <linux-hardening@vger.kernel.org>; Fri, 23 May 2025 22:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748032111; cv=none; b=AOiBAxjD9S25c3buvtfvmu7V1LGvFlRAM3AvKQxinzzaghJT+7HC94QlZ/XRaHQ7duJkvf5AEi3vr8LxIKCFkys8eCoJoPehRJk3pLmo19icXYX2awjXDgfM+KOaYNHmsBsOjuZY+XXI9dnoV0mWZ2l/YSsQXTbpMyTakjvruBY=
+	t=1748038066; cv=none; b=LHKVgwErH3g8eOG5xQ5TIDtJCGH0pRR45lT+Drj1YmHKafcar+TVtdqzcckbkQTTKHMlK1RDta6yByAjsktVXG8xdi1Slo0RUEjoIWlQOBWFRLdnoJyr+dyvSI05IxD3Noev3MlmkdMGusuJDjkEx8sPQJaIN4upGme469jCi0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748032111; c=relaxed/simple;
-	bh=mCqS/Kijb63hfjRogkIoo1V9a7plAKd5pBatsPb3zS4=;
+	s=arc-20240116; t=1748038066; c=relaxed/simple;
+	bh=/Vv1WmyqouccS68NScFLocNcJemiPcN41TARbtmKYJs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=An9HTiL0bNA4gZqLd+hPMKDmuQkClv/6HoDX/TW6yoIu93r7VBSmHU8JWSzodBS3PE3gKUEpwXL0PmalcCLkilnaB96565HqOj5NsdzJz7GaH6cgg3kOFJTcT4JN0kzMwubt81K3UrULP76ecMvLg3zrKuUeQk2ZPGYU/yzXA34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKCTWrMO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKCTWrMO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74E60C4CEEF;
-	Fri, 23 May 2025 20:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748032111;
-	bh=mCqS/Kijb63hfjRogkIoo1V9a7plAKd5pBatsPb3zS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cKCTWrMOz8QGFkwtap37uEMcxPQVostPEoFPh+liJpGoIZm7yUbph01VSxYIZ9Mnu
-	 Xp2SFx8fCFcAMCn/ELInspiWG36xJF3J7d0jPlVxo6aeh9oNz5+dzf8Kq3g/Xe/so1
-	 mYCrUnXAuBAVZPsZr7ruImlYVc+gipnIRXGuB54FA2ds4IMAQQ3eh1QLM/4b0qJj2M
-	 gTr/IjcVsa0wubmGcNRixgHZajZrPNsHowCdWXY/LC03W+Pu6hAChB6eWCEPXnK99u
-	 2vaA5rFoq3M2ELAJVxf64ufJ8UJLD7jY5t0UU+6I6+n7SgWhzCzujvRIpD5lc47LG4
-	 +IQz87qYLaslQ==
-Date: Fri, 23 May 2025 13:28:28 -0700
-From: Kees Cook <kees@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>, Mike Rapoport <rppt@kernel.org>,
-	Michal Wilczynski <michal.wilczynski@intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Usama Arif <usama.arif@bytedance.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-mm@kvack.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Christoph Hellwig <hch@lst.de>, Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v2 04/14] x86: Handle KCOV __init vs inline mismatches
-Message-ID: <202505231327.3FA45E4B@keescook>
-References: <20250523043251.it.550-kees@kernel.org>
- <20250523043935.2009972-4-kees@kernel.org>
- <aDCHl0RBMgNzGu6j@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=VnbqSfHNDZuvoha+KgIIDbLG0rwkVVTBPdsoE8IHCATOMqk82KiTHtawId1twIF1ui8KqJYKEe7J1x7h9Kn2mIYSGxOaW1e76M1qaCDdDKInhyV3n4ef5bNDBGxusq6GAOQ6axq7QvrkgM9ncOsiKbAgjk7N84oLfG8imFqOPFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-111-173.bstnma.fios.verizon.net [173.48.111.173])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 54NM7JSh006027
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 May 2025 18:07:22 -0400
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 3AFC12E00DD; Fri, 23 May 2025 18:07:19 -0400 (EDT)
+Date: Fri, 23 May 2025 18:07:19 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Kees Cook <kees@kernel.org>
+Cc: David Laight <david.laight.linux@gmail.com>,
+        Ethan Carter Edwards <ethan@ethancedwards.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] ext4: replace strcpy() with '.' assignment
+Message-ID: <20250523220719.GC332467@mit.edu>
+References: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
+ <202505190651.943F729@keescook>
+ <20250519145930.GB38098@mit.edu>
+ <20250523133100.1b023a6e@pumpkin>
+ <20250523142449.GB1414791@mit.edu>
+ <85A9A687-D5E0-4EE4-8FFE-ED70C8CCE863@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -83,28 +45,62 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aDCHl0RBMgNzGu6j@google.com>
+In-Reply-To: <85A9A687-D5E0-4EE4-8FFE-ED70C8CCE863@kernel.org>
 
-On Fri, May 23, 2025 at 07:35:03AM -0700, Sean Christopherson wrote:
-> On Thu, May 22, 2025, Kees Cook wrote:
-> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> > index 921c1c783bc1..72f13d643fca 100644
-> > --- a/arch/x86/kernel/kvm.c
-> > +++ b/arch/x86/kernel/kvm.c
-> > @@ -420,7 +420,7 @@ static u64 kvm_steal_clock(int cpu)
-> >  	return steal;
-> >  }
-> >  
-> > -static inline void __set_percpu_decrypted(void *ptr, unsigned long size)
-> > +static __always_inline void __set_percpu_decrypted(void *ptr, unsigned long size)
+On Fri, May 23, 2025 at 10:14:04AM -0700, Kees Cook wrote:
 > 
-> I'd rather drop the "inline" and explicitly mark this "__init".  There's value
-> in documenting and enforcing that memory is marked decrypted/shared only during
-> boot.
+> 
+> On May 23, 2025 7:24:49 AM PDT, Theodore Ts'o <tytso@mit.edu> wrote:
+> >On Fri, May 23, 2025 at 01:31:00PM +0100, David Laight wrote:
+> >> 
+> >> The compiler (or headers files) can also allow strcpy() of constant
+> >> length strings into arrays (known size). Erroring requests that are too long.
+> >> The strcpy() is then converted to a memcpy() which can then be optimised
+> >> into writes of constants.
+> >> 
+> >> So using strcpy() under those conditions 'isn't all bad' and can generate
+> >> better (and less bug prone) code than trying to hand-optimise it.
+> >> 
+> >> So even through strcpy() is usually a bad idea, there is not need to
+> >> remove the calls that the compiler can validate as safe.
+> >
+> >I assume that what the hardening folks want to do is to assert that
+> >strcpy is always evil(tm) so they can detect potential security bugs
+> >by doing "git grep strcpy".
+> 
+> FWIW, what I'd like is a lack of ambiguity for both humans and
+> compilers. "Get rid of strcpy" is the Big Hammer solution for
+> strcpy. The more precise version is "disallow strcpy of a src or dst
+> where either lack a compile-time buffer size".
 
-Sure! I will swap this around. Thanks!
+Well, technically speaking struct ext4_dir_entry.name has a fixed
+compile-time buffer size:
 
--Kees
+struct ext4_dir_entry {
+	__le32	inode;			/* Inode number */
+	__le16	rec_len;		/* Directory entry length */
+	__le16	name_len;		/* Name length */
+	char	name[EXT4_NAME_LEN];	/* File name */
+};
 
--- 
-Kees Cook
+And what we're copying into name here is also fixed.  It's either "."
+or "..".   As far as optimization is concerned, whether
+
+   de->name[0] = de->name[1] = '.';
+
+could be better optimized by the compiler than:
+
+   strcpy(de->name, "..");
+or
+   memcpy(de->name, "..", 2);
+(which is all that is required)
+
+Meh.  Probably the compiler could optimized it into a 2-byte word
+store, but it's not like mkdir is a hot path.  :-)
+
+It's probably easier to patch the code path and as opposed to having
+the conversation about how "no, really, it's safe, and I can prove
+it."  If this was a performance hot path, I might care more, but it
+isn't, so I don't.
+
+           	   	    	       - Ted
