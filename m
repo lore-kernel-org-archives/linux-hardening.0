@@ -1,128 +1,131 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86F522AE41;
-	Fri, 23 May 2025 11:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18ACD7E9;
+	Fri, 23 May 2025 12:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747999236; cv=none; b=Zc2jeWM5T8VQkj9UUjWVkBB/BkMGZFFOaLJsu8+Dr07uoqb+s8LqginWip4/0lAy+yu8mLO+mZNAfLQu0MrHsgN5MgZlTbnsHH8nVuRjfwV1OI0iRr6JWnjrjhYzn2tJzc41OMOetWIBDtrZ8LlH6EAJ4dxEbAGEkXy5cGvK3l4=
+	t=1748003465; cv=none; b=hKchHm631ch+WUL3oXgjQTRZaoipxtM+eeMcSP1tCPDb7Ei9e3xg9dGNQ0NDmVoifcSlytt37d5YyO29alYXPCAZIA1y/iI18jdRbJMkr5jI9YC4kNk9e2I/CjjUP3kOhX6Ypsx9F4LZkA+lH89DIUaoxPR+zBhkWqUKsnK56xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747999236; c=relaxed/simple;
-	bh=XmeiGBXI70ukFbp2wX31QSqHU/R9FyAhU/P3DDXoibQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fYLDUdCtLo2Nmv9UlQIhB+OX16Al9gH4nM+uIdcs3ZhTpwKjBfkBnZaezvoeTwzwUAIvDju7/FrE1DlSOZZduzYioPVdv3YI3LKxioP8o4DUmMYE+I885ELWCH0dFBlqFY3OAj3LT+FVPtOVQy9ni2JGpoK0fQj4rdI74Epvzvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pGrh4cl5; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748003465; c=relaxed/simple;
+	bh=zYFr+I1bNQIoAAYyuQ0AB1ehPMbnBPch3q9BFHXKHZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QvvJoiJ6vJvi85+n/wsivC8tAigCtXMxaihILCnegd76hx+Mxu0Mxr7C73e8EcZdatjzx7d60IA53sRT+SXKrtwbQSB4bZgg6JOMbYINW6bPfRXppyhNqS/aap7B2x/nHI0Zn3xjPlNmHE0d+5PswUVXVh2fZflNXletPRYWFrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hyMnLgRs; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pGrh4cl5"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54NBJc1K2086996;
-	Fri, 23 May 2025 06:19:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747999178;
-	bh=G3eBoRI6ajKzQj7PIYgoVul0HEV9Bq6GwjJIxWdrMvs=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=pGrh4cl5UNwlzQb/0t74988xZoSrBH7x4348QMBKDmfEIEnMxH8v3P122scZKOLoq
-	 WcvICifTw0IpvVBp7SlgqxN1dmooOa4XIXH6VEXHmwzZMIPuwOd/B/40p6zsECZIL9
-	 nKV7oX048/6bbOEblbgcqX9fFjhONqR8xG9NOzpE=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54NBJcAC023157
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 23 May 2025 06:19:38 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 23
- May 2025 06:19:37 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 23 May 2025 06:19:37 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54NBJblW1172257;
-	Fri, 23 May 2025 06:19:37 -0500
-Date: Fri, 23 May 2025 06:19:37 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Kees Cook <kees@kernel.org>
-CC: Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner
-	<tglx@linutronix.de>,
-        Santosh Shilimkar <ssantosh@kernel.org>, Lee Jones
-	<lee@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Christoph Hellwig
-	<hch@lst.de>, Marco Elver <elver@google.com>,
-        Andrey Konovalov
-	<andreyknvl@gmail.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Ard
- Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan
- Chancellor <nathan@kernel.org>,
-        Nicolas Schier <nicolas.schier@linux.dev>,
-        Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-        Bill Wendling
-	<morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>, <linux-kernel@vger.kernel.org>,
-        <x86@kernel.org>, <kasan-dev@googlegroups.com>,
-        <linux-doc@vger.kernel.org>, <kvmarm@lists.linux.dev>,
-        <linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
-        <linux-efi@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-kbuild@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <llvm@lists.linux.dev>
-Subject: Re: [PATCH v2 05/14] arm: Handle KCOV __init vs inline mismatches
-Message-ID: <20250523111937.f2fqhoshqevdoxcl@snowbird>
-References: <20250523043251.it.550-kees@kernel.org>
- <20250523043935.2009972-5-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hyMnLgRs"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-442ed8a275fso114417275e9.2;
+        Fri, 23 May 2025 05:31:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748003462; x=1748608262; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dy8YHa9sBE+qJ+igAsZENydvLd039JNemEnM7InNoVc=;
+        b=hyMnLgRsAWmNj0Xn8FDax038kfzZstDHB5qLJIq4avUFS2OIO7SNS7aX3tBXb0CKLV
+         s8kJeiW6X5DAYAGEyW7wStJHn7XyOd9JFQdlG0HX2AsAblmpOBGUfDFbiSYpXvrWRJy3
+         JpfsVLrNW7WQKQ2jxLHAN4OlOXhsARD0UhVdHEp899gskTHb5Kde8juy76AtOFKxQaA5
+         bsCx1SMCNroS/7s3owXyYdZst5zQwFGoRix0LLz02zWRCA8e1oEn6NIzPyIwhaZk8wP/
+         ZMZ8h4za/NfiyVuPkWZirLJ7Dz6x0wFj7YM4FPRevK2DTt5XPitI2iWUIrnVhoPkiC1/
+         hpOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748003462; x=1748608262;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dy8YHa9sBE+qJ+igAsZENydvLd039JNemEnM7InNoVc=;
+        b=MhriNamNpyVN7YGourrsmhYjxcwMCGORUg7Zs0iigxdOvI0sDT71vE53nA+bK1V/WU
+         U8wDnPZzYS8HoSGVrwKXKtihMjwoveG8TVKZr0BTGN+xcnZsdvo5wu1VphpZfUaQBECr
+         pTsgCH4NY0gXGwelwMydV7wICHDc1tQLaBCZ0uBd2dWf44tkSrCUqsgz0biUhL75CPTd
+         4UZ39KtKz10zblA2Ecr315pL2VL9gymn0/JmopyoUpceA46poMR0EEd/htPZsnOFOadi
+         pYzW1DStH+rJyqzQw4/K/W0PuXVSnsRnuUim/6DNx9mDasoOjhJ4zD/Zt6jRY/uA45QC
+         OMwg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8SXg9AlPcWHP0ydSUsDR1AXskw9I/xZaM9ZKZo5q5X2x5Y3f9iuqwjCKYIBm9vii1T74pqMsR0JPrGJxEKlZ3@vger.kernel.org, AJvYcCVvmmgrEDQd6ISVukZRMZiddN4RX8a/3Ta/B2DUcIt255tvfkz8HfobZthx+/b53r4vOjq+Th4m/QTi@vger.kernel.org, AJvYcCXDB27i6xREiBkvEEflFoG7u6q7cbQlV3u+n7Qj+9c9wMoRyYFqBwKZcHQtVD9k5h7zCggTHWMdGTGMzaxU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzs+5MKMqDUzuE1c0jJdju61o5qLySSKhuJt57U1rzeZyhq8Vjc
+	F4oqv5stpPk5ilmEUXWG+lAnOq3F9KiQsmMVuO9NqOE/uRkO/1NC4s8ERKI3Sg==
+X-Gm-Gg: ASbGncu/PH6yiABucmQVayW0bGJpWxENDmqSb0l3G6CgtgPWVDlYX3nSfuEdJkcB1l8
+	x9jqkFMjeBz5eShMd7hAB2dIFnUa6b6FLiRZp7C8DODMkOwVWFuEbv3Vu/MRXmrD5Ix0tejPUtC
+	dMuNr2kmHpOunoOVIsvaYzMJGndk3N7oqeg12N6SkDbbo0pkNBQ7Gj7CjARkyevaAWw8m0Oh6sU
+	/lIGFimPPSLmNYvgo46iARddf1gdmsdnNyBxsVjgE0lrjP43U1ShlyYz6NIkAa6UlqR/eyQ0m6e
+	GhHY/8qa9TP2K5WYU2EYeO/quzjuWr0ZdoPBsUA+1IzYYsbUzO3TS1ukB/latUytuCq1QqW8SPw
+	jfmrCyIVDm9rtuQ==
+X-Google-Smtp-Source: AGHT+IGRY+SIJAO8OmgYserPwzfW9oLd1sgZc8DxydvmeRylB5vmFcgb6WgrcelOSrX4QdbKqmgZfA==
+X-Received: by 2002:a05:600c:4fd6:b0:43d:98e7:38dc with SMTP id 5b1f17b1804b1-44b6cc055e8mr21996825e9.5.1748003462110;
+        Fri, 23 May 2025 05:31:02 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7bae3b9sm136490745e9.33.2025.05.23.05.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 05:31:01 -0700 (PDT)
+Date: Fri, 23 May 2025 13:31:00 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: Kees Cook <kees@kernel.org>, Ethan Carter Edwards
+ <ethan@ethancedwards.com>, Andreas Dilger <adilger.kernel@dilger.ca>,
+ linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] ext4: replace strcpy() with '.' assignment
+Message-ID: <20250523133100.1b023a6e@pumpkin>
+In-Reply-To: <20250519145930.GB38098@mit.edu>
+References: <20250518-ext4-strcpy-v2-1-80d316325046@ethancedwards.com>
+	<202505190651.943F729@keescook>
+	<20250519145930.GB38098@mit.edu>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250523043935.2009972-5-kees@kernel.org>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 21:39-20250522, Kees Cook wrote:
-> When KCOV is enabled all functions get instrumented, unless
-> the __no_sanitize_coverage attribute is used. To prepare for
-> __no_sanitize_coverage being applied to __init functions, we have to
-> handle differences in how GCC's inline optimizations get resolved. For
-> arm this exposed several places where __init annotations were missing
-> but ended up being "accidentally correct". Fix these cases and force
-> several functions to be inline with __always_inline.
+On Mon, 19 May 2025 10:59:30 -0400
+"Theodore Ts'o" <tytso@mit.edu> wrote:
+
+> On Mon, May 19, 2025 at 06:52:13AM -0700, Kees Cook wrote:
+> > > --- a/fs/ext4/inline.c
+> > > +++ b/fs/ext4/inline.c
+> > > @@ -1314,7 +1314,7 @@ int ext4_inlinedir_to_tree(struct file *dir_file,
+> > >  		if (pos == 0) {
+> > >  			fake.inode = cpu_to_le32(inode->i_ino);
+> > >  			fake.name_len = 1;
+> > > -			strcpy(fake.name, ".");
+> > > +			fake.name[0] = ".";  
+> > 
+> > This means the trailing NUL byte isn't being copied any more? That seems
+> > like a big change, even if name_len is being used for length tracking.  
 > 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-[...]
-> diff --git a/drivers/soc/ti/pm33xx.c b/drivers/soc/ti/pm33xx.c
-> index dfdff186c805..dc52a2197d24 100644
-> --- a/drivers/soc/ti/pm33xx.c
-> +++ b/drivers/soc/ti/pm33xx.c
-> @@ -145,7 +145,7 @@ static int am33xx_do_sram_idle(u32 wfi_flags)
->  	return pm_ops->cpu_suspend(am33xx_do_wfi_sram, wfi_flags);
->  }
->  
-> -static int __init am43xx_map_gic(void)
-> +static int am43xx_map_gic(void)
->  {
->  	gic_dist_base = ioremap(AM43XX_GIC_DIST_BASE, SZ_4K);
->  
-> -- 
-> 2.34.1
+> Yeah, and so that's something that needs to be tested (and not just
+> build tested to catch the obvious FTBFS bug).
+
+The compiler (or headers files) can also allow strcpy() of constant
+length strings into arrays (known size). Erroring requests that are too long.
+The strcpy() is then converted to a memcpy() which can then be optimised
+into writes of constants.
+
+So using strcpy() under those conditions 'isn't all bad' and can generate
+better (and less bug prone) code than trying to hand-optimise it.
+
+So even through strcpy() is usually a bad idea, there is not need to
+remove the calls that the compiler can validate as safe.
+
+	David   
+
+> However, note how we
+> handle normal filenames, as opposed to "." and "..".  From
+> ext4_insert_dentry():
 > 
-Acked-by: Nishanth Menon <nm@ti.com>
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+> 	de->inode = cpu_to_le32(inode->i_ino);
+> 	ext4_set_de_type(inode->i_sb, de, inode->i_mode);
+> 	de->name_len = fname_len(fname);
+> 	memcpy(de->name, fname_name(fname), fname_len(fname));
+> 
+> Or were you commenting on the "no functional changes intended" line in
+> the commit description?  I agree that this is probably no longer
+> accurate.  :-)
+> 
+> 					- Ted
+> 
+
