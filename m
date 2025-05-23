@@ -1,138 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A1A28D8C1;
-	Thu, 22 May 2025 14:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7CA2DCBEE;
+	Fri, 23 May 2025 04:26:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747925404; cv=none; b=FToVrGzloxL7NQBXB+qHpf/Cg15kM9SHrr3iTF4ls7FFcY+CWOH/VfacaUmcYz3yyWoe2FTNyic41ix9WVrWDGngPipWhFAtRvdfOtOxdt4iBltFmUaT5a0K+odzDAZZ/9Mq7djVD1qQw88XUKLjpLZgOdC33pbanvhtEORODzI=
+	t=1747974406; cv=none; b=uvT+e695WmSCsLHNiJ1Ph1IBzJUU65O38QT1F4J1QXvCIGRcoxhpJvFkcbNm3rRdABZyobY0SDmDBryMQjzsNgjaS+JpqsDgn6eS0n69z3VHioWzy778GilPQL4dtaTTUHDzXUpdN3qd46Su9wGPV3ZkysgReLijcFzVhm6VzF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747925404; c=relaxed/simple;
-	bh=6r62Mqd/YPbA2PQW6RZiBXcJUx8hGxcJTqL9xwKx9vo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HZiWtj9kZ0ThaBmsXky0Mvrm5tstzsuJIEQGIMP70uVAlk15sYXRgGek24pov9MgQBf7memTPN1KF/6dqRHvu/dnCe4u6amUiQa5DhFn+NrmFQYVlHyS2gTYb8NvwG3Im8dOgnY5h5rIc+Q/B7rIfIPKLD+rT5Q80lsMr1KfSBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fsz72wDo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747974406; c=relaxed/simple;
+	bh=EiExo/O1G1E1SOUp1zjWSOI7ZyzWY/boZSXRjtlQQKU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OIpTEWGjYAh/smfzzabvGRue/J6DHz7f8sNbkrxOxaTQB/IA28CvFOh8i7wY+N5i3iUYpFChGdQXTWR8owAZ1ovrgV4Rp0dzjEsYTRwtvbDxPOSGmXh2n+shyYjOih8KK0bQf8+SCkQz1OP/ZqBhCqUbpnp12VVmSfXv401x/Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gd0cPxQ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fsz72wDo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC59C4CEE4;
-	Thu, 22 May 2025 14:49:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gd0cPxQ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2819CC4CEE9;
+	Fri, 23 May 2025 04:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747925403;
-	bh=6r62Mqd/YPbA2PQW6RZiBXcJUx8hGxcJTqL9xwKx9vo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Fsz72wDoCC3Fl2E3rGDqbsZhGB1uzKlcElswbXmaMcyHVow2pjgAnDc/kv5d1Gdn9
-	 sw+r/dvwGz4qsKV/gMakNK3srikER/bOHRI0KI3fhhNrSBqnKwig3K1rld0K6Ag76t
-	 dTyw9cBsc9ykhIVBFBE/ufCSi+oS04oO/4noB2wfJvBBZzogo8XDD2AheIlUP3IHq7
-	 sGvtm6NqeoBANooWnpG9y4JnvaadmpAbbhZ+1G8tcdiKnbo/HtQHiS3DSYJ71PqlcC
-	 kbgexouOFrs87gy0EaowsU1HgVXbwhSlzR+yzKUo5CcTNCW6I9UHtKCdK4Z8+3Yzng
-	 HVm/KZghQlneA==
-Message-ID: <bb7e9828-a19d-4f45-b405-66aac85e3bcd@kernel.org>
-Date: Thu, 22 May 2025 16:49:57 +0200
+	s=k20201202; t=1747974406;
+	bh=EiExo/O1G1E1SOUp1zjWSOI7ZyzWY/boZSXRjtlQQKU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gd0cPxQ0zoquo9jIgV+uoBAHduYSKgrAdT0roCiDt9NE4yqILo1P9983Vp6MFLPxz
+	 KP8H6jFX9tizAmoAbtIAFDe8zauGFb/FZic9N7z5rNQ6QGOo1xe2p2saEEbUhh09Cp
+	 5rY/hFw/47tM15sFF4g7Nq2eueH8XmfjCRAtsWec0eoV9IEZM7YpsdBgXryjV2wjRV
+	 fpThYZb3TUkVoAM8dKrPb9FHxMoG7Fhg7lOwY7PJA7Qf++V922+Z7hWeDQ/FypdKWi
+	 WseVHaD/YWiKMqvDxWvt1JQUrP3LP4/vJTEwlrkuh2Vs+JXdhxNdK605va6zeBVgqZ
+	 weR8av0wI9BQg==
+From: Kees Cook <kees@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] x86: string_32.h: Provide basic sanity checks for fallback memcpy()
+Date: Thu, 22 May 2025 21:26:40 -0700
+Message-Id: <20250523042635.work.579-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/12] dt-bindings: phy: renesas,usb2-phy: Add
- renesas,sysc-signals
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, p.zabel@pengutronix.de, geert+renesas@glider.be,
- magnus.damm@gmail.com, yoshihiro.shimoda.uh@renesas.com, kees@kernel.org,
- gustavoars@kernel.org, biju.das.jz@bp.renesas.com,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-hardening@vger.kernel.org, john.madieu.xa@bp.renesas.com,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
- <20250521140943.3830195-6-claudiu.beznea.uj@bp.renesas.com>
- <20250522-evasive-unyielding-quoll-dbc9b2@kuoka>
- <b22e7a46-7e35-4840-aae3-a855c97fbde4@tuxon.dev>
- <4a07048a-c55a-4fd3-b4e5-7f9d218de76f@kernel.org>
- <68d83aaf-280a-4c19-becf-c6e1d9c2432b@kernel.org>
- <797611e1-3786-45c4-9103-3ee8f96cec6d@tuxon.dev>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <797611e1-3786-45c4-9103-3ee8f96cec6d@tuxon.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1719; i=kees@kernel.org; h=from:subject:message-id; bh=EiExo/O1G1E1SOUp1zjWSOI7ZyzWY/boZSXRjtlQQKU=; b=owGbwMvMwCVmps19z/KJym7G02pJDBn6P/4LaVfbv6sK5RDKfeB1aV+eQpL12qdCf5LfLbjeG 7hrnePjjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlYfGL4n/RZf/rOoKiqvSu4 ju2y8k3w1xFe3b7GY1ly0aZ90kUb2xn+mdgJ39awud3Mxne/2rB2/vX56xZPXXAkN5z50gq7IFZ nBgA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 22/05/2025 16:39, Claudiu Beznea wrote:
-> 
-> 
-> On 22.05.2025 15:48, Krzysztof Kozlowski wrote:
->> On 22/05/2025 14:46, Krzysztof Kozlowski wrote:
->>>>>>  
->>>>>> +  - if:
->>>>>> +      properties:
->>>>>> +        compatible:
->>>>>> +          contains:
->>>>>> +            const: renesas,usb2-phy-r9a08g045
->>>>>> +    then:
->>>>>> +      required:
->>>>>> +        - renesas,sysc-signals
->>>>>
->>>>> That's ABI break.
->>>>
->>>> There is no in kernel device tree users of "renesas,usb2-phy-r9a08g045"
->>>> compatible. It is introduced in patch 11/12 from this series. With this do
->>>> you still consider it ABI break?
->>>
->>> Then this patch cannot be split from binding introducing the user. Don't
->>> add unused/undocumented compatibles.
->>>
->> Or you meant DTS?
-> 
-> Yes, I meant in tree DTS.
+Add basic sanity checking for pathological "size" arguments to
+memcpy(). Besides the run-time checking benefit, this avoids
+GCC trying to be very smart about value range tracking[1] when
+CONFIG_PROFILE_ALL_BRANCHES=y but FORTIFY_SOURCE=n.
 
-Rhetorical question (because we talked about this on mailing list many
-times enough): what would be the point of any ABI if you can break it
-and adjust in-tree DTS in the next patch?
+Link: https://lore.kernel.org/all/202505191117.C094A90F88@keescook/ [1]
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Closes: https://lore.kernel.org/all/e3754f69-1dea-4542-8de0-a567a14fb95b@infradead.org/
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ v2: isolate this specifically to 32-bit x86 -- doing this generally is much more work
+ v1: https://lore.kernel.org/lkml/20250520163320.work.924-kees@kernel.org/
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: <x86@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+---
+ arch/x86/include/asm/string_32.h | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Best regards,
-Krzysztof
+diff --git a/arch/x86/include/asm/string_32.h b/arch/x86/include/asm/string_32.h
+index 32c0d981a82a..6e8d100d1301 100644
+--- a/arch/x86/include/asm/string_32.h
++++ b/arch/x86/include/asm/string_32.h
+@@ -147,7 +147,14 @@ extern void *memcpy(void *, const void *, size_t);
+ 
+ #ifndef CONFIG_FORTIFY_SOURCE
+ 
+-#define memcpy(t, f, n) __builtin_memcpy(t, f, n)
++#define memcpy(t, f, n)					\
++	({						\
++		typeof(n) __n = (n);			\
++		/* Skip impossible sizes. */		\
++		if (!(__n < 0 || __n == SIZE_MAX))	\
++			__builtin_memcpy(t, f, __n);	\
++		(t);					\
++	})
+ 
+ #endif /* !CONFIG_FORTIFY_SOURCE */
+ 
+-- 
+2.34.1
+
