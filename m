@@ -1,123 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403AB1DE3CA;
-	Sat, 24 May 2025 00:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6B67262E;
+	Sat, 24 May 2025 06:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748048034; cv=none; b=LgySteSAeS60aUNuGXnvvOhjH/ovBViAHcAg6N0Mc5L5l63CDPUd9OxdKDIc/N5faXm7NcBpE9xdGRtEoyIvFHCS4DolKlOmwwM+rcIi+joJZXDqjH3NqQ5iwpDMX9+FxUMB2NVvDZsQ1HkiA6LuK2kTmn5O8wXp3RTPQS2RI3E=
+	t=1748067960; cv=none; b=eWFyQSgsZe4zlPwx36dDgMFcLreTHPVBDAXGyDpPFkQ68XwphnjASGURTNbvTCZUYi+WeSHtfrBsVJJAZZhgx7KRrFPC+/fMvUVbjU6UlGF6k8/CsVWhEEAmrwOuGjivSbaI4JBDIvDVYHRYyYX5F9pHo87/79BhJHew4ciC9Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748048034; c=relaxed/simple;
-	bh=o4ZCIdstP4akpvLI/xTOh3WGsK9Kd7BBZn+JNNXep3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=symffpKxqeLPilwU5i2CtqjkrUsGXXdaRPmofJe4SJFwDTUKM0TkRLlAWbZdyALU1AHvT+4nQQyzLasqswObKgKGH9WRemTiJqMIb1F+FdTsUqRi/JQIzZRabAzZFaQd6//dVJalepUcIm9//PQ3/AWUKUDGoRcBYnVdZcFDeG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lstcPD7c; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748067960; c=relaxed/simple;
+	bh=ybkyU6z28mqr4/T7na2QWpSLF3TBkc00QqWGfXfVfMk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ERhXWbsfFxWrv4gUK94vyqKDaLcL+cd1sjRCq+EfHdWelqECNmVAJjlIN4rb4o8bN9EO1/spmW0D5oILoev6oJ3ZfvBZZO4WoeQKHs3/Uq7tOEjCcIQfUqtrj1bMNXWYl5O408Y3xLeNO/ECOMu/NXxyVYE3nBNgxrXpIYeCAnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7HoDqdm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lstcPD7c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748048033; x=1779584033;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o4ZCIdstP4akpvLI/xTOh3WGsK9Kd7BBZn+JNNXep3o=;
-  b=lstcPD7cqis68nq1eNzBC1XszvKRBHlih4gXCwod/dx0P6jjII7ilnhY
-   1KD39+VPm6ZVxHrdO+bppcKEaCxJfBcUFnSRPWw9j7gkpSz+UxUqVE4W8
-   9ZWJ4Z4WMXwj2tCmzveqCu1pdCY/DYzj1lJRsxaB+vFVtKbofDqYK5god
-   e6/WiCrPA41BoIUp4R1nCphZ27ancTyplWfOmz3bhV0LhC4muVy65CbY9
-   V3RxnhzD2fN/1i8KQPqkBmGQ9XOpT5AtZdtBqR8gSJPtAuaDrJb+ql++6
-   OYUtvVy2RHBICp4XvRf6NdQatRPasYVii5x8pg7jTj/eNh4+Tx6sXp/kn
-   A==;
-X-CSE-ConnectionGUID: dKF3AfeFSwWZIeLyLtA8HA==
-X-CSE-MsgGUID: cLIJJYmDRrShhO7CRj4bTQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="75508444"
-X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
-   d="scan'208";a="75508444"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 17:53:52 -0700
-X-CSE-ConnectionGUID: 46G+cFMqQ5ykPEn51US7kA==
-X-CSE-MsgGUID: tTBhCX0NQPejqe8lvgJDRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
-   d="scan'208";a="178484993"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 23 May 2025 17:53:49 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uId91-000QqG-0n;
-	Sat, 24 May 2025 00:53:47 +0000
-Date: Sat, 24 May 2025 08:52:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kees Cook <kees@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>
-Cc: oe-kbuild-all@lists.linux.dev, Kees Cook <kees@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86: string_32.h: Provide basic sanity checks for
- fallback memcpy()
-Message-ID: <202505240850.vTrqyqJx-lkp@intel.com>
-References: <20250523042635.work.579-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7HoDqdm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E725C4CEE4;
+	Sat, 24 May 2025 06:25:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748067959;
+	bh=ybkyU6z28mqr4/T7na2QWpSLF3TBkc00QqWGfXfVfMk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=C7HoDqdmO/xotBfAzRUQ+GNoQf2H1eycERDLPvJ4iw6PwkBWbgTyfTFWVc142XYZO
+	 BrXBCTsFp/59q0HRmi1wr5KK5BkGvkws+PmHtzgi+FBt9CF2OK6+7biVq7kpW1fpSV
+	 z3MyOarDobehnuIivFfSOQbeaSE/5dX44kHcIk32/FTIyMXs1UeOnbqsAYbDItUPik
+	 5wlrOQTPgvCWP7ssoo4g/K4NOdGems50a4TviqN+xY9NeGYApzEDJYK9Dn9mbhASSz
+	 RAR615DA7OkBk337aqgF9otVt3Yii9w80PnBJlq07AblfAy16OgKQxAju2Sq2RnKfW
+	 EodumkqNv2rOg==
+Message-ID: <e9dac160-f90a-48e2-9269-245b36c3aefe@kernel.org>
+Date: Sat, 24 May 2025 08:25:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523042635.work.579-kees@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 01/14] dt-bindings: net: Add PPE for Qualcomm
+ IPQ9574 SoC
+To: Luo Jie <quic_luoj@quicinc.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
+ Suruchi Agarwal <quic_suruchia@quicinc.com>,
+ Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-msm@vger.kernel.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-hardening@vger.kernel.org, quic_kkumarcs@quicinc.com,
+ quic_linchen@quicinc.com, srinivas.kandagatla@linaro.org,
+ bartosz.golaszewski@linaro.org, john@phrozen.org
+References: <20250513-qcom_ipq_ppe-v4-0-4fbe40cbbb71@quicinc.com>
+ <20250513-qcom_ipq_ppe-v4-1-4fbe40cbbb71@quicinc.com>
+ <20250519-garrulous-monumental-shrimp-94ad70@kuoka>
+ <a182df27-5b0d-42d1-8f58-4e7a913bb12d@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <a182df27-5b0d-42d1-8f58-4e7a913bb12d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Kees,
+On 23/05/2025 12:28, Luo Jie wrote:
+>>> +  interconnect-names:
+>>> +    items:
+>>> +      - const: ppe
+>>> +      - const: ppe_cfg
+>>> +      - const: qos_gen
+>>> +      - const: timeout_ref
+>>> +      - const: nssnoc_memnoc
+>>> +      - const: memnoc_nssnoc
+>>> +      - const: memnoc_nssnoc_1
+>>> +
+>>> +  ethernet-dma:
+>>
+>> I don't get why this is a separate node.
+>>
+> 
+> We used a separate node because the EDMA (Ethernet DMA)
+> is a separate block within the PPE block, with specific
+> functions like ports-to-host-CPU packet transfer and
+> hardware packet steering. We felt that a separate node
+> would depict the hierarchy more clearly. Could you please
+> suggest if a single node is recommended instead?
+Since it is a separate block and it has its own resources, it is fine.
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on tip/master]
-[also build test ERROR on tip/x86/core kees/for-next/pstore kees/for-next/kspp linus/master v6.15-rc7 next-20250523]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/x86-string_32-h-Provide-basic-sanity-checks-for-fallback-memcpy/20250523-122803
-base:   tip/master
-patch link:    https://lore.kernel.org/r/20250523042635.work.579-kees%40kernel.org
-patch subject: [PATCH] x86: string_32.h: Provide basic sanity checks for fallback memcpy()
-config: i386-buildonly-randconfig-004-20250524 (https://download.01.org/0day-ci/archive/20250524/202505240850.vTrqyqJx-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505240850.vTrqyqJx-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505240850.vTrqyqJx-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   arch/x86/crypto/serpent_sse2_glue.c: In function 'serpent_decrypt_cbc_xway':
->> arch/x86/crypto/serpent_sse2_glue.c:39:19: error: assignment to 'const u8 *' {aka 'const unsigned char *'} from incompatible pointer type 'u8 (*)[16]' {aka 'unsigned char (*)[16]'} [-Werror=incompatible-pointer-types]
-      39 |                 s = memcpy(buf, src, sizeof(buf));
-         |                   ^
-   cc1: some warnings being treated as errors
-
-
-vim +39 arch/x86/crypto/serpent_sse2_glue.c
-
-e0f409dcb82e463 Eric Biggers    2018-02-19  32  
-9ad58b46f814edd Ard Biesheuvel  2021-01-05  33  static void serpent_decrypt_cbc_xway(const void *ctx, u8 *dst, const u8 *src)
-e81792fbc2a6fa4 Jussi Kivilinna 2012-06-18  34  {
-9ad58b46f814edd Ard Biesheuvel  2021-01-05  35  	u8 buf[SERPENT_PARALLEL_BLOCKS - 1][SERPENT_BLOCK_SIZE];
-9ad58b46f814edd Ard Biesheuvel  2021-01-05  36  	const u8 *s = src;
-e81792fbc2a6fa4 Jussi Kivilinna 2012-06-18  37  
-9ad58b46f814edd Ard Biesheuvel  2021-01-05  38  	if (dst == src)
-9ad58b46f814edd Ard Biesheuvel  2021-01-05 @39  		s = memcpy(buf, src, sizeof(buf));
-9ad58b46f814edd Ard Biesheuvel  2021-01-05  40  	serpent_dec_blk_xway(ctx, dst, src);
-9ad58b46f814edd Ard Biesheuvel  2021-01-05  41  	crypto_xor(dst + SERPENT_BLOCK_SIZE, s, sizeof(buf));
-e81792fbc2a6fa4 Jussi Kivilinna 2012-06-18  42  }
-e81792fbc2a6fa4 Jussi Kivilinna 2012-06-18  43  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Krzysztof
