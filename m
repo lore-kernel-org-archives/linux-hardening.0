@@ -1,151 +1,145 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF21318DB0D;
-	Mon, 26 May 2025 07:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49AA820B81D
+	for <linux-hardening@vger.kernel.org>; Mon, 26 May 2025 14:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748244344; cv=none; b=TT8Im/Ms9gHbJ4CCYuUqVDOjM3Mai/q5kNkTr86P9mnyaYziFiHLGoXxWvuKsbZaKl5rkUCcl2EIMP3KmSB6iU2aZAsoJWP/mMpUr/gkAO0ch7w2FZdAV6pZd7+BxWAm68AJuNKNYvSSGRwURSjTfBsES+0+B9ixkvQjLLW27SI=
+	t=1748269364; cv=none; b=iEVKtE5aBIdRJ/xAAf4hWl1rjWN2MmUfgFK186IppfBOVz5h/jS7d03tBYSvNSSIPRtMAhGAi+QUYQgy3GnMb75mbEBLaVM38gyvPleJEUoOKHcYmQpz23sBjlZ65hqkQbps82fKxE0c20EDQVTT9zHow8ljA44hMwc01dkYKeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748244344; c=relaxed/simple;
-	bh=jI/6QrKDgQw+a5STQCUZbrlMyan64IJNwwcyUgaiJeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ckG6ZT7gSblfiF4/TlHrRuQX21pZbst4ixZqxI9xxRtnlgNF+SgCPmeUBf8864bESEXeNPfGtZqClj3Ksdy5So4pMGzRVA0LNHzQBU6//ny3xItgeddyUu6AzFXhHyS0CysVamvrp+SftSmUWDKo3a/dCrOTd4AjFOkQE20HEXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FgwTR4Yv; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1748269364; c=relaxed/simple;
+	bh=ozdZCu4sbeFf0TUaBG2zQu930/uOGL2LDeITT9iP378=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BdkQKcH88cGN4n48Umk8t8gzKphKiW5W3tps1LUyjqquhSc1bup6FUyMZcHLnQ5BNe0sn5g+kZSep4WoEuOa38oJ+gJCkJWCY0x/Ne75pG8IZSAOTX9sGeB0R/iJPObNEYUD9xusrgHuBX1iyRw7xQ1lL9XaIZM9im0ffjy7iW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CbMxnNXp; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FgwTR4Yv"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54PNetJ9018296;
-	Mon, 26 May 2025 07:25:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sFsCV/DjNz5vL4f4te1C3iQo+A07KiQkSvGfgc9WuHI=; b=FgwTR4YvNw/iNQkX
-	xUTYDKebwmzqI726vHADr5Jtjsv29mpbvMbzoKngMYIUNu0XwW+f38AmMGSO9/ky
-	YBV94NMg0sGOurG47Xwv8QRjOn/M67MeS4dNLW6WxCiNFZt8/0U826He7htqrzmv
-	cWzoeJcWdpYjvsTJGzn1MWNs0PSWmy1WYxQZX4aTdBk+xsRuBSWcvxvVnDJFLm8Z
-	vEPcsO7c3yjFxpenXJyWED38oLsXRcZymsJjE8s/XrNtom4SJq5+gfjq8n1URn6M
-	g9F9dbIKlWe26lfZiY+xvVF4w+qAAQfwmOJVBlPLfqu74fCE4HrumohP990yKxBi
-	kFFE6Q==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u7dc38wk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 07:25:25 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54Q7PPBK023669
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 07:25:25 GMT
-Received: from [10.253.8.193] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 26 May
- 2025 00:25:16 -0700
-Message-ID: <ce62bdda-b328-4be7-b9d7-1b4bffa039e6@quicinc.com>
-Date: Mon, 26 May 2025 15:25:14 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CbMxnNXp"
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2e3e58edab5so727927fac.3
+        for <linux-hardening@vger.kernel.org>; Mon, 26 May 2025 07:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748269362; x=1748874162; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ozdZCu4sbeFf0TUaBG2zQu930/uOGL2LDeITT9iP378=;
+        b=CbMxnNXpdH7dcuT163alnLe+DLlw9R0OWw1VSkPj3/lZcaEPAdUX+K2zMLv9+6wgy8
+         CJvLuCs6msm0CL4MYeEfiyq6fxoM7/dQa7ueXtHGffoLLLCmnGpL7bfDSLnYGQqNWyxi
+         4IUzqqF49IoS3OeK/cm+uRANpljL5VyoAaNW02z8cqFilm62ivL+/A2mlz+zt9LVL7A+
+         CSZ17Q5iAJ4vup2jJMic+W19M7zf6s9AIgYozGiQn2j6meSIBglgbqYsyqpXtvofMH00
+         /0WB8AmwKkJVhxNQqIwDyN+KjROGKIUIHJj09w4goMQMlCCoQqyt+gum6TI6FvYoZ+XP
+         fnmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748269362; x=1748874162;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ozdZCu4sbeFf0TUaBG2zQu930/uOGL2LDeITT9iP378=;
+        b=Q9p+LbB3JHnk5ZCYQMMMKjxjwE/2LrG2KaxqDXlhOFN45QVzdWosKxyEnX7Chvq3xR
+         fQuCKxilGDr9h2Kybsl1Eyn9Dh1mTbEJHAn7h6MkT6T4NyaaaSyJdUxc3+K3Ijx88hGM
+         BxOUJvjIByUGAF1kTBuuVvo8W0ysL+G3ayDaPuWY2h7M+opL4M7gILehqVp3k5BV5TvI
+         aY5gx+m7a7Z8B1H6mbnm9FIsExGXeT6hNiTIWJAPP1Gqe9Qa/7uZ8LUMmTCgdiYCU1Kg
+         kPPkiTOtGdGiOXa9TmvQd9NBPldxFpPaMuYzVhLoTw/d6WiAa56rtxrjoOVflK1N5g9e
+         tjlA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/Ug3iuBB3LLjAW93SwtmTXhijAWFVA1i0Xt0PZphVWEFaQTWcj2XRqdFzL2VhfBOGpnvhTxf0HFKBsCzGBv4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvt2ycGtT3Enu1umg51QrPq1h3NfmF/GQksxxkqkRTKJJs0MYs
+	qaDvGj8mgeJldJ0IP+XybvGNbczn9DVkm0+2IUFrTgeQBig4f5V/0InjdaI0viJQ0qwcUP7Yffq
+	SajnZ4Ng61+C2G1bWnaVxgqbAWjroX7VGyiUM3UI3
+X-Gm-Gg: ASbGnctz6mbMLXA7NHtkHtcoYlo2DzOfxyFIAzJedcCToBAI2u8UH7ZdQbGAC73dMLn
+	WicUj5hHU61vOJkFtox0XKxYBEJ9vifCA4sVMKwOBQj3bE0a++Aij8dFhJsn2ouugDS4FJAp1AI
+	i7QP2qqCICXzb1QQR1S2tYzlHQem2qQJ/JS1+Ovu5JnFdBxE2YaAxeww6mDpB+d+wgcC9T21QSC
+	w==
+X-Google-Smtp-Source: AGHT+IGgbU7dY/aYiuMiK0TQSXjmB1sIYr/LZnn+GBvw6EcrTaqiOABq0t//pFIO8AAy4IdCBf27PJqhqe3BHFJ+79Y=
+X-Received: by 2002:a05:6870:8894:b0:2d4:d07c:7cb2 with SMTP id
+ 586e51a60fabf-2e861e5ef24mr4321746fac.11.1748269362074; Mon, 26 May 2025
+ 07:22:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 01/14] dt-bindings: net: Add PPE for Qualcomm
- IPQ9574 SoC
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal
-	<quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>,
-        "Simon
- Horman" <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp
- Zabel" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <john@phrozen.org>
-References: <20250513-qcom_ipq_ppe-v4-0-4fbe40cbbb71@quicinc.com>
- <20250513-qcom_ipq_ppe-v4-1-4fbe40cbbb71@quicinc.com>
- <20250519-garrulous-monumental-shrimp-94ad70@kuoka>
- <a182df27-5b0d-42d1-8f58-4e7a913bb12d@quicinc.com>
- <e9dac160-f90a-48e2-9269-245b36c3aefe@kernel.org>
-Content-Language: en-US
-From: Luo Jie <quic_luoj@quicinc.com>
-In-Reply-To: <e9dac160-f90a-48e2-9269-245b36c3aefe@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ctFXOY6aZXB9Cba_WI4zxGky5WX3pqvO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDA2MSBTYWx0ZWRfX9SoU85VKL4uu
- BMRnvtaskkMUjU06iumRs8vuh7IPokcNOlBzWmuKhR4xpOUOBQWRC8P3dTWqQ7mUVvyAClrz6y5
- OroKuJM9CdZ7po9NUnCnksMj+nQIucZUUv4n0EjkJf6m22rID+R0sSbqaczAo7ra6c8IIbYMHhq
- m55VToirRUtsNGgtBGmIxRo90P+Vo8p29RNHhAe5Nf6XMo4jPMmBimFxqkemcxDN7/kmYvMqgq7
- F+TTlrTT8mXeaSn9j0UMsnybGbCGs63Yd/uDdhwyLAPwEUqn5bwfYLFBQXGmBjugC6nJhtdSuyb
- wiUYxYHlNvXt9mhIfclS8y95wJ44kVj3gYK97UIExMKmqTsv/hzQVlglskFNM7TFIESTHFauseH
- 9DTBDbIItl67LyP2+SMwseThrSBmtqGWKIKqE4kPByixkq8lFnwVZf1FIOn+N0et8W1HxUKN
-X-Proofpoint-ORIG-GUID: ctFXOY6aZXB9Cba_WI4zxGky5WX3pqvO
-X-Authority-Analysis: v=2.4 cv=Mq5S63ae c=1 sm=1 tr=0 ts=68341765 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=TRFCqlRPH5gG6gXwlP4A:9 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-26_04,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 clxscore=1015 adultscore=0 mlxlogscore=861
- bulkscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505260061
+References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-6-bqe@google.com>
+ <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com>
+ <682bc528.c80a0220.13f632.9ec0@mx.google.com> <aCvTYHMtuWZZizn9@yury>
+ <aC1PQ7tmcqMSmbHc@google.com> <aC3aOHWEGzjjDNgb@yury>
+In-Reply-To: <aC3aOHWEGzjjDNgb@yury>
+From: Burak Emir <bqe@google.com>
+Date: Mon, 26 May 2025 16:22:29 +0200
+X-Gm-Features: AX0GCFtaK59XKWVw-zjdUPgLjtmA8XtEQrH2zT15JLsncpG05JyCsu31b_JxoI8
+Message-ID: <CACQBu=XmC-9OHSHv_9KP88HpV3Ei83gmNmy-B8DAfbtipKmyLQ@mail.gmail.com>
+Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Carlos Llamas <cmllamas@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Jann Horn <jannh@google.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, May 21, 2025 at 3:50=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
+rote:
+>
+> On Wed, May 21, 2025 at 03:57:55AM +0000, Carlos Llamas wrote:
+> > On Mon, May 19, 2025 at 08:57:04PM -0400, Yury Norov wrote:
+> > > + Carlos Llamas
+>
+> ...
+>
+> > > Carlos, can you please elaborate your motivation to switch to bitmaps=
+?
+> > > Have you considered rb-trees with O(logn) lookup?
+> >
+> > Yeah, we tried rb-trees. There was even a patch that implemented the
+> > augmented logic. See this:
+> > https://lore.kernel.org/all/20240917030203.286-1-ebpqwerty472123@gmail.=
+com/
+> > IIRC, it just didn't make sense for our use case because of the extra
+> > memory bytes required for this solution. The performance ended up being
+> > the same (from my local testing).
+> >
+> > I'm not certain of this but one potential factor is that the rb nodes
+> > are in-strucutre members allocated separately. This can lead to more
+> > cache misses when traversing them. I don't know how applicable this
+> > would be for the Rust implementation though. Take that with a grain of
+> > salt as I didn't actually look super close while running the tests.
+> >
+> > I would also note, this whole logic wouldn't be required if userspace
+> > wasn't using these descriptor IDs as vector indexes. At some point this
+> > practice will be fixed and we can remove the "dbitmap" implementation.
+>
+> Yeah, I expected to get this kind of feedback from real-world testing.
+> Your reply to the patch you mentioned above answers all my questions:
+>
+> https://lore.kernel.org/all/ZwdWe_I2p3zD-v1O@google.com/
+>
+> Let's stick to bitmaps unless someone shows clear benefit of using any
+> alternative approach, both in time and memory perspectives, supported
+> by testing.
 
+Thanks all for the additional context.
 
-On 5/24/2025 2:25 PM, Krzysztof Kozlowski wrote:
-> On 23/05/2025 12:28, Luo Jie wrote:
->>>> +  interconnect-names:
->>>> +    items:
->>>> +      - const: ppe
->>>> +      - const: ppe_cfg
->>>> +      - const: qos_gen
->>>> +      - const: timeout_ref
->>>> +      - const: nssnoc_memnoc
->>>> +      - const: memnoc_nssnoc
->>>> +      - const: memnoc_nssnoc_1
->>>> +
->>>> +  ethernet-dma:
->>>
->>> I don't get why this is a separate node.
->>>
->>
->> We used a separate node because the EDMA (Ethernet DMA)
->> is a separate block within the PPE block, with specific
->> functions like ports-to-host-CPU packet transfer and
->> hardware packet steering. We felt that a separate node
->> would depict the hierarchy more clearly. Could you please
->> suggest if a single node is recommended instead?
-> Since it is a separate block and it has its own resources, it is fine.
+Yury, I've addressed most of the comments.
 
-OK, thanks for confirmation.
+You also commented on the API. The weirdness of the API is all due to
+the separating "request to shrink/grow" from allocation.
+Since allocation can happen while other threads may mess with the id
+pool, one has to double check that the request to shrink/grow still
+makes sense.
+Dealing with this situation is required in the Android binder context
+where this ID pool is used, my understanding is that one cannot
+allocate there while holding the spinlock.
 
-> 
-> Best regards,
-> Krzysztof
+In the next version, I have renamed the operations to make this a bit
+clearer, and made the comments a bit more explicit.
+If it's ok, let's move the discussion to v9 that I will send in a
+moment, I hope it clears things up a bit.
 
+Thanks.
+Burak
