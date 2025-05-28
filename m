@@ -1,84 +1,43 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BE41DF26E
-	for <linux-hardening@vger.kernel.org>; Wed, 28 May 2025 05:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C72210F4D;
+	Wed, 28 May 2025 06:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748409735; cv=none; b=P6tjd50jdhYRRfrDFvrCdGrM4/f//+l7zrucPUTcMAo99mBozBEWeupekcRR9spkPzVU8swf5WvW1AE4unsg+smUFYQNfaw3j9eiEzSQZrgAuMo8r8ortvZpFqolZ9P3dpDC+R7OxTZh1nNDthbloga43zvSy9jphSqXos2VxPc=
+	t=1748412884; cv=none; b=nw4ac8Egl6iFxgR5l/qUE0gFaXTQSHX9tEi2rUK3NlkwKsVmL6lJCo+zTWwGyfbT3Ab7RDd2PDkLu0sguYRs6V7hAVzfiTBnXMVYhzK8BU415aP6Coh8EnKSVGXtNVt+4Z8Xdb1w4yjfGRFhzx1AtgurYcs80CUhPI8g6vKzi50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748409735; c=relaxed/simple;
-	bh=yXGgj+mtxns8PhzMgNMh2VawII6kvgVSZTxvTe6x10Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=TQPy/lBqTeQYV6ekAa0MQYdF8WOcKtwh09/10fLunuOGrzruyzOHSEqlcRkljYMVx4LEkUdjIL3pfZ5Rynx6uwo2ANYRGOHA7IHdTsGQyoaDDkwBxL9xkhsWL6G3Ehr+ArX0Ok2aZCHe5Fxsm+uCbPGDDdoAGJDQ/i6MoiewqB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rtJ1njK3; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748412884; c=relaxed/simple;
+	bh=gSS4CjRAoDJno8ZPj89/BweAbZmckAAF42wPMM0GsLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g6l3qk21atcrmGnDsv/IVWYw1M74ZliTdRsbt5BEAr3qRJsd7cilGGeizMofARWGSZU7OCTqtpQeALI5ZFXsNK6El6d+ngkt6ztVFcXtH3pIZrnZpfuwpmGCzPXLwF4T7ndCnv2qK+r5ivNWafuco3ZF+n/TjEAwHnf9go36pCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aocLOYon; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rtJ1njK3"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-442f9043f56so27228075e9.0
-        for <linux-hardening@vger.kernel.org>; Tue, 27 May 2025 22:22:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748409730; x=1749014530; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hQoa0JY92XB83bF0hiIU1JdZJVH9XdUX6CbZ3gHnktA=;
-        b=rtJ1njK38bjbmRTgcx5Q8nv58SVXSFssmZneBw3MIEIAIvKqXK5OvwIugucZYZGrIQ
-         VslXBssJUKpAC49zdn5f+KAMq2ZBWMBw3EKzm76/1lP9b1MIoPoLysqaJGnJSUoWhq3G
-         2wMLXZr8oiqPvFnICw71nYb+64a2ZgbXn7MFMOaLJz9b4LHcX9E+zNRTbCj0+8j/AO2s
-         L3pJodMkWjsy07LlhIamkxyhZ1V0YNK+MovDBdWzqDWjsFlXEJFibB7lsFhT0DMEI6QI
-         AqaxqCu2i0cm+uFiX4PMo0bfO5k4G8kpzdDv5UJ3EnuhPTsKi7DsiXv3nULgs5HqS/ZP
-         vPRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748409730; x=1749014530;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hQoa0JY92XB83bF0hiIU1JdZJVH9XdUX6CbZ3gHnktA=;
-        b=IB5wKpCy9a9915afcSHoIQj3hAt1slrxy2sN7OfOcCUIiwNKEieOR6j6vB7QL1x703
-         DfSFBgMtygMQ5At+J1bMwTCN6G28/PFkMKma8KW/qRb9mltRLp74Y/z3AAPrBmzVtB7d
-         wYEeODtcnVXCiDtUMwQ0abuUAsOnoUuYvp370wYCoaXIhSn2OzjbBb1xZWnfGouT1ceh
-         n54BKmlUFcKKrkCRHB2HvasCe6W5Ct9odxIWIzqVWD6xYUXLcrCA/dlnuTwHROUg7R+2
-         tAUy7DnTHhJV06+n9yATlKN2hOnn3eBnzkdwDwRjir+ngdUBzy5oU5pe7j3c2Shat6Dm
-         P9mg==
-X-Forwarded-Encrypted: i=1; AJvYcCVVCkFDtjgrPoNAepW4e+ZMHSTdrRcYGuJrBMu0sFiRWIscLkiIo/KCKzmi+GldaMSEYNJ0mM+7x7Wcf69BgpY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywj9I/6YQrnUm1JD5kZSaYsd1JFjf1fmxdgZqJdgCEm3i2HaxYU
-	tSRtFEYkaZ+t17xTqKVWjDC8GZsUWXCEfCLqQZx7ihm9ExrshwvAKM8cZVwtUmMvLLk=
-X-Gm-Gg: ASbGncs3qtnbhublPCKekU57BPr15QOgBfAjvFM+UXVJqcRfPWqCxccl+4mb9H5xjAO
-	lIr1VnDlapKb3wDCSEKl0otQLQnmYjxkHEBuF6vRB/yCSOYh7Dg5OblGPK7L1Ao3vwR8iW/NZPa
-	DdnfNuf4tt0mTHa2HpKqcRjRKf3WyUhRttmaXsC1D5IdhCdyVin5CvtyHddBM9+OICv8hK5dton
-	VxAf3la9zD7EKvaJbntfuRFcuY3ve45r3bp5L/kF5G8VahBaabQ52eTuGCvZ/R1an1roM8/dt1G
-	RoAUJpDjSJd0/pkltl3OTnY0C9g0KYRoeRTN08zquF3Jn9RdXEAbsveh
-X-Google-Smtp-Source: AGHT+IFRt79F9Nml3doFVgCAm1e3lBsDWSa75/5HWtnFCBSWr87OHZCH/XypCJ2QyEheeH/6O/16gw==
-X-Received: by 2002:a05:600c:621b:b0:43c:fffc:786c with SMTP id 5b1f17b1804b1-44fafbf883dmr53519405e9.19.1748409729976;
-        Tue, 27 May 2025 22:22:09 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45072559736sm5617525e9.19.2025.05.27.22.22.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 22:22:09 -0700 (PDT)
-Date: Wed, 28 May 2025 08:22:06 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev,
-	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Apurupa Pattapu <quic_apurupa@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org,
-	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
-	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v5 09/12] tee: add Qualcomm TEE driver
-Message-ID: <202505280653.Y79JKqDd-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aocLOYon"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A98EFC4CEE7;
+	Wed, 28 May 2025 06:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748412884;
+	bh=gSS4CjRAoDJno8ZPj89/BweAbZmckAAF42wPMM0GsLU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aocLOYonwxONTi12LfiZ5xjosNb3Y5gKkNrj56+v0oqn+5bxipcc7fqfKMCLUiPqJ
+	 86koB/f3yH3JfJeFCzRulM0tj0iUYixZECMqlrrgJScAarzNXjZRjx0mo5Zc/ertnT
+	 8tvOuu4HUmgHrE5ANkuyKODt1Qj4IM4GjN2pJu4G+2hJp898Du/mknk+BrCDACyYrY
+	 cdhD6bs1tV3M5NFukEJcRQhBfTCDV7yjlZxxm8fSCmI3bDhNjtnt9hUHWF+Ioq30eW
+	 2vId+gOUX4vWP7jCqmsT4NHqRao2rZzclOgIRz3z+jiai+mHbfe19EkqU5HbAMTMQm
+	 xv3/SBt7Q0Rbg==
+Date: Tue, 27 May 2025 23:14:27 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+	kernel test robot <oliver.sang@intel.com>
+Subject: Re: [linus:master] [crypto]  40b9969796:
+ UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c
+Message-ID: <20250528061427.GA42911@sol>
+References: <202505281024.f42beaa7-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -87,110 +46,109 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-9-024e3221b0b9@oss.qualcomm.com>
+In-Reply-To: <202505281024.f42beaa7-lkp@intel.com>
 
-Hi Amirreza,
+[+Kees and linux-hardening]
 
-kernel test robot noticed the following build warnings:
+On Wed, May 28, 2025 at 01:15:05PM +0800, kernel test robot wrote:
+> 
+> 
+> Hello,
+> 
+> by this commit, the config has below diff:
+> 
+> --- /pkg/linux/x86_64-randconfig-101-20250522/clang-20/d469eaed223fa485eabebd3bcd05ddd3c891f54e/.config 2025-05-23 23:44:56.781716572 +0800
+> +++ /pkg/linux/x86_64-randconfig-101-20250522/clang-20/40b9969796bfa49ed1b0f7ddc254f48cb2ac6d2c/.config 2025-05-24 02:08:29.858605300 +0800
+> @@ -4837,7 +4837,8 @@ CONFIG_CRYPTO_ACOMP2=y
+>  CONFIG_CRYPTO_MANAGER=y
+>  CONFIG_CRYPTO_MANAGER2=y
+>  # CONFIG_CRYPTO_USER is not set
+> -CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=y
+> +CONFIG_CRYPTO_SELFTESTS=y
+> +# CONFIG_CRYPTO_MANAGER_EXTRA_TESTS is not set
+>  # CONFIG_CRYPTO_NULL is not set
+>  CONFIG_CRYPTO_PCRYPT=m
+>  CONFIG_CRYPTO_CRYPTD=y
+> 
+> it seems tests are enabled then we observe the UBSAN issues
+> 
+> d469eaed223fa485 40b9969796bfa49ed1b0f7ddc25
+> ---------------- ---------------------------
+>        fail:runs  %reproduction    fail:runs
+>            |             |             |
+>            :6          100%           6:6     dmesg.UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c
+>            :6          100%           6:6     dmesg.UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305.c
+> 
+> it's hard for bot to apply this commit to previous commits in bisect, so we just
+> make out below report FYI that we observe UBSAN issues in boot tests.
+> 
+> 
+> kernel test robot noticed "UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c" on:
+> 
+> commit: 40b9969796bfa49ed1b0f7ddc254f48cb2ac6d2c ("crypto: testmgr - replace CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> [test failed on linux-next/master 176e917e010cb7dcc605f11d2bc33f304292482b]
+> 
+> in testcase: boot
+> 
+> config: x86_64-randconfig-101-20250522
+> compiler: clang-20
+> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> 
+> 
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202505281024.f42beaa7-lkp@intel.com
+> 
+> 
+> [   12.442846][    T1] ------------[ cut here ]------------
+> [   12.443261][    T1] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305-selftest.c:8854:47
+> [   12.444084][    T1] 16 - 114 cannot be represented in type 'size_t' (aka 'unsigned long')
+> [   12.444682][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Tainted: G                T   6.15.0-rc5-00342-g40b9969796bf #1 VOLUNTARY
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Amirreza-Zarrabi/tee-allow-a-driver-to-allocate-a-tee_device-without-a-pool/20250527-151020
-base:   3be1a7a31fbda82f3604b6c31e4f390110de1b46
-patch link:    https://lore.kernel.org/r/20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-9-024e3221b0b9%40oss.qualcomm.com
-patch subject: [PATCH v5 09/12] tee: add Qualcomm TEE driver
-config: x86_64-randconfig-161-20250528 (https://download.01.org/0day-ci/archive/20250528/202505280653.Y79JKqDd-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+This issue predates the blamed commit, and it's specific to
+CONFIG_UBSAN_INTEGER_WRAP which was recently introduced.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202505280653.Y79JKqDd-lkp@intel.com/
+CONFIG_UBSAN_INTEGER_WRAP apparently requires clang 20.
 
-smatch warnings:
-drivers/tee/qcomtee/call.c:748 qcomtee_probe() warn: missing error code 'err'
+To try to reproduce this, I built clang from the release/20.x branch, then built
+a kernel with CONFIG_UBSAN_INTEGER_WRAP=y.  When booting that kernel, there are
+many UBSAN reports:
 
-vim +/err +748 drivers/tee/qcomtee/call.c
+    [    0.000000] UBSAN: negation-overflow in lib/sort.c:199:36
 
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  711  static int qcomtee_probe(struct platform_device *pdev)
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  712  {
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  713  	struct workqueue_struct *async_wq;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  714  	struct tee_device *teedev;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  715  	struct tee_shm_pool *pool;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  716  	struct tee_context *ctx;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  717  	struct qcomtee *qcomtee;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  718  	int err;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  719  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  720  	qcomtee = kzalloc(sizeof(*qcomtee), GFP_KERNEL);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  721  	if (!qcomtee)
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  722  		return -ENOMEM;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  723  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  724  	pool = qcomtee_shm_pool_alloc();
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  725  	if (IS_ERR(pool)) {
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  726  		err = PTR_ERR(pool);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  727  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  728  		goto err_free_qcomtee;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  729  	}
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  730  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  731  	teedev = tee_device_alloc(&qcomtee_desc, NULL, pool, qcomtee);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  732  	if (IS_ERR(teedev)) {
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  733  		err = PTR_ERR(teedev);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  734  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  735  		goto err_pool_destroy;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  736  	}
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  737  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  738  	qcomtee->teedev = teedev;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  739  	qcomtee->pool = pool;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  740  	err = tee_device_register(qcomtee->teedev);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  741  	if (err)
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  742  		goto err_unreg_teedev;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  743  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  744  	platform_set_drvdata(pdev, qcomtee);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  745  	/* Start async wq. */
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  746  	async_wq = alloc_ordered_workqueue("qcomtee_wq", 0);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  747  	if (!async_wq)
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26 @748  		goto err_unreg_teedev;
+    [    0.000000] UBSAN: negation-overflow in lib/sort.c:185:14
 
-err = -ENOMEM;
+    [    0.276708] UBSAN: unsigned-integer-overflow in ./include/linux/min_heap.h:329:24
 
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  749  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  750  	qcomtee->wq = async_wq;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  751  	/* Driver context used for async operations of teedev. */
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  752  	ctx = teedev_open(qcomtee->teedev);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  753  	if (IS_ERR(ctx)) {
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  754  		err = PTR_ERR(ctx);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  755  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  756  		goto err_dest_wq;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  757  	}
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  758  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  759  	qcomtee->ctx = ctx;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  760  	/* Init Object table. */
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  761  	qcomtee->xa_last_id = 0;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  762  	xa_init_flags(&qcomtee->xa_local_objects, XA_FLAGS_ALLOC);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  763  	/* Get QTEE verion. */
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  764  	qcomtee_get_qtee_feature_list(qcomtee->ctx,
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  765  				      QCOMTEE_FEATURE_VER_OP_GET_QTEE_ID,
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  766  				      &qtee_version);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  767  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  768  	pr_info("QTEE version %u.%u.%u\n",
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  769  		QTEE_VERSION_GET_MAJOR(qtee_version),
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  770  		QTEE_VERSION_GET_MINOR(qtee_version),
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  771  		QTEE_VERSION_GET_PATCH(qtee_version));
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  772  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  773  	return 0;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  774  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  775  err_dest_wq:
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  776  	destroy_workqueue(qcomtee->wq);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  777  err_unreg_teedev:
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  778  	tee_device_unregister(qcomtee->teedev);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  779  err_pool_destroy:
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  780  	tee_shm_pool_free(pool);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  781  err_free_qcomtee:
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  782  	kfree(qcomtee);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  783  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  784  	return err;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  785  }
+    [    0.277376] UBSAN: negation-overflow in ./include/linux/min_heap.h:260:42
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+    [    0.871191] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305-selftest.c:8854:47
 
+    [    0.890856] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305-selftest.c:8851:47
+
+    [    0.910455] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305.c:260:57
+
+    [    1.105542] UBSAN: unsigned-integer-overflow in lib/zstd/compress/zstd_compress_sequences.c:334:21
+
+    [    1.113539] UBSAN: unsigned-integer-overflow in lib/zstd/compress/huf_compress.c:889:23
+
+    [    1.114597] UBSAN: unsigned-integer-overflow in lib/lz4/lz4_compress.c:294:9
+
+So I did get the chacha20poly1305 ones, but they're hardly unique.
+
+If this new sanitizer is going to move forward, is there any sort of plan or
+guide for how to update code to be compatible with it?  Specifically considering
+common situations where unsigned wraparound (which is defined behavior in C) can
+be intentionally relied on, like calculating the distance from the next N-byte
+boundary.  What are the best practices now?
+
+Documentation/dev-tools/ubsan.rst says nothing about this and only mentions
+"undefined behavior", which this is not.
+
+- Eric
