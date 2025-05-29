@@ -1,116 +1,138 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD5E156CA
-	for <linux-hardening@vger.kernel.org>; Thu, 29 May 2025 06:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78645347B4;
+	Thu, 29 May 2025 08:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748498467; cv=none; b=DugX0DH49lhyyG+0nGxxD8VWfE82jODajjIRftUqv+rnZS7NjwHz/gjcO1oF+9b4bXoDTetrc8YGRuz7xnHR9hg7MhWN4aXh3iIkVAeonlKqMMhNfxREx70pN28remFHs2qVUVvO29NU0/mSxAKcREzleMZ4Rrra3uJ13z1uo3U=
+	t=1748508785; cv=none; b=dyajZRs4fYDtNDVSKiqSVTapY7gTju84E4/XyLTcw/iUVNIsfO6YcvuLveGo8N5Y9rpaJeFJwCeFhJkQ7i6qw+SMH53+IGvYTmgQEgm3fC/1KTpEj9281PQSLFQlod7e2y4xfeWj7ETRxQVxnFzCHhkGF/5EQo9LHAeIA429XpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748498467; c=relaxed/simple;
-	bh=ee6dPxxgizLJ75Ie6rGuft7Nj+pZxFsrYqyEC9SjHbk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ww04affTy2TONnEvMVIGxgXknhDlEsOpOkR5n//QQrmlX281zVwQwiQRjFNj+OOQ9ehD/fk6rInwfIhiGNi43IpaaZKOSEwOXJFAiOx3/i6zeHvaYbXjnxlSWkxx6VFaXmalq9dffOpMq4rZ3nsnd5CiSdLzKduo4sdHgMP6d9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K7SwnRXV; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748508785; c=relaxed/simple;
+	bh=Svn2pForCHDeHyrVgetTzgvLINmhng/+shKeR3RHEnk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PIgspC07HuB7WYVQF71ilTI8/Fae2gLjqRWROyy5tOmyl38VJ3DjkZXb6dv9k0KQ8PvwPVrM2MXC/OaaFtGhxvi4kUvBG1m9wp/q9Luo6nKQKuU2AMRmRB9DEf7GBZKjvl44frl9l8UhqxuRDRu8U/x4apN3VoLCODKTpN92c9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kEz9FM5o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K7SwnRXV"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3081f72c271so381890a91.0
-        for <linux-hardening@vger.kernel.org>; Wed, 28 May 2025 23:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748498465; x=1749103265; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vaz1+/ZzyNRFGMST7layMZzaN7+WIlAIP9tFziyB+WI=;
-        b=K7SwnRXVNwYCVPiJE4HnxYdzj0nDs+7sq4uluY6jVzgiFf6FHkN9J07qSV6R08liS5
-         evjvQa7FIwSKTUEvkaWWdiMSaBXX1ZOa6xoiOmOhBsal8TbHobucZNeaulkygn/uJdrD
-         6YSie/fBTAdl+ZddTLD3ce41bSKBaZ6zeqsZ2rAKpCGdp2QOHQCKwytDkdXOAQTLTNdp
-         aKSHiC4mF13ObArsMxzkYfltaWsVNMkYP9kJYfv+uLEQADjBRPUG4BPiXqgfvDLCNlQt
-         f4wFBL+3i+iVsO/jsiPdrTrQxUttVTkkT0/CjgGj/laOUnWyuFogojGCksBLh/kXKHjk
-         TD0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748498465; x=1749103265;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vaz1+/ZzyNRFGMST7layMZzaN7+WIlAIP9tFziyB+WI=;
-        b=FnFcozt32Mqh662KWwFjGjtJCGvej7hi9XG1Ds/dpgzWa1FCiXEY7Lwo2/l7wsUx33
-         BsDUcrHo5zwGaIJCbGpnM2wYnVv7TGF8yArF67ruILUCt/3gfc5a28awjt8wBXC1Xjl0
-         FaAIEAbanWh1/FYR6dusmbTJnb7n/TbBUXE8POhMJidHA4QJx0PaD4cMIKR9PFA36kdP
-         fMn79KUZQMBG2uwuEWR4rxcvFM/j9hEmHlLLkPxnoj7pMZmQniOcV/+Rk/iew5nEv0UY
-         EjvKyz0mqx5/irJ7oLrHzZguuO+hOIrfkA2UTGOBCV9ZXDNY0TGTG3m47m8f0ZMaa64v
-         hh8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUnOr9i99bmRRH8goCN3PwgRHgzcmFiqx1nW2W6t34l1p2Z0QKnCrb4pYp58t1T8q5QB1Toxa5iLlnNfgg6xeU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yydfc2k7IhIPiZp8ErqPQH0Ys3JC4ohI6jn0zkIshK6oL53lCWn
-	rO08kDGpnq+m05YHbC2hpJM/VUUHr2PrJze8923b0Apii9mtuVYVXdNURlSF7B/+tF813NzNcmc
-	3QbP3HVmDfNKbJqPKXk31EUDMSzyW4WtHj9rZ2R5e2UDXm0ZvYsp6/HLFXWc=
-X-Gm-Gg: ASbGncvyOTlr5dCjUeZtes5GYdgU2GJ6yUHolXlhG0OYWQzr81h+KNJsAqlayQIy1mF
-	LdBoBOeyngzGmaQpPJANlDOWANjUoJ1xzII8yTexybBvFsRviSyNTFWqAfvx4ySEHInrMU2N54c
-	8JhM2W2JGg82Its3dxGc4ooszJ/6vS1ohf7E//z+Fuq9y3+YXO3b9+EP5z9t8T+EOM3WZfjVy6E
-	iFo4xPrittMQA==
-X-Google-Smtp-Source: AGHT+IHjuvTVAXJCwbM+CJ0cJqVVQmFtXnQG4j1KUBe5D8/pDzRiNN6zp0kn7i3urzRkLpnfLornO0snBlrTDyUNKi0=
-X-Received: by 2002:a17:90b:2f08:b0:312:1dc9:9f67 with SMTP id
- 98e67ed59e1d1-3121dc9a0a5mr1652394a91.2.1748498464732; Wed, 28 May 2025
- 23:01:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kEz9FM5o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE46FC4CEF5;
+	Thu, 29 May 2025 08:53:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748508784;
+	bh=Svn2pForCHDeHyrVgetTzgvLINmhng/+shKeR3RHEnk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kEz9FM5ojyrKXBkT3OYgixm7adRGBLC7jDUMXkKjgTeuv0Ibfo0b8lcz42wIBaBwB
+	 qmkxLQ3uzYeahEo+cBvHWwSojSDS/LqTIx/fe1iHPo0baxDA3OrzG6Hx7dYflykoTr
+	 MkgtBFrBSIvWZgYyo+xoy6Ye8axQikXYSA4vphEpOpbfguVW+q0bQpQLlFd6I3BByw
+	 km5LN6qQNy+ggz0eTXj0u9bjhaePgNAVr3V+2NVhWWteJnZmr83b5Vz8GNGy0P06vJ
+	 iVolXD8lGrFt6Gf76wVW8iERx1huAFymf+yYw5A8s4v+VkxONiTU/9Msenil2CW22B
+	 ODgSoIHJgQ7KA==
+Message-ID: <6abdc70c-0def-4cf1-b1f4-ea9bdde4fcb5@kernel.org>
+Date: Thu, 29 May 2025 10:52:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528182616.work.296-kees@kernel.org>
-In-Reply-To: <20250528182616.work.296-kees@kernel.org>
-From: Marco Elver <elver@google.com>
-Date: Thu, 29 May 2025 08:00:00 +0200
-X-Gm-Features: AX0GCFv05dumQmD3kZlNkUj0qoKmc2PEwVW3_kOZBhYxH81s34wEweRfqQ1cmc0
-Message-ID: <CANpmjNPpyJn++DVZmO89ms_HkJ0OvQzkps0GjCFbWkk0F+_8Xg@mail.gmail.com>
-Subject: Re: [PATCH] ubsan: integer-overflow: depend on BROKEN to keep this
- out of CI
-To: Kees Cook <kees@kernel.org>
-Cc: Justin Stitt <justinstitt@google.com>, Eric Biggers <ebiggers@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>, llvm@lists.linux.dev, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
+To: Aaron Kling <webgeek1234@gmail.com>,
+ Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
+ <6920a557-9181-4c9c-98f4-a9be4e796a13@kernel.org>
+ <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
+ <83d17d6e-41c2-4729-94e6-5ccf480c766d@kernel.org>
+ <CALHNRZ8+vnXrx7xw=qjpB34MX32hW_m7k+=CdePJpErBPPzv-g@mail.gmail.com>
+ <53c943dc-5ea6-456b-a289-08212fc01d5d@kernel.org>
+ <CALHNRZ8+X61YzQ_gYRkuAZrz2XFiZK36GDgk=801+384y2KnOQ@mail.gmail.com>
+ <CALHNRZ-YZg3cKzRBMGaxRpejFMLSpOOz-FPQEaQVXFpFao40WA@mail.gmail.com>
+ <CALHNRZ-jxC5PXqiG4tNShybaU9gZjTz4YT+VXgfQFNQ-Ox7crg@mail.gmail.com>
+ <yczvbwanjadyfife3hnp2khxkgs77pokypqkxotlldjskshskt@xckrkfucg6xx>
+ <CALHNRZ--ZUxqrXHEnizXC8ddHC5LFA10oH+CgQmOcTt+cJ1CWw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <CALHNRZ--ZUxqrXHEnizXC8ddHC5LFA10oH+CgQmOcTt+cJ1CWw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 28 May 2025 at 20:26, Kees Cook <kees@kernel.org> wrote:
->
-> Depending on !COMPILE_TEST isn't sufficient to keep this feature out of
-> CI because we can't stop it from being included in randconfig builds.
-> This feature is still highly experimental, and is developed in lock-step
-> with Clang's Overflow Behavior Types[1]. Depend on BROKEN to keep it
-> from being enabled by anyone not expecting it.
->
-> Link: https://discourse.llvm.org/t/rfc-v2-clang-introduce-overflowbehaviortypes-for-wrapping-and-non-wrapping-arithmetic/86507 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
+On 28/05/2025 19:35, Aaron Kling wrote:
+>>>>
+>>>> Friendly reminder to the Tegra maintainers about this question.
+>>>>
+>>> In lieu of a response from the Tegra subsystem maintainers, I can only
+>>> hazard an assumption, Krzysztof. I presume the pstore carveout is
+>>> bootloader controlled because various stages of the boot stack can
+>>> dynamically allocate memory, and this became bootloader controlled to
+>>> prevent any of those from overwriting pstore. I worry about hardcoding
+>>> an address in the kernel dt, then finding out later that there's an
+>>> in-use configuration that overwrites or corrupts that section of ram
+>>> during boot. What are your thoughts on this? And is there any way for
+>>> this patch to proceed?
+>>
+>> I haven't been able to find anything out about this yet. Generally it's
+>> difficult to get the bootloaders updated for these devices. Tegra194 and
+>> Tegra234 may be new enough to make an update eventually go into a
+>> release, but for Tegra186 and older, I honestly wouldn't hold my
+>> breath.
+>>
+>> Thierry
+> 
+> Krzysztof, based on this response, is there any way or form that the
+> Tegra186 part of this could be submitted? I can drop the newer
+> platforms from this patch if Thierry can get a response to his other
+> reply about how the bootloader could conform.
+> 
+I don't NAK it. Eventually it is up to platform maintainer if they
+accept known DTC warnings.
 
-Acked-by: Marco Elver <elver@google.com>
-
-> ---
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Eric Biggers <ebiggers@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Marco Elver <elver@google.com>
-> Cc: llvm@lists.linux.dev
-> Cc: <linux-hardening@vger.kernel.org>
-> ---
->  lib/Kconfig.ubsan | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> index f6ea0c5b5da3..96cd89668467 100644
-> --- a/lib/Kconfig.ubsan
-> +++ b/lib/Kconfig.ubsan
-> @@ -118,6 +118,8 @@ config UBSAN_UNREACHABLE
->
->  config UBSAN_INTEGER_WRAP
->         bool "Perform checking for integer arithmetic wrap-around"
-> +       # This is very experimental so drop the next line if you really want it
-> +       depends on BROKEN
->         depends on !COMPILE_TEST
->         depends on $(cc-option,-fsanitize-undefined-ignore-overflow-pattern=all)
->         depends on $(cc-option,-fsanitize=signed-integer-overflow)
-> --
-> 2.34.1
->
+Best regards,
+Krzysztof
