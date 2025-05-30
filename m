@@ -1,82 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24F720E330;
-	Fri, 30 May 2025 19:09:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544DE23E35B;
+	Fri, 30 May 2025 19:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748632153; cv=none; b=Bcun8bsyVA9arzpOv6l5ZU7i1lsx6WFJhWpLLiqmIsiWfkKDnxmH3c8k/JobB537294tB4vcACXvniM0EOitDUysVnwmlJeVZ7nYSd+uKOb2Xhv2/u1fnbPjhB/JLgUVQu3Z4714QH2YL5DkX2OseJrhmfrY80l5dJDkjLCwAGo=
+	t=1748632403; cv=none; b=ZqXOxHNPG9UN1HDMJq3rPeC2GrihAm4SWoP9iHFznvGgt36qknZSTwTb+YuTk9nNGBR0hdDduA3Fi04q4zFks7S7Ih1VFPoKdvf5ambbPnRnxs4lfWzZ1ggMaBPnSWozPp1jrZXA4QpwCm+kLl5CXkENl5dLJRKm22LI2PxM8j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748632153; c=relaxed/simple;
-	bh=qY31LCaiezMBi3IDX14BQxlF0vXCVmIFLsnpZNcAFUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tliVZzPS3X5aWWw594fmuONdakYpHMWqzLGXiT1qwoF2AUJXUtPQ1uBpWSR/+pzzhWZaRU6Zh4kSRYcJhJ4RiOItGaWI7Ony8qAcslvsc0KeKW/saAaAETYcAS1OGPwYcerinP1cfkUgzFSX+4Rooxu9dKa7A9q8HSv2NlBEMnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6psXGim; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748632403; c=relaxed/simple;
+	bh=HzXJ6AEdcwmvBWA+PgiZUgeoUUm0HSXNmXjkxF0eRDs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qAzM73JnAnQi6R+Awm383fZyWa7tT4llafQNrUoh11BT9fWPMEfdTxOVsVAp6s/MCcmB4Hh+xcqUfg1H6NRG2Swmuth+ughNv+9mnvI4dWr5FawAczU0JfkdQdJWnjXCvRelgWCye4/arZgim+AMrrDYY5uSALzxYRF0XTbvSXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fviMXFQc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6psXGim"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58297C4CEE9;
-	Fri, 30 May 2025 19:09:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fviMXFQc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0918C4CEE9;
+	Fri, 30 May 2025 19:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748632152;
-	bh=qY31LCaiezMBi3IDX14BQxlF0vXCVmIFLsnpZNcAFUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k6psXGimYJySKWb+ryg947XO2qWUQMqN+Dw0OWn43efhp+7DnVUr1fryj0egd0Dnz
-	 lc1hCCSvwgiVdVn/wOT9f0a5wVpzmYwbQHKr5QENtKvwBxINw6dsFdOKDZIkGoGBZd
-	 IbR9kfuuudpeA9K5WTPVd2VLe9nGf62rx9jtgppFQHbX3++FPLb00B1ofTFxYo207M
-	 NzYaQCh0N7K6mFZuyCXXZJT/TaGgV664Z0FjiMo/s/j72TXF7MNgLtP8PKMH6XTQh1
-	 IuaTMPdVugCbClS9diLYbfPZtpahtyApyjTIT/UI//aqqA/hgwD5oMqRS5hdRQReUV
-	 ylOwgrCLxpLGg==
-Date: Fri, 30 May 2025 12:09:04 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Thiago Jung Bauermann <thiago.bauermann@linaro.org>,
-	akpm@linux-foundation.org, arnd@arndb.de, broonie@kernel.org,
-	davidgow@google.com, diego.daniel.professional@gmail.com,
-	gnoack@google.com, gustavoars@kernel.org, jmorris@namei.org,
-	justinstitt@google.com, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux@treblig.org, llvm@lists.linux.dev, mcgrof@kernel.org,
-	mic@digikod.net, morbo@google.com, nick.desaulniers+lkml@gmail.com,
-	paul@paul-moore.com, pmladek@suse.com, rmoar@google.com,
-	serge@hallyn.com, tamird@gmail.com, wangyuli@uniontech.com
-Subject: Re: [PATCH 3/3] Revert "hardening: Disable GCC randstruct for
- COMPILE_TEST"
-Message-ID: <20250530190904.GA1159814@ax162>
-References: <20250427013836.877214-3-kees@kernel.org>
- <20250530000646.104457-1-thiago.bauermann@linaro.org>
- <202505292153.14B0A688F8@keescook>
+	s=k20201202; t=1748632402;
+	bh=HzXJ6AEdcwmvBWA+PgiZUgeoUUm0HSXNmXjkxF0eRDs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fviMXFQcF4MiK9d/GhA2R0n7qXLFOkB6Asvr2RQbBkaxooffdv6uQfNwK3kRfwWdQ
+	 U5ZCv29xdRC9gpGAIQh8m+ijqkoAKWExmp1LwKIfI+tQSljPQjqtV0uHxQMybs2UYs
+	 PRbACuaFNs+kuq8sDYL4CsGWdspnTuVHADXP8PqC2rRsVX/lJMz3IPmonK7eRGn2Wy
+	 sqTL8qXdTAzgdGY8MzCpMDlGC8i/Qp0cjb6g0VqC2izrLGooqxsls/PwclBtOAMgWW
+	 VWhmfuYKQ1NdtB4JkCTvD3wLYJXc+wffeKfNpNIpl4bJzb1A4lOeSrYmqq+zG2Dm3D
+	 WYUyVEY+DbMlw==
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] overflow: Introduce __DEFINE_FLEX for having no initializer
+Date: Fri, 30 May 2025 12:13:16 -0700
+Message-Id: <20250530191312.work.661-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202505292153.14B0A688F8@keescook>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3412; i=kees@kernel.org; h=from:subject:message-id; bh=HzXJ6AEdcwmvBWA+PgiZUgeoUUm0HSXNmXjkxF0eRDs=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlWzD5z+qurGts6rTnDZWRjXaW6lAvq/x3stV/9qXX31 X97lb91lLIwiHExyIopsgTZuce5eLxtD3efqwgzh5UJZAgDF6cATIRhNiPDxePxP45c09Kvi/X0 Vr8Wubr2h0bdq+WHeZ3WicabWZyoZWRoTtgfn9/p7Lrfb6LsbqPbD3Oy2rYufXf4Q/5ev9ATwd1 8AA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 29, 2025 at 10:12:22PM -0700, Kees Cook wrote:
-> On Thu, May 29, 2025 at 09:06:46PM -0300, Thiago Jung Bauermann wrote:
-> > This commit was reported by our CI as breaking the allmodconfig build for
-> > the arm and arm64 architectures when using GCC 15. This is due to
-> > https://github.com/KSPP/linux/issues/367 :
-> > 
-> > 00:05:08 arch/arm64/kernel/kexec_image.c:132:14: internal compiler error: in comptypes_check_enum_int, at c/c-typeck.cc:1519
-> > 00:05:08   132 | const struct kexec_file_ops kexec_image_ops = {
-> > 00:05:08       |              ^~~~~~~~~~~~~~
-> 
-> I'm not able to reproduce this. Which specific version of GCC 15 and
-> on what distro are you seeing this?
+While not yet in the tree, there is a proposed patch[1] that was
+depending on the prior behavior of _DEFINE_FLEX, which did not have an
+explicit initializer. Provide this via __DEFINE_FLEX now, which can also
+have attributes applied (e.g. __uninitialized).
 
-It looks like this was also reported to Debian (I originally noticed it
-in the #gcc channel on OFTC a couple of weeks ago but forgot to mention
-it):
+Examples of the resulting initializer behaviors can be seen here:
+https://godbolt.org/z/P7Go8Tr33
 
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1104745
+Link: https://lore.kernel.org/netdev/20250520205920.2134829-9-anthony.l.nguyen@intel.com [1]
+Fixes: 47e36ed78406 ("overflow: Fix direct struct member initialization in _DEFINE_FLEX()")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: <linux-hardening@vger.kernel.org>
+---
+ include/linux/overflow.h | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-It looks like the difference might be whether GCC was built with
-additional checks or not based on the last couple of comments in that
-bug.
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index 7b7be27ca113..154ed0dbb43f 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -389,24 +389,37 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+ 	struct_size((type *)NULL, member, count)
+ 
+ /**
+- * _DEFINE_FLEX() - helper macro for DEFINE_FLEX() family.
+- * Enables caller macro to pass (different) initializer.
++ * __DEFINE_FLEX() - helper macro for DEFINE_FLEX() family.
++ * Enables caller macro to pass arbitrary trailing expressions
+  *
+  * @type: structure type name, including "struct" keyword.
+  * @name: Name for a variable to define.
+  * @member: Name of the array member.
+  * @count: Number of elements in the array; must be compile-time const.
+- * @initializer: Initializer expression (e.g., pass `= { }` at minimum).
++ * @trailer: Trailing expressions for attributes and/or initializers.
+  */
+-#define _DEFINE_FLEX(type, name, member, count, initializer...)			\
++#define __DEFINE_FLEX(type, name, member, count, trailer...)			\
+ 	_Static_assert(__builtin_constant_p(count),				\
+ 		       "onstack flex array members require compile-time const count"); \
+ 	union {									\
+ 		u8 bytes[struct_size_t(type, member, count)];			\
+ 		type obj;							\
+-	} name##_u = { .obj initializer };					\
++	} name##_u trailer;							\
+ 	type *name = (type *)&name##_u
+ 
++/**
++ * _DEFINE_FLEX() - helper macro for DEFINE_FLEX() family.
++ * Enables caller macro to pass (different) initializer.
++ *
++ * @type: structure type name, including "struct" keyword.
++ * @name: Name for a variable to define.
++ * @member: Name of the array member.
++ * @count: Number of elements in the array; must be compile-time const.
++ * @initializer: Initializer expression (e.g., pass `= { }` at minimum).
++ */
++#define _DEFINE_FLEX(type, name, member, count, initializer...)			\
++	__DEFINE_FLEX(type, name, member, count, = { .obj initializer })
++
+ /**
+  * DEFINE_RAW_FLEX() - Define an on-stack instance of structure with a trailing
+  * flexible array member, when it does not have a __counted_by annotation.
+@@ -424,7 +437,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+  * elements in array @member.
+  */
+ #define DEFINE_RAW_FLEX(type, name, member, count)	\
+-	_DEFINE_FLEX(type, name, member, count, = {})
++	__DEFINE_FLEX(type, name, member, count, = { })
+ 
+ /**
+  * DEFINE_FLEX() - Define an on-stack instance of structure with a trailing
+-- 
+2.34.1
 
-Cheers,
-Nathan
