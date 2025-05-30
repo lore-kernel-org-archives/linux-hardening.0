@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C051D89E3
-	for <linux-hardening@vger.kernel.org>; Fri, 30 May 2025 17:28:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FF6320B;
+	Fri, 30 May 2025 18:06:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748626124; cv=none; b=IBQwi/X+ooyDc9ELwwMJ27B5BBFDtHgBfw/cJAXHgbMfhnQ4nIVqDImyj8wZWgiwoXotYl3X+BEb8xV6hH75wtPoGUCAiXQLQWFRx9etMhWQ1z3qfAwonMQAAfwERztGdrOPpMC+5TIcla4kaYBk/3fNw/ATBaqsR/QKjGg4MtU=
+	t=1748628367; cv=none; b=YeRXrRDfWU+Gnz8SqyHfus5cMcy0ECu4gemCdjfhq/qL+pn9K6/IxEboeaTgipBgf2ykOty5UuSTsfFzdGspOHZ1P4n+aAOyM2V47Hl5uMHeJKw4EyvKzQXsliPtspTp2b9kBo+Jy5hw+gEyoDqHJJ9DhBI/GkD+zAX5J/9twXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748626124; c=relaxed/simple;
-	bh=GdcfJTIn4EytzQKo4ejTdCL4JTbbbptL8+8tqtN4Cvc=;
+	s=arc-20240116; t=1748628367; c=relaxed/simple;
+	bh=vTjL12s6KvtxA3tMHxUHBMgloZwocQuSUhLfD5vvNtU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L7F7Tetm8qPGjrhnhNctirVfZHtLbOKYFQlZeAcbMY++7iwa0h7QRjD3ANyglAGFfVW2g9NG3RhPHBFIQKprdMDqg0i1UC1m5R/7LVd+Sl/jn1YvVPxyM1siBqll0NkhQtni1YUBPx2KiFER1+pzvkemmcoRUIEv5UwpUeW3Vds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ATkJwl0W; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BxBttSELVAaXWA+lO6wEHor4iXWaE2WCsUqoU4LsmXKRxYh744V/HijdPtNlGc3s/VGDEgALNUZNuKK6UiRFFlAZc3pQ5LpvBjbfs4RIGFShCVv0F0+Yl0nTzgOKvOKBQl8n6C9OoK3rwDyAwohUkzx9d5DcGTOfd2mFWihXHFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tN4Re0Sd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ATkJwl0W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B50C0C4CEE9;
-	Fri, 30 May 2025 17:28:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tN4Re0Sd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D1D7C4CEE9;
+	Fri, 30 May 2025 18:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748626123;
-	bh=GdcfJTIn4EytzQKo4ejTdCL4JTbbbptL8+8tqtN4Cvc=;
+	s=k20201202; t=1748628366;
+	bh=vTjL12s6KvtxA3tMHxUHBMgloZwocQuSUhLfD5vvNtU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ATkJwl0WhZr2oNKqAcxbj4uBGmLzfhBZmkWuhd3oOdOeZ18cbiNkyEmaZzixDZ/OH
-	 3T1IQWLc2UvpHqooPq1kA3Oxraj7CVeno0n/fIkojyopxiX6/Ec2rc5B4p3YDClKf6
-	 FUaEzhbE5smIIkFrQqotEGp9BaxH+cnHnFCqBJj7v5B2d2hqz9qhblvZ7AK3b/cKVh
-	 yCSU+J8svgc7hCkDyP8A3/WXZMy0Bb52VNEJcY1TTIMtv+8TdieiD8kp6ATZv29n/2
-	 CmbNy/IruGQAbOaMwtQF823e+4h/8Qmascp3h5J4PXXnhvHhvkfivxgINr7vBHXiRa
-	 0q8j0Zs+mjz3w==
-Date: Fri, 30 May 2025 10:28:40 -0700
+	b=tN4Re0SduTQAupT/AgsL3IJXj9KsGw3/jtt0x6mQ+11wviDGwPUzdmQ/NdKf9FTLH
+	 igXbZ6mzpvUFiZAi3IuZQqtfe7gPbwSJgkmtrxATmw5o3ZAhpF+nLPzRta2SLUEpng
+	 ZFp1w4XoguzIeaoUkNuZAtB1nH0KrnaRbm9a16FRdr74kXxyNedo4mGH4rYakB/UTO
+	 TvBobJDk021EBFRx7ognli1P2B659+5AEat0M5tsuUxnE8wK/nv3ynPmCFIhs2BFCt
+	 PVyhxifT3Mj0K+BnqmMbjIBiVKUOr5lAViQWeC9yuGILIn2ySKjWRoJ0ZU/Ve44TyT
+	 6Lh37fMXtwPUA==
+Date: Fri, 30 May 2025 11:06:01 -0700
 From: Kees Cook <kees@kernel.org>
-To: Jani Nikula <jani.nikula@intel.com>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
 Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, intel-gfx@lists.freedesktop.org
-Subject: Re: i915 utils: range_overflows*()
-Message-ID: <202505301026.126AB6FFC@keescook>
-References: <cd0ea72c6cab6c478336cd1bb5b517a9fe7a150d@intel.com>
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3][next] overflow: Fix direct struct member
+ initialization in _DEFINE_FLEX()
+Message-ID: <202505301054.A786A183@keescook>
+References: <aBQVeyKfLOkO9Yss@kspp>
+ <d4eed1e3-6fc0-4372-8ced-ae6a49f3c5c1@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -42,28 +44,75 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cd0ea72c6cab6c478336cd1bb5b517a9fe7a150d@intel.com>
+In-Reply-To: <d4eed1e3-6fc0-4372-8ced-ae6a49f3c5c1@intel.com>
 
-On Fri, May 30, 2025 at 10:44:31AM +0300, Jani Nikula wrote:
+On Fri, May 30, 2025 at 04:59:35PM +0200, Alexander Lobakin wrote:
+> Unfortunately this can hurt performance on my setup.
+> In XDP, we usually place &xdp_buff on the stack. It's 56 bytes. We
+> initialize it only during the packet processing, not in advance.
 > 
-> Hi Kees -
-> 
-> drivers/gpu/drm/i915/i915_utils.h has a handful of helper macros for
-> checking range overflows: range_overflows(), range_overflows_t(),
-> range_overflows_end(), and range_overflows_end_t().
-> 
-> Looks like the first one has also been copy-pasted to
-> include/drm/drm_buddy.h.
-> 
-> Feels like include/linux/overflow.h would be the right place for (some
-> version of) them.
-> 
-> Thoughts?
+> In libeth_xdp, see [1], I provide a small extension for this struct.
+> This extension is 64 byte, plus I added a definition (see
+> `__LIBETH_XDP_ONSTACK_BUFF()`) to be able to define a bigger one in case
+> a driver might need more fields there.
+> The same as with &xdp_buff, it shouldn't be initialized in advance, only
+> during the packet processing. Otherwise, it can really decrease
+> performance, you might've seen recent Mellanox report that even
+> CONFIG_INIT_STACK_ZERO provokes this.
 
-Sure, yes! They need some documentation too. :) And probably some
-renaming. It looks like range_overflows() is not end-inclusive, but
-range_overflows_end() is? And the _t variants are forcing explicit
-types (like max_t, but unlike struct_size_t).
+FYI, you can use __uninitialized to force CONFIG_INIT_STACK_ZERO to
+leave an automatic variable uninitialized.
+
+> What would be the best option to resolve this? This flex XDP buff on the
+> stack is fully safe, there are a couple checks that its size does not
+> exceed the maximum (defined by xdp_buff_xsk) etc. And we really need to
+> initialize it field-by-field in a loop on a per-packet basis -- we are
+> sure that there will be no garbage.
+
+But yes, this is suddenly not available for _DEFINE_FLEX after the
+referenced patch.
+
+> It's even worse that most drivers will most likely not want to add any
+> additional fields, i.e. this flex array at the end will be empty, IOW
+> they just want a plain libeth_xdp_buff, but I made a unified definition,
+> with which you can declare them on the stack both with and without
+> additional fields. So, even if the drivers doesn't want any additional
+> fields and the flex array is empty, the struct will be zero-initialized
+> and the same perf hit will apply.
+> [...]
+> [1] https://lore.kernel.org/netdev/20250520205920.2134829-9-anthony.l.nguyen@intel.com
+
+Okay, so it sounds like you need the old behavior of _DEFINE_FLEX, *and*
+a way to apply attributes (like __uninitialized).
+
+How about replacing _DEFINE_FLEX with:
+
+
+#define __DEFINE_FLEX(type, name, member, count, trailer...)		\
+        _Static_assert(__builtin_constant_p(count),			\
+                       "onstack flex array members require compile-time const count"); \
+        union {								\
+                u8 bytes[struct_size_t(type, member, count)];		\
+                type obj;						\
+        } name##_u trailer;						\
+        type *name = (type *)&name##_u
+
+#define _DEFINE_FLEX(type, name, member, count, initializer...)		\
+	__DEFINE_FLEX(type, name, member, count, = { .obj = initializer })
+
+
+Which would yield this for ___LIBETH_XDP_ONSTACK_BUFF:
+
+
+#define ___LIBETH_XDP_ONSTACK_BUFF(name, ...)				\
+	__DEFINE_FLEX(struct libeth_xdp_buff, name, priv,		\
+		      LIBETH_XDP_PRIV_SZ(__VA_ARGS__ + 0),		\
+		      __uninitialized);					\
+	LIBETH_XDP_ASSERT_PRIV_SZ(__VA_ARGS__ + 0)
+
+
+Does that look like what you'd want? (Note I didn't actually build this;
+I want to make sure the concept is workable...)
 
 -- 
 Kees Cook
