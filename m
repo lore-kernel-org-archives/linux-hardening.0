@@ -1,42 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82FF189513;
-	Fri, 30 May 2025 18:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24F720E330;
+	Fri, 30 May 2025 19:09:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748631169; cv=none; b=b7jUM6nYiBdB5etkcDoRHsuRHPtvqyitHuCCaIu7MTkoJUhDw75Ornay1aoSDAz/M79B3RhzQWFfId343xggdfFPJ2lBOBaedo0MdS2JlluKUjpXbha0s6itbjhgF2YhqU5CO9T0GrCEedw1UWumBEWEI//tpKTnpsgF8vEN7k8=
+	t=1748632153; cv=none; b=Bcun8bsyVA9arzpOv6l5ZU7i1lsx6WFJhWpLLiqmIsiWfkKDnxmH3c8k/JobB537294tB4vcACXvniM0EOitDUysVnwmlJeVZ7nYSd+uKOb2Xhv2/u1fnbPjhB/JLgUVQu3Z4714QH2YL5DkX2OseJrhmfrY80l5dJDkjLCwAGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748631169; c=relaxed/simple;
-	bh=FQPMKronnbZixqRF5rYHmx0k8Hi4UbqrcPT7Lo9aCCQ=;
+	s=arc-20240116; t=1748632153; c=relaxed/simple;
+	bh=qY31LCaiezMBi3IDX14BQxlF0vXCVmIFLsnpZNcAFUQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nTBCbbxGSEraFrk0zGCzONwpAJQg6PgVJ+kqG8trT/5IzphCdue3yk0onIelrPKCdNfZwRwoCadvp/hFOvg4VRYf7VK7VelzUPlQbpMra1RAp4MZGTPLm3SxGF+f9rLrKjZJoGs9by4wvsYrLMSwc0JB9T1To6TLLE2jQbaIKSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGKZIj90; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tliVZzPS3X5aWWw594fmuONdakYpHMWqzLGXiT1qwoF2AUJXUtPQ1uBpWSR/+pzzhWZaRU6Zh4kSRYcJhJ4RiOItGaWI7Ony8qAcslvsc0KeKW/saAaAETYcAS1OGPwYcerinP1cfkUgzFSX+4Rooxu9dKa7A9q8HSv2NlBEMnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6psXGim; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGKZIj90"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51BB2C4CEE9;
-	Fri, 30 May 2025 18:52:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6psXGim"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58297C4CEE9;
+	Fri, 30 May 2025 19:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748631168;
-	bh=FQPMKronnbZixqRF5rYHmx0k8Hi4UbqrcPT7Lo9aCCQ=;
+	s=k20201202; t=1748632152;
+	bh=qY31LCaiezMBi3IDX14BQxlF0vXCVmIFLsnpZNcAFUQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VGKZIj90Q5s5AJPF1+8umGeT5/FLGKUv58yrc3F1xglLV+y+/9nkpZ/hMNuWtOnYC
-	 RuDmOXQ/Ike8Xg/kaEWCsIV0EvK5S3ugsWEqZz1SKCbdE/tq7yD9bIHGmxVz5sBOF1
-	 mw1XrSQgQDaRJmYzREBW4IZl/ukAe6mORVds5ndzU7Fjk0I1Jpx36GYRBQEA3h9pmG
-	 S+ly9EMibSnypgkOwkKGGhYGvOA7ea9UGKSxMedsMpRR4ZfITo9rYPtO/advDQXQm3
-	 4dF3rqsU+UBDPFXi/roQvmjx/bD2vRCS2O/SjSjWBNOhBFW7H+3dXZlSGZ+cOOqyMH
-	 UeIJjmXI3KgMw==
-Date: Fri, 30 May 2025 11:52:45 -0700
-From: Kees Cook <kees@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3][next] overflow: Fix direct struct member
- initialization in _DEFINE_FLEX()
-Message-ID: <202505301151.6CEDBBF8@keescook>
-References: <aBQVeyKfLOkO9Yss@kspp>
- <d4eed1e3-6fc0-4372-8ced-ae6a49f3c5c1@intel.com>
- <202505301054.A786A183@keescook>
+	b=k6psXGimYJySKWb+ryg947XO2qWUQMqN+Dw0OWn43efhp+7DnVUr1fryj0egd0Dnz
+	 lc1hCCSvwgiVdVn/wOT9f0a5wVpzmYwbQHKr5QENtKvwBxINw6dsFdOKDZIkGoGBZd
+	 IbR9kfuuudpeA9K5WTPVd2VLe9nGf62rx9jtgppFQHbX3++FPLb00B1ofTFxYo207M
+	 NzYaQCh0N7K6mFZuyCXXZJT/TaGgV664Z0FjiMo/s/j72TXF7MNgLtP8PKMH6XTQh1
+	 IuaTMPdVugCbClS9diLYbfPZtpahtyApyjTIT/UI//aqqA/hgwD5oMqRS5hdRQReUV
+	 ylOwgrCLxpLGg==
+Date: Fri, 30 May 2025 12:09:04 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Thiago Jung Bauermann <thiago.bauermann@linaro.org>,
+	akpm@linux-foundation.org, arnd@arndb.de, broonie@kernel.org,
+	davidgow@google.com, diego.daniel.professional@gmail.com,
+	gnoack@google.com, gustavoars@kernel.org, jmorris@namei.org,
+	justinstitt@google.com, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux@treblig.org, llvm@lists.linux.dev, mcgrof@kernel.org,
+	mic@digikod.net, morbo@google.com, nick.desaulniers+lkml@gmail.com,
+	paul@paul-moore.com, pmladek@suse.com, rmoar@google.com,
+	serge@hallyn.com, tamird@gmail.com, wangyuli@uniontech.com
+Subject: Re: [PATCH 3/3] Revert "hardening: Disable GCC randstruct for
+ COMPILE_TEST"
+Message-ID: <20250530190904.GA1159814@ax162>
+References: <20250427013836.877214-3-kees@kernel.org>
+ <20250530000646.104457-1-thiago.bauermann@linaro.org>
+ <202505292153.14B0A688F8@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -45,27 +53,30 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202505301054.A786A183@keescook>
+In-Reply-To: <202505292153.14B0A688F8@keescook>
 
-On Fri, May 30, 2025 at 11:06:01AM -0700, Kees Cook wrote:
-> #define __DEFINE_FLEX(type, name, member, count, trailer...)		\
->         _Static_assert(__builtin_constant_p(count),			\
->                        "onstack flex array members require compile-time const count"); \
->         union {								\
->                 u8 bytes[struct_size_t(type, member, count)];		\
->                 type obj;						\
->         } name##_u trailer;						\
->         type *name = (type *)&name##_u
+On Thu, May 29, 2025 at 10:12:22PM -0700, Kees Cook wrote:
+> On Thu, May 29, 2025 at 09:06:46PM -0300, Thiago Jung Bauermann wrote:
+> > This commit was reported by our CI as breaking the allmodconfig build for
+> > the arm and arm64 architectures when using GCC 15. This is due to
+> > https://github.com/KSPP/linux/issues/367 :
+> > 
+> > 00:05:08 arch/arm64/kernel/kexec_image.c:132:14: internal compiler error: in comptypes_check_enum_int, at c/c-typeck.cc:1519
+> > 00:05:08   132 | const struct kexec_file_ops kexec_image_ops = {
+> > 00:05:08       |              ^~~~~~~~~~~~~~
 > 
-> #define _DEFINE_FLEX(type, name, member, count, initializer...)		\
-> 	__DEFINE_FLEX(type, name, member, count, = { .obj = initializer })
-> [...]
-> Does that look like what you'd want? (Note I didn't actually build this;
-> I want to make sure the concept is workable...)
+> I'm not able to reproduce this. Which specific version of GCC 15 and
+> on what distro are you seeing this?
 
-FWIW, this is working as expected: https://godbolt.org/z/P7Go8Tr33
+It looks like this was also reported to Debian (I originally noticed it
+in the #gcc channel on OFTC a couple of weeks ago but forgot to mention
+it):
 
-I'll send a proper patch...
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1104745
 
--- 
-Kees Cook
+It looks like the difference might be whether GCC was built with
+additional checks or not based on the last couple of comments in that
+bug.
+
+Cheers,
+Nathan
