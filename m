@@ -1,71 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C8D224B05;
-	Mon,  2 Jun 2025 18:07:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9857E5D8F0;
+	Mon,  2 Jun 2025 18:08:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748887627; cv=none; b=gkfwj2pzNjigk+XJBtMT4KYEm0OUVn3AVrA9A+2TuDLP4NOjeBKhzT0kkoF0kkyg6a2DeljWnCws0IepqzWrebdY1/CQ1AZPsE5pVkxIbZhNAjr+Pj3Cipm07MABdkjhMFinq+mcvstYEedplqMhbhm8ObjUJLM8bWGcuXoyCW4=
+	t=1748887734; cv=none; b=p5A7dKw4Jt9TgWCU4ppBAc2VTaiHPSY9bf835MoWhd6KyS1mVVWYvpemS3eIvfMe48OR7iqvHNpMELcvwGRbctrier0IaC8w37A1Hi1wUFznLRu1pngQpp7afQdm4xDQa258zVWXeC64DFqoJwtC+YoX5z6Usjts802IKFK0OnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748887627; c=relaxed/simple;
-	bh=ZRZQYlirI0clKlwHpTQZVj1tgZlhftb/v17r4cRxfTk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L4sXF0Q/YiB/wdH3kPOgq827N+7hdkXbR8z0oWB5Z3/NTJdSxqdljeTjU/I/I8HH/janjL/aTU+HV5tfsAouvRvViP5myhXe6X5NyzfQqjHcBl4EG/OPUUlci2NIVZLeO2W8oQWAuU2VFj7FT3csenYNDHYe3gEdZQT1esRV3tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbHsuyGY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748887734; c=relaxed/simple;
+	bh=exvcHTQL5wekR42ghldPfL+3tZSs3pqr9YlpM7hdzcg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=revVmSsKPCUUWzsfv12Ex6U4BIO4lE1Nhv5nnFRNc8mpjNeaKsZes3OeQPVRDZF9FT6IkxiCFmuiInFx4MBQRh0BREc0pn8O0UJg84y2tPvPKy4EHmQ80g0sV+/yYFH9je5STmh77x2wnQIXfUpD4La9NaOP8lOQRHyHwphA49o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eaf/jt4z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbHsuyGY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E5B1C4CEEB;
-	Mon,  2 Jun 2025 18:07:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eaf/jt4z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0C9FC4CEEB;
+	Mon,  2 Jun 2025 18:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748887626;
-	bh=ZRZQYlirI0clKlwHpTQZVj1tgZlhftb/v17r4cRxfTk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mbHsuyGYiQY3x/axAOIdvVIJj2W0XVZ9/plUY2TTbLtriTcLyAL2/ii6zLJlG0hog
-	 dWDJdusKiGcaE7ERlrHBAk85ceL9ARBFTjtLotIwxf0k9RLaOiIr56OVs7l8zwTeo+
-	 tmm8t/s7C9a8+Eta9Ma8oCBBQnq3aECq0+xKZQIR6gaZAAQZ99Dwu4oOaTbENOfAj3
-	 QF7FxqRKcFkmvWW1KKFhT8Ej1aINyTV93nJmnS3LfNN7CH5h7+BZ20vEhwjISalBhY
-	 5BputfFKAEWC5lp0xo9jqML+35mk0XNsRkQf4L2v9eIyvMYcKTiP62Ty5KJayFgFBs
-	 Oo75/mFn7PM1w==
+	s=k20201202; t=1748887733;
+	bh=exvcHTQL5wekR42ghldPfL+3tZSs3pqr9YlpM7hdzcg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Eaf/jt4zASimQGSoTU6ssLIdeWNkmC98i/FpUC3X5SYiJeSkZS6OSPpCbysrGIIUn
+	 ozpEB48H1WytxV+20WEgetQhMAfOPvfpKqNyShWbjiAyWXeCaCIZI03fUnRJYHCGQU
+	 dAqgXHjq4HT3d4XknAtwW5l+4V0udblx+UNQLmKQ0+/ta7D/lPba5arpZ3ki7/ddrx
+	 KBP5l6kUIp8SRNMO8R3uStCrZxZGubDtNEVfimcWbzxbabGoau3pPy9r5eG5xq2sjT
+	 SnKfTbbjtcKUn7VfKgxn9/EiLboK1I+sma4nq2dF/bKGZmTl7t5MongxyX2+TpEBvW
+	 bErPxedZxrmlw==
+Date: Mon, 2 Jun 2025 11:08:50 -0700
 From: Kees Cook <kees@kernel.org>
-To: Junhui Pei <paradoxskin233@gmail.com>
-Cc: Kees Cook <kees@kernel.org>,
-	elver@google.com,
-	andreyknvl@gmail.com,
-	ryabinin.a.a@gmail.com,
-	akpm@linux-foundation.org,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ubsan: Fix incorrect hand-side used in handle
-Date: Mon,  2 Jun 2025 11:06:27 -0700
-Message-Id: <174888758557.4018560.13578751882908437370.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250602153841.62935-1-paradoxskin233@gmail.com>
-References: <20250602153841.62935-1-paradoxskin233@gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	David Gow <davidgow@google.com>, linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lib/tests: Make RANDSTRUCT_KUNIT_TEST depend on
+ RANDSTRUCT
+Message-ID: <202506021107.EA2F1CBDB8@keescook>
+References: <22d9c2fa9e751a9de3c599aa082be588ea82a7a0.1748875640.git.geert@linux-m68k.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <22d9c2fa9e751a9de3c599aa082be588ea82a7a0.1748875640.git.geert@linux-m68k.org>
 
-On Mon, 02 Jun 2025 23:38:41 +0800, Junhui Pei wrote:
-> __ubsan_handle_divrem_overflow() incorrectly uses the RHS to report.
-> It always reports the same log: division of -1 by -1. But it should
-> report division of LHS by -1.
+On Mon, Jun 02, 2025 at 04:49:51PM +0200, Geert Uytterhoeven wrote:
+> When CONFIG_RANDSTRUCT is not enabled, all randstruct tests are skipped.
+> Move this logic from run-time to config-time, to avoid people building
+> and running tests that do not do anything.
 
-Oops, this has been wrong for a long time! :) I've added the appropriate
-Fixes tag.
+I don't like doing this because it means that looking at CI output means
+I can't tell if the test was not built or if the config was not
+included. I want to always have the test available, but skip the test if
+the config is missing.
 
-Applied to for-linus/hardening, thanks!
-
-[1/1] ubsan: Fix incorrect hand-side used in handle
-      https://git.kernel.org/kees/c/c50b612bef51
-
-Take care,
+-Kees
 
 -- 
 Kees Cook
-
