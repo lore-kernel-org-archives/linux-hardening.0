@@ -1,62 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E98A6F073;
-	Wed,  4 Jun 2025 23:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4B314A4C7;
+	Thu,  5 Jun 2025 20:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749080669; cv=none; b=K0lnBvqdVcU9JsyVzUSMbol65aQKg/ocvczg/X9k7X9iC1+n5bPbYMg5lLwu1LuaepKQ3V8mmHjxyFM0cOcvC9YGV2iqwZnck1Rin/7v2bJprqSYuCg5mBbzV8Ej1Pw76qViNW6Q2FUa3YwhPv+jZApeQ0/zo1M3oBpleJwPz1o=
+	t=1749154533; cv=none; b=ZsGi/9vGk9241Ndh2/uIHGjmBk0bRHMU81kHe6a1Ei9wZ7LxeZtiIYS+QNV21ulT/rWuvF53K/b5d9hnvGiCj+egzxKknHwIHIqDPwfIZhfF0Wrp8Dh4Dj44aSHHHKJiFmdzHgdSG9ad4S4J0GnqyTWosGFeztsF60acmzrQEv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749080669; c=relaxed/simple;
-	bh=rwcuOfT1CA5poAxzq1khNwu+dKvGPkT+ivPyW0kINuA=;
+	s=arc-20240116; t=1749154533; c=relaxed/simple;
+	bh=IYT1CcO4LBvLg1Erh1PUlzPXoV02ZdFG//4pEvVZEPE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CqThr9SZHyFwBvoHYGweC2MYedH57X3vSq5hgoZzOmZRu1L02CvYalnfmStgnIb97+FMCanju8B9pcArzvhFFkc/TX8mZioziocCOt5rCWMQP0NwdaBZt1r7ec/B2JrlyNrgBj3874bGlXjDXWKsiisE3lVIshsAosMHmqQ5YoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fc99E2FI; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=UT0w1yBPsWzuryx788aT0PlOKBhUhFHKCJI4qkc0DTWuchreDj7Ul3JyfdzgGuovcGIh8Z/fuqeBjyK4NusPyhhJLxYB5sYDkc4K7UH8vKQngi+OzfAyi29fYSotWq9y9viPBxqw9tbBPfiodxOQF/jHXgL80EQhWVImjc8ZajM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dTKr/Yt2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fc99E2FI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749080667; x=1780616667;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rwcuOfT1CA5poAxzq1khNwu+dKvGPkT+ivPyW0kINuA=;
-  b=fc99E2FI2G9dizWLNTeJehK1xMxCiifDrjLEyOEEeG7/EgdzQjdLXLoj
-   JzEGypmuVUE8lvhd6Ol2iNd5piC/v4OkA5hw8iuWQVGTyCaBpR1Nz4lMt
-   gHwgdoON+RsgvZjLr6wRZtnL84YP3ZDTjDDzHkdSlo9H0034Swsqb0Kzr
-   Ka/bpb0HrrGUQuD+sQ26bQAELE69GG3WKnwAH14lfFmM1b4dNequfjDOa
-   9f7sfQSEZQ920L02ORvoc2doOZRewMXqHYOet6JJkUXRnRn0czqLGFoI3
-   AT1Y7rGMBpifvJjrxBLfpSI/FR0LksPUIS3eV4tXIwTeTDjXKQRbfYbzr
-   g==;
-X-CSE-ConnectionGUID: D2R8QreUTcCkRUAwvSszKQ==
-X-CSE-MsgGUID: dpwj04yQRTa5s4p4d5VVNA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="54975317"
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="54975317"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 16:44:26 -0700
-X-CSE-ConnectionGUID: WJXhXchUQsmFazAPsiwa5g==
-X-CSE-MsgGUID: OB62SZJpSyG16SNyMguRFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="146274344"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 16:44:26 -0700
-Date: Wed, 4 Jun 2025 16:44:25 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Zaid Alali <zaidal@os.amperecomputing.com>
-Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com, bp@alien8.de,
-	kees@kernel.org, gustavoars@kernel.org, Jonathan.Cameron@huawei.com,
-	sudeep.holla@arm.com, u.kleine-koenig@baylibre.com,
-	jonathanh@nvidia.com, viro@zeniv.linux.org.uk, ira.weiny@intel.com,
-	peterz@infradead.org, sthanneeru.opensrc@micron.com,
-	gregkh@linuxfoundation.org, Benjamin.Cheatham@amd.com,
-	dave.jiang@intel.com, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v8 0/7] Enable EINJv2 Support
-Message-ID: <aEDaWWHKrM5hUt9M@agluck-desk3>
-References: <20250604223804.842501-1-zaidal@os.amperecomputing.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dTKr/Yt2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 371BAC4CEE7;
+	Thu,  5 Jun 2025 20:15:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749154533;
+	bh=IYT1CcO4LBvLg1Erh1PUlzPXoV02ZdFG//4pEvVZEPE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dTKr/Yt2Hy5Ra/GPalkzOkUFA7/xkis8nb3QvcUSx1uSkyip3GUeXJLvaI1Q37XYa
+	 gtXxU6j0esbWwO7AK21FwIU08/csOV39EEYuh8Y90tsXAEqXxfJh87ws6ci4CAfU6d
+	 QvebhzDT+5dO28YbZA/5RsMLwzJFcCI1wZaScn/qjLteznxorhfE+Abf9sCB/pnZ9p
+	 /aAw9KIRqxTSARGXt6FedihZ5FXiNVxhjzdvgnyekN+8B+ijeCaAfAh7/ZqWMvQ5pT
+	 zHC5/7LMdIfZm+KDKOSVkeUv88+wMQJ2OMUGLoScaB9oyMoEDv33arK+TILWsn4tYJ
+	 dKR1Q9gFExg9Q==
+Date: Thu, 5 Jun 2025 13:15:32 -0700
+From: Kees Cook <kees@kernel.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sergio Perez Gonzalez <sperezglz@gmail.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	David Rientjes <rientjes@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	Thomas Huth <thuth@redhat.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] slab: Decouple slab_debug and no_hash_pointers
+Message-ID: <202506051314.D6EDFA91D@keescook>
+References: <20250415170232.it.467-kees@kernel.org>
+ <Z_-dPcdiGW0fo8Ji@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -65,35 +67,42 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250604223804.842501-1-zaidal@os.amperecomputing.com>
+In-Reply-To: <Z_-dPcdiGW0fo8Ji@pathway.suse.cz>
 
-On Wed, Jun 04, 2025 at 03:37:57PM -0700, Zaid Alali wrote:
-> The goal of this update is to allow the driver to simultaneously
-> support EINJ and EINJv2. The implementation follows ACPI 6.6
-> specs[1] that enables the driver to discover system capabilities
-> through GET_ERROR_TYPE.
+On Wed, Apr 16, 2025 at 02:06:21PM +0200, Petr Mladek wrote:
+> On Tue 2025-04-15 10:02:33, Kees Cook wrote:
+> > Some system owners use slab_debug=FPZ (or similar) as a hardening option,
+> > but do not want to be forced into having kernel addresses exposed due
+> > to the implicit "no_hash_pointers" boot param setting.[1]
+> > 
+> > Introduce the "hash_pointers" boot param, which defaults to "auto"
+> > (the current behavior), but also includes "always" (forcing on hashing
+> > even when "slab_debug=..." is defined), and "never". The existing
+> > "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
+> > 
+> > This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
+> > 
+> > Link: https://github.com/KSPP/linux/issues/368 [1]
+> > Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
+> > Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> > Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> > Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> > Acked-by: David Rientjes <rientjes@google.com>
+> > Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> > Signed-off-by: Kees Cook <kees@kernel.org>
 > 
-> Link: https://uefi.org/specs/ACPI/6.6/18_Platform_Error_Interfaces.html#error-injection [1]
+> Tested-by: Petr Mladek <pmladek@suse.com>
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
 > 
-> V8:
-> 	*Update UI to use single value files for component array.
-> 	*Update links to point to recent ACPI 6.6 spec release.
-> 	*Updated commit messages and documentation patch.
-> 	*Dropped the first two patches as they were merged via
-> 	 ACPICA project.
+> I am going to wait few more days for a potential feedback.
+> I'll queue it for 6.16 unless anyone complains.
 
-Some of the Signed-off-by tags in this series are wrong. Partially
-my fault for an offline exchange of patches with Zaid to get this
-series cleaned up.
+Hi,
 
-1	Could have a Reviewed-by: Tony Luck instead of Signed-off
-2	Could have a Reviewed-by: Tony Luck instead of Signed-off
-3	Could have a Reviewed-by: Tony Luck instead of Signed-off
-4	I rewrote the commit message, could have a Reviewed-by: Tony Luck instead of Signed-off
-5	My patch, but Zaid forwarded it, so it should have his Signed-off after mine
-6	Zaid's Signed-off should be after my Sign/Co-developed
-7	Zaid's Signed-off should be after my Sign/Co-developed
+Is this still planned for 6.16? I just noticed it wasn't in -next, and
+we're almost to the end of the merge window...
 
-Apart from that, all seems good in this version.
+-Kees
 
--Tony
+-- 
+Kees Cook
