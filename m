@@ -1,43 +1,43 @@
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E491E7C03;
-	Thu,  5 Jun 2025 21:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC9D20330;
+	Thu,  5 Jun 2025 21:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749158432; cv=none; b=MlaQ9oT7a1MH418kFDxbtCR5nW4mtzyXVY+zdGO3mTd9ijwOVh06kjL8HHGZs3FahcwOWqV9TXhH1lIB9cMWpq2Znq3PiP2a5gZPS2+tuIX5faBXtjsH6fhRlHVF5p7YxDYEwrvtjAT/93v8ziPM87Iwy98zYKYGLt24SgtnKtQ=
+	t=1749159431; cv=none; b=XuLQNML0q+15mxiABwpRZf9ywIgQARJ/ElzlbcBF2+O/Ffz5UPBGkZzpztqTskCg71WfWaNdpuVM8n9VDnkSvaU8ii45jCTQSQ7903kdKAaapU88WyRjXndRcXkjhvT9BJVSw/GMHk60gonbpqF3YR8EJc1rOJj9oc1ZQvsrO44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749158432; c=relaxed/simple;
-	bh=mufn19hPlgQ6NEoSc03kk/eDPI9BBT8SEPAfnKWcjzI=;
+	s=arc-20240116; t=1749159431; c=relaxed/simple;
+	bh=KomAMxAvk/8Fc5tTwcHMRIr9zWc5gjWQmOub4ROYpow=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dryFGdl+qzZZ8BbKQ7QYf17sNfDmGNLWfABoxAlV3s93vA1y2Os1WiANpceCNMPwVLPh2kY2Q/R1z5jDrezhFuulwPxvSnCpnG3qYmoLAmEt4da0DfIey6+IUg6n9jDIjlIFRhPtZ9LNqfkRvoQkG2HZYGVwVTN+XE8FHKCHVyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=rOUiZQ42; arc=none smtp.client-ip=188.165.51.139
+	 MIME-Version:Content-Type; b=CjqPxkIekkPfYfsAjZibl3/x9OvIWVSx3QvA/mbrMbNoqtcx4z24uyEQBqKQVzIKomr1DAUkbVokrQxXik3lFYKUCj5VjwtRzKCAw9tiwEPp4qDUo2FIcoXDdxjqjzqLrrkflp+07Y0Mxv00cnYZaZ5+yj2gjlJl79Gt/L3qiaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=d9QT9hUK; arc=none smtp.client-ip=185.70.43.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="rOUiZQ42"
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="d9QT9hUK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1749158413; x=1749417613;
-	bh=47lez6F5pabPoFPvx8kOKO3g/OggZmFNdiAKAkn0fxE=;
+	s=protonmail3; t=1749159426; x=1749418626;
+	bh=21FryjTDqEqpqP5odesMO7gwe0g3ollvbPo6Ejjt5TE=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=rOUiZQ424MFhcTamtDLMBjX27SJcn48z0adoCkiWKOiPLX0MbLW9PO4UCLqnRipl9
-	 6E3W1jw4vlHvRRmMhPHaFcf1tqnYMh8ypK6QS8tzjJUppKGGWbEEbKtyHa4DL00HBn
-	 X1wlJhFGf/413Cuo6Ty/0Pgq3oC+ws8xivzrImMdP8ZtDV80Wi/GX/J41kRrK+B3k5
-	 irsZGJ1e2oAbgUBfn5F0camaYke8puW9UJ+2sNvwBvTgpHtnxufpaaYaheNmUM7H25
-	 G7hwJDxxgaB3fVLbaus06w4nWHj6oGO4peD2cjYSbi/sAEFrMJ8ZdNRxbsGK5eq3Nr
-	 SKDAdL2jj76PQ==
-Date: Thu, 05 Jun 2025 21:20:09 +0000
+	b=d9QT9hUK1TUc6sevjceVQVHiZqxlt/OlbaghCqW6E3ztPOLroSqNmbXMvATygHrNs
+	 4iGibH2JJA3xdd+5lew1DpwVMuWYuf6iaQWRWN3t/q3MQpB8y4uzUdNGFnNQYNvgqi
+	 ghgXLjLEDP8/xibfWMvyY1xaK9ut0auTFkGzPoYlbsCzY9xxY1T5jRx2q7UBkjRLfb
+	 X8sb1GiHUJ9JL3Feiy4eu2KXmR7969lSLP899p/hp/fXCEZiKwmeHwDKSb/kIq0Omm
+	 ygED7M35lcZTfAs5SdDxNfXWbnll4sVtnbGLoxrUt0VBXijubscewOW47H8/H0Kavy
+	 UCLmo5zLR4/QA==
+Date: Thu, 05 Jun 2025 21:37:00 +0000
 To: Burak Emir <bqe@google.com>
 From: Pekka Ristola <pekkarr@protonmail.com>
 Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, Carlos LLama <cmllamas@google.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v11 3/5] rust: add bitmap API.
-Message-ID: <LGWNtyhjCByj6PPHMsGCwo-WBkCCUuCOn_cUuwlwHPhfRZ4TdDR97a3u63ACSIvJQZF2SyAInyX90iMkERX2MK3Up-R6jazWHWhFzTIWah4=@protonmail.com>
-In-Reply-To: <20250602135231.1615281-4-bqe@google.com>
-References: <20250602135231.1615281-1-bqe@google.com> <20250602135231.1615281-4-bqe@google.com>
+Subject: Re: [PATCH v11 4/5] rust: add find_bit_benchmark_rust module.
+Message-ID: <pXt1ZkjyScL3fnnuyw12MHGyxxDunKpUjhGl_tL4kg8FpobamrUohmzQyqMxtCPfgbUmmPl4ZE6wco8Yqs6aLD5jLTD5ZL-zeNo8wk0uKUM=@protonmail.com>
+In-Reply-To: <20250602135231.1615281-5-bqe@google.com>
+References: <20250602135231.1615281-1-bqe@google.com> <20250602135231.1615281-5-bqe@google.com>
 Feedback-ID: 29854222:user:proton
-X-Pm-Message-ID: 101473ab8081905c8394262b66904cff266291bd
+X-Pm-Message-ID: f90f569db84e596600f06996b3f91aa40038543e
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,251 +48,183 @@ Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
 On Monday, June 2nd, 2025 at 16.53, Burak Emir <bqe@google.com> wrote:
-> Provides an abstraction for C bitmap API and bitops operations.
+> Microbenchmark protected by a config FIND_BIT_BENCHMARK_RUST,
+> following `find_bit_benchmark.c` but testing the Rust Bitmap API.
 >=20
-> This commit enables a Rust implementation of an Android Binder
-> data structure from commit 15d9da3f818c ("binder: use bitmap for faster
-> descriptor lookup"), which can be found in drivers/android/dbitmap.h.
-> It is a step towards upstreaming the Rust port of Android Binder driver.
+> We add a fill_random() method protected by the config in order to
+> maintain the abstraction.
 >=20
-> We follow the C Bitmap API closely in naming and semantics, with
-> a few differences that take advantage of Rust language facilities
-> and idioms:
+> The sample output from the benchmark, both C and Rust version:
 >=20
->   * We leverage Rust type system guarantees as follows:
+> find_bit_benchmark.c output:
+> ```
+> Start testing find_bit() with random-filled bitmap
+> [  438.101937] find_next_bit:                  860188 ns, 163419 iteratio=
+ns
+> [  438.109471] find_next_zero_bit:             912342 ns, 164262 iteratio=
+ns
+> [  438.116820] find_last_bit:                  726003 ns, 163419 iteratio=
+ns
+> [  438.130509] find_nth_bit:                  7056993 ns,  16269 iteratio=
+ns
+> [  438.139099] find_first_bit:                1963272 ns,  16270 iteratio=
+ns
+> [  438.173043] find_first_and_bit:           27314224 ns,  32654 iteratio=
+ns
+> [  438.180065] find_next_and_bit:              398752 ns,  73705 iteratio=
+ns
+> [  438.186689]
+>                Start testing find_bit() with sparse bitmap
+> [  438.193375] find_next_bit:                    9675 ns,    656 iteratio=
+ns
+> [  438.201765] find_next_zero_bit:            1766136 ns, 327025 iteratio=
+ns
+> [  438.208429] find_last_bit:                    9017 ns,    656 iteratio=
+ns
+> [  438.217816] find_nth_bit:                  2749742 ns,    655 iteratio=
+ns
+> [  438.225168] find_first_bit:                 721799 ns,    656 iteratio=
+ns
+> [  438.231797] find_first_and_bit:               2819 ns,      1 iteratio=
+ns
+> [  438.238441] find_next_and_bit:                3159 ns,      1 iteratio=
+ns
+> ```
 >=20
->     * all (non-atomic) mutating operations require a &mut reference which
->       amounts to exclusive access.
+> find_bit_benchmark_rust.rs output:
+> ```
+> [  451.182459] find_bit_benchmark_rust_module:
+> [  451.186688] Start testing find_bit() Rust with random-filled bitmap
+> [  451.194450] next_bit:                       777950 ns, 163644 iteratio=
+ns
+> [  451.201997] next_zero_bit:                  918889 ns, 164036 iteratio=
+ns
+> [  451.208642] Start testing find_bit() Rust with sparse bitmap
+> [  451.214300] next_bit:                         9181 ns,    654 iteratio=
+ns
+> [  451.222806] next_zero_bit:                 1855504 ns, 327026 iteratio=
+ns
+> ```
 >=20
->     * the Bitmap type implements Send. This enables transferring
->       ownership between threads and is needed for Binder.
+> Here are the results from 32 samples, with 95% confidence interval.
+> The microbenchmark was built with RUST_BITMAP_HARDENED=3Dn and run on a
+> machine that did not execute other processes.
 >=20
->     * the Bitmap type implements Sync, which enables passing shared
->       references &Bitmap between threads. Atomic operations can be
->       used to safely modify from multiple threads (interior
->       mutability), though without ordering guarantees.
+> Random-filled bitmap:
+> +-----------+-------+-----------+--------------+-----------+-----------+
+> | Benchmark | Lang  | Mean (ms) | Std Dev (ms) | 95% CI Lo | 95% CI Hi |
+> +-----------+-------+-----------+--------------+-----------+-----------+
+> | find_bit/ | C     |    825.07 |        53.89 |    806.40 |    843.74 |
+> | next_bit  | Rust  |    870.91 |        46.29 |    854.88 |    886.95 |
+> +-----------+-------+-----------+--------------+-----------+-----------+
+> | find_zero/| C     |    933.56 |        56.34 |    914.04 |    953.08 |
+> | next_zero | Rust  |    945.85 |        60.44 |    924.91 |    966.79 |
+> +-----------+-------+-----------+--------------+-----------+-----------+
 >=20
->   * The Rust API uses `{set,clear}_bit` vs `{set,clear}_bit_atomic` as
->     names, which differs from the C naming convention which uses
->     set_bit for atomic vs __set_bit for non-atomic.
+> Rust appears 5.5% slower for next_bit, 1.3% slower for next_zero.
 >=20
->   * we include enough operations for the API to be useful, but not all
->     operations are exposed yet in order to avoid dead code. The missing
->     ones can be added later.
+> Sparse bitmap:
+> +-----------+-------+-----------+--------------+-----------+-----------+
+> | Benchmark | Lang  | Mean (ms) | Std Dev (ms) | 95% CI Lo | 95% CI Hi |
+> +-----------+-------+-----------+--------------+-----------+-----------+
+> | find_bit/ | C     |     13.17 |         6.21 |     11.01 |     15.32 |
+> | next_bit  | Rust  |     14.30 |         8.27 |     11.43 |     17.17 |
+> +-----------+-------+-----------+--------------+-----------+-----------+
+> | find_zero/| C     |   1859.31 |        82.30 |   1830.80 |   1887.83 |
+> | next_zero | Rust  |   1908.09 |       139.82 |   1859.65 |   1956.54 |
+> +-----------+-------+-----------+--------------+-----------+-----------+
 >=20
->   * We follow the C API closely with a fine-grained approach to safety:
+> Rust appears 8.5% slower for next_bit, 2.6% slower for next_zero.
 >=20
->     * Low-level bit-ops get a safe API with bounds checks. Calling with
->       an out-of-bounds arguments to {set,clear}_bit becomes a no-op and
->       get logged as errors.
->=20
->     * We introduce a RUST_BITMAP_HARDENED config, which
->       causes invocations with out-of-bounds arguments to panic.
->=20
->     * methods correspond to find_* C methods tolerate out-of-bounds
->       since the C implementation does. Also here, we log out-of-bounds
->       arguments as errors and panic in RUST_BITMAP_HARDENED mode.
->=20
->     * We add a way to "borrow" bitmaps from C in Rust, to make C bitmaps
->       that were allocated in C directly usable in Rust code (`CBitmap`).
->=20
->   * the Rust API is optimized to represent the bitmap inline if it would
->     fit into a pointer. This saves allocations which is
->     relevant in the Binder use case.
->=20
-> The underlying C bitmap is *not* exposed, and must never be exposed
-> (except in tests). Exposing the representation of the owned bitmap would
-> lose static guarantees.
->=20
-> An alternative route of vendoring an existing Rust bitmap package was
-> considered but suboptimal overall. Reusing the C implementation is
-> preferable for a basic data structure like bitmaps. It enables Rust
-> code to be a lot more similar and predictable with respect to C code
-> that uses the same data structures and enables the use of code that
-> has been tried-and-tested in the kernel, with the same performance
-> characteristics whenever possible.
->=20
-> We use the `usize` type for sizes and indices into the bitmap,
-> because Rust generally always uses that type for indices and lengths
-> and it will be more convenient if the API accepts that type. This means
-> that we need to perform some casts to/from u32 and usize, since the C
-> headers use unsigned int instead of size_t/unsigned long for these
-> numbers in some places.
->=20
-> Adds new MAINTAINERS section BITMAP API [RUST].
+> In summary, taking the arithmetic mean of all slow-downs, we can say
+> the Rust API has a 4.5% slowdown.
 >=20
 > Suggested-by: Alice Ryhl <aliceryhl@google.com>
 > Suggested-by: Yury Norov <yury.norov@gmail.com>
 > Signed-off-by: Burak Emir <bqe@google.com>
 > ---
->  MAINTAINERS                |   7 +
->  rust/kernel/bitmap.rs      | 574 +++++++++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs         |   1 +
->  security/Kconfig.hardening |  10 +
->  4 files changed, 592 insertions(+)
->  create mode 100644 rust/kernel/bitmap.rs
+>  MAINTAINERS                     |  1 +
+>  lib/Kconfig.debug               | 13 +++++
+>  lib/Makefile                    |  1 +
+>  lib/find_bit_benchmark_rust.rs  | 95 +++++++++++++++++++++++++++++++++
+>  rust/bindings/bindings_helper.h |  1 +
+>  rust/kernel/bitmap.rs           | 14 +++++
+>  6 files changed, 125 insertions(+)
+>  create mode 100644 lib/find_bit_benchmark_rust.rs
 >=20
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index 04d6727e944c..565eaa015d9e 100644
+> index 565eaa015d9e..943d85ed1876 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -4127,6 +4127,13 @@ S:=09Maintained
->  F:=09rust/helpers/bitmap.c
->  F:=09rust/helpers/cpumask.c
+> @@ -4132,6 +4132,7 @@ M:=09Alice Ryhl <aliceryhl@google.com>
+>  M:=09Burak Emir <bqe@google.com>
+>  R:=09Yury Norov <yury.norov@gmail.com>
+>  S:=09Maintained
+> +F:=09lib/find_bit_benchmark_rust.rs
+>  F:=09rust/kernel/bitmap.rs
 >=20
-> +BITMAP API [RUST]
-> +M:=09Alice Ryhl <aliceryhl@google.com>
-> +M:=09Burak Emir <bqe@google.com>
-> +R:=09Yury Norov <yury.norov@gmail.com>
-> +S:=09Maintained
-> +F:=09rust/kernel/bitmap.rs
-> +
 >  BITOPS API
->  M:=09Yury Norov <yury.norov@gmail.com>
->  R:=09Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
-> new file mode 100644
-> index 000000000000..28c11e400d1e
-> --- /dev/null
-> +++ b/rust/kernel/bitmap.rs
-> @@ -0,0 +1,574 @@
-
-[...]
-
-> +    /// Returns a raw pointer to the backing [`Bitmap`].
-> +    pub fn as_ptr(&self) -> *const usize {
-> +        self as *const CBitmap as *const usize
-> +    }
-> +
-> +    /// Returns a mutable raw pointer to the backing [`Bitmap`].
-> +    pub fn as_mut_ptr(&mut self) -> *mut usize {
-> +        self as *mut CBitmap as *mut usize
-> +    }
-> +
-> +    /// Returns length of this [`CBitmap`].
-> +    #[allow(clippy::len_without_is_empty)]
-
-Using `expect` would be more idiomatic than `allow`.
-
-> +    pub fn len(&self) -> usize {
-> +        self.data.len()
-> +    }
-> +}
-> +
-> +/// Holds either a pointer to array of `unsigned long` or a small bitmap=
-.
-> +#[repr(C)]
-> +union BitmapRepr {
-> +    bitmap: usize,
-> +    ptr: NonNull<usize>,
-> +}
-> +
-> +macro_rules! bitmap_assert {
-> +    ($cond:expr, $($arg:tt)+) =3D> {
-> +        #[cfg(RUST_BITMAP_HARDENED)]
-
-The config name should be prefixed with `CONFIG_`.
-
-> +        assert!($e, $($arg)*);
-
-`$e` is not defined, it should be `$cond`.
-
-> +    }
-> +}
-> +
-> +macro_rules! bitmap_assert_return {
-> +    ($cond:expr, $($arg:tt)+) =3D> {
-> +        #[cfg(RUST_BITMAP_HARDENED)]
-> +        assert!($e, $($arg)*);
-> +
-> +        #[cfg(not(RUST_BITMAP_HARDENED))]
-> +        if !($cond) {
-> +            pr_err!($($arg)*);
-> +            return
-> +        }
-> +    }
-> +}
-
-Same for this macro.
-
-[...]
-
-> +    #[test]
-> +    fn bitmap_set_clear_find() {
-> +        let mut b =3D Bitmap::new(128, GFP_KERNEL).unwrap();
-> +
-> +        // Zero-initialized
-> +        assert_eq!(None, b.next_bit(0));
-> +        assert_eq!(Some(0), b.next_zero_bit(0));
-> +        assert_eq!(None, b.last_bit());
-> +
-> +        b.set_bit(17);
-> +
-> +        assert_eq!(Some(17), b.next_bit(0));
-> +        assert_eq!(Some(17), b.next_bit(17));
-> +        assert_eq!(None, b.next_bit(18));
-> +        assert_eq!(Some(17), b.last_bit());
-> +
-> +        b.set_bit(107);
-> +
-> +        assert_eq!(Some(17), b.next_bit(0));
-> +        assert_eq!(Some(17), b.next_bit(17));
-> +        assert_eq!(Some(107), b.next_bit(18));
-> +        assert_eq!(Some(107), b.last_bit());
-> +
-> +        b.clear_bit(17);
-> +
-> +        assert_eq!(Some(107), b.next_bit(0));
-> +        assert_eq!(Some(107), b.last_bit());
-> +    }
-> +
-> +    #[cfg(not(RUST_BITMAP_HARDENED))]
-
-Here as well, the config name should be `CONFIG_RUST_BITMAP_HARDENED`.
-
-> +    #[test]
-> +    fn bitmap_out_of_bounds() {
-> +        let mut b =3D Bitmap::new(128, GFP_KERNEL).unwrap();
-> +
-> +        b.set_bit(2048);
-> +        b.set_bit_atomic(2048);
-> +        b.clear_bit(2048);
-> +        b.clear_bit_atomic(2048);
-> +        assert_eq!(None, b.next_bit(2048));
-> +        assert_eq!(None, b.next_zero_bit(2048));
-> +        assert_eq!(None, b.last_bit());
-> +    }
-
-[...]
-
-> diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-> index 3fe9d7b945c4..3ca3c7dc4381 100644
-> --- a/security/Kconfig.hardening
-> +++ b/security/Kconfig.hardening
-> @@ -324,6 +324,16 @@ config LIST_HARDENED
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index f9051ab610d5..3f826a73bdbf 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2605,6 +2605,19 @@ config FIND_BIT_BENCHMARK
 >=20
 >  =09  If unsure, say N.
 >=20
-> +config RUST_BITMAP_HARDENED
-> +=09bool "Check integrity of linked list manipulation"
-
-The description seems to have been copied from the previous menu entry.
-
+> +config FIND_BIT_BENCHMARK_RUST
+> +=09tristate "Test find_bit functions in Rust"
 > +=09depends on CONFIG_RUST
 
-This needs to be `depends on RUST`, as Kconfig doesn't use the `CONFIG_`
-prefix here.
+The `CONFIG_` prefix should be removed.
 
 > +=09help
-> +=09  Enables additional assertions in the Rust Bitmap API to catch
-> +=09  arguments that are not guaranteed to result in an immediate access
-> +=09  fault.
+> +=09  This builds the "find_bit_benchmark_rust" module. It is a micro
+> +          benchmark that measures the performance of Rust functions that
+> +          correspond to the find_*_bit() operations in C. It follows the
+> +          FIND_BIT_BENCHMARK closely but will in general not yield same
+> +          numbers due to extra bounds checks and overhead of foreign
+> +          function calls.
 > +
 > +=09  If unsure, say N.
 > +
->  config BUG_ON_DATA_CORRUPTION
->  =09bool "Trigger a BUG when data corruption is detected"
->  =09select LIST_HARDENED
+>  config TEST_FIRMWARE
+>  =09tristate "Test firmware loading via userspace interface"
+>  =09depends on FW_LOADER
+
+[...]
+
+> diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
+> index 28c11e400d1e..9fefb2473099 100644
+> --- a/rust/kernel/bitmap.rs
+> +++ b/rust/kernel/bitmap.rs
+> @@ -252,6 +252,20 @@ pub fn new(nbits: usize, flags: Flags) -> Result<Sel=
+f, AllocError> {
+>      pub fn len(&self) -> usize {
+>          self.nbits
+>      }
+> +
+> +    /// Fills this `Bitmap` with random bits.
+> +    #[cfg(CONFIG_FIND_BIT_BENCHMARK_RUST)]
+> +    pub fn fill_random(&mut self) {
+> +        // SAFETY: `self.as_mut_ptr` points to either an array of the
+> +        // appropriate length or one usize.
+> +        unsafe {
+> +            bindings::get_random_bytes(
+> +                self.as_mut_ptr() as *mut ffi::c_void,
+> +                usize::div_ceil(self.nbits, bindings::BITS_PER_LONG as u=
+size)
+> +                    * bindings::BITS_PER_LONG as usize,
+
+I think the second argument to `get_random_bytes` should be in bytes, not
+bits. So it should be multiplied by "bytes per long", not "bits per long".
+
+> +            );
+> +        }
+> +    }
+>  }
+>=20
+>  impl CBitmap {
 > --
 > 2.49.0.1204.g71687c7c1d-goog
 
