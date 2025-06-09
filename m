@@ -1,95 +1,69 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C3D13CF9C
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Jun 2025 14:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084102AE6F;
+	Mon,  9 Jun 2025 15:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749479996; cv=none; b=lW2QiWNZPL1+vQaluFH1HYvCoi/+ZxIWOR8gKbdeujr5U6LB2x+SxIc+HoioRm0rNVOcmMMq5ZyfxQQDSdJAKI0lrlU974OsNEAYfYwG5Rdfo0WLtyPkY71TY9RPr1M2MoXJmjdq8eAEIbvxrKFVuLZZQX7ZnOIhwZSYJiAPreM=
+	t=1749482420; cv=none; b=vEOUuoSS1I01x8e2APtnQID8S9mPu6UkJNJblp0dfBpcPO04qpu/jPt2xwTBoWq/30KzxxKtJn6dNWynnf3MTttp76C1JgWzOhHwg4ongFc5SO5Ubm3WA0/CNYIsMFseJTy7AUpRlUKmAke8dVSPhm6IhnOLYOrr/PZl0HBwnU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749479996; c=relaxed/simple;
-	bh=Tpmkew92d3UkCD/uBMzxFAJa947kpytzKjgdSyXBJfs=;
+	s=arc-20240116; t=1749482420; c=relaxed/simple;
+	bh=v+qNLhObMXgfKH7cBPQ5CCrdeTCsLTz3+1rD022Ddq8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cpf6gfPgJL2AX+i7Mb7ORQJBaNew+7m5bA175TzQYj2m2kGmiBz82w/52wLlx62akAR9frdBGsuYeSJspwTaUI0flYTOXGqfUVTXETseTVTnN23dRjZIY1Whbi3IOAICIp+XetCFF1Vz5SUW7Vt4KFpKW5q1LGadnVYt2zSQ6ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Kdpcp82k; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=dSmpv7DDELLWBSC9J15+ShoLSIgcsmC2JeNrQmX9SZd8Bsfu5DAOoemL+u9YJmDpyfQVVswFZof/+vQ/oMHsgM5mPHaTJY3taPPdowBJVG20XrjkYlrW5xSHJKksRfxBLndGMFBzyQHpKDWvcig1iWIem1XFmB8F5vod80W4iQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fT2aERJv; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Kdpcp82k"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a365a6804eso2739468f8f.3
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Jun 2025 07:39:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749479992; x=1750084792; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TBUyMfCvEgObXbMHMtHUW0hbnDDnIuTip1OX215Qd8E=;
-        b=Kdpcp82kCwc92L/UgF0Whbbj5VvCOwVSJhAJI/QudBtP5S2cjq4ObAHOiP1czxYYYn
-         O6iPWkkHhrJExJTcxZPbngPEKUi2VMjyt/51lVF+pTF41ui+xB0Aj5eoYC1oQ27uNOBq
-         BuEjyEHMzbuiJ31XKAbPjDhpACLoXtJu2aYxm5KTEmyWjpDt/S0bFnCoA3RvCp1e89/L
-         djALovjdfi6jGY5TQm3cGS4IEhNrd8XjMd4xnTGHuzA7WAZCP00TWNIl4lAmLQxF2l2J
-         VkNvl7s3SKVDH8uaN6YZO5y8ZPEjs77AGw7uL9hM6BukTjwSS4gWXQRvpkbtpZ3VmVsp
-         MIkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749479992; x=1750084792;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TBUyMfCvEgObXbMHMtHUW0hbnDDnIuTip1OX215Qd8E=;
-        b=X1bL/e5mCRfjbV6eivjnage6VVZ2NjlLKPVdGy/CLhxQdcnANZx2ZgKGiIjtgu1fks
-         G9phezj9UNN9aRMBm443MbD8TOC2uP47K921kk4Lm3pycXiEmorm4P2+pDYEKvxHuXt+
-         8o5k9x/Jsu2PYeUBbO6J1UVioECpFVSB4epv4xxw6bpt/OmiwgRX1zqok+dgNeCzeL58
-         4pDv/7zQv8C/S0Hi0dQ4VC7h/RLRGjt+sb1ujDnnSWWtNBBeH2Io/i9b4roAMl6M0Lrx
-         KnFaC6vzJ4lEMd+mdZo4ZgdtNzhDWQuKE9TQ1YuF8vwP1MJzwapdscj5kCc0DcBdgLhB
-         SO2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUT6n8n568+ayI9CYQ6t9CkEMfvbZCemUu0xy1Z0sxw1kzQCYHFnpglHEhtvrj3CX2nPm802PCk4qwJv3mi4Ow=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGCZvmwIhWjM0xemmAOqNvUWz0IfNfrtUp6Zct2qxMrx9+HzVk
-	3UAXU7SLn2ygUxZ1UxquvfBRwEj61GGsLEFrpEGRX4KljxkK88/VKP7wYIZEMxlMtoE=
-X-Gm-Gg: ASbGncu4cVm9rmxo/0PkScjAg4jf+e4G9AEXnnhcZQOQrMfJX9xhHUHiI8IeqWpOtqV
-	VxxUPq6M57MXw41OAQdmbia5L0ahk912lTfavoZ14FV4GWduVUoMEIznuQIoLAQZ2di2josfcbz
-	72Zx4g603zOfmmFbPSJ6xjoLLTk1jRXK2eiRIBHymquHiVqArKOzyfVdCt9QZ1sVShdsSU5pvpX
-	u/NrqfC4cRHAlTImysI/GHUyJgIgSiH9g7d92vA8V1n4HsljLOQ8dOzLc69SwzwbS1XAuAVuQwC
-	ZhxR4hKpo8sh/UGfGuN0X9tVLX4erNsuISl3pbhIZyq7h794tJglIolOFCh3NRsL
-X-Google-Smtp-Source: AGHT+IHQ9WnlIb2N+Qu2oqWlSl1QrWztkyTzn0RfuZ+Bgd3cAwyVXJ521y5E6cUICXCtVhbSAJCdMQ==
-X-Received: by 2002:a5d:5846:0:b0:3a5:2b75:56b3 with SMTP id ffacd0b85a97d-3a531cae8d7mr10675904f8f.24.1749479991728;
-        Mon, 09 Jun 2025 07:39:51 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092635sm55068605ad.81.2025.06.09.07.39.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 07:39:50 -0700 (PDT)
-Date: Mon, 9 Jun 2025 16:39:25 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Sergio Perez Gonzalez <sperezglz@gmail.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	David Rientjes <rientjes@google.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fT2aERJv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749482418; x=1781018418;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=v+qNLhObMXgfKH7cBPQ5CCrdeTCsLTz3+1rD022Ddq8=;
+  b=fT2aERJvcV14Hd4OYqhD+qDNcUevn5ZJC9qJzLQSrTnXfuacpvc7Uz+2
+   ZOLs2pxyRG7vQ0oOBg6mh8gMLlyfLr+w1LnBRLEa8yY2tpz8yLB/WkG71
+   DrFVbuF/MBHRgVYpBCwy+zNpheRLuCLxxkG5ll7YEymczcvgjcai0bbWk
+   RDO/jj3OCx3zyaEC4bFP4ZADriYKvMn/peZ+EpVJpngQWTssmYKEyLisL
+   LXfwxyaBtD3BpcT88jxR0tXAFMAYrFi2ACObJVrv+38qIRgUNo65ZMONQ
+   8Y9bsQZzNhkx2BY5O0GM0nzA8M1BVavbBky/4IyVI7hdXO0FCWcUCDyj3
+   g==;
+X-CSE-ConnectionGUID: Lf/PUgCuQXOK9Ax9l4IBSw==
+X-CSE-MsgGUID: B6EcGbAnSjGe4AW07tIXnw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="62218025"
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="62218025"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 08:20:17 -0700
+X-CSE-ConnectionGUID: Fv1ZiFD1Si6u1CUusduqvg==
+X-CSE-MsgGUID: R/zDx6RHRxKuta3nM1KO5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="151540730"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 09 Jun 2025 08:20:13 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uOeIE-000781-1B;
+	Mon, 09 Jun 2025 15:20:10 +0000
+Date: Mon, 9 Jun 2025 23:20:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Thomas Richard <thomas.richard@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	Thomas Huth <thuth@redhat.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] slab: Decouple slab_debug and no_hash_pointers
-Message-ID: <aEbyHeG8qh8GChTh@pathway.suse.cz>
-References: <20250415170232.it.467-kees@kernel.org>
- <Z_-dPcdiGW0fo8Ji@pathway.suse.cz>
- <202506051314.D6EDFA91D@keescook>
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Kees Cook <kees@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
+	GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org,
+	Thomas Richard <thomas.richard@bootlin.com>
+Subject: Re: [PATCH v7 06/10] gpio: aggregator: export symbols of the GPIO
+ forwarder library
+Message-ID: <202506092324.XqSwWl1z-lkp@intel.com>
+References: <20250609-aaeon-up-board-pinctrl-support-v7-6-1ab73ec0cb98@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -98,54 +72,231 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202506051314.D6EDFA91D@keescook>
+In-Reply-To: <20250609-aaeon-up-board-pinctrl-support-v7-6-1ab73ec0cb98@bootlin.com>
 
-On Thu 2025-06-05 13:15:32, Kees Cook wrote:
-> On Wed, Apr 16, 2025 at 02:06:21PM +0200, Petr Mladek wrote:
-> > On Tue 2025-04-15 10:02:33, Kees Cook wrote:
-> > > Some system owners use slab_debug=FPZ (or similar) as a hardening option,
-> > > but do not want to be forced into having kernel addresses exposed due
-> > > to the implicit "no_hash_pointers" boot param setting.[1]
-> > > 
-> > > Introduce the "hash_pointers" boot param, which defaults to "auto"
-> > > (the current behavior), but also includes "always" (forcing on hashing
-> > > even when "slab_debug=..." is defined), and "never". The existing
-> > > "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
-> > > 
-> > > This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
-> > > 
-> > > Link: https://github.com/KSPP/linux/issues/368 [1]
-> > > Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
-> > > Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-> > > Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-> > > Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> > > Acked-by: David Rientjes <rientjes@google.com>
-> > > Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > 
-> > Tested-by: Petr Mladek <pmladek@suse.com>
-> > Reviewed-by: Petr Mladek <pmladek@suse.com>
-> > 
-> > I am going to wait few more days for a potential feedback.
-> > I'll queue it for 6.16 unless anyone complains.
-> 
-> Hi,
-> 
-> Is this still planned for 6.16? I just noticed it wasn't in -next, and
-> we're almost to the end of the merge window...
+Hi Thomas,
 
-I am terribly sorry. I have forgot this patch...
+kernel test robot noticed the following build warnings:
 
-I have just pushed it into printk/linux.git, branch
-for-6.17-hash_pointers.
+[auto build test WARNING on d9946fe286439c2aeaa7953b8c316efe5b83d515]
 
-Also I updated the documentation, aka applied the diff
-from https://lore.kernel.org/r/202504181307.254F81843@keescook
-See
-https://web.git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git/commit/?h=for-6.17-hash_pointers&id=de1c831a7898f164c1c2703c6b2b9e4fb4bebefc
+url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Richard/gpiolib-add-support-to-register-sparse-pin-range/20250609-175445
+base:   d9946fe286439c2aeaa7953b8c316efe5b83d515
+patch link:    https://lore.kernel.org/r/20250609-aaeon-up-board-pinctrl-support-v7-6-1ab73ec0cb98%40bootlin.com
+patch subject: [PATCH v7 06/10] gpio: aggregator: export symbols of the GPIO forwarder library
+config: i386-buildonly-randconfig-001-20250609 (https://download.01.org/0day-ci/archive/20250609/202506092324.XqSwWl1z-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250609/202506092324.XqSwWl1z-lkp@intel.com/reproduce)
 
-As the branch name suggests, I am going to push it for 6.17.
-If it is too late for you then please let me know.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506092324.XqSwWl1z-lkp@intel.com/
 
-Best Regards,
-Petr
+All warnings (new ones prefixed by >>):
+
+   drivers/dma/dw-edma/dw-edma-core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/dw/acpi.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/dw/core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/dw/dw.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/dw/idma32.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/fsl-dpaa2-qdma/dpdmai.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/fsldma.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/hsu/hsu.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/idxd/bus.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/idxd/cdev.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/idxd/device.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/idxd/dma.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/idxd/submit.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/mcf-edma-main.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/of-dma.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/ppc4xx/adma.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/qcom/hidma_mgmt.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/qcom/hidma_mgmt_sys.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/sh/shdma-base.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/ti/k3-psil.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/ti/k3-udma-glue.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/ti/k3-udma-private.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/virt-dma.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/xilinx/xdma.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dma/xilinx/xilinx_dma.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dpll/dpll_core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/dpll/dpll_netlink.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/edac/debugfs.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/edac/edac_device.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/edac/edac_mc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/edac/edac_module.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/edac/edac_pci.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/edac/edac_pci_sysfs.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/edac/mce_amd.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/edac/mem_repair.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/edac/skx_common.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/edac/wq.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/eisa/eisa-bus.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/extcon/devres.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/extcon/extcon.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firewire/core-card.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firewire/core-device.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firewire/core-topology.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firewire/core-transaction.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/arm_ffa/bus.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/arm_scmi/bus.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/broadcom/bcm47xx_nvram.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/broadcom/tee_bnxt_fw.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/cirrus/cs_dsp.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/cirrus/test/cs_dsp_mock_bin.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/cirrus/test/cs_dsp_mock_mem_maps.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/cirrus/test/cs_dsp_mock_regmap.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/cirrus/test/cs_dsp_mock_wmfw.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/dmi_scan.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/efi/capsule.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/efi/cper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/efi/efi-init.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/efi/efi.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/efi/embedded-firmware.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/efi/tpm.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/efi/vars.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/google/coreboot_table.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/google/memconsole.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/imx/imx-dsp.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/imx/imx-scu-irq.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/imx/imx-scu.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/imx/misc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/imx/rm.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/imx/sm-cpu.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/imx/sm-lmm.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/imx/sm-misc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/iscsi_ibft_find.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/meson/meson_sm.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/mtk-adsp-ipc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/qcom/qcom_tzmem.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/raspberrypi.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/samsung/exynos-acpm.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/smccc/kvm_guest.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/smccc/smccc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/stratix10-svc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/sysfb.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/tegra/bpmp.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/tegra/ivc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/thead,th1520-aon.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/firmware/xilinx/zynqmp.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/fpga/altera-pr-ip-core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/fpga/dfl.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/fpga/fpga-bridge.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/fpga/fpga-mgr.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/fpga/fpga-region.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/fpga/lattice-sysconfig.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/fpga/xilinx-core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/fsi/fsi-core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/fsi/fsi-master-i2cr.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/fsi/fsi-occ.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/fsi/fsi-sbefifo.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/fwctl/main.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gnss/core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gnss/serial.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpio/dev-sync-probe.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+>> drivers/gpio/gpio-aggregator.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpio/gpio-aspeed.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpio/gpio-cs5535.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpio/gpio-max730x.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpio/gpio-mmio.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpio/gpio-regmap.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpio/gpiolib-of.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpio/gpiolib-sysfs.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpio/gpiolib.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/amd/amdgpu/amdgpu_object.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/amd/amdxcp/amdgpu_xcp_drv.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/bridge/analogix/analogix_dp_core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/bridge/aux-bridge.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/bridge/aux-hpd-bridge.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/bridge/panel.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/bridge/samsung-dsim.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/bridge/synopsys/dw-hdmi.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/clients/drm_client_setup.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/display/drm_bridge_connector.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/display/drm_dp_aux_bus.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/display/drm_dp_cec.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/display/drm_dp_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/display/drm_dp_mst_topology.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/display/drm_dp_tunnel.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/display/drm_dsc_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/display/drm_hdmi_audio_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/display/drm_hdmi_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/display/drm_hdmi_state_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/display/drm_scdc_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_atomic.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_atomic_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_atomic_state_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_atomic_uapi.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_auth.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_bridge.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_bridge_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_buddy.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_client.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_client_event.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_client_modeset.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_color_mgmt.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_connector.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_damage_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_debugfs_crc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_drv.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_edid.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_exec.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_fb_dma_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_fb_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_fbdev_dma.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_fbdev_shmem.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_fbdev_ttm.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_file.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_flip_work.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_format_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_gem.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_gem_atomic_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_gem_framebuffer_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_gem_ttm_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_gem_vram_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_gpusvm.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_gpuvm.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_managed.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_mipi_dbi.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_mipi_dsi.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_mode_config.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_modeset_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_modeset_lock.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_panel.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_panel_backlight_quirks.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_panel_orientation_quirks.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_panic.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_plane.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_plane_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_print.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_privacy_screen.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_self_refresh_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_simple_kms_helper.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_suballoc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_syncobj.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_vblank_work.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_vma_manager.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/drm_writeback.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/i915/gt/intel_rps.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/i915/intel_gvt.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/i915/intel_gvt_mmio_table.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/imx/ipuv3/imx-drm-core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/lib/drm_random.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/mcde/mcde_display.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/mediatek/mtk_cec.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/nouveau/dispnv04/nouveau_i2c_encoder.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/panel/panel-samsung-s6e63m0.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/pl111/pl111_nomadik.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/pl111/pl111_versatile.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/renesas/rcar-du/rcar_cmm.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+   drivers/gpu/drm/renesas/rcar-du/rcar_lvds.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
