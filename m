@@ -1,94 +1,112 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A431E5B6D
-	for <linux-hardening@vger.kernel.org>; Sat,  7 Jun 2025 21:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9748238385;
+	Mon,  9 Jun 2025 09:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749331829; cv=none; b=T3YYBvG+CzBPOBBEkJe/OaTMycGCwgKTLB3S+5mLIv8ZQ4n0FrOVfCkuQnIQmvzxGGCF5bo1N3yh4R2vVYG2andc8F46P8oQ84Wk5wwzw6xxvxqAEbJC5RzXQGezCK2MfleAlK5Wy57Rrp5hiIY4sapz6yAeVKaIRKgbgvZCyns=
+	t=1749459707; cv=none; b=VKTvA5/2AxfFGJ5lv5kTRGQHs9rgSnrjEG5rPtGEWzNzBkOBzvzL/LemwrcmQFQVJm+OcnZo+yNmnKo08xVPwMA4WSidE/2tbqzUymv1VFgLPap7FgY3/4yfZ2RcqMoPKsB0AleWjSasBAhxnPaPVj+zNcbvgDjobugZa8llVtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749331829; c=relaxed/simple;
-	bh=cCui/UBexPOb+w6Y2QnKvfiASEiXWL1n2zIGSxWohaw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dv/f6Z51qLE7mrJrd0FnaPblp7YpMDLmZjS9fAvcTf/ZudqauFTIUA9M68LVe46t94l9QjU8fahIXTMKxhHLoI6AS326EgRBVRpWQll8Hk5M8AdEltxfAd5czDYd0SZvo0oGRzRcXb5eiNVoDN+KnJ4H6tR5ltdbnCdS8jAXBSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=1hrfMvYF; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
+	s=arc-20240116; t=1749459707; c=relaxed/simple;
+	bh=/cIaxeqw/uIFx9EFsl7xwKrl2aCOVbcL+LtzSQ69mXc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b22FfBS7yxwms3ckZGtdr8vTpbRMVL64v70x/8ywNnonW4OuQUvjieoLXYo2GMqFHP3CA1aqIZBrM+WY8U7Vr4iIruys8uU4RE639MAuh1OGCy3I9KOZBid2hO3LIR1o6mfrKjT0jwE3D9No22d4brT/rjpwsY5fH6CV6hRu7Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Yk+DxNrT; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="1hrfMvYF"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bFBDV2t9Vz9smv;
-	Sat,  7 Jun 2025 23:30:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
-	t=1749331818;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Yk+DxNrT"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0B3741FCEF;
+	Mon,  9 Jun 2025 09:01:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749459702;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=SNzK7t/kTDrEu3ZAe2BVUdBYjisR+xcRUFsS6jLDuk0=;
-	b=1hrfMvYFFhtvWdGADpcQy0aN+Dw/WPd67jBGx6Orn3GyPbkKgoCKPwHYnovEs+b7+gzbqw
-	jcp4GrOGKYyLQ3Dz3+2Ut+CHbJLt5E05xcM78flowv5jh3tp3HZRhDoeeQqK4gMRT3oNxy
-	2iKL3BVQd3YUwhHhXF4HBQLW4qXS+g21ZhVlePf8eEyNvK0kiTUKVpiudpSsBCTcDZIfvh
-	afFvVX7ujKPgqKZagXc3it2TVqes7xZlid0RipJ6+otyYVLA64lZSU/VOWBwtQYutL5zta
-	arvBZ+sifzYWjxCTXmYde9GbpMBNzBX1/cAJks9Js3RO2tj9/m1NeNAXLyeDMw==
-From: Brahmajit Das <listout@listout.xyz>
-To: linux-hardening@vger.kernel.org
-Cc: kees@kernel.org,
-	justinstitt@google.com,
-	richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	linux-um@lists.infradead.org
-Subject: [RFC PATCH] um: replace deprecated strncpy with strscpy
-Date: Sun,  8 Jun 2025 03:00:06 +0530
-Message-ID: <20250607213006.7858-1-listout@listout.xyz>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v6COVbmLFII/PGVnRIn0cQFTY2M/cpHl8qq/PR3IIZQ=;
+	b=Yk+DxNrTE675k1beTWKb0SQuKds48L/2lDtwaQ+WOt18+cAKKXF2Wv7Z7VifuNGxQnnHUi
+	VXzHvQCWnffhMWACCP9bEnuGRvWn4yKL50DE9zOxVk2j0Uk5dTQfAlxJwAc6vBi4lIHrkS
+	j0dZYKuupOo/UJYiAmbIVjE9a9MnsJdhWybpgZ/VZXZvggA75MMO1SeTiaXHntdnIKuGD2
+	N+yJbZ8BBJ/MUbL755+Cgf5Xq9p1r2OQCnTQ5AMBximjuMb15rV93jCueJ8F1TqLiMJB2v
+	xWmyLk9v58DFiUlspjhiTpsKUzY/dQbtmpmQE/NMku11Rc29bWUdKip9ylHnPA==
+Message-ID: <1031395a-f662-4c24-897f-85ef854060b2@bootlin.com>
+Date: Mon, 9 Jun 2025 11:01:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 12/12] pinctrl: Add pin controller driver for AAEON UP
+ boards
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw,
+ linux-hardening@vger.kernel.org
+References: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
+ <20250520-aaeon-up-board-pinctrl-support-v6-12-dcb3756be3c6@bootlin.com>
+ <aC3yKaCNZA8H2KPt@smile.fi.intel.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <aC3yKaCNZA8H2KPt@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdeltdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjs
+ ehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
+X-GND-Sasl: thomas.richard@bootlin.com
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+Hi Andy,
 
-This modification is mainly due to the concerns on
-https://github.com/KSPP/linux/issues/336, where it was mentioned that
-strncpy_from_user is confusingly named as it does not NUL-pad the
-destination, but it does NOT guarantee NUL-termination.
-With this approach/patch we can always ensure that the dst buffer is NUL
-terminated.
+Thanks for the review.
 
-My initial guess was to create a separate function, something like
-strscpy_from_user that would use strscpy_chunk_from_user which would
-inturn use strscpy instead of the strncpy (like in this patch). But I'm
-new quite unsure about adding new functions to kernel code. I'm open to
-other ideas and/or approach as well, since I'm quit sure there might be
-a better way to handle this.
+On 5/21/25 17:32, Andy Shevchenko wrote:
+>> +static void upboard_pinctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
+>> +				     unsigned int offset)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = upboard_pinctrl_pin_get_mode(pctldev, offset);
+>> +	if (ret == UPBOARD_PIN_MODE_FUNCTION)
+>> +		seq_puts(s, "mode function ");
+>> +	else if (ret == UPBOARD_PIN_MODE_DISABLED)
+>> +		seq_puts(s, "HIGH-Z ");
+> 
+>> +	else
+>> +		seq_printf(s, "GPIO (%s) ", str_input_output(ret == UPBOARD_PIN_MODE_GPIO_IN));
+> 
+> Actually this should be
+> 
+> 	else if (ret < 0)
+> 		seq_printf(s, "N/A "); // or similar text
+> 	else
+> 		seq_printf(s, "GPIO (%s) ", str_input_output(ret == UPBOARD_PIN_MODE_GPIO_IN));
+> 
+> as the above may return a negative error code which is not listed here.
+> 
+>> +}
+> 
+> With the above being addressed,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> ...
+> 
+> Thanks for doing this driver, eventually we will have it working
+> out-of-the-box. Do you have any plans for enabling HSI and SIM card
+> slot on UP Squared 7000?
 
-[1]: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+My scope is limited to the FPGA support, and I don't know the status of
+HSI and SIM card slot.
 
-Signed-off-by: Brahmajit Das <listout@listout.xyz>
----
- arch/um/kernel/skas/uaccess.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+But it is planned to add UP Squared 7000 support in the pinctrl driver.
 
-diff --git a/arch/um/kernel/skas/uaccess.c b/arch/um/kernel/skas/uaccess.c
-index 198269e384c4..c00ef385591c 100644
---- a/arch/um/kernel/skas/uaccess.c
-+++ b/arch/um/kernel/skas/uaccess.c
-@@ -170,7 +170,7 @@ static int strncpy_chunk_from_user(unsigned long from, int len, void *arg)
- 	char **to_ptr = arg, *to = *to_ptr;
- 	int n;
- 
--	strncpy(to, (void *) from, len);
-+	strscpy(to, (void *) from, len);
- 	n = strnlen(to, len);
- 	*to_ptr += n;
- 
--- 
-2.49.0
+Best Regards,
+
+Thomas
 
