@@ -1,41 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1638C1FF1B5;
-	Mon,  9 Jun 2025 15:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3799C1EB9E1;
+	Mon,  9 Jun 2025 20:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749482688; cv=none; b=nsIyDFw4O4JA8G+Z/xC2+2mRJBjA77lt35nK/HlxllFjfIRYMmepzrpa3/9yDKRR6GjImWMaiCxOfXorE/sRIE5kdopLWmis62oMpR0m6CRppT2K2SeCsHe3usScSucvo7bIx0AsYLYatRpx/StaQUV4I9rtM/u/4jHqyoNQNvA=
+	t=1749499972; cv=none; b=eOTCPsdPvfYsTsXufiypuagVC0kQkWym2dMeo2peZ1y7skgyeAF1mb1UakPGEi8rqYoDq+CWAqE2jSkCSZ2L/BHXjcltHtRtYQ0F7WHYe8TMMzDGXQUHXEoTWHHg5NT/LWw01Y/T+0f5Kf/sjyq2hRbHPAIciYlakDnnXsB5epQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749482688; c=relaxed/simple;
-	bh=ozjXpJHyeUzJv7RP45tM13BD+asvs0L+N0AGD1q7nAk=;
+	s=arc-20240116; t=1749499972; c=relaxed/simple;
+	bh=LJ/uZDXg4Dz+jNqe8xKGNosRt70el7DilOa/Q+s44xQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MkPxMW8bzkqvPEHfPl9h84plOM46fHmEcuzv2GpdupTje+YIm8kU5Tab0O5EjroVzTWwh9aGwq0VXlcmh270cn/FolTswRYLx13ye36iqFXv3Q7xYenaOrApgdnsn0bTP9UC2LMB+UcqYk3jeUrazTsX2qquOfNYpeXgaDZ53GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tTG/SW1V; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GfZAjbsPp8HUExtHvcs05G0lrrODVzkchdfumreyYile9gfqsh2EaiS2jAAbIUoEzwj86AvlkS10yobVDNac1NX+g9MNMl/eYOB4O1bs+cckZDBvBAsPcMlVVlo7dkExleqa7NpOKbKTB7EJvQBckHbeyfAQnoIMfxyjkiZUGq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SCgo9+6R; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tTG/SW1V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE3B5C4CEEB;
-	Mon,  9 Jun 2025 15:24:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749482687;
-	bh=ozjXpJHyeUzJv7RP45tM13BD+asvs0L+N0AGD1q7nAk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tTG/SW1VeshB/wdGO8XLzIf0hdyKLbl1+KLe8EridFc899vFQW0d6ONCeyFLYsHW5
-	 V59dAkT9Ep6Fs7nZMRPuONnctbLRkaVWhIASGcFHmen8JrPq5B4buiGitfIJf3CVP3
-	 3fP65nd/2wdXYmpO4UXj5RFF9yoYWjeLR2iEn8TzlPU66JvaTzE6KEYWO8t0rJNvGL
-	 ai7uFP5EQTZbYyqRMbVpF172LgDudE4jtD8dcDNZfmtRXfUh3Md28yHE/cWMYtetWU
-	 eA6a8JgrbzFqkCj+siPjSf6t2D6QXPu70eVKysRyk8wuZT9uFXlmDzWTmR3tZujpk7
-	 3ixrHVeRTM5Yg==
-Date: Mon, 9 Jun 2025 08:24:47 -0700
-From: Kees Cook <kees@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Sergio Perez Gonzalez <sperezglz@gmail.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SCgo9+6R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749499972; x=1781035972;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LJ/uZDXg4Dz+jNqe8xKGNosRt70el7DilOa/Q+s44xQ=;
+  b=SCgo9+6RTQAEQGbo1p7wLW9MaFAD0iC0EMpdrAQWEeL6wLttW5BcMtUE
+   djC2Q9hhoI9xETJxGDkbFzZLNslqYkajKqbh2tal22WsGUX2pVVJZopmi
+   jXDHeqwbTlgokzyb7dIVd5Rc/32sAr0lh1+r2+i9tUNDplHcmLnyal38z
+   Dhg/vAZc3NUAXVlO1Av000W1BBKstmgb5C6jr4rU9+8ZYsxM4I1BPvDIb
+   sse/gbrYXXhrcVOU5o/qmr0IUAKiJXsIzdeDdGQet/QsfMkSf58Q3vOe+
+   XxgPJrbUotMvzw9AouaL3Ud3S32lmcZwz5Xze8lVqG/ir3hL7A8NV/xMc
+   Q==;
+X-CSE-ConnectionGUID: 9ZAOTH3/TJqW0nN8XK+gkg==
+X-CSE-MsgGUID: /G/ORU5TQhaDTaEfodPc9g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51677175"
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="51677175"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 13:12:50 -0700
+X-CSE-ConnectionGUID: JgUShucbQ3mQBwHf/RSvig==
+X-CSE-MsgGUID: MCcgyiSGT0aLouJwJOiQ5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="147188410"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 13:12:43 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uOirG-000000059XK-27RQ;
+	Mon, 09 Jun 2025 23:12:38 +0300
+Date: Mon, 9 Jun 2025 23:12:38 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>,
+	Sergio Perez Gonzalez <sperezglz@gmail.com>,
 	Vlastimil Babka <vbabka@suse.cz>,
 	David Rientjes <rientjes@google.com>,
 	Bagas Sanjaya <bagasdotme@gmail.com>,
 	Jonathan Corbet <corbet@lwn.net>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
@@ -56,11 +77,12 @@ Cc: Sergio Perez Gonzalez <sperezglz@gmail.com>,
 	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v2] slab: Decouple slab_debug and no_hash_pointers
-Message-ID: <202506090823.33ED63C@keescook>
+Message-ID: <aEdANsGsQHqVQ9Wy@smile.fi.intel.com>
 References: <20250415170232.it.467-kees@kernel.org>
  <Z_-dPcdiGW0fo8Ji@pathway.suse.cz>
  <202506051314.D6EDFA91D@keescook>
  <aEbyHeG8qh8GChTh@pathway.suse.cz>
+ <202506090823.33ED63C@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,62 +91,22 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEbyHeG8qh8GChTh@pathway.suse.cz>
+In-Reply-To: <202506090823.33ED63C@keescook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Jun 09, 2025 at 04:39:25PM +0200, Petr Mladek wrote:
-> On Thu 2025-06-05 13:15:32, Kees Cook wrote:
-> > On Wed, Apr 16, 2025 at 02:06:21PM +0200, Petr Mladek wrote:
-> > > On Tue 2025-04-15 10:02:33, Kees Cook wrote:
-> > > > Some system owners use slab_debug=FPZ (or similar) as a hardening option,
-> > > > but do not want to be forced into having kernel addresses exposed due
-> > > > to the implicit "no_hash_pointers" boot param setting.[1]
-> > > > 
-> > > > Introduce the "hash_pointers" boot param, which defaults to "auto"
-> > > > (the current behavior), but also includes "always" (forcing on hashing
-> > > > even when "slab_debug=..." is defined), and "never". The existing
-> > > > "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
-> > > > 
-> > > > This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
-> > > > 
-> > > > Link: https://github.com/KSPP/linux/issues/368 [1]
-> > > > Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
-> > > > Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-> > > > Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-> > > > Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> > > > Acked-by: David Rientjes <rientjes@google.com>
-> > > > Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> > > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > > 
-> > > Tested-by: Petr Mladek <pmladek@suse.com>
-> > > Reviewed-by: Petr Mladek <pmladek@suse.com>
-> > > 
-> > > I am going to wait few more days for a potential feedback.
-> > > I'll queue it for 6.16 unless anyone complains.
-> > 
-> > Hi,
-> > 
-> > Is this still planned for 6.16? I just noticed it wasn't in -next, and
-> > we're almost to the end of the merge window...
-> 
-> I am terribly sorry. I have forgot this patch...
-> 
-> I have just pushed it into printk/linux.git, branch
-> for-6.17-hash_pointers.
-> 
-> Also I updated the documentation, aka applied the diff
-> from https://lore.kernel.org/r/202504181307.254F81843@keescook
-> See
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git/commit/?h=for-6.17-hash_pointers&id=de1c831a7898f164c1c2703c6b2b9e4fb4bebefc
-> 
-> As the branch name suggests, I am going to push it for 6.17.
-> If it is too late for you then please let me know.
+On Mon, Jun 09, 2025 at 08:24:47AM -0700, Kees Cook wrote:
+> On Mon, Jun 09, 2025 at 04:39:25PM +0200, Petr Mladek wrote:
 
-As long as it's in -next and scheduled to land, I'm happy. I'd always
-like it earlier, but the less workflow disruption the better! :)
+...
 
-Thanks!
+> As long as it's in -next and scheduled to land, I'm happy. I'd always
+> like it earlier, but the less workflow disruption the better! :)
 
--Kees
+Hmm... The __diag patch series were in Linux Next for a few weeks and did not
+land in v6.16-rc1. Just saying that there is always chance to go into cracks.
 
 -- 
-Kees Cook
+With Best Regards,
+Andy Shevchenko
+
+
