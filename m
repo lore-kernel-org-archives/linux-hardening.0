@@ -1,121 +1,67 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0266425E808
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Jun 2025 02:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDD0747F
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Jun 2025 04:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749523936; cv=none; b=VO5EcyKLSECy/vBw+VlIieEJJtv+ujCuqyBwgGDqLK5xDAsnYGfgmzDcI30fu+xnGTvahkOQLSR2b2+oLgmp69pEkCgh2Ilsw8EGMjQgZkCJ/dNVoioc1vdKOz9WTVQSF6ZHD9qWjUKkUUN/foKhKbOo3k/9Zkov1+jH9WQi0UE=
+	t=1749528950; cv=none; b=OXyuR58TqTad/oHZW+tYvc6NTDAVcPIy0HVnaFEUEnTWEsgR45wqYoXvhQgmZbWLu81nzGAz0u0uSMeNEH5SKF+t8mGJi9XlGwtsxajkc1jdZsgi80kyhzwvCKkewO3eeERb559oCfkmmgC48wx2MkyzDUmqyZSr7IIWmUXjT/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749523936; c=relaxed/simple;
-	bh=BJSAuM/KEuH1gidHkhv+0rdYBs0sl4fswnQ67X/V5y8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fDCs2CjP+Xv+NKbxLMlTvNt8T5GWBs0hdhQPU8vmYRdZb89O3XyO4Xm/dILUh0TFAkUwPtIYmgNHlWagMDPrstgovkAkCXgj6bHCPzuZZASgL5+udnniN+unelLu6axlmOU+Tf34taR0PBEFUAMEntcFPQ084uEY672eyRJRYVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QLWe4uge; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749528950; c=relaxed/simple;
+	bh=SNmQMfX8br1v3m6Ue7itdaBLQ/yx3M1lD48sr4R/J6Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cmqJlAQrewIN/TBjzmmcyor3z/2mBkqQCO1aQxwhPiir3Ju+OHHbjcA7Rj5oZhuEdLUZc9y6fhCd/YKKIzPm9EZtPp0degfKyMGq5LHWJBcQ8k1aWD4AOYYra0ITrRN/O+dm0dIKC/q/s+5M7rPrE0rao5F1sDjPoK97gIoS8pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+F7F0yE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QLWe4uge"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2363497cc4dso6321475ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Jun 2025 19:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749523933; x=1750128733; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rm7rFkHvnvV5pN555kvAO+KRnM6aiD+6xk7uYMzjvLU=;
-        b=QLWe4ugeX2+zvNXVl0saAH25f8B6ENIKkDorKxTErK5J3QH0T131mP8i4QyF7wp4gE
-         5aDl+5U1fMvIo5OVSXit76CWa5dZwuSlNVgOQ4xsFUn5jBhgdDrOoypZjkSVz2NRIAi5
-         +Rg2woHIuDv+0U01CNu424kG2Wq9/mjnPFIa0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749523933; x=1750128733;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Rm7rFkHvnvV5pN555kvAO+KRnM6aiD+6xk7uYMzjvLU=;
-        b=RMbI/LviPIlc9+dgNaan7ZXnI0e4RiezyzirDov7flw6GcqeNY0d1++FZa1MjWTO8p
-         eQNKnMB+TsFq4Xgjwj/wo0YLnTQ/0Od4NXIeTNXzRndlG+D093GJbnplWGSQ+MTmBvmM
-         pZrF950HMk9sHw8y1lxiNZBg9+n/x7uHkf/Z8JI/T/39ZKgLuzoZRp+VsNu9SoQo9ckY
-         nvT0+8kjBvDoMakGVfarSTWj6fhSRQmqK0Kb1KA4hdahkoaxeTHQPuQiAzEuVfPjovPD
-         9em4JZNicmHKcM7p/gnq6FteAa7dl6+RFOaXFvyYrMNvIUBjaxWVmRaOoNMQ8O7HY3qB
-         4UUg==
-X-Forwarded-Encrypted: i=1; AJvYcCViwZfMeostKQhtW80jDnTLx73ivjt+3tfFl/cOO8EgQhQTnJdVxl28QsH3jjgFAGdHyvNPaDN855VImOvEll0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxapH+cfGmhMf0RFjgWVPOuJ9JRRyBn/sAW5BeeDKNGq8UAHWSp
-	wEB5Vm2tPRYK41Ricz1oFJkhC0WtUHLKBL2xzVKXiHD2A/4+hc87ddecnX9Am5WMxQ==
-X-Gm-Gg: ASbGnct/7DleloPebaSlan6yl5J9u3XbqrNR9KXoDIqjJ5sZEvmIQOhv0iqQUHjE+tB
-	TOKEzp+YvGeCdCtAspG44TJ4kJ2lXRRxYaX6HPO5iyy6Abhti9ldGkYI/8hbc5flk1XMRZwJa5t
-	d/y9nkmGuywkkgW8WDUyzPB0oDA+4Fcv8b6PQU+y8CWPO65x5r74Ecp5vAcHJn1EbX6XsMERi09
-	Uf0N7TeVQzPScVbNZZwjFfxI/PLYl8Sg8dPRqnGjuWPl3ZRhSys0C2T5HbDjIk5H/PM9CmM1bR7
-	nkzdP8l4okJLDz8v8l8ACqNSIqAEXC8Cp/n4qv3cCIOSz1tbjW99k5pcK4nUk15nRN777qydYUf
-	lCQU8NFmmtDlnEl9uiO4=
-X-Google-Smtp-Source: AGHT+IGm82o58ZVjCAo3PybTPYdGDfXUbsMi8+8LjHbWtOpjdJXIBSCQJyWdYXNP2Z2kXvDi5YGUeg==
-X-Received: by 2002:a17:902:cf03:b0:234:9375:e07c with SMTP id d9443c01a7336-23601dbd9fcmr242591495ad.46.1749523933313;
-        Mon, 09 Jun 2025 19:52:13 -0700 (PDT)
-Received: from naoyatezuka1.tok.corp.google.com ([2401:fa00:8f:203:4173:c66c:ee04:82a8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603514230sm61107305ad.245.2025.06.09.19.52.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 19:52:12 -0700 (PDT)
-From: Naoya Tezuka <naoyatezuka@chromium.org>
-To: Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>
-Cc: chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Naoya Tezuka <naoyatezuka@chromium.org>
-Subject: [PATCH] platform/chrome: chromeos_pstore: Add ecc_size module parameter
-Date: Tue, 10 Jun 2025 11:51:37 +0900
-Message-ID: <20250610025152.3844404-1-naoyatezuka@chromium.org>
-X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+F7F0yE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46203C4CEEF;
+	Tue, 10 Jun 2025 04:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749528950;
+	bh=SNmQMfX8br1v3m6Ue7itdaBLQ/yx3M1lD48sr4R/J6Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F+F7F0yEzPfqKL0TrqfMXXeklqTlnsG4CCmP4dKNRl9Cq90xxhD++itUyDG4aQGUs
+	 oMbMIa8lR319QFWQKJFF+Ff5cvovzUnFjl2kxxRtcR14kY0ErFarqzjAtr2YysrCgP
+	 lDsQIIcbIbTiA4L7sxUlfocSSMzsqE5CRdl7HcCrGcAUXCo9iSSzE+cxIy7jhu7Fbk
+	 ksCbzd40NJDyFVpreicZuu8brXYtANRUAmwmV5ijt+pgR1fEP+/urR6o/TSUHsPUWL
+	 gJgoDIX2tx0W4Jv+hUU4YdTejM2RWGtokspGoH7CuE020K2pV/K+jUDjsegEaoBFjg
+	 q96OYf+YxJJyA==
+Date: Mon, 9 Jun 2025 21:15:49 -0700
+From: Kees Cook <kees@kernel.org>
+To: Brahmajit Das <listout@listout.xyz>
+Cc: linux-hardening@vger.kernel.org, justinstitt@google.com, richard@nod.at,
+	anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+	linux-um@lists.infradead.org
+Subject: Re: [RFC PATCH] um: replace deprecated strncpy with strscpy
+Message-ID: <202506092114.01147457A5@keescook>
+References: <20250607213006.7858-1-listout@listout.xyz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250607213006.7858-1-listout@listout.xyz>
 
-On ChromiumOS devices, the ecc_size is set to 0 (check dmesg | grep ecc 
-to see `ecc: 0`): this disables ECC for ramoops region, even when 
-ramoops.ecc=1 is given to kernel command line parameter.
+On Sun, Jun 08, 2025 at 03:00:06AM +0530, Brahmajit Das wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> This modification is mainly due to the concerns on
+> https://github.com/KSPP/linux/issues/336, where it was mentioned that
+> strncpy_from_user is confusingly named as it does not NUL-pad the
+> destination, but it does NOT guarantee NUL-termination.
+> With this approach/patch we can always ensure that the dst buffer is NUL
+> terminated.
 
-This patch introduces ecc_size module parameter to provide an method to 
-turn on ECC for ramoops and set different values of ecc_size per devices.
+I think we need wholesale fix the kernel's usage of
+strncpy_from_user()... first, how is it being used? Are things being
+manually terminated? Are something destinations not actually C Strings?
+We may want two APIs (like strtomem vs strscpy). And then since we're
+dealing with user data, I would think padding should be included?
 
-Signed-off-by: Naoya Tezuka <naoyatezuka@chromium.org>
----
- drivers/platform/chrome/chromeos_pstore.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/platform/chrome/chromeos_pstore.c b/drivers/platform/chrome/chromeos_pstore.c
-index f37c0ef4af1f..255818f24c2e 100644
---- a/drivers/platform/chrome/chromeos_pstore.c
-+++ b/drivers/platform/chrome/chromeos_pstore.c
-@@ -9,6 +9,10 @@
- #include <linux/platform_device.h>
- #include <linux/pstore_ram.h>
- 
-+static int ecc_size;
-+module_param(ecc_size, int, 0444);
-+MODULE_PARM_DESC(ecc_size, "ECC parity data size in bytes. A positive value enables ECC for the ramoops region.");
-+
- static const struct dmi_system_id chromeos_pstore_dmi_table[] __initconst = {
- 	{
- 		/*
-@@ -115,8 +119,12 @@ static inline bool chromeos_check_acpi(void) { return false; }
- 
- static int __init chromeos_pstore_init(void)
- {
-+
- 	bool acpi_dev_found;
- 
-+	if (ecc_size > 0)
-+		chromeos_ramoops_data.ecc_info.ecc_size = ecc_size;
-+
- 	/* First check ACPI for non-hardcoded values from firmware. */
- 	acpi_dev_found = chromeos_check_acpi();
- 
 -- 
-2.50.0.rc0.604.gd4ff7b7c86-goog
-
+Kees Cook
