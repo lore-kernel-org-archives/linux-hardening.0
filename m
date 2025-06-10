@@ -1,76 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D990924502D;
-	Tue, 10 Jun 2025 18:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E028244693
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Jun 2025 22:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749580932; cv=none; b=gcJSPZXP7OC/RPshJ/UP7Rbln17fRZcxsUmyFE7fwabKnB1+OfFqzADUZDYlOKmxca0jNxkYOPTLqLUt85diTXm1oXPxKNRCk7VP5wpl2DRDKTHFlguYG7B4oUaIHOjEiq3a1NcUC0itZkFCtpSXHDtTJT9USu4vOqGt1244yf0=
+	t=1749593423; cv=none; b=W6jMoaez2lItXIgrhNVHjU/zGOiqU/V8NrlMvF+2HVVF5FqVmLiLkH63jGvHK6eosS+PApbXrTPx9mlziRFa/E9KRf3Hlg5rrUGvLLVggeHzJpF4AMrYBrhZRjizUgDW44iIyd177ozHiAX872rmRPJ+60KKK1mNmvFM9oq0Pn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749580932; c=relaxed/simple;
-	bh=SRK4oOAbH+Nd5/QGu3c6zwgfCNvKDJBW3daJbzcjYAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qehHO6ZmIyfFSE6c9SUPFB/DZLq118MR0T8xf3f/S9ZLojBvzSJanVxs5lKF/yATq7Kj2WGvxWollj47bYagnEFDSu/G4EfxxyEGMcF2LlkVfCnk5DA7JxAirCKmGI3GdWYslw4i+x4IFKjpUXA9WNULuw2pFV1v1K2fYB0TF10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9un6jmU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749593423; c=relaxed/simple;
+	bh=4NsuCs21FfORtH1DAcJU346wyrSVbDZYpctIUxODfi0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i7w2IPIeeKH6LlLwd8oCMBImFCn8nrEgNitSZFJ1tWx5ICL8kVZWWTxXk7zMRhshOBN6fP/C9NogSPx7jvTk2O1/IGEjetauYcAvLoHXDO5bCJ7zntTQpTAFlQHxR4gG8x0L/GefYpqjF+adTEyGQTggxnx2tPmXMZwca3etd5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zft87NWu; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9un6jmU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F1FC4CEED;
-	Tue, 10 Jun 2025 18:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749580930;
-	bh=SRK4oOAbH+Nd5/QGu3c6zwgfCNvKDJBW3daJbzcjYAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o9un6jmUVybuavuWZsqHzWayBJ3FcxCqA/hi/it91vvatbcTVsqU18NLTfa+CiK3L
-	 PksVxD1tuZT4Pflv/QVvET2D6AL5JFSI7ec/C4YJ1nKI/yr6z8ZxtjZ+F37WRs6SAX
-	 dNZBaMOKRNiC6G5CvkQsY71T+t3HDQnqyf/ZAK4c04702mihq/dBczA6Z5piWRl/GN
-	 EadwfB/f/yI+C90ZkuI/xeDFht7mtiWWh1OsPUOyW3FP2P0LNU0MHhgCFCNUSpdput
-	 mJsRnZXObHkqIDb9G9RGcD7hzgy7O7rOoZtlAW1AoXRiqpf93d0zJF1R4bRD0jWE5p
-	 sR6dJUHGfUKYw==
-Date: Tue, 10 Jun 2025 11:41:46 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] crypto: Annotate crypto strings with nonstring
-Message-ID: <20250610184146.GA1649@sol>
-References: <20250529173113.work.760-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zft87NWu"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-32adebb15c5so40510401fa.3
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Jun 2025 15:10:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749593420; x=1750198220; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4NsuCs21FfORtH1DAcJU346wyrSVbDZYpctIUxODfi0=;
+        b=Zft87NWu+w49oRVtguIABucAm11rvQn344jrUA+7DrmVwTlgLJl07qVH8luEeKONM8
+         +JgXFWa8Z+KO6t33jnySZp6c8vH3GeqYm1Xyz/sZneylJWLTniJlnxRVBcsA0b58YeiL
+         WpIh5/zfbedvt03dWwMYPelweyi+2Y2qix6osA7hVFXbEsuOAXRtPh9pXW1sb/0W6txL
+         AOeR5+wV8W5hFnzPpl6Gmf2cxFzeJ7GzPtPAw5DFfN0gxW8Inok/Sgizaq/SbSZK6ku+
+         yXSNK06BYK5m/R2e6uwalnuL70G/c/kf4qLmUMmFd6Pl1wKl8UXhwsCJizUaBuCxgYAn
+         Csag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749593420; x=1750198220;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4NsuCs21FfORtH1DAcJU346wyrSVbDZYpctIUxODfi0=;
+        b=Y6hZuXf9f91UCFF+t026OW/fzLx784Ib2D/0L4/EX0S0XECZm0nAGzy7ASfjKIUCJm
+         hQXTgGvHJJTJlbNUOwOaLCVxyMF/M5N33NMyuvjyR1VOV3pfnhOCiTumsOeP0YaqFINq
+         Mjwm1qG+eemfnj4kYu9YlBg64B6R5swEoQtJpn7phAVrrssasRMh+K9CmOxWSl1LmOFr
+         O6fVJtHRNldkUBY4cz/lWMCsj+zXArGQGLFIjDPMn/fS8oujVxsTR+xveyYbgWP1oK54
+         y1RJOx5yfZCtyRFy/kmA6aS5vrjVsEtvXpAOpCWZ/HoOC9yayIKBeYtzubyWW6TC2Dnw
+         PNVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWGsW/LvFcRgTH63kIzxBYK0EG9//cgXemUz8+ENPGUmZfFEk2lcO/+HANzaZ2qj+EkcR360K3EuzKXhUoWyOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu0mJEqGxpr2+8zj2TKw6VKWFkH3NCfnTOW8qphh+qRXg3GcgJ
+	FnhKIkwhaiBJsSQI5okMy2p00r0yorPc1iam0CC23skJRUE0ytlDOBGbsXX4UFnQEIDGnHG8XsB
+	owzazxl5CRcJPot5cpowR1Rhs34hidwHdT70PzaxvAg==
+X-Gm-Gg: ASbGncs9hzGIdpM17HcjAR6jMCWuGt0ffLWnZXpSxO7Nk6JXN85yJRyDIN3uHmS9A2K
+	6ccox/7h/il5iacXXNTnCa2op1+KP9y0ZDxY/PkbyuvYzMofRl7eOGa7fQXhabr71XrymOi7yrF
+	d8mlcbBIDDPWC+/uiUDAY8qPFrrwJxTnKRthpj9oSdrEE56kAvgqi1/w==
+X-Google-Smtp-Source: AGHT+IFXxwww3rRneN2BUjxLNPNhg4yAnXFXP/2lKFW4OFSo8Ks3J3g+tSHPB6GX39sicVQXDwM/c1CXLqu6v3dqFFk=
+X-Received: by 2002:a05:651c:1501:b0:32a:864a:46eb with SMTP id
+ 38308e7fff4ca-32b21926dc7mr2464121fa.0.1749593419575; Tue, 10 Jun 2025
+ 15:10:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529173113.work.760-kees@kernel.org>
+References: <20250609-aaeon-up-board-pinctrl-support-v7-0-1ab73ec0cb98@bootlin.com>
+ <CACRpkdZpn5xy+6yb-mQd6wDs05X0QqRCQo7QpL6=aEWtyU-zTg@mail.gmail.com> <ddbaa399-6bad-4c97-8456-b597442e5be6@bootlin.com>
+In-Reply-To: <ddbaa399-6bad-4c97-8456-b597442e5be6@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 11 Jun 2025 00:10:07 +0200
+X-Gm-Features: AX0GCFv2Yttg6_a--xuQp4PbwFHmH30QcrKQqT9QjOj8bCT3ACO4rWmYyV62F-Q
+Message-ID: <CACRpkdY-6UeRai7AVO0uA_3JGtGNips5C4GtSFgw0SHky3ozcw@mail.gmail.com>
+Subject: Re: [PATCH v7 00/10] Add pinctrl support for the AAEON UP board FPGA
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 29, 2025 at 10:31:17AM -0700, Kees Cook wrote:
-> Annotate various keys, ivs, and other byte arrays with __nonstring so
-> that static initializers will not complain about truncating the trailing
-> NUL byte under GCC 15 with -Wunterminated-string-initialization enabled.
-> Silences many warnings like:
-> 
-> ../lib/crypto/aesgcm.c:642:27: warning: initializer-string for array of 'unsigned char' truncates NUL terminator but destination lacks 'nonstring' attribute (13 chars into 12 available) [-Wunterminated-string-initialization]
->   642 |                 .iv     = "\xca\xfe\xba\xbe\xfa\xce\xdb\xad"
->       |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: Eric Biggers <ebiggers@google.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: <linux-crypto@vger.kernel.org>
-> ---
->  lib/crypto/aescfb.c |  8 ++++----
->  lib/crypto/aesgcm.c | 46 ++++++++++++++++++++++-----------------------
->  2 files changed, 27 insertions(+), 27 deletions(-)
+On Tue, Jun 10, 2025 at 2:48=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+> On 6/10/25 14:42, Linus Walleij wrote:
+> > On Mon, Jun 9, 2025 at 11:51=E2=80=AFAM Thomas Richard
+> > <thomas.richard@bootlin.com> wrote:
+> >
+> >> This is the seventh version of this series. Only few changes, the seri=
+es has
+> >> been rebased on v6.16-rc1, the pinctrl patches were dropped as they we=
+re
+> >> already merged and a fix was added in upboard_pinctrl_dbg_show() to ha=
+ndle
+> >> the case upboard_pinctrl_pin_get_mode() returns an error.
+> >>
+> >> Best Regards,
+> >>
+> >> Thomas
+> >>
+> >> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> >
+> > Looks good to me, some testbot was complaining about something
+> > but certainly we can merge the majority?
+>
+> The export.h header file is missing in gpio-aggregator.
+> I can send a new version today. Or I can send a fix later.
+> What do you prefer ?
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=libcrypto-fixes
+Just send a v8, it's always easiest.
 
-Thanks!
-
-- Eric
+Yours,
+Linus Walleij
