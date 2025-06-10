@@ -1,118 +1,87 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E081B28C5AB
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Jun 2025 10:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41E028DB66
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Jun 2025 10:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749552119; cv=none; b=VMY2wjlwHvV6Ces4xZ1FhYW+/iaWphuNRX2zZ2x+yE2fe5GAYdWk+H9Y7g1nAMQPIn14hmp52P1sEbVw3JnPtG+fDnaRHYfV+MaJ/oYhNfKPHuq+RfNvQvZhDn5077TET3P5Qhh5lkkqwhB4cE2l9GXaxTY5qQszXQlUyWk7MAQ=
+	t=1749552468; cv=none; b=ogAHSN/hTKqGUt/zmAU7goU25qcE9SGUUUmQP9HWGMccm+qzg9llylHkT+fKRYqZwj9NbNnJNsSsXePHfd9A66/sNoh3u9FbqKwioHzAwKi1TzyoRLIl5TU9WmAec45IP1qMI74k0SkgS7cB9fyRkxejd8mnhSchQ2B7eOxVbA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749552119; c=relaxed/simple;
-	bh=HrubCorwEI4QzVE/jzPQeSmrMn2QE2G/08itsfpnLpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZOYQRu9mtPnEUVa2JEuTzeQR+e2e8C3hFHsqrkjxLZwiicrXqdXOUf4iNa4menriNPFT5NEcnl+DHX5eIm3Q0Y6m5DgXDDq51dnEY/5jHsEsNtcWiYxQOEBSEoSrZL4aNK8WZsmDjDSBHXLMUjpF4rTni8vjti/Qw6axB7FxjeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eZjAL4LM; arc=none smtp.client-ip=95.215.58.171
+	s=arc-20240116; t=1749552468; c=relaxed/simple;
+	bh=yqBGNHKHylLUbukGQanKBdMRqJDrnziE5o9wNGaF6So=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=rk+ZYMr4F6oVXa2A8imYDXUVyMdpoRt0+T3R8ppnTiKjVFm1Y+YxLbQsCdDMQoD2rEy9MIXIzKJ9SR53LrJfC4d9eNn/IZrqCKQurym8qsT84C/cPu6UN10YqYebt3ZCZ3M+9y/tsG1Za/aKPc9KUWgvl1HCmMdxym4j9PnUpNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=m515TzUh; arc=none smtp.client-ip=91.218.175.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eZjAL4LM"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="m515TzUh"
+Content-Type: text/plain;
+	charset=utf-8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749552114;
+	t=1749552463;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rEgV8+jcHG8DYIUGohYSskDCUEUrKKBIFZXspFzbGyU=;
-	b=eZjAL4LMXs5XY5pP0nCn1K//1kwYiqhXDNFRKcOLNmTKxhVLJkgeAWDwMVDvQmMEgzSx8S
-	/GhKEdKpKEsx0fHSwZonkrZTUIXhRuBI9LI3coOFYXEpuO7y83J53BGW+j9BLQ8yu5fWdC
-	Miv76Au4XAj/ldFz52sOugUd/Ifeb/A=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Peter Rosin <peda@axentia.se>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH RESEND] mux: Convert mux_control_ops to a flex array member in mux_chip
-Date: Tue, 10 Jun 2025 12:40:59 +0200
-Message-ID: <20250610104106.1948-2-thorsten.blum@linux.dev>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yqBGNHKHylLUbukGQanKBdMRqJDrnziE5o9wNGaF6So=;
+	b=m515TzUhRMnpShWuFOdaQf3kDQRhcxCVgb7v7HNfCsEg7NhHxgEv9lneCdOKPCIS/rx1bn
+	A/es2VtwMSzQZ2a72Hdf0037DIbD/d8YHxYxECA3grwetAmM2PuBl6MaaDAeiJbMV1WMP3
+	JwaDsoECJuuYyebuviuqIdWuiT3FTCc=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
+Subject: Re: [PATCH] smp: Replace deprecated strcpy() with strscpy()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <CAEdQ38E4Hks+m=srZsuuu7g8N2z_hJT7oxyF_Nz3MYsm8wx9YQ@mail.gmail.com>
+Date: Tue, 10 Jun 2025 12:47:18 +0200
+Cc: Kees Cook <kees@kernel.org>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Al Viro <viro@zeniv.linux.org.uk>,
+ Arnd Bergmann <arnd@arndb.de>,
+ linux-hardening@vger.kernel.org,
+ linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CBD9B075-41C1-4447-A432-6A0EED48545C@linux.dev>
+References: <20250417192054.69663-2-thorsten.blum@linux.dev>
+ <202504181322.5D3B93E93@keescook>
+ <ABD8884A-36DF-457C-83D4-49F4F63C339F@linux.dev>
+ <CAEdQ38E4Hks+m=srZsuuu7g8N2z_hJT7oxyF_Nz3MYsm8wx9YQ@mail.gmail.com>
+To: Matt Turner <mattst88@gmail.com>
 X-Migadu-Flow: FLOW_OUT
 
-Convert mux_control_ops to a flexible array member at the end of the
-mux_chip struct and add the __counted_by() compiler attribute to
-improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+Hi Matt,
 
-Use struct_size() to calculate the number of bytes to allocate for a new
-mux chip and to remove the following Coccinelle/coccicheck warning:
+On 19. Apr 2025, at 01:01, Matt Turner wrote:
+> On Fri, Apr 18, 2025 at 5:11=E2=80=AFPM Thorsten Blum wrote:
+>>=20
+>> On 18. Apr 2025, at 22:23, Kees Cook wrote:
+>>> On Thu, Apr 17, 2025 at 09:20:52PM +0200, Thorsten Blum wrote:
+>>>> strcpy() is deprecated; use strscpy() instead.
+>>>=20
+>>> Are there more strcpy() uses in arch/alpha? Maybe do all of them and
+>>> give the Subject prefix as "alpha:". If not, the "smp:" prefix is =
+likely
+>>> to non-specific. Maybe "alpha: smp:".
+>>=20
+>> There are a handful left, but they're not as straightforward as this
+>> one - so I'd prefer to keep them separate.
+>>=20
+>> Could the committer change the subject to "alpha: smp:" or should I
+>> submit a v2 just for the title?
+>=20
+> I'll fix it up when I add it to my tree.
 
-  WARNING: Use struct_size
+This one didn't make it into the last merge window, did it?
 
-Use size_add() to safely add any extra bytes.
+Should I resend it or can you take care of it?
 
-No functional changes intended.
-
-Link: https://github.com/KSPP/linux/issues/83
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/mux/core.c         | 7 +++----
- include/linux/mux/driver.h | 4 ++--
- 2 files changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/mux/core.c b/drivers/mux/core.c
-index 02be4ba37257..a3840fe0995f 100644
---- a/drivers/mux/core.c
-+++ b/drivers/mux/core.c
-@@ -98,13 +98,12 @@ struct mux_chip *mux_chip_alloc(struct device *dev,
- 	if (WARN_ON(!dev || !controllers))
- 		return ERR_PTR(-EINVAL);
- 
--	mux_chip = kzalloc(sizeof(*mux_chip) +
--			   controllers * sizeof(*mux_chip->mux) +
--			   sizeof_priv, GFP_KERNEL);
-+	mux_chip = kzalloc(size_add(struct_size(mux_chip, mux, controllers),
-+				    sizeof_priv),
-+			   GFP_KERNEL);
- 	if (!mux_chip)
- 		return ERR_PTR(-ENOMEM);
- 
--	mux_chip->mux = (struct mux_control *)(mux_chip + 1);
- 	mux_chip->dev.class = &mux_class;
- 	mux_chip->dev.type = &mux_type;
- 	mux_chip->dev.parent = dev;
-diff --git a/include/linux/mux/driver.h b/include/linux/mux/driver.h
-index 18824064f8c0..e58e59354e23 100644
---- a/include/linux/mux/driver.h
-+++ b/include/linux/mux/driver.h
-@@ -56,18 +56,18 @@ struct mux_control {
- /**
-  * struct mux_chip -	Represents a chip holding mux controllers.
-  * @controllers:	Number of mux controllers handled by the chip.
-- * @mux:		Array of mux controllers that are handled.
-  * @dev:		Device structure.
-  * @id:			Used to identify the device internally.
-  * @ops:		Mux controller operations.
-+ * @mux:		Array of mux controllers that are handled.
-  */
- struct mux_chip {
- 	unsigned int controllers;
--	struct mux_control *mux;
- 	struct device dev;
- 	int id;
- 
- 	const struct mux_control_ops *ops;
-+	struct mux_control mux[] __counted_by(controllers);
- };
- 
- #define to_mux_chip(x) container_of((x), struct mux_chip, dev)
--- 
-2.49.0
+Thanks,
+Thorsten
 
