@@ -1,123 +1,130 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C3425E80A
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Jun 2025 05:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731A721FF57
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Jun 2025 08:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749531909; cv=none; b=F2nCUobayW1ytSg+9ec0eFTzTNmxkvLXu7/HEv3GxFjWYWwk5FcWhithI5GsgkT1xygO+Qhm/cZwlH13tW3X3c66cjtTg9dlT2N1sxBC/VRyP1fsFaklu9Fb1EVZ6sK82TcqpgiZmPSZTlxfmI4IciZcPj3Thrh3XTmGo9gME+s=
+	t=1749544570; cv=none; b=GwicDPrmX2qnjlHK4/smWXPaAyliwHDXvgPHzKMziqeLAIIOdYus9lp7c5mt+vA17SvyZPGVIOSlDSWQBPWWo61QNz1HQJ4C/I/f95cvQIZqpUKjra6pjgstZ+jsY8wwfGkp0isoFsf/FxxLI5WTvuLbZKxkr3s3OnwZVFQC7Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749531909; c=relaxed/simple;
-	bh=uyNqLoXucwkytiJ5G6V3n8mW9G9aw8BXAUcbIVRwFtg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P6yuFniRQp6hGUKP+n0tTRnJdhyjJsGRlvUhoIojAsvEa98oY8fMPriika2IQcXY3/7WnY58aycxuc6f8Fw0PiHzfthT4Laeah3/p7aJ0RKNvRLEfDjq7zldee93VtQVxzRa5rH7kt5Z+Nd3C+6HS5DTwk4aHtYRjCSrzi4EeGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z+ahqp5l; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749544570; c=relaxed/simple;
+	bh=ZQz1tLG7kcWUwenzY9ZEbwsbyY9z1eYvjc4bgBPpWjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cm2F/6VfddY3HQu0C2oN9YSmXgOtgNt19TZEngM0eINTkgGJOF50ED6uNx4KsFmtYMKU77hUKJN96/UNK8r7F/V0MuFm1s3PxixkRYA8M5q4PYs2icZYyjgu2U8QeKvo9hwWqfhtYk4NAitDWuMVrwIpDnvN7SaiTW00HhQinLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=OsXU/5uQ; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z+ahqp5l"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-747abb3cd0bso4268582b3a.1
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Jun 2025 22:05:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="OsXU/5uQ"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a376ba6f08so2874263f8f.1
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Jun 2025 01:36:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749531907; x=1750136707; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=imqHtGt/tO66pE6iWFuD1X2tjs5P6qkLBbewDhpPIyg=;
-        b=Z+ahqp5lavby1uSVCG0DkZM1maM1W52PR/dBihhNY6ZSV/wbtYjAoBB+DyDlDtUej3
-         tRFaesV5M/oLX98QqhMO393OSRgOjEKU2mugVNhotfPDTCUec+fCT+/1SZmcIw1SRZCS
-         tYKls11klt774rEwHnwOiNhfi4WFwZevDbOYI=
+        d=suse.com; s=google; t=1749544567; x=1750149367; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nDL1VH2zgeGps6X0Zhyb1MxJka1vOhvb2PWMkFIaGrM=;
+        b=OsXU/5uQyuKxZY9UMxQHOEtKqlcj4a/ExbFJyl/xr9uRf6FADU/UN5z4IRG67FfyGL
+         JhrpGRUzYeV8C1fnoJp08DkKIyjuotao3ZkS5IRStxZXw8YuNRBocCqpa01mxgDktg5o
+         Qpo28Qmap/V+UqLOFZGh0G3/pSS/8dJgfmkEt9w5cTqyPZxF7j6N49AuJ2RCn5Dws08r
+         6BvV+EWDF4T3S6oED2WmlXAoNWk4a9UlnND9mBLwDWbzMx1lLKN7jWADvCKxtc+vaECW
+         ci/jzg1r0fnTIDjHRoC59/OubN6rAv2FEzt4Tj2Vz8hmP9gFeks6r64WG8/0PMGOMHHv
+         ksTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749531907; x=1750136707;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=imqHtGt/tO66pE6iWFuD1X2tjs5P6qkLBbewDhpPIyg=;
-        b=HSuSNKxbsxqP0w9oa92K9QgdW8OzysbH5syvSFxIrZe16nSF5dnIjjTJP6QRDEDTQd
-         /hYWdljbxxuKq7xJ5V0ko/Ps5L3lH3OZPuRhxl+WmMC6TB7qW+9uDDyBSY3/pRzIYKKe
-         ARb4qmbQZisBTmlfI+iC9avFE2KhIRExWrIj0YE0xX4IZ5wRr19F6mFHvPeYSqautgWT
-         cXJuSEok7uMtUILfGyT2yp92NbTv7Q8YrtIUOsbuHZExJ1R33Pr+6yHIBZRMS0oPLgpL
-         qpc1kKyTGMkbnkhurnNLIFMrndL17aXwzHGJl7SzhP0BSLseI4G9vHU+uxojE+lR4+Iv
-         91jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpSIqpuggZsHqtkaEV+Wyhn8resXKDrkgue1Ww6LS1O5hn9c4l/k/qpvuaiCqnvcrF8HZ/wzYAoys1YZO9dsE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/ZsR8ULsJ0yvfNjEXoUauZaTnqgzqAbAm0/oNk2M2yZYx5oeH
-	eIiAeW7bzSbbIwcijQ3lGca0sx3eyAh//UGolz+cEfysCfRtr24XS/PP4W/4wGo7zA==
-X-Gm-Gg: ASbGncsp0b61h5ktsu0YtU1FCUPTBMSwcwVUNw1RQoCbA/ziputPEUe5VTwrtWjMiD7
-	Icy4JZszUoKRyJbIruuFf7+oFmXWVrw9Z1YM9dUvySnANNBVJRpVNbIsAwVLqppwzuoVumj1xxR
-	Ra7rFelu9NRk0Aga5wj0D8Wlfnq8qVrLTA3IP2KTvJPWod9YXinJjWG81qtSv2iyiKw0reo2Yd2
-	tVfbQLZi/rXvyjn0+te2NRQdkpVE4m//ADct2TzSsfHkW4wB83R59OywxAZk4rBSqr4lBA/GMi/
-	HS/qMuq4ar5WneqsT8GzG8lthb8jU4otQEfEld3Jck2Eur1Z+8COP643dn6m7dSOzq841qPHleW
-	o3EJMx5YKe7sQ3V+4r7E=
-X-Google-Smtp-Source: AGHT+IEyvsBr6E/EX/tDQzT9qF/aIlLCH2bHJIt9wooBRZ+wpVSA3bPnKk7bwrMsUrtCyl1lykQxqw==
-X-Received: by 2002:a05:6a20:4303:b0:218:11d6:b66 with SMTP id adf61e73a8af0-21f768bb26cmr3591721637.5.1749531907301;
-        Mon, 09 Jun 2025 22:05:07 -0700 (PDT)
-Received: from naoyatezuka1.tok.corp.google.com ([2401:fa00:8f:203:4173:c66c:ee04:82a8])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5ee6f6desm5222359a12.26.2025.06.09.22.05.04
+        d=1e100.net; s=20230601; t=1749544567; x=1750149367;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nDL1VH2zgeGps6X0Zhyb1MxJka1vOhvb2PWMkFIaGrM=;
+        b=oue67nRdvhI02JrZQxK8THMSGad/EPbyqY2E64zisUJCwgoai5KomN8wN070MhskTV
+         PpPEjQ+pNM2F/v5kH82TtIhkSUqgDj+fgXnprbIv1Om57EcN8rdPDGFV6nz1U5fv/eCR
+         zKqR8sojqPiR1NZT5nTAkQIaWNVj8QM27TXpELqZpUWAew+Lj9UsWPWMUvA0ANrVDcmj
+         Fkjqjb65hlFf2vu/pdhjzZ2cp8NtpCnbI99TmSptgp0NJwcxCd9K7uJY/IDtR2dbr8hy
+         hTZThtxdIRdc/5Weee18EhXBbgRGPpkr1ojQM12qLBUTP1kUkYMBWX7GqN2i+D9lgVGQ
+         qNxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvzXEBEb4OX3QWLk4YoJqqqb1pyJ48uXuPQrGC/FnqMMu0Y3LaJMOmW3dbF8KSi8Gf38nZzFTj+iwH8nQFQl8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3t1bQ8s+iBqg50JHi2iJHO7mCHDBCCYzETYtz5gUiCWlrUzos
+	RJc+VL2uBarAstBETELzMnlZorHxXwdZVgviEoan3Iw2be9G4CvImt9Zf/5IsWNvLnM=
+X-Gm-Gg: ASbGncsbvcLYhz/NRsPzIaL8O77X75HTBFHq5uXkLWVaESo/VC8yDLe9mj//Bph1HpG
+	oHbKUz/N5+Z+5JRnIx246oapWvVGc1Lud10a8v/Q5pQ5SzJoJ6EqDwvgvt7Yghdp5OgeKlgTAvO
+	eh6z/FqmJAw8UZyzglvf/txQFkKjumAYu50/coZ1Zq4HxmnUlnDzY5lr+ypj6ayuAab7ojF9S8t
+	FOkOvwEZiXu3LoN3jlTaq4MkOYX8pJJ1ehpnyojGfKg3yMxFh5GEwl6jSWXMFSK+npG8LyG5r0z
+	ub9HTpRYF4pQ7EhsYGFviGVuxuTpkOFwdx13nOqeRoLd278kTQREGINYxHxvwS/1
+X-Google-Smtp-Source: AGHT+IE/nI85vSWlttVj+F3DLQC1penmgc3tIfP/1EOoFPr6y0TcG5WWvzoq1ne1V9qLxIrFBkrV9A==
+X-Received: by 2002:a05:6000:40c9:b0:3a4:f6ba:51da with SMTP id ffacd0b85a97d-3a531786845mr13169150f8f.15.1749544566711;
+        Tue, 10 Jun 2025 01:36:06 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af38386sm7001718b3a.6.2025.06.10.01.35.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 22:05:06 -0700 (PDT)
-From: Naoya Tezuka <naoyatezuka@chromium.org>
-To: Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>
-Cc: chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Naoya Tezuka <naoyatezuka@chromium.org>
-Subject: [PATCH v2] platform/chrome: chromeos_pstore: Add ecc_size module parameter
-Date: Tue, 10 Jun 2025 14:04:58 +0900
-Message-ID: <20250610050458.4014083-1-naoyatezuka@chromium.org>
-X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
+        Tue, 10 Jun 2025 01:36:05 -0700 (PDT)
+Date: Tue, 10 Jun 2025 10:35:34 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Sergio Perez Gonzalez <sperezglz@gmail.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	David Rientjes <rientjes@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	Thomas Huth <thuth@redhat.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] slab: Decouple slab_debug and no_hash_pointers
+Message-ID: <aEfuVgR78G1YgRau@pathway.suse.cz>
+References: <20250415170232.it.467-kees@kernel.org>
+ <Z_-dPcdiGW0fo8Ji@pathway.suse.cz>
+ <202506051314.D6EDFA91D@keescook>
+ <aEbyHeG8qh8GChTh@pathway.suse.cz>
+ <202506090823.33ED63C@keescook>
+ <aEdANsGsQHqVQ9Wy@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEdANsGsQHqVQ9Wy@smile.fi.intel.com>
 
-On ChromiumOS devices, the ecc_size is set to 0 (check dmesg | grep ecc 
-to see `ecc: 0`): this disables ECC for ramoops region, even when 
-ramoops.ecc=1 is given to kernel command line parameter.
+On Mon 2025-06-09 23:12:38, Andy Shevchenko wrote:
+> On Mon, Jun 09, 2025 at 08:24:47AM -0700, Kees Cook wrote:
+> > On Mon, Jun 09, 2025 at 04:39:25PM +0200, Petr Mladek wrote:
+> 
+> ...
+> 
+> > As long as it's in -next and scheduled to land, I'm happy. I'd always
+> > like it earlier, but the less workflow disruption the better! :)
+> 
+> Hmm... The __diag patch series were in Linux Next for a few weeks and did not
+> land in v6.16-rc1. Just saying that there is always chance to go into cracks.
 
-This patch introduces ecc_size module parameter to provide an method to 
-turn on ECC for ramoops and set different values of ecc_size per devices.
+Urgh, I am terribly sorry for this. I forgot to do it the other
+week. And I missed it in the merge window because it was in for-6.15*
+branch. I had a feeling that I have forgot something but I did
+not find it.
 
-Signed-off-by: Naoya Tezuka <naoyatezuka@chromium.org>
----
-v2:
-- Remove an unnecessary blank line
+OK, I guess that I am getting older or going through some more
+distracting times. And have to update my process.
 
-v1: https://lore.kernel.org/lkml/20250610025152.3844404-1-naoyatezuka@chromium.org/ 
----
- drivers/platform/chrome/chromeos_pstore.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+I have just created a list of branches which I have to merge
+for 6.17. I hope that it will do the trick.
 
-diff --git a/drivers/platform/chrome/chromeos_pstore.c b/drivers/platform/chrome/chromeos_pstore.c
-index f37c0ef4af1f..28e26aa99cdf 100644
---- a/drivers/platform/chrome/chromeos_pstore.c
-+++ b/drivers/platform/chrome/chromeos_pstore.c
-@@ -9,6 +9,10 @@
- #include <linux/platform_device.h>
- #include <linux/pstore_ram.h>
- 
-+static int ecc_size;
-+module_param(ecc_size, int, 0444);
-+MODULE_PARM_DESC(ecc_size, "ECC parity data size in bytes. A positive value enables ECC for the ramoops region.");
-+
- static const struct dmi_system_id chromeos_pstore_dmi_table[] __initconst = {
- 	{
- 		/*
-@@ -117,6 +121,9 @@ static int __init chromeos_pstore_init(void)
- {
- 	bool acpi_dev_found;
- 
-+	if (ecc_size > 0)
-+		chromeos_ramoops_data.ecc_info.ecc_size = ecc_size;
-+
- 	/* First check ACPI for non-hardcoded values from firmware. */
- 	acpi_dev_found = chromeos_check_acpi();
- 
--- 
-2.50.0.rc0.604.gd4ff7b7c86-goog
-
+Best Regards,
+Petr
