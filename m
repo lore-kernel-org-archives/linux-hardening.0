@@ -1,88 +1,83 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDED829ACEE;
-	Tue, 10 Jun 2025 12:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D122376E1;
+	Tue, 10 Jun 2025 15:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559722; cv=none; b=erVDXSBzfggOQzOUsVF2MA1M23u0lBidrXkXK9rVohP8LiZoD0Z2DmixmOaXLlydXCFehECn8sYF0PSbVUTG31a/WCFCYJRiuYm+eRqnXn8GJL9z6fyAA16l8UXWqwf+hWr3kd7wBtMZAxdLYoWWbZgZ/GlVZwOmjoNOb5N6CZQ=
+	t=1749568251; cv=none; b=u531RLvczbeEos4iAp2yAzbOCS9I3MDdE5+R8B2VJmb8pRWAeixdE49gUtURYS29Mhscl277QkZSHVpNCMUycThj89WOZ8FcKqttMSMHd+gaP2dfmQOMjx7jbduBTtzP3ypHQxkZAyyVf8sMVNqBwrAsvv7/P1qFpKAGqFNL15g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559722; c=relaxed/simple;
-	bh=vAk9eOkdNiTKGzMcVqu8m02OEyc0CxqIjkuGX2ovFC0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mYNGwd77A1L1+b0Lw/HhEvJ3iQHWVuUDYxQNotd0E73DAgc3jZJCNvlktNQx8U5Vyv6mjtcl0tsTkIqrXFLso4tR/L+hC22Jk8m/xCcADIo7KOVdMMBSEh+FUOUalXN0j5P237RzcfZZN5F6E0X1lAP6k0Qt0J3jX+J6xDUPYOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZPYUevZW; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749568251; c=relaxed/simple;
+	bh=spvctm3ZTIwSylv/GDwnK6tu7BZA1j5E0lauFoZ/CKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eji6cHCkQey5GiITYLjvEJ/i/jgsG1xUcBnXdfneejc9h5C9qEjLjKH1yBc86ismSOjZm16PE4N1YxlHB5XJas1ejt3DuyQXVhQdbfmLJSL4tA9bEDW0SuZui5v7KOZ5iZqUsTrhrir9vuOnPATcG9fhWZPIz5K3dKzB9zqVR4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GYYK0Q29; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZPYUevZW"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 46336433B5;
-	Tue, 10 Jun 2025 12:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749559712;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hBCPaYYOAsemees+fXLQJeUCZUeoXEQHz+o6sV7r0i4=;
-	b=ZPYUevZW5dCe0AjfwTQjF1wC4oMlC7cDUWHLJ+ufL+iJ9yhcl+qnoQd2mPMEwPXUqcXfne
-	vBqMJhafRVP+CB2ByC9Y54iLTfrsWTg0qc6lAJiX8pY9iBW+VsoZF7a0r8LGylnwGaRewz
-	a9WMZ/2Ea1RlNoSmJ5JnujU7yzv3YAoRQbRQg12zE8Mlob3Wr3SjtJ9ZIwy4UHhAPbRYQf
-	9lb2AbIUez2QBRV6k7W4I+aEUta5fUjq8R5NGTxlBUpnCikl25OFodwo2iPsNtOAqwz99i
-	4kmqMVAOEUb4QFBlSC2sCqM/FGVlo7SAWiiS4SV9V+4yMjCNR6jJv7F5+zIPIg==
-Message-ID: <ddbaa399-6bad-4c97-8456-b597442e5be6@bootlin.com>
-Date: Tue, 10 Jun 2025 14:48:29 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GYYK0Q29"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6545AC4CEED;
+	Tue, 10 Jun 2025 15:10:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749568251;
+	bh=spvctm3ZTIwSylv/GDwnK6tu7BZA1j5E0lauFoZ/CKU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GYYK0Q29SIbGCH2/EVWyzHZ3XixY4edz+YUHrlDy13SnnkcyklmjmOQVkvkO2XXgj
+	 90Y0lieVudBL+XIaWlkE19U/hU0A7C+nGRVLuWKUiMsXmUkJL8vcj4RWlFOaz4wyl/
+	 paR1/M4wLOb2mNvp4WktOnNMltUkOEQnuRzvC2i2yr7vVdVvzYuM4o/YdND3urAxvs
+	 2DStYnw9oRI1OQhSLbp48V4FyOu2eNbudeeeMrf4PqDD+GV8rxahHRwd6AbzDDXBkk
+	 MsHcn7WCwEhl/O9mgeZTqj0sp2wX1wzefd1tBZOXD2lwWII3QRYSfBvYgWpQJfS3jY
+	 F5ZMwlw/+ZXcA==
+Date: Tue, 10 Jun 2025 23:10:46 +0800
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Naoya Tezuka <naoyatezuka@chromium.org>
+Cc: Benson Leung <bleung@chromium.org>, Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] platform/chrome: chromeos_pstore: Add ecc_size module
+ parameter
+Message-ID: <aEhK9knE1Fu_e_Sv@tzungbi-laptop>
+References: <20250610050458.4014083-1-naoyatezuka@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/10] Add pinctrl support for the AAEON UP board FPGA
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-References: <20250609-aaeon-up-board-pinctrl-support-v7-0-1ab73ec0cb98@bootlin.com>
- <CACRpkdZpn5xy+6yb-mQd6wDs05X0QqRCQo7QpL6=aEWtyU-zTg@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CACRpkdZpn5xy+6yb-mQd6wDs05X0QqRCQo7QpL6=aEWtyU-zTg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdejiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheduheduvdfgvdeftefggfelueevjefgjedtheekteehveehveegudejgfdvtdetnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgdphhgvlhhopeglkffrggeimedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurggnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnu
- higrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: thomas.richard@bootlin.com
+In-Reply-To: <20250610050458.4014083-1-naoyatezuka@chromium.org>
 
-On 6/10/25 14:42, Linus Walleij wrote:
-> On Mon, Jun 9, 2025 at 11:51â€¯AM Thomas Richard
-> <thomas.richard@bootlin.com> wrote:
+On Tue, Jun 10, 2025 at 02:04:58PM +0900, Naoya Tezuka wrote:
+> On ChromiumOS devices, the ecc_size is set to 0 (check dmesg | grep ecc 
+> to see `ecc: 0`): this disables ECC for ramoops region, even when 
+> ramoops.ecc=1 is given to kernel command line parameter.
 > 
->> This is the seventh version of this series. Only few changes, the series has
->> been rebased on v6.16-rc1, the pinctrl patches were dropped as they were
->> already merged and a fix was added in upboard_pinctrl_dbg_show() to handle
->> the case upboard_pinctrl_pin_get_mode() returns an error.
->>
->> Best Regards,
->>
->> Thomas
->>
->> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-> 
-> Looks good to me, some testbot was complaining about something
-> but certainly we can merge the majority?
+> This patch introduces ecc_size module parameter to provide an method to 
+> turn on ECC for ramoops and set different values of ecc_size per devices.
 
-The export.h header file is missing in gpio-aggregator.
-I can send a new version today. Or I can send a fix later.
-What do you prefer ?
+The doc [1] suggests to describe changes in imperative mood. If you have
+chance to send next version, please fix it.  Otherwise, it doesn't really
+bother me.
 
-Regards,
+[1]: https://docs.kernel.org/process/submitting-patches.html
 
-Thomas
+> @@ -9,6 +9,10 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/pstore_ram.h>
+>  
+> +static int ecc_size;
+> +module_param(ecc_size, int, 0444);
 
+Does it need to be world-readable? How about 0400?
+
+> @@ -117,6 +121,9 @@ static int __init chromeos_pstore_init(void)
+>  {
+>  	bool acpi_dev_found;
+>  
+> +	if (ecc_size > 0)
+> +		chromeos_ramoops_data.ecc_info.ecc_size = ecc_size;
+
+It seems `ecc_size` doesn't have an upper bound.  Wondering what would
+be happened if it is a somehow large value.
