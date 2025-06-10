@@ -1,112 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3799C1EB9E1;
-	Mon,  9 Jun 2025 20:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0266425E808
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Jun 2025 02:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749499972; cv=none; b=eOTCPsdPvfYsTsXufiypuagVC0kQkWym2dMeo2peZ1y7skgyeAF1mb1UakPGEi8rqYoDq+CWAqE2jSkCSZ2L/BHXjcltHtRtYQ0F7WHYe8TMMzDGXQUHXEoTWHHg5NT/LWw01Y/T+0f5Kf/sjyq2hRbHPAIciYlakDnnXsB5epQ=
+	t=1749523936; cv=none; b=VO5EcyKLSECy/vBw+VlIieEJJtv+ujCuqyBwgGDqLK5xDAsnYGfgmzDcI30fu+xnGTvahkOQLSR2b2+oLgmp69pEkCgh2Ilsw8EGMjQgZkCJ/dNVoioc1vdKOz9WTVQSF6ZHD9qWjUKkUUN/foKhKbOo3k/9Zkov1+jH9WQi0UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749499972; c=relaxed/simple;
-	bh=LJ/uZDXg4Dz+jNqe8xKGNosRt70el7DilOa/Q+s44xQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GfZAjbsPp8HUExtHvcs05G0lrrODVzkchdfumreyYile9gfqsh2EaiS2jAAbIUoEzwj86AvlkS10yobVDNac1NX+g9MNMl/eYOB4O1bs+cckZDBvBAsPcMlVVlo7dkExleqa7NpOKbKTB7EJvQBckHbeyfAQnoIMfxyjkiZUGq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SCgo9+6R; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749523936; c=relaxed/simple;
+	bh=BJSAuM/KEuH1gidHkhv+0rdYBs0sl4fswnQ67X/V5y8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fDCs2CjP+Xv+NKbxLMlTvNt8T5GWBs0hdhQPU8vmYRdZb89O3XyO4Xm/dILUh0TFAkUwPtIYmgNHlWagMDPrstgovkAkCXgj6bHCPzuZZASgL5+udnniN+unelLu6axlmOU+Tf34taR0PBEFUAMEntcFPQ084uEY672eyRJRYVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QLWe4uge; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SCgo9+6R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749499972; x=1781035972;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LJ/uZDXg4Dz+jNqe8xKGNosRt70el7DilOa/Q+s44xQ=;
-  b=SCgo9+6RTQAEQGbo1p7wLW9MaFAD0iC0EMpdrAQWEeL6wLttW5BcMtUE
-   djC2Q9hhoI9xETJxGDkbFzZLNslqYkajKqbh2tal22WsGUX2pVVJZopmi
-   jXDHeqwbTlgokzyb7dIVd5Rc/32sAr0lh1+r2+i9tUNDplHcmLnyal38z
-   Dhg/vAZc3NUAXVlO1Av000W1BBKstmgb5C6jr4rU9+8ZYsxM4I1BPvDIb
-   sse/gbrYXXhrcVOU5o/qmr0IUAKiJXsIzdeDdGQet/QsfMkSf58Q3vOe+
-   XxgPJrbUotMvzw9AouaL3Ud3S32lmcZwz5Xze8lVqG/ir3hL7A8NV/xMc
-   Q==;
-X-CSE-ConnectionGUID: 9ZAOTH3/TJqW0nN8XK+gkg==
-X-CSE-MsgGUID: /G/ORU5TQhaDTaEfodPc9g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51677175"
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="51677175"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 13:12:50 -0700
-X-CSE-ConnectionGUID: JgUShucbQ3mQBwHf/RSvig==
-X-CSE-MsgGUID: MCcgyiSGT0aLouJwJOiQ5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="147188410"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 13:12:43 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uOirG-000000059XK-27RQ;
-	Mon, 09 Jun 2025 23:12:38 +0300
-Date: Mon, 9 Jun 2025 23:12:38 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>,
-	Sergio Perez Gonzalez <sperezglz@gmail.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	David Rientjes <rientjes@google.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	Thomas Huth <thuth@redhat.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] slab: Decouple slab_debug and no_hash_pointers
-Message-ID: <aEdANsGsQHqVQ9Wy@smile.fi.intel.com>
-References: <20250415170232.it.467-kees@kernel.org>
- <Z_-dPcdiGW0fo8Ji@pathway.suse.cz>
- <202506051314.D6EDFA91D@keescook>
- <aEbyHeG8qh8GChTh@pathway.suse.cz>
- <202506090823.33ED63C@keescook>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QLWe4uge"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2363497cc4dso6321475ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Jun 2025 19:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1749523933; x=1750128733; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rm7rFkHvnvV5pN555kvAO+KRnM6aiD+6xk7uYMzjvLU=;
+        b=QLWe4ugeX2+zvNXVl0saAH25f8B6ENIKkDorKxTErK5J3QH0T131mP8i4QyF7wp4gE
+         5aDl+5U1fMvIo5OVSXit76CWa5dZwuSlNVgOQ4xsFUn5jBhgdDrOoypZjkSVz2NRIAi5
+         +Rg2woHIuDv+0U01CNu424kG2Wq9/mjnPFIa0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749523933; x=1750128733;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Rm7rFkHvnvV5pN555kvAO+KRnM6aiD+6xk7uYMzjvLU=;
+        b=RMbI/LviPIlc9+dgNaan7ZXnI0e4RiezyzirDov7flw6GcqeNY0d1++FZa1MjWTO8p
+         eQNKnMB+TsFq4Xgjwj/wo0YLnTQ/0Od4NXIeTNXzRndlG+D093GJbnplWGSQ+MTmBvmM
+         pZrF950HMk9sHw8y1lxiNZBg9+n/x7uHkf/Z8JI/T/39ZKgLuzoZRp+VsNu9SoQo9ckY
+         nvT0+8kjBvDoMakGVfarSTWj6fhSRQmqK0Kb1KA4hdahkoaxeTHQPuQiAzEuVfPjovPD
+         9em4JZNicmHKcM7p/gnq6FteAa7dl6+RFOaXFvyYrMNvIUBjaxWVmRaOoNMQ8O7HY3qB
+         4UUg==
+X-Forwarded-Encrypted: i=1; AJvYcCViwZfMeostKQhtW80jDnTLx73ivjt+3tfFl/cOO8EgQhQTnJdVxl28QsH3jjgFAGdHyvNPaDN855VImOvEll0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxapH+cfGmhMf0RFjgWVPOuJ9JRRyBn/sAW5BeeDKNGq8UAHWSp
+	wEB5Vm2tPRYK41Ricz1oFJkhC0WtUHLKBL2xzVKXiHD2A/4+hc87ddecnX9Am5WMxQ==
+X-Gm-Gg: ASbGnct/7DleloPebaSlan6yl5J9u3XbqrNR9KXoDIqjJ5sZEvmIQOhv0iqQUHjE+tB
+	TOKEzp+YvGeCdCtAspG44TJ4kJ2lXRRxYaX6HPO5iyy6Abhti9ldGkYI/8hbc5flk1XMRZwJa5t
+	d/y9nkmGuywkkgW8WDUyzPB0oDA+4Fcv8b6PQU+y8CWPO65x5r74Ecp5vAcHJn1EbX6XsMERi09
+	Uf0N7TeVQzPScVbNZZwjFfxI/PLYl8Sg8dPRqnGjuWPl3ZRhSys0C2T5HbDjIk5H/PM9CmM1bR7
+	nkzdP8l4okJLDz8v8l8ACqNSIqAEXC8Cp/n4qv3cCIOSz1tbjW99k5pcK4nUk15nRN777qydYUf
+	lCQU8NFmmtDlnEl9uiO4=
+X-Google-Smtp-Source: AGHT+IGm82o58ZVjCAo3PybTPYdGDfXUbsMi8+8LjHbWtOpjdJXIBSCQJyWdYXNP2Z2kXvDi5YGUeg==
+X-Received: by 2002:a17:902:cf03:b0:234:9375:e07c with SMTP id d9443c01a7336-23601dbd9fcmr242591495ad.46.1749523933313;
+        Mon, 09 Jun 2025 19:52:13 -0700 (PDT)
+Received: from naoyatezuka1.tok.corp.google.com ([2401:fa00:8f:203:4173:c66c:ee04:82a8])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603514230sm61107305ad.245.2025.06.09.19.52.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 19:52:12 -0700 (PDT)
+From: Naoya Tezuka <naoyatezuka@chromium.org>
+To: Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>
+Cc: chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Naoya Tezuka <naoyatezuka@chromium.org>
+Subject: [PATCH] platform/chrome: chromeos_pstore: Add ecc_size module parameter
+Date: Tue, 10 Jun 2025 11:51:37 +0900
+Message-ID: <20250610025152.3844404-1-naoyatezuka@chromium.org>
+X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202506090823.33ED63C@keescook>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 09, 2025 at 08:24:47AM -0700, Kees Cook wrote:
-> On Mon, Jun 09, 2025 at 04:39:25PM +0200, Petr Mladek wrote:
+On ChromiumOS devices, the ecc_size is set to 0 (check dmesg | grep ecc 
+to see `ecc: 0`): this disables ECC for ramoops region, even when 
+ramoops.ecc=1 is given to kernel command line parameter.
 
-...
+This patch introduces ecc_size module parameter to provide an method to 
+turn on ECC for ramoops and set different values of ecc_size per devices.
 
-> As long as it's in -next and scheduled to land, I'm happy. I'd always
-> like it earlier, but the less workflow disruption the better! :)
+Signed-off-by: Naoya Tezuka <naoyatezuka@chromium.org>
+---
+ drivers/platform/chrome/chromeos_pstore.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Hmm... The __diag patch series were in Linux Next for a few weeks and did not
-land in v6.16-rc1. Just saying that there is always chance to go into cracks.
-
+diff --git a/drivers/platform/chrome/chromeos_pstore.c b/drivers/platform/chrome/chromeos_pstore.c
+index f37c0ef4af1f..255818f24c2e 100644
+--- a/drivers/platform/chrome/chromeos_pstore.c
++++ b/drivers/platform/chrome/chromeos_pstore.c
+@@ -9,6 +9,10 @@
+ #include <linux/platform_device.h>
+ #include <linux/pstore_ram.h>
+ 
++static int ecc_size;
++module_param(ecc_size, int, 0444);
++MODULE_PARM_DESC(ecc_size, "ECC parity data size in bytes. A positive value enables ECC for the ramoops region.");
++
+ static const struct dmi_system_id chromeos_pstore_dmi_table[] __initconst = {
+ 	{
+ 		/*
+@@ -115,8 +119,12 @@ static inline bool chromeos_check_acpi(void) { return false; }
+ 
+ static int __init chromeos_pstore_init(void)
+ {
++
+ 	bool acpi_dev_found;
+ 
++	if (ecc_size > 0)
++		chromeos_ramoops_data.ecc_info.ecc_size = ecc_size;
++
+ 	/* First check ACPI for non-hardcoded values from firmware. */
+ 	acpi_dev_found = chromeos_check_acpi();
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.50.0.rc0.604.gd4ff7b7c86-goog
 
