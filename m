@@ -1,376 +1,308 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13462517AF;
-	Wed, 11 Jun 2025 22:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DF61EA65
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Jun 2025 23:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749682708; cv=none; b=GCaT+bdoZGWOuFU0amB5KLfp2l58rI4Ze4YrYjOTi53jHw8tmBmRZ1V0ROEL8glo+MzZjOfTupZVW5VKrxeuQGiGpxY6JMNASO6R5AU+UqywVI2P7IdANPI8SL3e51Zi8tSsU7bp0aQygHbqnHyI4pKpiK+hwAuMAyoKp0lKZyA=
+	t=1749685524; cv=none; b=VRsm0zw9rzZLM5KgeaBe5ABjeGAmjnyxGSlaBDe0WuNVZZsXkGlIeZQz5RQRI4sXqQhF5D9uvaE1Ka2basoQhqwSMFmGwEu/lyqOLuPXPxSd4FAToPhq90ybDmrUgdDLE/Yo1lhARp3MlRvC1k+buIW8DUYcVYMyUk94me2mL+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749682708; c=relaxed/simple;
-	bh=Jz7KQxqw8AvwiC5yF5NvhqsrEUzcFf30WSK7xO3MynA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ralPb06cbnDF17eBTLxUS4HCCmNrQHwSHwWtmLzCKIVGukMvyGJ3k9Yud0J+X/Q5kHzqJa4dzby/AIYXw4sc57p2Kxde0WvCQ3vffIIGqS24fK5bV+zA0kVMe0qKNBwNmR4HuZOTqcUZMamP911iZ4kyy02lo16XE0f6XLOxKyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o5KVNRsd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749685524; c=relaxed/simple;
+	bh=rxGnv5efpZB5FQxPCbcbR/DM98Rx425ii/1JrRUCjVY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jl8NzGglxuMp9jvWcSzrS8b337FMAJjNqQx1bl2l0QyWpNCG6KdYaljNYrjEOEBZsGfxCZ0L5AnqDVlBERHFgfDb1lORTTKAa+vnbheVZog7TSiGH/4lJ55EcFw+O6ZpFIRV/fB1XnwtUs0QCdTqn6zdSFrWhPTVxkNu4USnos8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Uk92e2Re; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o5KVNRsd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18626C4CEE3;
-	Wed, 11 Jun 2025 22:58:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749682708;
-	bh=Jz7KQxqw8AvwiC5yF5NvhqsrEUzcFf30WSK7xO3MynA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=o5KVNRsdkzwUhLptf0UPAyq01Ky8hwEnxTgBFzk34vTfU75Lq35i+1c5kesg72851
-	 pxMbW4fStzYk8WlcFMIpHiBil5vRMiMAFMcbEMFPLsThtFUUJ2w3syjLKl7tY6Gs4j
-	 UqyAl45VsMxr7yjj8pZTUdQv227Zrloi69U4lFfDs7TbjXjSmao8deCA/b6haIAh1+
-	 UlGM/pOpJqjjoQtalorX6BRQh95SK5f2rJL+YO1oO43gR11JoHCD0QlWLnum3gNyRe
-	 6lYd2b1uCQBoTSYlcsjIwUOjFfaaREHHOVaDzD24169wjAxYXxjKkGOzhPPTbGkTHW
-	 izO5EXxePItlw==
-Date: Wed, 11 Jun 2025 16:58:18 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] NFSD: Avoid multiple -Wflex-array-member-not-at-end
- warnings
-Message-ID: <aEoKCuQ1YDs2Ivn0@kspp>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Uk92e2Re"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BIUfur026007
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Jun 2025 23:45:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	kL/Liu/GqjPKUC4NnGw8PIVD+TNpkbMa+VGstZWsdgM=; b=Uk92e2ReIMb6itzQ
+	XyMYOmDFaHlbqT8QN2wh6CaJU1Ifca/48IbFjhYf0+tLT2k/ooeR962mAS9uSgn6
+	DBV5FAp6c3B42an+/WXAF9p+uIsKm1+2v4BNG7WjwiMjdyvCyrVp9uyysSO6g/xf
+	HczRBQrYHaWmK9pVwNKXeKHOKCF9hCS6vi+dtdQl+FLmpy5vNSgx9HWNsklA1AJP
+	XxdFs/vJVAzCr701hqw4eR3RE0cIBgJnA24yZhpF+f4cUgjGKHvQ8nGElozBvV6O
+	BLZ+YX0+TxXymijBPxCu7AITs8GciqOOUAq/+qdgxb2jKmiEgMkK/IY2U9wf8+5Y
+	XB2lBA==
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2y9g99-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Jun 2025 23:45:21 +0000 (GMT)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-311ef4fb5eeso240982a91.1
+        for <linux-hardening@vger.kernel.org>; Wed, 11 Jun 2025 16:45:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749685520; x=1750290320;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kL/Liu/GqjPKUC4NnGw8PIVD+TNpkbMa+VGstZWsdgM=;
+        b=Gd7hVXdbpZmfVTTn4S55VOKTVgfd63eXAdx4ByF6yvoXYfQpprvxT+0sQqiwtAomeJ
+         m96eFDAmQ6znzyRsQhGPQ2pemxxD7wxNN0ET3H7bFfKvpBf+rkjLfMrvSYZqZvOQb2Rw
+         YY2iCGNDyXUce1W+TLcpttD9wJiPosNLSxfCkoN5U3GyDB94bUGeXrdwtAFWNsghuUMT
+         n2OnQWJxhb+QAxR0jrvqdpkw8nIij2bgdtKeXPFA1M2GZpB70C/pSZ88PMNQp+lquti4
+         HWt+xoZH8GO5DC3PIPrsPH0Gwu9gjMNhnswX8Ulbyk/5PuujzmFrAaJ3c0GAHK/ztI3Y
+         af1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXC0jupRGf0SYrXvHzyJEHwI74zjcPqz+WpYG40PkR4kGxcbgweKZQr/bT0fwaXfV42PUDP/OkwO9si7ILiFgA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8f5lhhRIlatEui7aN3gNhD2NoNaT4/1gX4wUqTQkrTO8IDIm9
+	Ko+D+THhQIHzpOPRdczEWxJI5JrkS7c+IQyFTK+VKos1NsXGpen/80MKIWBr5MNxFOD/4WXJVre
+	8Z9ILMVWHN51/b/o3AaJBJOofd5uLkl52ApzmK4cUSu/+K00KK35u2WMHImvWbk6k2Bp8ng==
+X-Gm-Gg: ASbGnctc/Jt+JiijQpiv9EsynfkgudCVmRgvrg6Iry+VjB2073RdHtqp7XMRW2uSBgh
+	YOqplRl/FkYHJXT/m/7FrqwBKyr7T88HdzTIjRErH1+a7mAcCSj/1RZO2yy089pdD/hwnAjZ6ZN
+	oyfUDksa4pCumoPnBWCRiJR2tw54S8OI7KCWfpJOCj/AUyL0cfX3yunZ4uBUdf9BAJVlcFzIFES
+	AmYQaAvVLNm1C2+83OHioyGJ0UXW7QLTG/m/aJiGDi42wWKnhZfHIYPPeEo9OBtjX+z76wu5Ikm
+	LXVWV44phbbs8JkNBmi1KhyPs1vfKqTp4mJuqfpJUeo4Bz2NtJQsOyYl9XhRje3wC28dUDvDX4Z
+	2h5JeWpP4Myd6jDc4AeFu
+X-Received: by 2002:a17:90b:1d49:b0:311:a5ab:3d47 with SMTP id 98e67ed59e1d1-313bfd7ab92mr1604716a91.1.1749685520257;
+        Wed, 11 Jun 2025 16:45:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFAMR6wEIIwnne3OpDAIO64Df49wCTs/N/zWmX8iRNFkPwGVeKGubpgXpgrWv1YmWUP5MvRNQ==
+X-Received: by 2002:a17:90b:1d49:b0:311:a5ab:3d47 with SMTP id 98e67ed59e1d1-313bfd7ab92mr1604694a91.1.1749685519759;
+        Wed, 11 Jun 2025 16:45:19 -0700 (PDT)
+Received: from [192.168.0.74] (n1-41-240-65.bla22.nsw.optusnet.com.au. [1.41.240.65])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1b499cbsm200694a91.26.2025.06.11.16.45.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 16:45:19 -0700 (PDT)
+Message-ID: <8f9a7ca7-5098-40c6-94b2-490a857d7dae@oss.qualcomm.com>
+Date: Thu, 12 Jun 2025 09:45:10 +1000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 03/12] tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
+To: Andrew Davis <afd@ti.com>, Jens Wiklander <jens.wiklander@linaro.org>,
+        Sumit Garg <sumit.garg@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Apurupa Pattapu <quic_apurupa@quicinc.com>,
+        Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
+        Sumit Garg <sumit.garg@oss.qualcomm.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>
+References: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-0-024e3221b0b9@oss.qualcomm.com>
+ <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-3-024e3221b0b9@oss.qualcomm.com>
+ <f686130b-009f-4feb-bae1-022938c85923@ti.com>
+Content-Language: en-US
+From: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+In-Reply-To: <f686130b-009f-4feb-bae1-022938c85923@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDIwMCBTYWx0ZWRfX+QTU8l7AUhRE
+ HuEDL4IP3R3z9ZNRXgpz4MMRJiixWQ8P4ZOVp+QNpS3MPML2/mW/Ttz+fv3mtpa9aX5gK4D6Uqw
+ akRBTNYKMmTXJJ/IhNf8bQbaKq5neIx5NVeEroeTypmL6VWn3hKzkygaNeSoBcnA78vE3kw3iyD
+ 8avDvenvEMjKbU9dvUNH6AVXBxaQ+6f2ehL73XTZFORsUw8u8W5rdsuMoQZQX5x2gnZdZiZXTsd
+ TneCHSsQIdmGSdsSzzCvz/8odcqbVdyS3/5lwF+PIR5vpyN2+4aPak2WRIxKsI+VDuMJp7OYdAh
+ fbDZfPq098++sCm06IQH8oPDJVvhMD9e9Edpe1MU8WBsq+ND5zjTu/sH5dSnymuSgJ1VKAWRKDc
+ DoOHk/SfMg2HDHUgmjM3Dr/Mf6EBqBhGEjALbmYqWacf5EUUypoHYr/6tbtlqX1UN2LfjciA
+X-Proofpoint-GUID: sjdhXHxXeUoLVheeKiZZzZJ9KX4ESERv
+X-Proofpoint-ORIG-GUID: sjdhXHxXeUoLVheeKiZZzZJ9KX4ESERv
+X-Authority-Analysis: v=2.4 cv=f+BIBPyM c=1 sm=1 tr=0 ts=684a1511 cx=c_pps
+ a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=hi51d+lTLNy/RbqRqnOomQ==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8
+ a=ri7p8OPjmTxfXj7m-Z0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=uKXjsCUrEbL0IQVhDsJ9:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-11_10,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506110200
 
-Update `struct knfsd_fh` to use indices into the `fh_raw` array,
-allowing removal of the flexible-array member `fh_fsid[]`. Refactor
-related code accordingly.
+Hi Andrew,
 
-With this changes, fix many instances of the following type of
-warnings:
+On 6/12/2025 8:40 AM, Andrew Davis wrote:
+> On 5/27/25 1:56 AM, Amirreza Zarrabi wrote:
+>> For drivers that can transfer data to the TEE without using shared
+>> memory from client, it is necessary to receive the user address
+>> directly, bypassing any processing by the TEE subsystem. Introduce
+>> TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT/OUTPUT/INOUT to represent
+>> userspace buffers.
+>>
+> 
+> Could you expand on this, what is the issue with normal MEMREF?
+> 
 
-fs/nfsd/nfsfh.h:79:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/nfsd/state.h:763:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/nfsd/state.h:669:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/nfsd/state.h:549:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/nfsd/xdr4.h:705:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/nfsd/xdr4.h:678:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+QTEE supports two types of data passing: (1) memory objects and (2) buffers.
+A memory object can be a normal shared memory (shm) instance. However, a
+buffer is an [offset, size] pair referring to the transport memory shared
+with QTEE (established at the begining of the invocation).
 
-Co-developed-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Use indices into `fh_raw`. (Christoph)
- - Remove union and flexible-array member `fh_fsid`. (Christoph)
+There is no direct representation of VALUE in the QTEE ABI, so even basic
+data types, such as int, must be passed as a buffer [offset, sizeof(int)].
+VALUE cannot be used because it only represents a u64 data size. While MEMREF
+is an option, it requires additional ioctl calls and memory copies.
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/aBp37ZXBJM09yAXp@kspp/
+For example, if you need to send three integers to QTEE, you would require:
+  (1) Three ioctl calls to allocate three shared memory pages.
+  (2) Three memcpy operations to copy each integer into its respective shared memory.
+  (3) Three memcpy operations to transfer data from shared memory to the
+      transport buffer shared with QTEE.
 
- fs/nfsd/export.c      |  2 +-
- fs/nfsd/export.h      |  2 +-
- fs/nfsd/nfs4layouts.c | 10 ++++----
- fs/nfsd/nfsfh.c       | 58 +++++++++++++++++++++++--------------------
- fs/nfsd/nfsfh.h       | 30 +++++++++++-----------
- 5 files changed, 52 insertions(+), 50 deletions(-)
+You can optimize this slightly by making a single ioctl call for shared
+memory allocation. However, the backend still needs to inspect the shared
+memory, parse it, and extract the data and size information.
 
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index 88ae410b4113..654d54a7148f 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -1231,7 +1231,7 @@ rqst_exp_get_by_name(struct svc_rqst *rqstp, struct path *path)
- struct svc_export *
- rqst_exp_find(struct cache_req *reqp, struct net *net,
- 	      struct auth_domain *cl, struct auth_domain *gsscl,
--	      int fsid_type, u32 *fsidv)
-+	      int fsid_type, void *fsidv)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	struct svc_export *gssexp, *exp = ERR_PTR(-ENOENT);
-diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-index 4d92b99c1ffd..9b2719d8a3e2 100644
---- a/fs/nfsd/export.h
-+++ b/fs/nfsd/export.h
-@@ -131,6 +131,6 @@ static inline struct svc_export *exp_get(struct svc_export *exp)
- }
- struct svc_export *rqst_exp_find(struct cache_req *reqp, struct net *net,
- 				 struct auth_domain *cl, struct auth_domain *gsscl,
--				 int fsid_type, u32 *fsidv);
-+				 int fsid_type, void *fsidv);
- 
- #endif /* NFSD_EXPORT_H */
-diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-index 290271ac4245..6dcd2c9ec15b 100644
---- a/fs/nfsd/nfs4layouts.c
-+++ b/fs/nfsd/nfs4layouts.c
-@@ -56,7 +56,7 @@ static void
- nfsd4_alloc_devid_map(const struct svc_fh *fhp)
- {
- 	const struct knfsd_fh *fh = &fhp->fh_handle;
--	size_t fsid_len = key_len(fh->fh_fsid_type);
-+	size_t fsid_len = key_len(fh->fh_raw[FH_FSID_TYPE]);
- 	struct nfsd4_deviceid_map *map, *old;
- 	int i;
- 
-@@ -64,8 +64,8 @@ nfsd4_alloc_devid_map(const struct svc_fh *fhp)
- 	if (!map)
- 		return;
- 
--	map->fsid_type = fh->fh_fsid_type;
--	memcpy(&map->fsid, fh->fh_fsid, fsid_len);
-+	map->fsid_type = fh->fh_raw[FH_FSID_TYPE];
-+	memcpy(&map->fsid, fh->fh_raw + FH_FSID, fsid_len);
- 
- 	spin_lock(&nfsd_devid_lock);
- 	if (fhp->fh_export->ex_devid_map)
-@@ -73,9 +73,9 @@ nfsd4_alloc_devid_map(const struct svc_fh *fhp)
- 
- 	for (i = 0; i < DEVID_HASH_SIZE; i++) {
- 		list_for_each_entry(old, &nfsd_devid_hash[i], hash) {
--			if (old->fsid_type != fh->fh_fsid_type)
-+			if (old->fsid_type != map->fsid_type)
- 				continue;
--			if (memcmp(old->fsid, fh->fh_fsid,
-+			if (memcmp(old->fsid, map->fsid,
- 					key_len(old->fsid_type)))
- 				continue;
- 
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index aef474f1b84b..01ff91a28fb6 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -161,37 +161,40 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct net *net,
- 	if (fh->fh_size == 0)
- 		return nfserr_nofilehandle;
- 
--	if (fh->fh_version != 1)
-+	if (fh->fh_raw[FH_VERSION] != 1)
- 		return error;
- 
- 	if (--data_left < 0)
- 		return error;
--	if (fh->fh_auth_type != 0)
-+	if (fh->fh_raw[FH_AUTH_TYPE] != 0)
- 		return error;
--	len = key_len(fh->fh_fsid_type) / 4;
-+	len = key_len(fh->fh_raw[FH_FSID_TYPE]) / 4;
- 	if (len == 0)
- 		return error;
--	if (fh->fh_fsid_type == FSID_MAJOR_MINOR) {
-+	if (fh->fh_raw[FH_FSID_TYPE] == FSID_MAJOR_MINOR) {
- 		/* deprecated, convert to type 3 */
-+		u32 *fsidv = (u32 *)(fh->fh_raw + FH_FSID);
-+
- 		len = key_len(FSID_ENCODE_DEV)/4;
--		fh->fh_fsid_type = FSID_ENCODE_DEV;
-+		fh->fh_raw[FH_FSID_TYPE] = FSID_ENCODE_DEV;
- 		/*
- 		 * struct knfsd_fh uses host-endian fields, which are
- 		 * sometimes used to hold net-endian values. This
- 		 * confuses sparse, so we must use __force here to
- 		 * keep it from complaining.
- 		 */
--		fh->fh_fsid[0] = new_encode_dev(MKDEV(ntohl((__force __be32)fh->fh_fsid[0]),
--						      ntohl((__force __be32)fh->fh_fsid[1])));
--		fh->fh_fsid[1] = fh->fh_fsid[2];
-+		fsidv[0] = new_encode_dev(MKDEV(
-+			ntohl((__force __be32)fsidv[0]),
-+			ntohl((__force __be32)fsidv[1])));
-+		fsidv[1] = fsidv[2];
- 	}
- 	data_left -= len;
- 	if (data_left < 0)
- 		return error;
- 	exp = rqst_exp_find(rqstp ? &rqstp->rq_chandle : NULL,
- 			    net, client, gssclient,
--			    fh->fh_fsid_type, fh->fh_fsid);
--	fid = (struct fid *)(fh->fh_fsid + len);
-+			    fh->fh_raw[FH_FSID_TYPE], fh->fh_raw + FH_FSID);
-+	fid = (struct fid *)(fh->fh_raw + FH_FSID + len);
- 
- 	error = nfserr_stale;
- 	if (IS_ERR(exp)) {
-@@ -233,7 +236,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct net *net,
- 	 */
- 	error = nfserr_badhandle;
- 
--	fileid_type = fh->fh_fileid_type;
-+	fileid_type = fh->fh_raw[FH_FILEID_TYPE];
- 
- 	if (fileid_type == FILEID_ROOT)
- 		dentry = dget(exp->ex_path.dentry);
-@@ -463,18 +466,19 @@ static void _fh_update(struct svc_fh *fhp, struct svc_export *exp,
- {
- 	if (dentry != exp->ex_path.dentry) {
- 		struct fid *fid = (struct fid *)
--			(fhp->fh_handle.fh_fsid + fhp->fh_handle.fh_size/4 - 1);
-+			(fhp->fh_handle.fh_raw + FH_FSID +
-+			 fhp->fh_handle.fh_size - 1);
- 		int maxsize = (fhp->fh_maxsize - fhp->fh_handle.fh_size)/4;
- 		int fh_flags = (exp->ex_flags & NFSEXP_NOSUBTREECHECK) ? 0 :
- 				EXPORT_FH_CONNECTABLE;
- 		int fileid_type =
- 			exportfs_encode_fh(dentry, fid, &maxsize, fh_flags);
- 
--		fhp->fh_handle.fh_fileid_type =
-+		fhp->fh_handle.fh_raw[FH_FILEID_TYPE] =
- 			fileid_type > 0 ? fileid_type : FILEID_INVALID;
- 		fhp->fh_handle.fh_size += maxsize * 4;
- 	} else {
--		fhp->fh_handle.fh_fileid_type = FILEID_ROOT;
-+		fhp->fh_handle.fh_raw[FH_FILEID_TYPE] = FILEID_ROOT;
- 	}
- }
- 
-@@ -520,8 +524,8 @@ static void set_version_and_fsid_type(struct svc_fh *fhp, struct svc_export *exp
- retry:
- 	version = 1;
- 	if (ref_fh && ref_fh->fh_export == exp) {
--		version = ref_fh->fh_handle.fh_version;
--		fsid_type = ref_fh->fh_handle.fh_fsid_type;
-+		version = ref_fh->fh_handle.fh_raw[FH_VERSION];
-+		fsid_type = ref_fh->fh_handle.fh_raw[FH_FSID_TYPE];
- 
- 		ref_fh = NULL;
- 
-@@ -562,9 +566,9 @@ static void set_version_and_fsid_type(struct svc_fh *fhp, struct svc_export *exp
- 		fsid_type = FSID_ENCODE_DEV;
- 	else
- 		fsid_type = FSID_DEV;
--	fhp->fh_handle.fh_version = version;
-+	fhp->fh_handle.fh_raw[FH_VERSION] = version;
- 	if (version)
--		fhp->fh_handle.fh_fsid_type = fsid_type;
-+		fhp->fh_handle.fh_raw[FH_FSID_TYPE] = fsid_type;
- }
- 
- __be32
-@@ -610,18 +614,18 @@ fh_compose(struct svc_fh *fhp, struct svc_export *exp, struct dentry *dentry,
- 	fhp->fh_export = exp_get(exp);
- 
- 	fhp->fh_handle.fh_size =
--		key_len(fhp->fh_handle.fh_fsid_type) + 4;
--	fhp->fh_handle.fh_auth_type = 0;
-+		key_len(fhp->fh_handle.fh_raw[FH_FSID_TYPE]) + 4;
-+	fhp->fh_handle.fh_raw[FH_AUTH_TYPE] = 0;
- 
--	mk_fsid(fhp->fh_handle.fh_fsid_type,
--		fhp->fh_handle.fh_fsid,
-+	mk_fsid(fhp->fh_handle.fh_raw[FH_FSID_TYPE],
-+		fhp->fh_handle.fh_raw + FH_FSID,
- 		ex_dev,
- 		d_inode(exp->ex_path.dentry)->i_ino,
- 		exp->ex_fsid, exp->ex_uuid);
- 
- 	if (inode)
- 		_fh_update(fhp, exp, dentry);
--	if (fhp->fh_handle.fh_fileid_type == FILEID_INVALID) {
-+	if (fhp->fh_handle.fh_raw[FH_FILEID_TYPE] == FILEID_INVALID) {
- 		fh_put(fhp);
- 		return nfserr_stale;
- 	}
-@@ -644,11 +648,11 @@ fh_update(struct svc_fh *fhp)
- 	dentry = fhp->fh_dentry;
- 	if (d_really_is_negative(dentry))
- 		goto out_negative;
--	if (fhp->fh_handle.fh_fileid_type != FILEID_ROOT)
-+	if (fhp->fh_handle.fh_raw[FH_FILEID_TYPE] != FILEID_ROOT)
- 		return 0;
- 
- 	_fh_update(fhp, fhp->fh_export, dentry);
--	if (fhp->fh_handle.fh_fileid_type == FILEID_INVALID)
-+	if (fhp->fh_handle.fh_raw[FH_FILEID_TYPE] == FILEID_INVALID)
- 		return nfserr_stale;
- 	return 0;
- out_bad:
-@@ -776,9 +780,9 @@ char * SVCFH_fmt(struct svc_fh *fhp)
- 
- enum fsid_source fsid_source(const struct svc_fh *fhp)
- {
--	if (fhp->fh_handle.fh_version != 1)
-+	if (fhp->fh_handle.fh_raw[FH_VERSION] != 1)
- 		return FSIDSOURCE_DEV;
--	switch(fhp->fh_handle.fh_fsid_type) {
-+	switch (fhp->fh_handle.fh_raw[FH_FSID_TYPE]) {
- 	case FSID_DEV:
- 	case FSID_ENCODE_DEV:
- 	case FSID_MAJOR_MINOR:
-diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index 5103c2f4d225..26975ede465a 100644
---- a/fs/nfsd/nfsfh.h
-+++ b/fs/nfsd/nfsfh.h
-@@ -43,22 +43,17 @@
-  *   filesystems must not use the values '0' or '0xff'. 'See enum fid_type'
-  *   in include/linux/exportfs.h for currently registered values.
-  */
--
- struct knfsd_fh {
- 	unsigned int	fh_size;	/*
- 					 * Points to the current size while
- 					 * building a new file handle.
- 					 */
--	union {
--		char			fh_raw[NFS4_FHSIZE];
--		struct {
--			u8		fh_version;	/* == 1 */
--			u8		fh_auth_type;	/* deprecated */
--			u8		fh_fsid_type;
--			u8		fh_fileid_type;
--			u32		fh_fsid[]; /* flexible-array member */
--		};
--	};
-+	char		fh_raw[NFS4_FHSIZE];
-+#define FH_VERSION		0
-+#define FH_AUTH_TYPE		1
-+#define FH_FSID_TYPE		2
-+#define FH_FILEID_TYPE		3
-+#define FH_FSID			4
- };
- 
- static inline __u32 ino_t_to_u32(ino_t ino)
-@@ -141,10 +136,12 @@ extern enum fsid_source fsid_source(const struct svc_fh *fhp);
-  * sparse from complaining. Since these values are opaque to the
-  * client, that shouldn't be a problem.
-  */
--static inline void mk_fsid(int vers, u32 *fsidv, dev_t dev, ino_t ino,
--			   u32 fsid, unsigned char *uuid)
-+static inline void mk_fsid(int vers, void *fsid, dev_t dev, ino_t ino,
-+			   u32 fsid_num, unsigned char *uuid)
- {
-+	u32 *fsidv = fsid;
- 	u32 *up;
-+
- 	switch(vers) {
- 	case FSID_DEV:
- 		fsidv[0] = (__force __u32)htonl((MAJOR(dev)<<16) |
-@@ -152,7 +149,7 @@ static inline void mk_fsid(int vers, u32 *fsidv, dev_t dev, ino_t ino,
- 		fsidv[1] = ino_t_to_u32(ino);
- 		break;
- 	case FSID_NUM:
--		fsidv[0] = fsid;
-+		fsidv[0] = fsid_num;
- 		break;
- 	case FSID_MAJOR_MINOR:
- 		fsidv[0] = (__force __u32)htonl(MAJOR(dev));
-@@ -260,9 +257,10 @@ static inline bool fh_match(const struct knfsd_fh *fh1,
- static inline bool fh_fsid_match(const struct knfsd_fh *fh1,
- 				 const struct knfsd_fh *fh2)
- {
--	if (fh1->fh_fsid_type != fh2->fh_fsid_type)
-+	if (fh1->fh_raw[FH_FSID_TYPE] != fh2->fh_raw[FH_FSID_TYPE])
- 		return false;
--	if (memcmp(fh1->fh_fsid, fh2->fh_fsid, key_len(fh1->fh_fsid_type)) != 0)
-+	if (memcmp(fh1->fh_raw + FH_FSID, fh2->fh_raw + FH_FSID,
-+			key_len(fh1->fh_raw[FH_FSID_TYPE])) != 0)
- 		return false;
- 	return true;
- }
--- 
-2.43.0
+With UBUF user pass user address and size, and ther is only one copy_from_use
+in the backend.
+
+Regards,
+Amir  
+
+> Andrew
+> 
+>> Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
+>> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+>> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+>> ---
+>>   drivers/tee/tee_core.c   | 33 +++++++++++++++++++++++++++++++++
+>>   include/linux/tee_drv.h  |  6 ++++++
+>>   include/uapi/linux/tee.h | 22 ++++++++++++++++------
+>>   3 files changed, 55 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+>> index b9ea5a85278c..74e40ed83fa7 100644
+>> --- a/drivers/tee/tee_core.c
+>> +++ b/drivers/tee/tee_core.c
+>> @@ -387,6 +387,17 @@ static int params_from_user(struct tee_context *ctx, struct tee_param *params,
+>>               params[n].u.value.b = ip.b;
+>>               params[n].u.value.c = ip.c;
+>>               break;
+>> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
+>> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+>> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+>> +            params[n].u.ubuf.uaddr = u64_to_user_ptr(ip.a);
+>> +            params[n].u.ubuf.size = ip.b;
+>> +
+>> +            if (!access_ok(params[n].u.ubuf.uaddr,
+>> +                       params[n].u.ubuf.size))
+>> +                return -EFAULT;
+>> +
+>> +            break;
+>>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
+>>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+>> @@ -455,6 +466,11 @@ static int params_to_user(struct tee_ioctl_param __user *uparams,
+>>                   put_user(p->u.value.c, &up->c))
+>>                   return -EFAULT;
+>>               break;
+>> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+>> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+>> +            if (put_user((u64)p->u.ubuf.size, &up->b))
+>> +                return -EFAULT;
+>> +            break;
+>>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+>>               if (put_user((u64)p->u.memref.size, &up->b))
+>> @@ -655,6 +671,13 @@ static int params_to_supp(struct tee_context *ctx,
+>>               ip.b = p->u.value.b;
+>>               ip.c = p->u.value.c;
+>>               break;
+>> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
+>> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+>> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+>> +            ip.a = (u64)p->u.ubuf.uaddr;
+>> +            ip.b = p->u.ubuf.size;
+>> +            ip.c = 0;
+>> +            break;
+>>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
+>>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+>> @@ -757,6 +780,16 @@ static int params_from_supp(struct tee_param *params, size_t num_params,
+>>               p->u.value.b = ip.b;
+>>               p->u.value.c = ip.c;
+>>               break;
+>> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+>> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+>> +            p->u.ubuf.uaddr = u64_to_user_ptr(ip.a);
+>> +            p->u.ubuf.size = ip.b;
+>> +
+>> +            if (!access_ok(params[n].u.ubuf.uaddr,
+>> +                       params[n].u.ubuf.size))
+>> +                return -EFAULT;
+>> +
+>> +            break;
+>>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+>>               /*
+>> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
+>> index a54c203000ed..78bbf12f02f0 100644
+>> --- a/include/linux/tee_drv.h
+>> +++ b/include/linux/tee_drv.h
+>> @@ -82,6 +82,11 @@ struct tee_param_memref {
+>>       struct tee_shm *shm;
+>>   };
+>>   +struct tee_param_ubuf {
+>> +    void * __user uaddr;
+>> +    size_t size;
+>> +};
+>> +
+>>   struct tee_param_value {
+>>       u64 a;
+>>       u64 b;
+>> @@ -92,6 +97,7 @@ struct tee_param {
+>>       u64 attr;
+>>       union {
+>>           struct tee_param_memref memref;
+>> +        struct tee_param_ubuf ubuf;
+>>           struct tee_param_value value;
+>>       } u;
+>>   };
+>> diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
+>> index d0430bee8292..3e9b1ec5dfde 100644
+>> --- a/include/uapi/linux/tee.h
+>> +++ b/include/uapi/linux/tee.h
+>> @@ -151,6 +151,13 @@ struct tee_ioctl_buf_data {
+>>   #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT    6
+>>   #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT    7    /* input and output */
+>>   +/*
+>> + * These defines userspace buffer parameters.
+>> + */
+>> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT    8
+>> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT    9
+>> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT    10    /* input and output */
+>> +
+>>   /*
+>>    * Mask for the type part of the attribute, leaves room for more types
+>>    */
+>> @@ -186,14 +193,17 @@ struct tee_ioctl_buf_data {
+>>   /**
+>>    * struct tee_ioctl_param - parameter
+>>    * @attr: attributes
+>> - * @a: if a memref, offset into the shared memory object, else a value parameter
+>> - * @b: if a memref, size of the buffer, else a value parameter
+>> + * @a: if a memref, offset into the shared memory object,
+>> + *     else if a ubuf, address of the user buffer,
+>> + *     else a value parameter
+>> + * @b: if a memref or ubuf, size of the buffer, else a value parameter
+>>    * @c: if a memref, shared memory identifier, else a value parameter
+>>    *
+>> - * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref or value is used in
+>> - * the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value and
+>> - * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref. TEE_PARAM_ATTR_TYPE_NONE
+>> - * indicates that none of the members are used.
+>> + * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref, ubuf, or value is
+>> + * used in the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value,
+>> + * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref, and TEE_PARAM_ATTR_TYPE_UBUF_*
+>> + * indicates ubuf. TEE_PARAM_ATTR_TYPE_NONE indicates that none of the members
+>> + * are used.
+>>    *
+>>    * Shared memory is allocated with TEE_IOC_SHM_ALLOC which returns an
+>>    * identifier representing the shared memory object. A memref can reference
+>>
 
