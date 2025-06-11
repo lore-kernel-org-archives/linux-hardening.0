@@ -1,73 +1,48 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DF61EA65
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Jun 2025 23:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E602F4317;
+	Thu, 12 Jun 2025 01:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749685524; cv=none; b=VRsm0zw9rzZLM5KgeaBe5ABjeGAmjnyxGSlaBDe0WuNVZZsXkGlIeZQz5RQRI4sXqQhF5D9uvaE1Ka2basoQhqwSMFmGwEu/lyqOLuPXPxSd4FAToPhq90ybDmrUgdDLE/Yo1lhARp3MlRvC1k+buIW8DUYcVYMyUk94me2mL+I=
+	t=1749690297; cv=none; b=P3F6r68guuqT3wZdgqUwUNcz/d3rpfO/7qWeeC/A5QHi9tPqyEM9SQz76K526w+SDVq+ZOlI8oiZxKPSlFgZ1qiY9GxGYEUQPDpT61cOmzKs5LWllToFwcFtsfjXnIoJAECCIE5RB32FVLXxf4x4j1WYEZ+/Vx+cIQRbO6rlqwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749685524; c=relaxed/simple;
-	bh=rxGnv5efpZB5FQxPCbcbR/DM98Rx425ii/1JrRUCjVY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jl8NzGglxuMp9jvWcSzrS8b337FMAJjNqQx1bl2l0QyWpNCG6KdYaljNYrjEOEBZsGfxCZ0L5AnqDVlBERHFgfDb1lORTTKAa+vnbheVZog7TSiGH/4lJ55EcFw+O6ZpFIRV/fB1XnwtUs0QCdTqn6zdSFrWhPTVxkNu4USnos8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Uk92e2Re; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749690297; c=relaxed/simple;
+	bh=wz12a0wo4whUmuZ1qyFTN5zdGQYr7vGk/rFBNQEeacc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=roRi9llzX80ekT7TuVZIGim1ndAQRxpsZA6PRAdoG6wPBnqe8ryiT6ri7vtuhWoBPNWsuEypYBknk3CYesSkfYySJGgjLt1Ngjw4S6e0Cvs/USLg+eh8RgImyIu7TYzIJf0/wEJEfzYbMPqAdk+DJ6r2fOuED2ha+QOiJVdR89E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZNtAdT5q; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Uk92e2Re"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BIUfur026007
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Jun 2025 23:45:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	kL/Liu/GqjPKUC4NnGw8PIVD+TNpkbMa+VGstZWsdgM=; b=Uk92e2ReIMb6itzQ
-	XyMYOmDFaHlbqT8QN2wh6CaJU1Ifca/48IbFjhYf0+tLT2k/ooeR962mAS9uSgn6
-	DBV5FAp6c3B42an+/WXAF9p+uIsKm1+2v4BNG7WjwiMjdyvCyrVp9uyysSO6g/xf
-	HczRBQrYHaWmK9pVwNKXeKHOKCF9hCS6vi+dtdQl+FLmpy5vNSgx9HWNsklA1AJP
-	XxdFs/vJVAzCr701hqw4eR3RE0cIBgJnA24yZhpF+f4cUgjGKHvQ8nGElozBvV6O
-	BLZ+YX0+TxXymijBPxCu7AITs8GciqOOUAq/+qdgxb2jKmiEgMkK/IY2U9wf8+5Y
-	XB2lBA==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2y9g99-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Jun 2025 23:45:21 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-311ef4fb5eeso240982a91.1
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Jun 2025 16:45:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749685520; x=1750290320;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kL/Liu/GqjPKUC4NnGw8PIVD+TNpkbMa+VGstZWsdgM=;
-        b=Gd7hVXdbpZmfVTTn4S55VOKTVgfd63eXAdx4ByF6yvoXYfQpprvxT+0sQqiwtAomeJ
-         m96eFDAmQ6znzyRsQhGPQ2pemxxD7wxNN0ET3H7bFfKvpBf+rkjLfMrvSYZqZvOQb2Rw
-         YY2iCGNDyXUce1W+TLcpttD9wJiPosNLSxfCkoN5U3GyDB94bUGeXrdwtAFWNsghuUMT
-         n2OnQWJxhb+QAxR0jrvqdpkw8nIij2bgdtKeXPFA1M2GZpB70C/pSZ88PMNQp+lquti4
-         HWt+xoZH8GO5DC3PIPrsPH0Gwu9gjMNhnswX8Ulbyk/5PuujzmFrAaJ3c0GAHK/ztI3Y
-         af1A==
-X-Forwarded-Encrypted: i=1; AJvYcCXC0jupRGf0SYrXvHzyJEHwI74zjcPqz+WpYG40PkR4kGxcbgweKZQr/bT0fwaXfV42PUDP/OkwO9si7ILiFgA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8f5lhhRIlatEui7aN3gNhD2NoNaT4/1gX4wUqTQkrTO8IDIm9
-	Ko+D+THhQIHzpOPRdczEWxJI5JrkS7c+IQyFTK+VKos1NsXGpen/80MKIWBr5MNxFOD/4WXJVre
-	8Z9ILMVWHN51/b/o3AaJBJOofd5uLkl52ApzmK4cUSu/+K00KK35u2WMHImvWbk6k2Bp8ng==
-X-Gm-Gg: ASbGnctc/Jt+JiijQpiv9EsynfkgudCVmRgvrg6Iry+VjB2073RdHtqp7XMRW2uSBgh
-	YOqplRl/FkYHJXT/m/7FrqwBKyr7T88HdzTIjRErH1+a7mAcCSj/1RZO2yy089pdD/hwnAjZ6ZN
-	oyfUDksa4pCumoPnBWCRiJR2tw54S8OI7KCWfpJOCj/AUyL0cfX3yunZ4uBUdf9BAJVlcFzIFES
-	AmYQaAvVLNm1C2+83OHioyGJ0UXW7QLTG/m/aJiGDi42wWKnhZfHIYPPeEo9OBtjX+z76wu5Ikm
-	LXVWV44phbbs8JkNBmi1KhyPs1vfKqTp4mJuqfpJUeo4Bz2NtJQsOyYl9XhRje3wC28dUDvDX4Z
-	2h5JeWpP4Myd6jDc4AeFu
-X-Received: by 2002:a17:90b:1d49:b0:311:a5ab:3d47 with SMTP id 98e67ed59e1d1-313bfd7ab92mr1604716a91.1.1749685520257;
-        Wed, 11 Jun 2025 16:45:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFAMR6wEIIwnne3OpDAIO64Df49wCTs/N/zWmX8iRNFkPwGVeKGubpgXpgrWv1YmWUP5MvRNQ==
-X-Received: by 2002:a17:90b:1d49:b0:311:a5ab:3d47 with SMTP id 98e67ed59e1d1-313bfd7ab92mr1604694a91.1.1749685519759;
-        Wed, 11 Jun 2025 16:45:19 -0700 (PDT)
-Received: from [192.168.0.74] (n1-41-240-65.bla22.nsw.optusnet.com.au. [1.41.240.65])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1b499cbsm200694a91.26.2025.06.11.16.45.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 16:45:19 -0700 (PDT)
-Message-ID: <8f9a7ca7-5098-40c6-94b2-490a857d7dae@oss.qualcomm.com>
-Date: Thu, 12 Jun 2025 09:45:10 +1000
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZNtAdT5q"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55BMeZ482743681;
+	Wed, 11 Jun 2025 17:40:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749681635;
+	bh=3ScxWKcILfYH0VS/UgTIF+jQeDfTkbMiB6a5wGY1/a8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=ZNtAdT5qT05X/zaXIfzUes9m+pF2G5opXg7GQwjXVpOUyQ/toDs3hVTzrYl3Y39rU
+	 vq19vAvQHD1nijThP5FXt4F1YP1gPrA/w6El2jRWYSukeplnPguQUkeojqHk2e9mJt
+	 dtdbjbdU5OCcAwwfTYwxLLb4ct1jhNcIhs75+Qmo=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55BMeZlV1457760
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 11 Jun 2025 17:40:35 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 11
+ Jun 2025 17:40:35 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 11 Jun 2025 17:40:35 -0500
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55BMeYtX1182750;
+	Wed, 11 Jun 2025 17:40:34 -0500
+Message-ID: <f686130b-009f-4feb-bae1-022938c85923@ti.com>
+Date: Wed, 11 Jun 2025 17:40:33 -0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -76,233 +51,187 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v5 03/12] tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
-To: Andrew Davis <afd@ti.com>, Jens Wiklander <jens.wiklander@linaro.org>,
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
+        Jens Wiklander
+	<jens.wiklander@linaro.org>,
         Sumit Garg <sumit.garg@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
+        Bjorn
+ Andersson <andersson@kernel.org>,
         Konrad Dybcio <konradybcio@kernel.org>,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Apurupa Pattapu <quic_apurupa@quicinc.com>,
+        Apurupa Pattapu
+	<quic_apurupa@quicinc.com>,
         Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>,
         Sumit Semwal <sumit.semwal@linaro.org>,
         =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
-        Sumit Garg <sumit.garg@oss.qualcomm.com>,
+CC: Harshal Dev <quic_hdev@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <op-tee@lists.trustedfirmware.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>, <linux-doc@vger.kernel.org>,
+        Sumit Garg
+	<sumit.garg@oss.qualcomm.com>,
         Neil Armstrong <neil.armstrong@linaro.org>
 References: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-0-024e3221b0b9@oss.qualcomm.com>
  <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-3-024e3221b0b9@oss.qualcomm.com>
- <f686130b-009f-4feb-bae1-022938c85923@ti.com>
 Content-Language: en-US
-From: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-In-Reply-To: <f686130b-009f-4feb-bae1-022938c85923@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDIwMCBTYWx0ZWRfX+QTU8l7AUhRE
- HuEDL4IP3R3z9ZNRXgpz4MMRJiixWQ8P4ZOVp+QNpS3MPML2/mW/Ttz+fv3mtpa9aX5gK4D6Uqw
- akRBTNYKMmTXJJ/IhNf8bQbaKq5neIx5NVeEroeTypmL6VWn3hKzkygaNeSoBcnA78vE3kw3iyD
- 8avDvenvEMjKbU9dvUNH6AVXBxaQ+6f2ehL73XTZFORsUw8u8W5rdsuMoQZQX5x2gnZdZiZXTsd
- TneCHSsQIdmGSdsSzzCvz/8odcqbVdyS3/5lwF+PIR5vpyN2+4aPak2WRIxKsI+VDuMJp7OYdAh
- fbDZfPq098++sCm06IQH8oPDJVvhMD9e9Edpe1MU8WBsq+ND5zjTu/sH5dSnymuSgJ1VKAWRKDc
- DoOHk/SfMg2HDHUgmjM3Dr/Mf6EBqBhGEjALbmYqWacf5EUUypoHYr/6tbtlqX1UN2LfjciA
-X-Proofpoint-GUID: sjdhXHxXeUoLVheeKiZZzZJ9KX4ESERv
-X-Proofpoint-ORIG-GUID: sjdhXHxXeUoLVheeKiZZzZJ9KX4ESERv
-X-Authority-Analysis: v=2.4 cv=f+BIBPyM c=1 sm=1 tr=0 ts=684a1511 cx=c_pps
- a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=hi51d+lTLNy/RbqRqnOomQ==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8
- a=ri7p8OPjmTxfXj7m-Z0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=uKXjsCUrEbL0IQVhDsJ9:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_10,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 adultscore=0 phishscore=0 mlxscore=0
- malwarescore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506110200
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-3-024e3221b0b9@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Andrew,
-
-On 6/12/2025 8:40 AM, Andrew Davis wrote:
-> On 5/27/25 1:56 AM, Amirreza Zarrabi wrote:
->> For drivers that can transfer data to the TEE without using shared
->> memory from client, it is necessary to receive the user address
->> directly, bypassing any processing by the TEE subsystem. Introduce
->> TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT/OUTPUT/INOUT to represent
->> userspace buffers.
->>
-> 
-> Could you expand on this, what is the issue with normal MEMREF?
+On 5/27/25 1:56 AM, Amirreza Zarrabi wrote:
+> For drivers that can transfer data to the TEE without using shared
+> memory from client, it is necessary to receive the user address
+> directly, bypassing any processing by the TEE subsystem. Introduce
+> TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT/OUTPUT/INOUT to represent
+> userspace buffers.
 > 
 
-QTEE supports two types of data passing: (1) memory objects and (2) buffers.
-A memory object can be a normal shared memory (shm) instance. However, a
-buffer is an [offset, size] pair referring to the transport memory shared
-with QTEE (established at the begining of the invocation).
+Could you expand on this, what is the issue with normal MEMREF?
 
-There is no direct representation of VALUE in the QTEE ABI, so even basic
-data types, such as int, must be passed as a buffer [offset, sizeof(int)].
-VALUE cannot be used because it only represents a u64 data size. While MEMREF
-is an option, it requires additional ioctl calls and memory copies.
+Andrew
 
-For example, if you need to send three integers to QTEE, you would require:
-  (1) Three ioctl calls to allocate three shared memory pages.
-  (2) Three memcpy operations to copy each integer into its respective shared memory.
-  (3) Three memcpy operations to transfer data from shared memory to the
-      transport buffer shared with QTEE.
-
-You can optimize this slightly by making a single ioctl call for shared
-memory allocation. However, the backend still needs to inspect the shared
-memory, parse it, and extract the data and size information.
-
-With UBUF user pass user address and size, and ther is only one copy_from_use
-in the backend.
-
-Regards,
-Amir  
-
-> Andrew
+> Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
+> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+> ---
+>   drivers/tee/tee_core.c   | 33 +++++++++++++++++++++++++++++++++
+>   include/linux/tee_drv.h  |  6 ++++++
+>   include/uapi/linux/tee.h | 22 ++++++++++++++++------
+>   3 files changed, 55 insertions(+), 6 deletions(-)
 > 
->> Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
->> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
->> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
->> ---
->>   drivers/tee/tee_core.c   | 33 +++++++++++++++++++++++++++++++++
->>   include/linux/tee_drv.h  |  6 ++++++
->>   include/uapi/linux/tee.h | 22 ++++++++++++++++------
->>   3 files changed, 55 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
->> index b9ea5a85278c..74e40ed83fa7 100644
->> --- a/drivers/tee/tee_core.c
->> +++ b/drivers/tee/tee_core.c
->> @@ -387,6 +387,17 @@ static int params_from_user(struct tee_context *ctx, struct tee_param *params,
->>               params[n].u.value.b = ip.b;
->>               params[n].u.value.c = ip.c;
->>               break;
->> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
->> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
->> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
->> +            params[n].u.ubuf.uaddr = u64_to_user_ptr(ip.a);
->> +            params[n].u.ubuf.size = ip.b;
->> +
->> +            if (!access_ok(params[n].u.ubuf.uaddr,
->> +                       params[n].u.ubuf.size))
->> +                return -EFAULT;
->> +
->> +            break;
->>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
->>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
->>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
->> @@ -455,6 +466,11 @@ static int params_to_user(struct tee_ioctl_param __user *uparams,
->>                   put_user(p->u.value.c, &up->c))
->>                   return -EFAULT;
->>               break;
->> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
->> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
->> +            if (put_user((u64)p->u.ubuf.size, &up->b))
->> +                return -EFAULT;
->> +            break;
->>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
->>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
->>               if (put_user((u64)p->u.memref.size, &up->b))
->> @@ -655,6 +671,13 @@ static int params_to_supp(struct tee_context *ctx,
->>               ip.b = p->u.value.b;
->>               ip.c = p->u.value.c;
->>               break;
->> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
->> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
->> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
->> +            ip.a = (u64)p->u.ubuf.uaddr;
->> +            ip.b = p->u.ubuf.size;
->> +            ip.c = 0;
->> +            break;
->>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
->>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
->>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
->> @@ -757,6 +780,16 @@ static int params_from_supp(struct tee_param *params, size_t num_params,
->>               p->u.value.b = ip.b;
->>               p->u.value.c = ip.c;
->>               break;
->> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
->> +        case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
->> +            p->u.ubuf.uaddr = u64_to_user_ptr(ip.a);
->> +            p->u.ubuf.size = ip.b;
->> +
->> +            if (!access_ok(params[n].u.ubuf.uaddr,
->> +                       params[n].u.ubuf.size))
->> +                return -EFAULT;
->> +
->> +            break;
->>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
->>           case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
->>               /*
->> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
->> index a54c203000ed..78bbf12f02f0 100644
->> --- a/include/linux/tee_drv.h
->> +++ b/include/linux/tee_drv.h
->> @@ -82,6 +82,11 @@ struct tee_param_memref {
->>       struct tee_shm *shm;
->>   };
->>   +struct tee_param_ubuf {
->> +    void * __user uaddr;
->> +    size_t size;
->> +};
->> +
->>   struct tee_param_value {
->>       u64 a;
->>       u64 b;
->> @@ -92,6 +97,7 @@ struct tee_param {
->>       u64 attr;
->>       union {
->>           struct tee_param_memref memref;
->> +        struct tee_param_ubuf ubuf;
->>           struct tee_param_value value;
->>       } u;
->>   };
->> diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
->> index d0430bee8292..3e9b1ec5dfde 100644
->> --- a/include/uapi/linux/tee.h
->> +++ b/include/uapi/linux/tee.h
->> @@ -151,6 +151,13 @@ struct tee_ioctl_buf_data {
->>   #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT    6
->>   #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT    7    /* input and output */
->>   +/*
->> + * These defines userspace buffer parameters.
->> + */
->> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT    8
->> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT    9
->> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT    10    /* input and output */
->> +
->>   /*
->>    * Mask for the type part of the attribute, leaves room for more types
->>    */
->> @@ -186,14 +193,17 @@ struct tee_ioctl_buf_data {
->>   /**
->>    * struct tee_ioctl_param - parameter
->>    * @attr: attributes
->> - * @a: if a memref, offset into the shared memory object, else a value parameter
->> - * @b: if a memref, size of the buffer, else a value parameter
->> + * @a: if a memref, offset into the shared memory object,
->> + *     else if a ubuf, address of the user buffer,
->> + *     else a value parameter
->> + * @b: if a memref or ubuf, size of the buffer, else a value parameter
->>    * @c: if a memref, shared memory identifier, else a value parameter
->>    *
->> - * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref or value is used in
->> - * the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value and
->> - * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref. TEE_PARAM_ATTR_TYPE_NONE
->> - * indicates that none of the members are used.
->> + * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref, ubuf, or value is
->> + * used in the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value,
->> + * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref, and TEE_PARAM_ATTR_TYPE_UBUF_*
->> + * indicates ubuf. TEE_PARAM_ATTR_TYPE_NONE indicates that none of the members
->> + * are used.
->>    *
->>    * Shared memory is allocated with TEE_IOC_SHM_ALLOC which returns an
->>    * identifier representing the shared memory object. A memref can reference
->>
-
+> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> index b9ea5a85278c..74e40ed83fa7 100644
+> --- a/drivers/tee/tee_core.c
+> +++ b/drivers/tee/tee_core.c
+> @@ -387,6 +387,17 @@ static int params_from_user(struct tee_context *ctx, struct tee_param *params,
+>   			params[n].u.value.b = ip.b;
+>   			params[n].u.value.c = ip.c;
+>   			break;
+> +		case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
+> +		case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+> +		case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+> +			params[n].u.ubuf.uaddr = u64_to_user_ptr(ip.a);
+> +			params[n].u.ubuf.size = ip.b;
+> +
+> +			if (!access_ok(params[n].u.ubuf.uaddr,
+> +				       params[n].u.ubuf.size))
+> +				return -EFAULT;
+> +
+> +			break;
+>   		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
+>   		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>   		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+> @@ -455,6 +466,11 @@ static int params_to_user(struct tee_ioctl_param __user *uparams,
+>   			    put_user(p->u.value.c, &up->c))
+>   				return -EFAULT;
+>   			break;
+> +		case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+> +		case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+> +			if (put_user((u64)p->u.ubuf.size, &up->b))
+> +				return -EFAULT;
+> +			break;
+>   		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>   		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+>   			if (put_user((u64)p->u.memref.size, &up->b))
+> @@ -655,6 +671,13 @@ static int params_to_supp(struct tee_context *ctx,
+>   			ip.b = p->u.value.b;
+>   			ip.c = p->u.value.c;
+>   			break;
+> +		case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
+> +		case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+> +		case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+> +			ip.a = (u64)p->u.ubuf.uaddr;
+> +			ip.b = p->u.ubuf.size;
+> +			ip.c = 0;
+> +			break;
+>   		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
+>   		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>   		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+> @@ -757,6 +780,16 @@ static int params_from_supp(struct tee_param *params, size_t num_params,
+>   			p->u.value.b = ip.b;
+>   			p->u.value.c = ip.c;
+>   			break;
+> +		case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+> +		case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+> +			p->u.ubuf.uaddr = u64_to_user_ptr(ip.a);
+> +			p->u.ubuf.size = ip.b;
+> +
+> +			if (!access_ok(params[n].u.ubuf.uaddr,
+> +				       params[n].u.ubuf.size))
+> +				return -EFAULT;
+> +
+> +			break;
+>   		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>   		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+>   			/*
+> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
+> index a54c203000ed..78bbf12f02f0 100644
+> --- a/include/linux/tee_drv.h
+> +++ b/include/linux/tee_drv.h
+> @@ -82,6 +82,11 @@ struct tee_param_memref {
+>   	struct tee_shm *shm;
+>   };
+>   
+> +struct tee_param_ubuf {
+> +	void * __user uaddr;
+> +	size_t size;
+> +};
+> +
+>   struct tee_param_value {
+>   	u64 a;
+>   	u64 b;
+> @@ -92,6 +97,7 @@ struct tee_param {
+>   	u64 attr;
+>   	union {
+>   		struct tee_param_memref memref;
+> +		struct tee_param_ubuf ubuf;
+>   		struct tee_param_value value;
+>   	} u;
+>   };
+> diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
+> index d0430bee8292..3e9b1ec5dfde 100644
+> --- a/include/uapi/linux/tee.h
+> +++ b/include/uapi/linux/tee.h
+> @@ -151,6 +151,13 @@ struct tee_ioctl_buf_data {
+>   #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT	6
+>   #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT	7	/* input and output */
+>   
+> +/*
+> + * These defines userspace buffer parameters.
+> + */
+> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT	8
+> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT	9
+> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT	10	/* input and output */
+> +
+>   /*
+>    * Mask for the type part of the attribute, leaves room for more types
+>    */
+> @@ -186,14 +193,17 @@ struct tee_ioctl_buf_data {
+>   /**
+>    * struct tee_ioctl_param - parameter
+>    * @attr: attributes
+> - * @a: if a memref, offset into the shared memory object, else a value parameter
+> - * @b: if a memref, size of the buffer, else a value parameter
+> + * @a: if a memref, offset into the shared memory object,
+> + *     else if a ubuf, address of the user buffer,
+> + *     else a value parameter
+> + * @b: if a memref or ubuf, size of the buffer, else a value parameter
+>    * @c: if a memref, shared memory identifier, else a value parameter
+>    *
+> - * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref or value is used in
+> - * the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value and
+> - * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref. TEE_PARAM_ATTR_TYPE_NONE
+> - * indicates that none of the members are used.
+> + * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref, ubuf, or value is
+> + * used in the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value,
+> + * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref, and TEE_PARAM_ATTR_TYPE_UBUF_*
+> + * indicates ubuf. TEE_PARAM_ATTR_TYPE_NONE indicates that none of the members
+> + * are used.
+>    *
+>    * Shared memory is allocated with TEE_IOC_SHM_ALLOC which returns an
+>    * identifier representing the shared memory object. A memref can reference
+> 
