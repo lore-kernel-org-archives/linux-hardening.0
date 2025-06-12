@@ -1,101 +1,102 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45942147E7;
-	Thu, 12 Jun 2025 09:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D18EB23184A;
+	Thu, 12 Jun 2025 10:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749721981; cv=none; b=EXrq1uXKi1JzGhKlQJJPH47OodsWmSqWuLBlB+jkceuU/1T4XoCdobwb41GD8sidM8byGn6HRgqtW7eJpGpMXHqcjue0zz37FknznhLOQYBjc7sbFh4ronPw7uakQr2/PLlEBuHh4StSf3hHv4Ky32cDIzgA1AW/nfz7wfaKR8A=
+	t=1749725170; cv=none; b=qZdGWthThN5GsPRkv0xXhkMw69zsCwB+ld0DaH8udTbn80fnpAsDz3nCcSDt2536vf3HWvj1CBKoiVt3neB5GaMDs/mF7LltS7QQEYxmEZp9ttpRzBXZZwkzG0xfsxOnSzwAD0SJ11u4IjpJOIGfCpUsZvzRMGviUiT6KgYg4io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749721981; c=relaxed/simple;
-	bh=V5DPnJRry1OK1AUby4FmzrJdYc53co+Vvo5McgKVp+U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BTmX+nYX3wiI4VJiUmz5CZv+xYhwZ4vh1ooU+7PT29rnMs2vGtID+3mHzTjWoRyIa5VEATwDON86xH2OtPudx+TTIvDUlcwXMMTRC+knsClU3m9OXcGAovETvj2q4Sfnwd6AmuC657+ToVmz13jmXv1yZZwbYmmHgT5b98yUN4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J/LZc2zK; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/LZc2zK"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7429cbbeec6so128923b3a.2;
-        Thu, 12 Jun 2025 02:52:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749721979; x=1750326779; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V5DPnJRry1OK1AUby4FmzrJdYc53co+Vvo5McgKVp+U=;
-        b=J/LZc2zKrW2Dxg+GFOll9f2BfVteaygdlC7W+BLmOzp4JGzBcWkSoMT2V/5gS1ZtNN
-         83TqdqyrVD0IAGPCgx97HhqE5px3GnpHNXrvjYDMysX5B3z181R6utpAnWil4gOTdhDh
-         2TDsNDirmcpX7FNmtYisMQqHa0v0P6gXmfgtSKXpcqMcaivv4btS32byN8UWJ3BTnyr7
-         0u10cttmAI0zQceYbGy5wlOBr/PKFM6wA/8Fw318/lrikC0EGuVojFMpdDx0BFw7XoFY
-         RTSjCpWn7nqgIKxbIskmvP2JYDgtTdY7Plt0r9kTv7lainY43FVuvXF78sH7O1ED2QMY
-         Y4dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749721979; x=1750326779;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V5DPnJRry1OK1AUby4FmzrJdYc53co+Vvo5McgKVp+U=;
-        b=m7opiB7AA7BDBku+u1F9gRKrKmFTY4xh+JK1Dz7h7ISxZWzbYNka/6I4H4kbIdjoUE
-         aTVhk0e2bk2/QcVcnUih5wr8Yh/J5uwpP8pLP8PyVbqiys3OPYKWCpuw1SSTZbFnbl/M
-         fa5QZ883cw9gtDjcriU8d2Gbek3mEfBYpl3NL76epWOdWuE2O01/27MVeDYrG4IWGrVd
-         OK0KEGGc5E0BNtLDFqVTDBRCV+Qoqtq6sPMYCoSywfAgrk0CV0bRPHGSwNcMeDjEFFDK
-         syH7J9cm+8AhstqXLl0Zuh12LoOCBMtxlL3TO0JQ9gGSZrLr+Nq7+ZYcH+1LeBOesZoj
-         J/Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXg3FkLjw80o2neM/EcaL0GIx54m0i8SpW6NDT+6X6etGbRxdimygdidzDhTAbjXgoJh2OEh1kcRgLtVMx5Nc=@vger.kernel.org, AJvYcCW8wVQHDz062hmKEip20SGiov8BmL+MtR7QS+k2zPlcLku11OmiTCUnX08JdXb/KtMiP8OfKCpohzjOZzx8OUk=@vger.kernel.org, AJvYcCWH+L+E4+ptVrWU5an6QaSrf/VErw0LrI4aseqs76gqUpOa2Ftsc0IsI4Ph9j6Da+41Sz86y1ZY6ro3rs66@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+fBLuZPmXY6uzGiOMombqorYVzid4E4eazMbJS3K72tdsYP7J
-	roqcD0Uz4B7bwgQe0BK+tsgNvPYKbHqcGkGWOkBJcrGax+7taepREe8e9qZCo95NzSSZQoitXgg
-	1b6t8u/KhGQeNDjk5Cn2UAYaBNfNoNbw=
-X-Gm-Gg: ASbGncuFD2iGZ36YXA1jGsECMX5FKHAclXBj0HcDhllop92tjVgNny6FsONeSE7EA0Q
-	f655+z3CJGyFoALmeoMFD0xzHV7RI5/LqBWntTOxKgv1qRqh95PHlWeWesv641FFAk1IB0iGcn0
-	86aakXbd0dVPf3Dvr3MIVr2l347YzzpVGRfdCxNoRZszsCbMgB3B9g3g==
-X-Google-Smtp-Source: AGHT+IHPE151L+2L8xLpf10WS2F8tUI6eax6tGycQNKhMolPYhuY5bC4kej16ZoAGc92LZQ5ZzwmMQaUExKxc8QL0Es=
-X-Received: by 2002:a17:902:d4d2:b0:234:a139:11f7 with SMTP id
- d9443c01a7336-23641b16dc5mr37652985ad.10.1749721979155; Thu, 12 Jun 2025
- 02:52:59 -0700 (PDT)
+	s=arc-20240116; t=1749725170; c=relaxed/simple;
+	bh=/1gcciYLf3mcr5dTWnS0/NNH5ggDzXWBaBIN89ySJHw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KpAfdjVeyVA9HxkTmcXzpgDAxTPGbDOJtaZ+gB3818iD3EyVth1FcdqY0CQxR22rM00VuQNPgWWQusKdpW0zjbQE3NaPp4FXzoXxLeDgTmLqOStHNmRtGUrVfiMwThvfSQEkVQLSPOLwUWtAEDKjXCJ1+WRLNZYKaX+DzShaQfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
+	by app1 (Coremail) with SMTP id TAJkCgDH6xHXr0popHueAA--.50747S2;
+	Thu, 12 Jun 2025 18:45:45 +0800 (CST)
+From: Yulin Lu <luyulin@eswincomputing.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	brgl@bgdev.pl,
+	linux-hardening@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	zhengyu@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	fenglin@eswincomputing.com,
+	lianghujun@eswincomputing.com,
+	Yulin Lu <luyulin@eswincomputing.com>
+Subject: [PATCH v5 0/2] ESWIN EIC7700 pinctrl driver
+Date: Thu, 12 Jun 2025 18:45:39 +0800
+Message-Id: <20250612104539.2011-1-luyulin@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611194840.877308-1-bqe@google.com> <20250611194840.877308-4-bqe@google.com>
- <CAH5fLgi1GBqDHvMh30fbxVUjnTETLXthpK6eGLJA0Vh_TZRnsQ@mail.gmail.com> <CACQBu=W4PziG3Fsnzqu_wu-vgBThktD7FcEJ-vOhOMhNDz8h3g@mail.gmail.com>
-In-Reply-To: <CACQBu=W4PziG3Fsnzqu_wu-vgBThktD7FcEJ-vOhOMhNDz8h3g@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 12 Jun 2025 11:52:46 +0200
-X-Gm-Features: AX0GCFsJPSfEGG6M_EXyv_QUF8gfnAl1V6r9HPZlTcf0LptF5juXMpYSnxrtFOg
-Message-ID: <CANiq72kuRLANX=W7xUo1Jv7euH2eAhwHbx-CF4_4Nj=e9e1Weg@mail.gmail.com>
-Subject: Re: [PATCH v12 3/5] rust: add bitmap API.
-To: Burak Emir <bqe@google.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Yury Norov <yury.norov@gmail.com>, 
-	Kees Cook <kees@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgDH6xHXr0popHueAA--.50747S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cry7KF4fAFWUKFWkJFWkZwb_yoW8Gr13pF
+	43Grn5Jan8XF47ta4xJ3Wj9ry3Gan7Ar1a9a1Sg347XFs8Aw1UJFW5Kr15XFWDGr48Jr93
+	tF15Kryj9F1UArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRidbbtUUUUU==
+X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
 
-On Thu, Jun 12, 2025 at 10:47=E2=80=AFAM Burak Emir <bqe@google.com> wrote:
->
-> True, I observed the panic but the test is erroneously marked as failing.
-> I have commented it out and added TODO to enable it once
-> [should_panic] is supported.
+  Implements support for the Eswin eic7700 SoC pinctrl controller.
+  Provides API to manage pinctrl for the eic7700 SoC.
+  Integration with the Linux pinctrl subsystem for consistency and
+  scalability.
 
-No, please do not use `unwrap()`.
+  Supported chips:
+    Eswin eic7700 SoC.
 
-Instead, tests are supposed to be written as you would normally write
-kernel code as much as possible, i.e. fallible.
+  Test:
+    Tested this patch on the Sifive HiFive Premier P550 (which uses
+    the EIC7700 SoC), including system boot, networking, EMMC, display,
+    and other peripherals. The drivers for these modules all use the
+    pinctrl module, so this verifies that this pinctrl driver
+    patch is working properly.
 
-We also have now support for tests that return `-> Result`, so you can
-e.g. use the `?` operator.
+---
+Changes since V4:
+  pinctrl: eswin: Add EIC7700 pinctrl driver
+  - Added #ifdef CONFIG_OF to fix the kernel robot test compilation error.
+  - Removed "Reviewed-by" tag of "Krzysztof Kozlowski"
+  - Link: https://lore.kernel.org/all/20250515054524.390-1-luyulin@eswincomputing.com/
 
-Thanks!
+Yulin Lu (2):
+  dt-bindings: pinctrl: eswin: Document for EIC7700 SoC
+  pinctrl: eswin: Add EIC7700 pinctrl driver
 
-Cheers,
-Miguel
+ .../pinctrl/eswin,eic7700-pinctrl.yaml        | 156 ++++
+ drivers/pinctrl/Kconfig                       |  11 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-eic7700.c             | 704 ++++++++++++++++++
+ 4 files changed, 872 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
+
+-- 
+2.25.1
+
