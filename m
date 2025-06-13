@@ -1,145 +1,91 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8DF2C1593
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Jun 2025 09:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC782DA77C;
+	Fri, 13 Jun 2025 10:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749807746; cv=none; b=NHXxHRhNQTRb+e7zfYDmCQDnnT0nzJ8AJFGKpnAPz53HmVg4OW+V99Jb0wVtsi53QzqUMVK7WvL9S+etTa2J5ww6FpSDr7dF4xYHZgH48ku7kCKECZZ08KdInQ82Hh0tEDt8W4s+O+DY3BApk3pXRDLiJttkpasKAdhw6i86rMY=
+	t=1749809679; cv=none; b=mE75AQ3nWT0Fceg+J6ZiHHAlysU+Jj+165mDjjp0kY+ZBwLkCod1FELqPtEq/c0OjWhtMWrYOqMP9YfsPw4XKzZkqm1LZOyrcHuHLEhoG/A58XhX8fHtGTTS1EtdYOv8IP6cGWOxv4+1AOrzk9nexmLeIuLtQ1SSpwpz29NfXFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749807746; c=relaxed/simple;
-	bh=CtNvxnB0vPCKAmcYC/efh99DjurqltuJUPHBbthRWF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bATHZO7ZP1m8cE9qGj17q1d2r5d8wSzUfMC4v9TyAFRQEH9iLbZBdG/jWOyTCRV28yNo+wY6lXBiel56l8zqqF1oLYSzuWaSTJTak1LAbPTCX4NTItFaGedo+N2zbyUS6wsYMvBmV7B8tp4fr75ezvP7CDFece1BpZaKQxM84xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=R/FyAZcl; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1749809679; c=relaxed/simple;
+	bh=LU8OJNzLx7wW8BhbXNUKCKzFrz3qoYbDjTeoITe1lQo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=dqTIxzhv6lRoCMfR4hRPodP+B1/8YYKaZdi96W0NOmifskXBTjHlw4MrnwVd8n3jhZ/+iI77CQpePD1aYEP2H7Kv8w7p77XdWmTumrMtuos6dp7S4s7K/kefrtcypjopdXZxNcXXsnyqaXsX1DOuK1JSOma+Npn8m9OYAHPfsdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YZh+UM0y; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="R/FyAZcl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=nZy3
-	8NmYICe8Mu3Mjf0MKMXMdi41KhsE9KdB9TPXbwo=; b=R/FyAZcluhMz+xilJAeX
-	AjuZC66tdPKDOWPqHfc55pWuX1hKenjxDjbiNOlSEtvAeTK+JRrq2CsPizBCDmxF
-	Pqx2h976CSHwMUbpNXeLPRCL3IvKrbwU6DUes2Lkv9G9L11zL/TyHvlPJFLJ3GiE
-	+efyepQVVJqaWErYYfnK+OI/fQUPNBJ2kddB57jzDyAdWvEkioEUYFUvyc5YH0Yk
-	fau42RxrxDfr0uJFKJ0JW0KwOF3M5eR7PHuElpYo83effjkSrnNUlgAMmr1CU0+T
-	vWdeMwfO40Bq9Cwww0x8DUl+AaAOChIZfJyMqzXZsAd1y3RAX0edRkGTq1tiRDNN
-	FQ==
-Received: (qmail 166897 invoked from network); 13 Jun 2025 11:42:21 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Jun 2025 11:42:21 +0200
-X-UD-Smtp-Session: l3s3148p1@bEzU3HA3pOEgAwDPXy2/ACpZfVCNKldR
-Date: Fri, 13 Jun 2025 11:42:20 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, linux-i3c@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH RFC 4/7] i3c: add driver for Renesas I3C IP
-Message-ID: <aEvyfM42WTKENbFO@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Frank Li <Frank.li@nxp.com>, linux-renesas-soc@vger.kernel.org,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, linux-i3c@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-References: <20250611093934.4208-1-wsa+renesas@sang-engineering.com>
- <20250611093934.4208-5-wsa+renesas@sang-engineering.com>
- <aEmws+OtHirrUPUo@lizhi-Precision-Tower-5810>
- <aErqY0QWMRdC7Pvg@shikoro>
- <aEsDj5Vcb4zFJFlo@lizhi-Precision-Tower-5810>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YZh+UM0y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749809678; x=1781345678;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=LU8OJNzLx7wW8BhbXNUKCKzFrz3qoYbDjTeoITe1lQo=;
+  b=YZh+UM0yhR75t/LhRhUe1cYsLBz+hiC6Kc/PLz1Zph9YT3JtzV5D9zn0
+   ZXT/Bprpi0aDpKP74suWdSTbQiRHuMZuoArGoQkN/AmquvQ6U8U9tbrZB
+   a2mnz3rEBbbCAN6rDzPGaC+mf2dm6jo8NMenoIEcd9qju387Zlr9di0Jw
+   RsoVPYkPWeG44JU/wS3dEh05Y1s0ClD+gMR1lErV5cvfsxid2uOgjbYYb
+   hjJ2Z2C9Cu58MpLh4E2UUFe3FWKvpLycDivEY1Orx3U1oTFoaLtC4HztE
+   ExpAu3/0aovUoh95JGOSLvkgCnscq2My9JaDZqvfIPmN4K/Aox0a086ux
+   A==;
+X-CSE-ConnectionGUID: 9G7AA+edS7CSZU2A1zYt7w==
+X-CSE-MsgGUID: P9uaC1ouRPe6B/8Av82orA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="69595178"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="69595178"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:14:38 -0700
+X-CSE-ConnectionGUID: YMrBMR8eQhaCQbaYzdmuBQ==
+X-CSE-MsgGUID: sq44Qaw3Q5qX+Hgt1/gwuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="178690106"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:14:35 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+ Hans de Goede <hdegoede@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+In-Reply-To: <20250529181831.work.439-kees@kernel.org>
+References: <20250529181831.work.439-kees@kernel.org>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Handle KCOV __init vs
+ inline mismatches
+Message-Id: <174980967013.26331.3871583437927541253.b4-ty@linux.intel.com>
+Date: Fri, 13 Jun 2025 13:14:30 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="K40i87jX3QkMmMc9"
-Content-Disposition: inline
-In-Reply-To: <aEsDj5Vcb4zFJFlo@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
+
+On Thu, 29 May 2025 11:18:37 -0700, Kees Cook wrote:
+
+> When KCOV is enabled all functions get instrumented, unless the
+> __no_sanitize_coverage attribute is used. To prepare for
+> __no_sanitize_coverage being applied to __init functions[1], we have
+> to handle differences in how GCC's inline optimizations get resolved.
+> For thinkpad_acpi routines, this means forcing two functions to be
+> inline with __always_inline.
+> 
+> [...]
 
 
---K40i87jX3QkMmMc9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
+The list of commits applied:
+[1/1] platform/x86: thinkpad_acpi: Handle KCOV __init vs inline mismatches
+      commit: 6418a8504187dc7f5b6f9d0649c03e362cb0664b
 
-> > And there are only 8 of these registers. So, there is a maximum of 8 for
-> > this controller. We could hardcode 8. But we could leave the handling as
-> > is, just in case a future controller has more or less of these
-> > registers.
->=20
-> Okay, can you point me spec link.
+--
+ i.
 
-Overview of the SoC:
-https://www.renesas.com/en/products/microcontrollers-microprocessors/rz-mpu=
-s/rzg3s-general-purpose-microprocessors-single-core-arm-cortex-a55-11ghz-cp=
-u-and-dual-core-cortex-m33-250mhz#documents
-
-Datasheet:
-https://www.renesas.com/en/document/mah/rzg3s-group-users-manual-hardware?r=
-=3D25458591
-
-> > Sure thing. I think I didn't get feedback on my original suggestion so
-> > far. If I now know you are positive about it, I will give it a try.
->=20
-> Sorry, linux-i3c mail list always delay your post, did you register linux=
--i3c
-> mail list.
-
-I did subscribe. I receive mails and my patches using git-send-email go
-through directly. My responses to mails are always held back just saying
-"suspicious header". But I don't know what is "suspicious", so I can't
-work on it.
-
-> > There is a specified timeout? I couldn't find one in the specs, can you
-> > kindly point me to it? So, the solution is to use 100us as timeout?
->=20
-> See: 5.1.2.5 Controller Clock Stalling
-
-Ah, I missed this one so far. Thanks!
-
-> The spec have not defined what exactly happen if stall clock more than
-> 100us.
-
-I am going to the I3C Plugfest in Warszaw in 10 days. I could ask people
-there...
-
-Happy hacking,
-
-   Wolfram
-
-
---K40i87jX3QkMmMc9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhL8nwACgkQFA3kzBSg
-KbbuVA/+I4VgOS79AXzpTRA0k72Re819xTv12Dq7qqQyCvfvXCSQWsGPY/bHSW7G
-w0mdyHeWX668BlMnSJ0tG16z3aOERAYb84wNXH4hobO2IN5pTAi532QkA/4GOniQ
-gKgep4L26X5/tE1OcO0fb6wUiezfzKRr0FRvgiv34rdK7lnK3zrNij+DjH+t9Osf
-iazabHh+KZGOe0IqqU14ePC3W23edCu6HgluAXscThJSLl+aucuS53XEoO9oPBto
-Lpt694NxL5Cu61OKYEzRmcbh0UdHx8CtH98QgKNifMVR60kd8yByfefcpcMfZDQV
-aKcS5fRiH0qBbxRGO2nvgHYQR8B0N3EPFDs3tRtpGLq74rr2q8Yyf5JEdlBBitQe
-d6JZvrSJGo3P+rL4OFlYeYvCkc0hu3BvPAqEfVzup6qBes3YvClh9j7kEGDU2ySj
-NTx9t1hrFqFFSccOtzAVvRtuXXLOfowYgK9+n/xqzOjINWT4S8PM//pDcrEjrr1/
-r6UJ3PgVCnTaIImNh1LTx87bYOLC+D+h/yQfW7YWJn0IQ8c5gSaoPRdH5txhJo4M
-Z9hD+awjQveg5jIA/B5ghu2CVGxK+u/Lixh07uywkjfefoiKLiPLFbmweSMQLQHk
-RsQtvyJ3wz/jbiHo8RFWauThZa0iiU40L3VW1xogTk3SFfjc1XU=
-=wf2Y
------END PGP SIGNATURE-----
-
---K40i87jX3QkMmMc9--
