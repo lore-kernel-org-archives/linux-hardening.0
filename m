@@ -1,91 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC782DA77C;
-	Fri, 13 Jun 2025 10:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A34291C2E;
+	Fri, 13 Jun 2025 12:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749809679; cv=none; b=mE75AQ3nWT0Fceg+J6ZiHHAlysU+Jj+165mDjjp0kY+ZBwLkCod1FELqPtEq/c0OjWhtMWrYOqMP9YfsPw4XKzZkqm1LZOyrcHuHLEhoG/A58XhX8fHtGTTS1EtdYOv8IP6cGWOxv4+1AOrzk9nexmLeIuLtQ1SSpwpz29NfXFk=
+	t=1749817452; cv=none; b=hfUamTq0rB6Mc8Opt7CeeXW3qXAr7Y1nx9HK7fpuZhdZoHUnK0Hj2zAWY1yQJrjh5pei2IXQuE6iO4hQ1KSVFSUk0Bk8VCEnsVzShwXgAli7SZj9zObTfvOpqfnCnAdguKKDSrFucxCGfuKppXbhRNOO3ZpPckKMbzNNucNeaAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749809679; c=relaxed/simple;
-	bh=LU8OJNzLx7wW8BhbXNUKCKzFrz3qoYbDjTeoITe1lQo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=dqTIxzhv6lRoCMfR4hRPodP+B1/8YYKaZdi96W0NOmifskXBTjHlw4MrnwVd8n3jhZ/+iI77CQpePD1aYEP2H7Kv8w7p77XdWmTumrMtuos6dp7S4s7K/kefrtcypjopdXZxNcXXsnyqaXsX1DOuK1JSOma+Npn8m9OYAHPfsdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YZh+UM0y; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YZh+UM0y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749809678; x=1781345678;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=LU8OJNzLx7wW8BhbXNUKCKzFrz3qoYbDjTeoITe1lQo=;
-  b=YZh+UM0yhR75t/LhRhUe1cYsLBz+hiC6Kc/PLz1Zph9YT3JtzV5D9zn0
-   ZXT/Bprpi0aDpKP74suWdSTbQiRHuMZuoArGoQkN/AmquvQ6U8U9tbrZB
-   a2mnz3rEBbbCAN6rDzPGaC+mf2dm6jo8NMenoIEcd9qju387Zlr9di0Jw
-   RsoVPYkPWeG44JU/wS3dEh05Y1s0ClD+gMR1lErV5cvfsxid2uOgjbYYb
-   hjJ2Z2C9Cu58MpLh4E2UUFe3FWKvpLycDivEY1Orx3U1oTFoaLtC4HztE
-   ExpAu3/0aovUoh95JGOSLvkgCnscq2My9JaDZqvfIPmN4K/Aox0a086ux
-   A==;
-X-CSE-ConnectionGUID: 9G7AA+edS7CSZU2A1zYt7w==
-X-CSE-MsgGUID: P9uaC1ouRPe6B/8Av82orA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="69595178"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="69595178"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:14:38 -0700
-X-CSE-ConnectionGUID: YMrBMR8eQhaCQbaYzdmuBQ==
-X-CSE-MsgGUID: sq44Qaw3Q5qX+Hgt1/gwuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="178690106"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:14:35 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
- Hans de Goede <hdegoede@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20250529181831.work.439-kees@kernel.org>
-References: <20250529181831.work.439-kees@kernel.org>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Handle KCOV __init vs
- inline mismatches
-Message-Id: <174980967013.26331.3871583437927541253.b4-ty@linux.intel.com>
-Date: Fri, 13 Jun 2025 13:14:30 +0300
+	s=arc-20240116; t=1749817452; c=relaxed/simple;
+	bh=fPnnAEsFj2pXGJf+KlWLW3/3Btcwm7tHlz6Ibx8xA5w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CAh4IvNiJTyL2IgmfXjL+8eUu3iJRzsC9Qlsw315aVqYrk7ETNuez6JaWDdJEpOsoTABtD/qj6C0p77CvAPK2mH1hPLC7jyr3JeWlKhUP4YXRWZnFiVo/9JRNMp8F45AZYJFYxcxxcO+nLCeGgohNesoBMLi3w/i3EimDPWMEhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-87ecc02528aso555981241.2;
+        Fri, 13 Jun 2025 05:24:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749817448; x=1750422248;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+gnQwem1mwUuekrLA9IOnRJxUiNMrjqNgOKJoIX6WMc=;
+        b=ewxBxII6bbnv/Y1Duv/dFw3ifYb2s5qPn7+BGMiqQUreMnq4UKvL7RQLdUdHL3m62g
+         N4iMX6C85uaNKeQUFga+AXcldmIO7Tyexcnb0+bIyFWn4dQ+vps8SZC3/7qS04/jSLO2
+         W0b8+x5hTCcedN9QD2QVr4WYnniVT/jW1sUDSb4AMK+3f0tSG0mTTPRwKXh78xztP9/M
+         LVL9SPjeYb4KJiPbFdfjWs1lPZFxz0RUWv/oWabaa5uAPWmYV03rrOAK2TqJrjtZS6fh
+         I/OZlOexfMozlQhSPBeczDQl032hXZi7s90uOCVtCiRZVNgDaIhYlPj1gzxp2QVX8Vd9
+         pULw==
+X-Forwarded-Encrypted: i=1; AJvYcCW0DCnJUH4yhjGgDbAZ2LMI/y8H8TN/Jy2LMR3TX0qtP6hksDSZOYkcsy7+uFnao15WnxFkxkDyqWwSazurx0Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7xeXxIHnTLZxdaYPpns3BK+NVNm51Zf9o4rm6YtQsVTcHSwN/
+	MYyLThIKzv5d1glnz507EHD0h2f80G6DSmfmS741KJWaRfGO7dUlcFwAPkkvit6D
+X-Gm-Gg: ASbGncvT3H3X9vLyuX/k71mO3Kz5gQdVTzZhINLvPO8bXBKC5zUne5jns8mJTWfDXbO
+	HaHttg0XnAYrqgwJw6tfDtQpLQ41l9AN1sBCKiieooFCqEjOATbAvbr4iFBbPaJvwpYtvx/tDOu
+	QBVH6LGPMCSfbyfOi5tBmeaulcJ+UaooViJ4U5B/FP6MwsVW3t/5uD3B9Fwg5NutEBHUTtuKRg1
+	qyv5lVTaqi8tk62bE5AEcu+i31I77+HGHWcTDdlYIJxQuJ5BavomOpZb5z3jAMGAGtuZL/baGhv
+	P5QTsYWTgM7gOjknRazu4ZIIG45gGtdgehHSEs0mI1oYfG+YEWS1MjKACpmcAkB8j0riMW55fx/
+	MVWlhSEE//HCTwBZXASiFnqKk
+X-Google-Smtp-Source: AGHT+IFMPq+oCs/ySFYCvKM3KjyKfmz2izhhckrF9F9YHz2Wywnm+NrY3X07VRcrmQ9Ni/98MJu6OA==
+X-Received: by 2002:a05:6122:2912:b0:531:2afc:461b with SMTP id 71dfb90a1353d-5313ca4d013mr1918776e0c.4.1749817447817;
+        Fri, 13 Jun 2025 05:24:07 -0700 (PDT)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5313dd849fdsm202402e0c.3.2025.06.13.05.24.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 05:24:07 -0700 (PDT)
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4e7b9cbd19dso535500137.3;
+        Fri, 13 Jun 2025 05:24:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUJ/ly60PuH898m2oD+kQke0Hme8LhqG9C6ce689295CnrTRaa2KMJkKsb+aUvcgYFgUDZOQ2wq5I2p6cNmA6U=@vger.kernel.org
+X-Received: by 2002:a05:6102:6a96:b0:4e5:a394:16cb with SMTP id
+ ada2fe7eead31-4e7e3913affmr1776882137.7.1749817446838; Fri, 13 Jun 2025
+ 05:24:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+References: <20250611093934.4208-1-wsa+renesas@sang-engineering.com>
+ <20250611093934.4208-5-wsa+renesas@sang-engineering.com> <aEmws+OtHirrUPUo@lizhi-Precision-Tower-5810>
+ <aErqY0QWMRdC7Pvg@shikoro> <aEsDj5Vcb4zFJFlo@lizhi-Precision-Tower-5810> <aEvyfM42WTKENbFO@shikoro>
+In-Reply-To: <aEvyfM42WTKENbFO@shikoro>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 13 Jun 2025 14:23:55 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXW_4gHSTo0roNUpBrq2gLVBK=6zY_=rhh8OP85KJdqTg@mail.gmail.com>
+X-Gm-Features: AX0GCFud3FpU7j3L5lRkGCpi0azPf9mSlrHfr1677jlPzJNObQkb7btaZ7k73WA
+Message-ID: <CAMuHMdXW_4gHSTo0roNUpBrq2gLVBK=6zY_=rhh8OP85KJdqTg@mail.gmail.com>
+Subject: Re: [PATCH RFC 4/7] i3c: add driver for Renesas I3C IP
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org, 
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-i3c@lists.infradead.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 29 May 2025 11:18:37 -0700, Kees Cook wrote:
+Hi Wolfram,
 
-> When KCOV is enabled all functions get instrumented, unless the
-> __no_sanitize_coverage attribute is used. To prepare for
-> __no_sanitize_coverage being applied to __init functions[1], we have
-> to handle differences in how GCC's inline optimizations get resolved.
-> For thinkpad_acpi routines, this means forcing two functions to be
-> inline with __always_inline.
-> 
-> [...]
+On Fri, 13 Jun 2025 at 13:41, Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> > Sorry, linux-i3c mail list always delay your post, did you register linux-i3c
+> > mail list.
+>
+> I did subscribe. I receive mails and my patches using git-send-email go
+> through directly. My responses to mails are always held back just saying
+> "suspicious header". But I don't know what is "suspicious", so I can't
+> work on it.
 
+Perhaps your overly-long Mail-Followup-To:-header?
+When replying to your emails, I always have to prune the To-recipients...
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+> I am going to the I3C Plugfest in Warszaw in 10 days. I could ask people
+> there...
 
-The list of commits applied:
-[1/1] platform/x86: thinkpad_acpi: Handle KCOV __init vs inline mismatches
-      commit: 6418a8504187dc7f5b6f9d0649c03e362cb0664b
+Amazing ;-)
 
---
- i.
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
