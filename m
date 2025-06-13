@@ -1,107 +1,96 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A34291C2E;
-	Fri, 13 Jun 2025 12:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C89A16D9BF
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Jun 2025 13:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749817452; cv=none; b=hfUamTq0rB6Mc8Opt7CeeXW3qXAr7Y1nx9HK7fpuZhdZoHUnK0Hj2zAWY1yQJrjh5pei2IXQuE6iO4hQ1KSVFSUk0Bk8VCEnsVzShwXgAli7SZj9zObTfvOpqfnCnAdguKKDSrFucxCGfuKppXbhRNOO3ZpPckKMbzNNucNeaAY=
+	t=1749820259; cv=none; b=ZvcBZeOWc2KP/u0FeKi7IxLaPZQso8mWcTE4PxblqDyX1vGz51vklvI7w0wyOE66Y8dFF3ifpSipJbvuGfZIJIgNqMwWiUh3TD3BRAK3Pd3a8juekKWIVQdP2zcmN4ym++h0XTiTMjJKhQ6Tyv5wPO6aFwVgIf3SWPBSnfF0x3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749817452; c=relaxed/simple;
-	bh=fPnnAEsFj2pXGJf+KlWLW3/3Btcwm7tHlz6Ibx8xA5w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CAh4IvNiJTyL2IgmfXjL+8eUu3iJRzsC9Qlsw315aVqYrk7ETNuez6JaWDdJEpOsoTABtD/qj6C0p77CvAPK2mH1hPLC7jyr3JeWlKhUP4YXRWZnFiVo/9JRNMp8F45AZYJFYxcxxcO+nLCeGgohNesoBMLi3w/i3EimDPWMEhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-87ecc02528aso555981241.2;
-        Fri, 13 Jun 2025 05:24:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749817448; x=1750422248;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+gnQwem1mwUuekrLA9IOnRJxUiNMrjqNgOKJoIX6WMc=;
-        b=ewxBxII6bbnv/Y1Duv/dFw3ifYb2s5qPn7+BGMiqQUreMnq4UKvL7RQLdUdHL3m62g
-         N4iMX6C85uaNKeQUFga+AXcldmIO7Tyexcnb0+bIyFWn4dQ+vps8SZC3/7qS04/jSLO2
-         W0b8+x5hTCcedN9QD2QVr4WYnniVT/jW1sUDSb4AMK+3f0tSG0mTTPRwKXh78xztP9/M
-         LVL9SPjeYb4KJiPbFdfjWs1lPZFxz0RUWv/oWabaa5uAPWmYV03rrOAK2TqJrjtZS6fh
-         I/OZlOexfMozlQhSPBeczDQl032hXZi7s90uOCVtCiRZVNgDaIhYlPj1gzxp2QVX8Vd9
-         pULw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0DCnJUH4yhjGgDbAZ2LMI/y8H8TN/Jy2LMR3TX0qtP6hksDSZOYkcsy7+uFnao15WnxFkxkDyqWwSazurx0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7xeXxIHnTLZxdaYPpns3BK+NVNm51Zf9o4rm6YtQsVTcHSwN/
-	MYyLThIKzv5d1glnz507EHD0h2f80G6DSmfmS741KJWaRfGO7dUlcFwAPkkvit6D
-X-Gm-Gg: ASbGncvT3H3X9vLyuX/k71mO3Kz5gQdVTzZhINLvPO8bXBKC5zUne5jns8mJTWfDXbO
-	HaHttg0XnAYrqgwJw6tfDtQpLQ41l9AN1sBCKiieooFCqEjOATbAvbr4iFBbPaJvwpYtvx/tDOu
-	QBVH6LGPMCSfbyfOi5tBmeaulcJ+UaooViJ4U5B/FP6MwsVW3t/5uD3B9Fwg5NutEBHUTtuKRg1
-	qyv5lVTaqi8tk62bE5AEcu+i31I77+HGHWcTDdlYIJxQuJ5BavomOpZb5z3jAMGAGtuZL/baGhv
-	P5QTsYWTgM7gOjknRazu4ZIIG45gGtdgehHSEs0mI1oYfG+YEWS1MjKACpmcAkB8j0riMW55fx/
-	MVWlhSEE//HCTwBZXASiFnqKk
-X-Google-Smtp-Source: AGHT+IFMPq+oCs/ySFYCvKM3KjyKfmz2izhhckrF9F9YHz2Wywnm+NrY3X07VRcrmQ9Ni/98MJu6OA==
-X-Received: by 2002:a05:6122:2912:b0:531:2afc:461b with SMTP id 71dfb90a1353d-5313ca4d013mr1918776e0c.4.1749817447817;
-        Fri, 13 Jun 2025 05:24:07 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5313dd849fdsm202402e0c.3.2025.06.13.05.24.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 05:24:07 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4e7b9cbd19dso535500137.3;
-        Fri, 13 Jun 2025 05:24:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUJ/ly60PuH898m2oD+kQke0Hme8LhqG9C6ce689295CnrTRaa2KMJkKsb+aUvcgYFgUDZOQ2wq5I2p6cNmA6U=@vger.kernel.org
-X-Received: by 2002:a05:6102:6a96:b0:4e5:a394:16cb with SMTP id
- ada2fe7eead31-4e7e3913affmr1776882137.7.1749817446838; Fri, 13 Jun 2025
- 05:24:06 -0700 (PDT)
+	s=arc-20240116; t=1749820259; c=relaxed/simple;
+	bh=l0VgyYB/ZSw1IAdEkULqtGq6LH1Skbo3zycVkQRMxtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dJQTCCEi+TKXZ5wOvSa4pmzbvaUgYrBtZQJcFjBsIH4mps/zf1zQsrwSYFR9bfvBo02CHZLEm3EpKp9yjLc4uBg+ZYldDnJFUAfbUfKxPl/8b+4vWXbpRJPxMPWUWFzH4TTZ+FIdGiBBxa1n4bK54rljl7oMchd1Fd0q+Hqlimo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=LWN+jg3E; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="LWN+jg3E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=l0Vg
+	yYB/ZSw1IAdEkULqtGq6LH1Skbo3zycVkQRMxtI=; b=LWN+jg3E2eQbAW2r+yhd
+	O4Bpm/CZgezWtgvbbg1GNKBXfrJPM/qTnHcQEFtjknfjQgkztR2GXyalOYamHmVg
+	JENDJejLMPtmZBLjWw6BCK7dFMFcsrI1vc/TliFCj/3sKT2iXN5X0UGbuTwyLl8e
+	Q0tKis3epiKb2rxmJELqM4eRUFhA3Dl46nDEUX36/Mss6vi48usvrGBBaL4SbdUs
+	nFpHs0EAxf85QbBTgrQ17711Z6VsW6X03T6YQCLPvD7aXXakX2wkvrfS6/aiEySN
+	8+juIEnVcKdUHPJoD5EUzaZu2+AvVYK14rfaeqTc8m8rvBrgiF71iRE180BrSmLD
+	bA==
+Received: (qmail 245682 invoked from network); 13 Jun 2025 15:10:43 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Jun 2025 15:10:43 +0200
+X-UD-Smtp-Session: l3s3148p1@/DwExnM3jrAujnsC
+Date: Fri, 13 Jun 2025 15:10:43 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>, linux-i3c@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH RFC 4/7] i3c: add driver for Renesas I3C IP
+Message-ID: <aEwjU-uq4XsNzrOO@shikoro>
+References: <20250611093934.4208-1-wsa+renesas@sang-engineering.com>
+ <20250611093934.4208-5-wsa+renesas@sang-engineering.com>
+ <aEmws+OtHirrUPUo@lizhi-Precision-Tower-5810>
+ <aErqY0QWMRdC7Pvg@shikoro>
+ <aEsDj5Vcb4zFJFlo@lizhi-Precision-Tower-5810>
+ <aEvyfM42WTKENbFO@shikoro>
+ <CAMuHMdXW_4gHSTo0roNUpBrq2gLVBK=6zY_=rhh8OP85KJdqTg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611093934.4208-1-wsa+renesas@sang-engineering.com>
- <20250611093934.4208-5-wsa+renesas@sang-engineering.com> <aEmws+OtHirrUPUo@lizhi-Precision-Tower-5810>
- <aErqY0QWMRdC7Pvg@shikoro> <aEsDj5Vcb4zFJFlo@lizhi-Precision-Tower-5810> <aEvyfM42WTKENbFO@shikoro>
-In-Reply-To: <aEvyfM42WTKENbFO@shikoro>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 13 Jun 2025 14:23:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXW_4gHSTo0roNUpBrq2gLVBK=6zY_=rhh8OP85KJdqTg@mail.gmail.com>
-X-Gm-Features: AX0GCFud3FpU7j3L5lRkGCpi0azPf9mSlrHfr1677jlPzJNObQkb7btaZ7k73WA
-Message-ID: <CAMuHMdXW_4gHSTo0roNUpBrq2gLVBK=6zY_=rhh8OP85KJdqTg@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/7] i3c: add driver for Renesas I3C IP
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org, 
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-i3c@lists.infradead.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="X+Zw/Ma7TThVuQ+w"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXW_4gHSTo0roNUpBrq2gLVBK=6zY_=rhh8OP85KJdqTg@mail.gmail.com>
 
-Hi Wolfram,
 
-On Fri, 13 Jun 2025 at 13:41, Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> > Sorry, linux-i3c mail list always delay your post, did you register linux-i3c
-> > mail list.
->
-> I did subscribe. I receive mails and my patches using git-send-email go
-> through directly. My responses to mails are always held back just saying
-> "suspicious header". But I don't know what is "suspicious", so I can't
-> work on it.
+--X+Zw/Ma7TThVuQ+w
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Perhaps your overly-long Mail-Followup-To:-header?
-When replying to your emails, I always have to prune the To-recipients...
 
-> I am going to the I3C Plugfest in Warszaw in 10 days. I could ask people
-> there...
+> Perhaps your overly-long Mail-Followup-To:-header?
+> When replying to your emails, I always have to prune the To-recipients...
 
-Amazing ;-)
+Let's try if this comes through. I told mutt to not add it anymore...
 
-Gr{oetje,eeting}s,
 
-                        Geert
+--X+Zw/Ma7TThVuQ+w
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+-----BEGIN PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhMI08ACgkQFA3kzBSg
+KbYZIhAAg15c5Y44NP6UIZb08GFS9r8HIOSlt3EgKq3SlKYplf47YWrNic/AGYCo
+bri4irl5GndW3ciIjD/wEA1O6l1wBV2NC6ebi1fcoImqAwVB6RpZa/5CtRC1iIim
+YUrXnte0RfKpcKLWBoz/40Q32sSM7Muw+w34d/rEsPEC/dehtf2ePOsjrWhSEP95
+y/Qd0T19GVW0py+aDtqyXSwW/50PgWzDD2+BeHiMliTV1+XO40DgxCOJ58zWKtdq
+QtDvI5JwK8yCEayVea8TDZ6oNiXjfHIPpbkmYJGAU99DepSNI/aaXaLi+G769ju/
+hsDmlRHYAOn833tI013Bal1/qeWD3/GxRlOUKucS7+6Znwyq9tc51JJbtWFPYuad
+/TuGwXJzqtTs/dpkIiTOlC7saiJCY4qqYhroyHqN1ytCSyMPBorC7LSSSjuk6Kk4
+uJlAR+feS381I/URq3DAwS9aDBg7Z7INHFqh3Y/9KOjZ1U2wSsQaOuYY26XKsgb9
+zMkmmWlD5F8sOY8pve/JdaKRphMRHDz6I6TQJ603S0dkmJyTPAf4rh5Kji4dzG27
+b3f/lSeeQ7vlgmtP8xk2G4CRQoHWtQi6/jSk6n9dUsiBlSDwAOQgYe4HLz/RpKUy
+QuNxGppKdSU22gqUcjJqvbT89Q6AnnGJ8OKs2fN+SidwUknFxuQ=
+=5whn
+-----END PGP SIGNATURE-----
+
+--X+Zw/Ma7TThVuQ+w--
