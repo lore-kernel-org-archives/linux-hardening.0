@@ -1,102 +1,88 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB511EB2F;
-	Tue, 17 Jun 2025 01:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414341A5BBE;
+	Tue, 17 Jun 2025 01:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750123785; cv=none; b=Y/gZ7MbmMhglkzJPLhgWvQklyf7vydLic13OdRvJhElm0gBxzIrlggYIUGu2J82Wlpuk3NioSLUiSjHcb9gNBYoBG+Mkxa39t0PZOneE1m73tIyWy2kDlS720OETa7Rpxco57qaaHrMKAgGtqL5Cu4/6k2GiBXjJAzM8jdV9iG8=
+	t=1750124552; cv=none; b=Y6etizOay8OmXkyPita/u0oqTQ+w737g4ByT/0i38SIF4oAba+pbioXJzz31eRBM3ruX4TtaRRw2s3xiSXGwxkLQHeh7uD4TnyiMzywB3GhOSCiqf/pxIIdx5+wUhPHC6TiVFP06H8cn+Jsym3OO6EN69VM0xj1BDQjtv43Phhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750123785; c=relaxed/simple;
-	bh=vxegoV2BgUHnQ0atJz+spQ82J2b82Fix3qd/gZSIPT0=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=h86pJFGd9ff7sJhdfCOQorwoIOhQjwBFy2x7Jc38sw5pZMFfvaRI58KJAsdYw5O6KBQjHmoRQbPSXDiolSC4zRwFSEOaz908y1q6a+2jEXGelDdwe39zeuLavUgaYkhkuX+FSAFqb9iz3wGC9mR6cIW6DcaCcz9Vrdf5a8zY9cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uRL8m-00GzoS-OP;
-	Tue, 17 Jun 2025 01:29:32 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1750124552; c=relaxed/simple;
+	bh=vW8+vb1swfPDo3QTugetg1Qq57hrQn+fLgudj+eQrww=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=emWbR1vyPGTQo/dO1UeAbvg6QtY6x3zWmspx65AmPTJo8Itb090EmYSwhNXUhxQxReXjn6InHD6o74WKr72/kRIIMR30sOc4HyTH1DQAlN8sd6vwMijdIYK3/PVoVKsAz/SnV14lQ3hGV9M+1RM8ycFtjwGONd+iyaxCweYPvPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kj/itKc6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kj/itKc6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E85F1C4CEEA;
+	Tue, 17 Jun 2025 01:42:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750124551;
+	bh=vW8+vb1swfPDo3QTugetg1Qq57hrQn+fLgudj+eQrww=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Kj/itKc6fK83Sk9qIDDIQcbumKnGslbe+PCAbB88N7M50IQh0YM0QxOzfBsFjx7TF
+	 PFlziGG4IdqcmsMcu9ZJAKDEjFjFTm9cRThAN+x+72ClhJDJa6PB4I+8PBCiIWGxnJ
+	 XiMYX55fvUdWyNKB8an/ied+hjnxPVgHjvxyFVc0M2jwMth4Z3D6k5QTMYrvLNTTWk
+	 cyXFgpwXG/dU7xkA0vWgPGz5Z5y/IlNBRicwchFK/1QKfaqaU0BlNxxLJpEmj8yP4g
+	 vWj0nBk5IQFiZG19m1Fpn/eIddC1vw/xSNEO04cRfPCdjVdrxgx/Z5Kl6N8pXnko43
+	 NBnFOWbZTa2bA==
+Date: Mon, 16 Jun 2025 19:42:28 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] stddef: Introduce TRAILING_OVERLAP() helper macro
+Message-ID: <aFDIBBeYgRSx1ekO@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3][next] NFSD: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-In-reply-to: <aFCbJ7mKFOzJ8VZ6@kspp>
-References: <aFCbJ7mKFOzJ8VZ6@kspp>
-Date: Tue, 17 Jun 2025 11:29:32 +1000
-Message-id: <175012377224.608730.8179235443153600742@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 17 Jun 2025, Gustavo A. R. Silva wrote:
-> Replace flexible-array member with a fixed-size array.
->=20
-> With this changes, fix many instances of the following type of
-> warnings:
->=20
-> fs/nfsd/nfsfh.h:79:33: warning: structure containing a flexible array membe=
-r is not at the end of another structure [-Wflex-array-member-not-at-end]
-> fs/nfsd/state.h:763:33: warning: structure containing a flexible array memb=
-er is not at the end of another structure [-Wflex-array-member-not-at-end]
-> fs/nfsd/state.h:669:33: warning: structure containing a flexible array memb=
-er is not at the end of another structure [-Wflex-array-member-not-at-end]
-> fs/nfsd/state.h:549:33: warning: structure containing a flexible array memb=
-er is not at the end of another structure [-Wflex-array-member-not-at-end]
-> fs/nfsd/xdr4.h:705:33: warning: structure containing a flexible array membe=
-r is not at the end of another structure [-Wflex-array-member-not-at-end]
-> fs/nfsd/xdr4.h:678:33: warning: structure containing a flexible array membe=
-r is not at the end of another structure [-Wflex-array-member-not-at-end]
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v3:
->  - Replace flexible-array member with a fixed-size array. (NeilBrown)
->=20
-> Changes in v2:
->  - Use indices into `fh_raw`. (Christoph)
->  - Remove union and flexible-array member `fh_fsid`. (Christoph)
->  - Link: https://lore.kernel.org/linux-hardening/aEoKCuQ1YDs2Ivn0@kspp/
->=20
-> v1:
->  - Link: https://lore.kernel.org/linux-hardening/aBp37ZXBJM09yAXp@kspp/
->=20
->  fs/nfsd/nfsfh.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-> index 5103c2f4d225..760e77f3630b 100644
-> --- a/fs/nfsd/nfsfh.h
-> +++ b/fs/nfsd/nfsfh.h
-> @@ -56,7 +56,7 @@ struct knfsd_fh {
->  			u8		fh_auth_type;	/* deprecated */
->  			u8		fh_fsid_type;
->  			u8		fh_fileid_type;
-> -			u32		fh_fsid[]; /* flexible-array member */
-> +			u32		fh_fsid[NFS4_FHSIZE / 4 - 1];
->  		};
+Add new TRAILING_OVERLAP() helper macro to create a union between
+a flexible-array member (FAM) in a struct and a set of additional
+members that would otherwise follow it.
 
-Thanks.  I think this is a good and simple solution.
+Co-developed-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ include/linux/stddef.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-Reviewed-by: NeilBrown <neil@brown.name>
-
-
->  	};
->  };
-> --=20
-> 2.43.0
->=20
->=20
+diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+index 929d67710cc5..635513ff2829 100644
+--- a/include/linux/stddef.h
++++ b/include/linux/stddef.h
+@@ -93,4 +93,24 @@ enum {
+ #define DECLARE_FLEX_ARRAY(TYPE, NAME) \
+ 	__DECLARE_FLEX_ARRAY(TYPE, NAME)
+ 
++/**
++ * TRAILING_OVERLAP() - Overlap a flexible-array member with trailing members.
++ *
++ * Creates a union between a flexible-array member (FAM) in a struct and a set
++ * of additional members that would otherwise follow it.
++ *
++ * @TYPE: Flexible structure type name, including "struct" keyword.
++ * @NAME: Name for a variable to define.
++ * @FAM: The flexible-array member within @TYPE
++ * @MEMBERS: Trailing overlapping members.
++ */
++#define TRAILING_OVERLAP(TYPE, NAME, FAM, MEMBERS)				\
++	union {									\
++		TYPE NAME;							\
++		struct {							\
++			unsigned char __offset_to_fam[offsetof(TYPE, FAM)];	\
++			MEMBERS							\
++		};								\
++	}
++
+ #endif
+-- 
+2.43.0
 
