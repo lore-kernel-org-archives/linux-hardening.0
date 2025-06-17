@@ -1,88 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414341A5BBE;
-	Tue, 17 Jun 2025 01:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAD228C2C7;
+	Tue, 17 Jun 2025 07:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750124552; cv=none; b=Y6etizOay8OmXkyPita/u0oqTQ+w737g4ByT/0i38SIF4oAba+pbioXJzz31eRBM3ruX4TtaRRw2s3xiSXGwxkLQHeh7uD4TnyiMzywB3GhOSCiqf/pxIIdx5+wUhPHC6TiVFP06H8cn+Jsym3OO6EN69VM0xj1BDQjtv43Phhg=
+	t=1750144363; cv=none; b=bFdoQZ1XYATX6pnxncrXgJG14Tf7hD/C7dHW5+uFkHUtD4lpFiyif3Go52C1invsnVopFWjXReOwcqOp408SsaFJTVuUFo1BVLX2qZb4Vd2lFl5RiYbJQl7uw18YFf3lG3Wuo0dd+SMSs+na+2bXeKWSJ1z6wRuqcxYJHljYnv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750124552; c=relaxed/simple;
-	bh=vW8+vb1swfPDo3QTugetg1Qq57hrQn+fLgudj+eQrww=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=emWbR1vyPGTQo/dO1UeAbvg6QtY6x3zWmspx65AmPTJo8Itb090EmYSwhNXUhxQxReXjn6InHD6o74WKr72/kRIIMR30sOc4HyTH1DQAlN8sd6vwMijdIYK3/PVoVKsAz/SnV14lQ3hGV9M+1RM8ycFtjwGONd+iyaxCweYPvPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kj/itKc6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kj/itKc6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E85F1C4CEEA;
-	Tue, 17 Jun 2025 01:42:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750124551;
-	bh=vW8+vb1swfPDo3QTugetg1Qq57hrQn+fLgudj+eQrww=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Kj/itKc6fK83Sk9qIDDIQcbumKnGslbe+PCAbB88N7M50IQh0YM0QxOzfBsFjx7TF
-	 PFlziGG4IdqcmsMcu9ZJAKDEjFjFTm9cRThAN+x+72ClhJDJa6PB4I+8PBCiIWGxnJ
-	 XiMYX55fvUdWyNKB8an/ied+hjnxPVgHjvxyFVc0M2jwMth4Z3D6k5QTMYrvLNTTWk
-	 cyXFgpwXG/dU7xkA0vWgPGz5Z5y/IlNBRicwchFK/1QKfaqaU0BlNxxLJpEmj8yP4g
-	 vWj0nBk5IQFiZG19m1Fpn/eIddC1vw/xSNEO04cRfPCdjVdrxgx/Z5Kl6N8pXnko43
-	 NBnFOWbZTa2bA==
-Date: Mon, 16 Jun 2025 19:42:28 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] stddef: Introduce TRAILING_OVERLAP() helper macro
-Message-ID: <aFDIBBeYgRSx1ekO@kspp>
+	s=arc-20240116; t=1750144363; c=relaxed/simple;
+	bh=0ZvkLgWdTVoVsHyt/50pZjOCSEl6fxkinMVnmzzuyLM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mZk6NcCvLQFnWmZJPBEbRMUYeLSoFEVGhIXoMwVLCoHEgB6xHFRY98LucoIC+T1eHvAuagit59VuwLtQ4gz6dvTNE6AR0LCHS+dT/6Qts6j3Ab5RHOTqBru8eZ5fLlttEs7OpluP02q8E9wnnAHFe7kwkLRDjvmjyvdE7MO/X/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5315acf37b6so620345e0c.2;
+        Tue, 17 Jun 2025 00:12:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750144359; x=1750749159;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=61Nmvul6W8ekOE7+MmxAVOB45wapNmCLHpMau5XL4H0=;
+        b=atykW+qVRpHI5PmgLqiftvmxRNqY/2iWnm56gWD9zjgMeYqgaWBylutmFs0Yxv7Xzd
+         /Fk1elljbuFMDmc8hr8gCsnQzjb9coAfeqIRqMlCuySM0tSf5zJK8QQYWdGpTUbhG7kA
+         vU3lkFUqCTYnloj7Eaks80I9LsWl+cGTohx6kGthl0bkBD10EnJvowBtUUiWaf79NOkE
+         6zC9slzJLglisGXn2Oor3veiMgxOGu/W2kHVq9YdRjebyVIQMpNkFUjAV80BKnCWHAMz
+         VYPAM5NUZUKov357HpuWmdkj95/cm/7jc0TWrizjBEKr+NfBx+WzrzjwRt97DPrY409W
+         JkCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDsA81LDsuW7WCmo4AgQoZB5dCpHx6i30BsoBQuwhbWi9v6dgVAnnoky1HEVe7TjOA6jGGw6eWDldNeYB30fs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRbKBX5Udp3hma0iIt01fUr7ZbZm2w1Z4Rrj3nlQLX6n7zFAl4
+	D6LP3eMuJB1hQ8eZZJpSVTbxX9LBlrR1bYV6nyYBiTOQq05OmZFCZ/BIG+YxD5qK
+X-Gm-Gg: ASbGncusHeJH8WKj0Hs1pmNxN4Pl8HLhJ4YNimH7TRwQPmWO4cliC96pFZEJJxqRH6a
+	j1oDqTvILWwtn2e9lDpy4ZxSakW3z8LcaDJS/aLGAH1W/FPD0qqKEelnfE/82MfWxoPScbIuL/Z
+	LwbQkRuPOTH9bBMq6SxTW1i0VrrAbpBgnrtTWN26qCZn9Xq8Rc0Rq7IseKY614soUTJQrCMVp52
+	UxEKQSA+obsU5Y0mBqL/KUHbeixuTdQ6KD9shuiEx9h3PhfJlA4EAcO9IXH7x5LdMXfmMHYYIYO
+	/6hD/CAIAeSXvI7hNUS1+vQL8U5/QrZYNU6SLzTEI2QqdYAZ/8HUJCYqYMfas6IuRmQ+IwM8289
+	hYCOJJG9eI479It1Qo7kd7ixj2B6Ar+SwhHE=
+X-Google-Smtp-Source: AGHT+IGTSh50xfm440MU+tVE2YbvTaJaIzc+Y8oyl8fs2ugWx3ed26fRB1lx6nR9YyzkSRTnWkQKkg==
+X-Received: by 2002:a05:6122:3c51:b0:530:81ac:51be with SMTP id 71dfb90a1353d-5314968c4f9mr6983365e0c.8.1750144358700;
+        Tue, 17 Jun 2025 00:12:38 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5313dddc610sm1560628e0c.15.2025.06.17.00.12.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 00:12:37 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e7eefcbf08so871671137.2;
+        Tue, 17 Jun 2025 00:12:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWfY+ppWO9bbb1o9sqxuKW6O8PoQ9buR83roppvFdYaliLyLKPRKUjelCiuT7UfnW8LjezoTkb//7s8B2LccVk=@vger.kernel.org
+X-Received: by 2002:a05:6102:c8f:b0:4e5:59ce:4717 with SMTP id
+ ada2fe7eead31-4e7f614b8femr7832472137.9.1750144357283; Tue, 17 Jun 2025
+ 00:12:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250611093934.4208-1-wsa+renesas@sang-engineering.com>
+ <20250611093934.4208-5-wsa+renesas@sang-engineering.com> <aEmws+OtHirrUPUo@lizhi-Precision-Tower-5810>
+ <aErqY0QWMRdC7Pvg@shikoro> <aEsDj5Vcb4zFJFlo@lizhi-Precision-Tower-5810>
+ <aEvyfM42WTKENbFO@shikoro> <CAMuHMdXW_4gHSTo0roNUpBrq2gLVBK=6zY_=rhh8OP85KJdqTg@mail.gmail.com>
+ <aEwjU-uq4XsNzrOO@shikoro>
+In-Reply-To: <aEwjU-uq4XsNzrOO@shikoro>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 17 Jun 2025 09:12:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWOxBfwwXUpYpmB30Zpqdwgwa2d=hXQyYVsoAD0bN4seQ@mail.gmail.com>
+X-Gm-Features: AX0GCFvUnS4t6z_q3W1IAT-fQyHXax5-N9-bx5_cemKOClJecGyaB9RpDeXkPO0
+Message-ID: <CAMuHMdWOxBfwwXUpYpmB30Zpqdwgwa2d=hXQyYVsoAD0bN4seQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 4/7] i3c: add driver for Renesas I3C IP
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org, 
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-i3c@lists.infradead.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add new TRAILING_OVERLAP() helper macro to create a union between
-a flexible-array member (FAM) in a struct and a set of additional
-members that would otherwise follow it.
+Hi Wolfram,
 
-Co-developed-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/linux/stddef.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+On Fri, 13 Jun 2025 at 17:15, Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> > Perhaps your overly-long Mail-Followup-To:-header?
+> > When replying to your emails, I always have to prune the To-recipients...
+>
+> Let's try if this comes through. I told mutt to not add it anymore...
 
-diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-index 929d67710cc5..635513ff2829 100644
---- a/include/linux/stddef.h
-+++ b/include/linux/stddef.h
-@@ -93,4 +93,24 @@ enum {
- #define DECLARE_FLEX_ARRAY(TYPE, NAME) \
- 	__DECLARE_FLEX_ARRAY(TYPE, NAME)
- 
-+/**
-+ * TRAILING_OVERLAP() - Overlap a flexible-array member with trailing members.
-+ *
-+ * Creates a union between a flexible-array member (FAM) in a struct and a set
-+ * of additional members that would otherwise follow it.
-+ *
-+ * @TYPE: Flexible structure type name, including "struct" keyword.
-+ * @NAME: Name for a variable to define.
-+ * @FAM: The flexible-array member within @TYPE
-+ * @MEMBERS: Trailing overlapping members.
-+ */
-+#define TRAILING_OVERLAP(TYPE, NAME, FAM, MEMBERS)				\
-+	union {									\
-+		TYPE NAME;							\
-+		struct {							\
-+			unsigned char __offset_to_fam[offsetof(TYPE, FAM)];	\
-+			MEMBERS							\
-+		};								\
-+	}
-+
- #endif
+Thanks, much better!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.43.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
