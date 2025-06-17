@@ -1,183 +1,178 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684C61465A5
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Jun 2025 09:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981EE21C9FF;
+	Tue, 17 Jun 2025 10:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153373; cv=none; b=fkY/omFyM9Kkm05asm0mL1gCT75Hh0+HeeGfvZp8sWgOCNfUGtIaJff0pZS6++SFAv9YKXudk+f22hH/4MhyEI3i5oQvsr7ywtpuEVkzw/7WrHHWG9nfUvrh8dRgeHVBHgVdgGPdY5IOHfCGvRJWSVTvL5v0+jubkS0LvB/MFZ8=
+	t=1750157837; cv=none; b=QotS+I8yOXqUW+j7yXCGnIZErQgt6oH+3zR9dPo+gMvehO/XJ9kw3UfIriiuKMdsbO9r7FMK4khHROWjGY3FBnYAvf4IW9I4WxTEH1aoCaS9c/361eU5Mhd72UyqxansPsrilnSiGxexcrg/R9h91Ot2RhPGMfh8clIN4i64/UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153373; c=relaxed/simple;
-	bh=xaE/PMeoOICl6xRLwJIOUDitFaeMYrwS0QlpB2Bo+gs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sLVHk3WDd2h7uJbzLKRwQUm+a6ihzpnTc0uRyDtTr1Fa10aboQVOL4DCY9eb3vug0cH5z+REge+q++qoopAgedzlaNo/OsmZfwDc3ew/enKnT6mmqYWPZ6GeIoYYbn30p+/9aYA5RQdc/OHpIJAWcd/Mgmjwgbr8peiNY7zha4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=GMWwKYhN; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1750157837; c=relaxed/simple;
+	bh=NmzERQxeC+Wf2VWr+OrNl8OC5PXA5OvyS6pPpgJXa/s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tXjW9rZayHTM7offhIFiRh9/9zRXeXbr34fMV1l0q1Oo1JU1ABJzTVfLTlskCuCv37ClP7rTEgMiFCCC4W491+UUTvxidWE1m/m04/NDQAcYQlGU3QkaeRvMwTE3BkcJkU04qIo5RJHMmbsUH/f6jatfZG0XRrXH3ZLXWj7J9/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0hzfsPK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="GMWwKYhN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=5Nu8
-	wYWOVF85nemsZ/25+lLkQ0qafeZ231O7LDkXoXY=; b=GMWwKYhNyjWQbrAjDmk5
-	ALhySfdH2SBIbpPrN8OF+qNr1gBtkbZJX8LFYfK0+mvERoiUyg8Sbr61qzDZxFo5
-	sI+MtnwhzKTEkqvoymiGms1zmu45ImFhL3h0JQ3WkVjqyCJ8rwWz2PCnYB5nIMOW
-	GUDJ6G1BQgWI74qThx9sNu9/9l+opUdzuy3HZXnyQULuWZ5gDVGfeTx6TVPbnMzJ
-	DTH/XbxMkExkjRa3z558hQgmzJ545MEnaOIlY99pa8cTfthHsZcXlG0moC6PHhLO
-	SM0PSqTVLZ2FZeNaBWbVUXi1/Thx7EdNVOWlVyTj0HWPbOedMggO8bIohfWxFB7J
-	4g==
-Received: (qmail 1600317 invoked from network); 17 Jun 2025 11:42:40 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 Jun 2025 11:42:40 +0200
-X-UD-Smtp-Session: l3s3148p1@Vc1UVcE3DtUgAwDPXy2/ACpZfVCNKldR
-Date: Tue, 17 Jun 2025 11:42:39 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, linux-i3c@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0hzfsPK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ACF6C4CEE3;
+	Tue, 17 Jun 2025 10:57:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750157837;
+	bh=NmzERQxeC+Wf2VWr+OrNl8OC5PXA5OvyS6pPpgJXa/s=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=p0hzfsPK4/Yb2c8CGIiL6DAnK1zyOrJJc2OmgspqEekT3SP2COHx7lr9H5a0/PjZ7
+	 /2wo08+//cLL+UDwNAJTkDuoBQ1yQNchmOv8DiNw95ueP6+7+73Ls+GuTQsfTgVcYA
+	 WQ6SDRwzQJfZJE8eXCPTD10tVDH0Rpfd9acjTK3tL3j5zJi7HmQ2tf1dydu/8F04Bb
+	 SdkV5ztUzdgJK4y62kFyk97PBoK0YhsYYBtyjVgypVIN/iWaDB7LDRm7i1C6mmjn++
+	 Z2n3PFTsFem52v5xmoMG7p5wczJ5wX7CC33CxzPdkoa7wywE/eVG+UY8OoqoItcAYs
+	 wV29K041vspUA==
+Message-ID: <0ce7c86caaa57d879ef85471414f80692212a6c6.camel@kernel.org>
+Subject: Re: [PATCH v3][next] NFSD: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+From: Jeff Layton <jlayton@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Chuck Lever	
+ <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH RFC 4/7] i3c: add driver for Renesas I3C IP
-Message-ID: <aFE4j86NaZcMvxBF@shikoro>
-References: <20250611093934.4208-1-wsa+renesas@sang-engineering.com>
- <20250611093934.4208-5-wsa+renesas@sang-engineering.com>
- <aEmws+OtHirrUPUo@lizhi-Precision-Tower-5810>
+Date: Tue, 17 Jun 2025 06:57:15 -0400
+In-Reply-To: <aFCbJ7mKFOzJ8VZ6@kspp>
+References: <aFCbJ7mKFOzJ8VZ6@kspp>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ty0/U/BdEFVy0pZE"
-Content-Disposition: inline
-In-Reply-To: <aEmws+OtHirrUPUo@lizhi-Precision-Tower-5810>
 
-
---ty0/U/BdEFVy0pZE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-some status updates...
-
-> It is similar ADI version. Can you simple descript hardware behavor to sh=
-ow
-> why need RENESAS_I3C_MAX_DEVS,
-
-I hope the documentation links I sent were helpful.
-
-> Add common header in drivers/i3c/master/core.h implement inline helper
-> function
-
-I decided to handle this incrementally. I need to work on the real show
-stoppers first, I'd say.
-
-> #define PRTS                 0x00
-> #define  PRTS_PRTMD          BIT(0)
+On Mon, 2025-06-16 at 16:31 -0600, Gustavo A. R. Silva wrote:
+> Replace flexible-array member with a fixed-size array.
 >=20
-> Add extra space help distinguish register and field define.
-
-Done.
-
-> > +#define STDBR			0x74
-> > +#define STDBR_SBRLO(cond, x)	((((x) >> (cond)) & 0xff) << 0)
-> > +#define STDBR_SBRHO(cond, x)	((((x) >> (cond)) & 0xff) << 8)
+> With this changes, fix many instances of the following type of
+> warnings:
 >=20
-> FIELD_GET FIELD_PREP
+> fs/nfsd/nfsfh.h:79:33: warning: structure containing a flexible array mem=
+ber is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/state.h:763:33: warning: structure containing a flexible array me=
+mber is not at the end of another structure [-Wflex-array-member-not-at-end=
+]
+> fs/nfsd/state.h:669:33: warning: structure containing a flexible array me=
+mber is not at the end of another structure [-Wflex-array-member-not-at-end=
+]
+> fs/nfsd/state.h:549:33: warning: structure containing a flexible array me=
+mber is not at the end of another structure [-Wflex-array-member-not-at-end=
+]
+> fs/nfsd/xdr4.h:705:33: warning: structure containing a flexible array mem=
+ber is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/xdr4.h:678:33: warning: structure containing a flexible array mem=
+ber is not at the end of another structure [-Wflex-array-member-not-at-end]
 >=20
-> check other define
-
-Done. Also with GETMASK
-
-> > +static inline void i3c_reg_update(u32 mask, u32 val, void __iomem *reg)
-> > +{
-> > +	u32 data =3D readl(reg);
-> > +
-> > +	data &=3D ~mask;
-> > +	data |=3D (val & mask);
-> > +	writel(data, reg);
-> > +}
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v3:
+>  - Replace flexible-array member with a fixed-size array. (NeilBrown)
 >=20
-> can you move reg to first argument to align below help function?
-
-Done.
-
-> > +out:
-> > +	kfree(xfer);
+> Changes in v2:
+>  - Use indices into `fh_raw`. (Christoph)
+>  - Remove union and flexible-array member `fh_fsid`. (Christoph)
+>  - Link: https://lore.kernel.org/linux-hardening/aEoKCuQ1YDs2Ivn0@kspp/
 >=20
-> you can __free(kfree) xfer =3D NULL at declear to avoid this goto branch.
-
-Do you insist on this? It makes the driver less consistent because there
-are other 'out'-branches with kfree() in them which we need to keep
-anyhow, because there are more instructions needed. I can do the change
-if you want but I personally would prefer to leave the code as is.
-
-> > +		if (!i3c_xfers[i].rnw && i3c_xfers[i].len > 4) {
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/aBp37ZXBJM09yAXp@kspp/
 >=20
-> Only pre fill fifo when len >4? what happen if only write 1 byte?
-
-That was a really good catch, thank you! I think the code is completely
-redundant because we fill the FIFO again at a later time. Then, also
-handling the case of < 4 bytes correctly. Sadly, I can't test this with
-my current setup right now. I hope to have tested this by next week.
-
-> > +		if (!wait_for_completion_timeout(&xfer->comp, XFER_TIMEOUT))
-> > +			renesas_i3c_dequeue_xfer(i3c, xfer);
+>  fs/nfsd/nfsfh.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> This may common problem, I3C spec have 100us timeout, target side may
-> timeout when driver wait for irq. So target side treat "repeat start" as
-> "start" and issue address arbitration.
+> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+> index 5103c2f4d225..760e77f3630b 100644
+> --- a/fs/nfsd/nfsfh.h
+> +++ b/fs/nfsd/nfsfh.h
+> @@ -56,7 +56,7 @@ struct knfsd_fh {
+>  			u8		fh_auth_type;	/* deprecated */
+>  			u8		fh_fsid_type;
+>  			u8		fh_fileid_type;
+> -			u32		fh_fsid[]; /* flexible-array member */
+> +			u32		fh_fsid[NFS4_FHSIZE / 4 - 1];
+>  		};
+>  	};
+>  };
 
-As said, I will try to discuss this at the I3C plugfest.
-
-> > +	i3c->addrs[pos] =3D dev->info.dyn_addr ? : dev->info.static_addr;
->=20
-> Are there extension of "?" operator in C ? I remember
-
-As agreed, I will keep this.
-
-> > +		ret =3D devm_request_irq(&pdev->dev, ret, renesas_i3c_irqs[i].isr,
-> > +				       0, renesas_i3c_irqs[i].desc, i3c);
-> > +		if (ret) {
-> > +			dev_err(&pdev->dev, "failed to request irq %s\n",
-> > +				renesas_i3c_irqs[i].desc);
-> > +			return ret;
-
-I removed the printout comepletely. No need to do it for irqs.
-
-I plan to resubmit the non-RFC version next week after the plugfest.
-Fingers crossed.
-
-Thanks and all the best,
-
-   Wolfram
-
-
---ty0/U/BdEFVy0pZE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhROIsACgkQFA3kzBSg
-KbZ/Xw/8DX5jexSQzPCertcmZdvx2WFQht/3bF3fEGKe2TolB3N7T6+8ufA4IKTR
-66mcTrw/JX+hmPbyxFb4ycfNiczSJ2JwhM8r4Wi+29DKO5VN5Ijp77eGASXlCUOz
-9jQKbz8pbFY9X6yCY8YZGS8KWGA0Uy4icKY8tnGmtOgWg7A98fYOk5zN6YY3L1Ua
-P92qa55YKSdduD5P1oWWxg7xdwKGztgwuhts4ImslmMjR8DaTROHuDUGWbA4A981
-nUoqoZ4bTvszO7ANJ76Vi0blUVZd6uPC5IMfg246/r5fXWtMtPUArWQ5tsrGgj4p
-vAzQ3Scx5dgNTtfVJ+aVR80+LYO4RHkXzV8UGmZpb/FDo06qtNyXbayCF1m+kDC9
-KvieuLnfsZro5T6WjeAjDs97CCnf0Q6MP0HPbiHUGxr5DBL/fUGxCI5W7nNJE5Q2
-IlU8vJev+xu1Gs5IYoemJvpquiVP/dDiTW8cOfJzW9EsQyypseasCSf2QrzMHkNT
-hoDiGo0Op/gV6YZ7Kq0t1qNfHM5vMI1fnki7YIo4oZduPWlzhUleb+FCjQJosfQl
-ypC0WYwprqZYVzX51d3EderVsu4o87OeydEa72ctv2gp4WD80lJwbxOwO9BHFAOT
-UChANBnupaV93h/WDysb5jB8ZCgE0laQ8m2Z/+Y4KGvW4Qj2gtg=
-=gPHu
------END PGP SIGNATURE-----
-
---ty0/U/BdEFVy0pZE--
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
