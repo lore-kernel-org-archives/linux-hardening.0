@@ -1,108 +1,97 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C462E7193
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Jun 2025 15:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A92C2EF9A6;
+	Tue, 17 Jun 2025 19:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750172599; cv=none; b=QWN5XDeWQhxfPxXIjPP3NgDbgKvHVcgcNb2Zk/Zv1aENaA8bEdrdWZKwInOAkKFL/RxvFg9y48ONQ2jLO6dhDYb6SPVdHvJPC+W9eIvV1ad6ClmQf0hJX6GUTV1pFLPaDuLYwKXTZDGSuxvWtDOSgscix1ADCA6AYYrXg7/HaKw=
+	t=1750187140; cv=none; b=qQVEMJuH3ayO7wTeyAjKbwWlqx6BLeCPfP6/2m0I2+UjJ7FYhUPfw31+4MOzlF5f1lLpWoz/Qn6q9pxpSjPqXmPYwDg7q25ZYYc6RLjR6qeax/tkkq1shkFXOYWNZOtnsJ/x4OXpMg29YkNvYKTYJHPGp5fS2o9d4gTLyapcqDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750172599; c=relaxed/simple;
-	bh=cBM0bl1EYdw9m/LmJstocm95QTHjddRw6azuJUPFwDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aom8Fd1kPY5iGp/RVGvoKTfrvSY6BBtM0n0B+9MGVPulfaKPMGtAvlBNDGufkh/liSpXMI8mdWodUjE4N2++IvXl9o+FNvzop9NlatdR2Uwry2VOoSX3uK4nLY/qmtzZxe/bnkEvlDsMt30KBBEiOMlrQqFZsqq8fsSi8kBFyJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EkwSVAMl; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1750187140; c=relaxed/simple;
+	bh=dbDKOsBz9dJlbqgtvG7nKkHg1onXG2S9EsH8HaBLgGE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=e6wpqFmhyvrbZG8kXBiNETm/Cr+omIBlDQMZOYi1Tvc01AJ3Fz9FfJ2egRtnG7UAizQDHDeOYw4jBmwPuukrIUCjwKnQ/OSeJiPzMYfcQKemACtQQ5ocT0ZZbBqbKKVvuml3+cl4fqds0G8GLvowejUhMRdcqhqqv6a5KuSJENg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bF6/B995; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EkwSVAMl"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553b16a0e38so5135605e87.1
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Jun 2025 08:03:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750172593; x=1750777393; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8kro4RJTLnz5wiZbHdQt1ebP7niZRblh94LfQW2yVq0=;
-        b=EkwSVAMlRBSjPuoOcaegUSjDri7TcwkfKlGbxzHLxsNqdFQYhf65Gysr5/tcshqAck
-         w632tqJ34b+XmkddFD8zusqZvw48kyyA+1+DIJnOvY0+iq7G7j74P882Br7/n1hgC89M
-         dhxL7Qoo0F+qdb/mbXIB8GGgIU2VfxnfyFXykn2I0UtfvTWJtk8tCfcCXxp6Wkc0dxRs
-         ZZlduppDxt09Azdbtgf9bYaU2LKHtZOLDOaQ5DZYfyUCRqNZ4K1YeTZKfhU4IzoOLzUk
-         9rjwiVG9/efaGh35N8pSs7uLhER4tVbKN2hzKQKUg1x5ADTHHmU1FzkvyzRXPn2owuk1
-         8WyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750172593; x=1750777393;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8kro4RJTLnz5wiZbHdQt1ebP7niZRblh94LfQW2yVq0=;
-        b=RVdTu1BRpjxdaRhwIXSFbDvN9UyPTJOnGNKdz12LvfMn0ZryTI72yRYCmttT7bCTPX
-         PcLdedZSwTH8EgXdzHWfBPkV2mYHT+zIEfy25+v2fkszuxzhRt+d/kiPxFpbCaWYUKV6
-         zrEVATw1qDOSt/aOqCA922sHBhSqbRGPkXc0IPmI8dbdiRpS3MN8SvpWYaD7ia2wCSCU
-         Z2VTOWzN8Zr6VPpaoRNDuAl+nHEbOei6APJBkPkRZx4pNmXeAPvSNxXEZulxa86dG4Bz
-         8018EfuFPu5uGMT0uEvPpqj86luV7zzZJgXVNFF7oJf56RQQ1tGvCQ8VCco9R3551KSf
-         xG1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUyK/DAXjiY4/rbfIJq7Rz9vZm3Rc6AyfA7Zbd3gaS11J3RvSrRSB8y+TeN4e3v3U+5wl9ckEMotHGrGYDaGTk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTBFcOb5UAtProOo+MwcJnshqB+b3W0KdHWMSXWF9aHzepEH8R
-	qpMmOlp4824C/hd+pybXKrT6YBH7FBeyFu2/I/ZWySt9GS3tz/1lY850Rc7wsUFIFa8=
-X-Gm-Gg: ASbGncs0yH8fHGne3uu4jPB1PvVUBMaIKM3JSExLGGhQvxYfMPsEQkn7mdBmPzwJ/Xy
-	U2EsTycYhLo+jbbVbiFydv6Pa/C8rxd8QUbv3bMXTHyA9f5RtRWIAgT5diFeRoFGxHjaM10KiNJ
-	NBBhIOG27X51GfZKMBwxQ0eqr2ym9XZGbH5dFQn0+7zZbs+YqCsXX0Do6YABj+52pCvDGr+5eMU
-	gqG92PR5bpPN5XVi0ugvDR1Iv5Fy1yZCv5s8zeEPfAJK5Omc/9VY4Rw2Meq+ekR6Ub8prDyCGBV
-	beFVh9HfvBwcTEuxG/OI5HOpijePRKLXr17aytUx6xDq7z8SzpFyjZApU93PobWk
-X-Google-Smtp-Source: AGHT+IHT9POn8wjfJ3yL9wa7ePb4/upFX9M1uvkh2r1EA9oSU/oPblXzyWWBgyX0wBY3kJqvG2nMIA==
-X-Received: by 2002:a05:6512:104e:b0:553:510d:f464 with SMTP id 2adb3069b0e04-553b6ee29d9mr3569632e87.25.1750172593026;
-        Tue, 17 Jun 2025 08:03:13 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deb4e27sm81250535ad.176.2025.06.17.08.03.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 08:03:12 -0700 (PDT)
-Date: Tue, 17 Jun 2025 17:02:59 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Kees Cook <kees@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bF6/B995"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 209ACC4CEE3;
+	Tue, 17 Jun 2025 19:05:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750187139;
+	bh=dbDKOsBz9dJlbqgtvG7nKkHg1onXG2S9EsH8HaBLgGE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=bF6/B995Xf+rT0H1YlbOklofkR1DZ4mEz1Dpi99+wCz2GlUTzIT3iEWkttuMjMJvn
+	 SzGT0lvoi+eNhcuHZ6QCOl42n+Gk35N/JNdp29tcHcH/OQ7Kc12i3CT6c/vDq72Hqu
+	 g/zp1W+VMy579MUxS6u74HjmUP8FZNLFXr8WFBDJfqNIjxj2D2LRCm+zqAuRFs4lYF
+	 B/R9IE9jGO69rNMpFUYOycAQR6S/CAIY/wSDmRoMoAvR32SyQwI5fGNyLxhPDt7haq
+	 4SvzIPEP4LP9fe2uwX2qqiWo1pT7wj5JkxGESIh5U07/c6bAnIo8qLGFlNxEIRetk8
+	 yupgRRbR8XQZw==
+Date: Tue, 17 Jun 2025 13:05:36 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	John Ogness <jogness@linutronix.de>,
-	David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] printk: ringbuffer: Add KUnit test
-Message-ID: <aFGDhxefzuWCwOOV@pathway.suse.cz>
-References: <20250612-printk-ringbuffer-test-v3-1-550c088ee368@linutronix.de>
+Subject: [PATCH v2][next] stddef: Introduce TRAILING_OVERLAP() helper macro
+Message-ID: <aFG8gEwKXAWWIvX0@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250612-printk-ringbuffer-test-v3-1-550c088ee368@linutronix.de>
 
-On Thu 2025-06-12 08:29:07, Thomas Weiﬂschuh wrote:
-> The KUnit test validates the correct operation of the ringbuffer.
-> A separate dedicated ringbuffer is used so that the global printk
-> ringbuffer is not touched.
-> 
-> Co-developed-by: John Ogness <john.ogness@linutronix.de>
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+Add new TRAILING_OVERLAP() helper macro to create a union between
+a flexible-array member (FAM) and a set of members that would
+otherwise follow it. This overlays the trailing members onto the
+FAM while preserving the original memory layout.
 
-Looks good to me:
+Co-developed-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Use `__offset_of_##FAM` instead of `__offset_of_fam` for the
+   offset variable.
+ - Update changelog text.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/aFDIBBeYgRSx1ekO@kspp/
 
-Best Regards,
-Petr
+ include/linux/stddef.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-PS: I have got an idea to count the number of failed prb_reserve()
-    calls. And it really failed from time to time.
+diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+index 929d67710cc5..dab49e2ec8c0 100644
+--- a/include/linux/stddef.h
++++ b/include/linux/stddef.h
+@@ -93,4 +93,24 @@ enum {
+ #define DECLARE_FLEX_ARRAY(TYPE, NAME) \
+ 	__DECLARE_FLEX_ARRAY(TYPE, NAME)
+ 
++/**
++ * TRAILING_OVERLAP() - Overlap a flexible-array member with trailing members.
++ *
++ * Creates a union between a flexible-array member (FAM) in a struct and a set
++ * of additional members that would otherwise follow it.
++ *
++ * @TYPE: Flexible structure type name, including "struct" keyword.
++ * @NAME: Name for a variable to define.
++ * @FAM: The flexible-array member within @TYPE
++ * @MEMBERS: Trailing overlapping members.
++ */
++#define TRAILING_OVERLAP(TYPE, NAME, FAM, MEMBERS)				\
++	union {									\
++		TYPE NAME;							\
++		struct {							\
++			unsigned char __offset_to_##FAM[offsetof(TYPE, FAM)];	\
++			MEMBERS							\
++		};								\
++	}
++
+ #endif
+-- 
+2.43.0
 
-    I played with it and came up with two more patches. I am going
-    to send them tomorrow. I think that we should solve it separately
-    to avoid too many respins. The current patch is very good as
-    it is now.
