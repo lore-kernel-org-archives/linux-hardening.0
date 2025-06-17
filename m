@@ -1,93 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E241A262D;
-	Mon, 16 Jun 2025 22:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB511EB2F;
+	Tue, 17 Jun 2025 01:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750113068; cv=none; b=ASUq+k2fselhjHPsdqTq/j9bVxwkn1ac0flZBpLrgBIeh46nkx7rmhI7+6hqc5C663K7Gj9+zRZ1IJJmlxbOp4qCQVckprAbaDXtN2qA/Pv5DeivkFPNGu6zQy9uY43dv4LNxgwD5gOiEIYjk5fpDOGDh61OLxvMXlfJZhd3f+4=
+	t=1750123785; cv=none; b=Y/gZ7MbmMhglkzJPLhgWvQklyf7vydLic13OdRvJhElm0gBxzIrlggYIUGu2J82Wlpuk3NioSLUiSjHcb9gNBYoBG+Mkxa39t0PZOneE1m73tIyWy2kDlS720OETa7Rpxco57qaaHrMKAgGtqL5Cu4/6k2GiBXjJAzM8jdV9iG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750113068; c=relaxed/simple;
-	bh=EkAFJcLPgPbjTKoUMNmizvrwNLp1j6JJOB4wBncDD1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=h4vlCxgtiHHxTYAlWWb53uJbKHGAWnsMNhOL4uUoT7/8iJKIzqEB888zD41N2nbxx154O/xdGPWMwUKiXhxZGcWrjfR/x9KYhIugxx51GY/UfpFrd44daaGjMPItxgge6lk4mMCOdyrEv1Uzm4IdpuDPKkUztVTql2iGDYOwuj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TkGFeU9p; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TkGFeU9p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F033C4CEEA;
-	Mon, 16 Jun 2025 22:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750113068;
-	bh=EkAFJcLPgPbjTKoUMNmizvrwNLp1j6JJOB4wBncDD1I=;
-	h=Date:From:To:Cc:Subject:From;
-	b=TkGFeU9p/O3ay7cUOsigArUqUuE7ZDXE9F74E+EPJFM7VNOea1yKmiZAaAdVcG2hj
-	 /j3l7PNx/AGchLGgLyNSLuyNYUrP/FTwEz7M9W8xUr3CAOlj67mFFmM4vWETAPgfnf
-	 tr0gRArzeLvszG14SzhINBpderB36IgE/rllkk8Xfa6nYeCUrReAtJfXsI36DgnoYK
-	 jSzVIhdO+tznOxHQZ+QEDNUwdWoHEE6r2LefMGQ9L4TCXIECnNHOryg21LB1weTFW3
-	 D9XX2aqBR5ZSCRp99GAAfJKk0Lh+Wn/lM0g1/WowKHRb4Q4u5qTo58tGC5pS10r1i0
-	 517cI1i4cWAzA==
-Date: Mon, 16 Jun 2025 16:31:03 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v3][next] NFSD: Avoid multiple -Wflex-array-member-not-at-end
- warnings
-Message-ID: <aFCbJ7mKFOzJ8VZ6@kspp>
+	s=arc-20240116; t=1750123785; c=relaxed/simple;
+	bh=vxegoV2BgUHnQ0atJz+spQ82J2b82Fix3qd/gZSIPT0=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=h86pJFGd9ff7sJhdfCOQorwoIOhQjwBFy2x7Jc38sw5pZMFfvaRI58KJAsdYw5O6KBQjHmoRQbPSXDiolSC4zRwFSEOaz908y1q6a+2jEXGelDdwe39zeuLavUgaYkhkuX+FSAFqb9iz3wGC9mR6cIW6DcaCcz9Vrdf5a8zY9cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uRL8m-00GzoS-OP;
+	Tue, 17 Jun 2025 01:29:32 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From: "NeilBrown" <neil@brown.name>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3][next] NFSD: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+In-reply-to: <aFCbJ7mKFOzJ8VZ6@kspp>
+References: <aFCbJ7mKFOzJ8VZ6@kspp>
+Date: Tue, 17 Jun 2025 11:29:32 +1000
+Message-id: <175012377224.608730.8179235443153600742@noble.neil.brown.name>
 
-Replace flexible-array member with a fixed-size array.
+On Tue, 17 Jun 2025, Gustavo A. R. Silva wrote:
+> Replace flexible-array member with a fixed-size array.
+>=20
+> With this changes, fix many instances of the following type of
+> warnings:
+>=20
+> fs/nfsd/nfsfh.h:79:33: warning: structure containing a flexible array membe=
+r is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/state.h:763:33: warning: structure containing a flexible array memb=
+er is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/state.h:669:33: warning: structure containing a flexible array memb=
+er is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/state.h:549:33: warning: structure containing a flexible array memb=
+er is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/xdr4.h:705:33: warning: structure containing a flexible array membe=
+r is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/nfsd/xdr4.h:678:33: warning: structure containing a flexible array membe=
+r is not at the end of another structure [-Wflex-array-member-not-at-end]
+>=20
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v3:
+>  - Replace flexible-array member with a fixed-size array. (NeilBrown)
+>=20
+> Changes in v2:
+>  - Use indices into `fh_raw`. (Christoph)
+>  - Remove union and flexible-array member `fh_fsid`. (Christoph)
+>  - Link: https://lore.kernel.org/linux-hardening/aEoKCuQ1YDs2Ivn0@kspp/
+>=20
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/aBp37ZXBJM09yAXp@kspp/
+>=20
+>  fs/nfsd/nfsfh.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+> index 5103c2f4d225..760e77f3630b 100644
+> --- a/fs/nfsd/nfsfh.h
+> +++ b/fs/nfsd/nfsfh.h
+> @@ -56,7 +56,7 @@ struct knfsd_fh {
+>  			u8		fh_auth_type;	/* deprecated */
+>  			u8		fh_fsid_type;
+>  			u8		fh_fileid_type;
+> -			u32		fh_fsid[]; /* flexible-array member */
+> +			u32		fh_fsid[NFS4_FHSIZE / 4 - 1];
+>  		};
 
-With this changes, fix many instances of the following type of
-warnings:
+Thanks.  I think this is a good and simple solution.
 
-fs/nfsd/nfsfh.h:79:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/nfsd/state.h:763:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/nfsd/state.h:669:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/nfsd/state.h:549:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/nfsd/xdr4.h:705:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/nfsd/xdr4.h:678:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Reviewed-by: NeilBrown <neil@brown.name>
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v3:
- - Replace flexible-array member with a fixed-size array. (NeilBrown)
 
-Changes in v2:
- - Use indices into `fh_raw`. (Christoph)
- - Remove union and flexible-array member `fh_fsid`. (Christoph)
- - Link: https://lore.kernel.org/linux-hardening/aEoKCuQ1YDs2Ivn0@kspp/
-
-v1:
- - Link: https://lore.kernel.org/linux-hardening/aBp37ZXBJM09yAXp@kspp/
-
- fs/nfsd/nfsfh.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index 5103c2f4d225..760e77f3630b 100644
---- a/fs/nfsd/nfsfh.h
-+++ b/fs/nfsd/nfsfh.h
-@@ -56,7 +56,7 @@ struct knfsd_fh {
- 			u8		fh_auth_type;	/* deprecated */
- 			u8		fh_fsid_type;
- 			u8		fh_fileid_type;
--			u32		fh_fsid[]; /* flexible-array member */
-+			u32		fh_fsid[NFS4_FHSIZE / 4 - 1];
- 		};
- 	};
- };
--- 
-2.43.0
+>  	};
+>  };
+> --=20
+> 2.43.0
+>=20
+>=20
 
