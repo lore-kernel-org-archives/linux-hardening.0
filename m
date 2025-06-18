@@ -1,51 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1232B2EE5FA;
-	Wed, 18 Jun 2025 15:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E162F003A
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Jun 2025 15:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750260615; cv=none; b=uTNAsyokG8mzUKPbqKQ0DRwVBiming8gmoCD4zGcFal/wf0h06KBzujPQIJ1hnNcXnN8EQ06GlK2X3L5QM0Y+DYCw6VEs6IoIIXR7RNP/rkInc/Bob5XxjslhlP3pMmpZ8eusx9SYPoXcAp/KU77t0veiGNlTU3d52a3YGXePrA=
+	t=1750261908; cv=none; b=VmBjBbQbla/t7hloKnX3a0Xb4Yv0Ginzw+260O27postShhKPims98wxRVyqjdOm+FYDmLn7e0xL8P/aKPMWMEf86iKRLGa1lkDaMMKxFk/S38bi468kYdVpCvzbaKPnJ+dW+ShyaW3pFfXtO5YziWMBGrzI+mq30AsdoJqWRyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750260615; c=relaxed/simple;
-	bh=uao6iLRPS+RTJHDF89A0xuDY5D9OIKEScQYTHr7q75E=;
+	s=arc-20240116; t=1750261908; c=relaxed/simple;
+	bh=23FzxqtG6GgAE/fMAHJQU0Q8RmYqZeTXf4zDRHmSZjs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GVSHyhj8RDl1XQwWl+PMsmWTAkXwb7nl6SoHPn76gpVZsYGbTQGQCCQq5X0bYHaWcixnBdLitw3337+yyJFfy5Z0xaTe58T8O6XKM57x9vW9z503WBqLuSy7sKRQXV6tJEu3B252KBnlwPIv/PiRZbgbSacxAJvAJ17JDOuX7RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cauo37mP; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=q4QhJlI+6/M7V8ENwMqk4fRmDZuAyl/fSQoVWhZ9/egwBsuZiANNtEOxTy0xdFcxv0OABebf+btangHlwqTaF+Kqbdk/A2ACO7q7SEgOnNhYZlUDC9DYf5gPqIosS07jB/97y1tj6WqBw81JRIrg2eVNOHOzth9Xvy3rqd/piSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c55xp1fm; arc=none smtp.client-ip=209.85.210.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cauo37mP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750260615; x=1781796615;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uao6iLRPS+RTJHDF89A0xuDY5D9OIKEScQYTHr7q75E=;
-  b=Cauo37mPmfnhltCQReygwvYaMqbaKHZM7GSFyVi3b76KUVvl31E45ZkR
-   bjpGAF245Xj/jixbc0wTMndG8xWZSwdNA/tCNVwuOgqoG4Wgcp92lZlAP
-   1LYlhptF6vfBN5kKHmL1qIyQs1uCQaCs+XWtF9MIhVXAqY1olmAy7JQzZ
-   Sj/SKuq8ifp2WFYyx9NH85X5NGPTFuIJ4zUESR97h4rgmv256ysUALopA
-   QoNjQc51H8utYSl95FI+m5k7L7DDn2yl+3IeKHeT+UC92WsWG3srwQ0ob
-   pTRxS9l6skC6qW1FasoSByj7TV0gAX8W5oZaWHYRHRrAvKCQLmiUBaS6N
-   A==;
-X-CSE-ConnectionGUID: 2YMvwS7sTGSmOmhI92JXfQ==
-X-CSE-MsgGUID: 6IZ1fGxxSdSVkAopi1XA/A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="56165192"
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="56165192"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 08:30:14 -0700
-X-CSE-ConnectionGUID: jODERCniRByzQhhkPOAnww==
-X-CSE-MsgGUID: rczAkcBSQmazkneLo4/xcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="150180111"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 08:30:12 -0700
-Date: Wed, 18 Jun 2025 08:30:10 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c55xp1fm"
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-739dcdb012fso1813336a34.2
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Jun 2025 08:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750261906; x=1750866706; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kYPQPWqeQ8cFIac7fW7Mg6b3Vri4HsDMay80nKR0axs=;
+        b=c55xp1fmqzOZBOMkoe7L873bU+mSZ8BBkTBQpR/nx/b2HHDr3aSSw5F+Gp2XRsOdzH
+         brJvGvmvTSizkgr1uWhWw5btrWfDuApfSSu6igvBho7Q3F9XUew+hNdAaGpd1MI8D3hz
+         uM3Xsw6lNE42p/x1P4YH5gZ7gViPjndUKVDKq8OfufLzEKfUs2duMzJwO+LtL6nNAe/8
+         zC8VlxsIi/8JLQRz24utqI/+xLScMmZd5ij7Xy8NKx6VvfCNZCEF0IsuC74CMCuTugRi
+         CyGsdp8BwwDSatoGPB7nzQS71Uzj3hk6pnUrOHdYBmdJIxk4mUYYYpiPyxcjq2Rm5QCG
+         YYnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750261906; x=1750866706;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kYPQPWqeQ8cFIac7fW7Mg6b3Vri4HsDMay80nKR0axs=;
+        b=VUXSsmi1RvsVte1sFHkiIncJdlSO4dA9ZkzfPzUrdyrNwFvV701eJDQA3HDm5NLHxL
+         Ktq77VvFcFmO1yXmG3A+Xkeftshle2e1yp9JYXkpvwlacQbfF7+AdqRKaU7xego2J5q0
+         dv34ThFXr3Gw/oO4AKZYLZkoWVwNDT2E0l81GK4V4zIl2VbRKtFCOfRa4WKLDASzgg61
+         CAOCf1T4o1IYnjKjQpHFjVTqIRDO55Lz+FixU9v8eaG94/i0Zi46adv+Bl+LiqLBr1a0
+         +ndfiD1woF5C06jYEGA14kadZQD5mQUreZ0h91jzijAzxzmZFLLWH4XJnjSqB+MVR41e
+         fwtw==
+X-Forwarded-Encrypted: i=1; AJvYcCURjcOX3kJG1UMntWP73FBU9Ty2drHIHUOd7Id7Lkp4h1TQhZThCGyN1/ytVEJgKhiwMDdna4E+HrKTPJKyo/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqZCSzvcwYyTy2b7S8kXvvWY6wq9kp4CI3T3MIMs59d4yBVgKm
+	GphmsMTnZ+S9ew5+3qHwvaPxaXVwPe6wcFeZ7ezaENXpcXUBIUhGfXGnzNny4UDvk1U=
+X-Gm-Gg: ASbGncvMNksY8P7FKMNt63oFx2tAYCOr1m4MX5ZcvbbkxALU9i6EgX0RBLXkivZ4XJB
+	IAyIn1yjPkDF7oPEp9x/kJtUNhSq+cO6xp4Dk7OHSc1N7ySX/rn2barLRvqEXepIQ2BcC1+xAZ4
+	xrxrsUj2pL+8q/0RmkH9t6XpYziVVQqHg4kRdDUyrpjfeW4iCr0kBiZ1nxqkGe8qiits2KYXFMx
+	/Zm3oTn0jxRvQ7NTqotVv7of63ATIftV11tuUw2y1eAiiUilC7r2YRoCr/4AFOAMXnQ2Y5KTW1P
+	+cu/+Cn4lfDsbfZMjaC9eFGCEuEI6WqH4FGfCm9egmrVSP5bDm38IZycM3hN50M/ARtGqA==
+X-Google-Smtp-Source: AGHT+IF4tQv5VuEQMCpbEPVkO8mXIAv9i/Gb5HQeEcizVo5ZWGkRY/icNXe2XOorHfOXGX7eq/SdMA==
+X-Received: by 2002:a05:6808:2124:b0:408:fbb6:f4cb with SMTP id 5614622812f47-40a7c0fbb45mr11582833b6e.6.1750261905772;
+        Wed, 18 Jun 2025 08:51:45 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:1b3b:c162:aefa:da1b])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a741b882csm2367776b6e.48.2025.06.18.08.51.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 08:51:44 -0700 (PDT)
+Date: Wed, 18 Jun 2025 18:51:42 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Luck, Tony" <tony.luck@intel.com>
 Cc: Zaid Alali <zaidal@os.amperecomputing.com>, rafael@kernel.org,
 	lenb@kernel.org, james.morse@arm.com, bp@alien8.de, kees@kernel.org,
 	gustavoars@kernel.org, Jonathan.Cameron@huawei.com,
@@ -58,10 +71,11 @@ Cc: Zaid Alali <zaidal@os.amperecomputing.com>, rafael@kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v9 5/7] ACPI: APEI: EINJ: Create debugfs files to enter
  device id and syndrome
-Message-ID: <aFLbgkhB5Q4ZbAZl@agluck-desk3>
+Message-ID: <2859fb82-1579-4d45-a8ee-2e3de184fa0d@suswa.mountain>
 References: <20250612231327.84360-1-zaidal@os.amperecomputing.com>
  <20250612231327.84360-6-zaidal@os.amperecomputing.com>
  <3a143d53-8731-4afc-9117-bac49ea96db1@suswa.mountain>
+ <aFLbgkhB5Q4ZbAZl@agluck-desk3>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,37 +84,32 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3a143d53-8731-4afc-9117-bac49ea96db1@suswa.mountain>
+In-Reply-To: <aFLbgkhB5Q4ZbAZl@agluck-desk3>
 
-On Wed, Jun 18, 2025 at 06:21:39PM +0300, Dan Carpenter wrote:
-> On Thu, Jun 12, 2025 at 04:13:25PM -0700, Zaid Alali wrote:
-> > +static ssize_t u128_read(struct file *f, char __user *buf, size_t count, loff_t *off)
-> > +{
-> > +	char output[2 * COMPONENT_LEN + 1];
-> > +	u8 *data = f->f_inode->i_private;
-> > +	int i;
-> > +
-> > +	if (*off >= sizeof(output))
-> > +		return 0;
+On Wed, Jun 18, 2025 at 08:30:10AM -0700, Luck, Tony wrote:
+> On Wed, Jun 18, 2025 at 06:21:39PM +0300, Dan Carpenter wrote:
+> > On Thu, Jun 12, 2025 at 04:13:25PM -0700, Zaid Alali wrote:
+> > > +static ssize_t u128_read(struct file *f, char __user *buf, size_t count, loff_t *off)
+> > > +{
+> > > +	char output[2 * COMPONENT_LEN + 1];
+> > > +	u8 *data = f->f_inode->i_private;
+> > > +	int i;
+> > > +
+> > > +	if (*off >= sizeof(output))
+> > > +		return 0;
+> > 
+> > No need for this check.  simple_read_from_buffer() will do the
+> > right thing.
 > 
-> No need for this check.  simple_read_from_buffer() will do the
-> right thing.
-
-True. But why waste cycles populating the output buffer
-when it will be ignored? The normal flow here is that
-a user will likely try to read a <stdio.h> sized buffer
-and get back 33 bytes. Then read again to find EOF. That
-second read doesn't need to do all the "sprintf()"s.
-
-> regards,
-> dan carpenter
+> True. But why waste cycles populating the output buffer
+> when it will be ignored? The normal flow here is that
+> a user will likely try to read a <stdio.h> sized buffer
+> and get back 33 bytes. Then read again to find EOF. That
+> second read doesn't need to do all the "sprintf()"s.
 > 
-> > +
-> > +	for (i = 0; i < COMPONENT_LEN; i++)
-> > +		sprintf(output + 2 * i, "%.02x", data[COMPONENT_LEN - i - 1]);
-> > +	output[2 * COMPONENT_LEN] = '\n';
-> > +
-> > +	return simple_read_from_buffer(buf, count, off, output, sizeof(output));
-> > +}
 
--Tony
+Ah.  Okay, I didn't realize that.
+
+regards,
+dan carpenter
+
