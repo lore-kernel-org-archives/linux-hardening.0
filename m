@@ -1,116 +1,110 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A452EF29C
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Jun 2025 15:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A002EFDAE
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Jun 2025 15:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750260053; cv=none; b=FOq6E2D7suU7B3f9hJFppapXcx9Ip9V3Qx757u38NiB3trBcXscUUl7ouGOPFc1gFuMq3R05RD1xwrrZ6IB4ATF7E/LpRff8/d8pFk1lM5uURTt6MIldRaJ0ELZjmFTXBj6ucKLoFVsCw6HHyd6wXtXxC1TCjwNfQtLcQ95kpbc=
+	t=1750260105; cv=none; b=ouVHuvW8/VmzazDZhUw6rtELehpDuFqLKoUx1QAPGQpSQTkzq7+z6WtjX+JEKsLPlzfzEhYTi525jRyMiyqFqoPzBXNIoZomZO354U4v3eocjxKfthNlOkkU7SAqzNF4O1gIEthoi04bVtYNSr7+EBuG6J8EElgAceuEHYP9pH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750260053; c=relaxed/simple;
-	bh=bu9BXidHNtjmnwyuSNdRj9LB7CpuIo8NlQ/Pqo7N8eg=;
+	s=arc-20240116; t=1750260105; c=relaxed/simple;
+	bh=g07THXNWgAdEHWIqoiEHlcfwthoxZVyVXkEAgRexV0Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tpXLKvaLm4HIGa3XxySL4ddROiJ15UI3worHn3AE11p9icz/L6+P81dnfz/sCeGUfIKYks9XroElixKZsp5zs290U3difGVZnHzx8qUDZ1ZVPKhvQpFv3IETDE6SpsGkpVKe1bdjdgUz/OOe2otDWluspmRB0W2nWLh9Tzk/1rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HQv6i/S4; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ii0O0fxNsK4jM/lEdAT6u9sdfKi61jO3xtjqbOY8YR5MO6EFYBt+MhV/B7zf2sISdXAy7jkfhxow/X+y/woL/MffGppmoW7O+Bk18aZEln9Kf/8yPegIJyoDHfiYnqeKtgz1LqUrh+BV275iHsf6frReVHRtTTap5BdHO+iQfl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r3rKuG+x; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HQv6i/S4"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a54700a46eso4545437f8f.1
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Jun 2025 08:20:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r3rKuG+x"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-4091180d3e5so3378205b6e.0
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Jun 2025 08:21:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750260050; x=1750864850; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=R2mixnOIloQHoWX2vcLi6dJzCof8rZSm4l18a4KpDRg=;
-        b=HQv6i/S48uZirMImdmMJ9teZNgbhku2y60AGeaBL6lGDXxXTzKie9GGpw5rYfYND3p
-         ZdcHx5FIp6gIhKo/2ulaLqC7y90B3yomXxQL2XHiIvfHwPS16k0fVQyk4ioWpY66w1Al
-         Bx1KmfOEM5N7uxg5D/NnoNUKjdQ+HzO6khNRzND2IrS8Fcp51wiZNvPbP7WMA1a1y1ii
-         To97blaS0n7tkFf0ApM2XeWKD/MDlIGvlm3wq+XnlFj4lNTq3uFdK5r0S64LmWE12uPv
-         7CSk2Ww9RHs0zzXnyxF5r9rXD+YCd5R5EOLJCHMEeHo3QqKBXJtPGgQCNhrMxn+nbtw2
-         lZrQ==
+        d=linaro.org; s=google; t=1750260102; x=1750864902; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9AxwiK4VYo3D71UIHkicDqC7/83I7Lbnvvk8W3WY5b4=;
+        b=r3rKuG+xt/6fjUipvT17u93EVUlVMjQfpT7D05ucLAMebOFy9CQU5VMPaRb0oi7TqG
+         ObTwduvkwcmOdPoXYIZ7v00uhzdYrqBkS7gPWCG7HUEgSePqKFIyPD6bfYossU3Uiy8h
+         Ym/CawwMPi5XR2Fes6RHUXQGdzg7znAYpWbsEvvxibHpwhVgmD6+irjzgWqp45gVRzko
+         +ATEuaEd231fsiA5Taog/NIImPA9KgXcl0O7UhCVqPTjjW1IvyGS88dp8pd4S2gQBMLK
+         Pnl7CbNM3RSZ2EHZsVoSM8/wbuWl+tmm414+raqdpIV3s4CsLhJzvlrNRfzSLyNj6bJa
+         DUxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750260050; x=1750864850;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R2mixnOIloQHoWX2vcLi6dJzCof8rZSm4l18a4KpDRg=;
-        b=ozIBelzHunwBvkn2fZ+IMQEntItlG4ujP70kBK/cvO4rT+iSoI8N8/Ib6qcR5ksl27
-         wMQn7y3nme95BUige694xx4yzE+FqjpGUyrW5jBru3MgdhPUUiYjqaLD2R+dPTELm8s/
-         4SEOAKbAtlW+3h5opr8e4pvl7i2gnhigNX0WvArKYecX5aDnrLbJ7fO75BbIVYliBImX
-         suKQwcgl1E/+DpoEBYwjR3XrUxPa1Ln/0gXm6r1MUFf8YkB8XX8yR3XdZE+siqzpxZms
-         7aC7a3OKA4QbODouBIk6m5xs0x/SudyqbsJOyxIBcYXq1GoavSHG89sDE5LnzDlmmWq6
-         GQ4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVOzIMe0S1VggHWJXIzo7gzH2dlLwymochG62xP37wnAQ/D1uvpkytLqMo29qvQBR8a8vUH23WWzttIbBRwnzA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIAuVG43D7VbmuPdA0ThkzPqajPUil2ooEBPw6ngPW1EurI3yJ
-	tgN6WfnpmJ+ccCmv+JFtIKZyxXqUbpEP3szHkPilM69lfTFqnzm0QpvETx93rQaNkyk=
-X-Gm-Gg: ASbGncs1rawsVT4aZVpgZo17E/GRSuityoLATM82sFFMo6gUIUUHb4qezKppVNgP89N
-	HrjUjxlVFvQjsFzup9F5MQC5x1tUe4W44m89gXmoysHDz1nyZUVcMdnpZW3C+WIP12nDJP8IYPh
-	D0jWhSFs79dsfkhguKjIXLQvKgys72mtakfsCB+dm30RT6O5ptFduziWeH3HUky3Gq2UOP7v3W2
-	9+9DlC0DK9Fvh2W1i5oKucxX2kT/jtmG9hDlTzZr9WEtD2C9Od7yqVq6BdbLCYBtrQ74uqJ2HVM
-	fI/1eCN57eZKBeaxlRLAkBaQ8DqLlJZe9sdCOSTL5ZCt1LSmAUimtZeBHMFR+Ake
-X-Google-Smtp-Source: AGHT+IH/o02+oo3I6UQDONKE+lMSxWW2bFWP8iy5NSan2E4s86/5Ooep9MGM3MBi06jxWJGtRw+Oqg==
-X-Received: by 2002:a05:6000:4304:b0:3a5:1f2:68f3 with SMTP id ffacd0b85a97d-3a572e2e049mr16035090f8f.46.1750260049995;
-        Wed, 18 Jun 2025 08:20:49 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900cec72sm11126479b3a.150.2025.06.18.08.20.41
+        d=1e100.net; s=20230601; t=1750260102; x=1750864902;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9AxwiK4VYo3D71UIHkicDqC7/83I7Lbnvvk8W3WY5b4=;
+        b=tll1xHHgDnwBaaTtgEsMePxAKQKQheLCDRjMC6PS5pFTofE72LhiKOzrmbKJg8dmqM
+         oVKrSFoIn+N7JD/uoS3Ju0Prw5MTW4SDfjtpM0gWI2kb0TozYDMafIoHHBBsybQT4H4e
+         u1Si0191H1f+/emCC8bav1TIpwwqjwM+4MaG303mVEbL6LPlvNiZnmOnyYBAty8Gilv/
+         jdHLAkcG2NTHQSxj2ZTrXW8qmQumoFrd9xyAZc8AAmBW/UCIAK6OaZsWEdPnyhV1G3wH
+         EoYuvZXhnYDhl1Ws0apv5nbly+ZyxfO8uDPmnFrhlzdu7DeRoePdZMf2FFAWe1MAbvd7
+         xarg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJATtPlxPTcWtKxwICqWYqISH4tW80wUkzaHQF1vw0YNmOkIkCuDUv//9J9Pz32Oq+Tq99NgBSPwo8cdVQxs0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4UguJqQI3XNZgLkMsLEpRVY0SjfOoQJnSRfCXJx4CLRWLQhk3
+	+0tBfwpHN9LL3WQmxkMPn8UtADhcaw60IHtFeLaU5Hf3fn3ExvIZnWpL0S711cHlSs8=
+X-Gm-Gg: ASbGncuFzzGN+Prq+QByqKWZ1KmBc5SzYXn6i9XP+qHE7xX2vylJ/aJoSO7+sA6+yTl
+	RJoMGBlV28nTPoh70MJpsLVZJnoAdEcP00o1OJJwnoKW2FgTtlpSvlHUBSJ4sz9mj089YU1Ck/0
+	L3AT5eH7m4nV0hlAnl0vQzk3JWWDEJbEh4gzvr16GuhNe0b3UzU9wUgoz/SQG8MKvf/bsizvr/A
+	JnTI3j1bdU3PwrzuaumqvZYT6Ry8ToNEs889/cbLj3HWX6E6y1dGP8Rx0f+fgCg5bRsheF79Oam
+	ZOtr62+dsXxEPlGdc3cvc93kllydlYTzRGrYekwJrx/n95oE+aMXl8ZJiGWATw6EqQx1+A==
+X-Google-Smtp-Source: AGHT+IGrf/owYOZYoHFe51D4S6Sh3ECbMUim7WjOpYzkcX3/wGxlPvEhosTHB9TtV8xPJwEvEZoZLA==
+X-Received: by 2002:a05:6808:238a:b0:3f6:a1f8:ce3 with SMTP id 5614622812f47-40a7c1160b3mr10691931b6e.14.1750260102438;
+        Wed, 18 Jun 2025 08:21:42 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:1b3b:c162:aefa:da1b])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a741b8588sm2371576b6e.49.2025.06.18.08.21.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 08:20:49 -0700 (PDT)
-Date: Wed, 18 Jun 2025 17:20:35 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	John Ogness <jogness@linutronix.de>,
-	David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] printk: ringbuffer: Add KUnit test
-Message-ID: <aFLZQ4jb928NhBly@pathway.suse.cz>
-References: <20250612-printk-ringbuffer-test-v3-1-550c088ee368@linutronix.de>
- <aFGDhxefzuWCwOOV@pathway.suse.cz>
+        Wed, 18 Jun 2025 08:21:40 -0700 (PDT)
+Date: Wed, 18 Jun 2025 18:21:39 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com,
+	tony.luck@intel.com, bp@alien8.de, kees@kernel.org,
+	gustavoars@kernel.org, Jonathan.Cameron@huawei.com,
+	sudeep.holla@arm.com, jonathanh@nvidia.com,
+	u.kleine-koenig@baylibre.com, viro@zeniv.linux.org.uk,
+	ira.weiny@intel.com, alison.schofield@intel.com,
+	dan.j.williams@intel.com, gregkh@linuxfoundation.org,
+	peterz@infradead.org, dave.jiang@intel.com,
+	Benjamin.Cheatham@amd.com, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v9 5/7] ACPI: APEI: EINJ: Create debugfs files to enter
+ device id and syndrome
+Message-ID: <3a143d53-8731-4afc-9117-bac49ea96db1@suswa.mountain>
+References: <20250612231327.84360-1-zaidal@os.amperecomputing.com>
+ <20250612231327.84360-6-zaidal@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aFGDhxefzuWCwOOV@pathway.suse.cz>
+In-Reply-To: <20250612231327.84360-6-zaidal@os.amperecomputing.com>
 
-On Tue 2025-06-17 17:03:13, Petr Mladek wrote:
-> On Thu 2025-06-12 08:29:07, Thomas Weiﬂschuh wrote:
-> > The KUnit test validates the correct operation of the ringbuffer.
-> > A separate dedicated ringbuffer is used so that the global printk
-> > ringbuffer is not touched.
-> > 
-> > Co-developed-by: John Ogness <john.ogness@linutronix.de>
-> > Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> 
-> Looks good to me:
-> 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+On Thu, Jun 12, 2025 at 04:13:25PM -0700, Zaid Alali wrote:
+> +static ssize_t u128_read(struct file *f, char __user *buf, size_t count, loff_t *off)
+> +{
+> +	char output[2 * COMPONENT_LEN + 1];
+> +	u8 *data = f->f_inode->i_private;
+> +	int i;
+> +
+> +	if (*off >= sizeof(output))
+> +		return 0;
 
-JFYI, the patch has been comitted into printk/linux.git,
-branch rework/ringbuffer-kunit-test.
+No need for this check.  simple_read_from_buffer() will do the
+right thing.
 
-I am going to get it into the mainline in the next merge window
-for 6.17.
+regards,
+dan carpenter
 
-> PS: I have got an idea to count the number of failed prb_reserve()
->     calls. And it really failed from time to time.
-> 
->     I played with it and came up with two more patches. I am going
->     to send them tomorrow. I think that we should solve it separately
->     to avoid too many respins. The current patch is very good as
->     it is now.
+> +
+> +	for (i = 0; i < COMPONENT_LEN; i++)
+> +		sprintf(output + 2 * i, "%.02x", data[COMPONENT_LEN - i - 1]);
+> +	output[2 * COMPONENT_LEN] = '\n';
+> +
+> +	return simple_read_from_buffer(buf, count, off, output, sizeof(output));
+> +}
 
-I did not have much time to play with it today. I still have to
-think about it...
