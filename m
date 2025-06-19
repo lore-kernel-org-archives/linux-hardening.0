@@ -1,67 +1,66 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3EA235056
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Jun 2025 14:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C737C267714
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Jun 2025 14:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344922; cv=none; b=B5IJfkMvHPPWaG5OrnmcUNAOrXqpVri6rXmdb0ftUvtA4i9FVvyrFRB0UkV6r+E+XIUWUL1ItFpOpffyDdbu7owUBGfN6axjatnGNgRGxMiO/z4N4BxKODQsFmo0YdSTHEkvU0mSGRtSZCpB2P/DzqtzIniWvWI9aj7EqhXbv1g=
+	t=1750344924; cv=none; b=S/mVUc59BcXKTPHtqeCvZRfRFAUtkMFelCYzYzy+5UD/F+xMpn06QdHiWJbUsMI4Asl+S9FsNduUpZpA41ALBg8GZq5JGr9E72eh4h7nzY4muDyPAhXyT0RoBk3xMWKwGfFx+bd5+rqMkppjXBTADfspThzilrdGu1OmQNbkf+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344922; c=relaxed/simple;
-	bh=qYAZCfZCRBki6rEwNto82MyVYrF2GEVO45R3Q08g/IA=;
+	s=arc-20240116; t=1750344924; c=relaxed/simple;
+	bh=6Z4D16SkPJ8yBSytHwVl7DqQPX/xHbOuvdjyNeV7Wm4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ceh+fsUyBZIGhpKz/1W1R5lDrtC9/2URlzTyRgsvfQAR2/tNoKDw3WOojOkKCrzOj0dOJNkPGL1PYHMlDWtvU65lwYFDr0SKOU9p/kqhh333wrPBFPMF0AgpDYmrPbnL95TzkzvfkzL99C4ZXEDMxWE/OohQ4fXc9jvrg9V71v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GiRIjnJz; arc=none smtp.client-ip=209.85.128.44
+	 In-Reply-To:To:Cc; b=uJDzTYfaUV451bNxYVUEpkmX9mbpXhATQuznZhoCHWvcZxEbSTn6jX+tTeZnMFqPrtOPPRzj456HiWYS2KZhkCESfk5ecsEBa0TFRCX6pGYqxHPv5kzGWbPseCtjvMyAEVyNpn3Zha2XigIYBSypbUaSnNkHn8hDpBGVqVD24qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wbTjSoQ+; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GiRIjnJz"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso7230795e9.2
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Jun 2025 07:55:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wbTjSoQ+"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso573648f8f.2
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Jun 2025 07:55:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750344918; x=1750949718; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750344920; x=1750949720; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=k6CcoGZqjD9+K1M8PYMMCHFJXIehGW4t5wpSeTmgCi8=;
-        b=GiRIjnJzhPZYfgHcZwpnz89qiKvoMQrB2yAurdDj7rDgg33XvrOCFXIO9QFDYL2wEV
-         N6KkwpYi+AtVZAh7NRXXw42faiHbmPZ8ecHdaoHsEGxcZGo4aMTE3ptQ0QhPM9ktX+rA
-         aVCQSguZeKDD8EVUVNcuQ+ZWWYqN7MPO6llVi486H7VITLEJ46q7oU0aIYOz70I5ePmA
-         aQ0N0+YaQuLTZGnIE7DRxEk7qxuNO6q9v8tFZOoxEDILoUM33yxoSHd4vGbui7x7y+L0
-         jdDXCCoB6nkO9OZtE/u7gVOfihI331pAw3zC2Gb2IbvD3jhc27VgVlC25wDW66KGe27J
-         ZKhw==
+        bh=oEHr+JFKq0mjjtdNVZ8KWmf7N7HSZ0JZspgwtDVrdBE=;
+        b=wbTjSoQ+TSYlMS/h+iShp0+5ton1au/W30Fnq4R2IhpJO2/BmODFJ5SKIyeavg/5hb
+         eIWDQGZyaRwok6dYCC2Zgvqwc0bEbgl0ijj18avyvtl4w896uifKXCsSKaUWsk/x4R18
+         4a1PJoXnaXDIfo2qm/FnBx80iXL2B9MlxkrBokXTXL8R8YYDwUQJZOhAz0C+n7adBTce
+         LJxUxZTjAs4irM2FiZGnUEUnajy7C0H7aqR1FkwYoPqcxzXP4CYl1k0oqljCDR/QNgVM
+         tn+aZT4IvranYYw0/ORE2rUTCuflcUQ5TV8u4nlnkKU3mrwrtovtOMXHmzT1i7YDQceC
+         N6jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750344918; x=1750949718;
+        d=1e100.net; s=20230601; t=1750344920; x=1750949720;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=k6CcoGZqjD9+K1M8PYMMCHFJXIehGW4t5wpSeTmgCi8=;
-        b=F1LR3XEPGzA6bIeIJkeHCI1yyvJKWqoOP+UUwyacMkY+xPcBLz6Q8zAy8MiIc9BFvz
-         qYzmQBoVjcaJmRAJdLet988+bTS8VJ6j1x0Ak9bgQddBIYfcpMRkb3moe5Oik9WjfHxi
-         VNowYMFa6X+b+Jmty/TYq0+WpXHXKKO3qqdV73In3UY0nP5o5nHp5gQylkWFsZSE6Uu1
-         5oJNTj2rRhUeb5ib6wHxw+b1nW5UnQ+bCCxoUF16hWk6vAQSsHSiG3OepGTRbb9JzpOa
-         9yIntOPh0X5HNiUokH92GUmvL6ATcJOcHxfBoypt+t4kg/hRG2yVMdx9/GgUYHUbSy/z
-         JYMg==
-X-Forwarded-Encrypted: i=1; AJvYcCXwzIVCKq3LJBs+UA2D8i28TElV8dkKpn4/bZIlJ95hKncB+byRJx3xgQltst4oyRLL45RyrZmvxmynWh+JwpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoPAN6hR3PXRRHZcdL7KBSAeZdfv6tLvhR2lBYmFD2Q//1HsPh
-	rsT9R9SprqR1/Q2OYrRiY2V7NL+bGYP69rIv19bBAN0jdybKnvVOxJnpK5SHGREew1U=
-X-Gm-Gg: ASbGnctDhuPvghZaZ8kJw7WtjQtU6mVl50HmxjsXz3Uq/dDpMXAfRgqU8D3vN3cgfXF
-	rr7ElqrA8TsGIYJQvKXx8iM1VZT3nA/c+tZcZlxD9L8NXXJ4zwVnxhrll+0YAWwucBpJXOFCjNv
-	ZtlVAj/5ekkmvkx0/tw4tposUDEDv+Of59yEZiqfP3ib12OCxaTi4rBS5KBGIi9t6qHRR5z3Mc/
-	k6cQfnUVWIi4FHhjLJmd7ahXGDQ5C8/iqbrkntQqiBGNjfG6WgBMoBs693zrC4Sr5m5tSK1QP7i
-	+8TabZarrMWd0cKVb6v7E3B2uGWdqp/1gZe0mwy9730nPzrW6fXDJcA77M5dU8tZMw26nB4LI+F
-	/WT03vrhGmp9ZTCsZhddXWQ==
-X-Google-Smtp-Source: AGHT+IHqn4tAEPgYc+nW6NOVxVDdxt9Vx+UOQZkFC9cJaTvzxaVLk2lXNPEErPPHH3ALfmNFXQfnFw==
-X-Received: by 2002:a05:600c:5185:b0:453:59c2:e4f8 with SMTP id 5b1f17b1804b1-45359c2e6f1mr60408825e9.1.1750344918502;
-        Thu, 19 Jun 2025 07:55:18 -0700 (PDT)
+        bh=oEHr+JFKq0mjjtdNVZ8KWmf7N7HSZ0JZspgwtDVrdBE=;
+        b=kCp2ZN0o3D0f8YGWLr18XvELAIC8IKoayRtBkg4/XqnQ7hgsIMN0Y7DMx2kOu0VqYh
+         SNiIV1JIczIICc87+fvAzY1myherPfwLYA5H+66Ux3GxATeBJUiRvs6mdWCXaym45145
+         K23wWrTzVqU9ZBIbNT0OplLhG1kSYFc70D03JSk/C3UeJfOCfH2XeilxuNgJesRG3o5b
+         bB8LO5PK9Vo2H8ZC2gBUNRlsyLPyF1xaoO7rtllLJ5+aIQ6O1EXcf4UhXDdy+rj+lGU1
+         KXywnAat99MzLjxlNgGidYUqRWu2k/5+xNOzLpxSKM1uD9S6SiWILNPSZbCA11c8qmF7
+         yecQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX2IvF2sCvVPKfwlVe7M9/TupMAqjqJYhUukJxq9ZYvdbTsYJjW/Zvnk1HcY0+Cd3tC2gFiCt0LuEFpXyOPVUQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywn9uCdJwXk+hmDKeOB0LQ/SmmdVP1dImWIjz8zHHKFbwj1/+Y+
+	aVEOTRXb1IZ14+g9EwKFyGYcm94z4xSPzsfbBHoX8ExK3SJiZO7fAiOFZy9XuER2BSo=
+X-Gm-Gg: ASbGncsBNJcxGLpF0ZkOfbZPwsIxcSaqSAN1IJnTCR0Pwrosd8MzNyKpRwHjWbZQptL
+	X+tx3aZy/DQ1TIgFvGdn5il2ZRNg9DsNW7mRsTLhdLa6r6liKpKu49eUC0Y65Vs1I4jvO9TwZHT
+	BAh4zbPS1sQtAxV5tBfXgSvUhbjLL8B9ozSl/Pl0O4mobyBkeEho6PFdQEpuPtjUZDiz4BHpaYH
+	VPhVNr5fYbBcLKaJkryG+4dwfevUR63BOM/0V3bQXX/dWQ6kEjmvJyAjjPQDEvR602AxVbsARTr
+	rDhzZuKwmJ+CEOwmG3511NdcikE6HKD/Srzb/4QK0ftg7dR0sk3kbsAjCQ+CfpuLnLBSQjmp4pF
+	jVrzsORy13Us=
+X-Google-Smtp-Source: AGHT+IHWbjMlG2E6TzWb22wDzJtnoqglGRvEM5is+uCoWk0J9I5KSBBT9LoIyRfmFnTQymBf3ofmdw==
+X-Received: by 2002:a05:6000:18aa:b0:3a4:f50b:ca2 with SMTP id ffacd0b85a97d-3a5723663c3mr16381011f8f.8.1750344919992;
+        Thu, 19 Jun 2025 07:55:19 -0700 (PDT)
 Received: from toyger.tail248178.ts.net ([2a0e:c5c1:0:100:b058:b8f5:b561:423c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebced8asm31343715e9.40.2025.06.19.07.55.17
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebced8asm31343715e9.40.2025.06.19.07.55.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 07:55:18 -0700 (PDT)
+        Thu, 19 Jun 2025 07:55:19 -0700 (PDT)
 From: Casey Connolly <casey.connolly@linaro.org>
-Date: Thu, 19 Jun 2025 16:55:10 +0200
-Subject: [PATCH 02/11] arm64: dts: qcom: sdm845-oneplus-*: set
- constant-charge-current-max-microamp
+Date: Thu, 19 Jun 2025 16:55:11 +0200
+Subject: [PATCH 03/11] power: supply: qcom_pmi8998_charger: fix wakeirq
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250619-smb2-smb5-support-v1-2-ac5dec51b6e1@linaro.org>
+Message-Id: <20250619-smb2-smb5-support-v1-3-ac5dec51b6e1@linaro.org>
 References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
 In-Reply-To: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
 To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -83,83 +82,57 @@ Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
  Sebastian Reichel <sebastian.reichel@collabora.com>, 
  linux-hardening@vger.kernel.org, Casey Connolly <casey.connolly@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2521;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1378;
  i=casey.connolly@linaro.org; h=from:subject:message-id;
- bh=qYAZCfZCRBki6rEwNto82MyVYrF2GEVO45R3Q08g/IA=;
- b=owEBbQKS/ZANAwAKAQWDMSsZX2S2AcsmYgBoVCTRdzCeOVoOYYIZoWDgVhy/ZEc/+H7vHO3hk
- 9+coi1FjLqJAjMEAAEKAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCaFQk0QAKCRAFgzErGV9k
- tgjFEACJoBqzSyVmNA7Zpg0bF2fnP3tcsYhpkpKhB+GRT6LikucPsFc4ySsBumxIks0HruvV5ym
- XBTm07V2xs+PTsMWjllFWTGsObMoPxYJXR081gxtDlhCL0Ng/A5vFdsFHiYU0zn2vK+bqtZgemt
- oia+SFbIUf5a+/MB1cwJUrsjodgY+OUE3iR6nVvuqlz7CnVpI0TvXxqqSzpneGfC0zxHUMjrfSy
- f8aR1Cc7+iLLp6VqAV6AaIS1aGQkQPQYUFB77t2gk2sTs8ByeIm2fWP0UnxbaV7vd52naJnmi4r
- jfcbyvihE53AY7F0RYLzl644mwnj32/INi3C/qZsfaHJYRXFyQjsaxi0DV2eZQmn3Mqq8bbc5O1
- OqN8GqoHqT+N5BOhkEn/b+UAp0d4tHCW21o4FyqMsvlfAH+9GiPAZpMCfFLxdup8FHTn7cW4QMf
- Y8XOicvxAQentqPPUVhhOaZyB4mP0faVWN0IeA8tQHx4kQ6trbi6qeWb1fgNNJIFPwMPLBDDOCu
- R4c4jpKQIPEuxc2r7CYJe5jc+V77svrd454tJnurx2rlWNMFmONymTxnXftnaV3FYx/5Zr/uhBl
- Ha8Iv5nLMRjqDGEHTuFBDXLxDExoNqGOIaMTssY9bo9Em52vZCFs11E1HYXdcQ6TKiKFAo1/+qa
- GIVjesETp5LyJFg==
+ bh=6Z4D16SkPJ8yBSytHwVl7DqQPX/xHbOuvdjyNeV7Wm4=;
+ b=owEBbQKS/ZANAwAKAQWDMSsZX2S2AcsmYgBoVCTRhc+icEuxNhuT86NLqeDxQeR4vqH+O6CVX
+ 1VOLWhF6VCJAjMEAAEKAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCaFQk0QAKCRAFgzErGV9k
+ tmGRD/0R7yKQaE0xf7lUByZ4lt/WrVrHsd4lwLP0Knrr7xy4r0l8x++FJhew8FlK7XIXTmj+Enh
+ KQGn7Mz7pWIFuM0PU9KhXDvL2J2NKnXljq1yVW2mok7ZQCxzIw1a8OnG2ua5jC/hine+eCOopO5
+ lGejGQMGussxPINrRMwSI0JKl9+ikufSc24PaxvoIf3tqgqL5ToUNlA0byiMPdkuDjt5SzE8NQw
+ V7s++GnqrkYBoMb5yjr6+LfSVgRWGAXvDM6SzmXjy6UI3KX9FsWNxjYtxTLGzvBmqWUB1iRwQul
+ SBI5SN6+KMLgyi6sitxK/8BY7cUwHFaH6MAUC1W36WAHiqP/5gUgbG7P0kvCAfMVQhCOtXGUN9o
+ WU1/Ib4FkHzWIuMnLNS77ImL5kjgT1VKwkhT18hIEUmhfH5gy2ISzOD0mHV9xhyR/7A+TptTZEh
+ VpX5OSoG26TolQdYbdexzlBdWT2eYpeepbSEzNqcvVKwmSRVNrheIeiwr3JMqTiGcHvLuaG8Kby
+ tsxx2VjhvbjuyRhB7KZtHquxA2M6YAYHk7t/xTohzT+4Z5lRaiQ/R0IkmvrQ6Ph9qYWiHevzIr6
+ ALWLa02Zs/mG6XyvdmA4jUpolpYZPhdv8C1fhsy6MvH/eOb3GKcXy4YdLJczUzsk+BNu78ISCv8
+ nQ3uWO2t0nceVcQ==
 X-Developer-Key: i=casey.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 
-Set the maximum constant charge current to use for this battery. While
-the battery is likely comfortably capable of 4A or so, OnePlus didn't
-include a secondary charger IC for parallel charging (instead they have
-their proprietary Dash Charging). It's possible that this value could be
-safely increased after some testing (and when we have support for
-modelling the charger as a cooling device properly), but for now this
-value is acceptable.
+Unloading and reloading the driver (e.g. when built as a module)
+currently leads to errors trying to enable wake IRQ since it's already
+enabled.
 
-This is references from qcom,usb-icl-ua property in the downstream
-vendor devicetree.
+Use devm to manage this for us so it correctly gets disabled when
+removing the driver.
 
+Additionally, call device_init_wakeup() so that charger attach/remove
+will trigger a wakeup by default.
+
+Fixes: 8648aeb5d7b7 ("power: supply: add Qualcomm PMI8998 SMB2 Charger driver")
 Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845-oneplus-enchilada.dts | 8 ++++++++
- arch/arm64/boot/dts/qcom/sdm845-oneplus-fajita.dts    | 8 ++++++++
- 2 files changed, 16 insertions(+)
+ drivers/power/supply/qcom_pmi8998_charger.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-oneplus-enchilada.dts b/arch/arm64/boot/dts/qcom/sdm845-oneplus-enchilada.dts
-index 4005e04d998a40d25a64d652a526bf93efc20332..9ab5ddc1f6cbbdcfbf793b959d199b20256be9ed 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-oneplus-enchilada.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-oneplus-enchilada.dts
-@@ -19,8 +19,16 @@ battery: battery {
+diff --git a/drivers/power/supply/qcom_pmi8998_charger.c b/drivers/power/supply/qcom_pmi8998_charger.c
+index c2f8f2e24398316ac5c491eaaabe4c455e875c47..cd3cb473c70dd1c289cc4094e74746e3c6dc16ee 100644
+--- a/drivers/power/supply/qcom_pmi8998_charger.c
++++ b/drivers/power/supply/qcom_pmi8998_charger.c
+@@ -1015,9 +1015,11 @@ static int smb2_probe(struct platform_device *pdev)
+ 	rc = smb2_init_irq(chip, &irq, "wdog-bark", smb2_handle_wdog_bark);
+ 	if (rc < 0)
+ 		return rc;
  
- 		charge-full-design-microamp-hours = <3300000>;
- 		voltage-min-design-microvolt = <3400000>;
- 		voltage-max-design-microvolt = <4400000>;
+-	rc = dev_pm_set_wake_irq(chip->dev, chip->cable_irq);
++	devm_device_init_wakeup(chip->dev);
 +
-+		/*
-+		 * Typical designs have multiple charger ICs which can handle more
-+		 * current but the OnePlus 6/T do not, hence the lower limit. This
-+		 * does not apply when using the Dash Charger, however this is not
-+		 * yet supported.
-+		 */
-+		constant-charge-current-max-microamp = <1800000>;
- 	};
- };
++	rc = devm_pm_set_wake_irq(chip->dev, chip->cable_irq);
+ 	if (rc < 0)
+ 		return dev_err_probe(chip->dev, rc, "Couldn't set wake irq\n");
  
- &display_panel {
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-oneplus-fajita.dts b/arch/arm64/boot/dts/qcom/sdm845-oneplus-fajita.dts
-index 9471ada0d6ad8bd44cc58a6efa07f7eb27921af9..1644648fb8800934e4a8a9b54380bb019dcd0059 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-oneplus-fajita.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-oneplus-fajita.dts
-@@ -19,8 +19,16 @@ battery: battery {
- 
- 		charge-full-design-microamp-hours = <3700000>;
- 		voltage-min-design-microvolt = <3400000>;
- 		voltage-max-design-microvolt = <4400000>;
-+
-+		/*
-+		 * Typical designs have multiple charger ICs which can handle more
-+		 * current but the OnePlus 6/T do not, hence the lower limit. This
-+		 * does not apply when using the Dash Charger, however this is not
-+		 * yet supported.
-+		 */
-+		constant-charge-current-max-microamp = <1800000>;
- 	};
- };
- 
- &display_panel {
+ 	platform_set_drvdata(pdev, chip);
 
 -- 
 2.49.0
