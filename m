@@ -1,101 +1,114 @@
-Received: from mail.burntcomma.com (unknown [62.3.69.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B81F2ED15D;
-	Thu, 19 Jun 2025 18:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.3.69.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28D822339;
+	Fri, 20 Jun 2025 01:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750356215; cv=none; b=U4TtIHFf9kUqh8FqQPeParfIxjh9icXOMYq7qDahRZNxtPHXBUnODhO/JsZHYXXcESwgUPJSy12qFDVFao73rAyICf2G//ofOr8b2RGWL2sjbH4reU/lTP/B3KdRFLB0UALo9LjmRfpW7pqMbpMlOluC9gSWv5JLCS7FwaTaVbk=
+	t=1750383316; cv=none; b=R98PgGTdel6enioluMAYbvvSSvZ+wIiyUKbrXk4gJZ1TrMP/429A+S/Ogbp1y3l7D1DVdd06eLe/KrlMNIG6m36zfgzljIRaBCZze1ERE+lsVRNyEYLbzXP0/2QqT06QeZSa1q1whX+sYAtJF2/38Tdb2oAnNEbMVyOh7YOkTJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750356215; c=relaxed/simple;
-	bh=mHAMYuIGEsFqdsF3yX/wqLMTXEHswZHPRaMvZ11doms=;
-	h=Message-ID:Date:Mime-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ElBgO9y1tGWaIAD9y0rxSVJeswGJ+aPRTdczZEMa5YFVlP0+Dd9QRcM0fmMThmzEbuoTzXw3yIHo8brRfWNx6mtwpYAmfciVwF6B1qy5/bgcejkEJ/Zpr7pegw6zzgzcaPe7NR/Ln5lOJ+qEs7JOKK+ivrH9EUnPw7iZ9jfEWzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com; spf=pass smtp.mailfrom=harmstone.com; dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b=t8bvAQ56; arc=none smtp.client-ip=62.3.69.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=harmstone.com
+	s=arc-20240116; t=1750383316; c=relaxed/simple;
+	bh=Ygb8D3DFDD//bZSNlotR+GYu4xbc8GQmhXzfNgEY/lU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Evf2vWN7P57iJcRB49CQ5Ogp+kbgW4Sm9KOkroJqIqdH4XQ+S7dj0YfBy9nMniTk7nKA41fgMYRyvgEvlm7KflPPr8QY1DytRNZDkS6/h+cm6zEl+Yc75COmz/1HIVn6BfB9M7dJmnbr2SSpejb2rVOlzE55d+OAT8hOQCucN8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jM7li+nU; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b="t8bvAQ56"
-Received: from [IPV6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2] (beren.burntcomma.com [IPv6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
-	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
-	(Client CN "hellas", Issuer "burntcomma.com" (verified OK))
-	by mail.burntcomma.com (Postfix) with ESMTPS id E356428978C;
-	Thu, 19 Jun 2025 19:03:27 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=harmstone.com;
-	s=mail; t=1750356208;
-	bh=tspvUCiguj3Wm3D+7sYAUwox/ingERnQvBTjDZbBptE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=t8bvAQ562dcHIUDPtyM7scI11vnx0aLskD+4QOHQg4HN+c7YXxVTD81a7ukUWfqHO
-	 kBGx3GCgE8p9ZXb96k85zfwwBBMuB22fA7gsgxbBJ68D/nGSbC5DLWqgy7Zz6Qmcq8
-	 696ed9DqULoa6gkGmniB4LpfRrj2r4tACWKK4Itc=
-Message-ID: <fcb1bd45-f703-4df7-a3dd-f5cdae9c3983@harmstone.com>
-Date: Thu, 19 Jun 2025 19:03:27 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jM7li+nU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750383315; x=1781919315;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ygb8D3DFDD//bZSNlotR+GYu4xbc8GQmhXzfNgEY/lU=;
+  b=jM7li+nUUt/Qidl+PterMewp2En2Kw4LOW04OYx4WnCmn2JmlmZjJPul
+   0lux5JQuGuOpiEm1F1URoZmaP7dWSd1EaM1CjX1levRGHazxzhb/G0xOd
+   S7YXONf5s9wi/f3Xtfew7VeEhnVedk/X4lWvA8WX0k0vpahTklUZQ9ZHH
+   HjYqvtYKxRYNtF0E3M71YO/kFDj3ePqQ3mUI+byNoG72cjnMG2tEuT+k8
+   uxgbWDOikNSN/fOUI3iLUqaTk5sedHpgRpxGD69vuzzVP4mIiow2LDOMe
+   2AS3uwffdnmqKsTVB4ba/9vOyEGPo3mk5UOgxxdxprGN4hcE4bamhKuyU
+   Q==;
+X-CSE-ConnectionGUID: q4cPJS7RTK+ev3X1XN6JWQ==
+X-CSE-MsgGUID: XgOcd5gVQWOJLU80xbstpA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="51750452"
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="51750452"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 18:35:14 -0700
+X-CSE-ConnectionGUID: CPgJMUJiRxiT9t4/7rcsJg==
+X-CSE-MsgGUID: kbMFDARYTOqnqEggcyM+9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="188001454"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 19 Jun 2025 18:35:09 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSQep-000LGA-0S;
+	Fri, 20 Jun 2025 01:35:07 +0000
+Date: Fri, 20 Jun 2025 09:34:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alice Ryhl <aliceryhl@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Miguel Ojeda <ojeda@kernel.org>, Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
+Subject: Re: [PATCH] panic: improve panic output from Rust panics
+Message-ID: <202506200907.0hDFXWmf-lkp@intel.com>
+References: <20250619-rust-panic-v1-1-ad1a803962e5@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: Re: [PATCH v2] btrfs: replace deprecated strcpy with strscpy
-To: Brahmajit Das <listout@listout.xyz>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-btrfs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com,
- dsterba@suse.com, kees@kernel.org, ailiop@suse.com
-References: <20250619140623.3139-1-listout@listout.xyz>
- <20250619153904.25889-1-listout@listout.xyz>
- <b8945d37-3eb9-4ad6-b3eb-2725dbb008ad@harmstone.com>
- <rbjjfbhrwh4qjfj4pjhb5zzrvyddjlekfed6kfcrtuurj2ovgg@dm6xesb7nuzm>
-Content-Language: en-US
-From: Mark Harmstone <mark@harmstone.com>
-Autocrypt: addr=mark@harmstone.com; keydata=
- xsBNBFp/GMsBCACtFsuHZqHWpHtHuFkNZhMpiZMChyou4X8Ueur3XyF8KM2j6TKkZ5M/72qT
- EycEM0iU1TYVN/Rb39gBGtRclLFVY1bx4i+aUCzh/4naRxqHgzM2SeeLWHD0qva0gIwjvoRs
- FP333bWrFKPh5xUmmSXBtBCVqrW+LYX4404tDKUf5wUQ9bQd2ItFRM2mU/l6TUHVY2iMql6I
- s94Bz5/Zh4BVvs64CbgdyYyQuI4r2tk/Z9Z8M4IjEzQsjSOfArEmb4nj27R3GOauZTO2aKlM
- 8821rvBjcsMk6iE/NV4SPsfCZ1jvL2UC3CnWYshsGGnfd8m2v0aLFSHZlNd+vedQOTgnABEB
- AAHNI01hcmsgSGFybXN0b25lIDxtYXJrQGhhcm1zdG9uZS5jb20+wsCRBBMBCAA7AhsvBQsJ
- CAcCBhUICQoLAgQWAgMBAh4BAheAFiEEG2JgKYgV0WRwIJAqbKyhHeAWK+0FAmRQOkICGQEA
- CgkQbKyhHeAWK+22wgf/dBOJ0pHdkDi5fNmWynlxteBsy3VCo0qC25DQzGItL1vEY95EV4uX
- re3+6eVRBy9gCKHBdFWk/rtLWKceWVZ86XfTMHgy+ZnIUkrD3XZa3oIV6+bzHgQ15rXXckiE
- A5N+6JeY/7hAQpSh/nOqqkNMmRkHAZ1ZA/8KzQITe1AEULOn+DphERBFD5S/EURvC8jJ5hEr
- lQj8Tt5BvA57sLNBmQCE19+IGFmq36EWRCRJuH0RU05p/MXPTZB78UN/oGT69UAIJAEzUzVe
- sN3jiXuUWBDvZz701dubdq3dEdwyrCiP+dmlvQcxVQqbGnqrVARsGCyhueRLnN7SCY1s5OHK
- ls7ATQRafxjLAQgAvkcSlqYuzsqLwPzuzoMzIiAwfvEW3AnZxmZn9bQ+ashB9WnkAy2FZCiI
- /BPwiiUjqgloaVS2dIrVFAYbynqSbjqhki+uwMliz7/jEporTDmxx7VGzdbcKSCe6rkE/72o
- 6t7KG0r55cmWnkdOWQ965aRnRAFY7Zzd+WLqlzeoseYsNj36RMaqNR7aL7x+kDWnwbw+jgiX
- tgNBcnKtqmJc04z/sQTa+sUX53syht1Iv4wkATN1W+ZvQySxHNXK1r4NkcDA9ZyFA3NeeIE6
- ejiO7RyC0llKXk78t0VQPdGS6HspVhYGJJt21c5vwSzIeZaneKULaxXGwzgYFTroHD9n+QAR
- AQABwsGsBBgBCAAgFiEEG2JgKYgV0WRwIJAqbKyhHeAWK+0FAlp/GMsCGy4BQAkQbKyhHeAW
- K+3AdCAEGQEIAB0WIQR6bEAu0hwk2Q9ibSlt5UHXRQtUiwUCWn8YywAKCRBt5UHXRQtUiwdE
- B/9OpyjmrshY40kwpmPwUfode2Azufd3QRdthnNPAY8Tv9erwsMS3sMh+M9EP+iYJh+AIRO7
- fDN/u0AWIqZhHFzCndqZp8JRYULnspXSKPmVSVRIagylKew406XcAVFpEjloUtDhziBN7ykk
- srAMoLASaBHZpAfp8UAGDrr8Fx1on46rDxsWbh1K1h4LEmkkVooDELjsbN9jvxr8ym8Bkt54
- FcpypTOd8jkt/lJRvnKXoL3rZ83HFiUFtp/ZkveZKi53ANUaqy5/U5v0Q0Ppz9ujcRA9I/V3
- B66DKMg1UjiigJG6espeIPjXjw0n9BCa9jqGICyJTIZhnbEs1yEpsM87eUIH/0UFLv0b8IZe
- pL/3QfiFoYSqMEAwCVDFkCt4uUVFZczKTDXTFkwm7zflvRHdy5QyVFDWMyGnTN+Bq48Gwn1M
- uRT/Sg37LIjAUmKRJPDkVr/DQDbyL6rTvNbA3hTBu392v0CXFsvpgRNYaT8oz7DDBUUWj2Ny
- 6bZCBtwr/O+CwVVqWRzKDQgVo4t1xk2ts1F0R1uHHLsX7mIgfXBYdo/y4UgFBAJH5NYUcBR+
- QQcOgUUZeF2MC9i0oUaHJOIuuN2q+m9eMpnJdxVKAUQcZxDDvNjZwZh+ejsgG4Ejd2XR/T0y
- XFoR/dLFIhf2zxRylN1xq27M9P2t1xfQFocuYToPsVk=
-In-Reply-To: <rbjjfbhrwh4qjfj4pjhb5zzrvyddjlekfed6kfcrtuurj2ovgg@dm6xesb7nuzm>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619-rust-panic-v1-1-ad1a803962e5@google.com>
 
-On 19/06/2025 6.59 pm, Brahmajit Das wrote:
-> On 19.06.2025 18:06, Mark Harmstone wrote:
->> On 19/06/2025 4.39 pm, Brahmajit Das wrote:
-> ...
->>
->> Surely this doesn't compile... strscpy takes three parameters.
->>
-> It does, the third parameter is optional. From include/linux/string.h
-> 
-> #define strscpy(dst, src, ...) \
-> 	CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
-> 
-> But I'm more than happy to add the third parameter.
+Hi Alice,
 
-Okay. It looks like this was added by e6584c3964f2ff76a9fb5a701e4a59997b35e547 in
-2023 - the docs don't seem to have caught up yet.
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 19272b37aa4f83ca52bdf9c16d5d81bdd1354494]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Alice-Ryhl/panic-improve-panic-output-from-Rust-panics/20250619-231923
+base:   19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+patch link:    https://lore.kernel.org/r/20250619-rust-panic-v1-1-ad1a803962e5%40google.com
+patch subject: [PATCH] panic: improve panic output from Rust panics
+config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250620/202506200907.0hDFXWmf-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250620/202506200907.0hDFXWmf-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506200907.0hDFXWmf-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> error[E0277]: `core::option::Option<&core::fmt::Arguments<'_>>` doesn't implement `core::fmt::Display`
+   --> rust/kernel/lib.rs:210:36
+   |
+   210 |     match core::format_args!("{}", info.message()) {
+   |                                    ^^^^^^^^^^^^^^ `core::option::Option<&core::fmt::Arguments<'_>>` cannot be formatted with the default formatter
+   |
+   = help: the trait `core::fmt::Display` is not implemented for `core::option::Option<&core::fmt::Arguments<'_>>`
+   = note: in format strings you may be able to use `{:?}` (or {:#?} for pretty-print) instead
+   = note: this error originates in the macro `core::format_args` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
