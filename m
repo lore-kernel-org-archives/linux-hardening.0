@@ -1,120 +1,144 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E45427E04D
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Jun 2025 09:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B4E30E830;
+	Fri, 20 Jun 2025 09:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750410085; cv=none; b=FwTEpcbjj7DmU+ncVOe6eKYDHaN7bFDKetrKsdmRdk33vGj2QrPdydtbqkyhQk2EpIHEDSUV/Xl6lpXYIZUV9WlWlbLk1Gbl8RG1XuCGDqnMvVVJ4wisjFNcPWyBPMCf4LUfVJzZ32TPBqV2WFufiQUweTVg26qrXvk7uZ4ZCPc=
+	t=1750412209; cv=none; b=tzpTXzpFblchAymAaleAPua75LM3kNRMgxc2ybwFx84gZVS8LXNdQsUHLYlxK2yPkdp89oK9lIr8e4ixCG7cjKDXj8qxHmygRchs8VFP4XWAuZfhclGdEDg2yrDsfcFjoLQayk8XxIlm4FrJHTOsM3KrmWuXShZ/mOAoFyOGkTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750410085; c=relaxed/simple;
-	bh=YrP2gC6yzF7+01sD+adEWpkCL/eUCTLHQ55D7CZnBEA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=tjQu4hnKOEJ8Oz1XVSMPHnUJCe1v98DMG5KllSYh2VmOtijncg9NguoB9lr626Q1y4vEfN7aUPHevOeW4oj/lYacbVBgTpjV9Zr31uJhdsrcWkJjP7wkZcFt2XB8wX/2XVVhDiH/hmXjcGjjXUBK0XC3a0WHQq4kk2nDaBb8Boo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=LGsGSgIV; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1750412209; c=relaxed/simple;
+	bh=FuOrTJYV1TyVcLzYLdvi5tZy8xh4xKDKJ3Sg9dm0nak=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D42stPzP0svUK7UhH8kXeV4qT95j4xcWD87nBGtqeOtFdcf6tVtV4G6aKNn/QAsA0UsAxvAZ1j3ABq5/3NkUta7bJy3EYTY/zs2FSU6GLKHKo8SVJziwJI07IpghSgpryUvCXelNf72qpH6zDcaIgaQKo8jLhJ+SHJiNFxjfldY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cMN4bv7t; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="LGsGSgIV"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ae04ce9153aso207806566b.0
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Jun 2025 02:01:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cMN4bv7t"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-313756c602fso191936a91.3;
+        Fri, 20 Jun 2025 02:36:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1750410082; x=1751014882; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BSgGeI6RPkNX/6Nx7o+CdwyAntQHm7sGCCxVWOem2w8=;
-        b=LGsGSgIV1QOsEbm4P8phGCqfn54CXCS2MA4qCKXCKvy1D+ysntkeA6eUfd6A/5Ub0J
-         SiS5GSq1elwhdOwPPSRAF3l74NdM2iq/v7t5LfHzhP6SoZGQ8QgcGTwPF84dCmeqCoVh
-         arvmepCP86SAv3phx/hBcXy9RFKLBqRRGU8MKAKjIXlUljB+UO/riQ+7H1xOLMItb4/f
-         VDdgI/qCaVpKvVKlhQav5bscnPapHoX+LMfLG4yddlLknU1YY4sOswuZbgDmRmNROqi5
-         ZYMvN6XvaZakG5yNZt8q7f2chKhrp4LENsWJcj56Evi0nj3vIJmBQlO6tQkoiYNKn0ro
-         MM8w==
+        d=gmail.com; s=20230601; t=1750412207; x=1751017007; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7wAC0jk/TixklVdDrxl3rlcFerlxjtSOFBZZ7j6Irus=;
+        b=cMN4bv7t+5rVYjFw7OZsb2eZTSC+jM6CHW6rpC8caT9yCSiqlNpZmsBH1633AftZzf
+         fVrEIpflJGMUAP5J66im8JMuCd1adHjhot6JovoxDCtUu5fRXe9LKE6gDfST96THHS+V
+         +oZxRejPW6RKsQlTvD2vlvrPurdc3fghFXgq0Fp+4A/jYBqcav85FF2MSZ/SF1fViUtw
+         iooxfrbu873NQ9RDxYtlv5cog3unYD0R0KT4MTpi/4DHEkPDhT4J6xYPqTm78/tYNHVL
+         u+9YPAALMCYuRhcYAJHMfZ85RNt3rQZCOKq+ZJsmSiSsFjeuIcduJvHrzlqDPYKNp0D7
+         g5sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750410082; x=1751014882;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BSgGeI6RPkNX/6Nx7o+CdwyAntQHm7sGCCxVWOem2w8=;
-        b=j+qUG/B/AHu5eyCYlrowaTLcHFA9peWn3QnXwq2GnsuGqvVEHwS/LwJi762jy1Qlnq
-         w7eXwPPPj9PJumYjbK8SqdiwaIijMyGyS2k1KE5SofTTf14Q9yiU8tnla/0UrcLZoXSM
-         THW1A5bAAMytaqHrIYa5sfva8wzkZ8ji6BOalWmjnIxKQoTR4Rdt/n0AIdJ4Hyke06dT
-         0Sy24TYm8l/rwyUjXqrf7lbI3aaZT/WAjb7OFh8/899vxfNP/zMQR9r87Cnvsa/BXhy3
-         iAa06CprLq+YNiRf2s9I84u/5cyPILd8foZ70Hg+7RaJF4dNSbXhYpxXnPU41IWKv+Qt
-         x2Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCVoVUESOnX0m+dmuKuNjmE7jBVX+/ufsY5Yd4Dvlk5/sn+bM6cNGAL1WmpnBv/d6X/Q/e7YTCBKn6olhQD2ApY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLxzKXPGtTQ9rC7DrXm5sZyFOVOgV9G5V/5+E3+Ca1qmkK5D9w
-	lXh0qC0MU0CLEEKvWOjrLqcccJemZIPVio0M71wVG7gk8mX3KyRn48g6rmkhhdYpuks=
-X-Gm-Gg: ASbGncvfC9C6/mSorifHorXaI5RMDM42fw/gw8vzz0axhIsyX9gwKTJiG7JyNuxulHM
-	FqYLwn/F2xOOwvo7IrWu2DnDhiP5qbtZ5Fh4p9HDDUIx1ERpudjkvV3CMERv+dJtYxAheAdnFDT
-	+W3SiQz5IajHK51vGfNPSKM5M4oxJmq6gM/P4y1xODCVsI22V0T8/nc/vbC65S0+jYD68Zxi33y
-	wpV6c4pGtaKeOH+lhgaU3diMLH3dRLmO2QtXEjqjJDmZeEj+GT8nm2EQ+TNnoDsqyQ+RnXMWdM9
-	ytEnoB6SZlBTSZO0kC/RuK9+3juYeU1qrKLQllK2tBt9R6zqjkqiIgHCSPMiCeMDIrNg5VAUlca
-	epByB13n6kixvwV+GtYe4mZYkKUgsLGIv9aQmbv9XQQ==
-X-Google-Smtp-Source: AGHT+IEhyS+3Hkk2TlhfDWZUPUo2xBTpBDeJOyfp0vYr2FDqO4tGaGom5OMtaz2UPfLrKxD1kEZb1Q==
-X-Received: by 2002:a17:907:3d16:b0:ad8:959c:c567 with SMTP id a640c23a62f3a-ae05ae211a0mr151097266b.10.1750410082254;
-        Fri, 20 Jun 2025 02:01:22 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae05408300dsm129887466b.95.2025.06.20.02.01.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 02:01:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750412207; x=1751017007;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7wAC0jk/TixklVdDrxl3rlcFerlxjtSOFBZZ7j6Irus=;
+        b=L6tz3xVmC1S4jq0ED42nNjLzim04/nZ/9H0SRwd5P3zjywDSBQ+Zto7mX+xe8Be3+m
+         2e/GlSGLXu0DvLxs+tRMwGyo5ZwWFYGmc4Xe++4op93+8qAeFrwQkSG2I6/kQ1kQqV8Z
+         BZKd4IEOQpg+OnlzQAWyxioiN7ZWhvscobZOnrbVxoexS8G+2mExf/VvtNMaEA+LMk74
+         XRUhrRrC3xK+wjcmN28RvHClQSSGhX6WrJU27L34Yba7Lvu8HoAdjv3V2Uzv/WYwuoh6
+         O7hA5APswF+OLf2nkECssJ7f1oY05HALnDWA8+cz24eOLYKWiXi1231bWOJ7YvGN+fXf
+         eHug==
+X-Forwarded-Encrypted: i=1; AJvYcCU3BYNNcxpnjhrMHGXNE39gyKLpTXHN8NWiRSVXc/fUWI6U8thF1StUcb1g4UbLPwn75F5rlEzP5A4E@vger.kernel.org, AJvYcCV8qKTv7deT3ZMhsJgchIi5gr8yguIZuRn7agEWPUbg7CL3zx58oBzEChTmmrHeUChdl4hYuUlbPco1xUia7B0=@vger.kernel.org, AJvYcCWFvXJwhdnr2Mp/YLczGjAnRek2leKtb59z5RFEi/hHapB9iXp/AT6EUyB2mI2FdJEXuJvF2t4f251noeKg@vger.kernel.org, AJvYcCXvYFskQ6EdM2W6V4Bs7JbPvYqLdvh/cYEAortDwF1u3sDKE2ORGIFPeR3kgBRdzL/3Vck2D+LmCbpGO7ZaPrjm@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSdSynAQPSsHxIBuQNHixNksCaKemVcMH/L8pAFpcxnNQSNMIJ
+	joNgzvjuHqsCkKRQfySMSzHQtEjSZbBkH+UQKaUjpObVMuml73tUQSO6PjyO8gjGsCnUfLtrO7n
+	vMycdrFKg/kPEg2iqaxjERYH/1IGUJ44=
+X-Gm-Gg: ASbGncumSk6tV7JcmqQJ9q7/DM+GgKejM7Mlfi/eEWS5pi3nKKVelJ1oSmOWD65nmNB
+	FK21jXIQgR09/gHQzC6h8EFcmrXLWUJpLLc638d4BwrpeHce9H3gcax5CvKwJd2kwM2USlj9ukn
+	p0KKoN+6aYRZrL/11JrqAqW7l3dptGLeKaeipClEYunQ==
+X-Google-Smtp-Source: AGHT+IErmtjg+qV/f7L/+kcv6/HmRz1EzHIDT7AGQ80FANhBmxuvff1/k1x66DZEdVanCBXpBXa0VvV+WwWlLoI0aMc=
+X-Received: by 2002:a17:90b:2dc8:b0:313:2f9a:13c0 with SMTP id
+ 98e67ed59e1d1-3159d628b10mr1572415a91.1.1750412207139; Fri, 20 Jun 2025
+ 02:36:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250619-rust-panic-v1-1-ad1a803962e5@google.com> <CANiq72=ORd8Y=BiMCWEN7sdjLTGrepnLd58AObVHEPcZE_NVAg@mail.gmail.com>
+In-Reply-To: <CANiq72=ORd8Y=BiMCWEN7sdjLTGrepnLd58AObVHEPcZE_NVAg@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 20 Jun 2025 11:36:34 +0200
+X-Gm-Features: Ac12FXwWRyOtO7_L2Yxf7CvhqMQMdmMs9HlEkDMLDzUlEEnWHFKhBuDi7KW2WNU
+Message-ID: <CANiq72nVJ4wL0eWY1C40hqYaOXuLjLFJZePjMh=n1YzZXCTPrw@mail.gmail.com>
+Subject: Re: [PATCH] panic: improve panic output from Rust panics
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Miguel Ojeda <ojeda@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: multipart/mixed; boundary="000000000000d156250637fd99bc"
+
+--000000000000d156250637fd99bc
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 20 Jun 2025 11:01:21 +0200
-Message-Id: <DAR8L6C8LIOH.A6EGWUZJ2NN4@fairphone.com>
-Cc: <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Sebastian
- Reichel" <sebastian.reichel@collabora.com>,
- <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Casey Connolly" <casey.connolly@linaro.org>, "Sebastian Reichel"
- <sre@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Bjorn
- Andersson" <andersson@kernel.org>, "Konrad Dybcio"
- <konradybcio@kernel.org>, "Kees Cook" <kees@kernel.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
- <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
-In-Reply-To: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
 
-On Thu Jun 19, 2025 at 4:55 PM CEST, Casey Connolly wrote:
-> Introduce support for the SMB5 charger found on pm8150b and other more
-> modern Qualcomm SoCs.
+On Thu, Jun 19, 2025 at 6:10=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> SMB5 is largely similar to SMB2, with a few register differences. The
-> main difference is the new Type-C hardware block which some registers
-> are moved to.
->
-> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
-> ---
+> Yeah, I don't think we should do that.
 
-<snip>
+By the way, if we are OK with just moving the line down, then we could
+keep using `BUG()` taking advantage of `BUGFLAG_NO_CUT_HERE`.
 
-> +static int smb_get_prop_health(struct smb_chip *chip, int *val)
-> +{
-> +	switch (chip->gen) {
-> +	case SMB2:
-> +		return smb2_get_prop_health(chip, val);
-> +	case SMB5:
-> +		return smb5_get_prop_health(chip, val);
-> +	}
-> +}
+Well, at least for x86 it seems straightforward -- see diff -- to get
+output like e.g.:
 
-This doesn't compile for me:
+    [    0.609779] ------------[ cut here ]------------
+    [    0.609855] rust_kernel: panicked at samples/rust/rust_minimal.rs:29=
+:9:
+    [    0.609855] my Rust panic message
+    [    0.610474] kernel BUG at rust/helpers/bug.c:7!
+    [    0.610992] Oops: invalid opcode: 0000 [#1] SMP NOPTI
 
-drivers/power/supply/qcom_smbx.c: In function 'smb_get_prop_health':
-drivers/power/supply/qcom_smbx.c:588:1: error: control reaches end of non-v=
-oid function [-Werror=3Dreturn-type]
-  588 | }
-      | ^
+Cheers,
+Miguel
 
-Regards
-Luca
+--000000000000d156250637fd99bc
+Content-Type: text/x-patch; charset="US-ASCII"; name="bug_rust.patch"
+Content-Disposition: attachment; filename="bug_rust.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mc4ly27b0>
+X-Attachment-Id: f_mc4ly27b0
+
+RnJvbSAyNWYzMDNkNDM4MWQzYjU4YzBlMDhmNmNmNTI0MzU3NTA5ZDkzNmJkIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBNaWd1ZWwgT2plZGEgPG9qZWRhQGtlcm5lbC5vcmc+CkRhdGU6
+IFRodSwgMTkgSnVuIDIwMjUgMTg6NDM6NTIgKzAyMDAKU3ViamVjdDogW1BBVENIXSAuLi4KCi0t
+LQogYXJjaC94ODYvaW5jbHVkZS9hc20vYnVnLmggfCA3ICsrKysrLS0KIHJ1c3QvaGVscGVycy9i
+dWcuYyAgICAgICAgIHwgMiArLQogcnVzdC9rZXJuZWwvbGliLnJzICAgICAgICAgfCAzICsrKwog
+MyBmaWxlcyBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgpkaWZmIC0t
+Z2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vYnVnLmggYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9i
+dWcuaAppbmRleCBmMGU5YWNmNzI1NDcuLjFkODYyZTE2ODQ5YiAxMDA2NDQKLS0tIGEvYXJjaC94
+ODYvaW5jbHVkZS9hc20vYnVnLmgKKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vYnVnLmgKQEAg
+LTc5LDEyICs3OSwxNSBAQCBkbyB7CQkJCQkJCQkJXAogI2VuZGlmIC8qIENPTkZJR19HRU5FUklD
+X0JVRyAqLwoKICNkZWZpbmUgSEFWRV9BUkNIX0JVRwotI2RlZmluZSBCVUcoKQkJCQkJCQlcCisj
+ZGVmaW5lIEJVR19GTEFHUyhmbGFncykJCQkJCVwKIGRvIHsJCQkJCQkJCVwKIAlpbnN0cnVtZW50
+YXRpb25fYmVnaW4oKTsJCQkJXAotCV9CVUdfRkxBR1MoQVNNX1VEMiwgMCwgIiIpOwkJCQlcCisJ
+X0JVR19GTEFHUyhBU01fVUQyLCBmbGFncywgIiIpOwkJCQlcCiAJX19idWlsdGluX3VucmVhY2hh
+YmxlKCk7CQkJCVwKIH0gd2hpbGUgKDApCisjZGVmaW5lIEJVRygpIEJVR19GTEFHUygwKQorI2Rl
+ZmluZSBCVUdfUlVTVCgpIEJVR19GTEFHUyhCVUdGTEFHX05PX0NVVF9IRVJFKQorCgogLyoKICAq
+IFRoaXMgaW5zdHJ1bWVudGF0aW9uX2JlZ2luKCkgaXMgc3RyaWN0bHkgc3BlYWtpbmcgaW5jb3Jy
+ZWN0OyBidXQgaXQKZGlmZiAtLWdpdCBhL3J1c3QvaGVscGVycy9idWcuYyBiL3J1c3QvaGVscGVy
+cy9idWcuYwppbmRleCBlMmQxM2JhYmM3MzcuLmVmOWJlNmEwYzU5YiAxMDA2NDQKLS0tIGEvcnVz
+dC9oZWxwZXJzL2J1Zy5jCisrKyBiL3J1c3QvaGVscGVycy9idWcuYwpAQCAtNCw1ICs0LDUgQEAK
+CiBfX25vcmV0dXJuIHZvaWQgcnVzdF9oZWxwZXJfQlVHKHZvaWQpCiB7Ci0JQlVHKCk7CisJQlVH
+X1JVU1QoKTsKIH0KZGlmZiAtLWdpdCBhL3J1c3Qva2VybmVsL2xpYi5ycyBiL3J1c3Qva2VybmVs
+L2xpYi5ycwppbmRleCA2YjQ3NzRiMmIxYzMuLmM1ZTJhYjVkYTczOSAxMDA2NDQKLS0tIGEvcnVz
+dC9rZXJuZWwvbGliLnJzCisrKyBiL3J1c3Qva2VybmVsL2xpYi5ycwpAQCAtMTk3LDYgKzE5Nyw5
+IEBAIHB1YiBjb25zdCBmbiBhc19wdHIoJnNlbGYpIC0+ICptdXQgYmluZGluZ3M6Om1vZHVsZSB7
+CiAjW2NmZyhub3QoYW55KHRlc3RsaWIsIHRlc3QpKSldCiAjW3BhbmljX2hhbmRsZXJdCiBmbiBw
+YW5pYyhpbmZvOiAmY29yZTo6cGFuaWM6OlBhbmljSW5mbzwnXz4pIC0+ICEgeworICAgIHVuc2Fm
+ZSB7CisgICAgICAgIGJpbmRpbmdzOjpfcHJpbnRrKHN0cjo6Q1N0cjo6ZnJvbV9ieXRlc193aXRo
+X251bF91bmNoZWNrZWQoYmluZGluZ3M6OkNVVF9IRVJFKS5hc19wdHIoKSk7CisgICAgfQogICAg
+IHByX2VtZXJnISgie31cbiIsIGluZm8pOwogICAgIC8vIFNBRkVUWTogRkZJIGNhbGwuCiAgICAg
+dW5zYWZlIHsgYmluZGluZ3M6OkJVRygpIH07CgpiYXNlLWNvbW1pdDogZTA0Yzc4ZDg2YTk2OTlk
+MTM2OTEwY2ZjMGJkY2YwMTA4N2UzMjY3ZQotLQoyLjUwLjAK
+--000000000000d156250637fd99bc--
