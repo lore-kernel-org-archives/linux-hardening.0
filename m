@@ -1,191 +1,102 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6F586344
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Jun 2025 02:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823311B87F2;
+	Fri, 20 Jun 2025 03:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750387862; cv=none; b=QX8AFPKgYdb3dETydcaE3JvbiCgZVkVuRBqZuRSWTby6zW0iP3dCvyr291ZZvGT73JTOWvFCk6sczfsp6XyPXDxDhEOahBsk/veEdS75O4nX+KdUn6q8czeXT638TsYLw5mzVU7vOkcJfkxfMaBWIxmYBiRl/kZ2tsvcnw02HR8=
+	t=1750390406; cv=none; b=t22C8bhTVoL6y6z82t8pVp2SCyPYnNdIjY0ba8KYoJ6yLkcIuCOLkFrwAAktDbhYuMcXGsp4fWnlcWg0bfpHn4cVJdf3naXpwI9lY5jORHLnXqF53s3o7m4mVet2IbYvaWJz1r7HSTj5ZK2DqZHfVWSS5DXdCVGOakjOuQ4sHhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750387862; c=relaxed/simple;
-	bh=/QKDlRcwhqIDqN1ZyOADY7Kn32bkkQMXiTnisdbzINo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MtNDyk8w3Fe15Os32yNupXbv7LPW5uA9ptRfeL9+QTtMgzWgUsMThD9/lgPyp9sqjtv7PGnlovy1C0/dW5e9ih8DZVXRK4pvzTjj8cp4p+66+hnq8nmLpp/WBFRNM9UlKqUhAr0QmrLq+4eDodRZqrok32VLg283rzxK8dcNPYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=a69Il1lX; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1750390406; c=relaxed/simple;
+	bh=6+/5o6kmcWKk3e2NbFhat/dx9eXksyOA9L6fkZ/p9uU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vyk8emCz4Ftrtls2DAO0OJEErsX38bRbRCZqJPAcJ/00XEQMn0QHD32+yWsF8kR2BrOBftzRi7HUAO3eW4ZsqOo/qULttyhAaTERaq+YyXC7No+S11hLZf4tCLUSkT0ddVFB6B8/noshq3c2X4xAhim1AMvZR6nyNUJhLTRGKPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gUBaWCiJ; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a69Il1lX"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32b7113ed6bso13662781fa.1
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Jun 2025 19:50:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750387858; x=1750992658; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/Tx2CbH4A/3SzNrGWHEPoaDpuPtPaErEYy8KTPvOJ9E=;
-        b=a69Il1lXynoX9hlTwfZFz3xpXNoUER1T+d+lc+rBQa8xQJKtzEVVDqlwiGHHMBhCWX
-         fOeRAJjtKhSQnjk6/vg0dZKj25Dl8j8ipHl1CojUzvbblmnXTGNORjKrK4JkuwgrcPgp
-         EObWpgSNWQyRRjOlZNUjl5g3dE18AR+8CBKiw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750387858; x=1750992658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/Tx2CbH4A/3SzNrGWHEPoaDpuPtPaErEYy8KTPvOJ9E=;
-        b=dzdomHJM/enqbvra3eOAYOOpPO/Y39X+84/XISNbS/FKU5ev9/dtGEdKxbnJqLn/3j
-         xufUop2QNo5QWWMXcfEUOB2j/P8EjU22RAjVtAmKCSeIJshbNaDBpqesan/9ShngNTCE
-         H/p7mtgiGQn/BS3+edspAAYrLpmsEPjxKuX6N9Mpl+xarAIPbHZET94mhxMkyGAZRduw
-         F8M7iMSGpBVpbjQra11g1qRWoFG+VdgMRs8bfAMmfbXxH+iWpL7haiyivKm/lFhowVee
-         NRpaxVociwvPglwYtacPhknHYKBMBZsENTyJmOohz5pt4jS8GtP+sGqnIJxod6f2RKRC
-         3R+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVY9+G3dMMFNmyVmZmI7oTLJNKsyfcMdMfcwKYwPLxViDz4dzSgqiCGGWjNR+ms07jHUy8mqGxFCp9sy9p2s+o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWJFCY7OCzXWUh8c4BtXw2/HPHWTLu5+6zyeSJf6L1BIEbg56Y
-	/dBs02N0oXahrq0vlAf7HEByl/S9NDFgAmXxhaw5aNyQX7I4Jhmbz0Goi11Mixj02U/jO4rShqd
-	dweL6PdwX2aEKucdYOPYtFANwElsRhwN67s1et90V
-X-Gm-Gg: ASbGncvYt7R6I+MGuhCqlZUmJehJ1lQFGfvIfqdtIfQrurll4fb8bahLe7K3k3nMPFJ
-	eYgmtAp3YdInxKvFF4MizPsnsX0+LTdlN6LbYxMoBkxh7gEYIwlGt3fKhAC5YH9yuR5C58aDjIR
-	tRgLtutczYu7bGSVJyg44civ0T6jJ81qWQfZIC/C5reYTDcWPhMaXcQpV9+6Rl0AUPZ74O1W+vA
-	A==
-X-Google-Smtp-Source: AGHT+IEpFd0jknn6dJ7uHw9T9Pf5V4mOpm5v3zlNZwNkWSElZnOusIQCIAw38tA7L/6endmHtCrfM0YwX0tD4KBIaVU=
-X-Received: by 2002:a2e:bc05:0:b0:32b:9c54:4ca1 with SMTP id
- 38308e7fff4ca-32b9c544dfcmr1378961fa.39.1750387858055; Thu, 19 Jun 2025
- 19:50:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gUBaWCiJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750390404; x=1781926404;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6+/5o6kmcWKk3e2NbFhat/dx9eXksyOA9L6fkZ/p9uU=;
+  b=gUBaWCiJGuywIjJtog9di/kCyviKcdjpS6ru+SaVCLKQ1dYqTjP+9lr9
+   WRrrc2I5XWCjyNTFJ+ERFVrBcHisSh9jS4yefgaz38P6o/R0AfVvpoUVy
+   BOsFrj6DeaW7gyQi9/0muR2eYluh9MP5ZlIXllTNVX+ubnBTMPDMF6B5Q
+   2474hvuy0l925Z24OciP3BWCV+gJGb1OkE2nCf5cKP2mSrGUq4/Mnriy+
+   jFPS563Y45BxpomSgEm4GE6t4yBK/7WzldqNp62sZh34t6tWgfSu5/vwg
+   +FMS+iNFruh19kZ00R9Wf40KthlRljOwVfNn+cpAFOYC0qYqAdgOHjs1t
+   g==;
+X-CSE-ConnectionGUID: asbSkjizR0qeQfwuNlsa7A==
+X-CSE-MsgGUID: 1SRYPx4FQJimbAGCwveB/w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="63692002"
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="63692002"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 20:33:24 -0700
+X-CSE-ConnectionGUID: VUdPqhjeRb2L7mMeCgCrCw==
+X-CSE-MsgGUID: 7ZdBpbZbRx6UeBW6+OSrbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="151105038"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 19 Jun 2025 20:33:20 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSSVB-000LL8-2s;
+	Fri, 20 Jun 2025 03:33:17 +0000
+Date: Fri, 20 Jun 2025 11:32:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Casey Connolly <casey.connolly@linaro.org>,
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Casey Connolly <casey.connolly@linaro.org>
+Subject: Re: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
+Message-ID: <202506201101.9HMIR1fb-lkp@intel.com>
+References: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610050458.4014083-1-naoyatezuka@chromium.org> <aEhK9knE1Fu_e_Sv@tzungbi-laptop>
-In-Reply-To: <aEhK9knE1Fu_e_Sv@tzungbi-laptop>
-From: Naoya Tezuka <naoyatezuka@chromium.org>
-Date: Fri, 20 Jun 2025 11:50:46 +0900
-X-Gm-Features: AX0GCFvTeEJqMqZJLqsl51gLxelWMSzurbKwmLCMjIMUg2mxZgtwpD35rT1g5Ho
-Message-ID: <CAFe8q1Xp3c-o7DdNcmdwRDcntnEjD5sqVQEj06ouugLK6KO66A@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/chrome: chromeos_pstore: Add ecc_size module parameter
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Benson Leung <bleung@chromium.org>, Kees Cook <kees@kernel.org>, 
-	Tony Luck <tony.luck@intel.com>, "Guilherme G . Piccoli" <gpiccoli@igalia.com>, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
 
-Hi Tzung-Bi and others,
+Hi Casey,
 
-Thank you so much for taking time and valuable feedback on my patch.
+kernel test robot noticed the following build warnings:
 
-On Wed, Jun 11, 2025 at 12:10=E2=80=AFAM Tzung-Bi Shih <tzungbi@kernel.org>=
- wrote:
-> The doc [1] suggests to describe changes in imperative mood. If you have
-> chance to send next version, please fix it.  Otherwise, it doesn't really
-> bother me.
+[auto build test WARNING on bc6e0ba6c9bafa6241b05524b9829808056ac4ad]
 
-Thank you for pointing out the convention. I'll fix the commit message to f=
-ollow
-this in the next version (v3).
+url:    https://github.com/intel-lab-lkp/linux/commits/Casey-Connolly/dt-bindings-power-supply-qcom-pmi89980-charger-add-pm8150b-and-7250b/20250619-230137
+base:   bc6e0ba6c9bafa6241b05524b9829808056ac4ad
+patch link:    https://lore.kernel.org/r/20250619-smb2-smb5-support-v1-9-ac5dec51b6e1%40linaro.org
+patch subject: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
+config: x86_64-buildonly-randconfig-006-20250620 (https://download.01.org/0day-ci/archive/20250620/202506201101.9HMIR1fb-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250620/202506201101.9HMIR1fb-lkp@intel.com/reproduce)
 
-> > @@ -9,6 +9,10 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pstore_ram.h>
-> >
-> > +static int ecc_size;
-> > +module_param(ecc_size, int, 0444);
->
-> Does it need to be world-readable? How about 0400?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506201101.9HMIR1fb-lkp@intel.com/
 
-Good point, there is no need for it to be world-readable. I'll change
-the permission
-to 0400 as you suggested in the next version.
+All warnings (new ones prefixed by >>):
 
+>> Warning: drivers/power/supply/qcom_smbx.c:250 struct member 'gen' not described in 'smb_chip'
 
-> > @@ -117,6 +121,9 @@ static int __init chromeos_pstore_init(void)
-> >  {
-> >       bool acpi_dev_found;
-> >
-> > +     if (ecc_size > 0)
-> > +             chromeos_ramoops_data.ecc_info.ecc_size =3D ecc_size;
->
-> It seems `ecc_size` doesn't have an upper bound.  Wondering what would
-> be happened if it is a somehow large value.
-
-I have investigated this, and you are right to be concerned. Providing a la=
-rge
-value for `ecc_size` can indeed lead to a kernel panic.
-The panic occurs within the Reed-Solomon library, specifically from a BUG_O=
-N
-check in `decode_rs()` [1] when the ECC parameters are invalid. Here
-is the crash
-log I observed (edited for simplicity):
-
-[    2.395351] kernel BUG at lib/reed_solomon/decode_rs.c:43!
-[    2.395355] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-[    2.395358] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W
-  5.15.178-24446-gf4364e2b1c85-dirty #1
-f18df54893409d10705efc03f3f58f5431f53e8b
-[    2.395361] Hardware name: Google Kindred/Kindred, BIOS
-Google_Kindred.12672.534.0 01/19/2023
-[    2.395362] RIP: 0010:decode_rs8+0xee0/0xef0
-[    2.395378] Call Trace:
-[    2.395379]  <TASK>
-[    2.395380]  ? __die_body+0xac/0xb0
-[    2.395383]  ? die+0x2f/0x50
-[    2.395385]  ? do_trap+0x9e/0x170
-[    2.395386]  ? decode_rs8+0xee0/0xef0
-[    2.395388]  ? decode_rs8+0xee0/0xef0
-[    2.395390]  ? handle_invalid_op+0x69/0x80
-[    2.395391]  ? decode_rs8+0xee0/0xef0
-[    2.395392]  ? exc_invalid_op+0x3b/0x50
-[    2.395395]  ? asm_exc_invalid_op+0x16/0x20
-[    2.395397]  ? decode_rs8+0xee0/0xef0
-[    2.395399]  ? down_trylock+0x27/0x40
-[    2.395401]  ? console_trylock+0x46/0xd0
-[    2.395404]  persistent_ram_save_old+0xfd/0x1b0
-[    2.395407]  persistent_ram_new+0x385/0x720
-[    2.395410]  ramoops_init_prz+0x8e/0x120
-[    2.395412]  ramoops_probe+0x25e/0x460
-[    2.395414]  ? acpi_dev_pm_attach+0x27/0x110
-[    2.395416]  platform_probe+0x6b/0xa0
-[    2.395419]  really_probe+0xd5/0x340
-[    2.395421]  __driver_probe_device+0x78/0xc0
-[    2.395423]  driver_probe_device+0x28/0x180
-[    2.395425]  __device_attach_driver+0x11b/0x130
-[    2.395427]  ? deferred_probe_work_func+0xc0/0xc0
-[    2.395429]  bus_for_each_drv+0x9d/0xe0
-[    2.395430]  __device_attach+0xec/0x1a0
-[    2.395432]  bus_probe_device+0x32/0xa0
-[    2.395434]  device_add+0x281/0x3b0
-[    2.395436]  platform_device_add+0x15e/0x200
-[    2.395438]  ? chromeos_privacy_screen_driver_init+0x20/0x20
-[    2.395441]  do_one_initcall+0x10e/0x2d0
-[    2.395445]  ? strlen+0x10/0x20
-[    2.395447]  ? parse_args+0x11f/0x3a0
-[    2.395450]  do_initcall_level+0x80/0xe0
-[    2.395453]  do_initcalls+0x50/0x80
-[    2.395455]  kernel_init_freeable+0xee/0x160
-[    2.395456]  ? rest_init+0xd0/0xd0
-[    2.395458]  kernel_init+0x1a/0x110
-[    2.395460]  ret_from_fork+0x1f/0x30
-[    2.395463]  </TASK>
-[    2.395463] Modules linked in:
-[    2.396278] gsmi: Log Shutdown Reason 0x03
-[    2.397390] ---[ end trace 52a9249d98b7a130 ]---
-
-Since this validation issue exists in the pstore/ram core rather than
-being specific to this driver, I believe the best approach is to address
-it in a separate, new patch. My proposed fix is to add a check in
-`ram_set_ecc_info()` [2] to validate the ECC parameters against the
-requirements of the Reed-Solomon library, and return -EINVAL if the check
-fails.
-I will prepare and send this new patch for review, and add you to CC.
-
-Thank you again for your guidance.
-
-Best,
-Naoya Tezuka
-
-
-[1] https://elixir.bootlin.com/linux/v6.15.1/source/lib/reed_solomon/decode=
-_rs.c#L43
-[2] https://elixir.bootlin.com/linux/v6.15/source/fs/pstore/ram_core.c#L188
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
