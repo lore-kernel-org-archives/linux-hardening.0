@@ -1,100 +1,114 @@
-Received: from mail.burntcomma.com (unknown [62.3.69.246])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D5C78F39;
-	Fri, 20 Jun 2025 05:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.3.69.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D452218EA2
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Jun 2025 05:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750396544; cv=none; b=stZccV0avp7Mjt6hmNyV9H80UYUGQwM2QznWfiOZIYGrldrfFbUFgb5GnFCXEptQX6Pr+LVfQwnU5PyRpZo9WiMQnqoIMaMxGSnIUHpOKiwlLtW+lDSpKEFCuWfLF0PpX+Glv79mOzp8F4/5C/pieR53e4f5JGjeRoKIlXnqPwo=
+	t=1750398504; cv=none; b=GjD0YLeWDuhkUFoTM7sS+gWkE2ZJ8fqhDXzsYD2Pfu/dniIF2etiv+CT7pmUQ2uz9AsYw0hX4/88ki5UKMpMfSMSl/fsC7oA6gUOrYlaeKcbgx43S5aJ6gi3GRMtSRj9loPu93RTDUIXnaduENm2cHw/5fff5uJCjPvc1O9cayo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750396544; c=relaxed/simple;
-	bh=O904UY4g9qU/8ydu02BIa7irnjU7uK2vL+0lcoh6uSg=;
-	h=Message-ID:Date:Mime-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mRSQDqmnKg9I1YyafP6I93x2z0YXE8ay09QKVThCxhUj7BbqJXkJertdbfwYW2h8VNw3zRD8vgmrRmq9H2VRMDvM+PkFmHCP8LOYKeGiNqUF+7IbeJA6GAcQfHmFIcFuscx3wCOV8FA82BPv5XGjoIEThhGrVteV6wspXHJoo8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com; spf=pass smtp.mailfrom=harmstone.com; dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b=Jpsby3fo; arc=none smtp.client-ip=62.3.69.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=harmstone.com
+	s=arc-20240116; t=1750398504; c=relaxed/simple;
+	bh=S75fM3nM9TnsR7L4uT55yoIs2jbn/4LAz5Rs4K4sh/E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZvJFIC21hQMvsjbIyvFRjrKFSlISK87+j8v6OsusGBNrUQVUoSdR6fGrNU4U5h5xL5f/GlswF7KA2PZCKLtO0ghA0bzgpGu0uUXjeNJKxWXoIfToK2KyzoPSLKPJ6Yk52f3aEqfPzznqhSjvy45lW2fj5ls2AadI683iq/bNh3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e5c9e2va; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b="Jpsby3fo"
-Received: from [IPV6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2] (beren.burntcomma.com [IPv6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
-	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
-	(Client CN "hellas", Issuer "burntcomma.com" (verified OK))
-	by mail.burntcomma.com (Postfix) with ESMTPS id 62D9F289FC5;
-	Fri, 20 Jun 2025 06:15:34 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=harmstone.com;
-	s=mail; t=1750396534;
-	bh=FnNTl0qbEVs06UYig+TW5k2wjnmUnCDbypirnUZwu6A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Jpsby3foFxNktoFfhbog4sVWzUFPZklJzlZmGw783gPqd4+5HYS6E4SWH5QBWe5sv
-	 ulq+0Wfkl8kkLlH0fG8ZwXv+5xAs/APftYYR3zCQ8QLFqyiIQz7r1/1qIalKX/6RPr
-	 j0Qbf34BOEe+5Vxkgr1lb5eMO0haE8qkMpmtLfD0=
-Message-ID: <37cea83e-06b2-44c6-abe2-4bccc1cfd5c4@harmstone.com>
-Date: Fri, 20 Jun 2025 06:15:34 +0100
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e5c9e2va"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2363616a1a6so10964945ad.3
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Jun 2025 22:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1750398502; x=1751003302; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QDhdNRa67SFV3SQYqSsc+ujKA1vPIuWHhvTmauspQso=;
+        b=e5c9e2vaRW27In8sJjFRZX4JAI6HG/qpTqecPVPmhdDDh6dBKKkKkB7SKyp1/JL1HJ
+         foJX4G9ulj7wOEVhqCnV/M/s7xAYtPf+ycwZ3ZLR5z+Tres4nzpQAR3NWoHE1wjDqgJA
+         R2Ggroh+enLgInAeji9CmeyzxLA2XQbF8S/vw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750398502; x=1751003302;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QDhdNRa67SFV3SQYqSsc+ujKA1vPIuWHhvTmauspQso=;
+        b=OFZhD21nFjSx32oMrywWZUCLc+FnscRZvnSCk7eT8BaK9fW1pHQkO0DxTtEjab//Wl
+         pJhE6aRVo46wycpUFRB9C6V5ScW1A/fDnJ3/fSe/4+OY+RAi/EyzXAUALai/9w2SJG49
+         +n237Em7I2VV+2UaxX8SgrVLiUp9w+Jrnm2lnWvtOyy55eKJ+gFOmAW2dUDXVy09Qbrr
+         yLSd80qZcZ1eiFS8zhZaLPSQn+SSbOO43Qf7t/ipRg9qQYlClptgj5qyHQ20mlAr1Z/u
+         D+OrwpXKFFC/VtNBYCIO+EWWj92rQ5viASmshntSLpS3VfkN/sqkc70ZAcVfXzmSjSvZ
+         DQqA==
+X-Forwarded-Encrypted: i=1; AJvYcCWA/DgOMuTeEPOQiTKtexzHQlftkOXM+PMcqstL7ocQow/hwUbIUl5Y5VJL9rq1ITLvImWnfJn0vCMZUyKGqrY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJNJl+sTiTWhcn8JlA+FmmccbGQbmz5zjSAcm2YpkdY9hcv0Ml
+	ZTHxhfqdhBebjsxHqjI6PhbxXNIxRUehaMhFYaOz2lbU74IamMm7QnNZhyXMANNbhw==
+X-Gm-Gg: ASbGncsH1C+dyoRaaW6L7WMX3kz6bfjA95sdRhtn1YHZBSLLF3VFShk4zJlwbuNF9wa
+	UqBdpxhX0QnHvOCSIUDhv3pmXLW7I0Ra14wMtbnUuW1MQ+dlZ1KQhe0l4f2sz4vZdxfnUEgxejl
+	UTwABB4QLtKJIFJhcSfYlMAeUy4RYleIUc9El/aA5krPgLkEn7qQiCkw/ao+SotnXRWd0kuwZaW
+	PRbLmuDLUg0kkklm1k2fjrPApuDT0JYXoa6twdVi9HLdk5yokTYvSUriY8CoZTFgqmENCZiID5D
+	zf0oZgXMPBPiouBlya1aUU/2LfzCznbmiDozUDBpDdkh7eqmPLSy6o8loRfrHkv+L18qOZmdCte
+	6cOJcyshQERsrVeAVJ2I=
+X-Google-Smtp-Source: AGHT+IFJk0gn2Y3dKhWc3pdhP6/fnoHggpA9+Dt/AssUIqPkRx2PlFX9KNpf7G7AZbo7eFSKogQnog==
+X-Received: by 2002:a17:903:1988:b0:234:f182:a734 with SMTP id d9443c01a7336-237d9954d7dmr24314205ad.31.1750398501768;
+        Thu, 19 Jun 2025 22:48:21 -0700 (PDT)
+Received: from naoyatezuka1.tok.corp.google.com ([2401:fa00:8f:203:8f2b:74f7:bc26:564e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83937bcsm9215265ad.43.2025.06.19.22.48.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jun 2025 22:48:21 -0700 (PDT)
+From: Naoya Tezuka <naoyatezuka@chromium.org>
+To: Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>
+Cc: Tzung-Bi Shih <tzungbi@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Naoya Tezuka <naoyatezuka@chromium.org>
+Subject: [PATCH] pstore/ram: Validate ECC parameters against Reed-Solomon constraint
+Date: Fri, 20 Jun 2025 14:47:57 +0900
+Message-ID: <20250620054757.1006729-1-naoyatezuka@chromium.org>
+X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: Re: [PATCH v3] btrfs: replace deprecated strcpy with strscpy
-To: Brahmajit Das <listout@listout.xyz>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, kees@kernel.org,
- ailiop@suse.com
-References: <20250619153904.25889-1-listout@listout.xyz>
- <20250620014344.27589-1-listout@listout.xyz>
-Content-Language: en-US
-From: Mark Harmstone <mark@harmstone.com>
-Autocrypt: addr=mark@harmstone.com; keydata=
- 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
-In-Reply-To: <20250620014344.27589-1-listout@listout.xyz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On 20/06/2025 2.43 am, Brahmajit Das wrote:
-> --- a/fs/btrfs/volumes.c
-> +++ b/fs/btrfs/volumes.c
-> @@ -215,7 +215,7 @@ void btrfs_describe_block_groups(u64 bg_flags, char *buf, u32 size_buf)
->   	u32 size_bp = size_buf;
->   
->   	if (!flags) {
-> -		strcpy(bp, "NONE");
-> +		memcpy(bp, "NONE", 5);
->   		return;
->   	}
+The Reed-Solomon library enforces the constraint `n <= 2^m - 1` via a
+BUG_ON(), where `n` is `block_size + ecc_size` and `m` is `symsize` for
+the pstore RAM backend. A driver providing invalid parameters can trigger
+this, leading to a kernel panic. For more details on the theory behind:
+https://www.cs.cmu.edu/~guyb/realworld/reedsolomon/reed_solomon_codes.html
 
-There's still the problem here that you're hardcoding a magic number,
-and that memcpy is no safer than strcpy.
+This issue was discovered during develop chromeos_pstore driver:
+https://lore.kernel.org/lkml/20250610050458.4014083-1-naoyatezuka@chromium.org/
 
-If your aim is to get rid of strcpy entirely in the codebase, this is
-more than likely impossible.
+Add a check to validate this constraint before initializing Reed-Solomon
+codec. On failure, return -EINVAL to prevent the panic.
+
+Signed-off-by: Naoya Tezuka <naoyatezuka@chromium.org>
+---
+ fs/pstore/ram_core.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
+index f1848cdd6d34..c7a2ff9c5a6c 100644
+--- a/fs/pstore/ram_core.c
++++ b/fs/pstore/ram_core.c
+@@ -212,6 +212,14 @@ static int persistent_ram_init_ecc(struct persistent_ram_zone *prz,
+ 		return -EINVAL;
+ 	}
+ 
++	if (prz->ecc_info.block_size + prz->ecc_info.ecc_size >
++	    (1 << prz->ecc_info.symsize) - 1) {
++		pr_err("%s: invalid ecc parameters (block_size = %d, ecc_size = %d, symsize = %d\n",
++		       __func__, prz->ecc_info.block_size,
++		       prz->ecc_info.ecc_size, prz->ecc_info.symsize);
++		return -EINVAL;
++	}
++
+ 	prz->buffer_size -= ecc_total;
+ 	prz->par_buffer = buffer->data + prz->buffer_size;
+ 	prz->par_header = prz->par_buffer +
+-- 
+2.50.0.rc2.701.gf1e915cc24-goog
+
