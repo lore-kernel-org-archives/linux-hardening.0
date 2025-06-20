@@ -1,122 +1,176 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CF62367DC
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Jun 2025 08:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A15726C3B9
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Jun 2025 08:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750408612; cv=none; b=Qw3l7MrIVot7OrAfxzaHssmX57bDVCXJU1Q2LR4JRg20HsPWzEMqHvUdIDGhYOnQgyhPbNHTvYlcRI++YZJHnUI2csHiRhEQQol4PX+m04EkU7nEmvyXhvKSlpDHphfWXdj09PUcm3Jbu+gN/cw2F9cjpfcTqIUCPu6DsWDErBA=
+	t=1750408755; cv=none; b=AmSB+3BDu1yMJGE/MRKSzwT2VN5p5BH+PgqVt/WCkkIZN3LrceUlQmKtPYMw8bMvAjIpvoS0mGCFIMjcejcvC4rpNQ6O9BBNk2mMZsRHq77Ocq0icKgv2mfn8HQluv0ktuVUKycj8ZNJ8G2YVYUyuWosVPPnu2KxZ9x2MRRllJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750408612; c=relaxed/simple;
-	bh=lM8ClZuxWRG/dPj6dEzB4uWbxDPqXAWHFLGyuMbLk5k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q6L0rMyzb3eQ69RTobTozb3jTJ2SzxboNH3BTLnGpzJeU2YqZ9X5la3EO/c0ucIJI2qOcaqctHJWFYQUYSaLGQNuvJFBms7rTxaXo+qsZaYx+KYeYYZ9X7iVHy5OoUwpZGLPqp4TqJMRbBRhqDf2kUSRFy4o6GORBf6jg+EFHUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LGJjM7O6; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750408755; c=relaxed/simple;
+	bh=nW0F0O/hWqw37ehBTiHOaKNVn3q7ZPdsEdlHH98mdbM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=V0UeQFGb2l9R63AtNDLczrhhzjw00pfoQRoa7qmjnsrlfpRaVt9CO9O+TOIqR4ArkG5pPJex5xYtIFGcmrv3ce4nlaCeT92a46H7kncxOpVxKdkHQOoHFXdEFhan/K27jDs2Iq2n2L3Tf3e0AGAsip4bnG/JmnDwtIhDi9T7wFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=Q9xiXWaU; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LGJjM7O6"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so1501315f8f.0
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Jun 2025 01:36:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="Q9xiXWaU"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-607cf70b00aso2806992a12.2
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Jun 2025 01:39:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750408608; x=1751013408; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=fairphone.com; s=fair; t=1750408752; x=1751013552; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hU7fzM9iDfstegkNAKIaUxvWPHDRAUDT6UmYmOI8JOY=;
-        b=LGJjM7O60ftIF9yHwzbdcDA5J/61ILIjNh4UCFaqalwRRdstiZhGXRIfcVTyi3TgvT
-         G2KRswmxBVnkEW/agFM2JcBiedad7f3yFE6joMUl/pNtIkOLMBQq5sCXf7uLpGW0OeoC
-         8Sl+ODpqfWgrJT/Wx2t9RKJazgZC07FzF+mG1XaRUKJCiyr8At1xFzS9CSwgN96q8sBT
-         Nj/qvKof+F6gG6PYM0Wl5x38BF3uSnVJGrh8P7v6zAX2HSbSa0+RybC3yQVI+2pxR3F0
-         1mUaoOuGbdnFb6Q+f/6PF8k0NjmWgDt7ZtWunAKg2Iu3j6+2yT713nBLdrMw/mWV5iNG
-         fu+g==
+        bh=6V7zu0Kxpdwv0OZSUsLSOjM7ZQH3dEZE86mrHpx7mAI=;
+        b=Q9xiXWaUVze6+3GxmnW8BlyGUQCfzbUuMCDHKuvU9se1IwGuIfLyzdveR2kcLu5Udn
+         xBSlTM/JaO96BhWAbE4WYr2MzkknDj7NFwNZ2zqGVcLOp/JB36tJ1uLmtYDTErgwTidQ
+         tmkldF6E1bTWV2zSrIeiJu4laeHtsAUdhr5m6QIb1kvRJRQZ3JVSofIYgf9SHw/kI2xL
+         CMS4nO7AooBQ7lStCAXLR5+YaZU7pbcEqyFHcgmdWD7q02R3NrB5xVaYsSIsTDlxilP5
+         js3OU1+BWZL55bsKeeTa9P5GHHvs1qfsewrTSmYhY6/psnV8azoc1lj+Mkd2G/oUHxpo
+         Xsng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750408608; x=1751013408;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hU7fzM9iDfstegkNAKIaUxvWPHDRAUDT6UmYmOI8JOY=;
-        b=PZos4jQG9+lgrLhGvtv4frIzIVL9lJYvbodvws3YTxZtIqpCIID9ABFo8n393XYcH9
-         bVkFVlRjzWmRByLB8465bc8nvXenAf/fPTu9HC09nCUMwnzrotW+qBPKrP+TVgveKjy9
-         9fTTq9V/7AZJPXUhvMptz7QfXmCtmBGxTuMUc6L7uqGu2Lre20CQZ3ngNMzQHMErCFin
-         7DriVOroKSAECR7ty6brc0bjAwL3NeK3U0gHl1W5KV71YmUAv3FwzH5sF6rFl140H5YS
-         BZGkPCnQsT1f73w/VW/mnvcOYCBnYx/px/YjOn3oxUIhQouzMxOB30U3n1I1LcLtxy1c
-         rxwA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6TDgMAOLv10lzfaA9/WiVgPPmcY3jsP+qelv6B9R2XSQ/EgjQ0hg8dXx5R73c2OWugn92QwnoaRrtBSVQixQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgUtOW+KfbKMRZAhasVgT84sQByOIdzuFUNk/xAxyO7dkbhrps
-	I1sWet9L7IB8a3UuC+AdR6G5ZYjemrILeMU9BQvu7quwSpt/awSi2e2cu9khC3sQ+YLbBPnCmIV
-	7hKCxj7eGPAaEajoO8NoIQU3VjwK7J+7wX5+nWbBz
-X-Gm-Gg: ASbGncsejKNvdw+SI39v5DuYHX7xIxBb2W4jwYxz9EgU2GTa4RTtNDty247fDEO9U60
-	Rg9tY1ylRqsoy6QRw1oXVVLOOFLlIuPyqDZ2SJejkzafpEYegoMLE++MqWpcpe/a/oRnQKeO5Ta
-	PSNFlQ0Dp+MAF4mTBZJd0H3pBBgzZWUXmA8wWpU4ktSXBmiltFOm6gEV9yyvhuH4llktO0MJrC8
-	A==
-X-Google-Smtp-Source: AGHT+IF4NsF4vxMOuxqxg8w50Y/+yHUkifBXKj0sFTc0mzTUo5N50IwMGJ5DvJzRBAJAGH5qKJWeKheEKgq3xvDVGG0=
-X-Received: by 2002:a05:6000:4201:b0:3a5:3062:793a with SMTP id
- ffacd0b85a97d-3a6d12fba1dmr1372232f8f.33.1750408608086; Fri, 20 Jun 2025
- 01:36:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750408752; x=1751013552;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6V7zu0Kxpdwv0OZSUsLSOjM7ZQH3dEZE86mrHpx7mAI=;
+        b=Lx0sI2sNuLihyaLOU7mtzAFGQRyYU9SotvC4c5K7BPYyPuIfDMb5P6F2YNsI3dFtl8
+         n0PUN4l+Hrv/ykGbvFtYc5+p4WeFeHdg03kEl6XYcJxIHZ3jp3SvbSxHiPAH3INGZ7CV
+         WC9OUxZMM08gblf2ffHQ/khKWckg4+Em8B41iX7EyCqyNKK050m5fU005p9pkq2ODGnf
+         HaTOy8UeE+BycGoidr52Y4IHevRlneKaodQYgIhtj1aoJ/kNi0kFkWz3LAMbmEDYSi7f
+         DF0Jfp4JOnu42k4eZaqs0RnSTbg3r63ybo+OjzIRZbY1tTUPrPbVeEyg34vrUNLbrL2C
+         JYaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGOk/0FdkQyxIozuPCiDNZKj1E7zHEd1haghej9LtoefYR8A2L7/0lahgGi0V6IWgtkcZkXf9JF9ZhoOk7gVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygPvOMTZ9iMUn7tpn1oJEDeBvGnIU3t/ztIfODGsCQ5wXS8C+b
+	2cmNB8U2pYhNkc/cww/n5c4TiAEdkcXudk8xxhkmQNWotrblPgPcc6MfxHXXCc2gRho=
+X-Gm-Gg: ASbGnctPx7RrrySlFhUVLFhgIwhFaxQeEfrnmmmWH8ecb6tjnaQ2PZQaJyK4x+Z5LpP
+	kBZzlAap8rIDai5tJLxUBAmERRzn7wu4AKRq6WpvTvVRKYH9WBme7Nv18ZwKQRf8XL/pizm2X1T
+	WET3yEigclOn80Sl8WcuZSlYtmwvpjG02vOQo8zghFFW/bV6nx6vKP6aDF9WzAVLXWRC1bIpxqI
+	KBg2SO7k5xiwzyWI3WPHB8fawbUf52DmXTc+z5Dm5Fa8bvavyEA9Z5FZzdY4zcCoS6v8GxZsDPl
+	pivL7P6nkz4yYlAEqZAXI/vM79skVC640ymnO65TLeMCHASdoUlbcvvMFtYfDNunDj6z3oEuNYD
+	khsnIVRfQVGHf3crCU1fCdK7sEmisHHs=
+X-Google-Smtp-Source: AGHT+IHnn+pgrcY80rrdIAItBJEQnsl8DLBgDjOptwBLYFl+zdmUZHUQXrI9nz0s+HIckaBRB9p+5A==
+X-Received: by 2002:a17:907:9816:b0:ad5:55db:e413 with SMTP id a640c23a62f3a-ae057a284e5mr172285466b.26.1750408751642;
+        Fri, 20 Jun 2025 01:39:11 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0541b6e36sm123747666b.120.2025.06.20.01.39.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Jun 2025 01:39:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250620082954.540955-1-bqe@google.com>
-In-Reply-To: <20250620082954.540955-1-bqe@google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 20 Jun 2025 10:36:36 +0200
-X-Gm-Features: Ac12FXwsALrO-m84HwB3vGvFIw9yO1_lS0Ap7fbgrdBUZ90ZAMgj4rZv-EvpFWY
-Message-ID: <CAH5fLgg134vuCCtL5B5vKY8LxAWJqTyY=Fr_xtAwBMTZ6WLX5g@mail.gmail.com>
-Subject: Re: [PATCH v13 0/5] rust: adds Bitmap API, ID pool and bindings
-To: Burak Emir <bqe@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 20 Jun 2025 10:39:10 +0200
+Message-Id: <DAR846ZKJENY.KINMYGVYAY97@fairphone.com>
+Cc: <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Sebastian
+ Reichel" <sebastian.reichel@collabora.com>,
+ <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Casey Connolly" <casey.connolly@linaro.org>, "Sebastian Reichel"
+ <sre@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Bjorn
+ Andersson" <andersson@kernel.org>, "Konrad Dybcio"
+ <konradybcio@kernel.org>, "Kees Cook" <kees@kernel.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, "Bryan O'Donoghue"
+ <bryan.odonoghue@linaro.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
+ <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
+In-Reply-To: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
 
-On Fri, Jun 20, 2025 at 10:29=E2=80=AFAM Burak Emir <bqe@google.com> wrote:
->
-> This series adds a Rust bitmap API for porting the approach from
-> commit 15d9da3f818c ("binder: use bitmap for faster descriptor lookup")
-> to Rust. The functionality in dbitmap.h makes use of bitmap and bitops.
->
-> The Rust bitmap API provides a safe abstraction to underlying bitmap
-> and bitops operations. For now, only includes method necessary for
-> dbitmap.h, more can be added later. We perform bounds checks for
-> hardening, violations are programmer errors that result in panics.
->
-> We include set_bit_atomic and clear_bit_atomic operations. One has
-> to avoid races with non-atomic operations, which is ensure by the
-> Rust type system: either callers have shared references &bitmap in
-> which case the mutations are atomic operations. Or there is a
-> exclusive reference &mut bitmap, in which case there is no concurrent
-> access.
->
-> This series includes an optimization to represent the bitmap inline,
-> as suggested by Yury.
->
-> We ran a simple microbenchmark which shows that overall the Rust API
-> can be expected to be about 4.5% slower than C API.
->
-> We also introduce a Rust API in id_pool.rs that would replace
-> dbitmap.h from the commit referenced above. This data structure is couple=
-d
-> with the bitmap API and adds support for growing and shrinking, along
-> with fine-grained control over when allocation happens.
-> The Binder code needs this since it holds a spinlock at the time it
-> discovers that growing is necessary; this has to be release
-> for performing a memory allocation with GFP_KERNEL that may cause
-> sleep.  We includes example doctests that demonstrate this usage.
->
-> This is v13, see [v12] for previous state. Thanks everyone for all the
-> helpful comments, this series has improved significantly as a result of
-> your work.
+Hi Casey!
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Adding a note here, I also plan to look into what (if any) changes are
+necessary for this to work on PMI632 (which is the PMIC for
+sdm632/msm8953 Fairphone 3) since that's also SMB5.
+
+On Thu Jun 19, 2025 at 4:55 PM CEST, Casey Connolly wrote:
+> Introduce support for the SMB5 charger found on pm8150b and other more
+> modern Qualcomm SoCs.
+>
+> SMB5 is largely similar to SMB2, with a few register differences. The
+> main difference is the new Type-C hardware block which some registers
+> are moved to.
+>
+> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
+> ---
+>  drivers/power/supply/qcom_smbx.c | 367 +++++++++++++++++++++++++++++++++=
+------
+>  1 file changed, 314 insertions(+), 53 deletions(-)
+
+<snip>
+
+> +/* Bits 2:0 match PMI8998 TYPE_C_INTRPT_ENB_SOFTWARE_CTRL */
+> +#define SMB5_TYPE_C_MODE_CFG				0x544
+> +#define SMB5_EN_TRY_SNK_BIT				BIT(4)
+> +#define SMB5_EN_SNK_ONLY_BIT				BIT(1)
+> +
+> +#define SMB5_TYPEC_TYPE_C_VCONN_CONTROL			0x546
+> +#define SMB5_VCONN_EN_ORIENTATION_BIT			BIT(2)
+> +#define SMB5_VCONN_EN_VALUE_BIT				BIT(1)
+> +#define SMB5_VCONN_EN_SRC_BIT				BIT(0)
+> +
+> +
+> +#define SMB5_TYPE_C_DEBUG_ACCESS_SINK			0x54a
+> +#define SMB5_TYPEC_DEBUG_ACCESS_SINK_MASK		GENMASK(4, 0)
+> +
+> +#define SMB5_DEBUG_ACCESS_SRC_CFG			0x54C
+> +#define SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT	BIT(0)
+> +
+> +#define SMB5_TYPE_C_EXIT_STATE_CFG			0x550
+> +#define SMB5_BYPASS_VSAFE0V_DURING_ROLE_SWAP_BIT	BIT(3)
+> +#define SMB5_SEL_SRC_UPPER_REF_BIT			BIT(2)
+> +#define SMB5_EXIT_SNK_BASED_ON_CC_BIT			BIT(0)
+
+<snip>
+
+>  /* Init sequence derived from vendor downstream driver */
+> -static const struct smb_init_register smb_init_seq[] =3D {
+> -	{ .addr =3D AICL_RERUN_TIME_CFG, .mask =3D AICL_RERUN_TIME_MASK, .val =
+=3D 0 },
+> +static const struct smb_init_register smb5_init_seq[] =3D {
+> +	{ .addr =3D USBIN_CMD_IL, .mask =3D USBIN_SUSPEND_BIT, .val =3D 0 },
+> +	/*
+> +	 * By default configure us as an upstream facing port
+> +	 * FIXME: This will be handled by the type-c driver
+> +	 */
+> +	{ .addr =3D SMB5_TYPE_C_MODE_CFG,
+> +	  .mask =3D SMB5_EN_TRY_SNK_BIT | SMB5_EN_SNK_ONLY_BIT,
+> +	  .val =3D SMB5_EN_TRY_SNK_BIT },
+
+Since there's already a driver for the Type-C in pm8150b and pm7250b,
+can we remove this? Or is additional plumbing between the two drivers
+necessary to make this work? Maybe Bryan can also jump in here.
+
+Regards
+Luca
+
+> +	{ .addr =3D SMB5_TYPEC_TYPE_C_VCONN_CONTROL,
+> +	  .mask =3D SMB5_VCONN_EN_ORIENTATION_BIT | SMB5_VCONN_EN_SRC_BIT |
+> +		  SMB5_VCONN_EN_VALUE_BIT,
+> +	  .val =3D SMB2_VCONN_EN_SRC_BIT },
+> +	{ .addr =3D SMB5_DEBUG_ACCESS_SRC_CFG,
+> +	  .mask =3D SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT,
+> +	  .val =3D SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT },
+> +	{ .addr =3D SMB5_TYPE_C_EXIT_STATE_CFG,
+> +	  .mask =3D SMB5_SEL_SRC_UPPER_REF_BIT,
+> +	  .val =3D SMB5_SEL_SRC_UPPER_REF_BIT },
+> +	/*
+> +	 * Disable Type-C factory mode and stay in Attached.SRC state when VCON=
+N
+> +	 * over-current happens
+> +	 */
+> +	{ .addr =3D TYPE_C_CFG,
+> +	  .mask =3D APSD_START_ON_CC_BIT,
+> +	  .val =3D 0 },
+> +	{ .addr =3D SMB5_TYPE_C_DEBUG_ACCESS_SINK,
+> +	  .mask =3D SMB5_TYPEC_DEBUG_ACCESS_SINK_MASK,
+> +	  .val =3D 0x17 },
