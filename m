@@ -1,159 +1,153 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1719F220696
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Jun 2025 12:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCC22DF3E8;
+	Fri, 20 Jun 2025 16:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750422442; cv=none; b=bQPCW1tRyO7+YBpNH+JSdZNDp1ycvUm+69+Xq3wDU3au36HztzkSKa1HrlpUxNHyxJOmnZdK+301qaHKuHcTvH+T2XKHv2UDOqFFkDD0gxF9I3rbHhdv75eTQeSAVc/8H4OCB+VryNXLxaY35A4TmzkI7N+wgZbqiQFIPn+26eM=
+	t=1750438222; cv=none; b=NZkn2uQLZ3hgHw162NIKSwmM/ibUvRmpi4Hh7j5Eb9Ozj+oozd4BgJmTLjZRk/ywSApetzV72z9LH0HP2m0udaHnb+9K5AHwHRUHcm3lG4NudVErE1Zqo/mzshCbIJQ3WlGefMxkbKNCdaH99sQdqXvJqw+Mn9dOWPTcCM3k9TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750422442; c=relaxed/simple;
-	bh=tX37v4gyoxennChCQjy16+67csIbio+cpP+xJt9Rkwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oKgnHoK8qdyuo8uwjYdDGDklh6bx3PBRN1gq+Oi6IPjPmjY+8G93nSWoteEKo0Uk5J5i+tf1BDo39j1WZIZ6rhpYz2zp4jBRWoVZlt5j0pnqeLH9gvBBzkrOVsA+qBbELAHv69lgcVqL7pOR2ZUAtqTouadvw2TX96pCdV+qyBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XTKisOjD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=x1VXfJZv; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XTKisOjD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=x1VXfJZv; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1750438222; c=relaxed/simple;
+	bh=Djr+3K7jIi45RsqDjkuU2kUeYUhAhVBD8G3UDQuEG+o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mjj1HGakbVD0dL0zB+VWDomQwZUl/f+dMXHkxyI3CYUxBVnWcL5bOH3Ts6eS9xLT3lpM4kTHvIavbIWC5VFLimMKDwPO1IJGxBSgJDwnZMRXMM/4TVoAdb+nkX/DE5OXtqGk/9QJWMdYNTA59MBLgF4aHj/uI936NOiCp7du5Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=Bo+cGcJZ; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XTKisOjD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="x1VXfJZv";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XTKisOjD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="x1VXfJZv"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="Bo+cGcJZ"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 32E1B1F38D;
-	Fri, 20 Jun 2025 12:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750422437;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3/Yy654QcQTRuj4MwSbC85PZYTXBTs5gVtteaaVNdCM=;
-	b=XTKisOjDYkQx7syjKIyWZ6Gug3DIHwnmqRO3mZ3V90hSA951elbcdNHd4I9GjOfTJjKC88
-	wkZBFYf0JHpn6XktUOU9u21qt/lJg5cBAMmhxRMLH4istfL6hPYJ4v0wx2zBt4DJncy6+D
-	CVw+ubMhRZCBDN+CgujzY3D9/AknvCs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750422437;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3/Yy654QcQTRuj4MwSbC85PZYTXBTs5gVtteaaVNdCM=;
-	b=x1VXfJZvbm/mvW4K1jPVQA2PhFlatnIlRiFi2Xb7YLFpsO/BKP8xvfLntSPV5e/wEp5c5D
-	vyfJy1YIyjMN4CBA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=XTKisOjD;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=x1VXfJZv
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750422437;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3/Yy654QcQTRuj4MwSbC85PZYTXBTs5gVtteaaVNdCM=;
-	b=XTKisOjDYkQx7syjKIyWZ6Gug3DIHwnmqRO3mZ3V90hSA951elbcdNHd4I9GjOfTJjKC88
-	wkZBFYf0JHpn6XktUOU9u21qt/lJg5cBAMmhxRMLH4istfL6hPYJ4v0wx2zBt4DJncy6+D
-	CVw+ubMhRZCBDN+CgujzY3D9/AknvCs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750422437;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3/Yy654QcQTRuj4MwSbC85PZYTXBTs5gVtteaaVNdCM=;
-	b=x1VXfJZvbm/mvW4K1jPVQA2PhFlatnIlRiFi2Xb7YLFpsO/BKP8xvfLntSPV5e/wEp5c5D
-	vyfJy1YIyjMN4CBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 130BF136BA;
-	Fri, 20 Jun 2025 12:27:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id PoZwBKVTVWjXJwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Fri, 20 Jun 2025 12:27:17 +0000
-Date: Fri, 20 Jun 2025 14:27:15 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Brahmajit Das <listout@listout.xyz>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com,
-	dsterba@suse.com, kees@kernel.org, ailiop@suse.com,
-	Mark Harmstone <mark@harmstone.com>
-Subject: Re: [PATCH v3] btrfs: replace deprecated strcpy with strscpy
-Message-ID: <20250620122715.GR4037@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250619153904.25889-1-listout@listout.xyz>
- <20250620014344.27589-1-listout@listout.xyz>
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bP3PF4GrMz9sSH;
+	Fri, 20 Jun 2025 18:50:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
+	t=1750438209;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=w+TsNKBMA7mmPQAazK1/o7louMuCJgM2Fjd4uBoSZWY=;
+	b=Bo+cGcJZV81/ECcjgm1/g9xkeGRTegbshCg6Utv8S/Y2tVMZ+xCYR4XuTLkHXB8IRk6dib
+	mTZVoS0kxV0Gu6HQCbk+WvqHZeBbqlNDaY6LBVYS/3lGFVVEyQIPCVnf10bdz3oBIJVKTN
+	T35XeuPVCvgp3VUcq1/2YAVi1lShJR6Zmn6HiVENkvJYXU4XfgYpwgIUSD1NnCEbFQzx3D
+	ycVXloxlmx5Zx/8A1O+SpRa1iBcWOdOLqKcNd451J7ONp4mzKDaz118ilfXSlnIkeLU/pw
+	mdVawUjZo1nHat6rT7JQXuA4eHtrHZJNKBfEfyMRcYkOSfLkpq8mlmHvA5OULA==
+From: Brahmajit Das <listout@listout.xyz>
+To: linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-btrfs@vger.kernel.org
+Cc: clm@fb.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com,
+	kees@kernel.org,
+	ailiop@suse.com,
+	mark@harmstone.com,
+	David Sterba <dsterba@suse.cz>,
+	Brahmajit Das <bdas@suse.de>
+Subject: [PATCH v4] btrfs: replace deprecated strcpy with strscpy
+Date: Fri, 20 Jun 2025 22:19:57 +0530
+Message-ID: <20250620164957.14922-1-listout@listout.xyz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620014344.27589-1-listout@listout.xyz>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 32E1B1F38D
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[twin.jikos.cz:mid,suse.cz:dkim,suse.cz:replyto,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.21
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 07:13:44AM +0530, Brahmajit Das wrote:
-> strcpy is deprecated due to lack of bounds checking. This patch replaces
-> strcpy with strscpy, the recommended alternative for null terminated
-> strings, to follow best practices.
-> 
-> There are instances where strscpy cannot be used such as where both the
-> source and destination are character pointers. In that instance we can
-> use sysfs_emit or a memcpy.
-> 
-> Update in v2: using sysfs_emit instead of scnprintf
-> Update in v3: Removed string.h in xattr, since we are not using any
-> fucntions from string.h and fixed length in memcpy in volumes.c
+strcpy is deprecated due to lack of bounds checking. This patch replaces
+strcpy with strscpy, the recommended alternative for null terminated
+strings, to follow best practices.
 
-This should be placed under the "---" marker. If it's a new information
-relevant for the patch then it should be a normal part of the changelog.
+There are instances where strscpy cannot be used such as where both the
+source and destination are character pointers. In that instance we can
+use sysfs_emit.
 
-> No functional changes intended.
+Link: https://github.com/KSPP/linux/issues/88
+Suggested-by: Anthony Iliopoulos <ailiop@suse.com>
+Suggested-by: David Sterba <dsterba@suse.cz>
+Signed-off-by: Brahmajit Das <bdas@suse.de>
+---
 
-No need to write this.
+Changes in v2: using sysfs_emit instead of scnprintf.
+Changes in v3: Removed string.h in xattr, since we are not using any.
+fucntions from string.h and fixed length in memcpy in volumes.c
+Changes in v4: As suggested by David, moving "NONE" as initial value of
+buf in describe_relocation() and removed copying of "NONE" to bp in
+btrfs_describe_block_groups().
+---
+ fs/btrfs/ioctl.c      | 2 +-
+ fs/btrfs/relocation.c | 2 +-
+ fs/btrfs/send.c       | 2 +-
+ fs/btrfs/volumes.c    | 1 -
+ fs/btrfs/xattr.c      | 3 +--
+ 5 files changed, 4 insertions(+), 6 deletions(-)
 
-> 
-> Link: https://github.com/KSPP/linux/issues/88
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index 913acef3f0a9..203f309f00b1 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -4200,7 +4200,7 @@ static int btrfs_ioctl_set_fslabel(struct file *file, void __user *arg)
+ 	}
+ 
+ 	spin_lock(&fs_info->super_lock);
+-	strcpy(super_block->label, label);
++	strscpy(super_block->label, label);
+ 	spin_unlock(&fs_info->super_lock);
+ 	ret = btrfs_commit_transaction(trans);
+ 
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index 02086191630d..c136552e129c 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -3880,7 +3880,7 @@ static void free_reloc_control(struct reloc_control *rc)
+  */
+ static void describe_relocation(struct btrfs_block_group *block_group)
+ {
+-	char buf[128] = {'\0'};
++	char buf[128] = "NONE";
+ 
+ 	btrfs_describe_block_groups(block_group->flags, buf, sizeof(buf));
+ 
+diff --git a/fs/btrfs/send.c b/fs/btrfs/send.c
+index 2891ec4056c6..66ee9e1b1e96 100644
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -758,7 +758,7 @@ static int send_header(struct send_ctx *sctx)
+ {
+ 	struct btrfs_stream_header hdr;
+ 
+-	strcpy(hdr.magic, BTRFS_SEND_STREAM_MAGIC);
++	strscpy(hdr.magic, BTRFS_SEND_STREAM_MAGIC);
+ 	hdr.version = cpu_to_le32(sctx->proto);
+ 	return write_buf(sctx->send_filp, &hdr, sizeof(hdr),
+ 					&sctx->send_off);
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 89835071cfea..8280474ec3d1 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -215,7 +215,6 @@ void btrfs_describe_block_groups(u64 bg_flags, char *buf, u32 size_buf)
+ 	u32 size_bp = size_buf;
+ 
+ 	if (!flags) {
+-		strcpy(bp, "NONE");
+ 		return;
+ 	}
+ 
+diff --git a/fs/btrfs/xattr.c b/fs/btrfs/xattr.c
+index 3e0edbcf73e1..49fd8a49584a 100644
+--- a/fs/btrfs/xattr.c
++++ b/fs/btrfs/xattr.c
+@@ -516,8 +516,7 @@ static int btrfs_initxattrs(struct inode *inode,
+ 			ret = -ENOMEM;
+ 			break;
+ 		}
+-		strcpy(name, XATTR_SECURITY_PREFIX);
+-		strcpy(name + XATTR_SECURITY_PREFIX_LEN, xattr->name);
++		sysfs_emit(name, "%s%s", XATTR_SECURITY_PREFIX, xattr->name);
+ 
+ 		if (strcmp(name, XATTR_NAME_CAPS) == 0)
+ 			clear_bit(BTRFS_INODE_NO_CAP_XATTR, &BTRFS_I(inode)->runtime_flags);
+-- 
+2.50.0
 
-No newline here.
-
-> Suggested-by: Anthony Iliopoulos <ailiop@suse.com>
-> Suggested-by: Mark Harmstone <mark@harmstone.com>
-> Signed-off-by: Brahmajit Das <listout@listout.xyz>
-
-Otherwise it looks good, thanks.
