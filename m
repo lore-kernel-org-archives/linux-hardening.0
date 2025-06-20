@@ -1,102 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.burntcomma.com (unknown [62.3.69.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823311B87F2;
-	Fri, 20 Jun 2025 03:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D5C78F39;
+	Fri, 20 Jun 2025 05:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.3.69.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750390406; cv=none; b=t22C8bhTVoL6y6z82t8pVp2SCyPYnNdIjY0ba8KYoJ6yLkcIuCOLkFrwAAktDbhYuMcXGsp4fWnlcWg0bfpHn4cVJdf3naXpwI9lY5jORHLnXqF53s3o7m4mVet2IbYvaWJz1r7HSTj5ZK2DqZHfVWSS5DXdCVGOakjOuQ4sHhk=
+	t=1750396544; cv=none; b=stZccV0avp7Mjt6hmNyV9H80UYUGQwM2QznWfiOZIYGrldrfFbUFgb5GnFCXEptQX6Pr+LVfQwnU5PyRpZo9WiMQnqoIMaMxGSnIUHpOKiwlLtW+lDSpKEFCuWfLF0PpX+Glv79mOzp8F4/5C/pieR53e4f5JGjeRoKIlXnqPwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750390406; c=relaxed/simple;
-	bh=6+/5o6kmcWKk3e2NbFhat/dx9eXksyOA9L6fkZ/p9uU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vyk8emCz4Ftrtls2DAO0OJEErsX38bRbRCZqJPAcJ/00XEQMn0QHD32+yWsF8kR2BrOBftzRi7HUAO3eW4ZsqOo/qULttyhAaTERaq+YyXC7No+S11hLZf4tCLUSkT0ddVFB6B8/noshq3c2X4xAhim1AMvZR6nyNUJhLTRGKPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gUBaWCiJ; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750396544; c=relaxed/simple;
+	bh=O904UY4g9qU/8ydu02BIa7irnjU7uK2vL+0lcoh6uSg=;
+	h=Message-ID:Date:Mime-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mRSQDqmnKg9I1YyafP6I93x2z0YXE8ay09QKVThCxhUj7BbqJXkJertdbfwYW2h8VNw3zRD8vgmrRmq9H2VRMDvM+PkFmHCP8LOYKeGiNqUF+7IbeJA6GAcQfHmFIcFuscx3wCOV8FA82BPv5XGjoIEThhGrVteV6wspXHJoo8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com; spf=pass smtp.mailfrom=harmstone.com; dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b=Jpsby3fo; arc=none smtp.client-ip=62.3.69.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=harmstone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=harmstone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gUBaWCiJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750390404; x=1781926404;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6+/5o6kmcWKk3e2NbFhat/dx9eXksyOA9L6fkZ/p9uU=;
-  b=gUBaWCiJGuywIjJtog9di/kCyviKcdjpS6ru+SaVCLKQ1dYqTjP+9lr9
-   WRrrc2I5XWCjyNTFJ+ERFVrBcHisSh9jS4yefgaz38P6o/R0AfVvpoUVy
-   BOsFrj6DeaW7gyQi9/0muR2eYluh9MP5ZlIXllTNVX+ubnBTMPDMF6B5Q
-   2474hvuy0l925Z24OciP3BWCV+gJGb1OkE2nCf5cKP2mSrGUq4/Mnriy+
-   jFPS563Y45BxpomSgEm4GE6t4yBK/7WzldqNp62sZh34t6tWgfSu5/vwg
-   +FMS+iNFruh19kZ00R9Wf40KthlRljOwVfNn+cpAFOYC0qYqAdgOHjs1t
-   g==;
-X-CSE-ConnectionGUID: asbSkjizR0qeQfwuNlsa7A==
-X-CSE-MsgGUID: 1SRYPx4FQJimbAGCwveB/w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="63692002"
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="63692002"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 20:33:24 -0700
-X-CSE-ConnectionGUID: VUdPqhjeRb2L7mMeCgCrCw==
-X-CSE-MsgGUID: 7ZdBpbZbRx6UeBW6+OSrbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="151105038"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 19 Jun 2025 20:33:20 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uSSVB-000LL8-2s;
-	Fri, 20 Jun 2025 03:33:17 +0000
-Date: Fri, 20 Jun 2025 11:32:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Casey Connolly <casey.connolly@linaro.org>,
-	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Casey Connolly <casey.connolly@linaro.org>
-Subject: Re: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
-Message-ID: <202506201101.9HMIR1fb-lkp@intel.com>
-References: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
+	dkim=pass (1024-bit key) header.d=harmstone.com header.i=@harmstone.com header.b="Jpsby3fo"
+Received: from [IPV6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2] (beren.burntcomma.com [IPv6:2a02:8012:8cf0:0:ce28:aaff:fe0d:6db2])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
+	(Client CN "hellas", Issuer "burntcomma.com" (verified OK))
+	by mail.burntcomma.com (Postfix) with ESMTPS id 62D9F289FC5;
+	Fri, 20 Jun 2025 06:15:34 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=harmstone.com;
+	s=mail; t=1750396534;
+	bh=FnNTl0qbEVs06UYig+TW5k2wjnmUnCDbypirnUZwu6A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Jpsby3foFxNktoFfhbog4sVWzUFPZklJzlZmGw783gPqd4+5HYS6E4SWH5QBWe5sv
+	 ulq+0Wfkl8kkLlH0fG8ZwXv+5xAs/APftYYR3zCQ8QLFqyiIQz7r1/1qIalKX/6RPr
+	 j0Qbf34BOEe+5Vxkgr1lb5eMO0haE8qkMpmtLfD0=
+Message-ID: <37cea83e-06b2-44c6-abe2-4bccc1cfd5c4@harmstone.com>
+Date: Fri, 20 Jun 2025 06:15:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
+Mime-Version: 1.0
+Subject: Re: [PATCH v3] btrfs: replace deprecated strcpy with strscpy
+To: Brahmajit Das <listout@listout.xyz>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
+Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, kees@kernel.org,
+ ailiop@suse.com
+References: <20250619153904.25889-1-listout@listout.xyz>
+ <20250620014344.27589-1-listout@listout.xyz>
+Content-Language: en-US
+From: Mark Harmstone <mark@harmstone.com>
+Autocrypt: addr=mark@harmstone.com; keydata=
+ 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
+In-Reply-To: <20250620014344.27589-1-listout@listout.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Casey,
+On 20/06/2025 2.43 am, Brahmajit Das wrote:
+> --- a/fs/btrfs/volumes.c
+> +++ b/fs/btrfs/volumes.c
+> @@ -215,7 +215,7 @@ void btrfs_describe_block_groups(u64 bg_flags, char *buf, u32 size_buf)
+>   	u32 size_bp = size_buf;
+>   
+>   	if (!flags) {
+> -		strcpy(bp, "NONE");
+> +		memcpy(bp, "NONE", 5);
+>   		return;
+>   	}
 
-kernel test robot noticed the following build warnings:
+There's still the problem here that you're hardcoding a magic number,
+and that memcpy is no safer than strcpy.
 
-[auto build test WARNING on bc6e0ba6c9bafa6241b05524b9829808056ac4ad]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Casey-Connolly/dt-bindings-power-supply-qcom-pmi89980-charger-add-pm8150b-and-7250b/20250619-230137
-base:   bc6e0ba6c9bafa6241b05524b9829808056ac4ad
-patch link:    https://lore.kernel.org/r/20250619-smb2-smb5-support-v1-9-ac5dec51b6e1%40linaro.org
-patch subject: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
-config: x86_64-buildonly-randconfig-006-20250620 (https://download.01.org/0day-ci/archive/20250620/202506201101.9HMIR1fb-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250620/202506201101.9HMIR1fb-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506201101.9HMIR1fb-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> Warning: drivers/power/supply/qcom_smbx.c:250 struct member 'gen' not described in 'smb_chip'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If your aim is to get rid of strcpy entirely in the codebase, this is
+more than likely impossible.
