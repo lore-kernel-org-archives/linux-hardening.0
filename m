@@ -1,132 +1,130 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77E718B47C
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Jun 2025 07:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E52201261;
+	Mon, 23 Jun 2025 10:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750663376; cv=none; b=YulKL6Z/Hfup0QLaXvPFtvovmzfsl8X+tPdkH8ECPr85XpjcYh2mFSJ07x1bxt3YEyL34gnWtVEK7Yztn/+Y1jeKOY2TLmbd1vNzkagqnozzpNzBL6sDLVUXH8d2l9SfLoSAe99t8fbxTbOqsNBX4TAt0sVTY0T2bPcGTpC4WxU=
+	t=1750674577; cv=none; b=iavfBD2f7L/9/r2UQ4teOoXOMocBQ7IHBOjNw70rDZHxOmh2AIztSiH45+uiYBrFarx+nmRuUg331p0/bghAZmfGbCZ8/xvgps1BBbxYAsjr8G1Ns+Zmuee9LpOzo5Zl2uw+qo0663MgtX2hqExsmyUsI0Ndh6XeWGlwfMeGPAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750663376; c=relaxed/simple;
-	bh=tVPLtvullvNQjyX06AbIbSTUgnJpCt5D3bAGyBfQVFc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LDkHJhQ4vanYcCeCJw8pLE6RaBWPw9Ql9WLmZNpCQtcZ4kRxf2MDqQiD94WJEoC5QGoz1AKYkoIkq2U6AHbG6ew32f3g5zRujO5FPUTNZLiYRVIGiV0xObY88hLwNIz5HY/GrDDoaSQRNyKjkxQviS/LlkNOMxli8Dw/HXhYWqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Wz823JMb; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1750674577; c=relaxed/simple;
+	bh=+GW4fgeA+xKGchuTpQBu6jwVxlJTWxJyFy/i+RiAaek=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XomwX4rXCwWZ3lAuOei2s4joSjYo1mjdWxMoEsQvcNRhTB6O9c6/wskw7Pi2jZCDGUMxEOIDbvD10Iqt8sqqGcl3iO+VY2yZKI1h/dJz7WyCnCDYPgUptJmQW2LH2Ac3whcLnHrztzX4CSmghrPMlISBvzP7EExuBpNnS8kHZck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SgbPBOWF; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wz823JMb"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2349f096605so56996975ad.3
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Jun 2025 00:22:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgbPBOWF"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-236470b2dceso40635015ad.0;
+        Mon, 23 Jun 2025 03:29:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750663374; x=1751268174; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ER9fq2t0eg8l0t3Hf1In7ziuJr8IwFhvzCavbCoJRs=;
-        b=Wz823JMbaHUIoZ2/7YVEJ7vwv6VmfFr6rR8nfaf1h7Jau5/JvzoU/Xww6K5SunMQLo
-         jJJwqvtPhVmluPkO5BDAyg/tQSXs2iFnWnOY+M2OqOltTWaFvxL1eWn8iRjjozWUTIv7
-         WPxxb3TBk82yRVAgJoxGBOQ/yAOelpcs9h7XQ=
+        d=gmail.com; s=20230601; t=1750674575; x=1751279375; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LNA9piZjlRKT0wGiiHkHTEOKa/CNGuXgOq/W48NNgPc=;
+        b=SgbPBOWFbqhi3GVRHIrwh6I+gB8bXvFhmAX6yand6mqYrC8XIaVXAjXUx4EKhv9w0q
+         2/oG4UMvbnDflYRoEN8+5iP+jHiORmkoe7FX1xZmij0u0uDilX8AakAadxTMPf9kpzLw
+         l2KD4SkSirrIGB2rl4lIrp9cp5qzefJEe3MzQ0zP47oGdIUBpdO1lMXbdwXC/0S6xgMB
+         JR8VH60/IdlRJa5owat2fhYG8djysZMeTV7wPnhFRe76/K19jyjd51ueSn8Kqhh4iurf
+         hTSMaIVlAO9Qms6dpu3hzKCz+YZ0Qz3Z5ZGn7aTdF8saQaj9uFEl7u+1Bs6VeKtVGZx3
+         5RtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750663374; x=1751268174;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1750674575; x=1751279375;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1ER9fq2t0eg8l0t3Hf1In7ziuJr8IwFhvzCavbCoJRs=;
-        b=c4nw4SDt5xJG6JLUnbHNY8ICyYKFmqQLCtsFwufkni7qLxDhaCmgtxqRtMVTgoQc4D
-         hp6WT8ftnoBdysgX9zcn/agKtkdvkh2sxxj9Yz1NyuIzaP5y1ypSoFcUjplqtMsgySyk
-         TF/BIqlBIlfiNSAVllXEyHKTJee+uHrEUT3V+Tsw/ai8KJR2t/9mKvzsRXNB81KUF76J
-         uLFXGu6UOgUiGprlCoOgnKT56jMYf9etLGHaYBeeFCcsFG/h+LDV62rjhpRbwbZI3bR5
-         +lMy2ubtoUSUcfRS4yytjOkgFHWeyHGYqKEIl082jk0xVvCdWDggWGGb52q9/AxSGJNH
-         t8mA==
-X-Forwarded-Encrypted: i=1; AJvYcCVD8H/eREX3QM/SYgQ8NnUzkpbwMc7weAcFDblHWcfDMyTgqwErtjSje0SQlkcD3Zrj+fXb9PFhAlq4C4H/KeY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKieT7pqXY3SW+db2ydj748C1xD5gHfk2Erb1pqWOGDEIbg4qD
-	v1tm0OLvZ8nZSSpK+fmDzax74G3cDTtN2gc7CuM2ZQ4G4YPQFrYpzzRqufe1CJqsNA==
-X-Gm-Gg: ASbGncsW5tf123UMCnzEaMMglgH1/sYd29QDjzIG0nYvPCBjQmuW1mBN2qfX8R0fITQ
-	bUQrRbB3vXD//2VSFqFndO7s5ofmzSkQsyDAvAA22lDaKXU02aK5o5UVtazMxvmvniHBwPy22zk
-	Yh5uo4l43QJJWymdhBjhXFtDI4pip/WE3uMpiYokJK1vMYfvVUkntkJtfFD2BM6ZqPRYoiu6DFl
-	HKS10vtY3sP1K+hD7qWH1gmaz6bAiEgyam5ViPIWGy4JwkBkbymy0MpuXEJHZxYqK/x3XvUq4NH
-	EvqQ3pSAb8njjHXx10ienzNOE3FAY8eJfj1bwJ1w2wakhIOBBhtqe+IjuyhjVNacdCsqvlqolnp
-	kcqga3Lhe9PTIFg66l9w=
-X-Google-Smtp-Source: AGHT+IFIWf+eX6Jha0d5myVggnQw78e8hvpbhp8ZINfD3GjMTiVzWryPYj08pzWUXUldpNI91QeNfA==
-X-Received: by 2002:a17:902:fc44:b0:234:e655:a632 with SMTP id d9443c01a7336-237d9b19e2cmr194435735ad.51.1750663374310;
-        Mon, 23 Jun 2025 00:22:54 -0700 (PDT)
-Received: from naoyatezuka1.tok.corp.google.com ([2401:fa00:8f:203:6507:6b94:dd66:3c4a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860a8b4sm74796595ad.90.2025.06.23.00.22.51
+        bh=LNA9piZjlRKT0wGiiHkHTEOKa/CNGuXgOq/W48NNgPc=;
+        b=adl/CWY7jt2DIW8cwIPCqDPKyPal9Zy1gozIKkDTnKEL7N4pquZxSAEV6eJlPD5NzZ
+         mYUWOhjMYQOPYnp5S2C2u7tXwZh0mYqmtuKVBOgZMzMu1iqvJCtISIzLT00lvGf6s8Se
+         SzHxvgDZnBVBAcoZFO/Ad75eBNeN7c8DU/b/0nBZtq3S2tDq21Qqkr2wf2GVNU5uDQji
+         R2GKRo9iNhF+QXFwE79ss9kf8DyttQK4XFvLRWQRMv0WzOkX4AjIlzxkqz/2hNKWKfUI
+         18dyke8QMK4TXKw5BlNsalpupzrGvxQBuhcz0Vmw5nytp4R3xefkobjCBcqDvQ2c4Sdv
+         5Wsg==
+X-Forwarded-Encrypted: i=1; AJvYcCURyZ79C7VWK2cVjssDZVCyONmz4Cbjmzz9ZTasoo0AXZbRhbqTLPcLPlnXr9IrqJ+CopF/+m6kcJ43b7rCfcQ=@vger.kernel.org, AJvYcCV9XjArZuUYNgIyUFUTDulTYm85G+sVXNeQHw2Db2kxkouApR8emMA/2C4PWHbEG4B0UWRkUNQBNAietYm+@vger.kernel.org, AJvYcCX5sgfxEHXBQOy2TPQjVyFxDULkujJlTnaKrIPi+yi9jh7KbebqoFXFLn7yM1RFZePQLLAmKwBRCNbclfaUb+Y/QMY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5vXqbAUfI74Atq0crB5qPvy2u3pUKN84O6BEA4n731udp7P4g
+	YVKCydGlVBy+yBGdj3cXtFkjWimJLEIZ1+93fPsqPyFYdxuTfO3gDFEH
+X-Gm-Gg: ASbGnctgeuFWAbHHzZTbm5be+htvuKQ/bdAH22+Vzeeq31FafEZp0WPduzhvhksc46V
+	hSS9EOZ8yKyQZ9ioA0bD6ujB5s7D5ATxjLpPTynjdTLcfTI+nW+MRVijq4Rc3MQYYG2k3v3tvch
+	DC8hqXjw7EtIhJMG4oxRt884G5fXCUDTxuDsYvgHoNax2LdWyvpzMq/cz72HOFNzm4V1X1+eQ2E
+	T1Ps6eqY6l+FfuhqdeRllkjzr7rtRfxlpKSaD/v8WZSjMgCMa4l1/JcJ7h00s40T+ZtTIailuin
+	symb+pzM+f6+xfLF0su2s28M3Ag0Ef8biuO8jBDlXQciLWN7sWchpi1aj6frdJKbjtK1mJB1bD3
+	AM12QdPIffrgV22ZyIE2xd8Vmeje+MYs=
+X-Google-Smtp-Source: AGHT+IGu/olQd3gCQ9n8b1T0IY/BOseKz/yROaIShRCjegUE1QktPgjGuNH4gxysfO4C6lOdqqk82A==
+X-Received: by 2002:a17:902:f642:b0:234:c549:d9f1 with SMTP id d9443c01a7336-237d9bac013mr160443415ad.47.1750674575287;
+        Mon, 23 Jun 2025 03:29:35 -0700 (PDT)
+Received: from [172.17.0.2] (125-227-29-20.hinet-ip.hinet.net. [125.227.29.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237eec29a77sm39901125ad.165.2025.06.23.03.29.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 00:22:53 -0700 (PDT)
-From: Naoya Tezuka <naoyatezuka@chromium.org>
-To: Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>
-Cc: Tzung-Bi Shih <tzungbi@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Naoya Tezuka <naoyatezuka@chromium.org>
-Subject: [PATCH v3] pstore/ram: Validate ECC parameters against Reed-Solomon constraint
-Date: Mon, 23 Jun 2025 16:22:44 +0900
-Message-ID: <20250623072244.368902-1-naoyatezuka@chromium.org>
-X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
+        Mon, 23 Jun 2025 03:29:34 -0700 (PDT)
+From: Leo Wang <leo.jt.wang@gmail.com>
+X-Google-Original-From: Leo Wang <leo.jt.wang@fii-foxconn.com>
+Subject: [PATCH v3 0/2] ARM: dts: Add support for Meta Clemente BMC
+Date: Mon, 23 Jun 2025 18:29:00 +0800
+Message-Id: <20250623-add-support-for-meta-clemente-bmc-v3-0-c223ffcf46cf@fii-foxconn.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGwsWWgC/5XNQQ6CMBCF4auYrh1DC63WlfcwLsowSBNpSVsJh
+ nB3CysTN7p8k8n3zyxSsBTZeTezQKON1rs8yv2OYWfcncA2eTNRCFkofgLTNBCfw+BDgtYH6Ck
+ ZwAf15BJB3SPoiptK6RqlKFl2hkCtnbbG9ZZ3Z2Py4bUlR75e/9FHDgWQRKOUJqqO9aW1Nv9O6
+ J07oO/Z2hjFhyv4L67IrkJJbSE1rzR+u8uyvAG3SOkwMAEAAA==
+X-Change-ID: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ bruce.jy.hung@fii-foxconn.com, george.kw.lee@fii-foxconn.com, 
+ Leo Wang <leo.jt.wang@fii-foxconn.com>, Leo Wang <leo.jt.wang@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750674571; l=1272;
+ i=leo.jt.wang@fii-foxconn.com; s=20250618; h=from:subject:message-id;
+ bh=+GW4fgeA+xKGchuTpQBu6jwVxlJTWxJyFy/i+RiAaek=;
+ b=btkegG8seakota/9EBKZL2P1m9hbYQ7NcEdNGd+Iz8G8tbLqCymMYqAzZy0D7nJsbPbeG6fVy
+ yF1S00pOaEBAlGU31LLYn+ehfvKPiteZ5u+ZO0/xuwC9i50JSo2Nnnf
+X-Developer-Key: i=leo.jt.wang@fii-foxconn.com; a=ed25519;
+ pk=x+DKjAtU/ZbbMkkAVdwfZzKpvNUVgiV1sLJbidVIwSQ=
 
-The Reed-Solomon library enforces the constraint `n <= 2^m - 1` via a
-BUG_ON() [1], where `n` is `block_size + ecc_size` and `m` is `symsize`
-for the pstore RAM backend. A driver providing invalid parameters can
-trigger this, leading to a kernel panic. For more details on the theory
-behind, see [2].
+This series adds initial support for the Meta Clemente BMC based on the ASPEED AST2600 SoC.
 
-This issue was discovered during developing chromeos_pstore driver [3].
+Patch 1 documents the compatible string.
+Patch 2 adds the device tree for the board.
 
-Add a check to validate this constraint before initializing Reed-Solomon
-codec. On failure, return -EINVAL to prevent the panic.
-
-[1] https://elixir.bootlin.com/linux/v6.15/source/lib/reed_solomon/decode_rs.c#L43
-[2] https://www.cs.cmu.edu/~guyb/realworld/reedsolomon/reed_solomon_codes.html
-[3] https://lore.kernel.org/lkml/20250610050458.4014083-1-naoyatezuka@chromium.org/
-
-Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
-Signed-off-by: Naoya Tezuka <naoyatezuka@chromium.org>
+Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
 ---
 Changes in v3:
-- Fix missing closing parenthesis in pr_err() format string.
-- Use [3] instead of Link: tag in commit message as suggested.
-- Add Reviewed-by tag from Tzung-Bi Shih.
-- Add changelog for v2 submission, which was previously omitted.
-
-- Link to v2: https://lore.kernel.org/lkml/20250623062827.133373-1-naoyatezuka@chromium.org/
+- Modify leakage sensor to reflect current design.
+- Link to v2: https://lore.kernel.org/r/20250621-add-support-for-meta-clemente-bmc-v2-0-6c5ef059149c@fii-foxconn.com
 
 Changes in v2:
-- Provide a link to BUG_ON() in commit message.
-- Refine commit message as suggested.
+- Fix patch 1/2 subject line to match dt-bindings convention.
+- Reorder device tree nodes in patch 2/2 to follow upstream DTS style.
+- Link to v1: https://lore.kernel.org/r/20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com
 
-- Link to v1: https://lore.kernel.org/lkml/20250620054757.1006729-1-naoyatezuka@chromium.org/
 ---
- fs/pstore/ram_core.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Leo Wang (2):
+      dt-bindings: arm: aspeed: add Meta Clemente board
+      ARM: dts: aspeed: clemente: add Meta Clemente BMC
 
-diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
-index f1848cdd6d34..64fa55daa47f 100644
---- a/fs/pstore/ram_core.c
-+++ b/fs/pstore/ram_core.c
-@@ -212,6 +212,14 @@ static int persistent_ram_init_ecc(struct persistent_ram_zone *prz,
- 		return -EINVAL;
- 	}
- 
-+	if (prz->ecc_info.block_size + prz->ecc_info.ecc_size >
-+	    (1 << prz->ecc_info.symsize) - 1) {
-+		pr_err("%s: invalid ecc parameters (block_size = %d, ecc_size = %d, symsize = %d)\n",
-+		       __func__, prz->ecc_info.block_size,
-+		       prz->ecc_info.ecc_size, prz->ecc_info.symsize);
-+		return -EINVAL;
-+	}
-+
- 	prz->buffer_size -= ecc_total;
- 	prz->par_buffer = buffer->data + prz->buffer_size;
- 	prz->par_header = prz->par_buffer +
+ .../devicetree/bindings/arm/aspeed/aspeed.yaml     |    1 +
+ arch/arm/boot/dts/aspeed/Makefile                  |    1 +
+ .../dts/aspeed/aspeed-bmc-facebook-clemente.dts    | 1254 ++++++++++++++++++++
+ 3 files changed, 1256 insertions(+)
+---
+base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+change-id: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+
+Best regards,
 -- 
-2.50.0.rc2.701.gf1e915cc24-goog
+Leo Wang <leo.jt.wang@fii-foxconn.com>
 
