@@ -1,142 +1,108 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A5821771B;
-	Tue, 24 Jun 2025 20:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700E2219E0;
+	Tue, 24 Jun 2025 23:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750798707; cv=none; b=gYncc8rY3F16uMeRHKSP7lSPDlm1Q5dyBbgKsPTnthdmmb58tg4dGbUMI3K/XJC+knBHv/4yQLr9zWv/Zzit/wovE3EAKi4bL+M/lL5HcFCVNYd5cCrW7Mdkc7IS0QlGC9difkC5ilSB5/xohSuyhPbdmKF7QBx0tZjtclJ97uE=
+	t=1750808652; cv=none; b=LaQ+wHI1LbbNkG57xRBvzCSvbXV4LAz7qrBJHvqVVrySJvpH54aIoYfcXPgxCJjFvNTAkAHeuurOP/EicVOPfRUiXVDD82izzpF4VY4396GwnZrTQ0P4OhvOLhiu1xfPk7pQ+xoPxf2BOaqus9YPfM8EN612Q6/NESZYHjODA1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750798707; c=relaxed/simple;
-	bh=ku7s8J7NNaVRw7IojtWRiPUGuS8pNyYSGsxT4vIfzIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Edc6fZIUATTqhn1xcCkG/t54LKYUoLZZst1/fN/PBdnbyJTYXrPFPAW21oA1kK6c2ZVTymwcxkCpOaQjDuleU2v0EgSo9+SNQw9/1wkVvzUd7vahixRrBSqbw4gcP3OhofJ59cIPJ9v08s0S21FIyRZD5cf/lHC4xGNx062mtf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ITJ2ydib; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750808652; c=relaxed/simple;
+	bh=gJ2Y39ij81lvq+iKRiDDGSNRlRMdUnfqavwz1La/gMA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FSh4Y0P9txgNmhHMxg3cNzGkI6nGS9xGe/WEjjk2ie7322kVmD1EH+T/Np8tT0ttHt6zsVu+epgQ1wB8SkI1DEN0XIPCyfvtttPOn4Gy47R+LD8eAgrQUrs7DEbOmIzf9R54hCZMIAy+lTGdkbzRFUvESrai0Xj+ocgVkKIMJS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=e/RG7Gxt; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITJ2ydib"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a582e09144so3569289f8f.1;
-        Tue, 24 Jun 2025 13:58:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="e/RG7Gxt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750798704; x=1751403504; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Zz2ubMDTUSZ3CzP5tOdKSgALba7wz8T19kE34wyz8os=;
-        b=ITJ2ydibI91f29bZD2LzT56abHD05SEaXsz33VlT2Y6WTu+CwoRbJ8nWQawB6BC/Tk
-         /cklgGhG/m+krTbAokh5fwvkarWAKcttu3x4cObu6OaCZK17GkeWBo1mTb4JILrwFnhy
-         0hlbAce/iEfD9OyxAxFFwoF4C6TiCtwst5wGTjuPZ4x8yq9GUPXc4dxuvd970peVpMkn
-         uO6VVm3aCqisonsWRsGlPKpJeENMHaKIgNyBbnrt+coanv0d2VlxPFbhyemytjB1VzeT
-         OvDwBn77dJ3Evlvj1voda0cx6jYfDdWhEWgYHVUpPQ6tWsTOLCix9VBle/usS7WTmA23
-         rigw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750798704; x=1751403504;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zz2ubMDTUSZ3CzP5tOdKSgALba7wz8T19kE34wyz8os=;
-        b=XbxTgJEtSg08+ozwcOrZUia7Us/h5W3F0aSFdPbXqbTImYBQb8cjWiozmoIlbfrAf5
-         91GQeIoPMPZbgEfaS8P8hmZJ6ivQtjgnKcfrr4nNKOF/PbTgqSDxPXPz5Eg77Rr7xM72
-         UYhDBnDzPfCPf0Rw/TixL23xwlhB0nz72mc4m175zRV1j7Tk4wf/RV/3sNMbgjaxYkC8
-         cc3EfjwVGE+QbOwdxDc/FwOVZlkCZDU4gj6tntyeeUgPh7aVFd/fkOlaeypj9687LwUI
-         BvlKSH30JsqstinTnmmsu6Fb16oAfgSH0HMRsKJF7dIyeHXSXtEPgMwfxzqpt746RcCo
-         rhKw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/I30jxsUQcwtIMdgW7OIS9MLXgcV7WwvY8H6KB5qFfeBd7Epu/t8YkEX5fMHYS+VdShSPG0lXff5kt2cUbqYi@vger.kernel.org, AJvYcCVmaRFfRkmlbO1746GOXsM445tI643Jlermd1emkbqmEvMmz20HQYvIlOOIg20PgkWkLcvG8sCttA==@vger.kernel.org, AJvYcCVubb+g4dX2iYIERGldCz3ClciwagGGybV1QqhVWJRG8iwGWpT5audPTvqrwecUxjvuggD43DKoTusXIQt62Dg=@vger.kernel.org, AJvYcCVwdAc8NZoIE2J/zk2K4a2sJOhoHAt+QmC4pddsN/GOcVEkOrgrh1F9iEuacyRQnq0S7DAhd6k2a0PXj0YL@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtugN8UxHf/C359l/OCHFqgBymRSndy7yMpcybAtGRNnNLaycw
-	chp/aLjHff7yZSSv5JVVPBdlWtbGj3nqzRkFCZ61WMXGbEgT/ODoJV1Q
-X-Gm-Gg: ASbGncud6H1dasuR44xebu1EYRl7umxuiEL0YAOTcyD+IDYFjVrhMM0tdGOTy9uAlDo
-	UnMRToSop7hTcCuPf2bJafHF4XVt4A2RPXzCG7o7HJIA3d/ccHeqKtlMTcJauf+L43JtBtL1zVv
-	GGI4jjLu2Sk7bFw7/nKpVHHiKEXqFwcFGMvaAk/SbvKeoI3qNXYq2Sp71P7HjmaYss+g6WCPFQ/
-	1ISJJQdvlPEvMmCO6x2e1sZXVg/XxpjZ0LVLtIni+UU8H5k7KJbJJLS9MGi11H/u4xSofSkxj3f
-	/Hiynoag/UYgp7S5AoNdD3sIoMEArPFjw+MbYU1VstqOY8SGHVK1hworxg==
-X-Google-Smtp-Source: AGHT+IGvRDON52aC7F32xyTsDzrric4VeeMtyvVJzhPR2+fqKMhg0dkJITxDSB426QL/PeWs4NeQFw==
-X-Received: by 2002:a5d:5c13:0:b0:3a4:eda1:6c39 with SMTP id ffacd0b85a97d-3a6ed6259e5mr149097f8f.13.1750798703771;
-        Tue, 24 Jun 2025 13:58:23 -0700 (PDT)
-Received: from localhost ([2a02:168:59f0:1:6ea:56ff:fe21:bea7])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45382373c6esm76865e9.34.2025.06.24.13.58.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 13:58:23 -0700 (PDT)
-Date: Tue, 24 Jun 2025 22:58:18 +0200
-From: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack3000@gmail.com>
-To: Paul Moore <paul@paul-moore.com>
-Cc: Stephen Smalley <stephen.smalley.work@gmail.com>, xandfury@gmail.com,
-	Shuah Khan <shuah@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, llvm@lists.linux.dev,
-	selinux@vger.kernel.org, kees@kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2] selinux: add capability checks for TIOCSTI ioctl
-Message-ID: <20250624.3bb75890f0b0@gnoack.org>
-References: <20250622-toicsti-bug-v1-0-f374373b04b2@gmail.com>
- <20250622-toicsti-bug-v1-2-f374373b04b2@gmail.com>
- <CAEjxPJ6v12nLFx-x4-=esuPMp7L8UBvTzoj1kkTPcD2mDKKW8w@mail.gmail.com>
- <CAHC9VhS8gPQwgesV_0VbUuqxGrADm5uDofM3m=wZuAEgkWi5Hw@mail.gmail.com>
+	d=codeconstruct.com.au; s=2022a; t=1750808648;
+	bh=gJ2Y39ij81lvq+iKRiDDGSNRlRMdUnfqavwz1La/gMA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=e/RG7Gxtw5W3CBuHcYNGv/w6plOoXdvuDnYyw33OMFnLPx72CtSGk/mZVXDr7kvvQ
+	 lQvvNjIR1z8+dP7hIHuOSYtYQD69z1shXUbod2f8a7IMnm825YwQtkOHMr+yELaxul
+	 yHnm2INU8nEpzKBuh2vJh8kEUimMut/n87IO40InhzIg+jyeGaAHddunxB9jbcMnPe
+	 CJ5D7W+W3MQclg+FTgFRnR9fCt7vYXSiUcHhmJMZc9tDY4hV2wBBE/5Kkgn7eZSp9l
+	 IT4B8PjYymsEerPDdo/Ios43uN7yJ3Tqmm6H7hD3myXFMDgpvEPP+Pcaxzkrs5xhDd
+	 S8K/nYPNmn1Uw==
+Received: from [192.168.68.112] (unknown [180.150.112.166])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 2047A640CD;
+	Wed, 25 Jun 2025 07:44:06 +0800 (AWST)
+Message-ID: <0f495eec39fd25d71a59a56876f6142e6fe786f3.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v2 2/2] ARM: dts: aspeed: clemente: add Meta Clemente BMC
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Leo Wang <leo.jt.wang@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Kees Cook
+ <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,  "Guilherme G. Piccoli"
+ <gpiccoli@igalia.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus
+ Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	bruce.jy.hung@fii-foxconn.com, george.kw.lee@fii-foxconn.com, Leo Wang
+	 <leo.jt.wang@fii-foxconn.com>
+Date: Wed, 25 Jun 2025 09:14:05 +0930
+In-Reply-To: <20250621-add-support-for-meta-clemente-bmc-v2-2-6c5ef059149c@fii-foxconn.com>
+References: 
+	<20250621-add-support-for-meta-clemente-bmc-v2-0-6c5ef059149c@fii-foxconn.com>
+	 <20250621-add-support-for-meta-clemente-bmc-v2-2-6c5ef059149c@fii-foxconn.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHC9VhS8gPQwgesV_0VbUuqxGrADm5uDofM3m=wZuAEgkWi5Hw@mail.gmail.com>
 
-On Mon, Jun 23, 2025 at 11:15:39AM -0400, Paul Moore wrote:
-> On Mon, Jun 23, 2025 at 8:39 AM Stephen Smalley
-> <stephen.smalley.work@gmail.com> wrote:
-> > On Sun, Jun 22, 2025 at 9:41 PM Abhinav Saxena via B4 Relay
-> > <devnull+xandfury.gmail.com@kernel.org> wrote:
-> > > --- a/security/selinux/hooks.c
-> > > +++ b/security/selinux/hooks.c
-> > > @@ -3847,6 +3847,12 @@ static int selinux_file_ioctl(struct file *file, unsigned int cmd,
-> > >                                             CAP_OPT_NONE, true);
-> > >                 break;
-> > >
-> > > +       case TIOCSTI:
-> > > +               if (!file_ns_capable(file, &init_user_ns, CAP_SYS_ADMIN) ||
-> > > +                   !capable(CAP_SYS_ADMIN))
-> > > +                       error = -EPERM;
-> > > +               break;
-> > > +
-> >
-> > So, aside from what I said previously, this also will break any
-> > existing policies currently controlling TIOCSTI
-> > via the selinux ioctl checking in the default case, so at the very
-> > least, this would need to be gated by a new
-> > SELinux policy capability for compatibility purposes. But I'm still
-> > unconvinced that this is the right approach.
-> 
-> I want to add my voice to the other comments that adding these
-> capability checks to the SELinux code and not the main TIOCSTI kernel
-> code is not an approach we want to support.  Beyond that, as others
-> have already pointed out, I think some additional inspection and
-> testing is needed to ensure that the additional capability checks do
-> not break existing, valid use cases.
+T24gU2F0LCAyMDI1LTA2LTIxIGF0IDE1OjUxICswODAwLCBMZW8gV2FuZyB3cm90ZToKPiBGcm9t
+OiBMZW8gV2FuZyA8bGVvLmp0LndhbmdAZ21haWwuY29tPgo+IAo+IEFkZCBsaW51eCBkZXZpY2Ug
+dHJlZSBlbnRyeSBmb3IgTWV0YSBDbGVtZW50ZSBjb21wdXRlLXRyYXkKPiBCTUMgdXNpbmcgQVNU
+MjYwMCBTb0MuCj4gCj4gU2lnbmVkLW9mZi1ieTogTGVvIFdhbmcgPGxlby5qdC53YW5nQGZpaS1m
+b3hjb25uLmNvbT4KPiAtLS0KPiDCoGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC9NYWtlZmlsZcKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoCAxICsKPiDCoC4uLi9kdHMv
+YXNwZWVkL2FzcGVlZC1ibWMtZmFjZWJvb2stY2xlbWVudGUuZHRzwqDCoMKgIHwgMTI1NCArKysr
+KysrKysrKysrKysrKysrKwo+IMKgMiBmaWxlcyBjaGFuZ2VkLCAxMjU1IGluc2VydGlvbnMoKykK
+PiAKPiAKCipzbmlwKgoKPiArCj4gKyZpMmMyIHsKPiArwqDCoMKgwqDCoMKgwqBzdGF0dXMgPSAi
+b2theSI7Cj4gK8KgwqDCoMKgwqDCoMKgLy8gTW9kdWxlIDAsIEV4cGFuZGVyIEAweDIwCj4gK8Kg
+wqDCoMKgwqDCoMKgaW9fZXhwYW5kZXIwOiBncGlvQDIwIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJueHAscGNhOTU1NSI7Cj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoHJlZyA9IDwweDIwPjsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgZ3Bpby1jb250cm9sbGVyOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAj
+Z3Bpby1jZWxscyA9IDwyPjsKPiArwqDCoMKgwqDCoMKgwqB9Owo+ICsKCipzbmlwKgoKPiArCj4g
+KyZpb19leHBhbmRlcjAgewo+ICvCoMKgwqDCoMKgwqDCoGdwaW8tbGluZS1uYW1lcyA9Cj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJGUEdBX1RIRVJNX09WRVJUX0wtSSIsCj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJGUEdBX1JFQURZX0JNQy1JIiwKPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIkhNQ19CTUNfREVURUNULU8iLAo+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAiSE1DX1BHT09ELU8iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAiIiwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIkJNQ19TVEJZ
+X0NZQ0xFLU8iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiRlBHQV9FUk9UX0ZB
+VEFMX0VSUk9SX0wtSSIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJXUF9IV19F
+WFRfQ1RSTF9MLU8iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiRVJPVF9GUEdB
+X1JTVF9MLU8iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiRlBHQV9FUk9UX1JF
+Q09WRVJZX0wtTyIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJCTUNfRVJPVF9G
+UEdBX1NQSV9NVVhfU0VMLU8iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiVVNC
+Ml9IVUJfUlNUX0wtTyIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCIiLAo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiU0dQSU9fRU5fTC1PIiwKPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIkIyQl9JT0VYUF9JTlRfTC1JIiwKPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIkkyQ19CVVNfTVVYX1JFU0VUX0wtTyI7Cj4gK307Cgppb19leHBh
+bmRlcjAgaXMgYSBub2RlIGxhYmVsIHRoYXQgeW91J3JlIGRlZmluaW5nIGluIHRoaXMgc2FtZSBz
+b3VyY2UKZmlsZS4gVGhlIGNvZGluZyBzdHlsZSBleHBlY3RhdGlvbiBpcyB0aGF0IHlvdSBkZWZp
+bmUgYWxsIHRoZQpwcm9wZXJ0aWVzIGluIHRoZSBub2RlIGl0c2VsZi4gTGFiZWwgcmVmZXJlbmNl
+cyBsaWtlIHRoZSBvbmUgYWJvdmUKc2hvdWxkIGJlIHVzZWQgd2hlbiByZWZlcmVuY2luZyBub2Rl
+cyBmcm9tIGluY2x1ZGVkIGZpbGVzLgoKUGxlYXNlIGZpeCB0aHJvdWdob3V0IChlLmcuIGF0IGxl
+YXN0IGlvX2V4cGFuZGVyMSAtIGlvX2V4cGFuZGVyMTMsIGJ1dAphbnkgb3RoZXIgaW5zdGFuY2Vz
+IGFzIHdlbGwpLgoKPiArCj4gKyZwaW5jdHJsIHsKPiArwqDCoMKgwqDCoMKgwqBwaW5jdHJsX25j
+c2kzX2RlZmF1bHQ6IG5jc2kzX2RlZmF1bHQgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqBmdW5jdGlvbiA9ICJSTUlJMyI7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oGdyb3VwcyA9ICJOQ1NJMyI7Cj4gK8KgwqDCoMKgwqDCoMKgfTsKPiArCj4gK8KgwqDCoMKgwqDC
+oMKgcGluY3RybF9uY3NpNF9kZWZhdWx0OiBuY3NpNF9kZWZhdWx0IHsKPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgZnVuY3Rpb24gPSAiUk1JSTQiOwo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqBncm91cHMgPSAiTkNTSTQiOwo+ICvCoMKgwqDCoMKgwqDCoH07CgpDYW4g
+eW91IHBsZWFzZSByYXRoZXIgYWRkIHRoZXNlIHRvIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC9h
+c3BlZWQtZzYtCnBpbmN0cmwuZHRzaSBzbyBvdGhlciBib2FyZHMgY2FuIG1ha2UgdXNlIG9mIHRo
+ZW0/CgpUaGFua3MsCgpBbmRyZXcK
 
-+1 from me as well.
-
-If the perceived problem is in core TTY logic, but the proposed fix is
-in SELinux, it only addresses a fraction of the install base, as not
-all machines use SELinux.
-
-Also, it's not clear to me why the perceived problem of FD-passsing
-with SCM_RIGHTS is a problem at all.  If a CAP_SYS_ADMIN process
-accepts FDs over SCM_RIGHTS, it is the responsibility of that process
-not to do unjustified privileged operations with these FDs, on behalf
-of other, less privileged, processes.
-
-In the more classic attack scenarios (as described in a series of CVEs
-[1]) the process who had the FD first is normally the more privileged
-one, for for those ones, the existing CAP_SYS_ADMIN check seems fine.
-
-—Günther
-
-[1] https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=TIOCSTI
-
--- 
