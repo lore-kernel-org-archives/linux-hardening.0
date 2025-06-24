@@ -1,40 +1,40 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE9028ECE0;
-	Tue, 24 Jun 2025 13:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBC02DFA46;
+	Tue, 24 Jun 2025 14:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750773404; cv=none; b=ScNKj7WWzpPjUT4/qClrAnWGqiHkTmN7mCM/JuPBXxXuZN6FYDR5rqS557WKkRxTvBQL9TrP5SZ2XcxoQDZDH4gfvRbbwVw1676jsDhmC6Nk3SfCkkU6uf3JqChcLo3D++tOaj4YDeqqNiJEOHzNLXwV92dgBZm45XaYcBbk/DI=
+	t=1750774604; cv=none; b=D/R12fg+YAZ+rwpkgyXF7y7BUN3FCcZwNIyS6MBdK4pnZTJi2QjhxnnaNN6xC9C1iNQYI2L+InAqjv82Q28s/w+ss7oLQtjzQiNec5gzIm26+SMOfCyfHulE5w7OAVCE9tF1R1P+dmEEsbXshZUhF7JrCcnntWCUdsnWuWutt0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750773404; c=relaxed/simple;
-	bh=B6gCqFX0DYfSOHCLouznUndba41nDMKlKq4BB0mKOwY=;
+	s=arc-20240116; t=1750774604; c=relaxed/simple;
+	bh=QySNGEn+z7q6xrGNdmdgwcdRl64BoG8RShihdAdvQ84=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sFwqbmC+AQa4M+RzsOKtElHMVNzGWuJvj+u8EqFBKagVg9rTZCl057ClrAMARAUzpw6Y3Oc7rO3chJY/kij2M8UorIYjHM9Fz6Q4tm6sjyWr9l9Qw4fJ3snqPKWhAxmAXRw01jxcG9r/UBj1srTCog7em2hYtevVbcjMhSqtb40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=SZPiNZwm; arc=none smtp.client-ip=80.241.56.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=L7YC/aiOu9F5Pmyo/PB7BxcWBX9qxd5OKICMoli2aLRquxrmHfve3MPl4rKk3eGsIxMNlmBCRSzJoKsepDhq9aLESaHWsw6VHUj6Hj3xshw3E2uXA24hWrrtlDudTUhO+oONITmsH2xfhq53rm/Nl0L55cuGfErwe3XHfc+ikEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=BwmiRiQ5; arc=none smtp.client-ip=80.241.56.151
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="SZPiNZwm"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="BwmiRiQ5"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bRRM50VM5z9t6q;
-	Tue, 24 Jun 2025 15:56:33 +0200 (CEST)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bRRp80z34z9swN;
+	Tue, 24 Jun 2025 16:16:32 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
-	t=1750773393;
+	t=1750774592;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uDKHq09riz26MRUGKyYOF6elIgy9JDdvB3gqrf3U0Ss=;
-	b=SZPiNZwmqPmL7WaX11SLgBmO0PsneQyb/e1xMaC4yJgg25CuVXeBUZKIhTvKVcwSmwigw1
-	XZcWWPrMxRLOaPE33QSchaTFll+vCc5Gd3AgrR3cUNZ8FaKEXIzhX/H/ACUy5APxNUkYUT
-	PISTECqIMt/gE9fwJo4dTNPdGLZK0e928dRkkxioQQUvkd4Vfm46PtlsElG0hizDT6hZd6
-	IG+XeQQpfWqgjIDSlR2A8mEg1MeBINJfRPtqlyfU+fAC8EpLgZGWP8uPHY+WTeQt0eU+29
-	MDb5v5OfV01y5QtgSj7EqMYkIOKtufaG0GEQ1k1KKet0mROFIYHWphCZlrifnw==
-Date: Tue, 24 Jun 2025 19:26:28 +0530
+	bh=zOB+KWj4K3uiBKIu1Zg12zTHSz73MTm6NuU1DNkS8ag=;
+	b=BwmiRiQ5DPb88L1bZT9xNSIhUKq+5c8llet+J2eGabC0TL2Nk7Xru+zRNTbAs7LeQut6BQ
+	f5MYSfxo/Rbn3WZ73Fh6Vom/ECXeSggR47dL3TtzpPOWWZOfP7o5DP6GDQa0bUHc1pA2/r
+	w0ZIzf7uN7IU16fMUeA2y5SWxVGDD84JktE2zo7PoZMR2FrnjnXqQ0AJopsyefQoIrmNVG
+	mWRSb2Gt/1b5plXqft2bRAQO6gJdAokb87X0XC+VzmhchAVrUAGwpYiQwFE3ho2oB5Q6dG
+	qnQ3ToOpAKME4tNm1/rg4XR7P3ho4OfB2WueYwCZo+Da7DcUTdHwrYUtJcPkSw==
+Date: Tue, 24 Jun 2025 19:46:25 +0530
 From: Brahmajit Das <listout@listout.xyz>
 To: "Rafael J. Wysocki" <rafael@kernel.org>
 Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -42,7 +42,7 @@ Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
 	rui.zhang@intel.com, len.brown@intel.com
 Subject: Re: [PATCH] ACPI / sysfs: Replace deprecated and unsafe functions
  with sysfs_emit
-Message-ID: <jbcmfguk7sfgpf4b5jsdjvuz7nzs34yhre3dokehrzm42dj4s7@fbpzrahozjay>
+Message-ID: <jgk536vpai32yf4ozjx66pah2nvi67j7cnbs4wlfrj5vsetg3w@sgd6huslhtk2>
 References: <20250624133739.25215-1-listout@listout.xyz>
  <CAJZ5v0jSk-NrovSq5En6qOureQXFbCsJLChorbgYXQdYfa0m3w@mail.gmail.com>
 Precedence: bulk
@@ -74,9 +74,40 @@ On 24.06.2025 15:46, Rafael J. Wysocki wrote:
 > of them in any places affected by this patch actually unsafe?
 > 
 
-I meant to send this as RFC. Sorry.
-But I guess the questions still holds.
+The previous patch's idea came while I was working to remove strcpy from
+acpi/sysfs.c. But I guess this is not a good way of sending patch and me
+being a new comer didn't help that I didn't completely tested the patch
+before sending, even it was meant for RFC.
 
+I vaguely remember a tread by GHK where he asked to leave out old code
+and only work on new code that you've tested. So I'll follow that for
+now until I've learnt testing my changes properly.
+
+And again sorry.
+
+I'm working on a patch that replaces deprecated strcpy (which according
+to kernel docs) with sysfs_emit. And looks like:
+
+diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+index a48ebbf768f9..7ce90998ab97 100644
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -181,10 +181,9 @@ static int param_set_trace_method_name(const char *val,
+ 
+ 	/* This is a hack.  We can't kmalloc in early boot. */
+ 	if (is_abs_path)
+-		strcpy(trace_method_name, val);
++		sysfs_emit(trace_method_name, "%s", val);
+ 	else {
+-		trace_method_name[0] = '\\';
+-		strcpy(trace_method_name+1, val);
++		sysfs_emit(trace_method_name, "\%s", val);
+ 	}
+ 
+ 	/* Restore the original tracer state */
+
+I guess I'll keep this, instead of replacing every instance of sprint
+with sysfs_emit blindly.
 -- 
 Regards,
 listout
