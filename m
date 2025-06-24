@@ -1,164 +1,575 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2974B2673B5
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Jun 2025 16:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CF813B2A4
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Jun 2025 01:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750696826; cv=none; b=ncxGwXK4Y1S3KeYOfbKspSRsNPSDkM7K/SYAFM4qM8J+nOEQw5hV8XENJS7RIOSXj5gbgH6QMXX0KcO4h1vnX70aq+qKaklgRCzTUkIZt/TGpkiGHPvsienOMUQEOl8S2lk5du/zGpskpQVWEKdj7vSIbXC68SLaFmAQfpgwnYk=
+	t=1750727188; cv=none; b=kbGxISYFILbNkV0X9ZlV7H3hOdO0kXF8EHt+jNDqEYEsUhsrXfGJuDJv8I1U/23KIMnomQU2NTmH39c0YJRTUOwzTMGkkKOzCwOHiAIGrm/j9UqsJjjARjey+2FvcxCjssGsIMTNwa2SK70WrV6NHdaH6S0hmvyH+k5XHi9KNuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750696826; c=relaxed/simple;
-	bh=eR+ur1cKOg2flLGzDzwtH0YBRTLAIui1olriTCPWVSs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kWGnD27otE7lVqcFkmEBGqBqaM1TFuxL2D0erEyOtT4uqqjfub8rQB892iHdvVrQxdKCwq0QL+9it4CqMpnWqfjHeYoGEKspOe6jEAGXXeRcabeP05cqXmT90Cemy8OreFEFJbB5rYkD4+gkmrfsyVZsmtTkhzpphsMwTxaCpWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hXa4RjH5; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1750727188; c=relaxed/simple;
+	bh=qkOE2/2wJBY6ZbsynzzM1Mei+Bwd/QCXOVugkkrd7sc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F1AjyXLEBtm6snlSPXjZbRKL+rQJoVeQQKwDIvdQMJDxXwM6BHa6dntpuxbgEMcL6PJlgUJyBb0pA/Esfqyf0WqVhVmazf1lEX64v3tVUbEhGhDJA+YiDW68FR/xdQcaEnBSO/Nvu+EEjWOktQ5tRXf1Wcy0aF8Xde/UWRxuOGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Eeyjp6sm; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hXa4RjH5"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N9YYqk032017
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Jun 2025 16:40:24 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Eeyjp6sm"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NKlvKG023113
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Jun 2025 01:06:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	t2bRT9SJHlT97u3ops9Jk5UZrZDQEVjvrIec/PkyZq8=; b=hXa4RjH5lR/jBXAK
-	vycZBatVTqXUgXL2Phf9cnXpke7WyRnccJu7Vnt2/+9AniZUphgSxHf2wuqm66ii
-	z2jpYcW3KYpA+ioPWrMygtQ8wqPbnmL/1+W7agkiP3AF45mGFU6a+Ry5l+5fINN5
-	GHiXxgeFx3T1EYprBp6jYa3YpOdV7XUA5QlDhbMRuCF71ND4YTYRYF/YZHY9FwKx
-	TmridgQDpb8Q8HqiPPwaP1RKLpFCzMzGsR2Eev9gGhae+UAj1wZzDjvCPAANVmuG
-	+50uYvHHG1ufCz6ll2mPrx2mozE/1TxixyRqciDJ4X0O6Q3RpOm/J345wJgshww8
-	fvr2Fg==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47esa4jn55-1
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=I96AeuzRSpWN5lhe5MzY/xvC
+	Lq4Px418+nL7dkLE5cg=; b=Eeyjp6smzu6Z5XStnlK2JC6nhI3PZ8yOMPUKqshb
+	lX6TtEiUZvxHBcBJ45FPQyoAHFQ37mhmwNuGI7cXrsI5d1iVlrlGeF1AnervcP6z
+	Dt1BorVtx0uOWpE7aQ4Q2jERTsJUaDb02jabON3b10QaD3bhUwLCASU+/tQTozdI
+	YVTeNHXZAKTJWPuUYWVG3DN/qDgG6B2A5sFHpnMU8u/tQWk5MJAEuNnIZYIbKAwR
+	jps0/GTlJtvme165ZH9CSgTH+lWgiSkIc0DkvAwFNmE+VVPJJBy9fzYVpGG+kSHp
+	/H6nceAR9ar8+S53pRLJaD342tSJFt8InWK+QwqXMc0xuw==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bgadb7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Jun 2025 16:40:24 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6fb5f7413beso8907976d6.3
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Jun 2025 09:40:23 -0700 (PDT)
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Jun 2025 01:06:24 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d3dcac892bso766865585a.1
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Jun 2025 18:06:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750696811; x=1751301611;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t2bRT9SJHlT97u3ops9Jk5UZrZDQEVjvrIec/PkyZq8=;
-        b=dvn9F0GgFvHoDXBVSaCF/p2Km97ejXkd5IUtRTJclLjZZ7FzjEN1UZDpmdiJOYHJ6j
-         r23UZiYjjNA4/gWQz70svRoxhyJf3J4dU/+ZnHgcRAvbm/Cg+7z/jcOrMcTddzN0/pWC
-         NVprZQYtfECu5Z/dxTuE07P+cRf4KT4f76sT59PcpyBrATcoOMMMmhbyWVsTNNkj8HsV
-         LBiuVb7FyHafiPx1S0pa8CS5toCFaL88WILvRJZbEKgi2sj7uHqA9esNtCCounDDuh/t
-         lcaz217HGg0cLy2O9Ir3Gx/VHNKYm9STMU6kJFwan7EIpMpL7817nJjNv2G+NJN/Zt6W
-         IjCw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvP02sa344MlA/9wqZz3MMPviWvdwPwVy1Wb+9Xx4x0SijjjKWE4T2PnVuHbvHAfiqC4HgMGI/7N2en5T6Iu8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjUqMDwDXbIDuxl3/nNeEqQpKGSu4Z2NS+vxBSG5n3x6+4CXNC
-	Xw62zRimcCx4Q2GIfXXaRJgrBR3ZGt+y1IYkgIwrgV0OC0rcz8qW38JGAbAumdpIByWyhnFRi52
-	nawMOHtTKXTcIRETdkbD4gQ/m0Uu95RY4ANZ841RnFJ0hTF1zq/bhPY03dRq+SSR/y7Fg0dg=
-X-Gm-Gg: ASbGnctm/KHgVIZ5z7j+O2nawI6PiafGs6voQJhCvLlkNlEbz3Xk7/WgXN8ypqDPK2R
-	XJhoPEMaoxMsKfyMhfF9wdmYGvFTazKNyXTyDU0LhxPCaW8EthvbLD8o74C9XBOyWOIXpLa0G1J
-	iGKL0s1+Q0bEaz7IT2w7AqYVcS9z8j+u4882bmV2/C2kXwlS6ipLYDgrgWOpmaIqrKiW+zjmrie
-	zrk2+K9+yKOi/LNPMjevHQOj6p4TrkDM2WGtBjywRIaFfLAoRdeNhgnl8P05fm5ZhZZNhQ48BwZ
-	elAsivHaMezPiz4caooJxpQO0r3UG2a3RkCbkaM6alCP6xTCtibjbgvM61mZ+bdwml/GUqMtZI7
-	e5z0=
-X-Received: by 2002:ac8:5c91:0:b0:48b:6eeb:f98e with SMTP id d75a77b69052e-4a780353b2fmr42899921cf.2.1750696810507;
-        Mon, 23 Jun 2025 09:40:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEq/XOpoxNvNR6RSBM0eTtgQkZh2y7a6j9L7YTt/WuGqvanSwKZAsgCnNh09krw6R1+H5c0WA==
-X-Received: by 2002:ac8:5c91:0:b0:48b:6eeb:f98e with SMTP id d75a77b69052e-4a780353b2fmr42899651cf.2.1750696809833;
-        Mon, 23 Jun 2025 09:40:09 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0541b6e04sm730543266b.115.2025.06.23.09.40.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 09:40:09 -0700 (PDT)
-Message-ID: <53a2cdba-0fb8-4b99-b58e-9318b1bd8ef6@oss.qualcomm.com>
-Date: Mon, 23 Jun 2025 18:40:07 +0200
+        d=1e100.net; s=20230601; t=1750727184; x=1751331984;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I96AeuzRSpWN5lhe5MzY/xvCLq4Px418+nL7dkLE5cg=;
+        b=wzx6ThlXyk5Bm9eDRhRjENHnFTos8w6swZpQkwlB3sASw6gURYSoFJ4SBeYxxg4dDH
+         wjy2XniEcFwYJfZZe8sBzsDAfDqMCH93XS1RdK5fx8aLTC2eFnnBAHyD+jfpA0Y5hPyq
+         LlFM0ToT1OymrMOTbKhnFgm+BV1cabldL0kPpom0iPoh/9WWtihqOjUkUYk+qVr5YSwI
+         iQ3lFCd9HDSn9iBF3MSNNKFVeFW1x0UQtsX87vaZuUVCKwj4+ow/3zOvqlmrsc/nvkg1
+         K4A9CuY6rzzni6fRWK/kDTVre4rga6011GFVw42nVi31YVvdgZwb2CwUM2NiXfp45neb
+         fU3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWmbO3T1riCClTEI72Lr8acNFj3VC4+XQQd/45zNlRuRCQ6ee3Sr9oc98pLwvi7ppDJwookcatC4gPWBjwGYaE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBX/3m/6vDX4+LtmTlIW17UT4p86Jdl4lQvZvT/e2SNg0RmHGy
+	r4VWGAy9h1b+fT445PSk+jCjjqfnfZbdgkoSG2ssMedm2aTWv5nHGVbhvmt1Cb2gIoqpimzF9mn
+	9o98iRfpZpdnEd7SCw5M7PEC9p/KQ7ARBJSQHT70TuHcEHNM2oOYbMvP05voYVHIg/1juyDU=
+X-Gm-Gg: ASbGncsNIx/pvpoezVaRur5OJ795qqhbYYvsKsThhpbBosgSQ4EVOnNFHeWDvAxXZgz
+	dI2u3lhkl3OA3RCxe5kYWs527bFJTDqnAYLCC3No1qSpNF6xQoxB243mhSthv1XqbPu8hksC41L
+	WQYOjTSPm7n4ct0jZQKsy0NPPAIdjAhSS22k6uytMhWIdqr0cyZYb6pqG5WHoPVDkURjTmaFh0N
+	4fJXoZIVn4pdS0VIYmoQd7Tiwgx1fZWpUA75uUWxxzFViNHqGY393Bqx4dYco17Cfo/oor1a346
+	fIMELsIDcpGmzuYHihQPGCQgu7FhbT9IjvfHlGsesRcmDWEokHCQzj72Cpq212Phbf2Tx/lmEhB
+	Y9Z5A0Db2CuDiBuCmfQtSUicGYkhLTbyuD30=
+X-Received: by 2002:a05:620a:1708:b0:7d3:a4fa:ee06 with SMTP id af79cd13be357-7d41ec6e85dmr215254685a.29.1750727183496;
+        Mon, 23 Jun 2025 18:06:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGTKBDfEoL6O7wRd3zl9wFu3DyJpaKfvCy8ukvFNelgsEofez8jOHOaqT4/pDR8PFZN/eKBJQ==
+X-Received: by 2002:a05:620a:1708:b0:7d3:a4fa:ee06 with SMTP id af79cd13be357-7d41ec6e85dmr215250685a.29.1750727182943;
+        Mon, 23 Jun 2025 18:06:22 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41473desm1604694e87.36.2025.06.23.18.06.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 18:06:22 -0700 (PDT)
+Date: Tue, 24 Jun 2025 04:06:20 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Casey Connolly <casey.connolly@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
+Message-ID: <anawfylnc5afpljxeooruyy3lgxn3wizy57jruvnmro6akfsx7@zdzsnludbl6f>
+References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
+ <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] power: supply: qcom_smbx: program aicl rerun time
-To: Casey Connolly <casey.connolly@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        linux-hardening@vger.kernel.org
-References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
- <20250619-smb2-smb5-support-v1-11-ac5dec51b6e1@linaro.org>
- <2d3ff07d-1cd8-4eb6-8b3b-2d0d6f64445f@oss.qualcomm.com>
- <613f2812-3c60-41fe-bdd3-fbe8ea7eeb69@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <613f2812-3c60-41fe-bdd3-fbe8ea7eeb69@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=eLYTjGp1 c=1 sm=1 tr=0 ts=68598378 cx=c_pps
- a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=NTzqWVVAQLbBsVAMQFsA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: P_q9sBdCDvUiu4VJhWyGtxY1Vl0RX2ww
-X-Proofpoint-ORIG-GUID: P_q9sBdCDvUiu4VJhWyGtxY1Vl0RX2ww
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDEwMSBTYWx0ZWRfX8JJBFEKkPhH9
- uQGF5ZP0rzG7YWQq6suSMe/H7/HR4XZaI/gJD2ARHM0MKjP5wuovUWb5LKBJRD6AKpkhCvIS9hA
- GNssQzJQKu1k6RfxRMXR406Ku2dB4GBepKpNrha21Z1/mUR2kI/LGB2sMu8S5GlPYPJW52QOOGv
- 10enOPEMA5os4sCkhaaHi+J2FTa5YPh05wQYhsuJy+n4UT4X23Vvqox2coc/0d6JLVhXp9PUyAB
- qL8/OKF+kwMZ7emaICaBaIpLbNLhEIYaR5KGb4xqpsA9pE4AIjWmnC7p710BXUDiiyMNWePdSdO
- 8AoZNPuVHyzl0rDyTcminofoyV5DG5jRpaKWvo9v+JrPz1o1VZZSEMzoZ9UOS/M231wUKvljzaZ
- wMsycgZX5pg8AgXRGK4MSPDgx8/sbepj7LK6j4alELlYi3TUGo3MvVo8kkLigiVjFmIyRfYR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
+X-Proofpoint-ORIG-GUID: d4C0lDLgNnFH2R8gKGRI3b09wYLMI_SH
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDAwNyBTYWx0ZWRfX9NeGfwirG74Y
+ FsLAzh5MQ9M6IGjK7BOkLl28FZbI+oajB+15NwEV5wbSbS+dddzljlfM2PPeOEXT0O8sTidTqUW
+ 1L3P9qUafkyOov7wX92BSwlkpm+83jOLPVqWgmNkH7FuJsiEC+L0VdTxEh2JNM8we1p7VHE6uBo
+ Y6x6tVauxYj7+5c5HluoE3txJYyyDT4yIZkiiomOLGNSUHx09lrw+g4qBMiVilY+mOycepP4Zp5
+ xuSyOG3/UTH6jzm7hj1jvBwqoCxymRymcvepTyjXAFulq82uvaBGxELqP7Snq8zLUG+ZY6XnTOF
+ HjgOopzHXH67ybVIG0VpyYTe41NGunO25I4KWxTJmyjXMNOg5Q91X3xuyUOFxbwAvT9Fv0OpNG2
+ UVROy/1P4wVQET33MCr8M1aAmztjIUIcUO7ir2Enre3p+BZxWwsrfI++WRO43XYYXnBIiFJc
+X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=6859fa10 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=5OhpeUltsOZZNJSkuxwA:9 a=CjuIK1q_8ugA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: d4C0lDLgNnFH2R8gKGRI3b09wYLMI_SH
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-23_04,2025-06-23_07,2025-03-28_01
+ definitions=2025-06-23_08,2025-06-23_07,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=999
- suspectscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506230101
+ mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ spamscore=0 phishscore=0 mlxlogscore=999 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506240007
 
-On 6/23/25 6:33 PM, Casey Connolly wrote:
+On Thu, Jun 19, 2025 at 04:55:17PM +0200, Casey Connolly wrote:
+> Introduce support for the SMB5 charger found on pm8150b and other more
+> modern Qualcomm SoCs.
 > 
+> SMB5 is largely similar to SMB2, with a few register differences. The
+> main difference is the new Type-C hardware block which some registers
+> are moved to.
 > 
-> On 6/20/25 19:00, Konrad Dybcio wrote:
->> On 6/19/25 4:55 PM, Casey Connolly wrote:
->>> We don't know what the bootloader programmed here, but we want to have a
->>> consistent value. Program the automatic input current limit detection to
->>> re-run every 3 seconds. This seems to be necessary at least for smb5.
->>>
->>> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
->>> ---
->>>   drivers/power/supply/qcom_smbx.c | 6 ++++++
->>>   1 file changed, 6 insertions(+)
->>>
->>> diff --git a/drivers/power/supply/qcom_smbx.c b/drivers/power/supply/qcom_smbx.c
->>> index d902f3f43548191d3d0310ce90e699918ed0f16f..b723dba5b86daefb238ee6aae19b1b7e5236fce3 100644
->>> --- a/drivers/power/supply/qcom_smbx.c
->>> +++ b/drivers/power/supply/qcom_smbx.c
->>> @@ -1091,8 +1091,14 @@ static int smb_probe(struct platform_device *pdev)
->>>       if (rc < 0)
->>>           return dev_err_probe(chip->dev, rc,
->>>                        "Couldn't write fast charge current cfg");
->>>   +    rc = regmap_write_bits(chip->regmap, chip->base + AICL_RERUN_TIME_CFG,
->>> +                   AICL_RERUN_TIME_MASK, AIC_RERUN_TIME_3_SECS);
->>
->> FWIW a random downstream clone I have sets 0x01 which is claimed to
->> mean "every 12s" instead
+> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
+> ---
+>  drivers/power/supply/qcom_smbx.c | 367 +++++++++++++++++++++++++++++++++------
+>  1 file changed, 314 insertions(+), 53 deletions(-)
 > 
-> hmm I saw that too, I think more documentation would be needed to understand this properly (I'm not exactly clear on what this actually means, when the AICL would re-run, etc).
-> 
-> I have reports that this works ok, so I'd just leave it unless we have info to suggest otherwise.
+> diff --git a/drivers/power/supply/qcom_smbx.c b/drivers/power/supply/qcom_smbx.c
+> index 10ddd33a09599decb23c0f1ccd02fa9b56602543..d902f3f43548191d3d0310ce90e699918ed0f16f 100644
+> --- a/drivers/power/supply/qcom_smbx.c
+> +++ b/drivers/power/supply/qcom_smbx.c
+> @@ -22,18 +22,32 @@
+>  #include <linux/regmap.h>
+>  #include <linux/types.h>
+>  #include <linux/workqueue.h>
+>  
+> +enum smb_generation {
+> +	SMB2,
+> +	SMB5,
+> +};
+> +
+> +#define SMB_REG_OFFSET(smb) (smb->gen == SMB2 ? 0x600 : 0x100)
+> +
+>  /* clang-format off */
+>  #define BATTERY_CHARGER_STATUS_1			0x06
+>  #define BATTERY_CHARGER_STATUS_MASK			GENMASK(2, 0)
+>  
+>  #define BATTERY_CHARGER_STATUS_2			0x07
+> -#define CHARGER_ERROR_STATUS_BAT_OV_BIT			BIT(5)
+> -#define BAT_TEMP_STATUS_HOT_SOFT_LIMIT_BIT		BIT(3)
+> -#define BAT_TEMP_STATUS_COLD_SOFT_LIMIT_BIT		BIT(2)
+> -#define BAT_TEMP_STATUS_TOO_HOT_BIT			BIT(1)
+> -#define BAT_TEMP_STATUS_TOO_COLD_BIT			BIT(0)
+> +#define SMB2_CHARGER_ERROR_STATUS_BAT_OV_BIT		BIT(5)
+> +#define SMB2_BAT_TEMP_STATUS_HOT_SOFT_LIMIT_BIT	BIT(3)
+> +#define SMB2_BAT_TEMP_STATUS_COLD_SOFT_LIMIT_BIT	BIT(2)
+> +#define SMB2_BAT_TEMP_STATUS_TOO_HOT_BIT		BIT(1)
+> +#define SMB5_CHARGER_ERROR_STATUS_BAT_OV_BIT		BIT(1)
+> +#define SMB2_BAT_TEMP_STATUS_TOO_COLD_BIT		BIT(0)
+> +
+> +#define BATTERY_CHARGER_STATUS_7			0x0D
+> +#define SMB5_BAT_TEMP_STATUS_HOT_SOFT_BIT		BIT(5)
+> +#define SMB5_BAT_TEMP_STATUS_COLD_SOFT_BIT		BIT(4)
+> +#define SMB5_BAT_TEMP_STATUS_TOO_HOT_BIT		BIT(3)
+> +#define SMB5_BAT_TEMP_STATUS_TOO_COLD_BIT		BIT(2)
+>  
+>  #define CHARGING_ENABLE_CMD				0x42
+>  #define CHARGING_ENABLE_CMD_BIT				BIT(0)
+>  
+> @@ -55,11 +69,14 @@
+>  
+>  #define FLOAT_VOLTAGE_CFG				0x70
+>  #define FLOAT_VOLTAGE_SETTING_MASK			GENMASK(7, 0)
+>  
+> -#define FG_UPDATE_CFG_2_SEL				0x7D
+> -#define SOC_LT_CHG_RECHARGE_THRESH_SEL_BIT		BIT(2)
+> -#define VBT_LT_CHG_RECHARGE_THRESH_SEL_BIT		BIT(1)
+> +#define SMB2_FG_UPDATE_CFG_2_SEL			0x7D
+> +#define SMB2_SOC_LT_CHG_RECHARGE_THRESH_SEL_BIT		BIT(2)
+> +#define SMB2_VBT_LT_CHG_RECHARGE_THRESH_SEL_BIT		BIT(1)
+> +
+> +#define SMB5_CHARGE_RCHG_SOC_THRESHOLD_CFG_REG		0x7D
+> +#define SMB5_CHARGE_RCHG_SOC_THRESHOLD_CFG_MASK		GENMASK(7, 0)
+>  
+>  #define OTG_CFG						0x153
+>  #define OTG_EN_SRC_CFG_BIT				BIT(1)
+>  
+> @@ -73,36 +90,46 @@
+>  #define CDP_CHARGER_BIT					BIT(2)
+>  #define OCP_CHARGER_BIT					BIT(1)
+>  #define SDP_CHARGER_BIT					BIT(0)
+>  
+> +#define USBIN_CMD_IL					0x340
+> +#define USBIN_SUSPEND_BIT				BIT(0)
+> +
+>  #define CMD_APSD					0x341
+>  #define APSD_RERUN_BIT					BIT(0)
+>  
+> +#define CMD_ICL_OVERRIDE				0x342
+> +#define ICL_OVERRIDE_BIT				BIT(0)
+> +
+>  #define TYPE_C_CFG					0x358
+> +#define APSD_START_ON_CC_BIT				BIT(7)
+>  #define FACTORY_MODE_DETECTION_EN_BIT			BIT(5)
+>  #define VCONN_OC_CFG_BIT				BIT(1)
+>  
+>  #define USBIN_OPTIONS_1_CFG				0x362
+> +#define AUTO_SRC_DETECT_BIT				BIT(3)
+>  #define HVDCP_EN_BIT					BIT(2)
+>  
+> +#define USBIN_LOAD_CFG					0x65
+> +#define ICL_OVERRIDE_AFTER_APSD_BIT			BIT(4)
+> +
+>  #define USBIN_ICL_OPTIONS				0x366
+>  #define USB51_MODE_BIT					BIT(1)
+>  #define USBIN_MODE_CHG_BIT				BIT(0)
+>  
+>  /* PMI8998 only */
+>  #define TYPE_C_INTRPT_ENB_SOFTWARE_CTRL			0x368
+> -#define VCONN_EN_SRC_BIT				BIT(4)
+> +#define SMB2_VCONN_EN_SRC_BIT				BIT(4)
+>  #define VCONN_EN_VALUE_BIT				BIT(3)
+>  #define TYPEC_POWER_ROLE_CMD_MASK			GENMASK(2, 0)
+> -#define UFP_EN_CMD_BIT					BIT(2)
+> -#define DFP_EN_CMD_BIT					BIT(1)
+> -#define TYPEC_DISABLE_CMD_BIT				BIT(0)
+> +#define SMB5_EN_SNK_ONLY_BIT				BIT(1)
+>  
+>  #define USBIN_CURRENT_LIMIT_CFG				0x370
+>  
+>  #define USBIN_AICL_OPTIONS_CFG				0x380
+>  #define SUSPEND_ON_COLLAPSE_USBIN_BIT			BIT(7)
+>  #define USBIN_AICL_START_AT_MAX_BIT			BIT(5)
+> +#define USBIN_AICL_PERIODIC_RERUN_EN_BIT		BIT(4)
+>  #define USBIN_AICL_ADC_EN_BIT				BIT(3)
+>  #define USBIN_AICL_EN_BIT				BIT(2)
+>  #define USBIN_HV_COLLAPSE_RESPONSE_BIT			BIT(1)
+>  #define USBIN_LV_COLLAPSE_RESPONSE_BIT			BIT(0)
+> @@ -113,15 +140,41 @@
+>  
+>  #define USBIN_CONT_AICL_THRESHOLD_CFG			0x384
+>  #define USBIN_CONT_AICL_THRESHOLD_CFG_MASK		GENMASK(5, 0)
+>  
+> -#define ICL_STATUS					0x607
+> +#define ICL_STATUS(smb)					(SMB_REG_OFFSET(smb) + 0x07)
+>  #define INPUT_CURRENT_LIMIT_MASK			GENMASK(7, 0)
+>  
+> -#define POWER_PATH_STATUS				0x60B
+> +#define POWER_PATH_STATUS(smb)				(SMB_REG_OFFSET(smb) + 0x0B)
+>  #define P_PATH_USE_USBIN_BIT				BIT(4)
+>  #define P_PATH_VALID_INPUT_POWER_SOURCE_STS_BIT		BIT(0)
+>  
+> +/* 0x5xx region is PM8150b only Type-C registers */
+> +
+> +/* Bits 2:0 match PMI8998 TYPE_C_INTRPT_ENB_SOFTWARE_CTRL */
+> +#define SMB5_TYPE_C_MODE_CFG				0x544
+> +#define SMB5_EN_TRY_SNK_BIT				BIT(4)
+> +#define SMB5_EN_SNK_ONLY_BIT				BIT(1)
+> +
+> +#define SMB5_TYPEC_TYPE_C_VCONN_CONTROL			0x546
+> +#define SMB5_VCONN_EN_ORIENTATION_BIT			BIT(2)
+> +#define SMB5_VCONN_EN_VALUE_BIT				BIT(1)
+> +#define SMB5_VCONN_EN_SRC_BIT				BIT(0)
+> +
+> +
+> +#define SMB5_TYPE_C_DEBUG_ACCESS_SINK			0x54a
+> +#define SMB5_TYPEC_DEBUG_ACCESS_SINK_MASK		GENMASK(4, 0)
+> +
+> +#define SMB5_DEBUG_ACCESS_SRC_CFG			0x54C
+> +#define SMB5_EN_UNORIENTED_DEBUG_ACCESS_SRC_BIT	BIT(0)
+> +
+> +#define SMB5_TYPE_C_EXIT_STATE_CFG			0x550
+> +#define SMB5_BYPASS_VSAFE0V_DURING_ROLE_SWAP_BIT	BIT(3)
+> +#define SMB5_SEL_SRC_UPPER_REF_BIT			BIT(2)
+> +#define SMB5_EXIT_SNK_BASED_ON_CC_BIT			BIT(0)
+> +
+> +/* Common */
+> +
+>  #define BARK_BITE_WDOG_PET				0x643
+>  #define BARK_BITE_WDOG_PET_BIT				BIT(0)
+>  
+>  #define WD_CFG						0x651
+> @@ -184,8 +237,9 @@ struct smb_chip {
+>  	const char *name;
+>  	unsigned int base;
+>  	struct regmap *regmap;
+>  	struct power_supply_battery_info *batt_info;
+> +	enum smb_generation gen;
+>  
+>  	struct delayed_work status_change_work;
+>  	int cable_irq;
+>  	bool wakeup_enabled;
+> @@ -195,8 +249,15 @@ struct smb_chip {
+>  
+>  	struct power_supply *chg_psy;
+>  };
+>  
+> +struct smb_match_data {
+> +	const char *name;
+> +	enum smb_generation gen;
+> +	size_t init_seq_len;
+> +	const struct smb_init_register __counted_by(init_seq_len) *init_seq;
+> +};
+> +
+>  static enum power_supply_property smb_properties[] = {
+>  	POWER_SUPPLY_PROP_MANUFACTURER,
+>  	POWER_SUPPLY_PROP_MODEL_NAME,
+>  	POWER_SUPPLY_PROP_CURRENT_MAX,
+> @@ -212,9 +273,9 @@ static int smb_get_prop_usb_online(struct smb_chip *chip, int *val)
+>  {
+>  	unsigned int stat;
+>  	int rc;
+>  
+> -	rc = regmap_read(chip->regmap, chip->base + POWER_PATH_STATUS, &stat);
+> +	rc = regmap_read(chip->regmap, chip->base + POWER_PATH_STATUS(chip), &stat);
+>  	if (rc < 0) {
+>  		dev_err(chip->dev, "Couldn't read power path status: %d\n", rc);
+>  		return rc;
+>  	}
+> @@ -267,11 +328,37 @@ static int smb_apsd_get_charger_type(struct smb_chip *chip, int *val)
+>  
+>  	return 0;
+>  }
+>  
+> +/* Return 1 when in overvoltage state, else 0 or -errno */
+> +static int smbx_ov_status(struct smb_chip *chip)
+> +{
+> +	u16 reg;
+> +	u8 mask;
+> +	int rc;
+> +	u32 val;
+> +
+> +	switch (chip->gen) {
+> +	case SMB2:
+> +		reg = BATTERY_CHARGER_STATUS_2;
+> +		mask = SMB2_CHARGER_ERROR_STATUS_BAT_OV_BIT;
+> +		break;
+> +	case SMB5:
+> +		reg = BATTERY_CHARGER_STATUS_7;
+> +		mask = SMB5_CHARGER_ERROR_STATUS_BAT_OV_BIT;
+> +		break;
+> +	}
+> +
+> +	rc = regmap_read(chip->regmap, chip->base + reg, &val);
+> +	if (rc)
+> +		return rc;
+> +
+> +	return !!(reg & mask);
+> +}
+> +
+>  static int smb_get_prop_status(struct smb_chip *chip, int *val)
+>  {
+> -	unsigned char stat[2];
+> +	u32 stat;
+>  	int usb_online = 0;
+>  	int rc;
+>  
+>  	rc = smb_get_prop_usb_online(chip, &usb_online);
+> @@ -279,24 +366,29 @@ static int smb_get_prop_status(struct smb_chip *chip, int *val)
+>  		*val = POWER_SUPPLY_STATUS_DISCHARGING;
+>  		return rc;
+>  	}
+>  
+> -	rc = regmap_bulk_read(chip->regmap,
+> -			      chip->base + BATTERY_CHARGER_STATUS_1, &stat, 2);
+> +	rc = regmap_read(chip->regmap,
+> +			      chip->base + BATTERY_CHARGER_STATUS_1, &stat);
+>  	if (rc < 0) {
+>  		dev_err(chip->dev, "Failed to read charging status ret=%d\n",
+>  			rc);
+>  		return rc;
+>  	}
+>  
+> -	if (stat[1] & CHARGER_ERROR_STATUS_BAT_OV_BIT) {
+> +	rc = smbx_ov_status(chip);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	/* In overvoltage state */
+> +	if (rc == 1) {
+>  		*val = POWER_SUPPLY_STATUS_NOT_CHARGING;
+>  		return 0;
+>  	}
+>  
+> -	stat[0] = stat[0] & BATTERY_CHARGER_STATUS_MASK;
+> +	stat = stat & BATTERY_CHARGER_STATUS_MASK;
+>  
+> -	switch (stat[0]) {
+> +	switch (stat) {
+>  	case TRICKLE_CHARGE:
+>  	case PRE_CHARGE:
+>  	case FAST_CHARGE:
+>  	case FULLON_CHARGE:
+> @@ -318,9 +410,9 @@ static int smb_get_prop_status(struct smb_chip *chip, int *val)
+>  
+>  static inline int smb_get_current_limit(struct smb_chip *chip,
+>  					 unsigned int *val)
+>  {
+> -	int rc = regmap_read(chip->regmap, chip->base + ICL_STATUS, val);
+> +	int rc = regmap_read(chip->regmap, chip->base + ICL_STATUS(chip), val);
+>  
+>  	if (rc >= 0)
+>  		*val *= CURRENT_SCALE_FACTOR;
+>  	return rc;
+> @@ -413,9 +505,46 @@ static int smb_get_iio_chan(struct smb_chip *chip, struct iio_channel *chan,
+>  
+>  	return iio_read_channel_processed(chan, val);
+>  }
+>  
+> -static int smb_get_prop_health(struct smb_chip *chip, int *val)
+> +static int smb5_get_prop_health(struct smb_chip *chip, int *val)
+> +{
+> +	int rc;
+> +	unsigned int stat;
+> +
+> +	rc = smbx_ov_status(chip);
+> +
+> +	/* Treat any error as if we are in the overvoltage state */
+> +	if (rc < 0)
+> +		dev_err(chip->dev, "Couldn't determine overvoltage status!");
+> +	if (rc) {
+> +		dev_err(chip->dev, "battery over-voltage");
+> +		*val = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
+> +		return 0;
+> +	}
+> +
+> +	rc = regmap_read(chip->regmap, chip->base + BATTERY_CHARGER_STATUS_7,
+> +			 &stat);
+> +	if (rc < 0) {
+> +		dev_err(chip->dev, "Couldn't read charger status 7 rc=%d\n", rc);
+> +		return rc;
+> +	}
+> +
+> +	if (stat & SMB5_BAT_TEMP_STATUS_TOO_COLD_BIT)
+> +		*val = POWER_SUPPLY_HEALTH_COLD;
+> +	else if (stat & SMB5_BAT_TEMP_STATUS_TOO_HOT_BIT)
+> +		*val = POWER_SUPPLY_HEALTH_OVERHEAT;
+> +	else if (stat & SMB5_BAT_TEMP_STATUS_COLD_SOFT_BIT)
+> +		*val = POWER_SUPPLY_HEALTH_COOL;
+> +	else if (stat & SMB5_BAT_TEMP_STATUS_HOT_SOFT_BIT)
+> +		*val = POWER_SUPPLY_HEALTH_WARM;
+> +	else
+> +		*val = POWER_SUPPLY_HEALTH_GOOD;
+> +
+> +	return 0;
+> +}
+> +
+> +static int smb2_get_prop_health(struct smb_chip *chip, int *val)
+>  {
+>  	int rc;
+>  	unsigned int stat;
+>  
+> @@ -426,34 +555,45 @@ static int smb_get_prop_health(struct smb_chip *chip, int *val)
+>  		return rc;
+>  	}
+>  
+>  	switch (stat) {
+> -	case CHARGER_ERROR_STATUS_BAT_OV_BIT:
+> +	case SMB2_CHARGER_ERROR_STATUS_BAT_OV_BIT:
+>  		*val = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
+>  		return 0;
+> -	case BAT_TEMP_STATUS_TOO_COLD_BIT:
+> +	case SMB2_BAT_TEMP_STATUS_TOO_COLD_BIT:
+>  		*val = POWER_SUPPLY_HEALTH_COLD;
+>  		return 0;
+> -	case BAT_TEMP_STATUS_TOO_HOT_BIT:
+> +	case SMB2_BAT_TEMP_STATUS_TOO_HOT_BIT:
+>  		*val = POWER_SUPPLY_HEALTH_OVERHEAT;
+>  		return 0;
+> -	case BAT_TEMP_STATUS_COLD_SOFT_LIMIT_BIT:
+> +	case SMB2_BAT_TEMP_STATUS_COLD_SOFT_LIMIT_BIT:
+>  		*val = POWER_SUPPLY_HEALTH_COOL;
+>  		return 0;
+> -	case BAT_TEMP_STATUS_HOT_SOFT_LIMIT_BIT:
+> +	case SMB2_BAT_TEMP_STATUS_HOT_SOFT_LIMIT_BIT:
+>  		*val = POWER_SUPPLY_HEALTH_WARM;
+>  		return 0;
+>  	default:
+>  		*val = POWER_SUPPLY_HEALTH_GOOD;
+>  		return 0;
+>  	}
+>  }
+>  
+> +static int smb_get_prop_health(struct smb_chip *chip, int *val)
+> +{
+> +	switch (chip->gen) {
+> +	case SMB2:
+> +		return smb2_get_prop_health(chip, val);
+> +	case SMB5:
+> +		return smb5_get_prop_health(chip, val);
+> +	}
+> +}
+> +
+>  static int smb_get_property(struct power_supply *psy,
+>  			     enum power_supply_property psp,
+>  			     union power_supply_propval *val)
+>  {
+>  	struct smb_chip *chip = power_supply_get_drvdata(psy);
+> +	int ret;
+>  
+>  	switch (psp) {
+>  	case POWER_SUPPLY_PROP_MANUFACTURER:
+>  		val->strval = "Qualcomm";
+> @@ -466,10 +606,15 @@ static int smb_get_property(struct power_supply *psy,
+>  	case POWER_SUPPLY_PROP_CURRENT_NOW:
+>  		return smb_get_iio_chan(chip, chip->usb_in_i_chan,
+>  					 &val->intval);
+>  	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+> -		return smb_get_iio_chan(chip, chip->usb_in_v_chan,
+> +		ret = smb_get_iio_chan(chip, chip->usb_in_v_chan,
+>  					 &val->intval);
+> +		if (!ret) {
+> +			if (chip->gen == SMB5)
+> +				val->intval *= 16;
+> +		}
+> +		return ret;
+>  	case POWER_SUPPLY_PROP_ONLINE:
+>  		return smb_get_prop_usb_online(chip, &val->intval);
+>  	case POWER_SUPPLY_PROP_STATUS:
+>  		return smb_get_prop_status(chip, &val->intval);
+> @@ -515,14 +660,10 @@ static int smb_property_is_writable(struct power_supply *psy,
+>  
+>  static irqreturn_t smb_handle_batt_overvoltage(int irq, void *data)
+>  {
+>  	struct smb_chip *chip = data;
+> -	unsigned int status;
+>  
+> -	regmap_read(chip->regmap, chip->base + BATTERY_CHARGER_STATUS_2,
+> -		    &status);
+> -
+> -	if (status & CHARGER_ERROR_STATUS_BAT_OV_BIT) {
+> +	if (smbx_ov_status(chip) == 1) {
+>  		/* The hardware stops charging automatically */
+>  		dev_err(chip->dev, "battery overvoltage detected\n");
+>  		power_supply_changed(chip->chg_psy);
+>  	}
+> @@ -566,9 +707,9 @@ static irqreturn_t smb_handle_wdog_bark(int irq, void *data)
+>  	return IRQ_HANDLED;
+>  }
+>  
+>  static const struct power_supply_desc smb_psy_desc = {
+> -	.name = "pmi8998_charger",
+> +	.name = "SMB2_charger",
+>  	.type = POWER_SUPPLY_TYPE_USB,
+>  	.usb_types = BIT(POWER_SUPPLY_USB_TYPE_SDP) |
+>  		     BIT(POWER_SUPPLY_USB_TYPE_CDP) |
+>  		     BIT(POWER_SUPPLY_USB_TYPE_DCP) |
+> @@ -580,18 +721,100 @@ static const struct power_supply_desc smb_psy_desc = {
+>  	.property_is_writeable = smb_property_is_writable,
+>  };
+>  
+>  /* Init sequence derived from vendor downstream driver */
+> -static const struct smb_init_register smb_init_seq[] = {
+> -	{ .addr = AICL_RERUN_TIME_CFG, .mask = AICL_RERUN_TIME_MASK, .val = 0 },
+> +static const struct smb_init_register smb5_init_seq[] = {
+> +	{ .addr = USBIN_CMD_IL, .mask = USBIN_SUSPEND_BIT, .val = 0 },
+> +	/*
+> +	 * By default configure us as an upstream facing port
+> +	 * FIXME: This will be handled by the type-c driver
+> +	 */
 
-Well, in case of such lack of understanding I'd much prefer to see
-a magic number that shipped on hundreds of millions of devices than
-a magic number that was confirmed working on a couple dozen.. especially
-since this looks like an improvement that people who had their hand in
-the hw design wouldn't generally overlook unless there was reasons
-(e.g. compatibility or some sort of a quirk)
+All of this needs to be reworked to cooperate with the type-c driver.
+Otherwise it might try to reconfigure the Type-C mode _after_ the TCPM
+has negotiated some configuration. So, it can't go in in this way.
 
-Konrad
+> +	{ .addr = SMB5_TYPE_C_MODE_CFG,
+> +	  .mask = SMB5_EN_TRY_SNK_BIT | SMB5_EN_SNK_ONLY_BIT,
+> +	  .val = SMB5_EN_TRY_SNK_BIT },
+> 
+
+-- 
+With best wishes
+Dmitry
