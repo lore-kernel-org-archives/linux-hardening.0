@@ -1,184 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2472AD58;
-	Wed, 25 Jun 2025 01:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8ADB20C48D
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Jun 2025 08:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750813757; cv=none; b=YfbjfnCbhUHL5kQrj8xgS5x0DIyWhhVbGI2r48aDF1QWXvRfaBJLE0qhdJIHzpY1Ica2isWjyiCNOUxbTdtAAdFoXfyg8LqaCiQdSc/pwwiJQ2W/L19BiKYTUQYfqH3hOo0TL2nci6Wwv+KMH2xdNSelMezmrMaAo7jMYJNd1Gc=
+	t=1750839988; cv=none; b=m+i0VYkx69ywl2+a0fawJ0gRjyDbDWgwxei00ZAiDJdri9PeAwxXpNOuQFIb3PcQcjlGQZq2d6sTOw/zLGk6KnWdpVZF+xqVpPbb0IZaSAhNgLb4m8wBDHewbwl0SnNhn1eK4ZthCrG0VqDp1kTUDiZmqMapNyjH14Q/yzOVjEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750813757; c=relaxed/simple;
-	bh=ar+M7uOS6NGMBXnGsSfhmdY2/NIrFzzFwB2vQ2UdzzU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Lqkw544z7nEnHYzbIOoMDtLajewAAV6RVrA7tDGQIOxWtcHK+kuLIn2j5w49sDUwlY2fCCaAkXRrufDWM5+1fUlgrmkCoJAkav6C/qgM142QAEVwLSQ9P9He8RAMJBXXqkUtLot5U/m+ZfFjCq/TFqEb325RvAZrTecsNXhdw7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=si3Mv9bY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750839988; c=relaxed/simple;
+	bh=HS4wAnVjCQeW1rVCh4eHK2uX9ZfsLA1faWghmR3VJxs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hIylIqa4jHKElNEF9559GqtK3XyD+D2PfcwoRhe3W7FbFxu+BS5AtRhUtXZOzDti41/lTZJ/waG4/556xbN1PeZnYaBlUy98TfhQ09EumWNRx4do+S+x6ULVXSbd6172QwrQyQpSp8c48KOkolkDOAel5bkvDdhpp37ogj3Zl6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0BLatIBb; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="si3Mv9bY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F5E3C4CEE3;
-	Wed, 25 Jun 2025 01:09:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750813756;
-	bh=ar+M7uOS6NGMBXnGsSfhmdY2/NIrFzzFwB2vQ2UdzzU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=si3Mv9bYY/8kBwTkVAcQqZoJK6oPCfQbERzoeHQNnnjouaaju9cDPj5M/XH+LGCGf
-	 sutZ2TLPTDRMtEiUcTLAfcucjlB1tBOK027s1ZYe+qpQm8YtBXVVCggwf2H8yIixe+
-	 IDVtaRLnE7OYk8omFmO1wVvMArdpG+qU6ghcCXqwDH3eSeR/zt8PJr47crwpodU4K/
-	 +SdYth5GpIqN7Rkz05vHh/vtCMrcnD2wmTD+63kR8qXgeUEYggdfeNmyLdKPgxxZY0
-	 Z7hF7LuReE6Xw0PlrdhJ4M022p1QhH6fci9WuRh8Uql2D6xK1hPUmyC7uoJ+Q8UvXd
-	 gbu4rtou3gcJw==
-Date: Tue, 24 Jun 2025 18:09:18 -0700
-From: Kees Cook <kees@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-CC: Arnd Bergmann <arnd@arndb.de>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Gleixner <tglx@linutronix.de>,
- Tianyang Zhang <zhangtianyang@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Christoph Hellwig <hch@lst.de>, Marco Elver <elver@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>, Ard Biesheuvel <ardb@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org, kasan-dev@googlegroups.com,
- linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-kselftest@vger.kernel.org,
- sparclinux@vger.kernel.org, llvm@lists.linux.dev
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_10/14=5D_loongarch=3A_Han?=
- =?US-ASCII?Q?dle_KCOV_=5F=5Finit_vs_inline_mismatches?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAAhV-H5oHPG+etNawAmVwyDtg80iKUrAM_m3Vj57bBO0scHqvQ@mail.gmail.com>
-References: <20250523043251.it.550-kees@kernel.org> <20250523043935.2009972-10-kees@kernel.org> <CAAhV-H4WxAwXTYVFOnphgHN80-_6jt77YZ_rw-sOBoBjjiN-yQ@mail.gmail.com> <CAAhV-H5oHPG+etNawAmVwyDtg80iKUrAM_m3Vj57bBO0scHqvQ@mail.gmail.com>
-Message-ID: <B5A11282-CB0E-46E0-A5D7-EF4D8BFC23B4@kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0BLatIBb"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553dceb345eso6887390e87.1
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Jun 2025 01:26:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750839985; x=1751444785; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HS4wAnVjCQeW1rVCh4eHK2uX9ZfsLA1faWghmR3VJxs=;
+        b=0BLatIBbTusvOWQOSK2PRieumkTqt50JsgYQ2iR6BvfU+C8OIp3zErrUw7Dwzwzkpr
+         +Kc5ucHXVpkO38Pfg158KUcESXu9+NKloZaLAmr49eyvV+Ux4t9CpD7QmbdQlM2c0bws
+         Luytt4puuoQbSU7UNjmYPxBUD11LCXRUTiyHuyjAW7UT5nn8a/poqCm6qtCZoNMRzW1O
+         hNTGT8iYxq67IYUyhjm9O8ejiT8lTsZoXQQ+Pb2j1NfpELfsv7mVhG88tG9GoGniAFDS
+         RUJ+eqOPyTD3zdcYb/XFZCNjn4tc6HRSy+5rN8VZzvQEalc/e2YGSPVrqd9EA19cCUFF
+         VKxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750839985; x=1751444785;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HS4wAnVjCQeW1rVCh4eHK2uX9ZfsLA1faWghmR3VJxs=;
+        b=EOHy83+xNaE7/ESNz7ETZgsUdyANbWjkXSHjNVWEblEPo/LSdnI3mrNXhI9tmrQPrE
+         QaBhthRgdO9bcz64Rcro1Mf5wxYAPaDAYYZeU9TG4TJdmWoRf6mENwzk0uJTrTFBXgO+
+         kBWzdwXsNg19tHfCNCgwkWhdPGziKGx9M3JApoTojxgLUbQLxa+F4eFXdF2RAeHrKi+z
+         l3a9gPXlIMaD3rGgEcnMKNFGEqpwBA66I43VsJtZJeXnsLytFUVd7crvI9p6rLPN1MCo
+         Nl/x/JMfCYB3HRAw4XlBjIX0CZThHj0Vdw2p0fNoG8C+VNmIKzLvfddFYBKvukigtUE5
+         jcHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPl8WVoKgRq6lFftEV5lbB+VSsU0GVLS98UF4pIr4DZGCfTtzEmxPsN2epONeqgFMTotb4a8rAVWJtu+aGidQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJF+YRsgUpI/SKxiVFsuCLZy1L0NFGJ9XgaFe+J8D0hIBizDpy
+	osqcfKl7MGFKXFpnQnHmf6s/nSmw4OLj6KYPvnxVz6XyfOFXuGfqZz+9ht6t0/KIypjFZdcGV2u
+	jT1zO7WnXY03HdwXAouZi96N7Z8dzpahSzeN5QSGsWg==
+X-Gm-Gg: ASbGncuaAH5rJp7h3wHJlCRe9beFvSSGbbpxDd4emY0JDVILGKc9j58/US0hVekpnD6
+	Xe9FMROqd1VvurdjRj+l6v0mxTp3EOBdFHmUWP7bbg8f2T+TlhVAFBfHSedHLMJ/oS+bJaxcrqb
+	oG6prXn6NYGwpBApKUCgNzpwbOViB/FFjuTdk2+eDOMtnJ1BSvjAS6C8Vw0OIzszC7Ecm1cCZYX
+	/E=
+X-Google-Smtp-Source: AGHT+IGpMxg8o/chcnQe5MhULiua6yOTHYM+kv1EqdYOqZzH7FhLx1vYLQZI7NUn33/FILfroU1k/T45xBu991cKMZg=
+X-Received: by 2002:a05:6512:3055:b0:553:2868:6361 with SMTP id
+ 2adb3069b0e04-554fdcf5558mr547065e87.18.1750839985044; Wed, 25 Jun 2025
+ 01:26:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
+In-Reply-To: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 25 Jun 2025 10:26:14 +0200
+X-Gm-Features: AX0GCFt4ItqCrsm7oeOr_Iat7x8NjoEMSLW9yiH4e8zUF9RBY6CHWLkj4pkFCt8
+Message-ID: <CAMRc=MfS5Em65n0fwbu8JtJsc3rTgQO5cv+PymSonJtf6_zRKQ@mail.gmail.com>
+Subject: Re: [PATCH v8 00/10] Add pinctrl support for the AAEON UP board FPGA
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-
-
-On June 24, 2025 5:31:12 AM PDT, Huacai Chen <chenhuacai@kernel=2Eorg> wro=
-te:
->Hi, Kees,
+On Wed, Jun 11, 2025 at 11:00=E2=80=AFAM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 >
->On Thu, Jun 19, 2025 at 4:55=E2=80=AFPM Huacai Chen <chenhuacai@kernel=2E=
-org> wrote:
->>
->> Hi, Kees,
->>
->> On Fri, May 23, 2025 at 12:39=E2=80=AFPM Kees Cook <kees@kernel=2Eorg> =
-wrote:
->> >
->> > When KCOV is enabled all functions get instrumented, unless
->> > the __no_sanitize_coverage attribute is used=2E To prepare for
->> > __no_sanitize_coverage being applied to __init functions, we have to
->> > handle differences in how GCC's inline optimizations get resolved=2E =
-For
->> > loongarch this exposed several places where __init annotations were
->> > missing but ended up being "accidentally correct"=2E Fix these cases =
-and
->> > force one function to be inline with __always_inline=2E
->> >
->> > Signed-off-by: Kees Cook <kees@kernel=2Eorg>
->> > ---
->> > Cc: Huacai Chen <chenhuacai@kernel=2Eorg>
->> > Cc: WANG Xuerui <kernel@xen0n=2Ename>
->> > Cc: Thomas Gleixner <tglx@linutronix=2Ede>
->> > Cc: Tianyang Zhang <zhangtianyang@loongson=2Ecn>
->> > Cc: Bibo Mao <maobibo@loongson=2Ecn>
->> > Cc: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->> > Cc: <loongarch@lists=2Elinux=2Edev>
->> > ---
->> >  arch/loongarch/include/asm/smp=2Eh | 2 +-
->> >  arch/loongarch/kernel/time=2Ec     | 2 +-
->> >  arch/loongarch/mm/ioremap=2Ec      | 4 ++--
->> >  3 files changed, 4 insertions(+), 4 deletions(-)
->> >
->> > diff --git a/arch/loongarch/include/asm/smp=2Eh b/arch/loongarch/incl=
-ude/asm/smp=2Eh
->> > index ad0bd234a0f1=2E=2E88e19d8a11f4 100644
->> > --- a/arch/loongarch/include/asm/smp=2Eh
->> > +++ b/arch/loongarch/include/asm/smp=2Eh
->> > @@ -39,7 +39,7 @@ int loongson_cpu_disable(void);
->> >  void loongson_cpu_die(unsigned int cpu);
->> >  #endif
->> >
->> > -static inline void plat_smp_setup(void)
->> > +static __always_inline void plat_smp_setup(void)
->> Similar to x86 and arm, I prefer to mark it as __init rather than
->> __always_inline=2E
->If you have no objections, I will apply this patch with the above modific=
-ation=2E
-
-That's fine by me; thank you! I didn't have a chance yet to verify that it=
- actually fixes the mismatches I saw, but if it looks good to you, yes plea=
-se=2E :)
-
--Kees
-
+> This is the eighth version of this series. I just added a missing header
+> file in gpio-aggregator driver to fix a build warning reported by a kerne=
+l
+> test robot [1].
 >
+> [1] https://lore.kernel.org/oe-kbuild-all/202506092324.XqSwWl1z-lkp@intel=
+.com/
 >
->Huacai
+> Best Regards,
 >
->>
->> Huacai
->>
->> >  {
->> >         loongson_smp_setup();
->> >  }
->> > diff --git a/arch/loongarch/kernel/time=2Ec b/arch/loongarch/kernel/t=
-ime=2Ec
->> > index bc75a3a69fc8=2E=2E367906b10f81 100644
->> > --- a/arch/loongarch/kernel/time=2Ec
->> > +++ b/arch/loongarch/kernel/time=2Ec
->> > @@ -102,7 +102,7 @@ static int constant_timer_next_event(unsigned lon=
-g delta, struct clock_event_dev
->> >         return 0;
->> >  }
->> >
->> > -static unsigned long __init get_loops_per_jiffy(void)
->> > +static unsigned long get_loops_per_jiffy(void)
->> >  {
->> >         unsigned long lpj =3D (unsigned long)const_clock_freq;
->> >
->> > diff --git a/arch/loongarch/mm/ioremap=2Ec b/arch/loongarch/mm/iorema=
-p=2Ec
->> > index 70ca73019811=2E=2Edf949a3d0f34 100644
->> > --- a/arch/loongarch/mm/ioremap=2Ec
->> > +++ b/arch/loongarch/mm/ioremap=2Ec
->> > @@ -16,12 +16,12 @@ void __init early_iounmap(void __iomem *addr, uns=
-igned long size)
->> >
->> >  }
->> >
->> > -void *early_memremap_ro(resource_size_t phys_addr, unsigned long siz=
-e)
->> > +void * __init early_memremap_ro(resource_size_t phys_addr, unsigned =
-long size)
->> >  {
->> >         return early_memremap(phys_addr, size);
->> >  }
->> >
->> > -void *early_memremap_prot(resource_size_t phys_addr, unsigned long s=
-ize,
->> > +void * __init early_memremap_prot(resource_size_t phys_addr, unsigne=
-d long size,
->> >                     unsigned long prot_val)
->> >  {
->> >         return early_memremap(phys_addr, size);
->> > --
->> > 2=2E34=2E1
->> >
+> Thomas
+>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> ---
 
---=20
-Kees Cook
+This series looks pretty good now, any objections to picking it up? As
+usual - I can take the GPIO patches and provide an immutable branch
+for Linus to pull.
+
+Bartosz
