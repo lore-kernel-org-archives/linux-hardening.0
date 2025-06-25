@@ -1,72 +1,114 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F422C2AE72
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Jun 2025 10:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01025286412
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Jun 2025 15:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750845625; cv=none; b=UgQsr8qH3jZus3gGaA9wpZew49Sk5K4uqown3ErmAIcMk0tR23pEg9YD7GW1Mac+L0v5XV5UYi/e9plUCID1HwSNd50wQsfWj5tPQ3UGvOwLX5C1kAxVjCOXZJ9aR5TMi7UaadzC9pMYk1ZF0tTI0xS2NpLP3JmdT3Cl/WRo7S8=
+	t=1750864943; cv=none; b=i9HrZOMY8XNp/JfKSHc6RJxisN3hZqPU2K727U+rkKsCvhi/SZkhqZ3bokSsaU+fa90b+m2RVXToltKK1arDZ9EsFSiSgZ1IkeP4x2oUiAsW54Tr7MRG/SL4s5lHCZ2SXh3fQbG0HcFpqoDFDnWrJMtdfMLvTMJlG7tjRBwUD/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750845625; c=relaxed/simple;
-	bh=BmZQJ9CzG60Pi2Rqd2i3dgVTDCS+zmBPHAGPadRN0EM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TCQ3m37Z2azcOyVJGb9GrYoUiL0zNKVFdcdBQiEUe4EhWSEFhCWjnoy8VWHGTFjgEjM3BGLLkHpB8haIUf0SyGRSeLBF8Hn2z33fbsprAoIwULVeiiF1QVY8CGm2ufU1fisI/MNQ37sGyGLaIgDusO76Y9WFN+qSFkCJtXBp45k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=I7O9PAkI; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1750864943; c=relaxed/simple;
+	bh=Rx45NJ1GsFxZHs81wIEDnwZYi+0jDBji5z3WR/l9iG4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Wazh9qetP92SmN4nTDlIxxfHL3kFUtVAN41tqwUn/GMsWFUOUN6HQhQPxnKGTZieDh5Rwywl9Zp2ikTSAkTmeT0ExNUepKOZe7dGUd7Zv+t7kE7pq1EaUnTfeYQHwjPS6w8MA5iZ0yt0UEQ+LMI8KsAefXku+nw2UP3B4AjsqhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BLshFpSS; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="I7O9PAkI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=PiEm
-	MoOYAz7QZzNJFDzzDAKfovCal4h2Wgp/iO94uSo=; b=I7O9PAkIsHbtozkdMdCS
-	2Bei1k471pUlS+QJwH7E5Sapl8oqS8LrixSS6PB7E0q0xep+u3lmhE1BS++7tOF4
-	3wRZx8Tu5Csg18Wx6EYj2hgIAa9cUDDD3ByxibQx9np76AbF4lsUwu9dl9p4tYsP
-	77zDkUAEJY7mMH2V90G2ck+prpjpUQwTuQEhlT46myVg9QzuJmm4uI8lWmp4cCNQ
-	quXysGRU/oBSmGEbtZ878FwZLpNIRDp/CMQTt/UTps0jPTChMPUt3/N+H7Z4zyz+
-	Pp0cJeQTUxcT72ZOgNfNoZCg1tY8pkkd0h+ETRZnHdJaONPdghf0zJnAeLvueWBL
-	jg==
-Received: (qmail 600652 invoked from network); 25 Jun 2025 12:00:20 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 25 Jun 2025 12:00:20 +0200
-X-UD-Smtp-Session: l3s3148p1@KvU5g2I4CLVtKDAs
-Date: Wed, 25 Jun 2025 12:00:19 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Magnus Damm <magnus.damm@gmail.com>, linux-i3c@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BLshFpSS"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-73adf1a0c48so497621a34.2
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Jun 2025 08:22:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750864941; x=1751469741; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zyrX5ScOI7JTeYtNbvLaGQids7Z98QDO78XPh4qfDb4=;
+        b=BLshFpSSxUuc5XgrjxbiBx9NqFhIf0HnyTGlUbGqPPtiXazAZhP7ijkEpblPZbyOdp
+         dOT5NKySSIpBXv2610NE5szYW79xlY0jsdyGPWYNcuzY49D5KO18yQL6nXYR5N5+iIfd
+         9V5c8OXsODwnraCD/ZcdVhq0Q/oi0O2/zxtz3pyotgd9/XVsr4vfaUXuAvfXHfdBtYFO
+         oQ07ww9kqJbW4WynH3TBZOLeC8UshdU8PqoSYLtZenGfmh2VagthAtObgl0mGAJaGoKR
+         PajiTJCRDll8scamE8fIrEYsQ5TuQUEUtB/md2a1+GP/7zQ908JNyjQFP6T21eYJ6kQK
+         MzSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750864941; x=1751469741;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zyrX5ScOI7JTeYtNbvLaGQids7Z98QDO78XPh4qfDb4=;
+        b=oMHsU+yfuaVE3U3XeP2f+PtUbdYcZN9u01ieVcf5DACzo5NY76vkegg3XLrsEhfF9j
+         I9Inx3/iEs4DMSupIbfTGkaZrdEeDhB+A97GDlsvFXoLNved+Ev836RyQYYNCJi7MZQF
+         jgMMG9q100YSCBi+/TGkBGs1JzSOS+U8o1Fg7UhsoInTPclkSaS/UdVt05K+0aB9H09L
+         xWjp+tAPFuqe0d7q+BTW04xEnGQjszN7pvy82776bv5JNCelZAt8tNGU7JK5tzh7GQff
+         89439ALZd6fhNAVjjfdEp07pi5jZws4yoRWtTuVMbaRvYOI2RZh4GsXSAVYoqWu+aTUB
+         pIcA==
+X-Forwarded-Encrypted: i=1; AJvYcCUb9bwC2mlB3nAFl5HylU3CpwsHB/2CEG6+PXchWsJk7tdgobCzh2CxwEbu4iw+oWWh1A0ItcYuluwYI4ujeYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb0lGZFhGA7WJMQw/zmGROlaE1SZA4SNeOFA6GMQY2xA+snz8H
+	Lf6MQahogyVcXS+T/2UW5aY6HXmXLFTGzSKo+coGGds8dsrESCkDDJcuvtB0hhUFl5CrFXTyxLN
+	SUI5d
+X-Gm-Gg: ASbGnctXycrsUEe1oAGvDt0qHnWBHUFK4+0JI6NhMe3pE+EuJ6oCMlHjDw/1rVcNqiV
+	mcj/FGGVPl2D21baMpmXtfG+zksSWnuB9RJG+23kTZ8/ctGdQfGAFmUNfhiZGZrD1tUJP8qoxDS
+	1OLgOqImndv7xc+R8Es5h5HgHLu2RGc6ijywPYeppPPjxlVNRojpJ+MDzLQFPdnItfikYgeVO98
+	cr0OHLN4vkGbeGWDRJ3OKuJxYBBP/+jzuqeTWv0ZtixAFW6TznKFUOzuRnXnUYKslVbefS/nQ0L
+	s/elQfIYGNwbqr11Ohp+LXQDW2D+OVCA6kQu6H45d0HQIjM58xXr9vYzP/LEPjnwipmeuZWyhaH
+	9wNh9
+X-Google-Smtp-Source: AGHT+IFgvZOS7uRZ5bc8Wzr7uLQERVpIcqLu7N7QwQiQgNpOzZjzTb0IQiQzFQyoW2dE5XA6Bc3lRA==
+X-Received: by 2002:a05:6830:2112:b0:72c:3235:557d with SMTP id 46e09a7af769-73adc7b4318mr2332490a34.13.1750864941059;
+        Wed, 25 Jun 2025 08:22:21 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:1fca:a60b:12ab:43a3])
+        by smtp.gmail.com with UTF8SMTPSA id 46e09a7af769-73a90b1b627sm2232339a34.19.2025.06.25.08.22.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 08:22:20 -0700 (PDT)
+Date: Wed, 25 Jun 2025 10:22:19 -0500
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: thomas.weissschuh@linutronix.de
+Cc: John Ogness <john.ogness@linutronix.de>, Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH RFC 4/7] i3c: add driver for Renesas I3C IP
-Message-ID: <aFvIs2KlyrMztLsf@shikoro>
-References: <20250611093934.4208-1-wsa+renesas@sang-engineering.com>
- <20250611093934.4208-5-wsa+renesas@sang-engineering.com>
- <aEmws+OtHirrUPUo@lizhi-Precision-Tower-5810>
- <aErqY0QWMRdC7Pvg@shikoro>
- <aEsDj5Vcb4zFJFlo@lizhi-Precision-Tower-5810>
- <aEvyfM42WTKENbFO@shikoro>
- <CAMuHMdXW_4gHSTo0roNUpBrq2gLVBK=6zY_=rhh8OP85KJdqTg@mail.gmail.com>
- <aEwjU-uq4XsNzrOO@shikoro>
- <CAMuHMdWOxBfwwXUpYpmB30Zpqdwgwa2d=hXQyYVsoAD0bN4seQ@mail.gmail.com>
- <aFFQDlFJXFRYgNAN@shikoro>
+Subject: [bug report] printk: ringbuffer: Add KUnit test
+Message-ID: <eaea66b9-266a-46e7-980d-33f40ad4b215@sabinyo.mountain>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aFFQDlFJXFRYgNAN@shikoro>
+Content-Transfer-Encoding: 8bit
 
+Hello Thomas Weißschuh,
 
-> > Thanks, much better!
-> 
-> Sadly, my mails still get the "suspicious header" warning :(
+The patch 5ea2bcdfbf46: "printk: ringbuffer: Add KUnit test" from Jun
+12, 2025, leads to the following static checker warning:
 
-Sigh, seems like infradead was not happy with me signing my emails. I
-removed it for this server.
+	kernel/printk/printk_ringbuffer_kunit_test.c:91 prbtest_check_data()
+	(unpublished script worries this an off by one)
 
+kernel/printk/printk_ringbuffer_kunit_test.c
+    83 static bool prbtest_check_data(const struct prbtest_rbdata *dat)
+    84 {
+    85 	unsigned int len;
+    86 
+    87 	/* Sane length? */
+    88 	if (dat->len < 1 || dat->len > MAX_RBDATA_TEXT_SIZE)
+    89 		return false;
+    90 
+--> 91 	if (dat->text[dat->len] != '\0')
+    92 		return false;
+    93 
+
+My question is that the prbtest_rbdata structure is declared like this:
+
+    53  /* test data structure */
+    54  struct prbtest_rbdata {
+    55          unsigned int len;
+    56          char text[] __counted_by(len);
+    57  };
+
+The size of text is not really counted by len, it's "MAX_RBDATA_TEXT_SIZE
++ 1".  The condition "if (dat->text[dat->len] != '\0')" is reading one
+element beyond the __counted_by() value so something should complain if
+we enable all the debugging, right?
+
+regards,
+dan carpenter
