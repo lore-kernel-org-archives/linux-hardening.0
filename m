@@ -1,114 +1,115 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01025286412
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Jun 2025 15:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A2C17A318;
+	Wed, 25 Jun 2025 16:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864943; cv=none; b=i9HrZOMY8XNp/JfKSHc6RJxisN3hZqPU2K727U+rkKsCvhi/SZkhqZ3bokSsaU+fa90b+m2RVXToltKK1arDZ9EsFSiSgZ1IkeP4x2oUiAsW54Tr7MRG/SL4s5lHCZ2SXh3fQbG0HcFpqoDFDnWrJMtdfMLvTMJlG7tjRBwUD/g=
+	t=1750867966; cv=none; b=gsTOfNrjasSYiTxKt7pESP+GQY68aXsCBgpVnrVnMExDUEId1LjFtbkduhc0Du8fZkXeLikZMPFQcbk8Vu+9CWdV3NyTQO1F8NsnhyjpHtuUqBwGbJHHr7myMzTgmdDXuS4PH46x+WzjzSyVASiILgmfaC4fS1+agG9soEyEUqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864943; c=relaxed/simple;
-	bh=Rx45NJ1GsFxZHs81wIEDnwZYi+0jDBji5z3WR/l9iG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Wazh9qetP92SmN4nTDlIxxfHL3kFUtVAN41tqwUn/GMsWFUOUN6HQhQPxnKGTZieDh5Rwywl9Zp2ikTSAkTmeT0ExNUepKOZe7dGUd7Zv+t7kE7pq1EaUnTfeYQHwjPS6w8MA5iZ0yt0UEQ+LMI8KsAefXku+nw2UP3B4AjsqhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BLshFpSS; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750867966; c=relaxed/simple;
+	bh=YWtMfRzqix6W7MGTaVg8D5Rh8GSRylpHNxGgmYUykwk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cqkAshTc6AAP+2Iew6OrVXeWyZBqzf6288+d9Q2ZFYSTpA1VGMwINHXQhbcIf+T/2TczViQriqppypCofy0MQwqCioQX91TLeVIiqJboUa1U2Opo6WoXsYIe5jikcoS2AIIdsthC1W1+OOurM3/YqTsx7utIMtUzpHPekPsJv5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lfltbnQF; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BLshFpSS"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-73adf1a0c48so497621a34.2
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Jun 2025 08:22:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfltbnQF"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45377776935so34508835e9.3;
+        Wed, 25 Jun 2025 09:12:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750864941; x=1751469741; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zyrX5ScOI7JTeYtNbvLaGQids7Z98QDO78XPh4qfDb4=;
-        b=BLshFpSSxUuc5XgrjxbiBx9NqFhIf0HnyTGlUbGqPPtiXazAZhP7ijkEpblPZbyOdp
-         dOT5NKySSIpBXv2610NE5szYW79xlY0jsdyGPWYNcuzY49D5KO18yQL6nXYR5N5+iIfd
-         9V5c8OXsODwnraCD/ZcdVhq0Q/oi0O2/zxtz3pyotgd9/XVsr4vfaUXuAvfXHfdBtYFO
-         oQ07ww9kqJbW4WynH3TBZOLeC8UshdU8PqoSYLtZenGfmh2VagthAtObgl0mGAJaGoKR
-         PajiTJCRDll8scamE8fIrEYsQ5TuQUEUtB/md2a1+GP/7zQ908JNyjQFP6T21eYJ6kQK
-         MzSw==
+        d=gmail.com; s=20230601; t=1750867963; x=1751472763; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L00iBDFoQRjQF0Sjwnm7AidhvF/6qjGok0YJWz7OSCQ=;
+        b=lfltbnQFrfKuDXuCtLk2zjDk9aMizOzD2DwsgKN6s24ViaveCsvOViLQFCZNAjom+H
+         YLjxFKSc80h7RndmNcDzCSGjkbhOt1G2Lapm2Ceoxpup+dvRkGTuPKZjnIwhw1lnuns+
+         YmV/fiDK8hSploNDVct4NmNPHwX7B+0drPXG5oZp2iaM7H6eHBooD61y9XxPVw0K+LcN
+         WNCA7bo8GdGf59e/FTwdJJBGfz6398A+p6a2HPoGna0YlaqfPuvzDPl5N8aDkWDTDcgo
+         OIjj6IRjo0UedvmUjW023nQat8ABUURFDx/H/qx/l6UfcbpvKmPioUet0tlU3i0oZt10
+         fmmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750864941; x=1751469741;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zyrX5ScOI7JTeYtNbvLaGQids7Z98QDO78XPh4qfDb4=;
-        b=oMHsU+yfuaVE3U3XeP2f+PtUbdYcZN9u01ieVcf5DACzo5NY76vkegg3XLrsEhfF9j
-         I9Inx3/iEs4DMSupIbfTGkaZrdEeDhB+A97GDlsvFXoLNved+Ev836RyQYYNCJi7MZQF
-         jgMMG9q100YSCBi+/TGkBGs1JzSOS+U8o1Fg7UhsoInTPclkSaS/UdVt05K+0aB9H09L
-         xWjp+tAPFuqe0d7q+BTW04xEnGQjszN7pvy82776bv5JNCelZAt8tNGU7JK5tzh7GQff
-         89439ALZd6fhNAVjjfdEp07pi5jZws4yoRWtTuVMbaRvYOI2RZh4GsXSAVYoqWu+aTUB
-         pIcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUb9bwC2mlB3nAFl5HylU3CpwsHB/2CEG6+PXchWsJk7tdgobCzh2CxwEbu4iw+oWWh1A0ItcYuluwYI4ujeYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb0lGZFhGA7WJMQw/zmGROlaE1SZA4SNeOFA6GMQY2xA+snz8H
-	Lf6MQahogyVcXS+T/2UW5aY6HXmXLFTGzSKo+coGGds8dsrESCkDDJcuvtB0hhUFl5CrFXTyxLN
-	SUI5d
-X-Gm-Gg: ASbGnctXycrsUEe1oAGvDt0qHnWBHUFK4+0JI6NhMe3pE+EuJ6oCMlHjDw/1rVcNqiV
-	mcj/FGGVPl2D21baMpmXtfG+zksSWnuB9RJG+23kTZ8/ctGdQfGAFmUNfhiZGZrD1tUJP8qoxDS
-	1OLgOqImndv7xc+R8Es5h5HgHLu2RGc6ijywPYeppPPjxlVNRojpJ+MDzLQFPdnItfikYgeVO98
-	cr0OHLN4vkGbeGWDRJ3OKuJxYBBP/+jzuqeTWv0ZtixAFW6TznKFUOzuRnXnUYKslVbefS/nQ0L
-	s/elQfIYGNwbqr11Ohp+LXQDW2D+OVCA6kQu6H45d0HQIjM58xXr9vYzP/LEPjnwipmeuZWyhaH
-	9wNh9
-X-Google-Smtp-Source: AGHT+IFgvZOS7uRZ5bc8Wzr7uLQERVpIcqLu7N7QwQiQgNpOzZjzTb0IQiQzFQyoW2dE5XA6Bc3lRA==
-X-Received: by 2002:a05:6830:2112:b0:72c:3235:557d with SMTP id 46e09a7af769-73adc7b4318mr2332490a34.13.1750864941059;
-        Wed, 25 Jun 2025 08:22:21 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:1fca:a60b:12ab:43a3])
-        by smtp.gmail.com with UTF8SMTPSA id 46e09a7af769-73a90b1b627sm2232339a34.19.2025.06.25.08.22.20
+        d=1e100.net; s=20230601; t=1750867963; x=1751472763;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L00iBDFoQRjQF0Sjwnm7AidhvF/6qjGok0YJWz7OSCQ=;
+        b=hEy4yoLyy815bRCrtRHeeYFXlJ+sxDqooDq9BiM5tdbb2dplLLL8ul5UgjmkHb5IZN
+         8mudJJs8/muspw95QbbrEl0KPV4KIm2H5Iy+3wORduQMUTiqDYLLHfBeCJwPPRRZQWqu
+         jTSHvCh+8SVTpOIx2Ppzb3psdK1N6AvEH/Sp+1UnxiqW3A24AVMIhwz+stwDBgBm6FGc
+         WE0ZRyEoBGHQfc/akpl3BkkLJ4duMEyFLiwQzQk7bktt141GTFQc0wVBGnsVkD1dFKDv
+         hj2aHDRI5eC732VVl8U8OFuO6brsbTgPU+xgSBAyA824OSKjTnhgEozw6laS4Y7/vb0C
+         s9Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUYPFqe79x9TKLUljx2eENltQ0uhJ45v+8YQ8oKvaWclQPExxLdLecHCztTGsdGVUHEoDkqv6PgNmdzh+Y@vger.kernel.org, AJvYcCVFxcYkZ3JQDZadRVIWqUyPNlHFJHPtyxshw4RUNe8bhyRIxCgKmzD88+NTpfE1ueahogHT7mC3zSruPUmdjNk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgI4CDqKLac5a2H27LvGLPkNu9zID6zhIEp0wwT03DjiM3k0pW
+	tv/rrIR2h4T4NqdqfEWQADdiOeGXKGXcebyzUiSeO+b4JLBpI6DrPYsh
+X-Gm-Gg: ASbGncs0287yZUl5OY8QpQdeomVraBDlRmmHBI0919Re35d+mN7E4OLGHqW2x0gmYhE
+	Ro5X8Ecl1UcV1CDT4q5dxAc9HqdYpt3aBIiGyKd14JCwyNIi1zOt1KJjtubAkuBkwLW6oRmWlZn
+	p8YTkwJVBdx4rOJ1Lkhs1jIkYrsGeO/CISn5aJaLZxfqMbr2KAPDqeK18Os98pNX8VUzinSBK5l
+	mKDmZE/57iyI+1M0U7niAlcn/vfFHieh+1WWZvWjQmw0tM7V83i5b+TQW5iixiIgQ4RyImjrveK
+	TFHLp897cgqtnNacJSvDJrV/YPsqWGS4ERj1KTPomG80NB/0lpNy8FAehRM/
+X-Google-Smtp-Source: AGHT+IGgnrOznrOrXViQkoRiboW6W28KWLLSjZCidMf+LDGZfhuP95A5A4efNIup2du3aNHdxrx62w==
+X-Received: by 2002:a05:600c:4f45:b0:43c:f895:cb4e with SMTP id 5b1f17b1804b1-45383906f07mr34281455e9.17.1750867962942;
+        Wed, 25 Jun 2025 09:12:42 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-453847ec763sm16149175e9.36.2025.06.25.09.12.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:22:20 -0700 (PDT)
-Date: Wed, 25 Jun 2025 10:22:19 -0500
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: thomas.weissschuh@linutronix.de
-Cc: John Ogness <john.ogness@linutronix.de>, Kees Cook <kees@kernel.org>,
+        Wed, 25 Jun 2025 09:12:42 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [bug report] printk: ringbuffer: Add KUnit test
-Message-ID: <eaea66b9-266a-46e7-980d-33f40ad4b215@sabinyo.mountain>
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] fortify: add branch hints on unlikely fortify_panic paths
+Date: Wed, 25 Jun 2025 17:12:20 +0100
+Message-ID: <20250625161221.295575-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hello Thomas Weißschuh,
+Analysis with gcov while running the stress-ng urandom stressor
+shows that there are a couple of fortify panic paths that are highly
+unlikely to be executed for well-behaving code. Adding appropriate
+branch hints improves the stress-ng urandom stressor my a small
+but statistically measureable amount. Ran 100 x 1 minute tests and
+measured the stressor bogo-op rates on a Debian based Intel(R)
+Core(TM) Ultra 9 285K with a 6.15 kernel with turbo disabled to
+reduce jitter.
 
-The patch 5ea2bcdfbf46: "printk: ringbuffer: Add KUnit test" from Jun
-12, 2025, leads to the following static checker warning:
+Results based on a Geometic Mean of 100 tests:
 
-	kernel/printk/printk_ringbuffer_kunit_test.c:91 prbtest_check_data()
-	(unpublished script worries this an off by one)
+Without patch: 50512.95 bogo-ops/sec
+With patch:    50819.58 bogo-ops/sec
 
-kernel/printk/printk_ringbuffer_kunit_test.c
-    83 static bool prbtest_check_data(const struct prbtest_rbdata *dat)
-    84 {
-    85 	unsigned int len;
-    86 
-    87 	/* Sane length? */
-    88 	if (dat->len < 1 || dat->len > MAX_RBDATA_TEXT_SIZE)
-    89 		return false;
-    90 
---> 91 	if (dat->text[dat->len] != '\0')
-    92 		return false;
-    93 
+%Std.Deviation of ~0.18%, so low jitter in results, improvement of ~0.6%
 
-My question is that the prbtest_rbdata structure is declared like this:
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ include/linux/fortify-string.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-    53  /* test data structure */
-    54  struct prbtest_rbdata {
-    55          unsigned int len;
-    56          char text[] __counted_by(len);
-    57  };
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index e4ce1cae03bf..2ab8cb641d70 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -593,9 +593,9 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+ 	 * (The SIZE_MAX test is to optimize away checks where the buffer
+ 	 * lengths are unknown.)
+ 	 */
+-	if (p_size != SIZE_MAX && p_size < size)
++	if (unlikely(p_size != SIZE_MAX && p_size < size))
+ 		fortify_panic(func, FORTIFY_WRITE, p_size, size, true);
+-	else if (q_size != SIZE_MAX && q_size < size)
++	else if (unlikely(q_size != SIZE_MAX && q_size < size))
+ 		fortify_panic(func, FORTIFY_READ, p_size, size, true);
+ 
+ 	/*
+-- 
+2.50.0
 
-The size of text is not really counted by len, it's "MAX_RBDATA_TEXT_SIZE
-+ 1".  The condition "if (dat->text[dat->len] != '\0')" is reading one
-element beyond the __counted_by() value so something should complain if
-we enable all the debugging, right?
-
-regards,
-dan carpenter
