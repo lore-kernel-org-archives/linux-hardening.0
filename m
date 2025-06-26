@@ -1,48 +1,50 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514352EA48F;
-	Thu, 26 Jun 2025 14:31:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EF2218858;
+	Thu, 26 Jun 2025 14:31:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750948300; cv=none; b=lThIqgAtYYIKrmOV/fd0lZLvI9s0/TUNLm1dHwajoIy8MQOmj3Xp/UxCo7RAmm+1/tshKIeLcAS02TAU5NQ3uUGjFI/9wS/E6dDkZcNzy7cNE84SB7JjWMOUgqTHj/hRv4wA7QDEVpnyloQ/AUDut5f5SZA/Q3ep0rBDsG3+Bhw=
+	t=1750948309; cv=none; b=rXWmluTXlTnwdrCARv2mVPuFniXsTtXAQWX4+t/ehpF2QmSfOFuBb1wwHoFAm+ps3wsvddV5lX0731hku7wNJVEbNd1T65h7lNfK0t7gpNz5UWHZ3fOWJ+4hacwx392gwIAtxCeR+yQuF5jBi3juD64agNKptm2pzFBLyWXs2lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750948300; c=relaxed/simple;
-	bh=2z3ml98/WD3T2c0c1eCD86DSm9GdXgBq1jKqH7CPXcw=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=BRcaVfs4ZX7Klz6s72d7BdFSuMMtwkWQ6elNXn4Ze2yu9UAiMRVUVFL7kPh1rS0Tjw2MDAOgr4sNyYhHA0EoxR5suckvCutlWGuJGjcnB0lR4Ea4dTiNhqR8ZVZF+/ztVZaMz8DjpCoGyw1fC17Wdt/r3UxjZxI7uUfOe2RIe1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RtLMEUWs; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1750948309; c=relaxed/simple;
+	bh=JYWrjqajMtzu6KYodqsVuu9BxHdAV7sweK/O4UvQLZI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=S/iKPYDRVrgBWfFngAuqWP8MjY28OH3fuI4HcZxFHKJ1xm6G9x4CJRyAtx0/FsUsn9bSMAn+Uhc/kIVquZOFPWsn66yNfNDIRm/cy6ikmG2klamaUBTaGp/wgv9bDExh1w86uhpkm0hoRnP42wFYeR9GwIWC1Krm/hRQylaTVyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AYmg6fpn; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RtLMEUWs"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q9wk3F022841;
-	Thu, 26 Jun 2025 14:31:24 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AYmg6fpn"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q9xW8J013292;
+	Thu, 26 Jun 2025 14:31:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=+ZARPR/xGGVGlafuoaJZNG
-	mg4LAtYlKNNNKp1YmQ4zI=; b=RtLMEUWsiTM9pON/ukpcHGwRn0kC/WD32aQecd
-	hj2nLX6ULe1/o2C/tk6EGv+SlzzpVFLVQO5irfeDhLTeqDS+4I2rLVOi3t06oK3U
-	danG91BM8uW18wB1ZfjW3th4eyNNlZ5Npk2bP6Lnh619HmwRBZ8gYoyfHvimWStN
-	a5fhYpul3fcZIzJqf7kAwDHkMpBrY6lP4xkQwJlLSX3J1O86ze7Avo8t0GZLYRb6
-	1B+aBTgPz5pFh60dBAluEqKm11MFV4c85g8Kb0pGxm3ZdN4jVGdzJ9gJqlr546z+
-	OtzzzRrEi1qDMP97gA/Ld6wJzEWMN37sb7mLs2EvwqMwOm+g==
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rPn2t7d8YEu1EMszfBtW6zlpm/EV+gGCvZOhrMI5eok=; b=AYmg6fpnpfmYRZq+
+	pFBOgQh2+oASADOW3eQYVrCGqBCovqY00PYdsX6cqsONx6w8cRyYkm8V01FtkwUs
+	iHpUPC9bQvy4iFy9qt7lLfC8o7NQAaTOFOxU3YAE9Q2mRVBsQQKklDIZAnoZu/QP
+	pYi6QwfffKgeULlCA/KuCStgbk14Awfu+wW2NzNej4ILOT373eDeqtDKZ5JlmpEA
+	aRT/RrUAo2thg8YY55lrOCAutZtDs8WzzhAy0cBpzmGuk2JHRG+KJb3uGAtChsjQ
+	pxY6+F3Wuv7uWm2srUYycEI5ah2kzNi3XebazKyZHPeNS9azrmYtaaSjZcKY2+kL
+	66P1Nw==
 Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fdfx1x03-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bgkm14-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 14:31:23 +0000 (GMT)
+	Thu, 26 Jun 2025 14:31:34 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55QEVMS4010697
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55QEVXX0011730
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 14:31:22 GMT
+	Thu, 26 Jun 2025 14:31:33 GMT
 Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 26 Jun 2025 07:31:17 -0700
+ 15.2.1544.9; Thu, 26 Jun 2025 07:31:28 -0700
 From: Luo Jie <quic_luoj@quicinc.com>
-Subject: [PATCH net-next v5 00/14] Add PPE driver for Qualcomm IPQ9574 SoC
-Date: Thu, 26 Jun 2025 22:30:59 +0800
-Message-ID: <20250626-qcom_ipq_ppe-v5-0-95bdc6b8f6ff@quicinc.com>
+Date: Thu, 26 Jun 2025 22:31:01 +0800
+Subject: [PATCH net-next v5 02/14] docs: networking: Add PPE driver
+ documentation for Qualcomm IPQ9574 SoC
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,10 +53,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKNZXWgC/52Nyw7CIBREf6W5azGU0oeu/A9jmkJv7V1IKVRS0
- /DvEnZuXU5mzpkDPDpCD9fiAIeBPC0mhfpUgJ4H80RGY8oguKh5Ixq26uXVk117a5ENnejEZex
- aVU2QEOtwoj3r7mBwYwb3DR6pmclvi/vkn1DmPivrsvpVBsk4k5NCybVSqi1v65s0GX1Oq6wK8
- n88xvgFjEYJJvMAAAA=
+Message-ID: <20250626-qcom_ipq_ppe-v5-2-95bdc6b8f6ff@quicinc.com>
+References: <20250626-qcom_ipq_ppe-v5-0-95bdc6b8f6ff@quicinc.com>
+In-Reply-To: <20250626-qcom_ipq_ppe-v5-0-95bdc6b8f6ff@quicinc.com>
 To: Andrew Lunn <andrew+netdev@lunn.ch>,
         "David S. Miller"
 	<davem@davemloft.net>,
@@ -82,180 +83,265 @@ CC: <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
         Luo Jie
 	<quic_luoj@quicinc.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750948277; l=7372;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750948277; l=10826;
  i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
- bh=2z3ml98/WD3T2c0c1eCD86DSm9GdXgBq1jKqH7CPXcw=;
- b=+vgxp4eT5meX/175YWtnS7d8aj+lELVj6Uhv9/PRRhSiH5+GdB2xU2uUJWPUi0LhtTNqKy0X4
- oIGjB+qDAFVD2p2ohUyXgYXS1dEBAAM8ZEZDcbftSm/Ux4Gzzuu6RAn
+ bh=819cXVnisDwuIVaj7wPI2RsjFinsO9XGoWQemCljwzk=;
+ b=rbE4+aNRqlPL82plNq64uEvNTduMuI7Rr+Ks/O+h+B9+JZb+8WtR1oCgN3CdtPGHqE+RHJVB+
+ 5tJBm2Fe0OuCXqtiEoNGtaO2dPCX3w12wRQ/ryx2TglH0bEpKb3TNnZ
 X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
  pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Fc1QselOXFYQGatuteBmwzGq-BPCXVr2
-X-Proofpoint-ORIG-GUID: Fc1QselOXFYQGatuteBmwzGq-BPCXVr2
-X-Authority-Analysis: v=2.4 cv=MtZS63ae c=1 sm=1 tr=0 ts=685d59bc cx=c_pps
+X-Proofpoint-ORIG-GUID: uuo5q6Zej4ZhZvX84071v3m3oAibDaej
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDEyMyBTYWx0ZWRfXxZ93pjjvdNnf
+ +qXv8biazFJF9Rmdh6xY7mGEqU80P/Q+I668QpYiCVBu+X0nfDXtIYInVtyP+iQGWJN/Y3DxlYt
+ aodC1zM4qY22NtSYo6IurHkyWS/u7megZkdWutwGZrmv1Dm/kJC1xpQ7ob12HCgQ1BYCtwlHCXx
+ +5Ox7H40mTuw6nhGHKVBYL8/QMwLRsFaaBBI+uM3fmp8vSnAJGSWTMUveXgb6PnYtbsL+WkirwD
+ 8iKNzEVdh5a6JwKkcV+7iMSOQA+6YK/3zNIVNJ22oqi2qulfGtEUh5+SVjuCI2px+E8F22uUL4a
+ n/bJbSoFDmIHD1ztNvYvYDCGcj9LiJFbV8/Ldgn8LNnPcdCtPgKyhN42AsMRnHBfPmx+cCceJBV
+ FjVkpwP2HJTZjyeqLZEqRnqZtHqW1A0BieqzmoGZY96wUnAfFtRL8o1XHxfWItrwWCsE17O7
+X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=685d59c6 cx=c_pps
  a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=HAxyLaFxb4ZfO1oSC6kA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDEyMyBTYWx0ZWRfXyKybQenUuz1W
- HRmHNf6KETFSHbsJzoOWjipiwnVFbU9tIfVA/5LuqkhtdoqaqrAxgKNpe1Jyci3EnXf5mud+vv9
- /Sp7+RRnTJ3dwUNtDMKFSbPcwR2IPzRJTh6/VnmMxOrtu8d7kfjoalaOpCSXHSAirxxIMQXNxSb
- kx3oOEC5P2Cnl4tdzm8oP4LDaR5WsI2NFI0f3sWYbp2bHkGDM71j3Pv4l+7QSWvqmJS30HAzapb
- 8KM/CYKDZVkWCTngx0SCp4AnflnwXuXKndd/omFfvCWkrwMSI2iBcccRnUHpPrGTmh/6zTf8GWi
- qqDBFv5/opqZO+XVXrC9WCUdSxITs8NNjTYlxb+U89SofOzVhdEw6Vy59cme+NSSJP5XpARn7MI
- t9eJw51/vG8sqUQ3WPskMOJCsfIkX1k6g/2wT7hXtc2LnUzQVH2IN/m4jPlhnBfvuJLC+MlZ
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=imonNLKGdx_ZcR_XrnUA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: uuo5q6Zej4ZhZvX84071v3m3oAibDaej
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-26_06,2025-06-26_04,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 malwarescore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 mlxscore=0 classifier=spam authscore=0
+ mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ spamscore=0 phishscore=0 mlxlogscore=999 classifier=spam authscore=0
  authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505280000 definitions=main-2506260123
 
-The PPE (packet process engine) hardware block is available in Qualcomm
-IPQ chipsets that support PPE architecture, such as IPQ9574 and IPQ5332.
-The PPE in the IPQ9574 SoC includes six ethernet ports (6 GMAC and 6
-XGMAC), which are used to connect with external PHY devices by PCS. The
-PPE also includes packet processing offload capabilities for various
-networking functions such as route and bridge flows, VLANs, different
-tunnel protocols and VPN. It also includes an L2 switch function for
-bridging packets among the 6 ethernet ports and the CPU port. The CPU
-port enables packet transfer between the ethernet ports and the ARM
-cores in the SoC, using the ethernet DMA.
+From: Lei Wei <quic_leiwei@quicinc.com>
 
-This patch series is the first part of a three part series that will
-together enable Ethernet function for IPQ9574 SoC. While support is
-initially being added for IPQ9574 SoC, the driver will be easily
-extendable to enable Ethernet support for other IPQ SoC such as IPQ5332.
-The driver can also be extended later for adding support for L2/L3
-network offload features that the PPE can support. The functionality
-to be enabled by each of the three series (to be posted sequentially)
-is as below:
+Add description and high-level diagram for PPE, driver overview and
+module enable/debug information.
 
-Part 1: The PPE patch series (this series), which enables the platform
-driver, probe and initialization/configuration of different PPE hardware
-blocks.
-
-Part 2: The PPE MAC patch series, which enables the phylink operations
-for the PPE ethernet ports.
-
-Part 3: The PPE EDMA patch series, which enables the Rx/Tx Ethernet DMA
-and netdevice driver for the 6 PPE ethernet ports.
-
-A more detailed description of the functions enabled by part 1 is below:
-1. Initialize PPE device hardware functions such as buffer management,
-   queue management, scheduler and clocks in order to bring up PPE
-   device.
-2. Enable platform driver and probe functions
-3. Register debugfs file to provide access to various PPE packet
-   counters. These statistics are recorded by the various hardware
-   process counters, such as port RX/TX, CPU code and hardware queue
-   counters.
-4. A detailed introduction of PPE along with the PPE hardware diagram
-   in the first two patches (dt-bindings and documentation).
-
-Below is a reference to an earlier RFC discussion with the community
-about enabling ethernet driver support for Qualcomm IPQ9574 SoC. This
-writeup can help provide a higher level architectural view of various
-other drivers that support the PPE such as clock and PCS drivers.
-Topic: RFC: Advice on adding support for Qualcomm IPQ9574 SoC Ethernet.
-https://lore.kernel.org/linux-arm-msm/d2929bd2-bc9e-4733-a89f-2a187e8bf917@quicinc.com/
-
+Signed-off-by: Lei Wei <quic_leiwei@quicinc.com>
 Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
 ---
-Changes in v5:
-- DT binding improvements:
-    * Update example by using clock & reset ID instead of magic number.
-    * Fix the duplicate '>' symbol.
-    * Convert the interrupt number to a fixed value and add the missing but
-      unused interrupts to complete the hardware description.
-    * Constraint the port node with clock and reset.
-- Add debugfs based queue drop counter.
-- Cosmetic update to commit messages to wrap the text correctly.
-- Link to v4: https://lore.kernel.org/r/20250513-qcom_ipq_ppe-v4-0-4fbe40cbbb71@quicinc.com
+ .../networking/device_drivers/ethernet/index.rst   |   1 +
+ .../device_drivers/ethernet/qualcomm/ppe/ppe.rst   | 194 +++++++++++++++++++++
+ 2 files changed, 195 insertions(+)
 
-Changes in v4:
-- Simplify statements regarding module load in documentation as per comments.
-- Improve data structure definitions for scheduler patch for clarity.
-- Replace u32p_replace_bits() with FIELD_MODIFY().
-- Enhance the comment of the PPE scheduler for BM and QM configurations.
-- Debugfs improvements:
-    *Remove print related macros and inline the code instead.
-    *Return error codes from register read/write wherever applicable.
-    *Split the hardware counter display file into separate files.
-- Link to v3: https://lore.kernel.org/r/20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com
+diff --git a/Documentation/networking/device_drivers/ethernet/index.rst b/Documentation/networking/device_drivers/ethernet/index.rst
+index 139b4c75a191..7613604f2a07 100644
+--- a/Documentation/networking/device_drivers/ethernet/index.rst
++++ b/Documentation/networking/device_drivers/ethernet/index.rst
+@@ -50,6 +50,7 @@ Contents:
+    neterion/s2io
+    netronome/nfp
+    pensando/ionic
++   qualcomm/ppe/ppe
+    smsc/smc9
+    stmicro/stmmac
+    ti/cpsw
+diff --git a/Documentation/networking/device_drivers/ethernet/qualcomm/ppe/ppe.rst b/Documentation/networking/device_drivers/ethernet/qualcomm/ppe/ppe.rst
+new file mode 100644
+index 000000000000..2fbc718ffbdc
+--- /dev/null
++++ b/Documentation/networking/device_drivers/ethernet/qualcomm/ppe/ppe.rst
+@@ -0,0 +1,194 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++===============================================
++PPE Ethernet Driver for Qualcomm IPQ SoC Family
++===============================================
++
++Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
++
++Author: Lei Wei <quic_leiwei@quicinc.com>
++
++
++Contents
++========
++
++- `PPE Overview`_
++- `PPE Driver Overview`_
++- `PPE Driver Supported SoCs`_
++- `Enabling the Driver`_
++- `Debugging`_
++
++
++PPE Overview
++============
++
++IPQ (Qualcomm Internet Processor) SoC (System-on-Chip) series is Qualcomm's series of
++networking SoC for Wi-Fi access points. The PPE (Packet Process Engine) is the Ethernet
++packet process engine in the IPQ SoC.
++
++Below is a simplified hardware diagram of IPQ9574 SoC which includes the PPE engine and
++other blocks which are in the SoC but outside the PPE engine. These blocks work together
++to enable the Ethernet for the IPQ SoC::
++
++             +------+ +------+ +------+ +------+ +------+  +------+ start +-------+
++             |netdev| |netdev| |netdev| |netdev| |netdev|  |netdev|<------|PHYLINK|
++             +------+ +------+ +------+ +------+ +------+  +------+ stop  +-+-+-+-+
++                                           |                                | | ^
++ +-------+   +-------------------------+--------+----------------------+    | | |
++ | GCC   |   |                         |  EDMA  |                      |    | | |
++ +---+---+   |  PPE                    +---+----+                      |    | | |
++     | clk   |                             |                           |    | | |
++     +------>| +-----------------------+------+-----+---------------+  |    | | |
++             | |   Switch Core         |Port0 |     |Port7(EIP FIFO)|  |    | | |
++             | |                       +---+--+     +------+--------+  |    | | |
++             | |                           |               |        |  |    | | |
++ +-------+   | |                    +------+---------------+----+   |  |    | | |
++ |CMN PLL|   | | +---+ +---+ +----+ | +--------+                |   |  |    | | |
++ +---+---+   | | |BM | |QM | |SCH | | | L2/L3  |  .......       |   |  |    | | |
++ |   |       | | +---+ +---+ +----+ | +--------+                |   |  |    | | |
++ |   |       | |                    +------+--------------------+   |  |    | | |
++ |   |       | |                           |                        |  |    | | |
++ |   v       | | +-----+-+-----+-+-----+-+-+---+--+-----+-+-----+   |  |    | | |
++ | +------+  | | |Port1| |Port2| |Port3| |Port4|  |Port5| |Port6|   |  |    | | |
++ | |NSSCC |  | | +-----+ +-----+ +-----+ +-----+  +-----+ +-----+   |  | mac| | |
++ | +-+-+--+  | | |MAC0 | |MAC1 | |MAC2 | |MAC3 |  |MAC4 | |MAC5 |   |  |<---+ | |
++ | ^ | |clk  | | +-----+-+-----+-+-----+-+-----+--+-----+-+-----+   |  | ops  | |
++ | | | +---->| +----|------|-------|-------|---------|--------|-----+  |      | |
++ | | |       +---------------------------------------------------------+      | |
++ | | |              |      |       |       |         |        |               | |
++ | | |   MII clk    |      QSGMII               USXGMII   USXGMII             | |
++ | | +------------->|      |       |       |         |        |               | |
++ | |              +-------------------------+ +---------+ +---------+         | |
++ | |125/312.5M clk|       (PCS0)            | | (PCS1)  | | (PCS2)  | pcs ops | |
++ | +--------------+       UNIPHY0           | | UNIPHY1 | | UNIPHY2 |<--------+ |
++ +--------------->|                         | |         | |         |           |
++ | 31.25M ref clk +-------------------------+ +---------+ +---------+           |
++ |                   |     |      |      |          |          |                |
++ |              +-----------------------------------------------------+         |
++ |25/50M ref clk| +-------------------------+    +------+   +------+  | link    |
++ +------------->| |      QUAD PHY           |    | PHY4 |   | PHY5 |  |---------+
++                | +-------------------------+    +------+   +------+  | change
++                |                                                     |
++                |                       MDIO bus                      |
++                +-----------------------------------------------------+
++
++The CMN (Common) PLL, NSSCC (Networking Sub System Clock Controller) and GCC (Global
++Clock Controller) blocks are in the SoC and act as clock providers.
++
++The UNIPHY block is in the SoC and provides the PCS (Physical Coding Sublayer) and
++XPCS (10-Gigabit Physical Coding Sublayer) functions to support different interface
++modes between the PPE MAC and the external PHY.
++
++This documentation focuses on the descriptions of PPE engine and the PPE driver.
++
++The Ethernet functionality in the PPE (Packet Process Engine) is comprised of three
++components: the switch core, port wrapper and Ethernet DMA.
++
++The Switch core in the IPQ9574 PPE has maximum of 6 front panel ports and two FIFO
++interfaces. One of the two FIFO interfaces is used for Ethernet port to host CPU
++communication using Ethernet DMA. The other one is used to communicate to the EIP
++engine which is used for IPsec offload. On the IPQ9574, the PPE includes 6 GMAC/XGMACs
++that can be connected with external Ethernet PHY. Switch core also includes BM (Buffer
++Management), QM (Queue Management) and SCH (Scheduler) modules for supporting the
++packet processing.
++
++The port wrapper provides connections from the 6 GMAC/XGMACS to UNIPHY (PCS) supporting
++various modes such as SGMII/QSGMII/PSGMII/USXGMII/10G-BASER. There are 3 UNIPHY (PCS)
++instances supported on the IPQ9574.
++
++Ethernet DMA is used to transmit and receive packets between the Ethernet subsystem
++and ARM host CPU.
++
++The following lists the main blocks in the PPE engine which will be driven by this
++PPE driver:
++
++- BM
++    BM is the hardware buffer manager for the PPE switch ports.
++- QM
++    Queue Manager for managing the egress hardware queues of the PPE switch ports.
++- SCH
++    The scheduler which manages the hardware traffic scheduling for the PPE switch ports.
++- L2
++    The L2 block performs the packet bridging in the switch core. The bridge domain is
++    represented by the VSI (Virtual Switch Instance) domain in PPE. FDB learning can be
++    enabled based on the VSI domain and bridge forwarding occurs within the VSI domain.
++- MAC
++    The PPE in the IPQ9574 supports up to six MACs (MAC0 to MAC5) which are corresponding
++    to six switch ports (port1 to port6). The MAC block is connected with external PHY
++    through the UNIPHY PCS block. Each MAC block includes the GMAC and XGMAC blocks and
++    the switch port can select to use GMAC or XMAC through a MUX selection according to
++    the external PHY's capability.
++- EDMA (Ethernet DMA)
++    The Ethernet DMA is used to transmit and receive Ethernet packets between the PPE
++    ports and the ARM cores.
++
++The received packet on a PPE MAC port can be forwarded to another PPE MAC port. It can
++be also forwarded to internal switch port0 so that the packet can be delivered to the
++ARM cores using the Ethernet DMA (EDMA) engine. The Ethernet DMA driver will deliver the
++packet to the corresponding 'netdevice' interface.
++
++The software instantiations of the PPE MAC (netdevice), PCS and external PHYs interact
++with the Linux PHYLINK framework to manage the connectivity between the PPE ports and
++the connected PHYs, and the port link states. This is also illustrated in above diagram.
++
++
++PPE Driver Overview
++===================
++PPE driver is Ethernet driver for the Qualcomm IPQ SoC. It is a single platform driver
++which includes the PPE part and Ethernet DMA part. The PPE part initializes and drives the
++various blocks in PPE switch core such as BM/QM/L2 blocks and the PPE MACs. The EDMA part
++drives the Ethernet DMA for packet transfer between PPE ports and ARM cores, and enables
++the netdevice driver for the PPE ports.
++
++The PPE driver files in drivers/net/ethernet/qualcomm/ppe/ are listed as below:
++
++- Makefile
++- ppe.c
++- ppe.h
++- ppe_config.c
++- ppe_config.h
++- ppe_debugfs.c
++- ppe_debugfs.h
++- ppe_regs.h
++
++The ppe.c file contains the main PPE platform driver and undertakes the initialization of
++PPE switch core blocks such as QM, BM and L2. The configuration APIs for these hardware
++blocks are provided in the ppe_config.c file.
++
++The ppe.h defines the PPE device data structure which will be used by PPE driver functions.
++
++The ppe_debugfs.c enables the PPE statistics counters such as PPE port Rx and Tx counters,
++CPU code counters and queue counters.
++
++
++PPE Driver Supported SoCs
++=========================
++
++The PPE driver supports the following IPQ SoC:
++
++- IPQ9574
++
++
++Enabling the Driver
++===================
++
++The driver is located in the menu structure at::
++
++  -> Device Drivers
++    -> Network device support (NETDEVICES [=y])
++      -> Ethernet driver support
++        -> Qualcomm devices
++          -> Qualcomm Technologies, Inc. PPE Ethernet support
++
++If the driver is built as a module, the module will be called qcom-ppe.
++
++The PPE driver functionally depends on the CMN PLL and NSSCC clock controller drivers.
++Please make sure the dependent modules are installed before installing the PPE driver
++module.
++
++
++Debugging
++=========
++
++The PPE hardware counters can be accessed using debugfs interface from the
++``/sys/kernel/debug/ppe/`` directory.
 
-Changes in v3:
-- Add the top-level ref ethernet-switch.yaml and remove node definition
-  ethernet-ports in the DT binding file.
-- Remove unnecessary error message for devm_kzalloc().
-- Reverse the mapping of BM ceiling bits.
-- Fix multicast queue start/end configurations.
-- Declare the SoC-specific PPE configuration variables as const.
-- Fix kernel documentation errors.
-- Fix the compile errors reported by gcc-14.
-- Improve the commit message of L2 bridge initialization and debugfs patches.
-- Link to v2: https://lore.kernel.org/r/20250108-qcom_ipq_ppe-v2-0-7394dbda7199@quicinc.com
-
-Changes in v2:
-- Represent the PPE hardware hierarchy in dtbindings, add PPE hardware diagram.
-- Remove all SoC specific hardware properties from dtbindings since driver
-  maintains them.
-- Move out the PCS (UNIPHY) handling into a separate PCS driver posted
-  separately at below.
-  https://lore.kernel.org/all/20250108-ipq_pcs_net-next-v4-0-0de14cd2902b@quicinc.com
-- Move out the PPE MAC patches into a separate series to limit patch count to
-  15 or less. (PPE MAC patches will be posted sequentially after this series).
-- Rename the hardware initialization related files from ppe_ops.c[h] to
-  ppe_config.c[h]
-- Improve PPE driver documentation and diagram.
-- Fix dtbinding check errors.
-- Link to v1: https://lore.kernel.org/r/20240110114033.32575-1-quic_luoj@quicinc.com
-
----
-Lei Wei (2):
-      docs: networking: Add PPE driver documentation for Qualcomm IPQ9574 SoC
-      net: ethernet: qualcomm: Initialize PPE L2 bridge settings
-
-Luo Jie (12):
-      dt-bindings: net: Add PPE for Qualcomm IPQ9574 SoC
-      net: ethernet: qualcomm: Add PPE driver for IPQ9574 SoC
-      net: ethernet: qualcomm: Initialize PPE buffer management for IPQ9574
-      net: ethernet: qualcomm: Initialize PPE queue management for IPQ9574
-      net: ethernet: qualcomm: Initialize the PPE scheduler settings
-      net: ethernet: qualcomm: Initialize PPE queue settings
-      net: ethernet: qualcomm: Initialize PPE service code settings
-      net: ethernet: qualcomm: Initialize PPE port control settings
-      net: ethernet: qualcomm: Initialize PPE RSS hash settings
-      net: ethernet: qualcomm: Initialize PPE queue to Ethernet DMA ring mapping
-      net: ethernet: qualcomm: Add PPE debugfs support for PPE counters
-      MAINTAINERS: Add maintainer for Qualcomm PPE driver
-
- .../devicetree/bindings/net/qcom,ipq9574-ppe.yaml  |  521 +++++
- .../networking/device_drivers/ethernet/index.rst   |    1 +
- .../device_drivers/ethernet/qualcomm/ppe/ppe.rst   |  194 ++
- MAINTAINERS                                        |    8 +
- drivers/net/ethernet/qualcomm/Kconfig              |   15 +
- drivers/net/ethernet/qualcomm/Makefile             |    1 +
- drivers/net/ethernet/qualcomm/ppe/Makefile         |    7 +
- drivers/net/ethernet/qualcomm/ppe/ppe.c            |  234 +++
- drivers/net/ethernet/qualcomm/ppe/ppe.h            |   39 +
- drivers/net/ethernet/qualcomm/ppe/ppe_config.c     | 2029 ++++++++++++++++++++
- drivers/net/ethernet/qualcomm/ppe/ppe_config.h     |  317 +++
- drivers/net/ethernet/qualcomm/ppe/ppe_debugfs.c    |  847 ++++++++
- drivers/net/ethernet/qualcomm/ppe/ppe_debugfs.h    |   16 +
- drivers/net/ethernet/qualcomm/ppe/ppe_regs.h       |  591 ++++++
- 14 files changed, 4820 insertions(+)
----
-base-commit: a9b24b3583ae1da7dbda031f141264f2da260219
-change-id: 20250626-qcom_ipq_ppe-a82829d87b3f
-
-Best regards,
 -- 
-Luo Jie <quic_luoj@quicinc.com>
+2.34.1
 
