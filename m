@@ -1,61 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1750944F;
-	Fri, 27 Jun 2025 00:15:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EA62746A;
+	Fri, 27 Jun 2025 01:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750983318; cv=none; b=AX5zCk5QBWEZgqsY/jdx+BFLcE0R9i1XzljbyTLSDvLR3uaX7WDH1b/19rrRLRPXOBPowvP2d5SDFcZRj1WDzz/wtqL982wAuMCjR1JCX673fsaF+XInguMuYJ25f45ir5aefrIWWA/3B10gX65lyYf0d9uxEBSdmFBMV43JRLw=
+	t=1750986381; cv=none; b=HRHdzCi+eTb8BTI5YhE441zyHBxvwUpQrnkBBqFI9rZ+YhLAfmnqxKfBtBYRynUHGgBdDweP3t7r91gB8nrp/pLj9MsNBQwCGzs35jJw5C0nz/2f7ir507w8ngPPgTWCaD1eca//75dPUjJYBb9PwZlL81juLLqwDVfyoYO/6Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750983318; c=relaxed/simple;
-	bh=kWgIppeliAYep/KV4T4ViN4nKmeetRXoP2486C4Nt0Y=;
+	s=arc-20240116; t=1750986381; c=relaxed/simple;
+	bh=+G/t9+B65nWdGibqPQwfKA9JGs6zB4rCzJDnBF/Kous=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bz7Qlzg2z7gcMX4ZV0EpaJrS2Zu6XAbw2oJnGWA3QP1dEgoi1o97lyFfP1UrXHDHjaN4wSwOy4/2IO+snspiePlF09kbxXK3KMxVNT1/61VH/UpzU6L555XNu3qVy6UydYkw3FmJ0Q1qXSwbLoaHWOry/c0GwRzZMCvuzT/h8dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zs/5hTmr; arc=none smtp.client-ip=192.198.163.19
+	 Content-Type:Content-Disposition:In-Reply-To; b=FrMPbfoW4B8b+7yycAv1trqoZMa7qmKrqgDzPRMBl8B55WPVaXC/diZKn+RSodXhSQ0Zh6z7B2mAZHbnu6IeWOar+oK/hxfpRqGCy5AeSfUVIhXvUIPNQ8sGmyhwWMY/EnlLqSzCuNuXAQYcPuiy/93vyjUXxtzWMe6zm+jUm40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YaEX0Cw0; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zs/5hTmr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YaEX0Cw0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750983316; x=1782519316;
+  t=1750986380; x=1782522380;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=kWgIppeliAYep/KV4T4ViN4nKmeetRXoP2486C4Nt0Y=;
-  b=Zs/5hTmrig2i3FuqboMAybN3/lzNJujZOgkviTXqbVb65r34p/CefyrE
-   nSOAAftjZAbZeAaDMsHMq3BHK4MMOBNyF6vItOmCgUC/l5+4hdJuH5Jip
-   0kpxhwI1uREyV98+7o5N+cbG8znoTeLZXwdD9yDuksfDLL840u7uWsPkh
-   Lm9Z5dskV0GtKs+DmFQKt/DYixqDi3uHN97CGCHJSMSDRCyiTj7LKqlwh
-   CDxoCHeEWrhK619XHJySq6bOwSTiaxwl1Mo5XYfv7Loa+zQdFvUW/ENn1
-   gcvgCRJPqeFoDTOJbZeZBhqYmiJGZiJoBpjffiTqyJFd05rwxVa352zpO
-   A==;
-X-CSE-ConnectionGUID: HwCf8xt+SaSCFrLnBY9lpg==
-X-CSE-MsgGUID: CJI7i40rS9yNNMk50eaq0A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="52416192"
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="52416192"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 17:15:15 -0700
-X-CSE-ConnectionGUID: /qZVWOtCSxO7HLnc5LgpIA==
-X-CSE-MsgGUID: cOYYjkm7TPeI8GMgIHxQdw==
+  bh=+G/t9+B65nWdGibqPQwfKA9JGs6zB4rCzJDnBF/Kous=;
+  b=YaEX0Cw0AaCmPaDbtMWwnTIPm3qNEHcIZvDMTbjbS2Cnn/Dnz0OiO12k
+   tu1p74ldd2OX0OaQZcEbtK6RuynihZO2QK+9Y6Hq2g2TqBGYEdB4T4o90
+   uRa00LyDLS8pyW63WWV3va9M+GxETK+wG11bzaXIQOGewqxaCKwU+fBLW
+   W4d9fL9yFgHRz+H3ifTIflmyehh18njlRIp7tvmsRLDyKiQeUAis6jPuT
+   +1vg84a2mMxLNFzNobuVkGLCYD84xJUt+wFI8b/CYqXxjzxYYIKQNfFfU
+   thGsXxu6EOQIoXJecwx0fZTgXY2/3MYOgVH3NFWRNxt9T1sa3+klUOda7
+   g==;
+X-CSE-ConnectionGUID: gmc35tN6RtS8C59ZuzXX5Q==
+X-CSE-MsgGUID: yV1/kx7MTcexgM3RdY+wZw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53023629"
+X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
+   d="scan'208";a="53023629"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 18:06:19 -0700
+X-CSE-ConnectionGUID: wEPlNzg9Qker8t5pQL+EYA==
+X-CSE-MsgGUID: YSqscLQrSFS6EmqJEU55cg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="158143053"
+X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
+   d="scan'208";a="153381319"
 Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 26 Jun 2025 17:15:13 -0700
+  by fmviesa010.fm.intel.com with ESMTP; 26 Jun 2025 18:06:17 -0700
 Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uUwkJ-000Vek-0F;
-	Fri, 27 Jun 2025 00:15:11 +0000
-Date: Fri, 27 Jun 2025 08:14:15 +0800
+	id 1uUxXi-000Vg2-2o;
+	Fri, 27 Jun 2025 01:06:14 +0000
+Date: Fri, 27 Jun 2025 09:05:48 +0800
 From: kernel test robot <lkp@intel.com>
 To: Colin Ian King <colin.i.king@gmail.com>, Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH][next] fortify: add branch hints on unlikely
  fortify_panic paths
-Message-ID: <202506270832.QJ2ekScw-lkp@intel.com>
+Message-ID: <202506270831.FzLx5USH-lkp@intel.com>
 References: <20250625161221.295575-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -69,10 +69,10 @@ In-Reply-To: <20250625161221.295575-1-colin.i.king@gmail.com>
 
 Hi Colin,
 
-kernel test robot noticed the following build errors:
+kernel test robot noticed the following build warnings:
 
-[auto build test ERROR on kees/for-next/hardening]
-[also build test ERROR on kees/for-next/pstore kees/for-next/kspp linus/master v6.16-rc3 next-20250626]
+[auto build test WARNING on kees/for-next/hardening]
+[also build test WARNING on kees/for-next/pstore kees/for-next/kspp linus/master v6.16-rc3 next-20250626]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch#_base_tree_information]
@@ -81,463 +81,354 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Colin-Ian-King/fortify-ad
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
 patch link:    https://lore.kernel.org/r/20250625161221.295575-1-colin.i.king%40gmail.com
 patch subject: [PATCH][next] fortify: add branch hints on unlikely fortify_panic paths
-config: x86_64-buildonly-randconfig-001-20250627 (https://download.01.org/0day-ci/archive/20250627/202506270832.QJ2ekScw-lkp@intel.com/config)
-compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250627/202506270832.QJ2ekScw-lkp@intel.com/reproduce)
+config: i386-buildonly-randconfig-004-20250627 (https://download.01.org/0day-ci/archive/20250627/202506270831.FzLx5USH-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250627/202506270831.FzLx5USH-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506270832.QJ2ekScw-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506270831.FzLx5USH-lkp@intel.com/
 
-All error/warnings (new ones prefixed by >>):
+All warnings (new ones prefixed by >>):
 
-   In file included from scripts/mod/devicetable-offsets.c:3:
-   In file included from include/linux/mod_devicetable.h:14:
-   In file included from include/linux/uuid.h:11:
-   In file included from include/linux/string.h:392:
->> include/linux/fortify-string.h:596:6: warning: non-constant static local variable in inline function may be different in different files [-Wstatic-local-in-inline]
-     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
-         |             ^
-   include/linux/compiler.h:47:24: note: expanded from macro 'unlikely'
+   In file included from include/linux/array_size.h:5,
+                    from include/linux/string.h:6,
+                    from include/linux/uuid.h:11,
+                    from include/linux/mod_devicetable.h:14,
+                    from scripts/mod/devicetable-offsets.c:3:
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
       47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
-         |                          ^
-   include/linux/compiler.h:24:4: note: expanded from macro '__branch_check__'
-      24 |                         static struct ftrace_likely_data                \
-         |                         ^
-   In file included from scripts/mod/devicetable-offsets.c:3:
-   In file included from include/linux/mod_devicetable.h:14:
-   In file included from include/linux/uuid.h:11:
-   In file included from include/linux/string.h:392:
-   include/linux/fortify-string.h:598:11: warning: non-constant static local variable in inline function may be different in different files [-Wstatic-local-in-inline]
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:598:18: note: in expansion of macro 'unlikely'
      598 |         else if (unlikely(q_size != SIZE_MAX && q_size < size))
-         |                  ^
-   include/linux/compiler.h:47:24: note: expanded from macro 'unlikely'
+         |                  ^~~~~~~~
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
       47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
-         |                          ^
-   include/linux/compiler.h:24:4: note: expanded from macro '__branch_check__'
-      24 |                         static struct ftrace_likely_data                \
-         |                         ^
-   2 warnings generated.
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:596:13: note: in expansion of macro 'unlikely'
+     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
+         |             ^~~~~~~~
 --
-   In file included from lib/locking-selftest.c:14:
-   In file included from include/linux/rwsem.h:15:
-   In file included from include/linux/spinlock.h:59:
-   In file included from include/linux/irqflags.h:18:
-   In file included from arch/x86/include/asm/irqflags.h:102:
-   In file included from arch/x86/include/asm/paravirt.h:21:
-   In file included from include/linux/cpumask.h:12:
-   In file included from include/linux/bitmap.h:13:
-   In file included from include/linux/string.h:392:
->> include/linux/fortify-string.h:596:6: warning: non-constant static local variable in inline function may be different in different files [-Wstatic-local-in-inline]
-     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
-         |             ^
-   include/linux/compiler.h:47:24: note: expanded from macro 'unlikely'
+   In file included from include/linux/export.h:5,
+                    from include/linux/linkage.h:7,
+                    from arch/x86/include/asm/cache.h:5,
+                    from include/vdso/cache.h:5,
+                    from include/linux/cache.h:6,
+                    from include/linux/slab.h:15,
+                    from fs/ocfs2/dlmglue.c:11:
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
       47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
-         |                          ^
-   include/linux/compiler.h:24:4: note: expanded from macro '__branch_check__'
-      24 |                         static struct ftrace_likely_data                \
-         |                         ^
-   In file included from lib/locking-selftest.c:14:
-   In file included from include/linux/rwsem.h:15:
-   In file included from include/linux/spinlock.h:59:
-   In file included from include/linux/irqflags.h:18:
-   In file included from arch/x86/include/asm/irqflags.h:102:
-   In file included from arch/x86/include/asm/paravirt.h:21:
-   In file included from include/linux/cpumask.h:12:
-   In file included from include/linux/bitmap.h:13:
-   In file included from include/linux/string.h:392:
-   include/linux/fortify-string.h:598:11: warning: non-constant static local variable in inline function may be different in different files [-Wstatic-local-in-inline]
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:598:18: note: in expansion of macro 'unlikely'
      598 |         else if (unlikely(q_size != SIZE_MAX && q_size < size))
-         |                  ^
-   include/linux/compiler.h:47:24: note: expanded from macro 'unlikely'
+         |                  ^~~~~~~~
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
       47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
-         |                          ^
-   include/linux/compiler.h:24:4: note: expanded from macro '__branch_check__'
-      24 |                         static struct ftrace_likely_data                \
-         |                         ^
-   lib/locking-selftest.c:2510:1: warning: unused function 'class_HARDIRQ_lock_ptr' [-Wunused-function]
-    2510 | DEFINE_LOCK_GUARD_0(HARDIRQ, HARDIRQ_ENTER(), HARDIRQ_EXIT())
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/cleanup.h:432:49: note: expanded from macro 'DEFINE_LOCK_GUARD_0'
-     432 | __DEFINE_CLASS_IS_CONDITIONAL(_name, false);                            \
-         |                                                                         ^
-     433 | __DEFINE_UNLOCK_GUARD(_name, void, _unlock, __VA_ARGS__)                \
-         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/cleanup.h:406:10: note: expanded from macro '\
-   __DEFINE_UNLOCK_GUARD'
-     406 |                                                                         \
-         |                                                                         ^
-     407 | __DEFINE_GUARD_LOCK_PTR(_name, &_T->lock)
-         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/cleanup.h:314:23: note: expanded from macro '\
-   __DEFINE_GUARD_LOCK_PTR'
-     314 |         static inline void * class_##_name##_lock_ptr(class_##_name##_t *_T) \
-         |                              ^~~~~~~~~~~~~~~~~~~~~~~~
-   <scratch space>:21:1: note: expanded from here
-      21 | class_HARDIRQ_lock_ptr
-         | ^~~~~~~~~~~~~~~~~~~~~~
-   lib/locking-selftest.c:2511:1: warning: unused function 'class_NOTTHREADED_HARDIRQ_lock_ptr' [-Wunused-function]
-    2511 | DEFINE_LOCK_GUARD_0(NOTTHREADED_HARDIRQ,
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    2512 |         do {
-         |         ~~~~
-    2513 |                 local_irq_disable();
-         |                 ~~~~~~~~~~~~~~~~~~~~
-    2514 |                 __irq_enter();
-         |                 ~~~~~~~~~~~~~~
-    2515 |                 WARN_ON(!in_irq());
-         |                 ~~~~~~~~~~~~~~~~~~~
-    2516 |         } while(0), HARDIRQ_EXIT())
-         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/cleanup.h:432:49: note: expanded from macro 'DEFINE_LOCK_GUARD_0'
-     432 | __DEFINE_CLASS_IS_CONDITIONAL(_name, false);                            \
-         |                                                                         ^
-     433 | __DEFINE_UNLOCK_GUARD(_name, void, _unlock, __VA_ARGS__)                \
-         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/cleanup.h:406:10: note: expanded from macro '\
-   __DEFINE_UNLOCK_GUARD'
-     406 |                                                                         \
-         |                                                                         ^
-     407 | __DEFINE_GUARD_LOCK_PTR(_name, &_T->lock)
-         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/cleanup.h:314:23: note: expanded from macro '\
-   __DEFINE_GUARD_LOCK_PTR'
-     314 |         static inline void * class_##_name##_lock_ptr(class_##_name##_t *_T) \
-         |                              ^~~~~~~~~~~~~~~~~~~~~~~~
-   <scratch space>:105:1: note: expanded from here
-     105 | class_NOTTHREADED_HARDIRQ_lock_ptr
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   lib/locking-selftest.c:2517:1: warning: unused function 'class_SOFTIRQ_lock_ptr' [-Wunused-function]
-    2517 | DEFINE_LOCK_GUARD_0(SOFTIRQ, SOFTIRQ_ENTER(), SOFTIRQ_EXIT())
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/cleanup.h:432:49: note: expanded from macro 'DEFINE_LOCK_GUARD_0'
-     432 | __DEFINE_CLASS_IS_CONDITIONAL(_name, false);                            \
-         |                                                                         ^
-     433 | __DEFINE_UNLOCK_GUARD(_name, void, _unlock, __VA_ARGS__)                \
-         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/cleanup.h:406:10: note: expanded from macro '\
-   __DEFINE_UNLOCK_GUARD'
-     406 |                                                                         \
-         |                                                                         ^
-     407 | __DEFINE_GUARD_LOCK_PTR(_name, &_T->lock)
-         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/cleanup.h:314:23: note: expanded from macro '\
-   __DEFINE_GUARD_LOCK_PTR'
-     314 |         static inline void * class_##_name##_lock_ptr(class_##_name##_t *_T) \
-         |                              ^~~~~~~~~~~~~~~~~~~~~~~~
-   <scratch space>:125:1: note: expanded from here
-     125 | class_SOFTIRQ_lock_ptr
-         | ^~~~~~~~~~~~~~~~~~~~~~
-   lib/locking-selftest.c:2520:1: warning: unused function 'class_RCU_lock_ptr' [-Wunused-function]
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:596:13: note: in expansion of macro 'unlikely'
+     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
+         |             ^~~~~~~~
+   In file included from include/linux/string.h:392,
+                    from arch/x86/include/asm/page_32.h:18,
+                    from arch/x86/include/asm/page.h:14,
+                    from arch/x86/include/asm/thread_info.h:12,
+                    from include/linux/thread_info.h:60,
+                    from include/linux/spinlock.h:60,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:7,
+                    from include/linux/slab.h:16:
+   In function 'fortify_memset_chk',
+       inlined from 'ocfs2_lock_res_free' at fs/ocfs2/dlmglue.c:791:2:
+   include/linux/fortify-string.h:480:25: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+     480 |                         __write_overflow_field(p_size_field, size);
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 --
-   In file included from lib/test_bitops.c:10:
-   In file included from include/linux/module.h:13:
-   In file included from include/linux/stat.h:19:
-   In file included from include/linux/time.h:60:
-   In file included from include/linux/time32.h:13:
-   In file included from include/linux/timex.h:67:
-   In file included from arch/x86/include/asm/timex.h:5:
-   In file included from arch/x86/include/asm/processor.h:19:
-   In file included from arch/x86/include/asm/cpuid/api.h:57:
-   In file included from arch/x86/include/asm/paravirt.h:21:
-   In file included from include/linux/cpumask.h:12:
-   In file included from include/linux/bitmap.h:13:
-   In file included from include/linux/string.h:392:
->> include/linux/fortify-string.h:596:6: error: non-constant static local variable in inline function may be different in different files [-Werror,-Wstatic-local-in-inline]
-     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
-         |             ^
-   include/linux/compiler.h:47:24: note: expanded from macro 'unlikely'
+   kernel/bpf/helpers.c: In function '____bpf_snprintf':
+   kernel/bpf/helpers.c:1067:9: warning: function '____bpf_snprintf' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+    1067 |         err = bstr_printf(str, str_size, fmt, data.bin_args);
+         |         ^~~
+   In file included from include/uapi/linux/filter.h:9,
+                    from include/linux/bpf.h:8,
+                    from kernel/bpf/helpers.c:4:
+   include/linux/fortify-string.h: At top level:
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
       47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
-         |                          ^
-   include/linux/compiler.h:24:4: note: expanded from macro '__branch_check__'
-      24 |                         static struct ftrace_likely_data                \
-         |                         ^
-   In file included from lib/test_bitops.c:10:
-   In file included from include/linux/module.h:13:
-   In file included from include/linux/stat.h:19:
-   In file included from include/linux/time.h:60:
-   In file included from include/linux/time32.h:13:
-   In file included from include/linux/timex.h:67:
-   In file included from arch/x86/include/asm/timex.h:5:
-   In file included from arch/x86/include/asm/processor.h:19:
-   In file included from arch/x86/include/asm/cpuid/api.h:57:
-   In file included from arch/x86/include/asm/paravirt.h:21:
-   In file included from include/linux/cpumask.h:12:
-   In file included from include/linux/bitmap.h:13:
-   In file included from include/linux/string.h:392:
-   include/linux/fortify-string.h:598:11: error: non-constant static local variable in inline function may be different in different files [-Werror,-Wstatic-local-in-inline]
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:598:18: note: in expansion of macro 'unlikely'
      598 |         else if (unlikely(q_size != SIZE_MAX && q_size < size))
-         |                  ^
-   include/linux/compiler.h:47:24: note: expanded from macro 'unlikely'
+         |                  ^~~~~~~~
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
       47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
-         |                          ^
-   include/linux/compiler.h:24:4: note: expanded from macro '__branch_check__'
-      24 |                         static struct ftrace_likely_data                \
-         |                         ^
-   2 errors generated.
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:596:13: note: in expansion of macro 'unlikely'
+     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
+         |             ^~~~~~~~
 --
-   In file included from lib/test_maple_tree.c:10:
-   In file included from include/linux/maple_tree.h:12:
-   In file included from include/linux/rcupdate.h:26:
-   In file included from include/linux/irqflags.h:18:
-   In file included from arch/x86/include/asm/irqflags.h:102:
-   In file included from arch/x86/include/asm/paravirt.h:21:
-   In file included from include/linux/cpumask.h:12:
-   In file included from include/linux/bitmap.h:13:
-   In file included from include/linux/string.h:392:
->> include/linux/fortify-string.h:596:6: warning: non-constant static local variable in inline function may be different in different files [-Wstatic-local-in-inline]
-     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
-         |             ^
-   include/linux/compiler.h:47:24: note: expanded from macro 'unlikely'
+   In file included from include/linux/build_bug.h:5,
+                    from include/linux/bits.h:32,
+                    from include/linux/ioport.h:13,
+                    from include/linux/acpi.h:12,
+                    from sound/soc/codecs/rt1318.c:10:
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
       47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
-         |                          ^
-   include/linux/compiler.h:24:4: note: expanded from macro '__branch_check__'
-      24 |                         static struct ftrace_likely_data                \
-         |                         ^
-   In file included from lib/test_maple_tree.c:10:
-   In file included from include/linux/maple_tree.h:12:
-   In file included from include/linux/rcupdate.h:26:
-   In file included from include/linux/irqflags.h:18:
-   In file included from arch/x86/include/asm/irqflags.h:102:
-   In file included from arch/x86/include/asm/paravirt.h:21:
-   In file included from include/linux/cpumask.h:12:
-   In file included from include/linux/bitmap.h:13:
-   In file included from include/linux/string.h:392:
-   include/linux/fortify-string.h:598:11: warning: non-constant static local variable in inline function may be different in different files [-Wstatic-local-in-inline]
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:598:18: note: in expansion of macro 'unlikely'
      598 |         else if (unlikely(q_size != SIZE_MAX && q_size < size))
-         |                  ^
-   include/linux/compiler.h:47:24: note: expanded from macro 'unlikely'
+         |                  ^~~~~~~~
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
       47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
-         |                          ^
-   include/linux/compiler.h:24:4: note: expanded from macro '__branch_check__'
-      24 |                         static struct ftrace_likely_data                \
-         |                         ^
-   lib/test_maple_tree.c:212:26: warning: unused function 'not_empty' [-Wunused-function]
-     212 | static inline __init int not_empty(struct maple_node *node)
-         |                          ^~~~~~~~~
-   3 warnings generated.
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:596:13: note: in expansion of macro 'unlikely'
+     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
+         |             ^~~~~~~~
+   sound/soc/codecs/rt1318.c:1148:34: warning: 'rt1318_of_match' defined but not used [-Wunused-const-variable=]
+    1148 | static const struct of_device_id rt1318_of_match[] = {
+         |                                  ^~~~~~~~~~~~~~~
 --
-   In file included from lib/tests/stackinit_kunit.c:14:
-   In file included from include/kunit/test.h:22:
-   In file included from include/linux/kref.h:16:
-   In file included from include/linux/spinlock.h:59:
-   In file included from include/linux/irqflags.h:18:
-   In file included from arch/x86/include/asm/irqflags.h:102:
-   In file included from arch/x86/include/asm/paravirt.h:21:
-   In file included from include/linux/cpumask.h:12:
-   In file included from include/linux/bitmap.h:13:
-   In file included from include/linux/string.h:392:
->> include/linux/fortify-string.h:596:6: warning: non-constant static local variable in inline function may be different in different files [-Wstatic-local-in-inline]
-     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
-         |             ^
-   include/linux/compiler.h:47:24: note: expanded from macro 'unlikely'
+   In file included from include/linux/dev_printk.h:14,
+                    from include/linux/device.h:15,
+                    from include/linux/extcon.h:21,
+                    from sound/soc/samsung/aries_wm8994.c:2:
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
       47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
-         |                          ^
-   include/linux/compiler.h:24:4: note: expanded from macro '__branch_check__'
-      24 |                         static struct ftrace_likely_data                \
-         |                         ^
-   In file included from lib/tests/stackinit_kunit.c:14:
-   In file included from include/kunit/test.h:22:
-   In file included from include/linux/kref.h:16:
-   In file included from include/linux/spinlock.h:59:
-   In file included from include/linux/irqflags.h:18:
-   In file included from arch/x86/include/asm/irqflags.h:102:
-   In file included from arch/x86/include/asm/paravirt.h:21:
-   In file included from include/linux/cpumask.h:12:
-   In file included from include/linux/bitmap.h:13:
-   In file included from include/linux/string.h:392:
-   include/linux/fortify-string.h:598:11: warning: non-constant static local variable in inline function may be different in different files [-Wstatic-local-in-inline]
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:598:18: note: in expansion of macro 'unlikely'
      598 |         else if (unlikely(q_size != SIZE_MAX && q_size < size))
-         |                  ^
-   include/linux/compiler.h:47:24: note: expanded from macro 'unlikely'
+         |                  ^~~~~~~~
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
       47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
-         |                          ^
-   include/linux/compiler.h:24:4: note: expanded from macro '__branch_check__'
-      24 |                         static struct ftrace_likely_data                \
-         |                         ^
-   lib/tests/stackinit_kunit.c:441:1: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
-     441 | DEFINE_UNION_INITIALIZER_TESTS(static, STRONG_PASS);
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   lib/tests/stackinit_kunit.c:421:3: note: expanded from macro 'DEFINE_UNION_INITIALIZER_TESTS'
-     421 |                 DEFINE_UNION_TESTS(base ## _ ## all, xfail)
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   lib/tests/stackinit_kunit.c:424:3: note: expanded from macro 'DEFINE_UNION_TESTS'
-     424 |                 DEFINE_UNION_TEST(same_sizes, init, xfail);     \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   lib/tests/stackinit_kunit.c:403:3: note: expanded from macro 'DEFINE_UNION_TEST'
-     403 |                 DEFINE_TEST(name ## _ ## init,                  \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     404 |                             union test_ ## name, STRUCT, init,  \
-         |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     405 |                             xfail)
-         |                             ~~~~~~
-   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   <scratch space>:20:1: note: expanded from here
-      20 | INIT_STRUCT_static_all
-         | ^
-   lib/tests/stackinit_kunit.c:137:8: note: expanded from macro 'INIT_STRUCT_static_all'
-     137 |                                         = __static_all
-         |                                           ^~~~~~~~~~~~
-   lib/tests/stackinit_kunit.c:118:8: note: expanded from macro '__static_all'
-     118 |                                           .two = 0,                     \
-         |                                           ^~~~~~~~
-   lib/tests/stackinit_kunit.c:441:1: note: previous initialization is here
-     441 | DEFINE_UNION_INITIALIZER_TESTS(static, STRONG_PASS);
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   lib/tests/stackinit_kunit.c:421:3: note: expanded from macro 'DEFINE_UNION_INITIALIZER_TESTS'
-     421 |                 DEFINE_UNION_TESTS(base ## _ ## all, xfail)
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   lib/tests/stackinit_kunit.c:424:3: note: expanded from macro 'DEFINE_UNION_TESTS'
-     424 |                 DEFINE_UNION_TEST(same_sizes, init, xfail);     \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   lib/tests/stackinit_kunit.c:403:3: note: expanded from macro 'DEFINE_UNION_TEST'
-     403 |                 DEFINE_TEST(name ## _ ## init,                  \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     404 |                             union test_ ## name, STRUCT, init,  \
-         |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     405 |                             xfail)
-         |                             ~~~~~~
-   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   <scratch space>:20:1: note: expanded from here
-      20 | INIT_STRUCT_static_all
-         | ^
-   lib/tests/stackinit_kunit.c:137:8: note: expanded from macro 'INIT_STRUCT_static_all'
-     137 |                                         = __static_all
-         |                                           ^~~~~~~~~~~~
-   lib/tests/stackinit_kunit.c:117:33: note: expanded from macro '__static_all'
-     117 | #define __static_all                    { .one = 0,                     \
-         |                                                  ^
-   lib/tests/stackinit_kunit.c:441:1: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
-     441 | DEFINE_UNION_INITIALIZER_TESTS(static, STRONG_PASS);
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   lib/tests/stackinit_kunit.c:421:3: note: expanded from macro 'DEFINE_UNION_INITIALIZER_TESTS'
-     421 |                 DEFINE_UNION_TESTS(base ## _ ## all, xfail)
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   lib/tests/stackinit_kunit.c:424:3: note: expanded from macro 'DEFINE_UNION_TESTS'
-     424 |                 DEFINE_UNION_TEST(same_sizes, init, xfail);     \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   lib/tests/stackinit_kunit.c:403:3: note: expanded from macro 'DEFINE_UNION_TEST'
-     403 |                 DEFINE_TEST(name ## _ ## init,                  \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     404 |                             union test_ ## name, STRUCT, init,  \
-         |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     405 |                             xfail)
-         |                             ~~~~~~
-   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   <scratch space>:20:1: note: expanded from here
-      20 | INIT_STRUCT_static_all
-         | ^
-   lib/tests/stackinit_kunit.c:137:8: note: expanded from macro 'INIT_STRUCT_static_all'
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:596:13: note: in expansion of macro 'unlikely'
+     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
+         |             ^~~~~~~~
+   sound/soc/samsung/aries_wm8994.c:524:34: warning: 'samsung_wm8994_of_match' defined but not used [-Wunused-const-variable=]
+     524 | static const struct of_device_id samsung_wm8994_of_match[] = {
+         |                                  ^~~~~~~~~~~~~~~~~~~~~~~
+--
+   kernel/trace/bpf_trace.c: In function '____bpf_trace_printk':
+   kernel/trace/bpf_trace.c:378:9: warning: function '____bpf_trace_printk' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+     378 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
+         |         ^~~
+   kernel/trace/bpf_trace.c: In function '____bpf_trace_vprintk':
+   kernel/trace/bpf_trace.c:434:9: warning: function '____bpf_trace_vprintk' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+     434 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
+         |         ^~~
+   kernel/trace/bpf_trace.c: In function '____bpf_seq_printf':
+   kernel/trace/bpf_trace.c:476:9: warning: function '____bpf_seq_printf' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+     476 |         seq_bprintf(m, fmt, data.bin_args);
+         |         ^~~~~~~~~~~
+   In file included from include/linux/array_size.h:5,
+                    from include/linux/kernel.h:16,
+                    from kernel/trace/bpf_trace.c:5:
+   include/linux/fortify-string.h: At top level:
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:598:18: note: in expansion of macro 'unlikely'
+     598 |         else if (unlikely(q_size != SIZE_MAX && q_size < size))
+         |                  ^~~~~~~~
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:596:13: note: in expansion of macro 'unlikely'
+     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
+         |             ^~~~~~~~
+--
+   In file included from include/linux/err.h:5,
+                    from drivers/regulator/pbias-regulator.c:17:
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:598:18: note: in expansion of macro 'unlikely'
+     598 |         else if (unlikely(q_size != SIZE_MAX && q_size < size))
+         |                  ^~~~~~~~
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:596:13: note: in expansion of macro 'unlikely'
+     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
+         |             ^~~~~~~~
+   drivers/regulator/pbias-regulator.c:136:34: warning: 'pbias_of_match' defined but not used [-Wunused-const-variable=]
+     136 | static const struct of_device_id pbias_of_match[] = {
+         |                                  ^~~~~~~~~~~~~~
+--
+   drivers/iommu/mtk_iommu_v1.c: In function 'mtk_iommu_v1_probe_finalize':
+   drivers/iommu/mtk_iommu_v1.c:512:35: warning: variable 'mtk_mapping' set but not used [-Wunused-but-set-variable]
+     512 |         struct dma_iommu_mapping *mtk_mapping;
+         |                                   ^~~~~~~~~~~
+   In file included from include/asm-generic/bug.h:5,
+                    from arch/x86/include/asm/bug.h:103,
+                    from include/linux/bug.h:5,
+                    from drivers/iommu/mtk_iommu_v1.c:10:
+   include/linux/fortify-string.h: At top level:
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:598:18: note: in expansion of macro 'unlikely'
+     598 |         else if (unlikely(q_size != SIZE_MAX && q_size < size))
+         |                  ^~~~~~~~
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:596:13: note: in expansion of macro 'unlikely'
+     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
+         |             ^~~~~~~~
+--
+   drivers/usb/renesas_usbhs/mod.c: In function 'usbhs_status_get_each_irq':
+   drivers/usb/renesas_usbhs/mod.c:195:13: warning: variable 'intenb0' set but not used [-Wunused-but-set-variable]
+     195 |         u16 intenb0, intenb1;
+         |             ^~~~~~~
+   In file included from include/linux/array_size.h:5,
+                    from include/linux/kernel.h:16,
+                    from include/linux/interrupt.h:6,
+                    from drivers/usb/renesas_usbhs/mod.c:9:
+   include/linux/fortify-string.h: At top level:
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:598:18: note: in expansion of macro 'unlikely'
+     598 |         else if (unlikely(q_size != SIZE_MAX && q_size < size))
+         |                  ^~~~~~~~
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:596:13: note: in expansion of macro 'unlikely'
+     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
+         |             ^~~~~~~~
+--
+   fs/nfsd/export.c: In function 'exp_rootfh':
+   fs/nfsd/export.c:1029:34: warning: variable 'inode' set but not used [-Wunused-but-set-variable]
+    1029 |         struct inode            *inode;
+         |                                  ^~~~~
+   In file included from include/linux/export.h:5,
+                    from include/linux/linkage.h:7,
+                    from arch/x86/include/asm/cache.h:5,
+                    from include/vdso/cache.h:5,
+                    from include/linux/cache.h:6,
+                    from include/linux/slab.h:15,
+                    from fs/nfsd/export.c:15:
+   include/linux/fortify-string.h: At top level:
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:598:18: note: in expansion of macro 'unlikely'
+     598 |         else if (unlikely(q_size != SIZE_MAX && q_size < size))
+         |                  ^~~~~~~~
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:596:13: note: in expansion of macro 'unlikely'
+     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
+         |             ^~~~~~~~
+--
+   In file included from include/linux/err.h:5,
+                    from include/linux/clk.h:12,
+                    from drivers/iio/adc/aspeed_adc.c:15:
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:598:18: note: in expansion of macro 'unlikely'
+     598 |         else if (unlikely(q_size != SIZE_MAX && q_size < size))
+         |                  ^~~~~~~~
+>> include/linux/compiler.h:27:33: warning: '______f' is static but declared in inline function 'fortify_memcpy_chk' which is not static
+      27 |                                 ______f = {                             \
+         |                                 ^~~~~~~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/fortify-string.h:596:13: note: in expansion of macro 'unlikely'
+     596 |         if (unlikely(p_size != SIZE_MAX && p_size < size))
+         |             ^~~~~~~~
+   drivers/iio/adc/aspeed_adc.c: In function 'aspeed_adc_probe':
+   drivers/iio/adc/aspeed_adc.c:493:65: warning: '%s' directive argument is null [-Wformat-overflow=]
+     493 |         snprintf(clk_parent_name, ARRAY_SIZE(clk_parent_name), "%s",
+         |                                                                 ^~
 ..
 
 
-vim +596 include/linux/fortify-string.h
+vim +27 include/linux/compiler.h
 
-   515	
-   516	/*
-   517	 * To make sure the compiler can enforce protection against buffer overflows,
-   518	 * memcpy(), memmove(), and memset() must not be used beyond individual
-   519	 * struct members. If you need to copy across multiple members, please use
-   520	 * struct_group() to create a named mirror of an anonymous struct union.
-   521	 * (e.g. see struct sk_buff.) Read overflow checking is currently only
-   522	 * done when a write overflow is also present, or when building with W=1.
-   523	 *
-   524	 * Mitigation coverage matrix
-   525	 *					Bounds checking at:
-   526	 *					+-------+-------+-------+-------+
-   527	 *					| Compile time  |   Run time    |
-   528	 * memcpy() argument sizes:		| write | read  | write | read  |
-   529	 *        dest     source   length      +-------+-------+-------+-------+
-   530	 * memcpy(known,   known,   constant)	|   y   |   y   |  n/a  |  n/a  |
-   531	 * memcpy(known,   unknown, constant)	|   y   |   n   |  n/a  |   V   |
-   532	 * memcpy(known,   known,   dynamic)	|   n   |   n   |   B   |   B   |
-   533	 * memcpy(known,   unknown, dynamic)	|   n   |   n   |   B   |   V   |
-   534	 * memcpy(unknown, known,   constant)	|   n   |   y   |   V   |  n/a  |
-   535	 * memcpy(unknown, unknown, constant)	|   n   |   n   |   V   |   V   |
-   536	 * memcpy(unknown, known,   dynamic)	|   n   |   n   |   V   |   B   |
-   537	 * memcpy(unknown, unknown, dynamic)	|   n   |   n   |   V   |   V   |
-   538	 *					+-------+-------+-------+-------+
-   539	 *
-   540	 * y = perform deterministic compile-time bounds checking
-   541	 * n = cannot perform deterministic compile-time bounds checking
-   542	 * n/a = no run-time bounds checking needed since compile-time deterministic
-   543	 * B = can perform run-time bounds checking (currently unimplemented)
-   544	 * V = vulnerable to run-time overflow (will need refactoring to solve)
-   545	 *
-   546	 */
-   547	__FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
-   548						 const size_t p_size,
-   549						 const size_t q_size,
-   550						 const size_t p_size_field,
-   551						 const size_t q_size_field,
-   552						 const u8 func)
-   553	{
-   554		if (__builtin_constant_p(size)) {
-   555			/*
-   556			 * Length argument is a constant expression, so we
-   557			 * can perform compile-time bounds checking where
-   558			 * buffer sizes are also known at compile time.
-   559			 */
-   560	
-   561			/* Error when size is larger than enclosing struct. */
-   562			if (__compiletime_lessthan(p_size_field, p_size) &&
-   563			    __compiletime_lessthan(p_size, size))
-   564				__write_overflow();
-   565			if (__compiletime_lessthan(q_size_field, q_size) &&
-   566			    __compiletime_lessthan(q_size, size))
-   567				__read_overflow2();
-   568	
-   569			/* Warn when write size argument larger than dest field. */
-   570			if (__compiletime_lessthan(p_size_field, size))
-   571				__write_overflow_field(p_size_field, size);
-   572			/*
-   573			 * Warn for source field over-read when building with W=1
-   574			 * or when an over-write happened, so both can be fixed at
-   575			 * the same time.
-   576			 */
-   577			if ((IS_ENABLED(KBUILD_EXTRA_WARN1) ||
-   578			     __compiletime_lessthan(p_size_field, size)) &&
-   579			    __compiletime_lessthan(q_size_field, size))
-   580				__read_overflow2_field(q_size_field, size);
-   581		}
-   582		/*
-   583		 * At this point, length argument may not be a constant expression,
-   584		 * so run-time bounds checking can be done where buffer sizes are
-   585		 * known. (This is not an "else" because the above checks may only
-   586		 * be compile-time warnings, and we want to still warn for run-time
-   587		 * overflows.)
-   588		 */
-   589	
-   590		/*
-   591		 * Always stop accesses beyond the struct that contains the
-   592		 * field, when the buffer's remaining size is known.
-   593		 * (The SIZE_MAX test is to optimize away checks where the buffer
-   594		 * lengths are unknown.)
-   595		 */
- > 596		if (unlikely(p_size != SIZE_MAX && p_size < size))
-   597			fortify_panic(func, FORTIFY_WRITE, p_size, size, true);
-   598		else if (unlikely(q_size != SIZE_MAX && q_size < size))
-   599			fortify_panic(func, FORTIFY_READ, p_size, size, true);
-   600	
-   601		/*
-   602		 * Warn when writing beyond destination field size.
-   603		 *
-   604		 * Note the implementation of __builtin_*object_size() behaves
-   605		 * like sizeof() when not directly referencing a flexible
-   606		 * array member, which means there will be many bounds checks
-   607		 * that will appear at run-time, without a way for them to be
-   608		 * detected at compile-time (as can be done when the destination
-   609		 * is specifically the flexible array member).
-   610		 * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101832
-   611		 */
-   612		if (p_size_field != SIZE_MAX &&
-   613		    p_size != p_size_field && p_size_field < size)
-   614			return true;
-   615	
-   616		return false;
-   617	}
-   618	
+1f0d69a9fc815d Steven Rostedt          2008-11-12  21  
+d45ae1f7041ac5 Steven Rostedt (VMware  2017-01-17  22) #define __branch_check__(x, expect, is_constant) ({			\
+2026d35741f2c3 Mikulas Patocka         2018-05-30  23  			long ______r;					\
+134e6a034cb004 Steven Rostedt (VMware  2017-01-19  24) 			static struct ftrace_likely_data		\
+e04462fb82f8dd Miguel Ojeda            2018-09-03  25  				__aligned(4)				\
+33def8498fdde1 Joe Perches             2020-10-21  26  				__section("_ftrace_annotated_branch")	\
+1f0d69a9fc815d Steven Rostedt          2008-11-12 @27  				______f = {				\
+134e6a034cb004 Steven Rostedt (VMware  2017-01-19  28) 				.data.func = __func__,			\
+134e6a034cb004 Steven Rostedt (VMware  2017-01-19  29) 				.data.file = __FILE__,			\
+134e6a034cb004 Steven Rostedt (VMware  2017-01-19  30) 				.data.line = __LINE__,			\
+1f0d69a9fc815d Steven Rostedt          2008-11-12  31  			};						\
+d45ae1f7041ac5 Steven Rostedt (VMware  2017-01-17  32) 			______r = __builtin_expect(!!(x), expect);	\
+d45ae1f7041ac5 Steven Rostedt (VMware  2017-01-17  33) 			ftrace_likely_update(&______f, ______r,		\
+d45ae1f7041ac5 Steven Rostedt (VMware  2017-01-17  34) 					     expect, is_constant);	\
+1f0d69a9fc815d Steven Rostedt          2008-11-12  35  			______r;					\
+1f0d69a9fc815d Steven Rostedt          2008-11-12  36  		})
+1f0d69a9fc815d Steven Rostedt          2008-11-12  37  
 
 -- 
 0-DAY CI Kernel Test Service
