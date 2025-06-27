@@ -1,69 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA5F20B80B;
-	Fri, 27 Jun 2025 19:40:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43FA221DB9;
+	Fri, 27 Jun 2025 20:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751053258; cv=none; b=joquvW2L29WIllFYF2gR5FDpz2CzIqvCV9vPIfNitCFa/8M5f0lI3LaJ2+A8ARomRVQqjfi1N31+533ABB02r8dCskFCYlPpQQdxrEoAFBya+QM40r3fgThiEbxxdABfrHBhPj5GV82B7/bjctqSCRqz67rV4GEQkhN3Cm/5jq0=
+	t=1751056132; cv=none; b=Axh+KJ/3kjrP0J71AKUdbVYAi/o6kcmUvNjYsZjNTc4G4OITHSmQcfwVQVRHGmydvK6GCy64CKwPh0pKfvwagpz7AssuSuM7gDUb4rBKikAj1qDvx8GnM/TQKDbg0dehxCTj+ttI8gac0OmzqStuCWrwe+Sf4o7FtxhDbo7pvdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751053258; c=relaxed/simple;
-	bh=6MkKhuTr/kzO2bvG/B9XyStdoHcYnsGwWcEHmKxSoeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sik7FRI/SzJ9R+TKOKhlfZDPt4YSO2cvdQ3kn2elZFGz7+Yi96E3gJycW7UUrbkPk1aiBCwWGY2Qf9YyXe1L1330npI8dvi59UySEYgHsW6a3sbiUh9mId7MJkyhnoOtVS0aKQ8sZug/FmBKOeXBYNbfl2Ma22j9tunEZX9hAN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XGoRR75N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751056132; c=relaxed/simple;
+	bh=f33g7AQTIoumIR81yP3oqisT+p6xQ/smz6jb75JSd7E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=edN1CB8A1jMu6BpmH2GzVKMbowLh3y02fQ1F4qtenM+zGssSbMCC/CnPPrlmufN/Pto7QoOi68CeLv/sU4/h8Tqt36hBGB6nJkDmEGXKfUJfDSYddGdC18QfAej5cJpNQKxDKIoDJLLmtPWlI6BUd5C0dtMtaQjPww4rERra8V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kjwcY67p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XGoRR75N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA796C4CEE3;
-	Fri, 27 Jun 2025 19:40:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kjwcY67p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD97C4CEE3;
+	Fri, 27 Jun 2025 20:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751053258;
-	bh=6MkKhuTr/kzO2bvG/B9XyStdoHcYnsGwWcEHmKxSoeU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XGoRR75NS9RuP6hhgBtMryU4oxmAfnWwpHznQWDniDus/HDNxdTTU3mSUHzS2z+Wm
-	 1nfMONZLmeiC4AmA+2brm+MKcNacPxxslUvnBK22GLhrDC3vI2io22zSRog5JCvS22
-	 L2YWxhpUeuneypndf2P80Qfq7LSKgiUTlK1mbGGqg7GECu8aoVOMCSeGv8PSYdQu4N
-	 Yjf/LCLnUUdENrI6yog82SP22gTdCR+UvZSvq+b5HcUfDypUOzBJgfFGkMQyuL0JOm
-	 cMc90lZLVsNLyYj9w7XEbyxmK9yJyHILh1Bf6gkGpg8DJqHRrw2xyKqndSstsnYRIB
-	 u7nmTIpNaKqsA==
-Date: Fri, 27 Jun 2025 14:40:57 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Casey Connolly <casey.connolly@linaro.org>
+	s=k20201202; t=1751056132;
+	bh=f33g7AQTIoumIR81yP3oqisT+p6xQ/smz6jb75JSd7E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kjwcY67phiXKdjFIgm+NBjQUL5EzYzn69zzAq8DaOFO6xB1xWGqOguqzzLJXWbxOF
+	 6oGMVHGZjLNqjTRwl8Q1hM0FcEJzM4ehPSR0JHFUbRPDl+6UduRZIcr5vHb3VQTCGO
+	 khZj6jaWnrTc5avIeF/HL2oRniIVoFIaf3EZnlwxWIChJx9ZWSFlNmqwuxQKvj1B1n
+	 xxDemS/rVxjpC1BoaY9y9v3rYyfaAYwTM9jc6RnZyu2qero0qSKiJl3wDi1M/pIjgP
+	 g14p76cvEU9CtAQkoQ89R5nApyPAIkXgkRvyNqqwVmliAwYqY9pWwAhXotV2uAee7Q
+	 b1nmHLg5JBGOQ==
+From: Kees Cook <kees@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	linux-hardening@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	devicetree@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>,
+	nvdimm@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 01/11] dt-bindings: power: supply: qcom,pmi89980-charger:
- add pm8150b and 7250b
-Message-ID: <175105325638.4057812.1772308849088053765.robh@kernel.org>
-References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
- <20250619-smb2-smb5-support-v1-1-ac5dec51b6e1@linaro.org>
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5][for-next/hardening] acpi: nfit: intel: avoid multiple -Wflex-array-member-not-at-end warnings
+Date: Fri, 27 Jun 2025 13:28:15 -0700
+Message-Id: <175105609270.2134124.11937541280593665883.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <aF7pF4kej8VQapyR@kspp>
+References: <aF7pF4kej8VQapyR@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619-smb2-smb5-support-v1-1-ac5dec51b6e1@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-
-On Thu, 19 Jun 2025 16:55:09 +0200, Casey Connolly wrote:
-> Add compatible strings for these two PMICs which use the SMB5 generation
-> of charger.
+On Fri, 27 Jun 2025 12:55:19 -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
-> ---
->  .../devicetree/bindings/power/supply/qcom,pmi8998-charger.yaml          | 2 ++
->  1 file changed, 2 insertions(+)
+> Use the new TRAILING_OVERLAP() helper to fix a dozen instances of
+> the following type of warning:
 > 
+> drivers/acpi/nfit/intel.c:692:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> [...]
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Thanks for the revs and reviews! :) Since this depends on
+TRAILING_OVERLAP, I've snagged it for the hardening tree.
+
+Applied to for-next/hardening, thanks!
+
+[1/1] acpi: nfit: intel: avoid multiple -Wflex-array-member-not-at-end warnings
+      https://git.kernel.org/kees/c/5e54510a9389
+
+Take care,
+
+-- 
+Kees Cook
 
