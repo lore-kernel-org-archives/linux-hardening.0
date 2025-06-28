@@ -1,44 +1,47 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1967F17D2
-	for <linux-hardening@vger.kernel.org>; Sat, 28 Jun 2025 01:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDF51799F;
+	Sat, 28 Jun 2025 12:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751075560; cv=none; b=sDtYTHyBLIpgNRwOZrnsI0BV7Al8YaS9DrhWt6x6MqMMPRs/HCiB9cB+VGkVyRI1XBLmKVM0NkOHButthdPeG/9nC+dfIOUPrsuDRHpYwiFZpNR13BixEHaE3zxhiBDqiL1R7UDxdl06E7rO4H/Aq4wxuWZpm4QtDf7jQBdzu64=
+	t=1751112338; cv=none; b=aTuTSMSd6MjmmjyLWQBzU9QacMTGUHU8eR21fOLEr7Nd+eocVZjBuNx322WGAoAEcM0/izNKrna4DQfi/z5uZmkOTPNv6Kv2GkJzoDLKWnKNa2LmSvrlTIChAwLcMmY0JzyN0TTGG9wThgzr9IYpV8AeFZTWqtZjj+XOdeciBnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751075560; c=relaxed/simple;
-	bh=NffUPSkbj1gfeu1piPJZyezUcJfgslp/p6HerefCQtk=;
+	s=arc-20240116; t=1751112338; c=relaxed/simple;
+	bh=DttSR+loL/+XwutcRtElHNrAyAfQKYpKcvL9oh1brpk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OF5HmRJ2+fZq9Q6+NJj9jjKQW+Zt5zClw6EEOs5+PPnJFD9JliUGFfPM9hBrAt92Gez14fSjf4gufltIeui44IS+UKF/rk35p/zNDAjy+IgyUwYUrEus7JuiW6ogkQnp7hCtkZDF3BvJQZfvIVoqAtOOGysZCvI+q1mShsRdn0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from macsyma.thunk.org ([70.33.172.117])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 55S1q3WA024139
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 21:52:03 -0400
-Received: by macsyma.thunk.org (Postfix, from userid 15806)
-	id 1736E340663; Fri, 27 Jun 2025 21:52:03 -0400 (EDT)
-Date: Fri, 27 Jun 2025 21:52:03 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Abhinav Saxena <xandfury@gmail.com>
-Cc: Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-        Bill Wendling <morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, llvm@lists.linux.dev,
-        selinux@vger.kernel.org, kees@kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/2] Possible TTY privilege escalation in TIOCSTI ioctl
-Message-ID: <20250628015203.GA4253@mit.edu>
-References: <20250622-toicsti-bug-v1-0-f374373b04b2@gmail.com>
- <87y0tcu23d.fsf@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UjYuzLq66IMxzxsVV2Ppcgemc99VojYg8A0c4ZUoowFxHDB4ur1oS/3wTFEBBpZQ4tKSfKXLPBFOUL7m60gPuC3kd2f8ciWdBMIkvApR/g6cMUzZge+uWNJO3anfnUnN01b6csex9elTYBMZnv02rPDqGl2qYjBW8yVcsL7D27A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlBSfVn4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlBSfVn4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D23FCC4CEEA;
+	Sat, 28 Jun 2025 12:05:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751112335;
+	bh=DttSR+loL/+XwutcRtElHNrAyAfQKYpKcvL9oh1brpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jlBSfVn4ePgI4Y+1FPzDgHJ46C9P1SILP9iSnzYGnpProm9sYoW/Yfz0dZEYBNbLG
+	 7xgr7rsmMVS1iP7E41jLMCefzSJ3nU5xYHvsMiVAIDmXlJ6IB9hwW22YNfTPHErpDP
+	 a32lkyHkTYoUfFxN8z8ahdTMvan7bAzFaCBh/CKxLsRX2kMdzQc22oBpkWFauji0SX
+	 Pk33L/NS4Euj4O3DueYOGBFQrudskK+xJEIFuu31f0F0J1pLc3x+o1KNtlEySNB2FN
+	 xyc6ouX96CcQfC+WsPLz3B4jZTht0jN6ZaEoZ0TLzlJkJ2T00KQGK+JNVPEgUUlfdt
+	 AJ/oKPUIY/nug==
+Date: Sat, 28 Jun 2025 14:05:31 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Leo Wang <leo.jt.wang@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, bruce.jy.hung@fii-foxconn.com, george.kw.lee@fii-foxconn.com, 
+	Leo Wang <leo.jt.wang@fii-foxconn.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: arm: aspeed: add Meta Clemente board
+Message-ID: <ojyrhi2stm7q6kcd7yl3je36cccbzypsepmc4fvl7venynyu5g@52rs6bntmnwl>
+References: <20250627-add-support-for-meta-clemente-bmc-v4-0-ce7ff23460c4@fii-foxconn.com>
+ <20250627-add-support-for-meta-clemente-bmc-v4-1-ce7ff23460c4@fii-foxconn.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,36 +50,17 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87y0tcu23d.fsf@gmail.com>
+In-Reply-To: <20250627-add-support-for-meta-clemente-bmc-v4-1-ce7ff23460c4@fii-foxconn.com>
 
-On Fri, Jun 27, 2025 at 06:38:42PM -0600, Abhinav Saxena wrote:
-> >
-> > As noted in previous discussion, while CONFIG_LEGACY_TIOCSTI can restrict
-> > TIOCSTI usage, it is enabled by default in most distributions. Even when
-> > CONFIG_LEGACY_TIOCSTI=n, processes with CAP_SYS_ADMIN can still use TIOCSTI
-> > according to the Kconfig documentation.
-> >
-> > Additionally, CONFIG_LEGACY_TIOCSTI controls the default value for the
-> > dev.tty.legacy_tiocsti sysctl, which remains runtime-configurable. This
-> > means the described attack vector could work on systems even with
-> > CONFIG_LEGACY_TIOCSTI=n, particularly on Ubuntu 24.04 where it’s “restricted”
-> > but still functional.
+On Fri, Jun 27, 2025 at 10:59:02AM +0800, Leo Wang wrote:
+> From: Leo Wang <leo.jt.wang@gmail.com>
+> 
+> Document the new compatibles used on Meta Clemente.
+> 
+> Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
 
-What is the threat scenario that you are concerned about?  The concern
-with TIOSTI is that it is a privilege escalation mechanism.  But you
-need to have root (well, CAP_SYS_ADMIN) to either enable the
-dev.tty.legacy_tiocsti sysctl, or to use TIOCSTI.  So what's the
-privilege escalation that you're concerned about?
+Checkpatch warnings.
 
-I could imagine some fairly esoteric ways that this might be a
-problem, but if it's not a common case concern, maybe using some kind
-of LSM to more forcibly disable TIOCSTI is sufficient?
+Best regards,
+Krzysztof
 
-Yes, we could imagine ways in which it could be permanently disabled
-(perhaps via a boot command line option) such that it can't be
-re-enabled without rebooting.  But is the extra complexity worth it,
-especially when there is always the LSM solution for the
-super-paranoid sysadmins?
-
-							- Ted
