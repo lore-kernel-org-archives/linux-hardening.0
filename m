@@ -1,330 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEA01E1DF2;
-	Tue,  1 Jul 2025 07:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FCE275AFF;
+	Tue,  1 Jul 2025 11:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751353909; cv=none; b=u9Ff64akl79SLs2+IH75RNBruxeMGDMFTUS4O/VQ4L4Qb+iH9NZ2Nwn2AdsjmK2rDrbual8292pxPHkGYmaE7H8RG2xuP46l4393tdV/x9Ib67gWBpk+n9K8cZLzSdfsFMMfpU4VzYakSVX+j7ozSM8m9VoXkc58oExDE0aJfyw=
+	t=1751370487; cv=none; b=q58iSdYDDbyIMD8fNXblHV9uEp+N7xJzijQ50TR81rcTqtqsXv4ZJmEYa+rLgl2/fu7bw7nshh44uNhvW/PoKSpW84+ebaxoYjxOj5/tutfxIgV1akuWokW7XcWq8zmsjsJbWtXhCO8T4KwnP654BSp3fuwDFzmabpEa7WCvOUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751353909; c=relaxed/simple;
-	bh=D5KZQfmlFp+zcIH+996tl0vUf6ORHXerO74OqdBTtwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fh++IhmwG/aSBlexBFovpZDOpr4JB6z2gK6eeyP8ie/fsPX6+K/gIajsl9PK6vdp5cgDQziJ/cz/MMmRSI4I4C0msP1IGuPZtvgcrGsFliMJJZzi5z08c15fYb7H1MEVOfCbQkIlriOv193mtbdmWXvnuUYDVlqbxL9FYflDtrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SwCH+AA7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751370487; c=relaxed/simple;
+	bh=mSARHChrsSkZqv4FL5ywNNlM+mfq9RkAadWkjMMswZY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eaFXdoRa9RxudpZLK6Az5uOsrvowsqD5Enak/E6SBF5YTOO0Cu3BCPeM3UtNTVFS9ETAedsPP7zkgU5KzgMWrT1UAouwToZxTO31bisvnykUXit3l7zJHukww2C0lmowSpBAi+G+QznIXEyrr5XyRjsBPWmfabAb3ieUXCCINuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MPBgrhp7; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SwCH+AA7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7350C4CEEB;
-	Tue,  1 Jul 2025 07:11:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751353909;
-	bh=D5KZQfmlFp+zcIH+996tl0vUf6ORHXerO74OqdBTtwE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SwCH+AA7/l5FEOGuLxWyofigen/e6Er6gsk6ktjmq+xU1gtu3uXSfsdumFyn8+ZBy
-	 6z5aEs+mRsFbnxFEy/9wXuGoMOvsPTIlm61yhTmEINi1zV+tscGF5B5OCDd8+nVpje
-	 JHIjutnGFn8w44qA68bsaMSybKdjsfbSxr3pu+k0EB1cQiXTXEOfPPMis4MYVPV178
-	 UX6kOjUJOtx3c3pCLGFGV/jZXCZ5OtLczmaijxElWpwT5F9Bn0UIDWKZ0YwusM+Kwk
-	 Bcq8cRveXW1O7nNVI3ANf2Q/yv+w5ZtetonuSKgQgAkRicgFL2Q7Ny2/E8q7t1HMge
-	 42Yht9MFIbNjw==
-Date: Tue, 1 Jul 2025 09:11:46 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Luo Jie <quic_luoj@quicinc.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Lei Wei <quic_leiwei@quicinc.com>, Suruchi Agarwal <quic_suruchia@quicinc.com>, 
-	Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com
-Subject: Re: [PATCH net-next v5 01/14] dt-bindings: net: Add PPE for Qualcomm
- IPQ9574 SoC
-Message-ID: <20250701-mottled-clever-walrus-f7dcd3@krzk-bin>
-References: <20250626-qcom_ipq_ppe-v5-0-95bdc6b8f6ff@quicinc.com>
- <20250626-qcom_ipq_ppe-v5-1-95bdc6b8f6ff@quicinc.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MPBgrhp7"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5618lCvZ026544;
+	Tue, 1 Jul 2025 11:47:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rCGpL5WtLCGHD7lGDK/ISop6wOAMqbvqcoNsJwiihW0=; b=MPBgrhp7EkFMuk/i
+	WvA1LuBdxuKhUs5pH0lkPCj+KvzspP8lCVgVeCn0zUo4mgxPfhWYjB9a3U7PAd56
+	Bo1VuKvFgqBOIFWnInNfxIg9/YFOrK8a8V1iiW/dpwciJPdpf6EoiuFPCsNQUZOn
+	/DogWUZySNf+K7FVN0tz7KuTX0fauaLt2fi12l5J7gDWa4hnxeDHTxqjliJ+lBK6
+	gIWHrLPmxm7N762zm9lPUDEOhBf920q8jRjVqHcsNhmyA584VA8+cbuEy+O2idMw
+	Fp7Urk6tyqY+yb+lkX5ZvVWM0qTfgYy6pPfqSzvDt7yT3Ss2LEKMi7BSBiQHBpsT
+	p1HHtw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j9pcrm2p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Jul 2025 11:47:54 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 561BlrvZ020980
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 1 Jul 2025 11:47:53 GMT
+Received: from [10.217.222.28] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 1 Jul
+ 2025 04:47:47 -0700
+Message-ID: <2455f20c-130c-4f27-9cf4-6411e485b845@quicinc.com>
+Date: Tue, 1 Jul 2025 17:17:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250626-qcom_ipq_ppe-v5-1-95bdc6b8f6ff@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 08/12] firmware: qcom: tzmem: export shm_bridge
+ create/delete
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
+        Jens Wiklander
+	<jens.wiklander@linaro.org>,
+        Sumit Garg <sumit.garg@kernel.org>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Apurupa Pattapu
+	<quic_apurupa@quicinc.com>,
+        Kees Cook <kees@kernel.org>,
+        "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+CC: Harshal Dev <quic_hdev@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <op-tee@lists.trustedfirmware.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>, <linux-doc@vger.kernel.org>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>
+References: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-0-024e3221b0b9@oss.qualcomm.com>
+ <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-8-024e3221b0b9@oss.qualcomm.com>
+Content-Language: en-US
+From: Kuldeep Singh <quic_kuldsing@quicinc.com>
+In-Reply-To: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-8-024e3221b0b9@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ztKxMaTHEsgXeingGXCKylzfZjaG2-ty
+X-Proofpoint-ORIG-GUID: ztKxMaTHEsgXeingGXCKylzfZjaG2-ty
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA3MyBTYWx0ZWRfX74DO11z9dMYF
+ 62b2TucWlwr7aP2wLjZ5GJ8VxyRAYqmoReJedk6CNfnGBZJatEM1OJrxmydL4DRvLfDVKk0HSaA
+ glGZa43wXvVkw2RNorrrDsT4ohoJw23givoio+J4JT9e/Hl2q/3PXbKXE+zYKGWyQ4nIZf/gX/x
+ 0ygEgUAUl4FzOcg4AoT3/bKo4Ebv9c//GZKuU6wOBpOmIJ8xM3KNdFtLFJeJVYgtJ/wQHRhXx5t
+ 8smIEsHc/qD5i5mML4oYknS7mIIQko5H7+L0qHY+ISOyaPPxqcBIb2UT8LymslIwxMEQzt9YzTg
+ n4t9AjjbkwFN7EiF6/75yhn9k5v8CoFMGTOfN3Gk1JPh9kXi6WPxG7qRXFFayej7yueJMXnlc23
+ +VdTOVUtCt62g4uAKYeR/hiM109i/duCv/ogYnnAOajxoeL8VSKAQRXcAvhJEhkPTRXvgCNO
+X-Authority-Analysis: v=2.4 cv=QMFoRhLL c=1 sm=1 tr=0 ts=6863caea cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=KKAkSRfTAAAA:8
+ a=EUspDBNiAAAA:8 a=T2KzT_qPCcxtbzpLTyEA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
+ clxscore=1011 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507010073
 
-On Thu, Jun 26, 2025 at 10:31:00PM +0800, Luo Jie wrote:
-> +      resets:
-> +        maxItems: 1
-> +        description: EDMA reset from NSS clock controller
-> +
-> +      interrupts:
-> +        minItems: 65
-> +        maxItems: 65
-> +
-> +      interrupt-names:
-> +        minItems: 65
-> +        maxItems: 65
-> +        description:
-> +          Interrupts "txcmpl_[0-31]" are the Ethernet DMA TX completion ring interrupts.
-> +          Interrupts "rxfill_[0-7]" are the Ethernet DMA RX fill ring interrupts.
-> +          Interrupts "rxdesc_[0-23]" are the Ethernet DMA RX Descriptor ring interrupts.
-> +          Interrupt "misc" is the Ethernet DMA miscellaneous error interrupt.
-> +
-> +    required:
-> +      - clocks
-> +      - clock-names
-> +      - resets
-> +      - interrupts
-> +      - interrupt-names
-> +
-> +patternProperties:
-> +  "^(ethernet-)?port@[0-9a-f]+$":
 
-Only one port? What are you switching here?
+On 5/27/2025 12:26 PM, Amirreza Zarrabi wrote:
+> Anyone with access to contiguous physical memory should be able to
+> share memory with QTEE using shm_bridge.
+> 
+> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+> ---
+>  drivers/firmware/qcom/qcom_tzmem.c       | 57 +++++++++++++++++++++++++-------
+>  include/linux/firmware/qcom/qcom_tzmem.h | 15 +++++++++
+>  2 files changed, 60 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/firmware/qcom/qcom_tzmem.c b/drivers/firmware/qcom/qcom_tzmem.c
+> index 4fe333fd2f07..e9e4f06924ae 100644
+> --- a/drivers/firmware/qcom/qcom_tzmem.c
+> +++ b/drivers/firmware/qcom/qcom_tzmem.c
+> @@ -108,25 +108,61 @@ static int qcom_tzmem_init(void)
+>  	return 0;
+>  }
+>  
+> -static int qcom_tzmem_init_area(struct qcom_tzmem_area *area)
+> +/**
+> + * qcom_tzmem_shm_bridge_create() - Create a SHM bridge.
+> + * @paddr: Physical address of the memory to share.
+> + * @size: Size of the memory to share.
+> + * @handle: Handle to the SHM bridge.
+> + *
+> + * On platforms that support SHM bridge, this function creates a SHM bridge
+> + * for the given memory region with QTEE. The handle returned by this function
+> + * must be passed to qcom_tzmem_shm_bridge_delete() to free the SHM bridge.
+> + *
+> + * Return: On success, returns 0; on failure, returns < 0.
+> + */
+> +int qcom_tzmem_shm_bridge_create(phys_addr_t paddr, size_t size, u64 *handle)
+>  {
+>  	u64 pfn_and_ns_perm, ipfn_and_s_perm, size_and_flags;
+> -	int ret;
+>  
+>  	if (!qcom_tzmem_using_shm_bridge)
+>  		return 0;
+>  
+> -	pfn_and_ns_perm = (u64)area->paddr | QCOM_SCM_PERM_RW;
+> -	ipfn_and_s_perm = (u64)area->paddr | QCOM_SCM_PERM_RW;
+> -	size_and_flags = area->size | (1 << QCOM_SHM_BRIDGE_NUM_VM_SHIFT);
+> +	pfn_and_ns_perm = paddr | QCOM_SCM_PERM_RW;
+> +	ipfn_and_s_perm = paddr | QCOM_SCM_PERM_RW;
+> +	size_and_flags = size | (1 << QCOM_SHM_BRIDGE_NUM_VM_SHIFT);
+> +	if (qcom_scm_shm_bridge_create(pfn_and_ns_perm, ipfn_and_s_perm,
+> +				       size_and_flags, QCOM_SCM_VMID_HLOS,
+> +				       handle))
 
-Anyway, ^ethernet-port..... is preferred over port.
+Can we add a debug log here to ease debugging in future?
+Something like this can also work.
 
-But other problem is that it does not match referenced schema at all and
-nothing in commit msg explains why this appered. 1.5 years of
-development of this and some significant, unexpected and not correct
-changes.
+pr_err("Shm bridge creation failed, ret: %d, NS PA|Perm: 0x%llx,
+size|flags: 0x%llx\n", ret, pfn_and_ns_perm_flags, size_and_flags);
 
-> +    unevaluatedProperties: false
-> +    $ref: ethernet-switch-port.yaml#
+> +		return -EINVAL;
 > +
-> +    properties:
-> +      clocks:
-> +        items:
-> +          - description: Port MAC clock from NSS clock controller
-> +          - description: Port RX clock from NSS clock controller
-> +          - description: Port TX clock from NSS clock controller
-> +
-> +      clock-names:
-> +        items:
-> +          - const: mac
-> +          - const: rx
-> +          - const: tx
-> +
-> +      resets:
-> +        items:
-> +          - description: Port MAC reset from NSS clock controller
-> +          - description: Port RX reset from NSS clock controller
-> +          - description: Port TX reset from NSS clock controller
-> +
-> +      reset-names:
-> +        items:
-> +          - const: mac
-> +          - const: rx
-> +          - const: tx
-> +
-> +    required:
-> +      - reg
-> +      - clocks
-> +      - clock-names
-> +      - resets
-> +      - reset-names
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - interconnects
-> +  - interconnect-names
-> +  - ethernet-dma
-> +
-> +allOf:
-> +  - $ref: ethernet-switch.yaml
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,ipq9574-gcc.h>
-> +    #include <dt-bindings/clock/qcom,ipq9574-nsscc.h>
-> +    #include <dt-bindings/interconnect/qcom,ipq9574.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/reset/qcom,ipq9574-nsscc.h>
-> +
-> +    ethernet-switch@3a000000 {
-> +        compatible = "qcom,ipq9574-ppe";
-> +        reg = <0x3a000000 0xbef800>;
-> +        clocks = <&nsscc NSS_CC_PPE_SWITCH_CLK>,
-> +                 <&nsscc NSS_CC_PPE_SWITCH_CFG_CLK>,
-> +                 <&nsscc NSS_CC_PPE_SWITCH_IPE_CLK>,
-> +                 <&nsscc NSS_CC_PPE_SWITCH_BTQ_CLK>;
-> +        clock-names = "ppe",
-> +                      "apb",
-> +                      "ipe",
-> +                      "btq";
-> +        resets = <&nsscc PPE_FULL_RESET>;
-> +        interrupts = <GIC_SPI 498 IRQ_TYPE_LEVEL_HIGH>;
-> +        interconnects = <&nsscc MASTER_NSSNOC_PPE &nsscc SLAVE_NSSNOC_PPE>,
-> +                        <&nsscc MASTER_NSSNOC_PPE_CFG &nsscc SLAVE_NSSNOC_PPE_CFG>,
-> +                        <&gcc MASTER_NSSNOC_QOSGEN_REF &gcc SLAVE_NSSNOC_QOSGEN_REF>,
-> +                        <&gcc MASTER_NSSNOC_TIMEOUT_REF &gcc SLAVE_NSSNOC_TIMEOUT_REF>,
-> +                        <&gcc MASTER_MEM_NOC_NSSNOC &gcc SLAVE_MEM_NOC_NSSNOC>,
-> +                        <&gcc MASTER_NSSNOC_MEMNOC &gcc SLAVE_NSSNOC_MEMNOC>,
-> +                        <&gcc MASTER_NSSNOC_MEM_NOC_1 &gcc SLAVE_NSSNOC_MEM_NOC_1>;
-> +        interconnect-names = "ppe",
-> +                             "ppe_cfg",
-> +                             "qos_gen",
-> +                             "timeout_ref",
-> +                             "nssnoc_memnoc",
-> +                             "memnoc_nssnoc",
-> +                             "memnoc_nssnoc_1";
-> +
-> +        ethernet-dma {
-> +            clocks = <&nsscc NSS_CC_PPE_EDMA_CLK>,
-> +                     <&nsscc NSS_CC_PPE_EDMA_CFG_CLK>;
-> +            clock-names = "sys",
-> +                          "apb";
-> +            resets = <&nsscc EDMA_HW_RESET>;
-> +            interrupts = <GIC_SPI 363 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 364 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 365 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 366 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 367 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 368 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 369 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 370 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 371 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 372 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 376 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 377 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 378 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 380 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 381 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 382 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 383 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 384 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 505 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 504 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 503 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 502 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 501 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 500 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 362 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 346 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 347 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 348 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 349 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 350 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 351 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 352 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 499 IRQ_TYPE_LEVEL_HIGH>;
-> +            interrupt-names = "txcmpl_0",
-> +                              "txcmpl_1",
-> +                              "txcmpl_2",
-> +                              "txcmpl_3",
-> +                              "txcmpl_4",
-> +                              "txcmpl_5",
-> +                              "txcmpl_6",
-> +                              "txcmpl_7",
-> +                              "txcmpl_8",
-> +                              "txcmpl_9",
-> +                              "txcmpl_10",
-> +                              "txcmpl_11",
-> +                              "txcmpl_12",
-> +                              "txcmpl_13",
-> +                              "txcmpl_14",
-> +                              "txcmpl_15",
-> +                              "txcmpl_16",
-> +                              "txcmpl_17",
-> +                              "txcmpl_18",
-> +                              "txcmpl_19",
-> +                              "txcmpl_20",
-> +                              "txcmpl_21",
-> +                              "txcmpl_22",
-> +                              "txcmpl_23",
-> +                              "txcmpl_24",
-> +                              "txcmpl_25",
-> +                              "txcmpl_26",
-> +                              "txcmpl_27",
-> +                              "txcmpl_28",
-> +                              "txcmpl_29",
-> +                              "txcmpl_30",
-> +                              "txcmpl_31",
-> +                              "rxfill_0",
-> +                              "rxfill_1",
-> +                              "rxfill_2",
-> +                              "rxfill_3",
-> +                              "rxfill_4",
-> +                              "rxfill_5",
-> +                              "rxfill_6",
-> +                              "rxfill_7",
-> +                              "rxdesc_0",
-> +                              "rxdesc_1",
-> +                              "rxdesc_2",
-> +                              "rxdesc_3",
-> +                              "rxdesc_4",
-> +                              "rxdesc_5",
-> +                              "rxdesc_6",
-> +                              "rxdesc_7",
-> +                              "rxdesc_8",
-> +                              "rxdesc_9",
-> +                              "rxdesc_10",
-> +                              "rxdesc_11",
-> +                              "rxdesc_12",
-> +                              "rxdesc_13",
-> +                              "rxdesc_14",
-> +                              "rxdesc_15",
-> +                              "rxdesc_16",
-> +                              "rxdesc_17",
-> +                              "rxdesc_18",
-> +                              "rxdesc_19",
-> +                              "rxdesc_20",
-> +                              "rxdesc_21",
-> +                              "rxdesc_22",
-> +                              "rxdesc_23",
-> +                              "misc";
-> +        };
-> +
-> +        ethernet-ports {
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_tzmem_shm_bridge_create);
 
-Look at your binding, not what it said...
-
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            port@1 {
-
-Best regards,
-Krzysztof
+-- 
+Regards
+Kuldeep
 
