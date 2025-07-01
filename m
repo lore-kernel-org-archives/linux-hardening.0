@@ -1,143 +1,181 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6487E27877F
-	for <linux-hardening@vger.kernel.org>; Tue,  1 Jul 2025 14:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A92279DA6
+	for <linux-hardening@vger.kernel.org>; Tue,  1 Jul 2025 15:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751381760; cv=none; b=Q/PUMlHyeRamB9NtJr6ZUxHQp3SxUCo9EZ9PhaY6s7OH67hi1815657MbAGq/sJ9d3WFhi24y9NQ/qsSStaAHMOuPUWYxaQzOrw06SsoQlU/65vQyl0N7tnGJ3udJSj43aHcvZz0bpTp411N9K6K7HZysnvtcFlvHpjy3rpsKPA=
+	t=1751383432; cv=none; b=iwrNG8JVznLDhm1s2II+Ab8D2AqYvDDp2cZ8YoPINsy4ZInFUrQ4swfbqgocLZVOoHmPR1mr7Tfz6nf/KAfgQbrEWf60pfyB8O6YKZJpxNNB16FaFIsAkQpKRQC9Vvcou78oPvFZ5qUZ+Xqmey4qlaKc5L4AKPDtjy1kuSlHDRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751381760; c=relaxed/simple;
-	bh=14969vE7oTvSxbIeUHQwNrXSIWKjWjIDgV2/5sQf9Yw=;
+	s=arc-20240116; t=1751383432; c=relaxed/simple;
+	bh=LCVQVjjqOl+3CTMzxiEMyl3uNu6dQ8/SX8rI26RGaYQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKLjxdEWJ7KJGdmVpzP5q9rGnWAjBCipjTRUG5+QtsntmP4mwcK8ytBIjejgpiH1eO934k6wg3P9yYF/oAYLljAdY1PVBEUZdLQdYSXWX4djiqkAXxt98SPBXBEbXUv86IiNyBTU4G87/+FAO52zrkxgbz4+l0oop63SNSYZKwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=b9RJrq9+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jW90b9qG; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=b9RJrq9+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jW90b9qG; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=tAQoSX0GPyUZ3d2YeeFzoaWdwkRU3zojO/tIAPgpYzLGFEHFk3ZODP2ShLHhW7eMIqZBZkj6EOLPWczpk9gZ7MAT9rjNlSqA5EDoyj5Cq6jz6waHPWuPPlQMqtGnS6p+qvyVJXNu9pziGwPCmGJkRYM+jrBnQ2nhDuQqvVc3KkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=umSpTv1M; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="b9RJrq9+";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jW90b9qG";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="b9RJrq9+";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jW90b9qG"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 8B0E11F393;
-	Tue,  1 Jul 2025 14:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751381756;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YJwexxfuZ+LMIUqSldhmO0aXwQ4xqqJs+O+5myB5TpM=;
-	b=b9RJrq9+T34cVkrnvNf/n9dXUx8P6sNRYPsnHMLCwYyhUrzzHBRQV7rk6CYgbWjbk8EUjD
-	msn3S6LUKHRMx49jr3FswCTO6+2s9APJZqViHXw/pJ2DTxuhT9G6nI5cZsdiQHHrcNZczh
-	eDFEQZBoAoLD0mx/7aptdl2Ov38uLho=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751381756;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YJwexxfuZ+LMIUqSldhmO0aXwQ4xqqJs+O+5myB5TpM=;
-	b=jW90b9qGFbV8y1J1V/y2WoLG5jdU9VN01/vu4IxIZFNwcptQxzD8mnFam2TJFit8hwIC+4
-	qyK3jD/HkWnmPdCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751381756;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YJwexxfuZ+LMIUqSldhmO0aXwQ4xqqJs+O+5myB5TpM=;
-	b=b9RJrq9+T34cVkrnvNf/n9dXUx8P6sNRYPsnHMLCwYyhUrzzHBRQV7rk6CYgbWjbk8EUjD
-	msn3S6LUKHRMx49jr3FswCTO6+2s9APJZqViHXw/pJ2DTxuhT9G6nI5cZsdiQHHrcNZczh
-	eDFEQZBoAoLD0mx/7aptdl2Ov38uLho=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751381756;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YJwexxfuZ+LMIUqSldhmO0aXwQ4xqqJs+O+5myB5TpM=;
-	b=jW90b9qGFbV8y1J1V/y2WoLG5jdU9VN01/vu4IxIZFNwcptQxzD8mnFam2TJFit8hwIC+4
-	qyK3jD/HkWnmPdCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6A0E313890;
-	Tue,  1 Jul 2025 14:55:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id H8eoGfz2Y2hmGQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 01 Jul 2025 14:55:56 +0000
-Date: Tue, 1 Jul 2025 16:55:51 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Brahmajit Das <listout@listout.xyz>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com,
-	dsterba@suse.com, kees@kernel.org, ailiop@suse.com,
-	mark@harmstone.com, David Sterba <dsterba@suse.cz>,
-	Brahmajit Das <bdas@suse.de>
-Subject: Re: [PATCH v4] btrfs: replace deprecated strcpy with strscpy
-Message-ID: <20250701145551.GS31241@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250620164957.14922-1-listout@listout.xyz>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="umSpTv1M"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-40a55314d06so1983401b6e.1
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Jul 2025 08:23:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751383429; x=1751988229; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MYwZ/k48BqyqbRLZtuPIBf9oEcqZvV0nNm/DOaSpvXc=;
+        b=umSpTv1MFs7s4w72OCI3jVgH7Gh0XoyvtyJlNFpmNXRUxszAhtAH5zJf+RI30/wZtJ
+         7OWTOYSWLndmGb96yRht1Iy0YAeBTHqKSwV59BRk11eIVCY34EPKGVFOkBl18UmOQ2PX
+         8VO2bmBxXYbJIVQzfQo9oRW9ZORCv+/9dEmlVeYKCsgesxfRxd74J2GIiTGdx3rDHLeJ
+         BOYq6vjBhUxpTf6vtiknH0iDcnUCInuFxs03UN1TAkBsh85m8nPRgi08ov8tPlPbJBPk
+         D0rtsKr8M8lRKO71abydfLMVg9S6jB9HSQJb5arLXI3s6J6I5x8Oh8Puq4YsTnL9aPz7
+         EFFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751383429; x=1751988229;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MYwZ/k48BqyqbRLZtuPIBf9oEcqZvV0nNm/DOaSpvXc=;
+        b=iwxPUAEc4W23fq6XLwYqZ4+5LAuPX0PRkc24N80eeA49GPBMrBt8yMCKuZS5buOeSf
+         Na2fBUE0gjcgE+nUn7irhjAAqSvtl4UInRTLOqJMuReadX3ZNF3LeTmJSDfcNd+oneOf
+         TGw7iXNTLWIRepYZzwXdmAju1sqYd36jEulWbTbuMrhcyMq3pb9eEcN+ttjlwZD3dhZB
+         aViI/rGCu2haPoyXyMSL59jw2Gg8/uo/O4SdtULo1LFgowW/FWn0AlfkdnsnUORUq59W
+         jakoB1V9fnjKtRAusyj381EKN+3MBsKbtyMoX+NZHZLVon2vBCN0DYSXgqbpIERmUy95
+         0Thg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWw7I7pPPb79rAL0s+61UW6WfWGUkhJiCNi+bBI0VnpB6Or3letHsXwK5lFUI/NDPDyysPc3pn6sMy2mhrX5E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5L/o5Vd1APuM30c0uhgcD4J3df2PoDHZmXXpi4RT/KcV6iVaJ
+	n3cHLQzpRGmi6nwc7pNkFOxBAcTzp9MZcBa+mbqw0VqoqnFKe8FfyvV0TK8oA9M9Df0=
+X-Gm-Gg: ASbGnctm/M6LV9n5CZDg4OSSsXKcam6cZ7AoF98lZtinCpTtxws1ys4obeIgoRbC6fQ
+	M1k5vIX7Zs8gun3Sove79jzH+FINagK2iVkPquXO+97I4/xM4x4WXdIgaSFQAw2qgpiuEEipd7k
+	vTx4fH+gvZq/GOUC4XudBy1lzx2Ho8NPwoQLM76/GliHCcBDrUVD3p7gRxDaBux8C7RiIomavb9
+	prDTfqosBc92sbs8k039+sKWbWel9MYZOlOZQKMJea01FdBHuKzdvGyGutfd/V74x1Wj0XwjgyH
+	PPRJ7YNCg3cNBiNXaMiI+ZWo07cTGeGlMigPUMZVUJdGTu1B2R9TdhO7gGBllhBFyJzXonKEwTs
+	Rj4Gp
+X-Google-Smtp-Source: AGHT+IFO+NNLHeWQEJrtSbhkE62e5VspiAQMKYLVQsc66ekN4NjgU+Dq9Uciy8NrYTFOEmdFwYZUMw==
+X-Received: by 2002:a05:6808:2201:b0:406:7cef:46a with SMTP id 5614622812f47-40b33e1407emr11563569b6e.19.1751383429231;
+        Tue, 01 Jul 2025 08:23:49 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:8ebc:82eb:65f7:565e])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b322ae48esm2129470b6e.13.2025.07.01.08.23.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 08:23:48 -0700 (PDT)
+Date: Tue, 1 Jul 2025 18:23:46 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Nathan Chancellor <nathan@kernel.org>
+Cc: John Ogness <john.ogness@linutronix.de>, Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org, Petr Mladek <pmladek@suse.com>
+Subject: Re: [bug report] printk: ringbuffer: Add KUnit test
+Message-ID: <248e204a-b610-485a-9a3a-1c5e38d52d5e@suswa.mountain>
+References: <eaea66b9-266a-46e7-980d-33f40ad4b215@sabinyo.mountain>
+ <20250626082605-c5fbbb88-f6cc-4659-bea0-a283cdb58e81@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250620164957.14922-1-listout@listout.xyz>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.com:email,twin.jikos.cz:mid,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250626082605-c5fbbb88-f6cc-4659-bea0-a283cdb58e81@linutronix.de>
 
-On Fri, Jun 20, 2025 at 10:19:57PM +0530, Brahmajit Das wrote:
-> strcpy is deprecated due to lack of bounds checking. This patch replaces
-> strcpy with strscpy, the recommended alternative for null terminated
-> strings, to follow best practices.
-> 
-> There are instances where strscpy cannot be used such as where both the
-> source and destination are character pointers. In that instance we can
-> use sysfs_emit.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Suggested-by: Anthony Iliopoulos <ailiop@suse.com>
-> Suggested-by: David Sterba <dsterba@suse.cz>
-> Signed-off-by: Brahmajit Das <bdas@suse.de>
-> ---
-> 
-> Changes in v2: using sysfs_emit instead of scnprintf.
-> Changes in v3: Removed string.h in xattr, since we are not using any.
-> fucntions from string.h and fixed length in memcpy in volumes.c
-> Changes in v4: As suggested by David, moving "NONE" as initial value of
-> buf in describe_relocation() and removed copying of "NONE" to bp in
-> btrfs_describe_block_groups().
+Let me add Nathan to the CC list.  He knows a lot about __counted_by().
+The dat->text is __counted_by() dat->len so the line:
 
-Sorry for the delay, added to for-next. Thanks.
+	if (dat->text[dat->len] != '\0')
+		return false;
+
+Should have generated a warning of some sort, right?  I'm including
+the whole thread even though I assume you are huge fan of b4.
+
+regards,
+dan carpenter
+
+On Thu, Jun 26, 2025 at 08:59:52AM +0200, Thomas Weißschuh wrote:
+> On Wed, Jun 25, 2025 at 10:22:19AM -0500, Dan Carpenter wrote:
+> > Hello Thomas Weißschuh,
+> > 
+> > The patch 5ea2bcdfbf46: "printk: ringbuffer: Add KUnit test" from Jun
+> > 12, 2025, leads to the following static checker warning:
+> > 
+> > 	kernel/printk/printk_ringbuffer_kunit_test.c:91 prbtest_check_data()
+> > 	(unpublished script worries this an off by one)
+> > 
+> > kernel/printk/printk_ringbuffer_kunit_test.c
+> >     83 static bool prbtest_check_data(const struct prbtest_rbdata *dat)
+> >     84 {
+> >     85 	unsigned int len;
+> >     86 
+> >     87 	/* Sane length? */
+> >     88 	if (dat->len < 1 || dat->len > MAX_RBDATA_TEXT_SIZE)
+> >     89 		return false;
+> >     90 
+> > --> 91 	if (dat->text[dat->len] != '\0')
+> >     92 		return false;
+> >     93 
+> > 
+> > My question is that the prbtest_rbdata structure is declared like this:
+> > 
+> >     53  /* test data structure */
+> >     54  struct prbtest_rbdata {
+> >     55          unsigned int len;
+> >     56          char text[] __counted_by(len);
+> >     57  };
+> > 
+> > The size of text is not really counted by len, it's "MAX_RBDATA_TEXT_SIZE
+> > + 1".  The condition "if (dat->text[dat->len] != '\0')" is reading one
+> > element beyond the __counted_by() value so something should complain if
+> > we enable all the debugging, right?
+> 
+> You are right, we are reading past the __counted_by().
+> But I don't get any complains with CONFIG_FORTIFY_SOURCE=y and CONFIG_KASAN=y
+> on either clang or gcc.
+> We could remove the __counted_by, but I assume somebody will try to add it back
+> at some point.
+> Or we account for the terminator in dat->len:
+> 
+> diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
+> index ef4a2beea57a..106f4c7ffc86 100644
+> --- a/kernel/printk/printk_ringbuffer_kunit_test.c
+> +++ b/kernel/printk/printk_ringbuffer_kunit_test.c
+> @@ -85,14 +85,15 @@ static bool prbtest_check_data(const struct prbtest_rbdata *dat)
+>         unsigned int len;
+>  
+>         /* Sane length? */
+> -       if (dat->len < 1 || dat->len > MAX_RBDATA_TEXT_SIZE)
+> +       if (dat->len < 2 || dat->len > MAX_RBDATA_TEXT_SIZE + 1)
+>                 return false;
+>  
+> -       if (dat->text[dat->len] != '\0')
+> +       len = dat->len - 1;
+> +
+> +       if (dat->text[len] != '\0')
+>                 return false;
+>  
+>         /* String repeats with the same character? */
+> -       len = dat->len;
+>         while (len--) {
+>                 if (dat->text[len] != dat->text[0])
+>                         return false;
+> @@ -114,10 +115,9 @@ static int prbtest_writer(void *data)
+>         kunit_info(tr->test_data->test, "start thread %03lu (writer)\n", tr->num);
+>  
+>         for (;;) {
+> -               /* ensure at least 1 character */
+> -               text_size = get_random_u32_inclusive(1, MAX_RBDATA_TEXT_SIZE);
+> -               /* +1 for terminator. */
+> -               record_size = sizeof(struct prbtest_rbdata) + text_size + 1;
+> +               /* ensure at least 1 character, +1 for terminator */
+> +               text_size = get_random_u32_inclusive(1, MAX_RBDATA_TEXT_SIZE) + 1;
+> +               record_size = sizeof(struct prbtest_rbdata) + text_size;
+>                 WARN_ON_ONCE(record_size > MAX_PRB_RECORD_SIZE);
+>  
+>                 /* specify the text sizes for reservation */
+> @@ -142,7 +142,7 @@ static int prbtest_writer(void *data)
+>                         dat = (struct prbtest_rbdata *)r.text_buf;
+>                         dat->len = text_size;
+>                         memset(dat->text, text_id, text_size);
+> -                       dat->text[text_size] = 0;
+> +                       dat->text[text_size - 1] = '\0';
+>  
+>                         prb_commit(&e);
