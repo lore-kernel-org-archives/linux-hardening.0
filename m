@@ -1,48 +1,48 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FCE275AFF;
-	Tue,  1 Jul 2025 11:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35AE2749C9;
+	Tue,  1 Jul 2025 12:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370487; cv=none; b=q58iSdYDDbyIMD8fNXblHV9uEp+N7xJzijQ50TR81rcTqtqsXv4ZJmEYa+rLgl2/fu7bw7nshh44uNhvW/PoKSpW84+ebaxoYjxOj5/tutfxIgV1akuWokW7XcWq8zmsjsJbWtXhCO8T4KwnP654BSp3fuwDFzmabpEa7WCvOUA=
+	t=1751372715; cv=none; b=F6c3ptdrfmRcB8YOqlSmbP+A4759bBcUDbQsIZr/Aoxa5YMbDORzxve8PH294w4WOmeknHadtBbHWmmLR1FWQOCb5bd+Ag1zgyr0zfP93t5OUDdX6JdgJ3Mz1fiGuMQdHgWqDtK/mXy03B8/R81vemwiWk5SKeNsX5pNGdyeN8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370487; c=relaxed/simple;
-	bh=mSARHChrsSkZqv4FL5ywNNlM+mfq9RkAadWkjMMswZY=;
+	s=arc-20240116; t=1751372715; c=relaxed/simple;
+	bh=ZfLRBlA2GXkaE/VO2K/FwkaVy6TzTJYLHSCfKwRcEYc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eaFXdoRa9RxudpZLK6Az5uOsrvowsqD5Enak/E6SBF5YTOO0Cu3BCPeM3UtNTVFS9ETAedsPP7zkgU5KzgMWrT1UAouwToZxTO31bisvnykUXit3l7zJHukww2C0lmowSpBAi+G+QznIXEyrr5XyRjsBPWmfabAb3ieUXCCINuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MPBgrhp7; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=aMgGbKzaXYL7E//RE9UFPMlaOm3VknlI+8MeS/WfB9yMLnf80VIFgQz3+i0AqnFDLMvLaP//Rvik6rpsZ8U9B9x1oKwDGMv1WQCDSu1fwasRhc0Ct6lsrYFcsIq7iGqmHKyOJoPayclTYnEp+beaim/CN5qtCNfNEXJ99+gz8fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Q0nmBEXC; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MPBgrhp7"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5618lCvZ026544;
-	Tue, 1 Jul 2025 11:47:54 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Q0nmBEXC"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 561AS4cV025180;
+	Tue, 1 Jul 2025 12:25:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rCGpL5WtLCGHD7lGDK/ISop6wOAMqbvqcoNsJwiihW0=; b=MPBgrhp7EkFMuk/i
-	WvA1LuBdxuKhUs5pH0lkPCj+KvzspP8lCVgVeCn0zUo4mgxPfhWYjB9a3U7PAd56
-	Bo1VuKvFgqBOIFWnInNfxIg9/YFOrK8a8V1iiW/dpwciJPdpf6EoiuFPCsNQUZOn
-	/DogWUZySNf+K7FVN0tz7KuTX0fauaLt2fi12l5J7gDWa4hnxeDHTxqjliJ+lBK6
-	gIWHrLPmxm7N762zm9lPUDEOhBf920q8jRjVqHcsNhmyA584VA8+cbuEy+O2idMw
-	Fp7Urk6tyqY+yb+lkX5ZvVWM0qTfgYy6pPfqSzvDt7yT3Ss2LEKMi7BSBiQHBpsT
-	p1HHtw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j9pcrm2p-1
+	VLfCL1rkHHgT9uUOPYI/+4UoWa4a8cDmu5VDzDonpos=; b=Q0nmBEXC8OyJe4Q6
+	6wy8de192wCOGtxsw4UcXZAXrrrVaB4j/tDvANBkuYMdgm7nKdstguZJ6b7JyPKq
+	+/AA6Nalt4YupTM8Jlri3CRJpZB68U0twE4ucq35IQCD2w3bYKeMEz+UMmFXLakw
+	AaFutyH2qh+hbxqqfFQUQvbW3eb1+eh1qlClzQIF9pR2K5Ww1IlrIE0B4TgWPLhm
+	8GKKrCoDxCSiWCl+Bfy8jeVTYZMExZ98USLD/jvFBf/wjuBEP3YWR7N32yV9nHw0
+	mxCtIXD/rL/UNYbNS0bQ8xgSj7LaHAY5/aXLNHxmkCToR5anjodQwvesNm+grpsR
+	lVU0ZA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kd64p3na-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Jul 2025 11:47:54 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 561BlrvZ020980
+	Tue, 01 Jul 2025 12:24:59 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 561COwqI015223
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 1 Jul 2025 11:47:53 GMT
-Received: from [10.217.222.28] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 1 Jul 2025 12:24:58 GMT
+Received: from [10.235.9.75] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 1 Jul
- 2025 04:47:47 -0700
-Message-ID: <2455f20c-130c-4f27-9cf4-6411e485b845@quicinc.com>
-Date: Tue, 1 Jul 2025 17:17:44 +0530
+ 2025 05:24:52 -0700
+Message-ID: <e768d295-843c-431d-b439-e2ed07de638e@quicinc.com>
+Date: Tue, 1 Jul 2025 20:24:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,128 +50,116 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/12] firmware: qcom: tzmem: export shm_bridge
- create/delete
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-        Jens Wiklander
-	<jens.wiklander@linaro.org>,
-        Sumit Garg <sumit.garg@kernel.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Apurupa Pattapu
-	<quic_apurupa@quicinc.com>,
-        Kees Cook <kees@kernel.org>,
+Subject: Re: [PATCH net-next v5 03/14] net: ethernet: qualcomm: Add PPE driver
+ for IPQ9574 SoC
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Andrew Lunn
+	<andrew+netdev@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric
+ Dumazet" <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lei Wei
+	<quic_leiwei@quicinc.com>,
+        Suruchi Agarwal <quic_suruchia@quicinc.com>,
+        Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
         "Gustavo A. R.
  Silva" <gustavoars@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-CC: Harshal Dev <quic_hdev@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <op-tee@lists.trustedfirmware.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>, <linux-doc@vger.kernel.org>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>
-References: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-0-024e3221b0b9@oss.qualcomm.com>
- <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-8-024e3221b0b9@oss.qualcomm.com>
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC: <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>
+References: <20250626-qcom_ipq_ppe-v5-0-95bdc6b8f6ff@quicinc.com>
+ <20250626-qcom_ipq_ppe-v5-3-95bdc6b8f6ff@quicinc.com>
+ <4556893f-982b-435d-aed1-d661ee31f862@oss.qualcomm.com>
 Content-Language: en-US
-From: Kuldeep Singh <quic_kuldsing@quicinc.com>
-In-Reply-To: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-8-024e3221b0b9@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+From: Luo Jie <quic_luoj@quicinc.com>
+In-Reply-To: <4556893f-982b-435d-aed1-d661ee31f862@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ztKxMaTHEsgXeingGXCKylzfZjaG2-ty
-X-Proofpoint-ORIG-GUID: ztKxMaTHEsgXeingGXCKylzfZjaG2-ty
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA3MyBTYWx0ZWRfX74DO11z9dMYF
- 62b2TucWlwr7aP2wLjZ5GJ8VxyRAYqmoReJedk6CNfnGBZJatEM1OJrxmydL4DRvLfDVKk0HSaA
- glGZa43wXvVkw2RNorrrDsT4ohoJw23givoio+J4JT9e/Hl2q/3PXbKXE+zYKGWyQ4nIZf/gX/x
- 0ygEgUAUl4FzOcg4AoT3/bKo4Ebv9c//GZKuU6wOBpOmIJ8xM3KNdFtLFJeJVYgtJ/wQHRhXx5t
- 8smIEsHc/qD5i5mML4oYknS7mIIQko5H7+L0qHY+ISOyaPPxqcBIb2UT8LymslIwxMEQzt9YzTg
- n4t9AjjbkwFN7EiF6/75yhn9k5v8CoFMGTOfN3Gk1JPh9kXi6WPxG7qRXFFayej7yueJMXnlc23
- +VdTOVUtCt62g4uAKYeR/hiM109i/duCv/ogYnnAOajxoeL8VSKAQRXcAvhJEhkPTRXvgCNO
-X-Authority-Analysis: v=2.4 cv=QMFoRhLL c=1 sm=1 tr=0 ts=6863caea cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=KKAkSRfTAAAA:8
- a=EUspDBNiAAAA:8 a=T2KzT_qPCcxtbzpLTyEA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22
+X-Authority-Analysis: v=2.4 cv=Z+PsHGRA c=1 sm=1 tr=0 ts=6863d39c cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=7dPGx68Ngd3I7BFEivgA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA3NyBTYWx0ZWRfX4IEn9JSUGS2L
+ aNJr6xWle08pZAmNdDBPdZeCIkNMtnn39GhzKsq4J544L1f1vXbWDKR4Z7NZ+uozrW7hnfRUfpR
+ rZ606b4PDQmGV4mV/ExgeN50BQQRSgc5KzY3y4PEXzOiSQqhYbhkH/ZvSpyxIcL+9CnqQdFWtWE
+ L52ZwCs30nD/OB9eg5gdwRr+C+wFj1djfQvrdbSx15EuWfiCYQqCJmj8ZzcVuTTIsz0UG8Ctlq8
+ TRF8wnyaUYn8EACuNmX/H46wdjsJHF89v82lfRhMp+PdLADCE++Tf4v32uGAB/JQHtdpNOZXU3e
+ RfG+I8K2Rrcs+H3P4WJFuo6TEQMucpVEpOqAwHLqqlcGV06p31cugGK0QVA4I81UAZoOPV8fe+P
+ VtYi288h4UcS9258SzF8EjyRndTdf+ZsMhSJ3P5K87gJf7nFjNC3Tvf48pJXQa9jW9Fg264i
+X-Proofpoint-GUID: lEGc_dr8qa8_dsrASY2Y2WkGC8eRWqHq
+X-Proofpoint-ORIG-GUID: lEGc_dr8qa8_dsrASY2Y2WkGC8eRWqHq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 bulkscore=0 spamscore=0 adultscore=0
- mlxlogscore=999 mlxscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
- clxscore=1011 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ phishscore=0 lowpriorityscore=0 clxscore=1015 malwarescore=0 mlxlogscore=886
+ spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507010073
+ definitions=main-2507010077
 
 
-On 5/27/2025 12:26 PM, Amirreza Zarrabi wrote:
-> Anyone with access to contiguous physical memory should be able to
-> share memory with QTEE using shm_bridge.
+
+On 6/28/2025 12:21 AM, Konrad Dybcio wrote:
+> On 6/26/25 4:31 PM, Luo Jie wrote:
+>> The PPE (Packet Process Engine) hardware block is available on Qualcomm
+>> IPQ SoC that support PPE architecture, such as IPQ9574.
+>>
+>> The PPE in IPQ9574 includes six integrated ethernet MAC for 6 PPE ports,
+>> buffer management, queue management and scheduler functions. The MACs
+>> can connect with the external PHY or switch devices using the UNIPHY PCS
+>> block available in the SoC.
+>>
+>> The PPE also includes various packet processing offload capabilities
+>> such as L3 routing and L2 bridging, VLAN and tunnel processing offload.
+>> It also includes Ethernet DMA function for transferring packets between
+>> ARM cores and PPE ethernet ports.
+>>
+>> This patch adds the base source files and Makefiles for the PPE driver
+>> such as platform driver registration, clock initialization, and PPE
+>> reset routines.
+>>
+>> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+>> ---
 > 
-> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-> ---
->  drivers/firmware/qcom/qcom_tzmem.c       | 57 +++++++++++++++++++++++++-------
->  include/linux/firmware/qcom/qcom_tzmem.h | 15 +++++++++
->  2 files changed, 60 insertions(+), 12 deletions(-)
+> [...]
 > 
-> diff --git a/drivers/firmware/qcom/qcom_tzmem.c b/drivers/firmware/qcom/qcom_tzmem.c
-> index 4fe333fd2f07..e9e4f06924ae 100644
-> --- a/drivers/firmware/qcom/qcom_tzmem.c
-> +++ b/drivers/firmware/qcom/qcom_tzmem.c
-> @@ -108,25 +108,61 @@ static int qcom_tzmem_init(void)
->  	return 0;
->  }
->  
-> -static int qcom_tzmem_init_area(struct qcom_tzmem_area *area)
-> +/**
-> + * qcom_tzmem_shm_bridge_create() - Create a SHM bridge.
-> + * @paddr: Physical address of the memory to share.
-> + * @size: Size of the memory to share.
-> + * @handle: Handle to the SHM bridge.
-> + *
-> + * On platforms that support SHM bridge, this function creates a SHM bridge
-> + * for the given memory region with QTEE. The handle returned by this function
-> + * must be passed to qcom_tzmem_shm_bridge_delete() to free the SHM bridge.
-> + *
-> + * Return: On success, returns 0; on failure, returns < 0.
-> + */
-> +int qcom_tzmem_shm_bridge_create(phys_addr_t paddr, size_t size, u64 *handle)
->  {
->  	u64 pfn_and_ns_perm, ipfn_and_s_perm, size_and_flags;
-> -	int ret;
->  
->  	if (!qcom_tzmem_using_shm_bridge)
->  		return 0;
->  
-> -	pfn_and_ns_perm = (u64)area->paddr | QCOM_SCM_PERM_RW;
-> -	ipfn_and_s_perm = (u64)area->paddr | QCOM_SCM_PERM_RW;
-> -	size_and_flags = area->size | (1 << QCOM_SHM_BRIDGE_NUM_VM_SHIFT);
-> +	pfn_and_ns_perm = paddr | QCOM_SCM_PERM_RW;
-> +	ipfn_and_s_perm = paddr | QCOM_SCM_PERM_RW;
-> +	size_and_flags = size | (1 << QCOM_SHM_BRIDGE_NUM_VM_SHIFT);
-> +	if (qcom_scm_shm_bridge_create(pfn_and_ns_perm, ipfn_and_s_perm,
-> +				       size_and_flags, QCOM_SCM_VMID_HLOS,
-> +				       handle))
+>> +static int ppe_clock_init_and_reset(struct ppe_device *ppe_dev)
+>> +{
+>> +	unsigned long ppe_rate = ppe_dev->clk_rate;
+>> +	struct device *dev = ppe_dev->dev;
+>> +	struct reset_control *rstc;
+>> +	struct clk_bulk_data *clks;
+>> +	struct clk *clk;
+>> +	int ret, i;
+>> +
+>> +	for (i = 0; i < ppe_dev->num_icc_paths; i++) {
+>> +		ppe_dev->icc_paths[i].name = ppe_icc_data[i].name;
+>> +		ppe_dev->icc_paths[i].avg_bw = ppe_icc_data[i].avg_bw ? :
+>> +					       Bps_to_icc(ppe_rate);
+>> +		ppe_dev->icc_paths[i].peak_bw = ppe_icc_data[i].peak_bw ? :
+>> +						Bps_to_icc(ppe_rate);
+>> +	}
+> 
+> Can you not just set ppe_dev->icc_paths to ppe_icc_data?
+> 
+> Konrad
 
-Can we add a debug log here to ease debugging in future?
-Something like this can also work.
-
-pr_err("Shm bridge creation failed, ret: %d, NS PA|Perm: 0x%llx,
-size|flags: 0x%llx\n", ret, pfn_and_ns_perm_flags, size_and_flags);
-
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_tzmem_shm_bridge_create);
-
--- 
-Regards
-Kuldeep
-
+The `avg_bw` and `peak_bw` for two of the PPE ICC clocks ('ppe' and
+'ppe_cfg') vary across different SoCs and they need to be read from
+platform data. They are not pre-defined in `ppe_icc_data` array.
+Therefore, we use this format to assign `icc_paths`, allowing us to
+accommodate cases where `avg_bw` and `peak_bw` are not predefined.
+Hope this is fine. Thanks.
