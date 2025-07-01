@@ -1,77 +1,72 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40B627781B
-	for <linux-hardening@vger.kernel.org>; Tue,  1 Jul 2025 15:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAF521FF35
+	for <linux-hardening@vger.kernel.org>; Tue,  1 Jul 2025 15:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751383474; cv=none; b=BgxbHWHVWIJO6z95OOuh9546VwrrgFQQhWSxgvJqzATR5HqhQL6GpEv7VKWylWOfGrcnEHFXpd8Scey2586YZ7ZmbJV6gfHM/rpRkzpN3gagMFhO4a5tuC7XIp/1Am38ouQ2AP85dKP/rKGfnoefyZUtW9WsdyZjcmE78dxzYk8=
+	t=1751385393; cv=none; b=SkwE5PHpUUCJMFAz/+Z/a8hof7BicqOUYNzx11P9G9/v9O9YPmDcP5lfHaSFl8pubqrRLZzzHlVzJHkWyxg24S5Ots+42S9OwtZtqcoViOIenBZSHJtIgmU0vfr4JL5miaL7bZ9Dv1SBF+wF2LGv2cT9IXBxaRipKaJf6I1Sg40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751383474; c=relaxed/simple;
-	bh=gzy0HYW1aiyamvIuwFD3xssIx7Of7faKEIvouPwowlw=;
+	s=arc-20240116; t=1751385393; c=relaxed/simple;
+	bh=qdDpUsdPRFTYRtz1Zfd+FoUnpi9pahuvtFmShTCynVk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=noYbXpdn5kIENSUYc9NXq4Qb3vtW4EUKymD63Gt5//VjUFh+ftFyu3YVOZo8tQ9W2aPDa988HStx3K9u2cq55rx3kzERPjw1cL6REHwQdA0iBoJNiBD1YVvOLT/eyny1hfrguFKHMh98Vmfz7bbogicnEw+6G5vqtxSMGSp1Eo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=G4dzMgaG; arc=none smtp.client-ip=209.85.221.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=IdlGgLrMglOqb+9HXm1jlJu5UIIbm/b7/hQSuMKqDJ2RoOqZD/aWHmFwXzu+lBP64nmbcf0TymCHo0NSAv4eGaKLVLxeR6J5E89RpvSSBCdKO/asX8PfUe0WOJhBVU2+PpKFaKHZgOhmxhgz9VDVn2QM1JW5SBb44FMXxydic5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=W6YMxhou; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="G4dzMgaG"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a5123c1533so1957953f8f.2
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Jul 2025 08:24:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="W6YMxhou"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a57ae5cb17so2315111f8f.0
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Jul 2025 08:56:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751383471; x=1751988271; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1751385390; x=1751990190; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=TWTUS4XDaGfHhbLK/yKE5holBOESHiUAlAPrvZOBErY=;
-        b=G4dzMgaGk4piVorXG+wr3/IA0UAi7rIqRfmN3WJ4Xk1jJS7Bthw50C7nT5sSR4WxmW
-         dRyGY3aqh1+yUVK+ETYEZxODBsGqXN50HPo3hh433DkE6qMhyEjBEL1aBBHlH7X4SeVi
-         d0BgXpP/pDw0CwekZeju+iVpItG2h44Q3ZzlJ91oOrg4SRS94/5rRDTtc8Ppxaxi2XYA
-         vdgQag/2fSK1/dR6ueSQw1scOV+weqTb3bx90Z+cp3ff5+OTvpjEu9IMZz/NjrpPCia1
-         HFLGwm+p2h0wO+0BNPEs9h2D2erYTAhqvZ+pnmNUZhusUmB78pjPBKvOq0QeEgXRYIRr
-         zmUw==
+        bh=Yfh6Yb2pjFZ2pvZ0AS6CJBmHfbVLNpjXWe1trIm1tjM=;
+        b=W6YMxhouo9IEKCKVJ29oY9d4oJmNa4HkHjQw/vTdwWAAYnDg9aUANw1DNEzSTqJJig
+         i80stZfN1IHmsBNMF3mZ8JeL+rBct0LUiFUg/uOjth8YIxYtaKNpcsAemhT1aXnnaJv2
+         /qgaxkFzAw6NYdGWqmWaXLBOI+DUKSxFt8AnoYi5iaWLcyXQONAj+qeC9a8VjSJq1kXQ
+         W6rHj0LQ1VNKGve29pkdCPF5irAJc/8A6rFDddDZ3GnsfiiSaryeSHpjJM31TkLHBAjJ
+         BrC2bpwT2bxsgrkLHZsNIRB3IfG0PHMaB8YOa6w55+XtBbsmEnYJGj868/Xh+c1bdLDV
+         ffVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751383471; x=1751988271;
+        d=1e100.net; s=20230601; t=1751385390; x=1751990190;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TWTUS4XDaGfHhbLK/yKE5holBOESHiUAlAPrvZOBErY=;
-        b=YIXsv5mMmQ2+2gHNGPmm2XM9TNlLOC2TTNtd+FZEu9DXrrI9Q5cTtTuL8hyQvUHNBz
-         T7BpqUZCZ4WZPGqMZiftaKhS5Murer1bv39Xk+4a8HkFZjhTt9P8+wbtQ3K44VaT5xvc
-         kesuEwXvNhkDgpkHgUwP7b7KdI1kQEpyE3MpC2ooGxW16Y65clPW82/Mmw1KEd1Xxoch
-         4bsToOn1kPd+EZRVUvW3UcpIyy/l3ZJZuIYpvkQm+pLrZh2Rtyqew5e5sdlU/+Usz60n
-         L3SPk4TQTFF+9DjD5bAUjA222v24oOEJCMzGuPOZPoDix7++uwALDhRI3r+6gDprKU3k
-         dQgw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHbskJWMnAm8Cqyxxcsxuey0b36SdrkajwBkHavBxKltxHdtFFV5ATTeE6ytIzaUx+2a9GNFiAcL720aOXjBk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGx7hxJs+/Vm5NX5RLEM7WWDbyXMQa4RrbUloy3k15MQ93ECz9
-	ES/PsHFz07ueEd9171KCpL8F+XivSAfnNu4IVXhF5uAaum2BsPMNwuag+71My7bl0QOUqFCxIxB
-	UbWRy
-X-Gm-Gg: ASbGncuRMBmFQJdtNZOlq2jUUV7p2RPQ67f6LLO664jkVsLobO/IZfmhRlxWmru3G9j
-	yYLyocA8ZkL2X5VpfXLAPO4my3AUzYl58UA/OJ3oQ9clF3XFxrDYRsufBHxDJmtfM1A1oGmv0Vt
-	1UvhBgE9mXcUsp2sB8HuMdbHQQT+BwYQ7xlFQJI73h6Fd6auIBdp/njTadWCeixpuB3DppSELOO
-	9FSng6oy2xf+ujau+EJ27twxkjAx9Oojt/smBwPVNlxrraH9/S+FTd8QMkL6zoEJvlKnTGLQGls
-	EHVzXTkSsYMxShhHNFQ44bYrt/6CqqAuu7cTKU1XcvTA+/bUcCKT+N2mQbaK5Fma
-X-Google-Smtp-Source: AGHT+IF8wfGH2gABidn97K6pcyx6hogp9QScuA+QUd2PL6iDQ+isNSIi1grDYA07z8SPbV8FgoUiJw==
-X-Received: by 2002:a05:6000:25e2:b0:3a5:88e9:a54f with SMTP id ffacd0b85a97d-3a8f435ed20mr13353032f8f.1.1751383471106;
-        Tue, 01 Jul 2025 08:24:31 -0700 (PDT)
+        bh=Yfh6Yb2pjFZ2pvZ0AS6CJBmHfbVLNpjXWe1trIm1tjM=;
+        b=Btfu9pimewSPH0L2heVp17Km67sybJOSw/QmRuFMzR01a7vKlTqGz5NRnn+a6XyjKy
+         0nW11LWF4EPgNcdTbvnhYvmamL94X9Epk34BDa0FE+9CWJKVkdb3WztDKOwCT/qmraDL
+         Kvyf5E1joR/Rg7qm0MFspKyZgZkMPqEaeSB2soZaa62bdWMV36KxAXfwZeNzgCp+/rFZ
+         hnhzggeYPF/tEBV1z0upe49r1aZIdnyN1X65z61k2CUVEOkwNy8g4GPXP+8dOdbTONWb
+         PVu54a6nCqT61wsBEQEHTzG7j9ePsob6ZLF9KDITQk+m9tdkfrtG2h7KlDT6fFiyiyRA
+         mdnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVWyyfaKG+SvPWIe5Exucssd0SIAYs2ib0kvMq5mVqUQ2ThV3GiEYaORoS6IHYHPPIb3Q/X8YwmDQBeaKi7w+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6VrlSXUXYfCcTuMmKdxrkEnBEvulvgHCMN1u48efLxoHXPzKs
+	9AvhTGqFFh4VTlYINUMl/9vxqjoTI8VLXpaIHmqXzR7Nvb1krMGJJ2NzMmDnmpyQ3No=
+X-Gm-Gg: ASbGncu3JHYU8AEk527BH5taXlYqTyEBY3rb/y5GCG9SOvPNz3+ZHVv6FyEAxmx7jV0
+	2ji4afI3y/B4k0hiLiLTV33oWJSkpL6H0PxccZFCt7c0JtZIlMY1cC6X41pBtTq3+ythXyx4dl/
+	qfEh0O4RZzK8I8f1jkra3za1xt/o4KZhH8sz00g51EK7myAgRKWO4HpdXCNogyrMxux5aM5dcXn
+	IsXi89mBzLsQDawgy2FL/LXGR1btxTJrwOqvSay62r042RfPuSklAFvjrPIfHXjlmC3XGAGDFwf
+	LDXBBh55P5m+NL35C/z3NDQZtcuNem8XFJgusrk+Hize3RFpZ93Z4+/wzD5gPg+L
+X-Google-Smtp-Source: AGHT+IEDeGmz8lEkTX8V7MjBxJvMgDbocuUguww83CXuss84NT2qvK/XoiI2HrV0j86RRxfrka4lwQ==
+X-Received: by 2002:adf:a193:0:b0:3a4:f6b7:8b07 with SMTP id ffacd0b85a97d-3a8ff52022fmr12799608f8f.48.1751385389956;
+        Tue, 01 Jul 2025 08:56:29 -0700 (PDT)
 Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f542661asm16082565a91.26.2025.07.01.08.24.23
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5409d62sm11508098b3a.27.2025.07.01.08.56.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 08:24:30 -0700 (PDT)
-Date: Tue, 1 Jul 2025 17:24:18 +0200
+        Tue, 01 Jul 2025 08:56:29 -0700 (PDT)
+Date: Tue, 1 Jul 2025 17:56:19 +0200
 From: Petr Mladek <pmladek@suse.com>
 To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
 	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	John Ogness <jogness@linutronix.de>,
-	David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4] printk: ringbuffer: Add KUnit test
-Message-ID: <aGP9ouAP5UFQQn0z@pathway.suse.cz>
-References: <20250620-printk-ringbuffer-test-v4-1-8df873f1f3e0@linutronix.de>
+	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
+Subject: Re: [bug report] printk: ringbuffer: Add KUnit test
+Message-ID: <aGQFIzXtyHw8FAeq@pathway.suse.cz>
+References: <eaea66b9-266a-46e7-980d-33f40ad4b215@sabinyo.mountain>
+ <20250626082605-c5fbbb88-f6cc-4659-bea0-a283cdb58e81@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -81,26 +76,120 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250620-printk-ringbuffer-test-v4-1-8df873f1f3e0@linutronix.de>
+In-Reply-To: <20250626082605-c5fbbb88-f6cc-4659-bea0-a283cdb58e81@linutronix.de>
 
-On Fri 2025-06-20 12:26:09, Thomas Weiﬂschuh wrote:
-> The KUnit test validates the correct operation of the ringbuffer.
-> A separate dedicated ringbuffer is used so that the global printk
-> ringbuffer is not touched.
+On Thu 2025-06-26 08:59:52, Thomas Weiﬂschuh wrote:
+> On Wed, Jun 25, 2025 at 10:22:19AM -0500, Dan Carpenter wrote:
+> > Hello Thomas Weiﬂschuh,
+> > 
+> > The patch 5ea2bcdfbf46: "printk: ringbuffer: Add KUnit test" from Jun
+> > 12, 2025, leads to the following static checker warning:
+> > 
+> > 	kernel/printk/printk_ringbuffer_kunit_test.c:91 prbtest_check_data()
+> > 	(unpublished script worries this an off by one)
+> > 
+> > kernel/printk/printk_ringbuffer_kunit_test.c
+> >     83 static bool prbtest_check_data(const struct prbtest_rbdata *dat)
+> >     84 {
+> >     85 	unsigned int len;
+> >     86 
+> >     87 	/* Sane length? */
+> >     88 	if (dat->len < 1 || dat->len > MAX_RBDATA_TEXT_SIZE)
+> >     89 		return false;
+> >     90 
+> > --> 91 	if (dat->text[dat->len] != '\0')
+> >     92 		return false;
+> >     93 
+> > 
+> > My question is that the prbtest_rbdata structure is declared like this:
+> > 
+> >     53  /* test data structure */
+> >     54  struct prbtest_rbdata {
+> >     55          unsigned int len;
+> >     56          char text[] __counted_by(len);
+> >     57  };
+> > 
+> > The size of text is not really counted by len, it's "MAX_RBDATA_TEXT_SIZE
+> > + 1".  The condition "if (dat->text[dat->len] != '\0')" is reading one
+> > element beyond the __counted_by() value so something should complain if
+> > we enable all the debugging, right?
 > 
-> Co-developed-by: John Ogness <john.ogness@linutronix.de>
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> Tested-by: Petr Mladek <pmladek@suse.com>
-> ---
-> Changes in v4:
-> - Add comment about possible prb_reserve() failures
-> - Pick up tags from Petr
-> - Link to v3: https://lore.kernel.org/r/20250612-printk-ringbuffer-test-v3-1-550c088ee368@linutronix.de
+> You are right, we are reading past the __counted_by().
+> But I don't get any complains with CONFIG_FORTIFY_SOURCE=y and CONFIG_KASAN=y
+> on either clang or gcc.
+> We could remove the __counted_by, but I assume somebody will try to add it back
+> at some point.
+> Or we account for the terminator in dat->len:
 
-I have already pushed v3. And I would prefer to avoid a rebase.
-I am going to send a patch which will add the comment.
+It means that the value will be the size occupied by the string
+including the trailing '\0'.
 
-Best  Regards,
+It means that we need to rename it, for example, len -> size.
+Because using "len" for size is confusing and error prone.
+See below.
+
+> diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
+> index ef4a2beea57a..106f4c7ffc86 100644
+> --- a/kernel/printk/printk_ringbuffer_kunit_test.c
+> +++ b/kernel/printk/printk_ringbuffer_kunit_test.c
+> @@ -85,14 +85,15 @@ static bool prbtest_check_data(const struct prbtest_rbdata *dat)
+>         unsigned int len;
+>  
+>         /* Sane length? */
+> -       if (dat->len < 1 || dat->len > MAX_RBDATA_TEXT_SIZE)
+> +       if (dat->len < 2 || dat->len > MAX_RBDATA_TEXT_SIZE + 1)
+>                 return false;
+>  
+> -       if (dat->text[dat->len] != '\0')
+> +       len = dat->len - 1;
+
+This is one example, where it just looks just ugly.
+
+> +
+> +       if (dat->text[len] != '\0')
+>                 return false;
+>  
+>         /* String repeats with the same character? */
+> -       len = dat->len;
+>         while (len--) {
+>                 if (dat->text[len] != dat->text[0])
+>                         return false;
+> @@ -114,10 +115,9 @@ static int prbtest_writer(void *data)
+>         kunit_info(tr->test_data->test, "start thread %03lu (writer)\n", tr->num);
+>  
+>         for (;;) {
+> -               /* ensure at least 1 character */
+> -               text_size = get_random_u32_inclusive(1, MAX_RBDATA_TEXT_SIZE);
+> -               /* +1 for terminator. */
+> -               record_size = sizeof(struct prbtest_rbdata) + text_size + 1;
+> +               /* ensure at least 1 character, +1 for terminator */
+> +               text_size = get_random_u32_inclusive(1, MAX_RBDATA_TEXT_SIZE) + 1;
+
+This is where the naming goes beyond sanity. We allow to break the
+limit by setting "text_size" to MAX_RBDATA_TEXT_SIZE + 1.
+
+It is because MAX_RBDATA_TEXT_SIZE is used to limit the length of
+the string (without the trailing '\0'). Huh.
+
+> +               record_size = sizeof(struct prbtest_rbdata) + text_size;
+>                 WARN_ON_ONCE(record_size > MAX_PRB_RECORD_SIZE);
+>  
+>                 /* specify the text sizes for reservation */
+> @@ -142,7 +142,7 @@ static int prbtest_writer(void *data)
+>                         dat = (struct prbtest_rbdata *)r.text_buf;
+>                         dat->len = text_size;
+>                         memset(dat->text, text_id, text_size);
+> -                       dat->text[text_size] = 0;
+> +                       dat->text[text_size - 1] = '\0';
+>  
+>                         prb_commit(&e);
+
+This patch forgot to update prbtest_fail_record(). It limits the
+printed string by dat->len. But the value newly counts the trailing
+'\0'.
+
+OK, I am going to send a patch with sane names where all this
+should be fixed.
+
+Best Regards,
 Petr
