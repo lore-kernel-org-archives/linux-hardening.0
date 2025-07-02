@@ -1,162 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70C83093A8;
-	Wed,  2 Jul 2025 14:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015782D77F6;
+	Wed,  2 Jul 2025 15:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751467745; cv=none; b=TTqhBM6+WOpGGrcahCuO+WHfVO0806oBnmjzx1iiN7/Qlxeg00hNt7Gvtyc4iaQBLsUDzoRUcAG1ovPZTDsXpQn6UVdfAA0iEiK91A1zyZUIA/lRc25l0hkzZTwOj9oboOmAqi/CGzSlFnjow07Lev3+D4jSG/F+0aknks7tPoE=
+	t=1751471302; cv=none; b=WREzYV2tW5aT2qV5Gk25KNezq4eM8+pbUuU6KuWMekH0jD6rpZ56OMhubn606QcMZ/Wmqlup9WsarYu0aJl0NmIQZbmTGah88AI7h4tC+00e/zQhYXQVD7KG+msA57MqFX2DazksLuVzkaM9Rrk7LYfCXxAjDu423I87wA24ygI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751467745; c=relaxed/simple;
-	bh=iOL/lPMGnLarpjBGtPcV25NxmgTYdI4Ux5+UDRDF4qU=;
+	s=arc-20240116; t=1751471302; c=relaxed/simple;
+	bh=szBu4cc71UNcL+UQ95Dz075O5wiuTepXP1WCmzIERqM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M9yrgIXbv9nM7Uqv9c2snzWofchPcj0eq0NoiYdVaQpk2D43a8gfbx85TzIQPqv+odPhd/KQAwoR/Vjw91QYRjeIB/bQnXKM28P+NCOvGDxEWWOPELP6OGXNpDc8UNV6twTlH1KlxI6YvQNLhBOH6yifboc7t+TieGzhmhNh9WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFKV7/3S; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=acQStpgzv4NAHTM/pDKSnq4PS5vmGXokPObe9SJo5NBAVKCDDmvxlKIp/Gw9qsMyCX7U7Q41tsa4XrxY38jWmFG+53TyeYyreuMZf0N3O4/1/yLr2RsZ5YADcb8qA7H1jj38M0hxTPxV0DgrDRqT6BvNIKKZvLhpgQ6gUEqAr5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f73bxgMn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bATw47+y; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFKV7/3S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4E7C4CEED;
-	Wed,  2 Jul 2025 14:49:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751467744;
-	bh=iOL/lPMGnLarpjBGtPcV25NxmgTYdI4Ux5+UDRDF4qU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MFKV7/3SMbyjv6dhZs2bxA/Fp1gF5SdUQReShAacjrdrHZJSkK05fvnxTOiYhVUTq
-	 TABg+qAw8f4x9zuMVaVUR6vi2T2RhdeCB2xlAWfFAmo0ZDQ4dX7CEYsyhVy5YlC+DL
-	 /nu3WU91jrVUmRlo7D1K3K1THhW7BRo2bsN/2miUeCfqL/3yQS0uJa3lG9oTkamyUj
-	 XbVQHI5PP2dEVxKzoyF0V4W7mAzN77Wk2UVs4Yl7BVq4yt8vyPFvOoLlRn1QzHCdnf
-	 SaLwHKAg9/PCDdzUEEsG1W1586gInTMJaI2NxNB+LQzhdS3D4wqSbjvA1oBkIpe53n
-	 b0KJkienC0mHw==
-Date: Wed, 2 Jul 2025 07:49:04 -0700
-From: Kees Cook <kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f73bxgMn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bATw47+y"
+Date: Wed, 2 Jul 2025 17:48:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751471298;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VSAVK0GU5TWvXP+ODZ1ziZYG6SMkFJRoffezLtLsz/8=;
+	b=f73bxgMnF1fBcS7WXOMnc6kEja+iUcHcyagqhNxHnFA2fkyvtpljiYainf94Q1wkk0k8oL
+	5yvSfYugRQWx6zI0tXr9RjcjOMu5nL1M3XVyRw6LvHjXEMTfL8SYhxvF/2lxvvV9r9iOT4
+	wlTxu1LZFmf2H5x6CRoeHn/y9X4FmGw79vOV0XEf9GC3ikXzcUiEp+JXKWtzGgLSl7+EcK
+	PC7ZP9JH9uNONhojtbblSkZwFEXzr+52EORT2ILSRwH9iZBv2NHSsJbFNsIP7jPgOhc4+G
+	3MyPOttZr2+/w7DREGC4Uhuuy9/pVxEDNONgZdHhQUSHRylJpu7DfGQMo8+G+Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751471298;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VSAVK0GU5TWvXP+ODZ1ziZYG6SMkFJRoffezLtLsz/8=;
+	b=bATw47+yUelqg3qqSU03c99ONUHLykGWnnniK+I7h40UvsM5J7rSF52vHgQ5eNr2ugVC1U
+	t0bxUVInbK1Mk9Dg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 To: Petr Mladek <pmladek@suse.com>
-Cc: Shardul Bankar <shardulsb08@gmail.com>, linux-kernel@vger.kernel.org,
-	rostedt@goodmis.org, john.ogness@linutronix.de,
-	senozhatsky@chromium.org, viro@zeniv.linux.org.uk,
-	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [BUG] KASAN: slab-out-of-bounds in vsnprintf triggered by large
- stack frame
-Message-ID: <202507020716.1B1E38593@keescook>
-References: <9052e70eb1cf8571c1b37bb0cee19aaada7dfe3d.camel@gmail.com>
- <aGUfd7mxQOOpkHz8@pathway.suse.cz>
+Cc: John Ogness <john.ogness@linutronix.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, David Gow <davidgow@google.com>, Arnd Bergmann <arnd@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/3] printk: KUnit: Followup fixes for the new KUnit test
+Message-ID: <20250702174519-0b0fb0a9-3e9b-4a1d-918c-f1a57d2c2935@linutronix.de>
+References: <20250702095157.110916-1-pmladek@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aGUfd7mxQOOpkHz8@pathway.suse.cz>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250702095157.110916-1-pmladek@suse.com>
 
-On Wed, Jul 02, 2025 at 02:00:55PM +0200, Petr Mladek wrote:
-> Adding Kees and linux-hardening mailing list into CC just to be sure.
+On Wed, Jul 02, 2025 at 11:51:54AM +0200, Petr Mladek wrote:
+> Hi,
 > 
-> But I think that this is a bogus report, see below.
+> this patchset puts together some followup fixes for the new KUnit test
+> which were discussed on several locations.
+
+<snip>
+
+> Arnd Bergmann (1):
+>   printk: kunit: support offstack cpumask
 > 
-> On Tue 2025-07-01 22:11:55, Shardul Bankar wrote:
-> > Hello,
-> > 
-> > I would like to report a slab-out-of-bounds bug that can be reliably
-> > reproduced with a purpose-built kernel module. This report was
-> > initially sent to security@kernel.org, and I was advised to move it to
-> > the public lists.
-> > 
-> > I have confirmed this issue still exists on the latest mainline kernel
-> > (v6.16.0-rc4).
-> > 
-> > Bug Summary:
-> > 
-> > The bug is a KASAN-reported slab-out-of-bounds write within vsnprintf.
-> > It appears to be caused by a latent memory corruption issue, likely
-> > related to the names_cache slab.
-> > 
-> > The vulnerability can be triggered by loading a kernel module that
-> > allocates an unusually large stack frame. When compiling the PoC
-> > module, GCC explicitly warns about this: warning: the frame size of
-> > 29760 bytes is larger than 2048 bytes. This "stack grooming" positions
-> > the task's stack to overlap with a stale pointer from a freed
-> > names_cache object. A subsequent call to pr_info() then uses this
-> > corrupted value, leading to the out-of-bounds write.
+> Petr Mladek (2):
+>   printk: ringbuffer: Explain why the KUnit test ignores failed writes
+>   printk: kunit: Fix __counted_by() in struct prbtest_rbdata
 > 
-> Honestly, I think that everything works as expected.
-> I do not see any bug with the existing kernel code.
-> IMHO, the bug is in the test module, see below.
-> 
-> > Reproducer:
-> > 
-> > The following minimal kernel module reliably reproduces the crash on my
-> > x86-64 test system.
-> > 
-> > #include <linux/init.h>
-> > #include <linux/module.h>
-> > #include <linux/printk.h>
-> > 
-> > #define STACK_FOOTPRINT (3677 * sizeof(void *))
-> > 
-> > static int __init final_poc_init(void)
-> > {
-> >     volatile char stack_eater[STACK_FOOTPRINT];
-> >     stack_eater[0] = 'A'; // Prevent optimization
-> 
-> This takes the whole stack.
+>  kernel/printk/printk_ringbuffer_kunit_test.c | 78 +++++++++++++-------
+>  1 file changed, 52 insertions(+), 26 deletions(-)
 
-Way more than the whole stack. :) That's 29416 bytes and the default
-stack is 8192 on x86_64. (Well, here it's actually 16K due to KASAN,
-I think.) So this is well past the bottom of the stack. And since the
-kernel builds with -fno-stack-clash-protection, we don't see a stack
-probing crash as the stack usage crosses into the guard page. This is
-the same as just doing:
+For the series:
 
-static int __init final_poc_init(void)
-{
-	volatile char stack_eater;
-	*(&stack_eater + STACK_FOOTPRINT) = 'A';
-	...
-
-Try this and see how the crash changes:
-
-static int __init final_poc_init(void)
-{
-	volatile char stack_eater[STACK_FOOTPRINT];
-	for (int i = STACK_FOOTPRINT - 1; i >= 0; i++)
-		stack_eater[i] = 'A';
-	...
-
-:)
-
-> >     pr_info("Final PoC: Triggering bug with controlled stack
-> > layout.\n");
-> 
-> And any function called here, which would need to store return
-> address on the stack would fail.
-> 
-> The compiler warned about it.
-> KASAN caught and reported the problem.
-> 
-> The solution is to listen to the compiler warnings and
-> do not create broken modules.
-
-I would agree.
-
-> > [  214.242355] Call Trace:
-> > [  214.242356]  <TASK>
-> > [  214.242359]  ? console_emit_next_record+0x12b/0x450
-> [...]
-> > [  214.242573]  ? entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> > [  214.242575]  </TASK>
-
-I would also note that the _entire_ trace is bogus too -- all the
-leading "?" lines means it's just guessing based on what was left over
-in memory rather than a sane dump.
-
-> > This is my first time reporting a bug on the mailing list, so please
-> > let me know if any additional information or formatting is required.
-
-I'd repeat what Petr said, which is: if the compiler is emitting
-warnings, then it's likely the bug is not with the core kernel. :)
-
--Kees
-
--- 
-Kees Cook
+Reviewed-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
