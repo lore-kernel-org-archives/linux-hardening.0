@@ -1,49 +1,46 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3F52BE65F;
-	Wed,  2 Jul 2025 20:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8C1239E90;
+	Wed,  2 Jul 2025 21:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751489231; cv=none; b=mnnJW7oRV4VZ+OLVv5pWmzL14YHIMxagrr9WocplsxAKPVJNsfUGnMSJ/BPrtjlV5h5esX40lmS8yWJDTOoMqmYrk6wDj7vhXh/pHdBVfjm+Dy+w6FR50O9NEtxNO+4747yVKX0CHdEOcln6tCDS9oCNgTR7CXnvQHULLqPcDuM=
+	t=1751490768; cv=none; b=owHh+ooPEzA1BrgUct7MoLT3QSfK1v9k8+Ehfuw8V5OKnKTMyo4u+Xs1Rllh6aYMB35NJRXZRYyEArGuexpOXWMgZhzYDSUs0OvnOa9uODt2Tie7iWzPrdWFBGytjlRe55pJv5J9/F+BgMH/xGS5PKoJjfCh/CNwke4chm4ivRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751489231; c=relaxed/simple;
-	bh=b7KpTvLGxlxB3a/FnKhICdjRjsnZi/EjjVjuL7ed9+8=;
+	s=arc-20240116; t=1751490768; c=relaxed/simple;
+	bh=PBybrmdPM7zrM8eU16XV6OIXKt3aecbUtvMDihivU7Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CczavsrYvqFMpGkSa7pEYa+nWxbToQwVg2Dy32LjmCtKLSliLj5/KlC2nE4ncYWztRFDwjLn1B3OvA+g3cS/E/iGAWYnG32aB7eC2SRTH7G1BvzBdzfHbWvG/fytlGnIk/0JYqPxA4ga7/H4vXPpB+lhDOig8w9TQJAILsQMpqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=cbIOmuoW; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
+	 Content-Type:Content-Disposition:In-Reply-To; b=ewMB3nLa9td1R7871lhwaOE5MZkpl0m9wPKazVuVnditKC8Lt2GnjUk3+y77HlJPnc3mjC65gNEbj5mk7foWqvXvgX41kS3gXKpRbScRzla1AbTY8B7NFgLlzj6PxkNOoySdwzjfum07uriMVw4tWD8vBVNcPyx5iOpO3SwhjNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LIU0waRN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="cbIOmuoW"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bXX4z2XGPz9t9v;
-	Wed,  2 Jul 2025 22:46:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
-	t=1751489219;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cj9HS6v1hLzfdQ76bVuuUjdPTAKEhhmP3lT0F4JEgMs=;
-	b=cbIOmuoWsdnUS+VhCcJFdQKvp1C+3vx47T9m38YeVQekkwpWuPusmL3EbsDs/jVk0RMGeJ
-	zb8qJvAGsSfR1fGrlU6O7N8D3HzrJK5gWtkZseHygqRRy90cjJUCXgYPjQU5Qcj3VV4leU
-	iW/5NgQfZrgESGsWNQ8/+khwj6itDmmpETAOnLd/7Uh7cc/gt8OFDeIxFdZF4BykFkR6s2
-	m8pL1iPm53JWvHB10KZQC1FgclV4vvHMfPryKXRh2xTmnI7J4nX6nsWJ64yFShduVALgUg
-	SOATgFC7W5jG5J2oB1dpvLpDbvrp3aE3FGvq4bbaJU4vvwYBHSq/fnog83gx6Q==
-Date: Thu, 3 Jul 2025 02:16:48 +0530
-From: Brahmajit Das <listout@listout.xyz>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	kees@kernel.org, ailiop@suse.com, mark@harmstone.com, 
-	David Sterba <dsterba@suse.cz>, Brahmajit Das <bdas@suse.de>
-Subject: Re: [PATCH v4] btrfs: replace deprecated strcpy with strscpy
-Message-ID: <pef6rt4ggd2gizakr7kqr2p4yn5mh6rqlqojuwx3gaoiexycxi@bzgezdja3pst>
-References: <20250620164957.14922-1-listout@listout.xyz>
- <20250702182712.GA3453770@ax162>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LIU0waRN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA7CEC4CEE7;
+	Wed,  2 Jul 2025 21:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751490767;
+	bh=PBybrmdPM7zrM8eU16XV6OIXKt3aecbUtvMDihivU7Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LIU0waRNiIeiPXwSighbehOZkYRBLyQQz/OS6cgrq0YpfDjcMuVKWmq2bSTD6tu66
+	 kA6tVC+6djnuqyN0Lj0rL334tlOcAB5r72iewYougOw/bzfu4Lx/nY304Jz7tSU9oj
+	 YaZfI4cthW4dLYj6wxLpbY/zI4K2yg/TiSQZboapPql9zxnqEGN1mz064iyzVaNgQ5
+	 YCS5r4KAwPVcGYmVSWrFN3Qqt7S9sHNgZfMNujLorofqE5HLZLHhNyEACZ2DGB4YlV
+	 w2gaNvdq1Snnwvrp7VO0eBCfOzN3B/iNQ8FhHlELE4LfNlkPoioqXa82k5CnizIR5a
+	 Gd7+4ywf7/owA==
+Date: Wed, 2 Jul 2025 14:12:43 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Bill Wendling <morbo@google.com>
+Cc: Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>,
+	Jannik =?iso-8859-1?Q?Gl=FCckert?= <jannik.glueckert@gmail.com>,
+	linux-hardening@vger.kernel.org,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] kunit/fortify: Add back "volatile" for sizeof() constants
+Message-ID: <20250702211243.GA327934@ax162>
+References: <20250628234034.work.800-kees@kernel.org>
+ <CAG48ez0n1E0iuOxPe=jq4MuuP3w2wMSNixmfNmBbB89jyJBSbA@mail.gmail.com>
+ <202507010926.1650356E@keescook>
+ <CAGG=3QWVM9tTRoGws0X+Jq+m7Fte2JeQC+jUL=EZ5hqGzSY6hg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,27 +49,35 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250702182712.GA3453770@ax162>
-X-Rspamd-Queue-Id: 4bXX4z2XGPz9t9v
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGG=3QWVM9tTRoGws0X+Jq+m7Fte2JeQC+jUL=EZ5hqGzSY6hg@mail.gmail.com>
 
-On 02.07.2025 11:27, Nathan Chancellor wrote:
-> Hi Brahmajit,
-> 
-> On Fri, Jun 20, 2025 at 10:19:57PM +0530, Brahmajit Das wrote:
-... snip ...
-> 
-> It looks like the offset_in_page(buf) part of the WARN() in
-> sysfs_emit() gets triggered with this, presumably because kmalloc()
-> returns something that is not page aligned like sysfs_emit() requires?
-> 
-> Cheers,
-> Nathan
+On Tue, Jul 01, 2025 at 10:38:36AM -0700, Bill Wendling wrote:
+> On Tue, Jul 1, 2025 at 9:27 AM Kees Cook <kees@kernel.org> wrote:
+> > I have not had the time to minimize it, no.
 
-Hey Nathan, thanks for reporting this. From the QEMU logs this looks
-like on ARM64. Unfortunately I didn't boot test on arm due to not having
-the hardware. I'll setup a qemu test env. for ARM and get back.
+I can try to extract this into a minimal reproducer next week if nothing
+major crops up over the long weekend.
 
-Sorry I'm new to kernel development.
--- 
-Regards,
-listout
+> OPTIMIZER_HIDE_VAR doesn't have a 'volatile' on it. Could that be it?
+
+I tested
+
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 6f04a1d8c720..eab208a9a6f4 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -160,7 +160,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ #ifndef OPTIMIZER_HIDE_VAR
+ /* Make the optimizer believe the variable can be manipulated arbitrarily. */
+ #define OPTIMIZER_HIDE_VAR(var)						\
+-	__asm__ ("" : "=r" (var) : "0" (var))
++	__asm__ volatile("" : "=r" (var) : "0" (var))
+ #endif
+ 
+ #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
+
+but that did not resolve the error.
+
+Cheers,
+Nathan
