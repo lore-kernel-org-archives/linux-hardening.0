@@ -1,96 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABBF303DFD;
-	Wed,  2 Jul 2025 18:04:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23E12E4990;
+	Wed,  2 Jul 2025 18:27:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751479457; cv=none; b=Vg7X11ySHnIBF/eRHRwN19AEQ5BBksuZ56YKT2DmYfdE15hipvJ5LmBpEw5DQqlp3Txt70i/vFHrgchLslk4PlLwX+gSk6Ht52JfiDqnmo/cZ11OTwatUL9FYLRs1FEHUQeFma1Ag8QSXVNqm+fP7GG2CE0o+yvQplB9oEWSa2g=
+	t=1751480840; cv=none; b=DmG2u16XVxxZqZ/lWOzWTsGbgKd+sLCRqaDhhihb0qplnzsN5MA5yN90Yfc+Y2jiiwqZO+Sf2Pi88VuJh1uP0DCRYYfIrTGF6E0KyWX/w1jCPOjot78l2EFFrT5oj4KSf8AkK5/utiPb8SFiKeOw9A8+5fuOW2QFxfwqQwaN7EU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751479457; c=relaxed/simple;
-	bh=rB7kDTHQ/uishKmXwIwf+woKkI5vPemOVne+kvr5XMw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DSqxE5zJ/jO8UBfypelknwnTtsa7doEKMQ1RvnViq8CIixsk/iGodqby/BwanSltq7UeJhx9F3KacvPouvphAe2SzQKcIK4yQ5szeSWvPITQwcX9BwoYUsvbcgTAe7zShjJqqvTQA37ZysMYn0WdAi+zYcW8l8b8TGfgFNMxUsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B51d1mwc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751480840; c=relaxed/simple;
+	bh=dug9JKJ8jzli2X+iTVUSEQZLGmtcSJ2d7RbXeaPWkg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QiNGB0NsocB2RM7l/ZavRy0TIfi6QO3fkB5UDuPqazduOjZTxl4IaDIlPFWsyLXqxk4WfMupZDEP3SkV0kJsRdhhE6h3GhwcquZ+dD6fSwo+qJwAah14G70vfBKCPQAqV+gUPFl/ZMS36vVhmE7kPGbnOIS5R39u38RNwnIV3tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gpy5Ywhr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B51d1mwc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7848C4CEE7;
-	Wed,  2 Jul 2025 18:04:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gpy5Ywhr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1614DC4CEE7;
+	Wed,  2 Jul 2025 18:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751479456;
-	bh=rB7kDTHQ/uishKmXwIwf+woKkI5vPemOVne+kvr5XMw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=B51d1mwcN1fRUwVhtU0Jp4Jmc/LOF7u9soJ+unACltt7krszWojbDQX3hqYEuOxMk
-	 4+050x4ZZaBrQ2cOlxJsLd+BnvGv0eBYf5BDnNGpmuHRqZIuBSLK5GfrzJw/iXFTZC
-	 BcA1sZC1Z76T19jPZjh194FNepYTNZrrGggebwG9n8adY3gAq3NFY64CA1cEt1qh1J
-	 8miVTNiLHS85CzbIy3Yv+mnMyF8UNM2jzKboRjHobK83Y7j5ClNL4ZJ/4vp8A4xvHV
-	 WCETJcmCvvJYesIcvgT6nIY2ctiRTIKfIFnFDI7DhaTGz8OSe8Y7n7PtSilnbwJbD1
-	 XSn0OWtgIBDQQ==
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-60f24b478e3so2308904eaf.3;
-        Wed, 02 Jul 2025 11:04:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV1Z0j7UDHsObjmjQDRC2cZn82nQdvbZ1xusYi+W5RHgrU9OFT/lPDBtIKvobM3qU3Sf8dX24Wrm1Xj@vger.kernel.org, AJvYcCVVFuwb1s958jBjYDPQuveo5IRk61G+cIyV6Ga6dYjc2zJsxxkWa8GmKRDs3w2SPjfAtCiTuaxfI1xv0GJX@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbIFdmeSMQ4gnc1aIJDQP6QsTHR9+4W9E0FZkgSKcI6YQTo0RT
-	jXLKov+vsw656pwIU2Zr7ogkZFoz33CpToTnU9VNM0NePoug6UGxy1r9mW+FNjN5UdlbwGdZ15b
-	whegaSCiRevxykrEM3sXMT/nLZBBWbXY=
-X-Google-Smtp-Source: AGHT+IEns6wOYy4KSm5xHGLBBW4O7MP8WE+AxP1Ldh9mvi+EG8ZwJYGZjnClAScUQLVNPqJRq+Ykwfex8U8yV8fedMo=
-X-Received: by 2002:a05:6820:210a:b0:611:b00b:baa with SMTP id
- 006d021491bc7-612010c1c74mr2670255eaf.3.1751479456022; Wed, 02 Jul 2025
- 11:04:16 -0700 (PDT)
+	s=k20201202; t=1751480837;
+	bh=dug9JKJ8jzli2X+iTVUSEQZLGmtcSJ2d7RbXeaPWkg8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gpy5YwhrnEizCphyRJl6J/BpYhjJnExkX+BBSfsX6vQnvNvN2rUpTEy9BI/XhlSCV
+	 M0COOxy3U5gNmMVRriVwMb8SoJj+o7rePGXPJk2kLWaXmLjrHP4ImQtq/bbfz/I6w7
+	 eQXST7zk9N2eOs6ODlFriRFF8pMqpR5Xg2YR7XVwl4aye4Dn+RCmSse8Rq9ie4QhhC
+	 u0KGIakUGby59qDY8npfx/Hfl6944hsOlSNboxK/1xhV90RJA7hg2K53sfySzOMU2o
+	 5JF/fTHq2YpARdiHLHYBYpzChSxq1cKBFt3FlPPZya7tJabFFX47xQRX1m5WH9jZF/
+	 B4FRENjpISMig==
+Date: Wed, 2 Jul 2025 11:27:12 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Brahmajit Das <listout@listout.xyz>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com,
+	dsterba@suse.com, kees@kernel.org, ailiop@suse.com,
+	mark@harmstone.com, David Sterba <dsterba@suse.cz>,
+	Brahmajit Das <bdas@suse.de>
+Subject: Re: [PATCH v4] btrfs: replace deprecated strcpy with strscpy
+Message-ID: <20250702182712.GA3453770@ax162>
+References: <20250620164957.14922-1-listout@listout.xyz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624142134.11317-1-listout@listout.xyz>
-In-Reply-To: <20250624142134.11317-1-listout@listout.xyz>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 20:04:05 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gHpaAs9DtP7z1NoBPVEF0FQjBXEyRWoUTWhRCLF80Ajw@mail.gmail.com>
-X-Gm-Features: Ac12FXxFn50hgoqYdCib2K_DvxZ-UZ8NCXtwyD3sCmb4Dj-M25Ntwt7i2bn5g_M
-Message-ID: <CAJZ5v0gHpaAs9DtP7z1NoBPVEF0FQjBXEyRWoUTWhRCLF80Ajw@mail.gmail.com>
-Subject: Re: [PATCH] ACPI / sysfs: Replace deprecated strcpy() with sysfs_emit
-To: Brahmajit Das <listout@listout.xyz>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, rafael@kernel.org, lenb@kernel.org, 
-	lv.zheng@intel.com, kees@kernel.org, rui.zhang@intel.com, len.brown@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620164957.14922-1-listout@listout.xyz>
 
-On Tue, Jun 24, 2025 at 4:21=E2=80=AFPM Brahmajit Das <listout@listout.xyz>=
- wrote:
->
-> strcpy() is deprecated; use sysfs_emit() instead. No functional changes
-> intended.
+Hi Brahmajit,
 
-It may be deprecated, but is it used incorrectly in this particular case?
-
+On Fri, Jun 20, 2025 at 10:19:57PM +0530, Brahmajit Das wrote:
+> strcpy is deprecated due to lack of bounds checking. This patch replaces
+> strcpy with strscpy, the recommended alternative for null terminated
+> strings, to follow best practices.
+> 
+> There are instances where strscpy cannot be used such as where both the
+> source and destination are character pointers. In that instance we can
+> use sysfs_emit.
+> 
 > Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Brahmajit Das <listout@listout.xyz>
-> ---
->  drivers/acpi/sysfs.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
-> index a48ebbf768f9..7ce90998ab97 100644
-> --- a/drivers/acpi/sysfs.c
-> +++ b/drivers/acpi/sysfs.c
-> @@ -181,10 +181,9 @@ static int param_set_trace_method_name(const char *v=
-al,
->
->         /* This is a hack.  We can't kmalloc in early boot. */
->         if (is_abs_path)
-> -               strcpy(trace_method_name, val);
-> +               sysfs_emit(trace_method_name, "%s", val);
->         else {
-> -               trace_method_name[0] =3D '\\';
-> -               strcpy(trace_method_name+1, val);
-> +               sysfs_emit(trace_method_name, "\%s", val);
->         }
+> Suggested-by: Anthony Iliopoulos <ailiop@suse.com>
+> Suggested-by: David Sterba <dsterba@suse.cz>
+> Signed-off-by: Brahmajit Das <bdas@suse.de>
+...
+> diff --git a/fs/btrfs/xattr.c b/fs/btrfs/xattr.c
+> index 3e0edbcf73e1..49fd8a49584a 100644
+> --- a/fs/btrfs/xattr.c
+> +++ b/fs/btrfs/xattr.c
+> @@ -516,8 +516,7 @@ static int btrfs_initxattrs(struct inode *inode,
+>  			ret = -ENOMEM;
+>  			break;
+>  		}
+> -		strcpy(name, XATTR_SECURITY_PREFIX);
+> -		strcpy(name + XATTR_SECURITY_PREFIX_LEN, xattr->name);
+> +		sysfs_emit(name, "%s%s", XATTR_SECURITY_PREFIX, xattr->name);
+>  
+>  		if (strcmp(name, XATTR_NAME_CAPS) == 0)
+>  			clear_bit(BTRFS_INODE_NO_CAP_XATTR, &BTRFS_I(inode)->runtime_flags);
 
-The code does strlen() checks before this, I don't think that the
-change is an improvement.
+This change is now in -next as commit d282edfe8850 ("btrfs: replace
+strcpy() with strscpy()"), where this hunk appears to causes a slew of
+warnings on my arm64 systems along the lines of:
 
->
->         /* Restore the original tracer state */
-> --
+  ------------[ cut here ]------------
+  invalid sysfs_emit: buf:00000000581f52ce
+  WARNING: fs/sysfs/file.c:767 at sysfs_emit+0x60/0xe0, CPU#5: systemd/1
+  Modules linked in:
+  CPU: 5 UID: 0 PID: 1 Comm: systemd Tainted: G        W           6.16.0-rc4-next-20250702 #1 PREEMPT(voluntary)
+  Tainted: [W]=WARN
+  Hardware name: QEMU KVM Virtual Machine, BIOS edk2-20241117-5.fc42 11/17/2024
+  pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+  pc : sysfs_emit+0x60/0xe0
+  lr : sysfs_emit+0x60/0xe0
+  sp : ffff80008005b840
+  x29: ffff80008005b890 x28: ffff0000c0793f18 x27: ffffac7b3da61468
+  x26: 0000000000400100 x25: ffffac7b3f173a88 x24: ffffac7b3f2a6480
+  x23: ffff0000c0793f18 x22: ffff0000c6d4da38 x21: ffff0000c156b500
+  x20: ffff0000c0e2e640 x19: ffff0000c156b500 x18: 00000000ffffffff
+  x17: 65766c6f7365722d x16: 646d65747379732d x15: 0000000000000010
+  x14: 0000000000000000 x13: 0000000000000008 x12: 0000000000000020
+  x11: 0000000000000001 x10: 0000000000000001 x9 : ffffac7b3d2b97cc
+  x8 : ffffac7b40c1aa40 x7 : ffff80008005b4a0 x6 : ffffac7b40beaa00
+  x5 : ffff0003fd79c488 x4 : ffff5388bd8bc000 x3 : ffff0000c0960000
+  x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000c0960000
+  Call trace:
+   sysfs_emit+0x60/0xe0 (P)
+   btrfs_initxattrs+0x8c/0x148
+   security_inode_init_security+0x110/0x1d8
+   btrfs_xattr_security_init+0x30/0x58
+   btrfs_create_new_inode+0x3cc/0xc60
+   btrfs_create_common+0xdc/0x148
+   btrfs_mkdir+0x7c/0xc0
+   vfs_mkdir+0x1a0/0x290
+   do_mkdirat+0x150/0x190
+   __arm64_sys_mkdirat+0x54/0xb0
+   invoke_syscall.constprop.0+0x64/0xe8
+   el0_svc_common.constprop.0+0x40/0xe8
+   do_el0_svc+0x24/0x38
+   el0_svc+0x3c/0x170
+   el0t_64_sync_handler+0x10c/0x138
+   el0t_64_sync+0x1b0/0x1b8
+  ---[ end trace 0000000000000000 ]---
+
+It looks like the offset_in_page(buf) part of the WARN() in
+sysfs_emit() gets triggered with this, presumably because kmalloc()
+returns something that is not page aligned like sysfs_emit() requires?
+
+Cheers,
+Nathan
