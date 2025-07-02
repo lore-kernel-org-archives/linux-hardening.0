@@ -1,83 +1,96 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015782D77F6;
-	Wed,  2 Jul 2025 15:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABBF303DFD;
+	Wed,  2 Jul 2025 18:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751471302; cv=none; b=WREzYV2tW5aT2qV5Gk25KNezq4eM8+pbUuU6KuWMekH0jD6rpZ56OMhubn606QcMZ/Wmqlup9WsarYu0aJl0NmIQZbmTGah88AI7h4tC+00e/zQhYXQVD7KG+msA57MqFX2DazksLuVzkaM9Rrk7LYfCXxAjDu423I87wA24ygI=
+	t=1751479457; cv=none; b=Vg7X11ySHnIBF/eRHRwN19AEQ5BBksuZ56YKT2DmYfdE15hipvJ5LmBpEw5DQqlp3Txt70i/vFHrgchLslk4PlLwX+gSk6Ht52JfiDqnmo/cZ11OTwatUL9FYLRs1FEHUQeFma1Ag8QSXVNqm+fP7GG2CE0o+yvQplB9oEWSa2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751471302; c=relaxed/simple;
-	bh=szBu4cc71UNcL+UQ95Dz075O5wiuTepXP1WCmzIERqM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=acQStpgzv4NAHTM/pDKSnq4PS5vmGXokPObe9SJo5NBAVKCDDmvxlKIp/Gw9qsMyCX7U7Q41tsa4XrxY38jWmFG+53TyeYyreuMZf0N3O4/1/yLr2RsZ5YADcb8qA7H1jj38M0hxTPxV0DgrDRqT6BvNIKKZvLhpgQ6gUEqAr5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f73bxgMn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bATw47+y; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751479457; c=relaxed/simple;
+	bh=rB7kDTHQ/uishKmXwIwf+woKkI5vPemOVne+kvr5XMw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DSqxE5zJ/jO8UBfypelknwnTtsa7doEKMQ1RvnViq8CIixsk/iGodqby/BwanSltq7UeJhx9F3KacvPouvphAe2SzQKcIK4yQ5szeSWvPITQwcX9BwoYUsvbcgTAe7zShjJqqvTQA37ZysMYn0WdAi+zYcW8l8b8TGfgFNMxUsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B51d1mwc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f73bxgMn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bATw47+y"
-Date: Wed, 2 Jul 2025 17:48:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751471298;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VSAVK0GU5TWvXP+ODZ1ziZYG6SMkFJRoffezLtLsz/8=;
-	b=f73bxgMnF1fBcS7WXOMnc6kEja+iUcHcyagqhNxHnFA2fkyvtpljiYainf94Q1wkk0k8oL
-	5yvSfYugRQWx6zI0tXr9RjcjOMu5nL1M3XVyRw6LvHjXEMTfL8SYhxvF/2lxvvV9r9iOT4
-	wlTxu1LZFmf2H5x6CRoeHn/y9X4FmGw79vOV0XEf9GC3ikXzcUiEp+JXKWtzGgLSl7+EcK
-	PC7ZP9JH9uNONhojtbblSkZwFEXzr+52EORT2ILSRwH9iZBv2NHSsJbFNsIP7jPgOhc4+G
-	3MyPOttZr2+/w7DREGC4Uhuuy9/pVxEDNONgZdHhQUSHRylJpu7DfGQMo8+G+Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751471298;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VSAVK0GU5TWvXP+ODZ1ziZYG6SMkFJRoffezLtLsz/8=;
-	b=bATw47+yUelqg3qqSU03c99ONUHLykGWnnniK+I7h40UvsM5J7rSF52vHgQ5eNr2ugVC1U
-	t0bxUVInbK1Mk9Dg==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Petr Mladek <pmladek@suse.com>
-Cc: John Ogness <john.ogness@linutronix.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, David Gow <davidgow@google.com>, Arnd Bergmann <arnd@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/3] printk: KUnit: Followup fixes for the new KUnit test
-Message-ID: <20250702174519-0b0fb0a9-3e9b-4a1d-918c-f1a57d2c2935@linutronix.de>
-References: <20250702095157.110916-1-pmladek@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B51d1mwc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7848C4CEE7;
+	Wed,  2 Jul 2025 18:04:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751479456;
+	bh=rB7kDTHQ/uishKmXwIwf+woKkI5vPemOVne+kvr5XMw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=B51d1mwcN1fRUwVhtU0Jp4Jmc/LOF7u9soJ+unACltt7krszWojbDQX3hqYEuOxMk
+	 4+050x4ZZaBrQ2cOlxJsLd+BnvGv0eBYf5BDnNGpmuHRqZIuBSLK5GfrzJw/iXFTZC
+	 BcA1sZC1Z76T19jPZjh194FNepYTNZrrGggebwG9n8adY3gAq3NFY64CA1cEt1qh1J
+	 8miVTNiLHS85CzbIy3Yv+mnMyF8UNM2jzKboRjHobK83Y7j5ClNL4ZJ/4vp8A4xvHV
+	 WCETJcmCvvJYesIcvgT6nIY2ctiRTIKfIFnFDI7DhaTGz8OSe8Y7n7PtSilnbwJbD1
+	 XSn0OWtgIBDQQ==
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-60f24b478e3so2308904eaf.3;
+        Wed, 02 Jul 2025 11:04:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV1Z0j7UDHsObjmjQDRC2cZn82nQdvbZ1xusYi+W5RHgrU9OFT/lPDBtIKvobM3qU3Sf8dX24Wrm1Xj@vger.kernel.org, AJvYcCVVFuwb1s958jBjYDPQuveo5IRk61G+cIyV6Ga6dYjc2zJsxxkWa8GmKRDs3w2SPjfAtCiTuaxfI1xv0GJX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbIFdmeSMQ4gnc1aIJDQP6QsTHR9+4W9E0FZkgSKcI6YQTo0RT
+	jXLKov+vsw656pwIU2Zr7ogkZFoz33CpToTnU9VNM0NePoug6UGxy1r9mW+FNjN5UdlbwGdZ15b
+	whegaSCiRevxykrEM3sXMT/nLZBBWbXY=
+X-Google-Smtp-Source: AGHT+IEns6wOYy4KSm5xHGLBBW4O7MP8WE+AxP1Ldh9mvi+EG8ZwJYGZjnClAScUQLVNPqJRq+Ykwfex8U8yV8fedMo=
+X-Received: by 2002:a05:6820:210a:b0:611:b00b:baa with SMTP id
+ 006d021491bc7-612010c1c74mr2670255eaf.3.1751479456022; Wed, 02 Jul 2025
+ 11:04:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250702095157.110916-1-pmladek@suse.com>
+References: <20250624142134.11317-1-listout@listout.xyz>
+In-Reply-To: <20250624142134.11317-1-listout@listout.xyz>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Jul 2025 20:04:05 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gHpaAs9DtP7z1NoBPVEF0FQjBXEyRWoUTWhRCLF80Ajw@mail.gmail.com>
+X-Gm-Features: Ac12FXxFn50hgoqYdCib2K_DvxZ-UZ8NCXtwyD3sCmb4Dj-M25Ntwt7i2bn5g_M
+Message-ID: <CAJZ5v0gHpaAs9DtP7z1NoBPVEF0FQjBXEyRWoUTWhRCLF80Ajw@mail.gmail.com>
+Subject: Re: [PATCH] ACPI / sysfs: Replace deprecated strcpy() with sysfs_emit
+To: Brahmajit Das <listout@listout.xyz>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, rafael@kernel.org, lenb@kernel.org, 
+	lv.zheng@intel.com, kees@kernel.org, rui.zhang@intel.com, len.brown@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 11:51:54AM +0200, Petr Mladek wrote:
-> Hi,
-> 
-> this patchset puts together some followup fixes for the new KUnit test
-> which were discussed on several locations.
+On Tue, Jun 24, 2025 at 4:21=E2=80=AFPM Brahmajit Das <listout@listout.xyz>=
+ wrote:
+>
+> strcpy() is deprecated; use sysfs_emit() instead. No functional changes
+> intended.
 
-<snip>
+It may be deprecated, but is it used incorrectly in this particular case?
 
-> Arnd Bergmann (1):
->   printk: kunit: support offstack cpumask
-> 
-> Petr Mladek (2):
->   printk: ringbuffer: Explain why the KUnit test ignores failed writes
->   printk: kunit: Fix __counted_by() in struct prbtest_rbdata
-> 
->  kernel/printk/printk_ringbuffer_kunit_test.c | 78 +++++++++++++-------
->  1 file changed, 52 insertions(+), 26 deletions(-)
+> Link: https://github.com/KSPP/linux/issues/88
+> Signed-off-by: Brahmajit Das <listout@listout.xyz>
+> ---
+>  drivers/acpi/sysfs.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+> index a48ebbf768f9..7ce90998ab97 100644
+> --- a/drivers/acpi/sysfs.c
+> +++ b/drivers/acpi/sysfs.c
+> @@ -181,10 +181,9 @@ static int param_set_trace_method_name(const char *v=
+al,
+>
+>         /* This is a hack.  We can't kmalloc in early boot. */
+>         if (is_abs_path)
+> -               strcpy(trace_method_name, val);
+> +               sysfs_emit(trace_method_name, "%s", val);
+>         else {
+> -               trace_method_name[0] =3D '\\';
+> -               strcpy(trace_method_name+1, val);
+> +               sysfs_emit(trace_method_name, "\%s", val);
+>         }
 
-For the series:
+The code does strlen() checks before this, I don't think that the
+change is an improvement.
 
-Reviewed-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+>
+>         /* Restore the original tracer state */
+> --
