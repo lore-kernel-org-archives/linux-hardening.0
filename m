@@ -1,150 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682B42DE6EC
-	for <linux-hardening@vger.kernel.org>; Wed,  2 Jul 2025 20:22:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F21B2DE6F9;
+	Wed,  2 Jul 2025 20:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751487727; cv=none; b=cJzCJY37Q8S3jYDTiPlR1ur8Gtfh8/8EH1sxmEaC59yGZ/iQOVZYKT8sKpi1cptnt85QlL1aKuUPWkYoad5Con2tR63zTkHc5fcHUzNlwujadPfetj6TKzcVzrmktaeKN6V5uzpejM9nUBc2bFeVztUgTrThenCEpLaTG9jb80Y=
+	t=1751488121; cv=none; b=eJAUJQH8h5YzQ43FDyMKPy2yuBZvk6RCmC0S3cRNi5s1Kq4mYAJ0Yc9CxE1RoOnBWukhrxxfxP1q3CVb6cVuv2FMKyNRxF47jaoKqaVXXfHrm8mZvkw6soKaDtCTvDBllUfezqj8V+J9IE+fCF5qIWOz8yJ3ssVtSpbZ1+EU7K0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751487727; c=relaxed/simple;
-	bh=sdZUD4SUjgX+uY9yBVT2jw55tiIT2RzRywMurq/3UyQ=;
+	s=arc-20240116; t=1751488121; c=relaxed/simple;
+	bh=ROkGUzLvmUxE4wznrKVXwS7nEdwLuTZhM5xIYa2wHvk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=awfPGRJGKnFXToqR/BVa+VEk5hzMxQsiiTsx1hC8eEod+p3cjLoZlUQEkXlWKimYG1yG/tVIhRLv9d11LWpp4+Aqa0vVxfLU1aB/RJwxPyr5ueprWQlhwFtZo8YxNIx0YNx0LjF5mjwC0vZfpTdbs6odmZcNdCq96mTs4dbKxJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYuGjGCj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ucbl5XeAUXHBBApXo1cM7QUh9jSy8lzxU+ZXvkRAHirx8VRaEfmtZi1vxlY01WNfU9Tm6SxRAXYjveVp5qNZjSSRHGymqzDD/hqYQqr8oalfQ4ID7KvRwzfbrJofP0OcIx3lTqwayBF14ieePCKutG+rhSDmjgBNK4HVNmTCU28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKKea4et; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYuGjGCj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80905C4CEE7;
-	Wed,  2 Jul 2025 20:22:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKKea4et"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82657C4CEEE;
+	Wed,  2 Jul 2025 20:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751487726;
-	bh=sdZUD4SUjgX+uY9yBVT2jw55tiIT2RzRywMurq/3UyQ=;
+	s=k20201202; t=1751488121;
+	bh=ROkGUzLvmUxE4wznrKVXwS7nEdwLuTZhM5xIYa2wHvk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gYuGjGCjIMW+SvLzrJgDrU4hDmhy9ZDWppgoQTAqUU+rhr4dKhGIZKIuC/ZaXtVlT
-	 PzDHkUbPOlc5lt0KqBpJ27weLeFDAr5hGK+RZVIn3EbynuJUlCvvgxqwEHM3LRwEDw
-	 swdJHTBkK72+KQ5uv04+nZUlf0uWAPbDJDAMzkzAr3E1iyExOmTgNBXAZ7meIoCH4h
-	 VGemIzoESVFHKKlFVpmJeLKpUidqM9nczn3tdRNGHgEBKaarQkykU0vXW7Mi4rEG/P
-	 M5GL+5ujawdYL7kOdXeszNil9ZbX2k1QKOutDztzDHw1zMMX3DcV2z3d80eWIWse6n
-	 TobaHCIsqdZXw==
-Date: Wed, 2 Jul 2025 13:22:03 -0700
+	b=OKKea4etTumn63tPGWaQhMxfzqNeH9R22N6OU2sVXEmAQoLTSRbusDooxkfv79rmL
+	 L1MAbj1ez+//gH4n6cns1sUnhqFlb3IOEtzo7q6SR0k/ZtMhoH8Rnp1hizQAnUtnAe
+	 MpwyNAmRBKmYQDJdgoI1wYwextBTsIh7MaShy/i8Tj4j2nYMGUZZxrLftkxNjHznAr
+	 72DyRBXxmru0h01OAlJH6ojuHmNffvgqb1KE/Ug+n9GroPojQHz6pUwL5MFgODaYKj
+	 N3gtEfr89+/xXR2TVrGpx1hXQHCXfQttdnUWBwDeGNzsXHjxXKDDx51m8+XTkskrYr
+	 /HuR5UQo7HgVQ==
+Date: Wed, 2 Jul 2025 13:28:35 -0700
 From: Nathan Chancellor <nathan@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+To: Petr Mladek <pmladek@suse.com>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
 	John Ogness <john.ogness@linutronix.de>,
-	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>
-Subject: Re: [bug report] printk: ringbuffer: Add KUnit test
-Message-ID: <20250702202203.GA3347226@ax162>
-References: <eaea66b9-266a-46e7-980d-33f40ad4b215@sabinyo.mountain>
- <20250626082605-c5fbbb88-f6cc-4659-bea0-a283cdb58e81@linutronix.de>
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	David Gow <davidgow@google.com>, Arnd Bergmann <arnd@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 2/3] printk: kunit: support offstack cpumask
+Message-ID: <20250702202835.GA593751@ax162>
+References: <20250702095157.110916-1-pmladek@suse.com>
+ <20250702095157.110916-3-pmladek@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250626082605-c5fbbb88-f6cc-4659-bea0-a283cdb58e81@linutronix.de>
+In-Reply-To: <20250702095157.110916-3-pmladek@suse.com>
 
-On Thu, Jun 26, 2025 at 08:59:52AM +0200, Thomas Weißschuh wrote:
-> On Wed, Jun 25, 2025 at 10:22:19AM -0500, Dan Carpenter wrote:
-> > Hello Thomas Weißschuh,
-> > 
-> > The patch 5ea2bcdfbf46: "printk: ringbuffer: Add KUnit test" from Jun
-> > 12, 2025, leads to the following static checker warning:
-> > 
-> > 	kernel/printk/printk_ringbuffer_kunit_test.c:91 prbtest_check_data()
-> > 	(unpublished script worries this an off by one)
-> > 
-> > kernel/printk/printk_ringbuffer_kunit_test.c
-> >     83 static bool prbtest_check_data(const struct prbtest_rbdata *dat)
-> >     84 {
-> >     85 	unsigned int len;
-> >     86 
-> >     87 	/* Sane length? */
-> >     88 	if (dat->len < 1 || dat->len > MAX_RBDATA_TEXT_SIZE)
-> >     89 		return false;
-> >     90 
-> > --> 91 	if (dat->text[dat->len] != '\0')
-> >     92 		return false;
-> >     93 
-> > 
-> > My question is that the prbtest_rbdata structure is declared like this:
-> > 
-> >     53  /* test data structure */
-> >     54  struct prbtest_rbdata {
-> >     55          unsigned int len;
-> >     56          char text[] __counted_by(len);
-> >     57  };
-> > 
-> > The size of text is not really counted by len, it's "MAX_RBDATA_TEXT_SIZE
-> > + 1".  The condition "if (dat->text[dat->len] != '\0')" is reading one
-> > element beyond the __counted_by() value so something should complain if
-> > we enable all the debugging, right?
+On Wed, Jul 02, 2025 at 11:51:56AM +0200, Petr Mladek wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> You are right, we are reading past the __counted_by().
-> But I don't get any complains with CONFIG_FORTIFY_SOURCE=y and CONFIG_KASAN=y
-> on either clang or gcc.
+> For large values of CONFIG_NR_CPUS, the newly added kunit test fails
+> to build:
+> 
+> kernel/printk/printk_ringbuffer_kunit_test.c: In function 'test_readerwriter':
+> kernel/printk/printk_ringbuffer_kunit_test.c:279:1: error: the frame size of 1432 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
+> 
+> Change this to use cpumask_var_t and allocate it dynamically when
+> CONFIG_CPUMASK_OFFSTACK is set.
+> 
+> Fixes: 5ea2bcdfbf46 ("printk: ringbuffer: Add KUnit test")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> [pmladek@suse.com: Correctly handle allocation failures and freeing using KUnit test API.]
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  kernel/printk/printk_ringbuffer_kunit_test.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
+> index 217dcc14670c..0c3030fde8c2 100644
+> --- a/kernel/printk/printk_ringbuffer_kunit_test.c
+> +++ b/kernel/printk/printk_ringbuffer_kunit_test.c
+> @@ -216,6 +216,7 @@ static int prbtest_reader(struct prbtest_data *test_data, unsigned long timeout_
+>  	return 0;
+>  }
+>  
+> +KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, free_cpumask_var, cpumask_var_t);
 
-You will need CONFIG_UBSAN_BOUNDS to see warnings from __counted_by()
-but they are present if I enable it with this test:
+This appears to break the build for me when CONFIG_CPUMASK_OFFSTACK is not
+set, like when enabling this test on top of x86_64 defconfig:
 
-  [    0.507904] ------------[ cut here ]------------
-  [    0.507904] UBSAN: array-index-out-of-bounds in kernel/printk/printk_ringbuffer_kunit_test.c:132:4
-  [    0.507907] index 108 is out of range for type 'char[] __counted_by(len)' (aka 'char[]')
-  [    0.507909] CPU: 3 UID: 0 PID: 392 Comm: prbtest writer  Tainted: G                 N  6.16.0-rc4-next-20250702 #1 PREEMPT(voluntary)
-  [    0.507912] Tainted: [N]=TEST
-  [    0.507913] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
-  [    0.507914] Call Trace:
-  [    0.507916]  <TASK>
-  [    0.507918]  dump_stack_lvl+0x84/0xc0
-  [    0.507922]  ubsan_epilogue+0x5/0x30
-  [    0.507925]  __ubsan_handle_out_of_bounds+0xa2/0xc0
-  [    0.507928]  prbtest_writer+0x16a/0x210
-  [    0.507932]  ? __pfx_prbtest_writer+0x10/0x10
-  [    0.507934]  kthread+0x21a/0x260
-  [    0.507937]  ? __pfx_kthread+0x10/0x10
-  [    0.507938]  ret_from_fork+0x77/0xd0
-  [    0.507940]  ? __pfx_kthread+0x10/0x10
-  [    0.507941]  ret_from_fork_asm+0x1a/0x30
-  [    0.507945]  </TASK>
-  [    0.507945] ---[ end trace ]---
+  In file included from kernel/printk/printk_ringbuffer_kunit_test.c:14:
+  kernel/printk/printk_ringbuffer_kunit_test.c: In function 'prbtest_cpumask_cleanup':
+  include/kunit/resource.h:409:32: error: cast specifies array type
+    409 |                 arg_type arg = (arg_type)in;                    \
+        |                                ^
+  kernel/printk/printk_ringbuffer_kunit_test.c:226:1: note: in expansion of macro 'KUNIT_DEFINE_ACTION_WRAPPER'
+    226 | KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, free_cpumask_var, cpumask_var_t);
+        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  [    0.516113] ------------[ cut here ]------------
-  [    0.516115] UBSAN: array-index-out-of-bounds in kernel/printk/printk_ringbuffer_kunit_test.c:91:6
-  [    0.516117]     # test_readerwriter: lib/ubsan.c:228: array-index-out-of-bounds in kernel/printk/printk_ringbuffer_kunit_test.c
-  [    0.516119] index 126 is out of range for type 'char const[] __counted_by(len)' (aka 'const char[]')
-  [    0.516122] CPU: 0 UID: 0 PID: 389 Comm: kunit_try_catch Tainted: G                 N  6.16.0-rc4-next-20250702 #1 PREEMPT(voluntary)
-  [    0.516125] Tainted: [N]=TEST
-  [    0.516126] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
-  [    0.516127] Call Trace:
-  [    0.516129]  <TASK>
-  [    0.516131]  dump_stack_lvl+0x84/0xc0
-  [    0.516136]  ubsan_epilogue+0x5/0x30
-  [    0.516138]  __ubsan_handle_out_of_bounds+0xa2/0xc0
-  [    0.516142]  prbtest_reader+0x2ff/0x480
-  [    0.516145]  ? srso_alias_return_thunk+0x5/0xfbef5
-  [    0.516147]  ? set_next_entity+0x5e/0x140
-  [    0.516150]  ? __pfx_prbtest_wakeup_callback+0x10/0x10
-  [    0.516155]  ? set_cpus_allowed_ptr+0x83/0xb0
-  [    0.516158]  test_readerwriter+0x297/0x3c0
-  [    0.516161]  kunit_try_run_case+0x8c/0x190
-  [    0.516164]  kunit_generic_run_threadfn_adapter+0x1a/0x40
-  [    0.516166]  ? __pfx_kunit_generic_run_threadfn_adapter+0x10/0x10
-  [    0.516167]  kthread+0x21a/0x260
-  [    0.516169]  ? __pfx_kthread+0x10/0x10
-  [    0.516170]  ret_from_fork+0x77/0xd0
-  [    0.516173]  ? __pfx_kthread+0x10/0x10
-  [    0.516174]  ret_from_fork_asm+0x1a/0x30
-  [    0.516177]  </TASK>
-  [    0.516178] ---[ end trace ]---
+Clang's error might be a little clearer with the "aka" note it provides.
 
-I see Petr sent an updated patch for this, which does resolve the
-warning in my testing.
+  kernel/printk/printk_ringbuffer_kunit_test.c:226:1: error: used type 'cpumask_var_t' (aka 'struct cpumask[1]') where arithmetic or pointer type is required
+    226 | KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, free_cpumask_var, cpumask_var_t);
+        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  include/kunit/resource.h:409:18: note: expanded from macro 'KUNIT_DEFINE_ACTION_WRAPPER'
+    409 |                 arg_type arg = (arg_type)in;                    \
+        |                                ^         ~~
 
-https://lore.kernel.org/20250702095157.110916-4-pmladek@suse.com/
-
-Cheers,
-Nathan
+>  KUNIT_DEFINE_ACTION_WRAPPER(prbtest_kthread_cleanup, kthread_stop, struct task_struct *);
+>  
+>  static void prbtest_add_kthread_cleanup(struct kunit *test, struct task_struct *kthread)
+> @@ -240,8 +241,13 @@ static void test_readerwriter(struct kunit *test)
+>  	struct prbtest_thread_data *thread_data;
+>  	struct prbtest_data *test_data;
+>  	struct task_struct *thread;
+> -	cpumask_t test_cpus;
+> +	cpumask_var_t test_cpus;
+>  	int cpu, reader_cpu;
+> +	int err;
+> +
+> +	KUNIT_ASSERT_TRUE(test, alloc_cpumask_var(&test_cpus, GFP_KERNEL));
+> +	err = kunit_add_action_or_reset(test, prbtest_cpumask_cleanup, test_cpus);
+> +	KUNIT_ASSERT_EQ(test, err, 0);
+>  
+>  	cpus_read_lock();
+>  	/*
+> @@ -250,15 +256,15 @@ static void test_readerwriter(struct kunit *test)
+>  	 * Instead use a snapshot of the online CPUs.
+>  	 * If they change during test execution it is unfortunate but not a grave error.
+>  	 */
+> -	cpumask_copy(&test_cpus, cpu_online_mask);
+> +	cpumask_copy(test_cpus, cpu_online_mask);
+>  	cpus_read_unlock();
+>  
+>  	/* One CPU is for the reader, all others are writers */
+> -	reader_cpu = cpumask_first(&test_cpus);
+> -	if (cpumask_weight(&test_cpus) == 1)
+> +	reader_cpu = cpumask_first(test_cpus);
+> +	if (cpumask_weight(test_cpus) == 1)
+>  		kunit_warn(test, "more than one CPU is recommended");
+>  	else
+> -		cpumask_clear_cpu(reader_cpu, &test_cpus);
+> +		cpumask_clear_cpu(reader_cpu, test_cpus);
+>  
+>  	/* KUnit test can get restarted more times. */
+>  	prbtest_prb_reinit(&test_rb);
+> @@ -271,7 +277,7 @@ static void test_readerwriter(struct kunit *test)
+>  
+>  	kunit_info(test, "running for %lu ms\n", runtime_ms);
+>  
+> -	for_each_cpu(cpu, &test_cpus) {
+> +	for_each_cpu(cpu, test_cpus) {
+>  		thread_data = kunit_kmalloc(test, sizeof(*thread_data), GFP_KERNEL);
+>  		KUNIT_ASSERT_NOT_NULL(test, thread_data);
+>  		thread_data->test_data = test_data;
+> -- 
+> 2.50.0
+> 
