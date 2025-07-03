@@ -1,165 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA02C2AF19;
-	Thu,  3 Jul 2025 20:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F254230D14;
+	Thu,  3 Jul 2025 21:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751573100; cv=none; b=mIO3ziheWly9K9GneSnou50DAjJcjb3O8blx+8Knn5acAxSaysJ/iH35ehHFkLwdauqWAZ//Tiw9EN6wDUZOmZFpCwajyNjpGBi7HOnpeu1mGSn40gtTS/XYkAnuiw4NyDA67rrL2vTYcrTS69Hxeem+mZ3GerbbXQDZNVVm9Bw=
+	t=1751579825; cv=none; b=iL7cl76U0CVslNUqrRAqG2463V9R0gscKYnEDNo173UPjl1BYYz5RsbXx4MCVWL2oWyGoWzw5KyfWhHivcwWuXqroJ/SwCY3wku6PMbsFOg/knDTUGTEeJpNvyyT+XDFFmvobJiPK7AlrtxqeUkMqwNpouKpTbCi5T40LUwOhho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751573100; c=relaxed/simple;
-	bh=8A6zCExYZEP4rbE455FW7xjkVxsegH5EtKHYm6w345E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=is+biXyoQSfNBWrjdp8KnfnRpyPtNgPeuGd34SFvSLljmCE7hSgoPn+I42gb3fxP8bD76UwjvTgPDEWNpMUuJaWNQF6/I+5xyLPM2eOuuIT/qAaVmqkYOWHvbsHSeBnP7mkFvIcXn1hPyaoMXZIKzfEzuEz9ygHymlHSdBkA6Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AJE+b2Kh; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751579825; c=relaxed/simple;
+	bh=F1kd85XvbU8QnYJXR1ZMhaX6ypNcPAllX5PBqQkj0gI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZUmHjEs134l3+qUwnGEld6/7FzkPM0MCG/AjQkpxCckwLPQsuFvdzLMIXn+TZtXYlnyYjE/Pm1djbBuG6kfUAwraDiQHCc+opcjwpjZ8/nduZPQQVanhIfBuoAdfrGCNZ2cpRT8usbwoqK/6UrIo4mvDtRwPhZfADRW6kTkJ82E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U28/K6/J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AJE+b2Kh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751573099; x=1783109099;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8A6zCExYZEP4rbE455FW7xjkVxsegH5EtKHYm6w345E=;
-  b=AJE+b2KhIKy/GwInEHpYgGdLl6T6NVywtoYLMzUxZXmlN6lj8doe4Aei
-   LlQ02EXjHDfBk6KsL41grBgjR44+b0QtAj93I64uDwORgptbuRpx5PyxT
-   /DKpeBT7xUfNjSVGUOgAP5KDY7aMTidjxW9TI7wJgnlsIZjWOTIHIXuXu
-   mo4WKN3XB2sggcDG06NC9MRTeyBJpTMrCbfwmUbQIWsQBo07zO8Ab1qjG
-   GM9O9zkeEcOfpixEKIVl7M589B9W4FwKBLtK6qjKbT8ih6NPltaKHCOGw
-   K+bGINRkPxVGwNPkM1TlnpRFoOncXE4JqZDq/EKpU/RsbszDQAmFX2pfM
-   g==;
-X-CSE-ConnectionGUID: COtmvcTqROWgT8uYur0b9w==
-X-CSE-MsgGUID: J7XJbWteRQKaEP8XdUJfIQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53782341"
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="53782341"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 13:04:58 -0700
-X-CSE-ConnectionGUID: QW2DgLdnRSm+onWsnwyHAg==
-X-CSE-MsgGUID: 2Nrr+cFIQkW/VweNHvWriQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="158498950"
-Received: from agluck-desk3.sc.intel.com ([172.25.103.51])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 13:04:57 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: zaidal@os.amperecomputing.com
-Cc: Jonathan.Cameron@huawei.com,
-	benjamin.cheatham@amd.com,
-	bp@alien8.de,
-	dan.carpenter@linaro.org,
-	dan.j.williams@intel.com,
-	dave.jiang@intel.com,
-	gregkh@linuxfoundation.org,
-	gustavoars@kernel.org,
-	ira.weiny@intel.com,
-	james.morse@arm.com,
-	jonathanh@nvidia.com,
-	kees@kernel.org,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	rafael@kernel.org,
-	sthanneeru.opensrc@micron.com,
-	sudeep.holla@arm.com,
-	tony.luck@intel.com,
-	viro@zeniv.linux.org.uk,
-	Yi1 Lai <yi1.lai@intel.com>
-Subject: [PATCH] ACPI: APEI: EINJ: Fix trigger actions
-Date: Thu,  3 Jul 2025 13:04:21 -0700
-Message-ID: <20250703200421.28012-1-tony.luck@intel.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250617193026.637510-2-zaidal@os.amperecomputing.com>
-References: <20250617193026.637510-2-zaidal@os.amperecomputing.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U28/K6/J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE31C4CEE3;
+	Thu,  3 Jul 2025 21:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751579825;
+	bh=F1kd85XvbU8QnYJXR1ZMhaX6ypNcPAllX5PBqQkj0gI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U28/K6/JfF56Rc+NVoYoPLT8SKPqnqwsagT17avDyskR/ynownshy4LFLdhKRnlRP
+	 iilMUUHz4bw5FS6V8uj+mpC0qnBJnyklKkOEsNZHvynwU13LsgDNTsJxuCaYc0dYuB
+	 WNqI6EJaxGEqQnE4K/u04PjgXmu/dTUXnGMf1xu3DIK0ZUvQ2DI5Oc4CfdVX7hBh9b
+	 bRAe2BYkyWYperkwd3i0Stt7nfNIOn1gnUIIPFPrbMC39Ng3ssjfiJHLJMjpVpPnq6
+	 3LyfesIzKM0WFbPJESM24wymGY5rcRWSqPMG7crxlN+h0jNHBSz3ToSK6r4OQaYFVS
+	 0huPc8uzI1BCw==
+Date: Thu, 3 Jul 2025 14:57:04 -0700
+From: Kees Cook <kees@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>,
+	Suman Kumar Chakraborty <suman.kumar.chakraborty@intel.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.com>,
+	linux-hardening@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: zstd - replace zero-length array with flexible
+ array member
+Message-ID: <202507031448.C3DAD52@keescook>
+References: <20250703171933.253654-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703171933.253654-2-thorsten.blum@linux.dev>
 
-The trigger events are in BIOS memory immediately following the
-acpi_einj_trigger structure. These were not copied to regular
-kernel memory for use by apei_exec_ctx_init() so injections in
-"notrigger=0" mode failed with a message like this:
+On Thu, Jul 03, 2025 at 07:19:34PM +0200, Thorsten Blum wrote:
+> Replace the deprecated zero-length array with a modern flexible array
+> member in the struct zstd_ctx.
 
-  APEI: Invalid action table, unknown instruction type: 123
+Oh, weird. This is a very recent change. This should include:
 
-Fix by allocating a "table_size" block of memory and copying the whole
-table for use in the rest of the trigger flow.
+Fixes: f5ad93ffb541 ("crypto: zstd - convert to acomp")
 
-Fixes: 1a35c88302a3 ("ACPI: APEI: EINJ: Fix kernel test sparse warnings")
-Reported-by: Yi1 Lai <yi1.lai@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- drivers/acpi/apei/einj-core.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> No functional changes intended.
+> 
+> Link: https://github.com/KSPP/linux/issues/78
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  crypto/zstd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/crypto/zstd.c b/crypto/zstd.c
+> index 657e0cf7b952..c489976c3e8b 100644
+> --- a/crypto/zstd.c
+> +++ b/crypto/zstd.c
+> @@ -25,7 +25,7 @@ struct zstd_ctx {
+>  	zstd_dctx *dctx;
+>  	size_t wksp_size;
+>  	zstd_parameters params;
+> -	u8 wksp[0] __aligned(8);
+> +	u8 wksp[] __aligned(8);
 
-diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
-index 3d37978418e8..bf8dc92a373a 100644
---- a/drivers/acpi/apei/einj-core.c
-+++ b/drivers/acpi/apei/einj-core.c
-@@ -394,6 +394,7 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
- 				u64 param1, u64 param2)
- {
- 	struct acpi_einj_trigger trigger_tab;
-+	struct acpi_einj_trigger *full_trigger_tab;
- 	struct apei_exec_context trigger_ctx;
- 	struct apei_resources trigger_resources;
- 	struct acpi_whea_header *trigger_entry;
-@@ -430,6 +431,9 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
- 
- 	rc = -EIO;
- 	table_size = trigger_tab.table_size;
-+	full_trigger_tab = kmalloc(table_size, GFP_KERNEL);
-+	if (!full_trigger_tab)
-+		goto out_rel_header;
- 	r = request_mem_region(trigger_paddr + sizeof(trigger_tab),
- 			       table_size - sizeof(trigger_tab),
- 			       "APEI EINJ Trigger Table");
-@@ -437,7 +441,7 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
- 		pr_err("Can not request [mem %#010llx-%#010llx] for Trigger Table Entry\n",
- 		       (unsigned long long)trigger_paddr + sizeof(trigger_tab),
- 		       (unsigned long long)trigger_paddr + table_size - 1);
--		goto out_rel_header;
-+		goto out_free_trigger_tab;
- 	}
- 	iounmap(p);
- 	p = ioremap_cache(trigger_paddr, table_size);
-@@ -445,9 +449,9 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
- 		pr_err("Failed to map trigger table!\n");
- 		goto out_rel_entry;
- 	}
--	memcpy_fromio(&trigger_tab, p, sizeof(trigger_tab));
-+	memcpy_fromio(full_trigger_tab, p, table_size);
- 	trigger_entry = (struct acpi_whea_header *)
--		((char *)&trigger_tab + sizeof(struct acpi_einj_trigger));
-+		((char *)full_trigger_tab + sizeof(struct acpi_einj_trigger));
- 	apei_resources_init(&trigger_resources);
- 	apei_exec_ctx_init(&trigger_ctx, einj_ins_type,
- 			   ARRAY_SIZE(einj_ins_type),
-@@ -469,7 +473,7 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
- 
- 		apei_resources_init(&addr_resources);
- 		trigger_param_region = einj_get_trigger_parameter_region(
--			&trigger_tab, param1, param2);
-+			full_trigger_tab, param1, param2);
- 		if (trigger_param_region) {
- 			rc = apei_resources_add(&addr_resources,
- 				trigger_param_region->address,
-@@ -500,6 +504,8 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
- out_rel_entry:
- 	release_mem_region(trigger_paddr + sizeof(trigger_tab),
- 			   table_size - sizeof(trigger_tab));
-+out_free_trigger_tab:
-+	kfree(full_trigger_tab);
- out_rel_header:
- 	release_mem_region(trigger_paddr, sizeof(trigger_tab));
- out:
+And likely, to use __counted_by(wksp_size)
+
+I'm surprised checkpatch.pl didn't warn, but I guess the __aligned
+confused the script?
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+-Kees
+
+>  };
+>  
+>  static DEFINE_MUTEX(zstd_stream_lock);
+> -- 
+> 2.50.0
+> 
+> 
+
 -- 
-2.50.0
-
+Kees Cook
