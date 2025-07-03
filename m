@@ -1,48 +1,33 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3048323BCF1;
-	Thu,  3 Jul 2025 09:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA202D5430;
+	Thu,  3 Jul 2025 09:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751535420; cv=none; b=hXilwU4yzWVQhc6GXho8yX10zOQr5jvV8++ibLwZ8G4ZJJH+BTLgkRGxvIXEJZlrPY21lJhVVzrQf++/OKvQqZZYPu6/tFLQ2rArJafthc924NMGLhK1Z5hwrnjFh6OiLvSp7UVfQBtLsl4iEJudPieUeHAPujpnWUTjKwgJv4w=
+	t=1751536086; cv=none; b=BVruYJzpGJE+iPdp4ZnRgnnWI56RF9s+Xrgzw2ZaErECt2XVN+CjCGDlJPIdzY3ZxrmMElrGramv82HjIssCTFL5hY8OIotVlWAFRc872XHeYJdqe7my0GDQS4TPwI4Kc1aruaFNmrSmZwTbE6szzW5E0hyO9Ittlr1efKhq5e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751535420; c=relaxed/simple;
-	bh=hQIHEuqeokZqHMrXMdMOy10SxuZNFEjF/nKwhEfgynE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bC7MbdOlnEalcNOCfWDw6/fB3CsD1Xh2UWRCRTLHdkNeYoSYpQgNiocaREnZtrmCjDqQNCh/pWQzz0QelhSyTHg2xWdyrVpiVJiHW92Sex8azemjhUXu5yVeMI8xnX5bfPT33D1eXt/B+FZXcFfgolIhi8bhRNZIjnZ8y38YDVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=d/2U4O7M; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751536086; c=relaxed/simple;
+	bh=ZTKqPImjcSOKSC55g+yqnIgIOsq+T6lJltFiNCqWR0k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oQtfxK6vurtkWI/RYchQHKLaszi1FkSzuBwZQ/ZQ/iPEc7/XgX6dI7Ssi48y+iT/dB6Qp3sUQz2ykBdBxo3TVO5yAN/b5SWKBos8mkTjYxHGCVykomvrMY59qYEr5onjiVHIccCkYyqP8cBOqzj5xq3uMq2S/M30JkflbWoubXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ut4lMuLU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="d/2U4O7M"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56314BTM025364;
-	Thu, 3 Jul 2025 09:36:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3Bx/D3f8npc4SVgVlVyBMLFb5KwIBdvI3Ykpbm7JiFg=; b=d/2U4O7MmgI2E25/
-	XyI77OUZU2WdhYAdQLuIqyTA8j5kPLGbz2tR3FyoZ8U8U3/gKrvFnUpc70DqkRTH
-	oN9OnZC/U+1paA5j1skHfguT/BaU8DxeLfvYZpL6bp44uGsR/H1uLKXV5cjjhx81
-	REC+oV2WZHHUiXkQQZ4CnxRcGpfasz3TRQ9cLAaRE6kGXwGx3LInOIW063RX/p79
-	nfOXRP7H1tlR6moY9id3ZdCPlpLjNOdRSUy26J1wSbvjYfWKhZke2ySSvdndSaZw
-	Q6SlML1wqvwgzB8CsxSt0E9aVfbDjHW3qlri4rN1ZfcFI7gv5WclW/kZGrVKxqGp
-	FEdgwg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kd64vyyx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 09:36:44 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5639agrH028261
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 3 Jul 2025 09:36:42 GMT
-Received: from [10.253.36.62] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 3 Jul
- 2025 02:36:36 -0700
-Message-ID: <e6185a22-8e32-417e-a2d5-a7526ff91bc6@quicinc.com>
-Date: Thu, 3 Jul 2025 17:36:33 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ut4lMuLU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E110C4CEE3;
+	Thu,  3 Jul 2025 09:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751536085;
+	bh=ZTKqPImjcSOKSC55g+yqnIgIOsq+T6lJltFiNCqWR0k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ut4lMuLUHKYWdPGOyZYT5AsrAP9kud6PSAMMuh11fAxAvg4ptqJFU12FDlM3EVu0u
+	 1ce24of77xsiBsF1c45R23a6bbTaZcW0dWzOsLMqM7PBgi9EVI81E78Qy5NMPS93qP
+	 CN771AOLJVenkTSZ61A5GL3o0PuTYt70YSRX2D/2H+k7mFRsA3u/Qc1v9YVfRxl59x
+	 4UvmHrFD31/TY9g2E4sEjJAgy2DQUQ6yhUO2+8ONRzEb+NNJR+qzDQRP8No23R9gZn
+	 LT6fqE7OfokYE0M6rnSPyCut7vRFpIMGpZECOtl8Q9A6QWNztBpgSFt87vOKMXYHod
+	 3rNzWUb+q9iNg==
+Message-ID: <1290da56-1d43-4bb5-a224-f827b411909d@kernel.org>
+Date: Thu, 3 Jul 2025 11:47:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,423 +35,93 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 01/14] dt-bindings: net: Add PPE for Qualcomm
- IPQ9574 SoC
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal
-	<quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>,
-        "Simon
- Horman" <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp
- Zabel" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>
-References: <20250626-qcom_ipq_ppe-v5-0-95bdc6b8f6ff@quicinc.com>
- <20250626-qcom_ipq_ppe-v5-1-95bdc6b8f6ff@quicinc.com>
- <20250701-mottled-clever-walrus-f7dcd3@krzk-bin>
+Subject: Re: [PATCH v5 2/2] ARM: dts: aspeed: clemente: add Meta Clemente BMC
+To: Leo Wang <leo.jt.wang@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Kees Cook <kees@kernel.org>,
+ Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
+ <gpiccoli@igalia.com>, Geert Uytterhoeven <geert+renesas@glider.be>,
+ Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, bruce.jy.hung@fii-foxconn.com,
+ george.kw.lee@fii-foxconn.com, Leo Wang <leo.jt.wang@fii-foxconn.com>
+References: <20250627-add-support-for-meta-clemente-bmc-v5-0-038ed6f1cb9f@fii-foxconn.com>
+ <20250627-add-support-for-meta-clemente-bmc-v5-2-038ed6f1cb9f@fii-foxconn.com>
+ <06178661-5665-4b9d-8652-de12c2a55f94@kernel.org>
+ <CAF9ZvUvBtMVwUZLaqMLVJryx_0OqDXsybMDDcimSMPoPV0Pmyg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Luo Jie <quic_luoj@quicinc.com>
-In-Reply-To: <20250701-mottled-clever-walrus-f7dcd3@krzk-bin>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=Z+PsHGRA c=1 sm=1 tr=0 ts=68664f2c cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10
- a=z97pFrWBJukyg1BkY94A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA3OCBTYWx0ZWRfX8UQw/MA7PL37
- gbOYW7JuoqHEOBxy8x0mHsSZtGIBk+voLShXu6J6WGNO0FUX2h9TGs1AKWl57erHEaMLe9ZQgnm
- R+Zd5ReqTfa6Hl6nKR2Dznc3opNkUYn2E5sRhX0L/cLkYLkK7Fj6G5Y4OFkr6upvQPuAe3VBou/
- 9ftvi33yD6AdQRatBDEh5aW5hyNehqkiiIeF8lKXb7cSrfgaaeiawTEO2DEFIXPskXGuwqGcYvy
- U7oX2JNuWV3TA5NdIodajiLNh9vZ5SfjMWdpE2krEze95WPeV2GB+YRPfKuklCwuBqSkbKu3sQ1
- whyAG3m09I9ItYVMPkrLTO8nYv2+NIKMlzLfrfaATDT0GilE+ynfoL06eQlrRyCnzB24D3M55dL
- 7g6e9AOQZh45iS777CVKEQYOdI8RjNcLGe9VX+KQ4nUAkdQA1j/KfVc4SaDUDGMJSqbCywla
-X-Proofpoint-GUID: Ipww-gDeKaUXzGkcJvTRDz5XUSrPL6D8
-X-Proofpoint-ORIG-GUID: Ipww-gDeKaUXzGkcJvTRDz5XUSrPL6D8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 clxscore=1015 malwarescore=0 mlxlogscore=999
- spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507030078
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAF9ZvUvBtMVwUZLaqMLVJryx_0OqDXsybMDDcimSMPoPV0Pmyg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-
-
-On 7/1/2025 3:11 PM, Krzysztof Kozlowski wrote:
-> On Thu, Jun 26, 2025 at 10:31:00PM +0800, Luo Jie wrote:
->> +      resets:
->> +        maxItems: 1
->> +        description: EDMA reset from NSS clock controller
->> +
->> +      interrupts:
->> +        minItems: 65
->> +        maxItems: 65
->> +
->> +      interrupt-names:
->> +        minItems: 65
->> +        maxItems: 65
->> +        description:
->> +          Interrupts "txcmpl_[0-31]" are the Ethernet DMA TX completion ring interrupts.
->> +          Interrupts "rxfill_[0-7]" are the Ethernet DMA RX fill ring interrupts.
->> +          Interrupts "rxdesc_[0-23]" are the Ethernet DMA RX Descriptor ring interrupts.
->> +          Interrupt "misc" is the Ethernet DMA miscellaneous error interrupt.
->> +
->> +    required:
->> +      - clocks
->> +      - clock-names
->> +      - resets
->> +      - interrupts
->> +      - interrupt-names
->> +
->> +patternProperties:
->> +  "^(ethernet-)?port@[0-9a-f]+$":
+On 03/07/2025 11:44, Leo Wang wrote:
+> Hi Krzysztof,
 > 
-> Only one port? What are you switching here?
-
-Sorry that this was missed in the update. We wanted to
-add the ethernet-port' property to ensure we document
-the per-port clocks/resets for completeness, but missed
-adding the 'ethernet-ports' property. I will add the
-'ethernet-ports' node in the updated version of the patch
-to accurately reflect the schema and hardware hierarchy.
-
-There are six physical ports in the PPE that can be part of
-the switch function.
-
+> Thanks for your feedback.
 > 
-> Anyway, ^ethernet-port..... is preferred over port.
-
-OK, I will update to use '^ethernet-port' instead.
-
+> I checked my patches using b4 prep --check, and I see the following two
+> checkpatch warnings:
 > 
-> But other problem is that it does not match referenced schema at all and
-> nothing in commit msg explains why this appered. 1.5 years of
-> development of this and some significant, unexpected and not correct
-> changes.
+>    1.
 > 
-
-I understand your concern. This change was described briefly in the V5
-cover letter, but I will improve this description in cover letter and
-update the commit message as well, to explicitly document this change.
-The motivation for adding the ethernet-port node in bindings was to
-document the required per-port clocks and resets as well, as these
-are essential for enabling Ethernet functionality on this hardware.
-
-Could you please review the following proposed changes and let me know
-if this approach is acceptable?
-
-patternProperties:
-   "^(ethernet-)?ports$":
-     additionalProperties: true
-     patternProperties:
-       "^ethernet-port@[1-6]+$":
-         type: object
-         unevaluatedProperties: false
-         $ref: ethernet-controller.yaml#
-		
-         properties:
-           reg:
-             minimum: 1
-             maximum: 6
-             description: PPE Ethernet port ID
-			
-           clocks:
-             items:
-               - description: Port MAC clock from NSS clock controller
-               - description: Port RX clock from NSS clock controller
-               - description: Port TX clock from NSS clock controller
-			
-           clock-names:
-             items:
-               - const: mac
-               - const: rx
-               - const: tx
-			
-           resets:
-             items:
-               - description: Port MAC reset from NSS clock controller
-               - description: Port RX reset from NSS clock controller
-               - description: Port TX reset from NSS clock controller
-			
-           reset-names:
-             items:
-               - const: mac
-               - const: rx
-               - const: tx
-			
-         required:
-           - reg
-           - clocks
-           - clock-names
-           - resets
-           - reset-names
-		
-...
-
-allOf:
-   - $ref: ethernet-switch.yaml
-...
-
->> +    unevaluatedProperties: false
->> +    $ref: ethernet-switch-port.yaml#
->> +
->> +    properties:
->> +      clocks:
->> +        items:
->> +          - description: Port MAC clock from NSS clock controller
->> +          - description: Port RX clock from NSS clock controller
->> +          - description: Port TX clock from NSS clock controller
->> +
->> +      clock-names:
->> +        items:
->> +          - const: mac
->> +          - const: rx
->> +          - const: tx
->> +
->> +      resets:
->> +        items:
->> +          - description: Port MAC reset from NSS clock controller
->> +          - description: Port RX reset from NSS clock controller
->> +          - description: Port TX reset from NSS clock controller
->> +
->> +      reset-names:
->> +        items:
->> +          - const: mac
->> +          - const: rx
->> +          - const: tx
->> +
->> +    required:
->> +      - reg
->> +      - clocks
->> +      - clock-names
->> +      - resets
->> +      - reset-names
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - resets
->> +  - interconnects
->> +  - interconnect-names
->> +  - ethernet-dma
->> +
->> +allOf:
->> +  - $ref: ethernet-switch.yaml
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/qcom,ipq9574-gcc.h>
->> +    #include <dt-bindings/clock/qcom,ipq9574-nsscc.h>
->> +    #include <dt-bindings/interconnect/qcom,ipq9574.h>
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    #include <dt-bindings/reset/qcom,ipq9574-nsscc.h>
->> +
->> +    ethernet-switch@3a000000 {
->> +        compatible = "qcom,ipq9574-ppe";
->> +        reg = <0x3a000000 0xbef800>;
->> +        clocks = <&nsscc NSS_CC_PPE_SWITCH_CLK>,
->> +                 <&nsscc NSS_CC_PPE_SWITCH_CFG_CLK>,
->> +                 <&nsscc NSS_CC_PPE_SWITCH_IPE_CLK>,
->> +                 <&nsscc NSS_CC_PPE_SWITCH_BTQ_CLK>;
->> +        clock-names = "ppe",
->> +                      "apb",
->> +                      "ipe",
->> +                      "btq";
->> +        resets = <&nsscc PPE_FULL_RESET>;
->> +        interrupts = <GIC_SPI 498 IRQ_TYPE_LEVEL_HIGH>;
->> +        interconnects = <&nsscc MASTER_NSSNOC_PPE &nsscc SLAVE_NSSNOC_PPE>,
->> +                        <&nsscc MASTER_NSSNOC_PPE_CFG &nsscc SLAVE_NSSNOC_PPE_CFG>,
->> +                        <&gcc MASTER_NSSNOC_QOSGEN_REF &gcc SLAVE_NSSNOC_QOSGEN_REF>,
->> +                        <&gcc MASTER_NSSNOC_TIMEOUT_REF &gcc SLAVE_NSSNOC_TIMEOUT_REF>,
->> +                        <&gcc MASTER_MEM_NOC_NSSNOC &gcc SLAVE_MEM_NOC_NSSNOC>,
->> +                        <&gcc MASTER_NSSNOC_MEMNOC &gcc SLAVE_NSSNOC_MEMNOC>,
->> +                        <&gcc MASTER_NSSNOC_MEM_NOC_1 &gcc SLAVE_NSSNOC_MEM_NOC_1>;
->> +        interconnect-names = "ppe",
->> +                             "ppe_cfg",
->> +                             "qos_gen",
->> +                             "timeout_ref",
->> +                             "nssnoc_memnoc",
->> +                             "memnoc_nssnoc",
->> +                             "memnoc_nssnoc_1";
->> +
->> +        ethernet-dma {
->> +            clocks = <&nsscc NSS_CC_PPE_EDMA_CLK>,
->> +                     <&nsscc NSS_CC_PPE_EDMA_CFG_CLK>;
->> +            clock-names = "sys",
->> +                          "apb";
->> +            resets = <&nsscc EDMA_HW_RESET>;
->> +            interrupts = <GIC_SPI 363 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 364 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 365 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 366 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 367 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 368 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 369 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 370 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 371 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 372 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 376 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 377 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 378 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 380 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 381 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 382 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 383 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 384 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 505 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 504 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 503 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 502 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 501 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 500 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 362 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 346 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 347 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 348 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 349 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 350 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 351 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 352 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 499 IRQ_TYPE_LEVEL_HIGH>;
->> +            interrupt-names = "txcmpl_0",
->> +                              "txcmpl_1",
->> +                              "txcmpl_2",
->> +                              "txcmpl_3",
->> +                              "txcmpl_4",
->> +                              "txcmpl_5",
->> +                              "txcmpl_6",
->> +                              "txcmpl_7",
->> +                              "txcmpl_8",
->> +                              "txcmpl_9",
->> +                              "txcmpl_10",
->> +                              "txcmpl_11",
->> +                              "txcmpl_12",
->> +                              "txcmpl_13",
->> +                              "txcmpl_14",
->> +                              "txcmpl_15",
->> +                              "txcmpl_16",
->> +                              "txcmpl_17",
->> +                              "txcmpl_18",
->> +                              "txcmpl_19",
->> +                              "txcmpl_20",
->> +                              "txcmpl_21",
->> +                              "txcmpl_22",
->> +                              "txcmpl_23",
->> +                              "txcmpl_24",
->> +                              "txcmpl_25",
->> +                              "txcmpl_26",
->> +                              "txcmpl_27",
->> +                              "txcmpl_28",
->> +                              "txcmpl_29",
->> +                              "txcmpl_30",
->> +                              "txcmpl_31",
->> +                              "rxfill_0",
->> +                              "rxfill_1",
->> +                              "rxfill_2",
->> +                              "rxfill_3",
->> +                              "rxfill_4",
->> +                              "rxfill_5",
->> +                              "rxfill_6",
->> +                              "rxfill_7",
->> +                              "rxdesc_0",
->> +                              "rxdesc_1",
->> +                              "rxdesc_2",
->> +                              "rxdesc_3",
->> +                              "rxdesc_4",
->> +                              "rxdesc_5",
->> +                              "rxdesc_6",
->> +                              "rxdesc_7",
->> +                              "rxdesc_8",
->> +                              "rxdesc_9",
->> +                              "rxdesc_10",
->> +                              "rxdesc_11",
->> +                              "rxdesc_12",
->> +                              "rxdesc_13",
->> +                              "rxdesc_14",
->> +                              "rxdesc_15",
->> +                              "rxdesc_16",
->> +                              "rxdesc_17",
->> +                              "rxdesc_18",
->> +                              "rxdesc_19",
->> +                              "rxdesc_20",
->> +                              "rxdesc_21",
->> +                              "rxdesc_22",
->> +                              "rxdesc_23",
->> +                              "misc";
->> +        };
->> +
->> +        ethernet-ports {
+>    WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+>    2.
 > 
-> Look at your binding, not what it said...
+>    WARNING: From:/Signed-off-by: email address mismatch: 'From: Leo Wang <
+>    leo.jt.wang@gmail.com>' != 'Signed-off-by: Leo Wang <
+>    leo.jt.wang@fii-foxconn.com>'
+> 
+> Are these the issues you were referring to?  If there are any other issues
+> I missed, I’d appreciate your guidance.
 
-I will fix this to add the ethernet-ports node in the next version.
+The second warning. Please don't top post. It makes it difficult to
+understand what you refer to.
 
-> 
->> +            #address-cells = <1>;
->> +            #size-cells = <0>;
->> +
->> +            port@1 {
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
-
+Best regards,
+Krzysztof
