@@ -1,46 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8C1239E90;
-	Wed,  2 Jul 2025 21:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE25B2F29;
+	Thu,  3 Jul 2025 00:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751490768; cv=none; b=owHh+ooPEzA1BrgUct7MoLT3QSfK1v9k8+Ehfuw8V5OKnKTMyo4u+Xs1Rllh6aYMB35NJRXZRYyEArGuexpOXWMgZhzYDSUs0OvnOa9uODt2Tie7iWzPrdWFBGytjlRe55pJv5J9/F+BgMH/xGS5PKoJjfCh/CNwke4chm4ivRg=
+	t=1751503122; cv=none; b=GxKbWNj6HMLO+NBtQhVFu1mNI+5R/5GqQ7kjBUvim5u+iM+awXxc7pv072pty9uruz4NO5QzE0XZkp/sWM8mVvnJtDHdpiLwMXrByXEMm6MFnk5YoO3ONrF0B2r3uovdoxD/w/hElz7Qx0sfZ63VNPBGg8tGEHUsqIaREBwuoKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751490768; c=relaxed/simple;
-	bh=PBybrmdPM7zrM8eU16XV6OIXKt3aecbUtvMDihivU7Q=;
+	s=arc-20240116; t=1751503122; c=relaxed/simple;
+	bh=g9Me9kmoPTzT0HnHlWcgqhB/Q5G0RngRw+bx7+XrqVs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ewMB3nLa9td1R7871lhwaOE5MZkpl0m9wPKazVuVnditKC8Lt2GnjUk3+y77HlJPnc3mjC65gNEbj5mk7foWqvXvgX41kS3gXKpRbScRzla1AbTY8B7NFgLlzj6PxkNOoySdwzjfum07uriMVw4tWD8vBVNcPyx5iOpO3SwhjNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LIU0waRN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=m/P38QfBhJGgJEjET44zt2ZSZT6H+7a5YXvKVUmOFeeEpxuiikO0DkEche/PqNbOLSI0MTwdUKTenCCY7cTYY40SPzZBEkQnKj36sA3v/sFLWbIYUGWp+ivTJIsg3m7k/pJCGO1t+C2UPfLaAQPH1WAt4+ilofvhZgMOEO11+sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=Vh89Nxq6; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LIU0waRN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA7CEC4CEE7;
-	Wed,  2 Jul 2025 21:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751490767;
-	bh=PBybrmdPM7zrM8eU16XV6OIXKt3aecbUtvMDihivU7Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LIU0waRNiIeiPXwSighbehOZkYRBLyQQz/OS6cgrq0YpfDjcMuVKWmq2bSTD6tu66
-	 kA6tVC+6djnuqyN0Lj0rL334tlOcAB5r72iewYougOw/bzfu4Lx/nY304Jz7tSU9oj
-	 YaZfI4cthW4dLYj6wxLpbY/zI4K2yg/TiSQZboapPql9zxnqEGN1mz064iyzVaNgQ5
-	 YCS5r4KAwPVcGYmVSWrFN3Qqt7S9sHNgZfMNujLorofqE5HLZLHhNyEACZ2DGB4YlV
-	 w2gaNvdq1Snnwvrp7VO0eBCfOzN3B/iNQ8FhHlELE4LfNlkPoioqXa82k5CnizIR5a
-	 Gd7+4ywf7/owA==
-Date: Wed, 2 Jul 2025 14:12:43 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Bill Wendling <morbo@google.com>
-Cc: Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>,
-	Jannik =?iso-8859-1?Q?Gl=FCckert?= <jannik.glueckert@gmail.com>,
-	linux-hardening@vger.kernel.org,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] kunit/fortify: Add back "volatile" for sizeof() constants
-Message-ID: <20250702211243.GA327934@ax162>
-References: <20250628234034.work.800-kees@kernel.org>
- <CAG48ez0n1E0iuOxPe=jq4MuuP3w2wMSNixmfNmBbB89jyJBSbA@mail.gmail.com>
- <202507010926.1650356E@keescook>
- <CAGG=3QWVM9tTRoGws0X+Jq+m7Fte2JeQC+jUL=EZ5hqGzSY6hg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="Vh89Nxq6"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bXdDD4nMKz9tc3;
+	Thu,  3 Jul 2025 02:38:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
+	t=1751503116;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PoB/Y9BQu84C/gSWrL3uiOGDePV7Lkp3Z6VQaSyvfV0=;
+	b=Vh89Nxq6By/fLoaWcBiM6Z/uO1OB2vC06SSZd7oNyrWWtXILt8urquz8n36GhHmX48F0rs
+	XsYKonuvgE/snaIQLZR0Pg1YNf3mxEO+8A7PDS9bUwiLZjFrWmWx2nWeJgJvMcJfq9fGSg
+	aRm8Zr/G2096YSVWyMz8rYu6SIDXdTa7SpSW1fIr27U2F1gKjtebmZdf3leJ4Idf4dnRZb
+	esNp8Jp9l1fdJNcjQV9CmrKPyOsYCDAVpbIUP5iGj3spu+5YrUQ4PHMrPaEvAPr9Hm/bPk
+	PKZo/lwUQhWcduRws0IA1xiIVMNETnUhsuyPZ+obOKQ15yMrkQGOCOykXoCpgA==
+Date: Thu, 3 Jul 2025 06:08:24 +0530
+From: Brahmajit Das <listout@listout.xyz>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-btrfs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
+	kees@kernel.org, ailiop@suse.com, mark@harmstone.com, 
+	David Sterba <dsterba@suse.cz>, Brahmajit Das <bdas@suse.de>
+Subject: Re: [PATCH v4] btrfs: replace deprecated strcpy with strscpy
+Message-ID: <25hcimtuueppt4w3ccvid3d7c3eots7nat4qspdr6t6minxfa2@zb4fmwz7qsyp>
+References: <20250620164957.14922-1-listout@listout.xyz>
+ <20250702182712.GA3453770@ax162>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,35 +52,36 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGG=3QWVM9tTRoGws0X+Jq+m7Fte2JeQC+jUL=EZ5hqGzSY6hg@mail.gmail.com>
+In-Reply-To: <20250702182712.GA3453770@ax162>
 
-On Tue, Jul 01, 2025 at 10:38:36AM -0700, Bill Wendling wrote:
-> On Tue, Jul 1, 2025 at 9:27 AM Kees Cook <kees@kernel.org> wrote:
-> > I have not had the time to minimize it, no.
+On 02.07.2025 11:27, Nathan Chancellor wrote:
+> Hi Brahmajit,
+> 
+> On Fri, Jun 20, 2025 at 10:19:57PM +0530, Brahmajit Das wrote:
+...
+> 
+> This change is now in -next as commit d282edfe8850 ("btrfs: replace
+> strcpy() with strscpy()"), where this hunk appears to causes a slew of
+> warnings on my arm64 systems along the lines of:
+> 
+...
+> 
+> It looks like the offset_in_page(buf) part of the WARN() in
+> sysfs_emit() gets triggered with this, presumably because kmalloc()
+> returns something that is not page aligned like sysfs_emit() requires?
+> 
+> Cheers,
+> Nathan
 
-I can try to extract this into a minimal reproducer next week if nothing
-major crops up over the long weekend.
+Nathan, can you help me with providing a bit more info to debug this. I
+set up qemu aarch64 env with btrfs but couldn't reproduce this issue by
+boot test. Basically trying to understand what workflow triggered this.
 
-> OPTIMIZER_HIDE_VAR doesn't have a 'volatile' on it. Could that be it?
+You can find my kernel config, dmesg log and boot logs here:
+https://gist.github.com/listout/de8b6efa6ddb02805b5886f35c3f73d4
 
-I tested
-
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 6f04a1d8c720..eab208a9a6f4 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -160,7 +160,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- #ifndef OPTIMIZER_HIDE_VAR
- /* Make the optimizer believe the variable can be manipulated arbitrarily. */
- #define OPTIMIZER_HIDE_VAR(var)						\
--	__asm__ ("" : "=r" (var) : "0" (var))
-+	__asm__ volatile("" : "=r" (var) : "0" (var))
- #endif
- 
- #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
-
-but that did not resolve the error.
-
-Cheers,
-Nathan
+Not to mention I'm very much open to suggestion from other btrfs
+developers as well.
+-- 
+Regards,
+listout
