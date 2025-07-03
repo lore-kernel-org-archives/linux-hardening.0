@@ -1,42 +1,79 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0091288C3A
-	for <linux-hardening@vger.kernel.org>; Thu,  3 Jul 2025 17:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA02C2AF19;
+	Thu,  3 Jul 2025 20:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751563253; cv=none; b=a2Y03gGdjYUwYKbRueNuxQi9TU5T97mEmuP4l7wua/HvicAriNEKZm/1HYW96aoFnXx6xot0asIVGbILhENNOYOx3XYlJaWy0K+6mpv7fq8ZuyXlH98LtZbutrCpd9IsNLMRUi0v9dyZdIHr3A4jp7BAEp79CV1Pfgb64oQ6SHg=
+	t=1751573100; cv=none; b=mIO3ziheWly9K9GneSnou50DAjJcjb3O8blx+8Knn5acAxSaysJ/iH35ehHFkLwdauqWAZ//Tiw9EN6wDUZOmZFpCwajyNjpGBi7HOnpeu1mGSn40gtTS/XYkAnuiw4NyDA67rrL2vTYcrTS69Hxeem+mZ3GerbbXQDZNVVm9Bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751563253; c=relaxed/simple;
-	bh=vPDISl6g5NAEE77KMXZjR8RjrfgvmCsHGDrvYGyHqjo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PSTW0cg0MPlBtrXWUwyT/JLM3O1jH9uffSWXGaXpzs4ccZwaF0Jx0gITCc9SFpNvJn5ChpzjSZt6Heh80y8hc4GOqslA1JSkb2tDHye8arLI/k84mrHsaB73ap4Z4mVzNih2vrW2386qR0gXNQyUz5LJVVSxNl0giF9X6tY7LkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=he8awb9p; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751573100; c=relaxed/simple;
+	bh=8A6zCExYZEP4rbE455FW7xjkVxsegH5EtKHYm6w345E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=is+biXyoQSfNBWrjdp8KnfnRpyPtNgPeuGd34SFvSLljmCE7hSgoPn+I42gb3fxP8bD76UwjvTgPDEWNpMUuJaWNQF6/I+5xyLPM2eOuuIT/qAaVmqkYOWHvbsHSeBnP7mkFvIcXn1hPyaoMXZIKzfEzuEz9ygHymlHSdBkA6Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AJE+b2Kh; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="he8awb9p"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751563249;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rBaauVU/2eqVg/IBff0Zf0cOYUFCWODEuFnTMq8cS+Q=;
-	b=he8awb9plbq9DFTpyr14nwlbX5WEp2zlR5FdoAVvjO8oTV+9deiVZpszeN3Jo5B7eUsr71
-	5KC5jP7TrP0eTfnydp/z691c6B2T9ccxDtBS1fiG/goVl3P45469tzlVxuShl7GWOM08FJ
-	wj37Y+m8bkD0SRcoAgr8SKTwRUgDWkU=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Nick Terrell <terrelln@fb.com>,
-	David Sterba <dsterba@suse.com>
-Cc: linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: zstd - replace zero-length array with flexible array member
-Date: Thu,  3 Jul 2025 19:19:34 +0200
-Message-ID: <20250703171933.253654-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AJE+b2Kh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751573099; x=1783109099;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8A6zCExYZEP4rbE455FW7xjkVxsegH5EtKHYm6w345E=;
+  b=AJE+b2KhIKy/GwInEHpYgGdLl6T6NVywtoYLMzUxZXmlN6lj8doe4Aei
+   LlQ02EXjHDfBk6KsL41grBgjR44+b0QtAj93I64uDwORgptbuRpx5PyxT
+   /DKpeBT7xUfNjSVGUOgAP5KDY7aMTidjxW9TI7wJgnlsIZjWOTIHIXuXu
+   mo4WKN3XB2sggcDG06NC9MRTeyBJpTMrCbfwmUbQIWsQBo07zO8Ab1qjG
+   GM9O9zkeEcOfpixEKIVl7M589B9W4FwKBLtK6qjKbT8ih6NPltaKHCOGw
+   K+bGINRkPxVGwNPkM1TlnpRFoOncXE4JqZDq/EKpU/RsbszDQAmFX2pfM
+   g==;
+X-CSE-ConnectionGUID: COtmvcTqROWgT8uYur0b9w==
+X-CSE-MsgGUID: J7XJbWteRQKaEP8XdUJfIQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53782341"
+X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
+   d="scan'208";a="53782341"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 13:04:58 -0700
+X-CSE-ConnectionGUID: QW2DgLdnRSm+onWsnwyHAg==
+X-CSE-MsgGUID: 2Nrr+cFIQkW/VweNHvWriQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
+   d="scan'208";a="158498950"
+Received: from agluck-desk3.sc.intel.com ([172.25.103.51])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 13:04:57 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: zaidal@os.amperecomputing.com
+Cc: Jonathan.Cameron@huawei.com,
+	benjamin.cheatham@amd.com,
+	bp@alien8.de,
+	dan.carpenter@linaro.org,
+	dan.j.williams@intel.com,
+	dave.jiang@intel.com,
+	gregkh@linuxfoundation.org,
+	gustavoars@kernel.org,
+	ira.weiny@intel.com,
+	james.morse@arm.com,
+	jonathanh@nvidia.com,
+	kees@kernel.org,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	rafael@kernel.org,
+	sthanneeru.opensrc@micron.com,
+	sudeep.holla@arm.com,
+	tony.luck@intel.com,
+	viro@zeniv.linux.org.uk,
+	Yi1 Lai <yi1.lai@intel.com>
+Subject: [PATCH] ACPI: APEI: EINJ: Fix trigger actions
+Date: Thu,  3 Jul 2025 13:04:21 -0700
+Message-ID: <20250703200421.28012-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250617193026.637510-2-zaidal@os.amperecomputing.com>
+References: <20250617193026.637510-2-zaidal@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,32 +81,85 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Replace the deprecated zero-length array with a modern flexible array
-member in the struct zstd_ctx.
+The trigger events are in BIOS memory immediately following the
+acpi_einj_trigger structure. These were not copied to regular
+kernel memory for use by apei_exec_ctx_init() so injections in
+"notrigger=0" mode failed with a message like this:
 
-No functional changes intended.
+  APEI: Invalid action table, unknown instruction type: 123
 
-Link: https://github.com/KSPP/linux/issues/78
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Fix by allocating a "table_size" block of memory and copying the whole
+table for use in the rest of the trigger flow.
+
+Fixes: 1a35c88302a3 ("ACPI: APEI: EINJ: Fix kernel test sparse warnings")
+Reported-by: Yi1 Lai <yi1.lai@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- crypto/zstd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/apei/einj-core.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/crypto/zstd.c b/crypto/zstd.c
-index 657e0cf7b952..c489976c3e8b 100644
---- a/crypto/zstd.c
-+++ b/crypto/zstd.c
-@@ -25,7 +25,7 @@ struct zstd_ctx {
- 	zstd_dctx *dctx;
- 	size_t wksp_size;
- 	zstd_parameters params;
--	u8 wksp[0] __aligned(8);
-+	u8 wksp[] __aligned(8);
- };
+diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
+index 3d37978418e8..bf8dc92a373a 100644
+--- a/drivers/acpi/apei/einj-core.c
++++ b/drivers/acpi/apei/einj-core.c
+@@ -394,6 +394,7 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
+ 				u64 param1, u64 param2)
+ {
+ 	struct acpi_einj_trigger trigger_tab;
++	struct acpi_einj_trigger *full_trigger_tab;
+ 	struct apei_exec_context trigger_ctx;
+ 	struct apei_resources trigger_resources;
+ 	struct acpi_whea_header *trigger_entry;
+@@ -430,6 +431,9 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
  
- static DEFINE_MUTEX(zstd_stream_lock);
+ 	rc = -EIO;
+ 	table_size = trigger_tab.table_size;
++	full_trigger_tab = kmalloc(table_size, GFP_KERNEL);
++	if (!full_trigger_tab)
++		goto out_rel_header;
+ 	r = request_mem_region(trigger_paddr + sizeof(trigger_tab),
+ 			       table_size - sizeof(trigger_tab),
+ 			       "APEI EINJ Trigger Table");
+@@ -437,7 +441,7 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
+ 		pr_err("Can not request [mem %#010llx-%#010llx] for Trigger Table Entry\n",
+ 		       (unsigned long long)trigger_paddr + sizeof(trigger_tab),
+ 		       (unsigned long long)trigger_paddr + table_size - 1);
+-		goto out_rel_header;
++		goto out_free_trigger_tab;
+ 	}
+ 	iounmap(p);
+ 	p = ioremap_cache(trigger_paddr, table_size);
+@@ -445,9 +449,9 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
+ 		pr_err("Failed to map trigger table!\n");
+ 		goto out_rel_entry;
+ 	}
+-	memcpy_fromio(&trigger_tab, p, sizeof(trigger_tab));
++	memcpy_fromio(full_trigger_tab, p, table_size);
+ 	trigger_entry = (struct acpi_whea_header *)
+-		((char *)&trigger_tab + sizeof(struct acpi_einj_trigger));
++		((char *)full_trigger_tab + sizeof(struct acpi_einj_trigger));
+ 	apei_resources_init(&trigger_resources);
+ 	apei_exec_ctx_init(&trigger_ctx, einj_ins_type,
+ 			   ARRAY_SIZE(einj_ins_type),
+@@ -469,7 +473,7 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
+ 
+ 		apei_resources_init(&addr_resources);
+ 		trigger_param_region = einj_get_trigger_parameter_region(
+-			&trigger_tab, param1, param2);
++			full_trigger_tab, param1, param2);
+ 		if (trigger_param_region) {
+ 			rc = apei_resources_add(&addr_resources,
+ 				trigger_param_region->address,
+@@ -500,6 +504,8 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
+ out_rel_entry:
+ 	release_mem_region(trigger_paddr + sizeof(trigger_tab),
+ 			   table_size - sizeof(trigger_tab));
++out_free_trigger_tab:
++	kfree(full_trigger_tab);
+ out_rel_header:
+ 	release_mem_region(trigger_paddr, sizeof(trigger_tab));
+ out:
 -- 
 2.50.0
 
