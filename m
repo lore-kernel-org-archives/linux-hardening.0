@@ -1,127 +1,162 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC1A273F9;
-	Fri,  4 Jul 2025 15:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A12954723;
+	Fri,  4 Jul 2025 23:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751642678; cv=none; b=W9eW0LN0HrQgjLYhu/LdbwWB2/Y2O76LitdRi1fM6sTzgog+dIKnVSINIbcb4xOnwCdD+Q+rFhU+0avB9LD1/aGw86TZFZlXw3IWbCgB6Sk4F87ClZPAnjI5tHGwYZ6pKXtqfDRdX98klxtQpO3vp07BGZ0CPWVSpqU/CRrmjFw=
+	t=1751672979; cv=none; b=UjAFzUrU/7v9IiOIYTXYkjlzkjg2A1sUytre4TP08xt2bTYe/magCis4ijD5111NEBh+A5yrHrFYod4LVzmBRx7Mw7J/0eRoEt9RBwuqA+z3biQJjn+S/t9hPCnBiA7hDVGb51bB7Yh/0Gwsf9AjDzvF+kSnxdlbZgxRm1Gqm0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751642678; c=relaxed/simple;
-	bh=1RaZjBaFK4O9m2hUkR0ejRqsoogZr8wxydc4okUFd4k=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=sgNFiXAanOZmNttTNDJzKEC/vJykDJG6eW3Io8MBSzxjmidjbmDaLojmH5lGEgt7HLQkOh/qbX2Ds/9dwaySE3WmRmmhXANweOi9y85DEk7chDJzHBIfr4Ki4wTuv32737kj4qROfFcyzAxAX0D8XMwK2WGym2VbUjM6ygN/LkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Lza9JkLP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dxiUTf/1; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Lza9JkLP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dxiUTf/1"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 5ABB2EC0B7C;
-	Fri,  4 Jul 2025 11:24:35 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Fri, 04 Jul 2025 11:24:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1751642675;
-	 x=1751729075; bh=OxkN8U0d6DLuyWGhk7/eLOhPT1m1WWG0eL9XC0pIFr0=; b=
-	Lza9JkLPgRTi72q0CeUE1aSO92cBDepyIq07HiZRYm49g0ed9gUJ5WwPIbg03Agx
-	ETl0ivARZlgi2RYninbmTmiJmbP4pCXjqVrW8cFUEMMe8tQ/Cyq0gEz7uBLn6Icg
-	Mi1k12uBxYwgsaL0v2FmBijBfYLNjBOiOAvq1Hpt9Ajw+a39wKnbePKYdLbmv6au
-	v2RIIEYMqfWQAYuO31E39j1KzAd2EGrvUQgoSZxqziEx2lJQ0+KbfqjZ0wmc7m/J
-	meqj5rmsGeyOuSsF9+Pwm/noCawjF2I4kRlmRnQMCM7/JfzDE5iyA3BMsA0yk3cz
-	R86QvRN9PYsxUavWRgzk1A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751642675; x=
-	1751729075; bh=OxkN8U0d6DLuyWGhk7/eLOhPT1m1WWG0eL9XC0pIFr0=; b=d
-	xiUTf/1s9MLiP438ZHeuS+7xaEEutv9Mn3/TdWRxhYadPIaMe7EWFZXPZclHpqra
-	RKz6rmVnOKyO1GgbACZ6IlCdfoNhcjdsT4FUMUnjb4wDO6uWLuLeGsTr6/IyELim
-	ZpoZhm3wIHOi/E/LMRooNtxfO7yuOD+YC64iDzxQWX31EcrSB9Gl1wwPHnVZEXeF
-	9dYRW1v1Dzlprpa3tdCGrh14EshhswUvwhD6QYBC6dJ8Rc322PT4hBsJRIgWbtZP
-	83tMUkLiDSQRsy0LxCrSy00LrUEHZXYiCSghv5pMH5e+U0KubT45xqc+4MJxGcaa
-	rfNZ6rCQCW+0fXJTmfkAQ==
-X-ME-Sender: <xms:MfJnaNvN37HV7zgfq6jdTA8JpiW-nE2rx-WKJkpWyg7mvpap_M0SVA>
-    <xme:MfJnaGeEF8cn4ICmeJVjqmjyQZLiMCOScRoieyHFnp9MrngymApUVSrPFgsgQmbKt
-    Q1otTNuPvQW6D0aGGU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfeehudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpeekvdeuhfeitdeuieejvedtieeijeefleevffefleekieetjeffvdekgfetuefhgfen
-    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghp
-    thhtohepvdegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrd
-    hmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepghhrvghgohhrhidrtghlvghm
-    vghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopeguuhhjvgesughujhgvmhhihh
-    grnhhovhhitgdrgiihiidprhgtphhtthhopehsvggsrghsthhirghnrdhhvghsshgvlhgs
-    rghrthhhsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghhpihgttgholhhisehighgrlh
-    hirgdrtghomhdprhgtphhtthhopehtohhnhidrlhhutghksehinhhtvghlrdgtohhmpdhr
-    tghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvg
-    gvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghl
-    rdhorhhg
-X-ME-Proxy: <xmx:MfJnaAxCTD5GLVOvef9h-xijbwlCKGjDQPooOQ9DsoQJ0-bnQyfE8g>
-    <xmx:MfJnaENTwpkQ739gsNO-gNbeGdk_tRKEoXqiGjI-ufMAEDIpjF88eQ>
-    <xmx:MfJnaN9pkyb4X-XNQ35bfM296M3Ectl9NE9XYjtHFlkWMgdmYd9yzA>
-    <xmx:MfJnaEUKXVpOXcgkgxq-JQ0wG5cu-cG3-Cp1eCGhTUovMkmqfJ01fQ>
-    <xmx:M_JnaEPhlG2tNQv7xOmXCRaxq_6QiJPS3simNK2BQ7SokKX2A-erjzIr>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CBABA700065; Fri,  4 Jul 2025 11:24:33 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1751672979; c=relaxed/simple;
+	bh=KsnRsT5Zp6SxXom0RgloRgybMVnMUbjcLP3imWbabD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J43XlxS97ku0WPWrNUI5KK5Y3PuTM1JUozzA+Ts9PN7PdmEKcNEfJ4225L5J2uoQY7KANw4rECQpPWKCD+L59rKviVezDvi2x4jdx36NK7OKScqd/HFec9+FrawmwTZ/F/ZEijVDUKnkrE1s1RgKuHGd6Qeug/HCzk+GlO8ECVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 28B8372C8CC;
+	Sat,  5 Jul 2025 02:49:29 +0300 (MSK)
+Received: from pony.office.basealt.ru (unknown [193.43.10.9])
+	by imap.altlinux.org (Postfix) with ESMTPSA id 15D0E36D0184;
+	Sat,  5 Jul 2025 02:49:29 +0300 (MSK)
+Received: by pony.office.basealt.ru (Postfix, from userid 500)
+	id EBF48360D4F8; Sat,  5 Jul 2025 02:49:28 +0300 (MSK)
+Date: Sat, 5 Jul 2025 02:49:28 +0300
+From: Vitaly Chikunov <vt@altlinux.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Kees Cook <kees@kernel.org>, Andreas Schwab <schwab@linux-m68k.org>, 
+	Masahiro Yamada <masahiroy@kernel.org>
+Cc: stable@vger.kernel.org, Michal Marek <mmarek@suse.cz>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yong Zhi <yong.zhi@intel.com>, 
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+	"Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH] mod_devicetable: Enlarge the maximum platform_device_id
+ name length
+Message-ID: <aukyxucdlmthz3v5a6xoh42vmz@altlinux.org>
+References: <20250415231420.work.066-kees@kernel.org>
+ <Z_9SIBPsf4_cQ77Y@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T2c71400495fa2685
-Date: Fri, 04 Jul 2025 17:24:13 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
- "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Lubomir Rintel" <lkundrak@v3.sk>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Andrew Lunn" <andrew@lunn.ch>,
- "Gregory Clement" <gregory.clement@bootlin.com>,
- "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
- "Kees Cook" <kees@kernel.org>, "Tony Luck" <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje@dujemihanovic.xyz>
-Cc: "David Wronek" <david@mainlining.org>, "Karel Balej" <balejk@matfyz.cz>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
- soc@lists.linux.dev, "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-Message-Id: <89072b80-09c0-418d-b104-668f7fdeae82@app.fastmail.com>
-In-Reply-To: <20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr>
-References: <20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr>
-Subject: Re: [PATCH v15 0/4] Initial Marvell PXA1908 support
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z_9SIBPsf4_cQ77Y@smile.fi.intel.com>
 
-On Mon, Apr 7, 2025, at 22:02, Duje Mihanovi=C4=87 via B4 Relay wrote:
->
-> This series adds initial support for the Marvell PXA1908 SoC and
-> "samsung,coreprimevelte", a smartphone using the SoC.
->
-...
->
-> Andreas F=C3=A4rber attempted to upstream support for this SoC in 2017:
-> https://lore.kernel.org/lkml/20170222022929.10540-1-afaerber@suse.de/
->
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+Andy, Kees,
 
-Hi Duje,
+On Wed, Apr 16, 2025 at 09:45:52AM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 15, 2025 at 04:14:24PM -0700, Kees Cook wrote:
+> > The 20 byte length of struct platform_device_id::name is not long enough
+> > for many devices (especially regulators), where the string initialization
+> > is getting truncated and missing the trailing NUL byte. This is seen
+> > with GCC 15's -Wunterminated-string-initialization option:
+> > 
+> > drivers/regulator/hi6421v530-regulator.c:189:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+> >   189 |         { .name = "hi6421v530-regulator" },
+> >       |                   ^~~~~~~~~~~~~~~~~~~~~~
+> > drivers/regulator/hi6421v600-regulator.c:278:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+> >   278 |         { .name = "hi6421v600-regulator" },
+> >       |                   ^~~~~~~~~~~~~~~~~~~~~~
+> > drivers/regulator/lp87565-regulator.c:233:11: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+> >   233 |         { "lp87565-q1-regulator", },
+> >       |           ^~~~~~~~~~~~~~~~~~~~~~
+> > sound/soc/fsl/imx-pcm-rpmsg.c:818:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+> >   818 |         { .name = "rpmsg-micfil-channel" },
+> >       |                   ^~~~~~~~~~~~~~~~~~~~~~
+> > drivers/iio/light/hid-sensor-als.c:457:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+> >   457 |                 .name = "HID-SENSOR-LISS-0041",
+> >       |                         ^~~~~~~~~~~~~~~~~~~~~~
+> > drivers/iio/light/hid-sensor-prox.c:366:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+> >   366 |                 .name = "HID-SENSOR-LISS-0226",
+> >       |                         ^~~~~~~~~~~~~~~~~~~~~~
+> > 
+> > Increase the length to 24, slightly more than is currently being used by
+> > the affected drivers. The string is used in '%s' format strings and via
+> > the module code, which appears to do its own length encoding. This size
+> > was chosen because there was already a 4 byte hole in the structure:
+> > 
+> > struct platform_device_id {
+> >         char                       name[20];             /*     0    20 */
+> > 
+> >         /* XXX 4 bytes hole, try to pack */
+> > 
+> >         kernel_ulong_t             driver_data;          /*    24     8 */
+> > 
+> >         /* size: 32, cachelines: 1, members: 2 */
+> >         /* sum members: 28, holes: 1, sum holes: 4 */
+> >         /* last cacheline: 32 bytes */
+> > };
+> 
+> Since there is no even potential ABI breakage, I'm fine with the change.
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I see you last posted this a few months ago and there was only
-a small warning that Rob reported. Are you planning to send
-an updated v16 of the series for it?
+This definitely breaks ABI on 32-bit architectures such as i586, because there
+is no gap from alignment. Perhaps, this also make the commit not suitable for
+backporting to stable branches?
 
-       Arnd
+I recently stumbled on build failure on v5.10.239 for i586:
+
+  make: Entering directory '/usr/src/kernel-source-5.10'
+    DEPMOD  5.10.239
+  depmod: FATAL: Module index: bad character '�'=0x80 - only 7-bit ASCII is supported:
+  platform:jsl_rt5682_max98360ax�
+  make: *** [Makefile:1786: modules_install] Error 1
+  make: Leaving directory '/usr/src/kernel-source-5.10'
+
+With this patch not applied "jsl_rt5682_max98360a" have terminating '\0'
+truncated due to PLATFORM_NAME_SIZE being same as the string length and
+concatenated with the following binary data:
+
+        {
+                .name = "jsl_rt5682_max98360a",
+                .driver_data = (kernel_ulong_t)(SOF_RT5682_MCLK_EN |
+                                        SOF_RT5682_MCLK_24MHZ |
+                                        SOF_RT5682_SSP_CODEC(0) |
+                                        SOF_SPEAKER_AMP_PRESENT |
+                                        SOF_MAX98360A_SPEAKER_AMP_PRESENT |
+                                        SOF_RT5682_SSP_AMP(1)),
+        },
+
+modpost then interprets it as an asciiz string concatenating with `driver_data`
+resulting in bad characters.
+
+  static int do_platform_entry(const char *filename,
+			       void *symval, char *alias)
+  {
+	  DEF_FIELD_ADDR(symval, platform_device_id, name);
+	  sprintf(alias, PLATFORM_MODULE_PREFIX "%s", *name);
+	  return 1;
+  }
+
+creating in an incorrect alias, and this somehow breaks depmod in kmod 34.2
+(maybe earlier).
+
+Old kmod 30 successfully adds incorrect alias:
+
+  $ modinfo snd-soc-sof_rt5682.ko | grep jsl_rt5682_max98360a
+  alias:          platform:jsl_rt5682_max98360a
+  alias:          platform:jsl_rt5682_max98360ax�
+
+and 
+
+  modules.alias:alias platform:jsl_rt5682_max98360ax� snd_soc_sof_rt5682
+
+Perhaps, scripts/mod/file2alias.c should be updated with:
+
+-	  sprintf(alias, PLATFORM_MODULE_PREFIX "%s", *name);
++	  sprintf(alias, PLATFORM_MODULE_PREFIX "%.*s", PLATFORM_NAME_SIZE, *name);
+
+(Or even producing an error if more serious truncation occurs.)
+
+Thanks,
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
