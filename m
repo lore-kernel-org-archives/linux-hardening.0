@@ -1,40 +1,45 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A12954723;
-	Fri,  4 Jul 2025 23:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FD9136349;
+	Sat,  5 Jul 2025 20:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751672979; cv=none; b=UjAFzUrU/7v9IiOIYTXYkjlzkjg2A1sUytre4TP08xt2bTYe/magCis4ijD5111NEBh+A5yrHrFYod4LVzmBRx7Mw7J/0eRoEt9RBwuqA+z3biQJjn+S/t9hPCnBiA7hDVGb51bB7Yh/0Gwsf9AjDzvF+kSnxdlbZgxRm1Gqm0o=
+	t=1751747630; cv=none; b=ne0amdTRSQIjhDc+iMGEy9X7PoIIZ1hfkLt0TJ5GFZFRhDHihKechX94CssDFkhLW32rmzFVrarHg9p1YOfBwORcixKyWkxdVdDsH7ICOKfM8+63Xh7oaZBxpcrji3UgrNsRxKdkR/tHtGt7PDmeUOX4X61DMJjWd8sdWzsJvCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751672979; c=relaxed/simple;
-	bh=KsnRsT5Zp6SxXom0RgloRgybMVnMUbjcLP3imWbabD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J43XlxS97ku0WPWrNUI5KK5Y3PuTM1JUozzA+Ts9PN7PdmEKcNEfJ4225L5J2uoQY7KANw4rECQpPWKCD+L59rKviVezDvi2x4jdx36NK7OKScqd/HFec9+FrawmwTZ/F/ZEijVDUKnkrE1s1RgKuHGd6Qeug/HCzk+GlO8ECVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 28B8372C8CC;
-	Sat,  5 Jul 2025 02:49:29 +0300 (MSK)
-Received: from pony.office.basealt.ru (unknown [193.43.10.9])
-	by imap.altlinux.org (Postfix) with ESMTPSA id 15D0E36D0184;
-	Sat,  5 Jul 2025 02:49:29 +0300 (MSK)
-Received: by pony.office.basealt.ru (Postfix, from userid 500)
-	id EBF48360D4F8; Sat,  5 Jul 2025 02:49:28 +0300 (MSK)
-Date: Sat, 5 Jul 2025 02:49:28 +0300
-From: Vitaly Chikunov <vt@altlinux.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Kees Cook <kees@kernel.org>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>
-Cc: stable@vger.kernel.org, Michal Marek <mmarek@suse.cz>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yong Zhi <yong.zhi@intel.com>, 
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
-	"Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH] mod_devicetable: Enlarge the maximum platform_device_id
- name length
-Message-ID: <aukyxucdlmthz3v5a6xoh42vmz@altlinux.org>
-References: <20250415231420.work.066-kees@kernel.org>
- <Z_9SIBPsf4_cQ77Y@smile.fi.intel.com>
+	s=arc-20240116; t=1751747630; c=relaxed/simple;
+	bh=x8F3+UGkH0IUobmiunbvuYQ7a54OJbCXpvRPOub+do0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ofba/KPDBAiQosj8cW615VCDnhgeJTGzESIHxC8vxSgfNILSLcOxx+EZgpyc13Nw2LONIqdtQ2kryzgmaJ+RvJ5Vm/dVwjps7Lv9QkwmW/exe3jVnVArMFnM//yPJh4f98dm+9SXGRAJzEfV3mXHO6pX5l+mjmT8R6Hl/kB+6uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IpEYLkd8; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IpEYLkd8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A74D0C4CEE7;
+	Sat,  5 Jul 2025 20:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751747629;
+	bh=x8F3+UGkH0IUobmiunbvuYQ7a54OJbCXpvRPOub+do0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IpEYLkd8kEl6uXR2s8odDBOdGh9Iy0F3L3ghw+a+MNOsL5u6hNSssi5RySaKpL8zD
+	 j7XsdtYrQb2inxwQc/oj/iACXPxMAT6JuDBZPxed+KrvCRINHo56OHiqFrs1zro1h0
+	 /KaRDJn8yFKwQrdY66bRBrQo/8i8vWuA4DdZ4Zl29n0a2Mp9mdlb94Y5KMIL5iBUFs
+	 cEY5G/M0zNbDrNap/M/2KyWMG4gwX0JIcp0Ls79CBdDMZXuVvT9hE7KH1m/i1Wz/V3
+	 l1VoUdNNXdq+eM0bPZiJxeLhC8pL7yU++KjoS0FrqIF4Qh+z8MFESeW2XTomxpU14U
+	 N/WJW3lnVYQbg==
+Date: Sat, 5 Jul 2025 22:33:47 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>
+Cc: Alejandro Colomar <alx@kernel.org>, 
+	Christopher Bazley <chris.bazley.wg14@gmail.com>, shadow <~hallyn/shadow@lists.sr.ht>, 
+	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>
+Subject: [RFC v1 0/3] Add and use seprintf() instead of less ergonomic APIs
+Message-ID: <cover.1751747518.git.alx@kernel.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,120 +48,54 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_9SIBPsf4_cQ77Y@smile.fi.intel.com>
 
-Andy, Kees,
+Hi Kees,
 
-On Wed, Apr 16, 2025 at 09:45:52AM +0300, Andy Shevchenko wrote:
-> On Tue, Apr 15, 2025 at 04:14:24PM -0700, Kees Cook wrote:
-> > The 20 byte length of struct platform_device_id::name is not long enough
-> > for many devices (especially regulators), where the string initialization
-> > is getting truncated and missing the trailing NUL byte. This is seen
-> > with GCC 15's -Wunterminated-string-initialization option:
-> > 
-> > drivers/regulator/hi6421v530-regulator.c:189:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
-> >   189 |         { .name = "hi6421v530-regulator" },
-> >       |                   ^~~~~~~~~~~~~~~~~~~~~~
-> > drivers/regulator/hi6421v600-regulator.c:278:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
-> >   278 |         { .name = "hi6421v600-regulator" },
-> >       |                   ^~~~~~~~~~~~~~~~~~~~~~
-> > drivers/regulator/lp87565-regulator.c:233:11: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
-> >   233 |         { "lp87565-q1-regulator", },
-> >       |           ^~~~~~~~~~~~~~~~~~~~~~
-> > sound/soc/fsl/imx-pcm-rpmsg.c:818:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
-> >   818 |         { .name = "rpmsg-micfil-channel" },
-> >       |                   ^~~~~~~~~~~~~~~~~~~~~~
-> > drivers/iio/light/hid-sensor-als.c:457:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
-> >   457 |                 .name = "HID-SENSOR-LISS-0041",
-> >       |                         ^~~~~~~~~~~~~~~~~~~~~~
-> > drivers/iio/light/hid-sensor-prox.c:366:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
-> >   366 |                 .name = "HID-SENSOR-LISS-0226",
-> >       |                         ^~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > Increase the length to 24, slightly more than is currently being used by
-> > the affected drivers. The string is used in '%s' format strings and via
-> > the module code, which appears to do its own length encoding. This size
-> > was chosen because there was already a 4 byte hole in the structure:
-> > 
-> > struct platform_device_id {
-> >         char                       name[20];             /*     0    20 */
-> > 
-> >         /* XXX 4 bytes hole, try to pack */
-> > 
-> >         kernel_ulong_t             driver_data;          /*    24     8 */
-> > 
-> >         /* size: 32, cachelines: 1, members: 2 */
-> >         /* sum members: 28, holes: 1, sum holes: 4 */
-> >         /* last cacheline: 32 bytes */
-> > };
-> 
-> Since there is no even potential ABI breakage, I'm fine with the change.
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+As I anticipated in private, here's an API that we're using in the
+shadow project.  I've added it in the kernel, and started replacing some
+existing calls to s*printf() calls, and it was a bug mine.
 
-This definitely breaks ABI on 32-bit architectures such as i586, because there
-is no gap from alignment. Perhaps, this also make the commit not suitable for
-backporting to stable branches?
+I haven't even built the code yet.  I present it for discussion only at
+the moment.  (Thus, RFC, not PATCH.)  Also, I've used ==NULL style for
+null checks, to be more explicit, even if that's against the coding
+style.  I'll change that for the actual patches, but for now during
+discussion, I prefer having the explicit tests for my own readability.
 
-I recently stumbled on build failure on v5.10.239 for i586:
+The improvement seems quite obvious.  Please let me know your opinion.
+I also have a few questions for the maintainers of the specific code, or
+at least for someone who deeply understands it, as I found some
+questionable code.  (See the individual commit messages, and code
+comments for those.)
 
-  make: Entering directory '/usr/src/kernel-source-5.10'
-    DEPMOD  5.10.239
-  depmod: FATAL: Module index: bad character '�'=0x80 - only 7-bit ASCII is supported:
-  platform:jsl_rt5682_max98360ax�
-  make: *** [Makefile:1786: modules_install] Error 1
-  make: Leaving directory '/usr/src/kernel-source-5.10'
+On top of that, I have a question about the functions I'm adding,
+and the existing kernel snprintf(3): The standard snprintf(3)
+can fail (return -1), but the kernel one doesn't seem to return <0 ever.
+Should I assume that snprintf(3) doesn't fail here?  (I have a comment
+in the source code of the implementation asking for that.)
 
-With this patch not applied "jsl_rt5682_max98360a" have terminating '\0'
-truncated due to PLATFORM_NAME_SIZE being same as the string length and
-concatenated with the following binary data:
+What do you think?
 
-        {
-                .name = "jsl_rt5682_max98360a",
-                .driver_data = (kernel_ulong_t)(SOF_RT5682_MCLK_EN |
-                                        SOF_RT5682_MCLK_24MHZ |
-                                        SOF_RT5682_SSP_CODEC(0) |
-                                        SOF_SPEAKER_AMP_PRESENT |
-                                        SOF_MAX98360A_SPEAKER_AMP_PRESENT |
-                                        SOF_RT5682_SSP_AMP(1)),
-        },
+Alejandro Colomar (3):
+  vsprintf: Add [v]seprintf(), [v]stprintf()
+  stacktrace, stackdepot: Add seprintf()-like variants of functions
+  mm: Use seprintf() instead of less ergonomic APIs
 
-modpost then interprets it as an asciiz string concatenating with `driver_data`
-resulting in bad characters.
+ include/linux/stackdepot.h |  13 +++++
+ include/linux/stacktrace.h |   3 +
+ kernel/stacktrace.c        |  28 ++++++++++
+ lib/stackdepot.c           |  12 ++++
+ lib/vsprintf.c             | 109 +++++++++++++++++++++++++++++++++++++
+ mm/kfence/kfence_test.c    |  24 ++++----
+ mm/kmsan/kmsan_test.c      |   4 +-
+ mm/mempolicy.c             |  18 +++---
+ mm/page_owner.c            |  32 ++++++-----
+ mm/slub.c                  |   5 +-
+ 10 files changed, 208 insertions(+), 40 deletions(-)
 
-  static int do_platform_entry(const char *filename,
-			       void *symval, char *alias)
-  {
-	  DEF_FIELD_ADDR(symval, platform_device_id, name);
-	  sprintf(alias, PLATFORM_MODULE_PREFIX "%s", *name);
-	  return 1;
-  }
+Range-diff against v0:
+-:  ------------ > 1:  2d20eaf1752e vsprintf: Add [v]seprintf(), [v]stprintf()
+-:  ------------ > 2:  ec2e375c2d1e stacktrace, stackdepot: Add seprintf()-like variants of functions
+-:  ------------ > 3:  be193e1856aa mm: Use seprintf() instead of less ergonomic APIs
+-- 
+2.50.0
 
-creating in an incorrect alias, and this somehow breaks depmod in kmod 34.2
-(maybe earlier).
-
-Old kmod 30 successfully adds incorrect alias:
-
-  $ modinfo snd-soc-sof_rt5682.ko | grep jsl_rt5682_max98360a
-  alias:          platform:jsl_rt5682_max98360a
-  alias:          platform:jsl_rt5682_max98360ax�
-
-and 
-
-  modules.alias:alias platform:jsl_rt5682_max98360ax� snd_soc_sof_rt5682
-
-Perhaps, scripts/mod/file2alias.c should be updated with:
-
--	  sprintf(alias, PLATFORM_MODULE_PREFIX "%s", *name);
-+	  sprintf(alias, PLATFORM_MODULE_PREFIX "%.*s", PLATFORM_NAME_SIZE, *name);
-
-(Or even producing an error if more serious truncation occurs.)
-
-Thanks,
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
