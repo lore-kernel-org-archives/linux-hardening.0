@@ -1,366 +1,337 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46071211A3F;
-	Sat,  5 Jul 2025 20:33:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD32136349;
+	Sat,  5 Jul 2025 20:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751747636; cv=none; b=pKyxGusOzc34R+DAZuaFKuTryQlRp45+j99Aw3fW4G8EPDkyIXUskYd7bK1ZSdF8COqMii+nOwaVs0AGEUSn/2eK4e3gOFcczWSZF9tXwMxweIJaFNdnfIbSv86RrVjPhp5cPhVbdDqBZ3rOqBxix/J/xNoTMTVfZEqlfln57rQ=
+	t=1751748053; cv=none; b=IRo9gET7D8qed739Qc7vpO4qTBGRbyqUIWwMNyk1hCQMYj4ANStTBnTT69Ar8kW+n7IlepXXL5gNNn36Vp3B3jTq6CcOpp+RHOaMOOiAI6jyobYjQyjDFagIFngRO2cu9UfC1Rc15NFbXiCOEP45iaoYQNJZ1esuq7uATYpJ+Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751747636; c=relaxed/simple;
-	bh=GJ/5VUMCSvyaJvDw2jTAUB+TVwoxvpKqQaf73jDQdi4=;
+	s=arc-20240116; t=1751748053; c=relaxed/simple;
+	bh=Sl88YxxAaHd/YsR1z8G/2KOwRYt4vN4CacwFtopcZqo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=INfH2AjSyWujMX2TKRdBoEpJh8bm3PvOsSLlBLiJCx7yrrAsN9jhyEOemBol9rJUJl6lUKsJXvdXHRu4KfvBoy6P/y+TLZ27+0ZHDy7Srs6cdWgqi66hCQYk5OCv4LkGqt+nBg1+zhGvNav0YrgqIAEpeSAmQipr0OzMOn2hyxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hyxkMuLH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EWq8PsDewFdrM7V5knw2BzAG6ImsfsU2w4Szdj3T/RRn/qfRnTxqx2X8gA4iQ3GitrT52oFmPNDEvpWJ2BUvval0Oj9G//VXXV8HefaFWutK3OtKCP9uTDWRDaIPhHuXlYNPlOYumlIXgvWEVeN3EtmOSpnv+PgS6mg3i5StM6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgrxJfBR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hyxkMuLH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B311BC4CEF2;
-	Sat,  5 Jul 2025 20:33:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgrxJfBR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39231C4CEE7;
+	Sat,  5 Jul 2025 20:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751747635;
-	bh=GJ/5VUMCSvyaJvDw2jTAUB+TVwoxvpKqQaf73jDQdi4=;
+	s=k20201202; t=1751748052;
+	bh=Sl88YxxAaHd/YsR1z8G/2KOwRYt4vN4CacwFtopcZqo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hyxkMuLH6q67TcM3jeXMoxP4XpsNnF6y+uBWtIf6fyyo+ALKJl6Gc/+2PckC+TYjI
-	 ygU0sE53zsuqL+TK+K/cP9TRPigq09xqW2uNlQyCarbEsJYXNh0GaPR5eYghS+xvuW
-	 yoQ5YSZvYwF0crxbcODpEEI1jSGAOkG+tuxMig10261JWOlJZ6FFoSSGnT8nsX0Zre
-	 YwXb7RXeF6wQANB/Rt2gej5bdzjVqizEe5KNgPXbuVuynHFJFql8kWK1TniRhdc7h2
-	 5IEvSAW5o+w6OJGrOwZpz8MlYZ5eEbdDl17s+7uL/7f9hKypTQXPfYqHTBwabfupc5
-	 5y+R+JKKAJehQ==
-Date: Sat, 5 Jul 2025 22:33:53 +0200
+	b=WgrxJfBRzSt4wG/yzG73d0f7M37donQF4ZMFIkIT+ZRDhejetUQsHAIQ9G0NKT6Yo
+	 3gWiK0arnp72MgVQLrFuImZYpiedLXUK9kKy+Oq+9O2XBeB6iZD+/4ljIZh7kbzoQb
+	 SRTAXr5+ztQYXzpmxu4wuiwg2hI0Kt5iT24pf4m0BvFqPUPHPchryFecT/jEsl9zr2
+	 ZgIEmX/vPmCpmL7nAoZSeS/pDksABqq1k183zx4qXMd4x6JsC2nYq5iuFily4d4bxm
+	 YL5oApUICgIDFSjfQ3dVsmFSIUyZ7MQjbXfePnUtSoKdI23oceOvTjLvCH56legkjn
+	 R0AgKkiqkIpKQ==
+Date: Sat, 5 Jul 2025 22:40:49 +0200
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
+Cc: Kees Cook <kees@kernel.org>, 
 	Christopher Bazley <chris.bazley.wg14@gmail.com>, shadow <~hallyn/shadow@lists.sr.ht>, 
 	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
 	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
 	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
 	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
 	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>
-Subject: [RFC v1 3/3] mm: Use seprintf() instead of less ergonomic APIs
-Message-ID: <be193e1856aaf40f0e6dc44bb2e22ab0688203af.1751747518.git.alx@kernel.org>
-X-Mailer: git-send-email 2.50.0
+Subject: Re: [RFC v1 1/3] vsprintf: Add [v]seprintf(), [v]stprintf()
+Message-ID: <nx6vj5qqcgkts4pmefzux3ee4kuumwyjh6vlwsdltf56ayq33e@kyf25zkic2rk>
 References: <cover.1751747518.git.alx@kernel.org>
+ <2d20eaf1752efefcc23d0e7c5c2311dd5ae252af.1751747518.git.alx@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pgtmvcnqaimzwfi6"
 Content-Disposition: inline
-In-Reply-To: <cover.1751747518.git.alx@kernel.org>
+In-Reply-To: <2d20eaf1752efefcc23d0e7c5c2311dd5ae252af.1751747518.git.alx@kernel.org>
 
-While doing this, I detected some anomalies in the existing code:
 
-mm/kfence/kfence_test.c:
+--pgtmvcnqaimzwfi6
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: linux-mm@kvack.org, linux-hardening@vger.kernel.org
+Cc: Kees Cook <kees@kernel.org>, 
+	Christopher Bazley <chris.bazley.wg14@gmail.com>, shadow <~hallyn/shadow@lists.sr.ht>, 
+	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>
+Subject: Re: [RFC v1 1/3] vsprintf: Add [v]seprintf(), [v]stprintf()
+References: <cover.1751747518.git.alx@kernel.org>
+ <2d20eaf1752efefcc23d0e7c5c2311dd5ae252af.1751747518.git.alx@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <2d20eaf1752efefcc23d0e7c5c2311dd5ae252af.1751747518.git.alx@kernel.org>
 
-	The last call to scnprintf() did increment 'cur', but it's
-	unused after that, so it was dead code.  I've removed the dead
-	code in this patch.
+On Sat, Jul 05, 2025 at 10:33:49PM +0200, Alejandro Colomar wrote:
+> seprintf()
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> seprintf() is a function similar to stpcpy(3) in the sense that it
+> returns a pointer that is suitable for chaining to other copy
+> operations.
+>=20
+> It takes a pointer to the end of the buffer as a sentinel for when to
+> truncate, which unlike a size, doesn't need to be updated after every
+> call.  This makes it much more ergonomic, avoiding manually calculating
+> the size after each copy, which is error prone.
+>=20
+> It also makes error handling much easier, by reporting truncation with
+> a null pointer, which is accepted and transparently passed down by
+> subsequent seprintf() calls.  This results in only needing to report
+> errors once after a chain of seprintf() calls, unlike snprintf(3), which
+> requires checking after every call.
+>=20
+> 	p =3D buf;
+> 	e =3D buf + countof(buf);
+> 	p =3D seprintf(p, e, foo);
+> 	p =3D seprintf(p, e, bar);
+> 	if (p =3D=3D NULL)
+> 		goto trunc;
+>=20
+> vs
+>=20
+> 	len =3D 0;
+> 	size =3D countof(buf);
+> 	len +=3D snprintf(buf + len, size - len, foo);
+> 	if (len >=3D size)
+> 		goto trunc;
+>=20
+> 	len +=3D snprintf(buf + len, size - len, bar);
+> 	if (len >=3D size)
+> 		goto trunc;
+>=20
+> And also better than scnprintf() calls:
+>=20
+> 	len =3D 0;
+> 	size =3D countof(buf);
+> 	len +=3D scnprintf(buf + len, size - len, foo);
+> 	len +=3D scnprintf(buf + len, size - len, bar);
+> 	if (len >=3D size)
+> 		goto trunc;
 
-mm/mempolicy.c:
+Oops, this error handling is incorrect, as scnprintf() doesn't report
+truncation.  I should have compared
 
-	This file uses the 'p += snprintf()' anti-pattern.  That will
-	overflow the pointer on truncation, which has undefined
-	behavior.  Using seprintf(), this bug is fixed.
+	p =3D buf;
+	e =3D buf + countof(buf);
+	p =3D seprintf(p, e, foo);
+	p =3D seprintf(p, e, bar);
 
-	As in the previous file, here there was also dead code in the
-	last scnprintf() call, by incrementing a pointer that is not
-	used after the call.  I've removed the dead code.
+vs
 
-mm/page_owner.c:
+	len =3D 0;
+	size =3D countof(buf);
+	len +=3D scnprintf(buf + len, size - len, foo);
+	len +=3D scnprintf(buf + len, size - len, bar);
 
-	Within print_page_owner(), there are some calls to scnprintf(),
-	which do report truncation.  And then there are other calls to
-	snprintf(), where we handle errors (there are two 'goto err').
+>=20
+> It seems aparent that it's a more elegant approach to string catenation.
+>=20
+> stprintf()
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> stprintf() is a helper that is needed for implementing seprintf()
+> --although it could be open-coded within vseprintf(), of course--, but
+> it's also useful by itself.  It has the same interface properties as
+> strscpy(): that is, it copies with truncation, and reports truncation
+> with -E2BIG.  It would be useful to replace some calls to snprintf(3)
+> and scnprintf() which don't need chaining, and where it's simpler to
+> pass a size.
+>=20
+> It is better than plain snprintf(3), because it results in simpler error
+> detection (it doesn't need a check >=3Dcountof(buf), but rather <0).
+>=20
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: Christopher Bazley <chris.bazley.wg14@gmail.com>
+> Signed-off-by: Alejandro Colomar <alx@kernel.org>
+> ---
+>  lib/vsprintf.c | 109 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 109 insertions(+)
+>=20
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 01699852f30c..a3efacadb5e5 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -2892,6 +2892,37 @@ int vsnprintf(char *buf, size_t size, const char *=
+fmt_str, va_list args)
+>  }
+>  EXPORT_SYMBOL(vsnprintf);
+> =20
+> +/**
+> + * vstprintf - Format a string and place it in a buffer
+> + * @buf: The buffer to place the result into
+> + * @size: The size of the buffer, including the trailing null space
+> + * @fmt: The format string to use
+> + * @args: Arguments for the format string
+> + *
+> + * The return value is the length of the new string.
+> + * If the string is truncated, the function returns -E2BIG.
+> + *
+> + * If you're not already dealing with a va_list consider using stprintf(=
+).
+> + *
+> + * See the vsnprintf() documentation for format string extensions over C=
+99.
+> + */
+> +int vstprintf(char *buf, size_t size, const char *fmt, va_list args)
+> +{
+> +	int len;
+> +
+> +	len =3D vsnprintf(buf, size, fmt, args);
+> +
+> +	// It seems the kernel's vsnprintf() doesn't fail?
+> +	//if (unlikely(len < 0))
+> +	//	return -E2BIG;
+> +
+> +	if (unlikely(len >=3D size))
+> +		return -E2BIG;
+> +
+> +	return len;
+> +}
+> +EXPORT_SYMBOL(vstprintf);
+> +
+>  /**
+>   * vscnprintf - Format a string and place it in a buffer
+>   * @buf: The buffer to place the result into
+> @@ -2923,6 +2954,36 @@ int vscnprintf(char *buf, size_t size, const char =
+*fmt, va_list args)
+>  }
+>  EXPORT_SYMBOL(vscnprintf);
+> =20
+> +/**
+> + * vseprintf - Format a string and place it in a buffer
+> + * @p: The buffer to place the result into
+> + * @end: A pointer to one past the last character in the buffer
+> + * @fmt: The format string to use
+> + * @args: Arguments for the format string
+> + *
+> + * The return value is a pointer to the trailing '\0'.
+> + * If @p is NULL, the function returns NULL.
+> + * If the string is truncated, the function returns NULL.
+> + *
+> + * If you're not already dealing with a va_list consider using seprintf(=
+).
+> + *
+> + * See the vsnprintf() documentation for format string extensions over C=
+99.
+> + */
+> +char *vseprintf(char *p, const char end[0], const char *fmt, va_list arg=
+s)
+> +{
+> +	int len;
+> +
+> +	if (unlikely(p =3D=3D NULL))
+> +		return NULL;
+> +
+> +	len =3D vstprintf(p, end - p, fmt, args);
+> +	if (unlikely(len < 0))
+> +		return NULL;
+> +
+> +	return p + len;
+> +}
+> +EXPORT_SYMBOL(vseprintf);
+> +
+>  /**
+>   * snprintf - Format a string and place it in a buffer
+>   * @buf: The buffer to place the result into
+> @@ -2950,6 +3011,30 @@ int snprintf(char *buf, size_t size, const char *f=
+mt, ...)
+>  }
+>  EXPORT_SYMBOL(snprintf);
+> =20
+> +/**
+> + * stprintf - Format a string and place it in a buffer
+> + * @buf: The buffer to place the result into
+> + * @size: The size of the buffer, including the trailing null space
+> + * @fmt: The format string to use
+> + * @...: Arguments for the format string
+> + *
+> + * The return value is the length of the new string.
+> + * If the string is truncated, the function returns -E2BIG.
+> + */
+> +
+> +int stprintf(char *buf, size_t size, const char *fmt, ...)
+> +{
+> +	va_list args;
+> +	int len;
+> +
+> +	va_start(args, fmt);
+> +	len =3D vstprintf(buf, size, fmt, args);
+> +	va_end(args);
+> +
+> +	return len;
+> +}
+> +EXPORT_SYMBOL(stprintf);
+> +
+>  /**
+>   * scnprintf - Format a string and place it in a buffer
+>   * @buf: The buffer to place the result into
+> @@ -2974,6 +3059,30 @@ int scnprintf(char *buf, size_t size, const char *=
+fmt, ...)
+>  }
+>  EXPORT_SYMBOL(scnprintf);
+> =20
+> +/**
+> + * seprintf - Format a string and place it in a buffer
+> + * @p: The buffer to place the result into
+> + * @end: A pointer to one past the last character in the buffer
+> + * @fmt: The format string to use
+> + * @...: Arguments for the format string
+> + *
+> + * The return value is a pointer to the trailing '\0'.
+> + * If @buf is NULL, the function returns NULL.
+> + * If the string is truncated, the function returns NULL.
+> + */
+> +
+> +char *seprintf(char *p, const char end[0], const char *fmt, ...)
+> +{
+> +	va_list args;
+> +
+> +	va_start(args, fmt);
+> +	p =3D vseprintf(p, end, fmt, args);
+> +	va_end(args);
+> +
+> +	return p;
+> +}
+> +EXPORT_SYMBOL(seprintf);
+> +
+>  /**
+>   * vsprintf - Format a string and place it in a buffer
+>   * @buf: The buffer to place the result into
+> --=20
+> 2.50.0
+>=20
 
-	I've kept the existing error handling, as I trust it's there for
-	a good reason (i.e., we may want to avoid calling
-	print_page_owner_memcg() if we truncated before).  Please review
-	if this amount of error handling is the right one, or if we want
-	to add or remove some.  For seprintf(), a single test for null
-	after the last call is enough to detect truncation.
+--=20
+<https://www.alejandro-colomar.es/>
 
-mm/slub.c:
+--pgtmvcnqaimzwfi6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	Again, the 'p += snprintf()' anti-pattern.  This is UB, and by
-	using seprintf() we've fixed the bug.
+-----BEGIN PGP SIGNATURE-----
 
-Cc: Kees Cook <kees@kernel.org>
-Cc: Christopher Bazley <chris.bazley.wg14@gmail.com>
-Signed-off-by: Alejandro Colomar <alx@kernel.org>
----
- mm/kfence/kfence_test.c | 24 ++++++++++++------------
- mm/kmsan/kmsan_test.c   |  4 ++--
- mm/mempolicy.c          | 18 +++++++++---------
- mm/page_owner.c         | 32 +++++++++++++++++---------------
- mm/slub.c               |  5 +++--
- 5 files changed, 43 insertions(+), 40 deletions(-)
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhpjcsACgkQ64mZXMKQ
+wqmVzQ/+KqUYH2RJ6XCFWIsqgzQlHWhF5QOxlPi3CwpP/HjdGT+EmXEM1eNot1aX
+OMIiUD26IZTG9icnCMdPoUXUmIQ4k5GalCWxTP8iKbwE+LuREW/AEeF+qO5eiu58
+LG0FsQbVZjOfFmGWRy55Wga0RnAGZH/jCn4qbroS+mlrpgXDyl+tdwtUNCMuQGiZ
+y0HUPpJqG8jh0e4LDdCvGyVVLWcpqgqG/eN/SrSM7w5SDZs7yRiqrT0DkeAJ4quI
+x34tG+smh4wRXUqHfcuhPyUXYUkC5M6jUPsrWoX1Gf0W8tGTzwHMs9K0Gvj0Oj/r
+uXAMGoCq/Z82kCxjCCngmFs1feJUc7DYis5gzWZivz2atf0SqYnOp9Je3X3tRp83
+tBALc/mAPJCCmdgP5nTFQWdu1SLjysCf66zM+DU3xnbt8KasIVfRUVk5ElUafb/5
+7ss6uDTymwU0wO9rDqsV4mBYcd2jdf/ozH9bSaePj9TEmpoBNY+aMNC20nF0bin6
+lbOS3z/hITZE6+pdSlxgfY66s/Dld6atXBrBD8rphQ9JwBwBN0QoKhbcRbbj8eNO
+kcaJhLcMM7B58fjqJqnnsQRlITuMPfVgTv5BfFHlbmNvKC4WYaGNNWNgwAzfaKeU
+7Qou5dxKwQorPHQriDuTMtkozWaW2hk02dsGE0ic7kUmBSJi3LY=
+=AQZ1
+-----END PGP SIGNATURE-----
 
-diff --git a/mm/kfence/kfence_test.c b/mm/kfence/kfence_test.c
-index 00034e37bc9f..ff734c514c03 100644
---- a/mm/kfence/kfence_test.c
-+++ b/mm/kfence/kfence_test.c
-@@ -113,26 +113,26 @@ static bool report_matches(const struct expect_report *r)
- 	end = &expect[0][sizeof(expect[0]) - 1];
- 	switch (r->type) {
- 	case KFENCE_ERROR_OOB:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: out-of-bounds %s",
-+		cur = seprintf(cur, end, "BUG: KFENCE: out-of-bounds %s",
- 				 get_access_type(r));
- 		break;
- 	case KFENCE_ERROR_UAF:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: use-after-free %s",
-+		cur = seprintf(cur, end, "BUG: KFENCE: use-after-free %s",
- 				 get_access_type(r));
- 		break;
- 	case KFENCE_ERROR_CORRUPTION:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: memory corruption");
-+		cur = seprintf(cur, end, "BUG: KFENCE: memory corruption");
- 		break;
- 	case KFENCE_ERROR_INVALID:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: invalid %s",
-+		cur = seprintf(cur, end, "BUG: KFENCE: invalid %s",
- 				 get_access_type(r));
- 		break;
- 	case KFENCE_ERROR_INVALID_FREE:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: invalid free");
-+		cur = seprintf(cur, end, "BUG: KFENCE: invalid free");
- 		break;
- 	}
- 
--	scnprintf(cur, end - cur, " in %pS", r->fn);
-+	seprintf(cur, end, " in %pS", r->fn);
- 	/* The exact offset won't match, remove it; also strip module name. */
- 	cur = strchr(expect[0], '+');
- 	if (cur)
-@@ -144,26 +144,26 @@ static bool report_matches(const struct expect_report *r)
- 
- 	switch (r->type) {
- 	case KFENCE_ERROR_OOB:
--		cur += scnprintf(cur, end - cur, "Out-of-bounds %s at", get_access_type(r));
-+		cur = seprintf(cur, end, "Out-of-bounds %s at", get_access_type(r));
- 		addr = arch_kfence_test_address(addr);
- 		break;
- 	case KFENCE_ERROR_UAF:
--		cur += scnprintf(cur, end - cur, "Use-after-free %s at", get_access_type(r));
-+		cur = seprintf(cur, end, "Use-after-free %s at", get_access_type(r));
- 		addr = arch_kfence_test_address(addr);
- 		break;
- 	case KFENCE_ERROR_CORRUPTION:
--		cur += scnprintf(cur, end - cur, "Corrupted memory at");
-+		cur = seprintf(cur, end, "Corrupted memory at");
- 		break;
- 	case KFENCE_ERROR_INVALID:
--		cur += scnprintf(cur, end - cur, "Invalid %s at", get_access_type(r));
-+		cur = seprintf(cur, end, "Invalid %s at", get_access_type(r));
- 		addr = arch_kfence_test_address(addr);
- 		break;
- 	case KFENCE_ERROR_INVALID_FREE:
--		cur += scnprintf(cur, end - cur, "Invalid free of");
-+		cur = seprintf(cur, end, "Invalid free of");
- 		break;
- 	}
- 
--	cur += scnprintf(cur, end - cur, " 0x%p", (void *)addr);
-+	seprintf(cur, end, " 0x%p", (void *)addr);
- 
- 	spin_lock_irqsave(&observed.lock, flags);
- 	if (!report_available())
-diff --git a/mm/kmsan/kmsan_test.c b/mm/kmsan/kmsan_test.c
-index 9733a22c46c1..a062a46b2d24 100644
---- a/mm/kmsan/kmsan_test.c
-+++ b/mm/kmsan/kmsan_test.c
-@@ -107,9 +107,9 @@ static bool report_matches(const struct expect_report *r)
- 	cur = expected_header;
- 	end = &expected_header[sizeof(expected_header) - 1];
- 
--	cur += scnprintf(cur, end - cur, "BUG: KMSAN: %s", r->error_type);
-+	cur = seprintf(cur, end, "BUG: KMSAN: %s", r->error_type);
- 
--	scnprintf(cur, end - cur, " in %s", r->symbol);
-+	seprintf(cur, end, " in %s", r->symbol);
- 	/* The exact offset won't match, remove it; also strip module name. */
- 	cur = strchr(expected_header, '+');
- 	if (cur)
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index b28a1e6ae096..c696e4a6f4c2 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -3359,6 +3359,7 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
- void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
- {
- 	char *p = buffer;
-+	char *e = buffer + maxlen;
- 	nodemask_t nodes = NODE_MASK_NONE;
- 	unsigned short mode = MPOL_DEFAULT;
- 	unsigned short flags = 0;
-@@ -3384,33 +3385,32 @@ void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
- 		break;
- 	default:
- 		WARN_ON_ONCE(1);
--		snprintf(p, maxlen, "unknown");
-+		seprintf(p, e, "unknown");
- 		return;
- 	}
- 
--	p += snprintf(p, maxlen, "%s", policy_modes[mode]);
-+	p = seprintf(p, e, "%s", policy_modes[mode]);
- 
- 	if (flags & MPOL_MODE_FLAGS) {
--		p += snprintf(p, buffer + maxlen - p, "=");
-+		p = seprintf(p, e, "=");
- 
- 		/*
- 		 * Static and relative are mutually exclusive.
- 		 */
- 		if (flags & MPOL_F_STATIC_NODES)
--			p += snprintf(p, buffer + maxlen - p, "static");
-+			p = seprintf(p, e, "static");
- 		else if (flags & MPOL_F_RELATIVE_NODES)
--			p += snprintf(p, buffer + maxlen - p, "relative");
-+			p = seprintf(p, e, "relative");
- 
- 		if (flags & MPOL_F_NUMA_BALANCING) {
- 			if (!is_power_of_2(flags & MPOL_MODE_FLAGS))
--				p += snprintf(p, buffer + maxlen - p, "|");
--			p += snprintf(p, buffer + maxlen - p, "balancing");
-+				p = seprintf(p, e, "|");
-+			p = seprintf(p, e, "balancing");
- 		}
- 	}
- 
- 	if (!nodes_empty(nodes))
--		p += scnprintf(p, buffer + maxlen - p, ":%*pbl",
--			       nodemask_pr_args(&nodes));
-+		seprintf(p, e, ":%*pbl", nodemask_pr_args(&nodes));
- }
- 
- #ifdef CONFIG_SYSFS
-diff --git a/mm/page_owner.c b/mm/page_owner.c
-index cc4a6916eec6..5811738e3320 100644
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -496,7 +496,7 @@ void pagetypeinfo_showmixedcount_print(struct seq_file *m,
- /*
-  * Looking for memcg information and print it out
-  */
--static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
-+static inline char *print_page_owner_memcg(char *p, const char end[0],
- 					 struct page *page)
- {
- #ifdef CONFIG_MEMCG
-@@ -511,8 +511,7 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
- 		goto out_unlock;
- 
- 	if (memcg_data & MEMCG_DATA_OBJEXTS)
--		ret += scnprintf(kbuf + ret, count - ret,
--				"Slab cache page\n");
-+		p = seprintf(p, end, "Slab cache page\n");
- 
- 	memcg = page_memcg_check(page);
- 	if (!memcg)
-@@ -520,7 +519,7 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
- 
- 	online = (memcg->css.flags & CSS_ONLINE);
- 	cgroup_name(memcg->css.cgroup, name, sizeof(name));
--	ret += scnprintf(kbuf + ret, count - ret,
-+	p = seprintf(p, end,
- 			"Charged %sto %smemcg %s\n",
- 			PageMemcgKmem(page) ? "(via objcg) " : "",
- 			online ? "" : "offline ",
-@@ -529,7 +528,7 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
- 	rcu_read_unlock();
- #endif /* CONFIG_MEMCG */
- 
--	return ret;
-+	return p;
- }
- 
- static ssize_t
-@@ -538,14 +537,16 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
- 		depot_stack_handle_t handle)
- {
- 	int ret, pageblock_mt, page_mt;
--	char *kbuf;
-+	char *kbuf, *p, *e;
- 
- 	count = min_t(size_t, count, PAGE_SIZE);
- 	kbuf = kmalloc(count, GFP_KERNEL);
- 	if (!kbuf)
- 		return -ENOMEM;
- 
--	ret = scnprintf(kbuf, count,
-+	p = kbuf;
-+	e = kbuf + count;
-+	p = seprintf(p, e,
- 			"Page allocated via order %u, mask %#x(%pGg), pid %d, tgid %d (%s), ts %llu ns\n",
- 			page_owner->order, page_owner->gfp_mask,
- 			&page_owner->gfp_mask, page_owner->pid,
-@@ -555,7 +556,7 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
- 	/* Print information relevant to grouping pages by mobility */
- 	pageblock_mt = get_pageblock_migratetype(page);
- 	page_mt  = gfp_migratetype(page_owner->gfp_mask);
--	ret += scnprintf(kbuf + ret, count - ret,
-+	p = seprintf(p, e,
- 			"PFN 0x%lx type %s Block %lu type %s Flags %pGp\n",
- 			pfn,
- 			migratetype_names[page_mt],
-@@ -563,22 +564,23 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
- 			migratetype_names[pageblock_mt],
- 			&page->flags);
- 
--	ret += stack_depot_snprint(handle, kbuf + ret, count - ret, 0);
--	if (ret >= count)
--		goto err;
-+	p = stack_depot_seprint(handle, p, e, 0);
-+	if (p == NULL)
-+		goto err;  // XXX: Should we remove this error handling?
- 
- 	if (page_owner->last_migrate_reason != -1) {
--		ret += scnprintf(kbuf + ret, count - ret,
-+		p = seprintf(p, e,
- 			"Page has been migrated, last migrate reason: %s\n",
- 			migrate_reason_names[page_owner->last_migrate_reason]);
- 	}
- 
--	ret = print_page_owner_memcg(kbuf, count, ret, page);
-+	p = print_page_owner_memcg(p, e, page);
- 
--	ret += snprintf(kbuf + ret, count - ret, "\n");
--	if (ret >= count)
-+	p = seprintf(p, e, "\n");
-+	if (p == NULL)
- 		goto err;
- 
-+	ret = p - kbuf;
- 	if (copy_to_user(buf, kbuf, ret))
- 		ret = -EFAULT;
- 
-diff --git a/mm/slub.c b/mm/slub.c
-index be8b09e09d30..b67c6ca0d0f7 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -7451,6 +7451,7 @@ static char *create_unique_id(struct kmem_cache *s)
- {
- 	char *name = kmalloc(ID_STR_LENGTH, GFP_KERNEL);
- 	char *p = name;
-+	char *e = name + ID_STR_LENGTH;
- 
- 	if (!name)
- 		return ERR_PTR(-ENOMEM);
-@@ -7475,9 +7476,9 @@ static char *create_unique_id(struct kmem_cache *s)
- 		*p++ = 'A';
- 	if (p != name + 1)
- 		*p++ = '-';
--	p += snprintf(p, ID_STR_LENGTH - (p - name), "%07u", s->size);
-+	p = seprintf(p, e, "%07u", s->size);
- 
--	if (WARN_ON(p > name + ID_STR_LENGTH - 1)) {
-+	if (WARN_ON(p == NULL)) {
- 		kfree(name);
- 		return ERR_PTR(-EINVAL);
- 	}
--- 
-2.50.0
-
+--pgtmvcnqaimzwfi6--
