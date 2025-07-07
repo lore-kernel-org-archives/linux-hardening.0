@@ -1,162 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAED61FDA89;
-	Mon,  7 Jul 2025 16:24:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970F01E3DC8;
+	Mon,  7 Jul 2025 18:51:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751905481; cv=none; b=GppcnZnfEhkmM984bwdZsX0Il3CsjUYboGDKCN8kgG42cHRTPtD9h+0v5brH6ef9Js6yYPgLouAdBUikFa/7fS2KuDddCYbZrSNu30V1HHDqm5QOWlTnuadf6KYPaER1Xdp1DHPpzVF2GkTF8GVXGVILhJxvoUlw+eleK7lLjbM=
+	t=1751914310; cv=none; b=QMVl+TBx+Fboj79hST9yKopjMmlH89atZRqDuDkkiH0xmgr+pCf7/jYWE0RB31kNq162ZZDYBz/kJhlwsami1a3tuy8P2ZWC8ADC21hy/SJLLUqufqnGug57/PIPcYhvKxbjtYybqxuoWszZqm2BYHkY/SJapi+ztXdlxDZqs4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751905481; c=relaxed/simple;
-	bh=OpmyrXOuF4jR4bZNera3upeRfyWBtD4Q83PmUjU3BNg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PHf31wcw4w8dpuFodTB7RBGdo4ZxXmDMMqd9IM/9P5DYFk+Te/pzT9C7vP3ajdThAgYEkk8/LF1K6eEHF2tTVYzHunUYfGbYnbBy/4TEAhlgeqsPV/r5WxhTWol4A1eEuWTZBOScxzHcUc5JN6wsSxXpl+V7boVes17F6QmB3LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ALcttH4c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751914310; c=relaxed/simple;
+	bh=Qqf9ps+7e3Tb2WEX2c8IM7c3U0tYKmP/2GxoInoMShA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=REeo/d7a8Ufnrl7L0RkE59mUscBJb6269ZGK6VjOa7aNXEG8Jd9OW0cSNpAUkBERDClSgqc2r1qMYWWQB1go6bPrizqObsreuz4RUGNijj66oBajb6s7Rsrv1SY6maiHYrrhE9/W0AEPIkiXVP2BCPROFS0r1US/cp7f4EiPV7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TTLwsxqI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ALcttH4c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 593CFC4CEFE;
-	Mon,  7 Jul 2025 16:24:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TTLwsxqI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7461CC4CEE3;
+	Mon,  7 Jul 2025 18:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751905480;
-	bh=OpmyrXOuF4jR4bZNera3upeRfyWBtD4Q83PmUjU3BNg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ALcttH4cG9A2K1BBkm8ys8YUSE47jLbp5os6hgEYlhBdrWhO9VFLkz7ce1HKi94Ca
-	 OrduFoIT5H7oPgJQwiRU4A1E5+PUfVEfRMhZOTTtp6PS76cnc/H2henSD6CaR7SQQf
-	 qLP7fW+iUrbKgJTZoV7SUrxb5WhaVEcQ7ZKSCKrEBkrXaY58It7tOaoEok5AMbT8T5
-	 sq2h+7UphZcmo1J7ZfEqettB7kuAzedYDoC8+AKnIUZhFRXQiHKkBvR4VTrf+rg3Xo
-	 jHrWsGmguqdlJWzHAeWB89gkAhnxV4G8HXfJ38Fa1mYBgft+7II1l3j5rT2plnUaOF
-	 CK6Fu3hcKlKBA==
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-611b246727cso1727951eaf.0;
-        Mon, 07 Jul 2025 09:24:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU2dUAsXg664J8tOcqwFwKGHUUm53MvHgyTAhwvbNX7YXujqRK2y3WtYiKYqqPFY5R9+bUF5pfksknw7QLC@vger.kernel.org, AJvYcCUa0okTO+ofbZXbzAMG97i5vSWXuYTkohLOxGrp9RR2muGM5mgLCnJSN7DaHzR8xWbHo2hnMCZ7yRs0@vger.kernel.org, AJvYcCV2pUgLcuF1cAki/AExxgZW/iOY8BgHOXhBSt9UrXZxx7Ft7DW4lj+4J9Xd1TZLii8BSTYRGokf3prHCnPBWepf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC2Dvye16HbAl+haB2B9e7eqzHWQidGqcwepL4vFso5vBZbaTN
-	DDlSU50uh8dx6HbaDzwPUIW1SAHYOpKwqgoMHb08eN2orJZl0eCfaBXkBgDXB8ZZ0X179DQgUcl
-	/ifJJrE52a8VfBU0eiylOvBb1P2xD/Ls=
-X-Google-Smtp-Source: AGHT+IFIZ8qOs8Pm/+IV5MuhnNkBENBQdeA61oaUw7+T17KFde9U9DvX8b/3cdiugQtl6zk43g7gUEblenbbZYlrgKY=
-X-Received: by 2002:a05:6820:1792:b0:612:c547:7984 with SMTP id
- 006d021491bc7-613928f68f4mr8474137eaf.1.1751905479504; Mon, 07 Jul 2025
- 09:24:39 -0700 (PDT)
+	s=k20201202; t=1751914310;
+	bh=Qqf9ps+7e3Tb2WEX2c8IM7c3U0tYKmP/2GxoInoMShA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TTLwsxqISs3bQMuv+PhebvFr3HLKpLxnYnwGH8PXmMzJQy8f+kxgiJjL4tVXC1A3y
+	 cILNNjhSVMHClh6LZpqpJW07AQdJcAAaUhxjsd5rSrRUwzHTkKdgdEh8FrW6OKQK68
+	 VTeHY50ttmbU/seFeO+PwXe5Ntf3odGsv8WvlOCXpOltagV8VrDwi584yRz/t9O+OC
+	 WgEt+DIJwVL59JkIVHDIZ+Z3fBfeG1kRgLx4b2S1msQg6twRNR+Cts0wR5m8mBZPiQ
+	 fCBVGkHrQ4FZS2IiybyVAQXu92RUnHng8sRBNCRQZTTO36QyBjxIQkmsseHPxlNB4G
+	 AGeCmeEzBLRRg==
+Date: Mon, 7 Jul 2025 20:51:37 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
+	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
+	Andrew Clayton <andrew@digital-domain.net>, Sven Schnelle <svens@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, 
+	"Huang, Ying" <ying.huang@intel.com>, Lee Schermerhorn <lee.schermerhorn@hp.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Chao Yu <chao.yu@oppo.com>
+Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
+Message-ID: <gvckzzomd7x3cxd7fxb37b6zn4uowjubpyrnvj7ptzz3mr3zq2@xovzgew63mxr>
+References: <cover.1751862634.git.alx@kernel.org>
+ <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
+ <CANpmjNMPWWdushTvUqYJzqQJz4SJLgPggH9cs4KPob_9=1T-nw@mail.gmail.com>
+ <kicfhrecpahv5kkawnnazsuterxjoqscwf3rb4u6in5gig2bq6@jbt6dwnzs67r>
+ <CANpmjNNXyyfmYFPYm2LCF_+vdPtWED3xj5gOJPQazpGhBizk5w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617193026.637510-2-zaidal@os.amperecomputing.com> <20250703200421.28012-1-tony.luck@intel.com>
-In-Reply-To: <20250703200421.28012-1-tony.luck@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 7 Jul 2025 18:24:28 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h4seRkBsgPXj+rJCmJ6k4NgRM5gMGNyi9c1coJ6axmhA@mail.gmail.com>
-X-Gm-Features: Ac12FXz3c7AVNX0dMtWvIOJ6ZrTzqnZyWNlOeY507TwiCsLOS7rxt5uADmk3-Ao
-Message-ID: <CAJZ5v0h4seRkBsgPXj+rJCmJ6k4NgRM5gMGNyi9c1coJ6axmhA@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: APEI: EINJ: Fix trigger actions
-To: Tony Luck <tony.luck@intel.com>
-Cc: zaidal@os.amperecomputing.com, Jonathan.Cameron@huawei.com, 
-	benjamin.cheatham@amd.com, bp@alien8.de, dan.carpenter@linaro.org, 
-	dan.j.williams@intel.com, dave.jiang@intel.com, gregkh@linuxfoundation.org, 
-	gustavoars@kernel.org, ira.weiny@intel.com, james.morse@arm.com, 
-	jonathanh@nvidia.com, kees@kernel.org, lenb@kernel.org, 
-	linux-acpi@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, peterz@infradead.org, rafael@kernel.org, 
-	sthanneeru.opensrc@micron.com, sudeep.holla@arm.com, viro@zeniv.linux.org.uk, 
-	Yi1 Lai <yi1.lai@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zymvzrfpwpjx3twc"
+Content-Disposition: inline
+In-Reply-To: <CANpmjNNXyyfmYFPYm2LCF_+vdPtWED3xj5gOJPQazpGhBizk5w@mail.gmail.com>
+
+
+--zymvzrfpwpjx3twc
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
+	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
+	Andrew Clayton <andrew@digital-domain.net>, Sven Schnelle <svens@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, 
+	"Huang, Ying" <ying.huang@intel.com>, Lee Schermerhorn <lee.schermerhorn@hp.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Chao Yu <chao.yu@oppo.com>
+Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
+References: <cover.1751862634.git.alx@kernel.org>
+ <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
+ <CANpmjNMPWWdushTvUqYJzqQJz4SJLgPggH9cs4KPob_9=1T-nw@mail.gmail.com>
+ <kicfhrecpahv5kkawnnazsuterxjoqscwf3rb4u6in5gig2bq6@jbt6dwnzs67r>
+ <CANpmjNNXyyfmYFPYm2LCF_+vdPtWED3xj5gOJPQazpGhBizk5w@mail.gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CANpmjNNXyyfmYFPYm2LCF_+vdPtWED3xj5gOJPQazpGhBizk5w@mail.gmail.com>
 
-On Thu, Jul 3, 2025 at 10:05=E2=80=AFPM Tony Luck <tony.luck@intel.com> wro=
-te:
->
-> The trigger events are in BIOS memory immediately following the
-> acpi_einj_trigger structure. These were not copied to regular
-> kernel memory for use by apei_exec_ctx_init() so injections in
-> "notrigger=3D0" mode failed with a message like this:
->
->   APEI: Invalid action table, unknown instruction type: 123
->
-> Fix by allocating a "table_size" block of memory and copying the whole
-> table for use in the rest of the trigger flow.
->
-> Fixes: 1a35c88302a3 ("ACPI: APEI: EINJ: Fix kernel test sparse warnings")
-> Reported-by: Yi1 Lai <yi1.lai@intel.com>
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  drivers/acpi/apei/einj-core.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.=
-c
-> index 3d37978418e8..bf8dc92a373a 100644
-> --- a/drivers/acpi/apei/einj-core.c
-> +++ b/drivers/acpi/apei/einj-core.c
-> @@ -394,6 +394,7 @@ static int __einj_error_trigger(u64 trigger_paddr, u3=
-2 type,
->                                 u64 param1, u64 param2)
->  {
->         struct acpi_einj_trigger trigger_tab;
-> +       struct acpi_einj_trigger *full_trigger_tab;
->         struct apei_exec_context trigger_ctx;
->         struct apei_resources trigger_resources;
->         struct acpi_whea_header *trigger_entry;
-> @@ -430,6 +431,9 @@ static int __einj_error_trigger(u64 trigger_paddr, u3=
-2 type,
->
->         rc =3D -EIO;
->         table_size =3D trigger_tab.table_size;
-> +       full_trigger_tab =3D kmalloc(table_size, GFP_KERNEL);
-> +       if (!full_trigger_tab)
-> +               goto out_rel_header;
->         r =3D request_mem_region(trigger_paddr + sizeof(trigger_tab),
->                                table_size - sizeof(trigger_tab),
->                                "APEI EINJ Trigger Table");
-> @@ -437,7 +441,7 @@ static int __einj_error_trigger(u64 trigger_paddr, u3=
-2 type,
->                 pr_err("Can not request [mem %#010llx-%#010llx] for Trigg=
-er Table Entry\n",
->                        (unsigned long long)trigger_paddr + sizeof(trigger=
-_tab),
->                        (unsigned long long)trigger_paddr + table_size - 1=
-);
-> -               goto out_rel_header;
-> +               goto out_free_trigger_tab;
->         }
->         iounmap(p);
->         p =3D ioremap_cache(trigger_paddr, table_size);
-> @@ -445,9 +449,9 @@ static int __einj_error_trigger(u64 trigger_paddr, u3=
-2 type,
->                 pr_err("Failed to map trigger table!\n");
->                 goto out_rel_entry;
->         }
-> -       memcpy_fromio(&trigger_tab, p, sizeof(trigger_tab));
-> +       memcpy_fromio(full_trigger_tab, p, table_size);
->         trigger_entry =3D (struct acpi_whea_header *)
-> -               ((char *)&trigger_tab + sizeof(struct acpi_einj_trigger))=
-;
-> +               ((char *)full_trigger_tab + sizeof(struct acpi_einj_trigg=
-er));
->         apei_resources_init(&trigger_resources);
->         apei_exec_ctx_init(&trigger_ctx, einj_ins_type,
->                            ARRAY_SIZE(einj_ins_type),
-> @@ -469,7 +473,7 @@ static int __einj_error_trigger(u64 trigger_paddr, u3=
-2 type,
->
->                 apei_resources_init(&addr_resources);
->                 trigger_param_region =3D einj_get_trigger_parameter_regio=
-n(
-> -                       &trigger_tab, param1, param2);
-> +                       full_trigger_tab, param1, param2);
->                 if (trigger_param_region) {
->                         rc =3D apei_resources_add(&addr_resources,
->                                 trigger_param_region->address,
-> @@ -500,6 +504,8 @@ static int __einj_error_trigger(u64 trigger_paddr, u3=
-2 type,
->  out_rel_entry:
->         release_mem_region(trigger_paddr + sizeof(trigger_tab),
->                            table_size - sizeof(trigger_tab));
-> +out_free_trigger_tab:
-> +       kfree(full_trigger_tab);
->  out_rel_header:
->         release_mem_region(trigger_paddr, sizeof(trigger_tab));
->  out:
-> --
+Hi Marco,
 
-Applied, thanks!
+On Mon, Jul 07, 2025 at 04:58:53PM +0200, Marco Elver wrote:
+> Feel free to make it warning-free, I guess that's useful.
+
+Thanks!
+
+> > > Did you run the tests? Do they pass?
+> >
+> > I don't know how to run them.  I've only built the kernel.  If you point
+> > me to instructions on how to run them, I'll do so.  Thanks!
+>=20
+> Should just be CONFIG_KFENCE_KUNIT_TEST=3Dy -- then boot kernel and
+> check that the test reports "ok".
+
+Hmmm, I can't see the results.  Did I miss anything?
+
+	alx@debian:~$ uname -a
+	Linux debian 6.15.0-seprintf-mm+ #5 SMP PREEMPT_DYNAMIC Mon Jul  7 19:16:4=
+0 CEST 2025 x86_64 GNU/Linux
+	alx@debian:~$ cat /boot/config-6.15.0-seprintf-mm+ | grep KFENCE
+	CONFIG_HAVE_ARCH_KFENCE=3Dy
+	CONFIG_KFENCE=3Dy
+	CONFIG_KFENCE_SAMPLE_INTERVAL=3D0
+	CONFIG_KFENCE_NUM_OBJECTS=3D255
+	# CONFIG_KFENCE_DEFERRABLE is not set
+	# CONFIG_KFENCE_STATIC_KEYS is not set
+	CONFIG_KFENCE_STRESS_TEST_FAULTS=3D0
+	CONFIG_KFENCE_KUNIT_TEST=3Dy
+	alx@debian:~$ sudo dmesg | grep -i kfence
+	alx@debian:~$=20
+
+I see a lot of new stuff in dmesg, but nothing with 'kfence' in it.
+
+
+Cheers,
+Alex
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--zymvzrfpwpjx3twc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhsFzIACgkQ64mZXMKQ
+wqm7pBAAp0OWYMffe4VFeySMyLKfBxSElLM0oKkc8hXHHJmYhodncUpDMxt6a6W0
+v3YW6LRCH20Pc1pEj4acCR5smdKJ3vXplvkoHKfKeCRlDL2nWTPG6ped6udUMbxp
+i9dz4jMwv+XNZccdN03NF5u+o0f4VF0KQOntx0wcGlqg1yvWlp2yg29oTJ5J/fim
+pZV/5L1lggzVnkHCze1+kXY4q6ZKko/olwgOhs4NXOQwVC5oxjBI7BUQX9e61Cca
+EJ8EVgQLDyzx9O4UhpXmztx+6fzdJLewN2RVfVScnMHF3wLniIa9ZyiwKZHpeeP+
+1a3qfy3o/gO0G/KLHpB4RQEdS61jzZxtYgbMYTqxID6QT2j3fTmCpS+nySEtQ8DR
+A86GlXYQlt/6HCp3K6ixmMOiTf7YOuFJkapw1T2zM1YZHMa3euxwEdLYwG+hiri1
+ZIt5AQP4CGpy90d5PTzZFGxqOdHELjws+oiU3zFXPDN/p2AepkOtSDU75ohaq6Kh
+PaK4Fu0ixILfKDRAhOKBDqcwz8eVzWEgAHV/PzksR/+nYBqUj8I3lPqLpu2eQTkV
+a/cHEPj7iu8nV0vdlO8CXzH5C9IM41eLSBGf3i7Hl+TWrRXSCq3pJMDp6rWM/52m
+R+nNX4VzpE4SfBI9jemyj2HoT7dA6uyaXQV2a2PrNS+XMnbkXOI=
+=h4vO
+-----END PGP SIGNATURE-----
+
+--zymvzrfpwpjx3twc--
