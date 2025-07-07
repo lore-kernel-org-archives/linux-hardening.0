@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1271A261571;
-	Mon,  7 Jul 2025 05:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E02E262FEC;
+	Mon,  7 Jul 2025 05:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751864770; cv=none; b=tO1isKbxZRp5wrkpczKRu4jjQwevX0BW5vc4ANq6ZHVegiurLMYKT91IlwPR19xoPtgiO3EgPuURIl+npDAUJZjmgc/SgIHqlex2INJHsyumh13S50xf70eP6Dif5se9lDvu7tad3Gfq0xHfFiDn3WLoifCQm+S0VTWCjm4KHtA=
+	t=1751864771; cv=none; b=psQnDf1EMPU5tMpi2DCycuGWUPDsS3aojduWXXd/8UCaYBENVYsOHjUnf3YZ1BOWvjyT2D//m3go2QDUfDQqrdbufDMkqyFQQ1EkOjkNVxUo2/6wTHaIK9mChFoyoW/QvsaWhKE43UlfY5CBbGz3C05ZCeBnMJYyRl5H8XZf0C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751864770; c=relaxed/simple;
-	bh=Yezh1PpcDSnMIsQt/1ue+JNou0BqpTIh4TMeGHqSd4o=;
+	s=arc-20240116; t=1751864771; c=relaxed/simple;
+	bh=UnukMHnFrNRdetsFMcw3prQ/v4qlktaL9HMhPaNQEX0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p1+nLXNE/7luu+bDZG+Viuis0Dk/0cvBGaUUh+S3oeXZMmHarC1x7ivm5y9yraUP4lzkhhk1TD2qEVr/37V5cW84Du4BoRL2OJOlIfgVQFyfaOW7X37JgG/eQj+VJgEbqZDBNltNEO1QylrcFD3Pe5K80env+QqkQOsFf29JGcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l4eRU6Zt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fznE2+x7lzqwhWua6VaXGR/2XfSJ0ZYN0I4xQhFfS69dQBhQ0CBBb8SSM2zG6NTKevsFm+6f0Fks6rHvvYyGy/aBvpiHAEhK340CL4YD5eGxlHC5N3/RN4kNvU5CyJ5JEUmPoopEra9Cy7V/SbjT2CJmmR/pKANfCTcYURbwfXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYkHDiS7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l4eRU6Zt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0821DC4CEEE;
-	Mon,  7 Jul 2025 05:06:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYkHDiS7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23963C4CEF5;
+	Mon,  7 Jul 2025 05:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751864769;
-	bh=Yezh1PpcDSnMIsQt/1ue+JNou0BqpTIh4TMeGHqSd4o=;
+	s=k20201202; t=1751864770;
+	bh=UnukMHnFrNRdetsFMcw3prQ/v4qlktaL9HMhPaNQEX0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l4eRU6ZtIjrPZqE1oswfysOMpfN27h8Z6VLlby66doSNl7CaHl5QBDBdXYWc6Yr9q
-	 60ONel3IMGDoF4MLcqJZyRjBE6YKzmlCjUgmCNZOFnoT7L/COa5LlI5V41UKkJVEGj
-	 upswcn7pRbgBfXEWEcFm4KFn/80NdG6p2/AsNRBuu6Sen590ehEudEdP+GkOUo34r9
-	 REromnPjwuV/0TxPAq9E3qV9ptD29A0pJRRmaK2x1YulRQ4oij925V03/RxBrglc56
-	 Bd7v0ZlzbpK7kaW5IJmiCgFg8HLmC4xiT+L6eOVH2ZnOspNXnz+jUqyHOYtNQLBVDM
-	 Y3aOsOl5BeqZA==
-Date: Mon, 7 Jul 2025 07:06:08 +0200
+	b=sYkHDiS7fXE2K8y0Y1giKvh2pbltZ7/tva+9LiT/VHcKqFKM3JQky1dhM2jGM1LcA
+	 BXF8Cw0R8HcuMxeVIdXjx7pdJfKJPI0hxP1xyqtt12nBF1nxdDD5N3CAQHaV/rPavC
+	 XOA113UlxIytk6j+oxrCBignYcCWTvYDU1038YP8IvJEjjQHZykZrdNYqNrIkNG3p0
+	 Of/g8ZVxkD0z/vQkDnNKJzv2SRZ7bMP9J7gi7WJTjZEGImUF1wMOtl2JBikTRlSaON
+	 Og0VdMofT7QId7rpsY5mQ8Qwg0NOlPbCeroujc0pWXhQrLC4tB/idCfrfsZnS5S3zc
+	 ax8VX82Slh2bQ==
+Date: Mon, 7 Jul 2025 07:06:09 +0200
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-mm@kvack.org, linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
@@ -37,8 +37,9 @@ Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>,
 	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
 	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
 	Andrew Clayton <andrew@digital-domain.net>
-Subject: [RFC v3 1/7] vsprintf: Add [v]seprintf(), [v]stprintf()
-Message-ID: <64334f0b94d6b853e6104ec4f89bcf910978db76.1751862634.git.alx@kernel.org>
+Subject: [RFC v3 2/7] stacktrace, stackdepot: Add seprintf()-like variants of
+ functions
+Message-ID: <9c140de9842dd34096928a7c87dab4f45ef18764.1751862634.git.alx@kernel.org>
 X-Mailer: git-send-email 2.50.0
 References: <cover.1751862634.git.alx@kernel.org>
 Precedence: bulk
@@ -51,234 +52,122 @@ Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 In-Reply-To: <cover.1751862634.git.alx@kernel.org>
 
-seprintf()
-==========
-
-seprintf() is a function similar to stpcpy(3) in the sense that it
-returns a pointer that is suitable for chaining to other copy
-operations.
-
-It takes a pointer to the end of the buffer as a sentinel for when to
-truncate, which unlike a size, doesn't need to be updated after every
-call.  This makes it much more ergonomic, avoiding manually calculating
-the size after each copy, which is error prone.
-
-It also makes error handling much easier, by reporting truncation with
-a null pointer, which is accepted and transparently passed down by
-subsequent seprintf() calls.  This results in only needing to report
-errors once after a chain of seprintf() calls, unlike snprintf(3), which
-requires checking after every call.
-
-	p = buf;
-	e = buf + countof(buf);
-	p = seprintf(p, e, foo);
-	p = seprintf(p, e, bar);
-	if (p == NULL)
-		goto trunc;
-
-vs
-
-	len = 0;
-	size = countof(buf);
-	len += snprintf(buf + len, size - len, foo);
-	if (len >= size)
-		goto trunc;
-
-	len += snprintf(buf + len, size - len, bar);
-	if (len >= size)
-		goto trunc;
-
-And also better than scnprintf() calls:
-
-	len = 0;
-	size = countof(buf);
-	len += scnprintf(buf + len, size - len, foo);
-	len += scnprintf(buf + len, size - len, bar);
-	if (len >= size)
-		goto trunc;
-
-It seems aparent that it's a more elegant approach to string catenation.
-
-stprintf()
-==========
-
-stprintf() is a helper that is needed for implementing seprintf()
---although it could be open-coded within vseprintf(), of course--, but
-it's also useful by itself.  It has the same interface properties as
-strscpy(): that is, it copies with truncation, and reports truncation
-with -E2BIG.  It would be useful to replace some calls to snprintf(3)
-and scnprintf() which don't need chaining, and where it's simpler to
-pass a size.
-
-It is better than plain snprintf(3), because it results in simpler error
-detection (it doesn't need a check >=countof(buf), but rather <0).
+I think there's an anomaly in stack_depot_s*print().  If we have zero
+entries, we don't copy anything, which means the string is still not a
+string.  Normally, this function is called surrounded by other calls to
+s*printf(), which guarantee that there's a '\0', but maybe we should
+make sure to write a '\0' here?
 
 Cc: Kees Cook <kees@kernel.org>
 Cc: Christopher Bazley <chris.bazley.wg14@gmail.com>
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- include/linux/sprintf.h |   4 ++
- lib/vsprintf.c          | 109 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 113 insertions(+)
+ include/linux/stackdepot.h | 13 +++++++++++++
+ include/linux/stacktrace.h |  3 +++
+ kernel/stacktrace.c        | 28 ++++++++++++++++++++++++++++
+ lib/stackdepot.c           | 12 ++++++++++++
+ 4 files changed, 56 insertions(+)
 
-diff --git a/include/linux/sprintf.h b/include/linux/sprintf.h
-index 51cab2def9ec..c3dbfd2efd2b 100644
---- a/include/linux/sprintf.h
-+++ b/include/linux/sprintf.h
-@@ -11,8 +11,12 @@ __printf(2, 3) int sprintf(char *buf, const char * fmt, ...);
- __printf(2, 0) int vsprintf(char *buf, const char *, va_list);
- __printf(3, 4) int snprintf(char *buf, size_t size, const char *fmt, ...);
- __printf(3, 0) int vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
-+__printf(3, 4) int stprintf(char *buf, size_t size, const char *fmt, ...);
-+__printf(3, 0) int vstprintf(char *buf, size_t size, const char *fmt, va_list args);
- __printf(3, 4) int scnprintf(char *buf, size_t size, const char *fmt, ...);
- __printf(3, 0) int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
-+__printf(3, 4) char *seprintf(char *p, const char end[0], const char *fmt, ...);
-+__printf(3, 0) char *vseprintf(char *p, const char end[0], const char *fmt, va_list args);
- __printf(2, 3) __malloc char *kasprintf(gfp_t gfp, const char *fmt, ...);
- __printf(2, 0) __malloc char *kvasprintf(gfp_t gfp, const char *fmt, va_list args);
- __printf(2, 0) const char *kvasprintf_const(gfp_t gfp, const char *fmt, va_list args);
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 01699852f30c..a3efacadb5e5 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -2892,6 +2892,37 @@ int vsnprintf(char *buf, size_t size, const char *fmt_str, va_list args)
- }
- EXPORT_SYMBOL(vsnprintf);
+diff --git a/include/linux/stackdepot.h b/include/linux/stackdepot.h
+index 2cc21ffcdaf9..a7749fc3ac7c 100644
+--- a/include/linux/stackdepot.h
++++ b/include/linux/stackdepot.h
+@@ -219,6 +219,19 @@ void stack_depot_print(depot_stack_handle_t stack);
+ int stack_depot_snprint(depot_stack_handle_t handle, char *buf, size_t size,
+ 		       int spaces);
  
 +/**
-+ * vstprintf - Format a string and place it in a buffer
-+ * @buf: The buffer to place the result into
-+ * @size: The size of the buffer, including the trailing null space
-+ * @fmt: The format string to use
-+ * @args: Arguments for the format string
++ * stack_depot_seprint - Print a stack trace from stack depot into a buffer
 + *
-+ * The return value is the length of the new string.
-+ * If the string is truncated, the function returns -E2BIG.
++ * @handle:	Stack depot handle returned from stack_depot_save()
++ * @p:		Pointer to the print buffer
++ * @end:	Pointer to one past the last element in the buffer
++ * @spaces:	Number of leading spaces to print
 + *
-+ * If you're not already dealing with a va_list consider using stprintf().
-+ *
-+ * See the vsnprintf() documentation for format string extensions over C99.
++ * Return:	Pointer to trailing '\0'; or NULL on truncation
 + */
-+int vstprintf(char *buf, size_t size, const char *fmt, va_list args)
-+{
-+	int len;
-+
-+	len = vsnprintf(buf, size, fmt, args);
-+
-+	// It seems the kernel's vsnprintf() doesn't fail?
-+	//if (unlikely(len < 0))
-+	//	return -E2BIG;
-+
-+	if (unlikely(len >= size))
-+		return -E2BIG;
-+
-+	return len;
-+}
-+EXPORT_SYMBOL(vstprintf);
++char *stack_depot_seprint(depot_stack_handle_t handle, char *p,
++                          const char end[0], int spaces);
 +
  /**
-  * vscnprintf - Format a string and place it in a buffer
-  * @buf: The buffer to place the result into
-@@ -2923,6 +2954,36 @@ int vscnprintf(char *buf, size_t size, const char *fmt, va_list args)
+  * stack_depot_put - Drop a reference to a stack trace from stack depot
+  *
+diff --git a/include/linux/stacktrace.h b/include/linux/stacktrace.h
+index 97455880ac41..748936386c89 100644
+--- a/include/linux/stacktrace.h
++++ b/include/linux/stacktrace.h
+@@ -67,6 +67,9 @@ void stack_trace_print(const unsigned long *trace, unsigned int nr_entries,
+ 		       int spaces);
+ int stack_trace_snprint(char *buf, size_t size, const unsigned long *entries,
+ 			unsigned int nr_entries, int spaces);
++char *stack_trace_seprint(char *p, const char end[0],
++			  const unsigned long *entries, unsigned int nr_entries,
++			  int spaces);
+ unsigned int stack_trace_save(unsigned long *store, unsigned int size,
+ 			      unsigned int skipnr);
+ unsigned int stack_trace_save_tsk(struct task_struct *task,
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index afb3c116da91..65caf9e63673 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -70,6 +70,34 @@ int stack_trace_snprint(char *buf, size_t size, const unsigned long *entries,
  }
- EXPORT_SYMBOL(vscnprintf);
+ EXPORT_SYMBOL_GPL(stack_trace_snprint);
  
 +/**
-+ * vseprintf - Format a string and place it in a buffer
-+ * @p: The buffer to place the result into
-+ * @end: A pointer to one past the last character in the buffer
-+ * @fmt: The format string to use
-+ * @args: Arguments for the format string
++ * stack_trace_seprint - Print the entries in the stack trace into a buffer
++ * @p:		Pointer to the print buffer
++ * @end:	Pointer to one past the last element in the buffer
++ * @entries:	Pointer to storage array
++ * @nr_entries:	Number of entries in the storage array
++ * @spaces:	Number of leading spaces to print
 + *
-+ * The return value is a pointer to the trailing '\0'.
-+ * If @p is NULL, the function returns NULL.
-+ * If the string is truncated, the function returns NULL.
-+ *
-+ * If you're not already dealing with a va_list consider using seprintf().
-+ *
-+ * See the vsnprintf() documentation for format string extensions over C99.
++ * Return: Pointer to the trailing '\0'; or NULL on truncation.
 + */
-+char *vseprintf(char *p, const char end[0], const char *fmt, va_list args)
++char *stack_trace_seprint(char *p, const char end[0],
++			  const unsigned long *entries, unsigned int nr_entries,
++			  int spaces)
 +{
-+	int len;
++	unsigned int i;
 +
-+	if (unlikely(p == NULL))
-+		return NULL;
++	if (WARN_ON(!entries))
++		return 0;
 +
-+	len = vstprintf(p, end - p, fmt, args);
-+	if (unlikely(len < 0))
-+		return NULL;
-+
-+	return p + len;
-+}
-+EXPORT_SYMBOL(vseprintf);
-+
- /**
-  * snprintf - Format a string and place it in a buffer
-  * @buf: The buffer to place the result into
-@@ -2950,6 +3011,30 @@ int snprintf(char *buf, size_t size, const char *fmt, ...)
- }
- EXPORT_SYMBOL(snprintf);
- 
-+/**
-+ * stprintf - Format a string and place it in a buffer
-+ * @buf: The buffer to place the result into
-+ * @size: The size of the buffer, including the trailing null space
-+ * @fmt: The format string to use
-+ * @...: Arguments for the format string
-+ *
-+ * The return value is the length of the new string.
-+ * If the string is truncated, the function returns -E2BIG.
-+ */
-+
-+int stprintf(char *buf, size_t size, const char *fmt, ...)
-+{
-+	va_list args;
-+	int len;
-+
-+	va_start(args, fmt);
-+	len = vstprintf(buf, size, fmt, args);
-+	va_end(args);
-+
-+	return len;
-+}
-+EXPORT_SYMBOL(stprintf);
-+
- /**
-  * scnprintf - Format a string and place it in a buffer
-  * @buf: The buffer to place the result into
-@@ -2974,6 +3059,30 @@ int scnprintf(char *buf, size_t size, const char *fmt, ...)
- }
- EXPORT_SYMBOL(scnprintf);
- 
-+/**
-+ * seprintf - Format a string and place it in a buffer
-+ * @p: The buffer to place the result into
-+ * @end: A pointer to one past the last character in the buffer
-+ * @fmt: The format string to use
-+ * @...: Arguments for the format string
-+ *
-+ * The return value is a pointer to the trailing '\0'.
-+ * If @buf is NULL, the function returns NULL.
-+ * If the string is truncated, the function returns NULL.
-+ */
-+
-+char *seprintf(char *p, const char end[0], const char *fmt, ...)
-+{
-+	va_list args;
-+
-+	va_start(args, fmt);
-+	p = vseprintf(p, end, fmt, args);
-+	va_end(args);
++	for (i = 0; i < nr_entries; i++) {
++		p = seprintf(p, end, "%*c%pS\n", 1 + spaces, ' ',
++			     (void *)entries[i]);
++	}
 +
 +	return p;
 +}
-+EXPORT_SYMBOL(seprintf);
++EXPORT_SYMBOL_GPL(stack_trace_seprint);
 +
- /**
-  * vsprintf - Format a string and place it in a buffer
-  * @buf: The buffer to place the result into
+ #ifdef CONFIG_ARCH_STACKWALK
+ 
+ struct stacktrace_cookie {
+diff --git a/lib/stackdepot.c b/lib/stackdepot.c
+index 73d7b50924ef..749496e6a6f1 100644
+--- a/lib/stackdepot.c
++++ b/lib/stackdepot.c
+@@ -771,6 +771,18 @@ int stack_depot_snprint(depot_stack_handle_t handle, char *buf, size_t size,
+ }
+ EXPORT_SYMBOL_GPL(stack_depot_snprint);
+ 
++char *stack_depot_seprint(depot_stack_handle_t handle, char *p,
++			  const char end[0], int spaces)
++{
++	unsigned long *entries;
++	unsigned int nr_entries;
++
++	nr_entries = stack_depot_fetch(handle, &entries);
++	return nr_entries ? stack_trace_seprint(p, end, entries, nr_entries,
++						spaces) : p;
++}
++EXPORT_SYMBOL_GPL(stack_depot_seprint);
++
+ depot_stack_handle_t __must_check stack_depot_set_extra_bits(
+ 			depot_stack_handle_t handle, unsigned int extra_bits)
+ {
 -- 
 2.50.0
 
