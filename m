@@ -1,121 +1,167 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5254129A30A
-	for <linux-hardening@vger.kernel.org>; Mon,  7 Jul 2025 14:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00C52D8DA8;
+	Mon,  7 Jul 2025 14:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751900372; cv=none; b=K5hZ6t+J25CGMHYZeRWyODumC9gSbqwOLp7OKNF2DKJAF2tCsuYlOy9Xw7gUxMtYSfv9AwBjll6iAArFLxh+ZDxOEvX4GSZO3LbUqFcEyRCUGGB3Oun6tzZC++A9/hu2tF5UvK3QIdWtUd3WEGYE/DLm8hS/kd11qRrgE1USbCo=
+	t=1751900376; cv=none; b=ebU4P1bRofLYx8o0kSOUnljc+WVfY68YxGd8+HsQmdyTp9AvIj/G4wdgZN5NQYz488nCIAbwmthIzlR9JLMkknHGGfx4kbvm7d+ej0k8k2wZuq9etdNikEEuz8pud0ZQ79ET+YCHh3HWl6OZ0lzr2Of61aLE1QGv+0R2bbhfkfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751900372; c=relaxed/simple;
-	bh=5J6/q/GM8RZ99jS9z81cyaKyHg6P0FVUWfxHrUa5/58=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VG2X5HtbvIwKcp/KpIXW2z9U7JK486YVeN7a9CcpwnH4xdZJ3fqHIlUgru78rkv4VM2C8IdnMj5YGbEEpUuzgtydKhHxidQW45KqrllvvrVJ8P4wYUNGbCqzGhzjQDtmTU9JL/Ch5VHG/TW7ZfCLKUBhHlNOorVCU531ZyFZqrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ho/SLovv; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751900376; c=relaxed/simple;
+	bh=AWC2+QrGGPhLVXZSYH0uztW+sd6LA96IpxcDRobGl9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GZKe1JFYOM28pDNZD2mRDuWCM/kSaZEZ7cxiitgIhY1XURAkTGt4g4ZswclaoSf1tqiG289+FD3MMbB1Y7FVdeubsPgb2BmTSQBUdJWV4ypHmsexRKmB0iRyZNM6r28/A6btyM3QaF/HIGhip9nc3K6UpLdy66UqpE2Re0OKiwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvUGVCWn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ho/SLovv"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-313910f392dso2621344a91.2
-        for <linux-hardening@vger.kernel.org>; Mon, 07 Jul 2025 07:59:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751900371; x=1752505171; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6TQLxoKJTtnPQL66AOVz1qBZAurWsbbtmQ08gZuI+u0=;
-        b=ho/SLovv7ZTD7nf26TVEZqkkJaOXDwFjpqiXUIT/mABz1JG8jIXNfwKzgyuOKoqpPa
-         GjNHc+OF0/cykuCxakHldGkpfmpZwXnLo4N0t9tbfYp05nGkdH+WmWBl94BO5BulKe3O
-         J2DsBKYVcU0wDeTVaSStyZ4YqAUZcbmt11q4v+IaAjZzrE21xoMzRKyQQ/sJ9Qo6u0RA
-         Y3OOJmWqwmb9S9SC35B2bVbeOpShkTqrzwlHrr/Fm3R2oDGtK34o0yH/jb099G4Yn+mW
-         Iq+is9JHTAzQx4LkvrI92DKSKk9AOuWa//YdW1a3boFCa5ihHOzTcvzNcSqaI9LjQvOZ
-         cIPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751900371; x=1752505171;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6TQLxoKJTtnPQL66AOVz1qBZAurWsbbtmQ08gZuI+u0=;
-        b=VdKUZm5jbUuP5zkRr2e6j+nhLzwzdop3C7N9x+bRiatpKKMzo3AcfzuOzlOmnKzbAN
-         U7F2JTIWxHReNdWvz8PjTGH9cl+CtaS6kS9TvdNy0CiX3tFfD/qtA5SjdYRpsand+g37
-         JGHZhBl35ZaIPUskLy8fu+zMICW7bk2a3xVWaKcQJUHWvHfF4688jiPRlslttY4ezyB5
-         tCYmO3zNDkdi5qpF+Ca2GOdDsZX78XhJOI3AzHtXLweXod+auwLzp+8L5IUO412J4heQ
-         c7LeyoFgNxoTDs9aUgHOoH/B2jf1AEp/JUmlT/uF+MbPdi2SLOIpW17rvZ2AMmtfQcdb
-         m6rg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmb6nYnIZxvytilXizaHeVpBEc/QWAqGRalZ1/bZeV7T7F/d99v3ADNAEmNXfgLK5QNUgKXVGtZZlrA/7Y64Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLe+Ii/bwppvQnFnW2V4xa0eAbcmEwFmBnIeJSQyX49FTxMhRD
-	GySQJMWzSmbj7IyhD5dRr9QZuSV14liGpxJ1HpsNxumsfKO0lnRzt1+sJvGSxvu0tvnJ3nKkjf9
-	mkMzvvNBOiNNR+JXBwnqAdhu4WE6xDoHrk6QRXzn/
-X-Gm-Gg: ASbGncuh8PA25CgKgHq1bB4Y5UZkqS9NfUM5Uz4s45JcZLE69VLn6lYCor2aT/To/dq
-	lctoXt6S+ubli9DNBR9Zw4oOqhIQg0rYQvtFiU9aFHr1AozudT1zT/Br1JjlGZ6zZCVo03wwPxz
-	xGij6dOVNkloVic0jRmGVhqjN+fy98XyU3KX8+d8iO
-X-Google-Smtp-Source: AGHT+IE9YWkTfOUxIPM2EzEa1lJ2gNYhmQvgWwWfNnfCuD/M3jrRM4u+/9ssAC3XE0kDqrvmOJaz3qcx79G+IEBBFhg=
-X-Received: by 2002:a17:90b:3f48:b0:312:b4a:6342 with SMTP id
- 98e67ed59e1d1-31aaddfc24amr20985661a91.33.1751900370388; Mon, 07 Jul 2025
- 07:59:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvUGVCWn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A9B6C4AF0B;
+	Mon,  7 Jul 2025 14:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751900375;
+	bh=AWC2+QrGGPhLVXZSYH0uztW+sd6LA96IpxcDRobGl9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AvUGVCWnNmAO7W75Rs5AQJ2G0//FEvucDQ7gqxUQ/y4B8Yo3GiF+faeaf3/k9+Tyq
+	 ODyO0zPgv8p2wRTSg3dnHc89kMCjYD7XsJ0lQIyaIAd6PBjOpwG3cKHrKVe63ofmM3
+	 /Q6Tl1qysl/uuTjH/KyDoorCG9Q62QGUY8PgT5e4v1IJl2uLNSdwmyv6Pk0HdyD3h/
+	 NuWVN9teFs3JLpCn4BuUkiztcuER+3A47aOx6ykJMUhbAvAbJPtcruE8g05rhqHT0k
+	 xW0n2lMOoATxPZrYEcMOfWTWWSGB/pJBkm4uv6J3aiHaILT0dkT2rpijVBhPjkMMEv
+	 7qdS8BViWInbA==
+Date: Mon, 7 Jul 2025 16:59:32 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Alexander Potapenko <glider@google.com>
+Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
+	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>
+Subject: Re: [RFC v1 1/3] vsprintf: Add [v]seprintf(), [v]stprintf()
+Message-ID: <a3f7i56s5fmg2kcc2j2yledsyxfgepvf62jquqhjzckvg2ojwp@nokqxjgqpman>
+References: <cover.1751747518.git.alx@kernel.org>
+ <2d20eaf1752efefcc23d0e7c5c2311dd5ae252af.1751747518.git.alx@kernel.org>
+ <CAG_fn=UG3O-3_ik0TY_kstxzMVh4Z9noTP1cYfAiWvCnaXQ-6A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1751862634.git.alx@kernel.org> <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
- <CANpmjNMPWWdushTvUqYJzqQJz4SJLgPggH9cs4KPob_9=1T-nw@mail.gmail.com> <kicfhrecpahv5kkawnnazsuterxjoqscwf3rb4u6in5gig2bq6@jbt6dwnzs67r>
-In-Reply-To: <kicfhrecpahv5kkawnnazsuterxjoqscwf3rb4u6in5gig2bq6@jbt6dwnzs67r>
-From: Marco Elver <elver@google.com>
-Date: Mon, 7 Jul 2025 16:58:53 +0200
-X-Gm-Features: Ac12FXxNc7MVDdqbSkiHg-OPuizBzk24Lc8ThBNq8a8QxrLwekty4YemWnP4YPo
-Message-ID: <CANpmjNNXyyfmYFPYm2LCF_+vdPtWED3xj5gOJPQazpGhBizk5w@mail.gmail.com>
-Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
-To: Alejandro Colomar <alx@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ltlrnmdc5i3ybtlp"
+Content-Disposition: inline
+In-Reply-To: <CAG_fn=UG3O-3_ik0TY_kstxzMVh4Z9noTP1cYfAiWvCnaXQ-6A@mail.gmail.com>
+
+
+--ltlrnmdc5i3ybtlp
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Alexander Potapenko <glider@google.com>
 Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
 	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
 	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, 
-	Dmitry Vyukov <dvyukov@google.com>, Alexander Potapenko <glider@google.com>, Christoph Lameter <cl@linux.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
 	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
-	Andrew Clayton <andrew@digital-domain.net>, Sven Schnelle <svens@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, 
-	"Huang, Ying" <ying.huang@intel.com>, Lee Schermerhorn <lee.schermerhorn@hp.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	Chao Yu <chao.yu@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>
+Subject: Re: [RFC v1 1/3] vsprintf: Add [v]seprintf(), [v]stprintf()
+References: <cover.1751747518.git.alx@kernel.org>
+ <2d20eaf1752efefcc23d0e7c5c2311dd5ae252af.1751747518.git.alx@kernel.org>
+ <CAG_fn=UG3O-3_ik0TY_kstxzMVh4Z9noTP1cYfAiWvCnaXQ-6A@mail.gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CAG_fn=UG3O-3_ik0TY_kstxzMVh4Z9noTP1cYfAiWvCnaXQ-6A@mail.gmail.com>
 
-On Mon, 7 Jul 2025 at 16:39, Alejandro Colomar <alx@kernel.org> wrote:
->
-> Hi Marco,
->
-> On Mon, Jul 07, 2025 at 09:44:09AM +0200, Marco Elver wrote:
-> > On Mon, 7 Jul 2025 at 07:06, Alejandro Colomar <alx@kernel.org> wrote:
-> > >
-> > > While doing this, I detected some anomalies in the existing code:
-> > >
-> > > mm/kfence/kfence_test.c:
-> > >
-> > >         -  The last call to scnprintf() did increment 'cur', but it's
-> > >            unused after that, so it was dead code.  I've removed the dead
-> > >            code in this patch.
-> >
-> > That was done to be consistent with the other code for readability,
-> > and to be clear where the next bytes should be appended (if someone
-> > decides to append more). There is no runtime dead code, the compiler
-> > optimizes away the assignment. But I'm indifferent, so removing the
-> > assignment is fine if you prefer that.
->
-> Yeah, I guessed that might be the reason.  I'm fine restoring it if you
-> prefer it.  I tend to use -Wunused-but-set-variable, but if it is not
-> used here and doesn't trigger, I guess it's fine to keep it.
+Hi Alexander,
 
-Feel free to make it warning-free, I guess that's useful.
+On Mon, Jul 07, 2025 at 11:47:43AM +0200, Alexander Potapenko wrote:
+> > +/**
+> > + * vseprintf - Format a string and place it in a buffer
+> > + * @p: The buffer to place the result into
+> > + * @end: A pointer to one past the last character in the buffer
+> > + * @fmt: The format string to use
+> > + * @args: Arguments for the format string
+> > + *
+> > + * The return value is a pointer to the trailing '\0'.
+> > + * If @p is NULL, the function returns NULL.
+> > + * If the string is truncated, the function returns NULL.
+> > + *
+> > + * If you're not already dealing with a va_list consider using seprint=
+f().
+> > + *
+> > + * See the vsnprintf() documentation for format string extensions over=
+ C99.
+> > + */
+> > +char *vseprintf(char *p, const char end[0], const char *fmt, va_list a=
+rgs)
+> > +{
+> > +       int len;
+> > +
+> > +       if (unlikely(p =3D=3D NULL))
+> > +               return NULL;
+> > +
+> > +       len =3D vstprintf(p, end - p, fmt, args);
+>=20
+> It's easy to imagine a situation in which `end` is calculated from the
+> user input and may overflow.
+> Maybe we can add a check for `end > p` to be on the safe side?
 
-> > Did you run the tests? Do they pass?
->
-> I don't know how to run them.  I've only built the kernel.  If you point
-> me to instructions on how to run them, I'll do so.  Thanks!
+That would technically be already UB at the moment you hold the 'end'
+pointer, so the verification should in theory happen much earlier.
 
-Should just be CONFIG_KFENCE_KUNIT_TEST=y -- then boot kernel and
-check that the test reports "ok".
+However, if we've arrived here with an overflown 'end', the safety is in
+vsnprintf(), which has
 
-Thanks,
--- marco
+        /* Reject out-of-range values early.  Large positive sizes are
+           used for unknown buffer sizes. */
+        if (WARN_ON_ONCE(size > INT_MAX))
+                return 0;
+
+The sequence is:
+
+-  vseprintf() calls vstprintf() where end-p =3D> size.
+-  vstprintf() calls vsnprintf() with size.
+-  vsnprintf() would return 0, and the contents of the string are
+   undefined, as we haven't written anything.  It's not even truncated.
+
+Which, indeed, doesn't sound like a safety.  We've reported a successful
+copy of 0 bytes, but we actually failed.
+
+Which BTW is a reminder that this implementation of vsnprintf() seems
+dangerous to me, and not conforming to the standard vsnprintf(3).
+
+Maybe we should do the check in vstprintf() and report an error as
+-E2BIG (which is later translated into NULL by vseprintf()).  This is
+what sized_strscpy() does, so sounds reasonable.  I'll add this test.
+
+Thanks!
+
+
+Have a lovely day!
+Alex
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--ltlrnmdc5i3ybtlp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhr4M4ACgkQ64mZXMKQ
+wqmu/w//WwZs9mMUUpehQAZpcLdKgHxOjWIoVERVVix9JXaMkRjvecmLbMcM09Gq
+VaIcLpSsccjhDCyz1HKOgvnjIXR/s7bDsy13cjIDwQ7LA8dcT15srw5TAFJhdIlB
+LgXQLbewhPidtpcqQBlZavyw2bhL6qhr/1RsI9vaRv6+fpz/TunEP6No1PogIwHB
+jTtats/jSKw+PwMukd2a7ZAuBsuopcP+vehDSgr5C+L6v2bG7adoFaiyZT6w3zLS
+Tp21Q1bZpQGtD2O6dHWcyn+mrr6i5XP/jKT9r0KQP/HEa28uHSEm/R4oi2RDtr7G
+PgJokX5UT8Jfj1YOOebpi0gp30hHEpyWNDPIoLxTqxRYhUja4yJQr//qrSxI++ec
+ZXEr4WNNMFDBiVLSfzan8TSJqxEL2KuexQbk89WfPdUw0xEV5bXbIRdIJAjoEM9o
+ZWpD61Fsk5vhiB++H4vHK7xVKvlbbdydWGr4/gEhw2Fb6TTUeR7yw24aBXjUSvWh
+TyDvLRfKpEy5GDmpzt3goQddiF3T4yP8mrcRXvvnJkyOyqJBX0TsMyLh32zTYoF/
+GvrcWFlZvMYB6HuW470wsTDDmQR4NfMdvlD5S/8gBOsIdmjLOMhyViZgYDsb5S5G
+xkvPd/+crvso450yOEVkbQMRMgQnx2IexlfON3fHYrQZ2EuSNi4=
+=2l/v
+-----END PGP SIGNATURE-----
+
+--ltlrnmdc5i3ybtlp--
