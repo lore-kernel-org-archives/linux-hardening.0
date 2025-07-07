@@ -1,117 +1,590 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2151B4236
-	for <linux-hardening@vger.kernel.org>; Mon,  7 Jul 2025 20:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265D52264B2;
+	Mon,  7 Jul 2025 20:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751921383; cv=none; b=P6nHg6+KyvQEFCGPqIHJ/Wfqz6dpAYylGLF11gAcsAiBd1NL1+2oLQ3uDA7B5+6q29s6jisbcQkcH0O0egfy1snVAiyJmyMSId6P3JPe+as0nA41qh7yxSamVuHVO8+yTg8aQ79qjIx92ozbu2Iu5ED7STihzvSXp5IFXNF9dmQ=
+	t=1751921617; cv=none; b=fYI7vT/GhaH+RpEs1jtKkuiVehhzfOEUkXwMnIO6HWY1Nok2vjuRZUOQCdXksRdhWHco2l0tePJ90v4SN7rmSIpWChZ+SvlX16BkYLpwaWyZtPUQKqA3XsXlG/vkhg2dHBBqzTFZlFlwkKex2PxkitgJM4Hlg3Tmyx7WZAlUrU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751921383; c=relaxed/simple;
-	bh=UlDKEZ5sWoRHG7cBcIetwmT6gX+Tex47BHzvQ0TG7UQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CwwYC4y28I2vw4cd4MjwSUTNP9Gd4bScVcxznZUd9tuzXvs+lGazWP+8keJAJS/ytpuLqP7OxF7y4ShYjRU2ZsXKr5A+MO84D+ZgSe6hW+psU5H2eKpt5VjtUuaT5LzBdoFR7tdSVN7GF1a9lqw8f6V0+dwofJQMvHGx5OrbGnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OznHFgvz; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1751921617; c=relaxed/simple;
+	bh=/eVrzMVvZvb4CQjSxi2c2jJBEuGwM07+lVQlQsN89Fc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iqvrdoew4RMqCNr8tlHtkz/KPN3C7t4GikiP0CtW39pBKfrR4ht39ikif0tynQGbWUZEM8lw5DzRR0Q3YK8MyqKvsr8QK2oTnVLuntBU0OL+dVbh5af/CxriKWULJfdMQnmpSQhs9wC+lMyR+c+zXGiltGz0cqb4FopKexMIc2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUJz70kr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OznHFgvz"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ae401ebcbc4so591901666b.1
-        for <linux-hardening@vger.kernel.org>; Mon, 07 Jul 2025 13:49:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1751921379; x=1752526179; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=02PgiN7PJFVFaSl1V+OWG4TgqqQ82M8yAYvu32Fbss8=;
-        b=OznHFgvzIGNoin3XJUee1aRQWChgFR90oiWthvm4p3rNoLLd5hHta2PjrN0l3bC2/I
-         lalfnpvsjqQvcwZNnEq1BfkpXln1CF762bWR3y4iue/rheNsJT0OZ1XgdTcX0l3l7VbR
-         veXrKDHaD0lnsEfUDslZ8+qgXZiJCqzCstln8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751921379; x=1752526179;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=02PgiN7PJFVFaSl1V+OWG4TgqqQ82M8yAYvu32Fbss8=;
-        b=t5Zm/ToJFXFqavwGCYzw7oaT6UWdyQH8D9H3w6boym0UgGWMkCdjtipGupt6LIpjh1
-         0FCKkL/MD84vGNhJH95IJHo8DqTtnN0vsiDjwN1wSXdJHHBmDQhWBDWp2016Sb6JACQ3
-         2UPK11MeUegqJ3UvjL31JFlUGORbLTGyldy9MnK96qOgB7N6qyI/5QtiULSRI67QWHNm
-         gX3ZcYbEkG0p6zWDrVtZuc0nxg3E8GI4e2m0zRga/ZO6C7XyOEJeuxEDDnZrT6DjO9hr
-         IuQu2+AcYDNjRFFutJY8rW+lYmIiM+yxKkdgqjhDaypslSFs3S5L+ehuv/RnSRUpGT+f
-         Nh8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWcgID8UATuHr93FUuDi0aL8Ctt9Hx7rSmpPDINGiIU237JJjPtRzf+qEF5rLebluEdoyZBdx4YSgZAPiIRLk4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysZ3AviJcKJuVFb7lL+vbLpZ8AG9nvjkBlR5O0O8MlRiux+mil
-	DZnH49XcjqM2rQkZhP6Ij7RTn3oiJ3VpE2dHFqX63naH7VUUi5z5ila2DwCjfOekgnRN57UOwZT
-	IEQYvrNE=
-X-Gm-Gg: ASbGncvmyKM5bEBM6xQaM7vvRWTfbGswqiANdrdLE9ihNk0/diWgXkuHNbSdGo2Uk48
-	TT2I6cLa/YuFM9J5hg4I/yoHZyOSwT6s1R5p9FBfjMAGKaggvE0A0b7Xw+Tn6zwwYRITI1dci5v
-	IfpER9yoI2meikuMF2VOdL7xDT9/ZlwHNhOj1Gu7MJi4su3AWa4Y8orbx3T8EEniqWQuEyUtu20
-	Qt/1aVPKQTkHpTt/lXDmhTCK22R8U+m7vWIrgSce7l8CVS+iTVjOLSFG73JGJkQBVbMdDeeBYRJ
-	Lwh+TpRU6/o1vjk8848sSQ8uIro1PZAbJxW3uFiAIbETx2OU/6sOza2Yw9ZeU4vhlNObE+5mPwA
-	dDOXol6/5kYxwn0phmFkoNyTM6NipgjWxLTC9
-X-Google-Smtp-Source: AGHT+IGcXZQBxeqz7AHcaf2jUq7xTY56FlGtImJEEaf/B+J+WPDbOtiqaxcQZVElbFF6bzm0rOgGAA==
-X-Received: by 2002:a17:907:1703:b0:ae3:d026:36cd with SMTP id a640c23a62f3a-ae6b021beebmr48581266b.42.1751921379192;
-        Mon, 07 Jul 2025 13:49:39 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66e7d4asm753129366b.23.2025.07.07.13.49.37
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jul 2025 13:49:38 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60c4521ae2cso6398300a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 07 Jul 2025 13:49:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWO6d+ywjbheDoOkCilaSjVT/5Ne+dP5zORNp6yRlUuHKw8nxrILffxN/HbjJVSe8WkF8nNpzRAxSXX3Tkfu44=@vger.kernel.org
-X-Received: by 2002:a05:6402:35cc:b0:60c:3cca:6503 with SMTP id
- 4fb4d7f45d1cf-610472e9b9dmr1045719a12.32.1751921377273; Mon, 07 Jul 2025
- 13:49:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUJz70kr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9460EC4CEE3;
+	Mon,  7 Jul 2025 20:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751921616;
+	bh=/eVrzMVvZvb4CQjSxi2c2jJBEuGwM07+lVQlQsN89Fc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PUJz70krZFt5UOCTS/RpEpL0p0exZ55UpeLHK0i2P0UGnVS6oy2RRmZ1vBTpqsF6x
+	 dOHlghUi6uhSR6tYoZoLvgJdmp/OorAeMm5KTSUdljk3fASW6pITg6xbgxCLb6mAis
+	 aFutNIc8g0PJZcBD2IfbgdGYPUrJGzPkD/+yNJwEV5e8kV0Y6IlbnGeY4/0NSrf6qw
+	 pGZQU5mlahtWdyM0wF9rVkmpAhU4IBxVxZbo7tYltcNXPApiIYED8UJgN4tmjzWYkw
+	 9bmFzZpgo8qrSk7CW7QjKpw+/L14P2CnCwspbePPBwPxe/mykQ8CZx7rOVun3bd/Wx
+	 dm1vpbe3baSfQ==
+Date: Mon, 7 Jul 2025 22:53:26 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
+	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
+	Andrew Clayton <andrew@digital-domain.net>, Sven Schnelle <svens@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, 
+	"Huang, Ying" <ying.huang@intel.com>, Lee Schermerhorn <lee.schermerhorn@hp.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Chao Yu <chao.yu@oppo.com>
+Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
+Message-ID: <t3wv6hlt7quhab7qqvxbx6zn4rh2oo6466urtu6tmnix63ju7v@hiwhnb5l4twf>
+References: <cover.1751862634.git.alx@kernel.org>
+ <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
+ <CANpmjNMPWWdushTvUqYJzqQJz4SJLgPggH9cs4KPob_9=1T-nw@mail.gmail.com>
+ <kicfhrecpahv5kkawnnazsuterxjoqscwf3rb4u6in5gig2bq6@jbt6dwnzs67r>
+ <CANpmjNNXyyfmYFPYm2LCF_+vdPtWED3xj5gOJPQazpGhBizk5w@mail.gmail.com>
+ <gvckzzomd7x3cxd7fxb37b6zn4uowjubpyrnvj7ptzz3mr3zq2@xovzgew63mxr>
+ <CANpmjNO0_RAMgZJktaempOm-KdY6Q0iJYFz=YEibvBgh7hNPwg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1751862634.git.alx@kernel.org> <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
- <CAHk-=wh9Pqz07ne9iSt1_v0c14rkOGvF9AbEkaq1KnFhQD1SSA@mail.gmail.com> <ugf4pu7qrojegz7arkcpa4cyde6hoyh73h66oc4f6ncc7jg23t@bklkbbotyzvp>
-In-Reply-To: <ugf4pu7qrojegz7arkcpa4cyde6hoyh73h66oc4f6ncc7jg23t@bklkbbotyzvp>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 7 Jul 2025 13:49:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whQ_0qFvg3cugt84+iKXi_eebNGY4so+PSnyyVNGVde1A@mail.gmail.com>
-X-Gm-Features: Ac12FXyBZiGga4SfFrcaUHuYJV_R_nCmMtiL9Yd7402tdLFKvKKk4keGfQkJ8kk
-Message-ID: <CAHk-=whQ_0qFvg3cugt84+iKXi_eebNGY4so+PSnyyVNGVde1A@mail.gmail.com>
-Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
-To: Alejandro Colomar <alx@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="v74lbtuwitce4ome"
+Content-Disposition: inline
+In-Reply-To: <CANpmjNO0_RAMgZJktaempOm-KdY6Q0iJYFz=YEibvBgh7hNPwg@mail.gmail.com>
+
+
+--v74lbtuwitce4ome
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Marco Elver <elver@google.com>
 Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
 	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
 	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, 
-	Dmitry Vyukov <dvyukov@google.com>, Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, 
-	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
 	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
 	Andrew Clayton <andrew@digital-domain.net>, Sven Schnelle <svens@linux.ibm.com>, 
 	Heiko Carstens <hca@linux.ibm.com>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, 
 	"Huang, Ying" <ying.huang@intel.com>, Lee Schermerhorn <lee.schermerhorn@hp.com>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	Chao Yu <chao.yu@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
+	Linus Torvalds <torvalds@linux-foundation.org>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Chao Yu <chao.yu@oppo.com>
+Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
+References: <cover.1751862634.git.alx@kernel.org>
+ <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
+ <CANpmjNMPWWdushTvUqYJzqQJz4SJLgPggH9cs4KPob_9=1T-nw@mail.gmail.com>
+ <kicfhrecpahv5kkawnnazsuterxjoqscwf3rb4u6in5gig2bq6@jbt6dwnzs67r>
+ <CANpmjNNXyyfmYFPYm2LCF_+vdPtWED3xj5gOJPQazpGhBizk5w@mail.gmail.com>
+ <gvckzzomd7x3cxd7fxb37b6zn4uowjubpyrnvj7ptzz3mr3zq2@xovzgew63mxr>
+ <CANpmjNO0_RAMgZJktaempOm-KdY6Q0iJYFz=YEibvBgh7hNPwg@mail.gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CANpmjNO0_RAMgZJktaempOm-KdY6Q0iJYFz=YEibvBgh7hNPwg@mail.gmail.com>
 
-On Mon, 7 Jul 2025 at 13:29, Alejandro Colomar <alx@kernel.org> wrote:
->
-> I am in the C Committee, and have proposed this API for standardization.
-> I have a feeling that the committee might be open to it.
+Hi Marco,
 
-Honestly, how about fixing the serious problems with the language instead?
+On Mon, Jul 07, 2025 at 09:08:29PM +0200, Marco Elver wrote:
+> > > > > Did you run the tests? Do they pass?
+> > > >
+> > > > I don't know how to run them.  I've only built the kernel.  If you =
+point
+> > > > me to instructions on how to run them, I'll do so.  Thanks!
+> > >
+> > > Should just be CONFIG_KFENCE_KUNIT_TEST=3Dy -- then boot kernel and
+> > > check that the test reports "ok".
+> >
+> > Hmmm, I can't see the results.  Did I miss anything?
+> >
+> >         alx@debian:~$ uname -a
+> >         Linux debian 6.15.0-seprintf-mm+ #5 SMP PREEMPT_DYNAMIC Mon Jul=
+  7 19:16:40 CEST 2025 x86_64 GNU/Linux
+> >         alx@debian:~$ cat /boot/config-6.15.0-seprintf-mm+ | grep KFENCE
+> >         CONFIG_HAVE_ARCH_KFENCE=3Dy
+> >         CONFIG_KFENCE=3Dy
+> >         CONFIG_KFENCE_SAMPLE_INTERVAL=3D0
+>=20
+>                      ^^ This means KFENCE is off.
+>=20
+> Not sure why it's 0 (distro default config?), but if you switch it to
+> something like:
 
-Get rid of the broken "strict aliasing" garbage.
+Yup, Debian default config plus what you told me.  :)
 
-Get rid of the random "undefined behavior" stuff that is literally
-designed to let compilers intentionally mis-compile code.
+>=20
+>   CONFIG_KFENCE_SAMPLE_INTERVAL=3D10
 
-Because as things are, "I am on the C committee" isn't a
-recommendation. It's a "we have decades of bad decisions to show our
-credentials".
+Thanks!  Now I see the tests.
 
-In the kernel, I have made it very very clear that we do not use
-standard C, because standard C is broken.
+I see no regressions.  I've tested both v6.15 and my branch, and see no
+differences:
 
-I stand by my "let's not add random letters to existing functions that
-are already too confusing".
 
-              Linus
+This was generated with the kernel built from my branch:
+
+	$ sudo dmesg | grep -inC2 kfence | sed 's/^....//' > tmp/log_after
+
+This was generated with a v6.15 kernel with the same exact config:
+
+	$ sudo dmesg | grep -inC2 kfence | sed 's/^....//' > tmp/log_before
+
+And here's a diff, ignoring some numbers that were easy to filter out:
+
+	$ diff -U999 \
+		<(cat tmp/log_before \
+			| sed 's/0x[0-9a-f]*/0x????/g' \
+			| sed 's/[[:digit:]]\.[[:digit:]]\+/?.?/g' \
+			| sed 's/#[[:digit:]]\+/#???/g') \
+		<(cat tmp/log_after \
+			| sed 's/0x[0-9a-f]*/0x????/g' \
+			| sed 's/[[:digit:]]\.[[:digit:]]\+/?.?/g' \
+			| sed 's/#[[:digit:]]\+/#???/g');
+	--- /dev/fd/63	2025-07-07 22:47:37.395608776 +0200
+	+++ /dev/fd/62	2025-07-07 22:47:37.395608776 +0200
+	@@ -1,303 +1,303 @@
+	 [    ?.?] NR_IRQS: 524544, nr_irqs: 1096, preallocated irqs: 16
+	 [    ?.?] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+	 [    ?.?] kfence: initialized - using 2097152 bytes for 255 objects at 0x=
+????(____ptrval____)-0x????(____ptrval____)
+	 [    ?.?] Console: colour dummy device 80x????
+	 [    ?.?] printk: legacy console [tty0] enabled
+	 --
+	 [    ?.?] ok 7 sysctl_test
+	 [    ?.?]     KTAP version 1
+	 [    ?.?]     # Subtest: kfence
+	 [    ?.?]     1..27
+	 [    ?.?]     # test_out_of_bounds_read: test_alloc: size=3D32, gfp=3Dcc0=
+, policy=3Dleft, cache=3D0
+	 [    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 [    ?.?] BUG: KFENCE: out-of-bounds read in test_out_of_bounds_read+0x??=
+??/0x????
+	=20
+	 [    ?.?] Out-of-bounds read at 0x???? (1B left of kfence-#???):
+	 [    ?.?]  test_out_of_bounds_read+0x????/0x????
+	 [    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 [    ?.?]  ret_from_fork_asm+0x????/0x????
+	=20
+	 [    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dkmalloc-32
+	=20
+	-[    ?.?] allocated by task 281 on cpu 6 at ?.?s (?.?s ago):
+	+[    ?.?] allocated by task 286 on cpu 8 at ?.?s (?.?s ago):
+	 --
+	 [    ?.?]     # test_out_of_bounds_read: test_alloc: size=3D32, gfp=3Dcc0=
+, policy=3Dright, cache=3D0
+	 [    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 [    ?.?] BUG: KFENCE: out-of-bounds read in test_out_of_bounds_read.cold=
++0x????/0x????
+	=20
+	 [    ?.?] Out-of-bounds read at 0x???? (32B right of kfence-#???):
+	 [    ?.?]  test_out_of_bounds_read.cold+0x????/0x????
+	 [    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 [    ?.?]  ret_from_fork_asm+0x????/0x????
+	=20
+	 [    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dkmalloc-32
+	=20
+	-[    ?.?] allocated by task 281 on cpu 6 at ?.?s (?.?s ago):
+	+[    ?.?] allocated by task 286 on cpu 11 at ?.?s (?.?s ago):
+	 --
+	 [    ?.?]     # test_out_of_bounds_read-memcache: test_alloc: size=3D32, =
+gfp=3Dcc0, policy=3Dleft, cache=3D1
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: out-of-bounds read in test_out_of_bounds_read+0x?=
+???/0x????
+	 -
+	 :[    ?.?] Out-of-bounds read at 0x???? (1B left of kfence-#???):
+	 -[    ?.?]  test_out_of_bounds_read+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dtest
+	 -
+	--[    ?.?] allocated by task 284 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 289 on cpu 8 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_out_of_bounds_read-memcache: test_alloc: size=3D32,=
+ gfp=3Dcc0, policy=3Dright, cache=3D1
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: out-of-bounds read in test_out_of_bounds_read.col=
+d+0x????/0x????
+	 -
+	 :[    ?.?] Out-of-bounds read at 0x???? (32B right of kfence-#???):
+	 -[    ?.?]  test_out_of_bounds_read.cold+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dtest
+	 -
+	--[    ?.?] allocated by task 284 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 289 on cpu 8 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_out_of_bounds_write: test_alloc: size=3D32, gfp=3Dc=
+c0, policy=3Dleft, cache=3D0
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: out-of-bounds write in test_out_of_bounds_write+0=
+x????/0x????
+	 -
+	 :[    ?.?] Out-of-bounds write at 0x???? (1B left of kfence-#???):
+	 -[    ?.?]  test_out_of_bounds_write+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dkmalloc-32
+	 -
+	--[    ?.?] allocated by task 288 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 291 on cpu 6 at ?.?s (?.?s ago):
+	 --
+	--[    ?.?]     # test_out_of_bounds_write-memcache: test_alloc: size=3D32=
+, gfp=3Dcc0, policy=3Dleft, cache=3D1
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	+-[    ?.?] clocksource: tsc: mask: 0x???? max_cycles: 0x????, max_idle_ns=
+: 881590599626 ns
+	 :[    ?.?] BUG: KFENCE: out-of-bounds write in test_out_of_bounds_write+0=
+x????/0x????
+	 -
+	 :[    ?.?] Out-of-bounds write at 0x???? (1B left of kfence-#???):
+	 -[    ?.?]  test_out_of_bounds_write+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dtest
+	 -
+	--[    ?.?] allocated by task 290 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 293 on cpu 10 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_use_after_free_read: test_alloc: size=3D32, gfp=3Dc=
+c0, policy=3Dany, cache=3D0
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: use-after-free read in test_use_after_free_read+0=
+x????/0x????
+	 -
+	 :[    ?.?] Use-after-free read at 0x???? (in kfence-#???):
+	 -[    ?.?]  test_use_after_free_read+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dkmalloc-32
+	 -
+	--[    ?.?] allocated by task 292 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 296 on cpu 10 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_use_after_free_read-memcache: test_alloc: size=3D32=
+, gfp=3Dcc0, policy=3Dany, cache=3D1
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: use-after-free read in test_use_after_free_read+0=
+x????/0x????
+	 -
+	 :[    ?.?] Use-after-free read at 0x???? (in kfence-#???):
+	 -[    ?.?]  test_use_after_free_read+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dtest
+	 -
+	--[    ?.?] allocated by task 294 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 298 on cpu 10 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_double_free: test_alloc: size=3D32, gfp=3Dcc0, poli=
+cy=3Dany, cache=3D0
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: invalid free in test_double_free+0x????/0x????
+	 -
+	 :[    ?.?] Invalid free of 0x???? (in kfence-#???):
+	 -[    ?.?]  test_double_free+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dkmalloc-32
+	 -
+	--[    ?.?] allocated by task 300 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 304 on cpu 6 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_double_free-memcache: test_alloc: size=3D32, gfp=3D=
+cc0, policy=3Dany, cache=3D1
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: invalid free in test_double_free+0x????/0x????
+	 -
+	 :[    ?.?] Invalid free of 0x???? (in kfence-#???):
+	 -[    ?.?]  test_double_free+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dtest
+	 -
+	--[    ?.?] allocated by task 302 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 306 on cpu 8 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_invalid_addr_free: test_alloc: size=3D32, gfp=3Dcc0=
+, policy=3Dany, cache=3D0
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: invalid free in test_invalid_addr_free+0x????/0x?=
+???
+	 -
+	 :[    ?.?] Invalid free of 0x???? (in kfence-#???):
+	 -[    ?.?]  test_invalid_addr_free+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dkmalloc-32
+	 -
+	--[    ?.?] allocated by task 304 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 308 on cpu 8 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_invalid_addr_free-memcache: test_alloc: size=3D32, =
+gfp=3Dcc0, policy=3Dany, cache=3D1
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: invalid free in test_invalid_addr_free+0x????/0x?=
+???
+	 -
+	 :[    ?.?] Invalid free of 0x???? (in kfence-#???):
+	 -[    ?.?]  test_invalid_addr_free+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dtest
+	 -
+	--[    ?.?] allocated by task 306 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 310 on cpu 8 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_corruption: test_alloc: size=3D32, gfp=3Dcc0, polic=
+y=3Dleft, cache=3D0
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: memory corruption in test_corruption+0x????/0x????
+	 -
+	 :[    ?.?] Corrupted memory at 0x???? [ ! . . . . . . . . . . . . . . . ]=
+ (in kfence-#???):
+	 -[    ?.?]  test_corruption+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dkmalloc-32
+	 -
+	--[    ?.?] allocated by task 308 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 312 on cpu 6 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_corruption: test_alloc: size=3D32, gfp=3Dcc0, polic=
+y=3Dright, cache=3D0
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: memory corruption in test_corruption+0x????/0x????
+	 -
+	 :[    ?.?] Corrupted memory at 0x???? [ ! ] (in kfence-#???):
+	 -[    ?.?]  test_corruption+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dkmalloc-32
+	 -
+	--[    ?.?] allocated by task 308 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 312 on cpu 6 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_corruption-memcache: test_alloc: size=3D32, gfp=3Dc=
+c0, policy=3Dleft, cache=3D1
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: memory corruption in test_corruption+0x????/0x????
+	 -
+	 :[    ?.?] Corrupted memory at 0x???? [ ! . . . . . . . . . . . . . . . ]=
+ (in kfence-#???):
+	 -[    ?.?]  test_corruption+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dtest
+	 -
+	--[    ?.?] allocated by task 310 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 314 on cpu 6 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_corruption-memcache: test_alloc: size=3D32, gfp=3Dc=
+c0, policy=3Dright, cache=3D1
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: memory corruption in test_corruption+0x????/0x????
+	 -
+	 :[    ?.?] Corrupted memory at 0x???? [ ! ] (in kfence-#???):
+	 -[    ?.?]  test_corruption+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dtest
+	 -
+	--[    ?.?] allocated by task 310 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 314 on cpu 6 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_kmalloc_aligned_oob_read: test_alloc: size=3D73, gf=
+p=3Dcc0, policy=3Dright, cache=3D0
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: out-of-bounds read in test_kmalloc_aligned_oob_re=
+ad+0x????/0x????
+	 -
+	 :[    ?.?] Out-of-bounds read at 0x???? (105B right of kfence-#???):
+	 -[    ?.?]  test_kmalloc_aligned_oob_read+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D73, cache=3Dkmalloc-96
+	 -
+	--[    ?.?] allocated by task 320 on cpu 10 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 326 on cpu 6 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_kmalloc_aligned_oob_write: test_alloc: size=3D73, g=
+fp=3Dcc0, policy=3Dright, cache=3D0
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: memory corruption in test_kmalloc_aligned_oob_wri=
+te+0x????/0x????
+	 -
+	 :[    ?.?] Corrupted memory at 0x???? [ ! . . . . . . . . . . . . . . . ]=
+ (in kfence-#???):
+	 -[    ?.?]  test_kmalloc_aligned_oob_write+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D73, cache=3Dkmalloc-96
+	 -
+	--[    ?.?] allocated by task 326 on cpu 8 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 328 on cpu 4 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     ok 22 test_memcache_ctor
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: invalid read in test_invalid_access+0x????/0x????
+	 -
+	 -[    ?.?] Invalid read at 0x????:
+	 --
+	 -[    ?.?]     # test_memcache_typesafe_by_rcu: test_alloc: size=3D32, gf=
+p=3Dcc0, policy=3Dany, cache=3D1
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: use-after-free read in test_memcache_typesafe_by_=
+rcu.cold+0x????/0x????
+	 -
+	 :[    ?.?] Use-after-free read at 0x???? (in kfence-#???):
+	 -[    ?.?]  test_memcache_typesafe_by_rcu.cold+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dtest
+	 -
+	--[    ?.?] allocated by task 336 on cpu 6 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 338 on cpu 10 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_krealloc: test_alloc: size=3D32, gfp=3Dcc0, policy=
+=3Dany, cache=3D0
+	 -[    ?.?] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	 :[    ?.?] BUG: KFENCE: use-after-free read in test_krealloc+0x????/0x????
+	 -
+	 :[    ?.?] Use-after-free read at 0x???? (in kfence-#???):
+	 -[    ?.?]  test_krealloc+0x????/0x????
+	 -[    ?.?]  kunit_try_run_case+0x????/0x????
+	 --
+	 -[    ?.?]  ret_from_fork_asm+0x????/0x????
+	 -
+	 :[    ?.?] kfence-#???: 0x????-0x????, size=3D32, cache=3Dkmalloc-32
+	 -
+	--[    ?.?] allocated by task 338 on cpu 4 at ?.?s (?.?s ago):
+	+-[    ?.?] allocated by task 340 on cpu 6 at ?.?s (?.?s ago):
+	 --
+	 -[    ?.?]     # test_memcache_alloc_bulk: setup_test_cache: size=3D32, c=
+tor=3D0x????
+	 -[    ?.?]     ok 27 test_memcache_alloc_bulk
+	 :[    ?.?] # kfence: pass:25 fail:0 skip:2 total:27
+	 -[    ?.?] # Totals: pass:25 fail:0 skip:2 total:27
+	 :[    ?.?] ok 8 kfence
+	 -[    ?.?]     KTAP version 1
+	 -[    ?.?]     # Subtest: damon
+
+If you'd like me to grep for something more specific, please let me
+know.
+
+
+Cheers,
+Alex
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--v74lbtuwitce4ome
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhsM78ACgkQ64mZXMKQ
+wqkNcw//cAOxiIsGa8kbXMBkXN7Ook5P9u2Zs0cUjCYoHn9AIRtW+hYf1lDdnNav
+BahwpujFq2zGzRyI1s959gqIYMg6K4bcKTE4INHACBnjgjMpRlHJy80VmHF2teO0
+wRIrPP+kH8fp005+LI5DjXLKwT6f8y6n0qGCfvQ9TRXkzrUSs8k0RKnhfW36sSff
+OVOARSwCyWLTgW0fXraBYwON/iFLjqYaMtqQrJ98XD1kzuOd8mIySqvFeDT7rZIN
+ysSww7O/EkPOGx6eWNpFHdhsW97XfYMsfMjULq3bJ2k6qxEryGG3f2Tz02d3VtYN
+Li7+VnK17YTfCtUIvztGRuhXWibtoqEcHt2bkmw1pHU2CTErtQi0c5+eeQ3T67dU
+1ypdyvk0q9xBxr77E031Po0VyXtRIhkEFwtAKsLU2zL7ebF9m0kj1tMqYGeS6UfO
+8G7ljq4NsBLX75+50dJGzbeRYdcxrMmbCNgAijuH5tN834b4BY5lw2mAuMeYUKg0
+58N4TGr/2jZ224zRFArUB7rlnfqnDUs/G4Qb6qM2VQJ0m5viWQ5QEJRvYQSr6TDh
+HYvlfve6M4tKrCmCKq6bc5Mpv13I3oGzushJn7gb8dFGkbTBe44youIcBMojljcz
+QJWkCtjVuSEA9icPljo1VU9boyGgmnPnf7gznVm1eCmLgpBRbQ0=
+=wycf
+-----END PGP SIGNATURE-----
+
+--v74lbtuwitce4ome--
