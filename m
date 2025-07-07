@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCCE28507E;
-	Mon,  7 Jul 2025 21:06:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF804194C96;
+	Mon,  7 Jul 2025 21:27:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751922366; cv=none; b=b7gpsQ/wNJsmQRN5OJpAHzEx+ETD3rkqCypDne5YS9DW+i4J+BUSj/bR8kMaVHeMgrISMpmOayGUs4bYYsm96JNPAW6natC/wpehxMxmMkJ2cK/19lloGFDyztDyIX/jsD4d+dCp/l0D1bhFSVfdij/fw9eWonFQAZxJaxvAeXs=
+	t=1751923623; cv=none; b=sfx+R3XEq7vLYZqusFVARX9Wze634OJwvPWF9kRjEKLkHbq2vCiCOF6HS4pFzWGyRd9QiOyLachbzO0RarDQN2ewsovr+WKooGWLjSlrFct+jwOUWQZDT+VfRETEH3nJA8GaCauIJYX3+1NpmJSxqZVPIFmtxkzDLQZ4gDcGME8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751922366; c=relaxed/simple;
-	bh=QkW1aiHP0NVpsrzGt8fVbIRYg7YfdAj+v9Qot7Jf2tU=;
+	s=arc-20240116; t=1751923623; c=relaxed/simple;
+	bh=PWdIqfq1lShjgNPU1FmwHqSMd26+YTTb1xk5ITmstGw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lg6RvWQbOK2csql1d4oMHtqoLC0K0FezLHOGKsk/nYQqlxQ7l7IvXTfW/Lmi9sRU0Mw/2/tUp9e8sfxVo5S741mhICjHDbLkl3UwV/Yj/w6k2pn0MuH5/503XbH5PebbgQiSFr0KcFSqGpCEwns3Y9LhHCnIIdK5pl5+bPpqkT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GvKG/PDe; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=h4Dk3QcrzqaUPBy6sYxko4ncRO7/Q707VwqLZobVrvZxdUN5muCGrOjsWFae4ngWg8kOnYTFX7kVN+8nq6jXxGxlsMPXv/7x4k+QZ/vuHEn/mzvwfZtWFN2t5cJm8nxIJpNBp6lNt6mBAAAfouo+o0iMjxr0GyT8b2In7iUx/4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TPeaJUeW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GvKG/PDe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B346C4CEE3;
-	Mon,  7 Jul 2025 21:06:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TPeaJUeW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FF7FC4CEE3;
+	Mon,  7 Jul 2025 21:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751922366;
-	bh=QkW1aiHP0NVpsrzGt8fVbIRYg7YfdAj+v9Qot7Jf2tU=;
+	s=k20201202; t=1751923623;
+	bh=PWdIqfq1lShjgNPU1FmwHqSMd26+YTTb1xk5ITmstGw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GvKG/PDewjeuSt9IUMciZqQ1yEcp5aclexa+R+dA/1sMXrcuoLv7mLLFkJ3DQnm8I
-	 nAdInF13toY5N+rGJ6NIdDae+CuE4fUyOEXUXTlq5HwplCm1cVmk762AGVYvy1sD5R
-	 JDJwcFaeSQdZXJ9h/WTxfdOboNJepEKSbQLdvQAef+ZbCLPS3BrV+cNtyxA4zOlzzx
-	 KcfMrXrq7bYPbn0rSWpVhWxw/TRZmDTQESwzG4ntFWA5sIF8gpMA4bpVekSBN0MxBc
-	 I48iUaz0rqWiq4Bnb1v3pDtIClT18yqp/kKkuJKHND+/BtZZDzsA5kBUe4za6Q+Jqd
-	 CXhg5/k7a4OyA==
-Date: Mon, 7 Jul 2025 23:05:57 +0200
+	b=TPeaJUeWzFWNndA5+LyG7Cuo6HDkcosyoYsPpgViGWK7zXQ2rx7g2ZZpBZo2V72Iw
+	 qfgYCeLtnZltnNM8uD/T9eGCESXdv4SaWbe2aCaZhlNITTjvtaZYMlso72nT4zS5vC
+	 dz/YlmeyTsPnY0p/jjWDjcFnETE6qIaIRZSLwx0zGN9EnJ5Ighv+T7VrBZx/MLYiDd
+	 5PWKLARp5sZSE45yjwtmnZq09Q5+bE8xJ0Yxx0DHjMc3LjhJX9EeDx2hFyNvystu79
+	 NaiVILtUD/+cOgh0Ap5w+svqPiR33Tkg+/LZ8IBns9xA2YwQC+EVJ+tppEZ4F6/9SR
+	 GODH7SOS66pGg==
+Date: Mon, 7 Jul 2025 23:26:49 +0200
 From: Alejandro Colomar <alx@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
@@ -41,12 +41,13 @@ Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org,
 	"Huang, Ying" <ying.huang@intel.com>, Lee Schermerhorn <lee.schermerhorn@hp.com>, 
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, Chao Yu <chao.yu@oppo.com>
 Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
-Message-ID: <gjxc2cxjlsnccopdghektco2oulmhyhonigy7lwsaqqcbn62wj@wa3tidbvpyvk>
+Message-ID: <r43lulact3247k23clhbqnp3ms75vykf7yxa526agenq2b4osk@q6qp7hk7efo2>
 References: <cover.1751862634.git.alx@kernel.org>
  <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
  <CAHk-=wh9Pqz07ne9iSt1_v0c14rkOGvF9AbEkaq1KnFhQD1SSA@mail.gmail.com>
  <ugf4pu7qrojegz7arkcpa4cyde6hoyh73h66oc4f6ncc7jg23t@bklkbbotyzvp>
  <CAHk-=whQ_0qFvg3cugt84+iKXi_eebNGY4so+PSnyyVNGVde1A@mail.gmail.com>
+ <gjxc2cxjlsnccopdghektco2oulmhyhonigy7lwsaqqcbn62wj@wa3tidbvpyvk>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,12 +55,12 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3rxu64vcup7p4zp6"
+	protocol="application/pgp-signature"; boundary="4tam3kmtkoib67ue"
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whQ_0qFvg3cugt84+iKXi_eebNGY4so+PSnyyVNGVde1A@mail.gmail.com>
+In-Reply-To: <gjxc2cxjlsnccopdghektco2oulmhyhonigy7lwsaqqcbn62wj@wa3tidbvpyvk>
 
 
---3rxu64vcup7p4zp6
+--4tam3kmtkoib67ue
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -82,82 +83,49 @@ References: <cover.1751862634.git.alx@kernel.org>
  <CAHk-=wh9Pqz07ne9iSt1_v0c14rkOGvF9AbEkaq1KnFhQD1SSA@mail.gmail.com>
  <ugf4pu7qrojegz7arkcpa4cyde6hoyh73h66oc4f6ncc7jg23t@bklkbbotyzvp>
  <CAHk-=whQ_0qFvg3cugt84+iKXi_eebNGY4so+PSnyyVNGVde1A@mail.gmail.com>
+ <gjxc2cxjlsnccopdghektco2oulmhyhonigy7lwsaqqcbn62wj@wa3tidbvpyvk>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whQ_0qFvg3cugt84+iKXi_eebNGY4so+PSnyyVNGVde1A@mail.gmail.com>
+In-Reply-To: <gjxc2cxjlsnccopdghektco2oulmhyhonigy7lwsaqqcbn62wj@wa3tidbvpyvk>
 
-Hi Linus,
+On Mon, Jul 07, 2025 at 11:06:06PM +0200, Alejandro Colomar wrote:
+> > I stand by my "let's not add random letters to existing functions that
+> > are already too confusing".
 
-On Mon, Jul 07, 2025 at 01:49:20PM -0700, Linus Torvalds wrote:
-> On Mon, 7 Jul 2025 at 13:29, Alejandro Colomar <alx@kernel.org> wrote:
-> >
-> > I am in the C Committee, and have proposed this API for standardization.
-> > I have a feeling that the committee might be open to it.
->=20
-> Honestly, how about fixing the serious problems with the language instead?
+If the name is your main concern, we can discuss a more explicit name in
+the kernel.
 
-I'm doing some work on that.  See the new _Countof() operator?  That was
-my first introduction in the standard, last year.
+I still plan to propose it as seprintf() for standardization, and for
+libc, but if that reads as a letter soup to you, I guess we can call it
+sprintf_end() or whatever, for the kernel.
 
-I'm working on an extension to it that I believe will make array
-parameters safer.
-
-> Get rid of the broken "strict aliasing" garbage.
-
-I don't feel qualified to comment on that.
-
-> Get rid of the random "undefined behavior" stuff that is literally
-> designed to let compilers intentionally mis-compile code.
-
-We're indeed working on that.  The last committee meeting removed a
-large number of undefined behaviors, and turned them into mandatory
-diagnostics.  And there's ongoing work on removing more of those.
-
-> Because as things are, "I am on the C committee" isn't a
-> recommendation. It's a "we have decades of bad decisions to show our
-> credentials".
-
-I joined in 2024 because I was fed up with the shit they were producing
-and wanted to influence it.  You don't need to convince me.
-
-> In the kernel, I have made it very very clear that we do not use
-> standard C, because standard C is broken.
-
-I agree.  I personally use GNU C and tend to ignore the standard.  But
-I'm still working on improving the standard, even if just to avoid
-having to learn Rust (and also because GCC and glibc don't accept any
-improvements or fixes if they don't go through the standard, these
-days).
+Does that sound reasonable enough?  What do you think about the diff
+itself ignoring the function name?
 
 
-Have a lovely day!
+Cheers,
 Alex
-
-> I stand by my "let's not add random letters to existing functions that
-> are already too confusing".
->=20
->               Linus
 
 --=20
 <https://www.alejandro-colomar.es/>
 
---3rxu64vcup7p4zp6
+--4tam3kmtkoib67ue
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhsNq8ACgkQ64mZXMKQ
-wqk41w//ZtMNK1v7cKQ0lZlTUqTrnD/HJrjpT73G+qAbUCgmMraH4Xk+LYomGqUq
-XJ5sCg2eHN76EUVvTNOVWQHCSLlmdMEheQSoIN9mpesMkPmmCMuvQpZ27WKvYUIR
-y4yEZ4BWlX9kVxpacTa50QHVIg/BVEloY3lcUodp5rVvlqi6QWSp15/wzf6spfc1
-l1PV/nmntBAq9XUv3XgNZ3T8nxNtBmaYW+PKdqQyi2xnt5TNOBff/E4sf4K+HUn+
-T2eHsOg8VPHZ4Nz9/cAHNFb7ZHjXAIkCWzjwayQrPyBPP2zL6GaFkKYGmPNcDz2U
-qmB0mJ6OQOk/lIuRr2K1CskmqUxRY0Ejt/5TIuzRQBR6Z1Dxaixp/DusKD/pcVlm
-E9lTV/NR0E0OLGXRCuCqC3BmOBQC6sZJPDoNObStAjSSlhA5PVBGc5O0AtWGn/NO
-7xX5gNtFWW4Yth0Reqd0HsZS3R5u5HaRI9q9KVEgVPKvSbizuSbKTEi4jRABdZ6s
-ekfxn3t2f3l8F+yWPZ2QFyPf5/c6xADdvLe5iYQgbkbCHPgRKzdfQV/pY3jgds7c
-Ct8TbV95pYM0xDnmS1P3FpyRfTrfkscJTfdilRdx8V0g/P9pG6A+rKDRJX3dFwG6
-HsA2MA0KFcYR43mRRKXNBvzAGdMHWZfqumHJlaW1s67BIqeLn8Q=
-=VDh/
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhsO5kACgkQ64mZXMKQ
+wqmfxA//c8S1dBGM6C2xdsVSN9VQGixTM+3FYuFDeOMfw3aJA3T74AUqgcqoNktT
+PdHNMk63xbAZwzFx3VVNdNVOtUMBuW70OfoOSFzVMwYYxrnVSoZUE95diweHAPvi
+hnPR6uvqM4TDiSpC4nI21I/fAuyQ9SI/E5eeUd23yDzAUHeXkNPCSnvAeiHSmZA0
+aaFn53PZV9aljWxzwWXI4ybptt+Zl3Y34ic70IFJ2SmBmzigJ3FOnH4LtOf5JvMl
+0zpzJkcUc9ZnhLfPt23qm3hoFzO7QSBNFMqzSdYby45I9ggRgE8Q3CNnvJZswzQ3
+bqEzuO/xHpKWU/Ost/Di26ckySPVv9LZcMhLThNlXD/iG4HuHeElInBham9vBsS7
+96xpy569tpZT6MJtOPpnZ1S/CKpUbsqCg5Bk0WHCyMLxU3c9RK21BPCkKArtMo0U
+loc1IW75iUG3Hyegg2vdalX4synsd1OyKZU6saIyP85Nga+gQ1Ou8gLJngq2Q8JR
+dZHpILVaJ4avAIjHrcwWnh3IBmQMphV29hLFxJmPM8fPpPHsfNODJLbrjgPP7ydR
+MhHsaP545Yx2j1a3X/CWNFNVYv7S31p9QDz694HMPU0Gdik0LYChP6iEgWexlqsF
+p23zq/kpLmR3XELdUin0C1ijMXokwxgG49UWy9nSlnW1S/GnPBk=
+=WSVf
 -----END PGP SIGNATURE-----
 
---3rxu64vcup7p4zp6--
+--4tam3kmtkoib67ue--
