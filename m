@@ -1,82 +1,325 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC3BE552;
-	Mon,  7 Jul 2025 19:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFF71F3BB5
+	for <linux-hardening@vger.kernel.org>; Mon,  7 Jul 2025 20:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751916931; cv=none; b=TVfwDVHt7RWUzvQy2pnErcFKR+yWk1xDGs9bHNMzGWEBfUjkucrmaqt4khA6YFogguSxM0Jv3axJFA8+uGUfeqgAtXyVHSUCP3C+LnLg4sPIUf2RmAhA9PFfG9JG1IBwEBg0KVQtMgfEjycMx+TOL71uaft3V4RIf3OBAXvSMBU=
+	t=1751919129; cv=none; b=EN/G9leryLliZ4s3pqb3PgkvihZdyC7qDfR9e5ixDLCxl8OSsDCAXqhAsOGQY3Gw5eEC6qLgJR7EsOHaaRBQwZ+f2mPXldwBai/NIflOpqIm4PjoooZL62EWMK8oV6ReD1cdrwyTGSSX/mhh9SkYPmtYP9DrYFuN8LX203ncLC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751916931; c=relaxed/simple;
-	bh=iEtHlsuxuwWzMeLakJ3mML6qWWC1Cfs4iU2Z2Bk2gDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AGui09olTrSyswrqmSlAkWaE1d05MMkFKsEux/oMxxePBTnO++/fVyVf0jDV6i0OoYarkyjYJM/1AsIsVGjrgteqirIgxYRGyP3awgHa9Yk1dlFU/XAKVhBqUPr8/vNydo3M9pNqRGoAlpq8xj88JpGdIAZgYXk2BsHzCt0AJv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=s9bgsMm2; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1751919129; c=relaxed/simple;
+	bh=a2ermjSx0vITzpqyJjxM8+Fp4A6dwkUufwczVtr2Yg4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Kr0HEsj3xEIjZSavhkWII2Dg934eUZOLGMiXdqBm/AzXxR6fDd7sc6aoHSQNdvGZ0Za9Kg1h9HA80JO6fqKanxutmjG1I7OSh2qFPZ1x5KhqVWie6x7fZFo+RQqi2zn+IHKMVHs0FA1QOfCP+SZ1rSqZ1nuwyHiCEnav7FsYu3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=b6bERso1; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="s9bgsMm2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Otyv2zO0XZSVF++N+FU4mfn8HTxzVXBK2tNM9StJTvY=; b=s9bgsMm2ZdrH/uwx/fP7d9V9tf
-	ZqWlzpTjOPc91xoC9nz1S76EB3FchcYgPZJ3m+gqRE0QGw/CrMNIJ0JbindtCEZnVamIcvBlBad3E
-	vw2A6j41W6AvOyjowmkLR1D1tJERGvzeINaQSS/6u/QTtHmJC3V4spItqTC3yuBPtj/gbPwnrmhqF
-	NLwiom++yVac/334sWunDrk9fy15gDtTEmLHCHhSyx9yl+uQ1NabDgthLAeDfLZP6YNUIreS8VDon
-	rjamX4TVhF1IPHQHAdXrJbcCXFHQZ30d5BZUEEPayjesgaaiOlOtVj+KUfzi38dLJA20XB9+VJs2N
-	gS9qoY5w==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uYrcX-00000003G1r-2czU;
-	Mon, 07 Jul 2025 19:35:21 +0000
-Date: Mon, 7 Jul 2025 20:35:21 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>,
-	Christopher Bazley <chris.bazley.wg14@gmail.com>,
-	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>,
-	David Rientjes <rientjes@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Andrew Clayton <andrew@digital-domain.net>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
-	"Huang, Ying" <ying.huang@intel.com>,
-	Lee Schermerhorn <lee.schermerhorn@hp.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Chao Yu <chao.yu@oppo.com>
-Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
-Message-ID: <20250707193521.GI1880847@ZenIV>
-References: <cover.1751862634.git.alx@kernel.org>
- <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
- <CAHk-=wh9Pqz07ne9iSt1_v0c14rkOGvF9AbEkaq1KnFhQD1SSA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="b6bERso1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1751919127; x=1783455127;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zW6R0f8LausFLSC1IVkHr5vyvsReJA1Jdqz/A3wiCFI=;
+  b=b6bERso1GWJA4a6eGh3EsttS2AWEo9dcnptv5aEME6yzz0PtNTkvyHXV
+   iyu0B2Lqgp8c34Npp1e9HvMBOey+o9GolFg0+cnMZ+M7Yu147tu2hWvN/
+   b5PPBWl7XdFTomF8f/smFoMYC9IkPH7YxCE/q/9M3vwGFQPa/sh3tHVdO
+   1qes2ZPsVy4Qpf7YZpV9NrgcU5YELU7rml9ftigpoVHV9a4uefPSB7XaH
+   hgSPGPq1aJCCpuXnLLuuMkqcLpXM4xKv+Pw1u+/G68SI7UdMQC5IcriZ7
+   cjst8jAWxLnmHhlCzMfDeuuD3qOrFzWfibBz8AmH7jlQTuEZfvwS+/A3m
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.16,295,1744070400"; 
+   d="scan'208";a="516134995"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 20:12:03 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.17.79:31613]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.0.124:2525] with esmtp (Farcaster)
+ id 037cbc00-35b0-4dbe-87fc-a12451aaab9d; Mon, 7 Jul 2025 20:12:01 +0000 (UTC)
+X-Farcaster-Flow-ID: 037cbc00-35b0-4dbe-87fc-a12451aaab9d
+Received: from EX19D031EUB003.ant.amazon.com (10.252.61.88) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.245) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 7 Jul 2025 20:12:01 +0000
+Received: from dev-dsk-mrgolin-1c-b2091117.eu-west-1.amazon.com
+ (10.253.103.172) by EX19D031EUB003.ant.amazon.com (10.252.61.88) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Mon, 7 Jul 2025
+ 20:11:59 +0000
+From: Michael Margolin <mrgolin@amazon.com>
+To: <kees@kernel.org>, <linux-hardening@vger.kernel.org>
+CC: <gustavoars@kernel.org>, <jgg@nvidia.com>, <leon@kernel.org>,
+	<sleybo@amazon.com>, <matua@amazon.com>
+Subject: [PATCH][next] overflow: Add safe add/sub and compare helpers
+Date: Mon, 7 Jul 2025 20:11:55 +0000
+Message-ID: <20250707201155.16874-1-mrgolin@amazon.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh9Pqz07ne9iSt1_v0c14rkOGvF9AbEkaq1KnFhQD1SSA@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D038UWC002.ant.amazon.com (10.13.139.238) To
+ EX19D031EUB003.ant.amazon.com (10.252.61.88)
 
-On Mon, Jul 07, 2025 at 12:17:11PM -0700, Linus Torvalds wrote:
+Following a discussion on changes in RDMA subsystem [1], there is a use
+for helpers that allow overflow safe comparison between the result of a
+sum or a diff between two variables and some third operand. The classic
+use case is checking that end address is in range, given start address
+and length, but there are probably others. Add helpers that perform
+mathematically correct comparison regardles of the types being used.
 
-> and we do have something like that in 'struct seq_buf'.  I'm not
-> convinced that's the optimal interface, but I think it's *better*.
-> Because it does both encapsulate a proper "this is my buffer" type,
-> and has a proper "this is a buffer operation" function name.
-> 
-> So I'd *much* rather people would try to convert their uses to things
-> like that, than add random letter combinations.
+[1] https://lore.kernel.org/all/20250213144219.GB3754072@nvidia.com/
 
-Lifting struct membuf out of include/linux/regset.h, perhaps, and
-adding printf to the family?
+Signed-off-by: Michael Margolin <mrgolin@amazon.com>
+---
+ include/linux/overflow.h   |  34 ++++++++
+ lib/tests/overflow_kunit.c | 171 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 205 insertions(+)
+
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index 154ed0dbb43f..c79bde6cee3d 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -99,6 +99,23 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+ 		*__ptr = wrapping_add(typeof(var), *__ptr, offset);	\
+ 	})
+ 
++/**
++ * overflow_safe_add_cmp() - Calculate addition of first two parameters and
++ * compare to the third parameter. The returned result is correct even when the
++ * sum wraps-around.
++ * @a: first addend
++ * @b: second addend
++ * @c: comparison operand
++ *
++ * Returns -1 if @a + @b < @c, 0 if @a + @b == @c and 1 if @a + @b > @c.
++ */
++#define overflow_safe_add_cmp(a, b, c)                                        \
++	({                                                                    \
++		typeof(c) __val, __c = c;                                     \
++		__builtin_add_overflow(a, b, &__val) || __val > __c ? 1 :     \
++		__val == __c ? 0 : -1;                                        \
++	})
++
+ /**
+  * check_sub_overflow() - Calculate subtraction with overflow checking
+  * @a: minuend; value to subtract from
+@@ -145,6 +162,23 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+ 		*__ptr = wrapping_sub(typeof(var), *__ptr, offset);	\
+ 	})
+ 
++/**
++ * overflow_safe_sub_cmp() - Calculate subtraction of second parameter from
++ * the first and compare to the third parameter. The returned result is correct
++ * even when the subtraction wraps-around.
++ * @a: minuend; value to subtract from
++ * @b: subtrahend; value to subtract from @a
++ * @c: comparison operand
++ *
++ * Returns -1 if @a - @b < @c, 0 if @a - @b == @c and 1 if @a - @b > @c.
++ */
++#define overflow_safe_sub_cmp(a, b, c)                                        \
++	({                                                                    \
++		typeof(c) __val, __c = c;                                     \
++		__builtin_sub_overflow(a, b, &__val) || __val < __c ? -1 :    \
++			__val == __c ? 0 : 1;                                 \
++	})
++
+ /**
+  * check_mul_overflow() - Calculate multiplication with overflow checking
+  * @a: first factor
+diff --git a/lib/tests/overflow_kunit.c b/lib/tests/overflow_kunit.c
+index 19cb03b25dc5..f6d94e55a593 100644
+--- a/lib/tests/overflow_kunit.c
++++ b/lib/tests/overflow_kunit.c
+@@ -1225,6 +1225,174 @@ static void DEFINE_FLEX_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, __member_size(two_but_zero->array), array_size_override);
+ }
+ 
++/* Common test macro for all overflow_safe_*_cmp functions */
++#define TEST_SAFE_CMP(op, a, b, c, expected) do {			          \
++	int result = overflow_safe_ ## op ## _cmp(a, b, c);		          \
++	KUNIT_EXPECT_EQ_MSG(test, result, expected,			          \
++		"expected overflow_safe_" #op "_cmp(%s, %s, %s) == %d, got %d\n", \
++		#a, #b, #c, expected, result);				          \
++	count++;							          \
++} while (0)
++
++static void overflow_safe_add_cmp_test(struct kunit *test)
++{
++	int count = 0;
++
++	/* Basic addition comparisons without overflow */
++	TEST_SAFE_CMP(add, 5, 3, 8, 0);
++	TEST_SAFE_CMP(add, 5, 3, 7, 1);
++	TEST_SAFE_CMP(add, 5, 3, 9, -1);
++	TEST_SAFE_CMP(add, 0, 0, 0, 0);
++	TEST_SAFE_CMP(add, 1, 0, 1, 0);
++	TEST_SAFE_CMP(add, 0, 1, 1, 0);
++
++	/* Test with unsigned 8-bit values */
++	TEST_SAFE_CMP(add, (u8)100, (u8)50, (u8)150, 0);
++	TEST_SAFE_CMP(add, (u8)100, (u8)50, (u8)149, 1);
++	TEST_SAFE_CMP(add, (u8)100, (u8)50, (u8)151, -1);
++
++	/* Test overflow cases with u8 - should behave as if on infinite types */
++	TEST_SAFE_CMP(add, (u8)200, (u8)100, (u8)44, 1);   /* 300 > 44, not 44 == 44 */
++	TEST_SAFE_CMP(add, (u8)255, (u8)1, (u8)0, 1);      /* 256 > 0, not 0 == 0 */
++	TEST_SAFE_CMP(add, (u8)255, (u8)2, (u8)1, 1);      /* 257 > 1, not 1 == 1 */
++	TEST_SAFE_CMP(add, (u8)200, (u8)200, (u8)145, 1);  /* 400 > 145, not 145 == 145 */
++
++	/* Test with signed values */
++	TEST_SAFE_CMP(add, -5, 3, -2, 0);
++	TEST_SAFE_CMP(add, -5, 3, -3, 1);
++	TEST_SAFE_CMP(add, -5, 3, -1, -1);
++
++	/* Test signed overflow cases - should behave as if on infinite types */
++	TEST_SAFE_CMP(add, (s8)100, (s8)50, (s8)-106, 1);  /* 150 > -106, not -106 == -106 */
++	TEST_SAFE_CMP(add, (s8)127, (s8)1, (s8)-128, 1);   /* 128 > -128, not -128 == -128 */
++	TEST_SAFE_CMP(add, (s8)127, (s8)127, (s8)-2, 1);   /* 254 > -2, not -2 == -2 */
++
++	/* Test with larger types */
++	TEST_SAFE_CMP(add, (u32)0xFFFFFFFF, (u32)1, (u32)0, 1);
++	TEST_SAFE_CMP(add, (u32)0xFFFFFFFF, (u32)2, (u32)1, 1);
++	TEST_SAFE_CMP(add, (u32)0xFFFFFFFF, (u32)0xFFFFFFFF, (u32)0, 1);
++
++	/* Test real-world use case: checking if an address range is within bounds */
++	TEST_SAFE_CMP(add, 0xFFFFFFFFFFFF0000ULL, 0x1000, 0x1000000ULL, 1);
++	TEST_SAFE_CMP(add, 0xFFFFFFFFFFFF0000ULL, 0x10000, 0x1000000ULL, 1);
++
++	/* Test with mixed types */
++	TEST_SAFE_CMP(add, (u8)200, (u16)300, (u32)500, 0);
++	TEST_SAFE_CMP(add, (u8)200, (u16)300, (u32)499, 1);
++	TEST_SAFE_CMP(add, (u8)200, (u16)300, (u32)501, -1);
++
++	/* Test with mixed types that would overflow in the smaller type */
++	TEST_SAFE_CMP(add, (u8)200, (u8)100, (u16)300, 0);
++	TEST_SAFE_CMP(add, (u8)255, (u16)1, (u32)256, 0);
++	TEST_SAFE_CMP(add, (u8)255, (u16)256, (u32)511, 0);
++
++	/* Test with mixed signed/unsigned types */
++	TEST_SAFE_CMP(add, (s8)-10, (u8)20, (s16)10, 0);
++	TEST_SAFE_CMP(add, (s8)-10, (u8)5, (s16)-5, 0);
++	TEST_SAFE_CMP(add, (s8)-128, (u16)128, (s32)0, 0);
++	TEST_SAFE_CMP(add, (s8)-128, (u16)127, (s32)-1, 0);
++
++	/* Test with mixed types where the result would overflow in c's type */
++	TEST_SAFE_CMP(add, (u32)40000, (u32)30000, (u16)4464, 1);  /* 70000 - 65536 */
++	TEST_SAFE_CMP(add, (s32)30000, (s32)10000, (s16)-25536, 1); /* 40000 - 65536 */
++
++	kunit_info(test, "%d overflow_safe_add_cmp tests finished\n", count);
++}
++
++static void overflow_safe_sub_cmp_test(struct kunit *test)
++{
++	int count = 0;
++
++	/* Basic subtraction comparisons without overflow */
++	TEST_SAFE_CMP(sub, 8, 3, 5, 0);
++	TEST_SAFE_CMP(sub, 8, 3, 4, 1);
++	TEST_SAFE_CMP(sub, 8, 3, 6, -1);
++	TEST_SAFE_CMP(sub, 5, 5, 0, 0);
++	TEST_SAFE_CMP(sub, 10, 0, 10, 0);
++
++	/* Test with unsigned 8-bit values */
++	TEST_SAFE_CMP(sub, (u8)150, (u8)50, (u8)100, 0);
++	TEST_SAFE_CMP(sub, (u8)150, (u8)50, (u8)99, 1);
++	TEST_SAFE_CMP(sub, (u8)150, (u8)50, (u8)101, -1);
++
++	/* Test underflow cases with u8 - should behave as if on infinite types */
++	TEST_SAFE_CMP(sub, (u8)50, (u8)100, (u8)200, -1);
++	TEST_SAFE_CMP(sub, (u8)0, (u8)1, (u8)255, -1);     /* -1 < 255, not 255 == 255 */
++	TEST_SAFE_CMP(sub, (u8)0, (u8)2, (u8)254, -1);     /* -2 < 254, not 254 == 254 */
++	TEST_SAFE_CMP(sub, (u8)10, (u8)20, (u8)246, -1);   /* -10 < 246, not 246 == 246 */
++
++	/* Test with signed values */
++	TEST_SAFE_CMP(sub, 5, -3, 8, 0);
++	TEST_SAFE_CMP(sub, -5, -3, -2, 0);
++	TEST_SAFE_CMP(sub, -5, 3, -8, 0);
++
++	/* Test signed underflow cases - should behave as if on infinite types */
++	TEST_SAFE_CMP(sub, (s8)-100, (s8)50, (s8)106, -1);  /* -150 < 106, not 106 == 106 */
++	TEST_SAFE_CMP(sub, (s8)-128, (s8)1, (s8)127, -1);   /* -129 < 127, not 127 == 127 */
++	TEST_SAFE_CMP(sub, (s8)-128, (s8)127, (s8)1, -1);   /* -255 < 1, not 1 == 1 */
++
++	/* Test with larger types */
++	TEST_SAFE_CMP(sub, (u32)0, (u32)1, (u32)0xFFFFFFFF, -1);
++	TEST_SAFE_CMP(sub, (u32)1, (u32)2, (u32)0xFFFFFFFF, -1);
++	TEST_SAFE_CMP(sub, (u32)0, (u32)0xFFFFFFFF, (u32)1, -1);
++
++	/* Test with mixed types */
++	TEST_SAFE_CMP(sub, (u16)500, (u8)200, (u32)300, 0);
++	TEST_SAFE_CMP(sub, (u16)500, (u8)200, (u32)299, 1);
++	TEST_SAFE_CMP(sub, (u16)500, (u8)200, (u32)301, -1);
++
++	/* Test with mixed types that would underflow in the smaller type */
++	TEST_SAFE_CMP(sub, (u8)50, (u16)100, (s32)-50, 0);
++	TEST_SAFE_CMP(sub, (u8)0, (u16)1, (s32)-1, 0);
++	TEST_SAFE_CMP(sub, (u8)10, (u16)20, (s32)-10, 0);
++
++	/* Test with mixed signed/unsigned types */
++	TEST_SAFE_CMP(sub, (s8)10, (u8)20, (s16)-10, 0);
++	TEST_SAFE_CMP(sub, (u8)20, (s8)-10, (s16)30, 0);
++	TEST_SAFE_CMP(sub, (s16)-1000, (u16)1000, (s32)-2000, 0);
++
++	/* Test with mixed types where the result would underflow in c's type */
++	TEST_SAFE_CMP(sub, (u16)1000, (u32)40000, (u16)26536, -1);  /* -39000 + 65536 */
++	TEST_SAFE_CMP(sub, (s16)-30000, (s16)10000, (s16)25536, -1); /* -40000 + 65536 */
++
++	kunit_info(test, "%d overflow_safe_sub_cmp tests finished\n", count);
++}
++
++#undef TEST_SAFE_CMP
++
++static void overflow_safe_cmp_side_effects_test(struct kunit *test)
++{
++	int a_orig = 5, a_test = 5;
++	int b_orig = 3, b_test = 3;
++	int c_orig = 8, c_test = 8;
++	int count = 0;
++
++	/* Test that the add macro doesn't have side effects */
++	overflow_safe_add_cmp(a_test++, b_test++, c_test++);
++	KUNIT_EXPECT_EQ_MSG(test, a_test, a_orig + 1,
++		"overflow_safe_add_cmp had unexpected side effect on first argument");
++	KUNIT_EXPECT_EQ_MSG(test, b_test, b_orig + 1,
++		"overflow_safe_add_cmp had unexpected side effect on second argument");
++	KUNIT_EXPECT_EQ_MSG(test, c_test, c_orig + 1,
++		"overflow_safe_add_cmp had unexpected side effect on third argument");
++	count += 3;
++
++	/* Test that the sub macro doesn't have side effects */
++	a_test = 5;
++	b_test = 3;
++	c_test = 8;
++	overflow_safe_sub_cmp(a_test++, b_test++, c_test++);
++	KUNIT_EXPECT_EQ_MSG(test, a_test, a_orig + 1,
++		"overflow_safe_sub_cmp had unexpected side effect on first argument");
++	KUNIT_EXPECT_EQ_MSG(test, b_test, b_orig + 1,
++		"overflow_safe_sub_cmp had unexpected side effect on second argument");
++	KUNIT_EXPECT_EQ_MSG(test, c_test, c_orig + 1,
++		"overflow_safe_sub_cmp had unexpected side effect on third argument");
++	count += 3;
++
++	kunit_info(test, "%d overflow safe comparison side effects tests finished\n", count);
++}
++
+ static struct kunit_case overflow_test_cases[] = {
+ 	KUNIT_CASE(u8_u8__u8_overflow_test),
+ 	KUNIT_CASE(s8_s8__s8_overflow_test),
+@@ -1248,6 +1416,9 @@ static struct kunit_case overflow_test_cases[] = {
+ 	KUNIT_CASE(same_type_test),
+ 	KUNIT_CASE(castable_to_type_test),
+ 	KUNIT_CASE(DEFINE_FLEX_test),
++	KUNIT_CASE(overflow_safe_add_cmp_test),
++	KUNIT_CASE(overflow_safe_sub_cmp_test),
++	KUNIT_CASE(overflow_safe_cmp_side_effects_test),
+ 	{}
+ };
+ 
+-- 
+2.47.1
+
