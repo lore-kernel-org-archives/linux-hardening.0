@@ -1,135 +1,78 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9519A288C2F;
-	Mon,  7 Jul 2025 13:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215AA298CB1;
+	Mon,  7 Jul 2025 13:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751894650; cv=none; b=TIPwS8rsdJuCk3/jhZLHL+Uw63L1LTX76Me6mRkUmlhlsu/9G2ld0Jy//8N1eQIaUfNUVOG+vc045lJvY5dP3fLz4uYdKDM1/JIZ1SnG2GPma4vLJI+bCED8aViazqGxGtHh7CW3xP2Qk+1yaweOmgkx/zWQPXRSl3XlkWbIfWg=
+	t=1751894747; cv=none; b=kGlL8xTNChNtNrYjypvXHdTsgW0I0bTM/WYVdSq4DMII33qHG0SYhzmqK3/u9RlsjqNjS3Nzc3cwsqKPvmd+rCqI3b0CLdTVQbZqtz1m4wEdDls3UnffjImkI854CjMBFemTuFj1br79T77qVuiPhsbX5MkDYui9u5jM0njTLTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751894650; c=relaxed/simple;
-	bh=8RjyTvSuow44Pogbmx4RVAaPQM0w6Xn4O6nez3/oVO8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bOOHwFJ+ZGC29n1KcgCprZ6CJNhEQZfAAUuRhlMFVhrOiFbvLcnCfMpq6OV9YcxBaSalMj5LtJ+hpBszS/+QReSi7Bx6ypc18nBqknXLqHKEMkMXZr7fe1f8MysXtVyg7bmhvrWX0bmVW8nuv3DQoL/cuSnpCS2Ocqaz8Z+WnSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B5twk7yd; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5twk7yd"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so2646120f8f.1;
-        Mon, 07 Jul 2025 06:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751894647; x=1752499447; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GHwATOF4+CjMS6IdiNe2EhFIMS0JQ1rdlybp9oGNmTE=;
-        b=B5twk7ydaKGsCAJZhjS9tq5YpaStwL+ejITJbB+VG6viur9W+Kpf5kKvuMCihl4rQ/
-         rdIODzt7DFyaQlg41TIU/p9Ntxc9CAIloz2PFW2sQgvyc2E4EQCC+bgNw/AfAD8XPa5V
-         yj9jPH2hthRXUI9GcJsMfRlBrQJNwX00qlMURMpxYZMX4CRfixdkt2zy9C+/tDPZy/6W
-         PI4sTaSiLAxD5HgXi11pabQXlFcbnrc9DCoYkvd4rXyJG7rnP9B/m2QaXRn8s9b543up
-         xVhVGWWZI5pHkOPqje4+pWa5kLIC7WMyjAN6UK6l1khHhAsnLHV4Cz6ZAwjpe1/ucd2I
-         TzTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751894647; x=1752499447;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GHwATOF4+CjMS6IdiNe2EhFIMS0JQ1rdlybp9oGNmTE=;
-        b=qmD/06EYoDRcZIWcBgtNXWQNVp245qpMFOfTIlFf6LZBrAulIJydFcoEBH8gMLg3i+
-         SNMqmCyhrlWQIYaFrA2368mGOWben0wQYPypSDFfilDoA+TPecSS4FwZGzO4GMo4fcLN
-         9zQTZyXYwEwwKD+Dh/51NxUvAKTi7CeIJGyRVbJFKp11qyuV7XqScvfWJztFJR0AS8TK
-         bW6Ii+YVT6xsSQjEqWumKdfFTN+L/eqlbMN+5mKepYTOcw44EqHD8AYsHWORSZTadFtg
-         kbudrC87LTuDegJ2OHiVYGEFadsmOcCndcVfmDo58FqCpd3z6WeiE1Tn8uyiHXvTPyNq
-         gDWg==
-X-Forwarded-Encrypted: i=1; AJvYcCV82Ma/T4gl/Z3nS9+fY6vhbj90v2/d3gcZrRz74tGSmODCXrUMGfRaZVxWYqG1+6Yv8sDCt3kfkc0VfkJRTu8=@vger.kernel.org, AJvYcCX0mNQApTE4AqKN91NTDnqMbOy+kVmXerH249jaRCZnl7eq1AwzhUdNXYkUSIJ8518QGGnjNTQAqa3QOYFB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwngWvJfoX8DK2w5nQ/FFuXmzJhU3+DXIv7bUtmrFh0RXa5TQyR
-	f9vlWpRnq1nxj+fHTWGowecWzLeVS59myzWOd4tsj46+Ppq9EQYmPajy
-X-Gm-Gg: ASbGncsYlaYnByoj84u+8E5ufxd0E4riwozvzGCKA7SnZvjJkcYkQXpg3lOdbsMqE2F
-	tdpBcji0wfQIJkKD2wAfS96aGjb0ib2nXQu/HagHteN3tS6miIoX9/Bgr517E6YuH1h9k0jQ2FC
-	kj5V/XAGmgJKxmTPQSLeXqrA5YTzaTVVotvqMzLtkm8WXjBoVnwFZ/jk7YASTgoxa/+dbonrf9f
-	rxwM62Vckdbe8bAsxE+VsjkbfxLVR40jd0sfoKzso9TZW8ARzILX9CBzJzfAOMtnbGc+AaD2Lmu
-	4n58luBZHW/VoLPH8HM5OU7wrvDmn/4sClix3AiPzN0ZMyWAMMsxhkYJXRTp
-X-Google-Smtp-Source: AGHT+IGtt8GxutZ5uOUaaH2YD0KB42AdE6oIi6ARJQVqLaHmKYYqZ3ZDw7TY0JnpeUWDARtw9Y2XMA==
-X-Received: by 2002:a5d:6f02:0:b0:3a5:1241:afde with SMTP id ffacd0b85a97d-3b495b9446amr12338612f8f.9.1751894646658;
-        Mon, 07 Jul 2025 06:24:06 -0700 (PDT)
-Received: from localhost ([87.254.0.133])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3b47225a720sm10198472f8f.77.2025.07.07.06.24.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 06:24:06 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][V2] fortify: add branch hints on unlikely fortify_panic paths
-Date: Mon,  7 Jul 2025 14:23:40 +0100
-Message-ID: <20250707132340.1768807-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.50.0
+	s=arc-20240116; t=1751894747; c=relaxed/simple;
+	bh=DmqcSYSjwJ1ngk4ooV07QfYE0CJwwndzGHvqhjZ4jbI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d8AMC2oUwPDY2KqjnoWUkWN71faW+0wiPyu6yyRbaqBhrS7AwpsbuF4XX73hcFtfqoDffa2E6AAoC51IUnZkH8ix18sOuen9aZYzOClhGKtN06PgHoIQ8Bna/MDYru7hVvXEK+/txVlGCIosJD4QBE9YyykNbpf41N9aCNvuaXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
+Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+	by mx.skole.hr (mx.skole.hr) with ESMTP id 4C7E38385E;
+	Mon,  7 Jul 2025 15:19:06 +0200 (CEST)
+From: Duje =?UTF-8?B?TWloYW5vdmnEhw==?= <duje.mihanovic@skole.hr>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: David Wronek <david@mainlining.org>, Karel Balej <balejk@matfyz.cz>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ soc@lists.linux.dev, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v15 0/4] Initial Marvell PXA1908 support
+Date: Mon, 07 Jul 2025 15:15:55 +0200
+Message-ID: <5038617.31r3eYUQgx@radijator>
+In-Reply-To: <89072b80-09c0-418d-b104-668f7fdeae82@app.fastmail.com>
+References:
+ <20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr>
+ <89072b80-09c0-418d-b104-668f7fdeae82@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Autocrypt: addr=duje.mihanovic@skole.hr;
+ keydata=
+ mDMEZokhzhYJKwYBBAHaRw8BAQdAWJZ0hsI/ytTqHGFV8x6tzd5sB596cTeeDB4CQsTf+wC0KER
+ 1amUgTWloYW5vdmnEhyA8ZHVqZUBkdWplbWloYW5vdmljLnh5ej6ImQQTFgoAQRYhBG3/QdYN8x
+ S1t2umMK0xk1JFj60DBQJmiSHOAhsDBQkJZgGABQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAA
+ AoJEK0xk1JFj60D1GABAJVSorZdMOlrp/oQtCSH/G53NE56x/JHA8VX+ZQBd/H3AP4/EcUf6eef
+ DUxVMh2bdkmuQKsVZGgOGiXpMksrVntWBrQpRHVqZSBNaWhhbm92acSHIDxkdWplLm1paGFub3Z
+ pY0Bza29sZS5ocj6ImQQTFgoAQRYhBG3/QdYN8xS1t2umMK0xk1JFj60DBQJmiSH/AhsDBQkJZg
+ GABQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEK0xk1JFj60Dlw8A/i4lPOL7NaYoYePDq
+ l8MaJaR9qoUi+D+HtD3t0Koi7ztAQCdizXbuqP3AVNxy5Gpb1ozgp9Xqh2MRcNmJCHA1YhWAbg4
+ BGaJIc4SCisGAQQBl1UBBQEBB0DEc9JeA55OlZfWKgvmRgw6a/EpBQ8mDl6nQTBmnd1XHAMBCAe
+ IfgQYFgoAJhYhBG3/QdYN8xS1t2umMK0xk1JFj60DBQJmiSHOAhsMBQkJZgGAAAoJEK0xk1JFj6
+ 0DG5MA/iuo4l2GDEZ1Zf+XaS//8FwdXDO9nHkfbV2MHjF4NZXwAQDroMzBdMcqVvc8GABFlTTgG
+ j7KrRDz2HwWNyF8ZeprAQ==
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-Analysis with gcov while running the stress-ng urandom stressor
-shows that there are a couple of fortify panic paths that are highly
-unlikely to be executed for well-behaving code. Adding appropriate
-branch hints improves the stress-ng urandom stressor my a small
-but statistically measureable amount. Ran 100 x 1 minute tests and
-measured the stressor bogo-op rates on a Debian based Intel(R)
-Core(TM) Ultra 9 285K with a 6.15 kernel with turbo disabled to
-reduce jitter.
+Hello Arnd,
 
-Results based on a Geometic Mean of 100 tests:
+On Friday, 4 July 2025 17:24:13 Central European Summer Time Arnd Bergmann 
+wrote:
+> I see you last posted this a few months ago and there was only
+> a small warning that Rob reported. Are you planning to send
+> an updated v16 of the series for it?
 
-Without patch: 50512.95 bogo-ops/sec
-With patch:    50819.58 bogo-ops/sec
+Yes, I have fixed those warnings and will send v16 shortly.
 
-%Std.Deviation of ~0.18%, so low jitter in results, improvement of ~0.6%
-
-Branch hints can only be enabled if CONFIG_TRACE_BRANCH_PROFILING due
-to a static variable being declared in __branch_check__ when using
-trace branch profiling in the unlikely macro causing build issues.
-
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
-V2: add fortify_unlikely macro wrapper for CONFIG_TRACE_BRANCH_PROFILING
-    build config.
----
- include/linux/fortify-string.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index e4ce1cae03bf..c740114bcbf8 100644
---- a/include/linux/fortify-string.h
-+++ b/include/linux/fortify-string.h
-@@ -10,6 +10,12 @@
- #define __FORTIFY_INLINE extern __always_inline __gnu_inline __overloadable
- #define __RENAME(x) __asm__(#x)
- 
-+#if defined(CONFIG_TRACE_BRANCH_PROFILING)
-+#define fortify_unlikely(x)		(x)
-+#else
-+#define fortify_unlikely(x)		unlikely(x)
-+#endif
-+
- #define FORTIFY_REASON_DIR(r)		FIELD_GET(BIT(0), r)
- #define FORTIFY_REASON_FUNC(r)		FIELD_GET(GENMASK(7, 1), r)
- #define FORTIFY_REASON(func, write)	(FIELD_PREP(BIT(0), write) | \
-@@ -593,9 +599,9 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
- 	 * (The SIZE_MAX test is to optimize away checks where the buffer
- 	 * lengths are unknown.)
- 	 */
--	if (p_size != SIZE_MAX && p_size < size)
-+	if (fortify_unlikely(p_size != SIZE_MAX && p_size < size))
- 		fortify_panic(func, FORTIFY_WRITE, p_size, size, true);
--	else if (q_size != SIZE_MAX && q_size < size)
-+	else if (fortify_unlikely(q_size != SIZE_MAX && q_size < size))
- 		fortify_panic(func, FORTIFY_READ, p_size, size, true);
- 
- 	/*
+Regards,
 -- 
-2.50.0
+Duje
+
+
 
