@@ -1,307 +1,146 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCE625C810;
-	Tue,  8 Jul 2025 10:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492B420E033;
+	Tue,  8 Jul 2025 10:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751968979; cv=none; b=GVCUFdRvsxDG5x1ssuRq2C4NzR9y1DZ0KKSPtpPvWrhpVqH6BZwOFXqu1jOwEv6CC7N5/tMtip9kqFwnBj+dnBwcmC+No7bHI3Qbk/v+PjCYj/5U76+fGPa83kppwzjC8D/zBrCLygNVB+0+vjkfhZCauPP8dKBJf5Uolq2GnOI=
+	t=1751969903; cv=none; b=UvpfN1bgyrwGrwj5zkSj7sGkplDStM1IKlJviyoU+MiZVBGN7TRMSKFIbbLZpKtX8yrbh9CzWejtXQwpc8UhrZEgEfxknwNaaJKDNtNoCbh4d/N/kNX0qNa10Kitr2KM4aIRqznytyyjShA/bWRT8nfAy5tI6yOj13g/Ah34FW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751968979; c=relaxed/simple;
-	bh=IBcDXn4gIJD6/+HOlQgMg67kvWA73UUNRspe/8WQ1kA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UcoKZaG9gFPUHjgTFkYckcbO7I/CaeVjqppb1iFM5zY5I3X98b5SsygK195DmsYlfQlKlglNFw1w8pjwre4uWlJzb3bTACVd1QbbKgoGSrV/ulsFodApy6Gq4HugIE16CqzkQpoxchktHBC2tSmaGv1x7ai3w1Wc6D75ndk+MUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kL9QNW3x; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751969903; c=relaxed/simple;
+	bh=lQzrd3v8IVLh9gCaLq7WUnZF8AHGYqftBF79jT2Lra4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qJUcun038wilP5GJZRVR2yoDQlpa2N0o4mpU0+U+fJRXOIbXv8muEdGtYN2YGCsdSYzhEjm6wBNChXpU0pfaZOcHQmPapBrOjxyNFve+aipB3zxtDdPqn1T/PalXjfXqSksRJhreApDhAw9j2k9dkxsvMeM+wTtAOCTrosETRk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dWZRC75l; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kL9QNW3x"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5687WOYR001169;
-	Tue, 8 Jul 2025 10:02:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	TP75IWhhLPo9tJDnwH2+kwvy93reIfE3lh6au8DCqOU=; b=kL9QNW3xXkAA6DXP
-	MD0SQJ1pLA9Auxm9vuFpMO8BNQSpRnMezS3QpI/b9J2J8gB8xqaABMMz/zkaRrvx
-	wsbPRFj5DsLFyf7nWrl41R98N60yiNipVbepYpNPMO3Ue86FEhfPuJz4/pxw8UkM
-	wtvwto8GYpUSiOCrLzP5XO5XLgBiv0aSLLzwRsgO21J77MawwcC9zDXLnfMX4l+s
-	hODvOH8yHTVeW/fjYx1uRe96zO/jhSpPhelfnr3557LDjFicH6yTnLps8EdMtQiR
-	drRTz+2tF5lp6SXFZtau1nOFmgxI2LrQmFn8JSNC35UbdY+PeDYDHqUjWxk0taS1
-	syK/Rw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47pv97m04g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Jul 2025 10:02:43 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 568A2h8i028768
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 8 Jul 2025 10:02:43 GMT
-Received: from [10.216.2.37] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 8 Jul
- 2025 03:02:37 -0700
-Message-ID: <ed740739-2116-4314-bfd1-bd8ef064123c@quicinc.com>
-Date: Tue, 8 Jul 2025 15:32:17 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWZRC75l"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-742c3d06de3so4865129b3a.0;
+        Tue, 08 Jul 2025 03:18:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751969901; x=1752574701; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dLtaJj3z2oPY1ShSlkHP1j/IqOzaduHiAyYzCbRo9Ls=;
+        b=dWZRC75lO3U6R7ZT3ccb6hBu/ZitOAVCN7UDdXa/uz5pnFzBkz/7d6YJlwgrH8JRSA
+         tYtwzyQzmReVMxKIBKJSyVF4KBh8fS0wNLUWI1q+voTItqeUdCLFa9gxuZ29mQehtCw2
+         OSBkmYf0fwayzS/xtHF1YqUGCI+NGWOfFlieL0QrAGJg1r0VI0OBaUWO8h1VVGu+EYMI
+         R+JGRR0deWP4YTraMTMEqe1vV1m3CLIZIf3LbnQLeX1wrtxInfO+1mqvvTNo8a36+sF8
+         gDPTllTQpGYaazYX67pmYrwQ/JsT4ZKG0kFZMZSqUnJ8WITpeNI6/outUP6N5Y5Vtukq
+         NUJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751969901; x=1752574701;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dLtaJj3z2oPY1ShSlkHP1j/IqOzaduHiAyYzCbRo9Ls=;
+        b=SeTzYPwZiXam/S+Fyf7tu/CSeQtzFrdIUDNJ+y+Z9MTkximq0m4Ftvr3UsZmRTId0C
+         qzOYUn/IhvWhsk6mNx7AbF9xTvpuc/1lPmWHLcGTgUEKGDCceZs5ayMeflZ6/KkxcJVi
+         ORAy55mp/tg6PRQZjv7YyapAbHaNgUi+ak0a/nRH7tP6SMdZRYxqxXGUeg1ytmKiEIGO
+         fgAMQgro91VYegmnWmFdUMKurQQn6MD/yuEkAThOp7+LZCoPZBWZol0xuwZ3adcaK4vM
+         y6BOYMkAQgsH8ZWQ5o5RfFGP8vQz6maxFcYJ3wnkGWFGfBLqx/tNmWoiyOTfI/EHaoMo
+         JXkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVY7AZP1+Q88hgJ9HfL79Iaqmzo/Kx9Ddwo9LAbxWx2Uo/xxTXjrdkKHa14RAE3udA09S5/2noOGwRYYjm1OVFdklI=@vger.kernel.org, AJvYcCXVXTr8emj1pSNgqSJDrc5IujbAx/IRXrK5ThFNCi6OqKzk9Epg9w38+2OaiCmYPzWAzGXU9b1axxYKhB44@vger.kernel.org, AJvYcCXppYcHM/z5IydpjbPtEcNqY3r9ATY14ePI9tToUZdARtwf6Yba1oDKHTBvhxqK3X0Dnn8+1K3ejhdVLwi/AP0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf0bwqLpph/zjS1W508pMugHQnufCfyognz2LVqW66wLGLx/R6
+	Dz6IkJDT56Yw3Nuf9s34BpJSAS6cGUAT7XFSSe301WFQ702RPIRTx3bWnADNzw==
+X-Gm-Gg: ASbGnctiINtB5oBN005Blc3+vPdcEi8eey9yHwmSjh/2lZrxh6dlZoYJVWsY6prMBFU
+	kp+8TVlANhvhAjIsHgHyqonZ2OLjKNGp/Xc6xl314Q/jyZ58UL6RXyJd7VAPFx9XWgfd43ugpKW
+	qkd9qmOmvPlxSKEf4oq4jIM/MMchlZ8OQXmAklYpvjQLpskYbNCxGwERJSR6R/bP84HS1WhsgcN
+	Sr/Be9HwykDHSB1NNz90HoRu6noKIiuXMEPnbyGb2uS4oI7FIhKjnLFxNAu0SdVnA8nh534eYA9
+	4wVGlrsejxCweXqh1x2Cb8hrFDtpNdTafG6CAf8hrF1ZpZrtG6JqqW8aMFNO9sLAOfSr4scbEaR
+	/xgK1Er/xj86e0+pIQ5qT53cMgBvHVhM=
+X-Google-Smtp-Source: AGHT+IHFTbQU/uYOoMrihd+GoWidRAGLXPHYkD16HziD5MyIKSHN6gIaJzOtsuNhgeCshtOg1HOW5A==
+X-Received: by 2002:a05:6a21:a44:b0:1f5:9024:3254 with SMTP id adf61e73a8af0-225b7f19724mr25324211637.6.1751969900609;
+        Tue, 08 Jul 2025 03:18:20 -0700 (PDT)
+Received: from [172.17.0.2] (125-227-29-20.hinet-ip.hinet.net. [125.227.29.20])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee4a40e3sm11114709a12.34.2025.07.08.03.18.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Jul 2025 03:18:19 -0700 (PDT)
+From: Leo Wang <leo.jt.wang@gmail.com>
+X-Google-Original-From: Leo Wang <leo.jt.wang@fii-foxconn.com>
+Subject: [PATCH v6 0/2] ARM: dts: Add support for Meta Clemente BMC
+Date: Tue, 08 Jul 2025 18:17:59 +0800
+Message-Id: <20250708-add-support-for-meta-clemente-bmc-v6-0-7f3e57bd0336@fii-foxconn.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 00/12] Trusted Execution Environment (TEE) driver for
- Qualcomm TEE (QTEE)
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-        Jens Wiklander
-	<jens.wiklander@linaro.org>,
-        Sumit Garg <sumit.garg@kernel.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Apurupa Pattapu
-	<quic_apurupa@quicinc.com>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R.
- Silva" <gustavoars@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-CC: <linux-arm-msm@vger.kernel.org>, <op-tee@lists.trustedfirmware.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
-        <linux-doc@vger.kernel.org>, Sumit Garg <sumit.garg@oss.qualcomm.com>,
-        "Neil
- Armstrong" <neil.armstrong@linaro.org>
-References: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-0-024e3221b0b9@oss.qualcomm.com>
-Content-Language: en-US
-From: Harshal Dev <quic_hdev@quicinc.com>
-In-Reply-To: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-0-024e3221b0b9@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=FrUF/3rq c=1 sm=1 tr=0 ts=686cecc3 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=NEAV23lmAAAA:8
- a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=AG4Js0pRBlaKZ-jc2TkA:9
- a=tS4vSzcxzpQKedQu:21 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA4MDA4MiBTYWx0ZWRfXwYqsMqDp/4Jq
- SB27SC7FrjtoYJW8TEzTuVvpiuuGh5a1gdyxtHGbkw7lbA9IasXSnCTrbfSt5QvvCNJg+P3AOwy
- WhARuQaNWA8SK+qD0m3gMqoENFl1IxdzFhNVhT9JJdxFs94d/ZEVehiq/tUHceC9V2Np82OfErb
- 14hKonvQ/o5TlU9FEMZv5QQF2WfaAzQAJ6vKwRAeyJubru1Dik0659Dm+2QYJ0cYkZytEUp0Ci9
- Df3ZUOgLV3FviDzKlKTGokJDzX6LzxPSJnOwJ/R2TbDWOmhYjMt6oe3XxlxsWAfBLouRdqxQ6hw
- kb57rTsRj+PX8JBzk1QmF9kGK9k1ZUHA8wA6buszzrPmUZxJs+wrMDxOVpgIp3pxYLPGfE6qxB0
- 5Yc4I3Uje4RvAuUadJ6VrMzVRphbIMgVMAgQXeLk/GPTH4vJBpsDSn93ssCJ51raTYhU50F8
-X-Proofpoint-GUID: 3rdJMCvq1Pn2oldo0cTdGMZIGPoJfqHy
-X-Proofpoint-ORIG-GUID: 3rdJMCvq1Pn2oldo0cTdGMZIGPoJfqHy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-08_03,2025-07-07_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 suspectscore=0 clxscore=1011 mlxscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 phishscore=0 malwarescore=0
- adultscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507080082
+X-B4-Tracking: v=1; b=H4sIAFfwbGgC/5XOTW6DMBAF4KtEXteV/4mz6j2iLMww01gqGNkUp
+ Yq4e01WLFiQ5XsafW+erGCOWNjl9GQZ51hiGmpwHycG9zB8I49dzUwJZYWTZx66jpffcUx54pQ
+ y73EKHH6wx2FC3vbAvZHBON+CVZpVZ8xI8fHauN5qvscypfz3mpzl2r6jz5ILjhaCcx7RNO0Xx
+ VhvH5CG4RNSz9aNWW1cJY+4qroOLJKwXhoP+67euvqIq6sLSmkiIOOA9l2zdZsjrlldbIiUNk6
+ A2Xft266trtBn7BxJaP3Ov8uy/AOXrcBoOAIAAA==
+X-Change-ID: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ Leo Wang <leo.jt.wang@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751969896; l=2063;
+ i=leo.jt.wang@fii-foxconn.com; s=20250618; h=from:subject:message-id;
+ bh=lQzrd3v8IVLh9gCaLq7WUnZF8AHGYqftBF79jT2Lra4=;
+ b=KlqQpQVMjrnLsTyzdw9K7byzDuSgHRV9Z3mimvYYtAWncmVd2YRbbCEniIfrILAVU2LEhX156
+ mgdNooJdzBbDK0eYj+sxgUbJ1UwgKhLdxEcF+FpXccjYalJHvhtPZBC
+X-Developer-Key: i=leo.jt.wang@fii-foxconn.com; a=ed25519;
+ pk=x+DKjAtU/ZbbMkkAVdwfZzKpvNUVgiV1sLJbidVIwSQ=
 
+This series adds initial support for the Meta Clemente BMC based on the
+ASPEED AST2600 SoC.
 
+Patch 1 documents the compatible string.
+Patch 2 adds the device tree for the board.
 
-On 5/27/2025 12:26 PM, Amirreza Zarrabi wrote:
-> This patch series introduces a Trusted Execution Environment (TEE)
-> driver for Qualcomm TEE (QTEE). QTEE enables Trusted Applications (TAs)
-> and services to run securely. It uses an object-based interface, where
-> each service is an object with sets of operations. Clients can invoke
-> these operations on objects, which can generate results, including other
-> objects. For example, an object can load a TA and return another object
-> that represents the loaded TA, allowing access to its services.
-> 
-> Kernel and userspace services are also available to QTEE through a
-> similar approach. QTEE makes callback requests that are converted into
-> object invocations. These objects can represent services within the
-> kernel or userspace process.
-> 
-> Note: This patch series focuses on QTEE objects and userspace services.
-> 
-> Linux already provides a TEE subsystem, which is described in [1]. The
-> tee subsystem provides a generic ioctl interface, TEE_IOC_INVOKE, which
-> can be used by userspace to talk to a TEE backend driver. We extend the
-> Linux TEE subsystem to understand object parameters and an ioctl call so
-> client can invoke objects in QTEE:
-> 
->   - TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF_*
->   - TEE_IOC_OBJECT_INVOKE
-> 
-> The existing ioctl calls TEE_IOC_SUPPL_RECV and TEE_IOC_SUPPL_SEND are
-> used for invoking services in the userspace process by QTEE.
-> 
-> The TEE backend driver uses the QTEE Transport Message to communicate
-> with QTEE. Interactions through the object INVOKE interface are
-> translated into QTEE messages. Likewise, object invocations from QTEE
-> for userspace objects are converted into SEND/RECV ioctl calls to
-> supplicants.
-> 
-> The details of QTEE Transport Message to communicate with QTEE is
-> available in [PATCH 12/12] Documentation: tee: Add Qualcomm TEE driver.
-> 
-> You can run basic tests with following steps:
-> git clone https://github.com/quic/quic-teec.git
-> cd quic-teec
-> mkdir build
-> cmake .. -DCMAKE_TOOLCHAIN_FILE=CMakeToolchain.txt -DBUILD_UNITTEST=ON
-> 
-> https://github.com/quic/quic-teec/blob/main/README.md lists dependencies
-> needed to build the above.
-> 
-> This series has been tested for basic QTEE object invocations and
-> callback requests, including loading a TA and requesting services form
-> the TA.
-> 
-> Tested platforms: sm8650-mtp, sm8550-qrd, sm8650-qrd, sm8650-hdk
-> 
-> [1] https://www.kernel.org/doc/Documentation/tee.txt
-> 
-> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-> 
-> Changes in v5:
-> - Remove references to kernel services and public APIs.
-> - Support auto detection for failing devices (e.g., RB1, RB4).
-> - Add helpers for obtaining client environment and service objects.
-> - Query the QTEE version and print it.
-> - Move remaining static variables, including the object table, to struct
->   qcomtee.
-> - Update TEE_MAX_ARG_SIZE to 4096.
-> - Add a dependancy to QCOM_TZMEM_MODE_SHMBRIDGE in Kconfig
-> - Reorganize code by removing release.c and qcom_scm.c.
-> - Add more error messages and improve comments.
-> - updated Tested-by:, Acked-by:, and Reviewed-by: tags
-> - Link to v4: https://lore.kernel.org/r/20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-0-6a143640a6cb@oss.qualcomm.com
-> 
-> Changes in v4:
-> - Move teedev_ctx_get/put and tee_device_get/put to tee_core.h.
-> - Rename object to id in struct tee_ioctl_object_invoke_arg.
-> - Replace spinlock with mutex for qtee_objects_idr.
-> - Move qcomtee_object_get to qcomtee_user/memobj_param_to_object.
-> - More code cleanup following the comments.
-> - Cleanup documentations.
-> - Update MAINTAINERS file.
-> - Link to v3: https://lore.kernel.org/r/20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-0-7f457073282d@oss.qualcomm.com
-> 
-> Changes in v3:
-> - Export shm_bridge create/delete APIs.
-> - Enable support for QTEE memory objects.
-> - Update the memory management code to use the TEE subsystem for all
->   allocations using the pool.
-> - Move all driver states into the driver's main service struct.
-> - Add more documentations.
-> - Link to v2: https://lore.kernel.org/r/20250202-qcom-tee-using-tee-ss-without-mem-obj-v2-0-297eacd0d34f@quicinc.com
-> 
-> Changes in v2:
-> - Clean up commit messages and comments.
-> - Use better names such as ubuf instead of membuf or QCOMTEE prefix
->   instead of QCOM_TEE, or names that are more consistent with other
->   TEE-backend drivers such as qcomtee_context_data instead of
->   qcom_tee_context.
-> - Drop the DTS patch and instantiate the device from the scm driver.
-> - Use a single structure for all driver's internal states.
-> - Drop srcu primitives and use the existing mutex for synchronization
->   between the supplicant and QTEE.
-> - Directly use tee_context to track the lifetime of qcomtee_context_data.
-> - Add close_context() to be called when the user closes the tee_context.
-> - Link to v1: https://lore.kernel.org/r/20241202-qcom-tee-using-tee-ss-without-mem-obj-v1-0-f502ef01e016@quicinc.com
-> 
-> Changes in v1:
-> - It is a complete rewrite to utilize the TEE subsystem.
-> - Link to RFC: https://lore.kernel.org/all/20240702-qcom-tee-object-and-ioctls-v1-0-633c3ddf57ee@quicinc.com
-> 
-> ---
-> Amirreza Zarrabi (12):
->       tee: allow a driver to allocate a tee_device without a pool
->       tee: add close_context to TEE driver operation
->       tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
->       tee: add TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF
->       tee: increase TEE_MAX_ARG_SIZE to 4096
->       firmware: qcom: scm: add support for object invocation
->       firmware: qcom: scm: remove unused arguments to the shm_brige
->       firmware: qcom: tzmem: export shm_bridge create/delete
->       tee: add Qualcomm TEE driver
->       qcomtee: add primordial object
->       qcomtee: enable TEE_IOC_SHM_ALLOC ioctl
->       Documentation: tee: Add Qualcomm TEE driver
-> 
->  Documentation/tee/index.rst              |   1 +
->  Documentation/tee/qtee.rst               | 150 +++++
->  MAINTAINERS                              |   8 +
->  drivers/firmware/qcom/qcom_scm.c         | 132 ++++-
->  drivers/firmware/qcom/qcom_scm.h         |   7 +
->  drivers/firmware/qcom/qcom_tzmem.c       |  57 +-
->  drivers/tee/Kconfig                      |   1 +
->  drivers/tee/Makefile                     |   1 +
->  drivers/tee/qcomtee/Kconfig              |  11 +
->  drivers/tee/qcomtee/Makefile             |   9 +
->  drivers/tee/qcomtee/async.c              | 183 ++++++
->  drivers/tee/qcomtee/call.c               | 833 +++++++++++++++++++++++++++
->  drivers/tee/qcomtee/core.c               | 930 +++++++++++++++++++++++++++++++
->  drivers/tee/qcomtee/mem_obj.c            | 172 ++++++
->  drivers/tee/qcomtee/primordial_obj.c     | 116 ++++
->  drivers/tee/qcomtee/qcomtee.h            | 266 +++++++++
->  drivers/tee/qcomtee/qcomtee_msg.h        | 251 +++++++++
->  drivers/tee/qcomtee/qcomtee_object.h     | 309 ++++++++++
->  drivers/tee/qcomtee/shm.c                | 150 +++++
->  drivers/tee/qcomtee/user_obj.c           | 694 +++++++++++++++++++++++
->  drivers/tee/tee_core.c                   | 127 ++++-
->  drivers/tee/tee_private.h                |   6 -
->  include/linux/firmware/qcom/qcom_scm.h   |  10 +-
->  include/linux/firmware/qcom/qcom_tzmem.h |  15 +
->  include/linux/tee_core.h                 |  54 +-
->  include/linux/tee_drv.h                  |  12 +
->  include/uapi/linux/tee.h                 |  56 +-
->  27 files changed, 4528 insertions(+), 33 deletions(-)
-> ---
-> base-commit: 3be1a7a31fbda82f3604b6c31e4f390110de1b46
-> change-id: 20241202-qcom-tee-using-tee-ss-without-mem-obj-362c66340527
-> 
-> Best regards,
+Signed-off-by: Leo Wang <leo.jt.wang@gmail.com>
+---
+Changes in v6:
+- Correct Author email to match Signed-off-by email address.
+- Link to v5: https://lore.kernel.org/r/20250627-add-support-for-meta-clemente-bmc-v5-0-038ed6f1cb9f@fii-foxconn.com
 
-Tested-by: Harshal Dev <quic_hdev@quicinc.com> # on SM8650-MTP
- 
-root@qcom-armv8a:~# qtee_supplicant &
-root@qcom-armv8a:~# qtee_supplicant: process entry PPID = 378
-Total listener services to start = 4
-Opening CRequestTABuffer_open
-Path /data/
-register_service ::Opening CRegisterTABufCBO_UID
-Calling TAbufCBO Register
-QTEE_SUPPLICANT RUNNING
- 
-root@qcom-armv8a:~# smcinvoke_client -c /data 1
-Run callback obj test...
-Load /data/tzecotestapp.mbn, size 52192, buf 0x1e44ba0.
-System Time: 2024-02-27 17:26:31
-PASSED - Callback tests with Buffer inputs.
-PASSED - Callback tests with Remote and Callback object inputs.
-PASSED - Callback tests with Memory Object inputs.
-TEST PASSED!
-root@qcom-armv8a:~#
-root@qcom-armv8a:~# smcinvoke_client -m /data 1
-Run memory obj test...
-Load /data/tzecotestapp.mbn, size 52192, buf 0x26cafba0.
-System Time: 2024-02-27 17:26:39
-PASSED - Single Memory Object access Test.
-PASSED - Two Memory Object access Test.
-TEST PASSED!
-root@qcom-armv8a:~#
+Changes in v5:
+- Remove accidentally pasted texts.
+- Link to v4: https://lore.kernel.org/r/20250627-add-support-for-meta-clemente-bmc-v4-0-ce7ff23460c4@fii-foxconn.com
 
-Tested using smcinvoke_client hosted at www.github.com/qualcomm/minkipc.
-The build instructions are available in the README.md file.
-These test cases exchange callback and memory objects with QTEE over a Mink
-Object-IPC protocol and then validate their invocation by QTEE.
-Before starting the test, the tzecotestapp Trusted Application calls into
-the time listener hosted by the qtee_supplicant daemon to print the system
-time, which also validates qtee_supplicant's transport path through the QCOMTEE
-driver.
+Changes in v4:
+- Move properties of nodes defined in the same file from label ref back to where they belong.
+- Move pinctrl default configs for ncsi3 and ncsi4 to aspeed-g6-pinctrl.dtsi.
+- Add properties to i2c10 and i2c15 to enable MCTP.
+- Link to v3: https://lore.kernel.org/r/20250623-add-support-for-meta-clemente-bmc-v3-0-c223ffcf46cf@fii-foxconn.com
 
-Regards,
-Harshal
+Changes in v3:
+- Modify leakage sensor to reflect current design.
+- Link to v2: https://lore.kernel.org/r/20250621-add-support-for-meta-clemente-bmc-v2-0-6c5ef059149c@fii-foxconn.com
+
+Changes in v2:
+- Fix patch 1/2 subject line to match dt-bindings convention.
+- Reorder device tree nodes in patch 2/2 to follow upstream DTS style.
+- Link to v1: https://lore.kernel.org/r/20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com
+
+---
+Leo Wang (2):
+      dt-bindings: arm: aspeed: add Meta Clemente board
+      ARM: dts: aspeed: clemente: add Meta Clemente BMC
+
+ .../devicetree/bindings/arm/aspeed/aspeed.yaml     |    1 +
+ arch/arm/boot/dts/aspeed/Makefile                  |    1 +
+ .../dts/aspeed/aspeed-bmc-facebook-clemente.dts    | 1291 ++++++++++++++++++++
+ arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |   11 +
+ 4 files changed, 1304 insertions(+)
+---
+base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+change-id: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+
+Best regards,
+-- 
+Leo Wang <leo.jt.wang@fii-foxconn.com>
+
