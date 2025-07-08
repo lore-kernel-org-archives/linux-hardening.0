@@ -1,142 +1,159 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6B81E5B91
-	for <linux-hardening@vger.kernel.org>; Tue,  8 Jul 2025 13:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FEDEEC3
+	for <linux-hardening@vger.kernel.org>; Tue,  8 Jul 2025 14:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751982676; cv=none; b=CBLXz+ghvi5MRCyJK8iWnQK0dqw6PuxYkgnnKO6KX5OO3H9wdSn6nNziQdvCkgZI5Hpz0y1GOlF4F6O75pGt+hsd3bvxU3E4XbAwRztP8X+7KDRkYZd9Qs5bP9fwd1ez5TWz4akapDufDzwcr+Koi3+B8Vag9C/led0mOhWBio8=
+	t=1751984062; cv=none; b=e5Xg2e8NFDjI3UIqdoheX/ruGHARuCamhsO4K/RbBqagd0LNxcioWhyKNEAsCH0v4QPDDEgFU0b8LaYJkZgvN52KLty38GyqJv2oLhqzDM8CVnmBT632nODNX4IdapLUjCRwHfSUu2H5rLJf8nvJ28xxfGkp/pOK2Ykvh0RKxGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751982676; c=relaxed/simple;
-	bh=qkHV+oubYu/O5KpKB/TIsQpLDj5mKUNq2idhGzy+r7s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DdNYHpdsY5hYPTqnGThiDXWGrtfBlMwk+0Ee/di9BD7lRi6LWtRWbE0wlPAapthJAqNMQpL6u+x/ALrXNa2b2Rl195de70rrGah4o3n3oBNmQnjeNDaHuzf5oX5SmG57wVhXJhSlvr5jPzgqmMsLmI1UAdd7SjdKHb3ffho4pYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=MBlRUTly; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
+	s=arc-20240116; t=1751984062; c=relaxed/simple;
+	bh=cnWaXa74/QbfnSb2LTs5sZmQXHNxB435+m+y24Jr8gI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jpuwqpEh9HG2ve3u91VDXE7VCk4cuJ9UR+vMYktQPZep3AwhtL6pVvxUwFUjcjgwgNRsnDzcseUcwzYN8yXy4eDY3XErQrvZ749E2CsIWwOe82SufNeX/CBKZfgYWnu6aqwzCpJYSI9v4gtl54L92I7lVqyBh3Q4Z4TwxwaQajM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UF5z2Khn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fI5fTs/Q; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2pzrGVc4; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4DpvvbG2; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="MBlRUTly"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-553d52cb80dso4055791e87.1
-        for <linux-hardening@vger.kernel.org>; Tue, 08 Jul 2025 06:51:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google; t=1751982672; x=1752587472; darn=vger.kernel.org;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=31MqR/E8gvc45qHOvdbZr7UXtdSXHcy53Qh8ZwjxaD0=;
-        b=MBlRUTlyH9cxaYU2jSw6vYHjJysk670xKuSrcsrt30nXStnUHx/1DBAyNfDbjxG4Be
-         sM1cghaj64PrdF+wd3jieeqiXODHrgk7HH2AmdmRU7nP0AZ9DnY9O9Vi4xdTv6xQOzmU
-         zksgurKCsDTu/uUJxP6mUN7N8I2WWEtfRCY5Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751982672; x=1752587472;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=31MqR/E8gvc45qHOvdbZr7UXtdSXHcy53Qh8ZwjxaD0=;
-        b=kfhM66frK2vIn5wTsdnQ+sTWiNMcl9eA6W2xJEljdj6IXBI60uEPmGOmL4HzP26Oqy
-         +V5IbZKnnRbydXpAymbb3sib4oTpXvppM6YGyHjKikyqvcpH4sbNM1bUL7RFX9BzgbVQ
-         DpI9ThFLI95oRhHil2h4NrYPUz9DKJN2X9FrheBW4/abWTTeMiUREBW6iEJTa708Q7dV
-         h7dXJbwCiu0PZKQgJEUiknRlVgIUN1gGb1z4tSq5rlrr0FQbt0kRsWYPUTQh1hx5z/Rq
-         LZWZhTgU5wgYtllHQdm+X/hVjK98bSJ6f/thUWVI1u/i1DXxYdEov1wVP2TxaOPJ0HBv
-         c5pw==
-X-Forwarded-Encrypted: i=1; AJvYcCVpDXCZU9NTv72VIPAPE4d4zPjBrjov+fiMqYXsiZlwAJ2jvV+jdD0694EcN0eojYiqUZ/tSnq5xA6L7hxrph0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8n18lZ2lbdoGYCm80dt096tbIvKqNGEFP5N/5vEM0NF6nSnz1
-	TYfo7xkHSuNhFqhoU/WXCnoqseDjI7u597N5Otmqw4KY2PIOCkytm5ADWYK/hfij+S9tWBEK7/C
-	7Fbe1684=
-X-Gm-Gg: ASbGnct6InZ5M8DeQ1dCebCzUdiTcysrJbXN/ub6G4uIevi9uTqM9SIx4sPlG1mzPg9
-	njC9sguXFidzXNHic3xy1fqvpcI+apj20a1Ibxqzz8+qX7zkVS+csSxgXlWLwsQrat97K/nL9Sf
-	e2I9ta92XZ1B3y8ZCwXwk6O0+l3/UX8EWEVAmUPR0Dy0ORidHaGbzRSltlbelK4TA4BQKQyzCQ7
-	hoXAQadNRBBM82eDYu2V2qm3SBc8GgSNwX4x9aeFDYpOnSLwt7He4hPa/2TKqUkJU80IlGcktTr
-	YrfZqey8K3vBVhUGovlaAaLU98ziv2sJj6LM9J3nPImcEuGgn9QGd2T9xp8Hck1a
-X-Google-Smtp-Source: AGHT+IGAGFiZWkwFnSiMkLwKey/goUWPwP6l7a9KOAhmvZ6IpsJt6jVgzyte8sMjjpbz+51yLmRVhA==
-X-Received: by 2002:a05:6512:2381:b0:553:2308:1ac5 with SMTP id 2adb3069b0e04-557f8d6a9efmr1017578e87.4.1751982672246;
-        Tue, 08 Jul 2025 06:51:12 -0700 (PDT)
-Received: from localhost ([81.216.59.226])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-556384cdf6fsm1699987e87.242.2025.07.08.06.51.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jul 2025 06:51:11 -0700 (PDT)
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-mm@kvack.org,  linux-hardening@vger.kernel.org,  Kees Cook
- <kees@kernel.org>,  Christopher Bazley <chris.bazley.wg14@gmail.com>,
-  shadow <~hallyn/shadow@lists.sr.ht>,  linux-kernel@vger.kernel.org,
-  Andrew Morton <akpm@linux-foundation.org>,  kasan-dev@googlegroups.com,
-  Dmitry Vyukov <dvyukov@google.com>,  Alexander Potapenko
- <glider@google.com>,  Marco Elver <elver@google.com>,  Christoph Lameter
- <cl@linux.com>,  David Rientjes <rientjes@google.com>,  Vlastimil Babka
- <vbabka@suse.cz>,  Roman Gushchin <roman.gushchin@linux.dev>,  Harry Yoo
- <harry.yoo@oracle.com>
-Subject: Re: [RFC v1 0/3] Add and use seprintf() instead of less ergonomic APIs
-In-Reply-To: <ez7yty6w7pe5pfzd64mhr3yfitvcurzsivjibeabnkg457xu7x@tkompzcytwcj>
-	(Alejandro Colomar's message of "Tue, 8 Jul 2025 13:36:57 +0200")
-References: <cover.1751747518.git.alx@kernel.org> <87a55fw5aq.fsf@prevas.dk>
-	<ez7yty6w7pe5pfzd64mhr3yfitvcurzsivjibeabnkg457xu7x@tkompzcytwcj>
-Date: Tue, 08 Jul 2025 15:51:10 +0200
-Message-ID: <871pqqx035.fsf@prevas.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UF5z2Khn";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fI5fTs/Q";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2pzrGVc4";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4DpvvbG2"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id F135F2111F;
+	Tue,  8 Jul 2025 14:14:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751984058;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jy7+FymTvjDCy1JGk/8xikVi4a2BjKPwW51tOqW3Ebs=;
+	b=UF5z2Khnttq1mw3Na6MdfoOFwxNq8t6qeI2mNA1fKrnBrWSLTj31b2ufiPfYWe3FUxTvNx
+	khngmhWAdgbx8lgLOyYzL49n/8UNcHhCUNsXw/8tSIjQMgE9WHBPYAC9mGD+1vR5pcn3GW
+	NipdN2gnTWHujDbtsGOIdNyuJ77oqBE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751984058;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jy7+FymTvjDCy1JGk/8xikVi4a2BjKPwW51tOqW3Ebs=;
+	b=fI5fTs/Q415OWmKm2xciqk1eDdKCZqaDg5lUn1fCv89Qb6rwvGWGjk7PlC/STdGEmgAr5h
+	/4wR/zJlT6zMAMDw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=2pzrGVc4;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=4DpvvbG2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751984057;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jy7+FymTvjDCy1JGk/8xikVi4a2BjKPwW51tOqW3Ebs=;
+	b=2pzrGVc4KJ33UUEttCriZCxABDkgLaW64trvzx+p+esR/BBzOlQ/oJq+JSFhJUZNZPl6M9
+	hflkIEhS4SXNrUIAx1TznWSYmJqymukP54/D71IPw9SQ1MpbVM9bMjM0Vwfn3vmM+ao7DX
+	t92FF+bFKzzYKz32tCDAYuRnfngDBMw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751984057;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jy7+FymTvjDCy1JGk/8xikVi4a2BjKPwW51tOqW3Ebs=;
+	b=4DpvvbG2ZkS55xtJDFB3XSSTfyWfIBGCE+5gfFdTUy+Krjfj4cCE5TTlTm99ncmBPPpdCq
+	rcE7oI+XPJD3qBDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D121E13A54;
+	Tue,  8 Jul 2025 14:14:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ZSLHMrknbWgDRQAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 08 Jul 2025 14:14:17 +0000
+Date: Tue, 8 Jul 2025 16:14:12 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.com>,
+	linux-hardening@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: zstd - replace zero-length array with flexible
+ array member
+Message-ID: <20250708141412.GL4453@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20250703171933.253654-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703171933.253654-2-thorsten.blum@linux.dev>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spamd-Result: default: False [-4.21 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Rspamd-Queue-Id: F135F2111F
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.21
 
-On Tue, Jul 08 2025, Alejandro Colomar <alx@kernel.org> wrote:
+On Thu, Jul 03, 2025 at 07:19:34PM +0200, Thorsten Blum wrote:
+> Replace the deprecated zero-length array with a modern flexible array
+> member in the struct zstd_ctx.
+> 
+> No functional changes intended.
+> 
+> Link: https://github.com/KSPP/linux/issues/78
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  crypto/zstd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/crypto/zstd.c b/crypto/zstd.c
+> index 657e0cf7b952..c489976c3e8b 100644
+> --- a/crypto/zstd.c
+> +++ b/crypto/zstd.c
+> @@ -25,7 +25,7 @@ struct zstd_ctx {
+>  	zstd_dctx *dctx;
+>  	size_t wksp_size;
+>  	zstd_parameters params;
+> -	u8 wksp[0] __aligned(8);
+> +	u8 wksp[] __aligned(8);
 
-> Hi Rasmus,
->
-> On Tue, Jul 08, 2025 at 08:43:57AM +0200, Rasmus Villemoes wrote:
->> On Sat, Jul 05 2025, Alejandro Colomar <alx@kernel.org> wrote:
->> 
->> > On top of that, I have a question about the functions I'm adding,
->> > and the existing kernel snprintf(3): The standard snprintf(3)
->> > can fail (return -1), but the kernel one doesn't seem to return <0 ever.
->> > Should I assume that snprintf(3) doesn't fail here?
->> 
->> Yes. Just because the standard says it may return an error, as a QoI
->> thing the kernel's implementation never fails. That also means that we
->> do not ever do memory allocation or similar in the guts of vsnsprintf
->> (that would anyway be a mine field of locking bugs).
->
-> All of that sounds reasonable.
->
->> If we hit some invalid or unsupported format specifier (i.e. a bug in
->> the caller), we return early, but still report what we wrote until
->> hitting that.
->
-> However, there's the early return due to size>INT_MAX || size==0,
-> which
-
-First of all, there's no early return for size==0, that's absolutely
-supported and the standard way for the caller to figure out how much to
-allocate before redoing the formatting - as userspace asprintf() and
-kernel kasprintf() does. And one of the primary reasons for me to write
-the kernel's printf test suite in the first place, as a number of the %p
-extensions weren't conforming to that requirement.
-
-> results in no string at all, and there's not an error code for this.
-> A user might think that the string is reliable after a vsprintf(3) call,
-> as it returned 0 --as if it had written ""--, but it didn't write
-> anything.
-
-No, because when passed invalid/bogus input we cannot trust that we can
-write anything at all to the buffer. We don't return a negative value,
-true, but it's not exactly silent - there's a WARN_ON to help find such
-bogus callers.
-
-So no, there's "no string at all", but nothing vsnprint() could do in
-that situation could help - there's a bug in the caller, we point it out
-loudly. Returning -Ewhatever would not remove that bug and would only
-make a difference if the caller checked for that.
-
-We don't want to force everybody to check the return value of snprintf()
-for errors, and having an interface that says "you have to check for
-errors if your code might be buggy", well...
-
-In fact, returning -Ewhatever is more likely to make the problem worse;
-the caller mismanages buffer/size computations, so probably he's likely
-to just be adding the return value to some size_t or char* variable,
-making a subsequent use of that variable point to some completely
-out-of-bounds memory.
-
-Rasmus
+This is from patch "crypto: zstd - convert to acomp" currently as commit
+f5ad93ffb54119a8dc in linux-next. Should it rather be folded there? It's
+part of the crypto queue.
