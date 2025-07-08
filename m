@@ -1,200 +1,157 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6914D273FE
-	for <linux-hardening@vger.kernel.org>; Tue,  8 Jul 2025 00:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D30770825;
+	Tue,  8 Jul 2025 02:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751933903; cv=none; b=JKf9H7h04+DX2xTqdg0ERLdIv4NIp+ZqVbf/KWoTiiWQNi+SiIkDTWsx6fw74TSC4Qo6UwvsjXlcBOLUWGWRR/gybLlYu1mB4dEE70Yju8uqrpO2NAGmO5TPsgbhbluD0oaY9naTI6k8g/LKEKskxbIWWk/Af4GX/OPUeRGO6PA=
+	t=1751941246; cv=none; b=Pklll3q27NCw/GqzSIQfn0PVNXogeiC70XsvVVrD90jTke3kCHl3OZtCW8pm2fRl5ZZgBTmk+/svKosIvjFTLMqbNuUAFXITX+sM/o/mttbLPDsxJbLLnl+OWtotMJwFADM7TAQZuAwjOkEcjmQ7O7zQuXbq3bIxJ72PBpomk/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751933903; c=relaxed/simple;
-	bh=kFt6Oom5g+9QGUKhUH0b2chcUL/hscbZVZ8LC4C1q8I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hqtae0kXbuJa+wPzN6wJIaUMI4Dqubcc76PO7frqR3aRa3YM6gbpMI4DaFL7qnU7Y6nDSaXU9vYSCrvXJXyV6ENiUYfQhIpeK6oRfzz5JhxnZZFjDgOeNJkVoM71EgjpFBYz1eA8pyHjxSUpIr4jXc0ZeuHV42HLc8C2VTNTcrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nHH0sG8E; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751941246; c=relaxed/simple;
+	bh=FdNfW5qOTMVaMNJhf3d4aC3Y6ZkzpECAp4ZXPawuD1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tbpBQrpdgiPOKmNMd6sZXS3sBKYgG1NKgXI3CF3quvmKSJN6GmM6EiLISzvxwYkiqgOGfaJCYFMqnFmbnj/kaVCJrQ/QU+6oy7SkV792fXw/JuT0iiNngebYq3XFKukg4bT7WlKypEKJBTMQnWAMKvIgV0k89EAO/y3FunbBwFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SfVuVxjD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nHH0sG8E"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 567JKvZC004574
-	for <linux-hardening@vger.kernel.org>; Tue, 8 Jul 2025 00:18:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	oaTOEkIO8yrsO0UKiWwZlqMg1M5J5KL8pwQLxI4CLgg=; b=nHH0sG8E+AXC4w4U
-	T4O+a6q0EEjbnZQYFWebBAmLf1LFy5Z5grmBAUj38+fCP789t8D5bX+71ZNR6c6O
-	GLAMa7KnfJMTt7SB1HVCtKMcZkAM8evugiLo9SgqYP5JUPcyDLNcn+Egu7JLPVcr
-	c9hJKiCNhXIgebs3eEnBzEf/l8lpJyfuykGn8tx8AJt85i7j5zQ3DmYD5xJXoTGS
-	16ndMIsTGrgYwojG+OE8FyCp6Kil7m92n/qQ36Av0+ueocIKULV+rC6qWTCg0svQ
-	SNez+wSpq1uksn32XBms6yrpuna1MZ3yV5Roa5dKd8RGFg+NtwH1Jfwj+zKsisf8
-	UBPw1Q==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47pvef9mx9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Tue, 08 Jul 2025 00:18:19 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2382607509fso20636605ad.3
-        for <linux-hardening@vger.kernel.org>; Mon, 07 Jul 2025 17:18:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751933898; x=1752538698;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oaTOEkIO8yrsO0UKiWwZlqMg1M5J5KL8pwQLxI4CLgg=;
-        b=gtoesOPu8ipXzfg3Gi8eoB+SaxzvbNnE02JFgnImSyzCy4/C1qCJp+MCGeh+JY3Myq
-         xM0xAs2ArSF9pfEvbFhSv7U+On75gePVuwZ/zfjby7uYDoKRyX+lU5IkezpwESSA1TLz
-         b5Xm/YRvBVqNVylvEBqD522qSkcMm74aG8Jz0kx1LjMVEmzjfITqam2VxgJ8OypbgHGt
-         uQF8MOkGw60K3lZaPH/Q2Mjb9jAokIKsIFYotwW27pSbPPeQdPj+w/SM+l8PM6reRNFO
-         XD37piYNLi5lHQqSSsRFtDjQ0rYbReCAuk+U2FPm+hKjUwGpKSk3o4aJNOlREXxdQnPf
-         W6rg==
-X-Forwarded-Encrypted: i=1; AJvYcCUebuJ6g4Wm+RAzRJ6Y8+IKNgWrpy81arQkJI6QoxoDLpVVI9lOJIZCZkgB4NTQehj2W0B5H9GD/R6frSaCSlg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpTH0R8dVHl48UE/o5UgAdDYWp4NuzBTFjIthb4Ffk6Prk7U+s
-	duoonwK5EkKL0r4JCbUyZF+fEwK9kJMM0fVtoZglLT6FIjmIEJSUwHyoSpX9Qlk9ctwuuge9KaU
-	XLr44tqhVwmOp0z0ikBuot8WjV+TmZQQFoBhqyD21CyW7jmzsqmJuRbxLP/RXFeD5i3XBPg==
-X-Gm-Gg: ASbGnculta/xsj7p1ZD0oH0jsTilugKMiopUUo0X64/G9aAKxoPvyNDyB9J/mEz1pv+
-	JA7KLB/qLcwQIUT+6LgfcQG4/dpSZQZcwoFCsBjOFkxfkI6OxvVwgHZqaM4xj4CQVIOycTH5ew8
-	qHsvhvPBQ4M5BvM5ObhKArRaO3iF8lUSxeihOA1vrfSfFf3ZvWivbnQ7jdFV9tcTCslYPviiCjh
-	bylwNosMWUMbS2x0ZKkqRS7POIcWULqx9EgUgeqJTvh7fE50Jw8AirIDeS8cWdgqPNwzXLjnmVw
-	SfuFM6ro/jJHqQcT0YniZ6v1XO/J3t5NfrqFeJcA3YR3yRECXttRVG+lk0rOKI0XZJgr9U2YeSX
-	A9S/33HrH9C0eXH9yNJM2
-X-Received: by 2002:a17:903:244c:b0:234:d679:72e3 with SMTP id d9443c01a7336-23dd1d80da1mr8271265ad.42.1751933897832;
-        Mon, 07 Jul 2025 17:18:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFMM+Gbo9/WjlZPVlIIUZQ4YQst2yhj+gXkh09Rr5WiqbDyV2/LPR3+ycOzSMRJJQfm2+cqXA==
-X-Received: by 2002:a17:903:244c:b0:234:d679:72e3 with SMTP id d9443c01a7336-23dd1d80da1mr8270825ad.42.1751933897349;
-        Mon, 07 Jul 2025 17:18:17 -0700 (PDT)
-Received: from [192.168.0.74] (n1-41-240-65.bla22.nsw.optusnet.com.au. [1.41.240.65])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8457e4d2sm103006315ad.148.2025.07.07.17.18.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jul 2025 17:18:13 -0700 (PDT)
-Message-ID: <07cd8098-2d2e-4f90-96c0-64f8547e291f@oss.qualcomm.com>
-Date: Tue, 8 Jul 2025 10:18:02 +1000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SfVuVxjD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A883DC4CEE3;
+	Tue,  8 Jul 2025 02:20:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751941246;
+	bh=FdNfW5qOTMVaMNJhf3d4aC3Y6ZkzpECAp4ZXPawuD1w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SfVuVxjDeHku7nPebEN4INSCvz6v89PVacBhg+NKah3iNBJs03PDRf+a+L4WHDLFf
+	 WN3uU2ocnUZAC5bIH/o0S8/qEpkJ/0I+oKfWaSmTOwD8jiiXyfoIkJXkQyLlarsQSQ
+	 zx5vCDH039tT51IGeUK1eV8qgTLEEaLvHGDEcsRTv15018+op0ewQehONP+7NB7AIk
+	 PMcGcXIbzs7t9S+Q/P+reRNeDudJ9WAON7SZsyFFHPtF7yUTGkVKtj4u9lOkFmRg9D
+	 JWu2J4YLfmN1MlhW31UUPbUqdaFfpPY7OGzYgaxgmRjVsjvtkEKxWvcRgXnTEOcE0M
+	 DhpVpRTUWCpMw==
+Date: Tue, 8 Jul 2025 04:20:43 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
+	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
+	Andrew Clayton <andrew@digital-domain.net>, Sven Schnelle <svens@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, 
+	"Huang, Ying" <ying.huang@intel.com>, Lee Schermerhorn <lee.schermerhorn@hp.com>, 
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, Chao Yu <chao.yu@oppo.com>
+Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
+Message-ID: <gnds5llds2bfqynijuaxafwsbb4ukafxfgggzuvhrqsi2rc6nb@dyf3qgdsmnti>
+References: <cover.1751862634.git.alx@kernel.org>
+ <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
+ <CAHk-=wh9Pqz07ne9iSt1_v0c14rkOGvF9AbEkaq1KnFhQD1SSA@mail.gmail.com>
+ <ugf4pu7qrojegz7arkcpa4cyde6hoyh73h66oc4f6ncc7jg23t@bklkbbotyzvp>
+ <CAHk-=whQ_0qFvg3cugt84+iKXi_eebNGY4so+PSnyyVNGVde1A@mail.gmail.com>
+ <gjxc2cxjlsnccopdghektco2oulmhyhonigy7lwsaqqcbn62wj@wa3tidbvpyvk>
+ <r43lulact3247k23clhbqnp3ms75vykf7yxa526agenq2b4osk@q6qp7hk7efo2>
+ <CAHk-=wj6gEmYih1VfYZu9FiYtOJYSFQ0f45CQZtDLrJpzF47Bg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/12] firmware: qcom: tzmem: export shm_bridge
- create/delete
-To: Kuldeep Singh <quic_kuldsing@quicinc.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Sumit Garg <sumit.garg@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Apurupa Pattapu <quic_apurupa@quicinc.com>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
-        Neil Armstrong <neil.armstrong@linaro.org>
-References: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-0-024e3221b0b9@oss.qualcomm.com>
- <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-8-024e3221b0b9@oss.qualcomm.com>
- <2455f20c-130c-4f27-9cf4-6411e485b845@quicinc.com>
-Content-Language: en-US
-From: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-In-Reply-To: <2455f20c-130c-4f27-9cf4-6411e485b845@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA4MDAwMSBTYWx0ZWRfXyPFf59zQ2s2J
- o8bPXxu8ucZGR4BVydmcYDOpqYnvQMVjmcWYddOzR8tLv0B31grFtFMbDRQey9cR/vupoTaW6Hr
- D3SFErSvt1Pa3vvSo51Z/lx+cq3Cp9m7gm2U+QnGuDjwFwwA0xR0CGACVY4yjwZP1b7H6h8PSsZ
- x//FjhmVqzrLTTCEweu9Wh2iuxFv5HvciZ+0Es2VWmFEyFJgjotztjruOddiqMfIR0jeCWb/xYk
- axEaC/2K03yzSGS3Usiigl42njxKQeLaWL4NzJ4SEiG/BKzbtcu56J+cg2Vk/CiQGwd0j7dNcZL
- KkzSrnv6KEMuc47/14qmEmCaU/W3UZ8pvc3D7BC8nlR8nZaC7HMw0U/1HctZ/jiGxa17Pr12MT8
- mgZeywzNmUF/6qDphlNHPjFa9U18ea+aN8WeJx3ZjKx9lHj7dNMXumbb6HN+N5LkavMjJMo0
-X-Authority-Analysis: v=2.4 cv=dciA3WXe c=1 sm=1 tr=0 ts=686c63cb cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=hi51d+lTLNy/RbqRqnOomQ==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=pz6wV3uveH3Zlr5Ofa0A:9 a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: WljkeQ7Nz4Icq9UX5-fAurF0Pur0TVR_
-X-Proofpoint-ORIG-GUID: WljkeQ7Nz4Icq9UX5-fAurF0Pur0TVR_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-07_06,2025-07-07_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 malwarescore=0 suspectscore=0 impostorscore=0 phishscore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0 adultscore=0
- spamscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507080001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj6gEmYih1VfYZu9FiYtOJYSFQ0f45CQZtDLrJpzF47Bg@mail.gmail.com>
 
-Hi Kuldeep,
+Hi Linus,
 
-On 7/1/2025 9:47 PM, Kuldeep Singh wrote:
+On Mon, Jul 07, 2025 at 03:17:50PM -0700, Linus Torvalds wrote:
+> On Mon, 7 Jul 2025 at 14:27, Alejandro Colomar <alx@kernel.org> wrote:
+> >
+> > If the name is your main concern, we can discuss a more explicit name in
+> > the kernel.
 > 
-> On 5/27/2025 12:26 PM, Amirreza Zarrabi wrote:
->> Anyone with access to contiguous physical memory should be able to
->> share memory with QTEE using shm_bridge.
->>
->> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
->> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
->> ---
->>  drivers/firmware/qcom/qcom_tzmem.c       | 57 +++++++++++++++++++++++++-------
->>  include/linux/firmware/qcom/qcom_tzmem.h | 15 +++++++++
->>  2 files changed, 60 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/firmware/qcom/qcom_tzmem.c b/drivers/firmware/qcom/qcom_tzmem.c
->> index 4fe333fd2f07..e9e4f06924ae 100644
->> --- a/drivers/firmware/qcom/qcom_tzmem.c
->> +++ b/drivers/firmware/qcom/qcom_tzmem.c
->> @@ -108,25 +108,61 @@ static int qcom_tzmem_init(void)
->>  	return 0;
->>  }
->>  
->> -static int qcom_tzmem_init_area(struct qcom_tzmem_area *area)
->> +/**
->> + * qcom_tzmem_shm_bridge_create() - Create a SHM bridge.
->> + * @paddr: Physical address of the memory to share.
->> + * @size: Size of the memory to share.
->> + * @handle: Handle to the SHM bridge.
->> + *
->> + * On platforms that support SHM bridge, this function creates a SHM bridge
->> + * for the given memory region with QTEE. The handle returned by this function
->> + * must be passed to qcom_tzmem_shm_bridge_delete() to free the SHM bridge.
->> + *
->> + * Return: On success, returns 0; on failure, returns < 0.
->> + */
->> +int qcom_tzmem_shm_bridge_create(phys_addr_t paddr, size_t size, u64 *handle)
->>  {
->>  	u64 pfn_and_ns_perm, ipfn_and_s_perm, size_and_flags;
->> -	int ret;
->>  
->>  	if (!qcom_tzmem_using_shm_bridge)
->>  		return 0;
->>  
->> -	pfn_and_ns_perm = (u64)area->paddr | QCOM_SCM_PERM_RW;
->> -	ipfn_and_s_perm = (u64)area->paddr | QCOM_SCM_PERM_RW;
->> -	size_and_flags = area->size | (1 << QCOM_SHM_BRIDGE_NUM_VM_SHIFT);
->> +	pfn_and_ns_perm = paddr | QCOM_SCM_PERM_RW;
->> +	ipfn_and_s_perm = paddr | QCOM_SCM_PERM_RW;
->> +	size_and_flags = size | (1 << QCOM_SHM_BRIDGE_NUM_VM_SHIFT);
->> +	if (qcom_scm_shm_bridge_create(pfn_and_ns_perm, ipfn_and_s_perm,
->> +				       size_and_flags, QCOM_SCM_VMID_HLOS,
->> +				       handle))
-> 
-> Can we add a debug log here to ease debugging in future?
-> Something like this can also work.
-> 
-> pr_err("Shm bridge creation failed, ret: %d, NS PA|Perm: 0x%llx,
-> size|flags: 0x%llx\n", ret, pfn_and_ns_perm_flags, size_and_flags);
-> 
+> So as they say: "There are only two hard problems in computer science:
+> cache invalidation, naming and off-by-one errors".
 
-Sure.
+Indeed.  And we have two of these classes here.  :)
 
-Regards,
-Amir
+> And the *worst* model for naming is the "add random characters" (ok, I
+> still remember when people believed the insane "Hungarian Notation"
+> BS, *that* particular braindamage seems to thankfully have faded away
+> and was probably even worse, because it was both pointless, unreadable
+> _and_ caused long identifiers).
 
->> +		return -EINVAL;
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(qcom_tzmem_shm_bridge_create);
+To be fair, one letter is enough if you're used to the name.  Everything
+of the form s*printf() people know that the differentiating part is that
+single letter between 's' and 'p', and a quick look at the function
+prototype usually explains the rest.
+
+More than that, and it's unnecessarily noisy to my taste.  But not
+everyone does string work all the time, so I get why you'd be less prone
+to liking the name.
+
+I won't press for the name.  Unless you say anything, my next revision
+of the series will call it sprintf_end().
+
+> Now, we obviously tend to have the usual bike-shedding discussions
+> that come from naming, but my *personal* preference is to avoid the
+> myriad of random "does almost the same thing with different
+> parameters" by using generics.
 > 
+> This is actually something that the kernel has done for decades, with
+> various odd macro games - things like "get_user()" just automatically
+> doing the RightThing(tm) based on the size of the argument, rather
+> than having N different versions for different types.
 
+In this case, I wouldn't want to go that way and reuse the name
+snprintf(3), because the kernel implementation of snprintf(3) is
+non-conforming, and both the standard and the kernel snprintf() have
+semantics that are importantly different than this API in terms of
+handling errors.
+
+I think reusing the name with slightly different semantics would be
+prone to bugs.
+
+Anyway, sprintf_end() should be clear enough that I don't expect much
+bikeshedding for the name.  Feel free to revisit this in the future and
+merge names if you don't like it; I won't complain.  :)
+
+
+Have a lovely night!
+Alex
+
+P.S.:  I'm not able to sign this email.
+
+> So we actually have a fair number of "generics" in the kernel, and
+> while admittedly the header file contortions to implement them can
+> often be horrendous - the *use* cases tend to be fairly readable.
+> 
+> It's not just get_user() and friends, it's things like our
+> type-checking min/max macros etc. Lots of small helpers that
+> 
+> And while the traditional C model for this is indeed macro games with
+> sizeof() and other oddities, these days at least we have _Generic() to
+> help.
+> 
+> So my personal preference would actually be to not make up new names
+> at all, but just have the normal names DoTheRightThing(tm)
+> automatically.
+> 
+> But honestly, that works best when you have good data structure
+> abstraction - *not* when you pass just random "char *" pointers
+> around.  It tends to help those kinds of _Generic() users, but even
+> without the use of _Generic() and friends, it helps static type
+> checking and makes things much less ambiguous even in general.
+> 
+> IOW, there's never any question about "is this string the source or
+> the destination?" or "is this the start or the end of the buffer", if
+> you just have a struct with clear naming that contains the arguments.
+> 
+> And while C doesn't have named arguments, it *does* have named
+> structure initializers, and we use them pretty religiously in the
+> kernel. Exactly because it helps so much both for readability and for
+> stability (ie it catches things when you intentionally rename members
+> because the semantics changed).
+> 
+>                 Linus
+
+-- 
+<https://www.alejandro-colomar.es/>
