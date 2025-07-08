@@ -1,90 +1,79 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FEDEEC3
-	for <linux-hardening@vger.kernel.org>; Tue,  8 Jul 2025 14:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB582E06F8
+	for <linux-hardening@vger.kernel.org>; Tue,  8 Jul 2025 14:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751984062; cv=none; b=e5Xg2e8NFDjI3UIqdoheX/ruGHARuCamhsO4K/RbBqagd0LNxcioWhyKNEAsCH0v4QPDDEgFU0b8LaYJkZgvN52KLty38GyqJv2oLhqzDM8CVnmBT632nODNX4IdapLUjCRwHfSUu2H5rLJf8nvJ28xxfGkp/pOK2Ykvh0RKxGM=
+	t=1751984704; cv=none; b=psebu9m5dyGBIpk85XQF0v7oC0jBTkKTaYn1seGm4nKmIPY4d4tDZj2hFXuTgSMAajy9C7FXjNHWpwlQiS2fYENirbZrRBkfSdwG+7TSO9VmfBDxMSt5X2UzdZd+B52Ckwgg3dSMK246aicSEd3rROjhfcFyzC2Tl5eD/iyV0AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751984062; c=relaxed/simple;
-	bh=cnWaXa74/QbfnSb2LTs5sZmQXHNxB435+m+y24Jr8gI=;
+	s=arc-20240116; t=1751984704; c=relaxed/simple;
+	bh=47sMeezCkfD7BpmYxS/tUpV+p5t2PAyjflbnzmAsGmc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jpuwqpEh9HG2ve3u91VDXE7VCk4cuJ9UR+vMYktQPZep3AwhtL6pVvxUwFUjcjgwgNRsnDzcseUcwzYN8yXy4eDY3XErQrvZ749E2CsIWwOe82SufNeX/CBKZfgYWnu6aqwzCpJYSI9v4gtl54L92I7lVqyBh3Q4Z4TwxwaQajM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UF5z2Khn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fI5fTs/Q; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2pzrGVc4; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4DpvvbG2; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=WxsITtRif2Hn8ycSRG4IBzqgaSusOgpxsoZzEjtGxQvlYG4EErcJEBS7op4nOoTxlHIUlTL+6Z35Wj1y1gNgtcV8atOL8AO7P41+mfub3GUqZD3e8yo1IZKQ0AbCJgHgqg9hpPLy75GjFJnOjlWJpUi0OBJsaykD9fqpHkty0Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JzVEIFkL; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UF5z2Khn";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fI5fTs/Q";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2pzrGVc4";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4DpvvbG2"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id F135F2111F;
-	Tue,  8 Jul 2025 14:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751984058;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jy7+FymTvjDCy1JGk/8xikVi4a2BjKPwW51tOqW3Ebs=;
-	b=UF5z2Khnttq1mw3Na6MdfoOFwxNq8t6qeI2mNA1fKrnBrWSLTj31b2ufiPfYWe3FUxTvNx
-	khngmhWAdgbx8lgLOyYzL49n/8UNcHhCUNsXw/8tSIjQMgE9WHBPYAC9mGD+1vR5pcn3GW
-	NipdN2gnTWHujDbtsGOIdNyuJ77oqBE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751984058;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jy7+FymTvjDCy1JGk/8xikVi4a2BjKPwW51tOqW3Ebs=;
-	b=fI5fTs/Q415OWmKm2xciqk1eDdKCZqaDg5lUn1fCv89Qb6rwvGWGjk7PlC/STdGEmgAr5h
-	/4wR/zJlT6zMAMDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=2pzrGVc4;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=4DpvvbG2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751984057;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jy7+FymTvjDCy1JGk/8xikVi4a2BjKPwW51tOqW3Ebs=;
-	b=2pzrGVc4KJ33UUEttCriZCxABDkgLaW64trvzx+p+esR/BBzOlQ/oJq+JSFhJUZNZPl6M9
-	hflkIEhS4SXNrUIAx1TznWSYmJqymukP54/D71IPw9SQ1MpbVM9bMjM0Vwfn3vmM+ao7DX
-	t92FF+bFKzzYKz32tCDAYuRnfngDBMw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751984057;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jy7+FymTvjDCy1JGk/8xikVi4a2BjKPwW51tOqW3Ebs=;
-	b=4DpvvbG2ZkS55xtJDFB3XSSTfyWfIBGCE+5gfFdTUy+Krjfj4cCE5TTlTm99ncmBPPpdCq
-	rcE7oI+XPJD3qBDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D121E13A54;
-	Tue,  8 Jul 2025 14:14:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZSLHMrknbWgDRQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 08 Jul 2025 14:14:17 +0000
-Date: Tue, 8 Jul 2025 16:14:12 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.com>,
-	linux-hardening@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: zstd - replace zero-length array with flexible
- array member
-Message-ID: <20250708141412.GL4453@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20250703171933.253654-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JzVEIFkL"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a510432236so2951375f8f.0
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Jul 2025 07:25:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1751984701; x=1752589501; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YpG3scJ3Np9QEUPPCVmqEg3Q5rZcnXDIMT/gTqWl5i8=;
+        b=JzVEIFkLDHqcCTe+N5gm3FZYXKUN2tlXYY9mj6O7IQVyzUFjUegYsxMrQVVUB0MM5B
+         NW/BUfnr2eyGm7+8V3ROR3znq6XSiqVA7TgBpBLUSQS2MvRB3lhFq3Efsi8i3aNoCfu5
+         HfwMb5y+l4V3w7AjWZgGea49DmataQbqU19zqhmkZv2CpsO90nsVh7TLRhxi0ZPsmdO3
+         i0t+xbIHbXvRX60202Te91Ax1VTMQk/tSca9eEQWjQ4mzlVQUH0E3PxHb+CHStHWZY01
+         5ypdwky7L9POUlvz5APOw708xcBYb5Y8SyVtRPujx/tQNniHf5RCxxE7VeyzOxgycIcN
+         hEmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751984701; x=1752589501;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YpG3scJ3Np9QEUPPCVmqEg3Q5rZcnXDIMT/gTqWl5i8=;
+        b=DzK4O21vyVPHP7oi36Qs9dcsBCsNQSga/d5jDLXKTLvVxwa6zYH1pL57zDofLIyknT
+         f64ATSxmMzuOITa73iMfBGiZYavPpIemGaHCO1lORQLHFQ/aXCTJYcqheTFJbJfo55gp
+         qAoXb3hooA9ODTfhrl7FHcZE/Vl7AZ2UqkXYXFJcbfS2NSmIrB8QVeTjHxQ87cQQYXGh
+         japL9KiASrSI2RzdyyXzxd2NSeBjp0chYQIzvw+GWlkPkCOMN1pdmtY6fTSIAoRSpHZZ
+         BN0NNt6HK0AujmuhP+lrHPilIe8f4wm/2nz21q7WDf8Om67vyHU7IkB7SRNdDlDGKcF3
+         tE/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVrtLsXiqp4oIyorHGgQVBpgO28KNkmJuJRXEnJEHFT7KlFhurbUQdyBqHZG9VWQnuI90TbDMDY8KQNM9JT2WE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIbQeyHWt9354IFvBEyRbY+El4M5AMOww897e+28UBbUGqZ3iL
+	SivWFyYFdWP3OfbVohj5qit5qUCO8Egayfr+u8CLmRvzrgZoBITqq61Il2S22hrDsJw=
+X-Gm-Gg: ASbGncuKXwGpVmh61pQ0qh0mje+bSUD0BZoLJmwypXS2bhb38o62EZnbR3+kqumIcH9
+	WtfJAlWdbbesznmY7aETSaI3EWIq5LmnopimImaB3o0mxjC/9YQzn6n28SpfBKdRhgklKbv6kj4
+	4/ZN8inkM1P+ihC8wXNCBYLY4tAd4BSmBJ2Rw5TXnwWr4fRnRPqGWLtD+KOLupveB5t4wH36xt1
+	GLCMOZWoz48GuzBGDijkzB0rZ9cgRx+b9T96nCaroTxN7WWO5/kB1E/VcJFmCp1sieeultCJ43t
+	aMQiSFVmvID4PLixPIA1nDRyMByxl9YPsDjF6b/G5wZvY2wGSqjDBbGLid6SMv7/
+X-Google-Smtp-Source: AGHT+IEymzRvPZkwJUFRSR10rZv1xLWU8N2unb76TA0g+rPIrc6wJMjUMy01VtJ0OvHT3jK2NCdVsw==
+X-Received: by 2002:a05:6000:2d10:b0:3b4:9c09:1aa2 with SMTP id ffacd0b85a97d-3b49c091dbbmr6654462f8f.13.1751984700864;
+        Tue, 08 Jul 2025 07:25:00 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce359d642sm12433730b3a.22.2025.07.08.07.24.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Jul 2025 07:25:00 -0700 (PDT)
+Date: Tue, 8 Jul 2025 16:24:45 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	David Gow <davidgow@google.com>, Arnd Bergmann <arnd@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 2/3] printk: kunit: support offstack cpumask
+Message-ID: <aG0qLaeAoTGaRs0n@pathway.suse.cz>
+References: <20250702095157.110916-1-pmladek@suse.com>
+ <20250702095157.110916-3-pmladek@suse.com>
+ <20250702202835.GA593751@ax162>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -93,67 +82,128 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250703171933.253654-2-thorsten.blum@linux.dev>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Rspamd-Queue-Id: F135F2111F
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.21
+In-Reply-To: <20250702202835.GA593751@ax162>
 
-On Thu, Jul 03, 2025 at 07:19:34PM +0200, Thorsten Blum wrote:
-> Replace the deprecated zero-length array with a modern flexible array
-> member in the struct zstd_ctx.
+On Wed 2025-07-02 13:28:35, Nathan Chancellor wrote:
+> On Wed, Jul 02, 2025 at 11:51:56AM +0200, Petr Mladek wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> > 
+> > For large values of CONFIG_NR_CPUS, the newly added kunit test fails
+> > to build:
+> > 
+> > kernel/printk/printk_ringbuffer_kunit_test.c: In function 'test_readerwriter':
+> > kernel/printk/printk_ringbuffer_kunit_test.c:279:1: error: the frame size of 1432 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
+> > 
+> > Change this to use cpumask_var_t and allocate it dynamically when
+> > CONFIG_CPUMASK_OFFSTACK is set.
+> > 
+> > Fixes: 5ea2bcdfbf46 ("printk: ringbuffer: Add KUnit test")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > [pmladek@suse.com: Correctly handle allocation failures and freeing using KUnit test API.]
+> > Signed-off-by: Petr Mladek <pmladek@suse.com>
+> > ---
+> >  kernel/printk/printk_ringbuffer_kunit_test.c | 18 ++++++++++++------
+> >  1 file changed, 12 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
+> > index 217dcc14670c..0c3030fde8c2 100644
+> > --- a/kernel/printk/printk_ringbuffer_kunit_test.c
+> > +++ b/kernel/printk/printk_ringbuffer_kunit_test.c
+> > @@ -216,6 +216,7 @@ static int prbtest_reader(struct prbtest_data *test_data, unsigned long timeout_
+> >  	return 0;
+> >  }
+> >  
+> > +KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, free_cpumask_var, cpumask_var_t);
 > 
-> No functional changes intended.
+> This appears to break the build for me when CONFIG_CPUMASK_OFFSTACK is not
+> set, like when enabling this test on top of x86_64 defconfig:
 > 
-> Link: https://github.com/KSPP/linux/issues/78
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  crypto/zstd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   In file included from kernel/printk/printk_ringbuffer_kunit_test.c:14:
+>   kernel/printk/printk_ringbuffer_kunit_test.c: In function 'prbtest_cpumask_cleanup':
+>   include/kunit/resource.h:409:32: error: cast specifies array type
+>     409 |                 arg_type arg = (arg_type)in;                    \
+>         |                                ^
+>   kernel/printk/printk_ringbuffer_kunit_test.c:226:1: note: in expansion of macro 'KUNIT_DEFINE_ACTION_WRAPPER'
+>     226 | KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, free_cpumask_var, cpumask_var_t);
+>         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 > 
-> diff --git a/crypto/zstd.c b/crypto/zstd.c
-> index 657e0cf7b952..c489976c3e8b 100644
-> --- a/crypto/zstd.c
-> +++ b/crypto/zstd.c
-> @@ -25,7 +25,7 @@ struct zstd_ctx {
->  	zstd_dctx *dctx;
->  	size_t wksp_size;
->  	zstd_parameters params;
-> -	u8 wksp[0] __aligned(8);
-> +	u8 wksp[] __aligned(8);
+> Clang's error might be a little clearer with the "aka" note it provides.
+> 
+>   kernel/printk/printk_ringbuffer_kunit_test.c:226:1: error: used type 'cpumask_var_t' (aka 'struct cpumask[1]') where arithmetic or pointer type is required
+>     226 | KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, free_cpumask_var, cpumask_var_t);
+>         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   include/kunit/resource.h:409:18: note: expanded from macro 'KUNIT_DEFINE_ACTION_WRAPPER'
+>     409 |                 arg_type arg = (arg_type)in;                    \
+>         |                                ^         ~~
+> 
+> >  KUNIT_DEFINE_ACTION_WRAPPER(prbtest_kthread_cleanup, kthread_stop, struct task_struct *);
+> >  
+> >  static void prbtest_add_kthread_cleanup(struct kunit *test, struct task_struct *kthread)
 
-This is from patch "crypto: zstd - convert to acomp" currently as commit
-f5ad93ffb54119a8dc in linux-next. Should it rather be folded there? It's
-part of the crypto queue.
+Thanks a lot for the nice report.
+
+The problem is how cpumask_var_t is defined in include/linux/cpumask_types.h:
+
+#ifdef CONFIG_CPUMASK_OFFSTACK
+typedef struct cpumask *cpumask_var_t;
+#else
+typedef struct cpumask cpumask_var_t[1];
+#endif /* CONFIG_CPUMASK_OFFSTACK */
+
+And KUNIT_DEFINE_ACTION_WRAPPER() expect that the 3rd parameter
+is a pointer.
+
+I am going to solve this by adding a wrapper over free_cpumask_var()
+which would work with a pointer to cpumask_var_t.
+
+It has another catch, though. It seems that the automatic clean up is
+done after test_readerwriter() finishes. Therefore the variable
+@test_cpus can't be on stack.
+
+Anyway, the following seems to work with both CONFIG_CPUMASK_OFFSTACK
+enabled and disabled:
+
+--- a/kernel/printk/printk_ringbuffer_kunit_test.c
++++ b/kernel/printk/printk_ringbuffer_kunit_test.c
+@@ -223,7 +223,17 @@ static int prbtest_reader(struct prbtest_data *test_data, unsigned long timeout_
+ 	return 0;
+ }
+ 
+-KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, free_cpumask_var, cpumask_var_t);
++/*
++ * Add a custom wrapper around free_cpumask_var() to be used by
++ * KUNIT_DEFINE_ACTION_WRAPPER(). It allows to pass @mask using
++ * a pointer even when CONFIG_CPUMASK_OFFSTACK is disabled.
++ */
++static void prbtest_free_cpumask_var(cpumask_var_t *mask)
++{
++	free_cpumask_var(*mask);
++}
++
++KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, prbtest_free_cpumask_var, cpumask_var_t *);
+ KUNIT_DEFINE_ACTION_WRAPPER(prbtest_kthread_cleanup, kthread_stop, struct task_struct *);
+ 
+ static void prbtest_add_kthread_cleanup(struct kunit *test, struct task_struct *kthread)
+@@ -244,16 +254,19 @@ static void test_readerwriter(struct kunit *test)
+ {
+ 	/* Equivalent to CONFIG_LOG_BUF_SHIFT=13 */
+ 	DEFINE_PRINTKRB(test_rb, 8, 5);
+-
++	/*
++	 * @test_cpus can't be on stack. THe pointer to this variable is passed
++	 * to an automatic clean up action, see prbtest_free_cpumask_var().
++	 */
++	static cpumask_var_t test_cpus;
+ 	struct prbtest_thread_data *thread_data;
+ 	struct prbtest_data *test_data;
+ 	struct task_struct *thread;
+-	cpumask_var_t test_cpus;
+ 	int cpu, reader_cpu;
+ 	int err;
+ 
+ 	KUNIT_ASSERT_TRUE(test, alloc_cpumask_var(&test_cpus, GFP_KERNEL));
+-	err = kunit_add_action_or_reset(test, prbtest_cpumask_cleanup, test_cpus);
++	err = kunit_add_action_or_reset(test, prbtest_cpumask_cleanup, &test_cpus);
+ 	KUNIT_ASSERT_EQ(test, err, 0);
+ 
+ 	cpus_read_lock();
