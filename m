@@ -1,96 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB06A1F948;
-	Wed,  9 Jul 2025 00:19:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031FB1E50E;
+	Wed,  9 Jul 2025 07:32:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752020389; cv=none; b=SxzcKCBZfj/t/sV3jSy2RUIycY/IK51OyTreVGo9ROTJoyniX2yzP6ISTvj3Lu0qkZRHcN7TOH1DqSSlUn+7gd/nWCz4oiHuUIZO82TQDrax8kdTP18qGxR34MuZo/10Ig91Iw3A89+Kp35rHpkOG/tSAoa4lS0e9eXYsN8lPCY=
+	t=1752046330; cv=none; b=l14/Ng1mQW2+RCpsZsrg9SORKbllUesT4rZCGpvQ0jgUIF/DV5WwfIuxWU4HeMynVwgdSMk1LPDbbRi5LpZd3hwvuiBSP/d6slLhMRmsjoxB/xxYghvgsLgZepbQ8S3tPADRCdfe9eUUNfaxCy2lvV1ei3rvQZ9V77l08L0NKew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752020389; c=relaxed/simple;
-	bh=v/nB2GgBn6O41u7c1Ro7V1Hpmn8qRlodUdQFWYOnF0g=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=rXBmo3aSdm9SveWkwnyP1qN9hhVu7gFN6tPoojEEAJXoS9+ZbB2gmqsh7z9bk3o5RqrSkoZPM4es6yWBnNJu3u5RZ50/ODawAMHwreoZIxdBsC6KbPqfMIjNdLmlIERPy0h2Oa0WQ4pDefG57RLhNSn+9fmJnj600TmJ7LrBRwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZY0ieNNu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752046330; c=relaxed/simple;
+	bh=9O4wep8X80DnfmVYqTYuUTz8kwz/OoeOVVejGNflgW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gcc4+b4QLVsl6M3J5fQdzO+QQsHZKhqYSGqkqXQBsltizWbpe6Yc3IrZZK2OVP29RELhRo/4BQ0prcAI8UYEzmlRuChySA0mP6aQIrPEaynKiX3S6WAw75QdRWMH1b7dvcp08R/GOFUAmyOhECyXIKq3P7XMAyd6JKQnfnWJNPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9O01RLa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZY0ieNNu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ACC5C4CEED;
-	Wed,  9 Jul 2025 00:19:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9O01RLa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAA84C4CEF0;
+	Wed,  9 Jul 2025 07:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752020388;
-	bh=v/nB2GgBn6O41u7c1Ro7V1Hpmn8qRlodUdQFWYOnF0g=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ZY0ieNNur62rcbKM7jWXWvkoD+obcpPKsjvq08QMHd4Go+eoVqItTQ9c5HerJykkn
-	 NUerlhVbTvTy7XYPLthIobuiivp+FfSij3TYbM5RCgy5aS03XfLiTkQAsb7dqKKdJ8
-	 RKk0I4K3ZpLUhtE+zUVjdOyvbuOZOIvm7p8UdRyANSGI5eeSFzfYGi1rgpN3+cEnsu
-	 N1aSUjXLXcNA0PTc4bdSPR7qG76GBfP0oVTZBXIG3bmOJ61kD+kti1hiQPDj2beiVE
-	 6dJcHaNhMrBJKpiCH8yN/7+VkUMicbAShZChxPDJCFgxhFQvL3Lg7Vm46o2yhp+cG1
-	 e+oHSaeXB0lHw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7129D380DBEE;
-	Wed,  9 Jul 2025 00:20:12 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1752046329;
+	bh=9O4wep8X80DnfmVYqTYuUTz8kwz/OoeOVVejGNflgW4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R9O01RLaIusvUqR/F5/lKlhbtGKqEdItzKwGaL4hISRhsf5Mhy3vHF/+UjRds0xZl
+	 1GVNVlK5DEPm9psaU5Od/+qxB5DQWtYbxVInihuL8082el1hqwNRIMfuqCebnTU8pZ
+	 aQA3wzK15XNOK1tVpfE3d01Wd+5+o1YyWeRZ+AKYTBrvFK5JnpfeURHIPyzRmN7kG3
+	 CJJkwskmrqm2FW5P1fKNIbps2BKuIBU+aG4+aBkYWjrPVTOWWSGwSLi8mV1810tPJL
+	 c87u/Phg/PE28r5b+PmWxGbdpB7JqrKJaydOEqQxx/GuqXP/kMotgvr3H7zAjn7hDg
+	 DnzEBVDT/xRCA==
+Date: Wed, 9 Jul 2025 09:32:06 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje@dujemihanovic.xyz>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+	Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	David Wronek <david@mainlining.org>, Karel Balej <balejk@matfyz.cz>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org, 
+	~postmarketos/upstreaming@lists.sr.ht, soc@lists.linux.dev, linux-mmc@vger.kernel.org
+Subject: Re: [PATCH v16 1/5] dt-bindings: mmc: sdhci-pxa: restrict pinctrl to
+ pxav1
+Message-ID: <20250709-spectacular-goat-of-tenacity-ced55a@krzk-bin>
+References: <20250708-pxa1908-lkml-v16-0-b4392c484180@dujemihanovic.xyz>
+ <20250708-pxa1908-lkml-v16-1-b4392c484180@dujemihanovic.xyz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/6] eth: fbnic: Add firmware logging support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175202041127.172847.7768220901270765799.git-patchwork-notify@kernel.org>
-Date: Wed, 09 Jul 2025 00:20:11 +0000
-References: <20250702192207.697368-1-lee@trager.us>
-In-Reply-To: <20250702192207.697368-1-lee@trager.us>
-To: Lee Trager <lee@trager.us>
-Cc: alexanderduyck@fb.com, kuba@kernel.org, kernel-team@meta.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, kees@kernel.org, gustavoars@kernel.org,
- sanman.p211993@gmail.com, mohsin.bashr@gmail.com, suhui@nfschina.com,
- vadim.fedorenko@linux.dev, horms@kernel.org,
- kalesh-anakkur.purayil@broadcom.com, jacob.e.keller@intel.com,
- andrew@lunn.ch, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250708-pxa1908-lkml-v16-1-b4392c484180@dujemihanovic.xyz>
 
-Hello:
+On Tue, Jul 08, 2025 at 07:09:46PM +0200, Duje Mihanovi=C4=87 wrote:
+> The current pinctrl properties apply only to the pxav1 controller.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Why they are not applicable for pxav3?
 
-On Wed,  2 Jul 2025 12:12:06 -0700 you wrote:
-> Firmware running on fbnic generates device logs. These logs contain useful
-> information about the device which may or may not be related to the host.
-> Logs are stored in a ring buffer and accessible through DebugFS.
-> 
-> Lee Trager (6):
->   eth: fbnic: Fix incorrect minimum firmware version
->   eth: fbnic: Use FIELD_PREP to generate minimum firmware version
->   eth: fbnic: Create ring buffer for firmware logs
->   eth: fbnic: Add mailbox support for firmware logs
->   eth: fbnic: Enable firmware logging
->   eth: fbnic: Create fw_log file in DebugFS
-> 
-> [...]
+> Adding one default pinctrl node to a pxav3 controller therefore causes
+> a schema warning.
+>=20
+> Check the existing properties only on pxav1. pxav2 and pxav3 may add
+> their own set of pinctrl properties if and when needed.
 
-Here is the summary with links:
-  - [net-next,1/6] eth: fbnic: Fix incorrect minimum firmware version
-    https://git.kernel.org/netdev/net-next/c/dd62e960a755
-  - [net-next,2/6] eth: fbnic: Use FIELD_PREP to generate minimum firmware version
-    https://git.kernel.org/netdev/net-next/c/e48f6620ee81
-  - [net-next,3/6] eth: fbnic: Create ring buffer for firmware logs
-    https://git.kernel.org/netdev/net-next/c/c2b93d6beca8
-  - [net-next,4/6] eth: fbnic: Add mailbox support for firmware logs
-    https://git.kernel.org/netdev/net-next/c/2e972f32ae5f
-  - [net-next,5/6] eth: fbnic: Enable firmware logging
-    https://git.kernel.org/netdev/net-next/c/ecc53b1b46c8
-  - [net-next,6/6] eth: fbnic: Create fw_log file in DebugFS
-    https://git.kernel.org/netdev/net-next/c/432407c86993
+This should be rather made complete here, because properties should be
+defined in top-level, not in allOf: block. Strictly speaking pinctrl-xxx
+are defined in core schema, but still the binding should follow same
+rule - define them in top.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Best regards,
+Krzysztof
 
