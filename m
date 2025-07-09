@@ -1,77 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B7E28C5D8;
-	Wed,  9 Jul 2025 10:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2047A28DB7B
+	for <linux-hardening@vger.kernel.org>; Wed,  9 Jul 2025 11:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752056609; cv=none; b=Lcq59jBTUY9mKfh2FpD50FdkefA9AHf+1EtSjdwdiOfqQm8QJGWbeCtKQ4nWlpJkoJbmzT731E9f2RGB/sIMqdMHZWQx3CPkH3lYRD/cJw7bXmJrtGKRxd2RdzV2D4JH0LwAh09HWEG93NANEFvRLMwckE9c6NXWiYgJeoFHZWs=
+	t=1752060993; cv=none; b=W4UdkJZD7dsJwE4REoWP/ld8eL7E1xdabQqBE3ATqpfndzPMHulwx+DTl+Qeawn9Yl7yZyUTBndArNGYCNYII7gwSmJHHXYV9aFKHVz/3SOhOjmszoLdCcnMfFm4kO4vUIpISd3iGuBxY5FpjeGZXcwFOveAS6r1AcSfZI1AXd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752056609; c=relaxed/simple;
-	bh=2+N4smsYfrl5HTf8MH0tIEMC4qA9EcZ/1I6Yj3gLik4=;
+	s=arc-20240116; t=1752060993; c=relaxed/simple;
+	bh=Te1IPXBoue59uUt5g0EYKUJvvijgYFF+a+wi3QS/dwQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A6uU6D6/EfQPPnpQ9qCD/H1TbkPU/hjcLROVnHLERWVCzJYHB0YmS0HNHulq4QDl2Xba94Ca/vtcSBvPdeOG/09f9FIJt7FQtsCUPTsJbO5DBczCQLQm/Ywk0b6d7zRAi11ozpf0gROzxqSNnkpMNBfh97YOu/LEMgvBoocNut4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KPmYOEA3; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=n5NreEqoJs0Vaf6dYvObW0SF1X7+fM+AX0KxTdW8w24Ol15ZNBXO4bqSS55p6odLz7+VbCG+BaKxdQ1C7c9W4NInQND9IwO4hQJDPHDtWSc1Xo4p83KFSKu4x4ybssqCga05hp6ujfI+goxYMxWOKqSRWgGOxeC8fMe4GbDxtc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JgeTl/R0; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KPmYOEA3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752056608; x=1783592608;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2+N4smsYfrl5HTf8MH0tIEMC4qA9EcZ/1I6Yj3gLik4=;
-  b=KPmYOEA3C2EUNRcAE6pvyo4RqCfqyqcfF6FO424jTCg9jjUQZe+qmg1D
-   1O0QF/N24/IRPaJHe4z8RKVMUNOpll6x768dHe3F2CjQQIMUwoilhm/Vy
-   p7WQ8/qkzq2Bw4DchNlhtP7DgNsgiigRYXTONf3QPengqPx1wEFyYLW+D
-   k4VYE6prNIBAn28eCz54VGE6oriG3RIPUMn2JYdfDzExJpqv7brFCrGFU
-   F8gnjxA+bnc3uYxC4RAZNfWNFq52TxBn9ag17rMBPSoPlLxQlG7x30zoi
-   +AYWGcYpv5WZzDoEWhikG2Rl1qH49c+UpneRyIjUX2+8m3b4v9hxoS2oY
-   g==;
-X-CSE-ConnectionGUID: WPpMwy6rRuKVdkHsEjdq+Q==
-X-CSE-MsgGUID: 0dE/07ZyQlGenSHCR7B4Sw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11487"; a="79750707"
-X-IronPort-AV: E=Sophos;i="6.16,298,1744095600"; 
-   d="scan'208";a="79750707"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2025 03:23:19 -0700
-X-CSE-ConnectionGUID: nA7HpcjlRkSUBS07mOfahw==
-X-CSE-MsgGUID: 2ZH4Zb0hTQCxpOErnia7Jg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,298,1744095600"; 
-   d="scan'208";a="160057178"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 09 Jul 2025 03:23:13 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uZRxG-0003OT-0W;
-	Wed, 09 Jul 2025 10:23:10 +0000
-Date: Wed, 9 Jul 2025 18:22:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje@dujemihanovic.xyz>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, David Wronek <david@mainlining.org>,
-	Karel Balej <balejk@matfyz.cz>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht, soc@lists.linux.dev,
-	linux-mmc@vger.kernel.org
-Subject: Re: [PATCH v16 3/5] arm64: Kconfig.platforms: Add config for Marvell
- PXA1908 platform
-Message-ID: <202507091803.RBsXE3aX-lkp@intel.com>
-References: <20250708-pxa1908-lkml-v16-3-b4392c484180@dujemihanovic.xyz>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JgeTl/R0"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a575a988f9so3533242f8f.0
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Jul 2025 04:36:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1752060989; x=1752665789; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J5v0QxB8CIIx8d0eXl2mG60S2HOst+7j31JI2TOZXUA=;
+        b=JgeTl/R0AHseS5L0ilT5YC1mPJ7Z5nwXxLKeWM1d+CEdYLP53l8wN5eFa3OEYCR/b5
+         JvrYOb4m7vDpmiU45zoKw0mDAKwpvXnTwziKu0Sik/G3J2wTqjXXTHFQDH6jP++U78GK
+         9d8W0VdPBMlW2nKw0ihPEraOAKyZEf0e28z0SSMxsIwkifMTcI7xg4YcAA0dmup3nV6G
+         NzxzkjsPzf64fAp+hXJlkAVito56XHGJrnVdKDvzMbAWb5eXAe/+n5bh1vLX5+J6flRg
+         FkZTMm5mJa+71e3F3/UVf9n3V4jU9eaVHxlnjtTrQWhvBi6ZEbbkwpLkHeAa377ThKZG
+         g7Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752060989; x=1752665789;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J5v0QxB8CIIx8d0eXl2mG60S2HOst+7j31JI2TOZXUA=;
+        b=R25mM6MTZqy+6AstfYt1UWKciGQ9/TMkPsAiENw/cjzYkFx83CQ2Tygpgx7Y0PuKKv
+         nmcvLkoaqWT9OEqB3lfLT8g+Q5bmRVKil3/MeYi8gZsJuPYcodbRKcK3ec20cF8NE1DN
+         N8pE/XsZ7gRZc8lTL8hqD90EEziHKSflB/WSMeLDZlLeS2O8+nh/Fq6i9NCttDhYASb5
+         uTjbNWwtYsZwQEFfaRil3n+oSYTkQ0oROmBwgt/az0rLoHJT3p6OSE9anb9cs1qay5ur
+         kQFC+MRe/vyQWY8iyj+dkput44kNnVK7nd0CN1aiIZf/XNr4DCCLePMJiYV96ymnDJcD
+         UwCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTYNuo812mEGt31LFqJV6OtgzqTLDw/2RykEfKBmcqRYqxMFbZIe/3M0up5Q9MN7YgJ9CY52wsNjrkbYbOOOE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpUgFCWROydw3mTE/3qbr7LUq+BliIzf4ThBK77xlNsZ5/adWr
+	yEBgkRhaO3TruPni+JPX0IIvyVHCJ03qaowmLp0K++yLmuoJK8RCfl2vempZTnBG0hk=
+X-Gm-Gg: ASbGnctrbHi79+TOSM/azoa7YO/MTYTASBuEHwTko/+PkMSlW/kz1xy8/BaezFcoIT1
+	dl5H7pjjL42tRbLyUKAswIryJ19tpTV6/+uUQcTf4kascb/0Yf6gtJXDNogZPc8Z4g1JiDgzdaD
+	G4tROmOPtjfai93RtMZmtseOqE4MLTentwgWUZJrIGfTFRg72sLiLU6nFt8cg3E6aZFdrXM0JcQ
+	lfZDtKdI5Wh4C1DQHxKBFAaCowsJaF1R+Ff8bJW0JptGqGw6tRqUeqE2c2J9+Kd7LgD148fZoms
+	ueLpdffaG8zlINGoh0gDDxT+KIRFPXoEte0Cs4YzqeG24wAb+ybttBJTyF3tHhes
+X-Google-Smtp-Source: AGHT+IFYgPdJtytP0Bie/T18+BQCpRFEtATg+ARsvJbawMPOEJGXTooNKNm0SSEKnpF1xDSDGl86+A==
+X-Received: by 2002:a05:6000:2906:b0:3b5:def6:4e4 with SMTP id ffacd0b85a97d-3b5e450fb3bmr1632999f8f.46.1752060989285;
+        Wed, 09 Jul 2025 04:36:29 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31c3003d2e8sm1935952a91.8.2025.07.09.04.36.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Jul 2025 04:36:28 -0700 (PDT)
+Date: Wed, 9 Jul 2025 13:36:14 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	David Gow <davidgow@google.com>, Arnd Bergmann <arnd@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 2/3] printk: kunit: support offstack cpumask
+Message-ID: <aG5ULpdSoAR6nF5R@pathway.suse.cz>
+References: <20250702095157.110916-1-pmladek@suse.com>
+ <20250702095157.110916-3-pmladek@suse.com>
+ <20250702202835.GA593751@ax162>
+ <aG0qLaeAoTGaRs0n@pathway.suse.cz>
+ <1217f48f-a12a-4ba1-8de5-bda4b2ad6107@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -80,33 +84,89 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250708-pxa1908-lkml-v16-3-b4392c484180@dujemihanovic.xyz>
+In-Reply-To: <1217f48f-a12a-4ba1-8de5-bda4b2ad6107@app.fastmail.com>
 
-Hi Duje,
+On Tue 2025-07-08 16:48:47, Arnd Bergmann wrote:
+> On Tue, Jul 8, 2025, at 16:24, Petr Mladek wrote:
+> > On Wed 2025-07-02 13:28:35, Nathan Chancellor wrote:
+> >> On Wed, Jul 02, 2025 at 11:51:56AM +0200, Petr Mladek wrote:
+> >
+> > Thanks a lot for the nice report.
+> >
+> > The problem is how cpumask_var_t is defined in include/linux/cpumask_types.h:
+> >
+> > #ifdef CONFIG_CPUMASK_OFFSTACK
+> > typedef struct cpumask *cpumask_var_t;
+> > #else
+> > typedef struct cpumask cpumask_var_t[1];
+> > #endif /* CONFIG_CPUMASK_OFFSTACK */
+> >
+> > And KUNIT_DEFINE_ACTION_WRAPPER() expect that the 3rd parameter
+> > is a pointer.
+> >
+> > I am going to solve this by adding a wrapper over free_cpumask_var()
+> > which would work with a pointer to cpumask_var_t.
+> 
+> I'm not familiar enough with the cleanup mechanism of kunit,
+> but can't you just move the mask allocation outside of
+> test_readerwriter()?
 
-kernel test robot noticed the following build warnings:
+The only solution would be global variable.
 
-[auto build test WARNING on d7b8f8e20813f0179d8ef519541a3527e7661d3a]
+test_readerwriter() is the top-level function passed
+to KUnit framework via:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Duje-Mihanovi/dt-bindings-mmc-sdhci-pxa-restrict-pinctrl-to-pxav1/20250709-011510
-base:   d7b8f8e20813f0179d8ef519541a3527e7661d3a
-patch link:    https://lore.kernel.org/r/20250708-pxa1908-lkml-v16-3-b4392c484180%40dujemihanovic.xyz
-patch subject: [PATCH v16 3/5] arm64: Kconfig.platforms: Add config for Marvell PXA1908 platform
-config: arm64-kismet-CONFIG_I2C_GPIO-CONFIG_VIDEO_MMP_CAMERA-0-0 (https://download.01.org/0day-ci/archive/20250709/202507091803.RBsXE3aX-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250709/202507091803.RBsXE3aX-lkp@intel.com/reproduce)
+	KUNIT_CASE_SLOW(test_readerwriter),
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507091803.RBsXE3aX-lkp@intel.com/
+And it seems that the clean is even done in a separate process.
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for I2C_GPIO when selected by VIDEO_MMP_CAMERA
-   WARNING: unmet direct dependencies detected for I2C_GPIO
-     Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && (GPIOLIB [=n] || COMPILE_TEST [=n])
-     Selected by [y]:
-     - VIDEO_MMP_CAMERA [=y] && MEDIA_SUPPORT [=y] && MEDIA_PLATFORM_SUPPORT [=y] && MEDIA_PLATFORM_DRIVERS [=y] && V4L_PLATFORM_DRIVERS [=y] && I2C [=y] && VIDEO_DEV [=y] && (ARCH_MMP [=y] || COMPILE_TEST [=n]) && COMMON_CLK [=y]
+I see the following:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+   KUNIT_CASE_SLOW() sets .run_case()
+
+The callback is called via via:
+
+  + kunit_try_run_case()
+   +  kunit_run_case_internal()
+     + test_case->run_case()
+
+And kunit_try_run_case() is called via:
+
+    + kunit_run_case_catch_errors()
+      + kunit_try_catch_run()
+	+ kthread_create()
+	     -> kunit_try_run_case() in the new thread
+
+The clean up is called from the same kunit_run_case_catch_errors()
+in another thread
+
+      + kunit_try_catch_run()
+	+ kthread_create()
+	    -> kunit_try_run_case_cleanup() in another new thread
+
+> > + */
+> > +static void prbtest_free_cpumask_var(cpumask_var_t *mask)
+> > +{
+> > +	free_cpumask_var(*mask);
+> > +}
+> 
+> Or you could pass this as a cpumask_t pointer instead,
+> which should do the right thing without the indirection.
+
+Nice trick. I am going to try it.
+
+> >  	KUNIT_ASSERT_TRUE(test, alloc_cpumask_var(&test_cpus, GFP_KERNEL));
+> > -	err = kunit_add_action_or_reset(test, prbtest_cpumask_cleanup, test_cpus);
+> > +	err = kunit_add_action_or_reset(test, prbtest_cpumask_cleanup, &test_cpus);
+> 
+> In my original version, I did not have the
+> KUNIT_ASSERT_TRUE() here, which seems sufficient since this
+> is not what you are testing at all, and in normal systems
+> this would just be a stack variable.
+
+I think that KUNIT_ASSERT is standard handling of any problem in the
+test. At least, I see KUNIT_ASSERT*() after any *malloc*() in
+the code samples in Documentation/dev-tools/kunit/usage.rst
+
+Best Regards,
+Petr
