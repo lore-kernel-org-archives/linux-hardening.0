@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5489B2FE39D;
-	Thu, 10 Jul 2025 21:31:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BC51E520B;
+	Thu, 10 Jul 2025 21:31:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752183079; cv=none; b=cRNy22NWR3zMahcnZBEIw54mkS5SppDztX8rfuUOJCSk7W7IEX1jYP/6v58xy8hydAySgCYQgrSeFE6aqzWKwM/nYS7sX6pWZIV1fDCALZ70d4yqW14bZ/TZ4OIQcOjfuWLQo/KDibJp3GRH79a4/4XQsaDMwzAcXQI94a7jfco=
+	t=1752183084; cv=none; b=n0tdeo3WsxeEJkTP4B/ZIvKKk1N1Z8ljnbWdj9OoS7gYgA+Gl8KABNsK6NGHrulAb2JBuwy6PhAfx5f2qnQJiLjSlzrwlmB0Uy5glhtvR/pauNhiZHlMdDWZ7U4qkhSZKiIUaGGnDNB/kcCyzoQTuGMR7eTcI0XSgVjoarfyZuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752183079; c=relaxed/simple;
-	bh=wFPXfnEZslZWUhJFarJBIrU2i1EIAu502D8Y+SMDH6M=;
+	s=arc-20240116; t=1752183084; c=relaxed/simple;
+	bh=BviaG8x5UaMaZ2NZNq4PRkpH6oax0KpIs4xoQwuZthQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IWJqAHIUP9pv9D8PZbpIhWshNGL9AAHiv9twD4t3z/7Dl7FbeF/eCVa8kHNzfWL1AKqJI3YgvmjSW2mPAHKNd+mGc8MxDqt/5LkBWGvlqKAg2jidT4Q1oPo6475s/Ep8LOf3n0weyW+bWHz92iVZrG1Sr14dt1iZe4rT9iEFhjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWuo1Zql; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eA39cMw1Toyyge1/lVfyKAy2VF9Qc3u986b4ciZq59WldwlBzeaNQLOlamzCcmokplM845Auy+2xwHrTNCbo+Q5G1sI3a8ck6YPYbPfVJLrKDrGSDa+t/h9EW5FghLwYbkU+RYx2k3UJ/9voN9JalSfZXn8uwNzbkHDE+jIawu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Czr/vs+w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWuo1Zql"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D0DAC4CEF4;
-	Thu, 10 Jul 2025 21:31:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Czr/vs+w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC03CC4CEED;
+	Thu, 10 Jul 2025 21:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752183077;
-	bh=wFPXfnEZslZWUhJFarJBIrU2i1EIAu502D8Y+SMDH6M=;
+	s=k20201202; t=1752183084;
+	bh=BviaG8x5UaMaZ2NZNq4PRkpH6oax0KpIs4xoQwuZthQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lWuo1ZqlT8hDeYCOdQ83TdmvF3KTGpYjhd5zydhkKWryMLsY/yiK+N6Gb3hmh8X/T
-	 AT6fkItdv8vi0RopIXquZcY2WFs4NBlcXWveYLG3SKhskex1XkYyHoMRFE8Pq7nPB3
-	 crYWMOb94V+RVJyuUPctglxGyyzCbhKkWT2uzfxIefWUfg+Sz/9dQny5+GJ2fuz0Uv
-	 xdbLu4BrdKkWrkzDFkqjrV3HQCOdPfSoAoD6/Bp8p5Tsa71nXhuP2XPQvCggDV5+th
-	 VUF7d2SevWeaVFMTwzUITeFqMKVJWvf9fnbkuosGwlSy0jzVnGlzRaFkg6XYuwSTQv
-	 INmQKlW3JVmxw==
-Date: Thu, 10 Jul 2025 23:31:11 +0200
+	b=Czr/vs+wEbaVSdBx4yIctL/u3HxGAZE/y+vim/e+sn09CaMvg5y47zTkS/tEx/dWZ
+	 /5bMgPrsHpl/rJ4D040AqEYgVFJ/Bck6WuCkR+6rdeF+Ssazk9PLeLcR6qXSqPO9Zs
+	 nFQ5wcNxIVXgWmoNEcM0VWZ4IiA1ovl0PNxCk01jARFm8wHV+S3BrdNPxNDL9VW2bg
+	 WgQrf4d4jefyBADF/g5LDs2FSXi3xNaqHV/nfsV/F8zycPkRzF4JN3Y0P6flSPtLK3
+	 aP1sBhHGoZLdhoBGvtgHJqyWNScaCGvORxWyQPho5YFfIKMmChAZODlEoGSIM77k9w
+	 Sy0yUgGXZv1tw==
+Date: Thu, 10 Jul 2025 23:31:18 +0200
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-mm@kvack.org, linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
@@ -39,9 +39,9 @@ Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>,
 	Andrew Clayton <andrew@digital-domain.net>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Michal Hocko <mhocko@suse.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
 	Al Viro <viro@zeniv.linux.org.uk>, Martin Uecker <uecker@tugraz.at>, Sam James <sam@gentoo.org>, 
-	Andrew Pinski <pinskia@gmail.com>, Jann Horn <jannh@google.com>
-Subject: [RFC v5 5/7] mm: Fix benign off-by-one bugs
-Message-ID: <515445ae064d4b8599899bf0d8b480dadd2ff843.1752182685.git.alx@kernel.org>
+	Andrew Pinski <pinskia@gmail.com>
+Subject: [RFC v5 6/7] sprintf: Add [v]sprintf_array()
+Message-ID: <04c1e026a67f1609167e834471d0f2fe977d9cb0.1752182685.git.alx@kernel.org>
 X-Mailer: git-send-email 2.50.0
 References: <cover.1751823326.git.alx@kernel.org>
  <cover.1752182685.git.alx@kernel.org>
@@ -55,66 +55,42 @@ Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 In-Reply-To: <cover.1752182685.git.alx@kernel.org>
 
-We were wasting a byte due to an off-by-one bug.  s[c]nprintf()
-doesn't write more than $2 bytes including the null byte, so trying to
-pass 'size-1' there is wasting one byte.  Now that we use sprintf_end(),
-the situation isn't different: sprintf_end() will stop writing *before*
-'end' --that is, at most the terminating null byte will be written at
-'end-1'--.
+These macros take the end of the array argument implicitly to avoid
+programmer mistakes.  This guarantees that the input is an array, unlike
 
-Acked-by: Marco Elver <elver@google.com>
-Cc: Kees Cook <kees@kernel.org>
-Cc: Christopher Bazley <chris.bazley.wg14@gmail.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+	snprintf(buf, sizeof(buf), ...);
+
+which is dangerous if the programmer passes a pointer instead of an
+array.
+
+These macros are essentially the same as the 2-argument version of
+strscpy(), but with a formatted string, and returning a pointer to the
+terminating '\0' (or NULL, on error).
+
 Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc: Marco Elver <elver@google.com>
 Cc: Michal Hocko <mhocko@suse.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- mm/kfence/kfence_test.c | 4 ++--
- mm/kmsan/kmsan_test.c   | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ include/linux/sprintf.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/mm/kfence/kfence_test.c b/mm/kfence/kfence_test.c
-index bae382eca4ab..c635aa9d478b 100644
---- a/mm/kfence/kfence_test.c
-+++ b/mm/kfence/kfence_test.c
-@@ -110,7 +110,7 @@ static bool report_matches(const struct expect_report *r)
+diff --git a/include/linux/sprintf.h b/include/linux/sprintf.h
+index a0dc35574521..8576a543e62c 100644
+--- a/include/linux/sprintf.h
++++ b/include/linux/sprintf.h
+@@ -4,6 +4,10 @@
  
- 	/* Title */
- 	cur = expect[0];
--	end = &expect[0][sizeof(expect[0]) - 1];
-+	end = ENDOF(expect[0]);
- 	switch (r->type) {
- 	case KFENCE_ERROR_OOB:
- 		cur = sprintf_end(cur, end, "BUG: KFENCE: out-of-bounds %s",
-@@ -140,7 +140,7 @@ static bool report_matches(const struct expect_report *r)
+ #include <linux/compiler_attributes.h>
+ #include <linux/types.h>
++#include <linux/array_size.h>
++
++#define sprintf_array(a, fmt, ...)  sprintf_end(a, ENDOF(a), fmt, ##__VA_ARGS__)
++#define vsprintf_array(a, fmt, ap)  vsprintf_end(a, ENDOF(a), fmt, ap)
  
- 	/* Access information */
- 	cur = expect[1];
--	end = &expect[1][sizeof(expect[1]) - 1];
-+	end = ENDOF(expect[1]);
- 
- 	switch (r->type) {
- 	case KFENCE_ERROR_OOB:
-diff --git a/mm/kmsan/kmsan_test.c b/mm/kmsan/kmsan_test.c
-index e48ca1972ff3..9bda55992e3d 100644
---- a/mm/kmsan/kmsan_test.c
-+++ b/mm/kmsan/kmsan_test.c
-@@ -105,7 +105,7 @@ static bool report_matches(const struct expect_report *r)
- 
- 	/* Title */
- 	cur = expected_header;
--	end = &expected_header[sizeof(expected_header) - 1];
-+	end = ENDOF(expected_header);
- 
- 	cur = sprintf_end(cur, end, "BUG: KMSAN: %s", r->error_type);
+ int num_to_str(char *buf, int size, unsigned long long num, unsigned int width);
  
 -- 
 2.50.0
