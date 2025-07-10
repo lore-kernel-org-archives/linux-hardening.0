@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C3521CA0A;
-	Thu, 10 Jul 2025 18:30:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D81322338;
+	Thu, 10 Jul 2025 21:21:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752172259; cv=none; b=pDhaCvUfQsyHvvGjm7PYefX0WmnLJ44YsnBRaUpZIzxr5mJMt8nI7L+h5s8S/2oK5gnN3bnEmrmwwmAE+NgiNwesGkUZXTpS0/hJ+E7lIhWTcneXy6p2AXmcbonct0vdNC54fnGtzXR2X6t+BkG2GFZ9ujJ6jFbe6wKsZdKNKlU=
+	t=1752182495; cv=none; b=O/9DB5ewPNVYabaiBFrVfPGv0chpjfIOmlgvik6EvDasNVwD5dgP39n8OAW/ct4gQAFwKck2GocK6fSX5PwrbBQi5aaur/mn7pmLMYcR/ufV/1JkAlYl7t8rw7zvA6C0s4cV5zkw10BK2YeRsHa7F6UnJV6I0PN9yTzG3DvxcIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752172259; c=relaxed/simple;
-	bh=YzVPXkrWcC89iLuTuFsldR1NCSylHyBNV4ySFkjnvaE=;
+	s=arc-20240116; t=1752182495; c=relaxed/simple;
+	bh=f4dUVXALsAYXTk+NKQ03a6GOt4JCMgbf8SSf+frc2Pg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=clhm0qICW0Ej10n2Y0GupE66Xi8bX0l7IDvUSfyzTbq17V3Jd1wcZBqTpxk/22MhePs6FSMyZZ+tIAwLnoTQktkwmi+ZVwvahJEloIXYa/p5WIBan3yJCy5WmtYrIiqvKWU5dJ14yVXGVxh0sV7p+AcM7943KGA0kf7FUUvLMa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pMXbP2GH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bGjPeXbdhXGl6BN8h8iELxx8IkOPKaglomQdVi5bpqQWc8CkJ+XBOcYghgGcvVk11hdLUogQd3/NHzmwopItDT430DsYbVN0SaMVSKGWmbant7oV6BP9GTxqRblvFWqBhwm5oWfciMDoqbZ8pUwIjqB5MlEV2s4necCMuR3qmjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gj450Crq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pMXbP2GH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C7FEC4CEE3;
-	Thu, 10 Jul 2025 18:30:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gj450Crq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 213A6C4CEED;
+	Thu, 10 Jul 2025 21:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752172259;
-	bh=YzVPXkrWcC89iLuTuFsldR1NCSylHyBNV4ySFkjnvaE=;
+	s=k20201202; t=1752182495;
+	bh=f4dUVXALsAYXTk+NKQ03a6GOt4JCMgbf8SSf+frc2Pg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pMXbP2GHCcgHhusslX+Beh7WW1fk8dvET/CVI07Rw63ApetuO/mFNyW+TmKYZOBL6
-	 /a8S2Wkh4a50yoc26Lt1L7qpGGrlVIuj0ywErcqj2hTOQb7WMjP6gv2hg9FZ/FRVV+
-	 0Vt2MHj+IRfV61UhugK3i41bhmURgs9T7noW87KEIqL4mACKIsSMtXGvRyCiPQnmuT
-	 Z4mDEv7uFarwzKT5WIWQc71igRgrv1ubQXGNH2nMIXg1d3N5d9mmRlwNxC1zMffckP
-	 ehqVGE7Z+Y1e0p2kg3a7Q+Ae7pRBJVF6R9BnEb3IdJ8UOgd/xb5ZeO0PWRLQ2d9cUh
-	 tiiZlIv++ExDA==
-Date: Thu, 10 Jul 2025 20:30:52 +0200
+	b=gj450CrqRm1IIoaIZ6Ao9BQGP3GXe2Ay3WiAmPp7j3VkZxQ/GWD2Pe8ctq4sv4tKT
+	 vnD7/mJjWXKUag5QerCCfnVpFIkjODzwV023Y9rUj8WVad8afw6zOa5bCW/U4LOea5
+	 aRH2eIh3XSsqOY9TFgRxlaXUax4fRE3gAAlZJI4zVU6SqiQtqSyZTR0F/nL7jXS/LF
+	 KfK+iykaKTDSODNqzmHsO/pPbmLuwnYA5t4EIJmzBJdvxNpm0BspuJ1PqW3wA3LFS/
+	 3LqmuRvkzkRfmnOOEi8Ndjw+2e8kasECXxt2pqQTaIi2PNznXOds/WDYNsHapsq1mM
+	 VoQe+suzA6P2A==
+Date: Thu, 10 Jul 2025 23:21:28 +0200
 From: Alejandro Colomar <alx@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
@@ -39,11 +39,12 @@ Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org,
 	Andrew Clayton <andrew@digital-domain.net>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Michal Hocko <mhocko@suse.com>, Al Viro <viro@zeniv.linux.org.uk>
 Subject: Re: [RFC v4 6/7] sprintf: Add [V]SPRINTF_END()
-Message-ID: <svune35mcrnaiuoz4xtzegnghojmphxulpb2jdgczy3tcqaijb@dskdebhbhtrq>
+Message-ID: <yxa4mb4tq4uamjc5atvhfefvxyu6fl6e6peuozd5j5cemaqd2t@pfwybj4oyscs>
 References: <cover.1751823326.git.alx@kernel.org>
  <cover.1752113247.git.alx@kernel.org>
  <0314948eb22524d8938fab645052840eb0c20cfa.1752113247.git.alx@kernel.org>
  <CAHk-=wiYistgF+BBeHY_Q58-7-MZLHsvtKybrwtiF97w+aU-UQ@mail.gmail.com>
+ <svune35mcrnaiuoz4xtzegnghojmphxulpb2jdgczy3tcqaijb@dskdebhbhtrq>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,12 +52,12 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fodiyed7jhvlrxi3"
+	protocol="application/pgp-signature"; boundary="7rucxqy6jxtw6lim"
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiYistgF+BBeHY_Q58-7-MZLHsvtKybrwtiF97w+aU-UQ@mail.gmail.com>
+In-Reply-To: <svune35mcrnaiuoz4xtzegnghojmphxulpb2jdgczy3tcqaijb@dskdebhbhtrq>
 
 
---fodiyed7jhvlrxi3
+--7rucxqy6jxtw6lim
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -76,100 +77,65 @@ References: <cover.1751823326.git.alx@kernel.org>
  <cover.1752113247.git.alx@kernel.org>
  <0314948eb22524d8938fab645052840eb0c20cfa.1752113247.git.alx@kernel.org>
  <CAHk-=wiYistgF+BBeHY_Q58-7-MZLHsvtKybrwtiF97w+aU-UQ@mail.gmail.com>
+ <svune35mcrnaiuoz4xtzegnghojmphxulpb2jdgczy3tcqaijb@dskdebhbhtrq>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiYistgF+BBeHY_Q58-7-MZLHsvtKybrwtiF97w+aU-UQ@mail.gmail.com>
+In-Reply-To: <svune35mcrnaiuoz4xtzegnghojmphxulpb2jdgczy3tcqaijb@dskdebhbhtrq>
 
 Hi Linus,
 
-On Thu, Jul 10, 2025 at 08:52:13AM -0700, Linus Torvalds wrote:
-> On Wed, 9 Jul 2025 at 19:49, Alejandro Colomar <alx@kernel.org> wrote:
-> >
-> > +#define SPRINTF_END(a, fmt, ...)  sprintf_end(a, ENDOF(a), fmt, ##__VA=
-_ARGS__)
-> > +#define VSPRINTF_END(a, fmt, ap)  vsprintf_end(a, ENDOF(a), fmt, ap)
+On Thu, Jul 10, 2025 at 08:30:59PM +0200, Alejandro Colomar wrote:
+> > IOW, why isn't this just
+> >=20
+> >   #define sprintf_array(a,...) snprintf(a, ARRAY_SIZE(a), __VA_ARGS__)
 >=20
-> So I like vsprintf_end() more as a name ("like more" not being "I love
-> it", but at least it makes me think it's a bit more self-explanatory).
+> Agree.  This is a better name for the kernel.
 
-:-)
+Oops, I misread.  I thought you were implementing it as
 
-> But I don't love screaming macros. They historically scream because
-> they are unsafe, but they shouldn't be unsafe in the first place.
->=20
-> And I don't think those [V]SPRINTF_END() and ENDOF() macros are unsafe
-> - they use our ARRAY_SIZE() macro which does not evaluate the
-> argument, only the type, and is safe to use.
+	#define sprintf_array(a, ...)  sprintf_end(a, ENDOF(a), __VA_ARGS__)
 
-Yup, it's safe to use.
+So, I prefer my implementation because it returns NULL on truncation.
+Compare usage:
 
-> So honestly, this interface looks easy to use, but the screaming must sto=
-p.
->=20
-> And none of this has *anything* to do with "end" in this form anyway.
+	if (linus_sprintf_array(a, "foo") >=3D ARRAY_SIZE(a))
+		goto fail;
 
-That same thing happened through my head while doing it, but I didn't
-think of a better name.
+	if (alex_sprintf_array(a, "foo") =3D=3D NULL)
+		goto fail;
 
-In shadow, we have many interfaces for which we have an uppercase macro
-version of many functions that gets array sizes and other extra safety
-measures where we can.  (So there, the uppercase versions are indeed
-extra safety, instead of the historical "there be dragons".  I use the
-uppercase to mean "this does some magic to be safer".)
+Another approach would be to have
 
-> IOW, why isn't this just
->=20
->   #define sprintf_array(a,...) snprintf(a, ARRAY_SIZE(a), __VA_ARGS__)
+	if (third_sprintf_array(a, "foo") < 0)  // -E2BIG
+		goto fail;
 
-Agree.  This is a better name for the kernel.
-
-> which is simpler and more direct, doesn't use the "end" version that
-> is pointless (it's _literally_ about the size of the array, so
-> 'snprintf' is the right thing to use),
-
-I disagree with snprintf(3), but not because of the input, but rather
-because of the output.  I think an API similar to strscpy() would be
-better, so it can return an error code for truncation.  In fact, up to
-v2, I had a stprintf() (T for truncation) that did exactly that.
-However, I found out I could do the same with sprintf_end(), which would
-mean one less function to grok, which is why I dropped that part.
-
-I'll use your suggested name, as I like it.  Expect v5 in a few minutes.
-
-> doesn't scream, and has a
-> rather self-explanatory name.
->=20
-> Naming matters.
-
-+1
+Which was my first approach, but since we have sprintf_end(), let's just
+reuse it.
 
 
-Have a lovely day!
+Cheers,
 Alex
-
->=20
->                 Linus
 
 --=20
 <https://www.alejandro-colomar.es/>
 
---fodiyed7jhvlrxi3
+--7rucxqy6jxtw6lim
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhwBtYACgkQ64mZXMKQ
-wqmOQA//bIEhEXLVgwS7mz/jBLQAGT4v53a5yhA1vSbBvckl7+P/z4tYOhS7drGu
-KipZBsVxwdBQhN097m1zOT1T1T9q4vbqFOVX1uNVL7Q2R/0WyYC5APIKDHO1ijNF
-uXc0HmMSM7Lm0CrY0nvPsI6ZGVagYdXm7QuQ9+GfBc2NAoiJU9fGRPBOjzllradR
-3ALXe1Y5c2lgE4sEPPHmAAQNK7LGIX17yx/+YlMDtbZ9/F8fYQrIyW6nkWLgoid9
-BmaQ1be4FK7NNbemif5QzHXxaLiwe3OgJrEsgEEAB7cmAvSc+bTloPpFv7UErAsq
-BRAv7ivc/Saq5S7779xS5e4GDq8MjdCG2qSMvMnUtfAuhNB90zarK5cXAdCPKvAB
-oD+7JptOjM1LHBvjK+Y7ZUIZ1JzP2/4NFtam9ioZUE+Drb5iLSGdwTYjOHzfF+Pi
-FLmGbNNQzBMl1b8kjXnOxvmMfYeYM39/eNWUxYXxrhfZGIiRnIdh3ezJreD8t5Rp
-AvqHuTbMKRbZmExHJ5sQFJ+MYH1/dOwkgpXvmhFnO78EgLJQSbW05CdDnGvlCNpj
-NvcOhy5N+fVmC64ytcS/ALIWJk6XG/Tadns1r2Dn44oDlm1po+tt5k5nT81+cL9t
-8gyc+6tp4He6Q4/zznnOCaQytRCja4eJcji3hvW3q2loFPWpzTw=
-=kDfd
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhwLtMACgkQ64mZXMKQ
+wqlldw/9G3vuwHK1ltksLTZk/bAMY1df2lNT+Tnvbn1O60dXRLNSLE1uslMMtt5m
+Ch9ME1lm4Z3rjU+EvgVg+CTTUXjmwPBMwC54IX4d55SJPLERcYcjrftC7AkDiaqA
++lHnVLrZzGgcdypVU7sADXi4efbbA2ju7Z9vpmvAivQr8bpP49dsahV/DjjVGOqT
+t9ZPfx6FbbGkGbceyVrYVVGdPt+2xRQ1lWAmmNxHvw2s4FPsbX3qTjFzCi3py3jr
+YfMncGwTyfeaivqCtayzi4w32hYDAsP6zigcf3ZPv2coww51DP1dnvY8c6CqabF4
+SBTYZPtTfbByr/COPxdNvJKqszwUKnuMpbLK0nSXe+zKUJsNGeQfFbg8SWG/AK+P
+miRh99ztSOhn13wqYqkJZEpVhPfjDgurEYVN1DeOMMLkvjEThtTF5A5gQebKAe0a
+nVxc+0UBwZyJflXngUvrwazrM+20tt+YK992Mgus+1tOcdF3RpphzR6umUkiv6de
+pesBSrzjVFdb81e1slMHaPpuouaIcTGHh+wuDSamjx/7Tfi/dUpz1ifa19UdUeWR
+4LJMN2FPIW+41OM8WwAppQXwehXlE2gKssUEa6tln4k8Pi/dn6ZZTxh25TPYI0Lc
+1O7lU+hNeS52MnpJRCpZpRhhZB0CAfGIFVBGT2EKIFdHWTbT1ho=
+=0kpp
 -----END PGP SIGNATURE-----
 
---fodiyed7jhvlrxi3--
+--7rucxqy6jxtw6lim--
