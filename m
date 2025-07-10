@@ -1,133 +1,264 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E7D23B617
-	for <linux-hardening@vger.kernel.org>; Thu, 10 Jul 2025 22:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC872F5C52;
+	Thu, 10 Jul 2025 23:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752185331; cv=none; b=Gk6rlvpjBadaXeDvkiEThcUGP9zQJa2ms2vq9QKAmlF8+4zV7182SFqt0DMIdh4nNs63TO5j0JB7Yjlid0057BLYguKS5LasDTizzHh0QLHvWeCQUxXqPsiqf8ppuvmPDMOw3WhOA/n6/jlj1EXKojqDYJ4s+rwLdYMQbGwZaoo=
+	t=1752189836; cv=none; b=hGDNgTPMKVH6oMQpe+goQ0Iqs0jUR54rxoZmEfv7e8xAdjVUYwAGEwtvv5IizvnmhfknImsMkA++Sp/iqtXP+xOPhLE778uezNhg6iJNnSkomw6ulTr6rUHQTVc9GcMV9erddb5AT367FSlpfWSibqlNznE4utrPnRUdSdOQgZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752185331; c=relaxed/simple;
-	bh=2U6l5kbEP9IBFxT9l3j6WvMdQZkeDWhWgT4LU0TCP98=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nG5aHQpNzB9WO1LjxysqOlUdxMS3Gv+eWuzqZVdckNN2x40uDiBTPPwO0Ger/TC0bry+NzAFuej1a4a7GahTZ5bp70YNRNrJrCbdNpTdhK4QkIJdKlPCoG/6+lWJGskc1uI+X0I4ngkQqC24HjWlQ+3Nqdy3QY7QBP6V8F7sPTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gJhmgwgL; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1752189836; c=relaxed/simple;
+	bh=KOQiERexs/yoLixl7P/bNkDLLxMUFU5pJHpr73kZB+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bsQR2rf83SFtLVGwuu1SZoB3OHTwqIvEquvIBqg84TBql/fajA493BbLDQlrkhJMSzl40hNM3lXw4epUCV9t1az77xh4wz3NoEBCBq1e/iLryHM48tSoD1lxxrHPAM/WcyDbJjXzHhj5JtiZbIYa8NPWkSaBDiDePQxpDD7uKcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFnRv05a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gJhmgwgL"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ae0de0c03e9so242482666b.2
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Jul 2025 15:08:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1752185327; x=1752790127; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ykdGKGKuBHYeQ543548mngZ+AURoPxGnuzWJOvHPANU=;
-        b=gJhmgwgL/C7gthMleszZjDplyr4OXjtyBgSDzsQVHQc/LxxwUQJE6tWzeZLRRvVHqX
-         XM38pflRzf02X7aoXKP7zc6gqLDvmfnGTClLJs7HXBJgSXYIaBa9ok54FUFaiWyGWw8N
-         JGS4i+2I6lYQHA324wj09apsikModhGaCR0Xw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752185327; x=1752790127;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ykdGKGKuBHYeQ543548mngZ+AURoPxGnuzWJOvHPANU=;
-        b=eVeoMUfRKT1Y04CQD568ozeIk+QiM8+u0sO6Wj2h99FXKtKnHA90lQIhgMN0RLyiKx
-         /2mQPyQm2qC5dMSLKFP10r3xsYfOkSF/FAR1dmFhZ9wE+ZE9k9fW+jrjV0mB+vjwupPQ
-         oc0SFRpX6D0zrd6eCtaY6ZEh16b3eQGig5iNVXKsTvCkMJVS5t3YippGg/nqwB31TFlW
-         EtYIZQZdEA1msOopBQ9Tj0zvELfl7q9lpznG9mBqcLdpAMrDZ0u2IxHUGCkv6avPd3AV
-         O68YhX5tmilh6JxxebW2OfAXXcbCOhMitH5XvpkgNbN2lKm0w0YCgmyMV744byJzDPem
-         bx6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUyeCRUTXjZUIFs2GH4ZLEprz8uLK2qgMaNKcJ6oJ9yutWfAn91935J8xI5TCyC8i/3jLHLzig8l18FkzWeryA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5p4H/8QvbQ7z7aJ9mpB+TIFCvEKQwfLpcL2+NGmB9FGK3JNNW
-	g4QewSCyi/YqY/XiefKA5p4lMOZJ6tikXBByCZMGIl5WAyzOCJMkiYeOWorxtHNoeG/P1WVZ2oS
-	RsetT3pcHvw==
-X-Gm-Gg: ASbGncuCgGkNcV4iCZ6NcZfdDOnodH0bdOcQXtOfdgUC2YopgZCqDukDaa3vRy1SunP
-	EHbS5XFdd0eZdDf/ZQcd7C3NzEEP91H6NHywA1zdpl9hJZAmTr1kNDsFUe1QhhxXBVT8krAaPZa
-	MhMhWYZ69Ye3rQA0b6E9HDbtnGVWgYgoGoxbrYXZ+rfPpUg7/xZan0TYOIqVqywi4BVC9ulNsUv
-	QklfinvNZFjm8Oh3uKbSWD93eS+c0aKz1v00AvrojTrJgSL1sy7kXaX3jeff0LUqCG+dKUCAzW1
-	oWGl6e8cvbGJbPzhCIK/YCL/mu9Sw8NLzaW2FHIuRmsFXi841mdZaKevu0bYhSTOg4H3vBWpr4F
-	n4EBZphXPjXxftMWnMQfQ8N8LedaTp4OCeYMT
-X-Google-Smtp-Source: AGHT+IGGOzNGIC5X1zRxeUgg2CxovWiHMk3XyzSOLOttLDC635yL4gdW3OjgrXZB3fO8tAUEHNhgGA==
-X-Received: by 2002:a17:907:da7:b0:ae3:6657:9e73 with SMTP id a640c23a62f3a-ae6fbd9bca7mr81755666b.20.1752185327346;
-        Thu, 10 Jul 2025 15:08:47 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae6e826466esm191297366b.74.2025.07.10.15.08.46
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Jul 2025 15:08:46 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60867565fb5so2382772a12.3
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Jul 2025 15:08:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWQFuCMp1e+keACbBZu6O4ipYP2VEIyu4xDu0awTrNso+vF5OTavJ81YfMqvvu8iv7S4zH/Lztmt0WVQlB2oOw=@vger.kernel.org
-X-Received: by 2002:a50:cd57:0:b0:607:77ed:19da with SMTP id
- 4fb4d7f45d1cf-611e7611808mr397182a12.1.1752185326316; Thu, 10 Jul 2025
- 15:08:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFnRv05a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C565FC4CEE3;
+	Thu, 10 Jul 2025 23:23:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752189836;
+	bh=KOQiERexs/yoLixl7P/bNkDLLxMUFU5pJHpr73kZB+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IFnRv05aBMMuD/UovBMBpX3B8jxMY9f6DsVdtK63J1obMVr4sUhL5pIrBCDQ3Ezzz
+	 Yh2ec9j5axRzT0BTskYRmQdXnTJeaHXa7JDcJZC6R6U5wgNrlaGeodlPjidmoy2CAX
+	 5sx3MLsPRN3HdfV2uPg0Z86KZpbfb3HyMqTlI5J9kr+Ow2sr+tvS9Qj8tQAxw30GA+
+	 b4+biY5FUVNppRK5T0auXi4LzwTCsVqMxP8AMomdKW1iKEeQ1i0knwvO8GFl1oLAFv
+	 rkCVB/RHjRXdnIZk+gPMQC3VQ05OW36oBAh4uzaGectYOW+6gb/442tjmaT91vNVZ+
+	 xXY4jFLQRDFKw==
+Date: Fri, 11 Jul 2025 01:23:49 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
+	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
+	Andrew Clayton <andrew@digital-domain.net>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Michal Hocko <mhocko@suse.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Martin Uecker <uecker@tugraz.at>, Sam James <sam@gentoo.org>, Andrew Pinski <pinskia@gmail.com>
+Subject: Re: [RFC v5 6/7] sprintf: Add [v]sprintf_array()
+Message-ID: <krmt6a25gio6ing5mgahl72nvw36jc7u3zyyb5dzbk4nfjnuy4@fex2h7lqmfwt>
+References: <cover.1751823326.git.alx@kernel.org>
+ <cover.1752182685.git.alx@kernel.org>
+ <04c1e026a67f1609167e834471d0f2fe977d9cb0.1752182685.git.alx@kernel.org>
+ <CAHk-=wiNJQ6dVU8t7oM0sFpSqxyK8JZQXV5NGx7h+AE0PY4kag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1751823326.git.alx@kernel.org> <cover.1752113247.git.alx@kernel.org>
- <0314948eb22524d8938fab645052840eb0c20cfa.1752113247.git.alx@kernel.org>
- <CAHk-=wiYistgF+BBeHY_Q58-7-MZLHsvtKybrwtiF97w+aU-UQ@mail.gmail.com>
- <svune35mcrnaiuoz4xtzegnghojmphxulpb2jdgczy3tcqaijb@dskdebhbhtrq> <yxa4mb4tq4uamjc5atvhfefvxyu6fl6e6peuozd5j5cemaqd2t@pfwybj4oyscs>
-In-Reply-To: <yxa4mb4tq4uamjc5atvhfefvxyu6fl6e6peuozd5j5cemaqd2t@pfwybj4oyscs>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 10 Jul 2025 15:08:29 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiOSRbTqEO8H=5bBem4Su3E=bZRLM3nE5rwLHSofhD0Lw@mail.gmail.com>
-X-Gm-Features: Ac12FXzpHETNg-HuLSmnK9b1Tp10RJ2FzmkvjWu0i-rRbR44n9d-UbbJBC2bj-w
-Message-ID: <CAHk-=wiOSRbTqEO8H=5bBem4Su3E=bZRLM3nE5rwLHSofhD0Lw@mail.gmail.com>
-Subject: Re: [RFC v4 6/7] sprintf: Add [V]SPRINTF_END()
-To: Alejandro Colomar <alx@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lpnpaylljl22ydn2"
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiNJQ6dVU8t7oM0sFpSqxyK8JZQXV5NGx7h+AE0PY4kag@mail.gmail.com>
+
+
+--lpnpaylljl22ydn2
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
 	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
 	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, 
-	Dmitry Vyukov <dvyukov@google.com>, Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, 
-	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
 	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
 	Andrew Clayton <andrew@digital-domain.net>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Michal Hocko <mhocko@suse.com>, Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+	Michal Hocko <mhocko@suse.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Martin Uecker <uecker@tugraz.at>, Sam James <sam@gentoo.org>, Andrew Pinski <pinskia@gmail.com>
+Subject: Re: [RFC v5 6/7] sprintf: Add [v]sprintf_array()
+References: <cover.1751823326.git.alx@kernel.org>
+ <cover.1752182685.git.alx@kernel.org>
+ <04c1e026a67f1609167e834471d0f2fe977d9cb0.1752182685.git.alx@kernel.org>
+ <CAHk-=wiNJQ6dVU8t7oM0sFpSqxyK8JZQXV5NGx7h+AE0PY4kag@mail.gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CAHk-=wiNJQ6dVU8t7oM0sFpSqxyK8JZQXV5NGx7h+AE0PY4kag@mail.gmail.com>
 
-On Thu, 10 Jul 2025 at 14:21, Alejandro Colomar <alx@kernel.org> wrote:
->
-> So, I prefer my implementation because it returns NULL on truncation.
+Hi Linus,
 
-As I pointed out, your implementation is WRONG.
+[I'll reply to both of your emails at once]
 
-If you want to return an error on truncation, do it right.  Not by
-returning NULL, but by actually returning an error.
+On Thu, Jul 10, 2025 at 02:58:24PM -0700, Linus Torvalds wrote:
+> You took my suggestion, and then you messed it up.
+>=20
+> Your version of sprintf_array() is broken. It evaluates 'a' twice.
+> Because unlike ARRAY_SIZE(), your broken ENDOF() macro evaluates the
+> argument.
 
-For example, in the kernel, we finally fixed 'strcpy()'. After about a
-million different versions of 'copy a string' where every single
-version was complete garbage, we ended up with 'strscpy()'. Yeah, the
-name isn't lovely, but the *use* of it is:
+An array has no issue being evaluated twice (unless it's a VLA).  On the
+other hand, I agree it's better to not do that in the first place.
+My bad for forgetting about it.  Sorry.
 
- - it returns the length of the result for people who want it - which
-is by far the most common thing people want
+On Thu, Jul 10, 2025 at 03:08:29PM -0700, Linus Torvalds wrote:
+> If you want to return an error on truncation, do it right.  Not by
+> returning NULL, but by actually returning an error.
 
- - it returns an actual honest-to-goodness error code if something
-overflowed, instead of the absoilutely horrible "source length" of the
-string that strlcpy() does and which is fundamentally broken (because
-it requires that you walk *past* the end of the source,
-Christ-on-a-stick what a broken interface)
+Okay.
 
- - it can take an array as an argument (without the need for another
-name - see my earlier argument about not making up new names by just
-having generics)
+> For example, in the kernel, we finally fixed 'strcpy()'. After about a
+> million different versions of 'copy a string' where every single
+> version was complete garbage, we ended up with 'strscpy()'. Yeah, the
+> name isn't lovely, but the *use* of it is:
 
-Now, it has nasty naming (exactly the kind of 'add random character'
-naming that I was arguing against), and that comes from so many
-different broken versions until we hit on something that works.
+I have implemented the same thing in shadow, called strtcpy() (T for
+truncation).  (With the difference that we read the string twice, since
+we don't care about threads.)
 
-strncpy is horrible garbage. strlcpy is even worse. strscpy actually
-works and so far hasn't caused issues (there's a 'pad' version for the
-very rare situation where you want 'strncpy-like' padding, but it
-still guarantees NUL-termination, and still has a good return value).
+I also plan to propose standardization of that one in ISO C.
 
-Let's agree to *not* make horrible garbage when making up new versions
-of sprintf.
+>  - it returns the length of the result for people who want it - which
+> is by far the most common thing people want
 
-             Linus
+Agree.
+
+>  - it returns an actual honest-to-goodness error code if something
+> overflowed, instead of the absoilutely horrible "source length" of the
+> string that strlcpy() does and which is fundamentally broken (because
+> it requires that you walk *past* the end of the source,
+> Christ-on-a-stick what a broken interface)
+
+Agree.
+
+>  - it can take an array as an argument (without the need for another
+> name - see my earlier argument about not making up new names by just
+> having generics)
+
+We can't make the same thing with sprintf() variants because they're
+variadic, so you can't count the number of arguments.  And since the
+'end' argument is of the same type as the formatted string, we can't
+do it with _Generic reliably either.
+
+> Now, it has nasty naming (exactly the kind of 'add random character'
+> naming that I was arguing against), and that comes from so many
+> different broken versions until we hit on something that works.
+>=20
+> strncpy is horrible garbage. strlcpy is even worse. strscpy actually
+> works and so far hasn't caused issues (there's a 'pad' version for the
+> very rare situation where you want 'strncpy-like' padding, but it
+> still guarantees NUL-termination, and still has a good return value).
+
+Agree.
+
+> Let's agree to *not* make horrible garbage when making up new versions
+> of sprintf.
+
+Agree.  I indeed introduced the mistake accidentally in v4, after you
+complained of having too many functions, as I was introducing not one
+but two APIs: seprintf() and stprintf(), where seprintf() is what now
+we're calling sprintf_end(), and stprintf() we could call it
+sprintf_trunc().  So I did the mistake by trying to reduce the number of
+functions to just one, which is wrong.
+
+So, maybe I should go back to those functions, and just give them good
+names.
+
+What do you think of the following?
+
+	#define sprintf_array(a, ...)  sprintf_trunc(a, ARRAY_SIZE(a), __VA_ARGS__)
+	#define vsprintf_array(a, ap)  vsprintf_trunc(a, ARRAY_SIZE(a), ap)
+
+	char *sprintf_end(char *p, const char end[0], const char *fmt, ...);
+	char *vsprintf_end(char *p, const char end[0], const char *fmt, va_list ar=
+gs);
+	int sprintf_trunc(char *buf, size_t size, const char *fmt, ...);
+	int vsprintf_trunc(char *buf, size_t size, const char *fmt, va_list args);
+
+	char *sprintf_end(char *p, const char end[0], const char *fmt, ...)
+	{
+		va_list args;
+
+		va_start(args, fmt);
+		p =3D vseprintf(p, end, fmt, args);
+		va_end(args);
+
+		return p;
+	}
+
+	char *vsprintf_end(char *p, const char end[0], const char *fmt, va_list ar=
+gs)
+	{
+		int len;
+
+		if (unlikely(p =3D=3D NULL))
+			return NULL;
+
+		len =3D vsprintf_trunc(p, end - p, fmt, args);
+		if (unlikely(len < 0))
+			return NULL;
+
+		return p + len;
+	}
+
+	int sprintf_trunc(char *buf, size_t size, const char *fmt, ...)
+	{
+		va_list args;
+		int len;
+
+		va_start(args, fmt);
+		len =3D vstprintf(buf, size, fmt, args);
+		va_end(args);
+
+		return len;
+	}
+
+	int vsprintf_trunc(char *buf, size_t size, const char *fmt, va_list args)
+	{
+		int len;
+
+		if (WARN_ON_ONCE(size =3D=3D 0 || size > INT_MAX))
+			return -EOVERFLOW;
+
+		len =3D vsnprintf(buf, size, fmt, args);
+		if (unlikely(len >=3D size))
+			return -E2BIG;
+
+		return len;
+	}
+
+sprintf_trunc() is like strscpy(), but with a formatted string.  It
+could replace uses of s[c]nprintf() where there's a single call (no
+chained calls).
+
+sprintf_array() is like the 2-argument version of strscpy().  It could
+replace s[c]nprintf() calls where there's no chained calls, where the
+input is an array.
+
+sprintf_end() would replace the chained calls.
+
+Does this sound good to you?
+
+
+Cheers,
+Alex
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--lpnpaylljl22ydn2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhwS38ACgkQ64mZXMKQ
+wqmhJhAAhZBNcIE/LkNJtDs9GNCCyYFQN+O55h5xwKBvOeNPeOX9QO202kKaYgsO
++BNzl6ccOtttWGx1ReDyi4BrB78LZGtm17mfXSb+kDpeThSMOc4uBdVepQ3CpXwg
+p4fdLPwNMWp3kRyN0Y4t8+w4mejmpSKQtwoY/Es/IKp6h8ol+ivkM0V46NviK//I
+fqvkaLIeMoiM2fks1mvdELYGBdTtSTjI3iFd5gP8Gk+oxIS6csyjE1MCQbUBcAp1
+VNaVVTRNstB34zYgQ6LhL2TzZySl7h1QK4Vd1yN8h8gRSg0TM3U3dWQ0ThcvjnDo
+cmoo8L3vj+Ya/hirwJ4h3MR0mSRKgDqvFSXC+p1/tI3xZCZZIFuuALQ2OLIl9gD2
+yibSSV6NCBLueGs/UrUIT0Z7d/adiroKW9CRmsMdmLQSsIUDRNlARo2vndL9wU7S
+wjBHqh/feWZ9R/1DNQfPgOuqMaqGBqm8wh2eyp828bIgAu+YV75apRZ1Q5kWJTwx
+IydZHSnOViZbfo7sDxBG6s6APp2eJJN7+RZpL1doZctkneboKN2L7EYg2ZJErmgO
+oYOCbbyGkRqWkedbQ0zOJL7tanUA0zT9OPLABVV/hY6QngajyUeix4pP+ve76aJH
+fggtgH9SFW1uhmA7dCnBF1SABfPMrgFB+71kzC6wI+BBgGleLKs=
+=hhWT
+-----END PGP SIGNATURE-----
+
+--lpnpaylljl22ydn2--
