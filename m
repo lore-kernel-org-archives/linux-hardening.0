@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6223141987;
-	Fri, 11 Jul 2025 01:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB05F1482E7;
+	Fri, 11 Jul 2025 01:57:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752199017; cv=none; b=hu5qAe5PIPMq76KHTdfLigKrmw4JvyHUMHdYZCoQ/YYHOnGmAcO9wWdaQZFmFMK9QPMYg2//oaBeQ+5/qP+XwJzYhYvCuXU6WqOnZnVToX5T5Q4+oARLeLYAWz6iJhnSKasJS5Bs6fc5+IxnUktGp7Sluzk3OFK9h1nN8m64j7s=
+	t=1752199024; cv=none; b=ZNmVMEOFP1NT19LVJj00dIF4StfcFekkgwo+nq+XsMeP9D2Kdc3ita2ynMP5CuVPxhbotsaPXhvl+yPixrO0ajW5EeBZCaSowQX3oHAwvx1Aed0/Msy1iZzcDA2IJvIa5FnLV0L/SBIJqEwC8BlNu5hOrTazgC9S1hfTNfdxlJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752199017; c=relaxed/simple;
-	bh=ZJDxyoHVxpXrXiiFeB/cS1+32e1KaIZe9xa0hULilH0=;
+	s=arc-20240116; t=1752199024; c=relaxed/simple;
+	bh=KFeH759S2pXUEgcinWQTZzWHu8P8w4ivkJjMDXMeyRQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q52P7NhHzy+b13ULzea8g6CO4CCh4asTFwIYTmaC9QNjWUfTvlWACdH0RWvmYGTBNs6R3N/Y8+OO9BAOLxMiinzw8SvyDcgKMig22YtA8bJRlzLT10UyM0K3NQvT52alHIC9ueozxtpoi76P2cLkgA5Fv6qay2GTJpiw9il4/Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ts7eRZFX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aIIjgmU7vWEuj4HoTI8eqAyP3m06Q3KzZehcHMwdevWGhDJZyDzT4KuFffRIOx0ZyewliWiauRYvnrBFJWlmbo6DtIoWFXs1Egh6rVhYEGE3gxJ8unBxPuMyW2MkOykJnHR6UKeL/vgjb6bGfpziEYZ2XyE++yJpBT12mrn+uiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b+yrik1Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ts7eRZFX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC406C4CEE3;
-	Fri, 11 Jul 2025 01:56:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b+yrik1Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BD82C4CEF6;
+	Fri, 11 Jul 2025 01:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752199017;
-	bh=ZJDxyoHVxpXrXiiFeB/cS1+32e1KaIZe9xa0hULilH0=;
+	s=k20201202; t=1752199024;
+	bh=KFeH759S2pXUEgcinWQTZzWHu8P8w4ivkJjMDXMeyRQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ts7eRZFXC+hTZVEFRgDt2D9q5siZFqf1bAIA+BV4yYoGKyCqhum9H5nH/wnnDWLuD
-	 AxlWW10ozY+fZ27zw6+BLSbjLzvoaCnD2qpZ2PS2TVPhJe84p6N4ZbzQcf9q69v0pH
-	 MHcofgmtzyrHi+wlXAYO0i/jjiGwAQWS4hTjnH9Q+qz6qMyv80CUFhD/YMW/naL4xm
-	 Lzl6Ob4LiiYFr7qFiuDb8A7U1f4s+9k+ph3bBe4ulLHpnd3rEDF8tDu0h0sRbjbyrH
-	 IY11kxEVhLQLSk1SSGfq01IKieR4Co0wn1vDOig6r4P2VEFzFpJQaHRak/PBPOHy3a
-	 WglLx3iQ0L3Dw==
-Date: Fri, 11 Jul 2025 03:56:51 +0200
+	b=b+yrik1Y7oQkJfNLgirKR+t+05Nr58BhPynA5GRvDE3dWL8dPFJxRPU/bK1SphqTI
+	 jvrRfyb2yeA1HvF5IQL1+rcY6ivhXJ8Mt+BvUBoZKD2BtH8AUqPgTZuuRvuOSLQvW4
+	 W77M+enNSb+dvC8ziwysEDVyn0pd5qks1TkAzefJ/zpVaK5BoJDPVQ358UVhcxOfEP
+	 kv+Ovf3a+dKCSD9OhppknH5doJg5s5bVR1TyvAPBuHkfHQVVqOBa+HySpvvTr/xme1
+	 VKqGqaCgIgtW71h6PNlgCxyVkRrnH1k6eqiH4eN6clJIhz4E6tT9ycqcwo5d1aB2L1
+	 dk3mUG45HJgag==
+Date: Fri, 11 Jul 2025 03:56:57 +0200
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-mm@kvack.org, linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
@@ -40,8 +40,9 @@ Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>,
 	Michal Hocko <mhocko@suse.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
 	Al Viro <viro@zeniv.linux.org.uk>, Martin Uecker <uecker@tugraz.at>, Sam James <sam@gentoo.org>, 
 	Andrew Pinski <pinskia@gmail.com>
-Subject: [RFC v6 3/8] sprintf: Add [v]sprintf_array()
-Message-ID: <9348d5df2d9f3a64be70a161f7af39ba30a0edc2.1752193588.git.alx@kernel.org>
+Subject: [RFC v6 4/8] stacktrace, stackdepot: Add sprintf_end()-like variants
+ of functions
+Message-ID: <6c5d8e6012f06f595fbb30e3c25a88a400538ad8.1752193588.git.alx@kernel.org>
 X-Mailer: git-send-email 2.50.0
 References: <cover.1751823326.git.alx@kernel.org>
  <cover.1752193588.git.alx@kernel.org>
@@ -55,17 +56,8 @@ Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 In-Reply-To: <cover.1752193588.git.alx@kernel.org>
 
-These macros take the end of the array argument implicitly to avoid
-programmer mistakes.  This guarantees that the input is an array, unlike
-
-	snprintf(buf, sizeof(buf), ...);
-
-which is dangerous if the programmer passes a pointer instead of an
-array.
-
-These macros are essentially the same as the 2-argument version of
-strscpy(), but with a formatted string.
-
+Cc: Kees Cook <kees@kernel.org>
+Cc: Christopher Bazley <chris.bazley.wg14@gmail.com>
 Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc: Marco Elver <elver@google.com>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -73,24 +65,113 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- include/linux/sprintf.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/stackdepot.h | 13 +++++++++++++
+ include/linux/stacktrace.h |  3 +++
+ kernel/stacktrace.c        | 28 ++++++++++++++++++++++++++++
+ lib/stackdepot.c           | 13 +++++++++++++
+ 4 files changed, 57 insertions(+)
 
-diff --git a/include/linux/sprintf.h b/include/linux/sprintf.h
-index 8dfc37713747..bd8174224a4a 100644
---- a/include/linux/sprintf.h
-+++ b/include/linux/sprintf.h
-@@ -4,6 +4,10 @@
+diff --git a/include/linux/stackdepot.h b/include/linux/stackdepot.h
+index 2cc21ffcdaf9..76182e874f67 100644
+--- a/include/linux/stackdepot.h
++++ b/include/linux/stackdepot.h
+@@ -219,6 +219,19 @@ void stack_depot_print(depot_stack_handle_t stack);
+ int stack_depot_snprint(depot_stack_handle_t handle, char *buf, size_t size,
+ 		       int spaces);
  
- #include <linux/compiler_attributes.h>
- #include <linux/types.h>
-+#include <linux/array_size.h>
++/**
++ * stack_depot_sprint_end - Print a stack trace from stack depot into a buffer
++ *
++ * @handle:	Stack depot handle returned from stack_depot_save()
++ * @p:		Pointer to the print buffer
++ * @end:	Pointer to one past the last element in the buffer
++ * @spaces:	Number of leading spaces to print
++ *
++ * Return:	Pointer to trailing '\0'; or NULL on truncation
++ */
++char *stack_depot_sprint_end(depot_stack_handle_t handle, char *p,
++                             const char end[0], int spaces);
 +
-+#define sprintf_array(a, fmt, ...)  sprintf_trunc(a, ARRAY_SIZE(a), fmt, ##__VA_ARGS__)
-+#define vsprintf_array(a, fmt, ap)  vsprintf_trunc(a, ARRAY_SIZE(a), fmt, ap)
+ /**
+  * stack_depot_put - Drop a reference to a stack trace from stack depot
+  *
+diff --git a/include/linux/stacktrace.h b/include/linux/stacktrace.h
+index 97455880ac41..79ada795d479 100644
+--- a/include/linux/stacktrace.h
++++ b/include/linux/stacktrace.h
+@@ -67,6 +67,9 @@ void stack_trace_print(const unsigned long *trace, unsigned int nr_entries,
+ 		       int spaces);
+ int stack_trace_snprint(char *buf, size_t size, const unsigned long *entries,
+ 			unsigned int nr_entries, int spaces);
++char *stack_trace_sprint_end(char *p, const char end[0],
++			     const unsigned long *entries,
++			     unsigned int nr_entries, int spaces);
+ unsigned int stack_trace_save(unsigned long *store, unsigned int size,
+ 			      unsigned int skipnr);
+ unsigned int stack_trace_save_tsk(struct task_struct *task,
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index afb3c116da91..f389647d8e44 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -70,6 +70,34 @@ int stack_trace_snprint(char *buf, size_t size, const unsigned long *entries,
+ }
+ EXPORT_SYMBOL_GPL(stack_trace_snprint);
  
- int num_to_str(char *buf, int size, unsigned long long num, unsigned int width);
++/**
++ * stack_trace_sprint_end - Print the entries in the stack trace into a buffer
++ * @p:		Pointer to the print buffer
++ * @end:	Pointer to one past the last element in the buffer
++ * @entries:	Pointer to storage array
++ * @nr_entries:	Number of entries in the storage array
++ * @spaces:	Number of leading spaces to print
++ *
++ * Return: Pointer to the trailing '\0'; or NULL on truncation.
++ */
++char *stack_trace_sprint_end(char *p, const char end[0],
++			  const unsigned long *entries, unsigned int nr_entries,
++			  int spaces)
++{
++	unsigned int i;
++
++	if (WARN_ON(!entries))
++		return 0;
++
++	for (i = 0; i < nr_entries; i++) {
++		p = sprintf_end(p, end, "%*c%pS\n", 1 + spaces, ' ',
++			     (void *)entries[i]);
++	}
++
++	return p;
++}
++EXPORT_SYMBOL_GPL(stack_trace_sprint_end);
++
+ #ifdef CONFIG_ARCH_STACKWALK
  
+ struct stacktrace_cookie {
+diff --git a/lib/stackdepot.c b/lib/stackdepot.c
+index 73d7b50924ef..48e5c0ff37e8 100644
+--- a/lib/stackdepot.c
++++ b/lib/stackdepot.c
+@@ -771,6 +771,19 @@ int stack_depot_snprint(depot_stack_handle_t handle, char *buf, size_t size,
+ }
+ EXPORT_SYMBOL_GPL(stack_depot_snprint);
+ 
++char *stack_depot_sprint_end(depot_stack_handle_t handle, char *p,
++			     const char end[0], int spaces)
++{
++	unsigned long *entries;
++	unsigned int nr_entries;
++
++	nr_entries = stack_depot_fetch(handle, &entries);
++	return nr_entries ?
++		stack_trace_sprint_end(p, end, entries, nr_entries, spaces)
++		: sprintf_end(p, end, "");
++}
++EXPORT_SYMBOL_GPL(stack_depot_sprint_end);
++
+ depot_stack_handle_t __must_check stack_depot_set_extra_bits(
+ 			depot_stack_handle_t handle, unsigned int extra_bits)
+ {
 -- 
 2.50.0
 
