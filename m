@@ -1,166 +1,141 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056892AE66;
-	Fri, 11 Jul 2025 17:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DD92F1FEA
+	for <linux-hardening@vger.kernel.org>; Fri, 11 Jul 2025 17:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752255947; cv=none; b=nSIYMAMdVDmwq6lj3yW3m+mywUhhefV/N5heJ76H1zLycAuCME4SuCnnUGIMmAIC+Kt1pLSoH0kfU3chFyf5UeR43ucXNAHGCQcGzXcSVMMC0xEIXWloCJxxxRiKL3PJYTxH6LF5sgu19cnwXa8pPibfMNyn1HQ5EkFknHrMrJA=
+	t=1752256758; cv=none; b=EOYY/hG/D0/fGx+9bpduHf4Jr6WJgw5o6mqioBLf14o+Kq+KBoDo+vVwwWI4yw26wZ1k9dhP9lIqrgTpURNf9DZ/MExJcOx5AlO5aGtgaRfzSuGBts/sxndNTPw1dmBNQ3kZrpma0SnfIvclHg522wsNcGhK7YS9mmg++IoamM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752255947; c=relaxed/simple;
-	bh=MdvErocQVN5X5b05F4uHIQIzS7VEosmmDN0AhrV9v8k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pwzw3Qqf+wJKzlGsK4XGAUnwQrRmhYt97c1OjUENnkis9+/jRDvLWEG06qMDGVDhub8Xx9qBDGGr/aGiyw0t/q4lQqdImS1ruIhLIZsZOMm/Dw+wTsbC6/2tMlfgBFa6keTsq6xGAIUS/9j/fQ6/lNOWuN/dfzP/UrcJNKLbP+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FR++HuE8; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752256758; c=relaxed/simple;
+	bh=kJPTgPdH0OPrTn/YGSgGWpc1xCCW5T5ErXZFEUacy4s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZTG1iOwGke1QqsPgTEMjsH0Z09TmVDjaM0BSkvTTopcOGXNjND4+RYqmaspPyZ/ex0GPAQJfXOirIx9tihWwbynIVN3oAU44BulsypX07h7Mcc+BTOv73h5iYsU7bhaEnEH0s+iVgM8jrsUDgmH393Tv0tTmh7Tz2N4/43eTb+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=e84vmfS/; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FR++HuE8"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso2356218f8f.3;
-        Fri, 11 Jul 2025 10:45:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="e84vmfS/"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60c9d8a169bso3970967a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Jul 2025 10:59:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752255944; x=1752860744; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aHz90J7wv6UCluJ+wqVTBlJ1tKvrIgBjMeUDsq9gFZU=;
-        b=FR++HuE8u6m+gBJz/phoINEKT4MxxZaG6f0QDKBDMtU8j7W7x6ZcvdUcrTm/WgLwJk
-         eiTUr40Vf9xr+U3h6+vnLk/D/N9Zoxay5EtwKH5Y1JgHXgNtV5pasF6UXA2w8QDBPVE0
-         DFjOmdHW8jNOM7ljoHpZbCLwrhXK7yGDsv+OJlbfD8Upd/Zjk8/r9Xd1uElq6PAd4677
-         epa/QZbaRxEx5azU1b4gBVtUOqkFnaFTbFodhoQERqmvLfcMm7rbWmzRFcOyPBpckuZn
-         h/9IGs8MzzHujbfa7qOGb+mxTFD+Gxl0wtU5WIOli/iFdDRIT9SQlrgOY+F3Wmh0YnSW
-         ziAA==
+        d=linux-foundation.org; s=google; t=1752256754; x=1752861554; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HO86Lx8//8hSyzYLerKKeVnItqg9SoMBkOdjNB0C6us=;
+        b=e84vmfS/uvJd4/7X9x9JaZqS7k53tkpjlFfTh956f9UYkN0iEsN4RUnhwm+GEhTleH
+         aC35uCL288fvWaHkxq3WSDZGWMtpie/ZxuHaqmQBfzlu9cUll2ECAJfie1+xkuSjFBT1
+         nIhTYvwv1VzPUOCcHQkqS4nbupaiquHTToLNw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752255944; x=1752860744;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aHz90J7wv6UCluJ+wqVTBlJ1tKvrIgBjMeUDsq9gFZU=;
-        b=esFj72mSSq5R+giTN+4cZVmtgrOLUTSx4BjkwCjhFpgvYfh+w0KjOXKqz/LLGvs6Zy
-         Qd2zDY+wP58PmMjcvw8Q728v4xTgNFtVtUBeGV0L0Ru0+lUJwgyf3uZRfDC7TBGp3LUp
-         0pJRLauoqomBqj4XbVwGFasIUaW202YF0mnBr641ku2GvDD/D7nn56Ht8QJ76vqgokw5
-         0vQPrzBG97o/xTayrWXLj8DDDcIs+bFeIOZc8lWl3Eum7Ik0EBKtYQVfbcok9I6s3xc7
-         Cw465zrAnaVgUiAMqVx//2lzTX4WwIEJ2Ls3A+VFnn7n6/92dXT/NGvgAJWtnC/Rutpu
-         E2hw==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ+t4UF7Ps5GpTp0N/jlaExUCb6ttLcE5iZY3J0YBlO0GYwgT5jC/e1uNXZ+qYRQh3ETBjF+Dn0/uthLhF@vger.kernel.org, AJvYcCVHMEA18t816SujrC3kPjg7KFrS0aIms0axHk1mKVxLz+REz0cqUmBPC8FkTCFjOOul3+Q1hqmUznbI+l3942U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzt334lIcDE9SUH0gzlOfC970EGFYCMPEs0Dr/adk36nvGlSFrQ
-	DImWZBwToVIM5LGrYQTBnJqGDP+XFAIyxRcGAB2BEAPjSknXzqRJ9O52
-X-Gm-Gg: ASbGncusWEnuW9IG1ZV3rpJzm8W+ZUNggnZ9VmUvpREcpqiWE5AZ4nfWgVqQ32hEGPm
-	D8T0GhzGtYxPQhlgu6frONAtlLITyOD33wfDOojxHPEd+i/Mvx0StmNd+K4zp3Atb03CkVZ+vki
-	Fn1h51zOpGPRbHaP3XHeRVTRZ/FFQAWP5WsA/JwHmcnrwKiGmhkDHZquW7NCpQoPScSF6rB/a5I
-	T/+DAfWCSkYsajlOBfZuzHDJ+l0W1qFsPe6XNqCUPN3tzJ4+uCGNKc6yfbf/7x/ocb7koDGNQnI
-	h35G4PKVEGE4yl5R1opLXmoFyRu+yDz5pXE/WhcHX2eLH9V6Exx4i+glZpW6Xe8/t5pW2VcboC6
-	9r72JeV5yctjPgCPXkGoN7TYtFHqbsmCW8cZQjyUWUwpnaKpsX8hutQ0HEThH4KN1
-X-Google-Smtp-Source: AGHT+IHYLFoeIiLxzKNpx2oPH/zTSNxUirXDFPit/qWyQBVz60uAIgugFu6p75MsyP67wPcmrHXWjg==
-X-Received: by 2002:a05:6000:645:b0:3a4:ffec:ee8e with SMTP id ffacd0b85a97d-3b5f188eb07mr3981761f8f.36.1752255944008;
-        Fri, 11 Jul 2025 10:45:44 -0700 (PDT)
-Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8bd18ffsm4957337f8f.9.2025.07.11.10.45.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Jul 2025 10:45:43 -0700 (PDT)
-Date: Fri, 11 Jul 2025 18:45:41 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Martin Uecker <ma.uecker@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Alejandro Colomar 
- <alx@kernel.org>, linux-mm@kvack.org, linux-hardening@vger.kernel.org, Kees
- Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>,
- shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, Andrew
- Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, Dmitry
- Vyukov <dvyukov@google.com>, Alexander Potapenko <glider@google.com>, Marco
- Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, David Rientjes
- <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin
- <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, Andrew
- Clayton <andrew@digital-domain.net>, Rasmus Villemoes
- <linux@rasmusvillemoes.dk>, Michal Hocko <mhocko@suse.com>, Al Viro
- <viro@zeniv.linux.org.uk>, Sam James <sam@gentoo.org>, Andrew Pinski
- <pinskia@gmail.com>
-Subject: Re: [RFC v5 6/7] sprintf: Add [v]sprintf_array()
-Message-ID: <20250711184541.68d770b9@pumpkin>
-In-Reply-To: <28c8689c7976b4755c0b5c2937326b0a3627ebf6.camel@gmail.com>
-References: <cover.1751823326.git.alx@kernel.org>
-	<cover.1752182685.git.alx@kernel.org>
-	<04c1e026a67f1609167e834471d0f2fe977d9cb0.1752182685.git.alx@kernel.org>
-	<CAHk-=wiNJQ6dVU8t7oM0sFpSqxyK8JZQXV5NGx7h+AE0PY4kag@mail.gmail.com>
-	<28c8689c7976b4755c0b5c2937326b0a3627ebf6.camel@gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20230601; t=1752256754; x=1752861554;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HO86Lx8//8hSyzYLerKKeVnItqg9SoMBkOdjNB0C6us=;
+        b=IkLRm4VEEqJQkgPzGwrhSrfKNJ6/6VSfDpHvaXz3/zVo3lUw1Nlx6jZK4g3BvrmzjQ
+         Pzx/Ztg/0djV/GwPIj/oTbZoFsMuGBxa04mW8DS0thOE1uQEHDbxKr+39IuURtdBsiWZ
+         msdNy3so/XsK2kTRSeNeOA4oZaiA3NKQM1LflLAZGYYktT6J5XaPQwBRTNt2zmD7Uynw
+         jYf0YBIeTqdOTl4CwVl5724N0iMtrWo0KBT5Ia/8nGRmhgNC4oBtDEp3umlGBn2RYnRR
+         PGHDQIwmP4kzBoUibXjXsYeHVMfWJv0VbkJaZ4uqcijQQWpvmdi78aCKaJM4wcF82i4S
+         J9Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9h0uAhiqZ32zCUUjgLjF4TDNbYl3lK22/StRsn0q7ld+YuO1qCu0RqNAfoQFqp/d3hQEK3qUayoTzJsybn5I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCLlczzgoE6TSwKwjmaGRfyAoYcIyWrWHs6198gIaZ5qPi0Nfk
+	U74OLP6rSgE9ORzuh6ADqWYmvP/8d8nmELr3x9XAgQ13PSOeKQdh4Awbm/1K/3Tws+lZB1kOF49
+	K9zjPRX5c/A==
+X-Gm-Gg: ASbGncsl1MgZp+xwFssu38k+8ugcTEZcLYim6nZTvePTgc3QfDjtUY34Ra5GjHlZ02+
+	804lFZh5yWmCAnGxLcvnG6ki/ucENdo9fMz9iQTUOw6ctL7Wl5k4S+XqPYzuAYgw3e8G8Q4UxX6
+	ArILu1bWsiLvoEUUo00QryY2UIXiIzkwJzOYjBgj3P01wp3ffy756s0r3R2Svw4MvOMMqgYl5Dy
+	5dSIGVpxZ3aGOgYH7owGVz6rW82QpAFX4khkloEF/vIA2/l9gdJzy7vKZdh53mXV9X0N/gZBweb
+	G+WajWsBrSALSFoGNBnyI+on9eW4H8reu31hE01p3mzbOJ5aAxNi4HG/xYsQqKvg7hfYl8nMrYI
+	DK5i8w3NyxBB17HliXSRPDgbtDNeWxVg0o15rgrmVZGoflo6xLFBtEUYVMkjN0mTPQ8+QPfUoGG
+	shqaj1HiQ=
+X-Google-Smtp-Source: AGHT+IGIJzUK4YmsR1JqY/93ZhekFFE81ZU91Y+WCTCweurHxPqqOWP7LQgLU7pVVOJNJ8Vqc6kR6Q==
+X-Received: by 2002:a17:907:972a:b0:ae3:cc60:8cf0 with SMTP id a640c23a62f3a-ae6fca6dc16mr470928666b.34.1752256754362;
+        Fri, 11 Jul 2025 10:59:14 -0700 (PDT)
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae6e7e910e8sm333829166b.36.2025.07.11.10.59.13
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Jul 2025 10:59:13 -0700 (PDT)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-60780d74c8cso3847283a12.2
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Jul 2025 10:59:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUptuMW0w0N71u/pWwnCezp2LktclTk8HaQmPv0Nsq/qxQrO9NsoguuVnvGYr72iGYH3K8/Gl16xVCPEdWXYcY=@vger.kernel.org
+X-Received: by 2002:a05:6402:518d:b0:60c:40bd:8843 with SMTP id
+ 4fb4d7f45d1cf-611e764f6e5mr3668397a12.11.1752256753054; Fri, 11 Jul 2025
+ 10:59:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <cover.1751823326.git.alx@kernel.org> <cover.1752182685.git.alx@kernel.org>
+ <04c1e026a67f1609167e834471d0f2fe977d9cb0.1752182685.git.alx@kernel.org>
+ <CAHk-=wiNJQ6dVU8t7oM0sFpSqxyK8JZQXV5NGx7h+AE0PY4kag@mail.gmail.com>
+ <28c8689c7976b4755c0b5c2937326b0a3627ebf6.camel@gmail.com> <20250711184541.68d770b9@pumpkin>
+In-Reply-To: <20250711184541.68d770b9@pumpkin>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 11 Jul 2025 10:58:56 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjC0pAFfMBHKtCLOAcUvLs30PpjKoMfN9aP1-YwD0MZ5Q@mail.gmail.com>
+X-Gm-Features: Ac12FXy_-gvqQgEDwxrh9_yUhPGT4NZn2yvYc_wfrsBVUNUS1D4_tzcLfdrYbJI
+Message-ID: <CAHk-=wjC0pAFfMBHKtCLOAcUvLs30PpjKoMfN9aP1-YwD0MZ5Q@mail.gmail.com>
+Subject: Re: [RFC v5 6/7] sprintf: Add [v]sprintf_array()
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Martin Uecker <ma.uecker@gmail.com>, Alejandro Colomar <alx@kernel.org>, linux-mm@kvack.org, 
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>, 
+	Christopher Bazley <chris.bazley.wg14@gmail.com>, shadow <~hallyn/shadow@lists.sr.ht>, 
+	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
+	Andrew Clayton <andrew@digital-domain.net>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Michal Hocko <mhocko@suse.com>, Al Viro <viro@zeniv.linux.org.uk>, Sam James <sam@gentoo.org>, 
+	Andrew Pinski <pinskia@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 11 Jul 2025 08:05:38 +0200
-Martin Uecker <ma.uecker@gmail.com> wrote:
+On Fri, 11 Jul 2025 at 10:45, David Laight <david.laight.linux@gmail.com> wrote:
+>
+> What does that actually look like behind all the #defines and generics?
+> It it continually doing malloc/free it is pretty much inappropriate
+> for a lot of system/kernel code.
 
-> Am Donnerstag, dem 10.07.2025 um 14:58 -0700 schrieb Linus Torvalds:
-> > On Thu, 10 Jul 2025 at 14:31, Alejandro Colomar <alx@kernel.org> wrote:  
-> > > 
-> > > These macros are essentially the same as the 2-argument version of
-> > > strscpy(), but with a formatted string, and returning a pointer to the
-> > > terminating '\0' (or NULL, on error).  
-> > 
-> > No.
-> > 
-> > Stop this garbage.
-> > 
-> > You took my suggestion, and then you messed it up.
-> > 
-> > Your version of sprintf_array() is broken. It evaluates 'a' twice.
-> > Because unlike ARRAY_SIZE(), your broken ENDOF() macro evaluates the
-> > argument.
-> > 
-> > And you did it for no reason I can see. You said that you wanted to
-> > return the end of the resulting string, but the fact is, not a single
-> > user seems to care, and honestly, I think it would be wrong to care.
-> > The size of the result is likely the more useful thing, or you could
-> > even make these 'void' or something.
-> > 
-> > But instead you made the macro be dangerous to use.
-> > 
-> > This kind of churn is WRONG. It _looks_ like a cleanup that doesn't
-> > change anything, but then it has subtle bugs that will come and bite
-> > us later because you did things wrong.
-> > 
-> > I'm NAK'ing all of this. This is BAD. Cleanup patches had better be
-> > fundamentally correct, not introduce broken "helpers" that will make
-> > for really subtle bugs.
-> > 
-> > Maybe nobody ever ends up having that first argument with a side
-> > effect. MAYBE. It's still very very wrong.
-> > 
-> >                 Linus  
-> 
-> What I am puzzled about is that - if you revise your string APIs -,
-> you do not directly go for a safe abstraction that combines length
-> and pointer and instead keep using these fragile 80s-style string
-> functions and open-coded pointer and size computations that everybody
-> gets wrong all the time.
-> 
-> String handling could also look like this:
+Honestly, the kernel approximately *never* has "string handling" in
+the traditional sense.
 
-What does that actually look like behind all the #defines and generics?
-It it continually doing malloc/free it is pretty much inappropriate
-for a lot of system/kernel code.
+But we do have "buffers with text". The difference typically exactly
+being that allocation has to happen separately from any text
+operation.
 
-	David
+It's why I already suggested people look at our various existing
+buffer abstractions: we have several, although they tend to often be
+somewhat specialized.
 
-> 
-> 
-> https://godbolt.org/z/dqGz9b4sM
-> 
-> and be completely bounds safe.
-> 
-> (Note that those function abort() on allocation failure, but this
-> is an unfinished demo and also not for kernel use. Also I need to
-> rewrite this using string views.)
-> 
-> 
-> Martin
-> 
-> 
-> 
-> 
+So, for example, we have things like "struct qstr" for path
+components: it's specialized not only in having an associated hash
+value for the string, but because it's a "initialize once" kind of
+buffer that gets initialized at creation time, and the string contents
+are constant (it literally contains a "const char *" in addition to
+the length/hash).
 
+That kind of "string buffer" obviously isn't useful for things like
+the printf family, but we do have others. Like "struct seq_buf", which
+already has "seq_buf_printf()" helpers.
+
+That's the one you probably should use for most kernel "print to
+buffer", but it has very few users despite not being complicated to
+use:
+
+        struct seq_buf s;
+        seq_buf_init(&s, buf, szie);
+
+and you're off to the races, and can do things like
+
+        seq_buf_printf(&s, ....);
+
+without ever having to worry about overflows etc.
+
+So we already do *have* good interfaces. But they aren't the
+traditional ones that everybody knows about.
+
+                   Linus
