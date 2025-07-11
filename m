@@ -1,277 +1,261 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252094A28;
-	Fri, 11 Jul 2025 00:19:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6A9288CC;
+	Fri, 11 Jul 2025 01:56:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752193197; cv=none; b=RphpBIZEPJbBAOvzhJkaYZMkVM7AgMyxCKJhfbxO7G5ae2SG+tBvVpO+VNuwx4OnX/+vCLT3VmjRVQwDcvHhOorePvR1YFZG5Ene4rx8Db73jzaWmYZO3VWafWGmAFJm5sRhjMI3pp2zPp7smuLyC7oDOVLssZASbwZ8H09S79c=
+	t=1752198998; cv=none; b=tPo4KqDd5z5RZXAYE0m8kw7WXxrwb7cLUKhBfaRIBufpahxMzokSCneWfCIA4zks1JiS+/INibJ4iTZVIZ6zbJH2w3SXCeJeKcVPHaXslmnmZVZCEBnNjgU9ysv4hqKIKd1n1YU+e/aUxt9PZConllND/28eszLNvodoqVHTuPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752193197; c=relaxed/simple;
-	bh=1shRO2dWNJiXv423vpJrUSqInLmf3e/NaLD48gCYbY0=;
+	s=arc-20240116; t=1752198998; c=relaxed/simple;
+	bh=nMqwPTuZCArqfvKgBl5seOh3ask1tIU2u8XOTytKLjI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TXGU7npsqs1mPWd42gMk/5BBpeVO4YJ/YfCi1vJvIAjs0yva4vuLmyTHaPm3R0Y+aVGXHp/AqD+/Ai+0k4+lRod08GJP3ggqmoxRl/xcxKId6/1/odojWzg7sQziIuPT48jTCLHON2cCjV4abZsLpJG8wdBnxJjd3NT+emEaVfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Weh/yhwS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CH9lySgOA4p/aJfdUrMFIhQt+/E1lLznQUxytaIFsBnsJKQZB0uEDwvuHvyqg4X9zc/sEP0ji/xITFr0LaerULpaD5G0WncFpL9BwfyVgWjC0Fa/6aLzS90vYMtLF9rORx/tFBQmuaTaSLBK/qp/mDUnWUH2GHqSWo5nKHE47tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZLNgHjX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Weh/yhwS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26BA0C4CEE3;
-	Fri, 11 Jul 2025 00:19:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZLNgHjX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2028BC4CEE3;
+	Fri, 11 Jul 2025 01:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752193196;
-	bh=1shRO2dWNJiXv423vpJrUSqInLmf3e/NaLD48gCYbY0=;
+	s=k20201202; t=1752198997;
+	bh=nMqwPTuZCArqfvKgBl5seOh3ask1tIU2u8XOTytKLjI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Weh/yhwSrgdfK/NY77C9CrZIuRWrOj+X1YSebmEEEAujIMSV+TJ2XKohgesgG+dmE
-	 rKOkscfeyE6LAVCiXxB2IRt1p4o4ca+oNuuKpVzhi0yhnsHjw+CXUG+JgfIbF3Dztn
-	 B8XQNg/sdY2QQXn7bSVVq1G/XcWAjBnlLOfsuFP8Zm8Lw7NrDfVOjBuwOec7ceiDqY
-	 yJY24GKOh4+OjurOobQ02HOq6Nz2KZBYCDCJy0VnOPW0hSl7UUUPWHFj0mPXXvQJkL
-	 UQyhmG7sO+XtCQcM7gXodjjE8UZtNlXo1c8VWXu53syVXgRG05v4ABpBUsUeU18aba
-	 mqKRsgOjVlc8g==
-Date: Fri, 11 Jul 2025 02:19:49 +0200
+	b=kZLNgHjXMeW05eCNVj21HjZxSP+L4pwwp9gPjl6qBWARya+EVCsulgPPii+foNDk+
+	 wk4YSFLH7R8UrVmeYijLV9o6nLpH5A+PlHkyH1IBRFlXIzVleaqOCyXjad2IXHA19G
+	 K28ywtc7aVBrUCmHOoDPSdS40fk8kfRKwBNXBBRqjd5ZNgBJXSDc+IBdDdVNyvDZ8f
+	 aNTSCTCf6mn3WJVh63wI8MkJbozTbDTydM8dkQMc707/B3cbl6wSbEphXODxJGz0e3
+	 Uj67Hzr+nxWPSMvihsa9ETDQp43trSNipHGUq9w+bN2YVZVRAWXHs7U+dyc1gYGs9E
+	 Nt+xfK6GtUUYg==
+Date: Fri, 11 Jul 2025 03:56:31 +0200
 From: Alejandro Colomar <alx@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
-	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+To: linux-mm@kvack.org, linux-hardening@vger.kernel.org
+Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Christopher Bazley <chris.bazley.wg14@gmail.com>, shadow <~hallyn/shadow@lists.sr.ht>, 
+	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
 	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
 	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
 	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
 	Andrew Clayton <andrew@digital-domain.net>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Michal Hocko <mhocko@suse.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Martin Uecker <uecker@tugraz.at>, Sam James <sam@gentoo.org>, Andrew Pinski <pinskia@gmail.com>
-Subject: Re: [RFC v5 6/7] sprintf: Add [v]sprintf_array()
-Message-ID: <z275r52gltcgv6gbixfdwj7z6ocn6qa26v5lif3h7n5otapiq2@37bsjlraqalo>
+	Michal Hocko <mhocko@suse.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Martin Uecker <uecker@tugraz.at>, Sam James <sam@gentoo.org>, 
+	Andrew Pinski <pinskia@gmail.com>
+Subject: [RFC v6 0/8] Add and use sprintf_{end,trunc,array}() instead of less
+ ergonomic APIs
+Message-ID: <cover.1752193588.git.alx@kernel.org>
+X-Mailer: git-send-email 2.50.0
 References: <cover.1751823326.git.alx@kernel.org>
- <cover.1752182685.git.alx@kernel.org>
- <04c1e026a67f1609167e834471d0f2fe977d9cb0.1752182685.git.alx@kernel.org>
- <CAHk-=wiNJQ6dVU8t7oM0sFpSqxyK8JZQXV5NGx7h+AE0PY4kag@mail.gmail.com>
- <krmt6a25gio6ing5mgahl72nvw36jc7u3zyyb5dzbk4nfjnuy4@fex2h7lqmfwt>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wxhooa7cq2eiokbj"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <krmt6a25gio6ing5mgahl72nvw36jc7u3zyyb5dzbk4nfjnuy4@fex2h7lqmfwt>
+In-Reply-To: <cover.1751823326.git.alx@kernel.org>
+
+Hi,
+
+Changes in v6:
+
+[As commented in private to Linus, I assume the NAK from Linus in v5
+ applies to the macro that evaluates twice.  This is resolved in v6, so
+ I send assuming no NAKs to the overall patch set.]
+
+-  Don't try to have a single function.  Have sprintf_end() for chaining
+   calls and sprintf_trunc() --which is the fmt version of strscpy()--
+   for single calls.  Then sprintf_array() --which is the fmt version of
+   the 2-argument strscpy()-- for single calls with an array as input.
+-  Fix implementation of sprintf_array() to not evaluate twice.
+
+These changes are essentially a roll-back to the general idea in v3,
+except for the more explicit names.
+
+Remaining questions:
+
+-  There are only 3 remaining calls to snprintf(3) under mm/.  They are
+   just fine for now, which is why I didn't replace them.  If anyone
+   wants to replace them, to get rid of all snprintf(3), we could that.
+   I think for now we can leave them, to minimize the churn.
+
+        $ grep -rnI snprintf mm/
+        mm/hugetlb_cgroup.c:674:                snprintf(buf, size, "%luGB", hsize / SZ_1G);
+        mm/hugetlb_cgroup.c:676:                snprintf(buf, size, "%luMB", hsize / SZ_1M);
+        mm/hugetlb_cgroup.c:678:                snprintf(buf, size, "%luKB", hsize / SZ_1K);
+
+   They could be replaced by sprintf_trunc().
+
+-  There are only 2 remaining calls to the kernel's scnprintf().  This
+   one I would really like to get rid of.  Also, those calls are quite
+   suspicious of not being what we want.  Please do have a look at them
+   and confirm what's the appropriate behavior in the 2 cases when the
+   string is truncated or not copied at all.  That code is very scary
+   for me to try to guess.
+
+        $ grep -rnI scnprintf mm/
+        mm/kfence/report.c:75:          int len = scnprintf(buf, sizeof(buf), "%ps", (void *)stack_entries[skipnr]);
+        mm/kfence/kfence_test.mod.c:22: { 0x96848186, "scnprintf" },
+        mm/kmsan/report.c:42:           len = scnprintf(buf, sizeof(buf), "%ps",
+
+   Apart from two calls, I see a string literal with that name.  Please
+   let me know if I should do anything about it.  I don't know what that
+   is.
+
+-  I think we should remove one error handling check in
+   "mm/page_owner.c" (marked with an XXX comment), but I'm not 100%
+   sure.  Please confirm.
+
+Other comments:
+
+-  This is still not complying to coding style.  I'll keep it like that
+   while questions remain open.
+-  I've tested the tests under CONFIG_KFENCE_KUNIT_TEST=y, and this has
+   no regressions at all.
+-  With the current style of the sprintf_end() prototyope, this triggers
+   a diagnostic due to a GCC bug:
+   <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108036>
+   It would be interesting to ask GCC to fix that bug.  (Added relevant
+   GCC maintainers and contributors to CC in this cover letter.)
+-  The call sprintf_end(p, end, "") in lib/stackdepot.c, within
+   stack_depot_sprint_end(), produces a warning for having an empty
+   string.  This could be replaced by a strcpy_end(p, end, "") if/when
+   we add that function.
+
+For anyone new to the thread, sprintf_end() will be proposed for
+standardization soon as seprintf():
+<https://lore.kernel.org/linux-hardening/20250710024745.143955-1-alx@kernel.org/T/#u>
 
 
---wxhooa7cq2eiokbj
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
-	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
-	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
-	Andrew Clayton <andrew@digital-domain.net>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Michal Hocko <mhocko@suse.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Martin Uecker <uecker@tugraz.at>, Sam James <sam@gentoo.org>, Andrew Pinski <pinskia@gmail.com>
-Subject: Re: [RFC v5 6/7] sprintf: Add [v]sprintf_array()
-References: <cover.1751823326.git.alx@kernel.org>
- <cover.1752182685.git.alx@kernel.org>
- <04c1e026a67f1609167e834471d0f2fe977d9cb0.1752182685.git.alx@kernel.org>
- <CAHk-=wiNJQ6dVU8t7oM0sFpSqxyK8JZQXV5NGx7h+AE0PY4kag@mail.gmail.com>
- <krmt6a25gio6ing5mgahl72nvw36jc7u3zyyb5dzbk4nfjnuy4@fex2h7lqmfwt>
-MIME-Version: 1.0
-In-Reply-To: <krmt6a25gio6ing5mgahl72nvw36jc7u3zyyb5dzbk4nfjnuy4@fex2h7lqmfwt>
-
-On Fri, Jul 11, 2025 at 01:23:56AM +0200, Alejandro Colomar wrote:
-> Hi Linus,
->=20
-> [I'll reply to both of your emails at once]
->=20
-> On Thu, Jul 10, 2025 at 02:58:24PM -0700, Linus Torvalds wrote:
-> > You took my suggestion, and then you messed it up.
-> >=20
-> > Your version of sprintf_array() is broken. It evaluates 'a' twice.
-> > Because unlike ARRAY_SIZE(), your broken ENDOF() macro evaluates the
-> > argument.
->=20
-> An array has no issue being evaluated twice (unless it's a VLA).  On the
-> other hand, I agree it's better to not do that in the first place.
-> My bad for forgetting about it.  Sorry.
->=20
-> On Thu, Jul 10, 2025 at 03:08:29PM -0700, Linus Torvalds wrote:
-> > If you want to return an error on truncation, do it right.  Not by
-> > returning NULL, but by actually returning an error.
->=20
-> Okay.
->=20
-> > For example, in the kernel, we finally fixed 'strcpy()'. After about a
-> > million different versions of 'copy a string' where every single
-> > version was complete garbage, we ended up with 'strscpy()'. Yeah, the
-> > name isn't lovely, but the *use* of it is:
->=20
-> I have implemented the same thing in shadow, called strtcpy() (T for
-> truncation).  (With the difference that we read the string twice, since
-> we don't care about threads.)
->=20
-> I also plan to propose standardization of that one in ISO C.
->=20
-> >  - it returns the length of the result for people who want it - which
-> > is by far the most common thing people want
->=20
-> Agree.
->=20
-> >  - it returns an actual honest-to-goodness error code if something
-> > overflowed, instead of the absoilutely horrible "source length" of the
-> > string that strlcpy() does and which is fundamentally broken (because
-> > it requires that you walk *past* the end of the source,
-> > Christ-on-a-stick what a broken interface)
->=20
-> Agree.
->=20
-> >  - it can take an array as an argument (without the need for another
-> > name - see my earlier argument about not making up new names by just
-> > having generics)
->=20
-> We can't make the same thing with sprintf() variants because they're
-> variadic, so you can't count the number of arguments.  And since the
-> 'end' argument is of the same type as the formatted string, we can't
-> do it with _Generic reliably either.
->=20
-> > Now, it has nasty naming (exactly the kind of 'add random character'
-> > naming that I was arguing against), and that comes from so many
-> > different broken versions until we hit on something that works.
-> >=20
-> > strncpy is horrible garbage. strlcpy is even worse. strscpy actually
-> > works and so far hasn't caused issues (there's a 'pad' version for the
-> > very rare situation where you want 'strncpy-like' padding, but it
-> > still guarantees NUL-termination, and still has a good return value).
->=20
-> Agree.
->=20
-> > Let's agree to *not* make horrible garbage when making up new versions
-> > of sprintf.
->=20
-> Agree.  I indeed introduced the mistake accidentally in v4, after you
-> complained of having too many functions, as I was introducing not one
-> but two APIs: seprintf() and stprintf(), where seprintf() is what now
-> we're calling sprintf_end(), and stprintf() we could call it
-> sprintf_trunc().  So I did the mistake by trying to reduce the number of
-> functions to just one, which is wrong.
->=20
-> So, maybe I should go back to those functions, and just give them good
-> names.
->=20
-> What do you think of the following?
->=20
-> 	#define sprintf_array(a, ...)  sprintf_trunc(a, ARRAY_SIZE(a), __VA_ARGS=
-__)
-> 	#define vsprintf_array(a, ap)  vsprintf_trunc(a, ARRAY_SIZE(a), ap)
-
-Typo: forgot the fmt argument.
-
->=20
-> 	char *sprintf_end(char *p, const char end[0], const char *fmt, ...);
-> 	char *vsprintf_end(char *p, const char end[0], const char *fmt, va_list =
-args);
-> 	int sprintf_trunc(char *buf, size_t size, const char *fmt, ...);
-> 	int vsprintf_trunc(char *buf, size_t size, const char *fmt, va_list args=
-);
->=20
-> 	char *sprintf_end(char *p, const char end[0], const char *fmt, ...)
-> 	{
-> 		va_list args;
->=20
-> 		va_start(args, fmt);
-> 		p =3D vseprintf(p, end, fmt, args);
-> 		va_end(args);
->=20
-> 		return p;
-> 	}
->=20
-> 	char *vsprintf_end(char *p, const char end[0], const char *fmt, va_list =
-args)
-> 	{
-> 		int len;
->=20
-> 		if (unlikely(p =3D=3D NULL))
-> 			return NULL;
->=20
-> 		len =3D vsprintf_trunc(p, end - p, fmt, args);
-> 		if (unlikely(len < 0))
-> 			return NULL;
->=20
-> 		return p + len;
-> 	}
->=20
-> 	int sprintf_trunc(char *buf, size_t size, const char *fmt, ...)
-> 	{
-> 		va_list args;
-> 		int len;
->=20
-> 		va_start(args, fmt);
-> 		len =3D vstprintf(buf, size, fmt, args);
-> 		va_end(args);
->=20
-> 		return len;
-> 	}
->=20
-> 	int vsprintf_trunc(char *buf, size_t size, const char *fmt, va_list args)
-> 	{
-> 		int len;
->=20
-> 		if (WARN_ON_ONCE(size =3D=3D 0 || size > INT_MAX))
-> 			return -EOVERFLOW;
->=20
-> 		len =3D vsnprintf(buf, size, fmt, args);
-> 		if (unlikely(len >=3D size))
-> 			return -E2BIG;
->=20
-> 		return len;
-> 	}
->=20
-> sprintf_trunc() is like strscpy(), but with a formatted string.  It
-> could replace uses of s[c]nprintf() where there's a single call (no
-> chained calls).
->=20
-> sprintf_array() is like the 2-argument version of strscpy().  It could
-> replace s[c]nprintf() calls where there's no chained calls, where the
-> input is an array.
->=20
-> sprintf_end() would replace the chained calls.
->=20
-> Does this sound good to you?
->=20
->=20
-> Cheers,
-> Alex
->=20
-> --=20
-> <https://www.alejandro-colomar.es/>
+Have a lovely night!
+Alex
 
 
+Alejandro Colomar (8):
+  vsprintf: Add [v]sprintf_trunc()
+  vsprintf: Add [v]sprintf_end()
+  sprintf: Add [v]sprintf_array()
+  stacktrace, stackdepot: Add sprintf_end()-like variants of functions
+  mm: Use sprintf_end() instead of less ergonomic APIs
+  array_size.h: Add ENDOF()
+  mm: Fix benign off-by-one bugs
+  mm: Use [v]sprintf_array() to avoid specifying the array size
 
---=20
-<https://www.alejandro-colomar.es/>
+ include/linux/array_size.h |   6 +++
+ include/linux/sprintf.h    |   8 +++
+ include/linux/stackdepot.h |  13 +++++
+ include/linux/stacktrace.h |   3 ++
+ kernel/stacktrace.c        |  28 ++++++++++
+ lib/stackdepot.c           |  13 +++++
+ lib/vsprintf.c             | 107 +++++++++++++++++++++++++++++++++++++
+ mm/backing-dev.c           |   2 +-
+ mm/cma.c                   |   4 +-
+ mm/cma_debug.c             |   2 +-
+ mm/hugetlb.c               |   3 +-
+ mm/hugetlb_cgroup.c        |   2 +-
+ mm/hugetlb_cma.c           |   2 +-
+ mm/kasan/report.c          |   3 +-
+ mm/kfence/kfence_test.c    |  28 +++++-----
+ mm/kmsan/kmsan_test.c      |   6 +--
+ mm/memblock.c              |   4 +-
+ mm/mempolicy.c             |  18 +++----
+ mm/page_owner.c            |  32 +++++------
+ mm/percpu.c                |   2 +-
+ mm/shrinker_debug.c        |   2 +-
+ mm/slub.c                  |   5 +-
+ mm/zswap.c                 |   2 +-
+ 23 files changed, 237 insertions(+), 58 deletions(-)
 
---wxhooa7cq2eiokbj
-Content-Type: application/pgp-signature; name="signature.asc"
+Range-diff against v5:
+-:  ------------ > 1:  dab6068bef5c vsprintf: Add [v]sprintf_trunc()
+1:  2c4f793de0b8 ! 2:  c801c9a1a90d vsprintf: Add [v]sprintf_end()
+    @@ Commit message
+         Signed-off-by: Alejandro Colomar <alx@kernel.org>
+     
+      ## include/linux/sprintf.h ##
+    -@@ include/linux/sprintf.h: __printf(3, 4) int snprintf(char *buf, size_t size, const char *fmt, ...);
+    - __printf(3, 0) int vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
+    - __printf(3, 4) int scnprintf(char *buf, size_t size, const char *fmt, ...);
+    +@@ include/linux/sprintf.h: __printf(3, 4) int scnprintf(char *buf, size_t size, const char *fmt, ...);
+      __printf(3, 0) int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
+    + __printf(3, 4) int sprintf_trunc(char *buf, size_t size, const char *fmt, ...);
+    + __printf(3, 0) int vsprintf_trunc(char *buf, size_t size, const char *fmt, va_list args);
+     +__printf(3, 4) char *sprintf_end(char *p, const char end[0], const char *fmt, ...);
+     +__printf(3, 0) char *vsprintf_end(char *p, const char end[0], const char *fmt, va_list args);
+      __printf(2, 3) __malloc char *kasprintf(gfp_t gfp, const char *fmt, ...);
+    @@ include/linux/sprintf.h: __printf(3, 4) int snprintf(char *buf, size_t size, con
+      __printf(2, 0) const char *kvasprintf_const(gfp_t gfp, const char *fmt, va_list args);
+     
+      ## lib/vsprintf.c ##
+    -@@ lib/vsprintf.c: int vscnprintf(char *buf, size_t size, const char *fmt, va_list args)
+    +@@ lib/vsprintf.c: int vsprintf_trunc(char *buf, size_t size, const char *fmt, va_list args)
+      }
+    - EXPORT_SYMBOL(vscnprintf);
+    + EXPORT_SYMBOL(vsprintf_trunc);
+      
+     +/**
+     + * vsprintf_end - va_list string end-delimited print formatted
+    @@ lib/vsprintf.c: int vscnprintf(char *buf, size_t size, const char *fmt, va_list
+     +char *vsprintf_end(char *p, const char end[0], const char *fmt, va_list args)
+     +{
+     +  int len;
+    -+  size_t size;
+     +
+     +  if (unlikely(p == NULL))
+     +          return NULL;
+     +
+    -+  size = end - p;
+    -+  if (WARN_ON_ONCE(size == 0 || size > INT_MAX))
+    -+          return NULL;
+    -+
+    -+  len = vsnprintf(p, size, fmt, args);
+    -+  if (unlikely(len >= size))
+    ++  len = vsprintf_trunc(p, end - p, fmt, args);
+    ++  if (unlikely(len < 0))
+     +          return NULL;
+     +
+     +  return p + len;
+    @@ lib/vsprintf.c: int vscnprintf(char *buf, size_t size, const char *fmt, va_list
+      /**
+       * snprintf - Format a string and place it in a buffer
+       * @buf: The buffer to place the result into
+    -@@ lib/vsprintf.c: int scnprintf(char *buf, size_t size, const char *fmt, ...)
+    +@@ lib/vsprintf.c: int sprintf_trunc(char *buf, size_t size, const char *fmt, ...)
+      }
+    - EXPORT_SYMBOL(scnprintf);
+    + EXPORT_SYMBOL(sprintf_trunc);
+      
+     +/**
+     + * sprintf_end - string end-delimited print formatted
+6:  04c1e026a67f ! 3:  9348d5df2d9f sprintf: Add [v]sprintf_array()
+    @@ Commit message
+         array.
+     
+         These macros are essentially the same as the 2-argument version of
+    -    strscpy(), but with a formatted string, and returning a pointer to the
+    -    terminating '\0' (or NULL, on error).
+    +    strscpy(), but with a formatted string.
+     
+         Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+         Cc: Marco Elver <elver@google.com>
+    @@ include/linux/sprintf.h
+      #include <linux/types.h>
+     +#include <linux/array_size.h>
+     +
+    -+#define sprintf_array(a, fmt, ...)  sprintf_end(a, ENDOF(a), fmt, ##__VA_ARGS__)
+    -+#define vsprintf_array(a, fmt, ap)  vsprintf_end(a, ENDOF(a), fmt, ap)
+    ++#define sprintf_array(a, fmt, ...)  sprintf_trunc(a, ARRAY_SIZE(a), fmt, ##__VA_ARGS__)
+    ++#define vsprintf_array(a, fmt, ap)  vsprintf_trunc(a, ARRAY_SIZE(a), fmt, ap)
+      
+      int num_to_str(char *buf, int size, unsigned long long num, unsigned int width);
+      
+2:  894d02b08056 = 4:  6c5d8e6012f0 stacktrace, stackdepot: Add sprintf_end()-like variants of functions
+3:  690ed4d22f57 = 5:  8a0ffc1bf43d mm: Use sprintf_end() instead of less ergonomic APIs
+4:  e05c5afabb3c = 6:  37b1088dbd01 array_size.h: Add ENDOF()
+5:  515445ae064d = 7:  c88780354e13 mm: Fix benign off-by-one bugs
+7:  e53d87e684ef = 8:  aa6323cbea64 mm: Use [v]sprintf_array() to avoid specifying the array size
 
------BEGIN PGP SIGNATURE-----
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+-- 
+2.50.0
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhwWKUACgkQ64mZXMKQ
-wqlpAw//RdeLKJ5j+1r2HH8/miXwNO+Td73GjSPzQwmr0qv5WC6xsxijQKo0TqcZ
-hCbrsLeLZwNnEOqaOpGJzyUyROAoqpFDN6WsPa2N4ZvZdPoktE2PwkUzTcCscJG7
-H/cZigcGgcQn2vNWM6RvGPCYrATCt7ijFBiuWsw42ojhDyLsF5WrmuzyD7z+zCOr
-/QuqtAH3pcX8lyyQQbKDqJKwoUDg0LR6jwnqYLuHPALsFH3h3NKKYanRGUqM5if3
-FfN9XQu+YGRAAIl0LNPD97im7wi0EVdt0VmnmVB8B0SuS2aBE6tEyQoP90lSkY5h
-X37I7y7fyevgIl/nfsOaWWe6kYSbFqI2gIRh4YE0pN0eaYwyiclf7L+GHu8ZyZs+
-ABUSDY9H7UThNDDC9mgZE4Cs9qTeCgAU0TllLqcrxVI15JsTriRIayp7dmCCZx4y
-eZg9sizGjpd6/X/s7F8w6yAWEvfVxt8Vcfm/064Z1/UtvkK/pRA04324lPZbVxVK
-l79tjbCwzIyfvtyhTPlCvCCOl5vSKGrsiTgxQDd0rGsMxj7bsmfehMAbvHIwYhGu
-dB2Mgil21Ce0I38Vx0oGdlaOQtXGSl1OCDttCcD+kkxjqfY0nJTX6psFr9DIQzhe
-BSdqZU3Kd2uKHWLPmxH0xAy7EzJ9iuECkOnGL3J9SKg8VLiWCg0=
-=KM9i
------END PGP SIGNATURE-----
-
---wxhooa7cq2eiokbj--
