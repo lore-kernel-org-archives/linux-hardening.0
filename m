@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA0C2FCE14;
-	Thu, 10 Jul 2025 23:24:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252094A28;
+	Fri, 11 Jul 2025 00:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752189891; cv=none; b=MdecIqUJ3DHkxxfPmvd0QkWq24M8J8ykS8EuxH7wxcbh1AUJpztlgX9KiLS4sjMa/Du96y9gsxzf7h+iFTS2tCVAb/VZkgGAK/+s8FAxb180onRESXO6KnRZM87/Vmwk76xVbZFmrGyk6ZwLN5XunlJA83wsH9TOgqMVq7OMRjk=
+	t=1752193197; cv=none; b=RphpBIZEPJbBAOvzhJkaYZMkVM7AgMyxCKJhfbxO7G5ae2SG+tBvVpO+VNuwx4OnX/+vCLT3VmjRVQwDcvHhOorePvR1YFZG5Ene4rx8Db73jzaWmYZO3VWafWGmAFJm5sRhjMI3pp2zPp7smuLyC7oDOVLssZASbwZ8H09S79c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752189891; c=relaxed/simple;
-	bh=yBhJ7jmYA0boZs71t+Q02sJpnvcmoh4aCEatyyAlf5o=;
+	s=arc-20240116; t=1752193197; c=relaxed/simple;
+	bh=1shRO2dWNJiXv423vpJrUSqInLmf3e/NaLD48gCYbY0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dInwQfIzt9nXOgDStLI5WbK6pX41j8QPIHAr8K25In9RVTNXtjBy2JddLEZMxSspxmco572wLM1ZJLJPKhbOVw2sPM6Qwq5U7uqfsSmydIjSMujgRrN++1cdiWJFPvdcc/V3dTrZQZ/Ts3EygAUPhhuC1/EHAxoQ6z256CPh4sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEw4YreP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TXGU7npsqs1mPWd42gMk/5BBpeVO4YJ/YfCi1vJvIAjs0yva4vuLmyTHaPm3R0Y+aVGXHp/AqD+/Ai+0k4+lRod08GJP3ggqmoxRl/xcxKId6/1/odojWzg7sQziIuPT48jTCLHON2cCjV4abZsLpJG8wdBnxJjd3NT+emEaVfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Weh/yhwS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEw4YreP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD578C4CEE3;
-	Thu, 10 Jul 2025 23:24:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Weh/yhwS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26BA0C4CEE3;
+	Fri, 11 Jul 2025 00:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752189891;
-	bh=yBhJ7jmYA0boZs71t+Q02sJpnvcmoh4aCEatyyAlf5o=;
+	s=k20201202; t=1752193196;
+	bh=1shRO2dWNJiXv423vpJrUSqInLmf3e/NaLD48gCYbY0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oEw4YrePhrzELF6Pbe1r3IR3JZKbRp9kpd275ZM81ATAPD9FK+QPu7dzyUDcsmuth
-	 5vwMlR07emlBd5TJYUa+Qbcq7NyDE4PekGUH8kYVY6d2+WBHOPaN2/UfeD3LHfog4a
-	 SCYoXz9dMA7OxWpmGhqGfA2yhN2KX9kSRQ3JfvF7A1eVdqTcAX5bDPnk+LyiYzkglw
-	 xTZH6gClj3GarPQHaRdWBGS1Rk+lizFbpQekWzKSWRRs75nI4WwX5HNU39bLIBjGkr
-	 CA3ZyBlcvBjuIfdgLspir3NumhiMsjGHaG2g9fVP7lTSFwP/hRgZKwpH9tHNA6E2mz
-	 tjxN179EdSgiA==
-Date: Fri, 11 Jul 2025 01:24:44 +0200
+	b=Weh/yhwSrgdfK/NY77C9CrZIuRWrOj+X1YSebmEEEAujIMSV+TJ2XKohgesgG+dmE
+	 rKOkscfeyE6LAVCiXxB2IRt1p4o4ca+oNuuKpVzhi0yhnsHjw+CXUG+JgfIbF3Dztn
+	 B8XQNg/sdY2QQXn7bSVVq1G/XcWAjBnlLOfsuFP8Zm8Lw7NrDfVOjBuwOec7ceiDqY
+	 yJY24GKOh4+OjurOobQ02HOq6Nz2KZBYCDCJy0VnOPW0hSl7UUUPWHFj0mPXXvQJkL
+	 UQyhmG7sO+XtCQcM7gXodjjE8UZtNlXo1c8VWXu53syVXgRG05v4ABpBUsUeU18aba
+	 mqKRsgOjVlc8g==
+Date: Fri, 11 Jul 2025 02:19:49 +0200
 From: Alejandro Colomar <alx@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
@@ -40,7 +40,7 @@ Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org,
 	Michal Hocko <mhocko@suse.com>, Al Viro <viro@zeniv.linux.org.uk>, 
 	Martin Uecker <uecker@tugraz.at>, Sam James <sam@gentoo.org>, Andrew Pinski <pinskia@gmail.com>
 Subject: Re: [RFC v5 6/7] sprintf: Add [v]sprintf_array()
-Message-ID: <vgqpplbhg6krsufibrhe4n5agnh7vcrdsmoqd225guiakr3ojs@2dltrftpb3p2>
+Message-ID: <z275r52gltcgv6gbixfdwj7z6ocn6qa26v5lif3h7n5otapiq2@37bsjlraqalo>
 References: <cover.1751823326.git.alx@kernel.org>
  <cover.1752182685.git.alx@kernel.org>
  <04c1e026a67f1609167e834471d0f2fe977d9cb0.1752182685.git.alx@kernel.org>
@@ -53,12 +53,12 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6edp5zcpae764526"
+	protocol="application/pgp-signature"; boundary="wxhooa7cq2eiokbj"
 Content-Disposition: inline
 In-Reply-To: <krmt6a25gio6ing5mgahl72nvw36jc7u3zyyb5dzbk4nfjnuy4@fex2h7lqmfwt>
 
 
---6edp5zcpae764526
+--wxhooa7cq2eiokbj
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -167,6 +167,9 @@ On Fri, Jul 11, 2025 at 01:23:56AM +0200, Alejandro Colomar wrote:
 > 	#define sprintf_array(a, ...)  sprintf_trunc(a, ARRAY_SIZE(a), __VA_ARGS=
 __)
 > 	#define vsprintf_array(a, ap)  vsprintf_trunc(a, ARRAY_SIZE(a), ap)
+
+Typo: forgot the fmt argument.
+
 >=20
 > 	char *sprintf_end(char *p, const char end[0], const char *fmt, ...);
 > 	char *vsprintf_end(char *p, const char end[0], const char *fmt, va_list =
@@ -181,9 +184,6 @@ args);
 >=20
 > 		va_start(args, fmt);
 > 		p =3D vseprintf(p, end, fmt, args);
-
-Typo here.  It's vsprintf_end().
-
 > 		va_end(args);
 >=20
 > 		return p;
@@ -211,9 +211,6 @@ args)
 >=20
 > 		va_start(args, fmt);
 > 		len =3D vstprintf(buf, size, fmt, args);
-
-Typo here.  It's vsprintf_trunc().
-
 > 		va_end(args);
 >=20
 > 		return len;
@@ -257,24 +254,24 @@ Typo here.  It's vsprintf_trunc().
 --=20
 <https://www.alejandro-colomar.es/>
 
---6edp5zcpae764526
+--wxhooa7cq2eiokbj
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhwS7wACgkQ64mZXMKQ
-wqlOQxAAqQqG5Z7+Xh1jkMiJqhKKnJ4dTK0nc7NVJNqdOHZBJCjt7CCvZulq+QO5
-TAKjjj5aaK3ZA+XB42UNR6cya6aL88fDOr4d6srebkLTkGoEXnjBN/VWardd8z2d
-Iq8z4UsaxfDDA8OQVz2lbcnFxA2KSszs9SwsP0mZZXjCZSdrIKqguPaexaJ1ZSkC
-IML9PzRqUqm9KbJn9qroGTx5DWRg2hf/q+T6PxCjzU+DDQL7mh1+XHgL3EXL1s4Y
-9+DnXRe+s9VJ8A/TcAwlbdZO99Cp4YpnNJP+m8y0wOJpOgIwlk51hbGGZ2U+jIU9
-nISZk+EZTERJLqU06PVPp3wVyWhxTqVIcbxhQTGKGumltTWaHu2i2yI/RkoMLL/c
-FRm8AnuO4X874TUc9JJTCq9ycz0BAv8YRmbNDmZoVcm8XhBzKVPo03h1LOm/kTnq
-+seYP9mJz6BiFwSXok60CZrsflPlaob3z3tFnMgwG/7qXwMnS6gW3FDRMFMuPVCf
-7vmiDiXMOf0sjwYzM0AYDqqWaGDloWBxU0KwUH0e9+Tp/mDxJbaCxr/1G7fyX3QL
-QtRd6yUURufITU56DsxEJYx9PkDdheYm9JI91ZFHEajSrR0FzQd+SwcNivSk6q8p
-fYtGfPwriq8GxHRzTxeYlCWcy2YKIhb63RLIRNuIgcDyDZ+EKhc=
-=icSd
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhwWKUACgkQ64mZXMKQ
+wqlpAw//RdeLKJ5j+1r2HH8/miXwNO+Td73GjSPzQwmr0qv5WC6xsxijQKo0TqcZ
+hCbrsLeLZwNnEOqaOpGJzyUyROAoqpFDN6WsPa2N4ZvZdPoktE2PwkUzTcCscJG7
+H/cZigcGgcQn2vNWM6RvGPCYrATCt7ijFBiuWsw42ojhDyLsF5WrmuzyD7z+zCOr
+/QuqtAH3pcX8lyyQQbKDqJKwoUDg0LR6jwnqYLuHPALsFH3h3NKKYanRGUqM5if3
+FfN9XQu+YGRAAIl0LNPD97im7wi0EVdt0VmnmVB8B0SuS2aBE6tEyQoP90lSkY5h
+X37I7y7fyevgIl/nfsOaWWe6kYSbFqI2gIRh4YE0pN0eaYwyiclf7L+GHu8ZyZs+
+ABUSDY9H7UThNDDC9mgZE4Cs9qTeCgAU0TllLqcrxVI15JsTriRIayp7dmCCZx4y
+eZg9sizGjpd6/X/s7F8w6yAWEvfVxt8Vcfm/064Z1/UtvkK/pRA04324lPZbVxVK
+l79tjbCwzIyfvtyhTPlCvCCOl5vSKGrsiTgxQDd0rGsMxj7bsmfehMAbvHIwYhGu
+dB2Mgil21Ce0I38Vx0oGdlaOQtXGSl1OCDttCcD+kkxjqfY0nJTX6psFr9DIQzhe
+BSdqZU3Kd2uKHWLPmxH0xAy7EzJ9iuECkOnGL3J9SKg8VLiWCg0=
+=KM9i
 -----END PGP SIGNATURE-----
 
---6edp5zcpae764526--
+--wxhooa7cq2eiokbj--
