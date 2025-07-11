@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38C114BFA2;
-	Fri, 11 Jul 2025 01:57:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C928913D531;
+	Fri, 11 Jul 2025 01:57:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752199032; cv=none; b=GROpZNKYUgKKECfz/UU6l1TWl1Vj/bNDeOZ35jDpuQopo76k8ZwhCDCq/wtFI+Im5/mIWidLGupuW/Tuu4iFRG/e9jLqgNc9aD14q8vTvR/HkteU3vbkeAiWu+/DjhxmYHDCXpPdjzJaGggxwBegdXpqt/QDaMDYQFWluF5tIyI=
+	t=1752199038; cv=none; b=MN9ZKOWUL2Ssf+fvFN/pUU1SPNedoP9L33oUabts5XYPdxQqEIjx8R6xWsDqYuiXpQ2RnfctOqpRBPTXKvL24CmQgyIOgBR4whOatl8GLy6tNA8LEWQJ+eEHtqGl9XH/TEDYrjm37MiiIkG4cYFPHCdSmSqc+v0BLSyI8DseMow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752199032; c=relaxed/simple;
-	bh=stTpsWR5B9qnU4lcgeg0tYr2I54PzkVTHHPWz1Iz+X8=;
+	s=arc-20240116; t=1752199038; c=relaxed/simple;
+	bh=rA+UPFYPuwoFgyGzULq9cIi8t0p+DMJsALzl86HNlek=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CQzEc/E9jOGM/dmFHAOH6V7N08GCmLyMQcuj3ZHjjGfKumfKih0c5p0G3ghSAKDkaFEPTM6FcctsayPuhoJpuDSouunmYtsQDlfugfd/HpMkCk7vFd7eWnthDnfC1MMBEPlAnoQJxWbkcIZlFoICILTdlYg18Zw8Bk4RVmOTbRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NHhCnKgm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ebQjDpU+vFh9kDfsgN6dP3KHMAUyyFUxxGntk35czbu/LHE8HcTdWSdAThDp5SauF+4U9byJ2d4XyieRSA9108DQdReEPektIiRnbt1z5wkixDP3No6qs97mLIIImnxa9zVHiRTa5FC8HeH/HHbs2mGcAH/GR7lw/sqCYe6DA3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLhTvbdN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHhCnKgm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E2D8C4CEE3;
-	Fri, 11 Jul 2025 01:57:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLhTvbdN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D0C2C4CEE3;
+	Fri, 11 Jul 2025 01:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752199031;
-	bh=stTpsWR5B9qnU4lcgeg0tYr2I54PzkVTHHPWz1Iz+X8=;
+	s=k20201202; t=1752199038;
+	bh=rA+UPFYPuwoFgyGzULq9cIi8t0p+DMJsALzl86HNlek=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NHhCnKgmG9jHKzaW9+iAljhm/h50l3wWsWTMssrurSEQzbFcDMsxQYw4EGK69U+3G
-	 Uajs6mZ0vvgIt/Z/z3/GwqaDBuFliwl9W5xbEnqkZn3i8s0YsrwJ5pm4usNyvvzjpt
-	 acUWRGkJNk/ilaTNM0FkzzxXz8g/21TFz7iak2WywEYviNC+/jTYtEyclexGZ+iu6K
-	 YG1GeVk1GfNVCTmGVZxm28IWh27RONOXcQKTM4FspjeAvPNvEktbDlbWMhqO31GnsJ
-	 9x/E8KUXayy9rWiJspo+aFLL7b9PKiPeEfws3rcunNSfy89u6+yNUz8TbY9A22uZGy
-	 ikR2FuLZZ9JYg==
-Date: Fri, 11 Jul 2025 03:57:04 +0200
+	b=NLhTvbdNgrS960NEQxlWk0IVVXJt/aRKdQ8OVhbhrfIMKyoZEeIZMrKuBezSoYVyv
+	 ZKzGLWxG8qRSd/nwR+JV/xwTEtjvwdwnCO/bLMSXfDmAXPvmunK6v3hErIbEwTzRij
+	 YaOJ6/iMD0EbonjcIxOqqbuuVpVpQWa7O6ka0O9B7g7FO2JiNiTAwvgbAN/F3Ck7ci
+	 JjNE+AxoJFDeYdXMuHCR1+0OlCBvh2xRQh5kBEmxqf9fxlVlSeNwzl4BO1PnlxhNQC
+	 7AUsmdAVBE4EYgDHXyIOZ8TB0POq1yaJICtauOk6eOorPS6EEfdYbEwGnR9GP0l8Yr
+	 exFYh78CmR5Dw==
+Date: Fri, 11 Jul 2025 03:57:12 +0200
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-mm@kvack.org, linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
@@ -39,11 +39,9 @@ Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>,
 	Andrew Clayton <andrew@digital-domain.net>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Michal Hocko <mhocko@suse.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
 	Al Viro <viro@zeniv.linux.org.uk>, Martin Uecker <uecker@tugraz.at>, Sam James <sam@gentoo.org>, 
-	Andrew Pinski <pinskia@gmail.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, Chao Yu <chao.yu@oppo.com>
-Subject: [RFC v6 5/8] mm: Use sprintf_end() instead of less ergonomic APIs
-Message-ID: <8a0ffc1bf43d60e1654c10546b9f615c38f604f0.1752193588.git.alx@kernel.org>
+	Andrew Pinski <pinskia@gmail.com>
+Subject: [RFC v6 6/8] array_size.h: Add ENDOF()
+Message-ID: <37b1088dbd01a21d2f9d460aa510726119b3bcb0.1752193588.git.alx@kernel.org>
 X-Mailer: git-send-email 2.50.0
 References: <cover.1751823326.git.alx@kernel.org>
  <cover.1752193588.git.alx@kernel.org>
@@ -57,356 +55,36 @@ Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 In-Reply-To: <cover.1752193588.git.alx@kernel.org>
 
-While doing this, I detected some anomalies in the existing code:
-
-mm/kfence/kfence_test.c:
-
-	-  The last call to scnprintf() did increment 'cur', but it's
-	   unused after that, so it was dead code.  I've removed the dead
-	   code in this patch.
-
-	-  'end' is calculated as
-
-		end = &expect[0][sizeof(expect[0] - 1)];
-
-	   However, the '-1' doesn't seem to be necessary.  When passing
-	   $2 to scnprintf(), the size was specified as 'end - cur'.
-	   And scnprintf() --just like snprintf(3)--, won't write more
-	   than $2 bytes (including the null byte).  That means that
-	   scnprintf() wouldn't write more than
-
-		&expect[0][sizeof(expect[0]) - 1] - expect[0]
-
-	   which simplifies to
-
-		sizeof(expect[0]) - 1
-
-	   bytes.  But we have sizeof(expect[0]) bytes available, so
-	   we're wasting one byte entirely.  This is a benign off-by-one
-	   bug.  The two occurrences of this bug will be fixed in a
-	   following patch in this series.
-
-mm/kmsan/kmsan_test.c:
-
-	The same benign off-by-one bug calculating the remaining size.
-
-mm/mempolicy.c:
-
-	This file uses the 'p += snprintf()' anti-pattern.  That will
-	overflow the pointer on truncation, which has undefined
-	behavior.  Using sprintf_end(), this bug is fixed.
-
-	As in the previous file, here there was also dead code in the
-	last scnprintf() call, by incrementing a pointer that is not
-	used after the call.  I've removed the dead code.
-
-mm/page_owner.c:
-
-	Within print_page_owner(), there are some calls to scnprintf(),
-	which do report truncation.  And then there are other calls to
-	snprintf(), where we handle errors (there are two 'goto err').
-
-	I've kept the existing error handling, as I trust it's there for
-	a good reason (i.e., we may want to avoid calling
-	print_page_owner_memcg() if we truncated before).  Please review
-	if this amount of error handling is the right one, or if we want
-	to add or remove some.  For sprintf_end(), a single test for
-	null after the last call is enough to detect truncation.
-
-mm/slub.c:
-
-	Again, the 'p += snprintf()' anti-pattern.  This is UB, and by
-	using sprintf_end() we've fixed the bug.
+This macro is useful to calculate the second argument to sprintf_end(),
+avoiding off-by-one bugs.
 
 Cc: Kees Cook <kees@kernel.org>
 Cc: Christopher Bazley <chris.bazley.wg14@gmail.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: Marco Elver <elver@google.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: Chao Yu <chao.yu@oppo.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Marco Elver <elver@google.com>
 Cc: Michal Hocko <mhocko@suse.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- mm/kfence/kfence_test.c | 24 ++++++++++++------------
- mm/kmsan/kmsan_test.c   |  4 ++--
- mm/mempolicy.c          | 18 +++++++++---------
- mm/page_owner.c         | 32 +++++++++++++++++---------------
- mm/slub.c               |  5 +++--
- 5 files changed, 43 insertions(+), 40 deletions(-)
+ include/linux/array_size.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/mm/kfence/kfence_test.c b/mm/kfence/kfence_test.c
-index 00034e37bc9f..bae382eca4ab 100644
---- a/mm/kfence/kfence_test.c
-+++ b/mm/kfence/kfence_test.c
-@@ -113,26 +113,26 @@ static bool report_matches(const struct expect_report *r)
- 	end = &expect[0][sizeof(expect[0]) - 1];
- 	switch (r->type) {
- 	case KFENCE_ERROR_OOB:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: out-of-bounds %s",
-+		cur = sprintf_end(cur, end, "BUG: KFENCE: out-of-bounds %s",
- 				 get_access_type(r));
- 		break;
- 	case KFENCE_ERROR_UAF:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: use-after-free %s",
-+		cur = sprintf_end(cur, end, "BUG: KFENCE: use-after-free %s",
- 				 get_access_type(r));
- 		break;
- 	case KFENCE_ERROR_CORRUPTION:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: memory corruption");
-+		cur = sprintf_end(cur, end, "BUG: KFENCE: memory corruption");
- 		break;
- 	case KFENCE_ERROR_INVALID:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: invalid %s",
-+		cur = sprintf_end(cur, end, "BUG: KFENCE: invalid %s",
- 				 get_access_type(r));
- 		break;
- 	case KFENCE_ERROR_INVALID_FREE:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: invalid free");
-+		cur = sprintf_end(cur, end, "BUG: KFENCE: invalid free");
- 		break;
- 	}
- 
--	scnprintf(cur, end - cur, " in %pS", r->fn);
-+	sprintf_end(cur, end, " in %pS", r->fn);
- 	/* The exact offset won't match, remove it; also strip module name. */
- 	cur = strchr(expect[0], '+');
- 	if (cur)
-@@ -144,26 +144,26 @@ static bool report_matches(const struct expect_report *r)
- 
- 	switch (r->type) {
- 	case KFENCE_ERROR_OOB:
--		cur += scnprintf(cur, end - cur, "Out-of-bounds %s at", get_access_type(r));
-+		cur = sprintf_end(cur, end, "Out-of-bounds %s at", get_access_type(r));
- 		addr = arch_kfence_test_address(addr);
- 		break;
- 	case KFENCE_ERROR_UAF:
--		cur += scnprintf(cur, end - cur, "Use-after-free %s at", get_access_type(r));
-+		cur = sprintf_end(cur, end, "Use-after-free %s at", get_access_type(r));
- 		addr = arch_kfence_test_address(addr);
- 		break;
- 	case KFENCE_ERROR_CORRUPTION:
--		cur += scnprintf(cur, end - cur, "Corrupted memory at");
-+		cur = sprintf_end(cur, end, "Corrupted memory at");
- 		break;
- 	case KFENCE_ERROR_INVALID:
--		cur += scnprintf(cur, end - cur, "Invalid %s at", get_access_type(r));
-+		cur = sprintf_end(cur, end, "Invalid %s at", get_access_type(r));
- 		addr = arch_kfence_test_address(addr);
- 		break;
- 	case KFENCE_ERROR_INVALID_FREE:
--		cur += scnprintf(cur, end - cur, "Invalid free of");
-+		cur = sprintf_end(cur, end, "Invalid free of");
- 		break;
- 	}
- 
--	cur += scnprintf(cur, end - cur, " 0x%p", (void *)addr);
-+	sprintf_end(cur, end, " 0x%p", (void *)addr);
- 
- 	spin_lock_irqsave(&observed.lock, flags);
- 	if (!report_available())
-diff --git a/mm/kmsan/kmsan_test.c b/mm/kmsan/kmsan_test.c
-index 9733a22c46c1..e48ca1972ff3 100644
---- a/mm/kmsan/kmsan_test.c
-+++ b/mm/kmsan/kmsan_test.c
-@@ -107,9 +107,9 @@ static bool report_matches(const struct expect_report *r)
- 	cur = expected_header;
- 	end = &expected_header[sizeof(expected_header) - 1];
- 
--	cur += scnprintf(cur, end - cur, "BUG: KMSAN: %s", r->error_type);
-+	cur = sprintf_end(cur, end, "BUG: KMSAN: %s", r->error_type);
- 
--	scnprintf(cur, end - cur, " in %s", r->symbol);
-+	sprintf_end(cur, end, " in %s", r->symbol);
- 	/* The exact offset won't match, remove it; also strip module name. */
- 	cur = strchr(expected_header, '+');
- 	if (cur)
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index b28a1e6ae096..6beb2710f97c 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -3359,6 +3359,7 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
- void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
- {
- 	char *p = buffer;
-+	char *e = buffer + maxlen;
- 	nodemask_t nodes = NODE_MASK_NONE;
- 	unsigned short mode = MPOL_DEFAULT;
- 	unsigned short flags = 0;
-@@ -3384,33 +3385,32 @@ void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
- 		break;
- 	default:
- 		WARN_ON_ONCE(1);
--		snprintf(p, maxlen, "unknown");
-+		sprintf_end(p, e, "unknown");
- 		return;
- 	}
- 
--	p += snprintf(p, maxlen, "%s", policy_modes[mode]);
-+	p = sprintf_end(p, e, "%s", policy_modes[mode]);
- 
- 	if (flags & MPOL_MODE_FLAGS) {
--		p += snprintf(p, buffer + maxlen - p, "=");
-+		p = sprintf_end(p, e, "=");
- 
- 		/*
- 		 * Static and relative are mutually exclusive.
- 		 */
- 		if (flags & MPOL_F_STATIC_NODES)
--			p += snprintf(p, buffer + maxlen - p, "static");
-+			p = sprintf_end(p, e, "static");
- 		else if (flags & MPOL_F_RELATIVE_NODES)
--			p += snprintf(p, buffer + maxlen - p, "relative");
-+			p = sprintf_end(p, e, "relative");
- 
- 		if (flags & MPOL_F_NUMA_BALANCING) {
- 			if (!is_power_of_2(flags & MPOL_MODE_FLAGS))
--				p += snprintf(p, buffer + maxlen - p, "|");
--			p += snprintf(p, buffer + maxlen - p, "balancing");
-+				p = sprintf_end(p, e, "|");
-+			p = sprintf_end(p, e, "balancing");
- 		}
- 	}
- 
- 	if (!nodes_empty(nodes))
--		p += scnprintf(p, buffer + maxlen - p, ":%*pbl",
--			       nodemask_pr_args(&nodes));
-+		sprintf_end(p, e, ":%*pbl", nodemask_pr_args(&nodes));
- }
- 
- #ifdef CONFIG_SYSFS
-diff --git a/mm/page_owner.c b/mm/page_owner.c
-index cc4a6916eec6..c00b3be01540 100644
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -496,7 +496,7 @@ void pagetypeinfo_showmixedcount_print(struct seq_file *m,
- /*
-  * Looking for memcg information and print it out
+diff --git a/include/linux/array_size.h b/include/linux/array_size.h
+index 06d7d83196ca..781bdb70d939 100644
+--- a/include/linux/array_size.h
++++ b/include/linux/array_size.h
+@@ -10,4 +10,10 @@
   */
--static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
-+static inline char *print_page_owner_memcg(char *p, const char end[0],
- 					 struct page *page)
- {
- #ifdef CONFIG_MEMCG
-@@ -511,8 +511,7 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
- 		goto out_unlock;
+ #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_array(arr))
  
- 	if (memcg_data & MEMCG_DATA_OBJEXTS)
--		ret += scnprintf(kbuf + ret, count - ret,
--				"Slab cache page\n");
-+		p = sprintf_end(p, end, "Slab cache page\n");
- 
- 	memcg = page_memcg_check(page);
- 	if (!memcg)
-@@ -520,7 +519,7 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
- 
- 	online = (memcg->css.flags & CSS_ONLINE);
- 	cgroup_name(memcg->css.cgroup, name, sizeof(name));
--	ret += scnprintf(kbuf + ret, count - ret,
-+	p = sprintf_end(p, end,
- 			"Charged %sto %smemcg %s\n",
- 			PageMemcgKmem(page) ? "(via objcg) " : "",
- 			online ? "" : "offline ",
-@@ -529,7 +528,7 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
- 	rcu_read_unlock();
- #endif /* CONFIG_MEMCG */
- 
--	return ret;
-+	return p;
- }
- 
- static ssize_t
-@@ -538,14 +537,16 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
- 		depot_stack_handle_t handle)
- {
- 	int ret, pageblock_mt, page_mt;
--	char *kbuf;
-+	char *kbuf, *p, *e;
- 
- 	count = min_t(size_t, count, PAGE_SIZE);
- 	kbuf = kmalloc(count, GFP_KERNEL);
- 	if (!kbuf)
- 		return -ENOMEM;
- 
--	ret = scnprintf(kbuf, count,
-+	p = kbuf;
-+	e = kbuf + count;
-+	p = sprintf_end(p, e,
- 			"Page allocated via order %u, mask %#x(%pGg), pid %d, tgid %d (%s), ts %llu ns\n",
- 			page_owner->order, page_owner->gfp_mask,
- 			&page_owner->gfp_mask, page_owner->pid,
-@@ -555,7 +556,7 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
- 	/* Print information relevant to grouping pages by mobility */
- 	pageblock_mt = get_pageblock_migratetype(page);
- 	page_mt  = gfp_migratetype(page_owner->gfp_mask);
--	ret += scnprintf(kbuf + ret, count - ret,
-+	p = sprintf_end(p, e,
- 			"PFN 0x%lx type %s Block %lu type %s Flags %pGp\n",
- 			pfn,
- 			migratetype_names[page_mt],
-@@ -563,22 +564,23 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
- 			migratetype_names[pageblock_mt],
- 			&page->flags);
- 
--	ret += stack_depot_snprint(handle, kbuf + ret, count - ret, 0);
--	if (ret >= count)
--		goto err;
-+	p = stack_depot_sprint_end(handle, p, e, 0);
-+	if (p == NULL)
-+		goto err;  // XXX: Should we remove this error handling?
- 
- 	if (page_owner->last_migrate_reason != -1) {
--		ret += scnprintf(kbuf + ret, count - ret,
-+		p = sprintf_end(p, e,
- 			"Page has been migrated, last migrate reason: %s\n",
- 			migrate_reason_names[page_owner->last_migrate_reason]);
- 	}
- 
--	ret = print_page_owner_memcg(kbuf, count, ret, page);
-+	p = print_page_owner_memcg(p, e, page);
- 
--	ret += snprintf(kbuf + ret, count - ret, "\n");
--	if (ret >= count)
-+	p = sprintf_end(p, e, "\n");
-+	if (p == NULL)
- 		goto err;
- 
-+	ret = p - kbuf;
- 	if (copy_to_user(buf, kbuf, ret))
- 		ret = -EFAULT;
- 
-diff --git a/mm/slub.c b/mm/slub.c
-index be8b09e09d30..dcc857676857 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -7451,6 +7451,7 @@ static char *create_unique_id(struct kmem_cache *s)
- {
- 	char *name = kmalloc(ID_STR_LENGTH, GFP_KERNEL);
- 	char *p = name;
-+	char *e = name + ID_STR_LENGTH;
- 
- 	if (!name)
- 		return ERR_PTR(-ENOMEM);
-@@ -7475,9 +7476,9 @@ static char *create_unique_id(struct kmem_cache *s)
- 		*p++ = 'A';
- 	if (p != name + 1)
- 		*p++ = '-';
--	p += snprintf(p, ID_STR_LENGTH - (p - name), "%07u", s->size);
-+	p = sprintf_end(p, e, "%07u", s->size);
- 
--	if (WARN_ON(p > name + ID_STR_LENGTH - 1)) {
-+	if (WARN_ON(p == NULL)) {
- 		kfree(name);
- 		return ERR_PTR(-EINVAL);
- 	}
++/**
++ * ENDOF - get a pointer to one past the last element in array @a
++ * @a: array
++ */
++#define ENDOF(a)  (a + ARRAY_SIZE(a))
++
+ #endif  /* _LINUX_ARRAY_SIZE_H */
 -- 
 2.50.0
 
