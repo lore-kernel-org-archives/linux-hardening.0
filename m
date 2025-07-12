@@ -1,68 +1,68 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B3C28A3F2
-	for <linux-hardening@vger.kernel.org>; Sat, 12 Jul 2025 19:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDA53C30
+	for <linux-hardening@vger.kernel.org>; Sat, 12 Jul 2025 19:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752348259; cv=none; b=mkcQ7sQf6INGTEPqdqn6oYbRRdROYJtdXXk3EmDEU+7g15+z/qRZJmDhkZEMbBNoYa+mUu4SUZRvhThVS/f0id30dHzdBDdi6HvdTuoI7UCtFNtiz53UQ0QkyN51+ZtWQbjjAkjyTH1QnG5V+QVLFsB7SI2dqnQf2nx/qGIMQSY=
+	t=1752348260; cv=none; b=KauD1yAfvRl3SDd56wC9Z1UfNlhU/ECcq71ElvVfSzY6H+7bTe7QiqduOchRRAYVKyZ+lQaNGuCQ104aQLvJPEWM2+QQc2/V5/53SAir6C7P5BKkY+UAxj9l/MI6YvJZGqfF9XZNlMxexgLog03NV+tHP3omT2roD55xZEUsFhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752348259; c=relaxed/simple;
-	bh=T4ev1myiJNlrSVB9uy6eES+bFsvdJ8U52jra2DPYfpA=;
+	s=arc-20240116; t=1752348260; c=relaxed/simple;
+	bh=Nes6f1fZBpLY2nyg1iafWnX3Jwp2nx2d3NnanYM0RTo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=airDAt25OqXmpPrQTu5L1vLPFCNpJ71BUl2/r1wy0jOitf75cZMhdxK51cUpSvbIhm0myirLKv7YfgRRvNMnBZG8Xf5UMIThjeGUEqVRZwgu/9Sk18hRQOr9I+DvIaY2B8xDztDxe26b0ONU2Yz58CDrBxIOxa0OCo/I9YUVOXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S3qgrC3n; arc=none smtp.client-ip=209.85.214.174
+	 MIME-Version; b=eikQ+7sEhzBn3O77YiXudo2FKttREPjoQuMkxYZV7GQxfVr6IicA7tUWlCr5W00VSoeP3i6CAsHVD2ezQWm+ve18BaECOh3SiYKiIh2Xjj/LYMvkGcYo2zJi+W9nCFW4ulfH6EJgnK8aWRyLMjG8oO/aO/Soa1jMKW+cw92dSU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=czHzSnPd; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S3qgrC3n"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-23aeac7d77aso26018125ad.3
-        for <linux-hardening@vger.kernel.org>; Sat, 12 Jul 2025 12:24:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czHzSnPd"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-23c703c471dso35551265ad.0
+        for <linux-hardening@vger.kernel.org>; Sat, 12 Jul 2025 12:24:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752348257; x=1752953057; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1752348258; x=1752953058; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fmjU9c7XFNhzBgv/SPa89jdt4dtsCwoIEITxjWS2MXg=;
-        b=S3qgrC3nbHZKXoMdbV6r4Sy6Xd6P07+ZPPQrSC0aotLX5igClbuTZz6l/OQVhhZ1Wk
-         7YitMMdJfpHH8tv2W9jJQC+KB0VW5FXFW2yJWCHyIZOWoVQy033tyweLAdabJW4FXKyE
-         t4dyT1kWRo3JjPjBm1JzO6+c5lmsg/tVwocXsT69a8qvElmdnqjw49DX8DVWpUAUFl3P
-         k/8IvSv7ptFxLWd537at7SAutNjoHmY5R5Uaqucm1NK0/iqlFprLSQOaYVcmRxF3csMZ
-         kraAtPJgOOOeGmcSZHraHuU9GGgVV9x0Ek2VO6SneUrdiL4vFRZ9B2aydYveZf2liinc
-         8MWA==
+        bh=IE9HMJY8sR3JkIClAZLUFN6qbNwz8PyZBZ/MV3KbT1Y=;
+        b=czHzSnPdsvCQ90SqTt2RwQT5FB1EM7LMm55KbqVSr0h1iyIUX112Xr2BLggPO1Fjpi
+         /Tyt9aqg29iLbhetZSM/7xW1k89iv+wW0+cQxXoXSPJ9FCEJtoOvqMQV3f0qKkpeqPa0
+         zQNcTj2UMdAIio3wQHFPmtlh5FiL7DnJAcKs5BK3kYqf0HQredEM10Ff3GBcjq4Bw9Q2
+         rFL0fMwZXoYwWfsFS3JtDzMrh5tGEqt/FLBTxKwuDzzpAQPLK8GCJETS4hEwtikwBVy2
+         vfCULaMVzemMos4dgCcJnkC/9ltQjJosjceFfDUmCxpjvGUXWQ4x3XF7vb+Fq9JRQUiL
+         AWJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752348257; x=1752953057;
+        d=1e100.net; s=20230601; t=1752348258; x=1752953058;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fmjU9c7XFNhzBgv/SPa89jdt4dtsCwoIEITxjWS2MXg=;
-        b=HOWYzHToYl4rZL6ncaIBAJlQHxIcSZaZpdg+UodwnCczAEB3ABFRj+/VhYX7WS/gxt
-         1ZI+QVHL59Ovkl/vIuucb9h4DuwURYmUTzmmVc54rPMJLiv0LdNRdLI2iJrqbBa8tlrH
-         PlY3yob8DEVy506CTZpKYM7u7R6ABYmaR1s8LL0+B7pktGK/oP5zQicylAdZBTNlgUOY
-         GajhhbC1IYHjJBBNAiG5QmBXl+caEvjgj+ynmLA9gfsmm4FUgIdtg9ARjBHencjwA9as
-         eSCspzi7tjbf5KGAyba+d669y5Uc69BoqF48Y3pg27dhNSrcvYEzpCSnXt5Qg4EsI7ro
-         Cl2w==
-X-Gm-Message-State: AOJu0YxDU+6DNO/ye+jpeuRroOZrdRrBHymMs9/UGf/xe9LG2DiTfcaH
-	QgUWcdpawg+4aJYb/uYb9pLMw+g+AzTDsD8f6o3TxmiaWSaB+ZHQkjuUma4badlS
-X-Gm-Gg: ASbGnct9F4iebZSUXYSgRs9xsoIwHGPKdYc0MfNvMXH8JrYff+rTYoUDjnk+ekN3EXw
-	oxUbhLp7tP2lXSwCHQBxvfm63IO6VA6fR7l5ZEfccZ5y7ZVXX8jtri+RkYT4Ub/GZeXNnPYDqrm
-	iS9VaOOS51aBOVanwmvA6CaSREWnhZcULxr3aDVa470V4+2T54qJGZlLl7mRdeqHprGd0Hz6X2q
-	iLH5WBf98M5471Z+8LbwdxQ1NAC2Y1evOJSu6+EntPNv8/Q7sIy8ECcYn4xRNEwloe3v/v/7fUf
-	wP6TE0hPZpWVd3qrm/blbbrtrbL2sVVs21XqfC0tjXU75cinN/bH2eZz7pwsWLsLJsJVa1Iiknt
-	vWCmzpCrbNmCtPrHfDbxDOnsNVQI+DzM2y69yI9S84ualReQRp8Ofopk=
-X-Google-Smtp-Source: AGHT+IGbMbHBIS8Kq3dqUHNIDRCjsLM6lPSN3a9NaZQVnXhGjMRORDY3ccDj9jetW6AGKkioZ85t8Q==
-X-Received: by 2002:a17:902:cf0e:b0:235:e8da:8d6 with SMTP id d9443c01a7336-23df07db1admr119664735ad.2.1752348256651;
-        Sat, 12 Jul 2025 12:24:16 -0700 (PDT)
+        bh=IE9HMJY8sR3JkIClAZLUFN6qbNwz8PyZBZ/MV3KbT1Y=;
+        b=DimoxowEEfk9GzpSGaCgp5A1Frw6jWBoNPvfJUJEKnrssneTHUI7qm/AUtVrFl9zkl
+         tcxOgIcswuF+L2edUYHtm8mr7CSRc9n2obQ+KoFC9VU2NmSvf3ZTWBpMlAY0fCFg8MCQ
+         lO5PE99V70FYPnEbyA1jXv1Gn8TROyGljkHRanDDcaBZm/bLnsMp5T5pbq/rECroKfh0
+         +dB38Ph1tW6CCgsvWijyTJBCp+0rkvsFbJ1wl9N9//EZw73yxW4Sl76FUZpaJ2Wqjjcq
+         hjMmwH6Libo5M9SCtRGsMKD398vVGrwp3gMdl71M+k2rmIRoNnXijTuGBpln3eAAf38n
+         QrNA==
+X-Gm-Message-State: AOJu0Yxqa+H/rHKyJ12Nt8C8sU95PAYu4fnxbGGBeZK/KGXce4Q67tuB
+	etbff8/N6eOqQyAyzjiHN5/MptaAAHi+uLiHcZhQck3+mh9bYOnlgwld6gj0f4R0
+X-Gm-Gg: ASbGncvvqe4mSUugof/HD549nHOrH3U1Av/fW3G8zKFFCY7+zRwp+86l2u3SG3FNa9w
+	GB1trFXccjA1zh4qpBD2lYAoedkhU25zOT1wB6Tuj6BJSorMBuaVdo2xYVIeTe5iLL1ri9nOTo4
+	95DBD7xDSQ6VAYkjmgJYCGHMx7Hj+lIakKMgIjSjFzG/uhC5mF9wCT/1XfevCEhs9d1O0Kn/3v+
+	JRe+yLwLnF9L8dfFsCqamKPx1wFYo4gDkVcl4dipw0+fZcs9aMyAXShSAY3pUfwXglCW7FuVaNB
+	Y6NpuHYccKAHEqS4xfnAAO3YnFwKA89kwvmb2nC+xUPkORBu4Dk0t9CCQD8OGm60WjpkJe9u2B/
+	3gsqfO/Cbo8SOKBBSNIiglA8tB00LtikK/HtZvOD4WTIH
+X-Google-Smtp-Source: AGHT+IEO5Rphs4LbYS2Nhspv81kY+igXMR/dKURQvnC2SlQiDyz4g2BqGdgFu9fUez5fPJlw0J+uBw==
+X-Received: by 2002:a17:902:cecb:b0:23d:dd5b:886a with SMTP id d9443c01a7336-23de2eafdd7mr178211455ad.0.1752348257669;
+        Sat, 12 Jul 2025 12:24:17 -0700 (PDT)
 Received: from localhost.localdomain ([147.182.204.210])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-23de4332b0csm66013645ad.149.2025.07.12.12.24.15
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-23de4332b0csm66013645ad.149.2025.07.12.12.24.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Jul 2025 12:24:16 -0700 (PDT)
+        Sat, 12 Jul 2025 12:24:17 -0700 (PDT)
 From: Gatlin Newhouse <gatlin.newhouse@gmail.com>
 To: linux-hardening@vger.kernel.org
 Cc: Gatlin Newhouse <gatlin.newhouse@gmail.com>
-Subject: [RFC v1 05/17] uaccess: add non-caching copy_from_user functions
-Date: Sat, 12 Jul 2025 19:21:50 +0000
-Message-Id: <20250712192202.707192-6-gatlin.newhouse@gmail.com>
+Subject: [RFC v1 06/17] futex: add get_user_no_dfcache() functions
+Date: Sat, 12 Jul 2025 19:21:51 +0000
+Message-Id: <20250712192202.707192-7-gatlin.newhouse@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250712192202.707192-1-gatlin.newhouse@gmail.com>
 References: <20250712192202.707192-1-gatlin.newhouse@gmail.com>
@@ -74,58 +74,101 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
+Add disabled cache get_user function calls to futex functions to disable
+using the SafeFetch cache on any fast userspace mutexes.
 ---
- include/linux/uaccess.h | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ kernel/futex/core.c     | 5 +++++
+ kernel/futex/futex.h    | 4 ++++
+ kernel/futex/pi.c       | 5 +++++
+ kernel/futex/requeue.c  | 5 ++++-
+ kernel/futex/waitwake.c | 4 ++++
+ 5 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 7c06f4795670..d6d80bb9e0fa 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -186,6 +186,26 @@ _inline_copy_from_user(void *to, const void __user *from, unsigned long n)
- extern __must_check unsigned long
- _copy_from_user(void *, const void __user *, unsigned long);
+diff --git a/kernel/futex/core.c b/kernel/futex/core.c
+index 90d53fb0ee9e..0ad5e0dba881 100644
+--- a/kernel/futex/core.c
++++ b/kernel/futex/core.c
+@@ -1023,8 +1023,13 @@ static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr,
+ 		return -1;
+ 
+ retry:
++#ifdef CONFIG_SAFEFETCH
++	if (get_user_no_dfcache(uval, uaddr))
++		return -1;
++#else
+ 	if (get_user(uval, uaddr))
+ 		return -1;
++#endif
+ 
+ 	/*
+ 	 * Special case for regular (non PI) futexes. The unlock path in
+diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
+index fcd1617212ee..515338cf4289 100644
+--- a/kernel/futex/futex.h
++++ b/kernel/futex/futex.h
+@@ -308,7 +308,11 @@ static __always_inline int futex_get_value(u32 *dest, u32 __user *from)
+ 		from = masked_user_access_begin(from);
+ 	else if (!user_read_access_begin(from, sizeof(*from)))
+ 		return -EFAULT;
++#ifdef CONFIG_SAFEFETCH
++	unsafe_get_user_no_dfcache(val, from, Efault);
++#else
+ 	unsafe_get_user(val, from, Efault);
++#endif
+ 	user_read_access_end();
+ 	*dest = val;
+ 	return 0;
+diff --git a/kernel/futex/pi.c b/kernel/futex/pi.c
+index dacb2330f1fb..f9f4ac192338 100644
+--- a/kernel/futex/pi.c
++++ b/kernel/futex/pi.c
+@@ -1140,8 +1140,13 @@ int futex_unlock_pi(u32 __user *uaddr, unsigned int flags)
+ 		return -ENOSYS;
+ 
+ retry:
++#ifdef CONFIG_SAFEFETCH
++	if (get_user_no_dfcache(uval, uaddr))
++		return -EFAULT;
++#else
+ 	if (get_user(uval, uaddr))
+ 		return -EFAULT;
++#endif
+ 	/*
+ 	 * We release only a lock we actually own:
+ 	 */
+diff --git a/kernel/futex/requeue.c b/kernel/futex/requeue.c
+index c716a66f8692..3ebc08a9a8e8 100644
+--- a/kernel/futex/requeue.c
++++ b/kernel/futex/requeue.c
+@@ -468,8 +468,11 @@ int futex_requeue(u32 __user *uaddr1, unsigned int flags1,
+ 			if (unlikely(ret)) {
+ 				futex_hb_waiters_dec(hb2);
+ 				double_unlock_hb(hb1, hb2);
+-
++#ifdef CONFIG_SAFEFETCH
++				ret = get_user_no_dfcache(curval, uaddr1);
++#else
+ 				ret = get_user(curval, uaddr1);
++#endif
+ 				if (ret)
+ 					return ret;
+ 
+diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
+index e2bbe5509ec2..bf4ed107aff8 100644
+--- a/kernel/futex/waitwake.c
++++ b/kernel/futex/waitwake.c
+@@ -629,7 +629,11 @@ int futex_wait_setup(u32 __user *uaddr, u32 val, unsigned int flags,
+ 		if (ret) {
+ 			futex_q_unlock(hb);
  
 +#ifdef CONFIG_SAFEFETCH
-+static inline __must_check unsigned long
-+_copy_from_user_no_dfcache(void *to, const void __user *from, unsigned long n)
-+{
-+	unsigned long res = n;
-+
-+	might_fault();
-+	if (!should_fail_usercopy() && likely(access_ok(from, n))) {
-+		instrument_copy_from_user_before(to, from, n);
-+		res = raw_copy_from_user_no_dfcache(to, from, n);
-+		instrument_copy_from_user_after(to, from, n, res);
-+	}
-+	if (unlikely(res))
-+		memset(to + (n - res), 0, res);
-+	return res;
-+}
-+extern __must_check unsigned long
-+_copy_from_user_no_dfcache(void *, const void __user *, unsigned long);
++			ret = get_user_no_dfcache(uval, uaddr);
++#else
+ 			ret = get_user(uval, uaddr);
 +#endif
-+
- static inline __must_check unsigned long
- _inline_copy_to_user(void __user *to, const void *from, unsigned long n)
- {
-@@ -213,6 +233,16 @@ copy_from_user(void *to, const void __user *from, unsigned long n)
- #endif
- }
+ 			if (ret)
+ 				return ret;
  
-+#ifdef CONFIG_SAFEFETCH
-+static __always_inline unsigned long __must_check
-+copy_from_user_no_dfcache(void *to, const void __user *from, unsigned long n)
-+{
-+	if (likely(check_copy_size(to, n, false)))
-+		n = _copy_from_user_no_dfcache(to, from, n);
-+	return n;
-+}
-+#endif
-+
- static __always_inline unsigned long __must_check
- copy_to_user(void __user *to, const void *from, unsigned long n)
- {
 -- 
 2.25.1
 
