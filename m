@@ -1,158 +1,137 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5EE2AE99;
-	Sat, 12 Jul 2025 20:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A2922258C;
+	Sat, 12 Jul 2025 21:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752353946; cv=none; b=dS3R1QJx5W6jxMEzR3ipNOxvFsW9qP2nuBipp8lirYRLccMFw1oPahsZuwnf6KkN/Wt4yPSBgQ3bNnQ7JxtkCb4JZZ5CWu/5jA0VBYG3Em1femhyB04VGjhWMEbYCx2QKa3dMeItuzZvg99ua2cJkkaojQdPWGkb1yu2yuUTlI8=
+	t=1752354809; cv=none; b=Z6O3aOxEHLnxLkPeLXhL1C3KGsphnoQ9c8AUxcClhsSXgSVzRUVMO4hbgu9/IFQ9Qti62I7meciDSgn1hdgTjgThmty2IsSNHjgY1Wy6roG4sGjM8kn8hwYxAp0Zb+VQcQ9bSkmJFjZkaCXOpAf9hWVlWn4UX/ePPAwiXt5XrzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752353946; c=relaxed/simple;
-	bh=ULMT2RN2xocfDvDhwK1+Ve5ay3Krg/YRfI7ZYlsX1fw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BytqPmN224KavfZneata8Ir4sqR4Iqe8q02pkSDRrLyVTWIB9uVm3xK8DHNnVeCcH8Ien/nxljSixJWHTqEpaqAAj+ntsG289tX6XbiNqTUlUOqJpfrzY1SZX894z2Q3+pTVmT6LeORvRYyIZK+q+jTulG+qgsgbfsHDxMR+tBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LeFcjPOz; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752354809; c=relaxed/simple;
+	bh=Yu/rqVtdJk1LsdyRzRH1EGxF9c126JGgqO4jhJfARbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nz4qVaULNtZDeGoJoBgQaDPgFlWVTfDrssLXGOo0ircITK7ZUceYbeikxuGlaz9WlZG3it8KyU72kOpHWlijvgy1K3234yemu07cWc3ye3iSgaOpRfzfUdCnzDevTPLfLDFQxbEmRxkmmU0C7tAHEscimApYI9nlV4tqwDIl0OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MOVMPvp/; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LeFcjPOz"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3122368d7c4so2661125a91.1;
-        Sat, 12 Jul 2025 13:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752353944; x=1752958744; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1ZuS0G5loQ6VTp2rtwXZCwwcpkBS4A9zfG+scNKGaJg=;
-        b=LeFcjPOzMzaq/vOfsOZsrihqhh8NrlfbOcfHFB6IhVDkuVX57aKb6dLgDhji2ky1Vc
-         tHcgc/5sqAkaG/NKBqfUdT5c4borg7iYQIYBFizJ5ykntX+GzYzSAViru+07lUfBgV6F
-         cadyrtKSLcXT4XaLB3ZjmQtDnM16GMV1PpQDFt+uwHRNtCMT/52AvWHIHAQvI06y32NH
-         nOyBXCcqd0x7iu55HxO0cEqt9A79Z2mOh0NuY/arcVESTy5AvUKdKaqSZmguGA6lZvOU
-         7BcI5YDPthhhxWKv9COZO9H3ojhi8ElbFbFWyckDIRgEp9JfqnqCLLm9v1zOXaUwVJeg
-         E+0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752353944; x=1752958744;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1ZuS0G5loQ6VTp2rtwXZCwwcpkBS4A9zfG+scNKGaJg=;
-        b=dLXhxxsYysLznqY/wtGS8OGVGyH2+tFZeZu7v08bU+St5+TGVwSPTR9XeaD6yu/xah
-         vW3l80267MxpG27jwRG/DoG1l5KP+FiFt5KM8FfXcdwjIljJE9s6Co/GLuIcu3cmBXSR
-         MQ7p8yc5SezpA8mLgfCEQYDacWa+43MS5JPv/YYlFEZ6QdzKJdC/yrwGAgMn8uNnic8D
-         Df7/RNea5qqqUtcgkZ8ghmmljsjsC0rqaYmAFEdekDaRcV09XoSwqpDKzS7PSBvMVI3y
-         /5dS1ZgXjdbAQwkiTK6EEKo36FStVb9siuKZcIRrW/F//aklhDnTuI1sl/H3AGhli0Gr
-         OYBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUm29b1KP4Dl5L1dun/gxmPtlIV6eNCJNY6uaf4u8FE+kMqY4V8vAw+tPjANdITmX4Mk75vjkwjB0HNc++1@vger.kernel.org, AJvYcCVTNqjbwoVgt/SRiEzMIrArSs6Bzl3IkSwmBUTg56zjI4T7mxExvs+uXE7dQN5Sx7JCHa1QstXeDKXkV2ZBlSU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOY+XSyp7MNR167TDHBKQeR6vZVgRRPivMiUxloQm94b7It/6f
-	r+NjD4uDy3STUw0inubS5R7vq3uVVMTb9p15luSAkNmEOD9n6c1MEpOeWU+g2bgjQMLsS22TS/w
-	Nguv9ePhWPit0CPPOCsGx5tannAXoUoY=
-X-Gm-Gg: ASbGnctm85rBFS5E+M+vBaPuh5lTOQ8KV+Po2AxyEHP5fu93sO54fQ7xeE1R1LJiAbZ
-	6bW525Ejt/9qEUq5RpzwNfA6eyt6gh6GFdRNYOrZMz13Bu+8IgDMFUDHA4qUwkyyCGBLP4XBBBA
-	IT9ptnzmGJtCl+Fw3veTMc7/hz0Ng4U4U/OkyPOAo9Qtyalv7Eiu2SUaf+nARAMaHw2zuyOInPF
-	7zmgy/8Einpyo0v5EO11ZhNft/AzEnPy9q0W2WJgNZghWxq1V8=
-X-Google-Smtp-Source: AGHT+IGWc/bsSjfCk72zM+sQY+wNB8gvwjDVcV29c75JkSwrzzUlbnd+fsKQQzCW9smTm3J6SKcCBpYHBPBehSjJtRw=
-X-Received: by 2002:a17:90b:5804:b0:311:b005:93d4 with SMTP id
- 98e67ed59e1d1-31c50e2c50dmr10076417a91.25.1752353944580; Sat, 12 Jul 2025
- 13:59:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MOVMPvp/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752354807; x=1783890807;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Yu/rqVtdJk1LsdyRzRH1EGxF9c126JGgqO4jhJfARbI=;
+  b=MOVMPvp/xwr8XT53LlYTi2HzZRLDbGQrquovFfofN1Ds0HGdmlc0Y+Ef
+   PGMRKUk92Xo1qk8t737OTIL4oy5SDbSwaYvgkCdsqiFcVYS9R10X+Rgo1
+   7K+aOVsw22hMs258tVMu7rRaI5NABfsAp1tqgxZqECI0Ugxlm3P5ptwzP
+   w04fAiAVhvEE2W1ScL38UfUNTaCYJTf4ZBOJ3MK2UOVgA0ihE8auB66L0
+   CtvhGAhxtPNZFIDEht/xoL0X5cHx4SpCyESNhaUOuMGWmLgEVKEwYBzYy
+   QAvhNALu3Tz4s5oczd6ezsN3NRuOed3pqEb7/3NduYKqYiBvpB1G17VDM
+   g==;
+X-CSE-ConnectionGUID: wHilQttCTKuYnc9dn3wN3g==
+X-CSE-MsgGUID: Bbmpj/lmSZWldPtGzOLcbg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="54476829"
+X-IronPort-AV: E=Sophos;i="6.16,307,1744095600"; 
+   d="scan'208";a="54476829"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2025 14:13:27 -0700
+X-CSE-ConnectionGUID: 1ZUU7DwHSiO8IorFCloulg==
+X-CSE-MsgGUID: R8lcEXhPTna0lvIwW0q9iA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,307,1744095600"; 
+   d="scan'208";a="160930908"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 12 Jul 2025 14:13:25 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uahX7-0007h5-3A;
+	Sat, 12 Jul 2025 21:13:21 +0000
+Date: Sun, 13 Jul 2025 05:12:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Theodore Ts'o <tytso@mit.edu>,
+	Ext4 Developers List <linux-ext4@vger.kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-hardening@vger.kernel.org,
+	ethan@ethancedwards.com, Theodore Ts'o <tytso@mit.edu>
+Subject: Re: [PATCH 3/3] ext4: refactor the inline directory conversion and
+ new directory codepaths
+Message-ID: <202507130429.rPIzofCD-lkp@intel.com>
+References: <20250712181249.434530-3-tytso@mit.edu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1751862634.git.alx@kernel.org> <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
- <CAHk-=wh9Pqz07ne9iSt1_v0c14rkOGvF9AbEkaq1KnFhQD1SSA@mail.gmail.com>
-In-Reply-To: <CAHk-=wh9Pqz07ne9iSt1_v0c14rkOGvF9AbEkaq1KnFhQD1SSA@mail.gmail.com>
-From: Christopher Bazley <chris.bazley.wg14@gmail.com>
-Date: Sat, 12 Jul 2025 21:58:53 +0100
-X-Gm-Features: Ac12FXzabVR3CNZ1e6s3vvkMYX7Q2knC-RQiMrmuvB567KXzcfJDo2IIzUb977w
-Message-ID: <CAEHU8x9UKFWjuE2JPd99CS7wY-x_0kE0k=K3rfYUCJ29uzOSOA@mail.gmail.com>
-Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>, shadow <~hallyn/shadow@lists.sr.ht>, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
-	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
-	Andrew Clayton <andrew@digital-domain.net>, Sven Schnelle <svens@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, 
-	"Huang, Ying" <ying.huang@intel.com>, Lee Schermerhorn <lee.schermerhorn@hp.com>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	Chao Yu <chao.yu@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250712181249.434530-3-tytso@mit.edu>
 
-Hi Linus,
+Hi Theodore,
 
-On Mon, Jul 7, 2025 at 8:17=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sun, 6 Jul 2025 at 22:06, Alejandro Colomar <alx@kernel.org> wrote:
-> >
-> > -       p +=3D snprintf(p, ID_STR_LENGTH - (p - name), "%07u", s->size)=
-;
-> > +       p =3D seprintf(p, e, "%07u", s->size);
->
-> I am *really* not a fan of introducing yet another random non-standard
-> string function.
->
-> This 'seprintf' thing really seems to be a completely made-up thing.
-> Let's not go there. It just adds more confusion - it may be a simpler
-> interface, but it's another cogniitive load thing, and honestly, that
-> "beginning and end" interface is not great.
->
-> I think we'd be better off with real "character buffer" interfaces,
-> and they should be *named* that way, not be yet another "random
-> character added to the printf family".
+kernel test robot noticed the following build warnings:
 
-I was really interested to see this comment because I presented a
-design for a standard character buffer interface, "strb_t", to WG14 in
-summer of 2014. The latest published version of that paper is
-https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3306.pdf (very long)
-and the slides (which cover most of the important points) are
-https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3276.pdf
+[auto build test WARNING on tytso-ext4/dev]
+[also build test WARNING on linus/master v6.16-rc5 next-20250711]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I contacted you beforehand, for permission to include kasprintf and
-kvasprintf in the 'prior art' section of my paper. At the time, you
-gave me useful information about the history of those and related
-functions. (As an aside, Alejandro has since written a proposal to
-standardise a similar function named aprintf, which I support:
-https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3630.txt )
+url:    https://github.com/intel-lab-lkp/linux/commits/Theodore-Ts-o/ext4-use-memcpy-instead-of-strcpy/20250713-021635
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git dev
+patch link:    https://lore.kernel.org/r/20250712181249.434530-3-tytso%40mit.edu
+patch subject: [PATCH 3/3] ext4: refactor the inline directory conversion and new directory codepaths
+config: i386-buildonly-randconfig-004-20250713 (https://download.01.org/0day-ci/archive/20250713/202507130429.rPIzofCD-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250713/202507130429.rPIzofCD-lkp@intel.com/reproduce)
 
-Going back to "strb_t", I did not bother you about it again because I
-didn't anticipate it being used in kernel space, which has its own
-interfaces for most things. I'd be interested to hear what you think
-of it though. My intent was to make it impossible to abuse, insofar as
-that is possible. That led me to make choices (such as use of an
-incomplete struct type) that some might consider strange or
-overengineered. I didn't see the point in trying to replace one set of
-error-prone functions with another.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507130429.rPIzofCD-lkp@intel.com/
 
-Alejandro has put a lot of thought into his proposed seprintf
-function, but it still fundamentally relies on the programmer passing
-the right arguments and it doesn't seem to extend the functionality of
-snprintf in any way that I actually need.
+All warnings (new ones prefixed by >>):
 
-For example, some of my goals for the character buffer interface were:
+   fs/ext4/namei.c: In function 'ext4_init_new_dir':
+>> fs/ext4/namei.c:2968:34: warning: variable 'de' set but not used [-Wunused-but-set-variable]
+    2968 |         struct ext4_dir_entry_2 *de;
+         |                                  ^~
 
-- A buffer should be specified using a single parameter.
-- Impossible to accidentally shallow-copy a buffer instead of copying
-a reference to it.
-- No aspect of character consumption delegated to character producers, e.g.=
-:
-  * whether to insert or overwrite.
-  * whether to prepend, insert or append.
-  * whether to allocate extra storage, and how to do that.
-- Minimize the effect of ignoring return values and not require
-ubiquitous error-handling.
-- Able to put strings directly into a buffer from any source.
-- Allow diverse implementations (mostly to allow tailoring to
-different platforms).
 
-This small program demonstrates some of those ideas:
-https://godbolt.org/z/66Gnre6dx
-It uses my ugly hacked-together prototype.
+vim +/de +2968 fs/ext4/namei.c
 
-Chris
+a774f9c20e0864 Tao Ma             2012-12-10  2963  
+8016e29f4362e2 Harshad Shirwadkar 2020-10-15  2964  int ext4_init_new_dir(handle_t *handle, struct inode *dir,
+a774f9c20e0864 Tao Ma             2012-12-10  2965  			     struct inode *inode)
+ac27a0ec112a08 Dave Kleikamp      2006-10-11  2966  {
+dabd991f9d8e32 Namhyung Kim       2011-01-10  2967  	struct buffer_head *dir_block = NULL;
+617ba13b31fbf5 Mingming Cao       2006-10-11 @2968  	struct ext4_dir_entry_2 *de;
+dc6982ff4db1f4 Theodore Ts'o      2013-02-14  2969  	ext4_lblk_t block = 0;
+a774f9c20e0864 Tao Ma             2012-12-10  2970  	int err;
+ac27a0ec112a08 Dave Kleikamp      2006-10-11  2971  
+3c47d54170b6a6 Tao Ma             2012-12-10  2972  	if (ext4_test_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA)) {
+3c47d54170b6a6 Tao Ma             2012-12-10  2973  		err = ext4_try_create_inline_dir(handle, dir, inode);
+3c47d54170b6a6 Tao Ma             2012-12-10  2974  		if (err < 0 && err != -ENOSPC)
+3c47d54170b6a6 Tao Ma             2012-12-10  2975  			goto out;
+3c47d54170b6a6 Tao Ma             2012-12-10  2976  		if (!err)
+3c47d54170b6a6 Tao Ma             2012-12-10  2977  			goto out;
+3c47d54170b6a6 Tao Ma             2012-12-10  2978  	}
+3c47d54170b6a6 Tao Ma             2012-12-10  2979  
+5eb8361f6b02c3 Theodore Ts'o      2025-07-12  2980  	set_nlink(inode, 2);
+dc6982ff4db1f4 Theodore Ts'o      2013-02-14  2981  	inode->i_size = 0;
+0f70b40613ee14 Theodore Ts'o      2013-02-15  2982  	dir_block = ext4_append(handle, inode, &block);
+0f70b40613ee14 Theodore Ts'o      2013-02-15  2983  	if (IS_ERR(dir_block))
+0f70b40613ee14 Theodore Ts'o      2013-02-15  2984  		return PTR_ERR(dir_block);
+a774f9c20e0864 Tao Ma             2012-12-10  2985  	de = (struct ext4_dir_entry_2 *)dir_block->b_data;
+5eb8361f6b02c3 Theodore Ts'o      2025-07-12  2986  	err = ext4_init_dirblock(handle, inode, dir_block, dir->i_ino, NULL, 0);
+a774f9c20e0864 Tao Ma             2012-12-10  2987  	if (err)
+a774f9c20e0864 Tao Ma             2012-12-10  2988  		goto out;
+a774f9c20e0864 Tao Ma             2012-12-10  2989  out:
+a774f9c20e0864 Tao Ma             2012-12-10  2990  	brelse(dir_block);
+a774f9c20e0864 Tao Ma             2012-12-10  2991  	return err;
+a774f9c20e0864 Tao Ma             2012-12-10  2992  }
+a774f9c20e0864 Tao Ma             2012-12-10  2993  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
