@@ -1,125 +1,158 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C80828D8F5
-	for <linux-hardening@vger.kernel.org>; Sat, 12 Jul 2025 19:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5EE2AE99;
+	Sat, 12 Jul 2025 20:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752348271; cv=none; b=lW5BgxsGhlnQCpO9IRno9zNuFuF65osb5JILOcERLEhq95gBXwRiVBmOF/QISqxuXZ3Y8rKBZ0zhkUrj5rH8TB1lQV0bH9fSzPAuUYr3iAUGwR0BmmNHW8YxWb+ooVwISHegNElH0mHXcTeTWl4zDihfPwDqWzbc7q0TsrfGUtQ=
+	t=1752353946; cv=none; b=dS3R1QJx5W6jxMEzR3ipNOxvFsW9qP2nuBipp8lirYRLccMFw1oPahsZuwnf6KkN/Wt4yPSBgQ3bNnQ7JxtkCb4JZZ5CWu/5jA0VBYG3Em1femhyB04VGjhWMEbYCx2QKa3dMeItuzZvg99ua2cJkkaojQdPWGkb1yu2yuUTlI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752348271; c=relaxed/simple;
-	bh=ufpE0uS3u78wr/reXtvKH4Y/KlkziLMDeXTbX3Awtnk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FiQVVH/QFb8sYP2COp+fSYYVd2P/QazzMXFZ9gCrM0WsPb9UCN63lCOIQeQL/cshygBsFUzkJPGMlMC6+vYTMYWsJ/wqGGe9ZCosYW8woXWTVLYGBDKkHWGujW9W/FiflnOO67d/8RDMP5pcfCkQ1teBzU1dsnYJIMT6aNJF+5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XryPduni; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1752353946; c=relaxed/simple;
+	bh=ULMT2RN2xocfDvDhwK1+Ve5ay3Krg/YRfI7ZYlsX1fw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BytqPmN224KavfZneata8Ir4sqR4Iqe8q02pkSDRrLyVTWIB9uVm3xK8DHNnVeCcH8Ien/nxljSixJWHTqEpaqAAj+ntsG289tX6XbiNqTUlUOqJpfrzY1SZX894z2Q3+pTVmT6LeORvRYyIZK+q+jTulG+qgsgbfsHDxMR+tBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LeFcjPOz; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XryPduni"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234c5b57557so31278915ad.3
-        for <linux-hardening@vger.kernel.org>; Sat, 12 Jul 2025 12:24:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LeFcjPOz"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3122368d7c4so2661125a91.1;
+        Sat, 12 Jul 2025 13:59:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752348269; x=1752953069; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1752353944; x=1752958744; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rFWf4pajwuCq0yrKvf8AqqJc8kjEky1o95n0xVg9Pf8=;
-        b=XryPduni/61+VmfrZ5Ln6yD/xBrw48BAEPYBUg9KlLk0ntbli/N60aWthRLOXKxi8D
-         rUDHOZ5wdAlL8if9k4B9y4MgTnxVYVaLT306btXJ7hkoaM8wrjbaF+SG0CuT/EisLCYl
-         qhD5anNZJcTfFjlINNykqm2KcyPsQeE2N3ztB0w/olg+EqgDZBuP9Y9SAfo8XnPNkWqE
-         oM8Xk6yvnIlPgnfcEqzRAgwVS7GJ+9k85b7NsApkvPqEPzB1sT4dWHsVQSw/JLv5eZJs
-         Fdvpc7TuHphKVxwIg19kDzBraZ6Ga7YaYQRXt3ZDx3+6WnS5Dy5rU6fpfP44nw+kjdn5
-         xVAw==
+        bh=1ZuS0G5loQ6VTp2rtwXZCwwcpkBS4A9zfG+scNKGaJg=;
+        b=LeFcjPOzMzaq/vOfsOZsrihqhh8NrlfbOcfHFB6IhVDkuVX57aKb6dLgDhji2ky1Vc
+         tHcgc/5sqAkaG/NKBqfUdT5c4borg7iYQIYBFizJ5ykntX+GzYzSAViru+07lUfBgV6F
+         cadyrtKSLcXT4XaLB3ZjmQtDnM16GMV1PpQDFt+uwHRNtCMT/52AvWHIHAQvI06y32NH
+         nOyBXCcqd0x7iu55HxO0cEqt9A79Z2mOh0NuY/arcVESTy5AvUKdKaqSZmguGA6lZvOU
+         7BcI5YDPthhhxWKv9COZO9H3ojhi8ElbFbFWyckDIRgEp9JfqnqCLLm9v1zOXaUwVJeg
+         E+0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752348269; x=1752953069;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1752353944; x=1752958744;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rFWf4pajwuCq0yrKvf8AqqJc8kjEky1o95n0xVg9Pf8=;
-        b=QCO9y6ejWoAexmp++x0oqw39N/BejujCLS+wpKwvkw6l0RkYef/RpRtUrUwT5dCCLw
-         G1i5DHH/I82arTdrEqgmeUNXoSEVnWibep0+zs08f4Oufp6In59st7Fz0rjs3/0DEMxs
-         dgdWIVMAcM2PbVWzeEyVYBFKqFgFFkUXiXSvuIcpk7HYZrU40bMMNKltlQW0DIHBp6DK
-         r6KjP5ishwFsXww8r27U/KI2FFtX4h1W0KWpy+LMVkfE7KFfDLoTT77BSBjje2ghaAIS
-         qB8Vx5cTf88gmNDTrCxG6P9oLo4SKBPJcZd3mU9UjDmnuFJlNFWWiGrHR2P4dJaLeidX
-         0Wdw==
-X-Gm-Message-State: AOJu0Yzx67xT2y7Z2HHuSs4kRiuHbUraitns2kOBAEev3jT7ljxSH2G2
-	S9uvmTYx3UmXT1V1g3QZIFLeQcv7dMZbvHpiLPTeV2Gcs3rOQDqul/rC66vQbX2F
-X-Gm-Gg: ASbGncsWArdW3N6VptyQElOCkynDBVJF3uCJudsVNm7AVY04Xf/If/hJIWOkEaZH/RP
-	V/ZIQ+yMmKtAdsMj5jtwINDtYyuMcqjHu4paiXmlP6MYe5Nr7Xrkn48ab9CYFyxSsFNpPZc58FL
-	WF2PfgN467r7xvFevQNIBHcpGCQUzC5iWR3GQUga4d8hnLvidJCN7vqUEynLDEoGUuXXwsVW2Eg
-	EyRWbeMXxqEYPSjbPr3Xv00f7NtssqXuMdDrAArTc1RhxVlmQ6xF+/7CRlMhmRmBIVCQGsikok4
-	fb9L1UTnMWzv/BpKXbvPJMyKnH3vegKkOYKUbi3JaGHUqmrAGcd2hLqwtkV/JzpADA9CvHbhz59
-	mRMtOxiKZK/2q0fIB4gSxIWeD4lCCWo67iklToFN7gseF
-X-Google-Smtp-Source: AGHT+IEtMd0QN6r2Kc2AYcdVN5SDeiX/Gxq2q8D8V7/TSzRchF3Jnp2BKgi4CL7e9g7Kw2LCx2xIfw==
-X-Received: by 2002:a17:903:950:b0:237:ed8e:51d4 with SMTP id d9443c01a7336-23dee0b4b5fmr136182395ad.24.1752348268544;
-        Sat, 12 Jul 2025 12:24:28 -0700 (PDT)
-Received: from localhost.localdomain ([147.182.204.210])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-23de4332b0csm66013645ad.149.2025.07.12.12.24.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Jul 2025 12:24:27 -0700 (PDT)
-From: Gatlin Newhouse <gatlin.newhouse@gmail.com>
-To: linux-hardening@vger.kernel.org
-Cc: Gatlin Newhouse <gatlin.newhouse@gmail.com>
-Subject: [RFC v1 17/17] vfs: ioctl: add logging to ioctl_file_dedupe_range() for testing
-Date: Sat, 12 Jul 2025 19:22:02 +0000
-Message-Id: <20250712192202.707192-18-gatlin.newhouse@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250712192202.707192-1-gatlin.newhouse@gmail.com>
-References: <20250712192202.707192-1-gatlin.newhouse@gmail.com>
+        bh=1ZuS0G5loQ6VTp2rtwXZCwwcpkBS4A9zfG+scNKGaJg=;
+        b=dLXhxxsYysLznqY/wtGS8OGVGyH2+tFZeZu7v08bU+St5+TGVwSPTR9XeaD6yu/xah
+         vW3l80267MxpG27jwRG/DoG1l5KP+FiFt5KM8FfXcdwjIljJE9s6Co/GLuIcu3cmBXSR
+         MQ7p8yc5SezpA8mLgfCEQYDacWa+43MS5JPv/YYlFEZ6QdzKJdC/yrwGAgMn8uNnic8D
+         Df7/RNea5qqqUtcgkZ8ghmmljsjsC0rqaYmAFEdekDaRcV09XoSwqpDKzS7PSBvMVI3y
+         /5dS1ZgXjdbAQwkiTK6EEKo36FStVb9siuKZcIRrW/F//aklhDnTuI1sl/H3AGhli0Gr
+         OYBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUm29b1KP4Dl5L1dun/gxmPtlIV6eNCJNY6uaf4u8FE+kMqY4V8vAw+tPjANdITmX4Mk75vjkwjB0HNc++1@vger.kernel.org, AJvYcCVTNqjbwoVgt/SRiEzMIrArSs6Bzl3IkSwmBUTg56zjI4T7mxExvs+uXE7dQN5Sx7JCHa1QstXeDKXkV2ZBlSU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOY+XSyp7MNR167TDHBKQeR6vZVgRRPivMiUxloQm94b7It/6f
+	r+NjD4uDy3STUw0inubS5R7vq3uVVMTb9p15luSAkNmEOD9n6c1MEpOeWU+g2bgjQMLsS22TS/w
+	Nguv9ePhWPit0CPPOCsGx5tannAXoUoY=
+X-Gm-Gg: ASbGnctm85rBFS5E+M+vBaPuh5lTOQ8KV+Po2AxyEHP5fu93sO54fQ7xeE1R1LJiAbZ
+	6bW525Ejt/9qEUq5RpzwNfA6eyt6gh6GFdRNYOrZMz13Bu+8IgDMFUDHA4qUwkyyCGBLP4XBBBA
+	IT9ptnzmGJtCl+Fw3veTMc7/hz0Ng4U4U/OkyPOAo9Qtyalv7Eiu2SUaf+nARAMaHw2zuyOInPF
+	7zmgy/8Einpyo0v5EO11ZhNft/AzEnPy9q0W2WJgNZghWxq1V8=
+X-Google-Smtp-Source: AGHT+IGWc/bsSjfCk72zM+sQY+wNB8gvwjDVcV29c75JkSwrzzUlbnd+fsKQQzCW9smTm3J6SKcCBpYHBPBehSjJtRw=
+X-Received: by 2002:a17:90b:5804:b0:311:b005:93d4 with SMTP id
+ 98e67ed59e1d1-31c50e2c50dmr10076417a91.25.1752353944580; Sat, 12 Jul 2025
+ 13:59:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <cover.1751862634.git.alx@kernel.org> <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
+ <CAHk-=wh9Pqz07ne9iSt1_v0c14rkOGvF9AbEkaq1KnFhQD1SSA@mail.gmail.com>
+In-Reply-To: <CAHk-=wh9Pqz07ne9iSt1_v0c14rkOGvF9AbEkaq1KnFhQD1SSA@mail.gmail.com>
+From: Christopher Bazley <chris.bazley.wg14@gmail.com>
+Date: Sat, 12 Jul 2025 21:58:53 +0100
+X-Gm-Features: Ac12FXzabVR3CNZ1e6s3vvkMYX7Q2knC-RQiMrmuvB567KXzcfJDo2IIzUb977w
+Message-ID: <CAEHU8x9UKFWjuE2JPd99CS7wY-x_0kE0k=K3rfYUCJ29uzOSOA@mail.gmail.com>
+Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Alejandro Colomar <alx@kernel.org>, linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>, shadow <~hallyn/shadow@lists.sr.ht>, 
+	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
+	Andrew Clayton <andrew@digital-domain.net>, Sven Schnelle <svens@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, 
+	"Huang, Ying" <ying.huang@intel.com>, Lee Schermerhorn <lee.schermerhorn@hp.com>, 
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	Chao Yu <chao.yu@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This adds a message indicating a double-fetch bug trigger for testing
-the SafeFetch patchset. It add the message right before the fix for
-CVE-2016-6516 [1][2] introduced by Scott Bauer [3]. Which can be tested
-by first compiling the double-fetch program from [4], and running a shell
-script similar to the one provided by the SafeFetch paper authors in their
-artifacts repository (see: run_security_artifact.sh) [5].
+Hi Linus,
 
-In summary, you can compile the sample from [4], then clear dmesg, run
-the sample with `./a.out 7 65534 1000000 0`. Then remove both files used
-in the sample /tmp/test.txt and /tmp/test2.txt. Now count the bug
-warning messages in dmesg before clearing dmesg again. Then enable
-safefetch with `./safefetch_control.sh -hooks` followed by
-`./safefetch_control.sh -adaptive 4096 4096 0` or
-`./safefetch_control.sh -rbtree 4096 4096 0` where safefetch_control.sh
-can be found in [5]. Now run the compiled sample again and count the bug
-warning messages in dmesg.
+On Mon, Jul 7, 2025 at 8:17=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Sun, 6 Jul 2025 at 22:06, Alejandro Colomar <alx@kernel.org> wrote:
+> >
+> > -       p +=3D snprintf(p, ID_STR_LENGTH - (p - name), "%07u", s->size)=
+;
+> > +       p =3D seprintf(p, e, "%07u", s->size);
+>
+> I am *really* not a fan of introducing yet another random non-standard
+> string function.
+>
+> This 'seprintf' thing really seems to be a completely made-up thing.
+> Let's not go there. It just adds more confusion - it may be a simpler
+> interface, but it's another cogniitive load thing, and honestly, that
+> "beginning and end" interface is not great.
+>
+> I think we'd be better off with real "character buffer" interfaces,
+> and they should be *named* that way, not be yet another "random
+> character added to the printf family".
 
-This was my method of testing the patchset as I forward ported it from
-v5.11 after fixing any merge conflicts or compiler errors.
+I was really interested to see this comment because I presented a
+design for a standard character buffer interface, "strb_t", to WG14 in
+summer of 2014. The latest published version of that paper is
+https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3306.pdf (very long)
+and the slides (which cover most of the important points) are
+https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3276.pdf
 
-[1] https://nvd.nist.gov/vuln/detail/CVE-2016-6516
-[2] https://www.openwall.com/lists/oss-security/2016/07/31/6
-[3] 10eec60ce79187686e052092e5383c99b4420a20
-[4] https://github.com/wpengfei/CVE-2016-6516-exploit/tree/master/Scott%20Bauer
-[5] https://github.com/vusec/safefetch-ae/
----
- fs/ioctl.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+I contacted you beforehand, for permission to include kasprintf and
+kvasprintf in the 'prior art' section of my paper. At the time, you
+gave me useful information about the history of those and related
+functions. (As an aside, Alejandro has since written a proposal to
+standardise a similar function named aprintf, which I support:
+https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3630.txt )
 
-diff --git a/fs/ioctl.c b/fs/ioctl.c
-index 69107a245b4c..db8df94d4caa 100644
---- a/fs/ioctl.c
-+++ b/fs/ioctl.c
-@@ -439,6 +439,12 @@ static int ioctl_file_dedupe_range(struct file *file,
- 		goto out;
- 	}
- 
-+	// Add an extra check before the bug fix to check whether a double-fetch occurred
-+	// With SafeFetch enabled this check will never get triggered because we correct
-+	// the second fetch from the cache.
-+	if (same->dest_count != count)
-+		pr_warn("[Bug-Warning] Bug triggered\n");
-+
- 	same->dest_count = count;
- 	ret = vfs_dedupe_file_range(file, same);
- 	if (ret)
--- 
-2.25.1
+Going back to "strb_t", I did not bother you about it again because I
+didn't anticipate it being used in kernel space, which has its own
+interfaces for most things. I'd be interested to hear what you think
+of it though. My intent was to make it impossible to abuse, insofar as
+that is possible. That led me to make choices (such as use of an
+incomplete struct type) that some might consider strange or
+overengineered. I didn't see the point in trying to replace one set of
+error-prone functions with another.
 
+Alejandro has put a lot of thought into his proposed seprintf
+function, but it still fundamentally relies on the programmer passing
+the right arguments and it doesn't seem to extend the functionality of
+snprintf in any way that I actually need.
+
+For example, some of my goals for the character buffer interface were:
+
+- A buffer should be specified using a single parameter.
+- Impossible to accidentally shallow-copy a buffer instead of copying
+a reference to it.
+- No aspect of character consumption delegated to character producers, e.g.=
+:
+  * whether to insert or overwrite.
+  * whether to prepend, insert or append.
+  * whether to allocate extra storage, and how to do that.
+- Minimize the effect of ignoring return values and not require
+ubiquitous error-handling.
+- Able to put strings directly into a buffer from any source.
+- Allow diverse implementations (mostly to allow tailoring to
+different platforms).
+
+This small program demonstrates some of those ideas:
+https://godbolt.org/z/66Gnre6dx
+It uses my ugly hacked-together prototype.
+
+Chris
