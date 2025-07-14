@@ -1,167 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6B323B608;
-	Mon, 14 Jul 2025 08:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E0C23D28A
+	for <linux-hardening@vger.kernel.org>; Mon, 14 Jul 2025 09:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752481354; cv=none; b=QJmr44W53xVxagkqWzjICapmTbX3wF5/nQq2IG26nK8LikEYEBfuK68l3jOgaUOq3bOYDWREeOHgN9txBlxLzlxixJEj+ous0BThE3AAJwlPWcutSUKBK2y8GNJWXtsCN6lnAfou3nWioT+mEP20g3p5uRHwhx30B0OOUEyj8dY=
+	t=1752484350; cv=none; b=bFmzWtRBrVG7Yk88SCBRVbRhG2W3MyiDk/QWXVq9u8IuCHp0kcbydlfVW8vY4NV90WMsb6PXis5p9a+cAT6JyuPGJj8ENoGzOuKpHQzaCbsalZnAMU3JirGxedX9UqApFNQoz9tMuYXtzmM+GfA+8zo0AKYZlHr/FDul/jJN7to=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752481354; c=relaxed/simple;
-	bh=9FsRu860H4W8OcEf2wpkIXNWWM6nplf11dSrJZDLgQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s2NG3WuPKrxlsNKlFjA9g1RxdN4Aa0fD0JndVV0ZsPcSxiUvvGlT9+Kkw+z+Nj2uIDR57qo/2JXdBYaRL/YpHe/ZU2fL9WZ/7qAEhqLXH/+EGxO4qUXjUApdGD2rEBB23JTTXbWb6v5vrt9EdHpLWZpWu7ygfOo1OoW0T1DFhjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GA9ew2ME; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1752484350; c=relaxed/simple;
+	bh=IDA+1A64+hS9RTzWYRwLy7lXuY/sOh514fCkmrhMVCY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=smSqsj/QDO+X5YIwrl3i4J5Ta/IxR3hplH3nRa/a4ni7RUcmsaPRexh6vd6T05PgkvTbHGjOHKxERR1b4VBsvzolZMSpABi71TrWXqUKRwKfyUiEPa9TLnsiq/VlNgHfHXAKuHzgXHHLOBDt4++cEt2u5tvuNMSrLZ5zEuAG3xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=TnBs9jQd; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GA9ew2ME"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752481353; x=1784017353;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9FsRu860H4W8OcEf2wpkIXNWWM6nplf11dSrJZDLgQo=;
-  b=GA9ew2MEHpMjmhO4xz7yYL3hefsbIhIdxLD8faYaRAQElH8UfSqzNBe/
-   pE/LT+9ZvFTH2rS4805im55eqnxDvxzqRxdLszgNMbKIUnsCVHLK4U+au
-   B//qpzpstjxvGM5VMD15ZyIQqPuiX0XojuSBij73G+7BZw6shjRCQecdW
-   2U7TwhvTulHRlGYbbKfcfjazMEzOmFWP6CMiNEn0JVIv2kiBoy16VlXjs
-   v0CZWR5aL8/pQoGIeiXCA06cCrmP8mFR+gmLhcTD0Jjc37chRl/hJAXdu
-   uSM+dAt0Kmr662vrByBpeP/vCRwjyZ9AGbBDImqmLstLOmzVfsR0yO1s1
-   Q==;
-X-CSE-ConnectionGUID: 30rqk1b/R/OnslbC9M08BQ==
-X-CSE-MsgGUID: +aX6vxYQQ2CcnoFWOKjyww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="54602488"
-X-IronPort-AV: E=Sophos;i="6.16,310,1744095600"; 
-   d="scan'208";a="54602488"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 01:22:32 -0700
-X-CSE-ConnectionGUID: FhSDe/JRREeFxD2jxZltkg==
-X-CSE-MsgGUID: 5L5J8xCsTwSdnL9D+kQEwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,310,1744095600"; 
-   d="scan'208";a="162544044"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 14 Jul 2025 01:22:27 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ubES8-0008gJ-1W;
-	Mon, 14 Jul 2025 08:22:24 +0000
-Date: Mon, 14 Jul 2025 16:22:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Apurupa Pattapu <quic_apurupa@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="TnBs9jQd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=xC3Ooo/eMtEmsx
+	oVMthubZ43cLSq+KXHCw/RPK4BkGs=; b=TnBs9jQdA1955Sah4dgnBsHA/shzIg
+	cjbHUUtug3K2d3RgdfPVib39hLBbArzd8JPnhonz710BHmzRBYlbDosRv/ciaI1D
+	R8/2ZxmwOQKs/9P3hTX6Gw01AAXBM9iFHnl5psJcd7CfW4PstCwek8p+2OM+Ooky
+	rzGRn3KFLW9Oaafowb8SSfCQtk+txVELGiQfqXfPSQ/jA1p7S5pKdm1cAqh/CmlB
+	GNX3CWV2AUiBCQRhkYgjQOyZ1z0hfKSxX18LR32NgAqZN8yb4bR8Nv6WGSEVLiTW
+	q6y3ljw+ZrSxHnNWKLkQ22wUNdgS/9KAg+s8wxWD4MN4ipq7dtkyAdAg==
+Received: (qmail 2399766 invoked from network); 14 Jul 2025 11:12:23 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 14 Jul 2025 11:12:23 +0200
+X-UD-Smtp-Session: l3s3148p1@qVPBDuA5dOYgAwDPXxNjAMIr4MhSGEU6
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Frank Li <Frank.Li@nxp.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, Harshal Dev <quic_hdev@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	linux-doc@vger.kernel.org,
-	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v6 08/12] firmware: qcom: tzmem: export shm_bridge
- create/delete
-Message-ID: <202507141458.kBLqFFYk-lkp@intel.com>
-References: <20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-8-697fb7d41c36@oss.qualcomm.com>
+	Kees Cook <kees@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-i3c@lists.infradead.org,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+Subject: [PATCH 0/2] i3c: add support for the Renesas controller
+Date: Mon, 14 Jul 2025 11:12:07 +0200
+Message-ID: <20250714091211.20497-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-8-697fb7d41c36@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Amirreza,
+Here is a basic driver for the I3C IP found in various Renesas SoCs like
+RZ/G3S and G3E. Missing features to be added incrementally are IBI,
+HotJoin and maybe target support. Other than that, this driver has been
+tested with I3C pure busses (2 targets) and mixed busses (2 I3C +
+various I2C targets). DAA and reading/writing to the temperature sensors
+worked reliably at different speeds. Scoping the bus, the output from
+the protocol analyzer seems reasonable, too. It was created by merging
+two versions of it from two different BSPs. Then, improved according to
+code analyzers, cleaned up with regard to coding style, and then
+refactored to hopefully match I3C subsystem standards.
 
-kernel test robot noticed the following build warnings:
+Changes since RFC are described in the individual patches. A branch with
+enablement patches for RZ/G3S+G3E can be found here:
 
-[auto build test WARNING on 835244aba90de290b4b0b1fa92b6734f3ee7b3d9]
+git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/g3s/i3c
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Amirreza-Zarrabi/tee-allow-a-driver-to-allocate-a-tee_device-without-a-pool/20250714-085215
-base:   835244aba90de290b4b0b1fa92b6734f3ee7b3d9
-patch link:    https://lore.kernel.org/r/20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-8-697fb7d41c36%40oss.qualcomm.com
-patch subject: [PATCH v6 08/12] firmware: qcom: tzmem: export shm_bridge create/delete
-config: arc-randconfig-001-20250714 (https://download.01.org/0day-ci/archive/20250714/202507141458.kBLqFFYk-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250714/202507141458.kBLqFFYk-lkp@intel.com/reproduce)
+Looking forward to comments,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507141458.kBLqFFYk-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from include/linux/device.h:15,
-                    from include/linux/dma-mapping.h:5,
-                    from drivers/firmware/qcom/qcom_tzmem.c:10:
-   drivers/firmware/qcom/qcom_tzmem.c: In function 'qcom_tzmem_shm_bridge_create':
->> drivers/firmware/qcom/qcom_tzmem.c:139:27: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 4 has type 'phys_addr_t' {aka 'unsigned int'} [-Wformat=]
-      dev_err(qcom_tzmem_dev, "SHM Bridge failed: ret %d paddr 0x%llx, size%zu\n",
-                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/dev_printk.h:110:16: note: in definition of macro 'dev_printk_index_wrap'
-      _p_func(dev, fmt, ##__VA_ARGS__);   \
-                   ^~~
-   include/linux/dev_printk.h:154:49: note: in expansion of macro 'dev_fmt'
-     dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
-                                                    ^~~~~~~
-   drivers/firmware/qcom/qcom_tzmem.c:139:3: note: in expansion of macro 'dev_err'
-      dev_err(qcom_tzmem_dev, "SHM Bridge failed: ret %d paddr 0x%llx, size%zu\n",
-      ^~~~~~~
+   Wolfram
 
 
-vim +139 drivers/firmware/qcom/qcom_tzmem.c
+Tommaso Merciai (1):
+  dt-bindings: i3c: renesas,i3c: Add binding for Renesas I3C controller
 
-   110	
-   111	/**
-   112	 * qcom_tzmem_shm_bridge_create() - Create a SHM bridge.
-   113	 * @paddr: Physical address of the memory to share.
-   114	 * @size: Size of the memory to share.
-   115	 * @handle: Handle to the SHM bridge.
-   116	 *
-   117	 * On platforms that support SHM bridge, this function creates a SHM bridge
-   118	 * for the given memory region with QTEE. The handle returned by this function
-   119	 * must be passed to qcom_tzmem_shm_bridge_delete() to free the SHM bridge.
-   120	 *
-   121	 * Return: On success, returns 0; on failure, returns < 0.
-   122	 */
-   123	int qcom_tzmem_shm_bridge_create(phys_addr_t paddr, size_t size, u64 *handle)
-   124	{
-   125		u64 pfn_and_ns_perm, ipfn_and_s_perm, size_and_flags;
-   126		int ret;
-   127	
-   128		if (!qcom_tzmem_using_shm_bridge)
-   129			return 0;
-   130	
-   131		pfn_and_ns_perm = paddr | QCOM_SCM_PERM_RW;
-   132		ipfn_and_s_perm = paddr | QCOM_SCM_PERM_RW;
-   133		size_and_flags = size | (1 << QCOM_SHM_BRIDGE_NUM_VM_SHIFT);
-   134	
-   135		ret = qcom_scm_shm_bridge_create(pfn_and_ns_perm, ipfn_and_s_perm,
-   136						 size_and_flags, QCOM_SCM_VMID_HLOS,
-   137						 handle);
-   138		if (ret) {
- > 139			dev_err(qcom_tzmem_dev, "SHM Bridge failed: ret %d paddr 0x%llx, size%zu\n",
-   140				ret, paddr, size);
-   141	
-   142			return ret;
-   143		}
-   144	
-   145		return 0;
-   146	}
-   147	EXPORT_SYMBOL_GPL(qcom_tzmem_shm_bridge_create);
-   148	
+Wolfram Sang (1):
+  i3c: add driver for Renesas I3C controller
+
+ .../devicetree/bindings/i3c/renesas,i3c.yaml  |  180 +++
+ MAINTAINERS                                   |    7 +
+ drivers/i3c/master/Kconfig                    |   10 +
+ drivers/i3c/master/Makefile                   |    1 +
+ drivers/i3c/master/renesas-i3c.c              | 1433 +++++++++++++++++
+ 5 files changed, 1631 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i3c/renesas,i3c.yaml
+ create mode 100644 drivers/i3c/master/renesas-i3c.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.47.2
+
