@@ -1,157 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx.olsak.net (mx.olsak.net [37.205.8.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B882253A7;
-	Mon, 14 Jul 2025 18:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69ACF230BE3;
+	Mon, 14 Jul 2025 22:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.8.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752519002; cv=none; b=asdlwW0ppdWc1DFZmiMfvq57cvfZVBvEEeH34lqOgj7tGhuTLm48EQAjc4yThDTxpYlqNaxn4DxBf/Z8HgZApYJh8KqjPytPbZUKh/j0ilxQWZebsJyJdp+73esp64BNwAoDqG89c4cEPzQImCGme3Lh+a9zeu2vKK2lBhUvEUs=
+	t=1752531917; cv=none; b=hg9xhNy6FJH9bNa3XOvYjuEYKBiJpjuaUO4SfRKJ2Cq1En0Iw2oODQw66TxRFoYWDrvt91+Xg4QPMl1hUkz9RsJBAqmfcO0OPdoHPoGUIpa8HxmZbrfV5FHo3bJFWCyr0OE4q3/LvvF6caC6RGsFyOSvX0PK+Mmw02qhl4zEya8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752519002; c=relaxed/simple;
-	bh=g/hdVwW4OrDEpaJ2jeOYNUGdpDfpOP3FpqeHfrFX5Q4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UmD3g2W6W3ID2nclMWzHVmTZZXoCPuMIvMnvjsxZenJfoyn8SPjKbTlmofPQLHVK5t7BF+L2Z+pFDShaMZKRXQEEFIvuIMcxWFdu3PgZtRAY3x/jT2j52f37GSfFDtOtb6E3S84xih/dowvfIMI0sNOC9rjulMdEzP3FXqOhg0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qyu7Fvom; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1752531917; c=relaxed/simple;
+	bh=4XuX/PYpEN8nAtv8oHkTyRtLKNxOjbkUhAeP/vk/0C4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k2cIIT/tcQrLI8XfWc9tnJTvmd1Hma5wKcG2HrxNwaRPZAhQcU9KZuvZ/pz01iNk8FR7kkMU/hLIxLuIuIRsqcHmbfeUayPMJff3SQ7VgUFH2+tuDa5YrBqaDKudzuCLUdG3eAfb3QL5wUYVBzq2wnDSNq10HeL8w4QbxvUAu1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dujemihanovic.xyz; spf=pass smtp.mailfrom=dujemihanovic.xyz; dkim=pass (2048-bit key) header.d=dujemihanovic.xyz header.i=@dujemihanovic.xyz header.b=uBtMImE8; arc=none smtp.client-ip=37.205.8.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dujemihanovic.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dujemihanovic.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qyu7Fvom"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752519001; x=1784055001;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=g/hdVwW4OrDEpaJ2jeOYNUGdpDfpOP3FpqeHfrFX5Q4=;
-  b=Qyu7FvomqSBeaQc4dV6s/XpHySGK/WmhngPKChdZIiyzTemp/mHHxUQ+
-   wkUT1zRxuQOKWgJCeK80t6lJiUIreM8+T5JWn7zymnULEGtL+GoMKPYr0
-   3CqmBSR5DTzhVd7QgK+90ybNOQv4pHatS+yVpHACHiWFDXQkXDv/0oMMK
-   K8Kbs9EsFFNY32IQ+5PBcEjgCQ8Kv0JZ2Y/UYY6/yt4xurj9wpw9GCuro
-   9B6tiLWAtdmNdOI0CzGppga0ZVaVlnIRjjd7fvaCyaIiFaKQsmXhTTEB8
-   8TyR3yuCDTQ80rNQUbuKhpYD2F+SpgDF5nwxT7zHdtRDtnsYKH0Zx9I+L
-   Q==;
-X-CSE-ConnectionGUID: 4XeZdS7fQ8SsdQOuRx6g3A==
-X-CSE-MsgGUID: Ochzz3YvRC6TT4cjvcy6gA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="66171359"
-X-IronPort-AV: E=Sophos;i="6.16,311,1744095600"; 
-   d="scan'208";a="66171359"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 11:50:00 -0700
-X-CSE-ConnectionGUID: n6iP6M2LTgWMCXmgik1TTw==
-X-CSE-MsgGUID: LOJAA0uFQLidXjoFjsHfaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,311,1744095600"; 
-   d="scan'208";a="156651276"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 14 Jul 2025 11:49:54 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ubOFM-0009EJ-1n;
-	Mon, 14 Jul 2025 18:49:52 +0000
-Date: Tue, 15 Jul 2025 02:49:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Apurupa Pattapu <quic_apurupa@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, Harshal Dev <quic_hdev@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	linux-doc@vger.kernel.org,
-	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v6 09/12] tee: add Qualcomm TEE driver
-Message-ID: <202507150221.oWiaX1I9-lkp@intel.com>
-References: <20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-9-697fb7d41c36@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=dujemihanovic.xyz header.i=@dujemihanovic.xyz header.b="uBtMImE8"
+DKIM-Signature: a=rsa-sha256; bh=4XuX/PYpEN8nAtv8oHkTyRtLKNxOjbkUhAeP/vk/0C4=;
+ c=relaxed/relaxed; d=dujemihanovic.xyz;
+ h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:In-Reply-To:Message-Id:Message-Id:References:References:Autocrypt:Openpgp;
+ i=@dujemihanovic.xyz; s=default; t=1752531826; v=1; x=1752963826;
+ b=uBtMImE8MkSWBszj0mA40VHczqtf8SMXQ+Djm8Dkyh0so7//byOoCXCmE9OkaVtPsNlGaeEi
+ DkSO1G1RHzD3hG5xKWZyX6nhG/w4WlcGmHfsrI0K4Ll8fgKLRcF4TMnCnHzzAQbiP2QlxP3TjAR
+ jyPutFkgO0QlnVBVd/OvljASXZB+pOsnQ7KZy8StpEBa4/AH2ui/c0eO7VWtScoT1COiJjCAuGk
+ V3UIZqWWbSyGQlkPzClEB3duAVeBfjpgouVSPnbx7Y9P72J0KfYUJFsWuE0dFUbPJY05rphxsst
+ iJ0hXcfiTtZgtrAKpukggmMvZPiarK78NijZlLIkM1iAQ==
+Received: by mx.olsak.net (envelope-sender <duje@dujemihanovic.xyz>) with
+ ESMTPS id acbc0645; Tue, 15 Jul 2025 00:23:46 +0200
+From: Duje =?UTF-8?B?TWloYW5vdmnEhw==?= <duje@dujemihanovic.xyz>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, David Wronek <david@mainlining.org>,
+ Karel Balej <balejk@matfyz.cz>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht, soc@lists.linux.dev,
+ linux-mmc@vger.kernel.org
+Subject:
+ Re: [PATCH v16 1/5] dt-bindings: mmc: sdhci-pxa: restrict pinctrl to pxav1
+Date: Tue, 15 Jul 2025 00:23:45 +0200
+Message-ID: <3028096.e9J7NaK4W3@radijator>
+In-Reply-To: <20250711-hypnotic-aloof-nuthatch-f3761c@krzk-bin>
+References:
+ <20250708-pxa1908-lkml-v16-0-b4392c484180@dujemihanovic.xyz>
+ <3379810.44csPzL39Z@radijator>
+ <20250711-hypnotic-aloof-nuthatch-f3761c@krzk-bin>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-9-697fb7d41c36@oss.qualcomm.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Hi Amirreza,
+On Friday, 11 July 2025 09:31:55 Central European Summer Time Krzysztof=20
+Kozlowski wrote:
+> On Wed, Jul 09, 2025 at 07:33:01PM +0200, Duje Mihanovi=C4=87 wrote:
+> > Would it then be acceptable to declare the pinctrl properties in the top
+> > level and define each controller's respective description: and items: in
+> > the allOf: block?
+>=20
+> just min/maxItems should be enough in each allOf:if:then: sections.
 
-kernel test robot noticed the following build errors:
+I guess for now. Later however I might need to add a state_uhs setting to t=
+he=20
+pxav3 driver; is the method I described right for this or is there somethin=
+g=20
+better?
 
-[auto build test ERROR on 835244aba90de290b4b0b1fa92b6734f3ee7b3d9]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Amirreza-Zarrabi/tee-allow-a-driver-to-allocate-a-tee_device-without-a-pool/20250714-085215
-base:   835244aba90de290b4b0b1fa92b6734f3ee7b3d9
-patch link:    https://lore.kernel.org/r/20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-9-697fb7d41c36%40oss.qualcomm.com
-patch subject: [PATCH v6 09/12] tee: add Qualcomm TEE driver
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250715/202507150221.oWiaX1I9-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250715/202507150221.oWiaX1I9-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507150221.oWiaX1I9-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/tee/qcomtee/qcomtee.h:12,
-                    from drivers/tee/qcomtee/async.c:8:
-   drivers/tee/qcomtee/qcomtee_msg.h: In function 'qcomtee_msg_num_ib':
->> drivers/tee/qcomtee/qcomtee_msg.h:172:16: error: implicit declaration of function 'FIELD_GET' [-Wimplicit-function-declaration]
-     172 |         return FIELD_GET(QCOMTEE_MASK_IB, counts);
-         |                ^~~~~~~~~
---
-   In file included from drivers/tee/qcomtee/qcomtee.h:12,
-                    from drivers/tee/qcomtee/core.c:14:
-   drivers/tee/qcomtee/qcomtee_msg.h: In function 'qcomtee_msg_num_ib':
->> drivers/tee/qcomtee/qcomtee_msg.h:172:16: error: implicit declaration of function 'FIELD_GET' [-Wimplicit-function-declaration]
-     172 |         return FIELD_GET(QCOMTEE_MASK_IB, counts);
-         |                ^~~~~~~~~
-   drivers/tee/qcomtee/core.c: In function 'qcomtee_object_user_init':
-   drivers/tee/qcomtee/core.c:303:17: warning: function 'qcomtee_object_user_init' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
-     303 |                 object->name = kvasprintf_const(GFP_KERNEL, fmt, ap);
-         |                 ^~~~~~
-   drivers/tee/qcomtee/core.c: In function 'qcomtee_prepare_msg':
-   drivers/tee/qcomtee/core.c:417:26: error: implicit declaration of function 'copy_from_user' [-Wimplicit-function-declaration]
-     417 |                 else if (copy_from_user(ptr, u[i].b.uaddr, u[i].b.size))
-         |                          ^~~~~~~~~~~~~~
-   drivers/tee/qcomtee/core.c: In function 'qcomtee_update_args':
-   drivers/tee/qcomtee/core.c:496:26: error: implicit declaration of function 'copy_to_user' [-Wimplicit-function-declaration]
-     496 |                 else if (copy_to_user(u[i].b.uaddr, ptr, u[i].b.size))
-         |                          ^~~~~~~~~~~~
---
-   In file included from drivers/tee/qcomtee/qcomtee.h:12,
-                    from drivers/tee/qcomtee/user_obj.c:10:
-   drivers/tee/qcomtee/qcomtee_msg.h: In function 'qcomtee_msg_num_ib':
->> drivers/tee/qcomtee/qcomtee_msg.h:172:16: error: implicit declaration of function 'FIELD_GET' [-Wimplicit-function-declaration]
-     172 |         return FIELD_GET(QCOMTEE_MASK_IB, counts);
-         |                ^~~~~~~~~
-   drivers/tee/qcomtee/user_obj.c: In function 'qcomtee_cb_params_from_args':
-   drivers/tee/qcomtee/user_obj.c:449:29: error: implicit declaration of function 'copy_to_user' [-Wimplicit-function-declaration]
-     449 |                         if (copy_to_user(params[i].u.ubuf.uaddr, u[i].b.addr,
-         |                             ^~~~~~~~~~~~
-   drivers/tee/qcomtee/user_obj.c: In function 'qcomtee_cb_params_to_args':
-   drivers/tee/qcomtee/user_obj.c:526:29: error: implicit declaration of function 'copy_from_user' [-Wimplicit-function-declaration]
-     526 |                         if (copy_from_user(u[i].b.addr, params[i].u.ubuf.uaddr,
-         |                             ^~~~~~~~~~~~~~
+Regards,
+=2D-
+Duje
 
 
-vim +/FIELD_GET +172 drivers/tee/qcomtee/qcomtee_msg.h
-
-   169	
-   170	static inline unsigned int qcomtee_msg_num_ib(u32 counts)
-   171	{
- > 172		return FIELD_GET(QCOMTEE_MASK_IB, counts);
-   173	}
-   174	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
