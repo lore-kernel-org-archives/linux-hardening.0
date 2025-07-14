@@ -1,119 +1,167 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CEC23717C;
-	Mon, 14 Jul 2025 07:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6B323B608;
+	Mon, 14 Jul 2025 08:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752479852; cv=none; b=QwKgQW1OptEJhtmGMW8JmiEtir0WYcw769WUORneo66HatUoBTq0Kb87aecLaTpxBF8lsmH5Gpq7XKBs+spKu5cTG4eYGAyXvRtRdtz1QZfkBaHH5xDTkp2ZGSmUs8XcwHscWU6otH9eo9SUXkx60cRb1buOXNe2fS4hBKGgxO4=
+	t=1752481354; cv=none; b=QJmr44W53xVxagkqWzjICapmTbX3wF5/nQq2IG26nK8LikEYEBfuK68l3jOgaUOq3bOYDWREeOHgN9txBlxLzlxixJEj+ous0BThE3AAJwlPWcutSUKBK2y8GNJWXtsCN6lnAfou3nWioT+mEP20g3p5uRHwhx30B0OOUEyj8dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752479852; c=relaxed/simple;
-	bh=RJo37Nhq5FGYaUxA8szx8YT34lqZWfDk4CzEZU4+yD8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N4hD8nnOViHhESVfuAWsfjCn+6zASJdWaVaS/Kqx1XD25x8NPMUvIsmF2qozYau5midSqdp57I4wnrfNokeh3aNYWgqCA0N3136n81dc6Y7NwfesCTTR2hwSKKCb5W7VFFhkXAVKdn6GafMQFWMB45lFLk3F0lfun7xhrOsvMiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EJddh72W; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752481354; c=relaxed/simple;
+	bh=9FsRu860H4W8OcEf2wpkIXNWWM6nplf11dSrJZDLgQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s2NG3WuPKrxlsNKlFjA9g1RxdN4Aa0fD0JndVV0ZsPcSxiUvvGlT9+Kkw+z+Nj2uIDR57qo/2JXdBYaRL/YpHe/ZU2fL9WZ/7qAEhqLXH/+EGxO4qUXjUApdGD2rEBB23JTTXbWb6v5vrt9EdHpLWZpWu7ygfOo1OoW0T1DFhjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GA9ew2ME; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJddh72W"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-235ef62066eso58796855ad.3;
-        Mon, 14 Jul 2025 00:57:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752479850; x=1753084650; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=roSjWg6cHsmiMCH7MqmdlcAQ72VjQ3ISK0vUZNe2l3k=;
-        b=EJddh72Ww+hOHmbwguJl1AZc7UaUBiYZECOiCj4tVdtXqfO7fqMWaI45RlAAnIbb6p
-         ajMxtaxw8bXir+50jxXwVxgrBqputtLoz2Pjn/TKazFs0AbP4XS3WeDXlxcshprlVNDX
-         Uu6zItjm/da4yT1JyttL1rE0dpWa4eW1bfWHKWmgHfAQUeW+uH/VXaY+mPWr7NCbjssY
-         u1gN+hqa/IlfrgKFo0vjzZHFCegQ7XAsljgD4idqvDYrNXQX/UFOxCTH1sZ1FQYCXZDJ
-         8XPfCXo6Uud8RJS8GXV46QQ7lGOGvwKdoTIolaC7hqfMTJAlQTnjT1fDFMbsh4ua+k4e
-         +NYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752479850; x=1753084650;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=roSjWg6cHsmiMCH7MqmdlcAQ72VjQ3ISK0vUZNe2l3k=;
-        b=CamLI5zP9tshMQdOI/oNIfF72X4un4OgfqTuFAxkJqtxchqiR5GLaL17+YMMv7frkQ
-         KqkYEFiTpAKYzPOO3ijb8WayFxuvuZoH0EGyQWt3RLNYak75Gby6hR07EyYmJYBbtXhS
-         us7s+qYnnN5AYmuNH/eIgfXdJACK6zhf4Ct8aw4ufxNOxfAGdyyGWXr85urxJwllGlsL
-         UtaL7NOd8EujcR44j5UQT0pbc+35CWtE5H8Zm9YIXCr/svM2fR9UE0oy+qkPpvH5Cp/P
-         L1q+xFwchmvF8n+nJyF/XpURWCCWy1jy8O9yaSDllZw3r54aL78U4aFWkG1Kd3h1bFGI
-         bHhA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5HiO4CvL74IgLOa2a5gvCPjJVaRk25qaYOY/tnrgLy0JB86Z1qhrXm08RInyYP9NVLrktrMyb4BhYxIliJ4o=@vger.kernel.org, AJvYcCXCRLjbXoGhmOfdvbqP7JgeQ23QmAim46ZkKuZiegoMZthFZwrAx0Ix7Ic8QSHFsuKrl3eLyNnf4D6GRRb+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8xeZ0M+dYu5QtQJr8oPtG2trUiSUc4SjqZq4Gel8hCfrR4P3n
-	zCeGbmrb2FSR5pFy9qZpjQu30AIbzinbzOO+g9SrhSflEnKTq0I8s207v/i0y1VEXyfuboXPoko
-	Y8pqSWJzyMeUw9jrwISBeMsG6ePz/veA=
-X-Gm-Gg: ASbGncvhjrSdj2sKZTQHsbBRB26NI44WIl+RUokQpHQ2r+yzoKH3Ds3xzgP3Fu2aDZj
-	6dxTsj/ECJDiOmHg1dBPLTHbhEwLQShTxKzOeBdSM99SoMBCVRRqkVSAljDinOL7R46yWUd9Zo3
-	NLLDHfUdryfgco89yo28iyeUVFqm/IjUZ5Alzt0LCIKF8/VYme5OC4sjoN18TV9TL9b+Q5Tb/v0
-	q8uM0DIlhe04XY=
-X-Google-Smtp-Source: AGHT+IFpr5pAueYHXrM1OZmfYU3/Tgdvg6AkbcDgwTXNPQu6TnItlBsyNVYApKSOI86T+XJ2I5iWvpVjvSs/hjFYFWc=
-X-Received: by 2002:a17:902:f98f:b0:23c:7b9e:1638 with SMTP id
- d9443c01a7336-23dede8c409mr132835185ad.35.1752479850537; Mon, 14 Jul 2025
- 00:57:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GA9ew2ME"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752481353; x=1784017353;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9FsRu860H4W8OcEf2wpkIXNWWM6nplf11dSrJZDLgQo=;
+  b=GA9ew2MEHpMjmhO4xz7yYL3hefsbIhIdxLD8faYaRAQElH8UfSqzNBe/
+   pE/LT+9ZvFTH2rS4805im55eqnxDvxzqRxdLszgNMbKIUnsCVHLK4U+au
+   B//qpzpstjxvGM5VMD15ZyIQqPuiX0XojuSBij73G+7BZw6shjRCQecdW
+   2U7TwhvTulHRlGYbbKfcfjazMEzOmFWP6CMiNEn0JVIv2kiBoy16VlXjs
+   v0CZWR5aL8/pQoGIeiXCA06cCrmP8mFR+gmLhcTD0Jjc37chRl/hJAXdu
+   uSM+dAt0Kmr662vrByBpeP/vCRwjyZ9AGbBDImqmLstLOmzVfsR0yO1s1
+   Q==;
+X-CSE-ConnectionGUID: 30rqk1b/R/OnslbC9M08BQ==
+X-CSE-MsgGUID: +aX6vxYQQ2CcnoFWOKjyww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="54602488"
+X-IronPort-AV: E=Sophos;i="6.16,310,1744095600"; 
+   d="scan'208";a="54602488"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 01:22:32 -0700
+X-CSE-ConnectionGUID: FhSDe/JRREeFxD2jxZltkg==
+X-CSE-MsgGUID: 5L5J8xCsTwSdnL9D+kQEwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,310,1744095600"; 
+   d="scan'208";a="162544044"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 14 Jul 2025 01:22:27 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ubES8-0008gJ-1W;
+	Mon, 14 Jul 2025 08:22:24 +0000
+Date: Mon, 14 Jul 2025 16:22:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
+	Jens Wiklander <jens.wiklander@linaro.org>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Apurupa Pattapu <quic_apurupa@quicinc.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: oe-kbuild-all@lists.linux.dev, Harshal Dev <quic_hdev@quicinc.com>,
+	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	linux-doc@vger.kernel.org,
+	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v6 08/12] firmware: qcom: tzmem: export shm_bridge
+ create/delete
+Message-ID: <202507141458.kBLqFFYk-lkp@intel.com>
+References: <20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-8-697fb7d41c36@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1751862634.git.alx@kernel.org> <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
- <CAHk-=wh9Pqz07ne9iSt1_v0c14rkOGvF9AbEkaq1KnFhQD1SSA@mail.gmail.com> <CAEHU8x9UKFWjuE2JPd99CS7wY-x_0kE0k=K3rfYUCJ29uzOSOA@mail.gmail.com>
-In-Reply-To: <CAEHU8x9UKFWjuE2JPd99CS7wY-x_0kE0k=K3rfYUCJ29uzOSOA@mail.gmail.com>
-From: Christopher Bazley <chris.bazley.wg14@gmail.com>
-Date: Mon, 14 Jul 2025 08:57:17 +0100
-X-Gm-Features: Ac12FXyCl2UVr3KuLV2X3zg5b49uXMIerI9JyvxvwFjPX5uWMA4vnuopNVK3Pd8
-Message-ID: <CAEHU8x9+_9VdMCp2j20hQJFTmCfD9_R8yacGg67JeQYwo3KPww@mail.gmail.com>
-Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>, shadow <~hallyn/shadow@lists.sr.ht>, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
-	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
-	Andrew Clayton <andrew@digital-domain.net>, Sven Schnelle <svens@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, 
-	"Huang, Ying" <ying.huang@intel.com>, Lee Schermerhorn <lee.schermerhorn@hp.com>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	Chao Yu <chao.yu@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-8-697fb7d41c36@oss.qualcomm.com>
 
-On Sat, Jul 12, 2025 at 9:58=E2=80=AFPM Christopher Bazley
-<chris.bazley.wg14@gmail.com> wrote:
->
-> Hi Linus,
->
-> On Mon, Jul 7, 2025 at 8:17=E2=80=AFPM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Sun, 6 Jul 2025 at 22:06, Alejandro Colomar <alx@kernel.org> wrote:
-> > >
-> > > -       p +=3D snprintf(p, ID_STR_LENGTH - (p - name), "%07u", s->siz=
-e);
-> > > +       p =3D seprintf(p, e, "%07u", s->size);
-> >
-> > I am *really* not a fan of introducing yet another random non-standard
-> > string function.
-> >
-> > This 'seprintf' thing really seems to be a completely made-up thing.
-> > Let's not go there. It just adds more confusion - it may be a simpler
-> > interface, but it's another cogniitive load thing, and honestly, that
-> > "beginning and end" interface is not great.
-> >
-> > I think we'd be better off with real "character buffer" interfaces,
-> > and they should be *named* that way, not be yet another "random
-> > character added to the printf family".
->
-> I was really interested to see this comment because I presented a
-> design for a standard character buffer interface, "strb_t", to WG14 in
-> summer of 2014.
+Hi Amirreza,
 
-Ugh, that should have been 2024. I'm getting old!
+kernel test robot noticed the following build warnings:
 
-Chris
+[auto build test WARNING on 835244aba90de290b4b0b1fa92b6734f3ee7b3d9]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Amirreza-Zarrabi/tee-allow-a-driver-to-allocate-a-tee_device-without-a-pool/20250714-085215
+base:   835244aba90de290b4b0b1fa92b6734f3ee7b3d9
+patch link:    https://lore.kernel.org/r/20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-8-697fb7d41c36%40oss.qualcomm.com
+patch subject: [PATCH v6 08/12] firmware: qcom: tzmem: export shm_bridge create/delete
+config: arc-randconfig-001-20250714 (https://download.01.org/0day-ci/archive/20250714/202507141458.kBLqFFYk-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250714/202507141458.kBLqFFYk-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507141458.kBLqFFYk-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/device.h:15,
+                    from include/linux/dma-mapping.h:5,
+                    from drivers/firmware/qcom/qcom_tzmem.c:10:
+   drivers/firmware/qcom/qcom_tzmem.c: In function 'qcom_tzmem_shm_bridge_create':
+>> drivers/firmware/qcom/qcom_tzmem.c:139:27: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 4 has type 'phys_addr_t' {aka 'unsigned int'} [-Wformat=]
+      dev_err(qcom_tzmem_dev, "SHM Bridge failed: ret %d paddr 0x%llx, size%zu\n",
+                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:110:16: note: in definition of macro 'dev_printk_index_wrap'
+      _p_func(dev, fmt, ##__VA_ARGS__);   \
+                   ^~~
+   include/linux/dev_printk.h:154:49: note: in expansion of macro 'dev_fmt'
+     dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
+                                                    ^~~~~~~
+   drivers/firmware/qcom/qcom_tzmem.c:139:3: note: in expansion of macro 'dev_err'
+      dev_err(qcom_tzmem_dev, "SHM Bridge failed: ret %d paddr 0x%llx, size%zu\n",
+      ^~~~~~~
+
+
+vim +139 drivers/firmware/qcom/qcom_tzmem.c
+
+   110	
+   111	/**
+   112	 * qcom_tzmem_shm_bridge_create() - Create a SHM bridge.
+   113	 * @paddr: Physical address of the memory to share.
+   114	 * @size: Size of the memory to share.
+   115	 * @handle: Handle to the SHM bridge.
+   116	 *
+   117	 * On platforms that support SHM bridge, this function creates a SHM bridge
+   118	 * for the given memory region with QTEE. The handle returned by this function
+   119	 * must be passed to qcom_tzmem_shm_bridge_delete() to free the SHM bridge.
+   120	 *
+   121	 * Return: On success, returns 0; on failure, returns < 0.
+   122	 */
+   123	int qcom_tzmem_shm_bridge_create(phys_addr_t paddr, size_t size, u64 *handle)
+   124	{
+   125		u64 pfn_and_ns_perm, ipfn_and_s_perm, size_and_flags;
+   126		int ret;
+   127	
+   128		if (!qcom_tzmem_using_shm_bridge)
+   129			return 0;
+   130	
+   131		pfn_and_ns_perm = paddr | QCOM_SCM_PERM_RW;
+   132		ipfn_and_s_perm = paddr | QCOM_SCM_PERM_RW;
+   133		size_and_flags = size | (1 << QCOM_SHM_BRIDGE_NUM_VM_SHIFT);
+   134	
+   135		ret = qcom_scm_shm_bridge_create(pfn_and_ns_perm, ipfn_and_s_perm,
+   136						 size_and_flags, QCOM_SCM_VMID_HLOS,
+   137						 handle);
+   138		if (ret) {
+ > 139			dev_err(qcom_tzmem_dev, "SHM Bridge failed: ret %d paddr 0x%llx, size%zu\n",
+   140				ret, paddr, size);
+   141	
+   142			return ret;
+   143		}
+   144	
+   145		return 0;
+   146	}
+   147	EXPORT_SYMBOL_GPL(qcom_tzmem_shm_bridge_create);
+   148	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
