@@ -1,44 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01F525CC62;
-	Mon, 14 Jul 2025 10:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B882253A7;
+	Mon, 14 Jul 2025 18:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752489964; cv=none; b=QQEEjNBfkVjypl4h6H8X258GC7gEzMXuFpOu8iTrvmXbg/BAD6EO+Oqcr/k6GhnSxDhD04uh5qcpodwSX+mA2Xy71aiOG/Bd0xnj8Itk0jpBnj8Fqk1gCjKiibcizACbgqc2keuLnf2/Xij0oPu6lwPmP6nWRjA/ufrjq6dDpEY=
+	t=1752519002; cv=none; b=asdlwW0ppdWc1DFZmiMfvq57cvfZVBvEEeH34lqOgj7tGhuTLm48EQAjc4yThDTxpYlqNaxn4DxBf/Z8HgZApYJh8KqjPytPbZUKh/j0ilxQWZebsJyJdp+73esp64BNwAoDqG89c4cEPzQImCGme3Lh+a9zeu2vKK2lBhUvEUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752489964; c=relaxed/simple;
-	bh=EHp+U2DAG79o1a2tBY+0M7uwUKpUfbK6FqGEdiexLEQ=;
+	s=arc-20240116; t=1752519002; c=relaxed/simple;
+	bh=g/hdVwW4OrDEpaJ2jeOYNUGdpDfpOP3FpqeHfrFX5Q4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jhqVmQOQ3dTDB8mXCi0UcD34fqAWJ7yM4JNEERENUyAo+8qHjdulPbJuZK6NPz5K34ef9uRwHd33j2e7in7SSCMS6P3zjRo3v53HFoe15D8VmtBizHOG/zAuMRXGRdk+148rXAqOskrP/MPpyzMJmlOepwsHke+1e1Flrrnizbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eIP+4TQ9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UmD3g2W6W3ID2nclMWzHVmTZZXoCPuMIvMnvjsxZenJfoyn8SPjKbTlmofPQLHVK5t7BF+L2Z+pFDShaMZKRXQEEFIvuIMcxWFdu3PgZtRAY3x/jT2j52f37GSfFDtOtb6E3S84xih/dowvfIMI0sNOC9rjulMdEzP3FXqOhg0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qyu7Fvom; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eIP+4TQ9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5C9FC4CEFE;
-	Mon, 14 Jul 2025 10:46:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752489963;
-	bh=EHp+U2DAG79o1a2tBY+0M7uwUKpUfbK6FqGEdiexLEQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eIP+4TQ9IO7AdK95xEYp8Dwsg8Jr+Pjrc+06gsSMb+jtfgEbA1HfR8kOl69Nbb0ED
-	 b+VYlLWqxEWVTwEkGp56JPcnighHzhFY/9sbdnwF3iXd5lGFsNQekFD2ShUvxiLrnz
-	 XvIjU84ZHc0qu8QK0ft5twkUItvVslfFJpF7vioJiM69LaNhp8lC2/Hu4JpSPgn7eV
-	 QCbBV2OhWMMFt4KaOtFv7q0fq5SkSGofbTxYwlL36W7ELowwp7Yjrp6T050GA1COZT
-	 zzkZdfUzR+wf3Cc3Sd86D+a+Et93qrHEmCOC4sIuoJi7gIuwI+yp9TzK9sKUiuyyWJ
-	 oLJk4Zov81MWw==
-Date: Mon, 14 Jul 2025 11:45:57 +0100
-From: Simon Horman <horms@kernel.org>
-To: Subbaraya Sundeep <sbhatta@marvell.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, gakula@marvell.com,
-	hkelam@marvell.com, bbhushan2@marvell.com, jerinj@marvell.com,
-	lcherian@marvell.com, sgoutham@marvell.com, netdev@vger.kernel.org,
-	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
-Subject: Re: [net-next PATCH 01/11] octeontx2-af: Simplify context writing
- and reading to hardware
-Message-ID: <20250714104557.GG721198@horms.kernel.org>
-References: <1752420669-2908-1-git-send-email-sbhatta@marvell.com>
- <1752420669-2908-2-git-send-email-sbhatta@marvell.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qyu7Fvom"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752519001; x=1784055001;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=g/hdVwW4OrDEpaJ2jeOYNUGdpDfpOP3FpqeHfrFX5Q4=;
+  b=Qyu7FvomqSBeaQc4dV6s/XpHySGK/WmhngPKChdZIiyzTemp/mHHxUQ+
+   wkUT1zRxuQOKWgJCeK80t6lJiUIreM8+T5JWn7zymnULEGtL+GoMKPYr0
+   3CqmBSR5DTzhVd7QgK+90ybNOQv4pHatS+yVpHACHiWFDXQkXDv/0oMMK
+   K8Kbs9EsFFNY32IQ+5PBcEjgCQ8Kv0JZ2Y/UYY6/yt4xurj9wpw9GCuro
+   9B6tiLWAtdmNdOI0CzGppga0ZVaVlnIRjjd7fvaCyaIiFaKQsmXhTTEB8
+   8TyR3yuCDTQ80rNQUbuKhpYD2F+SpgDF5nwxT7zHdtRDtnsYKH0Zx9I+L
+   Q==;
+X-CSE-ConnectionGUID: 4XeZdS7fQ8SsdQOuRx6g3A==
+X-CSE-MsgGUID: Ochzz3YvRC6TT4cjvcy6gA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="66171359"
+X-IronPort-AV: E=Sophos;i="6.16,311,1744095600"; 
+   d="scan'208";a="66171359"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 11:50:00 -0700
+X-CSE-ConnectionGUID: n6iP6M2LTgWMCXmgik1TTw==
+X-CSE-MsgGUID: LOJAA0uFQLidXjoFjsHfaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,311,1744095600"; 
+   d="scan'208";a="156651276"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 14 Jul 2025 11:49:54 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ubOFM-0009EJ-1n;
+	Mon, 14 Jul 2025 18:49:52 +0000
+Date: Tue, 15 Jul 2025 02:49:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
+	Jens Wiklander <jens.wiklander@linaro.org>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Apurupa Pattapu <quic_apurupa@quicinc.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: oe-kbuild-all@lists.linux.dev, Harshal Dev <quic_hdev@quicinc.com>,
+	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	linux-doc@vger.kernel.org,
+	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v6 09/12] tee: add Qualcomm TEE driver
+Message-ID: <202507150221.oWiaX1I9-lkp@intel.com>
+References: <20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-9-697fb7d41c36@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,141 +78,80 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1752420669-2908-2-git-send-email-sbhatta@marvell.com>
+In-Reply-To: <20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-9-697fb7d41c36@oss.qualcomm.com>
 
-+ Kees, linux-hardening
+Hi Amirreza,
 
-On Sun, Jul 13, 2025 at 09:00:59PM +0530, Subbaraya Sundeep wrote:
-> Simplify NIX context reading and writing by using hardware
-> maximum context size instead of using individual sizes of
-> each context type.
-> 
-> Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
-> ---
->  .../ethernet/marvell/octeontx2/af/rvu_nix.c   | 46 ++++++++++---------
->  1 file changed, 24 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-> index bdf4d852c15d..48d44911b663 100644
-> --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-> +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-> @@ -17,6 +17,8 @@
->  #include "lmac_common.h"
->  #include "rvu_npc_hash.h"
->  
-> +#define NIX_MAX_CTX_SIZE	128
-> +
->  static void nix_free_tx_vtag_entries(struct rvu *rvu, u16 pcifunc);
->  static int rvu_nix_get_bpid(struct rvu *rvu, struct nix_bp_cfg_req *req,
->  			    int type, int chan_id);
-> @@ -1149,36 +1151,36 @@ static int rvu_nix_blk_aq_enq_inst(struct rvu *rvu, struct nix_hw *nix_hw,
->  	case NIX_AQ_INSTOP_WRITE:
->  		if (req->ctype == NIX_AQ_CTYPE_RQ)
->  			memcpy(mask, &req->rq_mask,
-> -			       sizeof(struct nix_rq_ctx_s));
-> +			       NIX_MAX_CTX_SIZE);
->  		else if (req->ctype == NIX_AQ_CTYPE_SQ)
->  			memcpy(mask, &req->sq_mask,
-> -			       sizeof(struct nix_sq_ctx_s));
-> +			       NIX_MAX_CTX_SIZE);
->  		else if (req->ctype == NIX_AQ_CTYPE_CQ)
->  			memcpy(mask, &req->cq_mask,
-> -			       sizeof(struct nix_cq_ctx_s));
-> +			       NIX_MAX_CTX_SIZE);
->  		else if (req->ctype == NIX_AQ_CTYPE_RSS)
->  			memcpy(mask, &req->rss_mask,
-> -			       sizeof(struct nix_rsse_s));
-> +			       NIX_MAX_CTX_SIZE);
->  		else if (req->ctype == NIX_AQ_CTYPE_MCE)
->  			memcpy(mask, &req->mce_mask,
-> -			       sizeof(struct nix_rx_mce_s));
-> +			       NIX_MAX_CTX_SIZE);
->  		else if (req->ctype == NIX_AQ_CTYPE_BANDPROF)
->  			memcpy(mask, &req->prof_mask,
-> -			       sizeof(struct nix_bandprof_s));
-> +			       NIX_MAX_CTX_SIZE);
->  		fallthrough;
+kernel test robot noticed the following build errors:
 
-Hi Subbaraya,
+[auto build test ERROR on 835244aba90de290b4b0b1fa92b6734f3ee7b3d9]
 
-Unfortunately this patch adds string fortification warnings
-because, e.g. the size of req->rss_mask is less than 128 bytes.
+url:    https://github.com/intel-lab-lkp/linux/commits/Amirreza-Zarrabi/tee-allow-a-driver-to-allocate-a-tee_device-without-a-pool/20250714-085215
+base:   835244aba90de290b4b0b1fa92b6734f3ee7b3d9
+patch link:    https://lore.kernel.org/r/20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-9-697fb7d41c36%40oss.qualcomm.com
+patch subject: [PATCH v6 09/12] tee: add Qualcomm TEE driver
+config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250715/202507150221.oWiaX1I9-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250715/202507150221.oWiaX1I9-lkp@intel.com/reproduce)
 
-GCC 15.1.0 flags this as follows:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507150221.oWiaX1I9-lkp@intel.com/
 
-  In function 'fortify_memcpy_chk',
-      inlined from 'rvu_nix_blk_aq_enq_inst' at drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c:1159:4:
-  ./include/linux/fortify-string.h:580:4: warning: call to '__read_overflow2_field' declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()?
-      __read_overflow2_field(q_size_field, size);
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+All errors (new ones prefixed by >>):
 
-There may there is nicer way to do this. And it's entirely possible I've
-muddled up the combination of structures and unions here. But I wonder if
-an approach like this can reach your goals wile keeping the string
-fortification checker happy.
+   In file included from drivers/tee/qcomtee/qcomtee.h:12,
+                    from drivers/tee/qcomtee/async.c:8:
+   drivers/tee/qcomtee/qcomtee_msg.h: In function 'qcomtee_msg_num_ib':
+>> drivers/tee/qcomtee/qcomtee_msg.h:172:16: error: implicit declaration of function 'FIELD_GET' [-Wimplicit-function-declaration]
+     172 |         return FIELD_GET(QCOMTEE_MASK_IB, counts);
+         |                ^~~~~~~~~
+--
+   In file included from drivers/tee/qcomtee/qcomtee.h:12,
+                    from drivers/tee/qcomtee/core.c:14:
+   drivers/tee/qcomtee/qcomtee_msg.h: In function 'qcomtee_msg_num_ib':
+>> drivers/tee/qcomtee/qcomtee_msg.h:172:16: error: implicit declaration of function 'FIELD_GET' [-Wimplicit-function-declaration]
+     172 |         return FIELD_GET(QCOMTEE_MASK_IB, counts);
+         |                ^~~~~~~~~
+   drivers/tee/qcomtee/core.c: In function 'qcomtee_object_user_init':
+   drivers/tee/qcomtee/core.c:303:17: warning: function 'qcomtee_object_user_init' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+     303 |                 object->name = kvasprintf_const(GFP_KERNEL, fmt, ap);
+         |                 ^~~~~~
+   drivers/tee/qcomtee/core.c: In function 'qcomtee_prepare_msg':
+   drivers/tee/qcomtee/core.c:417:26: error: implicit declaration of function 'copy_from_user' [-Wimplicit-function-declaration]
+     417 |                 else if (copy_from_user(ptr, u[i].b.uaddr, u[i].b.size))
+         |                          ^~~~~~~~~~~~~~
+   drivers/tee/qcomtee/core.c: In function 'qcomtee_update_args':
+   drivers/tee/qcomtee/core.c:496:26: error: implicit declaration of function 'copy_to_user' [-Wimplicit-function-declaration]
+     496 |                 else if (copy_to_user(u[i].b.uaddr, ptr, u[i].b.size))
+         |                          ^~~~~~~~~~~~
+--
+   In file included from drivers/tee/qcomtee/qcomtee.h:12,
+                    from drivers/tee/qcomtee/user_obj.c:10:
+   drivers/tee/qcomtee/qcomtee_msg.h: In function 'qcomtee_msg_num_ib':
+>> drivers/tee/qcomtee/qcomtee_msg.h:172:16: error: implicit declaration of function 'FIELD_GET' [-Wimplicit-function-declaration]
+     172 |         return FIELD_GET(QCOMTEE_MASK_IB, counts);
+         |                ^~~~~~~~~
+   drivers/tee/qcomtee/user_obj.c: In function 'qcomtee_cb_params_from_args':
+   drivers/tee/qcomtee/user_obj.c:449:29: error: implicit declaration of function 'copy_to_user' [-Wimplicit-function-declaration]
+     449 |                         if (copy_to_user(params[i].u.ubuf.uaddr, u[i].b.addr,
+         |                             ^~~~~~~~~~~~
+   drivers/tee/qcomtee/user_obj.c: In function 'qcomtee_cb_params_to_args':
+   drivers/tee/qcomtee/user_obj.c:526:29: error: implicit declaration of function 'copy_from_user' [-Wimplicit-function-declaration]
+     526 |                         if (copy_from_user(u[i].b.addr, params[i].u.ubuf.uaddr,
+         |                             ^~~~~~~~~~~~~~
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-index 0bc0dc79868b..0aa1e823cbd3 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-@@ -985,14 +985,17 @@ struct nix_aq_enq_req {
- 		struct nix_rx_mce_s mce;
- 		struct nix_bandprof_s prof;
- 	};
--	union {
--		struct nix_rq_ctx_s rq_mask;
--		struct nix_sq_ctx_s sq_mask;
--		struct nix_cq_ctx_s cq_mask;
--		struct nix_rsse_s   rss_mask;
--		struct nix_rx_mce_s mce_mask;
--		struct nix_bandprof_s prof_mask;
--	};
-+	struct_group(
-+		mask,
-+		union {
-+			struct nix_rq_ctx_s rq_mask;
-+			struct nix_sq_ctx_s sq_mask;
-+			struct nix_cq_ctx_s cq_mask;
-+			struct nix_rsse_s   rss_mask;
-+			struct nix_rx_mce_s mce_mask;
-+			struct nix_bandprof_s prof_mask;
-+		};
-+	);
- };
- 
- struct nix_aq_enq_rsp {
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-index bdf4d852c15d..4089933d5a0b 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-@@ -1147,24 +1147,7 @@ static int rvu_nix_blk_aq_enq_inst(struct rvu *rvu, struct nix_hw *nix_hw,
- 
- 	switch (req->op) {
- 	case NIX_AQ_INSTOP_WRITE:
--		if (req->ctype == NIX_AQ_CTYPE_RQ)
--			memcpy(mask, &req->rq_mask,
--			       sizeof(struct nix_rq_ctx_s));
--		else if (req->ctype == NIX_AQ_CTYPE_SQ)
--			memcpy(mask, &req->sq_mask,
--			       sizeof(struct nix_sq_ctx_s));
--		else if (req->ctype == NIX_AQ_CTYPE_CQ)
--			memcpy(mask, &req->cq_mask,
--			       sizeof(struct nix_cq_ctx_s));
--		else if (req->ctype == NIX_AQ_CTYPE_RSS)
--			memcpy(mask, &req->rss_mask,
--			       sizeof(struct nix_rsse_s));
--		else if (req->ctype == NIX_AQ_CTYPE_MCE)
--			memcpy(mask, &req->mce_mask,
--			       sizeof(struct nix_rx_mce_s));
--		else if (req->ctype == NIX_AQ_CTYPE_BANDPROF)
--			memcpy(mask, &req->prof_mask,
--			       sizeof(struct nix_bandprof_s));
-+		memcpy(mask, &req->mask, sizeof(req->mask));
- 		fallthrough;
- 	case NIX_AQ_INSTOP_INIT:
- 		if (req->ctype == NIX_AQ_CTYPE_RQ)
 
-...
+vim +/FIELD_GET +172 drivers/tee/qcomtee/qcomtee_msg.h
+
+   169	
+   170	static inline unsigned int qcomtee_msg_num_ib(u32 counts)
+   171	{
+ > 172		return FIELD_GET(QCOMTEE_MASK_IB, counts);
+   173	}
+   174	
 
 -- 
-pw-bot: changes-requested
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
