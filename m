@@ -1,82 +1,83 @@
-Received: from mx.olsak.net (mx.olsak.net [37.205.8.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69ACF230BE3;
-	Mon, 14 Jul 2025 22:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.8.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C98323C8A1;
+	Tue, 15 Jul 2025 05:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752531917; cv=none; b=hg9xhNy6FJH9bNa3XOvYjuEYKBiJpjuaUO4SfRKJ2Cq1En0Iw2oODQw66TxRFoYWDrvt91+Xg4QPMl1hUkz9RsJBAqmfcO0OPdoHPoGUIpa8HxmZbrfV5FHo3bJFWCyr0OE4q3/LvvF6caC6RGsFyOSvX0PK+Mmw02qhl4zEya8=
+	t=1752556780; cv=none; b=F7MU881yt/Lot43HCthNfHapeTet7Ud8H/F0ZhT6QRJarL/544vO1u8y/o4i6FhV1huFsm/9rg6D+bktTRoRJRj4EeBXQ0iLymkCfFcQ3QVXHcOww29P3jwnnc9VztBsefrhfiAgxJyBzvKAm6oTP4jbw8Qump6k/qIZmX3T0DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752531917; c=relaxed/simple;
-	bh=4XuX/PYpEN8nAtv8oHkTyRtLKNxOjbkUhAeP/vk/0C4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k2cIIT/tcQrLI8XfWc9tnJTvmd1Hma5wKcG2HrxNwaRPZAhQcU9KZuvZ/pz01iNk8FR7kkMU/hLIxLuIuIRsqcHmbfeUayPMJff3SQ7VgUFH2+tuDa5YrBqaDKudzuCLUdG3eAfb3QL5wUYVBzq2wnDSNq10HeL8w4QbxvUAu1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dujemihanovic.xyz; spf=pass smtp.mailfrom=dujemihanovic.xyz; dkim=pass (2048-bit key) header.d=dujemihanovic.xyz header.i=@dujemihanovic.xyz header.b=uBtMImE8; arc=none smtp.client-ip=37.205.8.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dujemihanovic.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dujemihanovic.xyz
+	s=arc-20240116; t=1752556780; c=relaxed/simple;
+	bh=5kJrTLqEK1l9YRk4TYXY3UDlW4+Q7ZyR4bvWSBUgUaY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oQ0kf1rvsbGcTCKdeQLZw9wuUmZVfV645FYWR7LTPkCcrEUo7TWEifNpl3pefF1nw2hKMvJ5S++pEy36D24JhWDGU4zHFMwtBtfyHHESBpSnoWyTWlnSRhI9zZ66vzmYQbAaBDa+GwZze4sxuNi0V9HkDXfEUnxfIZGKmAaEsSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sj/n5ugK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dujemihanovic.xyz header.i=@dujemihanovic.xyz header.b="uBtMImE8"
-DKIM-Signature: a=rsa-sha256; bh=4XuX/PYpEN8nAtv8oHkTyRtLKNxOjbkUhAeP/vk/0C4=;
- c=relaxed/relaxed; d=dujemihanovic.xyz;
- h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:In-Reply-To:Message-Id:Message-Id:References:References:Autocrypt:Openpgp;
- i=@dujemihanovic.xyz; s=default; t=1752531826; v=1; x=1752963826;
- b=uBtMImE8MkSWBszj0mA40VHczqtf8SMXQ+Djm8Dkyh0so7//byOoCXCmE9OkaVtPsNlGaeEi
- DkSO1G1RHzD3hG5xKWZyX6nhG/w4WlcGmHfsrI0K4Ll8fgKLRcF4TMnCnHzzAQbiP2QlxP3TjAR
- jyPutFkgO0QlnVBVd/OvljASXZB+pOsnQ7KZy8StpEBa4/AH2ui/c0eO7VWtScoT1COiJjCAuGk
- V3UIZqWWbSyGQlkPzClEB3duAVeBfjpgouVSPnbx7Y9P72J0KfYUJFsWuE0dFUbPJY05rphxsst
- iJ0hXcfiTtZgtrAKpukggmMvZPiarK78NijZlLIkM1iAQ==
-Received: by mx.olsak.net (envelope-sender <duje@dujemihanovic.xyz>) with
- ESMTPS id acbc0645; Tue, 15 Jul 2025 00:23:46 +0200
-From: Duje =?UTF-8?B?TWloYW5vdmnEhw==?= <duje@dujemihanovic.xyz>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, David Wronek <david@mainlining.org>,
- Karel Balej <balejk@matfyz.cz>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht, soc@lists.linux.dev,
- linux-mmc@vger.kernel.org
-Subject:
- Re: [PATCH v16 1/5] dt-bindings: mmc: sdhci-pxa: restrict pinctrl to pxav1
-Date: Tue, 15 Jul 2025 00:23:45 +0200
-Message-ID: <3028096.e9J7NaK4W3@radijator>
-In-Reply-To: <20250711-hypnotic-aloof-nuthatch-f3761c@krzk-bin>
-References:
- <20250708-pxa1908-lkml-v16-0-b4392c484180@dujemihanovic.xyz>
- <3379810.44csPzL39Z@radijator>
- <20250711-hypnotic-aloof-nuthatch-f3761c@krzk-bin>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sj/n5ugK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF659C4CEE3;
+	Tue, 15 Jul 2025 05:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752556779;
+	bh=5kJrTLqEK1l9YRk4TYXY3UDlW4+Q7ZyR4bvWSBUgUaY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sj/n5ugKL9ykdWrIT+XGG95CfEapwo9WgrNNxjl4GIflUC6TQ84uZ3wMWiGhj0Vxb
+	 8mXV8V7E+SD5AP/aAM/heraB3ndsWzpudozFW6V6psdo5VeToVtj0OJ3mCGcqUB1MS
+	 CGPJU12tcQyWoDmHguGdOeCgMFfp7QaA7iKaq/fdKHxTYTjJdnkv0160osGqVFoMBG
+	 +iPkaCd4l7IEy3gVJAQydTP4PPc5yLLr0VP/KSO1b84QS3X7sBszabOWvkuzLZjVo2
+	 LO0CkPGw5NpCDASRVOpbHSlkQNeKJTf9VQvEeOhYWW2FUTDwatpxGK5AvZKh5yqIEp
+	 rTG31ApuNCbVw==
+Date: Mon, 14 Jul 2025 22:19:39 -0700
+From: Kees Cook <kees@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Laight <david.laight.linux@gmail.com>,
+	Martin Uecker <ma.uecker@gmail.com>,
+	Alejandro Colomar <alx@kernel.org>, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org,
+	Christopher Bazley <chris.bazley.wg14@gmail.com>,
+	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>,
+	David Rientjes <rientjes@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Andrew Clayton <andrew@digital-domain.net>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Michal Hocko <mhocko@suse.com>, Al Viro <viro@zeniv.linux.org.uk>,
+	Sam James <sam@gentoo.org>, Andrew Pinski <pinskia@gmail.com>
+Subject: Re: [RFC v5 6/7] sprintf: Add [v]sprintf_array()
+Message-ID: <202507142211.F1E0730A@keescook>
+References: <cover.1751823326.git.alx@kernel.org>
+ <cover.1752182685.git.alx@kernel.org>
+ <04c1e026a67f1609167e834471d0f2fe977d9cb0.1752182685.git.alx@kernel.org>
+ <CAHk-=wiNJQ6dVU8t7oM0sFpSqxyK8JZQXV5NGx7h+AE0PY4kag@mail.gmail.com>
+ <28c8689c7976b4755c0b5c2937326b0a3627ebf6.camel@gmail.com>
+ <20250711184541.68d770b9@pumpkin>
+ <CAHk-=wjC0pAFfMBHKtCLOAcUvLs30PpjKoMfN9aP1-YwD0MZ5Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjC0pAFfMBHKtCLOAcUvLs30PpjKoMfN9aP1-YwD0MZ5Q@mail.gmail.com>
 
-On Friday, 11 July 2025 09:31:55 Central European Summer Time Krzysztof=20
-Kozlowski wrote:
-> On Wed, Jul 09, 2025 at 07:33:01PM +0200, Duje Mihanovi=C4=87 wrote:
-> > Would it then be acceptable to declare the pinctrl properties in the top
-> > level and define each controller's respective description: and items: in
-> > the allOf: block?
->=20
-> just min/maxItems should be enough in each allOf:if:then: sections.
+On Fri, Jul 11, 2025 at 10:58:56AM -0700, Linus Torvalds wrote:
+>         struct seq_buf s;
+>         seq_buf_init(&s, buf, szie);
 
-I guess for now. Later however I might need to add a state_uhs setting to t=
-he=20
-pxav3 driver; is the method I described right for this or is there somethin=
-g=20
-better?
+And because some folks didn't like this "declaration that requires a
+function call", we even added:
 
-Regards,
-=2D-
-Duje
+	DECLARE_SEQ_BUF(s, 32);
 
+to do it in 1 line. :P
 
+I would love to see more string handling replaced with seq_buf.
+
+-- 
+Kees Cook
