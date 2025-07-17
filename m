@@ -1,61 +1,158 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93392BE656;
-	Thu, 17 Jul 2025 12:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC472F85D1;
+	Thu, 17 Jul 2025 14:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752755397; cv=none; b=JKlcC9RinG8Vrk6Qb4vQlDIlfyLShoyNqersUoEnG1B7GlinLWYaMLXPIlTFMejaefT9H+aeoKoD1JFY1gruf69bjl4bqsg5GZwFsVuwbdadCgRwPdfQzqYhY4Wi8oCwt0G2Wi6R8G5ncIDJQ2F/rMnMsc5rHT+mCW0+/kDt6mY=
+	t=1752764365; cv=none; b=AwQ0bLI2r3lqrMUeiVIcK4bZDjwk3snCgjebQDNL/ak9s+ak6q88T620HeOnYSvPVUBBnxAJHdRhQGRAdj3WqddQ5kUSJJ3WGAsnaMCr31gMTAC1wqc2w28Cu+6SNO0LvmN00qDfeQPbbsg99HAGwB2JQn7pWaJMrgDxF51bJMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752755397; c=relaxed/simple;
-	bh=48kSKcB2hnSyDzNIJj0i5QAlMxNjsdNNvCXuAgKehwc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IIvmD4p/WhtjmseKrq7bxMdXPqBCbdnOvE2de8+MGpV1NvAL51zVGbkfD9U5cDtFShmb/JWbCXIohYgyi5dWVVvxGfEBK0VjX00u0DISBDBdgnv7eHlxbxl2IUp7xUzAud8YeNkm5D38NSsS5CM45oEaSkyu+Csq1WOvTsgag6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id EA74A1DAD69;
-	Thu, 17 Jul 2025 12:29:53 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 8CFD720027;
-	Thu, 17 Jul 2025 12:29:51 +0000 (UTC)
-Date: Thu, 17 Jul 2025 08:30:12 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kees Cook <kees@kernel.org>
-Cc: David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Tamir
- Duberstein <tamird@gmail.com>, Eric Biggers <ebiggers@kernel.org>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>, Petr Mladek
- <pmladek@suse.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Luis
- Chamberlain <mcgrof@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] seq_buf: Introduce KUnit tests
-Message-ID: <20250717083012.7fea6aba@gandalf.local.home>
-In-Reply-To: <20250717085156.work.363-kees@kernel.org>
-References: <20250717085156.work.363-kees@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1752764365; c=relaxed/simple;
+	bh=JMX/QgUhmqLWxuEkWEUiV/WuMSD4F4bRfw4zHmMzWUw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IexqzRldm0dAeA+CQvXXEqs6AV+HktE91Hs2CzA2yJBq6sAvoXnBgqYHQdvnjcdPXCyR9VHyFmHTCOkX9j03VLdoZy8QkDgEi2cx1o/ruSqKOUxna7yFQskQIiUQ/sbxtMV+2zxT/PBKOEINxviDbQgkl67/r7R9/zdNJHstOT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f1gcU95t; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1gcU95t"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-23e210ebd5dso16100645ad.1;
+        Thu, 17 Jul 2025 07:59:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752764363; x=1753369163; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vnmPbk+SzjnQUab3zLiOuEdr6xig/TglCXCOUdlG6xw=;
+        b=f1gcU95tNbxCA9FrYQIQkVdoIKcB1FKAj4/u9/qomR0cHXTpOm5T6Q0olzsh/kIBH4
+         T2+EvUJ4sFfIk/473icxVUGfa3W4wWcP4rbT04T6tR7f6Afuvtn/b7ZciTlE/TVP7j51
+         KkqQWOUh2OdnjZtE7+dCxKMgSLeXTqLFeCj2j7g9jB1ODb/LOuGATL9X+382DJ0DAC7b
+         eLbDLhlVc+o/HUHNOQ7r57K8F2wcFuUMBEm0Goe7XNJhfEIoXcTwlY7qTa+nL3CO85GN
+         1yHOo6RJMfBvfSebQC+9Ir6mHj/GW0GvmiAIZDjJdiLiTz3lnhGYUlpzpIb2kAy3G0+5
+         6dpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752764363; x=1753369163;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vnmPbk+SzjnQUab3zLiOuEdr6xig/TglCXCOUdlG6xw=;
+        b=qwxpzxivG7BnSLsLZR+yR0LTVO4FnQIT+JeKbPTAIP2Nlf0d070iw7+OKCkbGshw0O
+         JCTre3UyJrgVSCspIEPG1KrC133MGKbATmBT36hYM91BpzhRsjnn6aLKHLREYBXRJVut
+         4ct7qF3XFFpZaYoOO1Sp3gOsAZDr85bdnWRbYqLjU/RJ8iF4Yt3yBmGDc2geNVpwPw9U
+         OGM9M9cJ9+Ymub8vnur9XY+1L30GN9pssX8TTVAn5q2urrgMg8GtxF87VPWuid5/M1fO
+         aH5plZr3jj9WA0ElQ8LVpwI6z4Lt2guEaLBkHpLUV6+/xDs40wmxWMC8LILdHlzMq6Kw
+         zrBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnsTJ2oLt19FqQnGPlRkjX47ciwPMmD1AlaGerbNsSZEfVs0nxKhDUrVp/ppWHc5nEOdV3+LjQ3st+09l6RRc=@vger.kernel.org, AJvYcCXFtpxcE22xKFyT7KPc54gxSplyK7IYl8M1ckKD+uBvIUkeB9Hk2rm/sfiUbpT3PLeZM4Ea/+Z2F2mNOlbh@vger.kernel.org, AJvYcCXlYJS91StJAZlC+o9/3pgQbEtnlKPE38aeFU79I6W/7RXuxJV/qYp0EhJ5iY1jqsIUxpIC2H+OwoHdUbABC8kZacg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkmTEzVpkJd82yh+CBbpZAtGPtQiTz2I4pBtjb2kAeEZk8Jb99
+	wxx/bYnsCfum3B5n7uFw0QvJ4J4n5EP/8ek6l2Xn4Js1t+FPhV3NIwdJ
+X-Gm-Gg: ASbGncu8BSgYFRBRtZ9LGvNBRcnk92HK2HoS1GwvXOznbWAgPpT6QjfcyqeQGECxakm
+	bf7y4v2gFRSYa/ZSOgE6TdhB7AXTBFA1Urv4++YNvw5dVhOsWBwyTSvwQ46zQwDDPVGNjhuSgCG
+	5dvbpHcRSK1Vo1aka+wsNU9tJwHb96NMG35BCVZDCdVRU7ztHFOdtU4iPmq5T330hCMHmTgNR4w
+	zUsV3YgMBazbN+6Di+RzkBAJZBA9mNGk9D6vcYeoNqciGJiBdPQP2sPRw3hvxg9DeOQYXQkIu1+
+	NpgP1311FzEEcNTzVDQ9CojzXmO7I6xfzmuV0p+b8bK0gA3H0NaFEl/fO0UdYvsHszhXGrKDA5R
+	hu9JiXknXKOrx58EIpOW6RlVOMWS8zTbefITZZwZ5QAGKyMxBvDWCRDUWRwF6djUzGAk=
+X-Google-Smtp-Source: AGHT+IHgkzEOYEeBylkMIDMLWlCKIz9EjBVWlMOVczHADMYS0NEj3G6AuhDKx5MYpE25LRvaHDKgNg==
+X-Received: by 2002:a17:902:d4c1:b0:234:595d:a58e with SMTP id d9443c01a7336-23e38fb11efmr1511875ad.25.1752764363108;
+        Thu, 17 Jul 2025 07:59:23 -0700 (PDT)
+Received: from [172.17.0.2] (125-227-29-20.hinet-ip.hinet.net. [125.227.29.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23de42aea81sm144603915ad.82.2025.07.17.07.59.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Jul 2025 07:59:22 -0700 (PDT)
+From: Leo Wang <leo.jt.wang@gmail.com>
+X-Google-Original-From: Leo Wang <leo.jt.wang@fii-foxconn.com>
+Subject: [PATCH v8 0/2] ARM: dts: Add support for Meta Clemente BMC
+Date: Thu, 17 Jul 2025 22:58:58 +0800
+Message-Id: <20250717-add-support-for-meta-clemente-bmc-v8-0-2ff6afb36b0e@fii-foxconn.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 7xkbp994kihwtej9kyy8bjwoyaffxjhh
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 8CFD720027
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19R7HG1UvXViNKqeoLNnHqLt9FvIKKsSUU=
-X-HE-Tag: 1752755391-728039
-X-HE-Meta: U2FsdGVkX18SKojBekyEXxUY3SLzqhD9e4wgcxFvNSqpZxiMGZjZJuUTX/1dyr/8Vc34UYYp1unSs1L3Vf17SUpIW2FTqkQzGSrkwnQckMXZ9dCNVS6TWOgw0oex9KtybEWKirvkUlw7LuvLFzjHQrA7mD+NubhtvLrDYJNWFRb2oR+2zbjJpJvNzvL0L4Mo5AviwtjtG+AjgMYB1qFkf6KWw5iFkzWrO7Z4aQM5rc1eN6e+lxdSyqA+JqxobbIg1N0d9syDIwWgIDMZmL9M/3si3y7bQB8hNTEHj8BzWLlTNKXfqEm2Fl8e8FGY3UP4gSQCDYg5CGSBdrSfZITMjpJ9/R/CPGDBHWj6Jq+Qn29W/cjNYgo0hg==
+X-B4-Tracking: v=1; b=H4sIALIPeWgC/5XRTWrDMBAF4KsErauif0Vd9R6lC2k0agS1ZWTXp
+ ATfvXI2NdQFZ/mG4XsDcyMj1owjeTndSMU5j7n0LZyfTgQuvv9AmmPLRDChmeFn6mOk49cwlDr
+ RVCrtcPIUPrHDfkIaOqBOca+MC6CFJM0ZKqZ8vXe8vbd8yeNU6ve9cubr9BF95pRR1OCNcYjKh
+ teUc9u9Qun7ZygdWTtmsXEFP+KK5hrQmJh2XDnYd+XWlUdc2VwQQqYESRlI+67auvaIq1YXbUp
+ CKsNA7bv6YVc3l8kzRpM4BPfPvebXtezQ30xzbZKobYhMSrPv2o3LzRHXNjfqEKzSDrT3f91lW
+ X4A8/ldSugCAAA=
+X-Change-ID: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ leo.jt.wang@fii-foxconn.com, george.kw.lee@fii-foxconn.com, 
+ bruce.jy.hung@fii-foxconn.com, Leo Wang <leo.jt.wang@gmail.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1752764359; l=2456;
+ i=leo.jt.wang@fii-foxconn.com; s=20250618; h=from:subject:message-id;
+ bh=JMX/QgUhmqLWxuEkWEUiV/WuMSD4F4bRfw4zHmMzWUw=;
+ b=O7FZv7SmN+3mZNqZcFF0E6+kINF6Do9tG1Je+dkH5V0XJWXbF2wApr0D+XWg6pkWRwXAS+RhJ
+ tgITsqyOYw1AMNw2JUBAAELEhjLPkzXTNYi7iabDimDhxy6AIb8bJbp
+X-Developer-Key: i=leo.jt.wang@fii-foxconn.com; a=ed25519;
+ pk=x+DKjAtU/ZbbMkkAVdwfZzKpvNUVgiV1sLJbidVIwSQ=
 
-On Thu, 17 Jul 2025 01:52:12 -0700
-Kees Cook <kees@kernel.org> wrote:
+This series adds initial support for the Meta Clemente BMC based on the
+ASPEED AST2600 SoC.
 
-> I used an LLM to produce this; it did pretty well, but I had to help it
-> get the Kconfig and make targets in the right places, and I tweaked some
-> of the edge cases and added a bit more (perhaps redundant) state checking.
+Patch 1 documents the compatible string.
+Patch 2 adds the device tree for the board.
 
-This is actually something I think LLMs are good for.
+Signed-off-by: Leo Wang <leo.jt.wang@gmail.com>
+---
+Changes in v8:
+- Relocate IOBx_NICx_TEMP TMP421 sensors
+- Enable byte mode for i2c11
+- Link to v7: https://lore.kernel.org/r/20250716-add-support-for-meta-clemente-bmc-v7-0-d5bb7459c5aa@fii-foxconn.com
 
--- Steve
+Changes in v7:
+- Relocate CBC FRU EEPROMs from i2c13 to i2c12.
+- Link to v6: https://lore.kernel.org/r/20250708-add-support-for-meta-clemente-bmc-v6-0-7f3e57bd0336@fii-foxconn.com
+
+Changes in v6:
+- Correct Author email to match Signed-off-by email address.
+- Link to v5: https://lore.kernel.org/r/20250627-add-support-for-meta-clemente-bmc-v5-0-038ed6f1cb9f@fii-foxconn.com
+
+Changes in v5:
+- Remove accidentally pasted texts.
+- Link to v4: https://lore.kernel.org/r/20250627-add-support-for-meta-clemente-bmc-v4-0-ce7ff23460c4@fii-foxconn.com
+
+Changes in v4:
+- Move properties of nodes defined in the same file from label ref back to where they belong.
+- Move pinctrl default configs for ncsi3 and ncsi4 to aspeed-g6-pinctrl.dtsi.
+- Add properties to i2c10 and i2c15 to enable MCTP.
+- Link to v3: https://lore.kernel.org/r/20250623-add-support-for-meta-clemente-bmc-v3-0-c223ffcf46cf@fii-foxconn.com
+
+Changes in v3:
+- Modify leakage sensor to reflect current design.
+- Link to v2: https://lore.kernel.org/r/20250621-add-support-for-meta-clemente-bmc-v2-0-6c5ef059149c@fii-foxconn.com
+
+Changes in v2:
+- Fix patch 1/2 subject line to match dt-bindings convention.
+- Reorder device tree nodes in patch 2/2 to follow upstream DTS style.
+- Link to v1: https://lore.kernel.org/r/20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com
+
+---
+Leo Wang (2):
+      dt-bindings: arm: aspeed: add Meta Clemente board
+      ARM: dts: aspeed: clemente: add Meta Clemente BMC
+
+ .../devicetree/bindings/arm/aspeed/aspeed.yaml     |    1 +
+ arch/arm/boot/dts/aspeed/Makefile                  |    1 +
+ .../dts/aspeed/aspeed-bmc-facebook-clemente.dts    | 1295 ++++++++++++++++++++
+ arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |   11 +
+ 4 files changed, 1308 insertions(+)
+---
+base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+change-id: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+
+Best regards,
+-- 
+Leo Wang <leo.jt.wang@fii-foxconn.com>
+
