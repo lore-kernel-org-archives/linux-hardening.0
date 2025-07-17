@@ -1,90 +1,97 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF302289808;
-	Thu, 17 Jul 2025 10:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5CA2BD030
+	for <linux-hardening@vger.kernel.org>; Thu, 17 Jul 2025 12:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752746882; cv=none; b=TcPnMMfnMYeyb1+rBE//5rX2YUGxhxACfkW/WwfLaNkp8X3mWax/8wbcY8A5REpCfkuU0EiYTZLYJZUO/2nIj5a4yRUOA4ZhlXv1DNbmKpGzY2j59IT5QQPv+drMkpSM4f6nIF5vdi9catg6E8O85ZyAy+UAMCUWYx5eEjiEBs4=
+	t=1752755118; cv=none; b=DlAlZCGy4B3I+prJZZqsCZDiEKnQs8jYFcNoEVI1SH2ZUjm3K4tcon534ZYkh4wlZx+wf/IaY+N+rkMBxPDBUuN46cj51Qmd/f9zhHc4YjJhpsJIH8V8niAlbc6m9GuyLxWZnMp4XMuyKdeO4mbYX/uLdya1H1ZsG3kYgoiT6pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752746882; c=relaxed/simple;
-	bh=FkQy/Y3q6tMqhobUejvgOD3UsPfO0JsXG2mMvZoSgj8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t7lsvvwhojdHZoBRS5mwTpBnX8/OlfhRMq4w01qGaOxUhB1MphnTcl7e+m5ibBjiefe46PXK0SZW01jApkqK+4Y3G+NyDuesS6XKthdJ4KeCXgOtf/24kUTex/xgzsxTJQzzH9Wvo2JAq6pRaNqr6gJJDUROJipXh7ihJQXXCX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WQHxz/cz; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752755118; c=relaxed/simple;
+	bh=YcINvDLfHkGzyANlr1ZupfWjKFva7tSMisQVD/2gG+4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qbLK/tvaGz0+xW5DWWcAVO0NOOwSEgt+XfXQcE3JA7ArDijjhmPesHEqyT3kkv2gs1dpmC/ZQnLAtjvkCFnD/7Wvmccp5VzT+fPKVY9E6wjHQi3LhFHC+L36WjXA4O+qcMJYjJn+tTO+9GDnAuCBu70MiBxslEeuer4RWADpkPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=EAl0qA9m; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQHxz/cz"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-312efc384fcso147169a91.3;
-        Thu, 17 Jul 2025 03:08:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752746880; x=1753351680; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FkQy/Y3q6tMqhobUejvgOD3UsPfO0JsXG2mMvZoSgj8=;
-        b=WQHxz/czFU4uwoHXtVPwJjHrwsXiw9SQeVDmVEntSTPgp28g6qhJRTwxf9R5ej1h3+
-         w+crIpgND5ZSOZ8dVX9bkMNRUqOicfzfJfryFJAjn+nlkFv5aT+t0vJw9BXqsBnS3Xds
-         wEk6z20qOIIXorvqceJH0IM+1poM8WvFeg/PyK4zA9f+zgsUx2AuQq6PTSW5fFNDcx5g
-         mdSFREIfYLYkgr9XusQF0vA7IDcbUAhlVIdAdGpqHgEIUed6yr7UDM7nO0G7KChLMtZu
-         QwNf2apXq1EPO19bfk8v1pd+zv0UZgxXH9oGCHte5d8IuZcA7Dc5AG8uCOzdoT+m6DGc
-         SoAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752746880; x=1753351680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FkQy/Y3q6tMqhobUejvgOD3UsPfO0JsXG2mMvZoSgj8=;
-        b=re1CW3kgvLj/5s7CEKIcz/wtsoGpyHgjGmSLN7BbHSgg2Fvw3WhTYREVdPlcEQJpGM
-         Wpw99NBWRPOsXqmn+55zJb/m5TJSb6MKgW6tqQ4bTqCA1H/S7JUWs0WXjwfgYjM6HL6w
-         aMcyW18zZ4v6UzoJCAJvpuwOV+NH4nTTu2/JYWmbP/pDY5N68OekG9Bv1MjMVBu6hMLO
-         qIcCOKP8xNKGo0qMwtuAkgYWBYCEqAA0DNf21EyJOSaaNZhKgcO6QdHRlbfDdHOurH4L
-         EP2/uafa8CIoAF+WRoTmjoNQgdjN3ATbtn+XF1UGQath7A877viZmPHlzKtnv+h4r0xX
-         o8Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGCrhG1FBOSvFSMOpdMEe8zJAXyqMQdH81XkWiPzLMLnW2Fxrw9mZdndh18JRkLSejAU0SYVCZ/xlqfyBk@vger.kernel.org, AJvYcCXEEuZ1s8jpOZtI980mq8HB6FG4wFgwU1HOcGZqOyTN4vwsx3v3+b7P2+uhhQx00ZoxSwv8cgJaskU+yHmMjno=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7ILh7wFJ2OGuXKqM8wU6YCYbnPxnQI65efZw+oyRUx0j7DGYT
-	ylmb9hh65psFPEiAbu2PAZy8dVLI7b2pv/eXUcuA6LPBJF4sKmrzvozVhbIVVHGSXbAg2NKiVnV
-	HJ8petXUtnd2w/RZoABK1Fac1VCeVolM=
-X-Gm-Gg: ASbGncsK8Zeu9rrxmyVm3QfSoeBlpC0h0bdxrX6L8kEgHINYYP3SNSg12HHMvA5WenY
-	HyMGqrshB9ecVibzRsz8zTzkKVzFEDDzqJSPUID9PSdx+P/AABpLVSZju3pei9Efp0DWmxYAFuh
-	Bw3ocwyIZeuIEbRf29ar0F7RqdaADJ7tlH4iRJEAuBDfADYHDiNAsKY3zhq7sha2sD3to/rqy0S
-	oZsXhSv
-X-Google-Smtp-Source: AGHT+IHx7O5PAXTasiy9yyPUprUELmj79np3hybUvsshq6jLwxK4T3fmJzDg7uiXUMAUYMEcAk0CpU7R+CJUVfZd4m0=
-X-Received: by 2002:a17:90b:4f8f:b0:30a:80bc:ad4 with SMTP id
- 98e67ed59e1d1-31c9e5fd68dmr3290528a91.0.1752746880122; Thu, 17 Jul 2025
- 03:08:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="EAl0qA9m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=bNx8gllGSe/xy2
+	vLhCn0cAXNpGel+OqdtdLDQBiWdoQ=; b=EAl0qA9mbot7pso+VTslj4rNQBSt56
+	66eiK2vjlv0+lnmxGqkjxz5RT6YfksGS12ls5HmBACf2IlO7i2YD6zi6qixXSJ7t
+	/JMMvGMjzuFdMNN43pYrPNWnzFajR5o9u2su7oWMatEPIyCHpCX0hy8X2J+8DCYk
+	xXox0gCwEoIBjIV5B0Pps6cIXu3kiFzw1I/+ivaxd75Wto9Lt/eMsQws89o6pDGH
+	f8dtBk+Xza8Gv2MCb/U6k3EV7Vf3VCcOl7uGdLYduE3QPJToTBLm8q8nbvwgLtZ0
+	iZFo9WNPXlnY74dwRs56GJgFPQKFJuDuM7aCZQ3BGcdaUUipo2dz/9JA==
+Received: (qmail 3671446 invoked from network); 17 Jul 2025 14:25:12 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 Jul 2025 14:25:12 +0200
+X-UD-Smtp-Session: l3s3148p1@HWbYGR86GMcgAwDPXx+vAAkEB0lWxGP4
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Frank Li <Frank.Li@nxp.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-i3c@lists.infradead.org,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+Subject: [PATCH v2 0/2] i3c: add support for the Renesas controller
+Date: Thu, 17 Jul 2025 14:24:51 +0200
+Message-ID: <20250717122455.9521-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250717085300.work.146-kees@kernel.org> <CANiq72kPmb+7Ygk_Qvsiq+22EJVSPjjwn4whdLuTGCPwvTAssQ@mail.gmail.com>
-In-Reply-To: <CANiq72kPmb+7Ygk_Qvsiq+22EJVSPjjwn4whdLuTGCPwvTAssQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 17 Jul 2025 12:07:47 +0200
-X-Gm-Features: Ac12FXwT-j99yzQ1QeDKF2d9w3_kpLJ5UpDscxnEoLwurYXccSzH2vvm19x_7h4
-Message-ID: <CANiq72nqg79xB=iV4GCH8XCak2jCn+XxUX4Hm1s6n5L=5cLuvw@mail.gmail.com>
-Subject: Re: [PATCH] Compiler Attributes: Add __kcfi_salt
-To: Kees Cook <kees@kernel.org>
-Cc: Bill Wendling <morbo@google.com>, Andrew Cooper <andrew.cooper3@citrix.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
-	llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 17, 2025 at 11:51=E2=80=AFAM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> It would be nice to have a quick sentence inline summarizing how it
-> will be used, e.g. what kind of functions will need to be annotated.
+Here is a basic driver for the I3C IP found in various Renesas SoCs like
+RZ/G3S and G3E. Missing features to be added incrementally are IBI,
+HotJoin and maybe target support. Other than that, this driver has been
+tested with I3C pure busses (2 targets) and mixed busses (2 I3C +
+various I2C targets). DAA and reading/writing to the temperature sensors
+worked reliably at different speeds. Scoping the bus, the output from
+the protocol analyzer seems reasonable, too. It was created by merging
+two versions of it from two different BSPs. Then, improved according to
+code analyzers, cleaned up with regard to coding style, and then
+refactored to hopefully match I3C subsystem standards.
 
-By the way, related to the use case question: would we eventually want
-such an attribute for Rust too? If so, happy to help.
+Changes since v1 are described in the individual patches. A branch with
+enablement patches for RZ/G3S+G3E can be found here:
 
-Cheers,
-Miguel
+git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/g3s/i3c
+
+Looking forward to comments,
+
+   Wolfram
+
+
+Tommaso Merciai (1):
+  dt-bindings: i3c: renesas,i3c: Add binding for Renesas I3C controller
+
+Wolfram Sang (1):
+  i3c: master: Add basic driver for the Renesas I3C controller
+
+ .../devicetree/bindings/i3c/renesas,i3c.yaml  |  179 +++
+ MAINTAINERS                                   |    7 +
+ drivers/i3c/master/Kconfig                    |   10 +
+ drivers/i3c/master/Makefile                   |    1 +
+ drivers/i3c/master/renesas-i3c.c              | 1425 +++++++++++++++++
+ 5 files changed, 1622 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i3c/renesas,i3c.yaml
+ create mode 100644 drivers/i3c/master/renesas-i3c.c
+
+-- 
+2.47.2
+
