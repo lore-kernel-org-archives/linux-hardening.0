@@ -1,181 +1,192 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5924C22A1D5
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Jul 2025 20:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4A723771E;
+	Thu, 17 Jul 2025 23:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752785348; cv=none; b=mfn7aK9KMgAO0erZfJQqAgRjQdm8wmPg3GSRxeh0elenax9wVlgjiOxTlbMt/T/zQOzoQPKWEqywecYIk70SPIEgkloUJ/hFDAzj2JXni1KsZTULg4CXJDqsH7DvhPa0DlgfiqUEZVl3F+KW05HO2MAgFRWB8/e7NrsbzrD2iLE=
+	t=1752794720; cv=none; b=c8yonrc24YZt+QAq2eNw6qR2PVQTpf6fvrxgOOz3hKkJwY0HUqzeuC2dzvH5SsltWqsMB+tL/pCKwX+GHDycJ5+T0ggTI3nf5G0bCbH6GrnISC6D3L5MaYlUHjHqIBlM3F/CRjCimRXXp1eV6kDg7QHZ5HcUKbmEhWPTQuqY5tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752785348; c=relaxed/simple;
-	bh=Lv5I/l69wbo8RENfJ/KSckfR2rUPD9dYes5xZ4X8ePk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l48nZCDS8kVRzoUcsriL8b57v7zgPmp8Bc4n6QxsJ2RWdNK4/fste+OfZzbZXFKCrIiKIjbG7mVCG9/0F2D3yb5fmbNShNweWbMutMDFZb2jUEmBDye5hEPW9BwZ8aBqSSy5aO9+WJwNLC8BB+NOe8Z8qOqCsTrmZgBvX5OAfCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZODzgaVF; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1752794720; c=relaxed/simple;
+	bh=ix3ybSX3HXyR5ul7nVKO/r/KYy1s5o0+DAZiEgLkmcM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=lWjGbImXRLXkYQAN3ouUQg/JrefeI50iZX6s39DzF1qWyKOcMiHYIWmneI3SiLdQYunrhfnug15u/g7RCO8eWj9Rvx2Jdm+greXXrhOXiYl8BhZPQYmdXjjpv7t93BapY4zkcw9+vLs5ezbr7/BvOCBQFaGk71BQLIsaY1z/8K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gn7vBNA8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZODzgaVF"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56HC65ku025209
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Jul 2025 20:49:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9CmYaonQmugq/A4aPpsk6Yn5qRo2GpUcf9NGF+0jewo=; b=ZODzgaVFXqDSAbAX
-	LfKxIzB6QdXDsZi4ImF0dwBp2TXCcsNhS6UED+aEZlPRNhtTx+6tQZOxmHlyQ0XJ
-	86tClR2BvCALhvt9pu9tfPDf3zwmNgqvytEHRMKqmtgbWbLKHgVyoi2Vpq7U+Uzc
-	mMcXIyQELPGgPM+V2jCUNQZVrluAeHsfIiJNfjNTr2Jkm9POmL2IatCpUImukDlO
-	HQLhVpF0OAt0a5m42K7IRUhwjQCovePyH79Gg3MNkGsA05XbOIK8EwIjBqCyOHSh
-	O2twmTg5nwKnFD6KIFiElguhTQtujDJFqbZbDtx/ylp2NW+CywH9U4iLLEe68oPp
-	Mpg+1g==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47xbsqdawr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Jul 2025 20:49:05 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4ab61b91608so3989621cf.3
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Jul 2025 13:49:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752785344; x=1753390144;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9CmYaonQmugq/A4aPpsk6Yn5qRo2GpUcf9NGF+0jewo=;
-        b=DpHPegerw5GvXRiwpDdOaIgYKanbMOGfVm6WmLCoehB7zgGtsGYV9yska2jEkcYeis
-         8J71/OBjEEHF7fX0fR76sbIzpz4A1YQe+bBpzdMbXPfjjtBAyFbJ0DkhokmnJifmhSLH
-         frzIlzYNqlhMmZYcMpx/5DQu9OCnhx8o1PhzTkhYD47AWTLWCo0CC5fS4UZTmtQFBrwX
-         ZVGuJVc7+cIWfdVkG7IfOEuNZqd4yNZ5dLqHTDLP3JKQgC+zHveiXTydoUPAcVmd7iq3
-         OXGaUZJECFjadzjut1/97Ez3gpFPB7RNhtPNaAUX1yL44Rde5REL21zsKD2NwQLx7Vuu
-         HPZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXWXoVzKHJeaQxSDNMvGzPy3me8sFB8Wfx7q6O81cnFCL4gA/1tZKQtvFfxRrYIyGYsBT3yVUGa6ENYmRyncq4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXQ2qg5VPmhqI0YzMsdrMnSw6LMwS2HFpQ/0EbCkg5ryk64HB5
-	Ve8E9T0+oWc3md2R6ejUyL/MMuYf4YEAejsnIICHJrQzGGKfRqVK/3BP9/ZD6z0s3qMLmfmEqWI
-	6X/FEN0DY7bEcGCKko4sVsMqw1CBy6x6O66azbCyiy7rFlmsHTGIoVosBBdYR4vgNC3sfTmE=
-X-Gm-Gg: ASbGnctqpv5xu4JIb3VuVMPSblg+yEaThmPY4SlfXgLwG3zZqk84RXlMKekcd9OG18E
-	o0kzoHSkI1vXGvSyVqRRUiayvR3bJi0aKJ+dFUMBES6eFdoUJFpgarnWMkpMY7saxSGteXbNjwm
-	7BIvphJNccGOfpIQMhYRXDjj2CfsXHLRiNFLEEeAtTH3t2oI/hhWqhPEUp13GnSaGfi+b7GYmyu
-	tSUJfhvezr3Sc1MzRCsek5TQJVqpaHH1CUXtHkds+bmILTP3f54GtGo7MARFF7dANEPaKj/tVpR
-	b+3YeCLEe5vMF59TaieZ8Srwb4VKv5Judoy6L145koSYSUZ4RA1XM1Avcf2O2ksPfF21qOtka5p
-	s8N44SQiEW40tO9EupgeR
-X-Received: by 2002:ac8:5a50:0:b0:4a9:9695:64c0 with SMTP id d75a77b69052e-4ab90a8b01cmr59189871cf.8.1752785344083;
-        Thu, 17 Jul 2025 13:49:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFsdUOD63AuogKrskTaxBSHWwDEDfZBOoSuBlZWtt3hsMXZqbmo6AUjQ6EHFno6axLzFcjgbQ==
-X-Received: by 2002:ac8:5a50:0:b0:4a9:9695:64c0 with SMTP id d75a77b69052e-4ab90a8b01cmr59189571cf.8.1752785343480;
-        Thu, 17 Jul 2025 13:49:03 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-611c95246e2sm10463988a12.17.2025.07.17.13.49.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Jul 2025 13:49:02 -0700 (PDT)
-Message-ID: <793434f9-7cdc-409f-b855-380be7a2b0db@oss.qualcomm.com>
-Date: Thu, 17 Jul 2025 22:48:59 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gn7vBNA8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29831C4CEEB;
+	Thu, 17 Jul 2025 23:25:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752794720;
+	bh=ix3ybSX3HXyR5ul7nVKO/r/KYy1s5o0+DAZiEgLkmcM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Gn7vBNA8ECW01pz7bzzi6l7uJmullsgdYyyFGomxO2fchHp+SDepdG+I6wOhD/gNK
+	 T3SEIM+1NfmErc+8DhsFxy8ppv7/K4qPjswgAhSVTH/FsykQ/fNbHEvrnupijvTyea
+	 b5T6AUCskwP0bPJyW348phxgXsYznPGl6Tfu0rEgmHXOlEMleiD7DVHcHq590DH2FY
+	 oMdbUTk24voKuAcf1WeqMrcw3JXvI5a4jYL/MBUz2SF0aWznalOa6/vg9ppvdbzmOv
+	 2MAUd25KsoHSEQdyNB+y5jYu/S+BPCr2PLArdK7j9HFT5emGVOiw+WzwFsulmUJmbM
+	 r4pAIwieJbXxA==
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH v3 00/13] stackleak: Support Clang stack depth tracking
+Date: Thu, 17 Jul 2025 16:25:05 -0700
+Message-Id: <20250717231756.make.423-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 10/14] net: ethernet: qualcomm: Initialize PPE
- RSS hash settings
-To: Luo Jie <quic_luoj@quicinc.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal <quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-        quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com
-References: <20250626-qcom_ipq_ppe-v5-0-95bdc6b8f6ff@quicinc.com>
- <20250626-qcom_ipq_ppe-v5-10-95bdc6b8f6ff@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250626-qcom_ipq_ppe-v5-10-95bdc6b8f6ff@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=ad1hnQot c=1 sm=1 tr=0 ts=687961c1 cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=afnzvhLNFvO1QOecfk8A:9
- a=QEXdDO2ut3YA:10 a=uxP6HrT_eTzRwkO_Te1X:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: GLPVlzjxtBDIsV_aNN0f47jf5B3OEdRb
-X-Proofpoint-GUID: GLPVlzjxtBDIsV_aNN0f47jf5B3OEdRb
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE3MDE4MyBTYWx0ZWRfX+Y34sWQzv+iB
- J1cX9YgnqfPq14qyCYuHpRKRo1wz1mcMz/c1PGxjM10oyFVvAd/R/NTcF/bwEyQjio4oGpSZEdB
- ZtFL4gVMBC5Nh+VsvauR9YBBSUsJkoNm5ErjyQ1K7PgiHwEiVrd36jHBTkJjlVDkNpmPzNNhNpe
- niAvplmKaprphqYGy55T9t0NvINq6MdjWwP7lYXPN5e3yFzN/niCc5kjF62RXqGmpoHM7P6/1cI
- 6TaeRzRLEB07qMI+91KjyCPyroe7CEvHvInCX0AXeENZPwx7D4djBhp4tQlW8umqBV9dC+HUG18
- 9p5clVwIaSsCNjH0FYQj7ktBgVrQ2tZg/AOW4idMoHeC6MgYD8uDi6NGnmbLn0eCALhzUa0nDql
- XWBtVAmDix9RwCxyWjWA+0o+CIQ2ed5nMOb1ZN9RuaPA2+4xFmBw6Ot3ActubQoSf4+JKwT3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-17_03,2025-07-17_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 spamscore=0
- malwarescore=0 phishscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507170183
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5918; i=kees@kernel.org; h=from:subject:message-id; bh=ix3ybSX3HXyR5ul7nVKO/r/KYy1s5o0+DAZiEgLkmcM=; b=owGbwMvMwCVmps19z/KJym7G02pJDBmVbZHJG+bN3K/qtDByvmFFwWZOiegr7v9P8cdPbSg4o 3Zj+4WOjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIkYBjMyfNv4wNam5MZaxztb DVV2bLscf+z93ddLbf58MJq2fUdLOyfDP/uXom2zOn6oGNnZ+vY/6tuxYr3x7FmnbTaV1Sr/nay 2lB0A
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 6/26/25 4:31 PM, Luo Jie wrote:
-> The PPE RSS hash is generated during PPE receive, based on the packet
-> content (3 tuples or 5 tuples) and as per the configured RSS seed. The
-> hash is then used to select the queue to transmit the packet to the
-> ARM CPU.
-> 
-> This patch initializes the RSS hash settings that are used to generate
-> the hash for the packet during PPE packet receive.
-> 
-> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
-> ---
->  drivers/net/ethernet/qualcomm/ppe/ppe_config.c | 194 ++++++++++++++++++++++++-
->  drivers/net/ethernet/qualcomm/ppe/ppe_config.h |  39 +++++
->  drivers/net/ethernet/qualcomm/ppe/ppe_regs.h   |  40 +++++
->  3 files changed, 272 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-> index dd7a4949f049..3b290eda7633 100644
-> --- a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-> +++ b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-> @@ -1216,6 +1216,143 @@ int ppe_counter_enable_set(struct ppe_device *ppe_dev, int port)
->  	return regmap_set_bits(ppe_dev->regmap, reg, PPE_PORT_EG_VLAN_TBL_TX_COUNTING_EN);
->  }
->  
-> +static int ppe_rss_hash_ipv4_config(struct ppe_device *ppe_dev, int index,
-> +				    struct ppe_rss_hash_cfg cfg)
-> +{
-> +	u32 reg, val;
-> +
-> +	switch (index) {
-> +	case 0:
-> +		val = FIELD_PREP(PPE_RSS_HASH_MIX_IPV4_VAL, cfg.hash_sip_mix[0]);
-> +		break;
-> +	case 1:
-> +		val = FIELD_PREP(PPE_RSS_HASH_MIX_IPV4_VAL, cfg.hash_dip_mix[0]);
-> +		break;
-> +	case 2:
-> +		val = FIELD_PREP(PPE_RSS_HASH_MIX_IPV4_VAL, cfg.hash_protocol_mix);
-> +		break;
-> +	case 3:
-> +		val = FIELD_PREP(PPE_RSS_HASH_MIX_IPV4_VAL, cfg.hash_dport_mix);
-> +		break;
-> +	case 4:
-> +		val = FIELD_PREP(PPE_RSS_HASH_MIX_IPV4_VAL, cfg.hash_sport_mix);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	reg = PPE_RSS_HASH_MIX_IPV4_ADDR + index * PPE_RSS_HASH_MIX_IPV4_INC;
-> +
-> +	return regmap_write(ppe_dev->regmap, reg, val);
+ v3:
+  - split up and drop __init vs inline patches that went via arch trees
+  - apply feedback about preferring __init to __always_inline
+  - incorporate Ritesh Harjani's patch for __init cleanups in powerpc
+  - wider build testing on older compilers
+ v2: https://lore.kernel.org/lkml/20250523043251.it.550-kees@kernel.org/
+ v1: https://lore.kernel.org/lkml/20250507180852.work.231-kees@kernel.org/
 
-FWIW you can assign the value in the switch statement and only FIELD_PREP
-it in the regmap_write, since the bitfield is the same
+Hi,
 
-Konrad
+As part of looking at what GCC plugins could be replaced with Clang
+implementations, this series uses the recently landed stack depth tracking
+callback in Clang[1] to implement the stackleak feature. Since the Clang
+feature is now landed, I'm moving this out of RFC to a v1.
+
+Since this touches a lot of arch-specific Makefiles, I tried to trim
+the CC list down to just mailing lists in those cases, otherwise the CC
+was giant.
+
+Thanks!
+
+-Kees
+
+[1] https://clang.llvm.org/docs/SanitizerCoverage.html#tracing-stack-depth
+
+Kees Cook (12):
+  stackleak: Rename STACKLEAK to KSTACK_ERASE
+  stackleak: Rename stackleak_track_stack to __sanitizer_cov_stack_depth
+  stackleak: Split KSTACK_ERASE_CFLAGS from GCC_PLUGINS_CFLAGS
+  x86: Handle KCOV __init vs inline mismatches
+  arm: Handle KCOV __init vs inline mismatches
+  arm64: Handle KCOV __init vs inline mismatches
+  s390: Handle KCOV __init vs inline mismatches
+  mips: Handle KCOV __init vs inline mismatch
+  init.h: Disable sanitizer coverage for __init and __head
+  kstack_erase: Support Clang stack depth tracking
+  configs/hardening: Enable CONFIG_KSTACK_ERASE
+  configs/hardening: Enable CONFIG_INIT_ON_FREE_DEFAULT_ON
+
+Ritesh Harjani (IBM) (1):
+  powerpc/mm/book3s64: Move kfence and debug_pagealloc related calls to
+    __init section
+
+ arch/Kconfig                                  |  4 +-
+ arch/arm/Kconfig                              |  2 +-
+ arch/arm64/Kconfig                            |  2 +-
+ arch/riscv/Kconfig                            |  2 +-
+ arch/s390/Kconfig                             |  2 +-
+ arch/x86/Kconfig                              |  2 +-
+ security/Kconfig.hardening                    | 45 +++++++++-------
+ Makefile                                      |  1 +
+ arch/arm/boot/compressed/Makefile             |  2 +-
+ arch/arm/vdso/Makefile                        |  2 +-
+ arch/arm64/kernel/pi/Makefile                 |  2 +-
+ arch/arm64/kernel/vdso/Makefile               |  3 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile              |  2 +-
+ arch/riscv/kernel/pi/Makefile                 |  2 +-
+ arch/riscv/purgatory/Makefile                 |  2 +-
+ arch/sparc/vdso/Makefile                      |  3 +-
+ arch/x86/entry/vdso/Makefile                  |  3 +-
+ arch/x86/purgatory/Makefile                   |  2 +-
+ drivers/firmware/efi/libstub/Makefile         |  8 +--
+ drivers/misc/lkdtm/Makefile                   |  2 +-
+ kernel/Makefile                               | 10 ++--
+ lib/Makefile                                  |  2 +-
+ scripts/Makefile.gcc-plugins                  | 16 +-----
+ scripts/Makefile.kstack_erase                 | 21 ++++++++
+ scripts/gcc-plugins/stackleak_plugin.c        | 52 +++++++++----------
+ Documentation/admin-guide/sysctl/kernel.rst   |  4 +-
+ Documentation/arch/x86/x86_64/mm.rst          |  2 +-
+ Documentation/security/self-protection.rst    |  2 +-
+ .../zh_CN/security/self-protection.rst        |  2 +-
+ arch/arm64/include/asm/acpi.h                 |  2 +-
+ arch/mips/include/asm/time.h                  |  2 +-
+ arch/s390/hypfs/hypfs.h                       |  2 +-
+ arch/s390/hypfs/hypfs_diag.h                  |  2 +-
+ arch/x86/entry/calling.h                      |  4 +-
+ arch/x86/include/asm/acpi.h                   |  4 +-
+ arch/x86/include/asm/init.h                   |  2 +-
+ arch/x86/include/asm/realmode.h               |  2 +-
+ include/linux/acpi.h                          |  4 +-
+ include/linux/bootconfig.h                    |  2 +-
+ include/linux/efi.h                           |  2 +-
+ include/linux/init.h                          |  4 +-
+ include/linux/{stackleak.h => kstack_erase.h} | 20 +++----
+ include/linux/memblock.h                      |  2 +-
+ include/linux/mfd/dbx500-prcmu.h              |  2 +-
+ include/linux/sched.h                         |  4 +-
+ include/linux/smp.h                           |  2 +-
+ arch/arm/kernel/entry-common.S                |  2 +-
+ arch/arm64/kernel/entry.S                     |  2 +-
+ arch/riscv/kernel/entry.S                     |  2 +-
+ arch/s390/kernel/entry.S                      |  2 +-
+ arch/arm/mm/cache-feroceon-l2.c               |  2 +-
+ arch/arm/mm/cache-tauros2.c                   |  2 +-
+ arch/powerpc/mm/book3s64/hash_utils.c         |  6 +--
+ arch/powerpc/mm/book3s64/radix_pgtable.c      |  4 +-
+ arch/s390/mm/init.c                           |  2 +-
+ arch/x86/kernel/kvm.c                         |  2 +-
+ arch/x86/mm/init_64.c                         |  2 +-
+ drivers/clocksource/timer-orion.c             |  2 +-
+ .../lkdtm/{stackleak.c => kstack_erase.c}     | 26 +++++-----
+ drivers/soc/ti/pm33xx.c                       |  2 +-
+ fs/proc/base.c                                |  6 +--
+ kernel/fork.c                                 |  2 +-
+ kernel/kexec_handover.c                       |  4 +-
+ kernel/{stackleak.c => kstack_erase.c}        | 22 ++++----
+ tools/objtool/check.c                         |  4 +-
+ tools/testing/selftests/lkdtm/config          |  2 +-
+ MAINTAINERS                                   |  6 ++-
+ kernel/configs/hardening.config               |  6 +++
+ 68 files changed, 204 insertions(+), 172 deletions(-)
+ create mode 100644 scripts/Makefile.kstack_erase
+ rename include/linux/{stackleak.h => kstack_erase.h} (81%)
+ rename drivers/misc/lkdtm/{stackleak.c => kstack_erase.c} (89%)
+ rename kernel/{stackleak.c => kstack_erase.c} (87%)
+
+-- 
+2.34.1
+
