@@ -1,173 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC03128816;
-	Fri, 18 Jul 2025 00:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1661A8F97;
+	Fri, 18 Jul 2025 07:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752800187; cv=none; b=tRIH+JKHikbIQz4M9TRkc5d/LTJhqhClxwR06F4EAEcFySZahzF4NpDlwEdOvPfTVzqFWObRoJtiT8wSrD6+77VWm5loAmmDIjqjezZwfjgk9a68n0wbNe33USvu1t/GGQeQvJ7h1+ovvZAg6oOrDvJrZ80q6DK6uq5ThqISLsA=
+	t=1752824513; cv=none; b=mAHm2QcANWWhxx/hPDVQ8ITfwsS//Du78odCNNxO6yi5xaA7cybgkvo/JulfUbehHEQiS+5v/wsupkQNBhBL2ccGIE+bXUhJONMIfvRgZlHsVM4eCBCY658/ElevdoCyIlGNsHxbe3AFn18PQQPyjVPzwTF8iKzs6VyJUcgf8wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752800187; c=relaxed/simple;
-	bh=SY6veYEenY3ETaNp90Fgi3oqpoAKdNxhIi+bTZtizDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qZeK0S6gjgQbQN4waDGHoi/Rgorgt+1hjov90woc0VbTe5VE9hLsPJusqTxYrtDb6usiGHFK4ff1qHr9fuZ6q9cF3jK2REcF4wXeIU04JxDY3L/kmd8/3VU5SS3D2fBBKZJ+SVmnebOYVwr2EtWbIWqyxJRounVyoBcZxHH+S0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZcIWXRcn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752824513; c=relaxed/simple;
+	bh=J5kKqTKlg4ioIqTAnV2dtolGEeERqKQr/KzPEPbUKz8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UcJGE+H5fJ4tsFyMhaFg/DBF8raW/C6nPGIZny9Ka0VYF/usrsSe9DpjnTj+rJ9NYahCz8sp/AZheL5b49yeKCh87CHGAZWI8xmXazcl7OVBo6alglOJu8LQc3CkwSWx2Et3WFhsEAp74sKMezXB+d95Nm0LFqNgtEa6FsjcL4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QTy2Kqxm; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZcIWXRcn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23233C4CEE3;
-	Fri, 18 Jul 2025 00:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752800186;
-	bh=SY6veYEenY3ETaNp90Fgi3oqpoAKdNxhIi+bTZtizDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZcIWXRcnolHN2gWY2+iymLVYl3JeOO7lUYBB1V/8/qccbb7Cs1UveUcs6vLq4s+kH
-	 JVddSr4+Aeyg/mmnDdBJhhZc2vxv81Drd97qre9tgQtxP2GDXen0YXRnY5AmXBD4ap
-	 9hf0RAvYDwH9mz9feeH7pB87wljMljAvVtB6hUZ2QNAe0P6aT0jyStJfcTNzMWVxir
-	 2yIQEL1k2Wv5SNrhLDFPaDk0sT78S40EhHJD/6y2fjzhEQzipxERScHsd/77irjhK9
-	 QNRiD3LCHw29wcKAkxTe977EJSX8EHSjeII0tlPeJKhZnqIh1eK/Yi+oXXqwXQRP2k
-	 w7SnrRkqiZAqQ==
-Date: Fri, 18 Jul 2025 02:56:19 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Kees Cook <kees@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Laight <david.laight.linux@gmail.com>, 
-	Martin Uecker <ma.uecker@gmail.com>, linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	Christopher Bazley <chris.bazley.wg14@gmail.com>, shadow <~hallyn/shadow@lists.sr.ht>, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
-	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
-	Andrew Clayton <andrew@digital-domain.net>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Michal Hocko <mhocko@suse.com>, Al Viro <viro@zeniv.linux.org.uk>, Sam James <sam@gentoo.org>, 
-	Andrew Pinski <pinskia@gmail.com>
-Subject: Re: [RFC v5 6/7] sprintf: Add [v]sprintf_array()
-Message-ID: <p2gl2w7gntydz4lpoyrazha2hqswwoggykdxo2un7us5wsc3lp@ij5my4epi3ot>
-References: <cover.1751823326.git.alx@kernel.org>
- <cover.1752182685.git.alx@kernel.org>
- <04c1e026a67f1609167e834471d0f2fe977d9cb0.1752182685.git.alx@kernel.org>
- <CAHk-=wiNJQ6dVU8t7oM0sFpSqxyK8JZQXV5NGx7h+AE0PY4kag@mail.gmail.com>
- <28c8689c7976b4755c0b5c2937326b0a3627ebf6.camel@gmail.com>
- <20250711184541.68d770b9@pumpkin>
- <CAHk-=wjC0pAFfMBHKtCLOAcUvLs30PpjKoMfN9aP1-YwD0MZ5Q@mail.gmail.com>
- <202507142211.F1E0730A@keescook>
- <3o3ra7vjn44iey2dosunsm3wa4kagfeas2o4yzsl34girgn2eb@6rnktm2dmwul>
- <202507171644.7FB3379@keescook>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QTy2Kqxm"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56I7cjHo009576;
+	Fri, 18 Jul 2025 07:41:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	FFAOMChFqrKhKYfUFTQm9VW1DmXhkt4PhiDLnZ9VC2M=; b=QTy2Kqxm09sxhe30
+	oq1riXFH+6JvVlsJoFElb+y9/z/QhwqNLKFRBtJjZzmaQWg5tHu//P6+gSglvwBD
+	d/XYDK+zzityzeIoJg8CoPQlhhQrnr/V7pQxxL37da/FUkMQFzhtLsQYT2Iszk6w
+	63YSdnPxT750gWzVEBmmXh8MxwS5tf63HQUUgC3gtwbRYIQ6YEQHiBwlIimpNie/
+	yVuIzzxlgG9DxKQuBn9APVvv1aQGT/hejB78Q/68Jiiw7o8NGcd0h22o7BFBxzAz
+	skWtQLq2Ro78XdLHsk2GBJHmgDSSd8EENrM/w+sbaDuivQsNO+kg1m6yC56GY0yc
+	7LYZIg==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ufxbam37-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Jul 2025 07:41:34 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 56I7fXVK013574
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Jul 2025 07:41:33 GMT
+Received: from [10.253.76.178] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Fri, 18 Jul
+ 2025 00:41:27 -0700
+Message-ID: <13ca4d6e-d5db-4fd5-af14-9ccda55ddba2@quicinc.com>
+Date: Fri, 18 Jul 2025 15:41:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="k63pphsxoo2hl7dh"
-Content-Disposition: inline
-In-Reply-To: <202507171644.7FB3379@keescook>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v5 10/14] net: ethernet: qualcomm: Initialize PPE
+ RSS hash settings
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Andrew Lunn
+	<andrew+netdev@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric
+ Dumazet" <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lei Wei
+	<quic_leiwei@quicinc.com>,
+        Suruchi Agarwal <quic_suruchia@quicinc.com>,
+        Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC: <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>
+References: <20250626-qcom_ipq_ppe-v5-0-95bdc6b8f6ff@quicinc.com>
+ <20250626-qcom_ipq_ppe-v5-10-95bdc6b8f6ff@quicinc.com>
+ <793434f9-7cdc-409f-b855-380be7a2b0db@oss.qualcomm.com>
+Content-Language: en-US
+From: Luo Jie <quic_luoj@quicinc.com>
+In-Reply-To: <793434f9-7cdc-409f-b855-380be7a2b0db@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: d_Ee6WCGIkzRAaD8MJrO82z3Rn9nrrvQ
+X-Proofpoint-ORIG-GUID: d_Ee6WCGIkzRAaD8MJrO82z3Rn9nrrvQ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE4MDA1OSBTYWx0ZWRfXzWtpS0NkR21S
+ bKygKN8oh1IUv8AVDh/vUd/98aZ1oaCRQpBNmnNHVo+bU0S20YIhwjsQfAGy8QYS8WmMWEhjMuh
+ dOEjt7OBI0xihMiqz95prDVSpkl+qR5vNDTqFFu/S5iixN7P4Q7k/dPXBGiu4152Y64ZCT0kgy4
+ IsNKfG6OInSNOWwIGk1E2H5zs0CecuE8LQnvsSa3h8/Bk1kynfcR/EYLONf5ZsGaParQWlh+ZgF
+ 6bFwKiSXXkavGCM0iDeit/p5+CBfc4c5N8BvrbaMeMovs8UT0JHfNz0rA2J1BcLXaCde1PXtTbU
+ OSeDdCdNTQ1CyL+HvZjr+IU6AVKhPnr1440unU7xxT0Ht2vq/MPuQF++CpGHHjclr3DfAWQgh4V
+ kGt0b7fqYgCsDzRrgTV5rnNQrs8tJx5idRSJgbWUJj6ShIHBnq6AWK0QWpwM7pjEN0Jbfnie
+X-Authority-Analysis: v=2.4 cv=Xc2JzJ55 c=1 sm=1 tr=0 ts=6879faae cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=8GLID_3tYxgRnLsb8HMA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-18_01,2025-07-17_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 mlxscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
+ clxscore=1015 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507180059
 
 
---k63pphsxoo2hl7dh
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Kees Cook <kees@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Laight <david.laight.linux@gmail.com>, 
-	Martin Uecker <ma.uecker@gmail.com>, linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	Christopher Bazley <chris.bazley.wg14@gmail.com>, shadow <~hallyn/shadow@lists.sr.ht>, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
-	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
-	Andrew Clayton <andrew@digital-domain.net>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Michal Hocko <mhocko@suse.com>, Al Viro <viro@zeniv.linux.org.uk>, Sam James <sam@gentoo.org>, 
-	Andrew Pinski <pinskia@gmail.com>
-Subject: Re: [RFC v5 6/7] sprintf: Add [v]sprintf_array()
-References: <cover.1751823326.git.alx@kernel.org>
- <cover.1752182685.git.alx@kernel.org>
- <04c1e026a67f1609167e834471d0f2fe977d9cb0.1752182685.git.alx@kernel.org>
- <CAHk-=wiNJQ6dVU8t7oM0sFpSqxyK8JZQXV5NGx7h+AE0PY4kag@mail.gmail.com>
- <28c8689c7976b4755c0b5c2937326b0a3627ebf6.camel@gmail.com>
- <20250711184541.68d770b9@pumpkin>
- <CAHk-=wjC0pAFfMBHKtCLOAcUvLs30PpjKoMfN9aP1-YwD0MZ5Q@mail.gmail.com>
- <202507142211.F1E0730A@keescook>
- <3o3ra7vjn44iey2dosunsm3wa4kagfeas2o4yzsl34girgn2eb@6rnktm2dmwul>
- <202507171644.7FB3379@keescook>
-MIME-Version: 1.0
-In-Reply-To: <202507171644.7FB3379@keescook>
 
-Hi Kees,
+On 7/18/2025 4:48 AM, Konrad Dybcio wrote:
+> On 6/26/25 4:31 PM, Luo Jie wrote:
+>> The PPE RSS hash is generated during PPE receive, based on the packet
+>> content (3 tuples or 5 tuples) and as per the configured RSS seed. The
+>> hash is then used to select the queue to transmit the packet to the
+>> ARM CPU.
+>>
+>> This patch initializes the RSS hash settings that are used to generate
+>> the hash for the packet during PPE packet receive.
+>>
+>> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+>> ---
+>>   drivers/net/ethernet/qualcomm/ppe/ppe_config.c | 194 ++++++++++++++++++++++++-
+>>   drivers/net/ethernet/qualcomm/ppe/ppe_config.h |  39 +++++
+>>   drivers/net/ethernet/qualcomm/ppe/ppe_regs.h   |  40 +++++
+>>   3 files changed, 272 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
+>> index dd7a4949f049..3b290eda7633 100644
+>> --- a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
+>> +++ b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
+>> @@ -1216,6 +1216,143 @@ int ppe_counter_enable_set(struct ppe_device *ppe_dev, int port)
+>>   	return regmap_set_bits(ppe_dev->regmap, reg, PPE_PORT_EG_VLAN_TBL_TX_COUNTING_EN);
+>>   }
+>>   
+>> +static int ppe_rss_hash_ipv4_config(struct ppe_device *ppe_dev, int index,
+>> +				    struct ppe_rss_hash_cfg cfg)
+>> +{
+>> +	u32 reg, val;
+>> +
+>> +	switch (index) {
+>> +	case 0:
+>> +		val = FIELD_PREP(PPE_RSS_HASH_MIX_IPV4_VAL, cfg.hash_sip_mix[0]);
+>> +		break;
+>> +	case 1:
+>> +		val = FIELD_PREP(PPE_RSS_HASH_MIX_IPV4_VAL, cfg.hash_dip_mix[0]);
+>> +		break;
+>> +	case 2:
+>> +		val = FIELD_PREP(PPE_RSS_HASH_MIX_IPV4_VAL, cfg.hash_protocol_mix);
+>> +		break;
+>> +	case 3:
+>> +		val = FIELD_PREP(PPE_RSS_HASH_MIX_IPV4_VAL, cfg.hash_dport_mix);
+>> +		break;
+>> +	case 4:
+>> +		val = FIELD_PREP(PPE_RSS_HASH_MIX_IPV4_VAL, cfg.hash_sport_mix);
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	reg = PPE_RSS_HASH_MIX_IPV4_ADDR + index * PPE_RSS_HASH_MIX_IPV4_INC;
+>> +
+>> +	return regmap_write(ppe_dev->regmap, reg, val);
+> 
+> FWIW you can assign the value in the switch statement and only FIELD_PREP
+> it in the regmap_write, since the bitfield is the same
+> 
+> Konrad
 
-On Thu, Jul 17, 2025 at 04:47:04PM -0700, Kees Cook wrote:
-> On Tue, Jul 15, 2025 at 09:08:14AM +0200, Alejandro Colomar wrote:
-> > Hi Kees,
-> >=20
-> > On Mon, Jul 14, 2025 at 10:19:39PM -0700, Kees Cook wrote:
-> > > On Fri, Jul 11, 2025 at 10:58:56AM -0700, Linus Torvalds wrote:
-> > > >         struct seq_buf s;
-> > > >         seq_buf_init(&s, buf, szie);
-> > >=20
-> > > And because some folks didn't like this "declaration that requires a
-> > > function call", we even added:
-> > >=20
-> > > 	DECLARE_SEQ_BUF(s, 32);
-> > >=20
-> > > to do it in 1 line. :P
-> > >=20
-> > > I would love to see more string handling replaced with seq_buf.
-> >=20
-> > The thing is, it's not as easy as the fixes I'm proposing, and
-> > sprintf_end() solves a lot of UB in a minimal diff that you can dumbly
-> > apply.
->=20
-> Note that I'm not arguing against your idea -- I just think it's not
-> going to be likely to end up in Linux soon given Linus's objections.
+Thank you for the suggestion, I'll update the code accordingly.
 
-It would be interesting to hear if Linus holds his objections on v6.
-
-> My
-> perspective is mainly one of pragmatic damage control: what *can* we do
-> in Linux that would make things better? Currently, seq_buf is better
-> than raw C strings...
-
-TBH, I'm not fully convinced.  While it may look simpler at first
-glance, I'm worried that it might bite in the details.  I default to not
-trusting APIs that hide the complexity in hidden state.  On the other
-hand, I agree that almost anything is safer than snprintf(3).
-
-But one good thing of snprintf(3) is that it's simple, and thus
-relatively obvious to see that it's wrong, so it's easy to fix (it's
-easy to transition from snprintf(3) to sprintf_end()).  So, maybe
-keeping it bogus until it's replaced by sprintf_end() is a better
-approach than using seq_buf.  (Unless the current code is found
-exploitable, but I assume not.)
-
-
-Have a lovely night!
-Alex
-
---=20
-<https://www.alejandro-colomar.es/>
-
---k63pphsxoo2hl7dh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmh5m60ACgkQ64mZXMKQ
-wqkLwBAAhgrJrpnkhBACfYY0eDqJcZh5qz8L/7W6xPGCf46NZSmjG/xJiYD2Ystf
-j2+6m1UM6ynUzTMKK0hUo2nMhmBqqd3mmgFpTgWO6iwOt+Am5C7+RuLtBhCNrAh+
-kYBPjichLntIH4Di6kHYlGevuH2NCR5zh5ImDK/fbBl56V6p0YTJCFGKqqWeiKo6
-UI/SXQgqL1leL6clVP18x0WTaPfslnoZ9SlbGT2FpVIkhs/fLzcfJm+sXDQTzGff
-1ccwyUPLGSJoiAD8jlrAxPson+KND8FtjU582aK/JwX05VVZSPzcKJLHm3Vu36j0
-ye+DL97kD00ebWjS+w2u9F2Xfl5mc1cNqGJUHhmaK2jJV1JTlus1HhWgQp9rNe/K
-49FWUIhnfqG2rz1kFzpGyTJY0zEXRmctcmm35K+qiGKnFHpO3DikvtBbgTPlOO2/
-+8ODvnlfr0ffTLHZ3Zh0x+vvKqCXm/OI7Wm9H3utA9X3GvSeDIYHfYjtTuJFyO8F
-Hw82ItMzcbi9h2mOgUQtVliLtxskzOxt+1jN+QgUfcRRQbV4K21MTQ/HzBioIKk1
-JUQZbyYIaXqS1RsJ308A4fuDA+XR5zah2Zn7WiIbVmnU7/xt72UQ3Jrq/jr3f0aW
-pXJ8aI2ggPuQXwUaF1pN3yHwlAXdAVziskVxXFiOXPTp7WXtC/c=
-=mSgQ
------END PGP SIGNATURE-----
-
---k63pphsxoo2hl7dh--
