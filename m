@@ -1,52 +1,66 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928FA2BDC07
-	for <linux-hardening@vger.kernel.org>; Fri, 18 Jul 2025 10:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6AE28B41A;
+	Fri, 18 Jul 2025 11:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752835718; cv=none; b=rvJJu8XnCojChgIhSI0Go5a1+eQVsbVVYx4fsoSgJpoXSkQ03AXi2WxKTRnPhWMBWlEEHA+qQJrK5tCz4f0Pu/TQFhm8eZT+9fSjTlPfnrm90Trgp0uKDp9pSVrRycMhL+bat/a7b2R17qGyQgC7aCfaXKBzyBKVtRMnf3Aemo4=
+	t=1752837733; cv=none; b=bmU7dcUS/kmqizw3rM3/On5WSZb1Xr7nYvxMRYtUB+8rxhtb2hvhAeKsb2bSyrGLLBruX4+6FZ1WC2uShwy4ziiv3mlNEGl0+n0+6XgOYTSB4o/vaO5cLD5jCNLmOg5ea0mKNSxZ0DdtNwKN2XkC8CAiTvtgydZyH84UCzdbJ7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752835718; c=relaxed/simple;
-	bh=4LTXnAcUBsgWRXbeGo2njI8Om68Wwn/Qh6Q/fLhMR/E=;
+	s=arc-20240116; t=1752837733; c=relaxed/simple;
+	bh=z3gndaGJcN2hgsC7vt0hd7Xv3Nt3ExEva3jSiEJodDw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HPeegC4GhOvcAKUTD52mH8PYOaAVexNmkvOghbgBXRQM/2DcARfXRo9PoKy5ut5nWYXJJ0wAdaPGtmAwucQJwG8CclhJMSlN5RWSzHcDilLJLk+KluqZvkjdws/x2MVR6pJ0b49IwwlJ2DydB5V1HupdXNmygBPh3+WfHl5RZHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=f1AsJS7b; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=t8U33/gZAIGFbC22qeWk+9Akb7kwIGE0TWfD0p70WbC3oFe+qBjf1cGHSYK/0zL5fB4IKItYuaZQvaAkzaPkyT11/VxG/mEG4kCl5nKqK8rQxG06GMBEG9Hi/iMawN7qNIXfAd2TMkircPU292hxhJI4OPit1XSxyvDb4pPq9sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8N985kT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="f1AsJS7b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=YiG1
-	IShrAJJD2nBW0s3CYWEa3UHJFS+PznTuJurnABk=; b=f1AsJS7b3SR9leX88GTm
-	UayW9XFd8Y3eOa1wFxwyBsYiBZ+WnU1CdhgD4p0ZFf77Z1cvbYQV6RJr7YB9dbw4
-	wNFdaoxYxJ1oyV9Zbw3HHZOT4SUzOK3Vn4Y2ZGZ+WwN6ZCZ1PM0syRQCkmgqlbto
-	p4tABsZnTFd3dZdIQZHWhoRcYNHQXKIAKc9UJEKdtQJKn+zNTNVXwjd69pCdZzmu
-	V2AOSb1lBjoJyrnP39QjPc3YrTphgM4hPdesyU94A0cYIeOL3bMrHge+4rXOU5RL
-	+E2iLf9eASg432JGo1eK2e0P6ie6RnRVdRql1qtqnL09ZIDD1iB0KNKEaOsYh4mQ
-	ew==
-Received: (qmail 4026406 invoked from network); 18 Jul 2025 12:48:32 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Jul 2025 12:48:32 +0200
-X-UD-Smtp-Session: l3s3148p1@IXr33TE6RuAgAwDPXx+vAAkEB0lWxGP4
-Date: Fri, 18 Jul 2025 12:48:31 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	Kees Cook <kees@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8N985kT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 833A3C4CEEB;
+	Fri, 18 Jul 2025 11:22:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752837733;
+	bh=z3gndaGJcN2hgsC7vt0hd7Xv3Nt3ExEva3jSiEJodDw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R8N985kTHPLNugtnVOg+RXuGHqT+Zz+SodSw21j8A2XMNGSyAS2qLmGjRtdbzVdfe
+	 IFIMulnZKrhgbpw3w3A/wIDLW7jS+0lr7ib7SjYztz4624iM9GPyVasvL+ut1PbsP5
+	 GATm09kiT/gS55onS8uWpLtxEReQqqli+IZv1Yy9PgkTsUWUEC0/zWoIWjaqVIVhco
+	 SkIA3BmQ+Qhzd2LQH9Ep7QagVHdJoHE7Ob0JsgkdtSsXlR4nkYf283TsM9C81gdIQ2
+	 5WVhkuIH1cek7XJyrnqpNFcrBlNvDicGrWLCZv53/xtUyuqeVZlNXH4XKH4CTgNd7Z
+	 8s9kw2QnTs+AQ==
+Date: Fri, 18 Jul 2025 12:22:04 +0100
+From: Will Deacon <will@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Gavin Shan <gshan@redhat.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	James Morse <james.morse@arm.com>,
+	Oza Pawandeep <quic_poza@quicinc.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Ingo Molnar <mingo@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, linux-i3c@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] i3c: master: Add basic driver for the Renesas I3C
- controller
-Message-ID: <aHomfzV_dJMwFyCN@shikoro>
-References: <20250717122455.9521-1-wsa+renesas@sang-engineering.com>
- <20250717122455.9521-3-wsa+renesas@sang-engineering.com>
- <aHlJ8KQzcamyaZA1@lizhi-Precision-Tower-5810>
+	Christoph Hellwig <hch@lst.de>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, kasan-dev@googlegroups.com,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v3 06/13] arm64: Handle KCOV __init vs inline mismatches
+Message-ID: <aHouXI5-tyQw78Ht@willie-the-truck>
+References: <20250717231756.make.423-kees@kernel.org>
+ <20250717232519.2984886-6-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -55,78 +69,23 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aHlJ8KQzcamyaZA1@lizhi-Precision-Tower-5810>
+In-Reply-To: <20250717232519.2984886-6-kees@kernel.org>
 
-Hi Frank,
+Hey Kees,
 
-> > +#define NDBSTLV0		0x398
-> > +#define  NDBSTLV0_RDBLV(x)	(((x) >> 8) & 0xff)
-> 
-> Can you use FILE_GET()?
+On Thu, Jul 17, 2025 at 04:25:11PM -0700, Kees Cook wrote:
+> When KCOV is enabled all functions get instrumented, unless
+> the __no_sanitize_coverage attribute is used. To prepare for
+> __no_sanitize_coverage being applied to __init functions, we
+> have to handle differences in how GCC's inline optimizations get
+> resolved. For arm64 this requires forcing one function to be inline
+> with __always_inline.
 
-You mean FIELD_GET? Probably yes.
+Please can you spell out the issue a bit more here? From the description
+you've given, I can't figure out why acpi_get_enable_method() is the
+only function that needs fixing up so I worry that this could be
+fragile.
 
-> > +#define RENESAS_I3C_MAX_DEVS	8
-> > +#define I2C_INIT_MSG		-1
-> > +
-> > +/* Bus condition timing */
-> > +#define I3C_BUS_THIGH_MIXED_NS	40		/* 40ns */
-> > +#define I3C_BUS_FREE_TIME_NS	1300		/* 1.3us for Mixed Bus with I2C FM Device*/
-> > +#define I3C_BUS_AVAL_TIME_NS	1000		/* 1us */
-> > +#define I3C_BUS_IDLE_TIME_NS	200000		/* 200us */
-> 
-> Do you have document reference to such timeout value?  If it is spec defined
-> timeout, please move to master.h and add ref to spec sections number.
+Thanks,
 
-They are all in the specs. Will move them.
-
-> > +#define XFER_TIMEOUT		(msecs_to_jiffies(1000))
-> 
-> Is it engineer choosen timeout or spec defined? add comments to show why
-> choose this timeout value.
-
-Consistency. All current I3C controller drivers use this value. If we
-want to improve it, we should do it in a seperate series for all drivers
-IMO.
-
-> > +	/* Wait for reset completion  */
-> > +	return readl_relaxed_poll_timeout(i3c->regs + RSTCTL, val,
-> > +					  !(val & RSTCTL_RI3CRST), 0, 1000);
-> 
-> All you use customer's readl at other place. here, you should use
-> read_poll_timeout(renesas_i3c_reg_read, ...) to keep consistent. check other
-> place.
-
-I will use regmap_read_poll_timeout().
-
-> > +			pp_high_ticks = DIV_ROUND_UP(I3C_BUS_THIGH_MIXED_NS,
-> > +						     1000000000 / rate);
-> 
-> 100000000 use NSEC_PER_SEC, check other place.
-
-Ack.
-
-> > +	/* Extended Bit Rate setting */
-> > +	renesas_i3c_reg_write(i3c->regs, EXTBR, EXTBR_EBRLO(od_low_ticks) |
-> > +					   EXTBR_EBRHO(od_high_ticks) |
-> > +					   EXTBR_EBRLP(pp_low_ticks) |
-> > +					   EXTBR_EBRHP(pp_high_ticks));
-> 
-> I feel renesas_i3c_reg_write is too long, renesas_write() should be enough.
-
-It is long, but precise. renesas_write() could mean anything. It would
-also be confusing if some functions start with renesas_* only and some
-with renesas_i3c_*. But this is already too much bike-shedding for my
-taste. I will do the extra work and switch to regmap and hope that the
-overhead is not noticable. I hope I can squeeze this in today.
-
-> > +static struct renesas_i3c_irq_desc renesas_i3c_irqs[] = {
-> 
-> const?
-
-Yes.
-
-Kind regards,
-
-   Wolfram
-
+Will
