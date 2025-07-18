@@ -1,106 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A111E5B78;
-	Fri, 18 Jul 2025 09:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928FA2BDC07
+	for <linux-hardening@vger.kernel.org>; Fri, 18 Jul 2025 10:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752830296; cv=none; b=ueIBKhxETet13/O0JaXx4rHoN6bhxSBHQeuE1fVw2qkgikiwlL7Zp3UQHUdjnHzgSaGDaXmWDBQ+N9p9EAEnDKE4/ikJS/sekO3Iybw2GnNJjnch8DEE5fvCCuId1nbxhv8mIja29JFJ4s1q+NkBDHLxjrLEeG2IZ72W+3AdZ3Y=
+	t=1752835718; cv=none; b=rvJJu8XnCojChgIhSI0Go5a1+eQVsbVVYx4fsoSgJpoXSkQ03AXi2WxKTRnPhWMBWlEEHA+qQJrK5tCz4f0Pu/TQFhm8eZT+9fSjTlPfnrm90Trgp0uKDp9pSVrRycMhL+bat/a7b2R17qGyQgC7aCfaXKBzyBKVtRMnf3Aemo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752830296; c=relaxed/simple;
-	bh=iN0MjV8lG6vlPY6QKWEDWqXP3y58juMGr+peNv9I/+Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AYWM+8wuerHdH4uclnn1P1V5B4lZzQfsfVzWPL2PAAUp0bevycDJ0BfbUxPdhLOH2vsQY9xeX3tR5m4Fu9z+H+Lv+GF9K3uWkRaULer50Q9VxA97mpxISj78zZsqA1VxBaZJlx+hY5d9f9Z/2Lgbw+1REBz49VboqjwgiFtneMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=upUCLIdr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752835718; c=relaxed/simple;
+	bh=4LTXnAcUBsgWRXbeGo2njI8Om68Wwn/Qh6Q/fLhMR/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HPeegC4GhOvcAKUTD52mH8PYOaAVexNmkvOghbgBXRQM/2DcARfXRo9PoKy5ut5nWYXJJ0wAdaPGtmAwucQJwG8CclhJMSlN5RWSzHcDilLJLk+KluqZvkjdws/x2MVR6pJ0b49IwwlJ2DydB5V1HupdXNmygBPh3+WfHl5RZHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=f1AsJS7b; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upUCLIdr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 191D5C4CEF0;
-	Fri, 18 Jul 2025 09:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752830296;
-	bh=iN0MjV8lG6vlPY6QKWEDWqXP3y58juMGr+peNv9I/+Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=upUCLIdrbbvEbKjUsZgTdUEGyRbXXPVKgUMJXI8oVEu7IuCo+NlAr8pZ3hP/3OpCS
-	 z+m8WoLkMvYdx42mseDFgent82TIUAOPaXDuO0MHrSBPWaortApspXcggf+7lhNmY8
-	 tOaGg0j7eaXiZqMy8OhhL3BAvuI4qqptGCOW5qdmQyljlx4c3DuNukqLAdC4airAsq
-	 nJKi0Be3SrrR2xHh9RGmjhMqPl6sRDW75QEF/7Lu21+PwIinNh5ZPzzmyUHWJMe6cp
-	 dzghcLYsnfaa3tVtbk0VeArOxbSMW6EX7TzfWbBD0ifZlVbF7q2+xGG6ugEJd7zFXx
-	 5DD1NmgbOVSgg==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-60c4521ae2cso3330368a12.0;
-        Fri, 18 Jul 2025 02:18:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV0AKoUIuonJeWHXWR2Cf7jQZCRjErGiIBNVCjuW0tpqJD3VWWQANTownXAYV244/9x+GvGSnXz7RM=@vger.kernel.org, AJvYcCV1TzUiHaDkQFdVridp0GhxD2QtBGx6xg0Lr3SAHadBj8NveE8r0J+4KYw8N9NpbhNp0K9s8iPNyi/xFTtJ@vger.kernel.org, AJvYcCV2RECSTJAxpYbYkY1rF1Lmt4kB3iosuDgXE19K1ASc8SE6fNRcv92tm/AHUzPKsA8+5FB65qL3NxnsoeKoZUx8@vger.kernel.org, AJvYcCV2fhkW998v5WZH4nLwEFwnzJO9W7r645GdDIgGB3cHzpXmDvZBGe03Upj0r4vlUbk44Oh0fDx97PlMAQ==@vger.kernel.org, AJvYcCVHdEZ8u7svwgKUodrkLtM/yJIIvU6xWOJc2TZJBZxyOX9PxZcyAJ0FmM5nCiAGOa7F1nRqPsmDjedv@vger.kernel.org, AJvYcCW4IDaSJazeWSwFFgACWN7b69epSroBWv2UjtCV4FoSmmVDdLNrz0ZML2pgVp0fPyOFulXTEhsYGbk7yA==@vger.kernel.org, AJvYcCX54pACOS+AT+fpvWNPmgl03ntroAgVDVSeFEZLJCxJoA7bevDnRDhIiCiI4qh+bhZoOHbq223hNnGkOq8KPjz3@vger.kernel.org, AJvYcCXI1xdPeZEbwcZTymERqI5WYVZVnRug5O0uQP3+54Ly+XPRoFapANuj6cb7nMIR75kkF9JyOiLz3rlpclN5@vger.kernel.org, AJvYcCXWHCcRsafKEhSZun1fPA+F8bDs0z7gysLDMQj5i4bfYF4K6fFmjSEG068g/vYSBMUDDLQC77HKfITkIj956HRV8Rob5ZLW@vger.kernel.org, AJvYcCXqNg6XyAk9/D4vsEBX1q7rzepaXITLUvpATBsxMYuqEQPgjantjzmPcNjOZr6xYNATsfGYAM5TpRD2rQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKJwdOXXj+QpoI1AL07zJBq6cn8RioZhFakuWRHcCYSS299SHg
-	B6dE6nWhyVZBwFGCBr4SkKevZyzO9uT19Cf5S5TC1wdpfbrwO03biextpt0qsRIGo2Dz+QevQ2k
-	y2LtfM2znofuQa60xHNXrOK5iQYEJz44=
-X-Google-Smtp-Source: AGHT+IH+CR6kK9khsoUi4kQxVa0vWTn3qqM4Z4G6WAw+0g0YyuRvDHP3ooIXGfMWBaXJUiPtMEtFUptkHeWtXN/zID4=
-X-Received: by 2002:a05:6402:26d5:b0:60c:6a48:8047 with SMTP id
- 4fb4d7f45d1cf-612d456bb15mr803449a12.11.1752830294637; Fri, 18 Jul 2025
- 02:18:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="f1AsJS7b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=YiG1
+	IShrAJJD2nBW0s3CYWEa3UHJFS+PznTuJurnABk=; b=f1AsJS7b3SR9leX88GTm
+	UayW9XFd8Y3eOa1wFxwyBsYiBZ+WnU1CdhgD4p0ZFf77Z1cvbYQV6RJr7YB9dbw4
+	wNFdaoxYxJ1oyV9Zbw3HHZOT4SUzOK3Vn4Y2ZGZ+WwN6ZCZ1PM0syRQCkmgqlbto
+	p4tABsZnTFd3dZdIQZHWhoRcYNHQXKIAKc9UJEKdtQJKn+zNTNVXwjd69pCdZzmu
+	V2AOSb1lBjoJyrnP39QjPc3YrTphgM4hPdesyU94A0cYIeOL3bMrHge+4rXOU5RL
+	+E2iLf9eASg432JGo1eK2e0P6ie6RnRVdRql1qtqnL09ZIDD1iB0KNKEaOsYh4mQ
+	ew==
+Received: (qmail 4026406 invoked from network); 18 Jul 2025 12:48:32 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Jul 2025 12:48:32 +0200
+X-UD-Smtp-Session: l3s3148p1@IXr33TE6RuAgAwDPXx+vAAkEB0lWxGP4
+Date: Fri, 18 Jul 2025 12:48:31 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>, linux-i3c@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] i3c: master: Add basic driver for the Renesas I3C
+ controller
+Message-ID: <aHomfzV_dJMwFyCN@shikoro>
+References: <20250717122455.9521-1-wsa+renesas@sang-engineering.com>
+ <20250717122455.9521-3-wsa+renesas@sang-engineering.com>
+ <aHlJ8KQzcamyaZA1@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250717231756.make.423-kees@kernel.org> <20250717232519.2984886-9-kees@kernel.org>
-In-Reply-To: <20250717232519.2984886-9-kees@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 18 Jul 2025 17:18:03 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4RyZQTak5AgYj6TaXHyEefgw+wmXs9Gi8jUJWrUV5HQw@mail.gmail.com>
-X-Gm-Features: Ac12FXyrA9A9-rpLV3MB79YH2kXhj6f2Fk9F6HAlk-0emUPTHthuyPP3lR9zQXg
-Message-ID: <CAAhV-H4RyZQTak5AgYj6TaXHyEefgw+wmXs9Gi8jUJWrUV5HQw@mail.gmail.com>
-Subject: Re: [PATCH v3 09/13] mips: Handle KCOV __init vs inline mismatch
-To: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-mips@vger.kernel.org, 
-	Ingo Molnar <mingo@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aHlJ8KQzcamyaZA1@lizhi-Precision-Tower-5810>
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Hi Frank,
 
-On Fri, Jul 18, 2025 at 7:26=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
->
-> When KCOV is enabled all functions get instrumented, unless
-> the __no_sanitize_coverage attribute is used. To prepare for
-> __no_sanitize_coverage being applied to __init functions, we
-> have to handle differences in how GCC's inline optimizations get
-> resolved. For mips this requires adding the __init annotation on
-> init_mips_clocksource().
->
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: <linux-mips@vger.kernel.org>
-> ---
->  arch/mips/include/asm/time.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/mips/include/asm/time.h b/arch/mips/include/asm/time.h
-> index e855a3611d92..5e7193b759f3 100644
-> --- a/arch/mips/include/asm/time.h
-> +++ b/arch/mips/include/asm/time.h
-> @@ -55,7 +55,7 @@ static inline int mips_clockevent_init(void)
->   */
->  extern int init_r4k_clocksource(void);
->
-> -static inline int init_mips_clocksource(void)
-> +static inline __init int init_mips_clocksource(void)
->  {
->  #ifdef CONFIG_CSRC_R4K
->         return init_r4k_clocksource();
-> --
-> 2.34.1
->
->
+> > +#define NDBSTLV0		0x398
+> > +#define  NDBSTLV0_RDBLV(x)	(((x) >> 8) & 0xff)
+> 
+> Can you use FILE_GET()?
+
+You mean FIELD_GET? Probably yes.
+
+> > +#define RENESAS_I3C_MAX_DEVS	8
+> > +#define I2C_INIT_MSG		-1
+> > +
+> > +/* Bus condition timing */
+> > +#define I3C_BUS_THIGH_MIXED_NS	40		/* 40ns */
+> > +#define I3C_BUS_FREE_TIME_NS	1300		/* 1.3us for Mixed Bus with I2C FM Device*/
+> > +#define I3C_BUS_AVAL_TIME_NS	1000		/* 1us */
+> > +#define I3C_BUS_IDLE_TIME_NS	200000		/* 200us */
+> 
+> Do you have document reference to such timeout value?  If it is spec defined
+> timeout, please move to master.h and add ref to spec sections number.
+
+They are all in the specs. Will move them.
+
+> > +#define XFER_TIMEOUT		(msecs_to_jiffies(1000))
+> 
+> Is it engineer choosen timeout or spec defined? add comments to show why
+> choose this timeout value.
+
+Consistency. All current I3C controller drivers use this value. If we
+want to improve it, we should do it in a seperate series for all drivers
+IMO.
+
+> > +	/* Wait for reset completion  */
+> > +	return readl_relaxed_poll_timeout(i3c->regs + RSTCTL, val,
+> > +					  !(val & RSTCTL_RI3CRST), 0, 1000);
+> 
+> All you use customer's readl at other place. here, you should use
+> read_poll_timeout(renesas_i3c_reg_read, ...) to keep consistent. check other
+> place.
+
+I will use regmap_read_poll_timeout().
+
+> > +			pp_high_ticks = DIV_ROUND_UP(I3C_BUS_THIGH_MIXED_NS,
+> > +						     1000000000 / rate);
+> 
+> 100000000 use NSEC_PER_SEC, check other place.
+
+Ack.
+
+> > +	/* Extended Bit Rate setting */
+> > +	renesas_i3c_reg_write(i3c->regs, EXTBR, EXTBR_EBRLO(od_low_ticks) |
+> > +					   EXTBR_EBRHO(od_high_ticks) |
+> > +					   EXTBR_EBRLP(pp_low_ticks) |
+> > +					   EXTBR_EBRHP(pp_high_ticks));
+> 
+> I feel renesas_i3c_reg_write is too long, renesas_write() should be enough.
+
+It is long, but precise. renesas_write() could mean anything. It would
+also be confusing if some functions start with renesas_* only and some
+with renesas_i3c_*. But this is already too much bike-shedding for my
+taste. I will do the extra work and switch to regmap and hope that the
+overhead is not noticable. I hope I can squeeze this in today.
+
+> > +static struct renesas_i3c_irq_desc renesas_i3c_irqs[] = {
+> 
+> const?
+
+Yes.
+
+Kind regards,
+
+   Wolfram
+
