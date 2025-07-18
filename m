@@ -1,108 +1,150 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D158D22422A
-	for <linux-hardening@vger.kernel.org>; Fri, 18 Jul 2025 22:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28838224AF7;
+	Fri, 18 Jul 2025 22:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752878941; cv=none; b=AE8m7QbgmKmEBgt/3uA+Lx8XNUNYvvx1qV2NrDpR+3Q/avGppATdyT6q+bGXRSKkna0o7z4ELJUpIysDf0UUZqx+XYVGKsym0dGQgIvrYtPyNyoZkv4Ip8TLBiHffWTwr7aP+lLp9+LE8S1CLsUFEzaFlFKU5bbjq31uTqlSHgE=
+	t=1752879089; cv=none; b=S3MILflS8Cf19q+M1ugUM9nr3hCErwhnmRs4Qeh2HM2Uy7IPGii8uqPCudEWjUEtX34LZYs8qH0Je5AYBSPGWhdV7Dv74trvZCru2ggaDKIwSKz1pXODf+sM16Hfs8Im8guWp4c7ereH5PUKWbcy3d1LTGyZZCKapX9NeBORdq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752878941; c=relaxed/simple;
-	bh=j5a0DZ468QzMrvyF4TXu1R8DhWG08C4AbgOqB1No9Po=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mlJtPMceYip0oWHpArlimEIuZ3h9TkFinCiWgKCo2Met67oQoaen09xFoNHrOrinSgHuWezPNejQMyvJ7vR5TF7YJ4HTBbkCsRKgSCGCd7cRuL+l3bbADagkeP6+ilt6xjX1p1uvsA54Ri9Vm/hueTNcbOX53HOfTcvj/HSl5aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IQqOd8jb; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1752879089; c=relaxed/simple;
+	bh=9wq1gPYvCplHPaY4Wm5XgoLMe+aODde2O7VcmHcmk98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uPLgdyUatVim0CECah6F4FPsKF/Ls5gb4V26IYBlQ1t173MdwVyCoWuoCPsOvoYdTionaiaKpw/1zEypEwH8hQ3ac8ZeL+s+ZrJ3IowNbuL9fEz1xfQN0oSbLJgtdU8JIsb0nKL4BcNLpdplupJAQ+SQ37o8H60Ag8plhzcuNkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmiVcikE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IQqOd8jb"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23aeac7d77aso22350775ad.3
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Jul 2025 15:48:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1752878938; x=1753483738; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XCekbMSEmyxIAVzfncRaEHsXG0dam6IEJBqPkNUa8Bk=;
-        b=IQqOd8jbGkWpS5jXLTybWKrxG+S/FfLWQdKskC4kilDEoAPanQFX1ysI9doii4Nnki
-         p5rk/hYUQEGegotwFpoAeXU9RlYW22EfGQZRAzMN1Vx8PPW4rNZ0oaFaQgTU9J+AYgWB
-         XKl76gunpWV9ABpsmeOOHZZecWpGsd9RrnlJk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752878938; x=1753483738;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XCekbMSEmyxIAVzfncRaEHsXG0dam6IEJBqPkNUa8Bk=;
-        b=rPGwxiYWatb+eXRxaSNX83+RZUw92+Ufppy2nTq1e1X8KfdzcNeyM7erKVk4CYWZS9
-         cS5gOi/XqXk0EAGoJVMnfbCmiQdyzmY857VK3jdQU0qua7ONhIJeUo14tj0j3U2hoa/k
-         YRxZHBq6YH6AjDRSQkFCZLwEivQjE+VFhMz3lZ1JAu8WAhfGeIHmXcN0taa9N1FV1/gV
-         uGpo4zsorhtYcAlUWeqRCrU8z5A/NREydRygSVpExHCSP1HfVPipG5wKW4o6dySk1Zlj
-         50XlEWyb4WnBUJn+sD9GUqXTSX1e1anbJl8e0uD658p1ZBuiPq8SsG827ErPBOz//W6w
-         rV/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUoxNPmVFJeAr0E/zQ5MmcKHh7L77l3E3XSzOFXk1MWLHKEh1BQ2sVMUZ3ihkxmAd5fH/XcEsGmJTd5BXauMz8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe1xYFFUZXb6y+SgvByoM2XMXY/h4Zc2eDCb3LlN4min7f2JRh
-	iMXb7TPe/Kg3fKaGWJLyiP15+I7vwEyj7ECnZoS9KkWYe9yq6zLhXn8Ctp+uswxxCZt4wR/if98
-	fvtU=
-X-Gm-Gg: ASbGncuPhQudgxNj+H9K4fo2LATdkatgrp6xYrAZxqv0ro7tvaMuXLjllOxFWE+lDCD
-	NWZ70PybGquoST0ZPQji9GHCNk3/n+xKZX3UIaEN+5T+uQsxJjB3g2aA+lEht2hjTLIDOmwHhGu
-	EGquLjXh04Z3OY8ZKsMEs7Wf3t4xMYSJG3kLi4iHmwKRvdVDZu5/FlT1l7b33sbpqXRLEeRlxjj
-	e4VwuTJA8npegAWWxW4FtRFJN9WAMH2X61YOGALHJAUhkp7/lLNrqtdlU64E2LfIlCjbs9iJ++O
-	88RrhzZnJRuHwHikyxYIP9Pm72cQlJUOgcLiCsST0iww8HVrFsUlX1PYrbJ5nYZJ4ucOCC4DIna
-	nnrERJcGkePD2AzyWre3+/ac3yvTf4vztCqwlpYbhgxKKsJrojdRuYw/Msz8IVw==
-X-Google-Smtp-Source: AGHT+IH50bdneQAhOHNW82KEl0fvb2GCqntGEeHaOQSYtUMbatw9WL481UCSKB3TKlaUHbXLFoYiwQ==
-X-Received: by 2002:a17:903:182:b0:237:e696:3d56 with SMTP id d9443c01a7336-23e24fbef08mr190398005ad.32.1752878937780;
-        Fri, 18 Jul 2025 15:48:57 -0700 (PDT)
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com. [209.85.216.43])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23e3bdfe68csm18162095ad.183.2025.07.18.15.48.56
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Jul 2025 15:48:56 -0700 (PDT)
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-311e46d38ddso2297123a91.0
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Jul 2025 15:48:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX+F3XmpFMxo863W/eppZYwByXS+XUkn03vhG77HS2gV1Bia3/CWdF0XSY3TES1FGxMjeap24IyC64jAK2snJM=@vger.kernel.org
-X-Received: by 2002:a17:90b:5307:b0:311:baa0:89ca with SMTP id
- 98e67ed59e1d1-31c9e79bc53mr17025524a91.34.1752878935739; Fri, 18 Jul 2025
- 15:48:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmiVcikE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A58ABC4CEEB;
+	Fri, 18 Jul 2025 22:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752879088;
+	bh=9wq1gPYvCplHPaY4Wm5XgoLMe+aODde2O7VcmHcmk98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VmiVcikElcqZk72BFs7/zWioNVg/RlBsEZTqUIs6HsScTtVwOS6j7B3ua7R/5a+8f
+	 B/Xx/QRZM/EQh/lO2RicrfWNUj4TspYI7v5C1esxaGnMy5qNgSFrlaLuHCW1KuRQE/
+	 vwjy0/1yadEDESYc6Jup2r2d1g6hRKk98N3uI9FiR3pIjtw/6N8d9/1A9DF/kI7Ptp
+	 /KtF2y8xo3+DKYzmZGh9ileKlyQIK4tsMmB+vc1VQguKTRnI0Md6sJRL9kCLGWssqH
+	 x60/sDs7wvwXbxMyYV4GlknlF8akcqkSZPz9pRU1nNtV+O7XtlJK1/hNvPy3K6SwqK
+	 vqLjSPHvQBQpQ==
+Date: Fri, 18 Jul 2025 15:51:28 -0700
+From: Kees Cook <kees@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Michal Wilczynski <michal.wilczynski@intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Roger Pau Monne <roger.pau@citrix.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Usama Arif <usama.arif@bytedance.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
+	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-mm@kvack.org, Ingo Molnar <mingo@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
+Message-ID: <202507181541.B8CFAC7E@keescook>
+References: <20250717231756.make.423-kees@kernel.org>
+ <20250717232519.2984886-4-kees@kernel.org>
+ <aHoHkDvvp4AHIzU1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250718213725.348363-2-thorsten.blum@linux.dev>
-In-Reply-To: <20250718213725.348363-2-thorsten.blum@linux.dev>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 18 Jul 2025 15:48:43 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W1tgwvajXD6mcggHKy=Q7EN8wLx4nSJgy0NJBzHLBnSg@mail.gmail.com>
-X-Gm-Features: Ac12FXxufG3DdfXgWkFesZeMyd_2GFfXRNaPb_AZ2xn1G3aBVcusp6YGrWqqY7c
-Message-ID: <CAD=FV=W1tgwvajXD6mcggHKy=Q7EN8wLx4nSJgy0NJBzHLBnSg@mail.gmail.com>
-Subject: Re: [PATCH] kdb: Replace deprecated strcpy() with strscpy()
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Jason Wessel <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Zhang Heng <zhangheng@kylinos.cn>, 
-	linux-hardening@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aHoHkDvvp4AHIzU1@kernel.org>
 
-Hi,
+On Fri, Jul 18, 2025 at 11:36:32AM +0300, Mike Rapoport wrote:
+> Hi Kees,
+> 
+> On Thu, Jul 17, 2025 at 04:25:09PM -0700, Kees Cook wrote:
+> > When KCOV is enabled all functions get instrumented, unless the
+> > __no_sanitize_coverage attribute is used. To prepare for
+> > __no_sanitize_coverage being applied to __init functions, we have to
+> > handle differences in how GCC's inline optimizations get resolved. For
+> > x86 this means forcing several functions to be inline with
+> > __always_inline.
+> > 
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> 
+> ...
+> 
+> > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> > index bb19a2534224..b96746376e17 100644
+> > --- a/include/linux/memblock.h
+> > +++ b/include/linux/memblock.h
+> > @@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
+> >  					  NUMA_NO_NODE);
+> >  }
+> >  
+> > -static inline void *memblock_alloc_from(phys_addr_t size,
+> > +static __always_inline void *memblock_alloc_from(phys_addr_t size,
+> >  						phys_addr_t align,
+> >  						phys_addr_t min_addr)
+> 
+> I'm curious why from all memblock_alloc* wrappers this is the only one that
+> needs to be __always_inline?
 
-On Fri, Jul 18, 2025 at 2:40=E2=80=AFPM Thorsten Blum <thorsten.blum@linux.=
-dev> wrote:
->
-> strcpy() is deprecated; use strscpy() instead.
->
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  kernel/debug/kdb/kdb_support.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+Thread-merge[1], adding Will Deacon, who was kind of asking the same
+question.
 
-nit: Since this only covers things in the file `kdb_support.c` and not
-everything in kernel/debug/kdb, perhaps that should be in the subject
-line? Maybe "kdb: Replace deprecated strcpy() with strscpy() in
-kdb_strdup()"?
+Based on what I can tell, GCC has kind of fragile inlining logic, in the
+sense that it can change whether or not it inlines something based on
+optimizations. It looks like the kcov instrumentation being added (or in
+this case, removed) from a function changes the optimization results,
+and some functions marked "inline" are _not_ inlined. In that case, we end up
+with __init code calling a function not marked __init, and we get the
+build warnings I'm trying to eliminate.
 
-Other than that, this looks fine to me.
+So, to Will's comment, yes, the problem is somewhat fragile (though
+using either __always_inline or __init will deterministically solve it).
+We've tripped over this before with GCC and the solution has usually
+been to just use __always_inline and move on.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+For memblock_alloc*, it appears to be that the heuristic GCC uses
+resulted in only memblock_alloc_from() being a problem in this case. I
+can certainly mark them all as __always_inline if that is preferred.
+
+Some maintainers have wanted things marked __init, some have wanted
+__always_inline. I opted for __always_inline since that was basically
+the intent of marking a function "inline" in the first place. I am happy
+to do whatever. :)
+
+-Kees
+
+[1] https://lore.kernel.org/lkml/aHouXI5-tyQw78Ht@willie-the-truck/
+
+-- 
+Kees Cook
