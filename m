@@ -1,50 +1,50 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998A4223DCC;
-	Sun, 20 Jul 2025 10:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02BA1E51EC;
+	Sun, 20 Jul 2025 10:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753009102; cv=none; b=R+kIPS6MnVzlrTOOw1ys0lhO0I50Da81kWhaMqNVLX21AiyUTTlaaYE/UXSm4DylsDFBn34Hpvi3OSGlhSOzy6neteyx1o6/uDB8bU72FjjqMmJ6Hq1OxgunB9AUSmqS9kxybyXpgZXh3adOwhr9AhFziFQsxKhpWgXeymcYWdU=
+	t=1753009115; cv=none; b=sn+eX4cS+xuSaKma33UiDld+40Eo9O+Im9XNn/DR9uoWLQE0xR80V3Cn6w2mltZ+7OWi91dBxI5CMc2D+5c0gMlo+HxIYg+jTG5/Pjt9WtcCX6UCezRdaQxnmZAWgtSyzAlZv7GnqOUSv9VvuoqhZLSUOXDN02CaM/L2hnaMpBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753009102; c=relaxed/simple;
-	bh=K4vOGNxLAPCB7vznXiRuV3prmClEMFlvFYDOzQbg+Gk=;
+	s=arc-20240116; t=1753009115; c=relaxed/simple;
+	bh=FlWDLKJU5uGVkDHmK4l8aywKAiLij8M1gABSQD1BwWU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Ix60p89ywlk7etrnCPUpMxKBDEd044JqPHkNXLTSnGNEuMiwruHKAipyqw5c5g8U+CcYyUec2NWQOHC968VEB/1zU79XAIfEMLYhUUgl/rqUuzLS+ND8SsA/b4LbudnDkrtqB6XL5ErFe2LLYl1oPk68ph9p29dfdjc4kf8LNZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=USk3q7lI; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:CC; b=NMHEVVUuLFDRdw+CRIvHRAaOsp2Cpltv2ZqaOhzv2a/GSHFL1cF4F+6YYIGhjsaXe6Jz0jAD2wkGGVOK4y/dd9blJqGvlkJw5NRaWcD5YOSYsBUJAXpFx3+jnT/x3UZYYQiLIRQMv19+y92bg+vBX9AcBw7+4AWuLsgoEIhybS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KSMKUnYQ; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="USk3q7lI"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56K5eKIo004187;
-	Sun, 20 Jul 2025 10:58:08 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KSMKUnYQ"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56K5jVP4003045;
+	Sun, 20 Jul 2025 10:58:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	cYKwbxeG4hrCkBWA5SBtkwUoQX2g5h/22kGMK82hjNA=; b=USk3q7lIU9/PHB5s
-	aWTpd22dqYwoGsyioCByxFs+j1VqgruXWIvvDsIXt6odUueFRB7rr+21UB9Ant+Q
-	Q0LJdPEl5Q9yahxEpUf87djlGh/Xh2br+lfOWabvu///8kulLKG4RBhKjyYwqKUk
-	F2H+RVc2UOF8GGlwC6+vLf9MUcvSCLDnGr3d4c70BDF4S+hPL5zsaQP2Hfs/dGuU
-	n+LSks8R7BNp+QzlHAtm4gD1I2QW5uzFn3TI8g1yiVuKkF9yg1S9aQvWbutZc4sI
-	WPtXquLtcKNlXa6pFhJaDUy8NYYjA82Cg2DNc538bK5zQvVFqv20qI9KlSkmiYaD
-	maMtcw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 480451a2p1-1
+	9Mjdm/E0mRe5OZwythZUsAJOQJjBaiFVIU656xMWPOw=; b=KSMKUnYQ1/7DkqQ6
+	1lGEfsnWWwDMBlG3L10FBXj5opGJvgXViBcEKyHEylE25Lv7nA4PciQ5V4MwZY0y
+	JpLrWGKB+6fWIeTxvrKoyrqoVjfm2jowOU8pYQJ+TEdGfR6gLhv6pCJH/T62ElxG
+	ApEtf8JD9hBG+t9Nyc37CDq8OMHiQo02DCG96criE+vNOEmKRNhct/ejcQHy4fvB
+	JphtnLFJZ5KqFlW4MT+tzzyY2hvA7fg+fUEuSjHLDFTYSk3WEkxZmAx9qzzwttyw
+	/orT0YrBdA5HtoYYOmXJYrNiMWx2dE7ZDgDN8Znni/h0VY5nZjnPLQH5+DmlWgqd
+	Rhj1CA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48044da3aa-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 20 Jul 2025 10:58:07 +0000 (GMT)
+	Sun, 20 Jul 2025 10:58:22 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 56KAw6Wn000466
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 56KAwLuX019438
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 20 Jul 2025 10:58:06 GMT
+	Sun, 20 Jul 2025 10:58:21 GMT
 Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Sun, 20 Jul 2025 03:58:01 -0700
+ 15.2.1748.10; Sun, 20 Jul 2025 03:58:16 -0700
 From: Luo Jie <quic_luoj@quicinc.com>
-Date: Sun, 20 Jul 2025 18:57:16 +0800
-Subject: [PATCH net-next v6 09/14] net: ethernet: qualcomm: Initialize PPE
- port control settings
+Date: Sun, 20 Jul 2025 18:57:19 +0800
+Subject: [PATCH net-next v6 12/14] net: ethernet: qualcomm: Initialize PPE
+ L2 bridge settings
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250720-qcom_ipq_ppe-v6-9-4ae91c203a5f@quicinc.com>
+Message-ID: <20250720-qcom_ipq_ppe-v6-12-4ae91c203a5f@quicinc.com>
 References: <20250720-qcom_ipq_ppe-v6-0-4ae91c203a5f@quicinc.com>
 In-Reply-To: <20250720-qcom_ipq_ppe-v6-0-4ae91c203a5f@quicinc.com>
 To: Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -83,256 +83,234 @@ CC: <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
         Luo Jie
 	<quic_luoj@quicinc.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1753009036; l=8504;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1753009036; l=7562;
  i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
- bh=K4vOGNxLAPCB7vznXiRuV3prmClEMFlvFYDOzQbg+Gk=;
- b=6FKnKqJre4j0q5/8P4Ss2jkV4jC2tAsakTekm1hkMCmNFTlT3H3Ij2YAvfP3xzcstIcDiAYLP
- avPKbBPPubQBcKpDzou84kuMJ38sqS7dzzRbfm5LFDXT8fkVIf2+xao
+ bh=tkCKgszPPF3/xzabdow8xHGu8wKV4t+EGcjdTXBa3w4=;
+ b=VR89Sc3jVC4KZ0J5UakeBbmVIx4diguOUpEswzA67K7NvQoUwPbSk/UIUkQhqCHkwrWC/ZIZ7
+ NtIhzRqwSWQClebFq8D71JdO1bD278haqC+eydhmW6kaUDMBDtujWuO
 X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
  pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=EIMG00ZC c=1 sm=1 tr=0 ts=687ccbbf cx=c_pps
+X-Authority-Analysis: v=2.4 cv=BJ6zrEQG c=1 sm=1 tr=0 ts=687ccbce cx=c_pps
  a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
  a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=J0k_80nE0nYP0oceNegA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 0SGGrXAz-ytr2mUuAmu-dnUO4PXJ1wDF
-X-Proofpoint-GUID: 0SGGrXAz-ytr2mUuAmu-dnUO4PXJ1wDF
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzIwMDEwNSBTYWx0ZWRfX2CK8Tau5yDB5
- y2uBZ4E3vbhSLoNj3TATKUhgUO2P2ih1tyLxT4ivTXDNygXeUZgRaN25xSKjBQmcDJpOTEddmmY
- KtpOy4T//KG8CGDIkKWyXRNkaIQwM5lQKE5mez/ces6uSV8p6GMoIxs0zL7jZFFj5D5nfaD0iTI
- uqNCiCftVqKW1TBR/BwbUwCw7uklMLFVr3oXt9a93MWCJHCzv8xcWpdMwiab7jdNNZBgEuyT5KZ
- 21iQct68wOekPoM17EuUUnIoBIAi5M8ntSwOmcWYgu3Q/mdIR1YfItGRSQW1xrS9mw88n9VoauB
- 4seWNo6OJWthQvNZxp3kfe5Hj9nWngDzYn7j6kv9SdCtvvUFEZD3+RdUUSGPie3y1ntwdD0FmS2
- mwTbZ6ucgojKjXiP54ZUR+yb3Wg+fuRMR+IswVOPgBeB9dBc/Nycvo7eTdlFng1JuBv7jA8e
+ a=kjK3jMQdVcNyYKlBoqoA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: rZ0sZWE3SibLJbftljipXN2y3O3Ky0A4
+X-Proofpoint-ORIG-GUID: rZ0sZWE3SibLJbftljipXN2y3O3Ky0A4
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzIwMDEwNSBTYWx0ZWRfX7aEHdQm55m1z
+ 2JXDXiTmYY6VxTcOYuR4WcZDasvH10vot5RNdBPs23NUhIAohto65cdkKEVNDhwDzVNjd/U+dqm
+ 0Yw9TS5iDsA/bnzS99ZKe9jT6xevyLnnFI8IZo4SlPUlS9tjSpRy0Ku2vP8rub0TORxApKIGJxx
+ 9FNbppgPTfTK43ku6FNYmu0DnpmQtb58sxmQtvLEKsiI5//cfEjJRlOc9ok02Yv6aOtSW86oAv4
+ ygA+ylsaWWZe51rLzKC5H/w9haxtI+9N8Q0ikSQFSXx7CVLqExJ1UOaiPVR9ADB9Y0xhnCf/FNK
+ y/acJv/Svv2kwlVVqSgaWl48jAtM909px7B+SOfZkpvxYZ7anyr0j9CkBmDlvLNAujL+mfdAoPM
+ 9wQQ3nCvewA8saP8GijDveWzl8Fn54jvdd7KCDYGc3tV0A3M7h9i1pqLl0os+6w3Lerbr24P
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-07-19_03,2025-07-17_02,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 mlxlogscore=999 phishscore=0 mlxscore=0 clxscore=1015
- suspectscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507200105
+ priorityscore=1501 lowpriorityscore=0 clxscore=1015 spamscore=0
+ mlxlogscore=999 suspectscore=0 impostorscore=0 phishscore=0 adultscore=0
+ mlxscore=0 malwarescore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507200105
 
-Configure the default action as drop when the packet size is more than
-the configured MTU of physical port. Also enable port specific counters
-in PPE.
+From: Lei Wei <quic_leiwei@quicinc.com>
 
+Initialize the L2 bridge settings for the PPE ports to only enable
+L2 frame forwarding between CPU port and PPE Ethernet ports.
+
+The per-port L2 bridge settings are initialized as follows:
+For PPE CPU port, the PPE bridge TX is enabled and FDB learning is
+disabled. For PPE physical ports, the default L2 forwarding action
+is initialized to forward to CPU port only.
+
+L2/FDB learning and forwarding will not be enabled for PPE physical
+ports yet, since the port's VSI (Virtual Switch Instance) and VSI
+membership are not yet configured, which are required for FDB
+forwarding. The VSI and FDB forwarding will later be enabled when
+switchdev is enabled.
+
+Signed-off-by: Lei Wei <quic_leiwei@quicinc.com>
 Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
 ---
- drivers/net/ethernet/qualcomm/ppe/ppe_config.c | 86 +++++++++++++++++++++++++-
- drivers/net/ethernet/qualcomm/ppe/ppe_config.h | 15 +++++
- drivers/net/ethernet/qualcomm/ppe/ppe_regs.h   | 47 ++++++++++++++
- 3 files changed, 147 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qualcomm/ppe/ppe_config.c | 80 +++++++++++++++++++++++++-
+ drivers/net/ethernet/qualcomm/ppe/ppe_regs.h   | 50 ++++++++++++++++
+ 2 files changed, 129 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-index 39a01f25f5ef..8b2b9986b895 100644
+index b9e99fd28831..89109a699ac3 100644
 --- a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
 +++ b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-@@ -1178,6 +1178,44 @@ int ppe_sc_config_set(struct ppe_device *ppe_dev, int sc, struct ppe_sc_cfg cfg)
- 	return regmap_write(ppe_dev->regmap, reg, val);
+@@ -1919,6 +1919,80 @@ static int ppe_queues_to_ring_init(struct ppe_device *ppe_dev)
+ 	return ppe_ring_queue_map_set(ppe_dev, 0, queue_bmap);
  }
  
-+/**
-+ * ppe_counter_enable_set - Set PPE port counter enabled
-+ * @ppe_dev: PPE device
-+ * @port: PPE port ID
-+ *
-+ * Enable PPE counters on the given port for the unicast packet, multicast
-+ * packet and VLAN packet received and transmitted by PPE.
-+ *
-+ * Return: 0 on success, negative error code on failure.
++/* Initialize PPE bridge settings to only enable L2 frame receive and
++ * transmit between CPU port and PPE Ethernet ports.
 + */
-+int ppe_counter_enable_set(struct ppe_device *ppe_dev, int port)
++static int ppe_bridge_init(struct ppe_device *ppe_dev)
 +{
-+	u32 reg, mru_mtu_val[3];
-+	int ret;
++	u32 reg, mask, port_cfg[4], vsi_cfg[2];
++	int ret, i;
 +
-+	reg = PPE_MRU_MTU_CTRL_TBL_ADDR + PPE_MRU_MTU_CTRL_TBL_INC * port;
-+	ret = regmap_bulk_read(ppe_dev->regmap, reg,
-+			       mru_mtu_val, ARRAY_SIZE(mru_mtu_val));
++	/* Configure the following settings for CPU port0:
++	 * a.) Enable Bridge TX
++	 * b.) Disable FDB new address learning
++	 * c.) Disable station move address learning
++	 */
++	mask = PPE_PORT_BRIDGE_TXMAC_EN;
++	mask |= PPE_PORT_BRIDGE_NEW_LRN_EN;
++	mask |= PPE_PORT_BRIDGE_STA_MOVE_LRN_EN;
++	ret = regmap_update_bits(ppe_dev->regmap,
++				 PPE_PORT_BRIDGE_CTRL_ADDR,
++				 mask,
++				 PPE_PORT_BRIDGE_TXMAC_EN);
 +	if (ret)
 +		return ret;
 +
-+	PPE_MRU_MTU_CTRL_SET_RX_CNT_EN(mru_mtu_val, true);
-+	PPE_MRU_MTU_CTRL_SET_TX_CNT_EN(mru_mtu_val, true);
-+	ret = regmap_bulk_write(ppe_dev->regmap, reg,
-+				mru_mtu_val, ARRAY_SIZE(mru_mtu_val));
-+	if (ret)
-+		return ret;
-+
-+	reg = PPE_MC_MTU_CTRL_TBL_ADDR + PPE_MC_MTU_CTRL_TBL_INC * port;
-+	ret = regmap_set_bits(ppe_dev->regmap, reg, PPE_MC_MTU_CTRL_TBL_TX_CNT_EN);
-+	if (ret)
-+		return ret;
-+
-+	reg = PPE_PORT_EG_VLAN_TBL_ADDR + PPE_PORT_EG_VLAN_TBL_INC * port;
-+
-+	return regmap_set_bits(ppe_dev->regmap, reg, PPE_PORT_EG_VLAN_TBL_TX_COUNTING_EN);
-+}
-+
- static int ppe_config_bm_threshold(struct ppe_device *ppe_dev, int bm_port_id,
- 				   const struct ppe_bm_port_config port_cfg)
- {
-@@ -1606,6 +1644,48 @@ static int ppe_servcode_init(struct ppe_device *ppe_dev)
- 	return ppe_sc_config_set(ppe_dev, PPE_EDMA_SC_BYPASS_ID, sc_cfg);
- }
- 
-+/* Initialize PPE port configurations. */
-+static int ppe_port_config_init(struct ppe_device *ppe_dev)
-+{
-+	u32 reg, val, mru_mtu_val[3];
-+	int i, ret;
-+
-+	/* MTU and MRU settings are not required for CPU port 0. */
 +	for (i = 1; i < ppe_dev->num_ports; i++) {
-+		/* Enable Ethernet port counter */
-+		ret = ppe_counter_enable_set(ppe_dev, i);
-+		if (ret)
-+			return ret;
-+
-+		reg = PPE_MRU_MTU_CTRL_TBL_ADDR + PPE_MRU_MTU_CTRL_TBL_INC * i;
-+		ret = regmap_bulk_read(ppe_dev->regmap, reg,
-+				       mru_mtu_val, ARRAY_SIZE(mru_mtu_val));
-+		if (ret)
-+			return ret;
-+
-+		/* Drop the packet when the packet size is more than
-+		 * the MTU or MRU of the physical interface.
++		/* Enable invalid VSI forwarding for all the physical ports
++		 * to CPU port0, in case no VSI is assigned to the physical
++		 * port.
 +		 */
-+		PPE_MRU_MTU_CTRL_SET_MRU_CMD(mru_mtu_val, PPE_ACTION_DROP);
-+		PPE_MRU_MTU_CTRL_SET_MTU_CMD(mru_mtu_val, PPE_ACTION_DROP);
-+		ret = regmap_bulk_write(ppe_dev->regmap, reg,
-+					mru_mtu_val, ARRAY_SIZE(mru_mtu_val));
++		reg = PPE_L2_VP_PORT_TBL_ADDR + PPE_L2_VP_PORT_TBL_INC * i;
++		ret = regmap_bulk_read(ppe_dev->regmap, reg,
++				       port_cfg, ARRAY_SIZE(port_cfg));
++
 +		if (ret)
 +			return ret;
 +
-+		reg = PPE_MC_MTU_CTRL_TBL_ADDR + PPE_MC_MTU_CTRL_TBL_INC * i;
-+		val = FIELD_PREP(PPE_MC_MTU_CTRL_TBL_MTU_CMD, PPE_ACTION_DROP);
-+		ret = regmap_update_bits(ppe_dev->regmap, reg,
-+					 PPE_MC_MTU_CTRL_TBL_MTU_CMD,
-+					 val);
++		PPE_L2_PORT_SET_INVALID_VSI_FWD_EN(port_cfg, true);
++		PPE_L2_PORT_SET_DST_INFO(port_cfg, 0);
++
++		ret = regmap_bulk_write(ppe_dev->regmap, reg,
++					port_cfg, ARRAY_SIZE(port_cfg));
 +		if (ret)
 +			return ret;
 +	}
 +
-+	/* Enable CPU port counters. */
-+	return ppe_counter_enable_set(ppe_dev, 0);
++	for (i = 0; i < PPE_VSI_TBL_ENTRIES; i++) {
++		/* Set the VSI forward membership to include only CPU port0.
++		 * FDB learning and forwarding take place only after switchdev
++		 * is supported later to create the VSI and join the physical
++		 * ports to the VSI port member.
++		 */
++		reg = PPE_VSI_TBL_ADDR + PPE_VSI_TBL_INC * i;
++		ret = regmap_bulk_read(ppe_dev->regmap, reg,
++				       vsi_cfg, ARRAY_SIZE(vsi_cfg));
++		if (ret)
++			return ret;
++
++		PPE_VSI_SET_MEMBER_PORT_BITMAP(vsi_cfg, BIT(0));
++		PPE_VSI_SET_UUC_BITMAP(vsi_cfg, BIT(0));
++		PPE_VSI_SET_UMC_BITMAP(vsi_cfg, BIT(0));
++		PPE_VSI_SET_BC_BITMAP(vsi_cfg, BIT(0));
++		PPE_VSI_SET_NEW_ADDR_LRN_EN(vsi_cfg, true);
++		PPE_VSI_SET_NEW_ADDR_FWD_CMD(vsi_cfg, PPE_ACTION_FORWARD);
++		PPE_VSI_SET_STATION_MOVE_LRN_EN(vsi_cfg, true);
++		PPE_VSI_SET_STATION_MOVE_FWD_CMD(vsi_cfg, PPE_ACTION_FORWARD);
++
++		ret = regmap_bulk_write(ppe_dev->regmap, reg,
++					vsi_cfg, ARRAY_SIZE(vsi_cfg));
++		if (ret)
++			return ret;
++	}
++
++	return 0;
 +}
 +
  int ppe_hw_config(struct ppe_device *ppe_dev)
  {
  	int ret;
-@@ -1626,5 +1706,9 @@ int ppe_hw_config(struct ppe_device *ppe_dev)
+@@ -1951,5 +2025,9 @@ int ppe_hw_config(struct ppe_device *ppe_dev)
  	if (ret)
  		return ret;
  
--	return ppe_servcode_init(ppe_dev);
-+	ret = ppe_servcode_init(ppe_dev);
+-	return ppe_queues_to_ring_init(ppe_dev);
++	ret = ppe_queues_to_ring_init(ppe_dev);
 +	if (ret)
 +		return ret;
 +
-+	return ppe_port_config_init(ppe_dev);
++	return ppe_bridge_init(ppe_dev);
  }
-diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_config.h b/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
-index 2b3f7e39cc7e..84fa447742e3 100644
---- a/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
-+++ b/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
-@@ -233,6 +233,20 @@ struct ppe_sc_cfg {
- 	int eip_offset_sel;
- };
- 
-+/**
-+ * enum ppe_action_type - PPE action of the received packet.
-+ * @PPE_ACTION_FORWARD: Packet forwarded per L2/L3 process.
-+ * @PPE_ACTION_DROP: Packet dropped by PPE.
-+ * @PPE_ACTION_COPY_TO_CPU: Packet copied to CPU port per multicast queue.
-+ * @PPE_ACTION_REDIRECT_TO_CPU: Packet redirected to CPU port per unicast queue.
-+ */
-+enum ppe_action_type {
-+	PPE_ACTION_FORWARD = 0,
-+	PPE_ACTION_DROP = 1,
-+	PPE_ACTION_COPY_TO_CPU = 2,
-+	PPE_ACTION_REDIRECT_TO_CPU = 3,
-+};
-+
- int ppe_hw_config(struct ppe_device *ppe_dev);
- int ppe_queue_scheduler_set(struct ppe_device *ppe_dev,
- 			    int node_id, bool flow_level, int port,
-@@ -254,4 +268,5 @@ int ppe_port_resource_get(struct ppe_device *ppe_dev, int port,
- 			  int *res_start, int *res_end);
- int ppe_sc_config_set(struct ppe_device *ppe_dev, int sc,
- 		      struct ppe_sc_cfg cfg);
-+int ppe_counter_enable_set(struct ppe_device *ppe_dev, int port);
- #endif
 diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h b/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-index 4cb76313db87..c26bee83252f 100644
+index 224beda046d4..6fc63f82ee80 100644
 --- a/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
 +++ b/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-@@ -40,6 +40,18 @@
- #define PPE_SERVICE_SET_RX_CNT_EN(tbl_cfg, value)	\
- 	FIELD_MODIFY(PPE_SERVICE_W1_RX_CNT_EN, (tbl_cfg) + 0x1, value)
- 
-+/* PPE port egress VLAN configurations. */
-+#define PPE_PORT_EG_VLAN_TBL_ADDR		0x20020
-+#define PPE_PORT_EG_VLAN_TBL_ENTRIES		8
-+#define PPE_PORT_EG_VLAN_TBL_INC		4
-+#define PPE_PORT_EG_VLAN_TBL_VLAN_TYPE		BIT(0)
-+#define PPE_PORT_EG_VLAN_TBL_CTAG_MODE		GENMASK(2, 1)
-+#define PPE_PORT_EG_VLAN_TBL_STAG_MODE		GENMASK(4, 3)
-+#define PPE_PORT_EG_VLAN_TBL_VSI_TAG_MODE_EN	BIT(5)
-+#define PPE_PORT_EG_VLAN_TBL_PCP_PROP_CMD	BIT(6)
-+#define PPE_PORT_EG_VLAN_TBL_DEI_PROP_CMD	BIT(7)
-+#define PPE_PORT_EG_VLAN_TBL_TX_COUNTING_EN	BIT(8)
-+
- /* PPE queue counters enable/disable control. */
- #define PPE_EG_BRIDGE_CONFIG_ADDR		0x20044
- #define PPE_EG_BRIDGE_CONFIG_QUEUE_CNT_EN	BIT(2)
-@@ -65,6 +77,41 @@
+@@ -117,6 +117,14 @@
  #define PPE_EG_SERVICE_SET_TX_CNT_EN(tbl_cfg, value)	\
  	FIELD_MODIFY(PPE_EG_SERVICE_W1_TX_CNT_EN, (tbl_cfg) + 0x1, value)
  
-+/* PPE port control configurations for the traffic to the multicast queues. */
-+#define PPE_MC_MTU_CTRL_TBL_ADDR		0x60a00
-+#define PPE_MC_MTU_CTRL_TBL_ENTRIES		8
-+#define PPE_MC_MTU_CTRL_TBL_INC			4
-+#define PPE_MC_MTU_CTRL_TBL_MTU			GENMASK(13, 0)
-+#define PPE_MC_MTU_CTRL_TBL_MTU_CMD		GENMASK(15, 14)
-+#define PPE_MC_MTU_CTRL_TBL_TX_CNT_EN		BIT(16)
++/* PPE port bridge configuration */
++#define PPE_PORT_BRIDGE_CTRL_ADDR		0x60300
++#define PPE_PORT_BRIDGE_CTRL_ENTRIES		8
++#define PPE_PORT_BRIDGE_CTRL_INC		4
++#define PPE_PORT_BRIDGE_NEW_LRN_EN		BIT(0)
++#define PPE_PORT_BRIDGE_STA_MOVE_LRN_EN		BIT(3)
++#define PPE_PORT_BRIDGE_TXMAC_EN		BIT(16)
 +
-+/* PPE port control configurations for the traffic to the unicast queues. */
-+#define PPE_MRU_MTU_CTRL_TBL_ADDR		0x65000
-+#define PPE_MRU_MTU_CTRL_TBL_ENTRIES		256
-+#define PPE_MRU_MTU_CTRL_TBL_INC		0x10
-+#define PPE_MRU_MTU_CTRL_W0_MRU			GENMASK(13, 0)
-+#define PPE_MRU_MTU_CTRL_W0_MRU_CMD		GENMASK(15, 14)
-+#define PPE_MRU_MTU_CTRL_W0_MTU			GENMASK(29, 16)
-+#define PPE_MRU_MTU_CTRL_W0_MTU_CMD		GENMASK(31, 30)
-+#define PPE_MRU_MTU_CTRL_W1_RX_CNT_EN		BIT(0)
-+#define PPE_MRU_MTU_CTRL_W1_TX_CNT_EN		BIT(1)
-+#define PPE_MRU_MTU_CTRL_W1_SRC_PROFILE		GENMASK(3, 2)
-+#define PPE_MRU_MTU_CTRL_W1_INNER_PREC_LOW	BIT(31)
-+#define PPE_MRU_MTU_CTRL_W2_INNER_PREC_HIGH	GENMASK(1, 0)
+ /* PPE port control configurations for the traffic to the multicast queues. */
+ #define PPE_MC_MTU_CTRL_TBL_ADDR		0x60a00
+ #define PPE_MC_MTU_CTRL_TBL_ENTRIES		8
+@@ -125,6 +133,36 @@
+ #define PPE_MC_MTU_CTRL_TBL_MTU_CMD		GENMASK(15, 14)
+ #define PPE_MC_MTU_CTRL_TBL_TX_CNT_EN		BIT(16)
+ 
++/* PPE VSI configurations */
++#define PPE_VSI_TBL_ADDR			0x63800
++#define PPE_VSI_TBL_ENTRIES			64
++#define PPE_VSI_TBL_INC				0x10
++#define PPE_VSI_W0_MEMBER_PORT_BITMAP		GENMASK(7, 0)
++#define PPE_VSI_W0_UUC_BITMAP			GENMASK(15, 8)
++#define PPE_VSI_W0_UMC_BITMAP			GENMASK(23, 16)
++#define PPE_VSI_W0_BC_BITMAP			GENMASK(31, 24)
++#define PPE_VSI_W1_NEW_ADDR_LRN_EN		BIT(0)
++#define PPE_VSI_W1_NEW_ADDR_FWD_CMD		GENMASK(2, 1)
++#define PPE_VSI_W1_STATION_MOVE_LRN_EN		BIT(3)
++#define PPE_VSI_W1_STATION_MOVE_FWD_CMD		GENMASK(5, 4)
 +
-+#define PPE_MRU_MTU_CTRL_SET_MRU(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_MRU_MTU_CTRL_W0_MRU, tbl_cfg, value)
-+#define PPE_MRU_MTU_CTRL_SET_MRU_CMD(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_MRU_MTU_CTRL_W0_MRU_CMD, tbl_cfg, value)
-+#define PPE_MRU_MTU_CTRL_SET_MTU(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_MRU_MTU_CTRL_W0_MTU, tbl_cfg, value)
-+#define PPE_MRU_MTU_CTRL_SET_MTU_CMD(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_MRU_MTU_CTRL_W0_MTU_CMD, tbl_cfg, value)
-+#define PPE_MRU_MTU_CTRL_SET_RX_CNT_EN(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_MRU_MTU_CTRL_W1_RX_CNT_EN, (tbl_cfg) + 0x1, value)
-+#define PPE_MRU_MTU_CTRL_SET_TX_CNT_EN(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_MRU_MTU_CTRL_W1_TX_CNT_EN, (tbl_cfg) + 0x1, value)
++#define PPE_VSI_SET_MEMBER_PORT_BITMAP(tbl_cfg, value)		\
++	FIELD_MODIFY(PPE_VSI_W0_MEMBER_PORT_BITMAP, tbl_cfg, value)
++#define PPE_VSI_SET_UUC_BITMAP(tbl_cfg, value)			\
++	FIELD_MODIFY(PPE_VSI_W0_UUC_BITMAP, tbl_cfg, value)
++#define PPE_VSI_SET_UMC_BITMAP(tbl_cfg, value)			\
++	FIELD_MODIFY(PPE_VSI_W0_UMC_BITMAP, tbl_cfg, value)
++#define PPE_VSI_SET_BC_BITMAP(tbl_cfg, value)			\
++	FIELD_MODIFY(PPE_VSI_W0_BC_BITMAP, tbl_cfg, value)
++#define PPE_VSI_SET_NEW_ADDR_LRN_EN(tbl_cfg, value)		\
++	FIELD_MODIFY(PPE_VSI_W1_NEW_ADDR_LRN_EN, (tbl_cfg) + 0x1, value)
++#define PPE_VSI_SET_NEW_ADDR_FWD_CMD(tbl_cfg, value)		\
++	FIELD_MODIFY(PPE_VSI_W1_NEW_ADDR_FWD_CMD, (tbl_cfg) + 0x1, value)
++#define PPE_VSI_SET_STATION_MOVE_LRN_EN(tbl_cfg, value)		\
++	FIELD_MODIFY(PPE_VSI_W1_STATION_MOVE_LRN_EN, (tbl_cfg) + 0x1, value)
++#define PPE_VSI_SET_STATION_MOVE_FWD_CMD(tbl_cfg, value)	\
++	FIELD_MODIFY(PPE_VSI_W1_STATION_MOVE_FWD_CMD, (tbl_cfg) + 0x1, value)
 +
- /* PPE service code configuration for destination port and counter. */
- #define PPE_IN_L2_SERVICE_TBL_ADDR		0x66000
- #define PPE_IN_L2_SERVICE_TBL_ENTRIES		256
+ /* PPE port control configurations for the traffic to the unicast queues. */
+ #define PPE_MRU_MTU_CTRL_TBL_ADDR		0x65000
+ #define PPE_MRU_MTU_CTRL_TBL_ENTRIES		256
+@@ -163,6 +201,18 @@
+ #define PPE_IN_L2_SERVICE_TBL_RX_CNT_EN		BIT(30)
+ #define PPE_IN_L2_SERVICE_TBL_TX_CNT_EN		BIT(31)
+ 
++/* L2 Port configurations */
++#define PPE_L2_VP_PORT_TBL_ADDR			0x98000
++#define PPE_L2_VP_PORT_TBL_ENTRIES		256
++#define PPE_L2_VP_PORT_TBL_INC			0x10
++#define PPE_L2_VP_PORT_W0_INVALID_VSI_FWD_EN	BIT(0)
++#define PPE_L2_VP_PORT_W0_DST_INFO		GENMASK(9, 2)
++
++#define PPE_L2_PORT_SET_INVALID_VSI_FWD_EN(tbl_cfg, value)	\
++	FIELD_MODIFY(PPE_L2_VP_PORT_W0_INVALID_VSI_FWD_EN, tbl_cfg, value)
++#define PPE_L2_PORT_SET_DST_INFO(tbl_cfg, value)		\
++	FIELD_MODIFY(PPE_L2_VP_PORT_W0_DST_INFO, tbl_cfg, value)
++
+ /* PPE service code configuration for the tunnel packet. */
+ #define PPE_TL_SERVICE_TBL_ADDR			0x306000
+ #define PPE_TL_SERVICE_TBL_ENTRIES		256
 
 -- 
 2.34.1
