@@ -1,50 +1,50 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02BA1E51EC;
-	Sun, 20 Jul 2025 10:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6920B2264A3;
+	Sun, 20 Jul 2025 10:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753009115; cv=none; b=sn+eX4cS+xuSaKma33UiDld+40Eo9O+Im9XNn/DR9uoWLQE0xR80V3Cn6w2mltZ+7OWi91dBxI5CMc2D+5c0gMlo+HxIYg+jTG5/Pjt9WtcCX6UCezRdaQxnmZAWgtSyzAlZv7GnqOUSv9VvuoqhZLSUOXDN02CaM/L2hnaMpBs=
+	t=1753009118; cv=none; b=hrrqg9e/7LmcaYwxfCj2d8IarkkhNXXPBXd93ZLq5iIcl9aAgE81wtMUENM34Sp/LRHwDFB16J4Rvu6L74u0XMG2u8GmxMHA4UXKc9/EFooglbsVctF1RpOr8nC507+xqyVyoAVEgk0m7SeFOrFkoyP44CW1hS0mEJFa0c2FL8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753009115; c=relaxed/simple;
-	bh=FlWDLKJU5uGVkDHmK4l8aywKAiLij8M1gABSQD1BwWU=;
+	s=arc-20240116; t=1753009118; c=relaxed/simple;
+	bh=Eo6ddE6SBckChQFuBJSSfKCp1lkmvde8y3jBn9Gffvc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=NMHEVVUuLFDRdw+CRIvHRAaOsp2Cpltv2ZqaOhzv2a/GSHFL1cF4F+6YYIGhjsaXe6Jz0jAD2wkGGVOK4y/dd9blJqGvlkJw5NRaWcD5YOSYsBUJAXpFx3+jnT/x3UZYYQiLIRQMv19+y92bg+vBX9AcBw7+4AWuLsgoEIhybS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KSMKUnYQ; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:CC; b=OMy7rCwcoQOWhIavsT2LOgoJWUGA6DT0JsGkxcFsQpmTvRl4lzQVD5P/CttkJpEkVASOYUoLLUFPbJhXRjBlRRwUMqiKo5i2DJ62Lzr9upd6H4xV3qkPyz3yG7om+xYHrZN3VOxyLEjjGj2yBfcznmUdMX84yBbQQbpT2N4iIwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CoFjv1nO; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KSMKUnYQ"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56K5jVP4003045;
-	Sun, 20 Jul 2025 10:58:23 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CoFjv1nO"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56KAbABh020807;
+	Sun, 20 Jul 2025 10:58:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9Mjdm/E0mRe5OZwythZUsAJOQJjBaiFVIU656xMWPOw=; b=KSMKUnYQ1/7DkqQ6
-	1lGEfsnWWwDMBlG3L10FBXj5opGJvgXViBcEKyHEylE25Lv7nA4PciQ5V4MwZY0y
-	JpLrWGKB+6fWIeTxvrKoyrqoVjfm2jowOU8pYQJ+TEdGfR6gLhv6pCJH/T62ElxG
-	ApEtf8JD9hBG+t9Nyc37CDq8OMHiQo02DCG96criE+vNOEmKRNhct/ejcQHy4fvB
-	JphtnLFJZ5KqFlW4MT+tzzyY2hvA7fg+fUEuSjHLDFTYSk3WEkxZmAx9qzzwttyw
-	/orT0YrBdA5HtoYYOmXJYrNiMWx2dE7ZDgDN8Znni/h0VY5nZjnPLQH5+DmlWgqd
-	Rhj1CA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48044da3aa-1
+	IKxkl2GpqL1SJxvKkxtjihMfAU77U+U/nQoQmC9UnDQ=; b=CoFjv1nOP+UdRipc
+	bFo7ppCLj3wHQq8ZqMITu+9Kaz2Jp5g4xzvICSJxbKLh6zwBg0jgkgiX1+w5gXIE
+	m6gyLpODXvssIB1VdQfnJ6aa3gU/JFzbEXYV31z2O5PLM6lqF4tLSrSZowSNghwl
+	TU0KfZuaZgOix2M6NiPcNaPbDjMNnWgeAo/yZoq5ZbjbagNGLiqoO/hfP+y37LlE
+	p7pDt8lXyVT9rFC6IvnIs7Pwb1vDSh2M2sgdug2YnqlIPyCSh6LKRatOVcpi7aeR
+	J40QHL3UmpbsG0w0pTh4Qc0+v7ErOafktAE0w0wAERcWUAfoUb33FBbs9CCB1zG5
+	JG25Kg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48048v22hq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 20 Jul 2025 10:58:22 +0000 (GMT)
+	Sun, 20 Jul 2025 10:58:12 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 56KAwLuX019438
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 56KAwBPC017894
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 20 Jul 2025 10:58:21 GMT
+	Sun, 20 Jul 2025 10:58:11 GMT
 Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Sun, 20 Jul 2025 03:58:16 -0700
+ 15.2.1748.10; Sun, 20 Jul 2025 03:58:06 -0700
 From: Luo Jie <quic_luoj@quicinc.com>
-Date: Sun, 20 Jul 2025 18:57:19 +0800
-Subject: [PATCH net-next v6 12/14] net: ethernet: qualcomm: Initialize PPE
- L2 bridge settings
+Date: Sun, 20 Jul 2025 18:57:17 +0800
+Subject: [PATCH net-next v6 10/14] net: ethernet: qualcomm: Initialize PPE
+ RSS hash settings
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250720-qcom_ipq_ppe-v6-12-4ae91c203a5f@quicinc.com>
+Message-ID: <20250720-qcom_ipq_ppe-v6-10-4ae91c203a5f@quicinc.com>
 References: <20250720-qcom_ipq_ppe-v6-0-4ae91c203a5f@quicinc.com>
 In-Reply-To: <20250720-qcom_ipq_ppe-v6-0-4ae91c203a5f@quicinc.com>
 To: Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -83,234 +83,389 @@ CC: <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
         Luo Jie
 	<quic_luoj@quicinc.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1753009036; l=7562;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1753009036; l=11937;
  i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
- bh=tkCKgszPPF3/xzabdow8xHGu8wKV4t+EGcjdTXBa3w4=;
- b=VR89Sc3jVC4KZ0J5UakeBbmVIx4diguOUpEswzA67K7NvQoUwPbSk/UIUkQhqCHkwrWC/ZIZ7
- NtIhzRqwSWQClebFq8D71JdO1bD278haqC+eydhmW6kaUDMBDtujWuO
+ bh=Eo6ddE6SBckChQFuBJSSfKCp1lkmvde8y3jBn9Gffvc=;
+ b=o2Swyl8cT6DeVB+Y/SmKx3zarjG2v9qad4qUe50F+V0R5+WOgM5esZtRGVcSVs/hMD57K1A09
+ BX0s83u19XGDMq5lxZWsvRIYdpVa3QK1wa5gixIV1YUyS9tt58JbTEa
 X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
  pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=BJ6zrEQG c=1 sm=1 tr=0 ts=687ccbce cx=c_pps
+X-Proofpoint-GUID: OA42t_UY_gecK4E-OZC_NlLj_6KsEvMv
+X-Authority-Analysis: v=2.4 cv=SYL3duRu c=1 sm=1 tr=0 ts=687ccbc4 cx=c_pps
  a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
  a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=kjK3jMQdVcNyYKlBoqoA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: rZ0sZWE3SibLJbftljipXN2y3O3Ky0A4
-X-Proofpoint-ORIG-GUID: rZ0sZWE3SibLJbftljipXN2y3O3Ky0A4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzIwMDEwNSBTYWx0ZWRfX7aEHdQm55m1z
- 2JXDXiTmYY6VxTcOYuR4WcZDasvH10vot5RNdBPs23NUhIAohto65cdkKEVNDhwDzVNjd/U+dqm
- 0Yw9TS5iDsA/bnzS99ZKe9jT6xevyLnnFI8IZo4SlPUlS9tjSpRy0Ku2vP8rub0TORxApKIGJxx
- 9FNbppgPTfTK43ku6FNYmu0DnpmQtb58sxmQtvLEKsiI5//cfEjJRlOc9ok02Yv6aOtSW86oAv4
- ygA+ylsaWWZe51rLzKC5H/w9haxtI+9N8Q0ikSQFSXx7CVLqExJ1UOaiPVR9ADB9Y0xhnCf/FNK
- y/acJv/Svv2kwlVVqSgaWl48jAtM909px7B+SOfZkpvxYZ7anyr0j9CkBmDlvLNAujL+mfdAoPM
- 9wQQ3nCvewA8saP8GijDveWzl8Fn54jvdd7KCDYGc3tV0A3M7h9i1pqLl0os+6w3Lerbr24P
+ a=yIKwQdIoj9ZhpUI_W6AA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzIwMDEwNSBTYWx0ZWRfX61gSLp/YuVf1
+ y/+3p5zaAmERn8kUC2Chdgrn+HKFWeSrjVZH8C3u8csN6JWNjuxiYcUwyy20Q8XBhxLmDt/4Tz1
+ lIg0Q/ISxQrrfC3oLIzUu3Z+i8ZY3d9mKa2Jp33DWg6BB1cKhzqSCZtRgcFhVARNrF99DF/+vOF
+ IQulzGkTH96aU9I/epdgwRnaLmG5XFl7oQsgzNCs/7r3BFLJxxQBRbJEsy4TvQQRArNmkcrAK82
+ m8yZaGXocjzrPDs5cNEMmBohEA+EPtOkEuah+nBLmTvSzTqrvGPfoUwnIGYFMYJwVjzV0lqYcXX
+ rOh7iMp6m0ZW4flmJVzZBuuyAobDWirKvjDAdBlq/219XbyW9YhCRYJ0mT49/jEc6y8CNE+1J2m
+ dHPtyGK3pXn09PFeRJ0ruq7pRdH87YLXR+ssBn5fKmYvavNF7tfT/UDolYtw6aXeCra73aSi
+X-Proofpoint-ORIG-GUID: OA42t_UY_gecK4E-OZC_NlLj_6KsEvMv
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-07-19_03,2025-07-17_02,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 lowpriorityscore=0 clxscore=1015 spamscore=0
- mlxlogscore=999 suspectscore=0 impostorscore=0 phishscore=0 adultscore=0
- mlxscore=0 malwarescore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ impostorscore=0 suspectscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 malwarescore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
  authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505280000 definitions=main-2507200105
 
-From: Lei Wei <quic_leiwei@quicinc.com>
+The PPE RSS hash is generated during PPE receive, based on the packet
+content (3 tuples or 5 tuples) and as per the configured RSS seed. The
+hash is then used to select the queue to transmit the packet to the
+ARM CPU.
 
-Initialize the L2 bridge settings for the PPE ports to only enable
-L2 frame forwarding between CPU port and PPE Ethernet ports.
+This patch initializes the RSS hash settings that are used to generate
+the hash for the packet during PPE packet receive.
 
-The per-port L2 bridge settings are initialized as follows:
-For PPE CPU port, the PPE bridge TX is enabled and FDB learning is
-disabled. For PPE physical ports, the default L2 forwarding action
-is initialized to forward to CPU port only.
-
-L2/FDB learning and forwarding will not be enabled for PPE physical
-ports yet, since the port's VSI (Virtual Switch Instance) and VSI
-membership are not yet configured, which are required for FDB
-forwarding. The VSI and FDB forwarding will later be enabled when
-switchdev is enabled.
-
-Signed-off-by: Lei Wei <quic_leiwei@quicinc.com>
 Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
 ---
- drivers/net/ethernet/qualcomm/ppe/ppe_config.c | 80 +++++++++++++++++++++++++-
- drivers/net/ethernet/qualcomm/ppe/ppe_regs.h   | 50 ++++++++++++++++
- 2 files changed, 129 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qualcomm/ppe/ppe_config.c | 198 ++++++++++++++++++++++++-
+ drivers/net/ethernet/qualcomm/ppe/ppe_config.h |  39 +++++
+ drivers/net/ethernet/qualcomm/ppe/ppe_regs.h   |  40 +++++
+ 3 files changed, 276 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-index b9e99fd28831..89109a699ac3 100644
+index 8b2b9986b895..778cb07f4ba4 100644
 --- a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
 +++ b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-@@ -1919,6 +1919,80 @@ static int ppe_queues_to_ring_init(struct ppe_device *ppe_dev)
- 	return ppe_ring_queue_map_set(ppe_dev, 0, queue_bmap);
+@@ -1216,6 +1216,147 @@ int ppe_counter_enable_set(struct ppe_device *ppe_dev, int port)
+ 	return regmap_set_bits(ppe_dev->regmap, reg, PPE_PORT_EG_VLAN_TBL_TX_COUNTING_EN);
  }
  
-+/* Initialize PPE bridge settings to only enable L2 frame receive and
-+ * transmit between CPU port and PPE Ethernet ports.
-+ */
-+static int ppe_bridge_init(struct ppe_device *ppe_dev)
++static int ppe_rss_hash_ipv4_config(struct ppe_device *ppe_dev, int index,
++				    struct ppe_rss_hash_cfg cfg)
 +{
-+	u32 reg, mask, port_cfg[4], vsi_cfg[2];
-+	int ret, i;
++	u32 reg, val;
 +
-+	/* Configure the following settings for CPU port0:
-+	 * a.) Enable Bridge TX
-+	 * b.) Disable FDB new address learning
-+	 * c.) Disable station move address learning
-+	 */
-+	mask = PPE_PORT_BRIDGE_TXMAC_EN;
-+	mask |= PPE_PORT_BRIDGE_NEW_LRN_EN;
-+	mask |= PPE_PORT_BRIDGE_STA_MOVE_LRN_EN;
-+	ret = regmap_update_bits(ppe_dev->regmap,
-+				 PPE_PORT_BRIDGE_CTRL_ADDR,
-+				 mask,
-+				 PPE_PORT_BRIDGE_TXMAC_EN);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 1; i < ppe_dev->num_ports; i++) {
-+		/* Enable invalid VSI forwarding for all the physical ports
-+		 * to CPU port0, in case no VSI is assigned to the physical
-+		 * port.
-+		 */
-+		reg = PPE_L2_VP_PORT_TBL_ADDR + PPE_L2_VP_PORT_TBL_INC * i;
-+		ret = regmap_bulk_read(ppe_dev->regmap, reg,
-+				       port_cfg, ARRAY_SIZE(port_cfg));
-+
-+		if (ret)
-+			return ret;
-+
-+		PPE_L2_PORT_SET_INVALID_VSI_FWD_EN(port_cfg, true);
-+		PPE_L2_PORT_SET_DST_INFO(port_cfg, 0);
-+
-+		ret = regmap_bulk_write(ppe_dev->regmap, reg,
-+					port_cfg, ARRAY_SIZE(port_cfg));
-+		if (ret)
-+			return ret;
++	switch (index) {
++	case 0:
++		val = cfg.hash_sip_mix[0];
++		break;
++	case 1:
++		val = cfg.hash_dip_mix[0];
++		break;
++	case 2:
++		val = cfg.hash_protocol_mix;
++		break;
++	case 3:
++		val = cfg.hash_dport_mix;
++		break;
++	case 4:
++		val = cfg.hash_sport_mix;
++		break;
++	default:
++		return -EINVAL;
 +	}
 +
-+	for (i = 0; i < PPE_VSI_TBL_ENTRIES; i++) {
-+		/* Set the VSI forward membership to include only CPU port0.
-+		 * FDB learning and forwarding take place only after switchdev
-+		 * is supported later to create the VSI and join the physical
-+		 * ports to the VSI port member.
-+		 */
-+		reg = PPE_VSI_TBL_ADDR + PPE_VSI_TBL_INC * i;
-+		ret = regmap_bulk_read(ppe_dev->regmap, reg,
-+				       vsi_cfg, ARRAY_SIZE(vsi_cfg));
++	reg = PPE_RSS_HASH_MIX_IPV4_ADDR + index * PPE_RSS_HASH_MIX_IPV4_INC;
++
++	return regmap_update_bits(ppe_dev->regmap, reg,
++				  PPE_RSS_HASH_MIX_IPV4_VAL,
++				  FIELD_PREP(PPE_RSS_HASH_MIX_IPV4_VAL, val));
++}
++
++static int ppe_rss_hash_ipv6_config(struct ppe_device *ppe_dev, int index,
++				    struct ppe_rss_hash_cfg cfg)
++{
++	u32 reg, val;
++
++	switch (index) {
++	case 0 ... 3:
++		val = cfg.hash_sip_mix[index];
++		break;
++	case 4 ... 7:
++		val = cfg.hash_dip_mix[index - 4];
++		break;
++	case 8:
++		val = cfg.hash_protocol_mix;
++		break;
++	case 9:
++		val = cfg.hash_dport_mix;
++		break;
++	case 10:
++		val = cfg.hash_sport_mix;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	reg = PPE_RSS_HASH_MIX_ADDR + index * PPE_RSS_HASH_MIX_INC;
++
++	return regmap_update_bits(ppe_dev->regmap, reg,
++				  PPE_RSS_HASH_MIX_VAL,
++				  FIELD_PREP(PPE_RSS_HASH_MIX_VAL, val));
++}
++
++/**
++ * ppe_rss_hash_config_set - Configure the PPE hash settings for the packet received.
++ * @ppe_dev: PPE device.
++ * @mode: Configure RSS hash for the packet type IPv4 and IPv6.
++ * @cfg: RSS hash configuration.
++ *
++ * PPE RSS hash settings are configured for the packet type IPv4 and IPv6.
++ *
++ * Return: 0 on success, negative error code on failure.
++ */
++int ppe_rss_hash_config_set(struct ppe_device *ppe_dev, int mode,
++			    struct ppe_rss_hash_cfg cfg)
++{
++	u32 val, reg;
++	int i, ret;
++
++	if (mode & PPE_RSS_HASH_MODE_IPV4) {
++		val = FIELD_PREP(PPE_RSS_HASH_MASK_IPV4_HASH_MASK, cfg.hash_mask);
++		val |= FIELD_PREP(PPE_RSS_HASH_MASK_IPV4_FRAGMENT, cfg.hash_fragment_mode);
++		ret = regmap_write(ppe_dev->regmap, PPE_RSS_HASH_MASK_IPV4_ADDR, val);
 +		if (ret)
 +			return ret;
 +
-+		PPE_VSI_SET_MEMBER_PORT_BITMAP(vsi_cfg, BIT(0));
-+		PPE_VSI_SET_UUC_BITMAP(vsi_cfg, BIT(0));
-+		PPE_VSI_SET_UMC_BITMAP(vsi_cfg, BIT(0));
-+		PPE_VSI_SET_BC_BITMAP(vsi_cfg, BIT(0));
-+		PPE_VSI_SET_NEW_ADDR_LRN_EN(vsi_cfg, true);
-+		PPE_VSI_SET_NEW_ADDR_FWD_CMD(vsi_cfg, PPE_ACTION_FORWARD);
-+		PPE_VSI_SET_STATION_MOVE_LRN_EN(vsi_cfg, true);
-+		PPE_VSI_SET_STATION_MOVE_FWD_CMD(vsi_cfg, PPE_ACTION_FORWARD);
-+
-+		ret = regmap_bulk_write(ppe_dev->regmap, reg,
-+					vsi_cfg, ARRAY_SIZE(vsi_cfg));
++		val = FIELD_PREP(PPE_RSS_HASH_SEED_IPV4_VAL, cfg.hash_seed);
++		ret = regmap_write(ppe_dev->regmap, PPE_RSS_HASH_SEED_IPV4_ADDR, val);
 +		if (ret)
 +			return ret;
++
++		for (i = 0; i < PPE_RSS_HASH_MIX_IPV4_ENTRIES; i++) {
++			ret = ppe_rss_hash_ipv4_config(ppe_dev, i, cfg);
++			if (ret)
++				return ret;
++		}
++
++		for (i = 0; i < PPE_RSS_HASH_FIN_IPV4_ENTRIES; i++) {
++			val = FIELD_PREP(PPE_RSS_HASH_FIN_IPV4_INNER, cfg.hash_fin_inner[i]);
++			val |= FIELD_PREP(PPE_RSS_HASH_FIN_IPV4_OUTER, cfg.hash_fin_outer[i]);
++			reg = PPE_RSS_HASH_FIN_IPV4_ADDR + i * PPE_RSS_HASH_FIN_IPV4_INC;
++
++			ret = regmap_write(ppe_dev->regmap, reg, val);
++			if (ret)
++				return ret;
++		}
++	}
++
++	if (mode & PPE_RSS_HASH_MODE_IPV6) {
++		val = FIELD_PREP(PPE_RSS_HASH_MASK_HASH_MASK, cfg.hash_mask);
++		val |= FIELD_PREP(PPE_RSS_HASH_MASK_FRAGMENT, cfg.hash_fragment_mode);
++		ret = regmap_write(ppe_dev->regmap, PPE_RSS_HASH_MASK_ADDR, val);
++		if (ret)
++			return ret;
++
++		val = FIELD_PREP(PPE_RSS_HASH_SEED_VAL, cfg.hash_seed);
++		ret = regmap_write(ppe_dev->regmap, PPE_RSS_HASH_SEED_ADDR, val);
++		if (ret)
++			return ret;
++
++		for (i = 0; i < PPE_RSS_HASH_MIX_ENTRIES; i++) {
++			ret = ppe_rss_hash_ipv6_config(ppe_dev, i, cfg);
++			if (ret)
++				return ret;
++		}
++
++		for (i = 0; i < PPE_RSS_HASH_FIN_ENTRIES; i++) {
++			val = FIELD_PREP(PPE_RSS_HASH_FIN_INNER, cfg.hash_fin_inner[i]);
++			val |= FIELD_PREP(PPE_RSS_HASH_FIN_OUTER, cfg.hash_fin_outer[i]);
++			reg = PPE_RSS_HASH_FIN_ADDR + i * PPE_RSS_HASH_FIN_INC;
++
++			ret = regmap_write(ppe_dev->regmap, reg, val);
++			if (ret)
++				return ret;
++		}
 +	}
 +
 +	return 0;
 +}
 +
- int ppe_hw_config(struct ppe_device *ppe_dev)
+ static int ppe_config_bm_threshold(struct ppe_device *ppe_dev, int bm_port_id,
+ 				   const struct ppe_bm_port_config port_cfg)
  {
- 	int ret;
-@@ -1951,5 +2025,9 @@ int ppe_hw_config(struct ppe_device *ppe_dev)
- 	if (ret)
- 		return ret;
+@@ -1686,6 +1827,57 @@ static int ppe_port_config_init(struct ppe_device *ppe_dev)
+ 	return ppe_counter_enable_set(ppe_dev, 0);
+ }
  
--	return ppe_queues_to_ring_init(ppe_dev);
-+	ret = ppe_queues_to_ring_init(ppe_dev);
++/* Initialize the PPE RSS configuration for IPv4 and IPv6 packet receive.
++ * RSS settings are to calculate the random RSS hash value generated during
++ * packet receive. This hash is then used to generate the queue offset used
++ * to determine the queue used to transmit the packet.
++ */
++static int ppe_rss_hash_init(struct ppe_device *ppe_dev)
++{
++	u16 fins[PPE_RSS_HASH_TUPLES] = { 0x205, 0x264, 0x227, 0x245, 0x201 };
++	u8 ips[PPE_RSS_HASH_IP_LENGTH] = { 0x13, 0xb, 0x13, 0xb };
++	struct ppe_rss_hash_cfg hash_cfg;
++	int i, ret;
++
++	hash_cfg.hash_seed = get_random_u32();
++	hash_cfg.hash_mask = 0xfff;
++
++	/* Use 5 tuple as RSS hash key for the first fragment of TCP, UDP
++	 * and UDP-Lite packets.
++	 */
++	hash_cfg.hash_fragment_mode = false;
++
++	/* The final common seed configs used to calculate the RSS has value,
++	 * which is available for both IPv4 and IPv6 packet.
++	 */
++	for (i = 0; i < ARRAY_SIZE(fins); i++) {
++		hash_cfg.hash_fin_inner[i] = fins[i] & 0x1f;
++		hash_cfg.hash_fin_outer[i] = fins[i] >> 5;
++	}
++
++	/* RSS seeds for IP protocol, L4 destination & source port and
++	 * destination & source IP used to calculate the RSS hash value.
++	 */
++	hash_cfg.hash_protocol_mix = 0x13;
++	hash_cfg.hash_dport_mix = 0xb;
++	hash_cfg.hash_sport_mix = 0x13;
++	hash_cfg.hash_dip_mix[0] = 0xb;
++	hash_cfg.hash_sip_mix[0] = 0x13;
++
++	/* Configure RSS seed configs for IPv4 packet. */
++	ret = ppe_rss_hash_config_set(ppe_dev, PPE_RSS_HASH_MODE_IPV4, hash_cfg);
 +	if (ret)
 +		return ret;
 +
-+	return ppe_bridge_init(ppe_dev);
++	for (i = 0; i < ARRAY_SIZE(ips); i++) {
++		hash_cfg.hash_sip_mix[i] = ips[i];
++		hash_cfg.hash_dip_mix[i] = ips[i];
++	}
++
++	/* Configure RSS seed configs for IPv6 packet. */
++	return ppe_rss_hash_config_set(ppe_dev, PPE_RSS_HASH_MODE_IPV6, hash_cfg);
++}
++
+ int ppe_hw_config(struct ppe_device *ppe_dev)
+ {
+ 	int ret;
+@@ -1710,5 +1902,9 @@ int ppe_hw_config(struct ppe_device *ppe_dev)
+ 	if (ret)
+ 		return ret;
+ 
+-	return ppe_port_config_init(ppe_dev);
++	ret = ppe_port_config_init(ppe_dev);
++	if (ret)
++		return ret;
++
++	return ppe_rss_hash_init(ppe_dev);
  }
+diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_config.h b/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
+index 84fa447742e3..eb4a82375bb2 100644
+--- a/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
++++ b/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
+@@ -23,6 +23,12 @@
+ /* The service code is used by EDMA port to transmit packet to PPE. */
+ #define PPE_EDMA_SC_BYPASS_ID			1
+ 
++/* The PPE RSS hash configured for IPv4 and IPv6 packet separately. */
++#define PPE_RSS_HASH_MODE_IPV4			BIT(0)
++#define PPE_RSS_HASH_MODE_IPV6			BIT(1)
++#define PPE_RSS_HASH_IP_LENGTH			4
++#define PPE_RSS_HASH_TUPLES			5
++
+ /**
+  * enum ppe_scheduler_frame_mode - PPE scheduler frame mode.
+  * @PPE_SCH_WITH_IPG_PREAMBLE_FRAME_CRC: The scheduled frame includes IPG,
+@@ -247,6 +253,37 @@ enum ppe_action_type {
+ 	PPE_ACTION_REDIRECT_TO_CPU = 3,
+ };
+ 
++/**
++ * struct ppe_rss_hash_cfg - PPE RSS hash configuration.
++ * @hash_mask: Mask of the generated hash value.
++ * @hash_fragment_mode: Hash generation mode for the first fragment of TCP,
++ * UDP and UDP-Lite packets, to use either 3 tuple or 5 tuple for RSS hash
++ * key computation.
++ * @hash_seed: Seed to generate RSS hash.
++ * @hash_sip_mix: Source IP selection.
++ * @hash_dip_mix: Destination IP selection.
++ * @hash_protocol_mix: Protocol selection.
++ * @hash_sport_mix: Source L4 port selection.
++ * @hash_dport_mix: Destination L4 port selection.
++ * @hash_fin_inner: RSS hash value first selection.
++ * @hash_fin_outer: RSS hash value second selection.
++ *
++ * PPE RSS hash value is generated for the packet based on the RSS hash
++ * configured.
++ */
++struct ppe_rss_hash_cfg {
++	u32 hash_mask;
++	bool hash_fragment_mode;
++	u32 hash_seed;
++	u8 hash_sip_mix[PPE_RSS_HASH_IP_LENGTH];
++	u8 hash_dip_mix[PPE_RSS_HASH_IP_LENGTH];
++	u8 hash_protocol_mix;
++	u8 hash_sport_mix;
++	u8 hash_dport_mix;
++	u8 hash_fin_inner[PPE_RSS_HASH_TUPLES];
++	u8 hash_fin_outer[PPE_RSS_HASH_TUPLES];
++};
++
+ int ppe_hw_config(struct ppe_device *ppe_dev);
+ int ppe_queue_scheduler_set(struct ppe_device *ppe_dev,
+ 			    int node_id, bool flow_level, int port,
+@@ -269,4 +306,6 @@ int ppe_port_resource_get(struct ppe_device *ppe_dev, int port,
+ int ppe_sc_config_set(struct ppe_device *ppe_dev, int sc,
+ 		      struct ppe_sc_cfg cfg);
+ int ppe_counter_enable_set(struct ppe_device *ppe_dev, int port);
++int ppe_rss_hash_config_set(struct ppe_device *ppe_dev, int mode,
++			    struct ppe_rss_hash_cfg hash_cfg);
+ #endif
 diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h b/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-index 224beda046d4..6fc63f82ee80 100644
+index c26bee83252f..3e9cccedc6be 100644
 --- a/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
 +++ b/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-@@ -117,6 +117,14 @@
- #define PPE_EG_SERVICE_SET_TX_CNT_EN(tbl_cfg, value)	\
- 	FIELD_MODIFY(PPE_EG_SERVICE_W1_TX_CNT_EN, (tbl_cfg) + 0x1, value)
+@@ -16,6 +16,46 @@
+ #define PPE_BM_SCH_CTRL_SCH_OFFSET		GENMASK(14, 8)
+ #define PPE_BM_SCH_CTRL_SCH_EN			BIT(31)
  
-+/* PPE port bridge configuration */
-+#define PPE_PORT_BRIDGE_CTRL_ADDR		0x60300
-+#define PPE_PORT_BRIDGE_CTRL_ENTRIES		8
-+#define PPE_PORT_BRIDGE_CTRL_INC		4
-+#define PPE_PORT_BRIDGE_NEW_LRN_EN		BIT(0)
-+#define PPE_PORT_BRIDGE_STA_MOVE_LRN_EN		BIT(3)
-+#define PPE_PORT_BRIDGE_TXMAC_EN		BIT(16)
++/* RSS settings are to calculate the random RSS hash value generated during
++ * packet receive to ARM cores. This hash is then used to generate the queue
++ * offset used to determine the queue used to transmit the packet to ARM cores.
++ */
++#define PPE_RSS_HASH_MASK_ADDR			0xb4318
++#define PPE_RSS_HASH_MASK_HASH_MASK		GENMASK(20, 0)
++#define PPE_RSS_HASH_MASK_FRAGMENT		BIT(28)
 +
- /* PPE port control configurations for the traffic to the multicast queues. */
- #define PPE_MC_MTU_CTRL_TBL_ADDR		0x60a00
- #define PPE_MC_MTU_CTRL_TBL_ENTRIES		8
-@@ -125,6 +133,36 @@
- #define PPE_MC_MTU_CTRL_TBL_MTU_CMD		GENMASK(15, 14)
- #define PPE_MC_MTU_CTRL_TBL_TX_CNT_EN		BIT(16)
- 
-+/* PPE VSI configurations */
-+#define PPE_VSI_TBL_ADDR			0x63800
-+#define PPE_VSI_TBL_ENTRIES			64
-+#define PPE_VSI_TBL_INC				0x10
-+#define PPE_VSI_W0_MEMBER_PORT_BITMAP		GENMASK(7, 0)
-+#define PPE_VSI_W0_UUC_BITMAP			GENMASK(15, 8)
-+#define PPE_VSI_W0_UMC_BITMAP			GENMASK(23, 16)
-+#define PPE_VSI_W0_BC_BITMAP			GENMASK(31, 24)
-+#define PPE_VSI_W1_NEW_ADDR_LRN_EN		BIT(0)
-+#define PPE_VSI_W1_NEW_ADDR_FWD_CMD		GENMASK(2, 1)
-+#define PPE_VSI_W1_STATION_MOVE_LRN_EN		BIT(3)
-+#define PPE_VSI_W1_STATION_MOVE_FWD_CMD		GENMASK(5, 4)
++#define PPE_RSS_HASH_SEED_ADDR			0xb431c
++#define PPE_RSS_HASH_SEED_VAL			GENMASK(31, 0)
 +
-+#define PPE_VSI_SET_MEMBER_PORT_BITMAP(tbl_cfg, value)		\
-+	FIELD_MODIFY(PPE_VSI_W0_MEMBER_PORT_BITMAP, tbl_cfg, value)
-+#define PPE_VSI_SET_UUC_BITMAP(tbl_cfg, value)			\
-+	FIELD_MODIFY(PPE_VSI_W0_UUC_BITMAP, tbl_cfg, value)
-+#define PPE_VSI_SET_UMC_BITMAP(tbl_cfg, value)			\
-+	FIELD_MODIFY(PPE_VSI_W0_UMC_BITMAP, tbl_cfg, value)
-+#define PPE_VSI_SET_BC_BITMAP(tbl_cfg, value)			\
-+	FIELD_MODIFY(PPE_VSI_W0_BC_BITMAP, tbl_cfg, value)
-+#define PPE_VSI_SET_NEW_ADDR_LRN_EN(tbl_cfg, value)		\
-+	FIELD_MODIFY(PPE_VSI_W1_NEW_ADDR_LRN_EN, (tbl_cfg) + 0x1, value)
-+#define PPE_VSI_SET_NEW_ADDR_FWD_CMD(tbl_cfg, value)		\
-+	FIELD_MODIFY(PPE_VSI_W1_NEW_ADDR_FWD_CMD, (tbl_cfg) + 0x1, value)
-+#define PPE_VSI_SET_STATION_MOVE_LRN_EN(tbl_cfg, value)		\
-+	FIELD_MODIFY(PPE_VSI_W1_STATION_MOVE_LRN_EN, (tbl_cfg) + 0x1, value)
-+#define PPE_VSI_SET_STATION_MOVE_FWD_CMD(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_VSI_W1_STATION_MOVE_FWD_CMD, (tbl_cfg) + 0x1, value)
++#define PPE_RSS_HASH_MIX_ADDR			0xb4320
++#define PPE_RSS_HASH_MIX_ENTRIES		11
++#define PPE_RSS_HASH_MIX_INC			4
++#define PPE_RSS_HASH_MIX_VAL			GENMASK(4, 0)
 +
- /* PPE port control configurations for the traffic to the unicast queues. */
- #define PPE_MRU_MTU_CTRL_TBL_ADDR		0x65000
- #define PPE_MRU_MTU_CTRL_TBL_ENTRIES		256
-@@ -163,6 +201,18 @@
- #define PPE_IN_L2_SERVICE_TBL_RX_CNT_EN		BIT(30)
- #define PPE_IN_L2_SERVICE_TBL_TX_CNT_EN		BIT(31)
- 
-+/* L2 Port configurations */
-+#define PPE_L2_VP_PORT_TBL_ADDR			0x98000
-+#define PPE_L2_VP_PORT_TBL_ENTRIES		256
-+#define PPE_L2_VP_PORT_TBL_INC			0x10
-+#define PPE_L2_VP_PORT_W0_INVALID_VSI_FWD_EN	BIT(0)
-+#define PPE_L2_VP_PORT_W0_DST_INFO		GENMASK(9, 2)
++#define PPE_RSS_HASH_FIN_ADDR			0xb4350
++#define PPE_RSS_HASH_FIN_ENTRIES		5
++#define PPE_RSS_HASH_FIN_INC			4
++#define PPE_RSS_HASH_FIN_INNER			GENMASK(4, 0)
++#define PPE_RSS_HASH_FIN_OUTER			GENMASK(9, 5)
 +
-+#define PPE_L2_PORT_SET_INVALID_VSI_FWD_EN(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_L2_VP_PORT_W0_INVALID_VSI_FWD_EN, tbl_cfg, value)
-+#define PPE_L2_PORT_SET_DST_INFO(tbl_cfg, value)		\
-+	FIELD_MODIFY(PPE_L2_VP_PORT_W0_DST_INFO, tbl_cfg, value)
++#define PPE_RSS_HASH_MASK_IPV4_ADDR		0xb4380
++#define PPE_RSS_HASH_MASK_IPV4_HASH_MASK	GENMASK(20, 0)
++#define PPE_RSS_HASH_MASK_IPV4_FRAGMENT		BIT(28)
 +
- /* PPE service code configuration for the tunnel packet. */
- #define PPE_TL_SERVICE_TBL_ADDR			0x306000
- #define PPE_TL_SERVICE_TBL_ENTRIES		256
++#define PPE_RSS_HASH_SEED_IPV4_ADDR		0xb4384
++#define PPE_RSS_HASH_SEED_IPV4_VAL		GENMASK(31, 0)
++
++#define PPE_RSS_HASH_MIX_IPV4_ADDR		0xb4390
++#define PPE_RSS_HASH_MIX_IPV4_ENTRIES		5
++#define PPE_RSS_HASH_MIX_IPV4_INC		4
++#define PPE_RSS_HASH_MIX_IPV4_VAL		GENMASK(4, 0)
++
++#define PPE_RSS_HASH_FIN_IPV4_ADDR		0xb43b0
++#define PPE_RSS_HASH_FIN_IPV4_ENTRIES		5
++#define PPE_RSS_HASH_FIN_IPV4_INC		4
++#define PPE_RSS_HASH_FIN_IPV4_INNER		GENMASK(4, 0)
++#define PPE_RSS_HASH_FIN_IPV4_OUTER		GENMASK(9, 5)
++
+ #define PPE_BM_SCH_CFG_TBL_ADDR			0xc000
+ #define PPE_BM_SCH_CFG_TBL_ENTRIES		128
+ #define PPE_BM_SCH_CFG_TBL_INC			0x10
 
 -- 
 2.34.1
