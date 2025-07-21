@@ -1,150 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E424502F;
-	Mon, 21 Jul 2025 12:48:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99432B9A8;
+	Mon, 21 Jul 2025 18:18:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753102089; cv=none; b=E8jZoPuVMg3Fp8eB1JExRdlxpUXTxuyaHxIVIDqfiW1CnTqRG7QkKUnTN7AwmtWQTfvIh3DHlGy0G/ojCya/Yc2/lTCjfQgahjwWT41RMTZNNiR5xC9xuOpyFcKRS4dnHEf72GjmTsfDQcK6QtLQCxnW1/FEfqH3Ns72O2GwfWc=
+	t=1753121897; cv=none; b=trSL6WcnvPFkgjkOChAj/EAVrvJyS2uHSDs5gohb0Mev51gSqkvHKKTFWZMf+/sp9gsWKCyOOBbZcAIFwlrUwwoluDNTYkPj6IUAJiire2YHwxfPuUv1cYsBq0WjpSYBEyjnFWT1xPj42wT0aDTQF4C5Wv6qz21sfhr2rnRqhX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753102089; c=relaxed/simple;
-	bh=fhUrUAac/iSii6E8bCY5/2OzAP/25KtTiniEKeJQXGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PdSKdNjtBboMgd832HDbP+uXPaRLqk5gH43+jq8vlM1Hc4dWSbJ50xkdj0WNZbdnrejhlZFh0alyVYXwTE1HxqaXdlipy/qcX255Zo/Sd8XhRxZIm5OMID6J0an5xZ63VZTx10Wb++nILTSxyC0qtE01UAmwtUiiRLoJ/+c1UNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8evXuR+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753121897; c=relaxed/simple;
+	bh=sTdqdr+or0m6zoDwN5ql7A5qIHEg53jj7f+Jo1+i0tQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sq++f5qhXVd+eI2QEY+o3xcwIYQIqRQ9UUfI59Nc1o4yXg69t79AeA31Luv5rMn46Jk23zBQfBaG+Rv7aikHt2/lz0gr8jY7k1p3RRaF5HwTZ9l3eidcUIy+qpsNg0950AGPnLbqEHnda9AhP2gTspf+o6ng5A6nUu2m5wWLOYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PVb/Z0fq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8evXuR+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2550C4CEED;
-	Mon, 21 Jul 2025 12:47:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PVb/Z0fq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F6EAC4CEED;
+	Mon, 21 Jul 2025 18:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753102088;
-	bh=fhUrUAac/iSii6E8bCY5/2OzAP/25KtTiniEKeJQXGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R8evXuR+wAan3GKqOPc31OKb0HXwT1fcr9RAvjn3iXq9AafrC9dr+uhqKKHXhydc/
-	 ommMgMhlPSa10h8tXea70KugAvoZCogNM+Xt21kS9UmsttjWDnOELNHjux+Ju59MNY
-	 /URVoorMncYyCzvX9VeofQFk7WldoN/Ri5qk6rB1XFXfi+hA14lKHW1R2sRPlxfo/E
-	 LGLDW2D8KsMU/Gla3tq/bXrtgsgK9NPEPhMAYMtEgjB4rEKVqgNW9ZLANwHmFPzbv2
-	 KyzNMpjT5XzFw+NFZx3vex8f/0R9leYdi3PuQeMO27/gBBOFaJYqsNHIsKj7h+b3pJ
-	 6c41KggZR4CKg==
-Date: Mon, 21 Jul 2025 13:47:55 +0100
-From: Will Deacon <will@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Michal Wilczynski <michal.wilczynski@intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Usama Arif <usama.arif@bytedance.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-mm@kvack.org, Ingo Molnar <mingo@kernel.org>,
+	s=k20201202; t=1753121896;
+	bh=sTdqdr+or0m6zoDwN5ql7A5qIHEg53jj7f+Jo1+i0tQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PVb/Z0fqiTP33p0axgayNekk9/96JzApdWTEFGdiBnrRW4dyNlqWvU2RGYDLjVVMi
+	 09pSevJS1z8o++kjGjCZE9Fvw3RkWVURic9gKcm9Ppc8PvXtAxmUAavJjx27meYIcP
+	 qclpxzKH2qR0hWb/C1L4QJE21CEN5IqFWda3QIUCx1MHdN4oG6SXC9ZhR5R1ynkpG2
+	 D+gFNhusOdxZE9eod1F0j6ymeCi2U2UnpPmU1tR7MaoNUMsiGM+3bETqDw1DaDP4Sd
+	 m5HQzC1lsezHPIZxuE5t5++OX4ByRC5+r2pESLmp8PZ0hXFpcc3mvwo1kzeN5ZQpSQ
+	 U22dPv9LZ7YwQ==
+From: Kees Cook <kees@kernel.org>
+To: Johannes Berg <johannes.berg@intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Chung-Hsien Hsu <chung-hsien.hsu@infineon.com>,
+	Chi-hsien Lin <chi-hsien.lin@infineon.com>,
+	James Prestwood <prestwoj@gmail.com>,
+	Arend van Spriel <arend.vanspriel@broadcom.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
-Message-ID: <aH42--h-ARsvX5Wk@willie-the-truck>
-References: <20250717231756.make.423-kees@kernel.org>
- <20250717232519.2984886-4-kees@kernel.org>
- <aHoHkDvvp4AHIzU1@kernel.org>
- <202507181541.B8CFAC7E@keescook>
- <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
+	Ting-Ying Li <tingying.li@cypress.com>,
+	linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] wifi: brcmfmac: cyw: Fix __counted_by to be LE variant
+Date: Mon, 21 Jul 2025 11:18:14 -0700
+Message-Id: <20250721181810.work.575-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1785; i=kees@kernel.org; h=from:subject:message-id; bh=sTdqdr+or0m6zoDwN5ql7A5qIHEg53jj7f+Jo1+i0tQ=; b=owGbwMvMwCVmps19z/KJym7G02pJDBl1LWmP9/UtS5wVc+Bl7Ay5jqP37/hnHuEvZp0T8qpr5 /OQ+c0HOkpZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACZSP42RoX/elrnSxRPKrFes 85ct3rslY0rL/xXdpm97b248MnG5TSkjw/U0zuUfUrfvCFyccvnVBV7jUhbXw8ef9ERefiG72Py JNRsA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jul 20, 2025 at 04:10:01PM +1000, Ard Biesheuvel wrote:
-> On Sat, 19 Jul 2025 at 08:51, Kees Cook <kees@kernel.org> wrote:
-> > On Fri, Jul 18, 2025 at 11:36:32AM +0300, Mike Rapoport wrote:
-> > > On Thu, Jul 17, 2025 at 04:25:09PM -0700, Kees Cook wrote:
-> > > > When KCOV is enabled all functions get instrumented, unless the
-> > > > __no_sanitize_coverage attribute is used. To prepare for
-> > > > __no_sanitize_coverage being applied to __init functions, we have to
-> > > > handle differences in how GCC's inline optimizations get resolved. For
-> > > > x86 this means forcing several functions to be inline with
-> > > > __always_inline.
-> > > >
-> > > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > >
-> > > ...
-> > >
-> > > > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> > > > index bb19a2534224..b96746376e17 100644
-> > > > --- a/include/linux/memblock.h
-> > > > +++ b/include/linux/memblock.h
-> > > > @@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
-> > > >                                       NUMA_NO_NODE);
-> > > >  }
-> > > >
-> > > > -static inline void *memblock_alloc_from(phys_addr_t size,
-> > > > +static __always_inline void *memblock_alloc_from(phys_addr_t size,
-> > > >                                             phys_addr_t align,
-> > > >                                             phys_addr_t min_addr)
-> > >
-> > > I'm curious why from all memblock_alloc* wrappers this is the only one that
-> > > needs to be __always_inline?
-> >
-> > Thread-merge[1], adding Will Deacon, who was kind of asking the same
-> > question.
-> >
-> > Based on what I can tell, GCC has kind of fragile inlining logic, in the
-> > sense that it can change whether or not it inlines something based on
-> > optimizations. It looks like the kcov instrumentation being added (or in
-> > this case, removed) from a function changes the optimization results,
-> > and some functions marked "inline" are _not_ inlined. In that case, we end up
-> > with __init code calling a function not marked __init, and we get the
-> > build warnings I'm trying to eliminate.
+In brcmf_cyw_mgmt_tx() the "len" counter of the struct
+brcmf_mf_params_le::data flexible array is stored as little-endian via
+cpu_to_le16() so the __counted_by_le() variant must be used:
 
-Got it, thanks for the explanation!
+	struct brcmf_mf_params_le *mf_params;
+	...
+	mf_params_len = offsetof(struct brcmf_mf_params_le, data) +
+			(len - DOT11_MGMT_HDR_LEN);
+	mf_params = kzalloc(mf_params_len, GFP_KERNEL);
+	...
+        mf_params->len = cpu_to_le16(len - DOT11_MGMT_HDR_LEN);
 
-> > So, to Will's comment, yes, the problem is somewhat fragile (though
-> > using either __always_inline or __init will deterministically solve it).
-> > We've tripped over this before with GCC and the solution has usually
-> > been to just use __always_inline and move on.
-> >
-> 
-> Given that 'inline' is already a macro in the kernel, could we just
-> add __attribute__((__always_inline__)) to it when KCOV is enabled?
+Fixes: 66f909308a7c ("wifi: brcmfmac: cyw: support external SAE authentication in station mode")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Chung-Hsien Hsu <chung-hsien.hsu@infineon.com>
+Cc: Chi-hsien Lin <chi-hsien.lin@infineon.com>
+Cc: James Prestwood <prestwoj@gmail.com>
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Ting-Ying Li <tingying.li@cypress.com>
+Cc: <linux-wireless@vger.kernel.org>
+Cc: <brcm80211@lists.linux.dev>
+Cc: <brcm80211-dev-list.pdl@broadcom.com>
+Cc: <linux-hardening@vger.kernel.org>
+---
+ .../net/wireless/broadcom/brcm80211/brcmfmac/cyw/fwil_types.h   | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-That sounds like a more robust approach and, by the sounds of it, we
-could predicate it on GCC too. That would also provide a neat place for
-a comment describing the problem.
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cyw/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cyw/fwil_types.h
+index 08c69142495a..669564382e32 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cyw/fwil_types.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cyw/fwil_types.h
+@@ -80,7 +80,7 @@ struct brcmf_mf_params_le {
+ 	u8 da[ETH_ALEN];
+ 	u8 bssid[ETH_ALEN];
+ 	__le32 packet_id;
+-	u8 data[] __counted_by(len);
++	u8 data[] __counted_by_le(len);
+ };
+ 
+ #endif /* CYW_FWIL_TYPES_H_ */
+-- 
+2.34.1
 
-Kees, would that work for you?
-
-Will
