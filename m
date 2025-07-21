@@ -1,85 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B0222F16C;
-	Mon, 21 Jul 2025 20:49:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C432C1C32;
+	Mon, 21 Jul 2025 23:16:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753130994; cv=none; b=XcF5tWe03lfzSPFwvh9DS8+1MX74O3iRvJOvF9EbsgSwioqcLgmaPwHtiunOnwHPf16v10FsTUXRoTD+1pCFNZu1G5gAOm4VPlddyagvA2gxIWOWN4II1j2v1s+JpKiHsiE3FnOPOHhSLJE/K4aV6DxWgLYdQkN3FSS6UMnB7Es=
+	t=1753139761; cv=none; b=dPQBxPI8hSX3QSZCu0vTXAOsqA6fxH6Uo7FL2ZW7d8K3798Kacsj65Q5iUv5Ff23FaPJHDbNmALFmTaUexZWeTiTWajXeLjR54hDIPFc/9hm9lt2PFFkUjYGWYmCxhrRfyYi9Sp9PnYYnLHLJ6WUxCH9SxtyCFYk86ZulqoFisM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753130994; c=relaxed/simple;
-	bh=RGpMFousrm9JXr2aga1XoiQZq81gXpkDZQCrU7p8kG4=;
+	s=arc-20240116; t=1753139761; c=relaxed/simple;
+	bh=bg3AErbx3qcaOZTRaXuAqWefd1tvdSCGLoIohkga8gg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J+n0C7+8nLAWgOnQW0vsAOF+FaLhTTplzKC54xFgeQ6Gu6Yfxn82pTzBXT7OIcicQDss77m0fR5TKg4i6AgdpM5k8LR3a1Qvi/HMsV6fjtQoClC2B2Nh+HMcxqviyz4ogdjjtSdxhmiUaMIn2yEw5re21gJzMp9WCXi7VWIa34g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=USwBlGGy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=SQDTF0mlXpwqFo56HY5twafIOnGGuFVe33Dx4wMg3ZO4AxSe+0wGl6ChLO/F3RHr4c7UxGngCn+dBIlTAquoN2prQ0WNXpbpANosN+6oG8SpyhxjlexmHq2QaPbsBhLoCBF4y3UI9ilwm7IVtBPQhbP+86GpEv3LxKPc9BRc/io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=djSFSTjh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="USwBlGGy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 464E6C4CEF4;
-	Mon, 21 Jul 2025 20:49:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djSFSTjh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23171C4CEED;
+	Mon, 21 Jul 2025 23:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753130994;
-	bh=RGpMFousrm9JXr2aga1XoiQZq81gXpkDZQCrU7p8kG4=;
+	s=k20201202; t=1753139761;
+	bh=bg3AErbx3qcaOZTRaXuAqWefd1tvdSCGLoIohkga8gg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=USwBlGGycUbYKwRlz8H1PUciShFkTuZXfVpLM5MtEpyQ2A97ZmBOIYa0cGOwBplAM
-	 P/UloDehuLPGSIqgqNRVeLye3ZQJwvjrIvND/8XbCEE/heb6TuWjlHXRTmnHic7i+/
-	 ufyzJfA+Tj1dnxW4WNlS2ijwfnLETqFwratBaRXG4lRw2vboY071pv4Rgj4gG0uneL
-	 vJADYIT6M2Sug0BnFp+wdbmKStgy/2g++iMRLOa45PAedgg8EJByYxkT5u6rz9xzId
-	 7//OhF3fMircm2SYJfkHca/mWkXbMTQEr5KB9GUZB1xfjt2aV3YLzdWsmNabD0jVLY
-	 gzg6qfQMQz07w==
-Date: Mon, 21 Jul 2025 13:49:53 -0700
-From: Kees Cook <kees@kernel.org>
-To: Will Deacon <will@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Mike Rapoport <rppt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Michal Wilczynski <michal.wilczynski@intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Usama Arif <usama.arif@bytedance.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-mm@kvack.org, Ingo Molnar <mingo@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
-Message-ID: <202507211349.D93679FB25@keescook>
-References: <20250717231756.make.423-kees@kernel.org>
- <20250717232519.2984886-4-kees@kernel.org>
- <aHoHkDvvp4AHIzU1@kernel.org>
- <202507181541.B8CFAC7E@keescook>
- <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
- <aH42--h-ARsvX5Wk@willie-the-truck>
- <202507211311.8DAC4C7@keescook>
+	b=djSFSTjh8tDbGf+Ye7KqrTVIZCJJKzIHHYgorI6EwsGZXSOTcykFOqMt2a1YIS7Io
+	 51GanYR3nPkugd8tl/W1eqbLnn+iJDiGPZZWZD485UlZpSeXHGj3wsILs+IBtutB8J
+	 hKaBlJu6P5v00x9/Po9GH2yzWlqXwUrcWNr7pXf/zZfx0fFp9h3uJfhu9z13nCEgB/
+	 uKqvbcJnlZnHA4cz+D+AurdAIAv4ofbnm4K7CHvhR2/EPAHXs+38aPAVrniEzLPkXk
+	 gDaHWprE2O/IclyCfqRjb8XsNaRvSlzNgCUKqVk9kSop21OuN/lYkl7+AJGZO7EBPa
+	 zwt6tUV0d429A==
+Date: Mon, 21 Jul 2025 16:15:59 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: kernel test robot <lkp@intel.com>,
+	Ext4 Developers List <linux-ext4@vger.kernel.org>,
+	oe-kbuild-all@lists.linux.dev, linux-hardening@vger.kernel.org,
+	ethan@ethancedwards.com
+Subject: Re: [PATCH 3/3] ext4: refactor the inline directory conversion and
+ new directory codepaths
+Message-ID: <20250721231559.GA85006@quark>
+References: <20250712181249.434530-3-tytso@mit.edu>
+ <202507130429.rPIzofCD-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -88,81 +46,18 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202507211311.8DAC4C7@keescook>
+In-Reply-To: <202507130429.rPIzofCD-lkp@intel.com>
 
-On Mon, Jul 21, 2025 at 01:14:36PM -0700, Kees Cook wrote:
-> On Mon, Jul 21, 2025 at 01:47:55PM +0100, Will Deacon wrote:
-> > On Sun, Jul 20, 2025 at 04:10:01PM +1000, Ard Biesheuvel wrote:
-> > > On Sat, 19 Jul 2025 at 08:51, Kees Cook <kees@kernel.org> wrote:
-> > > > On Fri, Jul 18, 2025 at 11:36:32AM +0300, Mike Rapoport wrote:
-> > > > > On Thu, Jul 17, 2025 at 04:25:09PM -0700, Kees Cook wrote:
-> > > > > > When KCOV is enabled all functions get instrumented, unless the
-> > > > > > __no_sanitize_coverage attribute is used. To prepare for
-> > > > > > __no_sanitize_coverage being applied to __init functions, we have to
-> > > > > > handle differences in how GCC's inline optimizations get resolved. For
-> > > > > > x86 this means forcing several functions to be inline with
-> > > > > > __always_inline.
-> > > > > >
-> > > > > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > > > >
-> > > > > ...
-> > > > >
-> > > > > > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> > > > > > index bb19a2534224..b96746376e17 100644
-> > > > > > --- a/include/linux/memblock.h
-> > > > > > +++ b/include/linux/memblock.h
-> > > > > > @@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
-> > > > > >                                       NUMA_NO_NODE);
-> > > > > >  }
-> > > > > >
-> > > > > > -static inline void *memblock_alloc_from(phys_addr_t size,
-> > > > > > +static __always_inline void *memblock_alloc_from(phys_addr_t size,
-> > > > > >                                             phys_addr_t align,
-> > > > > >                                             phys_addr_t min_addr)
-> > > > >
-> > > > > I'm curious why from all memblock_alloc* wrappers this is the only one that
-> > > > > needs to be __always_inline?
-> > > >
-> > > > Thread-merge[1], adding Will Deacon, who was kind of asking the same
-> > > > question.
-> > > >
-> > > > Based on what I can tell, GCC has kind of fragile inlining logic, in the
-> > > > sense that it can change whether or not it inlines something based on
-> > > > optimizations. It looks like the kcov instrumentation being added (or in
-> > > > this case, removed) from a function changes the optimization results,
-> > > > and some functions marked "inline" are _not_ inlined. In that case, we end up
-> > > > with __init code calling a function not marked __init, and we get the
-> > > > build warnings I'm trying to eliminate.
-> > 
-> > Got it, thanks for the explanation!
-> > 
-> > > > So, to Will's comment, yes, the problem is somewhat fragile (though
-> > > > using either __always_inline or __init will deterministically solve it).
-> > > > We've tripped over this before with GCC and the solution has usually
-> > > > been to just use __always_inline and move on.
-> > > >
-> > > 
-> > > Given that 'inline' is already a macro in the kernel, could we just
-> > > add __attribute__((__always_inline__)) to it when KCOV is enabled?
-> > 
-> > That sounds like a more robust approach and, by the sounds of it, we
-> > could predicate it on GCC too. That would also provide a neat place for
-> > a comment describing the problem.
-> > 
-> > Kees, would that work for you?
+Hi Ted,
+
+On Sun, Jul 13, 2025 at 05:12:55AM +0800, kernel test robot wrote:
+> All warnings (new ones prefixed by >>):
 > 
-> That seems like an extremely large hammer for this problem, IMO. It
-> feels like it could cause new strange corner cases. I'd much prefer the
-> small fixes I've currently got since it keeps it focused. KCOV is
-> already enabled for "allmodconfig", so any new instances would be found
-> very quickly, etc. (And GCC's fragility in this regard has already been
-> exposed to these cases -- it's just that I changed one of the
-> combinations of __init vs inline vs instrumentation.
-> 
-> I could give it a try, if you really prefer the big hammer approach...
+>    fs/ext4/namei.c: In function 'ext4_init_new_dir':
+> >> fs/ext4/namei.c:2968:34: warning: variable 'de' set but not used [-Wunused-but-set-variable]
+>     2968 |         struct ext4_dir_entry_2 *de;
+>          |                                  ^~
 
-I gave it a try -- it fails spectacularly. ;) Let's stick to my small
-fixes instead?
+This warning is present in ext4/dev now.
 
--- 
-Kees Cook
+- Eric
