@@ -1,97 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EB4280A56;
-	Tue, 22 Jul 2025 17:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4106919D082;
+	Tue, 22 Jul 2025 17:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753204719; cv=none; b=HNkgBkWVAvh7lAJ9whPNXUW4DyUI2BPrf1oVIA5bodeZltNDfHp5dnTqDtsK+hupOR0Jr6ZngPfT4XsA0SZPY7y/eto5kBkiBadVrCrcEfTJHCz8KDLBzimi38LUl1CHIDrnb4N0/2AgEJ6sNQmOrMk5FuzrcVEG7qU4pq1Bl6U=
+	t=1753206077; cv=none; b=PYT3IQUIb5HsJ2MRY7Rau6WobCyszjRnZbCaDskopBXtawzKhvARKLPwxyAgcJqtYZj4hRkwfxsNXNhWslqpcRkTyQkYB7k+kZIs0XhNE/TBhPrxFF+waOfYkeN8SWcfJfWPZ11D+MBVpGDKQ0sXWopQsCyojz0kJk9+9+IvL9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753204719; c=relaxed/simple;
-	bh=XaHeIrVkz+npBlw1lyf0qJblIEHGZQRxwothP5DgXpo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oy+mxgx2Er2UyrYhFhX2qxUaQbFQAde+qtyAQIK6/Cw2pZ4ws8Ing86VPtGdQ9lvNvvhXF74QNaeXOSKzbjD0FZ9gcHBw4akIySWnKDrFRKageM3O5kfluN3ZyhLoCTr8SN4L7g9e2ORcxAK5uuQGUlNVDEwjDUnYb9UaztWczE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tj5xUgp9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753206077; c=relaxed/simple;
+	bh=skUXd2YpZcbtREi+ucT+2NZdJ3FgLZdJLotsihlVZ5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iytS8x2yR5Ew8Fe9iXUQsG2UdSIRnWz7dGyRXRVgjdLEQnEdRpPKuVSlTY/KWLLTfTOEnXxoTZtniMkQvQwPhdal7VIAO0okkZeblMQxsn3oytIIez1pr5W4sNbHgjK0l6V46I0WBWPMWpJN2/3VUUXPG5zWqxwScvU/VdFAb7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=bSgLNiBV; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tj5xUgp9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C418C4CEF7;
-	Tue, 22 Jul 2025 17:18:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753204716;
-	bh=XaHeIrVkz+npBlw1lyf0qJblIEHGZQRxwothP5DgXpo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tj5xUgp9KQ+VF0Wd1AYYCmGk4/nQ5DWiP7ILBiUrnvuGZjbaCieFkxmcWQcAuZPXD
-	 dir1N8q2XCnfd8GlHFMqlZcDYQBbbVMKqmmOrVTY7I4ViQBuCqn4BPkcrniRSML6tV
-	 /g5eK40lPYYPwql2757wx4M1U4g845dnVfANTVay4IXjc0bJhHQAIwzPl5d1xFEsGs
-	 S4Mhe0iR54QBhh1/3jlLaQLT5TgOQo0fcoZtPdIC2awlU6gB1J5cGQr8N0B201fk0U
-	 hxqpPPPqorj2P1gPrvA0yjIu0smr9SyuZTpO6tlzjoQRuSnv/6PCkh4KDyClyD+Bic
-	 HDAmZKUC9NTqw==
-From: Kees Cook <kees@kernel.org>
-To: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc: Kees Cook <kees@kernel.org>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bSgLNiBV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Pgop0txGfgW9l2DjzVuSEIR9yTyTyHdsNlzGiM7qYPo=; b=bSgLNiBV49l/s1yUKU36xZZRw5
+	yKcx50prGOU/c13C+7MlLpp48sGhntPPIcsjIh+yDt7CePH+MtDSkLpTIQW5JLXI+4OQ+XCgLorj5
+	Yq3Jg4FzRMCm2siGT5SObmqF2EjWZI2+ifCodMvoB328VzjoGg6J+YC8bmGChDIFf298=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1ueGz7-002UfS-Ri; Tue, 22 Jul 2025 19:41:01 +0200
+Date: Tue, 22 Jul 2025 19:41:01 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Kees Cook <kees@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	wireguard@lists.zx2c4.com,
-	netdev@vger.kernel.org,
-	Xin Long <lucien.xin@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-sctp@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH net-next 2/3] wireguard: peer: Replace sockaddr with sockaddr_inet
-Date: Tue, 22 Jul 2025 10:18:32 -0700
-Message-Id: <20250722171836.1078436-2-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250722171528.work.209-kees@kernel.org>
-References: <20250722171528.work.209-kees@kernel.org>
+Subject: Re: [PATCH net-next] net: Document sockaddr safety in ARP and
+ routing UAPI structures
+Message-ID: <7577b0f5-2b43-4e5d-89fe-7129c32acb47@lunn.ch>
+References: <20250722165836.work.418-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1153; i=kees@kernel.org; h=from:subject; bh=XaHeIrVkz+npBlw1lyf0qJblIEHGZQRxwothP5DgXpo=; b=owGbwMvMwCVmps19z/KJym7G02pJDBn1x1+waS/6eaXHauGh7Jlr3071DrVkMA9uNtHtVvsr8 3Aq55mPHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABNxSWL4n+DN9V/bobTOfGpT abnPvEvdApF7tLTXJr22/XDoid3WGIY/nJcY52twtuzIOPChRDHhGxfX2rB7v5z+697k7dTheML ABQA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250722165836.work.418-kees@kernel.org>
 
-As part of the removal of the variably-sized sockaddr for kernel
-internals, replace struct sockaddr with sockaddr_inet in the endpoint
-union.
+On Tue, Jul 22, 2025 at 09:58:37AM -0700, Kees Cook wrote:
+> Add documentation clarifying that ARP and routing UAPI structures are
+> constrained to IPv4-only usage, making them safe for the coming fixed-size
+> sockaddr conversion (with the 14-byte struct sockaddr::sa_data). These
+> are fine as-is, but their use was non-obvious to me, so I figured they
+> could use a little more documentation:
+> 
+> - struct arpreq: ARP protocol is IPv4-only by design
+> - struct rtentry: Legacy IPv4 routing API, IPv6 uses different structures
 
-No binary changes; the union size remains unchanged due to sockaddr_inet
-matching the size of sockaddr_in6.
+I'm not sure this second statement is strictly true:
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: <wireguard@lists.zx2c4.com>
-Cc: <netdev@vger.kernel.org>
----
- drivers/net/wireguard/peer.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://elixir.bootlin.com/linux/v6.15.7/source/net/appletalk/ddp.c#L918
+atrtr_ioctl() ->
+  atrtr_create()->
+	struct sockaddr_at *ta = (struct sockaddr_at *)&r->rt_dst;
 
-diff --git a/drivers/net/wireguard/peer.h b/drivers/net/wireguard/peer.h
-index 76e4d3128ad4..718fb42bdac7 100644
---- a/drivers/net/wireguard/peer.h
-+++ b/drivers/net/wireguard/peer.h
-@@ -20,7 +20,7 @@ struct wg_device;
- 
- struct endpoint {
- 	union {
--		struct sockaddr addr;
-+		struct sockaddr_inet addr;     /* Large enough for both address families */
- 		struct sockaddr_in addr4;
- 		struct sockaddr_in6 addr6;
- 	};
--- 
-2.34.1
+where:
 
+struct sockaddr_at {
+	__kernel_sa_family_t sat_family;
+	__u8		  sat_port;
+	struct atalk_addr sat_addr;
+	char		  sat_zero[8];
+};
+
+This is not an IPv4 address.
+
+Maybe this does fit with a 14 byte sockaddr::sa_data, so it is not an
+issue, but the comment and commit message should be expanded to
+explain this. And i only looked at the first SIOCADDRT i came across,
+there are many other protocols using this ioctl.
+
+	Andrew
