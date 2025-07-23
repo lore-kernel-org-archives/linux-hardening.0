@@ -1,130 +1,403 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74172248F72;
-	Wed, 23 Jul 2025 03:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E896882C60;
+	Wed, 23 Jul 2025 05:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753242188; cv=none; b=rGbGLvXc5xAOaWILYfLw/DxZIglkylUiUnbtCZQGZq7Jbyc0ZQ+VhDrmFZ+nL1Jso2RgmpD7Crr5Eg+zwR1MYBm8rgYdEaQzUG0Du92mvNW2TX8pJqqzp491HKjhBDzIe61oUaCmAIU700hupgFMllDOTNusloigvK7Ktf226Eg=
+	t=1753246880; cv=none; b=VkBCzLKe30Lgd3w7svoJmYFpdBkPWck60EqmSinSGEHYsl+ikuFvgrqg+WcM6GNgqWlFWlm2aS8Ivp9qB2hGMyM69Ody0cYy0ghPjK6AqHiU6qUGipQlSnDdrHMjeWQH7GKTkpfWVnMa8OpQmU1d5S35YaNvYXq8O/7JdHxBaQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753242188; c=relaxed/simple;
-	bh=hi/PAdJ6bxER/R9rOhwjyW/uXI7cI32IlUrsv9ex63I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dMTa8LW7Zd1gvamcfSiZWgLSRAabfdvSegSieadZMrnQhmrVDdhCH9D7hw/XtoSF2IOAq46XBm9Tp1Bj0z3wrsPSv94O5l/YS5pMxevVRABC/tjRCOja4HGVGMGKbIE7iDFNHbXo/EiCwc04d3TtTicJQytjrdSNnecHPGzUzwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SF8M5dl8; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753246880; c=relaxed/simple;
+	bh=P1x5PC39rNuVQmhnD6UTsEnFKuJYGigsdtWXPSkXrew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZJ8ulb+a6UhGUbv6NwNWRfxnP4Qt4DDIWdrw2I2BuYuS15RWJxUm3c+9ANQhLw6cYeHbDW+wn7hIm6ylV+ez/zQADkfhCqY+ebFcEJfLcwd+6SuVTBDC+WHZCTfW/sD31s8xbVxxokjiiQLHWe9utUE28XBNHTi1BNRKe63gMVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Gpb7+GTs; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SF8M5dl8"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-235d6de331fso73295285ad.3;
-        Tue, 22 Jul 2025 20:43:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753242187; x=1753846987; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w/eos1Iv+JJoIEFFCBL+Da2J2v0o9eRaLw9+DKJIo1Q=;
-        b=SF8M5dl8xI6+z8cPNRFLYkWLIJr2JRUpewkk7F4ChLLaSMklpm/UB8Kl+lCPJhsQMK
-         J49kSV8Z0hq5rsANWENIZlfWjp6xdBLtLPw2w/KAW7M3hQYxRK+7WdyPr+o6WudFOBOQ
-         lol72DSXq+Ns540GXNwjB7eQOXKM6sbR8+WeT+Rfp8Tj+ioG9S5xY48/twXSb7JsbGMj
-         fvfZ4rTcZnnna59v0rjgO53tcmaRxrFUpoYHmEVQSgfqbVN69lUppWlNnxI9o5OMcltE
-         kRYre+MOL7H1yFauTWh575wztzNwhI6w01t50jKTcrVCqxsFuIEuo/NXwHGCeoTm5QrT
-         Zi/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753242187; x=1753846987;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w/eos1Iv+JJoIEFFCBL+Da2J2v0o9eRaLw9+DKJIo1Q=;
-        b=C6J2GJQWglBJoVq2X+weIVGHL0UliCXuNcrdfh8EbwKh06CGWy4ZCLnEusdc3JZ0FV
-         mYK66HyT+xnIItQ0bjA0OTm8tQWUNZHX5GZhduVxQ3CAkGi0qnLJGgsFf/zGXg8CjaG6
-         Ix3I9Z6oBr/XJ0NVoYy/xJP1Gxkx730JDMTJu4f1/n+P2dj89Gw8tuAuVRdZZFjPFugh
-         FrCtn8iUq6PByOcnhh0D75Hc2qgPDkyYedwYmyAEfX8Vbud4A8pT+ZFVz6/DaulmfiLF
-         oTXCKLwTUKH9ix2XS2JxzjDqJp7Matd/uW7Nl3/ax5wJLyqMBfOcPk2uPC3zCVJRMa4c
-         1qNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyfQuYT3f+QOJ41MAKwpTwKB9uu58q1beNtNOY/Ij85uIvp6aDU873pU7HMr0axkj+mNFpIDNDBuDJct7/hbE=@vger.kernel.org, AJvYcCXJ+TF++Uc+jJtt0JxqpzLojNuO9IqDxQyJVQw//pLkyntjCVcQV+0nh6HMvEHBUK9simRBHk6d/C0Uyfd8@vger.kernel.org, AJvYcCXm9VWopWFWZXie8a7AA6qTOeGyFA2DHkLnW1x7BRkR9WduJ3vuG+i0sSMbE60ZE6I6+Tj7EODTM5gm/fMM1XLK6Pc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9U1PsWGXbEGLcmYMt9Ex+qcoPqysmeGvGSDUjVqX32zYytQ/y
-	kPCAw89BrCpgXJMWxbi+uRTmwKXTjXZrtdyTZWfN9eadDayNEVKugvo5
-X-Gm-Gg: ASbGncuzlJlPtuElVxBld8FG2YcSdpZGid7WPnPJ+rceKu6j2nE9+U1RJdduhbKQP8O
-	6oqFZgzDBCErFt2dD2clxI+6A9duXCaQZcn4hqGdhBDNhQp2v1jy1gjBzqTwZnaEl3KE6z6ncq1
-	j86gih5f0/n/2sYkOAJmzfNDpPZs8sG26e0FBHlmboIgUEajn65HLJxSvnPnpsX8o2rjq8MaXUp
-	suE3iP4MyKxgRghxJXZNIJaQ28G2I/y4gkYbkMYrzBEISWaopgyginTdQrKBODzRfSkFdHOMBgw
-	kei5eDI5MSnWh6Vn2TJ7GqlzNBR8GwYAgLC4U8H2u6qy6AT2uPXLjdiRiIXvAoCNJ73nH/y07q4
-	Z/AGex2oc0khJahpsbprv07DqingfkP+URNqNQYHy+1oF1H/2LmV5S8NimePPthVfv40=
-X-Google-Smtp-Source: AGHT+IFUs+bNPR/ApG847/dcTAVEW96jKv4IioRlAvKP8jVS3JRjCWVIBr79jzQ0RqfNHkVXPiEhNw==
-X-Received: by 2002:a17:903:946:b0:235:27b6:a891 with SMTP id d9443c01a7336-23f981a83c9mr17116365ad.28.1753242186685;
-        Tue, 22 Jul 2025 20:43:06 -0700 (PDT)
-Received: from [172.17.0.2] (125-227-29-20.hinet-ip.hinet.net. [125.227.29.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23e3b6b4d47sm86197605ad.99.2025.07.22.20.43.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Jul 2025 20:43:06 -0700 (PDT)
-From: Leo Wang <leo.jt.wang@gmail.com>
-X-Google-Original-From: Leo Wang <leo.jt.wang@fii-foxconn.com>
-Date: Wed, 23 Jul 2025 11:42:42 +0800
-Subject: [PATCH v9 3/3] ARM: dts: aspeed: clemente: add NCSI3 and NCSI4
- pinctrl nodes
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Gpb7+GTs"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56MMNv3X019487;
+	Wed, 23 Jul 2025 05:01:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zp6NOVqNcRv7MKZS6XFS96TzCj/D0AQD+PebpPJS1dE=; b=Gpb7+GTsKLNs6OVE
+	MYMmvv+tfq0hUxhXMgQjP/KdV5AODLphqVncLXXIY10x3LVrdJii/2UrRIrCE8Ic
+	d5EXGHtwmSqkVy08oy1pCS5sRS++Gmfdf5rLNsgHTy5QzmxJbLFQHBK+brJhFBOK
+	/lsQpJMd+qhjWpyhqHWrhVX8tq9zynAJiKTjUWBfl7KVWpIL+751k1qrIYNaW1xZ
+	KU2rdd6BjWSQtTUUEV4mz1Td3eIwwoMmld1sOSxYhkOGChR6uMQCYA2HuVpqrEjF
+	4btW5HraKIFZIWs656gm0EesLfqnf8KohRn0jcFVNmpiJn9y9N9qT3HvB7kycKB6
+	bowyaQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 481qh6p2xa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Jul 2025 05:01:01 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 56N510Nm008283
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Jul 2025 05:01:00 GMT
+Received: from [10.253.77.44] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 22 Jul
+ 2025 22:00:55 -0700
+Message-ID: <cb3e0c01-1ce6-4651-8b3d-e45ebd7b938a@quicinc.com>
+Date: Wed, 23 Jul 2025 13:00:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v6 01/14] dt-bindings: net: Add PPE for Qualcomm
+ IPQ9574 SoC
+To: Rob Herring <robh@kernel.org>
+CC: Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lei Wei
+	<quic_leiwei@quicinc.com>,
+        Suruchi Agarwal <quic_suruchia@quicinc.com>,
+        Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>
+References: <20250720-qcom_ipq_ppe-v6-0-4ae91c203a5f@quicinc.com>
+ <20250720-qcom_ipq_ppe-v6-1-4ae91c203a5f@quicinc.com>
+ <20250721193545.GA1119033-robh@kernel.org>
+Content-Language: en-US
+From: Luo Jie <quic_luoj@quicinc.com>
+In-Reply-To: <20250721193545.GA1119033-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250723-add-support-for-meta-clemente-bmc-v9-3-b76e7de4d6c8@fii-foxconn.com>
-References: <20250723-add-support-for-meta-clemente-bmc-v9-0-b76e7de4d6c8@fii-foxconn.com>
-In-Reply-To: <20250723-add-support-for-meta-clemente-bmc-v9-0-b76e7de4d6c8@fii-foxconn.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, Kees Cook <kees@kernel.org>, 
- Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- leo.jt.wang@fii-foxconn.com, george.kw.lee@fii-foxconn.com, 
- bruce.jy.hung@fii-foxconn.com, Leo Wang <leo.jt.wang@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1753242171; l=998;
- i=leo.jt.wang@fii-foxconn.com; s=20250618; h=from:subject:message-id;
- bh=hi/PAdJ6bxER/R9rOhwjyW/uXI7cI32IlUrsv9ex63I=;
- b=kihku6zIwBO0LFNgqF1bX/J2ndiQu/2V21i0gTYkTS71k8iN52bF0HnmmT0NL6p8te3NQezO7
- BoSboi3lRPaC1P0FHR6xTZ2l5RtNyQzpo80y8WTx2j+I5p6SpBr0JhM
-X-Developer-Key: i=leo.jt.wang@fii-foxconn.com; a=ed25519;
- pk=x+DKjAtU/ZbbMkkAVdwfZzKpvNUVgiV1sLJbidVIwSQ=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=CZ4I5Krl c=1 sm=1 tr=0 ts=68806c8d cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=gEfo2CItAAAA:8
+ a=COk6AnOGAAAA:8 a=LWk5nEbthusw8WdjMxUA:9 a=QEXdDO2ut3YA:10
+ a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: DMhAUMIZsln-XEztU4hL_gYEIycieGq-
+X-Proofpoint-GUID: DMhAUMIZsln-XEztU4hL_gYEIycieGq-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzIzMDAzOSBTYWx0ZWRfXyx74rlI0ZBf/
+ bNT3clwXQvuDB4NcJsAVV/P1Tkj1ITt1SfZ2sjlKW+mrbmakbA2S4nTkbRGXHfuBc7u8LuV6k79
+ E5wFbW/azO2XByJsC9GvZ6JZCO5ykMQzgNqmc9OoxXWGsuUf8aO//8X8yVSXEspCO8Y35dWvnSx
+ tsMXrMZRM8ZgNdcN41T9flDrVqEfnidkuSL8qVnRtdP6h5T+IWHjzwqpLo6MYePDg7/FYRcweT/
+ dyzKmW//GDqJWkwlbphS1HeJ1dLVSWsdn5cPNRjYY8ChSVlwn5jovm7ZUW2qTV6ilJitH2RieYm
+ 2s8z0Rs3Bm6qbpw9VPyliUBTP7we4CykuCDPEvH1pngx9f6cF1fxkqk8OdTjrGKzbzTQBPOzWW9
+ w1TE5hWQjPeqVOJq/izSi6REErEWuwS3nPXdxTR2ls+/dZ8LpSW1rl/LV5MAcKSRqiCVrTKw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-23_01,2025-07-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 impostorscore=0
+ clxscore=1015 mlxscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
+ bulkscore=0 spamscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507230039
 
-Add pinctrl nodes for NCSI3 and NCSI4 to the AST2600 pinctrl
-description, enabling support for RMII3 and RMII4 interfaces.
 
-Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
----
- arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi b/arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi
-index 289668f051eb4271ac48ae3ce9b82587911548ee..e87c4b58994add33938792f732420ade7ea5c23f 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi
-@@ -412,6 +412,16 @@ pinctrl_mdio4_default: mdio4_default {
- 		groups = "MDIO4";
- 	};
- 
-+	pinctrl_ncsi3_default: ncsi3_default {
-+		function = "RMII3";
-+		groups = "NCSI3";
-+	};
-+
-+	pinctrl_ncsi4_default: ncsi4_default {
-+		function = "RMII4";
-+		groups = "NCSI4";
-+	};
-+
- 	pinctrl_ncts1_default: ncts1_default {
- 		function = "NCTS1";
- 		groups = "NCTS1";
+On 7/22/2025 3:35 AM, Rob Herring wrote:
+> On Sun, Jul 20, 2025 at 06:57:08PM +0800, Luo Jie wrote:
+>> The PPE (packet process engine) hardware block is available in Qualcomm
+>> IPQ chipsets that support PPE architecture, such as IPQ9574. The PPE in
+>> the IPQ9574 SoC includes six ethernet ports (6 GMAC and 6 XGMAC), which
+>> are used to connect with external PHY devices by PCS. It includes an L2
+>> switch function for bridging packets among the 6 ethernet ports and the
+>> CPU port. The CPU port enables packet transfer between the ethernet ports
+>> and the ARM cores in the SoC, using the ethernet DMA.
+>>
+>> The PPE also includes packet processing offload capabilities for various
+>> networking functions such as route and bridge flows, VLANs, different
+>> tunnel protocols and VPN.
+>>
+>> The PPE switch is modeled according to the ethernet switch schema, with
+>> additional properties defined for the switch node for interrupts, clocks,
+>> resets, interconnects and Ethernet DMA. The switch port node is extended
+>> with additional properties for clocks and resets.
+>>
+>> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+>> ---
+>>   .../devicetree/bindings/net/qcom,ipq9574-ppe.yaml  | 529 +++++++++++++++++++++
+>>   1 file changed, 529 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml b/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml
+>> new file mode 100644
+>> index 000000000000..d48169a8ba7c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml
+>> @@ -0,0 +1,529 @@
+>> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/net/qcom,ipq9574-ppe.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm IPQ packet process engine (PPE)
+>> +
+>> +maintainers:
+>> +  - Luo Jie <quic_luoj@quicinc.com>
+>> +  - Lei Wei <quic_leiwei@quicinc.com>
+>> +  - Suruchi Agarwal <quic_suruchia@quicinc.com>
+>> +  - Pavithra R <quic_pavir@quicinc.com>
+>> +
+>> +description: |
+>> +  The Ethernet functionality in the PPE (Packet Process Engine) is comprised
+>> +  of three components, the switch core, port wrapper and Ethernet DMA.
+>> +
+>> +  The Switch core in the IPQ9574 PPE has maximum of 6 front panel ports and
+>> +  two FIFO interfaces. One of the two FIFO interfaces is used for Ethernet
+>> +  port to host CPU communication using Ethernet DMA. The other is used
+>> +  communicating to the EIP engine which is used for IPsec offload. On the
+>> +  IPQ9574, the PPE includes 6 GMAC/XGMACs that can be connected with external
+>> +  Ethernet PHY. Switch core also includes BM (Buffer Management), QM (Queue
+>> +  Management) and SCH (Scheduler) modules for supporting the packet processing.
+>> +
+>> +  The port wrapper provides connections from the 6 GMAC/XGMACS to UNIPHY (PCS)
+>> +  supporting various modes such as SGMII/QSGMII/PSGMII/USXGMII/10G-BASER. There
+>> +  are 3 UNIPHY (PCS) instances supported on the IPQ9574.
+>> +
+>> +  Ethernet DMA is used to transmit and receive packets between the six Ethernet
+>> +  ports and ARM host CPU.
+>> +
+>> +  The follow diagram shows the PPE hardware block along with its connectivity
+>> +  to the external hardware blocks such clock hardware blocks (CMNPLL, GCC,
+>> +  NSS clock controller) and ethernet PCS/PHY blocks. For depicting the PHY
+>> +  connectivity, one 4x1 Gbps PHY (QCA8075) and two 10 GBps PHYs are used as an
+>> +  example.
+>> +
+>> +           +---------+
+>> +           |  48 MHZ |
+>> +           +----+----+
+>> +                |(clock)
+>> +                v
+>> +           +----+----+
+>> +    +------| CMN PLL |
+>> +    |      +----+----+
+>> +    |           |(clock)
+>> +    |           v
+>> +    |      +----+----+           +----+----+  (clock) +----+----+
+>> +    |  +---|  NSSCC  |           |   GCC   |--------->|   MDIO  |
+>> +    |  |   +----+----+           +----+----+          +----+----+
+>> +    |  |        |(clock & reset)      |(clock)
+>> +    |  |        v                     v
+>> +    |  |   +----+---------------------+--+----------+----------+---------+
+>> +    |  |   |       +-----+               |EDMA FIFO |          | EIP FIFO|
+>> +    |  |   |       | SCH |               +----------+          +---------+
+>> +    |  |   |       +-----+                        |              |       |
+>> +    |  |   |  +------+   +------+               +-------------------+    |
+>> +    |  |   |  |  BM  |   |  QM  |  IPQ9574-PPE  |    L2/L3 Process  |    |
+>> +    |  |   |  +------+   +------+               +-------------------+    |
+>> +    |  |   |                                             |               |
+>> +    |  |   | +-------+ +-------+ +-------+ +-------+ +-------+ +-------+ |
+>> +    |  |   | |  MAC0 | |  MAC1 | |  MAC2 | |  MAC3 | | XGMAC4| |XGMAC5 | |
+>> +    |  |   | +---+---+ +---+---+ +---+---+ +---+---+ +---+---+ +---+---+ |
+>> +    |  |   |     |         |         |         |         |         |     |
+>> +    |  |   +-----+---------+---------+---------+---------+---------+-----+
+>> +    |  |         |         |         |         |         |         |
+>> +    |  |     +---+---------+---------+---------+---+ +---+---+ +---+---+
+>> +    +--+---->|                PCS0                 | |  PCS1 | | PCS2  |
+>> +    |(clock) +---+---------+---------+---------+---+ +---+---+ +---+---+
+>> +    |            |         |         |         |         |         |
+>> +    |        +---+---------+---------+---------+---+ +---+---+ +---+---+
+>> +    +------->|             QCA8075 PHY             | | PHY4  | | PHY5  |
+>> +     (clock) +-------------------------------------+ +-------+ +-------+
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,ipq9574-ppe
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: PPE core clock from NSS clock controller
+>> +      - description: PPE APB (Advanced Peripheral Bus) clock from NSS clock controller
+>> +      - description: PPE ingress process engine clock from NSS clock controller
+>> +      - description: PPE BM, QM and scheduler clock from NSS clock controller
+> 
+> Drop 'from NSS clock controller'. That's outside the scope of this
+> binding.
 
--- 
-2.43.0
+Ok, will update.
+
+> 
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: ppe
+>> +      - const: apb
+>> +      - const: ipe
+>> +      - const: btq
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +    description: PPE reset, which is necessary before configuring PPE hardware
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +    description: PPE switch miscellaneous interrupt
+>> +
+>> +  interconnects:
+>> +    items:
+>> +      - description: Clock path leading to PPE switch core function
+>> +      - description: Clock path leading to PPE register access
+>> +      - description: Clock path leading to QoS generation
+>> +      - description: Clock path leading to timeout reference
+>> +      - description: Clock path leading to NSS NOC from memory NOC
+>> +      - description: Clock path leading to memory NOC from NSS NOC
+>> +      - description: Clock path leading to enhanced memory NOC from NSS NOC
+> 
+> Clock path? This should be bus interconnect paths.
+
+Sure, I will use "bus interconnect path" for clarity.
+
+> 
+>> +
+>> +  interconnect-names:
+>> +    items:
+>> +      - const: ppe
+>> +      - const: ppe_cfg
+>> +      - const: qos_gen
+>> +      - const: timeout_ref
+>> +      - const: nssnoc_memnoc
+>> +      - const: memnoc_nssnoc
+>> +      - const: memnoc_nssnoc_1
+>> +
+>> +  ethernet-dma:
+>> +    type: object
+>> +    additionalProperties: false
+>> +    description:
+>> +      EDMA (Ethernet DMA) is used to transmit packets between PPE and ARM
+>> +      host CPU. There are 32 TX descriptor rings, 32 TX completion rings,
+>> +      24 RX descriptor rings and 8 RX fill rings supported.
+>> +
+>> +    properties:
+>> +      clocks:
+>> +        items:
+>> +          - description: EDMA system clock from NSS Clock Controller
+>> +          - description: EDMA APB (Advanced Peripheral Bus) clock from
+>> +              NSS Clock Controller
+>> +
+>> +      clock-names:
+>> +        items:
+>> +          - const: sys
+>> +          - const: apb
+>> +
+>> +      resets:
+>> +        maxItems: 1
+>> +        description: EDMA reset from NSS clock controller
+>> +
+>> +      interrupts:
+>> +        minItems: 65
+>> +        maxItems: 65
+>> +
+>> +      interrupt-names:
+>> +        minItems: 65
+>> +        maxItems: 65
+>> +        description:
+>> +          Interrupts "txcmpl_[0-31]" are the Ethernet DMA TX completion ring interrupts.
+>> +          Interrupts "rxfill_[0-7]" are the Ethernet DMA RX fill ring interrupts.
+>> +          Interrupts "rxdesc_[0-23]" are the Ethernet DMA RX Descriptor ring interrupts.
+>> +          Interrupt "misc" is the Ethernet DMA miscellaneous error interrupt.
+> 
+> items:
+>    oneOf:
+>      - pattern: '^txcmpl_([1-2]?[0-9]|3[01])$'
+>      - pattern: '^rxfill_[0-7]$'
+>      - pattern: '^rxdesc_(1?[0-9]|2[0-3])$'
+>      - const: misc
+> 
+
+Thanks for the suggestion, I will add the constraint.
+
+>> +
+>> +    required:
+>> +      - clocks
+>> +      - clock-names
+>> +      - resets
+>> +      - interrupts
+>> +      - interrupt-names
+>> +
+>> +patternProperties:
+>> +  "^(ethernet-)?ports$":
+> 
+> New binding, does 'ethernet-' part need to be optional? No.
+
+OK, understand. Will update to make 'ethernet-' mandatory.
+
+> 
+>> +    patternProperties:
+>> +      "^ethernet-port@[1-6]+$":
+>> +        type: object
+>> +        unevaluatedProperties: false
+>> +        $ref: ethernet-switch-port.yaml#
+>> +
+>> +        properties:
+>> +          reg:
+>> +            minimum: 1
+>> +            maximum: 6
+>> +            description: PPE Ethernet port ID
+>> +
+>> +          clocks:
+>> +            items:
+>> +              - description: Port MAC clock from NSS clock controller
+>> +              - description: Port RX clock from NSS clock controller
+>> +              - description: Port TX clock from NSS clock controller
+>> +
+>> +          clock-names:
+>> +            items:
+>> +              - const: mac
+>> +              - const: rx
+>> +              - const: tx
+>> +
+>> +          resets:
+>> +            items:
+>> +              - description: Port MAC reset from NSS clock controller
+>> +              - description: Port RX reset from NSS clock controller
+>> +              - description: Port TX reset from NSS clock controller
+>> +
+>> +          reset-names:
+>> +            items:
+>> +              - const: mac
+>> +              - const: rx
+>> +              - const: tx
+>> +
+>> +        required:
+>> +          - reg
+>> +          - clocks
+>> +          - clock-names
+>> +          - resets
+>> +          - reset-names
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +  - resets
+>> +  - interconnects
+>> +  - interconnect-names
+>> +  - ethernet-dma
+>> +
+>> +allOf:
+>> +  - $ref: ethernet-switch.yaml
+>> +
+>> +unevaluatedProperties: false
 
