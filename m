@@ -1,69 +1,69 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DCF148830
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 18:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A6E1FE461
+	for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 18:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753381961; cv=none; b=Uu3M9oxkBFUIZxGcaOUr02CKennsFY7zq7l/6BrdckH1GsnggJBRgD9mvyELFqEDs2Qr37nQC84hmZVSpX9cq8jdtflX/ZUjJDSk5zl9lfLYe2kHPNrtZ9B4ZlwkFeXz8p30ZMd8dHO/F7va1iNS9SxhnUbP8X/N3ulawp7Zkv4=
+	t=1753382087; cv=none; b=B6vw4+5pB7XvzrimTzJ65/Q9zpWQyeShCtZJzpan9PJnJyv/AAoYoLpmIydwcXXMrWpbLkpOWpxfoWRTjJkEqrSUXYB6JjDptn1imRrQl6QbAfML+5tz2J/R+nbYcg/I+GxnY4r8XjJ152kw/PVu6cmXQUHhqDIh850h3tTGirE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753381961; c=relaxed/simple;
-	bh=GmbiL8iYCG1UQmihDFnlY08O2Td3VL/UPhO2brn2dvA=;
+	s=arc-20240116; t=1753382087; c=relaxed/simple;
+	bh=EhYy9s6IyDVXM+dw7SM2pC7TkH7KW3mc/cdVVRI5hxU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cCbDLKOexxMmiHh1LoTucazEokfc+fDa8XjHg9lqbBPY6b1aSUrJqvvJQgeQU71zaJmzoXFPIHKw/JdFT0ZOwEGduVtUAWKzDbYbwlkqWSMzI207d88S6NjmyZO8geBHSvivEsiq8C6TwHdqtlh/kFp8CjuU+SdUEZVWpCOFhSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gtLjUBVK; arc=none smtp.client-ip=209.85.160.49
+	 To:Cc:Content-Type; b=jzLDInWtUDjBwrQmOWJOt456rp+XSVi7Hf4wOZqeXVZpRRY8mv2bkIpwpB/p1Xu0HhJXwiTuikMwuSYlEYLVtUqMvc7TVDKSU/wI3Za2qd69IdQtQNxOkt6BmhOv09fkkvHv1CCbEAkHW9hTJAIveki1JOaEYgjl71ZC2EmX73Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fUEs5UEi; arc=none smtp.client-ip=209.85.210.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gtLjUBVK"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-306cce02908so31950fac.1
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 11:32:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fUEs5UEi"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-73e5487c4d7so50711a34.0
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 11:34:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1753381959; x=1753986759; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1753382084; x=1753986884; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=30rlnSB27npgJWbqBMQFO+7pkMsstYfilIqdkjSj02k=;
-        b=gtLjUBVKUNyhr6hxiQQtTRj4OhnLwITT+75wz9PFroSHtXyNu7PamlIDqOkDB0tYth
-         zIFmC0PThdv+KILnfkDASfFo4PO80DVZGII8M9kEagtr8EwQ727mECuRsmgcUZ0tc3kD
-         h+JNpNK1n+y3QIz9l4ueg0eZrbVtt2cynZosI=
+        bh=1hy19XYLYjogQ/4nZ2jE5q9A8m7TkG/b0NhBVuhbg9g=;
+        b=fUEs5UEiBJAJ6FriDLb1FHnA/LmsjzJZmod3WMVT0CTHqFlW6G9JuVUS30mW0O8pPl
+         +MNmrVSBCg+vr8eUA9qfmhaivCom84k6/Ag2AYtReM3dRFIVREYo87DhGi6GFhTkdqUb
+         yEwTYGWjxVxGD24alOl3lBGT4ucyUUHz1mQOk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753381959; x=1753986759;
+        d=1e100.net; s=20230601; t=1753382084; x=1753986884;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=30rlnSB27npgJWbqBMQFO+7pkMsstYfilIqdkjSj02k=;
-        b=biAkXyNtN7GSk7TNYlC2D3NYl/7ffIsXKcSHBgStEKYVshARn878cGZcInNnO+aF6J
-         XRV8yIYzJf1j9iB8r9nldirZB2yKEV/FBoCr4B5QX19lQBiEVvsWg05yZzphljhX5zpD
-         LtghhZK17ZuieYGrUpFqDV2F5rshdoAW9xUt7K8liS8x3CNwg4Aco1WGPZYGr3fdK+mU
-         AF9Obxub9upOByrXYbu30j2aE7t8ZZphe/LXS3CYmI+4TQCc5SxIUU4Jc1EukM8kTh/C
-         O2Bqg63wkZE+T7fVhbOR8BwpnbK1TVYOWlXTxYDsqvaLAs1YYLeiZyI0W+2CnPODIZVE
-         DTfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdljtFYyw6sLlMO4Gxy2zC4OH/Q4JXNGh0EAExQMwS4CbYEqkQ/dmpDMsq7Ly6HR7+otjsmnnF9hK3+S6m/44=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCAcd0Z3/ZVA7EhirkClxZXPSuYevp86wkIjxmB4WqpF7bWtVh
-	wlzyMJUuBzXCWaPnIxLG+IuQyoPQGmTPbSfLB8mikRVnt1Ph1RDVI70vSoN4U7iPw21/WfeCV7O
-	KOBGS0vunu/RLHRBp2NyCyoMIACu3VyZU+7NIWICJ
-X-Gm-Gg: ASbGncsT6tZ3HTHBG9fYwpB8hIbo2gzZkUz4JkYYDlop8MT8vTHu+SWHiCEyK1A2T/x
-	kPKB4c6ME0J1yc5cuoVeJfNjbadjHmWz2T/iiXlI/6dvT6QptHLodZfe7JdStE0mEyp3V+ZOZXV
-	/VLuL7saiB+uaWnaIzT/1NOzBVdVsQG0L2qb3L/tR+kFYtD9MguNs9mb/6gW7WEkvfilhDOx+Tw
-	eszw5c1+t6A+4zsLb0Yj2Rs+41IiSXECt3V
-X-Google-Smtp-Source: AGHT+IE/v8/QcDYMq5rcXlGAzua42CVQDWzWzn2XXU5Eo9ZmM+YPZpj2WCQ58zMFcZj9ilRciyOvuOU/eAmRuaHjmtQ=
-X-Received: by 2002:a05:6870:bb17:b0:2d6:1e7:f583 with SMTP id
- 586e51a60fabf-306c6f2f38fmr2016132fac.3.1753381958752; Thu, 24 Jul 2025
- 11:32:38 -0700 (PDT)
+        bh=1hy19XYLYjogQ/4nZ2jE5q9A8m7TkG/b0NhBVuhbg9g=;
+        b=oFC/ZUZa07NT1G1GANskh6ymEVZlkgzkSpSFDROCgaKAtK7ADq0BOWNIv35FCfiny3
+         69u2Qzsz8ELyjpKtCjZDlWVFiXm/ZdVDtkpGsDT1xzEU4X1oOvHK9g8PZd2b6IErNDpZ
+         NERusedf9je7Vt/wYXv51zsr8fMjT7ZBPlxQS9itHo+bYj5hAgn7j7/NRZ569LWq9lRS
+         gBBvNd4JD+zpAFr6LlLd1+Nhx2QC3aJfBBtcCvyM3xmmrzslO8caci/MbnBoVcEDgK+A
+         EZBwg2cUy+wED/Ml8+3MPexF2dov8XyjyZj4TJnqP5DHao/arfZ70aHA8/SK5s68DWwN
+         pGcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJz0nDA/S9fQTfsD2XP8a1lGPMisNukjF8zX422HQ6pX884rD31XtQy0JafdKUowB4WMakaDCVJvkTsNvHCp8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY5uJh64wAlT9rZetVZdbwRbi3o8jMjKkWT+P5GYsR/pF6HrxT
+	kmM99yzRpGNEOmxVlIU+BZDBUN9O6ypqmd5rt+KS6qa2eKP2wJOW+6Jn4TuXfK/13HnHfpgH0Jr
+	dJ+Hi9BMA70zt42ZA1LfzxEnMwdF3q2jLGgBFjTtT
+X-Gm-Gg: ASbGnctCJJ61O7OG2fz8Pn7ex71IKruqdY0IzQZUZDmtmeErxlbw4JPc8rSJRSVb5Op
+	hHHmbF/lEA2B0ecuWB0irWzz0Vp5Tj0QPCvCf16dJ+u3F8799urq38+1jI68Q31uG84sTIDBhX0
+	cy6lVJGHsQ+L3UGbtq2OGIdSt17BhxYNVVHZrUANzKnWFA2vLUj6R/l1BsDME2xhkCwGRkQC0DB
+	U1SMysqZ8aULC7ERhxrHKtHiOiJyZW2RwuKUPXx001iIIc=
+X-Google-Smtp-Source: AGHT+IExCMgwSyyh6fZVQDIoYTaFuZdsE+zuKDoymTdwp+61+7Vy2vinFRkoIRfsms0/uxkszHE5F4pscxTm40rOS1c=
+X-Received: by 2002:a05:6870:bb17:b0:2c1:5011:56e2 with SMTP id
+ 586e51a60fabf-306c6ebb4fcmr2003452fac.3.1753382084438; Thu, 24 Jul 2025
+ 11:34:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1752687069.git.lorenzo.stoakes@oracle.com>
-In-Reply-To: <cover.1752687069.git.lorenzo.stoakes@oracle.com>
+References: <cover.1752687069.git.lorenzo.stoakes@oracle.com> <d0e9b39c9d1abceb0ffac341c6fae96186c5d843.1752687069.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <d0e9b39c9d1abceb0ffac341c6fae96186c5d843.1752687069.git.lorenzo.stoakes@oracle.com>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 24 Jul 2025 11:32:26 -0700
-X-Gm-Features: Ac12FXzJWfvxsyQk1Xr5HsYL_xRb49zP3u1pqHeWkzOCB4ps3luILJW3LOiNn98
-Message-ID: <CABi2SkVVswRr+H5OWRcbFQSLq_457a0eXwn0OrtkcMEbGphz6w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] mseal cleanups, fixup MAP_PRIVATE file-backed case
+Date: Thu, 24 Jul 2025 11:34:31 -0700
+X-Gm-Features: Ac12FXzjuQzbVjnKfCaBaTm_N9qyhzxlzeAH9n1camAeM3s5LIPyo6jbvFBauj0
+Message-ID: <CABi2SkXa2n+csjXgb0UWQFi-f5q2caazRkswAGY1LJ9N91m8UQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] mm/mseal: always define VM_SEALED
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
 	David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
@@ -74,100 +74,96 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Lorenzo,
 
-Thanks for including me in this thread. I've just returned from
-vacation and am catching up on my emails. I'll respond to each patch
-separately in the following emails.
-
-Could you consider adding mm/mseal.c to the HARDENING section of
-MAINTAINERS? Please include Kees and linux-hardening in future emails
-about mseal - Kees has been helping me with mseal since the beginning.
-
-Thanks and regards,
--Jeff
-
 On Wed, Jul 16, 2025 at 10:38=E2=80=AFAM Lorenzo Stoakes
 <lorenzo.stoakes@oracle.com> wrote:
 >
-> Perform a number of cleanups to the mseal logic. Firstly, VM_SEALED is
-> treated differently from every other VMA flag, it really doesn't make sen=
-se
-> to do this, so we start by making this consistent with everything else.
->
-> Next we place the madvise logic where it belongs - in mm/madvise.c. It
-> really makes no sense to abstract this elsewhere. In doing so, we go to
-> great lengths to explain very clearly the previously very confusing logic
-> as to what sealed mappings are impacted here.
->
-> In doing so, we fix an existing logical oversight - previously we permitt=
-ed
-> an madvise() discard operation for a sealed, read-only MAP_PRIVATE
-> file-backed mapping.
->
-> However this is incorrect. To see why consider:
->
-> 1. A MAP_PRIVATE R/W file-backed mapping is established.
-> 2. The mapping is written to, which backs it with anonymous memory.
-> 3. The mapping is mprotect()'d read-only.
-> 4. The mapping is mseal()'d.
->
-> At this point you have data that, once sealed, a user cannot alter, but a
-> discard operation can unrecoverably remove. This contradicts the semantic=
-s
-> of mseal(), so should not be permitted.
->
-> We then abstract out and explain the 'are there are any gaps in this rang=
+> There is no reason to treat VM_SEALED in a special way, in each other cas=
 e
-> in the mm?' check being performed as a prerequisite to mseal being
-> performed.
+> in which a VMA flag is unavailable due to configuration, we simply assign
+> that flag to VM_NONE, so make VM_SEALED consistent with all other VMA
+> flags in this respect.
 >
-> Finally, we simplify the actual mseal logic which is really quite
-> straightforward.
+Originally, I wanted to avoid using VM_NONE for VM_SEALED to catch
+compiler errors in 32-bit builds. This would serve as a safeguard
+against inadvertently using VM_SEALED in code paths shared between
+32-bit and 64-bit architectures.
+
+Take an example of show_smap_vma_flags [1] :
+
+#ifdef CONFIG_64BIT
+[ilog2(VM_SEALED)] =3D "sl",
+#endif
+
+If a developer forgets to add #ifdef CONFIG_64BIT, the build will fail
+for 32-bit systems. With VM_SEALED redefined as VM_NONE, the problem
+will go unnoticed.
+
+This coding practice is more defensive and helps catch errors early
+on. It seems that you're working on introducing VM_SEALED for 32-bit
+systems. If that happens, we won't need this safeguard anymore. But
+until then, is it OK to keep it in place?  That said, if VM_SEALED
+support for 32-bit is coming really soon, we can merge this change,
+however, perhaps you could update the description to explain why we're
+removing this safeguard, i.e. due to 32-bit support will soon be in
+place.
+
+Link: https://elixir.bootlin.com/linux/v6.15.7/source/fs/proc/task_mmu.c#L1=
+001
+[1]
+
+Thanks and regards,
+-Jeff
+> Additionally, use the next available bit for VM_SEALED, 42, rather than
+> arbitrarily putting it at 63 and update the declaration to match all othe=
+r
+> VMA flags.
 >
+> No functional change intended.
 >
-> v3:
-> * Propagated more tags, thanks everyone!
-> * Updated 5/5 to assign curr_start in a smarter way as per Liam. Adjust
->   code to more sensibly handle already-sealed case at the same time.
-> * Updated 4/5 to not move range_contains_unmapped() for better diff.
-> * Renamed can_modify_vma() to vma_is_sealed() and inverted the logic - th=
-is
->   is far clearer than the nebulous 'can modify VMA'.
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> ---
+>  include/linux/mm.h               | 6 ++++--
+>  tools/testing/vma/vma_internal.h | 6 ++++--
+>  2 files changed, 8 insertions(+), 4 deletions(-)
 >
-> v2:
-> * Propagated tags, thanks everyone!
-> * Updated can_madvise_modify() to a more logical order re: the checks
->   performed, as per David.
-> * Replaced vma_is_anonymous() check (which was, in the original code, a
->   vma->vm_file or vma->vm_ops check) with a vma->vm_flags & VM_SHARED
->   check - to explicitly check for shared mappings vs private to preclude
->   MAP_PRIVATE-mapping file-baked mappings, as per David.
-> * Made range_contains_unmapped() static and placed in mm/mseal.c to avoid
->   encouraging any other internal users towards this rather silly pattern,
->   as per Pedro and Liam.
-> https://lore.kernel.org/all/cover.1752586090.git.lorenzo.stoakes@oracle.c=
-om/
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 805108d7bbc3..fbf2a1f7ffc6 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -414,8 +414,10 @@ extern unsigned int kobjsize(const void *objp);
+>  #endif
 >
-> v1:
-> https://lore.kernel.org/all/cover.1752497324.git.lorenzo.stoakes@oracle.c=
-om/
+>  #ifdef CONFIG_64BIT
+> -/* VM is sealed, in vm_flags */
+> -#define VM_SEALED      _BITUL(63)
+> +#define VM_SEALED_BIT  42
+> +#define VM_SEALED      BIT(VM_SEALED_BIT)
+> +#else
+> +#define VM_SEALED      VM_NONE
+>  #endif
 >
-> Lorenzo Stoakes (5):
->   mm/mseal: always define VM_SEALED
->   mm/mseal: update madvise() logic
->   mm/mseal: small cleanups
->   mm/mseal: Simplify and rename VMA gap check
->   mm/mseal: rework mseal apply logic
+>  /* Bits set in the VMA until the stack is in its final location */
+> diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_int=
+ernal.h
+> index 991022e9e0d3..0fe52fd6782b 100644
+> --- a/tools/testing/vma/vma_internal.h
+> +++ b/tools/testing/vma/vma_internal.h
+> @@ -108,8 +108,10 @@ extern unsigned long dac_mmap_min_addr;
+>  #define CAP_IPC_LOCK         14
 >
->  include/linux/mm.h                      |   6 +-
->  mm/madvise.c                            |  63 +++++++++-
->  mm/mprotect.c                           |   2 +-
->  mm/mremap.c                             |   2 +-
->  mm/mseal.c                              | 157 +++++-------------------
->  mm/vma.c                                |   4 +-
->  mm/vma.h                                |  27 +---
->  tools/testing/selftests/mm/mseal_test.c |   3 +-
->  tools/testing/vma/vma_internal.h        |   6 +-
->  9 files changed, 107 insertions(+), 163 deletions(-)
+>  #ifdef CONFIG_64BIT
+> -/* VM is sealed, in vm_flags */
+> -#define VM_SEALED      _BITUL(63)
+> +#define VM_SEALED_BIT  42
+> +#define VM_SEALED      BIT(VM_SEALED_BIT)
+> +#else
+> +#define VM_SEALED      VM_NONE
+>  #endif
 >
+>  #define FIRST_USER_ADDRESS     0UL
 > --
 > 2.50.1
+>
