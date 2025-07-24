@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F0523ABB2
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 21:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA87486328
+	for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 22:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753394040; cv=none; b=ID0ewbcgSUdNL3fRwtPaLlgM9Gic8daFO0JPw4U5Oj2CnzNay9c8qHdCDLbvENd2SLLnS6VtkvjG4taiLRTOdfp6ZnpSC1R61Tq1OsTSuJnLYvS/XvSIQUJOefJFTmsejna6lQwcLHdogP3mj9VY6m5rN8655RVrUQfuFob/HjQ=
+	t=1753395520; cv=none; b=ROA8+tIy6TethtIgvFc4zydWGjbRBXoWZHmDCcVDAiNQWcCL1GK1Xup4dQRl0P1jiZB6TptkDnKyXJpxIIu07X0p6ZyFvek4tq4bBFmXRtwCcgwuEO1DTuKInSCUxPeSLTmhet8tx637rF416/4cCgqSItU17bUIlgBRSqugc7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753394040; c=relaxed/simple;
-	bh=aSgmQpRl1EtsgTtoq5gJuvcK+lbZhF6aqiMeD4bLeyc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XkiKeSAoqN0MaYLUevImy1tBzU1QHSM6MQc0ly2LIUz+q7qD8VzW0Kc2vRQZbKE9t8J6MhcHO7UPmKSRtV+kvK5anKcc/JEZ2oFyb1fxnZybz4ntblLzdvLoGgdjBR2+jyzM46ULiShgQOZOapnlEk8QPXiWslGYJs0HIvgQmb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OpycNFQZ; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1753395520; c=relaxed/simple;
+	bh=0QvT3CUkJ6EXgG4xBXsmRtKHHlBw+oanIFcCij4kAHM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=sJ1SdoawhvDPD+Jwe342QzHLF599YgiVM4HibS7+2LLWfCM9+qfMOfVXA70LQ5rosUolMuUg9v+0/Nxwfw+jejhn4rVF0HJlDRvqwg5HJ+gfxT4Iq2fo2t9JoE2h8E0sosYNeEBatRWw1YpHbtMZsGX7qMdkOxz6DopmQo3sscg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CVMjbcHI; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OpycNFQZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CVMjbcHI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753394037;
+	s=mimecast20190719; t=1753395517;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jXLN4SsCK0ZOlY5y21K92auQYthqaAwqTZRZM+NRLdw=;
-	b=OpycNFQZ/xYgtwXd3kiZj2QX/LXIflzLWzSfsF1q37p2OKEfEYPe1G4jzPYqwHhRGfniTH
-	wJvXrb85rnwpLK5miRTdWnguZl8naRinOPk4462wHzO1e8M7gVTPwZ/JRKFkpv6HVHWTIy
-	mDG780KQamiPvH/aVS4TnSfkU1XQCB0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=o3Ts71k9kWEbm+9MEFacjDKvVlaJ/u4GBTuIh+m8AWw=;
+	b=CVMjbcHIvH8197HtUdst0jw4c3e03WMbrG5PsNj205xdtiSHcusE3iWPIyg2TcEYtLni1T
+	cI0GA1ogDWpJV3Rjcm7mUA+f30QJBGA7lHug854+j/RylRbL/VBGFe1RU6eUIfqTCYggW1
+	tGYxUbWZCJy+ZIBIoWqGk0GooLYq/XE=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-150-6Wsch-L4MuOwH3AfQRVGJQ-1; Thu, 24 Jul 2025 17:53:56 -0400
-X-MC-Unique: 6Wsch-L4MuOwH3AfQRVGJQ-1
-X-Mimecast-MFC-AGG-ID: 6Wsch-L4MuOwH3AfQRVGJQ_1753394035
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a6d1394b07so849520f8f.3
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 14:53:55 -0700 (PDT)
+ us-mta-107-pDahH7pcMXKUjdl5dgUKAA-1; Thu, 24 Jul 2025 18:18:36 -0400
+X-MC-Unique: pDahH7pcMXKUjdl5dgUKAA-1
+X-Mimecast-MFC-AGG-ID: pDahH7pcMXKUjdl5dgUKAA_1753395515
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4edf5bb4dso908978f8f.0
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 15:18:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753394035; x=1753998835;
+        d=1e100.net; s=20230601; t=1753395515; x=1754000315;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
+         :content-language:references:cc:to:from:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=jXLN4SsCK0ZOlY5y21K92auQYthqaAwqTZRZM+NRLdw=;
-        b=Bf7rbPC/dPqjxISUrrpbLJZtT1L8UZfsLpND88mOhyqqMvB67vm6RQbGMP4XndrElP
-         Xi/8K+RYiwbaT0zfM1XSN8B5unuDzRMGsBR0gdaP6iNLJW0kJboMqu33idwPmLsd4cFh
-         b13AHohwCJ1zREToRvKw/N5KK1zKlijyYbJu4XfEehRjmdO/uOa3HmEo840RnL+BcnIa
-         HOp7Sf3xDJ88H+BDwJpxaCO4zQXC+lzrsiBFQuYwfKoj+10XNUUQarfA+8mNoNBl6ckF
-         HUHrmWFeIKtwC6ke6H45uswFjfJoq8fDzG/2eHzjFUIEmNvMPcEw6rya3+cvgS4xaxOF
-         vhgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVm492quyt3xipYpgzNvgyK3qKtd6ynYsEdOSCrvcQ7fTPZxQf+KLERCWyFmgYtqlPjqSM5q0fqiwjX7uaejBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1XJuO1og/MmuRosGzq4opBFiAbMdTsK/9nKlJeiLDk4Dh6XD+
-	reInUYS74rd3DLw/jZ9zU3OoodZA0VSWX0Iu8vzaWN9+Bvys/mzp+GziJ6Wpb7vRJf28d2es4o1
-	SR3zwVzp9kvl/zPvlePTVsoplQWud1rHk5C+w0EAK8USpcA0yk40Pz/tXUx6nn31EmIt3zQ==
-X-Gm-Gg: ASbGnctqQq5lKZF/JkgtzF+RHvpiaEpihp8vJzf9QjHYMnoD+rDM4C0pDSGJEJKK/qP
-	U2s5wzW1VsWdyG3m7kvciNB8YgWKLLumg12tljxqQDZgiJ2t6IqMO4d/ycF5tFvr5OVj19N0h6k
-	AsHTFj5REieoF0r5hTqJ8ulDi5I/TCx9z5RLaj8K/Hex7vPmKn/5ol4oos5SNRWEvL0r6nZg+zs
-	QVLYFVJHPPPkUWWj/ZHe0mfB+HPtog8GBwVlaSR747PSDBB/BnjI+xEC8X1d+KoDev7ptCdXO9w
-	MZ8LkJkZzTy2h6Ig3J244xJGMeMQ3/ejN6e0yakRKF7E5kRzK8Zm4HZE70wsMDvTzVFD12hnj+T
-	djlAgO8YPZ3IKgX5SeHnP7vrEBzLOtqkc8CqcDqL0vk26z2VcyF0aoJWv8vNwo2Ht4ds=
-X-Received: by 2002:a05:6000:1ace:b0:3a5:2949:6c38 with SMTP id ffacd0b85a97d-3b768f14a6fmr6764500f8f.52.1753394034748;
-        Thu, 24 Jul 2025 14:53:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGkJOWTq8/VD4bvUr6a2rEovzwLN5dTrmxK2FT42yxexbPhNZb6gZWZXp4oLGU60o1OpU2tGg==
-X-Received: by 2002:a05:6000:1ace:b0:3a5:2949:6c38 with SMTP id ffacd0b85a97d-3b768f14a6fmr6764479f8f.52.1753394034223;
-        Thu, 24 Jul 2025 14:53:54 -0700 (PDT)
+        bh=o3Ts71k9kWEbm+9MEFacjDKvVlaJ/u4GBTuIh+m8AWw=;
+        b=d4czs2JT2e296fAhehK3l7PWgqX5ZOcA6/BpZURujwiqVU5h+/igxlw2WRUNfT86Xz
+         gNBKks6X6nJm34TrGXEuK0BFX+kegnivC8aRDY2wa3qLp8xeRFUBpuhYxzf32ZLtMMid
+         pq4KqEm4t2R9rGIayV7/PEqbk0zCfVjzKtwgE1Ab+Q8jZ8ZZ0vUiJKfnymK7WKti/Kso
+         V/dshsjw+8/L4p7bJXCKdn2Cd8NEnoe9w2WsS15PzXK2+524kaWexvFot99SV2QuRnB0
+         LOmazzNHBaiVBskux1xKSyxJZTQij2dKSZ2TfUJ+lMQT8TVYYu/uy1wRgwh35tolMLZz
+         9gfg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLwSU+0LFaX59cWKlftjHBD8cQ713IdhJRd29VxngOEyLnCLJQiTpC/OGuKGzo04WMAsydFl+mVOwNmF/rQJI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymNanPjg3sZ8V6pxBGxphC9u+c5muShU9r1SV7pZPQvSONMeEg
+	CheXHr4EWVV67qkhBgCGRuS/cSCqt4c/5dcL6U333umCGrqIyOWTFqmfaCXwZb1WMNNZObe5E6W
+	Kp6wl8VGjhcKa0mt2bZcafacCVSfb8lI2SoXfEyVQoRju2deMSOELlkzGjm5w5txzOzlCyA==
+X-Gm-Gg: ASbGnctN9pLvhUnRUU+3X17Yk+cI6aKquPPLFsYQeyz9/INNzfAFO/zwbhT71iEYZY7
+	9qzseEQL035AYV5dU8xlotkytpgBnWQ2GgeztZuZy3Dj9gFYb9eStZpaRUrt9rfTg+bUHjMi9Bw
+	9XdcsAHbC3tFQ26kdUu68doFYFTvssQA0THCdXra59dx0lkUJ3B5lk5FjpH39h1kRqNS/SSTvTS
+	25ip8/sRcw8Ef5Oh1fvwFahNEMymENk3QL2Uk1Wiuxh9A+XKpWlOg5ONbGYZlgk1I3wc+yBXu+A
+	IAqsxSgitrxpTrfpiRZNYpLBg+QPkaxFDCQDkg1R9/CgoOSHVOGQ886bghX9ycR82w2sSmB1CPf
+	kEiMfDrl7/zQ53krD1eDVp6HdLuMz470qwKiLKviVnbsp8oXWaWOpbGhCJ2A04oseD3w=
+X-Received: by 2002:a05:6000:4382:b0:3b7:5985:51f with SMTP id ffacd0b85a97d-3b768f060d3mr7168777f8f.44.1753395514939;
+        Thu, 24 Jul 2025 15:18:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEW9Oz0ofFy+ZXrphC7SrO746cspr60p4D8s06ek8+rLNxlA04Z1UWxrgzuJqYYf4J4/s1SJQ==
+X-Received: by 2002:a05:6000:4382:b0:3b7:5985:51f with SMTP id ffacd0b85a97d-3b768f060d3mr7168766f8f.44.1753395514391;
+        Thu, 24 Jul 2025 15:18:34 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f01:5500:ba83:3fd7:6836:62f6? (p200300d82f015500ba833fd7683662f6.dip0.t-ipconnect.de. [2003:d8:2f01:5500:ba83:3fd7:6836:62f6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b76fcc3ccasm3300445f8f.80.2025.07.24.14.53.53
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-458705684a8sm32671285e9.26.2025.07.24.15.18.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Jul 2025 14:53:53 -0700 (PDT)
-Message-ID: <9c861191-ac9e-4d26-b2a2-1facfa45de44@redhat.com>
-Date: Thu, 24 Jul 2025 23:53:52 +0200
+        Thu, 24 Jul 2025 15:18:32 -0700 (PDT)
+Message-ID: <1bc456a4-30ac-4e6b-8830-e7c86f113f9f@redhat.com>
+Date: Fri, 25 Jul 2025 00:18:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -76,8 +76,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 2/5] mm/mseal: update madvise() logic
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Jeff Xu <jeffxu@chromium.org>
+From: David Hildenbrand <david@redhat.com>
+To: Jeff Xu <jeffxu@chromium.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  "Liam R . Howlett" <Liam.Howlett@oracle.com>,
  Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
@@ -87,8 +88,7 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 References: <cover.1752687069.git.lorenzo.stoakes@oracle.com>
  <ec480dc1fd4ce04bb11c0acac6c6da78dc6f4156.1752687069.git.lorenzo.stoakes@oracle.com>
  <CABi2SkU75e7tXcpgnLbDhqSJBWVPOvmfMh2uPsU3mUjMUhhYqw@mail.gmail.com>
- <38ed372a-4b27-498e-bb3b-f95792bbbe27@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
+ <ab45d2f2-a34e-4ec7-8a49-03d166e6215a@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
  dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
@@ -134,36 +134,63 @@ Autocrypt: addr=david@redhat.com; keydata=
  WBe5lqcozu9LpNDH/brVSzHCSb7vjNGvvSVESDuoiHK8gNlf0v+epy5WYd7CGAgODPvDShGN
  g3eXuA==
 Organization: Red Hat
-In-Reply-To: <38ed372a-4b27-498e-bb3b-f95792bbbe27@lucifer.local>
+In-Reply-To: <ab45d2f2-a34e-4ec7-8a49-03d166e6215a@redhat.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: BBC-Ei9js0tXzwA8NlHaTKvVsKgDzKWSNsACnNsA87w_1753394035
+X-Mimecast-MFC-PROC-ID: NGCa0jAe69rrGPa-AQMA698qEfnKaq9aVnmPzdz-z3k_1753395515
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 24.07.25 20:56, David Hildenbrand wrote:
+>>
+>> To summarize all the discussion points so far:
+>> 1. It's questionable behavior for madvise to allow destructive
+>> behavior for read-only anonymous mappings, regardless of mseal state.
+>   > 2. We could potentially fix point 1 within madvise itself, without>
+> involving mseal, as Linus desires.
 > 
->> 4. We could ask applications to switch to non-destructive madvise,
->> like MADV_COLD or MADV_PAGEOUT. Or, another option is that we could
+> IIUC: disallow madvise(MADV_DONTNEED) without PROT_WRITE.
+> 
+> I am 99.99999% sure that that would break user case, unfortunately.
+> 
+>> 3. Android userspace uses destructive madvise to free up RAM, but I
+>> need to take a closer look at the patterns and usage to understand why
+>> they do that.
+> 
+> I am shocked that you question why they would use MADV_DONTNEED instead
+> of ...
+> 
+>   > 4. We could ask applications to switch to non-destructive madvise,>
+> like MADV_COLD or MADV_PAGEOUT. Or, another option is that we could
 >> switch the kernel to use non-destructive madvise implicitly for
 >> destructive madvise in suitable situations.
 > 
-> Umm what? I don't understand your point.
+> ... MADV_COLD / MADV_PAGEOUT.
 > 
->> 5. We could investigate more based on vma->anon_vma
+> I am also shocked that you think asking apps to switch would not make us
+> break user space.
+ > >> 5. We could investigate more based on vma->anon_vma
 > 
-> I have no idea what you mean by this. I am an rmap maintainer and have
-> worked extensively with anon_vma, what's the point exactly?
+> Or we do what sealing is supposed to do.
 
-I think, the idea would be to add an additional anon_vma check: so if 
-you have a MAP_PRIVATE file mapping, you could still allow for 
-MADV_DONTNEED if you are sure that there are no anon folios in there.
+Sorry for the rather hard replies, I was not understanding at all what 
+you were getting at really.
 
-If there is an anon_vma, the only way to find out is actually looking at 
-the page tables.
+> 
+> With the hope that this sealing fix here would not break user space.
 
-To be completely precise, one would have to enlighten the zap logic to 
-refuse to zap if there is any anon folio there, and bail out.
+Is your concern that something (in Chrome?) would be relying on 
+MADV_DONTNEED working in case we had a MAP_PRIVATE R/O file mapping?
+
+Again, disallowing that completely (even without mseal()) would break 
+user space, I am very sure.
+
+Whether we should allow zapping *anonymous folios* in MAP_PRIVATE R/O 
+file mapping is a good  question, hard to tell if that would break anything.
+
+For zapping *anonymous folios* in MAP_PRIVATE R/O anon mappings, I am 
+sure there are use cases around userfaultfd, I'm afraid ...
 
 -- 
 Cheers,
