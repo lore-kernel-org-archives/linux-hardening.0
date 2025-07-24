@@ -1,69 +1,69 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAE523ABA6
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 18:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FA926CE2A
+	for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 18:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753382473; cv=none; b=Lp3x9hEw78eQ0bo+aF0QPcGcJlt4ix4F1mszECaM7ih8HKyLxoTkhDTlQVJ71tWHwN7apuTjgZ6mW8sy8ilE45QKikE8i9SEEKOMMeu+YfQWEiXluV3vJfxZlXIM6rOgzEWUrlx2mTPQe5tMnb25RW67Vg6qN3QUF5B7dbsH0og=
+	t=1753382505; cv=none; b=klZzSFaBKOcZb8FMWSfNYTnOEzfmyD22tS/BXdAj66WfYB/SiszqFDcMLF8HZmGkso2eRcHlAJnscZgM3KDVGUawguGcEfOxdxfWbubqYMJhzzd4Tqua3iycL/sPa9qMngrw00e97TVEGiN4JD3iynEuQ5M5g67h7SQ/BWGCYWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753382473; c=relaxed/simple;
-	bh=IlyfWnsgnG/qOi3cvsxobjLRobl4VgBJf+TWR2bCOfA=;
+	s=arc-20240116; t=1753382505; c=relaxed/simple;
+	bh=UOwoGaDOvoje/9q1jcfzkopAP+bmCXpqgcS9RU00fkk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pAVmI/qaZVbCovo79wRWK8TZLUXISB5C1+S6wy+/BRP6AAFilZe2j978OlGQbDXTAktMU7ryh7GbTHgcmSrAJFMma+aufwWMb06+QsEszVbkNTzX3HWn1vfpzEO49zZD6FOAT7geBFr/hUq/0QblS7L7DnKQ5IKDV6RGKD4Qz1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=g7iV9rCz; arc=none smtp.client-ip=209.85.160.41
+	 To:Cc:Content-Type; b=oj8NkA3a08Gfsm2lIZ3PyLmNuqcudW+mrW1EtYoMZN5pYg9O39Kx5F1ibdPvzCUEBIReLxXdQhFGqQ2Pj8VtIFfFSYF1Kr/Qtd7wPv4yjg6C8L1bcHBqwNRyeAf0HDDgRRTi+osTSgMynGA/7nmjZ0iuUCxCG1Wp/K+YWq8ex8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LxTG8CRa; arc=none smtp.client-ip=209.85.160.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g7iV9rCz"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2ffc7c708a2so40833fac.2
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 11:41:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LxTG8CRa"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2ff92caabcaso161036fac.2
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 11:41:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1753382471; x=1753987271; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1753382502; x=1753987302; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pdGmQQBULDak1afO6wOGgGVbsIT5jshSzS0GzXEZM9Q=;
-        b=g7iV9rCzSluWBP/LMdOvVIA26kXNpef6vaPXbosUoVyt9UtDmdq2aWuvH3b9XUyhKc
-         ZkgQVGesg//dd3FwvLQGxznV5CDHOORzCq+5NRTjOp8kLOle3zRwM8+fsqjX4UJA3Ks8
-         dFKV6TOXIPpM9MIZfNlQMd29NSQO+YbF0vOKk=
+        bh=T1HWlZ2q1kj2IfdBM1XqDySr0QM/i4rMvQ57Io2GLV0=;
+        b=LxTG8CRaRwICQ+enPfg6ghra7oYvS6Iblco9sgqEVtQzt8t6zX9YN+gpqOf+pvkUBb
+         mzxjpftet4NpvBb7YYXq+5MGSR03RcS8qRqa9UTDLzFhjNZe2SbWcXktF3AqPIeL8UAu
+         Uj1pCe/DRd5+KAlNt1gyArow3BYGyABtOIEJE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753382471; x=1753987271;
+        d=1e100.net; s=20230601; t=1753382502; x=1753987302;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pdGmQQBULDak1afO6wOGgGVbsIT5jshSzS0GzXEZM9Q=;
-        b=e14U/NVBX93wvMDNTyGFpNTbfMrj5y4Mzh8oTFv1gEJkyzEg64o61G/eVFPkdwV7Uh
-         5G3FEqgW26kO3x2OT5X7ivtvZfJHUGW5NTKvz54DiP+IESoeCMKFq50EZUiRZqHoJNQO
-         VlkIPYrjQicZ8imLN+igMAsi0yAMfnJVkrySJTK+Vnmg9R+QFnnLglN+dY2GLJLI/USO
-         zjr3hoLBYGFPZAIx/6VK6FNBskwnhBo9ebUqtmtD+2UqKewTivJokqw1UuoQZ+84EtqH
-         iT4tI4kO+H0687/H9MRk5ibFBtyTzdIrSA7KKsY3UfqhXw2EIlGGJIMmMItaX7zvDGM4
-         krAw==
-X-Forwarded-Encrypted: i=1; AJvYcCXntjMIyGN7ohWyKi8js293VkTGtXprUiKc+dRdwskcjgpOP/ACiOTD3IBRNc4q3s8GMkmlpwOAmNma0PfqCYo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvsE2JkndNiRxowjr+SUuaXHSdp2AG8uwNgBAitUE7AbV8jBNM
-	1tXSA5M1feoioMOCoKNG+7+veG8gAqT18v0qfKiLsYpRnjmxQTSCgzzPY+1Z7tccbytmTX1gyvM
-	gQquGOk3iXNSaQYZBuDeCIwCFlyF8GzPLaYkX3jTD
-X-Gm-Gg: ASbGncsSJ9mHUlWkkd9waidhkiaxL+o3RF2mmmAsU/86N2zFrSKVPw3rjqv7VKcoshk
-	bKSZzPj2FmgaKBiz4VsMERESS5HFdABlb5fYYXKjCUrPu4GD7t2oqR2nq/0xQ49dvAlpRuL0vBE
-	aL/xOs6fD/OJ3KGIIg0C1Jgy13FRVzkavNapnJX1AFS/3fWyRwFwJNM4NXJMLGAzGaq7ZD3e0QD
-	Bo62KAjNa1Gy+bxT4fHdbDVoOg1jZtg6JYH
-X-Google-Smtp-Source: AGHT+IEoYM1EWKvzwa2CPrTTDfzZ7Ksf2AOfnilQct0N6oYa/w+7054kRqvJaSR7CoWM8egO7TBFq4f8ZqpZ1JK1c6I=
-X-Received: by 2002:a05:6870:d2c6:b0:2e9:fd62:9068 with SMTP id
- 586e51a60fabf-306c73182d7mr2083260fac.10.1753382470954; Thu, 24 Jul 2025
- 11:41:10 -0700 (PDT)
+        bh=T1HWlZ2q1kj2IfdBM1XqDySr0QM/i4rMvQ57Io2GLV0=;
+        b=tA5axlhnfgebKdQET0Fgywl7drH2up5u436iDOpVyhUjUR6ZA2vykwKhXUWR70RynY
+         bd3f8TcmPCw/BFifvZTWdRIqAjyu5kiVnPITZpiLhuzv5IOZue3Rr599ShkI/EiW0Oy6
+         W2UKAxxuT9AM05sTjWNPJgDUUCQaRyuaS6OyNI+i3Gs+MlyYaVCSMplDEd5uWphknkY8
+         MXBXJxuWQwNXDcs3kG2ru5izgrRuwWut/nHOEZnlfcOMryK5UqZ8lEGgSjSmgVQJ19q+
+         WDnUncPFiAS35oFRApndNa4QXG4JvKYwaLNwvY08n1mCSQUcXwzDfFnex5BFI+1Tujjx
+         tqrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjoasRVKw9nDCOWYBpb2qWCSMBF4soFWICL36juDa+6VZaa6DVvzJz4ibo+HtZastqUo//ZMpItE8/1/rkgeo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzPy+m87mX3P/GLHUqZl+wbuqzdKUrcgSBCnKbfQ/Bjp2Am/+q
+	tfRU52g5ZLFkbM6+HCDM8Z9VMiz/cdOcXhOVhNzuEbpcFp5Cs6/RtVWwPH/ylBPEkKaBgyOeKZC
+	HFfufJdGR4VS0Dzj5MWBv9SFTz0B0c8YoyAKjgMP/
+X-Gm-Gg: ASbGncu1cYFhbSJIo2UERurYebsULbpPmvp+uYFFVRci5owPlDz2P4evrQx98ufdWpA
+	8LJ4p7FCvuGf+y7eawy2c+ctNAjm1Y5fxzMgLggDqXCcBXHWfvapDy107/+cRYoPSGZQvyIjCY6
+	CpCGOgTQ3RjQtvQWTV6SvDLBnwi0ik23pttp6XEPTwqzVeYym50S2seBsW+1dEyP1isYys+d9fn
+	evabXMzUuTlUYIYyartffIp5XZgsvixptlY
+X-Google-Smtp-Source: AGHT+IFGOCABTTvB+uzF9wmiyKAOSjp+0YvJguYqvnGbeIpD4kNUAbPp92D+Kc9fHRgycq+ZSZnoA+bqeSnlnTMvEN0=
+X-Received: by 2002:a05:6871:71c5:b0:2b8:f99d:7ce6 with SMTP id
+ 586e51a60fabf-306c6f21d67mr1770212fac.3.1753382502323; Thu, 24 Jul 2025
+ 11:41:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1752687069.git.lorenzo.stoakes@oracle.com> <f4dda4c4840c69b2ea735bcb6d54ae70d527a48a.1752687069.git.lorenzo.stoakes@oracle.com>
-In-Reply-To: <f4dda4c4840c69b2ea735bcb6d54ae70d527a48a.1752687069.git.lorenzo.stoakes@oracle.com>
+References: <cover.1752687069.git.lorenzo.stoakes@oracle.com> <9ae70e1c509d790cf174f16e491975efd9be50b6.1752687069.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <9ae70e1c509d790cf174f16e491975efd9be50b6.1752687069.git.lorenzo.stoakes@oracle.com>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 24 Jul 2025 11:40:59 -0700
-X-Gm-Features: Ac12FXybD_pjPvOBCwcY-hNwuSV51_tRDl2BKwa1m5oQnEMvCGJNkN39CTK8H50
-Message-ID: <CABi2SkWgp1M5FWbo8p6_byF+5FzQtcSg3ui0rQ9Mpy6z2_BB5Q@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] mm/mseal: Simplify and rename VMA gap check
+Date: Thu, 24 Jul 2025 11:41:30 -0700
+X-Gm-Features: Ac12FXycf8JmBrOhOyz1OgvG94mrvgZe6JkSBqJucvHYxI-9914zkEue6RQd-ZA
+Message-ID: <CABi2SkXQsao-S+uy63k6Zc=y4W-pik6XZSzw+05f_Ws_frqZmQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] mm/mseal: rework mseal apply logic
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
 	David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
@@ -77,108 +77,146 @@ Hi Lorenzo,
 On Wed, Jul 16, 2025 at 10:38=E2=80=AFAM Lorenzo Stoakes
 <lorenzo.stoakes@oracle.com> wrote:
 >
-> The check_mm_seal() function is doing something general - checking whethe=
-r
-> a range contains only VMAs (or rather that it does NOT contain any
-> unmapped regions).
+> The logic can be simplified - firstly by renaming the inconsistently name=
+d
+> apply_mm_seal() to mseal_apply().
 >
-> So rename this function to range_contains_unmapped().
+> We then wrap mseal_fixup() into the main loop as the logic is simple enou=
+gh
+> to not require it, equally it isn't a hugely pleasant pattern in mprotect=
+()
+> etc.  so it's not something we want to perpetuate.
 >
-> Additionally simplify the logic, we are simply checking whether the last
-> vma->vm_end has either a VMA starting after it or ends before the end
-> parameter.
+> We eliminate the need for invoking vma_iter_end() on each loop by directl=
+y
+> determining if the VMA was merged - the only thing we need concern
+> ourselves with is whether the start/end of the (gapless) range are offset
+> into VMAs.
 >
-> This check is rather dubious, so it is sensible to keep it local to
-> mm/mseal.c as at a later stage it may be removed, and we don't want any
-> other mm code to perform such a check.
+> This refactoring also avoids the rather horrid 'pass pointer to prev
+> around' pattern used in mprotect() et al.
 >
 > No functional change intended.
 >
 > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 > Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
 > Acked-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/mseal.c | 36 +++++++++++-------------------------
->  1 file changed, 11 insertions(+), 25 deletions(-)
->
-> diff --git a/mm/mseal.c b/mm/mseal.c
-> index adbcc65e9660..61c07b1369cb 100644
-> --- a/mm/mseal.c
-> +++ b/mm/mseal.c
-> @@ -37,32 +37,22 @@ static int mseal_fixup(struct vma_iterator *vmi, stru=
-ct vm_area_struct *vma,
->         return ret;
->  }
->
-> -/*
-> - * Check for do_mseal:
-> - * 1> start is part of a valid vma.
-> - * 2> end is part of a valid vma.
-> - * 3> No gap (unallocated address) between start and end.
-> - * 4> map is sealable.
-> - */
-> -static int check_mm_seal(unsigned long start, unsigned long end)
-Is it possible to leave the check_mm_seal() function together with its
-header comments? My original reason was to have a contract that
-documents the exact entry check for mseal(). That way, no matter how
-the code is refactored in the future, as long as the contract remains
-true, I won't need to worry about behavior changes for mseal(). This
-could be helpful if you move range_contains_unmapped into vma.c in the
-future.
-
-Note: "4> map is sealable." can be removed,  which is obsolete, we no
-longer use sealable flags.
+Acked-by: Jeff Xu <jeffxu@chromium.org>
 
 Thanks and regards,
 -Jeff
-> +/* Does the [start, end) range contain any unmapped memory? */
-> +static bool range_contains_unmapped(struct mm_struct *mm,
-> +               unsigned long start, unsigned long end)
->  {
->         struct vm_area_struct *vma;
-> -       unsigned long nstart =3D start;
-> +       unsigned long prev_end =3D start;
->         VMA_ITERATOR(vmi, current->mm, start);
+> ---
+>  mm/mseal.c | 67 ++++++++++++++++--------------------------------------
+>  1 file changed, 20 insertions(+), 47 deletions(-)
 >
-> -       /* going through each vma to check. */
->         for_each_vma_range(vmi, vma, end) {
-> -               if (vma->vm_start > nstart)
-> -                       /* unallocated memory found. */
-> -                       return -ENOMEM;
+> diff --git a/mm/mseal.c b/mm/mseal.c
+> index 61c07b1369cb..0ab12e09792a 100644
+> --- a/mm/mseal.c
+> +++ b/mm/mseal.c
+> @@ -15,28 +15,6 @@
+>  #include <linux/sched.h>
+>  #include "internal.h"
+>
+> -static int mseal_fixup(struct vma_iterator *vmi, struct vm_area_struct *=
+vma,
+> -               struct vm_area_struct **prev, unsigned long start,
+> -               unsigned long end, vm_flags_t newflags)
+> -{
+> -       int ret =3D 0;
+> -       vm_flags_t oldflags =3D vma->vm_flags;
 > -
-> -               if (vma->vm_end >=3D end)
-> -                       return 0;
-> +               if (vma->vm_start > prev_end)
-> +                       return true;
->
-> -               nstart =3D vma->vm_end;
-> +               prev_end =3D vma->vm_end;
->         }
->
-> -       return -ENOMEM;
-> +       return prev_end < end;
+> -       if (newflags =3D=3D oldflags)
+> -               goto out;
+> -
+> -       vma =3D vma_modify_flags(vmi, *prev, vma, start, end, newflags);
+> -       if (IS_ERR(vma)) {
+> -               ret =3D PTR_ERR(vma);
+> -               goto out;
+> -       }
+> -
+> -       vm_flags_set(vma, VM_SEALED);
+> -out:
+> -       *prev =3D vma;
+> -       return ret;
+> -}
+> -
+>  /* Does the [start, end) range contain any unmapped memory? */
+>  static bool range_contains_unmapped(struct mm_struct *mm,
+>                 unsigned long start, unsigned long end)
+> @@ -55,38 +33,33 @@ static bool range_contains_unmapped(struct mm_struct =
+*mm,
+>         return prev_end < end;
 >  }
 >
->  /*
-> @@ -184,14 +174,10 @@ int do_mseal(unsigned long start, size_t len_in, un=
-signed long flags)
->         if (mmap_write_lock_killable(mm))
->                 return -EINTR;
+> -/*
+> - * Apply sealing.
+> - */
+> -static int apply_mm_seal(unsigned long start, unsigned long end)
+> +static int mseal_apply(struct mm_struct *mm,
+> +               unsigned long start, unsigned long end)
+>  {
+> -       unsigned long nstart;
+>         struct vm_area_struct *vma, *prev;
+> -       VMA_ITERATOR(vmi, current->mm, start);
+> +       unsigned long curr_start =3D start;
+> +       VMA_ITERATOR(vmi, mm, start);
 >
+> +       /* We know there are no gaps so this will be non-NULL. */
+>         vma =3D vma_iter_load(&vmi);
 > -       /*
-> -        * First pass, this helps to avoid
-> -        * partial sealing in case of error in input address range,
-> -        * e.g. ENOMEM error.
+> -        * Note: check_mm_seal should already checked ENOMEM case.
+> -        * so vma should not be null, same for the other ENOMEM cases.
 > -        */
-> -       ret =3D check_mm_seal(start, end);
-> -       if (ret)
-> +       if (range_contains_unmapped(mm, start, end)) {
-> +               ret =3D -ENOMEM;
->                 goto out;
-> +       }
+>         prev =3D vma_prev(&vmi);
+>         if (start > vma->vm_start)
+>                 prev =3D vma;
 >
->         /*
->          * Second pass, this should success, unless there are errors
+> -       nstart =3D start;
+>         for_each_vma_range(vmi, vma, end) {
+> -               int error;
+> -               unsigned long tmp;
+> -               vm_flags_t newflags;
+> -
+> -               newflags =3D vma->vm_flags | VM_SEALED;
+> -               tmp =3D vma->vm_end;
+> -               if (tmp > end)
+> -                       tmp =3D end;
+> -               error =3D mseal_fixup(&vmi, vma, &prev, nstart, tmp, newf=
+lags);
+> -               if (error)
+> -                       return error;
+> -               nstart =3D vma_iter_end(&vmi);
+> +               unsigned long curr_end =3D MIN(vma->vm_end, end);
+> +
+> +               if (!(vma->vm_flags & VM_SEALED)) {
+> +                       vma =3D vma_modify_flags(&vmi, prev, vma,
+> +                                       curr_start, curr_end,
+> +                                       vma->vm_flags | VM_SEALED);
+> +                       if (IS_ERR(vma))
+> +                               return PTR_ERR(vma);
+> +                       vm_flags_set(vma, VM_SEALED);
+> +               }
+> +
+> +               prev =3D vma;
+> +               curr_start =3D curr_end;
+>         }
+>
+>         return 0;
+> @@ -185,10 +158,10 @@ int do_mseal(unsigned long start, size_t len_in, un=
+signed long flags)
+>          * reaching the max supported VMAs, however, those cases shall
+>          * be rare.
+>          */
+> -       ret =3D apply_mm_seal(start, end);
+> +       ret =3D mseal_apply(mm, start, end);
+>
+>  out:
+> -       mmap_write_unlock(current->mm);
+> +       mmap_write_unlock(mm);
+>         return ret;
+>  }
+>
 > --
 > 2.50.1
 >
