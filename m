@@ -1,64 +1,64 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C78E2E889B
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 13:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149652EA733
+	for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 13:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753365408; cv=none; b=gBuietgCNIE2q9c5pxx53qHKUGffaJslFDvcJj+BmtlWWbjU/BmTR1+KAzBB7FOLjVt96nRXzvn+fEUljnqCASngonDHXbcg41sYTOarxlHioZJ6JB932uyFcsl8wRRYQ8saXaZD1yD/ConWg76DaKcC0uT2kolzL2hFCDPhPzc=
+	t=1753365409; cv=none; b=XlruGDjcoLgSjKpjW82ZeuW0JeHzZu5TXc0Lkv8d4xhApIRk5Ty3QL+0Nkf4D4LWC8iwr37DrfdvCELLcx4rLjYNQveFOmBKaX59BWmKbM6YZZHUeE1a04rEjlLpTamqgIu76rXKa3iLuoLmppEzcFuJ2kIjHinzec6LbxosLaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753365408; c=relaxed/simple;
-	bh=4mzNhzQY8HFx0bk+CHpi6+2DgmZYfQ8vHH6EB20MlrE=;
+	s=arc-20240116; t=1753365409; c=relaxed/simple;
+	bh=DC8BX+UCsCDL0s+QjMq45E4j2zLW64ooBSHspomP5gs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hMxjK+eRLnJNpS/T15GfYNxVyBBXGTLyezZjBAHdU8vtNlQkJx6GAe91+2FKv9yF9POi90qpRRGB+dlqnDykNhUZKb/M1YbdxIbpMWQoRTgGB0IbEiY9S9YRaKuTpFrqexknBp+ye83DdmBL8NZluyYXKo2j43nZr53xZ/BGWP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iClEbVMJ; arc=none smtp.client-ip=209.85.221.52
+	 MIME-Version; b=AQw3BgCDT4dSHd9XFpDhssa1KE1o4fSoV2LydbUHfuzmNyJpPJKgWL/X5z/n4NiE8ZrRabg6GLCkP+y0nC7lwdcVvh+Yc7lZb+09TvZJl0w45qR9xp+eXNBbDfsTvFICP6TwFiozWAvnDWKpFXSuxdJ0jrEgEcbyXGozCSFZDec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bpN1qSTE; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iClEbVMJ"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a588da60dfso649682f8f.1
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 06:56:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bpN1qSTE"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a54700a463so670486f8f.1
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 06:56:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1753365403; x=1753970203; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1753365405; x=1753970205; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h5mN880WCISqsqqypOE0OCrYzPzbEuiPZ0HVDAJk/kA=;
-        b=iClEbVMJGbk/PyxXaSMMcxMAAqWn6IMjOCGbXGY4SbpO6tWlrOvED9WZH1STFKee6Y
-         hHtDKSjj9AXb/itAOMfu+NlNgcBkRokxFC5lEdIpCJJ+u0F3wh8ftd0RFHgtT2YaraSq
-         ketGNDB0x/WxBU3SwLV8Obj3mnpIWnW4qIcuRREvISdg4EGUpwQhA4rQRanVEWxhschX
-         QLhS77NmD3AasXN5Yqd1WPeHDUyi4MJVAtLajTy+fiY3NdBPLN5juxw4sHLap8dmWM+E
-         K4f+4lYqgXd1aplpdLav6VbqVnXZ3qrRTthuhfvreR8lU17u+Vsgb2/2AhqcfcZPWSjc
-         BIdA==
+        bh=IAPeYZVy8llrcCGwu3MIGe2nhyxNrtHRlXTr72itWZc=;
+        b=bpN1qSTE5qttk/lJ/GnHbd0ERBi37+C3fAMBhgPXYw+BVR/WyOg0llV5z/0JJ7K2sm
+         bDTGWXiQz/1Y6EShBsHND4rx8+2J9ALqjcHQvZA9S8raNMW9NIGuUxAR45E8oD5KIj3k
+         MMeACj8mR3w8DdB1YvvhdJf0G1TcovVBN41fR8+CdmgJDlu7U4BinEBWL2j6PfzZmR1R
+         WhGUVRXll9Qk0QS+28daFSbHOaE3DdEp/1s9q5S2tmvIzjk+efVkVWvH7AQ7oukiDmiM
+         t3AyKk1j4j7YI6a84OnDQdFVn+XSH2YYYTVUJfV2hAAjoDwVPKh8P+A5rJcLcChPYEtp
+         Z8LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753365403; x=1753970203;
+        d=1e100.net; s=20230601; t=1753365405; x=1753970205;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h5mN880WCISqsqqypOE0OCrYzPzbEuiPZ0HVDAJk/kA=;
-        b=AZkflp5PdeYo7NFLCGj2is0+WKlfQIUtIMoVelPBcB9dU/pw97P1g082ED8mGTXf5o
-         36usU7TXXSQ34mGSuZBQC+r0Rbg77h/MPyGrmQo+1HVHWU+amRY690o9jiHdnlkDx9h+
-         08Q3g3xMhRlXkH95LBdPT0TVXQ6reuU37DtqLt9HfEbFWdxNYHFHJwazU7oNrERym1yI
-         DJ+D07HWEi14oqJAXqrQR+2uwf4/J/mUTLu1I6CSWhE4M59fgmRAG9nYOeDPlq9rw3Nv
-         if02kLUP7BxdU5jE+Zx4fUw2zi8CrZwtAEoF9uOe5VExH4x/Gj8DrGKgwI8E6uu2xTpa
-         3VGw==
-X-Forwarded-Encrypted: i=1; AJvYcCX1TKEUG2/iCNgfNf5oH5LLeRbzKCb6Sv25FgYn6colzmF9gJF4i50lbvN1jbZml7AbWbkESPa/v7616YgamrI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcwVa5gCA4Zq3SRC4ehZSgsG8/W3pQB8K3zyf5F07TkK72x7hm
-	2O2lrggV3+E19cH/on+QcjS85BSFnv8YsXs89NBFIiPOK+KbIml/4wxEDYjvsjpcCTM=
-X-Gm-Gg: ASbGncstX/0zeMVB76jcigcpSNvJmPNL29KZqybF1HNv4oRNnChTe/boZDIAWoP6dBa
-	gQqh+JjslxdS3JRREM74KD8epJnnT/8FDDYutVbYIsx1qAphVY3qJwlSBR0SDBnGhV8Gfhxh6z+
-	hJHWQ1JFeBiXaP68dVAbYRKFTMw4b5+FbJpoWJrqofNp5Rvdz9Bjze7CSoBjB6q1qSGTRl8GrOw
-	Ejf35ej31HYWpbd8vvk2jbCjlDHW6PQC9Jn6fS1MCVo1fjn/c5sEFOLo+l2f6aH5q4E+45xqZiP
-	/9EibrQ9xD9snnnnR6lW6wHq9PxANr29Y3mycSUl1lt0uIeRmjaYIN4eto/FeU+F82hgqoZOZ/F
-	f6hKI4LC0zmuB7X2UmSNOrUFqHAfeK7LTJaH5FbAi4uOiM1E4MIYcnGQvyOvUpOG7sF9PZY7Rak
-	gBoXHoM914PtoHbvrvoU9ZjkA=
-X-Google-Smtp-Source: AGHT+IF4egT06XIAWuc0TJnVdNpe1wQ7sn3xvEGeH8Rc0pzDJnMJjBpN4GYnZW+sz3u5f7Eq0JGLQw==
-X-Received: by 2002:a05:6000:3103:b0:3b5:dc05:79b with SMTP id ffacd0b85a97d-3b768cb0f15mr6041122f8f.14.1753365402888;
-        Thu, 24 Jul 2025 06:56:42 -0700 (PDT)
+        bh=IAPeYZVy8llrcCGwu3MIGe2nhyxNrtHRlXTr72itWZc=;
+        b=VQaimyQD6WkGQnNN0zFh+GvCT44UhCLk4AkAp7beuqvDQ0RDZxptevenNbNG90cneM
+         T+ehcc8XGv5OA9LPrE8ckTvdJGx3IkPHPXNdd0uX/xRflPa8F1kVVkPxTipeX59L735Z
+         cZbhnqM/tWu8NP2dksNw+z8bKk8pal0QHIZSM7Rzd8pKU88fPV3REtFOtmpQLxTaRB/P
+         XQtw8d7FLGmvBNC1+ciMpuZIELgnEE+bpzTtehCJZfgf2fCRuDOUAa6+GuJRMOVQ+e/t
+         qflsyT3Q3GlnZ6pUThrdW4VY0C1TMfurgkI5JXp21Ln5xvgqj2IshAB6N6GCQznvzNg6
+         ybOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUAIbBqJjffOyVv4gRqmmb/vVLQ84j5wpkFpek6yMPY6TGg3PAlA6S52KSYpeyQw37tYhzDVpi/uFIroBALUKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa0u4ciz+zy7NRZZwY30MfL8E7Z6qc+XR4TtCWBfYsYeKHFNzM
+	sLkrpoOEaJjTTJk2dOfWVMg/xFqb+PeoJ22+yBncJamYOHYecO6OkRGZModymiqr6QI=
+X-Gm-Gg: ASbGncvSQ6AtmABv/yfWuTtKhGWCJX1l1O1XHSLCSpe5LLUS4xs1QGNqOkK7mTWiQjs
+	69rmYwUS1jvqEtFRsYgU79lgbrGwdoYsEdTJljwNzOblB/tAcVoyvwb98yXK70wlpZyWSjs+iXv
+	YCZxtf+X4PhP8y4+nDCC5sJffC1zc5tSo7gjttics5AtxpxeyFs7yrodH0GYuQckDhxhADPIfXs
+	Iyikkg1dIyNXyIhfbGLatI03PAZ/9AerGp+fsSJDzoECM3TvRA9yXcHvqxYRdrk2LRkM7pj5zCj
+	sMdNgUenLo/tDbPgPk3M/V9FTOw/GwQWaQqeoUX96OUTRpS7ld7VvXHM9cOQ7nNtn56EP9Yl/Su
+	Pdli1BUmhjTtIhVWQE0mR0dCmKI0jpOsd1EU9dMLYYgsUmWQTPfohDQmA0a89Ffge6zGIkKRKlo
+	ViBN9ebq8NXlXo
+X-Google-Smtp-Source: AGHT+IE/tOxCaZJgBIx1z77DRVJHCm2c/RVz26viacIOb6VPqsOvedK5J5brFqoj/rS9r4t912qyvQ==
+X-Received: by 2002:a05:6000:2482:b0:3a4:e1f5:41f4 with SMTP id ffacd0b85a97d-3b771356cacmr1929316f8f.17.1753365404772;
+        Thu, 24 Jul 2025 06:56:44 -0700 (PDT)
 Received: from eugen-station.. (cpc148880-bexl9-2-0-cust354.2-3.cable.virginm.net. [82.11.253.99])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4587054e37dsm20889375e9.14.2025.07.24.06.56.42
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4587054e37dsm20889375e9.14.2025.07.24.06.56.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Jul 2025 06:56:42 -0700 (PDT)
+        Thu, 24 Jul 2025 06:56:44 -0700 (PDT)
 From: Eugen Hristev <eugen.hristev@linaro.org>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
@@ -75,9 +75,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	rostedt@goodmis.org,
 	jonechou@google.com,
 	tudor.ambarus@linaro.org
-Subject: [RFC][PATCH v2 23/29] mm/sparse: Register information into Kmemdump
-Date: Thu, 24 Jul 2025 16:55:06 +0300
-Message-ID: <20250724135512.518487-24-eugen.hristev@linaro.org>
+Subject: [RFC][PATCH v2 25/29] kmemdump: Add additional symbols to the coreimage
+Date: Thu, 24 Jul 2025 16:55:08 +0300
+Message-ID: <20250724135512.518487-26-eugen.hristev@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250724135512.518487-1-eugen.hristev@linaro.org>
 References: <20250724135512.518487-1-eugen.hristev@linaro.org>
@@ -89,80 +89,41 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Annotate vital static information into kmemdump:
- - mem_section
-
-Information on these variables is stored into dedicated kmemdump section.
-
-Register dynamic information into kmemdump:
- - section
- - mem_section_usage
-
-This information is being allocated for each node, so call
-kmemdump_alloc_size that will allocate an unique kmemdump uid, and
-register the address.
+Add additional symbols which are required by specific platforms
+firmware for dumping an image.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 ---
- mm/sparse.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ include/linux/kmemdump.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 3c012cf83cc2..04b1b679a2ad 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -15,6 +15,7 @@
- #include <linux/swapops.h>
- #include <linux/bootmem_info.h>
- #include <linux/vmstat.h>
-+#include <linux/kmemdump.h>
- #include "internal.h"
- #include <asm/dma.h>
- 
-@@ -30,6 +31,7 @@ struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT]
- 	____cacheline_internodealigned_in_smp;
- #endif
- EXPORT_SYMBOL(mem_section);
-+KMEMDUMP_VAR_CORE(mem_section, sizeof(mem_section));
- 
- #ifdef NODE_NOT_IN_PAGE_FLAGS
- /*
-@@ -67,10 +69,11 @@ static noinline struct mem_section __ref *sparse_index_alloc(int nid)
- 				   sizeof(struct mem_section);
- 
- 	if (slab_is_available()) {
--		section = kzalloc_node(array_size, GFP_KERNEL, nid);
-+		section = kmemdump_alloc_size(array_size, kzalloc_node,
-+					      array_size, GFP_KERNEL, nid);
- 	} else {
--		section = memblock_alloc_node(array_size, SMP_CACHE_BYTES,
--					      nid);
-+		section = kmemdump_alloc_size(array_size, memblock_alloc_node,
-+					      array_size, SMP_CACHE_BYTES, nid);
- 		if (!section)
- 			panic("%s: Failed to allocate %lu bytes nid=%d\n",
- 			      __func__, array_size, nid);
-@@ -252,7 +255,9 @@ static void __init memblocks_present(void)
- 
- 		size = sizeof(struct mem_section *) * NR_SECTION_ROOTS;
- 		align = 1 << (INTERNODE_CACHE_SHIFT);
--		mem_section = memblock_alloc_or_panic(size, align);
-+		mem_section = kmemdump_alloc_id_size(KMEMDUMP_ID_COREIMAGE_MEMSECT,
-+						     size, memblock_alloc_or_panic,
-+						     size, align);
- 	}
- #endif
- 
-@@ -338,7 +343,8 @@ sparse_early_usemaps_alloc_pgdat_section(struct pglist_data *pgdat,
- 	limit = goal + (1UL << PA_SECTION_SHIFT);
- 	nid = early_pfn_to_nid(goal >> PAGE_SHIFT);
- again:
--	usage = memblock_alloc_try_nid(size, SMP_CACHE_BYTES, goal, limit, nid);
-+	usage = kmemdump_alloc_size(size, memblock_alloc_try_nid, size,
-+				    SMP_CACHE_BYTES, goal, limit, nid);
- 	if (!usage && limit) {
- 		limit = MEMBLOCK_ALLOC_ACCESSIBLE;
- 		goto again;
+diff --git a/include/linux/kmemdump.h b/include/linux/kmemdump.h
+index 7933915c2c78..94493297d643 100644
+--- a/include/linux/kmemdump.h
++++ b/include/linux/kmemdump.h
+@@ -35,6 +35,22 @@ enum kmemdump_uid {
+ 	KMEMDUMP_ID_COREIMAGE_high_memory,
+ 	KMEMDUMP_ID_COREIMAGE_init_mm,
+ 	KMEMDUMP_ID_COREIMAGE_init_mm_pgd,
++	KMEMDUMP_ID_COREIMAGE__sinittext,
++	KMEMDUMP_ID_COREIMAGE__einittext,
++	KMEMDUMP_ID_COREIMAGE__end,
++	KMEMDUMP_ID_COREIMAGE__text,
++	KMEMDUMP_ID_COREIMAGE__stext,
++	KMEMDUMP_ID_COREIMAGE__etext,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_num_syms,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_relative_base,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_offsets,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_names,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_token_table,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_token_index,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_markers,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_seqs_of_names,
++	KMEMDUMP_ID_COREIMAGE_swapper_pg_dir,
++	KMEMDUMP_ID_COREIMAGE_init_uts_ns_name,
+ 	KMEMDUMP_ID_USER_START,
+ 	KMEMDUMP_ID_USER_END,
+ 	KMEMDUMP_ID_NO_ID,
 -- 
 2.43.0
 
