@@ -1,64 +1,64 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2AB2E4259
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 13:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA272E54B1
+	for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 13:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753365394; cv=none; b=rZ0/ocXgQEf/dv4/eEDT3TOxqBZYfV5SGr9C540hTCxAV4TluHpovhXEqn+kRBYgweQXf9bdlotwR7kjVrglrbtduA3M+Y/z2V7raFUQxLgF1m6GTUmLJ8rOqG2sHM0lleiCiUvp/2NQqqlaUIqoTRY4LriZE7BNaWqrECgIbzA=
+	t=1753365396; cv=none; b=K6xYFyISR7oJdvs8Zz+r+hxI8j1rlU1RFs312yHUzhTVbTAcUd4MGtsEUnoX2g/l60lgHmRqwoD04rLMxf5IELwnnA6GQz8QTlIX44EuOQorONXt6alh2zOmrKATSZmPv87pb/hnkdhMiEkfvch2p5JUDVgTOTpX9TwBQoaZlP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753365394; c=relaxed/simple;
-	bh=ghY+GwpjKzXQo2zgURX2uB3oB2874ijEbWShVaN08k0=;
+	s=arc-20240116; t=1753365396; c=relaxed/simple;
+	bh=lInkchUokjBe+FHAH3BxBiq6Y7tXF29NidQLxKe+PNs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BteS5ddZDzowvJQ1hia9Q4ZYPV/3ATo53E6YKIdUkjL7QofCilILhVcb3/N+2d9TsU7kQ4+YQi2FI1kpaGwneGLURWN9Bet7/kHU/1aJB2lUmdnH7l0Bup0PryExZhQoI+RpJQdt5dDIA2CSDF7nvOyGV1lQW/bljkrrt0YaB4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rEOHDd7Q; arc=none smtp.client-ip=209.85.221.46
+	 MIME-Version; b=kVjB7PyOiKrulKZk6aJ1OPfj//RQqzzQuzol0hM6QvO1KoL3R2rwtm4DbxVhYmgF//NIhLfv+Tzq6PxwJ3dEuFYfuQm9erOrD/nxNNcF+5dW9HSYHs7+E6zwqfLkr5ZbtPa47GcwUptElHKhDQl8Bodeugeaj8tmRBrJK0ju4w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gW9AcyqK; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rEOHDd7Q"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3b773767fddso160214f8f.0
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 06:56:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gW9AcyqK"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4538bc52a8dso7181795e9.2
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 06:56:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1753365390; x=1753970190; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1753365392; x=1753970192; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SReSPaHbR3saXb697Yp9wPF5rwCm4qBMUK6NGh7oWew=;
-        b=rEOHDd7Q8N2mYG5T6Unnixnoe176QqAN/bsTATidQzaTXYl8x6Fl7kfvxRo+ZWK4pc
-         qMPiNcCtEXI/oOonec1lsGzrOXHoDqJ3VDuKDkuiRI9iifVqADHi3VMHybE8rEeRnfT2
-         craY5TpZD6e5/X0OKbBzvy6zU6R5MiPYMHWfNs9a8ertibJByaQ1NYIaJ6koM5ZnZ0Sn
-         7NpwjIqHtMAAtK6Y5G8b20QQ9wWOoneaAVnyoKgbSWe+n7xqx4hzWKiNTIIeQU3fJn6l
-         eshPWsHMwEdHl5/6TtzTyIIVGndSQqVeaTyF7w88+qvU/tpL7QZ0qI2fL+YnilChs3qE
-         Y+qg==
+        bh=rl7MPjMQQR9YynEjNt+gG293fesASKmyZt5GnlBVdKk=;
+        b=gW9AcyqKuSMhUqviT/CaEES5gWyFk0OxnCjCR0DV8Rfx02S0IQgPMd6CCa6dOcVh30
+         63+5SGga433jpyLCKRIXeF4x+RONQMfgfnRhuEXYSrdOc15P7ZP6knymrDIPSnlOXUbc
+         zFBeJYEvIP+0Q6l8vESKKOH7mvgMS3go6yHjeswsqDv5pCRNkBsMaFUpGolOHFcK9KIp
+         B6bRuQK/BFUJdswR5pSmYLkG3M9hemjwfzoAjOdEICNheo8uqwkwqNhLV8X2BZObm5mV
+         YQDLMYBBmiQ1th6CMa1aSDiOzN50Af38DcFCS6QDL1+4TAlQC9tZri6Kb23R6heF4d/x
+         wrYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753365390; x=1753970190;
+        d=1e100.net; s=20230601; t=1753365392; x=1753970192;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SReSPaHbR3saXb697Yp9wPF5rwCm4qBMUK6NGh7oWew=;
-        b=ad9sYANhQ83x6OC90rEIxTRv9c19B2LOelrY8gZe7H5o3sJh3S6uYy+FKVEudlxDyu
-         G8BiizMTs0kHu8RGBJmMvhNeUFWHAr8iVnSj0RytrhDQ3r9W5XdOXy/OpRYyPg0JPESF
-         8s4oLlzUIzmWs3HGKhY3wtK6hoUpMef8wbgpFbQmh7an8BoOr6Fq97MHM0w4K54mBOY8
-         2B+8RNttSZbQSnZYz6FGEEd/Dmd104Hge4gvs9Y1l5bI3mRwJ1273Eq3fer9CtLjM1GQ
-         GvEgLRdEIVt76tc+gGZ/xnqhBTGLePQTVqmBLLx8R5vWWDUu8qTR2oubdJdfRN/26rZq
-         bP8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVbNI1pmKv2v/bAfSynH8SuAPDgEhJyva+SBmeZL/0Prs4ZAjtXmyemqOdr5WaU4DtbuJlvRZeBgYuzpDkY86Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygdzCsCc0bYOEJabh3orpAa8zOJCwJ6AHIhiKQuipCdVqprYrl
-	077QPTvtzDMUaWONnyrnGtMRqdz4xNZ3dCDf+rM6JwDCVLvYo3zStIC/hv6pidBiuK0=
-X-Gm-Gg: ASbGncsv5ucNpYYvvtG540hgT0QzEGoU+NUt/uSBgvd3lpP7U05nBT+77jk6lgsAngC
-	hB4/A0qPCVTAetuLnHLZDEzOyYOFPQa5BI/tix8ZpSXmESATQQn5lQTNiyseEr6ON0P3ftSd+qX
-	Pzv/Z6HfDadsE7sYM95b0+FBb0zwHjnBmelnnDGFOc0yLMn4iDO7/tXMkXz+qUu+SWbzzlGDVG+
-	YEDlTbWZrzPLUZr74oVwGx2lRdusFd/dm1so+ueVT5oZHCqJquvdb+5b8XxQslmpVbtbrkGBdEh
-	s28ZnPmqaDH6dqrpTcy7wKQAQD6zSPXNcRBq8zSqieJROp/cPmqRZLqyEdZqH0qgdIWfrCzav/e
-	ZGC514WUBiUyd+KM2GD9njEmASTfrv9EC40Q5aDHatLq31MYiVYRq1QoWghjHIq2fxx3WaqWJQT
-	SqbvhdiFqWCpnz
-X-Google-Smtp-Source: AGHT+IE5OpzTZyLft1dF8PAF1zWD0A9y1GJkIKlmiY5JcqmC3+aHq3C9hKZiU8MWr3uj6ilv3EjyHA==
-X-Received: by 2002:a05:6000:2c0c:b0:3b6:333:256f with SMTP id ffacd0b85a97d-3b768f27e15mr5395112f8f.58.1753365390310;
-        Thu, 24 Jul 2025 06:56:30 -0700 (PDT)
+        bh=rl7MPjMQQR9YynEjNt+gG293fesASKmyZt5GnlBVdKk=;
+        b=DIqK4E/IncmiRds+8Z5QS1SNvjdHlf5tREEcz8TDwWhiqAkh/acnjADdSLV1xpldVc
+         ALtNKOoEElqYwvSqdS8Nzd7EBbDKuXJBVLpCpSi4sQPaOnJ0M6HITSnPV+NXKShG9JPt
+         VPzqSJcF/o8kC3C/TsjY+ockZOpS2jxVjWbAuS3TEOmpRbbGOFd7aJRJU9ZeLFCCREzY
+         uZFJKA/H2mFGRFIjv3oeT7HiCSEIvGnC69QxpmfnUfKrZyr2hhKoq1OICGPn+/8sQcQc
+         omTSvYlgbtNu2TY2fMP4UKRZ5ZKBTu6JCPhXsTV2w3Kd96m6DdIvZNScAlNPrndYn4NP
+         EBTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVBAZ25016YQ8ISVdkgcPc0CUl302qd034FEp1UOkmkJWt9PK/Y1BBzlZDo0RFgRUeIbuLmrDIjvID7W47krVw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9oVV9tr7ozh31d1PEqmjBNfqMd0rw3GmikXMoTAl0lXpPaYgD
+	Xjg19Eg4F9Mjw5JSKKwDIN+7MIeoXhbQGi1xwzzFgnoYs6Dt1Z0lI7s6W1WZI6b/8Z0=
+X-Gm-Gg: ASbGncu0ob/Z9Kxb62shjmQ5X9V5C53KW78LrSeoV6RGcfXXxHtVXa1nfUMg7KbJ+3T
+	xc9mskI130B05IVdH9lMF2FSXnDjY4qac2Gzfp3T6IoOal0IUqKEqHzN5BjgiQlt67kDXi6UM1i
+	b82PN+sF/U5G0xt5EaO6Auyi+7mdCJtbUmbinkvCVY8gRAUk1vllWXGzjZ0PFPEUH1t4NtSpaVf
+	GlGwX2nlY88bTcjd3M4xqQgIW08FeRgaQvOTHKz5dFKRPJA+uL0bQE4UX17KgtCOorzmnctc2oy
+	F5k3jd4uOQV7LQzEDL1/TB3xQrYggou0z5Hv2LRSMjG9A3KKco+McyITdYgo/9HFV4JAuxu9FBn
+	FnF/TE5B8gH9jxCf+21DiOe3t93NPzEl+zpgXmM+XGs73hRSdOUrhX56bopHy96kb0JyQYHePJR
+	DT1bWyKoSe9I8y
+X-Google-Smtp-Source: AGHT+IHonQ82jnLO0p5HYq/pDMzB+6N1t6DWFVzcA1CVX2U3nXqH6sJ8SaBoH0rb44h0xr8LW+w4sw==
+X-Received: by 2002:a05:600c:6992:b0:43d:46de:b0eb with SMTP id 5b1f17b1804b1-45868c99c85mr63756925e9.12.1753365392038;
+        Thu, 24 Jul 2025 06:56:32 -0700 (PDT)
 Received: from eugen-station.. (cpc148880-bexl9-2-0-cust354.2-3.cable.virginm.net. [82.11.253.99])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4587054e37dsm20889375e9.14.2025.07.24.06.56.29
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4587054e37dsm20889375e9.14.2025.07.24.06.56.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Jul 2025 06:56:30 -0700 (PDT)
+        Thu, 24 Jul 2025 06:56:31 -0700 (PDT)
 From: Eugen Hristev <eugen.hristev@linaro.org>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
@@ -75,9 +75,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	rostedt@goodmis.org,
 	jonechou@google.com,
 	tudor.ambarus@linaro.org
-Subject: [RFC][PATCH v2 09/29] genirq/irqdesc: Annotate static information into Kmemdump
-Date: Thu, 24 Jul 2025 16:54:52 +0300
-Message-ID: <20250724135512.518487-10-eugen.hristev@linaro.org>
+Subject: [RFC][PATCH v2 11/29] sched/core: Annotate static information into Kmemdump
+Date: Thu, 24 Jul 2025 16:54:54 +0300
+Message-ID: <20250724135512.518487-12-eugen.hristev@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250724135512.518487-1-eugen.hristev@linaro.org>
 References: <20250724135512.518487-1-eugen.hristev@linaro.org>
@@ -90,35 +90,35 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 Annotate vital static information into kmemdump:
- - nr_irqs
+ - runqueues
 
 Information on these variables is stored into dedicated kmemdump section.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 ---
- kernel/irq/irqdesc.c | 2 ++
+ kernel/sched/core.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index b64c57b44c20..6d11b85be2b3 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -12,6 +12,7 @@
- #include <linux/export.h>
- #include <linux/interrupt.h>
- #include <linux/kernel_stat.h>
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2343f5691c54..18ba6c1e174f 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -67,6 +67,7 @@
+ #include <linux/wait_api.h>
+ #include <linux/workqueue_api.h>
+ #include <linux/livepatch_sched.h>
 +#include <linux/kmemdump.h>
- #include <linux/maple_tree.h>
- #include <linux/irqdomain.h>
- #include <linux/sysfs.h>
-@@ -140,6 +141,7 @@ static void desc_set_defaults(unsigned int irq, struct irq_desc *desc, int node,
- }
  
- static unsigned int nr_irqs = NR_IRQS;
-+KMEMDUMP_VAR_CORE(nr_irqs, sizeof(nr_irqs));
+ #ifdef CONFIG_PREEMPT_DYNAMIC
+ # ifdef CONFIG_GENERIC_IRQ_ENTRY
+@@ -119,6 +120,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_update_nr_running_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
  
- /**
-  * irq_get_nr_irqs() - Number of interrupts supported by the system.
+ DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
++KMEMDUMP_VAR_CORE(runqueues, sizeof(runqueues));
+ 
+ #ifdef CONFIG_SCHED_PROXY_EXEC
+ DEFINE_STATIC_KEY_TRUE(__sched_proxy_exec);
 -- 
 2.43.0
 
