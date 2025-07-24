@@ -1,64 +1,64 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9A62E2EFD
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 13:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6856B2DE71D
+	for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 13:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753365392; cv=none; b=lp12wzmD21jcSSA6iA1byZvXdVEMvFqA1nEX985yM7Dkk9rgub/4QeQv97bUvpDHBBHEtFb9gbOEnjOMb3rzdIwb8Hvx23hhQiStzvYa/+TRzvM00k26F6+l3DIu8e9oGHEbMvh9fqwIPqxjsHs2jyan5gYtKUF58AlKV8R7mvk=
+	t=1753365394; cv=none; b=X+vW+WpXYjLgXUlPlD67e3eNJ7IJJXbxfDXaWF2NhFZK++92KCne8JATB6+kX/1Fl9QOKGrJoyYTDl/VLn0x+fiIHnXkJwbx0HN4sT+R/68rbtBgE5JhlnfQUh+XAy354hAhDjegS781/dQjuK9DCgenHmHuxtndJBVgG1np2HI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753365392; c=relaxed/simple;
-	bh=MqHhOcNuXJ5oZB2p2GySncf4wGrMH13kPtoLfjjbjDA=;
+	s=arc-20240116; t=1753365394; c=relaxed/simple;
+	bh=WYZcYfuknZj3jTFjyz/2YrsteC6Vf4UuZMKZmSw4y2w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uh8HAqQfEEiS7pljLzH2zmkvA3ZxpJAqobhGdworRZp2yOa4KUgtsiZ2P2SiPRG167fP+gLbTR8j1+Hzf+p9KhE8Y9K0fLmQIAH/GPAAUNlEBsN+l9Odcr4KCrqM8nNor1YJvkmZ65rHMtZJbr8NzAXA7XJ1YN14gsmAXuoMxks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o06eEJlu; arc=none smtp.client-ip=209.85.128.48
+	 MIME-Version; b=uyTqFW5RzwKnEMXY+2BBJT1VH97s115zQOOuOeupJLLEmPxziH6OPx89N73zrnK4HR7295Z9LxXsrycUxb32ooyCcVNSgg/Tuj/wTsVixvN6UA4r/KLPrJYq4ovDYy1NtdrF/5ayUGBXB1bE/t+mzGySmqw1B3AqVNKom73r9C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Th3aUFFI; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o06eEJlu"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-45618ddd62fso10929445e9.3
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Th3aUFFI"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a588da60dfso649499f8f.1
         for <linux-hardening@vger.kernel.org>; Thu, 24 Jul 2025 06:56:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1753365388; x=1753970188; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1753365389; x=1753970189; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=o/nDqiXo0oPmiwRgkXmDbqPxo4RR6UizLNSv2BWaLmE=;
-        b=o06eEJluMpAq6dy3fOCgn7NAaSzuSdLBhZBZaMD6U2xLGIldpXohgymHLeLK9+xWTN
-         9+x0DVM9KcOW0fY4UPa1AaD5nV7oIzwVpF86Ej2cHoXm1zIYpl5+rvdOgT3Nwm//QP27
-         byvBAXdS/Fi5AYtUoXybNwolzf07pLMWW2vPPD0u5s2YcKeuBP0MFfJcWjzmtYUZSWbZ
-         m7kL2edMOTv0Q7FZaKNHgT8kD4xvBPzICoJsgGAxesIxE7W+mMeflzXYeWut6unLzIP9
-         NnwKtQwIthA7zFhcSIuGq9GPzo7rCpXXzNpyZyLhxNRncTKJhsKt2uydcdTkW4BEbf9W
-         bZiQ==
+        bh=754ZhLeV6aTccnAi72YeZAlKqe4sOON/R6H0mwMKOfI=;
+        b=Th3aUFFIQkGTV6sknzNIOajf27et1WQfLB29fQi7HkufV807DZOWxXheL4MoEi3zZ3
+         g902QOkIy0IAJTWMNe5iSjJJUGhTKHuis+4rkDDgWUm27kzTq5615hdX0D1j2gyCp+eK
+         JFh39ehqr0lZ6HQkTVfimzsFXYG/ZBJZAkPt/FFTfoekOqtl1ud7Ru6xpM/402OFXp9m
+         X9UfeqYaRwjAmhvhFYd2MPMKeq9sZTcWxGXXIrwQsMItziTSrEtm9pWWla2DI0cmEc69
+         B2qYsUcWWtp123urQK3cXCBMbWlYXXo8Vvip0LCdwhqw7XcijWppADMQJftEF70WvlZP
+         JxTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753365388; x=1753970188;
+        d=1e100.net; s=20230601; t=1753365389; x=1753970189;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=o/nDqiXo0oPmiwRgkXmDbqPxo4RR6UizLNSv2BWaLmE=;
-        b=cgEoMcFyGd/RtkhmiFgC08Bv1awReB/rAxyv2UzaWvt+iKZldHLpGctjywDteHt9OB
-         3WiFW0GvotuWQMRkb+dXBIg9lokM1pLTBDBiXlL8ViW18VhM1hwfUa+T3h8zXo/cHx5V
-         6bicAvSKtmkODQ+Mv4rWM3RZWMOOSAr7Gc23U6fBYq5ZT3adWWCjTyZ6xb2MEnlbQiZD
-         12L4zXwDEu3V9HBHNJJ+74mc0CAgdwIf+yhDOi3fwLq/MQ38UZdp8HAWVTlcOo1RwW+J
-         0NsboB+xwHeOHZwydDqaPRfkcVWDyrCXalRhH7cIjyiqrDnfHsu1WMu7GI+YKn706/kL
-         pSRw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqGe9oMEuSsNri9tIf0hU8Grd1svkdu9nX0H/vuFEzzbNf6QICYlseSxAHCD7ZLP8+YMNmGZWXGPyhWa/W+IA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5TNQyOGFUQ13bW2kyEvSE/WInQzQGNwhIr/uLBFwpy35T+3CT
-	Vp6Vvw8hjSl8HmbUx/WKvZad7KUnqoTeLcSlnbcSUugrG2q82niPDQlnmlRGQS6Z88g=
-X-Gm-Gg: ASbGncucpYaItfgDSl0uVtS5CWxsJHpM9VlVF8lU8+nVb2mtJ7bSGvYvB+W3Tee5uLI
-	8wEO0/DUk4GyplZ8LQDP7zlaueWa5+rZCicE7RBnRtgRYXl0picujEBj+nkDG+GA8w5/tjptJfo
-	BqgTI0huX+ppsmfNfb5EpzJmeqemd9XMGSKfi22JllcKdVwqRPno5F3KH24WO5iBEW8IuK83XAL
-	aYPlnyakB5CGeTgA19hDVr5GMfIFCzTlQclL7+sOzvCnEB0dVgK8OD7SlgHjiO3+FyhmJAhSb5q
-	BxrM7bVMzTbrqZzKUulqvk+QmZSIm9+cseV/vWhtG+NlLxa5cJ1NG6ZB+Ga3SL1dECEDOAHYfsO
-	mPSbSnzvQq5udkEFOOvWusWc6UHtOaafjstqr/EOMtGEQPKlkF8Rwhhx/scTs4xS5B6SkmCUuAm
-	4cV/ATgIiCf/S1
-X-Google-Smtp-Source: AGHT+IFsfIJWNObH04glJtR4VMihBKDX2X1KMe4027IfQD5dai+xqhfpETfw7nG5oExxx5Qg+IUmng==
-X-Received: by 2002:a05:600c:8719:b0:456:2ce8:b341 with SMTP id 5b1f17b1804b1-45868d47860mr71077715e9.17.1753365388431;
-        Thu, 24 Jul 2025 06:56:28 -0700 (PDT)
+        bh=754ZhLeV6aTccnAi72YeZAlKqe4sOON/R6H0mwMKOfI=;
+        b=mZfVlHYqW0pFMQzQDbANXCGV3TM2FtXK2WqKegJP1a/F0sR9Y84AeqrNH1dnvY5Y9o
+         XK+249/Xfx8SK/beSGnDpaF4jj2N3WzNv9TZz37Yn2aUGHOSz0HCXMd5OOjULRkyOVP9
+         rX1AeO/js0lXZezAIicadvvhmpHPJEs61zsZo9fwT6gcFDSBLTjZuE6kqx92zgdXiT2Y
+         +mLja8v2Zz226O7i7wcaVW27Sot0KkEOjUtspFzfTx4vGO3aVOnuBp7SnMzHtRK/fxA5
+         N9Vfah+c6LK76qaRYY4vTsEN4UMuYfjpmMnQwJ2gcx1l7l/hMJjzEGO4DVzoqXfAm0Sl
+         KYew==
+X-Forwarded-Encrypted: i=1; AJvYcCX6+dHQPreRhLf6lXu/Fp6F7VwJnMm6X2uCmH9GqAs/6DynV1SU+TUNocmBaKrP/hAcOKJwvyY0XHfOfIwUDGA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyziAfYx5SSYMB/gyfTPPD0R74xswkRC71Uw3/mMH47NAAOjh7b
+	lrkPYgD6dqp+qDIPDt6ENpCLOsD12MQbo1AV/R/ibbRakZk6PAHMbxxNJP6Zzm2QVkU=
+X-Gm-Gg: ASbGncuiZpsT+1IbRkjE1caz/+O6DeyTjh29XBvdgoeYU8n8k7dWn7U7hTFubKzX2ZZ
+	ItEq6gXr4VDgxApW9gbY4TO8xRNXz2bl+/rhZwtWaPWGt1P8U7cwbKU77mEJ0dyYLBmF3ZMxp6Y
+	aFBgCLJYbAIutA9NszQiSHBvQ1lG/APKRE9zZ6AmI01HjWERitysxpZgfa13NiZB+pJxZZ7ut0x
+	LdWKZYMflF0VK1pUo5UflIgdap1JSTXzcsB6CL8eR0MzAj7FH4L4mTY4Wg/8fP4JWClRQhZ94k0
+	qNROOafxVW26Ym2/1OxsdP19V9xZc6N4o9mFnd7ycQ47jqXBOIP/n1coBb9lkG8AvzutUrSoEd9
+	oDhGfQgnGkSwn5z3kRiRV9rK7NAHFdMjRBbmqai2x7oAskUcSmKBwgoik+38todqJM71ZIh2pRu
+	UfY5MrEkALnOadxLdgDlGUmMo=
+X-Google-Smtp-Source: AGHT+IHl6TFfQx8To8y+XEm2d27DSKV0h+MO3rvshokYEfPVyki8zgMiinC0EkzG8gsJheCG6bV65Q==
+X-Received: by 2002:a05:6000:188b:b0:3a8:2f65:3745 with SMTP id ffacd0b85a97d-3b768f11dfbmr6433064f8f.51.1753365389405;
+        Thu, 24 Jul 2025 06:56:29 -0700 (PDT)
 Received: from eugen-station.. (cpc148880-bexl9-2-0-cust354.2-3.cable.virginm.net. [82.11.253.99])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4587054e37dsm20889375e9.14.2025.07.24.06.56.27
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4587054e37dsm20889375e9.14.2025.07.24.06.56.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Jul 2025 06:56:28 -0700 (PDT)
+        Thu, 24 Jul 2025 06:56:29 -0700 (PDT)
 From: Eugen Hristev <eugen.hristev@linaro.org>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
@@ -75,9 +75,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	rostedt@goodmis.org,
 	jonechou@google.com,
 	tudor.ambarus@linaro.org
-Subject: [RFC][PATCH v2 07/29] init/version: Annotate static information into Kmemdump
-Date: Thu, 24 Jul 2025 16:54:50 +0300
-Message-ID: <20250724135512.518487-8-eugen.hristev@linaro.org>
+Subject: [RFC][PATCH v2 08/29] cpu: Annotate static information into Kmemdump
+Date: Thu, 24 Jul 2025 16:54:51 +0300
+Message-ID: <20250724135512.518487-9-eugen.hristev@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250724135512.518487-1-eugen.hristev@linaro.org>
 References: <20250724135512.518487-1-eugen.hristev@linaro.org>
@@ -90,36 +90,53 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 Annotate vital static information into kmemdump:
- - init_uts_ns
- - linux_banner
+ - __cpu_present_mask
+ - __cpu_online_mask
+ - __cpu_possible_mask
+ - __cpu_active_mask
 
 Information on these variables is stored into dedicated kmemdump section.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 ---
- init/version.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/cpu.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/init/version.c b/init/version.c
-index 94c96f6fbfe6..f5910c027948 100644
---- a/init/version.c
-+++ b/init/version.c
-@@ -16,6 +16,7 @@
- #include <linux/uts.h>
- #include <linux/utsname.h>
- #include <linux/proc_ns.h>
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index faf0f23fc5d8..d48e4dd979e9 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -38,6 +38,7 @@
+ #include <linux/random.h>
+ #include <linux/cc_platform.h>
+ #include <linux/parser.h>
 +#include <linux/kmemdump.h>
  
- static int __init early_hostname(char *arg)
- {
-@@ -51,4 +52,7 @@ const char linux_banner[] __weak;
+ #include <trace/events/power.h>
+ #define CREATE_TRACE_POINTS
+@@ -3092,18 +3093,22 @@ struct cpumask __cpu_possible_mask __ro_after_init
+ struct cpumask __cpu_possible_mask __ro_after_init;
+ #endif
+ EXPORT_SYMBOL(__cpu_possible_mask);
++KMEMDUMP_VAR_CORE(__cpu_possible_mask, sizeof(__cpu_possible_mask));
  
- #include "version-timestamp.c"
+ struct cpumask __cpu_online_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_online_mask);
++KMEMDUMP_VAR_CORE(__cpu_online_mask, sizeof(__cpu_online_mask));
  
-+KMEMDUMP_VAR_CORE(init_uts_ns, sizeof(init_uts_ns));
-+KMEMDUMP_VAR_CORE(linux_banner, sizeof(linux_banner));
-+
- EXPORT_SYMBOL_GPL(init_uts_ns);
+ struct cpumask __cpu_enabled_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_enabled_mask);
+ 
+ struct cpumask __cpu_present_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_present_mask);
++KMEMDUMP_VAR_CORE(__cpu_present_mask, sizeof(__cpu_present_mask));
+ 
+ struct cpumask __cpu_active_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_active_mask);
++KMEMDUMP_VAR_CORE(__cpu_active_mask, sizeof(__cpu_active_mask));
+ 
+ struct cpumask __cpu_dying_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_dying_mask);
 -- 
 2.43.0
 
