@@ -1,177 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D258B1401B;
-	Sat, 26 Jul 2025 12:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B8C285CBD
+	for <linux-hardening@vger.kernel.org>; Sat, 26 Jul 2025 14:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753532697; cv=none; b=cEJ9tXj+y3X14JapPQsh+6YIulCoeUyomThMiQzAZJdKkNgYIxDyvUH0uQp9qbWQ0H8qA2fn00K3vBFzBR4Zy97OIfHZHX6vdAg5ngg36AX/0XZlU2tH20BIHwIBWkpRUPNJxkq7H+PI5R6hJ7Ay41BfhwFvrmHCCEAc7/A01UQ=
+	t=1753539479; cv=none; b=Nz5I6st3Y4qn0QEScZRPemIk2Rl9WfpsPjfflylcAooV5J2elOlv8OZjikcHGirTak0RsUiulJFyN4gGA20A+qMKWm1YduKDy7JxO76kYaXBR2y0ii98fdZ2UiFAqXQQsctGp8OOoeX0dXPezRocy2L+WtubKTCmgS7siltNeGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753532697; c=relaxed/simple;
-	bh=Q9pEJcfekPUcRknoRen3DDDH4rZm+F68Z4P+bPSeIfQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FWeRa5GbHPeE1QXtQsErueyiqoCCSyc/urCavm+c3OdtxGffdqWlV8C0rdEH7cREvvNAXrWqnhJZYGqSRb+DsqnfdyVZzbtKjBe3v2Zh4s60TDlyn2i02o1hGoC6DC3He/N8wf2vhOfWUtq6t0H1AOhvxLoJFDLgXUvpRpJkMAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I4dXwOHn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753539479; c=relaxed/simple;
+	bh=QsKCYgFN3Pl/637rAO4WBZp3QLVhOoRKIclRbpT1pQQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Pf/qqdUiv7PcyFm441h13bQdUqvwqj2aDnEtMOqRDO4cvFJ+etPsOz5Eh2iMlJw9U9Jzd/YxRJmb9QTqbXmBI7Zoego9L6AxqPcgwnBj2zKRyWmuVH9Wey3zsAlDct6hfbNGkcnzniKSaUPp7pLZkBpTNN4KRycHcPB1dT1D2YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W3phLuaq; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I4dXwOHn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF1E5C4CEED;
-	Sat, 26 Jul 2025 12:24:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753532696;
-	bh=Q9pEJcfekPUcRknoRen3DDDH4rZm+F68Z4P+bPSeIfQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I4dXwOHnRQWjHsJ+SYTfUaiY82KVajXotoujJmsV/uFacibOC2t0bUwA+D7kG2y9Y
-	 zhTyAy1ojM9unojFjq6Res0zwM+N1/1ZZEQiKC+ECVy7z5NDLirytIRWBPHT9mxiAm
-	 K8NgPO/zr7mHoLv94p+zhbHEFk+LUEeSb/fM9JLd+GBXKaXw+kUnSAKZoayURITwWb
-	 RyBnhXxVcPgO9SBNnzfngQ0HC3Q+crrQkGMewjujJeHr/pm4D73QJJ9maNLsOl6CJW
-	 SUVVCX5TA1sKzCnLXkgUCnP7ttazW7vYoz3e+KKhXLS6bBqV/OsWFChaWJ5wuxiPJU
-	 mkcnaniU7eV1g==
-Message-ID: <0b284755-1ae7-4f5f-8338-836dfcb1db59@kernel.org>
-Date: Sat, 26 Jul 2025 14:24:51 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W3phLuaq"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-558facbc19cso2642208e87.3
+        for <linux-hardening@vger.kernel.org>; Sat, 26 Jul 2025 07:17:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1753539476; x=1754144276; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QsKCYgFN3Pl/637rAO4WBZp3QLVhOoRKIclRbpT1pQQ=;
+        b=W3phLuaq0RVVMNzRc9exL8O8cvPdzFYZxDXxvj/AeDazvwwlRvRGpWLdy13kQbTgc4
+         S61a8Sn8e4coANibRq5wFNwXxBLNIUzFXG6dAhpbX3cW+RNKQpMhs3lu/woLzZ2r3UjZ
+         QD56BsLYto7BaJF3JtSYuSJKsXS5ES9vXWdm4x4fePIAUiwLnJ8ByugA0oE5N0KV8fY1
+         e0+/zL1aMxMNW//hUUzRXDkpMXQ+prQyK2g+OWEZH867zHPr3w3LdbsL30ExWb4iJXQo
+         6AhTVmvWyqAjrepZklB7EefS6qNioFncIkTl21BZ5QDQ+pnTMl3v0JyRuVwiH1ffBazU
+         1N+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753539476; x=1754144276;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QsKCYgFN3Pl/637rAO4WBZp3QLVhOoRKIclRbpT1pQQ=;
+        b=nm5Yr9+BBM2BPdMTUG+YeHVZgXppbcn3RQ3Bf9uy4hurea1PJV6TijM4ScV/dLiRng
+         j4RWxAdEE6SZRmW648O6tlkcDWZDeNrSoGk4dfBA1nB3WedzBmJfctdm0cjPsILD1lhe
+         e4qRXT5ojN3klZr6Sb2WLnoA/3lamj1dOv8Dvg+gLhkd93WzdzKYVDnf2aGpjCllzS+X
+         b4g1YGVsfKA/vJFj3PfbBqt8/233r7AHQS4NoqIbCYMXLMAH03Akrqb5sSVf+poAHmWb
+         pgHP4jT+n5HFYE/hw+O8eg6fkWrmTAFlNFFfFT9m7Qe6SGB4cRZ0M8my6vGcwvKOo6bE
+         kYPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDfEcYXUIxd6OvShqh01SKuANgITVCT6BKM6dZTrhaU28HQGk1e9oo/iSoIxbc3gdcqz6Q8iIDwLf9NIRxQNE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznXbYcQoLtA3UcDKnl7r6WoxJnrU2cNG+bd4b2sq/eRgNwYkUb
+	twKAdIAB/3aOBH4Ld0jddvqG2TBCcoiQNtw4IRGJu5D60wkVHup9PuJwKmvmaTb8aslvyR17o17
+	dYvx73uQdRZD3njlbkw1OKok4K6igUS+Xvmam1vAfcg==
+X-Gm-Gg: ASbGncsC/WW91ZdMrnSsepqbfJiS3H1KudAFCC5pneB5dQDGgflLcKciA9XQKuMhF4l
+	GQD1fZamSR6C7bqoYCxrDTbOYLezWlqsFbV6BDjI2VP3VCzeNW8eXD2HnP+sqpOC1fpnj+J86NT
+	6ZpBxO+RG6beewuO1d7VRq9CIzZmK3QXm4znuYhrXbtIhn2ZDn4kNRdAkW75RbvYJsJEPY8YSrd
+	acgWWFwV9SJ
+X-Google-Smtp-Source: AGHT+IH7DWpvL4/EaSvQrUXZxoed9pZpjosN4KFejpqR4sw55oFM2Lj6aw3IRkV89heBwtbytSWltY9kUm8IpC204jQ=
+X-Received: by 2002:a05:6512:3da7:b0:55a:4462:f9b5 with SMTP id
+ 2adb3069b0e04-55b5f4c6d4bmr1362236e87.53.1753539475990; Sat, 26 Jul 2025
+ 07:17:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] staging: media: atomisp: Fix stack buffer overflow in
- gmin_get_var_int()
-To: Kees Cook <kees@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: zepta <z3ptaa@gmail.com>, Ard Biesheuvel <ardb@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>,
- linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>,
- Thomas Andreatta <thomasandreatta2000@gmail.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250724080756.work.741-kees@kernel.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250724080756.work.741-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
+ <CAMRc=MfS5Em65n0fwbu8JtJsc3rTgQO5cv+PymSonJtf6_zRKQ@mail.gmail.com>
+ <824ec6d1-4272-44c7-b3bb-93d716ed3d43@bootlin.com> <CAMRc=McnU6TO5p7Jwy-DOg_8-=AS7rFRfaPD0yH1SERWXM8L+A@mail.gmail.com>
+ <CAMRc=MeZ4HHJGkVBysLyusW5G-rM0iSQV1qqmFJUe1rsZrN2AA@mail.gmail.com>
+In-Reply-To: <CAMRc=MeZ4HHJGkVBysLyusW5G-rM0iSQV1qqmFJUe1rsZrN2AA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 26 Jul 2025 16:17:45 +0200
+X-Gm-Features: Ac12FXwQ27n_JGOOvHJ-jWxO2gK5gh1Sp4QaipYWDU0befizJdpmrsUresvZ2wg
+Message-ID: <CACRpkdbjQSns7a9EMx_5kdJ4Y2wsnocTLNsO2es7MQ=rKCBkQw@mail.gmail.com>
+Subject: Re: [PATCH v8 00/10] Add pinctrl support for the AAEON UP board FPGA
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Thomas Richard <thomas.richard@bootlin.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Kees,
+On Wed, Jul 23, 2025 at 10:43=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> On Tue, Jul 15, 2025 at 3:17=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
 
-On 24-Jul-25 10:08 AM, Kees Cook wrote:
-> When gmin_get_config_var() calls efi.get_variable() and the EFI variable
-> is larger than the expected buffer size, two behaviors combine to create
-> a stack buffer overflow:
-> 
-> 1. gmin_get_config_var() does not return the proper error code when
->    efi.get_variable() fails. It returns the stale 'ret' value from
->    earlier operations instead of indicating the EFI failure.
-> 
-> 2. When efi.get_variable() returns EFI_BUFFER_TOO_SMALL, it updates
->    *out_len to the required buffer size but writes no data to the output
->    buffer. However, due to bug #1, gmin_get_var_int() believes the call
->    succeeded.
-> 
-> The caller gmin_get_var_int() then performs:
-> - Allocates val[CFG_VAR_NAME_MAX + 1] (65 bytes) on stack
-> - Calls gmin_get_config_var(dev, is_gmin, var, val, &len) with len=64
-> - If EFI variable is >64 bytes, efi.get_variable() sets len=required_size
-> - Due to bug #1, thinks call succeeded with len=required_size
-> - Executes val[len] = 0, writing past end of 65-byte stack buffer
-> 
-> This creates a stack buffer overflow when EFI variables are larger than
-> 64 bytes. Since EFI variables can be controlled by firmware or system
-> configuration, this could potentially be exploited for code execution.
-> 
-> Fix the bug by returning proper error codes from gmin_get_config_var()
-> based on EFI status instead of stale 'ret' value.
-> 
-> The gmin_get_var_int() function is called during device initialization
-> for camera sensor configuration on Intel Bay Trail and Cherry Trail
-> platforms using the atomisp camera stack.
-> 
-> Reported-by: zepta <z3ptaa@gmail.com>
-> Closes: https://lore.kernel.org/all/CAPBS6KoQyM7FMdPwOuXteXsOe44X4H3F8Fw+y_qWq6E+OdmxQA@mail.gmail.com
-> Fixes: 38d4f74bc148 ("media: atomisp_gmin_platform: stop abusing efivar API")
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> > Well, nobody responded to my last email. This is a cross-tree series
+> > so at least Linus must confirm he's ok.
+> >
+> > Bart
+>
+> Linus, I'm willing to queue at least the GPIO part for v6.17, does the
+> pinctrl part look good to you?
 
-Thanks, patch looks good to me:
+Yes go ahead, sorry for late reply!
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Reviewed-by: Hans de Goede <hansg@kernel.org>
+I was mainly waiting for Andy's review on this, so if Andy
+is OK, I'm OK with it.
 
-I've already send an atomisp pull-request for 6.17 out
-and this is already in media-committers/next now and
-the media subsystem is typically not good in merging
-fixes just before the merge window.
-
-Kees, the file touched here is unchanged in
-media-committers/next vs Linus' latest master, can you
-send this fix to Linus yourself ?
-
-Regards,
-
-Hans
-
-
-
-
-
-
-
-
-> ---
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Andy Shevchenko <andy@kernel.org>
-> Cc: Hans de Goede <hansg@kernel.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: <linux-media@vger.kernel.org>
-> Cc: <linux-staging@lists.linux.dev>
-> 
-> Note that as an exercise this fix and the commit log body (I wrote the
-> tags) was entirely written by an LLM (and reviewed by me), though I really
-> had to help it focus on where to be looking. Here were my prompts:
-> 
-> Is there a buffer overflow problem associated with gmin_get_config_var()'s
-> use of efi.get_variable()?
-> 
-> What does efi.get_variable() do to out_len if it fails?
-> 
-> Does the function return an error when efi.get_variable fails?
-> 
-> What would the caller do when it sees a success but when efi.get_variable
-> changed out_len?
-> 
-> Propose fixes and write a commit message with all of the details you
-> just gave me about reachability, impact, etc.
-> 
-> Since the EFI_SUCCESS test ends with "return 0" you don't need an explicit
-> "else" block for the error path code.
-> ---
->  .../staging/media/atomisp/pci/atomisp_gmin_platform.c    | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> index 5f59519ac8e2..964cc3bcc0ac 100644
-> --- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> +++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> @@ -1272,14 +1272,15 @@ static int gmin_get_config_var(struct device *maindev,
->  	if (efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE))
->  		status = efi.get_variable(var16, &GMIN_CFG_VAR_EFI_GUID, NULL,
->  					  (unsigned long *)out_len, out);
-> -	if (status == EFI_SUCCESS)
-> +	if (status == EFI_SUCCESS) {
->  		dev_info(maindev, "found EFI entry for '%s'\n", var8);
-> -	else if (is_gmin)
-> +		return 0;
-> +	}
-> +	if (is_gmin)
->  		dev_info(maindev, "Failed to find EFI gmin variable %s\n", var8);
->  	else
->  		dev_info(maindev, "Failed to find EFI variable %s\n", var8);
-> -
-> -	return ret;
-> +	return -ENOENT;
->  }
->  
->  int gmin_get_var_int(struct device *dev, bool is_gmin, const char *var, int def)
-
+Yours,
+Linus Walleij
