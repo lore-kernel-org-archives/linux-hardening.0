@@ -1,100 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4F24A11;
-	Sat, 26 Jul 2025 21:47:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00618188000;
+	Sun, 27 Jul 2025 15:50:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753566480; cv=none; b=axwMFKDiA8JzQuB3ODmPAVaNSzfU2YiZBrNt1Pm+LodcXw8rCAATeeYxs5NSVYiyBBaFHFpx/TC5gFOPsivk6wvJ41I+7Mb/LLvYqOiZjMVARVxlOnCm2AfYNkqkIxX5jL4cJqGk5QX5B3Dkgd5GvuC/zZqeOeWg0I4kkP/T7DY=
+	t=1753631454; cv=none; b=dePcx+I9J4QwBpaybwXOKJ4Lym4KGC+eJHcmKObMa4VkddVH6Vdl11u2+TwtmaSo5ePb3tugtQSwvpz/4aGx1edhN7zO2xndHiwfG4/nKAVwhfe2z0USi7X4XZkSapL/gXGlBkI8qe7zt7v6gbM4wb9QiGApV1nvUsTAJ8+THZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753566480; c=relaxed/simple;
-	bh=/eYVX8SoAB6x3E1/nt7tNV75VsKCSwlna2pvOjAdRkY=;
+	s=arc-20240116; t=1753631454; c=relaxed/simple;
+	bh=uZqwwGm065LQI7dRLDoIzl+Vlmkbby//l9h+RF0Lp2Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BDFcYlHgG0bHE0u+Bbu8i8KkCwBz81yZtZNmgTYafCMqO79+QCwmasg6TRgTkrbfq9bGNGQgUIWPmHdDMJgvyjXHBDSK5coPJMuW1zkKHhKpm5p8lnTWR8tWiTz7bPWK+0fUzAINB/eB43D2PbDPHtUIBpbo1EC0duLveibShIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLV+aIK/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MqFXGa/oOb0A/LHnKQuK6UWbd54AWJlNbze/8ZePSSchVipjnj5+9bP5g84Tyo4SOYToCsaOloo6IXkQJ7s0jVNB3GH/h+030Ys5D80jhEWDDK3MjTy8Wj8dOXvPcxzSdn5dRbmg4DdIWL/gDp1BA/Xz0Y2VWbYl1/Ss3kw55Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2LceatE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLV+aIK/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FF06C4CEF4;
-	Sat, 26 Jul 2025 21:47:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2LceatE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EAFAC4CEEB;
+	Sun, 27 Jul 2025 15:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753566479;
-	bh=/eYVX8SoAB6x3E1/nt7tNV75VsKCSwlna2pvOjAdRkY=;
+	s=k20201202; t=1753631452;
+	bh=uZqwwGm065LQI7dRLDoIzl+Vlmkbby//l9h+RF0Lp2Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fLV+aIK/Vze5Yi37yRjGGquqtluZaj6oEyf8QVw+wrbGGLvpPqO/3VWgN6Q1uJ3EQ
-	 QH0nRrCHz1m2MVaid0DwO/ZAreS3vZit+HvBLazabv8sPBvyPMeFsxbcwMrKLtctLL
-	 j3NuYhUDBuP296I9Gm2LbU3o4w0jf03jgW1XCsrOoQO/rnS2XvncxSS5g/BxbXsPUY
-	 cZFoUBccYezObyf23E1vFbZZhbN05/QUjpb9Nu6YNxWPCEvwX+Xct1jvhL6BlIkWyO
-	 EQM6085jWFo3sxIkJ4QMkSe5eI9/li5cIvDNYY225Ouro0eBfYuV1C42m7ggGqabpt
-	 /L2PyqAmEpzaQ==
-Date: Sat, 26 Jul 2025 14:47:59 -0700
-From: Kees Cook <kees@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Gavin Shan <gshan@redhat.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	James Morse <james.morse@arm.com>,
-	Oza Pawandeep <quic_poza@quicinc.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Michal Wilczynski <michal.wilczynski@intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Kirill A. Shutemov" <kas@kernel.org>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Usama Arif <usama.arif@bytedance.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	b=S2LceatEmCJfPz6s2eLJeN2Up0rKPhct2bBII20Ezt0h8v+B34LL8ys0csF9ccMmx
+	 /6Jj77dAysa0Cz5NWbpL0mYvlhuHjicxfphl6BM8IepXDlFif/ir+Qvz+APS6NCvjq
+	 gxgq48pxwveOcQGZ0/fl9gCdvUmgem8kUUP+J9MDpqBdQPxWmICpTH2KTeaoBumTlI
+	 Iyf8rR1KoR479fTua9NU4eXs2Aj/B2yjVGLI/MeUzxHmZtnRVfD1BgPZFKD6pr2ZFY
+	 IOoaFSEeggTKZMtNgUvzSU2ff62jS5UQK/ekUnix27aEBocQ9CL3xPFJREYPmfdbwG
+	 34TIFiYkHDQMA==
+Date: Sun, 27 Jul 2025 08:50:47 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Youling Tang <tangyouling@kylinos.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
-	Alexander Graf <graf@amazon.com>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Jan Beulich <jbeulich@suse.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Bibo Mao <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-mm@kvack.org, kasan-dev@googlegroups.com,
-	linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
-	kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/4] stackleak: Support Clang stack depth tracking
-Message-ID: <202507261446.8BDE8B8@keescook>
-References: <20250724054419.it.405-kees@kernel.org>
- <20250726004313.GA3650901@ax162>
+	David Disseldorp <ddiss@suse.de>,
+	Qun-Wei Lin <qun-wei.lin@mediatek.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] sched/task_stack: Add missing const qualifier to
+ end_of_stack()
+Message-ID: <20250727155047.GA1183915@ax162>
+References: <20250726210641.work.114-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -103,34 +50,48 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250726004313.GA3650901@ax162>
+In-Reply-To: <20250726210641.work.114-kees@kernel.org>
 
-On Fri, Jul 25, 2025 at 05:43:13PM -0700, Nathan Chancellor wrote:
->   ld.lld: error: undefined symbol: __sanitizer_cov_stack_depth
->   >>> referenced by atags_to_fdt.c
+On Sat, Jul 26, 2025 at 02:06:46PM -0700, Kees Cook wrote:
+> Add missing const qualifier to the non-CONFIG_THREAD_INFO_IN_TASK
+> version of end_of_stack() to match the CONFIG_THREAD_INFO_IN_TASK
+> version. Fixes a warning with CONFIG_KSTACK_ERASE=y on archs that don't
+> select THREAD_INFO_IN_TASK (such as LoongArch):
+> 
+>   error: passing 'const struct task_struct *' to parameter of type 'struct task_struct *' discards qualifiers
+> 
+> The stackleak_task_low_bound() function correctly uses a const task
+> parameter, but the legacy end_of_stack() prototype didn't like that.
+> 
+> Build tested on loongarch (with CONFIG_KSTACK_ERASE=y) and m68k
+> (with CONFIG_DEBUG_STACK_USAGE=y).
+> 
+> Fixes: a45728fd4120 ("LoongArch: Enable HAVE_ARCH_STACKLEAK")
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Closes: https://lore.kernel.org/all/20250726004313.GA3650901@ax162
+> Cc: Youling Tang <tangyouling@kylinos.cn>
+> Cc: Huacai Chen <chenhuacai@loongson.cn>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Proposed fix:
-https://lore.kernel.org/lkml/20250726212945.work.975-kees@kernel.org/
+Tested-by: Nathan Chancellor <nathan@kernel.org>
 
->   kernel/kstack_erase.c:168:2: warning: function with attribute 'no_caller_saved_registers' should only call a function with attribute 'no_caller_saved_registers' or be compiled with '-mgeneral-regs-only' [-Wexcessive-regsave]
-
-Proposed fix:
-https://lore.kernel.org/lkml/20250726212615.work.800-kees@kernel.org/
-
->   In file included from kernel/fork.c:96:
->   include/linux/kstack_erase.h:29:37: error: passing 'const struct task_struct *' to parameter of type 'struct task_struct *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
->      29 |         return (unsigned long)end_of_stack(tsk) + sizeof(unsigned long);
->         |                                            ^~~
->   include/linux/sched/task_stack.h:56:63: note: passing argument to parameter 'p' here
->      56 | static inline unsigned long *end_of_stack(struct task_struct *p)
->         |                                                               ^
-
-Proposed fix:
-https://lore.kernel.org/lkml/20250726210641.work.114-kees@kernel.org/
-
-Thanks for the reports! :)
-
--Kees
-
--- 
-Kees Cook
+> ---
+>  include/linux/sched/task_stack.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/sched/task_stack.h b/include/linux/sched/task_stack.h
+> index 85c5a6392e02..1fab7e9043a3 100644
+> --- a/include/linux/sched/task_stack.h
+> +++ b/include/linux/sched/task_stack.h
+> @@ -53,7 +53,7 @@ static inline void setup_thread_stack(struct task_struct *p, struct task_struct
+>   * When the stack grows up, this is the highest address.
+>   * Beyond that position, we corrupt data on the next page.
+>   */
+> -static inline unsigned long *end_of_stack(struct task_struct *p)
+> +static inline unsigned long *end_of_stack(const struct task_struct *p)
+>  {
+>  #ifdef CONFIG_STACK_GROWSUP
+>  	return (unsigned long *)((unsigned long)task_thread_info(p) + THREAD_SIZE) - 1;
+> -- 
+> 2.34.1
+> 
