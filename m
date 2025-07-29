@@ -1,109 +1,163 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF8A269B12
-	for <linux-hardening@vger.kernel.org>; Tue, 29 Jul 2025 08:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6ED263F40;
+	Tue, 29 Jul 2025 08:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753776198; cv=none; b=KL1QlfyqVWJctU+wZRBFyFCP86JngpXyRHsdq4rYkSBn1MgupM5d+E5+9+tgMB1haNTt+1SjDlqKXM7fSHrSU7TaFd/UT/RlAo81FJRb2uKyXzQsN5llnPRwSoDZd+FKD+P8HObZ4dWAi1hG8RWCfjHTmlihRGSuNKgUMqa6By8=
+	t=1753776672; cv=none; b=UhPDVSQ7LnohOrK7B1YzRbX5pZM4I29itNGr+Dfh801NimR6u5eSJ3kUexrERuU4yLy3z44aqp/Z3yeBBXgmCbKBEUks52mIg/eDxjCEEN1bdk25PYaiBgaJTtMGg5rOe9MtvRYpNo0DrQ9u9qNvaZAcLAuJStScAXuO+ZEosBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753776198; c=relaxed/simple;
-	bh=UflJNvI/cneK2LX3m1PgDlZbFunqpRrS1ehCqCFEDw4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mBTr5Nmsm411tzprQ36OTT0e/+Gz3A6ZDmIOBD+Lmb3P9W6OpMwka5st3VQaCNbUQds0k4ZYJRC34J70mffFCDbMPrVfoF/KRnJAul2knnnrmEKbtmnS1oz6pmQK5lf91XN3BH80i63me/ZgNtnt0U7+Z66J2DdvISYZhKvbfdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lHg4Wcyd; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1753776672; c=relaxed/simple;
+	bh=cWVIex8ZD7iLHUiFYdl7hALOOKwBmGPA9Eu9Lq5/ve4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pmiqh4vKeniJcfgXOXAwYoVO6GQcySw2yVNYTwjbe7Yaku8/g6TpDOXBbJRXdZ4g8H05+UbTsNoHXdgT8TQwCaC4nrviajMHyrdPLGrkfLV2HCXAWtbr3E155nvKeYRtqXyC3ytO4pOUYvX7Wd/0Q/2rgE/BuuOHGuotRDLZHCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+W04S5x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lHg4Wcyd"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso5317833e87.0
-        for <linux-hardening@vger.kernel.org>; Tue, 29 Jul 2025 01:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753776195; x=1754380995; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UflJNvI/cneK2LX3m1PgDlZbFunqpRrS1ehCqCFEDw4=;
-        b=lHg4WcyduMyjgVQ75Wwb2TKuNLuAjYgZ4+19osY9bKFZEzrmKY4uIMEN3fBC07R6go
-         pskGLbA/N0ne2CkWctM4JDpWYRXHpfcukZqQEhqeEsS54LkKFTuuE8R2gHQZ7dHNDIzV
-         xGLXBvdxtYSSjTyADL+bLKVpv3DsON/0tKEvOi6kSLDyDLULXRAG2ooTXmm8osUX1nPP
-         eQlgc/4PzsjKTztid0tyehGU1MC7XLP8r+wa855O6Q9zN8PzYCUtiWd31uem/WT820in
-         0XQ3IPjOetIlqAYz57oHyNvYGPqfDU25en2sUfikIhDhSjCjIlz/r5YYwbKOrg5MtohH
-         0miA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753776195; x=1754380995;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UflJNvI/cneK2LX3m1PgDlZbFunqpRrS1ehCqCFEDw4=;
-        b=a04APWE4VG737jkhYZbHnS20Y+BS3qunLg+WcRBxwpGRgy82qoggj7DY1tQQUEVDcd
-         7QOOAsy3EztfL9PYTcr140cHt4cT8PkbcYZrdDPhscvC9oRRrhRvdRCPupY6Uvf17czP
-         z1yChzrGCUteUWevEahEUMgDZSA6KhwoYKpSgvucygBzkETQZ9trWXCsSzjVaQurOTvx
-         GGSuAz4RfMHR5gluQBZyZ5wpYG8Kq9JxsubLnGl4QShKNrG7wUBHWMzYyaeibO0+8yok
-         OhJxvJc/4u1ef1VEyMc/gO+lqPKP+vHHj8OmSyPtkjTA7OrjglX+J5xat3fdl3hJ22Qn
-         qiHw==
-X-Forwarded-Encrypted: i=1; AJvYcCV64D2Vd8AsJCVwCZC5iIzUyQqw6s4V/BctEM5frfvpA86dnmQcYgB9r+qT0hAtauPxzELnImD/uG3hWhQY0OI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmOcl7B7fd44auIwIi6sgMu/ds/n+7pzdgBVRW0brc+mpYmDse
-	78NetQLxIJp3JMWx+rd6IcpX8OfVur0kfUnha1t0h53D4RuGHrBz6x/Ve9G7QZ11+aM28Y64/3f
-	k3dy0yZFD0mmWx+kcJg77LT+MZJd8NrnSVOt6ltRgEQ==
-X-Gm-Gg: ASbGnctiJauUoitJulnf4MACUXk6NZv02Jol533FsiZi16SbtMUUrRYrMiVqaaj3rzP
-	D7f8aVlUj3x+f/NVq/4CcyVNYua3Yp0ZDbgGJHlt7adNDMXPqv1OgiPTk/r0O4fSFqMtQ2uEiLv
-	OJPwBk/l41jKdqTw0O9QnKgel93v7wcqB9iDH/B6iK4KYsBdEyD92kfKBFcaWqzP3DCYLTvbgq0
-	uaATAXFC3G87rQxfIHJSGvdZsIikdVDlSe7Kni0jtYs6tAbGw==
-X-Google-Smtp-Source: AGHT+IHhGTfRcwlCoTMkBpGGIbg24X8fFN+ca6FGQ7O5Z0tgMTO9PPQ8O181X8MbzMzcz0jB3+Pt3eo0mb+Vi3jG5I0=
-X-Received: by 2002:a05:6512:1082:b0:553:25f4:695c with SMTP id
- 2adb3069b0e04-55b5f4b9c66mr3802415e87.50.1753776194943; Tue, 29 Jul 2025
- 01:03:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+W04S5x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46400C4CEEF;
+	Tue, 29 Jul 2025 08:10:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753776671;
+	bh=cWVIex8ZD7iLHUiFYdl7hALOOKwBmGPA9Eu9Lq5/ve4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F+W04S5xBBcVSjTJ0lwCukWF0CUJoPlRJ5apOHIjcIp4Ir2h0WEtBfOZPNq9j6UIw
+	 6fZP5IdfM5f5vLEjByzE5d1D4q0ntoXIKt1ZlaptYaMMJ/RbpgOJ4vi8j7m1REK/WE
+	 cJzV6oM57CeEOUeuFXbdpRKe9ommavUNv3horhLZRAO6muGJhtumt9y36tBBk8z1p0
+	 RcW8XEWXTvj+vpzKEBs29ORzEbWanrDmwe68O6LcUhBYBhNbsg7nJAYdHkL7mym1rZ
+	 WuxIc0wxhAbBVU5BUD51GFHFqvaCN7R5JBhhYX7ZtWmQVYAe4Cx4MWw9LPH9S4UYr+
+	 4hpI//0VngcyA==
+Date: Tue, 29 Jul 2025 09:10:55 +0100
+From: Will Deacon <will@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Gavin Shan <gshan@redhat.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	James Morse <james.morse@arm.com>,
+	Oza Pawandeep <quic_poza@quicinc.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Michal Wilczynski <michal.wilczynski@intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Kirill A. Shutemov" <kas@kernel.org>,
+	Roger Pau Monne <roger.pau@citrix.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Usama Arif <usama.arif@bytedance.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
+	Alexander Graf <graf@amazon.com>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Jan Beulich <jbeulich@suse.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, kvm@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-mm@kvack.org, kasan-dev@googlegroups.com,
+	linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v4 1/4] arm64: Handle KCOV __init vs inline mismatches
+Message-ID: <aIiCD5V1MaI3ORqA@willie-the-truck>
+References: <20250724054419.it.405-kees@kernel.org>
+ <20250724055029.3623499-1-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
- <CAMRc=MfS5Em65n0fwbu8JtJsc3rTgQO5cv+PymSonJtf6_zRKQ@mail.gmail.com>
- <824ec6d1-4272-44c7-b3bb-93d716ed3d43@bootlin.com> <CAMRc=McnU6TO5p7Jwy-DOg_8-=AS7rFRfaPD0yH1SERWXM8L+A@mail.gmail.com>
- <CAMRc=MeZ4HHJGkVBysLyusW5G-rM0iSQV1qqmFJUe1rsZrN2AA@mail.gmail.com> <CACRpkdbjQSns7a9EMx_5kdJ4Y2wsnocTLNsO2es7MQ=rKCBkQw@mail.gmail.com>
-In-Reply-To: <CACRpkdbjQSns7a9EMx_5kdJ4Y2wsnocTLNsO2es7MQ=rKCBkQw@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 29 Jul 2025 10:03:03 +0200
-X-Gm-Features: Ac12FXz22uZHpwAEpH2A-edyCZbULy4WGvtG8B3M_WQs_F93ggeN_b2SiWiW7F4
-Message-ID: <CAMRc=MdWkWvwVU66daz94NB-asxBBY-1EC3BSLtPO+6dcvyCMw@mail.gmail.com>
-Subject: Re: [PATCH v8 00/10] Add pinctrl support for the AAEON UP board FPGA
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thomas Richard <thomas.richard@bootlin.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250724055029.3623499-1-kees@kernel.org>
 
-On Sat, Jul 26, 2025 at 4:17=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Wed, Jul 23, 2025 at 10:43=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
-pl> wrote:
-> > On Tue, Jul 15, 2025 at 3:17=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote:
->
-> > > Well, nobody responded to my last email. This is a cross-tree series
-> > > so at least Linus must confirm he's ok.
-> > >
-> > > Bart
-> >
-> > Linus, I'm willing to queue at least the GPIO part for v6.17, does the
-> > pinctrl part look good to you?
->
-> Yes go ahead, sorry for late reply!
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> I was mainly waiting for Andy's review on this, so if Andy
-> is OK, I'm OK with it.
->
+On Wed, Jul 23, 2025 at 10:50:25PM -0700, Kees Cook wrote:
+> GCC appears to have kind of fragile inlining heuristics, in the
+> sense that it can change whether or not it inlines something based on
+> optimizations. It looks like the kcov instrumentation being added (or in
+> this case, removed) from a function changes the optimization results,
+> and some functions marked "inline" are _not_ inlined. In that case,
+> we end up with __init code calling a function not marked __init, and we
+> get the build warnings I'm trying to eliminate in the coming patch that
+> adds __no_sanitize_coverage to __init functions:
+> 
+> WARNING: modpost: vmlinux: section mismatch in reference: acpi_get_enable_method+0x1c (section: .text.unlikely) -> acpi_psci_present (section: .init.text)
+> 
+> This problem is somewhat fragile (though using either __always_inline
+> or __init will deterministically solve it), but we've tripped over
+> this before with GCC and the solution has usually been to just use
+> __always_inline and move on.
+> 
+> For arm64 this requires forcing one ACPI function to be inlined with
+> __always_inline.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Gavin Shan <gshan@redhat.com>
+> Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Oza Pawandeep <quic_poza@quicinc.com>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Cc: <linux-arm-kernel@lists.infradead.org>
+> ---
+>  arch/arm64/include/asm/acpi.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
+> index a407f9cd549e..c07a58b96329 100644
+> --- a/arch/arm64/include/asm/acpi.h
+> +++ b/arch/arm64/include/asm/acpi.h
+> @@ -150,7 +150,7 @@ acpi_set_mailbox_entry(int cpu, struct acpi_madt_generic_interrupt *processor)
+>  {}
+>  #endif
+>  
+> -static inline const char *acpi_get_enable_method(int cpu)
+> +static __always_inline const char *acpi_get_enable_method(int cpu)
+>  {
+>  	if (acpi_psci_present())
+>  		return "psci";
 
-Ah, I already sent my big PR for this cycle. :( Let's pick it up early
-after rc1 and I'll prepare for you an immutable branch.
+Thanks for improving the commit message:
 
-Bartosz
+Acked-by: Will Deacon <will@kernel.org>
+
+Will
