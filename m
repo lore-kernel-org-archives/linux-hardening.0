@@ -1,258 +1,171 @@
-Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2EA288516;
-	Tue, 29 Jul 2025 09:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBC01AA1D9;
+	Tue, 29 Jul 2025 22:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753781754; cv=none; b=bT/pRl3zLqnTi0zhMb1oS/CsTQXmM4p/CbppHNqbcKGa0PQB5Dze+rDiEEEO6gA1e0OW3CDVa/BBiWdm/ZwyvSZ6jMhtlC+EgtqUNk+ntqEr8QlYFSxrHrssQRwUREy6C54UjebMRQFIVdmF5BQA+KD4P3iNQAJd+aHoDK8kcBs=
+	t=1753829015; cv=none; b=skVZV6toGXRAgAttRcJqTrYeI90s12dP7NUZf1FRuZRQxh3bDYVbO4A5Ufs0tSQfE39+QaBZa3MJJMu81oYVc5VeGrjvkBo/5Ung0CMRTMetDqW1p28YeZxekhHlJr/QIAuC0cdF4o/8vTWMtDuROCuPk2dsJ+8JgHM4iDxMDCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753781754; c=relaxed/simple;
-	bh=g+vpis/SpU05sbo8Vmp+65jPjCMeiygq63OVHIYclpc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=RqYzr4tC0eFZirougPWnfdyB0SyEhUwGX09OXiGsvSw/BDduxmjx9ocmezn65ZIi754jBuNqWZQf9KjsNCGVZzcVDBRAV781qEdBMlt4Y7uLBhi7is+8fzhpF24ZEg+V1CWA94KodiZXUhM0ir0jB5UhPlArX9LfCVWm8xCvQMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=T0M0CDw9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=buJJFSqR; arc=none smtp.client-ip=202.12.124.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1753829015; c=relaxed/simple;
+	bh=oTdYiE23IWd2hrwmuA8C9kEdsJ1UHqb9arQdLsQ2bvc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=puwZHSGTqUVkE1Emk2CwXoszvOCFqCqnCh4WhDMCcToL4NGFscaw4g8bmHjrKHrLdWEVtmHbzRbKNR9usshdCNi0vogXnvJP5rziTsM9i5snTU/qKbOefxFeiieIjyEEXBmRLwPm2bUJ8uxI7CF/9TRRKI9oZZA3oDbySL+WiIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rbz5frpJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="T0M0CDw9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="buJJFSqR"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailflow.stl.internal (Postfix) with ESMTP id 83C331302001;
-	Tue, 29 Jul 2025 05:35:49 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Tue, 29 Jul 2025 05:35:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1753781749;
-	 x=1753788949; bh=//ORI/NIeaAxh1YrBcckAswwPCVYsSmGgDQbyUkZAq8=; b=
-	T0M0CDw90VbSLjna7vCcfe6mTMKCQ5endMYTmbm5F+kZuNuH4nc4BQuqm9/kFxYO
-	cQELYjIMlvNKw4lJ6TCvYDOi6/GwbiFcq8V1FL9vON4SMrAYZBHEMyr3TapvJ32Q
-	EuCcZwakLVvoMKIuhtNhw9MpoU1pIRLsrJBuKfw0mFvSH27q/GYmQZrzLEpJzswO
-	GdKXjvNgbHsWZp/zE+Lg+mEXxE3fEhCRBZiE76eszktahyeCSVZQu6/kPCC3i4ZU
-	uXu4AJQyuOJ4LmQeRHhGFlF5/SpiTMdgAiOzotcaAGdLwfh/H5w+q56btZTRpbJ7
-	8OFkhBqJ4bK5fdS1U8Lbrg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1753781749; x=
-	1753788949; bh=//ORI/NIeaAxh1YrBcckAswwPCVYsSmGgDQbyUkZAq8=; b=b
-	uJJFSqRDP45vHQljpA7Vz5hxUd4Ye4pvXCFm5P+xUL3+GeSv2Jf9TQHBok2h5/y2
-	8/PZ9GxYgAgtcQpNwox5EnnRktB7wG3sB0/j0KvR/u0lZ+CnNXcE0cmlrZO+y5ZV
-	9yem6aXNjbvR7nkneYRaElOeon59Ocxqje2qLUNlkME5Sa7zPk4kjPv9pZqHNKNh
-	lJV3swLKBE9qqltK0HfW4aTL83MPWE1v/JKK8VeT/xPzY6Nnm7iNFa/W7BubAO9J
-	3ffb5NBK06Z9dokUuQl2fLD6FS2cFL30C4YYZiw2Iduv5cvgWcUOa8OL1iybrgXJ
-	mUVNSzzn8C2I/WoIb3d+g==
-X-ME-Sender: <xms:85WIaMyhieSSZlSTT0yHTn72mdFb2rWSE8kDBFOTHT75_XQsqr_aHQ>
-    <xme:85WIaARI_U36niK6nz84PWzTnfAtsvJXL8KAZzHI9PFLHL4DmUN20-ne2_bXTcjrC
-    kpOt2tuPjxukqMBaus>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdelgeejudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeftddpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepuggrvhgvrdhhrghnshgvnheslhhinhhugidrihhnthgvlhdrtghomh
-    dprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgt
-    ohhmpdhrtghpthhtohepkhhirhhilhhlrdhshhhuthgvmhhovheslhhinhhugidrihhnth
-    gvlhdrtghomhdprhgtphhtthhopehkvgigvggtsehlihhsthhsrdhinhhfrhgruggvrggu
-    rdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrd
-    hinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhlvhhmsehlihhsthhsrdhlihhn
-    uhigrdguvghvpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhsthhsrd
-    hsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtohepmhgrohgsihgsoheslhhoohhn
-    ghhsohhnrdgtnhdprhgtphhtthhopehjmhhorhhrihhssehnrghmvghirdhorhhg
-X-ME-Proxy: <xmx:85WIaPnIcgaIATKBhxVWwK2-m2EfS8PuHbx7ehTzbZYYwEyhpGDr_A>
-    <xmx:85WIaBEA4xy-CXl_decDoAPBk3bbcRqPT4EvT8P_Ytm06SHygu9mPg>
-    <xmx:85WIaCzO8e92MmMJKlNqjd5utHh39rP5DKbEOnMvLMHZjHXDsuvHGQ>
-    <xmx:85WIaKabnqwzN2tmkaM4lt9r0XopNiElVkycoMHYr9aBhvYdocxU-w>
-    <xmx:9ZWIaNYEQ0icn8P3P-aCu5BQdrX6XDYXkrqNxknDiXSDJWuFBQyFgcIe>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 9F298700065; Tue, 29 Jul 2025 05:35:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rbz5frpJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAE56C4CEEF;
+	Tue, 29 Jul 2025 22:43:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753829015;
+	bh=oTdYiE23IWd2hrwmuA8C9kEdsJ1UHqb9arQdLsQ2bvc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Rbz5frpJLBa6F6s41xo03v2BD1kk9wTm6eVzw6fQOUDUT5+zfo113PlWw5rTJ7l1o
+	 8K8n1yy4UCXM3LlrsZa0BxRHa/20YXcE+TI/vCyMUqdEJPEHCyPrjomoyaCFJG6A4x
+	 j1EM6/KNMIJxCXXCBVDryo8pU6znwJKwlq9n7FhaJo5n2GCDeroqzzeYEQEtLHguAX
+	 5WxNeMgEd5Ige0hU4WomyM7Z6Sr+J+owN7hxkzWj9xbNRURyP9VRcw424ERLZdZkV6
+	 yc5JTkZM4TinMDx/qiGwZiB8Gw7CavhsDsB1KepWVGhwcRG3R8pPioluEwVXBprPuh
+	 GW28p4zV8CY8w==
+From: Kees Cook <kees@kernel.org>
+To: Linus Torvalds <torvalds@linuxfoundation.org>
+Cc: Kees Cook <kees@kernel.org>,
+	kernel test robot <lkp@intel.com>,
+	syzbot+5245cb609175fb6e8122@syzkaller.appspotmail.com,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	"Kirill A . Shutemov" <kas@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Marc Herbert <Marc.Herbert@linux.intel.com>,
+	Yafang Shao <laoar.shao@gmail.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] compiler_types: Provide __no_kstack_erase to disable coverage only on Clang
+Date: Tue, 29 Jul 2025 15:43:33 -0700
+Message-Id: <20250729224325.work.019-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tf1c1d2456aa020de
-Date: Tue, 29 Jul 2025 11:34:57 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <kees@kernel.org>
-Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Paolo Bonzini" <pbonzini@redhat.com>,
- "Mike Rapoport" <rppt@kernel.org>, "Ard Biesheuvel" <ardb@kernel.org>,
- "Vitaly Kuznetsov" <vkuznets@redhat.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Michal Wilczynski" <michal.wilczynski@intel.com>,
- "Juergen Gross" <jgross@suse.com>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- "Roger Pau Monne" <roger.pau@citrix.com>,
- "David Woodhouse" <dwmw@amazon.co.uk>,
- "Usama Arif" <usama.arif@bytedance.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- "Thomas Huth" <thuth@redhat.com>, "Brian Gerst" <brgerst@gmail.com>,
- kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
- platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-mm@kvack.org, "Will Deacon" <will@kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
- "Gavin Shan" <gshan@redhat.com>,
- "Russell King" <rmk+kernel@armlinux.org.uk>,
- "James Morse" <james.morse@arm.com>,
- "Oza Pawandeep" <quic_poza@quicinc.com>,
- "Anshuman Khandual" <anshuman.khandual@arm.com>,
- "Hans de Goede" <hansg@kernel.org>,
- "Kirill A. Shutemov" <kas@kernel.org>, "Marco Elver" <elver@google.com>,
- "Andrey Konovalov" <andreyknvl@gmail.com>,
- "Andrey Ryabinin" <ryabinin.a.a@gmail.com>,
- "Hou Wenlong" <houwenlong.hwl@antgroup.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Luis Chamberlain" <mcgrof@kernel.org>,
- "Sami Tolvanen" <samitolvanen@google.com>,
- "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nicolas.schier@linux.dev>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Andy Lutomirski" <luto@kernel.org>, "Baoquan He" <bhe@redhat.com>,
- "Alexander Graf" <graf@amazon.com>,
- "Changyuan Lyu" <changyuanl@google.com>,
- "Paul Moore" <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
- "Serge E. Hallyn" <serge@hallyn.com>,
- "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>,
- "Bill Wendling" <morbo@google.com>,
- "Justin Stitt" <justinstitt@google.com>,
- "Jan Beulich" <jbeulich@suse.com>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Viresh Kumar" <viresh.kumar@linaro.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- "Bibo Mao" <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kasan-dev@googlegroups.com,
- linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- llvm@lists.linux.dev
-Message-Id: <f8bcf5ce-8b8b-4555-a210-14e1974eac92@app.fastmail.com>
-In-Reply-To: <20250724055029.3623499-2-kees@kernel.org>
-References: <20250724054419.it.405-kees@kernel.org>
- <20250724055029.3623499-2-kees@kernel.org>
-Subject: Re: [PATCH v4 2/4] x86: Handle KCOV __init vs inline mismatches
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3887; i=kees@kernel.org; h=from:subject:message-id; bh=oTdYiE23IWd2hrwmuA8C9kEdsJ1UHqb9arQdLsQ2bvc=; b=owGbwMvMwCVmps19z/KJym7G02pJDBmdflPCszbbFi44W9iQ8q2gw/i09Nzfa4Tbf+yQm+p+o 91pw+e+jlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlY5jAyXKh/vjRxp6Sb7Qd3 zzrb27l/vv3+zL8u+czsYw8CHz8qrGT4H/Cto7I35pXRwyshkX3LBZnljLpZXflSuq59Zr6atc6 VHwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 24, 2025, at 07:50, Kees Cook wrote:
-> GCC appears to have kind of fragile inlining heuristics, in the
-> sense that it can change whether or not it inlines something based on
-> optimizations. It looks like the kcov instrumentation being added (or in
-> this case, removed) from a function changes the optimization results,
-> and some functions marked "inline" are _not_ inlined. In that case,
-> we end up with __init code calling a function not marked __init, and we
-> get the build warnings I'm trying to eliminate in the coming patch that
-> adds __no_sanitize_coverage to __init functions:
->
-> WARNING: modpost: vmlinux: section mismatch in reference: xbc_exit+0x8 
-> (section: .text.unlikely) -> _xbc_exit (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> real_mode_size_needed+0x15 (section: .text.unlikely) -> 
-> real_mode_blob_end (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> __set_percpu_decrypted+0x16 (section: .text.unlikely) -> 
-> early_set_memory_decrypted (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> memblock_alloc_from+0x26 (section: .text.unlikely) -> 
-> memblock_alloc_try_nid (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> acpi_arch_set_root_pointer+0xc (section: .text.unlikely) -> x86_init 
-> (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> acpi_arch_get_root_pointer+0x8 (section: .text.unlikely) -> x86_init 
-> (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> efi_config_table_is_usable+0x16 (section: .text.unlikely) -> 
-> xen_efi_config_table_is_usable (section: .init.text)
->
-> This problem is somewhat fragile (though using either __always_inline
-> or __init will deterministically solve it), but we've tripped over
-> this before with GCC and the solution has usually been to just use
-> __always_inline and move on.
->
-> For x86 this means forcing several functions to be inline with
-> __always_inline.
->
-> Signed-off-by: Kees Cook <kees@kernel.org>
+In order to support Clang's stack depth tracking (for Linux's kstack_erase
+feature), the coverage sanitizer needed to be disabled for __init (and
+__head) section code. Doing this universally (i.e. for GCC too), created
+a number of unexpected problems, ranging from changes to inlining logic
+to failures to DCE code on earlier GCC versions.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Since this change is only needed for Clang, specialize it so that GCC
+doesn't see the change as it isn't needed there (the GCC implementation
+of kstack_erase uses a GCC plugin that removes stack depth tracking
+instrumentation from __init sections during a late pass in the IR).
 
-In my randconfig tests, I got these ones as well:
+Successful build and boot tested with GCC 12 and Clang 22.
 
-WARNING: modpost: vmlinux: section mismatch in reference: early_page_ext_enabled+0x14 (section: .text.unlikely) -> early_
-page_ext (section: .init.data)
-x86_64-linux-ld: lm75.c:(.text+0xd25): undefined reference to `i3c_device_do_priv_xfers'
+Fixes: 381a38ea53d2 ("init.h: Disable sanitizer coverage for __init and __head")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202507270258.neWuiXLd-lkp@intel.com/
+Reported-by: syzbot+5245cb609175fb6e8122@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/6888d004.a00a0220.26d0e1.0004.GAE@google.com/
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Linus Torvalds <torvalds@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: <x86@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Hou Wenlong <houwenlong.hwl@antgroup.com>
+Cc: Kirill A. Shutemov <kas@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/x86/include/asm/init.h    | 2 +-
+ include/linux/compiler_types.h | 7 +++++++
+ include/linux/init.h           | 2 +-
+ 3 files changed, 9 insertions(+), 2 deletions(-)
 
-And one more with a private patch of mine.
-
-These are the fixups that make it build for arm/arm64/x86
-randconfigs for me, so you could fold them as well in
-as well. I have already sent the i3c patch for upstream
-but not the page_ext.h patch.
-
---- a/include/linux/page_ext.h
-+++ b/include/linux/page_ext.h
-@@ -57,7 +57,7 @@ extern bool early_page_ext;
- extern unsigned long page_ext_size;
- extern void pgdat_page_ext_init(struct pglist_data *pgdat);
+diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
+index 6bfdaeddbae8..5a68e9db6518 100644
+--- a/arch/x86/include/asm/init.h
++++ b/arch/x86/include/asm/init.h
+@@ -5,7 +5,7 @@
+ #if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 170000
+ #define __head	__section(".head.text") __no_sanitize_undefined __no_stack_protector
+ #else
+-#define __head	__section(".head.text") __no_sanitize_undefined __no_sanitize_coverage
++#define __head	__section(".head.text") __no_sanitize_undefined __no_kstack_erase
+ #endif
  
--static inline bool early_page_ext_enabled(void)
-+static __always_inline bool early_page_ext_enabled(void)
- {
-        return early_page_ext;
- }
-@@ -189,7 +189,7 @@ static inline struct page_ext *page_ext_iter_get(const struct page_ext_iter *ite
- #else /* !CONFIG_PAGE_EXTENSION */
- struct page_ext;
+ struct x86_mapping_info {
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 2b77d12e07b2..89e2c01fc8b1 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -378,6 +378,13 @@ struct ftrace_likely_data {
+ # define __signed_wrap
+ #endif
  
--static inline bool early_page_ext_enabled(void)
-+static __always_inline bool early_page_ext_enabled(void)
- {
-        return false;
- }
---- a/include/linux/i3c/device.h
-+++ b/include/linux/i3c/device.h
-@@ -245,7 +245,7 @@ void i3c_driver_unregister(struct i3c_driver *drv);
-  *
-  * Return: 0 if both registrations succeeds, a negative error code otherwise.
-  */
--static inline int i3c_i2c_driver_register(struct i3c_driver *i3cdrv,
-+static __always_inline int i3c_i2c_driver_register(struct i3c_driver *i3cdrv,
-                                          struct i2c_driver *i2cdrv)
- {
-        int ret;
-@@ -270,7 +270,7 @@ static inline int i3c_i2c_driver_register(struct i3c_driver *i3cdrv,
-  * Note that when CONFIG_I3C is not enabled, this function only unregisters the
-  * @i2cdrv.
-  */
--static inline void i3c_i2c_driver_unregister(struct i3c_driver *i3cdrv,
-+static __always_inline void i3c_i2c_driver_unregister(struct i3c_driver *i3cdrv,
-                                             struct i2c_driver *i2cdrv)
- {
-        if (IS_ENABLED(CONFIG_I3C))
++/* GCC does not like splitting sanitizer coverage across section inlines */
++#ifdef CC_IS_CLANG
++#define __no_kstack_erase	__no_sanitize_coverage
++#else
++#define __no_kstack_erase
++#endif
++
+ /* Section for code which can't be instrumented at all */
+ #define __noinstr_section(section)					\
+ 	noinline notrace __attribute((__section__(section)))		\
+diff --git a/include/linux/init.h b/include/linux/init.h
+index c65a050d52a7..a60d32d227ee 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -51,7 +51,7 @@
+    discard it in modules) */
+ #define __init		__section(".init.text") __cold __latent_entropy	\
+ 						__noinitretpoline	\
+-						__no_sanitize_coverage
++						__no_kstack_erase
+ #define __initdata	__section(".init.data")
+ #define __initconst	__section(".init.rodata")
+ #define __exitdata	__section(".exit.data")
+-- 
+2.34.1
 
-As I understand, the underlying problem is less gcc inlining
-being fragile, but more that gcc does not inline functions
-when they have different __no_sanitize_coverage attributes.
-
-      Arnd
