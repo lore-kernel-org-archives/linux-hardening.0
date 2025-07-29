@@ -1,74 +1,85 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C369678F4C
-	for <linux-hardening@vger.kernel.org>; Tue, 29 Jul 2025 23:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6637A263F4E
+	for <linux-hardening@vger.kernel.org>; Tue, 29 Jul 2025 23:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753830078; cv=none; b=f3riDYH9aILwuo4lfRUkbgv70ccLoeeQxmQn/2fTt/vwakEWtqYfWuHOXqpkWT7xJyKts85ExY3anM0w/IOZgPu2ei9bjIiTkzSdaQc9+kh+5jsOIZg1r1KI7JkjmXr+qmeE6SAuZHgwgonbnNXyrobDzYDWnBrePnG0JRCT3tw=
+	t=1753830979; cv=none; b=W4rja1WaKAlF4qAyJgUJiTjCPVXb9bBFQ4vrDZ4t5q1F8pLOBQ7AkN3Fn26m8AQ0A4va6mMySBOFtLu19jeQL1AyG15+cQF9batCxxRzTACmsUVPIOHYdMUDlxf6dnJ5YAxzTvUwqhxEIQXyZ4AQQPTFtX4g84jCGISvYpJJKKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753830078; c=relaxed/simple;
-	bh=6jCng/YTFDTeRQn8f5lOGqcgmpk9+VAP8yf8TUEi2dQ=;
+	s=arc-20240116; t=1753830979; c=relaxed/simple;
+	bh=89oO5yBwKXogRnHzKM7W3myuaKHzc+gF2Cis+Twd0oQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z46sR2ZeLUF7vKCcN3TeSwxwM14n9RwZxpyz2yueuOyXIjp4HY4VjRxHzUV+H8pqRdSwp2o0KaoWZob2Cnnw7HWrFXbK5u5zrmaCXvhO2zUXuQbfpSWH7iez1bvXwFHzq/oyBnlIKkvfiI2F9WAi0Rw+arHWBfbloPAMVR6GoDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UJU0jswm; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=dsVYnTMEAorhlSKxnDt2MKO2Get1AGPvQ5qr5KYzpqgq7H/TE62PwXgCCBQsgUzmV7p4RG2yTvIzgWCrwUTjkdRbnX9HwCvnLdNC8PNeIeT6wuSNbwprfq8gkEFSu2kG/wPjlEyO4x2vhO1oOf5un6kh35mEUK4yFlwlURbJCdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RVF6d9wt; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UJU0jswm"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-31ec651c2a1so2436113a91.0
-        for <linux-hardening@vger.kernel.org>; Tue, 29 Jul 2025 16:01:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RVF6d9wt"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ae0dad3a179so1021624366b.1
+        for <linux-hardening@vger.kernel.org>; Tue, 29 Jul 2025 16:16:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753830076; x=1754434876; darn=vger.kernel.org;
+        d=linuxfoundation.org; s=google; t=1753830976; x=1754435776; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=z+3hpEC/XWKCoJPxAX/7UW8fvRo82H1QQsUoMkegBlc=;
-        b=UJU0jswma8orqsuW0f2z7ERYVhJSe5n37pBFXfFiOG3JYdOGnwoP5CfAV3NnG/7rdx
-         7dwBCUFED02gF1opxvLfsK3lpdMqnsyj7eexoUVknaI8le7KteOb8aIFQkc9wnhjEgBU
-         VW5EEsP4rHZMb1NanoUFjlQuUDrcgR6zjczLs3NsRkse9C14vZeEJ2wfQUZFdVg72J1N
-         rSQnz7u5o8dsadumPf5ZZxAiXdwT8LybWonX5rlnI53JfzWlAKJdwdD48XpdMhR3x2Gw
-         r6PDp9bH3Sf5zjjJ34+a7HJsX3v89Qpf6LtfiS0OHeZujoUtjGSY99kJy7aIWT+mED4G
-         xQnQ==
+        bh=V7MELq/l6D9hMY/qV+9sozKMnnecRDmbGpZ3SGFvMEw=;
+        b=RVF6d9wt8XFYsUTKn0XL8Fp1/rxjN9X/nPyCWNfueggrXDin3SfZNbkO322Idvca2a
+         +fTSlVzcQ2yKilvUrIqbVRoegK0PqOHIdikxzVRtOasGAjXWU19bmXTCYDm/GFybkqkC
+         Sn0oMtB/ArOHKuXM54YHoY8crYMys0/rk5+y0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753830076; x=1754434876;
+        d=1e100.net; s=20230601; t=1753830976; x=1754435776;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=z+3hpEC/XWKCoJPxAX/7UW8fvRo82H1QQsUoMkegBlc=;
-        b=AByGH8iMuSxARn1lsNZiDTlScSig6xtu9KuLMfrKC1r38z6nlaK9dbGjo+1wtL+9t4
-         apxS/zOpNg+KKaPh5y9cMTpyF0jP+QOb79+eeB50Umr4DAurAH+zZfqrUibQIuqiJg2t
-         dQB23QRfnTZmlZv/2m9+D4vENRN1NVEKOhvJ67RcOVsyxMEOHZThI0K194FqAIb733o/
-         XORPm4CgU8kdLQ4KnUXaXcY9U7YXPx11/m6xDAcrFM8wPJNr1bOU5g+zXfcF4fZmDaTP
-         l9aP6dgofWzeNthd8qsu/890F56LSxSbIfSiN1NOrTsAUOR7X54E2Kd6dvgzL2RVsJ7R
-         NoBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqClAabnV6EG2AmOUGgl676ikmr8T+p2v3x3s5viIKG5/wSEuUIDeC5x7aWeZ1nHPGvIwXKB3j0bLhAqgi/is=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNRjaA0xVB+uCInz2DXaM0JAAsBTY5hPslHdXDkUAa+bEWWJ/p
-	QV4rZfu6P0UxCzporOIt4/4rbArsENvLQ5pYDSzR9Qe8RZMXkzavQvrg4UwkFb2NQW1MEZbd29J
-	mqq/c9OqXtdMb2KLhOZkf1NqJlN8NFza1YcnauZf1
-X-Gm-Gg: ASbGncuNyLEbIIG3fY5reLraZDWZduVRoFgwu8p3mRIGu8WD2gPVpyJnzp7IrMZL2+H
-	5V8YK3RKvb8MhJKsMiEUD6yRLuIWz6m3jTj8T8hprKvIc5roGylHij3A5PIdy8EL5PahevUVGDu
-	wGwQ0KIcZ80yELbKnb6k4ZQ+hXxzcZQstvECCepcPDExEsmcPpe0EVTIy39ijaz0loGE3oq1rJA
-	z1oqykKUhdlBb3yNwFf/KJPj8dZgEJZa6ECi80=
-X-Google-Smtp-Source: AGHT+IEN+u/12HjQVSX1/UUPQZ6DEc6cODR2xLZMwTUPE7uUQpZPyiemKu7LkzWBOqN0Bu8mzVperrPAwON/FhFOFr4=
-X-Received: by 2002:a17:90b:1fcf:b0:312:f0d0:bc4 with SMTP id
- 98e67ed59e1d1-31f5dd9ccc8mr1419937a91.5.1753830075828; Tue, 29 Jul 2025
- 16:01:15 -0700 (PDT)
+        bh=V7MELq/l6D9hMY/qV+9sozKMnnecRDmbGpZ3SGFvMEw=;
+        b=OSiDV2laFLRfThcKaqSq499gYiJPDG9B1jtPDAG73NjoqS8juRLMoSJv0DJ+2qCB/w
+         VXl+1aruuEWGzh0IpLYiyBzSTPmPdU3e7/tQOX+BGCUWKwKS6md2liiqDaaUr2Rri2Ba
+         B32rHUK9HSnvuc4Vxlo6qWjfVkBHvvVIiU1z7pKWpwdMs2QnGLgJoQOZg+5WHXvJeiiy
+         WE8eFhVUfoo2v9uLb9f/kaELZZGfKw+ooVPDrjZTHHtBA9342C7iBhgKrtAzveak+DyV
+         TqrYzk1LlrHkE2EDmkBE/Yfx3YxXTP4lSq1pIdkb6+VizyRAM5/W3szNyPUACcQVDvjn
+         2yHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxgMcGdka3ZR89o/IQatfGM3TES+YG1uvjVw617VQ62cIvom366oIcCFW0nokYuTctlAvTTXZkasrSPAO0r2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQlMlfovw/PYhy3M8pk9zIV3c01xT0SRbNJ2AbsI4KuX1zVa4u
+	DT8Ek5IPqGgAhyiuP08pVgP1F9f2NqpWetdIaoXcVfe0vdz3O7HeGvNw4iDFtf1t12ymXf1cgFz
+	U0GYGego=
+X-Gm-Gg: ASbGncsLFBhI8PqcK5FIm8bdxHX3H1Euo50J0cl+pMQR8CDJhFwlwDZOEX1yyBXuirH
+	m2P5f16b1yzy4SOPn662cpRM3Yh0bQzPFhRGsbDSXf/xQ8I92NTw+AQQfdLhdZEz1N1YkKHc1S3
+	/+noJpPWgOImojKRFe3MfTxTqo02u3WK2t8pxAOExmEAu9IQdkRvRHOT/Q9zmFdInvyradlsfyY
+	i6w+Ci5fm1hBwYat+F57M2PUNDjVke0VUFvQlpOPDqx+nN0C3MSP4wZ/nqVd3D3Wvr11FSm9iZc
+	QyprtnoNlMt11t9J4qnHvIVLwQLgz7dNOlGaE5D2n2hiAZu06o6XYTiGwi46x9OpHZf0N7YGHBJ
+	pcTHf8XHeTXWkshyEy+Fn61qRUHG8QLQjBYa3D8iybXuycJ2ImIpypjoHvhsouBR2b8srrkd19P
+	IKBwL9KQ==
+X-Google-Smtp-Source: AGHT+IETS3m6AVfR0WfzvM1tFPd8EXjT6pVrPbfqMKQ7gVVKGrM5BQ5gdZs/SNhpHf1FqzNj2n+mNQ==
+X-Received: by 2002:a17:907:9691:b0:ae3:65a7:5621 with SMTP id a640c23a62f3a-af8fd98a011mr132566266b.37.1753830975621;
+        Tue, 29 Jul 2025 16:16:15 -0700 (PDT)
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af63585ff9fsm657810966b.19.2025.07.29.16.16.15
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Jul 2025 16:16:15 -0700 (PDT)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6157ed5dc51so1282649a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 29 Jul 2025 16:16:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUyMLFOtrUWQSlAy7zr1DGgqtGsl97rSJklfQ6dn3q8ynwRAJfHHg6WS6ZyDxoxGO/PPebkE/UHBuXb1TQx2R4=@vger.kernel.org
+X-Received: by 2002:aa7:c558:0:b0:615:684c:c2d6 with SMTP id
+ 4fb4d7f45d1cf-615870b6891mr1084772a12.22.1753830974956; Tue, 29 Jul 2025
+ 16:16:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250729224325.work.019-kees@kernel.org>
-In-Reply-To: <20250729224325.work.019-kees@kernel.org>
-From: Marco Elver <elver@google.com>
-Date: Wed, 30 Jul 2025 01:00:39 +0200
-X-Gm-Features: Ac12FXyfCCLmSEsE8JlzE9w-_XpBxlAkYo0upai9b0-ZK8VVBgqqOiOpyuUYP2g
-Message-ID: <CANpmjNNkYE9dvyR-YH3U18+g4bG4tpgD1pv99xG6xhdRuQYUQA@mail.gmail.com>
+References: <20250729224325.work.019-kees@kernel.org> <CANpmjNNkYE9dvyR-YH3U18+g4bG4tpgD1pv99xG6xhdRuQYUQA@mail.gmail.com>
+In-Reply-To: <CANpmjNNkYE9dvyR-YH3U18+g4bG4tpgD1pv99xG6xhdRuQYUQA@mail.gmail.com>
+From: Linus Torvalds <torvalds@linuxfoundation.org>
+Date: Tue, 29 Jul 2025 16:15:58 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh9qD2tY4+C9mjPviAZLHJ+Bix3KyBfKKYfYbP1XxnUVw@mail.gmail.com>
+X-Gm-Features: Ac12FXwyykh4eQS4aG6NfTaU_pPeuzIhKc2c8ZPYUithrQ3wXc60zMPaSd8W1iw
+Message-ID: <CAHk-=wh9qD2tY4+C9mjPviAZLHJ+Bix3KyBfKKYfYbP1XxnUVw@mail.gmail.com>
 Subject: Re: [PATCH] compiler_types: Provide __no_kstack_erase to disable
  coverage only on Clang
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Torvalds <torvalds@linuxfoundation.org>, kernel test robot <lkp@intel.com>, 
+To: Marco Elver <elver@google.com>
+Cc: Kees Cook <kees@kernel.org>, kernel test robot <lkp@intel.com>, 
 	syzbot+5245cb609175fb6e8122@syzkaller.appspotmail.com, 
 	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -86,85 +97,15 @@ Cc: Linus Torvalds <torvalds@linuxfoundation.org>, kernel test robot <lkp@intel.
 	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 30 Jul 2025 at 00:43, Kees Cook <kees@kernel.org> wrote:
+On Tue, 29 Jul 2025 at 16:01, Marco Elver <elver@google.com> wrote:
 >
-> In order to support Clang's stack depth tracking (for Linux's kstack_erase
-> feature), the coverage sanitizer needed to be disabled for __init (and
-> __head) section code. Doing this universally (i.e. for GCC too), created
-> a number of unexpected problems, ranging from changes to inlining logic
-> to failures to DCE code on earlier GCC versions.
->
-> Since this change is only needed for Clang, specialize it so that GCC
-> doesn't see the change as it isn't needed there (the GCC implementation
-> of kstack_erase uses a GCC plugin that removes stack depth tracking
-> instrumentation from __init sections during a late pass in the IR).
->
-> Successful build and boot tested with GCC 12 and Clang 22.
->
-> Fixes: 381a38ea53d2 ("init.h: Disable sanitizer coverage for __init and __head")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202507270258.neWuiXLd-lkp@intel.com/
-> Reported-by: syzbot+5245cb609175fb6e8122@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/6888d004.a00a0220.26d0e1.0004.GAE@google.com/
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Linus Torvalds <torvalds@linuxfoundation.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: <x86@kernel.org>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Hou Wenlong <houwenlong.hwl@antgroup.com>
-> Cc: Kirill A. Shutemov <kas@kernel.org>
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Cc: Sami Tolvanen <samitolvanen@google.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
->  arch/x86/include/asm/init.h    | 2 +-
->  include/linux/compiler_types.h | 7 +++++++
->  include/linux/init.h           | 2 +-
->  3 files changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
-> index 6bfdaeddbae8..5a68e9db6518 100644
-> --- a/arch/x86/include/asm/init.h
-> +++ b/arch/x86/include/asm/init.h
-> @@ -5,7 +5,7 @@
->  #if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 170000
->  #define __head __section(".head.text") __no_sanitize_undefined __no_stack_protector
->  #else
-> -#define __head __section(".head.text") __no_sanitize_undefined __no_sanitize_coverage
-> +#define __head __section(".head.text") __no_sanitize_undefined __no_kstack_erase
->  #endif
->
->  struct x86_mapping_info {
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 2b77d12e07b2..89e2c01fc8b1 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -378,6 +378,13 @@ struct ftrace_likely_data {
->  # define __signed_wrap
->  #endif
->
-> +/* GCC does not like splitting sanitizer coverage across section inlines */
-> +#ifdef CC_IS_CLANG
-> +#define __no_kstack_erase      __no_sanitize_coverage
-> +#else
-> +#define __no_kstack_erase
-> +#endif
+> I think this belongs into compiler-clang.h, we've typically refrained
+> from ifdef CC_IS_CLANG/GCC in the generic headers.
+> See __nocfi for an example, where compiler_types.h provides a default
+> empty definition, and compiler-clang.h provides a non-empty
+> definition.
 
-I think this belongs into compiler-clang.h, we've typically refrained
-from ifdef CC_IS_CLANG/GCC in the generic headers.
-See __nocfi for an example, where compiler_types.h provides a default
-empty definition, and compiler-clang.h provides a non-empty
-definition.
+Yeah, I think that would be a lot cleaner and matches the other things
+like this.
+
+               Linus
