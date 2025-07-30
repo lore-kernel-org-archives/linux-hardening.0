@@ -1,101 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE99A3594F;
-	Wed, 30 Jul 2025 00:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C77226D17
+	for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 09:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753835976; cv=none; b=MaWFSDYBUNP6B/RRKN27lW36KUBi9sfiLxFrIVFCpJ9gPuPYHplK6bvUInuyOkdKcBuu6u3ZAkcUx4b2XobrqpO8H3UMrv8PeRXLknTot/Ms3Ye9k9gIjqpJenuBHogfdo0xA7+S5XusD7npA5w5ITFBguTj9pStbXo4xxZIHZ8=
+	t=1753869293; cv=none; b=eVoBpdEwV9bpzghqXmVoZJlMnfAyGzdaNl5wgfwJ4eQeBdE2O4Wm2XS37QK6p4JvdZbALmgKQYIInkWo9OxjUU8BS7BoVo35vz9k8DJxdRTvOA3vK01oJebLvPqxCKBL1UVkmdVook6WJUHkC0wtpkWDD7g5O1nzczTFaspOtlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753835976; c=relaxed/simple;
-	bh=WnOG4V+bPLI97m9dWmTwO5wl8jjkLQXzMfj40MYmTCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=htMlWRvF96HEOOofYZzjTZrIBdn998zscaLjkf13URkmB4/N+B/U/nNuudA7y7e0bIlcRXabCb6aVGpGvrvJcC+AvS5RYd3NsvO3y5Wc7zvnTq83hYkoH971u4abl9t5U/s5HOV17+06GEe+PpxHiYZKOzrHzWuOcanUkccDH+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qxOrnxBQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753869293; c=relaxed/simple;
+	bh=hp7bAnlyWbMe0UagxjClRdoFhPBImgjJBDcHhbMOPBc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qAZvBI3rHhCRC53yJ4nEqLD/vx6sSRyrRK8lwbbHBsvCQf6NT24DPauekGBl83ezBHx+W5p0q7+5eZd+SGu4hIyRQEjg+nGjyX0fRDku4xWyXu+yPTmI9Ou98KZvcxsGQnX0foUmAiOUabfd0lGcr23cGRmp3u/LD48ExT9UnKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=y6v1Y+rP; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qxOrnxBQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 359D7C4CEF5;
-	Wed, 30 Jul 2025 00:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753835976;
-	bh=WnOG4V+bPLI97m9dWmTwO5wl8jjkLQXzMfj40MYmTCk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qxOrnxBQ5LgP2+fdyeglquYIz3PhpmHfQcFH/uN5dnvOBkG07d2J8y2FT817qbzLn
-	 dZwjdL/XnoUWVw5Yd6SKlXtuptPUIbiZO+YUkzeiBXhmCLL1ZbUazeJ/c18AYlr+k1
-	 Y0GlxDDV2tzOxAkhnUSCCbPlk8ze9rXmRpyZX8Px1Vy1MvxBIv1XwLbzvYHQ4Ifv1t
-	 oaBYzQMRo0d8PQIOpLIe57MbWWbs2LCljfoffKIAuryJpUooclqx8Guz/dHuo95bay
-	 X0klPqJBo+lJi+Z4UanHhCkLzQ0OrVaGZs0UPgXJA60bZm2BtrJJ1AADy4S1csXq4H
-	 qsS2kByItAcJA==
-Date: Tue, 29 Jul 2025 17:39:35 -0700
-From: Kees Cook <kees@kernel.org>
-To: Linus Torvalds <torvalds@linuxfoundation.org>
-Cc: kernel test robot <lkp@intel.com>,
-	syzbot+5245cb609175fb6e8122@syzkaller.appspotmail.com,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Hou Wenlong <houwenlong.hwl@antgroup.com>,
-	"Kirill A . Shutemov" <kas@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>, Uros Bizjak <ubizjak@gmail.com>,
-	Marc Herbert <Marc.Herbert@linux.intel.com>,
-	Yafang Shao <laoar.shao@gmail.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] compiler_types: Provide __no_kstack_erase to disable
- coverage only on Clang
-Message-ID: <202507291738.262CEF2095@keescook>
-References: <20250729234055.it.233-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="y6v1Y+rP"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-555024588b1so7110819e87.1
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 02:54:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753869290; x=1754474090; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b6vdhp2EWkPtq+IAr0ObGae8XoJd1fUV2G+NSQOgeB0=;
+        b=y6v1Y+rPEVDHOkrqc2KWOfhiugmQ47csz1p9+cPsKrBxMu6N++Lx7mDSVzJx9n6oqS
+         UB5hMz5e/MChLsSvAmzP82OKI7y6HHDsJkHIQqJ10ekWc9qTbZH4JevVzniY4W09B0A/
+         VbMUa0prk04D/p8/3TRqlWvGNSKC2kXTwf/bhns+HC7/CXVhXgBURVJR/9r87Bn9GlN0
+         gv/+LXG6hJV0a64I7ABkBgPr6iaKk6lKUYzENYZv0W+E8GgTmxZDjeJpjUQvzGsRYgUw
+         UIsm9yMb4dS4lePbwKM+ubqez2QY+tIytNFSDWF2gXWKi7MulASGNSolQFMpNoSrFq9C
+         RciA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753869290; x=1754474090;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b6vdhp2EWkPtq+IAr0ObGae8XoJd1fUV2G+NSQOgeB0=;
+        b=U+i07OGgje9i4zm3pqpb4qhmq+zTLZ7fKw68fEdt6UzBV8neuYOBvngCSiUQ3w/ka8
+         jXiRqIPwJcp1giG6V6kR62C8rkObBJTCKaxu4KmMj8GIafuQh/vLWJ3POi1NSC9cqfNf
+         mf21j6gXFgBJWCL60wQqQCJDPKeRK9ahustiytMqoFI7BBjTFOGJv1WHoF6nChsryAko
+         UZI8eR/vJMSOR61UygB0oVcIQRFpZOUqRmdC0tWtR14FQ1jXQMTFrlegslFpJ9HIzIq0
+         2/DFQc7ZyIc9FJ1M2xRUrCVOiCtk8tB+XZLXNsITgO7ZZl1NDPpbI2FdmCK8Q12+J6ez
+         O6Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCWoEwLTpcbSvh6nULu61R4wFh0KWxDW7QDanty65qiaWkx1JO5Np4LCDP3VzImVrdRWCDDeL0u/li0Y0FbPZig=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyws9xnmfTpzuItHm6UQhCiaLaZyoKCcfXmpIX2svM3AjV1HBKm
+	F/37EVzQI7+raapWVNevAxuG5ZYTtnSHn2S2PpnatBRpoV+pX8hiwD10D+qsdWjo+ZB+/lTg1rP
+	A6kkBsosEOWaAYMhxddkm1bX48Y/HdaNGtSX8jCS4ew==
+X-Gm-Gg: ASbGncs2kmh6pSyVIyZswmzLTj4BHSNoErk/zrMaNoxa6ZgvMggv5aQS+pCkL+n+Lh5
+	694KpExZSaGxHCNPapkcDQgi4c4zqY39kvCsRdQdCQ0mM4TGU2ETNRgSvnSWvZ6MwIlo0GZAaJl
+	dpUW3KPO5RxTx+vAnEckerYkRO5+uckf0A3KbBv0RpVWeNZrqBVqm3bR3lj8sIkaXl+T/LSl5eR
+	2zqdYXzrLOupAz/T2SVHjpKlmzcMR/s7etxcTk=
+X-Google-Smtp-Source: AGHT+IFD0mC+adTu2tQIUqoYqi4YbEm6lb9KfHl4WlQUhUVwQ9owZPBnvnUOvhF+89ksRVwAv/r0YIR9B2aVVdKhoAo=
+X-Received: by 2002:a05:6512:33c7:b0:554:e7f2:d76b with SMTP id
+ 2adb3069b0e04-55b7c0b0f66mr939851e87.56.1753869289592; Wed, 30 Jul 2025
+ 02:54:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250729234055.it.233-kees@kernel.org>
+References: <20250724-pinctrl-gpio-pinfuncs-v3-0-af4db9302de4@linaro.org>
+ <20250724-pinctrl-gpio-pinfuncs-v3-12-af4db9302de4@linaro.org> <CAHp75Vc4vsJh_-GbP+YO50veoGoGtfAPL4tjcF+73uophfmnGw@mail.gmail.com>
+In-Reply-To: <CAHp75Vc4vsJh_-GbP+YO50veoGoGtfAPL4tjcF+73uophfmnGw@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 30 Jul 2025 11:54:38 +0200
+X-Gm-Features: Ac12FXyouWksKyGI1Z-cYawOTPPQ3IbuMxJxWat2oIDr-ST0nxIlLBCifNIDusI
+Message-ID: <CAMRc=Mc1ophkofB6MmtD4adBAi69C3JyovM-S9YD_y7UA3V1qA@mail.gmail.com>
+Subject: Re: [PATCH v3 12/15] pinctrl: allow to mark pin functions as
+ requestable GPIOs
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
+	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 29, 2025 at 04:41:00PM -0700, Kees Cook wrote:
-> In order to support Clang's stack depth tracking (for Linux's kstack_erase
-> feature), the coverage sanitizer needed to be disabled for __init (and
-> __head) section code. Doing this universally (i.e. for GCC too) created
-> a number of unexpected problems, ranging from changes to inlining logic
-> to failures to DCE code on earlier GCC versions.
-> 
-> Since this change is only needed for Clang, specialize it so that GCC
-> doesn't see the change as it isn't needed there (the GCC implementation
-> of kstack_erase uses a GCC plugin that removes stack depth tracking
-> instrumentation from __init sections during a late pass in the IR).
-> 
-> Successfully build and boot tested with GCC 12 and Clang 22.
-> 
-> Fixes: 381a38ea53d2 ("init.h: Disable sanitizer coverage for __init and __head")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202507270258.neWuiXLd-lkp@intel.com/
-> Reported-by: syzbot+5245cb609175fb6e8122@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/6888d004.a00a0220.26d0e1.0004.GAE@google.com/
-> Signed-off-by: Kees Cook <kees@kernel.org>
+On Thu, Jul 24, 2025 at 2:22=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> >  struct pinfunction {
+> >         const char *name;
+> >         const char * const *groups;
+> >         size_t ngroups;
+> > +       unsigned long flags;
+>
+> Not sure we need this. If the function is GPIO, pin control already
+> knows about this. The pin muxing has gpio request / release callbacks
+> that change the state. Why do we need an additional flag(s)?
+>
 
-I've now sent the PR that includes this fix:
-https://lore.kernel.org/lkml/202507291728.51BAA26@keescook/
+I'm not following, how does the pin controller know that the function
+is GPIO exactly, other than by the bit set in this field?
 
-Thank you everyone for suffering through the mess I made! :P
-
--Kees
-
--- 
-Kees Cook
+Bartosz
