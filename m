@@ -1,148 +1,194 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0F72D3730;
-	Wed, 30 Jul 2025 13:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4222D838E
+	for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 13:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753882246; cv=none; b=YG3yCi9FYmyW8weN+EsEm1HuNv/R5qPgCMxOB2XJE1lkIzVubD4OEcn4AqpqHMfHFMMjt077VU1gGP6PFUTSOz7sFWjrgW5pJQo5FwizJLvHJIwnpSkQNvzdGWoptl8DEEVLIyBM0J9h60dmUMX9of82MrVaQ/wozMwhzDnK+fg=
+	t=1753883574; cv=none; b=iZB7fN+yyDmYE77g2dPfaWxS0sL3RfRwVeqUS4Ry37WvhgL0POq4dvCj5wBxfBEFMYfj5QJUuz1Nt+BrEWzm1rNC0nnWw1pNfGlKUEHSLQ/FbYZLX48oYZtUaVQM6A8kWbxqaZqQZpLF4b/59hmJcPcjpppo1ti9V7Iq4KPluBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753882246; c=relaxed/simple;
-	bh=8ONcE8oQ6Ovxim91GXFYg9iUHoLisltD7bWCaIaZE7o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VTQGcgyRn4WmWkqP64GtskoXvTsZcexZhvPOUFWU5qz3r2xOG006FMDagfOFNqmxxi+clPItbJMuKjYVhW59yWq22NrdKhgMZXYD4kkXOeTiAWGVNg8nK47AMWvorFnHcz8z701ZAuPaRpY31V44LS7H4uxICp6BMafsXKftvVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XXGIxDbQ; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753883574; c=relaxed/simple;
+	bh=+fhqt74zbGwFmAVFYzLM/I7yTITHbGkLqM+wqDzwR5o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NOdH7y+hPm0LcnChQ3oaLmn43inE2h45hJn/OzG/ln6lHuJHx69V1IW+2+htiFz5luYbzAPDcgZcHWMOkhWGRKTQDJjYAEgi1mds/P9l7TjZiWYofWHu9TmgLHquD0CtPnSVRJumk4CY+lslGSbeOMCiU2e7lF9goPaxWA2WYuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NnmcbnfJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXGIxDbQ"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-af66f444488so494854366b.0;
-        Wed, 30 Jul 2025 06:30:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753882243; x=1754487043; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qi9l6TBdgjaQnQAqpjO6D0pjlwGQDGt3b3+CN6Y3/yI=;
-        b=XXGIxDbQgUFtyfBsiUhmmtuDMRBamLuWISnO9xdTQF/YAQ8WANE9CZvOqvJxvQftjo
-         veUyXpuqERLCF1u+hgKEmk1YBCxNHtuNYWFbfXaqrmhqRZ7P5l3ZU+FBvyRcvLoS+IDg
-         24uU4nabWjNkcyYdk5KN5pntSEfseKkrsGCmhhJcwkzKGl7VyI8oo/m+7ldXcdyi+pP/
-         aPff05j7XsXRmSPfEZHJ0dFYnx6W4rUMe6b6ccFga3Odbb7aLvlxN+Kl+UJLXs1SbGT/
-         rzOf67HGCELMZeaBHd0czDvOGHEGlGWQSpanulTHNQViqXTfTopHRhOM86mBmgnKz8oI
-         sEoQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NnmcbnfJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753883570;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=INvhw9PaQlqHnlfqMb8yKpdneujvD9kPiqSCHTmOp+c=;
+	b=NnmcbnfJhU2/NmsRFZVrdqjNb5iMgOgQqbzK9LVodq8aDOuY6kCm/h/jNenCXHLdwak9Bf
+	6ihB/pUr2EfVQrfdqua1RmzzPZ1u+oQnEvsbeFbIqa1oGKbROs286G+gCPjrvmr2REfDDw
+	Ese/ZybnmLWigjzY9x/lgBKwH0D3M4Q=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-562-slfs4jRXPsiu_s2JNnU3og-1; Wed, 30 Jul 2025 09:52:49 -0400
+X-MC-Unique: slfs4jRXPsiu_s2JNnU3og-1
+X-Mimecast-MFC-AGG-ID: slfs4jRXPsiu_s2JNnU3og_1753883568
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ae3c8477f1fso86589666b.3
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 06:52:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753882243; x=1754487043;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qi9l6TBdgjaQnQAqpjO6D0pjlwGQDGt3b3+CN6Y3/yI=;
-        b=phAso52mGoBHFyZkp0DlaBkyB9T4jn9hZkhp0di5/folX5q/ce/Egp7CzVpS/v20aI
-         O2Fpgmpa8cbw+DG6mDCTkVRLWXhz4VipX0nA7vOuH7JWUvz/cyLCN05ldMMfNwgPWmXB
-         KxeJqsr0XAsbgX8cB7NhsOBWJMLN5E+zKN4Q/PZLvEPG4g/7cvKGJAfWCDqt1zEUu4dS
-         AvWJmccr88XO5DE514guSZ5f6eT2Tcmk/aUaq0xcaU5mviBcP53SY+LkK0RvzZPc8PB7
-         JvycNsG+XnKqXpzhwjOgMgAevbiwywlNsxTDS8BoUMpUJDiZgR8TIYrRRQcJ8tFY9wN/
-         0UKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUghB4NKzq1UKJ6JtGBF0T3HfYkkLaqx5TehD994Gc5yJz1YZ43CkFRP1w8C4qudvFfnGUQ0QZfbUGpPA==@vger.kernel.org, AJvYcCVWOjxdQ8yRBaL3EMd0bTZGIcPsEVBmoS109dHedLroHhx6ZK+xOcaSkAgkGTltSNgE3iCzI8u43+lyiw==@vger.kernel.org, AJvYcCVmEOJfEeQTPHUeIquLEkeBV1I/TOzkMnwdLql9BruT5Bl0HWiG1SD5Uk52oSe4Tuq6LGvKjNewFYpu/nK4z5Vt/Tg=@vger.kernel.org, AJvYcCW7TdmarISvfHFMqh6Vz04SgPNH7a4i0QSyTpeqxa+N3oVsHkjtxtP1IHJGTciG5KxZ9G2trz6MiachTrtbvje/@vger.kernel.org, AJvYcCWRR6QRIzCpZPxb2O4RjOKzcALg/XmGmk4JMzhOBcNSDjuVz5fV9xCTJBvlN1If/FiDnaTfqJHo0F1kWjiz@vger.kernel.org, AJvYcCX/x2cAhZeGKc5Hlem2la7wocuSCT+m1TS/dmPwrfX7YSOuSDOMZbo9sSzuMElcqwmw8xGElmurwXgXCiTI@vger.kernel.org, AJvYcCXk2paaTIFp057xMFhZBUX4ne0MP/ArqGhRSoB/lYvPvIc+lZaW2i+klLxZlcqipT8z4BFlX5ABFxn7KQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnTnHTzzY+UpszFobwBpkFac2Dw3G7WijzArDjDD4fv8VXnlKn
-	ueoErsC3TXnGtBFUyakO6zL50PfvSO05lqKvDm4rndc3EQ6w6EuG61WIVTwh84BPa0Sf5xKLu+o
-	FE/MhvLKBy76T2uXpYBgZV0cgGJnptII=
-X-Gm-Gg: ASbGnctjCOoHz2FKEAKZ60ryb1/XGNJ/tXr8uDufUsHONcXrEpyI+txILJXl9+q92St
-	o/ilXlISXAiDHbgl3d8rje3/ZUVrCx3Y3PAMIJFg8Bs/EIVs4ck6oOqN3QmhCV39dYvgZva/5mR
-	8KOcsI8md2xqeauvTZMEnvZVIhHxwbG68OL/c7RGOxApbi+0TQY6qdgTy+RKVnBm0rme6NmxPIF
-	VS9Bmaa+OE8IT3JL9uR
-X-Google-Smtp-Source: AGHT+IE7FH6m4Dj0jSn6Xv2SOxyVdUI56jx+oEPv/YLtr96ycR8jtmVTuCl5DRsdQyIzWn8vHcnXCm+w9rLeyqQEmTc=
-X-Received: by 2002:a17:907:dab:b0:ae3:60fb:1b3b with SMTP id
- a640c23a62f3a-af8fda93d6emr386293566b.58.1753882242487; Wed, 30 Jul 2025
- 06:30:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753883568; x=1754488368;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=INvhw9PaQlqHnlfqMb8yKpdneujvD9kPiqSCHTmOp+c=;
+        b=wWO1xZjT+JmCuQJzAZ79QORyDLqfmuN2AHspY06Xbhbo3KP+46KqkTjt5Pb3d0y1HL
+         rKsIMhwgUlpiUuP2c5tD5+DFP2oUvfg8SQv5TnbX8Z/z682GeR+7jW6r7F7bznvfxSaY
+         LpVuRVWamCfEcubEh3625Rg1QWmVAa5Cu/MD9Zw1KQZ2kU7ln0SsaFBWt5WNpqncPHq+
+         yll7i5dL2wT2wF7StoW+n6Yg/6TpVAly97yxYx8reZQaAKFUqHA4CKUTUYEnXQdH3j+T
+         7v3tIiyhTzRZskEbZxQL5c6lfsJO71oHUGQTSUtNLV2LLsfK/SwRw2WWDKI/+8boJXBS
+         rTEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSaIM5eeXSreed+47ZP3DFApjHEwLMtzj3yt+aBiAvdGqpjfHxfffdEWhyASYcD45QnLhoy2/BKImVoE6DaPw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyswr6Fja3hWYG02xoMRYqduqa+gCDPBwxwkytKJWfLYnLW1/Y2
+	7Ocug36wKU4433TVpdINk3rIt0llj0DacrSklxUOtlo+dhO/UsYKfHOmCOVSN+vlg1rRpqJD0cT
+	SEDniQqH5bHOZ1zB8o+oAPKIBNrWCm1F2EaPOmbsFmWs8I+mA821eNWuGfYVuYMHUWaaDPQ==
+X-Gm-Gg: ASbGnctt28XRh5jcGqPkqxT3XRx++QghW/ALqV7LjCjYY3CNYbmPiIn731fJlE2EGv3
+	JZXPtPeV8sSTnGn+e9YzTw6G6Tnpf2wZgwJMdJDLRUuntoXRWe+ORitNvQ4TlNaIy8DRVeQ0lmT
+	itMPTt3laO6Z7Z6y/MAyq2qMhcPp7h6GySfY7WZDpSo4Zz/L8zCOhVhaWW5CDtfnRbjtY6jWxtK
+	1vlQFE+frHJNq2GmeOHKH3IVu/Xv7myuNOrZo4SyQjXkN6UeCN+9q6lY0EMIvq9YluPEOfz2hKH
+	lvF8A6nAfq/VSpRxdRRGbE4WP4uLOwJbpcU8x2EAF3TgbadiCOuRlV1ayUjCRA==
+X-Received: by 2002:a17:907:7252:b0:ae6:e25b:2413 with SMTP id a640c23a62f3a-af8fda42a6emr459883566b.44.1753883567585;
+        Wed, 30 Jul 2025 06:52:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE2KhtHgQZ228r5yO4JfetEAu342+CZE6Zr5/g2fkWHPp7n9P5vjQqg7A7lY87sHfovdnuCuA==
+X-Received: by 2002:a17:907:7252:b0:ae6:e25b:2413 with SMTP id a640c23a62f3a-af8fda42a6emr459879766b.44.1753883567129;
+        Wed, 30 Jul 2025 06:52:47 -0700 (PDT)
+Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af8f1b172f2sm210258566b.80.2025.07.30.06.52.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Jul 2025 06:52:46 -0700 (PDT)
+Message-ID: <ffc43855-2263-408d-831c-33f518249f96@redhat.com>
+Date: Wed, 30 Jul 2025 15:52:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250724-pinctrl-gpio-pinfuncs-v3-0-af4db9302de4@linaro.org>
- <20250724-pinctrl-gpio-pinfuncs-v3-12-af4db9302de4@linaro.org>
- <CAHp75Vc4vsJh_-GbP+YO50veoGoGtfAPL4tjcF+73uophfmnGw@mail.gmail.com>
- <CAMRc=Mc1ophkofB6MmtD4adBAi69C3JyovM-S9YD_y7UA3V1qA@mail.gmail.com>
- <CAHp75VcV=K-DfOGs0z64==nO+wQNoEB2Ngd2vc+dLYr3WLChjg@mail.gmail.com> <CAMRc=MeVOEFkdqf+SwQ-a=7ZPvpoerb4G_kn-aZgNLR3aTTUog@mail.gmail.com>
-In-Reply-To: <CAMRc=MeVOEFkdqf+SwQ-a=7ZPvpoerb4G_kn-aZgNLR3aTTUog@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 30 Jul 2025 15:30:04 +0200
-X-Gm-Features: Ac12FXyFKinLiyKOfaCHk8Jvp-MCK0UJT4pw-WeZSCiJVFAceB4TVkbq9UOtwlo
-Message-ID: <CAHp75Vd_5HVwzuiV17XKkzpEvzd8dzPDRRx5w-VqZnjuCz6m6A@mail.gmail.com>
-Subject: Re: [PATCH v3 12/15] pinctrl: allow to mark pin functions as
- requestable GPIOs
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
-	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH v2 22/29] mm/numa: Register information into Kmemdump
+To: Eugen Hristev <eugen.hristev@linaro.org>, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-mm@kvack.org, tglx@linutronix.de, andersson@kernel.org,
+ pmladek@suse.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+ corbet@lwn.net, mojha@qti.qualcomm.com, rostedt@goodmis.org,
+ jonechou@google.com, tudor.ambarus@linaro.org
+References: <20250724135512.518487-1-eugen.hristev@linaro.org>
+ <20250724135512.518487-23-eugen.hristev@linaro.org>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAmgsLPQFCRvGjuMACgkQTd4Q
+ 9wD/g1o0bxAAqYC7gTyGj5rZwvy1VesF6YoQncH0yI79lvXUYOX+Nngko4v4dTlOQvrd/vhb
+ 02e9FtpA1CxgwdgIPFKIuXvdSyXAp0xXuIuRPQYbgNriQFkaBlHe9mSf8O09J3SCVa/5ezKM
+ OLW/OONSV/Fr2VI1wxAYj3/Rb+U6rpzqIQ3Uh/5Rjmla6pTl7Z9/o1zKlVOX1SxVGSrlXhqt
+ kwdbjdj/csSzoAbUF/duDuhyEl11/xStm/lBMzVuf3ZhV5SSgLAflLBo4l6mR5RolpPv5wad
+ GpYS/hm7HsmEA0PBAPNb5DvZQ7vNaX23FlgylSXyv72UVsObHsu6pT4sfoxvJ5nJxvzGi69U
+ s1uryvlAfS6E+D5ULrV35taTwSpcBAh0/RqRbV0mTc57vvAoXofBDcs3Z30IReFS34QSpjvl
+ Hxbe7itHGuuhEVM1qmq2U72ezOQ7MzADbwCtn+yGeISQqeFn9QMAZVAkXsc9Wp0SW/WQKb76
+ FkSRalBZcc2vXM0VqhFVzTb6iNqYXqVKyuPKwhBunhTt6XnIfhpRgqveCPNIasSX05VQR6/a
+ OBHZX3seTikp7A1z9iZIsdtJxB88dGkpeMj6qJ5RLzUsPUVPodEcz1B5aTEbYK6428H8MeLq
+ NFPwmknOlDzQNC6RND8Ez7YEhzqvw7263MojcmmPcLelYbfOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCaCwtJQUJG8aPFAAKCRBN3hD3AP+DWlDnD/4k2TW+HyOOOePVm23F5HOhNNd7nNv3
+ Vq2cLcW1DteHUdxMO0X+zqrKDHI5hgnE/E2QH9jyV8mB8l/ndElobciaJcbl1cM43vVzPIWn
+ 01vW62oxUNtEvzLLxGLPTrnMxWdZgxr7ACCWKUnMGE2E8eca0cT2pnIJoQRz242xqe/nYxBB
+ /BAK+dsxHIfcQzl88G83oaO7vb7s/cWMYRKOg+WIgp0MJ8DO2IU5JmUtyJB+V3YzzM4cMic3
+ bNn8nHjTWw/9+QQ5vg3TXHZ5XMu9mtfw2La3bHJ6AybL0DvEkdGxk6YHqJVEukciLMWDWqQQ
+ RtbBhqcprgUxipNvdn9KwNpGciM+hNtM9kf9gt0fjv79l/FiSw6KbCPX9b636GzgNy0Ev2UV
+ m00EtcpRXXMlEpbP4V947ufWVK2Mz7RFUfU4+ETDd1scMQDHzrXItryHLZWhopPI4Z+ps0rB
+ CQHfSpl+wG4XbJJu1D8/Ww3FsO42TMFrNr2/cmqwuUZ0a0uxrpkNYrsGjkEu7a+9MheyTzcm
+ vyU2knz5/stkTN2LKz5REqOe24oRnypjpAfaoxRYXs+F8wml519InWlwCra49IUSxD1hXPxO
+ WBe5lqcozu9LpNDH/brVSzHCSb7vjNGvvSVESDuoiHK8gNlf0v+epy5WYd7CGAgODPvDShGN
+ g3eXuA==
+Organization: Red Hat
+In-Reply-To: <20250724135512.518487-23-eugen.hristev@linaro.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: BI9k3H5D_l7kHyj_X1au59XEu6hK_JQsmf59s_pJLTI_1753883568
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 30, 2025 at 2:53=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
-> On Wed, Jul 30, 2025 at 2:50=E2=80=AFPM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Wed, Jul 30, 2025 at 11:54=E2=80=AFAM Bartosz Golaszewski <brgl@bgde=
-v.pl> wrote:
-> > > On Thu, Jul 24, 2025 at 2:22=E2=80=AFPM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > >
-> > > > >  struct pinfunction {
-> > > > >         const char *name;
-> > > > >         const char * const *groups;
-> > > > >         size_t ngroups;
-> > > > > +       unsigned long flags;
-> > > >
-> > > > Not sure we need this. If the function is GPIO, pin control already
-> > > > knows about this. The pin muxing has gpio request / release callbac=
-ks
-> > > > that change the state. Why do we need an additional flag(s)?
-> > >
-> > > I'm not following, how does the pin controller know that the function
-> > > is GPIO exactly, other than by the bit set in this field?
-> >
-> > AFAICS the gpio_owner !=3D NULL means that. No need to have a duplicate
-> > of this information.
->
-> No, that's not at all what this series does... gpio_owner is the
-> consumer label of a pin used by the GPIOLIB framework. The flag I'm
-> introducing it telling the pinctrl core - before GPIOLIB is ever
-> involved - that *this pin can be requested as a GPIO by GPIOLIB*.
+On 24.07.25 15:55, Eugen Hristev wrote:
+> Annotate vital static information into kmemdump:
+>   - node_data
+> 
+> Information on these variables is stored into dedicated kmemdump section.
+> 
+> Register dynamic information into kmemdump:
+>   - dynamic node data for each node
+> 
+> This information is being allocated for each node, as physical address,
+> so call kmemdump_phys_alloc_size that will allocate an unique kmemdump
+> uid, and register the virtual address.
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
+> ---
+>   mm/numa.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/numa.c b/mm/numa.c
+> index 7d5e06fe5bd4..88cada571171 100644
+> --- a/mm/numa.c
+> +++ b/mm/numa.c
+> @@ -4,9 +4,11 @@
+>   #include <linux/printk.h>
+>   #include <linux/numa.h>
+>   #include <linux/numa_memblks.h>
+> +#include <linux/kmemdump.h>
+>   
+>   struct pglist_data *node_data[MAX_NUMNODES];
+>   EXPORT_SYMBOL(node_data);
+> +KMEMDUMP_VAR_CORE(node_data, MAX_NUMNODES * sizeof(struct pglist_data));
+>   
+>   /* Allocate NODE_DATA for a node on the local memory */
+>   void __init alloc_node_data(int nid)
+> @@ -16,7 +18,8 @@ void __init alloc_node_data(int nid)
+>   	int tnid;
+>   
+>   	/* Allocate node data.  Try node-local memory and then any node. */
+> -	nd_pa = memblock_phys_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
+> +	nd_pa = kmemdump_phys_alloc_size(nd_size, memblock_phys_alloc_try_nid,
+> +					 nd_size, SMP_CACHE_BYTES, nid);
 
-The certain pin control driver may even not know about this. But even
-though the proposed change is an overkill. If it indeed needs to be
-done, the solution of valid_mask approach sounds to me much better. It
-will be a single bitmask per pin control to tell this.
+Do we really want to wrap memblock allocations in such a way? :/
 
-> It's
-> the other way around - without knowing this, for strict pinmuxers,
-> GPIOLIB would never be able to request this pin if it was muxed to a
-> function (even if the function is called "GPIO").
+Gah, no, no no.
 
-I need to read the series again, but I truly believe we don't need
-this new field in the struct pinfunction.
+Can't we pass that as some magical flag, or just ... register *after* 
+allocating?
 
+-- 
+Cheers,
 
+David / dhildenb
 
---=20
-With Best Regards,
-Andy Shevchenko
