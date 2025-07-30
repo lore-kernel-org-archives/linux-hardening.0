@@ -1,138 +1,161 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D4D2D662D;
-	Wed, 30 Jul 2025 14:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B172DBF75
+	for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 14:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753886403; cv=none; b=DfBDNuERIwwSYs/gM1wZZDQXS0Kh3gXW/V51f9bE9ocBmD604z+6edperY/61GY3MAYN0nNxPQIrWjhbIsapr4xwGsq/8PwHB8V41VsowJKpZ2yRc4jgiDVQE12AYFhZe+bhYZnbBmZBTI/45bm8H0C/R+RZRFPYPv0Qoq6BJYo=
+	t=1753886737; cv=none; b=Bj92tTN3RB5ATTZ0MozNUuUfp9TqOIotuJqHd4yJTWLbZ7Y2co3jvTUYdIt1hJNyZf4kn8obAfeSPf+qxcXGxoA/D1kIuNumkkUJvsJfL9tZTfh7umYYTKCAzmckrhQnMz8GYe3F8xipB+ZiyUqDMYg07ltQZmU+Rjk4tQkKhX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753886403; c=relaxed/simple;
-	bh=fsNDK0m2HvXhd+HmVg8X+IiMSdt3lmbUgCmoyNIyCOM=;
+	s=arc-20240116; t=1753886737; c=relaxed/simple;
+	bh=h6BIraPSPPKSk7SSDXt989v2WJKnWFnkSVC/oGpVfug=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B0MD4bzSuaZRnhgjXP7WpQ8i0LfIdQgszRXVWrBXoJ7nE0g5u1Gmnm129YX4tRwgZOzWacvA3p8FmSO1/wwXm0VvCbKXpx0OGXm/MCg9f1PCC1zfQZUNT26nsxvpHtdyCFwWSt+pZNWdzdN/fqbsIrqHS34oeeC+nITz6CTziSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-88d89eaf08dso203748241.1;
-        Wed, 30 Jul 2025 07:40:01 -0700 (PDT)
+	 To:Cc:Content-Type; b=f+aXt3B7nOQqoXZJuTCQgQPyM5oCHV0J4zJ3rMpW+sNMQkuQuW0j17KWNTdPtznAlEBTcQTw7C1gfe8G1JnqVuMii2sT4fjLjPQccjC1oF+onEbEhTk+i8VFJRx6Pi4vrQ2xr8f61z1eFGIUtuEFoHTd+WXn4ZPbD6x9RwUne/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tN++uUuI; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tN++uUuI"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553ba7f11cbso7344953e87.1
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 07:45:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753886733; x=1754491533; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m6AXuDDeUL1WpUxErghD7iQZDxn7tXl0MHZ3gm9RjBI=;
+        b=tN++uUuIIMW6vesD77CdgIQpMj9SC843EEVWdApX2Fr/6Mb92tbIooX9hKjDxmOaWt
+         cq6VWik3lq5SenrRNASErTN+Rvq7T0RjE+Qk1Dlcws/0vwn769kQRw27Q/c5GXUp06Az
+         A+8xDyLhN8j7jY30CceRKNgb5h69NSB+WTX9ln8eOXHSF47PNmCHXg6R63TraW5qipvr
+         XwnAj3+jNZvCU0X4PN4CunIARdAOd7hrRtb/bdzVs2RaZvJicEJU0JJd1NofUwsUuX/W
+         NncwyaGCbpsF9x5XEr/KEh7EWcrC07Rb+Q4FCU1wUlbg3gGVy4YDXJq7dkWAZsDdfN4u
+         O3jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753886400; x=1754491200;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l+/EyocnWfozW31T/mNyvD0w3Vb0gJmDVRrDiDkyjlc=;
-        b=cIEMjlvcyfKuA3dRR/eKMGdtV31S81UUXc4mfqnwka2ZveLS706yf0VGKAML3yOqUh
-         ts/w+Dg7jrbMOeepe5VRSbZyYy1IPLERNDaxpCi88tI6D+njEQ20N9CRAF+Qr53E3ETs
-         rsr1aOtxxdb5fapCJOYqoSSINXBqV2G2g497oDGBGO3Zzhe2sf3thkcvPZUrvdOuNQUP
-         9ybN2TE6dw6fIDKqSD8irdqo72PrL8jdxHIg65bAy0D1c+lCs2vRh2RAIrVSJRrCbHU1
-         sy0UrvvEIljOhhQ5LLC6P9XsoRakp1b/ekZ+jVk+kLxexJtZkRglzyqxwMN3CbSZ+qLY
-         yIrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWhq9tLldHFPEBWxqz/kkiP8LqJ7Yk8IW5fDidcb+jvuZzvAQLBdbY8egwR4WkDZw5fU4oUlO/rTcECuyYVcM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypQHD5brLG0eDEYlsehI+bieaBAxOY/TPgXlG+jUFYNAQ+4Tl4
-	1l3k05atvc64Nb5FC4Wlu86fcb49X2yToeCunvPVSyHjxPnFC6xxKgYM3MtnNizt
-X-Gm-Gg: ASbGncuThYlFue7rwozpoH2K1GkbBgn6b9VLpk97nhkOHkpV2An8Yj4CUwRzMpFwOgB
-	5FbfFCA8pCXXKBqi7JgPpoeYCmu64VN3hGQPBeBL62QrXB7PSY8E7UPxoeEXABIJrqah0d50ACf
-	ZRUrPlXUgU1no9aR2R8RTjmdpXch1VYFVgnkdTscMnNjSfuPRmi6CTCxri4t+3Gp/+SHwIX6CiT
-	EevKGVP0RdsUV5YHeZgR6fbhCRvFN40BbhF+gck8PO8MSY36MTkNxWNQMUzjAsubUDbsSAqkHKp
-	UbOll0ZvOpaBlwk3RiiG54POQJbsESnBsCdt6eHDnsBfy03tHRau2XZoo1lU/jUmhNhX1ZixpT0
-	q46jaPFvprQPpZEPbeXA76vfEyYMgHzOWmWkHlAb2n988gkgPlf/0F9f+QR2b
-X-Google-Smtp-Source: AGHT+IFmsyN4oP7DnANK0MkQ76aO4WZZsRcjAkfqT2KzDstalkDrSpWeA5c1MQg8fRnwcOChvM7nsg==
-X-Received: by 2002:a05:6102:6119:20b0:4fb:fc47:e8c2 with SMTP id ada2fe7eead31-4fbfc47ed68mr508048137.9.1753886399872;
-        Wed, 30 Jul 2025 07:39:59 -0700 (PDT)
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4fa46e0938esm2020906137.12.2025.07.30.07.39.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Jul 2025 07:39:59 -0700 (PDT)
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4fc042790f1so82542137.1;
-        Wed, 30 Jul 2025 07:39:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU4U3TG2TldlGdG1dDX1/YCB3N4gZvIsf87pj70bXCWOQn45UPjGcV1qRQChgf8+yR19D7iN2bnk+YpnGlqyW4=@vger.kernel.org
-X-Received: by 2002:a05:6102:1481:b0:4ec:c548:e57b with SMTP id
- ada2fe7eead31-4fbe7ad20fcmr3270846137.0.1753886397780; Wed, 30 Jul 2025
- 07:39:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753886733; x=1754491533;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m6AXuDDeUL1WpUxErghD7iQZDxn7tXl0MHZ3gm9RjBI=;
+        b=VOiq3/oXERYjg5FKJ5ccgKw2J9GpsJ2FEVBB6DAJ6Kvw8Ng5RYYg/X2pDDUz61z9am
+         /Wdwnth8CpGo6rSJ/WbRru5ExG3FmIwFfRJJI+PyUj3tqYofyecTnR2lbHi3cW2GSKnm
+         M0LkEfDfDGZLltwrF3jurCNTi2k0nbxlbx0zXkWjVdJcXSkmvZg1dAWqXjFvXhaMjM+r
+         sAKaf1IfFluwjRt9Bigy/EWlYayE4vKiPlAUJGsJW4JLetIUKgxesQL777Ho/9M3U8uG
+         dGjgFvoXOpb5I/P6uV9egY5Je2QQo1zwTTIiskQqvN5IynP9bUazijZfOfjtQEV8a/aK
+         Y6jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ0qEDgR3ecOImgmWgJ/D+2E/DpKQu+iMIa2BoubfkzKfKwTOnbRtu5S40yG8qou+8ncIN2brWQyBAyNZwdV4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzN/S24SmeIZWutAulg9y8nPHnFohY2CX+K/1+pHg8zi2zHcUe/
+	WWnICxBQxaaAhu88cm3uIhlspB+gCGALPgBtHWUxuj2kBDzs8j3FfoxlGzTbmZXq4u98fbzQsj8
+	2IIDeD8d/7vAEu5povUouoq1BMyQAjQybNECI8BwbhA==
+X-Gm-Gg: ASbGnctQi5U1qP3DIl7NWtjKfvHt8oN5oOQCukmbs4mKqPrARtOX2q5L1VoEDfrovpm
+	x7ZDBDEp7B56VAo5JWEVUZhp5KZ4ocR+C5HguyShyCSvguEjGXeI3vX3hGdF5/RCfve8QpKRULz
+	4HmOPjHoMqPnqOm1x3Aq7pg/PaJH0YJcxsTAja2b6voR4SI5QL/iyYSZ1cYM4uHSgrnDiyja+lq
+	FKmId9V/4B3bjO8iB2nGl1TIGjeOwJvFwLKK/k=
+X-Google-Smtp-Source: AGHT+IG0Q6hH9i+UpqLftCvpSVBouzPpbLbuygIY2t4i0+nQyoHOVMz3gwtmG10RMLHn13yYgB8U2bSlEYWDzelEprk=
+X-Received: by 2002:a05:6512:23a3:b0:554:f7ec:3b23 with SMTP id
+ 2adb3069b0e04-55b7c027afamr1034186e87.15.1753886733212; Wed, 30 Jul 2025
+ 07:45:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250724094146.6443-1-wsa+renesas@sang-engineering.com> <20250724094146.6443-5-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20250724094146.6443-5-wsa+renesas@sang-engineering.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 30 Jul 2025 16:39:46 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX5BfNm1GJ8UyqftcVc07p1aodXuVHxNaYWDYLHaxzXMw@mail.gmail.com>
-X-Gm-Features: Ac12FXwSHxwgh1iE-RiAFlbvbPUyCFA8Vv2qiKkbn-bMclgIM8YsBFxjbxa_ny4
-Message-ID: <CAMuHMdX5BfNm1GJ8UyqftcVc07p1aodXuVHxNaYWDYLHaxzXMw@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] i3c: master: Add basic driver for the Renesas I3C controller
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org, 
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, Frank Li <Frank.Li@nxp.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-i3c@lists.infradead.org, 
-	linux-hardening@vger.kernel.org
+References: <20250724-pinctrl-gpio-pinfuncs-v3-0-af4db9302de4@linaro.org>
+ <20250724-pinctrl-gpio-pinfuncs-v3-12-af4db9302de4@linaro.org>
+ <CAHp75Vc4vsJh_-GbP+YO50veoGoGtfAPL4tjcF+73uophfmnGw@mail.gmail.com>
+ <CAMRc=Mc1ophkofB6MmtD4adBAi69C3JyovM-S9YD_y7UA3V1qA@mail.gmail.com>
+ <CAHp75VcV=K-DfOGs0z64==nO+wQNoEB2Ngd2vc+dLYr3WLChjg@mail.gmail.com>
+ <CAMRc=MeVOEFkdqf+SwQ-a=7ZPvpoerb4G_kn-aZgNLR3aTTUog@mail.gmail.com> <CAHp75Vd_5HVwzuiV17XKkzpEvzd8dzPDRRx5w-VqZnjuCz6m6A@mail.gmail.com>
+In-Reply-To: <CAHp75Vd_5HVwzuiV17XKkzpEvzd8dzPDRRx5w-VqZnjuCz6m6A@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 30 Jul 2025 16:45:21 +0200
+X-Gm-Features: Ac12FXyd8ePQ6VSvFuinf3meGy3NBROTyjzQV07xe8o_XLvEkxT-hmgEmHvLoEA
+Message-ID: <CAMRc=McPvFzb7CSFSKOsQZD9ZPwtf+bCw+Ui=m6OoX0GxH9DtQ@mail.gmail.com>
+Subject: Re: [PATCH v3 12/15] pinctrl: allow to mark pin functions as
+ requestable GPIOs
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
+	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Wolfram,
-
-On Thu, 24 Jul 2025 at 11:41, Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> Add a basic driver for the I3C controller found in Renesas RZ/G3S and
-> G3E SoCs. Support I3C pure busses (tested with two targets) and mixed
-> busses (two I3C devices plus various I2C targets). DAA and communication
-> with temperature sensors worked reliably at various speeds.
+On Wed, Jul 30, 2025 at 3:30=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Missing features such as IBI, HotJoin, and target mode will be added
-> incrementally.
+> On Wed, Jul 30, 2025 at 2:53=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> > On Wed, Jul 30, 2025 at 2:50=E2=80=AFPM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Wed, Jul 30, 2025 at 11:54=E2=80=AFAM Bartosz Golaszewski <brgl@bg=
+dev.pl> wrote:
+> > > > On Thu, Jul 24, 2025 at 2:22=E2=80=AFPM Andy Shevchenko
+> > > > <andy.shevchenko@gmail.com> wrote:
+> > > > >
+> > > > > >  struct pinfunction {
+> > > > > >         const char *name;
+> > > > > >         const char * const *groups;
+> > > > > >         size_t ngroups;
+> > > > > > +       unsigned long flags;
+> > > > >
+> > > > > Not sure we need this. If the function is GPIO, pin control alrea=
+dy
+> > > > > knows about this. The pin muxing has gpio request / release callb=
+acks
+> > > > > that change the state. Why do we need an additional flag(s)?
+> > > >
+> > > > I'm not following, how does the pin controller know that the functi=
+on
+> > > > is GPIO exactly, other than by the bit set in this field?
+> > >
+> > > AFAICS the gpio_owner !=3D NULL means that. No need to have a duplica=
+te
+> > > of this information.
+> >
+> > No, that's not at all what this series does... gpio_owner is the
+> > consumer label of a pin used by the GPIOLIB framework. The flag I'm
+> > introducing it telling the pinctrl core - before GPIOLIB is ever
+> > involved - that *this pin can be requested as a GPIO by GPIOLIB*.
 >
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Tested-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> The certain pin control driver may even not know about this. But even
+> though the proposed change is an overkill. If it indeed needs to be
+> done, the solution of valid_mask approach sounds to me much better. It
+> will be a single bitmask per pin control to tell this.
+>
+> > It's
+> > the other way around - without knowing this, for strict pinmuxers,
+> > GPIOLIB would never be able to request this pin if it was muxed to a
+> > function (even if the function is called "GPIO").
+>
+> I need to read the series again, but I truly believe we don't need
+> this new field in the struct pinfunction.
+>
 
-Thanks for your patch!
+Without a code example, I can't tell what you're imagining but let me
+give some more context: the flags field could only exist in the
+qualcomm drivers but the problem will be the same on all existing
+platforms so IMO it's better to centralize it right away. And if we're
+already centralizing it, let's make it future proof by making it
+possible to define more such flags if we need it. Since the GPIO
+category is a function property, it only makes sense to put it in the
+structure defining the function.
 
-Just a few stylistic comments for now...
-
-> --- /dev/null
-> +++ b/drivers/i3c/master/renesas-i3c.c
-
-> +#define REFCKCTL               0x70
-> +#define  REFCKCTL_IREFCKS(x)   FIELD_PREP(GENMASK(2, 0), x)
-
-Interesting... Usually the FIELD_*() macros are used like this:
-
-    #define REFCKCTL_IREFCKS    GENMASK(2, 0)
-
-    x = readl(base + REFCKCTL);
-    a = FIELD_GET(REFCKCTL_IREFCKS, x);
-
-    y = FIELD_PREP(REFCKCTL_IREFCKS, b);
-    writel(y, base + REFCKCTL);
-
-That way you do not have to duplicate "GENMASK(2, 0)" in the read and
-write marshalling macros.  But I do agree this driver does not seem
-to have register fields that are both read and written ;-)
-
-> +static inline u32 renesas_readl(void __iomem *base, u32 reg)
-> +{
-> +       return readl(base + reg);
-> +}
-> +
-> +static inline void renesas_writel(void __iomem *base, u32 reg, u32 val)
-> +{
-> +       writel(val, base + reg);
-> +}
-
-Why not use readl() and writel() directly?
-To make it easier to add debug prints during initial development?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Bartosz
