@@ -1,161 +1,67 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B172DBF75
-	for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 14:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54852D8DAA
+	for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 14:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753886737; cv=none; b=Bj92tTN3RB5ATTZ0MozNUuUfp9TqOIotuJqHd4yJTWLbZ7Y2co3jvTUYdIt1hJNyZf4kn8obAfeSPf+qxcXGxoA/D1kIuNumkkUJvsJfL9tZTfh7umYYTKCAzmckrhQnMz8GYe3F8xipB+ZiyUqDMYg07ltQZmU+Rjk4tQkKhX4=
+	t=1753887256; cv=none; b=MG1F/sYKVqHvcMPLGXFk3Olf9toFC09UneNaMpnPM6pXPl/aIkel+z0+RbG87SRlKyjYda4s4rvf2eMnW5SURG/Z4yYoYqRLH70ZCy/XWv09pDhWntk06vQO1XKVyJEBdGpOOdCORZGbbji1QCyJAMDcw/ChJxzvZ/7SIM3fv7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753886737; c=relaxed/simple;
-	bh=h6BIraPSPPKSk7SSDXt989v2WJKnWFnkSVC/oGpVfug=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f+aXt3B7nOQqoXZJuTCQgQPyM5oCHV0J4zJ3rMpW+sNMQkuQuW0j17KWNTdPtznAlEBTcQTw7C1gfe8G1JnqVuMii2sT4fjLjPQccjC1oF+onEbEhTk+i8VFJRx6Pi4vrQ2xr8f61z1eFGIUtuEFoHTd+WXn4ZPbD6x9RwUne/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tN++uUuI; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1753887256; c=relaxed/simple;
+	bh=ie+RIG1rJYm4GmXC8JjeZKFDJPovwpXR3vjbC4sifHU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s1AxJgFOvdES2u5sftjG/Aro8KYtlTFyXvBeD7xH7jhzq7lsEW/LU4u4rAmozcbiwK4YMkckDqVOol8Yb3muuwfGWd/ISSNGZDWx4MwDoc36/yjr9g1zvjRs0DaXOC4aL6cH+6qyLKGkqM46tcynwxP2nM7zjjV3peVHYt8hIRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=k3/IZMwH; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tN++uUuI"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553ba7f11cbso7344953e87.1
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 07:45:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753886733; x=1754491533; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m6AXuDDeUL1WpUxErghD7iQZDxn7tXl0MHZ3gm9RjBI=;
-        b=tN++uUuIIMW6vesD77CdgIQpMj9SC843EEVWdApX2Fr/6Mb92tbIooX9hKjDxmOaWt
-         cq6VWik3lq5SenrRNASErTN+Rvq7T0RjE+Qk1Dlcws/0vwn769kQRw27Q/c5GXUp06Az
-         A+8xDyLhN8j7jY30CceRKNgb5h69NSB+WTX9ln8eOXHSF47PNmCHXg6R63TraW5qipvr
-         XwnAj3+jNZvCU0X4PN4CunIARdAOd7hrRtb/bdzVs2RaZvJicEJU0JJd1NofUwsUuX/W
-         NncwyaGCbpsF9x5XEr/KEh7EWcrC07Rb+Q4FCU1wUlbg3gGVy4YDXJq7dkWAZsDdfN4u
-         O3jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753886733; x=1754491533;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m6AXuDDeUL1WpUxErghD7iQZDxn7tXl0MHZ3gm9RjBI=;
-        b=VOiq3/oXERYjg5FKJ5ccgKw2J9GpsJ2FEVBB6DAJ6Kvw8Ng5RYYg/X2pDDUz61z9am
-         /Wdwnth8CpGo6rSJ/WbRru5ExG3FmIwFfRJJI+PyUj3tqYofyecTnR2lbHi3cW2GSKnm
-         M0LkEfDfDGZLltwrF3jurCNTi2k0nbxlbx0zXkWjVdJcXSkmvZg1dAWqXjFvXhaMjM+r
-         sAKaf1IfFluwjRt9Bigy/EWlYayE4vKiPlAUJGsJW4JLetIUKgxesQL777Ho/9M3U8uG
-         dGjgFvoXOpb5I/P6uV9egY5Je2QQo1zwTTIiskQqvN5IynP9bUazijZfOfjtQEV8a/aK
-         Y6jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ0qEDgR3ecOImgmWgJ/D+2E/DpKQu+iMIa2BoubfkzKfKwTOnbRtu5S40yG8qou+8ncIN2brWQyBAyNZwdV4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN/S24SmeIZWutAulg9y8nPHnFohY2CX+K/1+pHg8zi2zHcUe/
-	WWnICxBQxaaAhu88cm3uIhlspB+gCGALPgBtHWUxuj2kBDzs8j3FfoxlGzTbmZXq4u98fbzQsj8
-	2IIDeD8d/7vAEu5povUouoq1BMyQAjQybNECI8BwbhA==
-X-Gm-Gg: ASbGnctQi5U1qP3DIl7NWtjKfvHt8oN5oOQCukmbs4mKqPrARtOX2q5L1VoEDfrovpm
-	x7ZDBDEp7B56VAo5JWEVUZhp5KZ4ocR+C5HguyShyCSvguEjGXeI3vX3hGdF5/RCfve8QpKRULz
-	4HmOPjHoMqPnqOm1x3Aq7pg/PaJH0YJcxsTAja2b6voR4SI5QL/iyYSZ1cYM4uHSgrnDiyja+lq
-	FKmId9V/4B3bjO8iB2nGl1TIGjeOwJvFwLKK/k=
-X-Google-Smtp-Source: AGHT+IG0Q6hH9i+UpqLftCvpSVBouzPpbLbuygIY2t4i0+nQyoHOVMz3gwtmG10RMLHn13yYgB8U2bSlEYWDzelEprk=
-X-Received: by 2002:a05:6512:23a3:b0:554:f7ec:3b23 with SMTP id
- 2adb3069b0e04-55b7c027afamr1034186e87.15.1753886733212; Wed, 30 Jul 2025
- 07:45:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="k3/IZMwH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=ie+R
+	IG1rJYm4GmXC8JjeZKFDJPovwpXR3vjbC4sifHU=; b=k3/IZMwHuOeVahgnAUu3
+	vKGJIsEkUiEf2hNu18PmR2tKdfNsrxv1TcfC/S69NHlxnqJvQo5If+rPkfAaloRJ
+	8172ZavzDWHQ0k4uKjZ8xIAV8wCem4OvcEtcSwqaKL2oUpfwDmYUQKaXb6M7noGE
+	lTiDjcE1xynJGkZ31TNCfeUnyCZjIgtaFrZ4T7bKch6YzoT+Q0yYXDj4O7uAdyzj
+	+spw4hAnmtm+POL/tA0fc08wRD2rwb/Yio59fyX+WbzLI9NHEenPQBb0vVAYx7zd
+	Jvc7FbKdKjFzgJbHG5yibH4TS8OZIXd0J/ZLIq49LWD+RBuXMT1xUoWvzD9Zb5Cp
+	FA==
+Received: (qmail 19156 invoked from network); 30 Jul 2025 16:54:09 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 Jul 2025 16:54:09 +0200
+X-UD-Smtp-Session: l3s3148p1@M+RwsiY79lBtKPC7
+Date: Wed, 30 Jul 2025 16:54:08 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+	Frank Li <Frank.Li@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Magnus Damm <magnus.damm@gmail.com>, linux-i3c@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 4/4] i3c: master: Add basic driver for the Renesas I3C
+ controller
+Message-ID: <aIoyEKpB7twvKDGN@shikoro>
+References: <20250724094146.6443-1-wsa+renesas@sang-engineering.com>
+ <20250724094146.6443-5-wsa+renesas@sang-engineering.com>
+ <CAMuHMdX5BfNm1GJ8UyqftcVc07p1aodXuVHxNaYWDYLHaxzXMw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250724-pinctrl-gpio-pinfuncs-v3-0-af4db9302de4@linaro.org>
- <20250724-pinctrl-gpio-pinfuncs-v3-12-af4db9302de4@linaro.org>
- <CAHp75Vc4vsJh_-GbP+YO50veoGoGtfAPL4tjcF+73uophfmnGw@mail.gmail.com>
- <CAMRc=Mc1ophkofB6MmtD4adBAi69C3JyovM-S9YD_y7UA3V1qA@mail.gmail.com>
- <CAHp75VcV=K-DfOGs0z64==nO+wQNoEB2Ngd2vc+dLYr3WLChjg@mail.gmail.com>
- <CAMRc=MeVOEFkdqf+SwQ-a=7ZPvpoerb4G_kn-aZgNLR3aTTUog@mail.gmail.com> <CAHp75Vd_5HVwzuiV17XKkzpEvzd8dzPDRRx5w-VqZnjuCz6m6A@mail.gmail.com>
-In-Reply-To: <CAHp75Vd_5HVwzuiV17XKkzpEvzd8dzPDRRx5w-VqZnjuCz6m6A@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 30 Jul 2025 16:45:21 +0200
-X-Gm-Features: Ac12FXyd8ePQ6VSvFuinf3meGy3NBROTyjzQV07xe8o_XLvEkxT-hmgEmHvLoEA
-Message-ID: <CAMRc=McPvFzb7CSFSKOsQZD9ZPwtf+bCw+Ui=m6OoX0GxH9DtQ@mail.gmail.com>
-Subject: Re: [PATCH v3 12/15] pinctrl: allow to mark pin functions as
- requestable GPIOs
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
-	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdX5BfNm1GJ8UyqftcVc07p1aodXuVHxNaYWDYLHaxzXMw@mail.gmail.com>
 
-On Wed, Jul 30, 2025 at 3:30=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Jul 30, 2025 at 2:53=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
-> > On Wed, Jul 30, 2025 at 2:50=E2=80=AFPM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Wed, Jul 30, 2025 at 11:54=E2=80=AFAM Bartosz Golaszewski <brgl@bg=
-dev.pl> wrote:
-> > > > On Thu, Jul 24, 2025 at 2:22=E2=80=AFPM Andy Shevchenko
-> > > > <andy.shevchenko@gmail.com> wrote:
-> > > > >
-> > > > > >  struct pinfunction {
-> > > > > >         const char *name;
-> > > > > >         const char * const *groups;
-> > > > > >         size_t ngroups;
-> > > > > > +       unsigned long flags;
-> > > > >
-> > > > > Not sure we need this. If the function is GPIO, pin control alrea=
-dy
-> > > > > knows about this. The pin muxing has gpio request / release callb=
-acks
-> > > > > that change the state. Why do we need an additional flag(s)?
-> > > >
-> > > > I'm not following, how does the pin controller know that the functi=
-on
-> > > > is GPIO exactly, other than by the bit set in this field?
-> > >
-> > > AFAICS the gpio_owner !=3D NULL means that. No need to have a duplica=
-te
-> > > of this information.
-> >
-> > No, that's not at all what this series does... gpio_owner is the
-> > consumer label of a pin used by the GPIOLIB framework. The flag I'm
-> > introducing it telling the pinctrl core - before GPIOLIB is ever
-> > involved - that *this pin can be requested as a GPIO by GPIOLIB*.
->
-> The certain pin control driver may even not know about this. But even
-> though the proposed change is an overkill. If it indeed needs to be
-> done, the solution of valid_mask approach sounds to me much better. It
-> will be a single bitmask per pin control to tell this.
->
-> > It's
-> > the other way around - without knowing this, for strict pinmuxers,
-> > GPIOLIB would never be able to request this pin if it was muxed to a
-> > function (even if the function is called "GPIO").
->
-> I need to read the series again, but I truly believe we don't need
-> this new field in the struct pinfunction.
->
 
-Without a code example, I can't tell what you're imagining but let me
-give some more context: the flags field could only exist in the
-qualcomm drivers but the problem will be the same on all existing
-platforms so IMO it's better to centralize it right away. And if we're
-already centralizing it, let's make it future proof by making it
-possible to define more such flags if we need it. Since the GPIO
-category is a function property, it only makes sense to put it in the
-structure defining the function.
+> Why not use readl() and writel() directly?
+> To make it easier to add debug prints during initial development?
 
-Bartosz
+Yes. And ultimately, there is a patch in the works converting the driver
+to MMIO regmap to get rid of _all_ the helpers. I couldn't make this in
+time for the 6.17 mergewindow, though, because of... gory details.
+
