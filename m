@@ -1,114 +1,189 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C77226D17
-	for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 09:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990FA293C6C
+	for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 11:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753869293; cv=none; b=eVoBpdEwV9bpzghqXmVoZJlMnfAyGzdaNl5wgfwJ4eQeBdE2O4Wm2XS37QK6p4JvdZbALmgKQYIInkWo9OxjUU8BS7BoVo35vz9k8DJxdRTvOA3vK01oJebLvPqxCKBL1UVkmdVook6WJUHkC0wtpkWDD7g5O1nzczTFaspOtlE=
+	t=1753876632; cv=none; b=oP9msjpo0qeNaBGg6EOdPRFllUISKDM8yYhp7pJ7pcULM33BFMH8LBdVPJHbH0tIyUI1IfOPIv0vuJek2VangT7PIxV+/FumBRCCIO1oYEERGmiEmHQsVcvZBC487qrf4u3PgrO6GncOeVEoE7738DsEMpX0DrIfW/AlR9XctTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753869293; c=relaxed/simple;
-	bh=hp7bAnlyWbMe0UagxjClRdoFhPBImgjJBDcHhbMOPBc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qAZvBI3rHhCRC53yJ4nEqLD/vx6sSRyrRK8lwbbHBsvCQf6NT24DPauekGBl83ezBHx+W5p0q7+5eZd+SGu4hIyRQEjg+nGjyX0fRDku4xWyXu+yPTmI9Ou98KZvcxsGQnX0foUmAiOUabfd0lGcr23cGRmp3u/LD48ExT9UnKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=y6v1Y+rP; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1753876632; c=relaxed/simple;
+	bh=+eRDzekTqZXJk8PBWToJk0rTOuC+gK36unHXlpT7R3E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sHKwcyA+BxADFCprUxFwKaxOfMVxFP8xHLBRdXQW7jC42ig6OgTXe/6cKztoQJnWipp4YpWq/4JHrc/OGrZ7OrKaqxC1ZZWMXdv66CDV3lfkcRjLPvg/w24pqgNNhqz6UdCjcbgXzJk9ZDkjy64bsq2uRLsWArs+kdG7Y4tW1nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mx2is+/0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="y6v1Y+rP"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-555024588b1so7110819e87.1
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 02:54:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753869290; x=1754474090; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b6vdhp2EWkPtq+IAr0ObGae8XoJd1fUV2G+NSQOgeB0=;
-        b=y6v1Y+rPEVDHOkrqc2KWOfhiugmQ47csz1p9+cPsKrBxMu6N++Lx7mDSVzJx9n6oqS
-         UB5hMz5e/MChLsSvAmzP82OKI7y6HHDsJkHIQqJ10ekWc9qTbZH4JevVzniY4W09B0A/
-         VbMUa0prk04D/p8/3TRqlWvGNSKC2kXTwf/bhns+HC7/CXVhXgBURVJR/9r87Bn9GlN0
-         gv/+LXG6hJV0a64I7ABkBgPr6iaKk6lKUYzENYZv0W+E8GgTmxZDjeJpjUQvzGsRYgUw
-         UIsm9yMb4dS4lePbwKM+ubqez2QY+tIytNFSDWF2gXWKi7MulASGNSolQFMpNoSrFq9C
-         RciA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mx2is+/0"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56UBrANZ017420
+	for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 11:57:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	mIcjeDS7h8ogUXxvg4ORZjBG3hxtqpSdWr0+tiwbntc=; b=mx2is+/0fcYAIXjS
+	K6AjbVbXpF6WdJTnlXVg0K1oy6kkvtcj869yStnAx3zvac/0hyyPFlQgrq346N5U
+	JRkVtHpyrS8xU4HXYEWrv9qJxutLAjQpGJZi/qLiP3sFF9VmvXXgYHe5PgEtNHBs
+	dws3DB49dUks3+pH2uAc/ssZxy+hdxKDV+MjPb84BgB2FoXjXeKrLzc5uiu21qDL
+	cAwulemQGW7FQl5txt667736cbyWU5QNiKpUWq3hJvYfi3SBQDidee8YHINbis/q
+	WKrlyGog8ZA00f2T+1ruOcORKbSfupyl0vx+LtH7pnCX/Xv3ijooEl/kf1z0dgHy
+	ZNH9kw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 487jwg80d8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 11:57:09 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7e2b5396898so44506585a.0
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 04:57:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753869290; x=1754474090;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b6vdhp2EWkPtq+IAr0ObGae8XoJd1fUV2G+NSQOgeB0=;
-        b=U+i07OGgje9i4zm3pqpb4qhmq+zTLZ7fKw68fEdt6UzBV8neuYOBvngCSiUQ3w/ka8
-         jXiRqIPwJcp1giG6V6kR62C8rkObBJTCKaxu4KmMj8GIafuQh/vLWJ3POi1NSC9cqfNf
-         mf21j6gXFgBJWCL60wQqQCJDPKeRK9ahustiytMqoFI7BBjTFOGJv1WHoF6nChsryAko
-         UZI8eR/vJMSOR61UygB0oVcIQRFpZOUqRmdC0tWtR14FQ1jXQMTFrlegslFpJ9HIzIq0
-         2/DFQc7ZyIc9FJ1M2xRUrCVOiCtk8tB+XZLXNsITgO7ZZl1NDPpbI2FdmCK8Q12+J6ez
-         O6Dw==
-X-Forwarded-Encrypted: i=1; AJvYcCWoEwLTpcbSvh6nULu61R4wFh0KWxDW7QDanty65qiaWkx1JO5Np4LCDP3VzImVrdRWCDDeL0u/li0Y0FbPZig=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyws9xnmfTpzuItHm6UQhCiaLaZyoKCcfXmpIX2svM3AjV1HBKm
-	F/37EVzQI7+raapWVNevAxuG5ZYTtnSHn2S2PpnatBRpoV+pX8hiwD10D+qsdWjo+ZB+/lTg1rP
-	A6kkBsosEOWaAYMhxddkm1bX48Y/HdaNGtSX8jCS4ew==
-X-Gm-Gg: ASbGncs2kmh6pSyVIyZswmzLTj4BHSNoErk/zrMaNoxa6ZgvMggv5aQS+pCkL+n+Lh5
-	694KpExZSaGxHCNPapkcDQgi4c4zqY39kvCsRdQdCQ0mM4TGU2ETNRgSvnSWvZ6MwIlo0GZAaJl
-	dpUW3KPO5RxTx+vAnEckerYkRO5+uckf0A3KbBv0RpVWeNZrqBVqm3bR3lj8sIkaXl+T/LSl5eR
-	2zqdYXzrLOupAz/T2SVHjpKlmzcMR/s7etxcTk=
-X-Google-Smtp-Source: AGHT+IFD0mC+adTu2tQIUqoYqi4YbEm6lb9KfHl4WlQUhUVwQ9owZPBnvnUOvhF+89ksRVwAv/r0YIR9B2aVVdKhoAo=
-X-Received: by 2002:a05:6512:33c7:b0:554:e7f2:d76b with SMTP id
- 2adb3069b0e04-55b7c0b0f66mr939851e87.56.1753869289592; Wed, 30 Jul 2025
- 02:54:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753876628; x=1754481428;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mIcjeDS7h8ogUXxvg4ORZjBG3hxtqpSdWr0+tiwbntc=;
+        b=J4PnCnPXABmZFRP/u7v8iy6N4EmlLt/hGIu3hSxqYy5kJjZVADfmyBKzIiYhJyuUNr
+         QPdSjmoAdzp11+BSAcvtMBy4xnZRdhGqg3fwbbjxNcvk6KxFkejEYl7svYgfvV8SA5uq
+         iRmg5N/Nd5NhzwJwDujYpPyxpBn84uRCwIf8JMTjjLH845yKITzAsF50XsFRmP00i2qN
+         e3tTCFpaZkuuZV574rr3EwMA3/l9dhopEY1VzqzTRpz/ay30bbBi164qfCe2zefnwikv
+         Rl1pZ2QpTLgDPV0fmD24bh6/7rvdMnuGU16uaTcjwn7M69TzjszsBiHxV8Kh49NQX3h3
+         UhIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlVD8Bxy9spkcwpFyxgma75EY4xduScs6xIbwNUIsQolami1Xim5xOmjCukYrp3iiReGvoEaq56PzzcIqqPuI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHb7DMsEwmVv0/rGMuTwHjXl5AThwGzXi58RyVNOaJC0XB5Yyj
+	Gx/gcriyiuZPirfSt9YDrEQcY9mMDzG9Q2ZajcE43CI2zfsYIbaAYy/3JURA91aisrV0gx0tYAG
+	+020LKJL+HiP9VcgDaenJt/889Csbw1Vksk+fFjIG7fjyzQMaKamXA56QOwVOFBIl8ssKCqk=
+X-Gm-Gg: ASbGnctUE/nKu9KkMTn7bAgEpGMBDX3j7Jy9Bem+JRVjh3zp2rCOnAH96ZgRJWRe6Ui
+	A16NfxoYJUz4JW+ouTy535go4FZODDc4bZJe25OBrP1WGXzAvn+GEFunnDK2COORSsAYdxzK5AU
+	aQERgWBYkHEzHsJxukajrhBLOcCa42Njo91lddQgQmgYcszkGE8YBJa1kdWoKMDgKs51Gb4EPYt
+	pPY8Zo+rnn8s7DJL2hcs4x4M/5RDKXPdUxTbO0kgnGsqfAGxIVDC52NF0jMiqB4ZJC3lPMlQEvQ
+	CmYBZ8reQnALVan/syzDJVIzNo8LgUcoF3nImreDhQek89xFfVzIVufX7uquJG9nZ2vElli1YwT
+	FwlXkKEvQjObyNqQyXg==
+X-Received: by 2002:a05:620a:424a:b0:7e6:28a9:db0d with SMTP id af79cd13be357-7e66ef809d0mr222334385a.1.1753876628450;
+        Wed, 30 Jul 2025 04:57:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEZwDA7UZeel7Rz4M2kn1nFFS9iWCkYbP4GPLBRHIUG1gQp3Hpc/hlmL7J3fAcf+IqUnB0SfA==
+X-Received: by 2002:a05:620a:424a:b0:7e6:28a9:db0d with SMTP id af79cd13be357-7e66ef809d0mr222330685a.1.1753876627944;
+        Wed, 30 Jul 2025 04:57:07 -0700 (PDT)
+Received: from [192.168.43.16] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af63589cab0sm728955766b.38.2025.07.30.04.57.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Jul 2025 04:57:07 -0700 (PDT)
+Message-ID: <4e9ec735-1278-4475-8898-1e12ccb94909@oss.qualcomm.com>
+Date: Wed, 30 Jul 2025 13:57:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250724-pinctrl-gpio-pinfuncs-v3-0-af4db9302de4@linaro.org>
- <20250724-pinctrl-gpio-pinfuncs-v3-12-af4db9302de4@linaro.org> <CAHp75Vc4vsJh_-GbP+YO50veoGoGtfAPL4tjcF+73uophfmnGw@mail.gmail.com>
-In-Reply-To: <CAHp75Vc4vsJh_-GbP+YO50veoGoGtfAPL4tjcF+73uophfmnGw@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 30 Jul 2025 11:54:38 +0200
-X-Gm-Features: Ac12FXyouWksKyGI1Z-cYawOTPPQ3IbuMxJxWat2oIDr-ST0nxIlLBCifNIDusI
-Message-ID: <CAMRc=Mc1ophkofB6MmtD4adBAi69C3JyovM-S9YD_y7UA3V1qA@mail.gmail.com>
-Subject: Re: [PATCH v3 12/15] pinctrl: allow to mark pin functions as
- requestable GPIOs
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
-	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v5 03/14] net: ethernet: qualcomm: Add PPE driver
+ for IPQ9574 SoC
+To: Luo Jie <quic_luoj@quicinc.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
+        Suruchi Agarwal <quic_suruchia@quicinc.com>,
+        Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+        quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com
+References: <20250626-qcom_ipq_ppe-v5-0-95bdc6b8f6ff@quicinc.com>
+ <20250626-qcom_ipq_ppe-v5-3-95bdc6b8f6ff@quicinc.com>
+ <4556893f-982b-435d-aed1-d661ee31f862@oss.qualcomm.com>
+ <e768d295-843c-431d-b439-e2ed07de638e@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <e768d295-843c-431d-b439-e2ed07de638e@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=WvgrMcfv c=1 sm=1 tr=0 ts=688a0895 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=hn1M32U-3FIS6ASJhmIA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: cQR6R1a2qnhwFiKpYtbbQEz2DQOrdNGJ
+X-Proofpoint-GUID: cQR6R1a2qnhwFiKpYtbbQEz2DQOrdNGJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzMwMDA4NSBTYWx0ZWRfX/GMZI9pt4qjO
+ PHkbbrsIIGGCu95IKjWSitY6uF/2LSXjCshg/4gfmiRv51ec6voFLf6vYu8VpZVITfP56myql+R
+ tJ0Ml3YHzR6/kIOF2MZ7xdIYd5H6MODp1ZCKaRZEq4+KqYuUixGBoeUFxF/iynIN1Sutx8KK7bx
+ Z5qZmQgZQdw6Uht480TQAXj8RpbrgfUN4qFqdrkz4vcWPW39HrwPPBUahkmKffMTajRRrGijDuB
+ IHlmAka5GIYzlij2WnWivk0uG+iKpl4oFjRdPauPk9O63O0m9GiC2EPY9HYRpCW8k46Cftpmgb8
+ lxzFkKX7SOvbtGfhRJkb0Gu5NwYWpEx/QbkXJlrJM70DwiQzroYkjZCvskJhAyFvgIEnS1IwNJn
+ NYlIBCcd2BS1JHJUdEaAxkyiPGhgtVrzKSMfDVZ9JlhSnRCfOgtlbpJbzPYPGWvLX9VgLCT2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-30_04,2025-07-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 bulkscore=0 clxscore=1015 suspectscore=0 lowpriorityscore=0
+ spamscore=0 mlxscore=0 impostorscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507300085
 
-On Thu, Jul 24, 2025 at 2:22=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> >  struct pinfunction {
-> >         const char *name;
-> >         const char * const *groups;
-> >         size_t ngroups;
-> > +       unsigned long flags;
->
-> Not sure we need this. If the function is GPIO, pin control already
-> knows about this. The pin muxing has gpio request / release callbacks
-> that change the state. Why do we need an additional flag(s)?
->
+On 7/1/25 2:24 PM, Luo Jie wrote:
+> 
+> 
+> On 6/28/2025 12:21 AM, Konrad Dybcio wrote:
+>> On 6/26/25 4:31 PM, Luo Jie wrote:
+>>> The PPE (Packet Process Engine) hardware block is available on Qualcomm
+>>> IPQ SoC that support PPE architecture, such as IPQ9574.
+>>>
+>>> The PPE in IPQ9574 includes six integrated ethernet MAC for 6 PPE ports,
+>>> buffer management, queue management and scheduler functions. The MACs
+>>> can connect with the external PHY or switch devices using the UNIPHY PCS
+>>> block available in the SoC.
+>>>
+>>> The PPE also includes various packet processing offload capabilities
+>>> such as L3 routing and L2 bridging, VLAN and tunnel processing offload.
+>>> It also includes Ethernet DMA function for transferring packets between
+>>> ARM cores and PPE ethernet ports.
+>>>
+>>> This patch adds the base source files and Makefiles for the PPE driver
+>>> such as platform driver registration, clock initialization, and PPE
+>>> reset routines.
+>>>
+>>> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+>>> ---
+>>
+>> [...]
+>>
+>>> +static int ppe_clock_init_and_reset(struct ppe_device *ppe_dev)
+>>> +{
+>>> +    unsigned long ppe_rate = ppe_dev->clk_rate;
+>>> +    struct device *dev = ppe_dev->dev;
+>>> +    struct reset_control *rstc;
+>>> +    struct clk_bulk_data *clks;
+>>> +    struct clk *clk;
+>>> +    int ret, i;
+>>> +
+>>> +    for (i = 0; i < ppe_dev->num_icc_paths; i++) {
+>>> +        ppe_dev->icc_paths[i].name = ppe_icc_data[i].name;
+>>> +        ppe_dev->icc_paths[i].avg_bw = ppe_icc_data[i].avg_bw ? :
+>>> +                           Bps_to_icc(ppe_rate);
+>>> +        ppe_dev->icc_paths[i].peak_bw = ppe_icc_data[i].peak_bw ? :
+>>> +                        Bps_to_icc(ppe_rate);
+>>> +    }
+>>
+>> Can you not just set ppe_dev->icc_paths to ppe_icc_data?
+>>
+>> Konrad
+> 
+> The `avg_bw` and `peak_bw` for two of the PPE ICC clocks ('ppe' and
+> 'ppe_cfg') vary across different SoCs and they need to be read from
+> platform data. They are not pre-defined in `ppe_icc_data` array.
+> Therefore, we use this format to assign `icc_paths`, allowing us to
+> accommodate cases where `avg_bw` and `peak_bw` are not predefined.
+> Hope this is fine. Thanks.
 
-I'm not following, how does the pin controller know that the function
-is GPIO exactly, other than by the bit set in this field?
+You're currently hardcoding the clock rate, which one of the comments
+suggests is where the bw values come from. Is there a formula that we
+could calculate the necessary bandwidth based on?
 
-Bartosz
+We could then clk_get_rate() and do it dynamically
+
+Konrad
