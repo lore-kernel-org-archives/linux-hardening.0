@@ -1,198 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B462D9797
-	for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 14:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D4D2D662D;
+	Wed, 30 Jul 2025 14:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753884618; cv=none; b=aCjUascxIjc6MHuwFxmlwzkvlBGVJA/erabZWxUv/DJ2hhIwjP5MF4Ek9/V0HotFLOOPcJCiNRnJ5AS+frCs2VdBYHmFYZz5QZ+3fnBTw2Oj88ce82kz2JqpoSzOoo8WzwQ7J35j3phhqInDNU4+O9Fwr2pOJw3G6Y8R3L9niCw=
+	t=1753886403; cv=none; b=DfBDNuERIwwSYs/gM1wZZDQXS0Kh3gXW/V51f9bE9ocBmD604z+6edperY/61GY3MAYN0nNxPQIrWjhbIsapr4xwGsq/8PwHB8V41VsowJKpZ2yRc4jgiDVQE12AYFhZe+bhYZnbBmZBTI/45bm8H0C/R+RZRFPYPv0Qoq6BJYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753884618; c=relaxed/simple;
-	bh=42kUdey4mT9C9FWiNo6iXn+UnwxJJeEsgThw4Lai60o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fcmhj9JeVK8xRzjI9js3b7Y1q/LLQvTRGvqvJ/C2n2HOPkvgpxdVv1C/NptbQnJetJRlEL+b2DzN4UGGhfWsi+saXYCJzX4pNs2xlYXsw0f4RTgfDJcoAeWzk10b8cn7Q8lSkZ8DUjprPq6QalrT2O4EF9MplrJEHnZ3teZDAW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b5nMs5zt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b5nMs5zt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753884614;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=gnZ654VJktjY7DlJyw7K20uF9HlUxbvhJdrYHHl0LaA=;
-	b=b5nMs5zt27oxg80sO/x1jJ7II4kJm/IdtwYJfhN1pPyblh6AVCbJeTYsA7xjMKYyYsq7BG
-	DHuDFxoFB23QyvBVMNi57HTgNxdqUG9V3F1LZWBXKK81UbfTvttNQL13je5Hj5NSocWjma
-	Dxkhvf4phruPI9gZY/Cz7GgwLmwg8zY=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-230-3YkM8E03MC--1_gbqI5iMA-1; Wed, 30 Jul 2025 10:10:13 -0400
-X-MC-Unique: 3YkM8E03MC--1_gbqI5iMA-1
-X-Mimecast-MFC-AGG-ID: 3YkM8E03MC--1_gbqI5iMA_1753884612
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4ab7fb9c2d3so80700321cf.0
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 07:10:12 -0700 (PDT)
+	s=arc-20240116; t=1753886403; c=relaxed/simple;
+	bh=fsNDK0m2HvXhd+HmVg8X+IiMSdt3lmbUgCmoyNIyCOM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B0MD4bzSuaZRnhgjXP7WpQ8i0LfIdQgszRXVWrBXoJ7nE0g5u1Gmnm129YX4tRwgZOzWacvA3p8FmSO1/wwXm0VvCbKXpx0OGXm/MCg9f1PCC1zfQZUNT26nsxvpHtdyCFwWSt+pZNWdzdN/fqbsIrqHS34oeeC+nITz6CTziSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-88d89eaf08dso203748241.1;
+        Wed, 30 Jul 2025 07:40:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753884612; x=1754489412;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gnZ654VJktjY7DlJyw7K20uF9HlUxbvhJdrYHHl0LaA=;
-        b=MrBXeX91+yjjgp4+AjoN8gIixieaATb4GYTLBPLTJBEJFG8FsXDFxZidekgAw4sw+9
-         oLlX/TGjarmB3SCXIdzI5aBaX5Y55DbvZqTBqg+6KBhUK17AupvHTXaw58I8RSfgLGmp
-         vdZu/5Y1T5EpmwfCFrh1x0RX5uOVqElRK6FtExU6Y5oba1GYNyNHj3EpD4yhyhTWL+1k
-         cMYhsOKzeoGJ6Ayn+tlMxhAWFHujDGHmXpfXyd9166AYQP/xaoha4ee5/UBzD1zfoSfz
-         eH1pUIbORvyPjAyKbMQtyFz3A62JjokbEou1R1TyEK0S0+6A7gy2wOrI3iUmonZkBxpb
-         oFcA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9GClHv6gCasaQ8S16strMtNyi2UoTOlpQspEYO6OL2XQLvLiu01rw7NYpJuKN4WXuMEG3+7LRl5Io25WFJ9Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDEEbFub+S+kSS5dp3SxBEpwi+TrnIRxycDpjbncBXA7rJ0Em5
-	CZgOm7oroTRJAstlMujWXNO1c4FEHsOViYh/0Cg4slQi9c87gcImcR+/jhZffpZoD8jpzYy5Slu
-	QFGNpfsRw9r4eNwn++IjMj+ensK8v/s5v9ulPY50IpPscesnyVJFYu33MG4S++GFbfLxaLw==
-X-Gm-Gg: ASbGncuVnxVY0ZTLVtBOio2Sf2fhDQUOcVUoNiQ2+03AW60ppxnY9sfS/0orENH0c5C
-	LZ0YGEhjfD+JQRS94sbkRQgLUmug5n3kxgBXt134GgE+AzROSf9Zc/yjhKXQ4gsZ6gWmGBtewW9
-	jb56FpvS/P1+Oc005uUzRmdos846Le5PYLiDwiJq/sei4TDtakqtuuFUa0wglclBMCUA3X4AUof
-	I5hgBu/P+mHpGNs6iR/XRIq/C3a8HIx1Vf8Pa4ry3We3Fq0zWFYNwpAFRYJP5ukOk9jLZJPiMcL
-	kNe04SE1ng4T3zrF0MKAbpz+iTecJDWuTWdUUO49kxAi/Xf2aifDHwdvVe+Hjw==
-X-Received: by 2002:ac8:5856:0:b0:4ab:801d:90b8 with SMTP id d75a77b69052e-4aedbc3c248mr59348571cf.32.1753884611826;
-        Wed, 30 Jul 2025 07:10:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGRI0a4WBkLYn70H72HNhtziWoHC5rtdHpSwJbmWuGXwrUwXU1BeUaWjWUTF/B/xcEp5ALnHA==
-X-Received: by 2002:ac8:5856:0:b0:4ab:801d:90b8 with SMTP id d75a77b69052e-4aedbc3c248mr59347531cf.32.1753884611189;
-        Wed, 30 Jul 2025 07:10:11 -0700 (PDT)
-Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ae99573cbesm67000691cf.30.2025.07.30.07.10.08
+        d=1e100.net; s=20230601; t=1753886400; x=1754491200;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l+/EyocnWfozW31T/mNyvD0w3Vb0gJmDVRrDiDkyjlc=;
+        b=cIEMjlvcyfKuA3dRR/eKMGdtV31S81UUXc4mfqnwka2ZveLS706yf0VGKAML3yOqUh
+         ts/w+Dg7jrbMOeepe5VRSbZyYy1IPLERNDaxpCi88tI6D+njEQ20N9CRAF+Qr53E3ETs
+         rsr1aOtxxdb5fapCJOYqoSSINXBqV2G2g497oDGBGO3Zzhe2sf3thkcvPZUrvdOuNQUP
+         9ybN2TE6dw6fIDKqSD8irdqo72PrL8jdxHIg65bAy0D1c+lCs2vRh2RAIrVSJRrCbHU1
+         sy0UrvvEIljOhhQ5LLC6P9XsoRakp1b/ekZ+jVk+kLxexJtZkRglzyqxwMN3CbSZ+qLY
+         yIrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWhq9tLldHFPEBWxqz/kkiP8LqJ7Yk8IW5fDidcb+jvuZzvAQLBdbY8egwR4WkDZw5fU4oUlO/rTcECuyYVcM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypQHD5brLG0eDEYlsehI+bieaBAxOY/TPgXlG+jUFYNAQ+4Tl4
+	1l3k05atvc64Nb5FC4Wlu86fcb49X2yToeCunvPVSyHjxPnFC6xxKgYM3MtnNizt
+X-Gm-Gg: ASbGncuThYlFue7rwozpoH2K1GkbBgn6b9VLpk97nhkOHkpV2An8Yj4CUwRzMpFwOgB
+	5FbfFCA8pCXXKBqi7JgPpoeYCmu64VN3hGQPBeBL62QrXB7PSY8E7UPxoeEXABIJrqah0d50ACf
+	ZRUrPlXUgU1no9aR2R8RTjmdpXch1VYFVgnkdTscMnNjSfuPRmi6CTCxri4t+3Gp/+SHwIX6CiT
+	EevKGVP0RdsUV5YHeZgR6fbhCRvFN40BbhF+gck8PO8MSY36MTkNxWNQMUzjAsubUDbsSAqkHKp
+	UbOll0ZvOpaBlwk3RiiG54POQJbsESnBsCdt6eHDnsBfy03tHRau2XZoo1lU/jUmhNhX1ZixpT0
+	q46jaPFvprQPpZEPbeXA76vfEyYMgHzOWmWkHlAb2n988gkgPlf/0F9f+QR2b
+X-Google-Smtp-Source: AGHT+IFmsyN4oP7DnANK0MkQ76aO4WZZsRcjAkfqT2KzDstalkDrSpWeA5c1MQg8fRnwcOChvM7nsg==
+X-Received: by 2002:a05:6102:6119:20b0:4fb:fc47:e8c2 with SMTP id ada2fe7eead31-4fbfc47ed68mr508048137.9.1753886399872;
+        Wed, 30 Jul 2025 07:39:59 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4fa46e0938esm2020906137.12.2025.07.30.07.39.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Jul 2025 07:10:10 -0700 (PDT)
-Message-ID: <72485de0-d05e-4421-9b47-3449778d278b@redhat.com>
-Date: Wed, 30 Jul 2025 16:10:07 +0200
+        Wed, 30 Jul 2025 07:39:59 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4fc042790f1so82542137.1;
+        Wed, 30 Jul 2025 07:39:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU4U3TG2TldlGdG1dDX1/YCB3N4gZvIsf87pj70bXCWOQn45UPjGcV1qRQChgf8+yR19D7iN2bnk+YpnGlqyW4=@vger.kernel.org
+X-Received: by 2002:a05:6102:1481:b0:4ec:c548:e57b with SMTP id
+ ada2fe7eead31-4fbe7ad20fcmr3270846137.0.1753886397780; Wed, 30 Jul 2025
+ 07:39:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH v2 16/29] mm/show_mem: Annotate static information
- into Kmemdump
-To: Eugen Hristev <eugen.hristev@linaro.org>, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-mm@kvack.org, tglx@linutronix.de, andersson@kernel.org,
- pmladek@suse.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- corbet@lwn.net, mojha@qti.qualcomm.com, rostedt@goodmis.org,
- jonechou@google.com, tudor.ambarus@linaro.org
-References: <20250724135512.518487-1-eugen.hristev@linaro.org>
- <20250724135512.518487-17-eugen.hristev@linaro.org>
- <7ecaae9e-a088-4c1b-9caf-6a006a756544@redhat.com>
- <9843578b-2adb-4f6f-b3c1-99dac003e2bf@linaro.org>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- g3eXuA==
-Organization: Red Hat
-In-Reply-To: <9843578b-2adb-4f6f-b3c1-99dac003e2bf@linaro.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: qAAkZqChnNPjkuu76Ae6-_PhOt9Tlh5FpbmSZqAr1p8_1753884612
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250724094146.6443-1-wsa+renesas@sang-engineering.com> <20250724094146.6443-5-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20250724094146.6443-5-wsa+renesas@sang-engineering.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 30 Jul 2025 16:39:46 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX5BfNm1GJ8UyqftcVc07p1aodXuVHxNaYWDYLHaxzXMw@mail.gmail.com>
+X-Gm-Features: Ac12FXwSHxwgh1iE-RiAFlbvbPUyCFA8Vv2qiKkbn-bMclgIM8YsBFxjbxa_ny4
+Message-ID: <CAMuHMdX5BfNm1GJ8UyqftcVc07p1aodXuVHxNaYWDYLHaxzXMw@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] i3c: master: Add basic driver for the Renesas I3C controller
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org, 
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, Frank Li <Frank.Li@nxp.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-i3c@lists.infradead.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 30.07.25 16:04, Eugen Hristev wrote:
-> 
-> 
-> On 7/30/25 16:55, David Hildenbrand wrote:
->> On 24.07.25 15:54, Eugen Hristev wrote:
->>> Annotate vital static information into kmemdump:
->>>    - _totalram_pages
->>>
->>> Information on these variables is stored into dedicated kmemdump section.
->>>
->>> Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
->>> ---
->>>    mm/show_mem.c | 2 ++
->>>    1 file changed, 2 insertions(+)
->>>
->>> diff --git a/mm/show_mem.c b/mm/show_mem.c
->>> index 41999e94a56d..93a5dc041ae1 100644
->>> --- a/mm/show_mem.c
->>> +++ b/mm/show_mem.c
->>> @@ -14,12 +14,14 @@
->>>    #include <linux/mmzone.h>
->>>    #include <linux/swap.h>
->>>    #include <linux/vmstat.h>
->>> +#include <linux/kmemdump.h>
->>>    
->>>    #include "internal.h"
->>>    #include "swap.h"
->>>    
->>>    atomic_long_t _totalram_pages __read_mostly;
->>>    EXPORT_SYMBOL(_totalram_pages);
->>> +KMEMDUMP_VAR_CORE(_totalram_pages, sizeof(_totalram_pages));
->>
->> Tagging these variables that way is really rather ... controversial.
->>
->> As these are exported globals, isn't there a way to have a list of what
->> to include and what not somewhere else?
->>
->> Not sure if any of that would win a beauty price, though.
->>
-> 
-> Annotating the variable was suggested here :
-> 
-> https://lore.kernel.org/lkml/87h61wn2qq.ffs@tglx/
-> 
-> It does not win a beauty prize but it's simple and efficient at least.
-> Do you think it would be better to gather all the annotations for the
-> globals in a single place ?
+Hi Wolfram,
 
-See my other mail regarding VMCOREINFO.
+On Thu, 24 Jul 2025 at 11:41, Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> Add a basic driver for the I3C controller found in Renesas RZ/G3S and
+> G3E SoCs. Support I3C pure busses (tested with two targets) and mixed
+> busses (two I3C devices plus various I2C targets). DAA and communication
+> with temperature sensors worked reliably at various speeds.
+>
+> Missing features such as IBI, HotJoin, and target mode will be added
+> incrementally.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Tested-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+
+Thanks for your patch!
+
+Just a few stylistic comments for now...
+
+> --- /dev/null
+> +++ b/drivers/i3c/master/renesas-i3c.c
+
+> +#define REFCKCTL               0x70
+> +#define  REFCKCTL_IREFCKS(x)   FIELD_PREP(GENMASK(2, 0), x)
+
+Interesting... Usually the FIELD_*() macros are used like this:
+
+    #define REFCKCTL_IREFCKS    GENMASK(2, 0)
+
+    x = readl(base + REFCKCTL);
+    a = FIELD_GET(REFCKCTL_IREFCKS, x);
+
+    y = FIELD_PREP(REFCKCTL_IREFCKS, b);
+    writel(y, base + REFCKCTL);
+
+That way you do not have to duplicate "GENMASK(2, 0)" in the read and
+write marshalling macros.  But I do agree this driver does not seem
+to have register fields that are both read and written ;-)
+
+> +static inline u32 renesas_readl(void __iomem *base, u32 reg)
+> +{
+> +       return readl(base + reg);
+> +}
+> +
+> +static inline void renesas_writel(void __iomem *base, u32 reg, u32 val)
+> +{
+> +       writel(val, base + reg);
+> +}
+
+Why not use readl() and writel() directly?
+To make it easier to add debug prints during initial development?
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Cheers,
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-David / dhildenb
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
