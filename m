@@ -1,72 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4862DAFA9
-	for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 14:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B462D9797
+	for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 14:10:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753884279; cv=none; b=cpqDRU6UjiB6XP+eq7vJf/khsPUBBOq8D26VIf5U+Ux/fsyw7IkMDQPazhXF4vxTnScl9hUmBeOAhsYgd+rR7cxwvV/4s7imyBKOsDUblXLK39Hlc/p7W4afMkjnyVgfKmPah0+Z4JhK9QlD62iQ6M3OY13fkwHOQW9CHGhU8UA=
+	t=1753884618; cv=none; b=aCjUascxIjc6MHuwFxmlwzkvlBGVJA/erabZWxUv/DJ2hhIwjP5MF4Ek9/V0HotFLOOPcJCiNRnJ5AS+frCs2VdBYHmFYZz5QZ+3fnBTw2Oj88ce82kz2JqpoSzOoo8WzwQ7J35j3phhqInDNU4+O9Fwr2pOJw3G6Y8R3L9niCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753884279; c=relaxed/simple;
-	bh=tTPeRU5tBHd+tJmNQJ2DNQjOe9FritvNX2M+rx3N19k=;
+	s=arc-20240116; t=1753884618; c=relaxed/simple;
+	bh=42kUdey4mT9C9FWiNo6iXn+UnwxJJeEsgThw4Lai60o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qxmEUZC9UfxHMZejEYs/3e6EJas90KwjlzOTjTjnqeZ62Db8c8iluwV5rkAFASH9BQJ2eM5cbXSF9b6xqCReO3Ifslr1DevTqqcIWCsspMeimBLd5v2FjYvSg/XmQv5EygQiOV5mCoDR3YgCRO1wKzQFmIiEO5bsgTfrzNoQdN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cbDSvcIu; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=fcmhj9JeVK8xRzjI9js3b7Y1q/LLQvTRGvqvJ/C2n2HOPkvgpxdVv1C/NptbQnJetJRlEL+b2DzN4UGGhfWsi+saXYCJzX4pNs2xlYXsw0f4RTgfDJcoAeWzk10b8cn7Q8lSkZ8DUjprPq6QalrT2O4EF9MplrJEHnZ3teZDAW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b5nMs5zt; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cbDSvcIu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b5nMs5zt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753884277;
+	s=mimecast20190719; t=1753884614;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3O2oNAXD8KVY8vBDD4aG+8v/vac45H/32JLje5KhFMI=;
-	b=cbDSvcIuUuqZrV67L4RpgEuEsNxbgLsj+AXZyidlO4UcrP3lOoF2XKfmBOGpM03qJSOeEr
-	8HR40dEPLPoO546tPv+IWKlm7+Mi41ENYMtxbzUeglqq+7VItphTZrIDtWN7tjy3dNbmz4
-	Dgv+3P2ZGPM5UU0sZktg+VrxY9QRCg0=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=gnZ654VJktjY7DlJyw7K20uF9HlUxbvhJdrYHHl0LaA=;
+	b=b5nMs5zt27oxg80sO/x1jJ7II4kJm/IdtwYJfhN1pPyblh6AVCbJeTYsA7xjMKYyYsq7BG
+	DHuDFxoFB23QyvBVMNi57HTgNxdqUG9V3F1LZWBXKK81UbfTvttNQL13je5Hj5NSocWjma
+	Dxkhvf4phruPI9gZY/Cz7GgwLmwg8zY=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-34-JM8fbp_7MaW2cFhiuS5pSw-1; Wed, 30 Jul 2025 10:04:34 -0400
-X-MC-Unique: JM8fbp_7MaW2cFhiuS5pSw-1
-X-Mimecast-MFC-AGG-ID: JM8fbp_7MaW2cFhiuS5pSw_1753884273
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ae6d4c5f798so534675866b.0
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 07:04:34 -0700 (PDT)
+ us-mta-230-3YkM8E03MC--1_gbqI5iMA-1; Wed, 30 Jul 2025 10:10:13 -0400
+X-MC-Unique: 3YkM8E03MC--1_gbqI5iMA-1
+X-Mimecast-MFC-AGG-ID: 3YkM8E03MC--1_gbqI5iMA_1753884612
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4ab7fb9c2d3so80700321cf.0
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Jul 2025 07:10:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753884273; x=1754489073;
+        d=1e100.net; s=20230601; t=1753884612; x=1754489412;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=3O2oNAXD8KVY8vBDD4aG+8v/vac45H/32JLje5KhFMI=;
-        b=U9tlkrQcby6J7miFdnW87LgHJN06oK0SpZlcUMvs9u08ld8uDzRQccpKDHXB7cGqyq
-         imSpTugjAvAW/lJStaaQP4f7O/z+fJHs4kxdOwclLySkIjGzlQS3qnKshI9xnA+RG89j
-         up7FAj5/FL1BlL2YYPOfwKONbVvmhZKCw2AjGe1RSvr/FR1ZFGruEiCCKkBNF5EWNHcZ
-         8dBPQbm+Pf/r8OSfGn4W1rr2f8SHxywCjgxcN19BhFo1Dj8b4agXwn6GFxOhSOH69Quj
-         Zp6+sreF6dt2CJtd+5GVB2IJAzEKPasAHpSJDJ6gKOisWCRmGYq7ejzHAixkoxJ602U2
-         Nb4w==
-X-Forwarded-Encrypted: i=1; AJvYcCX0wwpRczQ0KPqG+GMefr8Ogx9d3PzVhDFLVKWFQDlAflVCbRZwO/Rdj3B+g8ZkVXNWiq/O0ba+bKZGx+r3XNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTSrN0cJeRqRuj+tkQ9mD413GWsVrYVRDuZJHtifSPQL/9Ixkp
-	eMeEj6+GBB4MfpCAu7FEzKVC8TOzJHYWopS6OQf4MkZO792iZBjMv+gDXoYIJZFUyXVrp7629ho
-	Ije/EqSRTvctm2YQVVkP8LuxsiDv3Do9wbDYrq8OD/GIV0+10iW43A1H6wGqPa3rb3bHO6w==
-X-Gm-Gg: ASbGnctowwS3tf/Gip+7F8fSBwWplfXwTUIdC08UA71kxZ4vFEdo13ka0JBaJGTHtF3
-	XMi1FRyYSoS5Oh2fansrOkyEb/+QIu6cCt6Ruqh/NC3euIWU79+T2rMw6+CvSsdMuhKKTK1O9ij
-	PxmKzV/LdO85Nnza0fu4fZ991oRmDMaoEBmIDLBL1xFuqM3CkI73D62q9cxQviJ9G+7dEGRSWW7
-	rxIEFkRV9KGacL/OgiDZ5yvt3Ha/12IHHUOlK/cVkkciHe1jGe2BiIXNnwze1IHsaKGHmouH7EJ
-	Y6woYkulY8XPzhGg1/X4wQ1KwrDk+DXyiYjgvH4LEV6B3GGiJaqzRA/yLZbmEw==
-X-Received: by 2002:a17:907:3f88:b0:af8:f9e8:6fae with SMTP id a640c23a62f3a-af8fd9f663amr404270866b.46.1753884272864;
-        Wed, 30 Jul 2025 07:04:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH4NPzv48+fUrubCDntYT5pIsBc9DKyFBE7vheDZ6rVTSQBnixNsW4Ss/KjIbgNUx7Mki1uOA==
-X-Received: by 2002:a17:907:3f88:b0:af8:f9e8:6fae with SMTP id a640c23a62f3a-af8fd9f663amr404265066b.46.1753884272305;
-        Wed, 30 Jul 2025 07:04:32 -0700 (PDT)
+        bh=gnZ654VJktjY7DlJyw7K20uF9HlUxbvhJdrYHHl0LaA=;
+        b=MrBXeX91+yjjgp4+AjoN8gIixieaATb4GYTLBPLTJBEJFG8FsXDFxZidekgAw4sw+9
+         oLlX/TGjarmB3SCXIdzI5aBaX5Y55DbvZqTBqg+6KBhUK17AupvHTXaw58I8RSfgLGmp
+         vdZu/5Y1T5EpmwfCFrh1x0RX5uOVqElRK6FtExU6Y5oba1GYNyNHj3EpD4yhyhTWL+1k
+         cMYhsOKzeoGJ6Ayn+tlMxhAWFHujDGHmXpfXyd9166AYQP/xaoha4ee5/UBzD1zfoSfz
+         eH1pUIbORvyPjAyKbMQtyFz3A62JjokbEou1R1TyEK0S0+6A7gy2wOrI3iUmonZkBxpb
+         oFcA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9GClHv6gCasaQ8S16strMtNyi2UoTOlpQspEYO6OL2XQLvLiu01rw7NYpJuKN4WXuMEG3+7LRl5Io25WFJ9Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDEEbFub+S+kSS5dp3SxBEpwi+TrnIRxycDpjbncBXA7rJ0Em5
+	CZgOm7oroTRJAstlMujWXNO1c4FEHsOViYh/0Cg4slQi9c87gcImcR+/jhZffpZoD8jpzYy5Slu
+	QFGNpfsRw9r4eNwn++IjMj+ensK8v/s5v9ulPY50IpPscesnyVJFYu33MG4S++GFbfLxaLw==
+X-Gm-Gg: ASbGncuVnxVY0ZTLVtBOio2Sf2fhDQUOcVUoNiQ2+03AW60ppxnY9sfS/0orENH0c5C
+	LZ0YGEhjfD+JQRS94sbkRQgLUmug5n3kxgBXt134GgE+AzROSf9Zc/yjhKXQ4gsZ6gWmGBtewW9
+	jb56FpvS/P1+Oc005uUzRmdos846Le5PYLiDwiJq/sei4TDtakqtuuFUa0wglclBMCUA3X4AUof
+	I5hgBu/P+mHpGNs6iR/XRIq/C3a8HIx1Vf8Pa4ry3We3Fq0zWFYNwpAFRYJP5ukOk9jLZJPiMcL
+	kNe04SE1ng4T3zrF0MKAbpz+iTecJDWuTWdUUO49kxAi/Xf2aifDHwdvVe+Hjw==
+X-Received: by 2002:ac8:5856:0:b0:4ab:801d:90b8 with SMTP id d75a77b69052e-4aedbc3c248mr59348571cf.32.1753884611826;
+        Wed, 30 Jul 2025 07:10:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGRI0a4WBkLYn70H72HNhtziWoHC5rtdHpSwJbmWuGXwrUwXU1BeUaWjWUTF/B/xcEp5ALnHA==
+X-Received: by 2002:ac8:5856:0:b0:4ab:801d:90b8 with SMTP id d75a77b69052e-4aedbc3c248mr59347531cf.32.1753884611189;
+        Wed, 30 Jul 2025 07:10:11 -0700 (PDT)
 Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af6358600a4sm754596166b.25.2025.07.30.07.04.29
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ae99573cbesm67000691cf.30.2025.07.30.07.10.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Jul 2025 07:04:31 -0700 (PDT)
-Message-ID: <751514db-9e03-4cf3-bd3e-124b201bdb94@redhat.com>
-Date: Wed, 30 Jul 2025 16:04:28 +0200
+        Wed, 30 Jul 2025 07:10:10 -0700 (PDT)
+Message-ID: <72485de0-d05e-4421-9b47-3449778d278b@redhat.com>
+Date: Wed, 30 Jul 2025 16:10:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -74,7 +74,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH v2 22/29] mm/numa: Register information into Kmemdump
+Subject: Re: [RFC][PATCH v2 16/29] mm/show_mem: Annotate static information
+ into Kmemdump
 To: Eugen Hristev <eugen.hristev@linaro.org>, linux-kernel@vger.kernel.org,
  linux-arm-msm@vger.kernel.org, linux-arch@vger.kernel.org,
  linux-mm@kvack.org, tglx@linutronix.de, andersson@kernel.org,
@@ -83,9 +84,9 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
  corbet@lwn.net, mojha@qti.qualcomm.com, rostedt@goodmis.org,
  jonechou@google.com, tudor.ambarus@linaro.org
 References: <20250724135512.518487-1-eugen.hristev@linaro.org>
- <20250724135512.518487-23-eugen.hristev@linaro.org>
- <ffc43855-2263-408d-831c-33f518249f96@redhat.com>
- <e66f29c2-9f9f-4b04-b029-23383ed4aed4@linaro.org>
+ <20250724135512.518487-17-eugen.hristev@linaro.org>
+ <7ecaae9e-a088-4c1b-9caf-6a006a756544@redhat.com>
+ <9843578b-2adb-4f6f-b3c1-99dac003e2bf@linaro.org>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -132,91 +133,63 @@ Autocrypt: addr=david@redhat.com; keydata=
  WBe5lqcozu9LpNDH/brVSzHCSb7vjNGvvSVESDuoiHK8gNlf0v+epy5WYd7CGAgODPvDShGN
  g3eXuA==
 Organization: Red Hat
-In-Reply-To: <e66f29c2-9f9f-4b04-b029-23383ed4aed4@linaro.org>
+In-Reply-To: <9843578b-2adb-4f6f-b3c1-99dac003e2bf@linaro.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: fNSlaiMNF_-64vad8yjYGnlENfBKNlhSofaXZQDqYNI_1753884273
+X-Mimecast-MFC-PROC-ID: qAAkZqChnNPjkuu76Ae6-_PhOt9Tlh5FpbmSZqAr1p8_1753884612
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 30.07.25 15:57, Eugen Hristev wrote:
-> Hello,
+On 30.07.25 16:04, Eugen Hristev wrote:
 > 
-> On 7/30/25 16:52, David Hildenbrand wrote:
->> On 24.07.25 15:55, Eugen Hristev wrote:
+> 
+> On 7/30/25 16:55, David Hildenbrand wrote:
+>> On 24.07.25 15:54, Eugen Hristev wrote:
 >>> Annotate vital static information into kmemdump:
->>>    - node_data
+>>>    - _totalram_pages
 >>>
 >>> Information on these variables is stored into dedicated kmemdump section.
 >>>
->>> Register dynamic information into kmemdump:
->>>    - dynamic node data for each node
->>>
->>> This information is being allocated for each node, as physical address,
->>> so call kmemdump_phys_alloc_size that will allocate an unique kmemdump
->>> uid, and register the virtual address.
->>>
 >>> Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 >>> ---
->>>    mm/numa.c | 5 ++++-
->>>    1 file changed, 4 insertions(+), 1 deletion(-)
+>>>    mm/show_mem.c | 2 ++
+>>>    1 file changed, 2 insertions(+)
 >>>
->>> diff --git a/mm/numa.c b/mm/numa.c
->>> index 7d5e06fe5bd4..88cada571171 100644
->>> --- a/mm/numa.c
->>> +++ b/mm/numa.c
->>> @@ -4,9 +4,11 @@
->>>    #include <linux/printk.h>
->>>    #include <linux/numa.h>
->>>    #include <linux/numa_memblks.h>
+>>> diff --git a/mm/show_mem.c b/mm/show_mem.c
+>>> index 41999e94a56d..93a5dc041ae1 100644
+>>> --- a/mm/show_mem.c
+>>> +++ b/mm/show_mem.c
+>>> @@ -14,12 +14,14 @@
+>>>    #include <linux/mmzone.h>
+>>>    #include <linux/swap.h>
+>>>    #include <linux/vmstat.h>
 >>> +#include <linux/kmemdump.h>
 >>>    
->>>    struct pglist_data *node_data[MAX_NUMNODES];
->>>    EXPORT_SYMBOL(node_data);
->>> +KMEMDUMP_VAR_CORE(node_data, MAX_NUMNODES * sizeof(struct pglist_data));
+>>>    #include "internal.h"
+>>>    #include "swap.h"
 >>>    
->>>    /* Allocate NODE_DATA for a node on the local memory */
->>>    void __init alloc_node_data(int nid)
->>> @@ -16,7 +18,8 @@ void __init alloc_node_data(int nid)
->>>    	int tnid;
->>>    
->>>    	/* Allocate node data.  Try node-local memory and then any node. */
->>> -	nd_pa = memblock_phys_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
->>> +	nd_pa = kmemdump_phys_alloc_size(nd_size, memblock_phys_alloc_try_nid,
->>> +					 nd_size, SMP_CACHE_BYTES, nid);
+>>>    atomic_long_t _totalram_pages __read_mostly;
+>>>    EXPORT_SYMBOL(_totalram_pages);
+>>> +KMEMDUMP_VAR_CORE(_totalram_pages, sizeof(_totalram_pages));
 >>
->> Do we really want to wrap memblock allocations in such a way? :/
+>> Tagging these variables that way is really rather ... controversial.
 >>
->> Gah, no, no no.
+>> As these are exported globals, isn't there a way to have a list of what
+>> to include and what not somewhere else?
 >>
->> Can't we pass that as some magical flag, or just ... register *after*
->> allocating?
+>> Not sure if any of that would win a beauty price, though.
 >>
 > 
-> Thanks for looking into my patch.
+> Annotating the variable was suggested here :
 > 
-> Yes, registering after is also an option. Initially this is how I
-> designed the kmemdump API, I also had in mind to add a flag, but, after
-> discussing with Thomas Gleixner, he came up with the macro wrapper idea
-> here:
-> https://lore.kernel.org/lkml/87ikkzpcup.ffs@tglx/
-> Do you think we can continue that discussion , or maybe start it here ?
+> https://lore.kernel.org/lkml/87h61wn2qq.ffs@tglx/
+> 
+> It does not win a beauty prize but it's simple and efficient at least.
+> Do you think it would be better to gather all the annotations for the
+> globals in a single place ?
 
-Yeah, I don't like that, but I can see how we ended up here.
-
-I also don't quite like the idea that we must encode here what to 
-include in a dump and what not ...
-
-For the vmcore we construct it at runtime in 
-crash_save_vmcoreinfo_init(), where we e.g., have
-
-VMCOREINFO_STRUCT_SIZE(pglist_data);
-
-Could we similar have some place where we construct what to dump 
-similarly, just not using the current values, but the memory ranges?
-
-Did you consider that?
+See my other mail regarding VMCOREINFO.
 
 -- 
 Cheers,
