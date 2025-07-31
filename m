@@ -1,128 +1,134 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587162C1594
-	for <linux-hardening@vger.kernel.org>; Thu, 31 Jul 2025 14:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC991DE8A8;
+	Thu, 31 Jul 2025 17:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753971125; cv=none; b=WXu73AYcdXXUc+t2BCSJZMm2+3Cu1SZWiAX9Pqb2dIj2TPjb4Bp/TvilP6cLdNbApeCFEC+m1qWqQn96jBHnMgl0wcHxMlIQv5TBBQIBwknKP4Irg6oYM0v4k38swsws2rUZNcb939+3NtTlO59R8J0Kl/5RQYIC+5z4Ovpez/0=
+	t=1753981548; cv=none; b=XPZQXVKqzxxm0cKZRz+oGZ/8413KNN0ZsLsuaoZX3SKlZ3Wl2P+moBhKS8cjTfgrv+jmYCY8FA6sklRqezGajkPuRIrnu1R3rrjjpfWCifJa+97s75l925hBUIyoC4g50d8zrr3Kag5oyEuty+PULI5BCNBtrRPV4pg/J1wMCwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753971125; c=relaxed/simple;
-	bh=TH3fCZPCy4YyphExJVOAQdZ8iXnIWWWw+CoAeuxr3Ps=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=TUHlcCMOCipNFslJOBMSF+yetJ1cEr9sFWOwjl06yQtwwn3nlDgF/uCTxtMcsvdSPaYERQLe85Fz2rV6Ge9hwdBZMiLMwHnAyEyI4vX+BTGagpLHrBrnoSvmJ0njJRtfGvHXRRq5iYct+9z62jEgL6eL66+jLdAvT8atx5I9qMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mqnRJmtW; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1753981548; c=relaxed/simple;
+	bh=cygdeMZgK8iW3+xuI2Q01zkcGjAmxwn4nIdnViALepc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tZyIcWKnBUqXTqeQKca8D7WnEWOPNaJxpEzMq6ODgPQNqUyMnq3/TrX2lSvXOZY3Srk97ql4AqyyLieEVKzIWIPmZ0JZz3vpxrgBvkOjDEYlf+Et2Yy8A6fvXAlUltnWUhhGLuUoQrMWIndc2Ql5TF0MBuqUyZTP5QTKpzZ1eM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G0ZCTUEK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mqnRJmtW"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-24031a3e05cso7518005ad.1
-        for <linux-hardening@vger.kernel.org>; Thu, 31 Jul 2025 07:12:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1753971122; x=1754575922; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=REQVjpTsrsLvJl/SEHd88cRQSz2tJb2a7A9OwH842ak=;
-        b=mqnRJmtWDjBsAGcBqJXhXYzi7AZmpoFVWtVQjbMn1KTC8PpaOCCrrfhekvL9TPbOA5
-         1hUKp7KKEdY7Bj7J3KlxuaOZC1xbll1lL7YqGnEJ21GE7HOJyeS4NtN9fvbOfivKAXme
-         i4FOW2VLsW4kH75FMKrSq2k8oPRJ7d9Pk6G0ggYhIAqTvxQUv/waiUSRc2kzWG3mhw/b
-         /2oKbE7P5WwI7AJY7uXeFqPnuHr62JK9V90W+E3o8+cJqad4zs+7+6F6pxCbH8bffoZV
-         Nc0XLzfvQtKQ8Qvzyh6o+7m9BEZ2lwjqwVWF2BEEzI0P2gt5YIm0mcH33FaOMFqqczVk
-         cWOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753971123; x=1754575923;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=REQVjpTsrsLvJl/SEHd88cRQSz2tJb2a7A9OwH842ak=;
-        b=PakX5ljPa58E+Cqb3KdtiGqppzXgGOXVvogsXpEurdZChWvpYjX953Q4zxDRuSZw/g
-         S+7Y+mwf3zyppVU0o6kI79pXN2/iZbv9MNQ+/N8IDFKKGGQX6vvSUuzgJyoQTqoHMRPF
-         4fAkkoSws1pknn4CVXTuP6R+YXmfTvoA+Vw5kSKJTfQMGt64jKZmMAq/rIG7KZNeMs/3
-         rGc+Cm/0Ns6uMN4wIAkL6X8Gr3QVOcQLxeadtHpbG2s0SKgKsQ1NJ09EEKEX/oMSx7vW
-         MVAsyVR/1WMvrzggVZqwQPgz72uhSzDuPLmjbunld3b8vwN+WNaWpQ6IOwAgz3qc7wCo
-         SjAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYSm8nh4gu/TZlYGqCZ54rJWegbH3OfEwIKjvNweX9bZACjDjj1aDJJo15/eUeU1vylB97BsntsvmTOn/tohw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/n2wKWDOb00du+RfpfgBN5MjPIOu1sRHXc9M6BmQTqEmVJv17
-	FNAmmNwrCIHoa3PlODlSmIrmjbuA1TGHum93l8tMXaSHgYd2i/jv1gkTT3Lo4iKh/FYQWIq6QzB
-	ghFx4TZCxwnilO+q26IQsTDFp8Q9dTl4LVXKHbp3KJg==
-X-Gm-Gg: ASbGncuO13F/StSdZ4Q0BC2bjQ0h7RZfGcGYbR6XmcIaPbWEtY0N5nV8W95I51ZTh9c
-	peYdENxvLT7Zp2N5Z3peJ1kq8UrV1kQZNpvJnKyEuzA0qigW4zr8fbsrBXpKSHPg2yzzdx6HTOU
-	a6nfTcrNRp0/NWp0Fdk+2VqBC01PwNXfK5Hwxi2kxh0UKt70N6LcjCqXhQ3jF9+ji39OghPosns
-	y8yCsEl6+DuJKupNVULJCohp5x23jmD/qR6M4x+
-X-Google-Smtp-Source: AGHT+IHFfipkwRQ+1K4xVlGJXDzqCVyVvmjQjtepMnIjmmMksReYrNJ2xhZLKNYVlub943plRlIYBtrdspjKLTHKge4=
-X-Received: by 2002:a17:902:ce8e:b0:234:24a8:bee9 with SMTP id
- d9443c01a7336-24200a0a192mr33923355ad.4.1753971122562; Thu, 31 Jul 2025
- 07:12:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G0ZCTUEK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09D6BC4CEEF;
+	Thu, 31 Jul 2025 17:05:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753981548;
+	bh=cygdeMZgK8iW3+xuI2Q01zkcGjAmxwn4nIdnViALepc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G0ZCTUEKD9dun9DBxQYzx4GHq2lIpW/KDI9pFeE32zJIBNpUzP/FFvrdecrjwQf84
+	 Snz90sAhbikpsX3fCAvtqQoNR3Yl8YuLiqUxPCciFpUuiRnX08tO6sxyKF7IpEYKay
+	 f3yvKnhu01DA9k4hwPs81dSCklqesFppVvmDhkQAKiugR48zYm890ZcmMWfHmLW+NS
+	 VnJc2mvnvy986vxxBto1dpRoyZH7KTIYtRUSqgVcoU6RknqiBrdTIanBJb7FM5aYIq
+	 OLyH7s5ANotGLlkRTto+hjErAZ07bXo2z5GGSRUYFjEfgGYMosqxpw43tMZzhRXjjI
+	 0NwDzzdyIGzhA==
+Date: Thu, 31 Jul 2025 10:05:47 -0700
+From: Kees Cook <kees@kernel.org>
+To: Simon Horman <horms@kernel.org>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	intel-wired-lan@lists.osuosl.org,
+	Michal Kubiak <michal.kubiak@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	nxne.cnse.osdt.itp.upstreaming@intel.com, bpf@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH iwl-next v3 16/18] idpf: add support for XDP on Rx
+Message-ID: <202507310955.03E47CFA4@keescook>
+References: <20250730160717.28976-1-aleksander.lobakin@intel.com>
+ <20250730160717.28976-17-aleksander.lobakin@intel.com>
+ <20250731123734.GA8494@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 31 Jul 2025 19:41:50 +0530
-X-Gm-Features: Ac12FXxL-rGTjN1fNAMIPyVHVoE05EOo4i2s7AKGH0E5aPdsscvXESoyUk_z0Hc
-Message-ID: <CA+G9fYvMS94GL5kMmHKSGSQqTS0XgwiYnETf_bLYYu6nTRNP-A@mail.gmail.com>
-Subject: next-20250731: arm64 arc riscv64 parisc vmlinux.unstripped warning
- empty loadable segment detected at vaddr is this intentional?
-To: open list <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, kees@kernel.org, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Ben Copeland <benjamin.copeland@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250731123734.GA8494@horms.kernel.org>
 
-Regressions while building arm64 arc riscv64 parisc with defconfig
-on the Linux next-20250730 and next-20250731 with gcc-13 and gcc-8
-the following build warnings noticed.
+On Thu, Jul 31, 2025 at 01:37:34PM +0100, Simon Horman wrote:
+> While I appreciate the desire for improved performance and nicer code
+> generation. I think the idea of writing 64 bits of data to the
+> address of a 32 bit member of a structure goes against the direction
+> of hardening work by Kees and others.
 
-Build warnings with gcc-13, gcc-12, gcc-11 and gcc-8 defconfig
+Agreed: it's better to avoid obscuring these details from the compiler
+so it can have an "actual" view of the object sizes involved.
 
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? Yes
+> Indeed, it seems to me this is the kind of thing that struct_group()
+> aims to avoid.
+> 
+> In this case struct group() doesn't seem like the best option,
+> because it would provide a 64-bit buffer that we can memcpy into.
+> But it seems altogether better to simply assign u64 value to a u64 member.
 
-First seen on the next-20250730
-Good: next-20250729
-Bad: next-20250730
+Agreed: with struct_group you get a sized pointer, and while you can
+provide a struct tag to make it an assignable object, it doesn't make
+too much sense here.
 
-Build regression: arm64  arc riscv64 parisc vmlinux.unstripped warning
-empty loadable segment detected at vaddr is this intentional?
+> So I'm wondering if an approach along the following lines is appropriate
+> (Very lightly compile tested only!).
+> 
+> And yes, there is room for improvement of the wording of the comment
+> I included below.
+> 
+> diff --git a/include/net/libeth/xdp.h b/include/net/libeth/xdp.h
+> index f4880b50e804..a7d3d8e44aa6 100644
+> --- a/include/net/libeth/xdp.h
+> +++ b/include/net/libeth/xdp.h
+> @@ -1283,11 +1283,7 @@ static inline void libeth_xdp_prepare_buff(struct libeth_xdp_buff *xdp,
+>  	const struct page *page = __netmem_to_page(fqe->netmem);
+>  
+>  #ifdef __LIBETH_WORD_ACCESS
+> -	static_assert(offsetofend(typeof(xdp->base), flags) -
+> -		      offsetof(typeof(xdp->base), frame_sz) ==
+> -		      sizeof(u64));
+> -
+> -	*(u64 *)&xdp->base.frame_sz = fqe->truesize;
+> +	xdp->base.frame_sz_le_qword = fqe->truesize;
+>  #else
+>  	xdp_init_buff(&xdp->base, fqe->truesize, xdp->base.rxq);
+>  #endif
+> diff --git a/include/net/xdp.h b/include/net/xdp.h
+> index b40f1f96cb11..b5eedeb82c9b 100644
+> --- a/include/net/xdp.h
+> +++ b/include/net/xdp.h
+> @@ -85,8 +85,19 @@ struct xdp_buff {
+>  	void *data_hard_start;
+>  	struct xdp_rxq_info *rxq;
+>  	struct xdp_txq_info *txq;
+> -	u32 frame_sz; /* frame size to deduce data_hard_end/reserved tailroom*/
+> -	u32 flags; /* supported values defined in xdp_buff_flags */
+> +	union {
+> +		/* Allow setting frame_sz and flags as a single u64 on
+> +		 * little endian systems. This may may give optimal
+> +		 * performance. */
+> +		u64 frame_sz_le_qword;
+> +		struct {
+> +			/* Frame size to deduce data_hard_end/reserved
+> +			 * tailroom. */
+> +			u32 frame_sz;
+> +			/* Supported values defined in xdp_buff_flags. */
+> +			u32 flags;
+> +		};
+> +	};
+>  };
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Yeah, this looks like a nice way to express this, and is way more
+descriptive than "(u64 *)&xdp->base.frame_sz" :)
 
-## Build log
-aarch64-linux-gnu-objcopy: vmlinux.unstripped: warning: empty loadable
-segment detected at vaddr=0xffff800082720000, is this intentional?
-arc-elf32-objcopy: vmlinux.unstripped: warning: empty loadable segment
-detected at vaddr=0x80306000, is this intentional?
-riscv64-linux-gnu-objcopy: vmlinux.unstripped: warning: empty loadable
-segment detected at vaddr=0xffffffff8202d000, is this intentional?
-hppa-linux-gnu-objcopy: vmlinux.unstripped: warning: empty loadable
-segment detected at vaddr=0x11400000, is this intentional?
-
-
-## Source
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: 84b92a499e7eca54ba1df6f6c6e01766025943f1
-* Git describe: next-20250731
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250731
-* Architectures: arm64 arc riscv64 parisc
-* Toolchains: gcc-8 gcc-13
-* Kconfigs: defconfig
-
-## Build
-* Build details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250731/log-parser-build-gcc/general-objcopy-warning-empty-loadable-segment-detected-at-vaddr-is-this-intentional/
-* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/30cmZFV63SOEwwWoGiSHEsDR63Q
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/30cmZFV63SOEwwWoGiSHEsDR63Q/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/30cmZFV63SOEwwWoGiSHEsDR63Q/config
-
-## Steps to reproduce
- * tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
---kconfig defconfig
-
---
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Kees Cook
