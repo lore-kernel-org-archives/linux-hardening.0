@@ -1,93 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97E71A0730;
-	Sat,  2 Aug 2025 18:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB58CC13B;
+	Sat,  2 Aug 2025 18:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754160220; cv=none; b=uenTdQ2E7eHtMJ/a5L2HCY5P6qrOq4mopTDtIvM0OxPluLoz6greqE1eFVDJgXazaDv0FfaDnBcyeBr96ZdJSHpUSL5bGVFgJ76iIuUGrs0UWsdFaQXMYn94hzzBkclJy9rSjWCNYuvpjZR35tqYEyxMnk/s2pPNC+dOgKl14ZI=
+	t=1754160764; cv=none; b=DZneWyR/iBqCx7RiemHOP7y1wGNNZAwLifrPDfY6iX6rRo8Xyufo4LiXLdIczMdC7j4jxPe4W0788KXqEdMewRug1OMsUfDX/N8AJhEiJ1YcouC1eGZHUd4n+ZrHw3jPFEoKrGV0O/ngI+jtnjJKkeRmyW0012tp6J4VzZ9tEQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754160220; c=relaxed/simple;
-	bh=mQLT26HbDMezkOswB66ycYR6QML2I25qybJHR7DuV4Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qTqUji6jxLZd18plPcLdiH0TdUp55mROOo9EkhKSVu9YHJjvkGGK3bP6Ai6C0N39mlvHBUjgIT6IemBDZmnvlWhQzyzmCi7QnGBPSVzjb5HAktj/uPeHOyZ0gHxvPdDA83EgZ1dsPI1/yQ16kRi21NHf3rNuLEQuQn0z5cPGFw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBn03Nz3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754160764; c=relaxed/simple;
+	bh=oKJ4o+84X2gZrWbVCPsj5JL/+cPPXG/1i+v6w3VXMC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G4OVXseBCKejkVH/nMIVkwDrc4kejYYddfQ9deF1SV3NevZSjkBa5UvP2ah7crOnyR3ZLsG/GRg+RXilQpSELqC4kzW/YiTGpr36yZMJrtmibtn0/tB8Dd/MOrfodA7LZfgRAePRMUSvHZSwHVKsdhNPh36g8BS3rSEDj8Z9IN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IYBwfnNt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBn03Nz3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 294AAC4CEEF;
-	Sat,  2 Aug 2025 18:43:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYBwfnNt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 482AEC4CEEF;
+	Sat,  2 Aug 2025 18:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754160219;
-	bh=mQLT26HbDMezkOswB66ycYR6QML2I25qybJHR7DuV4Q=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HBn03Nz3KlhNTOG8MOWhYWKtuhMzeoYZfANlHXX501A00w09BATRyqpLUnPtvN/xx
-	 O9Y0zsaxh2rqHIuhb8fyExKko+uj+1BHICWUL6zNxbImTgGl1K5rA6NPPo4EYvrN9z
-	 d7qJqrEQdlwx4gsh74bWAMwlFClocBseTwISYLie0rHXuApIdL3TyR+7ke8XfNFM+T
-	 q574OCoYEADwMJU7ygcd1LSNNDu/IHAg1pKBTvnqsZGy74KCaWzWyp9jwAzxxdvDBe
-	 aZYtd9DDGrHUWEyJA6gW1ex/+OA4KUOPU6TiDEkHE9FPFWqijJTbpeThVLCaECAJsV
-	 Su2+YffOoLB0g==
+	s=k20201202; t=1754160764;
+	bh=oKJ4o+84X2gZrWbVCPsj5JL/+cPPXG/1i+v6w3VXMC4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IYBwfnNtT4MqM4tAxSAR/QjCr7jN/hWRSOJgtIEv0cqySxNbaTHzmL9697+/+clTy
+	 0lXodjB2ALTL7KFhGrf+dOPaEl9UbiFS54b7fa4RPCFJKSLnMw3+lHXIhVFcfql4tk
+	 EreD2tbkCoyLDzoRzkgqjrUMwcRQvCio3Ls6fBtqgVXJztGW2LWZASS2RrIBIkD7AT
+	 c0zVOsLH8KRoGneQL/KaueDbzCGBKwbg6bdBvo/bGvF4O2p2+F2sWmwdT4Kdop5vt5
+	 HrEf3c+GE+zleyRAtl8EMibSGfp7N92FZFvklyyggz/EWUz2WkS9klmheE01e7SxVA
+	 eneqE0XK/GfVg==
+Date: Sat, 2 Aug 2025 11:52:44 -0700
 From: Kees Cook <kees@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	linux-kbuild@vger.kernel.org,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Simon Horman <horms@kernel.org>, intel-wired-lan@lists.osuosl.org,
+	Michal Kubiak <michal.kubiak@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	nxne.cnse.osdt.itp.upstreaming@intel.com, bpf@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] kbuild: Re-enable -Wunterminated-string-initialization
-Date: Sat,  2 Aug 2025 11:43:32 -0700
-Message-Id: <20250802184328.it.438-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH iwl-next v3 16/18] idpf: add support for XDP on Rx
+Message-ID: <202508021152.AD1850CD2@keescook>
+References: <20250730160717.28976-1-aleksander.lobakin@intel.com>
+ <20250730160717.28976-17-aleksander.lobakin@intel.com>
+ <20250731123734.GA8494@horms.kernel.org>
+ <202507310955.03E47CFA4@keescook>
+ <8c085ba0-29a3-492a-b9f1-e7d02b5fb558@intel.com>
+ <ff10e2a3-bd97-4c96-b7bd-f47289c9b0e4@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1682; i=kees@kernel.org; h=from:subject:message-id; bh=mQLT26HbDMezkOswB66ycYR6QML2I25qybJHR7DuV4Q=; b=owGbwMvMwCVmps19z/KJym7G02pJDBl9MSGG1o/95nz0rb8Y4x+yl4Pz1tsZenMjJ/lyVpX+S 5676qhSRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwESWczH8j/AM8tzhUupnUbD5 RXGJv/Wja/ode7a7brObX3hlIoPkI0aGXbs6iy3OWO+WPHKl4niphW9wXFPW+1nxN8Uc9kR4bzv IAwA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ff10e2a3-bd97-4c96-b7bd-f47289c9b0e4@intel.com>
 
-With the few remaining fixes now landed, we can re-enable the option
--Wunterminated-string-initialization (via -Wextra). Both GCC and Clang
-have the required multi-dimensional nonstring attribute support.
+On Fri, Aug 01, 2025 at 03:17:42PM +0200, Alexander Lobakin wrote:
+> From: Alexander Lobakin <aleksander.lobakin@intel.com>
+> Date: Fri, 1 Aug 2025 15:12:43 +0200
+> 
+> > From: Kees Cook <kees@kernel.org>
+> > Date: Thu, 31 Jul 2025 10:05:47 -0700
+> > 
+> >> On Thu, Jul 31, 2025 at 01:37:34PM +0100, Simon Horman wrote:
+> >>> While I appreciate the desire for improved performance and nicer code
+> >>> generation. I think the idea of writing 64 bits of data to the
+> >>> address of a 32 bit member of a structure goes against the direction
+> >>> of hardening work by Kees and others.
+> >>
+> >> Agreed: it's better to avoid obscuring these details from the compiler
+> >> so it can have an "actual" view of the object sizes involved.
+> >>
+> >>> Indeed, it seems to me this is the kind of thing that struct_group()
+> >>> aims to avoid.
+> >>>
+> >>> In this case struct group() doesn't seem like the best option,
+> >>> because it would provide a 64-bit buffer that we can memcpy into.
+> >>> But it seems altogether better to simply assign u64 value to a u64 member.
+> >>
+> >> Agreed: with struct_group you get a sized pointer, and while you can
+> >> provide a struct tag to make it an assignable object, it doesn't make
+> >> too much sense here.
+> >>
+> >>> So I'm wondering if an approach along the following lines is appropriate
+> >>> (Very lightly compile tested only!).
+> >>>
+> >>> And yes, there is room for improvement of the wording of the comment
+> >>> I included below.
+> >>>
+> >>> diff --git a/include/net/libeth/xdp.h b/include/net/libeth/xdp.h
+> >>> index f4880b50e804..a7d3d8e44aa6 100644
+> >>> --- a/include/net/libeth/xdp.h
+> >>> +++ b/include/net/libeth/xdp.h
+> >>> @@ -1283,11 +1283,7 @@ static inline void libeth_xdp_prepare_buff(struct libeth_xdp_buff *xdp,
+> >>>  	const struct page *page = __netmem_to_page(fqe->netmem);
+> >>>  
+> >>>  #ifdef __LIBETH_WORD_ACCESS
+> >>> -	static_assert(offsetofend(typeof(xdp->base), flags) -
+> >>> -		      offsetof(typeof(xdp->base), frame_sz) ==
+> >>> -		      sizeof(u64));
+> >>> -
+> >>> -	*(u64 *)&xdp->base.frame_sz = fqe->truesize;
+> >>> +	xdp->base.frame_sz_le_qword = fqe->truesize;
+> >>>  #else
+> >>>  	xdp_init_buff(&xdp->base, fqe->truesize, xdp->base.rxq);
+> >>>  #endif
+> >>> diff --git a/include/net/xdp.h b/include/net/xdp.h
+> >>> index b40f1f96cb11..b5eedeb82c9b 100644
+> >>> --- a/include/net/xdp.h
+> >>> +++ b/include/net/xdp.h
+> >>> @@ -85,8 +85,19 @@ struct xdp_buff {
+> >>>  	void *data_hard_start;
+> >>>  	struct xdp_rxq_info *rxq;
+> >>>  	struct xdp_txq_info *txq;
+> >>> -	u32 frame_sz; /* frame size to deduce data_hard_end/reserved tailroom*/
+> >>> -	u32 flags; /* supported values defined in xdp_buff_flags */
+> >>> +	union {
+> >>> +		/* Allow setting frame_sz and flags as a single u64 on
+> >>> +		 * little endian systems. This may may give optimal
+> >>> +		 * performance. */
+> >>> +		u64 frame_sz_le_qword;
+> >>> +		struct {
+> >>> +			/* Frame size to deduce data_hard_end/reserved
+> >>> +			 * tailroom. */
+> >>> +			u32 frame_sz;
+> >>> +			/* Supported values defined in xdp_buff_flags. */
+> >>> +			u32 flags;
+> >>> +		};
+> >>> +	};
+> >>>  };
+> >>
+> >> Yeah, this looks like a nice way to express this, and is way more
+> >> descriptive than "(u64 *)&xdp->base.frame_sz" :)
+> > 
+> > Sounds good to me!
+> > 
+> > Let me send v4 where I'll fix this.
+> 
+> Note: would it be okay if I send v4 with this fix when the window opens,
+> while our validation will retest v3 from Tony's tree in meantine? It's a
+> cosmetic change anyway and does not involve any functional changes.
 
-Build tested allmodconfig with:
-	gcc (Ubuntu 14.2.0-19ubuntu2) 14.2.0
-	gcc (GCC) 15.1.1 20250521 (Red Hat 15.1.1-2)
-	clang version 20.1.8 (Fedora 20.1.8-1.fc42)
-	ClangBuiltLinux clang version 21.1.0-rc2
-	clang version 22.0.0git
+If this is directed at me, yeah, I don't see any high urgency here.
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- v2: Clang is fixed too! :) (Nathan)
- v1: https://lore.kernel.org/lkml/20250802002733.work.941-kees@kernel.org/
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nicolas.schier@linux.dev>
-Cc: <linux-kbuild@vger.kernel.org>
----
- scripts/Makefile.extrawarn | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index dca175fffcab..a1001377dcb2 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -78,9 +78,6 @@ KBUILD_CFLAGS += $(call cc-option, -Wcast-function-type)
- KBUILD_CFLAGS-$(CONFIG_CC_NO_STRINGOP_OVERFLOW) += $(call cc-option, -Wno-stringop-overflow)
- KBUILD_CFLAGS-$(CONFIG_CC_STRINGOP_OVERFLOW) += $(call cc-option, -Wstringop-overflow)
- 
--# Currently, disable -Wunterminated-string-initialization as broken
--KBUILD_CFLAGS += $(call cc-option, -Wno-unterminated-string-initialization)
--
- # The allocators already balk at large sizes, so silence the compiler
- # warnings for bounds checks involving those possible values. While
- # -Wno-alloc-size-larger-than would normally be used here, earlier versions
 -- 
-2.34.1
-
+Kees Cook
