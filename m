@@ -1,56 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB58CC13B;
-	Sat,  2 Aug 2025 18:52:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105271B7F4;
+	Sun,  3 Aug 2025 17:32:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754160764; cv=none; b=DZneWyR/iBqCx7RiemHOP7y1wGNNZAwLifrPDfY6iX6rRo8Xyufo4LiXLdIczMdC7j4jxPe4W0788KXqEdMewRug1OMsUfDX/N8AJhEiJ1YcouC1eGZHUd4n+ZrHw3jPFEoKrGV0O/ngI+jtnjJKkeRmyW0012tp6J4VzZ9tEQM=
+	t=1754242361; cv=none; b=kshW18yx6wBLtbGWDnIfC9B/Lyx4yZ5z5cPyzYe7xnYqueh8WhkFhM8ScqkkDYcoGhnb8tkAtZDryV6b+5UwF5XRkHtPfn+oRnvImm8YUqCINhIKeCGZyXGWfe86hVKIGLwjRu/yr/4wVwkSSiK//UYbKDQZdhhrFl4OUEoMuyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754160764; c=relaxed/simple;
-	bh=oKJ4o+84X2gZrWbVCPsj5JL/+cPPXG/1i+v6w3VXMC4=;
+	s=arc-20240116; t=1754242361; c=relaxed/simple;
+	bh=a/PRtos9q7kngXplGI6XaTjlncjPBJcYproElg3uWPQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G4OVXseBCKejkVH/nMIVkwDrc4kejYYddfQ9deF1SV3NevZSjkBa5UvP2ah7crOnyR3ZLsG/GRg+RXilQpSELqC4kzW/YiTGpr36yZMJrtmibtn0/tB8Dd/MOrfodA7LZfgRAePRMUSvHZSwHVKsdhNPh36g8BS3rSEDj8Z9IN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IYBwfnNt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZvlVcXGvmuFUAEU5C08pcanUnSF15PHqsJoKhpPzNy/gN7BDMqQepJT7x1wx1j1N3P2Vy4GGeJQQNv3TKH5GHfJt4CghnnZHeGMnGWK5kE4N5TJqToiD0RvrFBltEh4YRvIEjIJtHhqeSea1TYgggW4pXMdWjEkR+jX7EnA6Wvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F9gWBdyC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYBwfnNt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 482AEC4CEEF;
-	Sat,  2 Aug 2025 18:52:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F9gWBdyC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AA36C4CEF7;
+	Sun,  3 Aug 2025 17:32:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754160764;
-	bh=oKJ4o+84X2gZrWbVCPsj5JL/+cPPXG/1i+v6w3VXMC4=;
+	s=k20201202; t=1754242360;
+	bh=a/PRtos9q7kngXplGI6XaTjlncjPBJcYproElg3uWPQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IYBwfnNtT4MqM4tAxSAR/QjCr7jN/hWRSOJgtIEv0cqySxNbaTHzmL9697+/+clTy
-	 0lXodjB2ALTL7KFhGrf+dOPaEl9UbiFS54b7fa4RPCFJKSLnMw3+lHXIhVFcfql4tk
-	 EreD2tbkCoyLDzoRzkgqjrUMwcRQvCio3Ls6fBtqgVXJztGW2LWZASS2RrIBIkD7AT
-	 c0zVOsLH8KRoGneQL/KaueDbzCGBKwbg6bdBvo/bGvF4O2p2+F2sWmwdT4Kdop5vt5
-	 HrEf3c+GE+zleyRAtl8EMibSGfp7N92FZFvklyyggz/EWUz2WkS9klmheE01e7SxVA
-	 eneqE0XK/GfVg==
-Date: Sat, 2 Aug 2025 11:52:44 -0700
-From: Kees Cook <kees@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Simon Horman <horms@kernel.org>, intel-wired-lan@lists.osuosl.org,
-	Michal Kubiak <michal.kubiak@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	nxne.cnse.osdt.itp.upstreaming@intel.com, bpf@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH iwl-next v3 16/18] idpf: add support for XDP on Rx
-Message-ID: <202508021152.AD1850CD2@keescook>
-References: <20250730160717.28976-1-aleksander.lobakin@intel.com>
- <20250730160717.28976-17-aleksander.lobakin@intel.com>
- <20250731123734.GA8494@horms.kernel.org>
- <202507310955.03E47CFA4@keescook>
- <8c085ba0-29a3-492a-b9f1-e7d02b5fb558@intel.com>
- <ff10e2a3-bd97-4c96-b7bd-f47289c9b0e4@intel.com>
+	b=F9gWBdyCGCHDk6wEjM3mMAo3HZOlf9fhUkOClREcZi8kEcA0ebGMLEF/t6WAkkqgf
+	 i4tQT25yV2YBfWBt9NRWh7JeAGG8/75mRHevXDkoJk5uCopQvemAXb4rkPM0OaNVWW
+	 hfgQBnwoeAV6DUpKKiSnZ8pz7LOZA6M/I7S3JmYU39Y+52Ps/gJuRH49QMa8d4qen4
+	 rFrfjReNvsnp4vUjMIXklRlRygi+u2BcFbxAopwyLk5w+DZccSkVgd/3zZo13vOQ6R
+	 UJ9CMpyOB2IGOVXJQ1UzXeH76Tf5EeK/gyIDi+m1SbccYRzvS/rbNpkeNkWffkZr1I
+	 HXMaazhutZebg==
+Date: Sun, 3 Aug 2025 10:32:35 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	linux-kbuild@vger.kernel.org,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] kbuild: Re-enable -Wunterminated-string-initialization
+Message-ID: <20250803173235.GA716998@ax162>
+References: <20250802184328.it.438-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,95 +47,135 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ff10e2a3-bd97-4c96-b7bd-f47289c9b0e4@intel.com>
+In-Reply-To: <20250802184328.it.438-kees@kernel.org>
 
-On Fri, Aug 01, 2025 at 03:17:42PM +0200, Alexander Lobakin wrote:
-> From: Alexander Lobakin <aleksander.lobakin@intel.com>
-> Date: Fri, 1 Aug 2025 15:12:43 +0200
+On Sat, Aug 02, 2025 at 11:43:32AM -0700, Kees Cook wrote:
+> With the few remaining fixes now landed, we can re-enable the option
+> -Wunterminated-string-initialization (via -Wextra). Both GCC and Clang
+> have the required multi-dimensional nonstring attribute support.
 > 
-> > From: Kees Cook <kees@kernel.org>
-> > Date: Thu, 31 Jul 2025 10:05:47 -0700
-> > 
-> >> On Thu, Jul 31, 2025 at 01:37:34PM +0100, Simon Horman wrote:
-> >>> While I appreciate the desire for improved performance and nicer code
-> >>> generation. I think the idea of writing 64 bits of data to the
-> >>> address of a 32 bit member of a structure goes against the direction
-> >>> of hardening work by Kees and others.
-> >>
-> >> Agreed: it's better to avoid obscuring these details from the compiler
-> >> so it can have an "actual" view of the object sizes involved.
-> >>
-> >>> Indeed, it seems to me this is the kind of thing that struct_group()
-> >>> aims to avoid.
-> >>>
-> >>> In this case struct group() doesn't seem like the best option,
-> >>> because it would provide a 64-bit buffer that we can memcpy into.
-> >>> But it seems altogether better to simply assign u64 value to a u64 member.
-> >>
-> >> Agreed: with struct_group you get a sized pointer, and while you can
-> >> provide a struct tag to make it an assignable object, it doesn't make
-> >> too much sense here.
-> >>
-> >>> So I'm wondering if an approach along the following lines is appropriate
-> >>> (Very lightly compile tested only!).
-> >>>
-> >>> And yes, there is room for improvement of the wording of the comment
-> >>> I included below.
-> >>>
-> >>> diff --git a/include/net/libeth/xdp.h b/include/net/libeth/xdp.h
-> >>> index f4880b50e804..a7d3d8e44aa6 100644
-> >>> --- a/include/net/libeth/xdp.h
-> >>> +++ b/include/net/libeth/xdp.h
-> >>> @@ -1283,11 +1283,7 @@ static inline void libeth_xdp_prepare_buff(struct libeth_xdp_buff *xdp,
-> >>>  	const struct page *page = __netmem_to_page(fqe->netmem);
-> >>>  
-> >>>  #ifdef __LIBETH_WORD_ACCESS
-> >>> -	static_assert(offsetofend(typeof(xdp->base), flags) -
-> >>> -		      offsetof(typeof(xdp->base), frame_sz) ==
-> >>> -		      sizeof(u64));
-> >>> -
-> >>> -	*(u64 *)&xdp->base.frame_sz = fqe->truesize;
-> >>> +	xdp->base.frame_sz_le_qword = fqe->truesize;
-> >>>  #else
-> >>>  	xdp_init_buff(&xdp->base, fqe->truesize, xdp->base.rxq);
-> >>>  #endif
-> >>> diff --git a/include/net/xdp.h b/include/net/xdp.h
-> >>> index b40f1f96cb11..b5eedeb82c9b 100644
-> >>> --- a/include/net/xdp.h
-> >>> +++ b/include/net/xdp.h
-> >>> @@ -85,8 +85,19 @@ struct xdp_buff {
-> >>>  	void *data_hard_start;
-> >>>  	struct xdp_rxq_info *rxq;
-> >>>  	struct xdp_txq_info *txq;
-> >>> -	u32 frame_sz; /* frame size to deduce data_hard_end/reserved tailroom*/
-> >>> -	u32 flags; /* supported values defined in xdp_buff_flags */
-> >>> +	union {
-> >>> +		/* Allow setting frame_sz and flags as a single u64 on
-> >>> +		 * little endian systems. This may may give optimal
-> >>> +		 * performance. */
-> >>> +		u64 frame_sz_le_qword;
-> >>> +		struct {
-> >>> +			/* Frame size to deduce data_hard_end/reserved
-> >>> +			 * tailroom. */
-> >>> +			u32 frame_sz;
-> >>> +			/* Supported values defined in xdp_buff_flags. */
-> >>> +			u32 flags;
-> >>> +		};
-> >>> +	};
-> >>>  };
-> >>
-> >> Yeah, this looks like a nice way to express this, and is way more
-> >> descriptive than "(u64 *)&xdp->base.frame_sz" :)
-> > 
-> > Sounds good to me!
-> > 
-> > Let me send v4 where I'll fix this.
+> Build tested allmodconfig with:
+> 	gcc (Ubuntu 14.2.0-19ubuntu2) 14.2.0
+> 	gcc (GCC) 15.1.1 20250521 (Red Hat 15.1.1-2)
+> 	clang version 20.1.8 (Fedora 20.1.8-1.fc42)
+> 	ClangBuiltLinux clang version 21.1.0-rc2
+> 	clang version 22.0.0git
 > 
-> Note: would it be okay if I send v4 with this fix when the window opens,
-> while our validation will retest v3 from Tony's tree in meantine? It's a
-> cosmetic change anyway and does not involve any functional changes.
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+>  v2: Clang is fixed too! :) (Nathan)
+>  v1: https://lore.kernel.org/lkml/20250802002733.work.941-kees@kernel.org/
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nicolas Schier <nicolas.schier@linux.dev>
+> Cc: <linux-kbuild@vger.kernel.org>
+> ---
+>  scripts/Makefile.extrawarn | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+> index dca175fffcab..a1001377dcb2 100644
+> --- a/scripts/Makefile.extrawarn
+> +++ b/scripts/Makefile.extrawarn
+> @@ -78,9 +78,6 @@ KBUILD_CFLAGS += $(call cc-option, -Wcast-function-type)
+>  KBUILD_CFLAGS-$(CONFIG_CC_NO_STRINGOP_OVERFLOW) += $(call cc-option, -Wno-stringop-overflow)
+>  KBUILD_CFLAGS-$(CONFIG_CC_STRINGOP_OVERFLOW) += $(call cc-option, -Wstringop-overflow)
+>  
+> -# Currently, disable -Wunterminated-string-initialization as broken
+> -KBUILD_CFLAGS += $(call cc-option, -Wno-unterminated-string-initialization)
+> -
+>  # The allocators already balk at large sizes, so silence the compiler
+>  # warnings for bounds checks involving those possible values. While
+>  # -Wno-alloc-size-larger-than would normally be used here, earlier versions
+> -- 
+> 2.34.1
+> 
 
-If this is directed at me, yeah, I don't see any high urgency here.
+I threw this into my local -next tree and my matrix finds the following
+remaining instances of this warning, mostly in driver code that may be
+used on specific architectures (I am guessing it is only x86_64
+allmodconfig that is clean?). I verified GCC 15 seems a couple of them
+then I stopped double checking for time sake.
 
--- 
-Kees Cook
+ARCH=arm multi_v5_defconfig:
+
+  drivers/cpufreq/kirkwood-cpufreq.c:98:10: warning: initializer-string for character array is too long, array size is 16 but initializer has size 17 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
+     98 |         .name   = "kirkwood-cpufreq",
+        |                   ^~~~~~~~~~~~~~~~~~
+
+ARCH=arm allmodconfig:
+
+  drivers/soc/ti/pm33xx.c:77:22: warning: initializer-string for character array is too long, array size is 10 but initializer has size 11 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
+     77 |         .irq_nr = 0, .src = "Ext wakeup",
+        |                             ^~~~~~~~~~~~
+
+  drivers/cpuidle/cpuidle-mvebu-v7.c:69:13: warning: initializer-string for character array is too long, array size is 16 but initializer has size 17 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
+     69 |                 .name                   = "MV CPU DEEP IDLE",
+        |                                           ^~~~~~~~~~~~~~~~~~
+
+  drivers/firmware/efi/libstub/vsprintf.c:121:33: warning: initializer-string for character array is too long, array size is 16 but initializer has size 17 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
+    121 |         static const char digits[16] = "0123456789ABCDEF"; /* "GHIJKLMNOPQRSTUVWXYZ"; */
+        |                                        ^~~~~~~~~~~~~~~~~~
+
+  drivers/net/ethernet/ti/netcp_ethss.c:1049:2: warning: initializer-string for character array is too long, array size is 32 but initializer has size 33 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
+   1049 |         GBENU_STATS_HOST(ale_unknown_ucast_bytes),
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  drivers/net/ethernet/ti/netcp_ethss.c:956:2: note: expanded from macro 'GBENU_STATS_HOST'
+    956 |         "GBE_HOST:"#field, GBENU_STATS0_MODULE,                 \
+        |         ^~~~~~~~~~~~~~~~~
+  drivers/net/ethernet/ti/netcp_ethss.c:1051:2: warning: initializer-string for character array is too long, array size is 32 but initializer has size 33 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
+   1051 |         GBENU_STATS_HOST(ale_unknown_mcast_bytes),
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  drivers/net/ethernet/ti/netcp_ethss.c:956:2: note: expanded from macro 'GBENU_STATS_HOST'
+    956 |         "GBE_HOST:"#field, GBENU_STATS0_MODULE,                 \
+        |         ^~~~~~~~~~~~~~~~~
+  drivers/net/ethernet/ti/netcp_ethss.c:1053:2: warning: initializer-string for character array is too long, array size is 32 but initializer has size 33 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
+   1053 |         GBENU_STATS_HOST(ale_unknown_bcast_bytes),
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  drivers/net/ethernet/ti/netcp_ethss.c:956:2: note: expanded from macro 'GBENU_STATS_HOST'
+    956 |         "GBE_HOST:"#field, GBENU_STATS0_MODULE,                 \
+        |         ^~~~~~~~~~~~~~~~~
+
+ARCH=riscv allmodconfig:
+
+  In file included from arch/riscv/kernel/kgdb.c:13:
+  arch/riscv/include/asm/gdb_xml.h:9:46: warning: initializer-string for character array is too long, array size is 31 but initializer has size 32 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
+      9 | static const char gdb_xfer_read_target[31] = "qXfer:features:read:target.xml:";
+        |                                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  arch/riscv/include/asm/gdb_xml.h:13:4: warning: initializer-string for character array is too long, array size is 39 but initializer has size 40 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
+     13 |                         "qXfer:features:read:riscv-64bit-cpu.xml";
+        |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These seem like obvious fixes from my brief investigations but I am not
+sure about the other ones. The RISC-V instances seem problematic because
+kgdb_arch_handle_qxfer_pkt() uses strcpy() to copy those strings?
+
+Cheers,
+Nathan
+
+diff --git a/drivers/firmware/efi/libstub/vsprintf.c b/drivers/firmware/efi/libstub/vsprintf.c
+index 71c71c222346..7f7bbdb2a507 100644
+--- a/drivers/firmware/efi/libstub/vsprintf.c
++++ b/drivers/firmware/efi/libstub/vsprintf.c
+@@ -118,7 +118,7 @@ char *number(char *end, unsigned long long num, int base, char locase)
+ 	 */
+ 
+ 	/* we are called with base 8, 10 or 16, only, thus don't need "G..."  */
+-	static const char digits[16] = "0123456789ABCDEF"; /* "GHIJKLMNOPQRSTUVWXYZ"; */
++	static const char digits[16] __nonstring = "0123456789ABCDEF"; /* "GHIJKLMNOPQRSTUVWXYZ"; */
+ 
+ 	switch (base) {
+ 	case 10:
+diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+index 55a1a96cd834..05d4323c6a13 100644
+--- a/drivers/net/ethernet/ti/netcp_ethss.c
++++ b/drivers/net/ethernet/ti/netcp_ethss.c
+@@ -771,7 +771,7 @@ static struct netcp_module xgbe_module;
+ 
+ /* Statistic management */
+ struct netcp_ethtool_stat {
+-	char desc[ETH_GSTRING_LEN];
++	char desc[ETH_GSTRING_LEN] __nonstring;
+ 	int type;
+ 	u32 size;
+ 	int offset;
