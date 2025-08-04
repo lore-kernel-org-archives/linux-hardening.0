@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837D128642C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F04286890;
 	Mon,  4 Aug 2025 16:44:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754325858; cv=none; b=EuV1dpKVatN99dVwmEeH9+GPLw/QbnAePQTh+C8C6Nw2UtdRAzNmIxM14j10JOij6LCViGpmcTQmLeBaTC/o4bL6d0UB2uKZsnWXl7gj2tjwf7vtFEPqYIhmPSZ0acr+wuWJRo49KPq4+ky1cra+3/62mq8fEPSwD3CdbzkWXGY=
+	t=1754325858; cv=none; b=RZtMYYhjxRW94hPop2LmDjid27X5UQmHg8SLlHc9AoHhaATC1X4ibhiKnNvVpEdq8ZR/VMSQcyWGB2gjusWVDOKnF1q82FZA3rhlutMD1GaNL1j3Wo4LFqPhMGU9FzCg4CeLydKU9irbgnhWOdZrW/DUctGANI2OJ1uaFTiFmpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1754325858; c=relaxed/simple;
-	bh=guvy9CFz34iD95VNx9U+nwzbEodayv2bp++BoAV7Co8=;
+	bh=3HtYht3o5b53HlW3hmmaVS1l68Fq+Byhwo7/QFnsV8I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Pqb7tK/tDhRDODqNnKWiGfxaWXJsu+ezfKDKiu3MhJxcLuP0qV235OocI4baDo2cAIlcLYQnYeSYL8YCwBy3y2Dt7gcXhECnRZGBW/H7qhQR+tjyUFtXy9iA0sNbmx6MCGI0qH/+4GPt8S281HRl7y9NQJZSTGFsPCcyTSnjmSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7b8ufEv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BYk9/D4FRzEWJ64UCDGiWw/aZcYKzwoksaEqSxkGektN7K8DzP13sfv9cllOIKUxnz9mMCosdKgkRKj4FshE8uLCirPAXlyn+4ajbaDmihmIaC24jp3zffTYG/Fn4acJVUFbPLnHkpxgDmBD5mdIHiqwOmytQq/ApsTgH1XcPps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V8su36dz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7b8ufEv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B233C116D0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V8su36dz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 557BFC19422;
 	Mon,  4 Aug 2025 16:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1754325858;
-	bh=guvy9CFz34iD95VNx9U+nwzbEodayv2bp++BoAV7Co8=;
+	bh=3HtYht3o5b53HlW3hmmaVS1l68Fq+Byhwo7/QFnsV8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m7b8ufEvWKC7zComlRM7+u4PtyfPEWo/yjTdeYkDlJsbVyvwHAovh35m4D3uuSVye
-	 gHJqZVdqWNTwtanGfltzgxGVOtOstQHMiweKxm56tiOvOzLvR44JZYdUL8B5L1htI+
-	 DGDKHooxzEKRzUaDUXP7yWLGj/TWeVyVHYMQzEghCsXqPhdeduMIDPn11gl9swH7a+
-	 HEINXXtYK9TpmhXZNMHyNCftjjwDDURfQsMuyzWDTs0oBX4SY+zy7mK7Jgke/vDeg3
-	 U7w0bqTMAqEajLuIcJFHYSbSneQKkmY/yNhbGerF4hTMOq3OpZ4VDdx/o1lJJPBczx
-	 s7evE8jRDh0cw==
+	b=V8su36dz8wLeATBiw+fLXUhOrWYvB0J2NFju0ulT3yX9bH3I4brsk1bfIPOwMtl4M
+	 eUdlQo6ZAufcuJ508hVz4gfoq3F3K0NaNBhUI39fozig9HtwiVIhUGFAxBVlIHjavx
+	 dlf5V9cU0uGCk2uQOYlzN0s30pv/X2w1LMbTVx6rbh/tujJoBv2E/x6rjwgPDf4RAL
+	 WgADCxDgFlafZg+p0CJETlCNY4boSlI5JQCzG5Rc0pHbrftG9aN/2N2mn7r2AzIlix
+	 US1fliCniVnKsIeSvSJNltImuRoFdZvNSuevHgga/082pXz8xl7Spx/2XIW3pDNRLi
+	 Tj/NQpbrTOeCw==
 From: Kees Cook <kees@kernel.org>
 To: linux-arch@vger.kernel.org
 Cc: Kees Cook <kees@kernel.org>,
@@ -45,9 +45,9 @@ Cc: Kees Cook <kees@kernel.org>,
 	sparclinux@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 06/17] sh: Add __attribute_const__ to ffs()-family implementations
-Date: Mon,  4 Aug 2025 09:44:02 -0700
-Message-Id: <20250804164417.1612371-6-kees@kernel.org>
+Subject: [PATCH 12/17] mips: Add __attribute_const__ to ffs()-family implementations
+Date: Mon,  4 Aug 2025 09:44:08 -0700
+Message-Id: <20250804164417.1612371-12-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250804163910.work.929-kees@kernel.org>
 References: <20250804163910.work.929-kees@kernel.org>
@@ -57,7 +57,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1828; i=kees@kernel.org; h=from:subject; bh=guvy9CFz34iD95VNx9U+nwzbEodayv2bp++BoAV7Co8=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkTHkfmP9t48PLcGkVp7XKfZ3/uTi7Rm+jids/QLcX+v ovoKoOHHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABNRZ2T4Z1zh+zj++LvqmA3l LWq5U/2rD36e5VuY8uHfOu9mze9iixn+5z/fPemPk/mc5Lc7HA/9vMSTdJhT49XaZfdm+L/0SFt yjQUA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2679; i=kees@kernel.org; h=from:subject; bh=3HtYht3o5b53HlW3hmmaVS1l68Fq+Byhwo7/QFnsV8I=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkTHkd9Czh7JOPuiXLZd7+tXh0+UvAmMXjmUpsPrqFNd emffkyY2FHKwiDGxSArpsgSZOce5+Lxtj3cfa4izBxWJpAhDFycAjCR0IeMDKtMbV93TbymIV3y RUjmeV9k6+Ycm98bV/GzP/x1wf6SQwEjw9LvUaanzu14nd9/YYIdr+mme3uzdviENGY4hmxRS95 ymhcA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -70,41 +70,59 @@ __attribute__const__, the compiler had to assume the function might
 change variable states as a side-effect (which is not true for ffs(),
 which provides deterministic math results).
 
-Add missing __attribute_const__ annotations to SH's implementations of
-__ffs() and ffz() functions. These are pure mathematical functions that
-always return the same result for the same input with no side effects,
-making them eligible for compiler optimization.
+Add missing __attribute_const__ annotations to MIPS's implementations of
+ffs(), __ffs(), fls(), and __fls() functions. These are pure mathematical
+functions that always return the same result for the same input with no
+side effects, making them eligible for compiler optimization.
 
-Build tested ARCH=sh defconfig with GCC sh4-linux-gnu 14.2.0.
+Build tested ARCH=mips defconfig with GCC mipsel-linux-gnu 14.2.0.
 
 Link: https://github.com/KSPP/linux/issues/364 [1]
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- arch/sh/include/asm/bitops.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/include/asm/bitops.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/sh/include/asm/bitops.h b/arch/sh/include/asm/bitops.h
-index 10ceb0d6b5a9..aba3aa96a50e 100644
---- a/arch/sh/include/asm/bitops.h
-+++ b/arch/sh/include/asm/bitops.h
-@@ -24,7 +24,7 @@
- #include <asm-generic/bitops/non-atomic.h>
- #endif
- 
--static inline unsigned long ffz(unsigned long word)
-+static inline unsigned long __attribute_const__ ffz(unsigned long word)
+diff --git a/arch/mips/include/asm/bitops.h b/arch/mips/include/asm/bitops.h
+index 89f73d1a4ea4..42f88452c920 100644
+--- a/arch/mips/include/asm/bitops.h
++++ b/arch/mips/include/asm/bitops.h
+@@ -327,7 +327,7 @@ static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *
+  * Return the bit position (0..63) of the most significant 1 bit in a word
+  * Returns -1 if no 1 bit exists
+  */
+-static __always_inline unsigned long __fls(unsigned long word)
++static __always_inline __attribute_const__ unsigned long __fls(unsigned long word)
  {
- 	unsigned long result;
+ 	int num;
  
-@@ -44,7 +44,7 @@ static inline unsigned long ffz(unsigned long word)
-  *
+@@ -393,7 +393,7 @@ static __always_inline unsigned long __fls(unsigned long word)
+  * Returns 0..SZLONG-1
   * Undefined if no bit exists, so code should check against 0 first.
   */
--static inline unsigned long __ffs(unsigned long word)
-+static inline __attribute_const__ unsigned long __ffs(unsigned long word)
+-static __always_inline unsigned long __ffs(unsigned long word)
++static __always_inline __attribute_const__ unsigned long __ffs(unsigned long word)
  {
- 	unsigned long result;
+ 	return __fls(word & -word);
+ }
+@@ -405,7 +405,7 @@ static __always_inline unsigned long __ffs(unsigned long word)
+  * This is defined the same way as ffs.
+  * Note fls(0) = 0, fls(1) = 1, fls(0x80000000) = 32.
+  */
+-static inline int fls(unsigned int x)
++static inline __attribute_const__ int fls(unsigned int x)
+ {
+ 	int r;
  
+@@ -458,7 +458,7 @@ static inline int fls(unsigned int x)
+  * the libc and compiler builtin ffs routines, therefore
+  * differs in spirit from the below ffz (man ffs).
+  */
+-static inline int ffs(int word)
++static inline __attribute_const__ int ffs(int word)
+ {
+ 	if (!word)
+ 		return 0;
 -- 
 2.34.1
 
