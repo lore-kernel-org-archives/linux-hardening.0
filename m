@@ -1,317 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729831FDD;
-	Tue,  5 Aug 2025 21:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BC23595C
+	for <linux-hardening@vger.kernel.org>; Wed,  6 Aug 2025 09:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754430509; cv=none; b=B+eeZaHaVuukN4HAjtROXjS+4BjizgSRVyGzivX9uHWHRDIUnvVInAf1T6/AJMEW3RyD2xaQSSNHvejDKOBOLd0wnohiOXzeS3h6BTI1OiY3QsrRtDJrqMQP267llciD+HAHh5a51N5PxB9AwM/l07D9MiE+MLRega0Fg4vyGGI=
+	t=1754471417; cv=none; b=VHV9rqyJQILRdWnqL7cnsGzazbYsdvtDiNWh8q3FJIqoz9G9X93oKniwdLfYNfLPzq6yXNumhv0SgdMEoA+/d4/E4TYEHOdFVWgJCqHUFoW5jm3iYBiMOCH5SRKdS/rVkmTq4aCcLKQm1gEr9Y4KvDySI8oI0X6fsLYUUBN5Srg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754430509; c=relaxed/simple;
-	bh=r0+4GeV4tZNDliUsJBvzpYIDNR8eo3viWiJWjIHPbus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Znculr6kfnkL0Rh6wak6U/+9TaQK3ZXRIhOvuvonNm0jk6k5WoKdUeJ0aPoWkYpj1EsAeGsKKdV9bnuv16ZCVhaEcLDrJU8nPOcyKbn4BcrfzRX7SYyx4fCjFn9IdOcs64M+7f8D/Mp7RjZ7WqPo9nLwW5FOKMoX9N/ad4FCgUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aqSTVwqD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754471417; c=relaxed/simple;
+	bh=31I6WjXhRwY1ZO5yYnIVtAEAXW02SAJ1j4oJyCrK7cU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GqeKxgl4gg59btsjAlT976qqOFtdAYTwaGMn5+SfHYxaWuQeuCIPp2Sbvgx6DiJ+XkkYHOuIyr2zIESxKVXFOnEQms4eg3Z0OP6Ii47meTgiCVJMPcdzdl4wd7w/615KXEHXFsdHzCKyntz1qGf2QzC+LIVt//i67/nkB09+cas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=XEsBx9IL reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aqSTVwqD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC17C4CEF0;
-	Tue,  5 Aug 2025 21:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754430508;
-	bh=r0+4GeV4tZNDliUsJBvzpYIDNR8eo3viWiJWjIHPbus=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aqSTVwqD7yOuPpApeNE4VLtVGaARP9F3w0YbozmADV7KCh0CDsyOPMlRs0tDMv6HT
-	 6FfB24HmRExiKu5ay/pYduFO/Q510J09T6y8grRuC6HOfnJFj/9IY5+gOJHwgMPcfr
-	 5u4y6/AYgAmlaXuTvc+GZqhbxxrW964oYa6YzzfayXcfxvaIHpAxOerulyhFFfiprr
-	 R9GduqfdeqnbzWZ3JWTR2Wy9+nASp2IaspVL3VZjrc0Gg6bLv/D3fY+WyoRtHUn4Ky
-	 5zYKjIIGDJmZ5/8Nd+UfdMSlRkDb35a3H8ob1AaIvNwNLeN8/pFNacwN8KbZIaj3iO
-	 P0sLzkJWm7v3w==
-Date: Tue, 5 Aug 2025 14:48:23 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Kees Cook <kees@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	linux-kbuild@vger.kernel.org,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] kbuild: Re-enable -Wunterminated-string-initialization
-Message-ID: <20250805214823.GB200407@ax162>
-References: <20250802184328.it.438-kees@kernel.org>
- <20250803173235.GA716998@ax162>
- <e4d801e3-3004-484b-897d-ed43c25e1576@intel.com>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="XEsBx9IL"
+Received: from h205.csg.ci.i.u-tokyo.ac.jp (h205.csg.ci.i.u-tokyo.ac.jp [133.11.54.205])
+	(authenticated bits=0)
+	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 5769A4Q3005818
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 6 Aug 2025 18:10:13 +0900 (JST)
+	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
+DKIM-Signature: a=rsa-sha256; bh=04SbAc//VYkDj1IMLyHG/BmwbhPG6uTcl3uHd/dz/BI=;
+        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
+        h=From:Subject:Date:Message-Id:To;
+        s=rs20250326; t=1754471413; v=1;
+        b=XEsBx9IL1udj/IyQHko/lhxsGUKJnAMTGyD6LZOzTQNNIBBMmB+owrZBhNRAY3Zt
+         DCl7SGKRwTdo0a/DCr88QNE4yZrv4Y4qiMvLI8Ba48/tWugukGW0HkDvgp1brHEY
+         WMAGmkFQHI3jbtf3vHTgRpLTMVbCrMhB/NQVPTDKJ0JdM6hwuRB50Memt2+KbBTE
+         UbiasCzNdvjQSKAKqJi7qqwybDdmOLx6wgUtcpV/fMk/2TKAaSTBx9s6LfhA+qEi
+         L/Ly7LCfvGHHUshrmn+2UFUI4eqTLbNHiWdAiTdysMPTWcuWwPe5gb63gFtw9E9y
+         4fxayjyrq+lW7QIi7WGvPA==
+From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+Subject: [PATCH RFC v2 0/2] KVM: arm64: PMU: Use multiple host PMUs
+Date: Wed, 06 Aug 2025 18:09:53 +0900
+Message-Id: <20250806-hybrid-v2-0-0661aec3af8c@rsg.ci.i.u-tokyo.ac.jp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e4d801e3-3004-484b-897d-ed43c25e1576@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOEbk2gC/zWOyw6CMBBFf4XM2pK28oisTEz8ALeGRWEGmQWgL
+ TYQwr/bVF3eOyfnzgaOLJODKtnAkmfH0xiCPiTQ9mZ8kGAMGbTUudQ6E/3aWEYhFeZdl5WEqCH
+ AT0sdL1F0h9v1AvW3tPR6B+n8uzTGkWinYeC5SnyRqiKCPbt5smv8wqtIxsGjOv0HvRJKZKgMG
+ iWplPkZzTrykgYb1Pu+fwAs6cmzywAAAA==
+X-Change-ID: 20250224-hybrid-01d5ff47edd2
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <shuah@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+X-Mailer: b4 0.14.2
 
-On Tue, Aug 05, 2025 at 04:50:28PM +0200, Alexander Lobakin wrote:
-> From: Nathan Chancellor <nathan@kernel.org>
-> Date: Sun, 3 Aug 2025 10:32:35 -0700
-> 
-> > On Sat, Aug 02, 2025 at 11:43:32AM -0700, Kees Cook wrote:
-> >> With the few remaining fixes now landed, we can re-enable the option
-> >> -Wunterminated-string-initialization (via -Wextra). Both GCC and Clang
-> >> have the required multi-dimensional nonstring attribute support.
-> 
-> [...]
-> 
-> > diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-> > index 55a1a96cd834..05d4323c6a13 100644
-> > --- a/drivers/net/ethernet/ti/netcp_ethss.c
-> > +++ b/drivers/net/ethernet/ti/netcp_ethss.c
-> > @@ -771,7 +771,7 @@ static struct netcp_module xgbe_module;
-> >  
-> >  /* Statistic management */
-> >  struct netcp_ethtool_stat {
-> > -	char desc[ETH_GSTRING_LEN];
-> > +	char desc[ETH_GSTRING_LEN] __nonstring;
-> 
-> 
-> Hmmm, ETH_GSTRING_LEN is the maximum length of the driver's statistics
-> name to be reported to Ethtool and this *includes* \0 at the end.
-> If this compilation flag triggers a warning here, the driver devs need
-> to fix their code. There should always be \0 at the end, `desc` is a
-> "proper" C 0-terminated string.
+On heterogeneous arm64 systems, KVM's PMU emulation is based on the
+features of a single host PMU instance. When a vCPU is migrated to a
+pCPU with an incompatible PMU, counters such as PMCCNTR_EL0 stop
+incrementing.
 
-Ack, I had misunderstood a previous fix that Kees did for a similar but
-different instance of the warning in another Ethernet driver and I
-did not look much further than the driver copying these values around
-with memcpy(). This does trigger a warning, from the original message:
+Although this behavior is permitted by the architecture, Windows does
+not handle it gracefully and may crash with a division-by-zero error.
 
-  drivers/net/ethernet/ti/netcp_ethss.c:1049:2: error: initializer-string for character array is too long, array size is 32 but initializer has size 33 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Werror,-Wunterminated-string-initialization]
-   1049 |         GBENU_STATS_HOST(ale_unknown_ucast_bytes),
-        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  drivers/net/ethernet/ti/netcp_ethss.c:956:2: note: expanded from macro 'GBENU_STATS_HOST'
-    956 |         "GBE_HOST:"#field, GBENU_STATS0_MODULE,                 \
-        |         ^~~~~~~~~~~~~~~~~
-  drivers/net/ethernet/ti/netcp_ethss.c:1051:2: error: initializer-string for character array is too long, array size is 32 but initializer has size 33 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Werror,-Wunterminated-string-initialization]
-   1051 |         GBENU_STATS_HOST(ale_unknown_mcast_bytes),
-        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  drivers/net/ethernet/ti/netcp_ethss.c:956:2: note: expanded from macro 'GBENU_STATS_HOST'
-    956 |         "GBE_HOST:"#field, GBENU_STATS0_MODULE,                 \
-        |         ^~~~~~~~~~~~~~~~~
-  drivers/net/ethernet/ti/netcp_ethss.c:1053:2: error: initializer-string for character array is too long, array size is 32 but initializer has size 33 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Werror,-Wunterminated-string-initialization]
-   1053 |         GBENU_STATS_HOST(ale_unknown_bcast_bytes),
-        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  drivers/net/ethernet/ti/netcp_ethss.c:956:2: note: expanded from macro 'GBENU_STATS_HOST'
-    956 |         "GBE_HOST:"#field, GBENU_STATS0_MODULE,                 \
-        |         ^~~~~~~~~~~~~~~~~
+The current workaround requires VMMs to pin vCPUs to a set of pCPUs
+that share a compatible PMU. This is difficult to implement correctly in
+QEMU/libvirt, where pinning occurs after vCPU initialization, and it
+also restricts the guest to a subset of available pCPUs.
 
-So it seems to me like this is a legitimate problem? Are these
-descriptions expected to be stable once they are released or are we able
-to adjust them? We could maybe shave an 'o' from 'unknown' to easily
-resolve this without losing much in the way of quick visual processing.
+This patch introduces the KVM_ARM_VCPU_PMU_V3_COMPOSITION attribute to
+create a "composite" PMU. When set, KVM exposes a PMU that is compatible
+with all pCPUs by advertising only a single cycle counter, a feature
+common to all PMUs.
 
-Cheers,
-Nathan
+This allows Windows guests to run reliably on heterogeneous systems
+without crashing, even without vCPU pinning, and enables VMMs to
+schedule vCPUs across all available pCPUs, making full use of the host
+hardware.
 
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index 55a1a96cd834..70590a04b6fd 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -493,12 +493,12 @@ struct gbenu_hw_stats {
- 	u32	ale_vid_ingress_drop;
- 	u32	ale_da_eq_sa_drop;
- 	u32	__rsvd_0[3];
--	u32	ale_unknown_ucast;
--	u32	ale_unknown_ucast_bytes;
--	u32	ale_unknown_mcast;
--	u32	ale_unknown_mcast_bytes;
--	u32	ale_unknown_bcast;
--	u32	ale_unknown_bcast_bytes;
-+	u32	ale_unknwn_ucast;
-+	u32	ale_unknwn_ucast_bytes;
-+	u32	ale_unknwn_mcast;
-+	u32	ale_unknwn_mcast_bytes;
-+	u32	ale_unknwn_bcast;
-+	u32	ale_unknwn_bcast_bytes;
- 	u32	ale_pol_match;
- 	u32	ale_pol_match_red;		/* NU */
- 	u32	ale_pol_match_yellow;		/* NU */
-@@ -953,7 +953,7 @@ static const struct netcp_ethtool_stat gbe13_et_stats[] = {
- 
- #define GBENU_STATS_HOST(field)					\
- {								\
--	"GBE_HOST:"#field, GBENU_STATS0_MODULE,			\
-+	"GBE_HST:"#field, GBENU_STATS0_MODULE,			\
- 	sizeof_field(struct gbenu_hw_stats, field),		\
- 	offsetof(struct gbenu_hw_stats, field)			\
- }
-@@ -1045,12 +1045,12 @@ static const struct netcp_ethtool_stat gbenu_et_stats[] = {
- 	GBENU_STATS_HOST(ale_rate_limit_drop),
- 	GBENU_STATS_HOST(ale_vid_ingress_drop),
- 	GBENU_STATS_HOST(ale_da_eq_sa_drop),
--	GBENU_STATS_HOST(ale_unknown_ucast),
--	GBENU_STATS_HOST(ale_unknown_ucast_bytes),
--	GBENU_STATS_HOST(ale_unknown_mcast),
--	GBENU_STATS_HOST(ale_unknown_mcast_bytes),
--	GBENU_STATS_HOST(ale_unknown_bcast),
--	GBENU_STATS_HOST(ale_unknown_bcast_bytes),
-+	GBENU_STATS_HOST(ale_unknwn_ucast),
-+	GBENU_STATS_HOST(ale_unknwn_ucast_bytes),
-+	GBENU_STATS_HOST(ale_unknwn_mcast),
-+	GBENU_STATS_HOST(ale_unknwn_mcast_bytes),
-+	GBENU_STATS_HOST(ale_unknwn_bcast),
-+	GBENU_STATS_HOST(ale_unknwn_bcast_bytes),
- 	GBENU_STATS_HOST(ale_pol_match),
- 	GBENU_STATS_HOST(ale_pol_match_red),
- 	GBENU_STATS_HOST(ale_pol_match_yellow),
-@@ -1111,12 +1111,12 @@ static const struct netcp_ethtool_stat gbenu_et_stats[] = {
- 	GBENU_STATS_P1(ale_rate_limit_drop),
- 	GBENU_STATS_P1(ale_vid_ingress_drop),
- 	GBENU_STATS_P1(ale_da_eq_sa_drop),
--	GBENU_STATS_P1(ale_unknown_ucast),
--	GBENU_STATS_P1(ale_unknown_ucast_bytes),
--	GBENU_STATS_P1(ale_unknown_mcast),
--	GBENU_STATS_P1(ale_unknown_mcast_bytes),
--	GBENU_STATS_P1(ale_unknown_bcast),
--	GBENU_STATS_P1(ale_unknown_bcast_bytes),
-+	GBENU_STATS_P1(ale_unknwn_ucast),
-+	GBENU_STATS_P1(ale_unknwn_ucast_bytes),
-+	GBENU_STATS_P1(ale_unknwn_mcast),
-+	GBENU_STATS_P1(ale_unknwn_mcast_bytes),
-+	GBENU_STATS_P1(ale_unknwn_bcast),
-+	GBENU_STATS_P1(ale_unknwn_bcast_bytes),
- 	GBENU_STATS_P1(ale_pol_match),
- 	GBENU_STATS_P1(ale_pol_match_red),
- 	GBENU_STATS_P1(ale_pol_match_yellow),
-@@ -1177,12 +1177,12 @@ static const struct netcp_ethtool_stat gbenu_et_stats[] = {
- 	GBENU_STATS_P2(ale_rate_limit_drop),
- 	GBENU_STATS_P2(ale_vid_ingress_drop),
- 	GBENU_STATS_P2(ale_da_eq_sa_drop),
--	GBENU_STATS_P2(ale_unknown_ucast),
--	GBENU_STATS_P2(ale_unknown_ucast_bytes),
--	GBENU_STATS_P2(ale_unknown_mcast),
--	GBENU_STATS_P2(ale_unknown_mcast_bytes),
--	GBENU_STATS_P2(ale_unknown_bcast),
--	GBENU_STATS_P2(ale_unknown_bcast_bytes),
-+	GBENU_STATS_P2(ale_unknwn_ucast),
-+	GBENU_STATS_P2(ale_unknwn_ucast_bytes),
-+	GBENU_STATS_P2(ale_unknwn_mcast),
-+	GBENU_STATS_P2(ale_unknwn_mcast_bytes),
-+	GBENU_STATS_P2(ale_unknwn_bcast),
-+	GBENU_STATS_P2(ale_unknwn_bcast_bytes),
- 	GBENU_STATS_P2(ale_pol_match),
- 	GBENU_STATS_P2(ale_pol_match_red),
- 	GBENU_STATS_P2(ale_pol_match_yellow),
-@@ -1243,12 +1243,12 @@ static const struct netcp_ethtool_stat gbenu_et_stats[] = {
- 	GBENU_STATS_P3(ale_rate_limit_drop),
- 	GBENU_STATS_P3(ale_vid_ingress_drop),
- 	GBENU_STATS_P3(ale_da_eq_sa_drop),
--	GBENU_STATS_P3(ale_unknown_ucast),
--	GBENU_STATS_P3(ale_unknown_ucast_bytes),
--	GBENU_STATS_P3(ale_unknown_mcast),
--	GBENU_STATS_P3(ale_unknown_mcast_bytes),
--	GBENU_STATS_P3(ale_unknown_bcast),
--	GBENU_STATS_P3(ale_unknown_bcast_bytes),
-+	GBENU_STATS_P3(ale_unknwn_ucast),
-+	GBENU_STATS_P3(ale_unknwn_ucast_bytes),
-+	GBENU_STATS_P3(ale_unknwn_mcast),
-+	GBENU_STATS_P3(ale_unknwn_mcast_bytes),
-+	GBENU_STATS_P3(ale_unknwn_bcast),
-+	GBENU_STATS_P3(ale_unknwn_bcast_bytes),
- 	GBENU_STATS_P3(ale_pol_match),
- 	GBENU_STATS_P3(ale_pol_match_red),
- 	GBENU_STATS_P3(ale_pol_match_yellow),
-@@ -1309,12 +1309,12 @@ static const struct netcp_ethtool_stat gbenu_et_stats[] = {
- 	GBENU_STATS_P4(ale_rate_limit_drop),
- 	GBENU_STATS_P4(ale_vid_ingress_drop),
- 	GBENU_STATS_P4(ale_da_eq_sa_drop),
--	GBENU_STATS_P4(ale_unknown_ucast),
--	GBENU_STATS_P4(ale_unknown_ucast_bytes),
--	GBENU_STATS_P4(ale_unknown_mcast),
--	GBENU_STATS_P4(ale_unknown_mcast_bytes),
--	GBENU_STATS_P4(ale_unknown_bcast),
--	GBENU_STATS_P4(ale_unknown_bcast_bytes),
-+	GBENU_STATS_P4(ale_unknwn_ucast),
-+	GBENU_STATS_P4(ale_unknwn_ucast_bytes),
-+	GBENU_STATS_P4(ale_unknwn_mcast),
-+	GBENU_STATS_P4(ale_unknwn_mcast_bytes),
-+	GBENU_STATS_P4(ale_unknwn_bcast),
-+	GBENU_STATS_P4(ale_unknwn_bcast_bytes),
- 	GBENU_STATS_P4(ale_pol_match),
- 	GBENU_STATS_P4(ale_pol_match_red),
- 	GBENU_STATS_P4(ale_pol_match_yellow),
-@@ -1375,12 +1375,12 @@ static const struct netcp_ethtool_stat gbenu_et_stats[] = {
- 	GBENU_STATS_P5(ale_rate_limit_drop),
- 	GBENU_STATS_P5(ale_vid_ingress_drop),
- 	GBENU_STATS_P5(ale_da_eq_sa_drop),
--	GBENU_STATS_P5(ale_unknown_ucast),
--	GBENU_STATS_P5(ale_unknown_ucast_bytes),
--	GBENU_STATS_P5(ale_unknown_mcast),
--	GBENU_STATS_P5(ale_unknown_mcast_bytes),
--	GBENU_STATS_P5(ale_unknown_bcast),
--	GBENU_STATS_P5(ale_unknown_bcast_bytes),
-+	GBENU_STATS_P5(ale_unknwn_ucast),
-+	GBENU_STATS_P5(ale_unknwn_ucast_bytes),
-+	GBENU_STATS_P5(ale_unknwn_mcast),
-+	GBENU_STATS_P5(ale_unknwn_mcast_bytes),
-+	GBENU_STATS_P5(ale_unknwn_bcast),
-+	GBENU_STATS_P5(ale_unknwn_bcast_bytes),
- 	GBENU_STATS_P5(ale_pol_match),
- 	GBENU_STATS_P5(ale_pol_match_red),
- 	GBENU_STATS_P5(ale_pol_match_yellow),
-@@ -1441,12 +1441,12 @@ static const struct netcp_ethtool_stat gbenu_et_stats[] = {
- 	GBENU_STATS_P6(ale_rate_limit_drop),
- 	GBENU_STATS_P6(ale_vid_ingress_drop),
- 	GBENU_STATS_P6(ale_da_eq_sa_drop),
--	GBENU_STATS_P6(ale_unknown_ucast),
--	GBENU_STATS_P6(ale_unknown_ucast_bytes),
--	GBENU_STATS_P6(ale_unknown_mcast),
--	GBENU_STATS_P6(ale_unknown_mcast_bytes),
--	GBENU_STATS_P6(ale_unknown_bcast),
--	GBENU_STATS_P6(ale_unknown_bcast_bytes),
-+	GBENU_STATS_P6(ale_unknwn_ucast),
-+	GBENU_STATS_P6(ale_unknwn_ucast_bytes),
-+	GBENU_STATS_P6(ale_unknwn_mcast),
-+	GBENU_STATS_P6(ale_unknwn_mcast_bytes),
-+	GBENU_STATS_P6(ale_unknwn_bcast),
-+	GBENU_STATS_P6(ale_unknwn_bcast_bytes),
- 	GBENU_STATS_P6(ale_pol_match),
- 	GBENU_STATS_P6(ale_pol_match_red),
- 	GBENU_STATS_P6(ale_pol_match_yellow),
-@@ -1507,12 +1507,12 @@ static const struct netcp_ethtool_stat gbenu_et_stats[] = {
- 	GBENU_STATS_P7(ale_rate_limit_drop),
- 	GBENU_STATS_P7(ale_vid_ingress_drop),
- 	GBENU_STATS_P7(ale_da_eq_sa_drop),
--	GBENU_STATS_P7(ale_unknown_ucast),
--	GBENU_STATS_P7(ale_unknown_ucast_bytes),
--	GBENU_STATS_P7(ale_unknown_mcast),
--	GBENU_STATS_P7(ale_unknown_mcast_bytes),
--	GBENU_STATS_P7(ale_unknown_bcast),
--	GBENU_STATS_P7(ale_unknown_bcast_bytes),
-+	GBENU_STATS_P7(ale_unknwn_ucast),
-+	GBENU_STATS_P7(ale_unknwn_ucast_bytes),
-+	GBENU_STATS_P7(ale_unknwn_mcast),
-+	GBENU_STATS_P7(ale_unknwn_mcast_bytes),
-+	GBENU_STATS_P7(ale_unknwn_bcast),
-+	GBENU_STATS_P7(ale_unknwn_bcast_bytes),
- 	GBENU_STATS_P7(ale_pol_match),
- 	GBENU_STATS_P7(ale_pol_match_red),
- 	GBENU_STATS_P7(ale_pol_match_yellow),
-@@ -1573,12 +1573,12 @@ static const struct netcp_ethtool_stat gbenu_et_stats[] = {
- 	GBENU_STATS_P8(ale_rate_limit_drop),
- 	GBENU_STATS_P8(ale_vid_ingress_drop),
- 	GBENU_STATS_P8(ale_da_eq_sa_drop),
--	GBENU_STATS_P8(ale_unknown_ucast),
--	GBENU_STATS_P8(ale_unknown_ucast_bytes),
--	GBENU_STATS_P8(ale_unknown_mcast),
--	GBENU_STATS_P8(ale_unknown_mcast_bytes),
--	GBENU_STATS_P8(ale_unknown_bcast),
--	GBENU_STATS_P8(ale_unknown_bcast_bytes),
-+	GBENU_STATS_P8(ale_unknwn_ucast),
-+	GBENU_STATS_P8(ale_unknwn_ucast_bytes),
-+	GBENU_STATS_P8(ale_unknwn_mcast),
-+	GBENU_STATS_P8(ale_unknwn_mcast_bytes),
-+	GBENU_STATS_P8(ale_unknwn_bcast),
-+	GBENU_STATS_P8(ale_unknwn_bcast_bytes),
- 	GBENU_STATS_P8(ale_pol_match),
- 	GBENU_STATS_P8(ale_pol_match_red),
- 	GBENU_STATS_P8(ale_pol_match_yellow),
+A QEMU patch that demonstrates the usage of the new attribute is
+available at:
+https://lore.kernel.org/qemu-devel/20250806-kvm-v1-1-d1d50b7058cd@rsg.ci.i.u-tokyo.ac.jp/
+("[PATCH RFC] target/arm/kvm: Choose PMU backend")
+
+Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+---
+Changes in v2:
+- Added the KVM_ARM_VCPU_PMU_V3_COMPOSITION attribute to opt in the
+  feature.
+- Added code to handle overflow.
+- Link to v1: https://lore.kernel.org/r/20250319-hybrid-v1-1-4d1ada10e705@daynix.com
+
+---
+Akihiko Odaki (2):
+      KVM: arm64: PMU: Introduce KVM_ARM_VCPU_PMU_V3_COMPOSITION
+      KVM: arm64: selftests: Test guest PMUv3 composition
+
+ Documentation/virt/kvm/devices/vcpu.rst            |  30 ++
+ arch/arm64/include/asm/kvm_host.h                  |   2 +
+ arch/arm64/include/uapi/asm/kvm.h                  |   1 +
+ arch/arm64/kvm/arm.c                               |   5 +-
+ arch/arm64/kvm/pmu-emul.c                          | 495 +++++++++++++--------
+ arch/arm64/kvm/sys_regs.c                          |   2 +-
+ include/kvm/arm_pmu.h                              |  12 +-
+ .../selftests/kvm/arm64/vpmu_counter_access.c      | 148 ++++--
+ 8 files changed, 461 insertions(+), 234 deletions(-)
+---
+base-commit: 8ec6d99a41e3d1dbdff2bdb3aa42951681e1e76c
+change-id: 20250224-hybrid-01d5ff47edd2
+
+Best regards,
+-- 
+Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+
