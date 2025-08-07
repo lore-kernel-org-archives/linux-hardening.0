@@ -1,117 +1,111 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCE8262FF8;
-	Thu,  7 Aug 2025 14:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF482E370A;
+	Thu,  7 Aug 2025 21:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754577803; cv=none; b=dEED8LkZu/EpkzJXBhwRQ8b99IAGOmNEfhBW5EY7xE8EO6oxmaS62Dwu7UdMjSvtHW00HVRRjWRVV81REiNj9KzpzLx4JdPV5uXIsPl54a0Lk4/VV38uk9b9mopdXJqb3j2bet5qeU1x5WbmigJTdaqrUxnySV60J3AwB6tKAKo=
+	t=1754602597; cv=none; b=m/2ojEI3zlx311y9dHra8QUnQ0uq62iOlsTlB+dFjRyTpO+7DKRz7jjTDO36hItdTOimxmJyJBocmREMaLGPRHJDEpxf4QxHuPgQZh4J0LqubWjHlIz5AbDKfu2I6dbLoNSwkkhArO6cRxH8lIUkpfIiNCe99uRBaucBte3k2uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754577803; c=relaxed/simple;
-	bh=y//IMsBANN67YjgRvFs1TqJNvAqanY/RR7wYOqvwarQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j072cA7J2Xq6pyO2GSQS4o81rGlMfPRyEpUD/o+fZ6v5th8youJk50D4N1/pqeXoYf2GRFgN6dyqDKS8k5gGp2ioh2Mp1N7PBMFwkTpZ9l1wP37Cn1gt7Q1Wo7I33uBjniH3qTRT63NDXNymUAvGo3QqPjH5D/tIrUgmxkph27k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D90BA4432A;
-	Thu,  7 Aug 2025 14:43:12 +0000 (UTC)
-Message-ID: <53b98e1e-4f7e-4320-8d04-d84dd2c4092d@ghiti.fr>
-Date: Thu, 7 Aug 2025 16:43:09 +0200
+	s=arc-20240116; t=1754602597; c=relaxed/simple;
+	bh=tUwmAkc0BRax/F/1mqhQobRKhACAzjEdHbZ1NnCs6/U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=e3e9Ocgp19WH+5t6UBLmrFea6AtVZ0t4HXcbyxMupczv3K/TWzXPHlV7D7KnYMcnM6lsMMs3TZoEYFlfwj7AbJodvyoII0gv/HIpoEcTwWssVWg+UdFfldMp33DjmKv/k3ymEg0QuMEOqxvGH5RMFk45ga6mxT+myH5jKcEg15A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2tGZJeY; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2tGZJeY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C4E6C4CEEB;
+	Thu,  7 Aug 2025 21:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754602596;
+	bh=tUwmAkc0BRax/F/1mqhQobRKhACAzjEdHbZ1NnCs6/U=;
+	h=From:Date:Subject:To:Cc:From;
+	b=X2tGZJeYhMMsvygEOa69O8xBM9b1+OCVmtFGwOqaqJYuHj8CL12krOGTltv82cjyw
+	 DCEt9FV3xE1WuGRd+/NhFwUdaSHRJDR6W9WL10Ex6Aya3QICPpJt1yoRQEnCOgKfwb
+	 XliWF0pAW1BrcjspziGyHUlMDkGEtitNfIXkIWYc+TrQn/THF2Ryep9XTGYaStjVnh
+	 udp8M5ATamGEpT7u7pISjCqR1geLrwLX3MZq9YWQziOyvqB0BUtJHEIIk7lXP1mu+V
+	 b5VhCL8M0Chs6pv3glF6TO88GV2s8vTJsRb13LhN5vx8wUz0gQk75Uiv6mqlzQPGSp
+	 FlL5aNDti4Zsw==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Thu, 07 Aug 2025 14:36:28 -0700
+Subject: [PATCH] hardening: Require clang 20.1.0 for __counted_by
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/17] riscv: Add __attribute_const__ to ffs()-family
- implementations
-To: Kees Cook <kees@kernel.org>, linux-arch@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-alpha@vger.kernel.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, llvm@lists.linux.dev,
- linux-hardening@vger.kernel.org
-References: <20250804163910.work.929-kees@kernel.org>
- <20250804164417.1612371-9-kees@kernel.org>
-Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250804164417.1612371-9-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduvdduudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeehiefhuddtuddukeetkeehhedtffduhfevfeeftdefveffgfeuffejjeejfeekueenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemlehftghfmeeksghfleemleeludgumeekrggrfhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemlehftghfmeeksghfleemleeludgumeekrggrfhdphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemlehftghfmeeksghfleemleeludgumeekrggrfhgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepudekpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhgthhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehli
- hhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrlhhphhgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqtghskhihsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqhhgvgigrghhonhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmieekkheslhhishhtshdrlhhinhhugidqmheikehkrdhorhhg
-X-GND-Sasl: alex@ghiti.fr
+Message-Id: <20250807-fix-counted_by-clang-19-v1-1-902c86c1d515@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAFsclWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDCwNz3bTMCt3k/NK8ktSU+KRK3eQcoCJdQ0tdE3ODFFPjNEvjxEQDJaD
+ ugqJUoFKwydGxtbUAMY4gcmkAAAA=
+X-Change-ID: 20250807-fix-counted_by-clang-19-470d53f93aa0
+To: Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: linux-hardening@vger.kernel.org, llvm@lists.linux.dev, 
+ patches@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2288; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=tUwmAkc0BRax/F/1mqhQobRKhACAzjEdHbZ1NnCs6/U=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBlTZZIyZjzPKm5Zf+nC/7+nA5Qrss4VfS3I9pi+N96BS
+ +3vwq8iHaUsDGJcDLJiiizVj1WPGxrOOct449QkmDmsTCBDGLg4BWAiZ1oY/ork1xgrmhTtFAne
+ PdNu45nyTTMExNSLJewfTjg7J/j1k2OMDDvaqrfEbrtq/a33YlSwb07JbK3S+61qpXfOrj5YzPs
+ 7kR0A
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-Hi Kees,
+After an innocuous change in -next that modified a structure that
+contains __counted_by, clang-19 start crashing when building certain
+files in drivers/gpu/drm/xe. When assertions are enabled, the more
+descriptive failure is:
 
-On 8/4/25 18:44, Kees Cook wrote:
-> While tracking down a problem where constant expressions used by
-> BUILD_BUG_ON() suddenly stopped working[1], we found that an added static
-> initializer was convincing the compiler that it couldn't track the state
-> of the prior statically initialized value. Tracing this down found that
-> ffs() was used in the initializer macro, but since it wasn't marked with
-> __attribute__const__, the compiler had to assume the function might
-> change variable states as a side-effect (which is not true for ffs(),
-> which provides deterministic math results).
->
-> Add missing __attribute_const__ annotations to RISC-V's implementations of
-> variable__ffs(), variable__fls(), and variable_ffs() functions. These are pure
-> mathematical functions that always return the same result for the same
-> input with no side effects, making them eligible for compiler optimization.
->
-> Build tested ARCH=riscv defconfig with GCC riscv64-linux-gnu 14.2.0.
->
-> Link: https://github.com/KSPP/linux/issues/364 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->   arch/riscv/include/asm/bitops.h | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/bitops.h b/arch/riscv/include/asm/bitops.h
-> index d59310f74c2b..77880677b06e 100644
-> --- a/arch/riscv/include/asm/bitops.h
-> +++ b/arch/riscv/include/asm/bitops.h
-> @@ -45,7 +45,7 @@
->   #error "Unexpected BITS_PER_LONG"
->   #endif
->   
-> -static __always_inline unsigned long variable__ffs(unsigned long word)
-> +static __always_inline __attribute_const__ unsigned long variable__ffs(unsigned long word)
->   {
->   	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
->   				      RISCV_ISA_EXT_ZBB, 1)
-> @@ -74,7 +74,7 @@ static __always_inline unsigned long variable__ffs(unsigned long word)
->   	 (unsigned long)__builtin_ctzl(word) :	\
->   	 variable__ffs(word))
->   
-> -static __always_inline unsigned long variable__fls(unsigned long word)
-> +static __always_inline __attribute_const__ unsigned long variable__fls(unsigned long word)
->   {
->   	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
->   				      RISCV_ISA_EXT_ZBB, 1)
-> @@ -103,7 +103,7 @@ static __always_inline unsigned long variable__fls(unsigned long word)
->   	 (unsigned long)(BITS_PER_LONG - 1 - __builtin_clzl(word)) :	\
->   	 variable__fls(word))
->   
-> -static __always_inline int variable_ffs(int x)
-> +static __always_inline __attribute_const__ int variable_ffs(int x)
->   {
->   	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
->   				      RISCV_ISA_EXT_ZBB, 1)
+  clang: clang/lib/AST/RecordLayoutBuilder.cpp:3335: const ASTRecordLayout &clang::ASTContext::getASTRecordLayout(const RecordDecl *) const: Assertion `D && "Cannot get layout of forward declarations!"' failed.
 
+According to a reverse bisect, a tangential change to the LLVM IR
+generation phase of clang during the LLVM 20 development cycle [1]
+resolves this problem. Bump the version of clang that enables
+CONFIG_CC_HAS_COUNTED_BY to 20.1.0 to ensure that this issue cannot be
+hit.
 
-Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-Acked-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Link: https://github.com/llvm/llvm-project/commit/160fb1121cdf703c3ef5e61fb26c5659eb581489 [1]
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+Should this be marked for stable? If this makes 6.17 final, I think we
+are fine for mainline and newer but I wonder if a patch that adds
+__counted_by to a structure would ever be backported and expose this
+problem there.
+---
+ init/Kconfig | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-Thanks,
+diff --git a/init/Kconfig b/init/Kconfig
+index af4c2f085455..a2675ee1ef8c 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -117,10 +117,11 @@ config CC_HAS_NO_PROFILE_FN_ATTR
+ 
+ config CC_HAS_COUNTED_BY
+ 	bool
+-	# clang needs to be at least 19.1.3 to avoid __bdos miscalculations
+-	# https://github.com/llvm/llvm-project/pull/110497
+-	# https://github.com/llvm/llvm-project/pull/112636
+-	default y if CC_IS_CLANG && CLANG_VERSION >= 190103
++	# clang needs to be at least 20.1.0 to avoid potential crashes
++	# when building structures that contain __counted_by
++	# https://github.com/ClangBuiltLinux/linux/issues/2114
++	# https://github.com/llvm/llvm-project/commit/160fb1121cdf703c3ef5e61fb26c5659eb581489
++	default y if CC_IS_CLANG && CLANG_VERSION >= 200100
+ 	# supported since gcc 15.1.0
+ 	# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
+ 	default y if CC_IS_GCC && GCC_VERSION >= 150100
 
-Alex
+---
+base-commit: f627b51aaa041cba715b59026cf2d9cb1476c7ed
+change-id: 20250807-fix-counted_by-clang-19-470d53f93aa0
 
+Best regards,
+--  
+Nathan Chancellor <nathan@kernel.org>
 
