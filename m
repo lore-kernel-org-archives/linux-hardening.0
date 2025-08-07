@@ -1,183 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1E69463;
-	Thu,  7 Aug 2025 04:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EE7376F1;
+	Thu,  7 Aug 2025 09:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754541961; cv=none; b=glVPHHHt9n+xmIH1Cnwf+mLTUH2RyNBO8jJMszezTN9fWHqced3oHb+UPHNPlzkQTdou8znh54Ak+QOu4ion4RwlZiyw9rtHZlW3g3trUM7eExgFJjjRz7QOke8eTi6FRdFUXQytRPRJt3UmFk81VwWjDjiyE3eW1UMcljkyo/g=
+	t=1754560034; cv=none; b=WSiYB1sov9r+MyOLLEO6RGAWbcL0l17FwXQ+H2xTTEzkXWesvR/IAHJIm6psFUlXLyOB5RQ9OVjVO9KZtqTGtQxxikQnDDz8KOVw7s5Mta7lCrfrkyjSMU1RwpNirg67TwJODNuYxfUDTODaXao3bbHjqeKRr0aMcc7CaTJhLRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754541961; c=relaxed/simple;
-	bh=y4KlCdk+5pgiOMnQfj5r49PM4fycrXkrnw4MykWMmxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DZyyIUBHsxf7p7V5zUCWHb8Eq/g2ct5j2w0J3YC99DZC1vwkSZUU8+TOLJVMHMzVe58vRBC90nVuOO/l7Uia47G+zkgTFoj8b2Zq3oMPYVJi6o1Lfx9sOCakszDFzkweT37i51Nv01scsm94iFMTdnMdLJZI+Yvuhg5/zeH3Ik4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A3Ttadx+; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1754560034; c=relaxed/simple;
+	bh=TDeiBApOh1NcX4yBW9i2CsFOUdCFeSFRwM+KeVVkTrQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sTQXZgV5k76/7a0JzNMXmvVyerfb5kbE2Z9SZ+vSuXIkpMJ96HGqPuMrGfj3LQpL8Hj6uA8Y4DjmETc2k6OEA9b88Wi81VGjdUJG8lE58o7qxeoHndmrEauBy+PK8S7lEU8W8+vr+zPNgDLO3iE5cfFF+aJd3M7XQNMho7+aKgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=go9qRIE7; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A3Ttadx+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754541960; x=1786077960;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=y4KlCdk+5pgiOMnQfj5r49PM4fycrXkrnw4MykWMmxc=;
-  b=A3Ttadx+sXTUVqToQMXWFjX13qVmk85qVR4G3DsQQe9Js8SsM+SjYYOo
-   ErfWbWEm0XzeYMvoIV1aRda8Umqq8IunV5iWuGR7X2NWMCwLdB/0mgJL3
-   ZBAqIrBVcV2wxoI0EUH7FbSjKcIAquGnKsGSUzZ8d4OTiof9sp7nc+DU/
-   aZhCk7LbTlLAJ1AqwTpFYLlGw3+F6SmoPtzvXRw3hjZdXSkdFAXUkfUQw
-   59aws4Zz5Cbumnks0J04TwXl3Yw/vcQCQrnqmlwyKfA7WYPilavulQVBm
-   UvuKRqpPe+X1CfjxADwi/gVS74R+y56TyuKyv2PLKdHFH76ykYLKkwTiG
-   g==;
-X-CSE-ConnectionGUID: yUsNd23BRgiq1neAIUGaiQ==
-X-CSE-MsgGUID: lKpNxo/dQGG7WizCuc2whQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="68243797"
-X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="68243797"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 21:46:00 -0700
-X-CSE-ConnectionGUID: MTg9uMhUTZKgCZSax4O11A==
-X-CSE-MsgGUID: 6evjZ82ATGmPVueWzXp+Pw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="165308362"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 06 Aug 2025 21:45:58 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ujsVn-0002NS-1x;
-	Thu, 07 Aug 2025 04:45:55 +0000
-Date: Thu, 7 Aug 2025 12:45:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Liao Yuanhong <liaoyuanhong@vivo.com>, Kees Cook <kees@kernel.org>,
-	"open list:GCC PLUGINS" <linux-hardening@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, liaoyuanhong@vivo.com
-Subject: Re: [PATCH] gcc-plugins: Use swap() to simplify code
-Message-ID: <202508071233.Bf6EgGd2-lkp@intel.com>
-References: <20250806124341.382446-1-liaoyuanhong@vivo.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="go9qRIE7"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57790AX3021567;
+	Thu, 7 Aug 2025 09:46:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ImRZUe
+	6tVuS8TT869/9J1UoTQ8hVJxjnFHqcKjWzkmg=; b=go9qRIE70CfPyS9Kn8TPsq
+	JkZyaxDOMfgvgd9oOkezsaYQ7nO6H1+vyJlxnFf+6IS8gazLQFoHJPSCtC/ozPKm
+	6VKICh++4mFIXlvEA+Fv861i489NybwU9awUyTQXXGMIfzvBpYV01KVsDF9Iz4YI
+	Ww/eXWrOH1iZah1GKzst8ykQD8OdLbBS52aH5gpTLX9hzYzJnzq1Wj6ghnhGN7K+
+	HeSCbGXR0u5BWfqTnzNxp7wSohfiND9Ay/p0FkDgE9Qit35GSbcVN7CqdFOj9pan
+	uk5bsEsgRkx16zjIPUzdIH9a6QpTBUGyN7bRfWvIADnQUc0lqNAVn74p649+uPzA
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48bq621brx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Aug 2025 09:46:53 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5779eRBP008042;
+	Thu, 7 Aug 2025 09:46:52 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 48bpwmyygs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Aug 2025 09:46:52 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5779kpb241746786
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 7 Aug 2025 09:46:51 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 450E158055;
+	Thu,  7 Aug 2025 09:46:51 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2F5705804E;
+	Thu,  7 Aug 2025 09:46:39 +0000 (GMT)
+Received: from [9.197.227.8] (unknown [9.197.227.8])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  7 Aug 2025 09:46:38 +0000 (GMT)
+Message-ID: <7f4f4d07-38f7-444c-adff-ec2a2387e86b@linux.ibm.com>
+Date: Thu, 7 Aug 2025 15:16:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250806124341.382446-1-liaoyuanhong@vivo.com>
-
-Hi Liao,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on kees/for-next/hardening]
-[also build test ERROR on kees/for-next/kspp kees/for-next/pstore linus/master v6.16 next-20250806]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Liao-Yuanhong/gcc-plugins-Use-swap-to-simplify-code/20250806-204609
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
-patch link:    https://lore.kernel.org/r/20250806124341.382446-1-liaoyuanhong%40vivo.com
-patch subject: [PATCH] gcc-plugins: Use swap() to simplify code
-config: i386-randconfig-012-20250807 (https://download.01.org/0day-ci/archive/20250807/202508071233.Bf6EgGd2-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250807/202508071233.Bf6EgGd2-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508071233.Bf6EgGd2-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   scripts/gcc-plugins/randomize_layout_plugin.c: In function 'void performance_shuffle(tree_node**, long unsigned int, ranctx*)':
->> scripts/gcc-plugins/randomize_layout_plugin.c:203:17: error: 'swap' was not declared in this scope
-     203 |                 swap(size_group[randnum], size_group[i]);
-         |                 ^~~~
-   scripts/gcc-plugins/randomize_layout_plugin.c:203:17: note: suggested alternatives:
-   In file included from /usr/include/c++/12/utility:69,
-                    from /usr/lib/gcc/x86_64-linux-gnu/12/plugin/include/system.h:244,
-                    from /usr/lib/gcc/x86_64-linux-gnu/12/plugin/include/gcc-plugin.h:28,
-                    from scripts/gcc-plugins/gcc-common.h:6,
-                    from scripts/gcc-plugins/randomize_layout_plugin.c:19:
-   /usr/include/c++/12/bits/stl_pair.h:715:5: note:   'std::swap'
-     715 |     swap(pair<_T1, _T2>&, pair<_T1, _T2>&) = delete;
-         |     ^~~~
-   In file included from /usr/include/c++/12/bits/stl_pair.h:61:
-   /usr/include/c++/12/bits/move.h:196:5: note:   'std::swap'
-     196 |     swap(_Tp& __a, _Tp& __b)
-         |     ^~~~
-   /usr/include/c++/12/bits/move.h:196:5: note:   'std::swap'
-   scripts/gcc-plugins/randomize_layout_plugin.c:216:25: error: 'swap' was not declared in this scope
-     216 |                         swap(newtree[randnum], newtree[i]);
-         |                         ^~~~
-   scripts/gcc-plugins/randomize_layout_plugin.c:216:25: note: suggested alternatives:
-   /usr/include/c++/12/bits/stl_pair.h:715:5: note:   'std::swap'
-     715 |     swap(pair<_T1, _T2>&, pair<_T1, _T2>&) = delete;
-         |     ^~~~
-   /usr/include/c++/12/bits/move.h:196:5: note:   'std::swap'
-     196 |     swap(_Tp& __a, _Tp& __b)
-         |     ^~~~
-   /usr/include/c++/12/bits/move.h:196:5: note:   'std::swap'
-   scripts/gcc-plugins/randomize_layout_plugin.c: In function 'void full_shuffle(tree_node**, long unsigned int, ranctx*)':
-   scripts/gcc-plugins/randomize_layout_plugin.c:227:17: error: 'swap' was not declared in this scope
-     227 |                 swap(newtree[randnum], newtree[i]);
-         |                 ^~~~
-   scripts/gcc-plugins/randomize_layout_plugin.c:227:17: note: suggested alternatives:
-   /usr/include/c++/12/bits/stl_pair.h:715:5: note:   'std::swap'
-     715 |     swap(pair<_T1, _T2>&, pair<_T1, _T2>&) = delete;
-         |     ^~~~
-   /usr/include/c++/12/bits/move.h:196:5: note:   'std::swap'
-     196 |     swap(_Tp& __a, _Tp& __b)
-         |     ^~~~
-   /usr/include/c++/12/bits/move.h:196:5: note:   'std::swap'
-   make[4]: *** [scripts/gcc-plugins/Makefile:54: scripts/gcc-plugins/randomize_layout_plugin.so] Error 1 shuffle=2972943921
-   make[4]: Target 'scripts/gcc-plugins/' not remade because of errors.
-   make[3]: *** [scripts/Makefile.build:554: scripts/gcc-plugins] Error 2 shuffle=2972943921
-   make[3]: Target 'scripts/' not remade because of errors.
-   make[2]: *** [Makefile:1258: scripts] Error 2 shuffle=2972943921
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:248: __sub-make] Error 2 shuffle=2972943921
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2 shuffle=2972943921
-   make: Target 'prepare' not remade because of errors.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/17] powerpc: Add __attribute_const__ to ffs()-family
+ implementations
+To: Kees Cook <kees@kernel.org>, linux-arch@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+References: <20250804163910.work.929-kees@kernel.org>
+ <20250804164417.1612371-5-kees@kernel.org>
+Content-Language: en-US
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+In-Reply-To: <20250804164417.1612371-5-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA3MDA3MyBTYWx0ZWRfX0unUnmBlk9BR
+ JyFnhjGUCcX72+ZTvzudrWhw0DB4YVlTamytH3O0p7bgfe1t3RFHu6oXmijVRlkSINNESQcI2ed
+ WV3l/gYRQ2VZynkYP3Tav0+7jWhZaLSgpYND2noyaRsJ968IyHQXslrcztFRDh0MZBgxPGbCx8b
+ +uiLKSt+6Y6IffZklEx4VluWHkjrCmfWHrp45aQanh3SGagw7gHzrJqpepYvNT4HS8EbCADH/Wn
+ zPt3JFi7B14TKcENIp/5NLm0esF1T5EYGCGzXF9hdI2cf8y7VhMMiJqeZefBkl9p6Z1CLp13muG
+ PGN5oX3iZrejuEHJm8J9sJaxrIF5Rg9tb8/6Jc0aiE3VKei/f3z6YRAKdY8HGg4pDBW4p1GLl1f
+ BVmzVXfbgFB6avmCIX9UByEecqNiyQFlc4BOgzcQYghhJIGa/JLCPKcNMH7ACy88lL+pl3p9
+X-Proofpoint-GUID: _d76WmYcTWXQ7iz_O6QVqZlqoAE5ZdTK
+X-Authority-Analysis: v=2.4 cv=BIuzrEQG c=1 sm=1 tr=0 ts=6894760d cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=NEAV23lmAAAA:8 a=VnNF1IyMAAAA:8
+ a=VwQbUJbxAAAA:8 a=ob59Q8BqYF9JHPHMJZcA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: _d76WmYcTWXQ7iz_O6QVqZlqoAE5ZdTK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-07_01,2025-08-06_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 spamscore=0 mlxlogscore=999 adultscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2507300000 definitions=main-2508070073
 
 
-vim +/swap +203 scripts/gcc-plugins/randomize_layout_plugin.c
 
-   190	
-   191	static void performance_shuffle(tree *newtree, unsigned long length, ranctx *prng_state)
-   192	{
-   193		unsigned long i, x, index;
-   194		struct partition_group size_group[length];
-   195		unsigned long num_groups = 0;
-   196		unsigned long randnum;
-   197	
-   198		partition_struct(newtree, length, (struct partition_group *)&size_group, &num_groups);
-   199	
-   200		/* FIXME: this group shuffle is currently a no-op. */
-   201		for (i = num_groups - 1; i > 0; i--) {
-   202			randnum = ranval(prng_state) % (i + 1);
- > 203			swap(size_group[randnum], size_group[i]);
-   204		}
-   205	
-   206		for (x = 0; x < num_groups; x++) {
-   207			for (index = size_group[x].length - 1; index > 0; index--) {
-   208				i = size_group[x].start + index;
-   209				if (DECL_BIT_FIELD_TYPE(newtree[i]))
-   210					continue;
-   211				randnum = ranval(prng_state) % (index + 1);
-   212				randnum += size_group[x].start;
-   213				// we could handle this case differently if desired
-   214				if (DECL_BIT_FIELD_TYPE(newtree[randnum]))
-   215					continue;
-   216				swap(newtree[randnum], newtree[i]);
-   217			}
-   218		}
-   219	}
-   220	
+On 8/4/25 10:14 PM, Kees Cook wrote:
+> While tracking down a problem where constant expressions used by
+> BUILD_BUG_ON() suddenly stopped working[1], we found that an added static
+> initializer was convincing the compiler that it couldn't track the state
+> of the prior statically initialized value. Tracing this down found that
+> ffs() was used in the initializer macro, but since it wasn't marked with
+> __attribute__const__, the compiler had to assume the function might
+> change variable states as a side-effect (which is not true for ffs(),
+> which provides deterministic math results).
+> 
+> Add missing __attribute_const__ annotations to PowerPC's implementations of
+> fls() function. These are pure mathematical functions that always return
+> the same result for the same input with no side effects, making them eligible
+> for compiler optimization.
+> 
+> Build tested ARCH=powerpc defconfig with GCC powerpc-linux-gnu 14.2.0.
+> 
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Also tested with gcc 8.1.
+
+Acked-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+
+
+> Link: https://github.com/KSPP/linux/issues/364 [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+>  arch/powerpc/include/asm/bitops.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/bitops.h b/arch/powerpc/include/asm/bitops.h
+> index 671ecc6711e3..0d0470cd5ac3 100644
+> --- a/arch/powerpc/include/asm/bitops.h
+> +++ b/arch/powerpc/include/asm/bitops.h
+> @@ -276,7 +276,7 @@ static inline void arch___clear_bit_unlock(int nr, volatile unsigned long *addr)
+>   * fls: find last (most-significant) bit set.
+>   * Note fls(0) = 0, fls(1) = 1, fls(0x80000000) = 32.
+>   */
+> -static __always_inline int fls(unsigned int x)
+> +static __always_inline __attribute_const__ int fls(unsigned int x)
+>  {
+>  	int lz;
+>  
+> @@ -294,7 +294,7 @@ static __always_inline int fls(unsigned int x)
+>   * 32-bit fls calls.
+>   */
+>  #ifdef CONFIG_PPC64
+> -static __always_inline int fls64(__u64 x)
+> +static __always_inline __attribute_const__ int fls64(__u64 x)
+>  {
+>  	int lz;
+>  
+
