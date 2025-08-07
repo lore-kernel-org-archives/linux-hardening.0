@@ -1,53 +1,61 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417FD4430
-	for <linux-hardening@vger.kernel.org>; Thu,  7 Aug 2025 02:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1E69463;
+	Thu,  7 Aug 2025 04:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754532236; cv=none; b=AcS8tjkZErbFDG3Ov7+MDs2f9OV75z0e41D47I7DjnLf8mSRk0OGO3ri22/DdJOFo9Ppxpxta64eoP5Wf4vNShaoKs6U8VfDSxQTYURT9mv6mUQjHHdoEVKhisVzRA8Gm8N3dQuvBSgoX6LpFuNdYtQvV5gcB8kaTNrfqD6trK4=
+	t=1754541961; cv=none; b=glVPHHHt9n+xmIH1Cnwf+mLTUH2RyNBO8jJMszezTN9fWHqced3oHb+UPHNPlzkQTdou8znh54Ak+QOu4ion4RwlZiyw9rtHZlW3g3trUM7eExgFJjjRz7QOke8eTi6FRdFUXQytRPRJt3UmFk81VwWjDjiyE3eW1UMcljkyo/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754532236; c=relaxed/simple;
-	bh=hqmcfReuijwtnpNcJRsSkCHLXblH9O/rigatjdEuRlU=;
+	s=arc-20240116; t=1754541961; c=relaxed/simple;
+	bh=y4KlCdk+5pgiOMnQfj5r49PM4fycrXkrnw4MykWMmxc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UGxgxmnrbBJEe0zB1csUxaycI+0Gg2deQ1kf5Q2z2R6YdVKdXyy3KkCClzadQ+2AQm+YNhXtw8lQ6QPXAlAQ8LuEwdzoq9D/swddeKLFK6eD/R5epHsKE7yge9CrA6jVLN5cY60cfQfVT5CEklTtnaNVnVwvhp48V9h2hrjAHUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Qg86bz33; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=DZyyIUBHsxf7p7V5zUCWHb8Eq/g2ct5j2w0J3YC99DZC1vwkSZUU8+TOLJVMHMzVe58vRBC90nVuOO/l7Uia47G+zkgTFoj8b2Zq3oMPYVJi6o1Lfx9sOCakszDFzkweT37i51Nv01scsm94iFMTdnMdLJZI+Yvuhg5/zeH3Ik4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A3Ttadx+; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Qg86bz33"
-Date: Wed, 6 Aug 2025 19:03:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1754532222;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m4lFUwBUTBASs8+w6RWnaE1vMNcqXEPtsns4iFPW3QQ=;
-	b=Qg86bz33wt/39A/xZzIW0ZTd1srRiZPD+rB+zqoTKG4gFhl3WRsh3Owk58E9KtF176Vpfj
-	05pY2mo1wxaAb79x+wFf8f2yL2E96FW2bZ4GODk0yLPFhGuQvFjdfgoSq/csplV1rYXk22
-	sFeqpRT2AYHBtFw9a98PEruMPqQMaDc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC v2 1/2] KVM: arm64: PMU: Introduce
- KVM_ARM_VCPU_PMU_V3_COMPOSITION
-Message-ID: <aJQJdElbZJ6KzQxD@linux.dev>
-References: <20250806-hybrid-v2-0-0661aec3af8c@rsg.ci.i.u-tokyo.ac.jp>
- <20250806-hybrid-v2-1-0661aec3af8c@rsg.ci.i.u-tokyo.ac.jp>
- <aJOO99xUrhsrvLwl@linux.dev>
- <276fdfb8-f1ca-44ad-b310-a811684b265a@rsg.ci.i.u-tokyo.ac.jp>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A3Ttadx+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754541960; x=1786077960;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=y4KlCdk+5pgiOMnQfj5r49PM4fycrXkrnw4MykWMmxc=;
+  b=A3Ttadx+sXTUVqToQMXWFjX13qVmk85qVR4G3DsQQe9Js8SsM+SjYYOo
+   ErfWbWEm0XzeYMvoIV1aRda8Umqq8IunV5iWuGR7X2NWMCwLdB/0mgJL3
+   ZBAqIrBVcV2wxoI0EUH7FbSjKcIAquGnKsGSUzZ8d4OTiof9sp7nc+DU/
+   aZhCk7LbTlLAJ1AqwTpFYLlGw3+F6SmoPtzvXRw3hjZdXSkdFAXUkfUQw
+   59aws4Zz5Cbumnks0J04TwXl3Yw/vcQCQrnqmlwyKfA7WYPilavulQVBm
+   UvuKRqpPe+X1CfjxADwi/gVS74R+y56TyuKyv2PLKdHFH76ykYLKkwTiG
+   g==;
+X-CSE-ConnectionGUID: yUsNd23BRgiq1neAIUGaiQ==
+X-CSE-MsgGUID: lKpNxo/dQGG7WizCuc2whQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="68243797"
+X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
+   d="scan'208";a="68243797"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 21:46:00 -0700
+X-CSE-ConnectionGUID: MTg9uMhUTZKgCZSax4O11A==
+X-CSE-MsgGUID: 6evjZ82ATGmPVueWzXp+Pw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
+   d="scan'208";a="165308362"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 06 Aug 2025 21:45:58 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ujsVn-0002NS-1x;
+	Thu, 07 Aug 2025 04:45:55 +0000
+Date: Thu, 7 Aug 2025 12:45:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Liao Yuanhong <liaoyuanhong@vivo.com>, Kees Cook <kees@kernel.org>,
+	"open list:GCC PLUGINS" <linux-hardening@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, liaoyuanhong@vivo.com
+Subject: Re: [PATCH] gcc-plugins: Use swap() to simplify code
+Message-ID: <202508071233.Bf6EgGd2-lkp@intel.com>
+References: <20250806124341.382446-1-liaoyuanhong@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,167 +64,120 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <276fdfb8-f1ca-44ad-b310-a811684b265a@rsg.ci.i.u-tokyo.ac.jp>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250806124341.382446-1-liaoyuanhong@vivo.com>
 
-On Thu, Aug 07, 2025 at 03:24:43AM +0900, Akihiko Odaki wrote:
-> On 2025/08/07 2:20, Oliver Upton wrote:
-> > Hi Akihiko,
-> > 
-> > This is an unreasonably large patch that needs to be broken down into
-> > smaller patches, ideally one functional change per patch. We need this
-> > even for an RFC for the sake of reviews.
-> > 
-> > On Wed, Aug 06, 2025 at 06:09:54PM +0900, Akihiko Odaki wrote:
-> > > +static u64 kvm_pmu_get_pmc_value(struct kvm_vcpu *vcpu, u8 idx)
-> > >   {
-> > > -	struct kvm_vcpu *vcpu = kvm_pmc_to_vcpu(pmc);
-> > > +	struct kvm_pmc *pmc = *kvm_vcpu_idx_to_pmc(vcpu, idx);
-> > >   	u64 counter, reg, enabled, running;
-> > > +	unsigned int i;
-> > > -	reg = counter_index_to_reg(pmc->idx);
-> > > +	reg = counter_index_to_reg(idx);
-> > >   	counter = __vcpu_sys_reg(vcpu, reg);
-> > >   	/*
-> > >   	 * The real counter value is equal to the value of counter register plus
-> > >   	 * the value perf event counts.
-> > >   	 */
-> > > -	if (pmc->perf_event)
-> > > -		counter += perf_event_read_value(pmc->perf_event, &enabled,
-> > > -						 &running);
-> > > +	if (pmc)
-> > > +		for (i = 0; i < pmc->nr_perf_events; i++)
-> > > +			counter += perf_event_read_value(pmc->perf_events[i],
-> > > +							 &enabled, &running);
-> > 
-> > I'm concerned that this array of events concept you're introducing is
-> > going to be error-prone. An approach that reallocates a new PMU event in
-> > the case of a vCPU migrating to a new PMU implementation would be
-> > desirable.
-> 
-> I avoided allocation at migration because I was worried with disabled
-> preemption. perf_event_create_kernel_counter() internally takes a mutex so
-> it cannot be used if preemption is disabled.
-> 
-> I wonder if it is guaranteed that kvm_arch_vcpu_load() executes with
-> preemption. If so, I can add a hook there to call
-> perf_event_create_kernel_counter().
+Hi Liao,
 
-You don't need to allocate the event at vcpu_load(). The only guarantee
-we need is that an event has been attached to the PMC prior to entering
-the guest, for which the KVM_REQ_* infrastructure is quite useful.
+kernel test robot noticed the following build errors:
 
-> > 
-> > > +static void reset_sample_period(struct perf_event *perf_event)
-> > > +{
-> > > +	struct kvm_pmc **pmc = perf_event->overflow_handler_context;
-> > > +	struct kvm_vcpu *vcpu = kvm_pmc_to_vcpu(pmc);
-> > > +	struct arm_pmu *cpu_pmu = to_arm_pmu(perf_event->pmu);
-> > > +	u64 period;
-> > > +
-> > > +	cpu_pmu->pmu.stop(perf_event, PERF_EF_UPDATE);
-> > > +
-> > > +	/*
-> > > +	 * Reset the sample period to the architectural limit,
-> > > +	 * i.e. the point where the counter overflows.
-> > > +	 */
-> > > +	period = compute_period(pmc, kvm_pmu_get_pmc_value(vcpu, (*pmc)->idx));
-> > > +
-> > > +	local64_set(&perf_event->hw.period_left, 0);
-> > > +	perf_event->attr.sample_period = period;
-> > > +	perf_event->hw.sample_period = period;
-> > > +
-> > > +	cpu_pmu->pmu.start(perf_event, PERF_EF_RELOAD);
-> > > +}
-> > 
-> > No, we can't start calling into the internal driver interfaces. The fact
-> > that we have a pointer to the PMU is an ugly hack and shouldn't be used
-> > like this.
-> 
-> This function was extracted from kvm_pmu_perf_overflow() and is not a new
-> addition (which should have been clear if I would have split the patch as
-> you noted).
+[auto build test ERROR on kees/for-next/hardening]
+[also build test ERROR on kees/for-next/kspp kees/for-next/pstore linus/master v6.16 next-20250806]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Yuck, then forgive my whining.
+url:    https://github.com/intel-lab-lkp/linux/commits/Liao-Yuanhong/gcc-plugins-Use-swap-to-simplify-code/20250806-204609
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+patch link:    https://lore.kernel.org/r/20250806124341.382446-1-liaoyuanhong%40vivo.com
+patch subject: [PATCH] gcc-plugins: Use swap() to simplify code
+config: i386-randconfig-012-20250807 (https://download.01.org/0day-ci/archive/20250807/202508071233.Bf6EgGd2-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250807/202508071233.Bf6EgGd2-lkp@intel.com/reproduce)
 
-> I thought of replacing it with perf_event_period(), but there is a catch: it
-> returns -EINVAL if the 63th bit of the sample period number is set. Perhaps
-> we can just specify ((1ULL << 63) - 1) if the sample period is going to be
-> so long, but I conservatively avoided that. I can change it if you prefer
-> that way or have an alternative idea.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508071233.Bf6EgGd2-lkp@intel.com/
 
-Let's keep it as-is then. Sorry about the noise.
+All errors (new ones prefixed by >>):
 
-> > Can we just special-case the fixed CPU cycle counter to use
-> > PERF_TYPE_HARDWARE / PERF_COUNT_HW_CPU_CYCLES? That _should_ have the
-> > intended effect of opening an event on the PMU for this CPU.
-> 
-> I have an impression that perhaps this emulation can be more generic by
-> converting eventsel to PERF_COUNT_HW_* numbers with armv8_pmuv3_perf_map in
-> drivers/perf/arm_pmuv3.c, but it is not in scope of this change. The current
-> code is sufficient for now.
+   scripts/gcc-plugins/randomize_layout_plugin.c: In function 'void performance_shuffle(tree_node**, long unsigned int, ranctx*)':
+>> scripts/gcc-plugins/randomize_layout_plugin.c:203:17: error: 'swap' was not declared in this scope
+     203 |                 swap(size_group[randnum], size_group[i]);
+         |                 ^~~~
+   scripts/gcc-plugins/randomize_layout_plugin.c:203:17: note: suggested alternatives:
+   In file included from /usr/include/c++/12/utility:69,
+                    from /usr/lib/gcc/x86_64-linux-gnu/12/plugin/include/system.h:244,
+                    from /usr/lib/gcc/x86_64-linux-gnu/12/plugin/include/gcc-plugin.h:28,
+                    from scripts/gcc-plugins/gcc-common.h:6,
+                    from scripts/gcc-plugins/randomize_layout_plugin.c:19:
+   /usr/include/c++/12/bits/stl_pair.h:715:5: note:   'std::swap'
+     715 |     swap(pair<_T1, _T2>&, pair<_T1, _T2>&) = delete;
+         |     ^~~~
+   In file included from /usr/include/c++/12/bits/stl_pair.h:61:
+   /usr/include/c++/12/bits/move.h:196:5: note:   'std::swap'
+     196 |     swap(_Tp& __a, _Tp& __b)
+         |     ^~~~
+   /usr/include/c++/12/bits/move.h:196:5: note:   'std::swap'
+   scripts/gcc-plugins/randomize_layout_plugin.c:216:25: error: 'swap' was not declared in this scope
+     216 |                         swap(newtree[randnum], newtree[i]);
+         |                         ^~~~
+   scripts/gcc-plugins/randomize_layout_plugin.c:216:25: note: suggested alternatives:
+   /usr/include/c++/12/bits/stl_pair.h:715:5: note:   'std::swap'
+     715 |     swap(pair<_T1, _T2>&, pair<_T1, _T2>&) = delete;
+         |     ^~~~
+   /usr/include/c++/12/bits/move.h:196:5: note:   'std::swap'
+     196 |     swap(_Tp& __a, _Tp& __b)
+         |     ^~~~
+   /usr/include/c++/12/bits/move.h:196:5: note:   'std::swap'
+   scripts/gcc-plugins/randomize_layout_plugin.c: In function 'void full_shuffle(tree_node**, long unsigned int, ranctx*)':
+   scripts/gcc-plugins/randomize_layout_plugin.c:227:17: error: 'swap' was not declared in this scope
+     227 |                 swap(newtree[randnum], newtree[i]);
+         |                 ^~~~
+   scripts/gcc-plugins/randomize_layout_plugin.c:227:17: note: suggested alternatives:
+   /usr/include/c++/12/bits/stl_pair.h:715:5: note:   'std::swap'
+     715 |     swap(pair<_T1, _T2>&, pair<_T1, _T2>&) = delete;
+         |     ^~~~
+   /usr/include/c++/12/bits/move.h:196:5: note:   'std::swap'
+     196 |     swap(_Tp& __a, _Tp& __b)
+         |     ^~~~
+   /usr/include/c++/12/bits/move.h:196:5: note:   'std::swap'
+   make[4]: *** [scripts/gcc-plugins/Makefile:54: scripts/gcc-plugins/randomize_layout_plugin.so] Error 1 shuffle=2972943921
+   make[4]: Target 'scripts/gcc-plugins/' not remade because of errors.
+   make[3]: *** [scripts/Makefile.build:554: scripts/gcc-plugins] Error 2 shuffle=2972943921
+   make[3]: Target 'scripts/' not remade because of errors.
+   make[2]: *** [Makefile:1258: scripts] Error 2 shuffle=2972943921
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:248: __sub-make] Error 2 shuffle=2972943921
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2 shuffle=2972943921
+   make: Target 'prepare' not remade because of errors.
 
-The only cross-PMU events we will support are the fixed counters, my
-strong preference is that we do not reverse-map architectural events to
-generic perf events for all counters.
 
-> > I'm not sure there's much value in preventing the user from configuring
-> > the PMU event filter. Even in the case of the fixed CPU cycle counter we
-> > allow userspace to filter the event.
-> 
-> It is possible to configure the PMU event filter, but it needs to be done
-> after setting the attribute. This behavior is aligned with
-> KVM_ARM_VCPU_PMU_V3_SET_PMU.
+vim +/swap +203 scripts/gcc-plugins/randomize_layout_plugin.c
 
-That's fine then, I missed that detail.
+   190	
+   191	static void performance_shuffle(tree *newtree, unsigned long length, ranctx *prng_state)
+   192	{
+   193		unsigned long i, x, index;
+   194		struct partition_group size_group[length];
+   195		unsigned long num_groups = 0;
+   196		unsigned long randnum;
+   197	
+   198		partition_struct(newtree, length, (struct partition_group *)&size_group, &num_groups);
+   199	
+   200		/* FIXME: this group shuffle is currently a no-op. */
+   201		for (i = num_groups - 1; i > 0; i--) {
+   202			randnum = ranval(prng_state) % (i + 1);
+ > 203			swap(size_group[randnum], size_group[i]);
+   204		}
+   205	
+   206		for (x = 0; x < num_groups; x++) {
+   207			for (index = size_group[x].length - 1; index > 0; index--) {
+   208				i = size_group[x].start + index;
+   209				if (DECL_BIT_FIELD_TYPE(newtree[i]))
+   210					continue;
+   211				randnum = ranval(prng_state) % (index + 1);
+   212				randnum += size_group[x].start;
+   213				// we could handle this case differently if desired
+   214				if (DECL_BIT_FIELD_TYPE(newtree[randnum]))
+   215					continue;
+   216				swap(newtree[randnum], newtree[i]);
+   217			}
+   218		}
+   219	}
+   220	
 
-> They are mutually exclusive and the latest configuration takes effect.
-> 
-> If you set SET_PMU after COMPOSITION, SET_PMU will take effect.
-> If you set COMPOSITION after SET_PMU, COMPOSITION will take effect.
-> 
-> I'll note that in the documentation.
-
-This isn't what I meant. What I mean is that userspace either can use
-the SET_PMU ioctl or the COMPOSITION ioctl. Once one of them has been
-used the other ioctl returns an error.
-
-We're really bad at getting ioctl ordering / interleaving right and
-syzkaller has a habit of finding these mistakes. There's zero practical
-value in using both of these ioctls on the same VM, let's prevent it.
-
-> > > +	case KVM_ARM_VCPU_PMU_V3_COMPOSITION:
-> > > +		return kvm_arm_pmu_v3_set_pmu_composition(vcpu);
-> > 
-> > I'd prefer naming this something like 'KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY'.
-> > We will have the fixed instruction counter eventually which is another
-> > event we could potentially provide system-wide.
-> 
-> The design decision to expose the cycle counter is driven by the motivation
-> to satisfy FEAT_PMU for the guest rather than the host capability.
-> 
-> When we implement FEAT_PMUv3_ICNTR in the future, I think we will need to
-> add KVM_ARM_VCPU_PMU_V3_COMPOSITION_ICNTR or something. The resultig
-> emulated PMU will work only on host CPUs that have instruction counters; a
-> host CPU may lack one because it doesn't implement FEAT_PMUv3_ICNTR or has a
-> third-party PMU like apple-m1-cpu-pmu (this particular PMU has an
-> instruction counter fortunately).
-
-No, this is at odds with the way we handle CPU features in KVM/arm64.
-
-Ignoring this ioctl, the goal is that after KVM_ARM_VCPU_INIT the vCPU
-is initialized to the maximum possible feature set. If userspace wants
-to de-feature the VM it can do so by modifying the ID registers.
-
-OTOH, your ioctl is dealing with something structural in how we
-support PMUs on the system. It should be defined as exposing all fixed
-counters that we support on a given piece of hardware. On systems
-without FEAT_PMUv3_ICNTR, the result should be a vPMU that only has the
-CPU cycle counter.
-
-On a system that has FEAT_PMUv3_ICNTR, userspace can still use this
-ioctl and explicitly de-feature ICNTR by writing to the ID register
-after initialization.
-
-Thanks,
-Oliver
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
