@@ -1,121 +1,88 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0792D9EFC
-	for <linux-hardening@vger.kernel.org>; Mon, 11 Aug 2025 18:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE382E2F01;
+	Mon, 11 Aug 2025 21:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754936030; cv=none; b=VYi6Sa1blC/yAf9HFRD9f1mmn/RtDZbUaf0tdUS65FiF2QZQbOrAI9dPBDT9GFscAQOmNA5JumaJLQNSmkHkF9U2xt6IjA8yboOLgMxPAGeWV5qqWi+Guv/PAd8QdxBXzatSo5W89iCpGkf9bFU4uxJjrCqqzCb82HEASrSMfOg=
+	t=1754946552; cv=none; b=RXmXdStqUUWrtX4W7Ku0mRB6aaLmJnjwRAsDhXTf4dkd7+u/tCRdlJdkaErZkHI5ag1RdEbZ1suhHG6TrAVCKzFct1UneTH/iVRhCgvJFWA9iqr9neDgZryPpM5C333GqXKqIuhpE/1K7eiESdHa/yU2p+CRD0UdPoUureCKfgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754936030; c=relaxed/simple;
-	bh=ANm4Uux2/v/BkH0mMC8Vcvx5lJDO9zkQ5mDxi+2+IZ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DgVonh/tn5/OhRiqkmEpmv9LymwA3GYW86JJ1zhoNB3zE8EV5DwVqY2zbpInVoPRu+RWq4q0rKfDJOD73cGipJ5RDriqtbzk324t2dw8ydPK03yrU7Ek5dpOcKiapKDOuMCR/zH/+uPmRyS7Ps6++HLdOB386Xh7GmEOhFcYU2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CrRT6JDS; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1754946552; c=relaxed/simple;
+	bh=6ax/s84qpXwB/a1KR32uE9HFa8Yea7etDg3dw4sZKEY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PXynUo6bwKNbIhrhOGVKqVUSP2LSGmRRgltq5HnRtvbT6DI8jhGEB6G2P7PXwunUJj/5XLFaOT/c7P2xbpwVwU436koi0/2evcxjrWwSON1mNGSAVazZJBZGNtwZoeCif2Ql/sAmoGoDDCGPfkRyG/DB0kUjhps1M7k+cArsCHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZB42YIu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CrRT6JDS"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-76a3818eb9bso4263680b3a.3
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Aug 2025 11:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1754936025; x=1755540825; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ANm4Uux2/v/BkH0mMC8Vcvx5lJDO9zkQ5mDxi+2+IZ0=;
-        b=CrRT6JDStMnr3Pt9JqrYGt76D5oQSHdJafT+btuiUChDpi6YAQGkwcTLwKHfMt2NHg
-         ZXiPh9K7ZeW7u4DnnNWfrtBM5Cz95y+KwTZ1JC9qzsZXnYC4iaFXkCSrUvuQN+6pmll6
-         U31+zl/BD57MJor/tt9SClJwo4A0IKsddBnmw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754936025; x=1755540825;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ANm4Uux2/v/BkH0mMC8Vcvx5lJDO9zkQ5mDxi+2+IZ0=;
-        b=c8rUK1uasR9EDxEajkb54ptNu6pvIvkLCDjERQBu3i9FSbrEWz18hcJgrnk6NRv3Qj
-         c7Q0kb4QKwR8nev21M+7P6h/w6ADyUp53zeUjMXCYsB3QJ6K+aPDhsoHYQvaKZ6v1ep+
-         5b2eFllIwr2fsfx0dpY19KdLOqlhyxGXGiOnWLojaxp4Izx1NR6D47PIIrKK7ylUiDeX
-         mMyRprCZqoUaiq6TRfIL8Yk4SMuxEa+N+h8p41h9cBpAbszuji0eMsqvAaSLTviUCHbY
-         t5/Rn0z+gvZpBptJPytf6kB2LJsO1VuGxYsqsJiznwGveUrJeDzvj4pL13K41ye4PeCV
-         3krw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6XYLcF4OPdeiccxyb9iXG25efXqqWuPSjcU49LZA1jqqHFdtOVUVhRCPJT9zMhWx9ngt/T0zMlGmSZwbgq5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwqZUTHLmB4gfRW0YlNuiRgrx6MDnYKCWITGzb8vihked963M9
-	IQoxpob4K3ftyWRlHVEkf+/0eWS9x5X24sF5To6BOkE9Z+Zhkltyth2JeJzbahFlhxauffxkV52
-	oh68=
-X-Gm-Gg: ASbGnctXz4xsvJsuZlINnCwBAw8aDNj8jK5yWbXtxwIuonEsU6d2LeH6GI8GIutNPOT
-	nAKLVHL1SbeWydwEaZe8s2JBXAYrRRp0z8E19G81gRZdgNuA/zuJoJknJrLDdPXwDI5dbmvTQk7
-	ZLNEB5HOqi9jJvccwZDl3daqlSWO38EwHRrsMOe6r3stWdbB/PqoFFZN160Sslazse1llN0QB36
-	HhRtgN9KxSuKuhdLjivzV6tyqgZEd+nso0HGpIc+wP8Hf5XGVMdv4+0T4BzY8inSZNxEqjOqdKD
-	A4+uGY37TS/7k7a+e1zaG8o/iPknRlNaIUowBDkVDfsJmatC/ePT9yBk3RGgwwL/3LEgIgSgAsz
-	8QsfqLBCFv/R8IZTvu68REK8fRVfIvnalzOBPgBoPpceHe2DuB5XYuyjNFPvf039lXRKbf/dx/u
-	+t
-X-Google-Smtp-Source: AGHT+IEXeMp8U72mTRhqU0W5GZnEcNU8C3fErW/ngbQ6Y4b+KfvI7mEgjQSrccKHow1CrANE9RM+sg==
-X-Received: by 2002:a05:6a20:728a:b0:22c:a165:3664 with SMTP id adf61e73a8af0-24055160270mr23730445637.26.1754936025392;
-        Mon, 11 Aug 2025 11:13:45 -0700 (PDT)
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com. [209.85.214.177])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b423d2f4fcesm21927878a12.33.2025.08.11.11.13.43
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Aug 2025 11:13:43 -0700 (PDT)
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23ffa7b3b30so43322785ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Aug 2025 11:13:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXHXf7j5NuKVCsq8ooQTGGLH396HOC6tkRNR9RltdlLy6Ygnlsqc73SWAhr1bv9XSH6p69mVDfxjmvBoLKMLjo=@vger.kernel.org
-X-Received: by 2002:a17:903:19cc:b0:242:a3fc:5900 with SMTP id
- d9443c01a7336-242c1ffce82mr181750335ad.8.1754936022978; Mon, 11 Aug 2025
- 11:13:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZB42YIu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7301C4CEED;
+	Mon, 11 Aug 2025 21:09:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754946551;
+	bh=6ax/s84qpXwB/a1KR32uE9HFa8Yea7etDg3dw4sZKEY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qZB42YIuCZS9uBL/0ojyW53obuWCfv0vJfd+m7By1McLWKL3JNh5lNcpuJ/eqhiry
+	 rZGwDTyrxLBEU9VeVW45lLU/hFTrxeeaSMLEuXQZNMzFkJBtPQSk0YuNZuhq0LJlxA
+	 /G2MeVoLm3vFntPZoUNKtOgec9DOIhBcK4VWHlZkPNpzzwsLFbadJREOh+i08jLYCc
+	 zzz4CWDbijgT6JnaCyQ8r6bJZyI/mE++h4It/pD4DN5PSl4EOeKwIFHxk1grw7plI5
+	 2VzvOBr4dIITizMjS024NGblubMwzgh0pWcUU1CtudE4GAa9kFlagP+yuSMLnM5VUU
+	 6fFJE/RtHNo1A==
+Date: Mon, 11 Aug 2025 14:09:06 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev
+Subject: Re: [PATCH] hardening: Require clang 20.1.0 for __counted_by
+Message-ID: <20250811210906.GA924329@ax162>
+References: <20250807-fix-counted_by-clang-19-v1-1-902c86c1d515@kernel.org>
+ <a9c64598-41e9-4ec8-8ec1-add5a5f903b4@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250811170351.68985-1-thorsten.blum@linux.dev>
- <CAD=FV=UrEv+=KmjZTDt7F5ftuw5xrpOyEim0OrGAkoiJ5Wi2cg@mail.gmail.com> <17A3048D-E2E3-41FD-A6A0-853B2E481B12@linux.dev>
-In-Reply-To: <17A3048D-E2E3-41FD-A6A0-853B2E481B12@linux.dev>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 11 Aug 2025 11:13:31 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XzSD+pz9RNZDS0paDUWKJ-AW91U5DuEQziszYchuZGAQ@mail.gmail.com>
-X-Gm-Features: Ac12FXyQvkSM0ZmqfknQHYkXyeurhKpeTOYtq8R_cD4QpIIkIrGjU0oRnuKfLKs
-Message-ID: <CAD=FV=XzSD+pz9RNZDS0paDUWKJ-AW91U5DuEQziszYchuZGAQ@mail.gmail.com>
-Subject: Re: [PATCH] kdb: Replace deprecated strcpy() with strscpy() in vkdb_printf()
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Jason Wessel <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>, 
-	Justin Stitt <justinstitt@google.com>, linux-hardening@vger.kernel.org, 
-	Daniel Thompson <daniel@riscstar.com>, kgdb-bugreport@lists.sourceforge.net, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a9c64598-41e9-4ec8-8ec1-add5a5f903b4@intel.com>
 
-Hi,
+On Mon, Aug 11, 2025 at 04:21:32PM +0200, Alexander Lobakin wrote:
+> From: Nathan Chancellor <nathan@kernel.org>
+> Date: Thu, 07 Aug 2025 14:36:28 -0700
+> 
+> > After an innocuous change in -next that modified a structure that
+> > contains __counted_by, clang-19 start crashing when building certain
+> > files in drivers/gpu/drm/xe. When assertions are enabled, the more
+> > descriptive failure is:
+> > 
+> >   clang: clang/lib/AST/RecordLayoutBuilder.cpp:3335: const ASTRecordLayout &clang::ASTContext::getASTRecordLayout(const RecordDecl *) const: Assertion `D && "Cannot get layout of forward declarations!"' failed.
+> > 
+> > According to a reverse bisect, a tangential change to the LLVM IR
+> > generation phase of clang during the LLVM 20 development cycle [1]
+> > resolves this problem. Bump the version of clang that enables
+> > CONFIG_CC_HAS_COUNTED_BY to 20.1.0 to ensure that this issue cannot be
+> > hit.
+> 
+> Any chance for this to go to the next 19.x (if it's planned at all)?
+> I always use the latest HEAD from llvm-project, but 19 is still widely
+> used across distros etc =\
 
-On Mon, Aug 11, 2025 at 11:11=E2=80=AFAM Thorsten Blum <thorsten.blum@linux=
-.dev> wrote:
->
-> > ...so I looked a little deeper here to see if the buffer overflow was
-> > actually possible to begin with. Looking, I _think_ this is true:
-> >
-> > * `cp` is a pointer into `kdb_buffer` (location of first '\n')
-> > * `cphold` and `cp` are equal at this point.
-> >
-> > ...so you're guaranteed not to overflow because the destination and
-> > source overlap. ...but that means we shouldn't have been using
-> > strcpy() either way. Both strcpy() and strscpy() say that their
-> > behaviors are undefined if the src/dest overlap. This means that
-> > really the right fix is to use memmove().
->
-> Good catch. I read about the undefined behavior in the function comment,
-> but never encountered it and haven't really been looking out for it.
->
-> > The above is based solely on code inspection w/ no testing. If I got
-> > it wrong, let me know.
->
-> Yes, I just compile-tested it as I didn't expect src/dst to overlap. And
-> then my last-minute change to strlen() made it even worse. Sorry about
-> that.
->
-> Are you going to fix it using memmove() or should I submit a v2?
+Unfortunately not, LLVM does not maintain more than one branch at a
+time, so LLVM 19 has been unsupported since LLVM 20.1.0-rc1 was
+released back in February :/
 
-Do you want to send a v2 that switches it to memmove()?
+Some distros may be willing to patch that in but there is not really a
+good way for us to check for that here, so I am not sure it helps much.
 
--Doug
+Kees and Bill may have thoughts around working around this in the one
+spot we know it happens but in my opinion, I would rather do the big
+hammer. The deployment of __counted_by in the kernel is only growing so
+it is totally possible for us to fix this one instance then run into
+another case in a few months, which is more painful for clang than GCC
+since it has been supported for a bigger number of releases.
+
+Cheers,
+Nathan
