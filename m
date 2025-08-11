@@ -1,80 +1,93 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C127038DD3
-	for <linux-hardening@vger.kernel.org>; Sun, 10 Aug 2025 21:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993EB263C8A;
+	Mon, 11 Aug 2025 05:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754862840; cv=none; b=rT0gWISzbZHy4B+kEIGa9tWA4cQwrJsjouIEIvS7rmb+JA98ALNuUX0+Exb2Sy1hT5kvgTFFol9fYaFXfo7HPqwyv1HuU36InLaA5c6JEr1PlC8pM2bIV9vrGIfRYOad8FXmfCAzdS5oVYsAS35Gba5D0PU1wc25e1InuY2XGMw=
+	t=1754889046; cv=none; b=mbJ2/eV+KC0cVs1HHmAgdJCoNUMGqm55DyeQJWRrwbEeigsfRljfBlxUUjsNsnDh5MluDwilSDtzOMqMe7Ahg9IpE3beYKl+y0vIpHwlHNx43SZH2TR+KT5/iRIdQqStJIlqQFI242A6ea6atF2oX/hPLGAL0BNtxyMFrQBD2mU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754862840; c=relaxed/simple;
-	bh=vSsSMn/9fqoTxHujBDUpBLFjebEiHOOZRkvaVIYfVn8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g/7cwIIrapKoKC5LljRoO3tDb/ElpFfv43bjkinuHDE+tq3KzGWpTiN5tTBBHJw4TmuGRym1+COLM2241J0EyOfYJxYIgbAKrhGWdj+aYqy4ZnGo2zBfQzSsyaVzszoWBv4P2TtMCo8W9pfRcIicI2/EGNvb1ykkJW+qXxddygI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=O9d+Ajgz; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1754889046; c=relaxed/simple;
+	bh=sBHtUXCF+8kQokeD5tixxpXogKKwzLwixr+bw4TvCWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=eC41CXo3AUsD++mKspkkcqqn+I1Rt0HgNad3qeZjkRkLNzFeYWUml2dawwaZrUuU1ZgsKxw/dQ4Go+Qrywh3zD1CUs7JftEmO4b7LdUatgrl91mzmBLTFqvyGCj31K/wt+u7CTgeSyLMGF/dnJeQrxWK/31BQHuCzqFReRQ0Rso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q/lv1WEC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="O9d+Ajgz"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1754862835;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=EV2BWPFCHA/5r+SQ5/78lZ/eRjTiq2HMm+8pHdqqWPc=;
-	b=O9d+AjgzxdqIL094+cWBPrSdagjbrk3RJCGN6XJ63TFuhFxdM3+9N/nY3R3eAexVxOTR/W
-	oOfykWWqm+IbRMffpSHCkDdTyYOp9BS9vdzn/il4pUZCH0XCN5QYK1Qo3laKiltuOn4Yha
-	iU6u0mYWDSKmmeRlcYAxSpRlC+ihAFw=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q/lv1WEC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8292C4CEED;
+	Mon, 11 Aug 2025 05:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754889046;
+	bh=sBHtUXCF+8kQokeD5tixxpXogKKwzLwixr+bw4TvCWw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=q/lv1WECJMAhhvfKv8UnEKXXTVlGOadbjNvPXswOXwPm52UTkCC/uuiqn6l9C8LD6
+	 5NoexselpTgiOwaPPDV3pVnGO1+Z3xRCm93YEDqDLWww7rcwgx9rQrY+i79pGTZRat
+	 1LCZY+IFuqB7R0UoFCMz+vbIpKB04VqO3YT1zPBnIzkxRthD9cOWuqiezeQAjvwAjK
+	 lk4K7OiB4EOXzPZ1weUhSlzyxsY7VMDKNXJNglwjmNvUW/bNQiP6X63FqbjyEO6+/b
+	 iFDFvX2dAYfif2gE1sBSIc60m9iN9HZWB+JsfS1nDFFX56gGt39LwQGTCBUUt27B0+
+	 tNyOnuh32vzhA==
+Date: Mon, 11 Aug 2025 14:10:39 +0900
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] Bluetooth: Annotate struct hci_drv_rp_read_info with __counted_by_le()
-Date: Sun, 10 Aug 2025 23:53:20 +0200
-Message-ID: <20250810215319.2629-2-thorsten.blum@linux.dev>
+Subject: [PATCH] iwlegacy: Remove unused structs and avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <aJl7TxeWgLdEKWhg@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Add the __counted_by_le() compiler attribute to the flexible array
-member 'supported_commands' to improve access bounds-checking via
-CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE.
+Remove unused structures and avoid the following
+-Wflex-array-member-not-at-end warnings:
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h:68:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h:60:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/net/bluetooth/hci_drv.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../wireless/intel/iwlegacy/iwl-spectrum.h    | 24 -------------------
+ 1 file changed, 24 deletions(-)
 
-diff --git a/include/net/bluetooth/hci_drv.h b/include/net/bluetooth/hci_drv.h
-index 2f01c44f05ec..3fd6fdbdb02e 100644
---- a/include/net/bluetooth/hci_drv.h
-+++ b/include/net/bluetooth/hci_drv.h
-@@ -47,7 +47,7 @@ struct hci_drv_ev_cmd_complete {
- struct hci_drv_rp_read_info {
- 	__u8	driver_name[HCI_DRV_MAX_DRIVER_NAME_LENGTH];
- 	__le16	num_supported_commands;
--	__le16	supported_commands[];
-+	__le16	supported_commands[] __counted_by_le(num_supported_commands);
+diff --git a/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h b/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
+index 1e8ab704dbfb..f00eb878b94b 100644
+--- a/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
++++ b/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
+@@ -50,28 +50,4 @@ struct ieee80211_measurement_params {
+ 	__le16 duration;
  } __packed;
  
- /* Driver specific OGF (Opcode Group Field)
+-struct ieee80211_info_element {
+-	u8 id;
+-	u8 len;
+-	u8 data[];
+-} __packed;
+-
+-struct ieee80211_measurement_request {
+-	struct ieee80211_info_element ie;
+-	u8 token;
+-	u8 mode;
+-	u8 type;
+-	struct ieee80211_measurement_params params[];
+-} __packed;
+-
+-struct ieee80211_measurement_report {
+-	struct ieee80211_info_element ie;
+-	u8 token;
+-	u8 mode;
+-	u8 type;
+-	union {
+-		struct ieee80211_basic_report basic[0];
+-	} u;
+-} __packed;
+-
+ #endif
 -- 
-2.50.1
+2.43.0
 
