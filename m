@@ -1,88 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE382E2F01;
-	Mon, 11 Aug 2025 21:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459B42E339E
+	for <linux-hardening@vger.kernel.org>; Mon, 11 Aug 2025 21:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754946552; cv=none; b=RXmXdStqUUWrtX4W7Ku0mRB6aaLmJnjwRAsDhXTf4dkd7+u/tCRdlJdkaErZkHI5ag1RdEbZ1suhHG6TrAVCKzFct1UneTH/iVRhCgvJFWA9iqr9neDgZryPpM5C333GqXKqIuhpE/1K7eiESdHa/yU2p+CRD0UdPoUureCKfgM=
+	t=1754948244; cv=none; b=KJXdSu2CC+KAq7WnA8IG9eRDg3skuwDA0XEjtJvwlrpWfO0h7CmrzD45tRKMS93XnGQuFoUJWjVu+NCya9Gyd/zFYtYM+BBYqgwBFO+Q1nAeLZsNEOHqmcpsc4ZqEJOZ3wOJWN9rx/HbdQdj/mDUyHI9FZLS17SdZqV/7Ecwt+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754946552; c=relaxed/simple;
-	bh=6ax/s84qpXwB/a1KR32uE9HFa8Yea7etDg3dw4sZKEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PXynUo6bwKNbIhrhOGVKqVUSP2LSGmRRgltq5HnRtvbT6DI8jhGEB6G2P7PXwunUJj/5XLFaOT/c7P2xbpwVwU436koi0/2evcxjrWwSON1mNGSAVazZJBZGNtwZoeCif2Ql/sAmoGoDDCGPfkRyG/DB0kUjhps1M7k+cArsCHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZB42YIu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754948244; c=relaxed/simple;
+	bh=qWIsTeGtfPbRasrX/LrieZfHdO0fcKIavaM4IK2K0+w=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=fCxuj2Fs8YTQQXo1i+OEC+Ym07c1mJLR2DdBstcWsy16oq96Be3yaAGjCUyqqVnAXDLclX2bvrYGtyVgXK0usZkfs7I3DdKPrzykl5d3O2LwVeEopf7a0ySWe8RWOJv4Vac5a0nVjjKZbGsoYZj+AtLkHlNp2QwPvnGFvgAcQpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v/OKbfwY; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZB42YIu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7301C4CEED;
-	Mon, 11 Aug 2025 21:09:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754946551;
-	bh=6ax/s84qpXwB/a1KR32uE9HFa8Yea7etDg3dw4sZKEY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qZB42YIuCZS9uBL/0ojyW53obuWCfv0vJfd+m7By1McLWKL3JNh5lNcpuJ/eqhiry
-	 rZGwDTyrxLBEU9VeVW45lLU/hFTrxeeaSMLEuXQZNMzFkJBtPQSk0YuNZuhq0LJlxA
-	 /G2MeVoLm3vFntPZoUNKtOgec9DOIhBcK4VWHlZkPNpzzwsLFbadJREOh+i08jLYCc
-	 zzz4CWDbijgT6JnaCyQ8r6bJZyI/mE++h4It/pD4DN5PSl4EOeKwIFHxk1grw7plI5
-	 2VzvOBr4dIITizMjS024NGblubMwzgh0pWcUU1CtudE4GAa9kFlagP+yuSMLnM5VUU
-	 6fFJE/RtHNo1A==
-Date: Mon, 11 Aug 2025 14:09:06 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-	patches@lists.linux.dev
-Subject: Re: [PATCH] hardening: Require clang 20.1.0 for __counted_by
-Message-ID: <20250811210906.GA924329@ax162>
-References: <20250807-fix-counted_by-clang-19-v1-1-902c86c1d515@kernel.org>
- <a9c64598-41e9-4ec8-8ec1-add5a5f903b4@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v/OKbfwY"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1754948238;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qWIsTeGtfPbRasrX/LrieZfHdO0fcKIavaM4IK2K0+w=;
+	b=v/OKbfwYchKtDxUTbSjUkOUPMdG9ZJ2fvL+Xmj0O4uyf1fmB8UYZ0Ox3SR1707b+qhGtLp
+	EWrW6Z6u8MXpTV5+dR9zK8rZ9BdKtZI+NzxtTx+jI4/JKo+I8s947PwHmDQhl6U38PRHJ7
+	6HBVG9383DfxMp/Sq4B+tRIbZ7WjhuA=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a9c64598-41e9-4ec8-8ec1-add5a5f903b4@intel.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
+Subject: Re: [PATCH] kdb: Replace deprecated strcpy() with strscpy() in
+ vkdb_printf()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <CAD=FV=XzSD+pz9RNZDS0paDUWKJ-AW91U5DuEQziszYchuZGAQ@mail.gmail.com>
+Date: Mon, 11 Aug 2025 23:37:04 +0200
+Cc: Jason Wessel <jason.wessel@windriver.com>,
+ Daniel Thompson <danielt@kernel.org>,
+ Justin Stitt <justinstitt@google.com>,
+ linux-hardening@vger.kernel.org,
+ Daniel Thompson <daniel@riscstar.com>,
+ kgdb-bugreport@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <3C68B943-D11D-40AD-9B3D-C35CA38D44AB@linux.dev>
+References: <20250811170351.68985-1-thorsten.blum@linux.dev>
+ <CAD=FV=UrEv+=KmjZTDt7F5ftuw5xrpOyEim0OrGAkoiJ5Wi2cg@mail.gmail.com>
+ <17A3048D-E2E3-41FD-A6A0-853B2E481B12@linux.dev>
+ <CAD=FV=XzSD+pz9RNZDS0paDUWKJ-AW91U5DuEQziszYchuZGAQ@mail.gmail.com>
+To: Doug Anderson <dianders@chromium.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Aug 11, 2025 at 04:21:32PM +0200, Alexander Lobakin wrote:
-> From: Nathan Chancellor <nathan@kernel.org>
-> Date: Thu, 07 Aug 2025 14:36:28 -0700
-> 
-> > After an innocuous change in -next that modified a structure that
-> > contains __counted_by, clang-19 start crashing when building certain
-> > files in drivers/gpu/drm/xe. When assertions are enabled, the more
-> > descriptive failure is:
-> > 
-> >   clang: clang/lib/AST/RecordLayoutBuilder.cpp:3335: const ASTRecordLayout &clang::ASTContext::getASTRecordLayout(const RecordDecl *) const: Assertion `D && "Cannot get layout of forward declarations!"' failed.
-> > 
-> > According to a reverse bisect, a tangential change to the LLVM IR
-> > generation phase of clang during the LLVM 20 development cycle [1]
-> > resolves this problem. Bump the version of clang that enables
-> > CONFIG_CC_HAS_COUNTED_BY to 20.1.0 to ensure that this issue cannot be
-> > hit.
-> 
-> Any chance for this to go to the next 19.x (if it's planned at all)?
-> I always use the latest HEAD from llvm-project, but 19 is still widely
-> used across distros etc =\
+On 11. Aug 2025, at 20:13, Doug Anderson wrote:
+> Do you want to send a v2 that switches it to memmove()?
 
-Unfortunately not, LLVM does not maintain more than one branch at a
-time, so LLVM 19 has been unsupported since LLVM 20.1.0-rc1 was
-released back in February :/
+Yes, I might just need a day or two.
 
-Some distros may be willing to patch that in but there is not really a
-good way for us to check for that here, so I am not sure it helps much.
+Thanks,
+Thorsten
 
-Kees and Bill may have thoughts around working around this in the one
-spot we know it happens but in my opinion, I would rather do the big
-hammer. The deployment of __counted_by in the kernel is only growing so
-it is totally possible for us to fix this one instance then run into
-another case in a few months, which is more painful for clang than GCC
-since it has been supported for a bigger number of releases.
-
-Cheers,
-Nathan
