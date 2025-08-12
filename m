@@ -1,191 +1,317 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2085.outbound.protection.outlook.com [40.107.96.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF121279DAA;
-	Tue, 12 Aug 2025 06:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754980880; cv=fail; b=cEdegIhwR62wDlYM3ovSc4a6CgLl7HMk3G/jxVJRgHuMSRDg8Xmfi5WuM/pVuR/9vmNsT0YwDtuWwMjzqIJ54yZ3WTtOzLl3NYyvSJ/1fT9DJ/faHCUGYEah/1KD2ujO409u9+064gxuiVELJzvyJ+sDiceOk/3H28Vs5OgiJvU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754980880; c=relaxed/simple;
-	bh=pBIoVrex9Do4uXxB2moxhP71U8hRynhzJPhn5iXZBT4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=esQvGHNoJYGVBVO4+H7b00lSa+cAIwykxe5C08+3NFiyMc1cP48zlIB4Tz9bYJ7jVHHaEc684cNxFQGQZX7j+KmcfgtegBjIAmUi3js8/0OPATDKk5cXmTaYNG7AEO2ic8H147I+bpBnDF55wDXa/n7Xb2kPnELrfEjAEyWhE4U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=r0Wrb/ll; arc=fail smtp.client-ip=40.107.96.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176E72E2647
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Aug 2025 08:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754987232; cv=none; b=A/kdSgxpGNJYOLZuegxWNPunIJb1TpjsaqFVRiG3OrWRqeepBBGCk7DD/sOva+BmsPt1bifsaZgJVfmCybDvb7YCcodmi43jv7wcn/qSZict0pfVdYI5DINSdIaubaQyPb8I80uGbC8EOaU/QOHYDf6Q50R3GCpt7gsOCxifnio=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754987232; c=relaxed/simple;
+	bh=UDQSxGWEdaNlEt2M7Mav0VdZbGU+CXX3IOWp5CNXy64=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=D892bKy2nm3KZ2V2JIGfmQQid+Fq1B+5arJcmrStIoUB9dr1sp+aIIU0jkXeEli3KQfLAtWjRfS9fAofQnsmxwZpSFbkgFilGauogiuxEbHJhxUmh2cZVvQY7AYzvpDJedcKpL4kZ2LW+lQ/CzUhaDQXzeUlh39Lqn9lN18naNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=uh06br+1; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="r0Wrb/ll"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mQesWILOCz/HN9AMahO/ASpLzqHMQNpHwnfuhjwjs1pdj7SVRYcx5+0wAzW0i8KsH0Mm0w4ehk2RYmtbPLdQS1iDsP8kudBGRibEe8XAyd9S0i9ImmEkMl8VVtR1PVcYHmtw8eXsIhFEBQSuZ3LkWAtMcWjTLBiynbR5QuUGxgp4hoULDcie1wg6j2CDul5EC+1lWf7p9pzke5O+ZA6tljI//+/VGzL7cTkTPZTQ4ovxDMOM5jWYc9OW58lI0UZkcu9HvEuaFZCwUb6Wu/B72X/E7P03i+G06nEpKKtpCXDIJX9fPs6ibh71kkm5THKNDU1q21utN8hCB2OUESEqrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BNO3sfOP5h/S8NsPp+LIa1cxVwMA9g8WsaOqvycLHYY=;
- b=diRmtLZ6JqV2hQcBsir2IZcyFFVJE2KrFp79Ne6yp9ilBIyxhLYhwcM8yN5t+yslNOgUKVlPBgfLpMHtQo19Cz3MqiR/HNNd4pcuVaI0v/afQasllRaBpkSDmmEkyYEbJxwdso2VCj4+nJg1HsRpMTAOf/qHzkeyaP9jEAbXlwJAc6CRi3litVeqksiwscgrrbYVp74ohgxF62hYEVD9hjqRvWAoqesk13CqeiOpdxatDUWOEozBqm+ynRVqa6gbdKI0ijSDZAIjzpJr4lLTssU7Xq64jlGXP7E6QUJUprFllNXJExu/lF3H7SWE+RKCYLUflRfYS4Hps048aLgZow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BNO3sfOP5h/S8NsPp+LIa1cxVwMA9g8WsaOqvycLHYY=;
- b=r0Wrb/llsbPeMlHsbkui/QR6ch7R2te7xZ8z1xKOxedNO1rGxDd45Hw0CqzE6MPochqSrTMK+m36bPd7cZFrCH5+8E2RFW0iS9nsjFTQE98uYnslp5AFm2sJV5P7F9R/TcPLoEBTN1n2jUeKJ2yrPW9FBFS3vyN3ZJz+tIM6az8=
-Received: from SJ0PR03CA0177.namprd03.prod.outlook.com (2603:10b6:a03:338::32)
- by SA1PR12MB6917.namprd12.prod.outlook.com (2603:10b6:806:24c::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.21; Tue, 12 Aug
- 2025 06:41:11 +0000
-Received: from CY4PEPF0000EDD4.namprd03.prod.outlook.com
- (2603:10b6:a03:338:cafe::99) by SJ0PR03CA0177.outlook.office365.com
- (2603:10b6:a03:338::32) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9009.20 via Frontend Transport; Tue,
- 12 Aug 2025 06:41:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EDD4.mail.protection.outlook.com (10.167.241.200) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.9031.11 via Frontend Transport; Tue, 12 Aug 2025 06:41:10 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 12 Aug
- 2025 01:41:10 -0500
-Received: from amd.com (10.180.168.240) by SATLEXMB03.amd.com (10.181.40.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39 via Frontend
- Transport; Tue, 12 Aug 2025 01:41:07 -0500
-Date: Tue, 12 Aug 2025 06:41:01 +0000
-From: Ankit Soni <Ankit.Soni@amd.com>
-To: Kees Cook <kees@kernel.org>
-CC: Joerg Roedel <joro@8bytes.org>, Simcha Kosman
-	<simcha.kosman@cyberark.com>, Suravee Suthikulpanit
-	<suravee.suthikulpanit@amd.com>, Will Deacon <will@kernel.org>, Robin Murphy
-	<robin.murphy@arm.com>, <iommu@lists.linux.dev>, Gavrilov Ilia
-	<Ilia.Gavrilov@infotecs.ru>, Kim Phillips <kim.phillips@amd.com>,
-	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH RESEND] iommu/amd: Avoid stack buffer overflow from
- kernel cmdline
-Message-ID: <nt5hjadzpif6sqoyj2cfpg3werd3pucfb3nys55fmeix6rcqso@hhmnso6csrn5>
-References: <20250804154023.work.970-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uh06br+1"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3b78127c5d1so3350583f8f.3
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Aug 2025 01:27:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1754987228; x=1755592028; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LSqLNFw5ZoJT+eJ+R/4RbrBYWHEJxUchO4svyAYAyHQ=;
+        b=uh06br+1hUHuDDhv+1MpaBvwx/eVDZjNM3nUeTrnjc5W0vKbVK83rgSCjAzcbPz04Z
+         Y3omjAuijSPpKXRcAO9GnfVtKoTGPozFk5/dmcCvAn4wRoMXrlsgYf939BfNUdx5GVmt
+         dQtyqM3ZgyK8QlJpczWKpnxmkZD1I66Ib6ujINItisGHFs258U78xkVSGpGM6DcmHU77
+         NdzkiHquTC6c5j0brtrMOqlXcWO1QUdSIHQ+lQMocXFEewagg5I665Sn6k9i0ZEn6LoE
+         S6SVcgOzfGjD4zxSiUdHjmKXxWDm5iyZG9ScSDj8QKcCy1JEmwyYwRJ/mN4oWnhDIWPd
+         VOjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754987228; x=1755592028;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LSqLNFw5ZoJT+eJ+R/4RbrBYWHEJxUchO4svyAYAyHQ=;
+        b=AJPRpWkJoCTh/50Tm/bKgG8IPyh9ViR16dYCLUDPyPFGv4Wmr6MGBTRrUdt3/jUAib
+         150UcB3Qh6xysSkMD4EhydpcNebAA8YbOrGN/lY+rNMyJGFtjL8DMSrIDIiNHxoGtS5N
+         MTWyNkk2KAjGMeJeQOYA7e3xweHsvPcEP0EuZvKlSh/Jr5Z8lVEx0VGXfAEIButd71Lt
+         v5qN6aIZZSWmLqx+FeXNt/ObWGK03dl93Vyy56M8LGDgZw3q4bvyW2l5gMp1wFpWHtQZ
+         SqZnPf12PKnTw6PEaNu2bCu33FDkg6EafKjGwT6mM8weSUp6xyy5qfHHLYSv15PXpJ+g
+         qstw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+k3B10qlGGPx/nJ141R9W27siKykpkkHHvMRBYVDspM4frBJMDDMLCw4gn0IxdsFsqsnrRxV7tb/wjMXNTfE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMpYj8HHjRNrBwIWE2kHHpUL+7GiDuiwZSCyjPa5q+6zTzxQN5
+	PXHTESacKBq+mjtjYdGdmFUuPVUCqeH1I4X/kYRtn/uW7QeTwrAopvoKHkk2HQejdm8=
+X-Gm-Gg: ASbGnctH4pDyjt1mE1ERT6chfgncHb4gH3XRie4FIdnG4OMXcLZwncH9alcuYCvNbLV
+	zfLLCOPbAuR8HsxbFZOT+WIeqpav6CZnq4A6wuSNgen6wKO5Z+REslRnygb72DgUWzbbOUfYjOc
+	/6JLvSa/yh0dPt7Z8QuJaLPBdOpwzGgahwNniH24DbuZjdWdPxHPMOxqoaYu0OhCuBvl7y3bsZ9
+	gQ4qLaBlHtUtAk3JByIeW0EYs7lDcXnR1CEAB7dUknLrfDjEr5rYWsLi8CQ0pLN2/De2xbfJGEh
+	ums7Nu4X0cCJB9yzEZzxOA+XVZ2Za63VpcBSD9REOOnCBmvGt74spFUX0GCp8rDazkOM7XXmfMH
+	uaNBa2lVpXnghTIo=
+X-Google-Smtp-Source: AGHT+IGt1Qdhl1SeHXbcRrXyromUYjuvLPhngmkyHILzZlpKPBo/s3ygqlYuwwSu6svvDg9bM89tcA==
+X-Received: by 2002:a05:6000:400b:b0:3a4:ee3f:8e1e with SMTP id ffacd0b85a97d-3b911031495mr2033996f8f.39.1754987228110;
+        Tue, 12 Aug 2025 01:27:08 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:16c8:50:27fe:4d94])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3b9386sm43549423f8f.18.2025.08.12.01.27.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Aug 2025 01:27:07 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v4 00/15] pinctrl: introduce the concept of a GPIO pin
+ function category
+Date: Tue, 12 Aug 2025 10:26:59 +0200
+Message-Id: <20250812-pinctrl-gpio-pinfuncs-v4-0-bb3906c55e64@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250804154023.work.970-kees@kernel.org>
-Received-SPF: None (SATLEXMB04.amd.com: Ankit.Soni@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD4:EE_|SA1PR12MB6917:EE_
-X-MS-Office365-Filtering-Correlation-Id: b6941cb2-3dc1-4d8a-be02-08ddd96b39b8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026|7053199007|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HKBssF2+OZEgG6+iQJsQM6TBKED5Q6aXo0yX2Qx7J4zrjF1RLSofyxXr0kw+?=
- =?us-ascii?Q?bOmcjOtrIPFdtWIanGBDe+kkKy2EhFh28gVX/lyt4hBsqU54vDE3t85TnIZv?=
- =?us-ascii?Q?mmSeSphYFMU8tk6U4fq+sViLnkXxy8i2VfhZcD8OY7O+/cTnplbJFYzq9uHB?=
- =?us-ascii?Q?qik9xnj3NncwS+3JQYcw+eDEoKxXnf6zQwLvbpZQ26m0QAPk70Hnfb5A+tZu?=
- =?us-ascii?Q?AtRL0Q1kmvCs5Y53GIFxN9I2TyL7H0JFBHTb0MoS10k9M+C2jCpQZO/HP/E0?=
- =?us-ascii?Q?UlBCmAR5yc8BRVwMrp4p3mFuzACmMn1rEOOeELuZPYTl/W1kKAqpzKtImiSs?=
- =?us-ascii?Q?doYPQOsZOReWMukd6Bt+NixH8dlbyKCLX8bUjMBU/XXImcXWy8SkmmjFj6kt?=
- =?us-ascii?Q?aolJFjVgSOcc/nLeKBzWYt7M+N1jAa3sYRFcP0NPKJG093hgxdseDKVExNOi?=
- =?us-ascii?Q?8R09g+fZxwLH2WlN6JNbw0KhAGKJAoHldBNRy0TmGL2cD2GJqj5RgFJRY2KP?=
- =?us-ascii?Q?VUA8vBSLs250cmdBrXFXF8QqpuMuBAwzQUKWzAb5WqMKGtN3LC+/skZm44/i?=
- =?us-ascii?Q?FZ3Bl2t6X3pV0RU6d2G7oETi1NNjk0KW7SW3HJ7FuyhYqY+ehRYn8282epKz?=
- =?us-ascii?Q?FbleGFq6GHPydL8hm17PA6ugnx4memk38jRQ+VV0tseHToydwVwLu5CW25hP?=
- =?us-ascii?Q?r75S0OlT/XChNydqPd3tm9pHQcWl6N6nyyfp2yB9V8LP7jz76XWMmpeSOSQb?=
- =?us-ascii?Q?TL8LqAhOqzHF6sJyFAZAedrJ47aMVsg1Rv6Je3ZGE567RLyMrqp7kUmVTNC7?=
- =?us-ascii?Q?DcN06ZS8RiYwMq5gPDciuxob+8cKdTBAJ3O+nbCckShlnEEy1Pwv42HEEs/p?=
- =?us-ascii?Q?n+Zjt63cxF/1XVkeAOooEg8un0rDosVo3Mm1ceS56WkN/PfY/qMvoi+F1BEa?=
- =?us-ascii?Q?ESPkVbbXqkpCk4U+40J2kZ7sJr/UA5qTCOZYXHRv6CfmumA8J6pWlolkpYpj?=
- =?us-ascii?Q?ytLHcYjFNED4EHDQ4WeR740y5woypNpEa9PNzR32Di1h/c6JcB4m9TQvXtMg?=
- =?us-ascii?Q?1WSspgutMaqHyJaNRCNzPFKnwAikJdwKTBhOn1N3p/DSgnklS+7TILm/zVzg?=
- =?us-ascii?Q?Maxuh2z7QZmyHeyS8wAbZTe7PlTsDo/gG/MzA+MxG09ZsTqxClKEK6dtGMhp?=
- =?us-ascii?Q?3zW+SnbxzOGu3kut1yNVuMM4CTNUdhgB0bYx7nh4AOqlo/XdLoK9PJIxyBTX?=
- =?us-ascii?Q?H9hicXTmtODMjJhuXN4mZfkaySTsyvlycWLYSkZJwSD20W87B3vCovEhwUeF?=
- =?us-ascii?Q?bZ9cCL8LZ2yJsVNDqmTFvsxzKw392zpNdozq5ci9SXBTL36BGGQXgEf2ZDpE?=
- =?us-ascii?Q?d5S6FkPmGke0fX+1g99anr7nIwJOp3/oiVlR9bYcEbgkYRknZzaUuoiEeTC4?=
- =?us-ascii?Q?eGS1qc8WY4yIYgqUxzqqUo4YADFXwRGxQrOZ5joa9pIepYaNDRdr6+Qsttnb?=
- =?us-ascii?Q?fvSTQRAUT0GYOX1dHMRLEGDd7tUb0Cpn9IwLC6EtwFDa0pXlp2RDnxzu0g?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026)(7053199007)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2025 06:41:10.8724
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6941cb2-3dc1-4d8a-be02-08ddd96b39b8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EDD4.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6917
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANP6mmgC/3XNTQqDMBCG4atI1k3Jn9Z01XuULmISdUASSWxoE
+ e/eKBQsxeX7wTwzo2gD2IiuxYyCTRDBuxziVCDdK9dZDCY3YoSV5EIoHsHpKQy4G8Gv0T6djtj
+ YmjVGKqUFR/l2DLaF1+beH7l7iJMP7+1Nouv6FdmBmCgm2JqsklaKqja3AZwK/uxDh1YysT0jj
+ xiWmaaivKRCamLkH8N3DBNHDM+MaoVpJCfMWPHDLMvyAQqoo11JAQAA
+X-Change-ID: 20250701-pinctrl-gpio-pinfuncs-de82bd9aac43
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Alexey Klimov <alexey.klimov@linaro.org>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
+ Andy Shevchenko <andy@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@redhat.com>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+ Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+ Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ NXP S32 Linux Team <s32@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Tony Lindgren <tony@atomide.com>, 
+ Haojian Zhuang <haojian.zhuang@linaro.org>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
+ linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10405;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=UDQSxGWEdaNlEt2M7Mav0VdZbGU+CXX3IOWp5CNXy64=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBomvrWB2qIjviAYzOzF9rGQxbtFl0bfNv3xt3BN
+ hJcX75YR9WJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaJr61gAKCRARpy6gFHHX
+ cnenD/9QVkiYWaN45se9mVCv1Kmd7fcDNhqOnqO5k+01l7TQAlPMrQt3gTyvoe7CiEK5dDfa5ng
+ aIbDkSuHtaZBpDsgc/BXeJMoESoAl36UvqOBfrX/zRL+EXlA4pE843GNpasFYss8kGdRGKbtO4U
+ gcJKcstwSwRux/gfffXVtbEZO+jh7/3gggLSCCZHX0R6kJJWHhzou5kJ0h6bek677sBClWVmoY8
+ eysYG00x5CQE0RPIPIM+4S2fQfWfxzhhRWIEq/YuuvJ4CuJ3LFO28NteYEEc4Y765gqgO5aQ/Go
+ cn/UlbQCcl5oTQDS++2t1KbaW3KN/GDVlTpprFJQPsNzI1LyfcnlvtpUkvJeqZgN6oh3GCf55Ss
+ gI0pMQB3Mudri5qmQ/yBPMY9RoPMVyuVEEfItLwmQVPnFBCFaUtksAM7oU6HqbEoLI4QwIN9XsE
+ CFIHwvjFLRP9nqeDtNCtAUwKro0rLOkIkDmnsCkXIIZnZfimLTmSyBrLTY/elmWUlxfkqfAEYKV
+ +z4qBQkVA4AJg6liF53vwd12SvKxjZQ8h93srCOICJ9uz3tOlOm/ZNpgXBuy0xTOpxbL9hJk2t0
+ RGNzvJ1D4MnTaRwEHz9bw+spw3G0XBBakwDrnhB7sOPsN9dUclNtSpGJxeVXc4cqeavZgYMr3mj
+ g7yTIfabzK5/L/w==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Hi,
+NOTE: This is obviously targetting v6.18.
 
-On Mon, Aug 04, 2025 at 08:40:27AM -0700, Kees Cook wrote:
-> While the kernel command line is considered trusted in most environments,
-> avoid writing 1 byte past the end of "acpiid" if the "str" argument is
-> maximum length.
-> 
-> Reported-by: Simcha Kosman <simcha.kosman@cyberark.com>
-> Closes: https://lore.kernel.org/all/AS8P193MB2271C4B24BCEDA31830F37AE84A52@AS8P193MB2271.EURP193.PROD.OUTLOOK.COM
-> Fixes: b6b26d86c61c ("iommu/amd: Add a length limitation for the ivrs_acpihid command-line parameter")
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> This was sent out before but it didn't end up on any public mailing list. My mistake!
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: <iommu@lists.linux.dev>
-> ---
->  drivers/iommu/amd/init.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-> index 7b5af6176de9..e11322d8d775 100644
-> --- a/drivers/iommu/amd/init.c
-> +++ b/drivers/iommu/amd/init.c
-> @@ -3638,7 +3638,7 @@ static int __init parse_ivrs_acpihid(char *str)
->  {
->  	u32 seg = 0, bus, dev, fn;
->  	char *hid, *uid, *p, *addr;
-> -	char acpiid[ACPIID_LEN] = {0};
-> +	char acpiid[ACPIID_LEN + 1] = { }; /* size with NUL terminator */
+NOTER: This series is a bit all over the place and looks like it should
+be split into at least two separate ones but I figured sending it in its
+entirety better shows the whole picture - namely the fact that the
+pinfunction handling rework is there to allow using the generic pinux
+functions in qualcomm drivers without ballooning up runtime memory
+usage.
 
-minor nits below,
+NOTEST: I tested several Qualcomm platforms but I have no means of
+testing Mediatek and others. Tested-by tags are appreciated.
 
-s/NUL/NULL
-and keeping "{0}" will be as per standard.
+Problem: when pinctrl core binds pins to a consumer device and the
+pinmux ops of the underlying driver are marked as strict, the pin in
+question can no longer be requested as a GPIO using the GPIO descriptor
+API. It will result in the following error:
 
-otherwise looks good!
-Reviewed-by: Ankit Soni <Ankit.Soni@amd.com>
+[    5.095688] sc8280xp-tlmm f100000.pinctrl: pin GPIO_25 already requested by regulator-edp-3p3; cannot claim for f100000.pinctrl:570
+[    5.107822] sc8280xp-tlmm f100000.pinctrl: error -EINVAL: pin-25 (f100000.pinctrl:570)
 
->  	int i;
->  
->  	addr = strchr(str, '@');
-> @@ -3664,7 +3664,7 @@ static int __init parse_ivrs_acpihid(char *str)
->  	/* We have the '@', make it the terminator to get just the acpiid */
->  	*addr++ = 0;
->  
-> -	if (strlen(str) > ACPIID_LEN + 1)
-> +	if (strlen(str) > ACPIID_LEN)
->  		goto not_found;
->  
->  	if (sscanf(str, "=%s", acpiid) != 1)
-> -- 
-> 2.34.1
-> 
+This typically makes sense except when the pins are muxed to a function
+that actually says "GPIO". Of course, the function name is just a string
+so it has no meaning to the pinctrl subsystem.
+
+We have many Qualcomm SoCs (and I can imagine it's a common pattern in
+other platforms as well) where we mux a pin to "gpio" function using the
+`pinctrl-X` property in order to configure bias or drive-strength and
+then access it using the gpiod API. This makes it impossible to mark the
+pin controller module as "strict".
+
+This series proposes to introduce a concept of a sub-category of
+pinfunctions: GPIO functions where the above is not true and the pin
+muxed as a GPIO can still be accessed via the GPIO consumer API even for
+strict pinmuxers.
+
+To that end: we first clean up the drivers that use struct function_desc
+and make them use the smaller struct pinfunction instead - which is the
+correct structure for drivers to describe their pin functions with. We
+also rework pinmux core to not duplicate memory used to store the
+pinfunctions unless they're allocated dynamically.
+
+First: provide the kmemdup_const() helper which only duplicates memory
+if it's not in the .rodata section. Then rework all pinctrl drivers that
+instantiate objects of type struct function_desc as they should only be
+created by pinmux core. Next constify the return value of the accessor
+used to expose these structures to users and finally convert the
+pinfunction object within struct function_desc to a pointer and use
+kmemdup_const() to assign it. With this done proceed to add
+infrastructure for the GPIO pin function category and use it in Qualcomm
+drivers. At the very end: make the Qualcomm pinmuxer strict.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Changes in v4:
+- Update the GPIO pin function definitions to include the new qcom
+  driver (milos)
+- Provide devm_kmemdup_const() instead of a non-managed kmemdup_const()
+  as a way to avoid casting out the 'const' modifier when passing the
+  const pointer to devm_add_action_or_reset()
+- Use devm_krealloc_array() where applicable instead of devm_krealloc()
+- Fix typos
+- Fix kerneldocs
+- Improve commit messages
+- Small tweaks as pointed out by Andy
+- Rebased on top of v6.17-rc1
+- Link to v3: https://lore.kernel.org/r/20250724-pinctrl-gpio-pinfuncs-v3-0-af4db9302de4@linaro.org
+
+Changes in v3:
+- Add more patches in front: convert pinctrl drivers to stop defining
+  their own struct function_desc objects and make pinmux core not
+  duplicate .rodata memory in which struct pinfunction objects are
+  stored.
+- Add a patch constifying pinmux_generic_get_function().
+- Drop patches that were applied upstream.
+- Link to v2: https://lore.kernel.org/r/20250709-pinctrl-gpio-pinfuncs-v2-0-b6135149c0d9@linaro.org
+
+Changes in v2:
+- Extend the series with providing pinmux_generic_add_pinfunction(),
+  using it in several drivers and converting pinctrl-msm to using
+  generic pinmux helpers
+- Add a generic function_is_gpio() callback for pinmux_ops
+- Convert all qualcomm drivers to using the new GPIO pin category so
+  that we can actually enable the strict flag
+- Link to v1: https://lore.kernel.org/r/20250702-pinctrl-gpio-pinfuncs-v1-0-ed2bd0f9468d@linaro.org
+
+---
+Bartosz Golaszewski (15):
+      devres: provide devm_kmemdup_const()
+      pinctrl: ingenic: use struct pinfunction instead of struct function_desc
+      pinctrl: airoha: replace struct function_desc with struct pinfunction
+      pinctrl: mediatek: mt7988: use PINCTRL_PIN_FUNCTION()
+      pinctrl: mediatek: moore: replace struct function_desc with struct pinfunction
+      pinctrl: imx: don't access the pin function radix tree directly
+      pinctrl: keembay: release allocated memory in detach path
+      pinctrl: keembay: use a dedicated structure for the pinfunction description
+      pinctrl: constify pinmux_generic_get_function()
+      pinctrl: make struct pinfunction a pointer in struct function_desc
+      pinctrl: qcom: use generic pin function helpers
+      pinctrl: allow to mark pin functions as requestable GPIOs
+      pinctrl: qcom: add infrastructure for marking pin functions as GPIOs
+      pinctrl: qcom: mark the `gpio` and `egpio` pins function as non-strict functions
+      pinctrl: qcom: make the pinmuxing strict
+
+ drivers/base/devres.c                            | 21 +++++++++
+ drivers/pinctrl/freescale/pinctrl-imx.c          | 42 ++++++-----------
+ drivers/pinctrl/mediatek/pinctrl-airoha.c        | 18 ++++----
+ drivers/pinctrl/mediatek/pinctrl-moore.c         | 10 ++--
+ drivers/pinctrl/mediatek/pinctrl-moore.h         |  7 +--
+ drivers/pinctrl/mediatek/pinctrl-mt7622.c        |  2 +-
+ drivers/pinctrl/mediatek/pinctrl-mt7623.c        |  2 +-
+ drivers/pinctrl/mediatek/pinctrl-mt7629.c        |  2 +-
+ drivers/pinctrl/mediatek/pinctrl-mt7981.c        |  2 +-
+ drivers/pinctrl/mediatek/pinctrl-mt7986.c        |  2 +-
+ drivers/pinctrl/mediatek/pinctrl-mt7988.c        | 44 +++++++-----------
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  2 +-
+ drivers/pinctrl/pinctrl-equilibrium.c            |  2 +-
+ drivers/pinctrl/pinctrl-ingenic.c                | 49 +++++++++-----------
+ drivers/pinctrl/pinctrl-keembay.c                | 26 +++++++----
+ drivers/pinctrl/pinctrl-single.c                 |  4 +-
+ drivers/pinctrl/pinmux.c                         | 59 ++++++++++++++++++++----
+ drivers/pinctrl/pinmux.h                         |  9 ++--
+ drivers/pinctrl/qcom/pinctrl-ipq5018.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-ipq5332.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-ipq5424.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-ipq6018.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-ipq8074.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-ipq9574.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-mdm9607.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-mdm9615.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-milos.c             |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm.c               | 45 ++++++------------
+ drivers/pinctrl/qcom/pinctrl-msm.h               |  5 ++
+ drivers/pinctrl/qcom/pinctrl-msm8226.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8660.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8909.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8916.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8917.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8953.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8960.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8976.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8994.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8996.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8998.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8x74.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-qcm2290.c           |  4 +-
+ drivers/pinctrl/qcom/pinctrl-qcs404.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-qcs615.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-qcs8300.c           |  4 +-
+ drivers/pinctrl/qcom/pinctrl-qdu1000.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sa8775p.c           |  4 +-
+ drivers/pinctrl/qcom/pinctrl-sar2130p.c          |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sc7180.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sc7280.c            |  4 +-
+ drivers/pinctrl/qcom/pinctrl-sc8180x.c           |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sc8280xp.c          |  4 +-
+ drivers/pinctrl/qcom/pinctrl-sdm660.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sdm670.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sdm845.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sdx55.c             |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sdx65.c             |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sdx75.c             |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm4450.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm6115.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm6125.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm6350.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm6375.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm7150.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm8150.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm8250.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm8350.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm8450.c            |  4 +-
+ drivers/pinctrl/qcom/pinctrl-sm8550.c            |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm8650.c            |  4 +-
+ drivers/pinctrl/qcom/pinctrl-sm8750.c            |  4 +-
+ drivers/pinctrl/qcom/pinctrl-x1e80100.c          |  2 +-
+ drivers/pinctrl/renesas/pinctrl-rza1.c           |  2 +-
+ drivers/pinctrl/renesas/pinctrl-rza2.c           |  2 +-
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c          |  2 +-
+ drivers/pinctrl/renesas/pinctrl-rzv2m.c          |  2 +-
+ include/linux/device/devres.h                    |  2 +
+ include/linux/pinctrl/pinctrl.h                  | 14 ++++++
+ include/linux/pinctrl/pinmux.h                   |  2 +
+ 79 files changed, 274 insertions(+), 225 deletions(-)
+---
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+change-id: 20250701-pinctrl-gpio-pinfuncs-de82bd9aac43
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
