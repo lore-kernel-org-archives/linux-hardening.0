@@ -1,97 +1,67 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56932263F22;
-	Tue, 12 Aug 2025 16:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192F13D987;
+	Tue, 12 Aug 2025 21:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755017664; cv=none; b=AwUeMrkGTyC2z6CJ51BfC63ykj3x59y1QIyaS/W89C5ds66Dh35vF/Am4MxTqeUMIQcfzrf4tQNjdPCImGdtEiNhFGbSii5asSaPRkk6KRs7vIt5RH/8IaVzQUtn8yV+yYJ3+qXdz0yUJ33ioBtojrqmv1pfpqHK/10QRzVaFgE=
+	t=1755033803; cv=none; b=F3ng/YjkHWXs8aiU68kt5X6v35OyUzmP6HFtINE4c387P3zSRLVOJXSmkPW8lBwo+jsBhyAk/nzHM5xFwsbRE3fQPJWpSfcEuDB78yfThdeHlQ+jcN75i5gstRoJ6wNOUFo5IG2wxrGQQg7vAC6JkT/P9k1mTLUgku/suHcHu58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755017664; c=relaxed/simple;
-	bh=/qn5HyjejE8OObLaU00F8rwyy1m3kk48b055lsc1nYQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SmbwGPP5JgSdGWWUZvabJmF0MYMNS5sNLxh5NZlsm8IUY4js1RbWx/SWxDqh77+VUqtplnAEM94lvkiLpUMXu4wqnXRwdFcTx5uSGiQVI5sO6dNd7rhtXU9laNP8xCqelXEd6vPsLlu978WoxZk2Wt+wTY2r+16igcxs9ipss60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=xGdc/awl; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1755033803; c=relaxed/simple;
+	bh=LPtqBbPzWjgmOf3CGPgRdpHTJUzsIJM11FkblEDdPSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EvleljaF7vGKItlkfdLxd+iQYLOTUKo9Pm/vBSautdyvx84fxMlu9YVy2UzYnRB8B5uZmzE9Tp+94wwXZgW3sLte1G5O3J9cVvMWCFLHIDODrR8fhQE7fpF4fdh0hi8O0eNi2481cJoL1n3dfxnb7HXCwkDKbp/y4UGR9Bp90Kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C1FOaepc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xGdc/awl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=1SxDAKOHuKo6/4q/wwaqNCQYQq81PZ4obbS2L6Mwp/k=; b=xGdc/awlWFGNckXmwjToLVREYM
-	a2X70y6ewzvP+SNCnkWmFdSGXtNGeG1Styz2eWfCXh8z0aCOSvkAV0LvKUN+W0kCKxEbbEIWW//eM
-	Lmu5l/4u58fjz1aGM1MPHmugHnrvBwoco5EqxdaPTEYXWb31Bgx87KajikX6O49ubhQuhHPdzHhZk
-	iQOv+PullK/SuJ01MEXALeRLUvJ0zi+B6WYBZ+tw0iQo6IBD4fiuWLFNQarf5QlyEFbSs2UHmx+ae
-	s9/Jn7sN9SQ40iXD001VfLoiojhABmlzI9+aG4LR+w9mmZq+AZ6VuEPVdtCfdU6csZZPD8HqpeREP
-	ZNGcsRgg==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulsGQ-0000000BU2A-0rUS;
-	Tue, 12 Aug 2025 16:54:18 +0000
-Message-ID: <5ee33ac3-c23e-4da7-87bc-2a5ea6e93afe@infradead.org>
-Date: Tue, 12 Aug 2025 09:54:16 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C1FOaepc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA5C4C4CEF0;
+	Tue, 12 Aug 2025 21:23:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755033802;
+	bh=LPtqBbPzWjgmOf3CGPgRdpHTJUzsIJM11FkblEDdPSg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C1FOaepcrShGvDBkDI/S7FsUqavgjO0e/GasdRkXF78Yrze8J+5CbMd2e0PG1SzNh
+	 qSHsK6JJY+nyA5bXH0IRVoZdTz6dN+KeHol+nol71nozH4VCbGgLeMQyzwjLSCTNt4
+	 Vsivx0pt+DLFlroDsZwtpSxCRA35cICCigpfMOejF57osddiLCGGI0Ow9mu93OFtGl
+	 QOwc/cuqoVSljFoAVscnx698j3eS/KjRw0UE7jdbsS6oAOGWhDmDRbMGtnbGjJZzcV
+	 WDgxy/TT7O9D6DjiwnezAagikpjchwRcPDWwhY8S+AweVjIYHS14oXEziqPP6J8Cb9
+	 1C8yt//0HMArw==
+Date: Tue, 12 Aug 2025 14:23:18 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev
+Subject: Re: [PATCH] hardening: Require clang 20.1.0 for __counted_by
+Message-ID: <20250812212318.GD532342@ax162>
+References: <20250807-fix-counted_by-clang-19-v1-1-902c86c1d515@kernel.org>
+ <a9c64598-41e9-4ec8-8ec1-add5a5f903b4@intel.com>
+ <20250811210906.GA924329@ax162>
+ <adb1b558-124c-4f7f-b193-bf44a6132fa2@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v7 03/14] net: ethernet: qualcomm: Add PPE driver
- for IPQ9574 SoC
-To: Luo Jie <quic_luoj@quicinc.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
- Suruchi Agarwal <quic_suruchia@quicinc.com>,
- Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
- quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com
-References: <20250812-qcom_ipq_ppe-v7-0-789404bdbc9a@quicinc.com>
- <20250812-qcom_ipq_ppe-v7-3-789404bdbc9a@quicinc.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250812-qcom_ipq_ppe-v7-3-789404bdbc9a@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <adb1b558-124c-4f7f-b193-bf44a6132fa2@intel.com>
 
+On Tue, Aug 12, 2025 at 06:28:29PM +0200, Alexander Lobakin wrote:
+> Aaah okay, I didn't know that, thanks!
 
+https://discourse.llvm.org/t/rfc-llvm-releases-every-two-weeks/84245 has
+some more information about that recent change if you or anyone else is
+interested.
 
-On 8/12/25 7:10 AM, Luo Jie wrote:
-> diff --git a/drivers/net/ethernet/qualcomm/Kconfig b/drivers/net/ethernet/qualcomm/Kconfig
-> index a4434eb38950..6e56b022fc2d 100644
-> --- a/drivers/net/ethernet/qualcomm/Kconfig
-> +++ b/drivers/net/ethernet/qualcomm/Kconfig
-> @@ -60,6 +60,21 @@ config QCOM_EMAC
->  	  low power, Receive-Side Scaling (RSS), and IEEE 1588-2008
->  	  Precision Clock Synchronization Protocol.
->  
-> +config QCOM_PPE
-> +	tristate "Qualcomm Technologies, Inc. PPE Ethernet support"
-> +	depends on HAS_IOMEM && OF
-> +	depends on COMMON_CLK
-> +	select REGMAP_MMIO
-> +	help
-> +	  This driver supports the Qualcomm Technologies, Inc. packet
-> +	  process engine (PPE) available with IPQ SoC. The PPE includes
-> +	  the ethernet MACs, Ethernet DMA (EDMA) and switch core that
+> BTW 21-rc1 was released roughly a month ago, does this mean that 20.x is
+> already unsupported?
 
-Please use ethernet or Ethernet consistently.
+Correct, LLVM 20.1.8 was the last release for release/20.x.
 
-> +	  supports L3 flow offload, L2 switch function, RSS and tunnel
-> +	  offload.
-> +
-> +	  To compile this driver as a module, choose M here. The module
-> +	  will be called qcom-ppe.
-> +
--- 
-~Randy
-
+Cheers,
+Nathan
