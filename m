@@ -1,109 +1,111 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F8827FB18
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Aug 2025 13:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD455288534
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Aug 2025 13:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755005280; cv=none; b=u0toxMRGAMKggyZFK8ZPEUyKdsmwIuwm4DST7YFnSEHGdw8qZXgy9sumtHuMt3a2G12z/c9vq5D61i/JimEWcPdXXWHWfitFJkWLUvIgAQVB83CAAq0+5fLrL7L7o1vm8bR3R8ta4FfSVMY3c7nfUdItdKLL/AkVLbd324GOxKM=
+	t=1755006890; cv=none; b=kfmmxjZj9hYk14rXQfmdnsdeN7KDpy9zaC1hCKAJ+4Ku8l9/flJN95y4uJI/5moP/exaHIyeyu9UZ49KsZ4h5COgyOlpT3fPWHOr6c+H6D/M4kU1q9qbvIUj1Veo6EbTdMaLD8hMrD7PFxiLcxGtd1ZwnfKhaA4kVJquQ+b6Bbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755005280; c=relaxed/simple;
-	bh=uUQekeSvKTsCb7oOO+EoYwxc2+w8LsYYt2YRxgpULUg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uilb9afVdPH//nS8fXD4OmVshSBwiw1piRziuyFQ8U7yOHb24SlcdKQ+BoJBfmKM7nVy7kbq7nSDIsx/S25dbKc81UVQQTtx4EbPxSZ2N88Y7Oh4cU4tf4CiBZXA8IuQXH/D2Na5fUTl0Jvk6Q1LnwthU1+w/kURBgO5dgEoCW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DaePAfMZ; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1755006890; c=relaxed/simple;
+	bh=upbKxsQx0QpZRud8WIcDD5N4XVxgeeYJQFgMmyBLI/U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nhw9zZ3xK1bMgT9l+26bJaM7rCmIYnfeJSdSewpwPaK99eoYMBe+jvSo8gx3aGfIieQnUMw0IpaplP0tDQCZhs9QBcbSS2IBEF7vxGWx8buqlwnuo4CU0eVrZBI8xUsErpZSltWO0G3FLTwrv9uxACczIKEBsrl6PqmSYZFg5VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=WOFmavdt; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DaePAfMZ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755005274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=bYA302zJcMdsKk1KdP3gy61mJzhYwbPixdUGA0jPcRs=;
-	b=DaePAfMZeHLDRsZ6v8S3bAZXf3PUGab484s2kCgPraf42WOLmShkCGa93atMyHJXjhMby6
-	jQwLDX9rVMgM6ytfMsK4jcpm+j4ZpA26RZd1igeoJGiwhRfuXuW5F3qohW4ItjZSDdNyM7
-	lHND/061G3VNRDgFxTXAvgFh9ilbReA=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Justin Stitt <justinstitt@google.com>
-Cc: linux-hardening@vger.kernel.org,
-	Daniel Thompson <daniel@riscstar.com>,
-	kgdb-bugreport@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] kdb: Replace deprecated strcpy() with memmove() in vkdb_printf()
-Date: Tue, 12 Aug 2025 15:26:20 +0200
-Message-ID: <20250812132621.119641-3-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="WOFmavdt"
+Received: from eig-obgw-6003b.ext.cloudfilter.net ([10.0.30.175])
+	by cmsmtp with ESMTPS
+	id lVbcuc2FO1jt6lpR9uaMLR; Tue, 12 Aug 2025 13:53:12 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id lpR8uGEzjCNkwlpR8uVAjg; Tue, 12 Aug 2025 13:53:11 +0000
+X-Authority-Analysis: v=2.4 cv=QO1oRhLL c=1 sm=1 tr=0 ts=689b4747
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=R1XpmoYe2GHAZdAE2O7VqQ==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=7T7KSl7uo7wA:10
+ a=5Dkndmrd0K96-EDDFPkA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=tNUEls5kqSuuy6g4SOW4SUaFj+tL30sjkLiY9FumhRY=; b=WOFmavdthVNtCV3zeQ97C9GGXl
+	oTXUDOOCNTA4k1JANH17X36iWvSj+tla4eykDGakfzmwZ7eQctmnCJctpzQNesABWAo3DF7WnrJux
+	olQ6x3wMEOOBK05H5vpfpphZG0W5bd7M8fk0LlxhBxwaWLF/brFtPZnQ2vUjb4/GkUke5B/7AD9PI
+	6DFHMer5dWSPqaYdQ/7BytIBN0zmUfAH4ASFA6v2ojH6iYMArgTnDmxeeD4yQcntAI2dqedrvyAkb
+	Luk3JVGaVHG/z1joq28CaQPNmZdve5nd2C3fviiNNARxB0quvd3rOKE9bCWgkFxVNZhflmoIkRCZV
+	NJuHUdfw==;
+Received: from oni-27.109.98-104.oninet.ne.jp ([27.109.98.104]:57416 helo=[192.168.0.175])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1ulpR7-00000002cDc-3zrY;
+	Tue, 12 Aug 2025 08:53:10 -0500
+Message-ID: <c7ffab41-97ed-49d8-966c-ac83d52266bf@embeddedor.com>
+Date: Tue, 12 Aug 2025 22:52:48 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] scsi: qla2xxx: Fix memcpy field-spanning write
+ issue
+To: "Martin K. Petersen" <martin.petersen@oracle.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Chris Leech <cleech@redhat.com>, Bryan Gurney <bgurney@redhat.com>,
+ Nilesh Javali <njavali@marvell.com>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ GR-QLogic-Storage-Upstream@marvell.com, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aIqivJeq8kxRUX0N@kspp> <yq1y0s5gicq.fsf@ca-mkp.ca.oracle.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <yq1y0s5gicq.fsf@ca-mkp.ca.oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 27.109.98.104
+X-Source-L: No
+X-Exim-ID: 1ulpR7-00000002cDc-3zrY
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: oni-27.109.98-104.oninet.ne.jp ([192.168.0.175]) [27.109.98.104]:57416
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHm3bE3IRumezWyLr2H8nIMu5W9EqL/dKIT/LbXxPDDJ0E+RQ/ubo5BqG8GHTk6/M/gG8GjVvct0so2Ga866Lso8DWXzE/oWG3Nppt1tyRfUZvCn8tmn
+ gHekZyqMhhJ5DhCey7Xoukb1QihxmdICaarxdEua+QIkxAJfA3sY4c6lomTjT/ZkGlQAXEhhGmohA3VfKxPRFO76M6PTwbNHZS1ThLtYfYqoRoMv3fN1v5L3
 
-strcpy() is deprecated and its behavior is undefined when the source and
-destination buffers overlap. Use memmove() instead to avoid any
-undefined behavior.
+Hi Martin,
 
-Adjust comments for clarity.
+On 31/07/25 12:17, Martin K. Petersen wrote:
+> 
+> Gustavo,
+> 
+>> +
+>> +	/* Must be last --ends in a flexible-array member. */
+>> +	TRAILING_OVERLAP(struct purex_item, default_item, iocb,
+>> +		uint8_t __default_item_iocb[QLA_DEFAULT_PAYLOAD_SIZE];
+>> +	);
+>>   } scsi_qla_host_t;
+> 
+> Looks OK to me but will have to wait for TRAILING_OVERLAP() to land.
+> 
 
-Link: https://github.com/KSPP/linux/issues/88
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Changes in v2:
-- Use memmove() because of strcpy()'s undefined behavior with
-  overlapping buffers as suggested by Doug Anderson
-- Compile-tested only
-- Link to v1: https://lore.kernel.org/lkml/20250811170351.68985-1-thorsten.blum@linux.dev/
----
- kernel/debug/kdb/kdb_io.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+The helper is already out in -rc1. :)
 
-diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-index 9b11b10b120c..b12b9db75c1d 100644
---- a/kernel/debug/kdb/kdb_io.c
-+++ b/kernel/debug/kdb/kdb_io.c
-@@ -714,8 +714,8 @@ int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
- 		 * it, depending on the results of the search.
- 		 */
- 		cp++;	 	     /* to byte after the newline */
--		replaced_byte = *cp; /* remember what/where it was */
--		cphold = cp;
-+		replaced_byte = *cp; /* remember what it was */
-+		cphold = cp;	     /* remember where it was */
- 		*cp = '\0';	     /* end the string for our search */
- 
- 		/*
-@@ -732,8 +732,9 @@ int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
- 			 * Shift the buffer left.
- 			 */
- 			*cphold = replaced_byte;
--			strcpy(kdb_buffer, cphold);
--			len = strlen(kdb_buffer);
-+			len = strlen(cphold);
-+			/* Use memmove() because the buffers overlap */
-+			memmove(kdb_buffer, cphold, len + 1);
- 			next_avail = kdb_buffer + len;
- 			size_avail = sizeof(kdb_buffer) - len;
- 			goto kdb_print_out;
-@@ -872,8 +873,9 @@ int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
- 	 */
- 	if (kdb_grepping_flag && !suspend_grep) {
- 		*cphold = replaced_byte;
--		strcpy(kdb_buffer, cphold);
--		len = strlen(kdb_buffer);
-+		len = strlen(cphold);
-+		/* Use memmove() because the buffers overlap */
-+		memmove(kdb_buffer, cphold, len + 1);
- 		next_avail = kdb_buffer + len;
- 		size_avail = sizeof(kdb_buffer) - len;
- 	}
--- 
-2.50.1
-
+Thanks!
+-Gustavo
