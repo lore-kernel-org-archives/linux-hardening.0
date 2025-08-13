@@ -1,144 +1,217 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1F928B415;
-	Wed, 13 Aug 2025 16:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38392FD7A9
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 20:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755104261; cv=none; b=eTuihXQIcKFuVt3/mFotCMkKZ1K4BJXr1Qq5hwxLNYEWWfMBez0nMON0/wo2Jwp7z99tQP7hZL2onc2eMI6ohS8zm4zrNPkINnDseg/z/SSoun1voObkkaZryu5F4fbOeJIDbwSvxOtC0kh5Ik11E9ho4/pwo3jVpHSTiYM20w4=
+	t=1755115688; cv=none; b=ulTES82UPfI9k1qJLHVmjFZi4rpO3JjwHPFyf3wMAeH+ar+UKUGgl3pr1DGvCS5Eg3UvP0VdWNWn6EyKegONtTNINaUI5shS/QRWzPRNvHwMX7VXIrNsRjx40lGh/tT14u4ZRkfWHFTigBodE0h5XOfHbsXFhN4hlf46CS+q3N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755104261; c=relaxed/simple;
-	bh=d5wzBkVFNX6qAoxoJebtm0HqVmOo3GmOYnWMCd8weXs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qi7ob+ZtrLVVySobUDDg7RDy0YgNl4yjYXjUtu9NCusKQloBhCWf+nYso14zVeaCPblexC3+OBHOYu9EjjPw02zQ+IIZsD4rvutPGeScvDuv5s3Dm/ILCK05PvLJuH88H5Y+vcen+ug+RSF8NSVTZitUV3gdQgeOZPpPIlFZJVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ApNM+ubm; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755115688; c=relaxed/simple;
+	bh=U4u5+5OOIgDBiJZLu+qX70rJyTfOwybMEUju62q4xg4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O+tc8gKVnBcWOhe8hCCFnfIQPLwuKta+kS9z4ElHLlHRoHMp3T8eWN7odY6R8R+pdWWc5zzrl3tVrn7iYUyOGicrIu8JzApMb60EgcFwM0zkAX65sK9B0jRpp0tDR0biiaBDYiMT0W9kWFXIY8sZTDBQ6m4jynWILQwPiEdrriA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gQY4SRQj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ApNM+ubm"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-afcb7a3b3a9so6984466b.2;
-        Wed, 13 Aug 2025 09:57:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755104258; x=1755709058; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a2gxI4yFXWVOtLhM/0polO/7seLsXtV2FXKtzlfxTr8=;
-        b=ApNM+ubmRwM7RSC40DNjE+ofpXjCz0yVpOG/2xfbZi7qscg3jPcd0V1xK83tfflzLO
-         xQQlfAD4bgsOZcSMc67YABOsyEF6BXTj5BH2upqRzKtS2Altdfq6vhhhP/7xyuZTRLw+
-         69ny3NIaMzt0MQQEQAutWV+QfX93MxlGgyAykiy+GLYt8EvrisfyCpZTFn1GwdzCRzkJ
-         MH3O+wRG8+n3jEaEctWMEIsjWc4iXIV5pxnkR1WZkgZJDJ6GapcKHjw5Tbsfar7c12Bg
-         xdB1OvsDYRk7kSQOc2nI21dgx6rKom352XD0xuHGhr1P29M7Evm+IOllImUPOVV/gWwS
-         6FGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755104258; x=1755709058;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a2gxI4yFXWVOtLhM/0polO/7seLsXtV2FXKtzlfxTr8=;
-        b=ROBFyP7FXRAoMOQA9puH7RV1e+pK4tlgzizwsHAxkc2T2KFurKXxf18jnEp/Xk74kH
-         3Xe/1a2phHMo8hH/xB8y8bieWK1bS7lOhHGCWs7tJWiu4AmAnkE3tjwUjBXYuug9ieEd
-         jJG+nRkfjlhaCKWyuySRxZ8TjPVW3gsMsDHZDaXUBWPl0VZg/ye44uBE6Zi8+X1jEUAZ
-         aB+j2cK/gplAjEdjLsj/UA3QNAk91uKpOrSL80SNOCCecy0TKW2DNHm/rP4vaGcFOO8E
-         33rx/bVxXIfhzD4k9dZFKXg3vLx03ZFCYXRztnnA4USq550yiBg4xMc47MXDWG+DGLly
-         zTEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFb/n2JjPOu+zVN0OpJD5bZwH6eGBLsD5d7DAv6L9YHIdMD3b+KbEm+cfQLNAOHDBtQCyMXptz+YjslA==@vger.kernel.org, AJvYcCUP8BuxXXlOY9TMnZ/VD5tK6sjv0S13p63uOvvr90XZptPa5RoHXfYjgJvqf7atW4bXyOC3m748YAZ/Dg==@vger.kernel.org, AJvYcCV1bSdJq0Z/LPIvpipkgXlLXQnN2nZl87MGMArkAeMtDq1Jy12bwMXvUxbLlpXPwwhlva6T/vKs2UNV2gouSkCB@vger.kernel.org, AJvYcCVrwpaCIGrNeuijpvLKerhBzw4o4uOurA6c9XrYjP2f9ZpjvqNzd7TxepUNKxKSNl33unVrk4TAWaniHN6s@vger.kernel.org, AJvYcCWUknLfk/wYmVAYugSHt3TnD5PEmZGk1zXkLIWb3c6uFNWeqpLUUniVc8hcY07/7aKV4fmOJ3pG4GxhwQ==@vger.kernel.org, AJvYcCWb/Ndlo8q3BUH80OzxEitcaS/f7JIvCRPkowjJosNxWLWYQGrzt6ZQvLL6MYcI4iejGZvwHXTHi+cnybW5@vger.kernel.org, AJvYcCWdigR4/hLNteSLuUQHxSzRd5A428Xy0WdFVH//gJaUTiGeWqQR+jl6xqxND6EfYC5iHDryYD1s8R33VPwuW9fIHcg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhyqgZclVJHPondCKLNK8BuomvBV97MPaE9FWZH2oHA3ugNqaa
-	agiFpvx2BaCWd5PChZmqZ2yrMT+dtIGgJXeJNA77Ui/c22Fu2SM4FRTw9xDSwH7JiL07kUyyiC3
-	vuI/S2qSjAbBCFdjvzx/wOcAF634KxoE=
-X-Gm-Gg: ASbGncsIOMOGI6ZYGV8RcPe4fZAMDUblFDMD9hUgtTSdwG8wix5q5Nsi3YMegNgeaBX
-	nQPXHn2AZKzqwieFJp2k1jEOnJrqDh4vPeLhd75yDNt2YwnWEXtK6fMsAMvgh49amTV4wL7BNwu
-	0s/vT0Yz74ymLMzbQtMfq1jwPltmI6gfLaEzkz40xcyhg4KriywShqk1yhhV/oj14Itz5zF82dE
-	4QDzlAu/w==
-X-Google-Smtp-Source: AGHT+IHbk44OEj1r3kasIcTcyEDngMuhrBuyXGAMgY2npDrtdlj0x5dJHeL/vjl9xwrgnQvrGKpG6wybKFGCryjWMzw=
-X-Received: by 2002:a17:907:3f0b:b0:af9:116c:61c4 with SMTP id
- a640c23a62f3a-afca4e44cd7mr358157166b.48.1755104257569; Wed, 13 Aug 2025
- 09:57:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gQY4SRQj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755115686;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=b7mt1C+KG932faq+YCzD+ZbW3TK14YbVvjxKepFVdXo=;
+	b=gQY4SRQjuXM8vaevOFyMMT/ScdJSkDBlPg2x11+6SYkwGjnkLooZDONknd1ExB2Dz7exWY
+	ddVi2G6iQ1rUh7uZvpN1tcOXF2Jsxe46CUKUATXG3kHogIvwGAT6qxLAAUvaSOn3wqp0VQ
+	GY83G70wGV5/Xs8XhaB7qQyk7snWkrE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-159-R7D5RGDiOjSUVj5WLhqYuQ-1; Wed,
+ 13 Aug 2025 16:08:00 -0400
+X-MC-Unique: R7D5RGDiOjSUVj5WLhqYuQ-1
+X-Mimecast-MFC-AGG-ID: R7D5RGDiOjSUVj5WLhqYuQ_1755115678
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 458691956056;
+	Wed, 13 Aug 2025 20:07:57 +0000 (UTC)
+Received: from bgurney-thinkpadp1gen5.remote.csb (unknown [10.44.32.39])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 816DA18003FC;
+	Wed, 13 Aug 2025 20:07:49 +0000 (UTC)
+From: Bryan Gurney <bgurney@redhat.com>
+To: linux-nvme@lists.infradead.org,
+	kbusch@kernel.org,
+	hch@lst.de,
+	sagi@grimberg.me,
+	axboe@kernel.dk
+Cc: james.smart@broadcom.com,
+	njavali@marvell.com,
+	linux-scsi@vger.kernel.org,
+	hare@suse.de,
+	linux-hardening@vger.kernel.org,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	bgurney@redhat.com,
+	jmeneghi@redhat.com,
+	emilne@redhat.com
+Subject: [PATCH v9 0/8] nvme-fc: FPIN link integrity handling
+Date: Wed, 13 Aug 2025 16:07:35 -0400
+Message-ID: <20250813200744.17975-1-bgurney@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250812-pinctrl-gpio-pinfuncs-v4-0-bb3906c55e64@linaro.org> <20250812-pinctrl-gpio-pinfuncs-v4-3-bb3906c55e64@linaro.org>
-In-Reply-To: <20250812-pinctrl-gpio-pinfuncs-v4-3-bb3906c55e64@linaro.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 13 Aug 2025 18:57:00 +0200
-X-Gm-Features: Ac12FXzRwEdbOG7WcfkJrIX52h7RVyVAx5HnOB8PpoXFNYyQXL2enxp09SWUXag
-Message-ID: <CAHp75VeSA=AYDKOV5XQ5nnz7EZRmnhbbVyJrcBUcMO2LrRMTmQ@mail.gmail.com>
-Subject: Re: [PATCH v4 03/15] pinctrl: airoha: replace struct function_desc
- with struct pinfunction
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
-	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Tue, Aug 12, 2025 at 10:27=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> struct function_desc is a wrapper around struct pinfunction with an
-> additional void *data pointer. This driver doesn't use the data pointer.
-> We're also working towards reducing the usage of struct function_desc in
-> pinctrl drivers - they should only be created by pinmux core and
-> accessed by drivers using pinmux_generic_get_function(). Replace the
-> struct function_desc objects in this driver with smaller struct
-> pinfunction instances.
+FPIN LI (link integrity) messages are received when the attached
+fabric detects hardware errors. In response to these messages I/O
+should be directed away from the affected ports, and only used
+if the 'optimized' paths are unavailable.
+Upon port reset the paths should be put back in service as the
+affected hardware might have been replaced.
+This patch adds a new controller flag 'NVME_CTRL_MARGINAL'
+which will be checked during multipath path selection, causing the
+path to be skipped when checking for 'optimized' paths. If no
+optimized paths are available the 'marginal' paths are considered
+for path selection alongside the 'non-optimized' paths.
+It also introduces a new nvme-fc callback 'nvme_fc_fpin_rcv()' to
+evaluate the FPIN LI TLV payload and set the 'marginal' state on
+all affected rports.
 
-...
+The testing for this patch set was performed by Bryan Gurney, using the
+process outlined by John Meneghini's presentation at LSFMM 2024, where
+the fibre channel switch sends an FPIN notification on a specific switch
+port, and the following is checked on the initiator:
 
->  #define PINCTRL_FUNC_DESC(id)                                          \
->         {                                                               \
->                 .desc =3D {                                              =
- \
-> -                       .func =3D {                                      =
- \
-> -                               .name =3D #id,                           =
- \
-> -                               .groups =3D id##_groups,                 =
- \
-> -                               .ngroups =3D ARRAY_SIZE(id##_groups),    =
- \
-> -                       }                                               \
-> +                       .name =3D #id,                                   =
- \
-> +                       .groups =3D id##_groups,                         =
- \
-> +                       .ngroups =3D ARRAY_SIZE(id##_groups),            =
- \
+1. The controllers corresponding to the paths on the port that has
+received the notification are showing a set NVME_CTRL_MARGINAL flag.
 
-Can this use PINCTRL_PINFUNCITON() ?
+   \
+    +- nvme4 fc traddr=c,host_traddr=e live optimized
+    +- nvme5 fc traddr=8,host_traddr=e live non-optimized
+    +- nvme8 fc traddr=e,host_traddr=f marginal optimized
+    +- nvme9 fc traddr=a,host_traddr=f marginal non-optimized
 
->                 },                                                      \
->                 .groups =3D id##_func_group,                             =
- \
->                 .group_size =3D ARRAY_SIZE(id##_func_group),             =
- \
+2. The I/O statistics of the test namespace show no I/O activity on the
+controllers with NVME_CTRL_MARGINAL set.
 
->  };
+   Device             tps    MB_read/s    MB_wrtn/s    MB_dscd/s
+   nvme4c4n1         0.00         0.00         0.00         0.00
+   nvme4c5n1     25001.00         0.00        97.66         0.00
+   nvme4c9n1     25000.00         0.00        97.66         0.00
+   nvme4n1       50011.00         0.00       195.36         0.00
 
---=20
-With Best Regards,
-Andy Shevchenko
+
+   Device             tps    MB_read/s    MB_wrtn/s    MB_dscd/s
+   nvme4c4n1         0.00         0.00         0.00         0.00
+   nvme4c5n1     48360.00         0.00       188.91         0.00
+   nvme4c9n1      1642.00         0.00         6.41         0.00
+   nvme4n1       49981.00         0.00       195.24         0.00
+
+
+   Device             tps    MB_read/s    MB_wrtn/s    MB_dscd/s
+   nvme4c4n1         0.00         0.00         0.00         0.00
+   nvme4c5n1     50001.00         0.00       195.32         0.00
+   nvme4c9n1         0.00         0.00         0.00         0.00
+   nvme4n1       50016.00         0.00       195.38         0.00
+
+Link: https://people.redhat.com/jmeneghi/LSFMM_2024/LSFMM_2024_NVMe_Cancel_and_FPIN.pdf
+
+Testing has been performed by sending all FPIN LI ELS messages from the
+switch to the Host and verifying the proper nvme multi-pathing behavior
+is effected with each of the eight different FPIN link integrity events.
+Results were verified with iostat and with the nvme list-subsys command.
+
+These tests were run with all scenarios including where there were only
+non-optimized paths available, and where all paths were
+marginal/degraded. All multi-path io-policies were tested including:
+numa, round-robin and queue-depth. When all paths on the host are
+marginal/degraded, I/O continues on the optimized path that was most
+recently non-marginal.  If both of the optimized paths are down, I/O
+properly continues on one of the marginal/degraded non-optimized paths.
+
+Testing has been complete with both Broadcom (lpfc) and Marvell (qla2xx)
+32GB HBAs.  Both HBAs successfully complete all tests.
+
+For a complete description of the tests that were run, please see
+bugzilla 20329.
+
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220329
+
+Changes to the original submission:
+- Changed flag name to 'marginal'
+- Do not block marginal path; influence path selection instead
+  to de-prioritize marginal paths
+
+Changes to v2:
+- Split off driver-specific modifications
+- Introduce 'union fc_tlv_desc' to avoid casts
+
+Changes to v3:
+- Include reviews from Justin Tee
+- Split marginal path handling patch
+
+Changes to v4:
+- Change 'u8' to '__u8' on fc_tlv_desc to fix a failure to build
+- Print 'marginal' instead of 'live' in the state of controllers
+  when they are marginal
+
+Changes to v5:
+- Minor spelling corrections to patch descriptions
+
+Changes to v6:
+- No code changes; added note about additional testing
+
+Changes to v7:
+- Split nvme core marginal flag addition into its own patch
+- Add patch for queue_depth marginal path support
+
+Changes to v8:
+- Rebased patch series to nvme-6.17.
+- Added patch from Gustavo Silva, "scsi: qla2xxx: Fix memcpy field-spanning
+  write issue", which resolves the field-spanning write issue
+- We decided to leave the "marginal" state as is, because the transport
+  driver uses the term "marginal".
+
+This patch series is based upon nvme-6.17.
+
+Bryan Gurney (2):
+  nvme: add NVME_CTRL_MARGINAL flag
+  nvme: sysfs: emit the marginal path state in show_state()
+
+Gustavo A. R. Silva (1):
+  scsi: qla2xxx: Fix memcpy field-spanning write issue
+
+Hannes Reinecke (5):
+  fc_els: use 'union fc_tlv_desc'
+  nvme-fc: marginal path handling
+  nvme-fc: nvme_fc_fpin_rcv() callback
+  lpfc: enable FPIN notification for NVMe
+  qla2xxx: enable FPIN notification for NVMe
+
+John Meneghini (1):
+  nvme-multipath: queue-depth support for marginal paths
+
+ drivers/nvme/host/core.c         |   1 +
+ drivers/nvme/host/fc.c           |  99 +++++++++++++++++++
+ drivers/nvme/host/multipath.c    |  24 +++--
+ drivers/nvme/host/nvme.h         |   6 ++
+ drivers/nvme/host/sysfs.c        |   4 +-
+ drivers/scsi/lpfc/lpfc_els.c     |  84 ++++++++--------
+ drivers/scsi/qla2xxx/qla_def.h   |  10 +-
+ drivers/scsi/qla2xxx/qla_isr.c   |  20 ++--
+ drivers/scsi/qla2xxx/qla_nvme.c  |   2 +-
+ drivers/scsi/qla2xxx/qla_os.c    |   5 +-
+ drivers/scsi/scsi_transport_fc.c |  27 +++--
+ include/linux/nvme-fc-driver.h   |   3 +
+ include/uapi/scsi/fc/fc_els.h    | 165 +++++++++++++++++--------------
+ 13 files changed, 293 insertions(+), 157 deletions(-)
+
+-- 
+2.50.1
+
