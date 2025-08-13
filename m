@@ -1,74 +1,74 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F251FFC48
-	for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 00:37:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E102063E7
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 00:37:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755045440; cv=none; b=WzSxLVHH+rap8SE50Qmuqoli8AJlWnXOCTeAQe1Ub8zXkm2/sr/KHcsuX05PUflB8VpPytLC7lzC6/SfLFciL4trTVqNrHqgkMXbr5tY61cZIiFoObAjW+9VKgn5L04CYG2UVkc46bldZEQ8J2qPtZznnxfd59MdXcDF0/ZnWxA=
+	t=1755045442; cv=none; b=UOm1Q8Vfql67rdQ7OEJ2WjXBpu1Cq1v/9HkljatP4FS2gdk921dBFB5qqWOK+P87OlMrltF75eR/AWpJW0Vj+FyUq4rnkD+akTYEuIUu8avpY3eW3fCEMxkc/ldrAavwr0n0kccVrPHn3ZDRSxFcGnQGX9ds1uP2hF6xXYkEyyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755045440; c=relaxed/simple;
-	bh=8Vle92yZY9xDtV8ytKjL5d+JCb2sWNmHvm13yHE47Fc=;
+	s=arc-20240116; t=1755045442; c=relaxed/simple;
+	bh=O53oCjVOWFRQhjWHjt+4P5FEAFT625NmeW0TBuS/Eqs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=E8c+An4SQBJoK6Qrla+I/tVipxbdvlhiXzwcw24CYRAvJz8MJS+Qzt6aS3+DG6yTwhakTL8B4Ee/nvEpnZpF+XriWEyFEKvDWdmJgB1+w8EJ8imoci3PPX3NwLgwkuBtk90nrcp0jhBj93FvssCKcTO89kM0YkXH18HlkxzwDjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AZqlctAO; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=Gd41rodFdVoK8QFDKNqKPgEzFTyD8CrtZ7uEAulRH9lKHeDrkSZWYdL5B9c1mWEH4oKE1iSyjy1YCCJ1soz3JB5AOBx6n+EBPHJzCzbITnWBdm9F7fjalj7cvc1KVf08sWHE6xArohIjxPpQVpV3a+bhrQNa5afKJGebi28uiuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dyRUUEtl; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AZqlctAO"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57CLFNTc018173
-	for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 00:37:18 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dyRUUEtl"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57CLXAKB020375
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 00:37:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	E9mIUmeVItJmyNwVFThGc/lr2aPxFoGHJijUqp9TSw4=; b=AZqlctAOyc6uApD2
-	2Dvft7OJAvLN3DqMZTOexglXu5CtJjX210i9h3xdeCad6ICLWA6QU4V4Bm9rpiEe
-	/5yM/6PV+QHBRNNRwaa6rlc7rg8h/RV2c3Tkmu/QdDDDy17NqfPOjRcQVJsa/2B8
-	/JH69lCW929T9eWFx/yE9EajcfMrdD4VpbTt54yVflauE/1YmFvixpLWGMDQw7tM
-	/M6/bdZdfjuTVyiPV4wrddxhZx7DYlyeBD3NPF5G4xIDICO6s0aosqz+ccRr8UyY
-	8SkXPe3gFwQ6OGBpMkZ4kmL9plzYUcIxPQY7w04XZM+qUez5dEg+vUx3y4gSknEZ
-	xI17zA==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48fem4dvmt-1
+	6+xxwSKNpqZLnnngK2iH6cMzG+P3jkkyP7YphG9EiKQ=; b=dyRUUEtlpPiZfYXI
+	B4QwBXfkzetvoj3MJXwTKVIl3KvQHjI+fxcu/pToqwBwZ171o3NbiyXXYQSFgfhW
+	tvHopc6Vzp/7xoZ/M7/sRHu4w3oI9Y5mmAQXWj7O+ib3IGs+dSBai9FucSr7MV/c
+	Hb3/vLosfqt2o1J+Zhhgha8WPv0GE8Lyb4rshh18XNBwVkhYA2aStbL5AgPkAJrY
+	GOLJ7mrS8miHdXNmmoO6hoyU48FTNHO/ukoqhBMJC5ltRRWtr9TqGnWauyzyU5LY
+	Kr3/qvOgM0UcSQ4aOuwHLJm8IzT+XVTU7i/GmD+B2FqEt1dtXHBP8zPjx37nS91b
+	o2k8rg==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48eqhx82ux-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 00:37:17 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-240012b74dfso44160445ad.2
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Aug 2025 17:37:17 -0700 (PDT)
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 00:37:14 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2403c86ff97so88940785ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Aug 2025 17:37:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755045436; x=1755650236;
+        d=1e100.net; s=20230601; t=1755045434; x=1755650234;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=E9mIUmeVItJmyNwVFThGc/lr2aPxFoGHJijUqp9TSw4=;
-        b=miaqzw/4mNDQ6w0XjyJTpoXnVxN43ITiqXNutkldYmzl8v78Z+EpBoVfzsRy1F9+/m
-         qALPqT8cr6F7JvN1Zu3C/KoyniesCe0ToKHGS1Gm9qPAtaryipGBAFBdmdqDyE8ClW2z
-         Xbn/GlDwFms02/wmXEk/A5VKQMHp5nxY7bkQn4Kigjcay5hA89TTL66bjonZYl1U2uPU
-         DcBBur0R3bheX2tfUQ+I/f0julfJueUWQ7Y41OVrzNtCIe95W4zWoSFwuKeN4IGlvKrf
-         DNOtfNhJPyl89TxPM7BKJqAd4oZyyqU0/y0L/tPpa+DVJP6NnrO7jBaUhV92esRLRb1P
-         PqnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQrcVZSoQMIYI4e+HxzBqAFQwmHgDUXSOJNnRHpZja9vsSfzqnoy/madOijtkNNCag7XqVzgU4uGCPKfzOTk0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMFK1O5OxcReWd/z81HiBjUmjfKnH4PP63TDJkBpt7T8kmDGos
-	6xWPb0VXl8ANKcX/bLXkRDA3EsDhBC+hZcPXNcJc0A/Vp0S2biZpwwjTWemjEi6wsVvu8MbYtk5
-	otz6HP/VcAzc7bi0afCT3X+iirPXwZs550WcrrdqF325EZ8lwA9njR10PL2PMFqHfjf8M6A==
-X-Gm-Gg: ASbGncso2OdCDqYHFjJCgj3Yxe6IatEL5m/ZTK8dYgofhn6JMPGTSpQkgkiCytIruLs
-	LFyMOQgfi9LStvjRaSURvUvTNyYPBIBs+QXg5XrIvnK4b0hf5PjK26bcCtfzICAlZzCs1YlhaN4
-	HdeVv1STbSrYFGgGOPpsnoAClxsh37/+5nbe87sNk/BsEn33QxK/BR/+TTwtsJ3wybwV6jMSRdC
-	oAk7JRTI4PMEUYB5FBHq+G/Wkt64ezyOD2c8wEmHGWuwQp4BYw2JYK181IZ5op4UXoA3SnLqP81
-	TN6t0hAdZD6bMREHqUnNL29yx9O0gS6edcBZT2/2d2BABQY0F2z7/HBgt7RzU7KP9MSmVtWdm9r
-	eWBvmwblOB6KyWcL48Jg3bTg=
-X-Received: by 2002:a17:903:2406:b0:240:49bf:6332 with SMTP id d9443c01a7336-2430d218afamr18366265ad.47.1755045436355;
-        Tue, 12 Aug 2025 17:37:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHFZ8I3i9S0gbmT7ZeBnhrBjqJHd1AmbumO63/UoIlLeoWED+/XTZ7ApkX0E4vEWA225OAgzQ==
-X-Received: by 2002:a17:903:2406:b0:240:49bf:6332 with SMTP id d9443c01a7336-2430d218afamr18365875ad.47.1755045435828;
-        Tue, 12 Aug 2025 17:37:15 -0700 (PDT)
+        bh=6+xxwSKNpqZLnnngK2iH6cMzG+P3jkkyP7YphG9EiKQ=;
+        b=Rj4FjvCJJ63essWQbREyjAhiYVFnzGLJfeFQEFCi5Ge8u43hCTbqsSHsFSjkoNL/CI
+         OY6K96J499jbg0lCzcqQuRfJ97Fh46dgdOkba6jd14xLlZBJ4XIH8mCn+9qwMXFCJBex
+         KxJxTvZHSgr64Kf+rvVNmMRprfgxTrYGrH5MhEhbSJyRyDPXIZEmx9CYlCRd8FgX5//N
+         nx+oe06GF262BvaojcXOBOt8bJb8TuMdK1qv3SBUlKQxsjmZJcxMEVFnzGxgAetyw6cW
+         4s5ig6XY0u7Kgqgs9n4s+eAfgqwIzqwNIBFyAtbFdZQfrFB/704BdeGf6BiFe+CDcz7N
+         L4UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHn3hOkv8udF7fmJpd/GWwmCnupl+BdUbWKBlElJPJaTH8ePCD7UtcmcXBxEJVUeHBHaB2/1a5WBoMZepQSqY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0Wakl7Uawijj/eC5fe4GNEjdRTUJdWqeKVs4oeoWVjfAR/sDn
+	ifbDmmZ1lFIQ/iQ1FhId1Xim94vcxqK2ixCxVPxg+22hxUvO0u6gJ88z/xMDYnI9vFw0kN7ZgHh
+	dehgLIEu+k9lE8pYEeHHahjWGtvaBvEN+bF2eONIfIllkfIcM5o+EwuWNCwReT1af+4FYrw==
+X-Gm-Gg: ASbGncuDANozEtzmd/C2Bb6QpoIpbyg59XoP7dsMA/vu9EsWDmqNREvSvX5A3CR8FpK
+	RM2TlTJXGlDDCkSOyKrQg4Ak3saD226IgCSY6Lxg9pKqNl8WpaEC7CtpsHfi5GyhfbozSxRYbov
+	iYR8TE9VzuS+huutyYYJ7DO0w0totl1GQrVfPqCCSjp4ccuNVjRtAg2QTOTNrUtCB6BUVvFy/PJ
+	IEUI+77dh9x0TnzJ/BF4QhlzB8pBAcPZU7Y2kfiCZcrxIsve7lFXH8TBMUZe68dulG/IexA/7Dr
+	1aIKmRbKHxF6y4GDLCqzpgLIChuHMgsfE3ahTJmJSjxF/R1iKNqhmRIZwNFBVwdzNfcPaec8bZo
+	aHPcw0H0f9AcpqSk2QoVBk50=
+X-Received: by 2002:a17:902:d48d:b0:240:80f:228e with SMTP id d9443c01a7336-2430d21d507mr16719475ad.52.1755045433472;
+        Tue, 12 Aug 2025 17:37:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF8i8EynRFCyIKJFpe6TlZ6plHoRJ1fRFvTsjRThmN5ggZyOGDgU+lkaJqS2YMALD+4ZNq6rQ==
+X-Received: by 2002:a17:902:d48d:b0:240:80f:228e with SMTP id d9443c01a7336-2430d21d507mr16718925ad.52.1755045433001;
+        Tue, 12 Aug 2025 17:37:13 -0700 (PDT)
 Received: from hu-azarrabi-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e8975c89sm308781585ad.96.2025.08.12.17.37.14
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e8975c89sm308781585ad.96.2025.08.12.17.37.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Aug 2025 17:37:15 -0700 (PDT)
+        Tue, 12 Aug 2025 17:37:12 -0700 (PDT)
 From: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-Date: Tue, 12 Aug 2025 17:35:40 -0700
-Subject: [PATCH v7 11/11] Documentation: tee: Add Qualcomm TEE driver
+Date: Tue, 12 Aug 2025 17:35:38 -0700
+Subject: [PATCH v7 09/11] qcomtee: add primordial object
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250812-qcom-tee-using-tee-ss-without-mem-obj-v7-11-ce7a1a774803@oss.qualcomm.com>
+Message-Id: <20250812-qcom-tee-using-tee-ss-without-mem-obj-v7-9-ce7a1a774803@oss.qualcomm.com>
 References: <20250812-qcom-tee-using-tee-ss-without-mem-obj-v7-0-ce7a1a774803@oss.qualcomm.com>
 In-Reply-To: <20250812-qcom-tee-using-tee-ss-without-mem-obj-v7-0-ce7a1a774803@oss.qualcomm.com>
 To: Jens Wiklander <jens.wiklander@linaro.org>,
@@ -95,167 +95,194 @@ Cc: Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org,
         linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
         Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-        Sumit Garg <sumit.garg@oss.qualcomm.com>
+        Sumit Garg <sumit.garg@oss.qualcomm.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.13.0
-X-Proofpoint-GUID: UwkDKaqd-Z8uRKTiP6rl_EtnLlN305-o
-X-Proofpoint-ORIG-GUID: UwkDKaqd-Z8uRKTiP6rl_EtnLlN305-o
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODExMDA2OCBTYWx0ZWRfX8EwacqfjLXTF
- OHScyS7n1MEbXCfGMooZNBFFyLBvxTpAdIcGnk555qc4El+NzVT7gpMpTv1W4jZNYzSLx8r68j8
- FQ4JhvehA0AxUAisZwMPNPyPVEuX4D8gcnIw+zcy11vROpZQER+wSbohXTaY1hOOI3RKKS3mHuL
- rlFI4P+cfeOD6kfzisbMJYZV1gCxFpGDyM6JOY5IbUFwss6J9C7k57NQw2fqxnJvJGW7ZFozhJr
- b9lGevhG4vROf4ISO0WUXg9rf9/d4xIty3vVZInkYvi/H1p2+QbBYn/uN+YRxYWkfreyLOGzknX
- wdMoY8Wg2j+gkuAL2/JkByxH+JRpO9fq8mdrZw6Gvzxe3cRRpN8EgcrA5aYCvz5HYHOz2H9yB1M
- goIF9hzu
-X-Authority-Analysis: v=2.4 cv=YMafyQGx c=1 sm=1 tr=0 ts=689bde3d cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=EUspDBNiAAAA:8 a=7CQSdrXTAAAA:8
- a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=vCTlBN6rBY5pDr9NrAkA:9 a=QEXdDO2ut3YA:10
- a=M0EVDjxxv-UA:10 a=1OuFwYUASf3TG4hYMiVC:22 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEwMDA1NyBTYWx0ZWRfX0AsAVy/Mqm0F
+ j0fHqoZA1w5Fmw/UDxSaNCcn94Hj4bytcV0tEUgt1QX+QVCcw4JqCEc6TTowvzkVny88Yquy+Jb
+ Ylxi5hcFXDhuxXcA3AW/5Q6BxSJX4FhLL8VE11uRqdVjkSTg3UbkBDYX9rN8LBpA1zK2ITn3aY1
+ LVy0pch0dqLT0IttGuxz8J8Ilhp07jkAjq83HwnqTo8wfBOVhPb1LWIOgKyCMijE1vvLiMv6Sj7
+ ARJu/FCYLeRlnHCgt2iUodNavKDlDjw5cDFNTL9f6AvGv+S2aMA+wmMXMDPRUYfJu0At9V9KuQT
+ sV3cB6CLNdiM/Zc6FF7h2ioykDVRLMQp9jorkil7zXI4fiNAZ7H3c+gb+HCkyzAldqbYQaFVIHC
+ R9orr+9w
+X-Proofpoint-GUID: GtrSPjFwV5JsAbYhBuwpxCFYYT4Ofr0x
+X-Authority-Analysis: v=2.4 cv=aYNhnQot c=1 sm=1 tr=0 ts=689bde3a cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8
+ a=COk6AnOGAAAA:8 a=6dJEewf6gjddJ4Qna_sA:9 a=QEXdDO2ut3YA:10
+ a=GvdueXVYPmCkWapjIL-Q:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: GtrSPjFwV5JsAbYhBuwpxCFYYT4Ofr0x
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-12_08,2025-08-11_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 clxscore=1015 priorityscore=1501 spamscore=0 suspectscore=0
- adultscore=0 impostorscore=0 malwarescore=0 phishscore=0
+ spamscore=0 adultscore=0 priorityscore=1501 suspectscore=0 phishscore=0
+ impostorscore=0 bulkscore=0 malwarescore=0 clxscore=1015
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508110068
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508100057
 
-Add documentation for the Qualcomm TEE driver.
+After booting, the kernel provides a static object known as the
+primordial object. This object is utilized by QTEE for native
+kernel services such as yield or privileged operations.
 
 Acked-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+Tested-by: Harshal Dev <quic_hdev@quicinc.com>
 Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
 ---
- Documentation/tee/index.rst |  1 +
- Documentation/tee/qtee.rst  | 96 +++++++++++++++++++++++++++++++++++++++++++++
- MAINTAINERS                 |  1 +
- 3 files changed, 98 insertions(+)
+ drivers/tee/qcomtee/Makefile         |  1 +
+ drivers/tee/qcomtee/core.c           | 19 ++++++++---
+ drivers/tee/qcomtee/primordial_obj.c | 66 ++++++++++++++++++++++++++++++++++++
+ drivers/tee/qcomtee/qcomtee.h        |  3 ++
+ 4 files changed, 84 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/tee/index.rst b/Documentation/tee/index.rst
-index 4be6e69d7837..62afb7ee9b52 100644
---- a/Documentation/tee/index.rst
-+++ b/Documentation/tee/index.rst
-@@ -11,6 +11,7 @@ TEE Subsystem
-    op-tee
-    amd-tee
-    ts-tee
-+   qtee
+diff --git a/drivers/tee/qcomtee/Makefile b/drivers/tee/qcomtee/Makefile
+index 600af2b8f1c1..78f8e899d143 100644
+--- a/drivers/tee/qcomtee/Makefile
++++ b/drivers/tee/qcomtee/Makefile
+@@ -3,5 +3,6 @@ obj-$(CONFIG_QCOMTEE) += qcomtee.o
+ qcomtee-objs += async.o
+ qcomtee-objs += call.o
+ qcomtee-objs += core.o
++qcomtee-objs += primordial_obj.o
+ qcomtee-objs += shm.o
+ qcomtee-objs += user_obj.o
+diff --git a/drivers/tee/qcomtee/core.c b/drivers/tee/qcomtee/core.c
+index 6d28138ef266..e1ea2c5eaff5 100644
+--- a/drivers/tee/qcomtee/core.c
++++ b/drivers/tee/qcomtee/core.c
+@@ -31,10 +31,12 @@ int qcomtee_next_arg_type(struct qcomtee_arg *u, int i,
+ }
  
- .. only::  subproject and html
+ /*
+- * QTEE expects IDs with the QCOMTEE_MSG_OBJECT_NS_BIT set for objects
+- * of the QCOMTEE_OBJECT_TYPE_CB type.
++ * QTEE expects IDs with QCOMTEE_MSG_OBJECT_NS_BIT set for objects of
++ * QCOMTEE_OBJECT_TYPE_CB type. The first ID with QCOMTEE_MSG_OBJECT_NS_BIT
++ * set is reserved for the primordial object.
+  */
+-#define QCOMTEE_OBJECT_ID_START (QCOMTEE_MSG_OBJECT_NS_BIT + 1)
++#define QCOMTEE_OBJECT_PRIMORDIAL (QCOMTEE_MSG_OBJECT_NS_BIT)
++#define QCOMTEE_OBJECT_ID_START (QCOMTEE_OBJECT_PRIMORDIAL + 1)
+ #define QCOMTEE_OBJECT_ID_END (U32_MAX)
  
-diff --git a/Documentation/tee/qtee.rst b/Documentation/tee/qtee.rst
+ #define QCOMTEE_OBJECT_SET(p, type, ...) \
+@@ -157,7 +159,9 @@ static void qcomtee_object_release(struct kref *refcount)
+  */
+ int qcomtee_object_get(struct qcomtee_object *object)
+ {
+-	if (object != NULL_QCOMTEE_OBJECT && object != ROOT_QCOMTEE_OBJECT)
++	if (object != &qcomtee_primordial_object &&
++	    object != NULL_QCOMTEE_OBJECT &&
++	    object != ROOT_QCOMTEE_OBJECT)
+ 		return kref_get_unless_zero(&object->refcount);
+ 
+ 	return 0;
+@@ -169,7 +173,9 @@ int qcomtee_object_get(struct qcomtee_object *object)
+  */
+ void qcomtee_object_put(struct qcomtee_object *object)
+ {
+-	if (object != NULL_QCOMTEE_OBJECT && object != ROOT_QCOMTEE_OBJECT)
++	if (object != &qcomtee_primordial_object &&
++	    object != NULL_QCOMTEE_OBJECT &&
++	    object != ROOT_QCOMTEE_OBJECT)
+ 		kref_put(&object->refcount, qcomtee_object_release);
+ }
+ 
+@@ -261,6 +267,9 @@ qcomtee_local_object_get(struct qcomtee_object_invoke_ctx *oic,
+ 	struct qcomtee *qcomtee = tee_get_drvdata(oic->ctx->teedev);
+ 	struct qcomtee_object *object;
+ 
++	if (object_id == QCOMTEE_OBJECT_PRIMORDIAL)
++		return &qcomtee_primordial_object;
++
+ 	guard(rcu)();
+ 	object = xa_load(&qcomtee->xa_local_objects, object_id);
+ 	/* It already checks for %NULL_QCOMTEE_OBJECT. */
+diff --git a/drivers/tee/qcomtee/primordial_obj.c b/drivers/tee/qcomtee/primordial_obj.c
 new file mode 100644
-index 000000000000..2fa2c1bf6384
+index 000000000000..df94fbf5f141
 --- /dev/null
-+++ b/Documentation/tee/qtee.rst
-@@ -0,0 +1,96 @@
-+.. SPDX-License-Identifier: GPL-2.0
++++ b/drivers/tee/qcomtee/primordial_obj.c
+@@ -0,0 +1,66 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
++ */
 +
-+=============================================
-+QTEE (Qualcomm Trusted Execution Environment)
-+=============================================
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
-+The QTEE driver handles communication with Qualcomm TEE [1].
++#include <linux/delay.h>
 +
-+The lowest level of communication with QTEE builds on the ARM SMC Calling
-+Convention (SMCCC) [2], which is the foundation for QTEE's Secure Channel
-+Manager (SCM) [3] used internally by the driver.
++#include "qcomtee.h"
 +
-+In a QTEE-based system, services are represented as objects with a series of
-+operations that can be called to produce results, including other objects.
++/**
++ * DOC: Primordial Object
++ *
++ * After boot, the kernel provides a static object of type
++ * %QCOMTEE_OBJECT_TYPE_CB called the primordial object. This object is used
++ * for native kernel services or privileged operations.
++ *
++ * We support:
++ *  - %QCOMTEE_OBJECT_OP_YIELD to yield by the thread running in QTEE.
++ *  - %QCOMTEE_OBJECT_OP_SLEEP to wait for a period of time.
++ */
 +
-+When an object is hosted within QTEE, executing its operations is referred
-+to as "direct invocation". QTEE can also invoke objects hosted in the non-secure
-+world using a method known as "callback request".
++#define QCOMTEE_OBJECT_OP_YIELD 1
++#define QCOMTEE_OBJECT_OP_SLEEP 2
 +
-+The SCM provides two functions to support direct invocation and callback requests:
++static int
++qcomtee_primordial_obj_dispatch(struct qcomtee_object_invoke_ctx *oic,
++				struct qcomtee_object *primordial_object_unused,
++				u32 op, struct qcomtee_arg *args)
++{
++	int err = 0;
 +
-+- QCOM_SCM_SMCINVOKE_INVOKE: Used for direct invocation. It can return either
-+  a result or initiate a callback request.
-+- QCOM_SCM_SMCINVOKE_CB_RSP: Used to submit a response to a callback request
-+  triggered by a previous direct invocation.
++	switch (op) {
++	case QCOMTEE_OBJECT_OP_YIELD:
++		cond_resched();
++		/* No output object. */
++		oic->data = NULL;
++		break;
++	case QCOMTEE_OBJECT_OP_SLEEP:
++		/* Check message format matched QCOMTEE_OBJECT_OP_SLEEP op. */
++		if (qcomtee_args_len(args) != 1 ||
++		    args[0].type != QCOMTEE_ARG_TYPE_IB ||
++		    args[0].b.size < sizeof(u32))
++			return -EINVAL;
 +
-+The QTEE Transport Message [4] is stacked on top of the SCM driver functions.
++		msleep(*(u32 *)(args[0].b.addr));
++		/* No output object. */
++		oic->data = NULL;
++		break;
++	default:
++		err = -EINVAL;
++	}
 +
-+A message consists of two buffers shared with QTEE: inbound and outbound
-+buffers. The inbound buffer is used for direct invocation, and the outbound
-+buffer is used to make callback requests. This picture shows the contents of
-+a QTEE transport message::
++	return err;
++}
 +
-+                                      +---------------------+
-+                                      |                     v
-+    +-----------------+-------+-------+------+--------------------------+
-+    | qcomtee_msg_    |object | buffer       |                          |
-+    |  object_invoke  |  id   | offset, size |                          | (inbound buffer)
-+    +-----------------+-------+--------------+--------------------------+
-+    <---- header -----><---- arguments ------><- in/out buffer payload ->
++static struct qcomtee_object_operations qcomtee_primordial_obj_ops = {
++	.dispatch = qcomtee_primordial_obj_dispatch,
++};
 +
-+                                      +-----------+
-+                                      |           v
-+    +-----------------+-------+-------+------+----------------------+
-+    | qcomtee_msg_    |object | buffer       |                      |
-+    |  callback       |  id   | offset, size |                      | (outbound buffer)
-+    +-----------------+-------+--------------+----------------------+
-+
-+Each buffer is started with a header and array of arguments.
-+
-+QTEE Transport Message supports four types of arguments:
-+
-+- Input Object (IO) is an object parameter to the current invocation
-+  or callback request.
-+- Output Object (OO) is an object parameter from the current invocation
-+  or callback request.
-+- Input Buffer (IB) is (offset, size) pair to the inbound or outbound region
-+  to store parameter to the current invocation or callback request.
-+- Output Buffer (OB) is (offset, size) pair to the inbound or outbound region
-+  to store parameter from the current invocation or callback request.
-+
-+Picture of the relationship between the different components in the QTEE
-+architecture::
-+
-+         User space               Kernel                     Secure world
-+         ~~~~~~~~~~               ~~~~~~                     ~~~~~~~~~~~~
-+   +--------+   +----------+                                +--------------+
-+   | Client |   |callback  |                                | Trusted      |
-+   +--------+   |server    |                                | Application  |
-+      /\        +----------+                                +--------------+
-+      ||  +----------+ /\                                          /\
-+      ||  |callback  | ||                                          ||
-+      ||  |server    | ||                                          \/
-+      ||  +----------+ ||                                   +--------------+
-+      ||       /\      ||                                   | TEE Internal |
-+      ||       ||      ||                                   | API          |
-+      \/       \/      \/   +--------+--------+             +--------------+
-+   +---------------------+  | TEE    | QTEE   |             | QTEE         |
-+   |   libqcomtee [5]    |  | subsys | driver |             | Trusted OS   |
-+   +-------+-------------+--+----+-------+----+-------------+--------------+
-+   |      Generic TEE API        |       |   QTEE MSG                      |
-+   |      IOCTL (TEE_IOC_*)      |       |   SMCCC (QCOM_SCM_SMCINVOKE_*)  |
-+   +-----------------------------+       +---------------------------------+
-+
-+References
-+==========
-+
-+[1] https://docs.qualcomm.com/bundle/publicresource/topics/80-70015-11/qualcomm-trusted-execution-environment.html
-+
-+[2] http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
-+
-+[3] drivers/firmware/qcom/qcom_scm.c
-+
-+[4] drivers/tee/qcomtee/qcomtee_msg.h
-+
-+[5] https://github.com/quic/quic-teec
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d19a49d60b41..0b476b794f8b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20882,6 +20882,7 @@ QUALCOMM TEE (QCOMTEE) DRIVER
- M:	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
-+F:	Documentation/tee/qtee.rst
- F:	drivers/tee/qcomtee/
++struct qcomtee_object qcomtee_primordial_object = {
++	.name = "primordial",
++	.object_type = QCOMTEE_OBJECT_TYPE_CB,
++	.ops = &qcomtee_primordial_obj_ops
++};
+diff --git a/drivers/tee/qcomtee/qcomtee.h b/drivers/tee/qcomtee/qcomtee.h
+index f34be992e68b..084b3882017e 100644
+--- a/drivers/tee/qcomtee/qcomtee.h
++++ b/drivers/tee/qcomtee/qcomtee.h
+@@ -140,4 +140,7 @@ int qcomtee_user_object_submit(struct tee_context *ctx,
+ 			       struct tee_param *params, int num_params,
+ 			       int req_id, int errno);
  
- QUALCOMM TRUST ZONE MEMORY ALLOCATOR
++/* (2) Primordial Object. */
++extern struct qcomtee_object qcomtee_primordial_object;
++
+ #endif /* QCOMTEE_H */
 
 -- 
 2.34.1
