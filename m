@@ -1,151 +1,177 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813EA212554
-	for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 10:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325832EE5F5;
+	Wed, 13 Aug 2025 10:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755079255; cv=none; b=UMIJeeOnuYaxHdfs57+IzNXkrZBmZDpdNkSe7/+2q/n3oREhYMZDK/vvYcBEynlPgnjnBu62R5oKPgn/Wdyo57nMuecgN8vQHJmmoFchX7/+skShavEbBNRe98i1xr7UcUhmXyT8f0EdTraRd8Ia1KeiATQPoHqCHsWaU0hYqvE=
+	t=1755079472; cv=none; b=R/sBQ249JNEyyCQPVk9fIVrs/tTpyuz4L0tmAjkLlovnUb4ge/KQiOD/d5UJGIVUWf96jebSWMFlKtrx3enmH5xrnwcCWCMRxbNoMQHzWKsS60lHMo5nRPu1q6xZA+JtCP+ojArcLiUhrothdkHSDFmxKgydcMpOKVaiGf+caJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755079255; c=relaxed/simple;
-	bh=cBywqYQ571JjXH/CFVXtPZFVBnz+yE4lfUMvOMd0qMo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VHDPgTRtfsSSXrUEgilyVdLOWmkttfGl/glM+EytjE5PBvxslaRLzgL9/mGRfnpI/cLFYjh5Bi3VFHlNJFEk9H4hgsVOX7A5NftbbIGUgCB2kwB71r+HsZH6ftzO+ktrZUo9DM5usCuExyAYeXOzc2Ye0tBBz/HtAnbJC5++uBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=N9CaoIbL; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1755079472; c=relaxed/simple;
+	bh=CjipzCBLA0dk4QE580Prr8K+4dZdrKP11N9W5AAxlSw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CTVBRJ/Hx2Cp8Vz0Del2wzlyFPPFGPNNNYERFygfSfTmlj9cEDXweUyVAFMvfhtqLjmwREsrpV2aMeqzcfk0qaX6a32x1chr7X1iUX5VJxfSEcfG4xcdyQD2TbQa20ws9pHjvpVGYo/15DuwuzSGMiHy7Us96k+MVGS8QBxJJcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GhK9KSfU; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="N9CaoIbL"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57D6mJfO008724
-	for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 10:00:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wiBWcdk24yow8RF3k9D1Z3F3r9BgHRGCWV7I+lbiN7E=; b=N9CaoIbLvjII5iGW
-	91H0wJPvVuZVgOQHfDedopcJWkBiXmu0ICOQy8BWlNAMtuIFn76O9zsijrMcXWaR
-	nGy1Lc3PT43fWeQIRxtPT/wUiLltdupUp3wNKpr4D6+EAXiXh4Y8inhd+D0CROS+
-	QvyvLgiKqlvKBtRTXqbV1cO5t0dB9S9+v8yPwFXbTTPA6MgYB2fzMCuUCJvhmITS
-	jVdz6J9Z8oSnKORIzJeeMhKraWxKcjqxlBdua9wfi2YinhduTNdaOnw1ZsZxFm7E
-	EXQIckRprZ49SAJVNw7MUW0hmGfMqL2vtakcjWUxi7WJVzJI3YEFLDrBS1JssXgF
-	zzOp1A==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48fem4favg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 10:00:52 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4b08f6edcedso18596251cf.2
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 03:00:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GhK9KSfU"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2407235722bso63433185ad.1;
+        Wed, 13 Aug 2025 03:04:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755079470; x=1755684270; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pA6OisM0xiSXM2QYlyPmLpjSFc9U7oYBc1YKa/QuGPA=;
+        b=GhK9KSfUCDeJweNLXeS/VJZ15srf62cNbQVSu7at/sWuGITzQ37nIGVXU/j2tGsKbI
+         +XGWWToSkdwBovt0wVDyk2wzxYERvm2LFgTlg1Nnvqd3CsuRG5EMBbCp4lQMN1x4mxZr
+         InxjSnJuOJljFL6CexKq0VZjO1NSOyIikvpClY3GL75v9gne3i8BZTXgd7JcyK62x3US
+         Cl7ldzNcubBLn4OKtItlBlDAsldpJxTlQWIbhAvRVE9t5rKaN8GAA1DJBW1HfNXUPAZ0
+         nILXE+0TB2T1eLO41Dv7a8l8ikIxide2CmNI6AB9YwG9waXcTVY0gllaVgPvmmkt+VAR
+         UisA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755079251; x=1755684051;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wiBWcdk24yow8RF3k9D1Z3F3r9BgHRGCWV7I+lbiN7E=;
-        b=P+ddWAb20vO1/lP4jSCEvGf4ev8NodYefNJIFUmMMLfBH5p4pDfPmxiWU978C7jhTF
-         t5cmZHrTJkccUFur60gIvOmf7tS7A6Q1RHYzDxdNPBLzZ3IsVkE8CLUkd6NA7NKM1coT
-         jo5VZV5MVZpqH3oVJXXv7rAaswqmh8A8gKdTsS2e6oAFnACS/owL4rnkgXGObFSO0eJ9
-         glmoYRx6U1O8cuDw9bbG9MIBQ7vD2ShgPtfvIF/+We6rBRIVFK9OCGvAlZGxQq9E5AKE
-         Wj2qIvnD7+kdIFVcpY35uTH/hR8VKg9Ye2zo6EIWovQbGExZYfxhl4Jad2i1mDmqciDq
-         NmPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGyhjhA7codlC+7/et6/IVZKIPeIZ5Y8WYq/vmpJkGuxnz7zUxHQz4xP1OXK7NNxhk8eupZQmHDoyYtb622TY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAQ/wbWNNWgj6HRoSH8LTl/OwBgGfmMd3iLzKNCa5poQzGjq7W
-	Abfe6i/4ujVy8yO1r4XZVeKcQtAvfuN9ZAlbFTgWlfwnGGRnu6FMCwuBV3j3/fb6r+0J0F222GV
-	NLy6a+abmdChzWm5rMp4Bw0pq7IcZqA1uM6KUEKbj82fzfVrjSM78nxGZYZLYwMhnBNRpEbU=
-X-Gm-Gg: ASbGncuG7uSLvjWjN7haKzPwSwlGa8Pum1/vFlBfkAq2atc5TVjtcpW6MPZcTgt/mgU
-	BBy4R2younVzrOr1fiQiDRyqHHubXpCk+8yM0WqQL+8ZE59D+2c0getOJ+3LFoKjUJ1CrGL3IUn
-	6WucT4EkvboPT6VCx/BDbK3rmRWj+lIi3OsjllvLvDZZPcym0qbeeFVEjWj4ndiqWHIiQacnw5m
-	Xbt/T48zxbbHV5m1lr0epB8un8SUo/c/puFkeypkqZj2ZryRaOCTRStBi30g2Za5eGCdcZYqgiA
-	2N/Yk3TRcxmh+Vmt1vp+cuApkO23+1uM+8LSfN2672hKa0G6ud13W6McAxoeotSdFolO0Is8uvc
-	nmyP+SN4wYgx30EOp8g==
-X-Received: by 2002:ac8:7f06:0:b0:472:2122:5a37 with SMTP id d75a77b69052e-4b0fc6c46d3mr13966881cf.4.1755079251122;
-        Wed, 13 Aug 2025 03:00:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHmTrD4ySjMqSbwhalzXJcsozDXyEzKvaYMIjrNiNP0RSpO0suJx9JL31ZtBXBXWoPTlWVUaw==
-X-Received: by 2002:ac8:7f06:0:b0:472:2122:5a37 with SMTP id d75a77b69052e-4b0fc6c46d3mr13966501cf.4.1755079250541;
-        Wed, 13 Aug 2025 03:00:50 -0700 (PDT)
-Received: from [192.168.43.16] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af91a0a3375sm2366142566b.41.2025.08.13.03.00.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Aug 2025 03:00:50 -0700 (PDT)
-Message-ID: <3ec0a8d0-7900-45bd-b0d3-90ee8ca7730c@oss.qualcomm.com>
-Date: Wed, 13 Aug 2025 12:00:46 +0200
+        d=1e100.net; s=20230601; t=1755079470; x=1755684270;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pA6OisM0xiSXM2QYlyPmLpjSFc9U7oYBc1YKa/QuGPA=;
+        b=exsPsIH3pAulCxd9em/o7klu/Gis8WByDqb7bRn+hEbdqGpXef1eRA4t1kslKT+C8r
+         ukktDEt2tF1/bjJFCVn7P9i/CR4A3ZD6el3Cq4QqFVDwQgGnjEQxNm8Qdzf9EzO9paj8
+         q2gsVhLBwMenI4wIVf7rpkgwoBZI7JFIgebNYS3gjlU2nNlDuWIp7+Hw5c7Oys6pIxA3
+         0b2UTsloZT1Ds/+o8Ppc0lVLVvCXa54Cxr65IuxQRhk82/UVNhNxGkebutzprnm8o2RG
+         r+WHvKBQY7jyGNCdECjfEK9mdt2Kcubmm7up0fqAybFdmZmT6rEBPwm8RGZjt2YUtyPz
+         pv+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUktRqgPxxECn8ph6Har7x5yK+Y0v00D3cFPcXBVC68ll3Xazdm2r4EobLOWAOyGkOKTswWNOh3hAEPHYwITr0iyXo=@vger.kernel.org, AJvYcCXddZx71RaQjW1QirtY+PWqujGcxKTzTUw10FcM1fWYr0U9sUxRw+F3Qc/TzOqYV/U8r7gXEP5UO8aFfB+QUCs=@vger.kernel.org, AJvYcCXwR5pjqN7SQiZWlCQFLvBgtZxHuZXeEO5bcHvdzmi9hTBZCPtXzs3AZWlcUb6B1k7CRiphuANQbnnmuVdp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8oq6zql0a9hXq3JXqJrGFLGf6YTfGRy17Ti/S3wFBjlsYh1Ih
+	G4bblswAo2/DVjqSUqe2PAhuC9GnDsDwKCOqym6uCbFpDBKajCADjqYU
+X-Gm-Gg: ASbGncsrMUZbw+i3hbW9nGpfhj5qmsu/OLVYzZsXQxoosqsNUMYpxbvDKyOnNIwI/FD
+	jyzgBIHls4J1O/hxPCeWHhZNQsF8z7T6k5jbkofWPQyJoXrmYELoGe2MiZg1Bx1aBGiYqo8ejXd
+	QH1NLHhOIs3pEl4ELD/VCtWAAHfssibJQzUF8dvI2VHnm+SyBooWVphkWZfopSrVTwkRldjKI5Y
+	T6rR5eSHbT9Kcs7zsNcLFpyNCxtSegkBxkYvPcAOzv5oaqs3oOi5y+uVpvRJCa3Cq+RXZ1Ho8xE
+	Hl19ZwNVoO8FQ7Bp9Hff3wsOSrW2NiECJW4VLAJEqeDJzDhqSJqLFq2if5V6Gd3z7y4z1Zz2Wss
+	jAJzZ5PDmA6AsTYcdTX7OVeLeMPTMQdN45QZdAu/GgcNDnCgQLu6OAS84NV9IVKJJcy1tBfVMQq
+	CI2w==
+X-Google-Smtp-Source: AGHT+IEGRUvzVmCw1gWq+fPL2z8gPf1Lc1jO0/qbCXCywxlp9sv7Gs9Tm2YFFW1IY+GR7t19aZAzjg==
+X-Received: by 2002:a17:902:e889:b0:240:a889:554d with SMTP id d9443c01a7336-2430d21d1d9mr41164265ad.45.1755079470435;
+        Wed, 13 Aug 2025 03:04:30 -0700 (PDT)
+Received: from [172.17.0.3] (125-227-29-20.hinet-ip.hinet.net. [125.227.29.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e8aabdedsm321545335ad.167.2025.08.13.03.04.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Aug 2025 03:04:29 -0700 (PDT)
+From: Leo Wang <leo.jt.wang@gmail.com>
+X-Google-Original-From: Leo Wang <leo.jt.wang@fii-foxconn.com>
+Subject: [PATCH v11 0/3] ARM: dts: Add support for Meta Clemente BMC
+Date: Wed, 13 Aug 2025 18:04:12 +0800
+Message-Id: <20250813-add-support-for-meta-clemente-bmc-v11-0-8970d41f88b0@fii-foxconn.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 10/11] qcomtee: enable TEE_IOC_SHM_ALLOC ioctl
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Sumit Garg <sumit.garg@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Apurupa Pattapu <quic_apurupa@quicinc.com>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Sumit Garg <sumit.garg@oss.qualcomm.com>
-References: <20250812-qcom-tee-using-tee-ss-without-mem-obj-v7-0-ce7a1a774803@oss.qualcomm.com>
- <20250812-qcom-tee-using-tee-ss-without-mem-obj-v7-10-ce7a1a774803@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250812-qcom-tee-using-tee-ss-without-mem-obj-v7-10-ce7a1a774803@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: h3Brrvv7a63McuLZ4bJ-uZqix_SJzs8u
-X-Proofpoint-ORIG-GUID: h3Brrvv7a63McuLZ4bJ-uZqix_SJzs8u
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODExMDA2OCBTYWx0ZWRfX1PYSP0bHZLi4
- 2f//bFQR6qg9NEMgPCtLiIHB3G9zuY65oMij7/RyjStLBcH/YSIbLZmDZRfNC6eYl1VP4Z60XwY
- ZDUAGKoSDmt+WcbrLHhJHUtH0ChiQYA/lDOtipl26vvbQPf69g9g30CX147si7oNZGg51bS9IZF
- tlrGwWd5vISHi38u2natVVT5D8WEQFxBtIIWDeGSP1012fB4axdNHEXt03UOnLUAPcPJ6Sxg/QH
- oKtn6rA4ACfZyNueFIrbrFg0P393mJ/v9nrz4ZxA5zcZqZLWGTckOXxXp/sP1iBU0Gula2GitK5
- EUfIAYo+Ggcov7P7QAJYhFdIW9rEue8nZtCz8pTp4BeHHKqUqOsi4Rsw5BEww3zfq2ip6g/kRsC
- psqo5145
-X-Authority-Analysis: v=2.4 cv=YMafyQGx c=1 sm=1 tr=0 ts=689c6254 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=COk6AnOGAAAA:8 a=WNCivIMphfMWkbBb3CYA:9 a=QEXdDO2ut3YA:10
- a=dawVfQjAaf238kedN5IG:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-12_08,2025-08-11_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 clxscore=1011 priorityscore=1501 spamscore=0 suspectscore=0
- adultscore=0 impostorscore=0 malwarescore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508110068
+X-B4-Tracking: v=1; b=H4sIABxjnGgC/5XSzWrDMAwH8FcpOc/Dn3Lc095j7GDL8mpYkpJko
+ aP03ef00sAycI8S5vcXlq7NRGOmqTkers1IS57y0JdCiJdDgyfffxLLsTQayaXhIFrmY2TT9/k
+ 8jDNLw8g6mj3DL+qon4mFDpnTwmtwAY1UTXHOI6V8uYe8f5T6lKd5GH/umYtYu8/oi2CckUEP4
+ Ii0DW8p5/L2gkPfv+LQNWvGIjeuFDWuLC6gocSNE9rhvqu2rqpxVXFRSpUSJg2Y9l29dW2Nq1e
+ XbEpSaeCo913ztGuKy1VLEZLA4P6ZFx6u5VV7g+LapMjYELlSsO/ajSugxrXFjSYEq41D4/2+2
+ 27dqn9oiytTAp+CgsBp33Ubt+4eXHGDBbKRdARs913BH3DLqw5Y8PUiBMqyEGlaFf/Kt9vtFwU
+ gvy7zAwAA
+X-Change-ID: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ leo.jt.wang@fii-foxconn.com, george.kw.lee@fii-foxconn.com, 
+ bruce.jy.hung@fii-foxconn.com, Leo Wang <leo.jt.wang@gmail.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1755079466; l=3316;
+ i=leo.jt.wang@fii-foxconn.com; s=20250618; h=from:subject:message-id;
+ bh=CjipzCBLA0dk4QE580Prr8K+4dZdrKP11N9W5AAxlSw=;
+ b=BJkjd0kiA5Y8obGHU+q6FUc8+QDJ1WXZD9uSxKU29Zky8R5vRxRpNK01HbH/Vk9qthXmKFUNj
+ wq0ZQ7HThYLCdP4EjcBvWj1whob5NKgQ/OA7LXugQL6ituxA13vE96/
+X-Developer-Key: i=leo.jt.wang@fii-foxconn.com; a=ed25519;
+ pk=x+DKjAtU/ZbbMkkAVdwfZzKpvNUVgiV1sLJbidVIwSQ=
 
-On 8/13/25 2:35 AM, Amirreza Zarrabi wrote:
-> Enable userspace to allocate shared memory with QTEE. Since
-> QTEE handles shared memory as object, a wrapper is implemented
-> to represent tee_shm as an object. The shared memory identifier,
-> obtained through TEE_IOC_SHM_ALLOC, is transferred to the driver using
-> TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF_INPUT/OUTPUT.
-> 
-> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Acked-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
-> Tested-by: Harshal Dev <quic_hdev@quicinc.com>
-> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-> ---
+This series adds initial support for the Meta Clemente BMC based on the
+ASPEED AST2600 SoC.
 
-[...]
+Patch 1 documents the compatible string.
+Patch 2 Add pinctrl nodes for NCSI3 and NCSI4.
+Patch 3 adds the device tree for the board.
 
-> +/* Mapping information format as expected by QTEE. */
-> +struct qcomtee_mapping_info {
-> +	u64 paddr;
-> +	u64 len;
-> +	u32 perms;
-> +} __packed;
+Signed-off-by: Leo Wang <leo.jt.wang@gmail.com>
+---
+Changes in v11:
+- Rebased on bmc/aspeed/dt as requested.
+- Link to v10: https://lore.kernel.org/r/20250801-add-support-for-meta-clemente-bmc-v10-0-c1c27082583d@fii-foxconn.com
 
-Please use types with explicit endianness, e.g. __le32. I'm assuming
-TZ will always be little-endian, regardless of the host OS
+Changes in v10:
+- Reordered NCSI pinctrl patch before board DTS.
+- Dropped MAX1363 ADC nodes from the devicetree.
+- Link to v9: https://lore.kernel.org/r/20250723-add-support-for-meta-clemente-bmc-v9-0-b76e7de4d6c8@fii-foxconn.com
 
-Konrad
+Changes in v9:
+- Fix comment alignment for // PDB TEMP SENSOR.
+- Drop non-standard aspeed,enable-byte property from i2c11 node.
+- Move NCSI3 and NCSI4 pinctrl nodes into a separate patch as requested.
+- Link to v8: https://lore.kernel.org/r/20250717-add-support-for-meta-clemente-bmc-v8-0-2ff6afb36b0e@fii-foxconn.com
+
+Changes in v8:
+- Relocate IOBx_NICx_TEMP TMP421 sensors
+- Enable byte mode for i2c11
+- Link to v7: https://lore.kernel.org/r/20250716-add-support-for-meta-clemente-bmc-v7-0-d5bb7459c5aa@fii-foxconn.com
+
+Changes in v7:
+- Relocate CBC FRU EEPROMs from i2c13 to i2c12.
+- Link to v6: https://lore.kernel.org/r/20250708-add-support-for-meta-clemente-bmc-v6-0-7f3e57bd0336@fii-foxconn.com
+
+Changes in v6:
+- Correct Author email to match Signed-off-by email address.
+- Link to v5: https://lore.kernel.org/r/20250627-add-support-for-meta-clemente-bmc-v5-0-038ed6f1cb9f@fii-foxconn.com
+
+Changes in v5:
+- Remove accidentally pasted texts.
+- Link to v4: https://lore.kernel.org/r/20250627-add-support-for-meta-clemente-bmc-v4-0-ce7ff23460c4@fii-foxconn.com
+
+Changes in v4:
+- Move properties of nodes defined in the same file from label ref back to where they belong.
+- Move pinctrl default configs for ncsi3 and ncsi4 to aspeed-g6-pinctrl.dtsi.
+- Add properties to i2c10 and i2c15 to enable MCTP.
+- Link to v3: https://lore.kernel.org/r/20250623-add-support-for-meta-clemente-bmc-v3-0-c223ffcf46cf@fii-foxconn.com
+
+Changes in v3:
+- Modify leakage sensor to reflect current design.
+- Link to v2: https://lore.kernel.org/r/20250621-add-support-for-meta-clemente-bmc-v2-0-6c5ef059149c@fii-foxconn.com
+
+Changes in v2:
+- Fix patch 1/2 subject line to match dt-bindings convention.
+- Reorder device tree nodes in patch 2/2 to follow upstream DTS style.
+- Link to v1: https://lore.kernel.org/r/20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com
+
+---
+Leo Wang (3):
+      dt-bindings: arm: aspeed: add Meta Clemente board
+      ARM: dts: aspeed: clemente: add NCSI3 and NCSI4 pinctrl nodes
+      ARM: dts: aspeed: clemente: add Meta Clemente BMC
+
+ .../devicetree/bindings/arm/aspeed/aspeed.yaml     |    1 +
+ arch/arm/boot/dts/aspeed/Makefile                  |    1 +
+ .../dts/aspeed/aspeed-bmc-facebook-clemente.dts    | 1250 ++++++++++++++++++++
+ arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |   10 +
+ 4 files changed, 1262 insertions(+)
+---
+base-commit: b785b5d88cc27a521ea22b3afd85804c4c321d4a
+change-id: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+
+Best regards,
+-- 
+Leo Wang <leo.jt.wang@fii-foxconn.com>
+
