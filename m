@@ -1,145 +1,113 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040FF74420;
-	Wed, 13 Aug 2025 11:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D034A2D0C60;
+	Wed, 13 Aug 2025 12:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755085189; cv=none; b=kpdjPlv5B/ZjBuer1aFv/aaInQQy6wWGJMHLzupCZzNFWn5plVdZJqAtCBEnVffyLAgmpbjthnpTyUnFUEVyiiS1tMDWSt3qiP4+sybzk5ZjatPUX7oBtrmJzFYmclh59bQX2wIXWNzVC7icXojI5z0keeJUfM5wm5lrhy3ZES8=
+	t=1755089892; cv=none; b=CX7Jh42F96awUN0tU4FlWiZFWwjYs/4Eo/DPvkii/mvtBHbgUICPHnsSWKPAnfHUErEyBbG579oWz2ombb8Og/AG+uOgndUvnyeWnIrugGSHhvw4QmQwGhDBC/18mZlXdxhq9vHYyzpFhrIm08ZpQdhpn2isf2ufVmjdBMjiuGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755085189; c=relaxed/simple;
-	bh=Zi6Z75oIMtn8beKtFputqAn8NKkyXzfJHRrfLH3JN/w=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=FVtjUWZ9+WGlPEHEBahvRrsW2pivIK59IMwHqbKr8eKUd3ez8uaQCrfuBWZJkhIBzlgS/PiwDp5BM2GcjPFnRYbqIjVXAEVgc9TPRP4PhI+VgF5fjh3QrRffwifZXQBVEO44vZcZKY/0mjqIg8YBakGgup29/pD5wXCZ+FIwMQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lTiqdsfR; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1755089892; c=relaxed/simple;
+	bh=tPbvYfvEEkJ90+feIIjnsSLo4M1qFBVXPPnHurj+jCk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O8fOYE6PMD6Vw1lXEEn3IGP4Fs4evxso8EJUH4IBPYM9gyUNf0qbeXoEZPrHSp3KIWQ3ae7mO4z5dEmRu0TswlVg2CFslCE/sZyn4F1/IvvhQEIGIa1VDG11cBwqE7+/GOq5nIHnBfm04D+riTOhNl2FqpwztHiEry/9VyyMz6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S6tFPUHG; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lTiqdsfR"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57DBLbgk002778;
-	Wed, 13 Aug 2025 11:39:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UJq5xl9wnlbTfrwZF8n2U+4EQciaitdnUfm2jP4aBNY=; b=lTiqdsfRl1pFVuwm
-	yg/nPzzH+T/3ZpVcXGcBcKvj6W4CUgQt3GrsWAXt0o25/nzrEC/gWww87fvRxrjy
-	wkykHSme6IyOui/BEd2p6kDz3FySkuGb2mUcmj/Fl7V+mSa7i+btrZKEL8gE9oTq
-	TUJP3Jt68qZ11KxOjR52tATYHhFCBVlcTtWyqMBGnipDC+5ETpUwEcfWNFrHf8kJ
-	y1DJJi/0cSD122xtpTMXWa7jMqgN9NaHxV2vicnfJhiqDBN7vsWYBbxnZf1yHRG1
-	l9SKICOO5cULnBCgKkljTu7u22HJka8Edre01kUYg1lbSxyfo+IEDwRFyMHRE/rG
-	+JA73Q==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48dxdv3kk5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Aug 2025 11:39:31 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 57DBdUQo008472
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Aug 2025 11:39:30 GMT
-Received: from [10.235.9.75] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 13 Aug
- 2025 04:39:25 -0700
-Message-ID: <ccb022ab-45a8-4e97-8b63-4d2921ebfadc@quicinc.com>
-Date: Wed, 13 Aug 2025 19:39:23 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6tFPUHG"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-24286ed4505so12155575ad.3;
+        Wed, 13 Aug 2025 05:58:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755089890; x=1755694690; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yhZ15xnNJ8Bsb5/U+nfBs12IH7lId86EXWsj3N0wAEw=;
+        b=S6tFPUHGbGIGW453LdibTjvxOrixs0IIUtZN4gG31KkeJwALt/UTJBSFZ4huex4YPx
+         nUzBlDjP09kBIawXpW9POAPSaehPH9zPJ4tFtDU5GfPw+ypm8HvoVRmvikCSf3NgqTtn
+         B6Slo+f4/smuKgQeflnXpQjHLBwA/nf5nYfMh6pf7QdpTDsf/Prg3pAP/zhf5+UNsFkY
+         EoLZGAgqr2Omk3s9c8apjjd1ao63eLJLkrq78QedLIF55ZrnSAqOm662iIPMfmZQ0DqV
+         9gnNyOSxQhDXLrI4ZTKhIamTTwadS4kEHJqZzo7ha8cek2i//XpPlY+EMTmy3L5epA77
+         U0yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755089890; x=1755694690;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yhZ15xnNJ8Bsb5/U+nfBs12IH7lId86EXWsj3N0wAEw=;
+        b=EzYmdW6n2Y7XcTskYKiTdmqiJNjUtsv4t5rx1HSCxo8kC0WDzHaVwhiNKDpWE3y57E
+         4r/H7+lIPVTzp8k4/IgfKvSjFedgUJeqZI7S10w6lR8hRdpoFwy2ZtGmWF1IgJqKEhf6
+         J7DJ4+WnC5SfBUmWGaiv1BU/Zb0QiXJ0J4y1yKfJEojG7blNsrTswnkvfIi+LR09N+wo
+         w4x92OC+Ain913rAT8gcDKNAGWzBQupn//WE1GmTttyn6i1c/V5OanR5wYawY5hmz9/I
+         bWx9s90A3FfV3ZbdeZZpDHv2eqiyV6hyn2IpO+wfFCEvYsmBTiNhRRlTc+ToUzHB3nRF
+         GYfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDGAkNuqifMmQKtyCjNgIO3VDHYQ4BuwSiepC5MILYrL1PUiBHNtIXcIsY3PHsvkR6Trw5n50maEZAibiL@vger.kernel.org, AJvYcCUVGjAmymR5VtAuVVUj7ScAMiXX/66PpO4xIWlM9MD40Zqku+o7OS22bzq5tb208mAsebqYn25GPsu4yGARwe8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIMjzVYCtzM1jtKhlPCxZQoD4APECEw3I/Ov/2IiCkOLHm0jWS
+	R5hpTmkGF1sttN9JWJPgxLtGSTzXMUZLPRes+dXYRbg72XiDCA1uymTqlKjmb34ZFL4pZegd6GC
+	OC2BH+T8WpxLTJT8hMU1wCrz1P7UozPI=
+X-Gm-Gg: ASbGncvloDN1d1l1e0Ft3Dy5RneiElcpRGEfbj1BAK66WMO6VEPt3d/NyQlyEDD76if
+	nRdYiNQVi8NRWvRjqxSbYHAVgVukE+jFjsI+YDuS0o2SR7kgpQLWhif/NFOWtmIO+1KOgNjqvAS
+	772wkVvVVDu3Jqmhz8SNLQiwBegp0yi7P3lOUOwyu0O3ScNYvSLYvyCNhsmX52YXIIMPp2OhKEB
+	pRx/1gsNIfzAZw4Fg==
+X-Google-Smtp-Source: AGHT+IHxKxef7KDAWgS57IBEethaxaid8oH0xBLj3YbbIW+PZKZlovPj9KRyOv5FJHyzY2EunVMbuo8q9l8uWKWf3Bg=
+X-Received: by 2002:a17:902:d487:b0:240:280a:5443 with SMTP id
+ d9443c01a7336-2430d0fb768mr20500475ad.3.1755089889907; Wed, 13 Aug 2025
+ 05:58:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Luo Jie <quic_luoj@quicinc.com>
-Subject: Re: [PATCH net-next v7 03/14] net: ethernet: qualcomm: Add PPE driver
- for IPQ9574 SoC
-To: Randy Dunlap <rdunlap@infradead.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Lei Wei <quic_leiwei@quicinc.com>,
-        "Suruchi
- Agarwal" <quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp
- Zabel" <p.zabel@pengutronix.de>
-CC: <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>
-References: <20250812-qcom_ipq_ppe-v7-0-789404bdbc9a@quicinc.com>
- <20250812-qcom_ipq_ppe-v7-3-789404bdbc9a@quicinc.com>
- <5ee33ac3-c23e-4da7-87bc-2a5ea6e93afe@infradead.org>
-Content-Language: en-US
-In-Reply-To: <5ee33ac3-c23e-4da7-87bc-2a5ea6e93afe@infradead.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=IuYecK/g c=1 sm=1 tr=0 ts=689c7973 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10
- a=yauDWUx4ckUadswYq4AA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: HPXd7wzleDymh-hJW_R1aw-SCfLCbgzB
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA5MDAyNSBTYWx0ZWRfX5i13+qW4nDqh
- usNlwPqDoA5CNuTNowKAdonAV7zadljzx9q3fqcxT+1U2TJ07AUN/7VCjWN15jv3mbCvze9A2Uz
- QI4CwGUmrc62E2ULgQkvAOJuGB9UCEj7XUtOTo8ReP8uZjXUj7Bgn5qTfTCa+dbzSNWi5iCzo2a
- z6VUSqtH1stODts+15mlPPTJ4kD9k1TJh9yonz9Uqhceyx9MaoD5cbPclc6gAq9ArsbZJp44udY
- OjHGH8SMve90uCrZo52J30m8Rj3hHkOaiwQUYbLe94ZZ3e9vZS/j/J1JnOpnzk9gCVhyXBwKNmS
- GkodGwC94senKvc1Sy2Cv6boQGsLhbMsz2WwD0EI//G8DsPU1vRzGiR8Ws+yPTJxzv2/JQWBGrm
- nwqGpvKy
-X-Proofpoint-GUID: HPXd7wzleDymh-hJW_R1aw-SCfLCbgzB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-13_01,2025-08-11_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 malwarescore=0 spamscore=0 priorityscore=1501 adultscore=0
- clxscore=1011 phishscore=0 suspectscore=0 bulkscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2508090025
+References: <Z678TNhCbTk363Tw@kspp> <864c7dd5-0deb-4adb-a1cf-c8a809514d7e@embeddedor.com>
+ <217b00f5-d03d-4624-9ba9-d838199ef7b9@embeddedor.com> <CADnq5_M5Jv4A5CXAKY2Qd-dhrfmecnauRtVY_ghSsut7i=KNww@mail.gmail.com>
+ <d07b4edc-6048-4c10-b8ac-dcccd5a932d3@embeddedor.com> <d43dac3e-122d-4c16-9c1e-760eac91b8da@embeddedor.com>
+In-Reply-To: <d43dac3e-122d-4c16-9c1e-760eac91b8da@embeddedor.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Wed, 13 Aug 2025 08:57:58 -0400
+X-Gm-Features: Ac12FXwFErwxayzzgdklN7bkoaoY4WArV4IyBD4hoWJZTycIfvcToKy2nH1H0nY
+Message-ID: <CADnq5_Mqa2HWWKrAYTAfjdvEQTMUeB1MBnhtRxJZjXLWcz1nmg@mail.gmail.com>
+Subject: Re: [PATCH][next] drm/amd/pm: Avoid multiple -Wflex-array-member-not-at-end
+ warnings
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Kenneth Feng <kenneth.feng@amd.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Aug 13, 2025 at 1:12=E2=80=AFAM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+> Hi!
+>
+> On 22/04/25 23:58, Gustavo A. R. Silva wrote:
+> >
+> >
+> > On 16/04/25 09:04, Alex Deucher wrote:
+> >> Can you resend, I can't seem to find the original emails.
+> >> Additionally, all of the NISLANDS structures are unused in amdgpu, so
+> >> those could be removed.
+>
+> I'm taking a look at this, and it seems that those NISLANDS structs are a=
+ctually
+> needed in amdgpu code. For instance, `struct si_power_info` contains a me=
+mber
+> of the type of `struct ni_power_info`, and this latter struct contains a
+> member of the type of `NISLANDS_SMC_STATETABLE`, thus `NISLANDS_SMC_SWSTA=
+TE`
+> and `NISLANDS_SMC_HW_PERFORMANCE_LEVEL` are needed, and so on.
+>
+> So, it seems that all those structs should stay. What do you think?
 
+They are not used for programming the hardware.  They were just
+inherited from radeon.  All of the NI SMC stuff can be dropped.
 
-On 8/13/2025 12:54 AM, Randy Dunlap wrote:
-> 
-> 
-> On 8/12/25 7:10 AM, Luo Jie wrote:
->> diff --git a/drivers/net/ethernet/qualcomm/Kconfig b/drivers/net/ethernet/qualcomm/Kconfig
->> index a4434eb38950..6e56b022fc2d 100644
->> --- a/drivers/net/ethernet/qualcomm/Kconfig
->> +++ b/drivers/net/ethernet/qualcomm/Kconfig
->> @@ -60,6 +60,21 @@ config QCOM_EMAC
->>   	  low power, Receive-Side Scaling (RSS), and IEEE 1588-2008
->>   	  Precision Clock Synchronization Protocol.
->>   
->> +config QCOM_PPE
->> +	tristate "Qualcomm Technologies, Inc. PPE Ethernet support"
->> +	depends on HAS_IOMEM && OF
->> +	depends on COMMON_CLK
->> +	select REGMAP_MMIO
->> +	help
->> +	  This driver supports the Qualcomm Technologies, Inc. packet
->> +	  process engine (PPE) available with IPQ SoC. The PPE includes
->> +	  the ethernet MACs, Ethernet DMA (EDMA) and switch core that
-> 
-> Please use ethernet or Ethernet consistently.
+Alex
 
-OK, I will update to use "Ethernet" consistently throughout the code.
-
-> 
->> +	  supports L3 flow offload, L2 switch function, RSS and tunnel
->> +	  offload.
->> +
->> +	  To compile this driver as a module, choose M here. The module
->> +	  will be called qcom-ppe.
->> +
-
+>
+> Thanks!
+> -Gustavo
