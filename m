@@ -1,117 +1,104 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AFA2D47EB;
-	Wed, 13 Aug 2025 07:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA6C27E05E
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 07:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755068726; cv=none; b=DaY7B4DkDbZaKTbo+r0J2qdVqz37WWo6kan4OPmGyiHvuEcbPhjyFxd7CtFqtzZcwyF3WHqUI5/Td559Tq6PbhIiAcVZxNBewWEGzUOHyvMF8PF92xfnspuHzqb+p6TgwcUTZ6Ww6RreiNkQvkhWeePrt58OUXQJY+1HMSJ/szI=
+	t=1755071382; cv=none; b=GUat4zVU8cw56+ukpRvYlvFJlTznzL3lrjr38CHypxUbQU6bdEmr+warESDOhjffTLxwJRuCzhM4rO/jRjDyEsqJ4neQyYxmHJlkdQkY2/qN1XQEPc8uc/2Mgjf8rfq0s58qqIEbxtUZq31H8CL0wtg8oqyMZyjOT9YR2uWHnhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755068726; c=relaxed/simple;
-	bh=Blj+rAkGaR1Tv69tNIKtlIhVlfPFKhegYi6Zanh+HSQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Z/3W7ZJ4jghP5DpIdtydUbzRodJbxQTol29210UcXOqWqdg9xwv315Z3PbExpQPRL4m4s+jWk3g7pSv+IEZW46Xw5/6oZnAPTPfG5OPYoI8qcNTg6W+RZiImfzqFft6HPjCSEgNqFi41Zk9/lOnfE1ZbRGkc0bvfvzO4DAhl2bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=I3ZFenF/; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1755071382; c=relaxed/simple;
+	bh=wfeJn6OXLOSd2GklhvEK2KXBF/te/QhNlLJRLLpT6NU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B//oHzYqSM5srjwjZpujAjKunhpnjip3eZct6xHg+MMvhHhYsiNxe/fZ98IrJ77yT9McAqHB6nCWgXQPJzIuDO18/ALo8QZ8Jula42XsBGvfREHeV+EQjm9cknuzJ4gDmzW734FT1wFMe+eXvoo/hJK2P0gcjK26+DSqZj6hzQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XLyuCYqE; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="I3ZFenF/"
-Received: from eig-obgw-6004b.ext.cloudfilter.net ([10.0.30.210])
-	by cmsmtp with ESMTPS
-	id lzZouumiX5wATm5XyuMkI2; Wed, 13 Aug 2025 07:05:18 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id m5XxuPIicwYTkm5XxuHNIO; Wed, 13 Aug 2025 07:05:17 +0000
-X-Authority-Analysis: v=2.4 cv=fYCty1QF c=1 sm=1 tr=0 ts=689c392d
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=R1XpmoYe2GHAZdAE2O7VqQ==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=7T7KSl7uo7wA:10
- a=1ml3npyrcYbOIoRaIsMA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8CHxB1Wtr3Lygs//ada2Fd8yg7mcVvvMNOvlWGSBdN4=; b=I3ZFenF/oSKFdznfXcmVkwDLWH
-	jpYuyLFZB/s3kjtkIinOMc6T0qePM+SdCTNDr4vrY9+ffKlxUYYZYaLdOCzNtMF4/brQeOpXIRPuN
-	AdZPXWP84dS1Mrhx77NS1c4wmAq8E4QkbwtdzmE/C9692L6HjslLXtKGgJD4FVTjWFxnxgmPYIN+k
-	k3LEoWTAbLtowaHrayu2E2gmh/kUS2tYFR+ATad0/BzNOjp5JWrtYUD0Cd1fY6vymUoq7rlrV8O6c
-	5Jvfu4fif+ZZYkfJc9N80vKfl7BOm3eAOeJxe7vkMSYrfPMdGmnEbn/ZQ18gzJdHV3SunW4eDbIsD
-	5WHOj5Hg==;
-Received: from oni-27.109.98-104.oninet.ne.jp ([27.109.98.104]:38110 helo=[192.168.0.175])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1um3n1-00000002TtW-1RYw;
-	Wed, 13 Aug 2025 00:12:43 -0500
-Message-ID: <d43dac3e-122d-4c16-9c1e-760eac91b8da@embeddedor.com>
-Date: Wed, 13 Aug 2025 14:12:30 +0900
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XLyuCYqE"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-619a603b7cdso1885477eaf.2
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Aug 2025 00:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755071379; x=1755676179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wfeJn6OXLOSd2GklhvEK2KXBF/te/QhNlLJRLLpT6NU=;
+        b=XLyuCYqEnk9yF8JdXGunyN+ujw1Fymw1txYThuFHVO2alhysN1K4UCef6XGGbyw5it
+         2w0IztDtFaXf65o16a9X5/C6QcWHc/D94mgHCUwA34dngIcBBdYYDnV54lk3yrY6Si7x
+         gIewLX3Vp/4GbAGHr/ZjpbHAauw2rtEsgLo7/PNdYPphtnLTjL1YCQiJFlIzHn6ofNsW
+         nD76UpLQUHYCKuBeJiR8PSOAuOchc/t5lZ7/SIK75NQw5Fir5TTIkgblpdxglIh/dcZm
+         i19+M2atTq0+VCm9ibcrVebj29D6Bute5K5CHRYwwqLlty+2MyY5WNCJ0vWDrPpSnkAv
+         mkkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755071379; x=1755676179;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wfeJn6OXLOSd2GklhvEK2KXBF/te/QhNlLJRLLpT6NU=;
+        b=tNdnDlIFETZgSvTK+Q2Sq2yaSYi71rY4YNhG6Qx50JJzfNICxZs8EO7iVbB5AafOnG
+         SJq4/vyE6V88pdhqZKNQWdmGIiA5qzvjhJHneAfVW282ILSvv3fCPdpcgruRC+zOUW2K
+         fgSn7FRzdSNX/ClfZ/uBtezIsOaOCw79TbcZT5FHQMOMy8K8Q1JDhsvI/2yQZw/yFzqr
+         ZN1fmsmKNWcsYvSBNhBw/uEvGMIkm0Nwzuw1+30hQj/aQoBJH6I4RluPtjlcGQ1kdBDx
+         S/8t0F/+/ifvyJ9QgOrEf8z9N9RKU6l5hUp5oEleGb2aMLGNcDOlAs3x03+B8uUgkxxi
+         nuzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUyNlefY+GBAMVEIoiK8Q2Y/7rTeGphSDBBpPv7RbWQaAb+EM8erpAtWGWTdF2yDsdDeYF2wuP2eVJxl/ZN9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh/DSNCeJiRKIAJ0V6ZyPob+LjJLeVjqJpDic4S9/jFFj58Dse
+	XJXz+IE+duGWSwudm8NTeK65hXjCDI09I6O9lsabBdClVVd+pSuYkRvQ74v+BW/WAfZQGwzPvqw
+	fq1Hb/4sjJtyNbaqJ6h8KAmiYk1JN0NfDvvBqD4hFCA==
+X-Gm-Gg: ASbGncsvBmkRiGbnEmh0/xpJmbD5kqMAGW2YvGXqShGWHA0olVYluZQZNo39LJlRsbP
+	YX+0EQGtziQaIbzFKoF0PIsz+Mn+KTmlEal9mMch6ra/QwytGqRqL/UdhggKYyRKDuWrx4JrFNK
+	TbUAVTf2cnoHOXH+bE3wLKObEH303OUFzHY1CHssn0fcGMUORQtu9xAQMdrddMeIPRm8SeMTRRw
+	grXIUJnlYOc2MRJPp8=
+X-Google-Smtp-Source: AGHT+IFAfPPXVnV/fIsv8KnI8b8Bl+IOsf+U5t0pmvRJM0gZ8xG3AukFt3DXdXVb9aF/gWZVqDSUuTyRuSP2uDtgU3s=
+X-Received: by 2002:a05:6820:1ac1:b0:619:a6c0:b4b with SMTP id
+ 006d021491bc7-61bc758538amr1013523eaf.5.1755071379266; Wed, 13 Aug 2025
+ 00:49:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/amd/pm: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kenneth Feng <kenneth.feng@amd.com>, Alex Deucher
- <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
- <christian.koenig@amd.com>, Xinhui Pan <Xinhui.Pan@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z678TNhCbTk363Tw@kspp>
- <864c7dd5-0deb-4adb-a1cf-c8a809514d7e@embeddedor.com>
- <217b00f5-d03d-4624-9ba9-d838199ef7b9@embeddedor.com>
- <CADnq5_M5Jv4A5CXAKY2Qd-dhrfmecnauRtVY_ghSsut7i=KNww@mail.gmail.com>
- <d07b4edc-6048-4c10-b8ac-dcccd5a932d3@embeddedor.com>
-Content-Language: en-US
-In-Reply-To: <d07b4edc-6048-4c10-b8ac-dcccd5a932d3@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 27.109.98.104
-X-Source-L: No
-X-Exim-ID: 1um3n1-00000002TtW-1RYw
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: oni-27.109.98-104.oninet.ne.jp ([192.168.0.175]) [27.109.98.104]:38110
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLKAMFhgpPdujCh/bDfZnwZkmVzdv2KvaLkUlxLNbkEnBIAlkACvXGYJRseIZgTBjIn6+sJR2wiFlUww7wV18+/fC1eiXa3icq30Kyr7niEixUI4OhG0
- 36uhZpFLHVpQJ+Red5t7nNhsXKgqRNgYsWw+xMHbP1Z4sYLBvWnsSh4RHQWQqkfwRuFBiqJfwrWILJ/rp+kW03B5uqumXp2TOFykgxwRgzy4yp+sYvsAuvtK
- Mx7+F3DR5LzLZaLQHDQtFtU2TLuaiF3vgTsGxkS+YUk=
+References: <20250812-qcom-tee-using-tee-ss-without-mem-obj-v7-0-ce7a1a774803@oss.qualcomm.com>
+In-Reply-To: <20250812-qcom-tee-using-tee-ss-without-mem-obj-v7-0-ce7a1a774803@oss.qualcomm.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Wed, 13 Aug 2025 09:49:27 +0200
+X-Gm-Features: Ac12FXyfvHrDtrackOzZC99WcBb71C_WC3_DT2d5Ppi_3YWKQtwtthH808vWulI
+Message-ID: <CAHUa44FJ9iRMyDHffRBwgxxX27vTwsAwNiCCEGQ8fMQPZS_D+g@mail.gmail.com>
+Subject: Re: [PATCH v7 00/11] Trusted Execution Environment (TEE) driver for
+ Qualcomm TEE (QTEE)
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: Sumit Garg <sumit.garg@kernel.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Apurupa Pattapu <quic_apurupa@quicinc.com>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org, 
+	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
+	Sumit Garg <sumit.garg@oss.qualcomm.com>, Neil Armstrong <neil.armstrong@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hi Amir,
 
-On 22/04/25 23:58, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 16/04/25 09:04, Alex Deucher wrote:
->> Can you resend, I can't seem to find the original emails.
->> Additionally, all of the NISLANDS structures are unused in amdgpu, so
->> those could be removed.
+On Wed, Aug 13, 2025 at 2:37=E2=80=AFAM Amirreza Zarrabi
+<amirreza.zarrabi@oss.qualcomm.com> wrote:
+>
+> This patch series introduces a Trusted Execution Environment (TEE)
+> driver for Qualcomm TEE (QTEE). QTEE enables Trusted Applications (TAs)
+> and services to run securely. It uses an object-based interface, where
+> each service is an object with sets of operations. Clients can invoke
+> these operations on objects, which can generate results, including other
+> objects. For example, an object can load a TA and return another object
+> that represents the loaded TA, allowing access to its services.
+>
 
-I'm taking a look at this, and it seems that those NISLANDS structs are actually
-needed in amdgpu code. For instance, `struct si_power_info` contains a member
-of the type of `struct ni_power_info`, and this latter struct contains a
-member of the type of `NISLANDS_SMC_STATETABLE`, thus `NISLANDS_SMC_SWSTATE`
-and `NISLANDS_SMC_HW_PERFORMANCE_LEVEL` are needed, and so on.
+There are some build errors/warnings for arm and x86_64, see
+https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/jens/plans/31DmCOn1pF=
+2JGVDk3otBOXOL6kV
 
-So, it seems that all those structs should stay. What do you think?
-
-Thanks!
--Gustavo
+Thanks,
+Jens
