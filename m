@@ -1,96 +1,154 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3D9221FC3
-	for <linux-hardening@vger.kernel.org>; Thu, 14 Aug 2025 15:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3E42E093E
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Aug 2025 16:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755184704; cv=none; b=rXpWncHnL0fkxLTOnjjMSM9R/dvfeRBWL+RESdZg2oK11QLGTAIjLhWKj9xyhxYI1yCoWgqbMnKR3fY8q4lJNipCOwIYuEYSXjgRhiibpygTJjsl/GuOdZ/piHUKbAuuQr7sz4phKoDi5LDiPyCEd8Xl5wmFKkZCmZoImxVJVQA=
+	t=1755189390; cv=none; b=NYsMKs8lIQcBKB03NO8roQDtRazTbJQrvETpLf7rbhkjAEVZ7Fs7RNn7QNg3OVaCsDPIirY++y/dZKNqKKSpDjsCgbJXRF5lVeNMMjBIf0dCLGl3EjBDuDx2t6bC6r1g1+waZCi0W9SPyUhvCiwCNYyGLzEYkgpxjSS+k+cewig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755184704; c=relaxed/simple;
-	bh=Ndckxh7GaSyKcvALgicX44P7JE+Sh8R8ujffyQhX8mk=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=dLRXmNZUPJ4uiPacmpyyI6HsUyq0YPIZ1PQBhfyIzVT1tXbEBI4x32p2TbLHHtpPLSdkaQDTi/Rby32TDtPPGWZZ9PzMvMgaWVxq78jF2X1oN0QigG6pUL6X1JTcgYiMwX5u6LTtPH4xZ1jL2aXlbsf1cGMM4gtHyoLHkQyRWMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KieuXxH5; arc=none smtp.client-ip=95.215.58.189
+	s=arc-20240116; t=1755189390; c=relaxed/simple;
+	bh=yHqjlwVr5vDwnZ7kvQR0+bT5SJ4ZaeXU4MeDJ/5rHhI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PlvY9w++9qitcAQhX1tggBwybtyviWWteQdU1by+BMI/kzhxNgfJge4R7QyuU3LipRNuBR2R0+qYMiyezS9pIWDusf5eYRWK4eW+jEqGQUNki7nkmugKJFbHg9fb2UfBM2XmzvjYg7IU5DG+iAtG6dzsm45RUOgpScSffY/2fCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=M/2cn49I; arc=none smtp.client-ip=91.218.175.186
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KieuXxH5"
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="M/2cn49I"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755184688;
+	t=1755189381;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zNVCqTGXXgZjRmlbQrG/+iAmbjssxuaVUFkoMWSkGi0=;
-	b=KieuXxH5EPJ2rurMTvRD6ZF6ONZgtqA2fAdXzCG4JFTRfDVmljRJoHsxwKrIdPMH0LCx2a
-	3PydCZE7gxD6rNpd7kecUoS6vrm7yP6gvTk59IxzJfUhGA4VCQdzeYbDQfqjec+Tb/6oTK
-	0Mxebmisb+bkMko+FgvFr9EHOz5x8Zo=
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qVhFd637Brqbn3HW8M52D+C4kErHTBTUzFv24N1Db9U=;
+	b=M/2cn49IoKBsQUy1dSZeswcrS9JEhHcUEWSOq/dNnlE9iOCDGKlZK+vJ70cJnmtHE/15L9
+	ZhnFfBqDzZEREAqBl16QVuU7lh0d1i/3Q/Ir4ASrdh/XaUVXBsVOoZ71dcLWWLC6rfCy85
+	7edyGuZf+mhNrDM06yaBMTIx27JAp3o=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Nir Lichtman <nir@lichtman.org>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Yuran Pereira <yuran.pereira@hotmail.com>
+Cc: linux-hardening@vger.kernel.org,
+	Daniel Thompson <daniel@riscstar.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	kgdb-bugreport@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] kdb: Replace deprecated strcpy() with strscpy() and memcpy()
+Date: Thu, 14 Aug 2025 18:32:34 +0200
+Message-ID: <20250814163237.229544-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH] kdb: Replace deprecated strcpy() with strscpy()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <2025081456-reflected-revolver-9f5b@gregkh>
-Date: Thu, 14 Aug 2025 17:17:52 +0200
-Cc: Jason Wessel <jason.wessel@windriver.com>,
- Daniel Thompson <danielt@kernel.org>,
- Douglas Anderson <dianders@chromium.org>,
- Nir Lichtman <nir@lichtman.org>,
- Yuran Pereira <yuran.pereira@hotmail.com>,
- linux-hardening@vger.kernel.org,
- Daniel Thompson <daniel@riscstar.com>,
- kgdb-bugreport@lists.sourceforge.net,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <55A7B251-8E1B-4935-B33F-B12DF1A2B382@linux.dev>
-References: <20250814120338.219585-2-thorsten.blum@linux.dev>
- <2025081408-swinging-endorphin-abe2@gregkh>
- <2025081456-reflected-revolver-9f5b@gregkh>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Hi Greg,
+strcpy() is deprecated; use strscpy() and memcpy() instead and remove
+several manual NUL-terminations.
 
-On 14. Aug 2025, at 16:35, Greg Kroah-Hartman wrote:
-> On Thu, Aug 14, 2025 at 02:35:56PM +0200, Greg Kroah-Hartman wrote:
->> On Thu, Aug 14, 2025 at 02:03:37PM +0200, Thorsten Blum wrote:
->>> [...]
->>> -	strcpy(kdb_grep_string, cp);
->>> +	strscpy(kdb_grep_string, cp);
->> 
->> If this was just a search/replace, it would have been done already, so
->> why is this ok?
-> 
-> I missed that strscpy() can now handle 2 arguments like this, so yes,
-> this should be ok.
-> 
-> BUT, you just checked the length above this line, which now isn't
-> needed, right?  So this function can get simpler?
+In parse_grep(), we can safely use memcpy() because we already know the
+length of the source string 'cp' and that it is guaranteed to be
+NUL-terminated within the first KDB_GREP_STRLEN bytes.
 
-Yes, this could just be
+Since the destination buffers 'cmd_cur' and 'cmd_hist[cmd_head]' have
+the fixed length CMD_BUFLEN, strscpy() automatically determines their
+size using sizeof() when the size argument is omitted. This makes the
+explicit size arguments for the existing strscpy() calls unnecessary,
+remove them.
 
-	memcpy(kdb_grep_string, cp, len + 1);
+No functional changes intended.
 
-because we already know the length which strscpy() would just recompute
-before calling memcpy() internally. I'll submit a v2.
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+Changes in v2:
+- Use memcpy() instead of strscpy() in parse_grep() as suggested by Greg
+- Compile-tested only so far
+- Link to v1: https://lore.kernel.org/lkml/20250814120338.219585-2-thorsten.blum@linux.dev/
+---
+ kernel/debug/kdb/kdb_main.c | 32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
 
->>> -		strscpy(cmd_cur, cmd_hist[cmdptr], CMD_BUFLEN);
->>> +		strscpy(cmd_cur, cmd_hist[cmdptr]);
->> 
->> Same here.  And other places...
-> 
-> Sorry, this should also be ok, BUT it's really just doing the same exact
-> thing, right?
-
-Yes, it's the same because sizeof(cmd_cur) equals CMD_BUFLEN.
-
-Thanks,
-Thorsten
+diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+index 7a4d2d4689a5..048dbbcd91a4 100644
+--- a/kernel/debug/kdb/kdb_main.c
++++ b/kernel/debug/kdb/kdb_main.c
+@@ -727,14 +727,10 @@ static int kdb_defcmd(int argc, const char **argv)
+ 	mp->help = kdb_strdup(argv[3], GFP_KDB);
+ 	if (!mp->help)
+ 		goto fail_help;
+-	if (mp->usage[0] == '"') {
+-		strcpy(mp->usage, argv[2]+1);
+-		mp->usage[strlen(mp->usage)-1] = '\0';
+-	}
+-	if (mp->help[0] == '"') {
+-		strcpy(mp->help, argv[3]+1);
+-		mp->help[strlen(mp->help)-1] = '\0';
+-	}
++	if (mp->usage[0] == '"')
++		strscpy(mp->usage, argv[2] + 1, strlen(argv[2]) - 1);
++	if (mp->help[0] == '"')
++		strscpy(mp->help, argv[3] + 1, strlen(argv[3]) - 1);
+ 
+ 	INIT_LIST_HEAD(&kdb_macro->statements);
+ 	defcmd_in_progress = true;
+@@ -860,7 +856,7 @@ static void parse_grep(const char *str)
+ 		kdb_printf("search string too long\n");
+ 		return;
+ 	}
+-	strcpy(kdb_grep_string, cp);
++	memcpy(kdb_grep_string, cp, len + 1);
+ 	kdb_grepping_flag++;
+ 	return;
+ }
+@@ -1076,12 +1072,12 @@ static int handle_ctrl_cmd(char *cmd)
+ 		if (cmdptr != cmd_tail)
+ 			cmdptr = (cmdptr + KDB_CMD_HISTORY_COUNT - 1) %
+ 				 KDB_CMD_HISTORY_COUNT;
+-		strscpy(cmd_cur, cmd_hist[cmdptr], CMD_BUFLEN);
++		strscpy(cmd_cur, cmd_hist[cmdptr]);
+ 		return 1;
+ 	case CTRL_N:
+ 		if (cmdptr != cmd_head)
+ 			cmdptr = (cmdptr+1) % KDB_CMD_HISTORY_COUNT;
+-		strscpy(cmd_cur, cmd_hist[cmdptr], CMD_BUFLEN);
++		strscpy(cmd_cur, cmd_hist[cmdptr]);
+ 		return 1;
+ 	}
+ 	return 0;
+@@ -1285,19 +1281,19 @@ static int kdb_local(kdb_reason_t reason, int error, struct pt_regs *regs,
+ 		cmdbuf = kdb_getstr(cmdbuf, CMD_BUFLEN, kdb_prompt_str);
+ 		if (*cmdbuf != '\n') {
+ 			if (*cmdbuf < 32) {
+-				if (cmdptr == cmd_head) {
++				if (cmdptr == cmd_head)
++					/* Copy the current command to the
++					 * history and let strscpy() replace the
++					 * last character with a NUL terminator.
++					 */
+ 					strscpy(cmd_hist[cmd_head], cmd_cur,
+-						CMD_BUFLEN);
+-					*(cmd_hist[cmd_head] +
+-					  strlen(cmd_hist[cmd_head])-1) = '\0';
+-				}
++						strlen(cmd_cur));
+ 				if (!handle_ctrl_cmd(cmdbuf))
+ 					*(cmd_cur+strlen(cmd_cur)-1) = '\0';
+ 				cmdbuf = cmd_cur;
+ 				goto do_full_getstr;
+ 			} else {
+-				strscpy(cmd_hist[cmd_head], cmd_cur,
+-					CMD_BUFLEN);
++				strscpy(cmd_hist[cmd_head], cmd_cur);
+ 			}
+ 
+ 			cmd_head = (cmd_head+1) % KDB_CMD_HISTORY_COUNT;
+-- 
+2.50.1
 
