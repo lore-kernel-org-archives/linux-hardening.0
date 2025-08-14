@@ -1,137 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01808145B3F;
-	Thu, 14 Aug 2025 11:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5B62F9996
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Aug 2025 11:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755169732; cv=none; b=cmBF8WcUHGUlTKmW+S7fmplzNcKnAG3ml0lNwQIn9Olli43tOCpCboX+C7b2hRvOv1TRlvwHZyKGi9hWf4EYb/D60iEzBuH0kFaaTgMxKhKG+gxvsjO1cNz4E4PkdIXVEeWFyJwnsJSP/R9Aey2CA3fSxKcfNVLC8oxHbAlM9KM=
+	t=1755172117; cv=none; b=BL5qceyv+ixte3njMoUcFM3z2NwOXDashyqACWICJOQKeA015LTptV35874qCEvWHt3pVb0uawRFwKDdRh0slTL8qEzEvm2++OeV3M6+pz7uf8txHlMAADnY6vHYDPj9CBoTVJ5vhGTDNffMrovO9eZDxXSgv9OBwcxbYjibvzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755169732; c=relaxed/simple;
-	bh=NcM/DeAVlXKmPkl7bBlwD0/QB2aiGZ25NX4zY8t3JZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pRSvR+921/hb6pk3i8dKDolwZSdgVPXTcWCB65g5q8sOpskRyApaj+8re41Ae1sKSlU5SfXEcSWJPrFoofDjS5gKKUQTs3XupDbmk8rz3QBj3Xs0QPr8NMjOyXkciuaRXOE42XBvXlnTr8TxYYaP5lal5Do07WwTyHQeQkDgtAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NwIlOaYM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755172117; c=relaxed/simple;
+	bh=2n58AnN8/7Sa58+iL/4wUwjaX1O7651vgF/GnzLpYUw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EHYvHj9KoumfFL3OmFAgtNrtRHYgcxUQvWo23c3X9CvM++QuR4BFUG8LapfzqD53R/kt275mH50ClQPxYh910O+JPO4GTrUPH0yOdnlfJq9VMdmT4OrT3Pvgtw+v4zY/2YSaG4/vW+D1qeZmYFWBPThqRxKo/h8NpWcNsG2lw/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=tPyjpAX3; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NwIlOaYM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17270C4CEED;
-	Thu, 14 Aug 2025 11:08:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755169731;
-	bh=NcM/DeAVlXKmPkl7bBlwD0/QB2aiGZ25NX4zY8t3JZ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NwIlOaYMCnbeBsS0fBLSHuuDnB/pqFV4dluw0+qSzHzUhq+lYiZn73OHbU8mnOnFn
-	 hB/r5LcpDdMM3f58g9MJYgITW2nFGieiM9esO9Pd41l5NalsUBpoMbsD4WZqugaLiY
-	 mMYfxqLQhL4SM3xQs64YIYw3xr/5rjn4Z4x7asoxXuf1I9nqK4i7ZC2NwFMdBb8dLf
-	 TI/xIJtSN8Xc3Fpb3C4mmeddLZq+Q/R7S1JdP1R8pg8sP+9jveJzHb5uCAOVce0djK
-	 LbYNTxSpqTxSrcjay48DoGWF5HMxlLm8OPtupmsgRl3JjoSbgRI/Tq2pqXe6d33/dS
-	 P3yDSmUkVhUpg==
-Date: Thu, 14 Aug 2025 13:08:48 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org, chrome-platform@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] pwm: cros-ec: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <2pgdxifg2zmyhvemm7a2qntprsz5nhh3ustrrlg2vvcqffwj6c@22enjpgycjbt>
-References: <aJtRPZpc-Lv-C6zD@kspp>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tPyjpAX3"
+Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
+	by cmsmtp with ESMTPS
+	id mVdauRNhk3e9emWReuaBxb; Thu, 14 Aug 2025 11:48:34 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id mWRduWX1Eb6dmmWRduz1kZ; Thu, 14 Aug 2025 11:48:34 +0000
+X-Authority-Analysis: v=2.4 cv=bs9MBFai c=1 sm=1 tr=0 ts=689dcd12
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=aBvOdYTnlRd+2LFm/58ENA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=7T7KSl7uo7wA:10
+ a=ciplz7lBqJibEU-u5rUA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=EbnZD1AMDuV7+S1NXEbn+nHpy6nqMny8DiTNPxWn18g=; b=tPyjpAX3i3y4qgRzjjAKYzgBHO
+	BGB2PaBSXDsfBXm8ZgZX9ICuWBjt1GJa49v0Ki3hMeIyWkZtbZgGxvMrYPPL1+3RpkimVlKoY9dEn
+	YtBOR85SwXYIRHc5Av4JcZFKvEf1nfV4qQERyhanJEHvMPKymsW0yIjHwpDfNg1QHwAWjnZxLPWF3
+	3mOj1/FKN3icVdXdoMlW9fvXT7Wby/9RI5jHirWT3SW/Pp0FIb0r38tNEzJL09LwLLNC7CbkgEwYd
+	oFAIWxRRXfg39FV2aECAF5jnXDK3+r+Rbjv6lIjGXMbvvam6jLa4sXd08yNXPDB4gzoUMZhR/q4+t
+	UNPgkVDg==;
+Received: from 172.117.7.202.megaegg.ne.jp ([202.7.117.172]:55560 helo=[192.168.241.228])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1umWRd-00000003h2r-0Aaz;
+	Thu, 14 Aug 2025 06:48:33 -0500
+Message-ID: <4b9eea66-f004-4b5f-bf48-4c32205cc8ee@embeddedor.com>
+Date: Thu, 14 Aug 2025 20:48:23 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vfjd7sxzjdmqmwth"
-Content-Disposition: inline
-In-Reply-To: <aJtRPZpc-Lv-C6zD@kspp>
-
-
---vfjd7sxzjdmqmwth
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH][next] pwm: cros-ec: Avoid -Wflex-array-member-not-at-end
  warnings
-MIME-Version: 1.0
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+ linux-pwm@vger.kernel.org, chrome-platform@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aJtRPZpc-Lv-C6zD@kspp>
+ <2pgdxifg2zmyhvemm7a2qntprsz5nhh3ustrrlg2vvcqffwj6c@22enjpgycjbt>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <2pgdxifg2zmyhvemm7a2qntprsz5nhh3ustrrlg2vvcqffwj6c@22enjpgycjbt>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 202.7.117.172
+X-Source-L: No
+X-Exim-ID: 1umWRd-00000003h2r-0Aaz
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 172.117.7.202.megaegg.ne.jp ([192.168.241.228]) [202.7.117.172]:55560
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfGlecLH4NONA3LEhvwKZiQ870WhHIHqJzAnZ1yagcuURtSs7h9gvY0i9DkXiidOEpxTRrRWfx9Vaj9fNw6j/dQbftt0BQTzEFOdvi1WLs8ZyUh0VLOoX
+ x2GOXZjmCq7JoenEPfLUqxj2uJ2yiqW8BNJPKu+Y7CODj2+vLnbcQavmmsTOBfcyqErewNGD1vBHWz45e+fygOashWLCY4mVuDmjNnSs0dMs05fPeUkkLWBq
 
-Hello,
 
-On Tue, Aug 12, 2025 at 11:35:41PM +0900, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
->=20
-> Use the new TRAILING_OVERLAP() helper to fix the following warnings:
->=20
-> drivers/pwm/pwm-cros-ec.c:53:40: warning: structure containing a flexible=
- array member is not at the end of another structure [-Wflex-array-member-n=
-ot-at-end]
-> drivers/pwm/pwm-cros-ec.c:87:40: warning: structure containing a flexible=
- array member is not at the end of another structure [-Wflex-array-member-n=
-ot-at-end]
->=20
-> This helper creates a union between a flexible-array member (FAM)
-> and a set of members that would otherwise follow it. This overlays
-> the trailing members onto the FAM while preserving the original
-> memory layout.
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/pwm/pwm-cros-ec.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
-> index 189301dc395e..67cfa17f58e0 100644
-> --- a/drivers/pwm/pwm-cros-ec.c
-> +++ b/drivers/pwm/pwm-cros-ec.c
-> @@ -49,10 +49,9 @@ static int cros_ec_pwm_set_duty(struct cros_ec_pwm_dev=
-ice *ec_pwm, u8 index,
->  				u16 duty)
->  {
->  	struct cros_ec_device *ec =3D ec_pwm->ec;
-> -	struct {
-> -		struct cros_ec_command msg;
-> +	TRAILING_OVERLAP(struct cros_ec_command, msg, data,
+> diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+> index dab49e2ec8c0..8ca9df87a523 100644
+> --- a/include/linux/stddef.h
+> +++ b/include/linux/stddef.h
+> @@ -108,7 +108,7 @@ enum {
+>   	union {									\
+>   		TYPE NAME;							\
+>   		struct {							\
+> -			unsigned char __offset_to_##FAM[offsetof(TYPE, FAM)];	\
+> +			unsigned char __offset_to_##FAM[sizeof(TYPE)];		\
+>   			MEMBERS							\
+>   		};								\
+>   	}
+> 
+> which only leaves one usage of FAM in the name of the padding struct
+> member. I'm sure someone is able to come up with something nice here to
+> get rid of FAM completely or point out what I'm missing.
 
-It's a bit ugly to have to pass the name of the flexible array member.
+Flexible structures (structs that contain a FAM) may have trailing padding.
+Under that scenario sizeof(TYPE) causes the overlay between FAM and MEMBERS
+to be misaligned.
 
-I think the following would work:
+On the other hand, offsetof(TYPE, FAM) precisely positions the trailing
+MEMBERS where the FAM begins, which is correct and safe.
 
-diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-index dab49e2ec8c0..8ca9df87a523 100644
---- a/include/linux/stddef.h
-+++ b/include/linux/stddef.h
-@@ -108,7 +108,7 @@ enum {
- 	union {									\
- 		TYPE NAME;							\
- 		struct {							\
--			unsigned char __offset_to_##FAM[offsetof(TYPE, FAM)];	\
-+			unsigned char __offset_to_##FAM[sizeof(TYPE)];		\
- 			MEMBERS							\
- 		};								\
- 	}
+Thanks
+-Gustavo
 
-which only leaves one usage of FAM in the name of the padding struct
-member. I'm sure someone is able to come up with something nice here to
-get rid of FAM completely or point out what I'm missing.
 
-Best regards
-Uwe
-
---vfjd7sxzjdmqmwth
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmidw70ACgkQj4D7WH0S
-/k5ieAf/TUUo4o0zI26SLZTp8nM6qwiZ9GhAA1lOoSO1+aUR/7VkqYJ7yO/fsdMH
-eAjsyTZixz4uh7p0c+nGpPS4wjpGry7l579dXbYkt6gVU3np/kXR93OUJDdYNbkU
-pkAhBvgWCRLbhuytiwDm1OJjlbTqu1piDh1/r3wgdud+cnva7caeQCVqfeHtRPQz
-X+ww6vwxHzAR2pTzGdLrBIZYt5yZhqUdOXidMETxqGdO3Z17zeUt15fzVyN/6h80
-UZOl1VXw9+T2v1v8+Wp48YMBIblWoGKf/qNmDFzpQyzS1tIsXpy+GEaK6tjrODuG
-xmdLAxw+LR1V8wthsULHBwBasbgfHg==
-=hwjq
------END PGP SIGNATURE-----
-
---vfjd7sxzjdmqmwth--
