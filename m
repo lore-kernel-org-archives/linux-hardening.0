@@ -1,156 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DB3212546;
-	Thu, 14 Aug 2025 14:09:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F387E1AAE28;
+	Thu, 14 Aug 2025 14:35:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755180541; cv=none; b=XuRPFmjA6qFr8OGMzIBYewP390wIVnCEjdS20+QhtFixuO92BbPlC9slqPxJ6rBANcMNCCQcoJCjQgQQpBWqLk0fK/jGMLDnFHpJjy5kn1vBGpQ8i9pQgH5b/iiIwGcSqAPy4i7uuLc+0cgd7Dka5SojbSivuDl7kbRO3naxYRw=
+	t=1755182152; cv=none; b=EsIGYfvW3fKsb7aXu/ZBJ9efnqyIIJmDEKI176RqIgqEak4vz9Lc9fUPpZsLdpCekAOtsdTPUVKUeSpArz9hLd7/PEJui6JP3mKFUl7lthIw15oNK7oClWlrQjh2ct/ECO7cqOSYx4oXqCiZkhvxwUAUlTCVOsqnOt2Z44zuZ98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755180541; c=relaxed/simple;
-	bh=KoWgzximSrrSXOKG05+Ln2RZTFfG6mhzQE07XNVMxr4=;
+	s=arc-20240116; t=1755182152; c=relaxed/simple;
+	bh=5r1ZfIYGt/SxED81e4SqxHAoPVYmkOk9pNZTa4DTRio=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=di1B6zQsccKFZ+zsY5qKl8Fwu2dYJ//OYNXT23ix573oDHw35r7O1wVOMINcwlVfhkwIgSIKVntpG3sBjsGzCV63sOFNSs71/W1e+xZMcKwjwUwBn7WIhl6KoU/rXDo4TQHYbYC4siSFyGqP6w0Le1NMSyzH0PwIAXODuwBP9l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Taw12qG1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hngq0tUu7XIRk7JsnBnk70HMv56vu69g40ocMyZn5xh4VM1BZ8m6vtM/x4y6WIxgv6f25XWExbC6ceuy7x52VOY13fyAiBgTs0k4pkpioovGnkgdnQ8Mf+e0z/6T9V/ucBF5SmfIvh04GUWFlzrYnad6450O7JYxzDzMbbCnuBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VpKlledi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Taw12qG1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 163A3C4CEED;
-	Thu, 14 Aug 2025 14:08:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755180540;
-	bh=KoWgzximSrrSXOKG05+Ln2RZTFfG6mhzQE07XNVMxr4=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VpKlledi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1BE8C4CEED;
+	Thu, 14 Aug 2025 14:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1755182151;
+	bh=5r1ZfIYGt/SxED81e4SqxHAoPVYmkOk9pNZTa4DTRio=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Taw12qG1musZlOg9O2MJdjAn+r2utRcPjMH9lo2Gx4scEDioXCFvdglOn+buWsSPO
-	 TWP8z/lZXaJeXSLJC+lzFQTe36YJbtPkFHqcpH1VytyXBVTfSRwJPGvJI4hIPlG6rr
-	 NmRsu9HjlOgmYHNTVCVdIa5TIIorSHLjuGSyYZZRadR2B6XRYjd4KusYoiYLxLIdN0
-	 qxfTVIF5mWJFwebr0eKSbDWX2pTwnhPm5zadc8yZwF0HlCSs03x/fl6xnVEd/e8bBg
-	 BHTtd2DePzkEG2QRrZQZejExx/HxUBICpPqwMod3zylWJ2YBwevKDI+AeVqgeYnZcz
-	 O2fvFiAJfd12w==
-Date: Thu, 14 Aug 2025 16:08:57 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] pwm: cros-ec: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <mlvple4tcnvu35a2liva5wxhafshc634fu46kwyrepn75wvuec@udshn3ja6lvc>
-References: <aJtRPZpc-Lv-C6zD@kspp>
- <2pgdxifg2zmyhvemm7a2qntprsz5nhh3ustrrlg2vvcqffwj6c@22enjpgycjbt>
- <4b9eea66-f004-4b5f-bf48-4c32205cc8ee@embeddedor.com>
+	b=VpKlledij6N1ObIMYIvXSGcwhoDFYArU1cCfJrKecfygL3SEf2/Zk9IFYFibNf8cy
+	 ZWlpDduYUsGUuhMoOFrTfYB75f8B/qfBVKR7ExKtHROyl5P6ZBl0ztw16nN/bNC5CJ
+	 rvmL8iV/zRE8CoUWj846Td8k+RBX4GHwU1LfCOos=
+Date: Thu, 14 Aug 2025 16:35:48 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Nir Lichtman <nir@lichtman.org>,
+	Yuran Pereira <yuran.pereira@hotmail.com>,
+	linux-hardening@vger.kernel.org,
+	Daniel Thompson <daniel@riscstar.com>,
+	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kdb: Replace deprecated strcpy() with strscpy()
+Message-ID: <2025081456-reflected-revolver-9f5b@gregkh>
+References: <20250814120338.219585-2-thorsten.blum@linux.dev>
+ <2025081408-swinging-endorphin-abe2@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fuq2btbbfpvvuy3v"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4b9eea66-f004-4b5f-bf48-4c32205cc8ee@embeddedor.com>
+In-Reply-To: <2025081408-swinging-endorphin-abe2@gregkh>
+
+On Thu, Aug 14, 2025 at 02:35:56PM +0200, Greg Kroah-Hartman wrote:
+> On Thu, Aug 14, 2025 at 02:03:37PM +0200, Thorsten Blum wrote:
+> > strcpy() is deprecated; use strscpy() instead and remove several manual
+> > NUL-terminations.
+> 
+> Manual NULL terminations are good, why get rid of that?
+> 
+> > Since the destination buffers 'cmd_cur' and 'cmd_hist[cmd_head]' have
+> > the fixed length CMD_BUFLEN, strscpy() automatically determines their
+> > size using sizeof() when the size argument is omitted. This makes the
+> > explicit size arguments for the existing strscpy() calls unnecessary,
+> > remove them.
+> 
+> But now you are dynamically calculating this?
+> 
+> > No functional changes intended.
+> 
+> How did you test this?  Many of these types of changes are wrong, so you
+> really really need to prove it is correct.
+> 
+> > 
+> > Link: https://github.com/KSPP/linux/issues/88
+> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> > ---
+> >  kernel/debug/kdb/kdb_main.c | 32 ++++++++++++++------------------
+> >  1 file changed, 14 insertions(+), 18 deletions(-)
+> > 
+> > diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+> > index 7a4d2d4689a5..ea7dc2540e40 100644
+> > --- a/kernel/debug/kdb/kdb_main.c
+> > +++ b/kernel/debug/kdb/kdb_main.c
+> > @@ -727,14 +727,10 @@ static int kdb_defcmd(int argc, const char **argv)
+> >  	mp->help = kdb_strdup(argv[3], GFP_KDB);
+> >  	if (!mp->help)
+> >  		goto fail_help;
+> > -	if (mp->usage[0] == '"') {
+> > -		strcpy(mp->usage, argv[2]+1);
+> > -		mp->usage[strlen(mp->usage)-1] = '\0';
+> > -	}
+> > -	if (mp->help[0] == '"') {
+> > -		strcpy(mp->help, argv[3]+1);
+> > -		mp->help[strlen(mp->help)-1] = '\0';
+> > -	}
+> > +	if (mp->usage[0] == '"')
+> > +		strscpy(mp->usage, argv[2] + 1, strlen(argv[2]) - 1);
+> 
+> Now you are manually testing the length of argv[2], are you sure that's
+> ok?
+> 
+> > +	if (mp->help[0] == '"')
+> > +		strscpy(mp->help, argv[3] + 1, strlen(argv[3]) - 1);
+> >  
+> >  	INIT_LIST_HEAD(&kdb_macro->statements);
+> >  	defcmd_in_progress = true;
+> > @@ -860,7 +856,7 @@ static void parse_grep(const char *str)
+> >  		kdb_printf("search string too long\n");
+> >  		return;
+> >  	}
+> > -	strcpy(kdb_grep_string, cp);
+> > +	strscpy(kdb_grep_string, cp);
+> 
+> If this was just a search/replace, it would have been done already, so
+> why is this ok?
+
+I missed that strscpy() can now handle 2 arguments like this, so yes,
+this should be ok.
+
+BUT, you just checked the length above this line, which now isn't
+needed, right?  So this function can get simpler?
 
 
---fuq2btbbfpvvuy3v
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH][next] pwm: cros-ec: Avoid -Wflex-array-member-not-at-end
- warnings
-MIME-Version: 1.0
+> 
+> 
+> >  	kdb_grepping_flag++;
+> >  	return;
+> >  }
+> > @@ -1076,12 +1072,12 @@ static int handle_ctrl_cmd(char *cmd)
+> >  		if (cmdptr != cmd_tail)
+> >  			cmdptr = (cmdptr + KDB_CMD_HISTORY_COUNT - 1) %
+> >  				 KDB_CMD_HISTORY_COUNT;
+> > -		strscpy(cmd_cur, cmd_hist[cmdptr], CMD_BUFLEN);
+> > +		strscpy(cmd_cur, cmd_hist[cmdptr]);
+> 
+> Same here.  And other places...
 
-On Thu, Aug 14, 2025 at 08:48:23PM +0900, Gustavo A. R. Silva wrote:
->=20
-> > diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-> > index dab49e2ec8c0..8ca9df87a523 100644
-> > --- a/include/linux/stddef.h
-> > +++ b/include/linux/stddef.h
-> > @@ -108,7 +108,7 @@ enum {
-> >   	union {									\
-> >   		TYPE NAME;							\
-> >   		struct {							\
-> > -			unsigned char __offset_to_##FAM[offsetof(TYPE, FAM)];	\
-> > +			unsigned char __offset_to_##FAM[sizeof(TYPE)];		\
-> >   			MEMBERS							\
-> >   		};								\
-> >   	}
-> >=20
-> > which only leaves one usage of FAM in the name of the padding struct
-> > member. I'm sure someone is able to come up with something nice here to
-> > get rid of FAM completely or point out what I'm missing.
->=20
-> Flexible structures (structs that contain a FAM) may have trailing paddin=
-g.
-> Under that scenario sizeof(TYPE) causes the overlay between FAM and MEMBE=
-RS
-> to be misaligned.
+Sorry, this should also be ok, BUT it's really just doing the same exact
+thing, right?  And, it's a different thing, so it should be a different
+patch (i.e. do not mix different logical things in the same patch, it
+confuses everyone.  Well, me at least...)
 
-That sounds wrong to me; are you sure? In that case allocating space for
-such a struct using
+thanks,
 
-	struct mystruct {
-		unsigned short len;
-		unsigned int array[];
-	};
-
-	s =3D malloc(sizeof(struct mystruct) + n * sizeof(unsigned int));
-
-wouldn't do the right thing.=20
-
-I found in the net (e.g.
-https://rgambord.github.io/c99-doc/sections/6/7/2/1/index.html):
-
-	In most situations, the flexible array member is ignored. In
-	particular, the size of the structure is as if the flexible
-	array member were omitted except that it may have more trailing
-	padding than the omission would imply.
-
-So I'd claim that sizeof does work here as intended.
-
-gcc here also behaves fine:
-
-	uwe@taurus:~$ cat test.c
-	#include <stdio.h>
-
-	struct mystruct {
-		unsigned short len;
-		unsigned int array[];
-	};
-
-	struct mystruct2 {
-		unsigned short len;
-	};
-
-	int main()
-	{
-		printf("sizeof(struct mystruct) =3D %zu\n", sizeof(struct mystruct));
-		printf("sizeof(struct mystruct2) =3D %zu\n", sizeof(struct mystruct2));
-		return 0;
-	}
-
-	uwe@taurus:~$ make test
-	cc    -c -o test.o test.c
-	cc   test.o   -o test
-
-	uwe@taurus:~$ ./test
-	sizeof(struct mystruct) =3D 4
-	sizeof(struct mystruct2) =3D 2
-
-Best regards
-Uwe
-
---fuq2btbbfpvvuy3v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmid7fYACgkQj4D7WH0S
-/k5blAgAh5+IokY92+K/+9z3K4qgh2F2Qwfe9kLJkliHAtW0BjPXsSmvDfrl6liX
-GHh7M26217I9OMG75Bhpl8C+jpzN6EMtRsAD/zFcdDDl/JACrm7yO56/FcVN1rER
-vjf+3ExMbV/ZMhRKY+Rsp3LCAbkkuywX6g2Lr7lDWmu4L/RyEGi1lSXVYSgMGvpi
-npJhS+qEtbbHXT2eUQCR/e3aQHHA/PUSPvvXsJ7u5fVDCQzTz6gluHY0zrtXl5su
-jXZ4C0ux6veyfj7S7m0ayFZRRdavN2SOhBVcWSIwNewhGFjQZCAuFBZ6ht9TzwyF
-nL6IkD2TrBgj6T2mtyWwmt8eHuM4tg==
-=CpNn
------END PGP SIGNATURE-----
-
---fuq2btbbfpvvuy3v--
+greg k-h
