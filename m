@@ -1,120 +1,145 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5B62F9996
-	for <linux-hardening@vger.kernel.org>; Thu, 14 Aug 2025 11:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2042FC889
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Aug 2025 12:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755172117; cv=none; b=BL5qceyv+ixte3njMoUcFM3z2NwOXDashyqACWICJOQKeA015LTptV35874qCEvWHt3pVb0uawRFwKDdRh0slTL8qEzEvm2++OeV3M6+pz7uf8txHlMAADnY6vHYDPj9CBoTVJ5vhGTDNffMrovO9eZDxXSgv9OBwcxbYjibvzI=
+	t=1755173103; cv=none; b=JQDYPQtz4bkw9aYQbzL5OmqM63TEQEVBMZsYZWXy6QQt8gfVzV+wFPQ5yiD1lMFrbfZrg5HXvb9JOnrnTKqvOShW2JCDiz0dkjoMp+h55+eYNhZOKq3bXlhr/PLJN1dzE/DJlrwnZcjhBlEH7ezUSdMjB8PwxBMGRKMtMjyBex4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755172117; c=relaxed/simple;
-	bh=2n58AnN8/7Sa58+iL/4wUwjaX1O7651vgF/GnzLpYUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EHYvHj9KoumfFL3OmFAgtNrtRHYgcxUQvWo23c3X9CvM++QuR4BFUG8LapfzqD53R/kt275mH50ClQPxYh910O+JPO4GTrUPH0yOdnlfJq9VMdmT4OrT3Pvgtw+v4zY/2YSaG4/vW+D1qeZmYFWBPThqRxKo/h8NpWcNsG2lw/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=tPyjpAX3; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1755173103; c=relaxed/simple;
+	bh=ZUzZD9vc/qfpF+dRCR5SITztXA1r9JjOxRlbeJKLBDI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XNWvxaW7xm4nL+Qn/qAdPrW+5cqSSZEbyQEfy/1j90HQQdk9p7qD59KXyIA9SbQwbBDUVW7h4HE056KjnZAVpPCNEOg7xCiaOShh+PJKnxr5/N9lh2J0d8gtcd1Q5M7qZsZoVmVZRQ15tDfZ+Sb28C1mTRGJRSh7voYirdzceos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cu0SHYHJ; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tPyjpAX3"
-Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
-	by cmsmtp with ESMTPS
-	id mVdauRNhk3e9emWReuaBxb; Thu, 14 Aug 2025 11:48:34 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id mWRduWX1Eb6dmmWRduz1kZ; Thu, 14 Aug 2025 11:48:34 +0000
-X-Authority-Analysis: v=2.4 cv=bs9MBFai c=1 sm=1 tr=0 ts=689dcd12
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=aBvOdYTnlRd+2LFm/58ENA==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=7T7KSl7uo7wA:10
- a=ciplz7lBqJibEU-u5rUA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=EbnZD1AMDuV7+S1NXEbn+nHpy6nqMny8DiTNPxWn18g=; b=tPyjpAX3i3y4qgRzjjAKYzgBHO
-	BGB2PaBSXDsfBXm8ZgZX9ICuWBjt1GJa49v0Ki3hMeIyWkZtbZgGxvMrYPPL1+3RpkimVlKoY9dEn
-	YtBOR85SwXYIRHc5Av4JcZFKvEf1nfV4qQERyhanJEHvMPKymsW0yIjHwpDfNg1QHwAWjnZxLPWF3
-	3mOj1/FKN3icVdXdoMlW9fvXT7Wby/9RI5jHirWT3SW/Pp0FIb0r38tNEzJL09LwLLNC7CbkgEwYd
-	oFAIWxRRXfg39FV2aECAF5jnXDK3+r+Rbjv6lIjGXMbvvam6jLa4sXd08yNXPDB4gzoUMZhR/q4+t
-	UNPgkVDg==;
-Received: from 172.117.7.202.megaegg.ne.jp ([202.7.117.172]:55560 helo=[192.168.241.228])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1umWRd-00000003h2r-0Aaz;
-	Thu, 14 Aug 2025 06:48:33 -0500
-Message-ID: <4b9eea66-f004-4b5f-bf48-4c32205cc8ee@embeddedor.com>
-Date: Thu, 14 Aug 2025 20:48:23 +0900
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cu0SHYHJ"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1755173099;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RwwfVIkcE9AyO7mM/6kI4iyF3cvpAbFGcgfbwetU2M0=;
+	b=cu0SHYHJzdsvKrJnBYh0JEyIE75X14ZAspzB7sFwJS4T2P226zXlonYvTzgIrwiUX0TO0l
+	FqrPhwC846PghwqWAykyvP3GsbA6znNN58YHge3iYLU4lRjE+23JjW3oX0iOHtfOu238/J
+	q2spVj3pG9boSfJCWgoZezEpVvIXHKQ=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Nir Lichtman <nir@lichtman.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Yuran Pereira <yuran.pereira@hotmail.com>
+Cc: linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Daniel Thompson <daniel@riscstar.com>,
+	kgdb-bugreport@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] kdb: Replace deprecated strcpy() with strscpy()
+Date: Thu, 14 Aug 2025 14:03:37 +0200
+Message-ID: <20250814120338.219585-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] pwm: cros-ec: Avoid -Wflex-array-member-not-at-end
- warnings
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
- linux-pwm@vger.kernel.org, chrome-platform@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aJtRPZpc-Lv-C6zD@kspp>
- <2pgdxifg2zmyhvemm7a2qntprsz5nhh3ustrrlg2vvcqffwj6c@22enjpgycjbt>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <2pgdxifg2zmyhvemm7a2qntprsz5nhh3ustrrlg2vvcqffwj6c@22enjpgycjbt>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 202.7.117.172
-X-Source-L: No
-X-Exim-ID: 1umWRd-00000003h2r-0Aaz
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 172.117.7.202.megaegg.ne.jp ([192.168.241.228]) [202.7.117.172]:55560
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGlecLH4NONA3LEhvwKZiQ870WhHIHqJzAnZ1yagcuURtSs7h9gvY0i9DkXiidOEpxTRrRWfx9Vaj9fNw6j/dQbftt0BQTzEFOdvi1WLs8ZyUh0VLOoX
- x2GOXZjmCq7JoenEPfLUqxj2uJ2yiqW8BNJPKu+Y7CODj2+vLnbcQavmmsTOBfcyqErewNGD1vBHWz45e+fygOashWLCY4mVuDmjNnSs0dMs05fPeUkkLWBq
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+strcpy() is deprecated; use strscpy() instead and remove several manual
+NUL-terminations.
 
-> diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-> index dab49e2ec8c0..8ca9df87a523 100644
-> --- a/include/linux/stddef.h
-> +++ b/include/linux/stddef.h
-> @@ -108,7 +108,7 @@ enum {
->   	union {									\
->   		TYPE NAME;							\
->   		struct {							\
-> -			unsigned char __offset_to_##FAM[offsetof(TYPE, FAM)];	\
-> +			unsigned char __offset_to_##FAM[sizeof(TYPE)];		\
->   			MEMBERS							\
->   		};								\
->   	}
-> 
-> which only leaves one usage of FAM in the name of the padding struct
-> member. I'm sure someone is able to come up with something nice here to
-> get rid of FAM completely or point out what I'm missing.
+Since the destination buffers 'cmd_cur' and 'cmd_hist[cmd_head]' have
+the fixed length CMD_BUFLEN, strscpy() automatically determines their
+size using sizeof() when the size argument is omitted. This makes the
+explicit size arguments for the existing strscpy() calls unnecessary,
+remove them.
 
-Flexible structures (structs that contain a FAM) may have trailing padding.
-Under that scenario sizeof(TYPE) causes the overlay between FAM and MEMBERS
-to be misaligned.
+No functional changes intended.
 
-On the other hand, offsetof(TYPE, FAM) precisely positions the trailing
-MEMBERS where the FAM begins, which is correct and safe.
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ kernel/debug/kdb/kdb_main.c | 32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
 
-Thanks
--Gustavo
-
+diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+index 7a4d2d4689a5..ea7dc2540e40 100644
+--- a/kernel/debug/kdb/kdb_main.c
++++ b/kernel/debug/kdb/kdb_main.c
+@@ -727,14 +727,10 @@ static int kdb_defcmd(int argc, const char **argv)
+ 	mp->help = kdb_strdup(argv[3], GFP_KDB);
+ 	if (!mp->help)
+ 		goto fail_help;
+-	if (mp->usage[0] == '"') {
+-		strcpy(mp->usage, argv[2]+1);
+-		mp->usage[strlen(mp->usage)-1] = '\0';
+-	}
+-	if (mp->help[0] == '"') {
+-		strcpy(mp->help, argv[3]+1);
+-		mp->help[strlen(mp->help)-1] = '\0';
+-	}
++	if (mp->usage[0] == '"')
++		strscpy(mp->usage, argv[2] + 1, strlen(argv[2]) - 1);
++	if (mp->help[0] == '"')
++		strscpy(mp->help, argv[3] + 1, strlen(argv[3]) - 1);
+ 
+ 	INIT_LIST_HEAD(&kdb_macro->statements);
+ 	defcmd_in_progress = true;
+@@ -860,7 +856,7 @@ static void parse_grep(const char *str)
+ 		kdb_printf("search string too long\n");
+ 		return;
+ 	}
+-	strcpy(kdb_grep_string, cp);
++	strscpy(kdb_grep_string, cp);
+ 	kdb_grepping_flag++;
+ 	return;
+ }
+@@ -1076,12 +1072,12 @@ static int handle_ctrl_cmd(char *cmd)
+ 		if (cmdptr != cmd_tail)
+ 			cmdptr = (cmdptr + KDB_CMD_HISTORY_COUNT - 1) %
+ 				 KDB_CMD_HISTORY_COUNT;
+-		strscpy(cmd_cur, cmd_hist[cmdptr], CMD_BUFLEN);
++		strscpy(cmd_cur, cmd_hist[cmdptr]);
+ 		return 1;
+ 	case CTRL_N:
+ 		if (cmdptr != cmd_head)
+ 			cmdptr = (cmdptr+1) % KDB_CMD_HISTORY_COUNT;
+-		strscpy(cmd_cur, cmd_hist[cmdptr], CMD_BUFLEN);
++		strscpy(cmd_cur, cmd_hist[cmdptr]);
+ 		return 1;
+ 	}
+ 	return 0;
+@@ -1285,19 +1281,19 @@ static int kdb_local(kdb_reason_t reason, int error, struct pt_regs *regs,
+ 		cmdbuf = kdb_getstr(cmdbuf, CMD_BUFLEN, kdb_prompt_str);
+ 		if (*cmdbuf != '\n') {
+ 			if (*cmdbuf < 32) {
+-				if (cmdptr == cmd_head) {
++				if (cmdptr == cmd_head)
++					/* Copy the current command to the
++					 * history and let strscpy() replace the
++					 * last character with a NUL terminator.
++					 */
+ 					strscpy(cmd_hist[cmd_head], cmd_cur,
+-						CMD_BUFLEN);
+-					*(cmd_hist[cmd_head] +
+-					  strlen(cmd_hist[cmd_head])-1) = '\0';
+-				}
++						strlen(cmd_cur));
+ 				if (!handle_ctrl_cmd(cmdbuf))
+ 					*(cmd_cur+strlen(cmd_cur)-1) = '\0';
+ 				cmdbuf = cmd_cur;
+ 				goto do_full_getstr;
+ 			} else {
+-				strscpy(cmd_hist[cmd_head], cmd_cur,
+-					CMD_BUFLEN);
++				strscpy(cmd_hist[cmd_head], cmd_cur);
+ 			}
+ 
+ 			cmd_head = (cmd_head+1) % KDB_CMD_HISTORY_COUNT;
+-- 
+2.50.1
 
