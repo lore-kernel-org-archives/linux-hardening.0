@@ -1,166 +1,129 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98290225A24
-	for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 14:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BADF1FCFF8
+	for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 14:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755268163; cv=none; b=iBbTpCCCgfHz6sNDmtFWczvnwszCmdjXRxhrHLlIwpvU38m2UMOBbgZFDXg9CcIz95vO1AMOS+aYBFhg5Ipaegm6mGvIZhq9ETp8Q4/TMuRWStRCOPsTg5qCP9tNau+mTgVSU9JAY5pu85PZCVKbl0Pi0/Xv4+ZiM3hAKt/QJrA=
+	t=1755268356; cv=none; b=H0aWEKeS7bL3FbaGz+krP+ul4/3NZj5abBvkBM1hOPMTYFUqX2/DMC3j8YVNI2QcdqWqwkxRuX4jCxXc+RgXfDCRpUtTz+cAnCDgOhxeiSalRwkkeoWY2J1HhYF84iarq0H6L1tN3Lbl1FPYS5q2MKwqLnlwKWgByViSHCKGLJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755268163; c=relaxed/simple;
-	bh=RVW9cSXcUu1m5JGd+bvJ90FNpKko1SHEvvh/ezxt6qw=;
+	s=arc-20240116; t=1755268356; c=relaxed/simple;
+	bh=O0MP8KZwZzoCuMItUb5xHUP4lzs/O8K3Xj0FuWpVb3M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GZfAX1Grpl36QSqI7j0x0+wIRwCLdIwknoX5pgGQ8OlUQake9ZNoNgCv73PBl5QrV1oNTfIA+Jt7JW2Vd6pGlzdhzh+JOwHRlrdHs7+gn1sN3hwPJyaYfAZTTh2TTqQlq/8V6JksRC6/Ul4iL91wNpapGX6K4m4yYq/3ZF2O55I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=1Cm0G0fy; arc=none smtp.client-ip=209.85.128.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=bgOum94fJJFNuDc2wbtD1w/wxqZ3Niq5HHafedReC+f7bV9m2Iw/iZqv0ejuujNLgMQayob2PG2q5D+Xzl6qeeoSroToiBnp+nzYWC0hrjIQ2WYXV7/KlySEj12CH/uyb1uuufk2xJbb6fNOyAIK6CaiSpdFcqgZFThTSMxKI44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=jgjuMlIo; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="1Cm0G0fy"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45a1b00f23eso11043045e9.0
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 07:29:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="jgjuMlIo"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45a1b097037so10871495e9.2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 07:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1755268160; x=1755872960; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dEwM/gpinhi2XOkvEAyf9mQGVVoziKKdbRHc3b2tU2Q=;
-        b=1Cm0G0fyjqv1m8hdOeKClNqWkFEuBbfhoh8S3VhGSKijpmmcxUWKEQjEvWxiXEfkwY
-         U4iV8YP1oYyQMeixgI1y6ENkDkGmlCdlTNBlj14KhUklqfElpxLXgHZ+luuFzUtlulWn
-         ErfG0fMjRf6unQ2zFsBaoAk8lL/WQEfhziqBEE2/rUKgyByKWHRwA66KmdFgprROGn7Z
-         BvRiJ8ZNvnlrvezIrcfPyEa5PX2+S+MvDus56W5zCMeUDgTWonmY/Hta445yCSPuxVka
-         MOi7z7oj5JXAj594j/qHaY7O6OYuTkUFRolQ4b3HflyazKQZsBckBH+4cOXs80J92mop
-         1z4g==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1755268352; x=1755873152; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8FXQf+9ghxPzhtvwrtvyY02+a0FGz0lPsLgvTccoTfc=;
+        b=jgjuMlIopCNE4eHRfW5bWZ7IzKi5/8hjWx5REXm/5ha20PNbMxLwutj9GkW2phl9bT
+         Wg+0pKnEcWq2qoouyGbQ75RJEZZiv1M5oDdZrDd7Jl/oPFin+P/rQquvt1131w1z8nDK
+         Vkp5Cn+gcGFsoiNZHRMkSo3nGSAj+ZS3RZBELtTOVOeGNmzUk5CcKIeoUUF7emvJiSsI
+         2sk6suB+wX5IQpXFKJADYbvl5Cut03v3soLiNO7/qCI8SeZHYhMP+WAuz3cVdXdKcXhp
+         Cp8E4yoIDXGJDQz0uiaRqFwSnJ2yPENUInFEzOp7Qw5Xm+9rNy8ctOXu0KxASRpMXIo/
+         kOHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755268160; x=1755872960;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dEwM/gpinhi2XOkvEAyf9mQGVVoziKKdbRHc3b2tU2Q=;
-        b=VpgryhqLsaXv4rzByR1UBNkfL7aANYVS5dq+CUw6m78S4aTS3lEoVsTSTJC+zE+jG4
-         XyM4E8V/ilor/v/T19TJTYXCCps27NuLIMFTqOLlKTGQoEtuLHgCEJHAFJyfFfHDvx0y
-         l8ynDP8yx74x+ZpP/CvO9ZPrfbXEuUDccUOn0nW/T6ZM0KrrMNPLqXfDQ+t8QT3EJb9D
-         jHV2el4OvJZXuWJL3w7NMLPxNh9YdJtUwGUR8F8GB9JtBOYARfLubziZclHC0WnYao0u
-         bAaWoTpLFDjambp616nKPYlChZ+8fwC2T++MNIn8pHbTyrYwqudbEV9BgqyKJ4ByvvjW
-         JFhA==
-X-Forwarded-Encrypted: i=1; AJvYcCURYSx1L11BsYOnZqM9jaF+HjtTqe+WyisUiut8BMLRH+NuoJpbMddK97hDyA/rcXYi03wfe6ss8rOn4oo/Voc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCvkFsuG50fXQyfjK4IWj/vY6xmIg+1lrh4w0bSvOt+i4HfHAl
-	REKeuRv4tr/mQy07ALJ+8Pqr/81FwinGfvtn8T6d0xtwqgk8AZ2ZJECdCb7IwbeqzQ4=
-X-Gm-Gg: ASbGnct3T8sqb0Rp2Fq7ch5O4lo8FEf/ig/SCp/fJFnefbUneRtJs0IZxj9VZDRY03P
-	0IrJZ7dSw+LetUP8jxTeeJrz8BNvmZ4jwB1Qprv7FrxmgvumvACvjwGMyqQRe5kuHrheCQLTSh6
-	ivdPz6wN2lopjnoRYb3JI3UYkxAzANF28Dd+QsN3ik53GI8n4ptdrzwxMT6FaInNRiR5jeNHEg0
-	U3EFVbN8XyydNzp4oqtQ2PddvXnYnm2V6OcwB9oZkVI+rdmOYR47V6xwOhhxRizmQBCG4Vxr1/X
-	I9EsnO4JYLmm0LrDhiNPIjD4Ft5u1gjJ5r/L+qKjkXicK8ECgU340fPaRe/AUFmpKRDiNrTIg9u
-	YEmqZOglaYs8roRg3sQy8aR/KTCktQh+NseciNdAxpWUkTaTHr84OKqW18YwLxZMA0OtpwIlTkf
-	KwcRlNjg==
-X-Google-Smtp-Source: AGHT+IGcsKXPoXqKCWjr+xBECNzFfr6DUpTtNHm2OUxibNs/VdcsyL+kzq6Oc8b1vYPRnE6BSoDntg==
-X-Received: by 2002:a05:6000:40e1:b0:3a4:d9fa:f1ed with SMTP id ffacd0b85a97d-3bb66d1f4e1mr1923586f8f.13.1755268159688;
-        Fri, 15 Aug 2025 07:29:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755268352; x=1755873152;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8FXQf+9ghxPzhtvwrtvyY02+a0FGz0lPsLgvTccoTfc=;
+        b=c6U1Q43WhVsVpN/WVms0lVB81HXF83hSPdv+e+tjZiWLTMsesRHYd1/xHS0so092GJ
+         1ucjQr19UNzCRJjOveodD0vwgbvczHNhPir3C1i4aXXniUFs4Y4HqnMQI1HN96xyDqQ5
+         JEYVGY+gCWGzzHL/CwFHHog30XKIhmxjD8iuQG09YLb7HhgNaMZCpcl2qhJ3Pc0uz5pI
+         7Fv8s3GeRlVTVnJjHpqruvDEzFRV/qxrxe6mqbTcKzSAosMyqcD8tedW0V0z2Cr0Mxi+
+         f8G7EKALSZDZXY3cQrXZzHiyQS1AiI1142uQVGOrlA17wYNIMONewLz/3JxqQcwG4JNc
+         iQ2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUEX0PnTF6DlXK62oTlFz4zS3bYUPbMaxinbn3AQKW1h0Cnk7gSvv6Tbn/WiTJJgx2Hy2uIx5jgVb0G6wHRTgk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhYClwz6usSbDdJeUQwmSL+dOv5tFtKFe3HBr7PVt4/xGUdUF1
+	E7udXj8kmHMVnN2HaO629kvUigcsYBuXerj5TevF66CBuV4zMf0p6NCxk8mKeVaytpA=
+X-Gm-Gg: ASbGncss0IsojzA1gOvoYa3gk+BN0rtFSQk5yQSduxFy2a7r1ZjWMrBS5+CqNo3JnK1
+	k8Mfr02TVhceM0zkdxuK3SPoTT+gkOuBWaCz2aWeFqkQGSDClE1u+S++KnpBWwfKGAwq7i4oSDa
+	YUvrWo4A8HNsavPr/FQ52Bm7Y5R/V5qAk0nzAxcFFQFTPLar/TjQ6vnQHupwc6d8FrHGbPotAUE
+	VWE/+3HTggEyfxpUAxZB5gtZGNuJPk1VdJT37q4DQLGiVTMLcGZLesl5gyObxEyFZQdntT40W/+
+	nMgQGLwppKgWiMagfzQ8MFm57ER4vOCo9PXi/DN3lW3kYWbAionjINQ8JaFgL0H7seu2+KFRG1A
+	mdglJH5AIAgTLULsBNqmnyqRx2DQriCqwSb4N56ASlUZ5Wxoibnu6xwWivm0idME/eYT22aJ98O
+	G7i5XvjA==
+X-Google-Smtp-Source: AGHT+IHnSLhDMqXcwx68Y9138TqJ+c1Cuo3gefZ8a2Oj1eAADjXvGhxdolw2Wdfb2t12ox2676R9IQ==
+X-Received: by 2002:a05:600c:45c9:b0:459:dde3:1a27 with SMTP id 5b1f17b1804b1-45a2182f2d2mr19947185e9.26.1755268352274;
+        Fri, 15 Aug 2025 07:32:32 -0700 (PDT)
 Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3bb64c30c38sm2113365f8f.15.2025.08.15.07.29.18
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c74ad27sm64461825e9.18.2025.08.15.07.32.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Aug 2025 07:29:19 -0700 (PDT)
-Date: Fri, 15 Aug 2025 15:29:17 +0100
+        Fri, 15 Aug 2025 07:32:31 -0700 (PDT)
+Date: Fri, 15 Aug 2025 15:32:29 +0100
 From: Daniel Thompson <daniel@riscstar.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Jason Wessel <jason.wessel@windriver.com>,
+To: Doug Anderson <dianders@chromium.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	Jason Wessel <jason.wessel@windriver.com>,
 	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Nir Lichtman <nir@lichtman.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Yuran Pereira <yuran.pereira@hotmail.com>,
+	Justin Stitt <justinstitt@google.com>,
 	linux-hardening@vger.kernel.org,
 	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] kdb: Replace deprecated strcpy() with strscpy() and
- memcpy()
-Message-ID: <aJ9EPQNk2bcOMP1h@aspen.lan>
-References: <20250814220130.281187-2-thorsten.blum@linux.dev>
- <aJ72XZ0VkrCkKFNy@aspen.lan>
- <710CDE93-89CC-4B60-A582-5F9B2916ED72@linux.dev>
- <aJ8cyXzMaa9b7ppN@aspen.lan>
- <72F30E3D-2887-4494-B58C-2042AC880C1B@linux.dev>
+Subject: Re: [PATCH v2] kdb: Replace deprecated strcpy() with memmove() in
+ vkdb_printf()
+Message-ID: <aJ9E_W4Z0n7EzjUw@aspen.lan>
+References: <20250812132621.119641-3-thorsten.blum@linux.dev>
+ <CAD=FV=VnvUUG7qE_RDKfos1H-baZUT8V5vKx2QNRX14OZ0QnwA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <72F30E3D-2887-4494-B58C-2042AC880C1B@linux.dev>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=VnvUUG7qE_RDKfos1H-baZUT8V5vKx2QNRX14OZ0QnwA@mail.gmail.com>
 
-On Fri, Aug 15, 2025 at 03:16:27PM +0200, Thorsten Blum wrote:
-> On 15. Aug 2025, at 13:40, Daniel Thompson wrote:
-> > On Fri, Aug 15, 2025 at 01:28:01PM +0200, Thorsten Blum wrote:
-> >> Hi Daniel,
-> >>
-> >>> On 15. Aug 2025, at 10:57, Daniel Thompson wrote:
-> >>> Sorry but a strscpy() where the length of the destination buffer has
-> >>> been calculated from the source string is way too much of a red flag
-> >>> for me.
-> >>>
-> >>> Put another way if there are "no functional changes intended" then there
-> >>> cannot possibly be any security benefit from replacing the "unsafe"
-> >>> strcpy() with the "safe" strscpy(). Likewise abusing the destination
-> >>> length argument to truncate a string makes the code shorter but *not*
-> >>> clearer because it's too easy to misread.
-> >>
-> >> Deliberately truncating the source using strscpy() is a valid use case.
-> >> strscpy() allows the size argument to be smaller than the destination
-> >> buffer, so this is an intended use of the size argument, not an abuse.
+On Tue, Aug 12, 2025 at 09:24:55AM -0700, Doug Anderson wrote:
+> Hi,
+>
+> On Tue, Aug 12, 2025 at 6:27 AM Thorsten Blum <thorsten.blum@linux.dev> wrote:
 > >
-> > Sorry, I didn't phrase that especially well. I regard the abuse to be
-> > deriving the length of the destination buffer exclusively from the
-> > state of the source buffer.
+> > strcpy() is deprecated and its behavior is undefined when the source and
+> > destination buffers overlap. Use memmove() instead to avoid any
+> > undefined behavior.
 > >
-> > As mentioned, it would be much cleaner to eliminate the string copy entirely
-> > than to translate it into something so similar to the original strcpy().
+> > Adjust comments for clarity.
+> >
+> > Link: https://github.com/KSPP/linux/issues/88
+> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> > ---
+> > Changes in v2:
+> > - Use memmove() because of strcpy()'s undefined behavior with
+> >   overlapping buffers as suggested by Doug Anderson
+> > - Compile-tested only
+> > - Link to v1: https://lore.kernel.org/lkml/20250811170351.68985-1-thorsten.blum@linux.dev/
+> > ---
+> >  kernel/debug/kdb/kdb_io.c | 14 ++++++++------
+> >  1 file changed, 8 insertions(+), 6 deletions(-)
 >
-> Something like this?
-
-It would feels disingenuous of me say "exactly like this" because I
-think your code is nicer than mine would have been for this (I suspect
-I would have been lazy and kdb_strdup()'ed str+1 and injected a
-terminator)!
-
-Looks great. Only one comment:
-
-> char *kdb_strdup_dequote(const char *str, gfp_t type)
-> {
-> 	size_t len = strlen(str);
-> 	char *s;
+> Much nicer, thank you!
 >
-> 	if (str[0] == '"') {
-> 		/* skip leading quote */
-> 		len--;
-> 		str++;
+> Given that the old code was officially relying on undefined behavior
+> of strcpy() before, I'd personally even add:
 >
-> 		if (len > 0 && str[len - 1] == '"')
-> 			len--; /* skip trailing quote */
-
-I like the extra diligence of checking the trailing quote but perhaps
-combine the two if statements (so we only chomp the quotes if there
-are two).
-
-
->        }
+> Fixes: 5d5314d6795f ("kdb: core for kgdb back end (1 of 2)")
 >
-> 	len++; /* add space for NUL terminator */
+> In any case:
 >
-> 	s = kmalloc(len, type);
-> 	if (!s)
-> 		return NULL;
-> 	strscpy(s, str, len);
-> 	return s;
-> }
->
-> This should probably be a separate patch, right?
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-I think so.
-
-I generally figure if you have to put two paragraphs into the patch
-description but each paragraph makes sense in isolation that's a sign
-there should be two patches... and I think that would be the case here
-(the paragraph explaining the memcpy() piece and the paragraph
-explaining kdb_strdup_dequote() would make sense in isolation.
+LGTM... and I agree that this is bug rather than a clean up so am
+waiting to hear back on the Fixes: .
 
 
-Daniel.
+Daniel
+
+
+PS Feel free to roll all three kdb patches discussed recently into a
+   series so I can pull in one go ;-) .
