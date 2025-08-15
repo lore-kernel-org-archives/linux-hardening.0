@@ -1,202 +1,154 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBFE12C2AA2;
-	Fri, 15 Aug 2025 08:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896242BDC21
+	for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 08:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755248216; cv=none; b=Wvp7NiXtplteeHIM25OPLMLRy9CmiYIqnZ7zuyY1Yk9V6PluvhH+4X5epYbOreGvKgCIE4KFur0bt5Vu4TfnIVUxlKf7wIX8j4FwUIebHqK3uIDNKzQSye2T34Z7UEfm4ynfhqclbW7DExw2UqaER+VEDxTDOXfb9QO/xuHFTFI=
+	t=1755248227; cv=none; b=ZrHkNZKNJWCAYa3l3q4WXUmnL3kVYJVEtjNW7GrXGcJFrvHYzZxCVsPsOGn/trM06tpIQkNoRpSIuLcY2XgAZvyC4Qsr6xmJR3IJvRXfHHNuRhYM4ozR1/UxXPM81hhTA0fjJhJEDQkihkHPBWNKvGSib851tPt/rk/jXJw56nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755248216; c=relaxed/simple;
-	bh=wrO/Sqh4R4Wsq/c46G/Xd9F9F2nr7GeOkIWqlY2LDrU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MuaIBvjaYIj4j/PKlLaXDnSpCR6HiDdglvQmDBCQF91fzfFTgDkCruBY+yfjfzMOd3Ft+gBOoN5zeSTgtfpqMpoLrXRpke70E9TO+LIFx9NKtvWt3eO4YrHGNya5pYL08yssbkrnAQ44cNpyEHQjNx8jlLKvVeNDcT/Xjb9cCwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0891F497;
-	Fri, 15 Aug 2025 01:56:46 -0700 (PDT)
-Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A20AA3F63F;
-	Fri, 15 Aug 2025 01:56:49 -0700 (PDT)
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-To: linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Jann Horn <jannh@google.com>,
-	Jeff Xu <jeffxu@chromium.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Kees Cook <kees@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Maxwell Bland <mbland@motorola.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pierre Langlois <pierre.langlois@arm.com>,
-	Quentin Perret <qperret@google.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	x86@kernel.org
-Subject: [RFC PATCH v5 18/18] arm64: mm: Batch kpkeys level switches
-Date: Fri, 15 Aug 2025 09:55:12 +0100
-Message-ID: <20250815085512.2182322-19-kevin.brodsky@arm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250815085512.2182322-1-kevin.brodsky@arm.com>
-References: <20250815085512.2182322-1-kevin.brodsky@arm.com>
+	s=arc-20240116; t=1755248227; c=relaxed/simple;
+	bh=O+ZJhafHbN8qKN4icGVFVJdf7Wc38og21IDtrgf6xHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pBcWrc0kLX5iVtXZItBAuuWCZKh+8iGHU3d8ZgDnp6cB5QeXjhVz6uCrd1/Y12AUXanTTljALGz1R13mTS+q7QVpxSKc56F4T25z00O2Rq9B/yuKlnGjPhe0ZBzhhLoojcz/+WeeCb+R9UcR4yT7ynwPIyB5Jn9uCQhtgVEMc8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=Fr8hMHLH; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="Fr8hMHLH"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3b9dc5c6521so997358f8f.1
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 01:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1755248224; x=1755853024; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9BVLRS1doEc+x07yv9mxCetgtRilsR775nABol27HW0=;
+        b=Fr8hMHLHFrSsBH9l/bO6eW28nYHZtMvryID8AI2vLYfKQtkM+iPi9bwffn8xFEXbcs
+         QZzLq92Gr8EGi3jbIKt2NwdxO9G62OeEQ4LKAldOZOd+c3B1DNG8Nae3JWfOO20s/iRb
+         d6mlVbAY09e9ctoTyxbfGwCcA9j1PeeFQbThwbJSRCSV6RLjn8Y1bs0qdIWWpKf69XeA
+         roh1yhn6YYTDYPoOXhggzyH7MOAcGtO3SG8E3hxfG0cQLLptrWmAkUHSImM/2Kx1TISM
+         HYyTkDBDA18/vQKh/iLc54ZQj7SH+DHIbCo8bNHBUEN0uP6/Yjx4rJ9Z0NobFMQAasix
+         8d3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755248224; x=1755853024;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9BVLRS1doEc+x07yv9mxCetgtRilsR775nABol27HW0=;
+        b=s37OmZ1ebJwlZHMrJt9kdAqlTaxBLreAM20GbJlz0qHWmAXuYyV3MFJ/TGAh+Iaq4t
+         gJ/HCfRAVewxmG61/ZU1EDA7IspaNF+x9VAx7Yu1DHqdPJFjmfvCI1g3T8X1Z57ilBCm
+         HzyzQC5NFbYaJRm3/AkR0JENXw5QgtJtpYMjNJJ8HtA+P7EoPCEVBQhZ0r5GyoQRwJHJ
+         rVxGVClIe0XIzJQYjDnCxgDPLz2CDzQFctM2bvdmOz1aM+yQSnrr0GgQIC6zvbJmWnsz
+         xcCtE6Z+tin7IIyJ5L5GDbZH8DD18OmPOJdTq+z1JEag3fsjc/2hplzBV2w3JL5u0r30
+         70fw==
+X-Forwarded-Encrypted: i=1; AJvYcCX1FfPkHfBKJS1ii9ZlbrEEY5d9iR6bcT2a2nDhiomhOQjWAgXD7BVgzUkAWTvGzuGU6eUCWos9H85ofhYNbMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKwp4K4RBldBgvPwfn/NYl9L3YLrequ3W88MpsSkgb26Zh3uUG
+	SHRfEs8e5xiljQliUFc6GNH0G6wDRiHPye4BY4ZhbnjHjsCv3NEm26AEUZn4MgNqnMs=
+X-Gm-Gg: ASbGncs8pnmSxTPNZZrjyAOi+29f9PZT08lbb4MeBKCEuGw+ctGYzujkVGUkJ6/R5EH
+	1ZUIgbbhzVlptMTkfqrJEf7DHiW3SCcetVaEE71Zz+AymY7DAfWM42ESkLPWBX3WsYMmpdgpg3K
+	/EdCzTYtKwC1ZUluUFxm9+jS44Ksq7UgPKj8au38JOVSgpP+4hglkDQVcsmyl71Yo6iP+tm5s9q
+	KCgjbzl0IgyADerD5UGJhGjPOB/1pmPXYGul8O1owxLzvtObJFlUA8zpoZo4Wbz7Cu39yYT9HRv
+	gdeur9KKovTCHbME8z3wP818LHtuXTMy4AXJCmDlfxu7ZZeu0n+2jV95Uje+uLiLvlm1OYT4bTW
+	EiQ/ASdckHEq72u+F1rqlX/IOqLW0Zkbi5N2EuwmUku5SpHoi10g3ROS+EmmuDxgMq/Uf4lzCR8
+	OvVA7UXQ==
+X-Google-Smtp-Source: AGHT+IFvt9mkLof/lJEoZmg1BE+vZmNTLjleKp492QP8YOt1wf51xs/Bcjh+MMEioORGgWasXnvAWQ==
+X-Received: by 2002:a5d:588e:0:b0:3b9:10c5:bd7d with SMTP id ffacd0b85a97d-3bb6636cb2fmr1029382f8f.10.1755248223713;
+        Fri, 15 Aug 2025 01:57:03 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3bb6863fc29sm1161346f8f.66.2025.08.15.01.57.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Aug 2025 01:57:03 -0700 (PDT)
+Date: Fri, 15 Aug 2025 09:57:01 +0100
+From: Daniel Thompson <daniel@riscstar.com>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Nir Lichtman <nir@lichtman.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Yuran Pereira <yuran.pereira@hotmail.com>,
+	linux-hardening@vger.kernel.org,
+	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] kdb: Replace deprecated strcpy() with strscpy() and
+ memcpy()
+Message-ID: <aJ72XZ0VkrCkKFNy@aspen.lan>
+References: <20250814220130.281187-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250814220130.281187-2-thorsten.blum@linux.dev>
 
-The kpkeys_hardened_pgtables feature currently switches kpkeys level
-in every helper that writes to page tables, such as set_pte(). With
-kpkeys implemented using POE, this entails a pair of ISBs whenever
-such helper is called.
+On Fri, Aug 15, 2025 at 12:01:28AM +0200, Thorsten Blum wrote:
+> strcpy() is deprecated; use strscpy() and memcpy() instead and remove
+> several manual NUL-terminations.
+>
+> In parse_grep(), we can safely use memcpy() because we already know the
+> length of the source string 'cp' and that it is guaranteed to be
+> NUL-terminated within the first KDB_GREP_STRLEN bytes.
+>
+> No functional changes intended.
+>
+> Link: https://github.com/KSPP/linux/issues/88
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+> Changes in v3:
+> - Extract the strscpy() changes into a separate patch and focus on
+>   replacing the deprecated strcpy() calls as suggested by Greg
+> - Link to v2: https://lore.kernel.org/lkml/20250814163237.229544-2-thorsten.blum@linux.dev/
+>
+> Changes in v2:
+> - Use memcpy() instead of strscpy() in parse_grep() as suggested by Greg
+> - Compile-tested only so far
+> - Link to v1: https://lore.kernel.org/lkml/20250814120338.219585-2-thorsten.blum@linux.dev/
+> ---
+>  kernel/debug/kdb/kdb_main.c | 14 +++++---------
+>  1 file changed, 5 insertions(+), 9 deletions(-)
+>
+> diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+> index 7a4d2d4689a5..40de0ece724b 100644
+> --- a/kernel/debug/kdb/kdb_main.c
+> +++ b/kernel/debug/kdb/kdb_main.c
+> @@ -727,14 +727,10 @@ static int kdb_defcmd(int argc, const char **argv)
+>  	mp->help = kdb_strdup(argv[3], GFP_KDB);
+>  	if (!mp->help)
+>  		goto fail_help;
+> -	if (mp->usage[0] == '"') {
+> -		strcpy(mp->usage, argv[2]+1);
+> -		mp->usage[strlen(mp->usage)-1] = '\0';
+> -	}
+> -	if (mp->help[0] == '"') {
+> -		strcpy(mp->help, argv[3]+1);
+> -		mp->help[strlen(mp->help)-1] = '\0';
+> -	}
+> +	if (mp->usage[0] == '"')
+> +		strscpy(mp->usage, argv[2] + 1, strlen(argv[2]) - 1);
 
-A simple way to reduce this overhead is to make use of the lazy_mmu
-mode, which has recently been adopted on arm64 to batch barriers
-(DSB/ISB) when updating kernel pgtables [1]. Reusing the
-TIF_LAZY_MMU flag introduced by this series, we amend the
-kpkeys_hardened_pgtables guard so that no level switch (i.e. POR_EL1
-update) is issued while that flag is set. Instead, we switch to
-KPKEYS_LVL_PGTABLES when entering lazy_mmu mode, and restore the
-previous level when exiting it. The optimisation is disabled while
-in interrupt as POR_EL1 is reset on exception entry, i.e. switching
-is not batched in that case.
+Sorry but a strscpy() where the length of the destination buffer has
+been calculated from the source string is way too much of a red flag
+for me.
 
-Restoring the previous kpkeys level requires storing the original
-value of POR_EL1 somewhere. This is a full 64-bit value so we cannot
-simply use a TIF flag, but since lazy_mmu sections cannot nest, some
-sort of thread-local variable would do the trick. There is no
-straightforward way to reuse current->thread.por_el1 for that
-purpose - this is where the current value of POR_EL1 is stored on a
-context switch, i.e. the value corresponding to KPKEYS_LVL_PGTABLES
-inside a lazy_mmu section. Instead, we add a new member to
-thread_struct to hold that value temporarily. This isn't optimal as
-that member is unused outside of lazy_mmu sections, but it is the
-simplest option.
+Put another way if there are "no functional changes intended" then there
+cannot possibly be any security benefit from replacing the "unsafe"
+strcpy() with the "safe" strscpy(). Likewise abusing the destination
+length argument to truncate a string makes the code shorter but *not*
+clearer because it's too easy to misread.
 
-A further optimisation this patch makes is to merge the ISBs when
-exiting lazy_mmu mode. That is, if an ISB is going to be issued by
-emit_pte_barriers() because kernel pgtables were modified in the
-lazy_mmu section, we skip the ISB after restoring POR_EL1. This is
-done by checking TIF_LAZY_MMU_PENDING and ensuring that POR_EL1 is
-restored before emit_pte_barriers() is called.
+In this case even adding a comment to explain the abuse is pointless:
+if you want to get rid of the strcpy() then do it by eliminating the
+need to copy the string in the first place (e.g. make
+kdb_strdup() duplicate the part of argv[2] that you actually want to
+keep).
 
-[1] https://lore.kernel.org/all/20250422081822.1836315-12-ryan.roberts@arm.com/
+> +	if (mp->help[0] == '"')
+> +		strscpy(mp->help, argv[3] + 1, strlen(argv[3]) - 1);
 
-Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
----
+Better yet add a kdb_strdup_dequote() helper so the same bit of code can
+be used in both these cases!
 
-Unfortunately lazy_mmu sections can in fact nest under certain
-circumstances [2], which means that storing the original value of
-POR_EL1 in thread_struct is not always safe.
 
-I am working on modifying the lazy_mmu API to handle nesting gracefully,
-which should also help with restoring POR_EL1 without using
-thread_struct. See also the discussion in [3].
-
-[2] https://lore.kernel.org/all/20250512150333.5589-1-ryan.roberts@arm.com/
-[3] https://lore.kernel.org/all/20250606135654.178300-1-ryan.roberts@arm.com/t/#u
-
- arch/arm64/include/asm/pgtable.h   | 37 +++++++++++++++++++++++++++++-
- arch/arm64/include/asm/processor.h |  1 +
- 2 files changed, 37 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 1694fb839854..35d15b9722e4 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -43,11 +43,40 @@
- 
- #ifdef CONFIG_KPKEYS_HARDENED_PGTABLES
- KPKEYS_GUARD_COND(kpkeys_hardened_pgtables, KPKEYS_LVL_PGTABLES,
--		  kpkeys_hardened_pgtables_enabled())
-+		  kpkeys_hardened_pgtables_enabled() &&
-+		  (in_interrupt() || !test_thread_flag(TIF_LAZY_MMU)))
- #else
- KPKEYS_GUARD_NOOP(kpkeys_hardened_pgtables)
- #endif
- 
-+static void kpkeys_lazy_mmu_enter(void)
-+{
-+	if (!kpkeys_hardened_pgtables_enabled())
-+		return;
-+
-+	current->thread.por_el1_lazy_mmu = kpkeys_set_level(KPKEYS_LVL_PGTABLES);
-+}
-+
-+static void kpkeys_lazy_mmu_exit(void)
-+{
-+	u64 saved_por_el1;
-+
-+	if (!kpkeys_hardened_pgtables_enabled())
-+		return;
-+
-+	saved_por_el1 = current->thread.por_el1_lazy_mmu;
-+
-+	/*
-+	 * We skip any barrier if TIF_LAZY_MMU_PENDING is set:
-+	 * emit_pte_barriers() will issue an ISB just after this function
-+	 * returns.
-+	 */
-+	if (test_thread_flag(TIF_LAZY_MMU_PENDING))
-+		__kpkeys_set_pkey_reg_nosync(saved_por_el1);
-+	else
-+		arch_kpkeys_restore_pkey_reg(saved_por_el1);
-+}
-+
- static inline void emit_pte_barriers(void)
- {
- 	/*
-@@ -107,6 +136,7 @@ static inline void arch_enter_lazy_mmu_mode(void)
- 		return;
- 
- 	set_thread_flag(TIF_LAZY_MMU);
-+	kpkeys_lazy_mmu_enter();
- }
- 
- static inline void arch_flush_lazy_mmu_mode(void)
-@@ -123,6 +153,11 @@ static inline void arch_leave_lazy_mmu_mode(void)
- 	if (in_interrupt())
- 		return;
- 
-+	/*
-+	 * The ordering should be preserved to allow kpkeys_lazy_mmu_exit()
-+	 * to skip any barrier when TIF_LAZY_MMU_PENDING is set.
-+	 */
-+	kpkeys_lazy_mmu_exit();
- 	arch_flush_lazy_mmu_mode();
- 	clear_thread_flag(TIF_LAZY_MMU);
- }
-diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-index 9340e94a27f6..7b20eedfe2fe 100644
---- a/arch/arm64/include/asm/processor.h
-+++ b/arch/arm64/include/asm/processor.h
-@@ -188,6 +188,7 @@ struct thread_struct {
- 	u64			tpidr2_el0;
- 	u64			por_el0;
- 	u64			por_el1;
-+	u64			por_el1_lazy_mmu;
- #ifdef CONFIG_ARM64_GCS
- 	unsigned int		gcs_el0_mode;
- 	unsigned int		gcs_el0_locked;
--- 
-2.47.0
-
+Daniel.
