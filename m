@@ -1,33 +1,33 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B542F90EA
-	for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 10:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C55225A4F
+	for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 11:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755254910; cv=none; b=QBGK4KFzCnq+64FMxovtnjBulnIut/QueTCNANGiWn9KobWaF7a7gW80Tnuq2A5lH9347upwl6cBUY03wQeERFyDAbap2TbvL+jFuTPWjWWAfYg56jBBuNjVi4MVF/XJgo60N50uc84rUkz1tdPNIpBPJXQn5H4NvTGaaNRLOYs=
+	t=1755257300; cv=none; b=gwKxMPfZWGjDlRi997Tkt04ZLBZCTdNeTPUpurgm6D5mCex+CoLnGEVOJ9+3iaPxIH8JRMjq9ZVtP75ZuzujfI6R1rsTFv52q9ooxYf787i1I3JdsirTKSrFWEy1X8afQPLck516KIYwhsUxQe6lhT8nGN73nnTkb9eaL8FhCRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755254910; c=relaxed/simple;
-	bh=RJu/sNUIv8XQfDSHQySP+VYb7RjTMwaetdYaK/UPq6U=;
+	s=arc-20240116; t=1755257300; c=relaxed/simple;
+	bh=i18PFWJvJyUVxvyf0I1d5XFMqv+8G//fSu9a0eWFQvM=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=K4BiNXjVh/v9+wdjhNTXUs+SUE0XXRiwnjgz9Mnk1Yh1ENN9+hSBoFHB/6mEZjH/K5XyjqCZAB6ecMokOHKIEuRMFj+nI785TFy3FDWxznynWl02e/OApWPEupM5j8ffAidz/a4LBqFb+/wXVxKs7hO7eWxnUbSA5UHIQUYknBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YfPOM09X; arc=none smtp.client-ip=91.218.175.183
+	 Message-Id:References:To; b=Cs7IxHVw8tFVqiOwcuR0i6CYHmqiDj2ICuPfGpGiG+LbJN7N3KUyxmNb2f3rHrn/u+YnZELiw8UvRScSdAe3Ekh+1sEFz5Khu4JkdPzgqjXckY9hgCsb4cWkG8EC9mz4bZkKdPx9xlhWekp+taJimB8x2C40BX6MyPRxCCCO/Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ROnwqb24; arc=none smtp.client-ip=95.215.58.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YfPOM09X"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ROnwqb24"
 Content-Type: text/plain;
 	charset=us-ascii
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755254896;
+	t=1755257296;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AaSW/iwCuCeSk0qdAIyHg2YdKiOz+eJwbEC+JwzC1eA=;
-	b=YfPOM09XPo1BU+oBnOV3ID7DL0F8FnzVL3RMOFLtqj21U19HXwnZY8KFOUVHOMGUfAl5R0
-	8+YOoU/zvn2CHEU2EX5fkIO1C4fqTfaoM7SeT4oky+Ar/RYCAKAxfVUqOFagng5rDH2mF8
-	9op5kavoHOpYOXm5SI0rRRMAXalkwGY=
+	bh=i18PFWJvJyUVxvyf0I1d5XFMqv+8G//fSu9a0eWFQvM=;
+	b=ROnwqb24+gaJ7csqiETiu1sNod6Py4u4m8Huq9Iis5g8n3RD2XFkpcuhAaApzvbf6p+diA
+	bQQlszxVZ3AT7MyJNNTkNg432j2xcY6YGOgookvyNiepzUzrET0xDHRx9k9YzTspzWY+Kl
+	f+xOvxfvVz+SMQ0JNX4kQ33QecehFsY=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -38,75 +38,46 @@ Subject: Re: [PATCH v3] kdb: Replace deprecated strcpy() with strscpy() and
  memcpy()
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <CAD=FV=Udf3pZjhpPxEuHsFynP7GoHnZ7RG=NYZ2gLzm=E_4V4A@mail.gmail.com>
-Date: Fri, 15 Aug 2025 12:48:02 +0200
+In-Reply-To: <aJ72XZ0VkrCkKFNy@aspen.lan>
+Date: Fri, 15 Aug 2025 13:28:01 +0200
 Cc: Jason Wessel <jason.wessel@windriver.com>,
  Daniel Thompson <danielt@kernel.org>,
+ Douglas Anderson <dianders@chromium.org>,
  Nir Lichtman <nir@lichtman.org>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Yuran Pereira <yuran.pereira@hotmail.com>,
  linux-hardening@vger.kernel.org,
- Daniel Thompson <daniel@riscstar.com>,
  kgdb-bugreport@lists.sourceforge.net,
  linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <0BB3AC5A-5B9B-4149-90CA-80171B8B0A48@linux.dev>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <710CDE93-89CC-4B60-A582-5F9B2916ED72@linux.dev>
 References: <20250814220130.281187-2-thorsten.blum@linux.dev>
- <CAD=FV=Udf3pZjhpPxEuHsFynP7GoHnZ7RG=NYZ2gLzm=E_4V4A@mail.gmail.com>
-To: Doug Anderson <dianders@chromium.org>
+ <aJ72XZ0VkrCkKFNy@aspen.lan>
+To: Daniel Thompson <daniel@riscstar.com>
 X-Migadu-Flow: FLOW_OUT
 
-Hi Doug,
+Hi Daniel,
 
-On 15. Aug 2025, at 04:05, Doug Anderson wrote:
-> Let's think about some test cases...
-> 
-> Old code:
-> mp->usage = kdb_strdup(argv[2], GFP_KDB);
-> if (mp->usage[0] == '"') {
->  strcpy(mp->usage, argv[2]+1);
->  mp->usage[strlen(mp->usage)-1] = '\0';
-> }
-> 
-> New code:
-> mp->usage = kdb_strdup(argv[2], GFP_KDB);
-> if (mp->usage[0] == '"')
->  strscpy(mp->usage, argv[2] + 1, strlen(argv[2]) - 1);
-> 
-> Example string: argv[2] = "\"xyz\""
-> 
-> Old:
->  mp->usage = strdup("\"xyz\"")
->  mp->usage becomes "xyz\""
->  mp->usage becomes "xyz"
-> 
-> New:
->  mp->usage = strdup("\"xyz\"")
->  mp->usage becomes "xyz\""
->  mp->usage doesn't change (!)
-> 
-> To match old behavior, I think you'd need "strlen(argv[2]) - 2", right?
+> On 15. Aug 2025, at 10:57, Daniel Thompson wrote:
+> Sorry but a strscpy() where the length of the destination buffer has
+> been calculated from the source string is way too much of a red flag
+> for me.
+>=20
+> Put another way if there are "no functional changes intended" then =
+there
+> cannot possibly be any security benefit from replacing the "unsafe"
+> strcpy() with the "safe" strscpy(). Likewise abusing the destination
+> length argument to truncate a string makes the code shorter but *not*
+> clearer because it's too easy to misread.
 
-No, it should be "strlen(argv[2]) - 1" to match the old behavior.
+Deliberately truncating the source using strscpy() is a valid use case.
+strscpy() allows the size argument to be smaller than the destination
+buffer, so this is an intended use of the size argument, not an abuse.
 
-In the new code, there are only two steps instead of three.
+=46rom the strscpy() function comment in linux/string.h:
 
-With your example source string "\"xyz\"" in argv[2]:
-
-	strscpy(mp->usage, argv[2] + 1, strlen(argv[2]) - 1)
-
-evaluates to:
-
-	strscpy(mp->usage, "xyz\"", strlen("\"xyz\"") - 1)
-
-strlen("\"xyz\"") is 5, so this becomes:
-
-	strscpy(mp->usage, "xyz\"", 4)
-
-Unlike strcpy(), strscpy() copies at most 'size - 1' characters and then
-appends a NUL terminator. In the example, it copies only the first three
-bytes (xyz) and then appends a NUL terminator, effectively replacing the
-trailing quote. The result is "xyz", the same as before.
+* The size argument @... is only required when @dst is not an array, or
+* when the copy needs to be smaller than sizeof(@dst).
 
 Thanks,
 Thorsten
