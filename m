@@ -1,121 +1,100 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F26E1A76B1
-	for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 13:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39B621CA1E;
+	Fri, 15 Aug 2025 14:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755263815; cv=none; b=RO4fFVYoPE0wf5TTl+i5r/kouc69sR8btjICydDmMzlXbdI1oLWdFOHkuemDCEUt717YWEKr2X9Wu8rmIhqjZQdwD8cp6Lm3yeZdw4rrHQFbwtgCCTJyhky/GwwGg068LLCmvVQjfManukNLxpm17uef8JLK3xFXPp+KNMGER+8=
+	t=1755267372; cv=none; b=bgkM3LXQ5rUiB3Fe0vy/cRBfV/Oxj83EeWvzq9pcipDIE1vsW4Drr6vgTWjHUvKbDVcXO+l155B6SaeEzpbnVDHU6VRgcsPIB03OWd4bEQTsAteS50lD8Yr5zuHjeCyyYwsZQXffuwGRpoOeVugZJtRkHLbsgfazjUOxGnJI8FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755263815; c=relaxed/simple;
-	bh=bgfj2m6LPQMcGtZYXMhupZjoTd0XkWjInAECH+rbt+I=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Tr1e3G33phLGCU1NUS5JnE4fe6Ahl6FyA5kiNVgi5fSOL4676VdwGux0+Uo/jYhiBAKp2XN+/JRENRIWMp0ctoLP8WlEEJUwAJAJNYv0gLnlPLjga0xbYPkRPx3Zeih0kmkzLDMDGesQSRGLxjsRp2DYgMdydBEPMDrh5FEMbXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bcRSdr6Q; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1755267372; c=relaxed/simple;
+	bh=s9kJmwCMSziAcLWlTjDKKVLqzB9UYAY5Fd1NiDLoqx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=etep9HeGlFxoIv5L6EUDj4El/Gxi525WEAS5zOnfTSV5riuoypT+YWEHWZ48C1Nyh1SBz74FHLzJez+iJrcAaBmGdDcu+SYwd1KO+ksFWa+zvqHEyu5LFW6bzioDGMnK6sdhCvze+D8J5MBy3bDFxMT0+QoI4kp+ElMtNnLNbd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PQ0jZW3G; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bcRSdr6Q"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755263801;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=chldCKJKzLBEudA2zF+CVszcShmDJjYf2nSfYDWW2g4=;
-	b=bcRSdr6QfLQd4sMbwYOukohDy3hwJeheXOHA4MbgC/GFOg60IobTqhElaGdzcjEKwDiZcX
-	8ja8pUCyXcXevtsccJIR9OC1VYxF9cQVyhxu+k0TQ5Ue0Gy7Bfid5kI3AGRhdT9753O19+
-	/t/Q14kSllXD2ONitO2VLDZs7DnTPVU=
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PQ0jZW3G"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=XDxHrD3TX9AedrU5KLSEMO2f62ogJmkuypzBhYFI+es=; b=PQ0jZW3Gt/YKfyB7A9r1pgw76l
+	rQduqzGPLkQ6qEnBZFb6+RR2IWvSJxDQkyXws/quSXO6w3t0Y/GauRAzWcz+vfu9vAXu8+r9WtEqz
+	pO1M0U1IYfbHyn7ovx/CqXvlDxUowuK2hwhgEOC5/5/xSqZaGha3kCpLP1sWAyzpgpLxJ6kIeqhUy
+	8N1Ntpnt10+ZtqxNTwXRffrvqjsxlIuwiaqwN4OZu95RYXqeHs6lc2RhU1zyeSMWjzT9B8d81/qL2
+	S0LnmRilElUK6EZHNhjBzN7tq3Au2y7CfHhIfaYnLxoi+IPnPoi/JsU02NkSYL7vRkxf5Tryc4mth
+	L8aoK0Tg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1umvDx-0000000Gje9-2EVx;
+	Fri, 15 Aug 2025 14:16:05 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 83BC03002ED; Fri, 15 Aug 2025 16:16:04 +0200 (CEST)
+Date: Fri, 15 Aug 2025 16:16:04 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, linux-alpha@vger.kernel.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 00/17] Add __attribute_const__ to ffs()-family
+ implementations
+Message-ID: <20250815141604.GD3289052@noisy.programming.kicks-ass.net>
+References: <20250804163910.work.929-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH v3] kdb: Replace deprecated strcpy() with strscpy() and
- memcpy()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <aJ8cyXzMaa9b7ppN@aspen.lan>
-Date: Fri, 15 Aug 2025 15:16:27 +0200
-Cc: Jason Wessel <jason.wessel@windriver.com>,
- Daniel Thompson <danielt@kernel.org>,
- Douglas Anderson <dianders@chromium.org>,
- Nir Lichtman <nir@lichtman.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Yuran Pereira <yuran.pereira@hotmail.com>,
- linux-hardening@vger.kernel.org,
- kgdb-bugreport@lists.sourceforge.net,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <72F30E3D-2887-4494-B58C-2042AC880C1B@linux.dev>
-References: <20250814220130.281187-2-thorsten.blum@linux.dev>
- <aJ72XZ0VkrCkKFNy@aspen.lan> <710CDE93-89CC-4B60-A582-5F9B2916ED72@linux.dev>
- <aJ8cyXzMaa9b7ppN@aspen.lan>
-To: Daniel Thompson <daniel@riscstar.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250804163910.work.929-kees@kernel.org>
 
-On 15. Aug 2025, at 13:40, Daniel Thompson wrote:
-> On Fri, Aug 15, 2025 at 01:28:01PM +0200, Thorsten Blum wrote:
->> Hi Daniel,
->>=20
->>> On 15. Aug 2025, at 10:57, Daniel Thompson wrote:
->>> Sorry but a strscpy() where the length of the destination buffer has
->>> been calculated from the source string is way too much of a red flag
->>> for me.
->>>=20
->>> Put another way if there are "no functional changes intended" then =
-there
->>> cannot possibly be any security benefit from replacing the "unsafe"
->>> strcpy() with the "safe" strscpy(). Likewise abusing the destination
->>> length argument to truncate a string makes the code shorter but =
-*not*
->>> clearer because it's too easy to misread.
->>=20
->> Deliberately truncating the source using strscpy() is a valid use =
-case.
->> strscpy() allows the size argument to be smaller than the destination
->> buffer, so this is an intended use of the size argument, not an =
-abuse.
->=20
-> Sorry, I didn't phrase that especially well. I regard the abuse to be
-> deriving the length of the destination buffer exclusively from the
-> state of the source buffer.
->=20
-> As mentioned, it would be much cleaner to eliminate the string copy =
-entirely
-> than to translate it into something so similar to the original =
-strcpy().
+On Mon, Aug 04, 2025 at 09:43:56AM -0700, Kees Cook wrote:
+> Hi,
+> 
+> While tracking down a problem where constant expressions used by
+> BUILD_BUG_ON() suddenly stopped working[1], we found that an added static
+> initializer was convincing the compiler that it couldn't track the state
+> of the prior statically initialized value. Tracing this down found that
+> ffs() was used in the initializer macro, but since it wasn't marked with
+> __attribute_const__, the compiler had to assume the function might
+> change variable states as a side-effect (which is not true for ffs(),
+> which provides deterministic math results).
+> 
+> Add KUnit tests for the family of functions and then add __attribute_const__
+> to all architecture implementations and wrappers.
+> 
+> -Kees
+> 
+> [1] https://github.com/KSPP/linux/issues/364
+> 
+> Kees Cook (17):
+>   KUnit: Introduce ffs()-family tests
+>   bitops: Add __attribute_const__ to generic ffs()-family
+>     implementations
+>   csky: Add __attribute_const__ to ffs()-family implementations
+>   x86: Add __attribute_const__ to ffs()-family implementations
+>   powerpc: Add __attribute_const__ to ffs()-family implementations
+>   sh: Add __attribute_const__ to ffs()-family implementations
+>   alpha: Add __attribute_const__ to ffs()-family implementations
+>   hexagon: Add __attribute_const__ to ffs()-family implementations
+>   riscv: Add __attribute_const__ to ffs()-family implementations
+>   openrisc: Add __attribute_const__ to ffs()-family implementations
+>   m68k: Add __attribute_const__ to ffs()-family implementations
+>   mips: Add __attribute_const__ to ffs()-family implementations
+>   parisc: Add __attribute_const__ to ffs()-family implementations
+>   s390: Add __attribute_const__ to ffs()-family implementations
+>   xtensa: Add __attribute_const__ to ffs()-family implementations
+>   sparc: Add __attribute_const__ to ffs()-family implementations
+>   KUnit: ffs: Validate all the __attribute_const__ annotations
 
-Something like this?
-
-char *kdb_strdup_dequote(const char *str, gfp_t type)
-{
-	size_t len =3D strlen(str);
-	char *s;
-
-	if (str[0] =3D=3D '"') {
-		/* skip leading quote */
-		len--;
-		str++;
-
-		if (len > 0 && str[len - 1] =3D=3D '"')
-			len--; /* skip trailing quote */
-       }
-
-	len++; /* add space for NUL terminator */
-
-	s =3D kmalloc(len, type);
-	if (!s)
-		return NULL;
-	strscpy(s, str, len);
-	return s;
-}
-
-This should probably be a separate patch, right?
-
-Thanks,
-Thorsten
-
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
