@@ -1,154 +1,288 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896242BDC21
-	for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 08:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39AE72D46D7;
+	Fri, 15 Aug 2025 09:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755248227; cv=none; b=ZrHkNZKNJWCAYa3l3q4WXUmnL3kVYJVEtjNW7GrXGcJFrvHYzZxCVsPsOGn/trM06tpIQkNoRpSIuLcY2XgAZvyC4Qsr6xmJR3IJvRXfHHNuRhYM4ozR1/UxXPM81hhTA0fjJhJEDQkihkHPBWNKvGSib851tPt/rk/jXJw56nM=
+	t=1755248410; cv=none; b=OXPeXNd3+yDex7Cc5TNH+bJK7Wn59TWzYIuB9OlhOlI2Kw8ZxYYHBaf0garcyj4G/ehKoZdZmHCq+vFtGumCP0zpoZjzBnG1JcyriSLkbG2E5AtJOzCTIb1keUsmq0YQg+F2Dq08vA5miZYJo0qOpy/iQ9miD7IOV7/hvqlQemw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755248227; c=relaxed/simple;
-	bh=O+ZJhafHbN8qKN4icGVFVJdf7Wc38og21IDtrgf6xHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pBcWrc0kLX5iVtXZItBAuuWCZKh+8iGHU3d8ZgDnp6cB5QeXjhVz6uCrd1/Y12AUXanTTljALGz1R13mTS+q7QVpxSKc56F4T25z00O2Rq9B/yuKlnGjPhe0ZBzhhLoojcz/+WeeCb+R9UcR4yT7ynwPIyB5Jn9uCQhtgVEMc8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=Fr8hMHLH; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="Fr8hMHLH"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3b9dc5c6521so997358f8f.1
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 01:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1755248224; x=1755853024; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9BVLRS1doEc+x07yv9mxCetgtRilsR775nABol27HW0=;
-        b=Fr8hMHLHFrSsBH9l/bO6eW28nYHZtMvryID8AI2vLYfKQtkM+iPi9bwffn8xFEXbcs
-         QZzLq92Gr8EGi3jbIKt2NwdxO9G62OeEQ4LKAldOZOd+c3B1DNG8Nae3JWfOO20s/iRb
-         d6mlVbAY09e9ctoTyxbfGwCcA9j1PeeFQbThwbJSRCSV6RLjn8Y1bs0qdIWWpKf69XeA
-         roh1yhn6YYTDYPoOXhggzyH7MOAcGtO3SG8E3hxfG0cQLLptrWmAkUHSImM/2Kx1TISM
-         HYyTkDBDA18/vQKh/iLc54ZQj7SH+DHIbCo8bNHBUEN0uP6/Yjx4rJ9Z0NobFMQAasix
-         8d3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755248224; x=1755853024;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9BVLRS1doEc+x07yv9mxCetgtRilsR775nABol27HW0=;
-        b=s37OmZ1ebJwlZHMrJt9kdAqlTaxBLreAM20GbJlz0qHWmAXuYyV3MFJ/TGAh+Iaq4t
-         gJ/HCfRAVewxmG61/ZU1EDA7IspaNF+x9VAx7Yu1DHqdPJFjmfvCI1g3T8X1Z57ilBCm
-         HzyzQC5NFbYaJRm3/AkR0JENXw5QgtJtpYMjNJJ8HtA+P7EoPCEVBQhZ0r5GyoQRwJHJ
-         rVxGVClIe0XIzJQYjDnCxgDPLz2CDzQFctM2bvdmOz1aM+yQSnrr0GgQIC6zvbJmWnsz
-         xcCtE6Z+tin7IIyJ5L5GDbZH8DD18OmPOJdTq+z1JEag3fsjc/2hplzBV2w3JL5u0r30
-         70fw==
-X-Forwarded-Encrypted: i=1; AJvYcCX1FfPkHfBKJS1ii9ZlbrEEY5d9iR6bcT2a2nDhiomhOQjWAgXD7BVgzUkAWTvGzuGU6eUCWos9H85ofhYNbMk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKwp4K4RBldBgvPwfn/NYl9L3YLrequ3W88MpsSkgb26Zh3uUG
-	SHRfEs8e5xiljQliUFc6GNH0G6wDRiHPye4BY4ZhbnjHjsCv3NEm26AEUZn4MgNqnMs=
-X-Gm-Gg: ASbGncs8pnmSxTPNZZrjyAOi+29f9PZT08lbb4MeBKCEuGw+ctGYzujkVGUkJ6/R5EH
-	1ZUIgbbhzVlptMTkfqrJEf7DHiW3SCcetVaEE71Zz+AymY7DAfWM42ESkLPWBX3WsYMmpdgpg3K
-	/EdCzTYtKwC1ZUluUFxm9+jS44Ksq7UgPKj8au38JOVSgpP+4hglkDQVcsmyl71Yo6iP+tm5s9q
-	KCgjbzl0IgyADerD5UGJhGjPOB/1pmPXYGul8O1owxLzvtObJFlUA8zpoZo4Wbz7Cu39yYT9HRv
-	gdeur9KKovTCHbME8z3wP818LHtuXTMy4AXJCmDlfxu7ZZeu0n+2jV95Uje+uLiLvlm1OYT4bTW
-	EiQ/ASdckHEq72u+F1rqlX/IOqLW0Zkbi5N2EuwmUku5SpHoi10g3ROS+EmmuDxgMq/Uf4lzCR8
-	OvVA7UXQ==
-X-Google-Smtp-Source: AGHT+IFvt9mkLof/lJEoZmg1BE+vZmNTLjleKp492QP8YOt1wf51xs/Bcjh+MMEioORGgWasXnvAWQ==
-X-Received: by 2002:a5d:588e:0:b0:3b9:10c5:bd7d with SMTP id ffacd0b85a97d-3bb6636cb2fmr1029382f8f.10.1755248223713;
-        Fri, 15 Aug 2025 01:57:03 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3bb6863fc29sm1161346f8f.66.2025.08.15.01.57.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Aug 2025 01:57:03 -0700 (PDT)
-Date: Fri, 15 Aug 2025 09:57:01 +0100
-From: Daniel Thompson <daniel@riscstar.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Nir Lichtman <nir@lichtman.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Yuran Pereira <yuran.pereira@hotmail.com>,
-	linux-hardening@vger.kernel.org,
-	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] kdb: Replace deprecated strcpy() with strscpy() and
- memcpy()
-Message-ID: <aJ72XZ0VkrCkKFNy@aspen.lan>
-References: <20250814220130.281187-2-thorsten.blum@linux.dev>
+	s=arc-20240116; t=1755248410; c=relaxed/simple;
+	bh=NJhkWf7zhRoCGliEK+Zp1zb+a/raMBqdQ4LQbVo/t08=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X1LRHJ4ZXo/P7qk+DyqhwWD8gKb578wKIIGW7sSflKwkE/wnypy7mtDSDN0OyVf3cPYuTlI2MExhzl9Oy2JdGBOV/pBROwO4YKucBaoVyX7bgwIPADaN0VE+wPx7+Iw619LS3i9poZ6Fg6tCaesS5YfLMLljneKI3VG8oroWouE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EA43497;
+	Fri, 15 Aug 2025 01:59:59 -0700 (PDT)
+Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21AFE3F63F;
+	Fri, 15 Aug 2025 02:00:02 -0700 (PDT)
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+To: linux-hardening@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Howells <dhowells@redhat.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@chromium.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Kees Cook <kees@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Maxwell Bland <mbland@motorola.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pierre Langlois <pierre.langlois@arm.com>,
+	Quentin Perret <qperret@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org,
+	x86@kernel.org
+Subject: [RFC v2 PATCH 0/8] pkeys-based cred hardening
+Date: Fri, 15 Aug 2025 09:59:52 +0100
+Message-ID: <20250815090000.2182450-1-kevin.brodsky@arm.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250814220130.281187-2-thorsten.blum@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 15, 2025 at 12:01:28AM +0200, Thorsten Blum wrote:
-> strcpy() is deprecated; use strscpy() and memcpy() instead and remove
-> several manual NUL-terminations.
->
-> In parse_grep(), we can safely use memcpy() because we already know the
-> length of the source string 'cp' and that it is guaranteed to be
-> NUL-terminated within the first KDB_GREP_STRLEN bytes.
->
-> No functional changes intended.
->
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
-> Changes in v3:
-> - Extract the strscpy() changes into a separate patch and focus on
->   replacing the deprecated strcpy() calls as suggested by Greg
-> - Link to v2: https://lore.kernel.org/lkml/20250814163237.229544-2-thorsten.blum@linux.dev/
->
-> Changes in v2:
-> - Use memcpy() instead of strscpy() in parse_grep() as suggested by Greg
-> - Compile-tested only so far
-> - Link to v1: https://lore.kernel.org/lkml/20250814120338.219585-2-thorsten.blum@linux.dev/
-> ---
->  kernel/debug/kdb/kdb_main.c | 14 +++++---------
->  1 file changed, 5 insertions(+), 9 deletions(-)
->
-> diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-> index 7a4d2d4689a5..40de0ece724b 100644
-> --- a/kernel/debug/kdb/kdb_main.c
-> +++ b/kernel/debug/kdb/kdb_main.c
-> @@ -727,14 +727,10 @@ static int kdb_defcmd(int argc, const char **argv)
->  	mp->help = kdb_strdup(argv[3], GFP_KDB);
->  	if (!mp->help)
->  		goto fail_help;
-> -	if (mp->usage[0] == '"') {
-> -		strcpy(mp->usage, argv[2]+1);
-> -		mp->usage[strlen(mp->usage)-1] = '\0';
-> -	}
-> -	if (mp->help[0] == '"') {
-> -		strcpy(mp->help, argv[3]+1);
-> -		mp->help[strlen(mp->help)-1] = '\0';
-> -	}
-> +	if (mp->usage[0] == '"')
-> +		strscpy(mp->usage, argv[2] + 1, strlen(argv[2]) - 1);
+This series aims at hardening struct cred using the kpkeys
+infrastructure proposed in [1]. The idea is to enforce the immutability
+of live credentials (task->{creds,read_creds}) by allocating them in
+"protected" memory, which cannot be written to in the default pkey
+configuration (kpkeys level). Code that genuinely requires writing to
+live credentials, such as get_cred(), explicitly switches to a
+privileged kpkeys level, enabling write access to the protected mapping.
 
-Sorry but a strscpy() where the length of the destination buffer has
-been calculated from the source string is way too much of a red flag
-for me.
+The main challenge with this approach is to minimise the disruption to
+existing code. Directly allocating credentials in protected memory would
+force any code setting up credentials to switch kpkeys level. Instead,
+we use the fact that commit_creds() "eats" the caller's reference,
+meaning that the caller cannot use that reference after calling
+commit_creds(). This allows us to move the credentials to a new location
+in commit_creds(): prepare_creds() still allocates them in regular
+memory, and commit_creds() moves them to protected memory (i.e. memory
+mapped with a non-default pkey). This ensures that _live_ credentials
+are protected, without affecting users of commit_creds().
 
-Put another way if there are "no functional changes intended" then there
-cannot possibly be any security benefit from replacing the "unsafe"
-strcpy() with the "safe" strscpy(). Likewise abusing the destination
-length argument to truncate a string makes the code shorter but *not*
-clearer because it's too easy to misread.
+The situation isn't as simple with override_creds(), as the caller may
+(and often does) keep using the reference it passed. In this case, the
+caller should explicitly call a new helper, protect_creds(), to move
+the credentials to protected memory. This seems to be the most robust
+approach, and the number of call sites to amend looks reasonable (patch
+7 covers the most important ones). No failure should occur if a call
+site is missed; the credentials will simply be left unprotected.
 
-In this case even adding a comment to explain the abuse is pointless:
-if you want to get rid of the strcpy() then do it by eliminating the
-need to copy the string in the first place (e.g. make
-kdb_strdup() duplicate the part of argv[2] that you actually want to
-keep).
+In order to allocate credentials in protected memory, this series
+introduces support for mapping slabs with a non-default pkey, using the
+SLAB_SET_PKEY kmem_cache_create() flag (patch 3). The complexity is kept
+minimal by setting the pkey at the slab level; it should also be
+possible to do this at the page level, but where to store the pkey value
+in struct page isn't obvious - especially since we've almost run out of
+GFP flags.
 
-> +	if (mp->help[0] == '"')
-> +		strscpy(mp->help, argv[3] + 1, strlen(argv[3]) - 1);
+Most of the cover letter for the original kpkeys series [1] is relevant
+to this series as well. In particular, the threat model is unchanged:
+the aim is to mitigate data-only attacks, such as use-after-free. It is
+therefore assumed that control flow is not corrupted, and that the
+attacker does not achieve arbitrary code execution.
 
-Better yet add a kdb_strdup_dequote() helper so the same bit of code can
-be used in both these cases!
+Performance considerations
+==========================
+
+The main caveat in this RFC is RCU handling. Storing struct cred in
+memory that is read-only by default would break RCU without special
+handling, as it needs to write to cred->rcu (to zero out the callback
+field, for instance). There is currently no efficient way for RCU to
+know whether the object to be freed is protected or not, and executing
+the whole of RCU at a higher kpkeys level would imply running RCU
+callbacks at that level too, which isn't ideal (a callback could be
+exploited to write to protected locations). The current approach (patch
+4) therefore switches kpkeys level whenever any struct rcu_head is
+written to. This is safe, but clearly suboptimal. Ideally, RCU would be
+able to tell if a struct rcu_head resides in protected memory, maybe
+using a flag - it isn't clear where that flag could be stored though.
+
+Other performance-related notes:
+
+* In many cases, the use of guard objects to obtain write access to
+  protected data is nested: a function holding a guard calls another
+  that will also create a guard object. This seems difficult to avoid
+  without heavy refactoring. With the assumption that writing to the
+  pkey register is expensive (which is the case at least on arm64/POE),
+  patch 1 mitigates the cost by skipping the setting/restoring of the
+  register if the new value is equal to the current one, as is the case
+  when guards are nested.
+
+* Because a struct cred may be freed before being ever installed,
+  put_cred_rcu() may be operating on an object that is located either
+  in regular or protected memory. This is handled by looking up the slab
+  containing the object and checking if its flags include SLAB_SET_PKEY.
+  The overhead is hopefully acceptable on that path, but the approach is
+  not particularly elegant.
+
+* Similarly, put_cred(), get_cred() and other helpers may be called on
+  unprotected objects. Those helpers however create a guard object
+  unconditionally if they need to write to the credentials. It is
+  unclear whether skipping the guard for unprotected objects would give
+  a performance uplift, as this depends on the cost of checking if an
+  object is protected or not.
+
+* It is assumed that calling arch_kpkeys_enabled() is cheap, as multiple
+  guards are conditional on that function. (This boils down to a static
+  branch on arm64, which should indeed be cheap.)
+
+Benchmarking
+============
+
+Like the kpkeys_hardened_pgtables feature [1], this series was evaluated
+on an Amazon EC2 M7g instance (Graviton3). A wide variety of benchmarks
+were run, including hackbench, kernbench and Speedometer. The baseline 
+(v6.17-rc1) was compared against this branch with the
+kpkeys_hardened_cred feature enabled and an additional patch enabling it
+to be run on current arm64 hardware; see the "Performance" section in [1]
+for more details.
+
+Unfortunately, none of the benchmarks yielded clear results. The
+overheads remain in the few % and are generally not statistically
+significant. Removing the RCU handling (patch 4) makes surprisingly
+little difference, which suggests that the guard objects are not adding
+overhead to a critical path in those workloads.
+
+Overall it seems that credential manipulation doesn't happen often
+enough to notice the overhead this series adds. It could mean that such
+overhead is therefore acceptable, but it would be good to confirm this
+with more targeted workloads. Suggestions are more than welcome!
 
 
-Daniel.
+This series applies on top of v6.17-rc1 + kpkeys RFC v5 [1]. It is also
+available in this repo:
+
+  https://gitlab.arm.com/linux-arm/linux-kb
+    Branch: kpkeys-cred/rfc-v2
+
+Any comment or feedback will be highly appreciated, be it on the
+high-level approach or implementation choices!
+
+- Kevin
+
+---
+Changelog
+
+RFC v1..v2:
+
+- Rebased on v6.17-rc1 and kpkeys RFC v5.
+
+- Added benchmarking section to cover letter.
+
+- Patch 7: fixed a bug that v1 introduced in overlayfs
+  (ovl_setup_cred_for_create()). That function should return a reference
+  to the protected credentials, which will later be passed to
+  put_cred(); in v1 a reference to the unprotected credentials was
+  returned, resulting in the unprotected object's refcount becoming
+  negative (put_cred() called twice), and a memory leak for the
+  protected object.
+
+- Patch 4: added a guard object in rcu_segcblist_entrain() as it also
+  writes to struct rcu_head.
+
+- Patch 8: followed the KUnit conventions more closely. [Kees Cook's
+  suggestion]
+
+- Patch 8: added tests for protect_creds/prepare_protected_creds
+  [Kees Cook's suggestion]
+
+- Moved kpkeys guard definitions out of <linux/kpkeys.h> and to a relevant
+  header for each subsystem (e.g. <linux/cred.h> for the
+  kpkeys_hardened_cred guard).
+
+RFC v1: https://lore.kernel.org/linux-hardening/20250203102809.1223255-1-kevin.brodsky@arm.com/
+
+
+[1] https://lore.kernel.org/linux-hardening/20250815085512.2182322-1-kevin.brodsky@arm.com/
+---
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jeff Xu <jeffxu@chromium.org>
+Cc: Joey Gouly <joey.gouly@arm.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Maxwell Bland <mbland@motorola.com>
+Cc: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Pierre Langlois <pierre.langlois@arm.com>
+Cc: Quentin Perret <qperret@google.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mm@kvack.org
+Cc: x86@kernel.org
+---
+Kevin Brodsky (8):
+  arm64: kpkeys: Avoid unnecessary writes to POR_EL1
+  mm: kpkeys: Introduce unrestricted level
+  slab: Introduce SLAB_SET_PKEY
+  rcu: Allow processing kpkeys-protected data
+  mm: kpkeys: Introduce cred pkey/level
+  cred: Protect live struct cred with kpkeys
+  fs: Protect creds installed by override_creds()
+  mm: Add basic tests for kpkeys_hardened_cred
+
+ arch/arm64/include/asm/kpkeys.h       |  14 +-
+ fs/aio.c                              |   2 +-
+ fs/fuse/passthrough.c                 |   2 +-
+ fs/nfs/nfs4idmap.c                    |   2 +-
+ fs/nfsd/auth.c                        |   2 +-
+ fs/nfsd/nfs4recover.c                 |   2 +-
+ fs/nfsd/nfsfh.c                       |   2 +-
+ fs/open.c                             |   2 +-
+ fs/overlayfs/dir.c                    |   1 +
+ fs/overlayfs/super.c                  |   2 +-
+ include/asm-generic/kpkeys.h          |   4 +
+ include/linux/cred.h                  |  12 ++
+ include/linux/kpkeys.h                |   4 +-
+ include/linux/slab.h                  |  21 +++
+ kernel/cred.c                         | 179 ++++++++++++++++++++++----
+ kernel/rcu/rcu.h                      |   7 +
+ kernel/rcu/rcu_segcblist.c            |  13 +-
+ kernel/rcu/tree.c                     |   3 +-
+ mm/Kconfig                            |   2 +
+ mm/Makefile                           |   1 +
+ mm/slab.h                             |   7 +-
+ mm/slab_common.c                      |   2 +-
+ mm/slub.c                             |  58 ++++++++-
+ mm/tests/kpkeys_hardened_cred_kunit.c |  79 ++++++++++++
+ security/Kconfig.hardening            |  24 ++++
+ 25 files changed, 401 insertions(+), 46 deletions(-)
+ create mode 100644 mm/tests/kpkeys_hardened_cred_kunit.c
+
+
+base-commit: dc8e5984111db485007d9a01bf8af760f8352d56
+-- 
+2.47.0
+
