@@ -1,129 +1,152 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BADF1FCFF8
-	for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 14:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC0F1E51EB
+	for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 14:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755268356; cv=none; b=H0aWEKeS7bL3FbaGz+krP+ul4/3NZj5abBvkBM1hOPMTYFUqX2/DMC3j8YVNI2QcdqWqwkxRuX4jCxXc+RgXfDCRpUtTz+cAnCDgOhxeiSalRwkkeoWY2J1HhYF84iarq0H6L1tN3Lbl1FPYS5q2MKwqLnlwKWgByViSHCKGLJk=
+	t=1755268379; cv=none; b=C6CcLF8jVRmfyNkE99ZOb581N9LhzZyVwV6aq4+2RKKufw80xOfbxpea1A7S8Bzi6pJnt6O+hGllOMvSsJwmKtFfFTA2wXN/UHbdpuo5PQAQEiFBWfZlkSITWZ+Z7GoUnbwTXD/CWISNwJBCCoHsJ5wX96zq7qW6+HRcSR8N/Mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755268356; c=relaxed/simple;
-	bh=O0MP8KZwZzoCuMItUb5xHUP4lzs/O8K3Xj0FuWpVb3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bgOum94fJJFNuDc2wbtD1w/wxqZ3Niq5HHafedReC+f7bV9m2Iw/iZqv0ejuujNLgMQayob2PG2q5D+Xzl6qeeoSroToiBnp+nzYWC0hrjIQ2WYXV7/KlySEj12CH/uyb1uuufk2xJbb6fNOyAIK6CaiSpdFcqgZFThTSMxKI44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=jgjuMlIo; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1755268379; c=relaxed/simple;
+	bh=AN2BMV6s6s+J42sKLs0G5mD6S9TR1PkBT2u/6WOkMOg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oE5tAKsrSTPwJ0m3o46peVEiW60bgIIq3fyTvy4ynXif336cyDGLChhJQ5uvAQF7IinKMMbot/5jc6uh5HUUlJ8xrSZRQQgB/+gWULrS6YaiJReLdWdu9tz3Y84i3BZnPiXUVv78Z0n6E+Q4DuxgyzRp0duWcLftQoUN89+FgvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BH8WkmDM; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="jgjuMlIo"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45a1b097037so10871495e9.2
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 07:32:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BH8WkmDM"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b47173a03ffso1260247a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 07:32:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1755268352; x=1755873152; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8FXQf+9ghxPzhtvwrtvyY02+a0FGz0lPsLgvTccoTfc=;
-        b=jgjuMlIopCNE4eHRfW5bWZ7IzKi5/8hjWx5REXm/5ha20PNbMxLwutj9GkW2phl9bT
-         Wg+0pKnEcWq2qoouyGbQ75RJEZZiv1M5oDdZrDd7Jl/oPFin+P/rQquvt1131w1z8nDK
-         Vkp5Cn+gcGFsoiNZHRMkSo3nGSAj+ZS3RZBELtTOVOeGNmzUk5CcKIeoUUF7emvJiSsI
-         2sk6suB+wX5IQpXFKJADYbvl5Cut03v3soLiNO7/qCI8SeZHYhMP+WAuz3cVdXdKcXhp
-         Cp8E4yoIDXGJDQz0uiaRqFwSnJ2yPENUInFEzOp7Qw5Xm+9rNy8ctOXu0KxASRpMXIo/
-         kOHg==
+        d=chromium.org; s=google; t=1755268375; x=1755873175; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HUPDlQYeNV8xVNLPQ4s+Wppv5EkSz5BsCNrMzhAzL8c=;
+        b=BH8WkmDMFVJsEf0mvkuIUaDOG978bejjNmSns5Odmd7YlQfNNdslboM2vTbgJaj8Z/
+         cWG5ZhLLGG/P+nyWvpZ89r5vvd2OagS02+v35S4I6uhB43JGkw8kzQVRFLIpUL8uZ5hs
+         qm4xZpp6mNMq5orh9UWovMX4+nb2i71L3YCuY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755268352; x=1755873152;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8FXQf+9ghxPzhtvwrtvyY02+a0FGz0lPsLgvTccoTfc=;
-        b=c6U1Q43WhVsVpN/WVms0lVB81HXF83hSPdv+e+tjZiWLTMsesRHYd1/xHS0so092GJ
-         1ucjQr19UNzCRJjOveodD0vwgbvczHNhPir3C1i4aXXniUFs4Y4HqnMQI1HN96xyDqQ5
-         JEYVGY+gCWGzzHL/CwFHHog30XKIhmxjD8iuQG09YLb7HhgNaMZCpcl2qhJ3Pc0uz5pI
-         7Fv8s3GeRlVTVnJjHpqruvDEzFRV/qxrxe6mqbTcKzSAosMyqcD8tedW0V0z2Cr0Mxi+
-         f8G7EKALSZDZXY3cQrXZzHiyQS1AiI1142uQVGOrlA17wYNIMONewLz/3JxqQcwG4JNc
-         iQ2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUEX0PnTF6DlXK62oTlFz4zS3bYUPbMaxinbn3AQKW1h0Cnk7gSvv6Tbn/WiTJJgx2Hy2uIx5jgVb0G6wHRTgk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhYClwz6usSbDdJeUQwmSL+dOv5tFtKFe3HBr7PVt4/xGUdUF1
-	E7udXj8kmHMVnN2HaO629kvUigcsYBuXerj5TevF66CBuV4zMf0p6NCxk8mKeVaytpA=
-X-Gm-Gg: ASbGncss0IsojzA1gOvoYa3gk+BN0rtFSQk5yQSduxFy2a7r1ZjWMrBS5+CqNo3JnK1
-	k8Mfr02TVhceM0zkdxuK3SPoTT+gkOuBWaCz2aWeFqkQGSDClE1u+S++KnpBWwfKGAwq7i4oSDa
-	YUvrWo4A8HNsavPr/FQ52Bm7Y5R/V5qAk0nzAxcFFQFTPLar/TjQ6vnQHupwc6d8FrHGbPotAUE
-	VWE/+3HTggEyfxpUAxZB5gtZGNuJPk1VdJT37q4DQLGiVTMLcGZLesl5gyObxEyFZQdntT40W/+
-	nMgQGLwppKgWiMagfzQ8MFm57ER4vOCo9PXi/DN3lW3kYWbAionjINQ8JaFgL0H7seu2+KFRG1A
-	mdglJH5AIAgTLULsBNqmnyqRx2DQriCqwSb4N56ASlUZ5Wxoibnu6xwWivm0idME/eYT22aJ98O
-	G7i5XvjA==
-X-Google-Smtp-Source: AGHT+IHnSLhDMqXcwx68Y9138TqJ+c1Cuo3gefZ8a2Oj1eAADjXvGhxdolw2Wdfb2t12ox2676R9IQ==
-X-Received: by 2002:a05:600c:45c9:b0:459:dde3:1a27 with SMTP id 5b1f17b1804b1-45a2182f2d2mr19947185e9.26.1755268352274;
-        Fri, 15 Aug 2025 07:32:32 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c74ad27sm64461825e9.18.2025.08.15.07.32.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Aug 2025 07:32:31 -0700 (PDT)
-Date: Fri, 15 Aug 2025 15:32:29 +0100
-From: Daniel Thompson <daniel@riscstar.com>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org,
-	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] kdb: Replace deprecated strcpy() with memmove() in
- vkdb_printf()
-Message-ID: <aJ9E_W4Z0n7EzjUw@aspen.lan>
-References: <20250812132621.119641-3-thorsten.blum@linux.dev>
- <CAD=FV=VnvUUG7qE_RDKfos1H-baZUT8V5vKx2QNRX14OZ0QnwA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1755268375; x=1755873175;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HUPDlQYeNV8xVNLPQ4s+Wppv5EkSz5BsCNrMzhAzL8c=;
+        b=DfMHf3V3lrf1heq78zgEXCZkwPYwtFskFfcIKZPRl9dvYUPxnTBFTaXU0FygYKIXdy
+         XIzzSTQY/feJVagXFtmoUv/1ckk6ZBtMqfb1Bdw1Z/EErt9y25FgIoRWBJRND6JUkdlH
+         5FyHCQEpJbCk6od7xhYhBlBolmi9O7lVepkZXGnqp+DpPkebkRsa9iom9h8LHgyQ00A/
+         ds2pZ3OWjG3M4yZq7u4S78pTAQMSgYDNb1jOSGo/eafEamvzcnW9IL0YfdvIojNh4cMK
+         2G3uCyJV166LqqY60BKFyCmF7HgX67OQmgj+q2nLw1Kl31xhdqAq//IZicYEGo68gwwb
+         2P6g==
+X-Forwarded-Encrypted: i=1; AJvYcCU0c95u74k74OpsbVRFN9RmmmpvLywqr1qn7x1BLwY5Hx1XZXIRCeT2DAqgRwxQNEuk33Gvhy30BGRhazBLxEI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7npji+JVRG569JWPulpM9hwZLxgV71LLw2vuOfPzyVkRkdAlP
+	M94SGe3vtcnPbu2HeX7MzKDuAVO3TW+BwrOABNZQfyRbc0wJzY77kcNITn6qzXVOG/a7Kbzfo/n
+	YUPM=
+X-Gm-Gg: ASbGncv+sVwQmvzbkXzL0NhitC/tObyNRDLlbgXfFoZoVXxxcXAONpSBWldSHqDMs0o
+	bHT9wU973V3vD0tverY6jc1Jx0wYjkxfNNSmdLTLbXnDmAzMOWrOCuDb8Aq38EWIEWYxD0Buo4g
+	RxDHwqAd+2clAy5ZeKkYsSiD30aT5FCoCDWrdhvYRQ+5a51O5qJaIbY4wbMaj4+tnlTki44oXxS
+	7gBdsGKcEZ5qBcgkzbiGh1CuzSd7klGUXq/oifnlrUS9jrD6yxG3nNusei2xjqcGOaTtprIm02C
+	fKEoZgNcCAc2RlHulSOsIZbssi/tHMlfo4vJ3j+B39ZVHkOyPh5XxkurbhR7pw097gNwGbw1yCx
+	j694VCkTTS/KHipDzz1R7OrjuN9/9iiEtQ6VYGUC2yvjyffyykPvZY4XDPaT6us9SYQ==
+X-Google-Smtp-Source: AGHT+IHw+jH69NPKPkmC2YNAM/a5Qe8n+3drt9J6mT2/WBlF9OCOegVIGnsU3W1lQU20lSR4Lv81Xg==
+X-Received: by 2002:a17:903:198e:b0:240:640a:c576 with SMTP id d9443c01a7336-2446d73a930mr31262195ad.15.1755268375085;
+        Fri, 15 Aug 2025 07:32:55 -0700 (PDT)
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com. [209.85.215.174])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446d53a2bbsm15500535ad.110.2025.08.15.07.32.54
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Aug 2025 07:32:54 -0700 (PDT)
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b47174beb13so1415588a12.2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Aug 2025 07:32:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVCHe5uw+rVgVop5ZmpLX82PCMOr6gqT2SI8sofnZNYYLFuSo37PAWut56Hk93w15tuEjLY7isD5ejWqClCr80=@vger.kernel.org
+X-Received: by 2002:a17:903:19c7:b0:240:92cc:8fcf with SMTP id
+ d9443c01a7336-2446d97a21dmr41288195ad.49.1755268373349; Fri, 15 Aug 2025
+ 07:32:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=VnvUUG7qE_RDKfos1H-baZUT8V5vKx2QNRX14OZ0QnwA@mail.gmail.com>
+References: <20250814220130.281187-2-thorsten.blum@linux.dev>
+ <CAD=FV=Udf3pZjhpPxEuHsFynP7GoHnZ7RG=NYZ2gLzm=E_4V4A@mail.gmail.com> <0BB3AC5A-5B9B-4149-90CA-80171B8B0A48@linux.dev>
+In-Reply-To: <0BB3AC5A-5B9B-4149-90CA-80171B8B0A48@linux.dev>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 15 Aug 2025 07:32:40 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V06iHUurHQYN07ri=2-5tHon3G2OMnT1rtZ2Qp7EAW+w@mail.gmail.com>
+X-Gm-Features: Ac12FXxL2rPDKIvnBjqZEgiiOTotbJwxpdaBhPYpGXK_jpG3oTuZHDGRA0uWCfE
+Message-ID: <CAD=FV=V06iHUurHQYN07ri=2-5tHon3G2OMnT1rtZ2Qp7EAW+w@mail.gmail.com>
+Subject: Re: [PATCH v3] kdb: Replace deprecated strcpy() with strscpy() and memcpy()
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Jason Wessel <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>, 
+	Nir Lichtman <nir@lichtman.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Yuran Pereira <yuran.pereira@hotmail.com>, linux-hardening@vger.kernel.org, 
+	Daniel Thompson <daniel@riscstar.com>, kgdb-bugreport@lists.sourceforge.net, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 12, 2025 at 09:24:55AM -0700, Doug Anderson wrote:
-> Hi,
+Hi,
+
+On Fri, Aug 15, 2025 at 3:48=E2=80=AFAM Thorsten Blum <thorsten.blum@linux.=
+dev> wrote:
 >
-> On Tue, Aug 12, 2025 at 6:27 AM Thorsten Blum <thorsten.blum@linux.dev> wrote:
+> Hi Doug,
+>
+> On 15. Aug 2025, at 04:05, Doug Anderson wrote:
+> > Let's think about some test cases...
 > >
-> > strcpy() is deprecated and its behavior is undefined when the source and
-> > destination buffers overlap. Use memmove() instead to avoid any
-> > undefined behavior.
+> > Old code:
+> > mp->usage =3D kdb_strdup(argv[2], GFP_KDB);
+> > if (mp->usage[0] =3D=3D '"') {
+> >  strcpy(mp->usage, argv[2]+1);
+> >  mp->usage[strlen(mp->usage)-1] =3D '\0';
+> > }
 > >
-> > Adjust comments for clarity.
+> > New code:
+> > mp->usage =3D kdb_strdup(argv[2], GFP_KDB);
+> > if (mp->usage[0] =3D=3D '"')
+> >  strscpy(mp->usage, argv[2] + 1, strlen(argv[2]) - 1);
 > >
-> > Link: https://github.com/KSPP/linux/issues/88
-> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> > ---
-> > Changes in v2:
-> > - Use memmove() because of strcpy()'s undefined behavior with
-> >   overlapping buffers as suggested by Doug Anderson
-> > - Compile-tested only
-> > - Link to v1: https://lore.kernel.org/lkml/20250811170351.68985-1-thorsten.blum@linux.dev/
-> > ---
-> >  kernel/debug/kdb/kdb_io.c | 14 ++++++++------
-> >  1 file changed, 8 insertions(+), 6 deletions(-)
+> > Example string: argv[2] =3D "\"xyz\""
+> >
+> > Old:
+> >  mp->usage =3D strdup("\"xyz\"")
+> >  mp->usage becomes "xyz\""
+> >  mp->usage becomes "xyz"
+> >
+> > New:
+> >  mp->usage =3D strdup("\"xyz\"")
+> >  mp->usage becomes "xyz\""
+> >  mp->usage doesn't change (!)
+> >
+> > To match old behavior, I think you'd need "strlen(argv[2]) - 2", right?
 >
-> Much nicer, thank you!
+> No, it should be "strlen(argv[2]) - 1" to match the old behavior.
 >
-> Given that the old code was officially relying on undefined behavior
-> of strcpy() before, I'd personally even add:
+> In the new code, there are only two steps instead of three.
 >
-> Fixes: 5d5314d6795f ("kdb: core for kgdb back end (1 of 2)")
+> With your example source string "\"xyz\"" in argv[2]:
 >
-> In any case:
+>         strscpy(mp->usage, argv[2] + 1, strlen(argv[2]) - 1)
 >
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> evaluates to:
+>
+>         strscpy(mp->usage, "xyz\"", strlen("\"xyz\"") - 1)
+>
+> strlen("\"xyz\"") is 5, so this becomes:
+>
+>         strscpy(mp->usage, "xyz\"", 4)
+>
+> Unlike strcpy(), strscpy() copies at most 'size - 1' characters and then
+> appends a NUL terminator. In the example, it copies only the first three
+> bytes (xyz) and then appends a NUL terminator, effectively replacing the
+> trailing quote. The result is "xyz", the same as before.
 
-LGTM... and I agree that this is bug rather than a clean up so am
-waiting to hear back on the Fixes: .
+Ugh, I missed that strscpy() implicitly takes away an extra character.
+So, yes, your version does appear correct in that sense. It's
+definitely non-obvious and I agree with Daniel that it doesn't feel
+like the right way to use strscpy().
 
-
-Daniel
-
-
-PS Feel free to roll all three kdb patches discussed recently into a
-   series so I can pull in one go ;-) .
+-Doug
