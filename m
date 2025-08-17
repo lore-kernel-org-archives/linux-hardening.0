@@ -1,41 +1,42 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F211A254E
-	for <linux-hardening@vger.kernel.org>; Sun, 17 Aug 2025 18:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADCA1F4C98
+	for <linux-hardening@vger.kernel.org>; Sun, 17 Aug 2025 18:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755455894; cv=none; b=QfRvUnRJk3dRJ/y9uXCOzTiiNv3OucDY3YPyPzzijIYvifpGW0M+xAL38nKuU7fMNlCpD6qg1CFY8RYaV6Gp0mO2QFXYJoR0XO/ltiWk5+FFEE9Hj26+A0rI7zB7QlSVIlDAT/XozApwUVqDuz8jtz0jXtZ/UqQaNxmz+R9SDw0=
+	t=1755455895; cv=none; b=LRTyetQby33r/aV8NmRSGCwDXwbsvzH8amlwckoUVB4yID5XhRPjTj+azqS7U0T3aare5UHEHgrV0mVwb2ej0cH3Xf+m9y38u6DDFXR7H3gpbGVBvWqKvdSoSQ49IXausi7cb5ZgLPImEmbtwarbh0Mb1gKCNvZJOtOhZXXGalE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755455894; c=relaxed/simple;
-	bh=sjVKdScJg1tpQ2DUxpoJnfCD3diHwlzHH3yVwhCQJTc=;
+	s=arc-20240116; t=1755455895; c=relaxed/simple;
+	bh=INypzJZVvRsuZMPxXGFxZWyEOvHfFpJqjvibZjyXVjs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FA7EWQhiDKzlNPJUOOSLaUe/XAIUyCUxLuiE2kI6MwJFN5X9dhXFw/U7/N7dhDemTs6oLADZ+Myp4AfSCJmwkcvGKaPljOsfX367/TadeWwVITZfBAzhBuC1fYYDBS3fFxRMzLbTHNM2ZupQqBFQ/O51124uvbw+/1s534uyuwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OZOHNLMN; arc=none smtp.client-ip=91.218.175.184
+	 MIME-Version; b=Kx27wTWO6UNmFGqv6JgULiib6KMp1mSzuE7nY1BBw1fPFXCQ9fCHML1jPiElRlSVJRul192K6NJMWIemQBMAp73/bdEZILUERy7As1axoy6ARfk/l83Slu0xO/KLLtLkRNyv+Z6SPY282e00k33hlr2j9gCKOczQAScWo+sdD2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DSbZzlu/; arc=none smtp.client-ip=91.218.175.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OZOHNLMN"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DSbZzlu/"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755455890;
+	t=1755455892;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xw23XuAqvkfjRvWscmZ9n/cdkV9n+OCr1B3xpq9eAq8=;
-	b=OZOHNLMNWmdE0QQiWgcj+p+qqlf8n0Kh4bSo8zUfrZ60Lug+KAy5jCy57xuUZ9QjDVPNE9
-	iqm0UzrK4t5zI77R74uau0mrYWzuhukcDJzERt778vmuFgrePGmrV8kbQuDeIQwbjRC1oM
-	vP0fMYg58VQ7CPE/CNbQHt6pPiMuQTs=
+	bh=uMC9qxl3+y8DjdiNV2tMfFu89w7Qwy8mTMvWDapM4CM=;
+	b=DSbZzlu/aOEapMU14Je5BNwcLLKrDxTOgyQK4IiOv9DbY5tu+g1vQ6Xg9xW489Hm6KapGA
+	xk7ia+HJo+4sGNssbDYrjuXlrFVUVNG9bZXajipf5Qz9YNT+fpNx9jLc7BjalU9tkcIC8S
+	om3fMxp3zvpH/KCVR3PkI10wCk6oBFY=
 From: Thorsten Blum <thorsten.blum@linux.dev>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thorsten Blum <thorsten.blum@linux.dev>
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Thomas Zimmermann <tzimmermann@suse.de>
 Cc: linux-hardening@vger.kernel.org,
 	linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/8] MIPS: sgi-ip32: Replace deprecated strcpy() in plat_mem_setup()
-Date: Sun, 17 Aug 2025 20:37:12 +0200
-Message-ID: <20250817183728.612012-2-thorsten.blum@linux.dev>
+Subject: [PATCH 3/8] MIPS: sni: Replace deprecated strcpy() in sni_console_setup()
+Date: Sun, 17 Aug 2025 20:37:13 +0200
+Message-ID: <20250817183728.612012-3-thorsten.blum@linux.dev>
 In-Reply-To: <20250817183728.612012-1-thorsten.blum@linux.dev>
 References: <20250817183728.612012-1-thorsten.blum@linux.dev>
 Precedence: bulk
@@ -52,30 +53,30 @@ strcpy() is deprecated; use strscpy() instead.
 Link: https://github.com/KSPP/linux/issues/88
 Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- arch/mips/sgi-ip32/ip32-setup.c | 3 ++-
+ arch/mips/sni/setup.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/sgi-ip32/ip32-setup.c b/arch/mips/sgi-ip32/ip32-setup.c
-index aeb0805aae57..c2ebc4bbd866 100644
---- a/arch/mips/sgi-ip32/ip32-setup.c
-+++ b/arch/mips/sgi-ip32/ip32-setup.c
-@@ -14,6 +14,7 @@
- #include <linux/interrupt.h>
- #include <linux/param.h>
- #include <linux/sched.h>
+diff --git a/arch/mips/sni/setup.c b/arch/mips/sni/setup.c
+index 03cb69937258..fc7da12284f5 100644
+--- a/arch/mips/sni/setup.c
++++ b/arch/mips/sni/setup.c
+@@ -13,6 +13,7 @@
+ #include <linux/export.h>
+ #include <linux/console.h>
+ #include <linux/screen_info.h>
 +#include <linux/string.h>
  
- #include <asm/bootinfo.h>
- #include <asm/mipsregs.h>
-@@ -90,7 +91,7 @@ void __init plat_mem_setup(void)
- 			static char options[8] __initdata;
- 			char *baud = ArcGetEnvironmentVariable("dbaud");
- 			if (baud)
--				strcpy(options, baud);
-+				strscpy(options, baud);
- 			add_preferred_console("ttyS", *(con + 1) == '2' ? 1 : 0,
- 					      baud ? options : NULL);
+ #ifdef CONFIG_FW_ARC
+ #include <asm/fw/arc/types.h>
+@@ -80,7 +81,7 @@ static void __init sni_console_setup(void)
+ 			break;
  		}
+ 		if (baud)
+-			strcpy(options, baud);
++			strscpy(options, baud);
+ 		if (strncmp(cdev, "tty552", 6) == 0)
+ 			add_preferred_console("ttyS", port,
+ 					      baud ? options : NULL);
 -- 
 2.50.1
 
