@@ -1,42 +1,44 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADCA1F4C98
-	for <linux-hardening@vger.kernel.org>; Sun, 17 Aug 2025 18:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB7530103F
+	for <linux-hardening@vger.kernel.org>; Sun, 17 Aug 2025 18:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755455895; cv=none; b=LRTyetQby33r/aV8NmRSGCwDXwbsvzH8amlwckoUVB4yID5XhRPjTj+azqS7U0T3aare5UHEHgrV0mVwb2ej0cH3Xf+m9y38u6DDFXR7H3gpbGVBvWqKvdSoSQ49IXausi7cb5ZgLPImEmbtwarbh0Mb1gKCNvZJOtOhZXXGalE=
+	t=1755455897; cv=none; b=uFB9eyRr6twEiHHhPlfQPR0yQoDGGM8kD/3aPe7CxzQi+e8qFYLKimjH0UZmqlxK8Cm//zTVJTLtoGOIkLostjzXI1kgly5rap3xzZU6b2uk88GEwIFoTatDsP13gvtfkyJURKltciFMFfyo3stqeBDBHmKjZGJE59GEKCFne7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755455895; c=relaxed/simple;
-	bh=INypzJZVvRsuZMPxXGFxZWyEOvHfFpJqjvibZjyXVjs=;
+	s=arc-20240116; t=1755455897; c=relaxed/simple;
+	bh=MIPEmkj8ov40oghApOnZj6uHa4v1TUsDCFIbFhrjr00=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Kx27wTWO6UNmFGqv6JgULiib6KMp1mSzuE7nY1BBw1fPFXCQ9fCHML1jPiElRlSVJRul192K6NJMWIemQBMAp73/bdEZILUERy7As1axoy6ARfk/l83Slu0xO/KLLtLkRNyv+Z6SPY282e00k33hlr2j9gCKOczQAScWo+sdD2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DSbZzlu/; arc=none smtp.client-ip=91.218.175.179
+	 MIME-Version; b=ImEIQuMDZGtnlheZJG6/Gn1CQBkqRFqIHPbaGB7sW0iDnttviUUe+lYT5gP3KJheQHHUMJuzZfhyMgFI9CEoVGPHjAxfB5IwBv/X9SLJEwJoU7opsvzh/xsCawLaXVmu4upIUVRRDIXnEitvU8yuPxw/eeo1BCkcDqV8EC4zHAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kvQ49TOE; arc=none smtp.client-ip=91.218.175.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DSbZzlu/"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kvQ49TOE"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755455892;
+	t=1755455894;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uMC9qxl3+y8DjdiNV2tMfFu89w7Qwy8mTMvWDapM4CM=;
-	b=DSbZzlu/aOEapMU14Je5BNwcLLKrDxTOgyQK4IiOv9DbY5tu+g1vQ6Xg9xW489Hm6KapGA
-	xk7ia+HJo+4sGNssbDYrjuXlrFVUVNG9bZXajipf5Qz9YNT+fpNx9jLc7BjalU9tkcIC8S
-	om3fMxp3zvpH/KCVR3PkI10wCk6oBFY=
+	bh=pQd3fjTE0bv5k0utUixn7f4BcezD3BFIk5BYH/5tHhc=;
+	b=kvQ49TOED4OS6VPH/JogC1VSquoWosgYj5mPa0rt2WeWkLAKR4IhFGpDPXKylHtjURVU03
+	myo8tCZtt64f8aISDgoLjU32+AH1HZqQnQv3syRQQJIwrhCNNawOcs4DCmy1moB4dbUfWy
+	CA/SJbfirsq46ON/4nLHG5Mftn6TZC4=
 From: Thorsten Blum <thorsten.blum@linux.dev>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
 	Thorsten Blum <thorsten.blum@linux.dev>,
-	Thomas Zimmermann <tzimmermann@suse.de>
+	Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-hardening@vger.kernel.org,
 	linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/8] MIPS: sni: Replace deprecated strcpy() in sni_console_setup()
-Date: Sun, 17 Aug 2025 20:37:13 +0200
-Message-ID: <20250817183728.612012-3-thorsten.blum@linux.dev>
+Subject: [PATCH 4/8] MIPS: txx9: Replace deprecated strcpy() with strscpy()
+Date: Sun, 17 Aug 2025 20:37:14 +0200
+Message-ID: <20250817183728.612012-4-thorsten.blum@linux.dev>
 In-Reply-To: <20250817183728.612012-1-thorsten.blum@linux.dev>
 References: <20250817183728.612012-1-thorsten.blum@linux.dev>
 Precedence: bulk
@@ -53,30 +55,31 @@ strcpy() is deprecated; use strscpy() instead.
 Link: https://github.com/KSPP/linux/issues/88
 Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- arch/mips/sni/setup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/mips/txx9/generic/setup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/sni/setup.c b/arch/mips/sni/setup.c
-index 03cb69937258..fc7da12284f5 100644
---- a/arch/mips/sni/setup.c
-+++ b/arch/mips/sni/setup.c
-@@ -13,6 +13,7 @@
- #include <linux/export.h>
- #include <linux/console.h>
- #include <linux/screen_info.h>
-+#include <linux/string.h>
+diff --git a/arch/mips/txx9/generic/setup.c b/arch/mips/txx9/generic/setup.c
+index 5dc867ea2c69..03f8a3a95637 100644
+--- a/arch/mips/txx9/generic/setup.c
++++ b/arch/mips/txx9/generic/setup.c
+@@ -200,7 +200,7 @@ static void __init preprocess_cmdline(void)
+ 	static char cmdline[COMMAND_LINE_SIZE] __initdata;
+ 	char *s;
  
- #ifdef CONFIG_FW_ARC
- #include <asm/fw/arc/types.h>
-@@ -80,7 +81,7 @@ static void __init sni_console_setup(void)
- 			break;
- 		}
- 		if (baud)
--			strcpy(options, baud);
-+			strscpy(options, baud);
- 		if (strncmp(cdev, "tty552", 6) == 0)
- 			add_preferred_console("ttyS", port,
- 					      baud ? options : NULL);
+-	strcpy(cmdline, arcs_cmdline);
++	strscpy(cmdline, arcs_cmdline);
+ 	s = cmdline;
+ 	arcs_cmdline[0] = '\0';
+ 	while (s && *s) {
+@@ -270,7 +270,7 @@ void __init prom_init(void)
+ 	preprocess_cmdline();
+ 	select_board();
+ 
+-	strcpy(txx9_system_type, txx9_board_vec->system);
++	strscpy(txx9_system_type, txx9_board_vec->system);
+ 
+ 	txx9_board_vec->prom_init();
+ }
 -- 
 2.50.1
 
