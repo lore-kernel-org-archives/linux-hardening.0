@@ -1,30 +1,30 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3821ADFE4
-	for <linux-hardening@vger.kernel.org>; Sun, 17 Aug 2025 23:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCDA2AE97
+	for <linux-hardening@vger.kernel.org>; Sun, 17 Aug 2025 23:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755472697; cv=none; b=i2+uSXsoPubMOxR6oaPck3saJIs/ARwuM5DnvOYL1MvRix0XQ5rsVn1oYFhW5H5UVVTqtXXW0VPUqRPNUNcCrsGBLYa/XrvWpyk/tgTxPmUWyqPd6HSw96sUgYnHDsMI2IxpQ+bO7hXdQ3W9Ks8yemSckLfWP1rB0FrDSJXNUTQ=
+	t=1755472920; cv=none; b=P2E4sd1cFw3KW5vMsj+IEeAVaDnkpmejFPDtNH4SUcVh+UgH6Kd/vergOTIdkDdblXGLueczlx3NGIiCZxRQ1B7juEo+HjnacBstQIBc28/KhPeDf1gVxXtzld+yhLzwl4kNoPY2RkxharT3XOseS41zU88nn7CmKHBZIO80DXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755472697; c=relaxed/simple;
-	bh=/GxEl0QPjOg6ALkrg7qmzgWQ1rEayIF61MPgBUBRnkw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U7uzQyYz6LpjWujH6OGVaKfsTuT0B+z4bctaMNY9w0hFIUkU7t3XYO4wAHIo2vjoTruaTGLXNENgVTUS66/zp2mc853EDLi7u0tV4Iwdp8iVqSBITvZWb3nDFclq+ianztHEOHirvpWo9HSeFzERsoHJ4ufa4fnHk4dp955Tdc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MZMAzonE; arc=none smtp.client-ip=95.215.58.182
+	s=arc-20240116; t=1755472920; c=relaxed/simple;
+	bh=wWqokGDMHBDhwGPIbUEwk+JQC46/td8MKpkyDnKaPFY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NRhdli7tNU5fGd4dJXbFL8oymrPGcS4VH7WJjyaEC60A9pTJ2bTiDIllygAmqUWRPCZZOfeILy4xpO0QRm1xt4YbySv7T0UXNS+YAheC06DHB/kZJa+O05J0qvM5iPfa6Tr/aUtEoAF333tdvltbfG3SSQtxV/97uE0lvC/yzeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JYac9BRa; arc=none smtp.client-ip=91.218.175.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MZMAzonE"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JYac9BRa"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755472683;
+	t=1755472907;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=APR/43NyS5T31TxBUdjop0LMI0MLna0XIyK/upjGzA0=;
-	b=MZMAzonEWu7ErZsR8ivDZPZ1AdJYzj75AS2OkwuuZZHPhS13yIFXAyAea7L9zspIYYuV93
-	dfMI1XVpc4pKLSF4ZWFX8tZWh+pg7d7R6uqq5WE368Z6N0sdAbACEPRo7cOl9GXWqhspwb
-	gfTETKj0caEG0lyFHs5/xg9jHlhDcFs=
+	bh=SIYYCveydZN/yS9B5/K7xi00iELlTOe8UHhKrMt4XvI=;
+	b=JYac9BRaohmbqI7o2h8cKY89Fe6NDk4lV4wIt7FZEZBagZ3R0tkepWFNv/++gVZSlitMgS
+	/FuG9V24sfu4Vc93IrA0ZIsW5r8qLwJwP8Y4D+85pcs6oeaZIurqxlUyBcKvGo0QT/i7E/
+	QvcWxWkGl/xus08DpWc7lhI65QmoN7k=
 From: Thorsten Blum <thorsten.blum@linux.dev>
 To: Richard Henderson <richard.henderson@linaro.org>,
 	Matt Turner <mattst88@gmail.com>
@@ -32,9 +32,9 @@ Cc: linux-hardening@vger.kernel.org,
 	Thorsten Blum <thorsten.blum@linux.dev>,
 	linux-alpha@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] alpha: Replace strcpy() with strscpy() in setup_arch()
-Date: Mon, 18 Aug 2025 01:17:50 +0200
-Message-ID: <20250817231753.633899-1-thorsten.blum@linux.dev>
+Subject: [PATCH RESEND] alpha: smp: Replace deprecated strcpy() with strscpy()
+Date: Mon, 18 Aug 2025 01:21:36 +0200
+Message-ID: <20250817232138.634361-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,43 +46,25 @@ X-Migadu-Flow: FLOW_OUT
 
 strcpy() is deprecated; use strscpy() instead.
 
-Since the destination buffer 'command_line' has a fixed length,
-strscpy() automatically determines its size using sizeof() when the size
-argument is omitted. This makes the explicit size argument for the
-existing strscpy() call unnecessary - remove it.
-
-No functional changes intended.
-
 Link: https://github.com/KSPP/linux/issues/88
 Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- arch/alpha/kernel/setup.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/alpha/kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/alpha/kernel/setup.c b/arch/alpha/kernel/setup.c
-index bebdffafaee8..8b51e6ca83d6 100644
---- a/arch/alpha/kernel/setup.c
-+++ b/arch/alpha/kernel/setup.c
-@@ -468,8 +468,8 @@ setup_arch(char **cmdline_p)
- 	/* 
- 	 * Locate the command line.
- 	 */
--	strscpy(command_line, COMMAND_LINE, sizeof(command_line));
--	strcpy(boot_command_line, command_line);
-+	strscpy(command_line, COMMAND_LINE);
-+	strscpy(boot_command_line, command_line, COMMAND_LINE_SIZE);
- 	*cmdline_p = command_line;
+diff --git a/arch/alpha/kernel/smp.c b/arch/alpha/kernel/smp.c
+index ed06367ece57..56155b988b9c 100644
+--- a/arch/alpha/kernel/smp.c
++++ b/arch/alpha/kernel/smp.c
+@@ -262,7 +262,7 @@ recv_secondary_console_msg(void)
  
- 	/* 
-@@ -511,7 +511,7 @@ setup_arch(char **cmdline_p)
- 	}
- 
- 	/* Replace the command line, now that we've killed it with strsep.  */
--	strcpy(command_line, boot_command_line);
-+	strscpy(command_line, boot_command_line);
- 
- 	/* If we want SRM console printk echoing early, do it now. */
- 	if (alpha_using_srm && srmcons_output) {
+ 		cnt = cpu->ipc_buffer[0] >> 32;
+ 		if (cnt <= 0 || cnt >= 80)
+-			strcpy(buf, "<<< BOGUS MSG >>>");
++			strscpy(buf, "<<< BOGUS MSG >>>");
+ 		else {
+ 			cp1 = (char *) &cpu->ipc_buffer[1];
+ 			cp2 = buf;
 -- 
 2.50.1
 
