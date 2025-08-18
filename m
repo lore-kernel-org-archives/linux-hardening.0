@@ -1,154 +1,132 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA8B2773E9
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Aug 2025 18:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47D93314B2
+	for <linux-hardening@vger.kernel.org>; Mon, 18 Aug 2025 18:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755540837; cv=none; b=j/otRi+T0H7wpgvA1rNXj3HWvhOI0JI2/O26BpblTY88/MPTZo3z6EznoWSo1GBRKGXs6BrqcSMn1sru3LVhPPD5d0XHpdmjIqAlTxMr5kmpZMqqS2JbibuCJaCvaua/BfDsWMFKQhT+L1mPPbbpeA6uFsAY9Sm8WrzYdAlv4+A=
+	t=1755541626; cv=none; b=ugRa1ukOqoKHRG8QIo0HXzoi+T9brhmgWcQBtfneampnQBmxoFvu2OStUIEHX9cS4HIM0a8nzmXzKxuc7fRo+pxqSAT4mBVFuFX/GS4QobJ3C6WDI6ioWp1J0uv83NHwHI9zhS5iUVVkllFWZeApW0M4MPPfIDUsPwhSlC4kQNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755540837; c=relaxed/simple;
-	bh=9Bx9GX4Ak2Q4ZFkwLWikHTj0E/sU5FgSiXmufxThwtM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t8Gaiz9YS9qZq5OxOWXErJk2BIUfh8vkXsBd0QakIwTw7ragW/jma06GU/3RqBg1zQLhCkY5vrOwzHJDFjZSIMiWX07vZRUM0UWqzY+Gut3gEMrLr/wCUdlT0wqQK13WluhI78jqHAk0Dq4C0aq5FSFEbc9a6loAhgDlXkNaKCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vgSCAIgI; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1755541626; c=relaxed/simple;
+	bh=Rwi7Cu8wK8PRPeBmHirEY0WEDhwHCHjnE925WnBAEsk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eMJszhMnUejpB4Cqo8XBMms0z3WVKtWe11OAMISR9Z8cF1dhaUPO/N3F4+nmyvXAJWKBE+jom+FuAKRutuy3lCf452EcLJWwRE18jK2sxEbl2CdKtVVs/6DsLIsZ5FDo9S+xq77NLK4o113NTH3m1aXKiAmBPywsDCcmt5lo5Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yQ8XGPe2; arc=none smtp.client-ip=209.85.166.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vgSCAIgI"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755540833;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f0U0WedRgobk8ZDmbWpWadtFbV5VpHYNx6DgdKVrYks=;
-	b=vgSCAIgIt2IoUaRmRHYQPIh75B3Pd0GvLyk2WHXOF3taTFyAxe/8UiHiQk7xp86eFfZC/m
-	gsAJxzIkp9wP4LxjzkzU6A29HquV6Z6CdmCZh2X2mzMK54rAMb8iFdhQ0FRSE5Fs5wGICp
-	Qsqy2o5C6r3g18USwPCArxhH5hh7qK8=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Nir Lichtman <nir@lichtman.org>,
-	Yuran Pereira <yuran.pereira@hotmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Zhang Heng <zhangheng@kylinos.cn>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Cc: linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Daniel Thompson <daniel@riscstar.com>,
-	kgdb-bugreport@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] kdb: Replace deprecated strcpy() with helper function in kdb_defcmd()
-Date: Mon, 18 Aug 2025 20:11:44 +0200
-Message-ID: <20250818181153.661431-4-thorsten.blum@linux.dev>
-In-Reply-To: <20250818181153.661431-1-thorsten.blum@linux.dev>
-References: <20250818181153.661431-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yQ8XGPe2"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-8843c431d11so97912839f.1
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Aug 2025 11:27:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1755541624; x=1756146424; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xthx9ompS/Nj5CKJ3I4BXZ4xhbM39aiwRjdnUlZCUzI=;
+        b=yQ8XGPe2gFoEnEemhwYLrmVWX6+5chnNIbLWOVh66V2X547loRxI0d8t40ZuCFBnGA
+         vGRZ09hqJYv7bH2RX7GOg/K9eC6uw8qntF0emVL1Pj5G1hF20lub9/7lHBQIJLc5pDDt
+         YeZgoPLN7Sb2plK5u9Mj+9kxwhDnxLGDOqeD5BpUh9dDlgOnCRheWDnC3eACtz4Bxlkd
+         sPVJ0xkiWFT+4AnaP7HgusymjDftPJAjKs4fTDBn7SPOuoJ+LvoZ3wT8Cy2AlclbBpg2
+         r2yu732fCi5wYnOOF1wgPVt+B4RHZSb4wmFX9FaybLbKL6WXTtltnYT/ZGj6FkasUJsC
+         sOFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755541624; x=1756146424;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xthx9ompS/Nj5CKJ3I4BXZ4xhbM39aiwRjdnUlZCUzI=;
+        b=bmG8+EZIfXJGZxgGpNMYs6G2wrWNLQTso0CQa7+3CGBDKiIVgYyL4PjYU1z1hGVQZ3
+         g4YKC2IaGmN+AUABCXMOr9yqDTt4JWvDgdo1QXwxScGUZcCh/ODI0hxa7F0gfF3oCGaT
+         cLwK5lIqn9iHiPBwRxFCarsrPsba7BnZApeNqhYaS44LQnYkRr2kSNyDZxCsr26C2u/3
+         neEJakg72QVLGrWNJmZabS89u7bGEjyBZgsy7yqzu/P4AN/yTqH6mxZEvv5Hp85FQZ4b
+         nFQkXSsNOT+shoGx4KiBnnTAocb2FFnf2eglLdY7ZbyIkt0ewB6FYzVsbD7aR5gfYzio
+         X8nQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1AhHxPmjjS2QYvVQwk18dVIfv1UL5hQCH97ptKo7pAlZeMXIA90T8pRGS4B/AGSgbCNDpSS2G7k/kcU9HoFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrgNQS4PPILAp6czqu6YPK4h67hraRhRxLZXuHM7akcQ7aePVj
+	9Xz5YM2AU2+UBu2+2iPwko05z2BxNrHqDrZAXcdW/How2NuRLtMvLkedoweBWWLiKxdBJmTBB7N
+	9SrIEJg==
+X-Gm-Gg: ASbGncv829J5AjR0CaW+czI0GEXB8M4ZdANOzcsOkee8+zliole8pDaZ36W2kVHkxOz
+	7qzs5MjykuJyNYNWWTsk7atVTlPnF5J0UM+OhMqGW7ytgDUERIqey1gSGrMdPV5xqRshKrjcz+g
+	UqVMiVd0yMnQWRjsZQ862wrXHBZ8cobfMOCIllmcLAtA1nSpm5apfV/xsBn/FneyGFP+vYpEU2P
+	e2anT4I8w/xjAanvl+vGpO1reea2aePLi4NXn0W5FbTVKchYyor+bnGRNsssg1FCac2jt9OCHaB
+	68MuRjllj1/QdzIc90gcA7cuhN93xtv7ltZrFLIBc9X1ANE4z7VccGO/HSwDFY8YCcXGU9qA4di
+	v0IV2LurSVXT/2lrksJRoYeoy5cCGmnPXuPafkISqlLtSOaMj2CUaCCjs7/JUSiHGMr4UT6XL7A
+	==
+X-Google-Smtp-Source: AGHT+IF2dotuoGSCZvg+ZyHAacP4HbK0Z2LLDMxgQqs043KhXAhyYpRU6mXhUnrZ2USLYc+dScshIw==
+X-Received: by 2002:a05:6602:6d06:b0:861:d8ca:3587 with SMTP id ca18e2360f4ac-884471192d0mr2123993939f.4.1755541623533;
+        Mon, 18 Aug 2025 11:27:03 -0700 (PDT)
+Received: from google.com (2.82.29.34.bc.googleusercontent.com. [34.29.82.2])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8843f9c2cc7sm323121039f.18.2025.08.18.11.27.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Aug 2025 11:27:02 -0700 (PDT)
+Date: Mon, 18 Aug 2025 11:26:57 -0700
+From: Justin Stitt <justinstitt@google.com>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kcsan: test: Replace deprecated strcpy() with strscpy()
+Message-ID: <hqvjfoaw5ooucqp3mwswrjxletq6vdzztwvlaxvxf5a6bivdzf@7fcytrsqhz4y>
+References: <20250815213742.321911-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250815213742.321911-3-thorsten.blum@linux.dev>
 
-strcpy() is deprecated; use the new helper function kdb_strdup_dequote()
-instead. In addition to string duplication similar to kdb_strdup(), it
-also trims surrounding quotes from the input string if present.
+Hi,
 
-kdb_strdup_dequote() also checks for a trailing quote in the input
-string which was previously not checked.
+On Fri, Aug 15, 2025 at 11:37:44PM +0200, Thorsten Blum wrote:
+> strcpy() is deprecated; use strscpy() instead.
+> 
+> Link: https://github.com/KSPP/linux/issues/88
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  kernel/kcsan/kcsan_test.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/kcsan/kcsan_test.c b/kernel/kcsan/kcsan_test.c
+> index 49ab81faaed9..ea1cb4c8a894 100644
+> --- a/kernel/kcsan/kcsan_test.c
+> +++ b/kernel/kcsan/kcsan_test.c
+> @@ -125,7 +125,7 @@ static void probe_console(void *ignore, const char *buf, size_t len)
+>  				goto out;
+>  
+>  			/* No second line of interest. */
+> -			strcpy(observed.lines[nlines++], "<none>");
+> +			strscpy(observed.lines[nlines++], "<none>");
 
-Link: https://github.com/KSPP/linux/issues/88
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- kernel/debug/kdb/kdb_main.c    | 12 ++----------
- kernel/debug/kdb/kdb_private.h |  1 +
- kernel/debug/kdb/kdb_support.c | 29 +++++++++++++++++++++++++++++
- 3 files changed, 32 insertions(+), 10 deletions(-)
+Looks good.
 
-diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index cdf91976eb7c..dddf2b5aad57 100644
---- a/kernel/debug/kdb/kdb_main.c
-+++ b/kernel/debug/kdb/kdb_main.c
-@@ -721,20 +721,12 @@ static int kdb_defcmd(int argc, const char **argv)
- 	mp->name = kdb_strdup(argv[1], GFP_KDB);
- 	if (!mp->name)
- 		goto fail_name;
--	mp->usage = kdb_strdup(argv[2], GFP_KDB);
-+	mp->usage = kdb_strdup_dequote(argv[2], GFP_KDB);
- 	if (!mp->usage)
- 		goto fail_usage;
--	mp->help = kdb_strdup(argv[3], GFP_KDB);
-+	mp->help = kdb_strdup_dequote(argv[3], GFP_KDB);
- 	if (!mp->help)
- 		goto fail_help;
--	if (mp->usage[0] == '"') {
--		strcpy(mp->usage, argv[2]+1);
--		mp->usage[strlen(mp->usage)-1] = '\0';
--	}
--	if (mp->help[0] == '"') {
--		strcpy(mp->help, argv[3]+1);
--		mp->help[strlen(mp->help)-1] = '\0';
--	}
- 
- 	INIT_LIST_HEAD(&kdb_macro->statements);
- 	defcmd_in_progress = true;
-diff --git a/kernel/debug/kdb/kdb_private.h b/kernel/debug/kdb/kdb_private.h
-index d2520d72b1f5..a2fc7d2bc9fc 100644
---- a/kernel/debug/kdb/kdb_private.h
-+++ b/kernel/debug/kdb/kdb_private.h
-@@ -110,6 +110,7 @@ extern int kdbgetaddrarg(int, const char **, int*, unsigned long *,
- extern int kdbgetsymval(const char *, kdb_symtab_t *);
- extern int kdbnearsym(unsigned long, kdb_symtab_t *);
- extern char *kdb_strdup(const char *str, gfp_t type);
-+extern char *kdb_strdup_dequote(const char *str, gfp_t type);
- extern void kdb_symbol_print(unsigned long, const kdb_symtab_t *, unsigned int);
- 
- /* Routine for debugging the debugger state. */
-diff --git a/kernel/debug/kdb/kdb_support.c b/kernel/debug/kdb/kdb_support.c
-index d36281142fa1..b42dc54f5a9a 100644
---- a/kernel/debug/kdb/kdb_support.c
-+++ b/kernel/debug/kdb/kdb_support.c
-@@ -255,6 +255,35 @@ char *kdb_strdup(const char *str, gfp_t type)
- 	return s;
- }
- 
-+/*
-+ * kdb_strdup_dequote - same as kdb_strdup(), but trims surrounding quotes from
-+ *			the input string if present.
-+ * Remarks:
-+ *	Quotes are only removed if there is both a leading and a trailing quote.
-+ */
-+char *kdb_strdup_dequote(const char *str, gfp_t type)
-+{
-+	size_t len = strlen(str);
-+	char *s;
-+
-+	if (str[0] == '"' && len > 1 && str[len - 1] == '"') {
-+		/* trim both leading and trailing quotes */
-+		str++;
-+		len -= 2;
-+	}
-+
-+	len++; /* add space for NUL terminator */
-+
-+	s = kmalloc(len, type);
-+	if (!s)
-+		return NULL;
-+
-+	memcpy(s, str, len);
-+	s[len - 1] = '\0';
-+
-+	return s;
-+}
-+
- /*
-  * kdb_getarea_size - Read an area of data.  The kdb equivalent of
-  *	copy_from_user, with kdb messages for invalid addresses.
--- 
-2.50.1
+Here's my checklist:
+1) strcpy() and strscpy() have differing return values, but we aren't using
+it.
+2) strscpy() can fail with -E2BIG if source is too big, but it isn't in
+this case.
+3) two-arg version of strscpy() is OK to use here as the source has a known
+size at compile time.
 
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+
+>  		}
+>  	}
+>  
+> @@ -231,7 +231,7 @@ static bool __report_matches(const struct expect_report *r)
+>  
+>  			if (!r->access[1].fn) {
+>  				/* Dummy string if no second access is available. */
+> -				strcpy(cur, "<none>");
+> +				strscpy(expect[2], "<none>");
+>  				break;
+>  			}
+>  		}
+> -- 
+> 2.50.1
+> 
+>
+
+Thanks
+Justin
