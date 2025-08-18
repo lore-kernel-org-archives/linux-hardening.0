@@ -1,86 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A53D27467B;
-	Mon, 18 Aug 2025 18:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897113451B3
+	for <linux-hardening@vger.kernel.org>; Mon, 18 Aug 2025 19:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755543472; cv=none; b=AEcfLcmsX0lnxP+ZaARRvPqcgHEd2yQ3waM0/1km+pOQAwtwS90BlkaGU8Qjqqu1o4EfqLQ/cunMpNUMKmUnigT6RqMXIXVjsZGGdDxvh2EKwDbH9XbIYKG6+8pdIp9z2d2TalrG+k+bNe2axKyylf4gygGdVRRygJps4TGD204=
+	t=1755545528; cv=none; b=UTEGxFrdRHhJU/7ytJvAYWtvFlLX48tE8iyDkbkPrwiOkpb1MP1JpTFWzgKL1l7Aqjq4CGm2+CbsqX9aUY2TLa1joomSh4zx9fr51BrwNB70UrM0C3Xm+uoXgPlYYXwqSCt3M2DcpxfR5CEw8Xj8/MnzoV1K/fuoyro04DCKstU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755543472; c=relaxed/simple;
-	bh=nxE7BPv67vk6+O2NN512KZ/22Fu2rCuKLzKSJq7gvSM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EtYWA7is4wex4nLQ5ZniGoPtLVsRUim5CwRW/RUWAJPvnlJpdQ2Mw61FPOHvP70H+vZBQk7S6AEZRmoscUJTeUHqkzGecjdIHotXAUMQvW7vBtAxqVVG6donr5n56buoIvvI1ebGeEOb8p8GJpK20c42GnDfkOSWiZC3T1ijRUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sbugmBn5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755545528; c=relaxed/simple;
+	bh=XNjz0I2eUY/Kr2G52Qo4E3MpWKIoWqP2+NCSQHIjBqI=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=pxZrAy7STk3EQsyqwXxZqy0V1lVz5EqyO+aTHd3CaPSUD5brtFChx4Hr2k/8o5XpzB71YdgVcJfGve2tbAaaUwsl4JfscoDInndsVuvMsKIqRftWkOpmi20VAbd+NaKZ4wM//ju/dKZMgMVtGhdwMVp4iStkckuww4+MSDE5v4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=A587SMQv; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sbugmBn5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42EA7C4CEF1;
-	Mon, 18 Aug 2025 18:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755543471;
-	bh=nxE7BPv67vk6+O2NN512KZ/22Fu2rCuKLzKSJq7gvSM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=sbugmBn57cQ8lbdaiAd7Gnq66RWDWOqKkW5DIdjslI9YoYxtUjGmaX+o3UbKNnVfp
-	 3H59+D4rVbVntzcMomi0OTb1kyMSqTZqnaXCoT+EEqVURgwDZ7Le6w9rPk614A9cBE
-	 0s/7azogaZGyZkPHExvPlqwzrK3IGuQPUpYnl//JiQsNFEdFDNo7cxvNnOFk6pz2Jq
-	 Yu4S/0610rNjEUnXaGRaBCbdf00ID0/QHYN0V4Qx49F32ObzsUtfPWf45Mz5tsoDqd
-	 GmZAc8pnH1+5yhqI85cWTUSlQORL09qxaT0Bh41+Y84tj2dT9gk524+6NHKKZ1PuW1
-	 IvKf7NL8HUN5A==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Mon, 18 Aug 2025 11:57:18 -0700
-Subject: [PATCH 02/10] arch/Kconfig: Drop always true condition from
- RANDOMIZE_KSTACK_OFFSET
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="A587SMQv"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1755545524;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3IWli4z+BgUSiJzQPJlT48mDOgPDj86VGLzv17N+ak4=;
+	b=A587SMQv1d16oej8NYD1kxIDDoIfTcrYAKEql/P9cnEmDztkEDLX3Nx+z5FL+MXz5XxnP3
+	ysQ2HROoynCqG8E6N4kmfXx1Bbi10WsmD6INkAOJes4RwZB4mtrTVmORtg1CoGzwYmgmq0
+	2ZUeSuYqm3xfu8CDT/3hK2tqwE61QOI=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
+Subject: Re: [PATCH] kcsan: test: Replace deprecated strcpy() with strscpy()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <hqvjfoaw5ooucqp3mwswrjxletq6vdzztwvlaxvxf5a6bivdzf@7fcytrsqhz4y>
+Date: Mon, 18 Aug 2025 21:32:01 +0200
+Cc: Marco Elver <elver@google.com>,
+ Dmitry Vyukov <dvyukov@google.com>,
+ linux-hardening@vger.kernel.org,
+ kasan-dev@googlegroups.com,
+ linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250818-bump-min-llvm-ver-15-v1-2-c8b1d0f955e0@kernel.org>
-References: <20250818-bump-min-llvm-ver-15-v1-0-c8b1d0f955e0@kernel.org>
-In-Reply-To: <20250818-bump-min-llvm-ver-15-v1-0-c8b1d0f955e0@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Kees Cook <kees@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, patches@lists.linux.dev, 
- Nathan Chancellor <nathan@kernel.org>, linux-hardening@vger.kernel.org
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=891; i=nathan@kernel.org;
- h=from:subject:message-id; bh=nxE7BPv67vk6+O2NN512KZ/22Fu2rCuKLzKSJq7gvSM=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDBmLyxfyvjymodS3fOtqrmtvYv1tZyowXq8yXmSW/NT50
- up0FduWjlIWBjEuBlkxRZbqx6rHDQ3nnGW8cWoSzBxWJpAhDFycAjCRxe0Mv1n39k/csUPrn8aS
- 69sbPJibF686X5br/LNnwXn130JLbJoYGX5HbqvwvGWRpWb4S0Py/v2rkX5Nohr/lSSeHtqwkp2
- 7hhsA
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Message-Id: <6BC1BD59-839C-4A3B-AE91-8CE963C891AA@linux.dev>
+References: <20250815213742.321911-3-thorsten.blum@linux.dev>
+ <hqvjfoaw5ooucqp3mwswrjxletq6vdzztwvlaxvxf5a6bivdzf@7fcytrsqhz4y>
+To: Justin Stitt <justinstitt@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-Now that the minimum supported version of LLVM for building the kernel
-has been bumped to 15.0.0, the second depends line in
-RANDOMIZE_KSTACK_OFFSET is always true, so it can be removed.
+On 18. Aug 2025, at 20:26, Justin Stitt wrote:
+> Looks good.
+> 
+> Here's my checklist:
+> 1) strcpy() and strscpy() have differing return values, but we aren't using
+> it.
+> 2) strscpy() can fail with -E2BIG if source is too big, but it isn't in
+> this case.
+> 3) two-arg version of strscpy() is OK to use here as the source has a known
+> size at compile time.
+> 
+> Reviewed-by: Justin Stitt <justinstitt@google.com>
 
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
-Cc: linux-hardening@vger.kernel.org
----
- arch/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+Thanks for your thorough review.
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index d1b4ffd6e085..4935c4c26f09 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -1475,7 +1475,6 @@ config RANDOMIZE_KSTACK_OFFSET
- 	bool "Support for randomizing kernel stack offset on syscall entry" if EXPERT
- 	default y
- 	depends on HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
--	depends on INIT_STACK_NONE || !CC_IS_CLANG || CLANG_VERSION >= 140000
- 	help
- 	  The kernel stack offset can be randomized (after pt_regs) by
- 	  roughly 5 bits of entropy, frustrating memory corruption
-
--- 
-2.50.1
+Thorsten
 
