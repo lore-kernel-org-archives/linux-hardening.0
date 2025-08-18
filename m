@@ -1,121 +1,117 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63673308F02
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Aug 2025 15:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81DD831A070;
+	Mon, 18 Aug 2025 16:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755531967; cv=none; b=RpxhhHeFmWee6ThCv1r1kqgrhf/7bcEljGFC+vpMhX7mgrTU4eI/kWozV2DiTRJJysNCKyLN3GWYrZtoRV0QdIwjWmandLLSp3zk0/OSNkvG7bm31ES6QVHlcsT8VYRrHrXnRHNfQzenUhpuiwWeayJtL3n9IpcgMVXFjLWEqOA=
+	t=1755532975; cv=none; b=DjahL8jIi8A5OqyGLtkS9JciiV4XojWOCJ+Lc0XFP7AQ6hKDMYFy10hxwby3J0nv/XV+qwje5wkl0+wId3hMzZjb2BV0oMwAEXnnDU/8PO/UYNqXd4cXdEALleGcVFggo9/2ZcgynaA5mm1PP+Pu3+ubbibFh60rxGD0BZgceEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755531967; c=relaxed/simple;
-	bh=V9A8nqHTup9ZR91fdAkDX3/VWJ7GOgH3IYdlBgF2tus=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iUmchH+4KeTRZNayMl5VhE7F+0S9aZn4j2TesEP+WftvUmNKuV1oJKyLmBuM51BPkK07PoMFR3URra0JFFSt4YkfWKwmAvL989jEy32JKd/TaqQkLCldb/vRH8CYVOgdv7zmIFsTORFHIKhXoY2G0cz+q75k0EyHJu2qONw1SSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pAgOcfzu; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pAgOcfzu"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-333f8f0965dso36118631fa.1
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Aug 2025 08:46:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755531963; x=1756136763; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=51DTC+MITTH703qrd2I1XRJ94G7+1YiQ7tYFyiKxmzY=;
-        b=pAgOcfzuZdNXo1QLi+fdQv34MCOtqrpMynZ0eBD00VmnEmvuGzoMFEH7DDj0x43JzN
-         vq5kx7nXJtGxc+upulCbwaOfSSvcH6avZ1FpAIDz03rUvwVYgacupaJbHyKbmenvNdKJ
-         VcxHX/WM6FAtodKfDyerntyX/JZN3ki6UGW7STWzUwTisrlA8xZ8Q0ZlIvm2WkySeXYC
-         ZzRiK9tTX5KRPDeHP7l4sALiLbQZpuOuYXbvqpSHBvoA7rb7BBJP/XDxhV509A10uWvK
-         aq4eWbJvlFDf5Eu+JxUI/TaW3cb6arhmOxtsXeqVgHiXnr5DwKqCU5M9Igm5NGtcsb36
-         pkbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755531963; x=1756136763;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=51DTC+MITTH703qrd2I1XRJ94G7+1YiQ7tYFyiKxmzY=;
-        b=PXCy46j/9ovmGFb4fHTYF9Uom/Ahir+Z/DS+x6t/83ctGt86zuEv55dV5Ayw8AoOw8
-         O3ZDb+ZfZgqH4mVre04cvQxwOxQ8ZMXXENHfq4HvX5QvB9/U04oikCafTegVW8Am5AOQ
-         NBT80jjJMLulqfuSgKbtSvoWD8h1fywT5cbPbqznYA1pP/DRZjWeAjd0Z8mqwm3qpS2V
-         ISUsDFHXIfNkj7jz0WkJAzU4XmEEbBpq1xQeS0PI36LLXJbCBAJ0BKgOLkvVfbCi0CSa
-         kzJ1NSqIhhXW9PLARJZ1qED3gT0+TERg754cM9uLY+rNnW/H8HDZ0dpPXEN7MmysyWg1
-         7Eyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXQtYXbbrw3pJfUrsjw4PxVCqjf3VNjppsMw8wydzaAy16210dk9gTi0ozanV8bOKwTk/WRINqFkcFLeHpdrS8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvP41qlaG1pWBD9Njn2T/1Jf2d/mA7TFpZaP9a7ASfXW5sJVP6
-	j3QelEycPmW4i7cKDpgbhO3qRGD0ltIFYV8EhSy+HJcPILYAXRlTm1lUmPhk0CDGKJ5kvS2ZFBY
-	BkI/o5YFwy/+KXPfQdQ+0eDYyuDo8gKotZHkacdyw5KkpZdJ2vPa5
-X-Gm-Gg: ASbGncsH3CB7vjblF84A+0NRl7RFIlPAQn3pXhTVjHmirr7ZmSOoLKcDbbcIA+XzLRL
-	kjEhnBuj/r/Dhm49gLJnb+Sd1w9b8ErTw110ZQMsKtLbtpYAdYC4CScuLbHTqo8IuE9+nAmYR4I
-	fG7k/4xbIV5Qa0AihubKwOGp+XWTrbcCmNeWAfZKUoxXzqcWKbZsFa51qU07NMx0O2Nx2Ofw5LT
-	rBjUB54MLJS
-X-Google-Smtp-Source: AGHT+IHwmWtaGT/XklYdjGHxL0ZkWBsslCIIfDul9Sr0lAl+wS4aHTOEpnoQAPHxKPwDMb6Ei8e0PuqlGjO+zjkpvos=
-X-Received: by 2002:a05:651c:510:b0:333:f3e6:9f2d with SMTP id
- 38308e7fff4ca-334097ca050mr27791091fa.6.1755531963498; Mon, 18 Aug 2025
- 08:46:03 -0700 (PDT)
+	s=arc-20240116; t=1755532975; c=relaxed/simple;
+	bh=tz0d9rCWNPVFVAlcAoNU0yPn0mQPwXExjPwll0A+KXM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ioClsGQ4lghOfCu6qGmdgqejZGmXmoRbM8DlBW/s/YkwvjFI2Y4JgALJeUyXMvesG2DLSqqXKERcd1p1SbrxBo+UYFSV+7nM7a9/BWcPIufjZz8xBb7tIvMAzczbZjpi7pCvCFIAs223aSbj046f3669DtLXFan2dQwh1NBKFmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5ECF31596;
+	Mon, 18 Aug 2025 09:02:44 -0700 (PDT)
+Received: from [10.57.58.12] (unknown [10.57.58.12])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB0343F63F;
+	Mon, 18 Aug 2025 09:02:46 -0700 (PDT)
+Message-ID: <b6579c2a-2262-4279-81a5-8235092bea13@arm.com>
+Date: Mon, 18 Aug 2025 18:02:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250811-aaeon-up-board-pinctrl-support-v9-0-29f0cbbdfb30@bootlin.com>
- <20250811-aaeon-up-board-pinctrl-support-v9-10-29f0cbbdfb30@bootlin.com>
-In-Reply-To: <20250811-aaeon-up-board-pinctrl-support-v9-10-29f0cbbdfb30@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 18 Aug 2025 17:45:49 +0200
-X-Gm-Features: Ac12FXw-f5f96UXYk89oFAKTC8GUPUN3mfWKfLNKZL2BLwooNi64tGeRuwAt8AM
-Message-ID: <CACRpkdb6XjX0unh70Gwq1dmLdGjo=19W39fziDd0L8vT3g39hA@mail.gmail.com>
-Subject: Re: [PATCH v9 10/10] pinctrl: Add pin controller driver for AAEON UP boards
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v5 13/18] mm: Map page tables with privileged pkey
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Cc: "maz@kernel.org" <maz@kernel.org>, "luto@kernel.org" <luto@kernel.org>,
+ "willy@infradead.org" <willy@infradead.org>,
+ "mbland@motorola.com" <mbland@motorola.com>,
+ "david@redhat.com" <david@redhat.com>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "rppt@kernel.org" <rppt@kernel.org>, "joey.gouly@arm.com"
+ <joey.gouly@arm.com>, "akpm@linux-foundation.org"
+ <akpm@linux-foundation.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "Weiny, Ira" <ira.weiny@intel.com>, "vbabka@suse.cz" <vbabka@suse.cz>,
+ "pierre.langlois@arm.com" <pierre.langlois@arm.com>,
+ "jeffxu@chromium.org" <jeffxu@chromium.org>,
+ "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+ "lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
+ "kees@kernel.org" <kees@kernel.org>,
+ "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "jannh@google.com" <jannh@google.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "will@kernel.org" <will@kernel.org>,
+ "qperret@google.com" <qperret@google.com>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "broonie@kernel.org" <broonie@kernel.org>, "x86@kernel.org" <x86@kernel.org>
+References: <20250815085512.2182322-1-kevin.brodsky@arm.com>
+ <20250815085512.2182322-14-kevin.brodsky@arm.com>
+ <616011cf17f1654ac3ad8757f0f33425b3af1ddd.camel@intel.com>
+Content-Language: en-GB
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+In-Reply-To: <616011cf17f1654ac3ad8757f0f33425b3af1ddd.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 11, 2025 at 3:25=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
+On 15/08/2025 18:37, Edgecombe, Rick P wrote:
+> On Fri, 2025-08-15 at 09:55 +0100, Kevin Brodsky wrote:
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index d9371d992033..4880cb7a4cb9 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -34,6 +34,7 @@
+>>  #include <linux/slab.h>
+>>  #include <linux/cacheinfo.h>
+>>  #include <linux/rcuwait.h>
+>> +#include <linux/kpkeys.h>
+>>  
+>>  struct mempolicy;
+>>  struct anon_vma;
+>> @@ -2979,6 +2980,8 @@ static inline bool __pagetable_ctor(struct ptdesc *ptdesc)
+>>  
+>>  	__folio_set_pgtable(folio);
+>>  	lruvec_stat_add_folio(folio, NR_PAGETABLE);
+>> +	if (kpkeys_protect_pgtable_memory(folio))
+>> +		return false;
+>>  	return true;
+>>  }
+> It seems like this does a kernel range shootdown for every page table that gets
+> allocated? If so it throws a pretty big wrench into the carefully managed TLB
+> flush minimization logic in the kernel.
+>
+> Obviously this is much more straightforward then the x86 series' page table
+> conversion batching stuff, but TBH I was worried that even that was going to
+> have a performance hit. I think how to efficiently do direct map permissions is
+> the key technical problem to solve for pkeys security usages. They can switch on
+> and off fast, but applying the key is just as much of a hit as any other kernel
+> memory permission. (I assume this works the similarly to x86's?)
 
-> This enables the pin control support of the onboard FPGA on AAEON UP
-> boards.
->
-> This FPGA acts as a level shifter between the Intel SoC pins and the pin
-> header, and also as a mux or switch.
->
-> +---------+          +--------------+             +---+
->           |          |              |             |   |
->           | PWM0     |       \      |             | H |
->           |----------|------  \-----|-------------| E |
->           | I2C0_SDA |              |             | A |
-> Intel SoC |----------|------\       |             | D |
->           | GPIO0    |       \------|-------------| E |
->           |----------|------        |             | R |
->           |          |     FPGA     |             |   |
-> ----------+          +--------------+             +---+
->
-> For most of the pins, the FPGA opens/closes a switch to enable/disable
-> the access to the SoC pin from a pin header.
-> Each switch, has a direction flag that is set depending the status of the
-> SoC pin.
->
-> For some other pins, the FPGA acts as a mux, and routes one pin (or the
-> other one) to the header.
->
-> The driver also provides a GPIO chip. It requests SoC pins in GPIO mode,
-> and drives them in tandem with FPGA pins (switch/mux direction).
->
-> This commit adds support only for UP Squared board.
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+The benchmarking results (see cover letter) don't seem to point to a
+major performance hit from setting the pkey on arm64 (worth noting that
+the linear mapping is PTE-mapped on arm64 today so no splitting should
+occur when setting the pkey). The overhead may well be substantially
+higher on x86.
 
-This patch applied on top of the pile I pulled in from Bartosz!
+I agree this is worth looking into, though. I will check the overhead
+added by set_memory_pkey() specifically (ignoring pkey register
+switches), and maybe try to allocate page tables with a dedicated
+kmem_cache instead, reusing this patch [1] from my other kpkeys series.
+A kmem_cache won't be as optimal as a dedicated allocator, but batching
+the page freeing may already improve things substantially.
 
-Yours,
-Linus Walleij
+- Kevin
+
+[1]
+https://lore.kernel.org/linux-hardening/20250815090000.2182450-4-kevin.brodsky@arm.com/
+
