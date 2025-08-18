@@ -1,98 +1,91 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F037212B3D
-	for <linux-hardening@vger.kernel.org>; Sun, 17 Aug 2025 23:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89831223DE8;
+	Mon, 18 Aug 2025 06:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755473038; cv=none; b=Cvb15RNXwe+3XSUcGVEFf6L95peqTDe7gS4pOg07yF2yVpYzv+cfzowQbIcVROi/+qwXy9HD9emXuTw4Mf+1w1388XfSA807ctC/HG3hm6QLsd9w2nUi+2GlBKuYmsjHemqiKhYtFqelzeTkaXXvB6UrHeEla5hedElCf3NJHCo=
+	t=1755498657; cv=none; b=Qgfb4+N425RG5P1mTba5mP9Jlbj+cIlc8PliZKbA94NcQ6htwvNWYcT0NwqaZXDA3wD/djh1aURraBjHZhGBWPsXnMHzsfsiLoYdEhBejqt92I1y6HTi+5KSEuRljQtmKgd+1cC/h7PLFG9R3Fzvg9SQlN2PYJlAxSk+tLDYo2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755473038; c=relaxed/simple;
-	bh=+syUSoXzn8pOd0qDh0tgVdOLd8Wu+Lh0DW1WupAKD20=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r/fAshWjC/At9Qdo0c4deUYQq+XVKd30ft4MeGcxksac6leiVjecz71Cch8PqXqTaU42UY6836vxzgPXiZ/W3tJ3YkV9h9KvFg7DJwIbOm6fUgcTOw7LlLJ5ZoZL/sc0zmQFYMrW9B2vv/OIE9OegIvAJ4f0FHhhbxFy8ThaGug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cXid9uT1; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cXid9uT1"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755473034;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wCMJPrdDQgHXKou2tP07iAww9tGuU+kjFqrxVf//los=;
-	b=cXid9uT1mhOnVX47/C7ggGLW6s3aekxJunBt0vEOOeEYtdWe9R8cNpQ96JdvdoEuNZXrpP
-	ubBM6f9le/z72+XlVSvMqES7PHdxQ7nexb5XX/vlH2GVQ3skFjArioRfREgVmKFvuywxCP
-	AlstRDzVMfPIZH5zogkgOAO9En0Pjh0=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: "David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>
-Cc: linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	sparclinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] sparc: PCI: Replace deprecated strcpy() with strscpy()
-Date: Mon, 18 Aug 2025 01:23:36 +0200
-Message-ID: <20250817232339.634641-1-thorsten.blum@linux.dev>
+	s=arc-20240116; t=1755498657; c=relaxed/simple;
+	bh=VoNHNqo8fUGvNqIOg37Qh0MYP91XFhZxSxTsoOiS8Ls=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R2CMcs57///+cBeTRy38qyMeSG+TO8mthIiiaOtqQvDjoAT2J21KPIYU1gA+h78uDaqddRDJcLKsUTeEkRxDHotm8G8Lj1R2yP6C0ApeqOhGKwx52vNw5J6/k5rifS+nz9B25y/UCPax7InpxIn0mPi61aB2X7/PUsINxeExY+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-89019119eeeso2430119241.3;
+        Sun, 17 Aug 2025 23:30:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755498654; x=1756103454;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KOcu/p0cV7w38P/APFmgt8wjqwiJZHneIgQmVX2LtzA=;
+        b=ndn44/1Js1hjOR7W09wtReUHF0UgwFs5XIQmtGYawAMIEHoMPj9VIQgKBVXiUuv36o
+         9Mo7jd6Efz2APPNivrvYqzo/joCmuIAvkn4PIOwPADW6/JbCzOEI3hrmWfxKPz2woxJu
+         jyUZ+YtevXOBlZY4t0Agj+Z+hg4+pVv10nlbyWwPsAMjxG8HDK2ydZmm1q1X4CVgolYm
+         jB0ktuP1Y5mVO50HX2ZxIKqOZkepLAQ9WkBfTrbDh0BHVBBEOJRC9d89C9Rd+Lg/rv3h
+         TUlqBJsVMYof7KEC1sbT8Wt1ohxniKtGNdyT/xl6OPY5t8OsZl1zwz+YyDMTzD1ZdCU8
+         d+cg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKgKSc+J3sL4eWKCt8v0SM7QCB151TTOhj8TaUtdr3FFzqUVm03iAPn1mdSUejODcYbbI2UwT8sXx0MIb7@vger.kernel.org, AJvYcCXZjHra1+mjCfUvrBkZC2taWJHbnVC+SnSGfPKQQWuyTtj37tmnDt0FoqybwBw5yQm05q0KZHrpUmFd2A==@vger.kernel.org, AJvYcCXfT6N375E7WRyiqWaYLc2+rW9keb4bbkfkhshONGIzesGGWT3eAkcl/9w0Qk64H+m3awgOeDpj8Z4k7+CcHpA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyA5c9+mAjDCTx3LDChEav1OEuJV2mAH5nNmyf26v7ry+1CXGX
+	wWpezvjYWlt/cJ+n3VbPSuN/La5ZjmepbGf8blAe/l/5hbOrZBJoV0J8vzGR2EJe
+X-Gm-Gg: ASbGncucwPfQSZnQmSMKMQUEwbmj9gmpyI7KCUgjWZJiIlE6kfjIiJUZoKz1FNLxFE/
+	nN+Lq8B/6WYvP/Q/rjlpMcAIVQH6HgpdZTm7sQg01266C0RWfJapeaqwPgrADK07RJlYHcO3yHX
+	aMo6rFIeT5zae/aLfNbUjzaLRoH49SblWN+48Si8qWR/lP5XS/XOwsRoxtXD3DoOnnmbdXtrQt1
+	qxgyu3AZpHz0AZrpgyE2wrIxyR9I7bLf3ML9sF4F1EMH0jVnEFb/vFN8jYtbyYdounelrY3Of1C
+	IbZ1egVMLrnRW8yHu21UQ41rt/Jobrmt7n7EMH8INKBb9auTDCTcN5Fj4O4EWVsU18xY029UiLM
+	mJT6XFozYJsY5AJOSn2aZ0LQu97p5lzzX1/Uj+M8J/rGr6R8aZBo2aSBu8FMnjC9wg+S8FUg=
+X-Google-Smtp-Source: AGHT+IHq6NW2gxSf1SiiUYzjyJCIne3mIKLZM7LKKCNsYMEYvMfzX4JmGDZ9fVqfCNGX0NxkXvSqzw==
+X-Received: by 2002:a05:6102:41a1:b0:4fa:e005:cb20 with SMTP id ada2fe7eead31-514c8b6839amr2937481137.3.1755498654216;
+        Sun, 17 Aug 2025 23:30:54 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5127fb10254sm1923168137.18.2025.08.17.23.30.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 Aug 2025 23:30:54 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-890190bee8bso2389929241.2;
+        Sun, 17 Aug 2025 23:30:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU7hPAWM3Xfpp0Af0jODS9O3FLr7Anu3PCxXUAO0m+bVFxjLsDZXPnRZvd/HJgczy1IB2yfaAyOrvI/Ng==@vger.kernel.org, AJvYcCWC7ecIeCA2vo2jwmkaKmrzLIC1D77l8OjN/SJBcPs0lbsFj0JGTlJ7RNHw1A8/d0+VfiTYeha/cMAhw9fT@vger.kernel.org, AJvYcCWOt3WhELc4iX4cvaOP73c0EJS3drZ5bPO9ZkPu4QcDuJHpaUkDTHomGAO2Q4Co1wcPlh0Xb5Y0RyhOa0jJYjY=@vger.kernel.org
+X-Received: by 2002:a05:6102:418a:b0:4f9:6a93:2a3a with SMTP id
+ ada2fe7eead31-514cb1a473dmr2883727137.26.1755498653860; Sun, 17 Aug 2025
+ 23:30:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250817183728.612012-1-thorsten.blum@linux.dev> <20250817183728.612012-4-thorsten.blum@linux.dev>
+In-Reply-To: <20250817183728.612012-4-thorsten.blum@linux.dev>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 18 Aug 2025 08:30:42 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVwvTGSyqTt4z=EgDrZ9=UxvQcb8kKzOx5H4s40sWTq+A@mail.gmail.com>
+X-Gm-Features: Ac12FXwVhRbO3bMzLwzayoRGg_slz1P9TUgElvRbnD6lMZ2Ht0pOA0TsGu9z7N4
+Message-ID: <CAMuHMdVwvTGSyqTt4z=EgDrZ9=UxvQcb8kKzOx5H4s40sWTq+A@mail.gmail.com>
+Subject: Re: [PATCH 4/8] MIPS: txx9: Replace deprecated strcpy() with strscpy()
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-hardening@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-strcpy() is deprecated; use strscpy() instead.
+On Sun, 17 Aug 2025 at 20:38, Thorsten Blum <thorsten.blum@linux.dev> wrote:
+> strcpy() is deprecated; use strscpy() instead.
+>
+> Link: https://github.com/KSPP/linux/issues/88
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-No functional changes intended.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Link: https://github.com/KSPP/linux/issues/88
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/sparc/kernel/pcic.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/arch/sparc/kernel/pcic.c b/arch/sparc/kernel/pcic.c
-index 25fe0a061732..f894ae79e78a 100644
---- a/arch/sparc/kernel/pcic.c
-+++ b/arch/sparc/kernel/pcic.c
-@@ -16,6 +16,7 @@
- #include <linux/init.h>
- #include <linux/mm.h>
- #include <linux/slab.h>
-+#include <linux/string.h>
- #include <linux/jiffies.h>
- 
- #include <asm/swift.h> /* for cache flushing. */
-@@ -352,7 +353,7 @@ int __init pcic_probe(void)
- 	pbm = &pcic->pbm;
- 	pbm->prom_node = node;
- 	prom_getstring(node, "name", namebuf, 63);  namebuf[63] = 0;
--	strcpy(pbm->prom_name, namebuf);
-+	strscpy(pbm->prom_name, namebuf);
- 
- 	{
- 		extern int pcic_nmi_trap_patch[4];
-@@ -477,7 +478,7 @@ static void pcic_map_pci_device(struct linux_pcic *pcic,
- 	int j;
- 
- 	if (node == 0 || node == -1) {
--		strcpy(namebuf, "???");
-+		strscpy(namebuf, "???");
- 	} else {
- 		prom_getstring(node, "name", namebuf, 63); namebuf[63] = 0;
- 	}
-@@ -536,7 +537,7 @@ pcic_fill_irq(struct linux_pcic *pcic, struct pci_dev *dev, int node)
- 	char namebuf[64];
- 
- 	if (node == 0 || node == -1) {
--		strcpy(namebuf, "???");
-+		strscpy(namebuf, "???");
- 	} else {
- 		prom_getstring(node, "name", namebuf, sizeof(namebuf));
- 	}
+                        Geert
+
 -- 
-2.50.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
