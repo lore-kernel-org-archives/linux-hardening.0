@@ -1,132 +1,141 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47D93314B2
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Aug 2025 18:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A31257854;
+	Mon, 18 Aug 2025 18:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755541626; cv=none; b=ugRa1ukOqoKHRG8QIo0HXzoi+T9brhmgWcQBtfneampnQBmxoFvu2OStUIEHX9cS4HIM0a8nzmXzKxuc7fRo+pxqSAT4mBVFuFX/GS4QobJ3C6WDI6ioWp1J0uv83NHwHI9zhS5iUVVkllFWZeApW0M4MPPfIDUsPwhSlC4kQNo=
+	t=1755543466; cv=none; b=ura9X89rT5SZFddx3IO4kIcHQ9troSY/Fuf3IiAV9r3O153z6W4/M9UmYwrYOzkB5UnJFn0mZoq5G8OBeDl+P65T5E+2hvzWNomzNByiI06Xc8LgteDQrRHb/+Ep//0iyf0+xcDy/w0JvaArKjyIWt0vXoEgH6Nx2h0pYvUmTwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755541626; c=relaxed/simple;
-	bh=Rwi7Cu8wK8PRPeBmHirEY0WEDhwHCHjnE925WnBAEsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eMJszhMnUejpB4Cqo8XBMms0z3WVKtWe11OAMISR9Z8cF1dhaUPO/N3F4+nmyvXAJWKBE+jom+FuAKRutuy3lCf452EcLJWwRE18jK2sxEbl2CdKtVVs/6DsLIsZ5FDo9S+xq77NLK4o113NTH3m1aXKiAmBPywsDCcmt5lo5Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yQ8XGPe2; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1755543466; c=relaxed/simple;
+	bh=qBGPy4AI12NWfHAvs72tXhhLkggZ76cCh4aJ0zfhg4o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hoTU0u6VbsBAGG/hgRPvd5QPu4GlMMdkLFLMaGlPdGvC83B/kAxKifs4QzMNIrnXpa5Lbrt4brOikAMlK4Pgbg62ziQv5eqcIwE0dNlsEgNdqbPEcS/UllSFA+I+dMLIEjAn7jitccMM5RNYjUjRkpq/Y5brhhLy2AeOjsMZIG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TO8hGFu9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yQ8XGPe2"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-8843c431d11so97912839f.1
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Aug 2025 11:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755541624; x=1756146424; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xthx9ompS/Nj5CKJ3I4BXZ4xhbM39aiwRjdnUlZCUzI=;
-        b=yQ8XGPe2gFoEnEemhwYLrmVWX6+5chnNIbLWOVh66V2X547loRxI0d8t40ZuCFBnGA
-         vGRZ09hqJYv7bH2RX7GOg/K9eC6uw8qntF0emVL1Pj5G1hF20lub9/7lHBQIJLc5pDDt
-         YeZgoPLN7Sb2plK5u9Mj+9kxwhDnxLGDOqeD5BpUh9dDlgOnCRheWDnC3eACtz4Bxlkd
-         sPVJ0xkiWFT+4AnaP7HgusymjDftPJAjKs4fTDBn7SPOuoJ+LvoZ3wT8Cy2AlclbBpg2
-         r2yu732fCi5wYnOOF1wgPVt+B4RHZSb4wmFX9FaybLbKL6WXTtltnYT/ZGj6FkasUJsC
-         sOFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755541624; x=1756146424;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xthx9ompS/Nj5CKJ3I4BXZ4xhbM39aiwRjdnUlZCUzI=;
-        b=bmG8+EZIfXJGZxgGpNMYs6G2wrWNLQTso0CQa7+3CGBDKiIVgYyL4PjYU1z1hGVQZ3
-         g4YKC2IaGmN+AUABCXMOr9yqDTt4JWvDgdo1QXwxScGUZcCh/ODI0hxa7F0gfF3oCGaT
-         cLwK5lIqn9iHiPBwRxFCarsrPsba7BnZApeNqhYaS44LQnYkRr2kSNyDZxCsr26C2u/3
-         neEJakg72QVLGrWNJmZabS89u7bGEjyBZgsy7yqzu/P4AN/yTqH6mxZEvv5Hp85FQZ4b
-         nFQkXSsNOT+shoGx4KiBnnTAocb2FFnf2eglLdY7ZbyIkt0ewB6FYzVsbD7aR5gfYzio
-         X8nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1AhHxPmjjS2QYvVQwk18dVIfv1UL5hQCH97ptKo7pAlZeMXIA90T8pRGS4B/AGSgbCNDpSS2G7k/kcU9HoFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrgNQS4PPILAp6czqu6YPK4h67hraRhRxLZXuHM7akcQ7aePVj
-	9Xz5YM2AU2+UBu2+2iPwko05z2BxNrHqDrZAXcdW/How2NuRLtMvLkedoweBWWLiKxdBJmTBB7N
-	9SrIEJg==
-X-Gm-Gg: ASbGncv829J5AjR0CaW+czI0GEXB8M4ZdANOzcsOkee8+zliole8pDaZ36W2kVHkxOz
-	7qzs5MjykuJyNYNWWTsk7atVTlPnF5J0UM+OhMqGW7ytgDUERIqey1gSGrMdPV5xqRshKrjcz+g
-	UqVMiVd0yMnQWRjsZQ862wrXHBZ8cobfMOCIllmcLAtA1nSpm5apfV/xsBn/FneyGFP+vYpEU2P
-	e2anT4I8w/xjAanvl+vGpO1reea2aePLi4NXn0W5FbTVKchYyor+bnGRNsssg1FCac2jt9OCHaB
-	68MuRjllj1/QdzIc90gcA7cuhN93xtv7ltZrFLIBc9X1ANE4z7VccGO/HSwDFY8YCcXGU9qA4di
-	v0IV2LurSVXT/2lrksJRoYeoy5cCGmnPXuPafkISqlLtSOaMj2CUaCCjs7/JUSiHGMr4UT6XL7A
-	==
-X-Google-Smtp-Source: AGHT+IF2dotuoGSCZvg+ZyHAacP4HbK0Z2LLDMxgQqs043KhXAhyYpRU6mXhUnrZ2USLYc+dScshIw==
-X-Received: by 2002:a05:6602:6d06:b0:861:d8ca:3587 with SMTP id ca18e2360f4ac-884471192d0mr2123993939f.4.1755541623533;
-        Mon, 18 Aug 2025 11:27:03 -0700 (PDT)
-Received: from google.com (2.82.29.34.bc.googleusercontent.com. [34.29.82.2])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8843f9c2cc7sm323121039f.18.2025.08.18.11.27.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Aug 2025 11:27:02 -0700 (PDT)
-Date: Mon, 18 Aug 2025 11:26:57 -0700
-From: Justin Stitt <justinstitt@google.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kcsan: test: Replace deprecated strcpy() with strscpy()
-Message-ID: <hqvjfoaw5ooucqp3mwswrjxletq6vdzztwvlaxvxf5a6bivdzf@7fcytrsqhz4y>
-References: <20250815213742.321911-3-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TO8hGFu9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7007FC4CEEB;
+	Mon, 18 Aug 2025 18:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755543466;
+	bh=qBGPy4AI12NWfHAvs72tXhhLkggZ76cCh4aJ0zfhg4o=;
+	h=From:Subject:Date:To:Cc:From;
+	b=TO8hGFu9iuv4h970cI0P8DaQE+EJjCFUuIpmSaDSZc3jEdTo9PJkV2ZjkGkU8yAyz
+	 hA6uFbfmOGnWNaUYGLBL+njTod03yGzU0n3WtfoyFctsEwXUmB+b+ektMo1uhkUEt0
+	 x+B2tuvrWWSXUizIVwqIgYX1trm2mhHkeSrWJzCgOaoVdF3TOEIEatnQLchQ6bouVN
+	 bqR50c9Og2MFxhXY+8T0CJouc/vuM+CLdC6liY23Lilx/TBdkUhSccNoOPjp8E2qEG
+	 KDRyquCnMeMv42skmZrHiH02/P7YKlkxqYQSYkfrbDYOmhiwgZm559AXS4YzQzJBoT
+	 JHTROUXnhA26w==
+From: Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH 00/10] Bump minimum supported version of LLVM for building
+ the kernel to 15.0.0
+Date: Mon, 18 Aug 2025 11:57:16 -0700
+Message-Id: <20250818-bump-min-llvm-ver-15-v1-0-c8b1d0f955e0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250815213742.321911-3-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIx3o2gC/x3MwQoCIRCA4VeROe+AY0zRvkrsoa2xBtRESQLx3
+ Vc6fof/71ClqFRYTYciTat+0gQtBh7ve3oJ6nManHVsL2Rx/8aMUROG0CI2KUiMV3Yn8iT7mRl
+ mmot4/f23t22MA23HpyFmAAAA
+X-Change-ID: 20250710-bump-min-llvm-ver-15-95231f1eb655
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Kees Cook <kees@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev, patches@lists.linux.dev, 
+ Nathan Chancellor <nathan@kernel.org>, linux-kbuild@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, Russell King <linux@armlinux.org.uk>, 
+ Ard Biesheuvel <ardb@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-mips@vger.kernel.org, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ linuxppc-dev@lists.ozlabs.org, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org, 
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+ kasan-dev@googlegroups.com, Alexander Potapenko <glider@google.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3422; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=qBGPy4AI12NWfHAvs72tXhhLkggZ76cCh4aJ0zfhg4o=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBmLyxfkKs9J3XvmTW/HPLXzb2LV/ble9105em3NlZSrK
+ rcn6luu7yhlYRDjYpAVU2Spfqx63NBwzlnGG6cmwcxhZQIZwsDFKQAT2WLNyLDcY1peR8tewSkT
+ F3NPCHvlGPr7vt3zpq/7/opaMwrfUPdmZDjG+/9Q5BeZLcKLVm0XPXCDawGDjEHkhrzAGu39rXt
+ Z47gA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-Hi,
+s390 and x86 have required LLVM 15 since
 
-On Fri, Aug 15, 2025 at 11:37:44PM +0200, Thorsten Blum wrote:
-> strcpy() is deprecated; use strscpy() instead.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  kernel/kcsan/kcsan_test.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/kcsan/kcsan_test.c b/kernel/kcsan/kcsan_test.c
-> index 49ab81faaed9..ea1cb4c8a894 100644
-> --- a/kernel/kcsan/kcsan_test.c
-> +++ b/kernel/kcsan/kcsan_test.c
-> @@ -125,7 +125,7 @@ static void probe_console(void *ignore, const char *buf, size_t len)
->  				goto out;
->  
->  			/* No second line of interest. */
-> -			strcpy(observed.lines[nlines++], "<none>");
-> +			strscpy(observed.lines[nlines++], "<none>");
+  30d17fac6aae ("scripts/min-tool-version.sh: raise minimum clang version to 15.0.0 for s390")
+  7861640aac52 ("x86/build: Raise the minimum LLVM version to 15.0.0")
 
-Looks good.
+respectively. This series bumps the rest of the kernel to 15.0.0 to
+match, which allows for a decent number of clean ups.
 
-Here's my checklist:
-1) strcpy() and strscpy() have differing return values, but we aren't using
-it.
-2) strscpy() can fail with -E2BIG if source is too big, but it isn't in
-this case.
-3) two-arg version of strscpy() is OK to use here as the source has a known
-size at compile time.
+On the distros front, we will only leave behind Debian Bookworm and
+Ubuntu Jammy. In both of those cases, builders / developers can either
+use the kernel.org toolchains or https://apt.llvm.org to get newer
+versions that will run on those distributions, if they cannot upgrade.
 
-Reviewed-by: Justin Stitt <justinstitt@google.com>
+  archlinux:latest              clang version 20.1.8
+  debian:oldoldstable-slim      Debian clang version 11.0.1-2
+  debian:oldstable-slim         Debian clang version 14.0.6
+  debian:stable-slim            Debian clang version 19.1.7 (3+b1)
+  debian:testing-slim           Debian clang version 19.1.7 (3+b1)
+  debian:unstable-slim          Debian clang version 19.1.7 (3+b2)
+  fedora:41                     clang version 19.1.7 (Fedora 19.1.7-4.fc41)
+  fedora:latest                 clang version 20.1.8 (Fedora 20.1.8-3.fc42)
+  fedora:rawhide                clang version 20.1.8 (Fedora 20.1.8-3.fc43)
+  opensuse/leap:latest          clang version 17.0.6
+  opensuse/tumbleweed:latest    clang version 20.1.8
+  ubuntu:focal                  clang version 10.0.0-4ubuntu1
+  ubuntu:jammy                  Ubuntu clang version 14.0.0-1ubuntu1.1
+  ubuntu:noble                  Ubuntu clang version 18.1.3 (1ubuntu1)
+  ubuntu:latest                 Ubuntu clang version 18.1.3 (1ubuntu1)
+  ubuntu:rolling                Ubuntu clang version 20.1.2 (0ubuntu1)
+  ubuntu:devel                  Ubuntu clang version 20.1.8 (0ubuntu1)
 
->  		}
->  	}
->  
-> @@ -231,7 +231,7 @@ static bool __report_matches(const struct expect_report *r)
->  
->  			if (!r->access[1].fn) {
->  				/* Dummy string if no second access is available. */
-> -				strcpy(cur, "<none>");
-> +				strscpy(expect[2], "<none>");
->  				break;
->  			}
->  		}
-> -- 
-> 2.50.1
-> 
->
+I think it makes sense for either Andrew to carry this via -mm on a
+nonmm branch or me to carry this via the Kbuild tree, with the
+appropriate acks.
 
-Thanks
-Justin
+---
+Nathan Chancellor (10):
+      kbuild: Bump minimum version of LLVM for building the kernel to 15.0.0
+      arch/Kconfig: Drop always true condition from RANDOMIZE_KSTACK_OFFSET
+      ARM: Clean up definition of ARM_HAS_GROUP_RELOCS
+      arm64: Remove tautological LLVM Kconfig conditions
+      mips: Unconditionally select ARCH_HAS_CURRENT_STACK_POINTER
+      powerpc: Drop unnecessary initializations in __copy_inst_from_kernel_nofault()
+      riscv: Remove version check for LTO_CLANG selects
+      lib/Kconfig.debug: Drop CLANG_VERSION check from DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
+      objtool: Drop noinstr hack for KCSAN_WEAK_MEMORY
+      KMSAN: Remove tautological checks
+
+ Documentation/process/changes.rst |  2 +-
+ arch/Kconfig                      |  1 -
+ arch/arm/Kconfig                  | 11 ++++-------
+ arch/arm64/Kconfig                |  5 +----
+ arch/mips/Kconfig                 |  2 +-
+ arch/powerpc/include/asm/inst.h   |  4 ----
+ arch/riscv/Kconfig                |  5 ++---
+ lib/Kconfig.debug                 |  2 +-
+ lib/Kconfig.kcsan                 |  6 ------
+ lib/Kconfig.kmsan                 | 11 +----------
+ scripts/min-tool-version.sh       |  6 ++----
+ tools/objtool/check.c             | 10 ----------
+ 12 files changed, 13 insertions(+), 52 deletions(-)
+---
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+change-id: 20250710-bump-min-llvm-ver-15-95231f1eb655
+
+Best regards,
+--  
+Nathan Chancellor <nathan@kernel.org>
+
