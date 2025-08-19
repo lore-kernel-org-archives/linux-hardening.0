@@ -1,159 +1,78 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306EE31CA58
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Aug 2025 09:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1645231E0F5
+	for <linux-hardening@vger.kernel.org>; Tue, 19 Aug 2025 10:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755597599; cv=none; b=kKdTlIZ/HDfNdjsY/i2VQoY8vjCkq4vUkGuw89LV++WjBuzobmND3IXD5zB35gXHxpSJ4L5QMjsJ/qaq745lEPCfLx9NaK455sEIsiv6b76xp87kwezwP5wrI0MpNLxaSjYk+6JyxN9QRUTJ4se8IQXQbZJFXX6cSocDgHjVt4Q=
+	t=1755597611; cv=none; b=p73R/FCdMeHlFoe7nXXCL5MjWha81xzGUSLNyEfQbF/E+lccZwdobcjWKasaVx2mFhXf3lfStZEWSg4tCGwcsiNnAFtdKnVlP4CDit1Qp/ujh/LpOzfn2qtbVnFwuOCE+hMmTCenRfLZNyuan6U+HqiZbYYE/R6sCsEQrD6Nqus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755597599; c=relaxed/simple;
-	bh=tRWhdp7rONDt0Z4ygIKJOPB6BP+gSazSCO2jVPOp+0U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RkKlUyHo0QFoW0b9sR2AilvO2Gy/N2Qq5sk8CXbQMxtQvEKsqgDjR50ykdaOHAbT+eBk0lSvgkg/sfrreHMVM45kVKp3SEapZNJ4V6rtPdMUsj5/XOuPfy2ndlsoUI2jGEAifDUwNhWcc+3985v80AiDQAJXDCWuyjwUJaymjek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t2UpmDn1; arc=none smtp.client-ip=95.215.58.181
+	s=arc-20240116; t=1755597611; c=relaxed/simple;
+	bh=v/okojaX1odAcTkpye83LrAb63NZEvMcO+JDGF8HSew=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ah7pqvbNKmQVUAKem5nTdNWpRZshG0ndy3i97ooQFJHLB6voSX+uzMjQUQHtaXocUghr4hpMgtAaYmZ0d/4Jdfe74kmutORtpM6VaIElTFEzi361q3I2Kpe5uxvSJh+DAuSlLXlTIhKWICxdVcLgXzwbdbkaAmf/fv6zY7LqTDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gDP4IC/0; arc=none smtp.client-ip=95.215.58.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t2UpmDn1"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gDP4IC/0"
+Content-Type: text/plain;
+	charset=us-ascii
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755597595;
+	t=1755597608;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AmP/nYN5bOTbWz+MCSydfAdHczvwFcuvFpVelEglPj8=;
-	b=t2UpmDn1Q5AJmOoOxWJ9xXBv+L80TEE/qRVgJojGJIkxvWZ+L3NTe+Ps/5oYKkr8AbXm4w
-	aRhrz3jvnqEG5enKh3O/dDtGy2f6z2w6IYP8lY+8farYMnIkjN0hWOO6wKQAFyTFjshdSr
-	2/+SAyHLy4CYz3tSu04Xd6q5plaGhzk=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Nir Lichtman <nir@lichtman.org>,
-	Yuran Pereira <yuran.pereira@hotmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Zhang Heng <zhangheng@kylinos.cn>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Cc: linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Daniel Thompson <daniel@riscstar.com>,
-	kgdb-bugreport@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] kdb: Replace deprecated strcpy() with helper function in kdb_defcmd()
-Date: Tue, 19 Aug 2025 11:59:06 +0200
-Message-ID: <20250819095915.711085-4-thorsten.blum@linux.dev>
-In-Reply-To: <20250819095915.711085-1-thorsten.blum@linux.dev>
-References: <20250819095915.711085-1-thorsten.blum@linux.dev>
+	bh=CjgCdFdN/p2XjO4xt3tgWE95EILx00Dh/AKJ/jlTXSQ=;
+	b=gDP4IC/0Ko3V3/IF1R8VGT2HoCz6HdkyUbdEPEapgXFqi0NcNmIb1hTH8nQstdbdqFv8ts
+	kP8b6/ndatZ9BbA24Vt/ZdThxjrnVqs0QveSS3PjfzlQm+uTye0ZlPcRvJTs59k+pkWWBN
+	kT1RsmxEBMXeESZBgNhO500qNpZIqy0=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
+Subject: Re: [PATCH 5/8] MIPS: arc: Replace deprecated strcpy() with memcpy()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <yisgcmjp5cj27yozthudyrdpfcovhcrgpqbyip5kcum4aa7qwl@52bccatjuiak>
+Date: Tue, 19 Aug 2025 12:00:02 +0200
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ linux-hardening@vger.kernel.org,
+ linux-mips@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <53007EE9-0DF2-4772-8254-0551F4093CE8@linux.dev>
+References: <20250817183728.612012-1-thorsten.blum@linux.dev>
+ <20250817183728.612012-5-thorsten.blum@linux.dev>
+ <yisgcmjp5cj27yozthudyrdpfcovhcrgpqbyip5kcum4aa7qwl@52bccatjuiak>
+To: Justin Stitt <justinstitt@google.com>
 X-Migadu-Flow: FLOW_OUT
 
-strcpy() is deprecated; use the new helper function kdb_strdup_dequote()
-instead. In addition to string duplication similar to kdb_strdup(), it
-also trims surrounding quotes from the input string if present.
+Hi Justin,
 
-kdb_strdup_dequote() also checks for a trailing quote in the input
-string which was previously not checked.
+On 19. Aug 2025, at 01:58, Justin Stitt wrote:
+> On Sun, Aug 17, 2025 at 08:37:15PM +0200, Thorsten Blum wrote:
+>> strcpy() is deprecated; use memcpy() instead.
+>> 
+>> Use pr_debug() instead of printk(KERN_DEBUG) to silence a checkpatch
+>> warning.
+> 
+> I'd like to see more reasoning for why you chose memcpy() here. With api
+> refactors like this I think most folks want to know if 1) there is any
+> functional change and 2) why you chose the api.
 
-Link: https://github.com/KSPP/linux/issues/88
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Changes in v2:
-- Copy 'len - 1' bytes using memcpy() as suggested by Doug
-- Link to v1: https://lore.kernel.org/lkml/20250818181153.661431-4-thorsten.blum@linux.dev/
----
- kernel/debug/kdb/kdb_main.c    | 12 ++----------
- kernel/debug/kdb/kdb_private.h |  1 +
- kernel/debug/kdb/kdb_support.c | 29 +++++++++++++++++++++++++++++
- 3 files changed, 32 insertions(+), 10 deletions(-)
+1) No functional changes intended.
 
-diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index cdf91976eb7c..dddf2b5aad57 100644
---- a/kernel/debug/kdb/kdb_main.c
-+++ b/kernel/debug/kdb/kdb_main.c
-@@ -721,20 +721,12 @@ static int kdb_defcmd(int argc, const char **argv)
- 	mp->name = kdb_strdup(argv[1], GFP_KDB);
- 	if (!mp->name)
- 		goto fail_name;
--	mp->usage = kdb_strdup(argv[2], GFP_KDB);
-+	mp->usage = kdb_strdup_dequote(argv[2], GFP_KDB);
- 	if (!mp->usage)
- 		goto fail_usage;
--	mp->help = kdb_strdup(argv[3], GFP_KDB);
-+	mp->help = kdb_strdup_dequote(argv[3], GFP_KDB);
- 	if (!mp->help)
- 		goto fail_help;
--	if (mp->usage[0] == '"') {
--		strcpy(mp->usage, argv[2]+1);
--		mp->usage[strlen(mp->usage)-1] = '\0';
--	}
--	if (mp->help[0] == '"') {
--		strcpy(mp->help, argv[3]+1);
--		mp->help[strlen(mp->help)-1] = '\0';
--	}
- 
- 	INIT_LIST_HEAD(&kdb_macro->statements);
- 	defcmd_in_progress = true;
-diff --git a/kernel/debug/kdb/kdb_private.h b/kernel/debug/kdb/kdb_private.h
-index d2520d72b1f5..a2fc7d2bc9fc 100644
---- a/kernel/debug/kdb/kdb_private.h
-+++ b/kernel/debug/kdb/kdb_private.h
-@@ -110,6 +110,7 @@ extern int kdbgetaddrarg(int, const char **, int*, unsigned long *,
- extern int kdbgetsymval(const char *, kdb_symtab_t *);
- extern int kdbnearsym(unsigned long, kdb_symtab_t *);
- extern char *kdb_strdup(const char *str, gfp_t type);
-+extern char *kdb_strdup_dequote(const char *str, gfp_t type);
- extern void kdb_symbol_print(unsigned long, const kdb_symtab_t *, unsigned int);
- 
- /* Routine for debugging the debugger state. */
-diff --git a/kernel/debug/kdb/kdb_support.c b/kernel/debug/kdb/kdb_support.c
-index d36281142fa1..56f7b906e7cc 100644
---- a/kernel/debug/kdb/kdb_support.c
-+++ b/kernel/debug/kdb/kdb_support.c
-@@ -255,6 +255,35 @@ char *kdb_strdup(const char *str, gfp_t type)
- 	return s;
- }
- 
-+/*
-+ * kdb_strdup_dequote - same as kdb_strdup(), but trims surrounding quotes from
-+ *			the input string if present.
-+ * Remarks:
-+ *	Quotes are only removed if there is both a leading and a trailing quote.
-+ */
-+char *kdb_strdup_dequote(const char *str, gfp_t type)
-+{
-+	size_t len = strlen(str);
-+	char *s;
-+
-+	if (str[0] == '"' && len > 1 && str[len - 1] == '"') {
-+		/* trim both leading and trailing quotes */
-+		str++;
-+		len -= 2;
-+	}
-+
-+	len++; /* add space for NUL terminator */
-+
-+	s = kmalloc(len, type);
-+	if (!s)
-+		return NULL;
-+
-+	memcpy(s, str, len - 1);
-+	s[len - 1] = '\0';
-+
-+	return s;
-+}
-+
- /*
-  * kdb_getarea_size - Read an area of data.  The kdb equivalent of
-  *	copy_from_user, with kdb messages for invalid addresses.
--- 
-2.50.1
+2) To advance the pointer 'cp', we already determine the string length
+'len' using strlen(), which allows us to use memcpy() directly. This is
+slightly more efficient than strscpy(), which would recompute the length
+before calling memcpy() internally. We could also use strscpy() and its
+return value as the length, but that would require checking for string
+truncation, which might introduce a functional change.
+
+Thanks,
+Thorsten
 
