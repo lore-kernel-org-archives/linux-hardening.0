@@ -1,84 +1,90 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507A1CA6B
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Aug 2025 00:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83532176ADB;
+	Tue, 19 Aug 2025 00:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755563653; cv=none; b=JoUCMB1wdOhe1+jsZqRW0k86epig68KpWBODvPMrp7EOPMfDGPmly/E7O4vSGGLTztZr1WI6BpaKDfiP96lx5gWq++hO7fin2jWXLlZeAvOcHBz6k5iKsvDPW7Lo6lmX/8hOEvNj7fqn4L+eHquGddiOIFccHgbNSc7cbkA0WzM=
+	t=1755564929; cv=none; b=PpaXyeNQspHVWTIckK9mcmJgXrYx0FlRNu8zuMXmWZD7iLOeHwNWrtBxBjXP6vJiU2q7lnKBBNZvwSVMbTpg/XFV1Y7EcZAXgJzU8hJ+mDG0s1YNY8wlOzzIu24ueRazIM9mlkfwnqDuoYBLbdMGwfhM/+/I38r82SPP4iSlO5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755563653; c=relaxed/simple;
-	bh=VIj2YbU5o1RNHaFfyeLVtpSo78+d55miYm5h6O1qnN4=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=QxWw08w+u1uPIFHsffwO0GASRwBxNV2uhg6lEa0wYcIx3yneqL9N71kGfCU4MzPgv4uwYQRaM43EN3P6rOSYlq87Q+UyefxKeDGP2Bbc40HJNAy8pRluoS4WatuYv6FA0hNLgY+fluct7Ha71MAGvyTjrxV0nqsW1JNTmLRCQ2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KxI8Cjev; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1755564929; c=relaxed/simple;
+	bh=RHDDgdI1KU5gTd6q3RZ5KjPYkSkpxLcDr1NCuu19268=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vrwp53Vxoa7wFDp4GkErXUTYyCVjL2F9uslq8ztOhl4p4crO8Z+iTw35Qk+o/AguRF6Q/9mom4vIuusk/E2H1chA/ps9syrMPB9R6Yo26oNE/KrnswQna5mWSkMsvN1nkfbe726k+pIptuvkVCyjXJm6/KuI5iX1bO+02ULCssg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xf9fcNQg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KxI8Cjev"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755563646;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VIj2YbU5o1RNHaFfyeLVtpSo78+d55miYm5h6O1qnN4=;
-	b=KxI8CjevBfsn7Z0BxhF1SbGMKg+RgAwIxiXyAWUW/S1KSGEbLLDNayeWDLdFvYxRLte4+T
-	4MngId6ICTspUMQqmzRCZBaw5ksNq7Pe9qczEV24tZ7/8flpgQ8QMseMNqTqLN4Dyrtx7/
-	3PpVbxzore0atenB9myOpoqSoB4EDYU=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xf9fcNQg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0A33C4CEEB;
+	Tue, 19 Aug 2025 00:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755564929;
+	bh=RHDDgdI1KU5gTd6q3RZ5KjPYkSkpxLcDr1NCuu19268=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xf9fcNQgSU+Jeg+ZP/DY9xu+7OEGwXkut8IrHzRW8NQLSJst0aTV0vjj7mBLD2TMC
+	 w5Fy48Sn79iupubE3YtfbIfAZusLxLPs26rf7V0ryA7My7a+9RNPJSdkDFA+bypbef
+	 SxGw74sKCkXQJfaZC+ps0lk9znD9XBmUnvgdm6lcfG4Dymf7j7PwKOAneQrOIzbUez
+	 vCSoiI+k4kes3saiX75j3h1XiAq43lBTMSMpkalNwUodG0ItYSp05wxSQjcjHYl4v/
+	 z2RjuW+7g/v5dY5viRILFm+jyrKcdgAUsnv3ksqOxqwz7dYrU5SvTErUHtrouytaWZ
+	 aW3FdXzlx4+Dw==
+Date: Mon, 18 Aug 2025 17:55:28 -0700
+From: Kees Cook <kees@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, patches@lists.linux.dev,
+	linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-mips@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linuxppc-dev@lists.ozlabs.org, Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+	kasan-dev@googlegroups.com, Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH 00/10] Bump minimum supported version of LLVM for
+ building the kernel to 15.0.0
+Message-ID: <202508181753.7204670E@keescook>
+References: <20250818-bump-min-llvm-ver-15-v1-0-c8b1d0f955e0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH 2/8] MIPS: sgi-ip32: Replace deprecated strcpy() in
- plat_mem_setup()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <6d7mznlomgbhqexp64tswbozmlqk7svrek66zggjnhljsdzan3@3f66zsc5jm5y>
-Date: Tue, 19 Aug 2025 02:33:53 +0200
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- linux-hardening@vger.kernel.org,
- linux-mips@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F4431470-322B-49C5-B55A-B236C8E04D77@linux.dev>
-References: <20250817183728.612012-1-thorsten.blum@linux.dev>
- <20250817183728.612012-2-thorsten.blum@linux.dev>
- <6d7mznlomgbhqexp64tswbozmlqk7svrek66zggjnhljsdzan3@3f66zsc5jm5y>
-To: Justin Stitt <justinstitt@google.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250818-bump-min-llvm-ver-15-v1-0-c8b1d0f955e0@kernel.org>
 
-On 19. Aug 2025, at 01:40, Justin Stitt wrote:
-> On Sun, Aug 17, 2025 at 08:37:12PM +0200, Thorsten Blum wrote:
->> strcpy() is deprecated; use strscpy() instead.
->>=20
->> Link: https://github.com/KSPP/linux/issues/88
->> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
->> ---
->> arch/mips/sgi-ip32/ip32-setup.c | 3 ++-
->> 1 file changed, 2 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/arch/mips/sgi-ip32/ip32-setup.c =
-b/arch/mips/sgi-ip32/ip32-setup.c
->> index aeb0805aae57..c2ebc4bbd866 100644
->> --- a/arch/mips/sgi-ip32/ip32-setup.c
->> +++ b/arch/mips/sgi-ip32/ip32-setup.c
->> @@ -14,6 +14,7 @@
->> #include <linux/interrupt.h>
->> #include <linux/param.h>
->> #include <linux/sched.h>
->> +#include <linux/string.h>
->=20
-> This new include isn't strictly necessary as it was building with
-> strcpy() fine before?
+On Mon, Aug 18, 2025 at 11:57:16AM -0700, Nathan Chancellor wrote:
+> s390 and x86 have required LLVM 15 since
+>
+>   30d17fac6aae ("scripts/min-tool-version.sh: raise minimum clang version to 15.0.0 for s390")
+>   7861640aac52 ("x86/build: Raise the minimum LLVM version to 15.0.0")
+>
+> respectively. This series bumps the rest of the kernel to 15.0.0 to
+> match, which allows for a decent number of clean ups.
 
-It's not strictly necessary, but since I was often asked to explicitly
-include it, I made it a habit.
+Looks good to me!
 
-Best,
-Thorsten
+Reviewed-by: Kees Cook <kees@kernel.org>
 
+> I think it makes sense for either Andrew to carry this via -mm on a
+> nonmm branch or me to carry this via the Kbuild tree, with the
+> appropriate acks.
+
+I vote you carry it with Kbuild. :)
+
+--
+Kees Cook
