@@ -1,44 +1,37 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B672129BDA8
-	for <linux-hardening@vger.kernel.org>; Thu, 21 Aug 2025 14:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029E92D97AB
+	for <linux-hardening@vger.kernel.org>; Thu, 21 Aug 2025 16:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755786313; cv=none; b=dCJqQIsUYN1LqBjP74K+yPETvGVjOC2YqLlN04l/iNdSiJ62nrxQbmEsZf7oJLdVO4mHYzgC6C4UDQjE8FMzruoVpLr1GdpX3ku8/2mhFuQ5nFdzaIt+brjsWYp8pprni2oedNK0bzvfSZy9q9oyanpqE0jGsMZLHbugjW1F5Ho=
+	t=1755792961; cv=none; b=mojDPg+QSmKn3dU2tZ6uGrPcf+45LoAv03+bnaQoZK/QWckXLHQawNnlLh346i9WZirlVohr9jvHeGMA7NxzmAb7RujH8xO4izF0/vEOfa/Wkk6u47X+1/1nMs05ubwnwfiXSL9R+X+9wYwnE/nSSduBatyR9zW9vXq4i/1qLDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755786313; c=relaxed/simple;
-	bh=y4DoN253EQlq8bsfQq61eUatgXGvq55EoMRF53Yfn0Y=;
+	s=arc-20240116; t=1755792961; c=relaxed/simple;
+	bh=9Wl1xXoOWbP8dypDvWcwf8bR+F9c5uAZ8pfGj0vPueY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ouRX6mQESvPO+i7wHivG+GNRLdYk+vhjx80TtSs1ItNTPkN3yyXcFhwA7gKhqMiCCcYvfidCWjugyNJ1ZNu1CMvP0edp5jmvi+nISR20W8sP0/qLoYVTtcEW7SBOxP8WCAfAFBEyTGkFip6DM6g3V9ls7gmPEyE2VaheTowpu/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aDuBZE2+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cr0w1u8YlIkdm/kAwg+kECRkFjdOLFTWD8MPy2g12sgCA4htYLBNsifzLdZrL8b9cJv6X4i4dNnbrUQbXrRJey3M0soZ2OQE5tvasnGnOTz1AF3RneTHEI8/Iv23ZmpDlrHvugxx+mll8ZZLCjHVWF5GbC+O0Urul5XrZIyTvyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HjE8GSwk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aDuBZE2+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=e9kMV4vY6kwakeMVJ8z6qT97kb1IiRen+iiNXAIUDiU=; b=aDuBZE2+EqMsxfQGQAp0U1lkSv
-	nXOjGswOFLgZsqbfTfDBV7U5YzgQJ22zs3BVdzz1cCBrb7fG6FsFNxZLPAuaupH5I7PwbjSA5tlaU
-	+Psbz5W801uh9RanilbqALxseZRp17C06J1uJxoTrDY24FY33ypjDtCEUoAiDmaX360W/lWjL537d
-	OHbDvkPi29hyGrwhRPDI3kHZdlCsQ/RrcPtgDErox6EM5F3go0UWI9VYMLYeS8Z0aXNELyqQ8fK8c
-	LsXs72VQANAPh9o13TmjHKxlg2YA0AdLjoWRcPREoJkmdGMiM7n5c+kNsufoDUZ21Eo8NX8wuAR8W
-	e2yHJmsQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1up6Ds-00000008iKK-3Lv1;
-	Thu, 21 Aug 2025 14:25:01 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 71DD73002ED; Thu, 21 Aug 2025 16:25:00 +0200 (CEST)
-Date: Thu, 21 Aug 2025 16:25:00 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Richard Biener <rguenther@suse.de>
-Cc: Andrew Pinski <andrew.pinski@oss.qualcomm.com>,
-	Kees Cook <kees@kernel.org>, Qing Zhao <qing.zhao@oracle.com>,
-	gcc-patches@gcc.gnu.org, Joseph Myers <josmyers@redhat.com>,
-	Jan Hubicka <hubicka@ucw.cz>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HjE8GSwk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C967FC4CEEB;
+	Thu, 21 Aug 2025 16:16:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755792960;
+	bh=9Wl1xXoOWbP8dypDvWcwf8bR+F9c5uAZ8pfGj0vPueY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HjE8GSwkwHP/Bu8pQvhRILXuAHMem3OFBLcsd9YZYRahKngu8onFQ7+mUtZ5cI0ma
+	 Zv7H5XFsvUPOcmng94e8Rf71H53UyJBnI31bZHYUq0Jn7vifnSRzHbBgWw6iX3Mvf2
+	 Vc9BF3dgY6SKYc1GcqkdgYeCLzPJUjoXHXOlF9LgGBAOrVsqO8sy6f60fDeDSghjkX
+	 aWEfsNTsghSGzzvqCAALalmQXpSurwXx2L9gwYYu8tAROhvg1QAWoTX9TDOLqDtVJ2
+	 cXT6IZq5yOYycFYO1Er2A9BC5deMbSrRJISMnX5oxQqYlrDCC9p/Xzs8LAbIQGoKpq
+	 DohQHE0yLLnaQ==
+Date: Thu, 21 Aug 2025 09:16:00 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
+Cc: Qing Zhao <qing.zhao@oracle.com>, gcc-patches@gcc.gnu.org,
+	Joseph Myers <josmyers@redhat.com>,
+	Richard Biener <rguenther@suse.de>, Jan Hubicka <hubicka@ucw.cz>,
 	Richard Earnshaw <richard.earnshaw@arm.com>,
 	Richard Sandiford <richard.sandiford@arm.com>,
 	Marcus Shawcroft <marcus.shawcroft@arm.com>,
@@ -47,107 +40,179 @@ Cc: Andrew Pinski <andrew.pinski@oss.qualcomm.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
 	Andrew Waterman <andrew@sifive.com>,
 	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Dan Li <ashimida.1990@gmail.com>, linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH 3/7] kcfi: Add core Kernel Control Flow Integrity
- infrastructure
-Message-ID: <20250821142500.GS4067720@noisy.programming.kicks-ass.net>
+Subject: Re: [RFC PATCH 2/7] mangle: Introduce C typeinfo mangling API
+Message-ID: <202508210841.8BE6E3C117@keescook>
 References: <20250821064202.work.893-kees@kernel.org>
- <20250821072708.3109244-3-kees@kernel.org>
- <CALvbMcA+8iHo+zCCvs4UdAg9PVQVtgOno-rtMS4i5YajrjkyGw@mail.gmail.com>
- <20250821091220.GM4067720@noisy.programming.kicks-ass.net>
- <q93o5262-po30-8n51-o17s-qrn0q96o51qp@fhfr.qr>
+ <20250821072708.3109244-2-kees@kernel.org>
+ <CALvbMcAPV1eB6nocPAS=qR8SCiQyU43v911R8S7Ah_=G7yK-+g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <q93o5262-po30-8n51-o17s-qrn0q96o51qp@fhfr.qr>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALvbMcAPV1eB6nocPAS=qR8SCiQyU43v911R8S7Ah_=G7yK-+g@mail.gmail.com>
 
-On Thu, Aug 21, 2025 at 01:01:37PM +0200, Richard Biener wrote:
-> On Thu, 21 Aug 2025, Peter Zijlstra wrote:
+On Thu, Aug 21, 2025 at 12:59:06AM -0700, Andrew Pinski wrote:
+> On Thu, Aug 21, 2025 at 12:41 AM Kees Cook <kees@kernel.org> wrote:
 > 
-> > On Thu, Aug 21, 2025 at 01:16:56AM -0700, Andrew Pinski wrote:
-> > 
-> > > > +/* Compute KCFI type ID for a function declaration or function type
-> > > > (internal) */
-> > > > +static uint32_t
-> > > > +compute_kcfi_type_id (tree fntype_or_fndecl)
-> > > > +{
-> > > > +  if (!fntype_or_fndecl)
-> > > > +    return 0;
-> > > > +
-> > > > +  const char *canonical_name = mangle_function_type (fntype_or_fndecl);
-> > > > +  uint32_t base_type_id = kcfi_hash_string (canonical_name);
-> > > >
-> > > 
-> > > Now I am curious why this needs to be a mangled function name? Since the
-> > > function in C the symbol is just its name.
-> > > Is there documentation that says the hash needs to be based on all of the
-> > > function arguments types?
-> > 
-> > The whole point of kCFI is to limit the targets of indirect calls to
-> > functions of the same signature. The actual function name is immaterial.
+> > To support the KCFI type-id which needs to convert unique function
+> > prototypes into unique 32-bit values, add a subset of the Itanium C++
+> > mangling ABI for C typeinfo of function prototypes. This gets us to the
+> > first step: a string representation of the function prototype.
+> >
 > 
-> What's the attack vector and how does kCFI achieve mitigating it?
+> Can you explain why this is needed? Also it seems like the code is very
 
-Any of the attacks that can result in scribbling a function pointer.
-Typically a buffer overflow I suppose.
+As you suggest later, this could just twiddle hash bits instead of
+building up a string, but I left this as a C mangler in case it might
+be useful in the future, and for debugging. Trying to figure out why
+certain prototypes got mismatched was super frustrating, and looking at
+a hash value was pretty meaningless. :)
 
+> sensitive to buffer overflows. Especially the way it is currently written.
+> The C++ front-end version uses obstack_grow to overcome the buffer overflow
+> issue.
 
-The way kCFI works is by changing the indirect call ABI. Traditionally
-the indirect call is simply:
+Oh nice, yes, obstack looks perfect for this. (Or as you suggest below,
+std::string).
 
-  load-pointer-into-reg
-  call *%reg
+If keeping the mangling string output is unwanted, maybe I could use
+obstack when the dumpfile is active and report the string+hash at the
+end of mangling, but make the actual output be the hash value?
 
-kCFI changes every function to have a preamble like (with IBT and
-retpolines and all the modern crap on):
+> > +    case BOOLEAN_TYPE:
+> > +      **p = 'b';
+> > +      (*p)++;
+> >
+> 
+> I am not 100% sure this is always correct. because there could be a boolean
+> type with a precision non 1.
 
-__cfi_\func:
-  movl $0x12345678, %eax
-  nop
-  nop
-  nop
-  nop
-  nop
-  nop
-  nop
-  nop
-  nop
-  nop
-  nop
-\func:
-  endbr64
-  ...
-   
-And every indirect call site to:
+AIUI, the non-1 case isn't possible on the C end of things and since
+this is strictly for C type representation, it's good as-is. But maybe
+I'm missing something?
 
-  load-pointer-into-r11
-  movl $(-0x12345678), %r10d
-  addl $-15(%r11), %r10d
-  je   2f
-1:ud2
-  .pushsection .kcfi_traps
-  .long 1b - .
-  .popsection
-2:cs call __x86_indirect_thunk_r11 
+> > +      else
+> > +       {
+> > +         /* Fallback for other real types.  */
+> > +         *p += snprintf (*p, end - *p, "f%d", TYPE_PRECISION (type));
+> > +       }
+> > +      break;
+> >
+> 
+> You definitely miss NULLPTR_TYPE.
 
-Where 0x12345678 is the appropriate signature hash.
+Isn't nullptr C++-only? I don't think I can create a C type that ends up
+getting internally mapped to NULLPTR_TYPE.
 
+> > +
+> > +    default:
+> > +      /* Unknown builtin type - this should never happen in a well-formed
+> > C program.  */
+> > +      error ("mangle: Unknown builtin type with %<TREE_CODE%> %d",
+> > TREE_CODE (type));
+> > +      error ("mangle: %<TYPE_MODE%> = %d, %<TYPE_PRECISION%> = %d",
+> > TYPE_MODE (type), TYPE_PRECISION (type));
+> > +      error ("mangle: Please report this as a bug with the above
+> > diagnostic information");
+> > +      gcc_unreachable ();
+> >
+> 
+> This is wrong way of doing this.
+> It should be a sorry or a fatal_error instead. Maybe with an inform
+> beforehand.
+> You might also want to use get_tree_code_name, GET_MODE_NAME instead of
+> printing out a number because the number tells nothing.
+> Maybe even use print_tree or print_generic_expr to print out the tree
+> instead of manually printing it.
 
-So if the loaded pointer is scribbled somehow, the hash embedded at the
-callsite no longer matches the hash in the function preamble and #UD.
+Ah, perfect; thanks!
 
-The kernel is also going to rewrite this if the hardware supports IBT,
-into a FineIBT sequence (with too many variants :-/), but I'll spare you
-those details.
+> > +    case ARRAY_TYPE:
+> > +      /* Array type: 'A' + size + '_' + element type (simplified).  */
+> > +      **p = 'A';
+> > +      (*p)++;
+> > +      if (TYPE_DOMAIN (type) && TYPE_MAX_VALUE (TYPE_DOMAIN (type)))
+> > +       {
+> > +         HOST_WIDE_INT size = tree_to_shwi (TYPE_MAX_VALUE (TYPE_DOMAIN
+> > (type))) + 1;
+> >
+> 
+> No check to make sure array type is not a VLA. So this will ICE.
 
-Those people interested can find it here:
+Oops, yes. Thanks!
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kernel/alternative.c#n1298
+> > +  else if (TREE_CODE (fntype_or_fndecl) == FUNCTION_DECL)
+> > +    {
+> > +      tree fndecl = fntype_or_fndecl;
+> > +      tree base_fntype = TREE_TYPE (fndecl);
+> > +
+> > +      /* For FUNCTION_DECL, build a synthetic function type using
+> > DECL_ARGUMENTS
+> > +        if available to preserve typedef information.  */
+> >
+> 
+> Why do the building? Seems like you could just do that work here. Also
+> doesn't FUNCTION_DECL's type have exactly what you need?
 
+I need the function prototype in three places:
 
+- address-taken extern functions
+- function preambles
+- indirect call sites
 
+At indirect call sites (during the early GIMPLE pass), I had a
+FUNCTION_TYPE available that still had the full typedef information,
+and I could use it fine. For the other two, it's later on and the
+TREE_TYPE(fndecl)'s FUNCTION_TYPE had lost the typedef information (which
+I need to be able to examine in cases where the typedef name was needed
+for the mangling vs looking at the underlying types).
+
+> > +      tree parm = DECL_ARGUMENTS (fndecl);
+> > +      if (parm)
+> > +       {
+> > +         /* Build parameter type list from DECL_ARGUMENTS.  */
+> > +         tree param_list = NULL_TREE;
+> > +         tree *param_tail = &param_list;
+> > +
+> > +         for (; parm; parm = DECL_CHAIN (parm))
+> > +           {
+> > +             tree parm_type = TREE_TYPE (parm);
+> > +             *param_tail = tree_cons (NULL_TREE, parm_type, NULL_TREE);
+> > +             param_tail = &TREE_CHAIN (*param_tail);
+> > +           }
+> > +
+> > +         /* Add void_type_node sentinel if the function takes no
+> > parameters.  */
+> > +         if (!param_list)
+> > +           param_list = tree_cons (NULL_TREE, void_type_node, NULL_TREE);
+> > +
+> > +         /* Build synthetic function type with preserved parameter
+> > types.  */
+> > +         fntype = build_function_type (TREE_TYPE (base_fntype),
+> > param_list);
+> > +       }
+> > +      else
+> > +       {
+> > +         /* No DECL_ARGUMENTS - use the standard function type.  */
+> > +         fntype = base_fntype;
+> > +       }
+> > +    }
+> > +  else
+> > +    {
+> > +      /* Must only be called with FUNCTION_DECL or FUNCTION_TYPE.  */
+> > +      gcc_unreachable ();
+> > +    }
+
+Thanks for looking through all this!
+
+-Kees
+
+-- 
+Kees Cook
