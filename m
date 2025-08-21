@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCB715853B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDE827FD64
 	for <linux-hardening@vger.kernel.org>; Thu, 21 Aug 2025 07:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755761229; cv=none; b=eZ9iGOiROxEc1tWCrzGLpOhuZzfoWWeGa9vXD5IUb9BvYw+QvCoQtD6pZf73FQ0jpuq1f/uafuptBPxjnaH27U9oHyWI4TqwMJG1+lWTc0pn06OPKoyL8BsC6n3grf4/H6iywTLLdrKrIdfl5p8tKM1Z5ar2FCnrmj5upkaHzl4=
+	t=1755761229; cv=none; b=NR4HI5j9sVDbmb/xw4yV8goY7uhE3/Ck4R4zAlUeMNU7Dpe8KPraidSmCq1TzzoboK8x+ZYfTeE7jVx9AYTpX0j1BDcr6KBfhxSkFCk4B5RBGhVlVnb5ASd3j10tJfv9U3PM/tkmylAxRRplmte0dCKDRVxmS5lTsdFuOvh9Fsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1755761229; c=relaxed/simple;
-	bh=mQq1VWBqWLL0QEkQvPy5IM+PhOmrN1uvLeG6eYR+WpU=;
+	bh=Q+Wh3qll0av1CLSS8b4lkD2Xt+0czmIDg5yEqfg3hT4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Dn0FNtY9v4cVjbITbsfeC98B9ENFQ+5UY5gBjs3+MsdIA/Iu6oKBrEgKPtsxz+7omcbhvRZsA6ghdhz0ZVolxeVhZHauNDTgGgplPIn59gEXzgpSvdpeyWjtJ29/QIbAX56j2MRgxWhk1H71POuZthd3sBIXB3J6P8Wp0FFWfpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LuxAbB0G; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=D+RAbAaw5d2u90SDj7bqAp3Z2bfiyyyUutvcKTrEXfM1Lwp+qp+l5fiZaCW0eTVOhJFxh2G31iMnAiQx1nVNqno4M6eWsvTTeLTm+qGtlb/1qqyIja9l4ELh/jN+DvNn9KiyEKrvqDf3F7GI+hbx5RkdMTSsWun1sujRRsxeDwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBR6DjlJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LuxAbB0G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2E71C4CEED;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBR6DjlJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 013EEC113CF;
 	Thu, 21 Aug 2025 07:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755761228;
-	bh=mQq1VWBqWLL0QEkQvPy5IM+PhOmrN1uvLeG6eYR+WpU=;
+	s=k20201202; t=1755761229;
+	bh=Q+Wh3qll0av1CLSS8b4lkD2Xt+0czmIDg5yEqfg3hT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LuxAbB0GXr5KDYo4gR5H5mtKG2uKvoYgqUavHjWTM+P+PQ5tqE9baFW2lrrxCCcyl
-	 d2AgTHtHFBOiVQWqFBVi3N4uq0w+aBOI2NULQo5JMS0CNQjadxQyU+f2AdqeLDjLcv
-	 TvlzxV0h0X4XLdW0xGMIcdXdGE0GDruHwhZrcF14qRuUTaXoZY5ngrjqWLWdP8k3dn
-	 B7Wnf2dxP9ZG0t5RU3UtAJr0P3ybvF00p+bWvwcxc7nQPZ0+9+K4tuf2XuTBJ+/eEM
-	 VAmxkuyBxdnoXFFEMED361HE1LrgA6UXghHiRpscPJGgjvuhJG8IRGCgxVu9oah4yp
-	 I6QeTweS9yfcA==
+	b=cBR6DjlJkX+6doXQJYJh8jctYp98YQ61Thit30GlyLD6pdTYljlYf5/9kaC/ERamk
+	 0JHx2jMId73Y1LsSbFGkrMKluDsFa713ci1lerGJEYxMxly8lpANjzk4hCEz6LHCtf
+	 yU5aUbRzSjmixrPYO/9qEVSGHCfy/C4KzpZZgpN4rHqlx42bMecQZZg0SbN5W28z03
+	 wVNWdVS5TwVctGct8HjavM6Ipy1JOyxsnzPUEDko9fTfskMrszU/fNuXwdbRgF10md
+	 hYkjVBlnlJTqmTdMegzSwmIv5+n5ue6owjP467WuBVAxC6rCM+sMvnGI3sCLXE5rx4
+	 SaFAD0mpFI2BA==
 From: Kees Cook <kees@kernel.org>
 To: Qing Zhao <qing.zhao@oracle.com>
 Cc: Kees Cook <kees@kernel.org>,
@@ -44,9 +44,9 @@ Cc: Kees Cook <kees@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Dan Li <ashimida.1990@gmail.com>,
 	linux-hardening@vger.kernel.org
-Subject: [RFC PATCH 1/7] sanitizer: Expand sanitizer flag from 32-bit to 64-bit
-Date: Thu, 21 Aug 2025 00:26:34 -0700
-Message-Id: <20250821072708.3109244-1-kees@kernel.org>
+Subject: [RFC PATCH 2/7] mangle: Introduce C typeinfo mangling API
+Date: Thu, 21 Aug 2025 00:26:35 -0700
+Message-Id: <20250821072708.3109244-2-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250821064202.work.893-kees@kernel.org>
 References: <20250821064202.work.893-kees@kernel.org>
@@ -58,389 +58,646 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Extend the sanitizer flags infrastructure from unsigned int (32-bit)
-to unsigned long long (64-bit) to support the future addition of KCFI
-(Kernel Control Flow Integrity) at bit position 32, which exceeds the
-previous 32-bit limit.
+To support the KCFI type-id which needs to convert unique function
+prototypes into unique 32-bit values, add a subset of the Itanium C++
+mangling ABI for C typeinfo of function prototypes. This gets us to the
+first step: a string representation of the function prototype.
 
-Update all sanitizer-related data structures, function signatures,
-and type handling across the compiler:
+Trying to extract only the C portions of the gcc/cp/mangle.cc code
+seemed infeasible after a few attempts. So this is the minimal subset
+of the mangling ABI needed to generate unique KCFI type ids.
 
-* common.opt: Change flag_sanitize from unsigned int to unsigned long long
-* flag-types.h: Convert all SANITIZE_* enum values from 1UL << N to 1ULL << N
-* opts.h: Update parse_sanitizer_options() and parse_no_sanitize_attribute()
-  function signatures to use unsigned long long parameters
-* opts.cc: Update sanitizer parsing functions and sanitizer_opts_s
-  structure to handle 64-bit flag values, including special handling for
-  "all" flag (~0ULL)
-* asan.h: Update sanitize_flags_p() to accept and return 64-bit values
-* c-family/c-common.h: Update add_no_sanitize_value() signature
-* c-family/c-attribs.cc: Update no_sanitize attribute handling functions
-* c-family/c-attribs.cc: Replace unsigned_type_node with
-  long_long_unsigned_type_node for no_sanitize attribute storage
-* d/d-attribs.cc: Replace d_uint_type with long_long_unsigned_type_node
-  for consistent 64-bit attribute representation across languages
-* c/c-parser.cc: Update local flag_sanitize_save variables in declaration
-  parsing where sanitization is temporarily disabled for initializers
-* cp/typeck.cc: Update flag_sanitize_save in pointer-to-member function
-  handling
-* dwarf2asm.cc: Update save_flag_sanitize for ASan-disabled indirect
-  constants
+I could not find a way to build a sensible selftest infrastructure for
+this code. I wanted to do something like this:
 
-Is using "unsigned long long" correct here, or is switching to
-"uint64_t" preferred?
+  #ifdef CHECKING_P
+  const char code[] = "
+	typedef struct { int x, y } xy_t;
+	extern int func(xy_t *p);
+  ";
+
+  ASSERT_MANGLE (code, "_ZTSPFiP4xy_tE");
+  ...
+  #endif
+
+But I could not find any way to build a localized parser that could
+parse the "code" string from which I could extract the "func" fndecl.
+It would have been so much nicer to build the selftest directly into
+mangle.cc here, but I couldn't figure it out. Instead, later patches
+create a "kcfi" dump file, and the large kcfi testsuite validates
+expected mangle strings as part of the type-id validation.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- gcc/asan.h                |  4 +--
- gcc/c-family/c-common.h   |  2 +-
- gcc/flag-types.h          | 64 +++++++++++++++++++--------------------
- gcc/opts.h                |  8 ++---
- gcc/c-family/c-attribs.cc | 19 +++++++-----
- gcc/c/c-parser.cc         |  4 +--
- gcc/common.opt            |  2 +-
- gcc/cp/typeck.cc          |  2 +-
- gcc/d/d-attribs.cc        |  8 ++---
- gcc/dwarf2asm.cc          |  2 +-
- gcc/opts.cc               | 16 +++++-----
- 11 files changed, 67 insertions(+), 64 deletions(-)
+ gcc/Makefile.in |   1 +
+ gcc/mangle.h    |  29 +++
+ gcc/selftest.h  |   1 +
+ gcc/mangle.cc   | 548 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 579 insertions(+)
+ create mode 100644 gcc/mangle.h
+ create mode 100644 gcc/mangle.cc
 
-diff --git a/gcc/asan.h b/gcc/asan.h
-index 273d6745c58d..7434d43ac493 100644
---- a/gcc/asan.h
-+++ b/gcc/asan.h
-@@ -242,9 +242,9 @@ asan_protect_stack_decl (tree decl)
-    remove all flags mentioned in "no_sanitize" of DECL_ATTRIBUTES.  */
- 
- inline bool
--sanitize_flags_p (unsigned int flag, const_tree fn = current_function_decl)
-+sanitize_flags_p (unsigned long long flag, const_tree fn = current_function_decl)
- {
--  unsigned int result_flags = flag_sanitize & flag;
-+  unsigned long long result_flags = flag_sanitize & flag;
-   if (result_flags == 0)
-     return false;
- 
-diff --git a/gcc/c-family/c-common.h b/gcc/c-family/c-common.h
-index 7c7e21d2d0eb..e7940cc079f6 100644
---- a/gcc/c-family/c-common.h
-+++ b/gcc/c-family/c-common.h
-@@ -1713,7 +1713,7 @@ extern enum flt_eval_method
- excess_precision_mode_join (enum flt_eval_method, enum flt_eval_method);
- 
- extern int c_flt_eval_method (bool ts18661_p);
--extern void add_no_sanitize_value (tree node, unsigned int flags);
-+extern void add_no_sanitize_value (tree node, unsigned long long flags);
- 
- extern void maybe_add_include_fixit (rich_location *, const char *, bool);
- extern void maybe_suggest_missing_token_insertion (rich_location *richloc,
-diff --git a/gcc/flag-types.h b/gcc/flag-types.h
-index 9a3cc4a2e165..33c88a15ecbb 100644
---- a/gcc/flag-types.h
-+++ b/gcc/flag-types.h
-@@ -301,42 +301,42 @@ enum zero_init_padding_bits_kind {
- /* Different instrumentation modes.  */
- enum sanitize_code {
-   /* AddressSanitizer.  */
--  SANITIZE_ADDRESS = 1UL << 0,
--  SANITIZE_USER_ADDRESS = 1UL << 1,
--  SANITIZE_KERNEL_ADDRESS = 1UL << 2,
-+  SANITIZE_ADDRESS = 1ULL << 0,
-+  SANITIZE_USER_ADDRESS = 1ULL << 1,
-+  SANITIZE_KERNEL_ADDRESS = 1ULL << 2,
-   /* ThreadSanitizer.  */
--  SANITIZE_THREAD = 1UL << 3,
-+  SANITIZE_THREAD = 1ULL << 3,
-   /* LeakSanitizer.  */
--  SANITIZE_LEAK = 1UL << 4,
-+  SANITIZE_LEAK = 1ULL << 4,
-   /* UndefinedBehaviorSanitizer.  */
--  SANITIZE_SHIFT_BASE = 1UL << 5,
--  SANITIZE_SHIFT_EXPONENT = 1UL << 6,
--  SANITIZE_DIVIDE = 1UL << 7,
--  SANITIZE_UNREACHABLE = 1UL << 8,
--  SANITIZE_VLA = 1UL << 9,
--  SANITIZE_NULL = 1UL << 10,
--  SANITIZE_RETURN = 1UL << 11,
--  SANITIZE_SI_OVERFLOW = 1UL << 12,
--  SANITIZE_BOOL = 1UL << 13,
--  SANITIZE_ENUM = 1UL << 14,
--  SANITIZE_FLOAT_DIVIDE = 1UL << 15,
--  SANITIZE_FLOAT_CAST = 1UL << 16,
--  SANITIZE_BOUNDS = 1UL << 17,
--  SANITIZE_ALIGNMENT = 1UL << 18,
--  SANITIZE_NONNULL_ATTRIBUTE = 1UL << 19,
--  SANITIZE_RETURNS_NONNULL_ATTRIBUTE = 1UL << 20,
--  SANITIZE_OBJECT_SIZE = 1UL << 21,
--  SANITIZE_VPTR = 1UL << 22,
--  SANITIZE_BOUNDS_STRICT = 1UL << 23,
--  SANITIZE_POINTER_OVERFLOW = 1UL << 24,
--  SANITIZE_BUILTIN = 1UL << 25,
--  SANITIZE_POINTER_COMPARE = 1UL << 26,
--  SANITIZE_POINTER_SUBTRACT = 1UL << 27,
--  SANITIZE_HWADDRESS = 1UL << 28,
--  SANITIZE_USER_HWADDRESS = 1UL << 29,
--  SANITIZE_KERNEL_HWADDRESS = 1UL << 30,
-+  SANITIZE_SHIFT_BASE = 1ULL << 5,
-+  SANITIZE_SHIFT_EXPONENT = 1ULL << 6,
-+  SANITIZE_DIVIDE = 1ULL << 7,
-+  SANITIZE_UNREACHABLE = 1ULL << 8,
-+  SANITIZE_VLA = 1ULL << 9,
-+  SANITIZE_NULL = 1ULL << 10,
-+  SANITIZE_RETURN = 1ULL << 11,
-+  SANITIZE_SI_OVERFLOW = 1ULL << 12,
-+  SANITIZE_BOOL = 1ULL << 13,
-+  SANITIZE_ENUM = 1ULL << 14,
-+  SANITIZE_FLOAT_DIVIDE = 1ULL << 15,
-+  SANITIZE_FLOAT_CAST = 1ULL << 16,
-+  SANITIZE_BOUNDS = 1ULL << 17,
-+  SANITIZE_ALIGNMENT = 1ULL << 18,
-+  SANITIZE_NONNULL_ATTRIBUTE = 1ULL << 19,
-+  SANITIZE_RETURNS_NONNULL_ATTRIBUTE = 1ULL << 20,
-+  SANITIZE_OBJECT_SIZE = 1ULL << 21,
-+  SANITIZE_VPTR = 1ULL << 22,
-+  SANITIZE_BOUNDS_STRICT = 1ULL << 23,
-+  SANITIZE_POINTER_OVERFLOW = 1ULL << 24,
-+  SANITIZE_BUILTIN = 1ULL << 25,
-+  SANITIZE_POINTER_COMPARE = 1ULL << 26,
-+  SANITIZE_POINTER_SUBTRACT = 1ULL << 27,
-+  SANITIZE_HWADDRESS = 1ULL << 28,
-+  SANITIZE_USER_HWADDRESS = 1ULL << 29,
-+  SANITIZE_KERNEL_HWADDRESS = 1ULL << 30,
-   /* Shadow Call Stack.  */
--  SANITIZE_SHADOW_CALL_STACK = 1UL << 31,
-+  SANITIZE_SHADOW_CALL_STACK = 1ULL << 31,
-   SANITIZE_SHIFT = SANITIZE_SHIFT_BASE | SANITIZE_SHIFT_EXPONENT,
-   SANITIZE_UNDEFINED = SANITIZE_SHIFT | SANITIZE_DIVIDE | SANITIZE_UNREACHABLE
- 		       | SANITIZE_VLA | SANITIZE_NULL | SANITIZE_RETURN
-diff --git a/gcc/opts.h b/gcc/opts.h
-index ea92c4922a3b..65b8a1079f34 100644
---- a/gcc/opts.h
-+++ b/gcc/opts.h
-@@ -432,10 +432,10 @@ extern char *write_langs (unsigned int mask);
- extern void print_ignored_options (void);
- extern void handle_common_deferred_options (void);
- extern void handle_deferred_dump_options (void);
--unsigned int parse_sanitizer_options (const char *, location_t, int,
--				      unsigned int, int, bool);
-+unsigned long long parse_sanitizer_options (const char *, location_t, int,
-+					    unsigned long long, int, bool);
- 
--unsigned int parse_no_sanitize_attribute (char *value);
-+unsigned long long parse_no_sanitize_attribute (char *value);
- extern bool common_handle_option (struct gcc_options *opts,
- 				  struct gcc_options *opts_set,
- 				  const struct cl_decoded_option *decoded,
-@@ -477,7 +477,7 @@ extern bool opt_enum_arg_to_value (size_t opt_index, const char *arg,
- extern const struct sanitizer_opts_s
- {
-   const char *const name;
--  unsigned int flag;
-+  unsigned long long flag;
-   size_t len;
-   bool can_recover;
-   bool can_trap;
-diff --git a/gcc/c-family/c-attribs.cc b/gcc/c-family/c-attribs.cc
-index 1f4a0df12051..eed384818433 100644
---- a/gcc/c-family/c-attribs.cc
-+++ b/gcc/c-family/c-attribs.cc
-@@ -1409,24 +1409,27 @@ handle_cold_attribute (tree *node, tree name, tree ARG_UNUSED (args),
- /* Add FLAGS for a function NODE to no_sanitize_flags in DECL_ATTRIBUTES.  */
- 
- void
--add_no_sanitize_value (tree node, unsigned int flags)
-+add_no_sanitize_value (tree node, unsigned long long flags)
- {
+diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+index d7d5cbe72770..86f62611c1d4 100644
+--- a/gcc/Makefile.in
++++ b/gcc/Makefile.in
+@@ -1619,6 +1619,7 @@ OBJS = \
+ 	lto-section-out.o \
+ 	lto-opts.o \
+ 	lto-compress.o \
++	mangle.o \
+ 	mcf.o \
+ 	mode-switching.o \
+ 	modulo-sched.o \
+diff --git a/gcc/mangle.h b/gcc/mangle.h
+new file mode 100644
+index 000000000000..94521e1e7e5c
+--- /dev/null
++++ b/gcc/mangle.h
+@@ -0,0 +1,29 @@
++/* Itanium C++ ABI type mangling for GCC.
++   Copyright (C) 2025 Free Software Foundation, Inc.
 +
-   tree attr = lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (node));
-   if (attr)
-     {
--      unsigned int old_value = tree_to_uhwi (TREE_VALUE (attr));
-+      unsigned long long old_value = tree_to_uhwi (TREE_VALUE (attr));
-       flags |= old_value;
- 
-       if (flags == old_value)
- 	return;
- 
--      TREE_VALUE (attr) = build_int_cst (unsigned_type_node, flags);
-+      TREE_VALUE (attr) = build_int_cst (long_long_unsigned_type_node, flags);
-     }
-   else
--    DECL_ATTRIBUTES (node)
--      = tree_cons (get_identifier ("no_sanitize"),
--		   build_int_cst (unsigned_type_node, flags),
--		   DECL_ATTRIBUTES (node));
++This file is part of GCC.
++
++GCC is free software; you can redistribute it and/or modify it under
++the terms of the GNU General Public License as published by the Free
++Software Foundation; either version 3, or (at your option) any later
++version.
++
++GCC is distributed in the hope that it will be useful, but WITHOUT ANY
++WARRANTY; without even the implied warranty of MERCHANTABILITY or
++FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++for more details.
++
++You should have received a copy of the GNU General Public License
++along with GCC; see the file COPYING3.  If not see
++<http://www.gnu.org/licenses/>.  */
++
++#ifndef GCC_MANGLE_H
++#define GCC_MANGLE_H
++
++#include "tree.h"
++
++/* Function type mangling following Itanium C++ ABI conventions.
++   Returns a static buffer containing the mangled type string.  */
++extern const char *mangle_function_type (tree fntype_or_fndecl);
++
++#endif /* GCC_MANGLE_H */
+diff --git a/gcc/mangle.cc b/gcc/mangle.cc
+new file mode 100644
+index 000000000000..830985251c81
+--- /dev/null
++++ b/gcc/mangle.cc
+@@ -0,0 +1,548 @@
++/* Itanium C++ ABI type mangling for GCC.
++   Copyright (C) 2025 Free Software Foundation, Inc.
++
++This file is part of GCC.
++
++GCC is free software; you can redistribute it and/or modify it under
++the terms of the GNU General Public License as published by the Free
++Software Foundation; either version 3, or (at your option) any later
++version.
++
++GCC is distributed in the hope that it will be useful, but WITHOUT ANY
++WARRANTY; without even the implied warranty of MERCHANTABILITY or
++FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++for more details.
++
++You should have received a copy of the GNU General Public License
++along with GCC; see the file COPYING3.  If not see
++<http://www.gnu.org/licenses/>.  */
++
++#include "config.h"
++#include "system.h"
++#include "coretypes.h"
++#include "tree.h"
++#include "diagnostic-core.h"
++#include "stringpool.h"
++#include "stor-layout.h"
++#include "mangle.h"
++#include "selftest.h"
++
++/* Forward declaration for recursive type mangling.  */
++static void mangle_type_to_buffer (tree type, char **p, char *end);
++
++/* Mangle a builtin type following Itanium C++ ABI for C types.  */
++static void
++mangle_builtin_type_to_buffer (tree type, char **p, char *end)
++{
++  gcc_assert (type != NULL_TREE);
++  gcc_assert (p != NULL && *p != NULL && end != NULL);
++  gcc_assert (*p < end);
++
++  if (*p >= end)
++    return;
++
++  switch (TREE_CODE (type))
 +    {
-+      DECL_ATTRIBUTES (node)
-+	= tree_cons (get_identifier ("no_sanitize"),
-+		     build_int_cst (long_long_unsigned_type_node, flags),
-+		     DECL_ATTRIBUTES (node));
++    case VOID_TYPE:
++      **p = 'v';
++      (*p)++;
++      break;
++
++    case BOOLEAN_TYPE:
++      **p = 'b';
++      (*p)++;
++      break;
++
++    case INTEGER_TYPE:
++      /* Handle standard integer types using Itanium ABI codes.  */
++      if (type == char_type_node)
++	{
++	  **p = 'c';
++	  (*p)++;
++	}
++      else if (type == signed_char_type_node)
++	{
++	  **p = 'a';
++	  (*p)++;
++	}
++      else if (type == unsigned_char_type_node)
++	{
++	  **p = 'h';
++	  (*p)++;
++	}
++      else if (type == short_integer_type_node)
++	{
++	  **p = 's';
++	  (*p)++;
++	}
++      else if (type == short_unsigned_type_node)
++	{
++	  **p = 't';
++	  (*p)++;
++	}
++      else if (type == integer_type_node)
++	{
++	  **p = 'i';
++	  (*p)++;
++	}
++      else if (type == unsigned_type_node)
++	{
++	  **p = 'j';
++	  (*p)++;
++	}
++      else if (type == long_integer_type_node)
++	{
++	  **p = 'l';
++	  (*p)++;
++	}
++      else if (type == long_unsigned_type_node)
++	{
++	  **p = 'm';
++	  (*p)++;
++	}
++      else if (type == long_long_integer_type_node)
++	{
++	  **p = 'x';
++	  (*p)++;
++	}
++      else if (type == long_long_unsigned_type_node)
++	{
++	  **p = 'y';
++	  (*p)++;
++	}
++      else
++	{
++	  /* Fallback for other integer types - use precision-based encoding.  */
++	  *p += snprintf (*p, end - *p, "i%d", TYPE_PRECISION (type));
++	}
++      break;
++
++    case REAL_TYPE:
++      if (type == float_type_node)
++	{
++	  **p = 'f';
++	  (*p)++;
++	}
++      else if (type == double_type_node)
++	{
++	  **p = 'd';
++	  (*p)++;
++	}
++      else if (type == long_double_type_node)
++	{
++	  **p = 'e';
++	  (*p)++;
++	}
++      else
++	{
++	  /* Fallback for other real types.  */
++	  *p += snprintf (*p, end - *p, "f%d", TYPE_PRECISION (type));
++	}
++      break;
++
++    default:
++      /* Unknown builtin type - this should never happen in a well-formed C program.  */
++      error ("mangle: Unknown builtin type with %<TREE_CODE%> %d", TREE_CODE (type));
++      error ("mangle: %<TYPE_MODE%> = %d, %<TYPE_PRECISION%> = %d", TYPE_MODE (type), TYPE_PRECISION (type));
++      error ("mangle: Please report this as a bug with the above diagnostic information");
++      gcc_unreachable ();
 +    }
- }
- 
- /* Handle a "no_sanitize" attribute; arguments as in
-@@ -1436,7 +1439,7 @@ static tree
- handle_no_sanitize_attribute (tree *node, tree name, tree args, int,
- 			      bool *no_add_attrs)
- {
--  unsigned int flags = 0;
-+  unsigned long long flags = 0;
-   *no_add_attrs = true;
-   if (TREE_CODE (*node) != FUNCTION_DECL)
-     {
-diff --git a/gcc/c/c-parser.cc b/gcc/c/c-parser.cc
-index 4a13fc0d3842..7a0e1d6de6f3 100644
---- a/gcc/c/c-parser.cc
-+++ b/gcc/c/c-parser.cc
-@@ -2822,7 +2822,7 @@ c_parser_declaration_or_fndef (c_parser *parser, bool fndef_ok,
- 			      specs->constexpr_p, &richloc);
- 		  /* A parameter is initialized, which is invalid.  Don't
- 		     attempt to instrument the initializer.  */
--		  int flag_sanitize_save = flag_sanitize;
-+		  unsigned long long flag_sanitize_save = flag_sanitize;
- 		  if (nested && !empty_ok)
- 		    flag_sanitize = 0;
- 		  init = c_parser_expr_no_commas (parser, NULL);
-@@ -2911,7 +2911,7 @@ c_parser_declaration_or_fndef (c_parser *parser, bool fndef_ok,
- 			      specs->constexpr_p, &richloc);
- 		  /* A parameter is initialized, which is invalid.  Don't
- 		     attempt to instrument the initializer.  */
--		  int flag_sanitize_save = flag_sanitize;
-+		  unsigned long long flag_sanitize_save = flag_sanitize;
- 		  if (TREE_CODE (d) == PARM_DECL)
- 		    flag_sanitize = 0;
- 		  init = c_parser_initializer (parser, d);
-diff --git a/gcc/common.opt b/gcc/common.opt
-index 70659fabebd5..f82f2b3f1b11 100644
---- a/gcc/common.opt
-+++ b/gcc/common.opt
-@@ -205,7 +205,7 @@ bool flag_opts_finished
- 
- ; What the sanitizer should instrument
- Variable
--unsigned int flag_sanitize
-+unsigned long long flag_sanitize
- 
- ; What sanitizers should recover from errors
- Variable
-diff --git a/gcc/cp/typeck.cc b/gcc/cp/typeck.cc
-index f592894e01ab..c26b2fb8939b 100644
---- a/gcc/cp/typeck.cc
-+++ b/gcc/cp/typeck.cc
-@@ -4287,7 +4287,7 @@ get_member_function_from_ptrfunc (tree *instance_ptrptr, tree function,
-       idx = build1 (NOP_EXPR, vtable_index_type, e3);
-       switch (TARGET_PTRMEMFUNC_VBIT_LOCATION)
- 	{
--	  int flag_sanitize_save;
-+	  unsigned long long flag_sanitize_save;
- 	case ptrmemfunc_vbit_in_pfn:
- 	  e1 = cp_build_binary_op (input_location,
- 				   BIT_AND_EXPR, idx, integer_one_node,
-diff --git a/gcc/d/d-attribs.cc b/gcc/d/d-attribs.cc
-index 77315dc5d58d..a1712f996bdc 100644
---- a/gcc/d/d-attribs.cc
-+++ b/gcc/d/d-attribs.cc
-@@ -1406,7 +1406,7 @@ d_handle_no_sanitize_attribute (tree *node, tree name, tree args, int,
-       return NULL_TREE;
-     }
- 
--  unsigned int flags = 0;
-+  unsigned long long flags = 0;
-   for (; args; args = TREE_CHAIN (args))
-     {
-       tree id = TREE_VALUE (args);
-@@ -1424,16 +1424,16 @@ d_handle_no_sanitize_attribute (tree *node, tree name, tree args, int,
-      merge existing flags if no_sanitize was previously handled.  */
-   if (tree attr = lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (*node)))
-     {
--      unsigned int old_value = tree_to_uhwi (TREE_VALUE (attr));
-+      unsigned long long old_value = tree_to_uhwi (TREE_VALUE (attr));
-       flags |= old_value;
- 
-       if (flags != old_value)
--	TREE_VALUE (attr) = build_int_cst (d_uint_type, flags);
-+	TREE_VALUE (attr) = build_int_cst (long_long_unsigned_type_node, flags);
-     }
-   else
-     {
-       DECL_ATTRIBUTES (*node) = tree_cons (get_identifier ("no_sanitize"),
--					   build_int_cst (d_uint_type, flags),
-+					   build_int_cst (long_long_unsigned_type_node, flags),
- 					   DECL_ATTRIBUTES (*node));
-     }
- 
-diff --git a/gcc/dwarf2asm.cc b/gcc/dwarf2asm.cc
-index ec5c684da479..6f193a68bf9d 100644
---- a/gcc/dwarf2asm.cc
-+++ b/gcc/dwarf2asm.cc
-@@ -1041,7 +1041,7 @@ dw2_output_indirect_constant_1 (const char *sym, tree id)
-   sym_ref = gen_rtx_SYMBOL_REF (Pmode, sym);
-   /* Disable ASan for decl because redzones cause ABI breakage between GCC and
-      libstdc++ for `.LDFCM*' variables.  See PR 78651 for details.  */
--  unsigned int save_flag_sanitize = flag_sanitize;
-+  unsigned long long save_flag_sanitize = flag_sanitize;
-   flag_sanitize &= ~(SANITIZE_ADDRESS | SANITIZE_USER_ADDRESS
- 		     | SANITIZE_KERNEL_ADDRESS);
-   /* And also temporarily disable -fsection-anchors.  These indirect constants
-diff --git a/gcc/opts.cc b/gcc/opts.cc
-index c21e66ba9171..5fd86aa89adb 100644
---- a/gcc/opts.cc
-+++ b/gcc/opts.cc
-@@ -2168,9 +2168,9 @@ const struct sanitizer_opts_s sanitizer_opts[] =
-   SANITIZER_OPT (pointer-overflow, SANITIZE_POINTER_OVERFLOW, true, true),
-   SANITIZER_OPT (builtin, SANITIZE_BUILTIN, true, true),
-   SANITIZER_OPT (shadow-call-stack, SANITIZE_SHADOW_CALL_STACK, false, false),
--  SANITIZER_OPT (all, ~0U, true, true),
-+  SANITIZER_OPT (all, ~0ULL, true, true),
- #undef SANITIZER_OPT
--  { NULL, 0U, 0UL, false, false }
-+  { NULL, 0ULL, 0UL, false, false }
- };
- 
- /* -fzero-call-used-regs= suboptions.  */
-@@ -2241,7 +2241,7 @@ get_closest_sanitizer_option (const string_fragment &arg,
-     {
-       /* -fsanitize=all is not valid, so don't offer it.  */
-       if (code == OPT_fsanitize_
--	  && opts[i].flag == ~0U
-+	  && opts[i].flag == ~0ULL
- 	  && value)
- 	continue;
- 
-@@ -2268,9 +2268,9 @@ get_closest_sanitizer_option (const string_fragment &arg,
-    adjust previous FLAGS and return new ones.  If COMPLAIN is false,
-    don't issue diagnostics.  */
- 
--unsigned int
-+unsigned long long
- parse_sanitizer_options (const char *p, location_t loc, int scode,
--			 unsigned int flags, int value, bool complain)
-+			 unsigned long long flags, int value, bool complain)
- {
-   enum opt_code code = (enum opt_code) scode;
- 
-@@ -2296,7 +2296,7 @@ parse_sanitizer_options (const char *p, location_t loc, int scode,
- 	    && memcmp (p, sanitizer_opts[i].name, len) == 0)
- 	  {
- 	    /* Handle both -fsanitize and -fno-sanitize cases.  */
--	    if (value && sanitizer_opts[i].flag == ~0U)
-+	    if (value && sanitizer_opts[i].flag == ~0ULL)
- 	      {
- 		if (code == OPT_fsanitize_)
- 		  {
-@@ -2377,10 +2377,10 @@ parse_sanitizer_options (const char *p, location_t loc, int scode,
- /* Parse string values of no_sanitize attribute passed in VALUE.
-    Values are separated with comma.  */
- 
--unsigned int
-+unsigned long long
- parse_no_sanitize_attribute (char *value)
- {
--  unsigned int flags = 0;
-+  unsigned long long flags = 0;
-   unsigned int i;
-   char *q = strtok (value, ",");
- 
++}
++
++/* Canonicalize typedef types to their underlying named struct/union types.  */
++static tree
++canonicalize_typedef_type (tree type)
++{
++  /* Handle typedef types - canonicalize to named structs when possible.  */
++  if (TYPE_NAME (type) && TREE_CODE (TYPE_NAME (type)) == TYPE_DECL)
++    {
++      tree type_decl = TYPE_NAME (type);
++
++      /* Check if this is a typedef (not the original struct declaration) */
++      if (DECL_ORIGINAL_TYPE (type_decl))
++	{
++	  tree original_type = DECL_ORIGINAL_TYPE (type_decl);
++
++	  /* If the original type is a named struct/union/enum, use that instead.  */
++	  if ((TREE_CODE (original_type) == RECORD_TYPE
++	       || TREE_CODE (original_type) == UNION_TYPE
++	       || TREE_CODE (original_type) == ENUMERAL_TYPE)
++	      && TYPE_NAME (original_type)
++	      && ((TREE_CODE (TYPE_NAME (original_type)) == TYPE_DECL
++		   && DECL_NAME (TYPE_NAME (original_type)))
++		  || TREE_CODE (TYPE_NAME (original_type)) == IDENTIFIER_NODE))
++	    {
++	      /* Recursively canonicalize in case the original type is also a typedef.  */
++	      return canonicalize_typedef_type (original_type);
++	    }
++
++	  /* For basic type typedefs (e.g., u8 -> unsigned char), canonicalize to original type.  */
++	  if (TREE_CODE (original_type) == INTEGER_TYPE
++	      || TREE_CODE (original_type) == REAL_TYPE
++	      || TREE_CODE (original_type) == POINTER_TYPE
++	      || TREE_CODE (original_type) == ARRAY_TYPE
++	      || TREE_CODE (original_type) == FUNCTION_TYPE
++	      || TREE_CODE (original_type) == METHOD_TYPE
++	      || TREE_CODE (original_type) == BOOLEAN_TYPE
++	      || TREE_CODE (original_type) == COMPLEX_TYPE
++	      || TREE_CODE (original_type) == VECTOR_TYPE)
++	    {
++	      /* Recursively canonicalize in case the original type is also a typedef.  */
++	      return canonicalize_typedef_type (original_type);
++	    }
++	}
++    }
++
++  return type;
++}
++
++/* Recursively mangle a type following Itanium C++ ABI conventions.  */
++static void
++mangle_type_to_buffer (tree type, char **p, char *end)
++{
++  gcc_assert (type != NULL_TREE);
++  gcc_assert (p != NULL && *p != NULL && end != NULL);
++  gcc_assert (*p < end);
++
++  if (*p >= end)
++    return;
++
++  /* Canonicalize typedef types to their underlying named struct types.  */
++  type = canonicalize_typedef_type (type);
++
++  switch (TREE_CODE (type))
++    {
++    case POINTER_TYPE:
++      {
++	/* Pointer type: 'P' + qualifiers + pointed-to type.  */
++	**p = 'P';
++	(*p)++;
++
++	/* Add qualifiers to the pointed-to type following Itanium C++ ABI ordering.  */
++	tree pointed_to_type = TREE_TYPE (type);
++	if (TYPE_QUALS (pointed_to_type) != TYPE_UNQUALIFIED)
++	  {
++	    /* Emit qualifiers in Itanium ABI order: restrict, volatile, const.  */
++	    if (TYPE_QUALS (pointed_to_type) & TYPE_QUAL_RESTRICT)
++	      {
++		**p = 'r';
++		(*p)++;
++	      }
++	    if (TYPE_QUALS (pointed_to_type) & TYPE_QUAL_VOLATILE)
++	      {
++		**p = 'V';
++		(*p)++;
++	      }
++	    if (TYPE_QUALS (pointed_to_type) & TYPE_QUAL_CONST)
++	      {
++		**p = 'K';
++		(*p)++;
++	      }
++	    /* Note: _Atomic is not typically used in kernel code.  */
++	  }
++
++	/* For KCFI's hybrid type system: preserve typedef names for compound types,
++	   but use canonical forms for primitive types.  */
++	tree target_type;
++	if (TREE_CODE (pointed_to_type) == RECORD_TYPE
++	    || TREE_CODE (pointed_to_type) == UNION_TYPE
++	    || TREE_CODE (pointed_to_type) == ENUMERAL_TYPE)
++	  {
++	    /* Compound type: preserve typedef information by using original type.  */
++	    target_type = pointed_to_type;
++	  }
++	else
++	  {
++	    /* Primitive type: use canonical form to ensure structural typing.  */
++	    target_type = TYPE_MAIN_VARIANT (pointed_to_type);
++	  }
++	mangle_type_to_buffer (target_type, p, end);
++	break;
++      }
++
++    case ARRAY_TYPE:
++      /* Array type: 'A' + size + '_' + element type (simplified).  */
++      **p = 'A';
++      (*p)++;
++      if (TYPE_DOMAIN (type) && TYPE_MAX_VALUE (TYPE_DOMAIN (type)))
++	{
++	  HOST_WIDE_INT size = tree_to_shwi (TYPE_MAX_VALUE (TYPE_DOMAIN (type))) + 1;
++	  *p += snprintf (*p, end - *p, "%ld_", (long) size);
++	}
++      else
++	{
++	  **p = '_';
++	  (*p)++;
++	}
++      mangle_type_to_buffer (TREE_TYPE (type), p, end);
++      break;
++
++    case FUNCTION_TYPE:
++      {
++	/* Function type: 'F' + return type + parameter types + 'E' */
++	**p = 'F';
++	(*p)++;
++	mangle_type_to_buffer (TREE_TYPE (type), p, end);
++
++	/* Add parameter types.  */
++	tree param_types = TYPE_ARG_TYPES (type);
++
++	if (param_types == NULL_TREE)
++	  {
++	    /* func() - variadic function, no parameter list.
++	       Don't mangle any parameters. */
++	  }
++	else
++	  {
++	    bool found_real_params = false;
++	    for (tree param = param_types; param && *p < end; param = TREE_CHAIN (param))
++	      {
++	        tree param_type = TREE_VALUE (param);
++	        if (param_type == void_type_node)
++	          {
++	            /* Check if this is the first parameter (explicit void) or a sentinel */
++	            if (!found_real_params)
++	              {
++	                /* func(void) - explicit empty parameter list.
++	                   Mangle void to distinguish from variadic func(). */
++	                mangle_type_to_buffer (void_type_node, p, end);
++	              }
++	            /* If we found real params before this void, it's a sentinel - stop */
++	            break;
++	          }
++
++	        found_real_params = true;
++
++	        /* For value parameters, ignore const/volatile qualifiers as they
++	           don't affect the calling convention.  const int and int are
++	           passed identically by value.  */
++	        tree canonical_param_type = param_type;
++	        if (TREE_CODE (param_type) != POINTER_TYPE
++	            && TREE_CODE (param_type) != REFERENCE_TYPE
++	            && TREE_CODE (param_type) != ARRAY_TYPE)
++	          {
++	            /* Strip qualifiers for non-pointer/reference value parameters.  */
++	            canonical_param_type = TYPE_MAIN_VARIANT (param_type);
++	          }
++
++	        mangle_type_to_buffer (canonical_param_type, p, end);
++	      }
++	  }
++
++	**p = 'E';
++	(*p)++;
++	break;
++      }
++
++    case RECORD_TYPE:
++    case UNION_TYPE:
++    case ENUMERAL_TYPE:
++      {
++	/* Struct/union/enum: use simplified representation for C types.  */
++	const char *name = NULL;
++
++	if (TYPE_NAME (type))
++	  {
++	    if (TREE_CODE (TYPE_NAME (type)) == TYPE_DECL)
++	      {
++		/* TYPE_DECL case: both named structs and typedef structs.  */
++		tree decl_name = DECL_NAME (TYPE_NAME (type));
++		if (decl_name && TREE_CODE (decl_name) == IDENTIFIER_NODE)
++		  {
++		    name = IDENTIFIER_POINTER (decl_name);
++		  }
++	      }
++	    else if (TREE_CODE (TYPE_NAME (type)) == IDENTIFIER_NODE)
++	      {
++		/* Direct identifier case.  */
++		name = IDENTIFIER_POINTER (TYPE_NAME (type));
++	      }
++	  }
++
++	/* If no name found through normal extraction, handle anonymous types following Itanium C++ ABI.  */
++	if (!name && !TYPE_NAME (type))
++	  {
++	    static char anon_name[128];
++
++	    if (TREE_CODE (type) == UNION_TYPE)
++	      {
++		/* For anonymous unions, try to find first named field (Itanium ABI approach).  */
++		tree field = TYPE_FIELDS (type);
++		while (field && !DECL_NAME (field))
++		  field = DECL_CHAIN (field);
++
++		if (field && DECL_NAME (field))
++		  {
++		    const char *field_name = IDENTIFIER_POINTER (DECL_NAME (field));
++		    snprintf (anon_name, sizeof(anon_name), "anon_union_by_%s", field_name);
++		  }
++		else
++		  {
++		    /* No named fields - use Itanium-style Ut encoding.  */
++		    snprintf (anon_name, sizeof(anon_name), "Ut_unnamed_union");
++		  }
++	      }
++	    else
++	      {
++		/* For anonymous structs/enums, use Itanium-style Ut encoding with layout info for discrimination.  */
++		const char *type_prefix = "";
++		if (TREE_CODE (type) == RECORD_TYPE)
++		  type_prefix = "struct";
++		else if (TREE_CODE (type) == ENUMERAL_TYPE)
++		  type_prefix = "enum";
++
++		/* Include size and field layout for better discrimination.  */
++		HOST_WIDE_INT size = 0;
++		if (TYPE_SIZE (type) && tree_fits_shwi_p (TYPE_SIZE (type)))
++		  size = tree_to_shwi (TYPE_SIZE (type));
++
++		/* Generate a hash based on field layout to distinguish same-sized anonymous types.  */
++		unsigned layout_hash = 0;
++		if (TREE_CODE (type) == RECORD_TYPE)
++		  {
++		    for (tree field = TYPE_FIELDS (type); field; field = DECL_CHAIN (field))
++		      {
++			if (TREE_CODE (field) == FIELD_DECL)
++			  {
++			    /* Hash field offset and type.  */
++			    if (DECL_FIELD_OFFSET (field))
++			      {
++				HOST_WIDE_INT offset = tree_to_shwi (DECL_FIELD_OFFSET (field));
++				layout_hash = layout_hash * 31 + (unsigned)offset;
++			      }
++
++			    /* Hash field type.  */
++			    tree field_type = TREE_TYPE (field);
++			    if (field_type && TYPE_MODE (field_type) != VOIDmode)
++			      layout_hash = layout_hash * 37 + (unsigned)TYPE_MODE (field_type);
++			  }
++		      }
++		  }
++
++		if (layout_hash != 0)
++		  snprintf (anon_name, sizeof(anon_name), "Ut_%s_%ld_%x", type_prefix, (long)size, layout_hash);
++		else
++		  snprintf (anon_name, sizeof(anon_name), "Ut_%s_%ld", type_prefix, (long)size);
++	      }
++
++	    name = anon_name;
++	  }
++
++	if (name)
++	  {
++	    *p += snprintf (*p, end - *p, "%zu%s", strlen (name), name);
++	  }
++	else
++	  {
++	    /* Always show diagnostic information for missing struct names.  */
++	    error ("mangle: No struct/union/enum name found for type code %d (%qs)",
++		   TREE_CODE (type), get_tree_code_name (TREE_CODE (type)));
++	    if (TYPE_NAME (type))
++	      {
++		error ("mangle: %<TYPE_NAME%> exists but extraction failed");
++		error ("mangle: %<TYPE_NAME%> tree code = %d", TREE_CODE (TYPE_NAME (type)));
++		if (TREE_CODE (TYPE_NAME (type)) == TYPE_DECL)
++		  {
++		    tree decl_name = DECL_NAME (TYPE_NAME (type));
++		    error ("mangle: %<TYPE_DECL%> %<DECL_NAME%> = %p", (void*)decl_name);
++		    if (decl_name && TREE_CODE (decl_name) == IDENTIFIER_NODE)
++		      error ("mangle: %<IDENTIFIER_NODE%> name = '%s'", IDENTIFIER_POINTER (decl_name));
++		  }
++		else if (TREE_CODE (TYPE_NAME (type)) == IDENTIFIER_NODE)
++		  {
++		    error ("mangle: %<IDENTIFIER_NODE%> name = '%s'", IDENTIFIER_POINTER (TYPE_NAME (type)));
++		  }
++		else
++		  {
++		    error ("mangle: Unknown %<TYPE_NAME%> tree code = %d", TREE_CODE (TYPE_NAME (type)));
++		  }
++	      }
++	    else
++	      {
++		error ("mangle: %<TYPE_NAME%> is NULL - anonymous struct/union/enum detected");
++	      }
++
++	    /* This indicates a missing case in our struct name extraction.  */
++	    error ("mangle: Please report this as a bug with the above diagnostic information");
++	    gcc_unreachable ();
++	  }
++	break;
++      }
++
++    default:
++      /* Handle builtin types.  */
++      mangle_builtin_type_to_buffer (type, p, end);
++      break;
++    }
++}
++
++/* Compute canonical type name using Itanium C++ ABI mangling.
++   Accepts either FUNCTION_DECL (preferred for typedef preservation) or FUNCTION_TYPE.  */
++const char *
++mangle_function_type (tree fntype_or_fndecl)
++{
++  gcc_assert (fntype_or_fndecl);
++
++  tree fntype = NULL;
++
++  /* Determine input type and extract function type.  */
++  if (TREE_CODE (fntype_or_fndecl) == FUNCTION_TYPE)
++    {
++      /* Already FUNCTION_TYPE.  */
++      fntype = fntype_or_fndecl;
++    }
++  else if (TREE_CODE (fntype_or_fndecl) == FUNCTION_DECL)
++    {
++      tree fndecl = fntype_or_fndecl;
++      tree base_fntype = TREE_TYPE (fndecl);
++
++      /* For FUNCTION_DECL, build a synthetic function type using DECL_ARGUMENTS
++	 if available to preserve typedef information.  */
++      tree parm = DECL_ARGUMENTS (fndecl);
++      if (parm)
++	{
++	  /* Build parameter type list from DECL_ARGUMENTS.  */
++	  tree param_list = NULL_TREE;
++	  tree *param_tail = &param_list;
++
++	  for (; parm; parm = DECL_CHAIN (parm))
++	    {
++	      tree parm_type = TREE_TYPE (parm);
++	      *param_tail = tree_cons (NULL_TREE, parm_type, NULL_TREE);
++	      param_tail = &TREE_CHAIN (*param_tail);
++	    }
++
++	  /* Add void_type_node sentinel if the function takes no parameters.  */
++	  if (!param_list)
++	    param_list = tree_cons (NULL_TREE, void_type_node, NULL_TREE);
++
++	  /* Build synthetic function type with preserved parameter types.  */
++	  fntype = build_function_type (TREE_TYPE (base_fntype), param_list);
++	}
++      else
++	{
++	  /* No DECL_ARGUMENTS - use the standard function type.  */
++	  fntype = base_fntype;
++	}
++    }
++  else
++    {
++      /* Must only be called with FUNCTION_DECL or FUNCTION_TYPE.  */
++      gcc_unreachable ();
++    }
++
++  static char name_buf[512];
++  char *p = name_buf;
++  char *end = name_buf + sizeof (name_buf) - 1;
++
++  /* Typeinfo for a function prototype.  */
++  p += sprintf(name_buf, "_ZTSP");
++
++  /* Use mangle_type_to_buffer for all cases.  */
++  mangle_type_to_buffer (fntype, &p, end);
++
++  /* Ensure we didn't overflow the buffer.  */
++  gcc_assert (p <= end);
++  *p = '\0';
++  return name_buf;
++}
 -- 
 2.34.1
 
