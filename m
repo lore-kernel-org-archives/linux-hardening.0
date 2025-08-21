@@ -1,112 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DB3308F02;
-	Thu, 21 Aug 2025 10:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D4213A265
+	for <linux-hardening@vger.kernel.org>; Thu, 21 Aug 2025 11:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755773414; cv=none; b=g+2W7wWTLH8GicqRyQEOeulhllSTxl2djV55e2b2y8piKkbjBj8SFBis4dkCKZ5WyMjx8zUaJ4qbTO09u2qZhoH3FUdZAt2lIXWsIILNYCmYDuevfWwS4nH3Vc/Sh3xgmgqjHI2Yku9lZa2wHqKOHCJaVRICYC3b9fXgZrFcbKI=
+	t=1755774102; cv=none; b=HWSGGvftn+46IsfG9kMrKtJozXbPXZAos9DiAaHgZ8nVN9JwKnpk0ci5Ds0GlmdVpbQSToEGr6RLHt6Ob4z63WZ2PCZCWBgAgD+vp6Z3cx4K1+Hu8OmakorTX0gSeSdJWARDxKvBqgf7jSgiBpHFKgZvi7XAZs267J/j9gWgA5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755773414; c=relaxed/simple;
-	bh=3pWLHc7LmGxgUyl74J5LFWhSFK0KCYRgf/oJ2btTLDI=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=JNA90HiKf8ce6WalzuRukEfdlyVPe2oONvNREXJ5JzqE1MKXPS6VUxb2QXoyLT9aZCYUKa6iAXARrBpnHH0zHn5PshkvvSg/AMEd5t/hE7vIgM/lp+eoUOMe83Oq64Lnve0sMd/6gf1eVEoDKEiRx3f/9jGb3ybdO2hnB6DdDGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnkrqOXH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755774102; c=relaxed/simple;
+	bh=tnrFrSyrtfd5q9IR099beA6KX8ykePjXKprgoNsqNFU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pFUecKySFD4MNVPpPW595INc9gFwj58fC6yhqAz5Md9Su92lfvZEPAtt1ww3Ou7ZyHp5FPWf+mTevyjBCdp/Y7s7HKZE9K7w0t0GIh82VCwOv4jJ0l5rUdRxa8n82zsGaTTz+1etPWwAMf5IUJSltRk6ufp01wf6lhVmnpdA5+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Pu64i8kU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tQapGghV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Pu64i8kU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tQapGghV; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnkrqOXH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDF9EC4CEEB;
-	Thu, 21 Aug 2025 10:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755773414;
-	bh=3pWLHc7LmGxgUyl74J5LFWhSFK0KCYRgf/oJ2btTLDI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=mnkrqOXHzIRqsY8fvy/vAHAEDK9+sT2XcxY9xn12xK8HxrmGkTImR/ebMLe6Xg81K
-	 9NQTFTqJSFPSMl1S6PaYn/sges8X/7fUeBexkwwPwHhijE5L4pVmhP32LC2miHSKKv
-	 o+nLUJVkitI9LhycxaVByhD0TBaA+/bYlJ5rmOgbjzMVrrRuj7hzj900DDSYfFA7eT
-	 F9UxuUaKuim+ajVoK30suue2H+MhKvSxNCJNYqnW9EAKC+lFh2QLnm4RDGRI1Y470n
-	 k2u/PlhV7243xai0eq/2QifGsf0oVFHbar0dCoNJwDLXufGu6cV0nNGGqblMvlI0MU
-	 VMsNbFt4ZU3Fw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70F05383BF5B;
-	Thu, 21 Aug 2025 10:50:24 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Pu64i8kU";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tQapGghV";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Pu64i8kU";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tQapGghV"
+Received: from murzim.nue2.suse.org (unknown [10.168.4.243])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A06CA1F836;
+	Thu, 21 Aug 2025 11:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1755774097; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=09eW29bqX7oU+z4yOLmLM37wMoYZmdB2WE04HEealMk=;
+	b=Pu64i8kU+xYOQM8+WUxdH00zldh7RpeQ+koLF6eCfToRmQIfdDoWnAV8IDwtqodd3em7Hj
+	kO6hdFd9b3GB5XybK3CERt1IwBuPzEnEVezAJDzRBdnEXValAEa8P2Fqwjz7ln53fmERqr
+	aDNionoRbAYkVb+5OymqcvzQ7+AH6ig=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1755774097;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=09eW29bqX7oU+z4yOLmLM37wMoYZmdB2WE04HEealMk=;
+	b=tQapGghV1IM0ESt//c85lsJWhCO2z67dINLjP0b6Gzf8QqzQxHxLma8MPSsw1e8JCcNUcI
+	zWH92pxZyemDPsAA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1755774097; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=09eW29bqX7oU+z4yOLmLM37wMoYZmdB2WE04HEealMk=;
+	b=Pu64i8kU+xYOQM8+WUxdH00zldh7RpeQ+koLF6eCfToRmQIfdDoWnAV8IDwtqodd3em7Hj
+	kO6hdFd9b3GB5XybK3CERt1IwBuPzEnEVezAJDzRBdnEXValAEa8P2Fqwjz7ln53fmERqr
+	aDNionoRbAYkVb+5OymqcvzQ7+AH6ig=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1755774097;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=09eW29bqX7oU+z4yOLmLM37wMoYZmdB2WE04HEealMk=;
+	b=tQapGghV1IM0ESt//c85lsJWhCO2z67dINLjP0b6Gzf8QqzQxHxLma8MPSsw1e8JCcNUcI
+	zWH92pxZyemDPsAA==
+Date: Thu, 21 Aug 2025 13:01:37 +0200 (CEST)
+From: Richard Biener <rguenther@suse.de>
+To: Peter Zijlstra <peterz@infradead.org>
+cc: Andrew Pinski <andrew.pinski@oss.qualcomm.com>, 
+    Kees Cook <kees@kernel.org>, Qing Zhao <qing.zhao@oracle.com>, 
+    gcc-patches@gcc.gnu.org, Joseph Myers <josmyers@redhat.com>, 
+    Jan Hubicka <hubicka@ucw.cz>, Richard Earnshaw <richard.earnshaw@arm.com>, 
+    Richard Sandiford <richard.sandiford@arm.com>, 
+    Marcus Shawcroft <marcus.shawcroft@arm.com>, 
+    Kyrylo Tkachov <kyrylo.tkachov@arm.com>, Kito Cheng <kito.cheng@gmail.com>, 
+    Palmer Dabbelt <palmer@dabbelt.com>, Andrew Waterman <andrew@sifive.com>, 
+    Jim Wilson <jim.wilson.gcc@gmail.com>, Dan Li <ashimida.1990@gmail.com>, 
+    linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH 3/7] kcfi: Add core Kernel Control Flow Integrity
+ infrastructure
+In-Reply-To: <20250821091220.GM4067720@noisy.programming.kicks-ass.net>
+Message-ID: <q93o5262-po30-8n51-o17s-qrn0q96o51qp@fhfr.qr>
+References: <20250821064202.work.893-kees@kernel.org> <20250821072708.3109244-3-kees@kernel.org> <CALvbMcA+8iHo+zCCvs4UdAg9PVQVtgOno-rtMS4i5YajrjkyGw@mail.gmail.com> <20250821091220.GM4067720@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v8 00/14] Add PPE driver for Qualcomm IPQ9574 SoC
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175577342325.986145.13841394351982921726.git-patchwork-notify@kernel.org>
-Date: Thu, 21 Aug 2025 10:50:23 +0000
-References: <20250818-qcom_ipq_ppe-v8-0-1d4ff641fce9@quicinc.com>
-In-Reply-To: <20250818-qcom_ipq_ppe-v8-0-1d4ff641fce9@quicinc.com>
-To: Luo Jie <quic_luoj@quicinc.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, quic_leiwei@quicinc.com, quic_suruchia@quicinc.com,
- quic_pavir@quicinc.com, horms@kernel.org, corbet@lwn.net, kees@kernel.org,
- gustavoars@kernel.org, p.zabel@pengutronix.de, linux-arm-msm@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-hardening@vger.kernel.org, quic_kkumarcs@quicinc.com,
- quic_linchen@quicinc.com
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_COUNT_ZERO(0.00)[0];
+	R_RATELIMIT(0.00)[from(RL8y3m6pz8udumc8k65cwet)];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[oss.qualcomm.com,kernel.org,oracle.com,gcc.gnu.org,redhat.com,ucw.cz,arm.com,gmail.com,dabbelt.com,sifive.com,vger.kernel.org];
+	TAGGED_RCPT(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[fhfr.qr:mid,murzim.nue2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -2.80
 
-Hello:
+On Thu, 21 Aug 2025, Peter Zijlstra wrote:
 
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Mon, 18 Aug 2025 21:14:24 +0800 you wrote:
-> The PPE (packet process engine) hardware block is available in Qualcomm
-> IPQ chipsets that support PPE architecture, such as IPQ9574 and IPQ5332.
-> The PPE in the IPQ9574 SoC includes six Ethernet ports (6 GMAC and 6
-> XGMAC), which are used to connect with external PHY devices by PCS. The
-> PPE also includes packet processing offload capabilities for various
-> networking functions such as route and bridge flows, VLANs, different
-> tunnel protocols and VPN. It also includes an L2 switch function for
-> bridging packets among the 6 Ethernet ports and the CPU port. The CPU
-> port enables packet transfer between the Ethernet ports and the ARM
-> cores in the SoC, using the Ethernet DMA.
+> On Thu, Aug 21, 2025 at 01:16:56AM -0700, Andrew Pinski wrote:
 > 
-> [...]
+> > > +/* Compute KCFI type ID for a function declaration or function type
+> > > (internal) */
+> > > +static uint32_t
+> > > +compute_kcfi_type_id (tree fntype_or_fndecl)
+> > > +{
+> > > +  if (!fntype_or_fndecl)
+> > > +    return 0;
+> > > +
+> > > +  const char *canonical_name = mangle_function_type (fntype_or_fndecl);
+> > > +  uint32_t base_type_id = kcfi_hash_string (canonical_name);
+> > >
+> > 
+> > Now I am curious why this needs to be a mangled function name? Since the
+> > function in C the symbol is just its name.
+> > Is there documentation that says the hash needs to be based on all of the
+> > function arguments types?
+> 
+> The whole point of kCFI is to limit the targets of indirect calls to
+> functions of the same signature. The actual function name is immaterial.
 
-Here is the summary with links:
-  - [net-next,v8,01/14] dt-bindings: net: Add PPE for Qualcomm IPQ9574 SoC
-    https://git.kernel.org/netdev/net-next/c/1898fc572118
-  - [net-next,v8,02/14] docs: networking: Add PPE driver documentation for Qualcomm IPQ9574 SoC
-    https://git.kernel.org/netdev/net-next/c/6b9f301985a3
-  - [net-next,v8,03/14] net: ethernet: qualcomm: Add PPE driver for IPQ9574 SoC
-    https://git.kernel.org/netdev/net-next/c/353a0f1d5b27
-  - [net-next,v8,04/14] net: ethernet: qualcomm: Initialize PPE buffer management for IPQ9574
-    https://git.kernel.org/netdev/net-next/c/8a971df98c4e
-  - [net-next,v8,05/14] net: ethernet: qualcomm: Initialize PPE queue management for IPQ9574
-    https://git.kernel.org/netdev/net-next/c/806268dc7efd
-  - [net-next,v8,06/14] net: ethernet: qualcomm: Initialize the PPE scheduler settings
-    https://git.kernel.org/netdev/net-next/c/331227983814
-  - [net-next,v8,07/14] net: ethernet: qualcomm: Initialize PPE queue settings
-    https://git.kernel.org/netdev/net-next/c/7a23a8af179d
-  - [net-next,v8,08/14] net: ethernet: qualcomm: Initialize PPE service code settings
-    https://git.kernel.org/netdev/net-next/c/73d05bdaf01e
-  - [net-next,v8,09/14] net: ethernet: qualcomm: Initialize PPE port control settings
-    https://git.kernel.org/netdev/net-next/c/8821bb0f6262
-  - [net-next,v8,10/14] net: ethernet: qualcomm: Initialize PPE RSS hash settings
-    https://git.kernel.org/netdev/net-next/c/1c46c3c0075c
-  - [net-next,v8,11/14] net: ethernet: qualcomm: Initialize PPE queue to Ethernet DMA ring mapping
-    https://git.kernel.org/netdev/net-next/c/fa99608a9a9e
-  - [net-next,v8,12/14] net: ethernet: qualcomm: Initialize PPE L2 bridge settings
-    https://git.kernel.org/netdev/net-next/c/8cc72c6c9236
-  - [net-next,v8,13/14] net: ethernet: qualcomm: Add PPE debugfs support for PPE counters
-    https://git.kernel.org/netdev/net-next/c/a2a7221dbd2b
-  - [net-next,v8,14/14] MAINTAINERS: Add maintainer for Qualcomm PPE driver
-    https://git.kernel.org/netdev/net-next/c/ad5cef7ef01c
+What's the attack vector and how does kCFI achieve mitigating it?
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Richard.
