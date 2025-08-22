@@ -1,53 +1,49 @@
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71239308F16;
-	Fri, 22 Aug 2025 14:34:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8563126CB;
+	Fri, 22 Aug 2025 14:43:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755873284; cv=none; b=tFJ3t5hRBmJXuWkPNAvvzIB4Hp08rEx9aYQS9CSHeMwgRg+Ww1a7R4bZtyRKmZi8U1KhLHiHpWDF3feoOnuW1qa1sgLY6cORKL6g6E7VWKyrDiJBZYcthG4x6BRDE6iEll3VjfvSLGpshN9REnWFxmM+lTYtgSELFGEx/f8qbKM=
+	t=1755873831; cv=none; b=pI2XqfSfG05qA0qfAn8eHrbVu9Q2IIW6n7Gw82aQSdEJnmepkT5ajxVnzS8RMocDvQD7vZ8+5UBDpaA4LEfqlAwLAmpnzGyNoeXz3NSb3sIGq1/bpYH5fB0SFW99EOAIgKbEFVEHmkCJbeXSlazIZcwP31TPu1sTYtPTsl4SM+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755873284; c=relaxed/simple;
-	bh=VII7U6zoNNMy6Odpt6FG1UI25vengIXA2fltFhm+W7Y=;
+	s=arc-20240116; t=1755873831; c=relaxed/simple;
+	bh=WPMCrHHzE2hhfHZBnURWyoybvJ5z/YbKy51IBm6AuvE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A0i+WwGJuV0MSPEsNC/Hq5OZkApinVbUa00QkK7rmoLT7FY1Vh8wjVRFHzvaxtYVGwBgpLt95z8PNCzRzcabtYMXjg56KwluAsw+M17PdEboIhxt7MHIISeAPCVQShG0+lHnHBO6tt6x+qV0dAdZ0r28rQEHUnS9BYO4fNrFo5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ouDdew2s; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZbxXvTTCslgbyeyY99C0rsPJkuiyyvQ6DLQ8w/1hE7XxhkQLOASXkkisJwjsNrxrLa70F7nNwnIZ5Xrv8CRn3qbeqIroUSYXAkKKdy/qLqpUuBDUJBAywh5ZTXytP0l/D1hkipozGso4n9/R5n+yZboQRBzHc1kjS8oJ8SZq8Sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=uJ3Lzm8y; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ouDdew2s"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uJ3Lzm8y"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=ogSGEAU2urSqL2qER3Zt/zAjp+FjNQ7ySdicQ6sxfPM=; b=ouDdew2scoE5UdbmgR+qZ6fyUY
-	ixVCBd5kSQvJG2mCWuXRTFp+I/74SXkF0H7ZcKef+NiMw7BMrk7UeFBNoJwyL6M+EMIVVNV5Xohh8
-	Bp/H+DUd8b5kGHuR0ljOFinlLEPzfAsuf7l6eZVz7YB1qALzU/l5O1IXgTdJn+IRg3DE=;
+	bh=rScHYwZSlxC2HrLw2hQbx6nHAeXoUXmhjKWdXFiabhg=; b=uJ3Lzm8yODr7Mfw7U+hOsyrOxd
+	BQEFdwgg9n1pSGQ1qELsnLAXTs0f6Q/CFSFpaMpf0Rb5IMPm1ES0YCaDNieSxpFs6KlVzSmi+5qkN
+	0kPYaH9kdL3gYiMBFwoAiLqJ9m37j9RKxiZEw8ti5mIrFw4BbO3Cpi8hm8hAp6iE7A10=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1upSq2-005aXb-Dt; Fri, 22 Aug 2025 16:33:54 +0200
-Date: Fri, 22 Aug 2025 16:33:54 +0200
+	id 1upSz6-005acg-Kr; Fri, 22 Aug 2025 16:43:16 +0200
+Date: Fri, 22 Aug 2025 16:43:16 +0200
 From: Andrew Lunn <andrew@lunn.ch>
-To: Yibo Dong <dong100@mucse.com>
-Cc: Parthiban.Veerasooran@microchip.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
-	gur.stavi@huawei.com, maddy@linux.ibm.com, mpe@ellerman.id.au,
-	danishanwar@ti.com, lee@trager.us, gongfan1@huawei.com,
-	lorenzo@kernel.org, geert+renesas@glider.be,
-	lukas.bulwahn@redhat.com, alexanderduyck@fb.com,
-	richardcochran@gmail.com, kees@kernel.org, gustavoars@kernel.org,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+To: Dong Yibo <dong100@mucse.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
+	gustavoars@kernel.org, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
 Subject: Re: [PATCH net-next v7 4/5] net: rnpgbe: Add basic mbx_fw support
-Message-ID: <b488b893-389f-4c20-b2c3-23071279272c@lunn.ch>
+Message-ID: <a066746c-2f12-4e70-b63a-7996392a9132@lunn.ch>
 References: <20250822023453.1910972-1-dong100@mucse.com>
  <20250822023453.1910972-5-dong100@mucse.com>
- <9fc58eb7-e3d8-4593-9d62-82ec40d4c7d2@microchip.com>
- <7D780BA46B65623F+20250822053740.GC1931582@nic-Precision-5820-Tower>
- <8fc334ac-cef8-447b-8a5b-9aa899e0d457@microchip.com>
- <A1F3F9E0764A4308+20250822065132.GA1942990@nic-Precision-5820-Tower>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,16 +52,42 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <A1F3F9E0764A4308+20250822065132.GA1942990@nic-Precision-5820-Tower>
+In-Reply-To: <20250822023453.1910972-5-dong100@mucse.com>
 
-> /* Initialized as a defensive measure to handle edge cases
->  * where try_cnt might be modified
->  */
->  int err = -EIO;
+> +/**
+> + * mucse_mbx_get_capability - Get hw abilities from fw
+> + * @hw: pointer to the HW structure
+> + *
+> + * mucse_mbx_get_capability tries to get capabities from
+> + * hw. Many retrys will do if it is failed.
+> + *
+> + * @return: 0 on success, negative on failure
+> + **/
+> +int mucse_mbx_get_capability(struct mucse_hw *hw)
+> +{
+> +	struct hw_abilities ability = {};
+> +	int try_cnt = 3;
+> +	int err = -EIO;
+> +
+> +	while (try_cnt--) {
+> +		err = mucse_fw_get_capability(hw, &ability);
+> +		if (err)
+> +			continue;
+> +		hw->pfvfnum = le16_to_cpu(ability.pfnum) & GENMASK_U16(7, 0);
+> +		return 0;
+> +	}
+> +	return err;
+> +}
 
-We don't use defensive code in the kernel. Defensive code suggests you
-don't actually know what your driver is doing and you are guessing
-this might happen. You should convince yourself it is
-possible/impossible and write the code as needed.
+Please could you add an explanation why it would fail? Is this to do
+with getting the driver and firmware in sync? Maybe you should make
+this explicit, add a function mucse_mbx_sync() with a comment that
+this is used once during probe to synchronise communication with the
+firmware. You can then remove this loop here.
+
+I would also differentiate between different error codes. It is
+pointless to try again with ENOMEM, EINVAL, etc. These are real errors
+which should be reported. However TIMEDOUT might makes sense to
+retry.
 
 	Andrew
