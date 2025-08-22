@@ -1,122 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A72D1DD543
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Aug 2025 05:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD34F1A255C;
+	Fri, 22 Aug 2025 05:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755839732; cv=none; b=ebvkJ7cCZhVQevSgYR13ZlS2z+l8KLqMxh8kKLoNBp2eZ/h590thNHR8IGyv/AXmIU6ZLzkCjs2GA5vqhkDK3eoN53IDdDIVfx8yZ/EUdiorAO3qMImJudoPT5F4lxI3d4uBJDcYpdvDnhB6DYUOSYLWukP6aTYxL2tjLjNsVOI=
+	t=1755840214; cv=none; b=DxjzK3XZxYRDno2nUwr7UXs3PY2/5E+CDcRb0JNKXcbOtnxhKS9vHzgLfDd5KtGH7Kr6wd/DJDLBgn5Xdqs7DLU58ff1r/YBNiMBIiUzG1WrOGKRq76VGEWhv4U6c8zFss5H5P2Oeu3UkL0aVznG4bceDz86dEq2QANhO7AludM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755839732; c=relaxed/simple;
-	bh=nsm8RvFd+KrNwKVTevP/oeZ81jy9SHfROVrCq1z+Mu8=;
+	s=arc-20240116; t=1755840214; c=relaxed/simple;
+	bh=vqrYwUwAVs5X2DPvqk2UlNCPO6LGG4MO76/HcDklnnw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IAZJX7OYN2XHUusWPQQCkcHrxWPuxYcfsrbuAFT1pWRVLAbmRmX7vShzgSfW3a5a5WvqAJ2PZMYEeZlhHW1Ic6MVQiih8fkMUzEJaSmxiwLB2o9Zf0UXLsEqunMzJSOkOXReqL/kSrEWU36SToKScxxzBGWvpQKA02/umnjqrwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDHpjXri; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDHpjXri"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4C18C4CEF1;
-	Fri, 22 Aug 2025 05:15:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755839731;
-	bh=nsm8RvFd+KrNwKVTevP/oeZ81jy9SHfROVrCq1z+Mu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sDHpjXriijMuMwUNRh/+PMuKGPKXOaZSPL8QmVtGM/Haa6obzV+CwihC9V9IYG1uH
-	 UqOc/4gN5jsNK4PcUY5iKfUdI1tXdwC1IJxeoW3oRcuDZcDyBQCQXbjnIpwdOKafdd
-	 eIB5UV5ksTfWSXd0vuCWk4URC1FRaD0iDBj2eOC+aNz76tLyIcCK+gFhUwvyw39ImK
-	 U3A3ow6bbl7uyh+CeT6M1deuOjhL2W4YvEgGvVWpxgmNaC//qoCMvh1mA4mEx/e/iD
-	 i2vFnpnWF0+f/2fnoIz8hNmoBkY5IrNyDqaKAqyJFELE5AOGGjVghTnqrRlgWC8V6T
-	 0cOITuqgMjGPw==
-Date: Thu, 21 Aug 2025 22:15:31 -0700
-From: Kees Cook <kees@kernel.org>
-To: Qing Zhao <qing.zhao@oracle.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Richard Biener <rguenther@suse.de>,
-	Andrew Pinski <andrew.pinski@oss.qualcomm.com>,
-	"gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
-	Joseph Myers <josmyers@redhat.com>, Jan Hubicka <hubicka@ucw.cz>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Richard Sandiford <richard.sandiford@arm.com>,
-	Marcus Shawcroft <marcus.shawcroft@arm.com>,
-	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-	Kito Cheng <kito.cheng@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Waterman <andrew@sifive.com>,
-	Jim Wilson <jim.wilson.gcc@gmail.com>,
-	Dan Li <ashimida.1990@gmail.com>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [RFC PATCH 3/7] kcfi: Add core Kernel Control Flow Integrity
- infrastructure
-Message-ID: <202508212211.77BED858A8@keescook>
-References: <20250821064202.work.893-kees@kernel.org>
- <20250821072708.3109244-3-kees@kernel.org>
- <CALvbMcA+8iHo+zCCvs4UdAg9PVQVtgOno-rtMS4i5YajrjkyGw@mail.gmail.com>
- <20250821091220.GM4067720@noisy.programming.kicks-ass.net>
- <q93o5262-po30-8n51-o17s-qrn0q96o51qp@fhfr.qr>
- <20250821142500.GS4067720@noisy.programming.kicks-ass.net>
- <15D39DFE-C110-442E-BF34-A850680767BE@oracle.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fkxe4x/3iyqbmNsIup7OXbpUMGR8kKsIGrqbzQkKPNwPhlDqJ66p9qRp8YRCKXbofsmL/2jqstHy2B/t02d6fX9QJiNNzv0xxfTK94A4+dW7jVsFoFP/ovGQ5BBQc9BnaA0ECwdGOUYs11Lyp+HgQHpHEHn3x8avOgC/1rihrqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: zesmtpsz3t1755840193tae549ba7
+X-QQ-Originating-IP: 5NgYGNwVjuXw11VeCT6N7t3/42rH5L5UVcwCtVF/r0o=
+Received: from localhost ( [203.174.112.180])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 22 Aug 2025 13:23:11 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 3820646082963758569
+Date: Fri, 22 Aug 2025 13:23:12 +0800
+From: Yibo Dong <dong100@mucse.com>
+To: Parthiban.Veerasooran@microchip.com
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+	lukas.bulwahn@redhat.com, alexanderduyck@fb.com,
+	richardcochran@gmail.com, kees@kernel.org, gustavoars@kernel.org,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next v7 1/5] net: rnpgbe: Add build support for rnpgbe
+Message-ID: <4DDD62E86FE72117+20250822052312.GA1931582@nic-Precision-5820-Tower>
+References: <20250822023453.1910972-1-dong100@mucse.com>
+ <20250822023453.1910972-2-dong100@mucse.com>
+ <f66e4b61-c547-428c-a947-57ea2a71c1ea@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <15D39DFE-C110-442E-BF34-A850680767BE@oracle.com>
+In-Reply-To: <f66e4b61-c547-428c-a947-57ea2a71c1ea@microchip.com>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: N9NPDBT3mqrZLsZ7F6BgRy9k2ik21+2AOLKDOHWHHJ+9kox3gRon9lM1
+	2QQ75Fc190KoR5XfUJTKwzooca4o+Ipng4RkW1dKauczL8iLDf4lvhoP9ibXJCJTYYWRo5t
+	Z5ePEeDBZq3OljNU2zIH4ceEWc4lI27Eiw1Xo0hny/p5+wkiPG2hY9UPNb6XWDDIB5tkQ58
+	1sK0SIY/zKmiY7IrwKAXGl84X7DNYjma7Ib25KsjmUoNgNS8rkTw5QFn1+MVCs0rOzYZ3dv
+	FNt2lMEBdU9jzjPfIHaY8Wb1/o8J851j5reSRmnaGjYVu9bK0AdNVyVuWWLX9IU6hjB4pMl
+	11KHHRjx8i7HPtfSeKsY89OuEUkOl+O4ptWSiBmOlwuaOhEh1zhMwfnntNX3zMp2Qwqw/4A
+	o9unV74734sLtWgQ5GvBEUSoU+4AfBGJ3qHRU+Cc7Ux5TgrnA9K3YF7NGaJmltoc2Urj0ct
+	DNPIGCCoG5w6iq8yHfXXGMyF6TKfY2GVhv1aQZ4N2kc2gq7QGSQ/Z23fNncMvvoP8JmSOIa
+	+Bh7bjuktUBcZDrdc7NwW7X+ryOFEXjF6TJyTN83EYVnFY4XL/zEn3SjKT1XmWW6hiSX6Ty
+	kQk7K+ILcRXeWFn3Oumqj0pHBOHS7K7rNWIN63ghS+P3bY5RPw/0G/9C5ZQ7Pyr5y2VYbbL
+	rAMFJTqKwfKPdt4PN7KVFJkNDpKzfOiLyuOb0Tcu1LlQt7evGgwyCA+JY0DU+cWlLxcnzCS
+	FQwDAiiFnG/ymSuUeKTGrrXr/QEGPe1kpqmR4F7uDxh7jfFsIhz1TvcHhvHgTNXCTiNyht/
+	SgiyE7jIzZKqubvdW+kt46YpImSHy9zg0h/Ypg+kr7o/48dczi988sW6nfOpzPzphVIn+9a
+	iTc6abni6PJWAFKBDkKWkdMo5FxllXNwZrsPw9yznmFE/c6Q+LCVjP3jmRaFdeYAorDDFnN
+	3x2a6RX346rzxVW2uaHLsgXq07+RBXI5DItTPm/O0i2hCMxzBpw1/YnbDo2TSJz5a3yI=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-On Thu, Aug 21, 2025 at 06:09:08PM +0000, Qing Zhao wrote:
-> > On Aug 21, 2025, at 10:25, Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > On Thu, Aug 21, 2025 at 01:01:37PM +0200, Richard Biener wrote:
-> >> On Thu, 21 Aug 2025, Peter Zijlstra wrote:
-> >> 
-> >>> On Thu, Aug 21, 2025 at 01:16:56AM -0700, Andrew Pinski wrote:
-> >>> 
-> >>>>> +/* Compute KCFI type ID for a function declaration or function type
-> >>>>> (internal) */
-> >>>>> +static uint32_t
-> >>>>> +compute_kcfi_type_id (tree fntype_or_fndecl)
-> >>>>> +{
-> >>>>> +  if (!fntype_or_fndecl)
-> >>>>> +    return 0;
-> >>>>> +
-> >>>>> +  const char *canonical_name = mangle_function_type (fntype_or_fndecl);
-> >>>>> +  uint32_t base_type_id = kcfi_hash_string (canonical_name);
-> >>>>> 
-> >>>> 
-> >>>> Now I am curious why this needs to be a mangled function name? Since the
-> >>>> function in C the symbol is just its name.
-> >>>> Is there documentation that says the hash needs to be based on all of the
-> >>>> function arguments types?
-> >>> 
-> >>> The whole point of kCFI is to limit the targets of indirect calls to
-> >>> functions of the same signature. The actual function name is immaterial.
-> >> 
-> >> What's the attack vector and how does kCFI achieve mitigating it?
-> > 
-> > Any of the attacks that can result in scribbling a function pointer.
-> > Typically a buffer overflow I suppose.
-> > 
-> > 
-> > The way kCFI works is by changing the indirect call ABI. Traditionally
-> > the indirect call is simply:
-> > 
-> >  load-pointer-into-reg
-> >  call *%reg
-> > 
-> > kCFI changes every function to have a preamble like (with IBT and
-> > retpolines and all the modern crap on):
+On Fri, Aug 22, 2025 at 04:32:06AM +0000, Parthiban.Veerasooran@microchip.com wrote:
+> > +
+> > +/**
+> > + * rnpgbe_probe - Device initialization routine
+> > + * @pdev: PCI device information struct
+> > + * @id: entry in rnpgbe_pci_tbl
+> > + *
+> > + * rnpgbe_probe initializes a PF adapter identified by a pci_dev
+> > + * structure.
+> > + *
+> > + * @return: 0 on success, negative on failure
+> > + **/
+> > +static int rnpgbe_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > +{
+> > +       int err;
+> > +
+> > +       err = pci_enable_device_mem(pdev);
+> > +       if (err)
+> > +               return err;
+> > +
+> > +       err = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(56));
+> > +       if (err) {
+> > +               dev_err(&pdev->dev,
+> > +                       "No usable DMA configuration, aborting %d\n", err);
+> > +               goto err_dma;
+> > +       }
+> > +
+> > +       err = pci_request_mem_regions(pdev, rnpgbe_driver_name);
+> > +       if (err) {
+> > +               dev_err(&pdev->dev,
+> > +                       "pci_request_selected_regions failed 0x%x\n", err);
+> > +               goto err_dma;
+> > +       }
+> > +
+> > +       pci_set_master(pdev);
+> > +       pci_save_state(pdev);
+> Don't you need to check the return value of this?
 > 
-> Does “every function” mean all the function in the compilation? Not only the function whose address is taken? 
+> Best regards,
+> Parthiban V
 
-I tried to explain the specific logic on how the set of functions getting
-preambles is chosen in this other reply:
-https://lore.kernel.org/linux-hardening/202508211258.8DEE293@keescook/
+Ok, I will add the check.
 
-If that didn't answer your question, let me know and I'll try again. :)
+Thanks for your feedback.
 
--Kees
-
--- 
-Kees Cook
