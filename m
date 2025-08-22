@@ -1,48 +1,65 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E012C4C83;
-	Fri, 22 Aug 2025 09:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265222F872
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Aug 2025 10:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755853504; cv=none; b=NAdyAVWYnqfEyYYJjZbyxfxWVGaNFGCcM+YTHanc1REaQw02/yOr4VSU+KQsh2e0S8iynbzEHNCCZFGPADgZCYEETTiK+wu2eA2smhYkkzxVTT54xdtB8X5b7FL7e2//8+lMJtOFdIh1lV6zKqHwK6vQiVNaA9h8s0oHWR7luP8=
+	t=1755857038; cv=none; b=UaspJM81mNRKYsXXVTgq+98Dz6JgrQy27cb8m3tEkfl+7er34zPOKtF/4gNFIxNSsQCoAYuYGfbiJs6QaxtxVVRhmHP0FBB8n8qQVzsTen0cjcJTldEEnhApVhpi9ZqM3SHNkv2TfxJ8lAA4FFSZxQIw5AnktCVN/8C3Vaao4bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755853504; c=relaxed/simple;
-	bh=60t7hl/zu+umYs+4sITncQYOpqFbM2NUS4qjxJ79ijo=;
+	s=arc-20240116; t=1755857038; c=relaxed/simple;
+	bh=sbCBKcHt+c/Q4R+FgRGXe3e2bGUwC4W9lFkdO9hTanY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZA2GdtK2A4HHHCJL7xSzVqCNwRmU6eY8Xbak3iEnLpLi2LEALQ4nhXXAtzjLsfc19TY1OqPAt/TRkyR+8rxNlPWoIvVsV6w8dRrEHpsNFsex0eYJhZEXlxd1neMLiAhn0sKSnRe05oYuLmErCvjTTnHbf4YjiXJKoxppHgnue+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
-X-QQ-mid: zesmtpgz3t1755853484t91f67561
-X-QQ-Originating-IP: KdZQdKjiVmOq80u/rGcJtR2w8ZFqoQtAd8QF7QfZ6dY=
-Received: from localhost ( [203.174.112.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 22 Aug 2025 17:04:42 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 7948226793383003131
-Date: Fri, 22 Aug 2025 17:04:43 +0800
-From: Yibo Dong <dong100@mucse.com>
-To: Parthiban.Veerasooran@microchip.com
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	lukas.bulwahn@redhat.com, alexanderduyck@fb.com,
-	richardcochran@gmail.com, kees@kernel.org, gustavoars@kernel.org,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v7 4/5] net: rnpgbe: Add basic mbx_fw support
-Message-ID: <42CB765B997D9FF5+20250822090443.GA1963638@nic-Precision-5820-Tower>
-References: <20250822023453.1910972-1-dong100@mucse.com>
- <20250822023453.1910972-5-dong100@mucse.com>
- <9fc58eb7-e3d8-4593-9d62-82ec40d4c7d2@microchip.com>
- <7D780BA46B65623F+20250822053740.GC1931582@nic-Precision-5820-Tower>
- <8fc334ac-cef8-447b-8a5b-9aa899e0d457@microchip.com>
- <A1F3F9E0764A4308+20250822065132.GA1942990@nic-Precision-5820-Tower>
- <bb6826d4-2e17-4cdd-a64f-26d346224805@microchip.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=abiPAbICsDHrht9QbY/ZHxwX5HyY0mpmmLajTbPCFsxLuBkjsMARDKVuHEupQYZ9DFlRwkvUFyPngHh7XRAnOmVn3d5F4O1R9du2QGqtgaKKfH5+JsM04sATgm4nrVuaE0Mx/T5sQiWlED4sphVNDrAGL5EtFHZEygZBCFtFLB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=q5cKyfF+; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q5cKyfF+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=LSpRcYgMV4yfzp+80xhTCTz2rhuCdiK9GUosugzgRmU=; b=q5cKyfF+FkK52bTYcrydVyQjCq
+	aujrZ9xw8gwumGSSYV3wPG3XSIB6poAp7Zx2YazKMeLSUJJrtNg/GGhkNLwijHIVHIhnwv8I5SnOZ
+	fsVQ4fgfvCpuN8XCwzUV75Jeq0LQ1hEBW99QVL5JCqDeLB0camvyKh+AXyH87PNz6JeiPkuFOXzO1
+	xpgQXinh57J7BB/czgjJiV5JYgWF+yhk5Oys0FE0P/IvlaXYb0UZ69A+7CylCBkoJ+ue8VSc1xpdo
+	g2fVWH63QDR6CvJg3LCMhBzIwNOffULN/zFhdoou0Zgi+8hwCtNEckfbJAUlHbkzeZtnhgf2yPD3p
+	6ef0m1Yg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1upOcd-00000006RZb-0sok;
+	Fri, 22 Aug 2025 10:03:47 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id CA399300342; Fri, 22 Aug 2025 12:03:46 +0200 (CEST)
+Date: Fri, 22 Aug 2025 12:03:46 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Qing Zhao <qing.zhao@oracle.com>, Richard Biener <rguenther@suse.de>,
+	Andrew Pinski <andrew.pinski@oss.qualcomm.com>,
+	"gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
+	Joseph Myers <josmyers@redhat.com>, Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Dan Li <ashimida.1990@gmail.com>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [RFC PATCH 3/7] kcfi: Add core Kernel Control Flow Integrity
+ infrastructure
+Message-ID: <20250822100346.GI3419281@noisy.programming.kicks-ass.net>
+References: <20250821064202.work.893-kees@kernel.org>
+ <20250821072708.3109244-3-kees@kernel.org>
+ <CALvbMcA+8iHo+zCCvs4UdAg9PVQVtgOno-rtMS4i5YajrjkyGw@mail.gmail.com>
+ <20250821091220.GM4067720@noisy.programming.kicks-ass.net>
+ <q93o5262-po30-8n51-o17s-qrn0q96o51qp@fhfr.qr>
+ <20250821142500.GS4067720@noisy.programming.kicks-ass.net>
+ <15D39DFE-C110-442E-BF34-A850680767BE@oracle.com>
+ <202508212211.77BED858A8@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,109 +69,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <bb6826d4-2e17-4cdd-a64f-26d346224805@microchip.com>
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MvyKdZyVtFx3iDqIOOqiI+Q5eJhbMIlR8m01Gf3QOToIc0p3a49b83IG
-	2LiIn9BBM6BvVNS4joP77MnOrGWz/iKg/2cedWjFY6oLuFTn3UApyJf3lA8ekAtuW1fK7Fd
-	8oEQWdZ84A9BUX9lgiHIdxFIVl2c0rcG4q471WUUOOcNzCKWHrOYk+46MtsTLxAY4FzpcIF
-	LqBCNNuP81qn8f0w7Kc9cZN8s1n9Jj4Mh/pM0UvYkKH73p/JNNoXYIf/33nBIz21PmNJBJB
-	fRM8A2jdAcaHukEEm3SdWGkOLv1heFKKtQGTpxBOMJK2xOZfEASLDSWZjipZA3xTw6Lpqz2
-	qtSj3q4uc2AE4Sa+sBn41MjKFCqNSvcQnClwJYN28QgUmAPEMpQxEWf5HVPI3IepKLH4aP2
-	ObNghqcyLtlbTcGZNY6l4QBS2HwNL5daDhzN5lyFaafioan3HfPrtJYNUWzyDvO0bJmM7QK
-	w1md2Gipi8aVxbOkWGcgfQkNOLmPQxQRUpJZstP9RdXUs4Zwt3iFGGSKU2P4gvfgnMOF63H
-	0i3xsuzcYc2q3/do9oxByBuh5SpzcghKV5TMeJK/4SRHwtI6uM1XW4f1TvX6Jf3Sdq2D4dv
-	kWZz+dqlk/CudtXD2KhLW+eKiavG4P30hD2vvqBRrxBx3chIj5RfmwWUtQJOePMWQoH+gwB
-	qYS1HyxMmlFCDrHyOWBeUe0vv5017fLvTrRD7k3Pgg3rE/mPWvMUPySVBYBF/bwZfiziT37
-	28/lK84a2xZIpd3W/1fv4napn/Iw4P5QbH9ZHn9P+XhG9CJFbER/Kmyv1tQmi/j7O/gMPQr
-	wUZZAquBxAXMWI39vsdcR4XKvNoqqK2xpGV59+ek5RrsQdpIZ5qsg+8yMDrvgAxsNG9vPXR
-	H2ZOR0YOTqy4KAv1PHyxWYdzX3ylUaleJil/1Cgg4efn8NquLqLI+Aat8enEb1XVny3fuaT
-	hGtGJHvv+58mceVRYbJJ/yivJakFK0SjwkaCb+3wgb++FJtQ/en5Q2Ya8mI8O6RYs7U5VO2
-	UUZ75rcQ==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <202508212211.77BED858A8@keescook>
 
-On Fri, Aug 22, 2025 at 08:05:50AM +0000, Parthiban.Veerasooran@microchip.com wrote:
-> On 22/08/25 12:21 pm, Yibo Dong wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+On Thu, Aug 21, 2025 at 10:15:31PM -0700, Kees Cook wrote:
+> On Thu, Aug 21, 2025 at 06:09:08PM +0000, Qing Zhao wrote:
+> > > On Aug 21, 2025, at 10:25, Peter Zijlstra <peterz@infradead.org> wrote:
+
+> > > kCFI changes every function to have a preamble like (with IBT and
+> > > retpolines and all the modern crap on):
 > > 
-> > On Fri, Aug 22, 2025 at 06:07:51AM +0000, Parthiban.Veerasooran@microchip.com wrote:
-> >> On 22/08/25 11:07 am, Yibo Dong wrote:
-> >>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >>>
-> >>> On Fri, Aug 22, 2025 at 04:49:44AM +0000, Parthiban.Veerasooran@microchip.com wrote:
-> >>>> On 22/08/25 8:04 am, Dong Yibo wrote:
-> >>>>> +/**
-> >>>>> + * mucse_mbx_get_capability - Get hw abilities from fw
-> >>>>> + * @hw: pointer to the HW structure
-> >>>>> + *
-> >>>>> + * mucse_mbx_get_capability tries to get capabities from
-> >>>>> + * hw. Many retrys will do if it is failed.
-> >>>>> + *
-> >>>>> + * @return: 0 on success, negative on failure
-> >>>>> + **/
-> >>>>> +int mucse_mbx_get_capability(struct mucse_hw *hw)
-> >>>>> +{
-> >>>>> +       struct hw_abilities ability = {};
-> >>>>> +       int try_cnt = 3;
-> >>>>> +       int err = -EIO;
-> >>>> Here too you no need to assign -EIO as it is updated in the while.
-> >>>>
-> >>>> Best regards,
-> >>>> Parthiban V
-> >>>>> +
-> >>>>> +       while (try_cnt--) {
-> >>>>> +               err = mucse_fw_get_capability(hw, &ability);
-> >>>>> +               if (err)
-> >>>>> +                       continue;
-> >>>>> +               hw->pfvfnum = le16_to_cpu(ability.pfnum) & GENMASK_U16(7, 0);
-> >>>>> +               return 0;
-> >>>>> +       }
-> >>>>> +       return err;
-> >>>>> +}
-> >>>>> +
-> >>>
-> >>> err is updated because 'try_cnt = 3'. But to the code logic itself, it should
-> >>> not leave err uninitialized since no guarantee that codes 'whthin while'
-> >>> run at least once. Right?
-> >> Yes, but 'try_cnt' is hard coded as 3, so the 'while loop' will always
-> >> execute and err will definitely be updated.
-> >>
-> >> So in this case, the check isn’t needed unless try_cnt is being modified
-> >> externally with unknown values, which doesn’t seem to be happening here.
-> >>
-> >> Best regards,
-> >> Parthiban V
-> >>>
-> >>> Thanks for your feedback.
-> >>>
-> >>>
-> >>
-> > 
-> > Is it fine if I add some comment like this?
-> > .....
-> > /* Initialized as a defensive measure to handle edge cases
-> >   * where try_cnt might be modified
-> >   */
-> >   int err = -EIO;
-> > .....
-> > 
-> > Additionally, keeping this initialization ensures we’ll no need to consider
-> > its impact every time 'try_cnt' is modified (Although this situation is
-> > almost impossible).
-> If you're concerned that 'try_cnt' might be modified, then let's keep 
-> the existing implementation as is. I also think the comment might not be 
-> necessary, so feel free to ignore my earlier suggestion.
+> > Does “every function” mean all the function in the compilation? Not only the function whose address is taken? 
 > 
-> Best regards,
-> Parthiban V
-> > 
-> > Thanks for your feedback.
-> > 
-> > 
+> I tried to explain the specific logic on how the set of functions getting
+> preambles is chosen in this other reply:
+> https://lore.kernel.org/linux-hardening/202508211258.8DEE293@keescook/
 > 
+> If that didn't answer your question, let me know and I'll try again. :)
 
-Thank you for your understanding and flexibility. I'll keep the current
-implementation with the initialization of err = -EIO as a defensive measure,
-as you suggested. I appreciate your willingness to accommodate this consideration.
+One detail that might be interesting is that ENDBR and the __cfi_\func
+preamble should be the same condition. The way these features are
+exposed doesn't make this obvious.
 
+And in fact, marking an address taken function with __noendbr will
+result in a function that has a __cfi_\func preamble, but no ENDBR
+(clang-20). 
+
+And while there is both a __noendbr and __nocfi attribute, they are
+*VERY* different from one another. Where __noendbr inhibits the emission
+of ENDBR and basically marks the function as impossible to reach with an
+indirect call, the __nocfi attribute inhibits the CALL modification.
+
+Notably, there is no function attribute to inhibit the __cfi_\func
+preamble (and I'm arguing __noendbr should have that effect).
+
+
+OTOH a function without __cfi_\func preamble but with ENDBR is 'unsafe',
+but usable with a __nocfi call (typically reserved for calling external
+code, like firmware). Anyway, we don't currently have means of
+expressing this to the compiler (also, I don't care much in this case --
+I think we should taint the kernel on EFI calls :-).
