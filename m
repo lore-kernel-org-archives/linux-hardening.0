@@ -1,60 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351E0393DF6
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Aug 2025 22:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850F7191F7E;
+	Sat, 23 Aug 2025 01:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755901752; cv=none; b=Wr8YjjG3afsUt0K7yuLvqVdwPdvbhP26jUM1oPm5a7UxhPSVkpKbYbdSIS0DnTUcnDmALST8FciRUoUPs9fNLoEJExQ4gszxawqRc4Zp44Wekj7AXjwPNBygYDUnWpqvvXoLQW2N+WGMGTbHeMNcaxukniXjiBiGEQw4+NyF0m0=
+	t=1755914327; cv=none; b=efibYTva+dOduuyJ/k2Ixe7uKC8pB32NU8ItTH3iQj7yk5sdH3Lqw5SK3UrufcwzpJ6hty9Ju20u0isBDrNxBLYe0JTLmtP+aYRUfwz4dLPmHsxQH1UWNLmN2CYZtMe/r+w/orZ5Ek+oGyiVy6ApBcL8GBFUZ8IGKfu1nxThfKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755901752; c=relaxed/simple;
-	bh=GS1D5/Nb5jV4iRJH3gv3Mgy+dmUtMmBhu29ziOfIxiQ=;
+	s=arc-20240116; t=1755914327; c=relaxed/simple;
+	bh=DL7lJvSlF2uYNjqhrn7rHxrrv9ZYt7wI4V1rmKzypqM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bOrcjrfbXruYu6zxcUB1H49tsToY2xkPfAnQsvdpyph1MmIpwzN5KC1A6bvpzXy7YJj/CgmQvRqsdwBb66zlnhrylXhbDKZgxSiQgO0axMpd4QaLo7O4SLN2YE2gP1hWP2Gd7SLra+ahfcLqlbrqbATWMes5DuQkGdeWNM7XWDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/ocA0xN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/ocA0xN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3FA9C4CEED;
-	Fri, 22 Aug 2025 22:29:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755901751;
-	bh=GS1D5/Nb5jV4iRJH3gv3Mgy+dmUtMmBhu29ziOfIxiQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M/ocA0xN5SzK6mhyRongD1lUBbfd5vf2F4EwO1Y5zNEPH2rwbhq/BnrC82i4nyZc0
-	 lpfJYMjic9MttR3AacCNNujGTa7WK312AbCXI1YTfjUkr2RsTJ4sx/jgcsRa1anaPt
-	 nWBqaW6godCyRSC9DnfGgKXeE0kaqRlvu720IF3q/yOK0NK4wI0FvRW5Vikst/nD8W
-	 il8/JHQQwA1Tc8cY3Q/0bFv33VMynnyi7nQCidy5DFR/gfJ+mkiwN1rolLd7AVwirY
-	 wIn47hl+5SvPhdus2YON9Ef+CqmWmh1AjLMdr+ukRUKT5lHQabxvU15CqmP97bfUeo
-	 yY+vsydPNloIg==
-Date: Fri, 22 Aug 2025 15:29:11 -0700
-From: Kees Cook <kees@kernel.org>
-To: Qing Zhao <qing.zhao@oracle.com>
-Cc: Andrew Pinski <andrew.pinski@oss.qualcomm.com>,
-	"gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
-	Joseph Myers <josmyers@redhat.com>,
-	Richard Biener <rguenther@suse.de>, Jan Hubicka <hubicka@ucw.cz>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Richard Sandiford <richard.sandiford@arm.com>,
-	Marcus Shawcroft <marcus.shawcroft@arm.com>,
-	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-	Kito Cheng <kito.cheng@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Waterman <andrew@sifive.com>,
-	Jim Wilson <jim.wilson.gcc@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Li <ashimida.1990@gmail.com>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/7] mangle: Introduce C typeinfo mangling API
-Message-ID: <202508221519.02CEBB27@keescook>
-References: <20250821064202.work.893-kees@kernel.org>
- <20250821072708.3109244-2-kees@kernel.org>
- <CALvbMcAPV1eB6nocPAS=qR8SCiQyU43v911R8S7Ah_=G7yK-+g@mail.gmail.com>
- <202508210841.8BE6E3C117@keescook>
- <E69330D6-1302-4BA1-BADD-8C91A096A1FD@oracle.com>
- <202508211258.8DEE293@keescook>
- <22C19D00-58D7-4854-915E-C7B8CDB3317E@oracle.com>
- <202508221149.F19A56772@keescook>
- <0F3CAA68-8C9E-49AC-8B12-95BE8E92475C@oracle.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KikkzyCgjpIFaWEdy2fUQAN7oGp6TFVJOJtahMhCQxsZ2LXcaZyVDMWv0BLSRojG/RvxlMqZnX/Hb7DRAX9NJCDHU/EnqXEBth26nWL9dLJ5Nfzw/oKQEkxWyZIrkLzFjoTcRBevP2v7l9PBcgSWAV/bFizEbaXXw0tGVLxElJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.206.34.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: esmtpsz20t1755914306t18ac98e2
+X-QQ-Originating-IP: 9m1i3pwX/AtOIuG45fGnU9FcBbfvOkYiHnLZOR3b2Mo=
+Received: from localhost ( [203.174.112.180])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sat, 23 Aug 2025 09:58:24 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 8408012566057604248
+Date: Sat, 23 Aug 2025 09:58:24 +0800
+From: Yibo Dong <dong100@mucse.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
+	gustavoars@kernel.org, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next v7 4/5] net: rnpgbe: Add basic mbx_fw support
+Message-ID: <C2BF8A6A8A79FB29+20250823015824.GB1995939@nic-Precision-5820-Tower>
+References: <20250822023453.1910972-1-dong100@mucse.com>
+ <20250822023453.1910972-5-dong100@mucse.com>
+ <a066746c-2f12-4e70-b63a-7996392a9132@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -63,54 +48,87 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0F3CAA68-8C9E-49AC-8B12-95BE8E92475C@oracle.com>
+In-Reply-To: <a066746c-2f12-4e70-b63a-7996392a9132@lunn.ch>
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: N4bqf7uc8PW19XP0trQQ+Rsb3QZc/woXInVpXcYjV9mq0x7aKC3grbok
+	nJu2P5DHHsQE4wPSEwK7S4Hq3iXRkE8CTW7EwRir3Skhp8aNYYv0TYF0N2LWiWNUFJF+a/7
+	LQ2gZkDYlUXSTtpezb4RS/+KamnaURkPHZf8hWsuNIuY5hNlTamZRDDt8fU+EMovNtxJrb1
+	OfsBnDNUcY/Eqt+5XT/f3ojtlUmzAgOk5XpK/OgmGYiPwMQ5/Fzju0UfpP0pUw/5KtnJKm9
+	NV03yknEXLUeHMyVKypZHCFm/+ChUYhl7uBgqCmUrKYVlxoaSoe6n5v0La864E4GMVtGWii
+	z5Ykg1pyHwYYMaTBZDFFQF+lbf2gOEEfMHGoPty4/ExbLEGSdfBMIR+RWB5C4tPifa1IBUI
+	sQMGL149hzPmfSN12ytVKsRfc1QGMnb3OLgLFm/C9oLXW5197HQ0TzS3hNEMi0tf2Y0X03n
+	z6rn5UrPCqIA+kB5eSGdEK16XBC8vHjaAZVDRMfiMf+uyUeqJ1R0NqDh4yeg2U3B1kf1ZZW
+	KmAe6AOn5bCbBa4LuYNl1f8ycWY0Y7aD1gSECDOA6tcOWECsdH/q6zKuyRLNHOtC13b+4fz
+	gEDURwbGRfpaAMzBJ/DQ++fCZdzUkoYrtM/pNZeE7wfsgcazLwOfmLWQwVNDW/hrct3n9VT
+	V++1W2YMzrn/lx0xE9/t12AaFIird+BnFFO49FsWZH4CtwSE9uAuXIjkcrU5iz1X4AagKHm
+	t9nzDeSFa3ECFun491qYTn90irbTUowuhyS0QluvLqEq49VqYc/h4FK+xQWxqkUH7tSBl/a
+	KXMqj8MrTtQjSv0aX/tsMoxmMhR3EI+uRPdL9CrQXY1qG5vbeFEPCePpZd1/XluE26T4Tup
+	nHsQaXYULFT80wvGVcOoGftBohNEos7hWbcJLNGXrhV0qlC5VEqDvFwoKId4+xQ9hMDmFHj
+	WodB1kV7ZV7zL+DaRalZQUet6E6nGWkTbsI0n0+vST5aQRK/cDoXy3Eip8lGV/XBU+7E=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-On Fri, Aug 22, 2025 at 08:29:16PM +0000, Qing Zhao wrote:
-> > On Aug 22, 2025, at 15:02, Kees Cook <kees@kernel.org> wrote:
-> > Right, and sometimes we have to explicitly perform a no-op
-> > address-taking to make sure a symbol gets generated:
-> > 
-> > /*
-> > * Force the compiler to emit 'sym' as a symbol, so that we can reference
-> > * it from inline assembler. Necessary in case 'sym' could be inlined
-> > * otherwise, or eliminated entirely due to lack of references that are
-> > * visible to the compiler.
-> > */
-> > #define ___ADDRESSABLE(sym, __attrs)                                            \
-> >        static void * __used __attrs                                            \
-> >        __UNIQUE_ID(__PASTE(__addressable_,sym)) = (void *)(uintptr_t)&sym;
-> > 
-> > #define __ADDRESSABLE(sym) \
-> >        ___ADDRESSABLE(sym, __section(".discard.addressable"))
-> > 
-> > $ git grep KCFI_REFERENCE
-> > include/linux/compiler.h:#define KCFI_REFERENCE(sym) __ADDRESSABLE(sym)
-> > arch/x86/include/asm/page_64.h:KCFI_REFERENCE(copy_page);
-> > arch/x86/include/asm/string_64.h:KCFI_REFERENCE(__memset);
-> > arch/x86/include/asm/string_64.h:KCFI_REFERENCE(__memmove);
-> > arch/x86/kernel/alternative.c:KCFI_REFERENCE(__bpf_prog_runX);
-> > arch/x86/kernel/alternative.c:KCFI_REFERENCE(__bpf_callback_fn);
+On Fri, Aug 22, 2025 at 04:43:16PM +0200, Andrew Lunn wrote:
+> > +/**
+> > + * mucse_mbx_get_capability - Get hw abilities from fw
+> > + * @hw: pointer to the HW structure
+> > + *
+> > + * mucse_mbx_get_capability tries to get capabities from
+> > + * hw. Many retrys will do if it is failed.
+> > + *
+> > + * @return: 0 on success, negative on failure
+> > + **/
+> > +int mucse_mbx_get_capability(struct mucse_hw *hw)
+> > +{
+> > +	struct hw_abilities ability = {};
+> > +	int try_cnt = 3;
+> > +	int err = -EIO;
+> > +
+> > +	while (try_cnt--) {
+> > +		err = mucse_fw_get_capability(hw, &ability);
+> > +		if (err)
+> > +			continue;
+> > +		hw->pfvfnum = le16_to_cpu(ability.pfnum) & GENMASK_U16(7, 0);
+> > +		return 0;
+> > +	}
+> > +	return err;
+> > +}
 > 
-> I am curious on why the compiler eliminates an external routine completely in the file if it's address-taken in that file. 
-> Why an additional no-op address-taken is needed here. 
+> Please could you add an explanation why it would fail? Is this to do
+> with getting the driver and firmware in sync? Maybe you should make
+> this explicit, add a function mucse_mbx_sync() with a comment that
+> this is used once during probe to synchronise communication with the
+> firmware. You can then remove this loop here.
 
-If I am remembering correctly this is needed for rare cases where
-a function built without a C definition is being used in Linux's
-self-patching "alternatives" code swaps in one function for another,
-and is being used indirectly. These cases end up not being visible to
-compiler (so no address-taken), but the indirect call site is still
-being instrumented. And the above list is the _entire_ list of such
-corner cases: all really low-level things.
+It is just get some fw capability(or info such as fw version).
+It is failed maybe:
+1. -EIO: return by mucse_obtain_mbx_lock_pf. The function tries to get
+pf-fw lock(in chip register, not driver), failed when fw hold the lock.
+2. -ETIMEDOUT: return by mucse_poll_for_xx. Failed when timeout.
+3. -ETIMEDOUT: return by mucse_fw_send_cmd_wait. Failed when wait
+response timeout.
+4. -EIO: return by mucse_fw_send_cmd_wait. Failed when error_code in
+response.
+5. err return by mutex_lock_interruptible.
 
-Peter may remember this better than me...
-
-> > Adding the IPA pass to find all functions worked perfectly. I was able
-> > to remove all the weird DECL reconstruction and just use the original
-> > FUNCTION_TYPE info for the typeids.
 > 
-> Nice. So this new IPA pass is invoked even when O0?
+> I would also differentiate between different error codes. It is
+> pointless to try again with ENOMEM, EINVAL, etc. These are real errors
+> which should be reported. However TIMEDOUT might makes sense to
+> retry.
+> 
+> 	Andrew
+> 
 
-It seems like it works at any optimization level, yes.
+Yes, I didn't differentiate between different error codes. But it cost
+~0 to ask firmware again. And error will be reported after 'try_cnt' times
+retry to the function caller.
+Maybe can simply handle error codes link this?
 
--- 
-Kees Cook
+Thanks for your feedback.
+
+
+
+
+
