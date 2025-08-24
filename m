@@ -1,118 +1,77 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E112AD4B;
-	Sat, 23 Aug 2025 15:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2519D1F1527;
+	Sun, 24 Aug 2025 02:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755962309; cv=none; b=LOjquCGXP2raFClOEkKWu+Bf2eyPrUUIDkJC8Q0yQTVuXr+wqn9p1cGpz5b6Bi3lnF0JqyobZI8ojLiFbShLyQ/9sSP9x9WjNRsonut88khLrgGc2NWinEN4OusdISaSQgtqBDFqn5OcR27STp/wKF+8sr/l4CnaOQneFYcUmLo=
+	t=1756004163; cv=none; b=BlhO2APy0kTLdufoGfGaLSS7/ERwmHlP062Wj92yA6lzmZfNvM8UZ3myGR97I69Cl4s8AYHCutVGH8vDA7f71GJnG7YL3MkaqwCbhoU2zH0Qzhtut6ub3Yo0GqBtNS6+rtfS2BqwvXedgU4WmEWxKL4A4Rcd6dRnbzPpUVL+5LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755962309; c=relaxed/simple;
-	bh=7JQkkt9dbMiHhXVQ6vItdJAZtW4rgJX33IpJrH+8jdY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H+yb7NTa+2I/nNMx2jKW2gda9/SuzhC/clVR7ClgXSYvYOR8Gcz+o5GK+pHBRyBt6ON9HDHzq3j/RIopy4pCJLydJIb8SmiKenn4Vane0/3C/+99s4Wvo8L9/1CqdnPAINZhtEQarZh85YFwAkXsH31hU6vVfK7USOvfOfIheZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=YVZFquyw; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1756004163; c=relaxed/simple;
+	bh=8x+UbB627SyJ/j1B+W0FdzspAC0kIm99NwlAYZ2UktY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hx484tLsALz4eg3LY55vNUU4nzon6Sp1w9btpBydPfnYxW/QdEnM4O5VhJXnvyq8EP2lNU9d5O4+VlN+4/06A9C2CtYWcvM5i/BffRFBasUw4bQrkfgNnqbEjMLzOIsNEni7mDIVAGkEucjA7txTvlPO78AvNmWHND4WYKKG+24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVitS7dT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="YVZFquyw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=6zbniq+Y33seUhQtkKnh8NN5RiVXcMAU2k6LfyetQpU=; b=YVZFquyw09UpAMBzf0gvl484W6
-	eqhTLx3nF5S40Cv+Y/y1oqp8Q7OAzxJjfrjMcd6Hp3GI26GZlV9oXKxHXrPZErTGG7RBdTxFfB1i9
-	Vo63trBrsfFyJRyKO/xegtH6K+CxG+FN3n9GRgzPX74ydnujS9Z4BtWwoZtzxKoUy/hY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1upq01-005lV0-92; Sat, 23 Aug 2025 17:17:45 +0200
-Date: Sat, 23 Aug 2025 17:17:45 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Yibo Dong <dong100@mucse.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
-	gustavoars@kernel.org, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVitS7dT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6A99C2BCB4;
+	Sun, 24 Aug 2025 02:56:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756004162;
+	bh=8x+UbB627SyJ/j1B+W0FdzspAC0kIm99NwlAYZ2UktY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=eVitS7dT64E+P+CmzEsoeBYr00FqP7V0W2h7znwv7LOrGRjFW556Jd7/EMKJUBuXj
+	 1Mk6HYFEkcXZmN2k7o3Dp4VKj2FGp8RdLEFVI7o4pdpL2W1CHXTNas2YVOQP4kZSaJ
+	 xW29uJ4aPmx08U6aot5Vf17xdEoUnXJE6hZ0a13VSZ/BDIv9R7Abt+hVZ8zLSboNm+
+	 1nl76CpR7FvNZ7nejfPEBF1mnMTHWH7nCInixuyMimHwd6aHrAqql0TdLgRxXVu1qv
+	 oHM6jKSdxyUgsbwFnAO71knAR2LbDifBONsGKFaLujXZ44d1CIrBAZ7AerVgBOOM0h
+	 Mq0ozUusiRtgg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Sebastian Reichel <sre@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Casey Connolly <casey.connolly@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v7 4/5] net: rnpgbe: Add basic mbx_fw support
-Message-ID: <f375e4bf-9b0b-49ca-b83d-addeb49384b8@lunn.ch>
-References: <20250822023453.1910972-1-dong100@mucse.com>
- <20250822023453.1910972-5-dong100@mucse.com>
- <a066746c-2f12-4e70-b63a-7996392a9132@lunn.ch>
- <C2BF8A6A8A79FB29+20250823015824.GB1995939@nic-Precision-5820-Tower>
+Subject: Re: (subset) [PATCH 00/11] power: supply: pmi8998 charger improvements and smb5 support
+Date: Sat, 23 Aug 2025 21:55:35 -0500
+Message-ID: <175600415274.952266.6319138445314463147.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
+References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C2BF8A6A8A79FB29+20250823015824.GB1995939@nic-Precision-5820-Tower>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, Aug 23, 2025 at 09:58:24AM +0800, Yibo Dong wrote:
-> On Fri, Aug 22, 2025 at 04:43:16PM +0200, Andrew Lunn wrote:
-> > > +/**
-> > > + * mucse_mbx_get_capability - Get hw abilities from fw
-> > > + * @hw: pointer to the HW structure
-> > > + *
-> > > + * mucse_mbx_get_capability tries to get capabities from
-> > > + * hw. Many retrys will do if it is failed.
-> > > + *
-> > > + * @return: 0 on success, negative on failure
-> > > + **/
-> > > +int mucse_mbx_get_capability(struct mucse_hw *hw)
-> > > +{
-> > > +	struct hw_abilities ability = {};
-> > > +	int try_cnt = 3;
-> > > +	int err = -EIO;
-> > > +
-> > > +	while (try_cnt--) {
-> > > +		err = mucse_fw_get_capability(hw, &ability);
-> > > +		if (err)
-> > > +			continue;
-> > > +		hw->pfvfnum = le16_to_cpu(ability.pfnum) & GENMASK_U16(7, 0);
-> > > +		return 0;
-> > > +	}
-> > > +	return err;
-> > > +}
-> > 
-> > Please could you add an explanation why it would fail? Is this to do
-> > with getting the driver and firmware in sync? Maybe you should make
-> > this explicit, add a function mucse_mbx_sync() with a comment that
-> > this is used once during probe to synchronise communication with the
-> > firmware. You can then remove this loop here.
+
+On Thu, 19 Jun 2025 16:55:08 +0200, Casey Connolly wrote:
+> This series contains fixes and cleanups for the pmi8998 charger driver,
+> as well as introducing support for the newer smb5 charger found in the
+> pm8150b and other newer Qualcomm PMICs..
 > 
-> It is just get some fw capability(or info such as fw version).
-> It is failed maybe:
-> 1. -EIO: return by mucse_obtain_mbx_lock_pf. The function tries to get
-> pf-fw lock(in chip register, not driver), failed when fw hold the lock.
+> A bug is fixed where wakeirq enable/disable refcounting wasn't respected
+> when the driver was unloaded and reloaded.
+> 
+> [...]
 
-If it cannot get the lock, isn't that fatal? You cannot do anything
-without the lock.
+Applied, thanks!
 
-> 2. -ETIMEDOUT: return by mucse_poll_for_xx. Failed when timeout.
-> 3. -ETIMEDOUT: return by mucse_fw_send_cmd_wait. Failed when wait
-> response timeout.
+[02/11] arm64: dts: qcom: sdm845-oneplus-*: set constant-charge-current-max-microamp
+        commit: cb2347ed822f77c6b04011ee3140f7483d206018
 
-If its dead, its dead. Why would it suddenly start responding?
-
-> 4. -EIO: return by mucse_fw_send_cmd_wait. Failed when error_code in
-> response.
-
-Which should be fatal. No retries necessary.
-
-> 5. err return by mutex_lock_interruptible.
-
-So you want the user to have to ^C three times?
-
-And is mucse_mbx_get_capability() special, or will all interactions
-with the firmware have three retries?
-
-	Andrew
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
