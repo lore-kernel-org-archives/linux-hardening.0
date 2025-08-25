@@ -1,35 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA30B2FB990;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1092FB612;
 	Mon, 25 Aug 2025 14:26:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756131964; cv=none; b=MpTYX87xZOnhAiZuE5i9OsAiOR/h3/L/ERJZ857MhVKqVAVCBctNj0MOZRY1Yc02kPrjbhrd52fyvYp0Iyg7uIVzXkjT/S7cac6f9LVsglwttWlevFDzxwmkqLD7Omb4p74k103k7I3za4nGoPqSj0ae97J7eTLIiOBCoog/Dn4=
+	t=1756131964; cv=none; b=licG/yNhsMZ9wa4D7gqQHjITNRQl+LLA40P018STIvYwjFp643xXdPRR4OnMaGrs/SDxReHwJJk9Q7KXY278073ZCrZpa3h/JvbL3e5XPKjwwn9mz3YFfPRrhaa1Rb8P5d5vJESP7WoXTuIMAddGrMlnmekX2/oc1YK07/OpUI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1756131964; c=relaxed/simple;
-	bh=wgWu+8XypexFEPIMyZ5cUv+a841NNieT1SYM+X0Qx/k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FwmhD+WTxy3Z3UqRPI1WrR+XP7pOrWx+r1qkmTUe24697MnLeRrk4EzJrQ8+PpgoNf075smFQoy5Se4haUfnqv29ZUJYCI4Vy6JBukGiVn45nMVfv4V7zKRsX3GoGaIfbgRVoZfksqH/B24InsVPcyNA9qQZW+A5Q1p6X8p1IM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhtif550; arc=none smtp.client-ip=10.30.226.201
+	bh=HivC8e+d4y482Da6cYyudQLG75+xG2H1Zq0+IirdkmE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TzroF7S0OeJgwfvQ/C3DExQVJjGIp3sEDG4RJGTScblOjAzol0dzJfVC3cszmNz1HDidh7EMdRGRe2OhJ+4yHfoGPtOr8mW09hsfJWqrl3wur9OuOZA6AyXpl9YLpgz98FcbpctCVmANiTmoYnkcncKw4AovhjsUzg36wSVbd4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pjNfH8WK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhtif550"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78AA6C4CEED;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pjNfH8WK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2968C116D0;
 	Mon, 25 Aug 2025 14:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1756131963;
-	bh=wgWu+8XypexFEPIMyZ5cUv+a841NNieT1SYM+X0Qx/k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qhtif550k7UP88ylX7mXFhF3o1Ewy/94q+uBREqP5wwVj4p5tKWo4YIYxqabfCm7o
-	 RXbpoE5lUS9A4eX6olO0JQHJX7II7zucifIUT4t5oGSDjVm5tEUvNG7nDTaTagf8MC
-	 jr7RemyFaL1wlR9Kr70Sg2zVepCA8TRpRF4n178+y1/WeWFAYnDer2xVGz5oBJ0Lzm
-	 0uYOJ+IQmCdVYQdGABtrzKO32BebHlOxGDRRKOqu8JezSkNdHqIcMoMGgLe2oVQ2xq
-	 QdjlzNO81fwO8SDSNET5/Yoj4vn7Gds6gMmBMfvGySNCf4krhzhfmv4KmE2sfHEjQA
-	 zncS7Q1vVyi0w==
+	bh=HivC8e+d4y482Da6cYyudQLG75+xG2H1Zq0+IirdkmE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pjNfH8WK7wwlxCDAwwhjnZU752SGmoD2ubuqmodGNyfTJWeONXLewWOxmik1Y5Vls
+	 Bc1dheonE3xufvqgfq7BafYodPq5cOFqWkU79VouuWmFze6QMUf8FTpcm7MJ81LJ4s
+	 W5XA+St1iUJ6JGhbM6fdEezFqE0b87qoXhtrkzi5yRg4tKA6whQsgOXnOArjXjiJQm
+	 7OCNj4lYaJ2wPGgePFGihoTH/pDceapGb7AkfDsDx0OgcftbRadjjunHkNT1UtDvzp
+	 QxqRlRLPPuWA9WkzfjE8H9hfNUYXK6aZW9J8mlAZyQ7lprpLGwyLkXQPFGTTV2c4rC
+	 B2xrp+uNa9IiA==
 From: Kees Cook <kees@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Kees Cook <kees@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
+	Kees Cook <kees@outflux.net>,
 	David Woodhouse <dwmw2@infradead.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Puranjay Mohan <puranjay@kernel.org>,
@@ -42,10 +44,12 @@ Cc: Kees Cook <kees@kernel.org>,
 	linux-riscv@lists.infradead.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 0/5] kcfi: Prepare for GCC support
-Date: Mon, 25 Aug 2025 07:25:47 -0700
-Message-Id: <20250825141316.work.967-kees@kernel.org>
+Subject: [PATCH 4/5] x86/cfi: Remove __noinitretpoline and __noretpoline
+Date: Mon, 25 Aug 2025 07:25:51 -0700
+Message-Id: <20250825142603.1907143-4-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250825141316.work.967-kees@kernel.org>
+References: <20250825141316.work.967-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,92 +58,87 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Kees Cook <kees@outflux.net>
 
-With KCFI support in GCC coming[1], we need to make some (relatively
-small) changes in the kernel to deal with it:
+Commit 66f793099a63 ("x86/retpoline: Avoid retpolines for built-in __init
+functions") disabled retpolines in __init sections (__noinitretpoline)
+as a precaution against potential issues with retpolines in early boot,
+but it has not been a problem in practice (i.e. see Clang below).
 
-- move __nocfi out of compilers-clang.h (so GCC can see it too)
-- add cfi=debug so future Kees can find breakage easier
-- remove problematic __noinitretpoline usage
-- rename CONFIG_CFI_CLANG to CONFIG_CFI (otherwise is it quite confusing)
+Commit 87358710c1fb ("x86/retpoline: Support retpoline builds with Clang")
+narrowed this to only GCC, as Clang doesn't have per-function control
+over retpoline emission. As such, Clang has been booting with retpolines
+in __init since retpoline support was introduced.
 
-Thanks!
+Clang KCFI has been instrumenting __init since CFI was introduced.
 
--Kees
+With the introduction of KCFI for GCC, KCFI instrumentation with
+retpolines disabled means that objtool does not construct .retpoline_sites
+section entries for the non-retpoline KCFI calls. At boot, the KCFI
+rehashing code, via __apply_fineibt(), misses all __init KCFI calls
+(since they are not retpolines), resulting in immediate hash mismatches:
+all preambles are rehashed (via .cfi_sites) and none of the __init call
+sites are rehashed.
 
-[1] https://lore.kernel.org/linux-hardening/20250821064202.work.893-kees@kernel.org/
+Remove __noinitretpoline since it provides no meaningful utility and
+creates problems with CFI. Additionally remove __noretpoline since it
+is now unused.
 
-Kees Cook (5):
-  compiler_types.h: Move __nocfi out of compiler-specific header
-  x86/traps: Clarify KCFI instruction layout
-  x86/cfi: Add option for cfi=debug bootparam
-  x86/cfi: Remove __noinitretpoline and __noretpoline
-  kcfi: Rename CONFIG_CFI_CLANG to CONFIG_CFI
+Alternatively, cfi_rand_callers() could walk the .kcfi_traps section which
+is exactly the list of KCFI instrumentation sites. But it seems better to
+have as few differences in common instruction sequences between compilers
+as possible, so better to remove the special handling of retpolines in
+__init for GCC.
 
- arch/Kconfig                                  | 22 +++++-----
- arch/arm/Kconfig                              |  2 +-
- arch/arm64/Kconfig                            |  4 +-
- arch/riscv/Kconfig                            |  6 +--
- arch/x86/Kconfig                              | 12 +++---
- init/Kconfig                                  |  4 +-
- kernel/module/Kconfig                         |  2 +-
- lib/Kconfig.debug                             |  2 +-
- Makefile                                      |  2 +-
- arch/arm/mm/Makefile                          |  2 +-
- arch/riscv/kernel/Makefile                    |  2 +-
- arch/riscv/purgatory/Makefile                 |  2 +-
- arch/x86/kernel/Makefile                      |  2 +-
- arch/x86/purgatory/Makefile                   |  2 +-
- kernel/Makefile                               |  2 +-
- .../admin-guide/kernel-parameters.txt         | 18 ++++++++
- arch/riscv/include/asm/cfi.h                  |  4 +-
- arch/x86/include/asm/cfi.h                    |  4 +-
- include/asm-generic/vmlinux.lds.h             |  2 +-
- include/linux/cfi.h                           |  6 +--
- include/linux/cfi_types.h                     |  8 ++--
- include/linux/compiler-clang.h                |  5 ---
- include/linux/compiler-gcc.h                  |  4 --
- include/linux/compiler.h                      |  2 +-
- include/linux/compiler_types.h                |  4 +-
- include/linux/init.h                          |  8 ----
- tools/include/linux/cfi_types.h               |  6 +--
- tools/perf/util/include/linux/linkage.h       |  2 +-
- arch/arm/mm/cache-fa.S                        |  2 +-
- arch/arm/mm/cache-v4.S                        |  2 +-
- arch/arm/mm/cache-v4wb.S                      |  4 +-
- arch/arm/mm/cache-v4wt.S                      |  2 +-
- arch/arm/mm/cache-v6.S                        |  2 +-
- arch/arm/mm/cache-v7.S                        |  2 +-
- arch/arm/mm/cache-v7m.S                       |  2 +-
- arch/arm/mm/proc-arm1020.S                    |  2 +-
- arch/arm/mm/proc-arm1020e.S                   |  2 +-
- arch/arm/mm/proc-arm1022.S                    |  2 +-
- arch/arm/mm/proc-arm1026.S                    |  2 +-
- arch/arm/mm/proc-arm920.S                     |  2 +-
- arch/arm/mm/proc-arm922.S                     |  2 +-
- arch/arm/mm/proc-arm925.S                     |  2 +-
- arch/arm/mm/proc-arm926.S                     |  2 +-
- arch/arm/mm/proc-arm940.S                     |  2 +-
- arch/arm/mm/proc-arm946.S                     |  2 +-
- arch/arm/mm/proc-feroceon.S                   |  2 +-
- arch/arm/mm/proc-mohawk.S                     |  2 +-
- arch/arm/mm/proc-xsc3.S                       |  2 +-
- arch/arm/mm/tlb-v4.S                          |  2 +-
- arch/arm/kernel/hw_breakpoint.c               |  2 +-
- arch/arm64/kernel/debug-monitors.c            |  2 +-
- arch/arm64/kernel/traps.c                     |  4 +-
- arch/arm64/kvm/handle_exit.c                  |  2 +-
- arch/arm64/net/bpf_jit_comp.c                 |  2 +-
- arch/riscv/net/bpf_jit_comp64.c               |  4 +-
- arch/x86/kernel/alternative.c                 | 43 +++++++++++++++----
- arch/x86/kernel/cfi.c                         |  2 +-
- arch/x86/kernel/kprobes/core.c                |  2 +-
- drivers/misc/lkdtm/cfi.c                      |  2 +-
- kernel/module/tree_lookup.c                   |  2 +-
- kernel/configs/hardening.config               |  2 +-
- 61 files changed, 141 insertions(+), 113 deletions(-)
+Signed-off-by: Kees Cook <kees@outflux.net>
+---
+Cc: David Woodhouse <dwmw2@infradead.org>
+---
+ include/linux/compiler-gcc.h | 4 ----
+ include/linux/init.h         | 8 --------
+ 2 files changed, 12 deletions(-)
 
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index 5d07c469b571..5de824a0b3d7 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -35,10 +35,6 @@
+ 	(typeof(ptr)) (__ptr + (off));					\
+ })
+ 
+-#ifdef CONFIG_MITIGATION_RETPOLINE
+-#define __noretpoline __attribute__((__indirect_branch__("keep")))
+-#endif
+-
+ #if defined(LATENT_ENTROPY_PLUGIN) && !defined(__CHECKER__)
+ #define __latent_entropy __attribute__((latent_entropy))
+ #endif
+diff --git a/include/linux/init.h b/include/linux/init.h
+index a60d32d227ee..17c1bc712e23 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -7,13 +7,6 @@
+ #include <linux/stringify.h>
+ #include <linux/types.h>
+ 
+-/* Built-in __init functions needn't be compiled with retpoline */
+-#if defined(__noretpoline) && !defined(MODULE)
+-#define __noinitretpoline __noretpoline
+-#else
+-#define __noinitretpoline
+-#endif
+-
+ /* These macros are used to mark some functions or 
+  * initialized data (doesn't apply to uninitialized data)
+  * as `initialization' functions. The kernel can take this
+@@ -50,7 +43,6 @@
+ /* These are for everybody (although not all archs will actually
+    discard it in modules) */
+ #define __init		__section(".init.text") __cold __latent_entropy	\
+-						__noinitretpoline	\
+ 						__no_kstack_erase
+ #define __initdata	__section(".init.data")
+ #define __initconst	__section(".init.rodata")
 -- 
 2.34.1
 
