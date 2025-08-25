@@ -1,82 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97B71E89C;
-	Mon, 25 Aug 2025 16:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78DE289802
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Aug 2025 16:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756138605; cv=none; b=oF0Q2GVRfBgGZJ98EySkM04HUKi6WyHC1/4Q3pg2gT5IlbFkTZzz3g0y1vyiazXenrRVovLCOC/Z4BoDhKBy4qJsg2iIFXIVvrDSaa0oYDs4OBB+4BntsTYrFI1dH8LTsNvzPuEScNdfOzoXWtiVE+ejKqwJIhGsbteHvOmVQz4=
+	t=1756139885; cv=none; b=sXPPgrB84Wzt030FlKB6y7c5ye2XtbjM8AyH0W5IaC/f4ovvbbwWFX+gMOugYgVw4BjHUKeI04aGptGijoJzJZMjFAMQasDb80DEqXdM3Q9ZFMSmFQw+PtFtX1TZlUC1kMbJmmGQBMc9OeYOFeubsYCR5zvhqpnBc8r6xv7g1Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756138605; c=relaxed/simple;
-	bh=9C0JTroVYJnMkJclSuilfgsfM6RmsoK/moXeHS/dRAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=toPfLBLMhEMRNahJ1LUutbw6FGgKrSSubRVTOZGIB5FguKfEa1U3fxnRr1mcg73Y+yLkflxktapXgxwVJt4jkwj8o6xxOOZeywJytyDiRvJSuEqq+9d0wTmxKY0Y7qcv94oFngBOWnl+cH8D0Wfra8WB0S1CXKtQcmWTCSZ5sfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfFYvZXM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756139885; c=relaxed/simple;
+	bh=49R1XUoVprLMJDRl704H1HRBpYFddqWu0RvHcoPBUlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hCMKSmlV8Pec9805hVqhIyb1K6hIiXeRja6CjpO0A8t6W96EBEFKnytY7Jn/l8MMPu4jd7cll1WSSK9Ri9D1an9erFOg+l0hLB9S8Gp7ZDhS/qri3f02idYjym0VbILkDO2gXr51ZmIru9ocW42pxxCQFx/C8PofGdhdq4u9ydE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AXjDp+G6; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfFYvZXM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E6A4C4CEED;
-	Mon, 25 Aug 2025 16:16:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756138605;
-	bh=9C0JTroVYJnMkJclSuilfgsfM6RmsoK/moXeHS/dRAc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HfFYvZXMBbgRSX0K3rOpSm2H32pNwz0EEz0H4S8bd5+3uFOutsnu/gA4+ctEHS7ur
-	 VtzlPW/aRP0P5S9aTe+JhuI3FChzXIEqbC+aN2veGXaOG1WRIWV4Psi+l4ONt+ohTF
-	 RyjzwfR0rTyuppZ+FJ3jNBUbzMZaGKzzoFEBXFRp23llVJvWbp47wn+tZBjZQGeoWB
-	 tb71D1+B7nImbFFmi9AowNEy8a6DHnwM8VKGxCarOVIkIRzF9fk369PfmrjngRV5/s
-	 NiocBqHCJ5uUXBhjX8UU+eppr7zFxbil46Apb7ckJhm0LZaf7z5J34/iQwh6ScYl9O
-	 CfcB+v7OD/pyg==
-Date: Mon, 25 Aug 2025 09:16:45 -0700
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org,
-	linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 3/5] x86/cfi: Add option for cfi=debug bootparam
-Message-ID: <202508250916.6424C531F@keescook>
-References: <20250825141316.work.967-kees@kernel.org>
- <20250825142603.1907143-3-kees@kernel.org>
- <20250825155923.GY3245006@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AXjDp+G6"
+Message-ID: <316f57e3-5953-4db6-84aa-df9278461d30@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1756139870;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=irO/0C7BR+axJtgXqBSOvuib9XTOGqEywKCWh0ZA8Ow=;
+	b=AXjDp+G6ZFTa4wnUJLVDBSLiLa/JC3S7lCg+Dc/OUA1Xw/gXWpRaT+ZsqO86MNvaeyIRf3
+	c3/7p59iH1LNGAPc8xfbTR7EyMzLYLYmrqkzG13zC6+QXd16PlYuMAABRIuIeELfBSResh
+	Csb5N9uB9tfqnQniqPTBBYcvtTT7jSE=
+Date: Mon, 25 Aug 2025 17:37:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250825155923.GY3245006@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH net-next v7 4/5] net: rnpgbe: Add basic mbx_fw support
+To: Dong Yibo <dong100@mucse.com>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, corbet@lwn.net, gur.stavi@huawei.com,
+ maddy@linux.ibm.com, mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+ gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+ Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+ alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
+ gustavoars@kernel.org
+Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250822023453.1910972-1-dong100@mucse.com>
+ <20250822023453.1910972-5-dong100@mucse.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250822023453.1910972-5-dong100@mucse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Aug 25, 2025 at 05:59:23PM +0200, Peter Zijlstra wrote:
-> On Mon, Aug 25, 2025 at 07:25:50AM -0700, Kees Cook wrote:
-> 
-> 
-> > +	if (builtin && cfi_debug)
-> > +		if (builtin && cfi_debug)
-> > +		if (builtin && cfi_debug)
-> > +		if (builtin && cfi_debug)
-> > +		if (builtin && cfi_debug)
-> > +		if (builtin && cfi_debug)
-> > +		if (builtin && cfi_debug)
-> > +		if (builtin && cfi_debug)
-> > +		if (builtin && cfi_debug)
-> 
-> You could just make that cfi_debug and add:
-> 
-> 	if (builtin)
-> 		cfi_debug = false;
-> 
-> at the very end of __apply_fineibt().
+On 22/08/2025 03:34, Dong Yibo wrote:
 
-Oh sneaky! Yeah. Will do.
+[...]
+> +/**
+> + * mucse_mbx_fw_post_req - Posts a mbx req to firmware and wait reply
+> + * @hw: pointer to the HW structure
+> + * @req: pointer to the cmd req structure
+> + * @cookie: pointer to the req cookie
+> + *
+> + * mucse_mbx_fw_post_req posts a mbx req to firmware and wait for the
+> + * reply. cookie->wait will be set in irq handler.
+> + *
+> + * @return: 0 on success, negative on failure
+> + **/
+> +static int mucse_mbx_fw_post_req(struct mucse_hw *hw,
+> +				 struct mbx_fw_cmd_req *req,
+> +				 struct mbx_req_cookie *cookie)
+> +{
+> +	int len = le16_to_cpu(req->datalen);
+> +	int err;
+> +
+> +	cookie->errcode = 0;
+> +	cookie->done = 0;
+> +	init_waitqueue_head(&cookie->wait);
+> +	err = mutex_lock_interruptible(&hw->mbx.lock);
+> +	if (err)
+> +		return err;
+> +	err = mucse_write_mbx_pf(hw, (u32 *)req, len);
+> +	if (err)
+> +		goto out;
+> +	/* if write succeeds, we must wait for firmware response or
+> +	 * timeout to avoid using the already freed cookie->wait
+> +	 */
+> +	err = wait_event_timeout(cookie->wait,
+> +				 cookie->done == 1,
+> +				 cookie->timeout_jiffies);
 
--- 
-Kees Cook
+it's unclear to me, what part of the code is managing values of cookie
+structure? I didn't get the reason why are you putting the address of
+cookie structure into request which is then directly passed to the FW.
+Is the FW supposed to change values in cookie?
+
+> +
+> +	if (!err)
+> +		err = -ETIMEDOUT;
+> +	else
+> +		err = 0;
+> +	if (!err && cookie->errcode)
+> +		err = cookie->errcode;
+> +out:
+> +	mutex_unlock(&hw->mbx.lock);
+> +	return err;
+> +}
+
+[...]
+
+> +struct mbx_fw_cmd_req {
+> +	__le16 flags;
+> +	__le16 opcode;
+> +	__le16 datalen;
+> +	__le16 ret_value;
+> +	union {
+> +		struct {
+> +			__le32 cookie_lo;
+> +			__le32 cookie_hi;
+> +		};
+> +
+> +		void *cookie;
+> +	};
+> +	__le32 reply_lo;
+> +	__le32 reply_hi;
+
+what do these 2 fields mean? are you going to provide reply's buffer
+address directly to FW?
+
+> +	union {
+> +		u8 data[32];
+> +		struct {
+> +			__le32 version;
+> +			__le32 status;
+> +		} ifinsmod;
+> +		struct {
+> +			__le32 port_mask;
+> +			__le32 pfvf_num;
+> +		} get_mac_addr;
+> +	};
+> +} __packed;
+> +
+> +struct mbx_fw_cmd_reply {
+> +	__le16 flags;
+> +	__le16 opcode;
+> +	__le16 error_code;
+> +	__le16 datalen;
+> +	union {
+> +		struct {
+> +			__le32 cookie_lo;
+> +			__le32 cookie_hi;
+> +		};
+> +		void *cookie;
+> +	};
+
+This part looks like the request, apart from datalen and error_code are
+swapped in the header. And it actually means that the FW will put back
+the address of provided cookie into reply, right? If yes, then it
+doesn't look correct at all...
+
+> +	union {
+> +		u8 data[40];
+> +		struct mac_addr {
+> +			__le32 ports;
+> +			struct _addr {
+> +				/* for macaddr:01:02:03:04:05:06
+> +				 * mac-hi=0x01020304 mac-lo=0x05060000
+> +				 */
+> +				u8 mac[8];
+> +			} addrs[4];
+> +		} mac_addr;
+> +		struct hw_abilities hw_abilities;
+> +	};
+> +} __packed;
