@@ -1,170 +1,181 @@
-Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68B1CA6F;
-	Mon, 25 Aug 2025 01:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE1322A1E1;
+	Mon, 25 Aug 2025 02:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756085480; cv=none; b=rxbOaSq5fojt4LbityX7pmO2W6KNUw8brXcl7J8wcmFB40XkE6ruqRyTpsPHuuM/OOmwHs8vf/AvuimVXldoUMFX/oKgFxHpCkJP5kjrOPeoRT+vzZfJfdXT2q0h+gv37kfsTK9++c4iCqtSALewqLRPl0aqbAqBQRV7FrWsIEM=
+	t=1756089022; cv=none; b=phOk8TC5kOuLgOfmzJ6EzTPXDJXboC1PZ2gugdV0L1jKOtFSFivj9Xy8P3p8/APj+07y9wANADnYtf+5x0zJA+u8+IkypVPO3VbVeyz/+biRI2QvWwf/MTTbN2T8386BXx04rLs1vuGdGuhHAGIAq7jZGdYEuLm1LHm+j6trWDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756085480; c=relaxed/simple;
-	bh=ip4FvYYw88ouWT6itUmL/S531RHQ7rP5ltgGr1KS+qk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rQB2Z0IjnjURDHzPRCYnN92Xu4mowIUNAXRMXfe1Ga3hjFu6CTwV2myyKZ6sqvnfn/9nlJ9SD3SLfb7mShZ0XNmlK/c4uBxPmuUkYbIObDPR/huz7+0lpEtXd+LYBerDCcWaJ8GV8nPmtfnz/R7eLrtz2FikOckojId6mFj5mWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=18.132.163.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
-X-QQ-mid: esmtpsz10t1756085455t51d7e1a8
-X-QQ-Originating-IP: nHucB3JtzMCn34hcRKZD02jofGkp3qyqMaeH0wrqwoo=
-Received: from localhost ( [203.174.112.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 25 Aug 2025 09:30:53 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 11934234295190835703
-Date: Mon, 25 Aug 2025 09:30:53 +0800
-From: Yibo Dong <dong100@mucse.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
-	gustavoars@kernel.org, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v7 4/5] net: rnpgbe: Add basic mbx_fw support
-Message-ID: <8989E7A85A9468B0+20250825013053.GA2006401@nic-Precision-5820-Tower>
-References: <20250822023453.1910972-1-dong100@mucse.com>
- <20250822023453.1910972-5-dong100@mucse.com>
- <a066746c-2f12-4e70-b63a-7996392a9132@lunn.ch>
- <C2BF8A6A8A79FB29+20250823015824.GB1995939@nic-Precision-5820-Tower>
- <f375e4bf-9b0b-49ca-b83d-addeb49384b8@lunn.ch>
- <424D721323023327+20250824041052.GB2000422@nic-Precision-5820-Tower>
- <809527f7-c838-4582-89cb-6cb9d24963dd@lunn.ch>
+	s=arc-20240116; t=1756089022; c=relaxed/simple;
+	bh=RsMWfaOhha6pvgiCZ8f22x4IYWbxbPYgWGKz1vmy5vw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lK4T08ROlZ5SQwY2zC1xXH23aTzMReCLevVs3NJ+7gCXSNtJE93ZkDt790PH+ePkAAEcJ7aSvkyqRWrGzOvQo2Zclwn75kArQVFNahkNFJgFL9zdwQRozxbzQU4xS4YoIC8TpPa9G4MFrYVIrhROJgwT4Eh8Liv7vnAEtfVGeQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xz+Gsm8N; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xz+Gsm8N"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-325195d1b1bso1777242a91.2;
+        Sun, 24 Aug 2025 19:30:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756089020; x=1756693820; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nYO/YmS5jL3ZM2fX1JrJ0oWdxchh893vzLzAxL1PuNk=;
+        b=Xz+Gsm8NHjPgLKRqUir8juluZX0Qad8EDZfY+bTue95fySvFDefcy0KWKJ/V50Vryi
+         nE7dAjXI4NqNrCONMQOFMSolWfaOshr7M5kr17uXj0G20hTnYCpXANTRlVjeTJWR9iks
+         p6h/uI2dwu8O7CAmYIY8EPXLlFo4tqycFTd0mNqYltnGYJ1kXR0/kZRjHZCx8270oJgf
+         pxuVZhCNYm+ZY3F6ZcwLLgCfW4uaPOAeVJudAFuGhF3Q89oHgGCPiid4I6dO4YpvHFCY
+         LOXUJ6T3e00tqj2YtqFKPkKcNDMXbNSW87eNm3XAAgb7D9jAZg7Zdis1WRoGiM3awEcO
+         EPrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756089020; x=1756693820;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nYO/YmS5jL3ZM2fX1JrJ0oWdxchh893vzLzAxL1PuNk=;
+        b=sC+tb9mTcbIU4qrBjOY2Rw93YbHkHizPDvq9IKTTQZ9ogRZXxz1s3u1S2TMmd1lNLI
+         sOws0JMd/x/s3ojRWw58GV7hy2tJuEngFfhUWkbzWwMI0KtbURty7bwh4NqIZjzw1wco
+         tfjLX75P4wNJBQArbr7dCQdgH+wGXP/TLLlG6e8rWc3drgDPnenBSzMU3gjbs2rzSArk
+         4oeu7+KhUWwyOh+zwDuJlRzv9C7Dv2TNOXWTOa5tEo+Zg80kAx/74NvJ6IPhYJIzqBIf
+         i+Nxj+tyxPlo9462uuS87weEZ6H1oVlEwHtuAfcWDB7tf+SImToePcIFYieCFlsPvUyc
+         xV6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUidRDR2sdEfdsAD8lNFvo1NAFuZmaT6IJaGs1eyNlt35ZlhZRll3n9MqPQHW252ag+17CuVTipMwKOQB3tYpxv@vger.kernel.org, AJvYcCUkyyaWiS1fQ6piNKLNp/nRbIl2cAEnLQXXt1MJG1q7lfoQD9/JEYXFlc5IXilmjXaaS8liv7um6tbfHg==@vger.kernel.org, AJvYcCW7guMgxi1cnBh2/jXN9BR3U8lM0XZDEt0HMBshYYK1OjYVGl4WgzjUiBSF3LYds0h5n9VLVqOH/RLOHN6n@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxY/SD0Vhy/er8tQnGD2SnBmZ0RpHeHzp/ENUHUsUij21wi7Jy
+	ep5lGjIKNDsFksatAHdkNcS5g9/FqlNAt2GIXdI+E7RmDnjFoqX7DEjg
+X-Gm-Gg: ASbGncsFXaEkRWQx7ADzYKOgfxeBtXhjoAcX5zym9qP7k9iKSAtwjQtmGKWezqYGTAK
+	3ArznD5qBupm6psYkOaING1ZSUIAQGqAKOPRBsEo6b/7PTKzHrSDokx9JpBewO0J9GEuoID9SSU
+	NYJ0JAKH5LGeqJPd3UCJaA4iaTmkon6xsH/AM2VjZMkpP4XLxHwbkUCTMyvxHdoKNH7TEFiNPkV
+	AMaRUdmJ1tvmIdh/zBNWM3Xa3ZO4u4yzJArD73bIpRm7QzD0aPth1xarAgSit3c+xnyXO1EoNL8
+	g/zPpGz5FZWP7nzTBrVkYma9aaaSFQyKTdwyHRH9PDnMR6/eDIi+1VPUd26hmQN5ZXCBN/v8zv2
+	w24XWBnrmx0Ji8yOUmQwrgWoiC7hyiUbm7Kw5p2h3N16ICXKyjeR52gkKRcgsboAmTvMHAa3Chj
+	4=
+X-Google-Smtp-Source: AGHT+IGcXL928gw4jZtFeS2GjzwHFx9joFXeGHPpEdrU46U9OgXBCfZHOfrutnNUpiMm/H6uh+w8Yw==
+X-Received: by 2002:a17:902:cec2:b0:236:9726:7264 with SMTP id d9443c01a7336-2462edc37a2mr159709745ad.5.1756089020026;
+        Sun, 24 Aug 2025 19:30:20 -0700 (PDT)
+Received: from localhost.localdomain ([114.242.33.243])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-246687af234sm53905175ad.48.2025.08.24.19.30.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Aug 2025 19:30:19 -0700 (PDT)
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Qianqiang Liu <qianqiang.liu@163.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Helge Deller <deller@gmx.de>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
+	Shixiong Ou <oushixiong@kylinos.cn>,
+	Jinchao Wang <wangjinchao600@gmail.com>,
+	Zsolt Kajtar <soci@c64.rulez.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Nam Cao <namcao@linutronix.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Joel Granados <joel.granados@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Feng Tang <feng.tang@linux.alibaba.com>,
+	Sravan Kumar Gundu <sravankumarlpu@gmail.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Anna Schumaker <anna.schumaker@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	Yunhui Cui <cuiyunhui@bytedance.com>,
+	Tejun Heo <tj@kernel.org>,
+	Luo Gengkun <luogengkun@huaweicloud.com>,
+	Li Huafei <lihuafei1@huawei.com>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	kexec@lists.infradead.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/9] panic: introduce panic status function family
+Date: Mon, 25 Aug 2025 10:29:28 +0800
+Message-ID: <20250825022947.1596226-1-wangjinchao600@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <809527f7-c838-4582-89cb-6cb9d24963dd@lunn.ch>
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OBUGnm9pFasAiZ6W90wYeKsby/+S0wZ8wiyoTqCKQr2mZNPk/xuvOhnt
-	vPAIHQk5tb87rpyR8tBfYmrgCdVLT1kKCtCB/hsps9/XhR/yK1wlC5kFfqXStXS8d5hUHq3
-	UgjO1xgNlYbfNTrE/0Irj6zsTut6gGvcxeGp5aNYK5Ml2zdsOhcjYY0uhO4ATMPM5i3mDPP
-	RRCc/OcH2vtkfWRsx/T0iOJKTRlfhA+RH5N1JlWDVRRvbkYS+glx7cuFXJM1QOtKFyM+9v/
-	NW9axunD9HSRfmndx5E5zmtCyzvxHI7xZCjCOnDENvn//Oku01vlL7Fi62GhHMdtbjTQlUE
-	K3YtJLJ47FjbgoEx8fhvAyfyNeIylB7kQcCIuV7WYpy5gCHmAPZVH2QV9Hl5c0jJKA5S5oe
-	OzRCHoOpc+f4e+hP3oQ+lE4hOARCrKg4fjxxmQtmouAHfkd1Cb1bmoiTEGKvsyMXuiBMiHq
-	do8nkr/O90mZZ7CyKosJlQdmqoKFPpdI++Sqq2X5dLs15tyEXImnO+dnqch0ZP3yn6h+uWT
-	enHZ78B0ofJSDCz+D+iz0VJ5GoILj1eilNbEH20kIDamSP2ilJknDst9MkC6eESn19uNweV
-	mKaHwYg6OBrtj9uboNgX0S9mr6BLyHM+ZHabZsLBuBmBOsMssCLFAf2owXg7RVO0InrZImK
-	8Cu6zKQiKbdf2hVBHjnL0rXWLSpVj8nRryIbVNDgcYh//OGWYAgFkWfRCv6boljH1KMCki5
-	tji2SaOwLj/6dX2F0XzgPwUayCVKyHz/+uc+LAbe/qMg87N5Vjlu0auRyajVYY1Dmqd9PNt
-	vTu8WyXSZUh/+5ziPT2ACSzMgWhlgDR2tXpf5X6Q4NWzwKV+WyzckmjjUAYBqipM8S9AGI/
-	avvy1EZ8fZEXArLXQnz7EPGe4gOd8EuXPxcl30gWDa5wQ5YvMT2Sl7l/ptzwPZscs4Omdjg
-	7I25sBT/Ol0dkmkbhppZ5QUgD4O6yvtl3Ys1yROMg+KQQWSnsmJHvL1s7
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Aug 24, 2025 at 05:15:25PM +0200, Andrew Lunn wrote:
-> On Sun, Aug 24, 2025 at 12:10:52PM +0800, Yibo Dong wrote:
-> > On Sat, Aug 23, 2025 at 05:17:45PM +0200, Andrew Lunn wrote:
-> > > On Sat, Aug 23, 2025 at 09:58:24AM +0800, Yibo Dong wrote:
-> > > > On Fri, Aug 22, 2025 at 04:43:16PM +0200, Andrew Lunn wrote:
-> > > > > > +/**
-> > > > > > + * mucse_mbx_get_capability - Get hw abilities from fw
-> > > > > > + * @hw: pointer to the HW structure
-> > > > > > + *
-> > > > > > + * mucse_mbx_get_capability tries to get capabities from
-> > > > > > + * hw. Many retrys will do if it is failed.
-> > > > > > + *
-> > > > > > + * @return: 0 on success, negative on failure
-> > > > > > + **/
-> > > > > > +int mucse_mbx_get_capability(struct mucse_hw *hw)
-> > > > > > +{
-> > > > > > +	struct hw_abilities ability = {};
-> > > > > > +	int try_cnt = 3;
-> > > > > > +	int err = -EIO;
-> > > > > > +
-> > > > > > +	while (try_cnt--) {
-> > > > > > +		err = mucse_fw_get_capability(hw, &ability);
-> > > > > > +		if (err)
-> > > > > > +			continue;
-> > > > > > +		hw->pfvfnum = le16_to_cpu(ability.pfnum) & GENMASK_U16(7, 0);
-> > > > > > +		return 0;
-> > > > > > +	}
-> > > > > > +	return err;
-> > > > > > +}
-> > > > > 
-> > > > > Please could you add an explanation why it would fail? Is this to do
-> > > > > with getting the driver and firmware in sync? Maybe you should make
-> > > > > this explicit, add a function mucse_mbx_sync() with a comment that
-> > > > > this is used once during probe to synchronise communication with the
-> > > > > firmware. You can then remove this loop here.
-> > > > 
-> > > > It is just get some fw capability(or info such as fw version).
-> > > > It is failed maybe:
-> > > > 1. -EIO: return by mucse_obtain_mbx_lock_pf. The function tries to get
-> > > > pf-fw lock(in chip register, not driver), failed when fw hold the lock.
-> > > 
-> > > If it cannot get the lock, isn't that fatal? You cannot do anything
-> > > without the lock.
-> > > 
-> > > > 2. -ETIMEDOUT: return by mucse_poll_for_xx. Failed when timeout.
-> > > > 3. -ETIMEDOUT: return by mucse_fw_send_cmd_wait. Failed when wait
-> > > > response timeout.
-> > > 
-> > > If its dead, its dead. Why would it suddenly start responding?
-> > > 
-> > > > 4. -EIO: return by mucse_fw_send_cmd_wait. Failed when error_code in
-> > > > response.
-> > > 
-> > > Which should be fatal. No retries necessary.
-> > > 
-> > > > 5. err return by mutex_lock_interruptible.
-> > > 
-> > > So you want the user to have to ^C three times?
-> > > 
-> > > And is mucse_mbx_get_capability() special, or will all interactions
-> > > with the firmware have three retries?
-> > 
-> 
-> > It is the first 'cmd with response' from fw when probe. If it failed,
-> > return err and nothing else todo (no registe netdev ...). So, we design
-> > to give retry for it.
-> > fatal with no retry, maybe like this? 
->  
-> Quoting myself:
-> 
-> > > > > Is this to do
-> > > > > with getting the driver and firmware in sync? Maybe you should make
-> > > > > this explicit, add a function mucse_mbx_sync() with a comment that
-> > > > > this is used once during probe to synchronise communication with the
-> > > > > firmware. You can then remove this loop here.
+This series introduces a family of helper functions to manage panic state and
+updates existing code to use them.
 
-'mucse_mbx_get_capability' is used once during probe in fact, and won't be
-used anywhere.
+Before this series, panic state helpers were scattered and inconsistent. For
+example, panic_in_progress() was defined in printk/printk.c, not in panic.c or
+panic.h. As a result, developers had to look in unexpected places to understand
+or re-use panic state logic. Other checks were open- coded, duplicating logic
+across panic, crash, and watchdog paths.
 
-> 
-> Does the firmware offer a NOP command? Or one to get the firmware
-> version?  If you are trying to get the driver and firmware in sync, it
-> make sense to use an operation which is low value and won't be used
-> anywhere else.
-> 
-> 	Andrew
-> 
+The new helpers centralize the functionality in panic.c/panic.h:
+  - panic_try_start()
+  - panic_reset()
+  - panic_in_progress()
+  - panic_on_this_cpu()
+  - panic_on_other_cpu()
 
-No NOP command.. 'mucse_mbx_get_capability' can get the firmware version
-and in fact only used in probe, maybe I should rename it to 'mucse_mbx_sync',
-and add comment 'only be used once during probe'?
-Or keep the name with that comment?
+Patches 1–8 add the helpers and convert panic/crash and printk/nbcon code to
+use them.
 
-Thanks for your feedback.
+Patch 9 fixes a bug in the watchdog subsystem by skipping checks when a panic
+is in progress, avoiding interference with the panic CPU.
+
+Together, this makes panic state handling simpler, more discoverable, and more
+robust.
+
+-- 
+
+Changes from v1:
+
+  - The commit messages have been re-formatted based on Baoquan He's suggestions.
+  - The panic_in_progress() check has been moved to be the first check in
+    watchdog_overflow_callback(), as suggested by Yury Norov.
+
+Link to v1:
+https://lore.kernel.org/all/20250820091702.512524-1-wangjinchao600@gmail.com/
+
+Jinchao Wang (9):
+  panic: Introduce helper functions for panic state
+  fbdev: Use panic_in_progress() helper
+  crash_core: use panic_try_start() in crash_kexec()
+  panic: use panic_try_start() in nmi_panic()
+  panic: use panic_try_start() in vpanic()
+  printk/nbcon: use panic_on_this_cpu() helper
+  panic/printk: replace this_cpu_in_panic() with panic_on_this_cpu()
+  panic/printk: replace other_cpu_in_panic() with panic_on_other_cpu()
+  watchdog: skip checks when panic is in progress
+
+ drivers/video/fbdev/core/fbcon.c  |  9 +---
+ include/linux/panic.h             |  6 +++
+ include/linux/printk.h            |  2 -
+ kernel/crash_core.c               | 15 ++-----
+ kernel/panic.c                    | 71 +++++++++++++++++++++++++------
+ kernel/printk/internal.h          |  1 -
+ kernel/printk/nbcon.c             | 14 +++---
+ kernel/printk/printk.c            | 37 +++-------------
+ kernel/printk/printk_ringbuffer.c |  2 +-
+ kernel/watchdog.c                 |  6 +++
+ kernel/watchdog_perf.c            |  4 ++
+ lib/dump_stack.c                  |  2 +-
+ 12 files changed, 91 insertions(+), 78 deletions(-)
+
+-- 
+2.43.0
 
