@@ -1,118 +1,255 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45AB28F1
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Aug 2025 08:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8371991BF
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Aug 2025 12:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756109650; cv=none; b=p19XWZF2K085uCqt6jWuPih8UqO4yb6LL/Zw72IpZ6xhMwM6zHwOsI4qa0HccfC4kKhaGFphv3G/gXFG9u6efCBgjZVuQNX/34T9crV2a2YXhgSCXibPdDevR/ffpvWyOHbQkOSJZJMI/2gUSzeeAOIwHKQgY4x7KsxS0qqPsTw=
+	t=1756126513; cv=none; b=C+5dcffUZIuZ2FHjxuhoV/VtwC9AGVln4jJUDtWHM7owQF9bd3WXhIFr5CTJepigRW89JvjBWqymy9CcZMqbLAYk6LzNR6NhU8heDg8QuFOBEqN8D0szXCcaAmeEACroqqp0MKQSIcAru7FTUkWmGuJnVoLRlI/cNl4P7tvns8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756109650; c=relaxed/simple;
-	bh=8s5t2owYPtmxiICQgtYcgysAMaPRgAtiQulUGdZjG+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pgkZ/NBa65ldscsZaV/UeDeybAeEgE3fXgfcaF0IUXoMs6FigO2UZ+WJmJ5B5R/ksd8pp2yZ4rdt6uJe4ExZICAuT0xFYCuhxqlEgx/ubtCUgXt7j+mGtfJO6LYGeD4xHf5Q7fSWT5EsVmGSzINn2EJjLkWggOli6ZYGomtHo/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CmqhLnsV; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1756126513; c=relaxed/simple;
+	bh=p6Zmaj5smnWJq2PWn5FiDiA6cSwI6w5qSVM1iEtB1lM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BOcXaj+JRv8nBqV35CGX8sbrKB2mQlpAU0ppzDZ2XoWS7KkGOGV4cBKL3R2Nesr072nt7rdcgE56j+OJgwZPjXa0gJ2CQe/UvwRHGD4bSMuNGchEF2/M28T6a0RTJ5MKl9R82uGW2ecbT8NyuG1u3rWVHMFxDcWw2dsuluSPF0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XhEYek19; arc=none smtp.client-ip=209.85.221.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CmqhLnsV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lRTu9c5L46ycIUkXtSIz7cdzeUcrFWh9AwNt49e3hU4=; b=CmqhLnsVB221BMPL6HHRq6cSb7
-	UPGvOseOmjBPKuJdo7GHMGb7l51v8nl6paa5viQB4uv7xcAlzIlp5SyMZsfua8qd9aiGPBN84pIGE
-	DOULYSepO7SFkhmZ7ihpx0G/wRdo5e4uWnR9t7QwjEb+pnXEdP9AzqRhDyPpvsHIWTr64nfpXt3qN
-	8TM7Xr/eRvN5qa/1+lPGExNYARbJ4THyg6bJM+JVj7rUahstjXu68J+lGCUF2cS0THOoqYfO3B80t
-	yOVYwoSydcnzfHOsmlk+SBvYFy6RF+/g6pv9BE3zc/GnzA7oNZHjoqMazT/ZlH3SqzcGpkfQuIwqO
-	xT/5qBtQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uqSL1-00000001mT3-19kT;
-	Mon, 25 Aug 2025 08:13:59 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3BC463002ED; Mon, 25 Aug 2025 10:13:58 +0200 (CEST)
-Date: Mon, 25 Aug 2025 10:13:58 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Qing Zhao <qing.zhao@oracle.com>,
-	Andrew Pinski <andrew.pinski@oss.qualcomm.com>,
-	"gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
-	Joseph Myers <josmyers@redhat.com>,
-	Richard Biener <rguenther@suse.de>, Jan Hubicka <hubicka@ucw.cz>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Richard Sandiford <richard.sandiford@arm.com>,
-	Marcus Shawcroft <marcus.shawcroft@arm.com>,
-	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-	Kito Cheng <kito.cheng@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Waterman <andrew@sifive.com>,
-	Jim Wilson <jim.wilson.gcc@gmail.com>,
-	Dan Li <ashimida.1990@gmail.com>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/7] mangle: Introduce C typeinfo mangling API
-Message-ID: <20250825081358.GS3245006@noisy.programming.kicks-ass.net>
-References: <20250821064202.work.893-kees@kernel.org>
- <20250821072708.3109244-2-kees@kernel.org>
- <CALvbMcAPV1eB6nocPAS=qR8SCiQyU43v911R8S7Ah_=G7yK-+g@mail.gmail.com>
- <202508210841.8BE6E3C117@keescook>
- <E69330D6-1302-4BA1-BADD-8C91A096A1FD@oracle.com>
- <202508211258.8DEE293@keescook>
- <22C19D00-58D7-4854-915E-C7B8CDB3317E@oracle.com>
- <202508221149.F19A56772@keescook>
- <0F3CAA68-8C9E-49AC-8B12-95BE8E92475C@oracle.com>
- <202508221519.02CEBB27@keescook>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XhEYek19"
+Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-3c380aa1ad0so2123108f8f.3
+        for <linux-hardening@vger.kernel.org>; Mon, 25 Aug 2025 05:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756126510; x=1756731310; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nyb7W0i1P3IjF0jcI+ICuOqZQ1VFzRLlpkO8ArSEv2U=;
+        b=XhEYek19T5/sOMJKe+Xz4/zVwm71KDg/IEs2q2n0mApkAfodD9NJ7S5McLDgflqOOB
+         vVeH1UUGz5sOuFNPJgLbnSSefMyh5FfHHbm9fY5KHLBt4MN2d4t9kieYx+Spt0B5Bv3G
+         yyk+PJDpdnsvaYQhK2RRdvoQIEA8uFDqOLnYfIh/0nkJI6QfqL0IW4H+ayMC+kVB3mfD
+         vSmeBya6U8JknaHWogW1GW3gEM6N+lpLOWSuLzsn7mZNfVbC0aGdxAMGCzdwbQGLK6PV
+         iCcDaPWN0bwDNG4DqdMQWTCha0tI6rojMVmcCfgF5eX8G+ky9tXQ7KRcHFEVofARS5RK
+         uSYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756126510; x=1756731310;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nyb7W0i1P3IjF0jcI+ICuOqZQ1VFzRLlpkO8ArSEv2U=;
+        b=eXzEScZ3VP4e2hYDOxEzoE1F+STW/DEd+7WHf2Eiff/WYg8hcBFrgT/5undlSwjfiA
+         Q4ykMS6DSp39yA/xoGBJjImuv5mYhj4wRSUmh4XCb/SGwi9L9hfeDJMZh40qoWbLVo4w
+         SWuzIDYwn6pvI6XjJNo1L91qEcjTPid4mi8/6miCi0djkf7t5Ep9acivul7G9+JbzPBG
+         8d6iSvCOK3m5+Sw1+B3KjBqhEa5q0pDIjoc4zm5N4blBwhGdPAOsjLeCS6pYuurpyOcc
+         fzmrXLcY/Hyl47QwQmT9mDAQgAiUU46xvAhk+9Lw3Hv3eI/vHvYjECncmAa28/Jgsn9x
+         gfmg==
+X-Forwarded-Encrypted: i=1; AJvYcCVOM3XouEdCfaDdgXAE7rMWtmYbQEQIukxSZ7HFKxs9MpihoI2ZmydQhP8a2JuvHB4icnswIEJmDKOwmtc7FOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+3RLtwy/54UWDOlrF2gH70uCArxoQiZ3HDqircFuWdZLPvqNF
+	YkW7+RTgB6hwdidC7eq8NjF/JNUS1KY+TDX6slZUOwl8S9Ctpom3mH5gD9nzXLDVwj4=
+X-Gm-Gg: ASbGncuRvV3Q+GjFsKoIp2UsPvyjsYIQTdsPBZDRN6laSPC4PHaLQhlDS/gAXkuPevQ
+	PP9KNGTswSPxVDPTmYTLMTEiNnorRRktWmwfLzD37y1kQ9BWt5rIbX1PSCtTKqMJe4FJbvWZbK1
+	nxU0j8puQ6pWqhZWV/w15ihzOhoALlcikVctTuuUEoUHi1XVrpVCmFcX2tz+rr/yhB1vB/bYSdD
+	Np4DC1bucJj0E8MTN/BQMLXSVCpgTIcCOfmoDauaDeiMGsnaW8xWUSM0A4/5NJcMnsKbJYu3jtN
+	wtBokPniDrfLliBdc8+I5yj3lz3V87G2gvDgCZRKEMPxoaXXjN8ZwgSHsSn7jx1+EYHKQnYolPW
+	8yhv+MmV9FfC8U7h7vOiNJThBOjuF+g==
+X-Google-Smtp-Source: AGHT+IGiatYdBiQIlX08WDb3q8TgWhNu9cU7pZ5BZYgWH52vQcA/WE9cIPHsPYf1nJo7amAILSvRZA==
+X-Received: by 2002:a05:6000:40dd:b0:3a4:d6ed:8df8 with SMTP id ffacd0b85a97d-3c5dc734927mr8857444f8f.39.1756126509927;
+        Mon, 25 Aug 2025 05:55:09 -0700 (PDT)
+Received: from [192.168.0.24] ([82.76.24.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b57487910sm107774225e9.15.2025.08.25.05.55.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Aug 2025 05:55:09 -0700 (PDT)
+Message-ID: <64a93c4a-5619-4208-9e9f-83848206d42b@linaro.org>
+Date: Mon, 25 Aug 2025 15:55:07 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202508221519.02CEBB27@keescook>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH v2 22/29] mm/numa: Register information into Kmemdump
+To: David Hildenbrand <david@redhat.com>, Michal Hocko <mhocko@suse.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org, tglx@linutronix.de,
+ andersson@kernel.org, pmladek@suse.com,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+ corbet@lwn.net, mojha@qti.qualcomm.com, rostedt@goodmis.org,
+ jonechou@google.com, tudor.ambarus@linaro.org,
+ Christoph Hellwig <hch@infradead.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>
+References: <20250724135512.518487-1-eugen.hristev@linaro.org>
+ <20250724135512.518487-23-eugen.hristev@linaro.org>
+ <ffc43855-2263-408d-831c-33f518249f96@redhat.com>
+ <e66f29c2-9f9f-4b04-b029-23383ed4aed4@linaro.org>
+ <751514db-9e03-4cf3-bd3e-124b201bdb94@redhat.com>
+ <aJCRgXYIjbJ01RsK@tiehlicka>
+ <e2c031e8-43bd-41e5-9074-c8b1f89e04e6@linaro.org>
+ <23e7ec80-622e-4d33-a766-312c1213e56b@redhat.com>
+ <f43a61b4-d302-4009-96ff-88eea6651e16@linaro.org>
+ <77d17dbf-1609-41b1-9244-488d2ce75b33@redhat.com>
+ <ecd33fa3-8362-48f0-b3c2-d1a11d8b02e3@linaro.org>
+ <9f13df6f-3b76-4d02-aa74-40b913f37a8a@redhat.com>
+From: Eugen Hristev <eugen.hristev@linaro.org>
+Content-Language: en-US
+In-Reply-To: <9f13df6f-3b76-4d02-aa74-40b913f37a8a@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Aug 22, 2025 at 03:29:11PM -0700, Kees Cook wrote:
-> On Fri, Aug 22, 2025 at 08:29:16PM +0000, Qing Zhao wrote:
-> > > On Aug 22, 2025, at 15:02, Kees Cook <kees@kernel.org> wrote:
-> > > Right, and sometimes we have to explicitly perform a no-op
-> > > address-taking to make sure a symbol gets generated:
-> > > 
-> > > /*
-> > > * Force the compiler to emit 'sym' as a symbol, so that we can reference
-> > > * it from inline assembler. Necessary in case 'sym' could be inlined
-> > > * otherwise, or eliminated entirely due to lack of references that are
-> > > * visible to the compiler.
-> > > */
-> > > #define ___ADDRESSABLE(sym, __attrs)                                            \
-> > >        static void * __used __attrs                                            \
-> > >        __UNIQUE_ID(__PASTE(__addressable_,sym)) = (void *)(uintptr_t)&sym;
-> > > 
-> > > #define __ADDRESSABLE(sym) \
-> > >        ___ADDRESSABLE(sym, __section(".discard.addressable"))
-> > > 
-> > > $ git grep KCFI_REFERENCE
-> > > include/linux/compiler.h:#define KCFI_REFERENCE(sym) __ADDRESSABLE(sym)
-> > > arch/x86/include/asm/page_64.h:KCFI_REFERENCE(copy_page);
-> > > arch/x86/include/asm/string_64.h:KCFI_REFERENCE(__memset);
-> > > arch/x86/include/asm/string_64.h:KCFI_REFERENCE(__memmove);
-> > > arch/x86/kernel/alternative.c:KCFI_REFERENCE(__bpf_prog_runX);
-> > > arch/x86/kernel/alternative.c:KCFI_REFERENCE(__bpf_callback_fn);
-> > 
-> > I am curious on why the compiler eliminates an external routine completely in the file if it's address-taken in that file. 
-> > Why an additional no-op address-taken is needed here. 
-> 
-> If I am remembering correctly this is needed for rare cases where
-> a function built without a C definition is being used in Linux's
-> self-patching "alternatives" code swaps in one function for another,
-> and is being used indirectly. These cases end up not being visible to
-> compiler (so no address-taken), but the indirect call site is still
-> being instrumented. And the above list is the _entire_ list of such
-> corner cases: all really low-level things.
-> 
-> Peter may remember this better than me...
 
-The above are all functions from assembly and JITs, the C compiler
-simply never sees the function definition, only the declaration. The
-above is used to force emit the __typeid symbol, such that assembly can
-reference it and it all links correctly.
+
+On 8/4/25 16:26, David Hildenbrand wrote:
+> On 04.08.25 15:03, Eugen Hristev wrote:
+>>
+>>
+>> On 8/4/25 15:49, David Hildenbrand wrote:
+>>> On 04.08.25 14:29, Eugen Hristev wrote:
+>>>>
+>>>>
+>>>> On 8/4/25 15:18, David Hildenbrand wrote:
+>>>>> On 04.08.25 13:06, Eugen Hristev wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 8/4/25 13:54, Michal Hocko wrote:
+>>>>>>> On Wed 30-07-25 16:04:28, David Hildenbrand wrote:
+>>>>>>>> On 30.07.25 15:57, Eugen Hristev wrote:
+>>>>>>> [...]
+>>>>>>>>> Yes, registering after is also an option. Initially this is how I
+>>>>>>>>> designed the kmemdump API, I also had in mind to add a flag, but, after
+>>>>>>>>> discussing with Thomas Gleixner, he came up with the macro wrapper idea
+>>>>>>>>> here:
+>>>>>>>>> https://lore.kernel.org/lkml/87ikkzpcup.ffs@tglx/
+>>>>>>>>> Do you think we can continue that discussion , or maybe start it here ?
+>>>>>>>>
+>>>>>>>> Yeah, I don't like that, but I can see how we ended up here.
+>>>>>>>>
+>>>>>>>> I also don't quite like the idea that we must encode here what to include in
+>>>>>>>> a dump and what not ...
+>>>>>>>>
+>>>>>>>> For the vmcore we construct it at runtime in crash_save_vmcoreinfo_init(),
+>>>>>>>> where we e.g., have
+>>>>>>>>
+>>>>>>>> VMCOREINFO_STRUCT_SIZE(pglist_data);
+>>>>>>>>
+>>>>>>>> Could we similar have some place where we construct what to dump similarly,
+>>>>>>>> just not using the current values, but the memory ranges?
+>>>>>>>
+>>>>>>> All those symbols are part of kallsyms, right? Can we just use kallsyms
+>>>>>>> infrastructure and a list of symbols to get what we need from there?
+>>>>>>>
+>>>>>>> In other words the list of symbols to be completely external to the code
+>>>>>>> that is defining them?
+>>>>>>
+>>>>>> Some static symbols are indeed part of kallsyms. But some symbols are
+>>>>>> not exported, for example patch 20/29, where printk related symbols are
+>>>>>> not to be exported. Another example is with static variables, like in
+>>>>>> patch 17/29 , not exported as symbols, but required for the dump.
+>>>>>> Dynamic memory regions are not have to also be considered, have a look
+>>>>>> for example at patch 23/29 , where dynamically allocated memory needs to
+>>>>>> be registered.
+>>>>>>
+>>>>>> Do you think that I should move all kallsyms related symbols annotation
+>>>>>> into a separate place and keep it for the static/dynamic regions in place ?
+>>>>>
+>>>>> If you want to use a symbol from kmemdump, then make that symbol
+>>>>> available to kmemdump.
+>>>>
+>>>> That's what I am doing, registering symbols with kmemdump.
+>>>> Maybe I do not understand what you mean, do you have any suggestion for
+>>>> the static variables case (symbols not exported) ?
+>>>
+>>> Let's use patch #20 as example:
+>>>
+>>> What I am thinking is that you would not include "linux/kmemdump.h" and
+>>> not leak all of that KMEMDUMP_ stuff in all these files/subsystems that
+>>> couldn't less about kmemdump.
+>>>
+>>> Instead of doing
+>>>
+>>> static struct printk_ringbuffer printk_rb_dynamic;
+>>>
+>>> You'd do
+>>>
+>>> struct printk_ringbuffer printk_rb_dynamic;
+>>>
+>>> and have it in some header file, from where kmemdump could lookup the
+>>> address.
+>>>
+>>> So you move the logic of what goes into a dump from the subsystems to
+>>> the kmemdump core.
+>>>
+>>
+>> That works if the people maintaining these systems agree with it.
+>> Attempts to export symbols from printk e.g. have been nacked :
+>>
+>>   https://lore.kernel.org/all/20250218-175733-neomutt-senozhatsky@chromium.org/
+> 
+> Do you really need the EXPORT_SYMBOL?
+> 
+> Can't you just not export symbols, building the relevant kmemdump part 
+> into the core not as a module.
+> 
+> IIRC, kernel/vmcore_info.c is never built as a module, as it also 
+> accesses non-exported symbols.
+
+Hello David,
+
+I am looking again into this, and there are some things which in my
+opinion would be difficult to achieve.
+For example I looked into my patch #11 , which adds the `runqueues` into
+kmemdump.
+
+The runqueues is a variable of `struct rq` which is defined in
+kernel/sched/sched.h , which is not supposed to be included outside of
+sched.
+Now moving all the struct definition outside of sched.h into another
+public header would be rather painful and I don't think it's a really
+good option (The struct would be needed to compute the sizeof inside
+vmcoreinfo). Secondly, it would also imply moving all the nested struct
+definitions outside as well. I doubt this is something that we want for
+the sched subsys. How the subsys is designed, out of my understanding,
+is to keep these internal structs opaque outside of it.
+
+From my perspective it's much simpler and cleaner to just add the
+kmemdump annotation macro inside the sched/core.c as it's done in my
+patch. This macro translates to a noop if kmemdump is not selected.
+
+How do you see this done another way ?
+
+> 
+>>
+>> So I am unsure whether just removing the static and adding them into
+>> header files would be more acceptable.
+>>
+>> Added in CC Cristoph Hellwig and Sergey Senozhatsky maybe they could
+>> tell us directly whether they like or dislike this approach, as kmemdump
+>> would be builtin and would not require exports.
+>>
+>> One other thing to mention is the fact that the printk code dynamically
+>> allocates memory that would need to be registered. There is no mechanism
+>> for kmemdump to know when this process has been completed (or even if it
+>> was at all, because it happens on demand in certain conditions).
+> 
+> If we are talking about memblock allocations, they sure are finished at 
+> the time ... the buddy is up.
+> 
+> So it's just a matter of placing yourself late in the init stage where 
+> the buddy is already up and running.
+> 
+> I assume dumping any dynamically allocated stuff through the buddy is 
+> out of the picture for now.
+> 
+
+The dumping mechanism needs to work for dynamically allocated stuff, and
+right now, it works for e.g. printk, if the buffer is dynamically
+allocated later on in the boot process.
+
+To have this working outside of printk, it would be required to walk
+through all the printk structs/allocations and select the required info.
+Is this something that we want to do outside of printk ? E.g. for the
+printk panic-dump case, the whole dumping is done by registering a
+dumper that does the job inside printk. There is no mechanism walking
+through printk data in another subsystem (in my example, pstore).
+So for me it is logical to register the data inside the printk.
+
+Does this make sense ?
+
