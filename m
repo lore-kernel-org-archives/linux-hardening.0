@@ -1,51 +1,31 @@
-Received: from DNSNULL (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5236A1A314E
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 04:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B67620551C;
+	Tue, 26 Aug 2025 04:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756183462; cv=none; b=Y6X0RsJUFYYke7LmrmfVqAM2uDou7rm37J05Eul+MfLZo+dHUDAZ5Czd9mGGkSoDRmQYetD5L7+Pl+YkyvWf+HXWORCsxTJl3NzgghfhGWlFvcpt13DjTqoYv/wr6fPNfjo+zEsmm6n4Y5oBWqiDY45cvom30/ohqAY30jB/Jpo=
+	t=1756184364; cv=none; b=qGlafg58DEnWvDhB5QNT08lNGhbF7XK0YxM9TZcRBm0CvIeN3ZKn7Guvz7s57zZcqc9FTSRlPCZcIXin1DGiJK3FX9K7AkNoaWXDjR2+WhToPBOVa+XZu/JKN5NWx64+SWFAQgPnWMD/FWq2uG0k6l1ZkiI+zUKTq8MdnvyxP2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756183462; c=relaxed/simple;
-	bh=6fpAxUXqlyE93Q/+JD6IIdh4cHWyrM9VR52auhBYhWE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FfnbKwFIUouF6vs5u2ehy1Ho+bOVFSSAalVzRb4/NPkYMYDHrTn7pxboLetau2jPI4rgBG8lzT1qU4ngY7jCz11aY+3w97UAGp3z9x451j+JvXYETmVFgCWl/A/dcpvOnoS3o4ME73CrP60EcgKOCbOpdWUSx6RsHT5UbfVVc88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=TRNzaXv/; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="TRNzaXv/"
-Received: from eig-obgw-6007b.ext.cloudfilter.net ([10.0.30.166])
-	by cmsmtp with ESMTPS
-	id qjumultVVSONXqlXaugnPj; Tue, 26 Aug 2025 04:44:14 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id qlXZuVx7p9jspqlXZuKTyI; Tue, 26 Aug 2025 04:44:13 +0000
-X-Authority-Analysis: v=2.4 cv=d8D1yQjE c=1 sm=1 tr=0 ts=68ad3b9d
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=DR2cKC/DEnBA9KqqjaPhpA==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=7T7KSl7uo7wA:10
- a=yNDbeuk1G1CePlwefi4A:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=3LEUZooy3cA+r1A+6Q/9oLA+oz/81DPxxeW8Ak9/YpM=; b=TRNzaXv/y0xo5y03+fEnAlaqt2
-	KZpexqG6D79IuXlv6yRe+d54dWiO3xDAPcsFF4z9yrugm3egVG+aUBIicmyl61uXJOUyH5hM4LTr4
-	YvTomCwxl2ExBNOnkDa1ctlokC7b35/CgdxvgB9MccKfmA9ij7g1lTR1I0jil01d4nwfoUi2L9t0+
-	cpnGtj8f1H+++YwZP82wX5XRq8UB3DMP5f4zI9qV03pDgGzf8+11mBlbXI5K2q8o3L0Cu00TYj+g9
-	U4724lFmFDwkKlk8ZHl6xzHcRVApv6s0BAaZS28R2/68zD3ka4kuXtJHCtYVN47OeUjGzmW68ExoQ
-	UcPk2bMQ==;
-Received: from static-243-216-117-93.thenetworkfactory.nl ([93.117.216.243]:36842 helo=[10.94.27.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1uqlXY-00000001RSx-0ZQh;
-	Mon, 25 Aug 2025 23:44:12 -0500
-Message-ID: <aa568cd4-3bfc-4eac-8a49-eb4cf7cf7331@embeddedor.com>
-Date: Tue, 26 Aug 2025 06:43:55 +0200
+	s=arc-20240116; t=1756184364; c=relaxed/simple;
+	bh=vtWZCqxOns3+V4/9Z1Du/nZLNLGy4uCskUYcOMcpDp4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BjXqUC4MGXhrMV4Y2ZLECHPYBfwZi9xmcntr4Ea0+NyPxaQ7/mNgYnjOoK91BvX60K+ysWbBQEyxYdhrbcHXOFOFvT5nzafTYQVckPKBMv2B+0hgr2sUm/1KegKyhw89SLQTHPlLpcpF5FOjsJotitBtHZIZ1dkVOkTIgSgcJTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4c9wMs74THz13NLV;
+	Tue, 26 Aug 2025 12:55:37 +0800 (CST)
+Received: from kwepemk100018.china.huawei.com (unknown [7.202.194.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id B38881402CF;
+	Tue, 26 Aug 2025 12:59:18 +0800 (CST)
+Received: from [10.67.110.48] (10.67.110.48) by kwepemk100018.china.huawei.com
+ (7.202.194.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 26 Aug
+ 2025 12:59:17 +0800
+Message-ID: <97dca868-dc8a-422a-aa47-ce2bb739e640@huawei.com>
+Date: Tue, 26 Aug 2025 12:59:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,80 +33,54 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] RDMA/cm: Avoid -Wflex-array-member-not-at-end
- warning
-To: Jason Gunthorpe <jgg@nvidia.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aJxnVjItIEW4iYAv@kspp> <20250825172020.GA2077724@nvidia.com>
+Subject: Re: [PATCH RFC] slab: support for compiler-assisted type-based slab
+ cache partitioning
+To: Marco Elver <elver@google.com>
+CC: <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>, "Liam R. Howlett"
+	<Liam.Howlett@oracle.com>, Alexander Potapenko <glider@google.com>, Andrew
+ Morton <akpm@linux-foundation.org>, Andrey Konovalov <andreyknvl@gmail.com>,
+	David Hildenbrand <david@redhat.com>, David Rientjes <rientjes@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Florent Revest <revest@google.com>, Harry
+ Yoo <harry.yoo@oracle.com>, Jann Horn <jannh@google.com>, Kees Cook
+	<kees@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Matteo Rizzo
+	<matteorizzo@google.com>, Michal Hocko <mhocko@suse.com>, Mike Rapoport
+	<rppt@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Roman Gushchin
+	<roman.gushchin@linux.dev>, Suren Baghdasaryan <surenb@google.com>, Vlastimil
+ Babka <vbabka@suse.cz>, <linux-hardening@vger.kernel.org>,
+	<linux-mm@kvack.org>
+References: <20250825154505.1558444-1-elver@google.com>
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20250825172020.GA2077724@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: GONG Ruiqi <gongruiqi1@huawei.com>
+In-Reply-To: <20250825154505.1558444-1-elver@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 93.117.216.243
-X-Source-L: No
-X-Exim-ID: 1uqlXY-00000001RSx-0ZQh
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: static-243-216-117-93.thenetworkfactory.nl ([10.94.27.44]) [93.117.216.243]:36842
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOJ+oeV287tun+gaUgedXdQMEy3cnq9osEVja9ltazO+m4NaKjISyh41efD6gKw+8PhH7x5+Y1H/s9R94y5U7jrVH1tz0Cj4k4Lqhm4WUcN5uqJUT8wr
- HYkILYB4/n83MxWJ1he2y5x11YVICi8ZuJ9tuLijK2K8QnxrZCjWROwAHXimGuo5V9X7+gmPcDktaH+NLXJyWSb1iP806EjR5o/ENRo1m87mU8L4y/jB4nHm
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemk100018.china.huawei.com (7.202.194.66)
 
 
-
-On 25/08/25 19:20, Jason Gunthorpe wrote:
-> On Wed, Aug 13, 2025 at 07:22:14PM +0900, Gustavo A. R. Silva wrote:
+On 8/25/2025 11:44 PM, Marco Elver wrote:
+> ...
 > 
->> @@ -1866,7 +1872,7 @@ static void cm_process_work(struct cm_id_private *cm_id_priv,
->>   	int ret;
+> Introduce a new mode, TYPED_KMALLOC_CACHES, which leverages Clang's
+> "allocation tokens" via __builtin_alloc_token_infer [1].
 > 
-> I think if you are going to do this restructing then these lower level
-> functions that never touch the path member should also have their
-> signatures updated to take in the cm_work_hdr not the cm_work struct
-> with the path, and we should never cast from a cm_work_hdr to a
-> cm_work.
+> This mechanism allows the compiler to pass a token ID derived from the
+> allocation's type to the allocator. The compiler performs best-effort
+> type inference, and recognizes idioms such as kmalloc(sizeof(T), ...).
+> Unlike RANDOM_KMALLOC_CACHES, this mode deterministically assigns a slab
+> cache to an allocation of type T, regardless of allocation site.
 > 
-> Basically we should have more type clarity when the path touches are
-> to be sure the cm_timewait_info version never gets into there.
+> Clang's default token ID calculation is described as [1]:
 > 
-> And to do that properly is going to need a preparing patch to untangle
-> cm_work_handler() a little bit, it shouldn't be the work function for
-> the cm_timewait_handler() which has a different ype.
+>    TypeHashPointerSplit: This mode assigns a token ID based on the hash
+>    of the allocated type's name, where the top half ID-space is reserved
+>    for types that contain pointers and the bottom half for types that do
+>    not contain pointers.
 > 
-> Also did you look closely at which members needed to be in the hdr?
-> I think with the above it will turn out that some members can be moved
-> to cm_work..
 
-I was wondering if we could just move cm_work at the very end of
-struct cm_timewait_info, like this:
+Is a type's token id always the same across different builds? Or somehow
+predictable? If so, the attacker could probably find out all types that
+end up with the same id, and use some of them to exploit the buggy one.
 
-  struct cm_timewait_info {
--       struct cm_work work;
-         struct list_head list;
-         struct rb_node remote_qp_node;
-         struct rb_node remote_id_node;
-@@ -204,6 +203,7 @@ struct cm_timewait_info {
-         __be32 remote_qpn;
-         u8 inserted_remote_qp;
-         u8 inserted_remote_id;
-+       struct cm_work work;
-  };
-
-and then I found this commit 09fb406a569b ("RDMA/cm: Add a note explaining
-how the timewait is eventually freed")
-
--Gustavo
+-Ruiqi
