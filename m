@@ -1,164 +1,190 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2086.outbound.protection.outlook.com [40.107.101.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCEC30BF55
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 11:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756207929; cv=none; b=KWLgUXyU4fBqW8FdIEBo2otdAEGLMPdRhyku2QXVhstw+8YSuq2+XfSDdjkXZ6mMCoTmSD8XdkID4k+FYPVcJ4n01o0CpBglkMxZ8lokxSOl3rauQz6NsHLh8BlSyPXfEh7WbxCkqq/zx/6P/fT9WNyY3aEi1KkWofZ9iKNw5o4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756207929; c=relaxed/simple;
-	bh=f8q+eThF8tpMuTG5oCEEYhTp9sfSYvEgg8hmv21YIcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=exLUeNd+UUyfmnMLX0UOloAvUZILopFapxuHyEyzYzq668nmQFskkvUe2mbVsAchcydAN/oTUF94D4XFoToDkmgFjnWXeCp1+yDjHhunNHwhAOetdInfzapALTh7cJ0VKDASeMiVQnVRwMMV4dUEXUlyYDod6tklprTojWz5SdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tjUpf8Du; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6D925557;
+	Tue, 26 Aug 2025 12:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756209660; cv=fail; b=kuZSniPDE+9hpbYsFNK9MDNKO+9nzFk+IKYAHW/Sfv/ZLyXJjePqoZfKDnA0AsDg71Uww0X1xxMH1pmKqUrg64BDE3q856N9lzl5IiY0NylTRdSklXstQRNq6PNkEUgXZf+4AblJvN6xV7o9ovpF3f42Q/Kmky00AykqouHnCbI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756209660; c=relaxed/simple;
+	bh=S+IILTkwYlDtf3uYYIZhYyY544LrzVsQLxM3TIYz/9M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bJ1NuUzNqjJD+KaeGxu2o7iS/Y88wuoYMpXWL2883ut0LvaS7Qwd9+HsixyApYyplKQvWDoaU1wRVpTyVeFJtun1q1brA19cG6C19ClUkxwVXKAnAMlg4iblFE4j2VtzPtS4IwNU5Q7umlZ4PC2Tqyqkk8a7kafcqPenjG9lRMo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ViEhcs0r; arc=fail smtp.client-ip=40.107.101.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tjUpf8Du"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4b29b714f8cso283361cf.1
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 04:32:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756207926; x=1756812726; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bgjl982rkJtQB6+NNyAU1pdVTWqd4G+6D2+THSotuPo=;
-        b=tjUpf8DuenEeOPwVR46DCvQgol+qb82UjM7e97ji0gQ7+iyXi+nBYtdyqmzu8J9BgX
-         spbbO3V+HocM0wtm9oTzRJgp2jsxdEj5BBSpuh+l2C2dt/TQKM2zeVZBm3utpPTP+Xhi
-         QbArfHwbtUdqmqVgqGUOuRUKqED2F5kJ/QAcvVdIBc3kMEa4qpwoSWHBQamcsBUeDuIr
-         lOnhTD86TsPnnnzeRr/+Ngqr6RvQoVKSR8pC3R0/CiX0Hl380fomvboCHyFbXZdNi8mK
-         wqTBDrI/H/4OiNJdAmsgfPKLXk3QvWEsv+jDtTKyOUXR2lVAT/vjnZPgaULINvpgqMPs
-         vDiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756207926; x=1756812726;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bgjl982rkJtQB6+NNyAU1pdVTWqd4G+6D2+THSotuPo=;
-        b=TbErj8eHyDIbg8oJoTzhTBWHZ5nPy5hHa4tFGzbizqHixdyeLWBGk9d3ziNxUXrKqI
-         bZ/FGghK1RN46iJWWf16zWXrV3T9CrI4zX2y91pj6Fe/H83Cgy+IcYsPBVMg9c1D4t1o
-         nmK8cvnl2GpuTn5FXS1cf1K+q6O5RLIBHT3A/mPVxkIjGz2eumrIWLszlhsykyg6IrEO
-         Bxz4IZIM15rrnv0rNAogTDJN/XRD4sPOGBrVkgA4ZqLvCI1Fo8NyEgCL6+Vu/pYrpd7c
-         rCEOLwXijSHIMoWh+vpsq7SaZsfCQi3RT45tavJVJvvVQaeSEBRFJsaYc6v8tjtBv/Ee
-         LxHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4GBLUsEzryAQ4f/o4i/xYTBW1xFnpUZGWS3qbGxysIz0YMUjMDvl0r7K3PgpdFhTm/kufDxZswu9XIuRROqc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIJiMP7R17+WoMvxqyHeL0REet22njso4dq/y0KrucnWnfei7H
-	cKGQNCA1+8LYn4ebe0FoXvofZnK0a09KQnmxAsB+UgWhBnVoAkI7HA15a0DqPboyzh7P2FJzLKr
-	EJ0tbCNzDQVowNisS6/8lMmWtOXsLups3Y+Zm+hg1
-X-Gm-Gg: ASbGnctbdkjv5vW8L47Vef5MM1Fsys7J7qx7PRRo52qgW/2/IfYWcxjUKNKIDW/xA0f
-	24FaQnQ/0BwkVxuZAc6MQUaen5XLOma3CU6k0PcNQ3wDPBhuYm1Hep2Bs8NYJTNLYXyL1/Cc8Uo
-	jhMe+QNPSmQpKvsZDcUuskibyLmTKzRSUkITkJzmTe7vFqi/Uhzoxlatg/NrF6nz5tHnIV0k/kf
-	5R/zAQ7N0o+vbJewbkgfhxfzYygImC6rv37sZY1WIUCcuBqZzdL
-X-Google-Smtp-Source: AGHT+IGIz0mfW/fdkVWrjqbaGzyt0+u7lbrcXJ+ddXu1DMsEf+ZPQnDOwsfrPc/mjKQ0Duj1yOEjprGa5se2wOTyim8=
-X-Received: by 2002:a05:622a:148b:b0:4a9:a4ef:35d3 with SMTP id
- d75a77b69052e-4b2e2c1e0cdmr4401241cf.7.1756207925975; Tue, 26 Aug 2025
- 04:32:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ViEhcs0r"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uSpUNb12toch/JJlOyIjyKlHc055Yvp3rXQ72PmgAqbWnqpj2K57Ronh2bJkxCsZF5ezvzhZcIjLhm0zHChKFwEQLElu9POID7+UrWTxMr/+BQ4SsvXSlff+RO44jkIMIRwzn+stEcE9JRAYYUxwb4f5rBsqW6KGldny3K+SJYwu0pmVdUJb8gWUekuq+VIUgI8CN6RzGh3E36wLFJhVEmTgWkIBORwgdxDGuzmo3M55ZN8r7phMtFqI6JRSBJG0A5gqn0aD15CWJI0SeGg6so6NN6mzcEHRUeQDw2MICdSG9pmtANdaiz5EL0ePR57zbRi+7B8QoewHO2Id53fH1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0WusdFnbXutZAdGmxFTqZqwQteKLzeLXEsjt4NVbzPg=;
+ b=vXzjgVpjjuPuLTC45t1BQaziK2uwQlQaL/4fZaQ5qCPgfZ1vGfv2pXuJP7EdHfiDtFAsIUEZX3Ku8i0PhXTilSaWNyk68wnE7YQZIt0XYIGvQVFrtHevbTkoH/RWa0+GU7bqOHjaQ3gPFPFP9XjDdyxJn3bkL62thJubyJD+ah8r+mR/Pka0l7s1NRQbpXGXLSYlj6BbMOyZ5jR93mAjBXFV8VEUU5/uEq0zZT/zPkSQB1LWQyNkF1bVfyLaOnNGqL1m7Xqmfa5SD6J1VCFjULhIHd4rPCavlYEQ6lsy/QIzKccnww0hHDsxTRjWxxjnv6vc01h8CVULpBtOIdqvUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0WusdFnbXutZAdGmxFTqZqwQteKLzeLXEsjt4NVbzPg=;
+ b=ViEhcs0rVRDIWzyf0ZV5srmy6VBlidgEt8XEiW0AOV0eX1vi4uNxY4woDr5Ln+NZLZQAd/kLpEZ3xrAOalUNTIannVQI7D0ldNyuqmp0cD1FEFvD4ttpw7324xUtN2ZDtQXFucFGLtnXKrTY8CYvQBJd4C5iPKv/6nMkYW5vzrUEZPZignj0D21DwyrkiNIsuKjRbDS1DFIbAxr96xOY9UDoGcjlhPm7EJua9gNyQJ3h3X5tSdY+h3Ylq5sNk2tDMQG2QdZi0ZK8KBLw90bLo9tK4u6cRTFMz6DqZYSF9gO8Cw/9GqSlr53D48XjIkDCFC5Z7CIrdfbQf585iU6www==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.20; Tue, 26 Aug
+ 2025 12:00:53 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.9052.019; Tue, 26 Aug 2025
+ 12:00:52 +0000
+Date: Tue, 26 Aug 2025 09:00:51 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] RDMA/cm: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <20250826120051.GC1970008@nvidia.com>
+References: <aJxnVjItIEW4iYAv@kspp>
+ <20250825172020.GA2077724@nvidia.com>
+ <aa568cd4-3bfc-4eac-8a49-eb4cf7cf7331@embeddedor.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa568cd4-3bfc-4eac-8a49-eb4cf7cf7331@embeddedor.com>
+X-ClientProxiedBy: YT4PR01CA0172.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:110::12) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250825154505.1558444-1-elver@google.com> <97dca868-dc8a-422a-aa47-ce2bb739e640@huawei.com>
- <CANpmjNMkU1gaKEa_QAb0Zc+h3P=Yviwr7j0vSuZgv8NHfDbw_A@mail.gmail.com>
-In-Reply-To: <CANpmjNMkU1gaKEa_QAb0Zc+h3P=Yviwr7j0vSuZgv8NHfDbw_A@mail.gmail.com>
-From: Florent Revest <revest@google.com>
-Date: Tue, 26 Aug 2025 13:31:54 +0200
-X-Gm-Features: Ac12FXzALeR2tDEEna1F4OrekZEDGHVi9TgPcdxl6W-rTLz9deGbqXZWqVvOe9c
-Message-ID: <CALGbS4U6fox7SwmdHfDuawmOWfQeQsxtA1X_VqRxTHpSs-sBYw@mail.gmail.com>
-Subject: Re: [PATCH RFC] slab: support for compiler-assisted type-based slab
- cache partitioning
-To: Marco Elver <elver@google.com>
-Cc: GONG Ruiqi <gongruiqi1@huawei.com>, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Alexander Potapenko <glider@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	David Hildenbrand <david@redhat.com>, David Rientjes <rientjes@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Harry Yoo <harry.yoo@oracle.com>, Jann Horn <jannh@google.com>, 
-	Kees Cook <kees@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Matteo Rizzo <matteorizzo@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Mike Rapoport <rppt@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Suren Baghdasaryan <surenb@google.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, linux-hardening@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM4PR12MB6085:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7b45335a-efc2-475b-1e02-08dde49834a2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Uzo3pcGQ4Sda9uPiKrEKO2FchtlAf8TpPaeLOmrGccmOy8y4TxXkqXJeO75L?=
+ =?us-ascii?Q?HI9wV6KhBFF4Hx/rIchCPKWbSK1I7yvt6QWJGhqkrWcdA1glkinpv48gELVO?=
+ =?us-ascii?Q?L9w3dML4oyGnj0+YnJ121SK2s9g+XUZxWytiGujDt7wvBx/D0dvBY2pkogyH?=
+ =?us-ascii?Q?v010alYuaTiRuu3vk6Gky0StQBz3Akg+e6NUcYb26X1/CKcmraxibV110qEq?=
+ =?us-ascii?Q?9XntZavGVXwLVg7EchCeD/fh8uEZcrZAGID+FMXwVnSjPGxScyxM485pM/QG?=
+ =?us-ascii?Q?ZpcmG/cpjbCQLKprRrzyahX59rbGAE/2xeuCbld+qYfjsYeARrqrPjPDrSmA?=
+ =?us-ascii?Q?6HvogKhmKYbIFANlZvnwFHupxfEYi/iNYlI+eKQ58+bJ8fAUEB6TDS2jiTfm?=
+ =?us-ascii?Q?HsaZSXqh1tI9wP6qDSJ7bkych4f6P16UU/SmxopUt1wBltNwIf33z547nxBI?=
+ =?us-ascii?Q?XK73Jn2OPSwjfL0s1yJGpuQIcTxwYU+s5dYkjqsTPMro5Dq2atNGtugZhUaM?=
+ =?us-ascii?Q?VfevPsPbmL6i8Aw1Cs3xRyeFsua4IPuezz37jMQS8oDEDofVdjmxuvaNYui2?=
+ =?us-ascii?Q?xe1Hcbor1gXUQRLek8ukECzLt8MF3I7WkyFyRn+JqbMvhXtQzPk5CXj1sL5P?=
+ =?us-ascii?Q?PJB1cCXF8iS+yBJdt7OReDrdrOMGdp35MUDmamKxqldsK2DMQHil5KLM59I1?=
+ =?us-ascii?Q?6hYyj3aTS9WS8qdMryDsRMAzvlDGhE8PUpKzMo3oCdVI953bv2rXox3+fUzM?=
+ =?us-ascii?Q?EQmgfdt10DKYrhpjF4JUDKr0Iyu9eR5Taws5mOqyyG5iT7kzTFOHZyNwJtND?=
+ =?us-ascii?Q?o81PwY5OAPFKoEWRhPiaKY/QCHYWj4n98kLK4EvPBZdzeJjeYXW6t9mxig/d?=
+ =?us-ascii?Q?GfQg6xDcLMm6d2thc6oaKpz3bBd/d5HhVAbzhoTpW7riCpMDt4YeIyTo4iBY?=
+ =?us-ascii?Q?WFvDQ02b1JiwzTAtCJnXNuIq9wyn8WPfHKFhCst50E5r5VRC28QGFT1XhtJE?=
+ =?us-ascii?Q?GzOb7BxtDT2j6TS3fFXAf/svrQ8FZCfz2NkZ1RrC0JGGzSe3kjBXgBX1fXCV?=
+ =?us-ascii?Q?OYae6uyTJ+AkB2FNeSxxFhZB/uADid5tnjWWO7cJuIWO5c9oIoi7C53ee5i3?=
+ =?us-ascii?Q?gYeXy+DAgYpLLJCKglxvVKegHT2T1IzIq9Gz5Kv1t1B2K+fDU4IQaQQiN6Zu?=
+ =?us-ascii?Q?Iw7th9DEf4YUAa0AF3GzWtDXwhdJnAHLWJCRl9q+hSDuQThiMhowZJ7lKOjf?=
+ =?us-ascii?Q?kguf/y+sX5EexRqPZowvFyTXhe5sK5oNRzWR6W7OjQoyg0LL/jyZtG5cvwxg?=
+ =?us-ascii?Q?ci6abILFJhlGxemcpH/rP/Zkf8W2j3xfI5qR3N6wdLo7qS4f8NjDyzkSpg4a?=
+ =?us-ascii?Q?N6JGsiQcoyrmID0DAU730SYq9C39q4rW1VSM4hPP/SU9PMP1rHROk7vSCQMe?=
+ =?us-ascii?Q?nwoKFamAcIw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NyMdFdS4Uq6XwScd+EtTxc1sLj8J6Hcwfevpew2YotGXpcLOaQn+w8R8SoVN?=
+ =?us-ascii?Q?UcaB6Jw3b/5ttv8GXDzdUoO6zCEH1BLqGuVdhkI0nkQ2dO7yg8oqTwVlDCvG?=
+ =?us-ascii?Q?klEyFNwcf6pvsTKDZ5j1BaQTKcTuBUDJ0YWP0lQj82TExx9dP+lUIAYFGqbn?=
+ =?us-ascii?Q?qiwGnRahACU/METhbHAJHFnDXsF6HBsGun6OAlp8zX6drPAfzNPHN52THL2u?=
+ =?us-ascii?Q?TKsk9zfZKAU9qmz5rVzi4jog80HZvoZ1AZfDF4ZCx83JMRTKkzwC8LFI+USK?=
+ =?us-ascii?Q?VvRNwR+K0LHjySOO/7IobsM8XZ6Xr946HJEr15iFImjjSzzDqFpuLJ4mK0SC?=
+ =?us-ascii?Q?KTpSrzacZBan1SDe+0z6H2iqODBlrCeLG6+Yh07JFt1TJUM7O7dqFzOR2GnR?=
+ =?us-ascii?Q?FizLNNteMEIHYkJ8eKoOHqMHRNCTRmxH4ULOILVxFrpU2SrnfXusBU3I+b8u?=
+ =?us-ascii?Q?glSMup4VhfLj9+IK4kApaZFb/r8XArtVnIl/Uy+rOlrqB8WMgGr0dSbxY5WC?=
+ =?us-ascii?Q?so7EpHhgTQjBDxFFsAMDVPsXee8qP83zqzkKpNrAC+3MOPeGxLEVRmumFaam?=
+ =?us-ascii?Q?sEk1lQGfhIUxZMQQ8nMUgy9E8Qb9xhGml4bJGY9KGnTyJGqatlvTQZ4Iv4Ye?=
+ =?us-ascii?Q?cV3piEmO2Y/wASfhf4pjIisOiaTm/mS81oFNrSPJS4Y4adFadGwl5QYKDHpg?=
+ =?us-ascii?Q?yh792FX0TLaczZtFJCNHzGbFkt+zRXpYMlQvZdics8JJ4yA/VKRq09sgPrKR?=
+ =?us-ascii?Q?B527GgbA4/cljzH8kTnapLuw/YF6aoYVd4B+QLmu6gqODYdN9mOE/uAoD2HY?=
+ =?us-ascii?Q?hp0rp7+d0Ad6rz5cSCYRycLmqCLXsAv+XVVrCdIMrqhQLQSJ5jndzWSS3av3?=
+ =?us-ascii?Q?fiLfxw5MSXx5qLVUh/b/J68tghupEKGoeVG9xzmJWrM5ou8CHejeptL7yDq1?=
+ =?us-ascii?Q?8hNFla1yDfos4wPAs00WtKY4302Ki6Bu77iKGehX+XaxDJGk3pnBz82ev/2I?=
+ =?us-ascii?Q?S++f59ZSQm2L1ScV2GWeNUnDkO/Cy/V6VMVGW+H8rTfuRRUSywotklvkz/le?=
+ =?us-ascii?Q?a2KNBHTw4XpRceHHQP0fOXUgxudKGGTqFCQTpjhISZpJ+qWMcrRMfbxntahJ?=
+ =?us-ascii?Q?y81Q1y3bIrsNdT9IqZGysTyVt+aJlfjkKZhr/1fTe+leMDust23u5gAEy1s5?=
+ =?us-ascii?Q?aSV80JTTG06MIXEc63ECl+36rRV+Ouyenps4ZmEpkvvDh7Iw8VIxccmsYnOo?=
+ =?us-ascii?Q?7VsUKw7LYX2QksZGQY9JiSJV0gVrU26KBtqI5le8mKMbleFYOHT9LSOCiTkF?=
+ =?us-ascii?Q?XgeaZDFY2TaXdwIblSfoqV3vLHsiHeQRixH4YiDH1PD9Z0QbMV3kkvgBkO+5?=
+ =?us-ascii?Q?bj1XPP6mpxWSG2lsMSUeT3hoRlc0GP4DriB6iwbE/jPa/LvM9XM99K575Mx3?=
+ =?us-ascii?Q?t3Eo76Iq2SyMWJSvHiYjO98MAMKraRVaIbfMwa/cqXCs5IxoBqNIzBF9XWCU?=
+ =?us-ascii?Q?ALGNqizBAYohtwKeAJwH+BYSIQoH5WvnptSSkrUR9X/i5cn2IssgYMtEEY9B?=
+ =?us-ascii?Q?OvvNmNfL9mAl9YB/xvY=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b45335a-efc2-475b-1e02-08dde49834a2
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2025 12:00:52.7978
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: S4DNAmG6JXkm3GACZQrdAVNSoe6+wjeLkOBlcRAstiZ9oAxYn/m0BLcLVthSJFvP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6085
 
-On Tue, Aug 26, 2025 at 1:01=E2=80=AFPM Marco Elver <elver@google.com> wrot=
-e:
->
-> On Tue, 26 Aug 2025 at 06:59, GONG Ruiqi <gongruiqi1@huawei.com> wrote:
-> > On 8/25/2025 11:44 PM, Marco Elver wrote:
-> > > ...
-> > >
-> > > Introduce a new mode, TYPED_KMALLOC_CACHES, which leverages Clang's
-> > > "allocation tokens" via __builtin_alloc_token_infer [1].
-> > >
-> > > This mechanism allows the compiler to pass a token ID derived from th=
-e
-> > > allocation's type to the allocator. The compiler performs best-effort
-> > > type inference, and recognizes idioms such as kmalloc(sizeof(T), ...)=
-.
-> > > Unlike RANDOM_KMALLOC_CACHES, this mode deterministically assigns a s=
-lab
-> > > cache to an allocation of type T, regardless of allocation site.
-> > >
-> > > Clang's default token ID calculation is described as [1]:
-> > >
-> > >    TypeHashPointerSplit: This mode assigns a token ID based on the ha=
-sh
-> > >    of the allocated type's name, where the top half ID-space is reser=
-ved
-> > >    for types that contain pointers and the bottom half for types that=
- do
-> > >    not contain pointers.
-> >
-> > Is a type's token id always the same across different builds? Or someho=
-w
-> > predictable? If so, the attacker could probably find out all types that
-> > end up with the same id, and use some of them to exploit the buggy one.
->
-> Yes, it's meant to be deterministic and predictable. I guess this is
-> the same question regarding randomness, for which it's unclear if it
-> strengthens or weakens the mitigation. As I wrote elsewhere:
->
-> > Irrespective of the top/bottom split, one of the key properties to
-> > retain is that allocations of type T are predictably assigned a slab
-> > cache. This means that even if a pointer-containing object of type T
-> > is vulnerable, yet the pointer within T is useless for exploitation,
-> > the difficulty of getting to a sensitive object S is still increased
-> > by the fact that S is unlikely to be co-located. If we were to
-> > introduce more randomness, we increase the probability that S will be
-> > co-located with T, which is counter-intuitive to me.
->
-> I think we can reason either way, and I grant you this is rather ambiguou=
-s.
->
-> But the definitive point that was made to me from various security
-> researchers that inspired this technique is that the most useful thing
-> we can do is separate pointer-containing objects from
-> non-pointer-containing objects (in absence of slab per type, which is
-> likely too costly in the common case).
+On Tue, Aug 26, 2025 at 06:43:55AM +0200, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 25/08/25 19:20, Jason Gunthorpe wrote:
+> > On Wed, Aug 13, 2025 at 07:22:14PM +0900, Gustavo A. R. Silva wrote:
+> > 
+> > > @@ -1866,7 +1872,7 @@ static void cm_process_work(struct cm_id_private *cm_id_priv,
+> > >   	int ret;
+> > 
+> > I think if you are going to do this restructing then these lower level
+> > functions that never touch the path member should also have their
+> > signatures updated to take in the cm_work_hdr not the cm_work struct
+> > with the path, and we should never cast from a cm_work_hdr to a
+> > cm_work.
+> > 
+> > Basically we should have more type clarity when the path touches are
+> > to be sure the cm_timewait_info version never gets into there.
+> > 
+> > And to do that properly is going to need a preparing patch to untangle
+> > cm_work_handler() a little bit, it shouldn't be the work function for
+> > the cm_timewait_handler() which has a different ype.
+> > 
+> > Also did you look closely at which members needed to be in the hdr?
+> > I think with the above it will turn out that some members can be moved
+> > to cm_work..
+> 
+> I was wondering if we could just move cm_work at the very end of
+> struct cm_timewait_info, like this:
+> 
+>  struct cm_timewait_info {
+> -       struct cm_work work;
+>         struct list_head list;
+>         struct rb_node remote_qp_node;
+>         struct rb_node remote_id_node;
+> @@ -204,6 +203,7 @@ struct cm_timewait_info {
+>         __be32 remote_qpn;
+>         u8 inserted_remote_qp;
+>         u8 inserted_remote_id;
+> +       struct cm_work work;
+>  };
+> 
+> and then I found this commit 09fb406a569b ("RDMA/cm: Add a note explaining
+> how the timewait is eventually freed")
 
-One more perspective on this: in a data center environment, attackers
-typically get a first foothold by compromising a userspace network
-service. If they can do that once, they can do that a bunch of times,
-and gain code execution on different machines every time.
+Yeah, it is a messy thing :\
 
-Before trying to exploit a kernel memory corruption to elevate
-privileges on a machine, they can test the SLAB properties of the
-running kernel to make sure it's as they wish (eg: with timing side
-channels like in the SLUBStick paper). So with RANDOM_KMALLOC_CACHES,
-attackers can just keep retrying their attacks until they land on a
-machine where the types T and S are collocated and only then proceed
-with their exploit.
-
-With TYPED_KMALLOC_CACHES (and with SLAB_VIRTUAL hopefully someday),
-they are simply never able to cross the "objects without pointers" to
-"objects with pointers" boundary which really gets in the way of many
-exploitation techniques and feels at least to me like a much stronger
-security boundary.
-
-This limit of RANDOM_KMALLOC_CACHES may not be as relevant in other
-deployments (eg: on a smartphone) but it makes me strongly prefer
-TYPED_KMALLOC_CACHES for server use cases at least.
+Jason
