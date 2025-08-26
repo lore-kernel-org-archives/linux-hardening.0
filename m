@@ -1,375 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD502C15A0
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 17:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A30259C83
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 18:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756229108; cv=none; b=Ls97DZlEzerOIbjKosGMluhch3GvF7o8NUMvNSmgZA8cXbrmyiIonJ7qEKgTvKqe4m1sx9pCzuEPLsLyPg9BEsMI7OeOa9mWvOvtqdGcYKhh7cLzlmkFvp9Y82fXMHyLhdh6hhODRJ9Ppvr6HOzpfrKnREhUw47dm+OgRzy7zUA=
+	t=1756232391; cv=none; b=POt7qpU0sObGnq3vAFY8bDaa1HLQjwKFLz5IRWZvnEbcoctTf8hJU6pZLEYRmrHbsmrHteiWjCLfjC8/Cy/hqloVS+91JAdsNAlimkkYP0/zPKm6grtIgEJ+Qudjc7xbyVyumUU+NzJMWQ85DvRzOxLRQ3cs6M3ZaA+KvrXlh14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756229108; c=relaxed/simple;
-	bh=4xLxgeEoH/AVWHWhK8TPxBARMEp/d28CXbwd3Rvot6k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ZtDYEiG+zETK33cBrU0cuRDXSoBsdnPXgstwYtc+d7336Q+dqhxLBTg9mRK+S9ntP9PVayMp52shJcArDkCQR1f3TfZBVPbcRfomc4YpiNrfbZXaslWWJhny7DthlxWPagnsFc0V8iH8rTe2LHjDzN8b7WiTVQiwcyvMexp+z/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SvuaaDpA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756232391; c=relaxed/simple;
+	bh=XQz/VrYK3cwCtAlJzmwCDIZSeNenI6Rm8ZKZbd4vuEk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GX2AUmGtVrNSUEJWXy7qRQtmPdr/y/7UOrG6aWiz9rYQ20szC88z3+LdKUowXRLWyTEPydIbhvuMwmZJaog7lzEHQ29VDgGQRyE74ZEbC87yYiQ2cicvwhdnsHNDNLQG2aslzRS3dqS4QqocYTjWEeIpZd99Fmh9IjVKqKgvupM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ydmJeZUw; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvuaaDpA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B22C113D0;
-	Tue, 26 Aug 2025 17:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756229108;
-	bh=4xLxgeEoH/AVWHWhK8TPxBARMEp/d28CXbwd3Rvot6k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SvuaaDpAQLgH+HN7gDVgYJlUXuraJQLNbL0vY8ZPvX5QXsNupoOwcku5Fbgg0f4FY
-	 sK3sQfXb47vybXzCpdyvlAjQrEdjwGp1GmyrB3/skbVp5BPzCC+vuZuFumeROGtuXa
-	 9VPLh4/EwUw0JnOz8dDUe9/g6pGujBUCziAEJlx5qSkZ7VqfT4JCdJIvEeZE79Qed8
-	 RHGEsGbhZ2J+IEkST1dcncal2afTmJPhs/5W2zNV4ZflSkWoQ48bfao+24pDbyDuNC
-	 MkfEdjan81WdMVZ2vbamqVLLPF8wmRa8tnboMrJBTTF9ph/OMCTCRdRlFSRhHtmNyc
-	 dy6qjgiasDgTg==
-From: Kees Cook <kees@kernel.org>
-To: Indu Bhagat <indu.bhagat@oracle.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Claudiu Zissulescu <claudiu.zissulescu-ianculescu@oracle.com>,
-	Andrew Pinski <andrew.pinski@oss.qualcomm.com>,
-	Qing Zhao <qing.zhao@oracle.com>,
-	gcc-patches@gcc.gnu.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v3] Fix sanitizer attribute infrastructure to use standard TREE_LIST format [PR113264]
-Date: Tue, 26 Aug 2025 10:25:05 -0700
-Message-Id: <20250826172500.make.968-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ydmJeZUw"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-55f53efe803so102767e87.2
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 11:19:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756232388; x=1756837188; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XQz/VrYK3cwCtAlJzmwCDIZSeNenI6Rm8ZKZbd4vuEk=;
+        b=ydmJeZUwk65YNZNu/QlcHmZJjyvB7rwhDCI8hO9AxkeyxmXy4LrXAuRaLxz75GF+y2
+         +7b6//9ACJiy0CI2AMoXV8k3QgqLL5qA5uzGncNdN6kQMoV8l7oSRBq99YgDUUMGumz0
+         7RhwTtN2Wr6CfDOq2FH9ZUF2cxxh2JOwTuT60ddjMgBxtQAAi4QJGYUrPhP+im0IFdLn
+         wFhte6LTGGCQbSw1cTM4vKJRS8OgEGZwWUW7cH76qKeioOx0sUbXzsijBsQV5efTmC7p
+         wQJo+Lp1oW5heIE7m7jxqGga2PB3xOBumQf+HlFN9E/rDnACXY6nhsKLwCTWq8BuSSeN
+         B/cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756232388; x=1756837188;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XQz/VrYK3cwCtAlJzmwCDIZSeNenI6Rm8ZKZbd4vuEk=;
+        b=lMfbJgkQtZX0iZwpewdSDo02+s2acfTFWyBtkmAXnBQDvd2Do6kQ80GVc7tt44EeTZ
+         NczGwWP57+OyeTNk1fUtct6SsBFyFj3ok8y9vWzx9pMGok45PwYL5vPsmalZUuzFG4tT
+         Ba7g0sEDxaPJTe7afgfdyE0vzW+MQ2UZiwy5xcILOGE+fW7UnwZ5Jml2VuvzpK7yGhc5
+         D4N5jWVw3+ZJWr2sZc+TwFEDyC6AZHiurpo/TK+KIlr8ZyLxAABaT9n97QBXe9z8llde
+         mYcExr41iByiAyTYfPQqJPvxCo0UhgHGwtZDCBO1Fg5GLaU6iWR++X0KHrzr4WZpXilu
+         7SMg==
+X-Forwarded-Encrypted: i=1; AJvYcCXhAnq8kcD1p6SK0EelWO1LCnes5gXs9Lb5E8Hkk9b2TG15BkRfg8oY1nUGlNnou/ZkYuzutZzE3vHw7dYVfzE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8tpbkEXNeKzQPgCKRj8ulYNTWFjgzZqhxwJu5mwQc5pUF143v
+	RZu8I1402lSZTuumgvcpjGDg4zJrub0dGNj3ZGt3pSgrFdBjf2XRktnfeIsZ18xc3u/Si9u1odl
+	wnjsBLXCyYf+IyXYXm27L1/DKpmlBsdvOS6pWSrC6YQ==
+X-Gm-Gg: ASbGncu2oWopnpC217fg/7KddTotHy4IKljyikP4oLZOhnJgstZPDZg564vLfSdaXDW
+	7L1qpvNhHBxtkqB/GhpXVBrPY1bQGF0J+5fySsFleUCvZGMVr67eRZI58FI6H98updq4I+2VOxT
+	oeciw6GOLORydLrQEe2MRzzyGMFpqLWgsR6nlAna09UVY1icDGB4KowNpem9N3ryw7emkLMeVV0
+	P6EWGrM5mv1uV4xl02ZtSCH/kXD01b+ugyD6SJJ9jrMRudcMJUEzGRSoS5r
+X-Google-Smtp-Source: AGHT+IH9/wDD1C5c1pzIo5M6703fhe2Ju79J3Cg57MCbuHB+kMzD9Ry2MpuHtwyxY9EgNTzhw0WfnDm8emGE0JQOveU=
+X-Received: by 2002:a05:6512:3d87:b0:55f:3d7c:387b with SMTP id
+ 2adb3069b0e04-55f3d7c3badmr3365498e87.12.1756232388100; Tue, 26 Aug 2025
+ 11:19:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=12622; i=kees@kernel.org; h=from:subject:message-id; bh=4xLxgeEoH/AVWHWhK8TPxBARMEp/d28CXbwd3Rvot6k=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlr337Y0vVyxdvIJb8PSTtekdLfei9hC5P+Qr3p1tFun zjn/3nH1FHKwiDGxSArpsgSZOce5+Lxtj3cfa4izBxWJpAhDFycAjARQRZGhvnvVimXBl//+vxj xMfYjTziIf9fuTZObRRapKdhPOn4/xxGhs0f2M66xso/OXBg5TKH11v/Ryy4nPRCq/v559KpexX 2TmEFAA==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20250815-pinctrl-gpio-pinfuncs-v5-0-955de9fd91db@linaro.org>
+ <CACRpkdaDGmdhaik+1saRv7Ts4myQ+tg1aQqGU3xQyT7ma8dJFw@mail.gmail.com>
+ <CAHp75VephepLq61HrVy=PX2oKUQd5NK2qS-vOC5h_NR65td3Uw@mail.gmail.com>
+ <CACRpkda4soRCLF5=W=6R4wnwT3pjk743j022XfJxjTTQzuarAA@mail.gmail.com> <534ad082-08fa-42c0-9c24-f0c11af7d5b2@sirena.org.uk>
+In-Reply-To: <534ad082-08fa-42c0-9c24-f0c11af7d5b2@sirena.org.uk>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 26 Aug 2025 20:19:37 +0200
+X-Gm-Features: Ac12FXxAYIw0w_2T1YaN-IyY2JYcpKwwddZS_ZNL3wGJGwAsl60-M2w6oLQOL30
+Message-ID: <CAMRc=Mdn0_yPXyYq4sbvH4P9-h71vEc4arLPBfSk1PiEFaB7jQ@mail.gmail.com>
+Subject: Re: [PATCH v5 00/15] pinctrl: introduce the concept of a GPIO pin
+ function category
+To: Mark Brown <broonie@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
+	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Chen-Yu Tsai <wenst@chromium.org>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The __attribute__((__copy__)) functionality was crashing when copying
-sanitizer-related attributes because these attributes violated the standard
-GCC attribute infrastructure by storing INTEGER_CST values directly instead
-of wrapping them in TREE_LIST like all other attributes.
+On Wed, Aug 20, 2025 at 8:41=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
+te:
+>
+> On Wed, Aug 20, 2025 at 09:12:49AM +0200, Linus Walleij wrote:
+>
+> > The qualcomm 32bit platforms fail in next anyway so I dropped the patch=
+es
+> > for now.
+>
+> FWIW the i.MX8MP also seems to have been broken by this:
+>
 
-Wrap sanitizer attributes INTEGER_CST values in TREE_LIST structures
-to follow the same pattern as other attributes. This eliminates the
-copy_list() crashes when copying sanitizer attributes:
+I can't test it unfortunately - would you mind sharing some info on
+what's failing exactly?
 
-test.c:4:1: internal compiler error: tree check: expected tree that contains ‘common’ structure, have ‘integer_cst’ in copy_list, at tree.cc:1427
-    4 | __attribute__((__copy__(__tanh)));
-      | ^~~~~~~~~~~~~
-0x859d06 tree_contains_struct_check_failed(tree_node const*, tree_node_structure_enum, char const*, int, char const*)
-        ../../gcc/gcc/tree.cc:9126
-0x860f78 contains_struct_check(tree_node*, tree_node_structure_enum, char const*, int, char const*)
-        ../../gcc/gcc/tree.h:3748
-0x860f78 copy_list(tree_node*)
-        ../../gcc/gcc/tree.cc:1427
-0xa755a5 handle_copy_attribute
-        ../../gcc/gcc/c-family/c-attribs.cc:3077
-
-gcc/c-family/ChangeLog:
-
-	PR c/113264
-	* c-attribs.cc (add_no_sanitize_value): Store INTEGER_CST values
-	wrapped in TREE_LIST following standard attribute conventions.
-	(handle_no_sanitize_attribute): Handle both original string
-	arguments and copied INTEGER_CST values from TREE_LIST format.
-
-gcc/ChangeLog:
-
-	PR c/113264
-	* asan.h (sanitize_flags_p): Extract sanitizer flags from
-	TREE_LIST wrapper instead of directly from INTEGER_CST.
-
-gcc/d/ChangeLog:
-
-	PR c/113264
-	* d-attribs.cc (d_handle_no_sanitize_attribute): Store INTEGER_CST
-	values wrapped in TREE_LIST following standard conventions.
-
-gcc/testsuite/ChangeLog:
-
-	PR c/113264
-	* gcc.dg/pr113264.c: New test.
-	* gcc.dg/pr113264-asan-no-instrumentation.c: New test validating
-	that copied sanitizer attributes prevent ASAN instrumentation.
-
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- v3: now with the tests actually included. Argh
-Cc: Indu Bhagat <indu.bhagat@oracle.com>
-Cc: Claudiu Zissulescu <claudiu.zissulescu-ianculescu@oracle.com>
-Cc: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
----
- gcc/asan.h                                    |  8 ++-
- .../gcc.dg/pr113264-asan-no-instrumentation.c | 43 +++++++++++
- gcc/testsuite/gcc.dg/pr113264.c               | 72 +++++++++++++++++++
- gcc/c-family/c-attribs.cc                     | 49 +++++++++----
- gcc/d/d-attribs.cc                            | 17 +++--
- 5 files changed, 169 insertions(+), 20 deletions(-)
- create mode 100644 gcc/testsuite/gcc.dg/pr113264-asan-no-instrumentation.c
- create mode 100644 gcc/testsuite/gcc.dg/pr113264.c
-
-diff --git a/gcc/asan.h b/gcc/asan.h
-index a24562f67a29..f5dc3d7ceb8d 100644
---- a/gcc/asan.h
-+++ b/gcc/asan.h
-@@ -253,7 +253,13 @@ sanitize_flags_p (sanitize_code_type flag,
-     {
-       tree value = lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (fn));
-       if (value)
--	result_flags &= ~tree_to_uhwi (TREE_VALUE (value));
-+	{
-+	  /* Extract the INTEGER_CST from the TREE_LIST wrapper.  */
-+	  tree attr_args = TREE_VALUE (value);
-+	  gcc_assert (attr_args && TREE_CODE (attr_args) == TREE_LIST);
-+	  sanitize_code_type no_sanitize_flags = tree_to_sanitize_code_type (TREE_VALUE (attr_args));
-+	  result_flags &= ~no_sanitize_flags;
-+	}
-     }
- 
-   return result_flags;
-diff --git a/gcc/testsuite/gcc.dg/pr113264-asan-no-instrumentation.c b/gcc/testsuite/gcc.dg/pr113264-asan-no-instrumentation.c
-new file mode 100644
-index 000000000000..d99819b4792f
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/pr113264-asan-no-instrumentation.c
-@@ -0,0 +1,43 @@
-+/* PR c/113264 - __attribute__((copy)) crashes with sanitizer attributes
-+   Test that copied no_sanitize_address attributes prevent ALL ASAN instrumentation.
-+   This file should have NO ASAN calls since all functions have the attribute.
-+   { dg-do compile }
-+   { dg-options "-fsanitize=address" }
-+   { dg-skip-if "no address sanitizer" { no_fsanitize_address } } */
-+
-+/* Original function with no_sanitize_address */
-+__attribute__((no_sanitize_address))
-+int original (int *p, int *q)
-+{
-+  *p = 42;
-+  return *q;
-+}
-+
-+/* Copy the attribute - should also have no_sanitize_address */
-+__typeof(original) copy1 __attribute__((__copy__(original)));
-+int copy1 (int *p, int *q)
-+{
-+  *p = 43;
-+  return *q;
-+}
-+
-+/* Another copy - should also have no_sanitize_address */
-+__typeof(original) copy2 __attribute__((__copy__(original)));
-+int copy2 (int *p, int *q)
-+{
-+  *p = 44;
-+  return *q;
-+}
-+
-+/* Copy from a copy - should still have no_sanitize_address */
-+__typeof(copy1) copy_of_copy __attribute__((__copy__(copy1)));
-+int copy_of_copy (int *p, int *q)
-+{
-+  *p = 45;
-+  return *q;
-+}
-+
-+/* Since ALL functions have no_sanitize_address (either directly or copied),
-+   there should be NO ASAN instrumentation calls in the entire file. */
-+/* { dg-final { scan-assembler-not "__asan_report_store" } } */
-+/* { dg-final { scan-assembler-not "__asan_report_load" } } */
-diff --git a/gcc/testsuite/gcc.dg/pr113264.c b/gcc/testsuite/gcc.dg/pr113264.c
-new file mode 100644
-index 000000000000..7a1b128bf203
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/pr113264.c
-@@ -0,0 +1,72 @@
-+/* PR c/113264 - __attribute__((copy)) crashes with sanitizer attributes
-+   Test that the copy attribute correctly handles sanitizer attributes
-+   which store their arguments as INTEGER_CST values rather than TREE_LIST.
-+   { dg-do compile }
-+   { dg-options "-O2" } */
-+
-+/* Test copying no_sanitize_address attribute.  */
-+__attribute__((no_sanitize_address)) void f1 (void);
-+__typeof(f1) f1_copy __attribute__((__copy__(f1)));
-+
-+/* Test copying no_sanitize_thread attribute.  */
-+__attribute__((no_sanitize_thread)) void f2 (void);
-+__typeof(f2) f2_copy __attribute__((__copy__(f2)));
-+
-+/* Test copying no_sanitize_undefined attribute.  */
-+__attribute__((no_sanitize_undefined)) void f3 (void);
-+__typeof(f3) f3_copy __attribute__((__copy__(f3)));
-+
-+/* Test copying no_sanitize_coverage attribute.  */
-+__attribute__((no_sanitize_coverage)) void f4 (void);
-+__typeof(f4) f4_copy __attribute__((__copy__(f4)));
-+
-+/* Test copying no_sanitize attribute with string arguments.  */
-+__attribute__((no_sanitize("address"))) void f5 (void);
-+__typeof(f5) f5_copy __attribute__((__copy__(f5)));
-+
-+__attribute__((no_sanitize("thread"))) void f6 (void);
-+__typeof(f6) f6_copy __attribute__((__copy__(f6)));
-+
-+__attribute__((no_sanitize("undefined"))) void f7 (void);
-+__typeof(f7) f7_copy __attribute__((__copy__(f7)));
-+
-+/* Test copying multiple sanitizer flags.  */
-+__attribute__((no_sanitize("address", "thread"))) void f8 (void);
-+__typeof(f8) f8_copy __attribute__((__copy__(f8)));
-+
-+/* Test the original bug report case.  This may trigger a warning
-+   about conflicting with a built-in function name.  */
-+__attribute__((no_sanitize_address)) void h (void);
-+__typeof(h) tanhf64 __attribute__((__copy__(h)));
-+/* { dg-warning "conflicting types for built-in function" "" { target *-*-* } .-1 } */
-+
-+/* Test copying from a function pointer variable - this should trigger a warning.  */
-+__attribute__((no_sanitize_address)) void f9 (void);
-+void (*f9_ptr)(void) = f9; /* { dg-message "symbol 'f9_ptr' referenced" } */
-+__typeof(f9) f9_ptr_copy __attribute__((__copy__(*f9_ptr))); /* { dg-warning "'copy' attribute ignored" } */
-+
-+/* Test with actual function definitions to ensure attributes are properly applied.  */
-+__attribute__((no_sanitize_address))
-+void actual_func (int *p)
-+{
-+  *p = 100;
-+}
-+
-+__typeof(actual_func) actual_func_copy __attribute__((__copy__(actual_func)));
-+
-+void actual_func_copy (int *p)
-+{
-+  *p = 200;
-+}
-+
-+/* Test copying sanitizer attributes along with other attributes.  */
-+__attribute__((no_sanitize_address, noinline, cold))
-+void multi_attr (void);
-+
-+__typeof(multi_attr) multi_attr_copy __attribute__((__copy__(multi_attr)));
-+
-+/* Verify that the copy attribute works with function declarations that
-+   have sanitizer attributes applied via separate declarations.  */
-+void separate_decl (void);
-+__attribute__((no_sanitize_address)) void separate_decl (void);
-+__typeof(separate_decl) separate_decl_copy __attribute__((__copy__(separate_decl)));
-diff --git a/gcc/c-family/c-attribs.cc b/gcc/c-family/c-attribs.cc
-index 1e3a94ed9493..e629601579ef 100644
---- a/gcc/c-family/c-attribs.cc
-+++ b/gcc/c-family/c-attribs.cc
-@@ -1425,20 +1425,27 @@ add_no_sanitize_value (tree node, sanitize_code_type flags)
-   tree attr = lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (node));
-   if (attr)
-     {
--      sanitize_code_type old_value =
--	tree_to_sanitize_code_type (TREE_VALUE (attr));
-+      /* Extract the INTEGER_CST from the TREE_LIST wrapper.  */
-+      tree attr_args = TREE_VALUE (attr);
-+      gcc_assert (attr_args && TREE_CODE (attr_args) == TREE_LIST);
-+      sanitize_code_type old_value = tree_to_sanitize_code_type (TREE_VALUE (attr_args));
-+
-       flags |= old_value;
- 
-       if (flags == old_value)
- 	return;
- 
--      TREE_VALUE (attr) = build_int_cst (uint64_type_node, flags);
-+      tree new_value = build_tree_list (NULL_TREE,
-+					build_int_cst (uint64_type_node, flags));
-+      TREE_VALUE (attr) = new_value;
-     }
-   else
--    DECL_ATTRIBUTES (node)
--      = tree_cons (get_identifier ("no_sanitize"),
--		   build_int_cst (uint64_type_node, flags),
--		   DECL_ATTRIBUTES (node));
-+    {
-+      tree attr_value = build_tree_list (NULL_TREE,
-+					 build_int_cst (uint64_type_node, flags));
-+      DECL_ATTRIBUTES (node) = tree_cons (get_identifier ("no_sanitize"), attr_value,
-+					  DECL_ATTRIBUTES (node));
-+    }
- }
- 
- /* Handle a "no_sanitize" attribute; arguments as in
-@@ -1456,17 +1463,29 @@ handle_no_sanitize_attribute (tree *node, tree name, tree args, int,
-       return NULL_TREE;
-     }
- 
--  for (; args; args = TREE_CHAIN (args))
-+  /* Handle both original string arguments and copied attributes that
-+     have already been processed into INTEGER_CST wrapped in TREE_LIST.  */
-+  if (args && TREE_CODE (args) == TREE_LIST
-+      && TREE_VALUE (args) && TREE_CODE (TREE_VALUE (args)) == INTEGER_CST)
-     {
--      tree id = TREE_VALUE (args);
--      if (TREE_CODE (id) != STRING_CST)
-+      /* This is a copied attribute with the flags already processed.  */
-+      flags = tree_to_sanitize_code_type (TREE_VALUE (args));
-+    }
-+  else
-+    {
-+      /* Process original string arguments.  */
-+      for (; args; args = TREE_CHAIN (args))
- 	{
--	  error ("%qE argument not a string", name);
--	  return NULL_TREE;
--	}
-+	  tree id = TREE_VALUE (args);
-+	  if (TREE_CODE (id) != STRING_CST)
-+	    {
-+	      error ("%qE argument not a string", name);
-+	      return NULL_TREE;
-+	    }
- 
--      char *string = ASTRDUP (TREE_STRING_POINTER (id));
--      flags |= parse_no_sanitize_attribute (string);
-+	  char *string = ASTRDUP (TREE_STRING_POINTER (id));
-+	  flags |= parse_no_sanitize_attribute (string);
-+	}
-     }
- 
-   add_no_sanitize_value (*node, flags);
-diff --git a/gcc/d/d-attribs.cc b/gcc/d/d-attribs.cc
-index 53aea5e2e904..342702b05acb 100644
---- a/gcc/d/d-attribs.cc
-+++ b/gcc/d/d-attribs.cc
-@@ -1424,17 +1424,26 @@ d_handle_no_sanitize_attribute (tree *node, tree name, tree args, int,
-      merge existing flags if no_sanitize was previously handled.  */
-   if (tree attr = lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (*node)))
-     {
--      sanitize_code_type old_value =
--	tree_to_sanitize_code_type (TREE_VALUE (attr));
-+      /* Extract the INTEGER_CST from the TREE_LIST wrapper.  */
-+      tree attr_args = TREE_VALUE (attr);
-+      gcc_assert (attr_args && TREE_CODE (attr_args) == TREE_LIST);
-+      sanitize_code_type old_value = tree_to_sanitize_code_type (TREE_VALUE (attr_args));
-+
-       flags |= old_value;
- 
-       if (flags != old_value)
--	TREE_VALUE (attr) = build_int_cst (d_ulong_type, flags);
-+	{
-+	  tree new_value = build_tree_list (NULL_TREE,
-+					     build_int_cst (d_ulong_type, flags));
-+	  TREE_VALUE (attr) = new_value;
-+	}
-     }
-   else
-     {
-+      tree attr_value = build_tree_list (NULL_TREE,
-+					  build_int_cst (d_ulong_type, flags));
-       DECL_ATTRIBUTES (*node) = tree_cons (get_identifier ("no_sanitize"),
--					   build_int_cst (d_ulong_type, flags),
-+					   attr_value,
- 					   DECL_ATTRIBUTES (*node));
-     }
- 
--- 
-2.34.1
-
+Bartosz
