@@ -1,244 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C15319309C
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 06:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3890C233128;
+	Tue, 26 Aug 2025 10:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756189064; cv=none; b=Ry/WPkq2oG4ArDlCrQnxlJ78p58ll5ncT5N/jIFsBwy6sseMQKx8zlvmPN4DFx0o6bp677t4P4/k+W0Aep+RDJz5FqJ8VJq33Xm7g3jD2jjsBZTA3hLToIiwuHt7CGb3YHehWJcaxl1Tw/rrJ3xX+QbMLA24Uu5mfX2l0ggdXKw=
+	t=1756203308; cv=none; b=E0ATxZil9/LVBUuI0Kq1ffJRuChq01v0GPiI0yv11bUVmiaWydCabcJ4aEl660ixi6jZT/pUUsfFHXUvuzUiZ1CBsPXEb0/nu0qJlA/q3oi1Hbk+TT/bzr2cCpL9ErS5yNn6492zdMnnR1wgSd7MyZ61cy9wudJPEUiIp5xlhY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756189064; c=relaxed/simple;
-	bh=ULArDttUoH2BnbOI3gLu8wJikWnIdMteyCkSVpdZ2qE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=okMz04EzVYP0CXvJ6bTP3Hk04zuyb4LzYLIYVfIk78KkXWmM6onn6JfC1l9g76CAPm1r9kqwoalTtwmjqID5oXd3wJXaObCRkfenPCC4NKzJsQpFEtT1EzR41rsSlHgYPkTBka+TB9dGcsAga8BoK7XoBLl8fEbnEDWEqpw8UFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=txQf7h5t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756203308; c=relaxed/simple;
+	bh=jzCx4AJYjfVdLu4lvm7viYZkDwKumPWXqnVTmygMhf8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uSqpa1qwopVnXXcGQ+aMTftplK6j35WnM5GKhTCQhU+MTd/Ip0THrWZtmdOsoNsHqstPToYO0peudLfbMW3r7T6cZQsVR26Yrm3gdkaUFU3x0V57qAQHtBsr/mAYQ4IjRpjMtwzhqCsdtxIxSQ2yYnghFTPM+g7piDe7UtOIHuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vKi90Lq8; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="txQf7h5t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC2BCC113D0;
-	Tue, 26 Aug 2025 06:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756189063;
-	bh=ULArDttUoH2BnbOI3gLu8wJikWnIdMteyCkSVpdZ2qE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=txQf7h5t8gXt/wjnFGOSjDUXSEMUTcPaSEMFkaXyP6txgAdgVGSfTScyYXJKdmhPW
-	 LioPj/kFrCdb46wRdYsF0PlkNALfuS9WPI8zGERHNvKZwL/9XY4CyhK554rtz648kB
-	 2LCmleazmASoUO5VfgiwhhMJ/CbGKNtjqB/QqJSoL73U6yYHNTeb9WDJ2KeWirX7P/
-	 HYe2+ahbjii5/AMV1ITc5PyJz2AEBkjQaVyRRf55g3IS+yhSn6zDQuoPi/MRWX1LNw
-	 6dJIAykwrTTAo+q9ONOVKY1z0B/PIHt5Bz612YjRkN3y5GrBjkC8P0/84aUu1bfXFB
-	 a2kX5ccor9bHw==
-From: Kees Cook <kees@kernel.org>
-To: Indu Bhagat <indu.bhagat@oracle.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Claudiu Zissulescu <claudiu.zissulescu-ianculescu@oracle.com>,
-	Andrew Pinski <andrew.pinski@oss.qualcomm.com>,
-	Qing Zhao <qing.zhao@oracle.com>,
-	gcc-patches@gcc.gnu.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] Fix sanitizer attribute infrastructure to use standard TREE_LIST format [PR113264]
-Date: Mon, 25 Aug 2025 23:17:39 -0700
-Message-Id: <20250826061735.it.634-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vKi90Lq8"
+Message-ID: <bbdabd48-61c0-46f9-bf33-c49d6d27ffb0@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1756203292;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=93BSLKjqwuhfuo1d7BbPvsz9FaxJknFZQrYjXgjX3Wc=;
+	b=vKi90Lq8N/rLBoHV/tqnWppuyM5doMlL1lAFpjC9LmAx77dqYYLv2dujjcgkPedcv4S1Z9
+	iMCUV/m4kMoYXj77kIMW/nhAhgV8WbG8og5OB9JvwilZ4AcQrp8cqsIAXz/O0+kuy7o6GX
+	6200GzoLUS2Tj99Sr5Lx6WpG/etTCik=
+Date: Tue, 26 Aug 2025 11:14:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7367; i=kees@kernel.org; h=from:subject:message-id; bh=ULArDttUoH2BnbOI3gLu8wJikWnIdMteyCkSVpdZ2qE=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlrA5uX9p+RPV16+MxUzqc+s4p0ym4cjLu3bQ2bgYTdU 5Yqr/iqjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlc62Rk+Hkwrnwx55E8D8/K Txxil4u+PlbbtKj2yow4rRMJ2+eGSjIybBFmX53wf9qE4mXaVxid7JSyVl+9bC7l/FHaQEX2sLo xDwA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v7 4/5] net: rnpgbe: Add basic mbx_fw support
+To: Yibo Dong <dong100@mucse.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
+ gur.stavi@huawei.com, maddy@linux.ibm.com, mpe@ellerman.id.au,
+ danishanwar@ti.com, lee@trager.us, gongfan1@huawei.com, lorenzo@kernel.org,
+ geert+renesas@glider.be, Parthiban.Veerasooran@microchip.com,
+ lukas.bulwahn@redhat.com, alexanderduyck@fb.com, richardcochran@gmail.com,
+ kees@kernel.org, gustavoars@kernel.org, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250822023453.1910972-1-dong100@mucse.com>
+ <20250822023453.1910972-5-dong100@mucse.com>
+ <316f57e3-5953-4db6-84aa-df9278461d30@linux.dev>
+ <82E3BE49DB4195F0+20250826013113.GA6582@nic-Precision-5820-Tower>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <82E3BE49DB4195F0+20250826013113.GA6582@nic-Precision-5820-Tower>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-The __attribute__((__copy__)) functionality was crashing when copying
-sanitizer-related attributes because these attributes violated the standard
-GCC attribute infrastructure by storing INTEGER_CST values directly instead
-of wrapping them in TREE_LIST like all other attributes.
+On 26/08/2025 02:31, Yibo Dong wrote:
+> On Mon, Aug 25, 2025 at 05:37:27PM +0100, Vadim Fedorenko wrote:
+>> On 22/08/2025 03:34, Dong Yibo wrote:
+>>
+>> [...]
+>>> +/**
+>>> + * mucse_mbx_fw_post_req - Posts a mbx req to firmware and wait reply
+>>> + * @hw: pointer to the HW structure
+>>> + * @req: pointer to the cmd req structure
+>>> + * @cookie: pointer to the req cookie
+>>> + *
+>>> + * mucse_mbx_fw_post_req posts a mbx req to firmware and wait for the
+>>> + * reply. cookie->wait will be set in irq handler.
+>>> + *
+>>> + * @return: 0 on success, negative on failure
+>>> + **/
+>>> +static int mucse_mbx_fw_post_req(struct mucse_hw *hw,
+>>> +				 struct mbx_fw_cmd_req *req,
+>>> +				 struct mbx_req_cookie *cookie)
+>>> +{
+>>> +	int len = le16_to_cpu(req->datalen);
+>>> +	int err;
+>>> +
+>>> +	cookie->errcode = 0;
+>>> +	cookie->done = 0;
+>>> +	init_waitqueue_head(&cookie->wait);
+>>> +	err = mutex_lock_interruptible(&hw->mbx.lock);
+>>> +	if (err)
+>>> +		return err;
+>>> +	err = mucse_write_mbx_pf(hw, (u32 *)req, len);
+>>> +	if (err)
+>>> +		goto out;
+>>> +	/* if write succeeds, we must wait for firmware response or
+>>> +	 * timeout to avoid using the already freed cookie->wait
+>>> +	 */
+>>> +	err = wait_event_timeout(cookie->wait,
+>>> +				 cookie->done == 1,
+>>> +				 cookie->timeout_jiffies);
+>>
+>> it's unclear to me, what part of the code is managing values of cookie
+>> structure? I didn't get the reason why are you putting the address of
+>> cookie structure into request which is then directly passed to the FW.
+>> Is the FW supposed to change values in cookie?
+>>
+> 
+> cookie will be used in an irq-handler. like this:
+> static int rnpgbe_mbx_fw_reply_handler(struct mucse *mucse,
+>                                         struct mbx_fw_cmd_reply *reply)
+> {
+>          struct mbx_req_cookie *cookie;
+> 
+>          cookie = reply->cookie;
+> 
+>          if (cookie->priv_len > 0)
+>                  memcpy(cookie->priv, reply->data, cookie->priv_len);
+>          cookie->done = 1;
+>          if (le16_to_cpu(reply->flags) & FLAGS_ERR)
+>                  cookie->errcode = -EIO;
+>          else
+>                  cookie->errcode = 0;
+>          wake_up(&cookie->wait);
+>          return 0;
+> }
+> That is why we must wait for firmware response.
+> But irq is not added in this patch series. Maybe I should move all
+> cookie relative codes to the patch will add irq?
 
-Wrap sanitizer attributes INTEGER_CST values in TREE_LIST structures
-to follow the same pattern as other attributes. This eliminates the
-copy_list() crashes when copying sanitizer attributes:
+well, yes, in general it's better to introduce the code as a solid
+solution. this way it's much easier to review
 
-test.c:4:1: internal compiler error: tree check: expected tree that contains ‘common’ structure, have ‘integer_cst’ in copy_list, at tree.cc:1427
-    4 | __attribute__((__copy__(__tanh)));
-      | ^~~~~~~~~~~~~
-0x859d06 tree_contains_struct_check_failed(tree_node const*, tree_node_structure_enum, char const*, int, char const*)
-        ../../gcc/gcc/tree.cc:9126
-0x860f78 contains_struct_check(tree_node*, tree_node_structure_enum, char const*, int, char const*)
-        ../../gcc/gcc/tree.h:3748
-0x860f78 copy_list(tree_node*)
-        ../../gcc/gcc/tree.cc:1427
-0xa755a5 handle_copy_attribute
-        ../../gcc/gcc/c-family/c-attribs.cc:3077
+> 
+>>> +
+>>> +	if (!err)
+>>> +		err = -ETIMEDOUT;
+>>> +	else
+>>> +		err = 0;
+>>> +	if (!err && cookie->errcode)
+>>> +		err = cookie->errcode;
+>>> +out:
+>>> +	mutex_unlock(&hw->mbx.lock);
+>>> +	return err;
+>>> +}
+>>
+>> [...]
+>>
+>>> +struct mbx_fw_cmd_req {
+>>> +	__le16 flags;
+>>> +	__le16 opcode;
+>>> +	__le16 datalen;
+>>> +	__le16 ret_value;
+>>> +	union {
+>>> +		struct {
+>>> +			__le32 cookie_lo;
+>>> +			__le32 cookie_hi;
+>>> +		};
+>>> +
+>>> +		void *cookie;
+>>> +	};
+>>> +	__le32 reply_lo;
+>>> +	__le32 reply_hi;
+>>
+>> what do these 2 fields mean? are you going to provide reply's buffer
+>> address directly to FW?
+>>
+> 
+> No, this is defined by fw. Some fw can access physical address.
+> But I don't use it in this driver.
 
-gcc/c-family/ChangeLog:
+FW can access physical address without previously configuring IOMMU?
+How can that be?
 
-	PR c/113264
-	* c-attribs.cc (add_no_sanitize_value): Store INTEGER_CST values
-	wrapped in TREE_LIST following standard attribute conventions.
-	(handle_no_sanitize_attribute): Handle both original string
-	arguments and copied INTEGER_CST values from TREE_LIST format.
+> 
+>>> +	union {
+>>> +		u8 data[32];
+>>> +		struct {
+>>> +			__le32 version;
+>>> +			__le32 status;
+>>> +		} ifinsmod;
+>>> +		struct {
+>>> +			__le32 port_mask;
+>>> +			__le32 pfvf_num;
+>>> +		} get_mac_addr;
+>>> +	};
+>>> +} __packed;
+>>> +
+>>> +struct mbx_fw_cmd_reply {
+>>> +	__le16 flags;
+>>> +	__le16 opcode;
+>>> +	__le16 error_code;
+>>> +	__le16 datalen;
+>>> +	union {
+>>> +		struct {
+>>> +			__le32 cookie_lo;
+>>> +			__le32 cookie_hi;
+>>> +		};
+>>> +		void *cookie;
+>>> +	};
+>>
+>> This part looks like the request, apart from datalen and error_code are
+>> swapped in the header. And it actually means that the FW will put back
+>> the address of provided cookie into reply, right? If yes, then it
+>> doesn't look correct at all...
+>>
+> 
+> It is yes. cookie is used in irq handler as show above.
+> Sorry, I didn't understand 'the not correct' point?
 
-gcc/ChangeLog:
+The example above showed that the irq handler uses some value received
+from the device as a pointer to kernel memory. That's not safe, you
+cannot be sure that provided value is valid pointer, and that it points
+to previously allocated cookie structure. It is a clear way to corrupt
+memory.
 
-	PR c/113264
-	* asan.h (sanitize_flags_p): Extract sanitizer flags from
-	TREE_LIST wrapper instead of directly from INTEGER_CST.
-
-gcc/d/ChangeLog:
-
-	PR c/113264
-	* d-attribs.cc (d_handle_no_sanitize_attribute): Store INTEGER_CST
-	values wrapped in TREE_LIST following standard conventions.
-
-gcc/testsuite/ChangeLog:
-
-	PR c/113264
-	* gcc.dg/pr113264.c: New test.
-	* gcc.dg/pr113264-asan-no-instrumentation.c: New test validating
-	that copied sanitizer attributes prevent ASAN instrumentation.
-
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- v2: Rebased on to latest upstream, which has sanitize_code_type now.
-Cc: Indu Bhagat <indu.bhagat@oracle.com>
-Cc: Claudiu Zissulescu <claudiu.zissulescu-ianculescu@oracle.com>
-Cc: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
----
- gcc/asan.h                |  8 ++++++-
- gcc/c-family/c-attribs.cc | 49 +++++++++++++++++++++++++++------------
- gcc/d/d-attribs.cc        | 17 ++++++++++----
- 3 files changed, 54 insertions(+), 20 deletions(-)
-
-diff --git a/gcc/asan.h b/gcc/asan.h
-index a24562f67a29..f5dc3d7ceb8d 100644
---- a/gcc/asan.h
-+++ b/gcc/asan.h
-@@ -253,7 +253,13 @@ sanitize_flags_p (sanitize_code_type flag,
-     {
-       tree value = lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (fn));
-       if (value)
--	result_flags &= ~tree_to_uhwi (TREE_VALUE (value));
-+	{
-+	  /* Extract the INTEGER_CST from the TREE_LIST wrapper.  */
-+	  tree attr_args = TREE_VALUE (value);
-+	  gcc_assert (attr_args && TREE_CODE (attr_args) == TREE_LIST);
-+	  sanitize_code_type no_sanitize_flags = tree_to_sanitize_code_type (TREE_VALUE (attr_args));
-+	  result_flags &= ~no_sanitize_flags;
-+	}
-     }
- 
-   return result_flags;
-diff --git a/gcc/c-family/c-attribs.cc b/gcc/c-family/c-attribs.cc
-index 1e3a94ed9493..e629601579ef 100644
---- a/gcc/c-family/c-attribs.cc
-+++ b/gcc/c-family/c-attribs.cc
-@@ -1425,20 +1425,27 @@ add_no_sanitize_value (tree node, sanitize_code_type flags)
-   tree attr = lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (node));
-   if (attr)
-     {
--      sanitize_code_type old_value =
--	tree_to_sanitize_code_type (TREE_VALUE (attr));
-+      /* Extract the INTEGER_CST from the TREE_LIST wrapper.  */
-+      tree attr_args = TREE_VALUE (attr);
-+      gcc_assert (attr_args && TREE_CODE (attr_args) == TREE_LIST);
-+      sanitize_code_type old_value = tree_to_sanitize_code_type (TREE_VALUE (attr_args));
-+
-       flags |= old_value;
- 
-       if (flags == old_value)
- 	return;
- 
--      TREE_VALUE (attr) = build_int_cst (uint64_type_node, flags);
-+      tree new_value = build_tree_list (NULL_TREE,
-+					build_int_cst (uint64_type_node, flags));
-+      TREE_VALUE (attr) = new_value;
-     }
-   else
--    DECL_ATTRIBUTES (node)
--      = tree_cons (get_identifier ("no_sanitize"),
--		   build_int_cst (uint64_type_node, flags),
--		   DECL_ATTRIBUTES (node));
-+    {
-+      tree attr_value = build_tree_list (NULL_TREE,
-+					 build_int_cst (uint64_type_node, flags));
-+      DECL_ATTRIBUTES (node) = tree_cons (get_identifier ("no_sanitize"), attr_value,
-+					  DECL_ATTRIBUTES (node));
-+    }
- }
- 
- /* Handle a "no_sanitize" attribute; arguments as in
-@@ -1456,17 +1463,29 @@ handle_no_sanitize_attribute (tree *node, tree name, tree args, int,
-       return NULL_TREE;
-     }
- 
--  for (; args; args = TREE_CHAIN (args))
-+  /* Handle both original string arguments and copied attributes that
-+     have already been processed into INTEGER_CST wrapped in TREE_LIST.  */
-+  if (args && TREE_CODE (args) == TREE_LIST
-+      && TREE_VALUE (args) && TREE_CODE (TREE_VALUE (args)) == INTEGER_CST)
-     {
--      tree id = TREE_VALUE (args);
--      if (TREE_CODE (id) != STRING_CST)
-+      /* This is a copied attribute with the flags already processed.  */
-+      flags = tree_to_sanitize_code_type (TREE_VALUE (args));
-+    }
-+  else
-+    {
-+      /* Process original string arguments.  */
-+      for (; args; args = TREE_CHAIN (args))
- 	{
--	  error ("%qE argument not a string", name);
--	  return NULL_TREE;
--	}
-+	  tree id = TREE_VALUE (args);
-+	  if (TREE_CODE (id) != STRING_CST)
-+	    {
-+	      error ("%qE argument not a string", name);
-+	      return NULL_TREE;
-+	    }
- 
--      char *string = ASTRDUP (TREE_STRING_POINTER (id));
--      flags |= parse_no_sanitize_attribute (string);
-+	  char *string = ASTRDUP (TREE_STRING_POINTER (id));
-+	  flags |= parse_no_sanitize_attribute (string);
-+	}
-     }
- 
-   add_no_sanitize_value (*node, flags);
-diff --git a/gcc/d/d-attribs.cc b/gcc/d/d-attribs.cc
-index 53aea5e2e904..342702b05acb 100644
---- a/gcc/d/d-attribs.cc
-+++ b/gcc/d/d-attribs.cc
-@@ -1424,17 +1424,26 @@ d_handle_no_sanitize_attribute (tree *node, tree name, tree args, int,
-      merge existing flags if no_sanitize was previously handled.  */
-   if (tree attr = lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (*node)))
-     {
--      sanitize_code_type old_value =
--	tree_to_sanitize_code_type (TREE_VALUE (attr));
-+      /* Extract the INTEGER_CST from the TREE_LIST wrapper.  */
-+      tree attr_args = TREE_VALUE (attr);
-+      gcc_assert (attr_args && TREE_CODE (attr_args) == TREE_LIST);
-+      sanitize_code_type old_value = tree_to_sanitize_code_type (TREE_VALUE (attr_args));
-+
-       flags |= old_value;
- 
-       if (flags != old_value)
--	TREE_VALUE (attr) = build_int_cst (d_ulong_type, flags);
-+	{
-+	  tree new_value = build_tree_list (NULL_TREE,
-+					     build_int_cst (d_ulong_type, flags));
-+	  TREE_VALUE (attr) = new_value;
-+	}
-     }
-   else
-     {
-+      tree attr_value = build_tree_list (NULL_TREE,
-+					  build_int_cst (d_ulong_type, flags));
-       DECL_ATTRIBUTES (*node) = tree_cons (get_identifier ("no_sanitize"),
--					   build_int_cst (d_ulong_type, flags),
-+					   attr_value,
- 					   DECL_ATTRIBUTES (*node));
-     }
- 
--- 
-2.34.1
+> 
+>>> +	union {
+>>> +		u8 data[40];
+>>> +		struct mac_addr {
+>>> +			__le32 ports;
+>>> +			struct _addr {
+>>> +				/* for macaddr:01:02:03:04:05:06
+>>> +				 * mac-hi=0x01020304 mac-lo=0x05060000
+>>> +				 */
+>>> +				u8 mac[8];
+>>> +			} addrs[4];
+>>> +		} mac_addr;
+>>> +		struct hw_abilities hw_abilities;
+>>> +	};
+>>> +} __packed;
+>>
 
