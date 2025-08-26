@@ -1,130 +1,198 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B4F1B6D08
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 21:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40A130CDB4;
+	Tue, 26 Aug 2025 22:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756244983; cv=none; b=LtfiAhKyv8EpNnw3dvmrAY27SzXpwzziUT4RZNnyA8qWRkATwH0QK5TR8Op2Uwq8ryuxrAItfAS66ILZJdt4iQaYGsP7aq+CLRhPgVZeDIsyGXLwuJi2SPGgTyu7MOvD+2PWjm7AZBktgwzbjx1Zxftcci8t3FTcbYcGXRM4TS8=
+	t=1756248710; cv=none; b=Kqn910s3UB2Lcg7hhv5FY2iuQ5UQh6tdquZM6+Wx+4ibs8b/3vYGoUY0KDcbyL/pmpeXDa0N56hwW7XoaQpjOMR80iCpTTJWame6cthTDefNBJKFtvS2MoA65iOuQTLeUXU3cwEcKMekf8V+5MLI4NfLkBgb6CxoPHvcxjsSz7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756244983; c=relaxed/simple;
-	bh=m0WVLtEMOLSm9zDk1d3O6jTHTPnftcVbrMs10BE0Kzo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eoVr/+ppLqpCbmdmJthhyMsj3p2wzr04XXx5b6ecDm46SEOmITHFAiUO5eKlRQyCpzUYUfL2XzWRXKq57r4Ea5eWQMhGmgS8Gv8T4AF9cY0BbF0KzAMStTaXwhc89WKRxYXGwjFl/5weVRyolz6VsW/2z7URExr/L3E/dQS7868=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GW7uBFTf; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1756248710; c=relaxed/simple;
+	bh=hgk4XDMvj1XRZUEv0zpCfESAIhrSX8CeXQ0czb2Zh0M=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sVWMy7DcFaeeYQUoxfto5FhCg+8XHjLuXErAiTWYS/QTtRv5kZY2lZBq9GsROd8BCxubQAIiowpGWQtxeEJKMGW0Sc8k9hgT9FVisC7GjmpV/dnnd9Z7wuZhB39iWb3qmD8nqR1TqBdQhaQwnozSJ6mSj/g57BYzHT/I+eeI7RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZH210GJO; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GW7uBFTf"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57QFqEsc031417
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 21:49:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ovwcz/UMx+Ei1EUDipzRJAkdj5/vHnIo3oFAfjDRoTY=; b=GW7uBFTfEjLK1VD+
-	jvcelJdkc9D6ELm3oQep1HEk63GXjAQGze8wezUoodAtkr4xi+hm1vjmixN0eaoo
-	ZMdPJozGh+tGniRlZKtVl1AlZMYsRqESV39zfdp1M7UVc6BAF/suWs0gP1ub7YkE
-	np1pOHkTc03QgmcyS7QXDEDKdem4JpdwM2KBuaXvGuMZ2qw5gZWnIjcAIGJKrLNt
-	HcWp8bTgc+WvN+ghBCrIIMgeZuUh+pgZkyxL/b9Ta1rHtyYYrb4IqkyvIG3grCN2
-	HnEpw+GWEEP+WBzz3K4tDfZmphSbo8b4397190wUll7OR044RLWLhULiGcQ1ItOT
-	koFGAA==
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48q5xfjewu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 21:49:40 +0000 (GMT)
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b49ddcdd5e9so4159549a12.3
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 14:49:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZH210GJO"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-323267872f3so4907928a91.1;
+        Tue, 26 Aug 2025 15:51:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756248708; x=1756853508; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nZ1zyXSSIOQ4H4hZM313mvzovTi9cnOMX7vreXvwnt8=;
+        b=ZH210GJOWtoq0n3sxfhXPRw/4mx439U/2mRcSrvPdOeboa7RywbdKnCnjV0GUAJ88K
+         SJ1IUQFwuURXaF/4kzUDVxyHoivDgO0jBgj6VJXeo4N7kI38CWGRmXNJU9EdtOytZhFf
+         Zm9qVHcpNvtfzEwFWoJqBM6TOjGFi0Gkkq2OnxgThdC3Joxx7xtOWACZ0AU40sLdCWax
+         L2VigclYvqaOcfctTDSb9P0IjBLT6sCmwIQkDel/TsSRxX6MO0J4Asbjj37McQxU3hvc
+         AmxUWE+K02TBrxPbPKx5SwQvMuop/0JETjxHP9OToRgCIONHsjqWQeBAW1OynfPaSjUu
+         32XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756244979; x=1756849779;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ovwcz/UMx+Ei1EUDipzRJAkdj5/vHnIo3oFAfjDRoTY=;
-        b=PwApAOnwZCEtw6IovN8ZFH8aRUaoG1gQSbUn+tX4Q3QoxWfqROrLcaFB5avrScnPei
-         KjucT4rw5SLyR6lthiyjxDFFxkrqF5C1v9VVzw7fLMHJ8jP2Eehyg1WK1CrJCP57DEry
-         pLCqyxD18QBhO491sYlVV6yWB0XyTTbW01b7wJpK61hy7/+176axjmhKks+RMj1O3upp
-         ObmOBUz+Z9iMpN/YrP+57rfg/p0/PLip2uDMGN+/odCBuMcwOutjyCujo9uuVcy65lR0
-         KaWFapsqTfmxCmRlo1zUQr2tknnN2O4pDdnDcmRW2eQ6HbPE9GaBiNt1yTRsgXmAqQEp
-         LJpg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxVzlagDq7/TadsPNTe/Bw5AWOH4cikmoQroBNtys6g7E44gXo9qUpmjOS6ySNHoscxVLw86C8163IJQc+nvQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb/BtMY7tc41bDuVsUrTGM5SwXCLuRGqzmw7XI/W5VD/laa0ll
-	m4s7+xM7eO5HeHYTJSfA4zLt0uN27cIyP8meDBEI0zl9rsZBkdg3Wnxn5zpEzaznpCmKtuu3dbf
-	xc80Jpn/WSe6QDLkku+E7ORI98vrqQ31veThqelDw0F2SNjiM/o9RVGTwju2Z5AH5ZKE8TPk=
-X-Gm-Gg: ASbGncuQr3ZG1xt5J2xFxq7XY2HgJBW2p2jYoYMGOYmLTleyLl0GiZ+tsHY+HQgqUo0
-	bXElwbt/vNB/tnTqmmXHomoGXui3yLF7RfZF9S4u0DTIrklJKrXdAjOXoLiwn656KhmN1jKkACU
-	5R58m1zwslC4st+6Zbr3us2upXHWgZrDorvrdnx91hQXN/BBst4voMU3FVPBVeNF3Ii1gHjW/x5
-	grmeKJGNh5XxDCg8rDvpK51/WOLElJ1HNgKlUl4siLIFlAdC7+wrZDJcG1vYw425p+mgw46K7fS
-	QRR2dTGZptZ13y9JHbkz///bjgOxuhSRYgaAaTn0bi8V4HZVPXUDJI7Ni4VUbE3sAjIoWcW5G6Z
-	FhNN4JmJPjgzWxUr6rHoes73xuN5gktmz
-X-Received: by 2002:a05:6a20:3947:b0:23d:5691:df51 with SMTP id adf61e73a8af0-24340b01b9emr23163092637.1.1756244979115;
-        Tue, 26 Aug 2025 14:49:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEvW96AUyv4NFuLjcj/uDmOR3GBBgYMnkq5H/IYhcNWvdPPtmf37a1KlGOYrRmV7mrjTboe3Q==
-X-Received: by 2002:a05:6a20:3947:b0:23d:5691:df51 with SMTP id adf61e73a8af0-24340b01b9emr23163064637.1.1756244978686;
-        Tue, 26 Aug 2025 14:49:38 -0700 (PDT)
-Received: from [192.168.1.111] (c-73-202-227-126.hsd1.ca.comcast.net. [73.202.227.126])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b4c1b2f5a3csm5860905a12.4.2025.08.26.14.49.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Aug 2025 14:49:38 -0700 (PDT)
-Message-ID: <e43ffda6-4d25-4874-99b0-6a65fea4a261@oss.qualcomm.com>
-Date: Tue, 26 Aug 2025 14:49:36 -0700
+        d=1e100.net; s=20230601; t=1756248708; x=1756853508;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nZ1zyXSSIOQ4H4hZM313mvzovTi9cnOMX7vreXvwnt8=;
+        b=pOIMRpebSgrNZ9HhQl/suHG1WEJthXelH2+2coWVJtTwNdyZ3Ubo+JU0WzlUp2W1kd
+         JdBGeqdUvvrMLwMxBizKaQ0BQPEXnqDssAPgBr+S/8XPhMnQas3T5/jlOhWDNX8kBZpl
+         tupKKRCDXOkMgxqCX9IghFDkefTP9MxUZaIlR8CSCzX9yCAVCUCR2ECS1kb1rglT5+hI
+         /C33HGOwKkzJQMYHCY+2qItzOk8GW5oM1ywFWrY8mCYZnZMC4Nze44v+eO857ofIxxvS
+         rCIxfLkqS3rCv7npq21C68pY/peI1ZcFpJRQBbWSbyzGYuCSYdw7mWdcqCc3ADaCy+Ro
+         6pQA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5Zsdr3dBN20qKAklXCvwyG4a2R2AVxnhQHnpnY4rQG8tjWro+NAQtYHE5RjkFz1yRzEMgzmHL6DML/4mF99c=@vger.kernel.org, AJvYcCXXxa2yjhAZktjrbS4MVgsl1+fqEkBLGKbEFyVWPJo4JnXEdV3u+aVO9kvgUFOs1AYO22dB0sOZNoRQ6koJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYPNWVlgAW/lXtcoh3OtSTcvOnYzhaGYmfuSlRHmAoiidf65wp
+	k0y0iWTsAHMBm3XEgjTTy/gB2oxpNGidFM+/8yqHBSVb3+QtDTSthl0M
+X-Gm-Gg: ASbGncspUl7hgh1vNnKrI0J1pt8nagTQIxedQ7f0yAp65Awv8gDK+iZqUEWq2Kvk0w/
+	9aV4iuGlFAD3PE/jc0fa3dEkuKA3xmqVvJ+vemMjj4mDg51iUdWGuFqBJl4bJxkD/P7/A13UmIs
+	uCllCqrHNcLvKoX1j1xQ/MXCTY79AaW+zU1M9YQf7MyXSGa7lzlew/pIqolgjiRfhABwtABpkA8
+	aPJx5Ge/dpvhC1CzDOeYvBtVvtadkVTTFd/6eJUSgn0iruewPWz6SBxVdI/y1Yd0RcnV1ngtWna
+	GpjEJPepWmMOGUqrODQUQjEtoTcx2fhW+fUDS9Of7wwiOPwl0ZWLSiPsV9lxd/vb3yE33Kd2LML
+	if4RcE0BQiIJKWQS1wdpV
+X-Google-Smtp-Source: AGHT+IG/HzQ4hMId5Yct6mGAhKNYFzfy96p39xqVpexqISKH81EdXf5MkxVWA1nFcqIHqt/EM66QhA==
+X-Received: by 2002:a17:902:ec82:b0:247:7e9:110d with SMTP id d9443c01a7336-24707e91239mr101058735ad.6.1756248708113;
+        Tue, 26 Aug 2025 15:51:48 -0700 (PDT)
+Received: from [0.0.5.57] ([136.159.213.249])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-246688a601esm105340815ad.162.2025.08.26.15.51.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Aug 2025 15:51:47 -0700 (PDT)
+From: Abhinav Saxena <xandfury@gmail.com>
+Subject: [RFC PATCH 0/5] tty: Add KUnit test framework for TTY drivers
+Date: Tue, 26 Aug 2025 16:51:30 -0600
+Message-Id: <20250826-tty-tests-v1-0-e904a817df92@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] kcfi: Rename CONFIG_CFI_CLANG to CONFIG_CFI
-To: Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: Kees Cook <kees@outflux.net>, Sami Tolvanen <samitolvanen@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland
- <mark.rutland@arm.com>,
-        Puranjay Mohan <puranjay@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Nathan Chancellor <nathan@kernel.org>, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20250825141316.work.967-kees@kernel.org>
- <20250825142603.1907143-5-kees@kernel.org>
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <20250825142603.1907143-5-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIzMDAzMyBTYWx0ZWRfX6B8vhvM4pcwK
- 5xwDOQ3KD1IXctvHWGyEBgDQ7Pueoz5BIy/tPGdHNO/MgougEBru26I7jf4hK77x8RGFZ/4S5vL
- l2gUbZ6RqDSb/wPJJyGkYStkxDEeuPMKi8kmFSbkeMDONQlioh8EyXMPh4oVng08b2+l77rYNUZ
- Lpbdcg4YMYhBj/Y5QsnpDUv0hRtNf3kZh3s9pBqjycudGNoohnenRmQjWhvO1bzyMOXr3BT22Ie
- 920kX6NrznqkFJvYteiv+VgAi71OFTqCQi9jTRx5OcRGlqN5zC1LdOiRCRKlB6az+xhBMq8GCHI
- xVDc3DnB0gK2UCdAA+v31ZnqfdpMzK81t5tAoWft8skj4okUvwkGZgZca6dhA1/EAA8snTs1G5A
- ROyTYXwl
-X-Proofpoint-GUID: E68LPvrXW1tZ6u_NgtchpyqjO7uMPdub
-X-Authority-Analysis: v=2.4 cv=MutS63ae c=1 sm=1 tr=0 ts=68ae2bf4 cx=c_pps
- a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=e70TP3dOR9hTogukJ0528Q==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=ZGSs6mt8D-bwwmi9yLIA:9
- a=QEXdDO2ut3YA:10 a=3WC7DwWrALyhR5TkjVHa:22
-X-Proofpoint-ORIG-GUID: E68LPvrXW1tZ6u_NgtchpyqjO7uMPdub
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-26_02,2025-08-26_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
- suspectscore=0 clxscore=1011 bulkscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508230033
+X-B4-Tracking: v=1; b=H4sIAHI6rmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDCyMT3ZKSSt2S1OKSYl3ztOQUiySjJANL41QloPqCotS0zAqwWdFKQW7
+ OILEAxxBnD6XY2loARpCBXmkAAAA=
+X-Change-ID: 20250824-tty-tests-7fcd8b2b093e
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+ llvm@lists.linux.dev, linux-hardening@vger.kernel.org, 
+ Abhinav Saxena <xandfury@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1756248706; l=4094;
+ i=xandfury@gmail.com; s=20250614; h=from:subject:message-id;
+ bh=hgk4XDMvj1XRZUEv0zpCfESAIhrSX8CeXQ0czb2Zh0M=;
+ b=mSY5yCA3KyC3Jqpzeam3sxhrqhDy9sptr85JvnLMfcV7xFOHeUh1WHDvH6DvdeIHlJNpXm7ph
+ p1EdMuN7iI6AUnv/NRn/HgYTdbqiB4Uy6CHqf9MebJo5XZAOXaGCc0s
+X-Developer-Key: i=xandfury@gmail.com; a=ed25519;
+ pk=YN6w7WNet8skqvMWxhG5BlAmtd1SQmo8If6Mofh4k44=
 
-On 8/25/2025 7:25 AM, Kees Cook wrote:
-...
-> -config ARCH_SUPPORTS_CFI_CLANG
-> +config ARCH_SUPPORTS_CFI
->  	bool
->  	help
->  	  An architecture should select this option if it can support Clang's
+This patch series introduces a KUnit testing framework for the TTY
+subsystem, enabling deterministic, automated testing of TTY drivers and
+core functionality without requiring hardware or userspace interaction.
 
-nit: Do you want to replace the mention of Clang in the help text?
+On an x86_64 build with CONFIG_GCOV enabled, these tests increased
+TTY subsystem coverage to approximately 10.6% line coverage and
+14.7% function coverage [1].
 
+Problem Statement
+-----------------
+Testing TTY drivers today requires:
+- User-space interaction through device nodes
+- Complex setup with ptys or real hardware
+- Limited ability to test error paths reliably and deterministically
+
+This series solves these issues by providing in-kernel KUnit tests that
+exercise real TTY core paths under controlled, deterministic conditions.
+
+What This Series Provides
+-------------------------
+1. Reusable test helpers (`tty_test_helpers.h`):
+   - Minimal (~150 LOC) infrastructure that any TTY driver should be
+   able to use
+   - Automatic resource management
+   - Integrated into core files under KUnit guard, with
+     `EXPORT_SYMBOL_IF_KUNIT()` to keep the production symbol table
+     clean
+
+2. Mock TTY driver:
+   - Demonstrates how drivers can leverage the helpers
+   - Enables deterministic scenarios without hardware
+
+3. Core TTY tests:
+   - Validate open/close/read/write/termios paths
+   - Exercise hangup, resize, and error handling
+   - Ensure real kernel paths are tested, not mocked stubs
+
+4. ttynull driver tests:
+   - Validate data sink behavior of the null driver
+   - Provide a minimal driver contract baseline
+
+5. Optional coverage support:
+   - GCOV integration for test coverage analysis
+
+Future Work
+-----------
+With this foundation merged, follow-up work can:
+- Add more coverage of TTY core functions
+- Enable each TTY driver to maintain its own KUnit suite
+- Introduce stress tests and race detection
+- Extend to include more tests for other tty drivers:
+  - UART drivers: test interrupt handling without hardware
+  - USB serial: validate disconnect and reconnect sequences
+  - PTY drivers: test resize, flow control, and hangups
+  - Virtual consoles: test Unicode and input handling
+  
+Testing
+-------
+- All patches pass `checkpatch.pl`
+- Verified on x86_64 with:
+    ./tools/testing/kunit/kunit.py run \
+        --kunitconfig=.kunit/ \
+        --kunitconfig=drivers/tty/tests/.kunitconfig \
+        --arch=x86_64
+- All tests pass (working around tty_read wrapper in progress)
+
+Feedback welcome! :)
+
+References
+----------
+[1] Coverage reports: ttytests.haunted2bwanted.me (alt: linux-9ik.pages.dev)
+[2] kunit.dev/third_party/kernel/docs/usage.html#testing-static-functions
+[3] KUnit: docs.kernel.org/dev-tools/kunit/
+[4] TTY driver API: https://docs.kernel.org/driver-api/serial/
+[5] Big thanks to LDD3! (Ch18 especially!)
+
+Signed-off-by: Abhinav Saxena <xandfury@gmail.com>
+---
+Abhinav Saxena (5):
+      tty: Add KUnit test infrastructure configuration
+      tty: Add KUnit test helper functions
+      tty: Add mock TTY driver for KUnit testing
+      tty: Add KUnit tests for core TTY functionality
+      tty: Add KUnit tests for ttynull driver
+
+ drivers/tty/Kconfig                  |   9 +
+ drivers/tty/Makefile                 |   7 +
+ drivers/tty/tests/.kunitconfig       |  44 ++++
+ drivers/tty/tests/Kconfig            |  44 ++++
+ drivers/tty/tests/Makefile           |   2 +
+ drivers/tty/tests/test_tty_io_core.c | 249 ++++++++++++++++++++++
+ drivers/tty/tests/test_ttynull.c     | 163 +++++++++++++++
+ drivers/tty/tests/tty_mock.c         | 186 +++++++++++++++++
+ drivers/tty/tests/tty_mock.h         |  34 +++
+ drivers/tty/tests/tty_test_helpers.c | 387 +++++++++++++++++++++++++++++++++++
+ drivers/tty/tests/tty_test_helpers.h | 239 +++++++++++++++++++++
+ drivers/tty/tty_io.c                 |   4 +
+ drivers/tty/ttynull.c                |   5 +
+ 13 files changed, 1373 insertions(+)
+---
+base-commit: 8d245acc1e884e89f0808f64d6af3fc91d4903a0
+change-id: 20250824-tty-tests-7fcd8b2b093e
+
+Best regards,
+-- 
+Abhinav Saxena <xandfury@gmail.com>
 
