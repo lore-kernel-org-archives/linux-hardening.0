@@ -1,229 +1,178 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3890C233128;
-	Tue, 26 Aug 2025 10:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FEF2367D9
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 10:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756203308; cv=none; b=E0ATxZil9/LVBUuI0Kq1ffJRuChq01v0GPiI0yv11bUVmiaWydCabcJ4aEl660ixi6jZT/pUUsfFHXUvuzUiZ1CBsPXEb0/nu0qJlA/q3oi1Hbk+TT/bzr2cCpL9ErS5yNn6492zdMnnR1wgSd7MyZ61cy9wudJPEUiIp5xlhY4=
+	t=1756205160; cv=none; b=gFBL12q29+rV5iMKFoFQ4IeR9mWd4OjuW4ZSEGzQ93VLPsAkNev4ge+uslZ/sicKPab9hnG1SZhP6BZuRTcxBdB0Gsot70hpY+7yOQ0DHVCFCwdKl5gzt1e6ZIMYT52cr6tfwYyZeu3v7X1ZVAqGxU8r7n4lkRBuH2dgsjATfoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756203308; c=relaxed/simple;
-	bh=jzCx4AJYjfVdLu4lvm7viYZkDwKumPWXqnVTmygMhf8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uSqpa1qwopVnXXcGQ+aMTftplK6j35WnM5GKhTCQhU+MTd/Ip0THrWZtmdOsoNsHqstPToYO0peudLfbMW3r7T6cZQsVR26Yrm3gdkaUFU3x0V57qAQHtBsr/mAYQ4IjRpjMtwzhqCsdtxIxSQ2yYnghFTPM+g7piDe7UtOIHuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vKi90Lq8; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1756205160; c=relaxed/simple;
+	bh=dCkr/rXAgWPhiFwu4T4ZQjjXUMya5djMDbNuiUF43r8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MK3a1sx2Cb7/i3YWfxTwXrKwLRv3/RqN5ykwE2HZO/5ywIG/YdzillUDzBaHwVwcJ4aUEDy/FwBnlFke20oxyqw0xxgQOl9ol95eKHWsYV9p+rqBGssPdSRi+GAluu88PmgalTkSyiy2x1ucX3qso9RtIub8F7tofE5NrB327wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ap+5Xt7s; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vKi90Lq8"
-Message-ID: <bbdabd48-61c0-46f9-bf33-c49d6d27ffb0@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1756203292;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=93BSLKjqwuhfuo1d7BbPvsz9FaxJknFZQrYjXgjX3Wc=;
-	b=vKi90Lq8N/rLBoHV/tqnWppuyM5doMlL1lAFpjC9LmAx77dqYYLv2dujjcgkPedcv4S1Z9
-	iMCUV/m4kMoYXj77kIMW/nhAhgV8WbG8og5OB9JvwilZ4AcQrp8cqsIAXz/O0+kuy7o6GX
-	6200GzoLUS2Tj99Sr5Lx6WpG/etTCik=
-Date: Tue, 26 Aug 2025 11:14:19 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ap+5Xt7s"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2445827be70so53749925ad.3
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 03:45:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1756205158; x=1756809958; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZGOLh5cQuaV0+vt4hcjFj06C3bqSM1fNgF6Sjp1p1nM=;
+        b=ap+5Xt7sne3+CTlfq42cMB/p8e2sZ5tyd+YMtKPApU+B6sgqPnJw7WDCVRmNjXuiwL
+         oeWh2OvJf3mVe23GF8kGvJFqleyxVnI6QZRm2dBeMeCvRfAyxt45hYItlojv5k0Qe0F4
+         BCot2jD1woKVsRSWbhzx6lqD+871dp20EO4HFh/LchrI7tRTj8TJNuhARq+jBWvm55pZ
+         kHECC0hBiSqo+627ZuwITc9bvfS/jHFu/wSFm9NMhvSMVq2dS4hGLug6ydvC8oI7omnY
+         NpnJj14hYz30FQQD91+mada1xeeaSugOb0HUUG8YjrwtwbBTSTl6dd0QiTqsB3p8hnuV
+         y+bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756205158; x=1756809958;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZGOLh5cQuaV0+vt4hcjFj06C3bqSM1fNgF6Sjp1p1nM=;
+        b=TYJvT1c6fyyTsUkEmRaLxndUGZS5JLpFn9PoZ57AQaxhZGwGODscc5irlVwAbDpE6g
+         kJZGJUd+NZB1P5cp62eG12VjUGy4I/t71nH0qWmahPePQeSwVLMIRysTBej5KAA868tH
+         b+SonlTlBUTUocPCGwEfJNJZ+BJyyIs7XyPWkVtk0O7YSWQqb4930siAw9vw0HPVqYzN
+         +vP75cj63J0sqjgYW8UCpDg3/6pf7D4nMsRwku/y70+aekLofy4rgkLHRmOqpjRHTBNo
+         7PTJMHr8dLGZYSu2NPeXDMybRHQ/q3h9QgHZkJgxKo2zS3k/ndFCxIb+ylEjvsLCdrTT
+         6Wlw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTOA02W3c+VzGzO5DD5vIbNEg4A3NJZCbU6n6a7sAXrzhjWhNJMDLn++yV+npYHfLRxQRDq+ISA92lIRLb+rI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDqqsa0Wp1+aXFSB6uNi6bk1eAweLwTWQjugrzw9JkGmgTd/S0
+	7JIN3/UxWu4pcRXXNMkOhMTe9nmXC0lX5Lyevt803EDGTverXCkTVMCS2hUCf2kwzFnbkYIjhqX
+	lOUIkW1kh5aRWiNh07qXXjtEDBoeW+rP8X0OUe48K
+X-Gm-Gg: ASbGncuiI8hPxF1956mDmajq4KLp7y+BdjPeLyZ7NYw4toTuuzeNQtB0ed0B0R0QhqU
+	QZltJ6AS5XFN+DtOyJ74t7Xzm6Ja+r9bC3em2IsKZcn380h6TW1OQRLK6jdOOoDiFPXMXqPrPyV
+	DdTs1aUQx0yD1wwDWgkhn0vmbyE0w5ErtoxkD/+srA/2GuwxSHEU8sPD9O5PVswsiDS1oPmlhHb
+	1Qe+ns4iJvhVjO3MhK3MmrVOfs=
+X-Google-Smtp-Source: AGHT+IHaZIymcSNO51VzrGvkl+EzFgf+EwvT7kBpe3gUWu+Fy0TGd2k7zRtskb+cPodn3Z41b2nZl1YDZatmO+4LcFc=
+X-Received: by 2002:a17:902:dad1:b0:240:8262:1a46 with SMTP id
+ d9443c01a7336-2462ee54512mr199229855ad.25.1756205157527; Tue, 26 Aug 2025
+ 03:45:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v7 4/5] net: rnpgbe: Add basic mbx_fw support
-To: Yibo Dong <dong100@mucse.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
- gur.stavi@huawei.com, maddy@linux.ibm.com, mpe@ellerman.id.au,
- danishanwar@ti.com, lee@trager.us, gongfan1@huawei.com, lorenzo@kernel.org,
- geert+renesas@glider.be, Parthiban.Veerasooran@microchip.com,
- lukas.bulwahn@redhat.com, alexanderduyck@fb.com, richardcochran@gmail.com,
- kees@kernel.org, gustavoars@kernel.org, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250822023453.1910972-1-dong100@mucse.com>
- <20250822023453.1910972-5-dong100@mucse.com>
- <316f57e3-5953-4db6-84aa-df9278461d30@linux.dev>
- <82E3BE49DB4195F0+20250826013113.GA6582@nic-Precision-5820-Tower>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <82E3BE49DB4195F0+20250826013113.GA6582@nic-Precision-5820-Tower>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250825154505.1558444-1-elver@google.com> <aKyT2UKmlznvN2jv@hyeyoo>
+In-Reply-To: <aKyT2UKmlznvN2jv@hyeyoo>
+From: Marco Elver <elver@google.com>
+Date: Tue, 26 Aug 2025 12:45:19 +0200
+X-Gm-Features: Ac12FXxpah0HkZevruBg4QeHMNDjWXsh7--6Kjx5Kp37atP55Mt7D7-5zFmt0B8
+Message-ID: <CANpmjNPUsbkyg5VvzUSYqVvaScXpqdfsb_oq2PuKV6VbkZLqFA@mail.gmail.com>
+Subject: Re: [PATCH RFC] slab: support for compiler-assisted type-based slab
+ cache partitioning
+To: Harry Yoo <harry.yoo@oracle.com>
+Cc: linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Alexander Potapenko <glider@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, David Hildenbrand <david@redhat.com>, 
+	David Rientjes <rientjes@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Florent Revest <revest@google.com>, GONG Ruiqi <gongruiqi@huaweicloud.com>, 
+	Jann Horn <jannh@google.com>, Kees Cook <kees@kernel.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Matteo Rizzo <matteorizzo@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Suren Baghdasaryan <surenb@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, linux-hardening@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 26/08/2025 02:31, Yibo Dong wrote:
-> On Mon, Aug 25, 2025 at 05:37:27PM +0100, Vadim Fedorenko wrote:
->> On 22/08/2025 03:34, Dong Yibo wrote:
->>
->> [...]
->>> +/**
->>> + * mucse_mbx_fw_post_req - Posts a mbx req to firmware and wait reply
->>> + * @hw: pointer to the HW structure
->>> + * @req: pointer to the cmd req structure
->>> + * @cookie: pointer to the req cookie
->>> + *
->>> + * mucse_mbx_fw_post_req posts a mbx req to firmware and wait for the
->>> + * reply. cookie->wait will be set in irq handler.
->>> + *
->>> + * @return: 0 on success, negative on failure
->>> + **/
->>> +static int mucse_mbx_fw_post_req(struct mucse_hw *hw,
->>> +				 struct mbx_fw_cmd_req *req,
->>> +				 struct mbx_req_cookie *cookie)
->>> +{
->>> +	int len = le16_to_cpu(req->datalen);
->>> +	int err;
->>> +
->>> +	cookie->errcode = 0;
->>> +	cookie->done = 0;
->>> +	init_waitqueue_head(&cookie->wait);
->>> +	err = mutex_lock_interruptible(&hw->mbx.lock);
->>> +	if (err)
->>> +		return err;
->>> +	err = mucse_write_mbx_pf(hw, (u32 *)req, len);
->>> +	if (err)
->>> +		goto out;
->>> +	/* if write succeeds, we must wait for firmware response or
->>> +	 * timeout to avoid using the already freed cookie->wait
->>> +	 */
->>> +	err = wait_event_timeout(cookie->wait,
->>> +				 cookie->done == 1,
->>> +				 cookie->timeout_jiffies);
->>
->> it's unclear to me, what part of the code is managing values of cookie
->> structure? I didn't get the reason why are you putting the address of
->> cookie structure into request which is then directly passed to the FW.
->> Is the FW supposed to change values in cookie?
->>
-> 
-> cookie will be used in an irq-handler. like this:
-> static int rnpgbe_mbx_fw_reply_handler(struct mucse *mucse,
->                                         struct mbx_fw_cmd_reply *reply)
-> {
->          struct mbx_req_cookie *cookie;
-> 
->          cookie = reply->cookie;
-> 
->          if (cookie->priv_len > 0)
->                  memcpy(cookie->priv, reply->data, cookie->priv_len);
->          cookie->done = 1;
->          if (le16_to_cpu(reply->flags) & FLAGS_ERR)
->                  cookie->errcode = -EIO;
->          else
->                  cookie->errcode = 0;
->          wake_up(&cookie->wait);
->          return 0;
-> }
-> That is why we must wait for firmware response.
-> But irq is not added in this patch series. Maybe I should move all
-> cookie relative codes to the patch will add irq?
+On Mon, 25 Aug 2025 at 18:49, Harry Yoo <harry.yoo@oracle.com> wrote:
+[...]
+> > This mechanism allows the compiler to pass a token ID derived from the
+> > allocation's type to the allocator. The compiler performs best-effort
+> > type inference, and recognizes idioms such as kmalloc(sizeof(T), ...).
+> > Unlike RANDOM_KMALLOC_CACHES, this mode deterministically assigns a slab
+> > cache to an allocation of type T, regardless of allocation site.
+>
+> I don't think either TYPED_KMALLOC_CACHES or RANDOM_KMALLOC_CACHES is
+> strictly superior to the other (or am I wrong?).
 
-well, yes, in general it's better to introduce the code as a solid
-solution. this way it's much easier to review
+TYPED_KMALLOC_CACHES provides stronger guarantees on how objects are
+isolated; in particular, isolating (most) pointer-containing objects
+from plain data objects means that it's a lot harder to gain control
+of a pointer from an ordinary buffer overflow in a plain data object.
 
-> 
->>> +
->>> +	if (!err)
->>> +		err = -ETIMEDOUT;
->>> +	else
->>> +		err = 0;
->>> +	if (!err && cookie->errcode)
->>> +		err = cookie->errcode;
->>> +out:
->>> +	mutex_unlock(&hw->mbx.lock);
->>> +	return err;
->>> +}
->>
->> [...]
->>
->>> +struct mbx_fw_cmd_req {
->>> +	__le16 flags;
->>> +	__le16 opcode;
->>> +	__le16 datalen;
->>> +	__le16 ret_value;
->>> +	union {
->>> +		struct {
->>> +			__le32 cookie_lo;
->>> +			__le32 cookie_hi;
->>> +		};
->>> +
->>> +		void *cookie;
->>> +	};
->>> +	__le32 reply_lo;
->>> +	__le32 reply_hi;
->>
->> what do these 2 fields mean? are you going to provide reply's buffer
->> address directly to FW?
->>
-> 
-> No, this is defined by fw. Some fw can access physical address.
-> But I don't use it in this driver.
+This particular proposed scheme is the result of conclusions I
+gathered from various security researchers (and also reconfirmed by
+e.g. [2]), and the conclusion being that many successful exploits gain
+a write primitive through a vulnerable plain data allocation. That
+write primitive can then be used to overwrite pointers in adjacent
+objects.
 
-FW can access physical address without previously configuring IOMMU?
-How can that be?
+In addition, I have been told by some of those security researches
+(citation needed), that RANDOM_KMALLOC_CACHES actually makes some
+exploits easier, because there is less "noise" in each individual slab
+cache, yet a given allocation is predictably assigned to a slab cache
+by its callsite (via _RET_IP_ + boot-time seed). RANDOM_KMALLOC_CACHES
+does not separate pointer-containing and non-pointer-containing
+objects, and therefore it's likely that a vulnerable object is still
+co-located with a pointer-containing object that can be overwritten.
 
-> 
->>> +	union {
->>> +		u8 data[32];
->>> +		struct {
->>> +			__le32 version;
->>> +			__le32 status;
->>> +		} ifinsmod;
->>> +		struct {
->>> +			__le32 port_mask;
->>> +			__le32 pfvf_num;
->>> +		} get_mac_addr;
->>> +	};
->>> +} __packed;
->>> +
->>> +struct mbx_fw_cmd_reply {
->>> +	__le16 flags;
->>> +	__le16 opcode;
->>> +	__le16 error_code;
->>> +	__le16 datalen;
->>> +	union {
->>> +		struct {
->>> +			__le32 cookie_lo;
->>> +			__le32 cookie_hi;
->>> +		};
->>> +		void *cookie;
->>> +	};
->>
->> This part looks like the request, apart from datalen and error_code are
->> swapped in the header. And it actually means that the FW will put back
->> the address of provided cookie into reply, right? If yes, then it
->> doesn't look correct at all...
->>
-> 
-> It is yes. cookie is used in irq handler as show above.
-> Sorry, I didn't understand 'the not correct' point?
+That being said, none of these mitigation are perfect. But on systems
+that cannot afford to enable KASAN (or rather, KASAN_HW_TAGS) in
+production, it's a lot better than nothing.
 
-The example above showed that the irq handler uses some value received
-from the device as a pointer to kernel memory. That's not safe, you
-cannot be sure that provided value is valid pointer, and that it points
-to previously allocated cookie structure. It is a clear way to corrupt
-memory.
+[2] https://blog.dfsec.com/ios/2025/05/30/blasting-past-ios-18
 
-> 
->>> +	union {
->>> +		u8 data[40];
->>> +		struct mac_addr {
->>> +			__le32 ports;
->>> +			struct _addr {
->>> +				/* for macaddr:01:02:03:04:05:06
->>> +				 * mac-hi=0x01020304 mac-lo=0x05060000
->>> +				 */
->>> +				u8 mac[8];
->>> +			} addrs[4];
->>> +		} mac_addr;
->>> +		struct hw_abilities hw_abilities;
->>> +	};
->>> +} __packed;
->>
+> Would it be reasonable
+> to do some run-time randomization for TYPED_KMALLOC_CACHES too?
+> (i.e., randomize index within top/bottom half based on allocation site and
+> random seed)
 
+It's unclear to me if that would strengthen or weaken the mitigation.
+Irrespective of the top/bottom split, one of the key properties to
+retain is that allocations of type T are predictably assigned a slab
+cache. This means that even if a pointer-containing object of type T
+is vulnerable, yet the pointer within T is useless for exploitation,
+the difficulty of getting to a sensitive object S is still increased
+by the fact that S is unlikely to be co-located. If we were to
+introduce more randomness, we increase the probability that S will be
+co-located with T, which is counter-intuitive to me.
+
+> > Clang's default token ID calculation is described as [1]:
+> >
+> >    TypeHashPointerSplit: This mode assigns a token ID based on the hash
+> >    of the allocated type's name, where the top half ID-space is reserved
+> >    for types that contain pointers and the bottom half for types that do
+> >    not contain pointers.
+> >
+> > Separating pointer-containing objects from pointerless objects and data
+> > allocations can help mitigate certain classes of memory corruption
+> > exploits [2]: attackers who gains a buffer overflow on a primitive
+> > buffer cannot use it to directly corrupt pointers or other critical
+> > metadata in an object residing in a different, isolated heap region.
+> >
+> > It is important to note that heap isolation strategies offer a
+> > best-effort approach, and do not provide a 100% security guarantee,
+> > albeit achievable at relatively low performance cost. Note that this
+> > also does not prevent cross-cache attacks, and SLAB_VIRTUAL [3] should
+> > be used as a complementary mitigation.
+>
+> Not relevant to this patch, but just wondering if there are
+> any plans for SLAB_VIRTUAL?
+
+The relevant folks are Cc'd, so hopefully they are aware.
+
+[...]
+> > Additionally, when I compile my kernel with -Rpass=alloc-token, which
+> > provides diagnostics where (after dead-code elimination) type inference
+> > failed, I see 966 allocation sites where the compiler failed to identify
+> > a type. Some initial review confirms these are mostly variable sized
+> > buffers, but also include structs with trailing flexible length arrays
+> > (the latter could be recognized by the compiler by teaching it to look
+> > more deeply into complex expressions such as those generated by
+> > struct_size).
+>
+> When the compiler fails to identify a type, does it go to top half or
+> bottom half, or perhaps it doesn't matter?
+
+It picks fallback of 0 by default, so that'd be the bottom half, which
+would be the pointer-less bucket. That also matches what I'm seeing,
+where the majority of these objects are variably sized plain buffers.
+The fallback itself is configurable, so it'd also be possible to pick
+a dedicated slab cache for the "unknown type" allocations.
