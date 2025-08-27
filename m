@@ -1,181 +1,203 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6C82D3237
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Aug 2025 06:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94AF61EEF9;
+	Wed, 27 Aug 2025 06:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756276157; cv=none; b=czHW4qnqGlpAfHzXpUDVXkST5X+DDr8JfL7RU8E+PFrfqMz4MFMUcGe8Od8xyt/2XuLiHpCUdrS0lwlHD/s8Yd81UOVg9W/1CxNd8zo4SfvstooLAvIQ1ZbJZcrqIz/+TaViRN/HJQg33Shx2IwPVaOwDNpwnnNjA2BoD1xafv0=
+	t=1756276456; cv=none; b=p+Brz3ewcVSJIggBUT5OKFH0/2Ag8FzezdwrfDcFRurq2nd8JLwzRXzBiMgzS/3yZAd1tbEd1rhe8KwMtYHnEdZzZu0wLr7CSr4QGiOCtfbVqxPvBmrkr4IIdUNsBvwz/vQcEETyy5teiNctF8TNDITRW3bp8DgNwRZu4ssPIRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756276157; c=relaxed/simple;
-	bh=rARVGU5C8wUHMe1KNFks5vW2LN9nMDzV86X7axvS1G8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TmTOIy4C72SzvzZjY6CYTOEWVWKrE0Kh7IBax5WT+skFIbNVQRziNdJK6+U1tyGiENDpkAMtWZwzMcGLo+RJSqDf61M0HVuMuGOpG/ndgfo74v7TcSsux4D1Su9D7UyZcy2VArPHPra+coP3NiIsx5jdheYl+bL+awRdlBN3Ia4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fWGSSyvU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WyTUHBvZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fWGSSyvU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WyTUHBvZ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fWGSSyvU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WyTUHBvZ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fWGSSyvU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WyTUHBvZ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4E50021BCD;
-	Wed, 27 Aug 2025 06:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1756276154; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MIR0tY1TkF8j1XVrNWr3yQ1OdVrmGrEjXuja9vf++n4=;
-	b=fWGSSyvUbb9OZ9/2LdtbKoUz9sZMxIJ9ttgZQr1lnIX7EMQMgMnc4N8SFXQBuCRg77f4Hx
-	JF8Ma+daffJ5EudsX2MK+9h24c5Oy0U14Fqf4kyc/63/he2g5bDVzmRx4oFuFY+vf9lj/l
-	+IBbYj/By6sn21+Bk0obW4s/n9U56Cw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1756276154;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MIR0tY1TkF8j1XVrNWr3yQ1OdVrmGrEjXuja9vf++n4=;
-	b=WyTUHBvZqZ/NXvjNw56HZ8Tg/LRdD+6KHnGr9WX2ZP/IkV2VPbfA9zQne5QO6NmGqinAXC
-	JO7xBRKA75uldWDA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1756276154; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MIR0tY1TkF8j1XVrNWr3yQ1OdVrmGrEjXuja9vf++n4=;
-	b=fWGSSyvUbb9OZ9/2LdtbKoUz9sZMxIJ9ttgZQr1lnIX7EMQMgMnc4N8SFXQBuCRg77f4Hx
-	JF8Ma+daffJ5EudsX2MK+9h24c5Oy0U14Fqf4kyc/63/he2g5bDVzmRx4oFuFY+vf9lj/l
-	+IBbYj/By6sn21+Bk0obW4s/n9U56Cw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1756276154;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MIR0tY1TkF8j1XVrNWr3yQ1OdVrmGrEjXuja9vf++n4=;
-	b=WyTUHBvZqZ/NXvjNw56HZ8Tg/LRdD+6KHnGr9WX2ZP/IkV2VPbfA9zQne5QO6NmGqinAXC
-	JO7xBRKA75uldWDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F139B13310;
-	Wed, 27 Aug 2025 06:29:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XiXVOLmlrmgBWQAAD6G6ig
-	(envelope-from <hare@suse.de>); Wed, 27 Aug 2025 06:29:13 +0000
-Message-ID: <020f8c5c-c9e4-4ad0-8052-a0b182ded92c@suse.de>
-Date: Wed, 27 Aug 2025 08:29:13 +0200
+	s=arc-20240116; t=1756276456; c=relaxed/simple;
+	bh=08Bdfu7Abb5AyaLDYLBrHXSveiS/oZksGtOGJHCmkk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mrGRfuhoKo4vJLF0FmwHwJO+knwalCR7XF23flEIkRL6i0RLFX9aVtvNcd17ycmYhL+pWc/mQD5bqv6Mcneece8OMg516TO9bHcW80HL3vK0kO1jYimhxuqZNGGtQSIjsOHyWq8/jB2HCRBRHxfiEu0eenKZ0xatPs0mz3TnCr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: zesmtpgz3t1756276443te96eac14
+X-QQ-Originating-IP: z93O1aUXQO9wJtNI9JgSSX/YEPfi2+9tuQMK75xB46U=
+Received: from localhost ( [203.174.112.180])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 27 Aug 2025 14:34:01 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 17250008978444675294
+Date: Wed, 27 Aug 2025 14:34:01 +0800
+From: Yibo Dong <dong100@mucse.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
+	gustavoars@kernel.org, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next v8 4/5] net: rnpgbe: Add basic mbx_fw support
+Message-ID: <4E0FB703028E42A8+20250827063401.GA504899@nic-Precision-5820-Tower>
+References: <20250827034509.501980-1-dong100@mucse.com>
+ <20250827034509.501980-5-dong100@mucse.com>
+ <4b6eb676-10f5-4438-9457-6aeda0ee7fb0@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] scsi: fc: Avoid -Wflex-array-member-not-at-end
- warnings
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Justin Tee <justin.tee@broadcom.com>, James Smart
- <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aK6hbQLyQlvlySf8@kspp>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <aK6hbQLyQlvlySf8@kspp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -4.30
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4b6eb676-10f5-4438-9457-6aeda0ee7fb0@infradead.org>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: ORqNQdnYjakC0GymvZaT7wSRhIi1hzcMqJ3OYYj+gj4GsX77VOLGWp48
+	dGRpeSGHKgEK5z9Hy5HXCY58NBa74URD4BN5x6/gse3Rb7ADjevC+kCKIAodB4cRSmpmPqK
+	2Rtsbt3n98XeM3WNuCZSIaxwJuupE7081p7XRlh55KlaOiERDDtxwJqGtGiFt1LAy1UvF/v
+	nm6eCYKXAdlROy4GhlVswM2AxLO22wGXwhitGONrgEq1NRydAWJJKkmSKg1jEEG08bn/oIS
+	zFVgXw+xhAYd9COuZ+oRUtioe9RqXAuYhzcHZvMq/Z9yFGj5d0PlIQjsJqStfdOwMMgsNZX
+	K86NhzhAE5g71hLCWthslSz9A5Vt37B+/++F/xmNzfwgGeSzy9f1vHgYJYIx5VieRZkwQ9Y
+	paSr4//YXp45OtyBGFMWZ9l86KAI++9LqpUGSSSBUysBfVbvuZLnqD8Bsgc8pX1bFi2NtY6
+	x8MoXHdRay/jZOCzlDRosyka2akuyu8DvRCuFb+KoozvEgkPJRiDTopSQuw2l6aZdHCFYSF
+	BP9M2niaMeFuUq3bnacaI6l8HAc6UpRAnaiVXKDnXdz+zNcwLOj1kd09iz/mPUR/FkiCTfp
+	eFdcPpJ+71vnsjgzM7F2MoSXurU8HOGra4M6Ne3EKQECTh9DqL3Pn93/E7VTmj2ENDg/pSM
+	lvOpJcMt3bAc2xGXkDyUGmBE5K2jiSb7kql9gCQT/pg1s8mgy8BhPQHot6bWIQrsoXu+ZCP
+	4/uBApBfSAtPuyyGVtggY8S3Zo3ESvvBqbQF3uThdWWN96DyDr+url2H0gRmqou/34EahIv
+	vDCCyMjFqt4E5HxfSU2yYkIqMUC8KM3/lzI8Q4LnaZfb+4cJ/ivDXh+x3zarxjW3v6FZWn0
+	RqTa6Ut5kXA+Ex+eL5/+pXiK7hignroVPCJqa9BKcSkksaUKFITlP6cbmq3GXAafGPGPuDc
+	3v/dnOWz0ehS00gV/OMo02PW8XvREtiNTD6dxjQMAKWoRxH8bKI/ArCkitGqq0BOJzVK3VX
+	Z8kgfcmw==
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-On 8/27/25 08:10, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end has been introduced in GCC-14, and we
-> are getting ready to enable it, globally.
+On Tue, Aug 26, 2025 at 10:26:38PM -0700, Randy Dunlap wrote:
+> On 8/26/25 8:45 PM, Dong Yibo wrote:
+> > Initialize basic mbx_fw ops, such as get_capability, reset phy
+> > and so on.
+> > 
+> > Signed-off-by: Dong Yibo <dong100@mucse.com>
+> > ---
+> >  drivers/net/ethernet/mucse/rnpgbe/Makefile    |   3 +-
+> >  drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h    |   1 +
+> >  .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c | 253 ++++++++++++++++++
+> >  .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.h | 126 +++++++++
+> >  4 files changed, 382 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c
+> >  create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.h
+> > 
 > 
-> So, in order to avoid ending up with a flexible-array member in the
-> middle of multiple other structs, we use the `__struct_group()`
-> helper to create a new tagged `struct fc_df_desc_fpin_reg_hdr`.
-> This structure groups together all the members of the flexible
-> `struct fc_df_desc_fpin_reg` except the flexible array.
 > 
-> As a result, the array is effectively separated from the rest of the
-> members without modifying the memory layout of the flexible structure.
-> We then change the type of the middle struct members currently causing
-> trouble from `struct fc_df_desc_fpin_reg` to `struct
-> fc_df_desc_fpin_reg_hdr`.
+> > diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c
+> > new file mode 100644
+> > index 000000000000..d3b323760708
+> > --- /dev/null
+> > +++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c
+> > @@ -0,0 +1,253 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Copyright(c) 2020 - 2025 Mucse Corporation. */
+> > +
+> > +#include <linux/pci.h>
+> > +#include <linux/if_ether.h>
+> > +
+> > +#include "rnpgbe.h"
+> > +#include "rnpgbe_hw.h"
+> > +#include "rnpgbe_mbx.h"
+> > +#include "rnpgbe_mbx_fw.h"
+> > +
+> > +/**
+> > + * mucse_fw_send_cmd_wait - Send cmd req and wait for response
+> > + * @hw: pointer to the HW structure
+> > + * @req: pointer to the cmd req structure
+> > + * @reply: pointer to the fw reply structure
+> > + *
+> > + * mucse_fw_send_cmd_wait sends req to pf-fw mailbox and wait
+> > + * reply from fw.
+> > + *
+> > + * @return: 0 on success, negative on failure
 > 
-> We also want to ensure that in case new members need to be added to the
-> flexible structure, they are always included within the newly created
-> tagged struct. For this, we use `_Static_assert()`. This ensures that
-> the memory layout for both the flexible structure and the new tagged
-> struct is the same after any changes.
+> Use of @return: is not a documented feature although kernel-doc does accept it.
+> I prefer that people don't use it, but I can't insist since it does work.
 > 
-> This approach avoids having to implement `struct fc_df_desc_fpin_reg_hdr`
-> as a completely separate structure, thus preventing having to maintain
-> two independent but basically identical structures, closing the door
-> to potential bugs in the future.
 > 
-> The above is also done for flexible structures `struct fc_els_rdf` and
-> `struct fc_els_rdf_resp`
-> 
-> So, with these changes, fix the following warnings:
-> drivers/scsi/lpfc/lpfc_hw4.h:4936:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/scsi/lpfc/lpfc_hw4.h:4942:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/scsi/lpfc/lpfc_hw4.h:4947:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v2:
->   - Implement the same changes for `struct fc_els_rdf_resp`
->   - Fix size calculation in lpfc_issue_els_rdf(). (Justin Tee)
-> 
-> v1:
->   - Link: https://lore.kernel.org/linux-hardening/aJtMETERd-geyP1q@kspp/
-> 
->   include/uapi/scsi/fc/fc_els.h | 58 +++++++++++++++++++++++------------
->   drivers/scsi/lpfc/lpfc_els.c  |  2 +-
->   drivers/scsi/lpfc/lpfc_hw4.h  |  6 ++--
->   3 files changed, 43 insertions(+), 23 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Cheers,
+Maybe change it like this?
+Return: 0 on success, negative errno on failure
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+> > + **/
+> > +static int mucse_fw_send_cmd_wait(struct mucse_hw *hw,
+> > +				  struct mbx_fw_cmd_req *req,
+> > +				  struct mbx_fw_cmd_reply *reply)
+> > +{
+> > +	int len = le16_to_cpu(req->datalen);
+> > +	int retry_cnt = 3;
+> > +	int err;
+> > +
+> > +	err = mutex_lock_interruptible(&hw->mbx.lock);
+> > +	if (err)
+> > +		return err;
+> > +	err = mucse_write_posted_mbx(hw, (u32 *)req, len);
+> > +	if (err)
+> > +		goto out;
+> > +	do {
+> > +		err = mucse_read_posted_mbx(hw, (u32 *)reply,
+> > +					    sizeof(*reply));
+> > +		if (err)
+> > +			goto out;
+> > +		/* mucse_write_posted_mbx return 0 means fw has
+> > +		 * received request, wait for the expect opcode
+> > +		 * reply with 'retry_cnt' times.
+> > +		 */
+> > +	} while (--retry_cnt >= 0 && reply->opcode != req->opcode);
+> > +out:
+> > +	mutex_unlock(&hw->mbx.lock);
+> > +	if (!err && retry_cnt < 0)
+> > +		return -ETIMEDOUT;
+> > +	if (!err && reply->error_code)
+> > +		return -EIO;
+> > +	return err;
+> > +}
+> 
+> 
+> [snip]
+> 
+> > +
+> > +/**
+> > + * mucse_fw_get_capability - Get hw abilities from fw
+> > + * @hw: pointer to the HW structure
+> > + * @abil: pointer to the hw_abilities structure
+> > + *
+> > + * mucse_fw_get_capability tries to get hw abilities from
+> > + * hw.
+> > + *
+> > + * @return: 0 on success, negative on failure
+> 
+> negative errno or just some negative number?
+> 
+
+errno, -EINTR, -EIO, -ETIMEDOUT
+Maybe update it like this?
+
+Return: 0 on success, negative errno on failure
+
+> > + **/
+> > +static int mucse_fw_get_capability(struct mucse_hw *hw,
+> > +				   struct hw_abilities *abil)
+> > +{
+> > +	struct mbx_fw_cmd_reply reply = {};
+> > +	struct mbx_fw_cmd_req req = {};
+> > +	int err;
+> > +
+> > +	build_phy_abilities_req(&req);
+> > +	err = mucse_fw_send_cmd_wait(hw, &req, &reply);
+> > +	if (!err)
+> > +		memcpy(abil, &reply.hw_abilities, sizeof(*abil));
+> > +	return err;
+> > +}
+> 
+> -- 
+> ~Randy
+> 
+> 
+
+Thanks for your feedback.
+
