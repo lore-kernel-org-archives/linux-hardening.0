@@ -1,80 +1,94 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1064F3176E3;
-	Wed, 27 Aug 2025 16:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC262343D9B;
+	Wed, 27 Aug 2025 16:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756310886; cv=none; b=KT2hwtWuylie7mok407gDKkYUG1jcPmF7eA2iFTo6FhDxkNimCNeDzC1RToWU/1O9JL8audujVtEZm0z14M+5bkCgfzQTtyCJWlwellcegKzwnlcA9VWIdu+0Q0vspFT1ZVQ1aRpPoQI+4VF1JRvsWyh5+LaIr0iXMXIi4I+V6A=
+	t=1756310953; cv=none; b=O5Rgu/sKOn7IRjJlReeD/Pfpv7VkVA9KvXq+10QdTfNrDt7voy16hxryurky7jv0KYlmhZpejhei0jmFUqt6v+KpgsUduv0mPatLRRc/GiYQE6BkTIaKx98IlbY30nSo8K90xCbl8HYzVyMC5bXHOSpsnpY+eunK2YF634xIQXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756310886; c=relaxed/simple;
-	bh=Eo8mcJx96u8VH4jn7nXN0WzI3pTAqmoosY5GMUzgLRE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FLyoTs9fqdy1fYU7CfsbzyYhBw+siGwQe4ncwqjQXEbfVPivaE863PPQbpzQdobDreDoX/0bAQgoDiG+gTyJCPAaDmxeDi6eEwnA88te6SQ3mya4B1uwDgq9Thczs2FYQbdms6Prd8JJgkh3Pd2JHYws1X2oVHaYCpaceYOytxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MFmaoO5+; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MFmaoO5+"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-71d603cebd9so74521267b3.1;
-        Wed, 27 Aug 2025 09:08:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756310884; x=1756915684; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Eo8mcJx96u8VH4jn7nXN0WzI3pTAqmoosY5GMUzgLRE=;
-        b=MFmaoO5+fLMye4h/UhcJYvtYkeHfeU6TgIAVELKkNYf35va7RiUQ1WH2/toWcgMRBP
-         qXfcEdcETUhighjx8zWTL4Pzp7+Jx4UP4qNu04ZKW5S3nBAmmAa6G/CpmnTq8IPAZAST
-         TQkoZMRBQuvWdljNKWrPwToxRXbMA+UWtdfZNAt5XgF3Qn5nyGHyrWwGfC1NgWxE+Rq1
-         GUFoxdfV7XcL1lvniWNseY8vGTIUroxcEMznLClwGrby2TRNCJO7LlRKBag2bmByAnwR
-         9Rsw8omveYdtlYtMbfSnFAcRN17Ztoq8C9rFR4orQXg1Zh+TgNZbTU96vWk5CFR+ZP8u
-         AyQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756310884; x=1756915684;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Eo8mcJx96u8VH4jn7nXN0WzI3pTAqmoosY5GMUzgLRE=;
-        b=asBw/H6yJk8C3jk67skURG+9nhqtO8dhwV0j/A6WMcQNYNVnovzQrH1h41EJjZpLSM
-         ZdLONZF2WqBqOp1RiKDsBKsHOI57RqFdm3ox0rwEVZiJlr4mzL80rw+9DWytjRJoQZLw
-         Az+dnExyQ0fDwMFSR36U7RGDIf8FWm0UyAwPgYMF5t1TiFJ5dW3KlfS4K6BF4cNC22qh
-         kDkZbm1+srata7Jd1MMuSDGCt2BZpRMHpkQuOCE57n0TokPdTdVU1b/dZZgEdNa/o4Db
-         p9OCRJ35lZ3bU6Izgruhv8Vqyl0cj04fisH2nwC6Hhmxbiy8mLbQR24eo/Lv4JMnlJYT
-         rfrw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWBdqN6WWFSplcgL4UrnF0nbdTbc6cUb0BJQ/xuO1sbgAb8QmvKymgmr077JgMqXBxWWlYbaZUl7YMvB2Mqdc=@vger.kernel.org, AJvYcCX+iJKX/btPt5+S6sbXy1cEIFHndxWkZ37KNAksL5Y9KuBOLPypxlFi2ZDH3dgDPG5yPpNzqcHgsx1/Lg==@vger.kernel.org, AJvYcCXyxswLIMdcoJi92gUIi4eIqEYCEfhFfuKRjdRDTRRt5eUVyp/Kmtr5VnF/6hVe+5YMqgJpkhwsc/n129zx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+vgtZ0fpI6D5C8PeaEfU3aW/EQtX+Hbxp9ouGaRfANgjAGAl2
-	iwZ6QOwXiEj0h0Nz4d1Les7kjLSYn17eWlA2HlB0zGbRtHgXTPwt1f3d8gN9e8cB1yHKPMKVKWC
-	LGGXEqh8KHQRqnPbxc6ppouRgvBVYG8vCOawk
-X-Gm-Gg: ASbGncug8/9RL3sHe618hWdBkBEBIKlUCiI+gAb2DPlBFpB6dxlFu/xFlmcgLht1ADN
-	hVmKTy6CWvMhyGxbUWAUvtxnna4wUo3iOspcp6xx+flhcEVAeD4jlgWql9CHmblVHpUkIUWTXV6
-	vjqnbdzqv/BpExCDtUzwpfl6aITzN50ELmHWYVU2UM5Ln+Y4vRm0o8uiLqcrHlaOmIR13gpVT9a
-	s5SD7nm6m+FKCH8wVs=
-X-Google-Smtp-Source: AGHT+IHhWZApQJf8beg6UJ/2XJqt2rVIO9kFhrGWCFb2fQ3i7gedFrTgbIzKalZ4+LrpLfrbEVLJsP9EpBLFSK6366k=
-X-Received: by 2002:a05:690c:f86:b0:720:5fbc:20c2 with SMTP id
- 00721157ae682-7205fbc3779mr151770777b3.36.1756310883816; Wed, 27 Aug 2025
- 09:08:03 -0700 (PDT)
+	s=arc-20240116; t=1756310953; c=relaxed/simple;
+	bh=2FIZ5aJCiTKj3kPm7g09Z5KJppD3cqCl82AjidiHnlo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t7VZ5mVDdejDuvaApTneYRJV0hh6sNuPZIgIDl8L/NWbgRUeMePFDfTW3S0z6Wc6wDjvQ8cxyznE6UjqI5HJ0kqb751Rijw41PVirM9MAQdZFcMJdEokTwnHVsxMLvTXVzujAFQ3OqhrryXjRTbFEPnBr0RCqO9ePsc0kN/VK4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C752B2720;
+	Wed, 27 Aug 2025 09:09:02 -0700 (PDT)
+Received: from [172.31.18.237] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CF663F738;
+	Wed, 27 Aug 2025 09:09:05 -0700 (PDT)
+Message-ID: <b9212134-0efa-422d-8cbf-4761e39ce8d6@arm.com>
+Date: Wed, 27 Aug 2025 18:09:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aK6hbQLyQlvlySf8@kspp> <020f8c5c-c9e4-4ad0-8052-a0b182ded92c@suse.de>
-In-Reply-To: <020f8c5c-c9e4-4ad0-8052-a0b182ded92c@suse.de>
-From: Justin Tee <justintee8345@gmail.com>
-Date: Wed, 27 Aug 2025 09:07:41 -0700
-X-Gm-Features: Ac12FXzYmfdpT-7M3izWgMiP6gup4wu_VmM5HZxYKNrgGaT92_htX_7P3pXBtm4
-Message-ID: <CABPRKS_O7HSvb2-R2B7O64SYmy=n+-E6GdViQG5GwGv3S=8iSg@mail.gmail.com>
-Subject: Re: [PATCH v2] scsi: fc: Avoid -Wflex-array-member-not-at-end warnings
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Hannes Reinecke <hare@suse.de>, Justin Tee <justin.tee@broadcom.com>, 
-	James Smart <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v5 00/18] pkeys-based page table hardening
+To: Yang Shi <yang@os.amperecomputing.com>, linux-hardening@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ David Hildenbrand <david@redhat.com>, Ira Weiny <ira.weiny@intel.com>,
+ Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
+ Joey Gouly <joey.gouly@arm.com>, Kees Cook <kees@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Marc Zyngier <maz@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+ Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ Quentin Perret <qperret@google.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
+References: <20250815085512.2182322-1-kevin.brodsky@arm.com>
+ <98c9689f-157b-4fbb-b1b4-15e5a68e2d32@os.amperecomputing.com>
+ <8e4e5648-9b70-4257-92c5-14c60928e240@arm.com>
+ <939ac25a-096f-46b3-90c1-d8cd6a9e445e@os.amperecomputing.com>
+Content-Language: en-GB
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+In-Reply-To: <939ac25a-096f-46b3-90c1-d8cd6a9e445e@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Reviewed-by: Justin Tee <justin.tee@broadcom.com>
+On 26/08/2025 21:18, Yang Shi wrote:
+>>
+>>>> from a contiguous cache of pages could help minimise the overhead, as
+>>>> proposed for x86 in [1].
+>>> I'm a little bit confused about how this can work. The contiguous
+>>> cache of pages should be some large page, for example, 2M. But the
+>>> page table pages allocated from the cache may have different
+>>> permissions if I understand correctly. The default permission is RO,
+>>> but some of them may become R/W at sometime, for example, when calling
+>>> set_pte_at(). You still need to split the linear mapping, right?
+>> When such a helper is called, *all* PTPs become writeable - there is no
+>> per-PTP permission switching.
+>
+> OK, so all PTPs in the same contiguous cache will become writeable
+> even though the helper (i.e. set_pte_at()) is just called on one of
+> the PTPs.  But doesn't it compromise the page table hardening somehow?
+> The PTPs from the same cache may belong to different processes. 
 
-Regards,
-Justin
+First just a note that this is true regardless of how the PTPs are
+allocated (i.e. this is already the case in this version of the series).
+
+Either way, yes you are right, this approach does not introduce any
+isolation *between* page tables - pgtable helpers are able to write to
+all page tables. In principle it should be possible to use a different
+pkey for kernel and user page tables, but that would make the kpkeys
+level switching in helpers quite a bit more complicated. Isolating
+further is impractical as we have so few pkeys (just 8 on arm64).
+
+That said, what kpkeys really tries to protect against is the direct
+corruption of critical data by arbitrary (unprivileged) code. If the
+attacker is able to manipulate calls to set_pte() and the likes, kpkeys
+cannot provide much protection - even if we restricted the writes to a
+specific set of page tables, the attacker would still be able to insert
+a translation to any arbitrary physical page.
+
+- Kevin
