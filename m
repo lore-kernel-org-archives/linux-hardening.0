@@ -1,37 +1,52 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589EE1F4634;
-	Wed, 27 Aug 2025 05:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6AE2287273
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Aug 2025 05:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756272412; cv=none; b=mrJt6JXKRNhDRD2Uy28WPBtnhlkJFoOuf2uhr+apqYn2JMnW8KDZsKOXW0JcA45PdB8G4S+cVl3Ejje+tllUsAVfb2TWQ8gAOgeCkLt+/KOYVhFZi71WiWB6sNU+fhQgp0AQ2atasgSll2uFUSa8elMYi3CJMvM+BTreFenmxGI=
+	t=1756274080; cv=none; b=d+xdmofViN8HZR4vH06b5y8IkVfkmtPWoLo6cMSuH+hHo0e3IhVg+OzYbiPhlSeoX7SRhVp75TbhPUBcmgSW0/LCOrikgyQrk7Yxjl3yC2Hgb2u6d1M2x8PyQpuPodRAl56DOXwXjLf3T6zwwmvfIG3KqhqLaVc3UDHTcpX72vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756272412; c=relaxed/simple;
-	bh=TJUP34WJXgMc/PFfTnwvvpNGYvGS1zSefzP7qdcI5EE=;
+	s=arc-20240116; t=1756274080; c=relaxed/simple;
+	bh=BbD6VwYuebZvVXUTjVIB736OOnh+InOqS07iPo4EGII=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TjzI8VSSywAgcbvaZKPXU67mc6FSVlBFSJ2CTv3l0J23qt+DmGiIiVv8eZI2eM9zVOnLRvA+KDPoLWnkzMuC24uUEvVSXscS/KViNpl+q1LnlL2BwUB93r+bvtoHbKf2+aKgb+zQlZyMWqLGCiFTnvycwj+15wHebXcaLet3IQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CrGX+oA6; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=mH7ePvneNjfGf+j0N5Pgc7eCPJEtn6XmL8ZZ5wLKnmTc3p/X/FYXDli0/seZIKM0dclVBqjQJ2NaQO4hmUAqkluvZ3fLAHIdFzdNRTWTP19bbFdBAsMwKKs1x6PfYE0pEyay4DWdgQIPwh5cA3UsFW/QduZHyF1XAzrCvi2CHTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=QUIln5s2; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CrGX+oA6"
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="QUIln5s2"
+Received: from eig-obgw-6005b.ext.cloudfilter.net ([10.0.30.162])
+	by cmsmtp with ESMTPS
+	id r5SIu8VRNA1smr97Au5CxL; Wed, 27 Aug 2025 05:54:32 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id r978uOqtqgahDr978uPMyJ; Wed, 27 Aug 2025 05:54:30 +0000
+X-Authority-Analysis: v=2.4 cv=faKty1QF c=1 sm=1 tr=0 ts=68ae9d97
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=DR2cKC/DEnBA9KqqjaPhpA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=7T7KSl7uo7wA:10
+ a=2AWf5FwvJw1iBHfDe3AA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=xYX6OU9JNrHFPr8prv8u:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=7B0I4tQu/4Ondp5JiMcitv5+BItz2nYZPupXPqkEpEU=; b=CrGX+oA6gsyrvUMxRv+4W2Nf8L
-	BvzwVEqfQdLmdAw6dGIOTV+Z1sbfs6xmzOj5sRab31kBKGRr+AnLy/0Q17DT+ZGuLEEJXWz5UfQjD
-	CVwTMd3f6WBnAwIf7nWNzUip0bSfYQVEm4bNKCdzz6qh0alHTzjQH1cZiTYUU1BygQVg1ZuRgSRyG
-	EGvH98NDv46RdLw5uccDnf5R4G1IOC9DKsOi27tOeHHjzcsJ1CgRPfIJLnlZw3nHirfvBzrgY/In8
-	KFI2hIJTtlZgIAeNfVEitX6wZ36zhYegBM6GbLERQtmMQwrve99exrSG6KaXG8Hhv/yGHVgkKDaDM
-	P17haqVg==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ur8gB-0000000E7O8-29CU;
-	Wed, 27 Aug 2025 05:26:39 +0000
-Message-ID: <4b6eb676-10f5-4438-9457-6aeda0ee7fb0@infradead.org>
-Date: Tue, 26 Aug 2025 22:26:38 -0700
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WDJGNaVGxwh+yCobnWlXXZbYF5Bu0xJlzbT0v72eZ/Y=; b=QUIln5s2eYN8GScnE9vXjS9uSf
+	tPmySM2JLcYvGA1m1XKq4aEnX/inUyKvpfB4CRSks+IPqNQT5/8y64YARHQQJ/lyaaG4c3/dxtZf1
+	HDnxbGMM2IajLtU1x77StimGO292yCeD2SVnhjqnuVJCnp9u3f9+29e/FT902XqZGKQoEGMhiehMn
+	fRedJQmbDm4nQOpHGnmg02VK5w83GlKyhqGD1cc81iZ5/59a7YP95O527Q6ItF3u4RrhqZc50fL1L
+	cjLz+ZP2ce3zSKOkgaeFbBJwM3IrycAIaiUyqW9zqb6Xjkv0bg1Mu4UGV5WUetdlBCMa1WyAj877O
+	ip9H/dKQ==;
+Received: from static-243-216-117-93.thenetworkfactory.nl ([93.117.216.243]:42968 helo=[10.94.27.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1ur977-00000003S0N-1GL6;
+	Wed, 27 Aug 2025 00:54:30 -0500
+Message-ID: <c3988bb4-a51e-4d7e-90d6-7c37020cd1b4@embeddedor.com>
+Date: Wed, 27 Aug 2025 07:54:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,140 +54,67 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v8 4/5] net: rnpgbe: Add basic mbx_fw support
-To: Dong Yibo <dong100@mucse.com>, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, corbet@lwn.net, gur.stavi@huawei.com,
- maddy@linux.ibm.com, mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
- gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
- Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
- alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
- gustavoars@kernel.org
-Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250827034509.501980-1-dong100@mucse.com>
- <20250827034509.501980-5-dong100@mucse.com>
+Subject: Re: [PATCH][next] scsi: fc: Avoid -Wflex-array-member-not-at-end
+ warnings
+To: Justin Tee <justintee8345@gmail.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: James Smart <james.smart@broadcom.com>,
+ Justin Tee <justin.tee@broadcom.com>, Hannes Reinecke <hare@suse.de>,
+ linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aJtMETERd-geyP1q@kspp> <yq1seheonya.fsf@ca-mkp.ca.oracle.com>
+ <CABPRKS9BVsGhBDmNVbts9QhMsJ-mZhMKDB4u-NnfVcVLsfWrAg@mail.gmail.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250827034509.501980-5-dong100@mucse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <CABPRKS9BVsGhBDmNVbts9QhMsJ-mZhMKDB4u-NnfVcVLsfWrAg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 93.117.216.243
+X-Source-L: No
+X-Exim-ID: 1ur977-00000003S0N-1GL6
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: static-243-216-117-93.thenetworkfactory.nl ([10.94.27.44]) [93.117.216.243]:42968
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfEAxqyLQul32hWJHlsXuI2N9DXHp941zqMi2T9LA/sWFYXZvVL1uiLLjURZGGVl8fIwgFRnwYZ1XjZnOr4mxjAlRsPHbudIkyz4RYoJDicJsv0o3Pu9v
+ vG5Y3Gi5L/z+DyouwrdxvpS278DUVHfxAJLFvv5lPBJMvsGZp7Qw0Ln7Y+DWC5KQ6NAlg5hqxOF88FQO547dlevYCCfWamYmKY6Ud0G6H67dUyb6iPicqB6O
 
 
 
-On 8/26/25 8:45 PM, Dong Yibo wrote:
-> Initialize basic mbx_fw ops, such as get_capability, reset phy
-> and so on.
+On 27/08/25 01:13, Justin Tee wrote:
+> Hi Martin and Gustavo,
 > 
-> Signed-off-by: Dong Yibo <dong100@mucse.com>
-> ---
->  drivers/net/ethernet/mucse/rnpgbe/Makefile    |   3 +-
->  drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h    |   1 +
->  .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c | 253 ++++++++++++++++++
->  .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.h | 126 +++++++++
->  4 files changed, 382 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c
->  create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.h
+> Regarding the maintainers file, yes Broadcom will push a patch to update soon.
 > 
+> Regarding Gustavo’s patch, I think we should also update the
+> assignment of rdf.desc_len in lpfc_els.c like below.
+> 
+> diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+> index fca81e0c7c2e..432761fb49de 100644
+> --- a/drivers/scsi/lpfc/lpfc_els.c
+> +++ b/drivers/scsi/lpfc/lpfc_els.c
+> @@ -3762,7 +3762,7 @@ lpfc_issue_els_rdf(struct lpfc_vport *vport,
+> uint8_t retry)
+>          memset(prdf, 0, cmdsize);
+>          prdf->rdf.fpin_cmd = ELS_RDF;
+>          prdf->rdf.desc_len = cpu_to_be32(sizeof(struct lpfc_els_rdf_req) -
+> -                                        sizeof(struct fc_els_rdf));
+> +                                        sizeof(struct fc_els_rdf_hdr));
 
+Good catch! :)
 
-> diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c
-> new file mode 100644
-> index 000000000000..d3b323760708
-> --- /dev/null
-> +++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c
-> @@ -0,0 +1,253 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright(c) 2020 - 2025 Mucse Corporation. */
-> +
-> +#include <linux/pci.h>
-> +#include <linux/if_ether.h>
-> +
-> +#include "rnpgbe.h"
-> +#include "rnpgbe_hw.h"
-> +#include "rnpgbe_mbx.h"
-> +#include "rnpgbe_mbx_fw.h"
-> +
-> +/**
-> + * mucse_fw_send_cmd_wait - Send cmd req and wait for response
-> + * @hw: pointer to the HW structure
-> + * @req: pointer to the cmd req structure
-> + * @reply: pointer to the fw reply structure
-> + *
-> + * mucse_fw_send_cmd_wait sends req to pf-fw mailbox and wait
-> + * reply from fw.
-> + *
-> + * @return: 0 on success, negative on failure
-
-Use of @return: is not a documented feature although kernel-doc does accept it.
-I prefer that people don't use it, but I can't insist since it does work.
-
-
-> + **/
-> +static int mucse_fw_send_cmd_wait(struct mucse_hw *hw,
-> +				  struct mbx_fw_cmd_req *req,
-> +				  struct mbx_fw_cmd_reply *reply)
-> +{
-> +	int len = le16_to_cpu(req->datalen);
-> +	int retry_cnt = 3;
-> +	int err;
-> +
-> +	err = mutex_lock_interruptible(&hw->mbx.lock);
-> +	if (err)
-> +		return err;
-> +	err = mucse_write_posted_mbx(hw, (u32 *)req, len);
-> +	if (err)
-> +		goto out;
-> +	do {
-> +		err = mucse_read_posted_mbx(hw, (u32 *)reply,
-> +					    sizeof(*reply));
-> +		if (err)
-> +			goto out;
-> +		/* mucse_write_posted_mbx return 0 means fw has
-> +		 * received request, wait for the expect opcode
-> +		 * reply with 'retry_cnt' times.
-> +		 */
-> +	} while (--retry_cnt >= 0 && reply->opcode != req->opcode);
-> +out:
-> +	mutex_unlock(&hw->mbx.lock);
-> +	if (!err && retry_cnt < 0)
-> +		return -ETIMEDOUT;
-> +	if (!err && reply->error_code)
-> +		return -EIO;
-> +	return err;
-> +}
-
-
-[snip]
-
-> +
-> +/**
-> + * mucse_fw_get_capability - Get hw abilities from fw
-> + * @hw: pointer to the HW structure
-> + * @abil: pointer to the hw_abilities structure
-> + *
-> + * mucse_fw_get_capability tries to get hw abilities from
-> + * hw.
-> + *
-> + * @return: 0 on success, negative on failure
-
-negative errno or just some negative number?
-
-> + **/
-> +static int mucse_fw_get_capability(struct mucse_hw *hw,
-> +				   struct hw_abilities *abil)
-> +{
-> +	struct mbx_fw_cmd_reply reply = {};
-> +	struct mbx_fw_cmd_req req = {};
-> +	int err;
-> +
-> +	build_phy_abilities_req(&req);
-> +	err = mucse_fw_send_cmd_wait(hw, &req, &reply);
-> +	if (!err)
-> +		memcpy(abil, &reply.hw_abilities, sizeof(*abil));
-> +	return err;
-> +}
-
--- 
-~Randy
+Thanks
+-Gustavo
 
