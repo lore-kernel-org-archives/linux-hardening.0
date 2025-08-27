@@ -1,94 +1,126 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC262343D9B;
-	Wed, 27 Aug 2025 16:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6D827FD59
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Aug 2025 16:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756310953; cv=none; b=O5Rgu/sKOn7IRjJlReeD/Pfpv7VkVA9KvXq+10QdTfNrDt7voy16hxryurky7jv0KYlmhZpejhei0jmFUqt6v+KpgsUduv0mPatLRRc/GiYQE6BkTIaKx98IlbY30nSo8K90xCbl8HYzVyMC5bXHOSpsnpY+eunK2YF634xIQXY=
+	t=1756313204; cv=none; b=XnwJEpFCNlhM/VmqxdKwQWW364WCJy811xctlAaVz0QF33A0Nz+dYKnN/ptDerySeU2qC9HX3SWCcRqRZ8sYojCOOxInpLB/Qh7aKtSDT97Jdzhp/ZQhSK1gjIGcwGMRNhTviUm5IEkndt+B7IQkCxk8oCKzjcptCrgAX41WOQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756310953; c=relaxed/simple;
-	bh=2FIZ5aJCiTKj3kPm7g09Z5KJppD3cqCl82AjidiHnlo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t7VZ5mVDdejDuvaApTneYRJV0hh6sNuPZIgIDl8L/NWbgRUeMePFDfTW3S0z6Wc6wDjvQ8cxyznE6UjqI5HJ0kqb751Rijw41PVirM9MAQdZFcMJdEokTwnHVsxMLvTXVzujAFQ3OqhrryXjRTbFEPnBr0RCqO9ePsc0kN/VK4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C752B2720;
-	Wed, 27 Aug 2025 09:09:02 -0700 (PDT)
-Received: from [172.31.18.237] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CF663F738;
-	Wed, 27 Aug 2025 09:09:05 -0700 (PDT)
-Message-ID: <b9212134-0efa-422d-8cbf-4761e39ce8d6@arm.com>
-Date: Wed, 27 Aug 2025 18:09:03 +0200
+	s=arc-20240116; t=1756313204; c=relaxed/simple;
+	bh=/Oe8mL8TjjkGnR2jG5Rxs9VLauseuU6oqwYerqQXRro=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nKEBLR6ndlxa4o0P4CWIPNyNSgF9c/L1S3AR9muwDUYhYj9KSq8PTw+fFYXwe5dPv/JPdC4DXUSRA9RbvR32Tb4bLqK8mEsJ6EyODAT9wH9T0JexZHzeCi5E47F2m/JB+h+pZHHDwHjhMYklH1MkiBW6I1SaP47kdvxwQcm4lLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Y2tS2rwK; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Y2tS2rwK"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-55f4345cfd3so58341e87.1
+        for <linux-hardening@vger.kernel.org>; Wed, 27 Aug 2025 09:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756313200; x=1756918000; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/Oe8mL8TjjkGnR2jG5Rxs9VLauseuU6oqwYerqQXRro=;
+        b=Y2tS2rwKaOZMyZh9ka58faXvzXrL50njDDYSugjXepp16GhbLbrRDic1EMKDEsQu7A
+         Jo8yPVvxwUMzfjzBwV2r9dxBxeTg8sgMMKdtJapvfsRogNaVdSQnnGdOH4To/VCgFtyC
+         CUbfx+Y3/frlByut4tTXIzvdnS1NQ/u3KJM1Vskoxza1szm03/bmnwdDzpkH5RArG2My
+         2gh4gwuP36bc8X5O0lejMIEvU5eBN5SnnfgCUXUpwA1NBXYKXNpIyGPt8sbzR72Jml1z
+         UlSgYZSxDKJluIOqB94vh/N4j9nleZMEJMlr/u6VmGxhfKuC3Q0WKTQtytRdteJ+0JV5
+         cE1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756313200; x=1756918000;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/Oe8mL8TjjkGnR2jG5Rxs9VLauseuU6oqwYerqQXRro=;
+        b=ZiyP2x09jEEMqD6AAmtpi3SqDx5je4VW+Yx30kcwb1Qsm4tOxfA3nR8xiaPHm81oBg
+         rwcYMOVwmyhx+cgnVbgNca+ud0hXiSftzPY5GtWbcwZ2q3oxSYmwTmNLyWiGMTQXe7c3
+         QBYynX9PlssADGHQwSbpzwa8wD7HRQOwKC/HRvjRA7YXXZDLwChWnGA1bw/+k/6ZpT18
+         FHJuSAq1eKB2sswa1IpnzN5vj825cQlWB53s1rS4jsjhhe8Sz24oCKpq+GP7Zk4NLnsg
+         pwnNZ0hJaUyjodL2MbxUAftpWVqxdUFilIG9anIGDEKT7ZzjUwLHvLzSqGIdDF4uwWl1
+         jN5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXK3lSLfvX3BAebRhLbcPDO2zrM7D/rPTYBXSqZFZNFLiWhFnfutEJVtjWQjmFRBRsGjzPFNZrcEI8OhtJIjAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZJnbVdi8PDteAxv+gazc/7FMCIJBulglpmLomogNPurrWP549
+	QrEn/aCqIsToZHJEbgYl58xs6JPnvT5mh8cQaf835Az3UkgC87lU8DQVt+RHL2AgSh4E0qp5Ghp
+	FiZiguH4R2vx02s3X7TV7wNFWtvLliLw8+PzQ4eYo9Q==
+X-Gm-Gg: ASbGncv13APHV5OP5+0UvFqBZjLZwMW6CsrZbzKpSxyqWxWsdNdj14o4JrYct+nSPf9
+	4v28ajJH3FXU+e1NZLAZKIcOf+vriH0T1r8swuC8b0VL5BJDo3wyJYNlLfLZ5bktuXgx5B5kdtX
+	kQdIqfQaRl6328et1+b9N7A/5Z08s8YCO2ozb/sZwgUnQf/l+IxtHBzpTQGYkUJEZCX+4Zi04YH
+	Xqmc6PZYcKj6W/cnt9GWfkAsKl1lRiCjHbva/qLSiqjI5HyWg==
+X-Google-Smtp-Source: AGHT+IH2vScJrK3ld667OkWoypLYcKly6TqnbjFjPvpTB4KCLVEthUMwQrvNGz6iiIbdkdd5rCAEnq3AM7MI6KeEyo4=
+X-Received: by 2002:a05:6512:138c:b0:553:2969:1d6d with SMTP id
+ 2adb3069b0e04-55f4f4c6a98mr2026962e87.13.1756313200214; Wed, 27 Aug 2025
+ 09:46:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 00/18] pkeys-based page table hardening
-To: Yang Shi <yang@os.amperecomputing.com>, linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@redhat.com>, Ira Weiny <ira.weiny@intel.com>,
- Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
- Joey Gouly <joey.gouly@arm.com>, Kees Cook <kees@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Marc Zyngier <maz@kernel.org>,
- Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
-References: <20250815085512.2182322-1-kevin.brodsky@arm.com>
- <98c9689f-157b-4fbb-b1b4-15e5a68e2d32@os.amperecomputing.com>
- <8e4e5648-9b70-4257-92c5-14c60928e240@arm.com>
- <939ac25a-096f-46b3-90c1-d8cd6a9e445e@os.amperecomputing.com>
-Content-Language: en-GB
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-In-Reply-To: <939ac25a-096f-46b3-90c1-d8cd6a9e445e@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250815-pinctrl-gpio-pinfuncs-v5-0-955de9fd91db@linaro.org>
+ <CACRpkdaDGmdhaik+1saRv7Ts4myQ+tg1aQqGU3xQyT7ma8dJFw@mail.gmail.com>
+ <CAHp75VephepLq61HrVy=PX2oKUQd5NK2qS-vOC5h_NR65td3Uw@mail.gmail.com>
+ <CACRpkda4soRCLF5=W=6R4wnwT3pjk743j022XfJxjTTQzuarAA@mail.gmail.com>
+ <534ad082-08fa-42c0-9c24-f0c11af7d5b2@sirena.org.uk> <CAMRc=Mdn0_yPXyYq4sbvH4P9-h71vEc4arLPBfSk1PiEFaB7jQ@mail.gmail.com>
+ <1804d9dc-8814-47d4-af88-c819c3f17bc0@sirena.org.uk>
+In-Reply-To: <1804d9dc-8814-47d4-af88-c819c3f17bc0@sirena.org.uk>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 27 Aug 2025 18:46:28 +0200
+X-Gm-Features: Ac12FXzUBjVjZcm1OFCa8B8Pt22rGMmSNEEFj8GwunzU7aycJyqw28vaNlWwNSA
+Message-ID: <CAMRc=MdKgqa+vjhHvD2+Tjw5NwBtFv-0aUivi5UuEQd+n4KxmA@mail.gmail.com>
+Subject: Re: [PATCH v5 00/15] pinctrl: introduce the concept of a GPIO pin
+ function category
+To: Mark Brown <broonie@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
+	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Chen-Yu Tsai <wenst@chromium.org>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 26/08/2025 21:18, Yang Shi wrote:
->>
->>>> from a contiguous cache of pages could help minimise the overhead, as
->>>> proposed for x86 in [1].
->>> I'm a little bit confused about how this can work. The contiguous
->>> cache of pages should be some large page, for example, 2M. But the
->>> page table pages allocated from the cache may have different
->>> permissions if I understand correctly. The default permission is RO,
->>> but some of them may become R/W at sometime, for example, when calling
->>> set_pte_at(). You still need to split the linear mapping, right?
->> When such a helper is called, *all* PTPs become writeable - there is no
->> per-PTP permission switching.
+On Wed, Aug 27, 2025 at 12:22=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
+ote:
 >
-> OK, so all PTPs in the same contiguous cache will become writeable
-> even though the helper (i.e. set_pte_at()) is just called on one of
-> the PTPs.  But doesn't it compromise the page table hardening somehow?
-> The PTPs from the same cache may belong to different processes. 
+> On Tue, Aug 26, 2025 at 08:19:37PM +0200, Bartosz Golaszewski wrote:
+> > On Wed, Aug 20, 2025 at 8:41=E2=80=AFPM Mark Brown <broonie@kernel.org>=
+ wrote:
+> > > On Wed, Aug 20, 2025 at 09:12:49AM +0200, Linus Walleij wrote:
+>
+> > > > The qualcomm 32bit platforms fail in next anyway so I dropped the p=
+atches
+> > > > for now.
+>
+> > > FWIW the i.MX8MP also seems to have been broken by this:
+>
+> > I can't test it unfortunately - would you mind sharing some info on
+> > what's failing exactly?
+>
+> I've just got the log I linked above.
 
-First just a note that this is true regardless of how the PTPs are
-allocated (i.e. this is already the case in this version of the series).
+So, I've been looking at this bisect email and clicking the links to
+LAVA jobs and I can't find anything. Does it fail to build? Fail at
+run-time? I'm not sure how to read this.
 
-Either way, yes you are right, this approach does not introduce any
-isolation *between* page tables - pgtable helpers are able to write to
-all page tables. In principle it should be possible to use a different
-pkey for kernel and user page tables, but that would make the kpkeys
-level switching in helpers quite a bit more complicated. Isolating
-further is impractical as we have so few pkeys (just 8 on arm64).
-
-That said, what kpkeys really tries to protect against is the direct
-corruption of critical data by arbitrary (unprivileged) code. If the
-attacker is able to manipulate calls to set_pte() and the likes, kpkeys
-cannot provide much protection - even if we restricted the writes to a
-specific set of page tables, the attacker would still be able to insert
-a translation to any arbitrary physical page.
-
-- Kevin
+Bart
