@@ -1,114 +1,374 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247B62FA0E2
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Aug 2025 06:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6213002AD
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Aug 2025 06:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756276492; cv=none; b=TZW+hlZWEFpq3XGp253RzmbV9/rsgeGOCO7XRjvPXye5vZPv54M9z7d66mLUbk+PcWx7WXEoJKez0FNLh+XGSONx4ICSjV9Ghxl/Aptl45T1a0zad5CGndze1MnTscOo1oSpBeGaPev2lXG7wp+8VpU6Cv4z7OAFbzqBS7ViW6c=
+	t=1756276952; cv=none; b=U5C9QLETfyJqMm2KWGf/Am7wsqLH7v7b/2tPK6ObF9jJJSCFpsIovslZRml+e0dIa3WNxEfc8QHD76fI6iTsS35bxf6Aum0rEj83Fc097PtJMLdSa8DTW1LMCSAvXnUcgUycC2j2Fk0XTcyeekNslHPwTqPAulcJ+LBexo5Ttdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756276492; c=relaxed/simple;
-	bh=pCyH8a8IPF53a4+xGnuijfrRt1r9Qpf/OOe8y/sPNKU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vAfQSdyG8HKZ4r3kU/XXF7i+WEzMXxAQgS9OnvFIlvP1pYj2+DxxEnJ4ddpyJ/GsCM9pxBfyvMBJnxrwWrU7bPiLBg8pyG5/4+u9ahZJyLVRRqzMSD6OVuifAk0R/bUvCAIfVukzdBmLC/GFwwelWqH1/peiCrUJR6F3UFdUemY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MYM86aQG; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1756276952; c=relaxed/simple;
+	bh=QN2W3dvP8dha/wBP+V6kbG0lQVJkXvPwGE4aduyhZfk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZX8iINeYvj3i6MMGSqicU2O/PLYR+GTc3JH0KTgGdnMQiFA8sPB01D+TA1iQQlY3xa9bdNMgCUDl69qNXyMphVHtLT/0ssL2N41t3pGAfFf8edsdVVg9YvGeA2xaQ9+SkmLGVcQz512JTYi+0JjJkvWBljZCnII6VdjTc17oqoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WUXpN5Ff; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MYM86aQG"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3c7aa4ce823so2359078f8f.0
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 23:34:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WUXpN5Ff"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6188b6f7f15so7671065a12.2
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Aug 2025 23:42:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756276488; x=1756881288; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pCyH8a8IPF53a4+xGnuijfrRt1r9Qpf/OOe8y/sPNKU=;
-        b=MYM86aQGmDiGJ1DSGwjfiaAG4hzrMe3wCquaVneCOVhvAVRZqvgHFil+F9z4jKOXjH
-         /Ada35TI9RtLSjgsKiDYFj+4CFkczGhMALb7o23Cr2xC2vjy1pRYiOUkp5A909DYrE6l
-         aDdozVWZdOJnmz+hpClXSWiGoxt8yP+LWUwIZIGqiwYgDIVKwL7Bfq0hxygsEx8JbEXx
-         El++JPwU4w5gWVxl2mzIjpoVjL/u6RVMn04PD3wJctAyIqqdEAxU/TgWUEH4uvP7IY5o
-         Ss3qdyRhjY+yEO57Ftm2nKOWzkJPFbJ5sAavV20iVtRB5gwOHK8IcLQTvUd6vVoYyrSb
-         Xrkg==
+        d=linaro.org; s=google; t=1756276948; x=1756881748; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N4AF+Z8QELxaFzdK5UESWjmAKEccgiFEItCe+oHlNao=;
+        b=WUXpN5Ff0gaH5nvweD2mb6K/+vhpEFmgkT7dWXJ3jDAZ3aWNY6aoDHW7HikjQgrbu6
+         EFw+w4LCDT4uWPcDKzH7D3Hwrv0aqsxxcScABhgRSzDmgBot/Q3Su3t7hmOpnPYWEqRj
+         EN057kxNWTqce2ylZyGDofCd3f1d3zkXghcr3WM5qiqbHTRAKkMUa5IbeSGJowQbsA9l
+         HbmFhcHmp2hkYMIHu7FZdsPCt2Z1eZLue7020VDgIib1G3iGHzgjQu0+z8L9+ifV4gLy
+         UU3AWYX6BTD6qbR1Gr4IJzLipBDPutIoAFWKZz9Dt2G05BPz8oZyQd4DQg5TITpPe1io
+         NVIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756276488; x=1756881288;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pCyH8a8IPF53a4+xGnuijfrRt1r9Qpf/OOe8y/sPNKU=;
-        b=w29W+18ogJh/zcmsXjTv2MpX+Kzq/FWrBOLIavSAnI1J9Sp4nckbw/liRyQFLKKzBd
-         ja2F8EXDwFIhuNWe8bEeJPlEBkgVv7vuUtDUSJoaMSTM74ND+FdicZNAHpNbt6nZaK/r
-         MDDuDihcGq0FQiupyjkDAF4gga3VclOEaYIemQ7ME5qPpaAnGLQqw8gObQsFC/mdj4bL
-         E8w8A8oLyHJLHc4dT5DNKv50sS7/vKlLwb0KGQWATO8Yxz1XmGqTi7epMkHz/AUlXiAc
-         fZpqzrkvC3ohVV75ALLMUfwTn4ZY8lJod3XA1AKPtZ7SOdx8KnsDanzSfbMVXoKt+kru
-         Jntg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqbi0+98UeBqgKhoiLKqHxUfnJH3w2sAn04YGJ9V95Ie1m4SQ3q5TDHnq9L1FzxlHZH2hCTylmURFAhP7PhUE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7tLzU45gdrXWf/PVVJK+SOk5MyvRMBHSvVZksMwLxjO2GG7li
-	qCONgNggnH6N4fgoOzaQVXAs3tafi6Mnu4hVKpsg8kEVQbNYrchuGl/Ape5VTGTHNBa27SuE/pN
-	URxO0yFtU8xfoDqAUW4hcOV1k238eJcXI4clOygYs
-X-Gm-Gg: ASbGnct3RyDjCxP58EgdOYwPCbuY+me5ma+bv5mlFnSDO9RLBTxdMaRWpUlYTCBA4ho
-	GlpZFaUs+CuDNsW2WLcMWaq93WEePEAfMupCbc+1gqBOnI4tiFlyRVTDVl7J6lxnX0Yi0l0dG01
-	SfzsiMlDyqL5jH80Jda+FfVSVEtjOjuFvAFP3TDIgEf88QhX6QtUCEjv1YG1Ce8FfYWxlHXoRVs
-	nD896UP7TliX/y6IlMMr9wvSDphj9wV3hWbZjV/oZnlxoMYA5GCOBJFZY1plM7cRkXW35zPKzQS
-	RgjVFknVNFA=
-X-Google-Smtp-Source: AGHT+IHRMHJeg+OlS34CwVPeTSsJ6oKbe0SYtoe+2fYCZi20TFk6OnqX47DgEgm12EW1OVuqdS5DyjJt1m7YfsCFUbE=
-X-Received: by 2002:a05:6000:4021:b0:3c9:2a0:1a9d with SMTP id
- ffacd0b85a97d-3c902a01d54mr8204739f8f.33.1756276488229; Tue, 26 Aug 2025
- 23:34:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756276948; x=1756881748;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N4AF+Z8QELxaFzdK5UESWjmAKEccgiFEItCe+oHlNao=;
+        b=PEh6SifLFhvsYpr3zUu68BwLhn+ltqF6lg3Mm8kwRir5JbLi7WiIyIxpmt++QQLRHK
+         SgEyPtTInXCPxmpJRFhrfQEs1kvZ7myt6d3xXUaeRrneOYxQviGIyMrhcKRsxGK06oFR
+         v8QwEFAKgd1XQPNlTiaXAlVdtKfTMjU2JVkTY/oMEhBm9t5e/ZXjnSOOfmd+qNzpobnA
+         GWdTScRlUBgKMeUYe9SVnrioKXlzmonyvOKe5E8Lg7QFZiOVDa/RPnKQSQeMUNHBm+Gb
+         Np/eY5QJr6oCn3jzEMGTccC53olELz5xKj4cQHBt7chX8wtgB7LQhbcSA8u/92NWVyY3
+         4tKA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfJlP1oOV8+hjlyr963K7VC+yDJMfdEDROWKkTYJBZFFDdefNJGpSO+Hy1Kfr24z32z8kCHnCGrPtAsoBXJxE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzfAUnHIvfDzMtTomeddakqwqQYxumu5UfcdTHBYPD1u9VPfsW
+	Csw7M4NLUo6t9wV+yvNt89M0pKIsHgI0W5BzT5SnEghhoujKruG7xzVZ0N1RELyq1jU=
+X-Gm-Gg: ASbGncukITchkUZwGjUIqZxB3IH5C4w0vVZECICcIXy0pOy1XfLDJnjAdj50btvDbh+
+	WLxmvhYk9qBWXVBXL8PhNk+LzCeB3LTgNc5FWG4dnneHeJo6XNqDjE7i72O23hphDdpMvGTnGoG
+	q+AdySZSeN7xZGyXXzPmAxUxaZvnY8r56JP0T17danlj0JplY3S3Zgt4PEDEVoWf91f7M5m82TL
+	H0etO6ZhmvI1kUG6Okomzjrc5PhyeGqwyt+46wXr9AsYKfVTgNiaqpGP4W6HC5tmGz+Gi2P2iNR
+	nCu5LW18buHf8C+2ZkRAJlIZzAkHe+AV71kYmlMt+LaicYSqsa30m1T5mDQR5bl6C8oK9y0MWvZ
+	91XHj5h7dLTVyoAakW7bKbTDHz6SW2A==
+X-Google-Smtp-Source: AGHT+IHPbx6kF83A+w0Q0/C0fjKETavqKUnu7JIyVYNCZOoMZP02b1AqvPznvJa3PXMc/mDqyr/CTg==
+X-Received: by 2002:a17:906:478a:b0:afe:c027:cfd4 with SMTP id a640c23a62f3a-afec027dffcmr146211766b.41.1756276947856;
+        Tue, 26 Aug 2025 23:42:27 -0700 (PDT)
+Received: from [192.168.0.24] ([82.76.24.202])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afe73cf6d99sm697061266b.0.2025.08.26.23.42.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Aug 2025 23:42:27 -0700 (PDT)
+Message-ID: <495394bb-6f0a-4300-ac77-e3193eb14ca4@linaro.org>
+Date: Wed, 27 Aug 2025 09:42:26 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250813153548.1650533-1-bqe@google.com> <aJ2Y21Yjs3a0CnAo@google.com>
- <aJ4Y_DAZe__0EWEm@yury> <CAH5fLgid9fF2fb06No9zmeQfru_nQicaM_9bb+DWe3zsOwm_cA@mail.gmail.com>
- <aK5KJDSDKiOsQ4gN@yury>
-In-Reply-To: <aK5KJDSDKiOsQ4gN@yury>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 27 Aug 2025 08:34:34 +0200
-X-Gm-Features: Ac12FXyexUrBaVTscx3URjfoCL-mSxtGR999p3jbzclq_r2ZesgUeNBJDls89MY
-Message-ID: <CAH5fLgg0BXtbqR2Yw4xxsU4MWmiM0kz9CGCjm=HytAgQog4aoQ@mail.gmail.com>
-Subject: Re: [PATCH v14 0/5] rust: adds Bitmap API, ID pool and bindings
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Burak Emir <bqe@google.com>, Kees Cook <kees@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH v2 00/29] introduce kmemdump
+To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org, tglx@linutronix.de,
+ andersson@kernel.org, pmladek@suse.com,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+ corbet@lwn.net, mojha@qti.qualcomm.com, rostedt@goodmis.org,
+ jonechou@google.com, tudor.ambarus@linaro.org
+References: <20250724135512.518487-1-eugen.hristev@linaro.org>
+ <20250826171447.6w77day5wddppy3s@hu-mojha-hyd.qualcomm.com>
+From: Eugen Hristev <eugen.hristev@linaro.org>
+Content-Language: en-US
+In-Reply-To: <20250826171447.6w77day5wddppy3s@hu-mojha-hyd.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Aug 27, 2025 at 1:58=E2=80=AFAM Yury Norov <yury.norov@gmail.com> w=
-rote:
->
-> On Tue, Aug 26, 2025 at 03:58:01PM +0200, Alice Ryhl wrote:
-> > On Thu, Aug 14, 2025 at 7:12=E2=80=AFPM Yury Norov <yury.norov@gmail.co=
-m> wrote:
-> > >
-> > > > Thanks a lot for doing this, Burak! I gave it a spin locally on
-> > > > v6.17-rc1, and it seems to work.
-> > >
-> > > Does this mean Tested-by?
-> >
-> > Just to confirm, is the plan that you will pick this up through your tr=
-ee?
->
-> Yes I will.
->
-> This series is very related to bitmaps, so I think my branch is the right
-> place to move it. Let's wait for a few more weeks. If no any objections,
-> I'll apply it.
 
-I agree. Thanks a lot!
 
-> Everyone, please send your tags if you had chance to test and/or review
-> this series, especially the rust part.
->
-> Thanks,
-> Yury
+On 8/26/25 20:14, Mukesh Ojha wrote:
+> On Thu, Jul 24, 2025 at 04:54:43PM +0300, Eugen Hristev wrote:
+>> kmemdump is a mechanism which allows the kernel to mark specific memory
+>> areas for dumping or specific backend usage.
+>> Once regions are marked, kmemdump keeps an internal list with the regions
+>> and registers them in the backend.
+>> Further, depending on the backend driver, these regions can be dumped using
+>> firmware or different hardware block.
+>> Regions being marked beforehand, when the system is up and running, there
+>> is no need nor dependency on a panic handler, or a working kernel that can
+>> dump the debug information.
+>> The kmemdump approach works when pstore, kdump, or another mechanism do not.
+>> Pstore relies on persistent storage, a dedicated RAM area or flash, which
+>> has the disadvantage of having the memory reserved all the time, or another
+>> specific non volatile memory. Some devices cannot keep the RAM contents on
+>> reboot so ramoops does not work. Some devices do not allow kexec to run
+>> another kernel to debug the crashed one.
+>> For such devices, that have another mechanism to help debugging, like
+>> firmware, kmemdump is a viable solution.
+>>
+>> kmemdump can create a core image, similar with /proc/vmcore, with only
+>> the registered regions included. This can be loaded into crash tool/gdb and
+>> analyzed.
+>> To have this working, specific information from the kernel is registered,
+>> and this is done at kmemdump init time, no need for the kmemdump user to
+>> do anything.
+>>
+>> This version of the kmemdump patch series includes two backend drivers:
+>> one is the Qualcomm Minidump backend, and the other one is the Debug Kinfo
+>> backend for Android devices, reworked from this source here:
+>> https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/drivers/android/debug_kinfo.c
+>> written originally by Jone Chou <jonechou@google.com>
+>>
+>> Initial version of kmemdump and discussion is available here:
+>> https://lore.kernel.org/lkml/20250422113156.575971-1-eugen.hristev@linaro.org/
+>>
+>> Kmemdump has been presented and discussed at Linaro Connect 2025,
+>> including motivation, scope, usability and feasability.
+>> Video of the recording is available here for anyone interested:
+>> https://www.youtube.com/watch?v=r4gII7MX9zQ&list=PLKZSArYQptsODycGiE0XZdVovzAwYNwtK&index=14
+>>
+>> The implementation is based on the initial Pstore/directly mapped zones
+>> published as an RFC here:
+>> https://lore.kernel.org/all/20250217101706.2104498-1-eugen.hristev@linaro.org/
+>>
+>> The back-end implementation for qcom_minidump is based on the minidump
+>> patch series and driver written by Mukesh Ojha, thanks:
+>> https://lore.kernel.org/lkml/20240131110837.14218-1-quic_mojha@quicinc.com/
+>>
+>> *** How to use kmemdump with minidump backend on Qualcomm platform guide ***
+>>
+>> Prerequisites:
+>> Crash tool with target=ARM64 and minor changes required for usual crash mode
+>> (minimal mode works without the patch)
+>> A patch can be applied from here https://p.calebs.dev/49a048
+>> This patch will be eventually sent in a reworked way to crash tool.
+>>
+>> Target kernel must be built with :
+>> CONFIG_DEBUG_INFO_REDUCED=n ; this will have vmlinux include all the debugging
+>> information needed for crash tool.
+>>
+>> Otherwise, the kernel requires these as well:
+>> CONFIG_KMEMDUMP, CONFIG_KMEMDUMP_COREIMAGE, and the backend
+>> CONFIG_KMEMDUMP_QCOM_MINIDUMP_BACKEND
+>>
+>> Kernel arguments:
+>> Kernel firmware must be set to mode 'mini' by kernel module parameter
+>> like this : qcom_scm.download_mode=mini
+>>
+>> After the kernel boots, and qcom_minidump module is loaded, everything is ready for
+>> a possible crash.
+>>
+>> Once the crash happens, the firmware will kick in and you will see on
+>> the console the message saying Sahara init, etc, that the firmware is
+>> waiting in download mode. (this is subject to firmware supporting this
+>> mode, I am using sa8775p-ride board)
+>>
+>> Example of log on the console:
+>> "
+>> [...]
+>> B -   1096414 - usb: init start
+>> B -   1100287 - usb: qusb_dci_platform , 0x19
+>> B -   1105686 - usb: usb3phy: PRIM success: lane_A , 0x60
+>> B -   1107455 - usb: usb2phy: PRIM success , 0x4
+>> B -   1112670 - usb: dci, chgr_type_det_err
+>> B -   1117154 - usb: ID:0x260, value: 0x4
+>> B -   1121942 - usb: ID:0x108, value: 0x1d90
+>> B -   1124992 - usb: timer_start , 0x4c4b40
+>> B -   1129140 - usb: vbus_det_pm_unavail
+>> B -   1133136 - usb: ID:0x252, value: 0x4
+>> B -   1148874 - usb: SUPER , 0x900e
+>> B -   1275510 - usb: SUPER , 0x900e
+>> B -   1388970 - usb: ID:0x20d, value: 0x0
+>> B -   1411113 - usb: ENUM success
+>> B -   1411113 - Sahara Init
+>> B -   1414285 - Sahara Open
+>> "
+>>
+>> Once the board is in download mode, you can use the qdl tool (I
+>> personally use edl , have not tried qdl yet), to get all the regions as
+>> separate files.
+>> The tool from the host computer will list the regions in the order they
+>> were downloaded.
+>>
+>> Once you have all the files simply use `cat` to put them all together,
+>> in the order of the indexes.
+>> For my kernel config and setup, here is my cat command : (you can use a script
+>> or something, I haven't done that so far):
+>>
+>> `cat memory/md_KELF1.BIN memory/md_Kvmcorein2.BIN memory/md_Kconfig3.BIN \
+>> memory/md_Kmemsect4.BIN memory/md_Ktotalram5.BIN memory/md_Kcpu_poss6.BIN \
+>> memory/md_Kcpu_pres7.BIN memory/md_Kcpu_onli8.BIN memory/md_Kcpu_acti9.BIN \
+>> memory/md_Kjiffies10.BIN memory/md_Klinux_ba11.BIN memory/md_Knr_threa12.BIN \
+>>  memory/md_Knr_irqs13.BIN memory/md_Ktainted_14.BIN memory/md_Ktaint_fl15.BIN \
+>> memory/md_Kmem_sect16.BIN memory/md_Knode_dat17.BIN memory/md_Knode_sta18.BIN \
+>> memory/md_K__per_cp19.BIN memory/md_Knr_swapf20.BIN memory/md_Kinit_uts21.BIN \
+>> memory/md_Kprintk_r22.BIN memory/md_Kprintk_r23.BIN memory/md_Kprb24.BIN \
+>> memory/md_Kprb_desc25.BIN memory/md_Kprb_info26.BIN memory/md_Kprb_data27.BIN \
+>> memory/md_Krunqueue28.BIN memory/md_Khigh_mem29.BIN memory/md_Kinit_mm30.BIN \
+>> memory/md_Kinit_mm_31.BIN memory/md_Kunknown32.BIN memory/md_Kunknown33.BIN \
+>> memory/md_Kunknown34.BIN  memory/md_Kunknown35.BIN memory/md_Kunknown36.BIN \
+>> memory/md_Kunknown37.BIN memory/md_Kunknown38.BIN memory/md_Kunknown39.BIN \
+>> memory/md_Kunknown40.BIN memory/md_Kunknown41.BIN memory/md_Kunknown42.BIN \
+>> memory/md_Kunknown43.BIN memory/md_Kunknown44.BIN memory/md_Kunknown45.BIN \
+>> memory/md_Kunknown46.BIN memory/md_Kunknown47.BIN  memory/md_Kunknown50.BIN \
+>> memory/md_Kunknown51.BIN memory/md_Kunknown52.BIN \
+>> memory/md_Kunknown53.BIN > ~/minidump_image`
+>>
+>> Once you have the resulted file, use `crash` tool to load it, like this:
+>> `./crash --no_modules --no_panic --no_kmem_cache --zero_excluded vmlinux minidump_image`
+>>
+>> There is also a --minimal mode for ./crash that would work without any patch applied
+>> to crash tool, but you can't inspect symbols, etc.
+> 
+> Unfortunately for me, only with --minimal option, I could see the 'log'.
+> 
+> ./crash --no_modules --no_panic --no_kmem_cache --zero_excluded vmlinux minidump_image
+> 
+> WARNING: kernel version inconsistency between vmlinux and dumpfile
+> 
+> crash: read error: kernel virtual address: ffffff8ed7f380d8  type: "IRQ stack pointer"
+> crash: read error: kernel virtual address: ffffff8ed7f510d8  type: "IRQ stack pointer"
+> crash: read error: kernel virtual address: ffffff8ed7f6a0d8  type: "IRQ stack pointer"
+> crash: read error: kernel virtual address: ffffff8ed7f830d8  type: "IRQ stack pointer"
+> crash: read error: kernel virtual address: ffffff8ed7f9c0d8  type: "IRQ stack pointer"
+> crash: read error: kernel virtual address: ffffff8ed7fb50d8  type: "IRQ stack pointer"
+> crash: read error: kernel virtual address: ffffff8ed7fce0d8  type: "IRQ stack pointer"
+> crash: read error: kernel virtual address: ffffff8ed7fe70d8  type: "IRQ stack pointer"
+> crash: read error: kernel virtual address: ffffffc0817c5d80  type: "maple_init read mt_slots"
+> crash: read error: kernel virtual address: ffffffc0817c5d78  type: "maple_init read mt_pivots"
+> crash: read error: kernel virtual address: ffffff8efb89e2c0  type: "memory section root table"
+> 
+> Looks like something more you are using in your setup to make it work.
+
+Hello Mukesh,
+
+Thanks for trying this out. Have you applied the indicated patch to the
+crash tool before compiling it ?
+If yes and still facing issues, can you run it with "-d 31" to enable
+debug mode, then send me the output log please.
+
+Eugen
+> 
+> -Mukesh
+> 
+>>
+>> Once you load crash you will see something like this :
+>>
+>>    KERNEL: /home/eugen/linux-minidump/vmlinux  [TAINTED]
+>>     DUMPFILE: /home/eugen/new
+>>         CPUS: 8 [OFFLINE: 7]
+>>         DATE: Thu Jan  1 02:00:00 EET 1970
+>>       UPTIME: 00:00:29
+>>        TASKS: 0
+>>     NODENAME: qemuarm64
+>>      RELEASE: 6.16.0-rc7-next-20250721-00029-gf8cffdbf0479-dirty
+>>      VERSION: #5 SMP PREEMPT Tue Jul 22 18:44:57 EEST 2025
+>>      MACHINE: aarch64  (unknown Mhz)
+>>       MEMORY: 34.2 GB
+>>        PANIC: ""
+>> crash> log
+>> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd4b2]
+>> [    0.000000] Linux version 6.16.0-rc7-next-20250721-00029-gf8cffdbf0479-dirty (eugen@eugen-station) (aarch64-none-linux-gnu-gcc (Arm GNU Toolchain 13.3.Rel1 (Build arm-13.24)) 13.3.1 20240614, GNU ld (Arm GNU Toolchain 13.3.Rel1 (Build arm-13.24)) 2.42.0.20240614) #5 SMP PREEMPT Tue Jul 22 18:44:57 EEST 2025
+>>
+>>
+>> *** Debug Kinfo backend driver ***
+>> I don't have any device to actually test this. So I have not.
+>> I hacked the driver to just use a kmalloc'ed area to save things instead
+>> of the shared memory, and dumped everything there and checked whether it looks
+>> sane. If someone is willing to try it out, thanks ! and let me know.
+>> I know there is no binding documentation for the compatible either.
+>>
+>> Thanks for everyone reviewing and bringing ideas into the discussion.
+>>
+>> Eugen
+>>
+>> Changelog since the v1 of the RFC:
+>> - Reworked the whole minidump implementation based on suggestions from Thomas Gleixner.
+>> This means new API, macros, new way to store the regions inside kmemdump
+>> (ditched the IDR, moved to static allocation, have a static default backend, etc)
+>> - Reworked qcom_minidump driver based on review from Bjorn Andersson
+>> - Reworked printk log buffer registration based on review from Petr Mladek
+>>
+>> I appologize if I missed any review comments. I know there is still lots of work
+>> on this series and hope I will improve it more and more.
+>> Patches are sent on top of next-20250721
+>>
+>> Eugen Hristev (29):
+>>   kmemdump: introduce kmemdump
+>>   Documentation: add kmemdump
+>>   kmemdump: add coreimage ELF layer
+>>   Documentation: kmemdump: add section for coreimage ELF
+>>   kmemdump: introduce qcom-minidump backend driver
+>>   soc: qcom: smem: add minidump device
+>>   init/version: Annotate static information into Kmemdump
+>>   cpu: Annotate static information into Kmemdump
+>>   genirq/irqdesc: Annotate static information into Kmemdump
+>>   panic: Annotate static information into Kmemdump
+>>   sched/core: Annotate static information into Kmemdump
+>>   timers: Annotate static information into Kmemdump
+>>   kernel/fork: Annotate static information into Kmemdump
+>>   mm/page_alloc: Annotate static information into Kmemdump
+>>   mm/init-mm: Annotate static information into Kmemdump
+>>   mm/show_mem: Annotate static information into Kmemdump
+>>   mm/swapfile: Annotate static information into Kmemdump
+>>   mm/percpu: Annotate static information into Kmemdump
+>>   mm/mm_init: Annotate static information into Kmemdump
+>>   printk: Register information into Kmemdump
+>>   kernel/configs: Register dynamic information into Kmemdump
+>>   mm/numa: Register information into Kmemdump
+>>   mm/sparse: Register information into Kmemdump
+>>   kernel/vmcore_info: Register dynamic information into Kmemdump
+>>   kmemdump: Add additional symbols to the coreimage
+>>   init/version: Annotate init uts name separately into Kmemdump
+>>   kallsyms: Annotate static information into Kmemdump
+>>   mm/init-mm: Annotate additional information into Kmemdump
+>>   kmemdump: Add Kinfo backend driver
+>>
+>>  Documentation/debug/index.rst      |  17 ++
+>>  Documentation/debug/kmemdump.rst   | 104 +++++++++
+>>  MAINTAINERS                        |  18 ++
+>>  drivers/Kconfig                    |   4 +
+>>  drivers/Makefile                   |   2 +
+>>  drivers/debug/Kconfig              |  55 +++++
+>>  drivers/debug/Makefile             |   6 +
+>>  drivers/debug/kinfo.c              | 304 +++++++++++++++++++++++++
+>>  drivers/debug/kmemdump.c           | 239 +++++++++++++++++++
+>>  drivers/debug/kmemdump_coreimage.c | 223 ++++++++++++++++++
+>>  drivers/debug/qcom_minidump.c      | 353 +++++++++++++++++++++++++++++
+>>  drivers/soc/qcom/smem.c            |  10 +
+>>  include/asm-generic/vmlinux.lds.h  |  13 ++
+>>  include/linux/kmemdump.h           | 219 ++++++++++++++++++
+>>  init/version.c                     |   6 +
+>>  kernel/configs.c                   |   6 +
+>>  kernel/cpu.c                       |   5 +
+>>  kernel/fork.c                      |   2 +
+>>  kernel/irq/irqdesc.c               |   2 +
+>>  kernel/kallsyms.c                  |  10 +
+>>  kernel/panic.c                     |   4 +
+>>  kernel/printk/printk.c             |  28 ++-
+>>  kernel/sched/core.c                |   2 +
+>>  kernel/time/timer.c                |   3 +-
+>>  kernel/vmcore_info.c               |   3 +
+>>  mm/init-mm.c                       |  12 +
+>>  mm/mm_init.c                       |   2 +
+>>  mm/numa.c                          |   5 +-
+>>  mm/page_alloc.c                    |   2 +
+>>  mm/percpu.c                        |   3 +
+>>  mm/show_mem.c                      |   2 +
+>>  mm/sparse.c                        |  16 +-
+>>  mm/swapfile.c                      |   2 +
+>>  33 files changed, 1670 insertions(+), 12 deletions(-)
+>>  create mode 100644 Documentation/debug/index.rst
+>>  create mode 100644 Documentation/debug/kmemdump.rst
+>>  create mode 100644 drivers/debug/Kconfig
+>>  create mode 100644 drivers/debug/Makefile
+>>  create mode 100644 drivers/debug/kinfo.c
+>>  create mode 100644 drivers/debug/kmemdump.c
+>>  create mode 100644 drivers/debug/kmemdump_coreimage.c
+>>  create mode 100644 drivers/debug/qcom_minidump.c
+>>  create mode 100644 include/linux/kmemdump.h
+>>
+>> -- 
+>> 2.43.0
+>>
+> 
+
