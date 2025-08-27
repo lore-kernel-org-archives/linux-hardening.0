@@ -1,134 +1,128 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597AB2F8BEE
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Aug 2025 10:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48E8341ABD;
+	Wed, 27 Aug 2025 10:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756289131; cv=none; b=mEfDV/972Q4QhnJk8nI+/ApsnxsLfqepO4/7kkOBbFINr2XqcOSBpY7txSKsw9hlWreRQP019/f5+Xqi3DpsMyIs8Wcff7c7gRat2DdHeoPjIcfca/SZosL5L57oGz8ZLCGKXAVgWPizfWM0R7AceRNXQTSzXxsvtYKQEJTIb8I=
+	t=1756290125; cv=none; b=iZdXwCjERHlVpibncqnnOf843I/nSxCAiB3VTBur0DwnTj6H1TzctZlOqOlm9WlX6eS/5Yp9tw/S8YXKYxV7HdpvzShpTuPgi+6UWDW1DCyHjy7orCsJfmn6zzf7Iz0xe554ocWHbdP4yH6hAu91al3UehKU6xZdyOXATYy9Bkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756289131; c=relaxed/simple;
-	bh=uDtonrv5F0Tm13HEdeo/NT4DyHYzETvrQtYYJEQ4+Io=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fgI9o63Z6VFUby2w+Rm/aogE3Ey5XOTbKgTtlbE3vtgMhtKXXN125AIpOW48mib64ai++wRXSM0RLUQoWDRCHi25xdUJENhoBDdM+LW7rkZAMa8IXTy4+6rQHETxnruW6AkY6icxRJ3a2SBvy6NdzsDYDSxEryOfiTpHTxuY64A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=gr7ETH0E; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1756290125; c=relaxed/simple;
+	bh=feIeFoFe/NIkaHWsBJ6sykJyPk/bFO1DqGerlF+Pkfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TIAF5vVVEpcw/dcgOai/QgLmA7KqcHHwbV/aID8rfPenPu/4J9JKfHNONQdj93JqiyG4j3xkB7Lp98k9POlH00UCKA33fFFIzjOgQmWe1Xwy3yYxafVPx3IaZcZOcGg1qjDcZZ5+4Q88wxAtBszET+R+Nd3qz5sM+3mUF/wesE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMY73pat; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="gr7ETH0E"
-Received: from eig-obgw-6002b.ext.cloudfilter.net ([10.0.30.203])
-	by cmsmtp with ESMTPS
-	id rA8au7lNkBQW9rD1zuvj4k; Wed, 27 Aug 2025 10:05:27 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id rD1yuI1bu1ar9rD1yu3jFu; Wed, 27 Aug 2025 10:05:26 +0000
-X-Authority-Analysis: v=2.4 cv=RtrFLDmK c=1 sm=1 tr=0 ts=68aed866
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=DR2cKC/DEnBA9KqqjaPhpA==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=g_siC_MSOhsqshzUI34A:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=6PngVi7LJ4k5lnqjspPjNk39ZzYBo+04kKzgOBdbfns=; b=gr7ETH0EDL2tSYMtLr7QuhmRH1
-	bmRGHsxJzzZc6h1l+EqB9Wm9r0iNrukYEB6KLMYBfjkgzgSLk5b3bYfH1oFkR11jR6w3X4uUeb3ws
-	Sj+EK+jPwSULVeAC0gCuMZfjFtIW/RNbLQsrgM0UU8hZ3lLoPNMx7qBlA90aIUEFFJlNY8F3oQlab
-	35qlvrSGdEXMTgKxDJtWVDTXNXaLptCYQxh5Wck3BdzMqVykMZD1VY2Ey23O6hIMA6FnylpUZues4
-	i00Uuy2O21B+2/gh2exX9NpBw1upCuorMeFb6LkOcT0G2f4WVCVEirCFe6dC+JD5O15caXteI6R7x
-	pX9QA55Q==;
-Received: from static-243-216-117-93.thenetworkfactory.nl ([93.117.216.243]:58552 helo=[10.94.27.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1urD1x-00000003Hmi-2Nz2;
-	Wed, 27 Aug 2025 05:05:26 -0500
-Message-ID: <2b54967e-bd1f-4ad9-bba7-aa05bf3d1e7c@embeddedor.com>
-Date: Wed, 27 Aug 2025 12:05:18 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMY73pat"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1E6FC4CEEB;
+	Wed, 27 Aug 2025 10:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756290123;
+	bh=feIeFoFe/NIkaHWsBJ6sykJyPk/bFO1DqGerlF+Pkfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CMY73patfhFBm1cWrO0GjSOUppBTmRm9w9tK3Op5eYvw95EorabzAemE8TKMQjBN0
+	 AFJLkvpc/07xvzw49PtfcXgo1jyfgqSIyA3tv8EQho2HxgcPu5RJ7YIj6+5ZO0Jjfj
+	 ejeS0GRY1n7Mq9lcoiSrFgud7UC1CHzgBEAzXF9wgw4H35uLjqwGgcAgwRdWTSnps4
+	 uVbcQD9zxttmWF0K8GiZTPHDS7eDEZN1k6CLQV5sYnoFYmqneHGPBxowx91U05F03k
+	 g5jrxQjovkqZ6CO/JHFUeS2pHASrfBK5fwYnJi/a4eamilP7bDZYeUuhHoJFoX+o0y
+	 IaB8i4S88yEdA==
+Date: Wed, 27 Aug 2025 11:21:46 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Alexey Klimov <alexey.klimov@linaro.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	imx@lists.linux.dev, linux-omap@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Chen-Yu Tsai <wenst@chromium.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v5 00/15] pinctrl: introduce the concept of a GPIO pin
+ function category
+Message-ID: <1804d9dc-8814-47d4-af88-c819c3f17bc0@sirena.org.uk>
+References: <20250815-pinctrl-gpio-pinfuncs-v5-0-955de9fd91db@linaro.org>
+ <CACRpkdaDGmdhaik+1saRv7Ts4myQ+tg1aQqGU3xQyT7ma8dJFw@mail.gmail.com>
+ <CAHp75VephepLq61HrVy=PX2oKUQd5NK2qS-vOC5h_NR65td3Uw@mail.gmail.com>
+ <CACRpkda4soRCLF5=W=6R4wnwT3pjk743j022XfJxjTTQzuarAA@mail.gmail.com>
+ <534ad082-08fa-42c0-9c24-f0c11af7d5b2@sirena.org.uk>
+ <CAMRc=Mdn0_yPXyYq4sbvH4P9-h71vEc4arLPBfSk1PiEFaB7jQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iwlegacy: Remove unused structs and avoid
- -Wflex-array-member-not-at-end warnings
-To: Johannes Berg <johannes@sipsolutions.net>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Stanislaw Gruszka <stf_xl@wp.pl>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aJl7TxeWgLdEKWhg@kspp>
- <e0aeda2d-931c-49c6-b0d4-dd097e87eae6@embeddedor.com>
- <0ef7587b7ae57d9363312ca130980707a68a3f7e.camel@sipsolutions.net>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <0ef7587b7ae57d9363312ca130980707a68a3f7e.camel@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 93.117.216.243
-X-Source-L: No
-X-Exim-ID: 1urD1x-00000003Hmi-2Nz2
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: static-243-216-117-93.thenetworkfactory.nl ([10.94.27.44]) [93.117.216.243]:58552
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCFjgyQaUbxNTJKjn+Dee3Y2B61x42xkN7Mv8sVanRAwc4vzwU8M/DunB4jwnJ4Eo+nCGDxY1Car9uvcl5WMnbpWcaGHowyMbiXb0vsYwj+SmL3/DjUu
- 6XnWdJR0f2oUcPJ1lBueyGq4SGXjKCHmaPRdkFWjeRu8g27NX3DPo2UprNClPlIMzVZ6i0/LknGNVJIs4M4B0T3RiaxZYLQayOey9EYRFzDrxQaHfZBhPKTE
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2cfgNcmAX2xoMgwh"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mdn0_yPXyYq4sbvH4P9-h71vEc4arLPBfSk1PiEFaB7jQ@mail.gmail.com>
+X-Cookie: Most people prefer certainty to truth.
 
 
+--2cfgNcmAX2xoMgwh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 27/08/25 11:36, Johannes Berg wrote:
-> On Wed, 2025-08-27 at 11:25 +0200, Gustavo A. R. Silva wrote:
->> Friendly
-> 
-> I contest that. It's been two weeks, while it's still summer with
+On Tue, Aug 26, 2025 at 08:19:37PM +0200, Bartosz Golaszewski wrote:
+> On Wed, Aug 20, 2025 at 8:41=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
+rote:
+> > On Wed, Aug 20, 2025 at 09:12:49AM +0200, Linus Walleij wrote:
 
-Sorry, I don't really know when people around the globe are on vacation
-or not. I don't think we're based in the same area, so our customs may
-vary.
+> > > The qualcomm 32bit platforms fail in next anyway so I dropped the pat=
+ches
+> > > for now.
 
-> vacations etc., not long after the merge window closed, with weeks to go
-> until the next release comes around. Why are you impatient?
+> > FWIW the i.MX8MP also seems to have been broken by this:
 
-Apparently (and according to git blame), the last person that committed a
-change to this file was Greg KH back in 2019, see: commit 16da78b7b580e
-("treewide: Replace GPLv2 boilerplate/ reference with SPDX - rule 270").
+> I can't test it unfortunately - would you mind sharing some info on
+> what's failing exactly?
 
-So, rather than impatience is more about not really knowing who's maintaining
-this file.
+I've just got the log I linked above.
 
-> 
-> I will take it. Eventually, the more you push the less I want to. And
+--2cfgNcmAX2xoMgwh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Not sure what to make of this. I'm just doing my work and trying to
-collaborate with people. I expect all my comments here clarify the
-reason for the ping.
+-----BEGIN PGP SIGNATURE-----
 
-> it'd help if you actually followed our conventions and used 'wifi:'
-> prefix.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmiu2/8ACgkQJNaLcl1U
+h9AN7gf9EwrkCMDKQJ3+l64opijlSNrt1Fb1YRWh9KvdN/1+7aQ7T/xu5C8tCq/f
+8Egc7c8xmS27/9OO0NDM90NRmoDvRBfCYsrX0yqXzJ/SMQ27wrw9H/OnNqrrq9V1
+OU0NsJVeKrt5FELD7Zd1UbdrMmQXQlJeWx80plpgQDCxBzBliPEFiSg3OkTc+mqd
+Ef9KfjLAlIwsCVBOC1uwPq3Z0vsIDMzbxXq/e9R6nmwhHZMI3puSNp8ZmUBXBSeq
+D8k41vgIAo2YLmAdLfeiepGWT3CcfFlmbEHdeRIRVUS4zoUK0u0/OIedQnCwXknI
+ucg20UGLpA7K1JhJlA678HGIBlpJcg==
+=VNoC
+-----END PGP SIGNATURE-----
 
-Related to my comments above, you're not listed as a maintainer of this
-file. If you were, I'd have probably remembered that.
-
-scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
-Stanislaw Gruszka <stf_xl@wp.pl> (maintainer:INTEL WIRELESS 3945ABG/BG, 4965AGN (iwlegacy))
-linux-wireless@vger.kernel.org (open list:INTEL WIRELESS 3945ABG/BG, 4965AGN (iwlegacy))
-linux-kernel@vger.kernel.org (open list)
-INTEL WIRELESS 3945ABG/BG, 4965AGN (iwlegacy) status: Supported
-
-In any case, thanks for your response.
--Gustavo
+--2cfgNcmAX2xoMgwh--
