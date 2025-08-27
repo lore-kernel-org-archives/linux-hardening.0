@@ -1,141 +1,68 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E751D7E5B
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Aug 2025 09:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFAD279324;
+	Wed, 27 Aug 2025 09:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756286736; cv=none; b=LNbv8qzWw45oLc3Hwxt2GrOOSDMuKatKRtzYxIIh+XDHhbONFflvPPOhI1xJ1mYD4oB7YlxnyHxSDSVxx8jWKaEJbTpXKsy1u/OXCDexwPhuHKtC1WX5N/0wnG0poyOMU0sajFmvx3iLTkhRfw82z+Id2yMuIG008LRdYhoTCEk=
+	t=1756287423; cv=none; b=mt6xPo3qJ8h6ZZOlSl0Jgi0Eo/M0FROtFdFkKimNkGJ1DicWLDSku9jXdcIZL/rtriuxF2qs4wOaL9p6dFf9zK0DnuQOP7KR5BqoYxZKxKuA2sXZBn9+16uBLlmIIFoYhePSiS1ZVkDXa7Te1wJotgrf17TOhuDpUqAA+OJ/9es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756286736; c=relaxed/simple;
-	bh=oMi0UWQ+TOt6JL8ZYf2QKRNR+60rZGf59phnokJPm48=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LwTPT1bNx3wB7fm5+QcCcWFtutBB49YllwLmH5Psr++2VO4IjQzZFl0VaFH6ZSWDXekiKIVWxU5H5gl3LJUC8V3K4kxUlVpDAepTTQRCmKQNsFympXxKcv16JSw4GajLcfsZ2YEdTdVYBqOc+2F+gYwR36vJYc+5MKsIS/JRL8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=yqU6RZhX; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1756287423; c=relaxed/simple;
+	bh=qdPbayitjWUO7btP9BcKFqJauAQzvLr/f26usdfMC4o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=F0fUn0Mlnu4iK4rmIIyB1xxDtaE6ZZra7UT9HbVtC6TqfD97I3dGt/kOjJBkvMaBsTI0CUlrAPWVPmbHUei4kNWIivLZSVeUQ9P2AFvWlsrmOMKUxNDq0DOMjurrs5efmS8CBO7jC42YL+uQaUNzgxxF4uji53+ll015alfFbL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=Rm9oVbhe; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="yqU6RZhX"
-Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
-	by cmsmtp with ESMTPS
-	id r5xzu8ZVgA1smrCPOu6H9t; Wed, 27 Aug 2025 09:25:34 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id rCPNuPSihb6dmrCPOuUQBk; Wed, 27 Aug 2025 09:25:34 +0000
-X-Authority-Analysis: v=2.4 cv=bs9MBFai c=1 sm=1 tr=0 ts=68aecf0e
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=DR2cKC/DEnBA9KqqjaPhpA==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=EQ2wRRerX22KNVu84O0A:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Rm9oVbhe"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=QKXC/+BbZZkDCTwUOx2ABG7PtIdtlD0aC6xcaPGqrKc=; b=yqU6RZhXp/xD+WohzkCZ6Tp6jj
-	wryf1jbLDHn4ylufsEKINPRbBuS/rBP1XH7816YtP6xS49B6ofxGmQYT9AIT4b/NgYEwKQBHmUEGp
-	FUvP6GKAJ4DeqXxgLjDe0oabrisMLNds/b4Qd6Gv5qi3jG53F05wLIsNe3lkIS5gyoCC0vOojTU5s
-	9Uht93L5O7NaqJXWwQ9DRgESj7ZcxdU8ufave6CZde2GZkuF3gZ13FqH1t1RUumYlCvq0s5X7RRoo
-	RbUco1dvaM4BJ9tQzhlsy5OkvqEqNE7BvKTrBn75wi35GYq7dNSryT8+3+oT10a41Gz5zyRJUyhPG
-	AisQyeQw==;
-Received: from static-243-216-117-93.thenetworkfactory.nl ([93.117.216.243]:44652 helo=[10.94.27.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1urCPM-00000002geJ-3JG4;
-	Wed, 27 Aug 2025 04:25:33 -0500
-Message-ID: <e0aeda2d-931c-49c6-b0d4-dd097e87eae6@embeddedor.com>
-Date: Wed, 27 Aug 2025 11:25:26 +0200
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=qdPbayitjWUO7btP9BcKFqJauAQzvLr/f26usdfMC4o=;
+	t=1756287422; x=1757497022; b=Rm9oVbheXw+1Bm1ZKigmOiJzDOoQGP5XSxFjPRZJmbA0PK0
+	+OiBv/ScN92ZKOu3BMlN7lSg75FFZ6DwBTo/9qCXvnUPLCCGUpxG361QN8gSQoEHXFsdvXCqcNCk1
+	gZ9wZA9DDErfM+gSAy84jrVaS/GFYc1wdx6ddyvLzms1Quh2Ko8L/2nmnP3BcQYbhfQRH8pYxceZH
+	qGgwKJGKmSMoBh70C5Ai/BUAfcS+3nLWVmMztnSW0Re+H3+W1hM+DId/v4qZ/pgYR0JW0Bva8/Qe5
+	gk++d2kYmLvt/ApPEYLKkIfOzFaVPkIKNdXgUWlE8sxuLYFrnPRmKnjNmuN6a/fQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1urCaR-00000005MRO-1CT6;
+	Wed, 27 Aug 2025 11:36:59 +0200
+Message-ID: <0ef7587b7ae57d9363312ca130980707a68a3f7e.camel@sipsolutions.net>
+Subject: Re: [PATCH] iwlegacy: Remove unused structs and avoid
+ -Wflex-array-member-not-at-end warnings
+From: Johannes Berg <johannes@sipsolutions.net>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>, "Gustavo A. R. Silva"
+	 <gustavoars@kernel.org>, Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Date: Wed, 27 Aug 2025 11:36:58 +0200
+In-Reply-To: <e0aeda2d-931c-49c6-b0d4-dd097e87eae6@embeddedor.com>
+References: <aJl7TxeWgLdEKWhg@kspp>
+	 <e0aeda2d-931c-49c6-b0d4-dd097e87eae6@embeddedor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iwlegacy: Remove unused structs and avoid
- -Wflex-array-member-not-at-end warnings
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Stanislaw Gruszka <stf_xl@wp.pl>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aJl7TxeWgLdEKWhg@kspp>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <aJl7TxeWgLdEKWhg@kspp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 93.117.216.243
-X-Source-L: No
-X-Exim-ID: 1urCPM-00000002geJ-3JG4
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: static-243-216-117-93.thenetworkfactory.nl ([10.94.27.44]) [93.117.216.243]:44652
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfM9rcTtP1AgKfgEQrnVkhBNnSJmTFD+ZAscnIogU9XR7MrcygxitsGi8swyYixG3Ir70YJYVOpF2ExEojbVzFiQS4c4ncDpY6zrlVVWpueW72vXDL+oY
- 9qfThm4+ZEyaG3Pfiha1X/MOvC2C/Hw/HR6vJvkqcXhTHJfhs1MweGvx2cIrsqBKwFlss06QKv4iWym4Q5u+/orJXVzh8WP//5gPfDySS9J/jm2LwWlvDAIH
+X-malware-bazaar: not-scanned
 
-Hi all,
+On Wed, 2025-08-27 at 11:25 +0200, Gustavo A. R. Silva wrote:
+> Friendly
 
-Friendly ping: who can take this, please? :)
+I contest that. It's been two weeks, while it's still summer with
+vacations etc., not long after the merge window closed, with weeks to go
+until the next release comes around. Why are you impatient?
 
-Thanks!
--Gustavo
+I will take it. Eventually, the more you push the less I want to. And
+it'd help if you actually followed our conventions and used 'wifi:'
+prefix.
 
-On 11/08/25 07:10, Gustavo A. R. Silva wrote:
-> Remove unused structures and avoid the following
-> -Wflex-array-member-not-at-end warnings:
-> 
-> drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h:68:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h:60:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   .../wireless/intel/iwlegacy/iwl-spectrum.h    | 24 -------------------
->   1 file changed, 24 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h b/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
-> index 1e8ab704dbfb..f00eb878b94b 100644
-> --- a/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
-> +++ b/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
-> @@ -50,28 +50,4 @@ struct ieee80211_measurement_params {
->   	__le16 duration;
->   } __packed;
->   
-> -struct ieee80211_info_element {
-> -	u8 id;
-> -	u8 len;
-> -	u8 data[];
-> -} __packed;
-> -
-> -struct ieee80211_measurement_request {
-> -	struct ieee80211_info_element ie;
-> -	u8 token;
-> -	u8 mode;
-> -	u8 type;
-> -	struct ieee80211_measurement_params params[];
-> -} __packed;
-> -
-> -struct ieee80211_measurement_report {
-> -	struct ieee80211_info_element ie;
-> -	u8 token;
-> -	u8 mode;
-> -	u8 type;
-> -	union {
-> -		struct ieee80211_basic_report basic[0];
-> -	} u;
-> -} __packed;
-> -
->   #endif
-
+johannes
