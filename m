@@ -1,1196 +1,370 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F813570AD;
-	Wed, 27 Aug 2025 13:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3F9302760
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Aug 2025 14:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756302753; cv=none; b=AIGrdp228SGxxQfz0vufcW3+gIcl/dVHiHRXQtDX8AQnUS3IzIgvRNvQyzdWDTJ3R3Dp8/rHxucyF4yIQVHq67wFiczQAKAAQe3ioT1rko9n7Rd8rf1HbgXX+SFokt9YqNSlupfMk0YqPrYbW1A7+68OYDfEdua1DX7PL+KE5Yo=
+	t=1756303738; cv=none; b=tj9K6xu9VfemQBmZrP5QRMt8wc9988PcVabUfWm9v9Rjs5HUC9FFhh7aIK2xb8xGpPqflZafaJIANtBoVhvqA1GCF+gzgi0Dldg5CS8mmmIzNMw3hh+TXe7mYrrOVfEgATULkszA4lLXJrmYgThFQCHEVOPP+AmFAAehj1/0qh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756302753; c=relaxed/simple;
-	bh=6gP5oniLiUJhtyw78nmaZ1E8VQx1a9EfU7ncMT1WMgY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=ZV/DP+B0GvLEK91HuWLEpMdrTM+6r+k0ZrJxmaRPnP9Ej/nsyvuz7ntS/4qbK0F7WEfmbouFntQigpwZR7StavQCNf0naMbzwpVTyHCxGdhRuhqGRs68feFuzwj65na1jqRbZqCbZGlZ8AlK4MTxkon4HHEyEQk65YP89sy8g8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=op4B3FXp; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1756303738; c=relaxed/simple;
+	bh=YTISNKJVJ8MY89bk7WOjHxjc0eIoX4hY9eRNO6eflsU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Iur8j4eA7Si5m1YCM7wWGa64yiiO3ViNNtEUXhDwRTrNSngL3wxdQIWxmFe/nNqkvMX42v3vPNP+FrCUiT0A5sZiDflUw9Odl415gw6KAQ8KCZy9julvo7J6VvbRz/Srntpa/vuS8djESKY2ZuzbeOJhPElQ0GZH+EvWCBWGXb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HGUp8HdP; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="op4B3FXp"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57RC88mZ017762;
-	Wed, 27 Aug 2025 09:52:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=d9ZtB
-	nW0Okb83o3/fgXQkdXeaFPS04JkcY0zsqd+9bQ=; b=op4B3FXpzVrtz5rIeM5i2
-	uhyVKYpxcRQ+cecEhVaZs+QZEuuNVb54WIwrP9W763BPgthV2aXZg2cQKIsOLkwe
-	SjcENwe65TDv2Q4p/wCb0diVQBrnm2e5/GPXtsq2/gdrUxkg7sK/Qxr1ie631LQw
-	E7qffFGZDnZPDx3R6KmPfs7/LqWiplyXilzm97Ipp4cUtYbsm/XphDwSwzzNNI3l
-	D07IwdDpeL3Yc7w4VS27n9ksAnDnry8vnbIJOyWw0HeX9onNxyWsSItYS4quZaQg
-	VmP/m5oUEUt5UdWOi/qQK8CU5wxcaAQioKdAfoA8TNkm/szuQitjkYQ+6z4O7oPE
-	w==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 48rmafwjnn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Aug 2025 09:52:19 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 57RDqI7Y038082
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 27 Aug 2025 09:52:18 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Wed, 27 Aug 2025 09:52:18 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Wed, 27 Aug 2025 09:52:18 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Wed, 27 Aug 2025 09:52:17 -0400
-Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.69])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 57RDpw2S006762;
-	Wed, 27 Aug 2025 09:52:11 -0400
-From: Jorge Marques <jorge.marques@analog.com>
-Date: Wed, 27 Aug 2025 15:51:59 +0200
-Subject: [PATCH v9 2/2] i3c: master: Add driver for Analog Devices I3C
- Controller IP
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HGUp8HdP"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3b9edf4cf6cso5514418f8f.3
+        for <linux-hardening@vger.kernel.org>; Wed, 27 Aug 2025 07:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756303734; x=1756908534; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xvE4LTDafzST+ebfuxrN2rVGDKvjsNA49QvlFFlyWIM=;
+        b=HGUp8HdP2807EgbpXRxdAuj9zzWFmJ1flNQ+2JKDiuH1AKfFKfBxYi6FTLcwlecJwl
+         Ewzk63rwAH3SwCUHOzq7AGlD0YM2IPyuvo2ag8wxhb0UFKzv+hME/Cwtn5o0f+zUPRwd
+         UMNfc1sanB5BK9TknBQizLNCy65fG1hr7B7r3asvjcXKha0KydFlva3glpOp5Z4o1twU
+         mlnSd47qY9c8NDI8sKamazOPAaQH9O+euaKOzIf/L8h0U9hPbIyGSCrcDK5jMUai25OD
+         kx/DPv5pRoeD/VMPvMlxUaXLhN7zgzvTeyCogpXps+scUEJ22aqXuuiWiw8vW+yCPeG8
+         6tlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756303734; x=1756908534;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xvE4LTDafzST+ebfuxrN2rVGDKvjsNA49QvlFFlyWIM=;
+        b=PT1H+KDROzqzPbrrg9yhXmIsGmcDVHYdjqY6u78Edx8AzkvbX5q5/Eo3RoE6DEilAK
+         fWzaLqQCiaSS3HlstlDtbA6C5GtdVGSVIk0UzqoioKrrFahu2oQMz2HWO0t338lv9GVn
+         Pi8980fRF6hqwZfz1Vx0TKtCNOp/VAdVeT9/YEhfhJOsp1aud6dldvJWiqUlOjkZWoO9
+         eW2A6miQHCtpWyx8hbjAvXgndFWoixqsGhygQhIj2dZRnVthhqvdI5Spa30Skeeke/sv
+         NdS73Z86uAhskMVz9AEkZjIp36xT6qfKatYKetgwpuSm4I4bkJLptJ5u5VooGsAxzGyX
+         xgPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUBQ9o/8JtBm0fXHk6o1rWZ9VueI0lKDU1klPthNH9v/AvzW3Db/RFbu4DLJpdMBEY/u7J1BaY3EBWpVk6Slb4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCLRGDKxbv8D1tjXU6kh8LaN/z218anAyzOAu/neroVxu2ZLd6
+	WFNecZ6fflDQbKgQlXTa+Vq2q9otvcB4LOhinfYgZE6/mGEWAZVXingP1iC4sfsWacQ=
+X-Gm-Gg: ASbGncu61V28QLj+MJ2TSNTvNBMSzXJUE/GhAaoFP+odHpOwYzVm0ZnQFg/8dra96Tm
+	9zSQ9ULb8qGzOBswIxmzhdACgxoQibsNdUDluS3Tz+bUO6rD+1aI/+F/BBO4KVDZYE0E7//LjI+
+	XykDqgSgiocZ4NMSlZLdwEkYROIzuEYQGWfnTk0d6L4Ebk1teT5jZNY0t23MNC4VIPu0WWXz3AW
+	qlZ+Pf3+krBfSqU2zsxkQChadROfcqKFAl5MRev5O+mxj37HjQMm4MzGRut4Jv7akt/Vi+ruKh5
+	b6I/hpXjCauvg3w+flqS5K9m5URg8JyL42MBtbal0NwLbhDK3fp6T9qLgZwPz1U0QSI9PAtkBsx
+	8BEhwxLCEJvomcziLd6XF1IO61TuD9w==
+X-Google-Smtp-Source: AGHT+IHkXcu1NEQam2q8j8cNwacl8Imtu6GXIMZzfeXxsacEy+DVaG4nf82ZkbK5vX8UXnyEqjuJwg==
+X-Received: by 2002:a05:6000:188e:b0:3cd:9794:cbcf with SMTP id ffacd0b85a97d-3cd9794cc94mr128751f8f.60.1756303733978;
+        Wed, 27 Aug 2025 07:08:53 -0700 (PDT)
+Received: from [192.168.0.24] ([82.76.24.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cc56bde919sm4094896f8f.59.2025.08.27.07.08.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Aug 2025 07:08:53 -0700 (PDT)
+Message-ID: <98afe1bd-99d2-4b5d-866a-e9541390fab4@linaro.org>
+Date: Wed, 27 Aug 2025 17:08:51 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20250827-adi-i3c-master-v9-2-04413925abe1@analog.com>
-References: <20250827-adi-i3c-master-v9-0-04413925abe1@analog.com>
-In-Reply-To: <20250827-adi-i3c-master-v9-0-04413925abe1@analog.com>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Frank Li
-	<Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC: <linux-i3c@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <gastmaier@gmail.com>,
-        <linux-hardening@vger.kernel.org>,
-        Jorge Marques <jorge.marques@analog.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1756302719; l=31211;
- i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
- bh=6gP5oniLiUJhtyw78nmaZ1E8VQx1a9EfU7ncMT1WMgY=;
- b=hi/QB/sSl463oEfl1wTsFaU/weD7LvJFtAwHRCdFCjrit1Z+gAa7eTYRrXO1dwT7eSAlEyK+b
- xfJOH+EstPXBaIBA/vOL9DC/hNKgoCTuQtkgN8T5MdPY2mnehPhLZtU
-X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
- pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODI1MDA3NSBTYWx0ZWRfX6FQgCVWYWcKX
- 4nLelD+lMFUv7FKjck2O255LLLymGSDfVguO2q6k7ZluKENit9QUUfeSPmS/1zHc0O9bfzsG0fd
- OKjphTiHiokbrb5GuTfBHFcDOrhyZwznFZ7ltj1RykY/7ec6X+kdsiQJFpJYz1HPfoqQBdpiEPU
- KncCQxTNjTqHbSSDn9T4uWNweYBu8nAfGY3u5SYFIPe05k4NsR8i3Pzo0m2CTSNjguy2oEXCsSY
- YF/6Uaa6Mt8NUrj1yZk/Sa8z+ZoeB89w4EXcZUYi10AfKe1lS7eXATRoGsbipkaWrg+49Pu/OxF
- pXVxtKj70U2/aIGxai580YLsNjIaohzn+uo9ivDcopvQrRel60h4tijsMOzHJIwLz9ioVjBpegg
- 7kHgjvmB
-X-Proofpoint-ORIG-GUID: Xso1PQxRkzu9B9YzpYcpOXruuAojAdBU
-X-Proofpoint-GUID: Xso1PQxRkzu9B9YzpYcpOXruuAojAdBU
-X-Authority-Analysis: v=2.4 cv=AoXu3P9P c=1 sm=1 tr=0 ts=68af0d93 cx=c_pps
- a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=8AirrxEcAAAA:8 a=gAnH3GRIAAAA:8
- a=Br2UW1UjAAAA:8 a=uYelplDOSPtZD9UNFWIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=ST-jHhOKWsTCqRlWije3:22 a=WmXOPjafLNExVIMTj843:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-27_03,2025-08-26_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 spamscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
- adultscore=0 bulkscore=0 phishscore=0 impostorscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2508250075
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH v2 22/29] mm/numa: Register information into Kmemdump
+To: David Hildenbrand <david@redhat.com>, Michal Hocko <mhocko@suse.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org, tglx@linutronix.de,
+ andersson@kernel.org, pmladek@suse.com,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+ corbet@lwn.net, mojha@qti.qualcomm.com, rostedt@goodmis.org,
+ jonechou@google.com, tudor.ambarus@linaro.org,
+ Christoph Hellwig <hch@infradead.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>
+References: <20250724135512.518487-1-eugen.hristev@linaro.org>
+ <20250724135512.518487-23-eugen.hristev@linaro.org>
+ <ffc43855-2263-408d-831c-33f518249f96@redhat.com>
+ <e66f29c2-9f9f-4b04-b029-23383ed4aed4@linaro.org>
+ <751514db-9e03-4cf3-bd3e-124b201bdb94@redhat.com>
+ <aJCRgXYIjbJ01RsK@tiehlicka>
+ <e2c031e8-43bd-41e5-9074-c8b1f89e04e6@linaro.org>
+ <23e7ec80-622e-4d33-a766-312c1213e56b@redhat.com>
+ <f43a61b4-d302-4009-96ff-88eea6651e16@linaro.org>
+ <77d17dbf-1609-41b1-9244-488d2ce75b33@redhat.com>
+ <ecd33fa3-8362-48f0-b3c2-d1a11d8b02e3@linaro.org>
+ <9f13df6f-3b76-4d02-aa74-40b913f37a8a@redhat.com>
+ <64a93c4a-5619-4208-9e9f-83848206d42b@linaro.org>
+ <f1f290fc-b2f0-483b-96d5-5995362e5a8b@redhat.com>
+ <01c67173-818c-48cf-8515-060751074c37@linaro.org>
+ <aab5e2af-04d6-485f-bf81-557583f2ae4b@redhat.com>
+ <1b52419c-101b-487e-a961-97bd405c5c33@linaro.org>
+ <99d2cc96-03ea-4026-883e-1ee083a96c39@redhat.com>
+From: Eugen Hristev <eugen.hristev@linaro.org>
+Content-Language: en-US
+In-Reply-To: <99d2cc96-03ea-4026-883e-1ee083a96c39@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add support for Analog Devices I3C Controller IP, an AXI-interfaced IP
-core that supports I3C and I2C devices, multiple speed-grades and
-I3C IBIs.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-Signed-off-by: Jorge Marques <jorge.marques@analog.com>
----
- MAINTAINERS                         |    1 +
- drivers/i3c/master/Kconfig          |   11 +
- drivers/i3c/master/Makefile         |    1 +
- drivers/i3c/master/adi-i3c-master.c | 1019 +++++++++++++++++++++++++++++++++++
- 4 files changed, 1032 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index faa50535b514037ddf97309874ec64aac2013cb6..aeb39657c55a46b89d17c6e4039a2642b62634d0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11456,6 +11456,7 @@ I3C DRIVER FOR ANALOG DEVICES I3C CONTROLLER IP
- M:	Jorge Marques <jorge.marques@analog.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
-+F:	drivers/i3c/master/adi-i3c-master.c
- 
- I3C DRIVER FOR CADENCE I3C MASTER IP
- M:	Przemysław Gaj <pgaj@cadence.com>
-diff --git a/drivers/i3c/master/Kconfig b/drivers/i3c/master/Kconfig
-index 13df2944f2ec9a0aa7e4dfa46f9a52ad19ba9bb2..82cf330778d5a789c0df7c10bd527a45549c1594 100644
---- a/drivers/i3c/master/Kconfig
-+++ b/drivers/i3c/master/Kconfig
-@@ -1,4 +1,15 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+config ADI_I3C_MASTER
-+	tristate "Analog Devices I3C master driver"
-+	depends on HAS_IOMEM
-+	help
-+	  Support for Analog Devices I3C Controller IP, an AXI-interfaced IP
-+	  core that supports I3C and I2C devices, multiple speed-grades and I3C
-+	  IBIs.
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called adi-i3c-master.
-+
- config CDNS_I3C_MASTER
- 	tristate "Cadence I3C master driver"
- 	depends on HAS_IOMEM
-diff --git a/drivers/i3c/master/Makefile b/drivers/i3c/master/Makefile
-index aac74f3e3851441fd2974f6b1f77c569a9ed1cc6..816a227b6f7acf0a99971e385fdef6a405e20040 100644
---- a/drivers/i3c/master/Makefile
-+++ b/drivers/i3c/master/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+obj-$(CONFIG_ADI_I3C_MASTER)		+= adi-i3c-master.o
- obj-$(CONFIG_CDNS_I3C_MASTER)		+= i3c-master-cdns.o
- obj-$(CONFIG_DW_I3C_MASTER)		+= dw-i3c-master.o
- obj-$(CONFIG_AST2600_I3C_MASTER)	+= ast2600-i3c-master.o
-diff --git a/drivers/i3c/master/adi-i3c-master.c b/drivers/i3c/master/adi-i3c-master.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..162f9eed39aa5ef6f656239dcd8bfc5fe6281264
---- /dev/null
-+++ b/drivers/i3c/master/adi-i3c-master.c
-@@ -0,0 +1,1019 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * I3C Controller driver
-+ * Copyright 2025 Analog Devices Inc.
-+ * Author: Jorge Marques <jorge.marques@analog.com>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/fpga/adi-axi-common.h>
-+#include <linux/i3c/master.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#include "../internals.h"
-+
-+#define ADI_MAX_DEVS			16
-+#define ADI_HAS_MDB_FROM_BCR(x)		(FIELD_GET(BIT(2), (x)))
-+
-+#define REG_ENABLE			0x040
-+
-+#define REG_PID_L			0x054
-+#define REG_PID_H			0x058
-+#define REG_DCR_BCR_DA			0x05c
-+#define   REG_DCR_BCR_DA_GET_DA(x)	FIELD_GET(GENMASK(22, 16), (x))
-+#define   REG_DCR_BCR_DA_GET_BCR(x)	FIELD_GET(GENMASK(15, 8), (x))
-+#define   REG_DCR_BCR_DA_GET_DCR(x)	FIELD_GET(GENMASK(7, 0), (x))
-+
-+#define REG_IRQ_MASK			0x080
-+#define REG_IRQ_PENDING			0x084
-+#define   REG_IRQ_PENDING_DAA		BIT(7)
-+#define   REG_IRQ_PENDING_IBI		BIT(6)
-+#define   REG_IRQ_PENDING_CMDR		BIT(5)
-+
-+#define REG_CMD_FIFO			0x0d4
-+#define   REG_CMD_FIFO_0_IS_CCC		BIT(22)
-+#define   REG_CMD_FIFO_0_BCAST		BIT(21)
-+#define   REG_CMD_FIFO_0_SR		BIT(20)
-+#define   REG_CMD_FIFO_0_LEN(l)		FIELD_PREP(GENMASK(19, 8), (l))
-+#define   REG_CMD_FIFO_0_DEV_ADDR(a)	FIELD_PREP(GENMASK(7, 1), (a))
-+#define   REG_CMD_FIFO_0_RNW		BIT(0)
-+#define   REG_CMD_FIFO_1_CCC(id)	FIELD_PREP(GENMASK(7, 0), (id))
-+
-+#define REG_CMD_FIFO_ROOM		0x0c0
-+#define REG_CMDR_FIFO			0x0d8
-+#define   REG_CMDR_FIFO_UDA_ERROR	8
-+#define   REG_CMDR_FIFO_NACK_RESP	6
-+#define   REG_CMDR_FIFO_CE2_ERROR	4
-+#define   REG_CMDR_FIFO_CE0_ERROR	1
-+#define   REG_CMDR_FIFO_NO_ERROR	0
-+#define   REG_CMDR_FIFO_ERROR(x)	FIELD_GET(GENMASK(23, 20), (x))
-+#define   REG_CMDR_FIFO_XFER_BYTES(x)	FIELD_GET(GENMASK(19, 8), (x))
-+
-+#define REG_SDO_FIFO			0x0dc
-+#define REG_SDO_FIFO_ROOM		0x0c8
-+#define REG_SDI_FIFO			0x0e0
-+#define REG_IBI_FIFO			0x0e4
-+#define REG_FIFO_STATUS			0x0e8
-+#define   REG_FIFO_STATUS_CMDR_EMPTY	BIT(0)
-+#define   REG_FIFO_STATUS_IBI_EMPTY	BIT(1)
-+
-+#define REG_OPS				0x100
-+#define   REG_OPS_PP_SG_MASK		GENMASK(6, 5)
-+#define   REG_OPS_SET_SG(x)		FIELD_PREP(REG_OPS_PP_SG_MASK, (x))
-+
-+#define REG_IBI_CONFIG			0x140
-+#define   REG_IBI_CONFIG_ENABLE		BIT(0)
-+#define   REG_IBI_CONFIG_LISTEN		BIT(1)
-+
-+#define REG_DEV_CHAR			0x180
-+#define   REG_DEV_CHAR_IS_I2C		BIT(0)
-+#define   REG_DEV_CHAR_IS_ATTACHED	BIT(1)
-+#define   REG_DEV_CHAR_BCR_IBI(x)	FIELD_PREP(GENMASK(3, 2), (x))
-+#define   REG_DEV_CHAR_WEN		BIT(8)
-+#define   REG_DEV_CHAR_ADDR(x)		FIELD_PREP(GENMASK(15, 9), (x))
-+
-+enum speed_grade {PP_SG_UNSET, PP_SG_1MHZ, PP_SG_3MHZ, PP_SG_6MHZ, PP_SG_12MHZ};
-+
-+struct adi_i3c_cmd {
-+	u32 cmd0;
-+	u32 cmd1;
-+	u32 tx_len;
-+	const void *tx_buf;
-+	u32 rx_len;
-+	void *rx_buf;
-+	u32 error;
-+};
-+
-+struct adi_i3c_xfer {
-+	struct list_head node;
-+	struct completion comp;
-+	int ret;
-+	unsigned int ncmds;
-+	unsigned int ncmds_comp;
-+	struct adi_i3c_cmd cmds[] __counted_by(ncmds);
-+};
-+
-+struct adi_i3c_master {
-+	struct i3c_master_controller base;
-+	u32 free_rr_slots;
-+	struct {
-+		unsigned int num_slots;
-+		struct i3c_dev_desc **slots;
-+		spinlock_t lock; /* Protect IBI slot access */
-+	} ibi;
-+	struct {
-+		struct list_head list;
-+		struct adi_i3c_xfer *cur;
-+		spinlock_t lock; /* Protect transfer */
-+	} xferqueue;
-+	void __iomem *regs;
-+	struct clk *clk;
-+	unsigned long i3c_scl_lim;
-+	struct {
-+		u8 addrs[ADI_MAX_DEVS];
-+		u8 index;
-+	} daa;
-+};
-+
-+static inline struct adi_i3c_master *to_adi_i3c_master(struct i3c_master_controller *master)
-+{
-+	return container_of(master, struct adi_i3c_master, base);
-+}
-+
-+static void adi_i3c_master_wr_to_tx_fifo(struct adi_i3c_master *master,
-+					 const u8 *buf, unsigned int nbytes)
-+{
-+	unsigned int n, m;
-+
-+	n = readl(master->regs + REG_SDO_FIFO_ROOM);
-+	m = min(n, nbytes);
-+	i3c_writel_fifo(master->regs + REG_SDO_FIFO, buf, nbytes);
-+}
-+
-+static void adi_i3c_master_rd_from_rx_fifo(struct adi_i3c_master *master,
-+					   u8 *buf, unsigned int nbytes)
-+{
-+	i3c_readl_fifo(master->regs + REG_SDI_FIFO, buf, nbytes);
-+}
-+
-+static bool adi_i3c_master_supports_ccc_cmd(struct i3c_master_controller *m,
-+					    const struct i3c_ccc_cmd *cmd)
-+{
-+	if (cmd->ndests > 1)
-+		return false;
-+
-+	switch (cmd->id) {
-+	case I3C_CCC_ENEC(true):
-+	case I3C_CCC_ENEC(false):
-+	case I3C_CCC_DISEC(true):
-+	case I3C_CCC_DISEC(false):
-+	case I3C_CCC_RSTDAA(true):
-+	case I3C_CCC_RSTDAA(false):
-+	case I3C_CCC_ENTDAA:
-+	case I3C_CCC_SETDASA:
-+	case I3C_CCC_SETNEWDA:
-+	case I3C_CCC_GETMWL:
-+	case I3C_CCC_GETMRL:
-+	case I3C_CCC_GETPID:
-+	case I3C_CCC_GETBCR:
-+	case I3C_CCC_GETDCR:
-+	case I3C_CCC_GETSTATUS:
-+	case I3C_CCC_GETHDRCAP:
-+		return true;
-+	default:
-+		break;
-+	}
-+
-+	return false;
-+}
-+
-+static int adi_i3c_master_disable(struct adi_i3c_master *master)
-+{
-+	writel(0, master->regs + REG_IBI_CONFIG);
-+
-+	return 0;
-+}
-+
-+static struct adi_i3c_xfer *adi_i3c_master_alloc_xfer(struct adi_i3c_master *master,
-+						      unsigned int ncmds)
-+{
-+	struct adi_i3c_xfer *xfer;
-+
-+	xfer = kzalloc(struct_size(xfer, cmds, ncmds), GFP_KERNEL);
-+	if (!xfer)
-+		return NULL;
-+
-+	INIT_LIST_HEAD(&xfer->node);
-+	xfer->ncmds = ncmds;
-+	xfer->ret = -ETIMEDOUT;
-+
-+	return xfer;
-+}
-+
-+static void adi_i3c_master_start_xfer_locked(struct adi_i3c_master *master)
-+{
-+	struct adi_i3c_xfer *xfer = master->xferqueue.cur;
-+	unsigned int i, n, m;
-+
-+	if (!xfer)
-+		return;
-+
-+	for (i = 0; i < xfer->ncmds; i++) {
-+		struct adi_i3c_cmd *cmd = &xfer->cmds[i];
-+
-+		if (!(cmd->cmd0 & REG_CMD_FIFO_0_RNW))
-+			adi_i3c_master_wr_to_tx_fifo(master, cmd->tx_buf, cmd->tx_len);
-+	}
-+
-+	n = readl(master->regs + REG_CMD_FIFO_ROOM);
-+	for (i = 0; i < xfer->ncmds; i++) {
-+		struct adi_i3c_cmd *cmd = &xfer->cmds[i];
-+
-+		m = cmd->cmd0 & REG_CMD_FIFO_0_IS_CCC ? 2 : 1;
-+		if (m > n)
-+			break;
-+		writel(cmd->cmd0, master->regs + REG_CMD_FIFO);
-+		if (cmd->cmd0 & REG_CMD_FIFO_0_IS_CCC)
-+			writel(cmd->cmd1, master->regs + REG_CMD_FIFO);
-+		n -= m;
-+	}
-+}
-+
-+static void adi_i3c_master_end_xfer_locked(struct adi_i3c_master *master,
-+					   u32 pending)
-+{
-+	struct adi_i3c_xfer *xfer = master->xferqueue.cur;
-+	int i, ret = 0;
-+
-+	if (!xfer)
-+		return;
-+
-+	while (!(readl(master->regs + REG_FIFO_STATUS) & REG_FIFO_STATUS_CMDR_EMPTY)) {
-+		struct adi_i3c_cmd *cmd;
-+		u32 cmdr, rx_len;
-+
-+		cmdr = readl(master->regs + REG_CMDR_FIFO);
-+
-+		cmd = &xfer->cmds[xfer->ncmds_comp++];
-+		if (cmd->cmd0 & REG_CMD_FIFO_0_RNW) {
-+			rx_len = min_t(u32, REG_CMDR_FIFO_XFER_BYTES(cmdr), cmd->rx_len);
-+			adi_i3c_master_rd_from_rx_fifo(master, cmd->rx_buf, rx_len);
-+		}
-+		cmd->error = REG_CMDR_FIFO_ERROR(cmdr);
-+	}
-+
-+	for (i = 0; i < xfer->ncmds_comp; i++) {
-+		switch (xfer->cmds[i].error) {
-+		case REG_CMDR_FIFO_NO_ERROR:
-+			break;
-+
-+		case REG_CMDR_FIFO_CE0_ERROR:
-+		case REG_CMDR_FIFO_CE2_ERROR:
-+		case REG_CMDR_FIFO_NACK_RESP:
-+		case REG_CMDR_FIFO_UDA_ERROR:
-+			ret = -EIO;
-+			break;
-+
-+		default:
-+			ret = -EINVAL;
-+			break;
-+		}
-+	}
-+
-+	xfer->ret = ret;
-+
-+	if (xfer->ncmds_comp != xfer->ncmds)
-+		return;
-+
-+	complete(&xfer->comp);
-+
-+	xfer = list_first_entry_or_null(&master->xferqueue.list,
-+					struct adi_i3c_xfer, node);
-+	if (xfer)
-+		list_del_init(&xfer->node);
-+
-+	master->xferqueue.cur = xfer;
-+	adi_i3c_master_start_xfer_locked(master);
-+}
-+
-+static void adi_i3c_master_queue_xfer(struct adi_i3c_master *master,
-+				      struct adi_i3c_xfer *xfer)
-+{
-+	init_completion(&xfer->comp);
-+	guard(spinlock_irqsave)(&master->xferqueue.lock);
-+	if (master->xferqueue.cur) {
-+		list_add_tail(&xfer->node, &master->xferqueue.list);
-+	} else {
-+		master->xferqueue.cur = xfer;
-+		adi_i3c_master_start_xfer_locked(master);
-+	}
-+}
-+
-+static void adi_i3c_master_unqueue_xfer(struct adi_i3c_master *master,
-+					struct adi_i3c_xfer *xfer)
-+{
-+	guard(spinlock_irqsave)(&master->xferqueue.lock);
-+	if (master->xferqueue.cur == xfer)
-+		master->xferqueue.cur = NULL;
-+	else
-+		list_del_init(&xfer->node);
-+
-+	writel(0x01, master->regs + REG_ENABLE);
-+	writel(0x00, master->regs + REG_ENABLE);
-+	writel(REG_IRQ_PENDING_CMDR, master->regs + REG_IRQ_MASK);
-+}
-+
-+static enum i3c_error_code adi_i3c_cmd_get_err(struct adi_i3c_cmd *cmd)
-+{
-+	switch (cmd->error) {
-+	case REG_CMDR_FIFO_CE0_ERROR:
-+		return I3C_ERROR_M0;
-+
-+	case REG_CMDR_FIFO_CE2_ERROR:
-+	case REG_CMDR_FIFO_NACK_RESP:
-+		return I3C_ERROR_M2;
-+
-+	default:
-+		break;
-+	}
-+
-+	return I3C_ERROR_UNKNOWN;
-+}
-+
-+static int adi_i3c_master_send_ccc_cmd(struct i3c_master_controller *m,
-+				       struct i3c_ccc_cmd *cmd)
-+{
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_xfer *xfer __free(kfree) = NULL;
-+	struct adi_i3c_cmd *ccmd;
-+
-+	xfer = adi_i3c_master_alloc_xfer(master, 1);
-+	if (!xfer)
-+		return -ENOMEM;
-+
-+	ccmd = xfer->cmds;
-+	ccmd->cmd1 = REG_CMD_FIFO_1_CCC(cmd->id);
-+	ccmd->cmd0 = REG_CMD_FIFO_0_IS_CCC |
-+		     REG_CMD_FIFO_0_LEN(cmd->dests[0].payload.len);
-+
-+	if (cmd->id & I3C_CCC_DIRECT)
-+		ccmd->cmd0 |= REG_CMD_FIFO_0_DEV_ADDR(cmd->dests[0].addr);
-+
-+	if (cmd->rnw) {
-+		ccmd->cmd0 |= REG_CMD_FIFO_0_RNW;
-+		ccmd->rx_buf = cmd->dests[0].payload.data;
-+		ccmd->rx_len = cmd->dests[0].payload.len;
-+	} else {
-+		ccmd->tx_buf = cmd->dests[0].payload.data;
-+		ccmd->tx_len = cmd->dests[0].payload.len;
-+	}
-+
-+	adi_i3c_master_queue_xfer(master, xfer);
-+	if (!wait_for_completion_timeout(&xfer->comp, msecs_to_jiffies(1000)))
-+		adi_i3c_master_unqueue_xfer(master, xfer);
-+
-+	cmd->err = adi_i3c_cmd_get_err(&xfer->cmds[0]);
-+
-+	return 0;
-+}
-+
-+static int adi_i3c_master_priv_xfers(struct i3c_dev_desc *dev,
-+				     struct i3c_priv_xfer *xfers,
-+				     int nxfers)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_xfer *xfer __free(kfree) = NULL;
-+	int i, ret;
-+
-+	if (!nxfers)
-+		return 0;
-+
-+	xfer = adi_i3c_master_alloc_xfer(master, nxfers);
-+	if (!xfer)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < nxfers; i++) {
-+		struct adi_i3c_cmd *ccmd = &xfer->cmds[i];
-+
-+		ccmd->cmd0 = REG_CMD_FIFO_0_DEV_ADDR(dev->info.dyn_addr);
-+
-+		if (xfers[i].rnw) {
-+			ccmd->cmd0 |= REG_CMD_FIFO_0_RNW;
-+			ccmd->rx_buf = xfers[i].data.in;
-+			ccmd->rx_len = xfers[i].len;
-+		} else {
-+			ccmd->tx_buf = xfers[i].data.out;
-+			ccmd->tx_len = xfers[i].len;
-+		}
-+
-+		ccmd->cmd0 |= REG_CMD_FIFO_0_LEN(xfers[i].len);
-+
-+		if (i < nxfers - 1)
-+			ccmd->cmd0 |= REG_CMD_FIFO_0_SR;
-+
-+		if (!i)
-+			ccmd->cmd0 |= REG_CMD_FIFO_0_BCAST;
-+	}
-+
-+	adi_i3c_master_queue_xfer(master, xfer);
-+	if (!wait_for_completion_timeout(&xfer->comp,
-+					 msecs_to_jiffies(1000)))
-+		adi_i3c_master_unqueue_xfer(master, xfer);
-+
-+	ret = xfer->ret;
-+
-+	for (i = 0; i < nxfers; i++)
-+		xfers[i].err = adi_i3c_cmd_get_err(&xfer->cmds[i]);
-+
-+	return ret;
-+}
-+
-+struct adi_i3c_i2c_dev_data {
-+	struct i3c_generic_ibi_pool *ibi_pool;
-+	u16 id;
-+	s16 ibi;
-+};
-+
-+static int adi_i3c_master_get_rr_slot(struct adi_i3c_master *master,
-+				      u8 dyn_addr)
-+{
-+	if (!master->free_rr_slots)
-+		return -ENOSPC;
-+
-+	return ffs(master->free_rr_slots) - 1;
-+}
-+
-+static int adi_i3c_master_reattach_i3c_dev(struct i3c_dev_desc *dev, u8 dyn_addr)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	u8 addr;
-+
-+	addr = dev->info.dyn_addr ? dev->info.dyn_addr : dev->info.static_addr;
-+
-+	writel(REG_DEV_CHAR_ADDR(dyn_addr), master->regs + REG_DEV_CHAR);
-+	writel((readl(master->regs + REG_DEV_CHAR) &
-+		~REG_DEV_CHAR_IS_ATTACHED) | REG_DEV_CHAR_WEN,
-+	       master->regs + REG_DEV_CHAR);
-+
-+	writel(REG_DEV_CHAR_ADDR(addr), master->regs + REG_DEV_CHAR);
-+	writel(readl(master->regs + REG_DEV_CHAR) |
-+	       REG_DEV_CHAR_IS_ATTACHED | REG_DEV_CHAR_WEN,
-+	       master->regs + REG_DEV_CHAR);
-+
-+	return 0;
-+}
-+
-+static int adi_i3c_master_attach_i3c_dev(struct i3c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_i2c_dev_data *data;
-+	int slot;
-+	u8 addr;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	slot = adi_i3c_master_get_rr_slot(master, dev->info.dyn_addr);
-+	if (slot < 0) {
-+		kfree(data);
-+		return slot;
-+	}
-+
-+	data->id = slot;
-+	i3c_dev_set_master_data(dev, data);
-+	master->free_rr_slots &= ~BIT(slot);
-+
-+	addr = dev->info.dyn_addr ? dev->info.dyn_addr : dev->info.static_addr;
-+
-+	writel(REG_DEV_CHAR_ADDR(addr), master->regs + REG_DEV_CHAR);
-+	writel(readl(master->regs + REG_DEV_CHAR) |
-+	       REG_DEV_CHAR_IS_ATTACHED | REG_DEV_CHAR_WEN,
-+	       master->regs + REG_DEV_CHAR);
-+
-+	return 0;
-+}
-+
-+static void adi_i3c_master_sync_dev_char(struct i3c_master_controller *m)
-+{
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct i3c_dev_desc *i3cdev;
-+	u32 bcr_ibi;
-+	u8 addr;
-+
-+	i3c_bus_for_each_i3cdev(&m->bus, i3cdev) {
-+		addr = i3cdev->info.dyn_addr ?
-+		       i3cdev->info.dyn_addr : i3cdev->info.static_addr;
-+		writel(REG_DEV_CHAR_ADDR(addr), master->regs + REG_DEV_CHAR);
-+		bcr_ibi = FIELD_GET(I3C_BCR_IBI_PAYLOAD | I3C_BCR_IBI_REQ_CAP, (i3cdev->info.bcr));
-+		writel(readl(master->regs + REG_DEV_CHAR) |
-+		       REG_DEV_CHAR_BCR_IBI(bcr_ibi) | REG_DEV_CHAR_WEN,
-+		       master->regs + REG_DEV_CHAR);
-+	}
-+}
-+
-+static void adi_i3c_master_detach_i3c_dev(struct i3c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
-+	u8 addr;
-+
-+	addr = dev->info.dyn_addr ? dev->info.dyn_addr : dev->info.static_addr;
-+
-+	writel(REG_DEV_CHAR_ADDR(addr), master->regs + REG_DEV_CHAR);
-+	writel((readl(master->regs + REG_DEV_CHAR) &
-+		~REG_DEV_CHAR_IS_ATTACHED) | REG_DEV_CHAR_WEN,
-+	       master->regs + REG_DEV_CHAR);
-+
-+	i3c_dev_set_master_data(dev, NULL);
-+	master->free_rr_slots |= BIT(data->id);
-+	kfree(data);
-+}
-+
-+static int adi_i3c_master_attach_i2c_dev(struct i2c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i2c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_i2c_dev_data *data;
-+	int slot;
-+
-+	slot = adi_i3c_master_get_rr_slot(master, 0);
-+	if (slot < 0)
-+		return slot;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->id = slot;
-+	master->free_rr_slots &= ~BIT(slot);
-+	i2c_dev_set_master_data(dev, data);
-+
-+	writel(REG_DEV_CHAR_ADDR(dev->addr) |
-+	       REG_DEV_CHAR_IS_I2C | REG_DEV_CHAR_IS_ATTACHED | REG_DEV_CHAR_WEN,
-+	       master->regs + REG_DEV_CHAR);
-+
-+	return 0;
-+}
-+
-+static void adi_i3c_master_detach_i2c_dev(struct i2c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i2c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_i2c_dev_data *data = i2c_dev_get_master_data(dev);
-+
-+	writel(REG_DEV_CHAR_ADDR(dev->addr) |
-+	       REG_DEV_CHAR_IS_I2C | REG_DEV_CHAR_WEN,
-+	       master->regs + REG_DEV_CHAR);
-+
-+	i2c_dev_set_master_data(dev, NULL);
-+	master->free_rr_slots |= BIT(data->id);
-+	kfree(data);
-+}
-+
-+static void adi_i3c_master_bus_cleanup(struct i3c_master_controller *m)
-+{
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+
-+	adi_i3c_master_disable(master);
-+}
-+
-+static void adi_i3c_master_upd_i3c_scl_lim(struct adi_i3c_master *master)
-+{
-+	struct i3c_master_controller *m = &master->base;
-+	struct i3c_bus *bus = i3c_master_get_bus(m);
-+	u8 i3c_scl_lim = 0;
-+	struct i3c_dev_desc *dev;
-+	u8 pp_sg;
-+
-+	i3c_bus_for_each_i3cdev(bus, dev) {
-+		u8 max_fscl;
-+
-+		max_fscl = max(I3C_CCC_MAX_SDR_FSCL(dev->info.max_read_ds),
-+			       I3C_CCC_MAX_SDR_FSCL(dev->info.max_write_ds));
-+
-+		switch (max_fscl) {
-+		case I3C_SDR1_FSCL_8MHZ:
-+			max_fscl = PP_SG_6MHZ;
-+			break;
-+		case I3C_SDR2_FSCL_6MHZ:
-+			max_fscl = PP_SG_3MHZ;
-+			break;
-+		case I3C_SDR3_FSCL_4MHZ:
-+			max_fscl = PP_SG_3MHZ;
-+			break;
-+		case I3C_SDR4_FSCL_2MHZ:
-+			max_fscl = PP_SG_1MHZ;
-+			break;
-+		case I3C_SDR0_FSCL_MAX:
-+		default:
-+			max_fscl = PP_SG_12MHZ;
-+			break;
-+		}
-+
-+		if (max_fscl &&
-+		    (i3c_scl_lim > max_fscl || !i3c_scl_lim))
-+			i3c_scl_lim = max_fscl;
-+	}
-+
-+	if (!i3c_scl_lim)
-+		return;
-+
-+	master->i3c_scl_lim = i3c_scl_lim - 1;
-+
-+	pp_sg = readl(master->regs + REG_OPS) & ~REG_OPS_PP_SG_MASK;
-+	pp_sg |= REG_OPS_SET_SG(master->i3c_scl_lim);
-+
-+	writel(pp_sg, master->regs + REG_OPS);
-+}
-+
-+static void adi_i3c_master_get_features(struct adi_i3c_master *master,
-+					unsigned int slot,
-+					struct i3c_device_info *info)
-+{
-+	u32 buf;
-+
-+	/* Dynamic address and PID are for identification only */
-+	memset(info, 0, sizeof(*info));
-+	buf = readl(master->regs + REG_DCR_BCR_DA);
-+	info->dyn_addr = REG_DCR_BCR_DA_GET_DA(buf);
-+	info->dcr = REG_DCR_BCR_DA_GET_DCR(buf);
-+	info->bcr = REG_DCR_BCR_DA_GET_BCR(buf);
-+	info->pid = readl(master->regs + REG_PID_L);
-+	info->pid |= (u64)readl(master->regs + REG_PID_H) << 32;
-+}
-+
-+static int adi_i3c_master_do_daa(struct i3c_master_controller *m)
-+{
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	int ret, addr = 0;
-+	u32 irq_mask;
-+
-+	for (u8 i = 0; i < ADI_MAX_DEVS; i++) {
-+		addr = i3c_master_get_free_addr(m, addr);
-+		if (addr < 0)
-+			return addr;
-+		master->daa.addrs[i] = addr;
-+	}
-+
-+	irq_mask = readl(master->regs + REG_IRQ_MASK);
-+	writel(irq_mask | REG_IRQ_PENDING_DAA,
-+	       master->regs + REG_IRQ_MASK);
-+
-+	master->daa.index = 0;
-+	ret = i3c_master_entdaa_locked(&master->base);
-+
-+	writel(irq_mask, master->regs + REG_IRQ_MASK);
-+
-+	/* DAA always finishes with CE2_ERROR or NACK_RESP */
-+	if (ret && ret != I3C_ERROR_M2)
-+		return ret;
-+
-+	/* Add I3C devices discovered */
-+	for (u8 i = 0; i < master->daa.index; i++)
-+		i3c_master_add_i3c_dev_locked(m, master->daa.addrs[i]);
-+	/* Sync retrieved devs info with the IP */
-+	adi_i3c_master_sync_dev_char(m);
-+
-+	i3c_master_defslvs_locked(&master->base);
-+
-+	adi_i3c_master_upd_i3c_scl_lim(master);
-+
-+	return 0;
-+}
-+
-+static int adi_i3c_master_bus_init(struct i3c_master_controller *m)
-+{
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct i3c_device_info info = { };
-+	int ret;
-+
-+	ret = i3c_master_get_free_addr(m, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	adi_i3c_master_get_features(master, 0, &info);
-+	ret = i3c_master_set_info(&master->base, &info);
-+	if (ret)
-+		return ret;
-+
-+	writel(REG_IBI_CONFIG_LISTEN,
-+	       master->regs + REG_IBI_CONFIG);
-+
-+	return 0;
-+}
-+
-+static void adi_i3c_master_handle_ibi(struct adi_i3c_master *master,
-+				      u32 raw)
-+{
-+	struct adi_i3c_i2c_dev_data *data;
-+	struct i3c_ibi_slot *slot;
-+	struct i3c_dev_desc *dev;
-+	u8 da, id, mdb, len;
-+	u8 *buf;
-+
-+	da = FIELD_GET(GENMASK(23, 17), raw);
-+	mdb = FIELD_GET(GENMASK(15, 8), raw);
-+	for (id = 0; id < master->ibi.num_slots; id++) {
-+		if (master->ibi.slots[id] &&
-+		    master->ibi.slots[id]->info.dyn_addr == da)
-+			break;
-+	}
-+
-+	if (id == master->ibi.num_slots)
-+		return;
-+
-+	dev = master->ibi.slots[id];
-+	len = ADI_HAS_MDB_FROM_BCR(dev->info.bcr);
-+	data = i3c_dev_get_master_data(dev);
-+
-+	guard(spinlock)(&master->ibi.lock);
-+	slot = i3c_generic_ibi_get_free_slot(data->ibi_pool);
-+	if (!slot)
-+		return;
-+
-+	slot->len = len;
-+	buf = slot->data;
-+	buf[0] = mdb;
-+	i3c_master_queue_ibi(dev, slot);
-+}
-+
-+static void adi_i3c_master_demux_ibis(struct adi_i3c_master *master)
-+{
-+	while (!(readl(master->regs + REG_FIFO_STATUS) & REG_FIFO_STATUS_IBI_EMPTY)) {
-+		u32 raw = readl(master->regs + REG_IBI_FIFO);
-+
-+		adi_i3c_master_handle_ibi(master, raw);
-+	}
-+}
-+
-+static void adi_i3c_master_handle_da_req(struct adi_i3c_master *master)
-+{
-+	u8 payload0[8];
-+	u32 addr;
-+
-+	adi_i3c_master_rd_from_rx_fifo(master, payload0, 6);
-+	addr = master->daa.addrs[master->daa.index++];
-+	addr = (addr << 1) | (parity8(addr) ? 0 : 1);
-+
-+	writel(addr, master->regs + REG_SDO_FIFO);
-+}
-+
-+static irqreturn_t adi_i3c_master_irq(int irq, void *data)
-+{
-+	struct adi_i3c_master *master = data;
-+	u32 pending;
-+
-+	pending = readl(master->regs + REG_IRQ_PENDING);
-+	writel(pending, master->regs + REG_IRQ_PENDING);
-+	if (pending & REG_IRQ_PENDING_CMDR) {
-+		scoped_guard(spinlock_irqsave, &master->xferqueue.lock) {
-+			adi_i3c_master_end_xfer_locked(master, pending);
-+		}
-+	}
-+	if (pending & REG_IRQ_PENDING_IBI)
-+		adi_i3c_master_demux_ibis(master);
-+	if (pending & REG_IRQ_PENDING_DAA)
-+		adi_i3c_master_handle_da_req(master);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int adi_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
-+				    struct i2c_msg *xfers,
-+				    int nxfers)
-+{
-+	struct i3c_master_controller *m = i2c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_xfer *xfer __free(kfree) = NULL;
-+	int i;
-+
-+	if (!nxfers)
-+		return 0;
-+	for (i = 0; i < nxfers; i++) {
-+		if (xfers[i].flags & I2C_M_TEN)
-+			return -EOPNOTSUPP;
-+	}
-+	xfer = adi_i3c_master_alloc_xfer(master, nxfers);
-+	if (!xfer)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < nxfers; i++) {
-+		struct adi_i3c_cmd *ccmd = &xfer->cmds[i];
-+
-+		ccmd->cmd0 = REG_CMD_FIFO_0_DEV_ADDR(xfers[i].addr);
-+
-+		if (xfers[i].flags & I2C_M_RD) {
-+			ccmd->cmd0 |= REG_CMD_FIFO_0_RNW;
-+			ccmd->rx_buf = xfers[i].buf;
-+			ccmd->rx_len = xfers[i].len;
-+		} else {
-+			ccmd->tx_buf = xfers[i].buf;
-+			ccmd->tx_len = xfers[i].len;
-+		}
-+
-+		ccmd->cmd0 |= REG_CMD_FIFO_0_LEN(xfers[i].len);
-+	}
-+
-+	adi_i3c_master_queue_xfer(master, xfer);
-+	if (!wait_for_completion_timeout(&xfer->comp,
-+					 m->i2c.timeout))
-+		adi_i3c_master_unqueue_xfer(master, xfer);
-+
-+	return xfer->ret;
-+}
-+
-+static int adi_i3c_master_disable_ibi(struct i3c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct i3c_dev_desc *i3cdev;
-+	u32 enabled = 0;
-+	int ret;
-+
-+	ret = i3c_master_disec_locked(m, dev->info.dyn_addr,
-+				      I3C_CCC_EVENT_SIR);
-+
-+	i3c_bus_for_each_i3cdev(&m->bus, i3cdev) {
-+		if (dev != i3cdev && i3cdev->ibi)
-+			enabled |= i3cdev->ibi->enabled;
-+	}
-+	if (!enabled) {
-+		writel(REG_IBI_CONFIG_LISTEN,
-+		       master->regs + REG_IBI_CONFIG);
-+		writel(readl(master->regs + REG_IRQ_MASK) & ~REG_IRQ_PENDING_IBI,
-+		       master->regs + REG_IRQ_MASK);
-+	}
-+
-+	return ret;
-+}
-+
-+static int adi_i3c_master_enable_ibi(struct i3c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+
-+	writel(REG_IBI_CONFIG_LISTEN | REG_IBI_CONFIG_ENABLE,
-+	       master->regs + REG_IBI_CONFIG);
-+
-+	writel(readl(master->regs + REG_IRQ_MASK) | REG_IRQ_PENDING_IBI,
-+	       master->regs + REG_IRQ_MASK);
-+
-+	return i3c_master_enec_locked(m, dev->info.dyn_addr,
-+				      I3C_CCC_EVENT_SIR);
-+}
-+
-+static int adi_i3c_master_request_ibi(struct i3c_dev_desc *dev,
-+				      const struct i3c_ibi_setup *req)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_i2c_dev_data *data;
-+	unsigned int i;
-+
-+	data = i3c_dev_get_master_data(dev);
-+	data->ibi_pool = i3c_generic_ibi_alloc_pool(dev, req);
-+	if (IS_ERR(data->ibi_pool))
-+		return PTR_ERR(data->ibi_pool);
-+
-+	scoped_guard(spinlock_irqsave, &master->ibi.lock) {
-+		for (i = 0; i < master->ibi.num_slots; i++) {
-+			if (!master->ibi.slots[i]) {
-+				data->ibi = i;
-+				master->ibi.slots[i] = dev;
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (i < master->ibi.num_slots)
-+		return 0;
-+
-+	i3c_generic_ibi_free_pool(data->ibi_pool);
-+	data->ibi_pool = NULL;
-+
-+	return -ENOSPC;
-+}
-+
-+static void adi_i3c_master_free_ibi(struct i3c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
-+
-+	scoped_guard(spinlock_irqsave, &master->ibi.lock) {
-+		master->ibi.slots[data->ibi] = NULL;
-+	}
-+
-+	i3c_generic_ibi_free_pool(data->ibi_pool);
-+}
-+
-+static void adi_i3c_master_recycle_ibi_slot(struct i3c_dev_desc *dev,
-+					    struct i3c_ibi_slot *slot)
-+{
-+	struct adi_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
-+
-+	i3c_generic_ibi_recycle_slot(data->ibi_pool, slot);
-+}
-+
-+static const struct i3c_master_controller_ops adi_i3c_master_ops = {
-+	.bus_init = adi_i3c_master_bus_init,
-+	.bus_cleanup = adi_i3c_master_bus_cleanup,
-+	.attach_i3c_dev = adi_i3c_master_attach_i3c_dev,
-+	.reattach_i3c_dev = adi_i3c_master_reattach_i3c_dev,
-+	.detach_i3c_dev = adi_i3c_master_detach_i3c_dev,
-+	.attach_i2c_dev = adi_i3c_master_attach_i2c_dev,
-+	.detach_i2c_dev = adi_i3c_master_detach_i2c_dev,
-+	.do_daa = adi_i3c_master_do_daa,
-+	.supports_ccc_cmd = adi_i3c_master_supports_ccc_cmd,
-+	.send_ccc_cmd = adi_i3c_master_send_ccc_cmd,
-+	.priv_xfers = adi_i3c_master_priv_xfers,
-+	.i2c_xfers = adi_i3c_master_i2c_xfers,
-+	.request_ibi = adi_i3c_master_request_ibi,
-+	.enable_ibi = adi_i3c_master_enable_ibi,
-+	.disable_ibi = adi_i3c_master_disable_ibi,
-+	.free_ibi = adi_i3c_master_free_ibi,
-+	.recycle_ibi_slot = adi_i3c_master_recycle_ibi_slot,
-+};
-+
-+static const struct of_device_id adi_i3c_master_of_match[] = {
-+	{ .compatible = "adi,i3c-master-v1" },
-+	{}
-+};
-+
-+static int adi_i3c_master_probe(struct platform_device *pdev)
-+{
-+	struct adi_i3c_master *master;
-+	struct clk_bulk_data *clk;
-+	unsigned int version;
-+	int ret, irq;
-+
-+	master = devm_kzalloc(&pdev->dev, sizeof(*master), GFP_KERNEL);
-+	if (!master)
-+		return -ENOMEM;
-+
-+	master->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(master->regs))
-+		return PTR_ERR(master->regs);
-+
-+	ret = devm_clk_bulk_get_all_enabled(&pdev->dev, &clk);
-+	if (ret < 0)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "Failed to get clocks\n");
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	version = readl(master->regs + ADI_AXI_REG_VERSION);
-+	if (ADI_AXI_PCORE_VER_MAJOR(version) != 1)
-+		dev_err_probe(&pdev->dev, -ENODEV, "Unsupported peripheral version %u.%u.%u\n",
-+			      ADI_AXI_PCORE_VER_MAJOR(version),
-+			      ADI_AXI_PCORE_VER_MINOR(version),
-+			      ADI_AXI_PCORE_VER_PATCH(version));
-+
-+	writel(0x00, master->regs + REG_ENABLE);
-+	writel(0x00, master->regs + REG_IRQ_MASK);
-+
-+	ret = devm_request_irq(&pdev->dev, irq, adi_i3c_master_irq, 0,
-+			       dev_name(&pdev->dev), master);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, master);
-+
-+	master->free_rr_slots = GENMASK(ADI_MAX_DEVS, 1);
-+
-+	writel(REG_IRQ_PENDING_CMDR, master->regs + REG_IRQ_MASK);
-+
-+	spin_lock_init(&master->ibi.lock);
-+	master->ibi.num_slots = 15;
-+	master->ibi.slots = devm_kcalloc(&pdev->dev, master->ibi.num_slots,
-+					 sizeof(*master->ibi.slots),
-+					 GFP_KERNEL);
-+	if (!master->ibi.slots)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&master->xferqueue.lock);
-+	INIT_LIST_HEAD(&master->xferqueue.list);
-+
-+	return i3c_master_register(&master->base, &pdev->dev,
-+				   &adi_i3c_master_ops, false);
-+}
-+
-+static void adi_i3c_master_remove(struct platform_device *pdev)
-+{
-+	struct adi_i3c_master *master = platform_get_drvdata(pdev);
-+
-+	writel(0xff, master->regs + REG_IRQ_PENDING);
-+	writel(0x00, master->regs + REG_IRQ_MASK);
-+	writel(0x01, master->regs + REG_ENABLE);
-+
-+	i3c_master_unregister(&master->base);
-+}
-+
-+static struct platform_driver adi_i3c_master = {
-+	.probe = adi_i3c_master_probe,
-+	.remove = adi_i3c_master_remove,
-+	.driver = {
-+		.name = "adi-i3c-master",
-+		.of_match_table = adi_i3c_master_of_match,
-+	},
-+};
-+module_platform_driver(adi_i3c_master);
-+
-+MODULE_AUTHOR("Jorge Marques <jorge.marques@analog.com>");
-+MODULE_DESCRIPTION("Analog Devices I3C master driver");
-+MODULE_LICENSE("GPL");
+On 8/27/25 15:18, David Hildenbrand wrote:
+> On 27.08.25 13:59, Eugen Hristev wrote:
+>>
+>>
+>> On 8/25/25 16:58, David Hildenbrand wrote:
+>>> On 25.08.25 15:36, Eugen Hristev wrote:
+>>>>
+>>>>
+>>>> On 8/25/25 16:20, David Hildenbrand wrote:
+>>>>>
+>>>>>>>
+>>>>>>> IIRC, kernel/vmcore_info.c is never built as a module, as it also
+>>>>>>> accesses non-exported symbols.
+>>>>>>
+>>>>>> Hello David,
+>>>>>>
+>>>>>> I am looking again into this, and there are some things which in my
+>>>>>> opinion would be difficult to achieve.
+>>>>>> For example I looked into my patch #11 , which adds the `runqueues` into
+>>>>>> kmemdump.
+>>>>>>
+>>>>>> The runqueues is a variable of `struct rq` which is defined in
+>>>>>> kernel/sched/sched.h , which is not supposed to be included outside of
+>>>>>> sched.
+>>>>>> Now moving all the struct definition outside of sched.h into another
+>>>>>> public header would be rather painful and I don't think it's a really
+>>>>>> good option (The struct would be needed to compute the sizeof inside
+>>>>>> vmcoreinfo). Secondly, it would also imply moving all the nested struct
+>>>>>> definitions outside as well. I doubt this is something that we want for
+>>>>>> the sched subsys. How the subsys is designed, out of my understanding,
+>>>>>> is to keep these internal structs opaque outside of it.
+>>>>>
+>>>>> All the kmemdump module needs is a start and a length, correct? So the
+>>>>> only tricky part is getting the length.
+>>>>
+>>>> I also have in mind the kernel user case. How would a kernel programmer
+>>>> want to add some kernel structs/info/buffers into kmemdump such that the
+>>>> dump would contain their data ? Having "KMEMDUMP_VAR(...)" looks simple
+>>>> enough.
+>>>
+>>> The other way around, why should anybody have a saying in adding their
+>>> data to kmemdump? Why do we have that all over the kernel?
+>>>
+>>> Is your mechanism really so special?
+>>>
+>>> A single composer should take care of that, and it's really just start +
+>>> len of physical memory areas.
+>>>
+>>>> Otherwise maybe the programmer has to write helpers to compute lengths
+>>>> etc, and stitch them into kmemdump core.
+>>>> I am not saying it's impossible, but just tiresome perhaps.
+>>>
+>>> In your patch set, how many of these instances did you encounter where
+>>> that was a problem?
+>>>
+>>>>>
+>>>>> One could just add a const variable that holds this information, or even
+>>>>> better, a simple helper function to calculate that.
+>>>>>
+>>>>> Maybe someone else reading along has a better idea.
+>>>>
+>>>> This could work, but it requires again adding some code into the
+>>>> specific subsystem. E.g. struct_rq_get_size()
+>>>> I am open to ideas , and thank you very much for your thoughts.
+>>>>
+>>>>>
+>>>>> Interestingly, runqueues is a percpu variable, which makes me wonder if
+>>>>> what you had would work as intended (maybe it does, not sure).
+>>>>
+>>>> I would not really need to dump the runqueues. But the crash tool which
+>>>> I am using for testing, requires it. Without the runqueues it will not
+>>>> progress further to load the kernel dump.
+>>>> So I am not really sure what it does with the runqueues, but it works.
+>>>> Perhaps using crash/gdb more, to actually do something with this data,
+>>>> would give more insight about its utility.
+>>>> For me, it is a prerequisite to run crash, and then to be able to
+>>>> extract the log buffer from the dump.
+>>>
+>>> I have the faint recollection that percpu vars might not be stored in a
+>>> single contiguous physical memory area, but maybe my memory is just
+>>> wrong, that's why I was raising it.
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>>    From my perspective it's much simpler and cleaner to just add the
+>>>>>> kmemdump annotation macro inside the sched/core.c as it's done in my
+>>>>>> patch. This macro translates to a noop if kmemdump is not selected.
+>>>>>
+>>>>> I really don't like how we are spreading kmemdump all over the kernel,
+>>>>> and adding complexity with __section when really, all we need is a place
+>>>>> to obtain a start and a length.
+>>>>>
+>>>>
+>>>> I understand. The section idea was suggested by Thomas. Initially I was
+>>>> skeptic, but I like how it turned out.
+>>>
+>>> Yeah, I don't like it. Taste differs ;)
+>>>
+>>> I am in particular unhappy about custom memblock wrappers.
+>>>
+>>> [...]
+>>>
+>>>>>>
+>>>>>> To have this working outside of printk, it would be required to walk
+>>>>>> through all the printk structs/allocations and select the required info.
+>>>>>> Is this something that we want to do outside of printk ?
+>>>>>
+>>>>> I don't follow, please elaborate.
+>>>>>
+>>>>> How is e.g., log_buf_len_get() + log_buf_addr_get() not sufficient,
+>>>>> given that you run your initialization after setup_log_buf() ?
+>>>>>
+>>>>>
+>>>>
+>>>> My initial thought was the same. However I got some feedback from Petr
+>>>> Mladek here :
+>>>>
+>>>> https://lore.kernel.org/lkml/aBm5QH2p6p9Wxe_M@localhost.localdomain/
+>>>>
+>>>> Where he explained how to register the structs correctly.
+>>>> It can be that setup_log_buf is called again at a later time perhaps.
+>>>>
+>>>
+>>> setup_log_buf() is a __init function, so there is only a certain time
+>>> frame where it can be called.
+>>>
+>>> In particular, once the buddy is up, memblock allocations are impossible
+>>> and it would be deeply flawed to call this function again.
+>>>
+>>> Let's not over-engineer this.
+>>>
+>>> Peter is on CC, so hopefully he can share his thoughts.
+>>>
+>>
+>> Hello David,
+>>
+>> I tested out this snippet (on top of my series, so you can see what I
+>> changed):
+>>
+>>
+>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+>> index 18ba6c1e174f..7ac4248a00e5 100644
+>> --- a/kernel/sched/core.c
+>> +++ b/kernel/sched/core.c
+>> @@ -67,7 +67,6 @@
+>>   #include <linux/wait_api.h>
+>>   #include <linux/workqueue_api.h>
+>>   #include <linux/livepatch_sched.h>
+>> -#include <linux/kmemdump.h>
+>>
+>>   #ifdef CONFIG_PREEMPT_DYNAMIC
+>>   # ifdef CONFIG_GENERIC_IRQ_ENTRY
+>> @@ -120,7 +119,12 @@
+>> EXPORT_TRACEPOINT_SYMBOL_GPL(sched_update_nr_running_tp);
+>>   EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
+>>
+>>   DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+>> -KMEMDUMP_VAR_CORE(runqueues, sizeof(runqueues));
+>> +
+>> +size_t runqueues_get_size(void);
+>> +size_t runqueues_get_size(void)
+>> +{
+>> +       return sizeof(runqueues);
+>> +}
+>>
+>>   #ifdef CONFIG_SCHED_PROXY_EXEC
+>>   DEFINE_STATIC_KEY_TRUE(__sched_proxy_exec);
+>> diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
+>> index d808c5e67f35..c6dd2d6e96dd 100644
+>> --- a/kernel/vmcore_info.c
+>> +++ b/kernel/vmcore_info.c
+>> @@ -24,6 +24,12 @@
+>>   #include "kallsyms_internal.h"
+>>   #include "kexec_internal.h"
+>>
+>> +typedef void* kmemdump_opaque_t;
+>> +
+>> +size_t runqueues_get_size(void);
+>> +
+>> +extern kmemdump_opaque_t runqueues;
+> 
+> I would have tried that through:
+> 
+> struct rq;
+> extern struct rq runqueues;
+> 
+> But the whole PER_CPU_SHARED_ALIGNED makes this all weird, and likely
+> not the way we would want to handle that.
+> 
+>>   /* vmcoreinfo stuff */
+>>   unsigned char *vmcoreinfo_data;
+>>   size_t vmcoreinfo_size;
+>> @@ -230,6 +236,9 @@ static int __init crash_save_vmcoreinfo_init(void)
+>>
+>>          kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_VMCOREINFO,
+>>                               (void *)vmcoreinfo_data, vmcoreinfo_size);
+>> +       kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_runqueues,
+>> +                            (void *)&runqueues, runqueues_get_size());
+>> +
+>>          return 0;
+>>   }
+>>
+>> With this, no more .section, no kmemdump code into sched, however, there
+>> are few things :
+> 
+> I would really just do here something like the following:
+> 
+> /**
+>   * sched_get_runqueues_area - obtain the runqueues area for dumping
+>   * @start: ...
+>   * @size: ...
+>   *
+>   * The obtained area is only to be used for dumping purposes.
+>   */
+> void sched_get_runqueues_area(void *start, size_t size)
+> {
+> 	start = &runqueues;
+> 	size = sizeof(runqueues);
+> }
+> 
+> might be cleaner.
+> 
 
--- 
-2.49.0
+How about this in the header:
+
+#define DECLARE_DUMP_AREA_FUNC(subsys, symbol) \
+
+void subsys ## _get_ ## symbol ##_area(void **start, size_t *size);
+
+
+
+#define DEFINE_DUMP_AREA_FUNC(subsys, symbol) \
+
+void subsys ## _get_ ## symbol ##_area(void **start, size_t *size)\
+
+{\
+
+        *start = &symbol;\
+
+        *size = sizeof(symbol);\
+
+}
+
+
+then, in sched just
+
+DECLARE_DUMP_AREA_FUNC(sched, runqueues);
+
+DEFINE_DUMP_AREA_FUNC(sched, runqueues);
+
+or a single macro that wraps both.
+
+would make it shorter and neater.
+
+What do you think ?
+
+> 
+> Having said that, if you realize that there is a fundamental issue with 
+> what I propose, please speak up.
+> 
+> So far, I feel like there are only limited number of "suboptimal" cases 
+> of this kind, but I might be wrong of course.
+> 
 
