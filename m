@@ -1,165 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2B14A33;
-	Wed, 27 Aug 2025 01:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1600530CD95;
+	Wed, 27 Aug 2025 01:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756258490; cv=none; b=EECLdGyNgIk3udQHT6PaWy7sCtc+9wEQs6w6/YR1Iz51JgFWRrjOtC94/BnAewfydoiLlnEv9Ri7rBwmsuklCS1Hr6qwLtDWAUnI5zGgW7HeNRTUTqgwthsz6AdtQ6drfFfulCSk06LdgxZpIcPG75GP5/qaxs94ODz3t5yWwCc=
+	t=1756258962; cv=none; b=ibktkUvPc6kEtpLJTo8FWLSLp4bkbE+5uCUkSQU4Pgy+ZD1aq82GGWb/o65V23D7x+ZlFyBwtH5NAIsUa3zlRNCr/44+dgs5KVNJjzMtkqEW6D8mdtScmmYuaIb4T5Rx/Zfjl+YMDNui5HiMjQpobxgXFma96lgOV5VJfSUvGzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756258490; c=relaxed/simple;
-	bh=4eiZvo+hL550WY6CZyKaK4fRP2VeqMte3/ZsoSFK2Bs=;
+	s=arc-20240116; t=1756258962; c=relaxed/simple;
+	bh=uH2VFSJMyCnSLjpcnGx56opsnpfl5naJHZ3WXF5SFAM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XEfbsOs1FS8yj/xlGm4jnruqTWDGKnep6QKoqOJKz1MQqRYCI8pPRbewK+YA/z/G7CYjEBq5C/nzu9RWPI3X565+qd3UGebZ/Uua8HL/5aj32uWU7k+IabHYYabyjLe3ytmDf7PwBWea7RjbFhLwqyifzC6T3bSy3/HHDZiLLOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iNIp4MzC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iNIp4MzC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78EAC4CEF1;
-	Wed, 27 Aug 2025 01:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756258489;
-	bh=4eiZvo+hL550WY6CZyKaK4fRP2VeqMte3/ZsoSFK2Bs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iNIp4MzCAz/2Su6Q9ie6SJSrrgadQvUrBTeD8Iqgom97Azq/yiTX5YT/3bytvQl+R
-	 c77dFs4j5ymA0p96r2A9q2eclhACDC0BeMXTZP3LnGFleYKgQ9mzTP+GLP+5gY/9Ld
-	 t7KLAwBt93khS7Q2I4taw+eQH0o+6z/5mLHT/GtxiSd8i5gwIHOrQUTdUKOkadkKml
-	 BoJhCES05WcIZSHiAvdbLB6rQmXqn6pV9HA0YzCMKsq74yPYyioPU2x3Lxud9h9HZh
-	 77zbyyS0CGOO7salab+iMazbkewswWMxdSjGCMEwRVQAwc5Bm5GbuGBYLRhm1vqbze
-	 /uP+OMYTMYmNg==
-Date: Tue, 26 Aug 2025 18:34:44 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@outflux.net>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Jonathan Corbet <corbet@lwn.net>, x86@kernel.org,
-	linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, llvm@lists.linux.dev,
+	 Content-Type:Content-Disposition:In-Reply-To; b=FWEEeKqu/8RgS81NY3rFwGip0t4pkXeSesXxllCRwCjp1rr9WLER5gJO/56qzNgi0SyJwNzPjiFrds+SwiiRxtvEocEcAmgl77vds/Iigpg/vLOph3g3CwZHkhn0pr/U0q/pCfGzTHHoDbnJfU2ms+38Uu8E9M2zNDLsfxj55Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: esmtpsz20t1756258933t53080512
+X-QQ-Originating-IP: 1lOMaAuA9nfuwe2FeABSvz6MykdgCUNe1qBMkBQJ4Vg=
+Received: from localhost ( [203.174.112.180])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 27 Aug 2025 09:42:11 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 10885226712742933272
+Date: Wed, 27 Aug 2025 09:42:11 +0800
+From: Yibo Dong <dong100@mucse.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
+	gur.stavi@huawei.com, maddy@linux.ibm.com, mpe@ellerman.id.au,
+	danishanwar@ti.com, lee@trager.us, gongfan1@huawei.com,
+	lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
+	gustavoars@kernel.org, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 5/5] kcfi: Rename CONFIG_CFI_CLANG to CONFIG_CFI
-Message-ID: <20250827013444.GA2859318@ax162>
-References: <20250825141316.work.967-kees@kernel.org>
- <20250825142603.1907143-5-kees@kernel.org>
- <CANiq72kc7Ky6+7Ny7jR04s8vU-g23qBQC0rQrOZDxDzXT+m1TQ@mail.gmail.com>
- <202508250834.E2456B9@keescook>
- <CANiq72mQsLqhpX29NP3Zm8HZ5m429tSXjgFcRYJM3e=Zac1G1w@mail.gmail.com>
- <9CCDBE93-7DBD-41D0-B9B6-05900F2AB1EE@outflux.net>
+Subject: Re: [PATCH net-next v7 4/5] net: rnpgbe: Add basic mbx_fw support
+Message-ID: <05B2D818DB1348E6+20250827014211.GA469112@nic-Precision-5820-Tower>
+References: <20250822023453.1910972-1-dong100@mucse.com>
+ <20250822023453.1910972-5-dong100@mucse.com>
+ <316f57e3-5953-4db6-84aa-df9278461d30@linux.dev>
+ <82E3BE49DB4195F0+20250826013113.GA6582@nic-Precision-5820-Tower>
+ <bbdabd48-61c0-46f9-bf33-c49d6d27ffb0@linux.dev>
+ <8C1007761115185D+20250826110539.GA461663@nic-Precision-5820-Tower>
+ <bd1d77b2-c218-4dce-bbf6-1cbdecabb30b@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9CCDBE93-7DBD-41D0-B9B6-05900F2AB1EE@outflux.net>
+In-Reply-To: <bd1d77b2-c218-4dce-bbf6-1cbdecabb30b@lunn.ch>
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MNsLylogNlqc6nEp4WVIUhq56of8guHz52MSHB8r89kVkvD5Sqrq9HQD
+	7V1CMGDOCVUhFU4MNcBTcz4D+A+5nJmGIiU/HOh+0o3A1KzX6gRwhbARZJ9Jh7jPegIH80M
+	xqRrxn840BbUOJBXhtaDbLpb3OtHqi/3rqpP+7vM7h9DPb+BGHAaEcij6/VQzDjBjLahzWr
+	SukMm0WfpCrbPOlSq/8BWYA45jhx/rqSTxYB6MPh38iqKSc8g3uHkxQJyuZcRO7oyEp7glv
+	MtU07FrRXgTgUXDIjOYWkjTFw0bpCM8NibLSehKerqXOAj1oBsz3p37B0NjJuJ7a8LKDkKZ
+	YROF59AsqPduzBBYpgjakUOt3l5nSV+1Z8yg+7PxaIaDVBhiL4HN+lvsvNU+WEteW1/P1ng
+	x/WfoUqt1CzhPjzyTZLmuXij5WIj5aQu+yGW4dLzjHJ3IGF4fdsrsh+w0cy1Xul9mfyxq+u
+	YmmnMFZysLpccjPKVt8/qU6omzGArZXpnHmF7eBsh2JDUmJGXW7YBGZQUzIL7B1kVVWrGfz
+	7fFQPPseO8huV2WchoUM2MMWRVFEH9GvZP4dWnCztZRAcQumInWnFn7pFAPNQYrHupKkvs/
+	Tzh3D2jVcfI9DwobeFgv5+8SqmGcDeBqnvRhxhe07dvA+PzxCp8IDvb8E9xNUV8aVd3LoHm
+	sjsSQYbI84wGqSL0eLHEjEdvzS6iNCYDYM47uJHTIhLUVR/zU/3TOwB4Om9RVYOODYEnz6D
+	pad7SxviHVzTwDKSQWqjaDX8/oH31wcjdPsp7Fd0ItmwBL9JVuxgp//Vu9BfGGzAG8rvX45
+	8sTj05502IWdtL1fxgFFMgRVlL8a5dUmrHmu5wT3BtKdCB+ustkp3vj+Eg347yh8igVV0G8
+	gPPCziKvbdWVZRgFygVMji6gqm0Hf/RkSE/dDtXuRjODqzKgwoyCgbVfcbyc7xedNiH37Pp
+	Ffqyzbeto8fzam3t714l2BYyLBIHDq7zDkvpwWa/XeWEUNlJFL7OcjvE/
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-On Mon, Aug 25, 2025 at 03:31:34PM -0400, Kees Cook wrote:
-> On August 25, 2025 1:00:22 PM EDT, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
-> >On Mon, Aug 25, 2025 at 5:35 PM Kees Cook <kees@kernel.org> wrote:
-> >>
-> >> Yeah, that's a good idea. What the right way to do that?
-> >>
-> >> config CFI_CLANG
-> >>         bool "Use Clang's Control Flow Integrity (CFI)"
-> >>         depends on ARCH_SUPPORTS_CFI
-> >>         select CFI
-> >>
-> >> ?
-> >
-> >I don't recall what is the idiomatic solution for renames, but I
-> >remember Linus talking about this topic and about avoiding losing old
-> >values if possible (perhaps getting a new question in `oldconfig` is
-> >OK as long as the `olddefconfig` respects the old value).
-> >
-> >I think your suggestion above will still make it appear twice in
-> >`menuconfig` -- there may be a way to play with visibility to make it
-> >better.
-> >
-> >A simple possibility I can think of (assuming it works) is having the
-> >CFI symbol for the time being introduced just as a `def_bool
-> >CFI_CLANG` for a few releases so that people get the new one in their
-> >configs.
+On Tue, Aug 26, 2025 at 02:39:07PM +0200, Andrew Lunn wrote:
+> > Yes. It is not safe, so I 'must wait_event_timeout before free cookie'....
+> > But is there a safe way to do it?
+> > Maybe:
+> > ->allocate cookie
+> >   -> map it to an unique id
+> >     ->set the id to req->cookie
+> >       ->receive response and check id valid? Then access cookie?
 > 
-> Ah, I think this works:
+> This is part of why adding cookies in a separate patch with a good
+> commit message is important.
 > 
-> config CFI_CLANG
->     bool
+> Please take a step back. What is the big picture? Why do you need a
+> cookie? What is it used for? If you describe what your requirements
+> are, we might be able to suggest a better solution, or point you at a
+> driver you can copy code from.
 > 
-> config CFI
->     bool "...."
->     default CFI_CLANG
+> 	Andrew
 > 
-> I will add that for v2.
 
-That does not appear to work for me. I applied
+I try to explain the it:
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index c25a45d9aa96..0d3ed03c76c2 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -876,8 +876,12 @@ config ARCH_SUPPORTS_CFI
- config ARCH_USES_CFI_TRAPS
-        bool
+driver-->fw, we has two types request:
+1. without response, such as mucse_mbx_ifinsmod
+2. with response, such as mucse_fw_get_macaddr
 
-+config CFI_CLANG
-+       bool
-+
- config CFI
-        bool "Use Kernel Control Flow Integrity (kCFI)"
-+       default CFI_CLANG
-        depends on ARCH_SUPPORTS_CFI
-        depends on $(cc-option,-fsanitize=kcfi)
-        help
+fw --> driver, we has one types request:
+1. link status (link speed, duplex, pause status...)
 
-on top of this series and
+fw tiggers irq when it sends response or request.
+In order to handle link status timely, we do an irqhandle like this:
 
-  CONFIG_CFI_CLANG=y
-  # CONFIG_CFI_ICALL_NORMALIZE_INTEGERS is not set
-  # CONFIG_CFI_PERMISSIVE is not set
+static int rnpgbe_rcv_msg_from_fw(struct mucse *mucse)
+{
+        u32 msgbuf[MUCSE_FW_MAILBOX_WORDS];
+        struct mucse_hw *hw = &mucse->hw;
+        struct mbx_fw_cmd_reply *reply;
+        int retval;
+	/* read mbx data out */
+        retval = mucse_read_mbx(hw, msgbuf, MUCSE_FW_MAILBOX_WORDS);
+        if (retval)
+                return retval;
 
-gets turned into
+        reply = (struct mbx_fw_cmd_reply *)msgbuf;
+	/* judge request or response */
+        if (le16_to_cpu(reply->flags) & FLAGS_DD) {
+		/* if it is a response, call wake_up(cookie) */
+                return rnpgbe_mbx_fw_reply_handler(mucse,
+                                (struct mbx_fw_cmd_reply *)msgbuf);
+        } else {
+		/* if it is a request, handle link status */
+                return rnpgbe_mbx_fw_req_handler(mucse,
+                                (struct mbx_fw_cmd_req *)msgbuf);
+        }
+}
 
-  # CONFIG_CFI is not set
+And driver requests with response is bellow 'without' irqhandle:
 
-after olddefconfig. CONFIG_CFI_CLANG has to be user selectable with a
-prompt but the only solution I can think of at the moment results in a
-duplicate prompt for Clang.
+static int mucse_fw_send_cmd_wait(struct mucse_hw *hw,
+				  struct mbx_fw_cmd_req *req,
+				  struct mbx_fw_cmd_reply *reply)
+{
+...
+	mucse_write_posted_mbx(hw, (u32 *)req, len);
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index c25a45d9aa96..93bf9b41a9de 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -876,8 +876,17 @@ config ARCH_SUPPORTS_CFI
- config ARCH_USES_CFI_TRAPS
-        bool
+	...
+	/* but as irqhandle be added, mbx data is read out in the
+	 * handler, mucse_read_posted_mbx cannot read anything */
+	mucse_read_posted_mbx(hw, (u32 *)reply, sizeof(*reply));
 
-+config CFI_CLANG
-+       bool "Use Kernel Control Flow Integrity (kCFI) - Transitional" if CC_IS_CLANG
-+       select CFI
-+       depends on ARCH_SUPPORTS_CFI
-+       depends on $(cc-option,-fsanitize=kcfi)
-+       help
-+         This is a transitional symbol to CONFIG_CFI, see its help text
-+         for more information.
-+
- config CFI
--       bool "Use Kernel Control Flow Integrity (kCFI)"
-+       bool "Use Kernel Control Flow Integrity (kCFI)" if CC_IS_GCC
-        depends on ARCH_SUPPORTS_CFI
-        depends on $(cc-option,-fsanitize=kcfi)
-        help
+}
 
-Maybe that does not matter for the sake of keeping things working?
-Otherwise, we could just keep things as they are with the patch set and
-expect people to actually use oldconfig or diff the results of
-olddefconfig (which I think is good practice anyways).
+To solve mucse_read_posted_mbx cannot read data with irq, we add 'cookie'.
+After mucse_write_posted_mbx, call wait_event_timeout. wake_up is called
+in irqhandle.
 
-Cheers,
-Nathan
+Thanks for your feedback.
+
