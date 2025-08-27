@@ -1,126 +1,205 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6D827FD59
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Aug 2025 16:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0EB2EBDD6;
+	Wed, 27 Aug 2025 19:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756313204; cv=none; b=XnwJEpFCNlhM/VmqxdKwQWW364WCJy811xctlAaVz0QF33A0Nz+dYKnN/ptDerySeU2qC9HX3SWCcRqRZ8sYojCOOxInpLB/Qh7aKtSDT97Jdzhp/ZQhSK1gjIGcwGMRNhTviUm5IEkndt+B7IQkCxk8oCKzjcptCrgAX41WOQE=
+	t=1756323501; cv=none; b=QvigeR8ivRLf/wveFYocoa/5fuv4KzWmHVPDTCDAM/b49pzC1ipqRiWuYZfSkgOZTjavjAm2pOrzUXdgN442N877G101nBRfEhueIzyIS45Uvze3gXR6KIQw88Ff2rB8vo5232epSyAEwMhVr9oY/kYzlJ+JMkkK1UuAbmE5JDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756313204; c=relaxed/simple;
-	bh=/Oe8mL8TjjkGnR2jG5Rxs9VLauseuU6oqwYerqQXRro=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nKEBLR6ndlxa4o0P4CWIPNyNSgF9c/L1S3AR9muwDUYhYj9KSq8PTw+fFYXwe5dPv/JPdC4DXUSRA9RbvR32Tb4bLqK8mEsJ6EyODAT9wH9T0JexZHzeCi5E47F2m/JB+h+pZHHDwHjhMYklH1MkiBW6I1SaP47kdvxwQcm4lLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Y2tS2rwK; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1756323501; c=relaxed/simple;
+	bh=W1AubzeJB5Z8LwdDQVCG3K8ifP+7BeoXcKAJfA+3/kA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VAEJn9NXB67a7gRtyfEOqGK714xauNu2D6r8tFxAq1CWvIG4h49+TWVLP6qQC6TcAm37FslOxKh/nBhXP7sz2qrTxmUR2/5VBU17AUdI7N3PEiWrSZbsuzSgwtCeJbqxOozqcWfTwlU3C4ip/r4Mq7XlP4eB0VF/jW20v/QZ3cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EH7zDK5u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Y2tS2rwK"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-55f4345cfd3so58341e87.1
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Aug 2025 09:46:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756313200; x=1756918000; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/Oe8mL8TjjkGnR2jG5Rxs9VLauseuU6oqwYerqQXRro=;
-        b=Y2tS2rwKaOZMyZh9ka58faXvzXrL50njDDYSugjXepp16GhbLbrRDic1EMKDEsQu7A
-         Jo8yPVvxwUMzfjzBwV2r9dxBxeTg8sgMMKdtJapvfsRogNaVdSQnnGdOH4To/VCgFtyC
-         CUbfx+Y3/frlByut4tTXIzvdnS1NQ/u3KJM1Vskoxza1szm03/bmnwdDzpkH5RArG2My
-         2gh4gwuP36bc8X5O0lejMIEvU5eBN5SnnfgCUXUpwA1NBXYKXNpIyGPt8sbzR72Jml1z
-         UlSgYZSxDKJluIOqB94vh/N4j9nleZMEJMlr/u6VmGxhfKuC3Q0WKTQtytRdteJ+0JV5
-         cE1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756313200; x=1756918000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/Oe8mL8TjjkGnR2jG5Rxs9VLauseuU6oqwYerqQXRro=;
-        b=ZiyP2x09jEEMqD6AAmtpi3SqDx5je4VW+Yx30kcwb1Qsm4tOxfA3nR8xiaPHm81oBg
-         rwcYMOVwmyhx+cgnVbgNca+ud0hXiSftzPY5GtWbcwZ2q3oxSYmwTmNLyWiGMTQXe7c3
-         QBYynX9PlssADGHQwSbpzwa8wD7HRQOwKC/HRvjRA7YXXZDLwChWnGA1bw/+k/6ZpT18
-         FHJuSAq1eKB2sswa1IpnzN5vj825cQlWB53s1rS4jsjhhe8Sz24oCKpq+GP7Zk4NLnsg
-         pwnNZ0hJaUyjodL2MbxUAftpWVqxdUFilIG9anIGDEKT7ZzjUwLHvLzSqGIdDF4uwWl1
-         jN5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXK3lSLfvX3BAebRhLbcPDO2zrM7D/rPTYBXSqZFZNFLiWhFnfutEJVtjWQjmFRBRsGjzPFNZrcEI8OhtJIjAA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZJnbVdi8PDteAxv+gazc/7FMCIJBulglpmLomogNPurrWP549
-	QrEn/aCqIsToZHJEbgYl58xs6JPnvT5mh8cQaf835Az3UkgC87lU8DQVt+RHL2AgSh4E0qp5Ghp
-	FiZiguH4R2vx02s3X7TV7wNFWtvLliLw8+PzQ4eYo9Q==
-X-Gm-Gg: ASbGncv13APHV5OP5+0UvFqBZjLZwMW6CsrZbzKpSxyqWxWsdNdj14o4JrYct+nSPf9
-	4v28ajJH3FXU+e1NZLAZKIcOf+vriH0T1r8swuC8b0VL5BJDo3wyJYNlLfLZ5bktuXgx5B5kdtX
-	kQdIqfQaRl6328et1+b9N7A/5Z08s8YCO2ozb/sZwgUnQf/l+IxtHBzpTQGYkUJEZCX+4Zi04YH
-	Xqmc6PZYcKj6W/cnt9GWfkAsKl1lRiCjHbva/qLSiqjI5HyWg==
-X-Google-Smtp-Source: AGHT+IH2vScJrK3ld667OkWoypLYcKly6TqnbjFjPvpTB4KCLVEthUMwQrvNGz6iiIbdkdd5rCAEnq3AM7MI6KeEyo4=
-X-Received: by 2002:a05:6512:138c:b0:553:2969:1d6d with SMTP id
- 2adb3069b0e04-55f4f4c6a98mr2026962e87.13.1756313200214; Wed, 27 Aug 2025
- 09:46:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EH7zDK5u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1760C4CEEB;
+	Wed, 27 Aug 2025 19:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756323501;
+	bh=W1AubzeJB5Z8LwdDQVCG3K8ifP+7BeoXcKAJfA+3/kA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EH7zDK5u6fdSChttEZ9MV34eaB/tec1yaLBsuBo62yZMBidjNVD3N2cfcpetw5OlX
+	 dJwRpObDkmjwGuaEeXNcXsBTkxrloAbzi8JdZ0ou0e1d6kpAPZqFf4WZIolLovvjuL
+	 NfPNU9xcO+AxflQmOxwBl/n3JmC5OLK8+qePfSEKNJFf8YgASTiiRPhij5JYDJWxUj
+	 B7V9W5raCFZMwDkbFJOvSMd641UP4EnSUSoI/B72ovoBaT7nE5yb/JfDIjVkJehFBO
+	 auGCVBbIQHa226riQz1U1ceP19zIf1WljY658hJJqpXQA2G7m0vw5u9tkyjn84TBe8
+	 sefDaIsTF223w==
+Date: Wed, 27 Aug 2025 12:38:15 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Kees Cook <kees@outflux.net>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>, x86@kernel.org,
+	linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 5/5] kcfi: Rename CONFIG_CFI_CLANG to CONFIG_CFI
+Message-ID: <20250827193815.GA2293657@ax162>
+References: <20250825141316.work.967-kees@kernel.org>
+ <20250825142603.1907143-5-kees@kernel.org>
+ <CANiq72kc7Ky6+7Ny7jR04s8vU-g23qBQC0rQrOZDxDzXT+m1TQ@mail.gmail.com>
+ <202508250834.E2456B9@keescook>
+ <CANiq72mQsLqhpX29NP3Zm8HZ5m429tSXjgFcRYJM3e=Zac1G1w@mail.gmail.com>
+ <9CCDBE93-7DBD-41D0-B9B6-05900F2AB1EE@outflux.net>
+ <20250827013444.GA2859318@ax162>
+ <56c2b1ce-00a4-403c-9927-79bfd9a23574@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250815-pinctrl-gpio-pinfuncs-v5-0-955de9fd91db@linaro.org>
- <CACRpkdaDGmdhaik+1saRv7Ts4myQ+tg1aQqGU3xQyT7ma8dJFw@mail.gmail.com>
- <CAHp75VephepLq61HrVy=PX2oKUQd5NK2qS-vOC5h_NR65td3Uw@mail.gmail.com>
- <CACRpkda4soRCLF5=W=6R4wnwT3pjk743j022XfJxjTTQzuarAA@mail.gmail.com>
- <534ad082-08fa-42c0-9c24-f0c11af7d5b2@sirena.org.uk> <CAMRc=Mdn0_yPXyYq4sbvH4P9-h71vEc4arLPBfSk1PiEFaB7jQ@mail.gmail.com>
- <1804d9dc-8814-47d4-af88-c819c3f17bc0@sirena.org.uk>
-In-Reply-To: <1804d9dc-8814-47d4-af88-c819c3f17bc0@sirena.org.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 27 Aug 2025 18:46:28 +0200
-X-Gm-Features: Ac12FXzUBjVjZcm1OFCa8B8Pt22rGMmSNEEFj8GwunzU7aycJyqw28vaNlWwNSA
-Message-ID: <CAMRc=MdKgqa+vjhHvD2+Tjw5NwBtFv-0aUivi5UuEQd+n4KxmA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/15] pinctrl: introduce the concept of a GPIO pin
- function category
-To: Mark Brown <broonie@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
-	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Chen-Yu Tsai <wenst@chromium.org>, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <56c2b1ce-00a4-403c-9927-79bfd9a23574@infradead.org>
 
-On Wed, Aug 27, 2025 at 12:22=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
-ote:
->
-> On Tue, Aug 26, 2025 at 08:19:37PM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Aug 20, 2025 at 8:41=E2=80=AFPM Mark Brown <broonie@kernel.org>=
- wrote:
-> > > On Wed, Aug 20, 2025 at 09:12:49AM +0200, Linus Walleij wrote:
->
-> > > > The qualcomm 32bit platforms fail in next anyway so I dropped the p=
-atches
-> > > > for now.
->
-> > > FWIW the i.MX8MP also seems to have been broken by this:
->
-> > I can't test it unfortunately - would you mind sharing some info on
-> > what's failing exactly?
->
-> I've just got the log I linked above.
+On Wed, Aug 27, 2025 at 12:35:12AM -0700, Randy Dunlap wrote:
+> On 8/26/25 6:34 PM, Nathan Chancellor wrote:
+> > On Mon, Aug 25, 2025 at 03:31:34PM -0400, Kees Cook wrote:
+> >> On August 25, 2025 1:00:22 PM EDT, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
+> >>> On Mon, Aug 25, 2025 at 5:35 PM Kees Cook <kees@kernel.org> wrote:
+> >>>>
+> >>>> Yeah, that's a good idea. What the right way to do that?
+> >>>>
+> >>>> config CFI_CLANG
+> >>>>         bool "Use Clang's Control Flow Integrity (CFI)"
+> >>>>         depends on ARCH_SUPPORTS_CFI
+> >>>>         select CFI
+> >>>>
+> >>>> ?
+> >>>
+> >>> I don't recall what is the idiomatic solution for renames, but I
+> >>> remember Linus talking about this topic and about avoiding losing old
+> >>> values if possible (perhaps getting a new question in `oldconfig` is
+> >>> OK as long as the `olddefconfig` respects the old value).
+> >>>
+> >>> I think your suggestion above will still make it appear twice in
+> >>> `menuconfig` -- there may be a way to play with visibility to make it
+> >>> better.
+> >>>
+> >>> A simple possibility I can think of (assuming it works) is having the
+> >>> CFI symbol for the time being introduced just as a `def_bool
+> >>> CFI_CLANG` for a few releases so that people get the new one in their
+> >>> configs.
+> >>
+> >> Ah, I think this works:
+> >>
+> >> config CFI_CLANG
+> >>     bool
+> >>
+> >> config CFI
+> >>     bool "...."
+> >>     default CFI_CLANG
+> >>
+> >> I will add that for v2.
+> > 
+> > That does not appear to work for me. I applied
+> > 
+> > diff --git a/arch/Kconfig b/arch/Kconfig
+> > index c25a45d9aa96..0d3ed03c76c2 100644
+> > --- a/arch/Kconfig
+> > +++ b/arch/Kconfig
+> > @@ -876,8 +876,12 @@ config ARCH_SUPPORTS_CFI
+> >  config ARCH_USES_CFI_TRAPS
+> >         bool
+> > 
+> > +config CFI_CLANG
+> > +       bool
+> > +
+> >  config CFI
+> >         bool "Use Kernel Control Flow Integrity (kCFI)"
+> > +       default CFI_CLANG
+> >         depends on ARCH_SUPPORTS_CFI
+> >         depends on $(cc-option,-fsanitize=kcfi)
+> >         help
+> > 
+> > on top of this series and
+> > 
+> >   CONFIG_CFI_CLANG=y
+> >   # CONFIG_CFI_ICALL_NORMALIZE_INTEGERS is not set
+> >   # CONFIG_CFI_PERMISSIVE is not set
+> > 
+> > gets turned into
+> > 
+> >   # CONFIG_CFI is not set
+> > 
+> > after olddefconfig. CONFIG_CFI_CLANG has to be user selectable with a
+> 
+> Could/did you test with 'oldconfig' instead?
+> 
+> olddefconfig is going to use the default value from the Kconfig file,
+> which if CFI_CLANG which is undefined/No/Not set.
+> 
+> oldconfig will use the old value from the .config file.
 
-So, I've been looking at this bisect email and clicking the links to
-LAVA jobs and I can't find anything. Does it fail to build? Fail at
-run-time? I'm not sure how to read this.
+I am not sure I understand what you mean here. With the series as it is
+or Kees's suggested fix, oldconfig still prompts the user to enable
+CONFIG_CFI with CONFIG_CFI_CLANG=y in the old configuration. Both Miguel
+and I allude to that being fine but it would be really nice if users
+with CONFIG_CFI_CLANG=y were automatically transitioned to CONFIG_CFI=y
+without any action on their part. That seems to be in line with how
+Linus feels even as recently as this past merge window:
 
-Bart
+https://lore.kernel.org/CAHk-=wgO0Rx2LcYT4f75Xs46orbJ4JxO2jbAFQnVKDYAjV5HeQ@mail.gmail.com/
+
+Another idea I had to avoid this is introducing CONFIG_CFI_GCC as a user
+selectable symbol and making CONFIG_CFI the hidden symbol that both
+compiler symbols select. After a couple of releases (or maybe the next
+LTS), both CONFIG_CFI_CLANG and CONFIG_CFI_GCC could be eliminated with
+CONFIG_CFI becoming user selectable, which would keep things working
+since CONFIG_CFI=y will be present in the previous configuration.
+
+Maybe it is not worth optimizing for this situation. I personally check
+my configurations into git so that it is easy to deal with losing
+things, as I have had my networking broken several times by new symbols
+and dependencies that do not get handled well with olddefconfig.
+
+> > prompt but the only solution I can think of at the moment results in a
+> > duplicate prompt for Clang.
+> > 
+> > diff --git a/arch/Kconfig b/arch/Kconfig
+> > index c25a45d9aa96..93bf9b41a9de 100644
+> > --- a/arch/Kconfig
+> > +++ b/arch/Kconfig
+> > @@ -876,8 +876,17 @@ config ARCH_SUPPORTS_CFI
+> >  config ARCH_USES_CFI_TRAPS
+> >         bool
+> > 
+> > +config CFI_CLANG
+> > +       bool "Use Kernel Control Flow Integrity (kCFI) - Transitional" if CC_IS_CLANG
+> > +       select CFI
+> > +       depends on ARCH_SUPPORTS_CFI
+> > +       depends on $(cc-option,-fsanitize=kcfi)
+> > +       help
+> > +         This is a transitional symbol to CONFIG_CFI, see its help text
+> > +         for more information.
+> > +
+> >  config CFI
+> > -       bool "Use Kernel Control Flow Integrity (kCFI)"
+> > +       bool "Use Kernel Control Flow Integrity (kCFI)" if CC_IS_GCC
+> >         depends on ARCH_SUPPORTS_CFI
+> >         depends on $(cc-option,-fsanitize=kcfi)
+> >         help
+> > 
+> > Maybe that does not matter for the sake of keeping things working?
+> > Otherwise, we could just keep things as they are with the patch set and
+> > expect people to actually use oldconfig or diff the results of
+> > olddefconfig (which I think is good practice anyways).
+> > 
+> > Cheers,
+> > Nathan
+> > 
+> 
+> -- 
+> ~Randy
+> 
