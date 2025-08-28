@@ -1,131 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C0430CD89;
-	Thu, 28 Aug 2025 08:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020C830F81A
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Aug 2025 12:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756371111; cv=none; b=CF1a4N1/A0WlYKH4O2WfhYeLjcOvy57cx8ISulJJBeeVnq/Rkb3GLRm+WDdTv3DOwLPbULPRtszQ6GVRpBPdbgSQwUNvQ7RGYwKeO1FU1o99t/dRoM5hUXYDWE32xRTHOQF2WTma24uSlpn5EiKad2fJu1a4ytT2LaC9Dm7AoHQ=
+	t=1756382936; cv=none; b=Y6ZmtnX1VjGaGQSB8BI2XFlGHS5BiMiT8Cwc+y4j/3wCQT8AyYf4Ku/35bpVGUH/NIJ+CsjrSr75cGN9GI0joVgQ8Tqbv65Zvt2c03ZcBuXqWFhrGpPKYKO6pfJp5hcw9SXv4JNO4vlgdsaWldWLSLp0BIs0gWD152XeA5IYeKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756371111; c=relaxed/simple;
-	bh=3YzdMt4Qw41h9On9I6WWC7I2bIUYtljay6e0dtrlQB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N9NnpuXbBnwSXIcIu2u23R/XRyrjdiogzPrL5rpKpTYtdQEDM30Bn123ZmbgZuqNh8tDZSivVJmd2ZwAPi1D036B5qDEUApKX9GHCydqvzIuBQ5/4SdWp73OGbFp/aqwrb9LJ6WjQIAbm+3B/m2CEeUlCgwAmL0Ye8bc9TCUm0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxUz4OE7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756382936; c=relaxed/simple;
+	bh=6sywg8iRUIcC+LFpPdVUH7AYVGdElA+Lmuu0M26yEpI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BnSoOytTzUvYE2QMyeJrsfhN/nLWIGyoHYFBRERPBY6KJ2ItOWnfAbWF6MfA8C4Asoepwklxh0wYBkG1KBwsYG/ZyHRC4FcmdMis11xMVUMFlqNxKPNA87x3km0/IDRzImXFi2PamixEvqyW5x9SExN5OQ1flYz+VkS2ibmMN9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oNgl824L; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxUz4OE7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAA74C4CEEB;
-	Thu, 28 Aug 2025 08:51:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756371110;
-	bh=3YzdMt4Qw41h9On9I6WWC7I2bIUYtljay6e0dtrlQB0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CxUz4OE7D1NGKWLHEwzYtKgtTZECCDgFwxLLFeEJiE5hR7TF/HdMp0veLk2o6qfDv
-	 KrmFmQeAKMvmoCGTsN2QEpErm2Z/n46G4CUgdan/vOqQ9+XQ8CHs5YjX+RarjPGWNt
-	 4fgJOJt8RG0sXbgl0kwnayykHV1vIbocYp6VitOqSIqH+RSsoJuBA8wtGEelQ3uPo5
-	 xCNZZZqIFBHNQnmi6rQHhugNHWi8N0tBMVwx+A651+DQ29n0lH/uQg909DvdKUppWS
-	 TcZgiGOplL37u0h/PshdhvyJVU8d5z8Os53O2PwwUjdkj2x+Ik0u8cPM+8bvR7rx0x
-	 zclGiA7ZwYXog==
-Date: Thu, 28 Aug 2025 10:51:44 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Alexey Klimov <alexey.klimov@linaro.org>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	NXP S32 Linux Team <s32@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Tony Lindgren <tony@atomide.com>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	imx@lists.linux.dev, linux-omap@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Chen-Yu Tsai <wenst@chromium.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v5 00/15] pinctrl: introduce the concept of a GPIO pin
- function category
-Message-ID: <aLAYoDyz8Xie4Dhb@finisterre.sirena.org.uk>
-References: <20250815-pinctrl-gpio-pinfuncs-v5-0-955de9fd91db@linaro.org>
- <CACRpkdaDGmdhaik+1saRv7Ts4myQ+tg1aQqGU3xQyT7ma8dJFw@mail.gmail.com>
- <CAHp75VephepLq61HrVy=PX2oKUQd5NK2qS-vOC5h_NR65td3Uw@mail.gmail.com>
- <CACRpkda4soRCLF5=W=6R4wnwT3pjk743j022XfJxjTTQzuarAA@mail.gmail.com>
- <534ad082-08fa-42c0-9c24-f0c11af7d5b2@sirena.org.uk>
- <CAMRc=Mdn0_yPXyYq4sbvH4P9-h71vEc4arLPBfSk1PiEFaB7jQ@mail.gmail.com>
- <1804d9dc-8814-47d4-af88-c819c3f17bc0@sirena.org.uk>
- <CAMRc=MdKgqa+vjhHvD2+Tjw5NwBtFv-0aUivi5UuEQd+n4KxmA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oNgl824L"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55f46ec2e00so589761e87.3
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Aug 2025 05:08:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756382933; x=1756987733; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6sywg8iRUIcC+LFpPdVUH7AYVGdElA+Lmuu0M26yEpI=;
+        b=oNgl824L+fC2moaJSL5/4UkdvCTWCcmZGxmMXiFhw15Nk4MO1i+znJi5GoZmPkjPdH
+         vV+qsgN4MHSjVwuL05hPonCM+KCuc3ltbN+pE0w3GTgSyAbUEipqSGvqelFmc4lmI5WK
+         gqxPx1T+vhr1w4hYkPiMIJ441sO3Fryo/L8pmtvDSBUbqIEcNRO72GZqtLzbuWMeKjMY
+         yOabpuU2TqX7Bi31pvfjDby/oCTRGhVnKhITNdAylRHg7IGLa1oknJAvglS5yZbMz8e4
+         i/z1vNqo6asC05PbHeW4Hi2209ndvK4hBH+S8lI3JA1vTbXV44oJe4r9G6T0tw73dQDh
+         qfpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756382933; x=1756987733;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6sywg8iRUIcC+LFpPdVUH7AYVGdElA+Lmuu0M26yEpI=;
+        b=RHhOgxuIl7nLhQTCdOPIxEl89qYk1PzE2GhP+y0gNWPIP5GNw4oobWRdULWgT7E7E5
+         m/6kUxQN9x8etR8k5Rw3CgGmwR4GWVgXZ0FU6TWNdfgRgnJ7ADPsoBt3p9m4sEQ5RLa5
+         +zTNcouF8ZceK7feNC9P+0ebeKBNVNYI/9m75xXUkx9acW1rW0vW9AcuqfOCCWxqyteT
+         I0QRoB7v/4me5RgNiZhyMYCKoY1tUbF4pCZ4ZY82rG+VPE28QPSK8C5yG4r+faKccRPw
+         FX53f/4CiIZKgZMyS1wSFNkpUggqmkJ+CWyTCFEKINyf6GNZZqoDPijKRtNzIC6tvU+2
+         Blvg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7jjQRZi79cFZ+/xoOZXSukwdh3xGiGx7V1kiFt1L+Rs/yXAWnp+NvUJIcF71ywaKc+YL/JMZukdFJPMPjVio=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzGSk7snxJubncJ1bLRE7w1qhaPGBICYz1bFllRFr4JpD13AhA
+	1qxlv17kFTIvDUMlzkRH7CZ2KrlInBmdcU8cxsokLCuw/Pdz66OOCHKOBWvljWWOHnuFVOeLq4b
+	FInIAnEjWqKSomLIYQ48zUV1USutVcmo77XT4vKdVhA==
+X-Gm-Gg: ASbGncvphDcmNONNfgNmoT+IOZn95jSzGzsADfs/ftfdobLxN2b6k1ztsSE8dQadEXX
+	cQp9FlVTcjt2KPxV8+KOdfgBjQvHqKlfSmo3iK7Zc4aX2Z1BRUtY0tJS/skOkgoGe6xBegYrgNl
+	Bd0mVgcVT7atygXZbevwNuQrKo8fy2cdbtbQ363Nl2yPZFwoBTN7JhGmMhNll5QoNHq3d3idt8D
+	YUOSw/FZ2cTWtF8Fw==
+X-Google-Smtp-Source: AGHT+IFg3M1giQrPALPiOG52C1JhN5PlRo7Xbw3xLek1Xu/lN9fGos88k4kc0ylKwurf0xKqLRcKUK5Mrc5xQ4s7/mM=
+X-Received: by 2002:a05:6512:6509:b0:55f:53bd:b137 with SMTP id
+ 2adb3069b0e04-55f53bdb50bmr2129835e87.31.1756382933088; Thu, 28 Aug 2025
+ 05:08:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="CMe5mpL7NfxBkMEj"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MdKgqa+vjhHvD2+Tjw5NwBtFv-0aUivi5UuEQd+n4KxmA@mail.gmail.com>
-X-Cookie: Filmed before a live audience.
-
-
---CMe5mpL7NfxBkMEj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20250825141316.work.967-kees@kernel.org> <20250825142603.1907143-5-kees@kernel.org>
+In-Reply-To: <20250825142603.1907143-5-kees@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 28 Aug 2025 14:08:42 +0200
+X-Gm-Features: Ac12FXys7kn8v1WW0NYPHPp9t-_9fYAtRAX-1QlGxBAnqlbjxr2PgRu8yVVv_Ow
+Message-ID: <CACRpkdYnM98n3JLBwVnVD3BRf4qrg4g9aBDqL_2Qb_cao6f5yA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] kcfi: Rename CONFIG_CFI_CLANG to CONFIG_CFI
+To: Kees Cook <kees@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@outflux.net>, 
+	Sami Tolvanen <samitolvanen@google.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Puranjay Mohan <puranjay@kernel.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Nathan Chancellor <nathan@kernel.org>, x86@kernel.org, 
+	linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 27, 2025 at 06:46:28PM +0200, Bartosz Golaszewski wrote:
-> On Wed, Aug 27, 2025 at 12:22=E2=80=AFPM Mark Brown <broonie@kernel.org> =
-wrote:
+On Mon, Aug 25, 2025 at 4:26=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
 
-> > I've just got the log I linked above.
+> From: Kees Cook <kees@outflux.net>
+>
+> The kernel's CFI implementation uses the KCFI ABI specifically, and is
+> not strictly tied to a particular compiler. In preparation for GCC
+> supporting KCFI[1], rename CONFIG_CFI_CLANG to CONFIG_CFI (along with
+> associated options).
+>
+> Link: https://lore.kernel.org/linux-hardening/20250821064202.work.893-kee=
+s@kernel.org [1]
+> Signed-off-by: Kees Cook <kees@outflux.net>
+> ---
+> Cc: Sami Tolvanen <samitolvanen@google.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Puranjay Mohan <puranjay@kernel.org>
 
-> So, I've been looking at this bisect email and clicking the links to
-> LAVA jobs and I can't find anything. Does it fail to build? Fail at
-> run-time? I'm not sure how to read this.
+Yeah that was not a good neutral name to begin with.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-It's failing prior to putting any output on the console.  I was also
-seeing an issue on i.MX6 so it might be all i.MX boards, same issue:
+I don't know about all that fuzz with providing the old symbol.
+Seems complex. Folks anyway have to go over their config
+symbols with every new kernel. But if people insist. I'm fine
+either way.
 
-   https://lava.sirena.org.uk/scheduler/job/1697667
-
-so it's possibly all the i.MX platforms failing.
-
---CMe5mpL7NfxBkMEj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmiwGJ8ACgkQJNaLcl1U
-h9Dgwgf/cCYgHVux4WcIOpHZVKvbhmDSDtzns435zt8WkkHs0HTefX6c8qkduloE
-AKCQvlOXq4w9mLYUJB73eu5lR2UZ9F/crY4Skm4QKJSl7xbmcTrUKkDh4anAgPCr
-TzCuAz0wBXpZDV6rbgGsv50bHpga2TkeYe4ILfO9i5WsXq884j6qH3q37x3LK9nk
-lbgltpZaBfzXdFk8ofMDg7QZQI/JDl0cR+6rsMZ60fSoehdmCHlO3Yk1ce8K2PMt
-jeC24eNQXFrAPZojnEdcSiHf7+AGirU7we0+4EPcomJRcfJDrf5lr4Mj/c5ofgNV
-ElALxe39ERW5FGeRn5q9m5nQ+3/dMQ==
-=cP5U
------END PGP SIGNATURE-----
-
---CMe5mpL7NfxBkMEj--
+Yours,
+Linus Walleij
