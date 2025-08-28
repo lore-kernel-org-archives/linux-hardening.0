@@ -1,37 +1,48 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4E8277C84;
-	Thu, 28 Aug 2025 06:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE7F23D7D3;
+	Thu, 28 Aug 2025 06:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756361686; cv=none; b=lfhNrGCfzlSej4Joo+yS5gnCXD16p8uhcAlHVm9+HxUoh68MxOjmOpHfyTkvyg437k1XjSIGiqm/0QJnkZ4xiQhgTMl/oz3OZy5rIxTOqdHliZZCjCnSlSBZrxBYXBMe4V5Ts7bphDtkhNGt4mGcWQ/s7rqdcmhxA5ZEhr4nu2c=
+	t=1756363746; cv=none; b=NG82Ea8L62UQtAZlhzIkHdx+jpyEHFFsBkfZzmHIKVPVQhsDBmwDl6Z5DZ9IjYJIo9tzS14Z6wNhZ80o7ZmJtRxyZPB1eml6hTX7LAia58VFz3fF6S0HVEEJpfdnA7lpXgPMvgKt+YO/dj1JgBDALJovdMqdVIFWBU7WasnBv1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756361686; c=relaxed/simple;
-	bh=24RtXmBs8sDbV+FKZY3m2RQfjwKVsmeGc/ycJ8DwMBw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ks0sc6XGzELAOPcuOZzwHqUfbIte4X2nyiLJDr1FuH9EAEzNKACheMD6j8LVHUL8V71BQG+rLcN43YDAMMtcWezgHk6t15lY2s3nRxyfQjAjE9GpveYAVmKB8ZkbHVRKQ0OZxj9fzk3nZNtm6gkwcJgukmvlt1XXqaptdLOCV3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bkxGi3Q6; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1756363746; c=relaxed/simple;
+	bh=JdQdj8/quONTRyAY1rYDuGFUboEOavKxJa5vBtUfRBg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DIBn0MCGBmtcK84a6nWK/7PsrGH7+AfUHl/uYTO2yz2NuIFSTV+pv1uc+PDYPwKjl14JVyhivGG1WK+XwlQzsePJOV8yUZf5t5tSfxbNrGXh0DDTARSWExaSma8k1HCcegNs5PCtDCmsocWTXJ810Vc/7DFPb848uO1Nq8lA3Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HHeluEfn; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bkxGi3Q6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=mLP5bwfx5JUrcHsz6CyZc7tgsZnbyjt3ON1W+9DUhmE=; b=bkxGi3Q6m6lm+Igj/KqLC35diy
-	D+8C+V1d7b7P294LP3kloHaUZQsS5V2wNmdrRa9BnpUsrNdGc9sjnIFq5AVDEdvpfr2CRtTaXXt6/
-	ZTCf7PVZigQcjx7zulNTvhErrYr+n50RnGuPZBTN+x/vD9kAZFGU983GYe6EkyK8JE7zP0NreezE8
-	dsJezbWOu2t9JxU8z/Gtny6N+IrqdZm3jVq7jSIaiNtr2M0vMWF8rbRYtFLyJX4HQQOhJ98tIZQc2
-	jwoD23j7ZEdtvosv6JKqa4SoOnqZ9GR/bHA5PxbpW0DcZWbKDISZecRVQVLixsAWZGKU8JYJAXrfm
-	WpmdxvJQ==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1urVuA-00000000Phx-1KCr;
-	Thu, 28 Aug 2025 06:14:38 +0000
-Message-ID: <61cd6dac-14e1-474e-9aa3-4fe782e81ba9@infradead.org>
-Date: Wed, 27 Aug 2025 23:14:36 -0700
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HHeluEfn"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 57S6m3xH1922557;
+	Thu, 28 Aug 2025 01:48:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1756363683;
+	bh=bRbLC9YRMEiIy0hEue35yrv0+2UC5iBSB3Rlj7DldO0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=HHeluEfnSghIj47SW6dN2IgVyuEECGnUGjUUhsyilUOcFtY3Hgtmp/PNv2UJZuNKJ
+	 FFIgS8xsdyevy22IB/ohdZXxDMNj0n8OkFhxBjgYhPFHHdCyQn1sDbYdKFJJIcF5EO
+	 Bl4ixkep5MOY6YCmNJDUAjMg+1X+WR4HQjgR6BJU=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 57S6m3Gu3038278
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 28 Aug 2025 01:48:03 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 28
+ Aug 2025 01:48:02 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 28 Aug 2025 01:48:02 -0500
+Received: from [172.24.231.152] (danish-tpc.dhcp.ti.com [172.24.231.152])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 57S6lsTv182199;
+	Thu, 28 Aug 2025 01:47:55 -0500
+Message-ID: <37a7ce7d-f34b-4734-8c05-722f6d369193@ti.com>
+Date: Thu, 28 Aug 2025 12:17:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,143 +50,89 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] kcfi: Rename CONFIG_CFI_CLANG to CONFIG_CFI
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Kees Cook <kees@outflux.net>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Kees Cook <kees@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Sami Tolvanen <samitolvanen@google.com>,
- Linus Walleij <linus.walleij@linaro.org>, Mark Rutland
- <mark.rutland@arm.com>, Puranjay Mohan <puranjay@kernel.org>,
- David Woodhouse <dwmw2@infradead.org>, Jonathan Corbet <corbet@lwn.net>,
- x86@kernel.org, linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
- llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20250825141316.work.967-kees@kernel.org>
- <20250825142603.1907143-5-kees@kernel.org>
- <CANiq72kc7Ky6+7Ny7jR04s8vU-g23qBQC0rQrOZDxDzXT+m1TQ@mail.gmail.com>
- <202508250834.E2456B9@keescook>
- <CANiq72mQsLqhpX29NP3Zm8HZ5m429tSXjgFcRYJM3e=Zac1G1w@mail.gmail.com>
- <9CCDBE93-7DBD-41D0-B9B6-05900F2AB1EE@outflux.net>
- <20250827013444.GA2859318@ax162>
- <56c2b1ce-00a4-403c-9927-79bfd9a23574@infradead.org>
- <20250827193815.GA2293657@ax162>
+Subject: Re: [PATCH net-next v9 0/5] Add driver for 1Gbe network chips from
+ MUCSE
+To: Yibo Dong <dong100@mucse.com>
+CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
+        <corbet@lwn.net>, <gur.stavi@huawei.com>, <maddy@linux.ibm.com>,
+        <mpe@ellerman.id.au>, <lee@trager.us>, <gongfan1@huawei.com>,
+        <lorenzo@kernel.org>, <geert+renesas@glider.be>,
+        <Parthiban.Veerasooran@microchip.com>, <lukas.bulwahn@redhat.com>,
+        <alexanderduyck@fb.com>, <richardcochran@gmail.com>, <kees@kernel.org>,
+        <gustavoars@kernel.org>, <rdunlap@infradead.org>,
+        <vadim.fedorenko@linux.dev>, <netdev@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <20250828025547.568563-1-dong100@mucse.com>
+ <0651d5a9-dd02-4936-94b8-834bd777003c@ti.com>
+ <BC262E8E0C675110+20250828053659.GA645649@nic-Precision-5820-Tower>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250827193815.GA2293657@ax162>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: MD Danish Anwar <danishanwar@ti.com>
+In-Reply-To: <BC262E8E0C675110+20250828053659.GA645649@nic-Precision-5820-Tower>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 
 
-On 8/27/25 12:38 PM, Nathan Chancellor wrote:
-> On Wed, Aug 27, 2025 at 12:35:12AM -0700, Randy Dunlap wrote:
->> On 8/26/25 6:34 PM, Nathan Chancellor wrote:
->>> On Mon, Aug 25, 2025 at 03:31:34PM -0400, Kees Cook wrote:
->>>> On August 25, 2025 1:00:22 PM EDT, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
->>>>> On Mon, Aug 25, 2025 at 5:35 PM Kees Cook <kees@kernel.org> wrote:
->>>>>>
->>>>>> Yeah, that's a good idea. What the right way to do that?
->>>>>>
->>>>>> config CFI_CLANG
->>>>>>         bool "Use Clang's Control Flow Integrity (CFI)"
->>>>>>         depends on ARCH_SUPPORTS_CFI
->>>>>>         select CFI
->>>>>>
->>>>>> ?
->>>>>
->>>>> I don't recall what is the idiomatic solution for renames, but I
->>>>> remember Linus talking about this topic and about avoiding losing old
->>>>> values if possible (perhaps getting a new question in `oldconfig` is
->>>>> OK as long as the `olddefconfig` respects the old value).
->>>>>
->>>>> I think your suggestion above will still make it appear twice in
->>>>> `menuconfig` -- there may be a way to play with visibility to make it
->>>>> better.
->>>>>
->>>>> A simple possibility I can think of (assuming it works) is having the
->>>>> CFI symbol for the time being introduced just as a `def_bool
->>>>> CFI_CLANG` for a few releases so that people get the new one in their
->>>>> configs.
->>>>
->>>> Ah, I think this works:
->>>>
->>>> config CFI_CLANG
->>>>     bool
->>>>
->>>> config CFI
->>>>     bool "...."
->>>>     default CFI_CLANG
->>>>
->>>> I will add that for v2.
->>>
->>> That does not appear to work for me. I applied
->>>
->>> diff --git a/arch/Kconfig b/arch/Kconfig
->>> index c25a45d9aa96..0d3ed03c76c2 100644
->>> --- a/arch/Kconfig
->>> +++ b/arch/Kconfig
->>> @@ -876,8 +876,12 @@ config ARCH_SUPPORTS_CFI
->>>  config ARCH_USES_CFI_TRAPS
->>>         bool
->>>
->>> +config CFI_CLANG
->>> +       bool
->>> +
->>>  config CFI
->>>         bool "Use Kernel Control Flow Integrity (kCFI)"
->>> +       default CFI_CLANG
->>>         depends on ARCH_SUPPORTS_CFI
->>>         depends on $(cc-option,-fsanitize=kcfi)
->>>         help
->>>
->>> on top of this series and
->>>
->>>   CONFIG_CFI_CLANG=y
->>>   # CONFIG_CFI_ICALL_NORMALIZE_INTEGERS is not set
->>>   # CONFIG_CFI_PERMISSIVE is not set
->>>
->>> gets turned into
->>>
->>>   # CONFIG_CFI is not set
->>>
->>> after olddefconfig. CONFIG_CFI_CLANG has to be user selectable with a
+On 28/08/25 11:06 am, Yibo Dong wrote:
+> On Thu, Aug 28, 2025 at 10:52:21AM +0530, MD Danish Anwar wrote:
+>> Hi Dong Yibo,
 >>
->> Could/did you test with 'oldconfig' instead?
+>> On 28/08/25 8:25 am, Dong Yibo wrote:
+>>> Hi maintainers,
+>>>
+>>> This patch series is v9 to introduce support for MUCSE N500/N210 1Gbps
+>>> Ethernet controllers. I divide codes into multiple series, this is the
+>>> first one which only register netdev without true tx/rx functions.
+>>>
+>>> Changelog:
+>>> v8 -> v9:
+>>> 1. update function description format '@return' to 'Return' 
+>>> 2. update 'negative on failure' to 'negative errno on failure'
+>>>
+>>> links:
+>>> v8: https://lore.kernel.org/netdev/20250827034509.501980-1-dong100@mucse.com/
+>>> v7: https://lore.kernel.org/netdev/20250822023453.1910972-1-dong100@mucse.com
+>>> v6: https://lore.kernel.org/netdev/20250820092154.1643120-1-dong100@mucse.com/
+>>> v5: https://lore.kernel.org/netdev/20250818112856.1446278-1-dong100@mucse.com/
+>>> v4: https://lore.kernel.org/netdev/20250814073855.1060601-1-dong100@mucse.com/
+>>> v3: https://lore.kernel.org/netdev/20250812093937.882045-1-dong100@mucse.com/
+>>> v2: https://lore.kernel.org/netdev/20250721113238.18615-1-dong100@mucse.com/
+>>> v1: https://lore.kernel.org/netdev/20250703014859.210110-1-dong100@mucse.com/
 >>
->> olddefconfig is going to use the default value from the Kconfig file,
->> which if CFI_CLANG which is undefined/No/Not set.
+>> Please wait for at least 24 hours before posting a new version. You
+>> posted v8 yesterday and most folks won't have noticed v8 by now or they
+>> maybe looking to give comments on v8. But before they could do that you
+>> posted v9.
 >>
->> oldconfig will use the old value from the .config file.
+>> Keep good amount of gaps between the series so that more folks can look
+>> at it. 24 hours is the minimum.
+>>
+>> -- 
+>> Thanks and Regards,
+>> Danish
+>>
+>>
 > 
-> I am not sure I understand what you mean here. With the series as it is
-> or Kees's suggested fix, oldconfig still prompts the user to enable
+> Got it, I found the v8 pathes state in websit:
+> https://patchwork.kernel.org/project/netdevbpf/list/
+> It is 'Changes Requested'. 
+> I mistakenly thought that a new version needed to be sent. I will wait
 
-OK, I don't know the state of the CFI_CLANG / CLANG patch(es).
+That's correct. 'Changes Requested' means that version will no longer be
+accepted and you have to send a newer one. But that doesn't mean you
+have to send it immediately.
 
-I just mean the difference in 'make oldconfig' and 'make olddefconfig'
-(at least AIUI).
+https://www.kernel.org/doc/html/v6.1/process/maintainer-netdev.html#i-have-received-review-feedback-when-should-i-post-a-revised-version-of-the-patches
 
 
-> CONFIG_CFI with CONFIG_CFI_CLANG=y in the old configuration. Both Miguel
-> and I allude to that being fine but it would be really nice if users
-> with CONFIG_CFI_CLANG=y were automatically transitioned to CONFIG_CFI=y
-> without any action on their part. That seems to be in line with how
-
-Yes, I agree.
-
-> Linus feels even as recently as this past merge window:
+> more time in the next time.
 > 
-> https://lore.kernel.org/CAHk-=wgO0Rx2LcYT4f75Xs46orbJ4JxO2jbAFQnVKDYAjV5HeQ@mail.gmail.com/
-> 
-> Another idea I had to avoid this is introducing CONFIG_CFI_GCC as a user
-> selectable symbol and making CONFIG_CFI the hidden symbol that both
-> compiler symbols select. After a couple of releases (or maybe the next
-> LTS), both CONFIG_CFI_CLANG and CONFIG_CFI_GCC could be eliminated with
-> CONFIG_CFI becoming user selectable, which would keep things working
-> since CONFIG_CFI=y will be present in the previous configuration.
-
+> Thanks for you feedback.
 
 -- 
-~Randy
+Thanks and Regards,
+Danish
 
