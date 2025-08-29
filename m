@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1862D24BA;
-	Fri, 29 Aug 2025 09:58:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BA81FDE31;
+	Fri, 29 Aug 2025 10:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756461509; cv=none; b=Asf8YSMVLUIu2YrcMzlbu7OVUhkquLHIJr/3Sil2jVikNssY2CqJa7sKJVzcDWfCzMktBhDutAqxI3dRZknd7tR21hIyh17cX5FycUEnfxRo5ZZyuNoFbK2wxTFQxCIDPA7zo0xYfNz3qMABAcAFSTQJH3pEiTvmJl/hAD1nHF8=
+	t=1756463333; cv=none; b=YlTrfQ7IMphQLtRPLptyHsRl/tRkBW7sXDjT5yZRYx8uYtIkm8VdUSUmyweuLTIt2cEGXsgVtjcFk8xS+xP3+7b5sZRntdLszyqgzGwD6cBQ3iERpGH7Fn821PdrWKN5djpKmRWdM8iL022cUy04YlYr66QKFmyHpalmxO5b3uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756461509; c=relaxed/simple;
-	bh=KDoth+kAYRavO4Qft6ekvmhD5j99ml0dSojmfq8vU8E=;
+	s=arc-20240116; t=1756463333; c=relaxed/simple;
+	bh=8J1IzMo3NnCzGtvrH5epfwnEdZ4lAO3fgP6owIMX35c=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=flD1u24KpL71vHori+MsOG2nrtxBiYE1db1rIRmaxbvnlHQU2nsEE7UqZgjk5+3gdkJ5BrDK1WvuVX36CuFnPzBSi7jLgC9AAVVLb8faWBsZC/pZhJq01pDeaw8B+K20HWLaFo5G1aOFKP0k1W9cFW6PIvy9QKRhPS0MAhWTPYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTSidfGI; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=T6ORoH7lhpmv7mItjGlzA/TY/BstPaX+dK2yiTFLcvhMDIJ5dazOzOqyJxi+Dp3weADwtmrVFWbuwh6ALOGlsnipNw5kLHssBhni09qHTOoGEcEOY256EI28gewBYs1jJPnGhXRgbqrKvvz3qImHtPmaPNJgUf4UOf99P51E6nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z79bxCEV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTSidfGI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2367C4CEF4;
-	Fri, 29 Aug 2025 09:58:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z79bxCEV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA46C4CEF0;
+	Fri, 29 Aug 2025 10:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756461508;
-	bh=KDoth+kAYRavO4Qft6ekvmhD5j99ml0dSojmfq8vU8E=;
+	s=k20201202; t=1756463332;
+	bh=8J1IzMo3NnCzGtvrH5epfwnEdZ4lAO3fgP6owIMX35c=;
 	h=Date:From:To:Cc:Subject:From;
-	b=BTSidfGIfGEaKs845+2g1h/e9KQwEYEK4MCB9j9nLwkIiRXFkrPIAjdxvDE3gpAG1
-	 AM8v7XeOg+dwMb/oYM4edixNCUdRXv86BVnGy7QKFdJPW75tdeQqxd79mRUdVSsVM+
-	 Xn+AJalHJKqPaHCKLF4A8pY7vigaoMs8aqK4nCJFSGK4R5llkIU6uCOYyMGCpNouHY
-	 PUOrgGVS/3Lqoti7i5ah9Ftut27MqyL+k4wQxnSUjW9dhlcKvvFc8i18V/7fKZJUSG
-	 YOklE++ycqz4qQ5c2+pzyWaIe+j1Ukcubmae8bvdiWSJLIdaCD1Xgz6TZ+qp0tfpan
-	 V0ATO8b+2N0AQ==
-Date: Fri, 29 Aug 2025 11:58:21 +0200
+	b=Z79bxCEVLTByzDhfBQVphj6Rb1CrK7C+hy2bBVYdDqH1ni+tD9fuwYr5Lpc12a/pL
+	 dM4D0qraMY/Hi0v0s7Y4tZMu+Rq8pX6DpaVG0lx1nDLXh17GLtBMqFV4raqcFXuM8a
+	 NyiLdrGzRPLwnEa/mvSy4729ypPGAHiclCneoJ07bDfUTAl8YD7nGIpWmTyOZsb+jk
+	 KuAC5IVdRc0fd2I1Sy3Fgrtra0kr3xhvAGVNacTo4PZHKq+DD7sID+HhBjP9MBeNVY
+	 xG/D2tmLiQfViCqQmLbc/DtD45M9l3aqy+60283DP1dS4jOS6AS9Q6QHabko4jaEKR
+	 5FVy88QE2TelQ==
+Date: Fri, 29 Aug 2025 12:28:45 +0200
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Felix Kuehling <Felix.Kuehling@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+To: Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/amdgpu/amdkfd: Avoid a couple hundred
- -Wflex-array-member-not-at-end warnings
-Message-ID: <aLF5vQv9P_vp0R6_@kspp>
+Subject: [PATCH][next] drm/xe: Avoid dozens of -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <aLGA3RVR2JIEnNhc@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,66 +51,40 @@ Content-Disposition: inline
 -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
 getting ready to enable it, globally.
 
-Move the conflicting declarations to the end of the corresponding
-structures. Notice that `struct dev_pagemap` is a flexible structure,
+Move the conflicting declaration to the end of the corresponding
+structure. Notice that `struct dev_pagemap` is a flexible structure,
 this is a structure that contains a flexible-array member.
 
-Fix 283 of the following type of warnings:
-    283 drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h:111:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Fix 56 of the following type of warnings:
+drivers/gpu/drm/xe/xe_vram_types.h:69:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu.h        | 8 +++++---
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h | 8 +++++---
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/xe/xe_vram_types.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-index ddd472e56f69..24f3e5cfbe5d 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-@@ -1155,9 +1155,6 @@ struct amdgpu_device {
- 	/* for userq and VM fences */
- 	struct amdgpu_seq64		seq64;
- 
--	/* KFD */
--	struct amdgpu_kfd_dev		kfd;
--
- 	/* UMC */
- 	struct amdgpu_umc		umc;
- 
-@@ -1320,6 +1317,11 @@ struct amdgpu_device {
- 	struct mutex                    userq_mutex;
- 	bool                            userq_halt_for_enforce_isolation;
- 	struct amdgpu_uid *uid_info;
-+
-+	/* KFD
-+	 * Must be last --ends in a flexible-array member.
-+	 */
-+	struct amdgpu_kfd_dev		kfd;
+diff --git a/drivers/gpu/drm/xe/xe_vram_types.h b/drivers/gpu/drm/xe/xe_vram_types.h
+index 83772dcbf1af..183d358da741 100644
+--- a/drivers/gpu/drm/xe/xe_vram_types.h
++++ b/drivers/gpu/drm/xe/xe_vram_types.h
+@@ -66,8 +66,6 @@ struct xe_vram_region {
+ #if IS_ENABLED(CONFIG_DRM_XE_PAGEMAP)
+ 	/** @migrate: Back pointer to migrate */
+ 	struct xe_migrate *migrate;
+-	/** @pagemap: Used to remap device memory as ZONE_DEVICE */
+-	struct dev_pagemap pagemap;
+ 	/**
+ 	 * @dpagemap: The struct drm_pagemap of the ZONE_DEVICE memory
+ 	 * pages of this tile.
+@@ -79,6 +77,8 @@ struct xe_vram_region {
+ 	 * This is generated when remap device memory as ZONE_DEVICE
+ 	 */
+ 	resource_size_t hpa_base;
++	/** @pagemap: Used to remap device memory as ZONE_DEVICE */
++	struct dev_pagemap pagemap;
+ #endif
  };
  
- static inline uint32_t amdgpu_ip_version(const struct amdgpu_device *adev,
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
-index 33eb4826b58b..127927b16ee2 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
-@@ -107,11 +107,13 @@ struct amdgpu_kfd_dev {
- 	bool init_complete;
- 	struct work_struct reset_work;
- 
--	/* HMM page migration MEMORY_DEVICE_PRIVATE mapping */
--	struct dev_pagemap pgmap;
--
- 	/* Client for KFD BO GEM handle allocations */
- 	struct drm_client_dev client;
-+
-+	/* HMM page migration MEMORY_DEVICE_PRIVATE mapping
-+	 * Must be last --ends in a flexible-array member.
-+	 */
-+	struct dev_pagemap pgmap;
- };
- 
- enum kgd_engine_type {
 -- 
 2.43.0
 
