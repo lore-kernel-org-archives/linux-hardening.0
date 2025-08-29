@@ -1,31 +1,30 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3CF83093DB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF9F33093CE;
 	Fri, 29 Aug 2025 10:31:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756463486; cv=none; b=ebBYQtfqnrTsias1GiQisCjkAbG2QYOP4s8wsdkztfSU56VlCi+xwVNV4AXRID7xExxeLck3Qij8R52mIgSgKVFv3OnK/3uLfpCFeoKZQvSKt/s5GAwc9Wb49gBfJ/0pvGrP76XmrVKF36lketPqwIEQ6KOhEERnIoCrZOP7WUk=
+	t=1756463486; cv=none; b=mkGmLOslkHm8ehPOYCh8IRZUmbE1+DwkoYevx8zlYa7CFrpDMj0GQQHPJ3p4GXYhNrI7UPNqK3cxFIbGMUdZk3V5283hXmjXngQz7w5ch6nepuxPSJZYwRmwLrKP5fSAt5JD/LXqoYv0nKUT7qRLi6X0g1P3E9+5yJzbvOc9/u8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1756463486; c=relaxed/simple;
-	bh=oK1vTC3I1CcIsF3aIfGOa5puBtc8td3Zh60PXSCKEvY=;
+	bh=VxvtKONg4OmBBNlFlOQEGAsic3ywxJZKH++Hg2cwpSA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4ZG1Azv4PiSifRIP12dyBB078up1YF3xvm10uEy8H+qqHiRiIpdKeMr/ggSCUKBFwo/KrWid0vjhg32V06thfqpBh5tcJ28mwEKNvgPPnWZmEX7w16ZZiuCGVUV1bhEkClLdgYsE0b9Snuug0oSbthLfrn0/V/dWrhqMMXnl1c=
+	 Content-Type:Content-Disposition:In-Reply-To; b=NWnpWXm62yXT0vlxdgItkvR7TJVEhRalwaYiL1DeX+/BdNsWsg6T0LlkdPc5T45nigGiLXWqqKoRv8QxRHGa01zIyJBgH+zW6U7DurT99BNaD3TOsiQkvNzbtaS4U7gNkyIR69ooZDGeE83Oy+CXWKncTX3gMaggen0nIoiZjw4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1urwO2-0004GF-00; Fri, 29 Aug 2025 12:31:14 +0200
+	id 1urwO3-0004Gg-00; Fri, 29 Aug 2025 12:31:15 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 05BBFC0D9E; Fri, 29 Aug 2025 12:26:32 +0200 (CEST)
-Date: Fri, 29 Aug 2025 12:26:32 +0200
+	id 3E538C0F01; Fri, 29 Aug 2025 12:28:03 +0200 (CEST)
+Date: Fri, 29 Aug 2025 12:28:03 +0200
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 To: Thorsten Blum <thorsten.blum@linux.dev>
 Cc: linux-hardening@vger.kernel.org, linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/8] MIPS: octeon: Replace memset(0) + deprecated
- strcpy() with strscpy_pad()
-Message-ID: <aLGAWOjB1_nFLbqN@alpha.franken.de>
-References: <20250817183728.612012-1-thorsten.blum@linux.dev>
- <20250817183728.612012-6-thorsten.blum@linux.dev>
+Subject: Re: [PATCH] MIPS: RB532: Replace deprecated strcpy() with memcpy()
+ and strscpy()
+Message-ID: <aLGAs9qSe3KSzh_P@alpha.franken.de>
+References: <20250819102419.712031-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -34,42 +33,64 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250817183728.612012-6-thorsten.blum@linux.dev>
+In-Reply-To: <20250819102419.712031-2-thorsten.blum@linux.dev>
 
-On Sun, Aug 17, 2025 at 08:37:16PM +0200, Thorsten Blum wrote:
-> Replace memset(0) followed by the deprecated strcpy() with strscpy_pad()
-> to improve octeon_fdt_set_phy(). This avoids zeroing the memory before
-> copying the string and ensures the destination buffer is only written to
-> once, simplifying the code and improving efficiency.
+On Tue, Aug 19, 2025 at 12:24:17PM +0200, Thorsten Blum wrote:
+> strcpy() is deprecated; use memcpy() and strscpy() instead.
+> 
+> Add the local variable 'size_t len' to keep track of the string lengths
+> and prefer memcpy() over strscpy() when we use the string length to
+> advance the 'cp' pointer.
+> 
+> No functional changes intended.
 > 
 > Link: https://github.com/KSPP/linux/issues/88
 > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 > ---
->  arch/mips/cavium-octeon/octeon-platform.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/mips/rb532/prom.c | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
 > 
-> diff --git a/arch/mips/cavium-octeon/octeon-platform.c b/arch/mips/cavium-octeon/octeon-platform.c
-> index 5e1dd4e6e82f..47677b5d7ed0 100644
-> --- a/arch/mips/cavium-octeon/octeon-platform.c
-> +++ b/arch/mips/cavium-octeon/octeon-platform.c
-> @@ -13,6 +13,7 @@
->  #include <linux/of_fdt.h>
->  #include <linux/platform_device.h>
->  #include <linux/libfdt.h>
-> +#include <linux/string.h>
+> diff --git a/arch/mips/rb532/prom.c b/arch/mips/rb532/prom.c
+> index b88e89ec5894..8c370eb180ef 100644
+> --- a/arch/mips/rb532/prom.c
+> +++ b/arch/mips/rb532/prom.c
+> @@ -53,6 +53,7 @@ static void __init prom_setup_cmdline(void)
+>  	int prom_argc;
+>  	char **prom_argv;
+>  	int i;
+> +	size_t len;
 >  
->  #include <asm/octeon/octeon.h>
->  #include <asm/octeon/cvmx-helper-board.h>
-> @@ -538,8 +539,7 @@ static void __init octeon_fdt_set_phy(int eth, int phy_addr)
+>  	prom_argc = fw_arg0;
+>  	prom_argv = (char **) fw_arg1;
+> @@ -82,20 +83,20 @@ static void __init prom_setup_cmdline(void)
+>  				mips_machtype = MACH_MIKROTIK_RB532;
+>  		}
 >  
->  	if (octeon_has_88e1145()) {
->  		fdt_nop_property(initial_boot_params, phy, "marvell,reg-init");
-> -		memset(new_name, 0, sizeof(new_name));
-> -		strcpy(new_name, "marvell,88e1145");
-> +		strscpy_pad(new_name, "marvell,88e1145");
->  		p = fdt_getprop(initial_boot_params, phy, "compatible",
->  				&current_len);
->  		if (p && current_len >= strlen(new_name))
+> -		strcpy(cp, prom_argv[i]);
+> -		cp += strlen(prom_argv[i]);
+> +		len = strlen(prom_argv[i]);
+> +		memcpy(cp, prom_argv[i], len + 1);
+> +		cp += len;
+>  	}
+>  	*(cp++) = ' ';
+>  
+> -	i = strlen(arcs_cmdline);
+> -	if (i > 0) {
+> +	len = strlen(arcs_cmdline);
+> +	if (len > 0) {
+>  		*(cp++) = ' ';
+> -		strcpy(cp, arcs_cmdline);
+> -		cp += strlen(arcs_cmdline);
+> +		memcpy(cp, arcs_cmdline, len + 1);
+> +		cp += len;
+>  	}
+>  	cmd_line[COMMAND_LINE_SIZE - 1] = '\0';
+> -
+> -	strcpy(arcs_cmdline, cmd_line);
+> +	strscpy(arcs_cmdline, cmd_line);
+>  }
+>  
+>  void __init prom_init(void)
 > -- 
 > 2.50.1
 
