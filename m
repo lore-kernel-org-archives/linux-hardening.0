@@ -1,44 +1,34 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BA81FDE31;
-	Fri, 29 Aug 2025 10:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEABF3093A7;
+	Fri, 29 Aug 2025 10:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756463333; cv=none; b=YlTrfQ7IMphQLtRPLptyHsRl/tRkBW7sXDjT5yZRYx8uYtIkm8VdUSUmyweuLTIt2cEGXsgVtjcFk8xS+xP3+7b5sZRntdLszyqgzGwD6cBQ3iERpGH7Fn821PdrWKN5djpKmRWdM8iL022cUy04YlYr66QKFmyHpalmxO5b3uU=
+	t=1756463484; cv=none; b=eB2KnMA2t1/Gc8bqQnc1/3prSCmFH6VOx3An/zjGZzlyUvBoCFkSJJyWLf3xvreetx3ZmutviI+q52i9FccA6NHX2U0pcqzMTG47AcVK12UACxp34nEoheIXLjXJB1uMWru3AZfV4/HNx0vMtkKwFuZePKybt8tEgGWWb1KxYkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756463333; c=relaxed/simple;
-	bh=8J1IzMo3NnCzGtvrH5epfwnEdZ4lAO3fgP6owIMX35c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=T6ORoH7lhpmv7mItjGlzA/TY/BstPaX+dK2yiTFLcvhMDIJ5dazOzOqyJxi+Dp3weADwtmrVFWbuwh6ALOGlsnipNw5kLHssBhni09qHTOoGEcEOY256EI28gewBYs1jJPnGhXRgbqrKvvz3qImHtPmaPNJgUf4UOf99P51E6nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z79bxCEV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z79bxCEV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA46C4CEF0;
-	Fri, 29 Aug 2025 10:28:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756463332;
-	bh=8J1IzMo3NnCzGtvrH5epfwnEdZ4lAO3fgP6owIMX35c=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Z79bxCEVLTByzDhfBQVphj6Rb1CrK7C+hy2bBVYdDqH1ni+tD9fuwYr5Lpc12a/pL
-	 dM4D0qraMY/Hi0v0s7Y4tZMu+Rq8pX6DpaVG0lx1nDLXh17GLtBMqFV4raqcFXuM8a
-	 NyiLdrGzRPLwnEa/mvSy4729ypPGAHiclCneoJ07bDfUTAl8YD7nGIpWmTyOZsb+jk
-	 KuAC5IVdRc0fd2I1Sy3Fgrtra0kr3xhvAGVNacTo4PZHKq+DD7sID+HhBjP9MBeNVY
-	 xG/D2tmLiQfViCqQmLbc/DtD45M9l3aqy+60283DP1dS4jOS6AS9Q6QHabko4jaEKR
-	 5FVy88QE2TelQ==
-Date: Fri, 29 Aug 2025 12:28:45 +0200
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/xe: Avoid dozens of -Wflex-array-member-not-at-end
- warnings
-Message-ID: <aLGA3RVR2JIEnNhc@kspp>
+	s=arc-20240116; t=1756463484; c=relaxed/simple;
+	bh=erCvdmuNynv/Glo8SbKw9XQtzIKpERjPcY5AltzhKks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k7+TkRGKwPpbV6eAfcKOz0Omo9z8/GuUEgx6CuN1KjUG7DFU3iU7Df6bK2PSNUB86JayBqSiAdiTr/gUCkZtweRXHyMBoSw6SWndBEV4fK6aPLT4jfcas3o9LaCgQ/DmA1c/m42tCjV77xy9LHnmol0T5Y9nobBLRn3EWDXx8DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1urwO2-0004G2-00; Fri, 29 Aug 2025 12:31:14 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 2858CC0D68; Fri, 29 Aug 2025 12:25:58 +0200 (CEST)
+Date: Fri, 29 Aug 2025 12:25:58 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-hardening@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/8] MIPS: txx9: Replace deprecated strcpy() with
+ strscpy()
+Message-ID: <aLGANory-ZVAg2_d@alpha.franken.de>
+References: <20250817183728.612012-1-thorsten.blum@linux.dev>
+ <20250817183728.612012-4-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,44 +37,46 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250817183728.612012-4-thorsten.blum@linux.dev>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Sun, Aug 17, 2025 at 08:37:14PM +0200, Thorsten Blum wrote:
+> strcpy() is deprecated; use strscpy() instead.
+> 
+> Link: https://github.com/KSPP/linux/issues/88
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  arch/mips/txx9/generic/setup.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/mips/txx9/generic/setup.c b/arch/mips/txx9/generic/setup.c
+> index 5dc867ea2c69..03f8a3a95637 100644
+> --- a/arch/mips/txx9/generic/setup.c
+> +++ b/arch/mips/txx9/generic/setup.c
+> @@ -200,7 +200,7 @@ static void __init preprocess_cmdline(void)
+>  	static char cmdline[COMMAND_LINE_SIZE] __initdata;
+>  	char *s;
+>  
+> -	strcpy(cmdline, arcs_cmdline);
+> +	strscpy(cmdline, arcs_cmdline);
+>  	s = cmdline;
+>  	arcs_cmdline[0] = '\0';
+>  	while (s && *s) {
+> @@ -270,7 +270,7 @@ void __init prom_init(void)
+>  	preprocess_cmdline();
+>  	select_board();
+>  
+> -	strcpy(txx9_system_type, txx9_board_vec->system);
+> +	strscpy(txx9_system_type, txx9_board_vec->system);
+>  
+>  	txx9_board_vec->prom_init();
+>  }
+> -- 
+> 2.50.1
 
-Move the conflicting declaration to the end of the corresponding
-structure. Notice that `struct dev_pagemap` is a flexible structure,
-this is a structure that contains a flexible-array member.
+applied to mips-next.
 
-Fix 56 of the following type of warnings:
-drivers/gpu/drm/xe/xe_vram_types.h:69:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Thomas.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/gpu/drm/xe/xe_vram_types.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/xe/xe_vram_types.h b/drivers/gpu/drm/xe/xe_vram_types.h
-index 83772dcbf1af..183d358da741 100644
---- a/drivers/gpu/drm/xe/xe_vram_types.h
-+++ b/drivers/gpu/drm/xe/xe_vram_types.h
-@@ -66,8 +66,6 @@ struct xe_vram_region {
- #if IS_ENABLED(CONFIG_DRM_XE_PAGEMAP)
- 	/** @migrate: Back pointer to migrate */
- 	struct xe_migrate *migrate;
--	/** @pagemap: Used to remap device memory as ZONE_DEVICE */
--	struct dev_pagemap pagemap;
- 	/**
- 	 * @dpagemap: The struct drm_pagemap of the ZONE_DEVICE memory
- 	 * pages of this tile.
-@@ -79,6 +77,8 @@ struct xe_vram_region {
- 	 * This is generated when remap device memory as ZONE_DEVICE
- 	 */
- 	resource_size_t hpa_base;
-+	/** @pagemap: Used to remap device memory as ZONE_DEVICE */
-+	struct dev_pagemap pagemap;
- #endif
- };
- 
 -- 
-2.43.0
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
