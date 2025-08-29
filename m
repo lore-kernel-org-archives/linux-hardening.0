@@ -1,46 +1,71 @@
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAAE6FC5;
-	Fri, 29 Aug 2025 02:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E822730CD9F;
+	Fri, 29 Aug 2025 04:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756435044; cv=none; b=jkqudftboiNcqWvJeBrfShtIwfIaMk35Nwyw+6gFEhMKgN/816CS7fM9RX0/Bath+325/GFosKjCr+QuSd+RjMpK0QL3Z5Vy/MOvo/XLHCEV42TbvAKUBv9KBzZ7ZeKlIOd+CVNMFJXPclJ0iQ7G+T3rsrK8CZs0V7bRvaVzRgo=
+	t=1756442174; cv=none; b=Vjez5w2m7grbQ3uIBqVgJ6PxuagNGfTB5exAHQ4wVICtnEKRC2y1Q+e0c7G6jig7ZnI32jDGQG1rO9GGSEMy+e+1bPPD+C5T4KnpdO5vQWqPDyhc24qFiMLYqnQC/FntctlHxhhF/Rh6y48PD6oP/HL+z3q5E+h64TM4ygbo6Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756435044; c=relaxed/simple;
-	bh=PJ+tY7pi3xt3j+eLneIBuSVZx0ciuyKBM2ylX7x8b6Y=;
+	s=arc-20240116; t=1756442174; c=relaxed/simple;
+	bh=Xt0feyUezz/5l4+6xUi2n7/85qxMuRWR4CZoEWdHKEM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KhMHYIdtrbJ0TbQnqM/agWrnI5keK08qMMnew5GWf/CqVBVJ2vgqCnLq6Pf2Gw09IXCxbXtkRa1zvOEjDVRUFI8xfG6TZEnyJbsJCxu12YGasbrXCGFx1+ujhcr2JJ0PtFqyHeI4Zw/oRUY2EE2hsGqTD6Sk11JOWEM8ppYCvzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.92.39.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
-X-QQ-mid: esmtpsz10t1756435010tf4b84854
-X-QQ-Originating-IP: g/Fgw+DgN7+02PgKaJ5YVFbo4h7+NoaFcU2OyWk3tBk=
-Received: from localhost ( [203.174.112.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 29 Aug 2025 10:36:48 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 7550459696108476182
-Date: Fri, 29 Aug 2025 10:36:48 +0800
-From: Yibo Dong <dong100@mucse.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
-	gustavoars@kernel.org, rdunlap@infradead.org,
-	vadim.fedorenko@linux.dev, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v9 5/5] net: rnpgbe: Add register_netdev
-Message-ID: <A5B215AE5EB4FE9D+20250829023648.GB904254@nic-Precision-5820-Tower>
-References: <20250828025547.568563-1-dong100@mucse.com>
- <20250828025547.568563-6-dong100@mucse.com>
- <e0f71a7d-1288-4971-804d-123e3e8a153f@lunn.ch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rckqgsb8AYpeuLwu6g/+zjgtebxW9WB6PqNrOQisBnWIx/BhNK0S20aW0Cd9V+LA1KSV1atZ9hOBRtSQCjP7yYXnRGWFtJTKyaPZjKic4cZnI4CTOeBFDhqV6hMyu03/TSVF5VE2600rPfBE0oxst56Kp3za49I3GZYzKHVJr0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xY1Jjw8Z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xY1Jjw8Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCE04C4CEF0;
+	Fri, 29 Aug 2025 04:36:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1756442173;
+	bh=Xt0feyUezz/5l4+6xUi2n7/85qxMuRWR4CZoEWdHKEM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=xY1Jjw8ZJBjA1gereFJwF2Toip1RNMc4A+dPEATNGOjGOWnbBOdZRcUYPKc3V7qn0
+	 GWpberpA5gzOQUr6rZ2g81TEVJp6F5fxemjpng6mPH9tMwua0E6udfMs4Q9mfIQL5e
+	 QrOAV51Bd+lS3QmtuIBpcrPqdL6lb/E4BIM44zL0=
+Date: Fri, 29 Aug 2025 06:36:09 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Alexey Klimov <alexey.klimov@linaro.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	imx@lists.linux.dev, linux-omap@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v6 01/15] devres: provide devm_kmemdup_const()
+Message-ID: <2025082957-cruncher-shingle-980a@gregkh>
+References: <20250828-pinctrl-gpio-pinfuncs-v6-0-c9abb6bdb689@linaro.org>
+ <20250828-pinctrl-gpio-pinfuncs-v6-1-c9abb6bdb689@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,96 +74,19 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e0f71a7d-1288-4971-804d-123e3e8a153f@lunn.ch>
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NyPaQtJYQgeoV1Z1Je0uGcuGrVaPxCqf2JhJcaHqlchXvjLgiXUdw83j
-	ZEExgqTFv8aVrCilH53F4PWh37w38aRDYbirdsU/KKbgpENJvjXjooKIk/TBMK7OTt/kG7l
-	IL91vXm8m/3MsWkkz7IoaZuCND+FMcQ0oP2Yi92U5k4dnm2Va4ymo635tkAJugA9gH9GgUq
-	dzv5R0qWi1UGDBCjSWuwhXjAgqjsmd1zfmPRr4u1cKABB/QKk3UKDWZul1FK+JfuQanhArT
-	0E1b4H9x3osyo4w3cSLkXO87oT+Y/WSV50HDxysH5FxXLDDPOJ7dptjWqNw9z/FXlg9HN0u
-	fQfJfMCFPNxNdYbivrQYiubyhT/QU+8BNIZ87j2fD32cK7N/ykYxYbFL9r03wH5ApyY3ng9
-	8RtlkBtTu4efsQs2Ag3bA4Zfi/OVngQaOCJ3cnUhBJA3zNsAmb775hZyem5/PmihoI4741p
-	3lINldyvi0FJjYCmMa+y5lSbQHvWVoRfeupRcEqBw97wvHO0tbK57MxP8DwFHUIFzfqDzjN
-	TNbbkE6IKZKdvACeL0SXoVqQIy3baqEzg0pradGhodSgOYMQUo31e1x0AVaNdNRdKe1EgaJ
-	kxsb3TeuGwTFaNRaMj3hvURyNWU222YagozcXMRw0eP3l3ANyd2jRtOpmfvb8iUfzdutaQ1
-	PVrGop+WtJ8ryzFtw7vgMHTJ3N5C3WeDP9kmYx2k2DYKfR+RIIW5KLCEANffoFHlwGyOC5K
-	SHuRz9ipMvuPpU7ANBYMF88E+Kj2GjNHURz5M7s3e83HWQPATFPFbE/dB24JKa99up1hj/Z
-	TL5y/NCvZvLFGOEOrmuHtPLhqzM9iQArA5muZYwZGf/pgY/AF8MvEoqeU1TQsl/LDj5bUwH
-	DPn2S5RI7GfRBzCMjVaQPsgXuWi+3BHFigP+Xfv+NHdlTTKOnP558L3xHbhY6O++R3bZx2H
-	Sta6eWKIaH5KEgbdCEknDLDD0mER2gN6zEtbkiBGAEEFX1N7UxA/BS4UxKAom0G+R2pQ=
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <20250828-pinctrl-gpio-pinfuncs-v6-1-c9abb6bdb689@linaro.org>
 
-On Thu, Aug 28, 2025 at 03:20:04PM +0200, Andrew Lunn wrote:
-> > +/**
-> > + * rnpgbe_reset_hw_ops - Do a hardware reset
-> > + * @hw: hw information structure
-> > + *
-> > + * rnpgbe_reset_hw_ops calls fw to do a hardware
-> > + * reset, and cleans some regs to default.
-> > + *
-> > + * Return: 0 on success, negative errno on failure
-> > + **/
-> > +static int rnpgbe_reset_hw_ops(struct mucse_hw *hw)
-> > +{
-> > +	struct mucse_dma_info *dma = &hw->dma;
-> > +	int err;
-> > +
-> > +	rnpgbe_dma_wr32(dma, RNPGBE_DMA_AXI_EN, 0);
-> > +	err = mucse_mbx_fw_reset_phy(hw);
-> > +	if (err)
-> > +		return err;
-> > +	return rnpgbe_get_permanent_mac(hw, hw->perm_addr);
+On Thu, Aug 28, 2025 at 06:00:09PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Why is a function named rnpgbe_reset_hw_ops() getting the permanent
-> MAC address? Reset should not have anything to do with MAC address.
+> Provide a function similar to devm_strdup_const() but for copying blocks
+> of memory that are likely to be placed in .rodata.
 > 
-> If the MAC address is not valid, you normally use a random MAC
-> address. But you cannot easily differentiate between the reset failed,
-> the reset got ^C, and the MAC address was not valid.
-> 
-
-Ok, I will remove call 'rnpgbe_get_permanent_mac' in function
-'rnpgbe_reset_hw_ops'. And call it in probe.
-
-> > +/**
-> > + * rnpgbe_driver_status_hw_ops - Echo driver status to hw
-> > + * @hw: hw information structure
-> > + * @enable: true or false status
-> > + * @mode: status mode
-> > + **/
-> > +static void rnpgbe_driver_status_hw_ops(struct mucse_hw *hw,
-> > +					bool enable,
-> > +					int mode)
-> > +{
-> > +	switch (mode) {
-> > +	case mucse_driver_insmod:
-> > +		mucse_mbx_ifinsmod(hw, enable);
-> 
-> Back to the ^C handling. This could be interrupted before the firmware
-> is told the driver is loaded. That EINTR is thrown away here, so the
-> driver thinks everything is O.K, but the firmware still thinks there
-> is no MAC driver. What happens then?
-> 
-
-The performance will be very poor since low working frequency,
-that is not we want.
-
-> And this is the same problem i pointed out before, you ignore EINTR in
-> a void function. Rather than fix one instance, you should of reviewed
-> the whole driver and fixed them all. You cannot expect the Reviewers
-> to do this for you.
-
-I see, I will change 'void' to 'int' in order to handle err, and try to check
-other functions.
-
-> 
->     Andrew
-> 
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
-> pw-bot: cr
-> 
+>  drivers/base/devres.c         | 21 +++++++++++++++++++++
+>  include/linux/device/devres.h |  2 ++
+>  2 files changed, 23 insertions(+)
 
-Thanks for your feedback.
-
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
