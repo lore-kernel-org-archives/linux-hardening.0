@@ -1,266 +1,205 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C42343213;
-	Fri, 29 Aug 2025 17:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2112309B9;
+	Fri, 29 Aug 2025 19:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756489590; cv=none; b=pAXDDcH0Kw9/rW+KOjnzJs3JEZrcdRHn4Sg+qJuFGr8vvlgLJbJG9/Ul3VKhF3UhAhpaNH3JVDOkeMY9o4vkg2W8ezur8WZLA9wuR4xYlPLDH44jpU9xpXsuYM9/4sVyXwS7aNb22U7CAaMtVzn4qgHwDRaGq7K+6Gq5egJ7J4k=
+	t=1756494449; cv=none; b=pf72O/GO85TtQ6KTcVopSpbZNLvc8HgYczywbIRjuDSkmlQK7UFbt4UBvmI0VLUgLERDshZt+KHwv6dhwYJNFAfnP+7XNSwBRubaMB2u1A/+4eAONnS6AiLjK/ulx/Jlej0dNTTwCd4Fb0RZSsSK869MGsYQPQPrpZGTeKugtnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756489590; c=relaxed/simple;
-	bh=ffhQYsIDiciYhH+b5mTnOldlYmqjRKlLJpxwdY8kaKM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H2faLn0pkaRYU+WnnI8S9fWziftcIfZLf4VqNNiFfBNO1MgXfMS8/Axi86DOJUCua/sF4y6bZ6O4dWVZLXRO/HzTRFKUijtR7c2DCRh7GkRMaMr8/10umy2/WtRWgAhh9HG4NKg5Bf7Xeyo6T227bWXl49Ct7TfQw6wr6pX0bm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FdHDF/OR; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1756494449; c=relaxed/simple;
+	bh=KhB9CZF6CwYnj2naomZZKO+E1e7v9OT05X6wGQRcFd0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KFO0zY5xoxi3mkhmrHJKq9xoWalRonqJ67B9QuQpXspcpOR6ePXi/jEtcxd0Ue0RtF9qkjigqf26Ewf8zlrPcFcJ6FiCCv83Ne5iCOBCXLvgEIaanqfNbAhNFWWmp/zgOKWwlwGsQYJR06/h2BNka2snW1gRD50a+4Gy3KyHwcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvYzxJmg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FdHDF/OR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756489588; x=1788025588;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ffhQYsIDiciYhH+b5mTnOldlYmqjRKlLJpxwdY8kaKM=;
-  b=FdHDF/ORjTykHzDvfkMrhDXH5I5Kc+BOEsEYQQ6KMHkk4kdBfwO/80bm
-   d03ac4CK0tPqbEuUHm+M6/vpxaA/LFl06YPZzaApZ1yfP9P4KHaJD2p9o
-   f4VwdcHtA3i58NTpfXq3gbir4/ssRAyoSIJcAKVv4BUP1c9XH5OvYHiwT
-   f4VeWYcpLXGaJDXPK1y+w65bQ5fg++jOmZiXU2IRM6JqmDPBPHMGovu4n
-   fgEf9TxuNXnKG7Z61vSLVNfxETMH294PSmx/zVtaDnpbGHm14MnYBpKv8
-   xNT837i0FM5CmbEdY1Kc9ttosoMlbnnkBvt/2TChnqyve6I45UsaigoZv
-   A==;
-X-CSE-ConnectionGUID: EGvCSZZ7Tn2SPmb8gL9FhA==
-X-CSE-MsgGUID: KHtJnDTUTbiKIsNJbhcZLA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="58851406"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="58851406"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 10:46:28 -0700
-X-CSE-ConnectionGUID: fGPMj5/lRymVIoM1KyC6qA==
-X-CSE-MsgGUID: oKGJbnFSTQKo7EXZ0qa+Hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
-   d="scan'208";a="175716544"
-Received: from hrotuna-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.246.58])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 10:46:25 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org,
-	jani.nikula@intel.com,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvYzxJmg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E864DC4CEF0;
+	Fri, 29 Aug 2025 19:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756494449;
+	bh=KhB9CZF6CwYnj2naomZZKO+E1e7v9OT05X6wGQRcFd0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lvYzxJmg+ard/fG5EsTMrf2xI7NBgIW3FlZDL6Njre+TqBc0AoWwn1hq5vnG0tb6u
+	 v93dP4zFqrP9v41KlT41RW3qS54lbsJxSzZljt3DL3QZotf4kErIPvCENSBDT7rCce
+	 C9daVpBYm+Z+CgKZysysOZPqzuspv/rXBrz6xhMh5JDfuPkK4u+FnUy9AQ1U4NShj9
+	 2jtDHE5H45OrVlvHtFYkhwfH24pUkvTc5FjQOb3FjegcOgW522clqKk670Lxmc5Evc
+	 EFXvSSvw7SLaN0qzS/VK49Jt8fDpBKWr+tvhV059esuzkMNqImPdwwPHplfvPMNk3p
+	 /yoRkdlTrXSUA==
+From: Kees Cook <kees@kernel.org>
+To: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Yue Haibing <yuehaibing@huawei.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	James Morse <james.morse@arm.com>,
+	Hardevsinh Palaniya <hardevsinh.palaniya@siliconsignals.io>,
+	David Hildenbrand <david@redhat.com>,
+	Zhenhua Huang <quic_zhenhuah@quicinc.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 3/3] overflow: add range_overflows() and range_end_overflows()
-Date: Fri, 29 Aug 2025 20:46:01 +0300
-Message-ID: <20250829174601.2163064-3-jani.nikula@intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250829174601.2163064-1-jani.nikula@intel.com>
-References: <20250829174601.2163064-1-jani.nikula@intel.com>
+Subject: [PATCH v2] arm64: mm: Fix CFI failure due to kpti_ng_pgd_alloc function signature
+Date: Fri, 29 Aug 2025 12:07:25 -0700
+Message-Id: <20250829190721.it.373-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4745; i=kees@kernel.org; h=from:subject:message-id; bh=KhB9CZF6CwYnj2naomZZKO+E1e7v9OT05X6wGQRcFd0=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkbf+X25rEmrrxy7tBxJu6bD0ybft1fnbf1WeeyS8wpD 5jMfcWqOkpZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACYitoORYeHPQzun1WqtEzvy qyioXy5DbZLSbHu/M3/fmv5cuTz/jQXDX+HtxyR2pk2UX1+Td7rdfcH0iIZ3zy2apGMWfbunZrv KmB0A
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Move the range_overflows() and range_end_overflows() along with the _t
-variants over from drm/i915 and drm/buddy to overflow.h.
+Seen during KPTI initialization:
 
-Cc: Kees Cook <kees@kernel.org>
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+  CFI failure at create_kpti_ng_temp_pgd+0x124/0xce8 (target: kpti_ng_pgd_alloc+0x0/0x14; expected type: 0xd61b88b6)
+
+The call site is alloc_init_pud() at arch/arm64/mm/mmu.c:
+
+  pud_phys = pgtable_alloc(TABLE_PUD);
+
+alloc_init_pud() has the prototype:
+
+  static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+                             phys_addr_t phys, pgprot_t prot,
+                             phys_addr_t (*pgtable_alloc)(enum pgtable_type),
+                             int flags)
+
+where the pgtable_alloc() prototype is declared.
+
+The target (kpti_ng_pgd_alloc) is used in arch/arm64/kernel/cpufeature.c:
+
+  create_kpti_ng_temp_pgd(kpti_ng_temp_pgd, __pa(alloc), KPTI_NG_TEMP_VA,
+                          PAGE_SIZE, PAGE_KERNEL, kpti_ng_pgd_alloc, 0);
+
+which is an alias for __create_pgd_mapping_locked() with prototype:
+
+  extern __alias(__create_pgd_mapping_locked)
+  void create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys,
+                               unsigned long virt,
+                               phys_addr_t size, pgprot_t prot,
+                               phys_addr_t (*pgtable_alloc)(enum pgtable_type),
+                               int flags);
+
+__create_pgd_mapping_locked() passes the function pointer down:
+
+  __create_pgd_mapping_locked() -> alloc_init_p4d() -> alloc_init_pud()
+
+But the target function (kpti_ng_pgd_alloc) has the wrong signature:
+
+  static phys_addr_t __init kpti_ng_pgd_alloc(int shift);
+
+The "int" should be "enum pgtable_type".
+
+To make "enum pgtable_type" available to cpufeature.c, move
+enum pgtable_type definition from arch/arm64/mm/mmu.c to
+arch/arm64/include/asm/mmu.h.
+
+Adjust kpti_ng_pgd_alloc to use "enum pgtable_type" instead of "int".
+The function behavior remains identical (parameter is unused).
+
+Fixes: c64f46ee1377 ("arm64: mm: use enum to identify pgtable level instead of *_SHIFT")
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- drivers/gpu/drm/i915/i915_utils.h | 70 -------------------------------
- include/drm/drm_buddy.h           |  9 ----
- include/linux/overflow.h          | 70 +++++++++++++++++++++++++++++++
- 3 files changed, 70 insertions(+), 79 deletions(-)
+ v2: Fixed the Fixes line. ;)
+ v1: https://lore.kernel.org/lkml/20250829154913.work.943-kees@kernel.org/
+Cc: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>
+Cc: Yue Haibing <yuehaibing@huawei.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: <linux-arm-kernel@lists.infradead.org>
+---
+ arch/arm64/include/asm/mmu.h   | 7 +++++++
+ arch/arm64/kernel/cpufeature.c | 5 +++--
+ arch/arm64/mm/mmu.c            | 7 -------
+ 3 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/i915_utils.h b/drivers/gpu/drm/i915/i915_utils.h
-index 968dae941532..eb4d43c40009 100644
---- a/drivers/gpu/drm/i915/i915_utils.h
-+++ b/drivers/gpu/drm/i915/i915_utils.h
-@@ -67,76 +67,6 @@ bool i915_error_injected(void);
- 		drm_err(&(i915)->drm, fmt, ##__VA_ARGS__); \
- })
+diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+index 6e8aa8e72601..49f1a810df16 100644
+--- a/arch/arm64/include/asm/mmu.h
++++ b/arch/arm64/include/asm/mmu.h
+@@ -17,6 +17,13 @@
+ #include <linux/refcount.h>
+ #include <asm/cpufeature.h>
  
--/**
-- * range_overflows() - Check if a range is out of bounds
-- * @start: Start of the range.
-- * @size:  Size of the range.
-- * @max:   Exclusive upper boundary.
-- *
-- * A strict check to determine if the range [@start, @start + @size) is
-- * invalid with respect to the allowable range [0, @max). Any range
-- * starting at or beyond @max is considered an overflow, even if @size is 0.
-- *
-- * Returns: true if the range is out of bounds.
-- */
--#define range_overflows(start, size, max) ({ \
--	typeof(start) start__ = (start); \
--	typeof(size) size__ = (size); \
--	typeof(max) max__ = (max); \
--	(void)(&start__ == &size__); \
--	(void)(&start__ == &max__); \
--	start__ >= max__ || size__ > max__ - start__; \
--})
--
--/**
-- * range_overflows_t() - Check if a range is out of bounds
-- * @type:  Data type to use.
-- * @start: Start of the range.
-- * @size:  Size of the range.
-- * @max:   Exclusive upper boundary.
-- *
-- * Same as range_overflows() but forcing the parameters to @type.
-- *
-- * Returns: true if the range is out of bounds.
-- */
--#define range_overflows_t(type, start, size, max) \
--	range_overflows((type)(start), (type)(size), (type)(max))
--
--/**
-- * range_end_overflows() - Check if a range's endpoint is out of bounds
-- * @start: Start of the range.
-- * @size:  Size of the range.
-- * @max:   Exclusive upper boundary.
-- *
-- * Checks only if the endpoint of a range (@start + @size) exceeds @max.
-- * Unlike range_overflows(), a zero-sized range at the boundary (@start == @max)
-- * is not considered an overflow. Useful for iterator-style checks.
-- *
-- * Returns: true if the endpoint exceeds the boundary.
-- */
--#define range_end_overflows(start, size, max) ({ \
--	typeof(start) start__ = (start); \
--	typeof(size) size__ = (size); \
--	typeof(max) max__ = (max); \
--	(void)(&start__ == &size__); \
--	(void)(&start__ == &max__); \
--	start__ > max__ || size__ > max__ - start__; \
--})
--
--/**
-- * range_end_overflows_t() - Check if a range's endpoint is out of bounds
-- * @type:  Data type to use.
-- * @start: Start of the range.
-- * @size:  Size of the range.
-- * @max:   Exclusive upper boundary.
-- *
-- * Same as range_end_overflows() but forcing the parameters to @type.
-- *
-- * Returns: true if the endpoint exceeds the boundary.
-- */
--#define range_end_overflows_t(type, start, size, max) \
--	range_end_overflows((type)(start), (type)(size), (type)(max))
--
- #define ptr_mask_bits(ptr, n) ({					\
- 	unsigned long __v = (unsigned long)(ptr);			\
- 	(typeof(ptr))(__v & -BIT(n));					\
-diff --git a/include/drm/drm_buddy.h b/include/drm/drm_buddy.h
-index 513837632b7d..04afd7c21a82 100644
---- a/include/drm/drm_buddy.h
-+++ b/include/drm/drm_buddy.h
-@@ -13,15 +13,6 @@
++enum pgtable_type {
++	TABLE_PTE,
++	TABLE_PMD,
++	TABLE_PUD,
++	TABLE_P4D,
++};
++
+ typedef struct {
+ 	atomic64_t	id;
+ #ifdef CONFIG_COMPAT
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 9ad065f15f1d..e49d142a281f 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -84,6 +84,7 @@
+ #include <asm/hwcap.h>
+ #include <asm/insn.h>
+ #include <asm/kvm_host.h>
++#include <asm/mmu.h>
+ #include <asm/mmu_context.h>
+ #include <asm/mte.h>
+ #include <asm/hypervisor.h>
+@@ -1945,11 +1946,11 @@ static bool has_pmuv3(const struct arm64_cpu_capabilities *entry, int scope)
+ extern
+ void create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
+ 			     phys_addr_t size, pgprot_t prot,
+-			     phys_addr_t (*pgtable_alloc)(int), int flags);
++			     phys_addr_t (*pgtable_alloc)(enum pgtable_type), int flags);
  
- #include <drm/drm_print.h>
+ static phys_addr_t __initdata kpti_ng_temp_alloc;
  
--#define range_overflows(start, size, max) ({ \
--	typeof(start) start__ = (start); \
--	typeof(size) size__ = (size); \
--	typeof(max) max__ = (max); \
--	(void)(&start__ == &size__); \
--	(void)(&start__ == &max__); \
--	start__ >= max__ || size__ > max__ - start__; \
--})
+-static phys_addr_t __init kpti_ng_pgd_alloc(int shift)
++static phys_addr_t __init kpti_ng_pgd_alloc(enum pgtable_type type)
+ {
+ 	kpti_ng_temp_alloc -= PAGE_SIZE;
+ 	return kpti_ng_temp_alloc;
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 34e5d78af076..183801520740 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -47,13 +47,6 @@
+ #define NO_CONT_MAPPINGS	BIT(1)
+ #define NO_EXEC_MAPPINGS	BIT(2)	/* assumes FEAT_HPDS is not used */
+ 
+-enum pgtable_type {
+-	TABLE_PTE,
+-	TABLE_PMD,
+-	TABLE_PUD,
+-	TABLE_P4D,
+-};
 -
- #define DRM_BUDDY_RANGE_ALLOCATION		BIT(0)
- #define DRM_BUDDY_TOPDOWN_ALLOCATION		BIT(1)
- #define DRM_BUDDY_CONTIGUOUS_ALLOCATION		BIT(2)
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 154ed0dbb43f..725f95f7e416 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -238,6 +238,76 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- 			      __overflows_type_constexpr(n, T),	\
- 			      __overflows_type(n, T))
+ u64 kimage_voffset __ro_after_init;
+ EXPORT_SYMBOL(kimage_voffset);
  
-+/**
-+ * range_overflows() - Check if a range is out of bounds
-+ * @start: Start of the range.
-+ * @size:  Size of the range.
-+ * @max:   Exclusive upper boundary.
-+ *
-+ * A strict check to determine if the range [@start, @start + @size) is
-+ * invalid with respect to the allowable range [0, @max). Any range
-+ * starting at or beyond @max is considered an overflow, even if @size is 0.
-+ *
-+ * Returns: true if the range is out of bounds.
-+ */
-+#define range_overflows(start, size, max) ({ \
-+	typeof(start) start__ = (start); \
-+	typeof(size) size__ = (size); \
-+	typeof(max) max__ = (max); \
-+	(void)(&start__ == &size__); \
-+	(void)(&start__ == &max__); \
-+	start__ >= max__ || size__ > max__ - start__; \
-+})
-+
-+/**
-+ * range_overflows_t() - Check if a range is out of bounds
-+ * @type:  Data type to use.
-+ * @start: Start of the range.
-+ * @size:  Size of the range.
-+ * @max:   Exclusive upper boundary.
-+ *
-+ * Same as range_overflows() but forcing the parameters to @type.
-+ *
-+ * Returns: true if the range is out of bounds.
-+ */
-+#define range_overflows_t(type, start, size, max) \
-+	range_overflows((type)(start), (type)(size), (type)(max))
-+
-+/**
-+ * range_end_overflows() - Check if a range's endpoint is out of bounds
-+ * @start: Start of the range.
-+ * @size:  Size of the range.
-+ * @max:   Exclusive upper boundary.
-+ *
-+ * Checks only if the endpoint of a range (@start + @size) exceeds @max.
-+ * Unlike range_overflows(), a zero-sized range at the boundary (@start == @max)
-+ * is not considered an overflow. Useful for iterator-style checks.
-+ *
-+ * Returns: true if the endpoint exceeds the boundary.
-+ */
-+#define range_end_overflows(start, size, max) ({ \
-+	typeof(start) start__ = (start); \
-+	typeof(size) size__ = (size); \
-+	typeof(max) max__ = (max); \
-+	(void)(&start__ == &size__); \
-+	(void)(&start__ == &max__); \
-+	start__ > max__ || size__ > max__ - start__; \
-+})
-+
-+/**
-+ * range_end_overflows_t() - Check if a range's endpoint is out of bounds
-+ * @type:  Data type to use.
-+ * @start: Start of the range.
-+ * @size:  Size of the range.
-+ * @max:   Exclusive upper boundary.
-+ *
-+ * Same as range_end_overflows() but forcing the parameters to @type.
-+ *
-+ * Returns: true if the endpoint exceeds the boundary.
-+ */
-+#define range_end_overflows_t(type, start, size, max) \
-+	range_end_overflows((type)(start), (type)(size), (type)(max))
-+
- /**
-  * castable_to_type - like __same_type(), but also allows for casted literals
-  *
 -- 
-2.47.2
+2.34.1
 
