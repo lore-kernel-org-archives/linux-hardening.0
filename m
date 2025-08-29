@@ -1,33 +1,42 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB8673093C6;
-	Fri, 29 Aug 2025 10:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41A0257AEC;
+	Fri, 29 Aug 2025 11:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756463487; cv=none; b=BY4JryNg/K6vePxUPAW/IRRlBW30LFrfJRHW83u1+KhyT0QQH+wJAU6RhQnZ7/rEvmCYQXr0p7C0CKx91mKvgMLMLe8iFTN4pMJe0CXl2W3d5yPyFoWD5AD1GTHx0qEOyDLt5iq4e2B9Pd5/owp6LRTytq7va+1Cg87N9OjIVo0=
+	t=1756467732; cv=none; b=ba1DdkZfZEXbBDuS/4c/SLdXa6uXdg9CzIujt/C4dTzYlok8rFB5TWv+24XWDaSFTuPi9RO5yS2qzyOm5xUlA+obw3GMv1Xpy9eaiKxfCNGvkuSflJB6zSSq43XIwyGUuMPSGevsKVq2EqJo3zrFi7jnQGqwbfDIdwveTZDTNWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756463487; c=relaxed/simple;
-	bh=9zaR7hmeHGzMTBLDpcgrDcO8nHvXWelEcyIRRcN0gHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K6R9fHbsqIhlwaXTlLtTAwJyMzjmlvIHj0h7jHHczZmC5nY4vykZSk53cdKcV3KDi00QlOH2+9XXGMN7LzDcpqg2B3Q/XsBH6V5F7FIfPOYFRWI8Km/xWaQ2lZoVTpJwws1YkNI6Irz1guP10/BKXqYdfAnGJt368C+z2viFIxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1urwO2-0004G4-00; Fri, 29 Aug 2025 12:31:14 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 31C33C0D9E; Fri, 29 Aug 2025 12:27:10 +0200 (CEST)
-Date: Fri, 29 Aug 2025 12:27:10 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	UNGLinuxDriver@microchip.com, Paul Burton <paulburton@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/8] MIPS: generic: Replace deprecated strcpy() in
- ocelot_detect()
-Message-ID: <aLGAfj_22Sr0j8Yh@alpha.franken.de>
-References: <20250817183728.612012-1-thorsten.blum@linux.dev>
- <20250817183728.612012-8-thorsten.blum@linux.dev>
+	s=arc-20240116; t=1756467732; c=relaxed/simple;
+	bh=mGCJapa3IJ0+IehasQuuYXSnKezNpFS2eVXdXMDPA7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sBPMcvPGqovCBgBSPcKmqZ4qAHf9i1o3k7UVovVthlaQx8d4TAaeAjfnxbEHExtGg+tSLe2Nglgm2m7TN99qDxraLBSafrHfB8xuEvjMeqa6KOAUdrgB8iGl7f0yh1QMCa4iJPQAtYWujFyGf/lo8qAgisEa0cKal1E8adnKSXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBfX1eDl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBfX1eDl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E82C4CEF0;
+	Fri, 29 Aug 2025 11:42:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756467732;
+	bh=mGCJapa3IJ0+IehasQuuYXSnKezNpFS2eVXdXMDPA7g=;
+	h=Date:From:To:Cc:Subject:From;
+	b=XBfX1eDlFphW7kw45SYhUUbftjExKsu1A0WI3T+9sqJSt/eTy2fBFbCG17kdAskXm
+	 Uvr0KGP3iiiCQqzMsOcRvJ2oPaoUV/hBeuPV2Nq2a2FIoMZzNZ36emag8EcjWFuIyT
+	 8xZbCbBA7L0fqp+ZH+AidKHFlhxruyls15wJqu9J4Ec82icw2HEAZSJD4e4nopSQI8
+	 P4ytcpuSfRNWdNij/B9zayemNmPOcY4fW5NrK1/D+gUvChCNoPxGcUQxEOU7CwY9Z/
+	 mgOAvP1l+MKjQsG+9sJ2GkSdWwi5/0uNIZWOvJGXbAxSy4pxrqCPv71baYKt/Pv9b5
+	 X7a8sAo4mjmxA==
+Date: Fri, 29 Aug 2025 13:42:06 +0200
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] hyperv: Avoid a hundred -Wflex-array-member-at-end
+ warnings
+Message-ID: <aLGSDpi4xDjUUYVm@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -36,45 +45,64 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250817183728.612012-8-thorsten.blum@linux.dev>
 
-On Sun, Aug 17, 2025 at 08:37:18PM +0200, Thorsten Blum wrote:
-> strcpy() is deprecated; use strscpy() instead.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  arch/mips/generic/board-ocelot.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/mips/generic/board-ocelot.c b/arch/mips/generic/board-ocelot.c
-> index 7115410acb4f..59a0fb243582 100644
-> --- a/arch/mips/generic/board-ocelot.c
-> +++ b/arch/mips/generic/board-ocelot.c
-> @@ -4,6 +4,7 @@
->   *
->   * Copyright (c) 2017 Microsemi Corporation
->   */
-> +#include <linux/string.h>
->  #include <asm/machine.h>
->  #include <asm/prom.h>
->  
-> @@ -41,7 +42,7 @@ static __init bool ocelot_detect(void)
->  
->  		if (prom_argc > 1 && strlen(prom_argv[1]) > 0)
->  			/* ignore all built-in args if any f/w args given */
-> -			strcpy(arcs_cmdline, prom_argv[1]);
-> +			strscpy(arcs_cmdline, prom_argv[1]);
->  	}
->  
->  	return true;
-> -- 
-> 2.50.1
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-applied to mips-next.
+Use the new TRAILING_OVERLAP() helper to fix 159 of the following type
+of warnings:
 
-Thomas.
+    159 ./include/linux/hyperv.h:711:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
+This helper creates a union between a flexible-array member (FAM)
+and a set of members that would otherwise follow it. This overlays
+the trailing members onto the FAM while preserving the original
+memory layout.
+
+Also, move `struct vmbus_close_msg close_msg;` at the end of
+`struct vmbus_channel`, as `struct vmbus_channel_msginfo,` ends
+in a flexible array member.
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ include/linux/hyperv.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index a59c5c3e95fb..efdd570669fa 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -708,8 +708,9 @@ struct vmbus_channel_msginfo {
+ };
+ 
+ struct vmbus_close_msg {
+-	struct vmbus_channel_msginfo info;
+-	struct vmbus_channel_close_channel msg;
++	TRAILING_OVERLAP(struct vmbus_channel_msginfo, info, msg,
++		struct vmbus_channel_close_channel msg;
++	);
+ };
+ 
+ enum vmbus_device_type {
+@@ -800,8 +801,6 @@ struct vmbus_channel {
+ 	struct hv_ring_buffer_info outbound;	/* send to parent */
+ 	struct hv_ring_buffer_info inbound;	/* receive from parent */
+ 
+-	struct vmbus_close_msg close_msg;
+-
+ 	/* Statistics */
+ 	u64	interrupts;	/* Host to Guest interrupts */
+ 	u64	sig_events;	/* Guest to Host events */
+@@ -1008,6 +1007,9 @@ struct vmbus_channel {
+ 
+ 	/* boolean to control visibility of sysfs for ring buffer */
+ 	bool ring_sysfs_visible;
++
++	/* Must be last --ends in a flexible-array member. */
++	struct vmbus_close_msg close_msg;
+ };
+ 
+ #define lock_requestor(channel, flags)					\
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.43.0
+
