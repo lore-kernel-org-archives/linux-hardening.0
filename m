@@ -1,153 +1,86 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC57222584
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Aug 2025 16:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37187334374;
+	Fri, 29 Aug 2025 16:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756484252; cv=none; b=lDV5fh0ivlMU92sv2YIoREcOexz1Ql8wHfc4CiR6hZ4Jfznc9EdBh4C3uZzDP/KStz+6yGsqoLa668O3BH2yIWk16XWVHlTio6YCA/dUNPDKwynuiI7D6BZS/WmNVeuqbhTuAXPwmkZU9V0LN7ELlFbDyTVJi2LcbD6rrNBdQac=
+	t=1756485670; cv=none; b=D3dm2CBDHedm+PJPJkKjMrkmhXChgLRUvy2sp9BCjPYlNvBHe3dXaPdaIeY1Mj1SgqdiqkedEehu6j3J8RnGzyfZUGApwtoq830HMkBaXqVb01v1Oz+aG4TfoQWyUMG9fs1+XvDLN2yH83w8nmgxeZLbisHKvNdavdsbU3IkNsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756484252; c=relaxed/simple;
-	bh=KLt4H1dAsH4m3W8wq5f1JTt1awfasu+AhMOuE6RzBOs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aXmFblvBpZLBzYu1zKJiWP+cqWo6MyuOQr58eTOqUjtYWaFJauPJweZcYLoVVzsG5r8tyvvU7593e7mCais+EhPVWMiK2p8mZloTSY2PwjYY+Oq7vXsdDU+ZvBOLUf29pOHznHnuy7UKc92CadhQbMvbbJEye6fUyAob0jmiV2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=SJByZQBy; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1756485670; c=relaxed/simple;
+	bh=QLBTv41xRWK0HCpldcOBdeOLxGpiyGcqZujmArx47Ms=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=in3uxVYfFgk4QW2j9FUKOhd/Ws4OZyxIEqRkK9NN3p5hq1u/9gnnV2o6cu7iiMGK3IoDpW4nUfWxckVvwIsHYvR7bZZdP2zKrem3qJAFcCUODeE/VS9bG1ubcpO3+iabPCYppUxMTFSAkBOT4LXyETyY3fqWOhtMgNO/CJtVYC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9Os/lNc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="SJByZQBy"
-Received: from eig-obgw-6004b.ext.cloudfilter.net ([10.0.30.210])
-	by cmsmtp with ESMTPS
-	id rlbAugw5bKXDJs1n2uSFuv; Fri, 29 Aug 2025 16:17:24 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id s1n0uiUBzwYTks1n0u7eMn; Fri, 29 Aug 2025 16:17:23 +0000
-X-Authority-Analysis: v=2.4 cv=fYCty1QF c=1 sm=1 tr=0 ts=68b1d293
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=DR2cKC/DEnBA9KqqjaPhpA==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=TsAxZPKnxnV8R9QPSkIA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=jd58pSIsv1e0sCZpmSVms3HbnYFises5DmnzMNo/SI0=; b=SJByZQByYNRohejkbnYICwqHak
-	TIIvcUIMXBt+mCHl5aDfJpFVL2rFm94Zbg4XvBhPkyDWY9G9Rhy3WX89aFk1Tb5aYDVNMrSb3+T9c
-	1COE02dHTnZfIYvPFOpPH6h9ICud9ZDpbhtKwvE9dQEyrhD7V0RrR5+eMg9P97Dh9yhs7mEfDWrQs
-	U/4EHXQI0qeYBMVFeVfKgcwHzh1doY3aFrkNs1trvHtUlmgtB6yA+ZeEEXfh3lclzlGq1tC5yWBkt
-	KSw/AIdTghFQhFKZDbDiM5BBFbtqmTRLnRIGKI+8GvSBYOGjxgz4M4rD6guhHirdVGQ1ZghakoL7p
-	v5DdgLcw==;
-Received: from static-243-216-117-93.thenetworkfactory.nl ([93.117.216.243]:49788 helo=[10.28.229.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1us1mz-00000004L3i-0KqT;
-	Fri, 29 Aug 2025 11:17:21 -0500
-Message-ID: <dc494864-22c9-42a6-ba3b-f64ae753ae53@embeddedor.com>
-Date: Fri, 29 Aug 2025 18:17:03 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9Os/lNc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0F0DC4CEF0;
+	Fri, 29 Aug 2025 16:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756485670;
+	bh=QLBTv41xRWK0HCpldcOBdeOLxGpiyGcqZujmArx47Ms=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Q9Os/lNcdCf4Uzum+cE3j5nXRy5ZscRCZhEdoSLsjWAlzWo9hN3BUUwsrbE+HIhde
+	 hzI6DH2mawBbExNEvyx5ZpAvZWPfbOB8ALucuFuUY9/L0nSblX7ZT+T5xOvj3w0iHV
+	 H7Xq0++BaGEoeeZVgR5ndkpLLCvyXBztp7ZXLymUKxS1iMdNGbPYcCsjoeRqg4sPxZ
+	 VOBG2hgFHRQZmrfiDb8ix8VqCU7Tibt/ZgvAYALM0vvMv3vONCRafF+g0DJxGsXl9H
+	 hZsHSmOOoTgSnjpUH3PR1qAqPBde8e+QtD9aDFl5QngDTpVcu1hpHp4txYdTVSL9eG
+	 I2kzTOerW6fjQ==
+Date: Fri, 29 Aug 2025 12:41:07 -0400
+From: Kees Cook <kees@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>
+CC: Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Yue Haibing <yuehaibing@huawei.com>, Marc Zyngier <maz@kernel.org>,
+ Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+ Joey Gouly <joey.gouly@arm.com>, Yeoreum Yun <yeoreum.yun@arm.com>,
+ James Morse <james.morse@arm.com>,
+ Hardevsinh Palaniya <hardevsinh.palaniya@siliconsignals.io>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>,
+ Zhenhua Huang <quic_zhenhuah@quicinc.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Dev Jain <dev.jain@arm.com>,
+ Yicong Yang <yangyicong@hisilicon.com>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_arm64=3A_mm=3A_Fix_CFI_failure_du?=
+ =?US-ASCII?Q?e_to_kpti=5Fng=5Fpgd=5Falloc_function_signature?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <aLHP-TG3a1Im3kpa@J2N7QTR9R3>
+References: <20250829154913.work.943-kees@kernel.org> <aLHP-TG3a1Im3kpa@J2N7QTR9R3>
+Message-ID: <315CE055-A886-4322-9683-AFE7003B1664@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] hyperv: Avoid a hundred
- -Wflex-array-member-not-at-end warnings
-To: Michael Kelley <mhklinux@outlook.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-References: <aLGSlaa6Llqz7jkJ@kspp>
- <SN6PR02MB4157D4C3A66E0563A9071DF1D43AA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <SN6PR02MB4157D4C3A66E0563A9071DF1D43AA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 93.117.216.243
-X-Source-L: No
-X-Exim-ID: 1us1mz-00000004L3i-0KqT
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: static-243-216-117-93.thenetworkfactory.nl ([10.28.229.44]) [93.117.216.243]:49788
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfO5ngVvqZieX5xoWxh7dRQGC3MlSJFU9HcmymyKSKtNaIgKtszkvQ/uDsXBBsbZ/T5o00pKBF0eMuEsCRKquZJW2uD504pOcJW0NbZcNskA3WHvSvoS6
- 9DWYIZbnt+i+bRwEwBELfgXUcciGe6PVUCM4sGZ/OnUUCQQx27nJHpPKehgO3gGyjl35A5Z5j2SKvXvM6Vr+32pyWqR6yJCkwcUaXIjJPE8lzTNY62we51hw
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
 
-On 8/29/25 18:07, Michael Kelley wrote:
-> From: Gustavo A. R. Silva <gustavoars@kernel.org> Sent: Friday, August 29, 2025 4:44 AM
->>
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Use the new TRAILING_OVERLAP() helper to fix 159 of the following type
->> of warnings:
->>
->>      159 ./include/linux/hyperv.h:711:38: warning: structure containing a flexible array
->> member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> This helper creates a union between a flexible-array member (FAM)
->> and a set of members that would otherwise follow it. This overlays
->> the trailing members onto the FAM while preserving the original
->> memory layout.
->>
->> Also, move `struct vmbus_close_msg close_msg;` at the end of
->> `struct vmbus_channel`, as `struct vmbus_channel_msginfo,` ends
->> in a flexible array member.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> --
->> Changes in v2:
->>   - Fix subject line.
->>
->> v1:
->>   - Link: https://lore.kernel.org/linux-hardening/aLGSDpi4xDjUUYVm@kspp/
->>
->>   include/linux/hyperv.h | 10 ++++++----
->>   1 file changed, 6 insertions(+), 4 deletions(-)
->>
->> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
->> index a59c5c3e95fb..efdd570669fa 100644
->> --- a/include/linux/hyperv.h
->> +++ b/include/linux/hyperv.h
->> @@ -708,8 +708,9 @@ struct vmbus_channel_msginfo {
->>   };
->>
->>   struct vmbus_close_msg {
->> -	struct vmbus_channel_msginfo info;
-> 
-> It turns out that this field of struct vmbus_close_msg is never used.
-> It dates back to 2011, so maybe somewhere along the way it stopped
-> being used, but struct vmbus_close_msg was left unchanged.
-> 
-> So a better solution to the "flex-array-member-not-at-end" issue is
-> to eliminate this structure entirely, and use struct
-> vmbus_channel_close_channel directly in the one place where
-> struct vmbus_close_msg is currently used. I've done a quick test of
-> this change and I don't see any problems.
-> 
-> I'll submit a separate patch with my proposed change, and this
-> patch can be dropped. Does that work?
-Yes, please. Go for it. :)
+On August 29, 2025 12:06:17 PM EDT, Mark Rutland <mark=2Erutland@arm=2Ecom=
+> wrote:
+>On Fri, Aug 29, 2025 at 08:49:21AM -0700, Kees Cook wrote:
+>> Fixes: 47546a1912fc ("arm64: mm: install KPTI nG mappings with MMU enab=
+led")
+>
+>That doesn't look right; that commit is from June 2022, and we only
+>introduced enum pgtable_type in May 2025 in commit:
+>
+>  c64f46ee13779616 ("arm64: mm: use enum to identify pgtable level instea=
+d of *_SHIFT")
+>
+>=2E=2E=2E which landed in v6=2E16=2E
+>
+>AFAICT, that's the commit which broke things=2E
 
-Thanks!
--Gustavo
+Oops, yes, I didn't look close enough=2E Want a v2 with that fixed up?
+
+
+--=20
+Kees Cook
