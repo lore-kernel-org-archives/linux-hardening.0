@@ -1,46 +1,67 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B926202980;
-	Fri, 29 Aug 2025 02:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32F026FC5;
+	Fri, 29 Aug 2025 02:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756433600; cv=none; b=j08qjoNhpI9J46GwApCC79vxUZFMoBagHT2U4QkFcSg46PNK7LiNAVqEvHx0VJXYuStCoAtpVT8J1r9t7e7pwxGTMwO5JjKZP0Y9Zg2R03BFmqVqk3NHga4D/I/PCWE2zQtqwVAkYDGZzmJFz4iPw4gcHHTKfaU8rhCsl5g+87k=
+	t=1756434801; cv=none; b=jUmaYioCHphzVPAHnBMl/GWGBRDnpSMtwmJdzFBmDZEssEh/fwUS4e0yeVUMYPIsFfasR9VA5WatPoAHMqlAFDc7F+0G5jvVgUeyG0HEoIwOYgdzomZaXuFq6B1UbyMD85C4a1e6jJuM+tpXnEd3O8O0ys0s/i3lNhkajYVlGUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756433600; c=relaxed/simple;
-	bh=bn36VH6fLv38tAROLVseb78fk0ahQrjwo5qQOr7SelU=;
+	s=arc-20240116; t=1756434801; c=relaxed/simple;
+	bh=IFNtVKSU1EQmaKEQKXFGEWGqHGx7GU+Q0foHY5ZdsOY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zil6krD0vn2o1lSDHM7LEzewH99mdYVyaAxa/VqKCxEzVOTbgX96oDDlpfjkS8qPVgzzriZ8SxzdFa8ItKvJlzC987vF5b8oefzQU0tJhooLWrqCSKgdfOFpqKx5mk/m9UCmmPrzxQ8Csdn2eWJN7FVsY6RS1GSMkDT0L2VCKy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
-X-QQ-mid: zesmtpgz4t1756433576t23706f55
-X-QQ-Originating-IP: p046whFzyUY8taJB0Gc2SR98nVSkqVtDSMRR9p6MXGA=
-Received: from localhost ( [203.174.112.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 29 Aug 2025 10:12:54 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 8592654146579979855
-Date: Fri, 29 Aug 2025 10:12:54 +0800
-From: Yibo Dong <dong100@mucse.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
-	gustavoars@kernel.org, rdunlap@infradead.org,
-	vadim.fedorenko@linux.dev, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v9 4/5] net: rnpgbe: Add basic mbx_fw support
-Message-ID: <DB12A33105BC0233+20250829021254.GA904254@nic-Precision-5820-Tower>
-References: <20250828025547.568563-1-dong100@mucse.com>
- <20250828025547.568563-5-dong100@mucse.com>
- <d61dd41c-5700-483f-847a-a92000b8a925@lunn.ch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UtXPF8GQ1y4HpNwEN+T81CX5b49I9LFdHW22RywNblOCRgVxSSCD579EAZJS30Pq//OPdH/PjAYVf+bjRG+WASw75dcOemClAsjSJKiw+IBq4cYeuQw7JSgHBUwo3lHghBP3giNuWKYv0qDKwqKvxF6G+uCz/TyPfnlSN50bMoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hjl7ZbxX; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hjl7ZbxX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=/NSh9exXaV3mbXvMj+1kS4uqG4EyWHM1miHRNzuQSLM=;
+	b=hjl7ZbxXK4eydWkCtecrgKvGYg5I86g18ky3ymLIRDCGQEiXg+YpeQk0mtqz3u
+	TcsOAAYx83eG5JvkPjFVOLp5AFw6PBUrL2gzr/x40bkZGxFU6kYtbPjchN3nB0Ac
+	ERsjwcm3G0RyaJqqVB/3imrXd2wNw65O98jPpSFE3UYcI=
+Received: from localhost (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wD3HznMELFo1sYnEw--.1949S2;
+	Fri, 29 Aug 2025 10:30:37 +0800 (CST)
+Date: Fri, 29 Aug 2025 10:30:35 +0800
+From: Qianqiang Liu <qianqiang.liu@163.com>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+	Yury Norov <yury.norov@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Helge Deller <deller@gmx.de>, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Shixiong Ou <oushixiong@kylinos.cn>,
+	Zsolt Kajtar <soci@c64.rulez.org>, Ingo Molnar <mingo@kernel.org>,
+	Nam Cao <namcao@linutronix.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Joel Granados <joel.granados@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Sohil Mehta <sohil.mehta@intel.com>,
+	Feng Tang <feng.tang@linux.alibaba.com>,
+	Sravan Kumar Gundu <sravankumarlpu@gmail.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Anna Schumaker <anna.schumaker@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	Yunhui Cui <cuiyunhui@bytedance.com>, Tejun Heo <tj@kernel.org>,
+	Luo Gengkun <luogengkun@huaweicloud.com>,
+	Li Huafei <lihuafei1@huawei.com>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Yicong Yang <yangyicong@hisilicon.com>, linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, kexec@lists.infradead.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/9] crash_core: use panic_try_start() in crash_kexec()
+Message-ID: <aLEQy-srX89Rndch@debian.debian.local>
+References: <20250825022947.1596226-1-wangjinchao600@gmail.com>
+ <20250825022947.1596226-4-wangjinchao600@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,152 +70,71 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d61dd41c-5700-483f-847a-a92000b8a925@lunn.ch>
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OAj1qrjhA85Aij9gO9YcsnUCJUqHISXM9E4WgsZcAV3J71kpptWBA0nY
-	muP4H9klQqERQIoPhB4RnxnnqyPU8QshvwZHk6jQ14w9Pv8lCYbZlrrcl2hp74KQ63jh0GD
-	2k3InfEJ25UOA+8xNJh+iUKf8z/MaueAqE767dSqQ5wd70BAj9iNhxnadeRWS0icka0GGPK
-	B+j/5POyDAmoJtEQP9Jt/qAOoO4Ays3MbWmmR8kKRbgVNaoCDOahaF70+47chdQCnkXEz3j
-	9enGWaWBICC5wjNn7bj2YRGnKLR2HGiDM3BQ+a6F8UAfQjF3F5xiPtoSJJf/vIqrcxFMla9
-	EzbUQwR7Px5mPwI+siPMD9a2loL9kVYVJMMfVoHtT24dPV60cM39hbV2RyVdapgcb16i+Cl
-	mhsxlFY49nd72uSdlYHuCdxJ+pTpt5gsedtpb6PB5r62cXhj8j3velDR218K4BogipsfFiw
-	gbqFSKShKuPFBch3f2SlAqqzjwA3Zrmy4U/m1IRbzswo8oJzLf0zLIbL2nZgFogouVVwqw8
-	2Sy6TzRiYx3ESnteCqIo+52YI/B2L3XRV2xZu4ZxySy6heUnCMmzqed/kSmLhKL6jYVElok
-	AHWMhdp92aAW2tP8dYmJVpRpzVu7mRDFlbK0sMgBney+1k1wDPiy8gkBgk9hT8DXsP8R/cO
-	XH5A7HY+OTmIqT+S9aNFg8IP5ONk4Yf+JhiwnfQ1zGMVc0eDJj/hPAxYZpGWGbFKsHF+efL
-	xdMpomW17Z5it5itkkcc0UWOlNCyrTrnuHbvWDrCroH2hxaIMvyS0oige2qDCr7Ih4wg/Xy
-	SY5CbSs6/DdFL8UQ7bxfzjlOtyiPUhZ6wbmt0Va8SdbLLq53gbOZyWw/19vSxi73a85bZw/
-	PaTUiZRZYsqVFk62KJqf69CWZHeEKOiLV+x1z5LMWNVWqVYeSsR/vVzq8nsmgKmEzy7dt0I
-	vIALI7tlGROqGemkokqscGDmzM6lXgdVm7kOmH8P5FYfgwdynyijppHs2
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <20250825022947.1596226-4-wangjinchao600@gmail.com>
+X-CM-TRANSID:_____wD3HznMELFo1sYnEw--.1949S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7AF47JFy8JFyUCw18tr1rCrg_yoW8AFW7pF
+	1ayay7Kw4kuFn5Kwn7JrsrtF4Fvw48JayxJa4vvF1fAasxJr15Jryv934xtFWjg343Kw1r
+	AF12g3Zag398XFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0ziuT5PUUUUU=
+X-CM-SenderInfo: xtld01pldqwhxolxqiywtou0bp/1tbiYhq3amiwW6b1mwABsv
 
-On Thu, Aug 28, 2025 at 03:09:51PM +0200, Andrew Lunn wrote:
-> > +/**
-> > + * mucse_mbx_get_capability - Get hw abilities from fw
-> > + * @hw: pointer to the HW structure
-> > + *
-> > + * mucse_mbx_get_capability tries to get capabities from
-> > + * hw. Many retrys will do if it is failed.
-> > + *
-> > + * Return: 0 on success, negative errno on failure
-> > + **/
-> > +int mucse_mbx_get_capability(struct mucse_hw *hw)
-> > +{
-> > +	struct hw_abilities ability = {};
-> > +	int try_cnt = 3;
-> > +	int err;
-> > +	/* It is called once in probe, if failed nothing
-> > +	 * (register network) todo. Try more times to get driver
-> > +	 * and firmware in sync.
-> > +	 */
-> > +	do {
-> > +		err = mucse_fw_get_capability(hw, &ability);
-> > +		if (err)
-> > +			continue;
-> > +		break;
-> > +	} while (try_cnt--);
-> > +
-> > +	if (!err)
-> > +		hw->pfvfnum = le16_to_cpu(ability.pfnum) & GENMASK_U16(7, 0);
-> > +	return err;
-> > +}
+On Mon, Aug 25, 2025 at 10:29:31AM +0800, Jinchao Wang wrote:
+> crash_kexec() had its own code to exclude parallel execution by setting
+> panic_cpu. This is already handled by panic_try_start(). Switch to
+> panic_try_start() to remove the duplication and keep the logic consistent.
 > 
-> I still think this should be a dedicated function to get the MAC
-> driver and firmware in sync, using a NOP or version request to the
-> firmware. The name mucse_mbx_get_capability() does not indicate this
-> function is special in any way, which is it.
-> 
-
-Maybe I should rename it like this?
-
-/**
- * mucse_mbx_sync_fw_by_get_capability - Try to sync driver and fw
- * @hw: pointer to the HW structure
- *
- * mucse_mbx_sync_fw_by_get_capability tries to sync driver and fw
- * by get capabitiy mbx cmd. Many retrys will do if it is failed.
- *
- * Return: 0 on success, negative errno on failure
- **/
-int mucse_mbx_sync_fw_by_get_capability(struct mucse_hw *hw)
-{
-	struct hw_abilities ability = {};
-	int try_cnt = 3;
-	int err;
-	/* It is called once in probe, if failed nothing
-	 * (register network) todo. Try more times to get driver
-	 * and firmware in sync.
-	 */
-	do {
-		err = mucse_fw_get_capability(hw, &ability);
-		if (err)
-			continue;
-		break;
-	} while (try_cnt--);
-
-	if (!err)
-		hw->pfvfnum = le16_to_cpu(ability.pfnum) & GENMASK_U16(7, 0);
-	return err;
-}
-
-> > +/**
-> > + * build_ifinsmod - build req with insmod opcode
-> > + * @req: pointer to the cmd req structure
-> > + * @is_insmod: true for insmod, false for rmmod
-> > + **/
-> > +static void build_ifinsmod(struct mbx_fw_cmd_req *req,
-> > +			   bool is_insmod)
-> > +{
-> > +	req->flags = 0;
-> > +	req->opcode = cpu_to_le16(DRIVER_INSMOD);
-> > +	req->datalen = cpu_to_le16(sizeof(req->ifinsmod) +
-> > +				   MBX_REQ_HDR_LEN);
-> > +	req->reply_lo = 0;
-> > +	req->reply_hi = 0;
-> > +#define FIXED_VERSION 0xFFFFFFFF
-> > +	req->ifinsmod.version = cpu_to_le32(FIXED_VERSION);
-> > +	if (is_insmod)
-> > +		req->ifinsmod.status = cpu_to_le32(1);
-> > +	else
-> > +		req->ifinsmod.status = cpu_to_le32(0);
-> > +}
-> 
-> Why does the firmware care? What does the firmware do when there is no
-> kernel driver? How does it behaviour change when the driver loads?
-> 
-
-fw reduce working frequency to save power if no driver is probed to this
-chip. And fw change frequency to normal after recieve insmod mbx cmd.
-
-Maybe I should add the comment to func "mucse_mbx_ifinsmod"? 
-/**
- * mucse_mbx_ifinsmod - Echo driver insmod status to fw
- * @hw: pointer to the HW structure
- * @is_insmod: true for insmod, false for rmmod
- *
- * mucse_mbx_ifinsmod echo driver insmod status to fw. fw changes working
- * frequency to normal after recieve insmod status, and reduce working
- * frequency if no driver is probed.
- *
- * Return: 0 on success, negative errno on failure
- **/
-int mucse_mbx_ifinsmod(struct mucse_hw *hw, bool is_insmod)
-{
-
-
-}
-
-> Please try to ensure comment say why you are doing something, not what
-> you are doing.
-> 
-> 
->     Andrew
-> 
+> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 > ---
-> pw-bot: cr
+>  kernel/crash_core.c | 15 +++------------
+>  1 file changed, 3 insertions(+), 12 deletions(-)
 > 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index a4ef79591eb2..bb38bbaf3a26 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
+>   */
+>  
+> +#include "linux/panic.h"
 
-Thanks for your feedback.
+Can you change this line of code to #include <linux/panic.h>?
+
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <linux/buildid.h>
+> @@ -143,17 +144,7 @@ STACK_FRAME_NON_STANDARD(__crash_kexec);
+>  
+>  __bpf_kfunc void crash_kexec(struct pt_regs *regs)
+>  {
+> -	int old_cpu, this_cpu;
+> -
+> -	/*
+> -	 * Only one CPU is allowed to execute the crash_kexec() code as with
+> -	 * panic().  Otherwise parallel calls of panic() and crash_kexec()
+> -	 * may stop each other.  To exclude them, we use panic_cpu here too.
+> -	 */
+> -	old_cpu = PANIC_CPU_INVALID;
+> -	this_cpu = raw_smp_processor_id();
+> -
+> -	if (atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu)) {
+> +	if (panic_try_start()) {
+>  		/* This is the 1st CPU which comes here, so go ahead. */
+>  		__crash_kexec(regs);
+>  
+> @@ -161,7 +152,7 @@ __bpf_kfunc void crash_kexec(struct pt_regs *regs)
+>  		 * Reset panic_cpu to allow another panic()/crash_kexec()
+>  		 * call.
+>  		 */
+> -		atomic_set(&panic_cpu, PANIC_CPU_INVALID);
+> +		panic_reset();
+>  	}
+>  }
+>  
+> -- 
+> 2.43.0
+
+-- 
+Best,
+Qianqiang Liu
 
