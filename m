@@ -1,31 +1,30 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C01013093BA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA8263081D0;
 	Fri, 29 Aug 2025 10:31:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756463486; cv=none; b=FT/HmiX+0pBfEAN48ic7HIdqIIiX61EYPuoA+F/zFQLUOCN07En8wJ+pLyMp6wSdnLz/11zx2lx1nDHNADe3jBTcF7Cga+9xVrdzaPElXZDU2uN72YaLYMhWSA5CsjyyW3Nhbx2+41x4iuMMgiTT8c5L3w+z/46PicJQphZYbf0=
+	t=1756463487; cv=none; b=MjQ1LXCrco8726R5zgDxfMyJCwZRlR0nvnUTB8Ce5rpYP3KOH0obAqm6AAAp0nVuC60Od+WaCy229nR3sCvdaJqZYujXq/Xnewlpawy1o3QrPhtCf+5UMU7VWlmF4D+4Uu8Ll1wta1JGnUfPGuiaIv6/CqBDtt0XXhnhmGrXsno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756463486; c=relaxed/simple;
-	bh=8Ut3/ZnA00gLpKqollXtplPZ6JXtj1qcc8FMBuHGQeg=;
+	s=arc-20240116; t=1756463487; c=relaxed/simple;
+	bh=BQH469dsO96mQDynpxqz0O1Bu5LtXeS2jU9VvrD7CUk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VPHD5Fk1wLftWKhEeHXsDZTNEi94Oluj2Uh4Q4rSkUar8QE60hHdEMSugquQ3KTWiNv6NE6Ibvd2cFaaeCU0990p6NQ8H+zCRTJC3p4y+p4C3Z6L4JF+FfouBixsrEnZ0sOA5Bw07+mh2Ur4Ky79lGCrzQt+zSEBtklf5ky+vw8=
+	 Content-Type:Content-Disposition:In-Reply-To; b=un6bkDzUbq84E6Ht2u++tHjwStmS52lYVts+AMi6+JgZqjRpRMBxyJ8NouK+G8dwB49T55Lgm9kUCsTN6+YQ+xfVvPzlzS5DTC06QfriLCQHCCMZ+NQj6ef2fwzyaVXpJssuCxHgSEXrtq3vHYWYtJ76YDxFDS1CknsnT4GspGU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1urwO2-0004GJ-00; Fri, 29 Aug 2025 12:31:14 +0200
+	id 1urwO2-0004G6-00; Fri, 29 Aug 2025 12:31:14 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 4D26AC0DB7; Fri, 29 Aug 2025 12:26:54 +0200 (CEST)
-Date: Fri, 29 Aug 2025 12:26:54 +0200
+	id 61C93C0D9C; Fri, 29 Aug 2025 12:26:13 +0200 (CEST)
+Date: Fri, 29 Aug 2025 12:26:13 +0200
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 To: Thorsten Blum <thorsten.blum@linux.dev>
 Cc: linux-hardening@vger.kernel.org, linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/8] MIPS: octeon: Replace deprecated strcpy() in
- octeon_model_get_string_buffer()
-Message-ID: <aLGAbovvZFViVb1Q@alpha.franken.de>
+Subject: Re: [PATCH 5/8] MIPS: arc: Replace deprecated strcpy() with memcpy()
+Message-ID: <aLGARYWeCQxyvS1F@alpha.franken.de>
 References: <20250817183728.612012-1-thorsten.blum@linux.dev>
- <20250817183728.612012-7-thorsten.blum@linux.dev>
+ <20250817183728.612012-5-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -34,114 +33,88 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250817183728.612012-7-thorsten.blum@linux.dev>
+In-Reply-To: <20250817183728.612012-5-thorsten.blum@linux.dev>
 
-On Sun, Aug 17, 2025 at 08:37:17PM +0200, Thorsten Blum wrote:
-> strcpy() is deprecated; use strscpy() instead.
+On Sun, Aug 17, 2025 at 08:37:15PM +0200, Thorsten Blum wrote:
+> strcpy() is deprecated; use memcpy() instead.
+> 
+> Use pr_debug() instead of printk(KERN_DEBUG) to silence a checkpatch
+> warning.
 > 
 > Link: https://github.com/KSPP/linux/issues/88
 > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 > ---
->  .../cavium-octeon/executive/octeon-model.c    | 31 ++++++++++---------
->  1 file changed, 16 insertions(+), 15 deletions(-)
+>  arch/mips/fw/arc/cmdline.c | 22 +++++++++++++---------
+>  1 file changed, 13 insertions(+), 9 deletions(-)
 > 
-> diff --git a/arch/mips/cavium-octeon/executive/octeon-model.c b/arch/mips/cavium-octeon/executive/octeon-model.c
-> index 657dbad9644e..98996cc0857e 100644
-> --- a/arch/mips/cavium-octeon/executive/octeon-model.c
-> +++ b/arch/mips/cavium-octeon/executive/octeon-model.c
-> @@ -25,6 +25,7 @@
->   * Contact Cavium Networks for more information
->   ***********************license end**************************************/
+> diff --git a/arch/mips/fw/arc/cmdline.c b/arch/mips/fw/arc/cmdline.c
+> index 155c5e911723..86b0e377b713 100644
+> --- a/arch/mips/fw/arc/cmdline.c
+> +++ b/arch/mips/fw/arc/cmdline.c
+> @@ -42,12 +42,13 @@ static char __init *move_firmware_args(int argc, LONG *argv, char *cp)
+>  {
+>  	char *s;
+>  	int actr, i;
+> +	size_t len;
 >  
-> +#include <linux/string.h>
->  #include <asm/octeon/octeon.h>
+>  	actr = 1; /* Always ignore argv[0] */
 >  
->  enum octeon_feature_bits __octeon_feature_bits __read_mostly;
-> @@ -208,16 +209,16 @@ static const char *__init octeon_model_get_string_buffer(uint32_t chip_id,
->  		 */
->  		switch (chip_id & 0xf) {
->  		case 0:
-> -			strcpy(pass, "1.X");
-> +			strscpy(pass, "1.X");
->  			break;
->  		case 1:
-> -			strcpy(pass, "2.X");
-> +			strscpy(pass, "2.X");
->  			break;
->  		case 3:
-> -			strcpy(pass, "3.X");
-> +			strscpy(pass, "3.X");
->  			break;
->  		default:
-> -			strcpy(pass, "X.X");
-> +			strscpy(pass, "X.X");
->  			break;
->  		}
->  		break;
-> @@ -232,13 +233,13 @@ static const char *__init octeon_model_get_string_buffer(uint32_t chip_id,
->  		 */
->  		switch (chip_id & 0xf) {
->  		case 0:
-> -			strcpy(pass, "1.0");
-> +			strscpy(pass, "1.0");
->  			break;
->  		case 2:
-> -			strcpy(pass, "1.1");
-> +			strscpy(pass, "1.1");
->  			break;
->  		default:
-> -			strcpy(pass, "X.X");
-> +			strscpy(pass, "X.X");
->  			break;
->  		}
->  		break;
-> @@ -253,13 +254,13 @@ static const char *__init octeon_model_get_string_buffer(uint32_t chip_id,
->  		 */
->  		switch (chip_id & 0xf) {
->  		case 0:
-> -			strcpy(pass, "1.0");
-> +			strscpy(pass, "1.0");
->  			break;
->  		case 2:
-> -			strcpy(pass, "1.1");
-> +			strscpy(pass, "1.1");
->  			break;
->  		default:
-> -			strcpy(pass, "X.X");
-> +			strscpy(pass, "X.X");
->  			break;
->  		}
->  		break;
-> @@ -273,16 +274,16 @@ static const char *__init octeon_model_get_string_buffer(uint32_t chip_id,
->  		if ((chip_id & 0xFF) < 0x8) {
->  			switch (chip_id & 0x3) {
->  			case 0:
-> -				strcpy(pass, "1.0");
-> +				strscpy(pass, "1.0");
+>  	while (actr < argc) {
+> -		for(i = 0; i < ARRAY_SIZE(used_arc); i++) {
+> -			int len = strlen(used_arc[i][0]);
+> +		for (i = 0; i < ARRAY_SIZE(used_arc); i++) {
+> +			len = strlen(used_arc[i][0]);
+>  
+>  			if (!strncmp(prom_argv(actr), used_arc[i][0], len)) {
+>  			/* Ok, we want it. First append the replacement... */
+> @@ -57,8 +58,9 @@ static char __init *move_firmware_args(int argc, LONG *argv, char *cp)
+>  				s = strchr(prom_argv(actr), '=');
+>  				if (s) {
+>  					s++;
+> -					strcpy(cp, s);
+> -					cp += strlen(s);
+> +					len = strlen(s);
+> +					memcpy(cp, s, len + 1);
+> +					cp += len;
+>  				}
+>  				*cp++ = ' ';
 >  				break;
->  			case 1:
-> -				strcpy(pass, "1.1");
-> +				strscpy(pass, "1.1");
->  				break;
->  			case 3:
-> -				strcpy(pass, "1.2");
-> +				strscpy(pass, "1.2");
->  				break;
->  			default:
-> -				strcpy(pass, "1.X");
-> +				strscpy(pass, "1.X");
->  				break;
->  			}
+> @@ -74,6 +76,7 @@ void __init prom_init_cmdline(int argc, LONG *argv)
+>  {
+>  	char *cp;
+>  	int actr, i;
+> +	size_t len;
+>  
+>  	actr = 1; /* Always ignore argv[0] */
+>  
+> @@ -86,14 +89,15 @@ void __init prom_init_cmdline(int argc, LONG *argv)
+>  
+>  	while (actr < argc) {
+>  		for (i = 0; i < ARRAY_SIZE(ignored); i++) {
+> -			int len = strlen(ignored[i]);
+> -
+> +			len = strlen(ignored[i]);
+>  			if (!strncmp(prom_argv(actr), ignored[i], len))
+>  				goto pic_cont;
 >  		}
-> @@ -447,7 +448,7 @@ static const char *__init octeon_model_get_string_buffer(uint32_t chip_id,
->  	default:
->  		family = "XX";
->  		core_model = "XX";
-> -		strcpy(pass, "X.X");
-> +		strscpy(pass, "X.X");
->  		suffix = "XXX";
->  		break;
->  	}
+> +
+>  		/* Ok, we want it. */
+> -		strcpy(cp, prom_argv(actr));
+> -		cp += strlen(prom_argv(actr));
+> +		len = strlen(prom_argv(actr));
+> +		memcpy(cp, prom_argv(actr), len + 1);
+> +		cp += len;
+>  		*cp++ = ' ';
+>  
+>  	pic_cont:
+> @@ -105,6 +109,6 @@ void __init prom_init_cmdline(int argc, LONG *argv)
+>  	*cp = '\0';
+>  
+>  #ifdef DEBUG_CMDLINE
+> -	printk(KERN_DEBUG "prom cmdline: %s\n", arcs_cmdline);
+> +	pr_debug("prom cmdline: %s\n", arcs_cmdline);
+>  #endif
+>  }
 > -- 
 > 2.50.1
 
