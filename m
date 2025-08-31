@@ -1,102 +1,174 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974D027450;
-	Sun, 31 Aug 2025 02:23:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCDC4A1A;
+	Sun, 31 Aug 2025 06:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756607037; cv=none; b=TSL01SvcktOLICOwaSY85UijZ+gLO7lgR0h63VOJ/AGNqa+Gb0VIBCQYH6ZaH4ek3FebkSD8N1GDnQOB904DuN4X6QdfvzSbXSbWXbPEoUkP6HZHW+zMVRRhq9Q3SMKJ/EBXgTvUVgMX8eAtvtUOlQJNJhJm8XzMQNKuVud/h9s=
+	t=1756620434; cv=none; b=daypjGtKcYCwZrQh3wut/dlJLNcFEMBcMkBQcP/WQFH9OQbo3eYknCj7czdJPwwQlwmYdzNG0j8+F4EzSvGgpcrOWpaMyeruBJfwTYlKl6XH/WxwhYxKgZb8DcQPG5sklsm++Om/9afrykVTsJ5IqKuWlncBkO5ikIxAqYWlh9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756607037; c=relaxed/simple;
-	bh=QY+f+HqL7N0KVufxdAS9SBjt9GAPYlHKLVQxyLvCaMc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KbKkCNuNLsAfgQY/NqAfK4qyj4R9Q+xUL6OEP2B7NHjus5InKAMNgy0QfhfVsyjssU5eNdpF17MHlsEbj/6Fzd7YjbYxDbuW9a1u/4a3zEvcopW4ivYUlWoTtWaRWnDn0ZS3PxSLHMJqC9xCzm+EpP0r6dskIyj51E1nbBOMSyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o8Si7Gnt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756620434; c=relaxed/simple;
+	bh=ABopUsGvRIKCQV1pVsnu1etx9G+hckoqj745dqdbdv0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bg5nG7xrbnkzrJA6eHSRPzn60NmXHrUv+U6pGG7jdTQUpraT4K1bbcFmYghQNuqSRR/2htMdPF5hjt7sloPW2/EDzpAB6yYioNFrpw8xhKU4dZL04x9f+PBoGNicvHigPyENLCs7OgryATZB79WXYjaYaopymm0i8ihPAt8pIM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kx3x8bbl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o8Si7Gnt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34929C4CEEB;
-	Sun, 31 Aug 2025 02:23:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kx3x8bbl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 128C1C4CEED;
+	Sun, 31 Aug 2025 06:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756607036;
-	bh=QY+f+HqL7N0KVufxdAS9SBjt9GAPYlHKLVQxyLvCaMc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=o8Si7Gnt6ZuN7xodmjugjqU6kz6F8MvjVBX8il20JsGzqFFx3tZVeOtczyDmhoQ2F
-	 Kbfml7DY/iOBvBhmQ/CVFwo75xhouBEJa7ClAxXCK21a4IOzsDlUqrgxYKg4K4JoBb
-	 NXh+YXabf7RISM3AWSjr5E8OKFqfzDzaje/4XccYX3Ikr4BEE5zUyJFdEvctl2pUfs
-	 rR9tvDQmuyOWjptphylOmrC6hT/I6pz72puJEosqLauj2tOyJ3gpvbq2un4crbmQWi
-	 nNzdzk8c9TplJfVznmb4Cp3jkKYeQttnDWWZL14o5g2ju7ab2sbFm2s4H2A5iiuRS1
-	 dM5EhSuLQCeng==
-From: Kees Cook <kees@kernel.org>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Kees Cook <kees@kernel.org>,
-	kernel test robot <lkp@intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Vineet Gupta <vgupta@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] arc: Fix __fls() const-foldability via __builtin_clzl()
-Date: Sat, 30 Aug 2025 19:23:53 -0700
-Message-Id: <20250831022352.it.055-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	s=k20201202; t=1756620432;
+	bh=ABopUsGvRIKCQV1pVsnu1etx9G+hckoqj745dqdbdv0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Kx3x8bblaAPaf/loZQgl3jUQIte6fkjPaGOyCwNFx+ROwOkvnPZEpoX84JoD37vuZ
+	 l5CW+sopI2FVBFFjvT+j7jOA0a02CBnNjLX7jIClPNDT0VoDxrcESZYywdRB9uii32
+	 m9VxGqSv3eWq60rd3gdhsIjjD0TDc9v6jBmr9U9tKySAPM7gGZHyAaBCPvDafZIh2O
+	 kWjhZ3XZlbCYMr6ZT1rEHCwrjvGNvE+Fm/ZJkLaQdTA7Dv36hClRTcU5k2h+K+F9BN
+	 YxTdj57G3FywFwNHImv7sTEK8nDvnnyFJTf/SXzKtokMskUREaq6qkY6qWoxMztQxr
+	 TRs56u8kdAZuw==
+Message-ID: <49070681-9111-404a-a965-ca2b2eb2988c@kernel.org>
+Date: Sun, 31 Aug 2025 08:07:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2452; i=kees@kernel.org; h=from:subject:message-id; bh=QY+f+HqL7N0KVufxdAS9SBjt9GAPYlHKLVQxyLvCaMc=; b=owGbwMvMwCVmps19z/KJym7G02pJDBmbN1ksCfpj2HxijuWzN0bihen7c97kM6xgN+BlFO3z5 3v1VLC7o5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCJH+hkZmpa+62KwOpTOJJ21 vkZeSD+98DH3XrdQ06LjJqpxrSsSGBk6NThnTWyxOZcXW1cjoXyp/VHzki8f/yad+Lz97uF5SdM YAA==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/5] tty: Add KUnit test framework for TTY drivers
+To: Abhinav Saxena <xandfury@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+ llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20250826-tty-tests-v1-0-e904a817df92@gmail.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250826-tty-tests-v1-0-e904a817df92@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-While tracking down a problem where constant expressions used by
-BUILD_BUG_ON() suddenly stopped working[1], we found that an added static
-initializer was convincing the compiler that it couldn't track the state
-of the prior statically initialized value. Tracing this down found that
-ffs() was used in the initializer macro, but since it wasn't marked with
-__attribute__const__, the compiler had to assume the function might
-change variable states as a side-effect (which is not true for ffs(),
-which provides deterministic math results).
+On 27. 08. 25, 0:51, Abhinav Saxena wrote:
+> This patch series introduces a KUnit testing framework for the TTY
+> subsystem, enabling deterministic, automated testing of TTY drivers and
+> core functionality without requiring hardware or userspace interaction.
+> 
+> On an x86_64 build with CONFIG_GCOV enabled, these tests increased
+> TTY subsystem coverage to approximately 10.6% line coverage and
+> 14.7% function coverage [1].
+> 
+> Problem Statement
+> -----------------
+> Testing TTY drivers today requires:
+> - User-space interaction through device nodes
+> - Complex setup with ptys or real hardware
+> - Limited ability to test error paths reliably and deterministically
+> 
+> This series solves these issues by providing in-kernel KUnit tests that
+> exercise real TTY core paths under controlled, deterministic conditions.
+> 
+> What This Series Provides
+> -------------------------
+> 1. Reusable test helpers (`tty_test_helpers.h`):
+>     - Minimal (~150 LOC) infrastructure that any TTY driver should be
+>     able to use
+>     - Automatic resource management
+>     - Integrated into core files under KUnit guard, with
+>       `EXPORT_SYMBOL_IF_KUNIT()` to keep the production symbol table
+>       clean
+> 
+> 2. Mock TTY driver:
+>     - Demonstrates how drivers can leverage the helpers
+>     - Enables deterministic scenarios without hardware
+> 
+> 3. Core TTY tests:
+>     - Validate open/close/read/write/termios paths
+>     - Exercise hangup, resize, and error handling
+>     - Ensure real kernel paths are tested, not mocked stubs
+> 
+> 4. ttynull driver tests:
+>     - Validate data sink behavior of the null driver
+>     - Provide a minimal driver contract baseline
+> 
+> 5. Optional coverage support:
+>     - GCOV integration for test coverage analysis
+> 
+> Future Work
+> -----------
+> With this foundation merged, follow-up work can:
+> - Add more coverage of TTY core functions
+> - Enable each TTY driver to maintain its own KUnit suite
+> - Introduce stress tests and race detection
+> - Extend to include more tests for other tty drivers:
+>    - UART drivers: test interrupt handling without hardware
+>    - USB serial: validate disconnect and reconnect sequences
+>    - PTY drivers: test resize, flow control, and hangups
+>    - Virtual consoles: test Unicode and input handling
+>    
+> Testing
+> -------
+> - All patches pass `checkpatch.pl`
+> - Verified on x86_64 with:
+>      ./tools/testing/kunit/kunit.py run \
+>          --kunitconfig=.kunit/ \
+>          --kunitconfig=drivers/tty/tests/.kunitconfig \
+>          --arch=x86_64
+> - All tests pass (working around tty_read wrapper in progress)
+> 
+> Feedback welcome! :)
 
-For arc architecture with CONFIG_ISA_ARCV2=y, the __fls() function
-uses __builtin_arc_fls() which lacks GCC's const attribute, preventing
-compile-time constant folding, and KUnit testing of ffs/fls fails on
-arc[3]. A patch[2] to GCC to solve this has been sent.
+Wow, looks good. Has it found something yet :)?
 
-Add a fix for this by handling compile-time constants with the standard
-__builtin_clzl() builtin (which has const attribute) while preserving
-the optimized arc-specific builtin for runtime cases. This has the added
-benefit of skipping runtime calculation of compile-time constant values.
-Even with the GCC bug fixed (which is about "attribute const") this is a
-good change to avoid needless runtime costs, and should be done
-regardless of the state of GCC's bug.
 
-Build tested ARCH=arc allyesconfig with GCC arc-linux 15.2.0.
+FWIW
+Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
 
-Link: https://github.com/KSPP/linux/issues/364 [1]
-Link: https://gcc.gnu.org/pipermail/gcc-patches/2025-August/693273.html
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202508031025.doWxtzzc-lkp@intel.com/ [3]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- v2: clarify commit log (we want this patch regardless of GCC being fixed)
- v1: https://lore.kernel.org/lkml/20250826034354.work.684-kees@kernel.org/
----
- arch/arc/include/asm/bitops.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arc/include/asm/bitops.h b/arch/arc/include/asm/bitops.h
-index 5340c2871392..df894235fdbc 100644
---- a/arch/arc/include/asm/bitops.h
-+++ b/arch/arc/include/asm/bitops.h
-@@ -133,6 +133,8 @@ static inline __attribute__ ((const)) int fls(unsigned int x)
-  */
- static inline __attribute__ ((const)) unsigned long __fls(unsigned long x)
- {
-+	if (__builtin_constant_p(x))
-+		return x ? BITS_PER_LONG - 1 - __builtin_clzl(x) : 0;
- 	/* FLS insn has exactly same semantics as the API */
- 	return	__builtin_arc_fls(x);
- }
+thanks,
 -- 
-2.34.1
-
+js
+suse labs
