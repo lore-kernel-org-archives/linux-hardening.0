@@ -1,73 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C29263F2D
-	for <linux-hardening@vger.kernel.org>; Mon,  1 Sep 2025 10:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E239242D9F
+	for <linux-hardening@vger.kernel.org>; Mon,  1 Sep 2025 12:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756720926; cv=none; b=LduKoRKynEiCS7lNpJfb46TZdk+2M8AKucgX3axG6VVdStP2r1IG8Nn1Ah3UhYH9CSPY5g9Q2/JPKRYtVNfJ3OvdH7nvQzas+iZI6kGYxh1I4btLnhsP8kEz6LVhMmC7LpS6cq4Vr4apMBlgitaFi9aWyMP1O1KIqF211hrYVhY=
+	t=1756728173; cv=none; b=V8QhLVCB/sgf9PQPxKjuG2hh0qPXL6T7pwnRTKqftUqgyfR78YCFf8M0qwGYaqNkSA818U679epUrer0oyWu96o5aRgzoQHBYaKBD3ocf507VwjVA+Yn7FCdWUNPyttqG0j67avEL3m5Jda791LCAtQzXH1Aq1vVI8snLwQD/lY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756720926; c=relaxed/simple;
-	bh=ypTD0sEZG5IOONmhSh4yZK8w8GcKNQIdnI9zf9EhGuE=;
+	s=arc-20240116; t=1756728173; c=relaxed/simple;
+	bh=8cO1XIiop7tlwEYA72YK/zDG0yqN75FP63jpCU3Sb3U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IZf+1j14hKCRyyBJ6aGqZ529BkCJrLHyhSTh0Wj+rPowS8b0Rg4sL9kpZmueERs5wJPc8y92ajpzAFJhBY3UyO9NuHMVr43sr+Zv+nv8U427i+KNjGPOlaetcvdYROAm8Dy+0iyeO1jeixJ+KGoPHKTTTDnnyvPiInM493+4/K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CQix3hq0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=Wn2Bgo0uqhjQuRlfM3p0EqOGVVZ1V65CwGqZxh4kYiXlMfgSawxBPQAFt6GkU3psqjsj5XB8OixMRpVRpCaqykMXBN3RnkefpwQS4Z1bEJCqGjgVs+WEW0l0BzuYZgroOIb69SdzL2Q3kyKQKhRwz2z6snSsa65uUgkCYFrzewo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XvMiE8Nt; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CQix3hq0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756720923;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+lQeSnVszPSSY9ZXSFHEL5gERJYR6xjSMj4HUufxrw4=;
-	b=CQix3hq00bRBN/IAtV2Cr9gNpZENe+1tROP+kSGL58N0dnlhFsldM187IW0CtjcPWtx1Vg
-	PSnbTzJY4ClUpo6rOT298GBiBNxn6jKvcrxSDwmAcCEN580wH0S9i35dWGfBX2q5FL6Iib
-	pPI4v+7/tL5l2fBHBiYRjNzS2/9NFNs=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-494-PC_z2WFuO6O-313tA0-ipA-1; Mon, 01 Sep 2025 06:02:02 -0400
-X-MC-Unique: PC_z2WFuO6O-313tA0-ipA-1
-X-Mimecast-MFC-AGG-ID: PC_z2WFuO6O-313tA0-ipA_1756720921
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3d160b611fdso1260692f8f.2
-        for <linux-hardening@vger.kernel.org>; Mon, 01 Sep 2025 03:02:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XvMiE8Nt"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3d1bf79d7acso1222326f8f.0
+        for <linux-hardening@vger.kernel.org>; Mon, 01 Sep 2025 05:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756728170; x=1757332970; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RnfmWiYHUC8i19glkM7oL/LSJL9iA4N5hQ/wPd1r+F0=;
+        b=XvMiE8NtCm26jovAFPIJKndkpRI67zXpt39QogtmkP3kmj1nRyNDlzhgGzBP/8X3Il
+         28YcVzX86ZzY8V/odgnYo4zTVg6/3RNCz7Rj3Versuz+AihAa9lhw8cj0snNT4RqVFrN
+         HSCKz0FTng5UDyYYu3CWGjZ2EoD29Ul5rdMNE3iKhIWxRTntdfla5SBszpuYCXmzBAWv
+         g1cpKoyIOAbenxvAjmcWZoiBHNcIJUrLCMW+c4DwJYoo8Wm0sIF6SKUeMd5xV+zIn1tI
+         kUQT7l762EdGTQ/prYDXbgQuf1j4QEz4iRAj28FHIzIHX68O0H6cvAfdmxH9YYMWu6ts
+         Cx5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756720921; x=1757325721;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+lQeSnVszPSSY9ZXSFHEL5gERJYR6xjSMj4HUufxrw4=;
-        b=GtAWXbIm4pTZZPPy8vHEy5RAb+oYRQP7YRTAm4DwmyScS5fVH3ma69DytFtT0XtGwO
-         9z5TuyXONE9sT4CURQSzbJZGnBxaRjLOAojZqI+9Ibb8ydtv8mlJpHbp51e9Dv3B/ClU
-         Aj4zC7EDq4aW4Y9ElWeklDjTxoRcjOKtx1pIDiyAl79gGwLxr9cAsFTPu/6ouznP80wc
-         OpfVA22Ydr605covD0Lopt5jvFwFB5PLgxaYVRlf/qtXn59J1eMp9sgZI4071dI7xFWY
-         XeD7e2v9OsJW70c36CH+XEe+X+Y/Edmc3GFtZcSqldxhBn4u90vdQPUeyFLgBAjuB0VF
-         XxNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyhDk/0OcJYPI1rCY2bSwzU3Cgr5D2zRZwRh5GGztyWhwzYAGZmI31gzic9PkDbw1nYqEPv54IFFCEXtX4XOo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV9krbvN8APmGYbmUMhIM0aON09tdn1qUFGmS+oYOqV7M8fi2b
-	Nxt0xjW6EZqNzPk5m9ylOAJHfHMa9G200qFC45IQiMq3wGLOPFuA9Kn5ZKng+wi4UjgrKy4GSPH
-	Vhqvo5FN+5aNdH01VkLQAW6hTmPjGe0Ega2dvIqi+2p82XxsjbTzRMQKakf6GYES1Z8R93Q==
-X-Gm-Gg: ASbGncs1L/qXvHZK3HUU2V9w5Hv5mZKKH1cSWjX2uLmFWJuGp1Vzsj1/c9tUiTUJUTf
-	s6t27SfNwmY5DPBG/DUarqgTXomJjFmTUYG6o+aFjRRjdOP5cAbTGbLA8pO4L6IJJlJjL3pYwdY
-	4GoOaWT2C2WyR0usxLHloHhJTjeYiqNEmF04NPlNKhq0oM8oBVoIknMXt8y/Uqbpe/7AJDs6C68
-	eVde7FgVnr7hw9mZFLHUQ27Xx6RLJHvJBcXh/j1jGKGH030b7Y/gleHOa+IWKRK8dwllNM8FL70
-	a6Y6LQaedMFWW2XtGzBgB1aiGDogLMnCl9d37Gf3ysJZqQV/hOluzTBMyQqLLyNyv3S46tHZzVI
-	co5t1xOadMwb/zdhehW0LK+OkLyTmS1orzlYDEbAASjQSth5YwnjOGToqEJTWYGR53ik=
-X-Received: by 2002:a5d:64cd:0:b0:3d1:abf7:e1c8 with SMTP id ffacd0b85a97d-3d1d98d60e1mr4874715f8f.0.1756720920935;
-        Mon, 01 Sep 2025 03:02:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGvPsDFpHZYqBUf8mT2gRUFJpfAuTdUtgOPMP4pMlCUZ06zRhnpYdXw7CHR6fjLFikWold/+w==
-X-Received: by 2002:a5d:64cd:0:b0:3d1:abf7:e1c8 with SMTP id ffacd0b85a97d-3d1d98d60e1mr4874687f8f.0.1756720920452;
-        Mon, 01 Sep 2025 03:02:00 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f37:2b00:948c:dd9f:29c8:73f4? (p200300d82f372b00948cdd9f29c873f4.dip0.t-ipconnect.de. [2003:d8:2f37:2b00:948c:dd9f:29c8:73f4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf275d2717sm14699314f8f.15.2025.09.01.03.01.58
+        d=1e100.net; s=20230601; t=1756728170; x=1757332970;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RnfmWiYHUC8i19glkM7oL/LSJL9iA4N5hQ/wPd1r+F0=;
+        b=g0oNPJcLFpSmo08dK8buvaTEbA7PGdx8/4zDduWWQnIetxOCuI4nFhEdq9gbZGmSE1
+         /mY9Zkm3SCZU+k6eI2q83gcwT5E0H6vsmwZFLYSTfLTFUABOPEok0MuwQ7+BQoSgk6Lh
+         OmVLoEwb7pylzzTdZQgQDB3Ify3bMGMkBgerWZh13aztM5VVeQZzyisPdSDgOJNiMma7
+         tXOxK2TZ3XnGaXxQrK2QQgfO6XSpBqxx42YAFHZut3PWSeWFzW7HG2FKVYp0tv0me9Ek
+         qZDjg2FVU8nVrvQjqAngEzj7BGJBSNvlvWXMFvsK8GUbWT1ZHacFrzE0YTY5oP1ceOvL
+         nr4w==
+X-Forwarded-Encrypted: i=1; AJvYcCVzewWZw2hJ0pso0SDyLFG4iemsQepw4Rx18zF7QepNWgrtflVuuriQKJcwex/s19DdOJAObWffGXKHG5MQWtk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypPosnWpuWEwNjBHP2oUEk+XqYjs92UHkazfhLTJQsurVDjhMX
+	D3FgE60Rj1D09JUkrHkta5/H9dnQl9EtkenYtYmMMob4RBu2km8Mj5j8CeGQpRwmdZY=
+X-Gm-Gg: ASbGncuSCxGNCDbVnDO7Eb4X7cPTwLbpCp04ocX1FHAeV1yWeOx7Z+t4F0bGKK2rDw+
+	ePSWFYwJOtiE1jd3mzoUMoVlK/sdE/1ch+wdJcHbpi27xC9xKYXXW3X3yYQSRX5Wxp3zNQd91QU
+	YuECUg3rMiHUiZFUmu1JqJNObe0U5M+5J3tP4C19sGfLvVVAraN9QP5fjslCGBJgbZCP0kKRE0V
+	PN6PKQKDlycTpoI/5EFZzjAq8/oOMloAhEmveC1hHqmwx6FZZ9tiBVl2CD72b0qOubrLlZy2gyl
+	vArD/i7Z6P5Q8xwBG5mxDF3ymhhSjgpOI/wWsiAdL2oBmkPvXGiutjuV6YnEUl3cjOINgo3tIrb
+	c1DRIY8p3oYZ01RZk4EiIUtcCuKbrxPHNFFD3011QJNoxEjdaugiw8sAmYVO3dBSpTUqqbnprf2
+	zDUm0=
+X-Google-Smtp-Source: AGHT+IGtFYqe1NkisHt6TuhFoDyL75/fnRaNQlYXgCsJGFwGxCneAkzy9wIFe6z6w5vZIfrX/R2fCA==
+X-Received: by 2002:a5d:5f90:0:b0:3d9:2fa8:1009 with SMTP id ffacd0b85a97d-3d92fa81454mr79263f8f.45.1756728169537;
+        Mon, 01 Sep 2025 05:02:49 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:335e:2208:72de:40f7:b7be:9bb7? ([2a0d:3344:335e:2208:72de:40f7:b7be:9bb7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e88785bsm154333855e9.14.2025.09.01.05.02.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Sep 2025 03:01:59 -0700 (PDT)
-Message-ID: <7e1f4f64-dfc4-4366-8e01-0891b2d4d2b4@redhat.com>
-Date: Mon, 1 Sep 2025 12:01:58 +0200
+        Mon, 01 Sep 2025 05:02:48 -0700 (PDT)
+Message-ID: <94f537ae-c2b1-4928-a3f3-6449c30cb624@linaro.org>
+Date: Mon, 1 Sep 2025 15:02:41 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -76,7 +69,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC][PATCH v2 22/29] mm/numa: Register information into Kmemdump
-To: Eugen Hristev <eugen.hristev@linaro.org>, Michal Hocko <mhocko@suse.com>
+To: David Hildenbrand <david@redhat.com>, Michal Hocko <mhocko@suse.com>
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-arch@vger.kernel.org, linux-mm@kvack.org, tglx@linutronix.de,
  andersson@kernel.org, pmladek@suse.com,
@@ -86,7 +79,6 @@ Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  Christoph Hellwig <hch@infradead.org>,
  Sergey Senozhatsky <senozhatsky@chromium.org>
 References: <20250724135512.518487-1-eugen.hristev@linaro.org>
- <ffc43855-2263-408d-831c-33f518249f96@redhat.com>
  <e66f29c2-9f9f-4b04-b029-23383ed4aed4@linaro.org>
  <751514db-9e03-4cf3-bd3e-124b201bdb94@redhat.com>
  <aJCRgXYIjbJ01RsK@tiehlicka>
@@ -105,90 +97,66 @@ References: <20250724135512.518487-1-eugen.hristev@linaro.org>
  <98afe1bd-99d2-4b5d-866a-e9541390fab4@linaro.org>
  <c59f2528-31b0-4b9d-8d20-f204a0600ff6@redhat.com>
  <40e802eb-3764-47af-8b4f-9f7c8b5b60c1@linaro.org>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZoEEwEIAEQCGwMCF4ACGQEFCwkIBwICIgIG
- FQoJCAsCBBYCAwECHgcWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaJzangUJJlgIpAAKCRBN
- 3hD3AP+DWhAxD/9wcL0A+2rtaAmutaKTfxhTP0b4AAp1r/eLxjrbfbCCmh4pqzBhmSX/4z11
- opn2KqcOsueRF1t2ENLOWzQu3Roiny2HOU7DajqB4dm1BVMaXQya5ae2ghzlJN9SIoopTWlR
- 0Af3hPj5E2PYvQhlcqeoehKlBo9rROJv/rjmr2x0yOM8qeTroH/ZzNlCtJ56AsE6Tvl+r7cW
- 3x7/Jq5WvWeudKrhFh7/yQ7eRvHCjd9bBrZTlgAfiHmX9AnCCPRPpNGNedV9Yty2Jnxhfmbv
- Pw37LA/jef8zlCDyUh2KCU1xVEOWqg15o1RtTyGV1nXV2O/mfuQJud5vIgzBvHhypc3p6VZJ
- lEf8YmT+Ol5P7SfCs5/uGdWUYQEMqOlg6w9R4Pe8d+mk8KGvfE9/zTwGg0nRgKqlQXrWRERv
- cuEwQbridlPAoQHrFWtwpgYMXx2TaZ3sihcIPo9uU5eBs0rf4mOERY75SK+Ekayv2ucTfjxr
- Kf014py2aoRJHuvy85ee/zIyLmve5hngZTTe3Wg3TInT9UTFzTPhItam6dZ1xqdTGHZYGU0O
- otRHcwLGt470grdiob6PfVTXoHlBvkWRadMhSuG4RORCDpq89vu5QralFNIf3EysNohoFy2A
- LYg2/D53xbU/aa4DDzBb5b1Rkg/udO1gZocVQWrDh6I2K3+cCs7BTQRVy5+RARAA59fefSDR
- 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
- VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
- /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
- iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
- 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
- zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
- azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
- FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
- sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
- 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
- EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
- IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
- 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
- Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
- sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
- yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
- 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
- r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
- 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
- CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
- qIws/H2t
-In-Reply-To: <40e802eb-3764-47af-8b4f-9f7c8b5b60c1@linaro.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: cPk-hYKZX3FFLWiJyAYqHqThtKIRhLCHq9wwtJFaCMs_1756720921
-X-Mimecast-Originator: redhat.com
+ <7e1f4f64-dfc4-4366-8e01-0891b2d4d2b4@redhat.com>
+From: Eugen Hristev <eugen.hristev@linaro.org>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <7e1f4f64-dfc4-4366-8e01-0891b2d4d2b4@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
->>> What do you think ?
+
+
+On 9/1/25 13:01, David Hildenbrand wrote:
+>>>> What do you think ?
+>>>
+>>> Looks a bit over-engineered, and will require us to import a header
+>>> (likely kmemdump.h) in these files, which I don't really enjoy.
+>>>
+>>> I would start simple, without any such macro-magic. It's a very simple
+>>> function after all, and likely you won't end up having many of these?
+>>>
 >>
->> Looks a bit over-engineered, and will require us to import a header
->> (likely kmemdump.h) in these files, which I don't really enjoy.
+>> Thanks David, I will do it as you suggested and see what comes out of it.
 >>
->> I would start simple, without any such macro-magic. It's a very simple
->> function after all, and likely you won't end up having many of these?
->>
+>> I have one side question you might know much better to answer:
+>> As we have a start and a size for each region, this start is a virtual
+>> address. The firmware/coprocessor that reads the memory and dumps it,
+>> requires physical addresses.
 > 
-> Thanks David, I will do it as you suggested and see what comes out of it.
+> Right. I was asking myself the same question while reviewing: should we 
+> directly export physical ranges here instead of virtual ones. I guess 
+> virtual ones is ok.
+
+In patch 22/29, some areas are registered using
+memblock_phys_alloc_try_nid() which allocates physical.
+In this case , phys_to_virt() didn't work for me, it was returning a
+wrong address. I used __va() and this worked. So there is a difference
+between them.
+
 > 
-> I have one side question you might know much better to answer:
-> As we have a start and a size for each region, this start is a virtual
-> address. The firmware/coprocessor that reads the memory and dumps it,
-> requires physical addresses.
+> What do you suggest to use to retrieve that
+>> address ? virt_to_phys might be problematic, __pa or __pa_symbol? or
+>> better lm_alias ?
+> 
+> All areas should either come from memblock or be global variables, right?
 
-Right. I was asking myself the same question while reviewing: should we 
-directly export physical ranges here instead of virtual ones. I guess 
-virtual ones is ok.
+I would like to be able to register from anywhere. For example someone
+debugging their driver, to just register kmalloc'ed struct.
+Other use case is to register dma coherent CMA areas.
 
-What do you suggest to use to retrieve that
-> address ? virt_to_phys might be problematic, __pa or __pa_symbol? or
-> better lm_alias ?
+> 
+> IIRC, virt_to_phys() should work for these. Did you run into any 
+> problems with them or why do you think virt_to_phys could be problematic?
+> 
 
-All areas should either come from memblock or be global variables, right?
+I am pondering about whether it would work in all cases, considering
+it's source code comments that it shall not be used because it does not
+work for any address.
 
-IIRC, virt_to_phys() should work for these. Did you run into any 
-problems with them or why do you think virt_to_phys could be problematic?
+Someone also reported its unavailability like this:
+drivers/debug/kmemdump_coreimage.c:67:24: error: call to undeclared
+function 'virt_to_phys'; ISO C99 and later do not support implicit
+function declarations [-Wimplicit-function-declaration]
 
--- 
-Cheers
-
-David / dhildenb
+I am yet to figure out which config fails.
 
