@@ -1,114 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014A719F12A;
-	Mon,  1 Sep 2025 01:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A96F1B0F19;
+	Mon,  1 Sep 2025 02:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756691720; cv=none; b=hlmZnLcmps92pdHExKqyIj9iPuLSW9a8J9GnU99UdGe4qRAnD6yohh9ydla2S/0Qdby60w6L1n7f4HX9T6MhCcA0ZzYRVyZAk1jEFtkENeGpZvHZq4JxaPdE8aoj17Qfte375LET46oygfGVLSOfzR0+8Q3hI84nCrkimrobbEY=
+	t=1756692527; cv=none; b=aUKywGhSwRWNmSHhDWmMLZsw5ZnI672LeDQk+Q6HIf4sXB8tdKyfbKxe+2aUq4fO3LZtLfLXVJ1zmiigvR8STYkutMDqWLrGF21qnt6hGJRrhMhZfj00qOdrGcR3Pn4D8+knqVvLpwKyVUgsRpEe/aOTNfe/E/GHe52o7CZ5Uzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756691720; c=relaxed/simple;
-	bh=y9uUD5rhZqWaFwFllOW9Bnz7ZPvxhH94nppg8HPo8WM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mizTcn5Cp1q/9Js4qPpdkn1HQfLK3CihGoNL0wJvwCL8IymI2OrIzLeE/GG42Rqfzbeal4LcrC6vI623NUb7X8SoyIt/pOGQmJa11FfqPhLLCMImDjsoSBkM4rYOIkyf89bfmH6U4s++tcErXYosQwFTGJGbB5xm/hpd/DEqCf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JuzNmjA/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JuzNmjA/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA76C4CEED;
-	Mon,  1 Sep 2025 01:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756691718;
-	bh=y9uUD5rhZqWaFwFllOW9Bnz7ZPvxhH94nppg8HPo8WM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JuzNmjA/vCoP7TafQO8Xv9Ns+jfihrA0K3Wh9SzcJbJdwMp77YZE+2O+80JPZ4fHr
-	 um7vfZfN1rXqBklwR8YjKwjvJ0I/UIereHZNhyMrRe/1irSBdEjO1ASVe+tgIHYsnJ
-	 tiz7Gk7tJP2CsAvBVjxHZNZOWo66lhjX3Mr1OMPAOxX08sVybRgj+OK6ytw66vL1BB
-	 8Sh1+Y5KfKQmrgTwe0pQZCJ1Adq75AUaYSrKxEUBUMH7IpfxAEdfPgwpTOHaAPbGkx
-	 yCCg70sCBFhfSO1HdxqD3Eh5nU8OozG0yxdo5cjmxkZqm33jIDsgEhKFxEy4HfjR6s
-	 2tzcg/78Vnrnw==
-Message-ID: <bfad9056-7ae7-4bd8-8600-a603ab8439ca@kernel.org>
-Date: Sun, 31 Aug 2025 18:55:16 -0700
+	s=arc-20240116; t=1756692527; c=relaxed/simple;
+	bh=Vm/kZN9c7s81CxsjYSlovb7fQlggwebCdtC5M962/Ds=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rhhUVqpd8AvRTok1mQBrW1Kn0f4LspOaStDR9Akh8mrQJJ26a0uTNNYQkiAD15ApwQuZPlDCrrn6nmOAQFK/ze/vHgWKukXzqQGBZQh+1M5tQ5NyyhjbfqqL3G9Qf43mEyQJ99bU0xZKSRC299paVj4RnmwRc7Qz8zasDsepfWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: zesmtpgz9t1756692493t00716bf8
+X-QQ-Originating-IP: 4hWyaNGsfTG/p5ecPAf++Im/XolX69MjIDgC8Pm9QiU=
+Received: from localhost ( [203.174.112.180])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 01 Sep 2025 10:08:11 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 17451087102426230808
+Date: Mon, 1 Sep 2025 10:08:11 +0800
+From: Yibo Dong <dong100@mucse.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
+	gustavoars@kernel.org, rdunlap@infradead.org,
+	vadim.fedorenko@linux.dev, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next v9 4/5] net: rnpgbe: Add basic mbx_fw support
+Message-ID: <384738E266C55C1A+20250901020811.GA21078@nic-Precision-5820-Tower>
+References: <20250828025547.568563-1-dong100@mucse.com>
+ <20250828025547.568563-5-dong100@mucse.com>
+ <d61dd41c-5700-483f-847a-a92000b8a925@lunn.ch>
+ <DB12A33105BC0233+20250829021254.GA904254@nic-Precision-5820-Tower>
+ <8a76222e-8da7-4499-981f-64660e377e1c@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arc: Fix __fls() const-foldability via
- __builtin_clzl()
-To: Kees Cook <kees@kernel.org>, Yury Norov <yury.norov@gmail.com>
-Cc: kernel test robot <lkp@intel.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, Vineet Gupta
- <vgupta@kernel.org>, linux-kernel@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-hardening@vger.kernel.org
-References: <20250831022352.it.055-kees@kernel.org>
-From: Vineet Gupta <vgupta@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250831022352.it.055-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8a76222e-8da7-4499-981f-64660e377e1c@lunn.ch>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NkLA2q2LD229wshJrtN9PYJ1yPuxDSKIY4fbApA8Kr64XeR+MrKuCA8i
+	APafXAyKbnp8x/DwZXUgYDSCXsQPlf3kWJfVXWf/6mizZE5ui37ddNb1tqUrXrUVQiQ3yUu
+	98zcZ+Xf+71Aocf/hrUtCX0zMN8aTLRLxaxy1sA6taS4PfHEl1TY0pMISft/c4DAeHQcUBz
+	MQGisJWRrzpXPotfOTeVyr40VIeXQoKT6NsCmhyHxQUShOQQaSm8DtjiogaJnhpWBOAZFWh
+	IaMaeDehiTPVwzRffvrMvBcnwn2WdsuK5KvLZPu9Xxhvpf+bmLpgvPqicl1WhM8mzGt1Crd
+	E8BveBLvAQ+zJmXyUPtKCFgyOXVnhXy697xe4AXM2c/cqpEEzRkIZT3rT/0lprRSJZ3hGMP
+	+GoXFkI+0PMhSIhZzKJ+SWTJ7GEN+H/xxm0RoTrJPh9hQlHXuk3xA3leA/fI3897qVDNuym
+	3JAwFIK2sbo80t6GmOiXavi2ISnbLcQU0OkOuTYGkKnJOewC5XGyXyNiOVk9nQeVTfDejfi
+	+2EDr3WJrj/k1BccH2KKeT/eMp7YOO4WoPhKzPMiVErPFByt8LEbW2i/t+89qAfuOZ7EtnE
+	jcR3sbSDboUhvilQleS/LkNteBCg8sT86aowHzOi2kdPMBQlxszT4ueRiv1hB3f69K3Md62
+	TJwVc78voN0ykCq44L/sAz8XlA7qrhChkgwaar+MVzQ7hOueVJNUgoA0MqWivF/QkEJ2Tor
+	zEUTI6fHr5eGsbq1xXlTnpvmGxpvLIH1E0P7bH+qqjzq77WeohkUsmXTbUzd1XkTwxgxBXA
+	CVQ9xE2+Hvh1v/oparjaItivnAiYiil3zq9/zrwZQdBxwBnRJshUoDvtLccglULCI81G/4A
+	GkK0dM5/r3fqf7Xuz4G6tw58Nxx9/beCSTMyR/9idQx3P/qBNelZMDOVWVFWoRYpz5SbWyL
+	7GOabwhtB3jRyAPvAKPGn6/EcVB7D0BIRPohaHZEGNjfCa3+j2ZwT5VrzBt/b9sO6HHqUH+
+	ZLhUbYWBEZXeEjAQaWU3LybNPQY6o=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On 8/30/25 19:23, Kees Cook wrote:
-> While tracking down a problem where constant expressions used by
-> BUILD_BUG_ON() suddenly stopped working[1], we found that an added static
-> initializer was convincing the compiler that it couldn't track the state
-> of the prior statically initialized value. Tracing this down found that
-> ffs() was used in the initializer macro, but since it wasn't marked with
-> __attribute__const__, the compiler had to assume the function might
-> change variable states as a side-effect (which is not true for ffs(),
-> which provides deterministic math results).
->
-> For arc architecture with CONFIG_ISA_ARCV2=y, the __fls() function
-> uses __builtin_arc_fls() which lacks GCC's const attribute, preventing
-> compile-time constant folding, and KUnit testing of ffs/fls fails on
-> arc[3]. A patch[2] to GCC to solve this has been sent.
->
-> Add a fix for this by handling compile-time constants with the standard
-> __builtin_clzl() builtin (which has const attribute) while preserving
-> the optimized arc-specific builtin for runtime cases. This has the added
-> benefit of skipping runtime calculation of compile-time constant values.
-> Even with the GCC bug fixed (which is about "attribute const") this is a
-> good change to avoid needless runtime costs, and should be done
-> regardless of the state of GCC's bug.
->
-> Build tested ARCH=arc allyesconfig with GCC arc-linux 15.2.0.
->
-> Link: https://github.com/KSPP/linux/issues/364 [1]
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2025-August/693273.html
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202508031025.doWxtzzc-lkp@intel.com/ [3]
-> Signed-off-by: Kees Cook <kees@kernel.org>
+On Fri, Aug 29, 2025 at 09:48:12PM +0200, Andrew Lunn wrote:
+> > Maybe I should rename it like this?
+> > 
+> > /**
+> >  * mucse_mbx_sync_fw_by_get_capability - Try to sync driver and fw
+> >  * @hw: pointer to the HW structure
+> >  *
+> >  * mucse_mbx_sync_fw_by_get_capability tries to sync driver and fw
+> >  * by get capabitiy mbx cmd. Many retrys will do if it is failed.
+> >  *
+> >  * Return: 0 on success, negative errno on failure
+> >  **/
+> > int mucse_mbx_sync_fw_by_get_capability(struct mucse_hw *hw)
+> > {
+> > 	struct hw_abilities ability = {};
+> > 	int try_cnt = 3;
+> > 	int err;
+> > 	/* It is called once in probe, if failed nothing
+> > 	 * (register network) todo. Try more times to get driver
+> > 	 * and firmware in sync.
+> > 	 */
+> > 	do {
+> > 		err = mucse_fw_get_capability(hw, &ability);
+> > 		if (err)
+> > 			continue;
+> > 		break;
+> > 	} while (try_cnt--);
+> > 
+> > 	if (!err)
+> > 		hw->pfvfnum = le16_to_cpu(ability.pfnum) & GENMASK_U16(7, 0);
+> > 	return err;
+> > }
+> 
+> Why so much resistance to a NOP or firmware version, something which
+> is not that important? Why do you want to combine getting sync and
+> getting the capabilities?
+> 
 
-Acked-by: Vineet Gupta <vgupta@kernel.org>
+But firmware not offer a NOP command.
+(https://lore.kernel.org/netdev/8989E7A85A9468B0+20250825013053.GA2006401@nic-Precision-5820-Tower/) 
 
-Phew ! Thanks for taking time to track this down and also submitting the gcc
-fix, like a true open source Good Samaritan.
-Please let me know if you want me to take it via ARC tree, just be advised it
-will be delayed due to slow'ish development.
+I will rename it like 'mucse_mbx_sync_fw', and rename opcode
+'GET_PHY_ABILITY = 0x0601' to 'SYNC_FW = 0x0601'.
 
-Cheers,
--Vineet
+> > fw reduce working frequency to save power if no driver is probed to this
+> > chip. And fw change frequency to normal after recieve insmod mbx cmd.
+> 
+> So why is this called ifinsmod? Why not power save? If you had called
+> this power save, i would not of questioned what this does, it is
+> pretty obvious, and other drivers probably have something
+> similar. Some drivers probably have something like open/close, which
+> do similar things. Again, i would not of asked. By not following what
+> other drivers are doing, you just cause problems for everybody.
 
+Sorry for it.
 
-> ---
->  v2: clarify commit log (we want this patch regardless of GCC being fixed)
->  v1: https://lore.kernel.org/lkml/20250826034354.work.684-kees@kernel.org/
-> ---
->  arch/arc/include/asm/bitops.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arc/include/asm/bitops.h b/arch/arc/include/asm/bitops.h
-> index 5340c2871392..df894235fdbc 100644
-> --- a/arch/arc/include/asm/bitops.h
-> +++ b/arch/arc/include/asm/bitops.h
-> @@ -133,6 +133,8 @@ static inline __attribute__ ((const)) int fls(unsigned int x)
->   */
->  static inline __attribute__ ((const)) unsigned long __fls(unsigned long x)
->  {
-> +	if (__builtin_constant_p(x))
-> +		return x ? BITS_PER_LONG - 1 - __builtin_clzl(x) : 0;
->  	/* FLS insn has exactly same semantics as the API */
->  	return	__builtin_arc_fls(x);
->  }
+> 
+> So please give this a new name. Not just the function, but also the
+> name of the firmware op and everything else to do with this. The
+> firmware does not care what the driver calls it, all it sees is a
+> binary message format, no names.
+> 
+> Please also go through your driver and look at all the other names. Do
+> they match what other drivers use. If not, you might want to rename
+> them, in order to get your code merged with a lot less back and forth
+> with reviewers.
+> 
+
+I see, I will check all names.
+
+> 	Andrew
+> 
+
+Thanks for you feedback.
 
