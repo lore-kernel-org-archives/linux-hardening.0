@@ -1,259 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837A22DF150;
-	Mon,  1 Sep 2025 16:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0112E6CB1
+	for <linux-hardening@vger.kernel.org>; Mon,  1 Sep 2025 17:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756745813; cv=none; b=F1X0Y4o8UqLRjWalqliWB1nmv47P/McHnN5oCUJIn51ITEYaEU1K+mabq9TiS0p8xpf6H53wAzxNDfBQf/AXxW88hsVO7mXyBRv8YNqb3sEux0v3mNPBF7bSp5qK0B9blaTCEdqmfQs6OiTTrV1E7FoMDM0wxiLJ3eDuubX5mig=
+	t=1756749491; cv=none; b=HqMtociYf6pIl912x5FQfLpbkFAc0uvAfP5s18ftXmYgeBl/pensGHzqLyyNbZ+7Ac2xj42GhORa+X7J0Kw0CrzZsNnaMSJcTxZNSYmjwlWWCmR25ztCW8ol8wUFrkXl71CkBVW1uqF1B7Lg5xj+0vGJeg2Mc9IV1ql6StwoC08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756745813; c=relaxed/simple;
-	bh=20LR7yZxZ7jgK8PFAyG1nr1bSN9YMTK88U5EEu7oj88=;
+	s=arc-20240116; t=1756749491; c=relaxed/simple;
+	bh=3byL/Fj0HJ/ZBpYR43St9uLQGKkKDjP2v7oMiVkvnmU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q9FR3QGjnA8Vb6D0X+Q6qukJ7C+zMfuAKTTqaVrSJkim6NjIg0JJMZofc41CYqxqPV9HgXILaTz1jwcfvIYVSvcbA5bkaYXe4zGwTx2PUfrSxTyNX5zM2Rb7TQTf+BRslH6+iYt8o8/phhw7hOjMo2rwwpWlVULse19mpwegvE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DcPdTN+W; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q8/1DYAZYZrT9W8+a/SvgUlWajSp8mrgquX8FiiYyXoPZjpeMdwx/5fxoLr0PYDEh/s1LVS1yck2SmIii//ICF18fsquswa6KY18291gxF4seRdHUXbE+IQ60cuYZauiQAWXxOacPDOrSH8P16NkktTgIVeS3wlsn8UiSi37WmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZG1gY2ut; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DcPdTN+W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5596FC4CEF0;
-	Mon,  1 Sep 2025 16:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756745813;
-	bh=20LR7yZxZ7jgK8PFAyG1nr1bSN9YMTK88U5EEu7oj88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DcPdTN+WWGE96roQtfgI5hduqOYqDQqpH5rYt/4CPVQ4g6HiuFjnVxDWy0CMjznbu
-	 vYAUwZSnim6X233yoi6pSPwDAYZORQvORdLJm2wdbchjEimGwS7DtP+bNGxkRWM3JL
-	 JT2GTySo8NSWG/9i7puLZ2CstVwLtYdLVfBKz/cIrPbLiZ3qNaV8LAFaODdJYu0l5i
-	 N52zDGiLV+svuusOfRhV9E9uJoBfhBP2dL1M3SRJL6thygg8BDnIDwj7PBjiuUEek8
-	 Y3psAJJUqytLwJr5NYMdGkWd8v32nHb3N2gl4uZFE1GAUBx90ajSCp0qYviGyLO1xJ
-	 h8LGAR5uYtMUQ==
-Date: Mon, 1 Sep 2025 09:56:52 -0700
-From: Kees Cook <kees@kernel.org>
-To: Vegard Nossum <vegard.nossum@oracle.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Marco Bonelli <marco@mebeim.net>, Petr Vorel <pvorel@suse.cz>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] kconfig: Add transitional symbol attribute for
- migration support
-Message-ID: <202509010949.9A61A98@keescook>
-References: <20250830020109.it.598-kees@kernel.org>
- <59c4f103-7f1b-4829-bd82-0d392047fea4@oracle.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZG1gY2ut"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3ceb830dd58so2536915f8f.0
+        for <linux-hardening@vger.kernel.org>; Mon, 01 Sep 2025 10:58:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1756749488; x=1757354288; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WBrUlowGaoMISX9iJ5RVVV/ygG/eI+RUk2vTf+rH8qI=;
+        b=ZG1gY2utY2Efkm9aWHKJRfTIui1Gpb1ubIUJp2PsMFnYGvHfo7FgdKlKFkMLwS12P6
+         Q6tPJ+pQpOwa2CP4AkK9HSBhskatqOmM1ymsUHD7Dw0amPtUUIjwgMQ9MoHVxEX+yIN5
+         X0oX1wTTonJmb5MYRiwHjaPuqmgRdmYXHvqhl2xG9iq8xc575YDtiKMqe3ID4VqlPQqA
+         qNU28X+CUp8gUzVX3kXtoGHyYszGnLUu72AY4SuQhDun9NIKXM2Pjk3vTKE3eYDbFEjl
+         xMP04CV710kMyP/EkIHiAzUJnsjg02lvE5fEkx/5CgAr5TGuwItnRkK30vUY7ILFnbHO
+         pW/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756749488; x=1757354288;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WBrUlowGaoMISX9iJ5RVVV/ygG/eI+RUk2vTf+rH8qI=;
+        b=sBs5EsYOv5nZgWcGd4osMwX9VJLpyoTVUPLNFUgxKoA7HXxiAGTQxWeKkW6eUO9LSK
+         TYceEv67aVfy0AF51XwnHV5TWPENy6wGzLQLKszAf27XSA7fQpzhzP0e0bZs/+3QoALH
+         lIEo/B4kosCIwE38PqzrT1mBbwR7KpCEOdZ8hdKTdxSdjM2SN6IQCAvPz5hOBMgbbfZL
+         tfw+vX2lrMSX+30pvjvcGl2uykSmDyAKPC8zZz8W9Vwv0B7rOG+D9GdgTIc5ytkkQpMY
+         pGRp52qhhiQeyUHHOnKgtVi9XxrkTHWgRzNpxaWb5W8zsNe4Q5fSwEvEjaNoel1qL01P
+         7LlA==
+X-Forwarded-Encrypted: i=1; AJvYcCW14BJ4UqRYhqqBVE+B6TAmudikw5jQCym5OqNkI8rFHJiIZNFNJ6yMTvUpDgkpFtFA99WyItNxt+FJrxgVuqw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7JgtEzdcE7HmGLP/VtwDjiQ/KOADlf/NdNXBvEdDQPiqdKdeH
+	JeWV2BlhrWB+42Vsf2uSL5IEXKjGsfh3Vm4CzkzQOr7u3V5odb4UUDX35V04M/7rC+Y=
+X-Gm-Gg: ASbGnctlHOxsm2jP9KaOCEZUfLgM8ZUeO1vsYeXvW/8qJd1H1/aXa09utlvjLRW8x2w
+	3iG0m/wkbtbrCR0eOSuqw0zCZkRvPEi9IqDUMYYeqXba+tcGA63jRx4/qUkoIKDIzZLrEn/QTaz
+	PR8h1FMfSfva9BCAIyCGF1HvygqFGuqnGVgzZIFNudJd/omdqqWF8JHx45RBHOaTsEexqwcY2ag
+	S1Si3epeo6CpE9IuRYVMpRexR0YtXUdTQLKsVuVk6G07SucLwu2/0ppaKt0Kh1S5lh5bBuse2OM
+	EsgJcJbAVJLmko47D1Uy1h+RJ7vrRuKRVnmEyXSrNiuNifeR7r2+0FD5RbJmiaZVLDmvJngjqK2
+	3QLoo9qDhSDS2f9XhshDx9ldxtX+fH2gfgFGzxCawMdsQzf3l8oWP+Q==
+X-Google-Smtp-Source: AGHT+IEKDAoZsVvcs49zoW6IewZ0iCEshtHwmKL7QaW26/0FEP2utdDdAE4fZYnG+d5xmXCXfom+zA==
+X-Received: by 2002:a05:6000:1ac8:b0:3c7:244:a4be with SMTP id ffacd0b85a97d-3d1dd04e24bmr7849050f8f.10.1756749487957;
+        Mon, 01 Sep 2025 10:58:07 -0700 (PDT)
+Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf34491a5asm15994104f8f.55.2025.09.01.10.58.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Sep 2025 10:58:07 -0700 (PDT)
+Date: Mon, 1 Sep 2025 19:58:05 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	linux-hardening@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Chen Ridong <chenridong@huaweicloud.com>
+Subject: Re: [RFC] cgroup: Avoid thousands of -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <y7nqc4bwovxmef3r6kd62t45w3xwi2ikxfmjmi2zxhkweezjbi@ytenccffmgql>
+References: <b3eb050d-9451-4b60-b06c-ace7dab57497@embeddedor.com>
+ <wkkrw7rot7cunlojzyga5fgik7374xgj7aptr6afiljqesd6a7@rrmmuq3o4muy>
+ <d0c49dc9-c810-47d2-a3ce-d74196a39235@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lkdsthcjr73q7k4e"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <59c4f103-7f1b-4829-bd82-0d392047fea4@oracle.com>
+In-Reply-To: <d0c49dc9-c810-47d2-a3ce-d74196a39235@embeddedor.com>
 
-On Mon, Sep 01, 2025 at 10:34:19AM +0200, Vegard Nossum wrote:
-> Drive-by review... consider it more as "here's some stuff that could be
-> worth looking at" rather than blocking in any way.
 
-Thanks for looking at it!
+--lkdsthcjr73q7k4e
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC] cgroup: Avoid thousands of -Wflex-array-member-not-at-end
+ warnings
+MIME-Version: 1.0
 
-> 
-> On 30/08/2025 04:01, Kees Cook wrote:
-> > During kernel option migrations (e.g. CONFIG_CFI_CLANG to CONFIG_CFI),
-> > existing .config files need to maintain backward compatibility while
-> > preventing deprecated options from appearing in newly generated
-> > configurations. This is challenging with existing Kconfig mechanisms
-> > because:
-> > 
-> > 1. Simply removing old options breaks existing .config files.
-> > 2. Manually listing an option as "deprecated" leaves it needlessly
-> >     visible and still writes them to new .config files.
-> > 3. Using any method to remove visibility (.e.g no 'prompt', 'if n',
-> >     etc) prevents the option from being processed at all.
-> > 
-> > Add a "transitional" attribute that creates symbols which are:
-> > - Processed during configuration (can influence other symbols' defaults)
-> > - Hidden from user menus (no prompts appear)
-> > - Omitted from newly written .config files (gets migrated)
-> > - Restricted to only having help sections (no defaults, selects, etc)
-> >    making it truly just a "prior value pass-through" option.
-> > 
-> > The transitional syntax requires a type argument and prevents type
-> > redefinition:
-> > 
-> >      config OLD_OPTION
-> >          transitional bool
-> >          help
-> >            Transitional config for OLD_OPTION migration.
-> > 
-> >      config NEW_OPTION
-> >          bool "New option"
-> >          default OLD_OPTION
-> 
-> Can you add this to scripts/kconfig/tests/ + both positive and negative
-> tests? Tests are run with 'make testconfig' but (AFAICT) doesn't
-> actually recompile config/mconf/etc. before running the tests, so small
-> gotcha there.
+On Mon, Sep 01, 2025 at 05:21:22PM +0200, "Gustavo A. R. Silva" <gustavo@em=
+beddedor.com> wrote:
+> Because struct cgroup ends in a flexible-array member `ancestors`.
+> This triggers the -Wflex-array-member-not-at-end warns about. So,
+> while `ancestors` is indeed a flexible array, any instance of
+> cgroup embedded in another struct should be placed at the end.
 
-Yes, I will get that added if people are generally happy with this
-feature idea. :)
+Oh, so TRAILING_OVERLAP() won't work like that?
+(I thought that it'd hide the FAM from the end of the union and thus it
+could embedded when wrapped like this. On second thought, I realize
+that's exclusive with the static validations.)
 
-> > diff --git a/scripts/kconfig/expr.h b/scripts/kconfig/expr.h
-> > index fe2231e0e6a4..be51574d6c77 100644
-> > --- a/scripts/kconfig/expr.h
-> > +++ b/scripts/kconfig/expr.h
-> > @@ -127,6 +127,21 @@ struct symbol {
-> >   	/* SYMBOL_* flags */
-> >   	int flags;
-> > +	/*
-> > +	 * Transitional symbol - processed during configuration but hidden from
-> > +	 * user in menus and omitted from newly written .config files. Used for
-> > +	 * backward compatibility during config option migrations (e.g.,
-> > +	 * CFI_CLANG → CFI). Transitional symbols can still influence default
-> > +	 * expressions of other symbols.
-> > +	 */
-> > +	bool transitional:1;
-> > +
-> > +	/*
-> > +	 * Symbol usability - calculated as (visible != no || transitional).
-> > +	 * Determines if symbol can be used in expressions.
-> > +	 */
-> > +	bool usable:1;
-> > +
-> 
-> It's a bit of a "red flag" to see bitfield bools just after an "int
-> flags;" member... should these be SYMBOL_ flags?
-> 
-> Speaking of SYMBOL_ flags, there's apparently one that controls whether
-> a given symbol should be written out to .config:
+> However, if we change it to something like this (and of course
+> updating any related code, accordingly):
+>=20
+> -       struct cgroup *ancestors[];
+> +       struct cgroup **ancestors;
+>=20
+> Then the flex in the middle issue goes away, and we can have
+> struct cgroup embedded in another struct anywhere.
+>=20
+> The question is if this would be an acceptable solution?
+>=20
+> I'd probably prefer this to remain a flexible-array member,
+> but I'd like to hear people's opinions and feedback. :)
 
-Yeah, I mentioned this in the commit log, and maybe I just have to make
-this not as easily readable? But you have a point about "usable" below...
+I'd prefer if cgroup_create could still work with one allocation only
+both for struct cgroup and its ancestors array. (Cgroup allocation
+happens many times in a day.)
 
-> scripts/kconfig/expr.h:#define SYMBOL_WRITE      0x0200  /* write symbol to
-> file (KCONFIG_CONFIG) */
-> 
-> This seems like something you'd like to use somehow -- maybe simply
-> clear it in sym_calc_value() if it's transitional? Similar to how it's
-> done for choice values:
-> 
->         if (sym_is_choice(sym))
->                 sym->flags &= ~SYMBOL_WRITE;
+The increase in struct cgroup_root size is IMO not that problematic.
+(There are typically at most CGROUP_SUBSYS_COUNT roots with gradual
+trend to only the single cgrp_dfl_root.)
 
-This is actually handled naturally as part of this logic:
+Note that it'd be good to keep it enclosed within struct cgroup_root
+(cgroup1_root_to_use could use struct_size()), however, the
+cgrp_dfl_root would still need the storage somewhere.
 
-> >   	if (sym->visible != no)
-> >   		sym->flags |= SYMBOL_WRITE;
+HTH,
+Michal
 
-i.e. "usable" doesn't change SYMBOL_WRITE getting set.
+--lkdsthcjr73q7k4e
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > @@ -205,6 +206,16 @@ config_option: T_PROMPT T_WORD_QUOTE if_expr T_EOL
-> >   	printd(DEBUG_PARSE, "%s:%d:prompt\n", cur_filename, cur_lineno);
-> >   };
-> > +config_option: T_TRANSITIONAL type T_EOL
-> > +{
-> > +	if (current_entry->sym->type != S_UNKNOWN)
-> > +		yyerror("transitional type cannot be set after symbol type is already defined");
-> > +	menu_set_type($2);
-> > +	current_entry->sym->transitional = true;
-> > +	printd(DEBUG_PARSE, "%s:%d:transitional(%u)\n", cur_filename, cur_lineno,
-> > +		$2);
-> > +};
-> 
-> You could also consider making this an attribute similar to the
-> "modules" flags and simplify:
-> 
-> config_option: T_TRANSITIONAL T_EOL
-> {
->        current_entry->sym->transitional = true;
->        printd(DEBUG_PARSE, "%s:%d:transitional\n", cur_filename,
-> cur_lineno);
-> };
-> 
-> ...it would mean the config options look this way:
-> 
-> config OLD_OPTION
->     bool
->     transitional
-> 
-> (If not, menu_set_type() does already contain a check for whether the
-> type has already been set.)
+-----BEGIN PGP SIGNATURE-----
 
-I went back and forth on how I wanted it to look and ultimately decided
-it was awkward to say "use transitional but only with a type that
-doesn't have a prompt". Instead it seemed better to have the type
-explicitly set.
+iJEEABYKADkWIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaLXeqxsUgAAAAAAEAA5t
+YW51MiwyLjUrMS4xMSwyLDIACgkQfj0C55Tb+AhNuAEAjKx0omIrhaMBlA3ec6KY
+kqg6f5iLg7LyrRkia3U31fMBALYGUaC9K1uFILkO5S/s3uVVR4mEqpN44csiQoP0
+Y/kP
+=jkIf
+-----END PGP SIGNATURE-----
 
-menu_set_type() does check already, but it's a warning only.
-
-> > @@ -558,6 +606,9 @@ void conf_parse(const char *name)
-> >   		if (menu->sym && sym_check_deps(menu->sym))
-> >   			yynerrs++;
-> > +		if (transitional_check_sanity(menu))
-> > +			yynerrs++;
-> > +
-> >   		if (menu->sym && sym_is_choice(menu->sym)) {
-> >   			menu_for_each_sub_entry(child, menu)
-> >   				if (child->sym && choice_check_sanity(child))
-> > diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
-> > index 26ab10c0fd76..b822c0c897e5 100644
-> > --- a/scripts/kconfig/symbol.c
-> > +++ b/scripts/kconfig/symbol.c
-> > @@ -447,6 +447,9 @@ void sym_calc_value(struct symbol *sym)
-> >   	if (sym->visible != no)
-> >   		sym->flags |= SYMBOL_WRITE;
-> > +	/* Calculate usable flag */
-> > +	sym->usable = (sym->visible != no || sym->transitional);
-> > +
-> 
-> Is this actually ever used outside of this function? (IOW could this
-> just be a local variable instead of a sym-> flag/member?) Or do we need
-> to set it here because sym_calc_value() calls itself recursively? To me
-> it looks like we only ever access sym->usable for the "sym" that was
-> passed as an argument to the function.
-
-Ah! It's not any more, no. I had an earlier version where I was
-examining it elsewhere, but yeah, this is only needed here.
-
-> 
-> >   	/* set default if recursively called */
-> >   	sym->curr = newval;
-> > @@ -459,13 +462,15 @@ void sym_calc_value(struct symbol *sym)
-> >   			sym_calc_choice(choice_menu);
-> >   			newval.tri = sym->curr.tri;
-> >   		} else {
-> > -			if (sym->visible != no) {
-> > +			if (sym->usable) {
-> >   				/* if the symbol is visible use the user value
-> >   				 * if available, otherwise try the default value
-> >   				 */
-> >   				if (sym_has_value(sym)) {
-> > +					tristate value = sym->transitional ?
-> > +						sym->def[S_DEF_USER].tri : sym->visible;
-> >   					newval.tri = EXPR_AND(sym->def[S_DEF_USER].tri,
-> > -							      sym->visible);
-> > +							      value);
-> 
-> This looks a bit odd to me. Just thinking out loud: your new logic is
-> there to be able to use a value even though it's not visible. In the
-> case where it's transitional you use the .config value instead of the
-> condition that makes it visible.
-> 
-> Could you simply change sym_calc_visibility() instead to always return
-> 'yes' when the symbol is transitional? Wouldn't that simplify everything
-> in sym_calc_value()?
-
-It's a tristate, so "m" is also possible besides "y". (sym->visible is
-also a tristate. :)
-
-I will send a v3 with better bit fields.
-
--Kees
-
--- 
-Kees Cook
+--lkdsthcjr73q7k4e--
