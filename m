@@ -1,126 +1,112 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0040F26CE3A
-	for <linux-hardening@vger.kernel.org>; Tue,  2 Sep 2025 22:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07868205E25;
+	Tue,  2 Sep 2025 23:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756851513; cv=none; b=SiVhQ6l+0B+4eDGIloPM5r1HR3yKigxTxc3fBPr9dZuriTkvk6b0TjJ0RJPuQyvkdDZUY7JQk9EYrNTifmH8pCXCfCXhA6Pp5BMo4C80vDnvwPtWAkz44t9azCOBBNhxBsO4VdUxpp85/Wwoj87gTtujzS5q2VGeHSCNXto24H8=
+	t=1756856040; cv=none; b=RrV0NuU8bwBj2kxqfzcJRdXhIR+wlhoO9aYHh4gOYZMSt3toljfsyrFJzNokX08lvyvOwmIo9AUaXYHgfmsoypPSKeIIR2n5HWa2SO5fZb+QqPzbHCHegxUJ1j7eGQ/MmrV4gMuqyufX0WOFQBv1DpNCilpo2GX2aQf+snlgSag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756851513; c=relaxed/simple;
-	bh=li67uZ6xqKQCADV810jgcapd5oaTXRr3DZZuD3FIP0o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eU/MWUxLG0sf5u4Ja4B6jK90fd3wAqkOu/vm8uR1IghnfPS485qPwXIgClO/wZQu+cuPCGAikVjLHHyZosfbzw8BTIZsE87NGK2rjVIHo4ETknU8Iyyzemvv1LYaVIUQAKnrKLEtqCqIic9RsmU6TNnO2cVPLU3mFG7VAQ6A3Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tV1oCHyr; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1756856040; c=relaxed/simple;
+	bh=yW9w6vRtrpU9Evv7gLXIbiVMJouFZmAUYRkWdYh8tpM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UwpJgl5vQkl+a6HD9S4yWgD+Tj8YHLazjlZfe6AgLlGkCAl0oiHYE6c8LXZUKDZJO7YhleTmjB+FJnx2OYKAM+13NF042ovNIRwE/jQsV7ix4woCJ4wxws3doepWM5YqeKjWvZr8XzaC/sIDvCB26lUS1iuWpQUZzgup4sKIWjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l/RvA9YK; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tV1oCHyr"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55f6bb0a364so5096192e87.1
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Sep 2025 15:18:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/RvA9YK"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7724cacc32bso2406898b3a.0;
+        Tue, 02 Sep 2025 16:33:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756851510; x=1757456310; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=li67uZ6xqKQCADV810jgcapd5oaTXRr3DZZuD3FIP0o=;
-        b=tV1oCHyrfYmjhrmPLH533BARsrpxRbaJMmIKMNpiBU+cBcoAjdS61zjvYBmxUNSWSE
-         aLQlV49Fpv/lyTrHOgiCRClCVrQmVfAYwYrPsVja3Cz8n6w5wQljG6AStH2AXIaaAkWh
-         357LGU4MIEiI1ubmGF0VLgK+FaxVBli9M0d3co6QlJKjUJrgHwHnL9NEZVuUznqwc9CP
-         S+j1UgUlrXACUZa1nKRyhUNvDBnwf3uB1+8Wthz8opS0iYw7ry0PGN1Vq3T9FzCoyRaj
-         PFlMqIw9ZZCGI6EFQ/qIAeNKWYnpnLly2XhKcY6P5fOUspO4X9L4qxrNK5K6r/0qV1ZY
-         GXOw==
+        d=gmail.com; s=20230601; t=1756856038; x=1757460838; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gAzJ/mYc64utzpgd4HFHI/h/o1xEjnEqOHUAiimbwZc=;
+        b=l/RvA9YKrNhXQj7SbEthra79k2CkuOhqoAUeicSkGFdPwjW/YT5YY8i3hfJpQMrus0
+         xffx58OVk+Tcj/0rjucO2DOgcU/oQ+jQh/W1czQqRpGh/+da0OAEMeSIW57haac45Smz
+         eK6iz4ltpaArhEWuYOdsA0Z6ngrg0B4mr0JusC1JikbFtPDD/q3ETJNvB/yPOhcrXJXi
+         ROVmVuP1JOiHLBm4Apxt43XqJoCl0xNbbTbcDiU3tN9Eu/GcamSFDOL2Na4PRvoxLu+v
+         Vbv02F64qjjSu6nOqyALOJIzlFtkLW5P6+bObFioO0PbPS8wrquvkjL4d29CE2ZDTrgu
+         vroA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756851510; x=1757456310;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=li67uZ6xqKQCADV810jgcapd5oaTXRr3DZZuD3FIP0o=;
-        b=rEhfZ7wtgPnfk+uXhwZSGF4B8ho6Cd3xvTolFS+1DiLel0zugtd6XJphsZLZtkS5Sj
-         Prde8YJgOBf240X2YBtYUWoX/cdBv8X5j8jUND0JElMRVGePs1JtvoO29wIEDrjFuK3I
-         EaY8svEoaJT3XWNq3dXO2aHm8edpYxT84idDftmrDbdg5iXZmehYnXh8saVB+ikSmkRq
-         QVQvzGBFlTOCzOFftaUOQEzZchJUkePq3G83+MFadrqlYlfY4U3sqfsiJzHZSwUX+h08
-         KAgdR/wlr1ng2ZEA2KR6lX0a9b4JwJUKrCdRx44U+p4+LuIQhGK9iNQpj8e+swatkKmn
-         G1YQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCrFPE/SxKnW27HRdXxCM5HGtdEhkkUdZWUBzupVIe2e5WRpuDO3yhlS4ivua7tPlCes1PT9UdvYJjZVN9xQo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwC4q4mGRB+soJKmAaVGeGPN28I5QlX9v4ln9X2qMty7TtQzPa1
-	VTmSrrYB31Jm8aAB9EFgSSXT9kBhvb9Yhh92Vsvlk1zGrzWs+/xKfVga09nFplM8zqPcflKptrP
-	fZVE5r7GrQwOaYlRfJrloBEzjZDM1OHxAmr4CrJQIpA==
-X-Gm-Gg: ASbGnctTSVbviwLInA9WbzUAgEbj6SmkD4EVEVFCY+76N12C7kLb7WlPNEPXque7DLL
-	4Xo1EY9bjdJvHOEGWZEA5AmG7u+g4Ug8QfmIZuoL9N4186bMtlpxvViV+TRbLi6Y2TiVfGBSo/U
-	ldZXpczF89opSP0QOa3za2nnL1mkSQuDw2k9B8FAlGGhU3XxbJZZuFtV4CQaLldk0Z5xc3aiO90
-	C2y04Wu/EyPbDIRvg==
-X-Google-Smtp-Source: AGHT+IFb5FJ4SVuaW/MZYjqlxiCtjVdy/Gs9hCmULK5gWsYMbnHTDsvg0XfXKbqBDAFJs9xAYF0giEeS6uNYA+ao+FQ=
-X-Received: by 2002:a05:6512:3d11:b0:55f:65fc:8db5 with SMTP id
- 2adb3069b0e04-55f708b9c56mr3711945e87.23.1756851510074; Tue, 02 Sep 2025
- 15:18:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756856038; x=1757460838;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gAzJ/mYc64utzpgd4HFHI/h/o1xEjnEqOHUAiimbwZc=;
+        b=Tqwpr0Ienb1hbawCsg5wFv+1nRKILq4M0VrNxkyYxUB4EtpJdOffpDBfYVYTCtL9ob
+         jV2nd+4Ct9O/IAo9kFu9l827TtAfpet8+07zJDDmwMLLihkO+cOmdQbP72B/NVg13Yy5
+         mvjcC8Ft1zS/XRaiUpzBxYxq7PPmkqa5vMbjI5cmK1xyky8yLSnmNZO9h0mwDH6YtDMY
+         b69RRxndXNBRN8Pd/tN74jU0bjH9jk3Wm43eMD++kbnpJAxju1lhUtjz/CFmSIj1Pjl5
+         sJ1swwmXXqmWWJGKvLNZb0aT4SPIzrHoM4LLdrdbLgvwdlgQ1MZUFlipfo9r31CV2Nj+
+         8LCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWzdeQ8nSIuXXS2UXsRsQ/Bxl4/AcDZDUiFWwNJvIwTvcTBab2YiqICK+C4jBzuwkNrkipNACq7NWe8RL5y@vger.kernel.org, AJvYcCXvI5oTtl1whkMoDNHVUxjch6FSC3tfReVM7daK1bU/+GUoKvG7CqeBxFhcjblAdhOE5v4G8G99ieZPARBfESg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKys5ukDtoNHt7W2XsrbOqbVjkqvNddmYslR0gqKGKI82kAo+n
+	Z537xlr/FzAvOebtI2lGwv0TzL0DntiB02lGLZ+cZJLwKTSPDJ5iC1iQ
+X-Gm-Gg: ASbGnctpcqgDE9YCn19RHb5xvuL6oMcoJskKo82cvbe6/tL3kEqswz7p9aFyMmQoHVH
+	82MpB1aawNv9vqHbbjTFz2zMjK0WhMza3VMyDqLrhNM+P+VlQAo4PciMVrbRICG8a8nh+BBTw9+
+	AZN1XWM5lZYgnolw377xyd3no4gtS0reFNSVbuOp+YtFi7uYS2Zmdrs1arISu7SB6dUq/hnUBoU
+	tpNNzE2JXwWJGof1PSG24fXaNek7a9M0XSvzl9lAM3ffWJ7cPgZYBX0AKftZw1Uon5kRkEqba9Z
+	ClYXqoTxGJdK7diUWXvki3kvJyrfO1PYQjx+3ZnjwAb2/WU73HPAmmAezOU8VQlFwnChkSRnve2
+	JDW8p/1J8BPjO1SdWwKiPpBLoS5Lu3ytzyAzO91dkL68=
+X-Google-Smtp-Source: AGHT+IFCHMJgNxwzVBuhDPUnqfnXtX/OwqNEFGPPrk3w9dx8T8LeDIovgdyFLLPhOdAAuEUOE8aTtw==
+X-Received: by 2002:a17:902:f60a:b0:234:f4da:7eeb with SMTP id d9443c01a7336-249448709abmr175164745ad.7.1756856038045;
+        Tue, 02 Sep 2025 16:33:58 -0700 (PDT)
+Received: from localhost ([216.228.127.131])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2490374412bsm142070755ad.51.2025.09.02.16.33.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Sep 2025 16:33:57 -0700 (PDT)
+Date: Tue, 2 Sep 2025 19:33:55 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Kees Cook <kees@kernel.org>
+Cc: kernel test robot <lkp@intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Vineet Gupta <vgupta@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] arc: Fix __fls() const-foldability via
+ __builtin_clzl()
+Message-ID: <aLd-40v-epEd1mi5@yury>
+References: <20250831022352.it.055-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
-In-Reply-To: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 3 Sep 2025 00:18:18 +0200
-X-Gm-Features: Ac12FXw-1tPuaZxU9kVS8RfwbL5AeZ_YF1A5IdRwoR4crjvnC6JAL_oHeKPOKoA
-Message-ID: <CACRpkdZ-Toq9MziPisZCcT7zcL3rosQYZ1Jw=RWCH1KZTbeBug@mail.gmail.com>
-Subject: Re: [PATCH v7 00/16] pinctrl: introduce the concept of a GPIO pin
- function category
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, imx@lists.linux.dev, linux-omap@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org, 
-	Chen-Yu Tsai <wenst@chromium.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250831022352.it.055-kees@kernel.org>
 
-On Tue, Sep 2, 2025 at 1:59=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+On Sat, Aug 30, 2025 at 07:23:53PM -0700, Kees Cook wrote:
+> While tracking down a problem where constant expressions used by
+> BUILD_BUG_ON() suddenly stopped working[1], we found that an added static
+> initializer was convincing the compiler that it couldn't track the state
+> of the prior statically initialized value. Tracing this down found that
+> ffs() was used in the initializer macro, but since it wasn't marked with
+> __attribute__const__, the compiler had to assume the function might
+> change variable states as a side-effect (which is not true for ffs(),
+> which provides deterministic math results).
+> 
+> For arc architecture with CONFIG_ISA_ARCV2=y, the __fls() function
+> uses __builtin_arc_fls() which lacks GCC's const attribute, preventing
+> compile-time constant folding, and KUnit testing of ffs/fls fails on
+> arc[3]. A patch[2] to GCC to solve this has been sent.
+> 
+> Add a fix for this by handling compile-time constants with the standard
+> __builtin_clzl() builtin (which has const attribute) while preserving
+> the optimized arc-specific builtin for runtime cases. This has the added
+> benefit of skipping runtime calculation of compile-time constant values.
+> Even with the GCC bug fixed (which is about "attribute const") this is a
+> good change to avoid needless runtime costs, and should be done
+> regardless of the state of GCC's bug.
+> 
+> Build tested ARCH=arc allyesconfig with GCC arc-linux 15.2.0.
+> 
+> Link: https://github.com/KSPP/linux/issues/364 [1]
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2025-August/693273.html
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202508031025.doWxtzzc-lkp@intel.com/ [3]
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-> We have many Qualcomm SoCs (and I can imagine it's a common pattern in
-> other platforms as well) where we mux a pin to "gpio" function using the
-> `pinctrl-X` property in order to configure bias or drive-strength and
-> then access it using the gpiod API. This makes it impossible to mark the
-> pin controller module as "strict".
->
-> This series proposes to introduce a concept of a sub-category of
-> pinfunctions: GPIO functions where the above is not true and the pin
-> muxed as a GPIO can still be accessed via the GPIO consumer API even for
-> strict pinmuxers.
-
-This is what I want for pin control, and fixes an ages old issue
-that pin control has no intrinsic awareness of if a pin is muxed
-to a function providing GPIO.
-So patches applied!
-
-Any remaining code nitpicks can be fixed in-tree, I need this
-to be able to apply the much desired Broadcom STB driver,
-so this needs to go into -next now for cooking.
-
-I also want to strictify some drivers using this, bringing GPIO
-function awareness into them, which is a good thing!
-
-Yours,
-Linus Walleij
+Applied in bitmap-for-next, thanks!
