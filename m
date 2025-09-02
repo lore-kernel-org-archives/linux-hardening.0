@@ -1,51 +1,48 @@
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFD125A642;
-	Mon,  1 Sep 2025 20:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF131A288;
+	Tue,  2 Sep 2025 01:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756757582; cv=none; b=plCDKwSzWwyVn+jlxAxfYOmXBI58u8WXrqsuzr0XPgNDjUOTh3n1fL/B0Of4LVm2EGsxwpk32PuzD7CSzKGFBHRtKwzM6QRb68G7pSDn8hbk0XEhgya810ZMdVb3w5+e3eQ9Yf1IuuCVXkqiaY0Yl4cVYpxv7hpJOpeWt0in7l4=
+	t=1756776705; cv=none; b=qIdyaZBLJnnEJ+0Fi627Kmpf1RULwpNRJXOqahsBqxtZZjnTjgp+3C2406ePZSg+7ld1rms4ZNRaLigKiZlSDRbzX3ckkdSNwZ8Tynh0ccnYCJWzzTPXHc4+1o6yf5IfLM2F8CpoGKFQFHD+3tXAdXL3+f6mR0EB9jFY0uoagus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756757582; c=relaxed/simple;
-	bh=zvdD5eNoOKxgj1d84KO3wFQ/w8Pf4L1cCEZiTrLfefc=;
+	s=arc-20240116; t=1756776705; c=relaxed/simple;
+	bh=VlGK73+2UsvCH2/UxRjr3vexyOny+hPU0H/RMxobD7g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KNhE80VxAj9AtFAPvgAKFFC04eO3SB/TGu6c7rd0JEDP26VT3/5qg2LcQgFgMHr/fuGU06/x6n0ff2YY1/3Y1hVvoV/t50+RIph9s/fj5myo22TzIkVB7NNjc9pb1gsz9mGYdASjaNDvbcd3xhfiKwfQIKn6K/ZqGDiUJ410PbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WHzpMIZj; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WHzpMIZj"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id E014F4E40C5E;
-	Mon,  1 Sep 2025 20:12:57 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 9A141605FC;
-	Mon,  1 Sep 2025 20:12:57 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 453091C22D4DC;
-	Mon,  1 Sep 2025 22:12:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1756757576; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=yx7mHEOoHsc87Dtv9nuxZTICDeAvK7jqOFwE7WdiL7s=;
-	b=WHzpMIZjyezAVqM5LP+PwrF5dQX10LbmN7LXHNVX4E0d1Pahp/10z5ZXuiGO8kwnDRCZJD
-	/BQgMEk7hT09KLlTALWS02GhIsryTQ61olMvL+CSiKbmN+Ljr8RKEAP5UTSSVK+vdSObN1
-	+zu16/Ur87JB5qOan4XoVM3+7Pdu1SK5Ve3xxgRp3BmZeVwoki+kI/h3d2VAl0wdCoZIDO
-	NHE1IudywD+OynU8gbdUH7HUEsdBYElVX/eYdXYAr6RD48tfuLca64OgvC/4lRXidigdE0
-	+Wmi2tFS0yYtGB62hKH+PJntWWby9pTr03E0Fx8KEVLh3lc37DnRR/6kK0+sHQ==
-Date: Mon, 1 Sep 2025 22:12:48 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-Cc: git@amd.com, michal.simek@amd.com, Frank.Li@nxp.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, kees@kernel.org,
-	gustavoars@kernel.org, jarkko.nikula@linux.intel.com,
-	linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	radhey.shyam.pandey@amd.com, srinivas.goud@amd.com,
-	shubhrajyoti.datta@amd.com, manion05gk@gmail.com
-Subject: Re: [PATCH V2 2/2] i3c: master: Add AMD I3C bus controller driver
-Message-ID: <202509012012480348cc7a@mail.local>
-References: <20250829171327.2590730-1-manikanta.guntupalli@amd.com>
- <20250829171327.2590730-3-manikanta.guntupalli@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TyUfY0FWLKtTue4EXLeH/gjp3qcCmpDyngeZDKxmvJQHvxJfT0/aX6qJkiI1QcJx387dW2DBHplg5x1uxu0qABfezGJFrzJEwaRbAB00o1KZ60zMS1uWbJuyGFycGWaBzCXgpld8HN3j8Bec0Kc6s6sl6HjneRPU+g1ki/ChEUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.207.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: zesmtpsz3t1756776674t0376ccc7
+X-QQ-Originating-IP: HnD05YW2Fm5i8g207GQNWjjPXwhJAhpiF2uBPQwqDl0=
+Received: from localhost ( [203.174.112.180])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 02 Sep 2025 09:31:12 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 16686580263834056200
+Date: Tue, 2 Sep 2025 09:31:12 +0800
+From: Yibo Dong <dong100@mucse.com>
+To: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Cc: Andrew Lunn <andrew@lunn.ch>, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
+	gur.stavi@huawei.com, maddy@linux.ibm.com, mpe@ellerman.id.au,
+	danishanwar@ti.com, lee@trager.us, gongfan1@huawei.com,
+	lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
+	gustavoars@kernel.org, rdunlap@infradead.org,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next v9 1/5] net: rnpgbe: Add build support for rnpgbe
+Message-ID: <DD499CD3F59F91F1+20250902013112.GA101881@nic-Precision-5820-Tower>
+References: <20250828025547.568563-1-dong100@mucse.com>
+ <20250828025547.568563-2-dong100@mucse.com>
+ <dcfb395d-1582-4531-98e4-8e80add5dea9@lunn.ch>
+ <8AD0BD429DAFBD3B+20250901082052.GA49095@nic-Precision-5820-Tower>
+ <a3c51a9e-f0cb-4d25-a841-117da0ff943c@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,31 +51,50 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250829171327.2590730-3-manikanta.guntupalli@amd.com>
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <a3c51a9e-f0cb-4d25-a841-117da0ff943c@linux.dev>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: M4ZQYI3ba7Qf7PwhqL03NSnSHc0z9QYWtJs/Rh5VtFs9N7cliX3zbt1s
+	vsKmyIcJW33c9x3wiPLwtAD3ayT//yEV+Bn//df7DNGF+CwQbpcmatXZM14rSwNkGrd/wop
+	5DyVUWpSC7Zd5easECjag+SR1Fdwomz3HADXziqP5FDCnKeOp9/XTyhSTK+n5p7lb/qTLqF
+	lSHBnLkObQ9c8ScNiPcAPV8OQwLuA9vkwxtmhQbYVAJb8F5uIhJFUUgeFh13ecTimFyCfhi
+	ZmA/IqWNNRaTh+xHW4p2toNPxrYOf36brvf/kkpjObu5KLZaYfUpuCX4gXrg6uQnldth91p
+	cVJXrBhBv/nP5Z8ORW/MigRROSqqHrv0E4qfPaaa1CV8pGtvYyIzFqy+yEWOzuYa+dB6OHQ
+	hjGXJNvMQ3cu+KXokIwBExblGCcQmMHrmodXNWXhjTMiCreVEGsYVr4m03ur+3Rk1vs2+bq
+	WGdkGQNRqfxUtCJlB/h/m2uH8z1/DfAy5pDf0790O3WP2AQKSxzfwol2TMvSwJpO1tGrGkQ
+	oLC1kC5COtgONsO+tV1qqwNeJ2K+mqsYylhY6yuSGEhfIy6sV9KmIviSgcyWmrmaWvdwcVc
+	e/dB1sEtRoWKXCIj1iJ1yUYR1VuvPaeU3xDzajZvtBLN1KLqum9HbEGEFTINwi8bjxGwKqf
+	WO/MFXR/ngBEZrB/5aUmGP1iRW1Tx8Awl97hzUisePqU7DhA8kzR8S5OPz4ZreHA0WVL+Zr
+	tAPgc/mRtirSIY1S5e+0eUg60fFH5NouYig32HdffFGwlXjdXnjEZD8dMNWzHVLO0wfcGW2
+	0DgpK+rc77qqIcUVw1d23BMeS2R6UCI/v+weUBV+4lyxGquC2ryey765gn5szcHYwgQ6B0w
+	lH5OI1BXGP9kl7tRD4D7scIHbQcUyrl0sXpNWLSX2/ZwXTRT5RL8roxELonzllJUiZdP04E
+	+7tpvP4Kr4ntTMKPYpS+ZP3DmTWyjNNrXOjOS1DqRLLWCGAFQwccCQaBf
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
-On 29/08/2025 22:43:27+0530, Manikanta Guntupalli wrote:
-> +static void xi3c_master_reset_fifos(struct xi3c_master *master)
-> +{
-> +	u32 data;
-> +
-> +	/* Reset fifos */
-> +	data = readl(master->membase + XI3C_RESET_OFFSET);
-> +	data |= XI3C_FIFOS_RST_MASK;
-> +	writel(data, master->membase + XI3C_RESET_OFFSET);
-> +	udelay(10);
+On Mon, Sep 01, 2025 at 10:58:48AM +0100, Vadim Fedorenko wrote:
+> On 01/09/2025 09:20, Yibo Dong wrote:
+> > On Thu, Aug 28, 2025 at 02:51:07PM +0200, Andrew Lunn wrote:
+> > > On Thu, Aug 28, 2025 at 10:55:43AM +0800, Dong Yibo wrote:
+> > 
+> > Hi, Andrew:
+> > 
+> > > > Add build options and doc for mucse.
+> > > > Initialize pci device access for MUCSE devices.
+> > > > 
+> > > > Signed-off-by: Dong Yibo <dong100@mucse.com>
+> > > 
+> > > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> > > 
+> > >      Andrew
+> > > 
+> > 
+> > Should I add 'Reviewed-by: Andrew Lunn <andrew@lunn.ch>' to commit for
+> > [PATCH 1/5] in the next version?
+> 
+> The general rule is to carry over all the tags if there is no (big)
+> changes to the code in the patch.
+> 
 
-As pointed out by checkpatch:
-usleep_range is preferred over udelay, I guess it would be fine in this
-function.
+Got it, thanks.
 
-> +	data &= ~XI3C_FIFOS_RST_MASK;
-> +	writel(data, master->membase + XI3C_RESET_OFFSET);
-> +	udelay(10);
-> +}
-> +
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
