@@ -1,59 +1,59 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D1126563F
-	for <linux-hardening@vger.kernel.org>; Tue,  2 Sep 2025 13:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F17A2C11C9
+	for <linux-hardening@vger.kernel.org>; Tue,  2 Sep 2025 13:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756819854; cv=none; b=DnSsLfVVQDAFeOWWKS/GZeYqoVzlRS/8dDFa8e4Vi50PVllGOS7+2Knfv97GNFX1IvLARE163NNbS0EMutU2riCHD1XLXjTZDFSvTGSw99FGMbE7YxycurbbmuMvNRsUaRLmpi5+1IC3OkQAH6DmEMVaJ4B6rYByXdwxTjIP0Eg=
+	t=1756819955; cv=none; b=nTvDzX+imi+8VHFH6Dw4G/cHqmwGHHUbOxPO8IuDMgftlUJ7SduhdnEOD6hkJ+4Txsmbarf2fD9DHWkM6aGzw2FA+vhbhAXSuBMqtWvHkdbQyeFVq45aEj5xEuXrzY0jvXAbhAkSsIiWur+IYT4J0a5mZA4dAitxCc5EsTYHXXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756819854; c=relaxed/simple;
-	bh=OnwD5QXlkWRXkwweSWm2YbRhyhJnp/UrnZINov1baPY=;
+	s=arc-20240116; t=1756819955; c=relaxed/simple;
+	bh=jQHix6PgeTZogNqwgwBs7BQIhf8j8t/QOXmjjj2gpJg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ptcB3hKx3jKuaLUeF78VUge6oBtCqN8pMsu7U93GilOk0jfLaSJTn5pLjPOrCKnb+4bRFSolLdG+Mw0wYbFyD0eBNUoZs4022zOozwhxrKZVghNB9/hplWHehTbpLE/ON3i4nJ30IJ2YJupFl+IRtB6dTV6eHBy3wWXse+dE1Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oSx6kIYn; arc=none smtp.client-ip=209.85.167.48
+	 To:Cc:Content-Type; b=CJDd30y8cozbMUUWZIYauBArlkKjo8lH75tghzfD218nBUDnk7ASIcaCpj4D8yreh9j6IguddZnQWSWHp9hvIElz5XYTjbufd4XYgikAh8zLtTJwFo+LFP/ZoSaWl5aEx2L+rgicRHUk0eg4A62uUHXFZi7y2gNEfU+swE3XiIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=eJsfRfy7; arc=none smtp.client-ip=209.85.167.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oSx6kIYn"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55f7039a9fdso3249349e87.1
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Sep 2025 06:30:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="eJsfRfy7"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-55f646b1db8so5114158e87.0
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Sep 2025 06:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756819851; x=1757424651; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756819951; x=1757424751; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XZhR5vC+b5jGByrsGl+I17mSTr+5gAmJbDumtIuc2ZA=;
-        b=oSx6kIYnxTc4ce01XQdS97dHxSBJKFsS51gCgcViELkkIwWqV/G2fco58SnjNs49Pv
-         JeUzY5hNY+EEphjDs00DvHnyLamO2HJU2/cPZT2O9EwEXQeUpC8X0+oUTDWnNtjqQVQe
-         46XR6p7LyBgmKVd/m1rmJgtKo7VL2uT/yb4P4nzuEL88f4bz0xt7Pi+wNjVBkT5KKdbr
-         n5686Wy1/ivZr1opV3gkwC96pi3LrgMumjJM2Pc1GHnlw9v9fRFXdXcND4fexD6gyV/M
-         FdtCCDQ2ECS2XLK1jOKNrP0rsM5v0y+fS4KBIhfPIeOJjMGM4pWsI9WXPLGOr4UEbuLK
-         R9xA==
+        bh=lnoH1+ZsxBYCzbeJtuEiwBsgC/lAs0DmEqE9uy46sWE=;
+        b=eJsfRfy7h3BUAwuHZFdWnQ1XEmgUS4W4ioUSft3a0cM8k2qYL8mnw++Yr14fOcTq5Z
+         gixFnvABxwl6FgdLjksEE4Kg0Gh92ca8rsuwMIUUVG7fzEblgv+WSbY0wstNwGC8Flof
+         bssAp/xtUDvgSf3+Y9lXKsjqPFEg6ivWWkUauDEyuqkgZQLWaFiNwgXh3HGwmuhQQsoa
+         FrnqK9Y0F8TH83mGYh2r4PtLPfX6vAzBD52TpDzQ1HVUpOPaT3k6FjNBobTNwKNE6Wbg
+         NXDke4iEvQag+5cZTPSyuU7xk7pj21WsXgVlJd8QTmu6fVV/X1dAS0RMBMIEwNg8y3Sb
+         sRLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756819851; x=1757424651;
+        d=1e100.net; s=20230601; t=1756819951; x=1757424751;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XZhR5vC+b5jGByrsGl+I17mSTr+5gAmJbDumtIuc2ZA=;
-        b=H5L0ppltSAY0rOfKgxMPT/OE+wA61xio4Xi1kycmlW4IJIcMII+hAOXaagKBfN04mz
-         nsIVAm4LCBeVeKdHprzcN9qm6x49fnyjfWPsATdrToycf/sMsPFNUifK4JKpF8x0CPi6
-         7B2xsZw4tLR+potVp9jwugCXQGrUr4yufXJKwfm2pybzQ4xBhMYOwBQJgLyc8nla4Mxm
-         CBAWUJEdijAOxh7bQ6xwzS8dy9tWFCcN/nlf6rJTjRK4olePE442YkAXPIPHyb3ZqTpj
-         2fne2un0uXY2sHGGNlv1hjuwEfR/GqsfvqIypW07R5HBtYAIu30nzwuYUiHUJs+woFBg
-         YkDA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9Nf5w1Mwi2CabgN6NvCOMV4wHH5TAGMx0d6269lnD3UjjUNvmog0m6YjoZL88Wehy/FI5ZyWZgy2HfkMXhtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUX63yonGPq5/vtx0zNHeCUlYaXiPI3FiOldmOsxAANGYny2OJ
-	re2PPIKaFMPjWJZbFCykl+CS9EIDMXnP8rXXmpbp8iQR/fv04AShdfqRDp/DKsspMnDswLmtNAD
-	NRJGIGYUXqD5G4ifw73WenXQbN2qhs+A0EDNkSsoLEA==
-X-Gm-Gg: ASbGncu7j9WiD9BEcwp7C7Dwg24VD4kj42yCIwdLNe0BzTaL6YEYgAqDsLd21GHbG6u
-	2vJDQTwMXrDjOl9Yi3WF1f/VOD5fRZX2brnMEY8vDNeG6myqtOzKmQsBRfgTuS7sLla+QZOJioo
-	/aPy515StrTjAzS3lqcSlhVvpfiXQZjTIvIxVtwwPi/FyKlGK3xlWb8FkX7qYjXQjGCjivc1gwZ
-	iHEsB0EoKnMclycwzSlQ6FYtOQFzDpd22jqLrk=
-X-Google-Smtp-Source: AGHT+IETXrXrPtCI9kHaUsOk3PiYBtzLQDyO5BpniBUPpd4tNEA5zWWpm33Zl8pshGOfywjYNp9sGHw+kB/41Th8Wwg=
-X-Received: by 2002:a05:6512:2522:b0:55f:4429:15a6 with SMTP id
- 2adb3069b0e04-55f70967db8mr4302395e87.48.1756819849325; Tue, 02 Sep 2025
- 06:30:49 -0700 (PDT)
+        bh=lnoH1+ZsxBYCzbeJtuEiwBsgC/lAs0DmEqE9uy46sWE=;
+        b=W8eJa4UYCBVJckKWcLnZWKB4i8sui15dXiThDhX4GEsyBDVwjCzmvwrAKYe6WPdaoE
+         L1d8x2H/a5xMcvMQFhm3IEifx5PuL61nYOgVhyGV1P0TR8q2k/vQ5/m2C3D8mJ60EuWx
+         TbSmyE+370xrZkzUcw5ra0adYJiyHNoU0vqq4M2Ndp+lyunJ0a5/SgYc1sZpKQHVQRux
+         P8u7n0cQO0LeXSg1Y03oe1/cnBygBYAE45ZssTRxjx6AB2VOkvxRSwtfBU5s4oEJ2kSO
+         oEFmknxKmudaIPZ5vZZ63vidtIlItWXIepM5y2LR9h/t+kxZ1aIv9hT5THPFiJm/NsFt
+         NEkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWaVsBjhfFbCveEY5mMOIhQRBYU+bcb8k0UL9yi4z+nwBt3W4krBv5hTNl1a7GyoodxPKcujpO749MaUV1wUe4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkx6JP97+KfRl+Xf2bxJ3C5kZtEcy8qpWTVFWN+pemzMwPRQ8T
+	6nToDlQbk48u/7HzJJL+9R6n5UTcOSotElvcZE+rMoPP6XiNuY1ugr57H28KrQ9dB6qZkh48U/0
+	fZ089CWKViSu6jNdfxnceXwFKrMNR8ofQTvWgFwbPwQ==
+X-Gm-Gg: ASbGncu+9AjuxifzaK2+BZqqqoz4tHsSLHyK8kR24kI/w9+pKvl4UtQJapzpZGEpgFq
+	/pvhvzslOeCfpJ/oV4JgU6tJufUOOsQ3vAobzLuOgMvPCVknyKv25NFIMgqlalMn7L4BaU0mF9j
+	n7OwifD9iL4xicNq/CwXLD11RJ2h8ZiIopNZ1vcE3QDdVbSvm7TZnCGPykLAijDBZTz/ovu/K2+
+	TKVOh6fZKSlgrfsnf/s5p1FEf7rlkNtMQC6DFc=
+X-Google-Smtp-Source: AGHT+IHbC8qI4AC5+0YZNljCnPe19ZYxRaps+B2CcXld1o2mGtDbXzoveQoI0IeEbDNxVlYlEUG/+tn7nGWqsyLzmeE=
+X-Received: by 2002:a05:6512:3ca9:b0:55f:55ad:2263 with SMTP id
+ 2adb3069b0e04-55f708b6c5bmr4286185e87.16.1756819949961; Tue, 02 Sep 2025
+ 06:32:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,14 +61,13 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
- <20250902-pinctrl-gpio-pinfuncs-v7-8-bb091daedc52@linaro.org> <aLbsr4s7nfvCKLnd@smile.fi.intel.com>
-In-Reply-To: <aLbsr4s7nfvCKLnd@smile.fi.intel.com>
+ <20250902-pinctrl-gpio-pinfuncs-v7-12-bb091daedc52@linaro.org> <aLbt2euqYQM5xXuZ@smile.fi.intel.com>
+In-Reply-To: <aLbt2euqYQM5xXuZ@smile.fi.intel.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 2 Sep 2025 15:30:38 +0200
-X-Gm-Features: Ac12FXwa7a499RP9JirYFVy7SbY2WfOVu2ugSGxCUkawbutvsj6hahPNBLiFvFg
-Message-ID: <CAMRc=MfgXac4kRgeiw+SkNUZS_ThoX5qcXeRX5bPWm-t3JQ9Xg@mail.gmail.com>
-Subject: Re: [PATCH v7 08/16] pinctrl: keembay: release allocated memory in
- detach path
+Date: Tue, 2 Sep 2025 15:32:18 +0200
+X-Gm-Features: Ac12FXySKFnql5rdsxfRBFF-2EejY2a696V_6zV_jaWq_9WtZl4uQNoHEj4w7YY
+Message-ID: <CAMRc=Mdnp8T46Gi_xZintgc9AZGCGiRPYc9mR32Xwodxy7DLqw@mail.gmail.com>
+Subject: Re: [PATCH v7 12/16] pinctrl: qcom: use generic pin function helpers
 To: Andy Shevchenko <andriy.shevchenko@intel.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
 	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
@@ -93,58 +92,37 @@ Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.
 	linux-mips@vger.kernel.org, linux-hardening@vger.kernel.org, 
 	linux-mm@kvack.org, imx@lists.linux.dev, linux-omap@vger.kernel.org, 
 	linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 2, 2025 at 3:10=E2=80=AFPM Andy Shevchenko
+On Tue, Sep 2, 2025 at 3:15=E2=80=AFPM Andy Shevchenko
 <andriy.shevchenko@intel.com> wrote:
 >
-> On Tue, Sep 02, 2025 at 01:59:17PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Sep 02, 2025 at 01:59:21PM +0200, Bartosz Golaszewski wrote:
 > >
-> > Unlike all the other allocations in this driver, the memory for storing
-> > the pin function descriptions allocated with kcalloc() and later resize=
-d
-> > with krealloc() is never freed. Use devres like elsewhere to handle
-> > that. While at it - replace krealloc() with more suitable
-> > devm_krealloc_array().
->
-> With that in mind...
->
-> > Note: the logic in this module is pretty convoluted and could probably
-> > use some revisiting, we should probably be able to calculate the exact
-> > amount of memory needed in advance or even skip the allocation
-> > altogether and just add each function to the radix tree separately.
+> > With the pinmux core no longer duplicating memory used to store the
+> > struct pinfunction objects in .rodata, we can now use the existing
+> > infrastructure for storing and looking up pin functions in qualcomm
+> > drivers. Remove hand-crafted callbacks.
 >
 > ...
 >
-> > Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+> > +     for (i =3D 0; i < soc_data->nfunctions; i++) {
+> > +             func =3D &soc_data->functions[i];
+> > +
+> > +             ret =3D pinmux_generic_add_pinfunction(pctrl->pctrl, func=
+, NULL);
+> > +             if (ret < 0)
 >
+> Why not simply
+>
+>                 if (ret)
+>
+> > +                     return ret;
+> > +     }
 
-Ah, I just ran b4 trailers -u and didn't check the result. :(
-
-> This tag is not applicable to all patches, I do not believe this has been
-> tested.
->
-> ...
->
-> > -     keembay_funcs =3D kcalloc(kpc->npins * 8, sizeof(*keembay_funcs),=
- GFP_KERNEL);
-> > +     keembay_funcs =3D devm_kcalloc(kpc->dev, kpc->npins * 8,
->
-> ...switching to size_mul() also adds more robustness against too big npin=
-s
-> values.
->
-
-Eh... ok, if there'll be a v8.
+Because it returns a possibly positive selector number.
 
 Bart
-
-> > +                                  sizeof(*keembay_funcs), GFP_KERNEL);
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
