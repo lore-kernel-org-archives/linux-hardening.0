@@ -1,67 +1,66 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1641930F537
-	for <linux-hardening@vger.kernel.org>; Tue,  2 Sep 2025 11:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EF6305054
+	for <linux-hardening@vger.kernel.org>; Tue,  2 Sep 2025 11:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756814366; cv=none; b=h3UPNxbDKt5VgcPhGeoi+EpnO1ZiB7qZM/nObEdrr64F9SoMWdBPlAN4uc5tbva1LEv6Uza9V9x72EQ71U/fU78V+ynKU3Vfy3ihLZrrWn76BWmqDS/3yr8LbJBzMncBZ+LT86dnhKu5UIGvHLhTkU+3kpc732CLoLU9BpVcIxc=
+	t=1756814368; cv=none; b=kbbGM/Q4bCPxIrSnPZdCVPNQHu6FIsvUoqsrKrMOZWDUJrvEzlmYnfz2mUuqK2VmXG0am/vpKO3+T9UJPrkN+1B5sjbg5u4d0UYOmFUsGL93axa8aDG4C+NBtCuoXfT81FtFIIunxKzysR95PcxBqGKhysk1QOtgGdo7E4jhXnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756814366; c=relaxed/simple;
-	bh=x7jB67hOHgUBA/KFXUtVDJmPHSB5d0zZ/tjtxsJC0zo=;
+	s=arc-20240116; t=1756814368; c=relaxed/simple;
+	bh=1Pr3q9yjXNf2iBsjHD0NIK47nOJbqENWNEx10XqPY9A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OADmawMqyKx72QJHicQlKmDnRjbVzZWyx3rx3aAO2s2xCGxEq73seZDA9mITSda9ZgnBgli6tf4Hy7xt1+Qgs64RSCjd9NQTMRr/cOsjI1Hi/8OKK2VxMAJM6ojzRzwySL0loqpE9Py6qea5MBkTZ8QM+Ku3z440MSu/SSa5Bv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=r5Mk8oUB; arc=none smtp.client-ip=209.85.128.41
+	 In-Reply-To:To:Cc; b=f90uMys3y7YRW7TJX54dWeE94QoEVETGPbyDxgI4M/8UE4WE1ev34tKTkR1rIm5dWSnKeMcIFDJFB2lfETUEtHUZlvK66FkiyDmig6+dDpOdLOrMo83ItWqDYinesfapOClzK7ObJUw+8kH7a/I/nRq/B3wQxIzRGKyGjPZ+OHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rKvuVv1G; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="r5Mk8oUB"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45b883aa3c9so16033845e9.2
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Sep 2025 04:59:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rKvuVv1G"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45b79ec2fbeso35719945e9.3
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Sep 2025 04:59:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756814361; x=1757419161; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756814363; x=1757419163; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Xw0DbvJpbtjbSqzP3tTQeRts0DWSDSnK+T4azKoEMMA=;
-        b=r5Mk8oUBDZ9zw6Jm415K/7Kk+pr7MiPETlGKR5Gjqmxr6nIUdCllfXQmv1Z7v/Ft7q
-         EeLB68mv2jI9YNGUXictmR/9eXGQBcXDnORiCI2+moV4idbrWXKJT4Hatmj9ljsMdz7V
-         KsFyFMAfImJ9gev4RxMry0jlluWojwPgD44Dxz05hntZhOF6Oo0OMomMI2k4Osxvik7a
-         ejFZAYom8JUDqM1IXy89g9F71UHpGKP85FCEUcoMEWKilcpvv9hoiVw/YdbjRgVGcaPJ
-         Yb7C5mp+NbI1EkAVd8GNF76VlLev9aWj6eJWPbnOSDF1XZ9lI/8HyE/TDRC3BMYgXwJP
-         qtFQ==
+        bh=frWO1MUM1iHp10hYQSMpeWUCufaMLUNxXxOHMSOr6+E=;
+        b=rKvuVv1GYI1ozV2nQeP0CijcrTfWT79BH/OS1/0Xf6TiIO4sIQZHEFcHDNILSmOqoc
+         SmC6FWkaYP76GasQKKSLCszEc7Aj/twNjd+1qTkzQxGE0h3Mtrh629jXPtY1pn3p4uAx
+         Id4ak67RmzoPq8Ty+YzWQAzD8liXvmNkvCuH3TF0LxLyiJVGfAarMncst19KIbORuROL
+         2YIv0pcnEiXJZjwXAdz4pWouPMYcqCZ5lpWWM6TikvAaoK0QCCmiwHDz7+zkDmrsUWff
+         WpnOYYC95smExnRJWS1nM1Psgq4OIJ3Hg46qc/v1jHsjjlmml4Xr//A3RA8isViJ5zQw
+         B0Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756814361; x=1757419161;
+        d=1e100.net; s=20230601; t=1756814363; x=1757419163;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Xw0DbvJpbtjbSqzP3tTQeRts0DWSDSnK+T4azKoEMMA=;
-        b=YDpG3YX2yF/IUnWeTx66jSW18cUyIJmavjCQZzXkBhMkkms0j38RmWXTkh0ZseBphf
-         nNuXP1ZnV6TAV0oPXo3bJ5/pAOw/zLYmtFtinHxQAhswsYQDs/NksVbo+NelgQYbKBSZ
-         pCiGZw9S4c0vW8WwUztJKDdIy7/vfWW7TjAvC04sMk/30ajjutoNyxuy0Xq4DZgq2Zbq
-         qYeHQvQxqKls471lSSgnufrJhuaricaNHRlexpMqNyWILYa3+rNnquW5ccEXPGqH/87g
-         XtrVn3b4B36t+z2DMj/mLUiOwNHrP/RJa4XmW84WshKX997MrLc/SMG/+qpRT4MRhGLQ
-         MuiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUX4qznLIp0ETr6h+sgKg/NhIyoZIPXL89dfHXr88o0Vay2g0kNw/6mk0nuMDdeh+wZxuwbEnbCbuFiRj4qTqs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/iMI9Rga9lwTH/Iv8Bfiw8rpi9go8qs6MKYMgFr1N5Jvjn0F8
-	kp8wr68A4Gk4kg35GYm3raD5oJE7pl6615vGLR1yDzD+zIf0M+cPN+ijNCbY8k2BLYA=
-X-Gm-Gg: ASbGncuuwMdQr+t+AXArRRzQBbZL3VPfhvga9bTUAAjw8iTzkwwbis3fbodOLC0ejeM
-	RFYuxLL/kAZKTI+GhvmhzhtNd6ejTbDV8eFd6y2WxUDs/e0i4EFcU4lz3G+ESSa1AL3uCRyaWxn
-	kas32VUohESktliJsCLw61ffT00qNegCdItprUJHw2WZiKKT8BMLjY4ugZjskgNjnoDsQNmn44q
-	W8KJ8J+PvPrhemwCY5mJXzlyo+YhUxi/HpUcDhDZNAYzXL3gMuzk4oS619Ujh9ahOBtDNeopQ6n
-	2iAm38BPLMgo4Ztm5DOc6JCAsSQ1M1Wjy2YpmVBeD7Zk5Y5KujGTcHy5NHSt7xuVWTE3M6VsnFE
-	Hg+yX4NEsrnzHDS7Br4jPAP6D5Nl7NIHKUJIiYw==
-X-Google-Smtp-Source: AGHT+IFig5+i8G3N69JEt/+fNxuJuAd6gRiFC1wmQxBVMkPWwXoGHVbuGh4GiKPX8+ZwNKQptgTe0Q==
-X-Received: by 2002:a05:600c:358c:b0:45b:9a3b:34aa with SMTP id 5b1f17b1804b1-45b9a3b36d5mr16360915e9.16.1756814360865;
-        Tue, 02 Sep 2025 04:59:20 -0700 (PDT)
+        bh=frWO1MUM1iHp10hYQSMpeWUCufaMLUNxXxOHMSOr6+E=;
+        b=AYdQQgD6LG8cBwmCsXnPV6QPMsnbB2iHDHZS2d7dSkzUMEeaqYqXx1QqHOSOu2wo5K
+         GdpJF1SgqKIwvbNOemxa2SRJ3QHMPnawxam5gVHCE6MGUMrSmiXdkCroFmef/v1y1JRA
+         ywzXt8TV2K1d5d7RMlNXaphPqbdagO9T4vDWhScOFLCBzdaX/NSoXc7HSM4TI30RceRa
+         5pYh0CKeedCIPQZe/HpNeT8Yfpwe6cy7WBPVFKRGFBzxvoj/pabp/iW0STdC7WKODrqO
+         4R5gRx1w98oJgFt96byFzcGTcxnKRdlTe2IKAGOvk1Skm3zp4M/rvvL7GVo0/ub8OuP6
+         KjNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVjiRcHyR8a26tyqNkfwL/euR4siokeTOOvCpEviyIGJWjGK4tWv8Qbk/OsB/fmzqU75d77i7X3Sei58rDxunA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTkkxP6guIdDKJd4g9iKfoU/2QLlvxNzA55mxS1xkh2rmI6PtS
+	uhO2Mfkzu8kfBjRVgUDzEvw5RpYSt+vuWefkSHsRjf5cJbcmeDKJvbw0xE5xOWWVCfA=
+X-Gm-Gg: ASbGncvChkpYoO9JLaCUaQJyc+tdtgC4I0POxVgGdyvR3GWvfVqogTV2OrTBjhsjPFl
+	/+WQvLc7IcCbF7RlXXKLbq9tfbrRIHR9/6JpQQ+XxpCjr6bqT+ag6Uyr4P2gEEsPb5AEWBmz+9y
+	wWbTiBBvtd4ipNsG/6AJsHHa1gqbjtsErLt79ean5wU/zCGtJrZC6zbiTsKDmWwaKYBPXy0slFN
+	804GVKwxO/i/XG9/peJtpiWKKiFsPzCLdjbqSWdVF3rNpf2wyIT4o5bB6xEN2MHtCB+fUW3K6JW
+	AcBxGL9/V8nqFaWNwO/C/iQztHkOft1gNH216s/bmHbsAWo5dC78ifPQ3mtA1NYc7JiVDYwh0vF
+	GnDFqeYNPbvZpGDA8BhzixSqvkxQ=
+X-Google-Smtp-Source: AGHT+IH0xKJNlyv4ZyEJNfQNwTyZdVQINH+cdoHboUNYQ9kgUCTDaVU74ZUCabwWO02Je54HFp0TUA==
+X-Received: by 2002:a05:600c:3541:b0:45b:8adf:cf2c with SMTP id 5b1f17b1804b1-45b8adfd08cmr65485875e9.26.1756814362526;
+        Tue, 02 Sep 2025 04:59:22 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:3327:447f:34e9:44f7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b9c234b24sm10224195e9.16.2025.09.02.04.59.19
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b9c234b24sm10224195e9.16.2025.09.02.04.59.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Sep 2025 04:59:20 -0700 (PDT)
+        Tue, 02 Sep 2025 04:59:22 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 02 Sep 2025 13:59:10 +0200
-Subject: [PATCH v7 01/16] pinctrl: check the return value of
- pinmux_ops::get_function_name()
+Date: Tue, 02 Sep 2025 13:59:11 +0200
+Subject: [PATCH v7 02/16] devres: provide devm_kmemdup_const()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250902-pinctrl-gpio-pinfuncs-v7-1-bb091daedc52@linaro.org>
+Message-Id: <20250902-pinctrl-gpio-pinfuncs-v7-2-bb091daedc52@linaro.org>
 References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
 In-Reply-To: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -103,57 +102,85 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
  linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
  linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- stable@vger.kernel.org
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1272;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2225;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=D54IdY1jZZ8ZVjEEMBAjgBQa9W3AU+ENLut7Z954Gtw=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBottwRpfc5+ADDPAejjZOjTlM10dVKuuNC16B4U
- swa+RJih4qJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaLbcEQAKCRARpy6gFHHX
- cvXpEADI6jEEX7IdUfYs7XEPZ54xMxDol/HqLYMKjzn1pd17gzZ6pMm489HJP8zxM8j2mK8WlMY
- iT8dv7GBCK7tnrD5rM7OlWLIxCHEgcGarIfQ57UN2+VpxxsBfBGJxT5xHQSPmO2/IuZDM4v7xrr
- JyfM56zeQWTLPe/1M25q4LQwah6Oqo80g3y/jAAg0Bc4NLVqbMRln4z3jzJnCxS4CfmCXVtD6lD
- ciPMgjSGGIOUmzZX5d3tPLZe8yjiEew2QQFX9+T2MRbl0+ohghrRAch+lwm/4sQTJ7GKOW1qk2i
- wwl7NFzrR9h5QQbB/nZZAP6tlNUbhFRh1w6y8WrY2zKhMwBwVkK73ahZ01ffpeWhg3NNobSNNWU
- pbfVXe3SwtMqwmifizSPEwqqxk1ic1ptmSRSLy7cK0O05upywue8PqE2slVh+TLY92uuX2KNjrN
- q9rl5LbEk8az7wY0eSXYE8hfRZcGcBst47/HbNFlIQxtMl3uuNlgmdLUthI/vOpeQ18Z1qXRQyG
- lpxPT6gBF9yUuuckVmcnrAASFTjSTBAq7653xlPLzOr0JPQwkykh9GfOyH/cj8cI7vpb6HUhjLy
- JBUfD5NOkVzL1VPrttUEGa0NyZG0lOBbQ4/NUG98mYZWTltQYpqLJ2URVbtPWAU/CoaZ1AF4/tv
- onN7mO4K/5AiBcg==
+ bh=/fPVmazhQjlUCOZ/s2UWyZhfkrmgQ0oqqeO6j82ecPA=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBottwSqkj5THulrOPioeZfQvwHNm2obXZdlx73n
+ rLgQ+gp18SJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaLbcEgAKCRARpy6gFHHX
+ cicBEACBSsEN+zHGYUqQzH0L1fVuUR4Uyab1CeLWPuBlfFDOeIdpOAiAwQMbodQXN0tUpDtsdfE
+ td+XDUygwggIWKTi8v2mOwA6u592fDxYytsIYAIKlwnxlylnU1dq0YsxtPM2jn0E12ksyZRhxRZ
+ fUAmR0hg5A/YXoadpFnbYagOSaf2hU+jiUmL4f4K+ypadqW1bAlVSzT6gI1r0pMJYfh7/3yX0PY
+ YG5m0U1+PTJ7m3EfG8+corSJRAS78Sh2FtPt6tkxA7SvyTZCtkF+9hE6cIDbwl+EePrpvN350H7
+ EFf+SVimrXeowCmoBm3yNNB1NmuPdUpEfzD5NZKO5RNzpC43CqCeDbSGBcJ0mJbKZ25CxZfucRO
+ qSqYqC705VQLTtzvva16XMEqe9r+MoAoLj8CRWuiZqQ9X6/Q5UsCNHlK1x3nPumfgoDNaUvz45z
+ Ag5VkkTMHChrka1WySas247IzRPM0u0mdh6XwAooEFp1tu73+eXbgiljzYdlNrgwFRfTawxE8Yj
+ leay7ODBWo8jv5tzc2mdo2FJx7d3gfD7s0sqbn6ynztvSoE77DkPLxqZJOW+LO43En0NrOYz7w0
+ 5QL1qvQD9C/lNGCMdrGAQxAR68tpaPC8h6+FTYhcH0YAaO+EbJVergnm02z7RlL4YUSmUYKfxPq
+ 1bB7j/qtQY97tcg==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-While the API contract in docs doesn't specify it explicitly, the
-generic implementation of the get_function_name() callback from struct
-pinmux_ops - pinmux_generic_get_function_name() - can fail and return
-NULL. This is already checked in pinmux_check_ops() so add a similar
-check in pinmux_func_name_to_selector() instead of passing the returned
-pointer right down to strcmp() where the NULL can get dereferenced. This
-is normal operation when adding new pinfunctions.
+Provide a function similar to devm_strdup_const() but for copying blocks
+of memory that are likely to be placed in .rodata.
 
-Cc: stable@vger.kernel.org
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/pinctrl/pinmux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/base/devres.c         | 21 +++++++++++++++++++++
+ include/linux/device/devres.h |  2 ++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index 79814758a084570adea0ea1a3151d186f65d1d1f..07a478b2c48740c24a32e6ac8f10df4876e718e3 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -337,7 +337,7 @@ static int pinmux_func_name_to_selector(struct pinctrl_dev *pctldev,
- 	while (selector < nfuncs) {
- 		const char *fname = ops->get_function_name(pctldev, selector);
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index ff55e1bcfa30057849a352c577bd32f1aa196532..c948c88d395607ff511ffa6eb0a75b7847ab9239 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -1117,6 +1117,27 @@ void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp)
+ }
+ EXPORT_SYMBOL_GPL(devm_kmemdup);
  
--		if (!strcmp(function, fname))
-+		if (fname && !strcmp(function, fname))
- 			return selector;
++/**
++ * devm_kmemdup_const - conditionally duplicate and manage a region of memory
++ *
++ * @dev: Device this memory belongs to
++ * @src: memory region to duplicate
++ * @len: memory region length,
++ * @gfp: GFP mask to use
++ *
++ * Return: source address if it is in .rodata or the return value of kmemdup()
++ * to which the function falls back otherwise.
++ */
++const void *
++devm_kmemdup_const(struct device *dev, const void *src, size_t len, gfp_t gfp)
++{
++	if (is_kernel_rodata((unsigned long)src))
++		return src;
++
++	return devm_kmemdup(dev, src, len, gfp);
++}
++EXPORT_SYMBOL_GPL(devm_kmemdup_const);
++
+ struct pages_devres {
+ 	unsigned long addr;
+ 	unsigned int order;
+diff --git a/include/linux/device/devres.h b/include/linux/device/devres.h
+index ae696d10faff4468a41f37b5d5fd679d4ff11997..8c5f57e0d613492fd0b2ec97dd384181608192fc 100644
+--- a/include/linux/device/devres.h
++++ b/include/linux/device/devres.h
+@@ -80,6 +80,8 @@ void devm_kfree(struct device *dev, const void *p);
  
- 		selector++;
+ void * __realloc_size(3)
+ devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp);
++const void *
++devm_kmemdup_const(struct device *dev, const void *src, size_t len, gfp_t gfp);
+ static inline void *devm_kmemdup_array(struct device *dev, const void *src,
+ 				       size_t n, size_t size, gfp_t flags)
+ {
 
 -- 
 2.48.1
