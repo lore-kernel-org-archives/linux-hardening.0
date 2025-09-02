@@ -1,154 +1,211 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530B62DFA46
-	for <linux-hardening@vger.kernel.org>; Tue,  2 Sep 2025 14:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0AA42DAFCA
+	for <linux-hardening@vger.kernel.org>; Tue,  2 Sep 2025 14:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756821763; cv=none; b=urs8MfLouShIDlsuTnha+7M7XexBlAKAUcVpLCK7KQ5lNEkcvoYorbuW23vKbFFfG/C5rh6eXvNOiTySB33ivHuxQ//xV2W/WSd3IDX9JiC8drDRjOhhgnijPxodwAp+dwsmQGpVu2ppZEf+x95RX99F/K2Jqhae7Vn+M65nyqA=
+	t=1756821822; cv=none; b=iTZUQN+DME5hUg5y32ZjYPL0J8qAzL3Q0LRLf+HrsXO1bp/hrD9k3G2NXQTf59WDkCL1lk/5Y3KEmVxjd5MtLe1EFn06FHox/cs0EAlopxkRcdVjUX84kFXe2PNNlz/9EkFqwOQ1VWQW7gp3MUWeoo/3rEHiyJ7j7J6umogSIhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756821763; c=relaxed/simple;
-	bh=t6qJ4Krbe8Eig8u7HuRNaH82OJCGzRpxUAzmtO7ZEgM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LzPQRPt65w+Ne7RAtCGLTY6kz1dw9TogK/z8VOUjC+Fjtm5P6UAmEuTNu6spsSdDrivAcE/tH1FTdhvPlNgHD3SdLUwI5HVHnW4N4kmrrW0rRXsKgu8KKGfW1UyR07GZjRKVtW9idlcU/zka5N/x6k0FPnPnK6Gvu3Ultb+WwHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=JHycl7Xh; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1756821822; c=relaxed/simple;
+	bh=S0kmrdVS0K2Abz4W9Kj/zMcV05L3rj3/6CRG4UjjXlU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LqjiS0ehbDUHzmZmMUyzm5w68s13S/v2CXBqhLN2fBXDQn1+BFY0d3xy/i7nViOggV3aNIqUaza4LT1Ogn5wK7CAtAQriIeUv9QxJQpG1cXnotypTnvh/Eq5jwHez8cLUh1dYPlLq5axHIj1OlG+x/AP8uhDtIWR+sOxsnT44w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=OLu78ZH6; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=d1sETiW2; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JHycl7Xh"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-55f691c9febso4315644e87.0
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Sep 2025 07:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756821759; x=1757426559; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t6qJ4Krbe8Eig8u7HuRNaH82OJCGzRpxUAzmtO7ZEgM=;
-        b=JHycl7XhizIXDhB7H67QiM3ora39fFS0qsQGf0MBFXfqjJb9Dgzdbi+DoMs5pSRqrV
-         H1S+PvcYqslE3IKKcShPsILhFh4PRKSBIAn2FyPiXHDOWJKPwZBIn2szYzVeB2zX/lMj
-         xFY9l3BIbKeACyANe2Gl3Wi6Pd7of6ydyevAVU5jUxXdKw5bKg3NiKjq5Drw1+1CjB80
-         GGS0MHpxBmKUTIVIfgW3lM2SpmJ2s70Gi+ySjOdNCbzVX9RHI09fnUcaI4TZdECpt6IX
-         U51ywl0Jzjr9Tx1v8W1cgFltIxP+C9cVUMC5r6Jdd9EqAUs2Tx+TLplVLKgDqqO8QFNo
-         UMTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756821759; x=1757426559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t6qJ4Krbe8Eig8u7HuRNaH82OJCGzRpxUAzmtO7ZEgM=;
-        b=Fjx9MYX1UYmfRUgwmLVO8GSUDdY5zkQ9HNq8rluddGG8orl5M5J6l68JmIliGOdfL9
-         tbfb21MW5/6IInNPSNO80Ni1Nv3QMIj/Rodq+Eay7Y6DdMcsjOUY5c+tUFwatCBsDcgi
-         hbtXoXqeC+GWpsqK3Ta0SjplEHxrSEreqK+uU+P2t29i8hLgpofHYf7U7MVrnXrqK7W9
-         kQBaFm/WRn1PsChEdTIsw7BCivw8o+pHOiBGOmmc7OeHFDFWyk00LBUPUxkVnrRpMdr5
-         UJmLT8D0p1BQZXCARslSYKdjjbQRdhhtFxaGK8uFMKt5lqQRZ8uD6zP4EnfIkRb8Z726
-         O3Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCUV1XSIwcXJloiyPgwvknHKOt37a/ArB6ruV/Cy1aBktpW6WksMzDYcWObO3NhX+1EAmi3q2s3gSAV6V4CSSTg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9owUJCicVPP+ejQNdTbtPsgA+ESQDTs6fdDQVNVh/JSfDpzOd
-	yws3D4Ah3WEfHc9bhQjpdDlitmvnQ90Q8pnX4FaFtaoqKWBovbtpCLFu9GVRCLVeDXN/Ls68d0i
-	iFYavpL8ig7I4CoLLoROn9jLfgHGNfjdISzSLuH+lBw==
-X-Gm-Gg: ASbGncuoj3alkVM0IKHHO1220iyDOPX64DPIK5RPyZM0yextIYwRIpal0GZRgLoQ9RG
-	ktQIX19uosdCp3fpr728rR3XOOt8cFXzXbvkfOlKykVqHanUYEwWQUgDdcI+SaEsRQdn8gsqQUO
-	xJFZbbGeChWGB2vTuPlr/Iac5ILlNmi+1V0s/YYo229HtUR6KBH3d+YZB6f46bMaXJmA41wF/9p
-	DeCPLL17R+QLU5eceZK9Qc6IR+AjO49B/9a2rMfVTVkFVL7Sw==
-X-Google-Smtp-Source: AGHT+IF0XxTo4Eof/cAnsUmsXyl7FaRgZjHqhfNse8z4FzsrSjUbnY+JobcnARjelIxZIYceGk+U5xWeRaOHkRoNgZc=
-X-Received: by 2002:a05:6512:1289:b0:55f:3f25:f03d with SMTP id
- 2adb3069b0e04-55f708dbc89mr4083265e87.32.1756821758848; Tue, 02 Sep 2025
- 07:02:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="OLu78ZH6";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="d1sETiW2"
+Received: from pathway.suse.cz (unknown [IPv6:2a07:de40:b2bf:1b::12bd])
+	by smtp-out2.suse.de (Postfix) with ESMTP id C850B1F38E;
+	Tue,  2 Sep 2025 14:03:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1756821819; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=FGE3n9gHMNWRbYGx9xfea52LLP6GPSA5dEO2fMhySTk=;
+	b=OLu78ZH6h6v7JXx9iLoa+InAb/Funj1lAMK54qKynZrBUYdz4OdLpNiM12plHbzuaIVHTa
+	ZEUsCD4HRz4s3ZVsdIewMM9FdhPOXvofrT9G+C1JbEuDbt0+Ob98TANvqXYDYDSoyK5ckV
+	fCNSPO4i6eYFIZm5q7EXjuGZvoI47gc=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=d1sETiW2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1756821817; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=FGE3n9gHMNWRbYGx9xfea52LLP6GPSA5dEO2fMhySTk=;
+	b=d1sETiW2tCyE7LPpr085ovvyMIWOABCgJ9ciI/Gi1Zbh0nAJ2HvKGTuqT5L5QeQZCVIZO/
+	N05AEsJwbeO0yYEdEDt5v+EHOnGRY5tb7VpWYKh5CP8jg0qITL032oLyICHEV+YUPKKRt9
+	4Ebh+87mwHgOL5Z8G6+Ondlgf1x8DoE=
+From: Petr Mladek <pmladek@suse.com>
+To: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	David Gow <davidgow@google.com>,
+	Arnd Bergmann <arnd@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>
+Subject: [PATCH v3] printk: kunit: support offstack cpumask
+Date: Tue,  2 Sep 2025 16:03:26 +0200
+Message-ID: <20250902140326.344214-1-pmladek@suse.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
- <20250902-pinctrl-gpio-pinfuncs-v7-1-bb091daedc52@linaro.org>
- <aLbrz5DYS5Yxx_UE@smile.fi.intel.com> <CAMRc=Mfx5czDM=vfEYhFtVO3MviYaW4wKBYjGZ9ZnMbr-+T4mg@mail.gmail.com>
- <aLb2HH5zgxdbDiPo@smile.fi.intel.com>
-In-Reply-To: <aLb2HH5zgxdbDiPo@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 2 Sep 2025 16:02:27 +0200
-X-Gm-Features: Ac12FXzmmMVa4i5hYh_JJ6GZvRRv05y-_-Nk_APJiumjkhCqONHKECafTZ1ySu4
-Message-ID: <CAMRc=Mdp2djgGbgu_uwLSkrtRPomAU=6-SRdzCdSbrHWzS2c2A@mail.gmail.com>
-Subject: Re: [PATCH v7 01/16] pinctrl: check the return value of pinmux_ops::get_function_name()
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, imx@lists.linux.dev, linux-omap@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Action: add header
+X-Spam-Flag: YES
+X-Spam-Level: ****************
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [16.68 / 50.00];
+	SPAM_FLAG(5.00)[];
+	NEURAL_SPAM_LONG(3.50)[1.000];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_SPAM_SHORT(2.99)[0.997];
+	HFILTER_HOSTNAME_UNKNOWN(2.50)[];
+	RDNS_NONE(2.00)[];
+	ONCE_RECEIVED(1.20)[];
+	MID_CONTAINS_FROM(1.00)[];
+	HFILTER_HELO_IP_A(1.00)[pathway.suse.cz];
+	R_MISSING_CHARSET(0.50)[];
+	HFILTER_HELO_NORES_A_OR_MX(0.30)[pathway.suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	DIRECT_TO_MX(0.00)[git-send-email 2.50.1];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b2bf:1b::12bd:from];
+	GREYLIST(0.00)[pass,body];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim,suse.com:email,pathway.suse.cz:helo,arndb.de:email];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	TO_MATCH_ENVRCPT_ALL(0.00)[]
+X-Spamd-Bar: ++++++++++++++++
+X-Rspamd-Queue-Id: C850B1F38E
+X-Spam-Score: 16.68
+X-Spam: Yes
 
-On Tue, Sep 2, 2025 at 3:50=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Tue, Sep 02, 2025 at 03:29:31PM +0200, Bartosz Golaszewski wrote:
-> > On Tue, Sep 2, 2025 at 3:06=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@intel.com> wrote:
-> > > On Tue, Sep 02, 2025 at 01:59:10PM +0200, Bartosz Golaszewski wrote:
-> > > >
-> > > > While the API contract in docs doesn't specify it explicitly,
-> > >
-> > > So, why not to amend the doc at the same time?
-> >
-> > Because this series is already big as is. That would be another commit
-> > that can be separate.
->
-> I meant _in the same_ patch.
->
-> > > > the generic implementation of the get_function_name() callback from=
- struct
-> > > > pinmux_ops - pinmux_generic_get_function_name() - can fail and retu=
-rn
-> > > > NULL. This is already checked in pinmux_check_ops() so add a simila=
-r
-> > > > check in pinmux_func_name_to_selector() instead of passing the retu=
-rned
-> > > > pointer right down to strcmp() where the NULL can get dereferenced.=
- This
-> > > > is normal operation when adding new pinfunctions.
->
-> > > Fixes?
-> >
-> > This has always been like that.
-> >
-> > > Reported?
-> >
-> > I mean, technically Mark Brown reported my previous patch failing but
-> > I don't think we do this if we're still within the same series just
-> > another iteration?
-> >
-> > > Closes?
-> >
-> > Ditto.
->
-> I meant that this fixes a potential issue disregard to your series, right=
-?
->
+From: Arnd Bergmann <arnd@arndb.de>
 
-No, as long as the imx driver keeps putting stuff into the pin
-function radix tree directly, this cannot happen. The issue was
-triggered by the discrepancy between the number of added selectors and
-the hardcoded number of functions (we started at 0 which was not in
-the radix tree and crashed before we got to 1).
+For large values of CONFIG_NR_CPUS, the newly added kunit test fails
+to build:
 
-Bart
+kernel/printk/printk_ringbuffer_kunit_test.c: In function 'test_readerwriter':
+kernel/printk/printk_ringbuffer_kunit_test.c:279:1: error: the frame size of 1432 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
+
+Change this to use cpumask_var_t and allocate it dynamically when
+CONFIG_CPUMASK_OFFSTACK is set.
+
+The variable has to be released via a KUnit action wrapper so that it is
+freed when the test fails and gets aborted. The parameter type is hardcoded
+to "struct cpumask *" because the macro KUNIT_DEFINE_ACTION_WRAPPER()
+does not accept an array. But the function does nothing when
+CONFIG_CPUMASK_OFFSTACK is not set anyway.
+
+Fixes: 5ea2bcdfbf46 ("printk: ringbuffer: Add KUnit test")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[pmladek@suse.com: Correctly handle allocation failures and freeing using KUnit test API.]
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+This patch applies on top of "rework/ringbuffer-kunit-test" branch
+in printk/linux.git.
+
+Changes against v2 [2]:
+
+  - Hardcode the pointer type to "struct cpumask *" when defining
+    prbtest_cpumask_cleanup() action to avoid warning
+    when CONFIG_CPUMASK_OFFSTACK is not set.
+
+Changes against v1 [1]:
+
+   - Abort the test when the cpumask allocation fails.
+   - Free the cpumask when the tests exits.
+
+[1] https://lore.kernel.org/all/20250620192554.2234184-1-arnd@kernel.org
+[2] https://lore.kernel.org/all/20250702095157.110916-3-pmladek@suse.com
+
+ kernel/printk/printk_ringbuffer_kunit_test.c | 24 +++++++++++++++-----
+ 1 file changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
+index e67e1815f4c8..2282348e869a 100644
+--- a/kernel/printk/printk_ringbuffer_kunit_test.c
++++ b/kernel/printk/printk_ringbuffer_kunit_test.c
+@@ -223,8 +223,17 @@ static int prbtest_reader(struct prbtest_data *test_data, unsigned long timeout_
+ 	return 0;
+ }
+ 
++KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, free_cpumask_var, struct cpumask *);
+ KUNIT_DEFINE_ACTION_WRAPPER(prbtest_kthread_cleanup, kthread_stop, struct task_struct *);
+ 
++static void prbtest_add_cpumask_cleanup(struct kunit *test, cpumask_var_t mask)
++{
++	int err;
++
++	err = kunit_add_action_or_reset(test, prbtest_cpumask_cleanup, mask);
++	KUNIT_ASSERT_EQ(test, err, 0);
++}
++
+ static void prbtest_add_kthread_cleanup(struct kunit *test, struct task_struct *kthread)
+ {
+ 	int err;
+@@ -247,9 +256,12 @@ static void test_readerwriter(struct kunit *test)
+ 	struct prbtest_thread_data *thread_data;
+ 	struct prbtest_data *test_data;
+ 	struct task_struct *thread;
+-	cpumask_t test_cpus;
++	cpumask_var_t test_cpus;
+ 	int cpu, reader_cpu;
+ 
++	KUNIT_ASSERT_TRUE(test, alloc_cpumask_var(&test_cpus, GFP_KERNEL));
++	prbtest_add_cpumask_cleanup(test, test_cpus);
++
+ 	cpus_read_lock();
+ 	/*
+ 	 * Failure of KUNIT_ASSERT() kills the current task
+@@ -257,15 +269,15 @@ static void test_readerwriter(struct kunit *test)
+ 	 * Instead use a snapshot of the online CPUs.
+ 	 * If they change during test execution it is unfortunate but not a grave error.
+ 	 */
+-	cpumask_copy(&test_cpus, cpu_online_mask);
++	cpumask_copy(test_cpus, cpu_online_mask);
+ 	cpus_read_unlock();
+ 
+ 	/* One CPU is for the reader, all others are writers */
+-	reader_cpu = cpumask_first(&test_cpus);
+-	if (cpumask_weight(&test_cpus) == 1)
++	reader_cpu = cpumask_first(test_cpus);
++	if (cpumask_weight(test_cpus) == 1)
+ 		kunit_warn(test, "more than one CPU is recommended");
+ 	else
+-		cpumask_clear_cpu(reader_cpu, &test_cpus);
++		cpumask_clear_cpu(reader_cpu, test_cpus);
+ 
+ 	/* KUnit test can get restarted more times. */
+ 	prbtest_prb_reinit(&test_rb);
+@@ -278,7 +290,7 @@ static void test_readerwriter(struct kunit *test)
+ 
+ 	kunit_info(test, "running for %lu ms\n", runtime_ms);
+ 
+-	for_each_cpu(cpu, &test_cpus) {
++	for_each_cpu(cpu, test_cpus) {
+ 		thread_data = kunit_kmalloc(test, sizeof(*thread_data), GFP_KERNEL);
+ 		KUNIT_ASSERT_NOT_NULL(test, thread_data);
+ 		thread_data->test_data = test_data;
+-- 
+2.50.1
+
