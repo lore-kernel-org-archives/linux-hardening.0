@@ -1,176 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F393212556;
-	Tue,  2 Sep 2025 13:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615952DAFD2
+	for <linux-hardening@vger.kernel.org>; Tue,  2 Sep 2025 13:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756821039; cv=none; b=D0MhMCiaGBaogt0XtGKiGPEGRu//aOgjdmP0fnI4pLTp0mUfuC+rd4dod409b6PqXEpbh7hLbMkAbwBIrbRpI29761mheTDe7dVFgK8cr9VHItVn52h2tnWD2c600iE/viKiOXbm25muhlldwipvHsQbMrNZYkkoCtC4txjemEo=
+	t=1756821333; cv=none; b=AOClHomSzA/q8LnXDSJ4+5nqff4hwitcWQh0XugrBTQIMvLNeixcPHmmEYiiDXq8I7Yoy6CXBpdvsWiJGx2jYefSxKMXJJekgumAPtXKCM002ob/NvEkUvlhUzP+fKt2/HDHAeEDVfiozUYDb4azuFad9HNVGwj3CU0BCVtCyvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756821039; c=relaxed/simple;
-	bh=pxx41/VBJwEQCpU5u+vMOlc6AdRXauTq/XBO/2b9BuM=;
+	s=arc-20240116; t=1756821333; c=relaxed/simple;
+	bh=bQakP1YsFZpN261MdTv67NQ3SO9sRRoupHv7KYhCKvc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=leGMOxLdK48Mvg48LLwHFnZM0figRKf4P68RRMQlMcPYzPUEJYBbaEhJi4fUZ0Dj//2HJVr2khUFTqCT3l6T0xuM+YIi52rmkFBslcnVxW1wrzfmEYBJDuue5O3XDa65imx6ZWDzS69tC6SpF2jrDcoPZQqEy7aSP4osexAVulg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eRgAjFqj; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=E5KsUlu+2ZpuDLH10QGqUu3kQE/pTaXW7sJsK5eAzOHphNvxJRogTvr5uwDagnh5G82A1XqO7sCGrtQRW32lqWshg53Y/o3z5gFbAUHJ28+GWEWxIP99Ej0OKiy9ds/aTkgZasTTD6HYU5CQM2WoS1TYfGNpSZhhz5qc42haNP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BBoM17pD; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eRgAjFqj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756821038; x=1788357038;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=pxx41/VBJwEQCpU5u+vMOlc6AdRXauTq/XBO/2b9BuM=;
-  b=eRgAjFqjrvlk3rcCDhqI43ucdTkT/uOXlKMyRfYBSbsfxy7wKMiCYiU4
-   rRH6X5fWqrUvQSc6tyv0mZhHxPGjPLVLZd7iowQYgLqC/PPwXDi96UHQq
-   YmUA38gVUu5waT7H/8HpHvB+aNzX2xavUHd+ObEBZ5pAr5HSyu6IFqK7r
-   yUi14fqD5BlqhnklO+lBigcehHsn7YXZq5Z9jUfQTAD2E9WG0LpQLQ3ux
-   YfGbn4A6wfw5RGN1VMFlIZENAfKJVXzk1aYUWI/RL241J93Xd/2787EVi
-   3jDjd3EH8nZj1WCowwDa5vwdFubZEtufUfinT7tF+1aLKLnbXTCp8MXBG
-   g==;
-X-CSE-ConnectionGUID: pAVJrVGfSqSLaUBO+akCwg==
-X-CSE-MsgGUID: iVN9697HTdGfGFlrWT5emQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11541"; a="62738133"
-X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
-   d="scan'208";a="62738133"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 06:50:37 -0700
-X-CSE-ConnectionGUID: ZHIE/dHOSB+FAZRCRRCs4Q==
-X-CSE-MsgGUID: 2IiLBKTERdG7VU87j86+iA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
-   d="scan'208";a="176590815"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 06:50:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1utROu-0000000AhyY-2NM3;
-	Tue, 02 Sep 2025 16:50:20 +0300
-Date: Tue, 2 Sep 2025 16:50:20 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Alexey Klimov <alexey.klimov@linaro.org>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	NXP S32 Linux Team <s32@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Tony Lindgren <tony@atomide.com>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	imx@lists.linux.dev, linux-omap@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v7 01/16] pinctrl: check the return value of
- pinmux_ops::get_function_name()
-Message-ID: <aLb2HH5zgxdbDiPo@smile.fi.intel.com>
-References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
- <20250902-pinctrl-gpio-pinfuncs-v7-1-bb091daedc52@linaro.org>
- <aLbrz5DYS5Yxx_UE@smile.fi.intel.com>
- <CAMRc=Mfx5czDM=vfEYhFtVO3MviYaW4wKBYjGZ9ZnMbr-+T4mg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BBoM17pD"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-61cb4374d2fso7728048a12.2
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Sep 2025 06:55:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1756821330; x=1757426130; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ux1+zM7DCGKk8Y0pNnzy3MA9mFKRSAX580GQ0UU99YQ=;
+        b=BBoM17pDDz4pTG+yQQkZNCPHzFb+sqNNNPnzNE6XnQxvJKCZXrY9y5VJf4kkGEOIgx
+         ydEkiEHqR3V1Oi/XJXlWHaa5a+hzJLnoTFj8W9H+aYPEHQ39Tz6Jo5/ZkiO+0F9sD/u4
+         K8mR9N6KW18MD9fwxGgR8bHSe4dZ2OsXP1NJmopKwwCechitZNog58ufXpf2uglRvm5G
+         SvGz5ILKq+7b59llHzAzx5FZZ78L7EdVoPk4QOGvMWn5UYnQvtajPDyMbLN3iy14wUY2
+         +gW8zBe6E2GOkvMFfe1gbcM2bUJJ1pYrrs+/rQBpANOkOEAzkKgPnT6PPLPVVvZZ4NvS
+         z0zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756821330; x=1757426130;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ux1+zM7DCGKk8Y0pNnzy3MA9mFKRSAX580GQ0UU99YQ=;
+        b=Vh4jx170AbHdM9n/qRO6H1FmqjuwKNjpUO/oSv2FZN4ioSBZQBi2HnE0zm/g2vQUM5
+         fiYjXK7ClXqZbHHjFSqAwCIDScOGdyOOtvtm5J8RiLlJ968dbX4vYg1gc1ZQQQ9kALiu
+         BjEnElLl7FxBOqnuL0QGBdar8ajtsMkm747JdAnnGo4vkBgzzWWWWWvcFM0uFa/ZHqhn
+         CviuXFmk+jjy05quc5KSYlgGawsFplUuxloUGuBo6leFaDEVaFDYEXpP8oFUCioL2nyP
+         7/YvAf+eh7GMugEmsy912CwEfs2mLTPsi3PlNbulBHQRbeSruwfVc4ooVKCNx3Z3b1WE
+         jadw==
+X-Forwarded-Encrypted: i=1; AJvYcCUf9WYsfRfIUEH+9YRcDpbdtax/Mu+cpznWIRXtNzWTHDEbpBWKrrD1CWJn73PkI9smHE3lKkrBYWwygrGSegc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhVjON1ia/UsIQNhe+agpuEgXTj/dz0z1IjE/5mJeN8/dM3FuU
+	VKeT+EgX+2VmM7Pr2EgSs0zz/mtlKiuQobvjUVlEXzn9DdUjosyPljkHInk2hGGMTHc=
+X-Gm-Gg: ASbGncurxw/xXGrZ0vrLKboK2TW497J5woMdH3H1KZlJFbZsxbRftopO06l573E7Dc2
+	nJvkh3yEVylHeLOVL4BRtQ33s5OTeTBYFtaBeTWqTCJRv9MlQBx2CR0Kj/EmqWDwAzyeLrinpSu
+	24y66A1kfZxVX+vM1welOVqB+Kb5sNqDmtQpQOdZ/t5JR+b/D9P1rd1Savy0UcKvGJd7MdspuaT
+	go6VARBZ49ZCBb65pWDYnpq0LAsqBEBHTdwAVZC09K3/PtAZz3e5E9bNN0rWKhQME0EQnzmwcqC
+	3r2RIbW70j+CLv5/PSyN6A6cMXLH+aPDV7RrnEw91tBzUzrorCvu2E3TwuPbUoq48zdh64BEuG2
+	puMpo0HOsl7Jvy2vzmU1PmdC6sM0dcSUxrtppJdVba690W60=
+X-Google-Smtp-Source: AGHT+IFYZsCEWcaT1DOSZuHxLNtRPdpvwo7JLtkjMRaV/jRgWXdGVcGEYo0U2qGMp5Ea0wH4E60Deg==
+X-Received: by 2002:a05:6402:24d9:b0:617:eb8d:283b with SMTP id 4fb4d7f45d1cf-61d26eb3cafmr9948273a12.26.1756821329693;
+        Tue, 02 Sep 2025 06:55:29 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61cfc214bacsm9895291a12.16.2025.09.02.06.55.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Sep 2025 06:55:29 -0700 (PDT)
+Date: Tue, 2 Sep 2025 15:55:27 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	David Gow <davidgow@google.com>, Arnd Bergmann <arnd@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 2/3] printk: kunit: support offstack cpumask
+Message-ID: <aLb3T6hjtX4M37dA@pathway.suse.cz>
+References: <20250702202835.GA593751@ax162>
+ <aG0qLaeAoTGaRs0n@pathway.suse.cz>
+ <1217f48f-a12a-4ba1-8de5-bda4b2ad6107@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mfx5czDM=vfEYhFtVO3MviYaW4wKBYjGZ9ZnMbr-+T4mg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <1217f48f-a12a-4ba1-8de5-bda4b2ad6107@app.fastmail.com>
 
-On Tue, Sep 02, 2025 at 03:29:31PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Sep 2, 2025 at 3:06 PM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > On Tue, Sep 02, 2025 at 01:59:10PM +0200, Bartosz Golaszewski wrote:
-> > >
-> > > While the API contract in docs doesn't specify it explicitly,
+On Tue 2025-07-08 16:48:47, Arnd Bergmann wrote:
+> On Tue, Jul 8, 2025, at 16:24, Petr Mladek wrote:
+> > On Wed 2025-07-02 13:28:35, Nathan Chancellor wrote:
+> >> On Wed, Jul 02, 2025 at 11:51:56AM +0200, Petr Mladek wrote:
 > >
-> > So, why not to amend the doc at the same time?
-> 
-> Because this series is already big as is. That would be another commit
-> that can be separate.
-
-I meant _in the same_ patch.
-
-> > > the generic implementation of the get_function_name() callback from struct
-> > > pinmux_ops - pinmux_generic_get_function_name() - can fail and return
-> > > NULL. This is already checked in pinmux_check_ops() so add a similar
-> > > check in pinmux_func_name_to_selector() instead of passing the returned
-> > > pointer right down to strcmp() where the NULL can get dereferenced. This
-> > > is normal operation when adding new pinfunctions.
-
-> > Fixes?
-> 
-> This has always been like that.
-> 
-> > Reported?
-> 
-> I mean, technically Mark Brown reported my previous patch failing but
-> I don't think we do this if we're still within the same series just
-> another iteration?
-> 
-> > Closes?
-> 
-> Ditto.
-
-I meant that this fixes a potential issue disregard to your series, right?
-
-...
-
-> > >       while (selector < nfuncs) {
-> > >               const char *fname = ops->get_function_name(pctldev, selector);
-> > >
-> > > -             if (!strcmp(function, fname))
-> > > +             if (fname && !strcmp(function, fname))
-> > >                       return selector;
+> > Thanks a lot for the nice report.
 > >
-> > I would slightly refactor this:
+> > The problem is how cpumask_var_t is defined in include/linux/cpumask_types.h:
 > >
-> >                 const char *fname;
+> > #ifdef CONFIG_CPUMASK_OFFSTACK
+> > typedef struct cpumask *cpumask_var_t;
+> > #else
+> > typedef struct cpumask cpumask_var_t[1];
+> > #endif /* CONFIG_CPUMASK_OFFSTACK */
 > >
-> >                 fname = ops->get_function_name(pctldev, selector);
-> >                 if (fname && !strcmp(function, fname))
-> >                         return selector;
+> > And KUNIT_DEFINE_ACTION_WRAPPER() expect that the 3rd parameter
+> > is a pointer.
 > >
-> > >               selector++;
-> >
+> > I am going to solve this by adding a wrapper over free_cpumask_var()
+> > which would work with a pointer to cpumask_var_t.
 > 
-> You can do this in a subsequent patch, I prefer a smaller diff personally.
+> I'm not familiar enough with the cleanup mechanism of kunit,
+> but can't you just move the mask allocation outside of
+> test_readerwriter()?
+> 
+> > + */
+> > +static void prbtest_free_cpumask_var(cpumask_var_t *mask)
+> > +{
+> > +	free_cpumask_var(*mask);
+> > +}
+> 
+> Or you could pass this as a cpumask_t pointer instead,
+> which should do the right thing without the indirection.
 
-Sure.
+It was actually enough to use this in the KUNIT_DEFINE_ACTION_WRAPPER()
+definition. It removed the warning about passing an array type.
+And I needed neither a wrapper not #ifdef.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I am going to send an updated version of the patch. I am sorry
+that it took so long. This patch has fallen though cracks because
+of vacation and other urgent tasks.
 
-
+Best Regards,
+Petr
