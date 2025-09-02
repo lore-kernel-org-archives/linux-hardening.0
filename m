@@ -1,160 +1,149 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF497285040
-	for <linux-hardening@vger.kernel.org>; Tue,  2 Sep 2025 12:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932C52D59F7;
+	Tue,  2 Sep 2025 13:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756816683; cv=none; b=U6PvKYSC9RURIPJuuQ/+8qCFUGyHSPC35EmRS6M30su5kc3+VYVHyfQ9YVErTEB4YOENahoL9ZXvx6mdf48g9rw2MGdewCcqKDVRw2VZDIWCiEmiIZD4u3WXMmMJzCnzLhVcUpsVAZJ036amLrTm/73343SGs2cnr2ZoGKF/VMo=
+	t=1756818403; cv=none; b=t6zXLZ1rCudLDag6mrKlOfqi/NhmzaWKdddXKIQ9WLPuINAQCmeF7kc84mqWyaYxDiDO1wBttlNwnuY1JQ1xZneiQauS9hjfuCx89pZz9h2MV5CnWGoOqM5Jqq/IJFRrXVsBdkY7j6ABlJ0/1xG6szKrnQmXE8/gZV4TL7lxMlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756816683; c=relaxed/simple;
-	bh=m9kwu89J1pc0NpjS5g2L6XMPeIhbKDj/KyiBWWWGE4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kcbxzuFbWtt7lZUo5y0jAaBaj9efAkTkYO0mLcAeTi8b9/BZSKJTwWbD8HYELy/etwpyaiCCPqmkk+0H41psFjOPmybEI7UmAwKpakdX+o7Jgya0xvoLfm0f6MWsLqHFAmfzJOwny71bBtN0XaX1YDVP3L9L9Qa5Tz6EpNuiDxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=O2alQQC5; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1756818403; c=relaxed/simple;
+	bh=304mhcCsZ3DPW/ZeHF0UCdKTce70KODDh/J7W7FbB/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p1s0H/6pSDMlH+uwD4YCX6th3hQUBuGFBRW5p3uivbxaY9zKwRoT763+mrOCyLAeLaoorB7TPy2+ffHHlDVZsW+/BBE2scBYlsGErf+2CYyEwdvPyyOnepJx/aP3Kk+ZVEjg6rq5kiPZ4PT87G/oB7PN+CcUeWKLiow20jSiSNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UQCIDNYV; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="O2alQQC5"
-Received: from eig-obgw-5006b.ext.cloudfilter.net ([10.0.29.217])
-	by cmsmtp with ESMTPS
-	id tOx2u7ExiaPqLtQGuuZqpV; Tue, 02 Sep 2025 12:38:00 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id tQGsu0F4flZMttQGtuZqCa; Tue, 02 Sep 2025 12:37:59 +0000
-X-Authority-Analysis: v=2.4 cv=As7u3P9P c=1 sm=1 tr=0 ts=68b6e527
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=XW3vq5T86JFyMsJaYQInbg==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=7T7KSl7uo7wA:10 a=_Wotqz80AAAA:8
- a=vvXS69cEl2kim63T5K4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=buJP51TR1BpY-zbLSsyS:22 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=mwylP/u0Yew4KVxFiy2Py7Is98fs5mA8roFxIyZP6YA=; b=O2alQQC567m+m1+/zLEFFKezsq
-	2g/SS+AmPnRruS+NKa1bokWKR2IoQZVAqquN4Q/2RESiQBN14SwGlHBWbjHPxAAiBs72bext2agIp
-	GA86zHfeX+adsDmbPXTWoHIsxePAHO38Lqe8G4Wr//huDmdi9sn13YuANEOxweE6maPuPEy36NREN
-	TgRcIz4c3nogGpikRQwbtZcRNzAHKDyKW6gl/cGV6g00cKBvP4/puan4VL9wGJQQby4Wa/sZ27VTC
-	h8zVEeBEjB9ru74pkFjdBxXX6b2yVXAab47Pb5mTkj5ig7W4WY1yjHCl1UZymSjD6cmbYiabLZNAr
-	XpU4TgHw==;
-Received: from d4b26982.static.ziggozakelijk.nl ([212.178.105.130]:36200 helo=[172.17.143.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1utQGr-000000034Dg-2bNH;
-	Tue, 02 Sep 2025 07:37:58 -0500
-Message-ID: <5fb74444-2fbb-476e-b1bf-3f3e279d0ced@embeddedor.com>
-Date: Tue, 2 Sep 2025 14:37:40 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UQCIDNYV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756818402; x=1788354402;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=304mhcCsZ3DPW/ZeHF0UCdKTce70KODDh/J7W7FbB/E=;
+  b=UQCIDNYVGpxtvgbkoY7oFmF1uEHsOnvPkPekgEus5qGJynNt6xWHlzFa
+   TWHxSPe0G3h5Utjn7kuBwsm64ho/mdg76e2OvNOzK8lNOHc9KIr9WD+p8
+   3zER82Z0y7/EQNQ1p0NDn++8QH1CpnQbKEWuxamzkJzp4+v1Rc37odw56
+   wDJ30Ycr7hTDWtJcY45rF0SjGNTR+BQ+EaM2ai9fSVUTo7ipuwHJ87ge+
+   zug56QWzODqP8bIW1vfmvzkiaU6dRqgDEm/EZfxU0PAkON0tcjPECUrLN
+   ZeLPftYJbNYKKjKs677gxRgzPge20DevVGRTYJsP+Tug/Y/AKJfPvkntz
+   g==;
+X-CSE-ConnectionGUID: v59mql1DQYSn9d5KaX9Kow==
+X-CSE-MsgGUID: Kjs3JnUMS8GhbW3/WQUYzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11541"; a="59028180"
+X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
+   d="scan'208";a="59028180"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 06:06:39 -0700
+X-CSE-ConnectionGUID: ahJv6su8QkCwIee8PybbEA==
+X-CSE-MsgGUID: WBNgT/TJTkOlqIdmDhs4Zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
+   d="scan'208";a="171432863"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 06:06:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1utQiN-0000000AhP0-4600;
+	Tue, 02 Sep 2025 16:06:23 +0300
+Date: Tue, 2 Sep 2025 16:06:23 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Alexey Klimov <alexey.klimov@linaro.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	imx@lists.linux.dev, linux-omap@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v7 01/16] pinctrl: check the return value of
+ pinmux_ops::get_function_name()
+Message-ID: <aLbrz5DYS5Yxx_UE@smile.fi.intel.com>
+References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
+ <20250902-pinctrl-gpio-pinfuncs-v7-1-bb091daedc52@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] cgroup: Avoid thousands of -Wflex-array-member-not-at-end
- warnings
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- linux-hardening@vger.kernel.org, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Chen Ridong <chenridong@huaweicloud.com>
-References: <b3eb050d-9451-4b60-b06c-ace7dab57497@embeddedor.com>
- <wkkrw7rot7cunlojzyga5fgik7374xgj7aptr6afiljqesd6a7@rrmmuq3o4muy>
- <d0c49dc9-c810-47d2-a3ce-d74196a39235@embeddedor.com>
- <y7nqc4bwovxmef3r6kd62t45w3xwi2ikxfmjmi2zxhkweezjbi@ytenccffmgql>
- <92912540-23d2-4b18-9002-bac962682caf@embeddedor.com>
- <tl6b6chfawtykzrxlmysn6ev7mq7gm764rnlsag7pfme7vhpof@lbwqooaybqmr>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <tl6b6chfawtykzrxlmysn6ev7mq7gm764rnlsag7pfme7vhpof@lbwqooaybqmr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 212.178.105.130
-X-Source-L: No
-X-Exim-ID: 1utQGr-000000034Dg-2bNH
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: d4b26982.static.ziggozakelijk.nl ([172.17.143.44]) [212.178.105.130]:36200
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGczkdqXLZhwgoXQEptopQXSzs6v8/ak0w/A8vRKeJmWWQR6hNsYwwnwLyiPs1zGdcvqK8+GhieeECcyyCV4NV9Co6jbbwG8sCtUOwXlV03lERBbEcqV
- ROmURDS5wEnE2a3YREy3Ot1DYLCX5wgXqgj2WGpSAYrvMSvw51hksHwC6uG3Hhk34UOtPt2P2CyvDyn//tJT3qkeOuf1gtBhcWtOtQ66CeVWDYCnUer87V4s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250902-pinctrl-gpio-pinfuncs-v7-1-bb091daedc52@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-
-
-On 9/2/25 13:17, Michal Koutný wrote:
-> On Tue, Sep 02, 2025 at 09:56:34AM +0200, "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
->> If the increase in size is not a problem, then something like this
->> works fine (unless there is a problem with moving those two members
->> at the end of cgroup_root?):
+On Tue, Sep 02, 2025 at 01:59:10PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Please don't forget to tackle cgroup_root allocators. IIUC, this move
-> towards the end shifts the burden to them.
+> While the API contract in docs doesn't specify it explicitly,
 
-I don't see how placing the TRAILING_OVERLAP() change at the end
-of cgroup_root would cause problems in cgroup_create(). I see
-this allocation for `struct cgroup *cgrp`:
+So, why not to amend the doc at the same time?
 
-cgrp = kzalloc(struct_size(cgrp, ancestors, (level + 1)), GFP_KERNEL);
+> the generic implementation of the get_function_name() callback from struct
+> pinmux_ops - pinmux_generic_get_function_name() - can fail and return
+> NULL. This is already checked in pinmux_check_ops() so add a similar
+> check in pinmux_func_name_to_selector() instead of passing the returned
+> pointer right down to strcmp() where the NULL can get dereferenced. This
+> is normal operation when adding new pinfunctions.
 
-but I don't see why struct cgroup cgrp; and struct cgroup *cgrp_ancestor_storage;
-cannot be placed at the end (as long as they're enclosed in TRAILING_OVERLAP()
-of course) of cgroup_root. In the end, it seems you're only interested in
-having cgrp->ancestors[0] overlap `cgrp_ancestor_storage` so that the latter
-points to the start of the FAM in struct cgroup.
+Fixes?
+Reported?
+Closes?
 
-> 
-> There's only the rcu_head we care about.
+...
 
-Based on this commit a7fb0423c201 ("cgroup: Move rcu_head up near the
-top of cgroup_root"), as long as rcu_head is not after struct cgroup,
-all's fine.
+>  	while (selector < nfuncs) {
+>  		const char *fname = ops->get_function_name(pctldev, selector);
+>  
+> -		if (!strcmp(function, fname))
+> +		if (fname && !strcmp(function, fname))
+>  			return selector;
 
-However, this tells me that people were aware of the possibility of
-`cgrp.ancestors[]` growing even beyond `cgrp_ancestor_storage`, which
-is yet another reason not to have that flex array in the middle of
-cgroup_root.
+I would slightly refactor this:
 
-> 
-> (You seem to be well versed with flex arrays, I was wondering if
-> something like this could be rearranged to make it work (assuming the
-> union is at the end of its containers):
-> 
-> 	union {
-> 		struct cgroup *ancestors[];
-> 		struct {
-> 			struct cgroup *_root_ancestor;
-> 			struct cgroup *_low_ancestors[];
-> 		};
-> 	};
-> )
+		const char *fname;
 
-Yep, that works (as long as it's always at the very end of any container
-or ends last in any nested structs, for instance in struct cgroup_root,
-it must also be at the end) for GCC-15+, but for older versions of GCC we
-have to use the DECLARE_FLEX_ARRAY() helper as below:
+		fname = ops->get_function_name(pctldev, selector);
+		if (fname && !strcmp(function, fname))
+			return selector;
 
-         union {
-                 /* All ancestors including self */
-                 DECLARE_FLEX_ARRAY(struct cgroup *, ancestors);
-                 struct {
-                         struct cgroup *_root_ancestor;
-                         struct cgroup *_low_ancestors[];
-                 };
-         };
+>  		selector++;
 
-Thanks
--Gustavo
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
