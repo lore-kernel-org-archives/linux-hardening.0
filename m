@@ -1,124 +1,132 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B192EE285
-	for <linux-hardening@vger.kernel.org>; Tue,  2 Sep 2025 10:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8E827FD5B
+	for <linux-hardening@vger.kernel.org>; Tue,  2 Sep 2025 11:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756807865; cv=none; b=r9Xtjbl8ArcNLHTsWTMYcMdo2jhgC8Bzc+iRPznL4SA9HE16hUB4DcEa8EDNjbXpGFcJGBUX9T9jY3kd4zpGS80IxXYKCq+xLPi+S+QUVpv3JJhvk7WqdNqq/DUPL3s9utZx7Zi7e/LLTgjSHgjbv4ldeku/6TRMYwtsDhcCzB4=
+	t=1756811838; cv=none; b=i0y26oMVc0wEx6JVnbS3B4FBBfvy4G0E+ULJgPNsYaMgExsfa/xGpmBxIDizhtFMxg2bNsr7x3MIkGqqSYmUT0F9YMSD6p6SaRKmUDikVzs8IGTHc1fj+pBKcK6/jXty7svA0D98p5th9qhuA782jl1k57nzARYrwNParodMcOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756807865; c=relaxed/simple;
-	bh=f4FSCQOOsa/4OCBJBGTowZPZFe3uwXyHE8EAIbJ1KzA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nZHGNoXyWgQJ9iZ9We3iT+ofqyNhIkbZd/iw3vk2Icbk4/Yy5AHTjIuaCNm32swmdQ/zkckhIbghPGFYzXWPoBKybCHjAr9s8PU6AkB4nm4m8IYGJlek44SxM/yCzuBN3qunkJzUBSGO3Qxw8bqySZHsqYpLyJg5gY8VVvyR2hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qZrp67rN; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1756811838; c=relaxed/simple;
+	bh=tFz8mxWmtvp+OLRSVyZYdPXZ40EOLiMevSfJIuTSZIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ASY70WO0SXhnMtGiIo/MS7EBGsVudXA+K5J45ZgCVjcgZdVipexBN21Vye2iBuVCkGHJ1kaHn1M+B3ZKrh+pEIXINOVgPbgzUwlazSOR3UHAipECOObkzy9XKCvSlSLRHsD11fBAG+qSNhiV0JT2hrxpnrZ8XpEalHv0XEshzeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TG1LNgkq; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qZrp67rN"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55f7ad815ceso2159656e87.3
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Sep 2025 03:11:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TG1LNgkq"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3d48b45f9deso1491855f8f.1
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Sep 2025 04:17:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756807862; x=1757412662; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S9/dg3rMdImtSDs9qVPDpc7idBTBiPszJRQRzWERi5Y=;
-        b=qZrp67rN8XplLKcepeAzOZpBM2vkxbddlAxns88NOS75WkWMp5a7tftIC5j31G/gZN
-         vpDQ/U8CedvYpuOl5mU5/0UiKJntFTiucGBTT5etoEDlCR/Cw768+vOUWL0oR7rtsg3X
-         ILfUyWmomFtemqMgb8+kwfc9WWGvbm507EDkPbJ0m5OrQdn4fM4jn2AXsdLIb2sROcX2
-         BMb4IDp1xaSol6aVBAs6D13/rZGFPjqgbd1ItJD6mxwj8K+XE4uoADFV/FZqioEopMwF
-         I3ojUVK6h5kNN0XS7Ib9AxJwDLyUyhe6adhZFeg2Eyo8CDhG8DFl/jFORKWPrWXxVsPf
-         dBWQ==
+        d=suse.com; s=google; t=1756811834; x=1757416634; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NkjdJ99tSVQ09kKrtq0hv3IjTswl5kKM4uWkHH+xt00=;
+        b=TG1LNgkqLtq9cIfMg2TppFSf7wDvWXZURS7bUn1zsAXXeR3nyDMz/jckkqyHVzGlj2
+         EpJh0wN5eHePSXUV65F2EidnCCVvx7fofkNmL+j1uvsxbLWNXvz0NO6TDjBNB7QVAN6m
+         y/9vDaHTAWhBLHOXcqEfg6DN0rle7qcoOMpi4wouoGT9Z+O8S+akwPqQxDsaZdC9+Dkj
+         Hl37AkSXcMqFFZw5jSm2XiaDsPFdkUblK1haJtxCr4SA41/XEXeNihBa72aplEgySu0x
+         dK42F8wLBJQ7zI7IArBWsUBq5d2csaCvesL5/GmrIA9SiKis+wpqFamZxMNpuuij/wQ6
+         pgmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756807862; x=1757412662;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S9/dg3rMdImtSDs9qVPDpc7idBTBiPszJRQRzWERi5Y=;
-        b=F5WY4iyRaiNnQ/O32D41cqHwbr9qzj5PNyRaaD+MHNP86WxofWAUnRzrW8p/vWnFoh
-         QZ3I1HvZOgULQWLVQjwRtWBrdVJpT6qCcPTSWv6VMZ9eaccg02/tgA8tfodYd6WW5/RU
-         t1STLghbQ65afEvpKfSGlJnnMSQY1UyEGxZQjktE2a6w6Mp35FDk71BjVdYtX1XrrwD3
-         ko0kAyT3F+FyP6K2MvA/7jVyZT+qr0Hrz1zFDgw2CnsRI5zX6qtNkA12A/VKwYL6rIfw
-         fWQTymxS/uK6JzC7M71G/KmudHVICdMggH5JRjyCub38SixxYvl+hnCf6vAeXQwUwh1r
-         ZGFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdVhmyiP+rC3Gw5ECWeAWMCG9Ie2KmbrMqXyE0HdCjhDSR7fO0h5L1wbQXo4JKICWcD53szLr20dY3TUTt4ug=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxulNHTV9sQvrdT8iFWAOCsBOvYAbd8bJCHQ8XMkfPN2i3opqLI
-	Dy2GUxvAbLlI972GTK3MhoDHqwAhQgFslyKQMWenOzcHNsASqFeyyiruDHl41cyr9y1QyqnuHiu
-	8ZRdogVv6U0wZzwu171dCzFWUKh+jhamcnMof8lLj1g==
-X-Gm-Gg: ASbGncslAhRhgyFC1M4R1mcPKJfv91aKIVhqxe1k4XTKX0vh9/UOgWeu48CfNVaH7A+
-	KsQ3OAsQHJarU4Rm2IG3BjEvndHqmnC7Lb85xu2IbGhVo6Anp8DXIo6n9W4wPfRfXCK+OY1duoA
-	yWLfHobUTtvMOjZNKHRyMFWFBZASQunQJeX1BLVlelGjkO9q3Od7UP0mpTO6leSS4gdw8yIP+/F
-	BcGqOI=
-X-Google-Smtp-Source: AGHT+IGvJOVNe+LUFvOCbgL5wgN/h/Cjvl043KlTfsb1COy3EuiSQw/TerVuRTUEwrGuUBs+VE/GG3RycL486iAnqi4=
-X-Received: by 2002:a05:6512:250d:b0:55f:34e8:b1a4 with SMTP id
- 2adb3069b0e04-55f709dda1amr3184317e87.56.1756807861583; Tue, 02 Sep 2025
- 03:11:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756811834; x=1757416634;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NkjdJ99tSVQ09kKrtq0hv3IjTswl5kKM4uWkHH+xt00=;
+        b=sSL8Z7iSNzbpqwVlcZ43Oz7ay5l/5oyJhiUti6ivJBPKzMJ64XapUmEYqYtcIpKl12
+         3Fz6cLZb0+EFobtITtzpoeQvwgBBsebKR/Iu6m1ZYQdv6u6pfK5CXeOVj86A3aHAxvKo
+         6oIFZyLy0Ue2QBt14v+5pu2vaHv0wWwxXfa6BdUt6lIBGNK5YiOOgmSWGi0t2ZfSANLT
+         zlmK3FqJKrpNkZfjBhWvlnDazc3Jr4yzRF9zQGjcUELAmgYhcj1TBcv5ozy4xrVQ+JS4
+         jL87lanQfWf7fcJ1M4p6H+TSnd3uFnEtwD/+/xKLnIe6qTa2aHMpYANl4fFkX2Maz7O1
+         iaBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcFQ34dGKTIbPkN926jfeLE+rIwXBXsd2XhxNgFZ5utcmpIkEIXW8HvCvT8SHIWKBD3v1YJ0K2a9Y+M5M9C8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy80PbD9DXv0ESpBWFVFE9hUUdG9D3viMgmbsegWsydxJOzbmU5
+	szfY9f9YmDbU/9f/JIVUMUu7AuCZtdROj9uwDBDNUnt/NAbdPhAUTz/VOzsV0S5reWI=
+X-Gm-Gg: ASbGncuMgyy++D7ex3ngmrM5/d4Yiz1cG7YLmfNZJEmzYbq2mihRSnwLsiFo5+ebAaM
+	2LoMSYTy+gtm7zQky8xBoxNBkxDnlw5DIx4KPHbBkCHIXYRh0YnZ2X/5i8bC3QNx2q1Ao61pLiq
+	u9xlmiQ1U6HFUjgGY0PmETEEgiERVLImlJCbYujTU8b0pWHASUYv5+MipYFhenzxAICNuvWT9Y0
+	TzkyWzjYECehUV4l1ndGcHpWyvPnkEfEF9DT5HSShd+cDuDJC8PfEEdxZPUBgz/hrlNBkpEgks7
+	E+OIqot41nHBfUVIRTjyQjQ4uVHaupBoKU6yUOJpJhdPr8ZVCXbCbYOFaYo9XTgI2rtPxCoStsy
+	TDobiW5l2qQxD18W2a7BLN41DWrBMzIZ+mp5txlMzvaU=
+X-Google-Smtp-Source: AGHT+IHz6YILuOaZ0SJzkFmlUROnxTGIZnMil2cOBLxZw94mqhQOg5dIe1n/6BlQbAypfFTe3xtbTw==
+X-Received: by 2002:a05:6000:1ac8:b0:3cd:5405:16e7 with SMTP id ffacd0b85a97d-3d1de4bc31dmr8130862f8f.29.1756811834120;
+        Tue, 02 Sep 2025 04:17:14 -0700 (PDT)
+Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e68c83asm207225375e9.20.2025.09.02.04.17.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Sep 2025 04:17:13 -0700 (PDT)
+Date: Tue, 2 Sep 2025 13:17:11 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	linux-hardening@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Chen Ridong <chenridong@huaweicloud.com>
+Subject: Re: [RFC] cgroup: Avoid thousands of -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <tl6b6chfawtykzrxlmysn6ev7mq7gm764rnlsag7pfme7vhpof@lbwqooaybqmr>
+References: <b3eb050d-9451-4b60-b06c-ace7dab57497@embeddedor.com>
+ <wkkrw7rot7cunlojzyga5fgik7374xgj7aptr6afiljqesd6a7@rrmmuq3o4muy>
+ <d0c49dc9-c810-47d2-a3ce-d74196a39235@embeddedor.com>
+ <y7nqc4bwovxmef3r6kd62t45w3xwi2ikxfmjmi2zxhkweezjbi@ytenccffmgql>
+ <92912540-23d2-4b18-9002-bac962682caf@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250828-pinctrl-gpio-pinfuncs-v6-0-c9abb6bdb689@linaro.org>
- <20250828-pinctrl-gpio-pinfuncs-v6-6-c9abb6bdb689@linaro.org>
- <61bad868-d976-4f49-805c-8d14d4d8b3e4@sirena.org.uk> <CAMRc=MfB_3e0sjCpV+XaKcKvit7Opk5LczH2wsxO=RftrAabjg@mail.gmail.com>
- <4a633387-08a9-43c8-81d7-488e7222aeda@sirena.org.uk> <CAMRc=Mf0dOvwsWb6uraCQXeauLYP0TqY6xsQnV3fM0w=wROW+Q@mail.gmail.com>
-In-Reply-To: <CAMRc=Mf0dOvwsWb6uraCQXeauLYP0TqY6xsQnV3fM0w=wROW+Q@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 2 Sep 2025 12:10:50 +0200
-X-Gm-Features: Ac12FXw4LKCvHHNtKGBjLfwABtGCHq93WPj_v3YPD6EUsw9OMGyVKBEoUj5pgYE
-Message-ID: <CACRpkdbrRc6E5idzkdN53QPDCSGpPUfdjmFmEFsS3g+v=cB6LA@mail.gmail.com>
-Subject: Re: [PATCH v6 06/15] pinctrl: imx: don't access the pin function
- radix tree directly
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Mark Brown <broonie@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, imx@lists.linux.dev, linux-omap@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jme3b5n5ad5ko2pk"
+Content-Disposition: inline
+In-Reply-To: <92912540-23d2-4b18-9002-bac962682caf@embeddedor.com>
 
-On Mon, Sep 1, 2025 at 9:22=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
-> On Mon, Sep 1, 2025 at 4:37=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
-ote:
-> > On Mon, Sep 01, 2025 at 03:20:44PM +0200, Bartosz Golaszewski wrote:
-> >
-> > > That's not a lot of info but it fails in strcmp() which - I suppose -
-> > > is the one in pinmux_func_name_to_selector(). Any chance you could
-> > > check what the value of np->name is in imx_pinctrl_parse_functions()?
-> > > Is it NULL for some reason?
-> >
-> > [    0.628245] imx8mp-pinctrl 30330000.pinctrl: np->name pinctrl
-> >
-> > https://lava.sirena.org.uk/scheduler/job/1758947#L705
->
-> Linus,
->
-> FYI: I reproduced the bug on qemu with an older ARMv7 IMX SoC. Should
-> be able to debug it and figure it out shortly.
 
-Awesome, thanks a lot for your perseverance on this important
-patch series.
+--jme3b5n5ad5ko2pk
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [RFC] cgroup: Avoid thousands of -Wflex-array-member-not-at-end
+ warnings
+MIME-Version: 1.0
 
-Linus
+On Tue, Sep 02, 2025 at 09:56:34AM +0200, "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+> If the increase in size is not a problem, then something like this
+> works fine (unless there is a problem with moving those two members
+> at the end of cgroup_root?):
+
+Please don't forget to tackle cgroup_root allocators. IIUC, this move
+towards the end shifts the burden to them.
+
+There's only the rcu_head we care about.
+
+(You seem to be well versed with flex arrays, I was wondering if
+something like this could be rearranged to make it work (assuming the
+union is at the end of its containers):
+
+	union {
+		struct cgroup *ancestors[];
+		struct {
+			struct cgroup *_root_ancestor;
+			struct cgroup *_low_ancestors[];
+		};
+	};
+)
+
+Thanks,
+Michal
+
+--jme3b5n5ad5ko2pk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJEEABYKADkWIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaLbSLRsUgAAAAAAEAA5t
+YW51MiwyLjUrMS4xMSwyLDIACgkQfj0C55Tb+AiIAwD/b00l+aVBPRUgP1zHehty
+uF0kty/XKqKmicCz61ldtxcA/1riA1X/290Fr8aUbMO/YyrMIhkgpxSWHh+JPrSl
+/WQC
+=0maq
+-----END PGP SIGNATURE-----
+
+--jme3b5n5ad5ko2pk--
