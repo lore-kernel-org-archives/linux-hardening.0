@@ -1,91 +1,194 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A602F8BD2
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Sep 2025 10:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FDD2F49FC
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Sep 2025 11:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756896818; cv=none; b=SQRUMc1lSg0vN84Mv0Pu9IMBnKEASduHnFThTQ6CoKg0IwC74NMI2RCmuqljL7amAuuT/ONoLzaPdjrWjFfoSTAo1vSncKj2lLwnP2eoVY8SjZlLvZT7Ql/rqnJdGnAjchwQulckXNH8pxnG7Hw7CNjInab//wZxF7Z47WCZMmA=
+	t=1756897542; cv=none; b=eSKtcoqls7NOlP/Oqlg3cjHZfKc6MydnQZh1eWcHANZ1LZ7qF4DmvfP1FbQHHVD8ihMoFBvngNTDiCyWVvOpVhYoec+71WaD1nxzLpwAHRUKP+xsWx+cPSEcpyAGDIsiEJF0mCAK4LcYNQ1y9B/eVC+dtg+v12hQjpz76Wa9VKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756896818; c=relaxed/simple;
-	bh=3e9oVt0w/svBQtWNoWSoYk3mpUNiPpo+o4wpoCKBBe4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q5+Qp+F4qdIK/aHbCQA6bRnB+QQlyc6qdKPYrYfjVfzvXQ6mQdSBeqmGZbKXvfba/4rEXbLviMfiqOTqHhvfdVMIXWmEyVIr3ci/Zk+zfHxzOB8yQTICHKs9B4m1YMS6K9RxuDnDEQGYsF/0jpWWuGlI71lTM2npUwjjzyFkSUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dV+Jylym; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1756897542; c=relaxed/simple;
+	bh=Hz4Ww0n5ndOPZ5lTF42At7O5rnM+5Mbm8JKoATPAMNQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oPgEefAZCGeAVLTX4fqSCVCg8KT6sR5f7bjWEiOxUWhsbq+dNJobDjIBBYjgz1y9kKz+bJm7NnvYu+5wVBeh1Ay/C4Cnok4vApBtWnumHDT+5wcrQl4nhVs65pq4TQnYkssVTws/XkmRgII3U+R+6vn5amZ4cWYpUBaAZEo+xJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=uxtdTPXC; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dV+Jylym"
-Message-ID: <be2b4af0-838e-4c7c-bae1-e74c027ad8fe@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1756896803;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BQM52vi5IgGsePrtSqbX4sI72O+u42u3GT3MlSFzMpU=;
-	b=dV+Jylym2s7f47lDo8BasYH0lA1GhWy8yx3RqhGZJt9+WVR18sJk5RGePt/zM5wxUtTy6K
-	MeF+RTqpnAjDxD9UNmsKPFucMcZsFB0jRj2dCthaNqSrqdAnTq2m1lVloQqwlqJaDsADue
-	58uRJU9LzIIO+Rl6ulAutZLTeUmIsWo=
-Date: Wed, 3 Sep 2025 11:53:17 +0100
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uxtdTPXC"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55f6ad5146eso3936877e87.0
+        for <linux-hardening@vger.kernel.org>; Wed, 03 Sep 2025 04:05:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756897539; x=1757502339; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TY99cVzo51RXHn+Vw+SAL0C6lDtANRsUUB+6t6UiVNI=;
+        b=uxtdTPXCeVHlw4sN35+9NbLtRyf6LzijynUIVC9RLmHMva6hJ3Ov/cM/iPM1oaZauC
+         pbTliyruv/w+0QuGJHPtYr9cRyZvE/M6C8lOxnTYF2gxQcEunKpoGx18pq6vKJA8BuMV
+         8xWjcgkqV2CkahyNRWXVuyFO/KmIhr6yzRqZ+8UV38LWUnLbPUdHB+rf4PUS9PyO2jlO
+         Zv4Ct7/LhL/QFZm5z3qbk65iwSqxBO6yvcYHLjhRIj+5DxWQq6EnOI3bPO6YSqFVzIRi
+         hZrjrCaFGrQO4RKLZ2QP3jwmqiT9BzoR2MleNvkUCA7OlmmvePPdz65p25d9PO7AiaxH
+         1tKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756897539; x=1757502339;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TY99cVzo51RXHn+Vw+SAL0C6lDtANRsUUB+6t6UiVNI=;
+        b=ZAkhmDvoKmQJ54MmZzZ/bj5XAJj0vW/tJcF6x+Uj0j0eYRaSj0Z35Jy0eXbIX3O1q/
+         UVQs3FswWnQK5XiPyzYmODQP0MMKcGiEG/Kymd6BUQ1kRNX09wY2ScyO5ueaIga9BqDF
+         /tdBFZxJCg2gEPt3vVQTdGViPeeBGO8977+0/Er73/DmCbb6c8v2eE1w3/9FF+fFx4Ba
+         E5aWPkRxUVUiNdD7NEwEEJrx81nhNFANgAaqBobWGMtHrXin74om9c4ONFA7hpSC+1vj
+         fXGGRngRTUV6Q/gTB+WrD5y0c9my5S9HH3thduf7k1/X/ECDMNH/rEvIvevp0OUrtH1P
+         onxw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9IWi1TA17khCEugmsFg/2idar3ArYOFVkDcQlnOmzkIJWjIzV0/0Z2JApZdLnCOiMfXlpfCsqHyAe4LxLilk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrEIhaaqoLmb4U6z86BC5hToWx4mQDrw8oO8WsbR4N1XCgaL4f
+	x+IZUuL/IKAaqBEvIB0EkdY0vmtTKcQyvUF0MAkmYGBfhYyoIB6kWLs1kH1tTj4cUQdZVieKyi4
+	apADp46ItCRRC49N8M+BrsIpYjUAHt/ixr9V36uhlnw==
+X-Gm-Gg: ASbGncvpzxgXLGH9egQuIsQv0SN8Vzc7jBsY0iP3u0Dv3VPErh4pLPkL49zD1jrUBh0
+	uz+VP0DyyoWgP220xQlQ2rHwYu6sycER5pRwEn9D9ue26qcGdisRrLWGCeqkH0nn/mPodnPWazz
+	abZ6TVSxcndH1WyF77uT/llI7j+JF+Um4kB5RdIz+CL0pxgTmzvPauNMD0Fu93MHguIIAgC2QEt
+	SuUfNc8ez2RM5n+PVLOHyx2G47yIPfATmANoHrXX7dV8l+/Tg==
+X-Google-Smtp-Source: AGHT+IGaO6jKgae4Bb0nnUY/KIMNPM9fcQrt4rcPCJpxbytVdpNy16Q2X9IuotKVynxw9JndtWotWpVme+DKGbgxexI=
+X-Received: by 2002:a05:6512:b8a:b0:55f:62f9:cad2 with SMTP id
+ 2adb3069b0e04-55f7093e564mr3786208e87.26.1756897538646; Wed, 03 Sep 2025
+ 04:05:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v10 3/5] net: rnpgbe: Add basic mbx ops support
-To: Dong Yibo <dong100@mucse.com>, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, corbet@lwn.net, gur.stavi@huawei.com,
- maddy@linux.ibm.com, mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
- gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
- Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
- alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
- gustavoars@kernel.org, rdunlap@infradead.org
-Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250903025430.864836-1-dong100@mucse.com>
- <20250903025430.864836-4-dong100@mucse.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250903025430.864836-4-dong100@mucse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
+ <20250902-pinctrl-gpio-pinfuncs-v7-16-bb091daedc52@linaro.org>
+ <aLcBcjvMbrxoDYoC@smile.fi.intel.com> <CAMRc=MfcFMgkNqWNZV5o0NxkAvxBTjC3vv56Cr98n0R2CkxuPw@mail.gmail.com>
+ <CAHp75VcgaqnDrPH27wxfgyK6zz4RAKJQB0r7G2vbTONTxkEzTw@mail.gmail.com>
+ <CAMRc=MfhhX2NJ0fhhX8u+7=sdyUy0G27n7caGf9=TpHxUDJVxg@mail.gmail.com>
+ <aLgW7J-j4nn0u8uo@smile.fi.intel.com> <CAMRc=MdA21fwnamymG6YhqBjKDso_nJs_4xefPNONQNfEcPHXA@mail.gmail.com>
+ <aLgaoivmBUgoeO6B@smile.fi.intel.com> <CAMRc=Me84OX=UEmAXxmwE8oOH=1UBsyHe-7XmU0c8a2gG9JnCA@mail.gmail.com>
+ <aLgeDNLABpmkShIU@smile.fi.intel.com>
+In-Reply-To: <aLgeDNLABpmkShIU@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 3 Sep 2025 13:05:27 +0200
+X-Gm-Features: Ac12FXyayAu5ynqkVYj2uRlegQC_XlF19483EKV3MWs-LYc9T7mcvfMXmn9zXkQ
+Message-ID: <CAMRc=MdD9g4WiBCP0qYGuy5e3pnQf5MUHTqkUOnrUvcWUYK27A@mail.gmail.com>
+Subject: Re: [PATCH v7 16/16] pinctrl: qcom: make the pinmuxing strict
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, imx@lists.linux.dev, linux-omap@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 03/09/2025 03:54, Dong Yibo wrote:
-> Initialize basic mbx function.
-> 
-> Signed-off-by: Dong Yibo <dong100@mucse.com>
-> ---
->   drivers/net/ethernet/mucse/rnpgbe/Makefile    |   3 +-
->   drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h    |  16 +
->   .../net/ethernet/mucse/rnpgbe/rnpgbe_chip.c   |   3 +
->   .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx.c    | 393 ++++++++++++++++++
->   .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx.h    |  25 ++
->   5 files changed, 439 insertions(+), 1 deletion(-)
->   create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx.c
->   create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx.h
-> 
-> diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_chip.c b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_chip.c
-> index 179621ea09f3..f38daef752a3 100644
-> --- a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_chip.c
-> +++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_chip.c
-> @@ -1,8 +1,11 @@
->   // SPDX-License-Identifier: GPL-2.0
->   /* Copyright(c) 2020 - 2025 Mucse Corporation. */
->   
-> +#include <linux/string.h>
+On Wed, Sep 3, 2025 at 12:53=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Wed, Sep 03, 2025 at 12:41:48PM +0200, Bartosz Golaszewski wrote:
+> > On Wed, Sep 3, 2025 at 12:38=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@intel.com> wrote:
+> > > On Wed, Sep 03, 2025 at 12:34:00PM +0200, Bartosz Golaszewski wrote:
+> > > > On Wed, Sep 3, 2025 at 12:22=E2=80=AFPM Andy Shevchenko
+> > > > <andriy.shevchenko@intel.com> wrote:
+> > > > > On Wed, Sep 03, 2025 at 09:33:34AM +0200, Bartosz Golaszewski wro=
+te:
+> > > > > > On Tue, Sep 2, 2025 at 10:46=E2=80=AFPM Andy Shevchenko
+> > > > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > > > On Tue, Sep 2, 2025 at 8:42=E2=80=AFPM Bartosz Golaszewski <b=
+rgl@bgdev.pl> wrote:
+> > > > > > > > On Tue, Sep 2, 2025 at 4:38=E2=80=AFPM Andy Shevchenko
+> > > > > > > > <andriy.shevchenko@intel.com> wrote:
+> > > > > > > > > On Tue, Sep 02, 2025 at 01:59:25PM +0200, Bartosz Golasze=
+wski wrote:
+>
+> ...
+>
+> > > > > > > > > > The strict flag in struct pinmux_ops disallows the usag=
+e of the same pin
+> > > > > > > > > > as a GPIO and for another function. Without it, a rouge=
+ user-space
+> > > > > > > > > > process with enough privileges (or even a buggy driver)=
+ can request a
+> > > > > > > > > > used pin as GPIO and drive it, potentially confusing de=
+vices or even
+> > > > > > > > > > crashing the system. Set it globally for all pinctrl-ms=
+m users.
+> > > > > > > > >
+> > > > > > > > > How does this keep (or allow) I=C2=B2C generic recovery m=
+echanism to work?
+> > > > > >
+> > > > > > Anyway, what is your point? I don't think it has any impact on =
+this.
+> > > > >
+> > > > > If we have a group of pins that are marked as I=C2=B2C, and we wa=
+nt to use recovery
+> > > > > via GPIOs, would it be still possible to request as GPIO when con=
+troller driver
+> > > > > is in the strict mode?
+> > > >
+> > > > Yes, if you mark that function as a "GPIO" function in the pin
+> > > > controller driver.
+> > >
+> > > How would it prevent from requesting from user space?
+> >
+> > It wouldn't, we don't discriminate between user-space and in-kernel
+> > GPIO users. A function either is a GPIO or isn't. Can you point me to
+> > the driver you're thinking about or is this a purely speculative
+> > question?
+>
+> The recovery mechanism is in I=C2=B2C core and many drivers use that.
+> I'm not aware of Qualcomm drivers in particular. But mechanism is
+> in use in I=C2=B2C DesignWare which is distributed a lot among platforms,
+> so using word 'purely' is incorrect, and word 'speculative' is a bit
+> strong, but you can think of the issue coming later on when somebody
+> does something like this.
+>
+> The same applies to the in-band wakeup UART mechanism.
+>
+> Which means that with this series we will relax it back anyway for
+> the above mentioned cases.
+>
+> (Not sure, but SPI DesignWare requires programming SPI native chip select=
+s even
+>  if the GPIO is used for that, this might have also some implications, bu=
+t here
+>  it's for real 'purely speculative'.)
+>
 
-I don't see a reason to have string.h included into rnpgbe_chip.c
+The high-level answer is: yes, a pin that will be used by GPIOLIB
+needs the function it's muxed to, to be marked as "GPIOable" in its
+parent pin controller if it's strict. That's still better than the
+current situation.
 
-> +
->   #include "rnpgbe.h"
->   #include "rnpgbe_hw.h"
-> +#include "rnpgbe_mbx.h"
+I can imagine we could differentiate between in-kernel and user-space
+users of GPIOs and then make it impossible for the latter to request
+certain pins while they could still be requested in the kernel but
+that's outside of the scope of this series.
 
-I believe this part has to be done in the previous patch.
-Please, be sure that the code can compile after every patch in the
-patchset.
+I don't see why this would stop these patches though, as they don't
+break anything unless you decide to make your pin controller strict in
+which situation you'd need to verify which functions can GPIOs anyway.
+
+Bartosz
