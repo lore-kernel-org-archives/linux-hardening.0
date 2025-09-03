@@ -1,33 +1,33 @@
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90548155333;
-	Wed,  3 Sep 2025 22:25:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F57A19C560;
+	Wed,  3 Sep 2025 22:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756938308; cv=none; b=BLZ7rdp+y0E3FFB3RMDzDoKCwUKkoY1Jpj2rGTvYPk0WHuOvsncjr6qIxXBBdQSjzIN5cdONL7TBRtsq56I/YlLwIqk0II5+GUavzHMHEoODAWi7jNpFnaJ/1vXlqN4mvLFEBuZ3fiUgpWdQtSM+3A+PJ/Bb5KAE/w001IWH1jc=
+	t=1756939581; cv=none; b=LaCqOOr02sNXdkyv83LT4KKOzOMmoybqdB4MoF+72q+adC4tHnOVJiWL/q1NJ4NdAqrI65TyYV1BI3TN+GN5yvWMyK9TM7tIfb/e69YzOij2VFJ6rXIq6YTal3eKJC3r7qztYIumqmJ13ipReo79EP4mc3vy8sX60DNtJ/9D5yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756938308; c=relaxed/simple;
-	bh=PAqn5ll1w4WzA93V6UQALMVRNrs6OiC8TUzJboJnmk0=;
+	s=arc-20240116; t=1756939581; c=relaxed/simple;
+	bh=E14G7hz4s7ZeraM27XTKxEUx9yqEMxZn0gjMb5mg+Ts=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ewsye/mTYauq+E2xMSi5X4RVBf1WRsmqJYCqhCJzb2lg+B7nOo5LzlPCF3rj/ntdhpcW7KHohAo0tNpXM0gsJJW/1F5/7IkfuQT0qjD5z66pfN7SZnxo+XU9jZjeV0f7hNjTHtC9W0A72YdGuzC4LHK4x5P5m8Q2XdC7VzS269g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=NuLDJx/V; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=b+UMLYT4TGcqBa7R/nuzP10PaGv8y3GNnERZJfRj0uwedN7htwjtpGJzRry0llROQbyxL9orkIeHR9Foaea8qv+H1vU+HW2Vd5Okdq8QltfNDS/o6cYfgE57yQCihSwtur0KLYLwq/kMDitwNY2i3Pbxz4f482OUru0GVi8iYUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=kgLW9QU8; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NuLDJx/V"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="kgLW9QU8"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=hOnnk2noF78dfU4ZbGRpjhX2RXceifum6ah+cMOBfng=; b=NuLDJx/VtDjySh6kD/OJEVSaBC
-	bzSz26/RcgKObjJWpskrD77FACyb/aVax19Hk6rFmi38QUqQ/k/WSPAc7Pvsv5X3465V247yIdM7M
-	KN0BOZlB54aQf6O8CQmwW8aJv2TBN8dvkUg9Z/krfp9DUO0raBiYEP6OZN9FDTmXwdZQ=;
+	bh=7bTvRnVvVrdfJ0JlVJfNw8ILrW2UjTWiVk6aSWpIF4o=; b=kgLW9QU8Ncl0JCWG9zxLcy6027
+	qExkkYTYK9wyu3uwEhwlhSPDNvDcHvWKlmLqgRL4U8pKuvCnJNqWz80FBbnE5ZELuEpQT5ItwMExS
+	jwHtmSlG2uSv1rDDN9JakBjTQvRVuc92CsF5dCUKVukVdYzchFDMDF5Tl8VNkm7EzBRc=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1utvtp-0076Ff-N1; Thu, 04 Sep 2025 00:24:17 +0200
-Date: Thu, 4 Sep 2025 00:24:17 +0200
+	id 1utwEZ-0076SB-85; Thu, 04 Sep 2025 00:45:43 +0200
+Date: Thu, 4 Sep 2025 00:45:43 +0200
 From: Andrew Lunn <andrew@lunn.ch>
 To: Dong Yibo <dong100@mucse.com>
 Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
@@ -41,10 +41,10 @@ Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
 	vadim.fedorenko@linux.dev, netdev@vger.kernel.org,
 	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v10 3/5] net: rnpgbe: Add basic mbx ops support
-Message-ID: <659df824-7509-4ffe-949b-187d7d44f69f@lunn.ch>
+Subject: Re: [PATCH net-next v10 4/5] net: rnpgbe: Add basic mbx_fw support
+Message-ID: <19ca3e80-97f7-428a-bf09-f713706fd6ab@lunn.ch>
 References: <20250903025430.864836-1-dong100@mucse.com>
- <20250903025430.864836-4-dong100@mucse.com>
+ <20250903025430.864836-5-dong100@mucse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,67 +53,50 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250903025430.864836-4-dong100@mucse.com>
-
->  struct mucse_mbx_info {
-> +	struct mucse_mbx_stats stats;
-> +	u32 timeout;
-> +	u32 usec_delay;
-> +	u16 size;
-> +	u16 fw_req;
-> +	u16 fw_ack;
-> +	/* lock for only one use mbx */
-> +	struct mutex lock;
->  	/* fw <--> pf mbx */
->  	u32 fw_pf_shm_base;
->  	u32 pf2fw_mbox_ctrl;
+In-Reply-To: <20250903025430.864836-5-dong100@mucse.com>
 
 > +/**
-> + * mucse_obtain_mbx_lock_pf - Obtain mailbox lock
+> + * mucse_mbx_powerup - Echo fw to powerup
 > + * @hw: pointer to the HW structure
+> + * @is_powerup: true for powerup, false for powerdown
 > + *
-> + * This function maybe used in an irq handler.
+> + * mucse_mbx_powerup echo fw to change working frequency
+> + * to normal after received true, and reduce working frequency
+> + * if false.
 > + *
-> + * Return: 0 if we obtained the mailbox lock or else -EIO
+> + * Return: 0 on success, negative errno on failure
 > + **/
-> +static int mucse_obtain_mbx_lock_pf(struct mucse_hw *hw)
+> +int mucse_mbx_powerup(struct mucse_hw *hw, bool is_powerup)
 > +{
-> +	struct mucse_mbx_info *mbx = &hw->mbx;
-> +	int try_cnt = 5000;
-> +	u32 reg;
+> +	struct mbx_fw_cmd_req req = {};
+> +	int len;
+> +	int err;
 > +
-> +	reg = PF2FW_MBOX_CTRL(mbx);
-> +	while (try_cnt-- > 0) {
-> +		mbx_ctrl_wr32(mbx, reg, MBOX_PF_HOLD);
-> +		/* force write back before check */
-> +		wmb();
-> +		if (mbx_ctrl_rd32(mbx, reg) & MBOX_PF_HOLD)
-> +			return 0;
-> +		udelay(100);
+> +	build_powerup(&req, is_powerup);
+> +	len = le16_to_cpu(req.datalen);
+> +	mutex_lock(&hw->mbx.lock);
+> +
+> +	if (is_powerup) {
+> +		err = mucse_write_posted_mbx(hw, (u32 *)&req,
+> +					     len);
+> +	} else {
+> +		err = mucse_write_mbx_pf(hw, (u32 *)&req,
+> +					 len);
 > +	}
-> +	return -EIO;
+
+It looks odd that this is asymmetric. Why is a different low level
+function used between power up and power down?
+
+> +int mucse_mbx_reset_hw(struct mucse_hw *hw)
+> +{
+> +	struct mbx_fw_cmd_reply reply = {};
+> +	struct mbx_fw_cmd_req req = {};
+> +
+> +	build_reset_hw_req(&req);
+> +	return mucse_fw_send_cmd_wait(hw, &req, &reply);
 > +}
 
-If there is a function which obtains a lock, there is normally a
-function which releases a lock. But i don't see it.
+And this uses a third low level API different to power up and power
+down?
 
-> +void mucse_init_mbx_params_pf(struct mucse_hw *hw)
-> +{
-> +	struct mucse_mbx_info *mbx = &hw->mbx;
-> +
-> +	mbx->usec_delay = 100;
-> +	mbx->timeout = (4 * USEC_PER_SEC) / mbx->usec_delay;
-> +	mbx->stats.msgs_tx = 0;
-> +	mbx->stats.msgs_rx = 0;
-> +	mbx->stats.reqs = 0;
-> +	mbx->stats.acks = 0;
-> +	mbx->size = MUCSE_MAILBOX_BYTES;
-> +	mutex_init(&mbx->lock);
-
-And this mutex never seems to be used anywhere. What is it supposed to
-be protecting?
-
-    Andrew
-
----
-pw-bot: cr
+	Andrew
