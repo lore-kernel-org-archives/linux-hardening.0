@@ -1,140 +1,116 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6862D3723;
-	Wed,  3 Sep 2025 07:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AD22E3391
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Sep 2025 08:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756884898; cv=none; b=P85tx0XzRj83JnRAZqI3YF4ggquRSyx2O4pRFi+oBBkUIINE/OPmC+bCI8Ep6vlJ6YBHIU0FTtNjSHxJkIpY9FWrsW8Fkkj04u46CjKb6cVLJ0rKl+mNs8obo6ECOETKybXzdKbBmMJTQBBWiu9cRI7R70j1ehjRlLR9WJCW76E=
+	t=1756888598; cv=none; b=e5E5+1rMI7vhJhYfuhNIWZ2sxQqwBpdeSLKOuRrBqbo0VDJiI+5cmrlwi/3Hp6ilIxoQfnN8Gjepta1yYHuxlvUOyabBYA2islnVS64pcxYXjL7W1pVpmDRtWwXAOUD4AenuFn4K9wda7jAwl+QFpdpZsNzFnMbT6UhX6fo+oOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756884898; c=relaxed/simple;
-	bh=KVlTZD38YWzAz5smcQFmlr3HoJ9kXtqQrAAT9RQglt0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LApofj95We71e5ndDZ9r24gXHA12Noo6pwkEIVnfTVwCHNxt+kXl/pKZW7Cubb9jqkQtimnEEIPS6dpcexolhXq1EOFSW89ptziPJsGVIXvLvETI+KBwQ9ZnjpZYH/6InpQNAOBXaAxkoeTIC2J4WpnIGm0FNbR13XfdokUDrSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-89018e9f902so4007414241.0;
-        Wed, 03 Sep 2025 00:34:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756884894; x=1757489694;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x+a63vXZQbYfBRMYForQk38b20jSe1QhqlF3QJeCGYE=;
-        b=H7h/16BBtyCDgJVcnFXRsZwLRNsKIBWK27uDZX4kz+Rqv1Fb7INUkYg1dR0wTK9OMD
-         14ifgqlGDV23KUcb7s2w7JOnLXrCaoiB19k49GAQIXhtGJ5l49Ky/cd0sUvnbUwBpc6U
-         p50Yvc7xvA0WFvDOo2PeSPkmHbIe2PJjDiZiocDRBdnHNhYrL58aIT2tnVfrQfnRYKTP
-         e7OMT0K7uyS28XdkOjEGEyMGxgcMMjdk5Q+U1JyP8RXj64fdJBpdjFPlTSqttN+sby+c
-         aPKXdFOzSZqN/FNKTqF7lTjmqBUJrHB+M1gqdS2aKRPLIUGAeh4OCrZlG4YvMl5fHUiq
-         iNgg==
-X-Forwarded-Encrypted: i=1; AJvYcCU3JIa6D5Iu+YrsgmquoAiuc8wCbAJcPIrTeJakOZd3DB9ZymuDSCHGRBx0kV2CZd7J1XpkB1ENFfU7Eg==@vger.kernel.org, AJvYcCUNOsVisiTai9pnotb9GBypWli2UqgkjczVI7nadXodnZN7SMlLYLm4t2arZmwMNcFu/F74L5pGUgXIB3LiUs78@vger.kernel.org, AJvYcCUrRUAqmVUYNBKQ8XFcBgr7Xz9JJFyQl4m3Cr0S1nTPyVox/Djm1artGZQehX+yx3VH0r3bXCwgjjkc1Fg8@vger.kernel.org, AJvYcCWNHMwovblEEgZ29w5X9dcwrtr+87E1lxdGqD+yEaUu3BkQAnvr/EcFe8jVsZE8G0fWHUR0910+rWkudg==@vger.kernel.org, AJvYcCWV0/jMdPZfaLGvdOjJtTt1D53C2G10dlPf/EI66IfVIAXB4dNc+hIGzj4yciXS33TtaA1FbVjiAdW+BQ==@vger.kernel.org, AJvYcCX6+kRNkQXQNuKbU64Zed5oDf+1kEtLKWoLPExbH6/Xvkm0l73WDtrNzDaZxdaAU8+d+9/hhaYkhsU6MhNoOC72HSg=@vger.kernel.org, AJvYcCXUqebF7Yah2vuYefpO6RHyNibFUTRxROPmhwxGwupsx12ZbPRiyRnG4azaSpyjo9sjqrThwSiErhKXNrmM@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtxKPTSrwARzpp70oRUL+0M74vtKGd2blXB4LOHz/813nQ91+u
-	EHahrlHbwhmb7JtVZB190Hl4G7ZNCJ3GhwG/3dNHGzbnWJ04XrnRC/WBVnehzOqJ
-X-Gm-Gg: ASbGnctUsN9kc0/lMHPkFdKPUP0PvZkmLW8qvTIsOJ/tFmWEAkidSHvtP4NQyzRRxil
-	Uc+1g6rSoQFs1WKx0+J5QaBuLSMDRyzW8gyRoqy0XBH0MkDQhXtQG7dPVc6ZS+PAf0/o889g+Te
-	jgNltEukDad8lxYTVhSu/5LoBRzqLcf2jdsK5/zyR5CcisuEQPJK07ALSiIpK1vHTnlE1hGNw4I
-	Eis0mGvBgnXiHiCaA1rbBn9vEfrFaCxN4xFaSmc2fw5PRPvPEE4/SusVeU4mnJhcnjDbnys6xZh
-	CXc0Q3h3E+ewt79VW/hOyT3iQmiFb3G9YmuPYBDI+a9TQDSug6EENAloD7MK5cMGyVQd/9r/+MQ
-	s09eZ7cpT/lssFkYwIuRYGoY6t6Lk25uW1Z/ijyhflAlBohw3bGKt1fOZBvberItyiWQ4a10=
-X-Google-Smtp-Source: AGHT+IFHIzXjta1ZznlvNwCmz1eIPklS9AO9Hk51EkuX46q+KD0HMQNlWZKaK0NkhcwGmaAool3+Yw==
-X-Received: by 2002:a05:6102:3ed3:b0:523:712d:448d with SMTP id ada2fe7eead31-52b1c76f54bmr5579343137.30.1756884894426;
-        Wed, 03 Sep 2025 00:34:54 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-52aef458d62sm5115684137.3.2025.09.03.00.34.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Sep 2025 00:34:54 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-89018e9f902so4007404241.0;
-        Wed, 03 Sep 2025 00:34:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUXxVidC5cghRtB43RGCeEk8aH7eMEISQjtLegaaIebkBqS7sYT3E9fHiM6KkrF0GXV5PIr/WwbUlZjEQ==@vger.kernel.org, AJvYcCUdRhtCCdhuswhL6cqZEv82KI4zKphb7guaz1rIVFkT5Z38DbdvIL95O5c/edsw4B94ooJWH1ehAakJ6jaH7265QSI=@vger.kernel.org, AJvYcCVPD7bKp1iGk8Lo0TvL1avJ+3QRDZFCQtA5QCv9xZRQeqNYPU/ZyOFPYb19GNBzYzmDP3ahh6kuCj26fw==@vger.kernel.org, AJvYcCWGaF4LjDcFyRtckjJH01fmt8R7NSZEvj5HnpNBQQaa8Ri973sNgqPiA/Q4oXONxJyILvaosUCg5KVdsw==@vger.kernel.org, AJvYcCWSF11VAMrEpqiERVyHLnzQ49a+SoF7Cfk0LD7iwbQpcp1ecEGi2ndsDXhzQXehhf0cdXJ+QSA4gTlnBd6m@vger.kernel.org, AJvYcCWmBFrC7BZ7kh69nPMNOCDkWQVmk37RpbLXxCM+b4rOm8Qp4hq5fXISztNRM4KzL4gW6/BOvKm23lTjKp26@vger.kernel.org, AJvYcCXkpSNuVWaweTiRbRQx+xNs7saExHyUY12h6jkwMKszA5gHLlUzxN0gXt/j81qyZrGBjQVg6OqmoS6qitACZyt+@vger.kernel.org
-X-Received: by 2002:a05:6102:3581:b0:524:5266:f74c with SMTP id
- ada2fe7eead31-52b1c8811fdmr4486002137.31.1756884894118; Wed, 03 Sep 2025
- 00:34:54 -0700 (PDT)
+	s=arc-20240116; t=1756888598; c=relaxed/simple;
+	bh=pfIOD2wihPkmDIOdlvguOBiN3hgM5Ymq26fkf8+/mLE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CkuFSzSrnrHqA3DWbHeCmPsjqqZ+doqp+kTEVUkg9e5wWIsRWPxgGuF+D8GKp91dTsHjnVREbBhS7ajBzyKU31o1H4L2dVDxmTJY0pCvkSuweeIXcblekRTFUXxus5wKGJjEEr2d/AOaqriiDmBZPkLA46uCpg+qPxxpVzYExNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=XDiO88T6; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="XDiO88T6"
+Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
+	by cmsmtp with ESMTPS
+	id tgXMu0PmUKXDJtiyku0f8o; Wed, 03 Sep 2025 08:36:30 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id tiyju9w0IM4Krtiyju3T37; Wed, 03 Sep 2025 08:36:29 +0000
+X-Authority-Analysis: v=2.4 cv=KLNaDEFo c=1 sm=1 tr=0 ts=68b7fe0d
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=XW3vq5T86JFyMsJaYQInbg==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=uY_jprAYB3ThRRmUuAoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=xPOvRU10uK9ZVSCWCMReoRW7p5xBpgAQIHli3Z6J08M=; b=XDiO88T6B7hHpfDmMmWr7MKhOE
+	/MJnEp8lWWDtzo9SXZ3rnysLZEAvqJkBXJZtB1hwpQ482HK9zxz7EqrtC0nmW9gv62piAsCrMDHHI
+	dcLIlcnCfDC0pkD2S0tLKLaD3/hht+1pFoNbNnFCnOLPoy09zm3kvDBdMRZji4saGMLCthitVTTyf
+	+JJtmLWQOzMixD8flw6YCp50vzNcKssfm7KfY1iBqTEM2Hy/NyQhk47km2cy5H7i8iNN19Zic3ylR
+	zyOSEFfkdIFLEbloKZDFcaGk7Loz/f7N15PkOFByYOup990A/WKRCADmU0cOErAAnzLL1FHc1x7MQ
+	jZ+uJtKg==;
+Received: from d4b26982.static.ziggozakelijk.nl ([212.178.105.130]:50240 helo=[172.17.143.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1utiyi-000000047SS-2QJT;
+	Wed, 03 Sep 2025 03:36:28 -0500
+Message-ID: <3f7338c4-1737-4cf7-a789-252abe30bdc6@embeddedor.com>
+Date: Wed, 3 Sep 2025 10:36:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
- <20250902-pinctrl-gpio-pinfuncs-v7-16-bb091daedc52@linaro.org>
- <aLcBcjvMbrxoDYoC@smile.fi.intel.com> <CAMRc=MfcFMgkNqWNZV5o0NxkAvxBTjC3vv56Cr98n0R2CkxuPw@mail.gmail.com>
- <CAHp75VcgaqnDrPH27wxfgyK6zz4RAKJQB0r7G2vbTONTxkEzTw@mail.gmail.com>
-In-Reply-To: <CAHp75VcgaqnDrPH27wxfgyK6zz4RAKJQB0r7G2vbTONTxkEzTw@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 3 Sep 2025 09:34:42 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUd1PeUbdkmrhaFstknwP2x=03m24gacJBJgEeCDf7toQ@mail.gmail.com>
-X-Gm-Features: Ac12FXyh8sb0bID330gK0HQPUvNSBJ0mn18x9ggidNhkopon3DqspiWAPKYplC8
-Message-ID: <CAMuHMdUd1PeUbdkmrhaFstknwP2x=03m24gacJBJgEeCDf7toQ@mail.gmail.com>
-Subject: Re: [PATCH v7 16/16] pinctrl: qcom: make the pinmuxing strict
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, imx@lists.linux.dev, linux-omap@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] drm/amdgpu/amdkfd: Avoid a couple hundred
+ -Wflex-array-member-not-at-end warnings
+To: "Kuehling, Felix" <felix.kuehling@amd.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aLF5vQv9P_vp0R6_@kspp>
+ <7a25b5ae-b995-431b-bd46-6d2d58d18e36@amd.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <7a25b5ae-b995-431b-bd46-6d2d58d18e36@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 212.178.105.130
+X-Source-L: No
+X-Exim-ID: 1utiyi-000000047SS-2QJT
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: d4b26982.static.ziggozakelijk.nl ([172.17.143.44]) [212.178.105.130]:50240
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfBgPHvGBeyCPlJRMfw8yu1+7+cdC5M4W2iBcqMTmzCvM/w5JMMZn0YCKo2BCWlW1IByHCgZPRqiKCLx+UNzMSOpnbcYJ5F027SHzQaYlMtgS7EIr9Dno
+ 7XNvaOSzNawk1Bm8aNU422DBKlejtUu8ud+KvY4qMILuixqjA5icrpqpYXKbSMyw+DPZTFbpfxoEFpsFd8CS8WFjkb0o6ylxd9HARqtQ9T+Mo/HFhQYmxBwl
 
-Hi Andy,
 
-On Tue, 2 Sept 2025 at 22:46, Andy Shevchenko <andy.shevchenko@gmail.com> w=
-rote:
-> On Tue, Sep 2, 2025 at 8:42=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
-> > On Tue, Sep 2, 2025 at 4:38=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@intel.com> wrote:
-> > > How does this keep (or allow) I=E6=B6=8E generic recovery mechanism t=
-o work?
-> >
-> > What even is the "generic recovery mechanism"? That's the first time
-> > I'm hearing this name.
->
-> "I=C2=B2C generic recovery mechanism" (I dunno why you put away the I=C2=
-=B2C keyword).
 
-Your original email had:
+On 9/2/25 17:11, Kuehling, Felix wrote:
+> On 2025-08-29 5:58 a.m., Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>> getting ready to enable it, globally.
+>>
+>> Move the conflicting declarations to the end of the corresponding
+>> structures. Notice that `struct dev_pagemap` is a flexible structure,
+>> this is a structure that contains a flexible-array member.
+>>
+>> Fix 283 of the following type of warnings:
+>>      283 drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h:111:28: warning: structure containing a flexible array member is not at the end of another structure [- 
+>> Wflex-array-member-not-at-end]
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> Thank you. I'll apply this to amd-staging-drm-next. I'll also add a note to the commit description that struct dev_pagemap always has space for at least one 
+> range, and that amdgpu only uses a single range. Therefore no changes are needed in the way struct amdgpu_device is allocated.
 
-    Content-Type: text/plain; charset=3Diso-8859-1
+Yep, that's correct. Thank you! :)
 
-Bartosz' has:
-
-    Content-Type: text/plain; charset=3D"UTF-8"
-
-Note that the Gmail web interface does show me the Kanji character
-instead of the intended "=C2=B2C".
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-Gustavo
