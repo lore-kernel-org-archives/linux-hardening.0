@@ -1,47 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959772D9EE1;
-	Wed,  3 Sep 2025 20:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90548155333;
+	Wed,  3 Sep 2025 22:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756932460; cv=none; b=sRFlwr25EMHtj7FZaV5vS3wtKnCLg/vehxbn19SAVW4rdaMjO7gdSEsSSasAZ4evdJLytW5ez53QoDGxLiASzA1X40rN3m93QaGIuHZatkjGit+0JEX7w1p8SdkIm1XVwYm5LdwQelnc1kdqhHAUbjwf2UQmYPYXH+3b1WNmc1E=
+	t=1756938308; cv=none; b=BLZ7rdp+y0E3FFB3RMDzDoKCwUKkoY1Jpj2rGTvYPk0WHuOvsncjr6qIxXBBdQSjzIN5cdONL7TBRtsq56I/YlLwIqk0II5+GUavzHMHEoODAWi7jNpFnaJ/1vXlqN4mvLFEBuZ3fiUgpWdQtSM+3A+PJ/Bb5KAE/w001IWH1jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756932460; c=relaxed/simple;
-	bh=fmmefG9viijRhTVNQthic+Hu8WGTQ6x3xU0/JdzSOjA=;
+	s=arc-20240116; t=1756938308; c=relaxed/simple;
+	bh=PAqn5ll1w4WzA93V6UQALMVRNrs6OiC8TUzJboJnmk0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RAWAMaRxdoXtRbRLwfunMGZS3584zok4X5LiUqgisqz5D58C5rf+Bj6HC6rMmVPRcy3OVp/PkmXeX7uAEkh+4p5mewSQEqn/w+OEOh82+eqI5EmHZB6B75C7yseG8aldb1ydxKqsDj8XgjFcL1z9k/OOScB1nl7fiXZeDeeqRx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVrMb9ZV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ewsye/mTYauq+E2xMSi5X4RVBf1WRsmqJYCqhCJzb2lg+B7nOo5LzlPCF3rj/ntdhpcW7KHohAo0tNpXM0gsJJW/1F5/7IkfuQT0qjD5z66pfN7SZnxo+XU9jZjeV0f7hNjTHtC9W0A72YdGuzC4LHK4x5P5m8Q2XdC7VzS269g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=NuLDJx/V; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVrMb9ZV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F28C4CEE7;
-	Wed,  3 Sep 2025 20:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756932460;
-	bh=fmmefG9viijRhTVNQthic+Hu8WGTQ6x3xU0/JdzSOjA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hVrMb9ZVNzZejicKw11SwSxH3otxG3KBAreea14rAz36ny2rEHcNl7rGQcic+LFYt
-	 iOuXWzfsOLHxgZMfKi2vN/TMl8agBwyhCXYDdEIwzpIoYk0gCFLvJFMLL4j/ZJkqgw
-	 DKZKPNnv8BjZXgEWcTDudeAqeXUiWRoKVF+CSWkotf+byb0UvtV7G4lBoL5u3e7vLr
-	 njz4cOVmWMlCx94tu086RPh5z1Gs3uZw1V99FJfJ6fLtnOhIVEYVBBTOVzQm1MoY1Z
-	 Z52sAjAau7oW7q3+CTm/6KEfi16kSGFUOpF01dhS93kv1LVqG4OwzT7JV21AhQ+Jju
-	 6TqHkMmey6kqg==
-Date: Wed, 3 Sep 2025 15:47:38 -0500
-From: Rob Herring <robh@kernel.org>
-To: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-Cc: git@amd.com, michal.simek@amd.com, alexandre.belloni@bootlin.com,
-	Frank.Li@nxp.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	kees@kernel.org, gustavoars@kernel.org,
-	jarkko.nikula@linux.intel.com, linux-i3c@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, radhey.shyam.pandey@amd.com,
-	srinivas.goud@amd.com, shubhrajyoti.datta@amd.com,
-	manion05gk@gmail.com
-Subject: Re: [PATCH V3 1/2] dt-bindings: i3c: Add AMD I3C master controller
- support
-Message-ID: <20250903204738.GA2744698-robh@kernel.org>
-References: <20250903095906.3260804-1-manikanta.guntupalli@amd.com>
- <20250903095906.3260804-2-manikanta.guntupalli@amd.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NuLDJx/V"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=hOnnk2noF78dfU4ZbGRpjhX2RXceifum6ah+cMOBfng=; b=NuLDJx/VtDjySh6kD/OJEVSaBC
+	bzSz26/RcgKObjJWpskrD77FACyb/aVax19Hk6rFmi38QUqQ/k/WSPAc7Pvsv5X3465V247yIdM7M
+	KN0BOZlB54aQf6O8CQmwW8aJv2TBN8dvkUg9Z/krfp9DUO0raBiYEP6OZN9FDTmXwdZQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1utvtp-0076Ff-N1; Thu, 04 Sep 2025 00:24:17 +0200
+Date: Thu, 4 Sep 2025 00:24:17 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Dong Yibo <dong100@mucse.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
+	gustavoars@kernel.org, rdunlap@infradead.org,
+	vadim.fedorenko@linux.dev, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next v10 3/5] net: rnpgbe: Add basic mbx ops support
+Message-ID: <659df824-7509-4ffe-949b-187d7d44f69f@lunn.ch>
+References: <20250903025430.864836-1-dong100@mucse.com>
+ <20250903025430.864836-4-dong100@mucse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,57 +53,67 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250903095906.3260804-2-manikanta.guntupalli@amd.com>
+In-Reply-To: <20250903025430.864836-4-dong100@mucse.com>
 
-On Wed, Sep 03, 2025 at 03:29:05PM +0530, Manikanta Guntupalli wrote:
-> Add device tree binding documentation for the AMD I3C master controller.
-> 
-> Signed-off-by: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-> ---
-> Changes for V2:
-> Updated commit subject and description.
-> Moved allOf to after required.
-> Removed xlnx,num-targets property.
-> 
-> Changes for V3:
-> Updated commit description.
-> Corrected the order of properties and removed resets property.
-> Added compatible to required list.
-> Added interrupts to example.
-> ---
->  .../devicetree/bindings/i3c/xlnx,axi-i3c.yaml | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i3c/xlnx,axi-i3c.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/i3c/xlnx,axi-i3c.yaml b/Documentation/devicetree/bindings/i3c/xlnx,axi-i3c.yaml
-> new file mode 100644
-> index 000000000000..32f73c31121e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i3c/xlnx,axi-i3c.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/i3c/xlnx,axi-i3c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: AMD I3C master
-> +
-> +maintainers:
-> +  - Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-> +
-> +description:
-> +  The AXI-I3C IP is an I3C Controller with an AXI4-Lite interface, compatible
-> +  with the MIPI I3C Specification v1.1.1. The design includes bidirectional I/O
-> +  buffers that implement open collector drivers for the SDA and SCL signals.
-> +  External pull-up resistors are required to properly hold the bus at a Logic-1
-> +  level when the drivers are released.
-> +
-> +properties:
-> +  compatible:
-> +    const: xlnx,axi-i3c-1.0
+>  struct mucse_mbx_info {
+> +	struct mucse_mbx_stats stats;
+> +	u32 timeout;
+> +	u32 usec_delay;
+> +	u16 size;
+> +	u16 fw_req;
+> +	u16 fw_ack;
+> +	/* lock for only one use mbx */
+> +	struct mutex lock;
+>  	/* fw <--> pf mbx */
+>  	u32 fw_pf_shm_base;
+>  	u32 pf2fw_mbox_ctrl;
 
-Where does the version number come from? This must correspond to some 
-h/w documentation or it is useless.
+> +/**
+> + * mucse_obtain_mbx_lock_pf - Obtain mailbox lock
+> + * @hw: pointer to the HW structure
+> + *
+> + * This function maybe used in an irq handler.
+> + *
+> + * Return: 0 if we obtained the mailbox lock or else -EIO
+> + **/
+> +static int mucse_obtain_mbx_lock_pf(struct mucse_hw *hw)
+> +{
+> +	struct mucse_mbx_info *mbx = &hw->mbx;
+> +	int try_cnt = 5000;
+> +	u32 reg;
+> +
+> +	reg = PF2FW_MBOX_CTRL(mbx);
+> +	while (try_cnt-- > 0) {
+> +		mbx_ctrl_wr32(mbx, reg, MBOX_PF_HOLD);
+> +		/* force write back before check */
+> +		wmb();
+> +		if (mbx_ctrl_rd32(mbx, reg) & MBOX_PF_HOLD)
+> +			return 0;
+> +		udelay(100);
+> +	}
+> +	return -EIO;
+> +}
 
-Rob
+If there is a function which obtains a lock, there is normally a
+function which releases a lock. But i don't see it.
+
+> +void mucse_init_mbx_params_pf(struct mucse_hw *hw)
+> +{
+> +	struct mucse_mbx_info *mbx = &hw->mbx;
+> +
+> +	mbx->usec_delay = 100;
+> +	mbx->timeout = (4 * USEC_PER_SEC) / mbx->usec_delay;
+> +	mbx->stats.msgs_tx = 0;
+> +	mbx->stats.msgs_rx = 0;
+> +	mbx->stats.reqs = 0;
+> +	mbx->stats.acks = 0;
+> +	mbx->size = MUCSE_MAILBOX_BYTES;
+> +	mutex_init(&mbx->lock);
+
+And this mutex never seems to be used anywhere. What is it supposed to
+be protecting?
+
+    Andrew
+
+---
+pw-bot: cr
