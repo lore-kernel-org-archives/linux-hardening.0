@@ -1,170 +1,156 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120D81C6FF5;
-	Wed,  3 Sep 2025 01:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A831DED53;
+	Wed,  3 Sep 2025 02:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756861602; cv=none; b=Uab1jgUOH+pKln5jlFmyqHP8cpV2K65KTzyNW0PtFL3RcDyE7EYZUutkgE74mkpHxGabEPDUFdyHYK0pPmm52uTI1t5IZo72DHbHXziw0aWgpc7sIyPP4egdg8lgqBCyoVVhlqEUe5Da7atrWEVlnH5ZXxZ1j5ExJGCPCHIGNwI=
+	t=1756868102; cv=none; b=paMYIxODAs16h/RasP9KOPZPyaMyH/F1Twc0R6lnCexJIPKuR8WFIahUjPreINOWwMRP59uCyqAfhfux4tZTDFnmjaFpnfsxOT6ZXLJ7caMBIf+6CGxO1DPYrnshzlCWC6Th0fzlgePABUsuaMqiPVJiZDq7/klkK+oLFXSTthc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756861602; c=relaxed/simple;
-	bh=ceRTBtclvdmLiZZuarbaXRhFDRc8VqrlQmXJkZciKB4=;
-	h=From:To:Cc:Subject:Date:References:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=nlQRVtHCdo8cNE5LmeCa573pNng2ucOuaqxdKy9Tb0gCH+l7laAncfG9JzObW9lEQTVh+1maXWuspSzYgjUsZ5wV5w7JG5f0gWg2kWQucRmVu95Fah/xdhMa+v8KR3/8sMWDqTVGxTMJ1GNk0DFMT3c2TAgCM9UIuxmceosacO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X1UU8rUe; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1UU8rUe"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-329e47dfa3eso1146495a91.1;
-        Tue, 02 Sep 2025 18:06:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756861599; x=1757466399; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:user-agent:references:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h+Zy5KyvmcM7VxHkxtQYLLwfPecZgZUE2aV0nDE4B8E=;
-        b=X1UU8rUefMS4B/ALTeMCpcOCY0CWRcV0OKAtIcuxSpezef27F9Rva6X5gmFZTOUvfR
-         CiJkoSRe52Ht92k0ftUD5oFYZa/YP2H+0Nd6fqXUdgW6Q/lAxFsEzQGwo0JXoRkoX6uE
-         KQF8o3YCk8xiaRRAzKyYPt7MlTXJYxltoP96M6qIC+GPnVnwWB3x+XKal/DCHImUJIsy
-         ++dXDcjgaMaS1tl123hOGNe+nTF/DpPjy8OQyZpjhnGwB8XgLgqwdRW7EIfF+Z2YGhS2
-         Tdyoegr/g+J3UGViTC6ip3kwkRPcvAHjA1ma2z6KEc9eqBA0+YgExBxzzb7QlrcGURbi
-         10+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756861599; x=1757466399;
-        h=mime-version:message-id:in-reply-to:user-agent:references:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h+Zy5KyvmcM7VxHkxtQYLLwfPecZgZUE2aV0nDE4B8E=;
-        b=g0wxjR7V9qHAFm2859l8pvPg33I0TZgF2QLx/Qm3LBXSdR6zn+jiOi8QzKISQxF0yX
-         bHR8cZWZVdyuqGNINFb8OKm/qBifY8qHEE35EV6febTYbjPiG1P1UejhwvZEo5680ts1
-         tOIdfkDBBaLRh+Rqx//CH6UtsS+A2z4rQvxRv7RMKChmQ1WdEHZDtFRSkZGMNsi+4dxG
-         9uQzkzfVhIEGG9vVVMmlTdEn5tzBlgBfKslht/9eHE8sYKyKKwiQwnFK+AUC/XPrbObx
-         6WHXigX59cpMkFyPA+F9vAI5Fo2j3UHWjCWOl9n/WcyE5hYPPYuQgnUHTF5pKQVSWUVE
-         y9Gw==
-X-Forwarded-Encrypted: i=1; AJvYcCUX9EZ+9O8HJuLjCpKr9bBmRB0UxfokTntTvJYxYkp2DU3VewsH+uoybkFLAeSYu3EcSDGudaBLi1jWTw4Y@vger.kernel.org, AJvYcCW8HBU9vCPaQvCMbDSsuKNN7zwAyyXGd67soyOaItvQSDJlkKN1RIjhRhoxb1j2I1SEqfJ0pKE0qRXBuu/Q@vger.kernel.org, AJvYcCWRGKwcpIzEMKdKg58s6ZJXT9wLQXK+1uZwBnFgZmF9USk81bEQn6iPpmTA0pVJ4duitdvM0pCHrrI1i1AOFUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKqUN0kWJ4587uJ6FvXVsMIr3fy+k3N8fyjs5pfl3FaMWXvWNF
-	0HJtwDs8WprsWZpLfBjnI9TVIVrQyTWLor4NhlsvDG+F/YrYsWJGiNNpfuL7Oecr
-X-Gm-Gg: ASbGncvhYTQGSkVpT0LIAEThzIYt49iFWJvXdmlvyC8sfzZUJh4PsfdC7N7lnr8xCZu
-	NYQYnqc1vSgYBACxNWrbYd8GZ5h7xk68j1n8ZN9n6dBx4IUItk3XnhGQOCtMhC6mhCfMuBjAVGY
-	SeP+U9SV21SAJBm8Uk/AAj3o+vn5N3NWKD6yw7RFE1M+6lJSozyZoJJEEM6dVk7SAOUkHjSgqin
-	G9x6V0HEbJ/SEnvR+hDeYEr5fW06uCJpGChV/KnTLHn96xFMLSZ7Ex8M7epeqTtWXJhQ7W3h4+V
-	S7trZn6v/7Q4+iPRs4JSkkJ0G4O9aqCx8YFf2O8Hec8xiW4e1GnZZSCc2AaFrGCg22Wcy8n4wqG
-	8vLXvNoHaUODH
-X-Google-Smtp-Source: AGHT+IFLXsI1iBGL+Ut+ZDfMQ0enHhDHctS3VtSMCVnTssw4bqYCdnD2v9z9tZKMV5HhdDUvp/SxvQ==
-X-Received: by 2002:a17:90b:1d46:b0:311:c970:c9c0 with SMTP id 98e67ed59e1d1-328156baf66mr15919593a91.22.1756861598762;
-        Tue, 02 Sep 2025 18:06:38 -0700 (PDT)
-Received: from 1337 ([136.159.213.138])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3276f57b227sm21210956a91.6.2025.09.02.18.06.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Sep 2025 18:06:38 -0700 (PDT)
-From: Abhinav Saxena <xandfury@gmail.com>
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nathan Chancellor
- <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, llvm@lists.linux.dev,
- linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH 0/5] tty: Add KUnit test framework for TTY drivers
-Date: Tue, 02 Sep 2025 18:56:38 -0600
-References: <20250826-tty-tests-v1-0-e904a817df92@gmail.com>
- <49070681-9111-404a-a965-ca2b2eb2988c@kernel.org>
-User-agent: mu4e 1.10.8; emacs 30.2
-In-reply-to: <49070681-9111-404a-a965-ca2b2eb2988c@kernel.org>
-Message-ID: <87ldmwjqeb.fsf@gmail.com>
+	s=arc-20240116; t=1756868102; c=relaxed/simple;
+	bh=7o3W8P2ojYUVJ0fsJWPPz/O+GKIXRReI+kCkt8+HLTg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e7odnoyRqrGjpwA3Upy8lFSP1FWyZvvv5wg3RDwITas+1cfsXjU9WimDFzlHQrfGraB5MRyQNtWwy3n9zMAFl+E/ouTgWBhNJGo1J+RmtTkIB6xuhagTXmHzCUYy2tUhMy4BkGGLstVfpx2l+TNE050hLFvO1/BRAGbaNvBSSyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: esmtpsz11t1756868078tecfa8ca1
+X-QQ-Originating-IP: bCx5FCFmzv9pp9MzqXj82PbMCHvLGw2luRJIppU3GC4=
+Received: from localhost.localdomain ( [203.174.112.180])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 03 Sep 2025 10:54:34 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 5429709690827777819
+EX-QQ-RecipientCnt: 28
+From: Dong Yibo <dong100@mucse.com>
+To: andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	corbet@lwn.net,
+	gur.stavi@huawei.com,
+	maddy@linux.ibm.com,
+	mpe@ellerman.id.au,
+	danishanwar@ti.com,
+	lee@trager.us,
+	gongfan1@huawei.com,
+	lorenzo@kernel.org,
+	geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com,
+	lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com,
+	richardcochran@gmail.com,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	rdunlap@infradead.org,
+	vadim.fedorenko@linux.dev
+Cc: netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	dong100@mucse.com
+Subject: [PATCH net-next v10 0/5] Add driver for 1Gbe network chips from MUCSE
+Date: Wed,  3 Sep 2025 10:54:25 +0800
+Message-Id: <20250903025430.864836-1-dong100@mucse.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="=-=-="
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: Mf2c2cXG8XEiQPz1OujGSlUS5cgahaZ3mQMT5guSiQ98wCnKEQwcF5b6
+	cdywTG6AmcwHyZMog6hDUmMZFGDtgTwsSbk2JDBk76HgQILdZ0EUgCFwH/IpqbDd06pf1e4
+	847cyG6FX9yBrspc952A7qBhkPkS1Ou6lx05PguzCIQ3t7yd+QbithUOBjt58Alg4+GWxiJ
+	MISy6IChaUGk1OcvY7/NqTrWFM5biIuTYvOqnuAebcW43IhXECJRxGkTtLYF0YgOvGOD5yi
+	WZXi4yUso5lv62+AsRoKhw+evxhZzga0t4q08jIq7abDk7f0NXycMPFOGw5xN6GEwygrKfx
+	3CLe6IvznFfrJUKdtpkho7r2T0+KX69FvmzlzPA7qxJIkqUiRh8RQFR3p82/JeC5pN4JrBU
+	w9kxH+njiQAIIkFTQ8QFL90D1EY8nJ/FUIwmEqgm9MKh3KjPNALHfFYL4PVcVzaTkmKNPyF
+	0JwsSZbhgVoV1SZx7X/yv5gKitSGGInZsntLUw7DgpttQIGvqOTrNDMY+8gGDH2VGeBXq3d
+	Hu58q3YfvNxR9ZHBPnemMKgwKvHSqqUd7tw2cP9qrtF80KzTan3hGP04BlLnywZ2Eb0C8vQ
+	jSbXF3IG/dO6nTKOsFlwmFTvNg0kt5XzfqpCnF6ngHtQqWKlWM/lCxIe0SP+FZIczCp3lmi
+	zdBJHkhca4Vsd7pBInmdBPEJlapmOpInCFiqw1yu9jt88wnCWnJfV6nS0XQki+gn5tRnyd4
+	nC98u+gmNv2odKNxiG3GSu3fCGK7l5u4a7fx8/0v12C0gXHJmK0m9fCuNQ1APdhrZY7Alkc
+	YMSSAx5+0f56n+kBMQnVC2sELzePxdOGqC2kUcQ1I8DhMyzrFmhDC95yV9wWKV8ltTItKVH
+	CUVj03Ki9+oQBfVdjzoddJBeAI6Lp6O29iml4M2D1+foCn3Uw6sCwToBXXQnUWNSpmIKNev
+	zAuuDx4UBg2NxWsIaNy8aQf8/rJY6M5dfTMuKJd+o2w9NRRZDr88TmuV2dnN2xaqlEXIs95
+	vMRMKqEeMWsiPQp22qmeTFydJ8ooc=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi maintainers,
 
-Hi!
+This patch series is v10 to introduce support for MUCSE N500/N210 1Gbps
+Ethernet controllers. I divide codes into multiple series, this is the
+first one which only register netdev without true tx/rx functions.
 
-Jiri Slaby <jirislaby@kernel.org> writes:
+Changelog:
+v9 -> v10:
+  [patch 4/5]:
+   1. update mucse_mbx_get_capability and rename to mucse_mbx_get_info, along
+      with relative capability struct.
+   2. Separte get_perm from reset_hw_ops.
+   3. Rename ifinmosd to powerup.
+   4. Rename mucse_fw_get_macaddr to mucse_mbx_get_macaddr.
+   5. Rename mucse_mbx_fw_reset_phy to mucse_mbx_reset_hw.
+   6. Add mucse_mbx_sync_fw.
+  [patch 5/5]:
+   1. Use 'mutex_lock', not 'mutex_lock_interruptible'.
+   2. Rename 'driver_status' to 'echo_fw_status'.
 
-> On 27. 08. 25, 0:51, Abhinav Saxena wrote:
->> This patch series introduces a KUnit testing framework for the TTY
->> subsystem, enabling deterministic, automated testing of TTY drivers and
->> core functionality without requiring hardware or userspace interaction.
->> On an x86_64 build with CONFIG_GCOV enabled, these tests increased
->> TTY subsystem coverage to approximately 10.6% line coverage and
->> 14.7% function coverage [1].
->> Problem Statement
->> =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=93
->> Testing TTY drivers today requires:
->> - User-space interaction through device nodes
->> - Complex setup with ptys or real hardware
->> - Limited ability to test error paths reliably and deterministically
->> This series solves these issues by providing in-kernel KUnit tests
->> that
->> exercise real TTY core paths under controlled, deterministic conditions.
->> What This Series Provides
->> =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94-
->> 1. Reusable test helpers (`tty_test_helpers.h`):
->>     - Minimal (~150 LOC) infrastructure that any TTY driver should be
->>     able to use
->>     - Automatic resource management
->>     - Integrated into core files under KUnit guard, with
->>       `EXPORT_SYMBOL_IF_KUNIT()` to keep the production symbol table
->>       clean
->> 2. Mock TTY driver:
->>     - Demonstrates how drivers can leverage the helpers
->>     - Enables deterministic scenarios without hardware
->> 3. Core TTY tests:
->>     - Validate open/close/read/write/termios paths
->>     - Exercise hangup, resize, and error handling
->>     - Ensure real kernel paths are tested, not mocked stubs
->> 4. ttynull driver tests:
->>     - Validate data sink behavior of the null driver
->>     - Provide a minimal driver contract baseline
->> 5. Optional coverage support:
->>     - GCOV integration for test coverage analysis
->> Future Work
->> =E2=80=94=E2=80=94=E2=80=94=E2=80=93
->> With this foundation merged, follow-up work can:
->> - Add more coverage of TTY core functions
->> - Enable each TTY driver to maintain its own KUnit suite
->> - Introduce stress tests and race detection
->> - Extend to include more tests for other tty drivers:
->>    - UART drivers: test interrupt handling without hardware
->>    - USB serial: validate disconnect and reconnect sequences
->>    - PTY drivers: test resize, flow control, and hangups
->>    - Virtual consoles: test Unicode and input handling
->>    Testing
->> =E2=80=94=E2=80=94-
->> - All patches pass `checkpatch.pl`
->> - Verified on x86_64 with:
->>      ./tools/testing/kunit/kunit.py run \
->>          =E2=80=93kunitconfig=3D.kunit/ \
->>          =E2=80=93kunitconfig=3Ddrivers/tty/tests/.kunitconfig \
->>          =E2=80=93arch=3Dx86_64
->> - All tests pass (working around tty_read wrapper in progress)
->> Feedback welcome! :)
->
-> Wow, looks good. Has it found something yet :)?
->
+links:
+v9: https://lore.kernel.org/netdev/20250828025547.568563-1-dong100@mucse.com/
+v8: https://lore.kernel.org/netdev/20250827034509.501980-1-dong100@mucse.com/
+v7: https://lore.kernel.org/netdev/20250822023453.1910972-1-dong100@mucse.com
+v6: https://lore.kernel.org/netdev/20250820092154.1643120-1-dong100@mucse.com/
+v5: https://lore.kernel.org/netdev/20250818112856.1446278-1-dong100@mucse.com/
+v4: https://lore.kernel.org/netdev/20250814073855.1060601-1-dong100@mucse.com/
+v3: https://lore.kernel.org/netdev/20250812093937.882045-1-dong100@mucse.com/
+v2: https://lore.kernel.org/netdev/20250721113238.18615-1-dong100@mucse.com/
+v1: https://lore.kernel.org/netdev/20250703014859.210110-1-dong100@mucse.com/
 
-Not yet. But I am kinda excited about having fixture based tests which
-can be applied to different tty drivers and test things like
-race conditions, CVE-class vulnerabilities, edge cases among other things.
+Dong Yibo (5):
+  net: rnpgbe: Add build support for rnpgbe
+  net: rnpgbe: Add n500/n210 chip support
+  net: rnpgbe: Add basic mbx ops support
+  net: rnpgbe: Add basic mbx_fw support
+  net: rnpgbe: Add register_netdev
 
-One step at a time, I guess :)
+ .../device_drivers/ethernet/index.rst         |   1 +
+ .../device_drivers/ethernet/mucse/rnpgbe.rst  |  21 +
+ MAINTAINERS                                   |   8 +
+ drivers/net/ethernet/Kconfig                  |   1 +
+ drivers/net/ethernet/Makefile                 |   1 +
+ drivers/net/ethernet/mucse/Kconfig            |  34 ++
+ drivers/net/ethernet/mucse/Makefile           |   7 +
+ drivers/net/ethernet/mucse/rnpgbe/Makefile    |  11 +
+ drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h    |  99 +++++
+ .../net/ethernet/mucse/rnpgbe/rnpgbe_chip.c   | 157 +++++++
+ drivers/net/ethernet/mucse/rnpgbe/rnpgbe_hw.h |  18 +
+ .../net/ethernet/mucse/rnpgbe/rnpgbe_main.c   | 300 +++++++++++++
+ .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx.c    | 393 ++++++++++++++++++
+ .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx.h    |  25 ++
+ .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c | 250 +++++++++++
+ .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.h | 126 ++++++
+ 16 files changed, 1452 insertions(+)
+ create mode 100644 Documentation/networking/device_drivers/ethernet/mucse/rnpgbe.rst
+ create mode 100644 drivers/net/ethernet/mucse/Kconfig
+ create mode 100644 drivers/net/ethernet/mucse/Makefile
+ create mode 100644 drivers/net/ethernet/mucse/rnpgbe/Makefile
+ create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h
+ create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_chip.c
+ create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_hw.h
+ create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c
+ create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx.c
+ create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx.h
+ create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c
+ create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.h
 
->
-> FWIW
-> Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
->
-> thanks,
+-- 
+2.25.1
 
-Thanks for the review!
-
--Abhinav
-
---=-=-=--
