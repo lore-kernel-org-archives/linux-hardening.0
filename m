@@ -1,83 +1,47 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A8E2E2DDD;
-	Wed,  3 Sep 2025 20:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959772D9EE1;
+	Wed,  3 Sep 2025 20:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756931012; cv=none; b=JDZPMV3aRz4tQ+uebKsRorl0+aFDnYZQDFNxyUrK/dLZwXmIcTHZh82JoNxVPzUaU5MqADRmLNdGU/AAk3MITBpFnSwJV/M8B5JwJLvyLN+38hdVBDlH+hXMZlUHmX1LLLOwy7AEenlbp0jD6WtvHIPczyOp7tRyZ+EIU9JWQIs=
+	t=1756932460; cv=none; b=sRFlwr25EMHtj7FZaV5vS3wtKnCLg/vehxbn19SAVW4rdaMjO7gdSEsSSasAZ4evdJLytW5ez53QoDGxLiASzA1X40rN3m93QaGIuHZatkjGit+0JEX7w1p8SdkIm1XVwYm5LdwQelnc1kdqhHAUbjwf2UQmYPYXH+3b1WNmc1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756931012; c=relaxed/simple;
-	bh=XKrol/jfuFCAmQQzMJdpHdOxULYYkFNf5bp11Fmwrsg=;
+	s=arc-20240116; t=1756932460; c=relaxed/simple;
+	bh=fmmefG9viijRhTVNQthic+Hu8WGTQ6x3xU0/JdzSOjA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtNAzcrKTGcLcdQUAOGhiyuLMyag33c3zkJuwHT7KcrCmHJyQq0yvnx0yGcnMAh4aRJwzYE1zsoomFdju+l37olQBCqCNt7cfh//rkIQqFmlX1lD4xeXJ2HisZesxhZtb1rZ3zEiveHqxRBazos0TsV2doVjdWRERCDlXk7JYXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TYSiEuHe; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RAWAMaRxdoXtRbRLwfunMGZS3584zok4X5LiUqgisqz5D58C5rf+Bj6HC6rMmVPRcy3OVp/PkmXeX7uAEkh+4p5mewSQEqn/w+OEOh82+eqI5EmHZB6B75C7yseG8aldb1ydxKqsDj8XgjFcL1z9k/OOScB1nl7fiXZeDeeqRx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVrMb9ZV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TYSiEuHe"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-24af8cd99ddso4793575ad.0;
-        Wed, 03 Sep 2025 13:23:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756931009; x=1757535809; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XKrol/jfuFCAmQQzMJdpHdOxULYYkFNf5bp11Fmwrsg=;
-        b=TYSiEuHe+jhup7eGwI81lsP6YcvgiLx/QJNQIioHM7eW4tqBlAjawKZAaxpdNFOVxn
-         kJChQ0IRwctL9r5ygZB1Uzt60ztiVG5A/ShF0s8L0c/l3tXyJlFlUFKgvUkIr5fbsBjW
-         2Elz/tCfH9Rr5k+35YcpeUQGYwZf0W+sFnkxTG5IPiMkj1l1bBo0j3wWNpP7OPWmR/uy
-         GGZ/53e2gEo8b/antwwOPuJS3qrSaVVEp8wjurA1sXJyS7RXV7+DxPmgp7RhB3G2wQfP
-         ZxJO1FmRFzMayVXMIF/b4iMbEivhGVubhIOrIR+OmD4kyOKMGrjjFd52SPw9ZCyFvGTk
-         Xu+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756931009; x=1757535809;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XKrol/jfuFCAmQQzMJdpHdOxULYYkFNf5bp11Fmwrsg=;
-        b=qLAlkfAupYvBakkcyvlGkQyxjCIHJOHPygRfaJJTLJ8GkJbxdrYMO99k8kKzYKgzaz
-         scQb0nulAVRXVWA1q+UjKl5QjHViZGycKRN4ivhX/j3Och3GaC/Sp6suDGHbSLzItYAP
-         4qZLM/AioZ5PX66eOqxEY95XDebtMYw5Wt99h9J2yYO+yDl3caBg4R2uj0tAHeNMmbvw
-         MlnaVGKygYIQw6wRz+BJZF2eHFfAMEJb9SD0jd2/AhTSQTtpmYn4GJNhZ9YJcunDjTd5
-         v6a71XVDJ8avrjrQpt+jAowyGwCFyMs4JZsTZeccG6BrC/eBBXHMLYELkwweY9K95aKA
-         NiDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKIwxqFqd1qUkut/2poNzyVBTr79t6OFwsPZuVkUyVTzimWPvpCPVaxnd1CVoLOQ0iYfF97adlVgqgU+Yo7wY=@vger.kernel.org, AJvYcCUSUceeYzm0ioS9okXMjeHq0XbUAiKDqq8udCDigyaN3QMsC885Q6RmyrnZWxKxLrBa33M/lFgDt0ip3G8jvOk=@vger.kernel.org, AJvYcCVpyvazXP+b+CcYg6JXSCtLDg9Oce6EmI0GaCk3gPqjHduEi/qXIv2bXOISD/wmwxJi1fFvgf2UcHJPKS4M@vger.kernel.org
-X-Gm-Message-State: AOJu0YxO2JgUjNDzJczX6h+CeGxoqoORt+ZonX+YmUjnbj+8Dplh+S3S
-	F96R8SCLGqvM+VZ4T4MWNnmAk8M7MXfcF6Qpi9xGvQlRN7x+qKnAR5I1
-X-Gm-Gg: ASbGncsA6tbznpizLkdL43Agewps8Yz7g5wzixKxrIKXIfNkjx5yPOpP0aipOfioGsD
-	08jYXjVUk7MkTIgqfsEES+vODU6P3/nVQ16D5vX8pKVaRUsJvpir6Z2depxl8b2xmF21ULMMRWh
-	W8byEuMoVKc1L5NnaxjTVGcC6e4xWimsTKkr1tVJr6/wxH5aaXgPZoG0mfTS6MR2qD756BAWrM+
-	tB7hMk/HQWcgwoiUR/5bgMYkUC8TM+fFKHYza2s2PnSUAaWXiQscmejVMLvmSZW1HGZcjkOgzVF
-	vsrrXBpi51l2p4Jf9eJ7M1fwmDO2qrZzne7vZ0TEK2v+yyP6tHMQXcCqqUqo5NU0ROlg2WJ0UnO
-	haQzL31TlYJmd9teNFUihZQ==
-X-Google-Smtp-Source: AGHT+IHlnFY5hTJ0kydoRG8Js74B72lzqORZromXAtkae8dA0NThgILnarSrne93rr4njqiKXFqLSQ==
-X-Received: by 2002:a17:903:1252:b0:23f:f96f:9de7 with SMTP id d9443c01a7336-24944b62e7amr182014985ad.51.1756931009506;
-        Wed, 03 Sep 2025 13:23:29 -0700 (PDT)
-Received: from localhost ([216.228.127.131])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-329e6d6d4b2sm5741810a91.0.2025.09.03.13.23.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Sep 2025 13:23:28 -0700 (PDT)
-Date: Wed, 3 Sep 2025 16:23:26 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Burak Emir <bqe@google.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Carlos LLama <cmllamas@google.com>,
-	Pekka Ristola <pekkarr@protonmail.com>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v14 0/5] rust: adds Bitmap API, ID pool and bindings
-Message-ID: <aLijvpTZbXP764mY@yury>
-References: <20250813153548.1650533-1-bqe@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVrMb9ZV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F28C4CEE7;
+	Wed,  3 Sep 2025 20:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756932460;
+	bh=fmmefG9viijRhTVNQthic+Hu8WGTQ6x3xU0/JdzSOjA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hVrMb9ZVNzZejicKw11SwSxH3otxG3KBAreea14rAz36ny2rEHcNl7rGQcic+LFYt
+	 iOuXWzfsOLHxgZMfKi2vN/TMl8agBwyhCXYDdEIwzpIoYk0gCFLvJFMLL4j/ZJkqgw
+	 DKZKPNnv8BjZXgEWcTDudeAqeXUiWRoKVF+CSWkotf+byb0UvtV7G4lBoL5u3e7vLr
+	 njz4cOVmWMlCx94tu086RPh5z1Gs3uZw1V99FJfJ6fLtnOhIVEYVBBTOVzQm1MoY1Z
+	 Z52sAjAau7oW7q3+CTm/6KEfi16kSGFUOpF01dhS93kv1LVqG4OwzT7JV21AhQ+Jju
+	 6TqHkMmey6kqg==
+Date: Wed, 3 Sep 2025 15:47:38 -0500
+From: Rob Herring <robh@kernel.org>
+To: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
+Cc: git@amd.com, michal.simek@amd.com, alexandre.belloni@bootlin.com,
+	Frank.Li@nxp.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	kees@kernel.org, gustavoars@kernel.org,
+	jarkko.nikula@linux.intel.com, linux-i3c@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, radhey.shyam.pandey@amd.com,
+	srinivas.goud@amd.com, shubhrajyoti.datta@amd.com,
+	manion05gk@gmail.com
+Subject: Re: [PATCH V3 1/2] dt-bindings: i3c: Add AMD I3C master controller
+ support
+Message-ID: <20250903204738.GA2744698-robh@kernel.org>
+References: <20250903095906.3260804-1-manikanta.guntupalli@amd.com>
+ <20250903095906.3260804-2-manikanta.guntupalli@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -86,30 +50,57 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250813153548.1650533-1-bqe@google.com>
+In-Reply-To: <20250903095906.3260804-2-manikanta.guntupalli@amd.com>
 
-On Wed, Aug 13, 2025 at 03:35:41PM +0000, Burak Emir wrote:
-> This series adds a Rust bitmap API for porting the approach from
-> commit 15d9da3f818c ("binder: use bitmap for faster descriptor lookup")
-> to Rust. The functionality in dbitmap.h makes use of bitmap and bitops.
+On Wed, Sep 03, 2025 at 03:29:05PM +0530, Manikanta Guntupalli wrote:
+> Add device tree binding documentation for the AMD I3C master controller.
+> 
+> Signed-off-by: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
+> ---
+> Changes for V2:
+> Updated commit subject and description.
+> Moved allOf to after required.
+> Removed xlnx,num-targets property.
+> 
+> Changes for V3:
+> Updated commit description.
+> Corrected the order of properties and removed resets property.
+> Added compatible to required list.
+> Added interrupts to example.
+> ---
+>  .../devicetree/bindings/i3c/xlnx,axi-i3c.yaml | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i3c/xlnx,axi-i3c.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/i3c/xlnx,axi-i3c.yaml b/Documentation/devicetree/bindings/i3c/xlnx,axi-i3c.yaml
+> new file mode 100644
+> index 000000000000..32f73c31121e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i3c/xlnx,axi-i3c.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/i3c/xlnx,axi-i3c.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: AMD I3C master
+> +
+> +maintainers:
+> +  - Manikanta Guntupalli <manikanta.guntupalli@amd.com>
+> +
+> +description:
+> +  The AXI-I3C IP is an I3C Controller with an AXI4-Lite interface, compatible
+> +  with the MIPI I3C Specification v1.1.1. The design includes bidirectional I/O
+> +  buffers that implement open collector drivers for the SDA and SCL signals.
+> +  External pull-up resistors are required to properly hold the bus at a Logic-1
+> +  level when the drivers are released.
+> +
+> +properties:
+> +  compatible:
+> +    const: xlnx,axi-i3c-1.0
 
-Hi Burak,
+Where does the version number come from? This must correspond to some 
+h/w documentation or it is useless.
 
-I'm having hard times trying to merge the series in bitmap-for-next.
-
-$ git am -3 v14_20250813_bqe_rust_adds_bitmap_api_id_pool_and_bindings.mbx
-Applying: rust: add bindings for bitmap.h
-Applying: rust: add bindings for bitops.h
-Applying: rust: add bitmap API.
-error: sha1 information is lacking or useless (MAINTAINERS).
-error: could not build fake ancestor
-Patch failed at 0003 rust: add bitmap API.
-hint: Use 'git am --show-current-patch=diff' to see the failed patch
-When you have resolved this problem, run "git am --continue".
-If you prefer to skip this patch, run "git am --skip" instead.
-To restore the original branch and stop patching, run "git am --abort".
-
-Can you please rebase and resend?
-
-Thanks,
-Yury
+Rob
