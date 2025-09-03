@@ -1,49 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79952304971;
-	Wed,  3 Sep 2025 16:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2373629B8;
+	Wed,  3 Sep 2025 18:44:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756917878; cv=none; b=pWBPrVV/ITo1+S7/1HKCq57xinTNE00p3VccDr+hifOuYCZtNvc+nVADwKmCGlVgecspmdVveyyxGo8zN5QZPykxTL45Xg5KLsCFWblVM9rZ8m4KtD6o5B+8R0GSAtAv4lcImveVugBI+km8q3BjR81mt/0k6KLt+fUCRKg5kzc=
+	t=1756925093; cv=none; b=XOZ1W5JgYb/382n5cZOlvXHk2hwydnm96/XsyBGNPi0loXDqclJlOZHZIMyhdww/tbjW1qaJq8EprUigZl8UEX12TU3O4HJANATzV1RDIuEs2Sw2INAjXOAnGuRoy7bR+GZu372jiHoP55Bq1UlZgCzLVDNAheIAmHYNe/0UIMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756917878; c=relaxed/simple;
-	bh=i/Nlpyf6049cvEbac9097z7Dtvp2kNHFjvpzDfbTlhI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KFge0Xkk0fOYFusFidHJETtqcSYORv224Rh2Gkc9s/Y88UupolFimpvgQ9IqvueXATvJKSbfGaXW/V8efrxG5BPKLcMfyAnnw6p7qW8Sx6yr96HFruT3mPW5+5GXmcM3gy1nlwaJ5H9dGsX6QmvjTtfhLxcGbR3b8rgBxHOEVew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Emx9N4el; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756925093; c=relaxed/simple;
+	bh=GsUokiikwbKp5vg1/26TrgCL7azSzjz7RAsIuuQWZKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=X7IskcLbfTS++/MTHiAac3/s1p9zuo6/BZ/TEAeeRFRvl8fqYR+dnPhBRCwBYmozigbiUP6rItQijPBRwhHOcIuiVZ1PLliCsR7i4b4iYNsft6itCakVMnwqKx6RAezySekiSXAqM36MKWj2bneaLGRJdOBWps4dnja68rUlD28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuTkKTjo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Emx9N4el"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B04DC4CEE7;
-	Wed,  3 Sep 2025 16:44:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuTkKTjo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D4ECC4CEE7;
+	Wed,  3 Sep 2025 18:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756917878;
-	bh=i/Nlpyf6049cvEbac9097z7Dtvp2kNHFjvpzDfbTlhI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Emx9N4elMpE1TUw9YeZsO399zAbTV/bxbFiYSQokruUc89e9oB8nrJh7Sh+dg+Qht
-	 r5CfHYLOcf1ohP8dDx9r6HpV2nyS8kcCLpJthfFtfq1azbE7SaKiK844WVxC0FW41c
-	 8TgId8zBbe+zZdnyfskvSU16TEo3Hp9GdThETGMyqyLvXeXnvIkHIZ0dOUeC9XFIl8
-	 Orc31/q+fEPNlnulcN7nhFLVyIy+WViMxeybSlzDt9rM0havE/OXuuCTqCmYa/6yjs
-	 DDp7Ct+EHA23QKZEKzm61gUM9gxgccgJX1mQjjjf47OzETK3L9GgJ/6xU4L92aH6N/
-	 saetrm8P4i9hg==
-Date: Wed, 3 Sep 2025 17:44:31 +0100
-From: Simon Horman <horms@kernel.org>
-To: Dong Yibo <dong100@mucse.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
-	gur.stavi@huawei.com, maddy@linux.ibm.com, mpe@ellerman.id.au,
-	danishanwar@ti.com, lee@trager.us, gongfan1@huawei.com,
-	lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
-	gustavoars@kernel.org, rdunlap@infradead.org,
-	vadim.fedorenko@linux.dev, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	s=k20201202; t=1756925093;
+	bh=GsUokiikwbKp5vg1/26TrgCL7azSzjz7RAsIuuQWZKg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ZuTkKTjoEfTXoELvBN4x5Vvt61F9HopbzRHhVwsomujm55IvVPjrn8Dsz2VuHFiKR
+	 GgaTpXgnmSo02sJ1gzW+9z4tIGzbzICm9HDSWjyiVSxr2MwW9wBKVPhiGgGudgbZtj
+	 zrGuf6svxGvVDj2Om5BI5Qfbdwuu5499T9DaLs2ixe2U4G6QmW1U8ew0Yb8brCT+/3
+	 0zVqM5pYO/LfsOVYTwplfkdw8S7WcWZPcRdfKt7nQqlRlpO2YytvfojS3YLKTSaLsJ
+	 DPBvNlOU/yCCGABD3NMC30dLCanuLZmxE96ief2Do9IkkxIMwGvas+PcIXPUGx2g30
+	 ox8dKnYCeMqIQ==
+Date: Wed, 3 Sep 2025 20:44:48 +0200
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Jack Wang <jinpu.wang@cloud.ionos.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v10 3/5] net: rnpgbe: Add basic mbx ops support
-Message-ID: <20250903164431.GD361157@horms.kernel.org>
-References: <20250903025430.864836-1-dong100@mucse.com>
- <20250903025430.864836-4-dong100@mucse.com>
+Subject: [PATCH][next] scsi: pm80xx: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <aLiMoNzLs1_bu4eJ@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,91 +45,57 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250903025430.864836-4-dong100@mucse.com>
 
-On Wed, Sep 03, 2025 at 10:54:28AM +0800, Dong Yibo wrote:
-> Initialize basic mbx function.
-> 
-> Signed-off-by: Dong Yibo <dong100@mucse.com>
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-...
+Move the conflicting declarations to the end of the corresponding
+structures. Notice that `struct ssp_response_iu` is a flexible
+structure, this is a structure that contains a flexible-array member.
 
-> +/**
-> + * mucse_mbx_inc_pf_req - Increase req
-> + * @hw: pointer to the HW structure
-> + *
-> + * mucse_mbx_inc_pf_req read pf_req from hw, then write
-> + * new value back after increase
-> + **/
-> +static void mucse_mbx_inc_pf_req(struct mucse_hw *hw)
-> +{
-> +	struct mucse_mbx_info *mbx = &hw->mbx;
-> +	u16 req;
-> +	u32 v;
-> +
-> +	v = mbx_data_rd32(mbx, MBX_PF2FW_COUNTER);
-> +	req = (v & GENMASK_U32(15, 0));
+With these changes fix the following warnings:
 
-nit1: Unnecessary parentheses
-nit2: I would have used FIELD_GET here in conjunction with something like.
+drivers/scsi/pm8001/pm8001_hwi.h:342:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/scsi/pm8001/pm80xx_hwi.h:561:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-      #define MBX_PF2FW_COUNTER_MASK GENMASK_U32(15, 0)
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/scsi/pm8001/pm8001_hwi.h | 4 +++-
+ drivers/scsi/pm8001/pm80xx_hwi.h | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-> +	req++;
-> +	v &= GENMASK_U32(31, 16);
-> +	v |= req;
+diff --git a/drivers/scsi/pm8001/pm8001_hwi.h b/drivers/scsi/pm8001/pm8001_hwi.h
+index fc2127dcb58d..7dc7870a8f86 100644
+--- a/drivers/scsi/pm8001/pm8001_hwi.h
++++ b/drivers/scsi/pm8001/pm8001_hwi.h
+@@ -339,8 +339,10 @@ struct ssp_completion_resp {
+ 	__le32	status;
+ 	__le32	param;
+ 	__le32	ssptag_rescv_rescpad;
+-	struct ssp_response_iu  ssp_resp_iu;
+ 	__le32	residual_count;
++
++	/* Must be last --ends in a flexible-array member. */
++	struct ssp_response_iu  ssp_resp_iu;
+ } __attribute__((packed, aligned(4)));
+ 
+ 
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.h b/drivers/scsi/pm8001/pm80xx_hwi.h
+index eb8fd37b2066..21afc28d9875 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.h
++++ b/drivers/scsi/pm8001/pm80xx_hwi.h
+@@ -558,8 +558,10 @@ struct ssp_completion_resp {
+ 	__le32	status;
+ 	__le32	param;
+ 	__le32	ssptag_rescv_rescpad;
+-	struct ssp_response_iu ssp_resp_iu;
+ 	__le32	residual_count;
++
++	/* Must be last --ends in a flexible-array member. */
++	struct ssp_response_iu ssp_resp_iu;
+ } __attribute__((packed, aligned(4)));
+ 
+ #define SSP_RESCV_BIT	0x00010000
+-- 
+2.43.0
 
-      And using FIELD_PREP is probably more succinct here.
-
-      Likewise in the following function
-
-> +	mbx_data_wr32(mbx, MBX_PF2FW_COUNTER, v);
-> +	hw->mbx.stats.msgs_tx++;
-> +}
-> +
-> +/**
-> + * mucse_mbx_inc_pf_ack - Increase ack
-> + * @hw: pointer to the HW structure
-> + *
-> + * mucse_mbx_inc_pf_ack read pf_ack from hw, then write
-> + * new value back after increase
-> + **/
-> +static void mucse_mbx_inc_pf_ack(struct mucse_hw *hw)
-> +{
-> +	struct mucse_mbx_info *mbx = &hw->mbx;
-> +	u16 ack;
-> +	u32 v;
-> +
-> +	v = mbx_data_rd32(mbx, MBX_PF2FW_COUNTER);
-> +	ack = (v >> 16) & GENMASK_U32(15, 0);
-> +	ack++;
-> +	v &= GENMASK_U32(15, 0);
-> +	v |= (ack << 16);
-> +	mbx_data_wr32(mbx, MBX_PF2FW_COUNTER, v);
-> +	hw->mbx.stats.msgs_rx++;
-> +}
-
-...
-
-> +/**
-> + * mucse_mbx_reset - Reset mbx info, sync info from regs
-> + * @hw: pointer to the HW structure
-> + *
-> + * This function reset all mbx variables to default.
-> + **/
-> +static void mucse_mbx_reset(struct mucse_hw *hw)
-> +{
-> +	struct mucse_mbx_info *mbx = &hw->mbx;
-> +	u32 v;
-> +
-> +	v = mbx_data_rd32(mbx, MBX_FW2PF_COUNTER);
-> +	hw->mbx.fw_req = v & GENMASK_U32(15, 0);
-> +	hw->mbx.fw_ack = (v >> 16) & GENMASK_U32(15, 0);
-
-I'd use FIELD_GET here too.
-
-> +	mbx_ctrl_wr32(mbx, PF2FW_MBOX_CTRL(mbx), 0);
-> +	mbx_ctrl_wr32(mbx, FW_PF_MBOX_MASK(mbx), GENMASK_U32(31, 16));
-> +}
-
-...
