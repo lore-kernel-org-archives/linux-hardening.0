@@ -1,65 +1,140 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0B32D6E61;
-	Wed,  3 Sep 2025 06:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5269B2D77E5
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Sep 2025 07:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756879650; cv=none; b=QuIaveviGd85jiLPi2UBtIM6KER2wwyM045C2BN9fTe+aQfPZfjiURvsrDdvsFY090q5bBsGOH5BwP5iJUrUbO8UGNjUVFVt/oux1JK4JcJ3RP2Lslz2CRyJh5+i6GO0HmpOTXXl/8owae/tjposSCWS+we+iCkBLcQLDkkrsi8=
+	t=1756884830; cv=none; b=tJsvs1foMp0RW7pe/Td2snr69g6e0PoCZW1w18/1nFQ7YzHDFXpnSpd0xm3XDN2FzS+vKopT2YSX77Sru1dADHsRw1iASQVO0Ufh/l2pqQopdwpQylLtoI0+bvq6RKipqu4O+CqsPBT1iZSKCIViQC1eUK1584LEkrh1d3x5IpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756879650; c=relaxed/simple;
-	bh=zc8gkB3r3ly4dKmAy7cMH8HtD1IHK8dkAEfBpuNNzns=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=UCM3XB8PGZWvDy76jac8yHhVF6MxodWFezCNaG9YHLtu17w2/+9PY80qn0PydZCCswiG7RgTw1/3/SwSPZ3RpL/72Tbx8Fsboa9eaUwWz4B7O2gNQ4zAjymNGtXgO6GM/RtnXEiC/PeVkARHcQT4jtOr0iOAmct4Pbo5oSW07nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=GSYt7p1g; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1756884830; c=relaxed/simple;
+	bh=YNYvzh/kc3+s5XJiH2jNySFaGPSj6mlg48FZqtmCTZw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ulj+FndezMFygK+VG8+DX5KmYKmUj9nRgRuBJ7hQfW19xW3re6obE/z64OffuEiJwOb3NOqwP7GEU4RfMo/wJeQIofXv/E/Ku5ETgCldDFOYadlaVkH8YJmbiZIQGJJN6KQE9XBG0+rB24c+9ojiY4I6GH+fkcJbO1fxAse+r/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=or+O9yqi; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="GSYt7p1g"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="or+O9yqi"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-336af6356a5so41546711fa.3
+        for <linux-hardening@vger.kernel.org>; Wed, 03 Sep 2025 00:33:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1756879645;
-	bh=4RROh9iqQ70OdBywmW1IULQcZq8kweW4OW0QocIf8EY=;
-	h=From:To:In-Reply-To:References:Subject:Date;
-	b=GSYt7p1g4bETO9d6Qq8Y5QOvEUe42ZM625lNOjYH+OOczlvKkSlbOn09/ufRp4XfZ
-	 /et9W1u79/dBVZYfAdiSPWGbocL1uHaGz/HqQE6pSBs52GRUY3GnGJbjvwn2U53KR+
-	 mRmemqbaug9is1yOMIsfZrrIaxPTY0pQk1BSvXgJpztqfeicGoY6TtHY96JD8YxrJr
-	 i0iiy03mDtRx8apj5TcfPYGFP3V2yxoCmiM2j2udEh6YsjO3T3qGOL4nOMTB5jKxGp
-	 WueU2FKz47+e9inVRGwvv7OgDVoNnwyqxy5Xf3I2x64EBU1Hn4CjVK8VMG8BrDsPuj
-	 K4+GGYvegHX5w==
-Received: from [127.0.1.1] (unknown [180.150.112.213])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 59A716E02C;
-	Wed,  3 Sep 2025 14:07:24 +0800 (AWST)
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250819131743.86905-2-krzysztof.kozlowski@linaro.org>
-References: <20250819131743.86905-2-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] ARM: dts: aspeed: Minor whitespace cleanup
-Message-Id: <175687964426.808220.6591590873945932888.b4-ty@codeconstruct.com.au>
-Date: Wed, 03 Sep 2025 15:37:24 +0930
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756884826; x=1757489626; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YNYvzh/kc3+s5XJiH2jNySFaGPSj6mlg48FZqtmCTZw=;
+        b=or+O9yqi+Fme2yw28jrJWT8dtYwgRPniIwPzJq/SW1Nz+gCVTeyG6kXv/ETbj6pAhP
+         PfQwrdCC0J8IPpaDld0dGTwBdTo8HgnCEkfxiGdnUigPylEtYkHH2IXCnVKHreljZ7Nk
+         yHXifcsd/RJwRpJCpaQE+Sf2RjCLIX11vWitdQbTjymxY5bZipIdoVLk6nUFtZwlsSaz
+         vVuiSathFGm9kWh20Hjen/wxlqVIDx0Hhapdh62TMS/Az+TzXdY6phHYf1p4+FACfmNQ
+         a33uBd4f12xTbiEtFTsqIEUUIOQCbxgmPtVspR8B+qHxFZeR4C9svVPCUa/bD4YF8ja4
+         SW7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756884826; x=1757489626;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YNYvzh/kc3+s5XJiH2jNySFaGPSj6mlg48FZqtmCTZw=;
+        b=mFtrsnqpxQIfTbkXcndUcikZwkC1LFet9s90Xyzl7CxTB60YLr0Kc23kWSvZc9nZpi
+         4VPQYquJip6N8yNkamHEZObNh2Wtwl6cmnjqLxmOz9j3QkkqysiabI/ODoE3AgHuTncq
+         qMvvdFVJYwSIXKLTJxp1ctXvQBavCWuUh2xzD3fzgyK4/tBglqL/dU60+IEUC4S4fj3+
+         0QIveyE/q+rq5XkRO068H1jSrnvpk0yGm7LPR2s9cyIV3dL7V97m8F2pwXpxieaLJHeD
+         bFkOV71oPQekbkI1uC8MfYKEi61eKHy6dbemIIb+tvI37BEWPBd14YYGQ9Pu2s7TscFF
+         gAFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWo194HabcEhL0MzlVIK9ZUaAxpq9t3VPag+e4IPLfjpX4HQFVay36J4R9b2Ge/djB2U+MB6bTYzw+69HnZBMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1db/dTwv6/9jQ5Robe5WIE9IoKvxx4llNACn+UfesN5tjRVw1
+	NJQezM7sV6SSyQzMWoLgNKOZq2MybmLtfKaYK/HE/o/+XtulsgCLfqnWbh6uFUCnS0JyAPmuvbk
+	FFAweovzbd6+CXVyHmhtXruEJNaPPI1U48qz6Bi13sQ==
+X-Gm-Gg: ASbGncsITxZ+91z9p1hSOtbzZ006W3rAyt9EAM4p7WCW0YZRImdNck8Bg+qU7p25WSn
+	o8zp3LxvaAGZIru9aP4qSb+9mir9mZ+K+P/4eww/obyt+cEZX6bGAajD0BOTNJMEiqKmreokHvF
+	KwdqggBPrZezPMO/3MT1gvMIhro+EoLiNuzdyKFwBuBDscpFs2t5BcUDhT3fcJ+W/9OKXQnMEvK
+	To3BTazbbw7kTDrNjuICp8ZPECgQdJ+MAm7dOoeHqCklOSoGw==
+X-Google-Smtp-Source: AGHT+IHQMDojBvXdcYFr83Du1enPEHK0Ti//rRC94x6rK+6MbJgsPNbFLU1zOeSW5BOM5GJv9hHYWvwxYnse2nh/rU8=
+X-Received: by 2002:a2e:a58a:0:b0:337:9e3b:895f with SMTP id
+ 38308e7fff4ca-3379e3b9b47mr24730131fa.0.1756884826262; Wed, 03 Sep 2025
+ 00:33:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
+ <20250902-pinctrl-gpio-pinfuncs-v7-16-bb091daedc52@linaro.org>
+ <aLcBcjvMbrxoDYoC@smile.fi.intel.com> <CAMRc=MfcFMgkNqWNZV5o0NxkAvxBTjC3vv56Cr98n0R2CkxuPw@mail.gmail.com>
+ <CAHp75VcgaqnDrPH27wxfgyK6zz4RAKJQB0r7G2vbTONTxkEzTw@mail.gmail.com>
+In-Reply-To: <CAHp75VcgaqnDrPH27wxfgyK6zz4RAKJQB0r7G2vbTONTxkEzTw@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 3 Sep 2025 09:33:34 +0200
+X-Gm-Features: Ac12FXwfTFesdkv2AsVGJLh1I6xBKdxxPYffotwRnf3CookQp3k-WXkxYMLzaTo
+Message-ID: <CAMRc=MfhhX2NJ0fhhX8u+7=sdyUy0G27n7caGf9=TpHxUDJVxg@mail.gmail.com>
+Subject: Re: [PATCH v7 16/16] pinctrl: qcom: make the pinmuxing strict
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, imx@lists.linux.dev, linux-omap@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 19 Aug 2025 15:17:44 +0200, Krzysztof Kozlowski wrote:
-> The DTS code coding style expects exactly one space around '=' or '{'
-> characters.
-> 
-> 
+On Tue, Sep 2, 2025 at 10:46=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Tue, Sep 2, 2025 at 8:42=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> >
+> > On Tue, Sep 2, 2025 at 4:38=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@intel.com> wrote:
+> > >
+> > > On Tue, Sep 02, 2025 at 01:59:25PM +0200, Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > The strict flag in struct pinmux_ops disallows the usage of the sam=
+e pin
+> > > > as a GPIO and for another function. Without it, a rouge user-space
+> > > > process with enough privileges (or even a buggy driver) can request=
+ a
+> > > > used pin as GPIO and drive it, potentially confusing devices or eve=
+n
+> > > > crashing the system. Set it globally for all pinctrl-msm users.
+> > >
+> > > How does this keep (or allow) I=E6=B6=8E generic recovery mechanism t=
+o work?
+> >
+> > What even is the "generic recovery mechanism"? That's the first time
+> > I'm hearing this name.
+>
+> "I=C2=B2C generic recovery mechanism" (I dunno why you put away the I=C2=
+=B2C keyword).
+>
 
-Thanks, I've applied this to the BMC tree.
+For some reason it was displayed like that[1] in my client. I see it's
+correct in lore though.
 
--- 
-Andrew Jeffery <andrew@codeconstruct.com.au>
+Anyway, what is your point? I don't think it has any impact on this.
 
+Bartosz
+
+[1] https://postimg.cc/7GFtxzzR
