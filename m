@@ -1,42 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2373629B8;
-	Wed,  3 Sep 2025 18:44:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14D02C18A;
+	Wed,  3 Sep 2025 19:36:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756925093; cv=none; b=XOZ1W5JgYb/382n5cZOlvXHk2hwydnm96/XsyBGNPi0loXDqclJlOZHZIMyhdww/tbjW1qaJq8EprUigZl8UEX12TU3O4HJANATzV1RDIuEs2Sw2INAjXOAnGuRoy7bR+GZu372jiHoP55Bq1UlZgCzLVDNAheIAmHYNe/0UIMM=
+	t=1756928181; cv=none; b=ndt3RZhfYgjZsb67SmWap6oCzHILQakFNQuoPDbY6rjNx+gKbH/KVz7mFxahfs9T8H8KjjTFArtkHC5SoyQABR0sADydvPZeCIBPsPSxODoTPDhdTchN1uwfbCVDLPxy2piTEr2nOM7GBf3wtZ0tNqgMaQdzriISvWuQAzu89w8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756925093; c=relaxed/simple;
-	bh=GsUokiikwbKp5vg1/26TrgCL7azSzjz7RAsIuuQWZKg=;
+	s=arc-20240116; t=1756928181; c=relaxed/simple;
+	bh=J5VDjAzU4bP2iNAyELFb3jm1tCgK9MjUGPIE6C22Gdg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=X7IskcLbfTS++/MTHiAac3/s1p9zuo6/BZ/TEAeeRFRvl8fqYR+dnPhBRCwBYmozigbiUP6rItQijPBRwhHOcIuiVZ1PLliCsR7i4b4iYNsft6itCakVMnwqKx6RAezySekiSXAqM36MKWj2bneaLGRJdOBWps4dnja68rUlD28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuTkKTjo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=u3rU247m8p6EeBeU9o817R75aAV5ckOgzc6GzfM4io+UXXBAKRkzb5EHh46R5fKTbYf2KT/fppZSZV4k324/wkSINpkUkRWvsxugJw7FGtbv+lT2ujpayeDXXx6/giaDMWwzRo0v9iXj4BKA4qcbjiFJvSGbvzbTai/C3IPOEaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocaVzao4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuTkKTjo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D4ECC4CEE7;
-	Wed,  3 Sep 2025 18:44:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocaVzao4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3982C4CEE7;
+	Wed,  3 Sep 2025 19:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756925093;
-	bh=GsUokiikwbKp5vg1/26TrgCL7azSzjz7RAsIuuQWZKg=;
+	s=k20201202; t=1756928180;
+	bh=J5VDjAzU4bP2iNAyELFb3jm1tCgK9MjUGPIE6C22Gdg=;
 	h=Date:From:To:Cc:Subject:From;
-	b=ZuTkKTjoEfTXoELvBN4x5Vvt61F9HopbzRHhVwsomujm55IvVPjrn8Dsz2VuHFiKR
-	 GgaTpXgnmSo02sJ1gzW+9z4tIGzbzICm9HDSWjyiVSxr2MwW9wBKVPhiGgGudgbZtj
-	 zrGuf6svxGvVDj2Om5BI5Qfbdwuu5499T9DaLs2ixe2U4G6QmW1U8ew0Yb8brCT+/3
-	 0zVqM5pYO/LfsOVYTwplfkdw8S7WcWZPcRdfKt7nQqlRlpO2YytvfojS3YLKTSaLsJ
-	 DPBvNlOU/yCCGABD3NMC30dLCanuLZmxE96ief2Do9IkkxIMwGvas+PcIXPUGx2g30
-	 ox8dKnYCeMqIQ==
-Date: Wed, 3 Sep 2025 20:44:48 +0200
+	b=ocaVzao4pHj7eKEMcbd5Gjt92N6UK53kmHR2XF447/zhQoXmw8ED4iAm8ilUtAevr
+	 vKKdTzgnJB9FZ1a+PVsxADdMDORDhph18ZzFI/AdYmCUQTYzzC/Cz/GKlZS9k1Zp9e
+	 NUT1+eg71S5VoVdEIEVAU4AaUwVtZPQXN2u+rLVMtT5EMAtSknA7fwUlQx8dAotCLT
+	 U9zjAzodQ6z5ATB5gzCWpsQe4EnD+a1Dzt2oh3l4QiKDfzIiGjs5jXyKiKt1azlZ9F
+	 L5BJUGaHOfxeUz/4t2P+LZ3uQGRmemu7XC5xnuUYUudbHtyjsMRq9/ZdI0Zq9DwdS5
+	 /SI2PRaNEUmdQ==
+Date: Wed, 3 Sep 2025 21:36:13 +0200
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Jack Wang <jinpu.wang@cloud.ionos.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] scsi: pm80xx: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <aLiMoNzLs1_bu4eJ@kspp>
+Subject: [PATCH][next] virtio_net: Fix alignment and avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <aLiYrQGdGmaDTtLF@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,53 +54,116 @@ Content-Disposition: inline
 -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
 getting ready to enable it, globally.
 
-Move the conflicting declarations to the end of the corresponding
-structures. Notice that `struct ssp_response_iu` is a flexible
-structure, this is a structure that contains a flexible-array member.
+Use the new TRAILING_OVERLAP() helper to fix the following warning:
 
-With these changes fix the following warnings:
+drivers/net/virtio_net.c:429:46: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-drivers/scsi/pm8001/pm8001_hwi.h:342:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/scsi/pm8001/pm80xx_hwi.h:561:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+This helper creates a union between a flexible-array member (FAM)
+and a set of members that would otherwise follow it (in this case
+`u8 rss_hash_key_data[VIRTIO_NET_RSS_MAX_KEY_SIZE];`). This
+overlays the trailing members (rss_hash_key_data) onto the FAM
+(hash_key_data) while keeping the FAM and the start of MEMBERS aligned.
+The static_assert() ensures this alignment remains, and it's
+intentionally placed inmediately after `struct virtnet_info` (no
+blank line in between).
+
+Notice that due to tail padding in flexible `struct
+virtio_net_rss_config_trailer`, `rss_trailer.hash_key_data`
+(at offset 83 in struct virtnet_info) and `rss_hash_key_data` (at
+offset 84 in struct virtnet_info) are misaligned by one byte. See
+below:
+
+struct virtio_net_rss_config_trailer {
+        __le16                     max_tx_vq;            /*     0     2 */
+        __u8                       hash_key_length;      /*     2     1 */
+        __u8                       hash_key_data[];      /*     3     0 */
+
+        /* size: 4, cachelines: 1, members: 3 */
+        /* padding: 1 */
+        /* last cacheline: 4 bytes */
+};
+
+struct virtnet_info {
+...
+        struct virtio_net_rss_config_trailer rss_trailer; /*    80     4 */
+
+        /* XXX last struct has 1 byte of padding */
+
+        u8                         rss_hash_key_data[40]; /*    84    40 */
+...
+        /* size: 832, cachelines: 13, members: 48 */
+        /* sum members: 801, holes: 8, sum holes: 31 */
+        /* paddings: 2, sum paddings: 5 */
+};
+
+After changes, those members are correctly aligned at offset 795:
+
+struct virtnet_info {
+...
+        union {
+                struct virtio_net_rss_config_trailer rss_trailer; /*   792     4 */
+                struct {
+                        unsigned char __offset_to_hash_key_data[3]; /*   792     3 */
+                        u8         rss_hash_key_data[40]; /*   795    40 */
+                };                                       /*   792    43 */
+        };                                               /*   792    44 */
+...
+        /* size: 840, cachelines: 14, members: 47 */
+        /* sum members: 801, holes: 8, sum holes: 35 */
+        /* padding: 4 */
+        /* paddings: 1, sum paddings: 4 */
+        /* last cacheline: 8 bytes */
+};
+
+As a last note `struct virtio_net_rss_config_hdr *rss_hdr;` is also
+moved to the end, since it seems those three members should stick
+around together. :)
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/scsi/pm8001/pm8001_hwi.h | 4 +++-
- drivers/scsi/pm8001/pm80xx_hwi.h | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/pm8001/pm8001_hwi.h b/drivers/scsi/pm8001/pm8001_hwi.h
-index fc2127dcb58d..7dc7870a8f86 100644
---- a/drivers/scsi/pm8001/pm8001_hwi.h
-+++ b/drivers/scsi/pm8001/pm8001_hwi.h
-@@ -339,8 +339,10 @@ struct ssp_completion_resp {
- 	__le32	status;
- 	__le32	param;
- 	__le32	ssptag_rescv_rescpad;
--	struct ssp_response_iu  ssp_resp_iu;
- 	__le32	residual_count;
+This should probably include the following tag:
+
+	Fixes: ed3100e90d0d ("virtio_net: Use new RSS config structs")
+
+but I'd like to hear some feedback, first.
+
+Thanks!
+
+ drivers/net/virtio_net.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+index 975bdc5dab84..f4964a18a214 100644
+--- a/drivers/net/virtio_net.c
++++ b/drivers/net/virtio_net.c
+@@ -425,9 +425,6 @@ struct virtnet_info {
+ 	u16 rss_indir_table_size;
+ 	u32 rss_hash_types_supported;
+ 	u32 rss_hash_types_saved;
+-	struct virtio_net_rss_config_hdr *rss_hdr;
+-	struct virtio_net_rss_config_trailer rss_trailer;
+-	u8 rss_hash_key_data[VIRTIO_NET_RSS_MAX_KEY_SIZE];
+ 
+ 	/* Has control virtqueue */
+ 	bool has_cvq;
+@@ -493,7 +490,16 @@ struct virtnet_info {
+ 	struct failover *failover;
+ 
+ 	u64 device_stats_cap;
++
++	struct virtio_net_rss_config_hdr *rss_hdr;
 +
 +	/* Must be last --ends in a flexible-array member. */
-+	struct ssp_response_iu  ssp_resp_iu;
- } __attribute__((packed, aligned(4)));
++	TRAILING_OVERLAP(struct virtio_net_rss_config_trailer, rss_trailer, hash_key_data,
++		u8 rss_hash_key_data[VIRTIO_NET_RSS_MAX_KEY_SIZE];
++	);
+ };
++static_assert(offsetof(struct virtnet_info, rss_trailer.hash_key_data) ==
++	      offsetof(struct virtnet_info, rss_hash_key_data));
  
- 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.h b/drivers/scsi/pm8001/pm80xx_hwi.h
-index eb8fd37b2066..21afc28d9875 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.h
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.h
-@@ -558,8 +558,10 @@ struct ssp_completion_resp {
- 	__le32	status;
- 	__le32	param;
- 	__le32	ssptag_rescv_rescpad;
--	struct ssp_response_iu ssp_resp_iu;
- 	__le32	residual_count;
-+
-+	/* Must be last --ends in a flexible-array member. */
-+	struct ssp_response_iu ssp_resp_iu;
- } __attribute__((packed, aligned(4)));
- 
- #define SSP_RESCV_BIT	0x00010000
+ struct padded_vnet_hdr {
+ 	struct virtio_net_hdr_v1_hash hdr;
 -- 
 2.43.0
 
