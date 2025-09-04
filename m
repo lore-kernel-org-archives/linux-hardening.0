@@ -1,48 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489262288CB;
-	Thu,  4 Sep 2025 03:46:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B0C229B2E;
+	Thu,  4 Sep 2025 03:46:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756957617; cv=none; b=IfMzR35Ya+s9JUoUei3LtkEtWWKtpHBAWZ+5/ZKb1WfPc+SCW2FoQDuhDcqu4TTaG8Z96b3B534+vtl71Xjl4xrlTvblpRqoLTylUNS0GD9ontpOdu0oDUrq0cLqVgzpu8bcmd/xYx8Pro5WJv2D12fDKkMrJOhPWQOercdEUfA=
+	t=1756957617; cv=none; b=QI1EqpFjexLQkRsU5gwBVyjCNjPGVsZiOkuwyvh1K9/wAI9E/5nDQO2HXaDcclwJNA+DO0j92iZQFcn5hFsJpoXQ07mwam/iBORsqw25gnyIOoszQOn2lDGYcq8X/U6as7KO87QV8vg8YPlvrbNX9jj9Vit2BfWGtwLZcb8hLFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1756957617; c=relaxed/simple;
-	bh=gygAMbYS4/B7LWfdzKi5nAbFlKtsg4fEng11C4rHscA=;
+	bh=9qnhoP2qHT9CRFXlDqVxSaXFtL9InbhntKhaSQiQx6M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RuAaseUNNZtgsk2DO/25F1UKw/ysdoNz8Zhd1P7sll9/s1UCzJ9YeAxqA4g+WMY4WlOS3YYqKsVkQQEuTTIE3ROjFC/0YZtiesbxEJSEdZMpPJvpzCKCX1E3WPyft4etRCysuhp3m4lHJ9YlMffz1sBXpami045KVk5D667pBz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ax77Piwh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FIKKrnfPKChg/GcxEPo7Sbi2XBZ3XEC0yxadHC7W8bkl6GJictQR7WF5qFXiLq4LrVeQyLp2Zr8cCDDN4vcOLezTVTjJuahmUeQayTERhoxBz9Grug4g30KL5dclk4HMBHKs9sMTWnJcGH/sBQnlVMElbH4PzQ8x1Vozo1N1BBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K9kvhgem; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ax77Piwh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D57B5C4CEFB;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K9kvhgem"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB9D7C4CEF7;
 	Thu,  4 Sep 2025 03:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1756957616;
-	bh=gygAMbYS4/B7LWfdzKi5nAbFlKtsg4fEng11C4rHscA=;
+	bh=9qnhoP2qHT9CRFXlDqVxSaXFtL9InbhntKhaSQiQx6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ax77PiwhKcQSmL+erPQOSQzZtwHMjB7MlrBfQJMwgdIsaxbt+573t0SUH6yHrHkJ3
-	 MkT+5bEPP6ahiL4X3gvDSnlCKUBMkFLF8vbl053+vkwlFs0RPik7MNgDTSwHdxm/V2
-	 Y83JLwcOw35riFnhHzBlZ3s0oit68/A2QdGsOM7+WcdUBA2/0ouo74mLA6iAAmKXrs
-	 xjB/uwejT5g799laygAHq46UhgFrmajI57kspqGI5QtFomOny8Y4lVPFFevWIMlWXj
-	 1gu7EPzf0cBMhXuAULqTZSIj1HcBgF8lAEGs2Fa232iAMVQcHfE0DM9Zpg0Z4GQLlp
-	 shQFx2TjNSQhQ==
+	b=K9kvhgemZLc77NjaYChu+kfIy+lKgj4STMzZqVPEwORHSSWEBrXn4s28M0SnG4nxC
+	 Wu3xHCZbZ/nUM6ZPODEIyL6cWsjx1VApf6RxkEsXzFjkDC/O/QWKXu4NuAEYF8B+S+
+	 LgS9vE8UZc3doXOMiVJxVW5JgzTcEDFTlQN/Omyb40rAKUxim0AV5p2QywaxzuMJgK
+	 +ii+sEYsQJHg74flff0DDp00tpDyiYnODBeLUR/4F02RivsopYizPEw1L5QZq2N6L2
+	 h63pd+G8sOubOQudI/lcfUNufiNWH+cxJ07zDP3VSGFy4QXa0WAtP4Pf1FVDMkTelw
+	 CSfXhtx0Foqkw==
 From: Kees Cook <kees@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Kees Cook <kees@kernel.org>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Zhen Lei <thunder.leizhen@huawei.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?UTF-8?q?Micha=C5=82=20Pecio?= <michal.pecio@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	linux-arm-kernel@lists.infradead.org,
+	David Woodhouse <dwmw2@infradead.org>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Vegard Nossum <vegard.nossum@oracle.com>,
 	Miguel Ojeda <ojeda@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
 	Randy Dunlap <rdunlap@infradead.org>,
-	David Woodhouse <dwmw2@infradead.org>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
 	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
@@ -53,17 +47,20 @@ Cc: Kees Cook <kees@kernel.org>,
 	"Paul E. McKenney" <paulmck@kernel.org>,
 	Nicolas Schier <nicolas.schier@linux.dev>,
 	Masahiro Yamada <masahiroy@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-doc@vger.kernel.org,
 	linux-kbuild@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	x86@kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 9/9] ARM: traps: Implement KCFI trap handler for ARM32
-Date: Wed,  3 Sep 2025 20:46:48 -0700
-Message-Id: <20250904034656.3670313-9-kees@kernel.org>
+Subject: [PATCH v2 6/9] x86/cfi: Remove __noinitretpoline and __noretpoline
+Date: Wed,  3 Sep 2025 20:46:45 -0700
+Message-Id: <20250904034656.3670313-6-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250904033217.it.414-kees@kernel.org>
 References: <20250904033217.it.414-kees@kernel.org>
@@ -73,174 +70,90 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5332; i=kees@kernel.org; h=from:subject; bh=gygAMbYS4/B7LWfdzKi5nAbFlKtsg4fEng11C4rHscA=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk7OUv3bN80e35o3zHx0myb+o8qKnZfg7IPSfIduFpVL 71eyfxERykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwEQ+dDD8FfttyuvjKDe7J/Di h2WqfeW1jRw+wb032a1sLxWWimQ+YPgft3Ij5+HZqmcvrGNlTr+uq1A4R/QWm9aTPZevstUHL0j hBwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3285; i=kees@kernel.org; h=from:subject; bh=9qnhoP2qHT9CRFXlDqVxSaXFtL9InbhntKhaSQiQx6M=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk7OUt2nPcJtw664XD+lmLHE+dcGSFbRbaJLz7YMDVtu tyzxmBCRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwET0nzP8L1j/7tX/ua+naOr3 T560tb/6T7/W6pkx4g++H/nKwDxBmIfhf8lKDsddi5Lmigdk8W1S16msOXe4ZuO2SwsSBANvfSp bwQYA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-ARM32 KCFI violations currently show as generic "Oops - undefined
-instruction" errors, making debugging CFI failures difficult. Add a
-proper KCFI trap handler similar to the aarch64 implementation to
-provide clear CFI error messages.
+Commit 66f793099a63 ("x86/retpoline: Avoid retpolines for built-in __init
+functions") disabled retpolines in __init sections (__noinitretpoline)
+as a precaution against potential issues with retpolines in early boot,
+but it has not been a problem in practice (i.e. see Clang below).
 
-The GCC ARM32 KCFI implementation uses UDF instructions with a specific
-encoding pattern:
-- UDF instruction format: cccc 0111 1111 imm12 1111 imm4
-- 16-bit immediate reconstructed from bits 19-8 and 3-0
-- KCFI encoding: 0x8000 | (type_reg_num << 5) | (target_reg_num & 31)
-- Bit 15: KCFI trap identifier (0x8000)
-- Bits 9-5: Type ID register field (0x1F when unavailable)
-- Bits 4-0: Target address register number
+Commit 87358710c1fb ("x86/retpoline: Support retpoline builds with Clang")
+narrowed this to only GCC, as Clang doesn't have per-function control
+over retpoline emission. As such, Clang has been booting with retpolines
+in __init since retpoline support was introduced.
 
-When the type register field is 0x1F (unavailable due to stack
-spilling), the handler walks back up to 5 preceding instructions to
-locate the movw/movt instruction pair that loads the 32-bit type ID,
-similar to x86 CFI trap reconstruction.
+Clang KCFI has been instrumenting __init since CFI was introduced.
 
-The undef_hook pattern matching includes the KCFI bit requirement to
-ensure the handler is only called for KCFI violations, not arbitrary
-UDF instructions.
+With the introduction of KCFI for GCC, KCFI instrumentation with
+retpolines disabled means that objtool does not construct .retpoline_sites
+section entries for the non-retpoline KCFI calls. At boot, the KCFI
+rehashing code, via __apply_fineibt(), misses all __init KCFI calls
+(since they are not retpolines), resulting in immediate hash mismatches:
+all preambles are rehashed (via .cfi_sites) and none of the __init call
+sites are rehashed.
+
+Remove __noinitretpoline since it provides no meaningful utility and
+creates problems with CFI. Additionally remove __noretpoline since it
+is now unused.
+
+Alternatively, cfi_rand_callers() could walk the .kcfi_traps section which
+is exactly the list of KCFI instrumentation sites. But it seems better to
+have as few differences in common instruction sequences between compilers
+as possible, so better to remove the special handling of retpolines in
+__init for GCC.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Cc: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Michał Pecio" <michal.pecio@gmail.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: <linux-arm-kernel@lists.infradead.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: David Woodhouse <dwmw2@infradead.org>
 ---
- arch/arm/kernel/traps.c | 102 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
+ include/linux/compiler-gcc.h | 4 ----
+ include/linux/init.h         | 8 --------
+ 2 files changed, 12 deletions(-)
 
-diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
-index afbd2ebe5c39..f2e4e18541e0 100644
---- a/arch/arm/kernel/traps.c
-+++ b/arch/arm/kernel/traps.c
-@@ -27,6 +27,7 @@
- #include <linux/sched/task_stack.h>
- #include <linux/irq.h>
- #include <linux/vmalloc.h>
-+#include <linux/cfi.h>
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index 5d07c469b571..5de824a0b3d7 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -35,10 +35,6 @@
+ 	(typeof(ptr)) (__ptr + (off));					\
+ })
  
- #include <linux/atomic.h>
- #include <asm/cacheflush.h>
-@@ -40,6 +41,7 @@
- #include <asm/stacktrace.h>
- #include <asm/system_misc.h>
- #include <asm/opcodes.h>
-+#include <linux/bitfield.h>
+-#ifdef CONFIG_MITIGATION_RETPOLINE
+-#define __noretpoline __attribute__((__indirect_branch__("keep")))
+-#endif
+-
+ #if defined(LATENT_ENTROPY_PLUGIN) && !defined(__CHECKER__)
+ #define __latent_entropy __attribute__((latent_entropy))
+ #endif
+diff --git a/include/linux/init.h b/include/linux/init.h
+index a60d32d227ee..17c1bc712e23 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -7,13 +7,6 @@
+ #include <linux/stringify.h>
+ #include <linux/types.h>
  
- 
- static const char *handler[]= {
-@@ -685,6 +687,106 @@ asmlinkage int arm_syscall(int no, struct pt_regs *regs)
- 	return 0;
- }
- 
-+#ifdef CONFIG_CFI
-+/*
-+ * ARM32 KCFI trap handler.
-+ * UDF instruction format: cccc 0111 1111 imm12 1111 imm4
-+ * Immediate is reconstructed from bits 19-8 (12 bits) and bits 3-0 (4 bits)
-+ * KCFI immediate encoding: 0x8000 | (0x1F << 5) | (target_reg_num & 31)
-+ * - Bit 15: KCFI trap identifier (0x8000)
-+ * - Bits 9-5: Type ID register field (0x1F when invalid due to stack spilling)
-+ * - Bits 4-0: Target address register number
-+ */
-+#define CFI_UDF_KCFI_BIT    BIT(15)	  /* KCFI identifier bit (0x8000) */
-+#define CFI_UDF_IMM_TARGET  GENMASK(4, 0) /* Target register (bits 4:0) */
-+#define CFI_UDF_IMM_TYPE    GENMASK(9, 5) /* Type register (bits 9:5) */
-+
-+/* UDF base pattern with KCFI bit: cond=0xe, 0x7f, xxxx, 1xxx, 0xf, xxxx */
-+#define CFI_UDF_IMM_BASE    0xe7f008f0
-+#define CFI_UDF_IMM_MASK    0xfff008f0	/* Mask for UDF + KCFI bit matching */
-+
-+static int cfi_udf_handler(struct pt_regs *regs, unsigned int instr)
-+{
-+	unsigned long target;
-+	u32 target_reg, type_reg, type, imm16;
-+
-+	/* Reconstruct 16-bit immediate from bits 19-8 and 3-0 */
-+	imm16 = ((instr >> 4) & 0xfff0) | (instr & 0x0f);
-+
-+	target_reg = FIELD_GET(CFI_UDF_IMM_TARGET, imm16);
-+	type_reg = FIELD_GET(CFI_UDF_IMM_TYPE, imm16);
-+
-+	if (target_reg >= 16) {
-+		pr_err("CFI UDF handler: invalid target register %u\n", target_reg);
-+		return 1;
-+	}
-+
-+	target = regs->uregs[target_reg];
-+
-+	/* Type register field is set to all 1s (0x1F) when invalid due to stack spilling */
-+	if (type_reg == 0x1F) {
-+		u32 *pc = (u32 *)regs->ARM_pc;
-+		int i;
-+
-+		type = 0;
-+		/* Walk back up to 5 instructions to find movw/movt pair for type ID */
-+		for (i = 1; i <= 5; i++) {
-+			u32 instr_prev = __mem_to_opcode_arm(pc[-i]);
-+
-+			/* Check for movw: cccc 0011 0000 imm4 Rd imm12 */
-+			if ((instr_prev & 0x0ff00000) == 0x03000000) {
-+				u32 imm16 = ((instr_prev >> 4) & 0xf000) | (instr_prev & 0xfff);
-+				type |= imm16;
-+			}
-+			/* Check for movt: cccc 0011 0100 imm4 Rd imm12 */
-+			else if ((instr_prev & 0x0ff00000) == 0x03400000) {
-+				u32 imm16 = ((instr_prev >> 4) & 0xf000) | (instr_prev & 0xfff);
-+				type |= (imm16 << 16);
-+			}
-+		}
-+		if (type == 0)
-+			pr_err("CFI UDF handler: failed to find type value\n");
-+	} else {
-+		if (type_reg >= 16) {
-+			pr_err("CFI UDF handler: invalid type register %u\n", type_reg);
-+			return 1;
-+		}
-+
-+		type = regs->uregs[type_reg];
-+	}
-+
-+	switch (report_cfi_failure(regs, regs->ARM_pc, &target, type)) {
-+	case BUG_TRAP_TYPE_BUG:
-+		die("Oops - CFI", regs, 0);
-+		break;
-+	case BUG_TRAP_TYPE_WARN:
-+		break;
-+	default:
-+		return 1;
-+	}
-+
-+	/* Skip the UDF instruction */
-+	regs->ARM_pc += 4;
-+	return 0;
-+}
-+
-+static struct undef_hook cfi_undef_hook = {
-+	.instr_mask	= CFI_UDF_IMM_MASK,
-+	.instr_val	= CFI_UDF_IMM_BASE,
-+	.cpsr_mask	= 0,
-+	.cpsr_val	= 0,
-+	.fn		= cfi_udf_handler,
-+};
-+
-+static int __init arm_cfi_init(void)
-+{
-+	register_undef_hook(&cfi_undef_hook);
-+	return 0;
-+}
-+
-+early_initcall(arm_cfi_init);
-+#endif /* CONFIG_CFI */
-+
- #ifdef CONFIG_TLS_REG_EMUL
- 
- /*
+-/* Built-in __init functions needn't be compiled with retpoline */
+-#if defined(__noretpoline) && !defined(MODULE)
+-#define __noinitretpoline __noretpoline
+-#else
+-#define __noinitretpoline
+-#endif
+-
+ /* These macros are used to mark some functions or 
+  * initialized data (doesn't apply to uninitialized data)
+  * as `initialization' functions. The kernel can take this
+@@ -50,7 +43,6 @@
+ /* These are for everybody (although not all archs will actually
+    discard it in modules) */
+ #define __init		__section(".init.text") __cold __latent_entropy	\
+-						__noinitretpoline	\
+ 						__no_kstack_erase
+ #define __initdata	__section(".init.data")
+ #define __initconst	__section(".init.rodata")
 -- 
 2.34.1
 
