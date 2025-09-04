@@ -1,100 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta033.useast.a.cloudfilter.net (omta033.useast.a.cloudfilter.net [44.202.169.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E44A1DF97F;
-	Thu,  4 Sep 2025 14:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23153283FF8
+	for <linux-hardening@vger.kernel.org>; Thu,  4 Sep 2025 15:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756997657; cv=none; b=S/kbXnbB4eja5tRT5cOuZt/M2dBH1ldxg/JorA2ZvSqcStKYZLhW43HjpFokPtGyg3DqdKxgUgIX0LjELVCU7dEdA2pbDWNhGEuEStb6V30BAEDAyf056GXRgv3RGUWiLJfmi260qPB2s26h0zgvFYdnFv+SFAsr9CWBUFV5dTQ=
+	t=1757001493; cv=none; b=j5Hq4KSASwj0GjcgysukbnBHywow56IerG7QiGI/ibfhMdi6WSnm1b+x6MTNICBcLjkktxqtGhTIARAE7ggdfG1ZnC70/laq/7o8pe/jJleGOWylR018R70YQiMYZ+/dr9fsV5mfbwVZCuG/hlgV/OrSK4spf/bRc/t8+0MRG9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756997657; c=relaxed/simple;
-	bh=NRF4KZuR9OnhWyUxnCyXlXsD7UEatus8Z/yPvb0aXZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KFcZyMj6sSS707+aAabhTE0FkFBu6lfsqazVwjpyBFwk4HMi5sVbb+MIDAGLhiAlQwUEumEPhbWw6/5QncdJuEekKICaL27grYBj9SiOXSO9EyU91gAub1nE3417N3aq8pKkqn8zgYzVC+ASwoEbKtDsB6tTQc8PAdjlg4fGGh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f+LWy6/M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757001493; c=relaxed/simple;
+	bh=GNG4T3IyxV5t7L2kGCETdYPeAjNlEABauKY6n8jzG+A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bP61DZpBIXcn2e+90ifdeDO8kr4X0GW+14SRfCweel3q7LKoJK/Le4RlAHAPgA18LUUN3awtut/J8UaeJgkKW276FCrXFZjITDWh+o25bKojPe1aI+oTPi0M9iSpW1EyGkTQajWAWbHCfQtw6T3DjOH7v2cQ6AY2SVktmmkkBTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=hhPJQJUb; arc=none smtp.client-ip=44.202.169.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f+LWy6/M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB104C4CEF0;
-	Thu,  4 Sep 2025 14:54:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756997656;
-	bh=NRF4KZuR9OnhWyUxnCyXlXsD7UEatus8Z/yPvb0aXZE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=f+LWy6/MWEkLk+OTSgkzAZdn0BeGqlNte6BtXqlVOHPOPfakyDvEJ14A8FPbP+67s
-	 Oofeo3CSXSTdweT5Cw4bjPJCiMbGeXLKRjKdZYg7gzcePiWN7nO0mSvuEmlETpsxSI
-	 LsK+enWN49uLWwhMdtxm0qI3ILic5Ew66CY3SrlyPfzn+vtofuhZEg9gZjyTWD5N1M
-	 k6xiA6321d7CE/a728QdZJTkL28xd1ZsXbej1rTyYX/k7KUUJBWbdSuKRERC4f7QG1
-	 8V9D461NyC3Whvaj1g2oqiqsHjhNxU8tjdJ+60OyOqIfDjqmP5Rvo5DhsL+efFqtWh
-	 kx67HGkC8gZKQ==
-Date: Thu, 4 Sep 2025 16:54:11 +0200
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Jack Wang <jinpu.wang@cloud.ionos.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] scsi: pm80xx: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <aLmoE8CznVPres5r@kspp>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hhPJQJUb"
+Received: from eig-obgw-6002b.ext.cloudfilter.net ([10.0.30.203])
+	by cmsmtp with ESMTPS
+	id uA7muBqG8U1JTuCLduC67Z; Thu, 04 Sep 2025 15:58:05 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id uCLbuMg2hDGXZuCLcuxC7T; Thu, 04 Sep 2025 15:58:04 +0000
+X-Authority-Analysis: v=2.4 cv=L/YdQ/T8 c=1 sm=1 tr=0 ts=68b9b70c
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=XW3vq5T86JFyMsJaYQInbg==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=eB5EMIHYC3Eq57A48okA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=wsIKJrAXhneWuMZ2Gt5XlAPUdaDAASZmisxqElG8+oQ=; b=hhPJQJUbqWpm4rtoZOzyNG+Z/b
+	UyybaI54eqVOgcHhq2gzHJ9K/F1Sp0ZSMtJeLph/h02IiAL5BheyN44ON3CZyz1/ImlLcRaSHK9n9
+	kri01p5tpqcmwwh7oAUfbjhvshDTWw/IMrWQBsrLNYP7vZHqy3fisV1DeIyMDb3596/ZOjcUa34M9
+	BSEL6vJnbdPNyOngVysO8h4wF/O88JvLRaYwXN+BgGNsnc/DcxctVP3eRWuA/WARbEoYuqwteD1Np
+	cDJrT/rXjKj1lEzAmLKixKQju5S76/cvOyBwrXLt0CqxmJuHhnxrm3pzaulfyenpmLokFCA+GzHvx
+	mupQRlNQ==;
+Received: from d4b26982.static.ziggozakelijk.nl ([212.178.105.130]:52332 helo=[10.52.79.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1uuCLb-00000003O4a-0yLR;
+	Thu, 04 Sep 2025 10:58:03 -0500
+Message-ID: <5417cc2c-c29a-49f5-8932-44d0507c0dea@embeddedor.com>
+Date: Thu, 4 Sep 2025 17:57:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] scsi: pm80xx: Avoid -Wflex-array-member-not-at-end
+ warning
+To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+ John Garry <john.g.garry@oracle.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Jack Wang <jinpu.wang@cloud.ionos.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aLiMoNzLs1_bu4eJ@kspp>
+ <7b60681e-a964-494a-a6fa-aba00086b7f7@oracle.com>
+ <b79c69e27b4ccd9556c89a88bf6c69ed441193ea.camel@HansenPartnership.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <b79c69e27b4ccd9556c89a88bf6c69ed441193ea.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 212.178.105.130
+X-Source-L: No
+X-Exim-ID: 1uuCLb-00000003O4a-0yLR
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: d4b26982.static.ziggozakelijk.nl ([10.52.79.44]) [212.178.105.130]:52332
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfO9AOznviHZibStXUr1k2ZJezcsf4ElmJUAa8/NElG2c7nyZLQTclHdUpFHQR24m/oPdm0RAHONHb2HPYX93WbMuIofLD1/olDcDBQdd+nc1QDDxwyBH
+ S4ZY3unWF58ZCmrlr4kQNnK/TuDNPN9AEReeO2YBtjO/bBiQqO3AKfIqAqIfXPfdfryPwZQsTzrUFWFboo3HWBMyyIk8y4XYPSSDeSotE2+GBnqzzDmjYFyz
 
-Remove unused field residual_count in a couple of structures,
-and with this, fix the following -Wflex-array-member-not-at-end
-warnings:
 
-drivers/scsi/pm8001/pm8001_hwi.h:342:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/scsi/pm8001/pm80xx_hwi.h:561:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Remove unused field residual_count. (James)
+On 9/4/25 14:39, James Bottomley wrote:
+> On Thu, 2025-09-04 at 07:52 +0100, John Garry wrote:
+>> On 03/09/2025 19:44, Gustavo A. R. Silva wrote:
+>>> diff --git a/drivers/scsi/pm8001/pm8001_hwi.h
+>>> b/drivers/scsi/pm8001/pm8001_hwi.h
+>>> index fc2127dcb58d..7dc7870a8f86 100644
+>>> --- a/drivers/scsi/pm8001/pm8001_hwi.h
+>>> +++ b/drivers/scsi/pm8001/pm8001_hwi.h
+>>> @@ -339,8 +339,10 @@ struct ssp_completion_resp {
+>>>    	__le32	status;
+>>>    	__le32	param;
+>>>    	__le32	ssptag_rescv_rescpad;
+>>> -	struct ssp_response_iu  ssp_resp_iu;
+>>>    	__le32	residual_count;
+>>> +
+>>> +	/* Must be last --ends in a flexible-array member. */
+>>> +	struct ssp_response_iu  ssp_resp_iu;
+>>
+>> this is a HW structure, right? I did not think that it is ok to
+>> simply re-order them...
+> 
+> Agreed, this is a standards defined information unit corresponding to
+> an on the wire data structure.  The patch is clearly wrong.
+> 
+> That being said, the three things the flexible member can contain are
+> no data, response data or sense data.  None of them has a residual
+> count at the beginning and, indeed, this field is never referred to in
+> the driver, so it looks like it can simply be deleted to fix the
+> warning.
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/aLiMoNzLs1_bu4eJ@kspp/
+I see. I just submitted v2. Thanks!
 
- drivers/scsi/pm8001/pm8001_hwi.h | 3 ++-
- drivers/scsi/pm8001/pm80xx_hwi.h | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> That being said, this pattern of adding fields after flexible members
+> to represent data that's common to all content types of the union is
+> not unknown in SCSI so if you want to enable this warning, what are we
+> supposed to do when we encounter a genuine use case?
 
-diff --git a/drivers/scsi/pm8001/pm8001_hwi.h b/drivers/scsi/pm8001/pm8001_hwi.h
-index fc2127dcb58d..170853dbf952 100644
---- a/drivers/scsi/pm8001/pm8001_hwi.h
-+++ b/drivers/scsi/pm8001/pm8001_hwi.h
-@@ -339,8 +339,9 @@ struct ssp_completion_resp {
- 	__le32	status;
- 	__le32	param;
- 	__le32	ssptag_rescv_rescpad;
-+
-+	/* Must be last --ends in a flexible-array member. */
- 	struct ssp_response_iu  ssp_resp_iu;
--	__le32	residual_count;
- } __attribute__((packed, aligned(4)));
- 
- 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.h b/drivers/scsi/pm8001/pm80xx_hwi.h
-index eb8fd37b2066..b13d42701b1b 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.h
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.h
-@@ -558,8 +558,9 @@ struct ssp_completion_resp {
- 	__le32	status;
- 	__le32	param;
- 	__le32	ssptag_rescv_rescpad;
-+
-+	/* Must be last --ends in a flexible-array member. */
- 	struct ssp_response_iu ssp_resp_iu;
--	__le32	residual_count;
- } __attribute__((packed, aligned(4)));
- 
- #define SSP_RESCV_BIT	0x00010000
--- 
-2.43.0
+It depends on the situation. Some people prefer to have a separate struct
+with only the header part of the flexible structure --this is excluding
+the flexible-array member (FAM), and then use an object of that header
+type embedded anywhere in any other struct. This of course (sometimes)
+implies having to do many other changes to accommodate the rest of the
+code accordingly, as in this[1] case.
 
+To address the situation described above without necessarily having to
+create a separate header struct and change a lot of code, the
+struct_group() helper can be used [2].
+
+In other cases, when for some reason the FAM has to be accessed through
+a composite struct, both struct_group() and container_of() (this to
+retrieve a pointer to the flexible structure and then access the FAM)
+can be used [3].
+
+We have the new TRAILING_OVERLAP() helper that in many cases can be
+superior to the struct_group()/container_of() approach. For instance
+this[4] could've been fixed with the following shorter and simpler
+patch:
+
+  struct nfsacl_simple_acl {
+-       struct posix_acl acl;
+-       struct posix_acl_entry ace[4];
++       TRAILING_OVERLAP(struct posix_acl, acl, a_entries,
++               struct posix_acl_entry ace[4];
++       );
+  };
+
+However, at the time we didn't have TRAILING_OVERLAP(). Also, this new
+macro is helping us to detect alignment issues and correct them [5].
+These[6][7] are a couple more example of when and how to use this helper.
+
+We also have the DEFINE_FLEX()/DEFINE_RAW_FLEX() helpers [8][9].
+
+So, again, we can do different things depending on the situation and
+maintainer's preferences.
+
+Ideally, FAMs-in-the-middle should be avoided, because it's so easy
+for them to open the door to memory corruption bugs[10] (to mention
+some).
+
+Thanks
+-Gustavo
+
+[1] https://git.kernel.org/linus/d2af710d6d50
+[2] https://git.kernel.org/linus/c54979a3abc4
+[3] https://git.kernel.org/linus/a7e8997ae18c
+[4] https://git.kernel.org/linus/dfd500d89545
+[5] https://lore.kernel.org/linux-hardening/aLiYrQGdGmaDTtLF@kspp/
+[6] https://git.kernel.org/linus/5e54510a9389
+[7] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=8abbbbb588f1
+[8] https://git.kernel.org/linus/1d717123bb1a
+[9] https://git.kernel.org/linus/34116ec67cc1
+[10a] https://git.kernel.org/linus/eea03d18af9c
+[10b] https://git.kernel.org/linus/6e4bf018bb04
+[10c] https://git.kernel.org/linus/cf44e745048d
+[10d] https://git.kernel.org/linus/d761bb01c85b
