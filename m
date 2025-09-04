@@ -1,52 +1,68 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86B572604;
-	Thu,  4 Sep 2025 12:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2A82749E5;
+	Thu,  4 Sep 2025 12:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756989354; cv=none; b=I2JKEhCmNrRXuxlQV/GjOkV7/NHsviYfUrEa8Nqg7VU0Yer8yeTxBEamqLrKCJv5kiRBzNckNIwJQjjGjs0zttX017Ervw4pqAs0SwR1h3BOdr6f7uJODWiUEwRRza50+v7NwtG7UI8Hs44TFKCOw1if+Hk2ThbU9S0MAIkXx6k=
+	t=1756989509; cv=none; b=KnVqJAn+IDYALgdP46NnZd6SUpaegsNVTXxeP13DEf7qUF5yKnEAJA3y/7WFLOcrT0mCXf/BHz1n66qAOYnFzKmWWj1ZxyQwfZ3Kvt9Y6pjs+CX/KXMhgRq5fiyYaBZgeHikQL3XIp+1170oNiU3vEY+VhZJIbFDNPgnPhK4Qeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756989354; c=relaxed/simple;
-	bh=PDnxGRWeEjp96hBsqgEYqVc5VvH/OHtMXABg4S2tAPk=;
+	s=arc-20240116; t=1756989509; c=relaxed/simple;
+	bh=FBGLD3KXpGnBfJUXJqFViPTZk56264NLPCfYoX+fVpM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q4bT49ZzCzVyjG/RwTqLmcgNVWHHyJjvdqgpCRrKCTVaxDP2zuZFThTggevrTk6NBw7SWhOkkgi4mIF+hFqQZBl2bXwzIgl+J+l05U3zeRNK0ATpOKexiA8sQ1Lh0x9A558m7zNsoB2RmqkYSWyNUGe7EqzDWx4Mn1qovAl39Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=VfuYftdR; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=H7O/P6syHiwicHgVhekykvjOf7eLXUnY8AR04A1LPZYP3uNqQoS1+CvLUg+F96+yW1qH1PuOur9fMsD0UCoiphGodgw8cvkET4Iyy0hO/DFyWPKAjiz3gr2RPbxYkBJi7Ad0X1Y5oJ2nOUpyMkOnnGdfICv7u4OwA5s54eP6sis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M5TcjKiq; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VfuYftdR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=vTMs0h45CDEOQS0xg4zE2o4BKftiiNc3aEpwZSrqS58=; b=VfuYftdRjRctpIk7NA+mQTfInT
-	3dRA62fep07AU7Epi2UpU/IfNfCmO6ILckb8HGEwEFCSoA4QmBiIvsY420tlxnhgeG5nugmtjr+4j
-	tsxsD7pXoxzKtCcyc5kj2/6ZYBggcJysmDDWh6eZLOW2BfwL0uGYS3SC+AeYTzgVHFD8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uu9BC-007D5j-8J; Thu, 04 Sep 2025 14:35:06 +0200
-Date: Thu, 4 Sep 2025 14:35:06 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Yibo Dong <dong100@mucse.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
-	gustavoars@kernel.org, rdunlap@infradead.org,
-	vadim.fedorenko@linux.dev, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M5TcjKiq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756989508; x=1788525508;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FBGLD3KXpGnBfJUXJqFViPTZk56264NLPCfYoX+fVpM=;
+  b=M5TcjKiq2zQSbtSJABbQLujviAwxhupadab6b0fqa0Zf8EU3j8kXrsog
+   MhWRLSTiKRNVoV7medXyPztMiA/ozYT9ymB6yA2TU0eli2fMWSmxCfdOE
+   xSZUUSCsNwPfJlfBrF1Xz6TAS36XNeVtMYYzGPsRDNzHTfSn83+yTw/qv
+   CsUhq1CDSUexTkPjyS2oD8zckyppDg+UNlow+TGSgJf3jEPLXfDrfbhNZ
+   97Ej4zGWp82Oz1s86G/xadli4/qGwyCkplqXlecK+BMMmYBv7XysTrk1q
+   4HIYWyam6/3VX8Yq5sI39h1TImE0ua2OPJwg7qbX56XNWgWEWRebp72z/
+   Q==;
+X-CSE-ConnectionGUID: CCI12jfVS/GojIH6OgrjCw==
+X-CSE-MsgGUID: tNDq1kz3SsakGgwhb5QZpQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11542"; a="70030657"
+X-IronPort-AV: E=Sophos;i="6.18,238,1751266800"; 
+   d="scan'208";a="70030657"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 05:38:27 -0700
+X-CSE-ConnectionGUID: nO4eeNixTqKJl6ZGSDOJpg==
+X-CSE-MsgGUID: uVrUxsVqSRSnPCJvRO0NNA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,238,1751266800"; 
+   d="scan'208";a="176223164"
+Received: from lkp-server02.sh.intel.com (HELO 06ba48ef64e9) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 04 Sep 2025 05:38:22 -0700
+Received: from kbuild by 06ba48ef64e9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uu9E1-0005IF-0F;
+	Thu, 04 Sep 2025 12:38:06 +0000
+Date: Thu, 4 Sep 2025 20:37:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manikanta Guntupalli <manikanta.guntupalli@amd.com>, git@amd.com,
+	michal.simek@amd.com, alexandre.belloni@bootlin.com,
+	Frank.Li@nxp.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, kees@kernel.org, gustavoars@kernel.org,
+	jarkko.nikula@linux.intel.com, linux-i3c@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v10 5/5] net: rnpgbe: Add register_netdev
-Message-ID: <d30ee369-3711-41d2-95ad-85fa3e1cb65c@lunn.ch>
-References: <20250903025430.864836-1-dong100@mucse.com>
- <20250903025430.864836-6-dong100@mucse.com>
- <b9a066d0-17b5-4da5-9c5d-8fe848e00896@lunn.ch>
- <6B193997D4E4412A+20250904030621.GD1015062@nic-Precision-5820-Tower>
+Cc: oe-kbuild-all@lists.linux.dev, radhey.shyam.pandey@amd.com,
+	srinivas.goud@amd.com, shubhrajyoti.datta@amd.com,
+	manion05gk@gmail.com,
+	Manikanta Guntupalli <manikanta.guntupalli@amd.com>
+Subject: Re: [PATCH V3 2/2] i3c: master: Add AMD I3C bus controller driver
+Message-ID: <202509042006.MI4nEHWs-lkp@intel.com>
+References: <20250903095906.3260804-3-manikanta.guntupalli@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -55,44 +71,35 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6B193997D4E4412A+20250904030621.GD1015062@nic-Precision-5820-Tower>
+In-Reply-To: <20250903095906.3260804-3-manikanta.guntupalli@amd.com>
 
-On Thu, Sep 04, 2025 at 11:06:21AM +0800, Yibo Dong wrote:
-> On Thu, Sep 04, 2025 at 12:53:27AM +0200, Andrew Lunn wrote:
-> > >   * rnpgbe_add_adapter - Add netdev for this pci_dev
-> > >   * @pdev: PCI device information structure
-> > > @@ -78,6 +129,38 @@ static int rnpgbe_add_adapter(struct pci_dev *pdev,
-> > >  
-> > >  	hw->hw_addr = hw_addr;
-> > >  	info->init(hw);
-> > > +	mucse_init_mbx_params_pf(hw);
-> > > +	err = hw->ops->echo_fw_status(hw, true, mucse_fw_powerup);
-> > > +	if (err) {
-> > > +		dev_warn(&pdev->dev, "Send powerup to hw failed %d\n", err);
-> > > +		dev_warn(&pdev->dev, "Maybe low performance\n");
-> > > +	}
-> > > +
-> > > +	err = mucse_mbx_sync_fw(hw);
-> > > +	if (err) {
-> > > +		dev_err(&pdev->dev, "Sync fw failed! %d\n", err);
-> > > +		goto err_free_net;
-> > > +	}
-> > 
-> > The order here seems odd. Don't you want to synchronise the mbox
-> > before you power up? If your are out of sync, the power up could fail,
-> > and you keep in lower power mode? 
-> > 
-> 
-> As I explained before, powerup sends mbx and wait fw read out, but
-> without response data from fw. mucse_mbx_sync_fw sends mbx and wait for
-> the corect response from fw, after mucse_mbx_sync_fw, driver->fw
-> request and fw->driver response will be both ok.
+Hi Manikanta,
 
-Because this is logically the wrong order, this deserves a comment.
+kernel test robot noticed the following build warnings:
 
-You choice of function names for the lower level functions also does
-not help. It is not so easy to look at the function used to know if it
-is a request/response to the firmware, or just a request without a
-response.
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on linus/master v6.17-rc4 next-20250904]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-	Andrew
+url:    https://github.com/intel-lab-lkp/linux/commits/Manikanta-Guntupalli/dt-bindings-i3c-Add-AMD-I3C-master-controller-support/20250903-220233
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250903095906.3260804-3-manikanta.guntupalli%40amd.com
+patch subject: [PATCH V3 2/2] i3c: master: Add AMD I3C bus controller driver
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20250904/202509042006.MI4nEHWs-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 2e122990391b2ba062e6308a12cfedf7206270ba)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250904/202509042006.MI4nEHWs-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509042006.MI4nEHWs-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Warning: drivers/i3c/master/amd-i3c-master.c:156 struct member 'daa' not described in 'xi3c_master'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
