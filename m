@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28DD6F305
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1119A55
 	for <linux-hardening@vger.kernel.org>; Fri,  5 Sep 2025 00:24:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757031859; cv=none; b=TofzQ+tBrxIpHzGsHaoKTsZc4nTljIJZAxIpdfux77Hs0jZQHJeLz2Rk6JQYU86mob+KE23SskyhLbmbRlxWjz9o1WQhpxqr2RYyCcAVyc/Vc11uzmhyTTl6xSXms5DETSRiT8bLirN4HCodolr6oEoZqjAaCVCrG/YlI/X+vdQ=
+	t=1757031859; cv=none; b=sLx1cShb871k6yQzCNIot3H4cnPVX5bRkivLativFyYbzW+CUM8JJBpchHdPrks25fpbgoxXOOjyAk/Nm4L7hAdrjHJdqmudC2T24kJIUR2N2w3GzQ+JahcowXwicNDZTIHpz1HGHgqxJblCZVVZJyVIdH0Jm4DNZLtXwVOs9ZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1757031859; c=relaxed/simple;
-	bh=AfGe0YIHtR0WOAD+XNfJFsZUWzrpMn5hWOBAmmmolGA=;
+	bh=ppvDNXxC1V4d1r/ZopUPPNzt7fb2ps1CRJ3vVYMq0dU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Yiv/JJulJrfiS/yBQEkPQ8+iiHeSDpUMHGao7bqGFdnKt0zVwgsYlVw268LIj7JlWfnY8OFF/RmRFPueS4Shh1f+7NBbes1XQy2zNV7hLN299IIXpnR/Na6ukVdaVlRLh6ZRbsODGeBGHO7Dmv1pSDnP8i7VHEzqrAOSOvolTfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p3tzmVr+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uB0l0JtnCab20xfN9Nq091i1Y7Iqiip+SeR7LW7r4dGlvKqPILuiVJ47UTSuSLg5tmuzBtSCBfyoTOTXogaL0FVm20/loiUs+ST02AklHl8rcQbUwYQX8mOQEJtJO9w+NXNNnloou2aIwXvJrQzqCzGCO3KpDCDaRSpvoAYRKR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iMB1YOTa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p3tzmVr+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F75BC4AF0E;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iMB1YOTa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38278C4CEF5;
 	Fri,  5 Sep 2025 00:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1757031859;
-	bh=AfGe0YIHtR0WOAD+XNfJFsZUWzrpMn5hWOBAmmmolGA=;
+	bh=ppvDNXxC1V4d1r/ZopUPPNzt7fb2ps1CRJ3vVYMq0dU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p3tzmVr+Ppk1vq8r1i7P9s9q5+MO2a1YkoYX7CsCOkw+JxQChYcWaS53OuDwofjrr
-	 3j0kwXrI6ApQSJW37ghqo/XT6A1cSgkeUv9oISp+Ysz25RyKJDue7eg8/7XThqtWpU
-	 FqcO8E7Yz2fEYmpMgERqyxx4UcmVRlu3N4l4TzptkQFw14KUgKtiZvuWrm9+etIDZx
-	 L9imWWDs9nYA3HnfEoSeM2uTRZcAyOopel+fFWGUg/hMSUJDNUGHuWU96Hr94LVMhE
-	 Doo0kRmiXHWtvyUO0pZiOpmcsNba53GeJWuvDeOzS1ytQr8henja3K0oUPYJyW/1HI
-	 duLA45cSwOA6Q==
+	b=iMB1YOTa8a0y4jXaOfNpm4+BrYiaNDJjtS5UwD7YSbcl5dFxxgHpYoutwupT9W/8K
+	 7Rm/4VdvgxkqC9fXY7ghmHjHaXP5ON/yvz00uUdco8yCyMt3OcKTwlEiZB8busC8/+
+	 oq1/6dztoaQlwJuid0VtlLeidPuBqLlUjISB9kWOOkiJE06EEj/Tgty40NRGSgo2IY
+	 HfAQ3V9+EHmeYUdslvUfC1pYzSwbrkwIuP41vaIxhDRyLrFI4obj5yDq/LBPMrq62G
+	 Gv67W5TvG2rmSSlQO9mfKI7sLHaaewHw2gAWM4N9o1j7FqhAXYHV+G7OeBvVFJ0TgG
+	 saH7s3986QwJA==
 From: Kees Cook <kees@kernel.org>
 To: Qing Zhao <qing.zhao@oracle.com>
 Cc: Kees Cook <kees@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Kees Cook <kees@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	gcc-patches@gcc.gnu.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 6/7] riscv: Add RISC-V Kernel Control Flow Integrity implementation
-Date: Thu,  4 Sep 2025 17:24:14 -0700
-Message-Id: <20250905002418.464643-6-kees@kernel.org>
+Subject: [PATCH v2 3/7] x86: Add x86_64 Kernel Control Flow Integrity implementation
+Date: Thu,  4 Sep 2025 17:24:11 -0700
+Message-Id: <20250905002418.464643-3-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250905001157.it.269-kees@kernel.org>
 References: <20250905001157.it.269-kees@kernel.org>
@@ -62,148 +62,206 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=14542; i=kees@kernel.org; h=from:subject; bh=AfGe0YIHtR0WOAD+XNfJFsZUWzrpMn5hWOBAmmmolGA=; b=owGbwMvMwCVmps19z/KJym7G02pJDBm7dNdpes1XaL7udzoockbjTL2oytWn7HvYq8Tm1illO BekzpTsKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmMi92wx/ZeN0Yp/fcvAw9X5m KCB28vbWbXkVLwRbef4m9TifUIvqZvjJKPVu7YVwtvLmroKXedyBSxlvy09mLvwzbU9m8C0PbVd mAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=16452; i=kees@kernel.org; h=from:subject; bh=ppvDNXxC1V4d1r/ZopUPPNzt7fb2ps1CRJ3vVYMq0dU=; b=owGbwMvMwCVmps19z/KJym7G02pJDBm7dNcWR9v9eOew6twJry7BXd2cJTszpOd7TmjN8Nim8 btwcadpRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwETufWP4p3MotU9t7u+suFI7 o6uMBs03tZlrWRQ0Y6xT0phkqjU2Mvz3+3LV+I/1rcKjT20iJsgy7InZm2YtsTQrqTjT5byb/kY +AA==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Implement RISC-V-specific KCFI backend.
+Implement x86_64-specific KCFI backend:
 
-- Function preamble generation using .word directives for type ID storage
-  at offset from function entry point (no alignment NOPs needed due to
-  fix 4-byte instruction size).
+- Implies -mindirect-branch-register since KCFI needs call target in
+  a register for typeid hash loading.
 
-- Scratch register allocation using t1/t2 (x6/x7) following RISC-V
-  procedure call standard for temporary registers.
+- Function preamble generation with type IDs positioned at -(4+prefix_nops)
+  offset from function entry point.
 
-- Integration with .kcfi_traps section for debugger/runtime metadata
-  (like x86_64).
+- Function-aligned KCFI preambles using calculated alignment NOPs:
+  aligned(prefix_nops + 5, 16) to maintain ability to call the
+  __cfi_ preamble directly in the case of Linux's FineIBT alternative
+  CFI sequences (live patched into place).
 
-Assembly Code Pattern for RISC-V:
-  lw      t1, -4(target_reg)         ; Load actual type ID from preamble
-  lui     t2, %hi(expected_type)     ; Load expected type (upper 20 bits)
-  addiw   t2, t2, %lo(expected_type) ; Add lower 12 bits (sign-extended)
-  beq     t1, t2, .Lkcfi_call        ; Branch if types match
-  .Lkcfi_trap: ebreak                ; Environment break trap on mismatch
-  .Lkcfi_call: jalr/jr target_reg    ; Execute validated indirect transfer
+- Type-id hash avoids generating ENDBR instruction in type IDs
+  (0xfa1e0ff3/0xfb1e0ff3 are incremented by 1 to prevent execution).
 
-Build and run tested with Linux kernel ARCH=riscv.
+- On-demand scratch register allocation strategy (r11 as needed).
+  The clobbers are available both early and late.
+
+- Uses the .kcfi_traps section for debugger/runtime metadata.
+
+Assembly Code Pattern layout required by Linux kernel:
+  movl $inverse_type_id, %r10d   ; Load expected type (0 - hash)
+  addl offset(%target), %r10d    ; Add stored type ID from preamble
+  je .Lkcfi_call                 ; Branch if types match (sum == 0)
+  .Lkcfi_trap: ud2               ; Undefined instruction trap on mismatch
+  .Lkcfi_call: call/jmp *%target ; Execute validated indirect transfer
+
+Build and run tested on x86_64 Linux kernel with various CPU errata
+handling alternatives, with and without FineIBT patching.
 
 gcc/ChangeLog:
 
-	config/riscv/riscv-protos.h: Declare KCFI helpers.
-	config/riscv/riscv.cc (riscv_maybe_wrap_call_with_kcfi): New
-	function, to wrap calls.
-	(riscv_maybe_wrap_call_value_with_kcfi): New function, to
-	wrap calls with return values.
-	(riscv_output_kcfi_insn): New function to emit KCFI assembly.
-	config/riscv/riscv.md: Add KCFI RTL patterns and hook expansion.
-	doc/invoke.texi: Document riscv nuances.
+	config/i386/i386.h: KCFI enables TARGET_INDIRECT_BRANCH_REGISTER.
+	config/i386/i386-protos.h: Declare ix86_output_kcfi_insn().
+	config/i386/i386-expand.cc (ix86_expand_call): Expand indirect
+	calls into KCFI RTL.
+	config/i386/i386.cc (ix86_kcfi_mask_type_id): New function.
+	(ix86_output_kcfi_insn): New function to emit KCFI assembly.
+	config/i386/i386.md: Add KCFI RTL patterns.
+	doc/invoke.texi: Document x86 nuances.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- gcc/config/riscv/riscv-protos.h |   3 +
- gcc/config/riscv/riscv.cc       | 147 ++++++++++++++++++++++++++++++++
- gcc/config/riscv/riscv.md       |  74 ++++++++++++++--
- gcc/doc/invoke.texi             |  13 +++
- 4 files changed, 231 insertions(+), 6 deletions(-)
+ gcc/config/i386/i386-protos.h  |   1 +
+ gcc/config/i386/i386.h         |   3 +-
+ gcc/config/i386/i386-expand.cc |  21 +++++-
+ gcc/config/i386/i386.cc        | 118 +++++++++++++++++++++++++++++++++
+ gcc/config/i386/i386.md        |  62 +++++++++++++++--
+ gcc/doc/invoke.texi            |  23 +++++++
+ 6 files changed, 220 insertions(+), 8 deletions(-)
 
-diff --git a/gcc/config/riscv/riscv-protos.h b/gcc/config/riscv/riscv-protos.h
-index 2d60a0ad44b3..0e916fbdde13 100644
---- a/gcc/config/riscv/riscv-protos.h
-+++ b/gcc/config/riscv/riscv-protos.h
-@@ -126,6 +126,9 @@ extern bool riscv_split_64bit_move_p (rtx, rtx);
- extern void riscv_split_doubleword_move (rtx, rtx);
- extern const char *riscv_output_move (rtx, rtx);
- extern const char *riscv_output_return ();
-+extern rtx riscv_maybe_wrap_call_with_kcfi (rtx, rtx);
-+extern rtx riscv_maybe_wrap_call_value_with_kcfi (rtx, rtx);
-+extern const char *riscv_output_kcfi_insn (rtx_insn *, rtx *);
- extern void riscv_declare_function_name (FILE *, const char *, tree);
- extern void riscv_declare_function_size (FILE *, const char *, tree);
- extern void riscv_asm_output_alias (FILE *, const tree, const tree);
-diff --git a/gcc/config/riscv/riscv.cc b/gcc/config/riscv/riscv.cc
-index 41ee81b93acf..8dc54ffb19fe 100644
---- a/gcc/config/riscv/riscv.cc
-+++ b/gcc/config/riscv/riscv.cc
-@@ -81,6 +81,7 @@ along with GCC; see the file COPYING3.  If not see
- #include "cgraph.h"
- #include "langhooks.h"
- #include "gimplify.h"
+diff --git a/gcc/config/i386/i386-protos.h b/gcc/config/i386/i386-protos.h
+index bdb8bb963b5d..b0b3864fb53c 100644
+--- a/gcc/config/i386/i386-protos.h
++++ b/gcc/config/i386/i386-protos.h
+@@ -377,6 +377,7 @@ extern enum attr_cpu ix86_schedule;
+ 
+ extern bool ix86_nopic_noplt_attribute_p (rtx call_op);
+ extern const char * ix86_output_call_insn (rtx_insn *insn, rtx call_op);
++extern const char * ix86_output_kcfi_insn (rtx_insn *insn, rtx *operands);
+ extern const char * ix86_output_indirect_jmp (rtx call_op);
+ extern const char * ix86_output_function_return (bool long_p);
+ extern const char * ix86_output_indirect_function_return (rtx ret_op);
+diff --git a/gcc/config/i386/i386.h b/gcc/config/i386/i386.h
+index 2d53db683176..5c6012ac743b 100644
+--- a/gcc/config/i386/i386.h
++++ b/gcc/config/i386/i386.h
+@@ -3038,7 +3038,8 @@ extern void debug_dispatch_window (int);
+ 
+ #define TARGET_INDIRECT_BRANCH_REGISTER \
+   (ix86_indirect_branch_register \
+-   || cfun->machine->indirect_branch_type != indirect_branch_keep)
++   || cfun->machine->indirect_branch_type != indirect_branch_keep \
++   || (flag_sanitize & SANITIZE_KCFI))
+ 
+ #define IX86_HLE_ACQUIRE (1 << 16)
+ #define IX86_HLE_RELEASE (1 << 17)
+diff --git a/gcc/config/i386/i386-expand.cc b/gcc/config/i386/i386-expand.cc
+index ef6c12cd5697..2a7feffa7ebc 100644
+--- a/gcc/config/i386/i386-expand.cc
++++ b/gcc/config/i386/i386-expand.cc
+@@ -94,6 +94,7 @@ along with GCC; see the file COPYING3.  If not see
+ #include "i386-builtins.h"
+ #include "i386-expand.h"
+ #include "asan.h"
 +#include "kcfi.h"
  
- /* This file should be included last.  */
- #include "target-def.h"
-@@ -11346,6 +11347,149 @@ riscv_convert_vector_chunks (struct gcc_options *opts)
-     return 1;
+ /* Split one or more double-mode RTL references into pairs of half-mode
+    references.  The RTL can be REG, offsettable MEM, integer constant, or
+@@ -10279,8 +10280,9 @@ ix86_expand_call (rtx retval, rtx fnaddr, rtx callarg1,
+   unsigned int vec_len = 0;
+   tree fndecl;
+   bool call_no_callee_saved_registers = false;
++  bool is_direct_call = SYMBOL_REF_P (XEXP (fnaddr, 0));
+ 
+-  if (SYMBOL_REF_P (XEXP (fnaddr, 0)))
++  if (is_direct_call)
+     {
+       fndecl = SYMBOL_REF_DECL (XEXP (fnaddr, 0));
+       if (fndecl)
+@@ -10317,7 +10319,7 @@ ix86_expand_call (rtx retval, rtx fnaddr, rtx callarg1,
+   if (TARGET_MACHO && !TARGET_64BIT)
+     {
+ #if TARGET_MACHO
+-      if (flag_pic && SYMBOL_REF_P (XEXP (fnaddr, 0)))
++      if (flag_pic && is_direct_call)
+ 	fnaddr = machopic_indirect_call_target (fnaddr);
+ #endif
+     }
+@@ -10401,7 +10403,7 @@ ix86_expand_call (rtx retval, rtx fnaddr, rtx callarg1,
+   if (ix86_cmodel == CM_LARGE_PIC
+       && !TARGET_PECOFF
+       && MEM_P (fnaddr)
+-      && SYMBOL_REF_P (XEXP (fnaddr, 0))
++      && is_direct_call
+       && !local_symbolic_operand (XEXP (fnaddr, 0), VOIDmode))
+     fnaddr = gen_rtx_MEM (QImode, construct_plt_address (XEXP (fnaddr, 0)));
+   /* Since x32 GOT slot is 64 bit with zero upper 32 bits, indirect
+@@ -10433,6 +10435,19 @@ ix86_expand_call (rtx retval, rtx fnaddr, rtx callarg1,
+ 
+   call = gen_rtx_CALL (VOIDmode, fnaddr, callarg1);
+ 
++  /* Only indirect calls need KCFI instrumentation.  */
++  rtx kcfi_type_rtx = is_direct_call ? NULL_RTX : kcfi_get_call_type_id ();
++  if (kcfi_type_rtx)
++    {
++      /* Wrap call with KCFI.  */
++      call = gen_rtx_KCFI (VOIDmode, call, kcfi_type_rtx);
++
++      /* Add KCFI clobbers for the insn sequence.  */
++      clobber_reg (&use, gen_rtx_REG (DImode, R10_REG));
++      clobber_reg (&use, gen_rtx_REG (DImode, R11_REG));
++      clobber_reg (&use, gen_rtx_REG (CCmode, FLAGS_REG));
++    }
++
+   if (retval)
+     call = gen_rtx_SET (retval, call);
+   vec[vec_len++] = call;
+diff --git a/gcc/config/i386/i386.cc b/gcc/config/i386/i386.cc
+index b2c1acd12dac..95912533a445 100644
+--- a/gcc/config/i386/i386.cc
++++ b/gcc/config/i386/i386.cc
+@@ -98,6 +98,7 @@ along with GCC; see the file COPYING3.  If not see
+ #include "i386-builtins.h"
+ #include "i386-expand.h"
+ #include "i386-features.h"
++#include "kcfi.h"
+ #include "function-abi.h"
+ #include "rtl-error.h"
+ #include "gimple-pretty-print.h"
+@@ -1700,6 +1701,19 @@ ix86_function_naked (const_tree fn)
+   return false;
  }
  
-+/* Apply KCFI wrapping to call pattern if needed.  */
-+rtx
-+riscv_maybe_wrap_call_with_kcfi (rtx pat, rtx addr)
++/* Apply x86-64 specific masking to KCFI type ID.  */
++static uint32_t
++ix86_kcfi_mask_type_id (uint32_t type_id)
 +{
-+  /* Only indirect calls need KCFI instrumentation.  */
-+  bool is_direct_call = SYMBOL_REF_P (addr);
-+  if (!is_direct_call)
-+    {
-+      rtx kcfi_type_rtx = kcfi_get_call_type_id ();
-+      if (kcfi_type_rtx)
-+	{
-+	  /* Extract the CALL from the PARALLEL and wrap it with KCFI */
-+	  rtx call_rtx = XVECEXP (pat, 0, 0);
-+	  rtx kcfi_call = gen_rtx_KCFI (VOIDmode, call_rtx, kcfi_type_rtx);
++  /* Avoid embedding ENDBR instructions in KCFI type IDs.
++     ENDBR64: 0xfa1e0ff3, ENDBR32: 0xfb1e0ff3
++     If the type ID matches either instruction encoding, increment by 1.  */
++  if (type_id == 0xfa1e0ff3U || type_id == 0xfb1e0ff3U)
++    return type_id + 1;
 +
-+	  /* Replace the CALL in the PARALLEL with the KCFI-wrapped call */
-+	  XVECEXP (pat, 0, 0) = kcfi_call;
-+	}
-+    }
-+  return pat;
++  return type_id;
 +}
 +
-+/* Apply KCFI wrapping to call_value pattern if needed.  */
-+rtx
-+riscv_maybe_wrap_call_value_with_kcfi (rtx pat, rtx addr)
-+{
-+  /* Only indirect calls need KCFI instrumentation.  */
-+  bool is_direct_call = SYMBOL_REF_P (addr);
-+  if (!is_direct_call)
-+    {
-+      rtx kcfi_type_rtx = kcfi_get_call_type_id ();
-+      if (kcfi_type_rtx)
-+	{
-+	  /* Extract the SET from the PARALLEL and wrap its CALL with KCFI */
-+	  rtx set_rtx = XVECEXP (pat, 0, 0);
-+	  rtx call_rtx = SET_SRC (set_rtx);
-+	  rtx kcfi_call = gen_rtx_KCFI (VOIDmode, call_rtx, kcfi_type_rtx);
-+
-+	  /* Replace the CALL in the SET with the KCFI-wrapped call */
-+	  SET_SRC (set_rtx) = kcfi_call;
-+	}
-+    }
-+  return pat;
-+}
-+
+ /* Write the extra assembler code needed to declare a function properly.  */
+ 
+ void
+@@ -28469,6 +28483,110 @@ ix86_set_handled_components (sbitmap components)
+       }
+ }
+ 
 +/* Output the assembly for a KCFI checked call instruction.  */
 +const char *
-+riscv_output_kcfi_insn (rtx_insn *insn, rtx *operands)
++ix86_output_kcfi_insn (rtx_insn *insn, rtx *operands)
 +{
-+  /* Target register.  */
++  /* Target is guaranteed to be in a register due to
++     TARGET_INDIRECT_BRANCH_REGISTER.  */
 +  rtx target_reg = operands[0];
 +  gcc_assert (REG_P (target_reg));
 +
-+  /* Get KCFI type ID.  */
-+  uint32_t expected_type = (uint32_t) INTVAL (operands[3]);
-+
-+  /* Calculate typeid offset from call target.  */
-+  HOST_WIDE_INT offset = -(4 + kcfi_patchable_entry_prefix_nops);
-+
-+  /* Choose scratch registers that don't conflict with target.  */
-+  unsigned temp1_regnum = T1_REGNUM;
-+  unsigned temp2_regnum = T2_REGNUM;
-+
-+  if (REGNO (target_reg) == T1_REGNUM)
-+    temp1_regnum = T3_REGNUM;
-+  else if (REGNO (target_reg) == T2_REGNUM)
-+    temp2_regnum = T3_REGNUM;
++  /* In thunk-extern mode, the register must be R11 for FineIBT
++     compatibility. Should this be handled via constraints?  */
++  if (cfun->machine->indirect_branch_type == indirect_branch_thunk_extern)
++    {
++      if (REGNO (target_reg) != R11_REG)
++	{
++	  /* Emit move from current target to R11.  */
++	  target_reg = gen_rtx_REG (DImode, R11_REG);
++	  rtx r11_operands[2] = { operands[0], target_reg };
++	  output_asm_insn ("movq\t%0, %1", r11_operands);
++	}
++    }
 +
 +  /* Generate labels internally.  */
 +  rtx trap_label = gen_label_rtx ();
@@ -219,38 +277,38 @@ index 41ee81b93acf..8dc54ffb19fe 100644
 +  ASM_GENERATE_INTERNAL_LABEL (trap_name, "Lkcfi_trap", trap_labelno);
 +  ASM_GENERATE_INTERNAL_LABEL (call_name, "Lkcfi_call", call_labelno);
 +
-+  /* Split expected_type for RISC-V immediate encoding.
-+     If bit 11 is set, increment upper 20 bits to compensate for sign extension. */
-+  int32_t lo12 = ((int32_t)(expected_type << 20)) >> 20;
-+  uint32_t hi20 = ((expected_type >> 12) + ((expected_type & 0x800) ? 1 : 0)) & 0xFFFFF;
++  /* Choose scratch register: r10 by default, r11 if r10 is the target.  */
++  bool target_is_r10 = (REGNO (target_reg) == R10_REG);
++  int scratch_reg = target_is_r10 ? R11_REG : R10_REG;
 +
-+  rtx temp_operands[3];
++  /* Get KCFI type ID from operand */
++  uint32_t type_id = (uint32_t) INTVAL (operands[2]);
 +
-+  /* Load actual type from memory at offset.  */
-+  temp_operands[0] = gen_rtx_REG (SImode, temp1_regnum);
-+  temp_operands[1] = gen_rtx_MEM (SImode,
-+                      gen_rtx_PLUS (DImode, target_reg,
-+                                   GEN_INT (offset)));
-+  output_asm_insn ("lw\t%0, %1", temp_operands);
++  /* Convert to inverse for the check (0 - hash) */
++  uint32_t inverse_type_id = (uint32_t)(0 - type_id);
 +
-+  /* Load expected type using lui + addiw for proper sign extension.  */
-+  temp_operands[0] = gen_rtx_REG (SImode, temp2_regnum);
-+  temp_operands[1] = GEN_INT (hi20);
-+  output_asm_insn ("lui\t%0, %1", temp_operands);
++  /* Calculate offset to typeid from target address.  */
++  HOST_WIDE_INT offset = -(4 + kcfi_patchable_entry_prefix_nops);
 +
-+  temp_operands[0] = gen_rtx_REG (SImode, temp2_regnum);
-+  temp_operands[1] = gen_rtx_REG (SImode, temp2_regnum);
-+  temp_operands[2] = GEN_INT (lo12);
-+  output_asm_insn ("addiw\t%0, %1, %2", temp_operands);
++  /* Output complete KCFI check + call/sibcall sequence atomically.  */
++  rtx inverse_type_id_rtx = gen_int_mode (inverse_type_id, SImode);
++  rtx mov_operands[2] = { inverse_type_id_rtx, gen_rtx_REG (SImode, scratch_reg) };
++  output_asm_insn ("movl\t$%c0, %1", mov_operands);
 +
-+  /* Output conditional branch to call label.  */
-+  fprintf (asm_out_file, "\tbeq\t%s, %s, ", reg_names[temp1_regnum], reg_names[temp2_regnum]);
++  /* Create memory operand for the addl instruction.  */
++  rtx offset_rtx = gen_int_mode (offset, DImode);
++  rtx mem_op = gen_rtx_MEM (SImode, gen_rtx_PLUS (DImode, target_reg, offset_rtx));
++  rtx add_operands[2] = { mem_op, gen_rtx_REG (SImode, scratch_reg) };
++  output_asm_insn ("addl\t%0, %1", add_operands);
++
++  /* Output conditional jump to call label.  */
++  fputs ("\tje\t", asm_out_file);
 +  assemble_name (asm_out_file, call_name);
 +  fputc ('\n', asm_out_file);
 +
-+  /* Output trap label and ebreak instruction.  */
++  /* Output trap label and instruction.  */
 +  ASM_OUTPUT_LABEL (asm_out_file, trap_name);
-+  output_asm_insn ("ebreak", operands);
++  output_asm_insn ("ud2", operands);
 +
 +  /* Use common helper for trap section entry.  */
 +  rtx trap_label_sym = gen_rtx_SYMBOL_REF (Pmode, trap_name);
@@ -259,178 +317,179 @@ index 41ee81b93acf..8dc54ffb19fe 100644
 +  /* Output pass/call label.  */
 +  ASM_OUTPUT_LABEL (asm_out_file, call_name);
 +
-+  /* Execute the indirect call.  */
++  /* Finally emit the protected call or sibling call.  */
 +  if (SIBLING_CALL_P (insn))
-+    {
-+      /* Tail call uses x0 (zero register) to avoid saving return address.  */
-+      temp_operands[0] = gen_rtx_REG (DImode, 0);  /* x0 */
-+      temp_operands[1] = target_reg;  /* target register */
-+      temp_operands[2] = const0_rtx;
-+      output_asm_insn ("jalr\t%0, %1, %2", temp_operands);
-+    }
++    return ix86_output_indirect_jmp (target_reg);
 +  else
-+    {
-+      /* Regular call uses x1 (return address register).  */
-+      temp_operands[0] = gen_rtx_REG (DImode, RETURN_ADDR_REGNUM);  /* x1 */
-+      temp_operands[1] = target_reg;  /* target register */
-+      temp_operands[2] = const0_rtx;
-+      output_asm_insn ("jalr\t%0, %1, %2", temp_operands);
-+    }
-+
-+  return "";
++    return ix86_output_call_insn (insn, target_reg);
 +}
 +
- /* 'Unpack' up the internal tuning structs and update the options
-     in OPTS.  The caller must have set up selected_tune and selected_arch
-     as all the other target-specific codegen decisions are
-@@ -15898,6 +16042,9 @@ riscv_prefetch_offset_address_p (rtx x, machine_mode mode)
- #define TARGET_GET_FUNCTION_VERSIONS_DISPATCHER \
-   riscv_get_function_versions_dispatcher
- 
++/* Emit x86_64-specific type ID instruction and return instruction size.  */
++static int
++ix86_kcfi_emit_type_id (FILE *file, uint32_t type_id)
++{
++  /* Emit movl instruction with type ID if file is not NULL.  */
++  if (file)
++    fprintf (file, "\tmovl\t$0x%08x, %%eax\n", type_id);
++
++  /* x86_64 uses 5-byte movl instruction for type ID.  */
++  return 5;
++}
++
 +#undef TARGET_KCFI_SUPPORTED
 +#define TARGET_KCFI_SUPPORTED hook_bool_void_true
 +
- #undef TARGET_DOCUMENTATION_NAME
- #define TARGET_DOCUMENTATION_NAME "RISC-V"
- 
-diff --git a/gcc/config/riscv/riscv.md b/gcc/config/riscv/riscv.md
-index 4718a75598a6..9a9524a5e46f 100644
---- a/gcc/config/riscv/riscv.md
-+++ b/gcc/config/riscv/riscv.md
-@@ -3982,10 +3982,25 @@
-   ""
- {
-   rtx target = riscv_legitimize_call_address (XEXP (operands[0], 0));
--  emit_call_insn (gen_sibcall_internal (target, operands[1], operands[2]));
-+  rtx pat = gen_sibcall_internal (target, operands[1], operands[2]);
-+  pat = riscv_maybe_wrap_call_with_kcfi (pat, target);
-+  emit_call_insn (pat);
-   DONE;
- })
- 
-+;; KCFI sibling call - matches KCFI wrapper RTL
-+(define_insn "*kcfi_sibcall_insn"
-+  [(kcfi (call (mem:SI (match_operand:DI 0 "call_insn_operand" "l"))
-+               (match_operand 1 ""))
-+         (match_operand 3 "const_int_operand"))
-+   (use (unspec:SI [(match_operand 2 "const_int_operand")] UNSPEC_CALLEE_CC))]
-+  "SIBLING_CALL_P (insn)"
-+{
-+  return riscv_output_kcfi_insn (insn, operands);
-+}
-+  [(set_attr "type" "call")
-+   (set_attr "length" "24")])
++#undef TARGET_KCFI_MASK_TYPE_ID
++#define TARGET_KCFI_MASK_TYPE_ID ix86_kcfi_mask_type_id
 +
- (define_insn "sibcall_internal"
-   [(call (mem:SI (match_operand 0 "call_insn_operand" "j,S,U"))
- 	 (match_operand 1 "" ""))
-@@ -4009,11 +4024,26 @@
-   ""
- {
-   rtx target = riscv_legitimize_call_address (XEXP (operands[1], 0));
--  emit_call_insn (gen_sibcall_value_internal (operands[0], target, operands[2],
--					      operands[3]));
-+  rtx pat = gen_sibcall_value_internal (operands[0], target, operands[2], operands[3]);
-+  pat = riscv_maybe_wrap_call_value_with_kcfi (pat, target);
-+  emit_call_insn (pat);
-   DONE;
- })
- 
-+;; KCFI sibling call with return value - matches KCFI wrapper RTL
-+(define_insn "*kcfi_sibcall_value_insn"
-+  [(set (match_operand 0 "")
-+	(kcfi (call (mem:SI (match_operand:DI 1 "call_insn_operand" "l"))
-+		    (match_operand 2 ""))
-+	      (match_operand 4 "const_int_operand")))
-+   (use (unspec:SI [(match_operand 3 "const_int_operand")] UNSPEC_CALLEE_CC))]
-+  "SIBLING_CALL_P (insn)"
-+{
-+  return riscv_output_kcfi_insn (insn, &operands[1]);
-+}
-+  [(set_attr "type" "call")
-+   (set_attr "length" "24")])
++#undef TARGET_KCFI_EMIT_TYPE_ID
++#define TARGET_KCFI_EMIT_TYPE_ID ix86_kcfi_emit_type_id
 +
- (define_insn "sibcall_value_internal"
-   [(set (match_operand 0 "" "")
- 	(call (mem:SI (match_operand 1 "call_insn_operand" "j,S,U"))
-@@ -4037,10 +4067,26 @@
-   ""
- {
-   rtx target = riscv_legitimize_call_address (XEXP (operands[0], 0));
--  emit_call_insn (gen_call_internal (target, operands[1], operands[2]));
-+  rtx pat = gen_call_internal (target, operands[1], operands[2]);
-+  pat = riscv_maybe_wrap_call_with_kcfi (pat, target);
-+  emit_call_insn (pat);
+ #undef TARGET_SHRINK_WRAP_GET_SEPARATE_COMPONENTS
+ #define TARGET_SHRINK_WRAP_GET_SEPARATE_COMPONENTS ix86_get_separate_components
+ #undef TARGET_SHRINK_WRAP_COMPONENTS_FOR_BB
+diff --git a/gcc/config/i386/i386.md b/gcc/config/i386/i386.md
+index cea6c152f2b9..b343f78361a0 100644
+--- a/gcc/config/i386/i386.md
++++ b/gcc/config/i386/i386.md
+@@ -20274,11 +20274,24 @@
    DONE;
  })
  
 +;; KCFI indirect call - matches KCFI wrapper RTL
-+(define_insn "*kcfi_call_internal"
-+  [(kcfi (call (mem:SI (match_operand:DI 0 "call_insn_operand" "l"))
-+               (match_operand 1 "" ""))
-+         (match_operand 3 "const_int_operand"))
-+   (use (unspec:SI [(match_operand 2 "const_int_operand")] UNSPEC_CALLEE_CC))
-+   (clobber (reg:SI RETURN_ADDR_REGNUM))]
++(define_insn "*call"
++  [(kcfi (call (mem:QI (match_operand:W 0 "call_insn_operand" "<c>BwBz"))
++	       (match_operand 1))
++         (match_operand 2 "const_int_operand"))]
 +  "!SIBLING_CALL_P (insn)"
 +{
-+  return riscv_output_kcfi_insn (insn, operands);
++  return ix86_output_kcfi_insn (insn, operands);
 +}
-+  [(set_attr "type" "call")
-+   (set_attr "length" "24")])
++  [(set_attr "type" "call")])
 +
- (define_insn "call_internal"
-   [(call (mem:SI (match_operand 0 "call_insn_operand" "l,S,U"))
- 	 (match_operand 1 "" ""))
-@@ -4065,11 +4111,27 @@
-   ""
- {
-   rtx target = riscv_legitimize_call_address (XEXP (operands[1], 0));
--  emit_call_insn (gen_call_value_internal (operands[0], target, operands[2],
--					   operands[3]));
-+  rtx pat = gen_call_value_internal (operands[0], target, operands[2], operands[3]);
-+  pat = riscv_maybe_wrap_call_value_with_kcfi (pat, target);
-+  emit_call_insn (pat);
+ (define_insn "*call"
+   [(call (mem:QI (match_operand:W 0 "call_insn_operand" "<c>BwBz"))
+ 	 (match_operand 1))]
+   "!SIBLING_CALL_P (insn)"
+-  "* return ix86_output_call_insn (insn, operands[0]);"
++{
++  return ix86_output_call_insn (insn, operands[0]);
++}
+   [(set_attr "type" "call")])
+ 
+ ;; This covers both call and sibcall since only GOT slot is allowed.
+@@ -20311,11 +20324,24 @@
+ }
+   [(set_attr "type" "call")])
+ 
++;; KCFI sibling call - matches KCFI wrapper RTL
++(define_insn "*sibcall"
++  [(kcfi (call (mem:QI (match_operand:W 0 "sibcall_insn_operand" "UBsBz"))
++	       (match_operand 1))
++         (match_operand 2 "const_int_operand"))]
++  "SIBLING_CALL_P (insn)"
++{
++  return ix86_output_kcfi_insn (insn, operands);
++}
++  [(set_attr "type" "call")])
++
+ (define_insn "*sibcall"
+   [(call (mem:QI (match_operand:W 0 "sibcall_insn_operand" "UBsBz"))
+ 	 (match_operand 1))]
+   "SIBLING_CALL_P (insn)"
+-  "* return ix86_output_call_insn (insn, operands[0]);"
++{
++  return ix86_output_call_insn (insn, operands[0]);
++}
+   [(set_attr "type" "call")])
+ 
+ (define_insn "*sibcall_memory"
+@@ -20472,12 +20498,26 @@
    DONE;
  })
  
-+;; KCFI call with return value - matches KCFI wrapper RTL
-+(define_insn "*kcfi_call_value_insn"
-+  [(set (match_operand 0 "" "")
-+	(kcfi (call (mem:SI (match_operand:DI 1 "call_insn_operand" "l"))
-+		    (match_operand 2 "" ""))
-+	      (match_operand 4 "const_int_operand")))
-+   (use (unspec:SI [(match_operand 3 "const_int_operand")] UNSPEC_CALLEE_CC))
-+   (clobber (reg:SI RETURN_ADDR_REGNUM))]
++;; KCFI call with return value - matches when KCFI note present
++(define_insn "*call_value"
++  [(set (match_operand 0)
++	(kcfi (call (mem:QI (match_operand:W 1 "call_insn_operand" "<c>BwBz"))
++	            (match_operand 2))
++              (match_operand 3 "const_int_operand")))]
 +  "!SIBLING_CALL_P (insn)"
 +{
-+  return riscv_output_kcfi_insn (insn, &operands[1]);
++  return ix86_output_kcfi_insn (insn, &operands[1]);
 +}
-+  [(set_attr "type" "call")
-+   (set_attr "length" "24")])
++  [(set_attr "type" "callv")])
 +
- (define_insn "call_value_internal"
-   [(set (match_operand 0 "" "")
- 	(call (mem:SI (match_operand 1 "call_insn_operand" "l,S,U"))
+ (define_insn "*call_value"
+   [(set (match_operand 0)
+ 	(call (mem:QI (match_operand:W 1 "call_insn_operand" "<c>BwBz"))
+ 	      (match_operand 2)))]
+   "!SIBLING_CALL_P (insn)"
+-  "* return ix86_output_call_insn (insn, operands[1]);"
++{
++  return ix86_output_call_insn (insn, operands[1]);
++}
+   [(set_attr "type" "callv")])
+ 
+ ;; This covers both call and sibcall since only GOT slot is allowed.
+@@ -20513,12 +20553,26 @@
+ }
+   [(set_attr "type" "callv")])
+ 
++;; KCFI sibling call with return value - matches KCFI wrapper RTL
++(define_insn "*sibcall_value"
++  [(set (match_operand 0)
++	(kcfi (call (mem:QI (match_operand:W 1 "sibcall_insn_operand" "UBsBz"))
++	            (match_operand 2))
++              (match_operand 3 "const_int_operand")))]
++  "SIBLING_CALL_P (insn)"
++{
++  return ix86_output_kcfi_insn (insn, &operands[1]);
++}
++  [(set_attr "type" "callv")])
++
+ (define_insn "*sibcall_value"
+   [(set (match_operand 0)
+ 	(call (mem:QI (match_operand:W 1 "sibcall_insn_operand" "UBsBz"))
+ 	      (match_operand 2)))]
+   "SIBLING_CALL_P (insn)"
+-  "* return ix86_output_call_insn (insn, operands[1]);"
++{
++  return ix86_output_call_insn (insn, operands[1]);
++}
+   [(set_attr "type" "callv")])
+ 
+ (define_insn "*sibcall_value_memory"
 diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-index 25ee82c9cba7..43e86f4bc5b4 100644
+index cd70e6351a4e..d44e7015facf 100644
 --- a/gcc/doc/invoke.texi
 +++ b/gcc/doc/invoke.texi
-@@ -18458,6 +18458,19 @@ allowing the kernel to identify both the KCFI violation and the involved
- registers for detailed diagnostics (eliminating the need for a separate
- @code{.kcfi_traps} section as used on x86_64).
+@@ -18404,6 +18404,29 @@ and without changing the entry points of the target functions. Only
+ functions that have referenced by their address receive the KCFI preamble
+ instrumentation.
  
-+On RISC-V, KCFI type identifiers are emitted as a @code{.word ID}
-+directive (a 32-bit constant) before the function entry, similar to AArch64.
-+RISC-V's natural 4-byte instruction alignment eliminates the need for
-+additional padding NOPs.  When used with @option{-fpatchable-function-entry},
-+the type identifier is placed before any patchable NOPs.  The runtime check
-+loads the actual type using @code{lw t1, OFFSET(target_reg)}, where the
-+offset accounts for any prefix NOPs, constructs the expected type using
-+@code{lui} and @code{addiw} instructions into @code{t2}, and compares them
-+with @code{beq}.  Type mismatches trigger an @code{ebreak} instruction.
-+Like x86_64, RISC-V uses a @code{.kcfi_traps} section to map trap locations
-+to their corresponding function entry points for debugging (RISC-V lacks
-+ESR-style trap encoding unlike AArch64).
++Platform-specific implementation details:
++
++On x86_64, KCFI type identifiers are emitted as a @code{movl $ID, %eax}
++instruction before the function entry.  The implementation ensures that
++type IDs never collide with ENDBR instruction encodings.  When used
++with @option{-fpatchable-function-entry}, the type identifier is
++placed before any patchable NOPs, with appropriate alignment to
++maintain a 16-byte boundary for the function entry.  KCFI automatically
++implies @option{-mindirect-branch-register}, forcing all indirect calls
++and jumps to use registers instead of memory operands.  The runtime
++check loads the type ID from the target function into @code{%r10d} and
++uses an @code{addl} instruction to add the negative expected type ID,
++effectively zeroing the register if the types match.  A conditional
++jump follows to either continue execution or trap on mismatch.  The
++check sequence uses @code{%r10d} and @code{%r11d} as scratch registers.
++Trap locations are recorded in a special @code{.kcfi_traps} section
++that maps trap sites to their corresponding function entry points,
++enabling debuggers and crash handlers to identify KCFI violations.
++The exact instruction sequences for both the KCFI preamble and the
++check-call bundle are considered ABI, as the Linux kernel may
++optionally rewrite these areas at boot time to mitigate detected CPU
++errata.
 +
  KCFI is intended primarily for kernel code and may not be suitable
  for user-space applications that rely on techniques incompatible
