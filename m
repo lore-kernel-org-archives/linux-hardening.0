@@ -1,124 +1,168 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A85028000F;
-	Fri,  5 Sep 2025 21:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CAD26B951;
+	Fri,  5 Sep 2025 21:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757107126; cv=none; b=F+FGxbGJb2+RgGeWlNex2NhYfkm7V9EsVU9VqCtngi6ubpzAJLVJsIiO7aKU//6Y/EyQGEsybYl49hy+7WznOViwoet/ffJUJba1ztmaK/SGXHRD4GbNkI8LNB0e+afMlcfAzubuOEfvcslTOadkoTsAuX0U423kMbJQPhu2MeA=
+	t=1757108927; cv=none; b=gMZxGUekY1emVK+6coBReja4V0kEbypO2uVAaz0j4KwSmbk0MWVEbsPcsxrvDPDbNY65ib05Lua0Cqapji+JTKIidrEarwpUF/sIzLTywny1AWewzaHimP9Zr6gwoXynKoeTSPj90iY4hUZfug4tjkYvzvkG82bI+1YAN2ekqhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757107126; c=relaxed/simple;
-	bh=+ir+mQtnfx/4sLdud4ghKsNSgiyx0xtDI7KlyJXyioY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hrpsqY+f2VprdyhIj1r+BSDhH6xujGIEbLWBu9xsL8SM/LA78pag2L8vrsIMD9UOHjdBLkSSL9vVxeTaxWdz5s84CQghLZCpij0q5Girl3EQo0neK9CfwJrEryUP+PnONvSYi85TGFERRD69TdBAgNjBfSkdxvMp/qhV5nT6oe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QE6DnSny; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1757108927; c=relaxed/simple;
+	bh=xUNNlqwOESV0eE+tUpWmOnuKApsTiklZcSE/4hYwGlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BJohnxtGkS09Y/Ti5bhPTh4KjCEvc61AMC9xgsGw5IG2pbd+uzdvCz6I/bYL06auTJ6ukIjxKRmoz9GwLlash94eZioJcjpF6NZEJAEwr7M/GsFiXBesPqomok6SZ7FAuSn7RoCIWLMvxs5KbG/256DcYz0/YSXNwkooN67Pk8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CqJNDZ5X; arc=none smtp.client-ip=209.85.128.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QE6DnSny"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-45b9c35bc0aso22685125e9.2;
-        Fri, 05 Sep 2025 14:18:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CqJNDZ5X"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-71d60501806so25246097b3.2;
+        Fri, 05 Sep 2025 14:48:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757107123; x=1757711923; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+ir+mQtnfx/4sLdud4ghKsNSgiyx0xtDI7KlyJXyioY=;
-        b=QE6DnSnys76cWZnMeua0PhnnFKQuE0qEjzez43zPyGc/hkUwKAqBj+ymTwUe/UnFLL
-         i/aLuUhQRxGfyAybHdPwV62RwghAKt5ZIkQuKMwqDSZfD528gXD4PRUd7JTz2Vl845Sm
-         iYPgncjE8J0B8qSoYJJTtiaLivJh/d5BeNMKgtFJQ23jrwaoH9ch3SIwRbkRxoUlmDwa
-         fm+148lkEX2XJt1Bgn4p7s3fSx++Vj3n9HMpPgktzMZfSsrF7O0Mn1GSNuvybZGpKUjj
-         +Gb6WPF0JntZs8R38vK/rrVcXzB7MWROKc+ue51EWeHdP7GM1DGEzb0KMg6xyxVhDVQ+
-         vpIg==
+        d=gmail.com; s=20230601; t=1757108924; x=1757713724; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=TlvGjgOOrYou8qPPCBam0uB1ddfexbPjHc8LzQs0nbU=;
+        b=CqJNDZ5XCZ9uxdV5wjjq+ECZKi8jl9dkNUa2+1e9pojOqTeJKWyG2ML1vNUjRCew9E
+         sfaWxTbhwfKkp44FS9hl7zsMjkx+V6O8DDw97pc9Whuklsjg6OHaqR1PCw31gV8lxNbZ
+         rB+Nt2qq8V07x6GPZM8lZaHRryxDppVaJYWR/yXyqxFuQ3I6sEyITjaJ/hDIk3GNeDEf
+         OowWFd9gxky5OQAFXloreVEZiRhGAhkOB689CT9FGecHUZkuRyBDHwz9uTaYAfwmVio8
+         ArZvH+mW5srbZJqJeoXRNn4pq5M4JLIAS9SlARQ5vxQ9TGJG41UfCMpnAPNPE4d3J3MH
+         MAaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757107123; x=1757711923;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+ir+mQtnfx/4sLdud4ghKsNSgiyx0xtDI7KlyJXyioY=;
-        b=K07H9Ogv06yrORvuyK2ZDEyv/46oKo9v5JpN8EJApFD6jXzuzLIo2iAIZ1Nu1iHbKX
-         6W2QTn/4gEBMm3gUluP0S9hhyQ7TNFRJ4gEEtK6+5rLboR3LVHly0CrZg/jzAqWil3qO
-         pdj19ekTtfB2pXFkw53U0BM9yIP1GclH11G5ZZwZaRtTjdD8WYBUT3DRE8Uzdsjx043E
-         CroGsHuG3YMViwS4DskgCCA6YeFuDkj26MiH5P22S03ph84+nFYeIbeHGzh5wSpzcwa7
-         XABdRNkHnz/8zvmwitTFJBKX3ONY/D8dXBDchi2f+ot7BKBIw4vSErWYW7PX2ZQhmnPu
-         8t4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUgBbOFoJmHR1c5lPv6ioy1hbNpEZIb9f/K8DLB1O4qXTywvzRbXYrvncNr1Z0in710d9oHLpKWEj+PQ6Vdi2U=@vger.kernel.org, AJvYcCXESp7PMlpgnGxx8o+PYNioZlPVIxzP5yQeYXQTf1k0ArR8oDHv/0mdlD2F+SS89AZ4VCsz0H/4iiV72Qxi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1cGWJBIUk/N0NmcPB0Iy8Nz5pEWE7sSulKiABi2QavGawk59H
-	4IsphyE3OfDtJ2sofsFAL7DyALmfUTYZtncXtMwd++X/FRHyBF/qdFbyR78oolzlknI+9RWetkm
-	FqepM1H6Fe2IS7sRGilQciS7qWotHFQA=
-X-Gm-Gg: ASbGnctUOKPWOjKScbcvPT3Vd0/t5LCUWDaUTPjwNrt6aHRHj5+Y7d9QMDmf6imqMjA
-	8qp2Fb0vJ9E9hBXmw8Vqz1LKgQgX2VRgEGA/cZZZKkmiNtUDq75e1phSScd/AQtV8qg5bRFUyil
-	TVh5dOIUvXdB69ZzqVJeaYcFxt/4R6jf3ER54UjkrDB1BBNesZxRqCeUcE7vSmC4DJdRxiRbNU2
-	noECXRLmJIxZFZ8mQ==
-X-Google-Smtp-Source: AGHT+IEgWv1D91zWSgoImbXrRcPy5ZV2Wu02ODmTl/zI9yjh7DlAkMQ9aVhZ7KPIK1OuKkXW8SeulTgQeggx/M7V3rI=
-X-Received: by 2002:a05:600c:1987:b0:458:b01c:8f with SMTP id
- 5b1f17b1804b1-45ddde8a55cmr3274575e9.8.1757107123278; Fri, 05 Sep 2025
- 14:18:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1757108924; x=1757713724;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TlvGjgOOrYou8qPPCBam0uB1ddfexbPjHc8LzQs0nbU=;
+        b=tB1HJHaG1bbGsnV01Tcfm5iW/O08rtEpwLEwm6kYHYnl4eWLxwEd0zH/ASAoDNGUGp
+         g0C63hqEQXsqRjHsBmFEDK2Lld/nqU1Hzi4Qq2qN1PX55mLeCa1Tw7JgBHFEp1uT38nZ
+         X7EpcZ0k3NoAhoPt5bTn2u/wB3HFsbj/64RlDmxZIjEM/ob2M0C5ZTer1pufQ+2PQha6
+         gyt92cMLj6qyZM5ZSygkgLUh4vzoH2WcAUuHR1G8VGM9PP3xjFGTgoNRSOvKWFJ+fTmk
+         g6JABh2DzsUcKWEbBP2qizXO5SXacQUjUMhF3VBU/UKjnY3E2x0wKYKUanrUUrRyPXwy
+         BkfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVF9yi23PWzMT10Gw/Z7Ro84bi3S7xvBuGMyyzaTx7hTd8hWPzrUPejJyLDIz8r92BZmKNErQff69WkpzW14+A=@vger.kernel.org, AJvYcCWU1tTcr3N/BUymG4Mto4ThlWpVM6MBpvbg/G/aaVg3egGX34RRTo6Ozd63M+XnjsGpPhTt+B5dahj3pbT/@vger.kernel.org, AJvYcCXidz08b4DWXQ2PAIQnzSlNri2sTMA1JoRKf3LMBSrXH8bY4ojvcm40yssKwFLMJB1NDWuv5NePspaSHVndIbU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzpcfjkq73SimQjpmkAzcuchw9LMKE7NNjGOVjzORIruEMQF5tG
+	8WxB+8dJaRRO0Vpr1yDUeu7YF683fvFh6yezeDhqPe02nxsCklu8hmZM
+X-Gm-Gg: ASbGncvx6MOArl8/2ckZCkpehtWaij4yJoHvpQfdkjNeMnI+0Xoc5C0jvS5vxXghsmB
+	5amshdL6ledBGacSI0mikhbsXu69+CAChiIcH6r/hrT4GSiGOZ7wPjhZmEJV/G7z70gnvXeoHTI
+	ohbaGcMYyjsT8yKyky/KzVgxfpvMO6WmFZzxKsA68kmXeB5uAMrxvdIhQ+rRCWZPaM7oTBXVBwm
+	qW7sEDu4uOlCNXOGnkFeD84+xQIOsfgXV+IwJaGlZOwDeTooXn1+LSJ09NITzoADRHWIlWVqR0U
+	UfHi/FZ0adhhYuIWspIJ3gsWqHC0HyIEjUqwmbliermRqTQxOFHzagfMxDqsW2FEnyCGwx5EA0v
+	dYCeeHNseLvulRJ8HSns=
+X-Google-Smtp-Source: AGHT+IGaw+gqiKbD8tSP3wYYMKk+NhXYGOt0QQgdzAKGLPBQortYFRwLmY/VZvXpIwDyWbzuX71RBQ==
+X-Received: by 2002:a05:690c:6e93:b0:723:88f6:c332 with SMTP id 00721157ae682-727f31a8b33mr4017117b3.18.1757108924205;
+        Fri, 05 Sep 2025 14:48:44 -0700 (PDT)
+Received: from localhost ([2601:347:100:5ea0:a745:ec:6416:ba44])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-723a8329a4dsm32770907b3.22.2025.09.05.14.48.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Sep 2025 14:48:43 -0700 (PDT)
+Date: Fri, 5 Sep 2025 17:48:42 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Burak Emir <bqe@google.com>, Kees Cook <kees@kernel.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Carlos LLama <cmllamas@google.com>,
+	Pekka Ristola <pekkarr@protonmail.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Philip Li <philip.li@intel.com>
+Subject: Re: [PATCH v15 0/5] rust: adds Bitmap API, ID pool and bindings
+Message-ID: <aLtautgAVKdqNv2R@yury>
+References: <20250904165015.3791895-1-bqe@google.com>
+ <aLnURXW_ZiX2iJd_@yury>
+ <CANiq72==48=69hYiDo1321pCzgn_n1_jg=ez5UYXX91c+g5JVQ@mail.gmail.com>
+ <aLrjNze2_L_vAnWX@yury>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <01d9ec74-27bb-4e41-9676-12ce028c503f@linux.com>
-In-Reply-To: <01d9ec74-27bb-4e41-9676-12ce028c503f@linux.com>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Fri, 5 Sep 2025 23:18:32 +0200
-X-Gm-Features: Ac12FXxfwzu8wekZMUNPG1-5QkyVVlkCYMyrLtAYUduk-8PvduVEITzaspdDKck
-Message-ID: <CA+fCnZdQDDwkcd153qexNDP-61VAbB4iAJrj02UVtoL8KN2Vjw@mail.gmail.com>
-Subject: Re: Slab allocator hardening and cross-cache attacks
-To: alex.popov@linux.com
-Cc: "kernel-hardening@lists.openwall.com" <kernel-hardening@lists.openwall.com>, linux-hardening@vger.kernel.org, 
-	kasan-dev <kasan-dev@googlegroups.com>, Kees Cook <keescook@chromium.org>, 
-	Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>, Marco Elver <elver@google.com>, 
-	Matteo Rizzo <matteorizzo@google.com>, Florent Revest <revest@google.com>, 
-	GONG Ruiqi <gongruiqi1@huawei.com>, Harry Yoo <harry.yoo@oracle.com>, 
-	Peter Zijlstra <peterz@infradead.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aLrjNze2_L_vAnWX@yury>
 
-On Fri, Sep 5, 2025 at 10:11=E2=80=AFPM Alexander Popov <alex.popov@linux.c=
-om> wrote:
->
-> After experimenting with kernel-hack-drill on Ubuntu Server 24.04, I foun=
-d that
-> CONFIG_RANDOM_KMALLOC_CACHES and CONFIG_SLAB_BUCKETS block naive UAF
-> exploitation, yet they also make my cross-cache attacks completely stable=
-. It
-> looks like these allocator features give an attacker better control over =
-the
-> slab with vulnerable objects and reduce the noise from other objects. Wou=
-ld you
-> agree?
->
-> It seems that, without a mitigation such as SLAB_VIRTUAL, the Linux kerne=
-l
-> remains wide-open to cross-cache attacks.
+(Actually adding Philip in the list.)
 
-I'd second the notion that without SLAB_VIRTUAL, the attempts to
-deterministically separate objects into different caches based on the
-code location or the type (as also with the TYPED_KMALLOC_CACHES
-series proposed by Marco [1]) aid exploitation more than prevent it.
-
-Many kernel exploits nowadays rely on cross-cache attacks due to the
-high portability of the post-cross-cache techniques for getting code
-execution or escalating privileges. And with these object separation
-features, the amount of unrelated-to-the-exploit allocation noise for
-a specific slab cache gets significantly reduced or completely
-removed. Which makes cross-cache attacks very stable.
-
-The only negative effect these separation features have on cross-cache
-attacks is that the attacker has to use the objects coming from the
-affected slab cache (i.e. the cache from where the object affected by
-the exploited vulnerability is allocated) for the slab shaping during
-the cross-cache attack (filling up the slab, overflowing the partial
-list, etc.). In practice, this is usually not a problem: the attacker
-can often allocate as many objects as they want from the affected
-cache (by using the same code path as the one required to allocate the
-vulnerable object) and only trigger the vulnerability for one of them.
-
-Having said that, I think it's still worth working on these separation
-features with the hope that SLAB_VIRTUAL will at some point end up in
-the kernel and be affordable enough to be enabled in production.
-
-[1] https://lore.kernel.org/all/20250825154505.1558444-1-elver@google.com/
+On Fri, Sep 05, 2025 at 09:18:50AM -0400, Yury ooNorov wrote:
+> + Philip Li <philip.li@intel.com>
+> 
+> On Fri, Sep 05, 2025 at 11:29:22AM +0200, Miguel Ojeda wrote:
+> > On Thu, Sep 4, 2025 at 8:02 PM Yury Norov <yury.norov@gmail.com> wrote:
+> > >
+> > > Added in bitmap-for-next for testing. Thanks!
+> > 
+> > linux-next breaks with CONFIG_RUST_BITMAP_HARDENED=y:
+> > 
+> >      error[E0425]: cannot find function `owned_bitmap_out_of_bounds`
+> > in this scope
+> >        --> rust/kernel/bitmap.rs:484:1
+> >         |
+> >     484 | #[kunit_tests(rust_kernel_bitmap)]
+> >         | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+> > 
+> > because the proc macro doesn't support `cfg`s (moving it below
+> > `#[test]` wouldn't work either). I have filled:
+> > 
+> >     https://github.com/Rust-for-Linux/linux/issues/1185
+> > 
+> > so that we don't forget about it.
+> > 
+> > Meanwhile, I would recommend e.g. moving the `cfg` inside the
+> > function, something like:
+> > 
+> >     diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
+> >     index 6e0824579781..2f00e91e9c35 100644
+> >     --- a/rust/kernel/bitmap.rs
+> >     +++ b/rust/kernel/bitmap.rs
+> >     @@ -551,18 +551,21 @@ fn bitmap_set_clear_find() -> Result<(), AllocError> {
+> >              Ok(())
+> >          }
+> > 
+> >     -    #[cfg(not(CONFIG_RUST_BITMAP_HARDENED))]
+> >          #[test]
+> >          fn owned_bitmap_out_of_bounds() -> Result<(), AllocError> {
+> >     -        let mut b = BitmapVec::new(128, GFP_KERNEL)?;
+> >     +        #[cfg(not(CONFIG_RUST_BITMAP_HARDENED))]
+> >     +        {
+> >     +            let mut b = BitmapVec::new(128, GFP_KERNEL)?;
+> >     +
+> >     +            b.set_bit(2048);
+> >     +            b.set_bit_atomic(2048);
+> >     +            b.clear_bit(2048);
+> >     +            b.clear_bit_atomic(2048);
+> >     +            assert_eq!(None, b.next_bit(2048));
+> >     +            assert_eq!(None, b.next_zero_bit(2048));
+> >     +            assert_eq!(None, b.last_bit());
+> >     +        }
+> > 
+> >     -        b.set_bit(2048);
+> >     -        b.set_bit_atomic(2048);
+> >     -        b.clear_bit(2048);
+> >     -        b.clear_bit_atomic(2048);
+> >     -        assert_eq!(None, b.next_bit(2048));
+> >     -        assert_eq!(None, b.next_zero_bit(2048));
+> >     -        assert_eq!(None, b.last_bit());
+> >              Ok(())
+> >          }
+> 
+> Thanks for the testing, Miguel! I've folded-in your fix and added
+> your co-developed-by tag. Please let me know if it doesn't work for
+> you.
+> 
+> Philip, is it possible to add CONFIG_RUST_BITMAP_HARDENED=y/n in your
+> testing too?
+> 
+> Thanks,
+> Yury
