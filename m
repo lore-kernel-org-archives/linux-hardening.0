@@ -1,107 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E54A1D6187
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Sep 2025 01:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746A7175BF;
+	Fri,  5 Sep 2025 01:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757034550; cv=none; b=HJQnF85RVpanw1FGqB+XiY0tUTSlYIlIRW4B6YfAxcA3V/uiT9ZPmNn6AL//4qfKmSFS81QLENHkgTBJQCu2tT2EIzripDPYgrgZkKJWLM1bwXADtBrlRV2gCvTSofK+FtVBq5a7E/ykkiywjQQpOuB0HXwCeepJ2aKPqsEiCRY=
+	t=1757035039; cv=none; b=DUhtbJU9S+CzGDI9pHh2PPLdirn5D91Gzp1hOtSHAMccKy7yYaFAvKCHwND2Q5spqcYUMd3DydU6e1PyHZLbwCymd9TZw/3uewJo+WYfn/P94T4pa6tEhLJkPuLUevvoQjKeELm/wAljEPM4TiNd7VIRoKcGXdqRVDk320DFwmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757034550; c=relaxed/simple;
-	bh=3G0O8uwq0/lMOK2F8gxjQTbTNvdSeqZBOubGPOeA5T8=;
+	s=arc-20240116; t=1757035039; c=relaxed/simple;
+	bh=+wCBLkddcwyeCzPBMQjiuSKkCrej7JNqV4TB0tDCD8k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uVGVoXaxDuNf5tz23d8n2eMQ2CKD3lSUxUvT8kuDqKV4ihmmwMRMicTj/dsrSnOOw4ciNH04WiwaH6IQglUZsASRub9H2jsDOZi270rUpGwy6Cwwa/ULfBa0ceTMFq6S6BhPxjR+gJ4V1TDXr7w+FTiaj4wapegVE1ocNyc1PSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dq5Bheai; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dq5Bheai"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D607C4CEF0;
-	Fri,  5 Sep 2025 01:09:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757034549;
-	bh=3G0O8uwq0/lMOK2F8gxjQTbTNvdSeqZBOubGPOeA5T8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dq5Bheaiyi4YPQeZCJQJ+oMT2CR0zT7a5IRNoMSZtqGg0o2tUX3vF7/OIz00V/g2N
-	 2mqLb0RmYQx/jyYidG82wHFgMXwEUOimRb2FFfyJ5TX/3JMFKckifThWRTc8rzT2zJ
-	 5r2+HHUo7cuR9yz3zwNq9VXb2hkfXak8Wy14sPbyTg5KJwdE5jPIoHVoPLKgW7rLf2
-	 yPKv2ogxTRn+ItenfhfGiT3qGT7uZAgyvZzdOKvv20x65HR5htrKKRNhZ5luvmpWzh
-	 Jsx+0wROUfXqmJLLUlpL1xpHL4coeDnBo+If/KwRT+k9I1LfFVErZTLCXWPNs4pxmb
-	 9zh0Bar0SCoVw==
-Date: Thu, 4 Sep 2025 18:09:09 -0700
-From: Kees Cook <kees@kernel.org>
-To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
-Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
-	Richard Biener <rguenther@suse.de>,
-	Joseph Myers <josmyers@redhat.com>, Jan Hubicka <hubicka@ucw.cz>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Richard Sandiford <richard.sandiford@arm.com>,
-	Marcus Shawcroft <marcus.shawcroft@arm.com>,
-	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-	Kito Cheng <kito.cheng@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Waterman <andrew@sifive.com>,
-	Jim Wilson <jim.wilson.gcc@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Li <ashimida.1990@gmail.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ramon de C Valle <rcvalle@google.com>,
-	Joao Moreira <joao@overdrivepizza.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=M++ZtILacjplnieY9HElrHx844UK6QSvIo1cG9y//HBgvdI20QUyDb6hu8Va8FGY8qzu1rw5C7FnO5/K5N6Ms2gHh8VqD5vGjwb4t/+HXXjviOHe2TUWl0I2s8Ogn+TgOmRnvz75Cm2eWBug9MSO4XAz7MIBFtwlEemoj2EXVhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.207.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: zesmtpgz9t1757035000t39e8f3c3
+X-QQ-Originating-IP: i4FX2pE7QvtBsnrO5X+wZgq5nyVzqV1BI164afJORGE=
+Received: from localhost ( [203.174.112.180])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 05 Sep 2025 09:16:37 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 4385893563284536436
+Date: Fri, 5 Sep 2025 09:16:37 +0800
+From: Yibo Dong <dong100@mucse.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
+	gustavoars@kernel.org, rdunlap@infradead.org,
+	vadim.fedorenko@linux.dev, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] mangle: Introduce C typeinfo mangling API
-Message-ID: <202509041805.5C660B7B70@keescook>
-References: <20250905001157.it.269-kees@kernel.org>
- <20250905002418.464643-1-kees@kernel.org>
- <CALvbMcADtEib6D05aC0XoDwOsEG-wHDh7M9TPUSXmG0s17hX_w@mail.gmail.com>
+Subject: Re: [PATCH net-next v10 3/5] net: rnpgbe: Add basic mbx ops support
+Message-ID: <C825CC85444ED85D+20250905011637.GA1091337@nic-Precision-5820-Tower>
+References: <20250903025430.864836-1-dong100@mucse.com>
+ <20250903025430.864836-4-dong100@mucse.com>
+ <659df824-7509-4ffe-949b-187d7d44f69f@lunn.ch>
+ <AF92025D9CBFCF3B+20250904031948.GA1022066@nic-Precision-5820-Tower>
+ <908e4c95-81cb-4a95-9235-2d2c8c80d80c@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALvbMcADtEib6D05aC0XoDwOsEG-wHDh7M9TPUSXmG0s17hX_w@mail.gmail.com>
+In-Reply-To: <908e4c95-81cb-4a95-9235-2d2c8c80d80c@lunn.ch>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OTaQrRjuGKLtJntBA4+B0Z7GyNwxtC973GzQYFbB+xOGXegwkUgKzwAk
+	j1KjRWBVZ4JR1V1cRnlSS1QRo0VZuJnxQ1NdzO9z5FMBm3vJDYYwCRUu24V/S0rL26OLPuc
+	NahRy9h4ckWXnJ5EQ7P3pHwi75qzdyJ58Mnr55GLeyxm9gJCqt/xw3WFLvElv04zFQP+EAx
+	xe16sNCjVEERU9CwhpIM5nhb/C27ceDxooqobGC6hjDtJXpaYf3s24/yfGQoYdFWvtNZ2ar
+	Ox1+gawdYb441iFJ2PoxAg3E9+sh/WnGqQ+fNTNz0r8ih+LrgENjsErpvIbwD2nsjMkrKLO
+	grJG06Xk+kCnIdVYcLnf17JjwUAnaTgx89bp7KIiMtv8xBuZIUsFntm6qEQZL4xhGQt9Hck
+	JZAMUTw/0Nm5LfJTI3PiWkihUzTTH1WoWONRoictTX95ao/7Czgh4KGOXk6wA/NQCL06NgF
+	ZzsRScyquz+9RSjUZRvKsXRYlXSjZrvYzf54RyA9AHPC+N+7/GMFe515XaDBSLP/KQ8fNr2
+	3GGHhoaJ0k8KfxdNRF1GZPF39FDq2aBLcxenQ+AnEgeRbndLIbhBywGy7YAXdqBIOcuehkd
+	yq4TWFgDggA6F0d+Clhi0KMPwtcH7wX8+sdcGXHJ/E4sY0G5hZ7cEygmtd4uIJ8N5JG9Lt8
+	jgHcICv5Fh8x6mJ2oX0iOad6nRDJoTYY6YgVksmh+DFb/NW1pvejBsaH/CQ2kY6sb7p20XK
+	3tiGe6jWT7MbyZJjZlfSoKn0zStrrthe1juf+Rg4JZNS6y/U9ZHKED7HV5JZb8Vf9wzCjIb
+	EP42RfcSGptYiRinIR2H0MgzD9ZwU+zqOt55J7YDuW4DPlCVZbhECVkF7csETNSSBexfE5c
+	X2YqGgTYt20o5F0mYc+iIqYeBCqbLEjAxz+kdXqXSr3IFcbOQ7anOVXML+kb1TRdroNSPdg
+	wCcqiT2SvkUOB0blrVlj9aJJHiUq4tk1m8jL3P5k3kRbyK5XGvnDDMNBJcqllQrhP4rxZsh
+	I9x3oB2qkUQXd/FV1lfUff/j7wB0I+UUnGVGJKRA==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
-On Thu, Sep 04, 2025 at 05:50:45PM -0700, Andrew Pinski wrote:
-> On Thu, Sep 4, 2025 at 5:27 PM Kees Cook <kees@kernel.org> wrote:
-> > +
-> > +  /* Unknown builtin type - this should never happen in a well-formed C program.  */
-> > +  debug_tree (type);
-> > +  internal_error ("mangle: Unknown builtin type in function %qD - please report this as a bug",
-> > +                  current_function_context);
+On Thu, Sep 04, 2025 at 02:05:57PM +0200, Andrew Lunn wrote:
+> On Thu, Sep 04, 2025 at 11:19:48AM +0800, Yibo Dong wrote:
+> > On Thu, Sep 04, 2025 at 12:24:17AM +0200, Andrew Lunn wrote:
+> > > >  struct mucse_mbx_info {
+> > > > +	struct mucse_mbx_stats stats;
+> > > > +	u32 timeout;
+> > > > +	u32 usec_delay;
+> > > > +	u16 size;
+> > > > +	u16 fw_req;
+> > > > +	u16 fw_ack;
+> > > > +	/* lock for only one use mbx */
+> > > > +	struct mutex lock;
+> > > >  	/* fw <--> pf mbx */
+> > > >  	u32 fw_pf_shm_base;
+> > > >  	u32 pf2fw_mbox_ctrl;
+> > > 
+> > > > +/**
+> > > > + * mucse_obtain_mbx_lock_pf - Obtain mailbox lock
+> > > > + * @hw: pointer to the HW structure
+> > > > + *
+> > > > + * This function maybe used in an irq handler.
+> > > > + *
+> > > > + * Return: 0 if we obtained the mailbox lock or else -EIO
+> > > > + **/
+> > > > +static int mucse_obtain_mbx_lock_pf(struct mucse_hw *hw)
+> > > > +{
+> > > > +	struct mucse_mbx_info *mbx = &hw->mbx;
+> > > > +	int try_cnt = 5000;
+> > > > +	u32 reg;
+> > > > +
+> > > > +	reg = PF2FW_MBOX_CTRL(mbx);
+> > > > +	while (try_cnt-- > 0) {
+> > > > +		mbx_ctrl_wr32(mbx, reg, MBOX_PF_HOLD);
+> > > > +		/* force write back before check */
+> > > > +		wmb();
+> > > > +		if (mbx_ctrl_rd32(mbx, reg) & MBOX_PF_HOLD)
+> > > > +			return 0;
+> > > > +		udelay(100);
+> > > > +	}
+> > > > +	return -EIO;
+> > > > +}
+> > > 
+> > > If there is a function which obtains a lock, there is normally a
+> > > function which releases a lock. But i don't see it.
+> > > 
+> > 
+> > The lock is relased when send MBOX_CTRL_REQ in mucse_write_mbx_pf:
+> > 
+> > mbx_ctrl_wr32(mbx, ctrl_reg, MBOX_CTRL_REQ);
+> > 
+> > Set MBOX_PF_HOLD(bit3) to hold the lock, clear bit3 to release, and set
+> > MBOX_CTRL_REQ(bit0) to send the req. req and lock are different bits in
+> > one register. So we send the req along with releasing lock (set bit0 and
+> > clear bit3).
+> > Maybe I should add comment like this?
+> > 
+> > /* send the req along with releasing the lock */
+> > mbx_ctrl_wr32(mbx, ctrl_reg, MBOX_CTRL_REQ);
 > 
-> This should NOT be internal_error but rather sorry.
-
-Ah, heh. I switched to internal_error because you'd suggested it in
-the last version. Maybe I misunderstood where I should be using sorry vs
-internal_error.
-
-> > +       if (!name && !TYPE_NAME (type))
-> > +         {
-> > +           static char anon_name[128];
+> As i said, functions like this come in pairs. obtain/release,
+> lock/unlock. When reading code, you want to be able to see both of the
+> pair in a function, to know the unlock is not missing. The kernel even
+> has tools which will validate all paths through a function releasing
+> locks. Often error paths get this wrong.
 > 
-> I am not a fan of a static variable here. Why not just a stack variable?
-
-Oh, whoops. I will fix that.
-
-> > +         {
-> > +           /* Always show diagnostic information for missing struct names.  */
-> > +           debug_tree (type);
-> > +           internal_error ("mangle: Missing case in struct name extraction - please report this as a bug");
+> So please make this a function, give it a name which makes it obvious
+> it is the opposite of mucse_obtain_mbx_lock_pf().
 > 
-> Again sorry rather than internal_error.
+> 	Andrew
 > 
-> I still think it would be better if the hashing and mangling be one
-> step rather than 2 separate steps.
-> Especially since this is only used for the hashing and will most
-> likely only used there ever.
 
-In this version the hashing happens immediately. No full string is built
-unless the dumpfile is enabled.
+Got it, I will update this.
 
--Kees
+Thanks for your feedback.
 
--- 
-Kees Cook
