@@ -1,158 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D3B32F76C
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Sep 2025 07:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCDF25949A;
+	Fri,  5 Sep 2025 07:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757056023; cv=none; b=Crv3tIaUADqgKQ4GQCavWWu44erxKC7hZeVEPbTb0HHyqHV4HZNM0zal0DW+Zj32D3YCuYjZkFIp+W2p8Y/zWFb2bysvY5C81TORhySy3KKfiVfv9Thq5nT0ByGMXyfpHw3P4grp/YpqYT8CV1mGzYmAy+I8ezmRK95zK5fgGGI=
+	t=1757058296; cv=none; b=fG9/ZtGsoMfQrGuXgUw5DeL0l51wE9eDSw/RMrBEeFdOzbcvHXUwdtWeGbetvPUCXl/rAqVeX1OOFBbodB9sOXGX3HGtlpI/QuD1OozbHRwS/ZpdKlXA8rwbIE30jG8it64exdWUekt27KPsUfpN2momFMjJE9+wc80TpDp3kkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757056023; c=relaxed/simple;
-	bh=tDHelf7WEMjV7EOGWj9jpwbEDjmFIvSfhs0WB1gOfx4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=PHNuGHWn2Tb0R34k0Bewm1/eNqWv54tkZ+NCwjodeWL7UfOWIRrkgmCbE0Xs3FTPAydUs3W6m+LvjQtgZOW4ACP5wCJlewp5SLenYqPDDohuGgJe63U4HsqPGgWAsdusPY9pgaISS0bgP9cgpST3sMFZPZYPoa0IVAYMn1IW0Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gsaf8mCr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1757058296; c=relaxed/simple;
+	bh=9FriGNAMQK60A3zi1qw0sJL8xNzp+kQ4bPAmGrninAY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hbnfwOi2O6WtG2Qb0iuFbr1KA971hN9nTwjacQ6MJ7D0N3OElRgu7wnZr9qB+Khj0eCVGFalxjLHcBV9gCLV+DLCCXGC/3TqiBqrBbrTtpvEq0KoXTGowX+G3Uk2khmQ7UESraBGPNv6Ell95bJHZUNeujgWIPBKwEwKcZKm9zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E8Atzsl3; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gsaf8mCr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757056021;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
-	bh=Ux3XLPCsvR2RUG+YaKSZ/r+FzeMFLOV7iYFFVNh/jRo=;
-	b=Gsaf8mCrkEjJX35maCkpP9j8oqaVtLvd2Cit6n8zIqlw7U3J3X6azssKgNxqdO1Pc76geS
-	47Bm+rBa0dsXrVYf5Mw6kNyAF3lv62W13r2e2utf2o7uPonGGufz1ftVUZk7ESqWZAaXKu
-	XTQAw6jxfGimeF3kd9QfgrKRB7qJRsg=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-653--7omiWA6MTqyRQeulSIA6Q-1; Fri,
- 05 Sep 2025 03:06:55 -0400
-X-MC-Unique: -7omiWA6MTqyRQeulSIA6Q-1
-X-Mimecast-MFC-AGG-ID: -7omiWA6MTqyRQeulSIA6Q_1757056012
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F3D5B19560A0;
-	Fri,  5 Sep 2025 07:06:50 +0000 (UTC)
-Received: from tucnak.zalov.cz (unknown [10.45.224.56])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C78341954126;
-	Fri,  5 Sep 2025 07:06:48 +0000 (UTC)
-Received: from tucnak.zalov.cz (localhost [127.0.0.1])
-	by tucnak.zalov.cz (8.17.1/8.17.1) with ESMTPS id 58576jDM1532872
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 5 Sep 2025 09:06:45 +0200
-Received: (from jakub@localhost)
-	by tucnak.zalov.cz (8.17.1/8.17.1/Submit) id 58576ff51532869;
-	Fri, 5 Sep 2025 09:06:41 +0200
-Date: Fri, 5 Sep 2025 09:06:41 +0200
-From: Jakub Jelinek <jakub@redhat.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
-        Richard Biener <rguenther@suse.de>, Joseph Myers <josmyers@redhat.com>,
-        Jan Hubicka <hubicka@ucw.cz>,
-        Richard Earnshaw <richard.earnshaw@arm.com>,
-        Richard Sandiford <richard.sandiford@arm.com>,
-        Marcus Shawcroft <marcus.shawcroft@arm.com>,
-        Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-        Kito Cheng <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Waterman <andrew@sifive.com>,
-        Jim Wilson <jim.wilson.gcc@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dan Li <ashimida.1990@gmail.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ramon de C Valle <rcvalle@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Bill Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] kcfi: Add regression test suite
-Message-ID: <aLqMAWTwDh5eXgUJ@tucnak>
-Reply-To: Jakub Jelinek <jakub@redhat.com>
-References: <20250905001157.it.269-kees@kernel.org>
- <20250905002418.464643-7-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8Atzsl3"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-24b157ba91bso3742275ad.3;
+        Fri, 05 Sep 2025 00:44:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757058294; x=1757663094; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9FriGNAMQK60A3zi1qw0sJL8xNzp+kQ4bPAmGrninAY=;
+        b=E8Atzsl3SwipG4Km1RjAtj9ZTMXwHyNV6sdMNs9KpRyQNrGvm08xyT3HA5Q5R0NhMx
+         5Y3nlGJK3Oehh+2nzBEF3hrrqxzhFwfjdmohksMGgJuvqzeDOpaSn6J3sGi23oEdQWFb
+         j/U1jFJJaADN8VInw+teFH+bQz1E0oZBpvClNp40TKNRJEN81G1kpBXjTj9QL7pzIgJV
+         YQeNEgJTcQYEuyemj3G3CbLJW2Q0guLyd8SuYOhStm+jRpZ4q4g08CUvmr8Q0ahL/DXu
+         jEshUGxUhIFMgCISGMPwj3iPit3nmYss4qd1uz5PUc80WK7dgV0LxP0/iuPaDTtEMu8H
+         N5iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757058294; x=1757663094;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9FriGNAMQK60A3zi1qw0sJL8xNzp+kQ4bPAmGrninAY=;
+        b=cloA5Egf1rMgvJ/7+V6naP/EpPJpThjKixGElgjMQ1Q3q2aOpK5r3optuGtj6sMmnh
+         zhk2LcumWfwZ9jB4gq6ahhORUZHvItOTaH0xNjagEscP2e/FmPcbOe015vBQt3pG7iR7
+         H5e41Wc3SUB0lqBA5+ZsowlSM7e4X3BsALG6qZ2zs1w0umZ0LODoqEqRMFZtWW1f6YrC
+         FoaUHnOGJ3RUjpvKQEbo6ox4QySRTaCPR2ziEnt2+F5eY0/G6E+zIa9aQ+M/b8ITLp61
+         gwghA+4nbGwp3kz8bdBJflRgzf3uMTy7821YEcWaOSocegm5eKpZxli8zj40DhqdgQGe
+         Btww==
+X-Forwarded-Encrypted: i=1; AJvYcCUGTkv/LesNnpld45UuH1z3dRcSXYkiD/rMi+1Pho0125h0yzsNzY8B2YVlZMR4f4EqVL4DBkjkZLGpIBnQrlR3@vger.kernel.org, AJvYcCUlTnsmtHbXTaqADnMGZiiZgwvZu4nO/t3SgJ13ZktAJOSJ9PUTHIwca8HiCLXZi9UxsPRppD/vMjSPSqvP@vger.kernel.org, AJvYcCVnHVUid+jqP/BGxiMuPoz2V4aTmj2dX792yVRTKZYuSneGguzPiY6O/fCwP44r55MoT0+imGbvWoQ=@vger.kernel.org, AJvYcCVzATrv2h2IIkcOjChye53720Sfd2QC2cXIwmfdh/U/IX9sP4nLnUiVLqepUGfnS9oi5MXdcZlaE0cTyr3V@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmWX0BnCW+/e6ITg/w2+F2d5GrkrrlQ5iZdnDhzYQCOwqd8bVN
+	LuX8iYjvCZrPmfYCoc0i6cl+CNOSaVncKu6DK5GqAazT3olDUUP1sBJm/pdYCEGFAonlReNkYjx
+	2bKA9M3v1oBMV1SMfEPOEkK0kFO3Cjbg=
+X-Gm-Gg: ASbGncsHawJ/E9kVFw88qA9NNtEY+oKx0n6qk+HxtU7YgTza6Rs1cnMqCKVvqEk4BZT
+	NtqPV6iYGASHBMu1Izes/oJIv6AiGBeZ+mSZ9s+2sD0JssPTjRXMmA8+dPbQ8423EpmlzwltFcJ
+	ZIbazJSgQ3ylEoxLFOagLy2EDFwqDuNUVEhqfKDZJXVOXnTakfyLn1ozklIj814r2GXk6XoFGvs
+	OdaFGVOTvm8ZNCPuncNXvk0NECz8vFv5vvNr35DQqjFplFtCW38h0YV2SHRBxagReRdMYejHjiP
+	eGuEH+6myaIznfyF6adq6RSPDQ==
+X-Google-Smtp-Source: AGHT+IGp+cfcPTE7KjWQu/swfr5iYBHHS7MaJe/UBLnqHcZT/xW+eAFQaePAZ9b+NKm2RPENGVUXqKIAn3gIBqf29BI=
+X-Received: by 2002:a17:902:d488:b0:24c:b6b6:e54c with SMTP id
+ d9443c01a7336-24cb6b6e5f9mr45340275ad.3.1757058293921; Fri, 05 Sep 2025
+ 00:44:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250905002418.464643-7-kees@kernel.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: bkLoKm_lyTYACPvbVtHoqShK2Fd7lVn1gO6vpOnlLIU_1757056012
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250904033217.it.414-kees@kernel.org> <20250904070410.GX4067720@noisy.programming.kicks-ass.net>
+ <202509040933.06AF02E714@keescook> <20250904200134.GA4067720@noisy.programming.kicks-ass.net>
+ <202509041740.1007FFEA@keescook>
+In-Reply-To: <202509041740.1007FFEA@keescook>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 5 Sep 2025 09:44:41 +0200
+X-Gm-Features: Ac12FXxuAyzV67ABgZG5WJnwUzLnA_eITH6K0nXKAnUgoCmOACBUUDhH7lZTQYk
+Message-ID: <CANiq72==vG_L35sQDGF6OFmTf=17qGs0k1NKiD17JYoforR30w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] kcfi: Prepare for GCC support
+To: Kees Cook <kees@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
+	Randy Dunlap <rdunlap@infradead.org>, David Woodhouse <dwmw2@infradead.org>, 
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Marco Elver <elver@google.com>, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Ramon de C Valle <rcvalle@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, Mark Rutland <mark.rutland@arm.com>, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, linux-doc@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	x86@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 04, 2025 at 05:24:15PM -0700, Kees Cook wrote:
-> --- /dev/null
-> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
-> @@ -0,0 +1,73 @@
-> +/* Test KCFI check/transfer adjacency - regression test for instruction
-> +   insertion.  */
-> +/* { dg-do compile } */
-> +/* { dg-options "-fsanitize=kcfi -O2" } */
-> +/* { dg-options "-fsanitize=kcfi -O2 -march=armv7-a -mfloat-abi=soft" { target arm32 } } */
+On Fri, Sep 5, 2025 at 2:42=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+>
+> Assuming Nathan (and Vegard? or other folks from the other thread?) are
+> okay with the kconfig changes, I'll take it via hardening.
 
-For stuff like this you should be using dg-additional-options.
-/* { dg-options "-fsanitize=kcfi -O2" } */
-/* { dg-additional-options "-march=armv7-a -mfloat-abi=soft" { target arm32 } } */
-(in various other tests too).
+I haven't had time to take a proper look, test it etc., so I didn't
+reply, sorry -- but I am following the thread and I am glad if we have
+something to easily/properly support this, so thanks for this.
 
-> +/* Should have KCFI instrumentation for all indirect calls.  */
-> +
-> +/* x86_64: Complete KCFI check sequence should be present.  */
-> +/* { dg-final { scan-assembler {movl\t\$-?[0-9]+, %r1[01]d\n\taddl\t[^,]+, %r1[01]d\n\tje\t\.Lkcfi_call[0-9]+\n\.Lkcfi_trap[0-9]+:\n\tud2} { target x86_64-*-* } } } */
+(And sorry for having triggered all this discussion/work -- at least
+if we get this done it will have been worth it :)
 
-This at least needs
-/* { dg-additional-options "-masm=att" { target x86_64-*-* } } */
-because Intel syntax wouldn't match.  Does this match with all possible
--march/-mtune settings?
-Peope very often do test
-make check RUNTESTFLAGS='--target_board=unix/-march=skylake-avx512'
-etc. so if the test depends on a particular ISA or tuning, better
-add it explicitly to dg-options.
-Also, we try not to use triplets like x86_64-*-* but instead
-{ i?86-*-* x86_64-*-* } && lp64
-or
-{ i?86-*-* x86_64-*-* } && { ! ia32 }
-depending on whether it is only for -m64, or for both -m64 and -mx32,
-because on some targets the multilib compiler is i?86-*-* defaulting
-to -m32, on most obviously x86_64-*-* defaulting to -m64.
+I will leave a quick message about the commit message.
 
-> --- /dev/null
-> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
-> @@ -0,0 +1,101 @@
-> +/* Test basic KCFI functionality - preamble generation.  */
-> +/* { dg-do compile } */
-> +/* { dg-options "-fsanitize=kcfi" } */
-> +/* { dg-options "-fsanitize=kcfi -falign-functions=16" { target x86_64-*-* } } */
-> +/* { dg-options "-fsanitize=kcfi -march=armv7-a -mfloat-abi=soft" { target arm32 } } */
-
-Again (and in many others).
-
-> +/* x86_64: Should have 0 entry NOPs - function starts immediately with
-> +   pushq.  */
-> +/* { dg-final { scan-assembler {test_function:\n\.LFB[0-9]+:\n\t*\.cfi_startproc\n\t*pushq\t*%rbp} { target x86_64-*-* } } } */
-> +/* { dg-final { scan-assembler-not {\t*\.weak\t*__kcfi_typeid_test_function\n} { target x86_64-*-* } } } */
-
-.weak is ELF specific, not all targets have it, are the tests restricted to
-targets that do support it and in this syntax?  We have
-/* { dg-require-weak "" } */
-but that doesn't imply a particular function.
-
-Also, not all configurations will support .cfi_* directives, that depends
-both on command line parameters and on whether assembler supports those.
-If you expect them in all tests, perhaps you should test for those in
-kcfi.exp and not run the tests at all if the directives aren't supported
-(or if weak isn't supported etc.).
-Also, there are targets with different line endings, so usually one scans
-for [\n\r]* instead of just \n.  No idea why you're using \t*, the compiler
-emits just one tab.
-
-	Jakub
-
+Cheers,
+Miguel
