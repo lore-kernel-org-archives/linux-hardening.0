@@ -1,302 +1,177 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510BF27AC3D;
-	Fri,  5 Sep 2025 09:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E923F285C99;
+	Fri,  5 Sep 2025 10:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757065311; cv=fail; b=gzW4kLlBCXZNnCrxbrSZ6S4T/+giAv7uA0ZaJvtI341thCWj8GBUaf2uxUQgObPBtIcPjNc0uOFJJ2o42U7BgA5mkTDjAuANeDZnY7QriTV4dACWlpyI03kiMN+nJIyMFCLXASVHW5zvEpMLioog6k6JD8zLvBQT2+dJbkFdujQ=
+	t=1757067845; cv=pass; b=eUmoJJF8FNL7h+sIVbwUz+bZw0yi9+ksHfWmZkoMgkCM9Pcb64EvxnErdZ1oFIzRmSqlKhFdpbwSgHa7rzH7R73ZtyWJSNSGCtzj+eY+5fZNznveyujGCU0FHVktbgOwpNz+du1Z5jCSKWrtNh85ksKBoNqx9ek+rDoZb0PxCd4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757065311; c=relaxed/simple;
-	bh=Vv5fUf/Mn7zid6VXxKWszkl0cu1qhn3ZqTOtL2ZiQ9Q=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NTF5BkkBZGuvJNWNVQ6pEYyw844ED1lbb1WIGUhucBQzanAgCZljF7fKWdmDff+VehrAJhIdl6sFaBZjK0gm7sQVuM2u9+g8UqdmjVmaAoaVGeQk3y5PtmdBTfxlYr3gKkOPnWaxP2btV0wtmSKw/2Sp4TKdsRCQBxUOk6MBPtM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=OJJi6pA8; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=RacL5zv/; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1757067845; c=relaxed/simple;
+	bh=QZA4RR62Kctrtehb5IxqxnX/l9Q+N/8UFN8FaTCAu04=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QLUZwkWRbYAodTKT+m+ZUl6XPwVHeZ5GiCBkJv0RsjvUYbKwlNTtHFZcZNWPixm35cPqnZyfk1MAq+TRPTET+3xbCgwO7TYYFPuMSe1mklRkKcXiv9mh3/u7+WTlq3dw+cigLc6CPqqa9B+5O/ZhSnbb2Q+2kv95+huYhTUtA8U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=BvgBdHW4; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OJJi6pA8";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="RacL5zv/"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58584UgC014429;
-	Fri, 5 Sep 2025 09:41:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=n7WavrV2VJl/K7DMn5B4RtrPxMLo2d5Izl/bNCJVqAY=; b=
-	OJJi6pA8Mn/3hIrhvCfDvQSiGsbKpnvCWpgzaKCEgMwnxScJr800h3n0fPMmUW3A
-	8cd5Mi/1R/734K9/HfbeP59cywn3/9y+N7EohzXTNIyNzWmzXNhxq1VYbmms1b7D
-	WhetKrb38btneVR/TbI+kjE9C4fizWj30S9inTf8PTrJqJM8FaBXEO1nZhpeDpRE
-	iNbY4xEK88Aq1qjnX1zNQ+wW4xRZVIsRlmiY1SRq9uiNsvNF924RtV8HLqdwz9p+
-	g/9rGp6OoM4+QCfOQUA2Kpde3zZ3rHVqx79Mvkq3OXv8s5UxhM+tUrxpUgVrkuFV
-	l3GCc2fGcFTk8w53reF6kw==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 48yv1f05en-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 05 Sep 2025 09:41:27 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5859Jbwi039557;
-	Fri, 5 Sep 2025 09:41:26 GMT
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04on2042.outbound.protection.outlook.com [40.107.102.42])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 48uqrjs1c6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 05 Sep 2025 09:41:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FYX78AG3X94xZlPYU6r43xfdzDSR8t4aPO4r0M6/nO3c+70VjA/CYdP3urTChZ4flIVSDpC4q4xGKt42AAQgGJwRNnp9uKoPfMWkeYwcZemMZzu5EgRRopF5oNXnvyzw4fG0X+o9F0G3TBVaKXTLj3DaGnJz4zvMaZjF/n9oNoIgMvBLz8z52kiM4fGEIIYaez+impYJs5oiojIN0nDX7CNHjYwgBkimHE3jVCJJy1DIPNNp61DGfYXlMcb2/VupDjaOQLlMDjq30fNFiwVjE15tqwwsuRqdNOpLuS+Wjb9nPr6C8GIFdXZDD8HNTtgsSAnfkxbg0FEyTZaPL0dckw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=n7WavrV2VJl/K7DMn5B4RtrPxMLo2d5Izl/bNCJVqAY=;
- b=L0XFcMbj/BN8bLLYPb+zmazvH1LHPweePvlduLEWb+Vl5ad41FHVTFQJCtpkurfBynpw9ILDMBqk8NJiluFcwGUTHKRX3LckDzmsHKJjQdX0ZhtrDkWkGv5E89etOx9SG/mi/ryVMFNiTWezMc9T1AbGXmQOIyp/DRKApjDm2eaHxRAywFDQjxouWpVk5SkQaMRXMrW7R0zS0wwpUy8voeJjtCuBLBbPEfNR52STg2UHzNKQZ1mMGy0P4dOwesUvmxD/c5Yc4N8iMmP10ZlQzSSOK6SB3uY+3LnOCxNotjSuVH9+rXDCsRm0JZsdebBFXDaDPY6NYXPJ8xHJyyaaTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n7WavrV2VJl/K7DMn5B4RtrPxMLo2d5Izl/bNCJVqAY=;
- b=RacL5zv/Ue9DlB18EKINBj8bxkWmWvTZQLaEJUc3q4QDsd7ld67S3X9SWUSMTrVf1dwkMEW6Gfio+wrogyPjs3GCA/SrTJKqbpDBXCuibwMANazqLrcPYfIiOHiPHgM8bCvB4gkl0uhZf/5hhhkAuA0RgsBg0AnDADKcyreRLVs=
-Received: from PH0PR10MB5433.namprd10.prod.outlook.com (2603:10b6:510:e0::9)
- by DS0PR10MB7272.namprd10.prod.outlook.com (2603:10b6:8:f7::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9094.16; Fri, 5 Sep 2025 09:41:23 +0000
-Received: from PH0PR10MB5433.namprd10.prod.outlook.com
- ([fe80::47be:ad6e:e3be:ba80]) by PH0PR10MB5433.namprd10.prod.outlook.com
- ([fe80::47be:ad6e:e3be:ba80%6]) with mapi id 15.20.9073.026; Fri, 5 Sep 2025
- 09:41:23 +0000
-Message-ID: <2bf12be7-7fd5-41e2-a0a2-da82903d0ccd@oracle.com>
-Date: Fri, 5 Sep 2025 11:41:18 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] kconfig: Add transitional symbol attribute for
- migration support
-From: Vegard Nossum <vegard.nossum@oracle.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-        Nicolas Schier <nicolas.schier@linux.dev>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Randy Dunlap
- <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Marco Bonelli <marco@mebeim.net>, Petr Vorel <pvorel@suse.cz>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250830020109.it.598-kees@kernel.org>
- <59c4f103-7f1b-4829-bd82-0d392047fea4@oracle.com>
- <202509010949.9A61A98@keescook>
- <d25b2c63-32e2-4a41-b982-da5131cffd2f@oracle.com>
- <202509011125.5879901C@keescook>
- <0d9ef42f-57c7-472b-89c1-4534f40991f7@oracle.com>
- <202509031949.375138FB13@keescook>
- <4cbc348d-02ca-4743-b8d4-21db2ebf4460@oracle.com>
- <18c2c59e-edae-4281-ac7c-8524d9cde1c5@oracle.com>
-Content-Language: en-US
-Autocrypt: addr=vegard.nossum@oracle.com; keydata=
- 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 8A==
-In-Reply-To: <18c2c59e-edae-4281-ac7c-8524d9cde1c5@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P123CA0155.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:188::16) To PH0PR10MB5433.namprd10.prod.outlook.com
- (2603:10b6:510:e0::9)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="BvgBdHW4"
+ARC-Seal: i=1; a=rsa-sha256; t=1757067816; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=GybpDjWYrcHzyhe7ld9X+plIzRLFThL2vVRB4HOE39LPhEWo7G76wejJkddedYND5EPpQ9rgJaOp7EXZOdAo/Gx7y6sP/7AwDkDaoIu8oF8/wJL1R3NIuDrBFXJOWn1TFpXNI5Yi2h+ARaHSMJPSUmiP4hecLToZf9uVK06a+sM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1757067816; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Sa4pK2HiFVq0V3IW5nFLIvvG4Ckdsl8UUh8ALJALKdQ=; 
+	b=kKnaR4pJBgM3+SeWyb52P6PTtYt804ke+MagQ44d46HPexHfGUR1TIMbeW5zhYKRPMug4qUTlbF7OVFmGt3sJQskTC+6ywtLpGbnjer9NVl83NuXJXKTRhLPR3KEXbQXQ2nrSHjqD0xhdfqW3OWWuG4qeYEkOO1cAjIGboZcX7I=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757067816;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=Sa4pK2HiFVq0V3IW5nFLIvvG4Ckdsl8UUh8ALJALKdQ=;
+	b=BvgBdHW4mre870EH86Py7ypKynt0qstx69dUFNQp7WUqIWhAOuSBhGluDwu2/8+D
+	oWRANoyyeXRnkSP+vEp0Mrig+Y3UUKyxJO/ChrCHo3JM1spMW0RnOxLDsh6wLJAQRoj
+	oT7zANmrPAe6hp2zMBRDn7sPcu6n8cGXUwp/n9HM=
+Received: by mx.zohomail.com with SMTPS id 1757067815022812.3069983849073;
+	Fri, 5 Sep 2025 03:23:35 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject: [PATCH RFC 00/10] MT8196 GPU Frequency/Power Control Support
+Date: Fri, 05 Sep 2025 12:22:56 +0200
+Message-Id: <20250905-mt8196-gpufreq-v1-0-7b6c2d6be221@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5433:EE_|DS0PR10MB7272:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2b8e5bd6-d966-4b66-767d-08ddec606049
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aFFPL2ZieUgvVElxOWlWYURyVi9veGdMcXhxS1hYTTIybVZBenBFQ2kvdVB2?=
- =?utf-8?B?OEtJY245L3dOdjV4eXh1eGoxYmt1b0dGdURWZWtOVzQ0ZmE3VnVYZmhOeks3?=
- =?utf-8?B?elZMMktkNU96UzVXOUFnNVBSWExSYUNpbm9wRk1jdXE2b2ZhZ1pwTmVmdDN6?=
- =?utf-8?B?cHlDK1hvSElRNzB5bDRvdkoyeFBRb0xKMW9KSFV5YjlPMVB6VmZ3Z0pkVTBK?=
- =?utf-8?B?bjkydmROV0tJMEV1cUpJU0h4dWo0Rkt3cHFKMFFiYWFSU3Y0bU5KMkVmRGRX?=
- =?utf-8?B?Y3NJNGZqQURhUUlMK0dHKzlPc0dOWFdXa3RDa214cFZEbkttQ0lnSXE0TzIr?=
- =?utf-8?B?YTlsZjlnQ3NvVDU0ZUJURkRjVkNBR0QvOFl4ZFJZajQwS2ZuV3dmYTNpMDUz?=
- =?utf-8?B?RTZSY1ozSkxjSEpWbHpaa0EzMVVFYkxsRUM4Q3dOMTZiVHY5Y0tXVXFuVFdV?=
- =?utf-8?B?MVFYL3ZUdzJDdjZYZEFUUW5wMngvL3hKaUpiQXdyZCtyVXVKYVdyRlg2TnRk?=
- =?utf-8?B?Y0J3WktQRi9XU1BxVVArZnNtSm05RTRDaFZqWDYzZEs1NkZUd0ozUDE3a3l2?=
- =?utf-8?B?K2xvOFhWK0ZBdk9RSTBwWHZkVGQ2NjZzd3dzMVM5TWRJb1N4RGhMSld4djNz?=
- =?utf-8?B?bTB4czBUZDVnM3hSZ1RTclBLN05kR3NUQklCN3FEOXZtZXRDbXBKSFhzNmZT?=
- =?utf-8?B?VkM1eHRGUTdBWWkvU0RrRlhGYVY5THAzL0FaQmtVK0JCQ1RlR0srU1E0ODZw?=
- =?utf-8?B?M1ZTS2t0bVJVVlowRFhpZy93eEdheWI3SmFUVm0yMkFJOTRlam1aYmpYVnJR?=
- =?utf-8?B?OGZPV0swbmwvZCtiN3hsMWNxay8rQUpCNWZDZldqUU84aGdjLzU3T0MrV2t5?=
- =?utf-8?B?VVp6cjU0ZkpaaFhSeTNqeS9QaEthOVVNSG1Vay9xYmZWM3FwQWcrRXBTVlZn?=
- =?utf-8?B?Y0QwbWV2Yk1aYnU0UlZLMXROZCtzRFltUG5GZVRycEJvcmhRQVdkdTVrRHVN?=
- =?utf-8?B?M3Q5REczYS9PN3MrMXFhUnBITkdDR2V5Wml4L0NWeXl0ZkdOT3NXZVdGUjBD?=
- =?utf-8?B?M1czUjRza1BIRWdwWFNXR05wNEpRSERlb0VlNjNvSVQ0aWRwaFFqZ2hUQlpV?=
- =?utf-8?B?UXNDOUJlUWIvaW1XaHZIUjA5RzA1WE81Q1FXc0tTNzNLeDBQUGp5ZEZkb0FQ?=
- =?utf-8?B?MmRSdnEvMElUeHdsbXpXcC9GdnJwTm03TEZoTTVubEs3WjVFenh5dXdSRW4v?=
- =?utf-8?B?Ry9zSGNteFQyTGNHdkpmSWRTUkFvUjNuVkM5Vk1yWEREam5SRFRINUZlMU9Q?=
- =?utf-8?B?K0JFU3U1RWRwdExVZUtDS3NORXFIWVE4K09hYVpCVHBaOTM1b292THVKRDN1?=
- =?utf-8?B?aTNhZU9VWTBXM3gza01vK2RWSS8zR0hjOUJCTzV2TFpxYjNEUFBWa00wc2hD?=
- =?utf-8?B?SXA3eEtOSVBhcy8yWnZTR29OMGZVZnJtQnUwNzBCM3VzMXM2cS9qMHVrSito?=
- =?utf-8?B?NnlSTGhPT0dNQ25reEVWUTRUY1RROC93c2paT2hVdnpoSngrWSs2eFJ4M3Ri?=
- =?utf-8?B?WHNvMVFjNDVUQXlld1UxUE1saEtEMEEyTXBFT2lRN1FYY3Y1WGRwNVlwemJR?=
- =?utf-8?B?NzhxeEtrRkJrVjl5RVNPVVJwRXhQQ2hQN3JCd2Q0RW0zVVg3U0JraThLLzZr?=
- =?utf-8?B?VHN1MGJHMEFDU3BoNWhaRVd3dlI0QXNDMDVMM1UyWTVocUkxY1pmSExsbTIz?=
- =?utf-8?B?MVdFVDBGN2lmSkRQNTVYWjlSVmxWNEo0djhyak8xMzVqOUUyZ1VPZGdaRUZF?=
- =?utf-8?B?RDE1S3pYTEpWMjIrTUF4OTdyaEZ6Q3o0L1hpLytFMUJpd0R5Y3Q3ekY5ZWpt?=
- =?utf-8?B?WlU5NHpkeWdqVkZKcXU2Z05OZmhKeVhoMnVmL0Y0bFNCcnBJZG4wYVllSDdp?=
- =?utf-8?Q?LPN3wTMQx7s=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5433.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dnRVSWJNSTVoY2pZODdZMkR6eGJjZnlIRHpTRXN3S0w1dEo1SmxpTmtqUStY?=
- =?utf-8?B?NVZzYVJOWE5HeThxVFpZckVVZFM0Y1lteGZxdXdxTHZZN084Nlk1dER5c0wr?=
- =?utf-8?B?QUVyZ1ZPQUc0cTNITE52ZHo0YWhhRFNhYnR5M1hIeGZkZVk5OUNtMlRZbmh5?=
- =?utf-8?B?WTV4UlcrdysvYlVaU1VYNjlJUGJ3TmFpUE5YdEJLeVZ1aWJkNjNTWWE4c2Zp?=
- =?utf-8?B?RmV5WVJuUWRLNTkrTm82ODlESlVzclR3c1VMSU55RjMxVVpHcFlraCttUzBV?=
- =?utf-8?B?UjhnRCtvcVR5ZmZwRlREM2g0SFNHTlgvUktCV0phclRGZm1WblBneVBpUTNY?=
- =?utf-8?B?OTlqSDFOSGRjYzdHaDBGdnd5Sm55ODNLTjF1TTVkOGxqajhGMU1mdU44Y3h1?=
- =?utf-8?B?QThDSzNiVkE5QXFydGFMZS8zV2wvU3VTTmlMU2FINWdaQWlONDAwT0tHazNs?=
- =?utf-8?B?eGpuOGhucmROSXNQeUJDUmJkeDJEbDdsSldtYzRjM29YVFltdzZWempBaGVX?=
- =?utf-8?B?TGI4RDVIV3Y4UWViSmdNVVlvaHMwMzVYbDIzV1JNT1JoT1lpOHhNZHhWcE52?=
- =?utf-8?B?VW4wNE1xMy9VZkFPNW1PRlNnL3o5WWxaVkVRMVRNMkcrNXlLUURqa3pzRUls?=
- =?utf-8?B?Z3B4eG1Ubis1cHErL3BTYllGQ3FBVHkvcXpuOEV2Q1FKamJmaXlZckZ2M21P?=
- =?utf-8?B?SGFBM0ViTmVMY1pRNjd5Q0NjQmFMMFRmNnZvd05pWWo5Q2tibXFrR2xYT3pm?=
- =?utf-8?B?L3FBaTVFclEzZjBkWlowOGd3WDlEeS9JdXNaYmZET0hsb25yOWVyL1gvSklF?=
- =?utf-8?B?ZU93Z29ib1ZxRFdHbWdDckpZckZnU250S3llN3NwMDd6R3UzbExXODJSaHJm?=
- =?utf-8?B?NnR2WDRDYzZleUJRMmdIMWRyWGFTeEQ2Ri9NdjEyNENsZVV1dGFOMWdiVHJU?=
- =?utf-8?B?aG9LSFVhK2ZaUVk1c0VqRFUwbGxaOFEwNmxtNWl5Smd1bEVwMnFPdUk0dm1n?=
- =?utf-8?B?Y0ZoM0hDaFRjTWpZQ3FyUUhlRFlrZnVJTzFJMjlTVW8yb3VscWozNkZOeDRK?=
- =?utf-8?B?NDVtcktHOU9adk9OZEsybFBHQjRwaTJxSi9WMWtPNHFNMmIzSDI1cVBqZ3RT?=
- =?utf-8?B?S1E5TVpJOTVGTWVaNmJBaGlpV2U2U3E3cWZ2N1RCVGJMNWgvQVRsVFRQZ2Yw?=
- =?utf-8?B?MlhXU2lwQVBYcU5aZHlmNlBZbDlSOVFxRm5sSFErSWNnNGR6RlFRa0YwU1VQ?=
- =?utf-8?B?ZkQ2andCZ0Z0dGgzbSs4MVVUeGE2SHM3QUZMV1IwNVJsNXhtOHErUDZGSlpE?=
- =?utf-8?B?RDk2TmN2R2plZk5aWjJKTk51UWVoL1dDZE8yV0wySUNZdHI2eEE0RFQxZ09D?=
- =?utf-8?B?cmgwTzFzRFJRdXZqM2dxak5GclpvdXkzYTVtRXdjN1JKV01TYitiZEo0bk4w?=
- =?utf-8?B?UjlvVkRWZ3pHMlVKL2xwelVPOERZb2FGQi9LMEludkdydkI0WUNPU3JwaXpU?=
- =?utf-8?B?S1d2TDFIeTh4dGJONTRQWCtzWVJEYjZnM1I3TVRJbHd1M2MySFlGbCtBbmVR?=
- =?utf-8?B?LzNUbWZPdzBwem96MzloV0ltckwvbS9GU1N2NWF4T0g3aXdyUWpLamdYV0Z0?=
- =?utf-8?B?UitsUmJjNVd3OHVoemlFNlVsdmtPV241RU15TmJJMWozMlh0ZUJ1ZEtibHNh?=
- =?utf-8?B?S3lCTGp6dkJNcFFyeXl3MWRBRFlHQzRpVU1KNDcyZXB3TFVRZ1JzSzdUTXI2?=
- =?utf-8?B?Nks5NzJtSFpzY0Rycmh0Q1U0dDR6M1BReHlieTQ4eTJrc24rS1ZBQ2lqdmFm?=
- =?utf-8?B?SXN2S1M0ZXErb2ViUG1IQThMZFlhajFicmpCUzNVdUxtU1loOGZZR1NJZmJ4?=
- =?utf-8?B?NFlGdzhSQ0RsOUpnRVFzeGdRczBVdUpBcDJQdEo1SGVLVFdvcDJJZ1FWbzkx?=
- =?utf-8?B?ODNMak4zUHZWT0pkYUIwNzlFS0R0SHpxdDl4cm9jblhQWEhhNUJrQjFyYXFY?=
- =?utf-8?B?ZjhaNVNFZWxsdm5TUWU4YU81L1Z1UUFlbGlONUtEQ005d3RUNGxZYit2UGFF?=
- =?utf-8?B?RW9jSUR4ckxRYzRXSjBRZTlqMHJsbG5QQTVQY0hTZkF6OWRBN2VVa1dCRVlk?=
- =?utf-8?Q?22l3re/AkyVs+v0EBL4tuRmaj?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	4veddOvPQvkL9zkFHUYNVoFCUslCGlVn5Jg9pK9iPE4tbB89YT09IDQB9uAJDW5iYSsQONBWo6dlueqXAsi4bg77yoS+/1GxV+RYeGD/oNV4rFprPqrlWz1tAV+0gOliy+SdPt4Y0PApQB7S00kjNVd6/xek6InsllS+5BUL+IFym3ggNcKsmq2sMtI750lgOrq8Q/RTkYRaibtcxJkKdByL0dpQMYQBf5p6cusQJ+0c2jHdra5+bG/siscdyFtfGSrxPeUX0E6fI8kQT14m50f7n03t3lMb1CXSowar/TH/HsQ7Qth1wzATirX2udr5dzUKlG2Tg47kt5avHC2ARxHPA0SQyNrqKflhT7WDn8A1v3URJ6EaVip5g2UpbUatzgIbO7Xvxcoc8CqGT5L089TPKFal6Z0qHDxU7V3XGq1QNNnInqLfIt30aIVOUslxaQvhewU4dlreGkqnah1lonOwGkvyDxtKmQpzYrQ8k3puOdaqD5UOTi0urHUAVbftLb6ub6gstZKDmiqxjm6+V+MBjhbM2XKc5O3NwwfPHhb19kZ8ZiNdG8PEE6UeWmTNXDf+K6Pyvp2PoHlUt8rFNGWAHgg1r8t5k+mGrDklsSE=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b8e5bd6-d966-4b66-767d-08ddec606049
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5433.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2025 09:41:23.7236
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tGrMkULX+KooQ6+16ekmgd3MP1CLQPjTjtjikl3iEoxGqorjue/ctceD2SolZDPQNnUPpEIx7gyNHLs41wZ8+RN5QY0Ll4NiCarGUbA2azE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7272
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-05_02,2025-09-04_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 bulkscore=0
- adultscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2508110000
- definitions=main-2509050093
-X-Proofpoint-ORIG-GUID: vcUa9I11c6bZb9MDH-K7pKBBqh-xkTBM
-X-Proofpoint-GUID: vcUa9I11c6bZb9MDH-K7pKBBqh-xkTBM
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA1MDA3OCBTYWx0ZWRfX4/MTVihnFgdD
- JQdLL7F3R6XCfn2lZ2WOY9XXx60bxJ1fFh9+9s3hXihNn1EIGCKjADYZQHY5ODExBgQnfngEeZ/
- h1c44LPFiTeSjE0gPHfmYvq3IumRjvnhKjq3lEiT0iXQiuxjljEbLmQKWnNGGN//zI0rwIW923D
- Eyosvtu65Imrq1YYjHJ8kd38pL4AAI6DlFMkdCJbsSwjj3WckU2Yyo4h2n7lCDwKs8Zgar2pcic
- 6aQf0klOF9ilu/xdMCqc0Z1q1Mlglf+dcB66RLOOFfoqP3xDDFVjw6Ebi6LoJoaJLMjfS/36/mp
- SDDhRiB3eF79CTPayzWk8aAhgO1SMYXVoQfjxUsNRtJ6DY0So4u1jfZxIWWDI32HnVkrk93Vco1
- /otHSgrpWGZKE9zAtw6B7CiR8QvfyQ==
-X-Authority-Analysis: v=2.4 cv=C7/pyRP+ c=1 sm=1 tr=0 ts=68bab047 b=1 cx=c_pps
- a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=yJojWOMRYYMA:10 a=GoEa3M9JfhUA:10 a=_kHF1yU3zlKfq-h4VY0A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 cc=ntf awl=host:12068
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAG6umgC/zWN3QqCMBhAX0W+6ybbTN0kIgh6gG7Di6mfNVBn2
+ wxBfPeW1eX5fs5ZwKHV6KCIFrD40k6bIQDbRVA/1HBHopvAwClPqeCS9F4wmZH7OLUWn0Tl2T7
+ NctowwSE8jRZbPW/CG1wvZyi/w3A7Bbn/bSrlkNSm77UvogFnT7aApOlH0qNzaksX0eFfppJJl
+ sQsYSkXhJFOTVbFgzKn2nSdqkygYDxCua5vazWHD9cAAAA=
+X-Change-ID: 20250829-mt8196-gpufreq-a7645670d182
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Boris Brezillon <boris.brezillon@collabora.com>, 
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ MyungJoo Ham <myungjoo.ham@samsung.com>, 
+ Kyungmin Park <kyungmin.park@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>, 
+ kernel@collabora.com, dri-devel@lists.freedesktop.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
+This series, currently an RFC, introduces two new drivers to accomplish
+controlling the frequency and power of the Mali GPU on MediaTek MT8196
+SoCs.
 
-On 04/09/2025 19:10, Vegard Nossum wrote:
-> On 04/09/2025 19:03, Vegard Nossum wrote:
->> @@ -214,6 +214,11 @@ static void sym_calc_visibility(struct symbol *sym)
->>          struct property *prop;
->>          tristate tri;
->>
->> +       if (sym->flags & SYMBOL_HIDDEN) {
->> +               sym->visible = yes;
-> 
-> ...I just saw the irony here after having already pressed "Send".
-> 
-> Let me explain:
-> 
-> SYMBOL_HIDDEN is your new flag that indicates that somebody used
-> "transitional" on the config entry.
-> 
-> sym->visible is tristate value that gives you the condition for whether
-> a symbol can take on a value -- y/m means the option is visible to the
-> user (hence the name) and thus eligible to have a value assigned to it.
+It's marked as an RFC as I want feedback on the general approach, and
+because there is a clock series I need to send out first but that's
+waiting for the other clock series to be accepted first in order to not
+create needless confusion and conflicts.
 
-Another small clarification: Replace "is visible to the user" by "can be
-set by .config".
+The reason why it's not as straightforward as with other SoCs is that
+the MT8196 has quite complex glue logic. There's an additional MCU
+running a specialised firmware, which communicates with the application
+processor through a mailbox and some SRAM, and is in charge of
+controlling the regulators, the PLL clocks, and the power gating of the
+GPU, all while also being in charge of any DVFS control.
 
-Actual user visibility is controlled by menu_is_visible(), not
-sym->visible, so my patch still doesn't show transitional symbols to the
-user in menuconfig. AFAICT, menu_is_visible() is completely independent
-of sym->visible.
+This set of drivers is enough to communicate desired OPP index limits to
+the aforementioned MCU, referred to as "GPUEB" from here on out. The
+GPUEB is still free to lower the effective frequency if the GPU has no
+jobs going on at all, even when a higher OPP is set. There's also
+several more powerful OPPs it seemingly refuses to apply, possibly
+because those are boost levels.
 
-I tested menuconfig/mconf and oldconfig/conf --oldconfig with scripts/
-kconfig/tests/transitional/Kconfig and my patch and it looks correct
-(only the new options are displayed).
+The frequency control driver lives in panthor's subdirectory, as it
+registers a devfreq device for the panthor GPU device, and needs to
+mingle with it somewhat closely. I've kept the tie-in parts generic
+enough however to not make this a complete hack; mediatek_mfg (the
+frequency control driver) registers itself as a "devfreq provider" with
+panthor, and panthor picks it up during its probe function (or defers if
+mediatek_mfg is not ready yet, after adding a device link first).
 
+The mailbox driver is a fairly bog-standard common mailbox framework
+driver, just specific to the firmware that runs on the GPUEB. Most of
+its channels are not known, as they're either not really used apart from
+debug references in downstream code, or have indecipherable downstream
+code, and I lacked the necessary documentation.
 
-Vegard
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+Nicolas Frattaroli (10):
+      dt-bindings: gpu: mali-valhall-csf: add mediatek,mt8196-mali variant
+      dt-bindings: devfreq: add mt8196-gpufreq binding
+      dt-bindings: sram: Add compatible for mediatek,mt8196-gpufreq-sram
+      dt-bindings: mailbox: Add MT8196 GPUEB Mailbox
+      mailbox: add MediaTek GPUEB IPI mailbox
+      drm/panthor: call into devfreq for current frequency
+      drm/panthor: move panthor_devfreq struct to header
+      drm/panthor: devfreq: expose get_dev_status and make it more generic
+      drm/panthor: devfreq: add pluggable devfreq providers
+      drm/panthor: add support for MediaTek MFlexGraphics
+
+ .../bindings/devfreq/mediatek,mt8196-gpufreq.yaml  |  116 +++
+ .../bindings/gpu/arm,mali-valhall-csf.yaml         |   36 +-
+ .../mailbox/mediatek,mt8196-gpueb-mbox.yaml        |   64 ++
+ Documentation/devicetree/bindings/sram/sram.yaml   |    1 +
+ drivers/gpu/drm/panthor/Kconfig                    |   13 +
+ drivers/gpu/drm/panthor/Makefile                   |    2 +
+ drivers/gpu/drm/panthor/mediatek_mfg.c             | 1053 ++++++++++++++++++++
+ drivers/gpu/drm/panthor/panthor_devfreq.c          |  136 ++-
+ drivers/gpu/drm/panthor/panthor_devfreq.h          |   57 +-
+ drivers/gpu/drm/panthor/panthor_device.h           |    3 -
+ drivers/gpu/drm/panthor/panthor_drv.c              |    4 +-
+ drivers/mailbox/Kconfig                            |   10 +
+ drivers/mailbox/Makefile                           |    2 +
+ drivers/mailbox/mtk-gpueb-mailbox.c                |  330 ++++++
+ 14 files changed, 1788 insertions(+), 39 deletions(-)
+---
+base-commit: 87a9e300217e33b2388b9c1ffe99ec454eb6e983
+change-id: 20250829-mt8196-gpufreq-a7645670d182
+prerequisite-message-id: <20250829091913.131528-1-laura.nao@collabora.com>
+prerequisite-patch-id: 441c4c2e3d22f83a41241a1ab5c9be1a442f742e
+prerequisite-patch-id: 852bfc3d13e2bccc4d6f4813a71c42f329dadb0c
+prerequisite-patch-id: 0bc5b7bf268e88a6ef22e46c91db7645e2ce6189
+prerequisite-patch-id: 442533e316e46ecd47cd0b7fb410b58fad2b3bf9
+prerequisite-patch-id: 6d6d70ccb7d718b3bcca6662cdaf1e8b64b6ddc2
+prerequisite-patch-id: d61046e2cd2f33024092e96e8a987b9c34c24e73
+prerequisite-patch-id: c27ca28bb3df435c98fe02438264188d6fa52b7c
+prerequisite-patch-id: 27fadb12ce15099a684c08d4f8c785bedc87cef2
+prerequisite-patch-id: 7796ec9a0162ae96b708ea513742016657c69e14
+prerequisite-patch-id: f7549078f3702acdf1e6dcd36ddebab0e543b5db
+prerequisite-patch-id: b123fb15cb8c97cf0896b826820f4ce33085170c
+prerequisite-patch-id: fa96e18eae90efc14e4b9f13534c013b448a3f84
+prerequisite-patch-id: 1e53ad7341ddb67c9788252456068cc14ab2f610
+prerequisite-patch-id: ffff2977d8f2a3a44c3606f77d38f8745cb3c60a
+prerequisite-patch-id: 71d23f4f096e424ae3aa59a23695f5b1e488fab0
+prerequisite-patch-id: 3c12631f22a39d6def9340ed840e9e55e1a76304
+prerequisite-patch-id: caec6572d5d9a37183601b8e38f50af797df635e
+prerequisite-patch-id: d5b3d5719675a1e3be26e028b5596d39e839bc09
+prerequisite-patch-id: da7b826d56ac70b3b72be58d64e7c2107445478f
+prerequisite-patch-id: f3f789e0d919dd92b7d811a4e11c57bb05f71617
+prerequisite-patch-id: 79cca92633ca3d9cc2f1f38b6fc977a8d8543d60
+prerequisite-patch-id: f663f8f3bddf198d0cab083bac7ebb88689ffc82
+prerequisite-patch-id: a0ffc5b88c5eb88c491f6187672012c621bd520c
+prerequisite-patch-id: e6c6d67b034d06b6158a0e0f8299ad28f0e59134
+prerequisite-patch-id: 25f658fbd1238bd57e05ff299d0436f942bdcc4d
+prerequisite-patch-id: 7be8439e241a320b0eb0a264a8a59a9beef383d6
+prerequisite-patch-id: b903714dbe7d6a44fbe18faa02d59862ceadf217
+
+Best regards,
+-- 
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+
