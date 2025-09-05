@@ -1,192 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133A9143756
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Sep 2025 17:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066B62798FD;
+	Fri,  5 Sep 2025 19:24:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757092534; cv=none; b=YvgsO2su8QfPMKihfVbAk2bkBzcbWbQ8ZNIvKxOyLkcDnhTjwnwVQgualSBiyOUdbDQmo71/KpMoQY9yqpSjzounL7Kf/eOSrPMHXJVrL2Sa4kjbptWpgn5bigIps/zhHIsm8QT5tLuqjhU+aXE8vKrT2FPWhMUpWf+EEo1N62Q=
+	t=1757100268; cv=none; b=ls/ry5Dod1+EAJhrQ1ghcC934MlShTdZ9gNdaO2+l9EqQj9gpDS9AulSVU56FuPupbTfWZby+3qT9m3+gpX1VvuX0t1VD5ERUTLprZioUJuJIbb7n/M6FeiefONMFuUx6JCuTq1jH+JddrfCeZj/N72aGtD/ZGDNGVyUp672lPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757092534; c=relaxed/simple;
-	bh=FyALXuaJqAwhA4Ic3W5ABw6sQQDQJojhS843VbsAAyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iTphS+U6anik7Dlh62u8ZFjEKIjxrDWF/LV9rEOAItPiGrzycfLjToIWV03Tu4xZrBuIp7dwkKTHhvArQOofgUnkqCNHn2DjxcF7jYuFeMDx7PiW7f+60ElnBYnicm7o8xD8KNPQzonvzFkmvEKQATgIv9Moky7Ev1c32o6JCC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TYLLqJOQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757100268; c=relaxed/simple;
+	bh=PneSr0UFkyje7hiRxdgfda0/0faF4NUEJ+o+j1qL+sc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hNK/ww4k5rfe3NHZZZP9YXNS5p6lpksdsXSUvYOJLNfG6i/8FoSz1f6zrbo7DQ79zkZPytgcRO/x73c/cN7U7X2q+tqsZ5egkjh3j7IWKPFiF7q3AAFBgBGvfPVHGacWXO0QN8YOzkJ+/DiWxWETcYCL3u1Ywu3/zMxvRpZpSdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WFuPcJc0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TYLLqJOQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FE6CC4CEF1;
-	Fri,  5 Sep 2025 17:15:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WFuPcJc0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22400C4CEF1;
+	Fri,  5 Sep 2025 19:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757092533;
-	bh=FyALXuaJqAwhA4Ic3W5ABw6sQQDQJojhS843VbsAAyQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TYLLqJOQS1KN6pIxkngxtpyEBl4/S29pAZafwi17NNbcnYWZ7e81RcuhE6SZ2w+tO
-	 P96PKHCbyhu0vwixYGjxdf08kkaH7m5GrZe0YkgGUxuBfd44BM3TnGxiTx/GC2tDMD
-	 XaE/4CNEjRhR965Lqrf4rP6gVQAsJOCfxsvBo1C4cUXd8R/CfWRUQbuFUyQIToHYlj
-	 3pdXLCSsNpIwzK4SZx3xriKC8gk4Wtw5wNu1QdtJX6/PnPGcgY9a7aravKvF6hnHLc
-	 8yvOLmMPTC3CW6wnJ+mRZCye7IQRw3qdytwOUPe+42vArd4caPDzL8AtsXEu3FnGcq
-	 xUBb2FD+GueXA==
-Date: Fri, 5 Sep 2025 10:15:33 -0700
-From: Kees Cook <kees@kernel.org>
-To: Jakub Jelinek <jakub@redhat.com>
-Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
-	Richard Biener <rguenther@suse.de>,
-	Joseph Myers <josmyers@redhat.com>, Jan Hubicka <hubicka@ucw.cz>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Richard Sandiford <richard.sandiford@arm.com>,
-	Marcus Shawcroft <marcus.shawcroft@arm.com>,
-	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-	Kito Cheng <kito.cheng@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Waterman <andrew@sifive.com>,
-	Jim Wilson <jim.wilson.gcc@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Li <ashimida.1990@gmail.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ramon de C Valle <rcvalle@google.com>,
-	Joao Moreira <joao@overdrivepizza.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] kcfi: Add regression test suite
-Message-ID: <202509050950.8D39B0D@keescook>
-References: <20250905001157.it.269-kees@kernel.org>
- <20250905002418.464643-7-kees@kernel.org>
- <aLqMAWTwDh5eXgUJ@tucnak>
+	s=k20201202; t=1757100267;
+	bh=PneSr0UFkyje7hiRxdgfda0/0faF4NUEJ+o+j1qL+sc=;
+	h=From:Date:Subject:To:Cc:From;
+	b=WFuPcJc0u1IB0G+xb6m54A2SVprt+VURztyXSXsOtv6TQZnjptkXW00SV5sqwpvmS
+	 J1omyhIE9VkmYjYz9RypCZES6Rn7i62OCf+SY1rr/A2Zi80lI5NfMqqJ4D8uI+tpQ6
+	 wLwPVciyTL915kWOBYVjwmW3ckYe+WR+9+P1siOV7Wqtul8PlyAExP/LVUZDWaHHnX
+	 GoQj7ODF1f3S0AAY20XKl2G3Uc8yTAEzZwBnLNEhWSVccpZ02Chesl2TshAMS08zN7
+	 T3tO3VA85anwXcenlxKlGjWxUNhWtzKgkpeOrAOfoKATdTMAQPBlRuguONXEjVYefk
+	 nGJzVSS/CFm4w==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Fri, 05 Sep 2025 12:24:17 -0700
+Subject: [PATCH] nilfs2: fix CFI failure when accessing
+ /sys/fs/nilfs2/features/*
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aLqMAWTwDh5eXgUJ@tucnak>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250905-nilfs2-fix-features-cfi-violation-v1-1-b5d35136d813@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAOA4u2gC/x2NQQqDQAxFryJZNxBHBtGrFBepZjQgY5lYKYh3N
+ 7h88N9/J5gUFYO+OqHIoaZbdqhfFYwL51lQJ2cIFCJ1FDHrmixg0j8m4f1XxHBMioduK+9uY8O
+ xkU8M3BKB/3yL+PppvIfrugEy5dlvcwAAAA==
+X-Change-ID: 20250905-nilfs2-fix-features-cfi-violation-3a53eb52a700
+To: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, linux-nilfs@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, kernel test robot <oliver.sang@intel.com>, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3674; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=PneSr0UFkyje7hiRxdgfda0/0faF4NUEJ+o+j1qL+sc=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBm7LV5O75mxwrtSTGB7lt4OySaL1axT1hyo3X23TPHVj
+ zSXNUtvd5SyMIhxMciKKbJUP1Y9bmg45yzjjVOTYOawMoEMYeDiFICJfHjK8FdyqecGt+93zgof
+ WWk4/esd/vmzVDu/7qrn84kRerXXc9sLhn96lipyE1R2aex6MTleduPdM0tnt1lmKTZNk7hVosz
+ 5pJEFAA==
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Fri, Sep 05, 2025 at 09:06:41AM +0200, Jakub Jelinek wrote:
-> On Thu, Sep 04, 2025 at 05:24:15PM -0700, Kees Cook wrote:
-> > --- /dev/null
-> > +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
-> > @@ -0,0 +1,73 @@
-> > +/* Test KCFI check/transfer adjacency - regression test for instruction
-> > +   insertion.  */
-> > +/* { dg-do compile } */
-> > +/* { dg-options "-fsanitize=kcfi -O2" } */
-> > +/* { dg-options "-fsanitize=kcfi -O2 -march=armv7-a -mfloat-abi=soft" { target arm32 } } */
-> 
-> For stuff like this you should be using dg-additional-options.
-> /* { dg-options "-fsanitize=kcfi -O2" } */
-> /* { dg-additional-options "-march=armv7-a -mfloat-abi=soft" { target arm32 } } */
-> (in various other tests too).
+When accessing one of the files under /sys/fs/nilfs2/features when
+CONFIG_CFI_CLANG is enabled, there is a CFI violation:
 
-Ah, perfect; thanks!
+  CFI failure at kobj_attr_show+0x59/0x80 (target: nilfs_feature_revision_show+0x0/0x30; expected type: 0xfc392c4d)
+  ...
+  Call Trace:
+   <TASK>
+   sysfs_kf_seq_show+0x2a6/0x390
+   ? __cfi_kobj_attr_show+0x10/0x10
+   kernfs_seq_show+0x104/0x15b
+   seq_read_iter+0x580/0xe2b
+  ...
 
-> > +/* Should have KCFI instrumentation for all indirect calls.  */
-> > +
-> > +/* x86_64: Complete KCFI check sequence should be present.  */
-> > +/* { dg-final { scan-assembler {movl\t\$-?[0-9]+, %r1[01]d\n\taddl\t[^,]+, %r1[01]d\n\tje\t\.Lkcfi_call[0-9]+\n\.Lkcfi_trap[0-9]+:\n\tud2} { target x86_64-*-* } } } */
-> 
-> This at least needs
-> /* { dg-additional-options "-masm=att" { target x86_64-*-* } } */
-> because Intel syntax wouldn't match.
+When the kobject of the kset for /sys/fs/nilfs2 is initialized, its
+ktype is set to kset_ktype, which has a ->sysfs_ops of kobj_sysfs_ops.
+When nilfs_feature_attr_group is added to that kobject via
+sysfs_create_group(), the kernfs_ops of each files is
+sysfs_file_kfops_rw, which will call sysfs_kf_seq_show() when
+->seq_show() is called. sysfs_kf_seq_show() in turn calls
+kobj_attr_show() through ->sysfs_ops->show(). kobj_attr_show() casts the
+provided attribute out to a 'struct kobj_attribute' via container_of()
+and calls ->show(), resulting in the CFI violation since neither
+nilfs_feature_revision_show() nor nilfs_feature_README_show() match the
+prototype of ->show() in 'struct kobj_attribute'.
 
-Ah, okay. Is the test suite ever run with -masm != att?
+Resolve the CFI violation by adjusting the second parameter in
+nilfs_feature_{revision,README}_show() from 'struct attribute' to
+'struct kobj_attribute' to match the expected prototype.
 
-> Does this match with all possible -march/-mtune settings?
+Cc: stable@vger.kernel.org
+Fixes: aebe17f68444 ("nilfs2: add /sys/fs/nilfs2/features group")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202509021646.bc78d9ef-lkp@intel.com/
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ fs/nilfs2/sysfs.c | 4 ++--
+ fs/nilfs2/sysfs.h | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-I was just running this with "default" state. I didn't think there was
-value is testing all the combinations -- all the sequence tests are
-basically validating that nothing surprising happened during emission,
-etc. What's the best practice for this? Should I add specific
--march/-mtune options for each arch?
+diff --git a/fs/nilfs2/sysfs.c b/fs/nilfs2/sysfs.c
+index 14868a3dd592..bc52afbfc5c7 100644
+--- a/fs/nilfs2/sysfs.c
++++ b/fs/nilfs2/sysfs.c
+@@ -1075,7 +1075,7 @@ void nilfs_sysfs_delete_device_group(struct the_nilfs *nilfs)
+  ************************************************************************/
+ 
+ static ssize_t nilfs_feature_revision_show(struct kobject *kobj,
+-					    struct attribute *attr, char *buf)
++					    struct kobj_attribute *attr, char *buf)
+ {
+ 	return sysfs_emit(buf, "%d.%d\n",
+ 			NILFS_CURRENT_REV, NILFS_MINOR_REV);
+@@ -1087,7 +1087,7 @@ static const char features_readme_str[] =
+ 	"(1) revision\n\tshow current revision of NILFS file system driver.\n";
+ 
+ static ssize_t nilfs_feature_README_show(struct kobject *kobj,
+-					 struct attribute *attr,
++					 struct kobj_attribute *attr,
+ 					 char *buf)
+ {
+ 	return sysfs_emit(buf, features_readme_str);
+diff --git a/fs/nilfs2/sysfs.h b/fs/nilfs2/sysfs.h
+index 78a87a016928..d370cd5cce3f 100644
+--- a/fs/nilfs2/sysfs.h
++++ b/fs/nilfs2/sysfs.h
+@@ -50,16 +50,16 @@ struct nilfs_sysfs_dev_subgroups {
+ 	struct completion sg_segments_kobj_unregister;
+ };
+ 
+-#define NILFS_COMMON_ATTR_STRUCT(name) \
++#define NILFS_KOBJ_ATTR_STRUCT(name) \
+ struct nilfs_##name##_attr { \
+ 	struct attribute attr; \
+-	ssize_t (*show)(struct kobject *, struct attribute *, \
++	ssize_t (*show)(struct kobject *, struct kobj_attribute *, \
+ 			char *); \
+-	ssize_t (*store)(struct kobject *, struct attribute *, \
++	ssize_t (*store)(struct kobject *, struct kobj_attribute *, \
+ 			 const char *, size_t); \
+ }
+ 
+-NILFS_COMMON_ATTR_STRUCT(feature);
++NILFS_KOBJ_ATTR_STRUCT(feature);
+ 
+ #define NILFS_DEV_ATTR_STRUCT(name) \
+ struct nilfs_##name##_attr { \
 
-> Peope very often do test
-> make check RUNTESTFLAGS='--target_board=unix/-march=skylake-avx512'
-> etc. so if the test depends on a particular ISA or tuning, better
-> add it explicitly to dg-options.
+---
+base-commit: b320789d6883cc00ac78ce83bccbfe7ed58afcf0
+change-id: 20250905-nilfs2-fix-features-cfi-violation-3a53eb52a700
 
-How does that end up meshing? i.e. if I have -mtune=generic in
-dg-options, but someone runs with a different -mtune, what happens?
+Best regards,
+--  
+Nathan Chancellor <nathan@kernel.org>
 
-> Also, we try not to use triplets like x86_64-*-* but instead
-> { i?86-*-* x86_64-*-* } && lp64
-> or
-> { i?86-*-* x86_64-*-* } && { ! ia32 }
-> depending on whether it is only for -m64, or for both -m64 and -mx32,
-> because on some targets the multilib compiler is i?86-*-* defaulting
-> to -m32, on most obviously x86_64-*-* defaulting to -m64.
-
-Okay, sounds good. I'll update all of these (for this we only care about
-64-bit x86). Out of curiosity what triple matches i?86-*-* and lp64? I
-thought x86_64 was sufficient here.
-
-(Though I suddenly realize I think I have nothing in the KCFI patches
-can that rejects working under -m32 ... I only do careful target checks
-under arm.)
-
-> > +/* x86_64: Should have 0 entry NOPs - function starts immediately with
-> > +   pushq.  */
-> > +/* { dg-final { scan-assembler {test_function:\n\.LFB[0-9]+:\n\t*\.cfi_startproc\n\t*pushq\t*%rbp} { target x86_64-*-* } } } */
-> > +/* { dg-final { scan-assembler-not {\t*\.weak\t*__kcfi_typeid_test_function\n} { target x86_64-*-* } } } */
-> 
-> .weak is ELF specific, not all targets have it, are the tests restricted to
-> targets that do support it and in this syntax?  We have
-> /* { dg-require-weak "" } */
-> but that doesn't imply a particular function.
-
-Oh, er, this is just for ELF targets. Is there a way to globally
-restrict all of these tests to just the 4 arch combos? I'm suspecting
-now that these tests will all universally fail for the archs that don't
-support -fsanitize=kcfi. I thought dg-options was handling filtering
-this, but maybe I've misunderstood?
-
-I'm guessing I need to declare an alias like "lp64" or what I think I
-saw asan doing for this feature?
-
-> Also, not all configurations will support .cfi_* directives, that depends
-> both on command line parameters and on whether assembler supports those.
-> If you expect them in all tests, perhaps you should test for those in
-> kcfi.exp and not run the tests at all if the directives aren't supported
-> (or if weak isn't supported etc.).
-
-Yeah, this sounds like the place I need to limit the tests from?
-Everything I know about dg I've learned in the last month. :P
-
-Studying this some more, it looks like some .exp files use "istarget". I
-found, e.g.:
-
-if { [istarget nvptx-*-*] } {
-    return
-}
-
-So maybe I need that as a top-level filter in kcfi.exp:
-
-if { ![istarget arm*-*-*] && ![istarget x86_64-*-*] && ... } {
-    unsupported "KCFI tests not supported on this target"
-    return
-}
-
-?
-
-I will build some 5th target and see what happens when I run these
-tests. :P
-
-> Also, there are targets with different line endings, so usually one scans
-> for [\n\r]* instead of just \n.
-
-Okay -- I'm expecting this will go away once I limit to just the 4 targets
-I want, or do you want me to universally update the \n patterns to
-[\n\r]*?
-
-> No idea why you're using \t*, the compiler emits just one tab.
-
-Ah, I'm not sure where that came from (I will fix it). There has been
-a lot of automation on my end to get all these patterns converted from
-.s output into dg patterns.
-
-Thanks for looking this over!
-
--Kees
-
--- 
-Kees Cook
