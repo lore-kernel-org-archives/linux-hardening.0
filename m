@@ -1,105 +1,105 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8690631D744;
-	Fri,  5 Sep 2025 15:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACD931D72E;
+	Fri,  5 Sep 2025 15:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757087789; cv=none; b=q7Wl8flukJNTAwmwl13+kiAuewhbNcOj4j4o5INbkMMAcKffayJIfOzR1hy9ZwyUDJ8aUc0Gz9gTR0BMgnXPtV0wuw/Hn7rEnRHT8WZ+TsffXcOdWKwWGozoKOndMa/dkJxFuM6p3uCcrA8bBVxNS37Wd21+tlerTBRXBeOlNhE=
+	t=1757087956; cv=none; b=S3bs/iDDQOhvrJwqepBCZmo4EL2OaBmkH1YapROYpRtrvYHqumQDdfDvzPH4hP3rGzAUmGYCGTMCNxmteFcem2c9VaGyvled9VJbsDmrnFDLo+WtQwQF9jTILfIhrzQpJXDSoxBJXRLWXNnZ2iMJ3XXBhodnFJyaujgDcHIzZqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757087789; c=relaxed/simple;
-	bh=pcnGAznxIEC7EbbTSRq9hisXNulVSJI/mitRD7IVHy8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=puLO07mTWRp+QIPNWU85y/YxYY8ArMQsum8ohHXOVqK0zVZ5WvOQ6FfTU3g4DWKh7oHmbY91HijSKwjw8VmfW/sDlcWI61q3CiKJdnovrI7s4qEM7JOPhTREb9tQ8DvIxGVDlQSBRWA+1c+TGqTU3tfgsm+1gA2lOU9WIdRTRJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c8bd3MXp; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1757087956; c=relaxed/simple;
+	bh=eSR4TUXkvx/9lqvlUc87GuT3m88dAjDqGBb9KS2uelY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WESsFAxkMMrQwX67TSccUWTz7vQ9GbXt5raqzYoJCGw0OJBzInMSiNvzsP7fSboYAqWjjKnkdoxLXmw0Yx/rSXm7UMF6RFpEc+5y2Blp5DawJRlEX5hgSz2LSsV20FmqGgo7WDVqmaNoqJ9dCvtkcTMpoLOEClSsljg54pqDtQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q3BLjbQ+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8bd3MXp"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-248f2da72edso3788025ad.2;
-        Fri, 05 Sep 2025 08:56:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757087788; x=1757692588; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pcnGAznxIEC7EbbTSRq9hisXNulVSJI/mitRD7IVHy8=;
-        b=c8bd3MXp41TfJYLnPWn9Cix75k3aPXFJhU618XW7lb6e2tOTk42Vvvp8zVdLiI75fR
-         YqIBtX69g8S1MstlJMHAACT1QhTQh14OqH4NYIY4HIH0gJBMlqsqsjWixxHDk6XXyl0D
-         s1ME0cl+BSZZXtMY04jxDTAKmOBKHXln/HnNYRrSKG7bJxqVwqAdCA7KhoR1C2vgM6IQ
-         7ON9PiYtKGF+/tsSGRI6u2GFe3Gydabd5vtxH8QpD3s6RfFCrjgBHzw32pONKBQ7VTmX
-         UMT85yYoej/u1cN4RrbMdDMhdINktREH7L7tBXjR4M9F4r7Dc2h+FHA+1KNVe3lWdbdK
-         5QSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757087788; x=1757692588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pcnGAznxIEC7EbbTSRq9hisXNulVSJI/mitRD7IVHy8=;
-        b=DGz6kI7kdNmUokQXMcZ6of1iLAkImLwafqlA79+TxwLlSyi/3/d5xHl1qaxFMLUlhR
-         JgXG8VJelKcZl4bqBVgsH4jwmPzIWHHNB0kFzkXSkCS1vUApxfbb5EHFMcu6q/GboxTb
-         zZ2IEB2hcqZ2WBjKDGcq5LyYoI3WQjf/vw571HlGCHuzojA9zBa1bGmOmMfPLub0tCYW
-         3qgsDYVEiNmU1cpK3xa34IASRA6nHmWuOqHZ2OrLJlcp3y0GaAHH2ccMiWOSgJ2r/RhW
-         lxCo6nt+j0O3yL6/afoCFHnaHe4iWyGvpcqLxPgUQvO0Qy8taumI7SCm02yZsKkvijS7
-         vEGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWr7E6xtvZlWSVm7kvMuF80pOGP+FuF+GmlAjWo/aRDPRDM1BFRoW9iAYf+dtJiz6njw3R5IvbTVv+ybseICx8=@vger.kernel.org, AJvYcCXChb+4rrksOz9vbD2W9qh0YDHFM7UdHFUBg2UPPEpUQWJzCUvhJRIIZDtd6h4JOg3E9TudIiCyfw8bOD2H@vger.kernel.org, AJvYcCXWuisoHe2KQuhjtnFLVHcJb8HtZx7p17yQcf/PwJaWoGnqkwjPPLd2Dw1CyNCMJOhufkCNeqA25rVNnL4kjWk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS5DZubh/v8c2mQPVpiyccQ8/xGXLQ/GmEQn7Bb5kzRhXkEajb
-	aDzda8dBhm02TbLhxbnAVlbIFeUMQmm0k4RWB1SPGeIkOAnxMfVHJUiKE2AwyeL1YSPklgZbbQd
-	bdoelZdRWykvKO4E4Jvyuk/4k63M34rk=
-X-Gm-Gg: ASbGncsdUdmnZQBYroQshtWI8JcmCjJYKPnSabAvFZUEBKtKGkYDbJLVfkosVkp3HYv
-	VbS7Tn/yvMOCLSxwUnW4doJgliuSN56VnjutQYqYgvGuft0imNIZDf50Ynhr0vRfcitjICl9DJg
-	StoZkJGyLNPF+7KYeMFsqmVQPZ2V04sHMsdso9hFrIW90NSxKNu8ZcDg3h+XcCEBZrOkFtSIZyX
-	BbGgaDtW2+8xOwq6ihdFpvUlYvABsbnYCPN2SPLX1G6GbOegt2Yfn9Rnouia0z+hJDOL2HsjvH4
-	krDU/WSBF3hmuLRMLeodGi1vGw==
-X-Google-Smtp-Source: AGHT+IF1dTaVV6W/81i45DpyYdcg7pg29RYnQDdjqqMS3Pt5h19w21OosjVbZcjDakD7XmGMBIvdb/mrHGnHA4PtyM0=
-X-Received: by 2002:a17:902:e74f:b0:246:ed8f:c63e with SMTP id
- d9443c01a7336-2491be7d2a2mr202503665ad.0.1757087787736; Fri, 05 Sep 2025
- 08:56:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q3BLjbQ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77101C4CEF4;
+	Fri,  5 Sep 2025 15:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757087955;
+	bh=eSR4TUXkvx/9lqvlUc87GuT3m88dAjDqGBb9KS2uelY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q3BLjbQ+8OkT8qvpn4s3NSjeQidQ2M7anZICert5+EGY0zu8wPr2u7XU4+cBjW5Wu
+	 fPY7IePrZr1wkXMOCb/t0Uz0Fg1tca/5mDSGiL1TRE/W0hfBy3W0E1a95UwZpYIMGX
+	 8qgOrhFeWJwLSMl+4KH8IAHcWVt9K2k4JraCMY6qo9VdtBNHhO/4NulSKIIgMElOOJ
+	 TuA8jWLgtBUs63qB4o4HWd0USFli9kZY6eBz+qDgWUK3rZ1dB7xPd7XO5hNDIYVasy
+	 QvK0lGpOdbnNHOL8bE9ZRiCrQ6KPzE+i4MuKwNear/aScZbMezE4aKLronoh52A4fp
+	 PPiqX70ygaAag==
+Date: Fri, 5 Sep 2025 08:59:15 -0700
+From: Kees Cook <kees@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	linux-kbuild@vger.kernel.org,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] kbuild: Re-enable -Wunterminated-string-initialization
+Message-ID: <202509050856.E5D810BC@keescook>
+References: <20250802184328.it.438-kees@kernel.org>
+ <20250803173235.GA716998@ax162>
+ <e4d801e3-3004-484b-897d-ed43c25e1576@intel.com>
+ <20250805214823.GB200407@ax162>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250904165015.3791895-1-bqe@google.com> <aLnURXW_ZiX2iJd_@yury>
- <CANiq72==48=69hYiDo1321pCzgn_n1_jg=ez5UYXX91c+g5JVQ@mail.gmail.com> <aLrjNze2_L_vAnWX@yury>
-In-Reply-To: <aLrjNze2_L_vAnWX@yury>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 5 Sep 2025 17:56:15 +0200
-X-Gm-Features: Ac12FXyBrmRcLFt5YG2uxmiZLky5ex7OPkFK9lSHgX0FSU_aqENr8sCbxJ66nnQ
-Message-ID: <CANiq72=KyX39_jyZNewithy-bVL90wN2mg=SQokX3ArKF83B6w@mail.gmail.com>
-Subject: Re: [PATCH v15 0/5] rust: adds Bitmap API, ID pool and bindings
-To: Yury ooNorov <yury.norov@gmail.com>
-Cc: Burak Emir <bqe@google.com>, Kees Cook <kees@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, Carlos LLama <cmllamas@google.com>, 
-	Pekka Ristola <pekkarr@protonmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250805214823.GB200407@ax162>
 
-On Fri, Sep 5, 2025 at 3:18=E2=80=AFPM Yury ooNorov <yury.norov@gmail.com> =
-wrote:
->
-> Thanks for the testing, Miguel! I've folded-in your fix and added
-> your co-developed-by tag. Please let me know if it doesn't work for
-> you.
+On Tue, Aug 05, 2025 at 02:48:23PM -0700, Nathan Chancellor wrote:
+> On Tue, Aug 05, 2025 at 04:50:28PM +0200, Alexander Lobakin wrote:
+> > From: Nathan Chancellor <nathan@kernel.org>
+> > Date: Sun, 3 Aug 2025 10:32:35 -0700
+> > 
+> > > On Sat, Aug 02, 2025 at 11:43:32AM -0700, Kees Cook wrote:
+> > >> With the few remaining fixes now landed, we can re-enable the option
+> > >> -Wunterminated-string-initialization (via -Wextra). Both GCC and Clang
+> > >> have the required multi-dimensional nonstring attribute support.
+> > 
+> > [...]
+> > 
+> > > diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+> > > index 55a1a96cd834..05d4323c6a13 100644
+> > > --- a/drivers/net/ethernet/ti/netcp_ethss.c
+> > > +++ b/drivers/net/ethernet/ti/netcp_ethss.c
+> > > @@ -771,7 +771,7 @@ static struct netcp_module xgbe_module;
+> > >  
+> > >  /* Statistic management */
+> > >  struct netcp_ethtool_stat {
+> > > -	char desc[ETH_GSTRING_LEN];
+> > > +	char desc[ETH_GSTRING_LEN] __nonstring;
+> > 
+> > 
+> > Hmmm, ETH_GSTRING_LEN is the maximum length of the driver's statistics
+> > name to be reported to Ethtool and this *includes* \0 at the end.
 
-You're welcome! I regularly build a bunch of arches/configs/compiler
-versions etc.
+This is not true. ethtool uses non-C-String logic to report these values
+in userspace. These are _not_ C-Strings -- they're NUL padded to
+ETH_GSTRING_LEN, so some drivers _happen_ to use C-String APIs, but
+they're "wasting" a byte.
 
-As for the tag, you are too kind :) It is such a small thing that I
-feel it may look like it diminishes the work from Burak and others, so
-I think it may be best to drop it (and anyway I didn't take a close
-look at the code or the latest versions, and a SoB would need to be
-added either way).
+> > If this compilation flag triggers a warning here, the driver devs need
+> > to fix their code. There should always be \0 at the end, `desc` is a
+> > "proper" C 0-terminated string.
+> 
+> Ack, I had misunderstood a previous fix that Kees did for a similar but
+> different instance of the warning in another Ethernet driver and I
+> did not look much further than the driver copying these values around
+> with memcpy(). This does trigger a warning, from the original message:
 
-Thanks!
+These don't need to be renamed -- they just need to use memcpy instead
+of C String helpers.
 
-Cheers,
-Miguel
+ETH_GSTRING stuff is not NUL terminated.
+
+-Kees
+
+-- 
+Kees Cook
