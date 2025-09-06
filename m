@@ -1,137 +1,144 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F202F1F5F6;
-	Sat,  6 Sep 2025 14:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757168852; cv=none; b=Dlza9vO26Pj7dih8KlolvFUf/S3N5AeH76oZRG+crPFUicvDMNKZ9bHY24k/LWlUf3dTB+vCSQLsXy9TTZAPOFM6NsccBvofPqFdHR42pKFINlE3bAMBJUKh4yC3SJJNff/4OmWhWSnZD8SsauxAvBryDSQR/TJAEtWD9PSdFLo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757168852; c=relaxed/simple;
-	bh=uLFV/MlpNQBdyT07MRh3qADLmF7gcgTzvaZH9DgBaEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eqzoivrSNX33B/jWjhJWqDbm15sqdrmTjTdb2gciLuwVkDToEYpY/bRpIfkYHjbPcB0ApewQbofnGl6WUAtlpYYYXZvRZK0vvL/vcT8YXqbUxStLOhfvDLzeABwiWdT7L6RekaSH4ecv3Xgl9jYY7dqR/qKiAdsHHLq+g02zjyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h6y309nx; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CC24086A;
+	Sat,  6 Sep 2025 17:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757181333; cv=pass; b=GheWWSbPwCVVyanpohn8n+rZHFUe50plU1HVmsJYI5EW3xm46enKZQlbbvFByhknKjI4ZGDbkXvWtU+NLP/kM1W9VKgqzPAGf4z7IFt4yIymMQ1AVx5nZ1+k+At2peFPf0HtHQ83hemtryXKELD6ldMOqb3JZVHi4AanMSO83Rg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757181333; c=relaxed/simple;
+	bh=cxA/TjFCZsy3Ml7FHfxCzzBAUJu9FQFAXS6ZycQWykc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qkEsm0OUs74H+26/HJwMGWAAMOnuuS0xKkacbVzoHf7NsjBRdtu4sJy0sfi1VYasMqv5J3PWOIO4PBiN+4Gioy2qGqkQ/1MZwDqknjiDPo/qgY46BrxJ0XvByaT8ayi3YuoB7A/9ITjm7ULpzJCrl4AMyER6SemUy5lpGeE1ypI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=Vo8En1fH; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6y309nx"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-723bc91d7a6so26687787b3.3;
-        Sat, 06 Sep 2025 07:27:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757168850; x=1757773650; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FJO9S7x3nRRnjHDwb9V3pJU7i7F2/XAB3JBEito+s1c=;
-        b=h6y309nx7Z3iqK/xhcX+hvmryH/kw5rodCQ07zMUDZBBOFJyI8rsC0FYr1XCXIucmJ
-         7ATf7D1fONCHSn5Z30QqT7tuN+5ScseDVEPEL9eNbEUMyPnZ7CwxyQeCSfBctkXxNPEK
-         NctytL3HAAOXKr8sAsutOh9hkGOyUAvP6KzyCY8oqzn12/kcHiPl/denPdXr79PVAjxq
-         HqxsbCwlT0yxT8X3g5x5qw9t6TWgqUigVpUnkEFhhO9NQbJWHzIjL8izFQq8AUy3xSdM
-         WjjaQ7JWZXK7uVywV/4bG58EA9XYGMLFAYCuRS8Y8faRGRPBvKwxXx2BCzuiomgiVKRu
-         TnMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757168850; x=1757773650;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FJO9S7x3nRRnjHDwb9V3pJU7i7F2/XAB3JBEito+s1c=;
-        b=kCuXDBiMSsduhBzMSfTtRjQeluldd3a3Qt27OQ6RxO5oP4BGx9my30XeC2WaXPM0EK
-         oWL8zI2jbzTEmJqLobSzLSsXGwDOHejfl22LEat2jAdmrlVMeUlvyYC6iE5nIZsDOdGn
-         s9CUAWlR+DuO67AMCX0eRfyHo8A2uGo7n55pPfuvC8RnWyKEtJADtk8IEKyPY6S/Pp3W
-         LTUw/gJH2DeZndoPQT/XX3dZ4htmZkTfxCoBZ3WT2lWfPCXtA/Z9xzkBK2ZgmtLnW8/F
-         KDHWQHy8z+JoVRD4cFhgYfgIL27VeqvqBin1nDzQXogsx7Zfr1coy5kovuxp4YyX2PY9
-         xaWA==
-X-Forwarded-Encrypted: i=1; AJvYcCWF5mKBUFKlPGbbfnexZzT3vi77dgeHxHXNlieqK84eI1iPuIDtxffcC538yXTtPpoWMiz7pLQ8ecNj7j5b@vger.kernel.org, AJvYcCXAuYxvdXPPRLlXA+X+ZBolCkW5QHj60jAcYZneH2rdWFAJkXNNm/jP+h8r7m/hngv8AojBCqXq1zFlEjuRCQk=@vger.kernel.org, AJvYcCXf7gDBHUSys72LwS/0SL7NsbAJh+mo1u2ywEkq6v5LsR3CG7MqdO9k71Qdn6kpK9ViRSBBENhIEXO57jpRWYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1y5yFJaox3er3F6e6kjuXheN+cI37SzWIUk5ySSjOfrSdu7wB
-	M8VcBh6OD90TkRYG6lY39hpXexetJs31YdV0dz9v2leNRpWX06xMhrO0GiXjgg==
-X-Gm-Gg: ASbGnctHahzHLbdvQS7nKnHMh1faHRaUZxqLyjHnrfUast7Q8h7W9VxKTBmZ3jKQOm9
-	VRIDb0a2A7TCFeA790lxUuC4uhu/m2UNTJgyXZwjwUO9MN3Uhsmo9muhP2hfGv3GGDDdQCveKl6
-	LcN8I9SYEl76jT8cpTfxTT4Z77xif5kkVRI26d9AJq6YFxgXZJms6bx0ki+Pr9+bQz3FNf8sHAo
-	k2mPmD1QRLsYxGeWOlb2aHzyH/B5RKj6mN5/41jmvWYrDtmMWYRsRxotzPWcTFYKkxr6/mpcJsO
-	FiJvoKS8Sc0whhdD6NUVJs+gPPsahq+PV/W0ygaS/3T7p8aoiMMfrcVWB64/6Kymv0u0snERu1C
-	J3uWOXkDhj0QBo7MDifTQu9BJzxtERMcreVbsDJQBIKF3jYJjad6PFk1Eiw==
-X-Google-Smtp-Source: AGHT+IFo/wdRnLRWSsHuDNT81jeYpBcsp0gDGos0qkmPdS51KfdLC3byHzsGcGowzpzY+8XxHQpscA==
-X-Received: by 2002:a05:690c:7002:b0:721:21f6:3e0d with SMTP id 00721157ae682-727f505616fmr20670537b3.38.1757168849822;
-        Sat, 06 Sep 2025 07:27:29 -0700 (PDT)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-5ff8784525dsm3348113d50.3.2025.09.06.07.27.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Sep 2025 07:27:29 -0700 (PDT)
-Date: Sat, 6 Sep 2025 10:27:28 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Burak Emir <bqe@google.com>, Kees Cook <kees@kernel.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Carlos LLama <cmllamas@google.com>,
-	Pekka Ristola <pekkarr@protonmail.com>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v15 0/5] rust: adds Bitmap API, ID pool and bindings
-Message-ID: <aLxE0AvP63nXxciG@yury>
-References: <20250904165015.3791895-1-bqe@google.com>
- <aLnURXW_ZiX2iJd_@yury>
- <CANiq72==48=69hYiDo1321pCzgn_n1_jg=ez5UYXX91c+g5JVQ@mail.gmail.com>
- <aLv8buzrro0E5CCQ@stanley.mountain>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="Vo8En1fH"
+ARC-Seal: i=1; a=rsa-sha256; t=1757181295; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=WNxEioriaEs/u+KCseNI2dB68EOHRgf0F+l9UmkTxpaMjOTaqo7u92cu+ELDxOq6VauP91oW2ZnCuFdGdIQG226W+TRDWmCwA6K1lZfffMI7N5jNd0xsoKMeTVR1IK7VMxAMZB0evgvqsPZF3Nuz8Jix1RWyYjfVfQelO0JUG6g=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1757181295; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=IP7rUBaz1mvKnSQijXZkfLhmJRgyKEeoaWImepnoHPM=; 
+	b=mM+byTotFb+OP9BafKuB5zHSQdFPMwb3RQYFI8+0FJmDjAyweLe7SNCFmWy+36m5UCxNSlRPRyu0GAm8QbEmAmilnIpWvS5mwtSI5Vs3PEYrSxv5JBfOOaVstU2l2TGJaQBFEzZvZOkP023kXkSiEAzAJ3ZZKPwVhvEWRN0EGdc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757181295;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=IP7rUBaz1mvKnSQijXZkfLhmJRgyKEeoaWImepnoHPM=;
+	b=Vo8En1fHBjlORqqr4nwH2t1Ko4oGKDiIZXye5dpPTJTXQ0z0uomJitKJBaxlGxz0
+	Hyf/qh7Sf5IUbhGDXsb0Bl7OJakZbjMGKA4FFAayKBvo3sM8/nDtjSqFD7NHQPPAjTa
+	lnvN1396nqMaHKXIkhA6srQFSndnyRG4BHZ+RY68=
+Received: by mx.zohomail.com with SMTPS id 1757181293913862.8978758635274;
+	Sat, 6 Sep 2025 10:54:53 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Rob Herring <robh@kernel.org>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ MyungJoo Ham <myungjoo.ham@samsung.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>,
+ kernel@collabora.com, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject:
+ Re: [PATCH RFC 01/10] dt-bindings: gpu: mali-valhall-csf: add
+ mediatek,mt8196-mali variant
+Date: Sat, 06 Sep 2025 19:54:46 +0200
+Message-ID: <13801600.O9o76ZdvQC@workhorse>
+In-Reply-To: <20250905232657.GA1497794-robh@kernel.org>
+References:
+ <20250905-mt8196-gpufreq-v1-0-7b6c2d6be221@collabora.com>
+ <20250905-mt8196-gpufreq-v1-1-7b6c2d6be221@collabora.com>
+ <20250905232657.GA1497794-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aLv8buzrro0E5CCQ@stanley.mountain>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Sat, Sep 06, 2025 at 12:18:38PM +0300, Dan Carpenter wrote:
-> Nope.  Try again.
+Hi Rob,
+
+On Saturday, 6 September 2025 01:26:57 Central European Summer Time Rob Herring wrote:
+> On Fri, Sep 05, 2025 at 12:22:57PM +0200, Nicolas Frattaroli wrote:
+> > The Mali-based GPU on the MediaTek MT8196 SoC is shackled to its concept
+> > of "MFlexGraphics", which in this iteration includes an embedded MCU
+> > that needs to be poked to power on the GPU, and is in charge of
+> > controlling all the clocks and regulators.
+> > 
+> > In return, it lets us omit the OPP tables from the device tree, as those
+> > can now be enumerated at runtime from the MCU.
+> > 
+> > Add the mediatek,mt8196-mali compatible, and a performance-controller
+> > property which points to a node representing such setups. It's required
+> > on mt8196 devices.
+> > 
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > ---
+> >  .../bindings/gpu/arm,mali-valhall-csf.yaml         | 36 +++++++++++++++++++++-
+> >  1 file changed, 35 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
+> > index a5b4e00217587c5d1f889094e2fff7b76e6148eb..6df802e900b744d226395c29f8d87fb6d3282d26 100644
+> > --- a/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
+> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
+> > @@ -19,6 +19,7 @@ properties:
+> >        - items:
+> >            - enum:
+> >                - rockchip,rk3588-mali
+> > +              - mediatek,mt8196-mali
+> >            - const: arm,mali-valhall-csf   # Mali Valhall GPU model/revision is fully discoverable
+> >  
+> >    reg:
+> > @@ -53,6 +54,13 @@ properties:
+> >    opp-table:
+> >      type: object
+> >  
+> > +  performance-controller:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description:
+> > +      A phandle of a device that controls this GPU's power and frequency,
+> > +      if any. If present, this is usually in the form of some specialised
+> > +      embedded MCU.
 > 
-> diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
-> index 6e0824579781..2f00e91e9c35 100644
-> --- a/rust/kernel/bitmap.rs
-> +++ b/rust/kernel/bitmap.rs
-> @@ -551,18 +551,21 @@ fn bitmap_set_clear_find() -> Result<(), AllocError> {
->          Ok(())
->      }
->  
-> -    #[cfg(not(CONFIG_RUST_BITMAP_HARDENED))]
->      #[test]
->      fn owned_bitmap_out_of_bounds() -> Result<(), AllocError> {
-> -        let mut b = BitmapVec::new(128, GFP_KERNEL)?;
-> +        #[cfg(not(CONFIG_RUST_BITMAP_HARDENED))]
-> +        {
-> +            let mut b = BitmapVec::new(128, GFP_KERNEL)?;
-> +
-> +            b.set_bit(2048);
-> +            b.set_bit_atomic(2048);
-> +            b.clear_bit(2048);
-> +            b.clear_bit_atomic(2048);
-> +            assert_eq!(None, b.next_bit(2048));
-> +            assert_eq!(None, b.next_zero_bit(2048));
-> +            assert_eq!(None, b.last_bit());
-> +        }
->  
-> -        b.set_bit(2048);
-> -        b.set_bit_atomic(2048);
-> -        b.clear_bit(2048);
-> -        b.clear_bit_atomic(2048);
-> -        assert_eq!(None, b.next_bit(2048));
-> -        assert_eq!(None, b.next_zero_bit(2048));
-> -        assert_eq!(None, b.last_bit());
->          Ok(())
->      }
+> We already abuse power-domains binding with both power and performance. 
+> There's a performance-domain binding too, but only used on one platform 
+> for CPUs (Mediatek too IIRC). Or perhaps you could just point to an 
+> empty OPP table. I don't think you have anything new here, so don't 
+> invent something new.
 
-Alright, the testing is definitely failed. I'll drop the series and
-let Burak to send v16 with all fixes merged.
+Oops, yeah, I forgot about performance-domain already existing. I agree
+that it looks like a good fit; iirc I initially disregarded it because
+I thought it was an actual heterogenous core cpufreq-y thing I'd be
+overloading with new meaning, but I see now that this is not so, and
+aside from mediatek, Apple appears to be the only user.
 
-Thanks,
-Yury
+Thanks for the fast review.
+
+Kind regards,
+Nicolas Frattaroli
+
+> 
+> Rob
+> 
+
+
+
+
