@@ -1,266 +1,192 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2054.outbound.protection.outlook.com [40.107.100.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D280303C9F;
-	Mon,  8 Sep 2025 11:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757330109; cv=none; b=u3bVsJp8Ee9igEuQCOax4lEJ/Nh/RIZxg1xx/vTOfs0sCSkhYZMxd/tE2yvH1pycYk2RX0Ei193qTcfnEr5egodKcDaHb80YBNDrIfaH/CQeLdEUX+56+RTzzkLL5yqPNQRxm/NqKJ8n3k3eynA/KX1eWZemqCkQ2fKpubZ/RnM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757330109; c=relaxed/simple;
-	bh=OMK7ztTy/hr+DFx5lept7xu4GuQI0uzYkMpWvYSDScI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ok467kBEUF0IxtIkIX+w4JdW/EhZu0XztuOnJu0yJOS/OAnrXD3yap6msEVJF2pWnYgdog/pLzCnSr2pD3VjpsgidKo5WXG5NqceF+GfZssHNCQSy6tSuAjnS9Aoab8480U5GsAxDfSO9D87itnl7TsD6kRcOJvK9D6KWXUhR9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XpdT/jZX; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42553594A;
+	Mon,  8 Sep 2025 11:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757330500; cv=fail; b=ICUzYJMD6v5y5bbdMxOGw14lp/9HizmyTkdGd3aOOrH5VXgWUqvjccdEN2lII0E5NgXrBFrDd+pi4MP6Cnkr7GTYYc3HnI4evN0cZPPb0h8FuhKltk51dMe3vSUU+RRp4xATYocy6vjSfoUl8RAhCH2Evg+4Vp2Nth11CPMSQEs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757330500; c=relaxed/simple;
+	bh=YCMTav6lo3lnKrLMywrqUbo6zDCx2gQRCKRtHwdy8Ds=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P29BWu0ymtv6JePVQ2zCokS3Ajk/TRDmwaq48WrcqlIa2n9OXByRGsk5voPBUGQdZO9yUihhirD0c3lP74ZBRSwDTGobebizho4W0/umPvewGgyyCyA/+QLo6MIm9iMuLF/DadEceYorNPQePKWiXel+QzID8oIliTysr1CiyLg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iURzAVf7; arc=fail smtp.client-ip=40.107.100.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XpdT/jZX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1757330105;
-	bh=OMK7ztTy/hr+DFx5lept7xu4GuQI0uzYkMpWvYSDScI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XpdT/jZXwuTehiGIMwpqT+gCEf11TGAG4gaTFsV2bMtbNLtV2xcDXF4MkycLHrI23
-	 SMyPiG7ulsQVhZA3zyrI9Cjj97KRwYK65ueKUi5D8g7oj377B3QxEOcIwavDeXHuIO
-	 fb4hy1g7HPNR1YBQiHjU4B9SJvsr1Z4Qh+b2NuBVpRWDAYdGSne6zjF3D+VSjdu6bR
-	 y10MCinaMkVCY57dZAjXkgCtPstbZl8sFPI1v7CQtCMkGW05whW4KAgt/uouJuZ6k9
-	 q+1+cM9DscPa5ifKovnFtpHzVBJWutGjRjLgh4sSKh8YTTjPhINScRkBiPST/PAKCr
-	 dCkSVkalKLpIA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 66F2317E00A6;
-	Mon,  8 Sep 2025 13:15:04 +0200 (CEST)
-Message-ID: <751d3abc-cf40-40a2-a580-7c0ba425ac25@collabora.com>
-Date: Mon, 8 Sep 2025 13:15:03 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iURzAVf7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OmcF6rO82GaxrB5UT5BZ4DP2EyQQH+hcNtYyLA8lIDF32yxLEC1LQHC6vvpGf8X/HQNhmmKCXJ96BVfhWbKtEGH6J+GrA7qlIOgxi6b6c2sNRHeogcLDRDWM3qpvOYafu5/GEd/pTW7vvY4oRMjgVuoh6zWGrPR/UkGf/gfXe0W7E/GoywvyQMIviayeZZvqNKTxzXE5pN1k2IPxUW5PsiYqyLW00amnDsowTttnwx9i2soQSLZX9YbY9XlpbMiDLD42NTGzfNpjmqhWdoKwpKeDnat8MVl9l1poHNopHKx7A4nJpuOXkFIv+nvM33tPXt2EFKKoK714lnG+tsBn7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZlzlJcyncipZ33Qg7z5m23BoO4A06Nfxh4zTmEMXnNU=;
+ b=m5qOhBNyH74cPAWKkLcWKnGt9kRIMTTTmSbXZOARLJx4Toi3l64IsncMIwvcemTG7nP3tSElklA+BxBRBF9mxL2gDVkOKTf6KJYVPrv3ntn7V0R8BP+X6QVbzd6O9vkRPAFCZ6orLjHIDbP0HFo0Mmc2rodhVr3iOFuiRBnyGYgHGaEuasn6j5VI7gRLKXm3VeIxTfuQTu4692wav9osYCW2+aWrresvSmVYz/WAklmBQXb27xSoQlpeEC4M68SVszeyG1SGjandFF/KHTEdG8bLmHYE4RtqolYiH52UW8emnoKNIIEPhcxIwQLVfpgt0nwBNsC9ihESTDKJGBUW5A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZlzlJcyncipZ33Qg7z5m23BoO4A06Nfxh4zTmEMXnNU=;
+ b=iURzAVf71XEcFplif6U/FqRWnMRmFU0sXCSNKBVJn2J9q70WpBl5d1RTVl9Djd2BGqPJ9rF/G7vlFaNR74jEV+6e+SHT7zGaMKdlypQGi+p+Wjt3z78FBL2D8WfEoxt9b4EtNMn3ar61EyHQZpzhbBUhWgp6hqOxD1BSIU4/NYo=
+Received: from DS7PR06CA0020.namprd06.prod.outlook.com (2603:10b6:8:2a::21) by
+ LV2PR12MB5894.namprd12.prod.outlook.com (2603:10b6:408:174::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.19; Mon, 8 Sep
+ 2025 11:21:34 +0000
+Received: from CY4PEPF0000FCC1.namprd03.prod.outlook.com
+ (2603:10b6:8:2a:cafe::18) by DS7PR06CA0020.outlook.office365.com
+ (2603:10b6:8:2a::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9094.22 via Frontend Transport; Mon,
+ 8 Sep 2025 11:21:34 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ CY4PEPF0000FCC1.mail.protection.outlook.com (10.167.242.103) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9115.13 via Frontend Transport; Mon, 8 Sep 2025 11:21:34 +0000
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 8 Sep
+ 2025 04:21:27 -0700
+Received: from xhdradheys41.xilinx.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Mon, 8 Sep 2025 04:21:21 -0700
+From: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
+To: <git@amd.com>, <michal.simek@amd.com>, <alexandre.belloni@bootlin.com>,
+	<Frank.Li@nxp.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <kees@kernel.org>, <gustavoars@kernel.org>,
+	<jarkko.nikula@linux.intel.com>, <linux-i3c@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>
+CC: <radhey.shyam.pandey@amd.com>, <srinivas.goud@amd.com>,
+	<shubhrajyoti.datta@amd.com>, <manion05gk@gmail.com>, Manikanta Guntupalli
+	<manikanta.guntupalli@amd.com>
+Subject: [PATCH V5 0/2] Add AMD I3C master controller driver and bindings
+Date: Mon, 8 Sep 2025 16:51:15 +0530
+Message-ID: <20250908112117.205270-1-manikanta.guntupalli@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 02/10] dt-bindings: devfreq: add mt8196-gpufreq
- binding
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, MyungJoo Ham <myungjoo.ham@samsung.com>,
- Kyungmin Park <kyungmin.park@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>,
- kernel@collabora.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250905-mt8196-gpufreq-v1-0-7b6c2d6be221@collabora.com>
- <20250905-mt8196-gpufreq-v1-2-7b6c2d6be221@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250905-mt8196-gpufreq-v1-2-7b6c2d6be221@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC1:EE_|LV2PR12MB5894:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2ab49449-60ca-4e29-c7d3-08ddeec9de5e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|7416014|36860700013|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ZDrAgNOvmC3JFi0leXQVH74uy9OA4b0p0D+nKxEJB3V2jQeLHwpk8tZ9mQBC?=
+ =?us-ascii?Q?xENe+XYJ3G8DhQKtYy6TnA5vj8jAkkhV4spOOhI5C/tHSzCy661vWBd9k6x2?=
+ =?us-ascii?Q?NtYxPUlqcLQ4++twTiPMy0A716dWTyirhY1M4p0rC4WLO4S9qGo+EQLFCo8q?=
+ =?us-ascii?Q?w9lECnyTqnlKN4l9iMOErlQq8IEI1aFv3LaDljzUbl7wehenX2khKx8OYJ56?=
+ =?us-ascii?Q?ESTX6K0t1BBKOKl+9Y76Cit8SuwYd5AaYiWkCr+720g9lPihqlNY8vk/UDfw?=
+ =?us-ascii?Q?ciuqEsKGxaRZYLRbVBouArmNC1k3S8JxBdHqCrgUh7t7/2IoPBCOd/8xKlks?=
+ =?us-ascii?Q?aGiEbQk2BTPyp+GzMkGUrM3cyDkkDLFC2okutnyrddv6QvjtJCn88jHEeQxa?=
+ =?us-ascii?Q?xTvGyAq7pLgpYxRR8XEqjzN1tcXanDHrn6i9pOjwdn4ZfTIsDxvR0f0wx8yQ?=
+ =?us-ascii?Q?0Ga55sd1qtsjzzcAxi+/vAigVuG22GuVobIFQhApzGPRimzw96O1lLA55/uV?=
+ =?us-ascii?Q?RC/KdY0wSBtXhZVZm/OYF2DsXzVO8YJzMUsRmpUrQjHjBLU7X4EhDldX422i?=
+ =?us-ascii?Q?VvmBi2NflezrfIqut/fqn4/glnXxqpqhg0JUsdn+cc4C9G3Y4KI9ImJIiNvt?=
+ =?us-ascii?Q?xBQrSs68ekByNLuTgvSR+eyN5o3s3TNKN5TlcYv7XEOz+sK+YFOhTtgAm5KV?=
+ =?us-ascii?Q?J0xEYx5WOrSo3DmKy66YRScdefgPW8w9RDxLDkDdJjSPPbCZHHLdqef7VmpA?=
+ =?us-ascii?Q?XWT70iLhSXzN3olyXkk4Aqyz3LLl/WnAtIPIjAxnFZAc4Xz0ZiDXpMM5hDS8?=
+ =?us-ascii?Q?xehAgws/Qbxk6M2d6+voiFOf893zsnYtUxo7XY5ifpN7RoOueW+3y+w3u0Jl?=
+ =?us-ascii?Q?i6jCnPKkjfJ212kNTl7+pcEVHXP5jLi5ADY2l3t1ANTxtlruXhumSEBP5w6R?=
+ =?us-ascii?Q?RBLQtkhZxACh1ryvLPkJHVEIQSo+XsSZn1zplJxtohTDmJ2YvtBDJ2jcZSoI?=
+ =?us-ascii?Q?d4JhkRlseqKQOQPfAryKmdHrHP1ydjceMg7Nf5XmhvPu7pjNirR+bgyfX0wj?=
+ =?us-ascii?Q?UJ03ESMpBOysHDnPueJqFHdKJhD9rbeba5/uUZkBKDzHVbMCuzqTMQJ/GjX5?=
+ =?us-ascii?Q?DgxZwtLxjq7vdKptMriQIRNG5ivZDCBznaRMl+G3iJ0Za6qk1NxEtOT3bdQ5?=
+ =?us-ascii?Q?TrRGxD2t7VmXLc966eohyvFJNogNh7++/czvYdTzBuhPHkDRX/CLhSIH+nMj?=
+ =?us-ascii?Q?3weA1obVfShUIx1bl1/sjHKpvRhiu07yT1q8nMOEE9gIQtySWTrVeAZyTq+N?=
+ =?us-ascii?Q?YV0lalaqIJVdApSaZYXegySobZwt+UDQLtXw2dSiXgXg6K/EVeW7h4CnMPDQ?=
+ =?us-ascii?Q?glQxL2cz1MgVTOdQ6BVb6fJsfhWfJkAvqwP9nXQvxjNURlDx1g6SSGA5b5Ei?=
+ =?us-ascii?Q?b6bUy5+5Yuhr+2Vwu3Wm+cLmsyDVzde0MPbSEy1ZX5MJi6A0cEBXEQfhQ0sD?=
+ =?us-ascii?Q?jpQr2vziabKMQwnqEp9kkpBDCSgmbQ2TzPblkBP5qzpOByZlbBiTnl5XhA?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(7416014)(36860700013)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2025 11:21:34.2198
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ab49449-60ca-4e29-c7d3-08ddeec9de5e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000FCC1.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5894
 
-Il 05/09/25 12:22, Nicolas Frattaroli ha scritto:
-> On the MediaTek MT8196 SoC, the GPU has its power and frequency
-> dynamically controlled by an embedded special-purpose MCU. This MCU is
-> in charge of powering up the GPU silicon. It also provides us with a
-> list of available OPPs at runtime, and is fully in control of all the
-> regulator and clock fiddling it takes to reach a certain level of
-> performance. It's also in charge of enforcing limits on power draw or
-> temperature.
-> 
-> Add a binding for this device in the devfreq subdirectory, where it
-> seems to fit in best considering its tasks.
-> 
-> The functions of many of the mailbox channels are unknown. This is not
-> the fault of this binding's author; we've never received adequate
-> documentation for this hardware, and the downstream code does not make
-> use of them in a way that'd reveal their purpose. They are kept in the
-> binding as the binding should be complete.
-> 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
->   .../bindings/devfreq/mediatek,mt8196-gpufreq.yaml  | 116 +++++++++++++++++++++
->   1 file changed, 116 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/mediatek,mt8196-gpufreq.yaml b/Documentation/devicetree/bindings/devfreq/mediatek,mt8196-gpufreq.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..1fe43c9fc94bb603b1fb77e9a97a27e92fea1ae8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/devfreq/mediatek,mt8196-gpufreq.yaml
-> @@ -0,0 +1,116 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/devfreq/mediatek,mt8196-gpufreq.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek MFlexGraphics Performance Controller
+This patch series introduces support for the AMD I3C master controller,
+including the device tree binding and driver implementation.
 
-Doesn't MFG stand for MediaTek Flexible Graphics? (or did they update the name?)
+Changes for V2:
+Updated commit subject and description.
+Moved allOf to after required.
+Removed xlnx,num-targets property.
+Added mixed mode support with clock configuration.
+Converted smaller functions into inline functions.
+Used FIELD_GET() in xi3c_get_response().
+Updated xi3c_master_rd_from_rx_fifo() to use cmd->rx_buf.
+Used parity8() for address parity calculation.
+Added guards for locks.
+Dropped num_targets and updated xi3c_master_do_daa().
+Used __free(kfree) in xi3c_master_send_bdcast_ccc_cmd().
+Dropped PM runtime support.
+Updated xi3c_master_read() and xi3c_master_write() with
+xi3c_is_resp_available() check.
+Created separate functions: xi3c_master_init() and xi3c_master_reinit().
+Used xi3c_master_init() in bus initialization and xi3c_master_reinit()
+in error paths.
+Added DAA structure to xi3c_master structure.
 
-Perhaps it's a good idea to also add that reference... I think it's a little more
-readable and understandable compared to "MFlexGraphics" :-)
+Changes for V3:
+Updated commit description.
+Corrected the order of properties and removed resets property.
+Added compatible to required list.
+Added interrupts to example.
+Resolved merge conflicts.
 
-> +
-> +maintainers:
-> +  - Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: '^performance-controller@[a-f0-9]+$'
-> +
-> +  compatible:
-> +    enum:
-> +      - mediatek,mt8196-gpufreq
-> +
-> +  reg:
-> +    items:
-> +      - description: GPR memory area
-> +      - description: RPC memory area
-> +      - description: SoC variant ID register
-> +
-> +  reg-names:
-> +    items:
-> +      - const: gpr
-> +      - const: rpc
-> +      - const: e2_id
+Changes for V4:
+Added h/w documentation details.
+Updated timeout macros.
+Removed type casting for xi3c_is_resp_available() macro.
+Used ioread32() and iowrite32() instead of readl() and writel()
+to keep consistency.
+Read XI3C_RESET_OFFSET reg before udelay().
+Removed xi3c_master_free_xfer() and directly used kfree().
+Skipped checking return value of i3c_master_add_i3c_dev_locked().
+Used devm_mutex_init() instead of mutex_init().
 
-We should find a better name for that "e2_id".
+Changes for V5:
+Renamed the xlnx,axi-i3c.yaml file into xlnx,axi-i3c-1.0.yaml.
+Used GENMASK_ULL for PID mask as it's 64bit mask.
 
-> +
-> +  clocks:
-> +    items:
-> +      - description: main clock of the embedded controller (EB)
-> +      - description: core PLL
-> +      - description: stack 0 PLL
-> +      - description: stack 1 PLL
-> +
-> +  clock-names:
-> +    items:
-> +      - const: eb
-> +      - const: mfgpll
-> +      - const: mfgpll_sc0
-> +      - const: mfgpll_sc1
-> +
-> +  mboxes:
-> +    items:
-> +      - description: FastDVFS events
-> +      - description: frequency control
-> +      - description: sleep control
-> +      - description: timer control
-> +      - description: frequency hopping control
-> +      - description: hardware voter control
-> +      - description: gpumpu (some type of memory control, unknown)
-> +      - description: FastDVFS control
-> +      - description: Unknown
-> +      - description: Unknown
-> +      - description: Unknown, but likely controls some boosting behaviour
-> +      - description: Unknown
-> +
-> +  mbox-names:
-> +    items:
-> +      - const: fast_dvfs_event
+Manikanta Guntupalli (2):
+  dt-bindings: i3c: Add AMD I3C master controller support
+  i3c: master: Add AMD I3C bus controller driver
 
-Any problem if we avoid underscores in names?
+ .../bindings/i3c/xlnx,axi-i3c-1.0.yaml        |   55 +
+ MAINTAINERS                                   |    7 +
+ drivers/i3c/master/Kconfig                    |   16 +
+ drivers/i3c/master/Makefile                   |    1 +
+ drivers/i3c/master/amd-i3c-master.c           | 1014 +++++++++++++++++
+ 5 files changed, 1093 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i3c/xlnx,axi-i3c-1.0.yaml
+ create mode 100644 drivers/i3c/master/amd-i3c-master.c
 
-> +      - const: gpufreq
-> +      - const: sleep
-> +      - const: timer
-> +      - const: fhctl
-> +      - const: ccf
-> +      - const: gpumpu
-
-"some type of memory control" .. it's really a MPU. For memory protection. :-)
-Besides, I don't think we have to touch anything in the gpumpu for freq control
-via gpueb.
-
-> +      - const: fast_dvfs
-> +      - const: ipir_c_met
-> +      - const: ipis_c_met
-
-MET is a hardware event tracer / profiler... and I'm fairly sure that we have no
-real reason to support it (at least, not like that, and not in a first submission).
-
-Ah btw: ipir ipis .. ipi-receive ipi-send
-
-> +      - const: brisket
-
-Brisket is... something. There's one for the GPU, one for CPU, and one for APU.
-Not sure what it exactly does, but seems to be or control a FLL (freq locked loop).
-
-> +      - const: ppb
-
-PPB = Peak Power Budget
-
-The PPB needs its own "big" driver (the PBM - Power Budget Manager) in order to do
-anything - as in - this manages a SoC-global peak power setting based on the
-available maximum deliverable instantaneous (and/or sustainable) power from the
-board's power source and it is mainly used for smartphone usecase (battery!).
-
-In order to work, the PPB HW (yet another mcu) needs to be initialized with tables
-for CPU and GPU (and APU? and something else too?), and with other data explaining
-the maximum instantaneous power that can delivered at a certain battery percentage.
-
-Important point is... I doubt that PPB is being initialized by the bootloader, on
-all of Genio, Kompanio and Dimensity chips, so this should be disabled by default.
-
-You can keep it, especially now that you have a description for it - and because it
-does indeed exist, but I doubt that we're using this anytime soon.
-
-Cheers,
-Angelo
-
-> +
-> +  shmem:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle to the shared memory region of the GPUEB MCU
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - clock-names
-> +  - mboxes
-> +  - mbox-names
-> +  - shmem
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/mediatek,mt8196-clock.h>
-> +
-> +    gpufreq: performance-controller@4b09fd00 {
-> +        compatible = "mediatek,mt8196-gpufreq";
-> +        reg = <0x4b09fd00 0x80>,
-> +              <0x4b800000 0x1000>,
-> +              <0x4b860128 0x4>;
-> +        reg-names = "gpr", "rpc", "e2_id";
-> +        clocks = <&topckgen CLK_TOP_MFG_EB>,
-> +                 <&mfgpll CLK_MFG_AO_MFGPLL>,
-> +                 <&mfgpll_sc0 CLK_MFGSC0_AO_MFGPLL_SC0>,
-> +                 <&mfgpll_sc1 CLK_MFGSC1_AO_MFGPLL_SC1>;
-> +        clock-names = "eb", "mfgpll", "mfgpll_sc0",
-> +                      "mfgpll_sc1";
-> +        mboxes = <&gpueb_mbox 0>, <&gpueb_mbox 1>, <&gpueb_mbox 2>,
-> +                 <&gpueb_mbox 3>, <&gpueb_mbox 4>, <&gpueb_mbox 5>,
-> +                 <&gpueb_mbox 6>, <&gpueb_mbox 7>, <&gpueb_mbox 8>,
-> +                 <&gpueb_mbox 9>, <&gpueb_mbox 10>, <&gpueb_mbox 11>;
-> +        mbox-names = "fast_dvfs_event", "gpufreq", "sleep", "timer", "fhctl",
-> +                     "ccf", "gpumpu", "fast_dvfs", "ipir_c_met", "ipis_c_met",
-> +                     "brisket", "ppb";
-> +        shmem = <&gpufreq_shmem>;
-> +    };
-> 
+-- 
+2.34.1
 
