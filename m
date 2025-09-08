@@ -1,65 +1,62 @@
 Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF132E7186
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Sep 2025 07:22:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54850298CD5
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Sep 2025 07:22:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757316124; cv=none; b=kZgw5ZiDVgMERPLKNTETXhm8eyu+K2cODOeqXvAqSrMBnFRwXNQGwHJnUHeUbU5LsFS0lJ+qqm6Q8ys2KMdRPlS1acairCeVpA6mXfwID6NqMcK1/D7sdv92+GwlhYKb9Dw+05O3nLu+PGCiTpGKZlE7kVF8z0vhttQT8Gk9PP8=
+	t=1757316124; cv=none; b=tBd8MUTevzlEM+fEasZVQPP862z4rj+bvPbf9FmkjkwRmLPcIXA9KfrXy8XoKrTdH1gJsF1Unc7jVakxSd5hmcKL1qKlcnDRsH+7L/vxV/8zKiyVEk/lNTfuXVAro2G2V2iy0FdQACfbIc9P59H/ohyzRRwFEpuDWibS5MEfUiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1757316124; c=relaxed/simple;
-	bh=iv0V5sjDmP+G0IfYZFx/KWMcUh6euYWecr6+mvlV4QE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Mx9m/CJ537/rXfNlW3CM0imY9M1J3NRr3L2gkxIAW7iCRBF9QcJdByBGj5+57Z8dxnIznMGjKxc/o+ZxXIdxPvspYT4XoYeeUriAsDaSduUtnV0PyghhXtXo38PorgleyaZeDcAVy3w90wAee1ZCKwb93cPLaMRdJWRjjUQrYbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KdJK25Sy; arc=none smtp.client-ip=209.85.208.74
+	bh=UkLXBhcQ6UIhr2r/eNIyfltLxopalMTMot5l21sWBiw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Urzgp/zc1sUBj8XE0u+FQrWtg1XEKP/7gstjG71iaqWq8C+wdZXgBhXRctIwfYvXukjYi455u++FsQ5PCeQfjRaBkQaSzZO624crQbhgt04MBFGT0rR00hTBU5ZN+UPQ8Waqsq30+INcg6NhT/9nzKF6o7c4TpQ63yQHXLZnVIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mbrawgO5; arc=none smtp.client-ip=209.85.208.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KdJK25Sy"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-625b1922a37so1469157a12.1
-        for <linux-hardening@vger.kernel.org>; Mon, 08 Sep 2025 00:22:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mbrawgO5"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-61d2de72644so4733728a12.0
+        for <linux-hardening@vger.kernel.org>; Mon, 08 Sep 2025 00:22:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757316121; x=1757920921; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ysoQKff0sxHrJKhSrzzYE1E0RWSujnefH1ZX7oEQ0w8=;
-        b=KdJK25SysnGxyaRHUn9WG4zsc/gDPVtFj/V0AawE5Uk8AUsrEKxNWSL1PP6SHGYk9C
-         vf2835qYRb8LpCjqmYRmfu2rtOdIVgoDGjei838BbebOIvoxNn4XCHOL/9RwzmBTMI/M
-         nwC9lS+mscJAnlz1RyYyhmVQt4ShZ0am89XC6vmhW+udUJuc+Gkupsd31olbOBA8RoiD
-         SgZG6isWlZXXHdoOTPslTKa6mIyTB1vmECPmP37bGjRuJxbGtppeLIUfuiZvTM0w/oEk
-         78EOBtVqvIH+ddZxBwzF6RohLwQZVN8jIE2pg0pX5o+7HOp6GO7vQcolcZMaXfjh8DaT
-         L3nA==
+        d=google.com; s=20230601; t=1757316120; x=1757920920; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GKxpUEQeRzjVHF6O26oiP7FdiJL5g7e0DqS8LwqJYF8=;
+        b=mbrawgO5CXjC/+E0VVtwvmQnOgnQGUD2boiCj+2FYA1bZuantGe4YLUIj+Y0QvpKNs
+         Isalp7Bay0kNhtoM4emp4HX+gxUmHwaQo38P6IB0WUqWAr+dUuCN/dphK3448TR76VEK
+         WZ82hlkeH4xa+DvMKOIRMRn+BpfXHk/AEWHa5cNDLywWtVKe7r77jT4PlG7ytYgw6Yb4
+         rYsOtBWekatGLxF0iTfOTiXrJ2sT1XIAwMkVQ28fRNydFpHyhXRr3/3MTXhWEYpZ7KYb
+         nZGverV6a2SuzXNhh/z2Lr2baVSPK5kh8YGg9O9SmK6IfiY17bAfKUAes3+CKsrLJuuf
+         ZOgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757316121; x=1757920921;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ysoQKff0sxHrJKhSrzzYE1E0RWSujnefH1ZX7oEQ0w8=;
-        b=g1Con/uNNpnxjWdnJtRU2JFax+T0sNLS6ScBkTuulH7E/rBQrC2xiaXVn2nnMBv9Ly
-         nrBermdiEuLtslZfNnb6sT8x+f8BLmpE0OxUHTNzX6l1dLCkDHb6PJ+Kr/Kcgn9zSNqq
-         lr99ioBKrLbhf9VpyTXPAEU/GQGNMXhSTfcN7GNqiz/QpZnDsol5sPd7n7kGFHiMEBCm
-         LOZMGtZ0sgzRl52PJ4efqAyfx4NgKTRc66QaTuJx8AWOhvASwXeEyvCBFXyM3UEnkFBK
-         aBQGSgZeCymNAk4Qal4SH4rG7RMcGJnIXFutRH2JsC68qdQbp0RdHwFzx4WYdaGOAYEz
-         bNnA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5qBPDZHNCBjSfnOg8OM4eOioK8UbKBuFKCbVPG0GyahZbtscLGgA2FyeE6ThHHdOJJYO4j8Gjw4JGKLneP4A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySUbE0leO7gsQqvZdYS3+dPLCx6txrd/KvnYEf0RXCliw2oprj
-	yVne6/PyMkESllGnjWUhemD0B5uinH6CNH1R24daHnhkkrkq8iYmkibvwnQfw19xW4LhGw==
-X-Google-Smtp-Source: AGHT+IG3O7KQTMkteqE6QaLliSIWj3W9rn30EeC9lqpPanaLx1WwtPnQKWWx4eZFplTweL/AeLsHHkM=
-X-Received: from edaa13.prod.google.com ([2002:a05:6402:24cd:b0:61a:366c:d1ba])
- (user=bqe job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:52cb:b0:61a:967f:55f9
- with SMTP id 4fb4d7f45d1cf-6237b972390mr5963632a12.10.1757316120834; Mon, 08
- Sep 2025 00:22:00 -0700 (PDT)
-Date: Mon,  8 Sep 2025 07:21:51 +0000
-In-Reply-To: <20250908072158.1041611-1-bqe@google.com>
+        d=1e100.net; s=20230601; t=1757316120; x=1757920920;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GKxpUEQeRzjVHF6O26oiP7FdiJL5g7e0DqS8LwqJYF8=;
+        b=S4oy0TMCPkLz2vVKaqRpKwM+TAvnZQYobceVPui07fDD/r2Nj2TfPlhKIwRHRIC2p9
+         oU+W1F5Em2M2ew/Zj7Ri4PJ8+pCbMjnBYeOfR4wnEy4P7p9bCyx2xur4GhxS3XPOIT0q
+         NwwxSlIA+veNG0SX1F9OHyf30esHjsTBgd9+dSMm5jgdxXIPJ31a2RraQOb+Ro/kbHKd
+         CSbHyTlFLX9TaVxQ6MKoEucSgJv7C2tbEM4C8F6EIdZUMCmxFJE2/NjtnL1bWmIS+93c
+         MTbNaSrdBaWWcUaX4K0q/6Cu+QU0rDs2iPNFxPM5mJD36gClaZiJbJGMFrL1Ov9QOHog
+         Xu3g==
+X-Forwarded-Encrypted: i=1; AJvYcCU8x85BKtbfHTs/9ydByMOVJq/hL+xUdFVB07UDXcIHKU4gFb8Gmp/GGA/ElWLcBNvY6F70P/cdY1TUx79yiF8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRKXr6qmwL4bb7NWr3+uLqO5E/iNeffWkfuQp3rZ2g4tc+CKYd
+	en8WfoH6pwyt+vAUtRrDj7ZYw5nxr09/6Gk255+CpO1C9WPB0VqUX3BvPnSP4bfmC3zO1Q==
+X-Google-Smtp-Source: AGHT+IGbGaq09Vro6wrxRFmPM3mUrXlXYch0/wKaitjIgO1vBDPz70l4YuAhUOpBkkLNZsqcavfs+hs=
+X-Received: from edc19.prod.google.com ([2002:a05:6402:4613:b0:61a:1a2c:d097])
+ (user=bqe job=prod-delivery.src-stubby-dispatcher) by 2002:a50:bb25:0:b0:61e:d2f0:5875
+ with SMTP id 4fb4d7f45d1cf-620f3881221mr7119146a12.1.1757316119706; Mon, 08
+ Sep 2025 00:21:59 -0700 (PDT)
+Date: Mon,  8 Sep 2025 07:21:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250908072158.1041611-1-bqe@google.com>
 X-Mailer: git-send-email 2.51.0.355.g5224444f11-goog
-Message-ID: <20250908072158.1041611-2-bqe@google.com>
-Subject: [PATCH v16 1/5] rust: add bindings for bitmap.h
+Message-ID: <20250908072158.1041611-1-bqe@google.com>
+Subject: [PATCH v16 0/5] rust: adds Bitmap API, ID pool and bindings
 From: Burak Emir <bqe@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>
 Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
@@ -74,74 +71,203 @@ Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Makes the bitmap_copy_and_extend inline function available to Rust.
-Adds F: to existing MAINTAINERS section BITMAP API BINDINGS [RUST].
+This series adds a Rust bitmap API for porting the approach from
+commit 15d9da3f818c ("binder: use bitmap for faster descriptor lookup")
+to Rust. The functionality in dbitmap.h makes use of bitmap and bitops.
 
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
-Suggested-by: Yury Norov <yury.norov@gmail.com>
-Signed-off-by: Burak Emir <bqe@google.com>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Acked-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
--
----
- MAINTAINERS                     | 1 +
- rust/bindings/bindings_helper.h | 1 +
- rust/helpers/bitmap.c           | 9 +++++++++
- rust/helpers/helpers.c          | 1 +
- 4 files changed, 12 insertions(+)
+The Rust bitmap API provides a safe abstraction to underlying bitmap
+and bitops operations. For now, only includes method necessary for
+dbitmap.h, more can be added later. We perform bounds checks for
+hardening, violations are programmer errors that result in panics.
+
+We include set_bit_atomic and clear_bit_atomic operations. One has
+to avoid races with non-atomic operations, which is ensure by the
+Rust type system: either callers have shared references &bitmap in
+which case the mutations are atomic operations. Or there is a
+exclusive reference &mut bitmap, in which case there is no concurrent
+access.
+
+This series includes an optimization to represent the bitmap inline,
+as suggested by Yury.
+
+We ran a simple microbenchmark which shows that overall the Rust API 
+can be expected to be about 4.5% slower than C API.
+
+We also introduce a Rust API in id_pool.rs that would replace 
+dbitmap.h from the commit referenced above. This data structure is coupled 
+with the bitmap API and adds support for growing and shrinking, along
+with fine-grained control over when allocation happens. 
+The Binder code needs this since it holds a spinlock at the time it
+discovers that growing is necessary; this has to be release
+for performing a memory allocation with GFP_KERNEL that may cause 
+sleep.  We include example doctests that demonstrate this usage.
+
+Thanks everyone for all the helpful comments, this series has improved 
+significantly as a result of your work.
+
+Changes v15 --> v16:
+- Rebased on commit 6ab41fca2e80 ("Merge tag 'timers-urgent-2025-09-07' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip")
+- kunit [test]s in Rust don't yet work with cfg, which breaks when
+  CONFIG_RUST_BITMAP_HARDENED=y. Miguel identified the issue and
+  suggested to move the [cfg] to body. Should be changed back when issue 
+  https://github.com/Rust-for-Linux/linux/issues/1185 is fixed.
+
+Changes v14 --> v15:
+- Rebased on commit 08b06c30a445 ("Merge tag 'v6.17-rc4-ksmbd-fix' of git://git.samba.org/ksmbd")
+
+Changes v13 --> v14:
+- Rebased on commit 8742b2d8935f ("Merge tag 'pull-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs")
+- applied clippy suggestions for pointer casts
+- in benchmark module, replace use of the Rust Ktime abstraction 
+- in benchmark module, move newlines around for pr_cont to work
+  with Instant, elapsed.
+- added Alice's Reviewed-by tag
+
+Changes v12 --> v13:
+- Rebased on commit 75f5f23f8787 ("Merge tag 'block-6.16-20250619' of git://git.kernel.dk/linux")
+- Renamed types CBitmap --> Bitmap, Bitmap --> BitmapVec.
+- Rewrote unit tests to not use `unwrap()` but `Result` and `?`
+- Replaced NonNull::as_mut() with NonNull::as_ptr()
+- declared local BITS_PER_LONG usize constants, fixed rustdoc
+
+Changes v11 --> v12:
+- Added Reviewed-by tag, changed named of benchmark module
+- Fixed config, rustdoc, clippy and bytes computation (Pekka).
+- Added test that exercises CONFIG_RUST_BITMAP_HARDENED,
+  verified it panics.
+- Had to add a break to benchmark module, for the
+  CONFIG_RUST_BITMAP_HARDENED case which enforces bounds check.
+
+Changes v10 --> v11:
+- Fix Kconfig dependency, Rust benchmark depends on CONFIG_RUST
+- Disable clippy warning for len() without is_empty() in id_pool.rs
+
+Changes v9 --> v10:
+- change helper to use `unsigned long` for `nr` parameter (Boqun)
+- add missing and fix safety comments (Boqun, Pekka)
+- move benchmark module output and results to #4 commit msg.
+- use pr_cont to avoid repeating find_bit_benchmark_rust log prefix.
+- Disable clippy warning for len() without is_empty() in bitmap.rs
+
+Changes v8 --> v9:
+- added a new type `CBitmap` that makes any C bitmap accessible with
+  the same API, and add Deref so both Bitmap and
+  CBitmap can share the same implementation.  Full credit for this 
+  goes to Alice who suggested idea and code.
+- added config dependency on CONFIG_RUST that was missing from
+  CONIG_FIND_BIT_BENCHMARK_RUST.
+- implemented Send for Bitmap, it is actually needed by Binder.
+- reworded commit msg for clarity.
+- removed unsafe for atomic ops.
+- renamed `bitmap_hardening_assert` to `bitmap_assert` and make operations
+  do nothing and log error when RUST_BITMAP_HARDENED is off.
+- update author information in find_bit_benchmark_rust.rs
+- Various improvements to id_pool, better names and comments.
+
+Changes v7 --> v8:
+- added Acked-by for bindings patches
+- add RUST_BITMAP_HARDENED config, making extra bound-checks configurable.
+  This is added to security/Kconfig.hardening 
+- changed checks of `index` return value to >=
+- removed change to FIND_BIT_BENCHMARK
+
+Changes v6 --> v7:
+- Added separate unit tests in bitmap.rs and benchmark module,
+  following the example in find_bit_benchmark.c
+- Added discussion about using vendored bitset to commit message.
+- Refined warning about naming convention
+
+Changes v5 --> v6:
+- Added SAFETY comment for atomic operations.
+- Added missing volatile to bitops set_bit and clear_bit bindings.
+- Fixed condition on `nbits` to be <= i32::MAX, update SAFETY comments.
+- Readability improvements.
+- Updated doc comments wording and indentation.
+
+Changes v4 --> v5: (suggested by Yury and Alice)
+- rebased on next-20250318
+- split MAINTAINERS changes
+- no dependencies on [1] and [2] anymore - Viresh,
+  please do add a separate section if you want to maintain cpumask.rs
+  separately.
+- imports atomic and non-atomic variants, introduces a naming convention
+  set_bit and set_bit_atomic on the Rust side.
+- changed naming and comments. Keeping `new`.
+- change dynamic_id_pool to id_pool
+- represent bitmap inline when possible
+- add some more tests
+- add myself to M: line for the Rust abstractions
+
+Changes v3 --> v4:
+- Rebased on Viresh's v3 [2].
+- split into multiple patches, separate Rust and bindings. (Yury)
+- adds dynamic_id_pool.rs to show the Binder use case. (Yury)
+- include example usage that requires release of spinlock (Alice)
+- changed bounds checks to `assert!`, shorter (Yury)
+- fix param names in binding helpers. (Miguel)
+- proper rustdoc formatting, and use examples as kunit tests. (Miguel)
+- reduce number of Bitmap methods, and simplify API through
+  use Option<usize> to handle the "not found" case.
+- make Bitmap pointer accessors private, so Rust Bitmap API
+  provides an actual abstraction boundary (Tamir)
+- we still return `AllocError` in `Bitmap::new` in case client code
+  asks for a size that is too large. Intentionally
+  different from other bounds checks because it is not about
+  access but allocation, and we expect that client code need
+  never handle AllocError and nbits > u32::MAX situations
+  differently.
+
+Changes v2 --> v3:
+- change `bitmap_copy` to `copy_from_bitmap_and_extend` which
+  zeroes out extra bits. This enables dbitmap shrink and grow use
+  cases while offering a consistent and understandable Rust API for
+  other uses (Alice)
+
+Changes v1 --> v2:
+- Rebased on Yury's v2 [1] and Viresh's v3 [2] changes related to
+  bitmap.
+- Removed import of `bindings::*`, keeping only prefix (Miguel)
+- Renamed panic methods to make more explicit (Miguel)
+- use markdown in doc comments and added example/kunit test (Miguel)
+- Added maintainer section for BITOPS API BINDINGS [RUST] (Yury)
+- Added M: entry for bitmap.rs which goes to Alice (Viresh, Alice)
+- Changed calls from find_* to _find_*, removed helpers (Yury)
+- Use non-atomic __set_bit and __clear_bit from Bitmap Rust API (Yury)
+
+Link [1] https://lore.kernel.org/all/20250224233938.3158-1-yury.norov@gmail.com/
+Link [2] https://lore.kernel.org/rust-for-linux/cover.1742296835.git.viresh.kumar@linaro.org/
+Link [v15] https://lore.kernel.org/rust-for-linux/20250904165015.3791895-1-bqe@google.com/
+
+
+
+Burak Emir (5):
+  rust: add bindings for bitmap.h
+  rust: add bindings for bitops.h
+  rust: add bitmap API.
+  rust: add find_bit_benchmark_rust module.
+  rust: add dynamic ID pool abstraction for bitmap
+
+ MAINTAINERS                     |  15 +
+ lib/Kconfig.debug               |  13 +
+ lib/Makefile                    |   1 +
+ lib/find_bit_benchmark_rust.rs  | 104 ++++++
+ rust/bindings/bindings_helper.h |   2 +
+ rust/helpers/bitmap.c           |   9 +
+ rust/helpers/bitops.c           |  23 ++
+ rust/helpers/helpers.c          |   2 +
+ rust/kernel/bitmap.rs           | 600 ++++++++++++++++++++++++++++++++
+ rust/kernel/id_pool.rs          | 226 ++++++++++++
+ rust/kernel/lib.rs              |   2 +
+ security/Kconfig.hardening      |  10 +
+ 12 files changed, 1007 insertions(+)
+ create mode 100644 lib/find_bit_benchmark_rust.rs
  create mode 100644 rust/helpers/bitmap.c
+ create mode 100644 rust/helpers/bitops.c
+ create mode 100644 rust/kernel/bitmap.rs
+ create mode 100644 rust/kernel/id_pool.rs
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cd7ff55b5d32..0b2d800d8ae5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4299,6 +4299,7 @@ F:	tools/lib/find_bit.c
- BITMAP API BINDINGS [RUST]
- M:	Yury Norov <yury.norov@gmail.com>
- S:	Maintained
-+F:	rust/helpers/bitmap.c
- F:	rust/helpers/cpumask.c
- 
- BITOPS API
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index 84d60635e8a9..7bb575043c86 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -36,6 +36,7 @@
- #include <drm/drm_ioctl.h>
- #include <kunit/test.h>
- #include <linux/auxiliary_bus.h>
-+#include <linux/bitmap.h>
- #include <linux/blk-mq.h>
- #include <linux/blk_types.h>
- #include <linux/blkdev.h>
-diff --git a/rust/helpers/bitmap.c b/rust/helpers/bitmap.c
-new file mode 100644
-index 000000000000..a50e2f082e47
---- /dev/null
-+++ b/rust/helpers/bitmap.c
-@@ -0,0 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/bitmap.h>
-+
-+void rust_helper_bitmap_copy_and_extend(unsigned long *to, const unsigned long *from,
-+		unsigned int count, unsigned int size)
-+{
-+	bitmap_copy_and_extend(to, from, count, size);
-+}
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 7cf7fe95e41d..8437736fdf28 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -8,6 +8,7 @@
-  */
- 
- #include "auxiliary.c"
-+#include "bitmap.c"
- #include "blk.c"
- #include "bug.c"
- #include "build_assert.c"
+
+base-commit: 6ab41fca2e8059803b27cef336d2abe7c936ba0b
 -- 
 2.51.0.355.g5224444f11-goog
 
