@@ -1,60 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1676D2E3AE6
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Sep 2025 21:55:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5CB1DDC3F;
+	Mon,  8 Sep 2025 21:57:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757368539; cv=none; b=GffKezZwlcimz1Qqwk0w2I01xyLUBj3a4oMrbz0n1hbxuMXuATyTWtLk+T949TvuLqJfGJjH9sUoUjcFqmpeqNXRaIKiciycNDJaNK/euSZsOSA2edtvy8le3uAkLokGw5iA3nhhjUpaACF+EeMgxw3ESDuut6WI2FeiHxSJ0L4=
+	t=1757368648; cv=none; b=i34ivfTWVhdYATdX9VKwGV9s1i2YcS6/8aknmTBBISDMQ5GD8hpSVp6xtKizq0JrgTsEvB5mq6ZrP+uy4cszi6zNJdQZExfnTwGdLE7vbEkiRRiOmzEZSTnpq/cgTB/hArBXnCqKU05AekFQB4Z8lRZ63ZPsCdi/+2aVNwzSnmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757368539; c=relaxed/simple;
-	bh=ekDYj2zs0R8kaSzqCC9ugiM/Ig3BJsBus8v4qfUaCmk=;
+	s=arc-20240116; t=1757368648; c=relaxed/simple;
+	bh=VgArNmPKMSrg6/XYZxYG/sx1QQ930i8IKyjIw9VoiNk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m0P9BEVzx4oak/gLDHu5Zj4svGJD5A5z54Mhmaoqwfx2vjPE5E4Qb/xV9XBAeq5rTFn5ZqAAgcoixOZnsz5HzI+m8a4aEBKcmQRJSfm1Rc1H7neditDINzo1CqU0VRhqZt/uRZMsQYaFgjvyXD+kwB3fOtfHABx2rI1YT/oENlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a2yHvaCl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=obY7NX0SmUuogD4U8hjc1Nl/ckxLghLFN/WZ5npNEPibFlXzz82er1hr0iT9WOgN83ws4VnceZKrGfspH7J9V+Lp+JpD75gj149MWRV4hsCqbhyKbnIc9ykaO6RaJEiBLmZhFdcTpogwuVAf8GLBoUJXdRUFkjzOGnCjKer4bKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUDWHdrv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a2yHvaCl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E56EEC4CEF1;
-	Mon,  8 Sep 2025 21:55:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUDWHdrv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C216C4CEF1;
+	Mon,  8 Sep 2025 21:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757368538;
-	bh=ekDYj2zs0R8kaSzqCC9ugiM/Ig3BJsBus8v4qfUaCmk=;
+	s=k20201202; t=1757368648;
+	bh=VgArNmPKMSrg6/XYZxYG/sx1QQ930i8IKyjIw9VoiNk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a2yHvaClGdz629uOUfe1EY8LjTllS15XLwlnPKY6EyS9yMJ3ge+4tY3W1gwBk1qgv
-	 hhXTb5+6b/ycWpG3TCtD8mzCdSxvlAliHuUpVTTmmet8pHGhl57QotPR9kki4Pyl0q
-	 vlk6mgQB7Hza2lp8hRY4qInH2GuqQT2uylSKNbBE4fuHSReMjBEO94ITS6ryYWrPHD
-	 NindhljdfsA6d5v3FY7MHjtIn8q2fK4jF0Bu9mBkm1q9dOuvw3uWfBv46AxIIVk8dd
-	 W1ZtgkVTRQK5b4dIZLNZEo+A4TG5+9PBYiN1nH9roy7nUc+4QA/nyKjUr2iLNSryYv
-	 nxf0ydZAOJL2Q==
-Date: Mon, 8 Sep 2025 14:55:38 -0700
+	b=OUDWHdrvt0AobPF9H+Rhe3F8soG4rkEU5WUKwDve0ebIwb1NSyuDHGIpO4cWG0VHn
+	 DoSjf16aP6O1F4wmOIgQODnx9BlPltRDQzLgHTnEIVg0x53fSTurjARakobtErNKpX
+	 ie/YQCtsOwJ7K+0HwIlO05XyIjAHpG4UpuEwXPVg+ZxUL/B0OvRmACfz994t39SyeD
+	 3znsgYdnYl7D0Ksa8vSKQxolk+nyOi/r4oHbi0PRehPZRqdEWL5ZD+I5em6H/htu9c
+	 vlRu2vIzYNudQJLkGuH/D3rg7enuI/1X5zAUMm4GICqwXX447rHIZm1O5HrBkk/RVd
+	 F8X3CCEy9WsXg==
+Date: Mon, 8 Sep 2025 14:57:27 -0700
 From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
-	Richard Biener <rguenther@suse.de>,
-	Joseph Myers <josmyers@redhat.com>, Jan Hubicka <hubicka@ucw.cz>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Richard Sandiford <richard.sandiford@arm.com>,
-	Marcus Shawcroft <marcus.shawcroft@arm.com>,
-	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-	Kito Cheng <kito.cheng@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Waterman <andrew@sifive.com>,
-	Jim Wilson <jim.wilson.gcc@gmail.com>,
-	Dan Li <ashimida.1990@gmail.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ramon de C Valle <rcvalle@google.com>,
-	Joao Moreira <joao@overdrivepizza.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org,
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Linux Kernel Functional Testing <lkft@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Ben Copeland <benjamin.copeland@linaro.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] kcfi: Add core Kernel Control Flow Integrity
- infrastructure
-Message-ID: <202509081452.5AD50CAA@keescook>
-References: <20250905001157.it.269-kees@kernel.org>
- <20250905002418.464643-2-kees@kernel.org>
- <20250905085103.GT3245006@noisy.programming.kicks-ass.net>
- <202509050907.DE9A5ED2@keescook>
- <20250908153258.GE4067720@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH] PCI: Test for bit underflow in pcie_set_readrq()
+Message-ID: <202509081457.B5A99815E@keescook>
+References: <20250905052836.work.425-kees@kernel.org>
+ <20250908215142.GA1467111@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -63,91 +53,43 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250908153258.GE4067720@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250908215142.GA1467111@bhelgaas>
 
-On Mon, Sep 08, 2025 at 05:32:58PM +0200, Peter Zijlstra wrote:
-> On Fri, Sep 05, 2025 at 09:19:29AM -0700, Kees Cook wrote:
-> > On Fri, Sep 05, 2025 at 10:51:03AM +0200, Peter Zijlstra wrote:
-> > > On Thu, Sep 04, 2025 at 05:24:10PM -0700, Kees Cook wrote:
-> > > > +- The check-call instruction sequence must be treated a single unit: it
-> > > > +  cannot be rearranged or split or optimized. The pattern is that
-> > > > +  indirect calls, "call *$target", get converted into:
-> > > > +
-> > > > +    mov $target_expression, %target ; only present if the expression was
-> > > > +                                    ; not already %target register
-> > > > +    load -$offset(%target), %tmp    ; load the typeid hash at target
-> > > > +    cmp $hash, %tmp                 ; compare expected typeid with loaded
-> > > > +    je .Lcheck_passed               ; jump to the indirect call
-> > > > +  .Lkcfi_trap$N:                    ; label of trap insn
-> > > > +    trap                            ; trap on failure, but arranged so
-> > > > +                                    ; "permissive mode" falls through
-> > > > +  .Lkcfi_call$N:                    ; label of call insn
-> > > > +    call *%target                   ; actual indirect call
-> > > > +
-> > > > +  This pattern of call immediately after trap provides for the
-> > > > +  "permissive" checking mode automatically: the trap gets handled,
-> > > > +  a warning emitted, and then execution continues after the trap to
-> > > > +  the call.
-> > > 
-> > > I know it is far too late to do anything here. But I've recently dug
-> > > through a bunch of optimization manual and the like and that Jcc is
-> > > about as bad as it gets :/
-> > > 
-> > > The old optimization manual states that forward jumps are assumed
-> > > not-taken; while backward jumps are assumed taken.
-> > > 
-> > > The new wisdom is that any Jcc must be assumed not-taken; that is, the
-> > > fallthrough case has the best throughput.
+On Mon, Sep 08, 2025 at 04:51:42PM -0500, Bjorn Helgaas wrote:
+> On Thu, Sep 04, 2025 at 10:28:41PM -0700, Kees Cook wrote:
+> > After commit cbc654d18d37 ("bitops: Add __attribute_const__ to generic
+> > ffs()-family implementations"), which allows GCC's value range tracker
+> > to see past ffs(), GCC 8 on ARM thinks that it might be possible that
+> > "ffs(rq) - 8" used here:
 > > 
-> > I would expect the cmp to be the slowest part of this sequence, and I
-> > figured the both the trap and the call to be speculation barriers? I'm
-> > not sure, though. Is changing the sequence actually useful?
+> > 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+> > 
+> > could wrap below 0, leading to a very large value, which would be out of
+> > range for the FIELD_PREP() usage:
+> > 
+> > drivers/pci/pci.c: In function 'pcie_set_readrq':
+> > include/linux/compiler_types.h:572:38: error: call to '__compiletime_assert_471' declared with attribute error: FIELD_PREP: value too large for the field
+> > ...
+> > drivers/pci/pci.c:5896:6: note: in expansion of macro 'FIELD_PREP'
+> >   v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+> >       ^~~~~~~~~~
+> > 
+> > If the result of the ffs() is bounds checked before being used in
+> > FIELD_PREP(), the value tracker seems happy again. :)
+> > 
+> > Fixes: cbc654d18d37 ("bitops: Add __attribute_const__ to generic ffs()-family implementations")
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > Closes: https://lore.kernel.org/linux-pci/CA+G9fYuysVr6qT8bjF6f08WLyCJRG7aXAeSd2F7=zTaHHd7L+Q@mail.gmail.com/
+> > Signed-off-by: Kees Cook <kees@kernel.org>
 > 
-> The load can miss, in which case it is definitely the most expensive
-> thing around.
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> > > Here we have a forward branch which is assumed taken :-(
-> > 
-> > The constraints we have are:
-> > 
-> > - Linux x86 KCFI trap handler decodes the instructions from the trap
-> >   backwards, but it uses exact offsets (-12 and -6).
-> > - Control flow following the trap must make the call (for warn-only mode)
-> > 
-> > If we change this, we'd need to make the insn decoder smarter to likey
-> > look at the insn AFTER the trap ("is it a direct jump?")
-> > 
-> > And then use this, which is ugly, but matches second constraint:
-> > 
-> > 	cmp $hash %tmp
-> > 	jne .Ltrap
-> > .Lcall:
-> > 	call *%target
-> > 	jmp .Ldone
-> > .Ltrap:
-> > 	ud2
-> > 	jmp .Lcall
-> > .Ldone:
-> 
-> Ah, you can do something like:
-> 
-> 	cmp $hash, %tmp
-> 	jne +3
-> 	nopl -42(%rax)
-> 	call *%target
-> 
-> which is only 2 bytes longer. Notably, that nopl is 4 bytes and the 4th
-> byte is 0xd6 (aka UDB). This is an effective UDcc instruction based
-> around a forward non-taken branch.
+> Would be great if you included this as part of your series, thanks!
 
-Oh right, I forgot about the nop encodings.
+Okay, thanks! :)
 
-> But yeah, I don't know if it is worth changing this. Its just that I've
-> been staring at these things far too much of late :-)
+-Kees
 
-To do this we'd need to change the Linux trap handler and Clang's
-implementation, so yeah, I'm inclined to just leave it as-is until we
-have a stronger reason to change it.
 
 -- 
 Kees Cook
