@@ -1,111 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5071F790F;
-	Mon,  8 Sep 2025 18:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2E3C2D59EF
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Sep 2025 19:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757356929; cv=none; b=lUAUElIH5m1Fz7kH7hBMrdoevEeKYueE9DXjK5CXW7I1ZVw4f7INMvv4IYwup0wfLGFugmXSvmTK0EpG1Jj1AF5r5o+V/8e7uyZuhsYlRwE8SOd2K0JU2ivT6M/Pdw0uMacGrqAeTqIBSEQUvEOOsr9+JwORilf/ZmTX7ggn6Vo=
+	t=1757361154; cv=none; b=Nf4YwpYye0ihSgnZEU1lu9Qp9Oz4icKOV/1Se/FHmqE9Hj7dHxo4uMJov9BLQRyREL9qFj+1X3BnyFiXCTMKYsjP2ZfwN4ADDTo/kC4YGPgGj+SaPaIbvdokqkot62FoGJFlhAR7u2ns1pQq9Y2kawDDh3MdEVyrMLF9ID9zytk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757356929; c=relaxed/simple;
-	bh=72VHZnaP72CTpxdIwgdUNhKdw5m3kU5+PRYk/sWvmW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pgcETTYrFBY0nAO1m9qAQoZKdz1g5X/zE3AElJwkHcpnD57OHME96PeLokAUIoGT3spjZttFSzz63SO8qPxlNV5GQClZrXtvNjJNb2OzwGNaASwS0JMq6QRXEgBTItB7qcZwn3uzoREqg9PB+zgX7JdBRqLLLLkgapKyEBjDBJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fbh3WVCo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fbh3WVCo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB8CBC4CEF1;
-	Mon,  8 Sep 2025 18:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757356928;
-	bh=72VHZnaP72CTpxdIwgdUNhKdw5m3kU5+PRYk/sWvmW4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Fbh3WVCo3JM3GvyJPCV7HUjNfU8ejuyRq+iumfCXe8Tq8JbnU5WHVu7yo6qPRzdAZ
-	 4lCO7Ub6+7pGQGSaRuqx4cZR49H1ZbH0g4wj0HINNg59He3EZh6Wh7gyYs6SxfjWsS
-	 h9u9dYK0YQG7IDvQdyXMdFQCoLAYRUZ6MIrd0hmnMsFvtns6Hqw9TWqwbdZxAtigZc
-	 +ihpBDbc2Fa7y9+AUAyf0R0qvnYc5qIyS2yMvkixRIYK3HEKcSTK8NMrhcvdX/blms
-	 xW1RJHyJwY1qVVPlGoa8yR7eyNDF9yyneN8oAQyDnXCCvs38SgMZgWfFXF5KN+jN16
-	 RaBAcjeMsk+nw==
-Date: Mon, 8 Sep 2025 20:42:01 +0200
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Jack Wang <jinpu.wang@cloud.ionos.com>,
-	John Garry <john.g.garry@oracle.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1757361154; c=relaxed/simple;
+	bh=KG/wZiINb4q+y6OBOElz2J9sgATSOMqPoUnV+iOCiIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WnHKLcTUr+Z7a8TzdOIsiPpCtGO4/UEerMED4mYXUCVtq9fUq3IX9ux2DK5hDCLhfQ+rkjwtBspO4d2ixZ6RvlCN7b0jqfoj49rrZFwRiYHrwt4extaHi0s5SUIitIBtobiijrfk/CJjG3eJu3hirS4ii4OilPHIxmEnMb2F39E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 843BD19F0
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Sep 2025 12:52:23 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9E3E63F694
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Sep 2025 12:52:31 -0700 (PDT)
+Date: Mon, 8 Sep 2025 20:51:58 +0100
+From: Liviu Dudau <liviu.dudau@arm.com>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Jassi Brar <jassisinghbrar@gmail.com>, Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>,
+	kernel@collabora.com, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v3][next] scsi: pm80xx: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <aL8jeSJ8uKih9DNJ@kspp>
+Subject: Re: [PATCH RFC 01/10] dt-bindings: gpu: mali-valhall-csf: add
+ mediatek,mt8196-mali variant
+Message-ID: <aL8z3go1ece81LQj@e110455-lin.cambridge.arm.com>
+References: <20250905-mt8196-gpufreq-v1-0-7b6c2d6be221@collabora.com>
+ <20250905-mt8196-gpufreq-v1-1-7b6c2d6be221@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250905-mt8196-gpufreq-v1-1-7b6c2d6be221@collabora.com>
 
-Comment out unused field `residual_count` in a couple of structures,
-and with this, fix the following -Wflex-array-member-not-at-end
-warnings:
+On Fri, Sep 05, 2025 at 12:22:57PM +0200, Nicolas Frattaroli wrote:
+> The Mali-based GPU on the MediaTek MT8196 SoC is shackled to its concept
+> of "MFlexGraphics", which in this iteration includes an embedded MCU
+> that needs to be poked to power on the GPU, and is in charge of
+> controlling all the clocks and regulators.
+> 
+> In return, it lets us omit the OPP tables from the device tree, as those
+> can now be enumerated at runtime from the MCU.
+> 
+> Add the mediatek,mt8196-mali compatible, and a performance-controller
+> property which points to a node representing such setups. It's required
+> on mt8196 devices.
+> 
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+>  .../bindings/gpu/arm,mali-valhall-csf.yaml         | 36 +++++++++++++++++++++-
+>  1 file changed, 35 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
+> index a5b4e00217587c5d1f889094e2fff7b76e6148eb..6df802e900b744d226395c29f8d87fb6d3282d26 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
+> @@ -19,6 +19,7 @@ properties:
+>        - items:
+>            - enum:
+>                - rockchip,rk3588-mali
+> +              - mediatek,mt8196-mali
+>            - const: arm,mali-valhall-csf   # Mali Valhall GPU model/revision is fully discoverable
+>  
+>    reg:
+> @@ -53,6 +54,13 @@ properties:
+>    opp-table:
+>      type: object
+>  
+> +  performance-controller:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      A phandle of a device that controls this GPU's power and frequency,
+> +      if any. If present, this is usually in the form of some specialised
+> +      embedded MCU.
+> +
+>    power-domains:
+>      minItems: 1
+>      maxItems: 5
+> @@ -91,7 +99,6 @@ required:
+>    - interrupts
+>    - interrupt-names
+>    - clocks
+> -  - mali-supply
+>  
+>  additionalProperties: false
+>  
+> @@ -105,9 +112,24 @@ allOf:
+>        properties:
+>          clocks:
+>            minItems: 3
+> +        performance-controller: false
+>          power-domains:
+>            maxItems: 1
+>          power-domain-names: false
+> +      required:
+> +        - mali-supply
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: rockchip,mt8196-mali
 
-drivers/scsi/pm8001/pm8001_hwi.h:342:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/scsi/pm8001/pm80xx_hwi.h:561:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+s/rockchip/mediatek/
 
-Reviewed-by: Jack Wang <jinpu.wang@ionos.com>
-Reviewed-by: John Garry <john.g.garry@oracle.com>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v3:
- - Comment out unused field instead of removing it. (John Garry)
- - Update changelog text.
- - Add RB tags.
+Best regards,
+Liviu
 
-Changes in v2:
- - Remove unused field residual_count. (James)
- - Link: https://lore.kernel.org/linux-hardening/aLmoE8CznVPres5r@kspp/
+> +    then:
+> +      properties:
+> +        mali-supply: false
+> +        sram-supply: false
+> +        operating-points-v2: false
+> +      required:
+> +        - performance-controller
+>  
+>  examples:
+>    - |
+> @@ -143,5 +165,17 @@ examples:
+>              };
+>          };
+>      };
+> +  - |
+> +    gpu2: gpu@48000000 {
+> +        compatible = "mediatek,mt8196-mali", "arm,mali-valhall-csf";
+> +        reg = <0x48000000 0x480000>;
+> +        clocks = <&mfgpll 0>;
+> +        clock-names = "core";
+> +        interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH 0>,
+> +                     <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH 0>,
+> +                     <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH 0>;
+> +        interrupt-names = "job", "mmu", "gpu";
+> +        performance-controller = <&gpufreq>;
+> +    };
+>  
+>  ...
+> 
+> -- 
+> 2.51.0
+> 
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/aLiMoNzLs1_bu4eJ@kspp/
-
- drivers/scsi/pm8001/pm8001_hwi.h | 4 +++-
- drivers/scsi/pm8001/pm80xx_hwi.h | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/pm8001/pm8001_hwi.h b/drivers/scsi/pm8001/pm8001_hwi.h
-index fc2127dcb58d..f1ce8df082b0 100644
---- a/drivers/scsi/pm8001/pm8001_hwi.h
-+++ b/drivers/scsi/pm8001/pm8001_hwi.h
-@@ -339,8 +339,10 @@ struct ssp_completion_resp {
- 	__le32	status;
- 	__le32	param;
- 	__le32	ssptag_rescv_rescpad;
-+
-+	/* Must be last --ends in a flexible-array member. */
- 	struct ssp_response_iu  ssp_resp_iu;
--	__le32	residual_count;
-+	/* __le32  residual_count; */
- } __attribute__((packed, aligned(4)));
- 
- 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.h b/drivers/scsi/pm8001/pm80xx_hwi.h
-index eb8fd37b2066..d8a63b7fed6a 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.h
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.h
-@@ -558,8 +558,10 @@ struct ssp_completion_resp {
- 	__le32	status;
- 	__le32	param;
- 	__le32	ssptag_rescv_rescpad;
-+
-+	/* Must be last --ends in a flexible-array member. */
- 	struct ssp_response_iu ssp_resp_iu;
--	__le32	residual_count;
-+	/* __le32  residual_count; */
- } __attribute__((packed, aligned(4)));
- 
- #define SSP_RESCV_BIT	0x00010000
 -- 
-2.43.0
-
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
