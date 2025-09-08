@@ -1,134 +1,173 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213DA1E1E1C;
-	Mon,  8 Sep 2025 11:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757332385; cv=none; b=ioGhLrPD3VpRy+lHRDvzkEJphk4Nyn4kxV8vhqctyF2w13hLKOsRcV5hvRDtpVhBYq3CTXL2yWGr+JL+2rFs7DxdM5y14HE5zNlhIGvYvwDYOwSToXiH2nNxfyNLtsJXHduNfNWBfXAeq98OOkseCcPn9C2M5GTIMn5uW7XjNHI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757332385; c=relaxed/simple;
-	bh=Qo2zIgqtHTQ1BKtkB9HKCKiZl/Wi8TsjKo7wvQsntiI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pwvgNSA/NjV5gkO2bXmQPgMDIG53enM7i8Kf7Y5kVP4OWMJsD8fE8OUknYwl4Lw3F035/ijpFbvAhnsS1DFaytlbY61vDvUt5SoDNOmDWcdJLsPvrCJSbfOuaz9giL+gT6Ff2bYTI/0D3tScoFsf+rK8AOir1VGtP5MdV4RhqmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gfreQxUv; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FE61C4A13;
+	Mon,  8 Sep 2025 12:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757333180; cv=pass; b=Oo3XvrfoKyI558bidxB2988ZFh84EmvPfYDIfnDVjWDY7K8CcXuDJ+bs8MeOPBAOlOxKPIguz897l2d7/Gdxw2nSIsXXxJY3DBueEM1CrxkuVQCQqYVNpE0Wo2h9XF9JLxGaybncfx1gWqcj3Yx299phxcPMg+LmnHSXBuPLwk4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757333180; c=relaxed/simple;
+	bh=XF5HF01lkw2dK1GHMGmr0LLR92FqpdTAG5LzZQINfxo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hKeW0NQOQOGUOUTo+888R28N+lpgBEJH2j6FIxgp8TXRjfWyMyE9O6MssC90PFrm6eyRlVgQMR9LSkrUJoOULo/3aFH7YO8IPm2VS47DHI9U9dSAAE2NsIAbdBHIGyhx5/8Aki1ll3/66YynMhlZj/IgAxix9AMfLSyQJwuTt9E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=enOSjJUi; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfreQxUv"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-45cb5e1adf7so35253265e9.0;
-        Mon, 08 Sep 2025 04:53:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757332382; x=1757937182; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SSIlMFrvVdUyAVeh4YN6Zqf6MEv5vRPNuRzsQeImS7s=;
-        b=gfreQxUvDduIegnpFA0orDrQyh+ZFoLyPBhxsSSx23NQlplCF7JvPmqpl3ubc5y3Tz
-         YVSZIogrXNw6RFOth/GnOHoBu3XjUj97ymf/8WSBdC/Cvf4jgb36OGhDgjfMMNdkDT7j
-         9/DcG8M7WYlt4lynO8eZMo2cRsj94ZWGQEooANRsvNQRzuV6bm2QDzR+ccoCeCZnELqw
-         u5FczyqwWUHR/Y9kxhuZzrdsP3Wtky5UD1OI9TpcE2vDTwQ6gAVWELGaPicloHqsTF1O
-         7LWgEzSt4PA4UxytrUfq9UGDlHZUpLY8lVSt/Q2qkBQjgg7EU9Kdz6jClw1r1ptznpPH
-         QHgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757332382; x=1757937182;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SSIlMFrvVdUyAVeh4YN6Zqf6MEv5vRPNuRzsQeImS7s=;
-        b=TZKFq9ERJD41Z3BzlHrQ9gVEkxow/+dLiTVRw3F2xsAeK8NAhIzy8vryPrXgTOtVUQ
-         Lgf5UNg8Bzw7gYm6TZgyOI15Q7z3sof+Uu5ciST1c5kOPCV0PcVUydcRTmvM5MsBpTTV
-         fBBKykmGncebcU6iQm2JcdV9Qz8hl881mZFA9Mpxe9NolqzGJ/iw7nYLLzuBZKqpNYSw
-         z1tmXOrEmeSHFuJ87d+uPbBwg8rKn5KUeswpxgdKPXiT02seMV2240NQHGuRT8zbCuSY
-         lo/+cMDI4BX0TKMa7YV3iNHabIS/7lSYF03IkfPgcxIry3RKlOtlLzl+aC1iVh6yZqQ2
-         hlWg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/jFSRVl14/bQaEHBLohrCaK94k9W00xvjXhBd0ABaeMAelyoMAxdmi3zyCpdOV9BsYxtAEcii@vger.kernel.org, AJvYcCW31oAo9nIGGoRpo365o/Zy+0TtEgcgI7KqvlsP0EOWQGXhesv5lNcSlhiQ+Jgvusu68JHyqCci+0OeUsjx@vger.kernel.org, AJvYcCWOcS1jXOyBED2Fh6OE+PlzMjhH2Ur8BP5yK87ZA1eicRN1qnZKDrAGRabN3YGF22d6zpUUw0Qp/aBy2qEcCw7z@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcIXJ0S8RoL0e1xF6NDL+ZdksbxnOJEGvipX0cBf+PQdraKuK+
-	1kz5QNdPxjWO1T8BKHVFKesIXXxVqJzUzEbzxtT7C4/lmRV8aBq2ZKv1
-X-Gm-Gg: ASbGncsZSZe7lb+l80R1dBKXBnippzk49xkyb18Xp0XKQsDKE/DxaifRIkb+9zXuvs6
-	fj/lDg7Chl+EWRQLIkpsMkXBJxAnPKdLbZ5Gm5kw2ymdSRjiNd00nrChMiyxOiBKmcw9EXlQnnx
-	3O3jZaa15eydi5qM8w84Z01d6ryhlAEkgzmwD3FnGTmKeKWvGtVvYtVAOIrdNO+327kBgLLAcrF
-	sKO7ceuQQ+YLtp2VWojfCivCG1+XXKq+k3/LW79QE8don7SbtXwNopy2Yf5f+eWNa+ftsq+JORD
-	qhK2vfO3XGmpG6hMZeAmAXrpccmDX+ddFSLPwdBnjplxmpipeKyOQUagefEJErbZ4LCklmVFbf3
-	Bxsp0YuSqvNP5RtaMgX0jeLmLGVgJnGXw/o/DgqbdeZkjvbQIjBfC2ZPCeq21lNBxoOEGzqw=
-X-Google-Smtp-Source: AGHT+IG1mCE2Wg0NzfAOz2qF7vpg1XyG/YnKrkNmXzBapGyeFoTq5/DKBkNtKWBSvGvW4tooP5vWCg==
-X-Received: by 2002:a05:600c:3510:b0:45b:8543:c8c9 with SMTP id 5b1f17b1804b1-45dddeed951mr60289865e9.34.1757332382076;
-        Mon, 08 Sep 2025 04:53:02 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e898b99sm436258925e9.19.2025.09.08.04.53.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Sep 2025 04:53:01 -0700 (PDT)
-Date: Mon, 8 Sep 2025 12:53:00 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Michal =?UTF-8?B?S291dG7DvQ==?= <mkoutny@suse.com>, Tejun Heo
- <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- linux-hardening@vger.kernel.org, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Chen Ridong <chenridong@huaweicloud.com>
-Subject: Re: [RFC] cgroup: Avoid thousands of -Wflex-array-member-not-at-end
- warnings
-Message-ID: <20250908125300.25a2f475@pumpkin>
-In-Reply-To: <5fb74444-2fbb-476e-b1bf-3f3e279d0ced@embeddedor.com>
-References: <b3eb050d-9451-4b60-b06c-ace7dab57497@embeddedor.com>
-	<wkkrw7rot7cunlojzyga5fgik7374xgj7aptr6afiljqesd6a7@rrmmuq3o4muy>
-	<d0c49dc9-c810-47d2-a3ce-d74196a39235@embeddedor.com>
-	<y7nqc4bwovxmef3r6kd62t45w3xwi2ikxfmjmi2zxhkweezjbi@ytenccffmgql>
-	<92912540-23d2-4b18-9002-bac962682caf@embeddedor.com>
-	<tl6b6chfawtykzrxlmysn6ev7mq7gm764rnlsag7pfme7vhpof@lbwqooaybqmr>
-	<5fb74444-2fbb-476e-b1bf-3f3e279d0ced@embeddedor.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="enOSjJUi"
+ARC-Seal: i=1; a=rsa-sha256; t=1757333114; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Fwi8FJOl6mvelR+XqWpeg0MkcWyKjt9sal7ACIe4cUfDfR0xjaWqAwhNsyPa+9hf4Y8CghW1tV5Et2Rm0ZpwEZ++juzARRJw5ohVeHcdjMnOVdbQhN6mIOf9yKgKeO9WmYqXkB+0Z1AXPuM1OF6H0YYSQtVrxGDEG/wvnYYCajI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1757333114; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=I9rZ3d8EMRlGLHfWRe9wMpV16pDXMhWX5ESo3BO7/WA=; 
+	b=WnXggBoOh0ucK1WGPTro59OrVuZ1/qvF3oGDjLmTp2x6wA36/fDCUgisKK/53HB4SB7Z1gQ8gO3h5UGHYVPGT+uXRBRPjM7ii5prDJ7bdTP5lv1VCZsQsymxxhEavmGrv27w/16JJIE3I+Uc1lVBjff7wJTdasqIfcPi0+LlxYE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757333114;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=I9rZ3d8EMRlGLHfWRe9wMpV16pDXMhWX5ESo3BO7/WA=;
+	b=enOSjJUicizZ4eADZz53gBldVW80SHGJER79glDLzB0j4qALuUS6nrUge64Wk1LM
+	AihHTD1HaAHt7sAhTG4UKcDXDICMq3Ze2goYEIXgvfZc+P9LLIp988DQ2620fFg13lO
+	SbYM3SG8vCnkLF4VKrBdBSiq0dTPiYcsYWSThr08=
+Received: by mx.zohomail.com with SMTPS id 1757333112565883.1464946521103;
+	Mon, 8 Sep 2025 05:05:12 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ MyungJoo Ham <myungjoo.ham@samsung.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>,
+ kernel@collabora.com, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH RFC 05/10] mailbox: add MediaTek GPUEB IPI mailbox
+Date: Mon, 08 Sep 2025 14:05:05 +0200
+Message-ID: <7865698.EvYhyI6sBW@workhorse>
+In-Reply-To: <27159dc0-96f1-4d99-bf5e-cda0f9c7d307@collabora.com>
+References:
+ <20250905-mt8196-gpufreq-v1-0-7b6c2d6be221@collabora.com>
+ <20250905-mt8196-gpufreq-v1-5-7b6c2d6be221@collabora.com>
+ <27159dc0-96f1-4d99-bf5e-cda0f9c7d307@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, 2 Sep 2025 14:37:40 +0200
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+On Monday, 8 September 2025 12:06:01 Central European Summer Time AngeloGioacchino Del Regno wrote:
+> Il 05/09/25 12:23, Nicolas Frattaroli ha scritto:
+> > The MT8196 SoC uses an embedded MCU to control frequencies and power of
+> > the GPU. This controller is referred to as "GPUEB".
+> > 
+> > It communicates to the application processor, among other ways, through
+> > a mailbox.
+> > 
+> > The mailbox exposes one interrupt, which appears to only be fired when a
+> > response is received, rather than a transaction is completed. For us,
+> > this means we unfortunately need to poll for txdone.
+> > 
+> > The mailbox also requires the EB clock to be on when touching any of the
+> > mailbox registers.
+> > 
+> > Add a simple driver for it based on the common mailbox framework.
+> > 
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> 
+> Only a few nits in this, check below.
+> 
+> [...]
+> > +
+> > +static int mtk_gpueb_mbox_send_data(struct mbox_chan *chan, void *data)
+> > +{
+> > +	struct mtk_gpueb_mbox *ebm = dev_get_drvdata(chan->mbox->dev);
+> > +	unsigned int *num = chan->con_priv;
+> > +	int i;
+> 
+> int i, j;
+> 
+> > +	u32 *values = data;
+> > +
+> > +	if (*num >= ebm->v->num_channels)
+> > +		return -ECHRNG;
+> > +
+> > +	if (!ebm->v->channels[*num].no_response &&
+> > +	    atomic_read(&ebm->rx_status[*num]))
+> > +		return -EBUSY;
+> > +
+> > +	writel(BIT(*num), ebm->mbox_ctl + MBOX_CTL_IRQ_CLR);
+> > +
+> > +	/*
+> > +	 * We don't want any fancy nonsense, just write the 32-bit values in
+> > +	 * order. memcpy_toio/__iowrite32_copy don't work here, because fancy.
+> > +	 */
+> > +	for (i = 0; i < ebm->v->channels[*num].tx_len; i += 4) {
+> 
+> Just use an additional `j` index, so that you can avoid division.
 
-> On 9/2/25 13:17, Michal Koutn=C3=BD wrote:
-> > On Tue, Sep 02, 2025 at 09:56:34AM +0200, "Gustavo A. R. Silva" <gustav=
-o@embeddedor.com> wrote: =20
-...=20
-> >=20
-> > (You seem to be well versed with flex arrays, I was wondering if
-> > something like this could be rearranged to make it work (assuming the
-> > union is at the end of its containers):
-> >=20
-> > 	union {
-> > 		struct cgroup *ancestors[];
-> > 		struct {
-> > 			struct cgroup *_root_ancestor;
-> > 			struct cgroup *_low_ancestors[];
-> > 		};
-> > 	};
-> > ) =20
->=20
-> Yep, that works (as long as it's always at the very end of any container
-> or ends last in any nested structs, for instance in struct cgroup_root,
-> it must also be at the end) for GCC-15+, but for older versions of GCC we
-> have to use the DECLARE_FLEX_ARRAY() helper as below:
+The `/ 4` division here is equivalent to a `>> 2` which comes free with
+almost every instruction on arm64, I don't think having two separate
+indices makes the code any clearer? Unless I misunderstand how you'd
+want me to use j here.
 
-Could the warning be disabled for 'older versions of gcc'?
-A build time warning doesn't need to happen for all builds.
+Like this?
 
-	David
+  j = 0;
+  for (i = 0; i < ebm->v->channels[*num].tx_len; i += 4) {
+    writel(values[j++], ebm->mbox_mmio + ebm->v->channels[*num].tx_offset + i);
+  }
 
->=20
->          union {
->                  /* All ancestors including self */
->                  DECLARE_FLEX_ARRAY(struct cgroup *, ancestors);
->                  struct {
->                          struct cgroup *_root_ancestor;
->                          struct cgroup *_low_ancestors[];
->                  };
->          };
->=20
-> Thanks
-> -Gustavo
->=20
+This makes the relationship between the values index and i less clear. (And
+in my rendition, assumes the reader knows how postincrement works, but I
+think assuming people know C is fine.)
+
+> [...]
+>
+> > +
+> > +	ebm->clk = devm_clk_get_enabled(ebm->dev, NULL);
+> > +	if (IS_ERR(ebm->clk))
+> > +		return dev_err_probe(ebm->dev, PTR_ERR(ebm->clk),
+> > +				     "Failed to get 'eb' clock\n");
+> > +
+> > +	ebm->mbox_mmio = devm_platform_ioremap_resource_byname(pdev, "mbox");
+> 
+> I'd say that "chan" and "ctl" are more descriptive as resource names, but then,
+> do we really need to search by name?
+
+In the binding, it was proposed to change "mbox" to something like "data",
+which is fine by me, and to drop the "mbox" prefix of "ctl".
+
+> 
+> Doing that by index is also an option, as you can write the MMIO names and their
+> full description in the bindings instead.
+
+Yeah in the driver I think I'll switch to doing indices until some second
+compatible forces us to actually rely on names because it adds a bunch of
+other ranges.
+
+> [...]
+
+thanks for the feedback, assume that anything I didn't directly respond
+to will be fixed in the next revision.
+
+Kind regards,
+Nicolas Frattaroli
+
 
