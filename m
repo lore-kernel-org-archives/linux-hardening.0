@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E1B21FF39;
-	Mon,  8 Sep 2025 20:53:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6372E7BCC;
+	Mon,  8 Sep 2025 21:39:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757364831; cv=none; b=k1CHiiWppVZ7beruOrXBa30qV7jL6wjpY3y4JDWJ6h6gs/asXkcfOuSijgLYC0rVgKVFLDbUZPEG9G25+eKaZu0sQeoajy4dkgVu6zXLFD6LCuJZKJfAvAB4VlqPSXcjCBmnrdac7Q7LamHAcx9nplMEJIFKMKZauL92LCvNTwA=
+	t=1757367591; cv=none; b=K8DWHb1TSa4G62yutknHwt2bphzQMfGPAFvBCoXvVccplFiF3MIUWDLYfpuwTJ4TV90Rvw1VqgcqqVpK6t6X65kO90c6pbLy1IqteeWh+Gp2oJFagsTibiaNItTnKgXW0Fcf1VBavZe+se4JoLWeyatjatdC4cuVBapbTLWcd7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757364831; c=relaxed/simple;
-	bh=POcz+JpYGpHubzD14Eku3ZQzqXppkJMBMmqMowj0z/E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kUTpaUtrh/bH/1Sa3kfgbYDu43k0Om6BspAmteJ8Y0FQUpD5Io0KqZi2Yj2G123QmibPEeAI3QMaaC6oJBfzQ5DktXW411DDXLsUwlbbpvEeqth4hhxF5PhPk8EGxv/5XV/xQO/q037jtiErpOfQIK5aypTRPz9KKeoi2GZIWbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HwA2dgov; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757367591; c=relaxed/simple;
+	bh=UU018OS5T8BP6FQvRLgEBBbYmTBbhOLVCvGQwUhRScg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TSclH9eQL/Uhcm9cZq7QT2d/aHvcO8rhbYDzrGLPV4exSwbDDInB5KGtnOl2TWNZ/hmztAS+T2FYyyeSanaQZ6558GPhED1p2hM7yA3GPGbdpyWsgJTUS2fJc70K2RrjBH6l68y6op1gZ7ZB9Au3p7klI0DwpuYBgt2SwyzyANE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1nq8UmL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HwA2dgov"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FB6DC4CEF1;
-	Mon,  8 Sep 2025 20:53:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1nq8UmL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 183ABC4CEF1;
+	Mon,  8 Sep 2025 21:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757364830;
-	bh=POcz+JpYGpHubzD14Eku3ZQzqXppkJMBMmqMowj0z/E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HwA2dgovXhqbZKDE4CyF6jfjUOnL7dEWbzZKFuoiTgQM0/8RbmKtDJPAN9M5U7NdR
-	 332e8aBZX3AbPbB6EpAt9HNVbvClc42ykkVZoJjNbULcacR8h0B5EXEYiKZkgZ0oop
-	 MOztEVj9EyVglVVIKVAZMxdg6OGkWy3zLxbY/8rXxuKdTmHbBJJ416YTwQcjKpBtKY
-	 fK6GtR6tE/0qkbhp5QxKjzmH6c551WY5tmeIrJaR+WyTrg1e0UOJG7niYxUXTfUBiu
-	 qiXTd7ug2j69De7tF7VnvVqeCJga5fsCbsa8lXBVxnN8uEDltBUZshWZ3PB/PvJJG6
-	 9aMOKYX/9U7dQ==
-Date: Mon, 8 Sep 2025 15:53:49 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kees Cook <kees@kernel.org>
+	s=k20201202; t=1757367591;
+	bh=UU018OS5T8BP6FQvRLgEBBbYmTBbhOLVCvGQwUhRScg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S1nq8UmLGx5uRMQs6vh1VmUFVYOAhLM8k3R8gBBpIz5bJ8FbBW4/mPoZh3opih+d9
+	 fD77GaQ1PNtQC9IachDxXUOs0L9pFzXvHPnMwZJJynrt6xEfjEMooCEvEITPHc2aQd
+	 2YzvfcA+lyEs5QjH+jYg4eO3bAGh3oW5cyvpvv8wl8fjyR4Iy89cCYBM8kKwzHVf7t
+	 4TM7W86KNAj7GTJEPLUU9c9xhFdgp1jQ+dNmBInuvFJsNzq+BBjvITJaLyzAk7hwB8
+	 YzE1A/QaN4qDYNpA1+gqTN/Qs97XnUkegNOA/cJmkgxiXE0qs28rB1mLGHaH+AP1Qx
+	 dlEv9ESd1sVSg==
+Date: Mon, 8 Sep 2025 14:39:50 -0700
+From: Kees Cook <kees@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Linux Kernel Functional Testing <lkft@linaro.org>,
 	Anders Roxell <anders.roxell@linaro.org>,
@@ -42,7 +42,9 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
 	linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] PCI: Test for bit underflow in pcie_set_readrq()
-Message-ID: <20250908205349.GA1463686@bhelgaas>
+Message-ID: <202509081437.1F92F56@keescook>
+References: <20250905052836.work.425-kees@kernel.org>
+ <20250908205349.GA1463686@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,81 +53,44 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250905052836.work.425-kees@kernel.org>
+In-Reply-To: <20250908205349.GA1463686@bhelgaas>
 
-On Thu, Sep 04, 2025 at 10:28:41PM -0700, Kees Cook wrote:
-> After commit cbc654d18d37 ("bitops: Add __attribute_const__ to generic
-> ffs()-family implementations"), which allows GCC's value range tracker
-> to see past ffs(), GCC 8 on ARM thinks that it might be possible that
-> "ffs(rq) - 8" used here:
+On Mon, Sep 08, 2025 at 03:53:49PM -0500, Bjorn Helgaas wrote:
+> On Thu, Sep 04, 2025 at 10:28:41PM -0700, Kees Cook wrote:
+> > After commit cbc654d18d37 ("bitops: Add __attribute_const__ to generic
+> > ffs()-family implementations"), which allows GCC's value range tracker
+> > to see past ffs(), GCC 8 on ARM thinks that it might be possible that
+> > "ffs(rq) - 8" used here:
+> > 
+> > 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+> > 
+> > could wrap below 0, leading to a very large value, which would be out of
+> > range for the FIELD_PREP() usage:
+> > 
+> > drivers/pci/pci.c: In function 'pcie_set_readrq':
+> > include/linux/compiler_types.h:572:38: error: call to '__compiletime_assert_471' declared with attribute error: FIELD_PREP: value too large for the field
+> > ...
+> > drivers/pci/pci.c:5896:6: note: in expansion of macro 'FIELD_PREP'
+> >   v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+> >       ^~~~~~~~~~
+> > 
+> > If the result of the ffs() is bounds checked before being used in
+> > FIELD_PREP(), the value tracker seems happy again. :)
+> > 
+> > Fixes: cbc654d18d37 ("bitops: Add __attribute_const__ to generic ffs()-family implementations")
 > 
-> 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
-> 
-> could wrap below 0, leading to a very large value, which would be out of
-> range for the FIELD_PREP() usage:
-> 
-> drivers/pci/pci.c: In function 'pcie_set_readrq':
-> include/linux/compiler_types.h:572:38: error: call to '__compiletime_assert_471' declared with attribute error: FIELD_PREP: value too large for the field
-> ...
-> drivers/pci/pci.c:5896:6: note: in expansion of macro 'FIELD_PREP'
->   v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
->       ^~~~~~~~~~
-> 
-> If the result of the ffs() is bounds checked before being used in
-> FIELD_PREP(), the value tracker seems happy again. :)
-> 
-> Fixes: cbc654d18d37 ("bitops: Add __attribute_const__ to generic ffs()-family implementations")
+> What's your plan for merging cbc654d18d37?  I suppose it's intended
+> for v6.18?  If it will appear in v6.17, let me know so I can merge
+> this for it as well.
 
-What's your plan for merging cbc654d18d37?  I suppose it's intended
-for v6.18?  If it will appear in v6.17, let me know so I can merge
-this for it as well.
+I had it planned for v6.18.
 
-Maybe this should go in v6.17 regardless, to avoid a warning
-regression between this patch and cbc654d18d37?
+> Maybe this should go in v6.17 regardless, to avoid a warning
+> regression between this patch and cbc654d18d37?
 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: https://lore.kernel.org/linux-pci/CA+G9fYuysVr6qT8bjF6f08WLyCJRG7aXAeSd2F7=zTaHHd7L+Q@mail.gmail.com/
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Anders Roxell <anders.roxell@linaro.org>
-> Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Cc: lkft-triage@lists.linaro.org
-> Cc: Linux Regressions <regressions@lists.linux.dev>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Dan Carpenter <dan.carpenter@linaro.org>
-> Cc: Ben Copeland <benjamin.copeland@linaro.org>
-> Cc: <lkft-triage@lists.linaro.org>
-> Cc: <linux-pci@vger.kernel.org>
-> Cc: <linux-kernel@vger.kernel.org>
-> ---
->  drivers/pci/pci.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b0f4d98036cd..005b92e6585e 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5932,6 +5932,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->  {
->  	u16 v;
->  	int ret;
-> +	unsigned int firstbit;
->  	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
->  
->  	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
-> @@ -5949,7 +5950,10 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->  			rq = mps;
->  	}
->  
-> -	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
-> +	firstbit = ffs(rq);
-> +	if (firstbit < 8)
-> +		return -EINVAL;
-> +	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, firstbit - 8);
->  
->  	if (bridge->no_inc_mrrs) {
->  		int max_mrrs = pcie_get_readrq(dev);
-> -- 
-> 2.34.1
-> 
+Sure, or I could take it as part of the ffs series?
+
+-Kees
+
+-- 
+Kees Cook
