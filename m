@@ -1,107 +1,477 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from leontynka.twibright.com (leontynka.twibright.com [109.81.181.203])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174D77082A;
-	Mon,  8 Sep 2025 14:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712C91A2387;
+	Mon,  8 Sep 2025 15:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.81.181.203
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757340927; cv=none; b=YQeBOk/KRN7daIrEIWLOSOYa/5o0QVZ0ey6afRJI8PmrYbrsqV+LGRHTi8vuu7SFmSkfrpiC8YILubUJMJN3U7Mqgzxa7LPg43wQeHDpB9yzlxKaQTbSHlZWM72YcZ3GNQ7RtAvqGjGUAaw04Mv8h42RdI1z9dki0h3Z1RS8l00=
+	t=1757344951; cv=none; b=AI9RKg1uNWLNZ8k04yVwRVWFgM3VNRG3KWM+ClfIVG29nGKnk5xEcHJ0FkNM1GFZcQ+etPWPvLvzYAFyaE6YBTRDvo2p7xjd9PClR2REHRnrnlqwnG7qYq9Y71+3+P6OUZwN87ksWreCwSsZ0bfkNNHqkUOhaGNLT8m2HfqX/WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757340927; c=relaxed/simple;
-	bh=7YU1UeI4W5ZZgGKI5I9Pad1avQD9YJzn8mftLPPO940=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=apuwBYso+aAGmNL7AIQqjMRV8yrUkJFZpB4HJAGJgXkA9fe56PDyaaZxNSt6c/NpbSq50O4Tl/hXGv/P3VvuMdPX5P2dCBRmF4msPWURCB8s/eNQAuyw3hiuylYQNiISPByqJQ4cgBfT/Zhou3eX6birBJIO76uVBCcl/RL4FwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBEMa3DL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBEMa3DL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1154C4CEFB;
-	Mon,  8 Sep 2025 14:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757340926;
-	bh=7YU1UeI4W5ZZgGKI5I9Pad1avQD9YJzn8mftLPPO940=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=aBEMa3DLnFEhYE5MM8rXin/IPrmqiJAruTHxw1YMdy1L8IKc6Vl9ySelCceSeNJTW
-	 TxPPJmu+AFBJXRNOodDcoGEkQchAqxW5lVzKMDUM1m5+gfp6ZfZaKMzBUgTj+ct8tt
-	 tcIgRZNynayEmViK8GQTzTNHXelqkwAWOQ9gjDV4UqVSlxzxQGu1tRAmVWenUBCWTZ
-	 XS/GCCnU2vPzxhFSDjdZCB8H6JM+Lh+c3JgcHluOyFm5Be9LHw52H1ak2yIpt1Jei9
-	 kFKN0+DYjUmbs5iNskMYMVmVvUqk/a0IREvZnQEmDPvVoG/YINVTqRlsqQ/QBMH9E8
-	 c6HwqyEHkryAw==
-Date: Mon, 08 Sep 2025 09:15:26 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1757344951; c=relaxed/simple;
+	bh=MgsRTG+t4Kj3xSpnI65GEsv/QtEGsMgrOeZ/tmMGNp0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NSHpAviKbdR9XHbwYF/tWxK5WzzGweoi4HWKe7oTS8a0y4DdEf1BJ7L8J8B6HKmFsoiQQk9b9587SIbH0M9VfwdfoK6l2ZHP4pH87gPgHyGOjaMKNTBDuBzjsLl2q/NsBMurZ4jLig7jsriWifHsthYF1LzePczxtf6twUftc14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=twibright.com; spf=pass smtp.mailfrom=twibright.com; arc=none smtp.client-ip=109.81.181.203
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=twibright.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=twibright.com
+Received: from mikulas (helo=localhost)
+	by leontynka.twibright.com with local-esmtp (Exim 4.96)
+	(envelope-from <mikulas@twibright.com>)
+	id 1uvd0f-00A86K-0E;
+	Mon, 08 Sep 2025 16:38:21 +0200
+Date: Mon, 8 Sep 2025 16:38:21 +0200 (CEST)
+From: Mikulas Patocka <mikulas@twibright.com>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+    Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, 
+    Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org, 
+    linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] fs: hpfs: Avoid multiple -Wflex-array-member-not-at-end
+ warnings
+In-Reply-To: <8007649f-324a-4dfb-ae33-9bed8c8d6eec@embeddedor.com>
+Message-ID: <d7f2fee4-1832-b47d-f33f-79b9d4b79645@twibright.com>
+References: <aJnpXOndcEAF6_NW@kspp> <8007649f-324a-4dfb-ae33-9bed8c8d6eec@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: manion05gk@gmail.com, conor+dt@kernel.org, 
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
- gustavoars@kernel.org, linux-i3c@lists.infradead.org, srinivas.goud@amd.com, 
- alexandre.belloni@bootlin.com, devicetree@vger.kernel.org, kees@kernel.org, 
- michal.simek@amd.com, shubhrajyoti.datta@amd.com, git@amd.com, 
- jarkko.nikula@linux.intel.com, Frank.Li@nxp.com, 
- radhey.shyam.pandey@amd.com, krzk+dt@kernel.org
-To: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-In-Reply-To: <20250908112117.205270-2-manikanta.guntupalli@amd.com>
-References: <20250908112117.205270-1-manikanta.guntupalli@amd.com>
- <20250908112117.205270-2-manikanta.guntupalli@amd.com>
-Message-Id: <175734087989.1809191.3813013625215736173.robh@kernel.org>
-Subject: Re: [PATCH V5 1/2] dt-bindings: i3c: Add AMD I3C master controller
- support
+Content-Type: text/plain; charset=US-ASCII
 
 
-On Mon, 08 Sep 2025 16:51:16 +0530, Manikanta Guntupalli wrote:
-> Add device tree binding documentation for the AMD I3C master controller.
+
+On Wed, 27 Aug 2025, Gustavo A. R. Silva wrote:
+
+> Hi all,
 > 
-> Signed-off-by: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-> ---
-> Changes for V2:
-> Updated commit subject and description.
-> Moved allOf to after required.
-> Removed xlnx,num-targets property.
+> Friendly ping: who can take/review this, please?
 > 
-> Changes for V3:
-> Updated commit description.
-> Corrected the order of properties and removed resets property.
-> Added compatible to required list.
-> Added interrupts to example.
+> Any comments or feedback is greatly appreciated. :)
 > 
-> Changes for V4:
-> Added h/w documentation details.
+> Thanks!
+> -Gustavo
+
+Hi
+
+I comitted the patch here, thanks.
+https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/log/?h=hpfs
+
+Mikulas
+
+> On 11/08/25 15:00, Gustavo A. R. Silva wrote:
+> > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> > getting ready to enable it, globally.
+> > 
+> > So, in order to avoid ending up with a flexible-array member in the
+> > middle of other structs, we use the `struct_group_tagged()` helper
+> > to create a new tagged `struct bplus_header_fixed`. This structure
+> > groups together all the members of the flexible `struct bplus_header`
+> > except the flexible array.
+> > 
+> > As a result, the array is effectively separated from the rest of the
+> > members without modifying the memory layout of the flexible structure.
+> > We then change the type of the middle struct member currently causing
+> > trouble from `struct bplus_header` to `struct bplus_header_fixed`.
+> > 
+> > We also want to ensure that when new members need to be added to the
+> > flexible structure, they are always included within the newly created
+> > tagged struct. For this, we use `static_assert()`. This ensures that the
+> > memory layout for both the flexible structure and the new tagged struct
+> > is the same after any changes.
+> > 
+> > This approach avoids having to implement `struct bplus_header_fixed`
+> > as a completely separate structure, thus preventing having to maintain
+> > two independent but basically identical structures, closing the door
+> > to potential bugs in the future.
+> > 
+> > We also use `container_of()` (via a wrapper) whenever we need to retrieve
+> > a pointer to the flexible structure, through which we can access the
+> > flexible-array member, if necessary.
+> > 
+> > So, with these changes, fix 26 of the following type of warnings:
+> > fs/hpfs/hpfs.h:456:23: warning: structure containing a flexible array member
+> > is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > fs/hpfs/hpfs.h:498:23: warning: structure containing a flexible array member
+> > is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> > Changes in v2:
+> >   - Add GET_BTREE_PTR() wrapper for container_of().
+> > 
+> >   fs/hpfs/anode.c | 43 ++++++++++++++++++++++---------------------
+> >   fs/hpfs/ea.c    |  2 +-
+> >   fs/hpfs/file.c  |  4 +++-
+> >   fs/hpfs/hpfs.h  | 44 +++++++++++++++++++++++++++++++-------------
+> >   fs/hpfs/map.c   |  8 ++++----
+> >   5 files changed, 61 insertions(+), 40 deletions(-)
+> > 
+> > diff --git a/fs/hpfs/anode.c b/fs/hpfs/anode.c
+> > index c14c9a035ee0..a4f5321eafae 100644
+> > --- a/fs/hpfs/anode.c
+> > +++ b/fs/hpfs/anode.c
+> > @@ -27,7 +27,7 @@ secno hpfs_bplus_lookup(struct super_block *s, struct
+> > inode *inode,
+> >   				a = le32_to_cpu(btree->u.internal[i].down);
+> >   				brelse(bh);
+> >   				if (!(anode = hpfs_map_anode(s, a, &bh)))
+> > return -1;
+> > -				btree = &anode->btree;
+> > +				btree = GET_BTREE_PTR(&anode->btree);
+> >   				goto go_down;
+> >   			}
+> >   		hpfs_error(s, "sector %08x not found in internal anode %08x",
+> > sec, a);
+> > @@ -69,12 +69,13 @@ secno hpfs_add_sector_to_btree(struct super_block *s,
+> > secno node, int fnod, unsi
+> >   	int n;
+> >   	unsigned fs;
+> >   	int c1, c2 = 0;
+> > +
+> >   	if (fnod) {
+> >   		if (!(fnode = hpfs_map_fnode(s, node, &bh))) return -1;
+> > -		btree = &fnode->btree;
+> > +		btree = GET_BTREE_PTR(&fnode->btree);
+> >   	} else {
+> >   		if (!(anode = hpfs_map_anode(s, node, &bh))) return -1;
+> > -		btree = &anode->btree;
+> > +		btree = GET_BTREE_PTR(&anode->btree);
+> >   	}
+> >   	a = node;
+> >   	go_down:
+> > @@ -91,7 +92,7 @@ secno hpfs_add_sector_to_btree(struct super_block *s,
+> > secno node, int fnod, unsi
+> >   		if (hpfs_sb(s)->sb_chk)
+> >   			if (hpfs_stop_cycles(s, a, &c1, &c2,
+> > "hpfs_add_sector_to_btree #1")) return -1;
+> >   		if (!(anode = hpfs_map_anode(s, a, &bh))) return -1;
+> > -		btree = &anode->btree;
+> > +		btree = GET_BTREE_PTR(&anode->btree);
+> >   		goto go_down;
+> >   	}
+> >   	if (n >= 0) {
+> > @@ -151,7 +152,7 @@ secno hpfs_add_sector_to_btree(struct super_block *s,
+> > secno node, int fnod, unsi
+> >   		}
+> >   		brelse(bh);
+> >   		bh = bh1;
+> > -		btree = &anode->btree;
+> > +		btree = GET_BTREE_PTR(&anode->btree);
+> >   	}
+> >   	btree->n_free_nodes--; n = btree->n_used_nodes++;
+> >   	le16_add_cpu(&btree->first_free, 12);
+> > @@ -168,10 +169,10 @@ secno hpfs_add_sector_to_btree(struct super_block *s,
+> > secno node, int fnod, unsi
+> >   			if (hpfs_stop_cycles(s, up, &c1, &c2,
+> > "hpfs_add_sector_to_btree #2")) return -1;
+> >   		if (up != node || !fnod) {
+> >   			if (!(anode = hpfs_map_anode(s, up, &bh))) return -1;
+> > -			btree = &anode->btree;
+> > +			btree = GET_BTREE_PTR(&anode->btree);
+> >   		} else {
+> >   			if (!(fnode = hpfs_map_fnode(s, up, &bh))) return -1;
+> > -			btree = &fnode->btree;
+> > +			btree = GET_BTREE_PTR(&fnode->btree);
+> >   		}
+> >   		if (btree->n_free_nodes) {
+> >   			btree->n_free_nodes--; n = btree->n_used_nodes++;
+> > @@ -206,8 +207,8 @@ secno hpfs_add_sector_to_btree(struct super_block *s,
+> > secno node, int fnod, unsi
+> >   			anode->btree.n_used_nodes = 1;
+> >   			anode->btree.n_free_nodes = 59;
+> >   			anode->btree.first_free = cpu_to_le16(16);
+> > -			anode->btree.u.internal[0].down = cpu_to_le32(a);
+> > -			anode->btree.u.internal[0].file_secno =
+> > cpu_to_le32(-1);
+> > +			GET_BTREE_PTR(&anode->btree)->u.internal[0].down =
+> > cpu_to_le32(a);
+> > +			GET_BTREE_PTR(&anode->btree)->u.internal[0].file_secno
+> > = cpu_to_le32(-1);
+> >   			mark_buffer_dirty(bh);
+> >   			brelse(bh);
+> >   			if ((anode = hpfs_map_anode(s, a, &bh))) {
+> > @@ -229,20 +230,20 @@ secno hpfs_add_sector_to_btree(struct super_block *s,
+> > secno node, int fnod, unsi
+> >   			brelse(bh2);
+> >   			return -1;
+> >   		}
+> > -		btree = &anode->btree;
+> > +		btree = GET_BTREE_PTR(&anode->btree);
+> >   	} else {
+> >   		if (!(fnode = hpfs_map_fnode(s, node, &bh))) {
+> >   			brelse(bh2);
+> >   			return -1;
+> >   		}
+> > -		btree = &fnode->btree;
+> > +		btree = GET_BTREE_PTR(&fnode->btree);
+> >   	}
+> >   	ranode->up = cpu_to_le32(node);
+> >   	memcpy(&ranode->btree, btree, le16_to_cpu(btree->first_free));
+> >   	if (fnod)
+> >   		ranode->btree.flags |= BP_fnode_parent;
+> > -	ranode->btree.n_free_nodes = (bp_internal(&ranode->btree) ? 60 : 40) -
+> > ranode->btree.n_used_nodes;
+> > -	if (bp_internal(&ranode->btree)) for (n = 0; n <
+> > ranode->btree.n_used_nodes; n++) {
+> > +	GET_BTREE_PTR(&ranode->btree)->n_free_nodes =
+> > (bp_internal(GET_BTREE_PTR(&ranode->btree)) ? 60 : 40) -
+> > GET_BTREE_PTR(&ranode->btree)->n_used_nodes;
+> > +	if (bp_internal(GET_BTREE_PTR(&ranode->btree))) for (n = 0; n <
+> > GET_BTREE_PTR(&ranode->btree)->n_used_nodes; n++) {
+> >   		struct anode *unode;
+> >   		if ((unode = hpfs_map_anode(s,
+> > le32_to_cpu(ranode->u.internal[n].down), &bh1))) {
+> >   			unode->up = cpu_to_le32(ra);
+> > @@ -291,7 +292,7 @@ void hpfs_remove_btree(struct super_block *s, struct
+> > bplus_header *btree)
+> >   			if (hpfs_stop_cycles(s, ano, &d1, &d2,
+> > "hpfs_remove_btree #1"))
+> >   				return;
+> >   		if (!(anode = hpfs_map_anode(s, ano, &bh))) return;
+> > -		btree1 = &anode->btree;
+> > +		btree1 = GET_BTREE_PTR(&anode->btree);
+> >   		level++;
+> >   		pos = 0;
+> >   	}
+> > @@ -307,7 +308,7 @@ void hpfs_remove_btree(struct super_block *s, struct
+> > bplus_header *btree)
+> >   	ano = le32_to_cpu(anode->up);
+> >   	if (--level) {
+> >   		if (!(anode = hpfs_map_anode(s, ano, &bh))) return;
+> > -		btree1 = &anode->btree;
+> > +		btree1 = GET_BTREE_PTR(&anode->btree);
+> >   	} else btree1 = btree;
+> >   	for (i = 0; i < btree1->n_used_nodes; i++) {
+> >   		if (le32_to_cpu(btree1->u.internal[i].down) == oano) {
+> > @@ -332,7 +333,7 @@ static secno anode_lookup(struct super_block *s,
+> > anode_secno a, unsigned sec)
+> >   	struct anode *anode;
+> >   	struct buffer_head *bh;
+> >   	if (!(anode = hpfs_map_anode(s, a, &bh))) return -1;
+> > -	return hpfs_bplus_lookup(s, NULL, &anode->btree, sec, bh);
+> > +	return hpfs_bplus_lookup(s, NULL, GET_BTREE_PTR(&anode->btree), sec,
+> > bh);
+> >   }
+> >     int hpfs_ea_read(struct super_block *s, secno a, int ano, unsigned pos,
+> > @@ -388,7 +389,7 @@ void hpfs_ea_remove(struct super_block *s, secno a, int
+> > ano, unsigned len)
+> >   	struct buffer_head *bh;
+> >   	if (ano) {
+> >   		if (!(anode = hpfs_map_anode(s, a, &bh))) return;
+> > -		hpfs_remove_btree(s, &anode->btree);
+> > +		hpfs_remove_btree(s, GET_BTREE_PTR(&anode->btree));
+> >   		brelse(bh);
+> >   		hpfs_free_sectors(s, a, 1);
+> >   	} else hpfs_free_sectors(s, a, (len + 511) >> 9);
+> > @@ -407,10 +408,10 @@ void hpfs_truncate_btree(struct super_block *s, secno
+> > f, int fno, unsigned secs)
+> >   	int c1, c2 = 0;
+> >   	if (fno) {
+> >   		if (!(fnode = hpfs_map_fnode(s, f, &bh))) return;
+> > -		btree = &fnode->btree;
+> > +		btree = GET_BTREE_PTR(&fnode->btree);
+> >   	} else {
+> >   		if (!(anode = hpfs_map_anode(s, f, &bh))) return;
+> > -		btree = &anode->btree;
+> > +		btree = GET_BTREE_PTR(&anode->btree);
+> >   	}
+> >   	if (!secs) {
+> >   		hpfs_remove_btree(s, btree);
+> > @@ -448,7 +449,7 @@ void hpfs_truncate_btree(struct super_block *s, secno f,
+> > int fno, unsigned secs)
+> >   			if (hpfs_stop_cycles(s, node, &c1, &c2,
+> > "hpfs_truncate_btree"))
+> >   				return;
+> >   		if (!(anode = hpfs_map_anode(s, node, &bh))) return;
+> > -		btree = &anode->btree;
+> > +		btree = GET_BTREE_PTR(&anode->btree);
+> >   	}	
+> >   	nodes = btree->n_used_nodes + btree->n_free_nodes;
+> >   	for (i = 0; i < btree->n_used_nodes; i++)
+> > @@ -485,7 +486,7 @@ void hpfs_remove_fnode(struct super_block *s,
+> > fnode_secno fno)
+> >   	struct extended_attribute *ea;
+> >   	struct extended_attribute *ea_end;
+> >   	if (!(fnode = hpfs_map_fnode(s, fno, &bh))) return;
+> > -	if (!fnode_is_dir(fnode)) hpfs_remove_btree(s, &fnode->btree);
+> > +	if (!fnode_is_dir(fnode)) hpfs_remove_btree(s,
+> > GET_BTREE_PTR(&fnode->btree));
+> >   	else hpfs_remove_dtree(s,
+> > le32_to_cpu(fnode->u.external[0].disk_secno));
+> >   	ea_end = fnode_end_ea(fnode);
+> >   	for (ea = fnode_ea(fnode); ea < ea_end; ea = next_ea(ea))
+> > diff --git a/fs/hpfs/ea.c b/fs/hpfs/ea.c
+> > index 102ba18e561f..2149d3ca530b 100644
+> > --- a/fs/hpfs/ea.c
+> > +++ b/fs/hpfs/ea.c
+> > @@ -41,7 +41,7 @@ void hpfs_ea_ext_remove(struct super_block *s, secno a,
+> > int ano, unsigned len)
+> >   		struct buffer_head *bh;
+> >   		struct anode *anode;
+> >   		if ((anode = hpfs_map_anode(s, a, &bh))) {
+> > -			hpfs_remove_btree(s, &anode->btree);
+> > +			hpfs_remove_btree(s, GET_BTREE_PTR(&anode->btree));
+> >   			brelse(bh);
+> >   			hpfs_free_sectors(s, a, 1);
+> >   		}
+> > diff --git a/fs/hpfs/file.c b/fs/hpfs/file.c
+> > index 263b5bbe1849..29e876705369 100644
+> > --- a/fs/hpfs/file.c
+> > +++ b/fs/hpfs/file.c
+> > @@ -51,7 +51,9 @@ static secno hpfs_bmap(struct inode *inode, unsigned
+> > file_secno, unsigned *n_sec
+> >   		return hpfs_inode->i_disk_sec + n;
+> >   	}
+> >   	if (!(fnode = hpfs_map_fnode(inode->i_sb, inode->i_ino, &bh))) return
+> > 0;
+> > -	disk_secno = hpfs_bplus_lookup(inode->i_sb, inode, &fnode->btree,
+> > file_secno, bh);
+> > +	disk_secno = hpfs_bplus_lookup(inode->i_sb, inode,
+> > +				       GET_BTREE_PTR(&fnode->btree),
+> > +				       file_secno, bh);
+> >   	if (disk_secno == -1) return 0;
+> >   	if (hpfs_chk_sectors(inode->i_sb, disk_secno, 1, "bmap")) return 0;
+> >   	n = file_secno - hpfs_inode->i_file_sec;
+> > diff --git a/fs/hpfs/hpfs.h b/fs/hpfs/hpfs.h
+> > index 281dec8f636b..353f73c914d9 100644
+> > --- a/fs/hpfs/hpfs.h
+> > +++ b/fs/hpfs/hpfs.h
+> > @@ -394,27 +394,45 @@ enum {
+> >   	BP_binary_search = 0x40,
+> >   	BP_internal = 0x80
+> >   };
+> > +
+> > +/**
+> > + * GET_BTREE_PTR() - Get a pointer to struct bplus_header
+> > + *
+> > + * Wrapper around container_of() to retrieve a pointer to struct
+> > + * bplus_header from a pointer to struct bplus_header_fixed.
+> > + *
+> > + * @ptr: Pointer to struct bplus_header_fixed.
+> > + *
+> > + */
+> > +#define GET_BTREE_PTR(ptr) \
+> > +	container_of(ptr, struct bplus_header, __hdr)
+> > +
+> >   struct bplus_header
+> >   {
+> > -  u8 flags;				/* bit 0 - high bit of first free
+> > entry offset
+> > +	/* New members MUST be added within the struct_group() macro below. */
+> > +	struct_group_tagged(bplus_header_fixed, __hdr,
+> > +		u8 flags;		/* bit 0 - high bit of first free
+> > entry offset
+> >   					   bit 5 - we're pointed to by an
+> > fnode,
+> >   					   the data btree or some ea or the
+> >   					   main ea bootage pointer ea_secno
+> >   					   bit 6 - suggest binary search
+> > (unused)
+> >   					   bit 7 - 1 -> (internal) tree of
+> > anodes
+> >   						   0 -> (leaf) list of extents
+> > */
+> > -  u8 fill[3];
+> > -  u8 n_free_nodes;			/* free nodes in following array */
+> > -  u8 n_used_nodes;			/* used nodes in following array */
+> > -  __le16 first_free;			/* offset from start of header to
+> > +		u8 fill[3];
+> > +		u8 n_free_nodes;	/* free nodes in following array */
+> > +		u8 n_used_nodes;	/* used nodes in following array */
+> > +		__le16 first_free;	/* offset from start of header to
+> >   					   first free node in array */
+> > -  union {
+> > -	/* (internal) 2-word entries giving subtree pointers */
+> > -	DECLARE_FLEX_ARRAY(struct bplus_internal_node, internal);
+> > -	/* (external) 3-word entries giving sector runs */
+> > -	DECLARE_FLEX_ARRAY(struct bplus_leaf_node, external);
+> > -  } u;
+> > +	);
+> > +	union {
+> > +		/* (internal) 2-word entries giving subtree pointers */
+> > +		DECLARE_FLEX_ARRAY(struct bplus_internal_node, internal);
+> > +		/* (external) 3-word entries giving sector runs */
+> > +		DECLARE_FLEX_ARRAY(struct bplus_leaf_node, external);
+> > +	} u;
+> >   };
+> > +static_assert(offsetof(struct bplus_header, u.internal) == sizeof(struct
+> > bplus_header_fixed),
+> > +	      "struct member likely outside of struct_group_tagged()");
+> >     static inline bool bp_internal(struct bplus_header *bp)
+> >   {
+> > @@ -453,7 +471,7 @@ struct fnode
+> >     __le16 flags;				/* bit 1 set -> ea_secno is an
+> > anode */
+> >   					/* bit 8 set -> directory.  first &
+> > only extent
+> >   					   points to dnode. */
+> > -  struct bplus_header btree;		/* b+ tree, 8 extents or 12 subtrees
+> > */
+> > +  struct bplus_header_fixed btree;	/* b+ tree, 8 extents or 12 subtrees
+> > */
+> >     union {
+> >       struct bplus_leaf_node external[8];
+> >       struct bplus_internal_node internal[12];
+> > @@ -495,7 +513,7 @@ struct anode
+> >     __le32 self;				/* pointer to this anode */
+> >     __le32 up;				/* parent anode or fnode */
+> >   -  struct bplus_header btree;		/* b+tree, 40 extents or 60
+> > subtrees */
+> > +  struct bplus_header_fixed btree;	/* b+tree, 40 extents or 60 subtrees
+> > */
+> >     union {
+> >       struct bplus_leaf_node external[40];
+> >       struct bplus_internal_node internal[60];
+> > diff --git a/fs/hpfs/map.c b/fs/hpfs/map.c
+> > index ecd9fccd1663..be73233502f8 100644
+> > --- a/fs/hpfs/map.c
+> > +++ b/fs/hpfs/map.c
+> > @@ -178,14 +178,14 @@ struct fnode *hpfs_map_fnode(struct super_block *s,
+> > ino_t ino, struct buffer_hea
+> >   			}
+> >   			if (!fnode_is_dir(fnode)) {
+> >   				if ((unsigned)fnode->btree.n_used_nodes +
+> > (unsigned)fnode->btree.n_free_nodes !=
+> > -				    (bp_internal(&fnode->btree) ? 12 : 8)) {
+> > +				    (bp_internal(GET_BTREE_PTR(&fnode->btree))
+> > ? 12 : 8)) {
+> >   					hpfs_error(s,
+> >   					   "bad number of nodes in fnode
+> > %08lx",
+> >   					    (unsigned long)ino);
+> >   					goto bail;
+> >   				}
+> >   				if (le16_to_cpu(fnode->btree.first_free) !=
+> > -				    8 + fnode->btree.n_used_nodes *
+> > (bp_internal(&fnode->btree) ? 8 : 12)) {
+> > +				    8 + fnode->btree.n_used_nodes *
+> > (bp_internal(GET_BTREE_PTR(&fnode->btree)) ? 8 : 12)) {
+> >   					hpfs_error(s,
+> >   					    "bad first_free pointer in fnode
+> > %08lx",
+> >   					    (unsigned long)ino);
+> > @@ -233,12 +233,12 @@ struct anode *hpfs_map_anode(struct super_block *s,
+> > anode_secno ano, struct buff
+> >   				goto bail;
+> >   			}
+> >   			if ((unsigned)anode->btree.n_used_nodes +
+> > (unsigned)anode->btree.n_free_nodes !=
+> > -			    (bp_internal(&anode->btree) ? 60 : 40)) {
+> > +			    (bp_internal(GET_BTREE_PTR(&anode->btree)) ? 60 :
+> > 40)) {
+> >   				hpfs_error(s, "bad number of nodes in anode
+> > %08x", ano);
+> >   				goto bail;
+> >   			}
+> >   			if (le16_to_cpu(anode->btree.first_free) !=
+> > -			    8 + anode->btree.n_used_nodes *
+> > (bp_internal(&anode->btree) ? 8 : 12)) {
+> > +			    8 + anode->btree.n_used_nodes *
+> > (bp_internal(GET_BTREE_PTR(&anode->btree)) ? 8 : 12)) {
+> >   				hpfs_error(s, "bad first_free pointer in anode
+> > %08x", ano);
+> >   				goto bail;
+> >   			}
 > 
-> Changes for V5:
-> Renamed the xlnx,axi-i3c.yaml file into xlnx,axi-i3c-1.0.yaml.
-> ---
->  .../bindings/i3c/xlnx,axi-i3c-1.0.yaml        | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i3c/xlnx,axi-i3c-1.0.yaml
 > 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i3c/xlnx,axi-i3c-1.0.yaml: $id: Cannot determine base path from $id, relative path/filename doesn't match actual path or filename
- 	 $id: http://devicetree.org/schemas/i3c/xlnx,axi-i3c.yaml
- 	file: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i3c/xlnx,axi-i3c-1.0.yaml
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250908112117.205270-2-manikanta.guntupalli@amd.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
