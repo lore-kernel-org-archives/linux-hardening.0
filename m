@@ -1,348 +1,84 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383B030496A;
-	Mon,  8 Sep 2025 12:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E3122F757
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Sep 2025 13:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757335767; cv=none; b=lzYtKoOICQnpf7UogZnXb3Olh8l5NVReDzjo3sfRano8/HzTEUF4ST8NnuvMWKOThpMYBoBhTfSpIhx+rIh1CchXLVLGaPtb2NPpWe6vxk80t3XqfaHJJSJZMTeHRAqQz29GzWOw+q4TIesoHi/hoMMJHhmbmV+YcSL+IS/9hWQ=
+	t=1757337848; cv=none; b=J5SacDreRTXlfIfxnPEoHNV+3dQEjrqLpMYNDeQylRxe06UcXc4B30ij5Pm7Kf3ENG+7dSkpl6EugwtBFpEMJtSaBn9eqD0UZKTc7UY1JpwWd4mvsvJmaEn1K8cWfILhs1iXjupeVqdGSkSPCfk2Ay6U/Eh4pHE5jl/N7TDDnoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757335767; c=relaxed/simple;
-	bh=BW9QqUTnxdImH2dw+lKf1PJLRVjcmqu6EdnalgtPi08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZlhEGLI48a+98pKd1HgbbJILvTsS5mRU6K4HyXNX9RW8Hwc25lL6enTgEAVNZT3jYWLkalyYVqzT9BOQHoGGrUIFL7GSIdFCIDHaNVmvuAefdR5ks2n8NBAz4I0Tn2yV76UtIZFXJrDhyak/t5ajyd8WVwm6HbdaKu5xjja6csg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VhFZMXKm; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1757337848; c=relaxed/simple;
+	bh=EPd83UltdMGvJmPx8SdONg4LzaYmS95mYdOCMO52T7s=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=lJ9i7+T2HcT8v294teSYYKTWAab8p+RzOCcQoDUN9EK2FXmCtqFhenkbDWMqdAwLk/hNtx41r7hFxNA4l59XxJF3HW9oHUevJxX8+wqpGvGiRAGwY46GDWUDt1J2j39hENErxKj19rCYRDL6WlqKYzOC1GToXdA3j0M7TrDXVBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wLfdSojr; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VhFZMXKm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1757335763;
-	bh=BW9QqUTnxdImH2dw+lKf1PJLRVjcmqu6EdnalgtPi08=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VhFZMXKm3QcD+UiicvaqWjZjZTESYw6AGmLRQTY/VDOfpcPn/rvE76yqFgBa+zMRv
-	 qmUZnj5gWjzOLg7eLR1xb5jED0/vnN9o7XK05FUbAybkB9E6fZjscI7yeqctu5A6Fu
-	 KyVo7eMIn/giIRYJXe2dbvNOlI0dwhUdxLxEswOShmW4p6hoRXCwHGCxdiusmsgSSX
-	 26WV1OMpW2pBoQ9Ya4hHjXvpUBqarKPF7t1OaPo5jo9A5VD+RW4vkAmYP6U0UbLzJ1
-	 Y0rIUPColxIRQY/ESvaVjAdnRJi1KdkzPr9Qq8lnmif0F2XloPTvmgQhfmucwnjK1k
-	 Kc2jLmNKkYgQw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3462417E0C96;
-	Mon,  8 Sep 2025 14:49:22 +0200 (CEST)
-Message-ID: <0b31377d-70b4-4a51-84d9-1a568c8be5df@collabora.com>
-Date: Mon, 8 Sep 2025 14:49:21 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wLfdSojr"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1757337832;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EPd83UltdMGvJmPx8SdONg4LzaYmS95mYdOCMO52T7s=;
+	b=wLfdSojr2Onwr2QVHTO6IRzsZ4wRt0qp54X2B4gao0AsAvEfSRXBAfuK5Uyi9ofzFBIlF0
+	MuIajks6at1aYwOYpE/bVO2EAjhNgpCEOQvW34+J0y6z0zZdpRNpaJo3b5QKRBvIOOtN/z
+	YlNkJAeS6KdKNo3MednL0G4CiJAVKIg=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 02/10] dt-bindings: devfreq: add mt8196-gpufreq
- binding
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, MyungJoo Ham <myungjoo.ham@samsung.com>,
- Kyungmin Park <kyungmin.park@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>,
- kernel@collabora.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250905-mt8196-gpufreq-v1-0-7b6c2d6be221@collabora.com>
- <20250905-mt8196-gpufreq-v1-2-7b6c2d6be221@collabora.com>
- <751d3abc-cf40-40a2-a580-7c0ba425ac25@collabora.com>
- <13857717.uLZWGnKmhe@workhorse>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <13857717.uLZWGnKmhe@workhorse>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
+Subject: Re: [PATCH RESEND] alpha: Replace strcpy() with strscpy() in
+ setup_arch()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <CA+=Fv5QdP-qGjUXQZ4ig1RX=0zx5c11gdrvwT9gqXNqTTqSZvA@mail.gmail.com>
+Date: Mon, 8 Sep 2025 15:23:40 +0200
+Cc: Richard Henderson <richard.henderson@linaro.org>,
+ Matt Turner <mattst88@gmail.com>,
+ linux-hardening@vger.kernel.org,
+ linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <99A381BA-47F7-410E-AC3C-D6EFA298DD5A@linux.dev>
+References: <20250817231753.633899-1-thorsten.blum@linux.dev>
+ <CA+=Fv5QdP-qGjUXQZ4ig1RX=0zx5c11gdrvwT9gqXNqTTqSZvA@mail.gmail.com>
+To: Magnus Lindholm <linmag7@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Il 08/09/25 13:39, Nicolas Frattaroli ha scritto:
-> On Monday, 8 September 2025 13:15:03 Central European Summer Time AngeloGioacchino Del Regno wrote:
->> Il 05/09/25 12:22, Nicolas Frattaroli ha scritto:
->>> On the MediaTek MT8196 SoC, the GPU has its power and frequency
->>> dynamically controlled by an embedded special-purpose MCU. This MCU is
->>> in charge of powering up the GPU silicon. It also provides us with a
->>> list of available OPPs at runtime, and is fully in control of all the
->>> regulator and clock fiddling it takes to reach a certain level of
->>> performance. It's also in charge of enforcing limits on power draw or
->>> temperature.
->>>
->>> Add a binding for this device in the devfreq subdirectory, where it
->>> seems to fit in best considering its tasks.
->>>
->>> The functions of many of the mailbox channels are unknown. This is not
->>> the fault of this binding's author; we've never received adequate
->>> documentation for this hardware, and the downstream code does not make
->>> use of them in a way that'd reveal their purpose. They are kept in the
->>> binding as the binding should be complete.
->>>
->>> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
->>> ---
->>>    .../bindings/devfreq/mediatek,mt8196-gpufreq.yaml  | 116 +++++++++++++++++++++
->>>    1 file changed, 116 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/devfreq/mediatek,mt8196-gpufreq.yaml b/Documentation/devicetree/bindings/devfreq/mediatek,mt8196-gpufreq.yaml
->>> new file mode 100644
->>> index 0000000000000000000000000000000000000000..1fe43c9fc94bb603b1fb77e9a97a27e92fea1ae8
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/devfreq/mediatek,mt8196-gpufreq.yaml
->>> @@ -0,0 +1,116 @@
->>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/devfreq/mediatek,mt8196-gpufreq.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: MediaTek MFlexGraphics Performance Controller
->>
->> Doesn't MFG stand for MediaTek Flexible Graphics? (or did they update the name?)
->>
->> Perhaps it's a good idea to also add that reference... I think it's a little more
->> readable and understandable compared to "MFlexGraphics" :-)
-> 
-> "MFlexGraphics" is what the abbreviation section in the datasheet calls "MFG".
-> I don't see "Flexible Graphics" at all in the datasheet, but it's an obvious
-> inference of what the name means.
-> 
-> I think keeping "MFlexGraphics" is better for people grepping for what
-> the datasheet calls it.
-> 
+Hi Magnus,
 
-Okay in MT8196 that was updated then.
+On 30. Aug 2025, at 21:11, Magnus Lindholm wrote:
+> It can be a bit controversial to replace the platform specific string
+> manipulation functions with a generic interface. On Alpha, there is =
+nothing
+> (at least to my knowledge) that indicates that strcpy is broken or =
+used in
+> an unsafe way and hence this patch doesn't really fix anything.
+> In my opinion, I think this should be a NAK.
 
-On any other SoC previous to MT8196, the datasheet name is
-"MediaTek Flexible Graphics (MFG)".
+My patch doesn't fix anything, it simply replaces the deprecated
+strcpy() with the safer strscpy(), without introducing any functional
+changes.
 
-If you want to keep "MFlexGraphics" in MT8196-style, it's still a good idea to also
-reference somewhere the old "MediaTek Flexible Graphics" name, as that was used for
-more than 10 years. Really.
+I'm not sure whether the platform-specific strcpy() has any performance
+benefits over the generic strscpy(), but setup_arch() is already using
+strscpy() (converted from strlcpy() [1]) to copy the COMMAND_LINE string
+to 'command_line'.
 
->>
->>> +
->>> +maintainers:
->>> +  - Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
->>> +
->>> +properties:
->>> +  $nodename:
->>> +    pattern: '^performance-controller@[a-f0-9]+$'
->>> +
->>> +  compatible:
->>> +    enum:
->>> +      - mediatek,mt8196-gpufreq
->>> +
->>> +  reg:
->>> +    items:
->>> +      - description: GPR memory area
->>> +      - description: RPC memory area
->>> +      - description: SoC variant ID register
->>> +
->>> +  reg-names:
->>> +    items:
->>> +      - const: gpr
->>> +      - const: rpc
->>> +      - const: e2_id
->>
->> We should find a better name for that "e2_id".
-> 
-> Agreed, but we don't have a register map that includes this address
-> and would give us a different name.
+The current code feels unnecessarily inconsistent, with one line using
+strscpy() and the next using the platform-specific strcpy().
 
-Yeah but still, it feels like this naming is MT8196-specific, and this driver is
-not entirely specific to this SoC (this version is, but with minor modifications
-this can work on other chips as well).
+Thanks,
+Thorsten
 
- > I think it's some sort of silicon revision.
+[1] =
+https://lore.kernel.org/all/20220818205936.6144-1-wsa+renesas@sang-enginee=
+ring.com/
 
-It is. And there's a broad range of names that you can use in place of "e2_id"...
-
-If there's no precise name, always go with something that is generic enough but
-that resembles what can be found inside of the mmio that you're specifying.
-
->>
->>> +
->>> +  clocks:
->>> +    items:
->>> +      - description: main clock of the embedded controller (EB)
->>> +      - description: core PLL
->>> +      - description: stack 0 PLL
->>> +      - description: stack 1 PLL
->>> +
->>> +  clock-names:
->>> +    items:
->>> +      - const: eb
->>> +      - const: mfgpll
->>> +      - const: mfgpll_sc0
->>> +      - const: mfgpll_sc1
->>> +
->>> +  mboxes:
->>> +    items:
->>> +      - description: FastDVFS events
->>> +      - description: frequency control
->>> +      - description: sleep control
->>> +      - description: timer control
->>> +      - description: frequency hopping control
->>> +      - description: hardware voter control
->>> +      - description: gpumpu (some type of memory control, unknown)
->>> +      - description: FastDVFS control
->>> +      - description: Unknown
->>> +      - description: Unknown
->>> +      - description: Unknown, but likely controls some boosting behaviour
->>> +      - description: Unknown
->>> +
->>> +  mbox-names:
->>> +    items:
->>> +      - const: fast_dvfs_event
->>
->> Any problem if we avoid underscores in names?
->>
-> 
-> No but I'm not sure what the canonical naming style is for mailbox
-> channels. "fastdvfsevent" is hard to read.
-> 
-
-"fast-dvfs-event" would be good, wouldn't it? :-)
-
->>> +      - const: gpufreq
->>> +      - const: sleep
->>> +      - const: timer
->>> +      - const: fhctl
->>> +      - const: ccf
->>> +      - const: gpumpu
->>
->> "some type of memory control" .. it's really a MPU. For memory protection. :-)
->> Besides, I don't think we have to touch anything in the gpumpu for freq control
->> via gpueb.
->>
-> 
-> Gotcha, so should I leave it out of the GPUFreq binding's used channels?
-> 
-> Would leave a gap, but that's probably fine.
-> 
-
-I really doubt that this is ever getting used at all for GPUFreq, so yes, leave it
-out.
-
->>> +      - const: fast_dvfs
->>> +      - const: ipir_c_met
->>> +      - const: ipis_c_met
->>
->> MET is a hardware event tracer / profiler... and I'm fairly sure that we have no
->> real reason to support it (at least, not like that, and not in a first submission).
->>
->> Ah btw: ipir ipis .. ipi-receive ipi-send
->>
-> 
-> Gotcha, will remove those as well.
-> 
-
-P.S.: of course I was implying that if we ever need to support those, we can always
-add them later (but I still really doubt that we're ever going to use MET at all,
-even though it would be *really* nice to).
-
->>> +      - const: brisket
->>
->> Brisket is... something. There's one for the GPU, one for CPU, and one for APU.
->> Not sure what it exactly does, but seems to be or control a FLL (freq locked loop).
->>
->>> +      - const: ppb
->>
->> PPB = Peak Power Budget
->>
->> The PPB needs its own "big" driver (the PBM - Power Budget Manager) in order to do
->> anything - as in - this manages a SoC-global peak power setting based on the
->> available maximum deliverable instantaneous (and/or sustainable) power from the
->> board's power source and it is mainly used for smartphone usecase (battery!).
->>
->> In order to work, the PPB HW (yet another mcu) needs to be initialized with tables
->> for CPU and GPU (and APU? and something else too?), and with other data explaining
->> the maximum instantaneous power that can delivered at a certain battery percentage.
->>
->> Important point is... I doubt that PPB is being initialized by the bootloader, on
->> all of Genio, Kompanio and Dimensity chips, so this should be disabled by default.
->>
->> You can keep it, especially now that you have a description for it - and because it
->> does indeed exist, but I doubt that we're using this anytime soon.
-> 
-> If it's going to be used by a separate driver, wouldn't it be better if we don't make
-> this channel part of the channels the GPUFreq driver uses?
-> 
-
-Not sure if gpufreq needs to poke that channel to tell to the ppb "I'm setting this
-frequency here", or if the MCUs can communicate that stuff on their own.
-I didn't do any research about that.
-
-Since adding stuff is kinda easier than removing, I guess avoiding to add this for
-now is a sensible option. Let's do just that then.
-
->>
->> Cheers,
->> Angelo
->>
-> 
-> Kind regards,
-> Nicolas Frattaroli
-> 
->>> +
->>> +  shmem:
->>> +    $ref: /schemas/types.yaml#/definitions/phandle
->>> +    description: phandle to the shared memory region of the GPUEB MCU
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - reg-names
->>> +  - clocks
->>> +  - clock-names
->>> +  - mboxes
->>> +  - mbox-names
->>> +  - shmem
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/clock/mediatek,mt8196-clock.h>
->>> +
->>> +    gpufreq: performance-controller@4b09fd00 {
->>> +        compatible = "mediatek,mt8196-gpufreq";
->>> +        reg = <0x4b09fd00 0x80>,
->>> +              <0x4b800000 0x1000>,
->>> +              <0x4b860128 0x4>;
->>> +        reg-names = "gpr", "rpc", "e2_id";
->>> +        clocks = <&topckgen CLK_TOP_MFG_EB>,
->>> +                 <&mfgpll CLK_MFG_AO_MFGPLL>,
->>> +                 <&mfgpll_sc0 CLK_MFGSC0_AO_MFGPLL_SC0>,
->>> +                 <&mfgpll_sc1 CLK_MFGSC1_AO_MFGPLL_SC1>;
->>> +        clock-names = "eb", "mfgpll", "mfgpll_sc0",
->>> +                      "mfgpll_sc1";
->>> +        mboxes = <&gpueb_mbox 0>, <&gpueb_mbox 1>, <&gpueb_mbox 2>,
->>> +                 <&gpueb_mbox 3>, <&gpueb_mbox 4>, <&gpueb_mbox 5>,
->>> +                 <&gpueb_mbox 6>, <&gpueb_mbox 7>, <&gpueb_mbox 8>,
->>> +                 <&gpueb_mbox 9>, <&gpueb_mbox 10>, <&gpueb_mbox 11>;
->>> +        mbox-names = "fast_dvfs_event", "gpufreq", "sleep", "timer", "fhctl",
->>> +                     "ccf", "gpumpu", "fast_dvfs", "ipir_c_met", "ipis_c_met",
->>> +                     "brisket", "ppb";
->>> +        shmem = <&gpufreq_shmem>;
->>> +    };
->>>
->>
->>
-> 
-> 
-> 
-> 
