@@ -1,176 +1,131 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2E3C2D59EF
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Sep 2025 19:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E1B21FF39;
+	Mon,  8 Sep 2025 20:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757361154; cv=none; b=Nf4YwpYye0ihSgnZEU1lu9Qp9Oz4icKOV/1Se/FHmqE9Hj7dHxo4uMJov9BLQRyREL9qFj+1X3BnyFiXCTMKYsjP2ZfwN4ADDTo/kC4YGPgGj+SaPaIbvdokqkot62FoGJFlhAR7u2ns1pQq9Y2kawDDh3MdEVyrMLF9ID9zytk=
+	t=1757364831; cv=none; b=k1CHiiWppVZ7beruOrXBa30qV7jL6wjpY3y4JDWJ6h6gs/asXkcfOuSijgLYC0rVgKVFLDbUZPEG9G25+eKaZu0sQeoajy4dkgVu6zXLFD6LCuJZKJfAvAB4VlqPSXcjCBmnrdac7Q7LamHAcx9nplMEJIFKMKZauL92LCvNTwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757361154; c=relaxed/simple;
-	bh=KG/wZiINb4q+y6OBOElz2J9sgATSOMqPoUnV+iOCiIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WnHKLcTUr+Z7a8TzdOIsiPpCtGO4/UEerMED4mYXUCVtq9fUq3IX9ux2DK5hDCLhfQ+rkjwtBspO4d2ixZ6RvlCN7b0jqfoj49rrZFwRiYHrwt4extaHi0s5SUIitIBtobiijrfk/CJjG3eJu3hirS4ii4OilPHIxmEnMb2F39E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 843BD19F0
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Sep 2025 12:52:23 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9E3E63F694
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Sep 2025 12:52:31 -0700 (PDT)
-Date: Mon, 8 Sep 2025 20:51:58 +0100
-From: Liviu Dudau <liviu.dudau@arm.com>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Jassi Brar <jassisinghbrar@gmail.com>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>,
-	kernel@collabora.com, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
+	s=arc-20240116; t=1757364831; c=relaxed/simple;
+	bh=POcz+JpYGpHubzD14Eku3ZQzqXppkJMBMmqMowj0z/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=kUTpaUtrh/bH/1Sa3kfgbYDu43k0Om6BspAmteJ8Y0FQUpD5Io0KqZi2Yj2G123QmibPEeAI3QMaaC6oJBfzQ5DktXW411DDXLsUwlbbpvEeqth4hhxF5PhPk8EGxv/5XV/xQO/q037jtiErpOfQIK5aypTRPz9KKeoi2GZIWbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HwA2dgov; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HwA2dgov"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FB6DC4CEF1;
+	Mon,  8 Sep 2025 20:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757364830;
+	bh=POcz+JpYGpHubzD14Eku3ZQzqXppkJMBMmqMowj0z/E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HwA2dgovXhqbZKDE4CyF6jfjUOnL7dEWbzZKFuoiTgQM0/8RbmKtDJPAN9M5U7NdR
+	 332e8aBZX3AbPbB6EpAt9HNVbvClc42ykkVZoJjNbULcacR8h0B5EXEYiKZkgZ0oop
+	 MOztEVj9EyVglVVIKVAZMxdg6OGkWy3zLxbY/8rXxuKdTmHbBJJ416YTwQcjKpBtKY
+	 fK6GtR6tE/0qkbhp5QxKjzmH6c551WY5tmeIrJaR+WyTrg1e0UOJG7niYxUXTfUBiu
+	 qiXTd7ug2j69De7tF7VnvVqeCJga5fsCbsa8lXBVxnN8uEDltBUZshWZ3PB/PvJJG6
+	 9aMOKYX/9U7dQ==
+Date: Mon, 8 Sep 2025 15:53:49 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Linux Kernel Functional Testing <lkft@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Ben Copeland <benjamin.copeland@linaro.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH RFC 01/10] dt-bindings: gpu: mali-valhall-csf: add
- mediatek,mt8196-mali variant
-Message-ID: <aL8z3go1ece81LQj@e110455-lin.cambridge.arm.com>
-References: <20250905-mt8196-gpufreq-v1-0-7b6c2d6be221@collabora.com>
- <20250905-mt8196-gpufreq-v1-1-7b6c2d6be221@collabora.com>
+Subject: Re: [PATCH] PCI: Test for bit underflow in pcie_set_readrq()
+Message-ID: <20250908205349.GA1463686@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250905-mt8196-gpufreq-v1-1-7b6c2d6be221@collabora.com>
+In-Reply-To: <20250905052836.work.425-kees@kernel.org>
 
-On Fri, Sep 05, 2025 at 12:22:57PM +0200, Nicolas Frattaroli wrote:
-> The Mali-based GPU on the MediaTek MT8196 SoC is shackled to its concept
-> of "MFlexGraphics", which in this iteration includes an embedded MCU
-> that needs to be poked to power on the GPU, and is in charge of
-> controlling all the clocks and regulators.
+On Thu, Sep 04, 2025 at 10:28:41PM -0700, Kees Cook wrote:
+> After commit cbc654d18d37 ("bitops: Add __attribute_const__ to generic
+> ffs()-family implementations"), which allows GCC's value range tracker
+> to see past ffs(), GCC 8 on ARM thinks that it might be possible that
+> "ffs(rq) - 8" used here:
 > 
-> In return, it lets us omit the OPP tables from the device tree, as those
-> can now be enumerated at runtime from the MCU.
+> 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
 > 
-> Add the mediatek,mt8196-mali compatible, and a performance-controller
-> property which points to a node representing such setups. It's required
-> on mt8196 devices.
+> could wrap below 0, leading to a very large value, which would be out of
+> range for the FIELD_PREP() usage:
 > 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> drivers/pci/pci.c: In function 'pcie_set_readrq':
+> include/linux/compiler_types.h:572:38: error: call to '__compiletime_assert_471' declared with attribute error: FIELD_PREP: value too large for the field
+> ...
+> drivers/pci/pci.c:5896:6: note: in expansion of macro 'FIELD_PREP'
+>   v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+>       ^~~~~~~~~~
+> 
+> If the result of the ffs() is bounds checked before being used in
+> FIELD_PREP(), the value tracker seems happy again. :)
+> 
+> Fixes: cbc654d18d37 ("bitops: Add __attribute_const__ to generic ffs()-family implementations")
+
+What's your plan for merging cbc654d18d37?  I suppose it's intended
+for v6.18?  If it will appear in v6.17, let me know so I can merge
+this for it as well.
+
+Maybe this should go in v6.17 regardless, to avoid a warning
+regression between this patch and cbc654d18d37?
+
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Closes: https://lore.kernel.org/linux-pci/CA+G9fYuysVr6qT8bjF6f08WLyCJRG7aXAeSd2F7=zTaHHd7L+Q@mail.gmail.com/
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
->  .../bindings/gpu/arm,mali-valhall-csf.yaml         | 36 +++++++++++++++++++++-
->  1 file changed, 35 insertions(+), 1 deletion(-)
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Anders Roxell <anders.roxell@linaro.org>
+> Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Cc: lkft-triage@lists.linaro.org
+> Cc: Linux Regressions <regressions@lists.linux.dev>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Dan Carpenter <dan.carpenter@linaro.org>
+> Cc: Ben Copeland <benjamin.copeland@linaro.org>
+> Cc: <lkft-triage@lists.linaro.org>
+> Cc: <linux-pci@vger.kernel.org>
+> Cc: <linux-kernel@vger.kernel.org>
+> ---
+>  drivers/pci/pci.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
-> index a5b4e00217587c5d1f889094e2fff7b76e6148eb..6df802e900b744d226395c29f8d87fb6d3282d26 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
-> @@ -19,6 +19,7 @@ properties:
->        - items:
->            - enum:
->                - rockchip,rk3588-mali
-> +              - mediatek,mt8196-mali
->            - const: arm,mali-valhall-csf   # Mali Valhall GPU model/revision is fully discoverable
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b0f4d98036cd..005b92e6585e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5932,6 +5932,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+>  {
+>  	u16 v;
+>  	int ret;
+> +	unsigned int firstbit;
+>  	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
 >  
->    reg:
-> @@ -53,6 +54,13 @@ properties:
->    opp-table:
->      type: object
+>  	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
+> @@ -5949,7 +5950,10 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+>  			rq = mps;
+>  	}
 >  
-> +  performance-controller:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      A phandle of a device that controls this GPU's power and frequency,
-> +      if any. If present, this is usually in the form of some specialised
-> +      embedded MCU.
-> +
->    power-domains:
->      minItems: 1
->      maxItems: 5
-> @@ -91,7 +99,6 @@ required:
->    - interrupts
->    - interrupt-names
->    - clocks
-> -  - mali-supply
+> -	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+> +	firstbit = ffs(rq);
+> +	if (firstbit < 8)
+> +		return -EINVAL;
+> +	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, firstbit - 8);
 >  
->  additionalProperties: false
->  
-> @@ -105,9 +112,24 @@ allOf:
->        properties:
->          clocks:
->            minItems: 3
-> +        performance-controller: false
->          power-domains:
->            maxItems: 1
->          power-domain-names: false
-> +      required:
-> +        - mali-supply
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: rockchip,mt8196-mali
-
-s/rockchip/mediatek/
-
-Best regards,
-Liviu
-
-> +    then:
-> +      properties:
-> +        mali-supply: false
-> +        sram-supply: false
-> +        operating-points-v2: false
-> +      required:
-> +        - performance-controller
->  
->  examples:
->    - |
-> @@ -143,5 +165,17 @@ examples:
->              };
->          };
->      };
-> +  - |
-> +    gpu2: gpu@48000000 {
-> +        compatible = "mediatek,mt8196-mali", "arm,mali-valhall-csf";
-> +        reg = <0x48000000 0x480000>;
-> +        clocks = <&mfgpll 0>;
-> +        clock-names = "core";
-> +        interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH 0>,
-> +                     <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH 0>,
-> +                     <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH 0>;
-> +        interrupt-names = "job", "mmu", "gpu";
-> +        performance-controller = <&gpufreq>;
-> +    };
->  
->  ...
-> 
+>  	if (bridge->no_inc_mrrs) {
+>  		int max_mrrs = pcie_get_readrq(dev);
 > -- 
-> 2.51.0
+> 2.34.1
 > 
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
