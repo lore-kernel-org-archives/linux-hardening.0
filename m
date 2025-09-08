@@ -1,71 +1,80 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC8E2F7AB4
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Sep 2025 10:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A582F3617
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Sep 2025 10:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757326421; cv=none; b=UkM6tTvCZwWxome8fSobhMzXQjtnMQCAJcKtphc61CpOv16LIpDDPZENCdHSBIRASMswemokyozvyL+EGoH7ih1VX/RrXU+gxIjbO8bQLIJHInQLJBNSd3Y36WU1OtRq5mGitBKxEtWB8Kqy7dMKe0KkOTkMB9X5uSeifBMYs+M=
+	t=1757327307; cv=none; b=AlGAmZS0MdmPZVrxk5w2wHj0JK1RPuACN0X7meVbh1SL1yKExE5i9/bR0u/ZjgzzgioxSokc0jA/ORoVKHY8gQkIiqbR/x989UYEFlqcUupXk31esCUQbJsf1yQ2vMTI9tvv8//uO0h/vU2Rz/4aRfs3YqVbhVhh6H144rEL0pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757326421; c=relaxed/simple;
-	bh=3pvVKGd7pcGv4RXsx05CvvxQspqn3K5m7zfBYj1+QQA=;
+	s=arc-20240116; t=1757327307; c=relaxed/simple;
+	bh=v3Z3ghB7KcUR4Am4dT9GemFH7OfycF4DQNNj2Zkzb0s=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ejvzKPVXtG6lYhVQbZ4pQnV0XdRoKFba0Kv/mZhqS0nRNICWPclnECkmmQUunr2rEyiNe98sMwcmzq4nAOtETAKsnj5la4Aci1H0y2DVEKb6Qtg2FRrNR8Wf7g7rm2MJ/MqOagFXh6rK5KzuUUb4kaSBURFjGS2q+8qfdOzrNIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ih76/L2l; arc=none smtp.client-ip=91.218.175.177
+	 Message-Id:References:To; b=mfBo2kttRmS4mfEMl58r0ztP4FP84xZcC1QTjFOvb4BvXV79hCxTn0v7evc4ON1+KjZzlNlYDc9ISS4BV4wSpO67LZA3QBOhn8KVogHVCoag2MoZyUF8hC16kidy01JBdKExMVBNCXE1/TphJsfwk8oUZ6mD5qwYn70GAUfBpJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HvO5eXPK; arc=none smtp.client-ip=95.215.58.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ih76/L2l"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HvO5eXPK"
 Content-Type: text/plain;
 	charset=us-ascii
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1757326417;
+	t=1757327303;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ySYSYlIA/WaQQvWmLKzzHmlSzbnnjmLpztV22CiKLVQ=;
-	b=ih76/L2lS8JBDzjzBYQzyoQ97mWRepyVcKp+RDwwuSie+Xq6sRUWWJqvd4fSWrsRAhOUMB
-	si0E7Z+e0nvbcMEJiji+CPL75J5TLfNPPJvQj2KB2rh0E6KbozE8rBlnyKU6NRDg8PBeeU
-	KvLX67GLefwHdZejGvHN4dAueGcETsY=
+	bh=vrjCytdFkDjnHkRdvcB7fx759T+TGea1zRYHsJqXGDI=;
+	b=HvO5eXPK5UWyGF8ldXce/9XHVI6j+ymMky97qOwi6caV9S4ZJSOCkBu32aOs6wgyE5nfcm
+	jAfzAhpH0Vgw7ACdUcAepLGHqUi5z+l94twD1SkquuzuBwfIkRe7oZW85xNwfbW7qyHNp2
+	uBM4WbsG+3xieB3cZxFx/zm5dehmdcQ=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH] tracing: probes: Replace strcpy() with memcpy() in
- __trace_probe_log_err()
+Subject: Re: [PATCH v2 4/4] kdb: Replace deprecated strcpy() with helper
+ function in kdb_defcmd()
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <20250825160540.9a5272a8a93a789eb36a7098@kernel.org>
-Date: Mon, 8 Sep 2025 12:13:23 +0200
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20250819095915.711085-4-thorsten.blum@linux.dev>
+Date: Mon, 8 Sep 2025 12:28:09 +0200
+Cc: linux-hardening@vger.kernel.org,
+ Daniel Thompson <daniel@riscstar.com>,
+ kgdb-bugreport@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: 7bit
-Message-Id: <635528D7-9B5F-4B7C-9568-87375BA866C3@linux.dev>
-References: <20250820214717.778243-3-thorsten.blum@linux.dev>
- <20250825160540.9a5272a8a93a789eb36a7098@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Message-Id: <10062259-AB0E-471F-A992-0999E0CC02CF@linux.dev>
+References: <20250819095915.711085-1-thorsten.blum@linux.dev>
+ <20250819095915.711085-4-thorsten.blum@linux.dev>
+To: Jason Wessel <jason.wessel@windriver.com>,
+ Daniel Thompson <danielt@kernel.org>,
+ Douglas Anderson <dianders@chromium.org>,
+ Nir Lichtman <nir@lichtman.org>,
+ Yuran Pereira <yuran.pereira@hotmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Zhang Heng <zhangheng@kylinos.cn>,
+ "Dr. David Alan Gilbert" <linux@treblig.org>
 X-Migadu-Flow: FLOW_OUT
 
-Hi Masami,
+Hi Daniel,
 
-On 25. Aug 2025, at 09:05, Masami Hiramatsu (Google) wrote:
-> On Wed, 20 Aug 2025 23:47:18 +0200
-> Thorsten Blum <thorsten.blum@linux.dev> wrote:
+On 19. Aug 2025, at 11:59, Thorsten Blum wrote:
+> strcpy() is deprecated; use the new helper function kdb_strdup_dequote()
+> instead. In addition to string duplication similar to kdb_strdup(), it
+> also trims surrounding quotes from the input string if present.
 > 
->> strcpy() is deprecated; use memcpy() instead.
->> 
->> Link: https://github.com/KSPP/linux/issues/88
->> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> kdb_strdup_dequote() also checks for a trailing quote in the input
+> string which was previously not checked.
 > 
-> OK, looks good to me.
+> Link: https://github.com/KSPP/linux/issues/88
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
 
-Did you forget to add a Reviewed-by: tag and/or to add it to your tree?
+Could you give this series another look? All four patches have been
+reviewed by Doug and it still applies to -next.
 
 Thanks,
 Thorsten
