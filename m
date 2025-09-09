@@ -1,119 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611ED309EE5;
-	Tue,  9 Sep 2025 12:13:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8FD2D3ED7;
+	Tue,  9 Sep 2025 12:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757420023; cv=none; b=jDwjr9R+IirIU51fTO+KiRd8JXBue/R4d9pi4QGSAuyVSI9NawbOYmNphvXU0Np0V2kWGC4D5H8vXaCs8v0KoMvlxHscedWfnsGoZ9LDSPRq7wC/E19e+fdhBN6ITC8wvlYmKJfs6+K3I99JuI7FeZVmcCgevaegcuBFg172Akc=
+	t=1757421479; cv=none; b=laKDac8dzPT/4pEx90uCNUlyWsguedjb4rP3LmHV8J2dNZuPu6VURxy02o/5mneHdVpB1v5IBhAD/ppF/r1OdEUfpHRMdZqwBPBi+jMZdeMNe1LuidiynlOCJ0LdiLFIDoyN+u0Tt9vGn+LBA9KSoNEfXygBTUecFxvEW5UlFbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757420023; c=relaxed/simple;
-	bh=R8IBEgyyfdC4LwzwmPwd7zIkX1SnWTZM2uMbSQnjzwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=akP9lZStcLYzznumOfDYOockoa2e9+V0/b57/eOij4zmIuSsNMs0UYAWjdNOBobnF/h0sQLo6tyag8P7MQDEYrQ34AOjlRW5RdwU/uPN/I1CBuj2cGd8CgcSRcuQcaNv4z1EMUVRg/EsCVRif0dhr1aS+7MfILXF+NP0Js6arKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBnaipz2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757421479; c=relaxed/simple;
+	bh=AwlCg6UHOncWugo3loGql859Ew84PL/D9QEznoNdr4k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DYXPTBw/kXDrHCtf+QJnkyInQl3uX69hD0mUOTVqs34dOy1m64f2lLCdzTF4KtK58uza1eR5UsF5ZqFFDRN5TyIeb3I6s5voJswSMDsdg1GJ73ujHAsfR/NszAsrKMb/8XX1nzE5ain8Ru6jn+DSZodQEIcoVFcEJvudcu1qbAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=K8q7vAU+; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBnaipz2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35132C4CEF4;
-	Tue,  9 Sep 2025 12:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757420022;
-	bh=R8IBEgyyfdC4LwzwmPwd7zIkX1SnWTZM2uMbSQnjzwM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=cBnaipz2LRSWHlYEn0e52S3XLyiB6lXu6/LeAGDw65qGwxiXR8F+oOBTLmlQ2A4jF
-	 8XTTP+HDqJ8D7514Jb1PS6OJdLWxz3CtxtbhbU50QmRBMQz/lOiGaw8XfRcQ+mRcVz
-	 3gBIHu95PULkdI49gRhxVX64xonatNwmF5vmZyfml1gHE14h/6qVf6Lv3PRD4m65ca
-	 C/54C4NCmHW3clOLH8CrhRJ4xbufciXFxWz5wgi8ETt7/Tc/VhvhH88hnk6V6ItS3M
-	 38poAUb+EysM1CDvCtNW6Jsxh1RuGuhHHV/GPnpvnFnjfjK+htAOy7hgZJjodfOz7e
-	 uDtMT7gBwwbCA==
-Date: Tue, 9 Sep 2025 14:13:35 +0200
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] Bluetooth: Avoid a couple dozen
- -Wflex-array-member-not-at-end warnings
-Message-ID: <aMAZ7wIeT1sDZ4_V@kspp>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="K8q7vAU+"
+Message-ID: <71629bf0-9c61-47a0-a56e-664bde0ba853@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1757421474;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=48/xwh638NkFUCq4et+8iyMSrrRkWWc1f9x5JOS6UrU=;
+	b=K8q7vAU+GggklQq47Rd7nds+ybARZaP6wmn0tzNbBQgLmexzx/99WHXN+/9G9R2g2425Yv
+	lhJ+97Q7LmIQumu5YVmWTvuTQ1LM5u1LPdHz3X/nSYYEzrQ5URmt9GaX0raILlrMdMYr1U
+	hMlnHEEvXEBt5i8BXv23OaPDeoDD2y8=
+Date: Tue, 9 Sep 2025 13:37:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Subject: Re: [PATCH net-next v11 1/5] net: rnpgbe: Add build support for
+ rnpgbe
+To: Dong Yibo <dong100@mucse.com>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, corbet@lwn.net, gur.stavi@huawei.com,
+ maddy@linux.ibm.com, mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+ gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+ Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+ alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
+ gustavoars@kernel.org, rdunlap@infradead.org
+Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Andrew Lunn <andrew@lunn.ch>
+References: <20250909120906.1781444-1-dong100@mucse.com>
+ <20250909120906.1781444-2-dong100@mucse.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250909120906.1781444-2-dong100@mucse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On 09/09/2025 13:09, Dong Yibo wrote:
+> Add build options and doc for mucse.
+> Initialize pci device access for MUCSE devices.
+> 
+> Signed-off-by: Dong Yibo <dong100@mucse.com>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Use the __struct_group() helper to fix 31 instances of the following
-type of warnings:
-
-30 net/bluetooth/mgmt_config.c:16:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-1 net/bluetooth/mgmt_config.c:22:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Use __struct_group() instead of TRAILING_OVERLAP().
-
-v1:
- - Link: https://lore.kernel.org/linux-hardening/aLSCu8U62Hve7Dau@kspp/
-
- include/net/bluetooth/mgmt.h | 9 +++++++--
- net/bluetooth/mgmt_config.c  | 4 ++--
- 2 files changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/include/net/bluetooth/mgmt.h b/include/net/bluetooth/mgmt.h
-index 3575cd16049a..74edea06985b 100644
---- a/include/net/bluetooth/mgmt.h
-+++ b/include/net/bluetooth/mgmt.h
-@@ -53,10 +53,15 @@ struct mgmt_hdr {
- } __packed;
- 
- struct mgmt_tlv {
--	__le16 type;
--	__u8   length;
-+	/* New members MUST be added within the __struct_group() macro below. */
-+	__struct_group(mgmt_tlv_hdr, __hdr, __packed,
-+		__le16 type;
-+		__u8   length;
-+	);
- 	__u8   value[];
- } __packed;
-+static_assert(offsetof(struct mgmt_tlv, value) == sizeof(struct mgmt_tlv_hdr),
-+	      "struct member likely outside of __struct_group()");
- 
- struct mgmt_addr_info {
- 	bdaddr_t	bdaddr;
-diff --git a/net/bluetooth/mgmt_config.c b/net/bluetooth/mgmt_config.c
-index 6ef701c27da4..c4063d200c0a 100644
---- a/net/bluetooth/mgmt_config.c
-+++ b/net/bluetooth/mgmt_config.c
-@@ -13,13 +13,13 @@
- 
- #define HDEV_PARAM_U16(_param_name_) \
- 	struct {\
--		struct mgmt_tlv entry; \
-+		struct mgmt_tlv_hdr entry; \
- 		__le16 value; \
- 	} __packed _param_name_
- 
- #define HDEV_PARAM_U8(_param_name_) \
- 	struct {\
--		struct mgmt_tlv entry; \
-+		struct mgmt_tlv_hdr entry; \
- 		__u8 value; \
- 	} __packed _param_name_
- 
--- 
-2.43.0
-
+Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
