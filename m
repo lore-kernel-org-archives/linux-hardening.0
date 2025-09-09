@@ -1,66 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0075226D1D;
-	Tue,  9 Sep 2025 14:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DC4255E27;
+	Tue,  9 Sep 2025 14:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757429779; cv=none; b=CXKFKoe6CHtqn/wg9+r5mQNMz0LQtqTgcQ5nK1RrRAWtqeUOlP3ZXDaCjajuKiBicLps2agN47CnZYotHzD+TcM+89hOFotjwxxxab9UmLU6d77zeIe/iu808Vol78GP+uFWrqEzCGsq/cpLWK+IebYgdMafALIFutbzTIJiY40=
+	t=1757429884; cv=none; b=cVcJkYK4wjRY2PFWYJ9NTGjcNOUzh24LYJ8TS3UOBs/NnJkKZoaKR6a1wtDGKX5GpkfUVlneJgOemXXJgetZXSFJ4dQPavvIle/99cEbwLvzGrPJxHout5XlrbbKO5Z2O7CxFr9HXqGllZ0tnZi3YW0G9cwWvJr+2EvH/150j3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757429779; c=relaxed/simple;
-	bh=OUiEyXGSue/Qc0yE11k9Ns0FoQt2oacvNvUxDFL/e5E=;
+	s=arc-20240116; t=1757429884; c=relaxed/simple;
+	bh=AhYS1yMvT6UZY4gb3lSyTd7YEFXttTdUlw02kjzCzS8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TwFlyNAHBBk0IsdOlVfFYVpS6B7aZV286IBETqyO7Qiny6xnSBh6cTfLeBjZAWZA7uabG6JkR/vLUXd976BAUQvw/2FnQRjSKWkb47W1KxCLKWXDPec5MeQIi/5VJeXAECvgOmh3ICTvh7IucywTeQQID6GvY6R516N2HtYz6y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kyL/Ba7s; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ip9A31ulW3us8exbqzvhE7rx0IjNd84cgMXnEV6t+WM9DgeECGzP0eu/QLlr+QZezKZAJ4M9w2PO5taxc+K3cK4S87PleKJki2GTFs+xzp3agnbtELrwEpwL5I5E7rgiNR48DfzLDrdOAtXgiFQueeyXc2BOOh88LDfzfsqR/Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CyBnTsH3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kyL/Ba7s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757429777; x=1788965777;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OUiEyXGSue/Qc0yE11k9Ns0FoQt2oacvNvUxDFL/e5E=;
-  b=kyL/Ba7sAXwbe87nnDQBqrD4uSkzTxanwn0ppyRpvKlvE8OmWJ+xkR2u
-   EBS18BafGCCxxLrp3ZvpGY89t3d9pK2edQ+BX/0nBoKOwUyjGi90CyIGe
-   oomDpsSvwdw4VIztO+2++iYtbVqIThyjY/wN17a03dM8/MyGwy1fF02a0
-   MNyY01G+qqvhmGwetd7jqfhY9UdWVHEXjkcMLX4rBlEjLl3aSCT5k57kG
-   TS5crmnX6SA38w7vXKsc78OVicn0yJYh/Eg8fTNUouMVFjLTvegyOvm6z
-   5OdHWDu9ohqNx3eOmYl4mWUSkOUsCvthl8JGYYXnNP0y5OnyHp3MWwbJy
-   Q==;
-X-CSE-ConnectionGUID: btvsHT8HT9ieNgHUUGjdvA==
-X-CSE-MsgGUID: lQLdIQ6nTIamWIOS2ZjF+g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11548"; a="59862601"
-X-IronPort-AV: E=Sophos;i="6.18,251,1751266800"; 
-   d="scan'208";a="59862601"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 07:56:16 -0700
-X-CSE-ConnectionGUID: MZ6qQ+1FTt+tZ2SdU+KwyQ==
-X-CSE-MsgGUID: LchPTtfYR7WBuVhwCI8EuA==
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO 114d98da2b6c) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 09 Sep 2025 07:56:12 -0700
-Received: from kbuild by 114d98da2b6c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uvzlR-0004xT-2N;
-	Tue, 09 Sep 2025 14:56:09 +0000
-Date: Tue, 9 Sep 2025 22:55:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manikanta Guntupalli <manikanta.guntupalli@amd.com>, git@amd.com,
-	michal.simek@amd.com, alexandre.belloni@bootlin.com,
-	Frank.Li@nxp.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, kees@kernel.org, gustavoars@kernel.org,
-	jarkko.nikula@linux.intel.com, linux-i3c@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, radhey.shyam.pandey@amd.com,
-	srinivas.goud@amd.com, shubhrajyoti.datta@amd.com,
-	manion05gk@gmail.com,
-	Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-Subject: Re: [PATCH V5 2/2] i3c: master: Add AMD I3C bus controller driver
-Message-ID: <202509092248.xJvRASTq-lkp@intel.com>
-References: <20250908112117.205270-3-manikanta.guntupalli@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CyBnTsH3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76645C4CEF4;
+	Tue,  9 Sep 2025 14:58:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757429883;
+	bh=AhYS1yMvT6UZY4gb3lSyTd7YEFXttTdUlw02kjzCzS8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CyBnTsH3dRriP5kf2uS4+LiBcDagW9pxeN1obzP2gB0inxfxry/Tr2XjeGKUW34To
+	 T99k4lgGErOmGZ+5GPVORAWpL1vSJxJzxC80p4snLHbce4fxgizBofDswGSn5old7D
+	 gsiKG/wfauBHy+4x1ZIExll1W9M82wPu3zCrUo+lfQAd3CcPj5c6dr1Nx9ben30pVO
+	 sOLnRlunffd1xDbIzaJA6scW5bDrqNTizK5Nh2kNnJnjpJwmtDzYqVpXtlsjVarJFb
+	 YR8rsjMrb/2ZA1eH63dxmDTji8CxLgKB1K7qXwXE8HrAo/lfm1Lyf9HQ3Km/dHirQA
+	 rOZ2YeIhs9v1w==
+Date: Tue, 9 Sep 2025 09:58:00 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>, 
+	Sumit Garg <sumit.garg@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Apurupa Pattapu <quic_apurupa@quicinc.com>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
+	Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v9 06/11] firmware: qcom: scm: add support for object
+ invocation
+Message-ID: <67c676glro2asxtavghtvczdjcvtxlb5yd6rg2y5ln7ahj2gfq@yqtkle5tnal6>
+References: <20250901-qcom-tee-using-tee-ss-without-mem-obj-v9-0-a2af23f132d5@oss.qualcomm.com>
+ <20250901-qcom-tee-using-tee-ss-without-mem-obj-v9-6-a2af23f132d5@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,152 +51,217 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250908112117.205270-3-manikanta.guntupalli@amd.com>
+In-Reply-To: <20250901-qcom-tee-using-tee-ss-without-mem-obj-v9-6-a2af23f132d5@oss.qualcomm.com>
 
-Hi Manikanta,
+On Mon, Sep 01, 2025 at 09:55:53PM -0700, Amirreza Zarrabi wrote:
+> Qualcomm TEE (QTEE) hosts Trusted Applications (TAs) and services in
+> the secure world, accessed via objects. A QTEE client can invoke these
+> objects to request services. Similarly, QTEE can request services from
+> the nonsecure world using objects exported to the secure world.
+> 
+> Add low-level primitives to facilitate the invocation of objects hosted
+> in QTEE, as well as those hosted in the nonsecure world.
+> 
+> If support for object invocation is available, the qcom_scm allocates
+> a dedicated child platform device. The driver for this device communicates
+> with QTEE using low-level primitives.
+> 
+> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Tested-by: Harshal Dev <quic_hdev@quicinc.com>
+> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+> ---
+>  drivers/firmware/qcom/qcom_scm.c       | 124 +++++++++++++++++++++++++++++++++
+>  drivers/firmware/qcom/qcom_scm.h       |   7 ++
+>  include/linux/firmware/qcom/qcom_scm.h |   6 ++
+>  3 files changed, 137 insertions(+)
+> 
+> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+> index edeae6cdcf31..739ee9819549 100644
+> --- a/drivers/firmware/qcom/qcom_scm.c
+> +++ b/drivers/firmware/qcom/qcom_scm.c
+> @@ -2094,6 +2094,127 @@ static int qcom_scm_qseecom_init(struct qcom_scm *scm)
+>  
+>  #endif /* CONFIG_QCOM_QSEECOM */
+>  
+> +/**
+> + * qcom_scm_qtee_invoke_smc() - Invoke a QTEE object.
+> + * @inbuf: start address of memory area used for inbound buffer.
+> + * @inbuf_size: size of the memory area used for inbound buffer.
+> + * @outbuf: start address of memory area used for outbound buffer.
+> + * @outbuf_size: size of the memory area used for outbound buffer.
+> + * @result: result of QTEE object invocation.
+> + * @response_type: response type returned by QTEE.
+> + *
+> + * @response_type determines how the contents of @inbuf and @outbuf
+> + * should be processed.
+> + *
+> + * Return: On success, return 0 or <0 on failure.
+> + */
+> +int qcom_scm_qtee_invoke_smc(phys_addr_t inbuf, size_t inbuf_size,
+> +			     phys_addr_t outbuf, size_t outbuf_size,
+> +			     u64 *result, u64 *response_type)
+> +{
+> +	struct qcom_scm_desc desc = {
+> +		.svc = QCOM_SCM_SVC_SMCINVOKE,
+> +		.cmd = QCOM_SCM_SMCINVOKE_INVOKE,
+> +		.owner = ARM_SMCCC_OWNER_TRUSTED_OS,
+> +		.args[0] = inbuf,
+> +		.args[1] = inbuf_size,
+> +		.args[2] = outbuf,
+> +		.args[3] = outbuf_size,
+> +		.arginfo = QCOM_SCM_ARGS(4, QCOM_SCM_RW, QCOM_SCM_VAL,
+> +					 QCOM_SCM_RW, QCOM_SCM_VAL),
+> +	};
+> +	struct qcom_scm_res res;
+> +	int ret;
+> +
+> +	ret = qcom_scm_call(__scm->dev, &desc, &res);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (response_type)
+> +		*response_type = res.result[0];
+> +
+> +	if (result)
+> +		*result = res.result[1];
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(qcom_scm_qtee_invoke_smc);
+> +
+> +/**
+> + * qcom_scm_qtee_callback_response() - Submit response for callback request.
+> + * @buf: start address of memory area used for outbound buffer.
+> + * @buf_size: size of the memory area used for outbound buffer.
+> + * @result: Result of QTEE object invocation.
+> + * @response_type: Response type returned by QTEE.
+> + *
+> + * @response_type determines how the contents of @buf should be processed.
+> + *
+> + * Return: On success, return 0 or <0 on failure.
+> + */
+> +int qcom_scm_qtee_callback_response(phys_addr_t buf, size_t buf_size,
+> +				    u64 *result, u64 *response_type)
+> +{
+> +	struct qcom_scm_desc desc = {
+> +		.svc = QCOM_SCM_SVC_SMCINVOKE,
+> +		.cmd = QCOM_SCM_SMCINVOKE_CB_RSP,
+> +		.owner = ARM_SMCCC_OWNER_TRUSTED_OS,
+> +		.args[0] = buf,
+> +		.args[1] = buf_size,
+> +		.arginfo = QCOM_SCM_ARGS(2, QCOM_SCM_RW, QCOM_SCM_VAL),
+> +	};
+> +	struct qcom_scm_res res;
+> +	int ret;
+> +
+> +	ret = qcom_scm_call(__scm->dev, &desc, &res);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (response_type)
+> +		*response_type = res.result[0];
+> +
+> +	if (result)
+> +		*result = res.result[1];
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(qcom_scm_qtee_callback_response);
+> +
+> +static void qcom_scm_qtee_free(void *data)
+> +{
+> +	struct platform_device *qtee_dev = data;
+> +
+> +	platform_device_unregister(qtee_dev);
+> +}
+> +
+> +static void qcom_scm_qtee_init(struct qcom_scm *scm)
+> +{
+> +	struct platform_device *qtee_dev;
+> +	u64 result, response_type;
+> +	int ret;
+> +
+> +	/*
+> +	 * Probe for smcinvoke support. This will fail due to invalid buffers,
+> +	 * but first, it checks whether the call is supported in QTEE syscall
+> +	 * handler. If it is not supported, -EIO is returned.
+> +	 */
+> +	ret = qcom_scm_qtee_invoke_smc(0, 0, 0, 0, &result, &response_type);
+> +	if (ret == -EIO)
+> +		return;
+> +
+> +	/* Setup QTEE interface device. */
+> +	qtee_dev = platform_device_register_data(scm->dev, "qcomtee",
+> +						 PLATFORM_DEVID_NONE, NULL, 0);
+> +	if (IS_ERR(qtee_dev)) {
+> +		dev_err(scm->dev, "qcomtee: register failed: %d\n",
+> +			PTR_ERR(qtee_dev));
 
-kernel test robot noticed the following build warnings:
+This isn't going to fail, and all expected paths that it would fail will
+be -ENOMEM which already printed a warning. So, I'd suggest that you
+resolve the LKP build warning by dropping the print.
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on linus/master v6.17-rc5 next-20250909]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> +		return;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(scm->dev, qcom_scm_qtee_free, qtee_dev);
+> +	if (ret)
+> +		dev_err(scm->dev, "qcomtee: add action failed: %d\n", ret);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Manikanta-Guntupalli/dt-bindings-i3c-Add-AMD-I3C-master-controller-support/20250908-192455
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250908112117.205270-3-manikanta.guntupalli%40amd.com
-patch subject: [PATCH V5 2/2] i3c: master: Add AMD I3C bus controller driver
-config: sh-randconfig-r113-20250909 (https://download.01.org/0day-ci/archive/20250909/202509092248.xJvRASTq-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 10.5.0
-reproduce: (https://download.01.org/0day-ci/archive/20250909/202509092248.xJvRASTq-lkp@intel.com/reproduce)
+The only possible error here is -ENOMEM, so you can skip the print.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509092248.xJvRASTq-lkp@intel.com/
+Regards,
+Bjorn
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/i3c/master/amd-i3c-master.c:559:68: sparse: sparse: dubious: x | !y
-   drivers/i3c/master/amd-i3c-master.c:427:13: sparse: sparse: context imbalance in 'xi3c_master_dequeue_xfer' - wrong count at exit
-   drivers/i3c/master/amd-i3c-master.c:601:9: sparse: sparse: context imbalance in 'xi3c_master_do_daa' - different lock contexts for basic block
-   drivers/i3c/master/amd-i3c-master.c:644:12: sparse: sparse: context imbalance in 'xi3c_master_send_bdcast_ccc_cmd' - wrong count at exit
-   drivers/i3c/master/amd-i3c-master.c:680:12: sparse: sparse: context imbalance in 'xi3c_master_send_direct_ccc_cmd' - wrong count at exit
-   drivers/i3c/master/amd-i3c-master.c:733:12: sparse: sparse: context imbalance in 'xi3c_master_priv_xfers' - wrong count at exit
-   drivers/i3c/master/amd-i3c-master.c:773:12: sparse: sparse: context imbalance in 'xi3c_master_i2c_xfers' - wrong count at exit
-   drivers/i3c/master/amd-i3c-master.c:926:65: sparse: sparse: shift too big (32) for type unsigned long
-
-vim +559 drivers/i3c/master/amd-i3c-master.c
-
-   499	
-   500	static int xi3c_master_do_daa(struct i3c_master_controller *m)
-   501	{
-   502		struct xi3c_master *master = to_xi3c_master(m);
-   503		struct xi3c_cmd *daa_cmd;
-   504		struct xi3c_xfer *xfer;
-   505		u8 pid_bufs[XI3C_MAX_DEVS][8];
-   506		u8 data, last_addr = 0;
-   507		int addr, ret, i;
-   508		u8 *pid_buf;
-   509	
-   510		u64 *pid_bcr_dcr __free(kfree) = kcalloc(XI3C_MAX_DEVS, sizeof(u64),
-   511							 GFP_KERNEL);
-   512		if (!pid_bcr_dcr)
-   513			return -ENOMEM;
-   514	
-   515		xfer = xi3c_master_alloc_xfer(master, 1);
-   516		if (!xfer) {
-   517			ret = -ENOMEM;
-   518			goto err_daa_mem;
-   519		}
-   520	
-   521		for (i = 0; i < XI3C_MAX_DEVS; i++) {
-   522			addr = i3c_master_get_free_addr(m, last_addr + 1);
-   523			if (addr < 0) {
-   524				ret = -ENOSPC;
-   525				goto err_daa;
-   526			}
-   527			master->daa.addrs[i] = (u8)addr;
-   528			last_addr = (u8)addr;
-   529		}
-   530	
-   531		/* Fill ENTDAA CCC */
-   532		data = I3C_CCC_ENTDAA;
-   533		daa_cmd = &xfer->cmds[0];
-   534		daa_cmd->addr = I3C_BROADCAST_ADDR;
-   535		daa_cmd->rnw = 0;
-   536		daa_cmd->tx_buf = &data;
-   537		daa_cmd->tx_len = 1;
-   538		daa_cmd->type = XI3C_SDR_MODE;
-   539		daa_cmd->tid = XI3C_SDR_TID;
-   540		daa_cmd->continued = true;
-   541	
-   542		ret = xi3c_master_common_xfer(master, xfer);
-   543		/* DAA always finishes with CE2_ERROR or NACK_RESP */
-   544		if (ret && ret != I3C_ERROR_M2) {
-   545			goto err_daa;
-   546		} else {
-   547			if (ret && ret == I3C_ERROR_M2) {
-   548				ret = 0;
-   549				goto err_daa;
-   550			}
-   551		}
-   552	
-   553		master->daa.index = 0;
-   554	
-   555		while (true) {
-   556			struct xi3c_cmd *cmd = &xfer->cmds[0];
-   557	
-   558			pid_buf = pid_bufs[master->daa.index];
- > 559			addr = (master->daa.addrs[master->daa.index] << 1) |
-   560			       (!parity8(master->daa.addrs[master->daa.index]));
-   561	
-   562			cmd->tx_buf = (u8 *)&addr;
-   563			cmd->tx_len = 1;
-   564			cmd->addr = I3C_BROADCAST_ADDR;
-   565			cmd->rnw = 1;
-   566			cmd->rx_buf = pid_buf;
-   567			cmd->rx_len = XI3C_DAA_SLAVEINFO_READ_BYTECOUNT;
-   568			cmd->is_daa = true;
-   569			cmd->type = XI3C_SDR_MODE;
-   570			cmd->tid = XI3C_SDR_TID;
-   571			cmd->continued = true;
-   572	
-   573			ret = xi3c_master_common_xfer(master, xfer);
-   574	
-   575			/* DAA always finishes with CE2_ERROR or NACK_RESP */
-   576			if (ret && ret != I3C_ERROR_M2) {
-   577				goto err_daa;
-   578			} else {
-   579				if (ret && ret == I3C_ERROR_M2) {
-   580					xi3c_master_resume(master);
-   581					master->daa.index--;
-   582					ret = 0;
-   583					break;
-   584				}
-   585			}
-   586		}
-   587	
-   588		kfree(xfer);
-   589	
-   590		for (i = 0; i < master->daa.index; i++) {
-   591			i3c_master_add_i3c_dev_locked(m, master->daa.addrs[i]);
-   592	
-   593			pid_bcr_dcr[i] = FIELD_GET(XI3C_PID_MASK,
-   594						   get_unaligned_be64(pid_bufs[i]));
-   595			dev_info(master->dev, "Client %d: PID: 0x%llx\n", i, pid_bcr_dcr[i]);
-   596		}
-   597	
-   598		return 0;
-   599	
-   600	err_daa:
-   601		kfree(xfer);
-   602	err_daa_mem:
-   603		xi3c_master_reinit(master);
-   604		return ret;
-   605	}
-   606	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +}
+> +
+>  /**
+>   * qcom_scm_is_available() - Checks if SCM is available
+>   */
+> @@ -2326,6 +2447,9 @@ static int qcom_scm_probe(struct platform_device *pdev)
+>  	ret = qcom_scm_qseecom_init(scm);
+>  	WARN(ret < 0, "failed to initialize qseecom: %d\n", ret);
+>  
+> +	/* Initialize the QTEE object interface. */
+> +	qcom_scm_qtee_init(scm);
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/firmware/qcom/qcom_scm.h b/drivers/firmware/qcom/qcom_scm.h
+> index 0e8dd838099e..a56c8212cc0c 100644
+> --- a/drivers/firmware/qcom/qcom_scm.h
+> +++ b/drivers/firmware/qcom/qcom_scm.h
+> @@ -156,6 +156,13 @@ int qcom_scm_shm_bridge_enable(struct device *scm_dev);
+>  #define QCOM_SCM_SVC_GPU			0x28
+>  #define QCOM_SCM_SVC_GPU_INIT_REGS		0x01
+>  
+> +/* ARM_SMCCC_OWNER_TRUSTED_OS calls */
+> +
+> +#define QCOM_SCM_SVC_SMCINVOKE			0x06
+> +#define QCOM_SCM_SMCINVOKE_INVOKE_LEGACY	0x00
+> +#define QCOM_SCM_SMCINVOKE_CB_RSP		0x01
+> +#define QCOM_SCM_SMCINVOKE_INVOKE		0x02
+> +
+>  /* common error codes */
+>  #define QCOM_SCM_V2_EBUSY	-12
+>  #define QCOM_SCM_ENOMEM		-5
+> diff --git a/include/linux/firmware/qcom/qcom_scm.h b/include/linux/firmware/qcom/qcom_scm.h
+> index 0f667bf1d4d9..a55ca771286b 100644
+> --- a/include/linux/firmware/qcom/qcom_scm.h
+> +++ b/include/linux/firmware/qcom/qcom_scm.h
+> @@ -175,4 +175,10 @@ static inline int qcom_scm_qseecom_app_send(u32 app_id,
+>  
+>  #endif /* CONFIG_QCOM_QSEECOM */
+>  
+> +int qcom_scm_qtee_invoke_smc(phys_addr_t inbuf, size_t inbuf_size,
+> +			     phys_addr_t outbuf, size_t outbuf_size,
+> +			     u64 *result, u64 *response_type);
+> +int qcom_scm_qtee_callback_response(phys_addr_t buf, size_t buf_size,
+> +				    u64 *result, u64 *response_type);
+> +
+>  #endif
+> 
+> -- 
+> 2.34.1
+> 
