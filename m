@@ -1,52 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112672773D8;
-	Tue,  9 Sep 2025 22:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372101863E
+	for <linux-hardening@vger.kernel.org>; Wed, 10 Sep 2025 00:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757455218; cv=none; b=fcAfqmzywMD4X9q8cpogsVU5vWbIkOr2GlJiaFxjNtAzOuRe5biZ5h5fCynBVhqCUcKWgMD3qf8UeI9LOIKryoGP2N1e0Q82G2HRxQe0Z5BKaT5KRyJriV7o0YUJEWdUmsque98J7LubMlPZn2a4Him/abbUnoH0C0R6psHqNBg=
+	t=1757463080; cv=none; b=SjB4iM01y0EdsTk0b0uL6ia8Q413qhVCQf5CPLHtyfhwgqa1DZLLmd2WWgniPVdgzk+hQFtvUqtehZgkof77gHIh7ppK18ZtFKicrTwO+QIkcj6FWPKJ/6vPU8gA4eGaNeZDZxKJoBc4WR4IZFEzaFqd3niYyfLNj4/hZl7Nasc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757455218; c=relaxed/simple;
-	bh=J0wPZupB+Xsv5pSL6FaS6vYM6IU4qCEKiECUNs+CFV8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UmGmIVoWEepLO5+ufkP+4gr3G9SyNlExbh8Lr1dSWqziuxGCnfxJ62o018ty+P2yUvEFxbmsPzji4I55zzeKLskbnNw2vpVmXuECK287i+rGi8XGD2P3YjA2kRuumE96rlaBAYKIjpTI2eSJ3r7IzVcX7fkKeV6wXpwvKsPVYoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=URq2Fxdk; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1757463080; c=relaxed/simple;
+	bh=ONUj9YuvVgtL/osizZ1m5+rfDER5Pg6/BX9ljc3V5eU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RqUbb3tnyaYCZPAsjJXTSoD2EQskxcYCxLxLl+AbJSxD2FLn62YVkfDQ+Ic7Rsoy++nhbb1TJsa5AC+VbPtR+T4kLrVr0BtIHOHwJMpf6Q5DWK4Ws8P6y6PgtZckheNJ3iIEwFHsYC1knBP/GZpBwZ+OjIgcjqWtM75PfIsUXiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XI1T7lHy; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="URq2Fxdk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757455216; x=1788991216;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=J0wPZupB+Xsv5pSL6FaS6vYM6IU4qCEKiECUNs+CFV8=;
-  b=URq2FxdkmtCq+yCguz2LNwoGaIeDzNW4KutB+2/bpYgJlJhTIDv91C5i
-   Okdw/HnY7c1AA6QtOlQFBuQoJ50s2DZs0CeZ8PNouIlYz/RqKOIshgUw5
-   bFYdMU5Ek0zVms0iPVMbn/YTzVPuedFJl35rNh3QjuT5GMIsqfPgcWEwA
-   ZydXe0bfrNxzlwWkMuNNBtPF7mwdFYdmXLaKkiYcP75wtuNbimtRLs+34
-   QSIz/2RFjtVRNaFwYXNX08UVM+Y5YrYixGUFkoyFI2Rcauo+cNub1o3IO
-   IztcViUG2xvvrXfBjtqaAJjdnbuGJ0xGeW0oesopQ76zBtOfgsTtaVwQD
-   g==;
-X-CSE-ConnectionGUID: rbSETMh3RkyskaPdPpAaCg==
-X-CSE-MsgGUID: je0gPVssQ+Ku9Ey8uAy3Tw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11548"; a="63584676"
-X-IronPort-AV: E=Sophos;i="6.18,252,1751266800"; 
-   d="scan'208";a="63584676"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 15:00:09 -0700
-X-CSE-ConnectionGUID: HNmsrvI3SqKaxlf3KYSRpQ==
-X-CSE-MsgGUID: 79gh8YjbTLSpo0j/yzml+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,252,1751266800"; 
-   d="scan'208";a="172780974"
-Received: from orcnseosdtjek.jf.intel.com (HELO [10.166.28.70]) ([10.166.28.70])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 15:00:08 -0700
-From: Jacob Keller <jacob.e.keller@intel.com>
-Date: Tue, 09 Sep 2025 14:57:56 -0700
-Subject: [PATCH RFC net-next 7/7] ice-vfio-pci: implement PCI .reset_done
- handling
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XI1T7lHy"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 589HhDRW032394
+	for <linux-hardening@vger.kernel.org>; Wed, 10 Sep 2025 00:11:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=jFpVoHgd0Kv1eDQsqTgiYA
+	sqE3K27Ovfdi+4AyDrDPc=; b=XI1T7lHyTAWs8BzJdvkRrP8RHC3k6im8O+2ho+
+	vNMfna8i+sWzy+UHW/m8yOLVXbgjOGR8KpVcgdoDYMh9lu4NP7b3oX0gSq+2xXiz
+	GeqztB/JUAhHEnXvEov5e081xBG3egn096/mz+r7JyZpqsBmJEdPuHzLGoacjAS7
+	dfyY2Ojl2aQI3kQC1Db+uagYrgZQjVn7oGKNoGEkwvUdpmSiMv8toUaZP4ftB6v1
+	3VXRsqEYIe8Xg65lGJ8eNU97fp5gyLdNXDW4ci0wkCiVh1ZaJu9Durhf4bpAZrKo
+	rop9vkpj5MPt3oJYrRDFO92lPPtbqGYqJMYkZa5oFlqMVhzA==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 490e4m1w9c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Wed, 10 Sep 2025 00:11:17 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-24457ef983fso136834005ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Sep 2025 17:11:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757463076; x=1758067876;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jFpVoHgd0Kv1eDQsqTgiYAsqE3K27Ovfdi+4AyDrDPc=;
+        b=ubHc2WDDvxN/vrYHzqn1pG9W09L9XA+KQVUc2CoECBtTwCcyT90m/POf/Ss9ht5AVC
+         yQu9WofCRRhFvtQXwwvYzO05QeDeLgL0hy6TG/XtIEcy8tyFMOPwqTVcEOKA1Slj8Eh8
+         jLQU905yTasNm95hUWJuidKbD22X/N4eVp1h8bAvoJTQK6rNtCuyGDgDn6uHaHK0JA0z
+         CK1kYxrfYvhlI+QIfSYd52IPf8Rl+blwXjcZY9xy+zE0qi4fqH/DgERpSjFbLLAdb62/
+         vlDh0ilk9UHiJJ9hqEYLGqUx13b5o/fflYj2chJmksugTgfErlokQjB8qb8XhfPNFiqn
+         leYg==
+X-Forwarded-Encrypted: i=1; AJvYcCWOS3cpFWwQ1PA4FvR6iOJM1yBkEChUhqJJEA3kIep72KWumog8SezG7pWwJGvHUzurjWXq2Z2GAlGGfM9fEVc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybX1Kgyop9EEnQbxZHCX00TGpqD2ZMe7z06BWd75E7o6rOiaXA
+	ZpiS7j97GhYrbzL9OddK3jup4Q4COKkuU8//uBTdnYmM/pXi8FkDgJRsjDB9kxyhMmGjhPXCKct
+	CKO66n6mUGuB+zG2do10sH50htXntQLauACDax1+zD6EwjAw5cLXo+O95oxAZbuFBwSqaYw==
+X-Gm-Gg: ASbGncueuJevMJHTM6tLr8ZInt4uc26sWaVYBZGa2mrhFD2cyYOaPRXdWU14Ru4keYI
+	+nXpgKNNIyNY6PVdvossbQGaqL/WFDp1b7pvYEiUT/zcQ/p1Lx8jCMPa4w1DyPN0GXwmNSqiqF0
+	h9dmuOWQNy0oMvAUHodmgKxseL9NphNKFBKc9gWllIf5Idd8FtJpf0BRb3aJT7TqWZtk4dBv/Xd
+	EeVqIyO4oums0qC+IJbqgM8ks5FaMFIqw1YcZkopEn/1Wdm3UPf8Xt+Cwi6O6m5YHBsxJGvlNBY
+	lOEpJm63xP+3CbcODBSn83L16SlivDyt2YkCY5kKazdACP5ZDBQbqcIPpJRibBnbN/vXnFny83V
+	O9M4aTuDASjtrNfyAKWjHIiM=
+X-Received: by 2002:a17:903:19e5:b0:24d:6f65:7a91 with SMTP id d9443c01a7336-25171cbfe5emr195303965ad.29.1757463076249;
+        Tue, 09 Sep 2025 17:11:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHiBOCGrjDfaQx3eQmuWGjbM8k6kUSKqmsXf9ORqS92+AWuiEPW/gTySpMQGnWREBEdVe36gA==
+X-Received: by 2002:a17:903:19e5:b0:24d:6f65:7a91 with SMTP id d9443c01a7336-25171cbfe5emr195303465ad.29.1757463075571;
+        Tue, 09 Sep 2025 17:11:15 -0700 (PDT)
+Received: from hu-azarrabi-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32dab6bb655sm1285672a91.10.2025.09.09.17.11.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Sep 2025 17:11:15 -0700 (PDT)
+From: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+Subject: [PATCH v10 00/11] Trusted Execution Environment (TEE) driver for
+ Qualcomm TEE (QTEE)
+Date: Tue, 09 Sep 2025 17:11:02 -0700
+Message-Id: <20250909-qcom-tee-using-tee-ss-without-mem-obj-v10-0-20b17855ef31@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -55,198 +77,278 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250909-e810-live-migration-jk-migration-tlv-v1-7-4d1dc641e31f@intel.com>
-References: <20250909-e810-live-migration-jk-migration-tlv-v1-0-4d1dc641e31f@intel.com>
-In-Reply-To: <20250909-e810-live-migration-jk-migration-tlv-v1-0-4d1dc641e31f@intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>, 
- Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Alex Williamson <alex.williamson@redhat.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, Yishai Hadas <yishaih@nvidia.com>, 
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, 
- Kevin Tian <kevin.tian@intel.com>, Jakub Kicinski <kuba@kernel.org>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Jacob Keller <jacob.e.keller@intel.com>, 
- Aleksandr Loktionov <aleksandr.loktionov@intel.com>
-X-Mailer: b4 0.15-dev-c61db
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6535;
- i=jacob.e.keller@intel.com; h=from:subject:message-id;
- bh=J0wPZupB+Xsv5pSL6FaS6vYM6IU4qCEKiECUNs+CFV8=;
- b=owGbwMvMwCWWNS3WLp9f4wXjabUkhowDi9Oc9l7cG7r7jd8j8xgrg+3CfcsaPnhv3DqJc7r7z
- oL80LXXOkpZGMS4GGTFFFkUHEJWXjeeEKb1xlkOZg4rE8gQBi5OAZjIvYeMDJcYun+8sgx+58h2
- 21lMLuaosZZXb36F35mIWWcXb4/iu8nIsMPz/pObfbdq4/WrO6/su6UT6hkY1P9YTX7O44a0/zd
- S2AA=
-X-Developer-Key: i=jacob.e.keller@intel.com; a=openpgp;
- fpr=204054A9D73390562AEC431E6A965D3E6F0F28E8
+X-B4-Tracking: v=1; b=H4sIABfCwGgC/5XRwWrEIBAG4FdZcq7LOBo1Pe17lB6M0V1LkzQxS
+ VuWffdOFkoKbcBexBmc7xfmWiQ/Rp+Kx8O1GP0SU+w7Kjg8HAp3sd3Zs9hQo0BAyelgg+tbNnn
+ P5hS78/2WEnuP06WfJ9b6lvX1CxMKnVJCQom6IOtt9CF+3IOenqm+xDT14+c9d+Fr978JC2fAQ
+ gnoA3APXJ2GObrYuSONF2vGgt8uvcp3kVystLeugUbI8NsVmytQ57qCXB1kqUELNNic+pSOw2x
+ fabzdcLnhEk0uLglXlkuhJFjl6h283PASVS5eEk7L8QKR11BXO7jacM1FLq7Wn1c61LqR3Am1g
+ +sNNzx7l5pw57XlVmtpQOzg5geOkIubdaGglDIQuDB2B682vAKei1eEW7QBBdnYlH/gt9vtC5g
+ lmYzAAwAA
+To: Jens Wiklander <jens.wiklander@linaro.org>,
+        Sumit Garg <sumit.garg@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Apurupa Pattapu <quic_apurupa@quicinc.com>,
+        Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
+        Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kuldeep Singh <quic_kuldsing@quicinc.com>,
+        Sumit Garg <sumit.garg@oss.qualcomm.com>
+X-Mailer: b4 0.13.0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA2MDAzOCBTYWx0ZWRfX5O3A7lmeV+05
+ UwYCll0uLwbKe3ghCiogqQqBjddo8KU0M7bTjWEHJs1clJbJxDmH4s+U1548J7Oycen5iGCVtJv
+ 1d1hRtr6K2sC4l9JhwyFUCgzj0R8em9cnMfwIkJOaHAmDOUjM++MMaqtdHEZJfVpulkr8cjQNS5
+ RZtI91vyi3DBen0YE0gS/hRjaFoX0One+amYrFGBpjmAid4prwchy/xNTgP/DLfwDxjM0Dy/Z40
+ Z9n74S2wk4V7E6dy03s/Alb2vCJit71eUseVgFJnGw1YODRTFnFhIXBWfi0Yqt0zuiikZ4+/dJK
+ wdjz2jrHqQzbWXSBl48xdf2GB4kZzNPu2vDduA7cc6Cu3fvwLox6HpYZfvvGn9g+xuS1ZNI5CbT
+ Ge6p6/wW
+X-Authority-Analysis: v=2.4 cv=J66q7BnS c=1 sm=1 tr=0 ts=68c0c225 cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8
+ a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=hlSAHII3iifkWu_GNqkA:9
+ a=D8jLBtTEXUNSpw3P:21 a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: WTmsD9RzVUeNdetQ4y3HDQdsnrOn5s_i
+X-Proofpoint-ORIG-GUID: WTmsD9RzVUeNdetQ4y3HDQdsnrOn5s_i
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-09_03,2025-09-08_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 clxscore=1015 spamscore=0 phishscore=0
+ adultscore=0 priorityscore=1501 suspectscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509060038
 
-Add an implementation callback for the PCI .reset_done handler to enable
-cleanup after a PCI reset. This function has one rather nasty locking
-complexity due to the way the various locks interact.
+This patch series introduces a Trusted Execution Environment (TEE)
+driver for Qualcomm TEE (QTEE). QTEE enables Trusted Applications (TAs)
+and services to run securely. It uses an object-based interface, where
+each service is an object with sets of operations. Clients can invoke
+these operations on objects, which can generate results, including other
+objects. For example, an object can load a TA and return another object
+that represents the loaded TA, allowing access to its services.
 
-The VFIO layer holds the mm_lock across a reset, and a naive implementation
-which just takes the state mutex would trigger a simple ABBA deadlock
-between the state_mutex and the mm_lock.
+Kernel and userspace services are also available to QTEE through a
+similar approach. QTEE makes callback requests that are converted into
+object invocations. These objects can represent services within the
+kernel or userspace process.
 
-To avoid this, allow deferring handling cleanup after a PCI reset until the
-current thread holding the state_mutex exits.
+Note: This patch series focuses on QTEE objects and userspace services.
 
-This is done through adding a reset_lock spinlock and a needs_reset
-boolean. All flows which previously simply released the state_mutex now
-call a specialized ice_vfio_pci_state_mutex_unlock() handler.
+Linux already provides a TEE subsystem, which is described in [1]. The
+tee subsystem provides a generic ioctl interface, TEE_IOC_INVOKE, which
+can be used by userspace to talk to a TEE backend driver. We extend the
+Linux TEE subsystem to understand object parameters and an ioctl call so
+client can invoke objects in QTEE:
 
-This handler acquires the reset_lock, and checks if a reset was deferred.
-If so, the reset_lock is released, cleanup is handled, then the reset_lock
-is reacquired  and the thread loops to check for another deferred reset.
-Eventually the needs_reset is false, and the function exits by releasing
-the state_mutex and then the deferred reset_lock.
+  - TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF_*
+  - TEE_IOC_OBJECT_INVOKE
 
-The actual reset_done implementation acquires the reset lock, sets
-needs_reset to true, then uses try_lock to acquire the state mutex. If
-it fails to acquire the state mutex, this means another thread is handling
-business and will perform the deferred reset cleanup as part of unlocking
-the state mutex. Finally, if the reset_done does acquire the state mutex,
-it simply unlocks using the ice_vfio_pci_state_mutex_unlock helper which
-will immediately handle the "deferred" reset.
+The existing ioctl calls TEE_IOC_SUPPL_RECV and TEE_IOC_SUPPL_SEND are
+used for invoking services in the userspace process by QTEE.
 
-This is complicated, but is similar to code in other VFIO migration drivers
-including the mlx5 driver and logic in the virtiovf migration code.
+The TEE backend driver uses the QTEE Transport Message to communicate
+with QTEE. Interactions through the object INVOKE interface are
+translated into QTEE messages. Likewise, object invocations from QTEE
+for userspace objects are converted into SEND/RECV ioctl calls to
+supplicants.
 
-Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+The details of QTEE Transport Message to communicate with QTEE is
+available in [PATCH 12/12] Documentation: tee: Add Qualcomm TEE driver.
+
+You can run basic tests with following steps:
+git clone https://github.com/quic/quic-teec.git
+cd quic-teec
+mkdir build
+cmake .. -DCMAKE_TOOLCHAIN_FILE=CMakeToolchain.txt -DBUILD_UNITTEST=ON
+
+https://github.com/quic/quic-teec/blob/main/README.md lists dependencies
+needed to build the above.
+
+More comprehensive tests are availabe at
+https://github.com/qualcomm/minkipc.
+
+root@qcom-armv8a:~# qtee_supplicant &
+root@qcom-armv8a:~# qtee_supplicant: process entry PPID = 378
+Total listener services to start = 4
+Opening CRequestTABuffer_open
+Path /data/
+register_service ::Opening CRegisterTABufCBO_UID
+Calling TAbufCBO Register
+QTEE_SUPPLICANT RUNNING
+ 
+root@qcom-armv8a:~# smcinvoke_client -c /data 1
+Run callback obj test...
+Load /data/tzecotestapp.mbn, size 52192, buf 0x1e44ba0.
+System Time: 2024-02-27 17:26:31
+PASSED - Callback tests with Buffer inputs.
+PASSED - Callback tests with Remote and Callback object inputs.
+PASSED - Callback tests with Memory Object inputs.
+TEST PASSED!
+root@qcom-armv8a:~#
+root@qcom-armv8a:~# smcinvoke_client -m /data 1
+Run memory obj test...
+Load /data/tzecotestapp.mbn, size 52192, buf 0x26cafba0.
+System Time: 2024-02-27 17:26:39
+PASSED - Single Memory Object access Test.
+PASSED - Two Memory Object access Test.
+TEST PASSED!
+
+This series has been tested for QTEE object invocations, including
+loading a TA, requesting services from the TA, memory sharing, and
+handling callback requests to a supplicant.
+
+Tested platforms: sm8650-mtp, sm8550-qrd, sm8650-qrd, sm8650-hdk
+
+[1] https://www.kernel.org/doc/Documentation/tee.txt
+
+Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+
+Changes in v10:
+- Remove all loggings in qcom_scm_qtee_init().
+- Reorder patches.
+- Link to v9:
+  https://lore.kernel.org/r/20250901-qcom-tee-using-tee-ss-without-mem-obj-v9-0-a2af23f132d5@oss.qualcomm.com
+
+Changes in v9:
+- Remove unnecessary logging in qcom_scm_probe().
+- Replace the platform_device_alloc()/add() sequence with
+  platform_device_register_data().
+- Fixed sparse warning.
+- Fixed documentation typo.
+- Link to v8:
+  https://lore.kernel.org/r/20250820-qcom-tee-using-tee-ss-without-mem-obj-v8-0-7066680f138a@oss.qualcomm.com
+
+Changes in v8:
+- Check if arguments to qcom_scm_qtee_invoke_smc() and
+  qcom_scm_qtee_callback_response() are NULL.
+- Add CPU_BIG_ENDIAN as a dependency to Kconfig.
+- Fixed kernel bot errors.
+- Link to v7:
+  https://lore.kernel.org/r/20250812-qcom-tee-using-tee-ss-without-mem-obj-v7-0-ce7a1a774803@oss.qualcomm.com
+
+Changes in v7:
+- Updated copyrights.
+- Updated Acked-by: tags.
+- Fixed kernel bot errors.
+- Link to v6:
+  https://lore.kernel.org/r/20250713-qcom-tee-using-tee-ss-without-mem-obj-v6-0-697fb7d41c36@oss.qualcomm.com
+
+Changes in v6:
+- Relocate QTEE version into the driver's main service structure.
+- Simplfies qcomtee_objref_to_arg() and qcomtee_objref_from_arg().
+- Enhanced the return logic of qcomtee_object_do_invoke_internal().
+- Improve comments and remove redundant checks.
+- Improve helpers in qcomtee_msh.h to use GENMASK() and FIELD_GET().
+- updated Tested-by:, Acked-by:, and Reviewed-by: tags
+- Link to v5:
+  https://lore.kernel.org/r/20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-0-024e3221b0b9@oss.qualcomm.com
+
+Changes in v5:
+- Remove references to kernel services and public APIs.
+- Support auto detection for failing devices (e.g., RB1, RB4).
+- Add helpers for obtaining client environment and service objects.
+- Query the QTEE version and print it.
+- Move remaining static variables, including the object table, to struct
+  qcomtee.
+- Update TEE_MAX_ARG_SIZE to 4096.
+- Add a dependancy to QCOM_TZMEM_MODE_SHMBRIDGE in Kconfig
+- Reorganize code by removing release.c and qcom_scm.c.
+- Add more error messages and improve comments.
+- updated Tested-by:, Acked-by:, and Reviewed-by: tags
+- Link to v4: https://lore.kernel.org/r/20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-0-6a143640a6cb@oss.qualcomm.com
+
+Changes in v4:
+- Move teedev_ctx_get/put and tee_device_get/put to tee_core.h.
+- Rename object to id in struct tee_ioctl_object_invoke_arg.
+- Replace spinlock with mutex for qtee_objects_idr.
+- Move qcomtee_object_get to qcomtee_user/memobj_param_to_object.
+- More code cleanup following the comments.
+- Cleanup documentations.
+- Update MAINTAINERS file.
+- Link to v3: https://lore.kernel.org/r/20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-0-7f457073282d@oss.qualcomm.com
+
+Changes in v3:
+- Export shm_bridge create/delete APIs.
+- Enable support for QTEE memory objects.
+- Update the memory management code to use the TEE subsystem for all
+  allocations using the pool.
+- Move all driver states into the driver's main service struct.
+- Add more documentations.
+- Link to v2: https://lore.kernel.org/r/20250202-qcom-tee-using-tee-ss-without-mem-obj-v2-0-297eacd0d34f@quicinc.com
+
+Changes in v2:
+- Clean up commit messages and comments.
+- Use better names such as ubuf instead of membuf or QCOMTEE prefix
+  instead of QCOM_TEE, or names that are more consistent with other
+  TEE-backend drivers such as qcomtee_context_data instead of
+  qcom_tee_context.
+- Drop the DTS patch and instantiate the device from the scm driver.
+- Use a single structure for all driver's internal states.
+- Drop srcu primitives and use the existing mutex for synchronization
+  between the supplicant and QTEE.
+- Directly use tee_context to track the lifetime of qcomtee_context_data.
+- Add close_context() to be called when the user closes the tee_context.
+- Link to v1: https://lore.kernel.org/r/20241202-qcom-tee-using-tee-ss-without-mem-obj-v1-0-f502ef01e016@quicinc.com
+
+Changes in v1:
+- It is a complete rewrite to utilize the TEE subsystem.
+- Link to RFC: https://lore.kernel.org/all/20240702-qcom-tee-object-and-ioctls-v1-0-633c3ddf57ee@quicinc.com
+
 ---
- drivers/vfio/pci/ice/main.c | 69 +++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 67 insertions(+), 2 deletions(-)
+Amirreza Zarrabi (11):
+      firmware: qcom: tzmem: export shm_bridge create/delete
+      firmware: qcom: scm: add support for object invocation
+      tee: allow a driver to allocate a tee_device without a pool
+      tee: add close_context to TEE driver operation
+      tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
+      tee: add TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF
+      tee: increase TEE_MAX_ARG_SIZE to 4096
+      tee: add Qualcomm TEE driver
+      tee: qcom: add primordial object
+      tee: qcom: enable TEE_IOC_SHM_ALLOC ioctl
+      Documentation: tee: Add Qualcomm TEE driver
 
-diff --git a/drivers/vfio/pci/ice/main.c b/drivers/vfio/pci/ice/main.c
-index 161053ba383c..17865fab02ce 100644
---- a/drivers/vfio/pci/ice/main.c
-+++ b/drivers/vfio/pci/ice/main.c
-@@ -36,17 +36,21 @@ struct ice_vfio_pci_migration_file {
-  * @core_device: The core device being operated on
-  * @mig_info: Migration information
-  * @state_mutex: mutex protecting the migration state
-+ * @reset_lock: spinlock protecting the reset_done flow
-  * @resuming_migf: Migration file containing data for the resuming VF
-  * @saving_migf: Migration file used to store data from saving VF
-  * @mig_state: the current migration state of the device
-+ * @needs_reset: if true, reset is required at next unlock of state_mutex
-  */
- struct ice_vfio_pci_device {
- 	struct vfio_pci_core_device core_device;
- 	struct vfio_device_migration_info mig_info;
- 	struct mutex state_mutex;
-+	spinlock_t reset_lock;
- 	struct ice_vfio_pci_migration_file *resuming_migf;
- 	struct ice_vfio_pci_migration_file *saving_migf;
- 	enum vfio_device_mig_state mig_state;
-+	bool needs_reset:1;
- };
- 
- #define to_ice_vdev(dev) \
-@@ -154,6 +158,65 @@ static void ice_vfio_pci_disable_fds(struct ice_vfio_pci_device *ice_vdev)
- 	}
- }
- 
-+/**
-+ * ice_vfio_pci_state_mutex_unlock - Unlock state_mutex
-+ * @mutex: pointer to the ice-vfio-pci state_mutex
-+ *
-+ * ice_vfio_pci_reset_done may defer a reset in the event it fails to acquire
-+ * the state_mutex. This is necessary in order to avoid an unconditional
-+ * acquire of the state_mutex that could lead to ABBA lock inversion issues
-+ * with the mm lock.
-+ *
-+ * This function is called to unlock the state_mutex, but ensures that any
-+ * deferred reset is handled prior to unlocking. It uses the reset_lock to
-+ * check if any reset has been deferred.
-+ */
-+static void ice_vfio_pci_state_mutex_unlock(struct mutex *mutex)
-+{
-+	struct ice_vfio_pci_device *ice_vdev =
-+		container_of(mutex, struct ice_vfio_pci_device,
-+			     state_mutex);
-+
-+again:
-+	spin_lock(&ice_vdev->reset_lock);
-+	if (ice_vdev->needs_reset) {
-+		ice_vdev->needs_reset = false;
-+		spin_unlock(&ice_vdev->reset_lock);
-+		ice_vdev->mig_state = VFIO_DEVICE_STATE_RUNNING;
-+		ice_vfio_pci_disable_fds(ice_vdev);
-+		goto again;
-+	}
-+	/* The state_mutex must be unlocked before the reset_lock, otherwise
-+	 * a new deferred reset could occur inbetween. Such a reset then be
-+	 * deferred until the next state_mutex critical section.
-+	 */
-+	mutex_unlock(&ice_vdev->state_mutex);
-+	spin_unlock(&ice_vdev->reset_lock);
-+}
-+
-+/**
-+ * ice_vfio_pci_reset_done - Handle or defer PCI reset
-+ * @pdev: The PCI device structure
-+ *
-+ * As the higher VFIO layers are holding locks across reset and using those
-+ * same locks with the mm_lock we need to prevent ABBA deadlock with the
-+ * state_mutex and mm_lock. In case the state_mutex was taken already we defer
-+ * the cleanup work to the unlock flow of the other running context.
-+ */
-+static void ice_vfio_pci_reset_done(struct pci_dev *pdev)
-+{
-+	struct ice_vfio_pci_device *ice_vdev = dev_get_drvdata(&pdev->dev);
-+
-+	spin_lock(&ice_vdev->reset_lock);
-+	ice_vdev->needs_reset = true;
-+	if (!mutex_trylock(&ice_vdev->state_mutex)) {
-+		spin_unlock(&ice_vdev->reset_lock);
-+		return;
-+	}
-+	spin_unlock(&ice_vdev->reset_lock);
-+	ice_vfio_pci_state_mutex_unlock(&ice_vdev->state_mutex);
-+}
-+
- /**
-  * ice_vfio_pci_open_device - VFIO .open_device callback
-  * @vdev: the VFIO device to open
-@@ -526,7 +589,7 @@ ice_vfio_pci_set_device_state(struct vfio_device *vdev,
- 		}
- 	}
- 
--	mutex_unlock(&ice_vdev->state_mutex);
-+	ice_vfio_pci_state_mutex_unlock(&ice_vdev->state_mutex);
- 
- 	return res;
- }
-@@ -547,7 +610,7 @@ static int ice_vfio_pci_get_device_state(struct vfio_device *vdev,
- 
- 	*curr_state = ice_vdev->mig_state;
- 
--	mutex_unlock(&ice_vdev->state_mutex);
-+	ice_vfio_pci_state_mutex_unlock(&ice_vdev->state_mutex);
- 
- 	return 0;
- }
-@@ -583,6 +646,7 @@ static int ice_vfio_pci_core_init_dev(struct vfio_device *vdev)
- 	struct ice_vfio_pci_device *ice_vdev = to_ice_vdev(vdev);
- 
- 	mutex_init(&ice_vdev->state_mutex);
-+	spin_lock_init(&ice_vdev->reset_lock);
- 
- 	vdev->migration_flags =
- 		VFIO_MIGRATION_STOP_COPY | VFIO_MIGRATION_P2P;
-@@ -681,6 +745,7 @@ static const struct pci_device_id ice_vfio_pci_table[] = {
- MODULE_DEVICE_TABLE(pci, ice_vfio_pci_table);
- 
- static const struct pci_error_handlers ice_vfio_pci_core_err_handlers = {
-+	.reset_done = ice_vfio_pci_reset_done,
- 	.error_detected = vfio_pci_core_aer_err_detected,
- };
- 
+ Documentation/tee/index.rst              |   1 +
+ Documentation/tee/qtee.rst               |  96 ++++
+ MAINTAINERS                              |   7 +
+ drivers/firmware/qcom/qcom_scm.c         | 119 ++++
+ drivers/firmware/qcom/qcom_scm.h         |   7 +
+ drivers/firmware/qcom/qcom_tzmem.c       |  63 ++-
+ drivers/tee/Kconfig                      |   1 +
+ drivers/tee/Makefile                     |   1 +
+ drivers/tee/qcomtee/Kconfig              |  12 +
+ drivers/tee/qcomtee/Makefile             |   9 +
+ drivers/tee/qcomtee/async.c              | 182 ++++++
+ drivers/tee/qcomtee/call.c               | 820 +++++++++++++++++++++++++++
+ drivers/tee/qcomtee/core.c               | 915 +++++++++++++++++++++++++++++++
+ drivers/tee/qcomtee/mem_obj.c            | 169 ++++++
+ drivers/tee/qcomtee/primordial_obj.c     | 113 ++++
+ drivers/tee/qcomtee/qcomtee.h            | 185 +++++++
+ drivers/tee/qcomtee/qcomtee_msg.h        | 304 ++++++++++
+ drivers/tee/qcomtee/qcomtee_object.h     | 316 +++++++++++
+ drivers/tee/qcomtee/shm.c                | 150 +++++
+ drivers/tee/qcomtee/user_obj.c           | 692 +++++++++++++++++++++++
+ drivers/tee/tee_core.c                   | 127 ++++-
+ drivers/tee/tee_private.h                |   6 -
+ include/linux/firmware/qcom/qcom_scm.h   |   6 +
+ include/linux/firmware/qcom/qcom_tzmem.h |  15 +
+ include/linux/tee_core.h                 |  54 +-
+ include/linux/tee_drv.h                  |  12 +
+ include/uapi/linux/tee.h                 |  56 +-
+ 27 files changed, 4410 insertions(+), 28 deletions(-)
+---
+base-commit: 33bcf93b9a6b028758105680f8b538a31bc563cf
+change-id: 20241202-qcom-tee-using-tee-ss-without-mem-obj-362c66340527
 
+Best regards,
 -- 
-2.51.0.rc1.197.g6d975e95c9d7
+Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
 
