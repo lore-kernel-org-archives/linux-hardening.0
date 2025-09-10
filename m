@@ -1,154 +1,73 @@
-Received: from s1.jo-so.de (s1.jo-so.de [37.221.195.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371C1311952;
-	Wed, 10 Sep 2025 08:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.221.195.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF74E2DCF55;
+	Wed, 10 Sep 2025 10:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757494649; cv=none; b=i8r8Fh8G8EjGgINfte6THCrMQM8JM12nB5OZI0wAfFXivfJVoQ0thxgLxLrcQDWoKnn8SF/Y9Bh61XG6EQh1QP+AgydPU8AQum0woeynEio1cXx/0eX/90p2sDUXAk5nTbsh7X9ED5NP5N44IOWRhYMhVpoRJsqCGFqs18JC3eo=
+	t=1757499934; cv=none; b=gSbuTjS/k0cavpdT8kOTmA1M+iVaq9OikzIi6DO+3e7qdd0e0uyyDJ0XFYgz30kAB3YUZQn8WN0q3y7XMjT95KCrm6BIcvzrHTQuK/bHAjomta6+QLkv8NxB6ALVzoV3azAjS+WIjxYQiSth16udBbR4CvRld2xCUlDeAp2pfiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757494649; c=relaxed/simple;
-	bh=UyTKr/gRlDYEGxckMgklqxwcPAl9u7MPrPxBjUXQOW4=;
+	s=arc-20240116; t=1757499934; c=relaxed/simple;
+	bh=rOQxOgEMHcjOh++UqbUESyHQ5d1FesjktaJp9ctQiAo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cn0AOIEwZb4xvhsHu/BeNy5zLh4ne8/LO2mAwn2gbcuAWad5kIJGdBnw5nA0G6OOJRGNPMoK9qOe8JjDP8HCFal+76/bp4tSHxxFhxFKObzVoBW7R0x2P4lYJPjgceIba/MAEPgbQMVrUDKLTtWsnZkyo28KDAmEiCJ53fA2/Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jo-so.de; spf=pass smtp.mailfrom=jo-so.de; arc=none smtp.client-ip=37.221.195.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jo-so.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jo-so.de
-Received: from mail-relay (helo=jo-so.de)
-	by s1.jo-so.de with local-bsmtp (Exim 4.98.2)
-	(envelope-from <joerg@jo-so.de>)
-	id 1uwG5X-00000006hFm-0ZHo;
-	Wed, 10 Sep 2025 10:21:59 +0200
-Received: from joerg by zenbook.jo-so.de with local (Exim 4.98.2)
-	(envelope-from <joerg@jo-so.de>)
-	id 1uwG5W-00000000Okw-2Jme;
-	Wed, 10 Sep 2025 10:21:58 +0200
-Date: Wed, 10 Sep 2025 10:21:58 +0200
-From: =?utf-8?B?SsO2cmc=?= Sommer <joerg@jo-so.de>
-To: Yibo Dong <dong100@mucse.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, "Anwar, Md Danish" <a0501179@ti.com>, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, pabeni@redhat.com, 
-	horms@kernel.org, corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com, 
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us, gongfan1@huawei.com, 
-	lorenzo@kernel.org, geert+renesas@glider.be, Parthiban.Veerasooran@microchip.com, 
-	lukas.bulwahn@redhat.com, alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org, 
-	gustavoars@kernel.org, rdunlap@infradead.org, vadim.fedorenko@linux.dev, 
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v11 4/5] net: rnpgbe: Add basic mbx_fw support
-Message-ID: <vfarjsi3uf55kb5uj25stnjriemyvra7gomxmtik3jowsp24n5@k44vc2gdmyaf>
-References: <20250909120906.1781444-1-dong100@mucse.com>
- <20250909120906.1781444-5-dong100@mucse.com>
- <68fc2f5c-2cbd-41f6-a814-5134ba06b4b5@ti.com>
- <20250909135822.2ac833fc@kernel.org>
- <00A30C785FE598BA+20250910060821.GB1832711@nic-Precision-5820-Tower>
+	 Content-Type:Content-Disposition:In-Reply-To; b=NllAgqT/76CDPKFDcKx8nBNtMUH3//+HsD2M+CcxqCno4XizzTjW8FTVSxlUSvU2x5AaLgig2QWPmKXVUVbiCQu8gIymItQFw82KsliaHqeA+1A/EPKPZ9irlXNr7HIpimEqXVm5w5rheHY+0RsJoG0xaekaDLD5GnWap8x8Dn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b4K+kdev; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b4K+kdev"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2692BC4CEF0;
+	Wed, 10 Sep 2025 10:25:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757499933;
+	bh=rOQxOgEMHcjOh++UqbUESyHQ5d1FesjktaJp9ctQiAo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b4K+kdevzHGbYRrec4m+ky9DW3o4crg47X0AbSlGJkqgiabBEiwxdKkU6us5Vgxpr
+	 bxQnspbQIaDrkez1h7jyF+5DJZTGvDcLqZn2L8BBp6I8r0q0o5qZyqOtoStYFcS5V7
+	 9904tL+Gy3mAtD9nxYLQWIR0LHwsV44ZYtqzsHfPoxvzjHrzkUIhKxxFBrw/z5WO5L
+	 MBijN8s/qIyiMADWPXDyqk8ZWUcxR4KqKJQrEwMu+OXbdsgwA4QooCLDgOTkI3Pu/X
+	 GiGvtrrAK7XVqNvrsWhUxK0LryZqtlHRvXqXWqE02melptFeQx/6FdUb9Dme2K/Dzl
+	 VasjEYf1cVLtw==
+Date: Wed, 10 Sep 2025 11:25:28 +0100
+From: Simon Horman <horms@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] Bluetooth: Avoid a couple dozen
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <20250910102528.GA30363@horms.kernel.org>
+References: <aMAZ7wIeT1sDZ4_V@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ave2a22qe2b7h3wz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00A30C785FE598BA+20250910060821.GB1832711@nic-Precision-5820-Tower>
+In-Reply-To: <aMAZ7wIeT1sDZ4_V@kspp>
 
+On Tue, Sep 09, 2025 at 02:13:35PM +0200, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the __struct_group() helper to fix 31 instances of the following
+> type of warnings:
+> 
+> 30 net/bluetooth/mgmt_config.c:16:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 1 net/bluetooth/mgmt_config.c:22:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v2:
+>  - Use __struct_group() instead of TRAILING_OVERLAP().
+> 
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/aLSCu8U62Hve7Dau@kspp/
 
---ave2a22qe2b7h3wz
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH net-next v11 4/5] net: rnpgbe: Add basic mbx_fw support
-MIME-Version: 1.0
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-Yibo Dong schrieb am Mi 10. Sep, 14:08 (+0800):
-> On Tue, Sep 09, 2025 at 01:58:22PM -0700, Jakub Kicinski wrote:
-> > On Tue, 9 Sep 2025 19:59:11 +0530 Anwar, Md Danish wrote:
-> > > > +int mucse_mbx_sync_fw(struct mucse_hw *hw)
-> > > > +{
-> > > > +	int try_cnt =3D 3;
-> > > > +	int err;
-> > > > +
-> > > > +	do {
-> > > > +		err =3D mucse_mbx_get_info(hw);
-> > > > +		if (err =3D=3D -ETIMEDOUT)
-> > > > +			continue;
-> > > > +		break;
-> > > > +	} while (try_cnt--);
-> > > > +
-> > > > +	return err;
-> > > > +} =20
-> > >=20
-> > > There's a logical issue in the code. The loop structure attempts to
-> > > retry on ETIMEDOUT errors, but the unconditional break statement after
-> > > the if-check will always exit the loop after the first attempt,
-> > > regardless of the error. The do-while loop will never actually retry
-> > > because the break statement is placed outside of the if condition that
-> > > checks for timeout errors.
-> >=20
->=20
-> What is expected is 'retry on ETIMEDOUT' and 'no retry others'.=20
-> https://lore.kernel.org/netdev/a066746c-2f12-4e70-b63a-7996392a9132@lunn.=
-ch/
->=20
-> > The other way around. continue; in a do {} while () look does *not*
-> > evaluate the condition. So this can loop forever.
-> >=20
->=20
-> Maybe I can update like this ?
->=20
-> int mucse_mbx_sync_fw(struct mucse_hw *hw)
-> {
-> 	int try_cnt =3D 3;
-> 	int err;
->=20
-> 	do {
-> 		err =3D mucse_mbx_get_info(hw);
-> 		if (err !=3D -ETIMEDOUT)
-> 			break;
-> 		/* only retry with ETIMEDOUT, others just return */
-> 	} while (try_cnt--);
->=20
-> 	return err;
-> } =20
-
-How about something like this?
-
-int mucse_mbx_sync_fw(struct mucse_hw *hw)
-{
-	for (int try =3D 3; try; --try) {
-		int err =3D mucse_mbx_get_info(hw);
-		if (err !=3D -ETIMEDOUT)
-			return err;
-	}
-
-	return ETIMEDOUT;
-}
-
-
-My 2cent.
-
-Regards J=C3=B6rg
-
---=20
-=E2=80=9EEs wurden und werden zu viele sprachlose B=C3=BCcher gedruckt, nac=
-h deren
-schon fl=C3=BCchtiger Lekt=C3=BCre man all die B=C3=A4ume um Vergebung bitt=
-en m=C3=B6chte,
-die f=C3=BCr den Schund ihr Leben lassen mussten.=E2=80=9C (Michael J=C3=BC=
-rgs,
-                      Seichtgebiete =E2=80=93 Warum wir hemmungslos verbl=
-=C3=B6den)
-
---ave2a22qe2b7h3wz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABEIAB0WIQS1pYxd0T/67YejVyF9LJoj0a6jdQUCaME1JAAKCRB9LJoj0a6j
-dWHfAP9MpwXSbDkmn0L3EBxXklRTyGo9dD4BVrhkdXrXtYNrXgD/f0quVJJNn+Zo
-2d4EZ+ulmakNhpMKJUdjDi8P1IHNG6c=
-=3Gfd
------END PGP SIGNATURE-----
-
---ave2a22qe2b7h3wz--
