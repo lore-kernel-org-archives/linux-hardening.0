@@ -1,231 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EF8D322C7C;
-	Wed, 10 Sep 2025 13:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65F21B425C
+	for <linux-hardening@vger.kernel.org>; Wed, 10 Sep 2025 16:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757512783; cv=none; b=KbhAXat8A2O2x7piTudEw3zpEhfHZxd5mvPcyYOrE1r2UBh7YUSryrP0totTuCXXGLeB8087tTF29dDzT2sB/Y/w35T6/CFrp8lpHzgLX+N2+d9ENUnh9MQrWdCIsgHUDzE1v+yaSxSrjI+C1WY1K8FC6MwTX3D+ViE8XRNIxi4=
+	t=1757520355; cv=none; b=mhaMe8zqlGIxqa6xFPAzqbG2XuO3hP5MEh4/WcDulwy2doNjTuJVTW9M2L58I1yyH6wbiC+PeYcN4OnD0M9VETi+Juxt0yorKv8IseZIzOfpKTFx9tq/mkabrzXvaK1CQe/EnB5PUw+2MUnAfyEeFZRBjwaW5LNvIFNxO1Gk3xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757512783; c=relaxed/simple;
-	bh=1GHlEkk33Hekq4aGD0DoRzQmiiOBAR4VAXYkvid7wZ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KtzfL95eqvJ9vrx6QpQIywmvbmO9u/P1y31HAhVA6mXPltkQpIje8BSW10NxWqYBcMuFhvvUNW/zwsz2e37DWW8KQXrlzgYonOvH98qLSgHIryUpC0kzj+yVVw81x/tUtXijcxgvLKXwLBieum95yn6z+XP3GdML+45kn5meIXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1371C16F8;
-	Wed, 10 Sep 2025 06:59:33 -0700 (PDT)
-Received: from [10.1.25.55] (e122027.cambridge.arm.com [10.1.25.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E14273F694;
-	Wed, 10 Sep 2025 06:59:35 -0700 (PDT)
-Message-ID: <4670e984-10c2-4c8e-89b3-d3a0217735b3@arm.com>
-Date: Wed, 10 Sep 2025 14:59:29 +0100
+	s=arc-20240116; t=1757520355; c=relaxed/simple;
+	bh=VYJEE0OdCF+OcIqloLm/1BOl4kW/iGjF5av4omVk19U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gxn+8vzZaWlkvhDWM5aJcumdaIENbu2LIAkFzpPc8bM9+omlSGrLrTv4TrY1ZmXrSZERU8otRR5TZlCa9cXODabqrOBudjuDf+M58iXqeYm1Ydtr1fnn0PtGccE4qCIuiibBSCY/EEgeMR38wWaMOg8L7nHj1+i7ySfpsUFOlzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Z4nQYplB; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Z4nQYplB"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b046fc9f359so1222529666b.0
+        for <linux-hardening@vger.kernel.org>; Wed, 10 Sep 2025 09:05:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1757520352; x=1758125152; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=l7C9yj707Xq302+3n2Zc2uqWZ1bCZ56pptu3TpPal6c=;
+        b=Z4nQYplBt5vX/B/RotfXT2IjXumVWnwNZMEbMhy1siyMd1UVMwVlGGMHPOV9Dt75WJ
+         Ax19cFy5EZP+gmdia0kAE7l/jKtm+abl2d90oAlENMOFqg/rAufpZFd3scFp/9Ewu77I
+         kpO72BJookWVgBISCUqu4orCltakg93fw4EEmKZw7Dt6r/32bs+CMlGDdBqDLG+LKy/V
+         6hygJNmFk2wAe3yRtLdAuTHnQtAKKYxohUsTeJi8NzgYHLzgw372s2dVWIrF7egX2Jh+
+         z8QvaKexD6WLdvDbX72zPS14vGqxcFw+hakqcc7sGjQeDmVd/p0IvVwAdGWEpwFNXf8X
+         CViw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757520352; x=1758125152;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l7C9yj707Xq302+3n2Zc2uqWZ1bCZ56pptu3TpPal6c=;
+        b=hqdZfbTTQOv1LxTy46xdfUwrv9Sjamp5dg0pk2LWC91BlYvx/ZyQBljd/jFiewpnqo
+         p79VaRkkImt3UyIxZfdSTeU8/t9zarRTFxJbmeHwj4RqwdYLertlXgImSVUxjMkYtl6H
+         ChCMPs4miB6pJnpigdYWqQUHOcNsJe2icjLggr0Y9U5mSpoD+WcXoFKtCs1kkvtSo7Ng
+         REx8QurR/cKtiOBBAkX7D1ZhoEsMyNbaT02axGJcZ97V+2avMf7zm9bHXX2mmwCXY7zM
+         q1lXmvqRG1/d2V2VA0BrdaH7Cyzhs20xSPRMwdKs3qNasvrXmSdKWcVb1uo/6FcmYzDx
+         sSKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9at8gK/WXcqozi1IwkgBArk/0DKH/VTozlfo6ziTgx2vUe3T/iDssAVJD0bpJhhAPSov+rfoSH9g60N2bSqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJZ8SKV3h5XFTYNW4NzDJUJuePly7U4ISXXPwYLqu+VSbps01E
+	yRud1TYcY9hxWi1p10Un8AtPOqdogd5wsJp1mznVT5GQ156Xs6vacwW4DmG2YGZ5TJA=
+X-Gm-Gg: ASbGncuhhIgQTAxtWBHrIquhEcVgPHYsCZLAtEqnXxLyUws3VqvUsLlBjrx/NChbRRg
+	W0YbUuPLnKlZUy6hms3nTNIH/4G0DxXWsW/NEDb6HrhrqVBq0OtLXfpCcUiWXNhPcB1KVsO45QA
+	RApM52EXXNDu2GogYsSO1b+uSF3YkI0A4g/m7k2ej+G2zIne64lZ6uj5xmKKO0xtA0uy35GWdSX
+	9q16MWnB3Ere9hWWKfBNGV7uzyfmTEtiIwhHcWcef+UwOFzz989Ugk/w+BtGVIph3phnssAX6jJ
+	8tbaeDXaHoYMUVhG7Dv71jmc41baPA6e54m4CDDWCpqUmNldLML0n5Kj5k6KeQuSBWGY4toElrA
+	eXSVBTlOawwQKgit7xGtIr9yjfm7jeri+g/3q
+X-Google-Smtp-Source: AGHT+IFYx0f6DUoknE3dgFPXDXGKuGYnSTvQRdBOTBBtYYwAndaqUysHWLmorf5AgzT60bAXrTya6w==
+X-Received: by 2002:a17:907:6d0d:b0:b04:ae7c:703e with SMTP id a640c23a62f3a-b04b140a770mr1479252666b.24.1757520352091;
+        Wed, 10 Sep 2025 09:05:52 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b078334d74bsm189650166b.57.2025.09.10.09.05.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Sep 2025 09:05:51 -0700 (PDT)
+Date: Wed, 10 Sep 2025 18:05:49 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	David Gow <davidgow@google.com>, Arnd Bergmann <arnd@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] printk: kunit: support offstack cpumask
+Message-ID: <aMGh3QqB4eNsUjf5@pathway.suse.cz>
+References: <20250902140326.344214-1-pmladek@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 09/10] drm/panthor: devfreq: add pluggable devfreq
- providers
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, MyungJoo Ham <myungjoo.ham@samsung.com>,
- Kyungmin Park <kyungmin.park@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>,
- kernel@collabora.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250905-mt8196-gpufreq-v1-0-7b6c2d6be221@collabora.com>
- <20250905-mt8196-gpufreq-v1-9-7b6c2d6be221@collabora.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250905-mt8196-gpufreq-v1-9-7b6c2d6be221@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250902140326.344214-1-pmladek@suse.com>
 
-On 05/09/2025 11:23, Nicolas Frattaroli wrote:
-> On some devices, devfreq is not controlled directly by DT OPPs and the
-> common clock framework, but through an external devfreq driver. To
-> permit this type of usage, add the concept of devfreq providers.
+On Tue 2025-09-02 16:03:26, Petr Mladek wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Devfreq providers for panthor register themselves with panthor as a
-> provider. panthor then gets whatever driver is suckling on its
-> performance-node property, finds the registered devfreq provider init
-> function for it, and calls it.
+> For large values of CONFIG_NR_CPUS, the newly added kunit test fails
+> to build:
 > 
-> Should the probe order work out such that panthor probes before the
-> devfreq provider is finished probing and registering itself, then we
-> just defer the probe after adding a device link.
+> kernel/printk/printk_ringbuffer_kunit_test.c: In function 'test_readerwriter':
+> kernel/printk/printk_ringbuffer_kunit_test.c:279:1: error: the frame size of 1432 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
 > 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> Change this to use cpumask_var_t and allocate it dynamically when
+> CONFIG_CPUMASK_OFFSTACK is set.
+> 
+> The variable has to be released via a KUnit action wrapper so that it is
+> freed when the test fails and gets aborted. The parameter type is hardcoded
+> to "struct cpumask *" because the macro KUNIT_DEFINE_ACTION_WRAPPER()
+> does not accept an array. But the function does nothing when
+> CONFIG_CPUMASK_OFFSTACK is not set anyway.
+> 
+> Fixes: 5ea2bcdfbf46 ("printk: ringbuffer: Add KUnit test")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> [pmladek@suse.com: Correctly handle allocation failures and freeing using KUnit test API.]
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
 
-Looks fine to me, but I think there are some updates needed due to the
-DT review.
+JFYI, this patch have been committed into printk/linux.git,
+branch rework/ringbuffer-kunit-test.
 
-Thanks,
-Steve
+It worked, I did it according to the feedback. Let's give
+it some spin in linux-next before the next merge window.
 
-> ---
->  drivers/gpu/drm/panthor/panthor_devfreq.c | 74 ++++++++++++++++++++++++++++++-
->  drivers/gpu/drm/panthor/panthor_devfreq.h | 16 +++++++
->  2 files changed, 89 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_devfreq.c b/drivers/gpu/drm/panthor/panthor_devfreq.c
-> index d495dd856299826c4bddc205087d8914d01d7fc4..1b0c21f6f069b059b8b0e412a79556c602c5f1e7 100644
-> --- a/drivers/gpu/drm/panthor/panthor_devfreq.c
-> +++ b/drivers/gpu/drm/panthor/panthor_devfreq.c
-> @@ -4,6 +4,7 @@
->  #include <linux/clk.h>
->  #include <linux/devfreq.h>
->  #include <linux/devfreq_cooling.h>
-> +#include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_opp.h>
->  
-> @@ -12,6 +13,34 @@
->  #include "panthor_devfreq.h"
->  #include "panthor_device.h"
->  
-> +static LIST_HEAD(panthor_devfreq_providers);
-> +static DEFINE_MUTEX(panthor_devfreq_providers_lock);
-> +
-> +int panthor_devfreq_register_provider(struct panthor_devfreq_provider *prov)
-> +{
-> +	guard(mutex)(&panthor_devfreq_providers_lock);
-> +
-> +	list_add(&prov->node, &panthor_devfreq_providers);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(panthor_devfreq_register_provider);
-> +
-> +static int panthor_devfreq_init_provider(struct panthor_device *ptdev,
-> +					 struct device *provider_dev)
-> +{
-> +	struct panthor_devfreq_provider *prov;
-> +
-> +	guard(mutex)(&panthor_devfreq_providers_lock);
-> +
-> +	list_for_each_entry(prov, &panthor_devfreq_providers, node) {
-> +		if (prov->dev == provider_dev)
-> +			return prov->init(ptdev, provider_dev);
-> +	}
-> +
-> +	return -EPROBE_DEFER;
-> +}
-> +
->  static void panthor_devfreq_update_utilization(struct panthor_devfreq *pdevfreq)
->  {
->  	ktime_t now, last;
-> @@ -102,7 +131,7 @@ static struct devfreq_dev_profile panthor_devfreq_profile = {
->  	.get_cur_freq = panthor_devfreq_get_cur_freq,
->  };
->  
-> -int panthor_devfreq_init(struct panthor_device *ptdev)
-> +static int panthor_devfreq_init_of(struct panthor_device *ptdev)
->  {
->  	/* There's actually 2 regulators (mali and sram), but the OPP core only
->  	 * supports one.
-> @@ -222,6 +251,49 @@ int panthor_devfreq_init(struct panthor_device *ptdev)
->  	return 0;
->  }
->  
-> +static int panthor_devfreq_init_platform(struct panthor_device *ptdev)
-> +{
-> +	struct device_node *pcnode;
-> +	struct platform_device *pdev;
-> +	struct device_link *link;
-> +	int ret;
-> +
-> +	pcnode = of_parse_phandle(ptdev->base.dev->of_node,
-> +				  "performance-controller", 0);
-> +	if (!pcnode)
-> +		return -EINVAL;
-> +
-> +	pdev = of_find_device_by_node(pcnode);
-> +	of_node_put(pcnode);
-> +	if (!pdev)
-> +		return -ENODEV;
-> +
-> +	link = device_link_add(ptdev->base.dev, &pdev->dev,
-> +			       DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS);
-> +	if (!link) {
-> +		dev_err(ptdev->base.dev, "failed to add device link\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = panthor_devfreq_init_provider(ptdev, &pdev->dev);
-> +	if (ret)
-> +		return dev_err_probe(ptdev->base.dev, ret,
-> +				     "failed to initialize devfreq provider\n");
-> +
-> +	DRM_DEV_INFO(ptdev->base.dev, "initialized devfreq provider %s\n",
-> +		     dev_name(&pdev->dev));
-> +
-> +	return 0;
-> +}
-> +
-> +int panthor_devfreq_init(struct panthor_device *ptdev)
-> +{
-> +	if (!of_property_present(ptdev->base.dev->of_node, "performance-controller"))
-> +		return panthor_devfreq_init_of(ptdev);
-> +
-> +	return panthor_devfreq_init_platform(ptdev);
-> +}
-> +
->  void panthor_devfreq_resume(struct panthor_device *ptdev)
->  {
->  	struct panthor_devfreq *pdevfreq = ptdev->devfreq;
-> diff --git a/drivers/gpu/drm/panthor/panthor_devfreq.h b/drivers/gpu/drm/panthor/panthor_devfreq.h
-> index a891cb5fdc34636444f141e10f5d45828fc35b51..94c9768d5d038c4ba8516929edb565a1f13443fb 100644
-> --- a/drivers/gpu/drm/panthor/panthor_devfreq.h
-> +++ b/drivers/gpu/drm/panthor/panthor_devfreq.h
-> @@ -8,6 +8,7 @@
->  
->  struct devfreq;
->  struct thermal_cooling_device;
-> +struct platform_device;
->  
->  struct panthor_device;
->  
-> @@ -43,6 +44,19 @@ struct panthor_devfreq {
->  	spinlock_t lock;
->  };
->  
-> +struct panthor_devfreq_provider {
-> +	/** @dev: device pointer to the provider device */
-> +	struct device *dev;
-> +	/**
-> +	 * @init: the provider's init callback that allocates a
-> +	 * &struct panthor_devfreq, adds it to panthor, and adds a devfreq
-> +	 * device to panthor. Will be called during panthor's probe.
-> +	 */
-> +	int (*init)(struct panthor_device *ptdev, struct device *dev);
-> +
-> +	struct list_head node;
-> +};
-> +
->  
->  int panthor_devfreq_init(struct panthor_device *ptdev);
->  
-> @@ -57,4 +71,6 @@ int panthor_devfreq_get_dev_status(struct device *dev,
->  
->  unsigned long panthor_devfreq_get_freq(struct panthor_device *ptdev);
->  
-> +int panthor_devfreq_register_provider(struct panthor_devfreq_provider *prov);
-> +
->  #endif /* __PANTHOR_DEVFREQ_H__ */
-> 
+Feel free to ask me to revert it, ...
 
+Best Regards,
+Petr
