@@ -1,137 +1,265 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E917D267B7F
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Sep 2025 07:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C53E2C0269
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Sep 2025 07:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757577010; cv=none; b=GYbQ8vmNYU3Fkmo0EuXgHCoZGqyXYGHkqXiD/mklZCdxvp9aacHTIknxff6G0fh0dDx9Wqu8ZG27RGLK1UNY97VOj0TiKLEJ6w61Rqj1UtLPNMN92mejuYHV6UdcQ6M/LvGYJu5hhPIODUTZ80170wJfI6ArNKgiOCmIp4WlUBo=
+	t=1757577397; cv=none; b=Sv5OWkHrmugI5TC0Mh7UuVm/bFHqMDhwn9BRh+Lvchbh97q4dKZyPlAC22FrFUxCbBJRI2+Nj8XgxShBTdInZsBqm2tnnMhp1ajjkoyeNosbDLY/r2nULyTTJzO+3e6LmY1CJgl03RsoQyGddWZt3FHcdIrVD8t81UVhd+lxLJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757577010; c=relaxed/simple;
-	bh=IpjMEeOicXD1vokeMuiFBcT1efgJJH75myvJXPDIAFg=;
+	s=arc-20240116; t=1757577397; c=relaxed/simple;
+	bh=iQptQ7gTbmXxopSjxBxOANU0HqRVgiApdv76+PN6Eag=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rFGR+cy5UDZ4E7tEmsnpkxKyezv46dtfm57DqW/vNC/r1BpdPAadIhe94/R3g7apcGfcD3GSljCu0n12K35UYixla5PTgVO2w4KEWTsK1q2asCpji6KAChbyTbFPigL2wbsG0amQ2/uaQZp5L94V82KoGV3jiFMS5gXmSGhswD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9udmL7w; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=JOYkTzEYntyBtDCdItz77PTN1OwbuLJI6EbFwXTiAf3PEGnxh5HB5Wb/BZ3LegkaiyHpSOvQZKd+r8jOPFX9/f5nonPqAK4zLUfe2w3eFRgh5v8kRiA0drYTwxPpC+wdsq8E43JvztVOSVU/3WHcRSlCGe8Frcpqii9BaH3eFNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C1dkI6Oo; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9udmL7w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81F69C4CEFF
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Sep 2025 07:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757577009;
-	bh=IpjMEeOicXD1vokeMuiFBcT1efgJJH75myvJXPDIAFg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=E9udmL7wG1Pj+O0gE3PKBTzXQtZHl9shxjaa5nTAzbjU+ksM5axbIo+RYIz0XpMxv
-	 1C8ogLatmyTaSDE+xkrwMDL/71V2HjTzvDZmRqeulQwGL91Pmmvigbcj2f4UKUS9TE
-	 LE4xLOcXw8MY4BZnYJ1FkMiMQ+NJFzNI5eQs2fNxOTlvOJXafOJQCltE+Pi4CEC2kg
-	 dhPIxJvrbq5rxoSIe6C/f4NjEwvMwcVs8trVaoBSwj/BZ67ha2JlOOZKfG2mySRl33
-	 gU/D5k4K1bR5hWnvOgWC/oQrmHN3BDWvb0fLYnKlnpPjXcZqwN/gXH64YOgkwGWSkQ
-	 uhF9rjrAgu09w==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-33c9f2bcdceso3233981fa.2
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Sep 2025 00:50:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW/6pzhq3Gs/SLfHXKtI5TjjtP+XCkMSxD6xuphEMS1X40LR7vZIswnjhZ04I7JDedmUxKcbXlk+VBPkUzmoTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhKkmjc8AmL30JYH14uOk7MOYpOMAnaDm3Vmy9nfNBYjJouIZ8
-	543TsDM3pzUyj4+y1YvXTygBBoNKBfSTUAg+P7RfcweaoIVWGtKDxJdmTAQHdDpsHcmUKGThyfX
-	Adymqge+CaIfGUruoOBnxtqMisTHolAw=
-X-Google-Smtp-Source: AGHT+IHFDwUeB357yOplEkYnGxYgkcZ7818jbfLu17DrZVUhMgvaTcpAsKrW/JsFP+hRuRZfIQ5v1KUvU7zHQVro+lk=
-X-Received: by 2002:a05:651c:19ab:b0:336:e32f:79ed with SMTP id
- 38308e7fff4ca-33b55f3292amr62325751fa.29.1757577007577; Thu, 11 Sep 2025
- 00:50:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C1dkI6Oo"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-746d3b0d926so171349a34.1
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Sep 2025 00:56:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1757577394; x=1758182194; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gcHgyDkcspweVIk7kRhliSymO4E+l9imWizmqVG+IwQ=;
+        b=C1dkI6OoBl84RGEkPIel8mXic7XqikfRUDV7psj/UWtUjQYMj4vonX53DwUYqjiMsT
+         fAR3QR1UKz4Txn7pTSSQ1zSwljsLSGqIE2UQe1ebOdFMU/EmeUo2KasMEPJ+8hrn7Waa
+         /cDvCmmvjI8NnK+j+0iQwxeido3CA6/o/7tpiodBIVsIhA/2q3e0aqcUguenA59OuwPz
+         147MQNleCaTsFIZFd9AWHX3m7fOBy+P46SewE3hwLGH++x4mViBEL6DSh9KipnYyalyL
+         sCSkUS8ctdj4xxU6mNnNtUPtT9ys9B5Fy2fniCKDjQXT3wDpJCbTnjtty5dg0g6JgpqK
+         jjBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757577394; x=1758182194;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gcHgyDkcspweVIk7kRhliSymO4E+l9imWizmqVG+IwQ=;
+        b=O/8nFoTkfXw7DjV0YD26aluHJoduzR+ROr+yf2kuE1EMf4e7EYRvOT7YxYp2IyiVXc
+         1nbKfhiSk29XQrXS8j/DhPb3BJqv9bZH8fVBi5kd6kdxEc3xBNdbj7tGM0CVMWc/V9GD
+         7FZD2sWlIIRry6d2uyZCGYzkDKG+Y1+cmmFZF+iSkop2cm/HK1CDTM6izQxlM+soBFtv
+         6CwJrJUH8zZNfQtuG9z6+tKUsc2uE+7/ZrePXJEX8w6HGCwVLQaFnkF4bxE3BQ1VBidK
+         jPX3idFdPhlyP6bmq/dImTeOBTeYpSOMLCGsVxwgY5ycJ9PV1ZEOj4s4C1qdAjmr5toS
+         YfRA==
+X-Forwarded-Encrypted: i=1; AJvYcCV44cMbx1EB8z+gLeTwEjQ6MV2UYniJqntidjb6VRNMpCxKY1FkeqBlGeYzNlmdYufhIrxA1nBzUc0Vt5gh3ao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyrQWUR6GtnYB4blCDStn1zilB0N6eOWWscYY5DfwJ1qclNqEK
+	4Oe+yiCQOO5Ntxm5A6SQULHwXFE9UuB1m0y75HK2fwx1FG26epSD1GI8b4+P2kbjXLGWq/nimrD
+	27kxE+m0EB632wZPfVtwVCqLERkKvQhzt82ukAzzSmA==
+X-Gm-Gg: ASbGncuhZfcO6tGD/F4/n2aLGhpvj4pqRR4RaVbbTuZO6ygxZ63pEACfGfp8L7pI7F0
+	m1YFbz0Mn8VntytzcCyeIZVZXuADn+Zpp0iIG5mDEdtdXTugfualFU1xnSE4wyq6QlK6pMS0+LL
+	p+rJJ1dwHba4ugvsjC3DplHjbhJ3cSilNjdI8PFTMDFM+h97blbOMzJDIZXYaqCoG6ORwKS47am
+	21sG5wsxLbxhfOAvYY=
+X-Google-Smtp-Source: AGHT+IG9ZMBIi6nBb96Zia9gSrtbi78A+YjqGi7eJdd43h+fxHz0Dsu/RXvlzn6cV1ytlcXB923nl0QOCRHh3jcErhM=
+X-Received: by 2002:a05:6830:67c5:b0:746:d4d3:c8b3 with SMTP id
+ 46e09a7af769-74c720f972bmr10157224a34.15.1757577394426; Thu, 11 Sep 2025
+ 00:56:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250905001157.it.269-kees@kernel.org> <20250905002418.464643-5-kees@kernel.org>
-In-Reply-To: <20250905002418.464643-5-kees@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 11 Sep 2025 09:49:56 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG+PtcXE5gkQ278vZ2qQojfc3Cv20WJKZ8AAQ9BvC2-zw@mail.gmail.com>
-X-Gm-Features: Ac12FXx4UpEZ-6GHZevGFAVEALdEtX7dFx5vYaaH3YbDpSQblo8SKul85yW7WjU
-Message-ID: <CAMj1kXG+PtcXE5gkQ278vZ2qQojfc3Cv20WJKZ8AAQ9BvC2-zw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] arm: Add ARM 32-bit Kernel Control Flow Integrity implementation
-To: Kees Cook <kees@kernel.org>
-Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>, 
-	Richard Biener <rguenther@suse.de>, Joseph Myers <josmyers@redhat.com>, Jan Hubicka <hubicka@ucw.cz>, 
-	Richard Earnshaw <richard.earnshaw@arm.com>, Richard Sandiford <richard.sandiford@arm.com>, 
-	Marcus Shawcroft <marcus.shawcroft@arm.com>, Kyrylo Tkachov <kyrylo.tkachov@arm.com>, 
-	Kito Cheng <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Andrew Waterman <andrew@sifive.com>, Jim Wilson <jim.wilson.gcc@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Dan Li <ashimida.1990@gmail.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Ramon de C Valle <rcvalle@google.com>, 
-	Joao Moreira <joao@overdrivepizza.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Bill Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
+References: <20250910-qcom-tee-using-tee-ss-without-mem-obj-v11-0-520e867b3d74@oss.qualcomm.com>
+ <20250910-qcom-tee-using-tee-ss-without-mem-obj-v11-5-520e867b3d74@oss.qualcomm.com>
+In-Reply-To: <20250910-qcom-tee-using-tee-ss-without-mem-obj-v11-5-520e867b3d74@oss.qualcomm.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Thu, 11 Sep 2025 09:56:23 +0200
+X-Gm-Features: Ac12FXyIP0WtPINFQV_xAL4fJ4Nl0DDdmiM8KSkVr4BQuuRBN2IjnhZ18XWv8gI
+Message-ID: <CAHUa44EsGNuYzjZo_kBJfa6O6u0o14tfDNo2fhSeo+g0BpwX7Q@mail.gmail.com>
+Subject: Re: [PATCH v11 05/11] tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+Cc: Sumit Garg <sumit.garg@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Apurupa Pattapu <quic_apurupa@quicinc.com>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org, 
+	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
+	Sumit Garg <sumit.garg@oss.qualcomm.com>, Neil Armstrong <neil.armstrong@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 5 Sept 2025 at 02:24, Kees Cook <kees@kernel.org> wrote:
->
-> Implement ARM 32-bit KCFI backend supporting ARMv7+:
->
-> - Function preamble generation using .word directives for type ID storage
->   at -4 byte offset from function entry point (no prefix NOPs needed due to
->   4-byte instruction alignment).
->
-> - Use movw/movt instructions for 32-bit immediate loading.
->
-> - Trap debugging through UDF instruction immediate encoding following
->   AArch64 BRK pattern for encoding registers with useful contents.
->
-> - Scratch register allocation using r0/r1 following ARM procedure call
->   standard for caller-saved temporary registers, though they get
->   stack spilled due to register pressure.
->
-> Assembly Code Pattern for ARM 32-bit:
->   push {r0, r1}                ; Spill r0, r1
->   ldr  r0, [target, #-4]       ; Load actual type ID from preamble
->   movw r1, #type_id_low        ; Load expected type (lower 16 bits)
->   movt r1, #type_id_high       ; Load upper 16 bits with top instruction
->   cmp  r0, r1                  ; Compare type IDs directly
->   pop [r0, r1]                 ; Reload r0, r1
+Hi Amir,
 
-We could avoid the MOVW/MOVT pair and the spilling by doing something
-along the lines of
-
-ldr   ip, [target, #-4]
-eor   ip, ip, #type_id[0]
-eor   ip, ip, #type_id[1] << 8
-eor   ip, ip, #type_id[2] << 16
-eors  ip, ip, #type_id[3] << 24
-ldrne ip, =type_id[3:0]
-
-Note that IP (R12) should be dead before a function call. Here it is
-conditionally loaded with the expected target typeid, removing the
-need to decode the instructions to recover it when the trap occurs.
-
-This should compile to Thumb2 as well as ARM encodings.
-
-
->   beq  .Lkcfi_call             ; Branch if typeids match
->   .Lkcfi_trap: udf #udf_value  ; Undefined instruction trap with encoding
->   .Lkcfi_call: blx/bx target   ; Execute validated indirect transfer
+On Thu, Sep 11, 2025 at 5:41=E2=80=AFAM Amirreza Zarrabi
+<amirreza.zarrabi@oss.qualcomm.com> wrote:
 >
-> UDF Immediate Encoding (following AArch64 ESR pattern):
-> - UDF instruction immediate encoding format:
->   0x8000 | ((ExpectedTypeReg & 31) << 5) | (TargetAddrReg & 31)
->   - ExpectedTypeReg indicates which register contains expected type (R12 = 12)
->   - TargetAddrReg indicates which register contains target address (0-15)
->   - Example: udf #33154 (0x817A) = expected type in R12, target address in R2
+> For drivers that can transfer data to the TEE without using shared
+> memory from client, it is necessary to receive the user address
+> directly, bypassing any processing by the TEE subsystem. Introduce
+> TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT/OUTPUT/INOUT to represent
+> userspace buffers.
 >
-> Build and run tested with Linux kernel ARCH=arm.
->
-> gcc/ChangeLog:
->
->         config/arm/arm-protos.h: Declare KCFI helpers.
->         config/arm/arm.cc (arm_maybe_wrap_call_with_kcfi): New function.
->         (arm_maybe_wrap_call_value_with_kcfi): New function.
->         (arm_output_kcfi_insn): Emit KCFI assembly.
->         config/arm/arm.md: Add KCFI RTL patterns and hook expansion.
->         doc/invoke.texi: Document arm32 nuances.
->
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
+> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Tested-by: Harshal Dev <quic_hdev@quicinc.com>
+> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
 > ---
->  gcc/config/arm/arm-protos.h |   4 +
->  gcc/config/arm/arm.cc       | 144 ++++++++++++++++++++++++++++++++++++
->  gcc/config/arm/arm.md       |  62 ++++++++++++++++
->  gcc/doc/invoke.texi         |  17 +++++
->  4 files changed, 227 insertions(+)
+>  drivers/tee/tee_core.c   | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/tee_drv.h  |  6 ++++++
+>  include/uapi/linux/tee.h | 22 ++++++++++++++++------
+>  3 files changed, 55 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> index f8534a00c56c..bb2e3a6c23a3 100644
+> --- a/drivers/tee/tee_core.c
+> +++ b/drivers/tee/tee_core.c
+> @@ -457,6 +457,17 @@ static int params_from_user(struct tee_context *ctx,=
+ struct tee_param *params,
+>                         params[n].u.value.b =3D ip.b;
+>                         params[n].u.value.c =3D ip.c;
+>                         break;
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+> +                       params[n].u.ubuf.uaddr =3D u64_to_user_ptr(ip.a);
+> +                       params[n].u.ubuf.size =3D ip.b;
+> +
+> +                       if (!access_ok(params[n].u.ubuf.uaddr,
+> +                                      params[n].u.ubuf.size))
+> +                               return -EFAULT;
+> +
+> +                       break;
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+> @@ -490,6 +501,11 @@ static int params_to_user(struct tee_ioctl_param __u=
+ser *uparams,
+>                             put_user(p->u.value.c, &up->c))
+>                                 return -EFAULT;
+>                         break;
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+> +                       if (put_user((u64)p->u.ubuf.size, &up->b))
+> +                               return -EFAULT;
+> +                       break;
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+>                         if (put_user((u64)p->u.memref.size, &up->b))
+> @@ -690,6 +706,13 @@ static int params_to_supp(struct tee_context *ctx,
+>                         ip.b =3D p->u.value.b;
+>                         ip.c =3D p->u.value.c;
+>                         break;
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+> +                       ip.a =3D (__force u64)p->u.ubuf.uaddr;
+
+There's a warning on arm32:
+drivers/tee/tee_core.c: In function 'params_to_supp':
+drivers/tee/tee_core.c:821:32: warning: cast from pointer to integer
+of different size [-Wpointer-to-int-cast]
+  821 |                         ip.a =3D (__force u64)p->u.ubuf.uaddr;
+
+I think you need to cast to unsigned long instead.
+
+Cheers,
+Jens
+
+
+> +                       ip.b =3D p->u.ubuf.size;
+> +                       ip.c =3D 0;
+> +                       break;
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+> @@ -792,6 +815,16 @@ static int params_from_supp(struct tee_param *params=
+, size_t num_params,
+>                         p->u.value.b =3D ip.b;
+>                         p->u.value.c =3D ip.c;
+>                         break;
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
+> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
+> +                       p->u.ubuf.uaddr =3D u64_to_user_ptr(ip.a);
+> +                       p->u.ubuf.size =3D ip.b;
+> +
+> +                       if (!access_ok(params[n].u.ubuf.uaddr,
+> +                                      params[n].u.ubuf.size))
+> +                               return -EFAULT;
+> +
+> +                       break;
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
+>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
+>                         /*
+> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
+> index 824f1251de60..7915e8869cbd 100644
+> --- a/include/linux/tee_drv.h
+> +++ b/include/linux/tee_drv.h
+> @@ -82,6 +82,11 @@ struct tee_param_memref {
+>         struct tee_shm *shm;
+>  };
+>
+> +struct tee_param_ubuf {
+> +       void __user *uaddr;
+> +       size_t size;
+> +};
+> +
+>  struct tee_param_value {
+>         u64 a;
+>         u64 b;
+> @@ -92,6 +97,7 @@ struct tee_param {
+>         u64 attr;
+>         union {
+>                 struct tee_param_memref memref;
+> +               struct tee_param_ubuf ubuf;
+>                 struct tee_param_value value;
+>         } u;
+>  };
+> diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
+> index d843cf980d98..0e3b735dcfca 100644
+> --- a/include/uapi/linux/tee.h
+> +++ b/include/uapi/linux/tee.h
+> @@ -151,6 +151,13 @@ struct tee_ioctl_buf_data {
+>  #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT        6
+>  #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT 7       /* input and outp=
+ut */
+>
+> +/*
+> + * These defines userspace buffer parameters.
+> + */
+> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT   8
+> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT  9
+> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT   10      /* input and outp=
+ut */
+> +
+>  /*
+>   * Mask for the type part of the attribute, leaves room for more types
+>   */
+> @@ -186,14 +193,17 @@ struct tee_ioctl_buf_data {
+>  /**
+>   * struct tee_ioctl_param - parameter
+>   * @attr: attributes
+> - * @a: if a memref, offset into the shared memory object, else a value p=
+arameter
+> - * @b: if a memref, size of the buffer, else a value parameter
+> + * @a: if a memref, offset into the shared memory object,
+> + *     else if a ubuf, address of the user buffer,
+> + *     else a value parameter
+> + * @b: if a memref or ubuf, size of the buffer, else a value parameter
+>   * @c: if a memref, shared memory identifier, else a value parameter
+>   *
+> - * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref or value is used=
+ in
+> - * the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value and
+> - * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref. TEE_PARAM_ATTR_TYPE_NO=
+NE
+> - * indicates that none of the members are used.
+> + * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref, ubuf, or value =
+is
+> + * used in the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value,
+> + * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref, and TEE_PARAM_ATTR_TYP=
+E_UBUF_*
+> + * indicates ubuf. TEE_PARAM_ATTR_TYPE_NONE indicates that none of the m=
+embers
+> + * are used.
+>   *
+>   * Shared memory is allocated with TEE_IOC_SHM_ALLOC which returns an
+>   * identifier representing the shared memory object. A memref can refere=
+nce
+>
+> --
+> 2.34.1
 >
