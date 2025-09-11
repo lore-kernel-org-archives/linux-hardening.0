@@ -1,45 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEA82459C9;
-	Thu, 11 Sep 2025 07:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CDE22D4F1
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Sep 2025 07:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757575042; cv=none; b=EnTCfYYUDWnpeIhWwkywhwOOsY2zCtSQDV0FX2ZKIS7t8bQrNvsDIxuYcM+EtWpFyeVbYU1n5eHZYjRUPuZIn9CfPoQyA9RXBP+sBGFL+uVyktx1Q4wAoh6xWfVyfkTQHy8kptDid3IEsIoVSxD3eXKW8y+0wkc7oKIKr7Iyks8=
+	t=1757575788; cv=none; b=I7d8VhT3ZZAGCpQ1zRCmRRoqB2VfGswD1WRzU7B+ja38aBn0WInPhKf5worIwjXmr05pcBXsj8wKIGMaqMCOG8DeNdFfiL5WsXiajI67EYZuhSOXSMZEINrym91If4p0TrdUDxqI3ahZlHkFXSyI941WMdTE13Z5jO5zezi8ixg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757575042; c=relaxed/simple;
-	bh=3wMR5YUirmLoPyGcn3OfRq7EbTozCuJg0PvJ2aBv9I8=;
+	s=arc-20240116; t=1757575788; c=relaxed/simple;
+	bh=+EhBbp80jwBMA2nDG91LSVQ9PIRj7PpTpIe5yr09xfc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uwJ036wkKP/KUpq9yJniH+M7/n5zZBi4DQ1f3d31qgBla1HT+BSM/7skOgvexVMxVkJ/HHKWIi659FqWR/p95g8zPxn8VL4E3drEYFLjXA9EemInkpZo8EHSE9Ll6U4C8/yHq/bQV5lUrmm5GaRM/bNeJB+xaVwLFJlPEjKc0d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CnlyHtvq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CgageHzJyiJ/bCB0tqpa0KUKlp0zotS3r/YUMdJ6g8awkSslA4Q898ZJ4kAp3yPermvHzzXsaL3d8Gup/pJugEMW7kSTKV9dHmO0ATVfHfPfymqaH2HjpO7j6mEwWhaivLOX70kfeYLVdxg1Dr6YMseAb7ShVzX/TD0/i1rrwoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DdM4xUVy; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CnlyHtvq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0020C4CEF1;
-	Thu, 11 Sep 2025 07:17:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757575042;
-	bh=3wMR5YUirmLoPyGcn3OfRq7EbTozCuJg0PvJ2aBv9I8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CnlyHtvqisURuISsrxVijo3amDU6SNauC29tvDoM5DfB2RP9YUPd7RIV6OvzUSYJU
-	 h8NdDOFYfkWVxoPnC2KijSWlEBhSsrRVNcYOdSRWfWXfTfRTocu8rq6NZzPLtZ4OxS
-	 wIBPZwcz5jD+wncSqii9eY+jk5QAfPB3377uPxHjpE4bKFTLHlvGIuzd1blS6J0XXb
-	 clg7fTSP6fn4Xjcyms/h/IZR0fKwvxDF9LgPPxif7qfaT0n3SjIWAUxt1ncacOOEG7
-	 pN7yvRZM8jxh03qk7W3fV+ulwgQE3mmZpcUFSvGqMoVwN+Pj77ILPgDmtMWIU9HfVp
-	 LlREz9Hyd4Upw==
-Date: Thu, 11 Sep 2025 09:17:19 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-Cc: git@amd.com, michal.simek@amd.com, alexandre.belloni@bootlin.com, 
-	Frank.Li@nxp.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	kees@kernel.org, gustavoars@kernel.org, jarkko.nikula@linux.intel.com, 
-	linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, radhey.shyam.pandey@amd.com, srinivas.goud@amd.com, 
-	shubhrajyoti.datta@amd.com, manion05gk@gmail.com
-Subject: Re: [PATCH V6 1/2] dt-bindings: i3c: Add AMD I3C master controller
- support
-Message-ID: <20250911-zippy-lavender-raccoon-e5326a@kuoka>
-References: <20250910112954.553353-1-manikanta.guntupalli@amd.com>
- <20250910112954.553353-2-manikanta.guntupalli@amd.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DdM4xUVy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=xj0VToSUfAMrjV3lI0PgVBsKZDh0ZuveTkoTBq9az0I=; b=DdM4xUVy4j1QG5NTOabx1j2kCR
+	wyIkLHJtD2Xx50St1yOdniH4EUvTPcfGcAKU5aAScWv/6J7oL8KGuDVTF3Od+Iy8vIhbk/SlELIoh
+	9+8T3u+rT2EXgX2ePVew46TEl43lRzYLqNCA/OHAHcsJdK1F6ovBdR+JJOC6V24HoQbN5fY004sWP
+	8IDa6CG+JxFXDs9DCvci3mLCYspWDu8kiFV2YpC/F1lWPQWBT+3FesBMusv/eUY/OpP4iJ4qEQ91x
+	PozVsB4HTRHp+FKRh22bXy9nk37fuSH4NvS1QemMooAynIUgsvzCkuRFQvSBYJFjdtaCi6DwuHxcB
+	s7bVljGg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uwbkO-00000006c3v-3f2m;
+	Thu, 11 Sep 2025 07:29:37 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 572B0300342; Thu, 11 Sep 2025 09:29:35 +0200 (CEST)
+Date: Thu, 11 Sep 2025 09:29:35 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
+	Richard Biener <rguenther@suse.de>,
+	Joseph Myers <josmyers@redhat.com>, Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Dan Li <ashimida.1990@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ramon de C Valle <rcvalle@google.com>,
+	Joao Moreira <joao@overdrivepizza.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	"gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v2 2/7] kcfi: Add core Kernel Control Flow Integrity
+ infrastructure
+Message-ID: <20250911072935.GW3245006@noisy.programming.kicks-ass.net>
+References: <20250905001157.it.269-kees@kernel.org>
+ <20250905002418.464643-2-kees@kernel.org>
+ <65CF25F7-E9F5-41C8-9316-F7A461FD35D0@oracle.com>
+ <202509101705.92474D66@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,39 +69,23 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250910112954.553353-2-manikanta.guntupalli@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202509101705.92474D66@keescook>
 
-On Wed, Sep 10, 2025 at 04:59:53PM +0530, Manikanta Guntupalli wrote:
-> Add device tree binding documentation for the AMD I3C master controller.
+On Wed, Sep 10, 2025 at 08:05:11PM -0700, Kees Cook wrote:
 
-and here you reflect the resolution of Rob's comments, otherwise you
-will get the same question.
-
+> > > +/* Check if a function needs KCFI preamble generation.
+> > > +   ALL functions get preambles when -fsanitize=kcfi is enabled, regardless
+> > > +   of no_sanitize("kcfi") attribute.  */
+> > 
+> > Why no_sanitize(“kcfi”) is not considered here?
 > 
-> Signed-off-by: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-> ---
-> Changes for V2:
-> Updated commit subject and description.
-> Moved allOf to after required.
-> Removed xlnx,num-targets property.
-> 
-> Changes for V3:
-> Updated commit description.
-> Corrected the order of properties and removed resets property.
-> Added compatible to required list.
-> Added interrupts to example.
-> 
-> Changes for V4:
-> Added h/w documentation details.
-> 
-> Changes for V5:
-> Renamed the xlnx,axi-i3c.yaml file into xlnx,axi-i3c-1.0.yaml.
-> 
-> Changes for V6:
-> Corrected the file name for $id in yaml to fix the dtschema warning.
+> no_sanitize(“kcfi”) is strictly about whether call-site checking
+> is performed within the function. It is not used to mark a function as
+> not being the target of a KCFI call.
 
-Optionally here you put that resolution...
+I'll once again argue that __attribute__((nocf_check)) (aka. __noendbr)
+should have that effect.
 
-Best regards,
-Krzysztof
-
+If there is no ENDBR, then no amount of kCFI preamble will make the
+function (indirectly) callable.
