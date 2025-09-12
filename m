@@ -1,63 +1,63 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-yx1-f51.google.com (mail-yx1-f51.google.com [74.125.224.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755BF313533
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 15:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB8630C621
+	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 15:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757689850; cv=none; b=sQvFDkZ09ADfcQ1G0LxTHyersVYQvGhgUC1yKUCTpY5kxlilOZLRvu4o0LY+2CDAKziU6Om8w67agq3v9L1c26j1YcwZohSHpM5Vxw5iFUmBi3w5AZV3xqyHC8/KWOPT4zF/CrkAFJ9+/tdXaB4xa+9Z8sp2WT4qpVFlvJ3mQuY=
+	t=1757689856; cv=none; b=a92QpVexjNltiOSXs2AWTYuKRHtcN0JpGLm+xzfa63hZV8X2Qsg/7EbfSEAbMoKXaAJBtKCBEM6Ue8pjMmgSK7UBHyZiWaYf8+9yD3m1bk7yAeDdqwtwXi/1TO2sTVYfcH6lP/GPT87IMPxMloJKluQooRMt1+r5vzDUFxpkILM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757689850; c=relaxed/simple;
-	bh=/BXmkvpKDtyn0qN8V/YK7rPLmRpgpvD9OPV5hibBmzU=;
+	s=arc-20240116; t=1757689856; c=relaxed/simple;
+	bh=mqm9C4r9CGB+Ni8ye2QxHYk0tRre6qbdyx5buxGNNkE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lI+WR6rIi82V7eI9ZtS1O1X0MV/dKGATvJ3TIeOIruKR6PGCYJY4pRRtsJ1PxnRLB7cayTGGuoJpUSmmFXd8wtJJ5ux11GmW/ZhbKfyC0n4w0Cr2iw1d/sUpDexEe+GJn4cuFx8EKdJoi3+g3CJIkqq+A7Ay+FXkGWHHOQd/Cy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YZypKfUU; arc=none smtp.client-ip=209.85.128.180
+	 MIME-Version; b=sLosvbpzI0wJKewo5GaiRID9Nxib+eVaraUlg9r+7CN2iaZxvWnsEpJBnP5NXgNxhftLci1l4LnOrsc1b7hDIUNLIkg61FD/eWtIxVw2kh2l7CyFGhWBp1LeCA8mWHuMUYSRhlmp34eSjwrOeBidOq0iEFEicMs8QceHTN0aTXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dj9E4H+n; arc=none smtp.client-ip=74.125.224.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YZypKfUU"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-71d6051aeafso14662127b3.2
-        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 08:10:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dj9E4H+n"
+Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-606b375eeb3so1037025d50.1
+        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 08:10:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757689847; x=1758294647; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1757689853; x=1758294653; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uvjoC9HrZ6XyeC1MmkaG/lWnbuRS5G1sVQIYvweJDZo=;
-        b=YZypKfUUilMWvSOC5tKJEyTgzwdJPYqeNXJf9FaJuF+EXB5614ExOqocoFR2zokgth
-         z3v+NG9SaCReUJAEdIU5jm6VnckPGRDxYmiM9LwJagc7Bpa5LgpuBr7qnGwepz712IiT
-         mH8TKsy2EmsmpRajtRjKlT/mJCeGbYpwZvepubkvev3TsBNjKxOSdSFlSd1w6aEuZ8Vu
-         GsoRgc6QC8knFhDDZrEYduQSljdhI9SK3vYc/giECpsxh7v/aR20rIV4kGmo+TLP4xsp
-         laTJy7nJ6KfD276gyuuXGUDUPP7scjNJRSCam+HDlAUrGAz0C9rIOBc0q2Ixh1snPk6r
-         Avzg==
+        bh=zRFg2hFdscTgaOHG8cpymzmUrui3DhwhCxVktuuhhLc=;
+        b=dj9E4H+no8XAqg107yE5TNeSG+7gi0ZtZiDlPOcflDzIR1+cD5ThGatjldRUsxTtat
+         qsTWvqAmnIlhuZw9RPmraQ/Cx7iBIxhdmSzYgJDAK5QVJahT98MGfzNykqnXeV/b31+9
+         h++zS/gU6SKeXjg5brrSfGSsvl1PaX+WJOrgrn8EacU2DucpbwozB5FHqgr0oZaRg3YK
+         AocMhhxbwq8kDTnqLAe9jjRnLeQOqyfCF78yohY6/ZFBNMsiuzkhc9T96c+JCUdo7AOy
+         VeAReLqohOjy1pW/qm2jDi36GgHfKnCwMgknOhCynzopGAPvqRB2ptx64+g1t3TdET1E
+         mwZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757689847; x=1758294647;
+        d=1e100.net; s=20230601; t=1757689853; x=1758294653;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uvjoC9HrZ6XyeC1MmkaG/lWnbuRS5G1sVQIYvweJDZo=;
-        b=VX+DMqEnI3wzZMHF5lsKNnFFZJoAsmcvK7KnKjI2RUK8/xQJ/h9GmOtoNBjC6Ka7l5
-         D+vvJJ/LOgcORK6+lTkUzdf8SzW1zzGVMuQ6aKtaeZr0jBF7vDWW3p7vnYLvxHfQ1NDA
-         18FFfTb4r90DFxKFKis7oyM6u6ie/SXpkrElhyNHdBajfH/c1xLAnXA7daYtPTSyXe+X
-         SP0OkZ03wCCdFFjokRRHyW2moqwXd+KzKvq/DotUhRArUC7zj32EeCTlxCydWc3I7D1v
-         GJjLsxneRhnNJhgLyemwBV95h37jIFlYDqoD6nzoXi/8WLuZ5VC7bRp/E7k0OGMXN/Vc
-         Y6zw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjq3gsQyFtFWE1ZEFHgNa+gfwBnilBo5tVgcXZz3EFWp2dvX1CcjC4KkEUY0Nb0jF5eXiqsKt2MNtPD/yvtdI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD8y5Dw8XiiPK62IAbgInBdJ98gOiDfoC/1rUk3hMJNKE8t/5C
-	g+ib42DeaBt7iPjQryvetGdGt5EQOqV4YgidvKg7QRk9r+TsMH+MrvmCYJylHvJ3+xs=
-X-Gm-Gg: ASbGncv0P4o3pvDeuGqJh9++jcI1l/vs/+r/g9ORW3l07mYhcfi4A6j9VuFFyQhBiN2
-	ippxrGO9Yn52lyTvJbpTooJlLcFuuMK0HeBmei9TG5H/OqcReC/JMMkMVLIWhS3ERxYN27Kfwqe
-	nKfUno32Q40Ngg19fZiwznWaEd20OAOU3yJhiwhNWU0kjgZQr185lV3KWNqtpNqQDb96fEA/fVd
-	y1zxkZV90zYvlmdhcL8fO2BpWL3CB8P6bLN+WIBrFpHkzHB8Sl0pHO0AylC7dKqkqwJ7a8kXwvJ
-	Hr8qjuvVNqWniWMoAMzpf/pM+BqG/RJxV9wy+3vAdkZOYawP0Jw9Mz1fMF16ldp4J/hGCDCnDjn
-	fPGtPwQscsy5AXrhRktxMrghzCzTr2ogGyQ==
-X-Google-Smtp-Source: AGHT+IG0Y2LxTvBY/AtHJvp89fVFaBOgxCKmySrObEvM5zSsJDKwSvyDpIHnZ+Ay7rKBasM7LP2xug==
-X-Received: by 2002:a05:690c:768a:b0:731:1bc7:7830 with SMTP id 00721157ae682-7311bc77c1fmr16987957b3.23.1757689847322;
-        Fri, 12 Sep 2025 08:10:47 -0700 (PDT)
+        bh=zRFg2hFdscTgaOHG8cpymzmUrui3DhwhCxVktuuhhLc=;
+        b=JS6qi0vXw/MmVRzuCwfjNDPEnyop1gC1FLD7VyFLE5fpFgSF0j8UQrFA8FoQUh6r9A
+         jHA40gSBYtGKvszJl5LBEo9zqKPUhCtHT/RkJRMF2wiN+wTeKGSBoXWTKiw93i9MyFgO
+         Z+yDvyAApBnAViVPEwRHowQRuZAaLvRtt9SiKZCuvcR5UruoWRhgAwXcPzH8852tEbzn
+         BCvz5FHz9jve2SlQYA8DTAYEETmseLdXyXYkDIywwm7+J188eJdKkjJXQzO+JOvMvndm
+         I7kPBc4ymi2KlgDuBmWrH+SqdIZIAxlIHa5TJeENCHz9Hn8BtaTGEK1fgkpWQNl+wFMG
+         sekA==
+X-Forwarded-Encrypted: i=1; AJvYcCWqw5XIs8ffVRcdHwZuMpSuclkahX2VIo0Lb2DgOUIAMvNBlnwZ7XTdeWOgKqdKtaAuftpXkvmWHraAviZOfLs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6gfIiVKVADSfbOitoNu9GFzMV21EA693P6XvdwWYFdZxrrpXH
+	hN+G5LWjBDXjTqVO9uDvFwd60Hy2ROsi4Bq79c/W+Qz89JICiUmj/Hyrls1Nu9iQGaw=
+X-Gm-Gg: ASbGncs3U2HqpnuHeUuljdtv5cL+cXkWfXPsVhAUrbFHtlKZuKrfWEdMwiXOiQYjtAD
+	BWbK+tWTXJPKffzhTimXbGaWnmXSon/au5UvRiaBq1IOQGukvqHsyfsxCf1E7n5dUrFWE0zGCRl
+	LDygDw/KjghUdXedXeu1ghbvSQebAXD8nTAjHwUrBLyLZ58mDlx92/tyEaHKvFipmz5Kil/9rNm
+	8lbiS55qtji67gJNKYVZL+oBTB3PICAzpDL1FEj/eyolhRKCGwlo0ZrwtZymerQxM+HM6Lwk+TV
+	cXQJ10fITuHnYEGmjJguhDn5SA0kOkCVofRE7W/xbBi5hXsU0dGyB57ZtNZH8vKQd6F4l374RUI
+	fzwWNfeYEP/cQpEFi0E8HmS0Tj1qKxCnWnQ==
+X-Google-Smtp-Source: AGHT+IGA3TFT+vemEd/ubQxEEhLwHcx7hg7Tn+5tAGBp/Y4gBcPvEFcB1itw15g/ByzT4/+eDheVvA==
+X-Received: by 2002:a53:84c7:0:b0:626:d26c:cca3 with SMTP id 956f58d0204a3-62714ee78ffmr2387133d50.0.1757689852988;
+        Fri, 12 Sep 2025 08:10:52 -0700 (PDT)
 Received: from eugen-station.. ([145.224.119.89])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-624841586c1sm1302244d50.6.2025.09.12.08.10.42
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-624841586c1sm1302244d50.6.2025.09.12.08.10.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Sep 2025 08:10:47 -0700 (PDT)
+        Fri, 12 Sep 2025 08:10:52 -0700 (PDT)
 From: Eugen Hristev <eugen.hristev@linaro.org>
 To: linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -78,9 +78,9 @@ Cc: tudor.ambarus@linaro.org,
 	linux-doc@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Eugen Hristev <eugen.hristev@linaro.org>
-Subject: [RFC][PATCH v3 11/16] mm/swapfile: Have nr_swapfiles as non-static
-Date: Fri, 12 Sep 2025 18:08:50 +0300
-Message-ID: <20250912150855.2901211-12-eugen.hristev@linaro.org>
+Subject: [RFC][PATCH v3 12/16] printk: Register information into Kmemdump
+Date: Fri, 12 Sep 2025 18:08:51 +0300
+Message-ID: <20250912150855.2901211-13-eugen.hristev@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250912150855.2901211-1-eugen.hristev@linaro.org>
 References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
@@ -92,27 +92,106 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-nr_swapfiles is required for debugging the kernel, and needs to be
-accessible for kmemdump into vmcoreinfo.
+Kmemdump requires the prb, data, descriptors and info.
+Add it inside the log_buf_vmcoreinfo_setup()
+
+In the case when the log buffer is dynamically replaced by a runtime
+allocated version, call kmemdump to register the data but call unregister
+to remove the old registered data first.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 ---
- mm/swapfile.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/printk/printk.c | 47 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index a7ffabbe65ef..2ef51da2c642 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -63,7 +63,7 @@ static struct swap_cluster_info *lock_cluster(struct swap_info_struct *si,
- static inline void unlock_cluster(struct swap_cluster_info *ci);
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 5aee9ffb16b9..f75489fd82df 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -49,6 +49,7 @@
+ #include <linux/sched/debug.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/panic.h>
++#include <linux/kmemdump.h>
  
- static DEFINE_SPINLOCK(swap_lock);
--static unsigned int nr_swapfiles;
-+unsigned int nr_swapfiles;
- atomic_long_t nr_swap_pages;
+ #include <linux/uaccess.h>
+ #include <asm/sections.h>
+@@ -964,6 +965,43 @@ const struct file_operations kmsg_fops = {
+ };
+ 
+ #ifdef CONFIG_VMCORE_INFO
++static void log_buf_vmcoreinfo_kmemdump_update(void *data, size_t data_size,
++					       void *descs, size_t descs_size,
++					       void *infos, size_t infos_size)
++{
++	kmemdump_unregister(KMEMDUMP_ID_COREIMAGE_prb_data);
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_prb_data,
++			     (void *)data, data_size);
++
++	kmemdump_unregister(KMEMDUMP_ID_COREIMAGE_prb_descs);
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_prb_descs,
++			     (void *)descs, descs_size);
++
++	kmemdump_unregister(KMEMDUMP_ID_COREIMAGE_prb_infos);
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_prb_infos,
++			     (void *)infos, infos_size);
++}
++
++static void log_buf_vmcoreinfo_kmemdump(void)
++{
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_prb,
++			     (void *)&prb, sizeof(prb));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_prb_descs,
++			     (void *)&_printk_rb_static_descs,
++			     sizeof(_printk_rb_static_descs));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_prb_infos,
++			     (void *)&_printk_rb_static_infos,
++			     sizeof(_printk_rb_static_infos));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_prb_data,
++			     (void *)&__log_buf, __LOG_BUF_LEN);
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_printk_rb_static,
++			     (void *)&printk_rb_static,
++			     sizeof(printk_rb_static));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_printk_rb_dynamic,
++			     (void *)&printk_rb_dynamic,
++			     sizeof(printk_rb_dynamic));
++}
++
  /*
-  * Some modules use swappable objects and may try to swap them out under
+  * This appends the listed symbols to /proc/vmcore
+  *
+@@ -1029,6 +1067,8 @@ void log_buf_vmcoreinfo_setup(void)
+ 
+ 	VMCOREINFO_STRUCT_SIZE(latched_seq);
+ 	VMCOREINFO_OFFSET(latched_seq, val);
++
++	log_buf_vmcoreinfo_kmemdump();
+ }
+ #endif
+ 
+@@ -1214,6 +1254,11 @@ void __init setup_log_buf(int early)
+ 		 new_descs, ilog2(new_descs_count),
+ 		 new_infos);
+ 
++#ifdef CONFIG_VMCORE_INFO
++	log_buf_vmcoreinfo_kmemdump_update(new_log_buf, new_log_buf_len,
++					   new_descs, new_descs_size,
++					   new_infos, new_infos_size);
++#endif
+ 	local_irq_save(flags);
+ 
+ 	log_buf_len = new_log_buf_len;
+@@ -1257,8 +1302,10 @@ void __init setup_log_buf(int early)
+ 	return;
+ 
+ err_free_descs:
++	kmemdump_unregister(KMEMDUMP_ID_COREIMAGE_prb_descs);
+ 	memblock_free(new_descs, new_descs_size);
+ err_free_log_buf:
++	kmemdump_unregister(KMEMDUMP_ID_COREIMAGE_prb_data);
+ 	memblock_free(new_log_buf, new_log_buf_len);
+ out:
+ 	print_log_buf_usage_stats();
 -- 
 2.43.0
 
