@@ -1,89 +1,72 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fra-out-014.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-014.esa.eu-central-1.outbound.mail-perimeter.amazon.com [18.199.210.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29E332F759
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 15:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966A3317708;
+	Fri, 12 Sep 2025 15:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.199.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757689875; cv=none; b=WSZJNF8N7tWStVUzQM23QIilYFzyjCd4AblziHEHGTpeiXAwOI50OjiZeyzqvdgPiSHxb+V5ZjBAMfPhMIuUN6HurlEAUBCThBUvTnjb1FTVZrJ3R74qWIluNuYCLCjr+1Ve69V075lBI5T0ZgXT25wx/QkfZMuXC4WY8pb3lZM=
+	t=1757691086; cv=none; b=YVA6seFQvLkpBQMaMZT6eBpMiOpW7guRWSVT4cNQTNFXlQJ6HaYcfAjM1Iyuqk5IejEJ7aujO1F/DFIuXtCUgs/LsOHk/G7/uduNK7cpEeb5VvaJBkOR0pxJsJyNWqkwTyVmkR9baLjm6No00zbdtOFuUjszFdLTYzoQ3PqWpfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757689875; c=relaxed/simple;
-	bh=SaxLNwPjG7byVt6l+p6cg0if9w4/pkHze4tv4MutSeU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=twafjJyjDnUnAF3JFdP3zCLiCxo8enuDIVVA8olCU+PNiC9GQSbmkXqhX6S+pp3Ll+fxBPfyNJhx3th1GbeCvJ2k+YaMecEHpHg0dPQhi+gUzum5wnpMdaMSMtvZ5jCy3Q8cQcv2Yzr/0eQbCSRHfUSU/WJLa4AKChpMwcXWvRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VjAiS8Xg; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1757691086; c=relaxed/simple;
+	bh=0ZAuq1AeP2txNQ7DcSKMbLVlk6LKgVQRz0GMnBaYbvU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FJRDqjrH10xN3yW49tqRCvIYmSbc65xy8wYx6qmSqBo2UARhEIDiB3J/1BJAf1OA5CBGaeErDHhived21GDsYK2aD4KfjxdxkaMzEhxTwulKEIZYTc88eQD8dngcH3csxtBjrHRlJeY2i4aPukwT5KOcCQEAhW/3CP6vY9N40bI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=Z7hdhhrm; arc=none smtp.client-ip=18.199.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VjAiS8Xg"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-71d71bcab6fso18134677b3.0
-        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 08:11:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="Z7hdhhrm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757689873; x=1758294673; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CNs2h9oqVJ2U55pyNU2xzrbkzs9MTq1sjEL+cOU6gkc=;
-        b=VjAiS8XgtXdzKrUmMwBmLiNbs2EgyM6GmNxbpZai9EZhieVl9fu/1Lp4nbNLwhvzQP
-         8wpPed/SEK5/wi4s35QCMhrNkKEf10JMs8CtILbmBESRW3ZP/etDBFt96wyMychc1chG
-         LcNRs6mLqth8+U9L6omrCfSmW8im4VbBEmJ6MMRLry8tpYVlbhRWTxEq7LPyjHELgiw5
-         QRzsqRBxeqV3e8otKZ9yXyOD3u8wAynvR1NKs5e84W5emwdpMIGepeUzlrRa/PmIBtR1
-         ExuSg/Tt3vScbYc6rEbzRSa8Mh4Me1W17/K4p7HAaaILzo0WrdPPG/tKMKEF6/rhqLCx
-         SX9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757689873; x=1758294673;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CNs2h9oqVJ2U55pyNU2xzrbkzs9MTq1sjEL+cOU6gkc=;
-        b=ecmNZ4nRdrKWw/cDOLQ6/YrybfWoVf+3zpJ/sP4qrWyBjnxuB/EQLQPOIqpDh3iRn9
-         TEz+4ViyHPAOvwqkvsi+mw9uQD4rI5jnmVq/8TmFSVp8fJb2uJvFBNJBpZQaWfntOwBs
-         1QJdBFZccokGiifPj5/zlCC34sk+uGYkymCqhIB34apnJBVM2rkBiHaYHSxA5IodJkb9
-         oq82uCWceFCsUXOby0oJvycMoUblHQpbP2ktLImApvgFA7dVH3wAYRzkRXFAw/ZuA+jv
-         PDe+69QxX2SywsYMDYSZ0+0fdxtke5hL2ZWMRAuioPiIMlhO6vHcoamxqbHdhh+2dOQm
-         sKMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVBhVDXM7LS4NlbadPQ27UqPSo/NnDXinZrwSJI4LHgukUJG8E+S3Yovox2XaYarupUdLofP8bNmlrMTE3DQXY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPr/ZzZnFdKI8+su7BuZAeAyYekLP54vT0t0L+Eep3OInGUhvR
-	UW1eQk19tCXNTQXSmc6BCCtTyC0zMA1rT6dmw9K6pfGoitmzOT7c4mxJeVLjHSZDXCw=
-X-Gm-Gg: ASbGncs9VPNL7LEPw1ZPhiPfDZUnfJRWDrHksU5gpX36WH4KQojhR0NyoW9dkB4ImLa
-	FZl+YWwnDjgYhW2x2lXy613VgfzkzVOoIc9p313xgplvYiuGjMfN/oqDHaaeUHQridxv8vQ17hf
-	y+auzYkfT6hxu5wumTb5FDLL41tchuferHqZdYZpoVIxWlndxL667xe7znI5q7ajO/sI8Au6FKs
-	AzpWS//AlRdWMl1/nJ9A5mIVL6N2m5Fa5f+GAJa+bTjcUThNaZl0sX2XqOU9FmVK6hUP3V99rGS
-	OgWx85nUURXaCwScKUfNMMWroLuUssv9Z8vZeaYkjgougVntLh+omxtwUxl0kVOW8alQ5AkA64l
-	Gbs7rmirA+x8Pa/S1i+VGl5U5dFZFa/vyoQ==
-X-Google-Smtp-Source: AGHT+IEpiP8vlE6JAkelU9ryV0aqgK+NNUoCmR9E9pT/XsbUls6aw+6SDhLPMx2e7d1wIx+kCxhExw==
-X-Received: by 2002:a05:690c:4a0a:b0:71c:1754:2696 with SMTP id 00721157ae682-730659ba7ecmr33141997b3.36.1757689872581;
-        Fri, 12 Sep 2025 08:11:12 -0700 (PDT)
-Received: from eugen-station.. ([145.224.119.89])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-624841586c1sm1302244d50.6.2025.09.12.08.11.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Sep 2025 08:11:12 -0700 (PDT)
-From: Eugen Hristev <eugen.hristev@linaro.org>
-To: linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	tglx@linutronix.de,
-	andersson@kernel.org,
-	pmladek@suse.com,
-	rdunlap@infradead.org,
-	corbet@lwn.net,
-	david@redhat.com,
-	mhocko@suse.com
-Cc: tudor.ambarus@linaro.org,
-	mukesh.ojha@oss.qualcomm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org,
-	jonechou@google.com,
-	rostedt@goodmis.org,
-	linux-doc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Eugen Hristev <eugen.hristev@linaro.org>
-Subject: [RFC][PATCH v3 16/16] dt-bindings: Add Google Kinfo
-Date: Fri, 12 Sep 2025 18:08:55 +0300
-Message-ID: <20250912150855.2901211-17-eugen.hristev@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250912150855.2901211-1-eugen.hristev@linaro.org>
-References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1757691084; x=1789227084;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=mNZQBQctKZfrpwn21cF3GKidAAjq4amyeXpqNxgoRJI=;
+  b=Z7hdhhrm5eB78M+9Fto5jg35y35OUyluwb1tX6tSEnHTZpVd66sOndAK
+   Confvzb95hQUth316ldM75XMVj2uoHcU0zvkwg6cl44DFP802pQ5q4Ome
+   Qage0YLFpVKubhZQlPsy6LPqNnGAgZ+TYNAlYucnS+5p+nZh3lD9Oegnk
+   LRMX6lM98ie0gpY8kj0hKlsfWxthaDC8g63xnsFRHsDokq18ennd7iG92
+   DKEVTQCOjbxIuo2Y9LBxgiihPCs9Dk1rTQLVy0ExuB4L7Dclq+Qo/ehpO
+   3mP+ynwaokVq7x6/yrE4NXkkC8Fn3PJItT66xR+QhjsQKG11JPjI+Znuh
+   w==;
+X-CSE-ConnectionGUID: 7HJlotdaQDe9hzRxj9Xhgg==
+X-CSE-MsgGUID: vzmFUeFfTLq6JhAyVvL6eQ==
+X-IronPort-AV: E=Sophos;i="6.18,259,1751241600"; 
+   d="scan'208";a="1926629"
+Received: from ip-10-6-11-83.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.11.83])
+  by internal-fra-out-014.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2025 15:31:13 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [54.240.197.225:20571]
+ by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.20.211:2525] with esmtp (Farcaster)
+ id 90cf4a3a-92b1-40c8-8a77-c06977ed7ddd; Fri, 12 Sep 2025 15:31:13 +0000 (UTC)
+X-Farcaster-Flow-ID: 90cf4a3a-92b1-40c8-8a77-c06977ed7ddd
+Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
+ Fri, 12 Sep 2025 15:31:13 +0000
+Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
+ (172.19.116.181) by EX19D018EUA004.ant.amazon.com (10.252.50.85) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20; Fri, 12 Sep 2025
+ 15:31:05 +0000
+From: Eliav Farber <farbere@amazon.com>
+To: <luc.vanoostenryck@gmail.com>, <rostedt@goodmis.org>, <mingo@redhat.com>,
+	<natechancellor@gmail.com>, <ndesaulniers@google.com>,
+	<keescook@chromium.org>, <sashal@kernel.org>, <akpm@linux-foundation.org>,
+	<ojeda@kernel.org>, <elver@google.com>, <gregkh@linuxfoundation.org>,
+	<kbusch@kernel.org>, <sj@kernel.org>, <bvanassche@acm.org>,
+	<leon@kernel.org>, <jgg@ziepe.ca>, <linux-kernel@vger.kernel.org>,
+	<linux-sparse@vger.kernel.org>, <clang-built-linux@googlegroups.com>,
+	<stable@vger.kernel.org>
+CC: <jonnyc@amazon.com>, <farbere@amazon.com>, Rasmus Villemoes
+	<linux@rasmusvillemoes.dk>, Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	<linux-hardening@vger.kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>
+Subject: [PATCH v2 3/4 5.10.y] overflow: Allow mixed type arguments
+Date: Fri, 12 Sep 2025 15:30:37 +0000
+Message-ID: <20250912153040.26691-4-farbere@amazon.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20250912153040.26691-1-farbere@amazon.com>
+References: <20250912153040.26691-1-farbere@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -91,70 +74,131 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D044UWA004.ant.amazon.com (10.13.139.7) To
+ EX19D018EUA004.ant.amazon.com (10.252.50.85)
 
-Add documentation for Google Kinfo kmemdump backend driver.
+From: Kees Cook <keescook@chromium.org>
 
-Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
+commit d219d2a9a92e39aa92799efe8f2aa21259b6dd82 upstream.
+
+When the check_[op]_overflow() helpers were introduced, all arguments
+were required to be the same type to make the fallback macros simpler.
+However, now that the fallback macros have been removed[1], it is fine
+to allow mixed types, which makes using the helpers much more useful,
+as they can be used to test for type-based overflows (e.g. adding two
+large ints but storing into a u8), as would be handy in the drm core[2].
+
+Remove the restriction, and add additional self-tests that exercise
+some of the mixed-type overflow cases, and double-check for accidental
+macro side-effects.
+
+[1] https://git.kernel.org/linus/4eb6bd55cfb22ffc20652732340c4962f3ac9a91
+[2] https://lore.kernel.org/lkml/20220824084514.2261614-2-gwan-gyeong.mun@intel.com
+
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: linux-hardening@vger.kernel.org
+Reviewed-by: Andrzej Hajda <andrzej.hajda@intel.com>
+Reviewed-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Tested-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+[ dropped the test portion of the commit as that doesn't apply to
+  5.15.y - gregkh]
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Eliav Farber <farbere@amazon.com>
 ---
- .../bindings/misc/google,kinfo.yaml           | 36 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/google,kinfo.yaml
+ include/linux/overflow.h | 72 +++++++++++++++++++++++-----------------
+ 1 file changed, 41 insertions(+), 31 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/misc/google,kinfo.yaml b/Documentation/devicetree/bindings/misc/google,kinfo.yaml
-new file mode 100644
-index 000000000000..b1e4fac43586
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/google,kinfo.yaml
-@@ -0,0 +1,36 @@
-+# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/misc/google,kinfo.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Google Pixel Kinfo debug driver
-+
-+maintainers:
-+  - Eugen Hristev <eugen.hristev@linaro.org>
-+
-+description:
-+  The Google Pixel Kinfo debug driver uses a supplied reserved memory area
-+  to save debugging information on the running kernel.
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: google,kinfo
-+
-+  memory-region:
-+    maxItems: 1
-+    description: Reference to the reserved-memory for the data
-+
-+required:
-+  - compatible
-+  - memory-region
-+
-+additionalProperties: true
-+
-+examples:
-+  - |
-+    debug-kinfo {
-+        compatible = "google,debug-kinfo";
-+        memory-region = <&debug_kinfo_reserved>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 65d9e5db46a9..6a846c51db04 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13821,6 +13821,7 @@ F:	mm/kmemdump/kmemdump_coreimage.c
- KMEMDUMP KINFO BACKEND DRIVER
- M:	Eugen Hristev <eugen.hristev@linaro.org>
- S:	Maintained
-+F:	Documentation/devicetree/bindings/misc/google,kinfo.yaml
- F:	mm/kmemdump/kinfo.c
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index 59d7228104d0..73bc67ec2136 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -51,40 +51,50 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+ 	return unlikely(overflow);
+ }
  
- KMEMDUMP QCOM MINIDUMP BACKEND DRIVER
+-/*
+- * For simplicity and code hygiene, the fallback code below insists on
+- * a, b and *d having the same type (similar to the min() and max()
+- * macros), whereas gcc's type-generic overflow checkers accept
+- * different types. Hence we don't just make check_add_overflow an
+- * alias for __builtin_add_overflow, but add type checks similar to
+- * below.
++/** check_add_overflow() - Calculate addition with overflow checking
++ *
++ * @a: first addend
++ * @b: second addend
++ * @d: pointer to store sum
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted addition, but is not considered
++ * "safe for use" on a non-zero return value, which indicates that the
++ * sum has overflowed or been truncated.
+  */
+-#define check_add_overflow(a, b, d) __must_check_overflow(({	\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_add_overflow(__a, __b, __d);	\
+-}))
++#define check_add_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_add_overflow(a, b, d))
+ 
+-#define check_sub_overflow(a, b, d) __must_check_overflow(({	\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_sub_overflow(__a, __b, __d);	\
+-}))
++/** check_sub_overflow() - Calculate subtraction with overflow checking
++ *
++ * @a: minuend; value to subtract from
++ * @b: subtrahend; value to subtract from @a
++ * @d: pointer to store difference
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted subtraction, but is not considered
++ * "safe for use" on a non-zero return value, which indicates that the
++ * difference has underflowed or been truncated.
++ */
++#define check_sub_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_sub_overflow(a, b, d))
+ 
+-#define check_mul_overflow(a, b, d) __must_check_overflow(({	\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_mul_overflow(__a, __b, __d);	\
+-}))
++/** check_mul_overflow() - Calculate multiplication with overflow checking
++ *
++ * @a: first factor
++ * @b: second factor
++ * @d: pointer to store product
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted multiplication, but is not
++ * considered "safe for use" on a non-zero return value, which indicates
++ * that the product has overflowed or been truncated.
++ */
++#define check_mul_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_mul_overflow(a, b, d))
+ 
+ /** check_shl_overflow() - Calculate a left-shifted value and check overflow
+  *
 -- 
-2.43.0
+2.47.3
 
