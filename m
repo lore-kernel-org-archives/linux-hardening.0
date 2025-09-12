@@ -1,63 +1,63 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2C6313278
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 15:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B27831691E
+	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 15:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757689801; cv=none; b=FwjuwEGHiadZj+sqzIUqI4ArQwPQHRhiGEn00oZcy5huq3heHmqsL3jXuXjsAND/fNEHDA9l2bsm1iv8RXtwDELfbQXmZkuThbGmm/tFXxZwETlpQAjAgWai9F8bY5qyn2m2sUAR47v88ZH2pJXWLFKsk+hBmbUHOxJoJkeYg9k=
+	t=1757689809; cv=none; b=PD7pdI+AotnOGN9nzbxbcQOEIc4nal4WJzBQfihnFJ8EZjoKdjjAXvE/IagKbWUnpEzZexwxvwjz+gE1/mBWE5MN5h83C8Ke4uJjIMBafkkOVxui+9WigQxGUh1p4GHPw6QH1RAV95o3yF8IEFXMsl1/qlyJjdK33Ku8Qpu5qqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757689801; c=relaxed/simple;
-	bh=NvrjHXeuAnfuPGfi6BRYd0FKeUfYwLvAE3fvW1FL450=;
+	s=arc-20240116; t=1757689809; c=relaxed/simple;
+	bh=dv2O9w9agbngektKvmDxu7BDFlmtFAERpT9g4V25J2E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dIVplohJ2Q2LSs8xa42JJLHds9yupuv9pe84PBfE6kM9RL2pS0qLxwVUJsz9YqN8aiWVBkHuHTfBswDxlIiACh5un2uzhmJDwm2YD+Z9zehs+fFq72lPD58gTq+NprDkuXA3qSVrfH5ihBkKh07QvCTx/d5eqqycS5Ji6xa95PE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tPaCglvD; arc=none smtp.client-ip=209.85.128.177
+	 MIME-Version; b=QbKlRaeaEsusSMF38eNrLdjd73RYqb+TY680fWcm8OLVvix0kWpiFIU8tyR/1u0lKhU9Hzg/EmCvK3FzhInGyIn2+BwsE7wNvIgtbEMJAl8OHWNJcrE33wwRj/tMZK/tSK+BtXYnVzSlGx7DGI4lmpOO1ItMMpMQJpisSbUYrjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cQumRqng; arc=none smtp.client-ip=209.85.128.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tPaCglvD"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-71d60528734so13929027b3.2
-        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 08:09:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cQumRqng"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-71d6083cc69so19024187b3.2
+        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 08:10:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757689798; x=1758294598; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1757689804; x=1758294604; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RH4GhObM3FT55o7hGQgrlMBMoWx9IX3m3EBVgQrzYfg=;
-        b=tPaCglvD3bTER4nu4P7fUsfICDLNQl5bCR5rGVyNn1s32La91d2ru3fJmK8Kp0LfY4
-         Nblqh4kSwxINAIKFKDxGEM26EBUXohgDFy3fvLKAHGsGdEOXLuI7DC7Bp0hiUhNFvB3D
-         TIOCxqC0wjMfk2a86ow+KvQ2h4DD5pBTvvbU11dQLDzOjFC0gLG5/Xt7TPNUOBNlEC01
-         QbPA/5MK6h0bNJ7fJaXPfbqSiWBofu2T8cJ3RwTvi1m160yjV36ii3Gx7cRYYzA55D8c
-         icfkdVgezVShVx6JQaUnljWYBKXT+pZr4vJcdnMh0EV8owtTs0aeP5NdmdVtcw3SBh/U
-         5VAA==
+        bh=7ltLVlonCLmXqCMj5NKS1dwyzuNto475BJCWDW4VinA=;
+        b=cQumRqngHyWg2L2ov4j2fDuDSEWLXvXVngMhj04E5NCwNc8DmpwSFVdXuabJS9QVrQ
+         1DK0mVq0F22aFjH48rztT+1bsmNIMORm339OPrQ/VvN9EB2JqARttvrH1oo/qLofHg1G
+         NOj47PgOBOYmBxs7GmxzvzZtRenO/mPaher+OrpbQ5zB40GyE/THKgkZzyvQYN3CTVzW
+         Jx3Wxh3NOFU4pD55N0L2jZ13rrMICc5aKxJLIGEjYeRsG4BowKjQWM7kn4oUCM/oWrE7
+         nieAimDHWnhl4oIdhV45Y7LQ9rBtR/hzshi5YS3rlHpgs7LUqYpwgjaznHRzmeBSMjc2
+         HYNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757689798; x=1758294598;
+        d=1e100.net; s=20230601; t=1757689804; x=1758294604;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RH4GhObM3FT55o7hGQgrlMBMoWx9IX3m3EBVgQrzYfg=;
-        b=IpizlSJxWRconFryNTFy01kvLNfvJ8vOqvE1zkM8k8O/VK6aca4/ZuBwkSoAIIquJc
-         Rn0hRfP74iFMegYIhycfUf2q4ezWWf2YoSQHyEmsDzb6B5Y0SK4Rvn5vDw8ppv0zVBCJ
-         wFPiPp5xrsb5vLDZvKGSgpUtIKSGnK2uoMSK+oXjJOoR2BWqP1biFJEDkzrsbQWeMy+K
-         Gou7ZbeXLfgRJDoxnqvyuPjJb5/j1+l9CYoT6t1kwO7IUrHj6tr4MWvV5Z0X20dzo9d1
-         c1vbKO3XjLXiaH/tgjtVxMhgq+w+CVVz4G9M5sJfPnwiy3B/b6XFGXiP2af4BUZJOBi0
-         iRbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxMIico/pOYKTKDAI9JpCdOIjxNhFaOV/GM3pCIptxt/t/JvYN6gH5NfW5WgfMe2P5rbG73XR2za/zS1anr/k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTkXDkHEk+dF8AGQ+u3mVGIroitX3vvz+m4YYR75qCUn+tBM25
-	mIZkOdeHsOMRYDNsl5OEukcm3mx3kyNuKGblJtdV9nA4OQegiAonnnVvvkdzAii6JG4=
-X-Gm-Gg: ASbGncv8qLxL5IhYdRoBUw42MrHHBCKk+g4oAK2l/KUQiGcX0gzMsPakWK1BdNdxyis
-	n9u83LCB95/wm8GKA86iK45x9xPTm9tCMLzz8F7riEOJWjLAqcMyVW2WMYKVPCykhxY+9I6LF+G
-	wwvI+Knz9fRMsdoRc9RSPk8A+UI/vVpFXq3gsiaToamzjtxGsVT2y8tCDg2DMXftOX61KXOkIay
-	VH5c9/kMtaSKCeNpG6AGKmeGZs56fazI7HO9WWBS5uMjIIAhQHtCIgDdu9ePFdoQxssylyN3d2r
-	vNLTR+fLa2+nJDEzZwFKDPTdxq9gOw3eT2HJiAoKwU4zBUjTusVPMlNO3Pseh6w5q8a0j6hSuV0
-	lqjwk1kd6n6JM5XmqmmqT3npPbSu6jOD9IpwJYTVgNsFb
-X-Google-Smtp-Source: AGHT+IHDbtGqslyeLn4YFWeoqnBwKggrxCYxTs3G1b8DQvW49OjHmQw5TtCHo1C0fUHoFsODFmt/wQ==
-X-Received: by 2002:a05:690c:660b:b0:721:7e7:50d with SMTP id 00721157ae682-730651d60dcmr29556217b3.42.1757689798342;
-        Fri, 12 Sep 2025 08:09:58 -0700 (PDT)
+        bh=7ltLVlonCLmXqCMj5NKS1dwyzuNto475BJCWDW4VinA=;
+        b=RF0Q5FOttOEgfnORc6Abd8eyb0cyedNml0Lbv+9G/MlE2QK5lPPJFXUGF+7Zpxy2HU
+         5Cb//HoFBCsTNblHYu0dibv9JD0kjQHh4Hgr/iGVHt3TtdNfuROYASH/92tGhLepkLmy
+         yvdXhwf6Ha+S3VEd09VcxVWbWhBhDOShzXZt+nibuhgnjT7HZNZ1D/VKGkbSKcEj+tNn
+         j1Fq9oDk7vsvbmlZY98hg7Ncnfu4o9/BPTE4lUVA98c85ZoasRAKFWMOKrrHkJ5rQA8F
+         LWKpQv4xkgnNqpE2ZRY7jFdd1C3hXqdP7yTNDzCX2h4+H6Z86sbyLKKM4nCCp3vLrEQX
+         x4FA==
+X-Forwarded-Encrypted: i=1; AJvYcCVSbm570EfhtvWYydw5v+ANuZOPYZv5Lk0HSpF8m5oRJupb9RKGa//NsEG5/jxFPk36iBjYC+2a8Fj+z8Dr0FQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoNLvUv7ijpjK6xjNkDMT6g/AA145j3YnUBxard3U7O3Ooxp9Z
+	SEd02MKhrsJeoFbAxk1Xie0ymNhRo6C7a3eK4liDUh9Nx/RK9C/h8V5/Z89QLr8XWTY=
+X-Gm-Gg: ASbGncuF6BewcRC+BfC1e+sxTRuGKkjVy7kVDthy4Yc3b3AaihgjH+5OHGT38x/f3Wb
+	J5ADEv65fW0NWX+TCZzQw4e6S8E0tpLnOBE+vLcyJaNfsIS2v/IWP9SBHqT6ZhRiVF2uFXX7tKP
+	8A5RvBhgbgPGYGWz/OFkvDDUs3t7Q09IXlSkbiu4uzIL+UfmqI0QdB9erADUDuISOShLwX/K3Bc
+	wuttm9k6i0EUsMX3hEYMYlGRtLaj6LADiOvwtBcgBpB88B9HFagDt87D5tareMjKMKOhRlv25tC
+	Pwm58faWx7LJxOJesmYx+FCecgxtRtAi5Z5BP3Qqh6E8B8JuF++0MVbmqI4uUSpYdHEGIskMSk+
+	T76HM3w5mqA4YW4usm74uIBsU6QAQej5dD7aR2yDdIDOT
+X-Google-Smtp-Source: AGHT+IErKNSDF6fGSUxu7uTin3OwoIqA+uAqwoNBYvN/bvRQQvIrBcXKk9r6zS33h/brxBiiTlCCzQ==
+X-Received: by 2002:a05:690c:7442:b0:725:74c3:75eb with SMTP id 00721157ae682-73065da8ef0mr33696617b3.54.1757689804212;
+        Fri, 12 Sep 2025 08:10:04 -0700 (PDT)
 Received: from eugen-station.. ([145.224.119.89])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-624841586c1sm1302244d50.6.2025.09.12.08.09.53
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-624841586c1sm1302244d50.6.2025.09.12.08.09.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Sep 2025 08:09:58 -0700 (PDT)
+        Fri, 12 Sep 2025 08:10:03 -0700 (PDT)
 From: Eugen Hristev <eugen.hristev@linaro.org>
 To: linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -78,9 +78,9 @@ Cc: tudor.ambarus@linaro.org,
 	linux-doc@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Eugen Hristev <eugen.hristev@linaro.org>
-Subject: [RFC][PATCH v3 02/16] Documentation: Add kmemdump
-Date: Fri, 12 Sep 2025 18:08:41 +0300
-Message-ID: <20250912150855.2901211-3-eugen.hristev@linaro.org>
+Subject: [RFC][PATCH v3 03/16] kmemdump: Add coreimage ELF layer
+Date: Fri, 12 Sep 2025 18:08:42 +0300
+Message-ID: <20250912150855.2901211-4-eugen.hristev@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250912150855.2901211-1-eugen.hristev@linaro.org>
 References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
@@ -92,177 +92,446 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document the new kmemdump kernel feature.
+Implement kmemdumping into an ELF coreimage.
+With this feature enabled, kmemdump will assemble all the regions
+into a coreimage, by having an initial first region with an ELF header,
+a second region with vmcoreinfo data, and then register vital kernel
+information in the subsequent regions.
+This image can then be dumped, assembled into a single file and loaded
+into debugging tools like crash/gdb.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 ---
- Documentation/dev-tools/index.rst    |   1 +
- Documentation/dev-tools/kmemdump.rst | 131 +++++++++++++++++++++++++++
- MAINTAINERS                          |   1 +
- 3 files changed, 133 insertions(+)
- create mode 100644 Documentation/dev-tools/kmemdump.rst
+ MAINTAINERS                      |   1 +
+ include/linux/kmemdump.h         |  67 ++++++++++
+ mm/kmemdump/Kconfig.debug        |  18 ++-
+ mm/kmemdump/Makefile             |   1 +
+ mm/kmemdump/kmemdump.c           |  32 +++++
+ mm/kmemdump/kmemdump_coreimage.c | 222 +++++++++++++++++++++++++++++++
+ 6 files changed, 339 insertions(+), 2 deletions(-)
+ create mode 100644 mm/kmemdump/kmemdump_coreimage.c
 
-diff --git a/Documentation/dev-tools/index.rst b/Documentation/dev-tools/index.rst
-index 65c54b27a60b..1b6674efeda0 100644
---- a/Documentation/dev-tools/index.rst
-+++ b/Documentation/dev-tools/index.rst
-@@ -28,6 +28,7 @@ Documentation/process/debugging/index.rst
-    kmsan
-    ubsan
-    kmemleak
-+   kmemdump
-    kcsan
-    kfence
-    kselftest
-diff --git a/Documentation/dev-tools/kmemdump.rst b/Documentation/dev-tools/kmemdump.rst
-new file mode 100644
-index 000000000000..504321de951a
---- /dev/null
-+++ b/Documentation/dev-tools/kmemdump.rst
-@@ -0,0 +1,131 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+========
-+kmemdump
-+========
-+
-+This document provides information about the kmemdump feature.
-+
-+Overview
-+========
-+
-+kmemdump is a mechanism that allows any driver or producer to register a
-+chunk of memory into it, to be used at a later time for a specific
-+purpose like debugging or memory dumping.
-+
-+kmemdump allows a backend to be connected, this backend interfaces a
-+specific hardware that can debug or dump the memory previously registered
-+into kmemdump.
-+
-+The reasoning for kmemdump is to minimize the required debug information
-+in case of a kernel problem. A traditional debug method involves dumping
-+the whole kernel memory and then inspecting it. Kmemdump allows the
-+users to select which memory is of interest, in order to help this
-+specific use case in production, where memory and connectivity
-+are limited.
-+
-+Although the kernel has multiple debugging mechanisms, kmemdump fits
-+a particular model which is not covered by the others.
-+
-+kmemdump Internals
-+==================
-+
-+API
-+---
-+
-+A memory region is being registered with a call to kmemdump_register() which
-+takes as parameters the ID of the region, a pointer to the virtual memory
-+start address and the size. If successful, this call returns an unique ID for
-+the allocated zone (either the requested ID or an allocated ID).
-+IDs are predefined in the kmemdump header. A second registration with the
-+same ID is not allowed, the caller needs to deregister first.
-+A dedicated NO_ID is defined, which has kmemdump allocate a new unique ID
-+for the request and return it. This case is useful with multiple dynamic
-+loop allocations where ID is not significant.
-+
-+The region would be registered with a call to kmemdump_unregister() which
-+takes the id as a parameter.
-+
-+For dynamically allocated memory, kmemdump defines a variety of wrappers
-+on top of allocation functions which are given as parameters.
-+This makes the dynamic allocation easy to use without additional calls
-+to registration functions. However kmemdump still exposes the register API
-+for cases where it may be needed (e.g. size is not exactly known at allocation
-+time).
-+
-+For static variables, a variety of annotation macros are provided. These
-+macros will create an annotation struct inside a separate section.
-+
-+
-+Backend
-+-------
-+
-+Backend is represented by a struct kmemdump_backend which has to be filled
-+in by the backend driver. Further, this struct is being passed to kmemdump
-+with a backend_register() call. backend_unregister() will remove the backend
-+from kmemdump.
-+
-+Once a backend is being registered, all previously registered regions are
-+being sent to the backend for registration.
-+
-+When the backend is being removed, all regions are being first deregistered
-+from the backend.
-+
-+kmemdump will request the backend to register a region with register_region()
-+call, and deregister a region with unregister_region() call. These two
-+functions are mandatory to be provided by a backend at registration time.
-+
-+Data structures
-+---------------
-+
-+struct kmemdump_backend represents the kmemdump backend and should be
-+initialized by the backend driver.
-+
-+The regions are being stored in a simple fixed size array. It avoids
-+memory allocation overhead. This is not performance critical nor does
-+allocating a few hundred entries create a memory consumption problem.
-+
-+The static variables registered into kmemdump are being annotated into
-+a dedicated .kemdump memory section. This is then walked by kmemdump
-+at a later time and each variable is registered.
-+
-+kmemdump Initialization
-+-----------------------
-+
-+After system boots, kmemdump will be ready to accept region registration
-+from producer drivers. Even if the backend may not be registered yet,
-+there is a default no-op backend that is registered. At any time the backend
-+can be changed with a real backend in which case all regions are being
-+registered to the new backend.
-+
-+backend functionality
-+---------------------
-+
-+kmemdump backend can keep it's own list of regions and use the specific
-+hardware available to dump the memory regions or use them for debugging.
-+
-+kmemdump example
-+================
-+
-+A production scenario for kmemdump is the following:
-+The kernel registers the linux_banner variable into kmemdump with
-+a simple call like:
-+
-+  kmemdump_register(linux_banner, sizeof(linux_banner));
-+
-+The backend will receive a call to it's register_region() callback after it
-+probes and registers with kmemdump.
-+The backend will then note into a specific table the address of the banner
-+and the size of it.
-+The specific table is then written to a shared memory area that can be
-+read by upper level firmware.
-+When the kernel freezes (hypothetically), the kernel will no longer feed
-+the watchdog. The watchdog will trigger a higher exception level interrupt
-+which will be handled by the upper level firmware. This firmware will then
-+read the shared memory table and find an entry with the start and size of
-+the banner. It will then copy it for debugging purpose. The upper level
-+firmware will then be able to provide useful debugging information,
-+like in this example, the banner.
-+
-+As seen here, kmemdump facilitates the interaction between the kernel
-+and a specific backend.
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 1713cccefc91..974f43c3902b 100644
+index 974f43c3902b..fc8cd34cf190 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -13813,6 +13813,7 @@ F:	drivers/iio/accel/kionix-kx022a*
- KMEMDUMP
- M:	Eugen Hristev <eugen.hristev@linaro.org>
- S:	Maintained
-+F:	Documentation/dev-tools/kmemdump.rst
+@@ -13816,6 +13816,7 @@ S:	Maintained
+ F:	Documentation/dev-tools/kmemdump.rst
  F:	include/linux/kmemdump.h
  F:	mm/kmemdump/kmemdump.c
++F:	mm/kmemdump/kmemdump_coreimage.c
  
+ KMEMLEAK
+ M:	Catalin Marinas <catalin.marinas@arm.com>
+diff --git a/include/linux/kmemdump.h b/include/linux/kmemdump.h
+index 8e764bb2d8ac..ac2eb1b4ba06 100644
+--- a/include/linux/kmemdump.h
++++ b/include/linux/kmemdump.h
+@@ -4,6 +4,52 @@
+ 
+ enum kmemdump_uid {
+ 	KMEMDUMP_ID_START = 0,
++	KMEMDUMP_ID_COREIMAGE_ELF,
++	KMEMDUMP_ID_COREIMAGE_VMCOREINFO,
++	KMEMDUMP_ID_COREIMAGE_CONFIG,
++	KMEMDUMP_ID_COREIMAGE_MEMSECT,
++	KMEMDUMP_ID_COREIMAGE__totalram_pages,
++	KMEMDUMP_ID_COREIMAGE___cpu_possible_mask,
++	KMEMDUMP_ID_COREIMAGE___cpu_present_mask,
++	KMEMDUMP_ID_COREIMAGE___cpu_online_mask,
++	KMEMDUMP_ID_COREIMAGE___cpu_active_mask,
++	KMEMDUMP_ID_COREIMAGE_jiffies_64,
++	KMEMDUMP_ID_COREIMAGE_linux_banner,
++	KMEMDUMP_ID_COREIMAGE_nr_threads,
++	KMEMDUMP_ID_COREIMAGE_nr_irqs,
++	KMEMDUMP_ID_COREIMAGE_tainted_mask,
++	KMEMDUMP_ID_COREIMAGE_taint_flags,
++	KMEMDUMP_ID_COREIMAGE_mem_section,
++	KMEMDUMP_ID_COREIMAGE_node_data,
++	KMEMDUMP_ID_COREIMAGE_node_states,
++	KMEMDUMP_ID_COREIMAGE___per_cpu_offset,
++	KMEMDUMP_ID_COREIMAGE_nr_swapfiles,
++	KMEMDUMP_ID_COREIMAGE_init_uts_ns,
++	KMEMDUMP_ID_COREIMAGE_printk_rb_static,
++	KMEMDUMP_ID_COREIMAGE_printk_rb_dynamic,
++	KMEMDUMP_ID_COREIMAGE_prb,
++	KMEMDUMP_ID_COREIMAGE_prb_descs,
++	KMEMDUMP_ID_COREIMAGE_prb_infos,
++	KMEMDUMP_ID_COREIMAGE_prb_data,
++	KMEMDUMP_ID_COREIMAGE_runqueues,
++	KMEMDUMP_ID_COREIMAGE_high_memory,
++	KMEMDUMP_ID_COREIMAGE_init_mm,
++	KMEMDUMP_ID_COREIMAGE_init_mm_pgd,
++	KMEMDUMP_ID_COREIMAGE__sinittext,
++	KMEMDUMP_ID_COREIMAGE__einittext,
++	KMEMDUMP_ID_COREIMAGE__end,
++	KMEMDUMP_ID_COREIMAGE__text,
++	KMEMDUMP_ID_COREIMAGE__stext,
++	KMEMDUMP_ID_COREIMAGE__etext,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_num_syms,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_relative_base,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_offsets,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_names,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_token_table,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_token_index,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_markers,
++	KMEMDUMP_ID_COREIMAGE_kallsyms_seqs_of_names,
++	KMEMDUMP_ID_COREIMAGE_swapper_pg_dir,
+ 	KMEMDUMP_ID_USER_START,
+ 	KMEMDUMP_ID_USER_END,
+ 	KMEMDUMP_ID_NO_ID,
+@@ -60,4 +106,25 @@ static inline void kmemdump_unregister(enum kmemdump_uid id)
+ }
+ #endif
+ 
++#ifdef CONFIG_KMEMDUMP
++#ifdef CONFIG_KMEMDUMP_COREIMAGE
++int init_elfheader(void);
++void update_elfheader(const struct kmemdump_zone *z);
++int clear_elfheader(const struct kmemdump_zone *z);
++#else
++static inline int init_elfheader(void)
++{
++	return 0;
++}
++
++static inline void update_elfheader(const struct kmemdump_zone *z)
++{
++}
++
++static inline int clear_elfheader(const struct kmemdump_zone *z)
++{
++	return 0;
++}
++#endif
++#endif
+ #endif
+diff --git a/mm/kmemdump/Kconfig.debug b/mm/kmemdump/Kconfig.debug
+index 5654180141c0..f62bde50a81b 100644
+--- a/mm/kmemdump/Kconfig.debug
++++ b/mm/kmemdump/Kconfig.debug
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-config KMEMDUMP
+-	bool "KMEMDUMP: Allow the kernel to register memory regions for dumping purpose"
++menuconfig KMEMDUMP
++	bool "KMEMDUMP: Register memory regions for dumping purpose"
+ 	help
+ 	  Kmemdump mechanism allows any driver to mark a specific memory area
+ 	  for later dumping/debugging purpose, depending on the functionality
+@@ -12,3 +12,17 @@ config KMEMDUMP
+ 
+ 	  Note that modules using this feature must be rebuilt if option
+ 	  changes.
++
++config KMEMDUMP_COREIMAGE
++	depends on KMEMDUMP
++	select VMCORE_INFO
++	bool "Assemble memory regions into a coredump readable with debuggers"
++	help
++	  Enabling this will assemble all the memory regions into a
++	  core ELF file. The first region will include program headers for
++	  all the regions. The second region is the vmcoreinfo and specific
++	  coredump structures.
++	  All the other regions follow. Specific kernel variables required
++	  for debug tools are being registered.
++	  The coredump file can then be loaded into GDB or crash  tool and
++	  further inspected.
+diff --git a/mm/kmemdump/Makefile b/mm/kmemdump/Makefile
+index f5b917a6ef5e..eed67f15a8d0 100644
+--- a/mm/kmemdump/Makefile
++++ b/mm/kmemdump/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ obj-y += kmemdump.o
++obj-$(CONFIG_KMEMDUMP_COREIMAGE) += kmemdump_coreimage.o
+diff --git a/mm/kmemdump/kmemdump.c b/mm/kmemdump/kmemdump.c
+index c016457620a4..3827b0597cac 100644
+--- a/mm/kmemdump/kmemdump.c
++++ b/mm/kmemdump/kmemdump.c
+@@ -28,6 +28,32 @@ static const struct kmemdump_backend kmemdump_default_backend = {
+ static const struct kmemdump_backend *backend = &kmemdump_default_backend;
+ static DEFINE_MUTEX(kmemdump_lock);
+ static struct kmemdump_zone kmemdump_zones[MAX_ZONES];
++static bool kmemdump_initialized;
++
++static int __init init_kmemdump(void)
++{
++	enum kmemdump_uid uid;
++
++	init_elfheader();
++
++	mutex_lock(&kmemdump_lock);
++	/*
++	 * Some regions may have been registered very early.
++	 * Update the elf header for all existing regions,
++	 * except for KMEMDUMP_ID_COREIMAGE_ELF and
++	 * KMEMDUMP_ID_COREIMAGE_VMCOREINFO, those are included in the
++	 * ELF header upon its creation.
++	 */
++	for (uid = KMEMDUMP_ID_COREIMAGE_CONFIG; uid < MAX_ZONES; uid++)
++		if (kmemdump_zones[uid].id)
++			update_elfheader(&kmemdump_zones[uid]);
++
++	kmemdump_initialized = true;
++	mutex_unlock(&kmemdump_lock);
++
++	return 0;
++}
++late_initcall(init_kmemdump);
+ 
+ /**
+  * kmemdump_register_id() - Register region into kmemdump with given ID.
+@@ -83,6 +109,9 @@ int kmemdump_register_id(enum kmemdump_uid req_id, void *zone, size_t size)
+ 	z->size = size;
+ 	z->id = uid;
+ 
++	if (kmemdump_initialized)
++		update_elfheader(z);
++
+ 	mutex_unlock(&kmemdump_lock);
+ 
+ 	return uid;
+@@ -110,6 +139,9 @@ void kmemdump_unregister(enum kmemdump_uid id)
+ 
+ 	backend->unregister_region(backend, z->id);
+ 
++	if (kmemdump_initialized)
++		clear_elfheader(z);
++
+ 	memset(z, 0, sizeof(*z));
+ 
+ 	mutex_unlock(&kmemdump_lock);
+diff --git a/mm/kmemdump/kmemdump_coreimage.c b/mm/kmemdump/kmemdump_coreimage.c
+new file mode 100644
+index 000000000000..a7b51a171d8e
+--- /dev/null
++++ b/mm/kmemdump/kmemdump_coreimage.c
+@@ -0,0 +1,222 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/io.h>
++#include <linux/elfcore.h>
++#include <linux/kmemdump.h>
++#include <linux/vmcore_info.h>
++
++#define CORE_STR "CORE"
++
++#define MAX_NUM_ENTRIES	201
++
++static struct elfhdr *ehdr;
++static size_t elf_offset;
++
++static void append_kcore_note(char *notes, size_t *i, const char *name,
++			      unsigned int type, const void *desc,
++			      size_t descsz)
++{
++	struct elf_note *note = (struct elf_note *)&notes[*i];
++
++	note->n_namesz = strlen(name) + 1;
++	note->n_descsz = descsz;
++	note->n_type = type;
++	*i += sizeof(*note);
++	memcpy(&notes[*i], name, note->n_namesz);
++	*i = ALIGN(*i + note->n_namesz, 4);
++	memcpy(&notes[*i], desc, descsz);
++	*i = ALIGN(*i + descsz, 4);
++}
++
++static void append_kcore_note_nodesc(char *notes, size_t *i, const char *name,
++				     unsigned int type, size_t descsz)
++{
++	struct elf_note *note = (struct elf_note *)&notes[*i];
++
++	note->n_namesz = strlen(name) + 1;
++	note->n_descsz = descsz;
++	note->n_type = type;
++	*i += sizeof(*note);
++	memcpy(&notes[*i], name, note->n_namesz);
++	*i = ALIGN(*i + note->n_namesz, 4);
++}
++
++static struct elf_phdr *elf_phdr_entry_addr(struct elfhdr *ehdr, int idx)
++{
++	struct elf_phdr *ephdr = (struct elf_phdr *)((size_t)ehdr + ehdr->e_phoff);
++
++	return &ephdr[idx];
++}
++
++/**
++ * clear_elfheader() - Remove the program header for a specific memory zone
++ * @z: pointer to the kmemdump zone
++ *
++ * Return: On success, it returns 0, errno otherwise
++ */
++int clear_elfheader(const struct kmemdump_zone *z)
++{
++	struct elf_phdr *phdr;
++	struct elf_phdr *tmp_phdr;
++	unsigned int phidx;
++	unsigned int i;
++
++	for (i = 0; i < ehdr->e_phnum; i++) {
++		phdr = elf_phdr_entry_addr(ehdr, i);
++		if (phdr->p_paddr == virt_to_phys(z->zone) &&
++		    phdr->p_memsz == ALIGN(z->size, 4))
++			break;
++	}
++
++	if (i == ehdr->e_phnum) {
++		pr_debug("Cannot find program header entry in elf\n");
++		return -EINVAL;
++	}
++
++	phidx = i;
++
++	/* Clear program header */
++	tmp_phdr = elf_phdr_entry_addr(ehdr, phidx);
++	for (i = phidx; i < ehdr->e_phnum - 1; i++) {
++		tmp_phdr = elf_phdr_entry_addr(ehdr, i + 1);
++		phdr = elf_phdr_entry_addr(ehdr, i);
++		memcpy(phdr, tmp_phdr, sizeof(*phdr));
++		phdr->p_offset = phdr->p_offset - ALIGN(z->size, 4);
++	}
++	memset(tmp_phdr, 0, sizeof(*tmp_phdr));
++	ehdr->e_phnum--;
++
++	elf_offset -= ALIGN(z->size, 4);
++
++	return 0;
++}
++
++/**
++ * update_elfheader() - Add the program header for a specific memory zone
++ * @z: pointer to the kmemdump zone
++ *
++ * Return: None
++ */
++void update_elfheader(const struct kmemdump_zone *z)
++{
++	struct elf_phdr *phdr;
++
++	phdr = elf_phdr_entry_addr(ehdr, ehdr->e_phnum++);
++
++	phdr->p_type = PT_LOAD;
++	phdr->p_offset = elf_offset;
++	phdr->p_vaddr = (elf_addr_t)z->zone;
++	phdr->p_paddr = (elf_addr_t)virt_to_phys(z->zone);
++	phdr->p_filesz = phdr->p_memsz = ALIGN(z->size, 4);
++	phdr->p_flags = PF_R | PF_W;
++
++	elf_offset += ALIGN(z->size, 4);
++}
++
++/**
++ * init_elfheader() - Prepare coreinfo elf header
++ *		This function prepares the elf header for the coredump image.
++ *		Initially there is a single program header for the elf NOTE.
++ *		The note contains the usual core dump information, and the
++ *		vmcoreinfo.
++ *
++ * Return: 0 on success, errno otherwise
++ */
++int init_elfheader(void)
++{
++	struct elf_phdr *phdr;
++	void *notes;
++	unsigned int elfh_size;
++	unsigned int phdr_off;
++	size_t note_len, i = 0;
++
++	struct elf_prstatus prstatus = {};
++	struct elf_prpsinfo prpsinfo = {
++		.pr_sname = 'R',
++		.pr_fname = "vmlinux",
++	};
++
++	/*
++	 * Header buffer contains:
++	 * ELF header, Note entry with PR status, PR ps info, and vmcoreinfo
++	 * MAX_NUM_ENTRIES Program headers,
++	 */
++	elfh_size = sizeof(*ehdr);
++	elfh_size += sizeof(struct elf_prstatus);
++	elfh_size += sizeof(struct elf_prpsinfo);
++	elfh_size += sizeof(VMCOREINFO_NOTE_NAME);
++	elfh_size += ALIGN(vmcoreinfo_size, 4);
++	elfh_size += (sizeof(*phdr)) * (MAX_NUM_ENTRIES);
++
++	elfh_size = ALIGN(elfh_size, 4);
++
++	/* Never freed */
++	ehdr = kzalloc(elfh_size, GFP_KERNEL);
++	if (!ehdr)
++		return -ENOMEM;
++
++	/* Assign Program headers offset, it's right after the elf header. */
++	phdr = (struct elf_phdr *)(ehdr + 1);
++	phdr_off = sizeof(*ehdr);
++
++	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
++	ehdr->e_ident[EI_CLASS] = ELF_CLASS;
++	ehdr->e_ident[EI_DATA] = ELF_DATA;
++	ehdr->e_ident[EI_VERSION] = EV_CURRENT;
++	ehdr->e_ident[EI_OSABI] = ELF_OSABI;
++	ehdr->e_type = ET_CORE;
++	ehdr->e_machine  = ELF_ARCH;
++	ehdr->e_version = EV_CURRENT;
++	ehdr->e_ehsize = sizeof(*ehdr);
++	ehdr->e_phentsize = sizeof(*phdr);
++
++	elf_offset = elfh_size;
++
++	notes = (void *)(((char *)ehdr) + elf_offset);
++
++	/* we have a single program header now */
++	ehdr->e_phnum = 1;
++
++	/* Length of the note is made of :
++	 * 3 elf notes structs (prstatus, prpsinfo, vmcoreinfo)
++	 * 3 notes names (2 core strings, 1 vmcoreinfo name)
++	 * sizeof each note
++	 */
++	note_len = (3 * sizeof(struct elf_note) +
++		    2 * ALIGN(sizeof(CORE_STR), 4) +
++		    VMCOREINFO_NOTE_NAME_BYTES +
++		    ALIGN(sizeof(struct elf_prstatus), 4) +
++		    ALIGN(sizeof(struct elf_prpsinfo), 4) +
++		    ALIGN(vmcoreinfo_size, 4));
++
++	phdr->p_type = PT_NOTE;
++	phdr->p_offset = elf_offset;
++	phdr->p_filesz = note_len;
++
++	/* advance elf offset */
++	elf_offset += note_len;
++
++	strscpy(prpsinfo.pr_psargs, saved_command_line,
++		sizeof(prpsinfo.pr_psargs));
++
++	append_kcore_note(notes, &i, CORE_STR, NT_PRSTATUS, &prstatus,
++			  sizeof(prstatus));
++	append_kcore_note(notes, &i, CORE_STR, NT_PRPSINFO, &prpsinfo,
++			  sizeof(prpsinfo));
++	append_kcore_note_nodesc(notes, &i, VMCOREINFO_NOTE_NAME, 0,
++				 ALIGN(vmcoreinfo_size, 4));
++
++	ehdr->e_phoff = phdr_off;
++
++	/* This is the first kmemdump region, the ELF header */
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_ELF, ehdr,
++			     elfh_size + note_len - ALIGN(vmcoreinfo_size, 4));
++
++	/*
++	 * The second region is the vmcoreinfo, which goes right after.
++	 * It's being registered through vmcoreinfo.
++	 */
++
++	return 0;
++}
++
 -- 
 2.43.0
 
