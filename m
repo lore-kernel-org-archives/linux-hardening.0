@@ -1,63 +1,63 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A711327A1C
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 15:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D22632A819
+	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 15:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757689861; cv=none; b=hXrQFXamC7mRiOdUEkx9UvpwTOqmcPCMjmqQXWCX/ITtOOgiHsC8Ye0Skl+lrLrj2Zdxh0PsKrpgMQjnwatM+R2sw3USurXtl+0k39wnBQL2lRc9WSXBd6yKP44udmDWyVOn22nv3yn/dRiHXQR6GSJ6NnXB2CBjXeLXXJIJOx4=
+	t=1757689867; cv=none; b=sqDw2XJw0zSqaNmfw+iBG/SbJ8oq+TQ9q/CoJ2rp0hog+MVfpICSU6GnP/a00sZbLGBTvhZdOlzQMsDsOUczi2bLOgfrT9lm2lcB+dvtpuNHnTbQYlIHuUbHAqKdle08wAFgCakFbh1fuk3z9vMTPyUeG1BUXeaoBqYbDGkwDPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757689861; c=relaxed/simple;
-	bh=y6R7JHolSByTQrZMijPqGMycDGbxs6NH+B+6pGvmKpA=;
+	s=arc-20240116; t=1757689867; c=relaxed/simple;
+	bh=olisOB+5za+t4P5vR3SQezv1tTe26b/8LyNxmfx828U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZDwW9U9YR5cJOElFV7q8wNgbKgOh5zjaR8mxW315TXISqtOi2owKvK4GBo9e1HfHDid9bis+6HcItwhFRmdV+As8dpkdbJoEDOh3eEmKBsl/SnUqskCq6yr/wGXWHejtpqOpmkGTTvVYHmSurj58OOHa1U4D5poiyTy23CyJZIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RkLKDK64; arc=none smtp.client-ip=209.85.128.180
+	 MIME-Version; b=GPUOJM4OA/Buq6uE5GEQ0LbyzdjyUTBBEbmQtfzh+bNw2V+Hd37Ggy7AWSw+H2kXBV95BqL9dXdbbE5cNYBvSlRwidwy6FSQlJ+ZY+BcYKBYIjJ7wNUjdxTuxSU4VzKba1gMMiEKo/s0Qy8Iek50eJz+Sq9WVJ/7hLYgOvc6RPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WubJAJkO; arc=none smtp.client-ip=209.85.128.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RkLKDK64"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-72ce9790ab3so14122447b3.1
-        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 08:10:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WubJAJkO"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-72485e14efbso12123967b3.3
+        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 08:11:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757689858; x=1758294658; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1757689863; x=1758294663; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iQyd/J78t59e431BzK+r1hLIHKrEAjBfy36U2OzrJzo=;
-        b=RkLKDK648r9G39cYNUgxAOkTYXEi2/89mqteQ158UtaweCw6CikKqdSLRll8g0cHql
-         qRxTuJrsWD0ihRSERDZuXzora7vcp8ATffCF4huACVPct1VvjVWD2nq/KK0PEWriuuLE
-         V6RC44iPBH1NihSdKirV+JOfyCZ1lTWHtGH0frmoCOX96W1rNDHhysfntO28vlTE38B7
-         MdPsuoE0+HqHemQ6VXwnwNc7fBPzUNDAwfWLAquFf2P8I1G/dowEFb/dmQwCyMpk7AcG
-         vX13zFnYKk7wUjiGbHMIAQtDvjn0nkWJl9Vyj5D7EYO1n1UyJBw/7tLB2hZ9RB3Fpt4Y
-         SWqQ==
+        bh=UNgnuqtXCBxfx2G2dXAsaT/aGFlSDDhwnEcansq3QOI=;
+        b=WubJAJkOJQnIMhnn6IzLIe0buPcWdYUddOlJ0l5R+p78Ifc8WWmzsO15i1RxkBwBhQ
+         laZtmtcDDz0WUY+8wiov2UGfhMzKbXO8p8d346MZWentphqz1ZsQYIf72mOU5fNwZOxO
+         bbk1kgDbV8O8p2gtoNwBtE7jnLpjB+FUbyo227s1MuK2cRTJqrMH/4NbfkWVGqpn/DOZ
+         hr3Vid4R+QGNOhaWsc9UQs1d1rRutUuW/r+eEqEXCfufJRmuemjyIxF9Yuj9R08nV3Iw
+         rduH/KgjoXP7SdYERbohUuJ6XqAW/vNJqWH5XEDBN6xBen5UNeYDHvh4nznAcpNNo5xW
+         64Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757689858; x=1758294658;
+        d=1e100.net; s=20230601; t=1757689863; x=1758294663;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iQyd/J78t59e431BzK+r1hLIHKrEAjBfy36U2OzrJzo=;
-        b=ioSGI+y7dddEVwu1ktbMzuLYhEzYGJRR/ER5ByaZlMy9Xu4bhOOIe/5SP8FHFj0xHA
-         Kga7FHe+xg6t8NaW1dgJABig2+iFgLvfFyOFNMY40i8rTzNd2TlMRWyq0+RW0FH0l0Db
-         MnzMQ8MxPj1v4wX9C8nU2ZdjtZOdFM+NZ7q4y4i/boDtx1Z7f0NGeC5+Ru3y/OcGP8uX
-         Jv7MUHLmFu/wofNi/8t2aPksA6KqX6Ph6c4ty3oEjXyGA0ujG5hFoT5Y1HJbfXTSyVpL
-         eaXOOMJnbn8lL8zFq/jQzlvSkkU3+q7GE/WygqPcFndGZqAeg82bY+szgATlVJY1Ml6X
-         B0yg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDM1LA7t30kSUnbHM7WtKJ5g2NYLqJGj/yKqVTA5xWbaXQaNO2ifZTnBRr5s1NNY8Z1+hP1W5l5w3Z5hacnh0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxANq7svlfTY+c4LQHqJm8GkzDKtL/IuY/kMyeh1b/3svefl91U
-	YWvn/5ZMX/qYVfTNkPvXeFh+z6MrNLfRZZ8E3d5t8hldc2fYGpyjpdBBRZHE8Zp8o2Q=
-X-Gm-Gg: ASbGncviXD/hVWJvfam3GSXfLViR3+VB3q1quni103sFzH1M6CgsSiC+HS0XkaofNH3
-	WSQYZIo67DmwkUfSsQLNgLB/FjimuBhKFxaLNI83/uyxYFsmQ77CuRw+93R+WUSjLv0/KiswG/X
-	UmGCJv6fu7W+BLwtgUOjgJUhU5utV7PncVU0ijcUNif47qkCPO59314dCMtM9JMIeX04qjdNIRs
-	Am9FYyORVIVXnafJNLBwrXbFFRbHMNKZBnIhWba1vzghejfKc/dGb/F2pHLN2REJvF9oH3QQs9N
-	uPbWeltX1IpwUh0wV/rul7c6EaHtwBXbg7eni0JbbgtZw4P6kRFeXLk6NeEICXvGBUi/fPZp3lu
-	PtaJ60TNrHXerIBm2kig/yBdoC9sCSyKumA==
-X-Google-Smtp-Source: AGHT+IHiWq2tZ0Zh+6RCMZ5n4YEMDF8GDIlS1UolWn0dcdm4mJQCk7ANF/Eeoayp4tEVnT1oJJ4YdQ==
-X-Received: by 2002:a05:690c:6089:b0:723:9ba7:7f9e with SMTP id 00721157ae682-73064cfc375mr30364727b3.25.1757689858316;
-        Fri, 12 Sep 2025 08:10:58 -0700 (PDT)
+        bh=UNgnuqtXCBxfx2G2dXAsaT/aGFlSDDhwnEcansq3QOI=;
+        b=oAyaLjnU9OFgrkG3b0QOTNvg4yI10JrDOQsu+tSMFEdPmxuqkzXoz4wAetw72AxmZi
+         Cx5KGT6Q1Haruhi2URCHq/oUB0iXPwaZ1QhUkbo0ozeH4zXSBTv+ERGYXmEK0ohPH2R6
+         r25l7gPKMfx6Dei+ERnWEzRFRkAuS25+Qozj3xxxO6/RSHrCP3O4WEO6wKjomK35Fyfa
+         97BEAgYgU/MKJ3nzfPb5X6LjjKp3f6poHfYcMmpQ7jcsjX3EtwUQIfPILOhbCTebZFoA
+         Nv5AVVGM01+RQiFjJ7fdwRLkKinhFUAqG0meSfoCasXBwkkysCZj26hoacHz44KuL1Xh
+         f0oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXnhJ8mc3Rxpy9e4MQwnb7UDLnVY7woVPYYqjn4OSc659tAvp075qktMcOyMAPQVcExeok74C2kJ9MEe0yr9Mg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yypo8PoTgNRUwcCPMAqhZcFzSo6F9y5cUFZywlxrCFekIzVUZ7e
+	Zks97DGgZyoPpTpF7Vw0zo2wqR1/YmnfWv+totJgVyvoIH9tOb+/xUVD1RzK0Kznswk=
+X-Gm-Gg: ASbGncvIeXaAJMyl1PdvRfTsvmKLAMM6Zvut5gCL7KHyCmbSCCP4kBOOA+D06E6MVuo
+	pMSLP1n2mRO399vrDbY4/VK3v3sDSkOMRmO3QS8BxZ4TehdcShwYeJqAzlSXwG9T8ibVdIkdUVU
+	Nw69s/x+T3xQnmzWoinkeFDxZYXahZD89NZzVzi1vJf2zK3W4Sgzi4JqWEv7HHRuLy95bclPcti
+	x1STRh+ON86aE7tvrkZTHGd+qED1E3PnnMWtCHzHF1lHz27yQsVyPRp8LBwEgVBFe045sAxnKGX
+	iaNAqo2yajYofzJEKl32Z5pUJohLITnLC9/ADAqOMkdbF7vuwZMJRPikIvZbdoUZGaftsNoaTdH
+	diGXTXSG7WKTKmIG4FCbbyVVMN1vyC3ZNvQ==
+X-Google-Smtp-Source: AGHT+IEtne9c9aNxfz8OotnYXAiNsAB4JCtq87oaoJ7ML/Nd9NUoYp51pIa4pWBpc4rPSN6ehP6TAw==
+X-Received: by 2002:a05:690c:9688:b0:721:1c48:a627 with SMTP id 00721157ae682-730627c990emr26695147b3.6.1757689862953;
+        Fri, 12 Sep 2025 08:11:02 -0700 (PDT)
 Received: from eugen-station.. ([145.224.119.89])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-624841586c1sm1302244d50.6.2025.09.12.08.10.53
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-624841586c1sm1302244d50.6.2025.09.12.08.10.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Sep 2025 08:10:58 -0700 (PDT)
+        Fri, 12 Sep 2025 08:11:02 -0700 (PDT)
 From: Eugen Hristev <eugen.hristev@linaro.org>
 To: linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -78,9 +78,9 @@ Cc: tudor.ambarus@linaro.org,
 	linux-doc@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Eugen Hristev <eugen.hristev@linaro.org>
-Subject: [RFC][PATCH v3 13/16] sched: Add sched_get_runqueues_area
-Date: Fri, 12 Sep 2025 18:08:52 +0300
-Message-ID: <20250912150855.2901211-14-eugen.hristev@linaro.org>
+Subject: [RFC][PATCH v3 14/16] kernel/vmcoreinfo: Register kmemdump core image information
+Date: Fri, 12 Sep 2025 18:08:53 +0300
+Message-ID: <20250912150855.2901211-15-eugen.hristev@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250912150855.2901211-1-eugen.hristev@linaro.org>
 References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
@@ -92,54 +92,183 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add simple function to get the runqueues area and size for dumping
-purpose.
+The coreimage generated by kmemdump requires some kernel information
+in order to be successfully loaded by `crash` or gdb.
+Register all this information through vmcoreinfo once vmcoreinfo is setup.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 ---
- kernel/sched/core.c  | 15 +++++++++++++++
- kernel/sched/sched.h |  2 ++
- 2 files changed, 17 insertions(+)
+ kernel/vmcore_info.c | 141 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 141 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 9af28286e61a..a054dd1fda68 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -120,6 +120,21 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
+diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
+index 3e2e846ba9c8..1d83e95cf9be 100644
+--- a/kernel/vmcore_info.c
++++ b/kernel/vmcore_info.c
+@@ -15,6 +15,7 @@
+ #include <linux/memblock.h>
+ #include <linux/kmemleak.h>
+ #include <linux/kmemdump.h>
++#include <linux/sched/stat.h>
  
- DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
- 
-+/**
-+ * sched_get_runqueues_area() - obtain runqueues area for dumping
-+ * @start: pointer to the start of the area, to be filled in
-+ * @size: size of the area, to be filled in
-+ *
-+ * The obtained area is only to be used for dumping purpose
-+ *
-+ * Return: none
-+ */
-+void sched_get_runqueues_area(void **start, size_t *size)
-+{
-+	*start = &runqueues;
-+	*size = sizeof(runqueues);
-+}
-+
- #ifdef CONFIG_SCHED_PROXY_EXEC
- DEFINE_STATIC_KEY_TRUE(__sched_proxy_exec);
- static int __init setup_proxy_exec(char *str)
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index b5367c514c14..3b9cedb1fbeb 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1330,6 +1330,8 @@ DECLARE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
- #define cpu_curr(cpu)		(cpu_rq(cpu)->curr)
- #define raw_rq()		raw_cpu_ptr(&runqueues)
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -24,6 +25,17 @@
+ #include "kallsyms_internal.h"
+ #include "kexec_internal.h"
  
 +void sched_get_runqueues_area(void **start, size_t *size);
 +
- #ifdef CONFIG_SCHED_PROXY_EXEC
- static inline void rq_set_donor(struct rq *rq, struct task_struct *t)
++extern unsigned int nr_irqs;
++extern unsigned long tainted_mask;
++extern unsigned int nr_swapfiles;
++
++#ifdef CONFIG_IKCONFIG_PROC
++extern char kernel_config_data;
++extern char kernel_config_data_end;
++#endif
++
+ /* vmcoreinfo stuff */
+ unsigned char *vmcoreinfo_data;
+ size_t vmcoreinfo_size;
+@@ -121,8 +133,137 @@ EXPORT_SYMBOL(paddr_vmcoreinfo_note);
+ 
+ static void vmcoreinfo_kmemdump(void)
  {
++	void *start;
++	size_t size;
++	int i;
++
+ 	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_VMCOREINFO,
+ 			     (void *)vmcoreinfo_data, vmcoreinfo_size);
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_linux_banner,
++			     (void *)&linux_banner, banner_len);
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_init_uts_ns,
++			     (void *)&init_uts_ns, sizeof(init_uts_ns));
++
++	sched_get_runqueues_area(&start, &size);
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_runqueues,
++			     (void *)start, size);
++
++#ifdef CONFIG_IKCONFIG_PROC
++	/* Register 8 bytes before and after, to catch the marker too */
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_CONFIG,
++			     (void *)&kernel_config_data - 8,
++			     &kernel_config_data_end - &kernel_config_data + 16);
++#endif
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE___cpu_possible_mask,
++			     (void *)&__cpu_possible_mask,
++			     sizeof(__cpu_possible_mask));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE___cpu_active_mask,
++			     (void *)&__cpu_active_mask,
++			     sizeof(__cpu_active_mask));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE___cpu_online_mask,
++			     (void *)&__cpu_online_mask,
++			     sizeof(__cpu_online_mask));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE___cpu_present_mask,
++			     (void *)&__cpu_present_mask,
++			     sizeof(__cpu_present_mask));
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_nr_irqs,
++			     (void *)&nr_irqs, sizeof(nr_irqs));
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_tainted_mask,
++			     (void *)&tainted_mask, sizeof(tainted_mask));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_taint_flags,
++			     (void *)&taint_flags, sizeof(taint_flags));
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_jiffies_64,
++			     (void *)&jiffies_64, sizeof(jiffies_64));
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_nr_threads,
++			     (void *)&nr_threads, sizeof(nr_threads));
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_node_states,
++			     (void *)&node_states, sizeof(node_states));
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_init_mm,
++			     (void *)&init_mm, sizeof(init_mm));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_init_mm_pgd,
++			     (void *)&init_mm.pgd, sizeof(*init_mm.pgd));
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE__totalram_pages,
++			     (void *)&_totalram_pages, sizeof(_totalram_pages));
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_nr_swapfiles,
++			     (void *)&nr_swapfiles, sizeof(nr_swapfiles));
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE___per_cpu_offset,
++			     (void *)&__per_cpu_offset, sizeof(__per_cpu_offset));
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_high_memory,
++			     (void *)&high_memory, sizeof(high_memory));
++#ifdef CONFIG_NUMA
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_node_data,
++			     (void *)&node_data,
++			     MAX_NUMNODES * sizeof(struct pglist_data));
++
++	for (i = 0; i < MAX_NUMNODES; i++) {
++		if (!NODE_DATA(i))
++			continue;
++		kmemdump_register((void *)NODE_DATA(i),
++				  roundup(sizeof(pg_data_t), SMP_CACHE_BYTES));
++	}
++#endif
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_mem_section,
++			     (void *)&mem_section, sizeof(mem_section));
++	for (i = 0; i < NR_SECTION_ROOTS; i++) {
++		if (!mem_section[i])
++			continue;
++		kmemdump_register((void *)mem_section[i],
++				  SECTIONS_PER_ROOT * sizeof(struct mem_section));
++	}
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_MEMSECT,
++			     (void *)mem_section,
++			     sizeof(struct mem_section *) * NR_SECTION_ROOTS);
++
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_kallsyms_num_syms,
++			     (void *)&kallsyms_num_syms,
++			     sizeof(kallsyms_num_syms));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_kallsyms_relative_base,
++			     (void *)&kallsyms_relative_base,
++			     sizeof(kallsyms_relative_base));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_kallsyms_offsets,
++			     (void *)&kallsyms_offsets,
++			     sizeof(&kallsyms_offsets));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_kallsyms_names,
++			     (void *)&kallsyms_names,
++			     sizeof(&kallsyms_names));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_kallsyms_token_table,
++			     (void *)&kallsyms_token_table,
++			     sizeof(&kallsyms_token_table));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_kallsyms_token_index,
++			     (void *)&kallsyms_token_index,
++			     sizeof(&kallsyms_token_index));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_kallsyms_markers,
++			     (void *)&kallsyms_markers,
++			     sizeof(&kallsyms_markers));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_kallsyms_seqs_of_names,
++			     (void *)&kallsyms_seqs_of_names,
++			     sizeof(&kallsyms_seqs_of_names));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE__sinittext,
++			     (void *)&_sinittext, sizeof(&_sinittext));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE__einittext,
++			     (void *)&_einittext, sizeof(&_einittext));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE__end,
++			     (void *)&_end, sizeof(&_end));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE__text,
++			     (void *)&_text, sizeof(&_text));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE__stext,
++			     (void *)&_stext, sizeof(&_stext));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE__etext,
++			     (void *)&_etext, sizeof(&_etext));
++	kmemdump_register_id(KMEMDUMP_ID_COREIMAGE_swapper_pg_dir,
++			     (void *)&swapper_pg_dir, sizeof(&swapper_pg_dir));
+ }
+ 
+ static int __init crash_save_vmcoreinfo_init(void)
 -- 
 2.43.0
 
