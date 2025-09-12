@@ -1,72 +1,73 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-yx1-f53.google.com (mail-yx1-f53.google.com [74.125.224.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB27F36206E
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 22:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19AD268C73
+	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 22:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757715084; cv=none; b=ny+IiTtKx8+RclBWH73XMtQXLpJROHXXZ3UVELkeoOeSAERZLMxz7Nr1mbNWol83rRP8Ya6T4JsLTS2VBdK0yzC9k6Ae4BShupxM6Ack2iWDpWDB8WRQxdzc4mu3psxNzmsO2cf0FGauPyrhaX+nEEOXlPzf2j3eAU81F2KcxJU=
+	t=1757717644; cv=none; b=cOT3G372yjoAOK2iuR/Pa5BTUwEyT2Pej5JTepzXl/OHcdavk/BGX+OIX4Tw76d3SmKH1r4QZEENrT8YtVI/qea6VCQCnAqyGSDC+3TV2RieEOpZ5+WCsvc74uj3LKJQ4CNVCEgmQ74sdZVZskL9tiwyZaApUCGXhK4lpQ6sUAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757715084; c=relaxed/simple;
-	bh=SbE2cgv2kQcmjvErb4P8aWuTkv80m0Jw5VHNYIRdjbE=;
+	s=arc-20240116; t=1757717644; c=relaxed/simple;
+	bh=MHrpa4Jwxgc+dQNTjUuLs2EeQFU4pffDsIDMZKMLqmc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u4Z6xWPy1mSTGUfvfdpka5FarYe7eCJmAmvQYMPvQY0iyzlUXgKyy5dNb7qTODFWqXbjY5areBpIgUu32wARdUoSvIulmB4VDtIqDLA50Wu7fsXRejg5c9EN9GCZw8XktPJHx3dYUm+dyjr2f3AyFRDMB3wjYfOi/jf0EXyCwqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H4I8qU5z; arc=none smtp.client-ip=209.85.219.179
+	 To:Cc:Content-Type; b=kHD++LoO/9Q963qRa0tzvvPpZFLWHRCXX8fWp8oUmgmbeXI51PeQ5JZiuOixoRXXbtFhsuipZsNqaTb3fQy1zINIvlxdRcb4HC3n60cwQnNLiR9eqhDqbitZkJQaY26oD3X2HRKpn2QYQyIwDK4epk0beU1N1hrz2WEeI3e8kdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PutVraYs; arc=none smtp.client-ip=74.125.224.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4I8qU5z"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-ea0150ee46dso1986190276.1
-        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 15:11:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PutVraYs"
+Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-60170e15cf6so1684685d50.0
+        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 15:54:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757715081; x=1758319881; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757717641; x=1758322441; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PKCZT/K4e4byUQqhyOs9c8fQ3Jbf6/69LbbDKjwZwLE=;
-        b=H4I8qU5zYYIajG0cFBKg9XLkC+arvjtzsJSFXvheCL6rEFjkBDjc3hegecUkfboRZJ
-         o+YKR91VOx5F4mC0NBXl1rGgTBplAfhta0YJG18OPylwKqPOunK7HTNz2EPsOewmiZ7b
-         Bqxs/BsbSOTDAngNZiMnuhnORI7pSDWuf/FyvtAF5G0cFF+NNpjd7VBXJNIYdLsxy3tO
-         8unUO2ooWffSDOCwop9ER6npWKnjKYm/uQ+3wcxMTLVNmoQ/tJ6Z3aQsDPRp6pM/gWsV
-         f8qbeVEPO+hCJ7RRpn+rf90Ejl0TJuM2dxqhA2pdPJCfpeoHGBh8ew8oti7p0xQn2yYz
-         HH9g==
+        bh=H/ALLDcBZ6nZwBY7ZN6L7gT+4ClMkunGI751uMEjico=;
+        b=PutVraYsoT8gxPT4xt/376mhNjsh17LrtcO0pcCNQRGNVS5m5Q1WliSxIPEbFrayGu
+         TgXJ+7M10CMLpAz64f/+YyNtvHzJCxwNO6iRD32fjXNIrDKaW68n9zp4tOd0v9ZV/z1Z
+         kzJdu620IzX7snuNghL/mL/EfriWSy8vJWiIzX+zbh95ncUBEY4OwELqMl3pcNP55JL1
+         KTfBuBP6o7eCrCzGduUf6nuAmTuYtmEKSL/Tt9eg8OaSlJisZ359ZY4oZzNkOeCVgdcz
+         cS87zXcu8yKWLUybiIlpq14j58AgjUOauJq0jvcdh7AUSKuWwDrt16zeBjmGcMb65yZh
+         ojMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757715081; x=1758319881;
+        d=1e100.net; s=20230601; t=1757717641; x=1758322441;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PKCZT/K4e4byUQqhyOs9c8fQ3Jbf6/69LbbDKjwZwLE=;
-        b=t4WoeDTLt8h9+mH6PyLt29J/2nyRaemetqejeK5/na/rp+7+WiD032hriBR5Mnc011
-         93KE+YS0KXibpoRqcHdEZeVUmQLON1gkiehLBaSMkvM5POZ4L6+MFYnCbPEzEsbiZ2UO
-         Fs4BUBnYHumy/3rTbndUwG4kKLodtV9JeA3R9yq1MdK0z7vlRX+RUhXKoHeNCLvZM6qu
-         kvk7eiZHVmZXqF2b/nPri/LqUfMLkD1utyEstGjhP80Ht7tvj1VQYIE8FSTa+WOMahmH
-         Mr3wW+KWXXeimaGk0/tzQ0lVrIQXe+CM90lNEQpcjRF3FVzyGgGEYwMCIGpfccqmLB85
-         hHOA==
-X-Forwarded-Encrypted: i=1; AJvYcCWLOTvCWcUmzYVmYunE/o+4/e32h5v8fbyuaSF5uN6phZn1YDkFvsy6ZZ5bgKzyebF+fWeDh2GR/F7+pJ/rCMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN8E5waiOh3j0Hb5NN7tW3742DAjCAbKIboGrXikxMLnvnM+ZO
-	xoKU8jnAZ2M+kyU0FSMYsEaSBzVPD0pw1X5Hi0p2JgWstWHtt1bbj+h+db9qLEP88OC6A1UtFRz
-	YoqEP0y5viiykwQxQRBc8mihy4RfR230=
-X-Gm-Gg: ASbGncvECElncyCtje3od2PsIr0G/WmiMt8orMUkayt/vGrh1G0kPPhaYEOPNpvmJ7w
-	BX/eFlXFJ0sYGsQJB1xrCSkATpoWd3r6CH32BtAW9sq7vrgQYdmzJuBc4xLJ6TTC/LQBLwrRoEE
-	5fUaMn9vC2ihdwBLMi2OTWBY50tHmKpIVba7+Rw+mYJPR+nA8lKOeyzDfrnwqac58vbm6nYA9ha
-	VUgXkGZTHFdpx/K3As6Sx+z5x0AQ/lYjoH9cwpPUJ9p9lw3epDe1iuoTbjYUifcaihODV60
-X-Google-Smtp-Source: AGHT+IHvIYQO4e+EnIIRJTQWJn4b+DyuGOUZd4hIxE3/1w0g4hnoPddMFEkakoXj6yfAPLr17VsI/RA83QQAwziujdk=
-X-Received: by 2002:a05:690c:4c09:b0:723:bd6c:4f2a with SMTP id
- 00721157ae682-730625cd9f7mr37664467b3.7.1757715080775; Fri, 12 Sep 2025
- 15:11:20 -0700 (PDT)
+        bh=H/ALLDcBZ6nZwBY7ZN6L7gT+4ClMkunGI751uMEjico=;
+        b=UlKrAuxEqERuVhYEaCU7r2m3e6j/yNzatz6ZYyCKwveEGzBvBQWGHh4rgvVh4QpXjg
+         DuMcags7W7cTGnFVMKvY2iNUrI1r+xaR7X+kWzFWeYhMOxbyXCjG5NU9QJ65Z2mKe7Ff
+         nDvKWtIcOS7ReqfZ6gdhDIa1jaasdHRhZ01cbr1LH3PO0BxHNXVuHnKqnacFNLQhgWpY
+         8qEOnR6dqNFHXRI0jqHUMZfatlTzFHts1jlM7AiMxTY/nmVT3iqDD/jN85el3iADJIT2
+         3Ep8y9T67+ZxogV2+L64OWX6SOssBzyoJsS+akXjA38k6+3hWgRs0cFIPki/KDMShYFO
+         gBpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXVxJttx0zA+yTdHD9Im1ZKB50Wjd1445sP7vS5sXDBaOvohBhYG/n2kyezZRn9IHYweJqDC2E+1CBCccCqkwo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiQBDs7OeIx/7Nc9p6/ggsiL1r7SeasxESf25q3H3EoOcXetyg
+	sigJZyAV9cGy9DxBr1XriCfbxJZoWtaUtHmMMGmvLNBwdCG+qqNk5jRSsAbaXEt4kvL93+Qjyuj
+	7+04rx4tmSBnpUyDzvefHlt6+2xHPG5U=
+X-Gm-Gg: ASbGncsu/LWIpYy8XRfy7yrEKLFMPyd4DQtWlTAcQSuBBHpDvv8VcHuMfEVz581+762
+	gPHpkvnq+gh8nH70vQ8WLbRlwvKFGVxKnE1WHgIhlNxDZv4CfcdZdOJ8H+GI3BdJrvMNPrfR/qN
+	T+SJiNt5pJ0xLupxumlgZz1rI7wSr5F+SAFlmX/cWt8yjjGOWauVA/WoiUN2KT8ZqIAfJcUjiG4
+	7uU3PuKHZu9r6QvJvvULKzi4VAJJW6xVOfeq4EWbkkCnXgkpP7DExAzTt+XFcu3zwn1Xv9ubbPD
+	j9SFtxY=
+X-Google-Smtp-Source: AGHT+IGmrPKfHKqLuLVsedBSU1D7fMJ0SPSt1pUu9IK0SCtyHO6OiaCBaQyBDxty6OWXlqg3nf3oT3Kb2tAQnhUAUk8=
+X-Received: by 2002:a53:7101:0:b0:626:842f:818c with SMTP id
+ 956f58d0204a3-6272297979cmr3570059d50.24.1757717641302; Fri, 12 Sep 2025
+ 15:54:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250912-mt8196-gpufreq-v2-0-779a8a3729d9@collabora.com> <20250912-mt8196-gpufreq-v2-5-779a8a3729d9@collabora.com>
-In-Reply-To: <20250912-mt8196-gpufreq-v2-5-779a8a3729d9@collabora.com>
+References: <20250912-mt8196-gpufreq-v2-0-779a8a3729d9@collabora.com> <20250912-mt8196-gpufreq-v2-9-779a8a3729d9@collabora.com>
+In-Reply-To: <20250912-mt8196-gpufreq-v2-9-779a8a3729d9@collabora.com>
 From: Chia-I Wu <olvaffe@gmail.com>
-Date: Fri, 12 Sep 2025 15:11:10 -0700
-X-Gm-Features: Ac12FXxS_5OX767ts7gHLmsyJJeyNECHrzeeo_cAOYq8vugrFis3NtJYNr5wYEs
-Message-ID: <CAPaKu7Q+KAzEtKBWy8KO2Kp+H4y-Mqo34uo=jgH1_iooaDq3hA@mail.gmail.com>
-Subject: Re: [PATCH v2 05/10] mailbox: add MediaTek GPUEB IPI mailbox
+Date: Fri, 12 Sep 2025 15:53:50 -0700
+X-Gm-Features: AS18NWAVsbHM7asbGyyRZapaZP5ufrQUasUcMY0V45b2pm9dui9MQp5I0XZOq0k
+Message-ID: <CAPaKu7TEN++z8r68k_4-iCyMLMthqJBUX35pgXupAHPdfttrYg@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] drm/panthor: devfreq: add pluggable devfreq providers
 To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
 	Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
@@ -88,90 +89,67 @@ Content-Transfer-Encoding: quoted-printable
 On Fri, Sep 12, 2025 at 11:38=E2=80=AFAM Nicolas Frattaroli
 <nicolas.frattaroli@collabora.com> wrote:
 <snipped>
-> +static irqreturn_t mtk_gpueb_mbox_thread(int irq, void *data)
-> +{
-> +       struct mtk_gpueb_mbox_chan *ch =3D data;
-> +       int status;
-> +
-> +       status =3D atomic_cmpxchg(&ch->rx_status,
-> +                               MBOX_FULL | MBOX_CLOGGED, MBOX_FULL);
-> +       if (status =3D=3D (MBOX_FULL | MBOX_CLOGGED)) {
-> +               mtk_gpueb_mbox_read_rx(ch);
-> +               writel(BIT(ch->num), ch->ebm->mbox_ctl + MBOX_CTL_IRQ_CLR=
-);
-> +               mbox_chan_received_data(&ch->ebm->mbox.chans[ch->num],
-> +                                       ch->rx_buf);
-Given what other drivers do, and how mtk_mfg consumes the data, we should
-
-  char buf[MAX_OF_RX_LEN]; //  MAX_OF_RX_LEN is 32; we can also
-allocate it during probe
-  mtk_gpueb_mbox_read_rx(ch);
-  mbox_chan_received_data(..., buf);
-
-mtx_mfg makes a copy eventually anyway. We don't need to maintain any
-extra copy.
-
-Then we might not need rx_status.
-
-> +               atomic_set(&ch->rx_status, 0);
-> +               return IRQ_HANDLED;
-> +       }
-> +
-> +       return IRQ_NONE;
-> +}
-> +
-> +static int mtk_gpueb_mbox_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +       struct mtk_gpueb_mbox_chan *ch =3D chan->con_priv;
-> +       int i;
-> +       u32 *values =3D data;
-> +
-> +       if (atomic_read(&ch->rx_status))
-> +               return -EBUSY;
-> +
-> +       /*
-> +        * We don't want any fancy nonsense, just write the 32-bit values=
- in
-> +        * order. memcpy_toio/__iowrite32_copy don't work here, because f=
-ancy.
+> diff --git a/drivers/gpu/drm/panthor/panthor_devfreq.h b/drivers/gpu/drm/=
+panthor/panthor_devfreq.h
+> index a891cb5fdc34636444f141e10f5d45828fc35b51..94c9768d5d038c4ba8516929e=
+db565a1f13443fb 100644
+> --- a/drivers/gpu/drm/panthor/panthor_devfreq.h
+> +++ b/drivers/gpu/drm/panthor/panthor_devfreq.h
+> @@ -8,6 +8,7 @@
+>
+>  struct devfreq;
+>  struct thermal_cooling_device;
+> +struct platform_device;
+>
+>  struct panthor_device;
+>
+> @@ -43,6 +44,19 @@ struct panthor_devfreq {
+>         spinlock_t lock;
+>  };
+>
+> +struct panthor_devfreq_provider {
+> +       /** @dev: device pointer to the provider device */
+> +       struct device *dev;
+> +       /**
+> +        * @init: the provider's init callback that allocates a
+> +        * &struct panthor_devfreq, adds it to panthor, and adds a devfre=
+q
+> +        * device to panthor. Will be called during panthor's probe.
 > +        */
-> +       for (i =3D 0; i < ch->c->tx_len; i +=3D 4)
-> +               writel(values[i / 4], ch->ebm->mbox_mmio + ch->c->tx_offs=
-et + i);
+> +       int (*init)(struct panthor_device *ptdev, struct device *dev);
 > +
-> +       writel(BIT(ch->num), ch->ebm->mbox_ctl + MBOX_CTL_IRQ_SET);
-> +
-> +       return 0;
-> +}
-> +
-> +static int mtk_gpueb_mbox_startup(struct mbox_chan *chan)
-> +{
-> +       struct mtk_gpueb_mbox_chan *ch =3D chan->con_priv;
-> +       int ret;
-> +
-> +       atomic_set(&ch->rx_status, 0);
-> +
-> +       ret =3D clk_enable(ch->ebm->clk);
-> +       if (ret) {
-> +               dev_err(ch->ebm->dev, "Failed to enable EB clock: %pe\n",
-> +                       ERR_PTR(ret));
-> +               goto err_clog;
-> +       }
-> +
-> +       writel(BIT(ch->num), ch->ebm->mbox_ctl + MBOX_CTL_IRQ_CLR);
-> +
-> +       ret =3D devm_request_threaded_irq(ch->ebm->dev, ch->ebm->irq, mtk=
-_gpueb_mbox_isr,
-> +                                       mtk_gpueb_mbox_thread, IRQF_SHARE=
-D | IRQF_ONESHOT,
-> +                                       ch->full_name, ch);
-I don't think this warrants a per-channel irq thread.
+> +       struct list_head node;
+> +};
+On mt8196, we have performance-domains to replace several other
+properties: clocks, *-supply, power-domains, operating-points-v2.
+There are also quirks, such as GPU_SHADER_PRESENT should be masked by
+GF_REG_SHADER_PRESENT. It feels like that the scope of
+panthor_devfreq_provider is more broader, and at least the naming is
+not right.
 
-mbox_chan_received_data is atomic. I think wecan start simple with
-just a devm_request_irq for all channels. mtk_gpueb_mbox_isr can
+Another issue is I am not sure if we need to expose panthor_device
+internals to the provider. mtk_mfg accesses very few fields of
+panthor_device. It seems we can make the two less coupled.
 
-  read bits from MBOX_CTL_RX_STS
-  for each bit set:
-    read data from rx
-    mbox_chan_received_data
-  write bits to MBOX_CTL_IRQ_CLR
+I might change my view as mtk_mfg evolves and requires tigher
+integration with panthor. But as is, I might prefer for mtk_mfg to
+live under drivers/soc/mediatek and provide a header for panthor to
+use in soc-specific path.
+
+
+> +
+>
+>  int panthor_devfreq_init(struct panthor_device *ptdev);
+>
+> @@ -57,4 +71,6 @@ int panthor_devfreq_get_dev_status(struct device *dev,
+>
+>  unsigned long panthor_devfreq_get_freq(struct panthor_device *ptdev);
+>
+> +int panthor_devfreq_register_provider(struct panthor_devfreq_provider *p=
+rov);
+> +
+>  #endif /* __PANTHOR_DEVFREQ_H__ */
+>
+> --
+> 2.51.0
+>
