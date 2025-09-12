@@ -1,614 +1,468 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2084.outbound.protection.outlook.com [40.107.244.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCB41EA7DD;
-	Fri, 12 Sep 2025 10:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B77830102D;
+	Fri, 12 Sep 2025 11:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.84
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757674788; cv=pass; b=D4s1yKfMIKLOizEiPt/ZUN/2qQRVviVHDeL6kdSyqkmXzgltTySRD8Qp5cqlK1nlLOH+rRoQe34VgzFLKgqbj/WCwnjW4PkPhLJsLewKVzQcEGKROPJrgjkqQtgozbC/x/NBpPkASSWE4tr55mTGMQlDdMqpVtN16lsF7GBhVMc=
+	t=1757676343; cv=fail; b=ABFIqogA8qGQWsyE1o+0oPqaQ7LiccJRdH31T6D0JRiDOATTB61TnTCYu+XULP4Zy/ArtnpjeZX9//8zHsCy2igzYJRwJO/Zg4z765zKw2zKaamfQW9SucHTBOAyNPJ4JICCH5PvIv3ObSj7OqSraajtvKcj4TC1tsC4qC7g/qA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757674788; c=relaxed/simple;
-	bh=dfqv03NeK6sZvQ5PcSGW6oPy7w+hVO5V+pWRUbS6FVM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GByG+9XHyyHvuyUYVNzw9EkrLnxYsOHkuuX9dCMZmlcqdJFO+PPKnB7EZeYJv26mejZ++mFmYsDwJf/oV5Uf0+WZbLNSBV6IQTY9SaQat/z8cf2Njf75a06bEQ2SsVa8qpKuqp6wslJewkiuLKGBoOPGVdYD9jUwa5F435s0kD8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=SWunbdIX; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1757676343; c=relaxed/simple;
+	bh=0thVmV+5x9bTJhZcgJOrXFgAFYYxbh9GxxTjpG3ZGqs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=DuZCnAcZjrIxG5ivJZySi+nus80c69yVUVjZx0Gmx5l7VHxLzioylKPQL1GipED2GZ48U1Y7kFR7vIVK0Bl0NJUZADNHbt3IjKRHAZTJHPvFWj9kKxvUErI4kPCne7z5q0aTxsa+LuM5MdpoY4Vus6lbLzPs8b1g7cNVbPNQaK0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EA0LxkeQ; arc=fail smtp.client-ip=40.107.244.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="SWunbdIX"
-ARC-Seal: i=1; a=rsa-sha256; t=1757674755; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=E6/1DG8WrAY75UakpxDmhKbrxrf5zSJePUut+IxSO+QVSKzsML34iXZUQ+m6j/eVTrvCFj6qQEW5YAHN7KzZO+pWwC4mWyAMqmcmMWIDVnIzGMr1uQbOTaV+Ll3+Q9rDxSL8pwhM5k94opYrSrqz2rJeWCLcBdpfzCL/Y0jWYW4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1757674755; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Kuus9WkOzKNAJUiWF7HiS3jmu57cJ6ZFPn774V4O+ow=; 
-	b=iq/hdzpBi45qBfvpZCSjt23TIPcWqzk6lLBl2cl47gTDQmN1OY5U9p5+JhmGVWAVxTJR3CjwuDhF3SCVqc4oRS0VRvB83AWEotDBJx83ggIGJ3shRjaMY2wxVDo5M2XRO9/OcZSSz/AzsZ5E1zETkf1/nDLa4Ry3C/vBqmNx5zo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757674755;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=Kuus9WkOzKNAJUiWF7HiS3jmu57cJ6ZFPn774V4O+ow=;
-	b=SWunbdIXnqksvknSPQ7Nd6CbWlKumM8UkQDE4huCokATci7Xqgmnrgr2bh8qeVpo
-	5AEy0PZdAf+P6SqEUe8wwOIwIJ0A7NgjJQdBxpK6JfYL1uPkgG8XY3foIpajmQX9OMD
-	SiCN+OrL+hLNarfJw4pJU7XnV7tC+PElz4LQfPJk=
-Received: by mx.zohomail.com with SMTPS id 175767475236216.54884001202231;
-	Fri, 12 Sep 2025 03:59:12 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Chia-I Wu <olvaffe@gmail.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- MyungJoo Ham <myungjoo.ham@samsung.com>,
- Kyungmin Park <kyungmin.park@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Chen-Yu Tsai <wenst@chromium.org>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH RFC 05/10] mailbox: add MediaTek GPUEB IPI mailbox
-Date: Fri, 12 Sep 2025 12:59:03 +0200
-Message-ID: <4506669.X9hSmTKtgW@workhorse>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EA0LxkeQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Xc3gwgL+N8IdPbjQGj1IXS2CuAPCMjVZZHAglWKXEFeu8rrJ1cUTSiOZofliQhHpBOe4UQ8t6mv+N9j2sva26XwvgwsLSmxDj63a2IawL7BSvrLBUuV0oOIsgscyVw9D1lR/VqIiNPJroBSA/UUs0UFLM6HiLlNhwP01/mQ6DRaOIiFqjBLpRXHem/LNyqHmmTWdQ1CamhU+D6JluEr7LGHXFf92Hmp3UTuvlt7IKIurYJQZQM0il98U6QsnIBoAKdDTmqMZH+ieL2lZQy8RWdYQwbRSChOeVws5gGGbWjBvarkRKJeR0/n2j+xanG1BJKowKJhhDCVSmw20FK6QXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kGIZumPD4xA7836xf0FyCYFLg/9TG+TMmaVbds/pyWs=;
+ b=yt+nOvS8W5cppI0qLaGesX1b4RNd5vqpqprzQNHy2owUoBi6EgNgxsU658pNVKrJZ+X9vGEq52O8iWiihaqtGC/WgGaLWeYopM9jSInUnAEOwelnv/qzxKWeJtxE0tccz1iB5iRwQu8Kh4TPfgDnXcES2EW9aHniawNAVEyEx8+0AIyo+DnwNxQDm0HpYhFH7u6ZzyEbJwMoqPAiClrLeUV2SLHUESzI1ajqeiDW5U4BXuX23AL/pX+Usu9RKLlc4NCPTB1hTgSFWcS4nR0u3n7lfKssvcquUQ4sF6VuH014lQUj9t2GSNMMNvKNpSDmltmr4DV3CVg//iTGMjW+rg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kGIZumPD4xA7836xf0FyCYFLg/9TG+TMmaVbds/pyWs=;
+ b=EA0LxkeQE65twRy29lNbhRA/QV4vc0+DoNw9xW6A9Na65XhJFuVVBV92gkMRp2nASvSVmFsIvXbMbO/wnWkXUGdljMTnwir4W0oWAp0RhyjKR2XP8wiF25OSbzMwD0V9EyVEfsfAk6vkL2neKbAml7YoeCXLU2ySqikqBzF8QAc=
+Received: from DM4PR12MB6109.namprd12.prod.outlook.com (2603:10b6:8:ae::11) by
+ CH0PR12MB8463.namprd12.prod.outlook.com (2603:10b6:610:187::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.18; Fri, 12 Sep
+ 2025 11:25:34 +0000
+Received: from DM4PR12MB6109.namprd12.prod.outlook.com
+ ([fe80::680c:3105:babe:b7e1]) by DM4PR12MB6109.namprd12.prod.outlook.com
+ ([fe80::680c:3105:babe:b7e1%4]) with mapi id 15.20.9094.021; Fri, 12 Sep 2025
+ 11:25:34 +0000
+From: "Guntupalli, Manikanta" <manikanta.guntupalli@amd.com>
+To: Frank Li <Frank.li@nxp.com>
+CC: "git (AMD-Xilinx)" <git@amd.com>, "Simek, Michal" <michal.simek@amd.com>,
+	"alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"kees@kernel.org" <kees@kernel.org>, "gustavoars@kernel.org"
+	<gustavoars@kernel.org>, "jarkko.nikula@linux.intel.com"
+	<jarkko.nikula@linux.intel.com>, "linux-i3c@lists.infradead.org"
+	<linux-i3c@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, "Pandey, Radhey Shyam"
+	<radhey.shyam.pandey@amd.com>, "Goud, Srinivas" <srinivas.goud@amd.com>,
+	"Datta, Shubhrajyoti" <shubhrajyoti.datta@amd.com>, "manion05gk@gmail.com"
+	<manion05gk@gmail.com>
+Subject: RE: [PATCH V6 2/2] i3c: master: Add AMD I3C bus controller driver
+Thread-Topic: [PATCH V6 2/2] i3c: master: Add AMD I3C bus controller driver
+Thread-Index: AQHcIkZvn4aTq4cirkSmmfELS1IUxLSMotAAgADGrwCAALgFgIAA6baQgABff+A=
+Date: Fri, 12 Sep 2025 11:25:33 +0000
+Message-ID:
+ <DM4PR12MB61099BA795FD6DA057DD08E58C08A@DM4PR12MB6109.namprd12.prod.outlook.com>
+References: <20250910112954.553353-1-manikanta.guntupalli@amd.com>
+ <20250910112954.553353-3-manikanta.guntupalli@amd.com>
+ <aMGtdFxlXRanIAuM@lizhi-Precision-Tower-5810>
+ <DM4PR12MB6109FB1956E8AC4979DFE85A8C09A@DM4PR12MB6109.namprd12.prod.outlook.com>
+ <aMLufaWnrhPxVyxm@lizhi-Precision-Tower-5810>
+ <DM4PR12MB61093B9BB9B3EF1D9F6B499E8C08A@DM4PR12MB6109.namprd12.prod.outlook.com>
 In-Reply-To:
- <CAPaKu7RUx6KHyvdvrfX3u-7Lk=Wa3nmTh6-tD3CbReNAwNtgoQ@mail.gmail.com>
-References:
- <20250905-mt8196-gpufreq-v1-0-7b6c2d6be221@collabora.com>
- <20250905-mt8196-gpufreq-v1-5-7b6c2d6be221@collabora.com>
- <CAPaKu7RUx6KHyvdvrfX3u-7Lk=Wa3nmTh6-tD3CbReNAwNtgoQ@mail.gmail.com>
+ <DM4PR12MB61093B9BB9B3EF1D9F6B499E8C08A@DM4PR12MB6109.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Enabled=True;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SetDate=2025-09-12T05:42:03.0000000Z;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Name=Open
+ Source;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_ContentBits=3;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Method=Privileged
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR12MB6109:EE_|CH0PR12MB8463:EE_
+x-ms-office365-filtering-correlation-id: aed9f3bd-a960-406c-0837-08ddf1ef16d9
+x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700021;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?vd2CjiPNMlEQijvAtKfY3URIkUvV9AB9RNW+zBQHV9WKE54mp+Cyd9BPIi9Q?=
+ =?us-ascii?Q?k2JuTYYYFYPCQ7K663fkjwc3onQ01FFvxgM5rUHCed2yl9pQPjKO/ySRhgyW?=
+ =?us-ascii?Q?fWt21ui+dkADz9ex0YGZELhf3V8NUWmvTUFKbNs+FsRpTQNBic2EMOekrkup?=
+ =?us-ascii?Q?gxAmWiDRqw39gWrDkfmLbj06ur3dqsZ9A5YOk7rvlKPiX1gEhjHmy9VU6Bv2?=
+ =?us-ascii?Q?vcQtZKuCPdEcwpTb5uwoTjUePkn1ZUIEIZLcRVdaz3dlsIvZE9j4uOPJ7anF?=
+ =?us-ascii?Q?+15G+hOruLGPlSQGZ9DMm8wUrRpz0T/4KxeGpDD5/FHND8rJaDFi6zHyNw5O?=
+ =?us-ascii?Q?04hFZ+dOBoXRTKAd9mfxcZEY5ZdXwdmxglVPpPA8WPGaEZJva5y7ykL/WhcP?=
+ =?us-ascii?Q?PVVEXOd8Qk/wRGrwbTVgMMnSRQyj3okfEaGxgJv0ab4lEFP1uCcUKZthuU6C?=
+ =?us-ascii?Q?x5ieFnfSaaD/b3baZ3STjinfJwxcbYBA/2A5+R5+/Vvn8P1D2WON0FbxsrjB?=
+ =?us-ascii?Q?wyZMBcY0+RSiMmChnW/G7beTxgIFz751P6ariwOIDyQ1/LCTORFSQ20XmJBB?=
+ =?us-ascii?Q?3ukxDzrEF5T1DRhSIzasW1Boz6fbvAVAXFqjxear4sRD0A9RsbtsrY95JAbE?=
+ =?us-ascii?Q?KZkgsSKTRJ5p/2YKXXayGsts9rIAQW3njgIjJi5TA2zsS1spiPua2QnGMgAh?=
+ =?us-ascii?Q?QVnRYjIkYrT+ftRJrRTM5AdZBkunYcJIqab0yZP8926XsLCnpbHVLr8PoAFV?=
+ =?us-ascii?Q?IZgIRZ13u7iH0LzrvJshCwfLNfqBahOOfqb8MoacGc3UTrVzxgyF6UPAFYyv?=
+ =?us-ascii?Q?BnFwitOEjxeNVI25Y45IUCajICswTzIytf3jfCTD8Mn7PHSYx/Iaz1PQ6Uc2?=
+ =?us-ascii?Q?3IA2Qk8GOV5+QG/u48/aIc/lipbXWPOZg11KmFZt6Jc2RclnxY85e8YLn+PL?=
+ =?us-ascii?Q?velfE3SdvETSV/9rs6Rjttb34eT6eiPpRnohQno3wth40H590f2fqHvZzGSd?=
+ =?us-ascii?Q?G5EVq3BotcOvsWP7cOYm1O0zOeGoXJTRw0J15GvLukL11oNeIuDy0lFg7pUY?=
+ =?us-ascii?Q?PUi+zCcQAb6tYHwc5WBgEbDMDjCk04bOnT0DEfH5xw75GGsmUGJrVvka6mjU?=
+ =?us-ascii?Q?XewDGMG/Gz5twASE+hG18glCNsNWks5xP3fG5d/ZKkTTSykkgpt3cMgYJTKO?=
+ =?us-ascii?Q?4nX+Z4yVkRe2djYkAZIZBmYdHBiLqM5uIMFCD6CWzJ2demLlJy9edaBaDrCM?=
+ =?us-ascii?Q?4h84b9gk1fKMLxkHpZexcxaR9wakAhmPNfdwvMb/yVMjJFUO68uTHLLZewWJ?=
+ =?us-ascii?Q?MmwfiRQ5djWpxSVO0g1AwN690N5J+RwSS5CqK+rMpVhrF51f1ayziEjaY/z8?=
+ =?us-ascii?Q?2qlwwWT+24KyjF2F8POj9wz8+X3vrGg1iZ9+Ijm9ujT22aiirjkh2w0o3eiB?=
+ =?us-ascii?Q?IKP4npAFewI=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?4b+UG21++Lo5Ugt9HSih2vyvZkIcDjnNeLXzdgnTQSg7yIKLtKZmVynfO4X0?=
+ =?us-ascii?Q?J4kwoaqqwMBR1G9bhsyso9+Yf9g9b567cmrOz/gOfPxIN79MREFJkMLy1xNS?=
+ =?us-ascii?Q?KMH4iSMGwYq/teHDqEAwOcTysnQ0K4gy8OBix9X1Yn1Dlf/BQY3D0kZnAqPx?=
+ =?us-ascii?Q?qWAj5j5Fw2tbhPlltQaZi5n2gsTUEcyYdqaICHxEVyDIlepTVbipAUoyWXpp?=
+ =?us-ascii?Q?qi9h5V0i9ydHaPAySkQD9k49M8SPeubjsSGqx2CcQqGR5/K9w1vaPciCj2Fk?=
+ =?us-ascii?Q?bu25XKOjOxVTVBCv5MzQQKakc75Z4YxkvKDPgJATZsAry3KP2FdY3a3w1sPE?=
+ =?us-ascii?Q?j+YnqtZIMsnu1uAiAiSnW3Dz5msm3qwo6dX/YQqqbI9LOkteCbjlzRmtpfvB?=
+ =?us-ascii?Q?Ihdslltx+aPFFGG6LTtd3f9NfR4GNUwKF2eoOji+QZbY9Ylqgb/H2WxV1wqo?=
+ =?us-ascii?Q?lR2eoyL0clVBgYjBCX+3JRN69qbCwjJzmAcXL/JOfbq/x4UZ005CS6w6zNTf?=
+ =?us-ascii?Q?G4XCjkqGTsyIKu2M5bOSzu4DtpYfFfqLqakwnJWl2h30JHtSg/fOMjx0f4gR?=
+ =?us-ascii?Q?DiOeiLaePZ+nlTOgZ7OH1M4HWzTbAXqKQHYltelOiq898zHEGOZ4qvLS49SO?=
+ =?us-ascii?Q?yw/W70YdClZhN6kXjpoCCcCmeMpQYN1qqdTZgys+XGony/Qg7eXn5FlI5VDx?=
+ =?us-ascii?Q?StKLm1GfCBkA6QOTdLLuoQtS+q8J9y8d5F+Jw02MZtBrTcYlSxOTTtfSphMn?=
+ =?us-ascii?Q?JBKZaIvgqBovdNu+s/yCxOU9AN+KSa2Z/IAHJZO9L+FRK1Eg/MU/S1m3kw9a?=
+ =?us-ascii?Q?DqhMsyWDxcTxv1AXWlB04eEENlZlrfVJUMP7So03tlzjJhAno5swJvsoA3lX?=
+ =?us-ascii?Q?Ek4US1ZmP/hbZZQJ06/Acylg5CBkUW3gBKP1N4O1VLOVeFGGK3YU9d7eQxCX?=
+ =?us-ascii?Q?hjznOduZW0ObCTKil2frbdLfoDWZ/Gtok+i6h866TfN+EZgNiuFQzWvYipxM?=
+ =?us-ascii?Q?gDAmzfJKFeziqNCicmLKTQRvOgwasb29CVlzY8WMedl1NEG4tMnk1Pl6UYxT?=
+ =?us-ascii?Q?2sY8CN3rlaX+FqriTa95t1/H2cHgsKtxewSEyhcBDTjgY1hEjTYmShG1vvjL?=
+ =?us-ascii?Q?MjlPxeD/MVKYsYLjIay5TO2urS3djnDi0fBwZiUDHAzfb7FoeXIeUFnancL5?=
+ =?us-ascii?Q?V4qzyvZrNSrgLgHOkSIsMHVP4BxPlkXj+ej9HZRlytrxa7MpiRuZYQJXB91E?=
+ =?us-ascii?Q?ytGK9zs5n6fl6LcUhRMCtgb2UJP4Hdeat7CcnguSQxUU97BT/tMxkHzBdDxe?=
+ =?us-ascii?Q?tXVwLjKB+zCnZUG+Ghwi9MHr2F9ePpMyPtmZqWp01r7jW6iMX8daN3GuPiNQ?=
+ =?us-ascii?Q?Yg/290BHdxEXQv29OyKG9ZvKXeHJFqNuz4bWVNg3NMVaaNIPuZH7zPJTHmtO?=
+ =?us-ascii?Q?wc2OcNH05xHTlqcYL2QiRZDM2ypP9thW99BmNd991GLGRZ6ZkqlF52wFFX9E?=
+ =?us-ascii?Q?fGcdPiKqnE0bw3pTtblLe1k/WHrJmVzjNia0NNPiTMcJxQbABk6cXcsM7/ar?=
+ =?us-ascii?Q?8lRdTBjLDLjuf/RPNXk=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6109.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aed9f3bd-a960-406c-0837-08ddf1ef16d9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2025 11:25:33.8954
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nDapoCp3b78EvoN7x7pcvqwwQRESRgBB4MPT7HyRgn/RXaT2CD2y53l6FssL5GXkWYYQ8gpeBw5NXSP0zelNcw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8463
 
-On Friday, 12 September 2025 06:48:17 Central European Summer Time Chia-I W=
-u wrote:
-> On Fri, Sep 5, 2025 at 3:24=E2=80=AFAM Nicolas Frattaroli
-> <nicolas.frattaroli@collabora.com> wrote:
+[Public]
+
+Hi,
+
+> -----Original Message-----
+> From: Guntupalli, Manikanta
+> Sent: Friday, September 12, 2025 11:25 AM
+> To: Frank Li <Frank.li@nxp.com>
+> Cc: git (AMD-Xilinx) <git@amd.com>; Simek, Michal <michal.simek@amd.com>;
+> alexandre.belloni@bootlin.com; robh@kernel.org; krzk+dt@kernel.org;
+> conor+dt@kernel.org; kees@kernel.org; gustavoars@kernel.org;
+> jarkko.nikula@linux.intel.com; linux-i3c@lists.infradead.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> hardening@vger.kernel.org; Pandey, Radhey Shyam
+> <radhey.shyam.pandey@amd.com>; Goud, Srinivas <srinivas.goud@amd.com>;
+> Datta, Shubhrajyoti <shubhrajyoti.datta@amd.com>; manion05gk@gmail.com
+> Subject: RE: [PATCH V6 2/2] i3c: master: Add AMD I3C bus controller drive=
+r
+>
+> Hi,
+>
+> > -----Original Message-----
+> > From: Frank Li <Frank.li@nxp.com>
+> > Sent: Thursday, September 11, 2025 9:15 PM
+> > To: Guntupalli, Manikanta <manikanta.guntupalli@amd.com>
+> > Cc: git (AMD-Xilinx) <git@amd.com>; Simek, Michal
+> > <michal.simek@amd.com>; alexandre.belloni@bootlin.com;
+> > robh@kernel.org; krzk+dt@kernel.org;
+> > conor+dt@kernel.org; kees@kernel.org; gustavoars@kernel.org;
+> > jarkko.nikula@linux.intel.com; linux-i3c@lists.infradead.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > hardening@vger.kernel.org; Pandey, Radhey Shyam
+> > <radhey.shyam.pandey@amd.com>; Goud, Srinivas <srinivas.goud@amd.com>;
+> > Datta, Shubhrajyoti <shubhrajyoti.datta@amd.com>; manion05gk@gmail.com
+> > Subject: Re: [PATCH V6 2/2] i3c: master: Add AMD I3C bus controller
+> > driver
 > >
-> > The MT8196 SoC uses an embedded MCU to control frequencies and power of
-> > the GPU. This controller is referred to as "GPUEB".
+> > On Thu, Sep 11, 2025 at 06:07:59AM +0000, Guntupalli, Manikanta wrote:
+> > > [Public]
+> > >
+> > > Hi,
+> > >
+> > > > -----Original Message-----
+> > > > From: Frank Li <Frank.li@nxp.com>
+> > > > Sent: Wednesday, September 10, 2025 10:25 PM
+> > > > To: Guntupalli, Manikanta <manikanta.guntupalli@amd.com>
+> > > > Cc: git (AMD-Xilinx) <git@amd.com>; Simek, Michal
+> > > > <michal.simek@amd.com>; alexandre.belloni@bootlin.com;
+> > > > robh@kernel.org; krzk+dt@kernel.org;
+> > > > conor+dt@kernel.org; kees@kernel.org; gustavoars@kernel.org;
+> > > > jarkko.nikula@linux.intel.com; linux-i3c@lists.infradead.org;
+> > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > > > hardening@vger.kernel.org; Pandey, Radhey Shyam
+> > > > <radhey.shyam.pandey@amd.com>; Goud, Srinivas
+> > > > <srinivas.goud@amd.com>; Datta, Shubhrajyoti
+> > > > <shubhrajyoti.datta@amd.com>; manion05gk@gmail.com
+> > > > Subject: Re: [PATCH V6 2/2] i3c: master: Add AMD I3C bus
+> > > > controller driver
+> > > >
+> > > > On Wed, Sep 10, 2025 at 04:59:54PM +0530, Manikanta Guntupalli wrot=
+e:
+> > > > > Add an I3C master driver and maintainers fragment for the AMD
+> > > > > I3C bus controller.
+> > > > >
+> > > > > The driver currently supports the I3C bus operating in SDR i3c
+> > > > > mode, with features including Dynamic Address Assignment,
+> > > > > private data transfers, and CCC transfers in both broadcast and
+> > > > > direct modes. It also supports operation in I2C mode.
+> > > > >
+> > > > > Signed-off-by: Manikanta Guntupalli
+> > > > > <manikanta.guntupalli@amd.com>
+> > > > > ---
+> > > > > Changes for V2:
+> > > > > Updated commit description.
+> > > > > Added mixed mode support with clock configuration.
+> > > > > Converted smaller functions into inline functions.
+> > > > > Used FIELD_GET() in xi3c_get_response().
+> > > > > Updated xi3c_master_rd_from_rx_fifo() to use cmd->rx_buf.
+> > > > > Used parity8() for address parity calculation.
+> > > > > Added guards for locks.
+> > > > > Dropped num_targets and updated xi3c_master_do_daa().
+> > > > > Used __free(kfree) in xi3c_master_send_bdcast_ccc_cmd().
+> > > > > Dropped PM runtime support.
+> > > > > Updated xi3c_master_read() and xi3c_master_write() with
+> > > > > xi3c_is_resp_available() check.
+> > > > > Created separate functions: xi3c_master_init() and xi3c_master_re=
+init().
+> > > > > Used xi3c_master_init() in bus initialization and
+> > > > > xi3c_master_reinit() in error paths.
+> > > > > Added DAA structure to xi3c_master structure.
+> > > > >
+> > > > > Changes for V3:
+> > > > > Resolved merge conflicts.
+> > > > >
+> > > > > Changes for V4:
+> > > > > Updated timeout macros.
+> > > > > Removed type casting for xi3c_is_resp_available() macro.
+> > > > > Used ioread32() and iowrite32() instead of readl() and writel()
+> > > > > to keep consistency.
+> > > > > Read XI3C_RESET_OFFSET reg before udelay().
+> > > > > Removed xi3c_master_free_xfer() and directly used kfree().
+> > > > > Skipped checking return value of i3c_master_add_i3c_dev_locked().
+> > > > > Used devm_mutex_init() instead of mutex_init().
+> > > > >
+> > > > > Changes for V5:
+> > > > > Used GENMASK_ULL for PID mask as it's 64bit mask.
+> > > > >
+> > > > > Changes for V6:
+> > > > > Removed typecast for xi3c_getrevisionnumber(),
+> > > > > xi3c_wrfifolevel(), and xi3c_rdfifolevel().
+> > > > > Replaced dynamic allocation with a static variable for pid_bcr_dc=
+r.
+> > > > > Fixed sparse warning in do_daa by typecasting the address parity
+> > > > > value to u8.
+> > > > > Fixed sparse warning in xi3c_master_bus_init by typecasting the
+> > > > > pid value to u64 in info.pid calculation.
+> > > > > ---
+> > > > >  MAINTAINERS                         |    7 +
+> > > > >  drivers/i3c/master/Kconfig          |   16 +
+> > > > >  drivers/i3c/master/Makefile         |    1 +
+> > > > >  drivers/i3c/master/amd-i3c-master.c | 1009
+> > > > > +++++++++++++++++++++++++++
+> > > > >  4 files changed, 1033 insertions(+)  create mode 100644
+> > > > > drivers/i3c/master/amd-i3c-master.c
+> > > > >
+> > > > > diff --git a/MAINTAINERS b/MAINTAINERS index
+> > > > > 1af81124bba3..ff603ce5e78d 100644
+> > > > > --- a/MAINTAINERS
+> > > > > +++ b/MAINTAINERS
+> > > > > @@ -11693,6 +11693,13 @@ L: linux-i2c@vger.kernel.org
+> > > > >  S: Maintained
+> > > > >  F: drivers/i2c/i2c-stub.c
+> > > > >
+> > > > > +I3C DRIVER FOR AMD AXI I3C MASTER
+> > > > > +M: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
+> > > > > +R: Michal Simek <michal.simek@amd.com>
+> > > > > +S: Maintained
+> > > > > +F: Documentation/devicetree/bindings/i3c/xlnx,axi-i3c.yaml
+> > > > > +F: drivers/i3c/master/amd-i3c-master.c
+> > > > > +
+> > > > >  I3C DRIVER FOR ASPEED AST2600
+> > > > >  M: Jeremy Kerr <jk@codeconstruct.com.au>
+> > > > >  S: Maintained
+> > > > > diff --git a/drivers/i3c/master/Kconfig
+> > > > > b/drivers/i3c/master/Kconfig index 13df2944f2ec..4b884a678893
+> > > > > 100644
+> > > > > --- a/drivers/i3c/master/Kconfig
+> > > > > +++ b/drivers/i3c/master/Kconfig
+> > > > > @@ -1,4 +1,20 @@
+> > > > >  # SPDX-License-Identifier: GPL-2.0-only
+> > > > > +
+> > > > > +config AMD_I3C_MASTER
+> > > > > +   tristate "AMD I3C Master driver"
+> > > > > +   depends on I3C
+> > > > > +   depends on HAS_IOMEM
+> > > > > +   help
+> > > > > +     Support for AMD I3C Master Controller.
+> > > > > +
+> > > > > +     This driver allows communication with I3C devices using the=
+ AMD
+> > > > > +     I3C master, currently supporting Standard Data Rate (SDR) m=
+ode.
+> > > > > +     Features include Dynamic Address Assignment, private transf=
+ers,
+> > > > > +     and CCC transfers in both broadcast and direct modes.
+> > > > > +
+> > > > > +     This driver can also be built as a module.  If so, the modu=
+le
+> > > > > +     will be called amd-i3c-master.
+> > > > > +
+> > > > >  config CDNS_I3C_MASTER
+> > > > >     tristate "Cadence I3C master driver"
+> > > > >     depends on HAS_IOMEM
+> > > > > diff --git a/drivers/i3c/master/Makefile
+> > > > > b/drivers/i3c/master/Makefile index aac74f3e3851..109bd48cb159
+> > > > > 100644
+> > > > > --- a/drivers/i3c/master/Makefile
+> > > > > +++ b/drivers/i3c/master/Makefile
+> > > > > @@ -1,4 +1,5 @@
+> > > > >  # SPDX-License-Identifier: GPL-2.0-only
+> > > > > +obj-$(CONFIG_AMD_I3C_MASTER)               +=3D amd-i3c-master.o
+> > > > >  obj-$(CONFIG_CDNS_I3C_MASTER)              +=3D i3c-master-cdns.=
+o
+> > > > >  obj-$(CONFIG_DW_I3C_MASTER)                +=3D dw-i3c-master.o
+> > > > >  obj-$(CONFIG_AST2600_I3C_MASTER)   +=3D ast2600-i3c-master.o
+> > > > > diff --git a/drivers/i3c/master/amd-i3c-master.c
+> > > > > b/drivers/i3c/master/amd-i3c-master.c
+> > > > > new file mode 100644
+> > > > > index 000000000000..cd9d85a0be80
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/i3c/master/amd-i3c-master.c
+> > > > > @@ -0,0 +1,1009 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > +/*
+> > > > > + * I3C master driver for the AMD I3C controller.
+> > > > > + *
+> > > > > + * Copyright (C) 2025, Advanced Micro Devices, Inc.
+> > > > > + */
+> > > > > +
+> > > > ...
+> > > > > +
+> > > > > +/* timeout waiting for the controller finish transfers */
+> > > > > +#define XI3C_XFER_TIMEOUT_MS                       10000
+> > > > > +#define XI3C_XFER_TIMEOUT
+> > > >       (msecs_to_jiffies(XI3C_XFER_TIMEOUT_MS))
+> > > >
+> > > > Do I missed your reply? I have not seen
+> > > > https://lore.kernel.org/linux-i3c/aL7+Urm4NB9kwOwQ@lizhi-Precision
+> > > > -T
+> > > > ower-5810/
+> > > >
+> > > > If you need define two macro for it. Need unit
+> > > > XI3C_XFER_TIMEOUT_JIFFIES to avoid confuse.
+> > > Sure, I'll update the macro name to XI3C_XFER_TIMEOUT_JIFFIES to
+> > > avoid
+> > confusion.
+> > > >
+> > > >
+> > > > > +
+> > > > > +#define xi3c_getrevisionnumber(master)                          =
+                   \
+> > > > > +   (FIELD_GET(XI3C_REV_NUM_MASK,
+> > > >       \
+> > > > > +              ioread32((master)->membase +
+> > > > > + XI3C_VERSION_OFFSET)))
+> > > > > +
+> > > >
+> > > > ...
+> > > >
+> > > > > +static void xi3c_master_wr_to_tx_fifo(struct xi3c_master *master=
+,
+> > > > > +                                 struct xi3c_cmd *cmd) {
+> > > > > +   u8 *tx_buf =3D (u8 *)cmd->tx_buf;
+> > > > > +   u32 data =3D 0;
+> > > > > +   u16 len;
+> > > > > +
+> > > > > +   len =3D cmd->tx_len;
+> > > > > +   if (len > 0) {
+> > > > > +           len =3D (len >=3D XI3C_WORD_LEN) ? XI3C_WORD_LEN : le=
+n;
+> > > > > +           memcpy(&data, tx_buf, len);
+> > > > > +           tx_buf +=3D len;
+> > > > > +           cmd->tx_len -=3D len;
+> > > > > +   }
+> > > > > +   cmd->tx_buf =3D tx_buf;
+> > > > > +
+> > > > > +   /* Write the 32-bit value to the Tx FIFO */
+> > > > > +   iowrite32be(data, master->membase + XI3C_WR_FIFO_OFFSET); }
+> > > >
+> > > > i3c_writel(readl)_fifo() did similar things, why not use it?
+> > > >
+> > > > Did you miss my review comment or I missed your reply?
+> > > You have missed my earlier reply on this.
+> > > The helpers i3c_writel_fifo() and i3c_readl_fifo() rely on the CPU's
+> > > native endianness, whereas in this case the FIFO should always be
+> > > accessed in
+> > big-endian format.
+> > > Hence, we cannot use the common helpers directly.
+> > >
+> > > For reference, here's my previous reply:
+> > >
 > >
-> > It communicates to the application processor, among other ways, through
-> > a mailbox.
+> https://lore.kernel.org/all/DM4PR12MB6109F6D5D032723C675472448C0FA@DM4
+> > > PR12MB6109.namprd12.prod.outlook.com/
 > >
-> > The mailbox exposes one interrupt, which appears to only be fired when a
-> > response is received, rather than a transaction is completed. For us,
-> > this means we unfortunately need to poll for txdone.
+> > Sorry, can you improve i3c_writel(readl)_fifo() to support endianness?
+> > I think not only you have this kind problem in future.
+> Sure, will add support for endianness.
+To add support for endianness, we could not find a big-endian counterpart t=
+o writesl().
+Please let me know if I missed any existing helper.
 > >
-> > The mailbox also requires the EB clock to be on when touching any of the
-> > mailbox registers.
-> >
-> > Add a simple driver for it based on the common mailbox framework.
-> >
-> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> > ---
-> >  drivers/mailbox/Kconfig             |  10 ++
-> >  drivers/mailbox/Makefile            |   2 +
-> >  drivers/mailbox/mtk-gpueb-mailbox.c | 330 ++++++++++++++++++++++++++++=
-++++++++
-> >  3 files changed, 342 insertions(+)
-> >
-> > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> > index 02432d4a5ccd46a16156a09c7f277fb03e4013f5..2016defda1fabb5c0fcc807=
-8f84a52d4e4e00167 100644
-> > --- a/drivers/mailbox/Kconfig
-> > +++ b/drivers/mailbox/Kconfig
-> > @@ -294,6 +294,16 @@ config MTK_CMDQ_MBOX
-> >           critical time limitation, such as updating display configurat=
-ion
-> >           during the vblank.
-> >
-> > +config MTK_GPUEB_MBOX
-> > +       tristate "MediaTek GPUEB Mailbox Support"
-> > +       depends on ARCH_MEDIATEK || COMPILE_TEST
-> > +       help
-> > +         The MediaTek GPUEB mailbox is used to communicate with the em=
-bedded
-> > +         controller in charge of GPU frequency and power management on=
- some
-> > +         MediaTek SoCs, such as the MT8196.
-> > +         Say Y or m here if you want to support the MT8196 SoC in your=
- kernel
-> > +         build.
-> > +
-> >  config ZYNQMP_IPI_MBOX
-> >         tristate "Xilinx ZynqMP IPI Mailbox"
-> >         depends on ARCH_ZYNQMP && OF
-> > diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> > index 98a68f838486eed117d24296138bf59fda3f92e4..564d06e71313e6d1972e4a6=
-036e1e78c8c7ec450 100644
-> > --- a/drivers/mailbox/Makefile
-> > +++ b/drivers/mailbox/Makefile
-> > @@ -63,6 +63,8 @@ obj-$(CONFIG_MTK_ADSP_MBOX)   +=3D mtk-adsp-mailbox.o
-> >
-> >  obj-$(CONFIG_MTK_CMDQ_MBOX)    +=3D mtk-cmdq-mailbox.o
-> >
-> > +obj-$(CONFIG_MTK_GPUEB_MBOX)   +=3D mtk-gpueb-mailbox.o
-> > +
-> >  obj-$(CONFIG_ZYNQMP_IPI_MBOX)  +=3D zynqmp-ipi-mailbox.o
-> >
-> >  obj-$(CONFIG_SUN6I_MSGBOX)     +=3D sun6i-msgbox.o
-> > diff --git a/drivers/mailbox/mtk-gpueb-mailbox.c b/drivers/mailbox/mtk-=
-gpueb-mailbox.c
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..0236fb358136e434a09a21e=
-f293fe949ced94123
-> > --- /dev/null
-> > +++ b/drivers/mailbox/mtk-gpueb-mailbox.c
-> > @@ -0,0 +1,330 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * MediaTek GPUEB mailbox driver for SoCs such as the MT8196
-> > + *
-> > + * Copyright (C) 2025, Collabora Ltd.
-> > + *
-> > + * Developers harmed in the making of this driver:
-> > + *  - Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> > + */
-> > +
-> > +#include <linux/atomic.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/device.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/io.h>
-> > +#include <linux/iopoll.h>
-> > +#include <linux/mailbox_controller.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#define MBOX_CTL_TX_STS 0x0000
-> > +#define MBOX_CTL_IRQ_SET 0x0004
-> > +#define MBOX_CTL_IRQ_CLR 0x0074
-> > +#define MBOX_CTL_RX_STS 0x0078
-> > +
-> > +#define MBOX_FULL BIT(0) /* i.e. we've received data */
-> > +#define MBOX_CLOGGED BIT(1) /* i.e. the channel is shutdown */
-> > +
-> > +struct mtk_gpueb_mbox {
-> > +       struct device *dev;
-> > +       struct clk *clk;
-> > +       void __iomem *mbox_mmio;
-> > +       void __iomem *mbox_ctl;
-> > +       void **rx_buf;
-> > +       atomic_t *rx_status;
-> > +       struct mbox_controller mbox;
-> > +       unsigned int *chn;
-> > +       int irq;
-> > +       const struct mtk_gpueb_mbox_variant *v;
-> > +};
-> > +
-> > +struct mtk_gpueb_mbox_ch {
-> > +       const char *name;
-> > +       const int num;
-> > +       const unsigned int tx_offset;
-> > +       const unsigned int tx_len;
-> > +       const unsigned int rx_offset;
-> > +       const unsigned int rx_len;
-> > +       const bool no_response;
-> > +};
-> > +
-> > +struct mtk_gpueb_mbox_variant {
-> > +       unsigned int num_channels;
-> > +       const struct mtk_gpueb_mbox_ch channels[] __counted_by(num_chan=
-nels);
-> > +};
-> > +
-> > +/**
-> > + * mtk_gpueb_mbox_read_rx - read RX buffer from MMIO into ebm's RX buf=
-fer
-> > + * @ebm: pointer to &struct mtk_gpueb_mbox instance
-> > + * @channel: number of channel to read
-> > + */
-> > +static void mtk_gpueb_mbox_read_rx(struct mtk_gpueb_mbox *ebm,
-> > +                                  unsigned int channel)
-> > +{
-> > +       const struct mtk_gpueb_mbox_ch *ch;
-> > +
-> > +       ch =3D &ebm->v->channels[channel];
-> > +
-> > +       memcpy_fromio(ebm->rx_buf[channel], ebm->mbox_mmio + ch->rx_off=
-set,
-> > +                     ch->rx_len);
-> > +
-> > +}
-> > +
-> > +static irqreturn_t mtk_gpueb_mbox_isr(int irq, void *data)
-> > +{
-> > +       struct mtk_gpueb_mbox *ebm =3D data;
-> > +       u32 rx_handled =3D 0;
-> > +       u32 rx_sts;
-> > +       int i;
-> > +
-> > +       rx_sts =3D readl(ebm->mbox_ctl + MBOX_CTL_RX_STS);
-> > +
-> > +       for (i =3D 0; i < ebm->v->num_channels; i++) {
-> > +               if (rx_sts & BIT(i)) {
-> > +                       if (!atomic_cmpxchg(&ebm->rx_status[i], 0,
-> > +                                           MBOX_FULL | MBOX_CLOGGED))
-> > +                               rx_handled |=3D BIT(i);
-> > +               }
-> > +       }
-> We can loop over bits that are set in rx_sts, if we expect that only a
-> few bits are set most of the time.
+> > >
+> > > >
+> > > > ...
+> > > > > +
+> > > > > +static const struct of_device_id xi3c_master_of_ids[] =3D {
+> > > > > +   { .compatible =3D "xlnx,axi-i3c-1.0" },
+> > > > > +   { },
+> > > > > +};
+> > > > > +
+> > > > > +static struct platform_driver xi3c_master_driver =3D {
+> > > > > +   .probe =3D xi3c_master_probe,
+> > > > > +   .remove =3D xi3c_master_remove,
+> > > > > +   .driver =3D {
+> > > > > +           .name =3D "axi-i3c-master",
+> > > > > +           .of_match_table =3D xi3c_master_of_ids,
+> > > > > +   },
+> > > > > +};
+> > > > > +module_platform_driver(xi3c_master_driver);
+> > > > > +
+> > > > > +MODULE_AUTHOR("Manikanta Guntupalli
+> > > > > +<manikanta.guntupalli@amd.com>"); MODULE_DESCRIPTION("AXI I3C
+> > > > > +master driver");
+> > > > MODULE_LICENSE("GPL");
+> > > > > --
+> > > > > 2.34.1
+> > > > >
+> > >
+>
 
-Could you elaborate on your preferred approach? num_channels will be
-smaller than the bit width of rx_sts. I could loop from __fls down to
-0 checking for (!rx_sts ^ rx_handled) for an early exit, but I'm not
-sure if this microoptimisation is what you meant or if that even makes
-much sense instruction cost wise.
-
-Alternatively, I could loop from __fss to num_channels.
-
-Is there some commonly used hyper-optimised "loop over set bits" macro
-that I'm unfamiliar with?
-
-> > +
-> > +       writel(rx_handled, ebm->mbox_ctl + MBOX_CTL_IRQ_CLR);
-> > +
-> > +       if (!(rx_sts ^ rx_handled))
-> "rx_sts =3D=3D rx_handled" should be more direct.
-
-Good point, will change.
-
-> > +               return IRQ_WAKE_THREAD;
-> > +
-> > +       dev_warn_ratelimited(ebm->dev, "spurious interrupts on 0x%04X\n=
-",
-> > +                            rx_sts ^ rx_handled);
-> > +       return IRQ_NONE;
-> It seems a bit too punishing when there are spurious interrupts. I
-> wonder if we should warn, but return IRQ_WAKE_THREAD as long as
-> rx_handled !=3D 0.
->=20
-> Also, if another interrupt can fire before mtk_gpueb_mbox_thread runs,
-> that's data dropping rather than spurious interrupts.
->=20
-
-Yeah, I agree that this is bad. As wens pointed out, my IRQ clearing
-earlier would most certainly open us up to losing data. I'll
-definitely look into changing this; iirc the current code resulted
-from me being unsure whether partially handled IRQs should still
-be counted as a handled IRQ or not.
-
-> > +}
-> > +
-> > +static irqreturn_t mtk_gpueb_mbox_thread(int irq, void *data)
-> > +{
-> > +       struct mtk_gpueb_mbox *ebm =3D data;
-> > +       irqreturn_t ret =3D IRQ_NONE;
-> > +       int status;
-> > +       int i;
-> > +
-> > +       for (i =3D 0; i < ebm->v->num_channels; i++) {
-> > +               status =3D atomic_cmpxchg(&ebm->rx_status[i],
-> > +                                       MBOX_FULL | MBOX_CLOGGED, MBOX_=
-=46ULL);
-> > +               if (status =3D=3D (MBOX_FULL | MBOX_CLOGGED)) {
-> We could also save rx_handled from mtk_gpueb_mbox_isr and loop over
-> bits that are set.  If we do that, ebm->rx_status[i] is guaranteed to
-> be MBOX_FULL | MBOX_CLOGGED.
->=20
-
-Wouldn't storing rx_handled open us up to data races with unpleasant
-code to try and prevent them? As far as I understand, the ISR is allowed
-to fire again before the thread has completed. Having the rx_status bits
-as individual atomics gives us finer granularity than needing to protect
-the entire set of bits.
-
-If there is some way to pass data from the ISR to the awoken thread
-directly as a per-invocation parameter rather than a squirreled away
-member of the driver private struct, then I agree doing it your way
-seems better.
-
-> > +                       mtk_gpueb_mbox_read_rx(ebm, i);
-> > +                       mbox_chan_received_data(&ebm->mbox.chans[i],
-> > +                                               ebm->rx_buf[i]);
-> It looks like we read the data and pass it on to the client
-> immediately. Does each channel need its own rx_buf?
->=20
-
-Yeah, common mailbox framework does not do a copy here, it just passes
-the pointer. Which is good, because nobody likes copies, and it
-prevents the mailbox core from needing to know the size of received
-data.
-
-So the individual rx_bufs are needed to prevent channel cross-talk.
-
-> > +                       /* FIXME: When does MBOX_FULL get cleared? Here=
-? */
-> > +                       atomic_set(&ebm->rx_status[i], 0);
-> > +                       ret =3D IRQ_HANDLED;
-> > +               }
-> > +       }
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +static int mtk_gpueb_mbox_send_data(struct mbox_chan *chan, void *data)
-> > +{
-> > +       struct mtk_gpueb_mbox *ebm =3D dev_get_drvdata(chan->mbox->dev);
-> > +       unsigned int *num =3D chan->con_priv;
-> > +       int i;
-> > +       u32 *values =3D data;
-> > +
-> > +       if (*num >=3D ebm->v->num_channels)
-> > +               return -ECHRNG;
-> Can this ever happen? (I am not familiar with the mbox subsystem)
-
-Only if someone with a pointer to chan modifies con_priv outside of
-what the mailbox driver set. It's an unlikely scenario, so I do think
-I can remove this check, but the downside is that if someone ever does
-manage to do this then the next line is a convenient read primitive.
-
-> > +
-> > +       if (!ebm->v->channels[*num].no_response &&
-> > +           atomic_read(&ebm->rx_status[*num]))
-> > +               return -EBUSY;
-> When no_response is true, rx_status is 0. We probably don't need to
-> check no_response.
-
-Now that I'm thinking about it, I can probably get rid of no_response
-altogether. It was originally added because I conflated txdone with
-response received, and one particular command on the sleep channel,
-namely powering off the MFG, is unable to ever cause a response
-interrupt to fire.
-
-Since we now poll for txdone anyway using the TX status register, I
-don't think this is needed at all anymore, so I'll try and get
-rid of it.
-
-> > +
-> > +       writel(BIT(*num), ebm->mbox_ctl + MBOX_CTL_IRQ_CLR);
-> > +
-> > +       /*
-> > +        * We don't want any fancy nonsense, just write the 32-bit valu=
-es in
-> > +        * order. memcpy_toio/__iowrite32_copy don't work here, because=
- fancy.
-> > +        */
-> > +       for (i =3D 0; i < ebm->v->channels[*num].tx_len; i +=3D 4) {
-> > +               writel(values[i / 4],
-> > +                      ebm->mbox_mmio + ebm->v->channels[*num].tx_offse=
-t + i);
-> > +       }
-> > +
-> > +       writel(BIT(*num), ebm->mbox_ctl + MBOX_CTL_IRQ_SET);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int mtk_gpueb_mbox_startup(struct mbox_chan *chan)
-> > +{
-> > +       struct mtk_gpueb_mbox *ebm =3D dev_get_drvdata(chan->mbox->dev);
-> > +       unsigned int *num =3D chan->con_priv;
-> > +
-> > +       if (*num >=3D ebm->v->num_channels)
-> > +               return -ECHRNG;
-> > +
-> > +       atomic_set(&ebm->rx_status[*num], 0);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static void mtk_gpueb_mbox_shutdown(struct mbox_chan *chan)
-> > +{
-> > +       struct mtk_gpueb_mbox *ebm =3D dev_get_drvdata(chan->mbox->dev);
-> > +       unsigned int *num =3D chan->con_priv;
-> > +
-> > +       atomic_set(&ebm->rx_status[*num], MBOX_CLOGGED);
-> > +}
-> > +
-> > +static bool mtk_gpueb_mbox_last_tx_done(struct mbox_chan *chan)
-> > +{
-> > +       struct mtk_gpueb_mbox *ebm =3D dev_get_drvdata(chan->mbox->dev);
-> > +       unsigned int *num =3D chan->con_priv;
-> > +
-> > +       return !(readl(ebm->mbox_ctl + MBOX_CTL_TX_STS) & BIT(*num));
-> > +}
-> > +
-> > +const struct mbox_chan_ops mtk_gpueb_mbox_ops =3D {
-> > +       .send_data =3D mtk_gpueb_mbox_send_data,
-> > +       .startup =3D mtk_gpueb_mbox_startup,
-> > +       .shutdown =3D mtk_gpueb_mbox_shutdown,
-> > +       .last_tx_done =3D mtk_gpueb_mbox_last_tx_done,
-> > +};
-> > +
-> > +static struct mbox_chan *
-> > +mtk_gpueb_mbox_of_xlate(struct mbox_controller *mbox,
-> > +                       const struct of_phandle_args *sp)
-> > +{
-> > +       struct mtk_gpueb_mbox *ebm =3D dev_get_drvdata(mbox->dev);
-> > +
-> > +       if (!sp->args_count)
-> > +               return ERR_PTR(-EINVAL);
-> > +
-> > +       if (sp->args[0] >=3D ebm->v->num_channels)
-> > +               return ERR_PTR(-ECHRNG);
-> > +
-> > +       return &mbox->chans[sp->args[0]];
-> > +}
-> > +
-> > +static int mtk_gpueb_mbox_probe(struct platform_device *pdev)
-> > +{
-> > +       struct mtk_gpueb_mbox *ebm;
-> > +       unsigned int rx_buf_sz;
-> > +       void *buf;
-> > +       unsigned int i;
-> > +       int ret;
-> > +
-> > +       ebm =3D devm_kzalloc(&pdev->dev, sizeof(*ebm), GFP_KERNEL);
-> > +       if (!ebm)
-> > +               return -ENOMEM;
-> > +
-> > +       ebm->dev =3D &pdev->dev;
-> > +       ebm->v =3D of_device_get_match_data(ebm->dev);
-> > +
-> > +       dev_set_drvdata(ebm->dev, ebm);
-> > +
-> > +       ebm->clk =3D devm_clk_get_enabled(ebm->dev, NULL);
-> > +       if (IS_ERR(ebm->clk))
-> > +               return dev_err_probe(ebm->dev, PTR_ERR(ebm->clk),
-> > +                                    "Failed to get 'eb' clock\n");
-> > +
-> > +       ebm->mbox_mmio =3D devm_platform_ioremap_resource_byname(pdev, =
-"mbox");
-> > +       if (IS_ERR(ebm->mbox_mmio))
-> > +               return dev_err_probe(ebm->dev, PTR_ERR(ebm->mbox_mmio),
-> > +                                    "Couldn't map mailbox registers\n"=
-);
-> > +
-> > +       ebm->mbox_ctl =3D devm_platform_ioremap_resource_byname(pdev, "=
-mbox_ctl");
-> > +       if (IS_ERR(ebm->mbox_ctl))
-> > +               return dev_err_probe(
-> > +                       ebm->dev, PTR_ERR(ebm->mbox_ctl),
-> > +                       "Couldn't map mailbox control registers\n");
-> > +
-> > +       rx_buf_sz =3D (ebm->v->channels[ebm->v->num_channels - 1].rx_of=
-fset +
-> > +                    ebm->v->channels[ebm->v->num_channels - 1].rx_len);
-> rx is after tx in mmio. The first half of the space is wasted.
->=20
-> We follow mtk_gpueb_mbox_read_rx by mbox_chan_received_data. It seems
-> we only need max of rx_len's.
-
-We do need the sum of all rx_len's but you're correct that the current code
-allocates too much memory. What I think it should do is
-
-last rx_offset + last rx_len - first rx_offset
-
-to get the total amount of MMIO occupied by RX.
-
-> > +
-> > +       buf =3D devm_kzalloc(ebm->dev, rx_buf_sz, GFP_KERNEL);
-> > +       if (!buf)
-> > +               return -ENOMEM;
-> > +
-> > +       ebm->rx_buf =3D devm_kmalloc_array(ebm->dev, ebm->v->num_channe=
-ls,
-> > +                                        sizeof(*ebm->rx_buf), GFP_KERN=
-EL);
-> > +       if (!ebm->rx_buf)
-> > +               return -ENOMEM;
-> > +
-> > +       ebm->mbox.chans =3D devm_kcalloc(ebm->dev, ebm->v->num_channels,
-> > +                                      sizeof(struct mbox_chan), GFP_KE=
-RNEL);
-> > +       if (!ebm->mbox.chans)
-> > +               return -ENOMEM;
-> > +
-> > +       ebm->rx_status =3D devm_kcalloc(ebm->dev, ebm->v->num_channels,
-> > +                                     sizeof(atomic_t), GFP_KERNEL);
-> > +       if (!ebm->rx_status)
-> > +               return -ENOMEM;
-> > +
-> > +       ebm->chn =3D devm_kcalloc(ebm->dev, ebm->v->num_channels,
-> > +                               sizeof(*ebm->chn), GFP_KERNEL);
-> > +
-> > +       for (i =3D 0; i < ebm->v->num_channels; i++) {
-> > +               ebm->rx_buf[i] =3D buf + ebm->v->channels[i].rx_offset;
-> > +               spin_lock_init(&ebm->mbox.chans[i].lock);
-> > +               /* the things you do to avoid explicit casting void* */
-> I actually prefer an inline helper that casts chan->con_priv to the
-> channel number. Another option is "chan - ebm->mox.chans".
-
-Hmmm, yeah. Though, I don't enjoy chan - ebm->mbox.chans because now we're
-in the woods regarding pointer arithmetics.
-
-I think the inline helper makes more sense, even if explicitly using a
-pointer as an integer gives me the heebie-jeebies.
-
-> > +               ebm->chn[i] =3D i;
-> > +               ebm->mbox.chans[i].con_priv =3D &ebm->chn[i];
-> > +               atomic_set(&ebm->rx_status[i], MBOX_CLOGGED);
-> > +       }
-> > +
-> > +       ebm->mbox.dev =3D ebm->dev;
-> > +       ebm->mbox.num_chans =3D ebm->v->num_channels;
-> > +       ebm->mbox.txdone_poll =3D true;
-> > +       ebm->mbox.txpoll_period =3D 0; /* minimum hrtimer interval */
-> > +       ebm->mbox.of_xlate =3D mtk_gpueb_mbox_of_xlate;
-> > +       ebm->mbox.ops =3D &mtk_gpueb_mbox_ops;
-> > +
-> > +       ebm->irq =3D platform_get_irq(pdev, 0);
-> > +       if (ebm->irq < 0)
-> > +               return ebm->irq;
-> > +
-> > +       ret =3D devm_request_threaded_irq(ebm->dev, ebm->irq, mtk_gpueb=
-_mbox_isr,
-> > +                                       mtk_gpueb_mbox_thread, 0, NULL,=
- ebm);
-> > +       if (ret)
-> > +               return dev_err_probe(ebm->dev, ret, "failed to request =
-IRQ\n");
-> > +
-> > +       ret =3D devm_mbox_controller_register(ebm->dev, &ebm->mbox);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static const struct mtk_gpueb_mbox_variant mtk_gpueb_mbox_mt8196 =3D {
-> > +       .num_channels =3D 12,
-> > +       .channels =3D {
-> > +               { "fast_dvfs_event", 0, 0x0000, 16, 0x00e0, 16, false },
-> > +               { "gpufreq",         1, 0x0010, 32, 0x00f0, 32, false },
-> > +               { "sleep",           2, 0x0030, 12, 0x0110,  4, true  },
-> > +               { "timer",           3, 0x003c, 24, 0x0114,  4, false },
-> > +               { "fhctl",           4, 0x0054, 36, 0x0118,  4, false },
-> > +               { "ccf",             5, 0x0078, 16, 0x011c, 16, false },
-> > +               { "gpumpu",          6, 0x0088, 24, 0x012c,  4, false },
-> > +               { "fast_dvfs",       7, 0x00a0, 24, 0x0130, 24, false },
-> > +               { "ipir_c_met",      8, 0x00b8,  4, 0x0148, 16, false },
-> > +               { "ipis_c_met",      9, 0x00bc, 16, 0x0158,  4, false },
-> > +               { "brisket",        10, 0x00cc, 16, 0x015c, 16, false },
-> > +               { "ppb",            11, 0x00dc,  4, 0x016c,  4, false },
-> > +       },
-> > +};
-> > +
-> > +static const struct of_device_id mtk_gpueb_mbox_of_ids[] =3D {
-> > +       { .compatible =3D "mediatek,mt8196-gpueb-mbox",
-> > +         .data =3D &mtk_gpueb_mbox_mt8196 },
-> > +       { /* Sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, mtk_gpueb_mbox_of_ids);
-> > +
-> > +static struct platform_driver mtk_gpueb_mbox_drv =3D {
-> > +       .probe =3D mtk_gpueb_mbox_probe,
-> > +       .driver =3D {
-> > +               .name =3D "mtk-gpueb-mbox",
-> > +               .of_match_table =3D mtk_gpueb_mbox_of_ids,
-> > +       }
-> > +};
-> > +module_platform_driver(mtk_gpueb_mbox_drv);
-> > +
-> > +MODULE_AUTHOR("Nicolas Frattaroli <nicolas.frattaroli@collabora.com>");
-> > +MODULE_DESCRIPTION("MediaTek GPUEB mailbox driver for SoCs such as the=
- MT8196");
-> > +MODULE_LICENSE("GPL");
-> >
-> > --
-> > 2.51.0
-> >
->=20
-
-Thank you for your review!
-
-Kind regards,
-Nicolas Frattaroli
-
-
+Thanks,
+Manikanta.
