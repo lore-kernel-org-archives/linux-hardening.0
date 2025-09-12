@@ -1,155 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7582427F006
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 09:43:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E490284B26;
+	Fri, 12 Sep 2025 09:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757670193; cv=none; b=H9u6LAAmq6SYaW0BlR5b9LdzoXGqN1x4jV9yle9FX7lc6I/cUiu4j0gDML17nmRNJl4FT81fv8UdIs/VBz1hgLq5bl/tagqDsQq7CItLjbNchOKfwJTIpBfrQxd9IkMI+ejrbs6aFaR9T/BCPEcb6YU0FllyLoZUzTt/JSQRuZs=
+	t=1757670412; cv=none; b=pl8EwPwIYIQ2S4Xr8UK16Sz4yzlPUYL7FHROM0XTmoOCRgixksZGrpDMTs18JdZxPLqRUy+lCvfWI3Rf8jaF04fwoCCiUaUdpr99ce4GsItyk24OQ+4AbUpXHIHit7MP4YR+ZKG+XCbRaE76dpKF5+iwgwwMYp5oICVqIqArCHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757670193; c=relaxed/simple;
-	bh=Tm/gr3fAX2mucVzxZ3vj5YCQWrBZQm7DSz03T/+PLm4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eV366J3cxLvb4OAUqlTtUDf2vL+ChMIEAtKrkkgeuyRKLdEVlyUwLKOGRyCCsOnazNpCJy7gg08UZY1l4bjHdUd7xyid2hoUdXcScfpvUZux4WvAq9v85bi/e94v21UkP0qeuwBPrfBfD9fGsY/IHvK91Ya6zxXe6Erctj2izHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UIJH9bqs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757670412; c=relaxed/simple;
+	bh=NegVXeCczBLb95zus6Xi050gA1rei1TvPnU9xQh+Oz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZU03Z9iBBodcnnHRvd/yfUoXzvrZpYMBFPPyr7flKc0rjJYanj8Z5w/TpE7TCfpYOFcWno7E76seSzFyVMHHc1Q9Rprfoq9Ge8fp2IbknnL1wWep1efGxaWpH0EttmYZosw2w6bPZLpfRSIEehZOJftNflR4snLKd3Jz7TRKShI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlHwIS8u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UIJH9bqs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45871C4CEF1
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 09:43:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlHwIS8u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C41CC4CEFB;
+	Fri, 12 Sep 2025 09:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757670193;
-	bh=Tm/gr3fAX2mucVzxZ3vj5YCQWrBZQm7DSz03T/+PLm4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UIJH9bqs+o7JvQRB/HzsFTfW34SRXiD3TsgEwZfPfWIvegiPp094sq3HjeZHUNORR
-	 aN8W3j5hcbM4HTLUu3hGdTnqiD+V20EwZRptIVw8TEMKcjV65hG/mctZK4pUZ7NN7J
-	 fWxNQuSex2SORd/mHFzqlsuvxxr7yx+wvcKExJ6fPC32pCamONHmd7bNA7UEwGUHKW
-	 LS55Z4+/yM7UsFXN6EvrF2G/YIlrgF0F0cqpXhn8Lk4dGVgeDvRX/aX3Vk/gsnvtAz
-	 zbZkG7sWnu9xVq4ri8LYiI5V4pdAb638ZLr2z9Af83TSA50FVsytlOFnMw8xGRlwrv
-	 r5SxlBKoqn+jw==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-352e19bd72fso557451fa.3
-        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 02:43:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWxNMlok4NE9hEUgeISYHUl4C7eYJ7jil1/v2qC+lljTGTJN47W3Oh7469knGLIi/DRjtSEgkdAZ65boupdFUE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3P8T9bB+OYK5AnQynjZAZfAIm8p13wN8XMHxSxPM2XBffdTru
-	YyjBw+yJwpVrYAoKUWwX3TpLc+P01vUOnIS7HwK92vaLmun4G6uHAKeJESmnfQaF0JlrFAto54W
-	fzycAUlPvNXpyJIUOB9NYLxecf4+yIEs=
-X-Google-Smtp-Source: AGHT+IG0zAg+CWmwTQNf0T7eQr0H8MrlAj0ok49vYOO0NTsSzSJA1V/Mfe9do0Vj4ptveNssaQxcrFh9cZYqY69qKpQ=
-X-Received: by 2002:a05:651c:3245:20b0:336:e176:cd3c with SMTP id
- 38308e7fff4ca-351403ed5aamr4876141fa.38.1757670191462; Fri, 12 Sep 2025
- 02:43:11 -0700 (PDT)
+	s=k20201202; t=1757670411;
+	bh=NegVXeCczBLb95zus6Xi050gA1rei1TvPnU9xQh+Oz8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tlHwIS8ug6kpBIrC+YecNbpE7U+PsFjIkpz8qRKv0N8I/dMi05ykyBedvzKGA9d+z
+	 UyfCvbqR8D4bmoMvnGGtflnFBLXY07Cqu9o1LLWyrBAIQESt+qlQSE/yQN6l1tMfqr
+	 9g1FPoIalkF/eMyh872sL/l8IIbH5Mdp829VHOxyOxi/QSlQdfultYiLZ4b2tJtbGN
+	 h48YWJ+Q3mPXk9Fae45hjGdZlsSOEW38Zo4E03YQWNnSW3kVBOv0JU26h21GAFlWTZ
+	 s80T7jn2C06bJoLUtOYhmNyu7qpCNhTBotRJ1feUw3EeQDvhlEqhhFZqQZ0HV13QYW
+	 btfi9G8AHwzbA==
+Date: Fri, 12 Sep 2025 15:16:34 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>
+Cc: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Apurupa Pattapu <quic_apurupa@quicinc.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org,
+	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kuldeep Singh <quic_kuldsing@quicinc.com>,
+	Sumit Garg <sumit.garg@oss.qualcomm.com>
+Subject: Re: [PATCH v12 00/11] Trusted Execution Environment (TEE) driver for
+ Qualcomm TEE (QTEE)
+Message-ID: <aMPr-sYzFDlr-R8R@sumit-X1>
+References: <20250911-qcom-tee-using-tee-ss-without-mem-obj-v12-0-17f07a942b8d@oss.qualcomm.com>
+ <CAHUa44Fow6BhkdTki=rt2psOC=dq99cRgwXsVagmQU7fttXyCw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250905001157.it.269-kees@kernel.org> <20250905002418.464643-5-kees@kernel.org>
- <CAMj1kXG+PtcXE5gkQ278vZ2qQojfc3Cv20WJKZ8AAQ9BvC2-zw@mail.gmail.com>
- <202509120157.9681B7FC6D@keescook> <202509120205.69A1B0CB@keescook>
-In-Reply-To: <202509120205.69A1B0CB@keescook>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 12 Sep 2025 11:43:00 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFAaO2=B5jFBKcpf6rUbhKNG-BEqZoFBv0UJ2gb-Eym5Q@mail.gmail.com>
-X-Gm-Features: Ac12FXwJ8k68qmVZ9hLIggEJHMS6xRMB37YN1YzfMTOCJqvVfKhzJeCmQ8Dmeko
-Message-ID: <CAMj1kXFAaO2=B5jFBKcpf6rUbhKNG-BEqZoFBv0UJ2gb-Eym5Q@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] arm: Add ARM 32-bit Kernel Control Flow Integrity implementation
-To: Kees Cook <kees@kernel.org>
-Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>, 
-	Richard Biener <rguenther@suse.de>, Joseph Myers <josmyers@redhat.com>, Jan Hubicka <hubicka@ucw.cz>, 
-	Richard Earnshaw <richard.earnshaw@arm.com>, Richard Sandiford <richard.sandiford@arm.com>, 
-	Marcus Shawcroft <marcus.shawcroft@arm.com>, Kyrylo Tkachov <kyrylo.tkachov@arm.com>, 
-	Kito Cheng <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Andrew Waterman <andrew@sifive.com>, Jim Wilson <jim.wilson.gcc@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Dan Li <ashimida.1990@gmail.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Ramon de C Valle <rcvalle@google.com>, 
-	Joao Moreira <joao@overdrivepizza.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Bill Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHUa44Fow6BhkdTki=rt2psOC=dq99cRgwXsVagmQU7fttXyCw@mail.gmail.com>
 
-On Fri, 12 Sept 2025 at 11:08, Kees Cook <kees@kernel.org> wrote:
->
-> On Fri, Sep 12, 2025 at 02:03:08AM -0700, Kees Cook wrote:
-> > On Thu, Sep 11, 2025 at 09:49:56AM +0200, Ard Biesheuvel wrote:
-> > > On Fri, 5 Sept 2025 at 02:24, Kees Cook <kees@kernel.org> wrote:
-> > > >
-> > > > Implement ARM 32-bit KCFI backend supporting ARMv7+:
-> > > >
-> > > > - Function preamble generation using .word directives for type ID storage
-> > > >   at -4 byte offset from function entry point (no prefix NOPs needed due to
-> > > >   4-byte instruction alignment).
-> > > >
-> > > > - Use movw/movt instructions for 32-bit immediate loading.
-> > > >
-> > > > - Trap debugging through UDF instruction immediate encoding following
-> > > >   AArch64 BRK pattern for encoding registers with useful contents.
-> > > >
-> > > > - Scratch register allocation using r0/r1 following ARM procedure call
-> > > >   standard for caller-saved temporary registers, though they get
-> > > >   stack spilled due to register pressure.
-> > > >
-> > > > Assembly Code Pattern for ARM 32-bit:
-> > > >   push {r0, r1}                ; Spill r0, r1
-> > > >   ldr  r0, [target, #-4]       ; Load actual type ID from preamble
-> > > >   movw r1, #type_id_low        ; Load expected type (lower 16 bits)
-> > > >   movt r1, #type_id_high       ; Load upper 16 bits with top instruction
-> > > >   cmp  r0, r1                  ; Compare type IDs directly
-> > > >   pop [r0, r1]                 ; Reload r0, r1
-> > >
-> > > We could avoid the MOVW/MOVT pair and the spilling by doing something
-> > > along the lines of
-> > >
-> > > ldr   ip, [target, #-4]
-> > > eor   ip, ip, #type_id[0]
-> > > eor   ip, ip, #type_id[1] << 8
-> > > eor   ip, ip, #type_id[2] << 16
-> > > eors  ip, ip, #type_id[3] << 24
-> > > ldrne ip, =type_id[3:0]
+On Fri, Sep 12, 2025 at 10:21:55AM +0200, Jens Wiklander wrote:
+> Hi,
+> 
+> On Fri, Sep 12, 2025 at 6:07 AM Amirreza Zarrabi
+> <amirreza.zarrabi@oss.qualcomm.com> wrote:
 > >
-> > Ah-ha, nice. And it could re-load the type_id on the slow path instead
-> > of unconditionally, I guess? (So no "ne" suffix needed there.)
+> > This patch series introduces a Trusted Execution Environment (TEE)
+> > driver for Qualcomm TEE (QTEE). QTEE enables Trusted Applications (TAs)
+> > and services to run securely. It uses an object-based interface, where
+> > each service is an object with sets of operations. Clients can invoke
+> > these operations on objects, which can generate results, including other
+> > objects. For example, an object can load a TA and return another object
+> > that represents the loaded TA, allowing access to its services.
 > >
-> >   ...
-> >   eors  ip, ip, #type_id[3] << 24
-> >   beq .Lkcfi_call
-> > .Lkcfi_trap:
-> >   ldr ip, =type_id[3:0]
+> [snip]
+> 
+> I'm OK with the TEE patches, Sumit and I have reviewed them.
+> 
+> There were some minor conflicts with other patches I have in the pipe
+> for this merge window, so this patchset is on top of what I have to
+> avoid merge conflicts.
+> 
+> However, the firmware patches are for code maintained by Björn.
+> Björn, how would you like to do this? Can I take them via my tree, or
+> what do you suggest?
 
-Yeah better. If you use the right compiler abstraction to emit this
-load, it will be turned into MOVW/MOVT if the target supports it.
+I had an offline chat with Amir about this and there is a build
+dependency of QTEE driver on firmware patches in case the patches gets
+applied in reverse order (first QTEE patches and then firmware ones).
+So I would suggest the complete patch-set goes through Jens tree given
+the very limited time we have.
 
-> >   udf #nnn
-> > .Lkcfi_call:
-> >   blx target
-> >
-> >
-> > >
-> > > Note that IP (R12) should be dead before a function call. Here it is
-> > > conditionally loaded with the expected target typeid, removing the
-> > > need to decode the instructions to recover it when the trap occurs.
-> > >
-> > > This should compile to Thumb2 as well as ARM encodings.
-> >
-> > Won't IP get used as the target register if r0-r3 are used for passing
-> > arguments? AAPCS implies this is how it'll go (4 arguments in registers,
-> > the rest on stack), but when I tried to force this to happen, it looked
-> > like it'd only pass 3 via registers, and would make the call with r3.
->
-> Wait, I misread, my test is using r4 as the target! Still, is IP guaranteed
-> to never be used for the target?
->
+Bjorn,
 
-The target register can be any GPR. IP is guaranteed by AAPCS not to
-play a role in parameter passing, because it is the Inter Procedural
-scratch register, and may be clobbered by PLT trampolines that get
-inserted between a direct call and its target. These are not direct
-calls, of course, but the callee does not know that, and so it cannot
-make any assumptions about the value of IP.
+Would it be fine for you to provide your ack for the firmware patches?
 
-That said, I'm not sure I understand why this type register has to be
-a fixed register. It /can/ be a fixed register, but you'd have to tell
-the compiler that. In that case, it can still use the link register
-for the target, unless it is emitting a tail call and LR needs to be
-preserved. The upshot of that would be that some tail calls will be
-converted into ordinary calls, due to the need to preserve some
-registers on the stack. But I'd still assume letting the compiler do
-this when needed is better than always pushing/popping two registers
-in the CFI call sequence.
+-Sumit
+
+> 
+> It's urgent to get this patchset into linux-next if it's to make it
+> for the coming merge window. Ideally, I'd like to send my pull request
+> to arm-soc during this week.
+> 
+> Cheers,
+> Jens
+> 
+> >
+> > ---
+> > Amirreza Zarrabi (11):
+> >       firmware: qcom: tzmem: export shm_bridge create/delete
+> >       firmware: qcom: scm: add support for object invocation
+> >       tee: allow a driver to allocate a tee_device without a pool
+> >       tee: add close_context to TEE driver operation
+> >       tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
+> >       tee: add TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF
+> >       tee: increase TEE_MAX_ARG_SIZE to 4096
+> >       tee: add Qualcomm TEE driver
+> >       tee: qcom: add primordial object
+> >       tee: qcom: enable TEE_IOC_SHM_ALLOC ioctl
+> >       Documentation: tee: Add Qualcomm TEE driver
+> >
+> >  Documentation/tee/index.rst              |   1 +
+> >  Documentation/tee/qtee.rst               |  96 ++++
+> >  MAINTAINERS                              |   7 +
+> >  drivers/firmware/qcom/qcom_scm.c         | 119 ++++
+> >  drivers/firmware/qcom/qcom_scm.h         |   7 +
+> >  drivers/firmware/qcom/qcom_tzmem.c       |  63 ++-
+> >  drivers/tee/Kconfig                      |   1 +
+> >  drivers/tee/Makefile                     |   1 +
+> >  drivers/tee/qcomtee/Kconfig              |  12 +
+> >  drivers/tee/qcomtee/Makefile             |   9 +
+> >  drivers/tee/qcomtee/async.c              | 182 ++++++
+> >  drivers/tee/qcomtee/call.c               | 820 +++++++++++++++++++++++++++
+> >  drivers/tee/qcomtee/core.c               | 915 +++++++++++++++++++++++++++++++
+> >  drivers/tee/qcomtee/mem_obj.c            | 169 ++++++
+> >  drivers/tee/qcomtee/primordial_obj.c     | 113 ++++
+> >  drivers/tee/qcomtee/qcomtee.h            | 185 +++++++
+> >  drivers/tee/qcomtee/qcomtee_msg.h        | 304 ++++++++++
+> >  drivers/tee/qcomtee/qcomtee_object.h     | 316 +++++++++++
+> >  drivers/tee/qcomtee/shm.c                | 150 +++++
+> >  drivers/tee/qcomtee/user_obj.c           | 692 +++++++++++++++++++++++
+> >  drivers/tee/tee_core.c                   | 127 ++++-
+> >  drivers/tee/tee_private.h                |   6 -
+> >  include/linux/firmware/qcom/qcom_scm.h   |   6 +
+> >  include/linux/firmware/qcom/qcom_tzmem.h |  15 +
+> >  include/linux/tee_core.h                 |  54 +-
+> >  include/linux/tee_drv.h                  |  12 +
+> >  include/uapi/linux/tee.h                 |  56 +-
+> >  27 files changed, 4410 insertions(+), 28 deletions(-)
+> > ---
+> > base-commit: 8b8aefa5a5c7d4a65883e5653cf12f94c0b68dbf
+> > change-id: 20241202-qcom-tee-using-tee-ss-without-mem-obj-362c66340527
+> >
+> > Best regards,
+> > --
+> > Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+> >
