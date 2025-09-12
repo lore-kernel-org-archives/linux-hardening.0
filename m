@@ -1,63 +1,63 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5707A32143F
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 15:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B8E32252C
+	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 15:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757689840; cv=none; b=mJzXCJjQjDDaW+kYUxJTkERU8d9f90DTw3ZaSbF9+ydqVp0ZyHZMnknXO2lKi9YV7yVazH8+t+rlABpBvzXkK3Q90jLXwTSSF0TIBxFZqx1ovDp4hBbJqbUk4fQO6eu4LG9VGvnxbvta8TX4XPwye9iomEoMiVQ2jyM1JFt+8CE=
+	t=1757689845; cv=none; b=OlMEr2uS+2zViLq91CODuYLXBbYjsuMvvaIA8hptStk6t/POPeY2/2k906EmR4k5h7UOe7zvhWAXXzyA0sWTq032iveEequ8hEslzX5auB3w4C4hosiC7MCdUxwFoKUQAEtzWrprUlpXfHTJKtXwFuswbVYgzK2CGdEHgGFVVEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757689840; c=relaxed/simple;
-	bh=lBamo/mRxiUtCBdbmIZyVniV6pvujs45sCbA4KFEQzE=;
+	s=arc-20240116; t=1757689845; c=relaxed/simple;
+	bh=6AaRzfJC4rwBpQMEKbO3OuuO8jZlJG6Q3ebKObOQ6ZM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cEHfKxCvYRnSEDbRETjtmqp776r3vcYQgT6fQ1NMAKpcsdD/hHG4qCxtzhoPeuVOFrMoPVLgjl36bjz9qZx8FwgYR7uW1LK4TyzBXIDifN7fsw87Fdgw3iRkhApCMmZnicLazQcgfQKtAZdkkg+1cB/8kn9aiFvCPM/MXi6oG7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fAOMROtg; arc=none smtp.client-ip=209.85.128.171
+	 MIME-Version; b=KBlBEDnTT2VY2YyQJpuALW5uxNpCkZUwV/dc7hCwIHpGsnMdJVo0z6o+CgDbBAdldvuj37ergO1xA6FNZ57ig0Dm8yed6zt97YTBvQcRm9x2nRhp8dEYEMrDmKDJfToIGbtOM+bJVuFHQoYAJUPwIeRzGsjBcFRpIzuqB6eEQtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QAEbFTKE; arc=none smtp.client-ip=209.85.128.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fAOMROtg"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-71d60504bf8so19144497b3.2
-        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 08:10:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QAEbFTKE"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-71d603b60cbso18644987b3.1
+        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 08:10:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757689836; x=1758294636; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1757689842; x=1758294642; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+ds8gslyRhEA90VqYYB6jUYRwIuKnqG3r9jdtCHu7D4=;
-        b=fAOMROtg/82tIva9GG3Qq7B1/Xo0+WLG/MAQv4jrJm8l+dpu/m7w88+hJOQUjbEBCE
-         Q/c6F7hcNX4R6eSvQuECiTJ/TwZ5ordlY296OA611EL10F6Q1XB+2shpcmNX1wJysvwv
-         NOh0HeeJrlREnwXJPTUTPDanh1+wbk5RqHQ26uU6u2xA9a2cR+CzZhb7PNYnsb0MizPk
-         vfA0nSyqNet2mhTreKSt6W/pq1aHgIboBGbT4SMlpCiDS1qWyPIW2mSg10P7JSnWUfnN
-         dgEWo/RJpZfZ7WXd2RPHPcUbUJGClDGaXmF6kF1cvaXdV1OhTMqaB58W9YZMg4944Pzp
-         7LQQ==
+        bh=FGwNZTJUDbb42i0I/DCBOpee9BSl0Ek2gmsDPeJY6Qk=;
+        b=QAEbFTKE3Is1fpN4DN352x4/uB/fuDeyg8Xhor65IPIkwk0uDjgCQ6Jh2BYx/AUUod
+         IeiEckAQTr5gy9kRRfDPj4lGzKnQkeqqGzlUcwj+oYonAfewd2XF4ogfR0xVk/OPy9C9
+         LT7VwTO/Hjy/zj12qr0uZvdfyDnKbBcVMr6e16LVaDQXKbTRVn4bo8cpbVWFABid7tal
+         Z38O30igG7fjNVVZjfWLpqSfCp4BiUwK0lX8sTxbecKmUdfZzFE+gm8f0YAthKTVlsXL
+         fAqvi8tPKPs5u2+qlxNSyZlz9K4y6cZ/D3hlx2tT9AUjf0QMHYRwEeB5oepeHFRa+N7p
+         dR3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757689836; x=1758294636;
+        d=1e100.net; s=20230601; t=1757689842; x=1758294642;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+ds8gslyRhEA90VqYYB6jUYRwIuKnqG3r9jdtCHu7D4=;
-        b=p12cRHWv+gSNvXpGhOjmxBCo+DAiYPVWCahhXpkK7cOpw70uAiF2yHv1B/d6yTBS5U
-         DZoz+hhyZ1dSXmOEddL0RFBeR7jn6pMj9wgtBX+ZolUUM+GfOd4N17NhnRwNkJP9IltQ
-         Ig0IikQEueGh9UN9F83zTjfpHl12YUrKUlghvJtxzp4HxYGa3eFDUzx94EG931pAWGWu
-         H7irqj1yEl86aFV49NXs7sB1g4MmDrLAw6o9nFiy2I/h+25qJ/DF/UfFaPRLRUYJdksy
-         1WvW/11AUcekDFi+KL+gcdUGzq1xMxvwzRDEaiMjRkcge5MMG30/4B9xP4Um1YBz6jFe
-         VhCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgyOLdCij3UxapUkMd4LNSROfnSL1lWhJ5CWX/C1G17+7MTC008u5Lbdh6t1j5XjVsxUXSlVOBfteuL8GMqw0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYBBNgZR+iAFZwF3aUQN6NWd0HiSyxQK2Gg1xkUF4cTiDEX1gm
-	ITKtB7TIYyIhbls2+//IUqDfXCE0H88eGLi+w5QLDr9B5A2ROcmXG7FxhpNoBh3MJCQ=
-X-Gm-Gg: ASbGncsiLiXMBm1MlbVQ2wkzEVmPiaFhIz7emDomQ6kEyflZ4mqEFT2zWIHuth9Bjkv
-	D+txi2fJ68Y0T9zNaZ/3xRBby+klUHXtVB+vn+qZm85gA93y3fa0MZtmA51uO2Gp0XpTcZrXkIz
-	Aon7iTmU8e/kSpJ3MV759JDfS7SwI9kD9mGPEqqIXRWu/FdRUmOfiS9Su6kM03m9Ke5Fm2QQln2
-	0CoYahxcCqL5dGmoQtRTYHP77moI6/jTrOudeJCXJtKt/qQ8KBXom7NNiJFup6mS0qksDNA8yQD
-	f2gQzqCDZd/p9cdriZt0P9YfHpihkV95BW8CieLy0AFPRRyJOysMnJP3eiNqFpUu/xAeoTaN9t4
-	wd0ZLM47wag8D6YA1KDxdHtoFQZ7on4Gcew==
-X-Google-Smtp-Source: AGHT+IGUk5zUSgxh+r2dAU6fmhsNlb1RTWa2J7nuwDb4l4jA+t4jqiomYFBGdZGHaaNJrIZspvEapA==
-X-Received: by 2002:a05:690c:7286:b0:725:dc12:3004 with SMTP id 00721157ae682-73063d589abmr33964367b3.22.1757689836260;
-        Fri, 12 Sep 2025 08:10:36 -0700 (PDT)
+        bh=FGwNZTJUDbb42i0I/DCBOpee9BSl0Ek2gmsDPeJY6Qk=;
+        b=DU4kwHUHRcLEAqja4yZMqmMU48xNa35edNX3ssmHl7v6Yq0F0Z+qoNoGg0iNTxnRX+
+         vxlYo/j4wo0TkeOuJoG67Us/axvezXjjOvltYHdwXqGnjqKhbvqOv9yDWayBwMPyiHP+
+         ev5CdmA28QiQB8zb7Svu495Q49WT4OlO5BSM+4Cb75xXluEVs53465Fzfe8vShpkhBWW
+         CQFh0j8sisdm6kvZZos+qlSCUyXe2RsMGRJSdPv9XPGZeBUTcII1cOBg/ADPZGWUKmya
+         ZuR2+ZVebpzjTJgT0O3PC7sP4EbaZdkDCeqCAnOsW6tt3J0Df0MVMDjheGu21P4NKy4+
+         n7/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUzfyASgwYwjYw7MkKzlA2ODIO8O9WAXyxFRtowdHRHL/jjkMwiXKYVm/uGZfB7OAA9EQ8QSY4yR/crktAzMUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwykHrxQ7VQXqyehayH3U7HJMna96J5lPiwEXYYdcloTzf/W5Zw
+	Yb3FqCyUJvB2cz6D1Fi+8MqCnnzmn3VHaVv1YsrNEuao2lG4XT6GpSjh7AAkruAvIR0=
+X-Gm-Gg: ASbGnctiMOtm4AFtIqQyW1ccmOn9PkTqkrEc8WSq0vrbmjaHON6rBluBMrfiSeO38E5
+	zLu+xtpd5K5XQGSweNtZr1FjvdlJU5RFWsqNAGCbuPii/s3WGNTkWUXGwqy8jxy9bMbthwKhrsd
+	9DTXUTQqVByh/O+fAMa+Ruvz2oHkQ9mYLdfOmaK66pm1eNlWUcPT1vZJDGVHlTUjRke6iwGL2hC
+	OVayavDrQLCPhV1LHYpVw2haf/p66OOcjOGAGViu3yJhmCgKRe+Rk1LJO6iNEw+c/IXkZISpBXR
+	haLcUj7NcS0uelNczxHvrVD7p9ofWEI1zmU5j8Gsoe61VVJT3xCZU+tbxLtRQvihzgguygIHtMG
+	HcEl+ckbmNgGHqgoH87SlYFYBaOyDz6szVnfr9V/Xunmo
+X-Google-Smtp-Source: AGHT+IGd4PoJfw4tH37hzUk6PYKHbfiAkto5gdK9xgc2f3TOFApwMRiD1EpUFg4A8D8xg0pKJaYxEg==
+X-Received: by 2002:a05:690c:f93:b0:71f:efa8:5881 with SMTP id 00721157ae682-730652db42amr34340137b3.30.1757689841832;
+        Fri, 12 Sep 2025 08:10:41 -0700 (PDT)
 Received: from eugen-station.. ([145.224.119.89])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-624841586c1sm1302244d50.6.2025.09.12.08.10.31
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-624841586c1sm1302244d50.6.2025.09.12.08.10.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Sep 2025 08:10:36 -0700 (PDT)
+        Fri, 12 Sep 2025 08:10:41 -0700 (PDT)
 From: Eugen Hristev <eugen.hristev@linaro.org>
 To: linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -78,9 +78,9 @@ Cc: tudor.ambarus@linaro.org,
 	linux-doc@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Eugen Hristev <eugen.hristev@linaro.org>
-Subject: [RFC][PATCH v3 09/16] genirq/irqdesc: Have nr_irqs as non-static
-Date: Fri, 12 Sep 2025 18:08:48 +0300
-Message-ID: <20250912150855.2901211-10-eugen.hristev@linaro.org>
+Subject: [RFC][PATCH v3 10/16] panic: Have tainted_mask as non-static
+Date: Fri, 12 Sep 2025 18:08:49 +0300
+Message-ID: <20250912150855.2901211-11-eugen.hristev@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250912150855.2901211-1-eugen.hristev@linaro.org>
 References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
@@ -92,27 +92,27 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-nr_irqs is required for debugging the kernel, and needs to be
+tainted_mask is required for debugging the kernel, and needs to be
 accessible for kmemdump into vmcoreinfo.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 ---
- kernel/irq/irqdesc.c | 2 +-
+ kernel/panic.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index db714d3014b5..6c3c8c4687fd 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -139,7 +139,7 @@ static void desc_set_defaults(unsigned int irq, struct irq_desc *desc, int node,
- 	desc_smp_init(desc, node, affinity);
- }
+diff --git a/kernel/panic.c b/kernel/panic.c
+index d9c7cd09aeb9..048c33dab98a 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -54,7 +54,7 @@ static unsigned int __read_mostly sysctl_oops_all_cpu_backtrace;
+ #endif /* CONFIG_SMP */
  
--static unsigned int nr_irqs = NR_IRQS;
-+unsigned int nr_irqs = NR_IRQS;
- 
- /**
-  * irq_get_nr_irqs() - Number of interrupts supported by the system.
+ int panic_on_oops = CONFIG_PANIC_ON_OOPS_VALUE;
+-static unsigned long tainted_mask =
++unsigned long tainted_mask =
+ 	IS_ENABLED(CONFIG_RANDSTRUCT) ? (1 << TAINT_RANDSTRUCT) : 0;
+ static int pause_on_oops;
+ static int pause_on_oops_flag;
 -- 
 2.43.0
 
