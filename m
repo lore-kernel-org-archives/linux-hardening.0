@@ -1,204 +1,157 @@
-Received: from fra-out-001.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-001.esa.eu-central-1.outbound.mail-perimeter.amazon.com [18.156.205.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B60F337694;
-	Fri, 12 Sep 2025 18:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.156.205.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4AB35975
+	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 19:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757703364; cv=none; b=aCByGL2G+FtHzmd1Ai2ydU4z+mhtm8oykUNTkFCYt2Q7t6ZP+0KCibQFQ5kLCtaHMFyu1rd9HlmCLMnOS2kuIzwudP5/w5B7S+EjXaDKxETqcGJ+5vGltn+H2f+8bfVtMm4PhcGfetTe/jV2a4tqqXmbbL55C3GvEeY20A5mCAw=
+	t=1757703704; cv=none; b=pdbp4gnv0xxff4AMK9oO/AmwJ4W/8U+r5z+XaUy9VkWVROYov4xmwTL5a+oGWhj83Sue7KEbc9eiMQOzW0KWfiUkDIO91kDkatoHWVzATK6YVQNV4jS8wn3+hayhduHj4hdbPLyRPJVB1XIZOtDSQmaRnP7lRm1/8jfdZErLUMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757703364; c=relaxed/simple;
-	bh=0ZAuq1AeP2txNQ7DcSKMbLVlk6LKgVQRz0GMnBaYbvU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kuvUdxopSvfmzO0UmDwiwLC+b+ELtza/7YyArt+g6Y4RqICWXcR75GrshsE0IrrpmcZGZi9CGBa5iAw0KavOvxad30pqvWyino2nXgV6GJjIFPLSSioaY84CJHM270pLpgJ/6e4VlqsNW01LXYO2nhA6ZlTYYvmgdwIZ8GWlG3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=bkH8ht8k; arc=none smtp.client-ip=18.156.205.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1757703704; c=relaxed/simple;
+	bh=hA6MyLWgvIm+B5v5H/EQMkzcwfOmSjHdmd6AaDQKXQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RChjq20a2GbmiJVdHlA55cnmpy3pPd6PYGg4yMzbRRRwHphtx5xvjeACbtuwv6T/VzfJlgn1PjHY01jVyxhprqE6w/br3o1JKBvBwUgNulBPNsDIHiSXtLCam6wYu+fJUmqMk0E1fhUEg3/8fKna8HwHfQYLVbVTJI9DbQ/0770=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkwiEGjv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="bkH8ht8k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1757703362; x=1789239362;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mNZQBQctKZfrpwn21cF3GKidAAjq4amyeXpqNxgoRJI=;
-  b=bkH8ht8kCmpkPnccnBVKDSyr8hjqrqSGpllyuB2CSBEeeEbTXcLUnWWT
-   mmJ+4t6UAXZgCO6+7V8JKEaTJwFNbUqkaejNHtl5c1/zRJ2FPMJ6b/fQT
-   iBPhVMiptDFdIYqR4o9cb54/JFyGfi72loufZttFgOAvCyOr6LbXX4jmL
-   FHLfb3BIyOhbxBTHj4hPLaZQwPAryMf+o8bwd0aLXGt2ndmwZlW1D0ywZ
-   tJlDmkMWSnMLnGh0GTbs4vNfx+xK6uJ7rNCPOmxtYgRL3LvRSHImKbTiY
-   2h1rRV61lZXVzCGJs27S8VFd42qDhl5Y7nACqTYqcz6GO6NWUkdnsj8IY
-   A==;
-X-CSE-ConnectionGUID: nDIF5dbKTfWceOOdhg4FEw==
-X-CSE-MsgGUID: gdPDVpDjRouU7JRSMELRTA==
-X-IronPort-AV: E=Sophos;i="6.18,259,1751241600"; 
-   d="scan'208";a="2035514"
-Received: from ip-10-6-3-216.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.3.216])
-  by internal-fra-out-001.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2025 18:55:52 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [54.240.197.233:24025]
- by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.11.107:2525] with esmtp (Farcaster)
- id e5ae6cb8-934c-4b30-b89c-9832205aefa6; Fri, 12 Sep 2025 18:55:52 +0000 (UTC)
-X-Farcaster-Flow-ID: e5ae6cb8-934c-4b30-b89c-9832205aefa6
-Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Fri, 12 Sep 2025 18:55:51 +0000
-Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
- (172.19.116.181) by EX19D018EUA004.ant.amazon.com (10.252.50.85) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20; Fri, 12 Sep 2025
- 18:55:44 +0000
-From: Eliav Farber <farbere@amazon.com>
-To: <luc.vanoostenryck@gmail.com>, <rostedt@goodmis.org>, <mingo@redhat.com>,
-	<natechancellor@gmail.com>, <ndesaulniers@google.com>,
-	<keescook@chromium.org>, <sashal@kernel.org>, <akpm@linux-foundation.org>,
-	<ojeda@kernel.org>, <elver@google.com>, <gregkh@linuxfoundation.org>,
-	<kbusch@kernel.org>, <sj@kernel.org>, <bvanassche@acm.org>,
-	<leon@kernel.org>, <jgg@ziepe.ca>, <linux-kernel@vger.kernel.org>,
-	<linux-sparse@vger.kernel.org>, <clang-built-linux@googlegroups.com>,
-	<stable@vger.kernel.org>
-CC: <jonnyc@amazon.com>, <farbere@amazon.com>, Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>, Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	<linux-hardening@vger.kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>
-Subject: [PATCH v3 3/4 5.10.y] overflow: Allow mixed type arguments
-Date: Fri, 12 Sep 2025 18:55:15 +0000
-Message-ID: <20250912185518.39980-4-farbere@amazon.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20250912185518.39980-1-farbere@amazon.com>
-References: <20250912185518.39980-1-farbere@amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkwiEGjv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD153C4CEF1;
+	Fri, 12 Sep 2025 19:01:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757703703;
+	bh=hA6MyLWgvIm+B5v5H/EQMkzcwfOmSjHdmd6AaDQKXQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VkwiEGjv5m0lEwy3zEWfI9aoZ/I9vSCqy8y/muAAZ4kHWwasnUSRjBgqgiYpZvhs6
+	 g+vg7fIK4cvrjGUx0Ik5PNbfbDfh8FSCDE6N/5XQoC9xbxAbnTEn/iucMVicxoYO9E
+	 ilNqsm3Apg5y8+E2aeoMwtur2/LzD28ywysTTq75x5xyioW4QxI7qVceINwqU1uVPC
+	 9QTW8JcJdLdiIzMPMZIlQiWiDQ+b9V/8dy2asmwhxHwzM9wsOKpu1109eCYY8qfeeh
+	 7XdG3tLaNDl35L+5GyYMOmvT52epGahfssCgjK63oxJU2WepH+0H2n1qAwkwALAn7g
+	 H8HE7aVZU9uXg==
+Date: Fri, 12 Sep 2025 12:01:43 -0700
+From: Kees Cook <kees@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
+	Richard Biener <rguenther@suse.de>,
+	Joseph Myers <josmyers@redhat.com>, Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Dan Li <ashimida.1990@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ramon de C Valle <rcvalle@google.com>,
+	Joao Moreira <joao@overdrivepizza.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 5/7] arm: Add ARM 32-bit Kernel Control Flow Integrity
+ implementation
+Message-ID: <202509121159.24CAA81@keescook>
+References: <20250905001157.it.269-kees@kernel.org>
+ <20250905002418.464643-5-kees@kernel.org>
+ <CAMj1kXG+PtcXE5gkQ278vZ2qQojfc3Cv20WJKZ8AAQ9BvC2-zw@mail.gmail.com>
+ <202509120157.9681B7FC6D@keescook>
+ <202509120205.69A1B0CB@keescook>
+ <CAMj1kXFAaO2=B5jFBKcpf6rUbhKNG-BEqZoFBv0UJ2gb-Eym5Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D045UWA001.ant.amazon.com (10.13.139.83) To
- EX19D018EUA004.ant.amazon.com (10.252.50.85)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFAaO2=B5jFBKcpf6rUbhKNG-BEqZoFBv0UJ2gb-Eym5Q@mail.gmail.com>
 
-From: Kees Cook <keescook@chromium.org>
+On Fri, Sep 12, 2025 at 11:43:00AM +0200, Ard Biesheuvel wrote:
+> On Fri, 12 Sept 2025 at 11:08, Kees Cook <kees@kernel.org> wrote:
+> >
+> > On Fri, Sep 12, 2025 at 02:03:08AM -0700, Kees Cook wrote:
+> > > On Thu, Sep 11, 2025 at 09:49:56AM +0200, Ard Biesheuvel wrote:
+> > > > On Fri, 5 Sept 2025 at 02:24, Kees Cook <kees@kernel.org> wrote:
+> > > > >
+> > > > > Implement ARM 32-bit KCFI backend supporting ARMv7+:
+> > > > >
+> > > > > - Function preamble generation using .word directives for type ID storage
+> > > > >   at -4 byte offset from function entry point (no prefix NOPs needed due to
+> > > > >   4-byte instruction alignment).
+> > > > >
+> > > > > - Use movw/movt instructions for 32-bit immediate loading.
+> > > > >
+> > > > > - Trap debugging through UDF instruction immediate encoding following
+> > > > >   AArch64 BRK pattern for encoding registers with useful contents.
+> > > > >
+> > > > > - Scratch register allocation using r0/r1 following ARM procedure call
+> > > > >   standard for caller-saved temporary registers, though they get
+> > > > >   stack spilled due to register pressure.
+> > > > >
+> > > > > Assembly Code Pattern for ARM 32-bit:
+> > > > >   push {r0, r1}                ; Spill r0, r1
+> > > > >   ldr  r0, [target, #-4]       ; Load actual type ID from preamble
+> > > > >   movw r1, #type_id_low        ; Load expected type (lower 16 bits)
+> > > > >   movt r1, #type_id_high       ; Load upper 16 bits with top instruction
+> > > > >   cmp  r0, r1                  ; Compare type IDs directly
+> > > > >   pop [r0, r1]                 ; Reload r0, r1
+> > > >
+> > > > We could avoid the MOVW/MOVT pair and the spilling by doing something
+> > > > along the lines of
+> > > >
+> > > > ldr   ip, [target, #-4]
+> > > > eor   ip, ip, #type_id[0]
+> > > > eor   ip, ip, #type_id[1] << 8
+> > > > eor   ip, ip, #type_id[2] << 16
+> > > > eors  ip, ip, #type_id[3] << 24
+> > > > ldrne ip, =type_id[3:0]
+> > >
+> > > Ah-ha, nice. And it could re-load the type_id on the slow path instead
+> > > of unconditionally, I guess? (So no "ne" suffix needed there.)
+> > >
+> > >   ...
+> > >   eors  ip, ip, #type_id[3] << 24
+> > >   beq .Lkcfi_call
+> > > .Lkcfi_trap:
+> > >   ldr ip, =type_id[3:0]
+> 
+> Yeah better. If you use the right compiler abstraction to emit this
+> load, it will be turned into MOVW/MOVT if the target supports it.
+> 
+> > >   udf #nnn
+> > > .Lkcfi_call:
+> > >   blx target
+> > >
+> > >
+> > > >
+> > > > Note that IP (R12) should be dead before a function call. Here it is
+> > > > conditionally loaded with the expected target typeid, removing the
+> > > > need to decode the instructions to recover it when the trap occurs.
+> > > >
+> > > > This should compile to Thumb2 as well as ARM encodings.
+> > >
+> > > Won't IP get used as the target register if r0-r3 are used for passing
+> > > arguments? AAPCS implies this is how it'll go (4 arguments in registers,
+> > > the rest on stack), but when I tried to force this to happen, it looked
+> > > like it'd only pass 3 via registers, and would make the call with r3.
+> >
+> > Wait, I misread, my test is using r4 as the target! Still, is IP guaranteed
+> > to never be used for the target?
+> >
+> 
+> The target register can be any GPR. IP is guaranteed by AAPCS not to
+> play a role in parameter passing, because it is the Inter Procedural
+> scratch register, and may be clobbered by PLT trampolines that get
+> inserted between a direct call and its target. These are not direct
+> calls, of course, but the callee does not know that, and so it cannot
+> make any assumptions about the value of IP.
 
-commit d219d2a9a92e39aa92799efe8f2aa21259b6dd82 upstream.
+Okay, it seems like I am close to having this replaced with the eor
+method, but the backend really really does not like constructing the ldr
+for me. I may leave this as a "future improvement", and just change the
+Linux side of the trap handling to decode the eor insns instead of
+pulling the value out of IP.
 
-When the check_[op]_overflow() helpers were introduced, all arguments
-were required to be the same type to make the fallback macros simpler.
-However, now that the fallback macros have been removed[1], it is fine
-to allow mixed types, which makes using the helpers much more useful,
-as they can be used to test for type-based overflows (e.g. adding two
-large ints but storing into a u8), as would be handy in the drm core[2].
-
-Remove the restriction, and add additional self-tests that exercise
-some of the mixed-type overflow cases, and double-check for accidental
-macro side-effects.
-
-[1] https://git.kernel.org/linus/4eb6bd55cfb22ffc20652732340c4962f3ac9a91
-[2] https://lore.kernel.org/lkml/20220824084514.2261614-2-gwan-gyeong.mun@intel.com
-
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: linux-hardening@vger.kernel.org
-Reviewed-by: Andrzej Hajda <andrzej.hajda@intel.com>
-Reviewed-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-Tested-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-[ dropped the test portion of the commit as that doesn't apply to
-  5.15.y - gregkh]
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Eliav Farber <farbere@amazon.com>
----
- include/linux/overflow.h | 72 +++++++++++++++++++++++-----------------
- 1 file changed, 41 insertions(+), 31 deletions(-)
-
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 59d7228104d0..73bc67ec2136 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -51,40 +51,50 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- 	return unlikely(overflow);
- }
- 
--/*
-- * For simplicity and code hygiene, the fallback code below insists on
-- * a, b and *d having the same type (similar to the min() and max()
-- * macros), whereas gcc's type-generic overflow checkers accept
-- * different types. Hence we don't just make check_add_overflow an
-- * alias for __builtin_add_overflow, but add type checks similar to
-- * below.
-+/** check_add_overflow() - Calculate addition with overflow checking
-+ *
-+ * @a: first addend
-+ * @b: second addend
-+ * @d: pointer to store sum
-+ *
-+ * Returns 0 on success.
-+ *
-+ * *@d holds the results of the attempted addition, but is not considered
-+ * "safe for use" on a non-zero return value, which indicates that the
-+ * sum has overflowed or been truncated.
-  */
--#define check_add_overflow(a, b, d) __must_check_overflow(({	\
--	typeof(a) __a = (a);			\
--	typeof(b) __b = (b);			\
--	typeof(d) __d = (d);			\
--	(void) (&__a == &__b);			\
--	(void) (&__a == __d);			\
--	__builtin_add_overflow(__a, __b, __d);	\
--}))
-+#define check_add_overflow(a, b, d)	\
-+	__must_check_overflow(__builtin_add_overflow(a, b, d))
- 
--#define check_sub_overflow(a, b, d) __must_check_overflow(({	\
--	typeof(a) __a = (a);			\
--	typeof(b) __b = (b);			\
--	typeof(d) __d = (d);			\
--	(void) (&__a == &__b);			\
--	(void) (&__a == __d);			\
--	__builtin_sub_overflow(__a, __b, __d);	\
--}))
-+/** check_sub_overflow() - Calculate subtraction with overflow checking
-+ *
-+ * @a: minuend; value to subtract from
-+ * @b: subtrahend; value to subtract from @a
-+ * @d: pointer to store difference
-+ *
-+ * Returns 0 on success.
-+ *
-+ * *@d holds the results of the attempted subtraction, but is not considered
-+ * "safe for use" on a non-zero return value, which indicates that the
-+ * difference has underflowed or been truncated.
-+ */
-+#define check_sub_overflow(a, b, d)	\
-+	__must_check_overflow(__builtin_sub_overflow(a, b, d))
- 
--#define check_mul_overflow(a, b, d) __must_check_overflow(({	\
--	typeof(a) __a = (a);			\
--	typeof(b) __b = (b);			\
--	typeof(d) __d = (d);			\
--	(void) (&__a == &__b);			\
--	(void) (&__a == __d);			\
--	__builtin_mul_overflow(__a, __b, __d);	\
--}))
-+/** check_mul_overflow() - Calculate multiplication with overflow checking
-+ *
-+ * @a: first factor
-+ * @b: second factor
-+ * @d: pointer to store product
-+ *
-+ * Returns 0 on success.
-+ *
-+ * *@d holds the results of the attempted multiplication, but is not
-+ * considered "safe for use" on a non-zero return value, which indicates
-+ * that the product has overflowed or been truncated.
-+ */
-+#define check_mul_overflow(a, b, d)	\
-+	__must_check_overflow(__builtin_mul_overflow(a, b, d))
- 
- /** check_shl_overflow() - Calculate a left-shifted value and check overflow
-  *
 -- 
-2.47.3
-
+Kees Cook
