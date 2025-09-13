@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB2F2BDC09
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2690290D81
 	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 23:24:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757805846; cv=none; b=EDhhw8R/CoNfTcNB9T6/4zIB8iFdKepjy5gj8DV0sOqueSQJcL2C+vfULIzxOpvZq0asCbpBqF7Q1QFTA/IwSX9Ak7USlXk9iJARA6IbsauRkSGmCJn1Ub0olkoNMgMB1K18+agfmsNt0imh4QZAIGZkoOG3Z2vSsdYWqr3hxHU=
+	t=1757805846; cv=none; b=esocnJpAiBycJOThTf7Vcx69/QctYZIDbLxJJHXl8Tr2YBPUaZbpeDM8idikFMzjdzhdSAcxmVfesxFsOJET2opDRSEDDCXXFw8ytv66txqimKLYcuq/1KtTlSxhmNVxJR0sBA1cx4lc7TOqPglcxUT39ykn0Neae9e6NdUwgYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1757805846; c=relaxed/simple;
-	bh=RpxjWGib2gzsQhT+AzyGAzu5FT+XsTIWFWtZ0hmylvs=;
+	bh=RicSM13Us7UVR3BUlyRqgQvIzZydZ1URVgFZtdMojP8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RMffqjRGTLSZ0t+NwobyT7OM72U9Fu/dixkDsuuDOJTR+aYTlGR/8USBMm2rsHcx4mqAJIsxauRQ2lCaJGS5xXQu32YHyC0c/eIELrT5maJe73RR+PerBooGFJQpziQShYCmiC3MWm8Ncia4i6bt2V/Epph51bvHSdnIoOadz6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l7yqq5MS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AcI1u0fnIOYdTYn0fjFyzn/5mxDB07dbApZHllWV43FhUFVW6HXK5h4vlTUI6/O6X4X9MNsViVoWIMf6c9YcNks0Tb4ySyTzH6xhNslvEFlKLbPLsszMLAs+Cb6caU5FIUtkwlH9Gfq2n/RoBKTIbxxLT3H/jPEyqoeLJaN4aPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=reRr9+OH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l7yqq5MS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A7C1C4CEFC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="reRr9+OH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62FAAC4CEFA;
 	Sat, 13 Sep 2025 23:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1757805845;
-	bh=RpxjWGib2gzsQhT+AzyGAzu5FT+XsTIWFWtZ0hmylvs=;
+	bh=RicSM13Us7UVR3BUlyRqgQvIzZydZ1URVgFZtdMojP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l7yqq5MSBbV6+/j5yGSOyOY4W+YttBAcm6kTryzrA11dcyFUZlnby0BM106AUVWUS
-	 6IjHL9/dlKB5jsdlc7nBkPAUA5dXA4Di/N+iPEzymP4QZAciY+xrEH/KwLxJy87Opa
-	 12xf/Os/qRsPl6nkuYX69kZ66e/nfqBmdHl7Qetj7u04/vifLH7siJ8jP33W8K1u0b
-	 bbafq/X7ybL761Xf/MegVt+a0d1ZEkWBJVnb2VofTqZ806BQ/6c1FpV6XWYYH491DI
-	 jmo1bpR3Z7R/YibyV191Fbd3Vtpr+1nWuqs3o4ilEv5CROpjbGHvEZ/3Rb3kRPPuMY
-	 8tihoTgwacUUQ==
+	b=reRr9+OHBUNVIyv9aVbXYX+ZUrBRIHRyzr+8UJgEEYjjNQBcnEhIshLfHi0TLDR9m
+	 ZHhA2RsN0SMajd/eVyH3hAHU+OiVSb6pbIlw/tApb4ndzwUF4SJB2GxMvAGsKh5W8T
+	 JvmA1ULxD/lFMt1DZzcB/rSnmE/mC7WC5RzlhAi7sjKq3rgqj3Q6/SJj7USsVdury3
+	 oCU8X56KOpL4LbC3Hzj1UOPwR7oEThsoh7RErqIegJoRsq+w0hzE9EyQ17wIwNF5V2
+	 oTsxYZDNfCmV0gO7m4w7ZudBV1PFWrwTqhdWEtdSoN++AQ09dsm2AI3ZvnJAqmPWWH
+	 44UKXvPBsrXCw==
 From: Kees Cook <kees@kernel.org>
 To: Qing Zhao <qing.zhao@oracle.com>
 Cc: Kees Cook <kees@kernel.org>,
@@ -52,9 +52,9 @@ Cc: Kees Cook <kees@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	gcc-patches@gcc.gnu.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v3 5/7] arm: Add ARM 32-bit Kernel Control Flow Integrity implementation
-Date: Sat, 13 Sep 2025 16:24:01 -0700
-Message-Id: <20250913232404.2690431-5-kees@kernel.org>
+Subject: [PATCH v3 4/7] aarch64: Add AArch64 Kernel Control Flow Integrity implementation
+Date: Sat, 13 Sep 2025 16:24:00 -0700
+Message-Id: <20250913232404.2690431-4-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250913231256.make.519-kees@kernel.org>
 References: <20250913231256.make.519-kees@kernel.org>
@@ -64,157 +64,163 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=14102; i=kees@kernel.org; h=from:subject; bh=RpxjWGib2gzsQhT+AzyGAzu5FT+XsTIWFWtZ0hmylvs=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlH/wre5LzcLBZeXjbL7sSq69pV/w3uMqaE/b8u+0prg v+kiheVHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABNZ3cbI8P0z0wyv8zZvpJsC dN1+RwbGTBFMifrqfsfCn0/1VOKjWwx/OB9GmOTktUp9eSSi+HrN2RzNLa38L85teF/B/8viZxc fBwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=13489; i=kees@kernel.org; h=from:subject; bh=RicSM13Us7UVR3BUlyRqgQvIzZydZ1URVgFZtdMojP8=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlH/wpqHz9e4O0Wv7PG79zCPcGRwcvLI7cey77q/86YZ 9eN1oKujlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIn0PWb4X7fxzo5yw4LIV9wf Xf9MWKES+CRm6p9u0y89E6crvEvOM2Rk6Fl3ccM6pv35W5fNXubVpuwcPjM18cHZ5fNda4uynxa mMAAA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Implement ARM 32-bit KCFI backend supporting ARMv7+:
+Implement AArch64-specific KCFI backend.
 
-- Use movw/movt instructions for 32-bit immediate loading.
+- Trap debugging through ESR (Exception Syndrome Register) encoding
+  in BRK instruction immediate values.
 
-- Trap debugging through UDF instruction immediate encoding following
-  AArch64 BRK pattern for encoding registers with useful contents.
+- Scratch register allocation using w16/w17 (x16/x17) following
+  AArch64 procedure call standard for intra-procedure-call registers.
 
-- Scratch register allocation using r0/r1 following ARM procedure call
-  standard for caller-saved temporary registers, though they get
-  stack spilled due to register pressure. IP (r12) not usable here
-  because register allocator regularly uses it as the branch target
-  register.
+Assembly Code Pattern for AArch64:
+  ldur w16, [target, #-4]       ; Load actual type ID from preamble
+  mov  w17, #type_id_low        ; Load expected type (lower 16 bits)
+  movk w17, #type_id_high, lsl #16  ; Load upper 16 bits if needed
+  cmp  w16, w17                 ; Compare type IDs directly
+  b.eq .Lpass                   ; Branch if types match
+  .Ltrap: brk #esr_value        ; Enhanced trap with register info
+  .Lpass: blr/br target         ; Execute validated indirect transfer
 
-Assembly Code Pattern for ARM 32-bit:
-  push {r0, r1}                ; Spill r0, r1
-  ldr  r0, [target, #-4]       ; Load actual type ID from preamble
-  movw r1, #type_id_low        ; Load expected type (lower 16 bits)
-  movt r1, #type_id_high       ; Load upper 16 bits with top instruction
-  cmp  r0, r1                  ; Compare type IDs directly
-  pop [r0, r1]                 ; Reload r0, r1
-  beq  .Lkcfi_call             ; Branch if typeids match
-  .Lkcfi_trap: udf #udf_value  ; Undefined instruction trap with encoding
-  .Lkcfi_call: blx/bx target   ; Execute validated indirect transfer
+ESR (Exception Syndrome Register) Integration:
+- BRK instruction immediate encoding format:
+  0x8000 | ((TypeIndex & 31) << 5) | (AddrIndex & 31)
+  - TypeIndex indicates which W register contains expected type (W17 = 17)
+  - AddrIndex indicates which X register contains target address (0-30)
+  - Example: brk #33313 (0x8221) = expected type in W17, target address in X1
 
-UDF Immediate Encoding (following AArch64 ESR pattern):
-- UDF instruction immediate encoding format:
-  0x8000 | ((ExpectedTypeReg & 31) << 5) | (TargetAddrReg & 31)
-  - ExpectedTypeReg indicates which register contains expected type (R12 = 12)
-  - TargetAddrReg indicates which register contains target address (0-15)
-  - Example: udf #33154 (0x817A) = expected type in R12, target address in R2
-
-Build and run tested with Linux kernel ARCH=arm.
+Build and run tested with Linux kernel ARCH=arm64.
 
 gcc/ChangeLog:
 
-	config/arm/arm-protos.h: Declare KCFI helpers.
-	config/arm/arm.cc (arm_maybe_wrap_call_with_kcfi): New function.
-	(arm_maybe_wrap_call_value_with_kcfi): New function.
-	(arm_output_kcfi_insn): Emit KCFI assembly.
-	config/arm/arm.md: Add KCFI RTL patterns and hook expansion.
-	doc/invoke.texi: Document arm32 nuances.
+	config/aarch64/aarch64-protos.h: Declare aarch64_indirect_branch_asm,
+	and KCFI helpers.
+	config/aarch64/aarch64.cc (aarch64_expand_call): Wrap CALLs in
+	KCFI, with clobbers.
+	(aarch64_indirect_branch_asm): New function, extract common
+	logic for branch asm, like existing call asm helper.
+	(aarch64_output_kcfi_insn): Emit KCFI assembly.
+	config/aarch64/aarch64.md: Add KCFI RTL patterns and replace
+	open-coded branch emission with aarch64_indirect_branch_asm.
+	doc/invoke.texi: Document aarch64 nuances.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- gcc/config/arm/arm-protos.h |   4 +
- gcc/config/arm/arm.cc       | 146 ++++++++++++++++++++++++++++++++++++
- gcc/config/arm/arm.md       |  62 +++++++++++++++
- gcc/doc/invoke.texi         |  17 +++++
- 4 files changed, 229 insertions(+)
+ gcc/config/aarch64/aarch64-protos.h |   5 ++
+ gcc/config/aarch64/aarch64.cc       | 116 ++++++++++++++++++++++++++++
+ gcc/config/aarch64/aarch64.md       |  64 +++++++++++++--
+ gcc/doc/invoke.texi                 |  14 ++++
+ 4 files changed, 191 insertions(+), 8 deletions(-)
 
-diff --git a/gcc/config/arm/arm-protos.h b/gcc/config/arm/arm-protos.h
-index ff7e7658f912..ad3dc522e2b9 100644
---- a/gcc/config/arm/arm-protos.h
-+++ b/gcc/config/arm/arm-protos.h
-@@ -607,6 +607,10 @@ void arm_initialize_isa (sbitmap, const enum isa_feature *);
+diff --git a/gcc/config/aarch64/aarch64-protos.h b/gcc/config/aarch64/aarch64-protos.h
+index 56efcf2c7f2c..c91fdcc80ea3 100644
+--- a/gcc/config/aarch64/aarch64-protos.h
++++ b/gcc/config/aarch64/aarch64-protos.h
+@@ -1261,6 +1261,7 @@ tree aarch64_resolve_overloaded_builtin_general (location_t, tree, void *);
  
- const char * arm_gen_far_branch (rtx *, int, const char * , const char *);
+ const char *aarch64_sls_barrier (int);
+ const char *aarch64_indirect_call_asm (rtx);
++const char *aarch64_indirect_branch_asm (rtx);
+ extern bool aarch64_harden_sls_retbr_p (void);
+ extern bool aarch64_harden_sls_blr_p (void);
  
-+rtx arm_maybe_wrap_call_with_kcfi (rtx, rtx);
-+rtx arm_maybe_wrap_call_value_with_kcfi (rtx, rtx);
-+const char *arm_output_kcfi_insn (rtx_insn *, rtx *);
+@@ -1284,4 +1285,8 @@ extern unsigned aarch64_stack_alignment (const_tree exp, unsigned align);
+ extern rtx aarch64_gen_compare_zero_and_branch (rtx_code code, rtx x,
+ 						rtx_code_label *label);
+ 
++/* KCFI support.  */
++extern void kcfi_emit_trap_with_section (FILE *file, rtx trap_label_rtx);
++extern const char *aarch64_output_kcfi_insn (rtx_insn *insn, rtx *operands);
 +
- bool arm_mve_immediate_check(rtx, machine_mode, bool);
- 
- opt_machine_mode arm_mve_data_mode (scalar_mode, poly_uint64);
-diff --git a/gcc/config/arm/arm.cc b/gcc/config/arm/arm.cc
-index 8b951f3d4a67..d06183fd2d53 100644
---- a/gcc/config/arm/arm.cc
-+++ b/gcc/config/arm/arm.cc
-@@ -77,6 +77,8 @@
- #include "aarch-common-protos.h"
- #include "machmode.h"
- #include "arm-builtins.h"
+ #endif /* GCC_AARCH64_PROTOS_H */
+diff --git a/gcc/config/aarch64/aarch64.cc b/gcc/config/aarch64/aarch64.cc
+index fb8311b655d7..a7d17f18b72e 100644
+--- a/gcc/config/aarch64/aarch64.cc
++++ b/gcc/config/aarch64/aarch64.cc
+@@ -83,6 +83,7 @@
+ #include "rtlanal.h"
+ #include "tree-dfa.h"
+ #include "asan.h"
 +#include "kcfi.h"
-+#include "flags.h"
+ #include "aarch64-elf-metadata.h"
+ #include "aarch64-feature-deps.h"
+ #include "config/arm/aarch-common.h"
+@@ -11848,6 +11849,16 @@ aarch64_expand_call (rtx result, rtx mem, rtx cookie, bool sibcall)
  
- /* This file should be included last.  */
- #include "target-def.h"
-@@ -35803,6 +35805,150 @@ arm_mode_base_reg_class (machine_mode mode)
-   return MODE_BASE_REG_REG_CLASS (mode);
+   call = gen_rtx_CALL (VOIDmode, mem, const0_rtx);
+ 
++  /* Only indirect calls need KCFI instrumentation.  */
++  bool is_direct_call = SYMBOL_REF_P (XEXP (mem, 0));
++  rtx kcfi_type_rtx = is_direct_call ? NULL_RTX
++    : kcfi_get_type_id_for_expanding_gimple_call ();
++  if (kcfi_type_rtx)
++    {
++      /* Wrap call in KCFI.  */
++      call = gen_rtx_KCFI (VOIDmode, call, kcfi_type_rtx);
++    }
++
+   if (result != NULL_RTX)
+     call = gen_rtx_SET (result, call);
+ 
+@@ -11864,6 +11875,16 @@ aarch64_expand_call (rtx result, rtx mem, rtx cookie, bool sibcall)
+ 
+   auto call_insn = aarch64_emit_call_insn (call);
+ 
++  /* Add KCFI clobbers for indirect calls.  */
++  if (kcfi_type_rtx)
++    {
++      rtx usage = CALL_INSN_FUNCTION_USAGE (call_insn);
++      /* Add X16 and X17 clobbers for AArch64 KCFI scratch registers.  */
++      clobber_reg (&usage, gen_rtx_REG (DImode, 16));
++      clobber_reg (&usage, gen_rtx_REG (DImode, 17));
++      CALL_INSN_FUNCTION_USAGE (call_insn) = usage;
++    }
++
+   /* Check whether the call requires a change to PSTATE.SM.  We can't
+      emit the instructions to change PSTATE.SM yet, since they involve
+      a change in vector length and a change in instruction set, which
+@@ -30630,6 +30651,14 @@ aarch64_indirect_call_asm (rtx addr)
+   return "";
  }
  
-+/* Apply KCFI wrapping to call pattern if needed.  */
-+
-+rtx
-+arm_maybe_wrap_call_with_kcfi (rtx pat, rtx addr)
++const char *
++aarch64_indirect_branch_asm (rtx addr)
 +{
-+  /* Only indirect calls need KCFI instrumentation.  */
-+  bool is_direct_call = SYMBOL_REF_P (addr);
-+  if (!is_direct_call)
-+    {
-+      rtx kcfi_type_rtx = kcfi_get_type_id_for_expanding_gimple_call ();
-+      if (kcfi_type_rtx)
-+	{
-+	  /* Extract the CALL from the PARALLEL and wrap it with KCFI.  */
-+	  rtx call_rtx = XVECEXP (pat, 0, 0);
-+	  rtx kcfi_call = gen_rtx_KCFI (VOIDmode, call_rtx, kcfi_type_rtx);
-+
-+	  /* Replace the CALL in the PARALLEL with the KCFI-wrapped call.  */
-+	  XVECEXP (pat, 0, 0) = kcfi_call;
-+	}
-+    }
-+  return pat;
++  gcc_assert (REG_P (addr));
++  output_asm_insn ("br\t%0", &addr);
++  return aarch64_sls_barrier (aarch64_harden_sls_retbr_p ());
 +}
 +
-+/* Apply KCFI wrapping to call_value pattern if needed.  */
-+
-+rtx
-+arm_maybe_wrap_call_value_with_kcfi (rtx pat, rtx addr)
-+{
-+  /* Only indirect calls need KCFI instrumentation.  */
-+  bool is_direct_call = SYMBOL_REF_P (addr);
-+  if (!is_direct_call)
-+    {
-+      rtx kcfi_type_rtx = kcfi_get_type_id_for_expanding_gimple_call ();
-+      if (kcfi_type_rtx)
-+	{
-+	  /* Extract the SET from the PARALLEL and wrap its CALL with KCFI.  */
-+	  rtx set_rtx = XVECEXP (pat, 0, 0);
-+	  rtx call_rtx = SET_SRC (set_rtx);
-+	  rtx kcfi_call = gen_rtx_KCFI (VOIDmode, call_rtx, kcfi_type_rtx);
-+
-+	  /* Replace the CALL in the SET with the KCFI-wrapped call.  */
-+	  SET_SRC (set_rtx) = kcfi_call;
-+	}
-+    }
-+  return pat;
-+}
-+
+ /* Emit the assembly instruction to load the thread pointer into DEST.
+    Select between different tpidr_elN registers depending on -mtp= setting.  */
+ 
+@@ -32823,6 +32852,93 @@ aarch64_libgcc_floating_mode_supported_p
+ #undef TARGET_DOCUMENTATION_NAME
+ #define TARGET_DOCUMENTATION_NAME "AArch64"
+ 
 +/* Output the assembly for a KCFI checked call instruction.  */
 +
 +const char *
-+arm_output_kcfi_insn (rtx_insn *insn, rtx *operands)
++aarch64_output_kcfi_insn (rtx_insn *insn, rtx *operands)
 +{
-+  /* KCFI requires movw/movt instructions for type ID loading.  */
-+  if (!TARGET_HAVE_MOVT)
-+    sorry ("%<-fsanitize=kcfi%> requires movw/movt instructions (ARMv7 or later)");
++  /* KCFI is only supported in LP64 mode.  */
++  if (TARGET_ILP32)
++    {
++      sorry ("%<-fsanitize=kcfi%> is not supported for %<-mabi=ilp32%>");
++      return "";
++    }
++  /* Target register is operands[0].  */
++  rtx target_reg = operands[0];
++  gcc_assert (REG_P (target_reg));
 +
-+  /* KCFI type id.  */
-+  uint32_t type_id = INTVAL (operands[2]);
++  /* Get KCFI type ID from operand[3].  */
++  uint32_t type_id = (uint32_t) INTVAL (operands[3]);
 +
 +  /* Calculate typeid offset from call target.  */
 +  HOST_WIDE_INT offset = -(4 + kcfi_patchable_entry_prefix_nops);
-+
-+  /* Calculate trap immediate.  */
-+  unsigned addr_reg_num = REGNO (operands[0]);
-+  unsigned udf_immediate = 0x8000 | (0x1F << 5) | (addr_reg_num & 31);
 +
 +  /* Generate labels internally.  */
 +  rtx trap_label = gen_label_rtx ();
@@ -230,217 +236,191 @@ index 8b951f3d4a67..d06183fd2d53 100644
 +  ASM_GENERATE_INTERNAL_LABEL (trap_name, "Lkcfi_trap", trap_labelno);
 +  ASM_GENERATE_INTERNAL_LABEL (call_name, "Lkcfi_call", call_labelno);
 +
-+  /* Create memory operand for the type load.  */
-+  rtx mem_op = gen_rtx_MEM (SImode,
-+			    gen_rtx_PLUS (SImode, operands[0],
-+					  GEN_INT (offset)));
-+  rtx temp_operands[6];
++  rtx temp_operands[3];
 +
-+  /* Spill r0 and r1 to stack.  */
-+  output_asm_insn ("push\t{r0, r1}", NULL);
++  /* Load actual type into w16 from memory at offset using ldur.  */
++  temp_operands[0] = gen_rtx_REG (SImode, R16_REGNUM);
++  temp_operands[1] = target_reg;
++  temp_operands[2] = GEN_INT (offset);
++  output_asm_insn ("ldur\t%w0, [%1, #%2]", temp_operands);
 +
-+  /* Load actual type from memory using r0.  */
-+  temp_operands[0] = gen_rtx_REG (SImode, R0_REGNUM);
-+  temp_operands[1] = mem_op;
-+  output_asm_insn ("ldr\t%0, %1", temp_operands);
-+
-+  /* Load expected type low 16 bits into r1.  */
-+  temp_operands[0] = gen_rtx_REG (SImode, R1_REGNUM);
++  /* Load expected type low 16 bits into w17.  */
++  temp_operands[0] = gen_rtx_REG (SImode, R17_REGNUM);
 +  temp_operands[1] = GEN_INT (type_id & 0xFFFF);
-+  output_asm_insn ("movw\t%0, %1", temp_operands);
++  output_asm_insn ("mov\t%w0, #%1", temp_operands);
 +
-+  /* Load expected type high 16 bits into r1.  */
-+  temp_operands[0] = gen_rtx_REG (SImode, R1_REGNUM);
++  /* Load expected type high 16 bits into w17.  */
++  temp_operands[0] = gen_rtx_REG (SImode, R17_REGNUM);
 +  temp_operands[1] = GEN_INT ((type_id >> 16) & 0xFFFF);
-+  output_asm_insn ("movt\t%0, %1", temp_operands);
++  output_asm_insn ("movk\t%w0, #%1, lsl #16", temp_operands);
 +
-+  /* Compare types in r0 and r1.  */
-+  temp_operands[0] = gen_rtx_REG (SImode, R0_REGNUM);
-+  temp_operands[1] = gen_rtx_REG (SImode, R1_REGNUM);
-+  output_asm_insn ("cmp\t%0, %1", temp_operands);
-+
-+  /* Restore r0 and r1 from stack.  */
-+  output_asm_insn ("pop\t{r0, r1}", NULL);
++  /* Compare types.  */
++  temp_operands[0] = gen_rtx_REG (SImode, R16_REGNUM);
++  temp_operands[1] = gen_rtx_REG (SImode, R17_REGNUM);
++  output_asm_insn ("cmp\t%w0, %w1", temp_operands);
 +
 +  /* Output conditional branch to call label.  */
-+  fputs ("\tbeq\t", asm_out_file);
++  fputs ("\tb.eq\t", asm_out_file);
 +  assemble_name (asm_out_file, call_name);
 +  fputc ('\n', asm_out_file);
 +
-+  /* Output trap label and UDF instruction.  */
++  /* Output trap label and BRK instruction.  */
 +  ASM_OUTPUT_LABEL (asm_out_file, trap_name);
-+  temp_operands[0] = GEN_INT (udf_immediate);
-+  output_asm_insn ("udf\t%0", temp_operands);
 +
-+  /* Output pass/call label.  */
++  /* Calculate and emit BRK with ESR encoding.  */
++  unsigned type_index = R17_REGNUM;
++  unsigned addr_index = REGNO (operands[0]) - R0_REGNUM;
++  unsigned esr_value = 0x8000 | ((type_index & 31) << 5) | (addr_index & 31);
++
++  temp_operands[0] = GEN_INT (esr_value);
++  output_asm_insn ("brk\t#%0", temp_operands);
++
++  /* Output call label.  */
 +  ASM_OUTPUT_LABEL (asm_out_file, call_name);
 +
-+  /* Handle calls to lr using ip (which may be clobbered in subr anyway).  */
-+  if (REGNO (operands[0]) == LR_REGNUM)
-+    {
-+      operands[0] = gen_rtx_REG (SImode, IP_REGNUM);
-+      output_asm_insn ("mov\t%0, lr", operands);
-+    }
-+
-+  /* Call or tail call instruction.  */
++  /* Return appropriate call instruction based on SIBLING_CALL_P.  */
 +  if (SIBLING_CALL_P (insn))
-+    output_asm_insn ("bx\t%0", operands);
++    return aarch64_indirect_branch_asm (operands[0]);
 +  else
-+    output_asm_insn ("blx\t%0", operands);
-+
-+  return "";
++    return aarch64_indirect_call_asm (operands[0]);
 +}
 +
 +#undef TARGET_KCFI_SUPPORTED
 +#define TARGET_KCFI_SUPPORTED hook_bool_void_true
 +
- #undef TARGET_DOCUMENTATION_NAME
- #define TARGET_DOCUMENTATION_NAME "ARM"
+ struct gcc_target targetm = TARGET_INITIALIZER;
  
-diff --git a/gcc/config/arm/arm.md b/gcc/config/arm/arm.md
-index 422ae549b65b..646eb0d757b1 100644
---- a/gcc/config/arm/arm.md
-+++ b/gcc/config/arm/arm.md
-@@ -8629,6 +8629,7 @@
-     else
-       {
- 	pat = gen_call_internal (operands[0], operands[1], operands[2]);
-+	pat = arm_maybe_wrap_call_with_kcfi (pat, XEXP (operands[0], 0));
- 	arm_emit_call_insn (pat, XEXP (operands[0], 0), false);
-       }
+ #include "gt-aarch64.h"
+diff --git a/gcc/config/aarch64/aarch64.md b/gcc/config/aarch64/aarch64.md
+index fedbd4026a06..1a5abc142f50 100644
+--- a/gcc/config/aarch64/aarch64.md
++++ b/gcc/config/aarch64/aarch64.md
+@@ -1483,6 +1483,19 @@
+   }"
+ )
  
-@@ -8687,6 +8688,20 @@
++;; KCFI indirect call
++(define_insn "*call_insn"
++  [(kcfi (call (mem:DI (match_operand:DI 0 "aarch64_call_insn_operand" "Ucr"))
++	       (match_operand 1 "" ""))
++	 (match_operand 3 "const_int_operand"))
++   (unspec:DI [(match_operand:DI 2 "const_int_operand")] UNSPEC_CALLEE_ABI)
++   (clobber (reg:DI LR_REGNUM))]
++  "!SIBLING_CALL_P (insn)"
++{
++  return aarch64_output_kcfi_insn (insn, operands);
++}
++  [(set_attr "type" "call")])
++
+ (define_insn "*call_insn"
+   [(call (mem:DI (match_operand:DI 0 "aarch64_call_insn_operand"))
+ 	 (match_operand 1 "" ""))
+@@ -1510,6 +1523,20 @@
+   }"
+ )
+ 
++;; KCFI call with return value
++(define_insn "*call_value_insn"
++  [(set (match_operand 0 "" "")
++	(kcfi (call (mem:DI (match_operand:DI 1 "aarch64_call_insn_operand" "Ucr"))
++		    (match_operand 2 "" ""))
++	      (match_operand 4 "const_int_operand")))
++   (unspec:DI [(match_operand:DI 3 "const_int_operand")] UNSPEC_CALLEE_ABI)
++   (clobber (reg:DI LR_REGNUM))]
++  "!SIBLING_CALL_P (insn)"
++{
++  return aarch64_output_kcfi_insn (insn, &operands[1]);
++}
++  [(set_attr "type" "call")])
++
+ (define_insn "*call_value_insn"
+   [(set (match_operand 0 "" "")
+ 	(call (mem:DI (match_operand:DI 1 "aarch64_call_insn_operand"))
+@@ -1550,6 +1577,19 @@
    }
  )
  
-+;; KCFI indirect call - KCFI wraps just the call pattern
-+(define_insn "*kcfi_call_reg"
-+  [(kcfi (call (mem:SI (match_operand:SI 0 "s_register_operand" "r"))
-+	       (match_operand 1 "" ""))
-+	 (match_operand 2 "const_int_operand"))
-+   (use (match_operand 3 "" ""))
-+   (clobber (reg:SI LR_REGNUM))]
-+  "TARGET_32BIT && !SIBLING_CALL_P (insn) && arm_ccfsm_state == 0"
++;; KCFI sibling call
++(define_insn "*sibcall_insn"
++  [(kcfi (call (mem:DI (match_operand:DI 0 "aarch64_call_insn_operand" "Ucs"))
++	       (match_operand 1 ""))
++	 (match_operand 3 "const_int_operand"))
++   (unspec:DI [(match_operand:DI 2 "const_int_operand")] UNSPEC_CALLEE_ABI)
++   (return)]
++  "SIBLING_CALL_P (insn)"
 +{
-+  return arm_output_kcfi_insn (insn, operands);
++  return aarch64_output_kcfi_insn (insn, operands);
 +}
-+  [(set_attr "type" "call")
-+   (set_attr "length" "36")])
-+
- (define_insn "*call_reg_armv5"
-   [(call (mem:SI (match_operand:SI 0 "s_register_operand" "r"))
-          (match_operand 1 "" ""))
-@@ -8753,6 +8768,7 @@
-       {
- 	pat = gen_call_value_internal (operands[0], operands[1],
- 				       operands[2], operands[3]);
-+	pat = arm_maybe_wrap_call_value_with_kcfi (pat, XEXP (operands[1], 0));
- 	arm_emit_call_insn (pat, XEXP (operands[1], 0), false);
-       }
- 
-@@ -8799,6 +8815,21 @@
-       }
-   }")
- 
-+;; KCFI indirect call_value - KCFI wraps just the call pattern
-+(define_insn "*kcfi_call_value_reg"
-+  [(set (match_operand 0 "" "")
-+	(kcfi (call (mem:SI (match_operand:SI 1 "s_register_operand" "r"))
-+		    (match_operand 2 "" ""))
-+	      (match_operand 3 "const_int_operand")))
-+   (use (match_operand 4 "" ""))
-+   (clobber (reg:SI LR_REGNUM))]
-+  "TARGET_32BIT && !SIBLING_CALL_P (insn) && arm_ccfsm_state == 0"
-+{
-+  return arm_output_kcfi_insn (insn, &operands[1]);
-+}
-+  [(set_attr "type" "call")
-+   (set_attr "length" "36")])
-+
- (define_insn "*call_value_reg_armv5"
-   [(set (match_operand 0 "" "")
-         (call (mem:SI (match_operand:SI 1 "s_register_operand" "r"))
-@@ -8901,6 +8932,7 @@
-       operands[2] = const0_rtx;
- 
-     pat = gen_sibcall_internal (operands[0], operands[1], operands[2]);
-+    pat = arm_maybe_wrap_call_with_kcfi (pat, XEXP (operands[0], 0));
-     arm_emit_call_insn (pat, operands[0], true);
-     DONE;
-   }"
-@@ -8935,11 +8967,26 @@
- 
-     pat = gen_sibcall_value_internal (operands[0], operands[1],
-                                       operands[2], operands[3]);
-+    pat = arm_maybe_wrap_call_value_with_kcfi (pat, XEXP (operands[1], 0));
-     arm_emit_call_insn (pat, operands[1], true);
-     DONE;
-   }"
- )
- 
-+;; KCFI sibling call - KCFI wraps just the call pattern
-+(define_insn "*kcfi_sibcall_insn"
-+  [(kcfi (call (mem:SI (match_operand:SI 0 "s_register_operand" "Cs"))
-+	       (match_operand 1 "" ""))
-+	 (match_operand 2 "const_int_operand"))
-+   (return)
-+   (use (match_operand 3 "" ""))]
-+  "TARGET_32BIT && SIBLING_CALL_P (insn) && arm_ccfsm_state == 0"
-+{
-+  return arm_output_kcfi_insn (insn, operands);
-+}
-+  [(set_attr "type" "call")
-+   (set_attr "length" "36")])
++  [(set_attr "type" "branch")])
 +
  (define_insn "*sibcall_insn"
-  [(call (mem:SI (match_operand:SI 0 "call_insn_operand" "Cs, US"))
- 	(match_operand 1 "" ""))
-@@ -8960,6 +9007,21 @@
-   [(set_attr "type" "call")]
+   [(call (mem:DI (match_operand:DI 0 "aarch64_call_insn_operand" "Ucs, Usf"))
+ 	 (match_operand 1 ""))
+@@ -1558,16 +1598,27 @@
+   "SIBLING_CALL_P (insn)"
+   {
+     if (which_alternative == 0)
+-      {
+-	output_asm_insn ("br\\t%0", operands);
+-	return aarch64_sls_barrier (aarch64_harden_sls_retbr_p ());
+-      }
++      return aarch64_indirect_branch_asm (operands[0]);
+     return "b\\t%c0";
+   }
+   [(set_attr "type" "branch, branch")
+    (set_attr "sls_length" "retbr,none")]
  )
  
-+;; KCFI sibling call with return value - KCFI wraps just the call pattern
-+(define_insn "*kcfi_sibcall_value_insn"
-+  [(set (match_operand 0 "" "")
-+	(kcfi (call (mem:SI (match_operand:SI 1 "s_register_operand" "Cs"))
-+		    (match_operand 2 "" ""))
-+	      (match_operand 3 "const_int_operand")))
-+   (return)
-+   (use (match_operand 4 "" ""))]
-+  "TARGET_32BIT && SIBLING_CALL_P (insn) && arm_ccfsm_state == 0"
++;; KCFI sibling call with return value
++(define_insn "*sibcall_value_insn"
++  [(set (match_operand 0 "")
++	(kcfi (call (mem:DI (match_operand:DI 1 "aarch64_call_insn_operand" "Ucs"))
++		    (match_operand 2 ""))
++	      (match_operand 4 "const_int_operand")))
++   (unspec:DI [(match_operand:DI 3 "const_int_operand")] UNSPEC_CALLEE_ABI)
++   (return)]
++  "SIBLING_CALL_P (insn)"
 +{
-+  return arm_output_kcfi_insn (insn, &operands[1]);
++  return aarch64_output_kcfi_insn (insn, &operands[1]);
 +}
-+  [(set_attr "type" "call")
-+   (set_attr "length" "36")])
++  [(set_attr "type" "branch")])
 +
  (define_insn "*sibcall_value_insn"
-  [(set (match_operand 0 "" "")
-        (call (mem:SI (match_operand:SI 1 "call_insn_operand" "Cs,US"))
+   [(set (match_operand 0 "")
+ 	(call (mem:DI
+@@ -1578,10 +1629,7 @@
+   "SIBLING_CALL_P (insn)"
+   {
+     if (which_alternative == 0)
+-      {
+-	output_asm_insn ("br\\t%1", operands);
+-	return aarch64_sls_barrier (aarch64_harden_sls_retbr_p ());
+-      }
++      return aarch64_indirect_branch_asm (operands[1]);
+     return "b\\t%c1";
+   }
+   [(set_attr "type" "branch, branch")
 diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-index 972e8e76494f..dfaec475d2e1 100644
+index bd84b7dd903f..972e8e76494f 100644
 --- a/gcc/doc/invoke.texi
 +++ b/gcc/doc/invoke.texi
-@@ -18439,6 +18439,23 @@ trap is taken, allowing the kernel to identify both the KCFI violation
- and the involved registers for detailed diagnostics (eliminating the need
- for a separate @code{.kcfi_traps} section as used on x86_64).
+@@ -18425,6 +18425,20 @@ check-call bundle are considered ABI, as the Linux kernel may
+ optionally rewrite these areas at boot time to mitigate detected CPU
+ errata.
  
-+On ARM 32-bit, KCFI type identifiers are emitted as a @code{.word ID}
-+directive (a 32-bit constant) before the function entry.  ARM's
++On AArch64, KCFI type identifiers are emitted as a @code{.word ID}
++directive (a 32-bit constant) before the function entry.  AArch64's
 +natural 4-byte instruction alignment eliminates the need for additional
 +alignment NOPs.  When used with @option{-fpatchable-function-entry}, the
 +type identifier is placed before any prefix NOPs.  The runtime check
-+preserves argument registers @code{r0} and @code{r1} using @code{push}
-+and @code{pop} instructions, then uses them as scratch registers for
-+the type comparison.  The expected type is loaded using @code{movw} and
-+@code{movt} instruction pairs for 32-bit immediate values.  Type mismatches
-+trigger a @code{udf} instruction with an immediate value that encodes
++uses @code{x16} and @code{x17} as scratch registers.  Type mismatches
++trigger a @code{brk} instruction with an immediate value that encodes
 +both the expected type register index and the target address register
 +index in the format @code{0x8000 | (type_reg << 5) | addr_reg}.  This
-+encoding is captured in the UDF immediate field when the trap is taken,
-+allowing the kernel to identify both the KCFI violation and the involved
-+registers for detailed diagnostics (eliminating the need for a separate
-+@code{.kcfi_traps} section as used on x86_64).
++encoding is captured in the ESR (Exception Syndrome Register) when the
++trap is taken, allowing the kernel to identify both the KCFI violation
++and the involved registers for detailed diagnostics (eliminating the need
++for a separate @code{.kcfi_traps} section as used on x86_64).
 +
  KCFI is intended primarily for kernel code and may not be suitable
  for user-space applications that rely on techniques incompatible
