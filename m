@@ -1,125 +1,89 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C27B2882BB
-	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 21:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9507281ACA
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 21:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757798509; cv=none; b=ZxmddS6bZTswiCecoAiiATjD8S/Fc4GkolvTjbMyQRHnVPR/Uesd915S3hovSXEXMsaA/ogh7Z0qnCagBaoNihP054LzOfFbFgWr86teevdvEI32LrVKloqWiedsWWe/CnJAIPXRjaJZ0b2Es3Od+XCyHCb0y+yS/RSfTOcA8nc=
+	t=1757798586; cv=none; b=rdUZ0n5UnPEZnP/952+u26GwhKUJj7spSRj4I9AUUPYJlSQIJjvyy6ZE9Rhi7RiEmJ0D6iBjJiA1doMU8raQSsTYPCISPVAvjKyL+5dpClQ+BAXuicwp5/xex3GkeSfJ4o9kCiNwi8zclap4mMGrl6mROKGySpQebEHQoJDW1p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757798509; c=relaxed/simple;
-	bh=ztO90OA7SFIyJUVjK8nlNGn9JJ5eZOFp24N24RDbL0k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FZ/kPUXPFClxgLdIggO1cmNiF6VkAPnANHS7J4t66WVKyMjciW8CRnXkV7UGTlreUCJY+2NC3z/JMxwppITibP7r8xfW02iGXCSEQexZa6JUZgeOXwTbvwb/7GsewQyYFdkxwiJM2YIBcxMAZ/6NDE6W958d4TxQrr3960MQt84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cxgy57rI; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1757798586; c=relaxed/simple;
+	bh=iywYQxRz9CS7up3Rb4XVNLQEC9bvPlsrkIVlIPpDzfw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hVo6Y55/uFXFUklC2lfj/roSZVJ0efnx5wI2T0mej82x2HlyfuvFF/DLTSFM9LeaMdhCmYx1dE8dxuGNQJOwJLJ5Kw7QvH/Etu1uupQr467lf9gUXNcJR1SOSJtlLtOtx1vr+0Ryu5L9KJ7L2FT02Ro4SGVBvoxXiBQFyno9kmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LCfEnNQT; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cxgy57rI"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-45dfb8e986aso30749305e9.0
-        for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 14:21:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCfEnNQT"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-45dd505a1dfso24400685e9.2
+        for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 14:23:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757798506; x=1758403306; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZyY3y/zfUMXFXUpRJ3OYxoXXX3m+tz9/9uTca/6/ofU=;
-        b=Cxgy57rImp5bFwJj2/yRy9AvVSk3tbtaiHhfNmtWLVrLSiLh+ph5ydyddu6yHxAL7f
-         0mIDUo0GHzDiCud31Wu7Zcy58Mr3gFPrqmqRjMSCz+S1iTqXKflV7aMYhNa/UBLHu1me
-         U21eNq+rlTdVGsIG0tv5gJQuRIcU5Z7d4TSVNQhrHglBkscWmv1a9vNtRG9fr7TaJfjh
-         Ve2SVt5KbFmE/ejJebBl6oYrRpFL6sLU5g1dZxgpu9+F6TdAfSGZMRqXdVqRytrhrZ46
-         h7hDvH0GoZIlDfmnhi1DzXRLFeVj7eIBG1H6vTxv6sxLb8qpBejVfktsRtqanip7+2Ke
-         KKRg==
+        d=gmail.com; s=20230601; t=1757798583; x=1758403383; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iywYQxRz9CS7up3Rb4XVNLQEC9bvPlsrkIVlIPpDzfw=;
+        b=LCfEnNQTkDc3WZXvNt+khxghbuibFKNLjrncEpTucIfGJC033gS3YoVt5PE0zNZx/z
+         vt1n64nrPQCdmNokuSaZchHywnumop+wglV2YeKDBY9kP2OMnoBMRh+wAB+xtOjroEPl
+         gozt3JlGjm/YXhwmPOr+FlDTDhiRyLQCW9RY80TgpnDWqk4IzuqklIXl+WTHl9EqX1ow
+         aND0IhBYyvvVzsGXIroeaDQ22aEDG/PmrCb8sBrLWo3Uynh7sd/tTaNRbisg48nwU7a7
+         WXNOj8/G3SkFrI3tlzU/zZ73FhxUc+OxPvNErZwu7yihYqoeU4dZ8lBsDNuX4Nd/amLE
+         0RsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757798506; x=1758403306;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1757798583; x=1758403383;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZyY3y/zfUMXFXUpRJ3OYxoXXX3m+tz9/9uTca/6/ofU=;
-        b=eiOfBFzzLEoIe2KANvP8edZXSoUQErijFHXKgkzjn1UWmCbpRYuRl+rXmbObqcqY+s
-         5m7ulG5DWw+svQXmxf2igJoFQwcN48DZ3cksLaEbQjVpu1d319G4XYp4TiqpAR9ica+b
-         hnKpiH2K+uIVlvbjlSseHcxtKzGU3KUyee0CYIobBs+AYlxaYrCdmCpDD46TTy4wBw4L
-         lEN1HfYBpeBjpep4ROtwDqZheUqjDASqWu4XrR2HVxEUw6O8sZzpVQrXCu9jI+DpqrNS
-         A7OyUMNvgd86FPb5OCc05clcGUv4+386a7Tjn478tKEvBr7deazdN98nUd9P+THne2w3
-         6s5w==
-X-Forwarded-Encrypted: i=1; AJvYcCWSBTnXJEXvEYj/lJhqEsBp4QZChJC1mB6bnpS69lpR166gbIin6/+mF/PiXjc2yro3O6W77JfNKlyNbInKW50=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/IivmaKyRUf5FKMwrGojSLUcSGgTFexe9KYEkc2XL/wK/gQx9
-	i3lJlhca+iiQaMvJZeOj3+LpeCA+A5tKFrs5adfoZJasqFhdFgaAODPd
-X-Gm-Gg: ASbGnct7B/pf9ySkAi56B0xTGGh2kadkd2U5yBP+gBNIHbx+zO2ZpAUYCdf02Er4i3W
-	hQXubqv0o4eRX4oPxxKXf01WH3J2sVMZR9UMdO2hdpS3A0FGYU/7BGtHdbiDsBXdyHlHFCpFs1I
-	42qJqf1l58XdRrPYCEG2uqVYM0j9CTG+MfDC4C5HiDP+EzdWh1WAIjRay2ta/KHZ3M4EzBRL0Wp
-	ke5J4/DEamK0nPc8yIrgQm6gzyaA63yA5D+xKQRu9DzF/IdWosEdW7OObwwy2AK/QvOT1SosiUp
-	vJbPGlpREhI1Fixb/91zODm/557m5nKkaDbySo1wt7GB1fd47LtFf6qarvEjBXikFe1sO0fzCgc
-	o8ekmIFok+qp3FQsC7WVdp3yeMBoJamE3N6mLqLtIJXwus7hqwRYg
-X-Google-Smtp-Source: AGHT+IHeRMdY0v41y9UG/rCilo0nlRpcPpVfU8FDp0C5dtOoNsF92GLDoRzILM7KZ+pH0kQfdzQpNQ==
-X-Received: by 2002:a05:6000:26cc:b0:3ce:f9b7:4db with SMTP id ffacd0b85a97d-3e765792bb7mr6581555f8f.24.1757798505977;
-        Sat, 13 Sep 2025 14:21:45 -0700 (PDT)
-Received: from Radijator.localdomain ([93.140.65.23])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607cd6absm11576842f8f.34.2025.09.13.14.21.42
+        bh=iywYQxRz9CS7up3Rb4XVNLQEC9bvPlsrkIVlIPpDzfw=;
+        b=cPGZ7dSS0zwLSW/9zQHV9JsUVkjXRUrdiqpr8gb9xgsN0PZ3r0go1A8qB7HBOJk/pp
+         l1/AvTM7Qzb1UU2U1t4eJ1vUak9zJM5EhY63Y661yfM5bcMvPyUW8m+sCZNeAzAqnau4
+         9CyskZdnkfXAlLSJXemZY7dIdDRV2x4L51u1J5QRnkju0PEDKChSy4Rn9y9KPaVyJOdU
+         4tNSTmjcaswJwYBKNPakF4iE/e6W8cq+UccHBPvRJ7Cns7/Mr1SpTErgNR61w0QLDJOp
+         rIbP8jv0yuNZD4atkgci26lBvqwVD3wjFVO+4oUAjYv3i1ifM/2MQlua8ZMYwDArXjrD
+         K+pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXkvf0OSiRRMx1fK7Y5CI+1FvusjN4cfBFwtnKbIfXBNriwV54N6ITImsfzBtGWgcexWsSzYRDipHg9UpWTrks=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBaONeywiwz4/yvG3IE+ymrUPzvfmY2A3F04zsyqTbbCJsmgQA
+	NY7WfUNLydwKWo75R4ulwVpZMhBhE8gFl2NXPASE8Y1xgxz/Kqxh1TJh
+X-Gm-Gg: ASbGnctRzbipQLIjPya0GHufXIctW3048NiMCiokO0i1n8Bm7bWp9E6YsGMhemV88y7
+	YUcWYtbY7LQ7AgegB+AQwfzYCkLsjEysmzG37HKg4gI2hfxyk4yNrDww688cV+MJwPhiv8RuO65
+	WcARLeoPPSRjysFhkLqy1BwUzwzXtAncn80rH65Vgje3sjy8zcXgmRth+cqtR8cG6+iiA4fzmjF
+	2+N7PvHplURN1ttMoz/fhQTaeo+7CgT2RA1Ej7WMppVLuqnBDSLaNfmeZZp5wGy4cJtMjdkWeg3
+	PtUwQTTBN4DJgn7TIJTLK8QLH+P3Ms3nVkqi8pLFT51b62UZHUBRFrqQ/OY6FECM/DrsGDdx0tb
+	ezzSpAl+sbx3v3YCkK/TFdbeM3r+Bs/KAaruo7eg3adS1uGWu
+X-Google-Smtp-Source: AGHT+IEW20rf2hIhimdxJS1T6kk93raCiCsoiaFO2LWxY/a237S3KFMKKEA8B3zumhUKy7Hqe0S/gA==
+X-Received: by 2002:a05:600c:605a:b0:45d:d353:a491 with SMTP id 5b1f17b1804b1-45f211cb5c2mr51983385e9.1.1757798582965;
+        Sat, 13 Sep 2025 14:23:02 -0700 (PDT)
+Received: from radijator.localnet ([93.140.65.23])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45e016b5c5dsm114475115e9.14.2025.09.13.14.23.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Sep 2025 14:21:44 -0700 (PDT)
-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <dujemihanovic32@gmail.com>
-Date: Sat, 13 Sep 2025 23:21:11 +0200
-Subject: [PATCH RESEND 9/9] arm64: dts: marvell: samsung,coreprimevelte:
- Add USB connector
+        Sat, 13 Sep 2025 14:23:02 -0700 (PDT)
+From: Duje =?UTF-8?B?TWloYW5vdmnEhw==?= <dujemihanovic32@gmail.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
+ Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH RESEND 0/9] samsung,coreprimevelte DTS additions
+Date: Sat, 13 Sep 2025 23:23:00 +0200
+Message-ID: <12753058.O9o76ZdvQC@radijator>
+In-Reply-To: <20250913-pxa1908-dts-v1-0-8120cdc969b8@dujemihanovic.xyz>
+References: <20250913-pxa1908-dts-v1-0-8120cdc969b8@dujemihanovic.xyz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250913-pxa1908-dts-v1-9-8120cdc969b8@dujemihanovic.xyz>
-References: <20250913-pxa1908-dts-v1-0-8120cdc969b8@dujemihanovic.xyz>
-In-Reply-To: <20250913-pxa1908-dts-v1-0-8120cdc969b8@dujemihanovic.xyz>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
- Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, 
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje@dujemihanovic.xyz>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=925; i=duje@dujemihanovic.xyz;
- s=20240706; h=from:subject:message-id;
- bh=UoJNCWjZnaplQXJr+hNjiSMuZ5Y1BK5iXqLcT0rH1m0=;
- b=owGbwMvMwCW21nBykGv/WmbG02pJDBlHH/i7ZUddnNcm6NX88ZzeqdVLopceTHzeyvbQ4GbZ5
- PvaH7PaOkpZGMS4GGTFFFly/zte4/0ssnV79jIDmDmsTCBDGLg4BWAiM30ZGT5cnORQud/ucF2i
- 9XoPuY3MVi/3HmcWv8LkI6p32urQvgBGhgtbDuqdMI6cvOB80Kwj50vyGvdPfxFbJPvwiQpTp6v
- 1H24A
-X-Developer-Key: i=duje@dujemihanovic.xyz; a=openpgp;
- fpr=6DFF41D60DF314B5B76BA630AD319352458FAD03
 
-From: Duje Mihanović <duje@dujemihanovic.xyz>
+Resent due to mail server issues with the initial send.
 
-Add a node for the micro-USB connector found on the board.
+Regards,
+--
+Duje
 
-Signed-off-by: Duje Mihanović <duje@dujemihanovic.xyz>
----
- arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts b/arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts
-index b3741389e2ae056714ff4235b972bc72b5560455..7c96eaa33b1ef0176811f3b4d915ce1a69cc690b 100644
---- a/arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts
-+++ b/arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts
-@@ -68,6 +68,12 @@ muic: extcon@14 {
- 			reg = <0x14>;
- 			interrupt-parent = <&gpio>;
- 			interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+
-+			usb_con: connector {
-+				compatible = "usb-b-connector";
-+				label = "micro-USB";
-+				type = "micro";
-+			};
- 		};
- 	};
- 
-
--- 
-2.51.0
 
