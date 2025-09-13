@@ -1,67 +1,67 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57155286D7D
-	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 21:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016A528750B
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 21:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757798503; cv=none; b=Fx1a+Cglh2308GO0b0/MSHa1VsS+u67Ea6ePn7bcjFYyV2jtE7qoYzPa7ZCdUxgHTQjduozrFL/zHGKKTV/Rny2dAI1WG1mfcjYhqHZEX2EnQQnOOaRbUi0TNakDG5PZqUcZmgJUk56b5oazCrqsH/S7mckPcFXyM8BrTha9zV4=
+	t=1757798505; cv=none; b=hqiPgNpoQjN1kfDxEQffrQLOgShHVfx7dE8kFN9QiE1LNKW6ouN4iN0Br2V+ZQT08DiCAeOMMjggAKd6fHtYMQUiBK037h7Ou78tdqm76ya3nKgDC23CxuP5F6pA1J2q1J468ThSk32psvDFxaI2kMYxzvvNaC2qs9KCL0Tvyuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757798503; c=relaxed/simple;
-	bh=VK1bOHyM4dk3WD+AO5ukhkRiS3HMe+PUonIyaKPLvqU=;
+	s=arc-20240116; t=1757798505; c=relaxed/simple;
+	bh=bN2NtU1jMjlIDsytJCAkaK3wY9kweoygfyCb0yYoCOA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pY8VD+c70Ph1aeCP11RP2nw58xIzSxeKe30RLYXjb3a3mOgtV9TpxIZ1fk3yhvjMbSjyJofbJcdmsquWzYFTynC1/UBB4fRy5Vy/HxE0V+K+xDoQjwf/n+H6SidabIto0r+j6ANokCr5y9ovbzFxD7MTmFyo7l4r8qBBJa+ko58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MB+hpxMA; arc=none smtp.client-ip=209.85.221.47
+	 In-Reply-To:To:Cc; b=DeUSJZApxVRTiBm2Xp9CI/RBhI8JzDX3FGBjJFqB70L8XUVP47z2OPlCqAPjhJMJIX0JGMtlR5Fo7LrwPT/TBpkdg2wLRCoMa29nNELcph79b5bCnpChdQ8LlTGJZ8IJCXhB7hssxlmFc8qSruiO6b4p0s2Jmlvz7XF98Zr6eyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tv7Ro6Bk; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MB+hpxMA"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3e537dc30f7so1674887f8f.2
-        for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 14:21:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tv7Ro6Bk"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-45dec026c78so29361945e9.0
+        for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 14:21:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757798500; x=1758403300; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757798502; x=1758403302; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=cpVtTH4bHBYzIxiNrmk9dugn8tPCGekUmbNjeMCfqOI=;
-        b=MB+hpxMAgYbvm43aiXxBRzlWD+2kIJ+JexrcqExZk+3odXkn8Mx5cUjahGyyOv1Hya
-         ptmtCokREHC6oaRngJBC6vYwhhTUenhCqJuOW+O3msFRjmBUxuNPPdyzEhYYIhqI5Ebp
-         zD2PH/J9dRn/u+jlAm/Tf/0/Zmca8OlQWSeEgnqNhvZIUBudCCZIlKCLQGGkhHvfOxyK
-         RgNu93EFzY1XjZnYATLlNz8eeNpegrBg3eLqtt6pavOOpHL/i74IlhV0BQp1hiaI5m29
-         lZ9Hft1AHeZ1foZT7b97+OGm6oeH4a0a8Rb6fqe9WAp4dRPKdV/FrzhNDjZcWh4KsWUg
-         bbKA==
+        bh=TGIDvsaWCo8xv8p7HWlgtVj86XAI/5q9CVA6cYOpa5o=;
+        b=Tv7Ro6BkwypAfhuJGLmcSeKbCifraTZKELC3sfmuEXSxxpkIUZRay8vMcA0+jV4tSU
+         8PYAcJPnyhyv5Bvc+I1Y3jSn7zJ7Tw1D1+/y2H9YqvWfII+t03MOhAhqCIqIAQbBCRUN
+         Cw0LJBmGlxXI6owlce/TSKK47caDYfq1IpmHnJGUsA9ZioqdWyVHoPMEM81xucXgAM07
+         LlJ+dtSfrglG+QKr2drMFPrVMd7uzgTHytAmVbxOwEdzb88CXBYn0g6KfVi4Zzorih7L
+         JUtIYtrdSSlAllqoS2YSOItyf21a5QbBFQJjNac6uVB2jz0ITmb6k92eJ51z/9VLMHXj
+         3I6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757798500; x=1758403300;
+        d=1e100.net; s=20230601; t=1757798502; x=1758403302;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cpVtTH4bHBYzIxiNrmk9dugn8tPCGekUmbNjeMCfqOI=;
-        b=SE18wKUGr7YHErUFU9XtfXF7jKfvueX0TYWYC7cBC9JJJ1dM7DtXDuVLm0GT0006/Z
-         0+fk09IH47bV46YUqq3eKY2E63GFSrEkCX8P435QwKEFOu+tGEdPNn+OseQ8So45PUaB
-         3c+F8eYM+w0Sc09i6QROA3qM0uXxCjzHEwXdCSHbrgv6vvcRORMPCs5A1X+ChFLM0cAA
-         eqrexOKSoa6jyCuZpSFc18C33R0MCrKRK5hWfomQdgGfKGR8zT9Gz3i+ME3OYpKToxW1
-         gz7l0yFWMGZd/k3p/ZzfbtAYeXmJ39wxLNir2nFuz11+wjx6j23IOb2HBJPQKk3gxx8X
-         knDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYsJ01JHRMejdvXFhiy9FsObP38vx1blihBo5szA5Y1yORlHcJxyVcWN3l82fqJUQk7GYTuFVjsWaBeqlMUc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxburuJNaipgYhXKSQ2mG3hlGDuqIWoNUpcXuJDBMI/qIETkeD8
-	cR4/ZKB0Shnog5+1mswS/vHpIKUJ4//Oluw+ONNSWYR/akdNLxWpuqO6
-X-Gm-Gg: ASbGncvcmCMhrDF8I0LgSSGoir2sgsbNI+c9WpyGHZKpPkmqKdT9nt9ItpJUmFKRxcr
-	BFqYGy29qWrM+EAuiK23hUHBATX4C8E1+SSSks6lZYXPWWxCWehQrm8QFiG42sy9ysYL4Ncyv56
-	ayPK0M0gpAQ2S+hqgP9Yr2GwYWSYQ5Y0RDDBSFhhW+cjxbEQ4+Qo8shrAc+50wqyBK+EB7ZV2Gy
-	3U8MCFT1Mnm64pZfWZIOvX8XIaJU//nhT3JxNZzU4gK4fjAxYSqHIw+GRWJtpWVmGk+idgXMKFX
-	kbTfy8UzjSFwsdspycew2btctAh7MHx+qD0O/tcxLlkZW2rDwGGfHvC2mQLzevzfzXnim3gY7X3
-	6/8rKuts6QIM9haKiBn3ExEzjjB9ee7NBfXS3QJe+R/HToQO/gNFL
-X-Google-Smtp-Source: AGHT+IGQbeLuYMGr75Uv+t8fAINg0m32Go0SXPJ3x4GDoXlXLUXrQPT9iD6lPWsbNXLMr0iYh+onNA==
-X-Received: by 2002:a5d:4b02:0:b0:3e7:f044:2860 with SMTP id ffacd0b85a97d-3e7f0442884mr3036887f8f.7.1757798499546;
-        Sat, 13 Sep 2025 14:21:39 -0700 (PDT)
+        bh=TGIDvsaWCo8xv8p7HWlgtVj86XAI/5q9CVA6cYOpa5o=;
+        b=d1rfi+Agi1tCFuK/BrO9FFSLyhJV3kvfsK0TpVRN4QbcnHpslWajy9YXgMCVpIsNKh
+         2pqipvFxk2xMnYdkd0zWmrDJxiHg3jxl8s9/Z0INhiU8ORJarNVHnF0yxrNqMIzUFbsW
+         9AWzOghsmbE8/QT1SoeIdsUdNVngirp8LmIUlOjSXivhSUW750mD6qC/kba2ZKDWvMQQ
+         kiyZxaRW5HIIu5666QMpJx9VdrN9DUaqtwtDxApBPu3ZZxCP1w2622CjK2jhD+h5RLy5
+         oXfHCrQ2djCWNNgdh9FgovjMz/NLaXz/+CWXimkrWc9Ogf2CwNCBrpjluRQSJiFrp2d8
+         SvbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXkAd/SOA2PlLaepTBFf5tmFRL7WNMgzarFtUWPzQTfgTqmj6ZRzsI7QTd99wmSVim5ly6U82P/DTcRA2iJj24=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3W3logTyxJQobMeG8RvqeD2S9YhtPOw7c3RwJWjN28WwW8rNO
+	M57MxNvR8a2di5xTctf7tpSPcCq/xzBN50msqP75hKnYTcenpNoTnv0K
+X-Gm-Gg: ASbGnctWh7Z64bTtjF+Bq9CPWZlZjHW9DQirk/ISnxwKQTGqXlmflAOKUzUbjcPxnCd
+	T71rupiYuiSwdbCj/Y6X5lXonfnscCDoAgFsRxFmcgB7J3XTH2p7i2WCSFFc5KUe9zB2AvXwQk8
+	VBOlJmvcfsqdLYXqVq9D6xtT+eHgAScqsPR+PnmaGDYgRkAu6bSvKDmiGXQoV262Hr+zOKOAEfV
+	6fOnjlgykOLTFSCL2YujQsbW9y9wCr+dWnqoQuDfZ4Dht/nf9GPZbvVCIfrjhboGu7CpCf8Q0h5
+	EW8MyDZMMOYaQI7Ndxf1nICxoSi40qxCFLlJfYpO4ertGUZK4qJ1A/hCsmd+MkCIXXHORCgtum0
+	YFZrKYTptufze9zX1fc8Ck5wdVnoNIrK1/hj08yhfWg==
+X-Google-Smtp-Source: AGHT+IFmY5THLm9dS6Ltyl84/gJeP6O7MDMN8wq3OBTV4vsimxgGIeh5PeYusAs8d7qMKStK/tRNLg==
+X-Received: by 2002:a05:6000:616:b0:3e7:41ac:45f8 with SMTP id ffacd0b85a97d-3e765a227fdmr6279358f8f.55.1757798502238;
+        Sat, 13 Sep 2025 14:21:42 -0700 (PDT)
 Received: from Radijator.localdomain ([93.140.65.23])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607cd6absm11576842f8f.34.2025.09.13.14.21.36
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607cd6absm11576842f8f.34.2025.09.13.14.21.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Sep 2025 14:21:37 -0700 (PDT)
+        Sat, 13 Sep 2025 14:21:41 -0700 (PDT)
 From: =?utf-8?q?Duje_Mihanovi=C4=87?= <dujemihanovic32@gmail.com>
-Date: Sat, 13 Sep 2025 23:21:09 +0200
-Subject: [PATCH RESEND 7/9] arm64: dts: marvell: samsung,coreprimevelte:
- Drop some reserved memory
+Date: Sat, 13 Sep 2025 23:21:10 +0200
+Subject: [PATCH RESEND 8/9] arm64: dts: marvell: samsung,coreprimevelte:
+ Fill in memory node
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250913-pxa1908-dts-v1-7-8120cdc969b8@dujemihanovic.xyz>
+Message-Id: <20250913-pxa1908-dts-v1-8-8120cdc969b8@dujemihanovic.xyz>
 References: <20250913-pxa1908-dts-v1-0-8120cdc969b8@dujemihanovic.xyz>
 In-Reply-To: <20250913-pxa1908-dts-v1-0-8120cdc969b8@dujemihanovic.xyz>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -83,54 +83,56 @@ Cc: Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
  =?utf-8?q?Duje_Mihanovi=C4=87?= <duje@dujemihanovic.xyz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1150;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1297;
  i=duje@dujemihanovic.xyz; s=20240706; h=from:subject:message-id;
- bh=AOTuIRkZ7qxukusobcqK/hGoYlqb/lfC8O75aryw37k=;
- b=owGbwMvMwCW21nBykGv/WmbG02pJDBlHH/iHWezr+Ji3VcW4KOXAtNRPH1Ked6kyHNpyev0K7
- ZI7nzLXdZSyMIhxMciKKbLk/ne8xvtZZOv27GUGMHNYmUCGMHBxCsBEvrxn+J+u/WeDhUtCgUiZ
- Ae9bk/sdh/Ofbw7P8H+yrM/g89cdk28wMuxnMjui4BTafcogPXb64b3WtlFnE26FcS5d8PHaod6
- DmYwA
+ bh=nM2aOAL4Rd5X1oThp5ECWAxcNFIMgGN60dxwZOl4zsk=;
+ b=owGbwMvMwCW21nBykGv/WmbG02pJDBlHH/jHnzbvid+8/4WqqeD2tsaqOVVzrW4dMC58tePCo
+ R7OvtSNHaUsDGJcDLJiiiy5/x2v8X4W2bo9e5kBzBxWJpAhDFycAjARFgZGhusB+x2XswWu8b3z
+ 53X0TMVnDvZdygG+SlOKT/IdFw/uiGBkmLWy9mLEXqMDpzo+7rnl8nit1aT0YN05gZ/uzJ9mF2/
+ LwgwA
 X-Developer-Key: i=duje@dujemihanovic.xyz; a=openpgp;
  fpr=6DFF41D60DF314B5B76BA630AD319352458FAD03
 
 From: Duje Mihanović <duje@dujemihanovic.xyz>
 
-Most of the memory marked as reserved is actually usable. Delete its
-reserved-memory nodes so that the memory can be used.
+The board is known to have 1 GiB of DRAM with the first 16 MiB unusable.
+Instead of relying on the bootloader to fill in the memory node, do it
+ourselves.
 
 Signed-off-by: Duje Mihanović <duje@dujemihanovic.xyz>
 ---
- .../dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts  | 17 -----------------
- 1 file changed, 17 deletions(-)
+ .../boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts b/arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts
-index dc58b19ef5d11c69f52ea7804323fe2fb2257ca7..13a726d86e65ad836166325e0958a6ec3e6d022e 100644
+index 13a726d86e65ad836166325e0958a6ec3e6d022e..b3741389e2ae056714ff4235b972bc72b5560455 100644
 --- a/arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts
 +++ b/arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts
-@@ -41,23 +41,6 @@ framebuffer@17000000 {
- 			reg = <0 0x17000000 0 0x1800000>;
- 			no-map;
+@@ -30,13 +30,22 @@ fb0: framebuffer@17177000 {
  		};
--
--		gpu@9000000 {
--			reg = <0 0x9000000 0 0x1000000>;
--		};
--
--		/* Communications processor, aka modem */
--		cp@5000000 {
--			reg = <0 0x5000000 0 0x3000000>;
--		};
--
--		cm3@a000000 {
--			reg = <0 0xa000000 0 0x80000>;
--		};
--
--		seclog@8000000 {
--			reg = <0 0x8000000 0 0x100000>;
--		};
  	};
  
- 	i2c-muic {
+-	/* Bootloader fills this in */
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0 0 0 0>;
++		reg = <0 0 0 0x40000000>;
+ 	};
+ 
+ 	reserved-memory {
++		/*
++		 * Reserved by the vendor bootloader as a "secure region".
++		 *
++		 * TODO: See if the responsible stage of the bootloader can be
++		 * replaced
++		 */
++		secure-region@0 {
++			reg = <0 0 0 0x1000000>;
++		};
++
+ 		framebuffer@17000000 {
+ 			reg = <0 0x17000000 0 0x1800000>;
+ 			no-map;
 
 -- 
 2.51.0
