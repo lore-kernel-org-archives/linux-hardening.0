@@ -1,155 +1,118 @@
-Received: from mail-yx1-f53.google.com (mail-yx1-f53.google.com [74.125.224.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19AD268C73
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 22:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E25A15D1
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 06:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757717644; cv=none; b=cOT3G372yjoAOK2iuR/Pa5BTUwEyT2Pej5JTepzXl/OHcdavk/BGX+OIX4Tw76d3SmKH1r4QZEENrT8YtVI/qea6VCQCnAqyGSDC+3TV2RieEOpZ5+WCsvc74uj3LKJQ4CNVCEgmQ74sdZVZskL9tiwyZaApUCGXhK4lpQ6sUAE=
+	t=1757744961; cv=none; b=NC50LJj6wEj1YexmX/VmoTnK0p2TOVYzrbCxV9+VZ8P2t5LJIy0yhVov6/5Xb2RA5GyR9OP+TYbxc5oMJqxY8kRk8l//KopVxRHB7R+PiXl2BGk4m7hLFMzPEHkm33EYOqV4pAdSeRnyb3fq9qPp1ocn6VSD4mBDnjGEGLHKtak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757717644; c=relaxed/simple;
-	bh=MHrpa4Jwxgc+dQNTjUuLs2EeQFU4pffDsIDMZKMLqmc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kHD++LoO/9Q963qRa0tzvvPpZFLWHRCXX8fWp8oUmgmbeXI51PeQ5JZiuOixoRXXbtFhsuipZsNqaTb3fQy1zINIvlxdRcb4HC3n60cwQnNLiR9eqhDqbitZkJQaY26oD3X2HRKpn2QYQyIwDK4epk0beU1N1hrz2WEeI3e8kdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PutVraYs; arc=none smtp.client-ip=74.125.224.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1757744961; c=relaxed/simple;
+	bh=fxnPDdvPd3c92wHByPhQ1EnrEd6j07zF/rSvscb71uY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OCxnkS6L86dGJjQON9O+tGyK7txK6jHSUbFKjqKI7Rl1oK6Rhtq1bIeiz/tbAFVBUOsD32kn78+2o/Z3qH9eIYKRDoteD/i96dFFHEdJt8+Qom+5uCiux6StdqrLnUNzdrufPXwjnW41Pl4pRmQaz/wQorlZ8ZVP4JKdYXa3TQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6cBb4Tq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PutVraYs"
-Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-60170e15cf6so1684685d50.0
-        for <linux-hardening@vger.kernel.org>; Fri, 12 Sep 2025 15:54:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757717641; x=1758322441; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H/ALLDcBZ6nZwBY7ZN6L7gT+4ClMkunGI751uMEjico=;
-        b=PutVraYsoT8gxPT4xt/376mhNjsh17LrtcO0pcCNQRGNVS5m5Q1WliSxIPEbFrayGu
-         TgXJ+7M10CMLpAz64f/+YyNtvHzJCxwNO6iRD32fjXNIrDKaW68n9zp4tOd0v9ZV/z1Z
-         kzJdu620IzX7snuNghL/mL/EfriWSy8vJWiIzX+zbh95ncUBEY4OwELqMl3pcNP55JL1
-         KTfBuBP6o7eCrCzGduUf6nuAmTuYtmEKSL/Tt9eg8OaSlJisZ359ZY4oZzNkOeCVgdcz
-         cS87zXcu8yKWLUybiIlpq14j58AgjUOauJq0jvcdh7AUSKuWwDrt16zeBjmGcMb65yZh
-         ojMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757717641; x=1758322441;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H/ALLDcBZ6nZwBY7ZN6L7gT+4ClMkunGI751uMEjico=;
-        b=UlKrAuxEqERuVhYEaCU7r2m3e6j/yNzatz6ZYyCKwveEGzBvBQWGHh4rgvVh4QpXjg
-         DuMcags7W7cTGnFVMKvY2iNUrI1r+xaR7X+kWzFWeYhMOxbyXCjG5NU9QJ65Z2mKe7Ff
-         nDvKWtIcOS7ReqfZ6gdhDIa1jaasdHRhZ01cbr1LH3PO0BxHNXVuHnKqnacFNLQhgWpY
-         8qEOnR6dqNFHXRI0jqHUMZfatlTzFHts1jlM7AiMxTY/nmVT3iqDD/jN85el3iADJIT2
-         3Ep8y9T67+ZxogV2+L64OWX6SOssBzyoJsS+akXjA38k6+3hWgRs0cFIPki/KDMShYFO
-         gBpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXVxJttx0zA+yTdHD9Im1ZKB50Wjd1445sP7vS5sXDBaOvohBhYG/n2kyezZRn9IHYweJqDC2E+1CBCccCqkwo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiQBDs7OeIx/7Nc9p6/ggsiL1r7SeasxESf25q3H3EoOcXetyg
-	sigJZyAV9cGy9DxBr1XriCfbxJZoWtaUtHmMMGmvLNBwdCG+qqNk5jRSsAbaXEt4kvL93+Qjyuj
-	7+04rx4tmSBnpUyDzvefHlt6+2xHPG5U=
-X-Gm-Gg: ASbGncsu/LWIpYy8XRfy7yrEKLFMPyd4DQtWlTAcQSuBBHpDvv8VcHuMfEVz581+762
-	gPHpkvnq+gh8nH70vQ8WLbRlwvKFGVxKnE1WHgIhlNxDZv4CfcdZdOJ8H+GI3BdJrvMNPrfR/qN
-	T+SJiNt5pJ0xLupxumlgZz1rI7wSr5F+SAFlmX/cWt8yjjGOWauVA/WoiUN2KT8ZqIAfJcUjiG4
-	7uU3PuKHZu9r6QvJvvULKzi4VAJJW6xVOfeq4EWbkkCnXgkpP7DExAzTt+XFcu3zwn1Xv9ubbPD
-	j9SFtxY=
-X-Google-Smtp-Source: AGHT+IGmrPKfHKqLuLVsedBSU1D7fMJ0SPSt1pUu9IK0SCtyHO6OiaCBaQyBDxty6OWXlqg3nf3oT3Kb2tAQnhUAUk8=
-X-Received: by 2002:a53:7101:0:b0:626:842f:818c with SMTP id
- 956f58d0204a3-6272297979cmr3570059d50.24.1757717641302; Fri, 12 Sep 2025
- 15:54:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6cBb4Tq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A626FC4CEEB;
+	Sat, 13 Sep 2025 06:29:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757744960;
+	bh=fxnPDdvPd3c92wHByPhQ1EnrEd6j07zF/rSvscb71uY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D6cBb4Tq/tikcZ1u9aKHiraOOzUgIy20iZMXyS4wCzWQu2oGgKh5giVm3npahhU1Q
+	 kv/DGPpCxliILgYGmZnQZ52LxsefacqEqw1MuDdCC3OenefWR5ZYR8irVGGPESa8SB
+	 fybdTlxhMVtB0snxCKCPiqe+84BXun+xvdEtzfqR7x6Y7B1c9/xiHiINIW0USNeM6b
+	 8CaHkDGkDKEv6YPyQ2wMrojt3udpiAGembtMyziLH4WSfllyZGmwsTzpmvd6S7RcU7
+	 gfqZy7Ckhv99uarDJtgQ5pyZ7wF4mXeqj9KmLSs2c/OGIiI/T2+L8AWDySWgzoTqe1
+	 Tac0u+rwF31CQ==
+Date: Fri, 12 Sep 2025 23:29:20 -0700
+From: Kees Cook <kees@kernel.org>
+To: Qing Zhao <qing.zhao@oracle.com>
+Cc: Andrew Pinski <pinskia@gmail.com>, Richard Biener <rguenther@suse.de>,
+	Joseph Myers <josmyers@redhat.com>, Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Dan Li <ashimida.1990@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ramon de C Valle <rcvalle@google.com>,
+	Joao Moreira <joao@overdrivepizza.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	"gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v2 2/7] kcfi: Add core Kernel Control Flow Integrity
+ infrastructure
+Message-ID: <202509121443.77F7CF7F@keescook>
+References: <20250905001157.it.269-kees@kernel.org>
+ <20250905002418.464643-2-kees@kernel.org>
+ <65CF25F7-E9F5-41C8-9316-F7A461FD35D0@oracle.com>
+ <202509101705.92474D66@keescook>
+ <A356F147-5B23-46F6-B05E-3BDDC81A768B@oracle.com>
+ <202509112321.BFBE82ABBA@keescook>
+ <40B4B0A9-FC8B-4681-850F-88D8CE525210@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250912-mt8196-gpufreq-v2-0-779a8a3729d9@collabora.com> <20250912-mt8196-gpufreq-v2-9-779a8a3729d9@collabora.com>
-In-Reply-To: <20250912-mt8196-gpufreq-v2-9-779a8a3729d9@collabora.com>
-From: Chia-I Wu <olvaffe@gmail.com>
-Date: Fri, 12 Sep 2025 15:53:50 -0700
-X-Gm-Features: AS18NWAVsbHM7asbGyyRZapaZP5ufrQUasUcMY0V45b2pm9dui9MQp5I0XZOq0k
-Message-ID: <CAPaKu7TEN++z8r68k_4-iCyMLMthqJBUX35pgXupAHPdfttrYg@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] drm/panthor: devfreq: add pluggable devfreq providers
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Chen-Yu Tsai <wenst@chromium.org>, kernel@collabora.com, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <40B4B0A9-FC8B-4681-850F-88D8CE525210@oracle.com>
 
-On Fri, Sep 12, 2025 at 11:38=E2=80=AFAM Nicolas Frattaroli
-<nicolas.frattaroli@collabora.com> wrote:
-<snipped>
-> diff --git a/drivers/gpu/drm/panthor/panthor_devfreq.h b/drivers/gpu/drm/=
-panthor/panthor_devfreq.h
-> index a891cb5fdc34636444f141e10f5d45828fc35b51..94c9768d5d038c4ba8516929e=
-db565a1f13443fb 100644
-> --- a/drivers/gpu/drm/panthor/panthor_devfreq.h
-> +++ b/drivers/gpu/drm/panthor/panthor_devfreq.h
-> @@ -8,6 +8,7 @@
->
->  struct devfreq;
->  struct thermal_cooling_device;
-> +struct platform_device;
->
->  struct panthor_device;
->
-> @@ -43,6 +44,19 @@ struct panthor_devfreq {
->         spinlock_t lock;
->  };
->
-> +struct panthor_devfreq_provider {
-> +       /** @dev: device pointer to the provider device */
-> +       struct device *dev;
-> +       /**
-> +        * @init: the provider's init callback that allocates a
-> +        * &struct panthor_devfreq, adds it to panthor, and adds a devfre=
-q
-> +        * device to panthor. Will be called during panthor's probe.
-> +        */
-> +       int (*init)(struct panthor_device *ptdev, struct device *dev);
-> +
-> +       struct list_head node;
-> +};
-On mt8196, we have performance-domains to replace several other
-properties: clocks, *-supply, power-domains, operating-points-v2.
-There are also quirks, such as GPU_SHADER_PRESENT should be masked by
-GF_REG_SHADER_PRESENT. It feels like that the scope of
-panthor_devfreq_provider is more broader, and at least the naming is
-not right.
+On Fri, Sep 12, 2025 at 02:01:57PM +0000, Qing Zhao wrote:
+> 
+> > On Sep 12, 2025, at 03:32, Kees Cook <kees@kernel.org> wrote:
+> > 
+> > On Thu, Sep 11, 2025 at 03:04:01PM +0000, Qing Zhao wrote:
+> >> 
+> >> 
+> >>> On Sep 10, 2025, at 23:05, Kees Cook <kees@kernel.org> wrote:
+> >>> 
+> >>> On Tue, Sep 09, 2025 at 06:49:22PM +0000, Qing Zhao wrote:
+> >>>> 
+> >>>> Why the type-id attached as the attribute is not enough?
+> >>> 
+> >>> Doing the wrapping avoided needing to update multiple optimization passes
+> >>> to check for the attribute.
+> 
+> Do you remember which optimization passes need to be updated for these purpose?
 
-Another issue is I am not sure if we need to expose panthor_device
-internals to the provider. mtk_mfg accesses very few fields of
-panthor_device. It seems we can make the two less coupled.
+I had patched at least old_insns_match_p:
+https://lore.kernel.org/linux-hardening/20250821072708.3109244-3-kees@kernel.org/#Z31gcc:cfgcleanup.cc
 
-I might change my view as mtk_mfg evolves and requires tigher
-integration with panthor. But as is, I might prefer for mtk_mfg to
-live under drivers/soc/mediatek and provide a header for panthor to
-use in soc-specific path.
+The rest that I patched were about dealing with retaining notes, which
+aren't used any more now (an attribute is used, not a note).
 
+> >>> And it still needed a way to distinguish
+> >>> between direct and indirect calls, so I need to wrap only the indirect
+> >>> calls, where as the typeid attribute is for all functions for all typeid
+> >>> needs, like preamble generation, etc.
+> >> 
+> >> Okay, this sounds like a reasonable justification for these additional temporaries 
+> >> and assignment stmts. 
+> >> One more question, are these additional temporaries and assignment stmts are
+> >> finally eliminated by later optimizations? Any runtime overhead due to them?
+> > 
+> > Yeah, they totally vanish as far as I've been able to determine.
+> 
+> That’s good.  Then you might add this too in the design doc as a justification of the
+> New wrapper type, temporaries and new assignment stmt.
 
-> +
->
->  int panthor_devfreq_init(struct panthor_device *ptdev);
->
-> @@ -57,4 +71,6 @@ int panthor_devfreq_get_dev_status(struct device *dev,
->
->  unsigned long panthor_devfreq_get_freq(struct panthor_device *ptdev);
->
-> +int panthor_devfreq_register_provider(struct panthor_devfreq_provider *p=
-rov);
-> +
->  #endif /* __PANTHOR_DEVFREQ_H__ */
->
-> --
-> 2.51.0
->
+I spent some time today experimenting with annotations and discovered that
+the KCFI RTL changes actually ended up solving all the issue I'd found.
+Combined with moving the DECL attributes to TYPE attributes, everything
+got MUCH simpler. I'll send v3 out soon with all of this redundancy
+removed. I want to test it a little more first.
+
+-- 
+Kees Cook
