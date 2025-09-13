@@ -1,67 +1,67 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016A528750B
-	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 21:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C27B2882BB
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 21:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757798505; cv=none; b=hqiPgNpoQjN1kfDxEQffrQLOgShHVfx7dE8kFN9QiE1LNKW6ouN4iN0Br2V+ZQT08DiCAeOMMjggAKd6fHtYMQUiBK037h7Ou78tdqm76ya3nKgDC23CxuP5F6pA1J2q1J468ThSk32psvDFxaI2kMYxzvvNaC2qs9KCL0Tvyuc=
+	t=1757798509; cv=none; b=ZxmddS6bZTswiCecoAiiATjD8S/Fc4GkolvTjbMyQRHnVPR/Uesd915S3hovSXEXMsaA/ogh7Z0qnCagBaoNihP054LzOfFbFgWr86teevdvEI32LrVKloqWiedsWWe/CnJAIPXRjaJZ0b2Es3Od+XCyHCb0y+yS/RSfTOcA8nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757798505; c=relaxed/simple;
-	bh=bN2NtU1jMjlIDsytJCAkaK3wY9kweoygfyCb0yYoCOA=;
+	s=arc-20240116; t=1757798509; c=relaxed/simple;
+	bh=ztO90OA7SFIyJUVjK8nlNGn9JJ5eZOFp24N24RDbL0k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DeUSJZApxVRTiBm2Xp9CI/RBhI8JzDX3FGBjJFqB70L8XUVP47z2OPlCqAPjhJMJIX0JGMtlR5Fo7LrwPT/TBpkdg2wLRCoMa29nNELcph79b5bCnpChdQ8LlTGJZ8IJCXhB7hssxlmFc8qSruiO6b4p0s2Jmlvz7XF98Zr6eyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tv7Ro6Bk; arc=none smtp.client-ip=209.85.128.50
+	 In-Reply-To:To:Cc; b=FZ/kPUXPFClxgLdIggO1cmNiF6VkAPnANHS7J4t66WVKyMjciW8CRnXkV7UGTlreUCJY+2NC3z/JMxwppITibP7r8xfW02iGXCSEQexZa6JUZgeOXwTbvwb/7GsewQyYFdkxwiJM2YIBcxMAZ/6NDE6W958d4TxQrr3960MQt84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cxgy57rI; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tv7Ro6Bk"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-45dec026c78so29361945e9.0
-        for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 14:21:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cxgy57rI"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-45dfb8e986aso30749305e9.0
+        for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 14:21:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757798502; x=1758403302; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757798506; x=1758403306; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=TGIDvsaWCo8xv8p7HWlgtVj86XAI/5q9CVA6cYOpa5o=;
-        b=Tv7Ro6BkwypAfhuJGLmcSeKbCifraTZKELC3sfmuEXSxxpkIUZRay8vMcA0+jV4tSU
-         8PYAcJPnyhyv5Bvc+I1Y3jSn7zJ7Tw1D1+/y2H9YqvWfII+t03MOhAhqCIqIAQbBCRUN
-         Cw0LJBmGlxXI6owlce/TSKK47caDYfq1IpmHnJGUsA9ZioqdWyVHoPMEM81xucXgAM07
-         LlJ+dtSfrglG+QKr2drMFPrVMd7uzgTHytAmVbxOwEdzb88CXBYn0g6KfVi4Zzorih7L
-         JUtIYtrdSSlAllqoS2YSOItyf21a5QbBFQJjNac6uVB2jz0ITmb6k92eJ51z/9VLMHXj
-         3I6A==
+        bh=ZyY3y/zfUMXFXUpRJ3OYxoXXX3m+tz9/9uTca/6/ofU=;
+        b=Cxgy57rImp5bFwJj2/yRy9AvVSk3tbtaiHhfNmtWLVrLSiLh+ph5ydyddu6yHxAL7f
+         0mIDUo0GHzDiCud31Wu7Zcy58Mr3gFPrqmqRjMSCz+S1iTqXKflV7aMYhNa/UBLHu1me
+         U21eNq+rlTdVGsIG0tv5gJQuRIcU5Z7d4TSVNQhrHglBkscWmv1a9vNtRG9fr7TaJfjh
+         Ve2SVt5KbFmE/ejJebBl6oYrRpFL6sLU5g1dZxgpu9+F6TdAfSGZMRqXdVqRytrhrZ46
+         h7hDvH0GoZIlDfmnhi1DzXRLFeVj7eIBG1H6vTxv6sxLb8qpBejVfktsRtqanip7+2Ke
+         KKRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757798502; x=1758403302;
+        d=1e100.net; s=20230601; t=1757798506; x=1758403306;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TGIDvsaWCo8xv8p7HWlgtVj86XAI/5q9CVA6cYOpa5o=;
-        b=d1rfi+Agi1tCFuK/BrO9FFSLyhJV3kvfsK0TpVRN4QbcnHpslWajy9YXgMCVpIsNKh
-         2pqipvFxk2xMnYdkd0zWmrDJxiHg3jxl8s9/Z0INhiU8ORJarNVHnF0yxrNqMIzUFbsW
-         9AWzOghsmbE8/QT1SoeIdsUdNVngirp8LmIUlOjSXivhSUW750mD6qC/kba2ZKDWvMQQ
-         kiyZxaRW5HIIu5666QMpJx9VdrN9DUaqtwtDxApBPu3ZZxCP1w2622CjK2jhD+h5RLy5
-         oXfHCrQ2djCWNNgdh9FgovjMz/NLaXz/+CWXimkrWc9Ogf2CwNCBrpjluRQSJiFrp2d8
-         SvbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXkAd/SOA2PlLaepTBFf5tmFRL7WNMgzarFtUWPzQTfgTqmj6ZRzsI7QTd99wmSVim5ly6U82P/DTcRA2iJj24=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3W3logTyxJQobMeG8RvqeD2S9YhtPOw7c3RwJWjN28WwW8rNO
-	M57MxNvR8a2di5xTctf7tpSPcCq/xzBN50msqP75hKnYTcenpNoTnv0K
-X-Gm-Gg: ASbGnctWh7Z64bTtjF+Bq9CPWZlZjHW9DQirk/ISnxwKQTGqXlmflAOKUzUbjcPxnCd
-	T71rupiYuiSwdbCj/Y6X5lXonfnscCDoAgFsRxFmcgB7J3XTH2p7i2WCSFFc5KUe9zB2AvXwQk8
-	VBOlJmvcfsqdLYXqVq9D6xtT+eHgAScqsPR+PnmaGDYgRkAu6bSvKDmiGXQoV262Hr+zOKOAEfV
-	6fOnjlgykOLTFSCL2YujQsbW9y9wCr+dWnqoQuDfZ4Dht/nf9GPZbvVCIfrjhboGu7CpCf8Q0h5
-	EW8MyDZMMOYaQI7Ndxf1nICxoSi40qxCFLlJfYpO4ertGUZK4qJ1A/hCsmd+MkCIXXHORCgtum0
-	YFZrKYTptufze9zX1fc8Ck5wdVnoNIrK1/hj08yhfWg==
-X-Google-Smtp-Source: AGHT+IFmY5THLm9dS6Ltyl84/gJeP6O7MDMN8wq3OBTV4vsimxgGIeh5PeYusAs8d7qMKStK/tRNLg==
-X-Received: by 2002:a05:6000:616:b0:3e7:41ac:45f8 with SMTP id ffacd0b85a97d-3e765a227fdmr6279358f8f.55.1757798502238;
-        Sat, 13 Sep 2025 14:21:42 -0700 (PDT)
+        bh=ZyY3y/zfUMXFXUpRJ3OYxoXXX3m+tz9/9uTca/6/ofU=;
+        b=eiOfBFzzLEoIe2KANvP8edZXSoUQErijFHXKgkzjn1UWmCbpRYuRl+rXmbObqcqY+s
+         5m7ulG5DWw+svQXmxf2igJoFQwcN48DZ3cksLaEbQjVpu1d319G4XYp4TiqpAR9ica+b
+         hnKpiH2K+uIVlvbjlSseHcxtKzGU3KUyee0CYIobBs+AYlxaYrCdmCpDD46TTy4wBw4L
+         lEN1HfYBpeBjpep4ROtwDqZheUqjDASqWu4XrR2HVxEUw6O8sZzpVQrXCu9jI+DpqrNS
+         A7OyUMNvgd86FPb5OCc05clcGUv4+386a7Tjn478tKEvBr7deazdN98nUd9P+THne2w3
+         6s5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWSBTnXJEXvEYj/lJhqEsBp4QZChJC1mB6bnpS69lpR166gbIin6/+mF/PiXjc2yro3O6W77JfNKlyNbInKW50=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/IivmaKyRUf5FKMwrGojSLUcSGgTFexe9KYEkc2XL/wK/gQx9
+	i3lJlhca+iiQaMvJZeOj3+LpeCA+A5tKFrs5adfoZJasqFhdFgaAODPd
+X-Gm-Gg: ASbGnct7B/pf9ySkAi56B0xTGGh2kadkd2U5yBP+gBNIHbx+zO2ZpAUYCdf02Er4i3W
+	hQXubqv0o4eRX4oPxxKXf01WH3J2sVMZR9UMdO2hdpS3A0FGYU/7BGtHdbiDsBXdyHlHFCpFs1I
+	42qJqf1l58XdRrPYCEG2uqVYM0j9CTG+MfDC4C5HiDP+EzdWh1WAIjRay2ta/KHZ3M4EzBRL0Wp
+	ke5J4/DEamK0nPc8yIrgQm6gzyaA63yA5D+xKQRu9DzF/IdWosEdW7OObwwy2AK/QvOT1SosiUp
+	vJbPGlpREhI1Fixb/91zODm/557m5nKkaDbySo1wt7GB1fd47LtFf6qarvEjBXikFe1sO0fzCgc
+	o8ekmIFok+qp3FQsC7WVdp3yeMBoJamE3N6mLqLtIJXwus7hqwRYg
+X-Google-Smtp-Source: AGHT+IHeRMdY0v41y9UG/rCilo0nlRpcPpVfU8FDp0C5dtOoNsF92GLDoRzILM7KZ+pH0kQfdzQpNQ==
+X-Received: by 2002:a05:6000:26cc:b0:3ce:f9b7:4db with SMTP id ffacd0b85a97d-3e765792bb7mr6581555f8f.24.1757798505977;
+        Sat, 13 Sep 2025 14:21:45 -0700 (PDT)
 Received: from Radijator.localdomain ([93.140.65.23])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607cd6absm11576842f8f.34.2025.09.13.14.21.39
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607cd6absm11576842f8f.34.2025.09.13.14.21.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Sep 2025 14:21:41 -0700 (PDT)
+        Sat, 13 Sep 2025 14:21:44 -0700 (PDT)
 From: =?utf-8?q?Duje_Mihanovi=C4=87?= <dujemihanovic32@gmail.com>
-Date: Sat, 13 Sep 2025 23:21:10 +0200
-Subject: [PATCH RESEND 8/9] arm64: dts: marvell: samsung,coreprimevelte:
- Fill in memory node
+Date: Sat, 13 Sep 2025 23:21:11 +0200
+Subject: [PATCH RESEND 9/9] arm64: dts: marvell: samsung,coreprimevelte:
+ Add USB connector
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250913-pxa1908-dts-v1-8-8120cdc969b8@dujemihanovic.xyz>
+Message-Id: <20250913-pxa1908-dts-v1-9-8120cdc969b8@dujemihanovic.xyz>
 References: <20250913-pxa1908-dts-v1-0-8120cdc969b8@dujemihanovic.xyz>
 In-Reply-To: <20250913-pxa1908-dts-v1-0-8120cdc969b8@dujemihanovic.xyz>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -83,56 +83,42 @@ Cc: Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
  =?utf-8?q?Duje_Mihanovi=C4=87?= <duje@dujemihanovic.xyz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1297;
- i=duje@dujemihanovic.xyz; s=20240706; h=from:subject:message-id;
- bh=nM2aOAL4Rd5X1oThp5ECWAxcNFIMgGN60dxwZOl4zsk=;
- b=owGbwMvMwCW21nBykGv/WmbG02pJDBlHH/jHnzbvid+8/4WqqeD2tsaqOVVzrW4dMC58tePCo
- R7OvtSNHaUsDGJcDLJiiiy5/x2v8X4W2bo9e5kBzBxWJpAhDFycAjARFgZGhusB+x2XswWu8b3z
- 53X0TMVnDvZdygG+SlOKT/IdFw/uiGBkmLWy9mLEXqMDpzo+7rnl8nit1aT0YN05gZ/uzJ9mF2/
- LwgwA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=925; i=duje@dujemihanovic.xyz;
+ s=20240706; h=from:subject:message-id;
+ bh=UoJNCWjZnaplQXJr+hNjiSMuZ5Y1BK5iXqLcT0rH1m0=;
+ b=owGbwMvMwCW21nBykGv/WmbG02pJDBlHH/i7ZUddnNcm6NX88ZzeqdVLopceTHzeyvbQ4GbZ5
+ PvaH7PaOkpZGMS4GGTFFFly/zte4/0ssnV79jIDmDmsTCBDGLg4BWAiM30ZGT5cnORQud/ucF2i
+ 9XoPuY3MVi/3HmcWv8LkI6p32urQvgBGhgtbDuqdMI6cvOB80Kwj50vyGvdPfxFbJPvwiQpTp6v
+ 1H24A
 X-Developer-Key: i=duje@dujemihanovic.xyz; a=openpgp;
  fpr=6DFF41D60DF314B5B76BA630AD319352458FAD03
 
 From: Duje Mihanović <duje@dujemihanovic.xyz>
 
-The board is known to have 1 GiB of DRAM with the first 16 MiB unusable.
-Instead of relying on the bootloader to fill in the memory node, do it
-ourselves.
+Add a node for the micro-USB connector found on the board.
 
 Signed-off-by: Duje Mihanović <duje@dujemihanovic.xyz>
 ---
- .../boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts b/arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts
-index 13a726d86e65ad836166325e0958a6ec3e6d022e..b3741389e2ae056714ff4235b972bc72b5560455 100644
+index b3741389e2ae056714ff4235b972bc72b5560455..7c96eaa33b1ef0176811f3b4d915ce1a69cc690b 100644
 --- a/arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts
 +++ b/arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dts
-@@ -30,13 +30,22 @@ fb0: framebuffer@17177000 {
+@@ -68,6 +68,12 @@ muic: extcon@14 {
+ 			reg = <0x14>;
+ 			interrupt-parent = <&gpio>;
+ 			interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
++
++			usb_con: connector {
++				compatible = "usb-b-connector";
++				label = "micro-USB";
++				type = "micro";
++			};
  		};
  	};
  
--	/* Bootloader fills this in */
- 	memory@0 {
- 		device_type = "memory";
--		reg = <0 0 0 0>;
-+		reg = <0 0 0 0x40000000>;
- 	};
- 
- 	reserved-memory {
-+		/*
-+		 * Reserved by the vendor bootloader as a "secure region".
-+		 *
-+		 * TODO: See if the responsible stage of the bootloader can be
-+		 * replaced
-+		 */
-+		secure-region@0 {
-+			reg = <0 0 0 0x1000000>;
-+		};
-+
- 		framebuffer@17000000 {
- 			reg = <0 0x17000000 0 0x1800000>;
- 			no-map;
 
 -- 
 2.51.0
