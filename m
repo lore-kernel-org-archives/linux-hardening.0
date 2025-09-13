@@ -1,66 +1,66 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165B52BEFF6
-	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 23:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FF22288CB
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 23:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757807504; cv=none; b=O3IeSSi5FHzh1NIsRdOhCn211UvkwILkyxiR4L1GuGw7DmE1nIuPCVKLXRhza1fRAO5iyzwJTfu2ZeUZOYyj6YBmZOnRZKKJlTrIBIByGwnMKIYYZVdRDiZIbYd14+gIN5Vzd9sB9qtJnN09XYyJsftU94gwkVI6lQYRwa3fJvs=
+	t=1757807932; cv=none; b=HSD62/FmFJJpKefVRMDWWxzsyzHE6niTcGGIELAw+9bgm5YIXyPG5LAjrjIInxuvgIYxDkQgwFgt88EeKYBAa1HfEcHKkJPloUFDNdGW/n/TeuyRein6We7vKtGlzw5m7WGDAO6S8lmlPjxjYnBrsSry/MjzpbUgF5tG0v9qaqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757807504; c=relaxed/simple;
-	bh=1Eqmwl/7iCmCEB+J+5dA0aDjCmPK14FS+q5MiwWwWJM=;
+	s=arc-20240116; t=1757807932; c=relaxed/simple;
+	bh=FWXogq7dCJjdu9qwDs3WCNTqXM5PVZuv630cFuT/EJ8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z2Rxc4a08+UJGCoBROOufsSmAzjTSB6oef01x0Pz3AXrYPSqYrGySIsaG5VIP5n4MhcN5uGWYvYlszh4RTFy6TlL5XnUz3R5XRaY2/+exIj00Sq61di/Q1n8nLHk/1V9Ma8kczdEYnLspUtSwuQpLyemp5MM2hWdkr9gavBFDKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IhtRmz/N; arc=none smtp.client-ip=205.220.168.131
+	 To:Cc:Content-Type; b=HoIsHIjq/t4dge8ZXs/PE5gvRU1gMAtGW29PwHDTyo+rZSJmWFq1819iwCopKpBUQOJV20VfaYYzL1nbTbNEA3nDH7X+4Fq0MRipWDpmbHAo0DWmLqgH3bJanXEhgwazVTSceZph2K2IEqyG6zsDWIuIkRlsnkwK7XJnsNHRjaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=boXu/geD; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IhtRmz/N"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58DN6WsG021646
-	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 23:51:39 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="boXu/geD"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58DNUKs1008131
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 23:58:46 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Y1qQc3S2WB0nwI0Qd1zBljAF9+X1O2GBFW6663dh/sM=; b=IhtRmz/NRrgVstzu
-	IejWnImrbprNKBy/ec2xBynqBzhtuAyAEUvlN9kFH9qlE/w77KiGvU0MvwptBQ7N
-	jMzhcLR+MdgcHSti6xSA9JWiR7KJo37LxEVX/KmMkJJe964IQSj6iR9K4Vu4Yx+N
-	Y6juWA83AYwXuf99X1Mu30SiurI2U60ZfLM4NGLjkFPTcY07XSxgoiPVde1KdlS+
-	krS7TxbPltsiaHiIZoAtO/FQjH/GHaIgfGZslsR2N3nLf6IVC2syj+haovVViOJD
-	CbrLv0+MUQ6280wEx3mC7NijwX4Ajt8CINp65qLPGQ3cU/zVT5+Bl5Dyqte+fLMm
-	zQt2BA==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 495eqpr7fb-1
+	MO7x8Fjz+PHFchirJxD5s0p1l65JWUsbKd5Zt5ZBXHM=; b=boXu/geDkMwsgfWW
+	GB4QLvLCGAROmU45XJg2fizufpG1De/Kyidvnc/xYJlY2qcE5NFfTcXF/ViTAy0g
+	aFpGZwk+lu9dKlEfSLIkseYjZThWObP3dgkJTdwTIOIdtR4PD5tLfPUFTdnyV+0P
+	zcCx3P9BRwOenItaczLm43D0mDpw/gd6v/UakMjLoSeAnIh/3Xn9qNYHnbDgZnYn
+	QrL3OAjs37I05nIP5S9QUd4xEwmEZdGenSU8R2nAyGR+otGrv7Fgoue/CVUljSaE
+	E6vbky2nRRnhBGOGJEwulVwx09wh4vM5S5qJHG8EDpu8DgGDD6M1yNhporJ+d2HI
+	FL8l7A==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 494wyr1mvt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 23:51:38 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-24e04a4f706so34796085ad.2
-        for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 16:51:38 -0700 (PDT)
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 23:58:46 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2641084fb5aso2368955ad.0
+        for <linux-hardening@vger.kernel.org>; Sat, 13 Sep 2025 16:58:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757807497; x=1758412297;
+        d=1e100.net; s=20230601; t=1757807923; x=1758412723;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y1qQc3S2WB0nwI0Qd1zBljAF9+X1O2GBFW6663dh/sM=;
-        b=h2pBmedsqKvY2YHM+6KLDFZYVadOmgZtbeDBLmmEDSYyAiBfP8KJa1ka92ubr9V6UO
-         xWd3iPmq5MmdhXPsOZueEEtBNiL5RqWy/Ty9Qx89SE3lQV8oIgonVs95rJ3UsperDnGX
-         eKwlCqt119RoeAT4XfUIKFfmwwQnqFU1bHAQLUq32+taM3D1GFP9T3e5QYovJvipGWMA
-         Qu+klUOPUu/7UdzNw8CznI2aMwVXNOz/vSniM0bz9lqUBX31Sf7B/u3Qex5vDcqQ0NJb
-         TXN0eeGkegoN6CnEwTDthp0io/1ZRSt5ClpI8seTLLTDSvOVwWZbxslMvTyKqNaVcwiA
-         wW2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUg69vwhP8GnZvmgZSFtUIosIeDyeB0XR9EZetAP0ZfViJ3wzwKDNNMla81t6Bd/QK8GwDmVXrFSs/i+oBVNKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+IFNWwVbHEzzGmnslVA2MC3f+E2l4QN0Af191iYLQxVlaVtxO
-	X8p1YH/KBnAvpAzXCUPewevffqlL7zE46dg9MCT8wt7jQDwaICnkWTh1DCu2QFNd25e38c+M57x
-	WzAr6UUeGZm6YKGQO4hKQAON1WQrT4QVxPtdkHDjyIZnUhtzUaG3H3ylur6xyaoKZrBMpokRcGM
-	tTTD1EnR91Ns3NdohsSnz8KwZVvHgtistLW/Bk1mA6xLWLNA==
-X-Gm-Gg: ASbGncszu4X2rqxyU/izr2uSEkPTyDFKOWwgWdwDnGqWCFr8Qywy2ay0m76bcWe8mv1
-	c9egya+0PVniWlyKsbQsQwaXl1A43aox36nO+stSV6sBaNQr8KL7boJY1rc+BjoBOlvwHSVG2XZ
-	ysrmxJ2bTIjPwAhgoONpo=
-X-Received: by 2002:a17:902:f612:b0:264:70e9:dcb1 with SMTP id d9443c01a7336-26470e9dd81mr9847795ad.56.1757807495116;
-        Sat, 13 Sep 2025 16:51:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHJdoygqdPwHJYIY2nW57ghuODfSuh8NppzmWgtu5B0Nf4E1KJbFUy6nziNHIHhsURBsBa2iDPltO7Hwkj7am0=
-X-Received: by 2002:a17:902:f612:b0:264:70e9:dcb1 with SMTP id
- d9443c01a7336-26470e9dd81mr9847055ad.56.1757807493366; Sat, 13 Sep 2025
- 16:51:33 -0700 (PDT)
+        bh=MO7x8Fjz+PHFchirJxD5s0p1l65JWUsbKd5Zt5ZBXHM=;
+        b=Bap9myh3wFMCAExjD49zMHVQZ1LKd10fSlX3FbqEX2ERTkydC0mxm/diwfa4y1alUn
+         LR/PWxtbSHPS63/aywano02L8E1bjVsGtAqGn1SBaxjMEAj6cDlvct9SMtABD7ZN5Gm0
+         aeawy+VjfQ8Uusq7QWzBWP4riVUKt5RLHiMBAw7m10iPrp+U5o1YYYeum9t2doSp4Uiw
+         7kXQ1dPuL3Be4P3c1TJenyRLDKGmzgMt0yynAe2Zy3DQq2EigJjDpvGD4T3zcztc2L5j
+         ptyCYzcVSZpDUY2JJRksTsIAnQ4fmZhasbVqDjU30MshNlX5cqZb5SQFbNdFNSKnd+IZ
+         NJSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWYXRFg/eW+aTWcyYRiwFTQyDR5IIZaQaQmrg20M8OdeR+TqrOrwbndOQCqgV5AP436/OWU2lDRXTydajH5B3Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7Rpku3UaI17erDLurTemRyD07zAZFc0AZpOjWFAXKFNHIxD/N
+	CPUg+PajZvnzvxTle0TRk/ufAyiKT/STE858n6vIgidQp6TWpaIASsnbs9k4nog4hiCzk1Ex+22
+	ejkwJ8bnYafxyMdJdZ5YiI8ReMC56MK6UNxLuccuhG8mrLZ1fMiuon8Rr174jMU6Pr7jJhMRMmK
+	OE+s13qeB7KKg+ZMAQTmQygKSGK1LcouCCJFlzvnPOaGICUQ==
+X-Gm-Gg: ASbGncs47+LRcm2xJSMwGIJ+yM+QpennldnYCLT3T14PEJSbE5alMcyXCHSpnWhIba/
+	51kA+44UFmcdBtZxQXYy570ZXQxcs4psaLs7o/DoeuC61NIJSGMJwLuVc3/enJIxoAhmCXmgDLU
+	t0ZVosVNjArGXK3abfnzk=
+X-Received: by 2002:a17:903:248:b0:249:2360:6af2 with SMTP id d9443c01a7336-25d24baff8emr98101395ad.16.1757807920786;
+        Sat, 13 Sep 2025 16:58:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFyhjZt0+upBohWCAJ5x2Zntw6xI9w/+xZ7Qsy08qHC6tn9rLa0PclNNpmVZpOrs/E3sU+Pzuorh2d9IomGRfM=
+X-Received: by 2002:a17:903:248:b0:249:2360:6af2 with SMTP id
+ d9443c01a7336-25d24baff8emr98100085ad.16.1757807917857; Sat, 13 Sep 2025
+ 16:58:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,9 +70,9 @@ MIME-Version: 1.0
 References: <20250913231256.make.519-kees@kernel.org> <20250913232404.2690431-7-kees@kernel.org>
 In-Reply-To: <20250913232404.2690431-7-kees@kernel.org>
 From: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
-Date: Sat, 13 Sep 2025 16:51:21 -0700
-X-Gm-Features: AS18NWDkzCDjgEz59lxgn95pVT7CmV0h4uF1oT44k7rmXmN50jeML9UJq3Daq4M
-Message-ID: <CALvbMcBv-vbJahUH_j+vxhsNnydbO7__RP1S2tg93HgUiTDv+w@mail.gmail.com>
+Date: Sat, 13 Sep 2025 16:58:26 -0700
+X-Gm-Features: AS18NWAHPhMMGMqp7tlifIMcFtn4OwTUi9R_66sr62eJ05rENUBG3ZvNRKSVqvo
+Message-ID: <CALvbMcDm5i2-+Q-XBG16z1s5P67sJVS=bvpozUqqobAvO+xW4g@mail.gmail.com>
 Subject: Re: [PATCH v3 7/7] kcfi: Add regression test suite
 To: Kees Cook <kees@kernel.org>
 Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
@@ -95,27 +95,27 @@ Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
         linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-GUID: Le3MAOOg8AejqvNtMBFCmMJCsQEHvCsQ
-X-Proofpoint-ORIG-GUID: Le3MAOOg8AejqvNtMBFCmMJCsQEHvCsQ
-X-Authority-Analysis: v=2.4 cv=XJIwSRhE c=1 sm=1 tr=0 ts=68c6038b cx=c_pps
- a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10
+X-Proofpoint-ORIG-GUID: OTHfHNU6yFkV_C0rTKAHBQaA7ckJNalU
+X-Authority-Analysis: v=2.4 cv=SouQ6OO0 c=1 sm=1 tr=0 ts=68c60536 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10
  a=mDV3o1hIAAAA:8 a=VwQbUJbxAAAA:8 a=Th9FP-laAYl7VsW0gK0A:9 a=QEXdDO2ut3YA:10
- a=GvdueXVYPmCkWapjIL-Q:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTEzMDE4NiBTYWx0ZWRfX7rhXGYnRRVV4
- ax7RoJAudmUdXF5u9ttGx1YugqsGJfghQu0y047VaZo+cp0m32j2vwdcpPM1KG960+r1yeQsHLf
- wAkhpqVKSUkgyV2VB6kFUmaPqPdUrfSzNocvVTPd+cQ3eWGF77AawwfpiG0eP9+PAcpMLRXYiyI
- 5na9b9aCC+v2q8t6UNeNy0PA2q9bDr+BR+m/q8nOr6PTgZkxDE3tiSz9kpU0o+UQAhc+G8PL0w0
- 4K3NMgQi5LCOqkL2v4T5Kg/b9j+35Ke1CxlB3kdB2FGraK1tyn7iRQPBRvQi9bJEF9tRiYM1dLY
- Rpw3nTfh8J6cF7xuFEANJ5Ez9jkT7QbOYCWxOXSaKlkUcBo53e7fpHo3UMFRGCDfXFGOKVePiC2
- zmumvIYe
+ a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTEzMDAwMCBTYWx0ZWRfXwCYhl285CKus
+ bdoAzEwv/yD5QG9PWp6m45qTz9baKwa6U+eQ/AxYP9Dz32Xis4Tl+JE1UtMzt/L7YNQ+EdE/RDj
+ srdPXuS0qKKFXCwNKnOoJ5mVOUMxhwhtdBm2yEIw0qAAz+vrs3iTPCLQzcvT2ihFCBRSibLvp5y
+ x5ZvUZABiKETMkm/n1tItKkj4DyAqn6tLEj7DmL2EUDgC8S8OrJ9v3H4d0YoQR62hmSq3dQfgSW
+ vsEeOkxVql18+h63eUtxB4Qg3hZ+KWThEDJLhuEyEYRhdO/IqwjgvxbKHGcYXGt2AZ+oLN2BJIE
+ 5mF+b7bNFDWPOWkOoq7qXKgUqwptbjV9Gw2vtGMB5oumGuApUZnzkkUES0JKlylKYm8gAmtEKlX
+ cPf/+vhD
+X-Proofpoint-GUID: OTHfHNU6yFkV_C0rTKAHBQaA7ckJNalU
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-09-13_07,2025-09-12_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 clxscore=1015 priorityscore=1501 phishscore=0 impostorscore=0
- malwarescore=0 spamscore=0 bulkscore=0 adultscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2509130186
+ impostorscore=0 spamscore=0 phishscore=0 adultscore=0 suspectscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509130000
 
 On Sat, Sep 13, 2025 at 4:36=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
 >
@@ -300,20 +300,6 @@ rap[0-9]+:\n\tebreak} { target riscv*-*-* } } } */
 */
 > +/* { dg-final { scan-assembler-not {\.kcfi_traps} { target arm32 } } } *=
 /
-
-
-I think it would be better to use check-function-bodies here rather
-than scan-assembler for the sequences. Maybe each target should have
-its own testcase rather than putting it all in one source.
-Plus I think the target testcase should be part of the target patch
-rather than its own patch to make it easier to review both things
-together. Because while I was reviewing the aarch64 part I was
-thinking where are the testcases for the aarch64 specific changes.
-
-Thanks,
-Andrew
-
-
 > diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c b/gcc/testsuite/gcc.=
 dg/kcfi/kcfi-basics.c
 > new file mode 100644
@@ -2462,6 +2448,11 @@ fi/kcfi.exp
 > +if { [istarget "x86_64-*-*"] && ![check_effective_target_lp64] } {
 > +    return
 > +}
+
+This is also wrong, you can have a multi-lib version of i?86 which
+support -m64 too.
+
+
 > +
 > +# Skip tests if AArch64 is running in ILP32 mode (-mabi=3Dilp32)
 > +if { [istarget "aarch64-*-*"] && ![check_effective_target_lp64] } {
@@ -2472,6 +2463,19 @@ fi/kcfi.exp
 > +if { [istarget "riscv*-*-*"] && ![check_effective_target_lp64] } {
 > +    return
 > +}
+
+These should really be part a new check_effective_target_kfci instead
+of embeded here.
+And then you can just call that from here.
+
+Does kcfi work on non-elf targets, e.g. aarch64-mingw or x86_64-mingw
+or x86_64-darwin?  I see you check lp64 and that would reject the
+mingw case but not the darwin case.
+
+Thanks,
+Andrew
+
+
 > +
 > +# Add KCFI-specific flags to any existing DEFAULT_CFLAGS
 > +global DEFAULT_CFLAGS
@@ -2484,6 +2488,16 @@ fi/kcfi.exp
 > +if [check_effective_target_arm32] {
 > +    set DEFAULT_CFLAGS "$DEFAULT_CFLAGS -march=3Darmv7-a -mfloat-abi=3Ds=
 oft"
+
+I think the above is incorrect can you explain why you want to change
+this? Especially since you might not have soft fp ABI compatiable
+glibc installed?
+Also it is either arm or aarch32 and not arm32.
+
+Thanks
+Andrew
+
+
 > +}
 > +
 > +# Initialize `dg'.
