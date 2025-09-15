@@ -1,85 +1,75 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485E92FCBF1;
-	Mon, 15 Sep 2025 10:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38B830CD98;
+	Mon, 15 Sep 2025 12:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757932554; cv=none; b=otQOoTybxqMS2WaiMeEXxjTXIEcYM0bwCNsy9SfuW48PTC5o088f7ldRhh62S+UYBQHCBiJLCiBIyNkSDU2uKfT+nyrQp6i60g295Z3uIrkMH5gKjpBl7XjvzMV6MT/Z4fRnpGOrMdtzROdZ0VKIE6FVk5w5mbYS+OWUCzyqQ8w=
+	t=1757940786; cv=none; b=pxmTk/UMpJoqreKq0e7K60E+SvAQKV1+Gqxpv1+Ri0GHmAaLgJhYdb2ZAgNQWvaoQu3LVVUeZHvbBJRgZnBrb67Abn22dnHmdYcthI/ILzKr5r3XT82QmieoehWhENQXfcEVFvVJ/3SClIswWo79TC9rcYmHnnZQrvVOEvR8YRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757932554; c=relaxed/simple;
-	bh=UBbHhzhMcY5RDHdtSw2V1FqJDniDFZuY+O0uFwbO0E4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hS0rruI/He7eoFYKyvEDOkRKMlnxgJlOFIaV+5cBB+PVxvku9VkzRMNapyfJe45Pgx9Nx6ea2VujNeqCvA3JLtMxdqHj7uhG5PVRjUhg++W2N7lNMS/xqM7LGGjZt2UEAt+tfNHnk0+equK4G/Jd/qZg9K7ddXHnH9YxgOh5jjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=TYgEeBAd; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1757940786; c=relaxed/simple;
+	bh=03DhFL7q+iJs+tw1V8FCzhxFTVFAy+z5zOi2iUsMbb0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HBp6LviXgS/t1+nZzLbT1MS3iYtGlCRT/l+xphR0UuUtaRZbYw+ejzft/kkEZ0u8FZz9cGnvCOpc7njkAVjH9szxnfUaQXY6nv8MitGxOewaD84HNc7hTESzalbjMwnf4171hbXlQxcv78amTQ3zg/k/7fCLBZrzQIL9FVPb0LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ES42hSfD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="TYgEeBAd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1757932550;
-	bh=UBbHhzhMcY5RDHdtSw2V1FqJDniDFZuY+O0uFwbO0E4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TYgEeBAdEYp8rWIMhzXznGM8IkgcKSEfGdsTlbNTZeFhEiEO+I8nTaromXd102swp
-	 FYIYLXoO5xPe94UX7kDKHrxQIB57+MGFi7oxXG+MMtez1MKBSqL1YWxcZkfjq6961T
-	 uk+9MsHgFpRYmeWUFzPyyXhUC9mQtGpVPHAhDIszYJRHI+W/HPI34EFuzGXljYNLre
-	 1Ak/DoDoxwYjI3WzynevGhUpgYjcX7DeAVKht5YhZTM/w1i0t30uKAyj8Cm2gTsCdR
-	 uD/Rl9NTpdQ/YxuIYHWoaSfRSWob1mUZ3WPb3E57/A/+J84fJGfFDZxAq/If/XixoU
-	 /efWatEnwWrIQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8296F17E0C21;
-	Mon, 15 Sep 2025 12:35:49 +0200 (CEST)
-Message-ID: <7dbfb425-4bcd-41bd-8860-9f8d1b9db798@collabora.com>
-Date: Mon, 15 Sep 2025 12:35:48 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ES42hSfD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CCB0C4CEF5;
+	Mon, 15 Sep 2025 12:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757940786;
+	bh=03DhFL7q+iJs+tw1V8FCzhxFTVFAy+z5zOi2iUsMbb0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ES42hSfDVs1XrJgDE2Z5T1p/EnJl72XU31PJtu7V5kjr8H9/YpYvSKWi8snZS4TDY
+	 aAujIDy9Y+WpmPdUou92n8w0CG1eY2kFY9DOqyMchuVxqG+TZxpxQA/EK4Acr3evuF
+	 q0wlO4Ptd6b7Mo5K+LpxacNXx94JNt1xEyrAiDCgGm/oBdLwO+kP5VBT1gLtxYwa8P
+	 vkjTd6V98jGRbxHcdmFv5bjF91WlaEfBoVIwa/2wPuT2IrcltwgjSeP+oqVtGik9Du
+	 pvRq1VIh/2BI/NWl9AocPZHiJl7MwwKEWcte91FT+wDYP5VjFPeLRhvLbGCt9V/1s0
+	 vh5egvK6HBSiQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] initramfs: Replace strcpy() with strscpy() in find_link()
+Date: Mon, 15 Sep 2025 14:52:50 +0200
+Message-ID: <20250915-hinstellen-golfclub-0f4565b7b561@brauner>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20250912064724.1485947-1-thorsten.blum@linux.dev>
+References: <20250912064724.1485947-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/10] drm/panthor: move panthor_devfreq struct to
- header
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, MyungJoo Ham <myungjoo.ham@samsung.com>,
- Kyungmin Park <kyungmin.park@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250912-mt8196-gpufreq-v2-0-779a8a3729d9@collabora.com>
- <20250912-mt8196-gpufreq-v2-7-779a8a3729d9@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250912-mt8196-gpufreq-v2-7-779a8a3729d9@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=900; i=brauner@kernel.org; h=from:subject:message-id; bh=03DhFL7q+iJs+tw1V8FCzhxFTVFAy+z5zOi2iUsMbb0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSc4NFZcbGLedIjEWt3T73GsqZT395oCby8Okl56qMNa xY87jM/3VHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjAR4c2MDF3lU6PmXJCwqjLf N/H9snsl574IT2zz/uK/avr7yG6XhNkMf0XWsJrvvuD58l7vpsRimXsTFFn+f/b/nJgZpWHibH6 zgQ8A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Il 12/09/25 20:37, Nicolas Frattaroli ha scritto:
-> In order to make files other than panthor_devfreq.c be able to touch the
-> members of a panthor_devfreq instance, it needs to live somewhere other
-> than the .c file.
+On Fri, 12 Sep 2025 08:47:24 +0200, Thorsten Blum wrote:
+> strcpy() is deprecated; use strscpy() instead.
 > 
-> Move it into the panthor_devfreq.h header, so that the upcoming MediaTek
-> MFG devfreq can use it as well.
 > 
-> Reviewed-by: Steven Price <steven.price@arm.com>
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Applied to the vfs-6.18.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.18.misc branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.18.misc
+
+[1/1] initramfs: Replace strcpy() with strscpy() in find_link()
+      https://git.kernel.org/vfs/vfs/c/afd77d2050c3
