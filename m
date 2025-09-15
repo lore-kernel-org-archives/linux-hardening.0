@@ -1,223 +1,87 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2E0288C14;
-	Mon, 15 Sep 2025 13:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A582926281;
+	Mon, 15 Sep 2025 14:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757943389; cv=none; b=doMnxa6ELmdJdHveUn1vEtY2Efz3O8D4TAI1h+4oFVzQ2ztKg6qVDnCG59sxYQ0hX8AnFt+cVyBlT7q/zNHxrSIoAzbFWK9i8LDsKdZtBmQFWSb8haJBVmbY4NmvAgYhUJC/YnoDu3UqZ336sWyLTtxyWuWtule+E4IU02aGESI=
+	t=1757945004; cv=none; b=tiCtImbI0H7cM1B2Q3ghGDiKygvKrqHugzgAPlcqx9UrNbMZur60UspnwC40WG8h3TBAbHXWcSsd8FA4BXlrMMTg9+I/GXeNjSTr8rpI5YfIW0P++OKpOMzwV/m6owaTp9aoyq2XxQmnXBc+dJoWyK7+NAK5b6ORg0k/3n8VTrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757943389; c=relaxed/simple;
-	bh=RrQWimjg2kK8bT3Tfn+05zZzA3ddMAkW4+eVTyyOWPI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HnKk/aFOE8hu2AIoSEI3MHa4XxFyELVM71n7eRVJavYdpZtTrePCKTA6mLMNdf/rZ/gk6vOsEWTAgK3Vhhm5Z+jamL+hYLfvPibeua7+q2QXHBA8Qg/Sqg23/T/3YjyjCdn2FuqP977VZ9cHDOOwrzMqbEjQh4TsuJGVs55ez0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=g44Ap7LR; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1757945004; c=relaxed/simple;
+	bh=3OGpAD/DchUR1g97RRHzHWYq+4uUvSPasPeyQ225Wbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LGn9TTW6QtzjJT4SW0Y02Opy8Of434puFnmI8RNTQFBBSBg8x2GPzBmt6FaIn5yGNzZsXY6wMo5/tHxhX4+G9nHrX1MyLqU7ighMBxToY10Y19zdpCIrbxczWELDhq4xn0vO+Hl6ISPrLyfnoC2F19rHw98/8lsoKhiCu9/ookc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePsbBEj7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="g44Ap7LR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1757943385;
-	bh=RrQWimjg2kK8bT3Tfn+05zZzA3ddMAkW4+eVTyyOWPI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=g44Ap7LRaJTyVhfQoQoHGsejO64m2J31G53D78xrOr4+FFz4z3xOCvP4AfA6tvVkx
-	 gp1dmAgOLj1cWESNMyhHcijNuakbwwWg5vSW+8ly1TrM1ECoCeEw7H5AhQ8SYNRm+n
-	 UH58C+OeagVyoxteY4LZyXDhSflPlQtiHkW7d1f0URvTQk32T+EvxdkjLliRgQ8Qn3
-	 9zLZvdGDFfpNhwIYwGDsyZsy6vQTy7nzeXTPkS6qSP/c4gSJS8q3nnLsXlcs+Uic+U
-	 KP7ROkE2G8EfPe56NT6tMariLZl7QG8EklpWtbeehk8aqjpLe+HXBsdVi9X/TJz5N0
-	 lwH/OvYImXJhA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3D73C17E1067;
-	Mon, 15 Sep 2025 15:36:24 +0200 (CEST)
-Message-ID: <a2f77d1b-26aa-47cb-a2b3-9495abbe78be@collabora.com>
-Date: Mon, 15 Sep 2025 15:36:23 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePsbBEj7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5EDCC4CEF1;
+	Mon, 15 Sep 2025 14:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757945004;
+	bh=3OGpAD/DchUR1g97RRHzHWYq+4uUvSPasPeyQ225Wbw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ePsbBEj7Xnja3jcodWPE9dWOmMn5QFEarpYbh77+opI5UEfW4s2diz9T0dmsLgpXH
+	 7hex+7mEbHOw4A6gcLtg+2YJLyfFsOxm3oNAYi55mbDGYGvEzjSWZEBqfbcFJMv+TZ
+	 cFVSWimnCfZai8Lji+z0GAuK7XR+pvIP5ipesFhyp/iU0Qi+xovpCcj7hzTj4yladf
+	 Jqk9hrb19xKTnctrFPfpuoZ5/nWiQ2td4pwFxDHLkftR/tp8+RTrDw5ZUh4qhC47WV
+	 25nGeIUReGZB9erzYXtEiEnKvwgdOsNbYHIEANFg9/KbyyBH4cxAnXA+xFsuIoorrB
+	 dJraCaCEONZVw==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Apurupa Pattapu <quic_apurupa@quicinc.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+Cc: Harshal Dev <quic_hdev@quicinc.com>,
+	linux-arm-msm@vger.kernel.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-doc@vger.kernel.org,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kuldeep Singh <quic_kuldsing@quicinc.com>,
+	Sumit Garg <sumit.garg@oss.qualcomm.com>
+Subject: Re: (subset) [PATCH v12 00/11] Trusted Execution Environment (TEE) driver for Qualcomm TEE (QTEE)
+Date: Mon, 15 Sep 2025 09:03:21 -0500
+Message-ID: <175794499686.3800302.11326605409469132909.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250911-qcom-tee-using-tee-ss-without-mem-obj-v12-0-17f07a942b8d@oss.qualcomm.com>
+References: <20250911-qcom-tee-using-tee-ss-without-mem-obj-v12-0-17f07a942b8d@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/10] drm/panthor: add support for MediaTek
- MFlexGraphics
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, MyungJoo Ham <myungjoo.ham@samsung.com>,
- Kyungmin Park <kyungmin.park@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250912-mt8196-gpufreq-v2-0-779a8a3729d9@collabora.com>
- <20250912-mt8196-gpufreq-v2-10-779a8a3729d9@collabora.com>
- <ae482072-c13f-4cb4-be26-50592b086fe6@collabora.com>
- <117198807.nniJfEyVGO@workhorse>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <117198807.nniJfEyVGO@workhorse>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Il 15/09/25 15:32, Nicolas Frattaroli ha scritto:
-> On Monday, 15 September 2025 12:28:09 Central European Summer Time AngeloGioacchino Del Regno wrote:
->> Il 12/09/25 20:37, Nicolas Frattaroli ha scritto:
->>> MediaTek uses some glue logic to control frequency and power on some of
->>> their GPUs. This is best exposed as a devfreq driver, as it saves us
->>> from having to hardcode OPPs into the device tree, and can be extended
->>> with additional devfreq-y logic like more clever governors that use the
->>> hardware's GPUEB MCU to set frame time targets and power limits.
->>>
->>> Add this driver to the panthor subdirectory. It needs to live here as it
->>> needs to call into panthor's devfreq layer, and panthor for its part
->>> also needs to call into this driver during probe to get a devfreq device
->>> registered. Solving the cyclical dependency by having mediatek_mfg live
->>> without knowledge of what a panthor is would require moving the devfreq
->>> provider stuff into a generic devfreq subsystem solution, which I didn't
->>> want to do.
->>>
->>> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
->>> ---
->>>    drivers/gpu/drm/panthor/Kconfig        |   13 +
->>>    drivers/gpu/drm/panthor/Makefile       |    2 +
->>>    drivers/gpu/drm/panthor/mediatek_mfg.c | 1053 ++++++++++++++++++++++++++++++++
->>>    3 files changed, 1068 insertions(+)
->>>
->> [ ... snip ...]
->>> +static int mtk_mfg_eb_on(struct mtk_mfg *mfg)
->>> +{
->>> +	struct device *dev = &mfg->pdev->dev;
->>> +	u32 val;
->>> +	int ret;
->>> +
->>> +	/*
->>> +	 * If MFG is already on from e.g. the bootloader, we should skip doing
->>> +	 * the power-on sequence, as it wouldn't work without powering it off
->>> +	 * first.
->>> +	 */
->>> +	if ((readl(mfg->rpc + RPC_PWR_CON) & PWR_ACK_M) == PWR_ACK_M)
->>> +		return 0;
->>> +
->>> +	ret = readl_poll_timeout(mfg->rpc + RPC_GHPM_RO0_CON, val,
->>> +				 !(val & (GHPM_PWR_STATE_M | GHPM_STATE_M)),
->>> +				 GPUEB_POLL_US, GPUEB_TIMEOUT_US);
->>> +	if (ret) {
->>> +		dev_err(dev, "timed out waiting for EB to power on\n");
->>> +		return ret;
->>> +	}
->>> +
->>> +	mtk_mfg_update_reg_bits(mfg->rpc + mfg->ghpm_en_reg, GHPM_ENABLE_M,
->>> +				GHPM_ENABLE_M);
->>> +
->>> +	mtk_mfg_update_reg_bits(mfg->rpc + RPC_GHPM_CFG0_CON, GHPM_ON_SEQ_M, 0);
->>> +	mtk_mfg_update_reg_bits(mfg->rpc + RPC_GHPM_CFG0_CON, GHPM_ON_SEQ_M,
->>> +				GHPM_ON_SEQ_M);
->>> +
->>> +	mtk_mfg_update_reg_bits(mfg->rpc + mfg->ghpm_en_reg, GHPM_ENABLE_M, 0);
->>> +
->>> +
->>> +	ret = readl_poll_timeout(mfg->rpc + RPC_PWR_CON, val,
->>> +				 (val & PWR_ACK_M) == PWR_ACK_M,
->>> +				 GPUEB_POLL_US, GPUEB_TIMEOUT_US);
->>
->> I wonder if you can check how much time does the GPUEB really take to poweron,
->> just so that we might be able to reduce delay_us here.
-> 
-> I already did, that's where the 50us value is from as far as I remember.
-> 
-
-Ah, perfect.
-
->>
->>> +	if (ret) {
->>> +		dev_err(dev, "timed out waiting for EB power ack, val = 0x%X\n",
->>> +			val);
->>> +		return ret;
->>> +	}
->>> +
->>> +	ret = readl_poll_timeout(mfg->gpr + GPR_LP_STATE, val,
->>> +				 (val == EB_ON_RESUME),
->>> +				 GPUEB_POLL_US, GPUEB_TIMEOUT_US);
->>
->> Same here - and I think this one is more critical, as I can see this suspend/resume
->> control being used more extensively in the future.
->>
->> Specifically, I'm wondering if we could add runtime PM ops that will request EB
->> suspend/resume - and also if doing so would make any sense.
->>
->> I am guessing that the "suspend" LP_STATE stops the internal state machine, making
->> the EB MCU to either go in a low-power state or to anyway lower its power usage by
->> at least suspending the iterations.
-> 
-> I think I briefly fiddled with this but then it did nothing other than
-> break everything. Is the current time it takes to resume a problem?
-> 
->>
->> Of course - here I mean that we could have
->> 1. System suspend ops that powers off the EB completely like you're doing here and
->> 2. Runtime PM op that may be called (very) aggressively
->>
->> ...this would obviously not be feasible if the EB suspend/resume (without complete
->> poweron/off) takes too much time to actually happen.
-> 
-> We probably don't want to aggressively suspend the thing doing DVFS
-> while a workload is running, and if no workload is running, it
-> already suspends. I can't really say how normal desktop usage will
-> play out yet, but generally speaking I think it's a bit early to
-> find a comfortable place on the transition latency vs power draw
-> curve at this point.
-> 
-
-Okay let's leave it for now and revisit that after everything is upstreamed.
-It's only an improvement anyway, not critical for functionality, and maybe
-not even feasible.
-
->> [... snip ...]
->>> +static int mtk_mfg_init_shared_mem(struct mtk_mfg *mfg)
->>> +{
->>> [... snip ...]
->>> +
->>> +	dev_info(dev, "initialised mem at phys 0x%016llX\n", mfg->sram_phys);
->>
->> I don't like exposing addresses in kmsg. Please just don't.
-> 
-> It's a physical address. This is not a kernel pointer, but something
-> that can be read from the DTS. But sure, I'll remove it I guess?
-> 
-
-Yeah, please.
-
->> [... snip ...]
->>
->> Cheers,
->> Angelo
->>
-> 
-> You can assume me not responding to a part of the feedback in this
-> e-mail means I'll address it in the next revision of the patch
-> series.
-> 
-
-Alright!
-
-Cheers,
-Angelo
-
-> Kind regards,
-> Nicolas Frattaroli
-> 
-> 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
 
+On Thu, 11 Sep 2025 21:07:39 -0700, Amirreza Zarrabi wrote:
+> This patch series introduces a Trusted Execution Environment (TEE)
+> driver for Qualcomm TEE (QTEE). QTEE enables Trusted Applications (TAs)
+> and services to run securely. It uses an object-based interface, where
+> each service is an object with sets of operations. Clients can invoke
+> these operations on objects, which can generate results, including other
+> objects. For example, an object can load a TA and return another object
+> that represents the loaded TA, allowing access to its services.
+> 
+> [...]
+
+Applied, thanks!
+
+[01/11] firmware: qcom: tzmem: export shm_bridge create/delete
+        commit: 8aa1e3a6f0ffbcfdf3bd7d87feb9090f96c54bc4
+[02/11] firmware: qcom: scm: add support for object invocation
+        commit: 4b700098c0fc4a76c5c1e54465c8f35e13755294
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
