@@ -1,75 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38B830CD98;
-	Mon, 15 Sep 2025 12:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA582D47F6;
+	Mon, 15 Sep 2025 13:22:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757940786; cv=none; b=pxmTk/UMpJoqreKq0e7K60E+SvAQKV1+Gqxpv1+Ri0GHmAaLgJhYdb2ZAgNQWvaoQu3LVVUeZHvbBJRgZnBrb67Abn22dnHmdYcthI/ILzKr5r3XT82QmieoehWhENQXfcEVFvVJ/3SClIswWo79TC9rcYmHnnZQrvVOEvR8YRo=
+	t=1757942521; cv=none; b=hR+UkOyRR2E4Yl30DHIEDdFGpY6hD4BfhFbjaSn3zoUkGt7ez25GnUqNURBQahCEA4CJ0p/WaVQ3M6qi5OUwVFlfmr5ATmEWMsB0MxNb/jPfG/usFBuHm5w/AIPvF8K8+t67j7cRCvF9dLOrLKhQpIAyeSWQGgZEiyJshq3C7nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757940786; c=relaxed/simple;
-	bh=03DhFL7q+iJs+tw1V8FCzhxFTVFAy+z5zOi2iUsMbb0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HBp6LviXgS/t1+nZzLbT1MS3iYtGlCRT/l+xphR0UuUtaRZbYw+ejzft/kkEZ0u8FZz9cGnvCOpc7njkAVjH9szxnfUaQXY6nv8MitGxOewaD84HNc7hTESzalbjMwnf4171hbXlQxcv78amTQ3zg/k/7fCLBZrzQIL9FVPb0LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ES42hSfD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757942521; c=relaxed/simple;
+	bh=O/mnM44tzuvdBUrl/CyJVRM6ZYLrlrkqYwTIqm29UZU=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=tKP/cib29icPLJV16GuUNlnGLQwW8ddg3QKr/wlrmdjtzOzpqlhrLJDrR6HJRw0GyY93ixltgmOplsyY6Cxh+qBxk2PTLAj9QXHCOAitaG96yBDDFNaOFDhmlWtDH1rDg2W6Hmlm5C/bMjeo+PfNndCtXKSToVBoy0LbDT3reg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u4GsmYuo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ES42hSfD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CCB0C4CEF5;
-	Mon, 15 Sep 2025 12:53:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u4GsmYuo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE07C4CEF1;
+	Mon, 15 Sep 2025 13:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757940786;
-	bh=03DhFL7q+iJs+tw1V8FCzhxFTVFAy+z5zOi2iUsMbb0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ES42hSfDVs1XrJgDE2Z5T1p/EnJl72XU31PJtu7V5kjr8H9/YpYvSKWi8snZS4TDY
-	 aAujIDy9Y+WpmPdUou92n8w0CG1eY2kFY9DOqyMchuVxqG+TZxpxQA/EK4Acr3evuF
-	 q0wlO4Ptd6b7Mo5K+LpxacNXx94JNt1xEyrAiDCgGm/oBdLwO+kP5VBT1gLtxYwa8P
-	 vkjTd6V98jGRbxHcdmFv5bjF91WlaEfBoVIwa/2wPuT2IrcltwgjSeP+oqVtGik9Du
-	 pvRq1VIh/2BI/NWl9AocPZHiJl7MwwKEWcte91FT+wDYP5VjFPeLRhvLbGCt9V/1s0
-	 vh5egvK6HBSiQ==
-From: Christian Brauner <brauner@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH] initramfs: Replace strcpy() with strscpy() in find_link()
-Date: Mon, 15 Sep 2025 14:52:50 +0200
-Message-ID: <20250915-hinstellen-golfclub-0f4565b7b561@brauner>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20250912064724.1485947-1-thorsten.blum@linux.dev>
-References: <20250912064724.1485947-1-thorsten.blum@linux.dev>
+	s=k20201202; t=1757942521;
+	bh=O/mnM44tzuvdBUrl/CyJVRM6ZYLrlrkqYwTIqm29UZU=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=u4GsmYuoaQzZElLXxaxCK0gKRH/XZDNwqYk409E42Jh/AiZag78CI8xKJ3kwzT9rX
+	 E1ghEo+f3jRCp8y+eVRqwaW8EO39bW6MpL1rwkrVnkl3ZHNxQGKpjZ3hr1BMwQ7Xmc
+	 de5fzLZcozznlgblsclHLJVi+675z4SyX4NpZmjmlpRivqrkZTj85JdlSBSznOOyq6
+	 +vLxTucV+VwVlrChnnZYoEsx4PwZ+ymybjD0Mb+ZabtZn6ZjIImjUYGoAQAqPLKUyu
+	 Yj8Zj1gQRiu/h23jQd/ruB3gy4wY/bfaFdpzwNWN6PPnQIJKUlcI2N73dS2DGncyOI
+	 vnI1Qp5OoVcLw==
+Date: Mon, 15 Sep 2025 08:21:59 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=900; i=brauner@kernel.org; h=from:subject:message-id; bh=03DhFL7q+iJs+tw1V8FCzhxFTVFAy+z5zOi2iUsMbb0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSc4NFZcbGLedIjEWt3T73GsqZT395oCby8Okl56qMNa xY87jM/3VHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjAR4c2MDF3lU6PmXJCwqjLf N/H9snsl574IT2zz/uK/avr7yG6XhNkMf0XWsJrvvuD58l7vpsRimXsTFFn+f/b/nJgZpWHibH6 zgQ8A
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, linux-hardening@vger.kernel.org, 
+ Kees Cook <kees@kernel.org>, devicetree@vger.kernel.org, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Tony Luck <tony.luck@intel.com>
+To: Alexandru Chimac <alex@chimac.ro>
+In-Reply-To: <20250914-exynos9610-devicetree-v1-1-2000fc3bbe0b@chimac.ro>
+References: <20250914-exynos9610-devicetree-v1-0-2000fc3bbe0b@chimac.ro>
+ <20250914-exynos9610-devicetree-v1-1-2000fc3bbe0b@chimac.ro>
+Message-Id: <175794237027.2496748.5518990883398170186.robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: arm: samsung: Document gta4xl board
+ binding
 
-On Fri, 12 Sep 2025 08:47:24 +0200, Thorsten Blum wrote:
-> strcpy() is deprecated; use strscpy() instead.
+
+On Sun, 14 Sep 2025 20:43:56 +0000, Alexandru Chimac wrote:
+> Add binding for the Samsung Galaxy Tab S6 Lite (SM-P610/SM-P615)
+> board.
 > 
+> Signed-off-by: Alexandru Chimac <alex@chimac.ro>
+> ---
+>  Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
-Applied to the vfs-6.18.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.18.misc branch should appear in linux-next soon.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml:250:13: [warning] wrong indentation: expected 14 but found 12 (indentation)
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+dtschema/dtc warnings/errors:
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+doc reference errors (make refcheckdocs):
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.18.misc
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250914-exynos9610-devicetree-v1-1-2000fc3bbe0b@chimac.ro
 
-[1/1] initramfs: Replace strcpy() with strscpy() in find_link()
-      https://git.kernel.org/vfs/vfs/c/afd77d2050c3
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
