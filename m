@@ -1,175 +1,179 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A52CA6F;
-	Mon, 15 Sep 2025 04:36:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D07189BB6;
+	Mon, 15 Sep 2025 09:36:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757910983; cv=none; b=La+Nt4pEmLklzPJUUDSjekmMQ8hImnOqZxNFrCoKkVy7m/G82zpolUbXGKiagii9AQsW7TsT1aybw4jj8KqaBeMFZwBNw/1XCpqFUbOVakq8nQ/rlMidqcpT0Fglz2vYWceB29Gpk2PQMUpXcPmRbux57EfDgkBsEndZCjrngxg=
+	t=1757929004; cv=none; b=b66hlf9Tk8mRG6zugsRZHq3ruapgmHvbH4IQP2Nh39lhViMaAhGRYNZMliUrCDjsziQjoPA1nPUm6Rb1UQV5LnVpN61TZ3gSpfmqX63BQiWAnIHvLFyZK4cQcvN6dgE0OMqtBcmsFTvGAoalvyE7CBSqcLkKrv7lpt2v3RfwBO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757910983; c=relaxed/simple;
-	bh=k0sNb7NLoVYVvW3vpRZbfBp88c3GVqAUJZWzv7Q2gnA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HKVmebvqSRB7ZnBkbscczXGV10VooH/SDm7kiEeQAnrMgE+bpGYusIeZiP5FdL++i0uAX8zx+FfG09+W9sKql4HyXBQm4EVtYAJh/J+8Iv1gjhoMdXNhlfHjS+KffVY1A7ktctdbTUFhCEOdTDlHntevvt3yebyDPUxntd2n+Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BzZgT5Hh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757929004; c=relaxed/simple;
+	bh=o8egUwKVNRfMUymwpa7mC1b1hnq1Hnwp9A7gj+Gh8/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b+NeGXgcSOzrX/D6EsbmrQFHotVROrehVl2yHcUU9CVNJkyArK+czwLumBW0rF2MalStqcOXsmHtQo3yJ/F31VxTz4lQlmzNSIdA47wECHwmVklEiGZqdSeDEu9mUSFgq+ztqfbQJSY8HAjkGzfRxBOxZqR7iw5icpd//HYvbis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=doMe+Eas; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BzZgT5Hh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36AFEC4CEF1;
-	Mon, 15 Sep 2025 04:36:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="doMe+Eas"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17955C4CEF1;
+	Mon, 15 Sep 2025 09:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757910981;
-	bh=k0sNb7NLoVYVvW3vpRZbfBp88c3GVqAUJZWzv7Q2gnA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BzZgT5Hhy4pc7AgYH3SHmULpHKz1lw+ZkSNWmXdxZ49uR2y3/mwfdmsS0CL1vE8QX
-	 Bmq7R3gW6CDGiYewtTdSNuI15scKuKMUn2Xow+DrseH3sk0AuOqnU5qRuUhkhMV2eB
-	 z50elEW5tOAA3Sy/3fldbOadFOBhDqY1ZOUCIYoeHY5j7x983PCgQHjkxByty4zl+J
-	 cXiRLh5BSWYmxFrOuICVPX8xaFq8a1f+tCvG34UgITYE6+TX6ocvygRHKaOoFVjnoE
-	 ypP+WWnT6rtEO7r3BvSbAGxv7uuUanCAKGdexJJ93SbET93BeQ4am8FgSDT+WDqdPB
-	 fDuPo+eEO0RUA==
-Message-ID: <ede52fd2-fe20-4648-be7b-de10b14d7e3f@kernel.org>
-Date: Mon, 15 Sep 2025 06:36:16 +0200
+	s=k20201202; t=1757929003;
+	bh=o8egUwKVNRfMUymwpa7mC1b1hnq1Hnwp9A7gj+Gh8/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=doMe+EasFFNVISoxJn9HwkU1XAMZRD4FDdbsW5F9iJZOzBBFcrjoGaV2dpbeUqM8f
+	 qWvud8qEXsot2NxsCJMoil0sQ2HfIxkVWA15f8tfK6zhT3IX7A1pEcFnaKaI72Fyk3
+	 h0PA9Uk9JEfeLZkPHPnPq2Z6OleYUP9HlvpigwchdYBtMqWtrkxheAyG8T41D5KZq5
+	 5qI7qHlZHPlaXoxoq/0+6POCZqUmf71VFDy2xstQUvX2Zrn6lKyQSHqzi4IihS03Aa
+	 GKbqW824PjHUDrc64I1HxkUgJ/fWsfU2YDVlZMYAQQ/7k0ZEfP0iM0Gs7QWS/TcjQ1
+	 8pyk7KtJUlAnA==
+Date: Mon, 15 Sep 2025 11:36:40 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] pwm: cros-ec: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <pw6lpxztxeg2sjwk5mheqlv4scl3zzhhpegnawf5umap6rxe4y@yckkngbinoy2>
+References: <aJtRPZpc-Lv-C6zD@kspp>
+ <2pgdxifg2zmyhvemm7a2qntprsz5nhh3ustrrlg2vvcqffwj6c@22enjpgycjbt>
+ <4b9eea66-f004-4b5f-bf48-4c32205cc8ee@embeddedor.com>
+ <mlvple4tcnvu35a2liva5wxhafshc634fu46kwyrepn75wvuec@udshn3ja6lvc>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] arm64: dts: exynos: Add initial support for the
- Exynos9610 SoC
-To: Alexandru Chimac <alex@chimac.ro>, Alim Akhtar <alim.akhtar@samsung.com>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Kees Cook <kees@kernel.org>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250914-exynos9610-devicetree-v1-0-2000fc3bbe0b@chimac.ro>
- <20250914-exynos9610-devicetree-v1-2-2000fc3bbe0b@chimac.ro>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250914-exynos9610-devicetree-v1-2-2000fc3bbe0b@chimac.ro>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 14/09/2025 22:44, Alexandru Chimac wrote:
-> +
-> +	arm-a53-pmu {
-> +		compatible = "arm,cortex-a53-pmu";
-> +		interrupts = <0 82 4>,
-> +			     <0 83 4>,
-> +			     <0 84 4>,
-> +			     <0 85 4>;
-> +		interrupt-affinity = <&cpu0>,
-> +				     <&cpu1>,
-> +				     <&cpu2>,
-> +				     <&cpu3>;
-> +	};
-> +
-> +	arm-a73-pmu {
-> +		compatible = "arm,cortex-a73-pmu";
-> +		interrupts = <0 96 4>,
-> +			     <0 97 4>,
-> +			     <0 98 4>,
-> +			     <0 99 4>;
-
-You need to use proper defines.
-
-> +		interrupt-affinity = <&cpu100>,
-> +				     <&cpu101>,
-> +				     <&cpu102>,
-> +				     <&cpu103>;
-> +	};
-> +
-> +	oscclk: clock-osc {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-output-names = "oscclk";
-> +		clock-frequency = <26000000>;
-
-clock-frequency is board property.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="q3lzyo2zdayjdgtj"
+Content-Disposition: inline
+In-Reply-To: <mlvple4tcnvu35a2liva5wxhafshc634fu46kwyrepn75wvuec@udshn3ja6lvc>
 
 
+--q3lzyo2zdayjdgtj
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH][next] pwm: cros-ec: Avoid -Wflex-array-member-not-at-end
+ warnings
+MIME-Version: 1.0
 
-...
+Hello,
 
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-> +
-> +		/* Stock Samsung bootloader doesn't configure CNTFRQ_EL0 */
-> +		clock-frequency = <26000000>;
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		abox_rmem: abox@e9400000 {
+On Thu, Aug 14, 2025 at 04:08:57PM +0200, Uwe Kleine-K=F6nig wrote:
+> On Thu, Aug 14, 2025 at 08:48:23PM +0900, Gustavo A. R. Silva wrote:
+> >=20
+> > > diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+> > > index dab49e2ec8c0..8ca9df87a523 100644
+> > > --- a/include/linux/stddef.h
+> > > +++ b/include/linux/stddef.h
+> > > @@ -108,7 +108,7 @@ enum {
+> > >   	union {									\
+> > >   		TYPE NAME;							\
+> > >   		struct {							\
+> > > -			unsigned char __offset_to_##FAM[offsetof(TYPE, FAM)];	\
+> > > +			unsigned char __offset_to_##FAM[sizeof(TYPE)];		\
+> > >   			MEMBERS							\
+> > >   		};								\
+> > >   	}
+> > >=20
+> > > which only leaves one usage of FAM in the name of the padding struct
+> > > member. I'm sure someone is able to come up with something nice here =
+to
+> > > get rid of FAM completely or point out what I'm missing.
+> >=20
+> > Flexible structures (structs that contain a FAM) may have trailing padd=
+ing.
+> > Under that scenario sizeof(TYPE) causes the overlay between FAM and MEM=
+BERS
+> > to be misaligned.
+>=20
+> That sounds wrong to me; are you sure? In that case allocating space for
+> such a struct using
+>=20
+> 	struct mystruct {
+> 		unsigned short len;
+> 		unsigned int array[];
+> 	};
+>=20
+> 	s =3D malloc(sizeof(struct mystruct) + n * sizeof(unsigned int));
+>=20
+> wouldn't do the right thing.=20
+>=20
+> I found in the net (e.g.
+> https://rgambord.github.io/c99-doc/sections/6/7/2/1/index.html):
+>=20
+> 	In most situations, the flexible array member is ignored. In
+> 	particular, the size of the structure is as if the flexible
+> 	array member were omitted except that it may have more trailing
+> 	padding than the omission would imply.
+>=20
+> So I'd claim that sizeof does work here as intended.
+>=20
+> gcc here also behaves fine:
+>=20
+> 	uwe@taurus:~$ cat test.c
+> 	#include <stdio.h>
+>=20
+> 	struct mystruct {
+> 		unsigned short len;
+> 		unsigned int array[];
+> 	};
+>=20
+> 	struct mystruct2 {
+> 		unsigned short len;
+> 	};
+>=20
+> 	int main()
+> 	{
+> 		printf("sizeof(struct mystruct) =3D %zu\n", sizeof(struct mystruct));
+> 		printf("sizeof(struct mystruct2) =3D %zu\n", sizeof(struct mystruct2));
+> 		return 0;
+> 	}
+>=20
+> 	uwe@taurus:~$ make test
+> 	cc    -c -o test.o test.c
+> 	cc   test.o   -o test
+>=20
+> 	uwe@taurus:~$ ./test
+> 	sizeof(struct mystruct) =3D 4
+> 	sizeof(struct mystruct2) =3D 2
 
-What is abox?
+My claim is wrong, while sizeof() never gives a value that is too small,
+it might be too big. E.g. for
 
-> +			compatible = "reserved-memory";
-> +			reg = <0x0 0xe9400000 0x2800000>;
-> +			no-map;
-> +		};
-> +
-> +		ramoops@f9d10000 {
+	struct mystruct {
+		unsigned short a;
+		unsigned char b;
+		unsigned char c[];
+	};
 
-This belongs to the the board.
+there is sizeof(mystruct) =3D 4, but c starts at offset 3.
 
-> +			compatible = "ramoops";
-> +			reg = <0x0 0xf9d10000 0x200000>;
-> +			record-size = <0x80000>;
-> +			console-size = <0x80000>;
+Anyhow, I applied the original patch now to
 
-Best regards,
-Krzysztof
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+
+; the discussion here was somewhat orthogonal anyhow.
+
+Best regards
+Uwe
+
+--q3lzyo2zdayjdgtj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjH3iYACgkQj4D7WH0S
+/k6/BAf/ZxOgLU/eXjlpr8Wkqx/8RBOPj6AKUELAGmT737Gz1YQ8MC1JGtImGaqk
+xyvLDBepUgDwpn06RX1mjJ7Q9gd3rCT+IgqTKCOP+cHYZM6kQJNyQT+K7t++7i1Q
+8rEsGlJiqy34iLjn5xUwydFwbjKikSeR4h3ty8yqEjfMkgK1224DPtKc0bPPI768
+jJsKh7zjhJrPtThaS4GCVi4L9GPU2qjCups50MCPWpeP0obC3vA+t4J3JUdS2wWh
+hu+S/OBbTYrsWJPUPC39IyVInucEZYgTQ3JVJQ7vy0vYfCIk194Z3qhsuwyi/+Zq
+KwzFIo0PRa0iMrL7VFjqVjQ0Rwgx6g==
+=ZEL1
+-----END PGP SIGNATURE-----
+
+--q3lzyo2zdayjdgtj--
