@@ -1,185 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E935C96;
-	Mon, 15 Sep 2025 17:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9661228BA83
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Sep 2025 23:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757958901; cv=none; b=bwEB6b9jwbj8JdpEINrfoHwGSE1K/4BqvgmJ2rMuy6rxWQfJudQxoEwCZF3WJHlCWNcQHd0mfk9N6DXYT4LvAMr4KCvJV5ToyTTBVK0cX/Y+aSq4M1K+xbT4K1h963pSyigwN1QqtCznAetEPx/Iby9xv3xOWZqNdTueALueBvE=
+	t=1757977640; cv=none; b=mxQzkdxdieEsVQSBA0t2JwuiUZZeOO5BkdiMBDr+JJ6TX+WtgFVXx2JImu1eaaXf0FHI0BNA923ZlhzEKLQ06AndI+/94z1dueBxJ3kguOaDAAeerWff9ypqyzwsG7hFCqbsfjRQ2DUKOffsrT9YYMRx3dE4Ktq5/JvlBcdqJzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757958901; c=relaxed/simple;
-	bh=p6i1OXOwL1SbFMy6RHcrUa5lkMegakp9xY05tYmaFnw=;
+	s=arc-20240116; t=1757977640; c=relaxed/simple;
+	bh=LN2djmX+oWBpW9P0SQsUvr3K6xqKGvT+SBfNb5FBCfs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k+7jYXMibeXWe85PU1pKY4XYAb/e+uBrwFLA1BoN/TSsrgJgfPkXVCJ8K9tKdakBvqnoBtCNq06n0WtwiQpVMyRjzh+FxMteHlPNEy5Ov/wJzyJ97fgDPnSckAQEW4uA6X4ACqjxp2Kk/kR4MoXNO3RiVPJvo22PO4xz86PcRlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jom/24+E; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RroR36kkWB6WBnfTnYxeDBylOsCFDJjMZXW2k9gHruHg8z3hXxpQetms6aMACMRrHpxU+mret/p/bPko5zNcJGvLL7R7shpM8Tfmbr4741NdHZXTpeSe477W26cNDBzUlQtECIO+eb/IEWwR2wHvg5N7T0kD/a9WJ/dd0DrfMtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nd5wlmFr; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jom/24+E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 562DAC4CEFB;
-	Mon, 15 Sep 2025 17:54:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757958901;
-	bh=p6i1OXOwL1SbFMy6RHcrUa5lkMegakp9xY05tYmaFnw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jom/24+EXhKUrEjPIycsMmgCYhmsBk1/WXxwQDO2r6+KPb+kDjeG8to3CCwvyqU/l
-	 oawXXgrHbTKOEYTYjVPgrJyCtjfq21/GjhscZsrXfDM4bMtSvzUQ58kdqXhYkaEspt
-	 Ny4iC9WtNufFJwcOxo518A1KT3kEYPnQzFoWgro6feQBLLfWND1LuAI1kIGvm+a0c6
-	 E8ycaLMCXRReKt2vOMMGFf5zGJSQan6rrQZbgVIFdzB/4bbbkoLF5+Q6qljSEdny0W
-	 jY5W1g7cN/dC0dhPI6/BkqxNRxPX8ESK+8pcBIjCifTi02o98uOSabpw5/AaEozXcx
-	 KgMv+VhBYMdYQ==
-Date: Mon, 15 Sep 2025 18:54:54 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Jassi Brar <jassisinghbrar@gmail.com>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>,
-	kernel@collabora.com, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 04/10] dt-bindings: mailbox: Add MT8196 GPUEB Mailbox
-Message-ID: <20250915-reviving-evasive-8ecd2d760ba8@spud>
-References: <20250912-mt8196-gpufreq-v2-0-779a8a3729d9@collabora.com>
- <20250912-mt8196-gpufreq-v2-4-779a8a3729d9@collabora.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nd5wlmFr"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-80b7a6b2b47so448997685a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Sep 2025 16:07:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1757977637; x=1758582437; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ntdt+Fw1ooyH2+q0/xC8jx4AecQq6NmyBnAlPcFGaz8=;
+        b=nd5wlmFrv+QWCLNeQpAFa30x8xxgTg85lWSc3loFOF8iGXWG1GN5el05+kBBnPDc1D
+         UbK6AMmer7L5dP9PU8vta7nGOOnnTo6uZgDIEw/wfD+8xrqwiFE25jB9y58uuvE2iABe
+         7kDWZpqRLPY6PV6o80+NJttu9XHmhc4gpH5fhlefcmeVDqNiL8xoQyYl4nzYjQr4L134
+         VifwvWpvShK4EvbuYWvss8GSsRLG6GjTvBYx5qy7ub2GD57eun5PWtJQD6gxFXzvpPmH
+         0jde8OLmPHaR8Sl+rvq/q2ih4JY9RLdNviWkqQB8utmrd2bm0dpv8czg0svlFiOhcHld
+         g4Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757977637; x=1758582437;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ntdt+Fw1ooyH2+q0/xC8jx4AecQq6NmyBnAlPcFGaz8=;
+        b=jaLCKObYGbegXFj0Gy1wvtO1piIRtHPrLBZKNol1c9aFZrbzmcJ5lRxQ1wAAOLIRQD
+         mhZnUHbKSm4UhzR6ye1vpyo5teIchk0xe4RKjuiIM1z+U0BMWEPAgwWXeuVQXIR7vayo
+         453DYEmVHucwCuTiXzicvSakicLvlj+Y3MecRlCN4aegaDqBCapxX7d4LaKaNlkUND6t
+         GMODhsK3NMSLODCKqdhTNbB2xrmjx00Q9cxAb/uOTHcwKuOyLTlz/gx3HSrQvpTGQ17B
+         GZZmqx9M9JM6sbyuPAPVi8Ghm+3BJXugr47PuyM7uUsKpUnpzFr8eyZBS7/GBGcHRSFp
+         IlOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxUzGQ7eUjAExUDhocgMwxmsbQzmwhcw88Snj67zpji6wYDCwFu9aBVCqynL4b4bAZF6Amb0siQ7El6d/Ibyw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8mM9SzSkdyesD+H82NmKjh4MBR+/9kQylXVDyxW82bflPjtY+
+	UkNPrzxdJ0HmukeU0v7zbhJ7Po1/LEItjrhHGKYl+MKbRi6IkpfsC7sJWK6FIgA71OluER6yFwv
+	V0g9qjg==
+X-Gm-Gg: ASbGncvW3QTkwx2m9ifqFMpTVLj+BeBnmEiv6uAyZkqVzwaIUr3L1UTZ4TnbysHbake
+	zRVVOkD8swSuxxp0kC9WqUy38Iu4t48DTJsNoF7BKIEjQtA1Uh1t19H7LOHLv0DCWEvaR58+x7G
+	IAQpEEtpkkdy1HNz8OYTjRbHFHRri9t/XKFdZV2y/fS9r3Kp5jATq7PqlzVL7b/LOjdARKrbccS
+	bcNZAbPCxpmcn3Ouhq7rlpK+PBMZF/Az0QiUJHNH1GVrIMnHQ1DFi/Sb/JBqYfCJgg+9Rnkv0pS
+	EMeqrvUkjQl/fYsHU/UwRBgAjlXuYV4Na/WpgxJQC3Iqjy983cWF8QSakG0/VS1o5/O5D++mswI
+	ZkDPIzl9sUlZDpNdreb4iy0vOfDMRe/mDGl5izHUJ6pS5DrprNz7pSAuZJxweJ7RtmQ1OsjWXrm
+	1lWAIm0A==
+X-Google-Smtp-Source: AGHT+IEoi1lVcF4aPi9zcBQfqqjlIJGn2T6EJO2nM/jlo5+f9d6XecVONNJlc1ldgD3Xd7nmpRVVIA==
+X-Received: by 2002:a05:6e02:12c7:b0:418:4323:921f with SMTP id e9e14a558f8ab-420a568c3a9mr147338935ab.32.1757977624725;
+        Mon, 15 Sep 2025 16:07:04 -0700 (PDT)
+Received: from google.com (138.243.29.34.bc.googleusercontent.com. [34.29.243.138])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-423f9383029sm37354345ab.32.2025.09.15.16.07.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Sep 2025 16:07:03 -0700 (PDT)
+Date: Mon, 15 Sep 2025 16:06:59 -0700
+From: Justin Stitt <justinstitt@google.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3][next] drm/nouveau: fifo: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <fksv7eprcqnb55n5zllfyhk7ynx6zgbeuqtuoimbpgamguyodh@niwjdhicah2j>
+References: <aJ17oxJYcqqr3946@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="DOVzGwk1KV7PIqCa"
-Content-Disposition: inline
-In-Reply-To: <20250912-mt8196-gpufreq-v2-4-779a8a3729d9@collabora.com>
-
-
---DOVzGwk1KV7PIqCa
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aJ17oxJYcqqr3946@kspp>
 
-On Fri, Sep 12, 2025 at 08:37:03PM +0200, Nicolas Frattaroli wrote:
-> The MediaTek MT8196 SoC includes an embedded MCU referred to as "GPUEB",
-> acting as glue logic to control power and frequency of the Mali GPU.
-> This MCU runs special-purpose firmware for this use, and the main
-> application processor communicates with it through a mailbox.
->=20
-> Add a binding that describes this mailbox.
->=20
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Hi,
+
+On Thu, Aug 14, 2025 at 03:01:07PM +0900, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the new TRAILING_OVERLAP() helper to fix the following warning:
+> 
+> drivers/gpu/drm/nouveau/nvif/fifo.c:29:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> This helper creates a union between a flexible-array member (FAM)
+> and a set of members that would otherwise follow it. This overlays
+> the trailing members onto the FAM while preserving the original
+> memory layout.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+I took a look at the modified structure layout with the union from the
+macro using pahole and found the layouts and sizes to be equivalent --
+all the while fixing the warning you demonstrated.
+
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+
 > ---
->  .../mailbox/mediatek,mt8196-gpueb-mbox.yaml        | 64 ++++++++++++++++=
-++++++
->  1 file changed, 64 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mailbox/mediatek,mt8196-gp=
-ueb-mbox.yaml b/Documentation/devicetree/bindings/mailbox/mediatek,mt8196-g=
-pueb-mbox.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..56508f406fce88c7c1699aa67=
-b57394fc7b1c357
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/mediatek,mt8196-gpueb-mbo=
-x.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/mediatek,mt8196-gpueb-mbox.ya=
-ml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek MFlexGraphics GPUEB Mailbox Controller
-> +
-> +maintainers:
-> +  - Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mediatek,mt8196-gpueb-mbox
-> +
-> +  reg:
-> +    items:
-> +      - description: mailbox data registers
-> +      - description: mailbox control registers
-> +
-> +  reg-names:
-> +    items:
-> +      - const: data
-> +      - const: ctl
-> +
-> +  clocks:
-> +    items:
-> +      - description: main clock of the GPUEB MCU
-> +
-> +  interrupts:
-> +    items:
-> +      - description: fires when a new message is received
-> +
-> +  "#mbox-cells":
-> +    const: 1
-> +    description:
-> +      The number of the mailbox channel.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - interrupts
-> +  - "#mbox-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/mediatek,mt8196-clock.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    gpueb_mbox: mailbox@4b09fd80 {
+> Changes in v3:
+>  - Use the new TRAILING_OVERLAP() helper.
 
-drop the label, but otherwise this binding looks okay to me.
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+There's really starting to be a lot of these helper macros!
 
-> +        compatible =3D "mediatek,mt8196-gpueb-mbox";
-> +        reg =3D <0x4b09fd80 0x280>,
-> +              <0x4b170000 0x7c>;
-> +        reg-names =3D "data", "ctl";
-> +        clocks =3D <&topckgen CLK_TOP_MFG_EB>;
-> +        interrupts =3D <GIC_SPI 608 IRQ_TYPE_LEVEL_HIGH 0>;
-> +        #mbox-cells =3D <1>;
-> +    };
->=20
-> --=20
-> 2.51.0
->=20
+> 
+> Changes in v2:
+>  - Adjust heap allocation.
+> 
+>  drivers/gpu/drm/nouveau/nvif/fifo.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nvif/fifo.c b/drivers/gpu/drm/nouveau/nvif/fifo.c
+> index a463289962b2..b0ab80995d98 100644
+> --- a/drivers/gpu/drm/nouveau/nvif/fifo.c
+> +++ b/drivers/gpu/drm/nouveau/nvif/fifo.c
+> @@ -25,13 +25,12 @@ static int
+>  nvif_fifo_runlists(struct nvif_device *device)
+>  {
+>  	struct nvif_object *object = &device->object;
+> -	struct {
+> -		struct nv_device_info_v1 m;
+> +	TRAILING_OVERLAP(struct nv_device_info_v1, m, data,
+>  		struct {
+>  			struct nv_device_info_v1_data runlists;
+>  			struct nv_device_info_v1_data runlist[64];
+>  		} v;
+> -	} *a;
+> +	) *a;
+>  	int ret, i;
+>  
+>  	if (device->runlist)
+> -- 
+> 2.43.0
+> 
+>
 
---DOVzGwk1KV7PIqCa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaMhS7gAKCRB4tDGHoIJi
-0lYlAP9XouEer/Fwt1f66kXxrg1+AQ0F+bPce66xOHq6v41wAgEA4pG93Zb9AFHi
-eAUYrGfpE1XzVi8+aUoob4gbAyOwvw0=
-=+tYL
------END PGP SIGNATURE-----
-
---DOVzGwk1KV7PIqCa--
+Thanks
+Justin
