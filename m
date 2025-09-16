@@ -1,242 +1,252 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58B2101F2
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 06:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1A613B293
+	for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 06:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758002660; cv=none; b=brQT+eWjzcYVjh5l42laoWO9+w60L/TEdPqFE9EfxPOFMSOcu1ruSg4HLEzIi1uKCVTSsH5OuC/0/vUwhWxZvE0z1U8KkwDn1rSaXpuiJxEn17WX3VmM1Uqitwf6YFdp/5ZwQGyHrHyYZqm466SSYhPblwwd7lJFs2GwlQnSOLY=
+	t=1758003451; cv=none; b=nCCNNuHFDQwAtzI7dIinfnDvupJbBYSFOr0sxmRFX5vis9z3UdqiTJxQrRwb5S1UVgPWKiGkoDJEyDsS6s5sek1YIYq0nnweCfzvqJhFMFd09S2p7+W8mfbuINyYAMfSZG5QXoJ4NyMgt6QuzN8O0RTnVcOMDy9U27JYaESYQQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758002660; c=relaxed/simple;
-	bh=qsa3bDVIaItaFQ9v+YDgGiDLcYmpylsuP+zGUrNJcT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YyiRDIMrCFIwiXLV2ktSdIpt3IchXz3mDRkSdNhZdrNl3R38wbaTWX124LValtWQDWB5pJiuXBLk2CnuBYvVzcsxGCQolfQTa2Kyc6uPQVmObFfW6nfHHz3/Pr1uGxrv6wzg2U2Kem6QYR43DTVMjf4nNsmhhh8hmdYeaiRAGtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f1cfidhD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758003451; c=relaxed/simple;
+	bh=deByhQqm1cMxd3U8TR2cG0vXVWNzGx1ca9c9khKTVxc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hUDM1c6nVOE1ufAJ9/OBfrKFx9GZ2iC9j/+zyfcjU7IN3H6G0XqtNTE+ioTeEi7nJU7VIgRyO4VHz4WnWk8cImFtluXoT7EDHxVdo7hK5OSs/CzcZhBhSdJVhxnmdueouDLyZZK3Llw4i+7JV8Gas5dpvLNs1/4QxmlP12DRpvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jPBdqu+O; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f1cfidhD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BFB0C4CEEB;
-	Tue, 16 Sep 2025 06:04:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758002659;
-	bh=qsa3bDVIaItaFQ9v+YDgGiDLcYmpylsuP+zGUrNJcT0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f1cfidhDhJ4NnlYGRvpMzNRrLNBlCqd7yzGkjnijaDryVzr0+u+UjWNk3JEnaDkEH
-	 MEAvv1UqaMVtS7YaY3jQDyiSBOUk0cnr5XOtPN5Z0fYvPSc4Z/KjfSd9e8oeKx6Qh6
-	 wXCmyx9GWrwGdpxK71a6cs1wWdMW7DrL2YrUjGAt3DkjaGVG3ResVPqYzPUAo9B4Y5
-	 xHIhJW8ET0tTU8kU+zOHaKiUaWLhjSl78cnvu+YlY6egtAWTrU9wDFYZw3v8JSSEeI
-	 gTchiTYrBI2Nus5JUwOYG1XPu414qRZT8OYPqu9L96S+w8JjGKeMYfUMAbM9fELe1r
-	 bO8/5PcLBRBuA==
-Date: Mon, 15 Sep 2025 23:04:18 -0700
-From: Kees Cook <kees@kernel.org>
-To: Jeff Law <jeffreyalaw@gmail.com>
-Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
-	Richard Biener <rguenther@suse.de>,
-	Joseph Myers <josmyers@redhat.com>, Jan Hubicka <hubicka@ucw.cz>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Richard Sandiford <richard.sandiford@arm.com>,
-	Marcus Shawcroft <marcus.shawcroft@arm.com>,
-	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-	Kito Cheng <kito.cheng@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Waterman <andrew@sifive.com>,
-	Jim Wilson <jim.wilson.gcc@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Li <ashimida.1990@gmail.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ramon de C Valle <rcvalle@google.com>,
-	Joao Moreira <joao@overdrivepizza.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] riscv: Add RISC-V Kernel Control Flow Integrity
- implementation
-Message-ID: <202509152254.8A38F96D91@keescook>
-References: <20250905001157.it.269-kees@kernel.org>
- <20250905002418.464643-6-kees@kernel.org>
- <dbf9a593-e19d-4f53-96d0-d067868f40b5@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPBdqu+O"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e96e1c82b01so3025507276.1
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Sep 2025 23:17:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758003449; x=1758608249; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HDaii2Wdk1Ox7/nqut8hlOiulSUANPWpY7ZmxRlktsA=;
+        b=jPBdqu+O0+JiQ5dfYi9QkFepJTSOnsqyCWgM/J9rhafQjT1zSPdddhgm1/FLOWbvgF
+         6DGG0OTF3s98siFGAZG2qz8GjkJc0BlbLLJ1HKAirP3Ti741DVIZ8A0GIGWtRVKF+5t5
+         9OuWfBrTy1PFqPU3UCbatDFI7nM5uQrO4KJHBf85kbvwfRN5JVXiPMWQd/YlBQhXDa+h
+         mewKFX6QOCfRqpnkqUW98k+Uqlk8QXy7pkAaWwgf0HM17Jh3dIezDs6+FdsQJQ7xvnNg
+         4bO7IlPxW6gM9n/LNUUqgi3SSJ8eiRoEXuPBN9qvyd/KFSZCWFmkBzqwgmFDLI5uHSh3
+         a4DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758003449; x=1758608249;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HDaii2Wdk1Ox7/nqut8hlOiulSUANPWpY7ZmxRlktsA=;
+        b=VjqAwUiW58Ox4lRwsoyDTR2LY0BZslXgX1XQPN4F4JYD7Xt+vOuGe49C3fcyfnsrgI
+         jZDAQ4CkN0j/jjOaezrWO27G35GJ2bK/SHNHkQQ9XpLmHneRvgNyzmQTeGu3eOsAMK8e
+         X13HaHZqXy/7hXTxB09HOQTELLiBQ9IJx7e0qa2ChAa//0YSIoTJ8+hDMvzbTGfAVPiM
+         y/zE5lwWgYURzTanzxUw6+CN/i459oXUwFF9h84pGpVsaB97Lo8df/WJXxKkiR6jgj+K
+         bOseAxWlDQWa/UdJA3d5oFl8LLJp+A+pcJ/RDe2i5orh5oWm3/mtQhk4WhF0wDnsj72J
+         a2rg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUNaHgtBf1eYqg7KgISk0wuTxITRBzdZv3kD8vJ5CISdZHipmmTbBWZMcIsrH3uITdZUfPI8V+WT4hodn49mk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8mZpIhGB2UzVFRPsdb267SO3gVFh3ifueWr9RHYxzGrI5z/9s
+	gZFuEe9kxoxvkGixH1seaQl6e7QIODzhZz4alc3tK/KkYSpOD2aYlaYrN/6s4LvTG9PU6NYgxst
+	M8Cxl9Jo/v0pErv0bU320xleU4SArrBk=
+X-Gm-Gg: ASbGnctUsqzcRYvlZ0p80IJUfrkFIOaNd/mKbx8dX0fJIvzuYbpUVLyLws3ez5LVuFa
+	EVKCAO23lwOdKdolpTHbYLL9HJWKKmQajF4t9H/H0GesRG+oFGko//6GVcFROjSaSqH1kob1iZp
+	JJ8XOo/NGEUHtDp4tGylobcz8OxTvnn8Y/fBZE1tKcz8/PmT5JdyE0aCQkgWFRxuF9D6FRgrQaJ
+	mxvkm7fHL5JkOOVHOJAAHgnPt7zd3fG4kp9C+cIp3gzT38hcUfUm8DmNTnzjHYV1ACoS9RR
+X-Google-Smtp-Source: AGHT+IF+Xiqik1tR0vXGQ+PFRyD1S4moq1IqD/LOHDIbRGhH8BmE3q7KjrCrPnOYGKNgwkeY1K1KRVmqmymVnMlyYJM=
+X-Received: by 2002:a05:6902:610c:b0:e9d:77de:c50a with SMTP id
+ 3f1490d57ef6-ea3d9a4e64dmr13041781276.17.1758003448858; Mon, 15 Sep 2025
+ 23:17:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dbf9a593-e19d-4f53-96d0-d067868f40b5@gmail.com>
+References: <20250912-mt8196-gpufreq-v2-0-779a8a3729d9@collabora.com>
+ <20250912-mt8196-gpufreq-v2-9-779a8a3729d9@collabora.com> <CAPaKu7TEN++z8r68k_4-iCyMLMthqJBUX35pgXupAHPdfttrYg@mail.gmail.com>
+ <24083992.6Emhk5qWAg@workhorse>
+In-Reply-To: <24083992.6Emhk5qWAg@workhorse>
+From: Chia-I Wu <olvaffe@gmail.com>
+Date: Mon, 15 Sep 2025 23:17:18 -0700
+X-Gm-Features: AS18NWCXWyl_YVRXpDa8LQOU9lM5ZjkiSFaFNztoIDgFSKKxEgJ3VR2PFYeYjBk
+Message-ID: <CAPaKu7QKUnTx-jRYfHEUJx_3bkgQ_=vEC=siTOigtQAnu4NxcQ@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] drm/panthor: devfreq: add pluggable devfreq providers
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
+	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
+	Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Chen-Yu Tsai <wenst@chromium.org>, kernel@collabora.com, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 15, 2025 at 09:40:53PM -0600, Jeff Law wrote:
-> 
-> 
-> On 9/4/25 18:24, Kees Cook wrote:
-> > Implement RISC-V-specific KCFI backend.
-> > 
-> > - Function preamble generation using .word directives for type ID storage
-> >    at offset from function entry point (no alignment NOPs needed due to
-> >    fix 4-byte instruction size).
-> > 
-> > - Scratch register allocation using t1/t2 (x6/x7) following RISC-V
-> >    procedure call standard for temporary registers.
-> > 
-> > - Integration with .kcfi_traps section for debugger/runtime metadata
-> >    (like x86_64).
-> > 
-> > Assembly Code Pattern for RISC-V:
-> >    lw      t1, -4(target_reg)         ; Load actual type ID from preamble
-> >    lui     t2, %hi(expected_type)     ; Load expected type (upper 20 bits)
-> >    addiw   t2, t2, %lo(expected_type) ; Add lower 12 bits (sign-extended)
-> >    beq     t1, t2, .Lkcfi_call        ; Branch if types match
-> >    .Lkcfi_trap: ebreak                ; Environment break trap on mismatch
-> >    .Lkcfi_call: jalr/jr target_reg    ; Execute validated indirect transfer
-> > 
-> > Build and run tested with Linux kernel ARCH=riscv.
-> > 
-> > gcc/ChangeLog:
-> > 
-> > 	config/riscv/riscv-protos.h: Declare KCFI helpers.
-> > 	config/riscv/riscv.cc (riscv_maybe_wrap_call_with_kcfi): New
-> > 	function, to wrap calls.
-> > 	(riscv_maybe_wrap_call_value_with_kcfi): New function, to
-> > 	wrap calls with return values.
-> > 	(riscv_output_kcfi_insn): New function to emit KCFI assembly.
-> > 	config/riscv/riscv.md: Add KCFI RTL patterns and hook expansion.
-> > 	doc/invoke.texi: Document riscv nuances.
-> > 
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> >   gcc/config/riscv/riscv-protos.h |   3 +
-> >   gcc/config/riscv/riscv.cc       | 147 ++++++++++++++++++++++++++++++++
-> >   gcc/config/riscv/riscv.md       |  74 ++++++++++++++--
-> >   gcc/doc/invoke.texi             |  13 +++
-> >   4 files changed, 231 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/gcc/config/riscv/riscv-protos.h b/gcc/config/riscv/riscv-protos.h
-> > index 2d60a0ad44b3..0e916fbdde13 100644
-> > --- a/gcc/config/riscv/riscv-protos.h
-> > +++ b/gcc/config/riscv/riscv-protos.h
-> > @@ -126,6 +126,9 @@ extern bool riscv_split_64bit_move_p (rtx, rtx);
-> >   extern void riscv_split_doubleword_move (rtx, rtx);
-> >   extern const char *riscv_output_move (rtx, rtx);
-> >   extern const char *riscv_output_return ();
-> > +extern rtx riscv_maybe_wrap_call_with_kcfi (rtx, rtx);
-> > +extern rtx riscv_maybe_wrap_call_value_with_kcfi (rtx, rtx);
-> > +extern const char *riscv_output_kcfi_insn (rtx_insn *, rtx *);
-> >   extern void riscv_declare_function_name (FILE *, const char *, tree);
-> >   extern void riscv_declare_function_size (FILE *, const char *, tree);
-> >   extern void riscv_asm_output_alias (FILE *, const tree, const tree);
-> 
-> > @@ -11346,6 +11347,149 @@ riscv_convert_vector_chunks (struct gcc_options *opts)
-> >       return 1;
-> >   }
-> > +/* Apply KCFI wrapping to call pattern if needed.  */
-> > +rtx
-> > +riscv_maybe_wrap_call_with_kcfi (rtx pat, rtx addr)
-> So our coding standards require a bit more for that function comment. What
-> are PAT and ADDR and how are they used?
+On Mon, Sep 15, 2025 at 6:34=E2=80=AFAM Nicolas Frattaroli
+<nicolas.frattaroli@collabora.com> wrote:
+>
+> On Saturday, 13 September 2025 00:53:50 Central European Summer Time Chia=
+-I Wu wrote:
+> > On Fri, Sep 12, 2025 at 11:38=E2=80=AFAM Nicolas Frattaroli
+> > <nicolas.frattaroli@collabora.com> wrote:
+> > <snipped>
+> > > diff --git a/drivers/gpu/drm/panthor/panthor_devfreq.h b/drivers/gpu/=
+drm/panthor/panthor_devfreq.h
+> > > index a891cb5fdc34636444f141e10f5d45828fc35b51..94c9768d5d038c4ba8516=
+929edb565a1f13443fb 100644
+> > > --- a/drivers/gpu/drm/panthor/panthor_devfreq.h
+> > > +++ b/drivers/gpu/drm/panthor/panthor_devfreq.h
+> > > @@ -8,6 +8,7 @@
+> > >
+> > >  struct devfreq;
+> > >  struct thermal_cooling_device;
+> > > +struct platform_device;
+> > >
+> > >  struct panthor_device;
+> > >
+> > > @@ -43,6 +44,19 @@ struct panthor_devfreq {
+> > >         spinlock_t lock;
+> > >  };
+> > >
+> > > +struct panthor_devfreq_provider {
+> > > +       /** @dev: device pointer to the provider device */
+> > > +       struct device *dev;
+> > > +       /**
+> > > +        * @init: the provider's init callback that allocates a
+> > > +        * &struct panthor_devfreq, adds it to panthor, and adds a de=
+vfreq
+> > > +        * device to panthor. Will be called during panthor's probe.
+> > > +        */
+> > > +       int (*init)(struct panthor_device *ptdev, struct device *dev)=
+;
+> > > +
+> > > +       struct list_head node;
+> > > +};
+> > On mt8196, we have performance-domains to replace several other
+> > properties: clocks, *-supply, power-domains, operating-points-v2.
+> > There are also quirks, such as GPU_SHADER_PRESENT should be masked by
+> > GF_REG_SHADER_PRESENT. It feels like that the scope of
+> > panthor_devfreq_provider is more broader, and at least the naming is
+> > not right.
+>
+> True, though I'm still not entirely sure whether mtk_mfg needs to do
+> the GF_REG_SHADER_PRESENT thing. It's entirely possible this is just
+> an efuse value the GPUEB reads and then puts in SRAM for us, and we
+> could simply read this efuse cell ourselves. Among a list of questions
+> about the hardware we're sending to MediaTek, whether this is an efuse
+> cell and where it is placed is one of them.
+>
+> If it turns out to be the case that we can simply read an efuse in
+> panthor in the other mt8196 integration code, then we can keep
+> mtk_mfg basically entirely focused on the devfreq-y part. I'd really
+> prefer this solution.
+>
+> However, assuming we can't go down this path either because this is
+> not how the hardware works, or because MediaTek never replies, or
+> because someone doesn't like reading efuses in panthor, I think
+> generalising "devfreq_provider" to "performance_controller" or
+> something like that would be a good move.
+Yeah, let's see what MTK has to say on shader core mask.
 
-Sure, I can document those more fully in the next version.
+Another thing is that panthor still requires a "core" clk. Is it also
+required on mt8196?
 
-> > +riscv_output_kcfi_insn (rtx_insn *insn, rtx *operands)
-> > +{
-> > +  /* Target register.  */
-> > +  rtx target_reg = operands[0];
-> > +  gcc_assert (REG_P (target_reg));
-> > +
-> > +  /* Get KCFI type ID.  */
-> > +  uint32_t expected_type = (uint32_t) INTVAL (operands[3]);
-> Do we know operands[3] is a CONST_INT?
+>
+> In a way, the fused off core mask is part of the vague domain of
+> "performance", and it'll also allow us to extend it with other
+> things relevant to performance control in different vendor integration
+> logic designs. I'm thinking memory bandwidth control and job scheduling
+> preferences. E.g. if the interconnect tells us one core is spending a
+> lot of time waiting on the interconnect, maybe because a different
+> piece of the SoC that's active shares the same path on the
+> interconnect, we could then communicate a scheduling preference for
+> the other cores that have bandwidth headroom even if they are busier
+> in compute. Maybe this doesn't make sense though because interconnect
+> designs are fully switched these days or panthor's scheduler will
+> already figure this out from job completion times.
+>
+> If any other SoC vendor or people working on hardware of those vendors
+> want to chime in and say whether they've got any other uses for
+> communicating more than just devfreq from glue logic to panthor, then
+> this would be a great time to do it, so that we can get this interface
+> right from the beginning.
+>
+> > Another issue is I am not sure if we need to expose panthor_device
+> > internals to the provider. mtk_mfg accesses very few fields of
+> > panthor_device. It seems we can make the two less coupled.
+> >
+> > I might change my view as mtk_mfg evolves and requires tigher
+> > integration with panthor. But as is, I might prefer for mtk_mfg to
+> > live under drivers/soc/mediatek and provide a header for panthor to
+> > use in soc-specific path.
+>
+> I'm not very confident it's possible to cleanly decouple them without
+> inventing a bunch of very panthor-and-mfg specific interfaces that
+> masquerade as general solutions in the process. It'd also mean I'd
+> have to duplicate all of `panthor_devfreq_get_dev_status` instead of
+> just being able to reuse it, unless that is also exposed in said
+> header file, which would need a better justification than "well there
+> is one other user of it and we're trying to couple it more loosely".
+>
+> I know that it's almost independent, but unfortunately, even a tiny
+> dependency between the two will mean that mediatek_mfg will need to
+> know about panthor.
+>
+> Other things needed from panthor are the pdevfreq->gov_data, and
+> the panthor struct device* itself, as well as stuff like "fast_rate"
+> in the panthor_device struct.
+>
+> In the future, we may want to expand this driver with governors
+> beyond SIMPLE_ONDEMAND, based on the job completion duration targets
+> we can communicate to the GPUEB. That may either make the driver
+> more tightly coupled or more loosely coupled, I don't really know
+> yet.
+>
+> One advantage of looking to completely decouple them (though again,
+> I doubt that's possible at the moment without questionable refactors)
+> could be that we could also support panfrost devices that need this.
+There is also tyr, although I don't follow its status.
 
-Yes, these all come from their respective RTL's:
+I can see the concern over "very panthor-and-mfg specific interfaces
+that masquerade as general solutions" or "questionable refactors". But
+I also don't like, for example, how mtk_mfg_init_devfreq inits
+panthor_devfreq manually. Beyond initialization, the remaining
+coupling comes from that we need panthor to provide get_dev_status
+callback for devfreq_dev_profile, and we need mtk_mfg to provide
+target and get_cur_freq callbacks. That seems like something solvable
+too.
 
-         (match_operand 3 "const_int_operand"))
-
-(Except for sibcalls where the RTL operand is offset by 1, but adjust
-for in the call to riscv_output_kcfi_insn.
-
-> 
-> > +
-> > +  /* Calculate typeid offset from call target.  */
-> > +  HOST_WIDE_INT offset = -(4 + kcfi_patchable_entry_prefix_nops);
-> > +
-> > +  /* Choose scratch registers that don't conflict with target.  */
-> > +  unsigned temp1_regnum = T1_REGNUM;
-> > +  unsigned temp2_regnum = T2_REGNUM;
-> ISTM that this will need some kidn of adjustment if someone were to compile
-> with -ffixed-reg.  Maybe all we really need is a sorry() so that if someone
-> were to try to fix the temporary registers they'd get a loud complaint from
-> teh compiler.
-
-Yeah, this needs more careful management of the scratch registers. I
-have not been able to find a sane way to provide working constraints to
-the RTL patterns, but I'd _much_ rather let the register allocator do
-all this work.
-
-> > +
-> > +  /* Load actual type from memory at offset.  */
-> > +  temp_operands[0] = gen_rtx_REG (SImode, temp1_regnum);
-> > +  temp_operands[1] = gen_rtx_MEM (SImode,
-> > +                      gen_rtx_PLUS (DImode, target_reg,
-> > +                                   GEN_INT (offset)));
-> > +  output_asm_insn ("lw\t%0, %1", temp_operands);
-> Rather than using DImode for the PLUS, shouldn't it instead use Pmode so
-> that it at least tries to work on rv32?  Or is this stuff somehow defined as
-> only working for rv64?
-
-It was designed entirely for rv64. I'm not against making it work with
-rv32, but I just haven't tried or tested it there.
-
-> > +
-> > +  /* Execute the indirect call.  */
-> > +  if (SIBLING_CALL_P (insn))
-> > +    {
-> > +      /* Tail call uses x0 (zero register) to avoid saving return address.  */
-> > +      temp_operands[0] = gen_rtx_REG (DImode, 0);  /* x0 */
-> > +      temp_operands[1] = target_reg;  /* target register */
-> > +      temp_operands[2] = const0_rtx;
-> > +      output_asm_insn ("jalr\t%0, %1, %2", temp_operands);
-> > +    }
-> > +  else
-> > +    {
-> > +      /* Regular call uses x1 (return address register).  */
-> > +      temp_operands[0] = gen_rtx_REG (DImode, RETURN_ADDR_REGNUM);  /* x1 */
-> > +      temp_operands[1] = target_reg;  /* target register */
-> > +      temp_operands[2] = const0_rtx;
-> > +      output_asm_insn ("jalr\t%0, %1, %2", temp_operands);
-> > +    }
-> More cases where we probably should be using Pmode.
-> 
-> We generally prefer to not generate assembly code like you've done, but
-> instead prefer to generate actual RTL.  Is there some reason why you decided
-> to use output_asm_insn rather than generating RTL and letting usual
-> mechanisms for generating assembly code kick in?
-
-Yeah, I covered this a bit in patch #2 in the series which describe the
-design requirements. The main issue is that the typeid validation check
-cannot be separated from the call, and the instruction pattern needs to
-have very close control over the register usage so we don't introduce
-any new indirect call gadgets (pop %target, call %target).
-
-So, this is a replacement of the regular CALL rtl pattern. I am totally
-open to any other way to do this. I have been bumbling around in here
-(and on the other architectures) trying to find ways to make it all
-work, but it still feels like a bit of a hack. :)
-
-> > +On RISC-V, KCFI type identifiers are emitted as a @code{.word ID}
-> > +directive (a 32-bit constant) before the function entry, similar to AArch64.
-> > +RISC-V's natural 4-byte instruction alignment eliminates the need for
-> > +additional padding NOPs.  When used with @option{-fpatchable-function-entry},
-> > +the type identifier is placed before any patchable NOPs.
-> Note that many designs implement the "C" extension and as a result only have
-> a 2 byte alignment for instructions.
-
-Okay, noted. Are there any restrictions on function pointer alignment?
-Regardless, I should probably rewrite this language a bit to try to
-better say "we don't care about alignment padding since the preamble
-typeid contents are a multiple of instruction size" (which would still
-be true for 2 byte alignemnt).
-
-Thanks for looking this over!
-
--Kees
-
--- 
-Kees Cook
+I really appreciate the work and I don't want to block it by vague
+concerns. If others have no preference, we should start with what we
+have.
+>
+> >
+> >
+> > > +
+> > >
+> > >  int panthor_devfreq_init(struct panthor_device *ptdev);
+> > >
+> > > @@ -57,4 +71,6 @@ int panthor_devfreq_get_dev_status(struct device *d=
+ev,
+> > >
+> > >  unsigned long panthor_devfreq_get_freq(struct panthor_device *ptdev)=
+;
+> > >
+> > > +int panthor_devfreq_register_provider(struct panthor_devfreq_provide=
+r *prov);
+> > > +
+> > >  #endif /* __PANTHOR_DEVFREQ_H__ */
+> > >
+> > > --
+> > > 2.51.0
+> > >
+> >
+>
+>
+>
+>
