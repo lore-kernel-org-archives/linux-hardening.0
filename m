@@ -1,394 +1,263 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DF41C862F
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 07:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758008984; cv=none; b=kZz8JbKeuI9MJduhjJLXgxz2sGxPW3kaiEYKup9plZ0mAInKT4TxkWT5uko6eTWEAl/3qzdsUbY7AAJEa2QA5U/vCSb0lvnvPxoJquJWuA136iw3weG5a54BVnoGZaxmdsJxf/XyqQG5i+yrt63f9jSwABXm3g3XOM0Lx9G1Czo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758008984; c=relaxed/simple;
-	bh=W+Be6Ztlvx3XJs0uODHFsJYtIs4U4XmxqawnLuYcaNY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X9Os5fIkDfjWIonNxiCmssl9x1DXC80/i2KabjO1qH7rK9eRFLxmIJ6n0bbbYdrG8Mt6wdNS3bUbzcYDIwDyWr6IliTdArDlxFm0lZoiepj8+KcSHiwGn4My/86oIoyirDvPK5zvjJ0CYXMTnEUMoEpnprAoPSOA66n2Ryk1tiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=I7buFBUL; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871F92877E7;
+	Tue, 16 Sep 2025 09:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758013478; cv=pass; b=F9AxcX4oJMFFZl6VEJ/0A3OTuc3HlaZveapIoWPYN8w2oBjSpb90nuJZQad9Hgi9idvbE28W5lFCPmLKfBgSqaf/Mh3x4uWhvGYvNUaWwTCg5E4bd8kn/6l5kXQ1Pjc2qVaGqeHdWhZpyC+GUhtjGws/A4r2pRG+4ODgOtYG+VE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758013478; c=relaxed/simple;
+	bh=kIuAVuoQsObrmznGhBdA+4YPK55LyLy1IsuoSloBp4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gE7aAX/wd9djSe9jdflqV0ymn2VGSpRSiuOvo+NOsaGX6NkzYYlbbmGEKkX3xtVB5rbULM21/jGj+lZfbbyD/FiyBEYDTTGRavskZffEBNGYonzXZsQT+QbJBwOrZKPNosvM8xH6XdodLeXygosmGlsmI0DLAI9Zcw7Gm2r+M4w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=VYZoQfha; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="I7buFBUL"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58G3psLI018499
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 07:49:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=RD+ta9axnzkY+q3MqSd9MuBT
-	TuCWROaoN5jRYETLo/A=; b=I7buFBULgQ7+QkaIef/7yOl7UguC+gMEx0Ij5vpV
-	Noh/LrnFwwOJtcf+6VAhT1I2Ma+zWJ5wCa2mlpeKUR45GfzCFteXlkm2SZijoNlq
-	nmpN88Nh4gzW4+KseiaXIgZYmKOFP7QJAJyy4YBIdDWvVD3b4gMUP6NcIhH5TXoW
-	u8JDn90KmJjpKdF1eb+qLmBr0anruvwnCxQyEuyb30dOVfuA+BPqS97An+Ircd6L
-	iFwMRSscsmJETgBzzHdRdoGQF/eZVKMRv4q9fomluj5u6+KlMX+Y4yF7uvFZsUoB
-	SGmhn5kVGk4FPdg40H93BFbupKJHiJKzzeKJql3Cod/NDQ==
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 496da9c90j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 07:49:41 +0000 (GMT)
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b4dfb96c99dso3407167a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 00:49:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758008979; x=1758613779;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RD+ta9axnzkY+q3MqSd9MuBTTuCWROaoN5jRYETLo/A=;
-        b=RZBMb0cXgn3ncUOnfbnj9GGd1e4nKMDW8RUODTF29lLP+6Hp+RVJ8Ei0vXzEBgE94s
-         8K9/aGjMWL8mu0Fq3d8QUl8k2eGkTNRVFG9ny+vhGNPs4nf+QD8xKAvTjP6zjhc7CPZs
-         87SJgx+lC4FmlBl4JQ2Enx3EPA8je2FJGYTWHQrODkdBWUpKFf1McMpmrqp2NdmrAUIi
-         5D1S1DipGq1Us+9AHSy0yVKabojKL5srBe8SGoAhy0gn2EIT0So8KHC1vbYRafD09ZO5
-         Gj9f71gCe/sxK50tdHYNq45it+z5CXqK5jIaDZ6pc3FCF//btFiP9nQLqRR5EHhG0Pam
-         7cug==
-X-Forwarded-Encrypted: i=1; AJvYcCXAzUpY4axMADvceH2Bj0PjnoR7IpL0ZmSF2weTw/t18BgVwJSPcWgD8RfkMHoSNPigQUIYpbiiD4KbIEd/c/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIWYeQc2gXRDLYuEG7X8Qy5iDQAo9ItPSJyeBEPwOzmpgVToUs
-	3tkAeVg9jIYlDG6HlckeJLEe5DauLRWffQuiBqRZKjHmFUw08P92dYwgilps2DytXSI7jSo3irq
-	nPCBgZKpVfJ41QTgpNJVdLMf2AER4pU9lrg2eKDgd+q+SaA2se44zdWojUq0EJLh4RbW1oao=
-X-Gm-Gg: ASbGnct0He975lbU9kVZLzLz4cmqBC3FZ7/TlJHXZS121dvHgIvnknn21o9Snu3vnER
-	nZR+xykdxlEWMfHoLBNtISd3VxIDXa8OB60S2wKDBY5rFHhi4HadrDa4kb+kptTqusySpGsJJo+
-	KLyteSyabc7dB6gEi+UrEVQ3rWJPM1d/8RE0jCkjjJJW042kFT3ztv9fZ1ZZo7HzoGDP8H+auO+
-	NefMHC54tdY7Kv1iR6ZQmvqGsNOjXtBF3rpXpvPWs9Zc2+J9oNkiOfQuE3wdTfOGzdfejdvkSlm
-	S7GNZ5HyT/ogJzndeyg45VJtfjvRfG0iQ1kts8aL8HHfOxolAkiqP/77hkN3VQD4MC4=
-X-Received: by 2002:a05:6a20:258a:b0:249:d4b0:5b2c with SMTP id adf61e73a8af0-2602aa8a4d8mr21370489637.14.1758008979102;
-        Tue, 16 Sep 2025 00:49:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEwdeHuLtMjTN5imzmMBdIsYKSIeC/AVXoqz2e7UTSBmIIvssIp5vod3+KGhF2DpoYErJqm1A==
-X-Received: by 2002:a05:6a20:258a:b0:249:d4b0:5b2c with SMTP id adf61e73a8af0-2602aa8a4d8mr21370433637.14.1758008978380;
-        Tue, 16 Sep 2025 00:49:38 -0700 (PDT)
-Received: from hu-mojha-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7762c225d2asm9332136b3a.65.2025.09.16.00.49.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Sep 2025 00:49:38 -0700 (PDT)
-Date: Tue, 16 Sep 2025 13:19:29 +0530
-From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-To: Eugen Hristev <eugen.hristev@linaro.org>
-Cc: kees@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, tglx@linutronix.de, andersson@kernel.org,
-        pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net,
-        david@redhat.com, mhocko@suse.com, tudor.ambarus@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
-        jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC][PATCH v3 00/16] Introduce kmemdump
-Message-ID: <20250916074929.xiait75tbnbyjt4c@hu-mojha-hyd.qualcomm.com>
-References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="VYZoQfha"
+ARC-Seal: i=1; a=rsa-sha256; t=1758013447; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=KphIoxkx3Cqj0qXKv+QONEdYHdi7TOxjXMeIFjDfloMVupb2o61pMUqjZ4bqfTOQhqGIbUK8DbxXjGqxV5x0TexDs9hNGMEDerN5hu6QXGL214QmPFbdz9IwyTXArIYA3WiNexkebwTvf4u6Vz9Oloa8Sh8ghlxeKCt8uTUG/aU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1758013447; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=vvB9uFwSO71J5u5suf9LzDD3AAOVAFdkQHjXMqw5dYs=; 
+	b=I/Gp8xb6pw6GnZQNdmmrEloJ+xsjI7JPL7JdONc0SPrqZE+QQDrTy2hnhmlIM1nhDbCwuqDBojz83VOKZ5+G4bBX6EKx2Bpi0HlKGZ6BTi5Rbq16jcH/wAruVDvzg/yWvtZBiyLWxyaPHSRhhhP+nriwk13Iu23ejuSz5brnzQs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1758013447;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=vvB9uFwSO71J5u5suf9LzDD3AAOVAFdkQHjXMqw5dYs=;
+	b=VYZoQfhaOxFZl7gpYmtPRLiRUkgTVYFaa6Td3m/0wyTVx6ttkq5K7psZ/2urwqCL
+	XCWZCkcz0LaT7xSAjw86BWu2urnKCyzUilLfARa5y6dBH2nj21gyNG3u/ScGSxaBIr3
+	qzZSU3LkTgXPn83JtA/HRG2LCAODFg/qgxxD5yvE=
+Received: by mx.zohomail.com with SMTPS id 1758013446090111.71149807332927;
+	Tue, 16 Sep 2025 02:04:06 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Chia-I Wu <olvaffe@gmail.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ MyungJoo Ham <myungjoo.ham@samsung.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Chen-Yu Tsai <wenst@chromium.org>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 05/10] mailbox: add MediaTek GPUEB IPI mailbox
+Date: Tue, 16 Sep 2025 11:03:57 +0200
+Message-ID: <5236533.GXAFRqVoOG@workhorse>
+In-Reply-To:
+ <CAPaKu7STDDp6D_fDGVfAKFrb5aWcxtwsT3nYtYDQQYCs7G9upA@mail.gmail.com>
+References:
+ <20250912-mt8196-gpufreq-v2-0-779a8a3729d9@collabora.com>
+ <8577914.T7Z3S40VBb@workhorse>
+ <CAPaKu7STDDp6D_fDGVfAKFrb5aWcxtwsT3nYtYDQQYCs7G9upA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250912150855.2901211-1-eugen.hristev@linaro.org>
-X-Authority-Analysis: v=2.4 cv=M+5NKzws c=1 sm=1 tr=0 ts=68c91695 cx=c_pps
- a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=kj9zAlcOel0A:10 a=yJojWOMRYYMA:10 a=Oh2cFVv5AAAA:8 a=VwQbUJbxAAAA:8
- a=KKAkSRfTAAAA:8 a=vnREMb7VAAAA:8 a=COk6AnOGAAAA:8 a=bLXd17yOAAAA:8
- a=1XWaLZrsAAAA:8 a=349LBZSuyFQcu3wEsZwA:9 a=CjuIK1q_8ugA:10
- a=3WC7DwWrALyhR5TkjVHa:22 a=7KeoIwV6GZqOttXkcoxL:22 a=cvBusfyB2V15izCimMoJ:22
- a=TjNXssC_j7lpFel5tvFf:22 a=XOuVWTVwyKTMzSnUH6Op:22
-X-Proofpoint-GUID: NOjQttKQ31JOfhMDWbs8BUUt0BuzNs4J
-X-Proofpoint-ORIG-GUID: NOjQttKQ31JOfhMDWbs8BUUt0BuzNs4J
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE1MDA1NiBTYWx0ZWRfXzaWsS1Zl6S7Y
- ztWBlJF7/MXhsMr/iK9/sDtCC5WO8ezkuwUwcfONIjLDMcPS9VPwW2AnweCC+aBaHeBn6jiIoTM
- atuufwfueYh38zDczWcIKjyyjcbe5aV0o+fgH2iEdFqO4UNo0W8KpZ0yMxFDQlNndPgNCs7VUb3
- fdr8/OBkMBneYbDg1wGTFmP/bi1YL/LLdeT2w9qX+bKcTxT9Db+unQYWAfNjbZc0sir3o3yJWcM
- 95BnuMGaSkIyQTqp6sVC9zZBSCYUw98e0EV3/kNIQZ2FZV4K6hT4kzXlT8DINeNtfByV2SwJc7N
- OU3volX0irSTHnRD6a56MrqCGs2FWA/vzsFtUL652cXSyFWdD7Si/3TGRJN+CrW4d0d/87DdHm2
- idERAAgc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-16_02,2025-09-12_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 spamscore=0 clxscore=1015 suspectscore=0 priorityscore=1501
- phishscore=0 adultscore=0 bulkscore=0 impostorscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2509150056
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Sep 12, 2025 at 06:08:39PM +0300, Eugen Hristev wrote:
-> kmemdump is a mechanism which allows the kernel to mark specific memory
-> areas for dumping or specific backend usage.
-> Once regions are marked, kmemdump keeps an internal list with the regions
-> and registers them in the backend.
-> Further, depending on the backend driver, these regions can be dumped using
-> firmware or different hardware block.
-> Regions being marked beforehand, when the system is up and running, there
-> is no need nor dependency on a panic handler, or a working kernel that can
-> dump the debug information.
-> The kmemdump approach works when pstore, kdump, or another mechanism do not.
-> Pstore relies on persistent storage, a dedicated RAM area or flash, which
-> has the disadvantage of having the memory reserved all the time, or another
-> specific non volatile memory. Some devices cannot keep the RAM contents on
-> reboot so ramoops does not work. Some devices do not allow kexec to run
-> another kernel to debug the crashed one.
-> For such devices, that have another mechanism to help debugging, like
-> firmware, kmemdump is a viable solution.
-> 
-> kmemdump can create a core image, similar with /proc/vmcore, with only
-> the registered regions included. This can be loaded into crash tool/gdb and
-> analyzed.
-> To have this working, specific information from the kernel is registered,
-> and this is done at kmemdump init time, no need for the kmemdump user to
-> do anything.
-> 
-> This version of the kmemdump patch series includes two backend drivers:
-> one is the Qualcomm Minidump backend, and the other one is the Debug Kinfo
-> backend for Android devices, reworked from this source here:
-> https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/drivers/android/debug_kinfo.c
-> written originally by Jone Chou <jonechou@google.com>
+On Tuesday, 16 September 2025 06:55:30 Central European Summer Time Chia-I =
+Wu wrote:
+> On Mon, Sep 15, 2025 at 6:34=E2=80=AFAM Nicolas Frattaroli
+> <nicolas.frattaroli@collabora.com> wrote:
+> >
+> > On Saturday, 13 September 2025 00:11:10 Central European Summer Time Ch=
+ia-I Wu wrote:
+> > > On Fri, Sep 12, 2025 at 11:38=E2=80=AFAM Nicolas Frattaroli
+> > > <nicolas.frattaroli@collabora.com> wrote:
+> > > <snipped>
+> > > > +static irqreturn_t mtk_gpueb_mbox_thread(int irq, void *data)
+> > > > +{
+> > > > +       struct mtk_gpueb_mbox_chan *ch =3D data;
+> > > > +       int status;
+> > > > +
+> > > > +       status =3D atomic_cmpxchg(&ch->rx_status,
+> > > > +                               MBOX_FULL | MBOX_CLOGGED, MBOX_FULL=
+);
+> > > > +       if (status =3D=3D (MBOX_FULL | MBOX_CLOGGED)) {
+> > > > +               mtk_gpueb_mbox_read_rx(ch);
+> > > > +               writel(BIT(ch->num), ch->ebm->mbox_ctl + MBOX_CTL_I=
+RQ_CLR);
+> > > > +               mbox_chan_received_data(&ch->ebm->mbox.chans[ch->nu=
+m],
+> > > > +                                       ch->rx_buf);
+> > > Given what other drivers do, and how mtk_mfg consumes the data, we sh=
+ould
+> > >
+> > >   char buf[MAX_OF_RX_LEN]; //  MAX_OF_RX_LEN is 32; we can also
+> > > allocate it during probe
+> > >   mtk_gpueb_mbox_read_rx(ch);
+> > >   mbox_chan_received_data(..., buf);
+> > >
+> > > mtx_mfg makes a copy eventually anyway.
+> >
+> > We don't right now, at least not until after the callback returns.
+> > So we need to have the copy in the mtk_mfg callback, not after the
+> > completion. That's fine and I do want to do this as this is what
+> > the mailbox framework seems to expect clients to do.
+> >
+> > > We don't need to maintain any
+> > > extra copy.
+> > >
+> > > Then we might not need rx_status.
+> >
+> > We can probably get rid of it if we keep the per-channel
+> > interrupt handler. Otherwise, we may still need clogged,
+> > as we don't want to process interrupts on channels we have
+> > no user for.
+> >
+> > >
+> > > > +               atomic_set(&ch->rx_status, 0);
+> > > > +               return IRQ_HANDLED;
+> > > > +       }
+> > > > +
+> > > > +       return IRQ_NONE;
+> > > > +}
+> > > > +
+> > > > +static int mtk_gpueb_mbox_send_data(struct mbox_chan *chan, void *=
+data)
+> > > > +{
+> > > > +       struct mtk_gpueb_mbox_chan *ch =3D chan->con_priv;
+> > > > +       int i;
+> > > > +       u32 *values =3D data;
+> > > > +
+> > > > +       if (atomic_read(&ch->rx_status))
+> > > > +               return -EBUSY;
+> > > > +
+> > > > +       /*
+> > > > +        * We don't want any fancy nonsense, just write the 32-bit =
+values in
+> > > > +        * order. memcpy_toio/__iowrite32_copy don't work here, bec=
+ause fancy.
+> > > > +        */
+> > > > +       for (i =3D 0; i < ch->c->tx_len; i +=3D 4)
+> > > > +               writel(values[i / 4], ch->ebm->mbox_mmio + ch->c->t=
+x_offset + i);
+> > > > +
+> > > > +       writel(BIT(ch->num), ch->ebm->mbox_ctl + MBOX_CTL_IRQ_SET);
+> > > > +
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > > +static int mtk_gpueb_mbox_startup(struct mbox_chan *chan)
+> > > > +{
+> > > > +       struct mtk_gpueb_mbox_chan *ch =3D chan->con_priv;
+> > > > +       int ret;
+> > > > +
+> > > > +       atomic_set(&ch->rx_status, 0);
+> > > > +
+> > > > +       ret =3D clk_enable(ch->ebm->clk);
+> > > > +       if (ret) {
+> > > > +               dev_err(ch->ebm->dev, "Failed to enable EB clock: %=
+pe\n",
+> > > > +                       ERR_PTR(ret));
+> > > > +               goto err_clog;
+> > > > +       }
+> > > > +
+> > > > +       writel(BIT(ch->num), ch->ebm->mbox_ctl + MBOX_CTL_IRQ_CLR);
+> > > > +
+> > > > +       ret =3D devm_request_threaded_irq(ch->ebm->dev, ch->ebm->ir=
+q, mtk_gpueb_mbox_isr,
+> > > > +                                       mtk_gpueb_mbox_thread, IRQF=
+_SHARED | IRQF_ONESHOT,
+> > > > +                                       ch->full_name, ch);
+> > > I don't think this warrants a per-channel irq thread.
+> > >
+> > > mbox_chan_received_data is atomic. I think wecan start simple with
+> > > just a devm_request_irq for all channels. mtk_gpueb_mbox_isr can
+> > >
+> > >   read bits from MBOX_CTL_RX_STS
+> > >   for each bit set:
+> > >     read data from rx
+> > >     mbox_chan_received_data
+> > >   write bits to MBOX_CTL_IRQ_CLR
+> > >
+> >
+> > I don't like this approach. It brings us back to having to process
+> > multiple channels per ISR, keep track of when the interrupt should
+> > be enabled and disabled based on how many channels are in use, and
+> > also is not in line with what e.g. omap-mailbox.c does.
+> >
+> > Remember that `mbox_chan_received_data` synchronously calls the
+> > mailbox client's rx_callback. In mediatek_mfg's case, this is
+> > fairly small, though with the request to not make the rx buffer
+> > persist beyond the rx_callback it will gain an additional memory
+> > copy. But we can't guarantee that someone isn't going to put a
+> > slow operation in the path. Sure, it's going to be atomic, but
+> > waiting for a spinlock is atomic and not something an ISR would
+> > enjoy. I don't think mailbox clients would expect that if they
+> > take their time they'll stall the interrupt handler for every
+> > other channel.
+> >
+> > So we'd keep the interrupt disabled for all channels until the
+> > client that received a message has processed it.
+> >
+> > I can see myself getting rid of the handler and just having the
+> > thread function as the bottom half, but I'd really like to keep
+> > the one-IRQ-request-per-channel thing I've got going now as it
+> > made the code a lot easier to reason about. However, doing this
+> > would mean the interrupt is re-enabled after the generic upper
+> > half, when all the business logic that needs to not run
+> > concurrently for an individual channel is in the bottom half.
+> >
+> > As far as I can tell, this would then mean we'd have to add
+> > some concurrency exclusion mechanism to the bottom half.
+> >
+> > Moving all the logic into the upper half handler function
+> > would make that handler somewhat longer, and I don't know
+> > if IRQF_ONESHOT masks the interrupt for all users of that
+> > IRQ number or just for those with that dev_id. If it's per
+> > dev_id, then I'm fine with moving stuff up there. But from
+> > my reading of the core IRQ handling code, that does not
+> > appear to be the case; one channel getting a reply would
+> > mask *all* channels of the mailbox until the upper half is
+> > completed, and if the upper half calls into a driver
+> > callback synchronously, that may take a hot minute.
+> >
+> > Put differently: Is there a problem with one thread per used
+> > channel, or are we going off vibes here? The way it currently
+> > works uses the shared interrupt to mark just that one channel
+> > as busy with rx_status before letting the IRQ for all channels
+> > be unmasked again, which seems ideal to me.
+> No, one thread per used channel can work. I can't say I like it, but I
+> also don't know the hw as well as you do.
+>=20
 
-+Adding some pstore experts to bring this to their attention if this can
-be followed and if they find it useful.
+Your knowledge is probably not far behind mine on this hardware :(
 
-Is not a good idea to add pstore as one of the backend of kmemdump so that all
-the kmemdump captured data automatically flow in a separate record(section) in
-pstore(e.g.,ram) so that all user of pstore automatically benefit from kmemdump
-captured data and later kmemdump section from ramoops can be recovered from
-userspace in next boot and crash utility can be run on that.
+I'll keep the per-channel thread for v3 for now, so that it's
+clearer as to how this will look. It'll also give us both an
+opportunity to run the code and add some measurements to see if
+this causes any problems, and to experiment with your proposed
+solution.
 
-              kmemdump captured data
-                |
-       ---------------------
-       |                   |
-       V                   V
-   Vendors firmware      pstore(ram)
-    backend               backend
-    (minidump)
+What I mainly am worried about is that if we go back to one IRQ
+for all channels, then we have to do our own "how many channels
+are enabled?" accounting to disable the IRQ later, because the
+enable_irq/disable_irq accounting works the opposite way where
+you can disable as many times as you want but your enables can't
+exceed disables + 1.
+
+Kind regards,
+Nicolas Frattaroli
 
 
-Thanks,
--Mukesh
 
-> 
-> *** History, motivation and available online resources ***
-> 
-> Initial version of kmemdump and discussion is available here:
-> https://lore.kernel.org/lkml/20250422113156.575971-1-eugen.hristev@linaro.org/
-> 
-> Kmemdump has been presented and discussed at Linaro Connect 2025,
-> including motivation, scope, usability and feasability.
-> Video of the recording is available here for anyone interested:
-> https://www.youtube.com/watch?v=r4gII7MX9zQ&list=PLKZSArYQptsODycGiE0XZdVovzAwYNwtK&index=14
-> 
-> Linaro blog on kmemdump can be found here:
-> https://www.linaro.org/blog/introduction-to-kmemdump/
-> 
-> The implementation is based on the initial Pstore/directly mapped zones
-> published as an RFC here:
-> https://lore.kernel.org/all/20250217101706.2104498-1-eugen.hristev@linaro.org/
-> 
-> The back-end implementation for qcom_minidump is based on the minidump
-> patch series and driver written by Mukesh Ojha, thanks:
-> https://lore.kernel.org/lkml/20240131110837.14218-1-quic_mojha@quicinc.com/
-> 
-> The RFC v2 version with .section creation and macro annotation kmemdump
-> is available here:
-> https://lore.kernel.org/all/20250724135512.518487-1-eugen.hristev@linaro.org/
-> 
-> *** How to use kmemdump with minidump backend on Qualcomm platform guide ***
-> 
-> Prerequisites:
-> Crash tool compiled with target=ARM64 and minor changes required for usual crash
-> mode (minimal mode works without the patch)
-> A patch can be applied from here https://p.calebs.dev/49a048
-> This patch will be eventually sent in a reworked way to crash tool.
-> 
-> Target kernel must be built with :
-> CONFIG_DEBUG_INFO_REDUCED=n ; this will have vmlinux include all the debugging
-> information needed for crash tool.
-> 
-> Also, the kernel requires these as well:
-> CONFIG_KMEMDUMP, CONFIG_KMEMDUMP_COREIMAGE, and the backend
-> CONFIG_KMEMDUMP_QCOM_MINIDUMP_BACKEND
-> 
-> Kernel arguments:
-> Kernel firmware must be set to mode 'mini' by kernel module parameter
-> like this : qcom_scm.download_mode=mini
-> 
-> After the kernel boots, and qcom_minidump module is loaded, everything is ready for
-> a possible crash.
-> 
-> Once the crash happens, the firmware will kick in and you will see on
-> the console the message saying Sahara init, etc, that the firmware is
-> waiting in download mode. (this is subject to firmware supporting this
-> mode, I am using sa8775p-ride board)
-> 
-> Example of log on the console:
-> "
-> [...]
-> B -   1096414 - usb: init start
-> B -   1100287 - usb: qusb_dci_platform , 0x19
-> B -   1105686 - usb: usb3phy: PRIM success: lane_A , 0x60
-> B -   1107455 - usb: usb2phy: PRIM success , 0x4
-> B -   1112670 - usb: dci, chgr_type_det_err
-> B -   1117154 - usb: ID:0x260, value: 0x4
-> B -   1121942 - usb: ID:0x108, value: 0x1d90
-> B -   1124992 - usb: timer_start , 0x4c4b40
-> B -   1129140 - usb: vbus_det_pm_unavail
-> B -   1133136 - usb: ID:0x252, value: 0x4
-> B -   1148874 - usb: SUPER , 0x900e
-> B -   1275510 - usb: SUPER , 0x900e
-> B -   1388970 - usb: ID:0x20d, value: 0x0
-> B -   1411113 - usb: ENUM success
-> B -   1411113 - Sahara Init
-> B -   1414285 - Sahara Open
-> "
-> 
-> Once the board is in download mode, you can use the qdl tool (I
-> personally use edl , have not tried qdl yet), to get all the regions as
-> separate files.
-> The tool from the host computer will list the regions in the order they
-> were downloaded.
-> 
-> Once you have all the files simply use `cat` to put them all together,
-> in the order of the indexes.
-> For my kernel config and setup, here is my cat command : (you can use a script
-> or something, I haven't done that so far):
-> 
-> `cat memory/md_KELF1.BIN memory/md_Kvmcorein2.BIN memory/md_Kconfig3.BIN \
-> memory/md_Kmemsect4.BIN memory/md_Ktotalram5.BIN memory/md_Kcpu_poss6.BIN \
-> memory/md_Kcpu_pres7.BIN memory/md_Kcpu_onli8.BIN memory/md_Kcpu_acti9.BIN \
-> memory/md_Kjiffies10.BIN memory/md_Klinux_ba11.BIN memory/md_Knr_threa12.BIN \
-> memory/md_Knr_irqs13.BIN memory/md_Ktainted_14.BIN memory/md_Ktaint_fl15.BIN \
-> memory/md_Kmem_sect16.BIN memory/md_Knode_dat17.BIN memory/md_Knode_sta18.BIN \
-> memory/md_K__per_cp19.BIN memory/md_Knr_swapf20.BIN memory/md_Kinit_uts21.BIN \
-> memory/md_Kprintk_r22.BIN memory/md_Kprintk_r23.BIN memory/md_Kprb24.BIN \
-> memory/md_Kprb_desc25.BIN memory/md_Kprb_info26.BIN memory/md_Kprb_data27.BIN \
-> memory/md_Krunqueue28.BIN memory/md_Khigh_mem29.BIN memory/md_Kinit_mm30.BIN \
-> memory/md_Kinit_mm_31.BIN memory/md_Kunknown32.BIN memory/md_Kunknown33.BIN \
-> memory/md_Kunknown34.BIN  memory/md_Kunknown35.BIN memory/md_Kunknown36.BIN \
-> memory/md_Kunknown37.BIN memory/md_Kunknown38.BIN memory/md_Kunknown39.BIN \
-> memory/md_Kunknown40.BIN memory/md_Kunknown41.BIN memory/md_Kunknown42.BIN \
-> memory/md_Kunknown43.BIN memory/md_Kunknown44.BIN memory/md_Kunknown45.BIN \
-> memory/md_Kunknown46.BIN memory/md_Kunknown49.BIN  memory/md_Kunknown50.BIN \
-> memory/md_Kunknown51.BIN > ~/minidump_image`
-> 
-> Once you have the resulted file, use `crash` tool to load it, like this:
-> `./crash --no_modules --no_panic --no_kmem_cache --zero_excluded vmlinux minidump_image`
-> 
-> There is also a --minimal mode for ./crash that would work without any patch applied
-> to crash tool, but you can't inspect symbols, etc.
-> 
-> Once you load crash you will see something like this :
-> 
->       KERNEL: /home/eugen/linux-minidump/vmlinux  [TAINTED]
->     DUMPFILE: /home/eugen/new
->         CPUS: 8 [OFFLINE: 5]
->         DATE: Thu Jan  1 02:00:00 EET 1970
->       UPTIME: 00:00:22
->        TASKS: 0
->     NODENAME: qemuarm64
->      RELEASE: 6.17.0-rc5-next-20250910-00020-g7dfa02aeae7e
->      VERSION: #116 SMP PREEMPT Thu Sep 11 18:28:06 EEST 2025
->      MACHINE: aarch64  (unknown Mhz)
->       MEMORY: 34.2 GB
->        PANIC: ""
-> crash> log
-> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd4b2]
-> [    0.000000] Linux version 6.17.0-rc5-next-20250910-00020-g7dfa02aeae7e (eugen@eugen-station) (aarch64-none-linux-gnu-gcc (Arm GNU Toolchain 13.3.Rel1 (Build arm-13.24)) 13.3.1 20240614, GNU ld (Arm GNU Toolchain 13.3.Rel1 (Build arm-13.24)) 2.42.0.20240614) #116 SMP PREEMPT Thu Sep 11 18:28:06 EEST 2025
-> 
-> 
-> *** Debug Kinfo backend driver ***
-> I don't have any device to actually test this. So I have not.
-> I hacked the driver to just use a kmalloc'ed area to save things instead
-> of the shared memory, and dumped everything there and checked whether it is identical
-> with what the downstream driver would have saved.
-> So this synthetic test passed and memories are identical.
-> Anyone who actually wants to test this, feel free to reply to the patch.
-> I have also written a simple DT binding for the driver.
-> 
-> Thanks for everyone reviewing and bringing ideas into the discussion.
-> 
-> Eugen
-> 
-> Changelog since the v2 of the RFC:
-> - V2 available here : https://lore.kernel.org/all/20250724135512.518487-1-eugen.hristev@linaro.org/
-> - Removed the .section as requested by David Hildenbrand.
-> - Moved all kmemdump registration(when possible) to vmcoreinfo.
-> - Because of this, some of the variables that I was registering had to be non-static
-> so I had to modify this as per David Hildenbrand suggestion.
-> - Fixed minor things in the Kinfo driver: one field was broken, fixed some
-> compiler warnings, fixed the copyright and remove some useless includes.
-> - Moved the whole kmemdump from drivers/debug into mm/ and Kconfigs into mm/Kconfig.debug
-> and it's now available in kernel hacking, as per Randy Dunlap review
-> - Reworked some of the Documentation as per review from Jon Corbet
-> 
-> 
-> Changelog since the v1 of the RFC:
-> - V1 available here: https://lore.kernel.org/lkml/20250422113156.575971-1-eugen.hristev@linaro.org/
-> - Reworked the whole minidump implementation based on suggestions from Thomas Gleixner.
-> This means new API, macros, new way to store the regions inside kmemdump
-> (ditched the IDR, moved to static allocation, have a static default backend, etc)
-> - Reworked qcom_minidump driver based on review from Bjorn Andersson
-> - Reworked printk log buffer registration based on review from Petr Mladek
-> 
-> I appologize if I missed any review comments. I know there is still lots of work
-> on this series and hope I will improve it more and more.
-> Patches are sent on top of next-20250910
-> 
-> Eugen Hristev (16):
->   kmemdump: Introduce kmemdump
->   Documentation: Add kmemdump
->   kmemdump: Add coreimage ELF layer
->   Documentation: kmemdump: Add section for coreimage ELF
->   kernel/vmcore_info: Register dynamic information into Kmemdump
->   kmemdump: Introduce qcom-minidump backend driver
->   soc: qcom: smem: Add minidump device
->   init/version: Add banner_len to save banner length
->   genirq/irqdesc: Have nr_irqs as non-static
->   panic: Have tainted_mask as non-static
->   mm/swapfile: Have nr_swapfiles as non-static
->   printk: Register information into Kmemdump
->   sched: Add sched_get_runqueues_area
->   kernel/vmcoreinfo: Register kmemdump core image information
->   kmemdump: Add Kinfo backend driver
->   dt-bindings: Add Google Kinfo
-> 
->  Documentation/dev-tools/index.rst             |   1 +
->  Documentation/dev-tools/kmemdump.rst          | 139 +++++++
->  .../bindings/misc/google,kinfo.yaml           |  36 ++
->  MAINTAINERS                                   |  19 +
->  drivers/soc/qcom/smem.c                       |  10 +
->  include/linux/kmemdump.h                      | 130 +++++++
->  include/linux/printk.h                        |   1 +
->  init/version-timestamp.c                      |   1 +
->  init/version.c                                |   1 +
->  kernel/irq/irqdesc.c                          |   2 +-
->  kernel/panic.c                                |   2 +-
->  kernel/printk/printk.c                        |  47 +++
->  kernel/sched/core.c                           |  15 +
->  kernel/sched/sched.h                          |   2 +
->  kernel/vmcore_info.c                          | 149 ++++++++
->  mm/Kconfig.debug                              |   2 +
->  mm/Makefile                                   |   1 +
->  mm/kmemdump/Kconfig.debug                     |  53 +++
->  mm/kmemdump/Makefile                          |   6 +
->  mm/kmemdump/kinfo.c                           | 293 +++++++++++++++
->  mm/kmemdump/kmemdump.c                        | 234 ++++++++++++
->  mm/kmemdump/kmemdump_coreimage.c              | 222 +++++++++++
->  mm/kmemdump/qcom_minidump.c                   | 353 ++++++++++++++++++
->  mm/swapfile.c                                 |   2 +-
->  24 files changed, 1718 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/dev-tools/kmemdump.rst
->  create mode 100644 Documentation/devicetree/bindings/misc/google,kinfo.yaml
->  create mode 100644 include/linux/kmemdump.h
->  create mode 100644 mm/kmemdump/Kconfig.debug
->  create mode 100644 mm/kmemdump/Makefile
->  create mode 100644 mm/kmemdump/kinfo.c
->  create mode 100644 mm/kmemdump/kmemdump.c
->  create mode 100644 mm/kmemdump/kmemdump_coreimage.c
->  create mode 100644 mm/kmemdump/qcom_minidump.c
-> 
-> -- 
-> 2.43.0
-> 
-
--- 
--Mukesh Ojha
