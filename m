@@ -1,540 +1,230 @@
-Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA8C2F6562;
-	Tue, 16 Sep 2025 11:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BACB1A01C6
+	for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 12:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758022266; cv=none; b=W2lP6cPOiRC8K47IwzRVXnaF6Ee4bN6sj8ORlhSXs+nOipVIhU3SWofv5iCCj3gCluJHSDzDMqVMM/xFp9srt+3Xq20YQjQjwGYkjGekFwyPTzoT5I4VhaDNaaQQP+4UokDds/tKIpHoEIl4HHmsNXsp0FQ700gQ1jvw8mVQGzo=
+	t=1758026863; cv=none; b=thD8osmJCp8ZwJGPp7ITB6MRXEnSmqZlXsdzJCF3RY6WJONigRGA/yYMAtHGke64ynne6dVPEGaO+OB+//WxcHv2OV8phtZc94qr3xh9j4nRMikX7USS9EvO8VHRaYWzftYRH4TiXPVgJvi5D/QLUV0now2pen4777wbA/5PpM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758022266; c=relaxed/simple;
-	bh=16Bt/wh6UdZKPEvMriE5giby4PZ2/I/vcLyeSbqXYNk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TqaWjdAH2njP3ymCCD2nFov9G09ClMD5YX77BZWsSldfGaTI5DNlPKWktCEAiWLWnP8fAoVk9XrrArTRTJth5ydVpuGvV7LHW2yLBqyQ82kMq8/BM4qbxv73jGxC01g5x5Ju8UBYD2Tsp0Qf8FqyKOIIXgFWHKC/gP/+5zUum1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=15.184.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
-X-QQ-mid: esmtpsz17t1758022226t4c14e981
-X-QQ-Originating-IP: XWMtGZDGzhI/xkhrSai2LozuCINhw1OVzRTPIof5qWE=
-Received: from localhost.localdomain ( [203.174.112.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 16 Sep 2025 19:30:23 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 13320685714790250545
-EX-QQ-RecipientCnt: 29
-From: Dong Yibo <dong100@mucse.com>
-To: andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	corbet@lwn.net,
-	gur.stavi@huawei.com,
-	maddy@linux.ibm.com,
-	mpe@ellerman.id.au,
-	danishanwar@ti.com,
-	lee@trager.us,
-	gongfan1@huawei.com,
-	lorenzo@kernel.org,
-	geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com,
-	lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com,
-	richardcochran@gmail.com,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	rdunlap@infradead.org,
-	vadim.fedorenko@linux.dev,
-	joerg@jo-so.de
-Cc: netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	dong100@mucse.com
-Subject: [PATCH net-next v12 4/5] net: rnpgbe: Add basic mbx_fw support
-Date: Tue, 16 Sep 2025 19:29:51 +0800
-Message-Id: <20250916112952.26032-5-dong100@mucse.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250916112952.26032-1-dong100@mucse.com>
-References: <20250916112952.26032-1-dong100@mucse.com>
+	s=arc-20240116; t=1758026863; c=relaxed/simple;
+	bh=shHE9KW7BesZUfFO29sYZ6kumc0tpGrToLz2fQbyJ+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k9krX1p6daoRcEndtMVcrmdUouW054tnwdiFJK2vZb46nKZ5Tf1A+ldj9m1QcH5LPqnS2OHEK/Ce0HcExnaioej/x15M8NBk3hmlHK+dccSXpruKEWmPO8Yl8ucQ+Lecazk/4sLKcP8eeoXrbMGCGrYWrf/EljMYxbPyGF3uJoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=G4Xr4jmo; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="G4Xr4jmo"
+Received: from eig-obgw-6002b.ext.cloudfilter.net ([10.0.30.203])
+	by cmsmtp with ESMTPS
+	id yTikuEsX0aPqLyV5ruiufz; Tue, 16 Sep 2025 12:47:35 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id yV5qumS4ngltQyV5qungiM; Tue, 16 Sep 2025 12:47:34 +0000
+X-Authority-Analysis: v=2.4 cv=ZYMdNtVA c=1 sm=1 tr=0 ts=68c95c66
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=rgnGs0SnPH8AdDS9O6an6A==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=hq4P9umPRdET-EkN_ZoA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Ir3vWjqrv49zXSLgiZpFEkxlPef9vckMUxhUY+rQbQo=; b=G4Xr4jmohwUGtFlp5kciSaLmxc
+	V4jusRpsg85n2MNX/y4uPmANn4XnAq2Mkn4CEEQ36ZB1c/MbYGO2Vzo41jCOd4UP6rUOZ5P6/Nmu6
+	m6L6KsdxWpQcM7HCHXWNRTFdnAkpTgpLgksqFv3gtZg7iHxYCCUsLfXEacp/d7UGeR+NY+KEU6c2P
+	FkiN1DsdSEy2KI6sMPwdh7FFz0u3womxRSNhWrNvCDbKrjaLoGRxphCTQYZf9zEu/W56dj/D/aN/0
+	GC5i4UxC3/lZ65KnYnzzUqTnMXfDhlA3tOvX1e+9R4bM0JQ3KWu8+Hud1NX5Af99jhwK4e6/EC96g
+	Kt1yI7IQ==;
+Received: from [185.7.52.72] (port=52888 helo=[172.30.86.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1uyV5n-00000003enU-2svP;
+	Tue, 16 Sep 2025 07:47:32 -0500
+Message-ID: <015cb465-6e4e-4242-8898-981721347050@embeddedor.com>
+Date: Tue, 16 Sep 2025 14:47:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OE3tIrIEWSq4FEusONEmsodNMFCwUuULL4yfx9m0p1PGrtClvYzZj81a
-	LZmLnISpV5XZ7r19IpanYP19/E3BEl575C44dr1Xzz4FWH8ofsZN8LyHzNQE90FPe8gsXj0
-	4Wt0bzlXzF4S1eNa0FCvQBlcFOvYktcrm8k9qYF64+yv67JL44rxP8tVXRQL2jcJVxmn/3/
-	z2/zHhWwwAeeReTBomj9bKoAWvPSb4Sotvn2atPkp/RpCt/XUaEHnFJOXFQPWSnFSVconj1
-	kfAxHWwNL0WZxnz8W6g+BLwA2C878mvDNtFoLdn+dO5kWhzgeCVveH+vsG+x0izKFp38RCr
-	Ki4jvT87g+oCrBgRGVec0NUCGSkMxJzpS5MHXmCvCY92Y6K8lqQaK0RU/OjAoOHaehWSWYh
-	kk+kot7NgG5hoI2zstQOAkdAeBmFjvBvsZjJtzUtL1BPXfs7wpP1dAn379l7012Vm4PSMgT
-	eRi8/e2nlwsY5/p8kmGhe7oEKIvlK4cK97r7Ax0hqwDfA54vEAAJlMP2BixLCpYf5O7/fHo
-	mLl3jaCO+7onofuynK+PRDt0zczxgU04Q8V+xPt3qXsLcNci14SEnnt8NEl2DKqGFrkATfk
-	XEsGgXGZtllRMW4giK347lMVgkqZsI/j6333TVkaez0flCNSVqGkjQMZ6AVo650okW3kC3z
-	zeVH3XYNuOgcCfMjXhWAMmZT9lmzXB6B8YSWOUL3Eijz3rAsNt+vnhGTLxRUYqUgmqoLTw7
-	7BMmzviQJ7YrbkaL6bBT/ioqAQfdMOIfUuuVwc/7xKPSyroBaMfJHgl36cWRZDfB3mAhiEA
-	ixdj4z8YRLxK5WIx8oq/0IeHYKPX/ZZv17sMqOdi/8Pa6NXZ4Dv5qCEPBZ9HvwQjsfSmpgx
-	mxIov2WrABJyltaTB8cQ4P49c7s1SMNZ4uqrrvNMwv5X/fCGbB+rs7Q24ADqJkatHTmmAKu
-	+L8VJwTm0920jyz0n4QpKEqFpk8Kyqn7J3doz2SzXATQUWARG3MGr+H4BxOaQLHmuwTRJ9I
-	qI2vkx9fWKVOp2/MSC
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] virtio_net: Fix alignment and avoid
+ -Wflex-array-member-not-at-end warning
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Simon Horman <horms@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Akihiko Odaki <akihiko.odaki@daynix.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, virtualization@lists.linux.dev,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aLiYrQGdGmaDTtLF@kspp> <20250904091315.GB372207@horms.kernel.org>
+ <cac19beb-eefb-4a6a-9eec-b414199ce339@embeddedor.com>
+ <20250904172951-mutt-send-email-mst@kernel.org>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20250904172951-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 185.7.52.72
+X-Source-L: No
+X-Exim-ID: 1uyV5n-00000003enU-2svP
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([172.30.86.44]) [185.7.52.72]:52888
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfLkFangMvZqIU80enz0w9MkR6MmDOoJRSiAiCeXeXVEwfcDblw9qMthvxpBv7hx9aQ7kPN5kJ1d8DuxM8/9ZkP0CjDYw2xijY/DLgeUSzH0n6ArGNZD0
+ YFua4I5RHSEh/FpYLzAuEu58h781E6wC5TbKyPpWeS+OgP4E0bVEZ7tz5wSjA1opU/1TF9eaEOA3vVafkz9L93I/gnf9gfI/yZnym3hPq1oCX5IRiwPZOAA7
 
-Add fundamental firmware (FW) communication operations via PF-FW
-mailbox, including:
-- FW sync (via HW info query with retries)
-- HW reset (post FW command to reset hardware)
-- MAC address retrieval (request FW for port-specific MAC)
-- Power management (powerup/powerdown notification to FW)
 
-Signed-off-by: Dong Yibo <dong100@mucse.com>
----
- drivers/net/ethernet/mucse/rnpgbe/Makefile    |   3 +-
- drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h    |   4 +
- .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx.c    |   1 +
- .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c | 246 ++++++++++++++++++
- .../net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.h | 121 +++++++++
- 5 files changed, 374 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c
- create mode 100644 drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.h
 
-diff --git a/drivers/net/ethernet/mucse/rnpgbe/Makefile b/drivers/net/ethernet/mucse/rnpgbe/Makefile
-index 5fc878ada4b1..de8bcb7772ab 100644
---- a/drivers/net/ethernet/mucse/rnpgbe/Makefile
-+++ b/drivers/net/ethernet/mucse/rnpgbe/Makefile
-@@ -7,4 +7,5 @@
- obj-$(CONFIG_MGBE) += rnpgbe.o
- rnpgbe-objs := rnpgbe_main.o\
- 	       rnpgbe_chip.o\
--	       rnpgbe_mbx.o
-+	       rnpgbe_mbx.o\
-+	       rnpgbe_mbx_fw.o
-diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h
-index 7450bfc5ee98..41b580f2168f 100644
---- a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h
-+++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h
-@@ -5,6 +5,7 @@
- #define _RNPGBE_H
- 
- #include <linux/types.h>
-+#include <linux/mutex.h>
- 
- enum rnpgbe_boards {
- 	board_n500,
-@@ -24,6 +25,8 @@ struct mucse_mbx_info {
- 	u32 delay_us;
- 	u16 fw_req;
- 	u16 fw_ack;
-+	/* lock for only one use mbx */
-+	struct mutex lock;
- 	/* fw <--> pf mbx */
- 	u32 fwpf_shm_base;
- 	u32 pf2fw_mbx_ctrl;
-@@ -34,6 +37,7 @@ struct mucse_mbx_info {
- struct mucse_hw {
- 	void __iomem *hw_addr;
- 	struct mucse_mbx_info mbx;
-+	u8 pfvfnum;
- };
- 
- struct mucse {
-diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx.c b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx.c
-index 7501a55c3134..8998fee2a615 100644
---- a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx.c
-+++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx.c
-@@ -416,5 +416,6 @@ void mucse_init_mbx_params_pf(struct mucse_hw *hw)
- 	mbx->stats.msgs_rx = 0;
- 	mbx->stats.reqs = 0;
- 	mbx->stats.acks = 0;
-+	mutex_init(&mbx->lock);
- 	mucse_mbx_reset(hw);
- }
-diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c
-new file mode 100644
-index 000000000000..0612d39869fc
---- /dev/null
-+++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.c
-@@ -0,0 +1,246 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright(c) 2020 - 2025 Mucse Corporation. */
-+
-+#include <linux/if_ether.h>
-+#include <linux/bitfield.h>
-+
-+#include "rnpgbe.h"
-+#include "rnpgbe_mbx.h"
-+#include "rnpgbe_mbx_fw.h"
-+
-+/**
-+ * mucse_fw_send_cmd_wait_resp - Send cmd req and wait for response
-+ * @hw: pointer to the HW structure
-+ * @req: pointer to the cmd req structure
-+ * @reply: pointer to the fw reply structure
-+ *
-+ * mucse_fw_send_cmd_wait_resp sends req to pf-fw mailbox and wait
-+ * reply from fw.
-+ *
-+ * Return: 0 on success, negative errno on failure
-+ **/
-+static int mucse_fw_send_cmd_wait_resp(struct mucse_hw *hw,
-+				       struct mbx_fw_cmd_req *req,
-+				       struct mbx_fw_cmd_reply *reply)
-+{
-+	int len = le16_to_cpu(req->datalen);
-+	int retry_cnt = 3;
-+	int err;
-+
-+	mutex_lock(&hw->mbx.lock);
-+	err = mucse_write_and_wait_ack_mbx(hw, (u32 *)req, len);
-+	if (err)
-+		goto out;
-+	do {
-+		err = mucse_poll_and_read_mbx(hw, (u32 *)reply,
-+					      sizeof(*reply));
-+		if (err)
-+			goto out;
-+		/* mucse_write_and_wait_ack_mbx return 0 means fw has
-+		 * received request, wait for the expect opcode
-+		 * reply with 'retry_cnt' times.
-+		 */
-+	} while (--retry_cnt >= 0 && reply->opcode != req->opcode);
-+out:
-+	mutex_unlock(&hw->mbx.lock);
-+	if (!err && retry_cnt < 0)
-+		return -ETIMEDOUT;
-+	if (!err && reply->error_code)
-+		return -EIO;
-+
-+	return err;
-+}
-+
-+/**
-+ * build_get_hw_info_req - build req with GET_HW_INFO opcode
-+ * @req: pointer to the cmd req structure
-+ **/
-+static void build_get_hw_info_req(struct mbx_fw_cmd_req *req)
-+{
-+	req->flags = 0;
-+	req->opcode = cpu_to_le16(GET_HW_INFO);
-+	req->datalen = cpu_to_le16(MUCSE_MBX_REQ_HDR_LEN);
-+	req->reply_lo = 0;
-+	req->reply_hi = 0;
-+}
-+
-+/**
-+ * mucse_mbx_get_info - Get hw info from fw
-+ * @hw: pointer to the HW structure
-+ *
-+ * mucse_mbx_get_info tries to get hw info from hw.
-+ *
-+ * Return: 0 on success, negative errno on failure
-+ **/
-+static int mucse_mbx_get_info(struct mucse_hw *hw)
-+{
-+	struct mbx_fw_cmd_reply reply = {};
-+	struct mbx_fw_cmd_req req = {};
-+	struct mucse_hw_info info = {};
-+	int err;
-+
-+	build_get_hw_info_req(&req);
-+
-+	err = mucse_fw_send_cmd_wait_resp(hw, &req, &reply);
-+	if (!err) {
-+		memcpy(&info, &reply.hw_info, sizeof(struct mucse_hw_info));
-+		mucse_hw_info_update_host_endian(&info);
-+		hw->pfvfnum = FIELD_GET(GENMASK_U16(7, 0),
-+					le16_to_cpu(info.pfnum));
-+	}
-+
-+	return err;
-+}
-+
-+/**
-+ * mucse_mbx_sync_fw - Try to sync with fw
-+ * @hw: pointer to the HW structure
-+ *
-+ * mucse_mbx_sync_fw tries to sync with fw. It is only called in
-+ * probe. Nothing (register network) todo if failed.
-+ * Try more times to do sync.
-+ *
-+ * Return: 0 on success, negative errno on failure
-+ **/
-+int mucse_mbx_sync_fw(struct mucse_hw *hw)
-+{
-+	int try_cnt = 3;
-+	int err;
-+
-+	do {
-+		err = mucse_mbx_get_info(hw);
-+	} while (err == -ETIMEDOUT && try_cnt--);
-+
-+	return err;
-+}
-+
-+/**
-+ * build_powerup - build req with powerup opcode
-+ * @req: pointer to the cmd req structure
-+ * @is_powerup: true for powerup, false for powerdown
-+ **/
-+static void build_powerup(struct mbx_fw_cmd_req *req,
-+			  bool is_powerup)
-+{
-+	req->flags = 0;
-+	req->opcode = cpu_to_le16(POWER_UP);
-+	req->datalen = cpu_to_le16(sizeof(req->powerup) +
-+				   MUCSE_MBX_REQ_HDR_LEN);
-+	req->reply_lo = 0;
-+	req->reply_hi = 0;
-+	/* fw needs this to reply correct cmd */
-+	req->powerup.version = cpu_to_le32(GENMASK_U32(31, 0));
-+	if (is_powerup)
-+		req->powerup.status = cpu_to_le32(1);
-+	else
-+		req->powerup.status = cpu_to_le32(0);
-+}
-+
-+/**
-+ * mucse_mbx_powerup - Echo fw to powerup
-+ * @hw: pointer to the HW structure
-+ * @is_powerup: true for powerup, false for powerdown
-+ *
-+ * mucse_mbx_powerup echo fw to change working frequency
-+ * to normal after received true, and reduce working frequency
-+ * if false.
-+ *
-+ * Return: 0 on success, negative errno on failure
-+ **/
-+int mucse_mbx_powerup(struct mucse_hw *hw, bool is_powerup)
-+{
-+	struct mbx_fw_cmd_req req = {};
-+	int len;
-+	int err;
-+
-+	build_powerup(&req, is_powerup);
-+	len = le16_to_cpu(req.datalen);
-+	mutex_lock(&hw->mbx.lock);
-+	err = mucse_write_and_wait_ack_mbx(hw, (u32 *)&req, len);
-+	mutex_unlock(&hw->mbx.lock);
-+
-+	return err;
-+}
-+
-+/**
-+ * build_reset_hw_req - build req with RESET_HW opcode
-+ * @req: pointer to the cmd req structure
-+ **/
-+static void build_reset_hw_req(struct mbx_fw_cmd_req *req)
-+{
-+	req->flags = 0;
-+	req->opcode = cpu_to_le16(RESET_HW);
-+	req->datalen = cpu_to_le16(MUCSE_MBX_REQ_HDR_LEN);
-+	req->reply_lo = 0;
-+	req->reply_hi = 0;
-+}
-+
-+/**
-+ * mucse_mbx_reset_hw - Posts a mbx req to reset hw
-+ * @hw: pointer to the HW structure
-+ *
-+ * mucse_mbx_reset_hw posts a mbx req to firmware to reset hw.
-+ * We use mucse_fw_send_cmd_wait_resp to wait hw reset ok.
-+ *
-+ * Return: 0 on success, negative errno on failure
-+ **/
-+int mucse_mbx_reset_hw(struct mucse_hw *hw)
-+{
-+	struct mbx_fw_cmd_reply reply = {};
-+	struct mbx_fw_cmd_req req = {};
-+
-+	build_reset_hw_req(&req);
-+
-+	return mucse_fw_send_cmd_wait_resp(hw, &req, &reply);
-+}
-+
-+/**
-+ * build_get_macaddress_req - build req with get_mac opcode
-+ * @req: pointer to the cmd req structure
-+ * @port_mask: port valid for this cmd
-+ * @pfvfnum: pfvfnum for this cmd
-+ **/
-+static void build_get_macaddress_req(struct mbx_fw_cmd_req *req,
-+				     int port_mask, int pfvfnum)
-+{
-+	req->flags = 0;
-+	req->opcode = cpu_to_le16(GET_MAC_ADDRESS);
-+	req->datalen = cpu_to_le16(sizeof(req->get_mac_addr) +
-+				   MUCSE_MBX_REQ_HDR_LEN);
-+	req->reply_lo = 0;
-+	req->reply_hi = 0;
-+	req->get_mac_addr.port_mask = cpu_to_le32(port_mask);
-+	req->get_mac_addr.pfvf_num = cpu_to_le32(pfvfnum);
-+}
-+
-+/**
-+ * mucse_mbx_get_macaddr - Posts a mbx req to request macaddr
-+ * @hw: pointer to the HW structure
-+ * @pfvfnum: index of pf/vf num
-+ * @mac_addr: pointer to store mac_addr
-+ * @port: port index
-+ *
-+ * mucse_mbx_get_macaddr posts a mbx req to firmware to get mac_addr.
-+ *
-+ * Return: 0 on success, negative errno on failure
-+ **/
-+int mucse_mbx_get_macaddr(struct mucse_hw *hw, int pfvfnum,
-+			  u8 *mac_addr,
-+			  int port)
-+{
-+	struct mbx_fw_cmd_reply reply = {};
-+	struct mbx_fw_cmd_req req = {};
-+	int err;
-+
-+	build_get_macaddress_req(&req, BIT(port), pfvfnum);
-+	err = mucse_fw_send_cmd_wait_resp(hw, &req, &reply);
-+	if (err)
-+		return err;
-+
-+	if (le32_to_cpu(reply.mac_addr.ports) & BIT(port))
-+		memcpy(mac_addr, reply.mac_addr.addrs[port].mac, ETH_ALEN);
-+	else
-+		return -ENODATA;
-+
-+	return 0;
-+}
-diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.h b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.h
-new file mode 100644
-index 000000000000..9dee6029e630
---- /dev/null
-+++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_mbx_fw.h
-@@ -0,0 +1,121 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright(c) 2020 - 2025 Mucse Corporation. */
-+
-+#ifndef _RNPGBE_MBX_FW_H
-+#define _RNPGBE_MBX_FW_H
-+
-+#include <linux/types.h>
-+
-+#include "rnpgbe.h"
-+
-+#define MUCSE_MBX_REQ_HDR_LEN 24
-+
-+enum MUCSE_FW_CMD {
-+	GET_HW_INFO = 0x0601,
-+	GET_MAC_ADDRESS = 0x0602,
-+	RESET_HW = 0x0603,
-+	POWER_UP = 0x0803,
-+};
-+
-+struct mucse_hw_info {
-+	u8 link_stat;
-+	u8 port_mask;
-+	__le32 speed;
-+	__le16 phy_type;
-+	__le16 nic_mode;
-+	__le16 pfnum;
-+	__le32 fw_version;
-+	__le32 axi_mhz;
-+	union {
-+		u8 port_id[4];
-+		__le32 port_ids;
-+	};
-+	__le32 bd_uid;
-+	__le32 phy_id;
-+	__le32 wol_status;
-+	union {
-+		__le32 ext_info;
-+		struct {
-+			u32 valid : 1;
-+			u32 wol_en : 1;
-+			u32 pci_preset_runtime_en : 1;
-+			u32 smbus_en : 1;
-+			u32 ncsi_en : 1;
-+			u32 rpu_en : 1;
-+			u32 v2 : 1;
-+			u32 pxe_en : 1;
-+			u32 mctp_en : 1;
-+			u32 yt8614 : 1;
-+			u32 pci_ext_reset : 1;
-+			u32 rpu_availble : 1;
-+			u32 fw_lldp_ability : 1;
-+			u32 lldp_enabled : 1;
-+			u32 only_1g : 1;
-+			u32 force_down_en: 1;
-+		} e_host;
-+	};
-+} __packed;
-+
-+/* FW stores extended information in 'ext_info' as a 32-bit
-+ * little-endian value. To make these flags easily accessible in the
-+ * kernel (via named 'bitfields' instead of raw bitmask operations),
-+ * we use the union's 'e_host' struct, which provides named bits
-+ * (e.g., 'wol_en', 'smbus_en')
-+ */
-+static inline void mucse_hw_info_update_host_endian(struct mucse_hw_info *info)
-+{
-+	u32 host_val = le32_to_cpu(info->ext_info);
-+
-+	memcpy(&info->e_host, &host_val, sizeof(info->e_host));
-+}
-+
-+struct mbx_fw_cmd_req {
-+	__le16 flags;
-+	__le16 opcode;
-+	__le16 datalen;
-+	__le16 ret_value;
-+	__le32 cookie_lo;
-+	__le32 cookie_hi;
-+	__le32 reply_lo;
-+	__le32 reply_hi;
-+	union {
-+		u8 data[32];
-+		struct {
-+			__le32 version;
-+			__le32 status;
-+		} powerup;
-+		struct {
-+			__le32 port_mask;
-+			__le32 pfvf_num;
-+		} get_mac_addr;
-+	};
-+} __packed;
-+
-+struct mbx_fw_cmd_reply {
-+	__le16 flags;
-+	__le16 opcode;
-+	__le16 error_code;
-+	__le16 datalen;
-+	__le32 cookie_lo;
-+	__le32 cookie_hi;
-+	union {
-+		u8 data[40];
-+		struct mac_addr {
-+			__le32 ports;
-+			struct _addr {
-+				/* for macaddr:01:02:03:04:05:06
-+				 * mac-hi=0x01020304 mac-lo=0x05060000
-+				 */
-+				u8 mac[8];
-+			} addrs[4];
-+		} mac_addr;
-+		struct mucse_hw_info hw_info;
-+	};
-+} __packed;
-+
-+int mucse_mbx_sync_fw(struct mucse_hw *hw);
-+int mucse_mbx_powerup(struct mucse_hw *hw, bool is_powerup);
-+int mucse_mbx_reset_hw(struct mucse_hw *hw);
-+int mucse_mbx_get_macaddr(struct mucse_hw *hw, int pfvfnum,
-+			  u8 *mac_addr, int port);
-+#endif /* _RNPGBE_MBX_FW_H */
--- 
-2.25.1
+On 9/4/25 23:31, Michael S. Tsirkin wrote:
+> On Thu, Sep 04, 2025 at 08:53:31PM +0200, Gustavo A. R. Silva wrote:
+>>
+>>
+>> On 9/4/25 11:13, Simon Horman wrote:
+>>> On Wed, Sep 03, 2025 at 09:36:13PM +0200, Gustavo A. R. Silva wrote:
+>>>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>>>> getting ready to enable it, globally.
+>>>>
+>>>> Use the new TRAILING_OVERLAP() helper to fix the following warning:
+>>>>
+>>>> drivers/net/virtio_net.c:429:46: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>>>
+>>>> This helper creates a union between a flexible-array member (FAM)
+>>>> and a set of members that would otherwise follow it (in this case
+>>>> `u8 rss_hash_key_data[VIRTIO_NET_RSS_MAX_KEY_SIZE];`). This
+>>>> overlays the trailing members (rss_hash_key_data) onto the FAM
+>>>> (hash_key_data) while keeping the FAM and the start of MEMBERS aligned.
+>>>> The static_assert() ensures this alignment remains, and it's
+>>>> intentionally placed inmediately after `struct virtnet_info` (no
+>>>> blank line in between).
+>>>>
+>>>> Notice that due to tail padding in flexible `struct
+>>>> virtio_net_rss_config_trailer`, `rss_trailer.hash_key_data`
+>>>> (at offset 83 in struct virtnet_info) and `rss_hash_key_data` (at
+>>>> offset 84 in struct virtnet_info) are misaligned by one byte. See
+>>>> below:
+>>>>
+>>>> struct virtio_net_rss_config_trailer {
+>>>>           __le16                     max_tx_vq;            /*     0     2 */
+>>>>           __u8                       hash_key_length;      /*     2     1 */
+>>>>           __u8                       hash_key_data[];      /*     3     0 */
+>>>>
+>>>>           /* size: 4, cachelines: 1, members: 3 */
+>>>>           /* padding: 1 */
+>>>>           /* last cacheline: 4 bytes */
+>>>> };
+>>>>
+>>>> struct virtnet_info {
+>>>> ...
+>>>>           struct virtio_net_rss_config_trailer rss_trailer; /*    80     4 */
+>>>>
+>>>>           /* XXX last struct has 1 byte of padding */
+>>>>
+>>>>           u8                         rss_hash_key_data[40]; /*    84    40 */
+>>>> ...
+>>>>           /* size: 832, cachelines: 13, members: 48 */
+>>>>           /* sum members: 801, holes: 8, sum holes: 31 */
+>>>>           /* paddings: 2, sum paddings: 5 */
+>>>> };
+>>>>
+>>>> After changes, those members are correctly aligned at offset 795:
+>>>>
+>>>> struct virtnet_info {
+>>>> ...
+>>>>           union {
+>>>>                   struct virtio_net_rss_config_trailer rss_trailer; /*   792     4 */
+>>>>                   struct {
+>>>>                           unsigned char __offset_to_hash_key_data[3]; /*   792     3 */
+>>>>                           u8         rss_hash_key_data[40]; /*   795    40 */
+>>>>                   };                                       /*   792    43 */
+>>>>           };                                               /*   792    44 */
+>>>> ...
+>>>>           /* size: 840, cachelines: 14, members: 47 */
+>>>>           /* sum members: 801, holes: 8, sum holes: 35 */
+>>>>           /* padding: 4 */
+>>>>           /* paddings: 1, sum paddings: 4 */
+>>>>           /* last cacheline: 8 bytes */
+>>>> };
+>>>>
+>>>> As a last note `struct virtio_net_rss_config_hdr *rss_hdr;` is also
+>>>> moved to the end, since it seems those three members should stick
+>>>> around together. :)
+>>>>
+>>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>>> ---
+>>>>
+>>>> This should probably include the following tag:
+>>>>
+>>>> 	Fixes: ed3100e90d0d ("virtio_net: Use new RSS config structs")
+>>>>
+>>>> but I'd like to hear some feedback, first.
+>>>
+>>> I tend to agree given that:
+>>>
+>>> On the one hand:
+>>>
+>>> 1) in virtnet_init_default_rss(), netdev_rss_key_fill() is used
+>>>      to write random data to .rss_hash_key_data
+>>>
+>>> 2) In virtnet_set_rxfh() key data written to .rss_hash_key_data
+>>>
+>>> While
+>>>
+>>> 3) In virtnet_commit_rss_command() virtio_net_rss_config_trailer,
+>>>      including the contents of .hash_key_data based on the length of
+>>>      that data provided in .hash_key_length is copied.
+>>>
+>>> It seems to me that step 3 will include 1 byte of uninitialised data
+>>> at the start of .hash_key_data. And, correspondingly, truncate
+>>> .rss_hash_key_data by one byte.
+>>>
+>>> It's unclear to me what the effect of this - perhaps they key works
+>>> regardless. But it doesn't seem intended. And while the result may be
+>>> neutral, I do  suspect this reduces the quality of the key. And I more
+>>> strongly suspect it doesn't have any positive outcome.
+>>>
+>>> So I would lean towards playing it safe and considering this as a bug.
+>>>
+>>> Of course, other's may have better insight as to the actual effect of this.
+>>
+>> Yeah, in the meantime I'll prepare v2 with both the 'Fixes' and 'stable'
+>> tags.
+>>
+>> Thanks for the feedback!
+>> -Gustavo
+>>
+>>
+> 
+> 
+> I agree. It looks like that commit completely broke RSS
+> configuration. Akihiko do you mind sharing how that was
+> tested? Maybe help testing the fix? Thanks!
 
+I've been waiting for Akihiko's comments on this, but I
+guess I'll now go ahead and submit v2 with the Fixes and
+stable tags included.
+
+Thanks for the feedback, Michael.
+
+-Gustavo
