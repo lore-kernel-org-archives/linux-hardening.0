@@ -1,323 +1,202 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-009a6c02.pphosted.com (mx0b-009a6c02.pphosted.com [148.163.141.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB651917D0
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 03:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757994058; cv=none; b=ZGjHNb15kQvx5+14SthU572dxr/NwdVS6ikOCO9WlxJEkvWrJe914Q+RFG8QQB9md3YhoFnJNzafdBemepZEGtjlsweTi4VOZHuRklatzUMsABtrg58QHydn48HQqFVp+boqWRdEK8tPv6QwVe1/ygtdx9yGXTYwPGMtjCfovJ4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757994058; c=relaxed/simple;
-	bh=VHgVKRhSvWgLessSnpdAHm7lt0qU5d3opMD0pHPY/xw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cQ/2teypB7F8FnhYpFRsktQU06oh04d2QoEXdm00murhF/uHvlLxXl7Vk0ZWzrS4QHTRKTrfnWgKmCHYjs9A46FjZUAkTOSIzwxgnFxLBnkETmKVvNP7aWoy2liD0REnhv1lPPILqN7K1tMkvkcgmycDO+gveRqqGmnh1IBgwZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Moy0t2PO; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7ED1E3DF2;
+	Tue, 16 Sep 2025 04:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.141.152
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757995582; cv=fail; b=PIUNW0y9iVgOIQq8yxskTpGLd0suM96LxYNaSTtAktgbraXarzYhcipwbE96e0kmQ+sBWmbWZ4p+vHP4X6gY4IAsCvxhBO6nYHrLg1+VQOWIaPTU9fvAd0pZYmNp7V9iCvftmpVdTXCzXX0R4IRGU92MMlZYq+wSxaTfv5XiVhw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757995582; c=relaxed/simple;
+	bh=/H0jY6V4wWKrd4oIFNiHqIQSgop34xcW+4/OnyoyT6Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=MK7CI4vEeOkdCFH2gMyAluAYkLTLrYMs1aSw0+izw4Z5nTrwgI/kreotK/a9cy6WbCjPJlB3SNxmrlSSpJoK96Lm42MvCasFEnDhVo2O88/wmj55Yr/ZOQhsVud6dZQwoF++FgSd5Mdq2pQntT3GmGqXgPiOt+KwVAp7x98B+rg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=jE0MymsG; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=IRqZU/Wk; arc=fail smtp.client-ip=148.163.141.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Moy0t2PO"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-772481b2329so5264433b3a.2
-        for <linux-hardening@vger.kernel.org>; Mon, 15 Sep 2025 20:40:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757994056; x=1758598856; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GxYJ7j3JIu2i4eeQri3+U22dNTdD0G/OMTcdxsyMGEQ=;
-        b=Moy0t2POyBUPFPN0n6Iy8okEcABRNkjaXswCuYrmn20UUcpnyW7F/xFDZufFjAQ68W
-         vJz7S9iED7nvt5OODdDK4AcZIkaJZYBmXKuRkvh4DsQGh0KTi/3ak9NgYavIMkW3FxGF
-         6z100EWnjWdPNrg+/CM0iBUd13F5mlZBzeQnkHHBeFcw7IFFBEImkTAO1uyEhSOOPu90
-         rJcUK2jDIboqZsBwPNL6AJDdM+WfD7YTHKvu2m7bQyJU8JghBLdDteXo8V+bjCrmvWJT
-         UG3jeFw+iVlvzIVrI/p8XJAhgqY2KlwZe8gNHaH05ydUBeYHh4AXU+0EUsGc3b5mHaEX
-         gNCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757994056; x=1758598856;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GxYJ7j3JIu2i4eeQri3+U22dNTdD0G/OMTcdxsyMGEQ=;
-        b=BzcG+QBJu2mfIZGJpgy7/4isbLXibVGII2jIfMPq0tby0qigHKFX+5GJtAAHSkQsTg
-         ORFfzhjBT3ds/iQCbyOavIuayW7DJQ9aBWtiSd8ein4ojKgHPLfH5v9B1lAsnu5Opr19
-         yqH5cDOoM/kJE7IRKCD29XWHacDw1PWogPUKSHwZQAfmfcL0MHh098gLJqA/5s0Vwv8m
-         yGwb9QfrJd6Hvn5lnappkMxEQvn/PMw++84FqoN+GZH7DPrV+UZinsojrIutl3+4ax/r
-         lpv3kcGBi82/jM48QflBaXJp+cHkes+XHhLh2IY3DbpCeVLH0KYZTjcIj1mK70biPLAl
-         YXkA==
-X-Forwarded-Encrypted: i=1; AJvYcCWsfADnS0HURt/2+Y6MQ0umNHVSu5PEVhNK4jlylPhXQM2apKNYeCbrxcmfnjoFwKtTRH+d458BtHMgSipS2xk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygOah0pdqH2lJiqRj4H05Rb6e4LQHj9m/qASOXIoIrsQ5y+gTT
-	6Co+ig7njNBfqj388Uai1P6nAZAdM2wt4K/qa2emtB/n5uRmInkgpOMQ
-X-Gm-Gg: ASbGnctRPse0awX65H6OVbzD1txapx9w/5PXoW/H2/Z3Qd/myMpTIg57kUpTRRHv5U7
-	6LIj1aO7xgdRCvtHik96Op29IbhB7/HdCZbupg0YoY4VIpL3FEq/6/ZT9j3WvudHNk05zGJg+Uv
-	v4Dh2D9RKl45EXK7SDAOuNOcJccRU+TAWRzbUgaPuooPDoaIVcveaIa9MMd4zs0Bwi80FtGPcy9
-	UzchJwnE2/lczMg74tWC6fUgowtrUtQlJ/24/+PD/c4zc2oYDYTfLzjYyHiWgHWoYTr/joxBGsD
-	OqOyfDytlA+RCnm86aGOwGPAAtAAALTsuxrvar8bLe5G/RwOQcTF002H82eS48VAfLvC8QreEx4
-	MuWb2+6tFT8ydYsIXN7r828XUBplRCRLiZ3txeQ==
-X-Google-Smtp-Source: AGHT+IFlIJMesoLUJ6LdxDKauGDKY+Y14YjUre3YkDTw8sn9u16qQCGm7WqXCcLq1kloyGVAinLGBQ==
-X-Received: by 2002:a05:6a20:4305:b0:245:ff00:5332 with SMTP id adf61e73a8af0-26029ea8f00mr18638975637.7.1757994056189;
-        Mon, 15 Sep 2025 20:40:56 -0700 (PDT)
-Received: from [172.31.0.38] ([136.38.201.137])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b54a399081dsm13112078a12.43.2025.09.15.20.40.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Sep 2025 20:40:55 -0700 (PDT)
-Message-ID: <dbf9a593-e19d-4f53-96d0-d067868f40b5@gmail.com>
-Date: Mon, 15 Sep 2025 21:40:53 -0600
+	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="jE0MymsG";
+	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="IRqZU/Wk"
+Received: from pps.filterd (m0462407.ppops.net [127.0.0.1])
+	by mx0b-009a6c02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 58G3SRqF2940147;
+	Tue, 16 Sep 2025 11:40:48 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=20250420; bh=ZPKQ07RAwabGyk5JJ+I+Ceq
+	/mwkbIDQjsLM6juhzhqk=; b=jE0MymsGBxewUkO3uCNF7mY8mO7msSljRAf+X1U
+	HJ/qKPOe8ksXEMMhBLAbjYykcmb0RxWnuZ3aLuyJJ0cHm1PoPveNxv4RR5W1SwHP
+	moV74siaoklyd3D1LkFZbiipcC0r1Eh8kc6U5uHOhjGT/tODB1E7rO81IugHuIg9
+	2VOGbDGCKwAIXUU9Y6mx/R/kor3vV88noJcrS/eO66vAbB+CYHNQPVda+FweH7tp
+	uzpprPagGScEOYKVydtjKRN37XlBpwGWv/xSJVEgQPzKPJKw9wonOZa3z1HyhKC7
+	zLDBfPhmYri5KZzMzCIXY9geMQcb374J03AhRiXiBJ/CiZA==
+Received: from typpr03cu001.outbound.protection.outlook.com (mail-japaneastazon11012045.outbound.protection.outlook.com [52.101.126.45])
+	by mx0b-009a6c02.pphosted.com (PPS) with ESMTPS id 497015g0cj-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 16 Sep 2025 11:40:48 +0800 (WST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XkrDkwwBIDdJ7xfxYmvQpa+cFOAMAZhTKOnX4mEOTx7gMmLjGQJahxEbEd9FyuYX62kwUQR00ZEMhh2FEaVRwQgV8MiGKNqwzjf56SeWndVDpCNhVmJza22zXIquEBPBNvFVQx0UOiVBD1OE5BFy2X50cO+rhXyRPn4eitgjWObPN2T2My+dh7pVH8z7Bq8W/SNH8uSt/0h5d2reu4NVB1N3h0y9nFjQa8s5mH+wl1Z3x/tVr4QWnkGDq1Jy6y5Som9ZhJufpzuVDzWFQNWGxp85aKzF73/oFGQW/3UyDCT0SdU4Ns8rLEavi0s/EzCNDkdzaw2Bk1rPj7KIJMXVJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZPKQ07RAwabGyk5JJ+I+Ceq/mwkbIDQjsLM6juhzhqk=;
+ b=SbgvSgH/+PbTa1Pw+bBsbide9vqPeCba+hiZ8tjy3n0AveLE4DL6ppZCAiC05/8vYOlcuRHg/7/olhtJhvHJ6WNSYGMGlVLy4xjdOazovPVhttFBCWB4e7NFeD7xgSmgdvPmML0Kt90j7+COgKH6P/7aiT34LpXDadX0+ZcdVFB7Tci08WGt34gDj+hMf8COuB5hOfW4hV4GKn77uLcWRGchhLY+5Db6oJUOsm/cDLjQV6hjnj5av/4rO+lyrJMfSh51EuNUUYhSuNvXoBOK1hCsBAPzygm8z5/0hhiQOMIJLntZ1677qxt8FLeq14S01efLPwksHhECeQ2RwM2MMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
+ (p=quarantine sp=quarantine pct=100) action=quarantine
+ header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZPKQ07RAwabGyk5JJ+I+Ceq/mwkbIDQjsLM6juhzhqk=;
+ b=IRqZU/WkYNfJ2j8SYigLfhtZx7D94Ofu3qqd6YPqVBKQNG58x6t16SZlxWIeBhOrb00BGO8OZMxtS/qxoVeSu4Qsgu3IY/IRLhR3Ij44SiGwp2B6jroRWxMlBYpQYlJAJYNS/qB2U5iEzMThzN5ZEWiyUAlQjX4//EVYXKnWdKHEQ7JUOSjwwapC/WY+ayprqH4VItHBpEmZCfeOJwzTx6a0duLVFAjXbfcJJfcUuy3shJYE8tuN2dk4wjuSAHsC/695PVyjwJk2RwKue5goJBk9un4gKND2GCkwuf0+Zu3eSXlHfZ54BlDR8nsactqxtlehxLEGV14Rp27LNwhpkA==
+Received: from SG2PR03CA0115.apcprd03.prod.outlook.com (2603:1096:4:91::19) by
+ SEYPR04MB5716.apcprd04.prod.outlook.com (2603:1096:101:89::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9115.21; Tue, 16 Sep 2025 03:40:40 +0000
+Received: from SG1PEPF000082E2.apcprd02.prod.outlook.com
+ (2603:1096:4:91:cafe::54) by SG2PR03CA0115.outlook.office365.com
+ (2603:1096:4:91::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9137.11 via Frontend Transport; Tue,
+ 16 Sep 2025 03:40:41 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
+ smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
+Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
+ designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
+ client-ip=211.20.1.79; helo=localhost.localdomain;
+Received: from localhost.localdomain (211.20.1.79) by
+ SG1PEPF000082E2.mail.protection.outlook.com (10.167.240.5) with Microsoft
+ SMTP Server id 15.20.9137.12 via Frontend Transport; Tue, 16 Sep 2025
+ 03:40:38 +0000
+From: Zane Li <Zane_Li@wiwynn.com>
+To: patrick@stwcx.xyz, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@codeconstruct.com.au>,
+        Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Zane Li <Zane_Li@wiwynn.com>, Zane Li <zane_li@wiwynn.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v1 1/1] ARM: dts: aspeed: yosemite4: allocate ramoops for kernel panic
+Date: Tue, 16 Sep 2025 11:40:35 +0800
+Message-Id: <20250916034036.348247-1-Zane_Li@wiwynn.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] riscv: Add RISC-V Kernel Control Flow Integrity
- implementation
-To: Kees Cook <kees@kernel.org>, Qing Zhao <qing.zhao@oracle.com>
-Cc: Andrew Pinski <pinskia@gmail.com>, Richard Biener <rguenther@suse.de>,
- Joseph Myers <josmyers@redhat.com>, Jan Hubicka <hubicka@ucw.cz>,
- Richard Earnshaw <richard.earnshaw@arm.com>,
- Richard Sandiford <richard.sandiford@arm.com>,
- Marcus Shawcroft <marcus.shawcroft@arm.com>,
- Kyrylo Tkachov <kyrylo.tkachov@arm.com>, Kito Cheng <kito.cheng@gmail.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Andrew Waterman <andrew@sifive.com>,
- Jim Wilson <jim.wilson.gcc@gmail.com>, Peter Zijlstra
- <peterz@infradead.org>, Dan Li <ashimida.1990@gmail.com>,
- Sami Tolvanen <samitolvanen@google.com>,
- Ramon de C Valle <rcvalle@google.com>, Joao Moreira
- <joao@overdrivepizza.com>, Nathan Chancellor <nathan@kernel.org>,
- Bill Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org,
- linux-hardening@vger.kernel.org
-References: <20250905001157.it.269-kees@kernel.org>
- <20250905002418.464643-6-kees@kernel.org>
-Content-Language: en-US
-From: Jeff Law <jeffreyalaw@gmail.com>
-In-Reply-To: <20250905002418.464643-6-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E2:EE_|SEYPR04MB5716:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 1137cf1b-ddbe-46e8-4352-08ddf4d2ce6c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|7416014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?jM45QMDd1Wso/Z4THH2ww/qcz3WSWni+8gkjCTtZNVpkcgZokfJyL+ccYPSU?=
+ =?us-ascii?Q?ai2ffClBwH4MvMS2jtquVAIxBkCN84RUQhnAETs1lkV8gXIo0/myZGVnWqpL?=
+ =?us-ascii?Q?B/Tt+PopfoXuHXNs7sGQTJinx5dP6RKfPUR+QaIeKmGf9cgg+PuV/ioXV68N?=
+ =?us-ascii?Q?Wd8nZ8iSOmR6W+78oBzqqHjhsHYrcjb0hDASh/GJJXMCO8fcc2kE/zI0gXOc?=
+ =?us-ascii?Q?/c+QLGdVta8/hfn4D1SS91/GIxNYB4JU9KNIEMUKK4n/Wk/Ey7b8/a4ivGVj?=
+ =?us-ascii?Q?VN3+07vdkSE3jtb2Hf0rkgJJdXmbYd5xMbWSCqlNpqb7XlpY7HZsRN0+Zc8C?=
+ =?us-ascii?Q?F7FNbbta2FIvua7DO0Ss+/CfYBhyJqakmGOKU958idj+ujoUrgPS71KqHugO?=
+ =?us-ascii?Q?Pig7W+RMzHt6oLsSymCLdBoJw+D15fci6dmJdGi9qSoBpH9OTVQrxq3elmHh?=
+ =?us-ascii?Q?tAJfsHm3lFPLZj2CaEGQagl+DoIHHdqf4cbghrNVsV9DdiHEVzpigoVm6Pxc?=
+ =?us-ascii?Q?k3Wzv4+dF75VlSklizZKbTYq460yfLgUu4DXhaCY7PiQoQQBESkgHACEjNDq?=
+ =?us-ascii?Q?Qeg8wcJ55syrRbUGeTXljts7eRSq+BfIjh37xNlCJPGJ2giXGsFO9fs2zJ3x?=
+ =?us-ascii?Q?7v46YG3nrsapR2zln+o/+tfSsKTdr2aechpYO4/ruftQ0uy67RROQD/ZZc+F?=
+ =?us-ascii?Q?nYH0JSzfkMbbRSdqVIJBu/r+jQQbPEOzUaY7hD4alQwnAAAAKVPilc93bXaN?=
+ =?us-ascii?Q?aqqW1Fxy/M8BzUxfMiqn1avUjxi9dGdWasy4nyb53vzXwIiBG+IKRGCiz1X5?=
+ =?us-ascii?Q?AbW3eBz5vAMj9hKVkEVXSLgrOYkBkoYYoZhwQVLsel77TkoslwZ8cWKClpgF?=
+ =?us-ascii?Q?NDTd9uv6287bgD+TfQqU4YYp/DR454ANQGLA+zc61LDxgo/rOneKJKwDlz99?=
+ =?us-ascii?Q?EoZudT7QhBR9aXisRk3SgClaWDZo9+yAcPENMj5QT66MzYS+oxLL18Ym6ygY?=
+ =?us-ascii?Q?7MO7dy6zvr+PWC8UhwcWz/mpgG9H6RqPDRUkpCyqVpg88Nmvc2GbjzOh/WAb?=
+ =?us-ascii?Q?Is/njlAxxf2wR+XvAKmJZ76ggG/GyE7ztina/9UwvicnUgK3H0u76dxvPR9k?=
+ =?us-ascii?Q?zDwMo2aMRocboomYFPG8zkcSfkaKalbjoIwA7gk6LilI5dlRfh4CFE14JQSq?=
+ =?us-ascii?Q?sc8c8v290MbDozNR6vm2ox0fuE46rlAnRI9KeQhWpTMa3yNTjfJrLsabirjm?=
+ =?us-ascii?Q?YA3c/i7ac+QwPJJtyF1Py/bSNKi/uOCy/HtbDqIGn/aLJjs2uiYAzelb+z2y?=
+ =?us-ascii?Q?NP29zIdiW45DCpgruTBXJ6pistd/yIvmJ6PLrtPvoz46NLIWsCjipdeM760D?=
+ =?us-ascii?Q?Qh9UtpyrFwFHhbw4eza1nYJCO4aSY4QsU0hl0PXuYQJLhuY9mO6AdSnPOQu3?=
+ =?us-ascii?Q?q1E+xizBqVCiC6mUizyZ20ch09/uzj3GbPEOmbuctfqI7Vt5ygKNqEv2QDrp?=
+ =?us-ascii?Q?uYQg1uqwbEx2LvXFcBhnCEUPbr+FxKPnuHb4?=
+X-Forefront-Antispam-Report:
+	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(7416014)(82310400026);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	a7xOfINWCKmD9JbSncTgIfI8nON9EK51PR2bK+4RixsYfBKd3RQVmRQEkkk7wuymGHG4fvu13Br2KXJ3WNV4SMljDMiiLw1kXtGvEzTh5UpLTozf1JdeKA//fg5Hc0aKFBo4h2CG2xbZ9KE+P/QNZH1Ps3ftrh7ltXUb8k6yAPguc8764LDohPiqGmOYGAhrgioNT5HW+C4zwYr9d85B7fJrTN4mAp36I5L7ALRUi7DFDgAkEPBqPXyYeYst2D+b8wAIZRPB46OSssfys88Xn7qlt8V46ko0oXtfm6p7lZ3uhBnjwonbJUmpnGXVoQHfMhd0dqAT6XnY8fvaR9DrHJTt34LpmLyb0wDR8jclC4XkRIpH2ggKXWhw3nnw5raE5G8lKxgRTAjysjJ8NHRRhsH395vecAFpwkz+TN/7VEA53QG3+qnW6R30eXB4pnm7vTewbv8NevrXjpVh3ImGX7P9lrKWEMs5RQW6AfIYm+8A4dJU/cT7Rj5FpXYVhPHQ350v1WNJvMEw4pUuLklbqLwpJKbOwsq63F5RoDIN+NhW458SdL/xCior+6RfNPCY/ALuXx9oFuaZRWLhr4W05VtcJAF04YKbijIYV5ff8VjZXfY4CwkpRD5q97xwzQzW
+X-OriginatorOrg: wiwynn.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2025 03:40:38.1893
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1137cf1b-ddbe-46e8-4352-08ddf4d2ce6c
+X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG1PEPF000082E2.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR04MB5716
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE2MDAzNSBTYWx0ZWRfXxTZKDz/AxB5X
+ Jejs1gzB1iYZJxH02FUdBGkMkeUSFx+1iNoKvI/ePXyCTkoQxJmWcQCYv9PgiVJZ9iyqoKnsQcF
+ NbhZvmP7TO0WAf7BdWNiXc3LqcIJtvZ7jbe8tRgJ+XnpwYnL69KKKSwedZxZoaoYQ4puyJrKlZw
+ gldBjs1QJ6WjJZ0T75ytsgSbTamqhk3o+a8SJzuYCROQ30NCgwmVqomAaN0NjeMxVtIvP5kefAT
+ VyMVhcMYsYeUPJs7egj5Q2Y8iEi7ZCYxpljvr00n0Jgum4TWj2ZwBl6PBnHWOM1XRBwWrmNJxDU
+ nvbZzKsuC90JlF9DwdCGtW4ssuor0WmLmKKGtT8EpUpRbwb0XM3W5URE30octQ=
+X-Proofpoint-GUID: P060C4-CHIrNVw0ibR-lPzXGu4ofw6mA
+X-Authority-Analysis: v=2.4 cv=KORaDEFo c=1 sm=1 tr=0 ts=68c8dc40 cx=c_pps
+ a=h8E/4LCcHWFDFiW/Oqp/PQ==:117 a=6rDDh2uRNVCE5HFPCIqeAA==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=yJojWOMRYYMA:10 a=4AL28aEVfeMA:10
+ a=cPYzWk29AAAA:8 a=EWjN2FjsdnYFZB9OOiMA:9 a=oSR2DF9YFqZEN4IGatwP:22
+X-Proofpoint-ORIG-GUID: P060C4-CHIrNVw0ibR-lPzXGu4ofw6mA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-16_01,2025-09-12_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 clxscore=1011 impostorscore=0 suspectscore=0 adultscore=0
+ spamscore=0 malwarescore=0 bulkscore=0 phishscore=0 classifier=typeunknown
+ authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.22.0-2507300000 definitions=firstrun
 
+Reserve a ramoops memory region in the Yosemite4 device tree so that
+kernel panic logs can be preserved across reboots. This helps with
+post-mortem debugging and crash analysis.
 
+Signed-off-by: Zane Li <zane_li@wiwynn.com>
+---
+ .../dts/aspeed/aspeed-bmc-facebook-yosemite4.dts   | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-On 9/4/25 18:24, Kees Cook wrote:
-> Implement RISC-V-specific KCFI backend.
-> 
-> - Function preamble generation using .word directives for type ID storage
->    at offset from function entry point (no alignment NOPs needed due to
->    fix 4-byte instruction size).
-> 
-> - Scratch register allocation using t1/t2 (x6/x7) following RISC-V
->    procedure call standard for temporary registers.
-> 
-> - Integration with .kcfi_traps section for debugger/runtime metadata
->    (like x86_64).
-> 
-> Assembly Code Pattern for RISC-V:
->    lw      t1, -4(target_reg)         ; Load actual type ID from preamble
->    lui     t2, %hi(expected_type)     ; Load expected type (upper 20 bits)
->    addiw   t2, t2, %lo(expected_type) ; Add lower 12 bits (sign-extended)
->    beq     t1, t2, .Lkcfi_call        ; Branch if types match
->    .Lkcfi_trap: ebreak                ; Environment break trap on mismatch
->    .Lkcfi_call: jalr/jr target_reg    ; Execute validated indirect transfer
-> 
-> Build and run tested with Linux kernel ARCH=riscv.
-> 
-> gcc/ChangeLog:
-> 
-> 	config/riscv/riscv-protos.h: Declare KCFI helpers.
-> 	config/riscv/riscv.cc (riscv_maybe_wrap_call_with_kcfi): New
-> 	function, to wrap calls.
-> 	(riscv_maybe_wrap_call_value_with_kcfi): New function, to
-> 	wrap calls with return values.
-> 	(riscv_output_kcfi_insn): New function to emit KCFI assembly.
-> 	config/riscv/riscv.md: Add KCFI RTL patterns and hook expansion.
-> 	doc/invoke.texi: Document riscv nuances.
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->   gcc/config/riscv/riscv-protos.h |   3 +
->   gcc/config/riscv/riscv.cc       | 147 ++++++++++++++++++++++++++++++++
->   gcc/config/riscv/riscv.md       |  74 ++++++++++++++--
->   gcc/doc/invoke.texi             |  13 +++
->   4 files changed, 231 insertions(+), 6 deletions(-)
-> 
-> diff --git a/gcc/config/riscv/riscv-protos.h b/gcc/config/riscv/riscv-protos.h
-> index 2d60a0ad44b3..0e916fbdde13 100644
-> --- a/gcc/config/riscv/riscv-protos.h
-> +++ b/gcc/config/riscv/riscv-protos.h
-> @@ -126,6 +126,9 @@ extern bool riscv_split_64bit_move_p (rtx, rtx);
->   extern void riscv_split_doubleword_move (rtx, rtx);
->   extern const char *riscv_output_move (rtx, rtx);
->   extern const char *riscv_output_return ();
-> +extern rtx riscv_maybe_wrap_call_with_kcfi (rtx, rtx);
-> +extern rtx riscv_maybe_wrap_call_value_with_kcfi (rtx, rtx);
-> +extern const char *riscv_output_kcfi_insn (rtx_insn *, rtx *);
->   extern void riscv_declare_function_name (FILE *, const char *, tree);
->   extern void riscv_declare_function_size (FILE *, const char *, tree);
->   extern void riscv_asm_output_alias (FILE *, const tree, const tree);
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
+index aae789854c52..4ec1abae1175 100644
+--- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
+@@ -49,6 +49,20 @@ memory@80000000 {
+ 		reg = <0x80000000 0x80000000>;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		ramoops@b8dfa000 {
++			compatible = "ramoops";
++			reg = <0xb8dfa000 0x6000>;
++			record-size = <0x2000>;
++			console-size = <0x2000>;
++			pmsg-size = <0x2000>;
++			max-reason = <1>;
++		};
++	};
++
+ 	iio-hwmon {
+ 		compatible = "iio-hwmon";
+ 		io-channels = <&adc0 0>, <&adc0 1>, <&adc0 2>, <&adc0 3>,
+-- 
+2.25.1
 
-> @@ -11346,6 +11347,149 @@ riscv_convert_vector_chunks (struct gcc_options *opts)
->       return 1;
->   }
->   
-> +/* Apply KCFI wrapping to call pattern if needed.  */
-> +rtx
-> +riscv_maybe_wrap_call_with_kcfi (rtx pat, rtx addr)
-So our coding standards require a bit more for that function comment. 
-What are PAT and ADDR and how are they used?
-
-
-
-> +}
-> +
-> +/* Apply KCFI wrapping to call_value pattern if needed.  */
-> +rtx
-> +riscv_maybe_wrap_call_value_with_kcfi (rtx pat, rtx addr)
-Similarly here.
-
-
-> +
-> +/* Output the assembly for a KCFI checked call instruction.  */
-> +const char *
-> +riscv_output_kcfi_insn (rtx_insn *insn, rtx *operands)
-And here.
-
-
-> +{
-> +  /* Target register.  */
-> +  rtx target_reg = operands[0];
-> +  gcc_assert (REG_P (target_reg));
-> +
-> +  /* Get KCFI type ID.  */
-> +  uint32_t expected_type = (uint32_t) INTVAL (operands[3]);
-Do we know operands[3] is a CONST_INT?
-
-> +
-> +  /* Calculate typeid offset from call target.  */
-> +  HOST_WIDE_INT offset = -(4 + kcfi_patchable_entry_prefix_nops);
-> +
-> +  /* Choose scratch registers that don't conflict with target.  */
-> +  unsigned temp1_regnum = T1_REGNUM;
-> +  unsigned temp2_regnum = T2_REGNUM;
-ISTM that this will need some kidn of adjustment if someone were to 
-compile with -ffixed-reg.  Maybe all we really need is a sorry() so that 
-if someone were to try to fix the temporary registers they'd get a loud 
-complaint from teh compiler.
-
-
-> +
-> +  /* Load actual type from memory at offset.  */
-> +  temp_operands[0] = gen_rtx_REG (SImode, temp1_regnum);
-> +  temp_operands[1] = gen_rtx_MEM (SImode,
-> +                      gen_rtx_PLUS (DImode, target_reg,
-> +                                   GEN_INT (offset)));
-> +  output_asm_insn ("lw\t%0, %1", temp_operands);
-Rather than using DImode for the PLUS, shouldn't it instead use Pmode so 
-that it at least tries to work on rv32?  Or is this stuff somehow 
-defined as only working for rv64?
-
-
-
-> +
-> +  /* Execute the indirect call.  */
-> +  if (SIBLING_CALL_P (insn))
-> +    {
-> +      /* Tail call uses x0 (zero register) to avoid saving return address.  */
-> +      temp_operands[0] = gen_rtx_REG (DImode, 0);  /* x0 */
-> +      temp_operands[1] = target_reg;  /* target register */
-> +      temp_operands[2] = const0_rtx;
-> +      output_asm_insn ("jalr\t%0, %1, %2", temp_operands);
-> +    }
-> +  else
-> +    {
-> +      /* Regular call uses x1 (return address register).  */
-> +      temp_operands[0] = gen_rtx_REG (DImode, RETURN_ADDR_REGNUM);  /* x1 */
-> +      temp_operands[1] = target_reg;  /* target register */
-> +      temp_operands[2] = const0_rtx;
-> +      output_asm_insn ("jalr\t%0, %1, %2", temp_operands);
-> +    }
-More cases where we probably should be using Pmode.
-
-We generally prefer to not generate assembly code like you've done, but 
-instead prefer to generate actual RTL.  Is there some reason why you 
-decided to use output_asm_insn rather than generating RTL and letting 
-usual mechanisms for generating assembly code kick in?
-
-
->     rtx target = riscv_legitimize_call_address (XEXP (operands[0], 0));
-> -  emit_call_insn (gen_sibcall_internal (target, operands[1], operands[2]));
-> +  rtx pat = gen_sibcall_internal (target, operands[1], operands[2]);
-> +  pat = riscv_maybe_wrap_call_with_kcfi (pat, target);
-> +  emit_call_insn (pat);
->     DONE;
->   })
->   
-> +;; KCFI sibling call - matches KCFI wrapper RTL
-> +(define_insn "*kcfi_sibcall_insn"
-> +  [(kcfi (call (mem:SI (match_operand:DI 0 "call_insn_operand" "l"))
-> +               (match_operand 1 ""))
-> +         (match_operand 3 "const_int_operand"))
-> +   (use (unspec:SI [(match_operand 2 "const_int_operand")] UNSPEC_CALLEE_CC))]
-> +  "SIBLING_CALL_P (insn)"
-I think the DI for the memory operand should probably be :P instead so 
-that we're not so tied to rv64.
-
-> +;; KCFI sibling call with return value - matches KCFI wrapper RTL
-> +(define_insn "*kcfi_sibcall_value_insn"
-> +  [(set (match_operand 0 "")
-> +	(kcfi (call (mem:SI (match_operand:DI 1 "call_insn_operand" "l"))
-> +		    (match_operand 2 ""))
-> +	      (match_operand 4 "const_int_operand")))
-> +   (use (unspec:SI [(match_operand 3 "const_int_operand")] UNSPEC_CALLEE_CC))]
-> +  "SIBLING_CALL_P (insn)"
-> +{
-> +  return riscv_output_kcfi_insn (insn, &operands[1]);
-> +}
-> +  [(set_attr "type" "call")
-> +   (set_attr "length" "24")])
-Similarly for this pattern.
-
-
-
->   
-> +;; KCFI indirect call - matches KCFI wrapper RTL
-> +(define_insn "*kcfi_call_internal"
-> +  [(kcfi (call (mem:SI (match_operand:DI 0 "call_insn_operand" "l"))
-> +               (match_operand 1 "" ""))
-> +         (match_operand 3 "const_int_operand"))
-> +   (use (unspec:SI [(match_operand 2 "const_int_operand")] UNSPEC_CALLEE_CC))
-> +   (clobber (reg:SI RETURN_ADDR_REGNUM))]
-> +  "!SIBLING_CALL_P (insn)"
-> +{
-> +  return riscv_output_kcfi_insn (insn, operands);
-> +}
-> +  [(set_attr "type" "call")
-> +   (set_attr "length" "24")])
-And this one.
-
-
->   
-> +;; KCFI call with return value - matches KCFI wrapper RTL
-> +(define_insn "*kcfi_call_value_insn"
-> +  [(set (match_operand 0 "" "")
-> +	(kcfi (call (mem:SI (match_operand:DI 1 "call_insn_operand" "l"))
-> +		    (match_operand 2 "" ""))
-> +	      (match_operand 4 "const_int_operand")))
-> +   (use (unspec:SI [(match_operand 3 "const_int_operand")] UNSPEC_CALLEE_CC))
-> +   (clobber (reg:SI RETURN_ADDR_REGNUM))]
-> +  "!SIBLING_CALL_P (insn)"
-> +{
-> +  return riscv_output_kcfi_insn (insn, &operands[1]);
-> +}
-> +  [(set_attr "type" "call")
-> +   (set_attr "length" "24")])
-THis one too.
-
-
-64).
->   
-> +On RISC-V, KCFI type identifiers are emitted as a @code{.word ID}
-> +directive (a 32-bit constant) before the function entry, similar to AArch64.
-> +RISC-V's natural 4-byte instruction alignment eliminates the need for
-> +additional padding NOPs.  When used with @option{-fpatchable-function-entry},
-> +the type identifier is placed before any patchable NOPs. 
-Note that many designs implement the "C" extension and as a result only 
-have a 2 byte alignment for instructions.
-
-
-Jeff
