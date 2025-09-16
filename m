@@ -1,513 +1,394 @@
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010005.outbound.protection.outlook.com [52.101.85.5])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6531BD9CE;
-	Tue, 16 Sep 2025 06:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.5
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758004640; cv=fail; b=gaJvVjO7VJe+R6pUtKVXWV2mS86I0m84vmrkYRtaKvF2aRWRWN4z0Lprs5YdcaC8jxG2Eh+fwd2j1t1bdKhrW9bPbByIuWoXrbA8vSgZidFYn40iYeXSVBlw3ShwBuCYjZOcrGahTUDOMRbljGHYAtY+Nkd6rFjqLP8m1wYNBiQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758004640; c=relaxed/simple;
-	bh=XisTl8iWjeXeLUD655cfZDp4b2ItGnr4ikLadNmswE0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=iWYjU6niZMFe4P2WVL/ilLH/9LHNCeEEhmnPBte/n0L/kefps5Jhf8r8yO5fnrnKBPS8/+SbPPwvrQ4y2gXQQB0OtR4kjxjixzS0XdPTG3JXhe7D5FkRJn5/CpGNmAPYlqUcZTkmBKtcjV8aTVKNUqvrr/kYARIcwejjqbj7Ki4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NYvaKLwL; arc=fail smtp.client-ip=52.101.85.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DF41C862F
+	for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 07:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758008984; cv=none; b=kZz8JbKeuI9MJduhjJLXgxz2sGxPW3kaiEYKup9plZ0mAInKT4TxkWT5uko6eTWEAl/3qzdsUbY7AAJEa2QA5U/vCSb0lvnvPxoJquJWuA136iw3weG5a54BVnoGZaxmdsJxf/XyqQG5i+yrt63f9jSwABXm3g3XOM0Lx9G1Czo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758008984; c=relaxed/simple;
+	bh=W+Be6Ztlvx3XJs0uODHFsJYtIs4U4XmxqawnLuYcaNY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X9Os5fIkDfjWIonNxiCmssl9x1DXC80/i2KabjO1qH7rK9eRFLxmIJ6n0bbbYdrG8Mt6wdNS3bUbzcYDIwDyWr6IliTdArDlxFm0lZoiepj8+KcSHiwGn4My/86oIoyirDvPK5zvjJ0CYXMTnEUMoEpnprAoPSOA66n2Ryk1tiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=I7buFBUL; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NYvaKLwL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RKKtpHK2VVlHnpSG3OilmabLmr0JuXibatDh081kRSm1i6Om1H7/IMnHhKxr2aWciwYNnL+M8Vt4kehB358vxW4FXRy1WNBWDpFllpQuv4DWorBPsufspEbTm1027XPIvHec42aM+5K062jMi1XUG0Q0cEJXeh+fAsGa6O/qJw68M+h5/ZXnmeEzTqLCHajvMmlIwTNJqlsLkO3V4Q3DAlDOeWElMFLh5eSU0XU/nOuuPVoaEnoQGveL/6YtIswjHIb5hijsr02wbcx+E224rnC941042tx4qjPSTk9C8zYGB+2/wr10P3RDyyK2pUVk8olxFOpu45VppHqZ+E4n7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mWPs40D8/nc6ZYMTzVYGjThnRrRZLMTWgFwZ3Xzu470=;
- b=CyucJ8XdjP9TT2gncOPQ03PmFc9N/PB3K3d/8JfL59K25OjpAVvHNCpYCht2fKEomLM2mcQOq2A6j1SGSuExXUJRgFqLa7ThnJ0/t6zGcjR+Wb1rbv7zn1tZOt2pOPTETYOEc4PzLB4TEU5nfA06+ljeNo4SG/W90mPu9rUnA4oLYkqZrIQw7FdrjYd4PZwJtyblEVH/YoqR0pCs7Nz3qsEajX9G4XCeT7raQnVjPKjk9xTAJKckxkPuBLvaM0U/zyhmlVIwg6PKAMwvijoTD/HUX8turMDdK/rfZrJagIbAMQ1N7kMwcIpvgZJVrtzLUVe7Lcvc1uB2N24DmbAvTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mWPs40D8/nc6ZYMTzVYGjThnRrRZLMTWgFwZ3Xzu470=;
- b=NYvaKLwLxjBYqzGTw/uBMj/vSSyUtdVs8ZBkmViNu1Rs+3VrbtymuX82MV8QAXl7j7VxJIECI2vMy4ul1gJrvqTD+iSFCrC+dNx09riddniTYK9UZeDJBNtmEn3LrsnG9I++7EOZ11sOsg9/zruuazgufWRQ2uVVsZze7wnMLhc=
-Received: from DM4PR12MB6109.namprd12.prod.outlook.com (2603:10b6:8:ae::11) by
- CH3PR12MB8533.namprd12.prod.outlook.com (2603:10b6:610:159::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.22; Tue, 16 Sep
- 2025 06:37:08 +0000
-Received: from DM4PR12MB6109.namprd12.prod.outlook.com
- ([fe80::680c:3105:babe:b7e1]) by DM4PR12MB6109.namprd12.prod.outlook.com
- ([fe80::680c:3105:babe:b7e1%4]) with mapi id 15.20.9115.018; Tue, 16 Sep 2025
- 06:37:08 +0000
-From: "Guntupalli, Manikanta" <manikanta.guntupalli@amd.com>
-To: Frank Li <Frank.li@nxp.com>
-CC: "git (AMD-Xilinx)" <git@amd.com>, "Simek, Michal" <michal.simek@amd.com>,
-	"alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"kees@kernel.org" <kees@kernel.org>, "gustavoars@kernel.org"
-	<gustavoars@kernel.org>, "jarkko.nikula@linux.intel.com"
-	<jarkko.nikula@linux.intel.com>, "linux-i3c@lists.infradead.org"
-	<linux-i3c@lists.infradead.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>, "Pandey, Radhey Shyam"
-	<radhey.shyam.pandey@amd.com>, "Goud, Srinivas" <srinivas.goud@amd.com>,
-	"Datta, Shubhrajyoti" <shubhrajyoti.datta@amd.com>, "manion05gk@gmail.com"
-	<manion05gk@gmail.com>
-Subject: RE: [PATCH V6 2/2] i3c: master: Add AMD I3C bus controller driver
-Thread-Topic: [PATCH V6 2/2] i3c: master: Add AMD I3C bus controller driver
-Thread-Index:
- AQHcIkZvn4aTq4cirkSmmfELS1IUxLSMotAAgADGrwCAALgFgIAA6baQgABff+CABfhCYA==
-Date: Tue, 16 Sep 2025 06:37:08 +0000
-Message-ID:
- <DM4PR12MB6109842EA1FFBD183C57AA8E8C14A@DM4PR12MB6109.namprd12.prod.outlook.com>
-References: <20250910112954.553353-1-manikanta.guntupalli@amd.com>
- <20250910112954.553353-3-manikanta.guntupalli@amd.com>
- <aMGtdFxlXRanIAuM@lizhi-Precision-Tower-5810>
- <DM4PR12MB6109FB1956E8AC4979DFE85A8C09A@DM4PR12MB6109.namprd12.prod.outlook.com>
- <aMLufaWnrhPxVyxm@lizhi-Precision-Tower-5810>
- <DM4PR12MB61093B9BB9B3EF1D9F6B499E8C08A@DM4PR12MB6109.namprd12.prod.outlook.com>
- <DM4PR12MB61099BA795FD6DA057DD08E58C08A@DM4PR12MB6109.namprd12.prod.outlook.com>
-In-Reply-To:
- <DM4PR12MB61099BA795FD6DA057DD08E58C08A@DM4PR12MB6109.namprd12.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Enabled=True;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SetDate=2025-09-12T05:42:03.0000000Z;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Name=Open
- Source;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_ContentBits=3;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Method=Privileged
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM4PR12MB6109:EE_|CH3PR12MB8533:EE_
-x-ms-office365-filtering-correlation-id: 709d9046-bd8b-4514-3f62-08ddf4eb7599
-x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700021;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?+Xt8S/8vGo5Tc1OdcWIYHfXFajXBLv4T3cABKQVk2bt8X0QH8Y7XveLun7Nl?=
- =?us-ascii?Q?9Vy9webLiJH0vuGAe9q/t1XQ/vwt9G2u1kUvYMJkQ/rkwBMYdBuaQfDNPXSy?=
- =?us-ascii?Q?8grTZZkM+sZywM+jWHSn3g+8AgvpAhDXJoaTRpMvbgMgcyTBgJYxvNZLMZBY?=
- =?us-ascii?Q?dObsHg/YPgH161sbrUQWOiR4VPGcgmXqa92FLdU8+P7REeVZ381Qn7HlhgS+?=
- =?us-ascii?Q?aNzeDWzNBOkgZhhRscmkT6lxSl1nXy7F1/yXxumoUDVXwSphU4jF8SKYqeIO?=
- =?us-ascii?Q?w+GZhVj6xjBugRBqG/rdottDcGUl7Cq8kShE8qx4LlW+o8aUISk1lLCE3i66?=
- =?us-ascii?Q?lYdEuY5wR9jGYQkyZFxXZP9ipIH3f760ybwJu0nAva/E3dl6Ofx5GpR3KbRN?=
- =?us-ascii?Q?rL9bCuQvlrUksPpxVVEhCFVwW8ODSrZHcsg2dYYRqLKCGeZbCKRnrka2d/d6?=
- =?us-ascii?Q?jRj3bXRBY/s2PU8nPN7l0Hb+GHNCPvcr2v9tVrd9eY8jZI78EaZPovxv+ljH?=
- =?us-ascii?Q?9P1peEx9/maHq/TeJlvbkuk1iOqmIXJQQHx2PEJEtT/DRrjwwXjeePQIf41P?=
- =?us-ascii?Q?8NTrX0cUwo/fRpCF2sZ+zvhae3f9hAWnh0a7EQnA4sCAYpnOBen6J8GMmJ45?=
- =?us-ascii?Q?kqI+Sm5kI3c5ThIfqb0kI4TmOSxiuUlPMyO1+CLhdTLfr9zykiDM7jUwPdlc?=
- =?us-ascii?Q?T33QBSUnM0DKZvoaS9LZ2vXYoRRiyYfv7/G4G9xbBBU6KHj3TqaMHBiPRdQu?=
- =?us-ascii?Q?kxcZMy8L1cMx4huwH87PSmck5HXDM/EqgBFegDsSZanCoWP8TH3Mi8AWjs1K?=
- =?us-ascii?Q?SLt9hifBlVzcYlKgMe2PnEzHSV2WXxRYQz1MChKjd/6DZD5JF7+U1aaKQ9tx?=
- =?us-ascii?Q?sVL4XvNUJW0r4T1bSZB4G2UwLCwvQlF3ZRIZQyWQZALFY+ktDnf6mR/ZU0XO?=
- =?us-ascii?Q?8WAC8PrtMlOwBnp1fGnmb737NrB6Ci2H+70zAtm6JCW0bJEw8E5BfMi/Nn3y?=
- =?us-ascii?Q?1itsUUo/w+XT2oB+n68OcCeL3bCgc4j7S9KgenHpXggj+Ajs4xMcLdtsV2if?=
- =?us-ascii?Q?oTSbi+nRZcc0CF8Bec7+sRi2PXOgkJkNtxTl/rph3Au1HeYPk/cfvWe2/jBn?=
- =?us-ascii?Q?rRFqGH44cN7P0yx0MnIs6eE3dHAg2fOZC3M7/T3PHCbuTTMkUdKroMm/8Xyg?=
- =?us-ascii?Q?IV9zxIVLoxaTeXRwJvKsBEPU/aL577OIHvlLQkTaYCtZBZwSq7TjJBPCxuKk?=
- =?us-ascii?Q?62ZfbU0dh3TzzpV+o0RTTPFgqQAkH3sxfvh8PQYPA/TfXjzkIaNgsGM4DXDZ?=
- =?us-ascii?Q?mGB+GDmnNmJb+CvXTI40/hfWIkGnsXY4nG86WvEJGLDdWIjiP2ObumEsELiP?=
- =?us-ascii?Q?6Zx4hfmFm3Jl1f7s+1r0JCZ/4NPELcx4qhFeMHQ8MxkVznwAmnEo1OR6dYmx?=
- =?us-ascii?Q?W4XXgFqNP5U=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?TRLAmoRm676uJniV/wQ5sU07evEW6a3KD2oP3meTCDctBE4wAZxJXafF4oMf?=
- =?us-ascii?Q?lE0y8xQMNJ+NfMGjtv/fTprFB+8CbwOoDSG+XE82dhAs0d6WW9hBME9eOLka?=
- =?us-ascii?Q?mB8rsWSf9ypoXS5Y1RntS9qGxaIrfRU1qQUnOvNHI92e6wNyrkCqP4oWrv8f?=
- =?us-ascii?Q?86rFejObczv1GAAE3T4REVxTRTU/4XZCVn+5Vt6KDhTRiJA7DkeMBXsKzaUH?=
- =?us-ascii?Q?QWHO6d9vRIodqrerDiwk1MpDFLxz99ABrfBc7l0y/GNDCMcUZo+F7goGZAJE?=
- =?us-ascii?Q?srBw08/3SBzCrQm4sMVUbjI6p2yoi/GRIZdYLlq9TU8+PkNAoDOTdiSzWM2e?=
- =?us-ascii?Q?oqUFEncW6ti9Jj9rR9xj0NXHFIvL1RLRnBmABhD/1w9waeUsKduM+kIbdBaX?=
- =?us-ascii?Q?RVZ4nob6rAsH904d1Zxp2ILsoHCyx7OcN0zTECanCcXdz1D7n9DS5VibHbJq?=
- =?us-ascii?Q?bSfAU5eI7FHrZXpjVWvHygVkn1oTu+Okr61G55bDwUs7RxQYJo/E1xTLGGX/?=
- =?us-ascii?Q?9ZSnj0eVsH59n/3iG3gUOOgjJ9Qv9WQaGTGMwIpWPlOdu5juX/MvY+gBsTIU?=
- =?us-ascii?Q?kLDgEut5cddwLk1EpkUBDOZKQDDlBT/Ym47PA6lXg2ToZOC5i7IRUTAqhfor?=
- =?us-ascii?Q?vd6oEXhnaJVW0qzWoFfXlDQuosMkBlPM7tEiHP7IpRuUumdAHthDnq7gGDMm?=
- =?us-ascii?Q?aGxRRmAd5piXNQDrF1048NYC9cObCaCGeEOEsJNz2lfQzb1KpbwB06DfS2Mw?=
- =?us-ascii?Q?buC9BbZqO6rdyCpRP+0Fxihi/JgbGzCj2icjTocVs6PJwk+GdcqwytzfNhBy?=
- =?us-ascii?Q?TLta3tibVjjx1p8rGkhI+j0Yu4jIZL6WqIYXHGKZuhgpO+cP4QkMyU5+6ylB?=
- =?us-ascii?Q?ICSU+bXVtEt/SktJX5IQPNdyosscQfa6EDmJ78cFoWkAh4iXWaJLgDlIQoAc?=
- =?us-ascii?Q?tw8jfXGRYZmTGhg93GH/mYff1pDMrEByRa3d1xKj25nJnYfxqhAK2Mh2UzzV?=
- =?us-ascii?Q?ezhRuB/iloF6vGSGYbN44ik2wTCcS9rmvEUdzQMZzc9mVe2Eb9QhjE/KXmBF?=
- =?us-ascii?Q?b1WODhTtLg/llgOUGnW3Sc26sS3O/Etdm9hg12b1mspYQsoUKSPnbRtzY4jU?=
- =?us-ascii?Q?uIDPE0LCMmIRdvSgwyFJSYxmGJHneJ7gAmvr4Vwyn58G2mtG48rEAfZaJlIU?=
- =?us-ascii?Q?kEaqnohxn/l8Agz0pOPYq20/FT0f3whWV/EUIg56y8hRFz1OiIa2pY1WhaDK?=
- =?us-ascii?Q?zZaROC2QmxXZKXlREVHdl7aPF1Z2z1m+Tk1XwXfHqRJK0Wv4Vl3bHZ8+6ZLP?=
- =?us-ascii?Q?wB0Hle3ep0/7Jv8/o7GBAH/mZ35AsdZNGgNzWooPoBpPUfVDw+tTb23FI/k2?=
- =?us-ascii?Q?IxCTh+FV35M6TGNTaquVFbvlrgayIcn7gG/s2PDarzOxkAJoeMqpaXk4iJen?=
- =?us-ascii?Q?mhGl4zcBKGCYbjQpOvEhay66JmFIGiIdcefzBHARkNsBGwzXsUl+L8f7/ZjB?=
- =?us-ascii?Q?qAaCWkDruEJWrNkiNQQgnACkw+s4eDlgvsoQ69fLt6s6Q5ecmIZ7J5wgOW+V?=
- =?us-ascii?Q?SNlsAIY27dO2CCyBBe8=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="I7buFBUL"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58G3psLI018499
+	for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 07:49:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=RD+ta9axnzkY+q3MqSd9MuBT
+	TuCWROaoN5jRYETLo/A=; b=I7buFBULgQ7+QkaIef/7yOl7UguC+gMEx0Ij5vpV
+	Noh/LrnFwwOJtcf+6VAhT1I2Ma+zWJ5wCa2mlpeKUR45GfzCFteXlkm2SZijoNlq
+	nmpN88Nh4gzW4+KseiaXIgZYmKOFP7QJAJyy4YBIdDWvVD3b4gMUP6NcIhH5TXoW
+	u8JDn90KmJjpKdF1eb+qLmBr0anruvwnCxQyEuyb30dOVfuA+BPqS97An+Ircd6L
+	iFwMRSscsmJETgBzzHdRdoGQF/eZVKMRv4q9fomluj5u6+KlMX+Y4yF7uvFZsUoB
+	SGmhn5kVGk4FPdg40H93BFbupKJHiJKzzeKJql3Cod/NDQ==
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 496da9c90j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 07:49:41 +0000 (GMT)
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b4dfb96c99dso3407167a12.0
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 00:49:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758008979; x=1758613779;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RD+ta9axnzkY+q3MqSd9MuBTTuCWROaoN5jRYETLo/A=;
+        b=RZBMb0cXgn3ncUOnfbnj9GGd1e4nKMDW8RUODTF29lLP+6Hp+RVJ8Ei0vXzEBgE94s
+         8K9/aGjMWL8mu0Fq3d8QUl8k2eGkTNRVFG9ny+vhGNPs4nf+QD8xKAvTjP6zjhc7CPZs
+         87SJgx+lC4FmlBl4JQ2Enx3EPA8je2FJGYTWHQrODkdBWUpKFf1McMpmrqp2NdmrAUIi
+         5D1S1DipGq1Us+9AHSy0yVKabojKL5srBe8SGoAhy0gn2EIT0So8KHC1vbYRafD09ZO5
+         Gj9f71gCe/sxK50tdHYNq45it+z5CXqK5jIaDZ6pc3FCF//btFiP9nQLqRR5EHhG0Pam
+         7cug==
+X-Forwarded-Encrypted: i=1; AJvYcCXAzUpY4axMADvceH2Bj0PjnoR7IpL0ZmSF2weTw/t18BgVwJSPcWgD8RfkMHoSNPigQUIYpbiiD4KbIEd/c/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIWYeQc2gXRDLYuEG7X8Qy5iDQAo9ItPSJyeBEPwOzmpgVToUs
+	3tkAeVg9jIYlDG6HlckeJLEe5DauLRWffQuiBqRZKjHmFUw08P92dYwgilps2DytXSI7jSo3irq
+	nPCBgZKpVfJ41QTgpNJVdLMf2AER4pU9lrg2eKDgd+q+SaA2se44zdWojUq0EJLh4RbW1oao=
+X-Gm-Gg: ASbGnct0He975lbU9kVZLzLz4cmqBC3FZ7/TlJHXZS121dvHgIvnknn21o9Snu3vnER
+	nZR+xykdxlEWMfHoLBNtISd3VxIDXa8OB60S2wKDBY5rFHhi4HadrDa4kb+kptTqusySpGsJJo+
+	KLyteSyabc7dB6gEi+UrEVQ3rWJPM1d/8RE0jCkjjJJW042kFT3ztv9fZ1ZZo7HzoGDP8H+auO+
+	NefMHC54tdY7Kv1iR6ZQmvqGsNOjXtBF3rpXpvPWs9Zc2+J9oNkiOfQuE3wdTfOGzdfejdvkSlm
+	S7GNZ5HyT/ogJzndeyg45VJtfjvRfG0iQ1kts8aL8HHfOxolAkiqP/77hkN3VQD4MC4=
+X-Received: by 2002:a05:6a20:258a:b0:249:d4b0:5b2c with SMTP id adf61e73a8af0-2602aa8a4d8mr21370489637.14.1758008979102;
+        Tue, 16 Sep 2025 00:49:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEwdeHuLtMjTN5imzmMBdIsYKSIeC/AVXoqz2e7UTSBmIIvssIp5vod3+KGhF2DpoYErJqm1A==
+X-Received: by 2002:a05:6a20:258a:b0:249:d4b0:5b2c with SMTP id adf61e73a8af0-2602aa8a4d8mr21370433637.14.1758008978380;
+        Tue, 16 Sep 2025 00:49:38 -0700 (PDT)
+Received: from hu-mojha-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7762c225d2asm9332136b3a.65.2025.09.16.00.49.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Sep 2025 00:49:38 -0700 (PDT)
+Date: Tue, 16 Sep 2025 13:19:29 +0530
+From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+To: Eugen Hristev <eugen.hristev@linaro.org>
+Cc: kees@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, tglx@linutronix.de, andersson@kernel.org,
+        pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net,
+        david@redhat.com, mhocko@suse.com, tudor.ambarus@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+        jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC][PATCH v3 00/16] Introduce kmemdump
+Message-ID: <20250916074929.xiait75tbnbyjt4c@hu-mojha-hyd.qualcomm.com>
+References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6109.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 709d9046-bd8b-4514-3f62-08ddf4eb7599
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2025 06:37:08.3591
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KUBoYLgvPSwq9sEVZJoSwwMTJJrVWod5d9mJgmQW+Aep5kq0JSwNzLeldQgWTQwkh3KQL3zdpMuA9BxsrfKqQw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8533
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250912150855.2901211-1-eugen.hristev@linaro.org>
+X-Authority-Analysis: v=2.4 cv=M+5NKzws c=1 sm=1 tr=0 ts=68c91695 cx=c_pps
+ a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=kj9zAlcOel0A:10 a=yJojWOMRYYMA:10 a=Oh2cFVv5AAAA:8 a=VwQbUJbxAAAA:8
+ a=KKAkSRfTAAAA:8 a=vnREMb7VAAAA:8 a=COk6AnOGAAAA:8 a=bLXd17yOAAAA:8
+ a=1XWaLZrsAAAA:8 a=349LBZSuyFQcu3wEsZwA:9 a=CjuIK1q_8ugA:10
+ a=3WC7DwWrALyhR5TkjVHa:22 a=7KeoIwV6GZqOttXkcoxL:22 a=cvBusfyB2V15izCimMoJ:22
+ a=TjNXssC_j7lpFel5tvFf:22 a=XOuVWTVwyKTMzSnUH6Op:22
+X-Proofpoint-GUID: NOjQttKQ31JOfhMDWbs8BUUt0BuzNs4J
+X-Proofpoint-ORIG-GUID: NOjQttKQ31JOfhMDWbs8BUUt0BuzNs4J
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE1MDA1NiBTYWx0ZWRfXzaWsS1Zl6S7Y
+ ztWBlJF7/MXhsMr/iK9/sDtCC5WO8ezkuwUwcfONIjLDMcPS9VPwW2AnweCC+aBaHeBn6jiIoTM
+ atuufwfueYh38zDczWcIKjyyjcbe5aV0o+fgH2iEdFqO4UNo0W8KpZ0yMxFDQlNndPgNCs7VUb3
+ fdr8/OBkMBneYbDg1wGTFmP/bi1YL/LLdeT2w9qX+bKcTxT9Db+unQYWAfNjbZc0sir3o3yJWcM
+ 95BnuMGaSkIyQTqp6sVC9zZBSCYUw98e0EV3/kNIQZ2FZV4K6hT4kzXlT8DINeNtfByV2SwJc7N
+ OU3volX0irSTHnRD6a56MrqCGs2FWA/vzsFtUL652cXSyFWdD7Si/3TGRJN+CrW4d0d/87DdHm2
+ idERAAgc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-16_02,2025-09-12_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 spamscore=0 clxscore=1015 suspectscore=0 priorityscore=1501
+ phishscore=0 adultscore=0 bulkscore=0 impostorscore=0 classifier=typeunknown
+ authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2507300000 definitions=main-2509150056
 
-[Public]
+On Fri, Sep 12, 2025 at 06:08:39PM +0300, Eugen Hristev wrote:
+> kmemdump is a mechanism which allows the kernel to mark specific memory
+> areas for dumping or specific backend usage.
+> Once regions are marked, kmemdump keeps an internal list with the regions
+> and registers them in the backend.
+> Further, depending on the backend driver, these regions can be dumped using
+> firmware or different hardware block.
+> Regions being marked beforehand, when the system is up and running, there
+> is no need nor dependency on a panic handler, or a working kernel that can
+> dump the debug information.
+> The kmemdump approach works when pstore, kdump, or another mechanism do not.
+> Pstore relies on persistent storage, a dedicated RAM area or flash, which
+> has the disadvantage of having the memory reserved all the time, or another
+> specific non volatile memory. Some devices cannot keep the RAM contents on
+> reboot so ramoops does not work. Some devices do not allow kexec to run
+> another kernel to debug the crashed one.
+> For such devices, that have another mechanism to help debugging, like
+> firmware, kmemdump is a viable solution.
+> 
+> kmemdump can create a core image, similar with /proc/vmcore, with only
+> the registered regions included. This can be loaded into crash tool/gdb and
+> analyzed.
+> To have this working, specific information from the kernel is registered,
+> and this is done at kmemdump init time, no need for the kmemdump user to
+> do anything.
+> 
+> This version of the kmemdump patch series includes two backend drivers:
+> one is the Qualcomm Minidump backend, and the other one is the Debug Kinfo
+> backend for Android devices, reworked from this source here:
+> https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/drivers/android/debug_kinfo.c
+> written originally by Jone Chou <jonechou@google.com>
 
-Hi,
++Adding some pstore experts to bring this to their attention if this can
+be followed and if they find it useful.
 
-> -----Original Message-----
-> From: Guntupalli, Manikanta
-> Sent: Friday, September 12, 2025 4:56 PM
-> To: 'Frank Li' <Frank.li@nxp.com>
-> Cc: git (AMD-Xilinx) <git@amd.com>; Simek, Michal <michal.simek@amd.com>;
-> 'alexandre.belloni@bootlin.com' <alexandre.belloni@bootlin.com>;
-> 'robh@kernel.org' <robh@kernel.org>; 'krzk+dt@kernel.org' <krzk+dt@kernel=
-.org>;
-> 'conor+dt@kernel.org' <conor+dt@kernel.org>; 'kees@kernel.org'
-> <kees@kernel.org>; 'gustavoars@kernel.org' <gustavoars@kernel.org>;
-> 'jarkko.nikula@linux.intel.com' <jarkko.nikula@linux.intel.com>; 'linux-
-> i3c@lists.infradead.org' <linux-i3c@lists.infradead.org>;
-> 'devicetree@vger.kernel.org' <devicetree@vger.kernel.org>; 'linux-
-> kernel@vger.kernel.org' <linux-kernel@vger.kernel.org>; 'linux-
-> hardening@vger.kernel.org' <linux-hardening@vger.kernel.org>; Pandey, Rad=
-hey
-> Shyam <radhey.shyam.pandey@amd.com>; Goud, Srinivas
-> <srinivas.goud@amd.com>; Datta, Shubhrajyoti <shubhrajyoti.datta@amd.com>=
-;
-> 'manion05gk@gmail.com' <manion05gk@gmail.com>
-> Subject: RE: [PATCH V6 2/2] i3c: master: Add AMD I3C bus controller drive=
-r
->
-> Hi,
->
-> > -----Original Message-----
-> > From: Guntupalli, Manikanta
-> > Sent: Friday, September 12, 2025 11:25 AM
-> > To: Frank Li <Frank.li@nxp.com>
-> > Cc: git (AMD-Xilinx) <git@amd.com>; Simek, Michal
-> > <michal.simek@amd.com>; alexandre.belloni@bootlin.com;
-> > robh@kernel.org; krzk+dt@kernel.org;
-> > conor+dt@kernel.org; kees@kernel.org; gustavoars@kernel.org;
-> > jarkko.nikula@linux.intel.com; linux-i3c@lists.infradead.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > hardening@vger.kernel.org; Pandey, Radhey Shyam
-> > <radhey.shyam.pandey@amd.com>; Goud, Srinivas <srinivas.goud@amd.com>;
-> > Datta, Shubhrajyoti <shubhrajyoti.datta@amd.com>; manion05gk@gmail.com
-> > Subject: RE: [PATCH V6 2/2] i3c: master: Add AMD I3C bus controller
-> > driver
-> >
-> > Hi,
-> >
-> > > -----Original Message-----
-> > > From: Frank Li <Frank.li@nxp.com>
-> > > Sent: Thursday, September 11, 2025 9:15 PM
-> > > To: Guntupalli, Manikanta <manikanta.guntupalli@amd.com>
-> > > Cc: git (AMD-Xilinx) <git@amd.com>; Simek, Michal
-> > > <michal.simek@amd.com>; alexandre.belloni@bootlin.com;
-> > > robh@kernel.org; krzk+dt@kernel.org;
-> > > conor+dt@kernel.org; kees@kernel.org; gustavoars@kernel.org;
-> > > jarkko.nikula@linux.intel.com; linux-i3c@lists.infradead.org;
-> > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > > hardening@vger.kernel.org; Pandey, Radhey Shyam
-> > > <radhey.shyam.pandey@amd.com>; Goud, Srinivas
-> > > <srinivas.goud@amd.com>; Datta, Shubhrajyoti
-> > > <shubhrajyoti.datta@amd.com>; manion05gk@gmail.com
-> > > Subject: Re: [PATCH V6 2/2] i3c: master: Add AMD I3C bus controller
-> > > driver
-> > >
-> > > On Thu, Sep 11, 2025 at 06:07:59AM +0000, Guntupalli, Manikanta wrote=
-:
-> > > > [Public]
-> > > >
-> > > > Hi,
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: Frank Li <Frank.li@nxp.com>
-> > > > > Sent: Wednesday, September 10, 2025 10:25 PM
-> > > > > To: Guntupalli, Manikanta <manikanta.guntupalli@amd.com>
-> > > > > Cc: git (AMD-Xilinx) <git@amd.com>; Simek, Michal
-> > > > > <michal.simek@amd.com>; alexandre.belloni@bootlin.com;
-> > > > > robh@kernel.org; krzk+dt@kernel.org;
-> > > > > conor+dt@kernel.org; kees@kernel.org; gustavoars@kernel.org;
-> > > > > jarkko.nikula@linux.intel.com; linux-i3c@lists.infradead.org;
-> > > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > > > > hardening@vger.kernel.org; Pandey, Radhey Shyam
-> > > > > <radhey.shyam.pandey@amd.com>; Goud, Srinivas
-> > > > > <srinivas.goud@amd.com>; Datta, Shubhrajyoti
-> > > > > <shubhrajyoti.datta@amd.com>; manion05gk@gmail.com
-> > > > > Subject: Re: [PATCH V6 2/2] i3c: master: Add AMD I3C bus
-> > > > > controller driver
-> > > > >
-> > > > > On Wed, Sep 10, 2025 at 04:59:54PM +0530, Manikanta Guntupalli wr=
-ote:
-> > > > > > Add an I3C master driver and maintainers fragment for the AMD
-> > > > > > I3C bus controller.
-> > > > > >
-> > > > > > The driver currently supports the I3C bus operating in SDR i3c
-> > > > > > mode, with features including Dynamic Address Assignment,
-> > > > > > private data transfers, and CCC transfers in both broadcast
-> > > > > > and direct modes. It also supports operation in I2C mode.
-> > > > > >
-> > > > > > Signed-off-by: Manikanta Guntupalli
-> > > > > > <manikanta.guntupalli@amd.com>
-> > > > > > ---
-> > > > > > Changes for V2:
-> > > > > > Updated commit description.
-> > > > > > Added mixed mode support with clock configuration.
-> > > > > > Converted smaller functions into inline functions.
-> > > > > > Used FIELD_GET() in xi3c_get_response().
-> > > > > > Updated xi3c_master_rd_from_rx_fifo() to use cmd->rx_buf.
-> > > > > > Used parity8() for address parity calculation.
-> > > > > > Added guards for locks.
-> > > > > > Dropped num_targets and updated xi3c_master_do_daa().
-> > > > > > Used __free(kfree) in xi3c_master_send_bdcast_ccc_cmd().
-> > > > > > Dropped PM runtime support.
-> > > > > > Updated xi3c_master_read() and xi3c_master_write() with
-> > > > > > xi3c_is_resp_available() check.
-> > > > > > Created separate functions: xi3c_master_init() and xi3c_master_=
-reinit().
-> > > > > > Used xi3c_master_init() in bus initialization and
-> > > > > > xi3c_master_reinit() in error paths.
-> > > > > > Added DAA structure to xi3c_master structure.
-> > > > > >
-> > > > > > Changes for V3:
-> > > > > > Resolved merge conflicts.
-> > > > > >
-> > > > > > Changes for V4:
-> > > > > > Updated timeout macros.
-> > > > > > Removed type casting for xi3c_is_resp_available() macro.
-> > > > > > Used ioread32() and iowrite32() instead of readl() and
-> > > > > > writel() to keep consistency.
-> > > > > > Read XI3C_RESET_OFFSET reg before udelay().
-> > > > > > Removed xi3c_master_free_xfer() and directly used kfree().
-> > > > > > Skipped checking return value of i3c_master_add_i3c_dev_locked(=
-).
-> > > > > > Used devm_mutex_init() instead of mutex_init().
-> > > > > >
-> > > > > > Changes for V5:
-> > > > > > Used GENMASK_ULL for PID mask as it's 64bit mask.
-> > > > > >
-> > > > > > Changes for V6:
-> > > > > > Removed typecast for xi3c_getrevisionnumber(),
-> > > > > > xi3c_wrfifolevel(), and xi3c_rdfifolevel().
-> > > > > > Replaced dynamic allocation with a static variable for pid_bcr_=
-dcr.
-> > > > > > Fixed sparse warning in do_daa by typecasting the address
-> > > > > > parity value to u8.
-> > > > > > Fixed sparse warning in xi3c_master_bus_init by typecasting
-> > > > > > the pid value to u64 in info.pid calculation.
-> > > > > > ---
-> > > > > >  MAINTAINERS                         |    7 +
-> > > > > >  drivers/i3c/master/Kconfig          |   16 +
-> > > > > >  drivers/i3c/master/Makefile         |    1 +
-> > > > > >  drivers/i3c/master/amd-i3c-master.c | 1009
-> > > > > > +++++++++++++++++++++++++++
-> > > > > >  4 files changed, 1033 insertions(+)  create mode 100644
-> > > > > > drivers/i3c/master/amd-i3c-master.c
-> > > > > >
-> > > > > > diff --git a/MAINTAINERS b/MAINTAINERS index
-> > > > > > 1af81124bba3..ff603ce5e78d 100644
-> > > > > > --- a/MAINTAINERS
-> > > > > > +++ b/MAINTAINERS
-> > > > > > @@ -11693,6 +11693,13 @@ L: linux-i2c@vger.kernel.org
-> > > > > >  S: Maintained
-> > > > > >  F: drivers/i2c/i2c-stub.c
-> > > > > >
-> > > > > > +I3C DRIVER FOR AMD AXI I3C MASTER
-> > > > > > +M: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-> > > > > > +R: Michal Simek <michal.simek@amd.com>
-> > > > > > +S: Maintained
-> > > > > > +F: Documentation/devicetree/bindings/i3c/xlnx,axi-i3c.yaml
-> > > > > > +F: drivers/i3c/master/amd-i3c-master.c
-> > > > > > +
-> > > > > >  I3C DRIVER FOR ASPEED AST2600
-> > > > > >  M: Jeremy Kerr <jk@codeconstruct.com.au>
-> > > > > >  S: Maintained
-> > > > > > diff --git a/drivers/i3c/master/Kconfig
-> > > > > > b/drivers/i3c/master/Kconfig index 13df2944f2ec..4b884a678893
-> > > > > > 100644
-> > > > > > --- a/drivers/i3c/master/Kconfig
-> > > > > > +++ b/drivers/i3c/master/Kconfig
-> > > > > > @@ -1,4 +1,20 @@
-> > > > > >  # SPDX-License-Identifier: GPL-2.0-only
-> > > > > > +
-> > > > > > +config AMD_I3C_MASTER
-> > > > > > +   tristate "AMD I3C Master driver"
-> > > > > > +   depends on I3C
-> > > > > > +   depends on HAS_IOMEM
-> > > > > > +   help
-> > > > > > +     Support for AMD I3C Master Controller.
-> > > > > > +
-> > > > > > +     This driver allows communication with I3C devices using t=
-he AMD
-> > > > > > +     I3C master, currently supporting Standard Data Rate (SDR)=
- mode.
-> > > > > > +     Features include Dynamic Address Assignment, private tran=
-sfers,
-> > > > > > +     and CCC transfers in both broadcast and direct modes.
-> > > > > > +
-> > > > > > +     This driver can also be built as a module.  If so, the mo=
-dule
-> > > > > > +     will be called amd-i3c-master.
-> > > > > > +
-> > > > > >  config CDNS_I3C_MASTER
-> > > > > >     tristate "Cadence I3C master driver"
-> > > > > >     depends on HAS_IOMEM
-> > > > > > diff --git a/drivers/i3c/master/Makefile
-> > > > > > b/drivers/i3c/master/Makefile index aac74f3e3851..109bd48cb159
-> > > > > > 100644
-> > > > > > --- a/drivers/i3c/master/Makefile
-> > > > > > +++ b/drivers/i3c/master/Makefile
-> > > > > > @@ -1,4 +1,5 @@
-> > > > > >  # SPDX-License-Identifier: GPL-2.0-only
-> > > > > > +obj-$(CONFIG_AMD_I3C_MASTER)               +=3D amd-i3c-master=
-.o
-> > > > > >  obj-$(CONFIG_CDNS_I3C_MASTER)              +=3D i3c-master-cdn=
-s.o
-> > > > > >  obj-$(CONFIG_DW_I3C_MASTER)                +=3D dw-i3c-master.=
-o
-> > > > > >  obj-$(CONFIG_AST2600_I3C_MASTER)   +=3D ast2600-i3c-master.o
-> > > > > > diff --git a/drivers/i3c/master/amd-i3c-master.c
-> > > > > > b/drivers/i3c/master/amd-i3c-master.c
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..cd9d85a0be80
-> > > > > > --- /dev/null
-> > > > > > +++ b/drivers/i3c/master/amd-i3c-master.c
-> > > > > > @@ -0,0 +1,1009 @@
-> > > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > > +/*
-> > > > > > + * I3C master driver for the AMD I3C controller.
-> > > > > > + *
-> > > > > > + * Copyright (C) 2025, Advanced Micro Devices, Inc.
-> > > > > > + */
-> > > > > > +
-> > > > > ...
-> > > > > > +
-> > > > > > +/* timeout waiting for the controller finish transfers */
-> > > > > > +#define XI3C_XFER_TIMEOUT_MS                       10000
-> > > > > > +#define XI3C_XFER_TIMEOUT
-> > > > >       (msecs_to_jiffies(XI3C_XFER_TIMEOUT_MS))
-> > > > >
-> > > > > Do I missed your reply? I have not seen
-> > > > > https://lore.kernel.org/linux-i3c/aL7+Urm4NB9kwOwQ@lizhi-Precisi
-> > > > > on
-> > > > > -T
-> > > > > ower-5810/
-> > > > >
-> > > > > If you need define two macro for it. Need unit
-> > > > > XI3C_XFER_TIMEOUT_JIFFIES to avoid confuse.
-> > > > Sure, I'll update the macro name to XI3C_XFER_TIMEOUT_JIFFIES to
-> > > > avoid
-> > > confusion.
-> > > > >
-> > > > >
-> > > > > > +
-> > > > > > +#define xi3c_getrevisionnumber(master)                        =
-                     \
-> > > > > > +   (FIELD_GET(XI3C_REV_NUM_MASK,
-> > > > >       \
-> > > > > > +              ioread32((master)->membase +
-> > > > > > + XI3C_VERSION_OFFSET)))
-> > > > > > +
-> > > > >
-> > > > > ...
-> > > > >
-> > > > > > +static void xi3c_master_wr_to_tx_fifo(struct xi3c_master *mast=
-er,
-> > > > > > +                                 struct xi3c_cmd *cmd) {
-> > > > > > +   u8 *tx_buf =3D (u8 *)cmd->tx_buf;
-> > > > > > +   u32 data =3D 0;
-> > > > > > +   u16 len;
-> > > > > > +
-> > > > > > +   len =3D cmd->tx_len;
-> > > > > > +   if (len > 0) {
-> > > > > > +           len =3D (len >=3D XI3C_WORD_LEN) ? XI3C_WORD_LEN : =
-len;
-> > > > > > +           memcpy(&data, tx_buf, len);
-> > > > > > +           tx_buf +=3D len;
-> > > > > > +           cmd->tx_len -=3D len;
-> > > > > > +   }
-> > > > > > +   cmd->tx_buf =3D tx_buf;
-> > > > > > +
-> > > > > > +   /* Write the 32-bit value to the Tx FIFO */
-> > > > > > +   iowrite32be(data, master->membase + XI3C_WR_FIFO_OFFSET);
-> > > > > > + }
-> > > > >
-> > > > > i3c_writel(readl)_fifo() did similar things, why not use it?
-> > > > >
-> > > > > Did you miss my review comment or I missed your reply?
-> > > > You have missed my earlier reply on this.
-> > > > The helpers i3c_writel_fifo() and i3c_readl_fifo() rely on the
-> > > > CPU's native endianness, whereas in this case the FIFO should
-> > > > always be accessed in
-> > > big-endian format.
-> > > > Hence, we cannot use the common helpers directly.
-> > > >
-> > > > For reference, here's my previous reply:
-> > > >
-> > >
-> >
-> https://lore.kernel.org/all/DM4PR12MB6109F6D5D032723C675472448C0FA@DM4
-> > > > PR12MB6109.namprd12.prod.outlook.com/
-> > >
-> > > Sorry, can you improve i3c_writel(readl)_fifo() to support endianness=
-?
-> > > I think not only you have this kind problem in future.
-> > Sure, will add support for endianness.
-> To add support for endianness, we could not find a big-endian counterpart=
- to
-> writesl().
-> Please let me know if I missed any existing helper.
-Endianness support for i3c_writel_fifo() and i3c_readl_fifo() would
-require writesl_be() and readsl_be(), which are not currently available.
-Implementing them introduces additional dependencies, so we suggest
-handling endianness support in a follow-up patch series instead.
-Please advise.
+Is not a good idea to add pstore as one of the backend of kmemdump so that all
+the kmemdump captured data automatically flow in a separate record(section) in
+pstore(e.g.,ram) so that all user of pstore automatically benefit from kmemdump
+captured data and later kmemdump section from ramoops can be recovered from
+userspace in next boot and crash utility can be run on that.
 
-> > > >
-> > > > >
-> > > > > ...
-> > > > > > +
-> > > > > > +static const struct of_device_id xi3c_master_of_ids[] =3D {
-> > > > > > +   { .compatible =3D "xlnx,axi-i3c-1.0" },
-> > > > > > +   { },
-> > > > > > +};
-> > > > > > +
-> > > > > > +static struct platform_driver xi3c_master_driver =3D {
-> > > > > > +   .probe =3D xi3c_master_probe,
-> > > > > > +   .remove =3D xi3c_master_remove,
-> > > > > > +   .driver =3D {
-> > > > > > +           .name =3D "axi-i3c-master",
-> > > > > > +           .of_match_table =3D xi3c_master_of_ids,
-> > > > > > +   },
-> > > > > > +};
-> > > > > > +module_platform_driver(xi3c_master_driver);
-> > > > > > +
-> > > > > > +MODULE_AUTHOR("Manikanta Guntupalli
-> > > > > > +<manikanta.guntupalli@amd.com>"); MODULE_DESCRIPTION("AXI
-> I3C
-> > > > > > +master driver");
-> > > > > MODULE_LICENSE("GPL");
-> > > > > > --
-> > > > > > 2.34.1
-> > > > > >
-> > > >
-> >
->
+              kmemdump captured data
+                |
+       ---------------------
+       |                   |
+       V                   V
+   Vendors firmware      pstore(ram)
+    backend               backend
+    (minidump)
+
 
 Thanks,
-Manikanta.
+-Mukesh
+
+> 
+> *** History, motivation and available online resources ***
+> 
+> Initial version of kmemdump and discussion is available here:
+> https://lore.kernel.org/lkml/20250422113156.575971-1-eugen.hristev@linaro.org/
+> 
+> Kmemdump has been presented and discussed at Linaro Connect 2025,
+> including motivation, scope, usability and feasability.
+> Video of the recording is available here for anyone interested:
+> https://www.youtube.com/watch?v=r4gII7MX9zQ&list=PLKZSArYQptsODycGiE0XZdVovzAwYNwtK&index=14
+> 
+> Linaro blog on kmemdump can be found here:
+> https://www.linaro.org/blog/introduction-to-kmemdump/
+> 
+> The implementation is based on the initial Pstore/directly mapped zones
+> published as an RFC here:
+> https://lore.kernel.org/all/20250217101706.2104498-1-eugen.hristev@linaro.org/
+> 
+> The back-end implementation for qcom_minidump is based on the minidump
+> patch series and driver written by Mukesh Ojha, thanks:
+> https://lore.kernel.org/lkml/20240131110837.14218-1-quic_mojha@quicinc.com/
+> 
+> The RFC v2 version with .section creation and macro annotation kmemdump
+> is available here:
+> https://lore.kernel.org/all/20250724135512.518487-1-eugen.hristev@linaro.org/
+> 
+> *** How to use kmemdump with minidump backend on Qualcomm platform guide ***
+> 
+> Prerequisites:
+> Crash tool compiled with target=ARM64 and minor changes required for usual crash
+> mode (minimal mode works without the patch)
+> A patch can be applied from here https://p.calebs.dev/49a048
+> This patch will be eventually sent in a reworked way to crash tool.
+> 
+> Target kernel must be built with :
+> CONFIG_DEBUG_INFO_REDUCED=n ; this will have vmlinux include all the debugging
+> information needed for crash tool.
+> 
+> Also, the kernel requires these as well:
+> CONFIG_KMEMDUMP, CONFIG_KMEMDUMP_COREIMAGE, and the backend
+> CONFIG_KMEMDUMP_QCOM_MINIDUMP_BACKEND
+> 
+> Kernel arguments:
+> Kernel firmware must be set to mode 'mini' by kernel module parameter
+> like this : qcom_scm.download_mode=mini
+> 
+> After the kernel boots, and qcom_minidump module is loaded, everything is ready for
+> a possible crash.
+> 
+> Once the crash happens, the firmware will kick in and you will see on
+> the console the message saying Sahara init, etc, that the firmware is
+> waiting in download mode. (this is subject to firmware supporting this
+> mode, I am using sa8775p-ride board)
+> 
+> Example of log on the console:
+> "
+> [...]
+> B -   1096414 - usb: init start
+> B -   1100287 - usb: qusb_dci_platform , 0x19
+> B -   1105686 - usb: usb3phy: PRIM success: lane_A , 0x60
+> B -   1107455 - usb: usb2phy: PRIM success , 0x4
+> B -   1112670 - usb: dci, chgr_type_det_err
+> B -   1117154 - usb: ID:0x260, value: 0x4
+> B -   1121942 - usb: ID:0x108, value: 0x1d90
+> B -   1124992 - usb: timer_start , 0x4c4b40
+> B -   1129140 - usb: vbus_det_pm_unavail
+> B -   1133136 - usb: ID:0x252, value: 0x4
+> B -   1148874 - usb: SUPER , 0x900e
+> B -   1275510 - usb: SUPER , 0x900e
+> B -   1388970 - usb: ID:0x20d, value: 0x0
+> B -   1411113 - usb: ENUM success
+> B -   1411113 - Sahara Init
+> B -   1414285 - Sahara Open
+> "
+> 
+> Once the board is in download mode, you can use the qdl tool (I
+> personally use edl , have not tried qdl yet), to get all the regions as
+> separate files.
+> The tool from the host computer will list the regions in the order they
+> were downloaded.
+> 
+> Once you have all the files simply use `cat` to put them all together,
+> in the order of the indexes.
+> For my kernel config and setup, here is my cat command : (you can use a script
+> or something, I haven't done that so far):
+> 
+> `cat memory/md_KELF1.BIN memory/md_Kvmcorein2.BIN memory/md_Kconfig3.BIN \
+> memory/md_Kmemsect4.BIN memory/md_Ktotalram5.BIN memory/md_Kcpu_poss6.BIN \
+> memory/md_Kcpu_pres7.BIN memory/md_Kcpu_onli8.BIN memory/md_Kcpu_acti9.BIN \
+> memory/md_Kjiffies10.BIN memory/md_Klinux_ba11.BIN memory/md_Knr_threa12.BIN \
+> memory/md_Knr_irqs13.BIN memory/md_Ktainted_14.BIN memory/md_Ktaint_fl15.BIN \
+> memory/md_Kmem_sect16.BIN memory/md_Knode_dat17.BIN memory/md_Knode_sta18.BIN \
+> memory/md_K__per_cp19.BIN memory/md_Knr_swapf20.BIN memory/md_Kinit_uts21.BIN \
+> memory/md_Kprintk_r22.BIN memory/md_Kprintk_r23.BIN memory/md_Kprb24.BIN \
+> memory/md_Kprb_desc25.BIN memory/md_Kprb_info26.BIN memory/md_Kprb_data27.BIN \
+> memory/md_Krunqueue28.BIN memory/md_Khigh_mem29.BIN memory/md_Kinit_mm30.BIN \
+> memory/md_Kinit_mm_31.BIN memory/md_Kunknown32.BIN memory/md_Kunknown33.BIN \
+> memory/md_Kunknown34.BIN  memory/md_Kunknown35.BIN memory/md_Kunknown36.BIN \
+> memory/md_Kunknown37.BIN memory/md_Kunknown38.BIN memory/md_Kunknown39.BIN \
+> memory/md_Kunknown40.BIN memory/md_Kunknown41.BIN memory/md_Kunknown42.BIN \
+> memory/md_Kunknown43.BIN memory/md_Kunknown44.BIN memory/md_Kunknown45.BIN \
+> memory/md_Kunknown46.BIN memory/md_Kunknown49.BIN  memory/md_Kunknown50.BIN \
+> memory/md_Kunknown51.BIN > ~/minidump_image`
+> 
+> Once you have the resulted file, use `crash` tool to load it, like this:
+> `./crash --no_modules --no_panic --no_kmem_cache --zero_excluded vmlinux minidump_image`
+> 
+> There is also a --minimal mode for ./crash that would work without any patch applied
+> to crash tool, but you can't inspect symbols, etc.
+> 
+> Once you load crash you will see something like this :
+> 
+>       KERNEL: /home/eugen/linux-minidump/vmlinux  [TAINTED]
+>     DUMPFILE: /home/eugen/new
+>         CPUS: 8 [OFFLINE: 5]
+>         DATE: Thu Jan  1 02:00:00 EET 1970
+>       UPTIME: 00:00:22
+>        TASKS: 0
+>     NODENAME: qemuarm64
+>      RELEASE: 6.17.0-rc5-next-20250910-00020-g7dfa02aeae7e
+>      VERSION: #116 SMP PREEMPT Thu Sep 11 18:28:06 EEST 2025
+>      MACHINE: aarch64  (unknown Mhz)
+>       MEMORY: 34.2 GB
+>        PANIC: ""
+> crash> log
+> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd4b2]
+> [    0.000000] Linux version 6.17.0-rc5-next-20250910-00020-g7dfa02aeae7e (eugen@eugen-station) (aarch64-none-linux-gnu-gcc (Arm GNU Toolchain 13.3.Rel1 (Build arm-13.24)) 13.3.1 20240614, GNU ld (Arm GNU Toolchain 13.3.Rel1 (Build arm-13.24)) 2.42.0.20240614) #116 SMP PREEMPT Thu Sep 11 18:28:06 EEST 2025
+> 
+> 
+> *** Debug Kinfo backend driver ***
+> I don't have any device to actually test this. So I have not.
+> I hacked the driver to just use a kmalloc'ed area to save things instead
+> of the shared memory, and dumped everything there and checked whether it is identical
+> with what the downstream driver would have saved.
+> So this synthetic test passed and memories are identical.
+> Anyone who actually wants to test this, feel free to reply to the patch.
+> I have also written a simple DT binding for the driver.
+> 
+> Thanks for everyone reviewing and bringing ideas into the discussion.
+> 
+> Eugen
+> 
+> Changelog since the v2 of the RFC:
+> - V2 available here : https://lore.kernel.org/all/20250724135512.518487-1-eugen.hristev@linaro.org/
+> - Removed the .section as requested by David Hildenbrand.
+> - Moved all kmemdump registration(when possible) to vmcoreinfo.
+> - Because of this, some of the variables that I was registering had to be non-static
+> so I had to modify this as per David Hildenbrand suggestion.
+> - Fixed minor things in the Kinfo driver: one field was broken, fixed some
+> compiler warnings, fixed the copyright and remove some useless includes.
+> - Moved the whole kmemdump from drivers/debug into mm/ and Kconfigs into mm/Kconfig.debug
+> and it's now available in kernel hacking, as per Randy Dunlap review
+> - Reworked some of the Documentation as per review from Jon Corbet
+> 
+> 
+> Changelog since the v1 of the RFC:
+> - V1 available here: https://lore.kernel.org/lkml/20250422113156.575971-1-eugen.hristev@linaro.org/
+> - Reworked the whole minidump implementation based on suggestions from Thomas Gleixner.
+> This means new API, macros, new way to store the regions inside kmemdump
+> (ditched the IDR, moved to static allocation, have a static default backend, etc)
+> - Reworked qcom_minidump driver based on review from Bjorn Andersson
+> - Reworked printk log buffer registration based on review from Petr Mladek
+> 
+> I appologize if I missed any review comments. I know there is still lots of work
+> on this series and hope I will improve it more and more.
+> Patches are sent on top of next-20250910
+> 
+> Eugen Hristev (16):
+>   kmemdump: Introduce kmemdump
+>   Documentation: Add kmemdump
+>   kmemdump: Add coreimage ELF layer
+>   Documentation: kmemdump: Add section for coreimage ELF
+>   kernel/vmcore_info: Register dynamic information into Kmemdump
+>   kmemdump: Introduce qcom-minidump backend driver
+>   soc: qcom: smem: Add minidump device
+>   init/version: Add banner_len to save banner length
+>   genirq/irqdesc: Have nr_irqs as non-static
+>   panic: Have tainted_mask as non-static
+>   mm/swapfile: Have nr_swapfiles as non-static
+>   printk: Register information into Kmemdump
+>   sched: Add sched_get_runqueues_area
+>   kernel/vmcoreinfo: Register kmemdump core image information
+>   kmemdump: Add Kinfo backend driver
+>   dt-bindings: Add Google Kinfo
+> 
+>  Documentation/dev-tools/index.rst             |   1 +
+>  Documentation/dev-tools/kmemdump.rst          | 139 +++++++
+>  .../bindings/misc/google,kinfo.yaml           |  36 ++
+>  MAINTAINERS                                   |  19 +
+>  drivers/soc/qcom/smem.c                       |  10 +
+>  include/linux/kmemdump.h                      | 130 +++++++
+>  include/linux/printk.h                        |   1 +
+>  init/version-timestamp.c                      |   1 +
+>  init/version.c                                |   1 +
+>  kernel/irq/irqdesc.c                          |   2 +-
+>  kernel/panic.c                                |   2 +-
+>  kernel/printk/printk.c                        |  47 +++
+>  kernel/sched/core.c                           |  15 +
+>  kernel/sched/sched.h                          |   2 +
+>  kernel/vmcore_info.c                          | 149 ++++++++
+>  mm/Kconfig.debug                              |   2 +
+>  mm/Makefile                                   |   1 +
+>  mm/kmemdump/Kconfig.debug                     |  53 +++
+>  mm/kmemdump/Makefile                          |   6 +
+>  mm/kmemdump/kinfo.c                           | 293 +++++++++++++++
+>  mm/kmemdump/kmemdump.c                        | 234 ++++++++++++
+>  mm/kmemdump/kmemdump_coreimage.c              | 222 +++++++++++
+>  mm/kmemdump/qcom_minidump.c                   | 353 ++++++++++++++++++
+>  mm/swapfile.c                                 |   2 +-
+>  24 files changed, 1718 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/dev-tools/kmemdump.rst
+>  create mode 100644 Documentation/devicetree/bindings/misc/google,kinfo.yaml
+>  create mode 100644 include/linux/kmemdump.h
+>  create mode 100644 mm/kmemdump/Kconfig.debug
+>  create mode 100644 mm/kmemdump/Makefile
+>  create mode 100644 mm/kmemdump/kinfo.c
+>  create mode 100644 mm/kmemdump/kmemdump.c
+>  create mode 100644 mm/kmemdump/kmemdump_coreimage.c
+>  create mode 100644 mm/kmemdump/qcom_minidump.c
+> 
+> -- 
+> 2.43.0
+> 
+
+-- 
+-Mukesh Ojha
