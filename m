@@ -1,167 +1,75 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDA131BC9F;
-	Tue, 16 Sep 2025 20:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5285C279788;
+	Tue, 16 Sep 2025 21:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758054992; cv=none; b=j1qRxH6qwhWAKjdUh3HcQ+KF3SyX1ZzDLJb8n43qsFS8pzVdRfJkKayiiE5SCTvoo8ItXpNku9/Nlyfp9WeEtasQWX7AuKGdd6KFLjPM5wagI4ELGJSAeaIugHqzJTTg2qP9bfrFbfBO1Ajd7AR0vPyrudWp2uh049dTZRFoj2M=
+	t=1758057026; cv=none; b=MTtUU094xwRm2o62WM4w0pMI30YTd+d2Ryw0TClE/Piy+d7DXlT90abACJYG4880jZG/18AmZbqkMotznmhD708clAor1/zf5Bz7ZO6rXKvftqLSkwIsPqpTmg3hO/1rEOliJAm6ddJn+zPR9hCtrRwidNWceaXuaEzcek3Z950=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758054992; c=relaxed/simple;
-	bh=bvBuTVi6aDRmqQt6s8gCawcYt5/NLCH3CkL+959SCAk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TXk+Negwn1DDUq0LC3PAqSojlmJcx8DSfzVCEvyz5hJYs6bioGPOSi9Yoajyewp7NahB0gcEG1BpRT7YcH6H7b9pGs2MLMRTggsVYU8AYHxd0YbiaqlIGuVfgmSMFpooVC97GW05foSkSCU4t+QA6ec9VyRY2wKe0hdv8UYiNCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=QYC890Jq; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=5LVDcZRo; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1758057026; c=relaxed/simple;
+	bh=8cCmYW5hdWkzAHs68vgot2dAtZak/ByN7XZ37Qz//U0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=koceLGtvEVeFn7hx+U8cVEH+UM2OOMpPbXXCGgk25fOFEMzJXUIHozkl9haOhqOqklfxtUrVnU4gw3p4y6MmjPj22MmZeViPOk01U5RT+y8WmLBuCeALECezMh3iY1U8Wl2R9fFaxmHCJ2WHBsDGGWvpJiu5/2Epw8DG7FfeAGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rzggNwY2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SDnxirkN; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="QYC890Jq";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="5LVDcZRo"
-DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Date:Subject:To:From; t=1758054802; bh=wx0QdjxydDmrBFDNOoQQ5/u
-	IBMbJD/oNitoYkWZcuC0=; b=QYC890JqZyfvPL4vqX1iuAz85TSGvZNs5qAS35MYC+22MBvW7W
-	iskQ/WenBh0sSTeuVw2g4lZHoYPoiv2GGsiFUWUKFSkU2zjwAoKIfhh6KCfgHkaD/kzS8GS68rS
-	5QxPQHc77pqj7NtCJnL98hSHNC/QK6suWUKMCY1iS34BYG6fYsZQ/3dpcvNdRz6I2AV2MVmHjwu
-	YuaU6JaX/xZbIKJ6+kGLuBOfuRai4gyokobGwnVBSAZFlMDcIGJhjDWqDCzz5y0qkraPWvzgro4
-	KM9+tBTzW+WGrtu1sDguiqrnfvt9vS5JK5S2VnGn8CNEa8jaBdqwZu+SFboo2ClciJw==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Date:Subject:To:From; t=1758054802; bh=wx0QdjxydDmrBFDNOoQQ5/u
-	IBMbJD/oNitoYkWZcuC0=; b=5LVDcZRoMcSN9ktKl9Pg4tEUVZHPmNTbYq67qVDbHUTddPsvdm
-	Jrh1Ji00j9vzj2yndXJA43uiUpoeW80faoDg==;
-From: Dang Huynh <dang.huynh@mainlining.org>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Sebastian Reichel <sre@kernel.org>,
- Vinod Koul <vkoul@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, linux-arm-kernel@lists.infradead.org,
- linux-unisoc@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-rtc@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: Re: [PATCH 00/25] RDA8810PL Clock, RTC and MMC driver
-Date: Tue, 16 Sep 2025 20:33:16 +0000
-Message-ID: <14470724.O9o76ZdvQC@melttower>
-In-Reply-To: <2025091620264900a32db6@mail.local>
-References:
- <20250917-rda8810pl-drivers-v1-0-74866def1fe3@mainlining.org>
- <2025091620264900a32db6@mail.local>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rzggNwY2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SDnxirkN"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1758057022;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pj5Qf/1bxCFrPvhs0jRUa6YUBACyGl4rbZxu2Lu22Yo=;
+	b=rzggNwY2vNIxBIBWhIM2eNT5/Wfp/pOEx3vtX/gpirUkPKVvJ0xOMkn1gIzyLdOdcJM/AD
+	LJ2HK4ybwmU0mn9P3gCiw4KAwCnEtKWMS9Sb/0qKfySh8hUCPH70rJAg5Vq0oS1Etq5y9s
+	fWaUbCSElmQMt6NX3zClcf91wEMcC1oZuAdCi/5IRA+Ig27XqQiW9KvpUqkD9NqXkHLd/0
+	Gd0n3URf4LrYUw8JAffVYVHTmdNOaBv3i4kwOMJvXw8NmVIpVwwAtKoaJo94DrP41+tyCK
+	c1/lgsIXQKLPw28SqA5WCxffxdnDK3zoAfFJs9W+tYUbrCs6XWPUEcEbL4SF7g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1758057022;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pj5Qf/1bxCFrPvhs0jRUa6YUBACyGl4rbZxu2Lu22Yo=;
+	b=SDnxirkNQwaVrfSM04srsZSWToQc90VpYlu25/LRFyplMb/H/OpA4GODTfBkYO63u2m+3S
+	JVN0QitkAjbE61Dw==
+To: Eugen Hristev <eugen.hristev@linaro.org>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, andersson@kernel.org,
+ pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net, david@redhat.com,
+ mhocko@suse.com
+Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+ jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, Eugen Hristev <eugen.hristev@linaro.org>
+Subject: Re: [RFC][PATCH v3 09/16] genirq/irqdesc: Have nr_irqs as non-static
+In-Reply-To: <20250912150855.2901211-10-eugen.hristev@linaro.org>
+References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
+ <20250912150855.2901211-10-eugen.hristev@linaro.org>
+Date: Tue, 16 Sep 2025 23:10:21 +0200
+Message-ID: <87cy7q9k8y.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain
 
-Hi,
+On Fri, Sep 12 2025 at 18:08, Eugen Hristev wrote:
+> nr_irqs is required for debugging the kernel, and needs to be
+> accessible for kmemdump into vmcoreinfo.
 
-On Tuesday, September 16, 2025 8:26:49=E2=80=AFPM Coordinated Universal Tim=
-e Alexandre=20
-Belloni wrote:
-> Hello,
->=20
-> On 17/09/2025 03:07:17+0700, Dang Huynh wrote:
-> > This patch series aims to add support for Clock/Reset, Real-Time Clock =
-and
-> > SDMMC on the RDA Micro RDA8810PL platform.
->=20
-> What are the dependencies between the various drivers? Ho< do you expect
-> the patches to be merged?
-The MMC driver depends on the clock controller (for getting APB2 rates) and=
-=20
-IFC for transferring data.
->=20
-> If the RTC patches are independent, please send them separately.
-They're independent. Noted.
->=20
-> > It also adds Intelligent Flow Controller (IOW, a DMA controller) which =
-is
-> > important for working with this MMC IP.
-> >=20
-> > Tested on the Orange Pi 2G-IOT.
-> >=20
-> > Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
-> > ---
-> >=20
-> > Dang Huynh (25):
-> >       ARM: dts: unisoc: rda8810pl: Add label to GPIO nodes
-> >       drivers: gpio: rda: Make IRQ optional
-> >       dt-bindings: gpio: rda: Make interrupts optional
-> >       rtc: Add timestamp for the end of 2127
-> >       dt-bindings: rtc: Add RDA Micro RDA8810PL RTC
-> >       rtc: Add driver for RDA Micro SoC
-> >       ARM: dts: unisoc: rda8810pl: Enable Real-Time Clock
-> >       ARM: dts: unisoc: rda8810pl: Enable ARM PMU
-> >       dt-bindings: clock: Add RDA Micro RDA8810PL clock/reset controller
-> >       drivers: clk: Add Clock and Reset Driver for RDA Micro RDA8810PL =
-SoC
-> >       dts: unisoc: rda8810pl: Enable clock/reset driver
-> >       dts: unisoc: rda8810pl: Add OPP for CPU and define L2 cache
-> >       dts: unisoc: orangepi: Disable UART with no users
-> >       dt-bindings: power: reset: Add RDA Micro Modem Reset
-> >       power: reset: Add basic power reset driver for RDA8810PL
-> >       dts: unisoc: rda8810pl: Enable modem reset
-> >       drivers: gpio: rda: Make direction register unreadable
-> >       dt-bindings: dma: Add RDA IFC DMA
-> >       dmaengine: Add RDA IFC driver
-> >       dts: unisoc: rda8810pl: Enable IFC
-> >       dt-bindings: mmc: Add RDA SDMMC controller
-> >       mmc: host: Add RDA Micro SD/MMC driver
-> >       dts: unisoc: rda8810pl: Add SDMMC controllers
-> >       dts: unisoc: orangepi-2g: Enable SD Card
-> >       dts: unisoc: orangepi-i96: Enable SD Card
-> > =20
-> >  .../bindings/clock/rda,8810pl-apsyscon.yaml        |  44 ++
-> >  Documentation/devicetree/bindings/dma/rda,ifc.yaml |  42 +
-> >  .../devicetree/bindings/gpio/gpio-rda.yaml         |   3 -
-> >  Documentation/devicetree/bindings/mmc/rda,mmc.yaml |  91 +++
-> >  .../bindings/power/reset/rda,md-reset.yaml         |  36 +
-> >  .../devicetree/bindings/rtc/rda,8810pl-rtc.yaml    |  30 +
-> >  MAINTAINERS                                        |  30 +
-> >  .../boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts  |  24 +-
-> >  .../arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts |  24 +-
-> >  arch/arm/boot/dts/unisoc/rda8810pl.dtsi            | 115 ++-
-> >  drivers/clk/Kconfig                                |   1 +
-> >  drivers/clk/Makefile                               |   1 +
-> >  drivers/clk/rda/Kconfig                            |  14 +
-> >  drivers/clk/rda/Makefile                           |   2 +
-> >  drivers/clk/rda/clk-rda8810.c                      | 770
-> >  +++++++++++++++++++ drivers/dma/Kconfig                               =
- |
-> >   10 +
-> >  drivers/dma/Makefile                               |   1 +
-> >  drivers/dma/rda-ifc.c                              | 450 +++++++++++
-> >  drivers/gpio/gpio-rda.c                            |   4 +-
-> >  drivers/mmc/host/Kconfig                           |  12 +
-> >  drivers/mmc/host/Makefile                          |   1 +
-> >  drivers/mmc/host/rda-mmc.c                         | 853
-> >  +++++++++++++++++++++ drivers/power/reset/Kconfig                     =
- =20
-> >  |   9 +
-> >  drivers/power/reset/Makefile                       |   1 +
-> >  drivers/power/reset/rda-reboot.c                   |  58 ++
-> >  drivers/rtc/Kconfig                                |  11 +
-> >  drivers/rtc/Makefile                               |   1 +
-> >  drivers/rtc/rtc-rda.c                              | 356 +++++++++
-> >  include/dt-bindings/clock/rda,8810pl-apclk.h       |  79 ++
-> >  include/dt-bindings/dma/rda-ifc.h                  |  28 +
-> >  include/linux/rtc.h                                |   1 +
-> >  31 files changed, 3079 insertions(+), 23 deletions(-)
-> >=20
-> > ---
-> > base-commit: 590b221ed4256fd6c34d3dea77aa5bd6e741bbc1
-> > change-id: 20250916-rda8810pl-drivers-9a5271452635
-> >=20
-> > Best regards,
+That's a patently bad idea.
 
-Best regards,
-Dang
+Care to grep how many instances of 'nr_irqs' variables are in the
+kernel?
 
+That name is way too generic to be made global.
 
+Thanks,
+
+        tglx
