@@ -1,73 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7624D2F7AB0
-	for <linux-hardening@vger.kernel.org>; Wed, 17 Sep 2025 15:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC3330C0E5
+	for <linux-hardening@vger.kernel.org>; Wed, 17 Sep 2025 15:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758122341; cv=none; b=mzFeCrCItYTXKDC+CNrT/svwhTxfWJ0RXFPNmbvWz7zMC6MeWOG5ef+nA4F9G14c1icwEx/Dxaj9xF3ommACDbhDokEcatcl/OlT9SSYn/8Cv2aDRruFIvdABjKQS3mD57dNyUOpW652RAq2qF3+0Su15gLZ1sS9KCmVn45V33A=
+	t=1758123168; cv=none; b=o6XoSl/cHxCh0Rdm6EJjAFjPME8Of7DGwLxU/bZH0U1sEncyq+E8CEKlauVZg4tI7SBEWrQfcaZVr8422EC1PTM8hFB5VQQWII2vRCTMnLTyX0HBEP3DcI6+0n9T886egD9+MqmpUn+daqUjP/DPUlzZUwtvwQ5X4LfgIeD5Mq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758122341; c=relaxed/simple;
-	bh=7jPZ96BclSCEIxwrjZ4n9aZB42Mvnx+aGDoeaEHGo3E=;
+	s=arc-20240116; t=1758123168; c=relaxed/simple;
+	bh=1PjU7nEeEI5Wf3JTQRVSrCL28uqYi+NS88MtDd4/3b4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pLK+yTWr9+oXLAmhyrIbL+HuhgEEKhRijBDMmnVoLB1m2xIhTW9HxpuVK3GFDbiVldhAQmA1Vahu4NK2VqdpOIidts6I007Q7kqnjHmV1PliwQbMLK4Ve5i9tLhGii4KV0V29x7GUyvzr8U0qQVZwTzdQ8Gy3F0zoMQqjG5IUZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WfX4KE76; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=TsOv6o2n2XYJA1Zg3/zekXPr0/Z0fkMibekG3le4AJbMhfAncqi4e4MfIBFILXr6FNzkRLSWTtppkSMqutD4FaFREmpLPOZDLtlfAqpw+jcMNuMf4QIb/LwWgLHE7pvpGl5S+khKjF5EtAX7eFCMwPSS88W/BIVmr4+AxBDhYA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u5VU4cWL; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WfX4KE76"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758122338;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Hy7kdzIRoahwzaXq+ZGvnPXEqK5VVBRIst3tKW3Ibxs=;
-	b=WfX4KE76zKuM5i2NUQrJiTpMmqfGB0/QRkGZ4jAveYCTh7XhIk+ebvPO3zcPefYIMjbdFs
-	IeP4Ra/1FZQ+7NFOPGJf4/dZYsWK2T478PrT0WUOkU5z5xkKjsGJO4UCEDQ/A8uaj107Fo
-	KauyGMtfNLr9y2s9HyRPl7PtKXqQXIU=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-22-mI3D2LjaMHCQGy8x4R4eNg-1; Wed, 17 Sep 2025 11:18:57 -0400
-X-MC-Unique: mI3D2LjaMHCQGy8x4R4eNg-1
-X-Mimecast-MFC-AGG-ID: mI3D2LjaMHCQGy8x4R4eNg_1758122336
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-45deddf34b9so6077875e9.1
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Sep 2025 08:18:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u5VU4cWL"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-62f277546abso8565744a12.3
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Sep 2025 08:32:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1758123164; x=1758727964; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V4k5J8VkcsZOGowc/PhE+thWQDtpKbu6223a2JTLS/I=;
+        b=u5VU4cWLvJNpz09QCFKrR9WS/+Lra5YUO3vptMugtunB9E6jEgY/OKlWhkOoHc1H1X
+         I3qX8hKbQRjdvIWnMFUvC64EgrzeUNY8GkFP82xe54nlukkqHLoKRkrLPX/Ebund1Osr
+         Tdwwd+YVGj3F6z3AkC4xk6PkSjAb+clOqjhhe3DegFA9wE6ifxtbQQRIh1VNcY6VvfKp
+         h0DIPyhXzi96SvMh5jCO4/yOEs8K8epFO7r4SgjRiI+gO2MhU6rpM6vVixpgjNGtqC+B
+         uznB7eCyBPbJ3k5+ihi8YkcrwPYdB2K//2ORlsP4Jm/voVzrESZUFr/XeseP7ntBgyXY
+         9KTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758122336; x=1758727136;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Hy7kdzIRoahwzaXq+ZGvnPXEqK5VVBRIst3tKW3Ibxs=;
-        b=YCpoZ2abhgH8gLvInR2FXzJrLKQ2odQuSyORFJeTNxWMjUBYGwAN/sPs73CRbb9yvg
-         GfsbfBbxpgPWl2HJU78z8GU6SdISawnSiawh4ghiwmv5Rc+vwucl9xr3kjgKgu/B8K2r
-         CyIKD41qhZcU7JP1xB4ZvNNSDNNQ3t3A+6Hdxyk8Xts3y3KaPqD9qRUiok9JyyrzPM2X
-         wNp3Ib6V1yOXOZmnvHarhMSBB00ICeuSXDrxBK3WZ3TGz5abdR2VZm7WLHhPjGp69jic
-         DTPwz2FI7xQ/Nz5YA3fyqR8Pumw/a7ZvfTiKgtrybLS5G3dYJPsP+1me7MkKvgy/c8Wa
-         xueA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTKYpLigdXbBrVAundC8Bpw9bB74qi4S/0tYgHVsk7zNPgbsaW+uRjt0lX68dwevL+Lwrub096mYFHdKfsJD8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIonKx4lmXjV6AlmlLkYCDY3zfR1FPuhgMeykfZlGhOcBkwac+
-	A9XpZxOgxjgXoLj9uIGII1hmpVNfh8D7iE5cLjYktgJIXqCtvIr/ymFAsCV0om/CbP+bZ2rBTUI
-	1jjiqx/bBzfSUMzK7nf53BPbVQlAy8rdpM7x3+sPA6f6TBLw9JHnoMX0pWYo2RozFGFCSIQ==
-X-Gm-Gg: ASbGnctPwOZ1I+qWENBrsTdBFBUJnnJlZXLRSFq/DFMMenUODHTq+X4wyFqsPXrIcMf
-	F1s0kezSvfmFJeRR6S3u2mV3qX7KepUbrsozkkdQlNKo4VSzjERvZ2QhGwH9bUWY0fyj+3fCduu
-	JZcSxu2Iu3jlvIN5OHbRTq6r0UWDSq/I8YeEubuqfphwGsfOHZ20vIvGg4Hbc+HIkSdobfkUQwy
-	vqDMg0tTfO7YHbAKJcMUcS0KolQniVnIXRaijGHROLwmVnLVzlqSisvbliFFrmYA/IoAenc9EdI
-	z1gc5PXJO3mWofPbCLnO9veZLtxEShGQNolRcJoPB/g2XBWQ9Uraq2qJFdKSWLtMOlZ9/Ch5i1L
-	rVBD8Or8Z0fydJPfMGfOABn529sIrjdIVWpt2Ph5SXHZFeEX4Lao4em69dByrET5X
-X-Received: by 2002:a05:600c:c0c2:b0:45d:e201:1603 with SMTP id 5b1f17b1804b1-45ffbb87d0fmr44805995e9.15.1758122335869;
-        Wed, 17 Sep 2025 08:18:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZJXZpzuRjgrByrwR+JkhhVX9lJLsNt0iPyJ6yeH+tCAOWNZvmbwXLVLzskDHw5XXeFtjkaQ==
-X-Received: by 2002:a05:600c:c0c2:b0:45d:e201:1603 with SMTP id 5b1f17b1804b1-45ffbb87d0fmr44805575e9.15.1758122335350;
-        Wed, 17 Sep 2025 08:18:55 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f27:6d00:7b96:afc9:83d0:5bd? (p200300d82f276d007b96afc983d005bd.dip0.t-ipconnect.de. [2003:d8:2f27:6d00:7b96:afc9:83d0:5bd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45f3211e8c7sm40537455e9.3.2025.09.17.08.18.51
+        d=1e100.net; s=20230601; t=1758123164; x=1758727964;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V4k5J8VkcsZOGowc/PhE+thWQDtpKbu6223a2JTLS/I=;
+        b=wUrScPmejH0YJsqGXu5Zs0d9XeE88erPDSpY6caocXWMAHuy5sIMVhBPkqj7Jk03RE
+         EuJEekfHz3fetNJJdBdJ4BqVV72JFBJhXhS7HcF/eWUJETyV/0+68LbBKRI14uaN+jX8
+         jmAhNs4EAsAjiLGS5TnUQHSx0bVkEf0OqXF8DLIIfNM3h5bfm6KxR18nMxFdNNnRgPpu
+         lA3+Z9nQ+EdKR5t6c6oOeQwlbYizGjBdrE+Nq3mDTJgvwVimp/7UAk9JQwW14xginEo2
+         aDNMBJMEBWJTKfaQcyGsw0t60ZL2admOZ+qgW/94MCEgW4KBjPZTHqT/W0A4W9e+vTCL
+         Jwtg==
+X-Forwarded-Encrypted: i=1; AJvYcCVEzc6zvOPcAF16ZLexQca+DwKXBXcuMCHNP6olcf+5DXaVi0Fe7snxEhuwCbbR1+lR8jbuFXETm45udpQFbps=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3LPAlTwFARxe8ySrJ7+G9OJ0Rpub1hSO8qDfJA8kk2uZZZPIC
+	wGFs0GomOYVfeNRLOnHF8QW3NbyzAAXFNtz29XPLhJ4UPz+9o7Vt4bs+HvnnIS3mch0=
+X-Gm-Gg: ASbGncv3HwJ+leaauoAYLU0n1TYIU9gpnyNcADg5mw5ah9ZLOq4keKBijz+X6L+Sl24
+	o9tscTm39wDXtNRIeEEJJ+pMKoZNFJYESulJ9DZgnLInzVLI0PuCwyubQunJ99YXgW48nUSKd+p
+	018nYZC/sVOnhjNxxk1R0s8uOvAStDbtMbjc61KFplFdcq6MS+oPvmlQY+wJQdEdj5AhFVgrsHa
+	8j7rLPGKog6P800SLMphHt4zHEY/rFXed5xmbYXSnYR83kRKqwfGochmyPL2AnsZup5eQHkAb+b
+	AI3wwCgwg4T4advFhGsswNrz2TSA/uhJeI6NzIsugjj3Xz3PY++ATMIDbZC4rghgX7GfrKrwjJc
+	av25svwRZvt9Drcd06GQdZsJlmxmo7zHvPN1vw1LK6wI=
+X-Google-Smtp-Source: AGHT+IE8ZMv8HN0yNwSikwv6pMskOhk9zA0LwfuIGCKmhTnIQQy04Vwmljxv3YCiPD4eKH8iHrC6Ug==
+X-Received: by 2002:a17:906:6a09:b0:b04:a1a4:4bec with SMTP id a640c23a62f3a-b1bc020111bmr330491066b.58.1758123164384;
+        Wed, 17 Sep 2025 08:32:44 -0700 (PDT)
+Received: from [172.20.10.3] ([109.166.135.151])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b07b317124esm1395390166b.46.2025.09.17.08.32.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Sep 2025 08:18:52 -0700 (PDT)
-Message-ID: <7f4aa4c6-7b77-422b-9f7a-d01530c54bff@redhat.com>
-Date: Wed, 17 Sep 2025 17:18:50 +0200
+        Wed, 17 Sep 2025 08:32:43 -0700 (PDT)
+Message-ID: <10540b3e-09ca-403d-bc20-b9412a7fe28a@linaro.org>
+Date: Wed, 17 Sep 2025 18:32:41 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -76,8 +68,8 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC][PATCH v3 09/16] genirq/irqdesc: Have nr_irqs as non-static
-To: Eugen Hristev <eugen.hristev@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, linux-arm-msm@vger.kernel.org,
+To: David Hildenbrand <david@redhat.com>, Thomas Gleixner
+ <tglx@linutronix.de>, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org, andersson@kernel.org,
  pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net, mhocko@suse.com
 Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
@@ -90,166 +82,153 @@ References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
  <2bd45749-e483-45ea-9c55-74c5ba15b012@redhat.com> <87v7lh891c.ffs@tglx>
  <95ff36c2-284a-46ba-984b-a3286402ebf8@redhat.com>
  <24d6a51d-f5f8-44d7-94cb-58b71ebf473a@linaro.org>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- qIws/H2t
-In-Reply-To: <24d6a51d-f5f8-44d7-94cb-58b71ebf473a@linaro.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 1MRrtAC3YHKZh3U4v3CWaE17SErz2iDWcQUMA6Qp1Ts_1758122336
-X-Mimecast-Originator: redhat.com
+ <7f4aa4c6-7b77-422b-9f7a-d01530c54bff@redhat.com>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Eugen Hristev <eugen.hristev@linaro.org>
+In-Reply-To: <7f4aa4c6-7b77-422b-9f7a-d01530c54bff@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 17.09.25 17:02, Eugen Hristev wrote:
-> 
-> 
-> On 9/17/25 17:46, David Hildenbrand wrote:
->> On 17.09.25 16:10, Thomas Gleixner wrote:
->>> On Wed, Sep 17 2025 at 09:16, David Hildenbrand wrote:
->>>> On 17.09.25 07:43, Eugen Hristev wrote:
->>>>> On 9/17/25 00:16, Thomas Gleixner wrote:
->>>>>> I pointed you to a solution for that and just because David does not
->>>>>> like it means that it's acceptable to fiddle in subsystems and expose
->>>>>> their carefully localized variables.
+
+
+On 9/17/25 18:18, David Hildenbrand wrote:
+> On 17.09.25 17:02, Eugen Hristev wrote:
+>>
+>>
+>> On 9/17/25 17:46, David Hildenbrand wrote:
+>>> On 17.09.25 16:10, Thomas Gleixner wrote:
+>>>> On Wed, Sep 17 2025 at 09:16, David Hildenbrand wrote:
+>>>>> On 17.09.25 07:43, Eugen Hristev wrote:
+>>>>>> On 9/17/25 00:16, Thomas Gleixner wrote:
+>>>>>>> I pointed you to a solution for that and just because David does not
+>>>>>>> like it means that it's acceptable to fiddle in subsystems and expose
+>>>>>>> their carefully localized variables.
+>>>>>
+>>>>> It would have been great if we could have had that discussion in the
+>>>>> previous thread.
 >>>>
->>>> It would have been great if we could have had that discussion in the
->>>> previous thread.
+>>>> Sorry. I was busy with other stuff and did not pay attention to that
+>>>> discussion.
 >>>
->>> Sorry. I was busy with other stuff and did not pay attention to that
->>> discussion.
->>
->> I understand, I'm busy with too much stuff such that sometimes it might
->> be good to interrupt me earlier: "David, nooo, you're all wrong"
->>
+>>> I understand, I'm busy with too much stuff such that sometimes it might
+>>> be good to interrupt me earlier: "David, nooo, you're all wrong"
 >>>
->>>> Some other subsystem wants to have access to this information. I agree
->>>> that exposing these variables as r/w globally is not ideal.
->>>
->>> It's a nono in this case. We had bugs (long ago) where people fiddled
->>> with this stuff (I assume accidentally for my mental sanity sake) and
->>> caused really nasty to debug issues. C is a horrible language to
->>> encapsulate stuff properly as we all know.
->>
->> Yeah, there is this ACCESS_PRIVATE stuff but it only works with structs
->> and relies on sparse IIRC.
->>
->>>
->>>> I raised the alternative of exposing areas or other information through
->>>> simple helper functions that kmemdump can just use to compose whatever
->>>> it needs to compose.
 >>>>
->>>> Do we really need that .section thingy?
+>>>>> Some other subsystem wants to have access to this information. I agree
+>>>>> that exposing these variables as r/w globally is not ideal.
+>>>>
+>>>> It's a nono in this case. We had bugs (long ago) where people fiddled
+>>>> with this stuff (I assume accidentally for my mental sanity sake) and
+>>>> caused really nasty to debug issues. C is a horrible language to
+>>>> encapsulate stuff properly as we all know.
 >>>
->>> The section thing is simple and straight forward as it just puts the
->>> annotated stuff into the section along with size and id and I definitely
->>> find that more palatable, than sprinkling random functions all over the
->>> place to register stuff.
+>>> Yeah, there is this ACCESS_PRIVATE stuff but it only works with structs
+>>> and relies on sparse IIRC.
 >>>
->>> Sure, you can achieve the same thing with an accessor function. In case
->>> of nr_irqs there is already one: irq_get_nr_irqs(), but for places which
+>>>>
+>>>>> I raised the alternative of exposing areas or other information through
+>>>>> simple helper functions that kmemdump can just use to compose whatever
+>>>>> it needs to compose.
+>>>>>
+>>>>> Do we really need that .section thingy?
+>>>>
+>>>> The section thing is simple and straight forward as it just puts the
+>>>> annotated stuff into the section along with size and id and I definitely
+>>>> find that more palatable, than sprinkling random functions all over the
+>>>> place to register stuff.
+>>>>
+>>>> Sure, you can achieve the same thing with an accessor function. In case
+>>>> of nr_irqs there is already one: irq_get_nr_irqs(), but for places which
+>>>
+>>> Right, the challenge really is that we want the memory range covered by
+>>> that address, otherwise it would be easy.
+>>>
+>>>> do not expose the information already for real functional reasons adding
+>>>> such helpers just for this coredump muck is really worse than having a
+>>>> clearly descriptive and obvious annotation which results in the section
+>>>> build.
+>>>
+>>> Yeah, I'm mostly unhappy about the "#include <linux/kmemdump.h>" stuff.
+>>>
+>>> Guess it would all feel less "kmemdump" specific if we would just have a
+>>> generic way to tag/describe certain physical memory areas and kmemdump
+>>> would simply make use of that.
 >>
->> Right, the challenge really is that we want the memory range covered by
->> that address, otherwise it would be easy.
+>> The idea was to make "kmemdump" exactly this generic way to tag/describe
+>> the memory.
+> 
+> That's probably where I got lost, after reading the cover letter 
+> assuming that this is primarily to program kmemdump backends, which I 
+> understood to just special hw/firmware areas, whereby kinfo acts as a 
+> filter.
+
+If there is a mechanism to tag all this memory, or regions, into a
+specific section, what we would do with it next ?
+It would have a purpose to be parsed and reused by different drivers,
+that would be able to actually use it.
+So there has a to be some kind of middleman, that holds onto this list
+of regions, manages it (unique id, add/remove), and allows certain
+drivers to use it.
+Now it would be interesting to have different kind of drivers connect to
+it (or backends how I called them).
+One of these programs an internal table for the firmware to use.
+Another , writes information into a dedicated reserved-memory for the
+bootloader to use on the next soft reboot (memory preserved).
+I called this middleman kmemdump. But it can be named differently, and
+it can reside in different places in the kernel.
+But what I would like to avoid is to just tag all this memory and have
+any kind of driver connect to the table. That works, but it's quite
+loose on having control over the table. E.g. no kmemdump, tag all the
+memory to sections, and have specific drivers (that would reside where?)
+walk it.
+
+> 
+>> If we would call it differently , simply dump , would it be better ?
+>> e.g. include linux/dump.h
+>> and then DUMP(var, size) ?
 >>
->>> do not expose the information already for real functional reasons adding
->>> such helpers just for this coredump muck is really worse than having a
->>> clearly descriptive and obvious annotation which results in the section
->>> build.
+>> could we call it maybe MARK ? or TAG ?
+>> TAG_MEM(area, size)
+> 
+> I'm wondering whether there could be any other user for this kind of 
+> information.
+> 
+> Like R/O access in a debug kernel to these areas, exporting the 
+> ranges/names + easy read access to content through debugfs or something.
+
+One idea I had to to have a jtag script read the table , parse it, and
+know where some information resides.
+Another idea is to use Uboot in case of persistent memory across reboot,
+and Uboot can read all the sections and assemble a ready-to-download
+coredump. (sure this doesn't work in all cases)
+What can be done in case of hypervisor is to implement there a routine
+that would read it, in case the OS is non-responsive, or even in the
+secure monitor.
+Another suggestion I had from someone was to use a pure software default
+backend in which to just keep the regions stored, and it could be
+accessed through userspace or read by a crash analyzer.
+
+> 
+> Guess that partially falls under the "dump" category.
+> 
+> Including that information in a vmcore info would probably allow to 
+> quickly extract some information even without the debug symbols around 
+> (I run into that every now and then).
+> 
 >>
->> Yeah, I'm mostly unhappy about the "#include <linux/kmemdump.h>" stuff.
+>> this would go to a separate section called .tagged_memory.
 >>
->> Guess it would all feel less "kmemdump" specific if we would just have a
->> generic way to tag/describe certain physical memory areas and kmemdump
->> would simply make use of that.
 > 
-> The idea was to make "kmemdump" exactly this generic way to tag/describe
-> the memory.
-
-That's probably where I got lost, after reading the cover letter 
-assuming that this is primarily to program kmemdump backends, which I 
-understood to just special hw/firmware areas, whereby kinfo acts as a 
-filter.
-
-> If we would call it differently , simply dump , would it be better ?
-> e.g. include linux/dump.h
-> and then DUMP(var, size) ?
+> Maybe just "tagged_memory.h" or sth. like that? I'm bad at naming, so I 
+> would let others make better suggestions.
 > 
-> could we call it maybe MARK ? or TAG ?
-> TAG_MEM(area, size)
-
-I'm wondering whether there could be any other user for this kind of 
-information.
-
-Like R/O access in a debug kernel to these areas, exporting the 
-ranges/names + easy read access to content through debugfs or something.
-
-Guess that partially falls under the "dump" category.
-
-Including that information in a vmcore info would probably allow to 
-quickly extract some information even without the debug symbols around 
-(I run into that every now and then).
-
+>> Then anyone can walk through the section and collect the data.
+>>
+>> I am just coming up with ideas here.
+>> Could it be even part of mm.h instead of having a new header perhaps ?
+>> Then we won't need to include one more.
 > 
-> this would go to a separate section called .tagged_memory.
+> I don't really have something against a new include, just not one that 
+> sounded like a very specific subsystem, not something more generic.
 > 
-
-Maybe just "tagged_memory.h" or sth. like that? I'm bad at naming, so I 
-would let others make better suggestions.
-
-> Then anyone can walk through the section and collect the data.
-> 
-> I am just coming up with ideas here.
-> Could it be even part of mm.h instead of having a new header perhaps ?
-> Then we won't need to include one more.
-
-I don't really have something against a new include, just not one that 
-sounded like a very specific subsystem, not something more generic.
-
--- 
-Cheers
-
-David / dhildenb
 
