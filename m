@@ -1,128 +1,112 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F4E328984
-	for <linux-hardening@vger.kernel.org>; Wed, 17 Sep 2025 14:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2664296BDE;
+	Wed, 17 Sep 2025 14:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758117756; cv=none; b=azjG3heosTjPYDGm5qXbHde7i7PZcCAL9Mq957gdCuWrrOdymWpagMah+ejsa0AgGEtwTSaGdLDaf+i19z4rngGODt7WdLs0ErQh47a9XcW98Qc6U/4pDtyzv3wdYB4ZcLj5ZxmfBuwsblW1AMUtONgjadt0cg1x0Vvd3/VlTLc=
+	t=1758118212; cv=none; b=EkyqG5oF6dziFrcRncYRELKtaOkFwowLbeaWswwoK3RODzDQHPfVtKxVbEA28Atg5Pc6RqadNLjk/U/rKbYw33JYuImLYUxXcRB+8cEay1yy5tGEmeI3yIS866nA1TwXhRbsAJsnGiwDGjQZEVFW9qytCA9PZiKcA24QTA/lS4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758117756; c=relaxed/simple;
-	bh=7TiAvhoxjdDJ9926V3sOvAKk26WqBwI6H6/qxKaTiKs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T5QRQy7oIo4jW0Vqi8cTrt19urrk7HkM+VfOCMBOKrh7M4VvCfnYHN4R3ddJLYFpNZXjw008j9WcaDg/8DrPFzs/0PB+L66jRVz4rWGrseLbXcflX52Sm+r8bSt2WKc8cF2zNH1kZRu0qTR6pgYEph8m7+b2vIEPltPgjk+m9Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cjifK6Lx; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1758118212; c=relaxed/simple;
+	bh=OsPdev5btX3JT4/2C8Z8laOOG2vZwe7o17n1YeULHOM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=g5+rvo3BWECpBk2uJyogW3RAj0x5L6H/tEs07XaXrzHxnwNY3iFd+gmVkPO7UX+fIN6tzLhr+lverINRVgIqfiOdK8iYzo7giqsEjhfHaVP7lpKAA1DQUk8eD1bxughaGhfF5QfRLJ1mbqmGu2rM5NF7HrSrmEV8Kz3H2XFRxEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZKpSI+WP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TbymsR0+; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cjifK6Lx"
-Message-ID: <fb8f876a-c2e5-49b0-bc64-bdf18ecd1ce4@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1758117741;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZKpSI+WP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TbymsR0+"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1758118208;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k/ue3/sXjmvdvdQFAqXQjLB/iQKQuwbWzhj6HJ39M4g=;
-	b=cjifK6Lxyaq7pAGByYUG4K5GmXgVrf/NCA4b2FP2O0PavT3ThCl+VDlgKiT0yb3O+DF1mL
-	cUneofJJYsTwOCUz0/BA+CHAK1I3nWmNZ8msmaHa86fX6fuVLnlLV+K85o+Uzc9OH+20Yn
-	OmPpifN0D7NifLM/lrmKSDDYX8Bj/CA=
-Date: Wed, 17 Sep 2025 15:02:13 +0100
+	bh=75mN+9VZdw4CLEq0UoX/nuXZgFL03Q5pomSFYWw9c2o=;
+	b=ZKpSI+WPydnrumYQ7gxnajAs+lz48YaqiNN3+WhYNwWXlUic0xCBsG6f6GfE8taQbHcIgJ
+	h7Kh1tpSx++CpIjdk2mOz5C8qrezCvij4Bk8iMJhmpa16eSQBcomARzZeXmkJinMK6glwU
+	/UoCFWaheNWZeinES9gkwAgNZHQGwrhZjReOwblCiBhi00hbE5NYnMlrnONnM1S91JYtLJ
+	5CckReOcFW3rJ1+heNZD7lLCRl+2mHJx7WPMA6JZ7bGl0gGxnrhAb0Qs6EzKVgYT+Ot1sw
+	h1UyJfZDjAyn+2j60JTop8cvG2RTrlkVsVVpCCok6p2oOoIhbLO/tvfT4Jfbiw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1758118208;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=75mN+9VZdw4CLEq0UoX/nuXZgFL03Q5pomSFYWw9c2o=;
+	b=TbymsR0+lk/yBTMUwla0JPYo6VaReyftRSNu6ml7UoTThH0F5HVkZGBsfwFUiwKRK5kBjM
+	+sfN3Y9Q7FzbGVAw==
+To: David Hildenbrand <david@redhat.com>, Eugen Hristev
+ <eugen.hristev@linaro.org>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, andersson@kernel.org,
+ pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net, mhocko@suse.com
+Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+ jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org
+Subject: Re: [RFC][PATCH v3 09/16] genirq/irqdesc: Have nr_irqs as non-static
+In-Reply-To: <2bd45749-e483-45ea-9c55-74c5ba15b012@redhat.com>
+References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
+ <20250912150855.2901211-10-eugen.hristev@linaro.org> <87cy7q9k8y.ffs@tglx>
+ <87a52u9jyl.ffs@tglx> <8df2cf28-c15e-4692-a127-6a5c966a965e@linaro.org>
+ <2bd45749-e483-45ea-9c55-74c5ba15b012@redhat.com>
+Date: Wed, 17 Sep 2025 16:10:07 +0200
+Message-ID: <87v7lh891c.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v12 4/5] net: rnpgbe: Add basic mbx_fw support
-To: Yibo Dong <dong100@mucse.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
- gur.stavi@huawei.com, maddy@linux.ibm.com, mpe@ellerman.id.au,
- danishanwar@ti.com, lee@trager.us, gongfan1@huawei.com, lorenzo@kernel.org,
- geert+renesas@glider.be, Parthiban.Veerasooran@microchip.com,
- lukas.bulwahn@redhat.com, alexanderduyck@fb.com, richardcochran@gmail.com,
- kees@kernel.org, gustavoars@kernel.org, rdunlap@infradead.org,
- joerg@jo-so.de, netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250916112952.26032-1-dong100@mucse.com>
- <20250916112952.26032-5-dong100@mucse.com>
- <3058c061-3a17-4077-8d4e-c91ad72b3831@linux.dev>
- <D7EC5E8B6F6E685E+20250917110540.GA91482@nic-Precision-5820-Tower>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <D7EC5E8B6F6E685E+20250917110540.GA91482@nic-Precision-5820-Tower>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-On 17/09/2025 12:05, Yibo Dong wrote:
-> On Wed, Sep 17, 2025 at 11:45:31AM +0100, Vadim Fedorenko wrote:
->> On 16/09/2025 12:29, Dong Yibo wrote:
->>> Add fundamental firmware (FW) communication operations via PF-FW
->>> mailbox, including:
->>> - FW sync (via HW info query with retries)
->>> - HW reset (post FW command to reset hardware)
->>> - MAC address retrieval (request FW for port-specific MAC)
->>> - Power management (powerup/powerdown notification to FW)
->>>
->>> Signed-off-by: Dong Yibo <dong100@mucse.com>
->>
->> Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
->>
->> small nits below
->>
->>
->>> +static void build_get_hw_info_req(struct mbx_fw_cmd_req *req)
->>> +{
->>> +	req->flags = 0;
->>> +	req->opcode = cpu_to_le16(GET_HW_INFO);
->>> +	req->datalen = cpu_to_le16(MUCSE_MBX_REQ_HDR_LEN);
->>> +	req->reply_lo = 0;
->>> +	req->reply_hi = 0;
->>> +}
->>
->> All these build*() functions re-init flags and reply to 0, but all
->> mbx_fw_cmd_req are zero-inited on the stack. Might be better clean
->> things assignments, but no strong opinion because the code is explicit
->>
->> If you will think of refactoring this part, it might be a good idea to
->> avoid build*() functions at all and do proper initialization of
->> mbx_fw_cmd_req in callers?
->>
->>> +
->>> +/**
->>> + * mucse_mbx_get_info - Get hw info from fw
->>> + * @hw: pointer to the HW structure
->>> + *
->>> + * mucse_mbx_get_info tries to get hw info from hw.
->>> + *
->>> + * Return: 0 on success, negative errno on failure
->>> + **/
->>> +static int mucse_mbx_get_info(struct mucse_hw *hw)
->>> +{
->>> +	struct mbx_fw_cmd_reply reply = {};
->>> +	struct mbx_fw_cmd_req req = {};
->>
->> something like:
->>
->> struct mbx_fw_cmd_req req =
->> 	{
->> 	  .opcode = cpu_to_le16(GET_HW_INFO),
->> 	  .datalen = cpu_to_le16(MUCSE_MBX_REQ_HDR_LEN),
->> 	}
->>
->>
->>
-> 
-> That's a good idea! That makes the code more compact.
-> I think I should update this as your suggestion.
-> 
-> Regarding adding your "Reviewed-by" tag in the next version:
-> Would it be acceptable to include it when I submit the updated patch (with
-> the initialization logic adjusted), or should I wait for your further
-> review of the modified code first?
+On Wed, Sep 17 2025 at 09:16, David Hildenbrand wrote:
+> On 17.09.25 07:43, Eugen Hristev wrote:
+>> On 9/17/25 00:16, Thomas Gleixner wrote:
+>>> I pointed you to a solution for that and just because David does not
+>>> like it means that it's acceptable to fiddle in subsystems and expose
+>>> their carefully localized variables.
+>
+> It would have been great if we could have had that discussion in the 
+> previous thread.
 
-If you will submit another version with this refactoring, I'll better do
-another review.
+Sorry. I was busy with other stuff and did not pay attention to that
+discussion.
+
+> Some other subsystem wants to have access to this information. I agree 
+> that exposing these variables as r/w globally is not ideal.
+
+It's a nono in this case. We had bugs (long ago) where people fiddled
+with this stuff (I assume accidentally for my mental sanity sake) and
+caused really nasty to debug issues. C is a horrible language to
+encapsulate stuff properly as we all know.
+
+> I raised the alternative of exposing areas or other information through 
+> simple helper functions that kmemdump can just use to compose whatever 
+> it needs to compose.
+>
+> Do we really need that .section thingy?
+
+The section thing is simple and straight forward as it just puts the
+annotated stuff into the section along with size and id and I definitely
+find that more palatable, than sprinkling random functions all over the
+place to register stuff.
+
+Sure, you can achieve the same thing with an accessor function. In case
+of nr_irqs there is already one: irq_get_nr_irqs(), but for places which
+do not expose the information already for real functional reasons adding
+such helpers just for this coredump muck is really worse than having a
+clearly descriptive and obvious annotation which results in the section
+build.
+
+The charm of sections is that they don't neither extra code nor stubs or
+ifdeffery when a certain subsystem is disabled and therefore no
+information available.
+
+I'm not insisting on sections, but having a table of 2k instead of
+hundred functions, stubs and whatever is definitely a win to me.
+
+Thanks,
+
+        tglx
