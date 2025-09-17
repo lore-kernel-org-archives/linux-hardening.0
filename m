@@ -1,273 +1,148 @@
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B2627935F;
-	Wed, 17 Sep 2025 08:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675CB302770;
+	Wed, 17 Sep 2025 10:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758098024; cv=none; b=j6BBQqaDX7voE9rv4iaE46zHcM91BcCT3iBEXVkYUr4RNSwKSP4a6W3x/77RV5qWbsxu9PM9Bb9ToL1Cjb8siQotPswAHZ8ZfVJncqpATflPIK/Jths+R8vCxHmDQa34Bdg2O9m5F5JpxkZPXABXNnqT8iV7QnNt3tSDqUXD3fc=
+	t=1758103417; cv=none; b=ITsH/XO89vfX3AkL+3b79qtHV4Uw9Lfl/dtkI/1fctr5x7yOs8hPKeGL40aunsKeZPZ0UT767Ooz/owdNOzEoP3R6qn82j7M/lR3DBS+f1YmN3yXx9jFu6mKQ0WPxCXxgfTLKLhoR/sfARTpjGi2tPy53l32TuZIogsPIC1V53o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758098024; c=relaxed/simple;
-	bh=ytCZP5Yar4/l+GMVyn3Wm0FCCeTtCPRlc0LrgNBzMmk=;
+	s=arc-20240116; t=1758103417; c=relaxed/simple;
+	bh=nNlilHjh09UBY7rPl6XW3+rKwLzxl/XA9okrB109O1c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PGYCooK/tf9L8kf2AspIxjIh7Zl/+aBGttVYnVqH7fkQnMT0zn/dopsSnD+uiVUKREKkSMPqlVxTdB/iJmdWTeGQ4VL6cTz0KTnz9EyFMyJa1RXSqlLV2yWbaSf5cccSIbI/yUdlsSP21iIkH1M4GaWbz9cSdf5VIpCoKpI8abs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.92.39.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
-X-QQ-mid: esmtpsz19t1758097989t378d3e97
-X-QQ-Originating-IP: nb0lliC7CGn1VoQ20o+EYjKtzODXCXagx4Ag1+9lwsc=
-Received: from localhost ( [203.174.112.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 17 Sep 2025 16:33:07 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 5419755831941980133
-Date: Wed, 17 Sep 2025 16:33:07 +0800
-From: Yibo Dong <dong100@mucse.com>
-To: MD Danish Anwar <danishanwar@ti.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, lee@trager.us, gongfan1@huawei.com,
-	lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
-	gustavoars@kernel.org, rdunlap@infradead.org,
-	vadim.fedorenko@linux.dev, joerg@jo-so.de, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v12 5/5] net: rnpgbe: Add register_netdev
-Message-ID: <7ABD3AEE5360FED8+20250917083307.GA55664@nic-Precision-5820-Tower>
-References: <20250916112952.26032-1-dong100@mucse.com>
- <20250916112952.26032-6-dong100@mucse.com>
- <f095f31c-b725-4a3f-bc73-7cc57428e5f2@ti.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=NJDcS00zmTTRoXhU0aCTXg8f1UnMpCzcesaPTYA4tJ6s9fq/17MX2YbSjZUK7NC1ZqKYPJaPXK1K7kalAjVGbASJ5/vzqgVOrvAE/ilQRzuGedv0a8X13gqpbGyrvVjadw52lwy1mSd/iOqi6ufDyQWA6L+0jsaUIVcdBaO5kTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9Y0nfAD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9Y0nfAD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 429F6C4CEF0;
+	Wed, 17 Sep 2025 10:03:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758103417;
+	bh=nNlilHjh09UBY7rPl6XW3+rKwLzxl/XA9okrB109O1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B9Y0nfADZvNHly1cC+7nuDT0d/oTq9ziRK04kv1w1BF/BHhB5Xn0fiBbI0/UEecCV
+	 Jgfp0Qr3MqeK4/IlBzjJBUmHnx5pt1iVtl+Of1wkezd6WDc+IA/jvJ55WlzYfsS8nU
+	 GlOvOEc5T+rMEM1daFnDSK5IiYY4xJjJYth9BdXysxjB3CLYozkCtQecbSEQIlO86I
+	 TlfVla0IwqYaoS6wTPwZxzKj9uyGujA4XWYEuhUot/r6Hdefu7hbiz2HhoSqrPqgNf
+	 yf5mgQmqWgUVN5yPotT6+fV64FGqGLfxWPfsp136Spi+UEUH80ZpjCppqgefz6djDH
+	 z9q04unFly53w==
+Date: Wed, 17 Sep 2025 15:33:22 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: dang.huynh@mainlining.org
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Sebastian Reichel <sre@kernel.org>, Vinod Koul <vkoul@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: Re: [PATCH 00/25] RDA8810PL Clock, RTC and MMC driver
+Message-ID: <lnfervvwctvemjdmyue2aohlsqpfd5gsuzjho3u6mtdtewl4vr@saqnionh72am>
+References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f095f31c-b725-4a3f-bc73-7cc57428e5f2@ti.com>
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NOIkHYnr7VzdiiVdQ6aDdxidLAW21uYeAUpXUQOc0FUaJT9YgHe5cv8B
-	U+GFaWhCrcT4YkYhD3DKtIlqb0lcBPVZSWjOTv+X3KbqDKfUiXg8h2NaMnop8zdV8QEbuKX
-	njIMViJNjR37GraR8C+pjEfmZs90hrJlJdXkNvMQ+Y2s+iQbwavgZLUDTmZzMtNxMPDPRxv
-	AH8zZT3nmYmBD/b6DjNgU7kiGsfvYwLqUNqefpa0UMwO0hw56pDekdN+S+PMC7+6FQ0pCGr
-	IkvMFTmei09CioafNMc3gmjsiO1zUoq9E1ORYsyyZVwESC7qcdUKVBzEeAVvEo/zsxKYjq7
-	XmuD+vKYT2gMf14hASYdjDuLcP5h7bRH0BeRuIpIJrVIble2caJo7nbvJ/1Is5am18DrUJb
-	OtJZsm2N2jowkeXbF60zcQaHjLo0AGjCOjihkAeshOkp5kVqpnVTfe3g2hXMhJot2qXGANJ
-	YQt5ybDeG66e5r4cncccnJmJASFmydxITOi0joiaQoPRA8mv6hv522MC3PrhO7XdSSZae4r
-	jAOEqSRJM1PITFr0bAaPugFIB9IVsSVyc0ajXDGP+ofqm1IyNPVO+KqiggyBtD8bZpny7Iq
-	z6GrpbVz3Nu69VippvG1U1mZwv4J7n94zjRBDipAlnYBnGWY45D4GZ8Kxx9U5+E9Vw4tQGo
-	kxf86G2pcPmZ2WxFi7LR3gB4scuDpCTi1CfgApSxa1acyU0O6gvHMCWv/qOVtKHxK8+hpMH
-	gVjkBS2JnIUK0cYEOVkwkr/P30KOZsRPY5B2wcj0+JrpKw0EAHZlbkh27RDoCENn4606/mU
-	lEAcEn2db/6KWV9quZXib7oa6u6fwxdSTsmAnd8P9CKjU0AXGu32BR8+VZcqHJW2pbT+T19
-	GZe18x7AubPT4TN4/LX9qBN3C9wLPRlbpY6V5wausxhd6FpMTrMhzE3eBJVnegDUVR5edtB
-	b7gCDw2buhH/t4FU8Bq0E9TJsDdNAtXE8SaWFoyL2lj3qqVXB8Z+znKB9GoYr5aw5eYnvMl
-	urFrqBCQ==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 
-On Wed, Sep 17, 2025 at 12:39:59PM +0530, MD Danish Anwar wrote:
-> On 16/09/25 4:59 pm, Dong Yibo wrote:
-> > Complete the network device (netdev) registration flow for Mucse Gbe
-> > Ethernet chips, including:
-> > 1. Hardware state initialization:
-> >    - Send powerup notification to firmware (via echo_fw_status)
-> >    - Sync with firmware
-> >    - Reset hardware
-> > 2. MAC address handling:
-> >    - Retrieve permanent MAC from firmware (via mucse_mbx_get_macaddr)
-> >    - Fallback to random valid MAC (eth_random_addr) if not valid mac
-> >      from Fw
-> > 
-> > Signed-off-by: Dong Yibo <dong100@mucse.com>
-> > ---
-> >  drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h    |  18 +++
-> >  .../net/ethernet/mucse/rnpgbe/rnpgbe_chip.c   |  80 ++++++++++++++
-> >  drivers/net/ethernet/mucse/rnpgbe/rnpgbe_hw.h |   2 +
-> >  .../net/ethernet/mucse/rnpgbe/rnpgbe_main.c   | 103 ++++++++++++++++++
-> >  4 files changed, 203 insertions(+)
-> > 
-> > diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h
-> > index 41b580f2168f..4c4b2f13cb4a 100644
-> > --- a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h
-> > +++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe.h
-> > @@ -6,6 +6,7 @@
-> >  
-> >  #include <linux/types.h>
-> >  #include <linux/mutex.h>
-> > +#include <linux/netdevice.h>
-> >  
-> >  enum rnpgbe_boards {
-> >  	board_n500,
-> > @@ -34,12 +35,26 @@ struct mucse_mbx_info {
-> >  	u32 fwpf_ctrl_base;
-> >  };
-> >  
-> > +enum {
-> > +	mucse_fw_powerup,
-> > +};
-> > +
+On Wed, Sep 17, 2025 at 03:24:57AM GMT, Dang Huynh via B4 Relay wrote:
+> This patch series aims to add support for Clock/Reset, Real-Time Clock and
+> SDMMC on the RDA Micro RDA8810PL platform.
 > 
-> This enum has only one value. You should either use a #define or add
-> more values to justify having an enum.
+> It also adds Intelligent Flow Controller (IOW, a DMA controller) which is
+> important for working with this MMC IP.
+> 
+> Tested on the Orange Pi 2G-IOT.
 > 
 
-Yes, it has only one value now, but more values will be added in the
-future.
-If I add new value here, but this patch not use it, it is
-confict with 'add define along with truely use'.
-If I use a #define here, when I add new values in the future, I should
-redefine it as enum.
+Thanks for work! Is it possible to split this patchset logically to ease
+reviewing and also merging? It currently touches different subsystems and has 25
+patches.
 
-So can I keep enum here with a commit like this ?
-/* Enum for firmware notification modes,
-   more modes (e.g., portup, link_report) will be added in future */
-+enum {
-+	mucse_fw_powerup,
-+};
-+
+You could easily split this into different series adding Clock/Reset, RTC, IFC,
+SDMMC and other misc patches in one series.
 
-> >  struct mucse_hw {
-> >  	void __iomem *hw_addr;
-> > +	struct pci_dev *pdev;
-> > +	const struct mucse_hw_operations *ops;
-> >  	struct mucse_mbx_info mbx;
-> > +	int port;
-> > +	u8 perm_addr[ETH_ALEN];
-> >  	u8 pfvfnum;
-> >  };
-> >  
-> > +struct mucse_hw_operations {
-> > +	int (*reset_hw)(struct mucse_hw *hw);
-> > +	int (*get_perm_mac)(struct mucse_hw *hw);
-> > +	int (*mbx_send_notify)(struct mucse_hw *hw, bool enable, int mode);
-> > +};
-> > +
-> >  struct mucse {
-> >  	struct net_device *netdev;
-> >  	struct pci_dev *pdev;
-> > @@ -54,4 +69,7 @@ int rnpgbe_init_hw(struct mucse_hw *hw, int board_type);
-> >  #define PCI_DEVICE_ID_N500_DUAL_PORT 0x8318
-> >  #define PCI_DEVICE_ID_N210 0x8208
-> >  #define PCI_DEVICE_ID_N210L 0x820a
-> > +
-> > +#define mucse_hw_wr32(hw, reg, val) \
-> > +	writel((val), (hw)->hw_addr + (reg))
-> >  #endif /* _RNPGBE_H */
-> > diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_chip.c b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_chip.c
-> > index 86f1c75796b0..667e372387a2 100644
-> > --- a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_chip.c
-> > +++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_chip.c
-> > @@ -1,11 +1,88 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  /* Copyright(c) 2020 - 2025 Mucse Corporation. */
-> >  
-> > +#include <linux/pci.h>
-> >  #include <linux/errno.h>
-> > +#include <linux/etherdevice.h>
-> >  
-> >  #include "rnpgbe.h"
-> >  #include "rnpgbe_hw.h"
-> >  #include "rnpgbe_mbx.h"
-> > +#include "rnpgbe_mbx_fw.h"
-> > +
-> > +/**
-> > + * rnpgbe_get_permanent_mac - Get permanent mac
-> > + * @hw: hw information structure
-> > + *
-> > + * rnpgbe_get_permanent_mac tries to get mac from hw
-> > + *
-> > + * Return: 0 on success, negative errno on failure
-> > + **/
-> > +static int rnpgbe_get_permanent_mac(struct mucse_hw *hw)
-> > +{
-> > +	struct device *dev = &hw->pdev->dev;
-> > +	u8 *mac_addr = hw->perm_addr;
-> > +	int err;
-> > +
-> > +	err = mucse_mbx_get_macaddr(hw, hw->pfvfnum, mac_addr, hw->port);
-> > +	if (err) {
-> > +		dev_err(dev, "Failed to get MAC from FW %d\n", err);
-> > +		return err;
-> > +	}
-> > +
-> > +	if (!is_valid_ether_addr(mac_addr)) {
-> > +		dev_err(dev, "Failed to get valid MAC from FW\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +/**
-> > + * rnpgbe_reset - Do a hardware reset
-> > + * @hw: hw information structure
-> > + *
-> > + * rnpgbe_reset calls fw to do a hardware
-> > + * reset, and cleans some regs to default.
-> > + *
-> > + * Return: 0 on success, negative errno on failure
-> > + **/
-> > +static int rnpgbe_reset(struct mucse_hw *hw)
-> > +{
-> > +	mucse_hw_wr32(hw, RNPGBE_DMA_AXI_EN, 0);
-> > +	return mucse_mbx_reset_hw(hw);
-> > +}
-> > +
-> > +/**
-> > + * rnpgbe_mbx_send_notify - Echo fw status
-> > + * @hw: hw information structure
-> > + * @enable: true or false status
-> > + * @mode: status mode
-> > + *
-> > + * Return: 0 on success, negative errno on failure
-> > + **/
-> > +static int rnpgbe_mbx_send_notify(struct mucse_hw *hw,
-> > +				  bool enable,
-> > +				  int mode)
-> > +{
-> > +	int err;
-> > +
-> > +	switch (mode) {
-> > +	case mucse_fw_powerup:
-> > +		err = mucse_mbx_powerup(hw, enable);
-> > +		break;
-> > +	default:
-> > +		err = -EINVAL;
-> > +	}
-> > +
+- Mani
+
+> Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
+> ---
+> Dang Huynh (25):
+>       ARM: dts: unisoc: rda8810pl: Add label to GPIO nodes
+>       drivers: gpio: rda: Make IRQ optional
+>       dt-bindings: gpio: rda: Make interrupts optional
+>       rtc: Add timestamp for the end of 2127
+>       dt-bindings: rtc: Add RDA Micro RDA8810PL RTC
+>       rtc: Add driver for RDA Micro SoC
+>       ARM: dts: unisoc: rda8810pl: Enable Real-Time Clock
+>       ARM: dts: unisoc: rda8810pl: Enable ARM PMU
+>       dt-bindings: clock: Add RDA Micro RDA8810PL clock/reset controller
+>       drivers: clk: Add Clock and Reset Driver for RDA Micro RDA8810PL SoC
+>       dts: unisoc: rda8810pl: Enable clock/reset driver
+>       dts: unisoc: rda8810pl: Add OPP for CPU and define L2 cache
+>       dts: unisoc: orangepi: Disable UART with no users
+>       dt-bindings: power: reset: Add RDA Micro Modem Reset
+>       power: reset: Add basic power reset driver for RDA8810PL
+>       dts: unisoc: rda8810pl: Enable modem reset
+>       drivers: gpio: rda: Make direction register unreadable
+>       dt-bindings: dma: Add RDA IFC DMA
+>       dmaengine: Add RDA IFC driver
+>       dts: unisoc: rda8810pl: Enable IFC
+>       dt-bindings: mmc: Add RDA SDMMC controller
+>       mmc: host: Add RDA Micro SD/MMC driver
+>       dts: unisoc: rda8810pl: Add SDMMC controllers
+>       dts: unisoc: orangepi-2g: Enable SD Card
+>       dts: unisoc: orangepi-i96: Enable SD Card
 > 
-> Since you only have one mode currently, this switch statement seems
-> unnecessary.
+>  .../bindings/clock/rda,8810pl-apsyscon.yaml        |  44 ++
+>  Documentation/devicetree/bindings/dma/rda,ifc.yaml |  42 +
+>  .../devicetree/bindings/gpio/gpio-rda.yaml         |   3 -
+>  Documentation/devicetree/bindings/mmc/rda,mmc.yaml |  91 +++
+>  .../bindings/power/reset/rda,md-reset.yaml         |  36 +
+>  .../devicetree/bindings/rtc/rda,8810pl-rtc.yaml    |  30 +
+>  MAINTAINERS                                        |  30 +
+>  .../boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts  |  24 +-
+>  .../arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts |  24 +-
+>  arch/arm/boot/dts/unisoc/rda8810pl.dtsi            | 115 ++-
+>  drivers/clk/Kconfig                                |   1 +
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/rda/Kconfig                            |  14 +
+>  drivers/clk/rda/Makefile                           |   2 +
+>  drivers/clk/rda/clk-rda8810.c                      | 770 +++++++++++++++++++
+>  drivers/dma/Kconfig                                |  10 +
+>  drivers/dma/Makefile                               |   1 +
+>  drivers/dma/rda-ifc.c                              | 450 +++++++++++
+>  drivers/gpio/gpio-rda.c                            |   4 +-
+>  drivers/mmc/host/Kconfig                           |  12 +
+>  drivers/mmc/host/Makefile                          |   1 +
+>  drivers/mmc/host/rda-mmc.c                         | 853 +++++++++++++++++++++
+>  drivers/power/reset/Kconfig                        |   9 +
+>  drivers/power/reset/Makefile                       |   1 +
+>  drivers/power/reset/rda-reboot.c                   |  58 ++
+>  drivers/rtc/Kconfig                                |  11 +
+>  drivers/rtc/Makefile                               |   1 +
+>  drivers/rtc/rtc-rda.c                              | 356 +++++++++
+>  include/dt-bindings/clock/rda,8810pl-apclk.h       |  79 ++
+>  include/dt-bindings/dma/rda-ifc.h                  |  28 +
+>  include/linux/rtc.h                                |   1 +
+>  31 files changed, 3079 insertions(+), 23 deletions(-)
+> ---
+> base-commit: 590b221ed4256fd6c34d3dea77aa5bd6e741bbc1
+> change-id: 20250916-rda8810pl-drivers-9a5271452635
 > 
-
-The same reason with enum....
-
-Can I keep switch here with a commit?
-
-/* Keep switch structure to support more modes in the future */
-switch (mode) {
-case mucse_fw_powerup:
-	err = mucse_mbx_powerup(hw, enable);
-	break;
-default:
-	err = -EINVAL;
-}
-
-> > +	return err;
-> > +}
-> 
-> 
+> Best regards,
 > -- 
-> Thanks and Regards,
-> Danish
+> Dang Huynh <dang.huynh@mainlining.org>
 > 
 > 
 
-Thanks for feedback.
-
+-- 
+மணிவண்ணன் சதாசிவம்
