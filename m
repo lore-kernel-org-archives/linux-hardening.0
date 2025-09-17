@@ -1,246 +1,263 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4B0A55;
-	Wed, 17 Sep 2025 01:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948171F4C92
+	for <linux-hardening@vger.kernel.org>; Wed, 17 Sep 2025 02:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758073122; cv=none; b=l5mGc4OnYJh1bsfHf6FgwJcNGhIRf6FMV1UJ9WuJMNOzmKnxq3Zjv5ojEmk5gTpofY5396pFz0p0NNyforULqOHL+zqfpwgr6GlVrnb/0ztt717nOxApkme50kNbCz4lIzoYTL4JdHJYa/XcwIhISDq5OwnUPfhD7SVKcAIrwVw=
+	t=1758074961; cv=none; b=hUyJlNt8PC33uUXzJ4bnnKGlHuBwFvWAY3YjYQm2MO0ABmQZeUYlEB0H217Q7UmeeeCbn1/Ls3gGLBp2ZPGTKEdUhJrz/vU9IvNjFsUQdoYG9Cs+vK8AOxoqTJwtxBNl4xRNAsrSyP6k2RSUb4RhjMERhgwgQoKj0RVrCG0FA8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758073122; c=relaxed/simple;
-	bh=c96r5g9/2TrMWF+E4shOu1iKxd/UIq2uyTWVCc7wfeI=;
+	s=arc-20240116; t=1758074961; c=relaxed/simple;
+	bh=9Uos3Cj/r3bNwVwBbAMSOGK6nTL3M/iIao2va7IjTHg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KXwgT5Jw3ctnDUS+nfSaverKvZDvL+I4+S/Ix6eE2K7JnU7vavXglbpzTXxge6myJQb3+mneYaIAg27Q9iPniTt2lBq4N1mayOI/hD7OIo2aOPJG4hejVK2gk7nln6ZA9zpBDNu1zpiHFjcLuf/Jxw1uVNucmd41Oqz85YG7DZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
-X-QQ-mid: esmtpgz14t1758073078tc590936c
-X-QQ-Originating-IP: DSQOi3WrbOSImlheDRdqyOR7Vym4llyrGDEqhpWxiX0=
-Received: from localhost ( [203.174.112.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 17 Sep 2025 09:37:55 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 17397237642805600174
-Date: Wed, 17 Sep 2025 09:37:55 +0800
-From: Yibo Dong <dong100@mucse.com>
-To: =?iso-8859-1?Q?J=F6rg?= Sommer <joerg@jo-so.de>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	corbet@lwn.net, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
-	gustavoars@kernel.org, rdunlap@infradead.org,
-	vadim.fedorenko@linux.dev, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v12 1/5] net: rnpgbe: Add build support for
- rnpgbe
-Message-ID: <B4DFD08F6CE2FA99+20250917013755.GA33236@nic-Precision-5820-Tower>
-References: <20250916112952.26032-1-dong100@mucse.com>
- <20250916112952.26032-2-dong100@mucse.com>
- <mr6wuiqeucy6shybrqrg3pwim22ep5tbdivspsjwpo5335ri7j@u4jcc6os3ndr>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pE+k5AgPMCCP72/sVlVebaIFGMDDYBf9EOf88cdXUGg6jYmPCviMfnZtCWF4x+IKYA4a4CjbhnqGZhhRxkDcM7Wj8u69+iLgf7sLwLYeSwTCSP8PvX9Vga70NHxGJ3yXSyiBNETa74UZqG+Zd2ezPOScH2iij+201FBaQsZ3qTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aVau2eK8; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aVau2eK8"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-32e1c40ecb0so2716176a91.3
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Sep 2025 19:09:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758074959; x=1758679759; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ec0asGTrd8ayRRK4foZ3FyVP3qtZ9n13Tw5uWDKt8/4=;
+        b=aVau2eK8E7JxlfS335s5a+CbasZt2IfRGQcEsBRFu1oojsde3u+vSP0Rx86mVfafk1
+         Bn3lAFsupy0sYGX0Gs6M/auoeDHMfASAD8XXbO8HrBJaIicfyp5iZu/D7DG/ikdXFrpP
+         kqxtCq48FxDuEnRjlwMp1Y0tujVXbYQ7IfHF+Kxj0Iur192PFAahP1IZJJEtzgopPRPI
+         dLUtDstLp2Xe7n7fC+Q1R69hDx3nGXUTpUj0zW+S7QgUxdIQM9Shnz2TpH4/tijYDNte
+         Xvfj5X19Qp9dj1k6gIB15jsdP1IPnn/7ULkhwMlsDOHNG8YGKVPwwbhAAkv+aUmKCn/t
+         k+dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758074959; x=1758679759;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ec0asGTrd8ayRRK4foZ3FyVP3qtZ9n13Tw5uWDKt8/4=;
+        b=BtOSYaUWX4JUG5HO7mwHsfdMBVFVSyVOD27vNzWhmPY3eYMZrXZter72N4BfUZmVRG
+         Z9SJU7vYHzeNszHPsOf1WrnOqFTdbkDEOHpheVOJNl9j4vSJGkfwqr3PrfFbXpdjwM14
+         RGMjetcTyEV1rpOPetxwr9/zROqfsid6h39y+1o1ehDl/dQhcm6T5qxyQOHeq44RYwcz
+         jkCDvBf9c68BiLUE/tfR7GwwFIUAhHV8PnS32olEn2rY+xf+BxDmZndgKRvDKPoM5e0Y
+         joAbcHRjVZoPaQEUDsDMQT61b6MphAsyFujxEJ1pSK0vwMI0SL+aaMeXCOZ5O3MQxc0I
+         82vA==
+X-Forwarded-Encrypted: i=1; AJvYcCUx0csXNE6ccodzS/beHxo6/sGLVtfjB8Mu7rsD0MOquDYChBHEQjZjLSg/tLlHe/GJ8dlAlFRpi62p3kk6SDw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzzo7OmopTRrj7FrqK0/ZtyrreFbCDsIK+xAek6VFVhqnGBY4Sd
+	yC6ZDtYDGRb0t/qMpQKD9f90PriwrRhvMzqHGs0JoIx5K27culd1r0id
+X-Gm-Gg: ASbGncuiLmgU4LnqHA+dqFJ7m+No7xD5mamp5WDOhGP8TBr2Vrw4ISba/7Wc/WLgdcN
+	9StIN4Lcdl6lkytQm0mKxz4wp+vDANrfyhT8MoNabJCAdh5dB2VN9W4PyG/qgevbWUBb3BT/Ai/
+	smxosFyWVSBg3ZbP8d5ORTPhEl2o8a6CgIT3Iz5aB+mnxVz0r4Yw/NowMgpigEgh3BJ8av1MGjD
+	mBmThDart2a9fEJr7qvVyBSs6BsXztT3hDlEew+4573MHe2y+nifpj8Qm3Tphq8k7QM561oWVfC
+	tD+DxihaavEjNZvovn9vJPiMF8TqvC+9aAlaqBk1b3LJM73/LWB3jy66vMf2pSBhUuEollHF1QA
+	XLsgJuTPW0D6EYUKTzqw3gGnMy8ftqAN7fixKSZVO
+X-Google-Smtp-Source: AGHT+IGE1lxlxAvcVFpWcXZnKgkQRp7XPS1CVNzz6zy0okJvDf1X7FhTYPGTQTnkoTiUrMzQO5PECQ==
+X-Received: by 2002:a17:90b:4a41:b0:32e:3686:830e with SMTP id 98e67ed59e1d1-32ee3f60244mr511848a91.23.1758074958707;
+        Tue, 16 Sep 2025 19:09:18 -0700 (PDT)
+Received: from localhost ([146.19.163.62])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32ed275fb3csm862045a91.20.2025.09.16.19.09.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Sep 2025 19:09:18 -0700 (PDT)
+Date: Wed, 17 Sep 2025 10:09:12 +0800
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Qianqiang Liu <qianqiang.liu@163.com>,
+	Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Shixiong Ou <oushixiong@kylinos.cn>,
+	Zsolt Kajtar <soci@c64.rulez.org>, Ingo Molnar <mingo@kernel.org>,
+	Nam Cao <namcao@linutronix.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Joel Granados <joel.granados@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Sohil Mehta <sohil.mehta@intel.com>,
+	Feng Tang <feng.tang@linux.alibaba.com>,
+	Sravan Kumar Gundu <sravankumarlpu@gmail.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Anna Schumaker <anna.schumaker@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	Yunhui Cui <cuiyunhui@bytedance.com>, Tejun Heo <tj@kernel.org>,
+	Luo Gengkun <luogengkun@huaweicloud.com>,
+	Li Huafei <lihuafei1@huawei.com>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Yicong Yang <yangyicong@hisilicon.com>, linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, kexec@lists.infradead.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/9] panic: Introduce helper functions for panic state
+Message-ID: <aMoYSElAEBiBvVET@mdev>
+References: <20250825022947.1596226-1-wangjinchao600@gmail.com>
+ <20250825022947.1596226-2-wangjinchao600@gmail.com>
+ <aMk0d5JO_4YECYGY@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <mr6wuiqeucy6shybrqrg3pwim22ep5tbdivspsjwpo5335ri7j@u4jcc6os3ndr>
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NWDl/EfWhAWl8xsYaJNDzPSYWIrCBwtoaDBKq3D05mRoZgaZHm7Gb/z9
-	KWyRgdBfy9eLai5qMkqIrL1/H/vBbbFPxPa835n6TLBWUw+73LUTCkd8tz4bWKcDxuMJY36
-	oabF+NzkLcBbWOVLNgmelbPH98eT5WsuV7ZDdZ7dHCKKYGukd0/skPVF6689W583WPOTmYk
-	44gw3nWjhU7F/meTtlhefHvxXb2zaoIAApFtjw8+tfSxhAKTe+eExe9cl58cS8zRwZ9/rDA
-	7+AlxXnAFtEcPRlaWLGXnyb59wIzUF+pZa+8M5sWWKZ5cUeVFO/tEG/e9FUlHpwt8o8gjMy
-	6WIXKeR3CyJS1lNcLPrJpbnbahowF5uQ/feODgnyeTFYmzNWHNOt8j6O9gIdCQLBpXLsMmY
-	7fIn+u+Qs1nMPzxEhACAkrGpi73Q/0v3ddxVWijNMhrDmXSp+VMyshc8iwBaXXI4dxen+yN
-	GD9AkIkm0PLN5WiSpn8bjx/T5q6C25X+1Wd1vxd5jG667ksNkuA9dJFv7Ug2irx6bIDyvqd
-	nz/ikLFNE9YgXBXElTzxnmizVfXXK00OzyOAaDdj55WcIBEfbcZ2y+xlPN3c8XAlV9ZqETY
-	i+S7yD0m+pfO5SYbKcvnj5FBjghM2TnOQtIXnXJHix3OBiJ6JlrmUDiuDDIzb4GPA6zsbV1
-	KzOVL/ORFzinPDqOU0mXzA9swzd2ZAU/85Yunewf6cZUCHDm5QvREtu+JtjNnrQ7CD2t7TO
-	0N9KS/eb7qKZynNivtSjR/KemzCUPa7P2CFzsa7SZYTGcp0x4Q6MlIckj+YATZgeatNwik1
-	fnPUkX/D2a0UbH8aFv3Uj46LvXuS9TWXfdKljtVIsvJuqFFSTdSStzwRoLzwLV0lHk8jOE8
-	gC3GxqO44Z9TFrMz2NdUqA0jTozwj+eTxFrkmAhE6gakLohxcuKRLANahTKYUIFdHu1s6Uw
-	PoXBQCSLLe4j5i9Lmz9YpydAk+ZjSeqoMNlKxPeiT0oSBQOWsOiHfFNJGetBTVq53+YF6NI
-	iMMx9jGwdBLg0Ulg/a
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <aMk0d5JO_4YECYGY@pathway.suse.cz>
 
-On Tue, Sep 16, 2025 at 09:00:23PM +0200, Jörg Sommer wrote:
-> Dong Yibo schrieb am Di 16. Sep, 19:29 (+0800):
-> > diff --git a/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c
-> > new file mode 100644
-> > index 000000000000..60bbc806f17b
-> > --- /dev/null
-> > +++ b/drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c
-> > @@ -0,0 +1,124 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/* Copyright(c) 2020 - 2025 Mucse Corporation. */
+On Tue, Sep 16, 2025 at 11:57:11AM +0200, Petr Mladek wrote:
+> On Mon 2025-08-25 10:29:29, Jinchao Wang wrote:
+> > This patch introduces four new helper functions to abstract the
+> > management of the panic_cpu variable. These functions will be used in
+> > subsequent patches to refactor existing code.
+> > 
+> > The direct use of panic_cpu can be error-prone and ambiguous, as it
+> > requires manual checks to determine which CPU is handling the panic.
+> > The new helpers clarify intent:
+> > 
+> > panic_try_start():
+> > Atomically sets the current CPU as the panicking CPU.
+> > 
+> > panic_reset():
+> > Reset panic_cpu to PANIC_CPU_INVALID.
+> > 
+> > panic_in_progress():
+> > Checks if a panic has been triggered.
+> > 
+> > panic_on_this_cpu():
+> > Returns true if the current CPU is the panic originator.
+> > 
+> > panic_on_other_cpu():
+> > Returns true if a panic is on another CPU.
+> > 
+> > This change lays the groundwork for improved code readability
+> > and robustness in the panic handling subsystem.
+> > 
+> > Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> > ---
+> >  include/linux/panic.h  |  6 +++++
+> >  kernel/panic.c         | 53 ++++++++++++++++++++++++++++++++++++++++++
+> >  kernel/printk/printk.c |  5 ----
+> >  3 files changed, 59 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/include/linux/panic.h b/include/linux/panic.h
+> > index 7be742628c25..6f972a66c13e 100644
+> > --- a/include/linux/panic.h
+> > +++ b/include/linux/panic.h
+> > @@ -43,6 +43,12 @@ void abort(void);
+> >  extern atomic_t panic_cpu;
+> >  #define PANIC_CPU_INVALID	-1
+> >  
+> > +bool panic_try_start(void);
+> > +void panic_reset(void);
+> > +bool panic_in_progress(void);
+> > +bool panic_on_this_cpu(void);
+> > +bool panic_on_other_cpu(void);
 > > +
-> > +#include <linux/pci.h>
+> >  /*
+> >   * Only to be used by arch init code. If the user over-wrote the default
+> >   * CONFIG_PANIC_TIMEOUT, honor it.
+> > diff --git a/kernel/panic.c b/kernel/panic.c
+> > index 72fcbb5a071b..eacb0c972110 100644
+> > --- a/kernel/panic.c
+> > +++ b/kernel/panic.c
+> > @@ -294,6 +294,59 @@ void __weak crash_smp_send_stop(void)
+> >  
+> >  atomic_t panic_cpu = ATOMIC_INIT(PANIC_CPU_INVALID);
+> >  
+> > +bool panic_try_start(void)
+> > +{
+> > +	int old_cpu, this_cpu;
 > > +
-> > +#include "rnpgbe.h"
+> > +	/*
+> > +	 * Only one CPU is allowed to execute the crash_kexec() code as with
+> > +	 * panic().  Otherwise parallel calls of panic() and crash_kexec()
+> > +	 * may stop each other.  To exclude them, we use panic_cpu here too.
+> > +	 */
+> > +	old_cpu = PANIC_CPU_INVALID;
+> > +	this_cpu = raw_smp_processor_id();
 > > +
-> > +static const char rnpgbe_driver_name[] = "rnpgbe";
+> > +	return atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu);
+> > +}
+> > +EXPORT_SYMBOL(panic_try_start);
 > > +
-> > +/* rnpgbe_pci_tbl - PCI Device ID Table
+> > +void panic_reset(void)
+> > +{
+> > +	atomic_set(&panic_cpu, PANIC_CPU_INVALID);
+> > +}
+> > +EXPORT_SYMBOL(panic_reset);
+> > +
+> > +bool panic_in_progress(void)
+> > +{
+> > +	return unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID);
+> > +}
+> > +EXPORT_SYMBOL(panic_in_progress);
+> > +
+> > +/* Return true if a panic is in progress on the current CPU. */
+> > +bool panic_on_this_cpu(void)
+> > +{
+> > +	/*
+> > +	 * We can use raw_smp_processor_id() here because it is impossible for
+> > +	 * the task to be migrated to the panic_cpu, or away from it. If
+> > +	 * panic_cpu has already been set, and we're not currently executing on
+> > +	 * that CPU, then we never will be.
+> > +	 */
+> > +	return unlikely(atomic_read(&panic_cpu) == raw_smp_processor_id());
+> > +}
+> > +EXPORT_SYMBOL(panic_on_this_cpu);
+> > +
+> > +/*
+> > + * Return true if a panic is in progress on a remote CPU.
 > > + *
-> > + * { PCI_DEVICE(Vendor ID, Device ID),
-> > + *   driver_data (used for different hw chip) }
+> > + * On true, the local CPU should immediately release any printing resources
+> > + * that may be needed by the panic CPU.
 > > + */
-> > +static struct pci_device_id rnpgbe_pci_tbl[] = {
-> > +	{ PCI_DEVICE(PCI_VENDOR_ID_MUCSE, PCI_DEVICE_ID_N500_QUAD_PORT),
-> > +	  .driver_data = board_n500},
-> > +	{ PCI_DEVICE(PCI_VENDOR_ID_MUCSE, PCI_DEVICE_ID_N500_DUAL_PORT),
-> > +	  .driver_data = board_n500},
-> > +	{ PCI_DEVICE(PCI_VENDOR_ID_MUCSE, PCI_DEVICE_ID_N210),
-> > +	  .driver_data = board_n210},
-> > +	{ PCI_DEVICE(PCI_VENDOR_ID_MUCSE, PCI_DEVICE_ID_N210L),
-> > +	  .driver_data = board_n210},
-> 
-> Should there be a space before }?
-> 
-
-ixgbe_main.c has sapce before }, but no sapce after {.
-ngbe_mainc. no sapce before }, but space after {.
-mlx5/core/main.c has space both.
-It seems not the same....
-I will add sapce before }.
-
-> > +	/* required last entry */
-> > +	{0, },
-> > +};
-> > +
-> > +/**
-> > + * rnpgbe_probe - Device initialization routine
-> > + * @pdev: PCI device information struct
-> > + * @id: entry in rnpgbe_pci_tbl
-> > + *
-> > + * rnpgbe_probe initializes a PF adapter identified by a pci_dev
-> > + * structure.
-> > + *
-> > + * Return: 0 on success, negative errno on failure
-> > + **/
-> > +static int rnpgbe_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > +bool panic_on_other_cpu(void)
 > > +{
-> > +	int err;
-> 
-> In rnpgbe_mbx.c you use `int ret` for this pattern. I think you should unify
-> this. But I'm more in favour of `err` than `ret`.
-> 
-
-I see, I will use err in rnpgbe_mbx.c
-
-> > +
-> > +	err = pci_enable_device_mem(pdev);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	err = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(56));
-> > +	if (err) {
-> > +		dev_err(&pdev->dev,
-> > +			"No usable DMA configuration, aborting %d\n", err);
-> > +		goto err_disable_dev;
-> > +	}
-> > +
-> > +	err = pci_request_mem_regions(pdev, rnpgbe_driver_name);
-> > +	if (err) {
-> > +		dev_err(&pdev->dev,
-> > +			"pci_request_selected_regions failed %d\n", err);
-> > +		goto err_disable_dev;
-> > +	}
-> > +
-> > +	pci_set_master(pdev);
-> > +	err = pci_save_state(pdev);
-> > +	if (err) {
-> > +		dev_err(&pdev->dev, "pci_save_state failed %d\n", err);
-> > +		goto err_free_regions;
-> > +	}
-> > +
-> > +	return 0;
-> > +err_free_regions:
-> > +	pci_release_mem_regions(pdev);
-> > +err_disable_dev:
-> > +	pci_disable_device(pdev);
-> > +	return err;
+> > +	return (panic_in_progress() && !this_cpu_in_panic());
 > > +}
+> > +EXPORT_SYMBOL(panic_on_other_cpu);
 > > +
-> > +/**
-> > + * rnpgbe_remove - Device removal routine
-> > + * @pdev: PCI device information struct
-> > + *
-> > + * rnpgbe_remove is called by the PCI subsystem to alert the driver
-> > + * that it should release a PCI device. This could be caused by a
-> > + * Hot-Plug event, or because the driver is going to be removed from
-> > + * memory.
-> > + **/
-> > +static void rnpgbe_remove(struct pci_dev *pdev)
-> > +{
-> > +	pci_release_mem_regions(pdev);
-> > +	pci_disable_device(pdev);
-> > +}
-> > +
-> > +/**
-> > + * rnpgbe_dev_shutdown - Device shutdown routine
-> > + * @pdev: PCI device information struct
-> > + **/
-> > +static void rnpgbe_dev_shutdown(struct pci_dev *pdev)
-> > +{
-> > +	pci_disable_device(pdev);
-> > +}
-> > +
-> > +/**
-> > + * rnpgbe_shutdown - Device shutdown routine
-> > + * @pdev: PCI device information struct
-> > + *
-> > + * rnpgbe_shutdown is called by the PCI subsystem to alert the driver
-> > + * that os shutdown. Device should setup wakeup state here.
-> > + **/
-> > +static void rnpgbe_shutdown(struct pci_dev *pdev)
-> > +{
-> > +	rnpgbe_dev_shutdown(pdev);
+> >  /*
+> >   * A variant of panic() called from NMI context. We return if we've already
+> >   * panicked on this CPU. If another CPU already panicked, loop in
+> > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> > index 0efbcdda9aab..5fe35f377b79 100644
+> > --- a/kernel/printk/printk.c
+> > +++ b/kernel/printk/printk.c
+> > @@ -345,11 +345,6 @@ static void __up_console_sem(unsigned long ip)
+> >  }
+> >  #define up_console_sem() __up_console_sem(_RET_IP_)
+> >  
+> > -static bool panic_in_progress(void)
+> > -{
+> > -	return unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID);
+> > -}
+> > -
+> >  /* Return true if a panic is in progress on the current CPU. */
+> >  bool this_cpu_in_panic(void)
+> >  {
 > 
-> Is this the only user of rnpgbe_dev_shutdown?
+> All the functions are trivial. It would make sense to define
+> them in linux/panic.h. Then the callers would benefit
+> from the (unlikely) prediction macro...
 > 
+> It can be done in a followup path.
+Thanks for feedback, I will do it later.
 
-No, it maybe called by suspend callback in the future.
-Device relative code will be added in rnpgbe_dev_shutdown, and power state
-code in rnpgbe_shutdown. This is the same like other driver did
-(ixgbe_main.c)
+BTW, this series was merged to -mm branch already.
 
-> > +}
-> > +
-> > +static struct pci_driver rnpgbe_driver = {
-> > +	.name = rnpgbe_driver_name,
-> > +	.id_table = rnpgbe_pci_tbl,
-> > +	.probe = rnpgbe_probe,
-> > +	.remove = rnpgbe_remove,
-> > +	.shutdown = rnpgbe_shutdown,
-> > +};
-> > +
-> > +module_pci_driver(rnpgbe_driver);
-> > +
-> > +MODULE_DEVICE_TABLE(pci, rnpgbe_pci_tbl);
-> > +MODULE_AUTHOR("Mucse Corporation, <techsupport@mucse.com>");
-> > +MODULE_DESCRIPTION("Mucse(R) 1 Gigabit PCI Express Network Driver");
-> > +MODULE_LICENSE("GPL");
-> > -- 
-> > 2.25.1
-> > 
-> > 
 > 
-> -- 
-> Als deutscher Tourist im Ausland steht man vor der Frage, ob man sich
-> anständig benehmen muss oder ob schon deutsche Touristen dagewesen sind.
->                                                 (Kurt Tucholsky)
+> Otherwise, the patch looks good. I think that it is too late
+> but feel free to use:
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> 
+> Best Regards,
+> Petr
 
-Thanks for your feedback.
-
-
+-- 
+Jinchao
