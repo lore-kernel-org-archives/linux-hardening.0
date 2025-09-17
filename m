@@ -1,91 +1,56 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900AB328965;
-	Wed, 17 Sep 2025 12:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFD04086A;
+	Wed, 17 Sep 2025 13:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758113413; cv=none; b=HVNxptdd+Yv3gDRaa0t4lPVHdFXEsYPGOQqt9ltcuLjbK2NMpYP3Jer/zDpPjPzRZNPx3PULEbgGN33s/Ay3pZCOtGQdEBP1qNfXb/gWWC7ZNMFibXqWWgDjTXyHdBuyWycjxB8B2XBJNKf+aWMma/WKy6NQ4cI5KVxIg6oBeC0=
+	t=1758115549; cv=none; b=tiwVuhZtP48iLW11Y3nmHfICT+Nn9gVmzvM9at5zRd8K2OTCDaeYEdAtQ8Or8PcsOcE4FiDkHY5ves9kEXgTYo7lao/6c/tX/deYrY6Uay3eCsCwG9kVSj8Vm3gwWA/2dzlNwotZTEXCY3r6MXu2qXcZn2dok1X/Eqh+DKarrys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758113413; c=relaxed/simple;
-	bh=Zzu47Spqkx9PBO3hTkWFHeC/kbz1j4gqkoIEVOrafyA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lr9oXXfPDDHFkaXl9N2gaTpFPyYWU6m/fAxsRNvApf6oiPn+enywYU2weRVxfgHnwjJ6c1ShRBmK9UaxGdqXj3vLb0GElJW8dpr44UsGp6ShRZTXz+EFMop6ZuYYTet6GvvyVFgKxmUd2VjqiZ5cQeecET7RnTqCjc7FeYU9lvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=G5lj8mwg; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1758115549; c=relaxed/simple;
+	bh=oQsiOAAwXPKVTRPEdd7R4V3CfL66QEI5EThA/cQWxbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=s8cJtWs1k/GNqa/KoqvVnmiPxJ+ZjGRBI9LDZM2Uxhd0ggza7uAvVkNUFBOC0DdeSFPmaa4ySJE8nl7qIPEdKSZiVwfOyW5GKPo3Lr80LlvyGcxi3QrJsPTB5iMDupsR++4xKjrSs1FLV7b5CSobX7RBPCBKdslvf+DyR0i4wjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rw2xViJ6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="G5lj8mwg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1758113409;
-	bh=Zzu47Spqkx9PBO3hTkWFHeC/kbz1j4gqkoIEVOrafyA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G5lj8mwgzYOBKZYPa16TeMLmQUonfUg5YrBUoPVrg1u+zpcWnBixbqS0A3wcteZC8
-	 +f9vEcVBBcOdwb8XhfXP07lARnpxRBKk+nCwEfUNt6lvMjXRbKn2TMP/ouU41jdp/w
-	 6Qm/t6yanrmwQYQfYFdBBrlTqtyEuckkxt4xwjClQXw+6UWyssj8czCufSj7ynhIwR
-	 8KnOs7UskI/UiQkPiIwOP6GnOY6t4JzXmqraLWuhyQMgkHoOteDxEpnMXYwJiSTV2d
-	 1JTi68Nm95/eE8tHh6YXbzhlDvdk/lWvkvPxotYnguOZ9RPk7/1gadXKh+7nOmGHAN
-	 F9f4M++sZDsFQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id A0D3217E0A49;
-	Wed, 17 Sep 2025 14:50:08 +0200 (CEST)
-Message-ID: <69c4f96b-8f47-493f-a236-5338c34dc100@collabora.com>
-Date: Wed, 17 Sep 2025 14:50:08 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rw2xViJ6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3351C4CEF5;
+	Wed, 17 Sep 2025 13:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758115549;
+	bh=oQsiOAAwXPKVTRPEdd7R4V3CfL66QEI5EThA/cQWxbA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Rw2xViJ6Po0IymGMP2y5IpODMIpD9MiRzQtZLG6+Wga5B5meo0V3l/tU6VCJaHDql
+	 JNJ9ByqmJUM0IyqCVPAjAdR8Q+3R/bS+lTJuE33FC/Hp+7zAW/EMoP4xFz8BPFZ62l
+	 a72DNjgaJ7MjxOIv8tUHHw2Q3hiSwWXDErB/UI2Qbsa/INUKla9TnPK5LjD9iPQXxV
+	 ECveJ3412Pz1NId5WCyKyqldqokMA1j60grw16m4oqgeQUvLF0ndbe81YY9IJwU1oU
+	 g2Z87RUn6li0o879b/fV80jHSAvNPi5Y1NGGuJMGDiv1J8X1/9pPQcUgpQb6EUVued
+	 hN8c5ag+qE8Rw==
+Date: Wed, 17 Sep 2025 15:25:44 +0200
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH 0/2][next] Expand TRAILING_OVERLAP() capabilities
+Message-ID: <cover.1758115257.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/10] mailbox: add MediaTek GPUEB IPI mailbox
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, MyungJoo Ham <myungjoo.ham@samsung.com>,
- Kyungmin Park <kyungmin.park@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250917-mt8196-gpufreq-v3-0-c4ede4b4399e@collabora.com>
- <20250917-mt8196-gpufreq-v3-5-c4ede4b4399e@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250917-mt8196-gpufreq-v3-5-c4ede4b4399e@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Il 17/09/25 14:22, Nicolas Frattaroli ha scritto:
-> The MT8196 SoC uses an embedded MCU to control frequencies and power of
-> the GPU. This controller is referred to as "GPUEB".
-> 
-> It communicates to the application processor, among other ways, through
-> a mailbox.
-> 
-> The mailbox exposes one interrupt, which appears to only be fired when a
-> response is received, rather than a transaction is completed. For us,
-> this means we unfortunately need to poll for txdone.
-> 
-> The mailbox also requires the EB clock to be on when touching any of the
-> mailbox registers.
-> 
-> Add a simple driver for it based on the common mailbox framework.
-> 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Small series aimed at expanding TRAILING_OVERLAP() capabilities.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Gustavo A. R. Silva (2):
+  stddef: Remove token-pasting in TRAILING_OVERLAP()
+  stddef: Introduce __TRAILING_OVERLAP()
 
+ include/linux/stddef.h | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
+
+-- 
+2.43.0
 
