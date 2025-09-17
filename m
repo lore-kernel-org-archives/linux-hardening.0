@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AE28BEE
-	for <linux-hardening@vger.kernel.org>; Wed, 17 Sep 2025 19:51:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C3934BA35
+	for <linux-hardening@vger.kernel.org>; Wed, 17 Sep 2025 20:01:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758138676; cv=none; b=RCaSAIgtrM3fSMnu9OtV6nFDzfDMaIGv0N1v4MsSM7GQvQ9MDHIs/x8pFm2ZE5xqRl5A6vG2W/cXT1E8s/r60H83AaGpXND4fW7VXYaCNljfK0LmgrqolmKS4LfibcNJk1kR4jOGeyTKKl2rppgdK8TlXQBzRZXSRHWmi2sGlgE=
+	t=1758139310; cv=none; b=MzbUjHbzJx0ie53dV+xG7xxB5Rq9ZIcMbh5qTH/S0AmXslqEiJV9tpHMuufPUtRs24KSDTsuw1E6UzSk+BVFMamyUPwhd3qCn3hdK+R0o5OjvTa0RQY6CXXkyZQTLFSyCZO2oeJU1QTln1rmgKHMpK3QqdYlRJMOasoZesyfGgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758138676; c=relaxed/simple;
-	bh=uLwMffjF4wzc/Y3kyxuCYBVTSWT4ervND3M++fZ2PnI=;
+	s=arc-20240116; t=1758139310; c=relaxed/simple;
+	bh=tf8qcOLWFJ3ub0QBr2nVAZfU6juUV89SaHHYZIcTTsk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eyajs2h1+1fVr4cklmQuH7iArQ6IaGRdNELwW1YjfYGzsrQqUc5fUGl81EybcVdHKNXWpiya8GinRhFxIN+H1fC5H3fMbdJ9jR2IbIQwzcFGoRgQheXHvvEM34fspJLkFAj9i4AxesBVS7RCmPqzi2UzIfVlFYYyIiWwSHrYXZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYtGT/E7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=c4r+m9FGjRdd1SPgB1Goq/oFwJCqNK3qEqQ+E22aSZXhgK5F6K+TAenkcl1BnkPZuBCDh2JiACOx9mHxOkYjmj1g4FNO4Xcx7MyLx6scbEv4dY3g56nqc7p5aDBpKzQgSRcm6eDl+CziaZsYtxnh8WTNewIx0K1RoV0KI1pQfmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZzyheHp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYtGT/E7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC61FC4CEE7;
-	Wed, 17 Sep 2025 19:51:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZzyheHp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA607C4CEE7;
+	Wed, 17 Sep 2025 20:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758138675;
-	bh=uLwMffjF4wzc/Y3kyxuCYBVTSWT4ervND3M++fZ2PnI=;
+	s=k20201202; t=1758139310;
+	bh=tf8qcOLWFJ3ub0QBr2nVAZfU6juUV89SaHHYZIcTTsk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DYtGT/E7XKfdpQl1v8DqHeqH60GuQUZsbiAoxnxmsYFKRLPhKYr5Fgo2Y6cb/D9Vl
-	 uxvNsarvdswTONBnLxOSsWkELMNxPYhxI3PSkpz7jQ5KqssFQq63faRx6kdJuvVuCz
-	 +aoxAzNzf8ZF/Utll9kOsEkQlSFKrURC/67nL07Qy7TNw5QJQjpsDIHc9UAMSqUHCn
-	 0G9lpyv64Bjtwsj829bPzknecJcFibVvnskvg8pp+N1ORu/ESIl+Bn8LFN0g69/uQ4
-	 9uf58ddUpFUC7PgEBEhM3OHzpB5S1O0JlWp1p6eQY75T4F6uK2pzyPsBszlQOC5aob
-	 /8S+BxuGJHwoQ==
-Date: Wed, 17 Sep 2025 12:51:15 -0700
+	b=JZzyheHpebIGOcAMzyLsAwDa6xAcXlc2AipgHNlAsgFUZidn6EjSldf0lu69Dj9oE
+	 KaeJWsz3kun4E+Xc7TW9YUS1ym1toVh64Jraeewnu4xrqFavqD9caHITve5s4ayshQ
+	 PgE3JIr4tcbiPrivFaHsA0vQ40PhR+LAATR7hXIUD1Z17BZ6dSQ49frMVNEa0bbK7H
+	 8SpGOMY+0WoxJlTBmmv9nB6euU0qoKBBfzzTu4tcfRx7M4pIm/Z45rmQh2Tv0k6Wdh
+	 kRKxn+0cltADfGjCaSWHoIDlwXgKmoKpp3zOO1qzonhuiN4Fa8yZOycQoeTHK2L2Ei
+	 l9BfPpn+y2SwA==
+Date: Wed, 17 Sep 2025 13:01:49 -0700
 From: Kees Cook <kees@kernel.org>
 To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
 Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
@@ -49,11 +49,12 @@ Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Bill Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] kcfi: Add regression test suite
-Message-ID: <202509171249.0ED683BBA@keescook>
+Subject: Re: [PATCH v3 4/7] aarch64: Add AArch64 Kernel Control Flow
+ Integrity implementation
+Message-ID: <202509171251.BA32F4B@keescook>
 References: <20250913231256.make.519-kees@kernel.org>
- <20250913232404.2690431-7-kees@kernel.org>
- <CALvbMcBv-vbJahUH_j+vxhsNnydbO7__RP1S2tg93HgUiTDv+w@mail.gmail.com>
+ <20250913232404.2690431-4-kees@kernel.org>
+ <CALvbMcDqbwjxeWn6B37+gQL1g+BvLvWpDFH=KEObMf=4kwZqZw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -63,48 +64,73 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALvbMcBv-vbJahUH_j+vxhsNnydbO7__RP1S2tg93HgUiTDv+w@mail.gmail.com>
+In-Reply-To: <CALvbMcDqbwjxeWn6B37+gQL1g+BvLvWpDFH=KEObMf=4kwZqZw@mail.gmail.com>
 
-On Sat, Sep 13, 2025 at 04:51:21PM -0700, Andrew Pinski wrote:
-> On Sat, Sep 13, 2025 at 4:36 PM Kees Cook <kees@kernel.org> wrote:
-> > +/* Should have KCFI instrumentation for all indirect calls.  */
-> > +
-> > +/* x86_64: Complete KCFI check sequence should be present.  */
-> > +/* { dg-final { scan-assembler {movl\t\$-?[0-9]+, %r1[01]d\n\taddl\t[^,]+, %r1[01]d\n\tje\t\.Lkcfi_call[0-9]+\n\.Lkcfi_trap[0-9]+:\n\tud2} { target x86_64-*-* } } } */
-> > +
-> > +/* AArch64: Complete KCFI check sequence should be present.  */
-> > +/* { dg-final { scan-assembler {ldur\tw16, \[x[0-9]+, #-[0-9]+\]\n\tmov\tw17, #[0-9]+\n\tmovk\tw17, #[0-9]+, lsl #16\n\tcmp\tw16, w17\n\tb\.eq\t(\.Lkcfi_call[0-9]+)\n\.Lkcfi_trap[0-9]+:\n\tbrk\t#[0-9]+\n\1:\n\tblr\tx[0-9]+} { target aarch64*-*-* } } } */
-> > +
-> > +/* ARM 32-bit: Complete KCFI check sequence should be present with stack
-> > +   spilling.  */
-> > +/* { dg-final { scan-assembler {push\t\{r0, r1\}\n\tldr\tr0, \[r[0-9]+, #-[0-9]+\]\n\tmovw\tr1, #[0-9]+\n\tmovt\tr1, #[0-9]+\n\tcmp\tr0, r1\n\tpop\t\{r0, r1\}\n\tbeq\t\.Lkcfi_call[0-9]+\n\.Lkcfi_trap[0-9]+:\n\tudf\t#[0-9]+\n\.Lkcfi_call[0-9]+:\n\tblx\tr[0-9]+} { target arm32 } } } */
-> > +
-> > +/* RISC-V: Complete KCFI check sequence should be present.  */
-> > +/* { dg-final { scan-assembler {lw\tt1, -4\([a-z0-9]+\)\n\tlui\tt2, [0-9]+\n\taddiw\tt2, t2, -?[0-9]+\n\tbeq\tt1, t2, \.Lkcfi_call[0-9]+\n\.Lkcfi_trap[0-9]+:\n\tebreak} { target riscv*-*-* } } } */
-> > +
-> > +/* Should have trap section with entries.  */
-> > +/* { dg-final { scan-assembler {\.kcfi_traps} { target x86_64-*-* } } } */
-> > +/* { dg-final { scan-assembler {\.kcfi_traps} { target riscv*-*-* } } } */
-> > +
-> > +/* AArch64 should NOT have trap section (uses brk immediate instead) */
-> > +/* { dg-final { scan-assembler-not {\.kcfi_traps} { target aarch64*-*-* } } } */
-> > +
-> > +/* ARM 32-bit should NOT have trap section (uses udf immediate instead) */
-> > +/* { dg-final { scan-assembler-not {\.kcfi_traps} { target arm32 } } } */
+On Sat, Sep 13, 2025 at 04:43:29PM -0700, Andrew Pinski wrote:
+> On Sat, Sep 13, 2025 at 4:28 PM Kees Cook <kees@kernel.org> wrote:
+> >
+> > Implement AArch64-specific KCFI backend.
+> >
+> > - Trap debugging through ESR (Exception Syndrome Register) encoding
+> >   in BRK instruction immediate values.
+> >
+> > - Scratch register allocation using w16/w17 (x16/x17) following
+> >   AArch64 procedure call standard for intra-procedure-call registers.
 > 
-> 
-> I think it would be better to use check-function-bodies here rather
-> than scan-assembler for the sequences. Maybe each target should have
-> its own testcase rather than putting it all in one source.
-> Plus I think the target testcase should be part of the target patch
-> rather than its own patch to make it easier to review both things
-> together. Because while I was reviewing the aarch64 part I was
-> thinking where are the testcases for the aarch64 specific changes.
+> How does this interact with BTI and sibcalls?
 
-Ah yeah, that works. I spent some time scratching my head over how to
-have it not drop labels, but I've gotten a bunch of these converted now.
-Some constructs I left, especially "scan-assembler-not" tests for v4.
-It's significantly more readable now! Thanks! :)
+BTI and KCFI are complementary. BTI uses passes to insert insns at entry
+points and at call-return sites. Like x86's CET "endbr" stuff, KCFI is
+providing finer granularity checking for forward-edge.
+
+Sibcalls are handled normally and there's no change to their
+construction beyond the KCFI sequence using jmp instead of call.
+
+> Since for indirect
+> calls, x17 is already used for the address.
+> Why do you need/want to use a fixed register here for the load/compare
+> anyways? Why can't you use any free register?
+
+I spent a bunch of time trying to understand the register allocator,
+and the bottom line is that the register allocator won't give me a
+scratch register if we hit register pressure because it (correctly) sees
+that while it can do a spill, it can't do a reload since the insn is a
+"CALL". As such, I have to do register lifetime management internally
+to the KCFI insn sequence.
+
+For aarch32, I've done this by using ip (r12) by default, but if it's
+used as the target register, I switch to r3, and do a spill/reload only
+if r3 is used as a call argument. Since r3 is already in the clobber list
+due to the call, the register allocator is already doing a spill/reload
+of r3 when it is live.
+
+For aarch64 w16 and w17 are universally on the clobber list (even for
+sibcalls), so I'm free to use them internally. But "proving" this to
+answer your question led me to find where that clobber is happening,
+which means I can drop the redundant clobber I was adding in this patch.
+
+> > +  /* Add KCFI clobbers for indirect calls.  */
+> > +  if (kcfi_type_rtx)
+> > +    {
+> > +      rtx usage = CALL_INSN_FUNCTION_USAGE (call_insn);
+> > +      /* Add X16 and X17 clobbers for AArch64 KCFI scratch registers.  */
+> > +      clobber_reg (&usage, gen_rtx_REG (DImode, 16));
+> > +      clobber_reg (&usage, gen_rtx_REG (DImode, 17));
+> > +      CALL_INSN_FUNCTION_USAGE (call_insn) = usage;
+> > +    }
+
+i.e. I've dropped the above.
+
+> > +
+> >    /* Check whether the call requires a change to PSTATE.SM.  We can't
+> >       emit the instructions to change PSTATE.SM yet, since they involve
+> >       a change in vector length and a change in instruction set, which
+> 
+> Also how does this interact with SME calls?
+
+Based on what I've been able to find, there's no conflict: the KCFI
+typeid is tied strictly to the function type and doesn't take the SME
+attributes into account. So this appears to be fine.
 
 -Kees
 
