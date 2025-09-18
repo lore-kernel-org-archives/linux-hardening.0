@@ -1,51 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cdmsr2.hinet.net (210-65-1-144.hinet-ip.hinet.net [210.65.1.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DD372634;
-	Thu, 18 Sep 2025 00:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9411C5227
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Sep 2025 02:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.65.1.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758155504; cv=none; b=AhBshCE2bKsOblLAbabIQTobX1GiwcwapqQVJgKXjlhEg0fatBaaB4DqtAkfJDTbN9RRQUsBaWhgriMjXeugs+yKwOCiCFxG1e64Fstc/EHCne+QzsrDKAh5/4SsEC24utpsqV6G2KzvE0uWtEJtZxfP5r0qUTF0WfKYqmbBzlI=
+	t=1758163221; cv=none; b=lHwNIUcw/rcYhNEIGqTrRzOE/0f7h5ONhnQN0fckpCpacsHay+WK35DojJgYf+SUSq4lc+9Qp4YJmYfNdrciIZX+WYDcmbw657aX7qddhxKT17DhunK12Oa53AIXj6Qyw0AOKXnPONFkN4NQRYY1SpWzXCO9HtdM71boPTlaVUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758155504; c=relaxed/simple;
-	bh=iIdI2nVYChT/3mg+w2hb4SPCTU6Zg+BJCAlX2qIxdvI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OQqfBPWiCOUg7777XA4KbcTJxhrqBzovQuXX1IWf4roIBlCr1aPTnL8B967FLLbZ9qiPZ79f3ZVN+uVfaVeFwbfeYXAd4GahAQRNj0isb6ConeIv5mhuzKcUtPRSPvZF/0JK/C3ByeLLq9oesXXpg2GJS/QSsY4FY7JAy8Wmv5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=phoUyoSI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758163221; c=relaxed/simple;
+	bh=Xzu8lp7pRB0ASZDv0Sex6fMh1PIpZSXg49qbUYC5EEs=;
+	h=From:To:Subject:Message-ID:Date:MIME-Version:Content-Type; b=TAP6dgNLaYldZTX9jzGDhjK/0pDzbOAHtSewiB3ouQUDAC6Ubwv/LF/Yx8y6TExlOtedNIyoJlSTg7VQ7ETDiotvpaxsC44PrQZRMZBf4O8J+lLXXltpjUrPdja3z4q2I7iUrM/40fqdQ7hvYgWCY+RJFZLcc4YCQRQwDnuw588=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net; spf=pass smtp.mailfrom=ms29.hinet.net; dkim=pass (1024-bit key) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.b=sIKcqsRl; arc=none smtp.client-ip=210.65.1.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ms29.hinet.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="phoUyoSI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E15C7C4CEE7;
-	Thu, 18 Sep 2025 00:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758155504;
-	bh=iIdI2nVYChT/3mg+w2hb4SPCTU6Zg+BJCAlX2qIxdvI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=phoUyoSIsHrZEp6LjQPs6tpELvmBp1F/OF8DNkAF6mX+9iz49xnhMFKH5GIIJByin
-	 DfDEQ9zCNVpDYz1bW7XCUm2Ew9AOpex6Qf4xkJOApkRA44A0RHRc8QQkrJOB4rY5Q9
-	 2jI1XAaM7aMZs974De+dE42iEnmQTXzH+B+qheaE5/U55esheQbE0WFdm6mUv0VMw5
-	 L7L4CqmJFo3QUojPzCXh6BUfGWwZZzyLRU7PIKA1+8CntOCQEOTwXHQobP9RHHiy/n
-	 RYS4psHc6q+7Vkb/Zwhsk96jKWhpHVOJi0Z0yHg2DG17I3xLX46KIa3byYRA4M7z3D
-	 tDIAdFUVDiROg==
-Date: Thu, 18 Sep 2025 09:31:42 +0900
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>, 
-	kernel@collabora.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 02/10] dt-bindings: devfreq: add mt8196-gpufreq binding
-Message-ID: <20250918-silent-dragon-of-gaiety-fdbfe3@kuoka>
-References: <20250917-mt8196-gpufreq-v3-0-c4ede4b4399e@collabora.com>
- <20250917-mt8196-gpufreq-v3-2-c4ede4b4399e@collabora.com>
+	dkim=pass (1024-bit key) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.b="sIKcqsRl"
+Received: from cmsr3.hinet.net ([10.199.216.82])
+	by cdmsr2.hinet.net (8.15.2/8.15.2) with ESMTPS id 58I2eEpu453978
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Sep 2025 10:40:17 +0800
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=ms29.hinet.net;
+	s=default; t=1758163217; bh=c8wZf5N8aNgl+b7EV1r5B/GUj08=;
+	h=From:To:Subject:Date;
+	b=sIKcqsRlgZJE/bLVxWf7xwKBebl/VPKloxahA90FiR7KiSiG1MHjFOykpwpo7q0T4
+	 LKssScawAMofxSx1HUNUatfkEI9dChSXTj2jU00gHpHZ/N0TxFj01hIth41yYUBuGN
+	 +XfNLMCXCCBazls7664Pj+5mnw+Sk157BNndP7Z0=
+Received: from [127.0.0.1] (218-173-148-207.dynamic-ip.hinet.net [218.173.148.207])
+	by cmsr3.hinet.net (8.15.2/8.15.2) with ESMTPS id 58I2a0e8908253
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Sep 2025 10:37:43 +0800
+From: "Info - Albinayah 182" <Linux-hardening@ms29.hinet.net>
+To: linux-hardening@vger.kernel.org
+Reply-To: "Info - Albinayah." <europe-sales@albinayah-group.com>
+Subject: =?UTF-8?B?TmV3IFNlcHRlbWJlciBPcmRlci4gOTEyODkgVGh1cnNkYXksIFNlcHRlbWJlciAxOCwgMjAyNSBhdCAwNDozNzo0MiBBTQ==?=
+Message-ID: <ca236100-c7bc-81d5-48dd-52c4824c97d8@ms29.hinet.net>
+Content-Transfer-Encoding: 7bit
+Date: Thu, 18 Sep 2025 02:37:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,36 +43,25 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250917-mt8196-gpufreq-v3-2-c4ede4b4399e@collabora.com>
+X-HiNet-Brightmail: Spam
+X-CMAE-Score: 100
+X-CMAE-Analysis: v=2.4 cv=LvQxyWdc c=0 sm=1 tr=0 ts=68cb7078
+	p=OrFXhexWvejrBOeqCD4A:9 a=LVU1Z0yGL6lFQ+lv2md78w==:117 a=IkcTkHD0fZMA:10
+	a=5KLPUuaC_9wA:10
 
-On Wed, Sep 17, 2025 at 02:22:33PM +0200, Nicolas Frattaroli wrote:
- +
-> +  shmem:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle to the shared memory region of the GPUEB MCU
-> +
-> +  "#performance-domain-cells":
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - clock-names
-> +  - mboxes
-> +  - mbox-names
-> +  - shmem
-> +  - "#performance-domain-cells"
+Hi Linux-hardening,
 
-Keep same order as in "properties:" block.
+Please provide a quote for your products:
 
-> +
-> +additionalProperties: false
+Include:
+1.Pricing (per unit)
+2.Delivery cost & timeline
+3.Quote expiry date
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Deadline: September
 
-Best regards,
-Krzysztof
+Thanks!
 
+Kamal Prasad
+
+Albinayah Trading
