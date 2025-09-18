@@ -1,67 +1,127 @@
-Received: from cdmsr2.hinet.net (210-65-1-144.hinet-ip.hinet.net [210.65.1.144])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9411C5227
-	for <linux-hardening@vger.kernel.org>; Thu, 18 Sep 2025 02:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.65.1.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8D334BA4C;
+	Thu, 18 Sep 2025 04:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758163221; cv=none; b=lHwNIUcw/rcYhNEIGqTrRzOE/0f7h5ONhnQN0fckpCpacsHay+WK35DojJgYf+SUSq4lc+9Qp4YJmYfNdrciIZX+WYDcmbw657aX7qddhxKT17DhunK12Oa53AIXj6Qyw0AOKXnPONFkN4NQRYY1SpWzXCO9HtdM71boPTlaVUA=
+	t=1758168987; cv=none; b=mg9ORFruJRQzuiEq0NbNbEA0yJXjZfFX8EzmLHjWa3nYuZYyU1FTbk7l9ba6WSvuT6GMJmTNMpYKIAHAdL/DoTKBuXpZohg/NfHv2DLA/IeKXY/SF0Vbj9GiO6rSxtc8XHl8OGngnc9UnWJJNWKNpN/4mVFZiU9FVxc/YBNSR5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758163221; c=relaxed/simple;
-	bh=Xzu8lp7pRB0ASZDv0Sex6fMh1PIpZSXg49qbUYC5EEs=;
-	h=From:To:Subject:Message-ID:Date:MIME-Version:Content-Type; b=TAP6dgNLaYldZTX9jzGDhjK/0pDzbOAHtSewiB3ouQUDAC6Ubwv/LF/Yx8y6TExlOtedNIyoJlSTg7VQ7ETDiotvpaxsC44PrQZRMZBf4O8J+lLXXltpjUrPdja3z4q2I7iUrM/40fqdQ7hvYgWCY+RJFZLcc4YCQRQwDnuw588=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net; spf=pass smtp.mailfrom=ms29.hinet.net; dkim=pass (1024-bit key) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.b=sIKcqsRl; arc=none smtp.client-ip=210.65.1.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ms29.hinet.net
+	s=arc-20240116; t=1758168987; c=relaxed/simple;
+	bh=BVY8Xj4e6MAs5x7hg6qQchNUfdSkglsNbtbLEad+y00=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=sYB70M0zifBu51S+ZR0NwSgPahL1BhDbP/XrT8MpzAZME4Lsz8eQeNmNc9kcJDdAP+Aivo5TqZLQFhQKzAZZ7Lsu9z/75P5q3Vyjk9QBygIvbywVPdCjsekU3CQrW8H6eJym4iNPbGPxbuxoIuJZ+5qR1pKt0mvYjvqPAFD3jv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=ShVjJBDQ; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=yG/LBgVK; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.b="sIKcqsRl"
-Received: from cmsr3.hinet.net ([10.199.216.82])
-	by cdmsr2.hinet.net (8.15.2/8.15.2) with ESMTPS id 58I2eEpu453978
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
-	for <linux-hardening@vger.kernel.org>; Thu, 18 Sep 2025 10:40:17 +0800
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=ms29.hinet.net;
-	s=default; t=1758163217; bh=c8wZf5N8aNgl+b7EV1r5B/GUj08=;
-	h=From:To:Subject:Date;
-	b=sIKcqsRlgZJE/bLVxWf7xwKBebl/VPKloxahA90FiR7KiSiG1MHjFOykpwpo7q0T4
-	 LKssScawAMofxSx1HUNUatfkEI9dChSXTj2jU00gHpHZ/N0TxFj01hIth41yYUBuGN
-	 +XfNLMCXCCBazls7664Pj+5mnw+Sk157BNndP7Z0=
-Received: from [127.0.0.1] (218-173-148-207.dynamic-ip.hinet.net [218.173.148.207])
-	by cmsr3.hinet.net (8.15.2/8.15.2) with ESMTPS id 58I2a0e8908253
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
-	for <linux-hardening@vger.kernel.org>; Thu, 18 Sep 2025 10:37:43 +0800
-From: "Info - Albinayah 182" <Linux-hardening@ms29.hinet.net>
-To: linux-hardening@vger.kernel.org
-Reply-To: "Info - Albinayah." <europe-sales@albinayah-group.com>
-Subject: =?UTF-8?B?TmV3IFNlcHRlbWJlciBPcmRlci4gOTEyODkgVGh1cnNkYXksIFNlcHRlbWJlciAxOCwgMjAyNSBhdCAwNDozNzo0MiBBTQ==?=
-Message-ID: <ca236100-c7bc-81d5-48dd-52c4824c97d8@ms29.hinet.net>
-Content-Transfer-Encoding: 7bit
-Date: Thu, 18 Sep 2025 02:37:42 +0000
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="ShVjJBDQ";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="yG/LBgVK"
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1758168671; bh=NJjbSSj5jhMk0HRinPCbRwY
+	9CFU4h6QcLpjE9fG/CGw=; b=ShVjJBDQtkoHl4zZviJw22Cn95HrMuMYoejLcf0xJzeQA7qKuJ
+	D5qGCh0b0urde73kHsIhQh0EsyeFnt6xLrCS4Wai/5YtjmNkkyeT1cTVXMvpBVRGs6RPCbRYT5d
+	KTQGQJbCq0HAA7aFbdsJbn+LX9CWR3mBsbAH5qHi+tbZeV4TPnjuZF1/f7ExusA6J2edVGY2bxx
+	XVh5ikQM3M4YuTAjivkFueiiTHxKhDNx0/PTewZ1HIP9kvQNpLjdZXXG4rVFwOslOgHB/JYldjK
+	OrVBQcOpVrOBMP7JPbckmUd1ygtraryn8HSnmM5jtXDJK4g7dnltryNpoL/GlzGe03Q==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1758168671; bh=NJjbSSj5jhMk0HRinPCbRwY
+	9CFU4h6QcLpjE9fG/CGw=; b=yG/LBgVK91WyVeVJYLDzq2LIwSsiLwpyegB0yLgC8ixqUZuUMP
+	oEKedmOlTd3bIbX2/d7CiHNj6juQ1b/PrEAQ==;
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-X-HiNet-Brightmail: Spam
-X-CMAE-Score: 100
-X-CMAE-Analysis: v=2.4 cv=LvQxyWdc c=0 sm=1 tr=0 ts=68cb7078
-	p=OrFXhexWvejrBOeqCD4A:9 a=LVU1Z0yGL6lFQ+lv2md78w==:117 a=IkcTkHD0fZMA:10
-	a=5KLPUuaC_9wA:10
+Date: Thu, 18 Sep 2025 11:11:10 +0700
+From: Dang Huynh <dang.huynh@mainlining.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Sebastian Reichel <sre@kernel.org>, Vinod Koul
+ <vkoul@kernel.org>, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-mmc@vger.kernel.org
+Subject: Re: [PATCH 05/25] dt-bindings: rtc: Add RDA Micro RDA8810PL RTC
+In-Reply-To: <20250917-contort-sassy-df07fd7515a0@spud>
+References: <20250917-rda8810pl-drivers-v1-0-74866def1fe3@mainlining.org>
+ <20250917-rda8810pl-drivers-v1-5-74866def1fe3@mainlining.org>
+ <20250917-contort-sassy-df07fd7515a0@spud>
+Message-ID: <c905fb3ace281280f1ac11c7fbe8e0aa@mainlining.org>
+X-Sender: dang.huynh@mainlining.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Linux-hardening,
+On 2025-09-18 03:46, Conor Dooley wrote:
+> On Wed, Sep 17, 2025 at 03:07:22AM +0700, Dang Huynh wrote:
+>> Add documentation describing the RTC found in RDA8810PL SoC.
+>> 
+>> Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
+>> ---
+>>  .../devicetree/bindings/rtc/rda,8810pl-rtc.yaml    | 30 
+>> ++++++++++++++++++++++
+>>  1 file changed, 30 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml 
+>> b/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
+>> new file mode 100644
+>> index 
+>> 0000000000000000000000000000000000000000..3ceae294921cc3211cd775d9b3890393196faf82
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
+>> @@ -0,0 +1,30 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/rtc/rda,8810pl-rtc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: RDA Micro RDA8810PL Real Time Clock
+>> +
+>> +maintainers:
+>> +  - Dang Huynh <dang.huynh@mainlining.org>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: rda,8810pl-rtc
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+> 
+> Your driver implements functions that turn on an alarm irq, but there 
+> is
+> none mentioned here. What's going on there?
+The RTC doesn't seem to have an AP IRQ associated. I can't find any
+reference to it on downstream kernel and the docs.
 
-Please provide a quote for your products:
-
-Include:
-1.Pricing (per unit)
-2.Delivery cost & timeline
-3.Quote expiry date
-
-Deadline: September
-
-Thanks!
-
-Kamal Prasad
-
-Albinayah Trading
+> 
+> Additionally, there's no clocks property? For an onboard RTC I'd have
+> expected there to be a clock sourced outside of the block.
+> 
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    rtc@1a06000 {
+>> +      compatible = "rda,8810pl-rtc";
+>> +      reg = <0x1a06000 0x1000>;
+>> +    };
+>> 
+>> --
+>> 2.51.0
