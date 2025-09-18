@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBFC288C35
-	for <linux-hardening@vger.kernel.org>; Thu, 18 Sep 2025 19:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACBF2DCBF8
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Sep 2025 19:39:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758223237; cv=none; b=iN+DCXTI/Rk1x4o3dOlfRyIrBJ+uYM/L8mbhBF9fmx7M215q7a4eqT8n8iLghY1KXGRkRlba0lBPQONaQem7cJXEhoETG1s9TLnc/tgecrtgK1Y37SUQndy+hT6KDT6Tw9r9nvvh4MlXRev8z0ZAy5/ogtMPi1/WwDwvD304wPg=
+	t=1758224366; cv=none; b=rECJA6HkO1Z9NIGHYRCbC1IbeteRD248NOWnUOAHQXynflGcMmZujC8hwwwTw73+LeiarNKC6PG/XYLMzyuLJSHLddMubrz7v8Rome/u8WFAamXAWGoGL7GJVJVx8zwlQFAQxoKKF1NBXNdWDkKimVOEdq5pf6tNZ4QgGoLOi+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758223237; c=relaxed/simple;
-	bh=BkhjC9v5agGrweHClSOJlURKBn10yPBW8/UlI04xT3I=;
+	s=arc-20240116; t=1758224366; c=relaxed/simple;
+	bh=7oEsFUnAHSFqSDNE6cVVgbdW+KOgh4D4GBm1+zwNK94=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q/Mjzx/jNswFYTv2bS2jyWUkRurjhE761SqSs5vI/T2cPAtS7J6TZB3DQjDW666UJnaC8+WXXjgEzdER3SuOv3CGojTRWsEKyuXRTtHRVuznRFCgM3PW7qBk+t0muLn8unNb9WpzR8cHLZOjajeN1zhFNEttXVfvL06xEN25lwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eX/0PBvZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kFu/G9/6a+7KAy1qgc7Rd0/7hIZktua8q+Z/pN/ZKvamobjauIpfyAjVN78e790a8hXqqT1kb8JpWc6Rv9p6OyqnrapMC4HcKPpyVLFHTA62lsH4dsyU7MK1blEsEVxq9NCjQKEODcN04w3HjL+3m2J/YqqLSxQuGrTX/91b7yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vM4v5uEb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eX/0PBvZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8A7C4CEE7;
-	Thu, 18 Sep 2025 19:20:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vM4v5uEb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AAC0C4CEE7;
+	Thu, 18 Sep 2025 19:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758223237;
-	bh=BkhjC9v5agGrweHClSOJlURKBn10yPBW8/UlI04xT3I=;
+	s=k20201202; t=1758224366;
+	bh=7oEsFUnAHSFqSDNE6cVVgbdW+KOgh4D4GBm1+zwNK94=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eX/0PBvZ/o7mKHRhGKUKLVYEcY73a/pw2mYAuKEN1M1w0evNLS35hN4/tTFvf3wiP
-	 R7QgoGSbtuZpJXyJDOCiFYU7BEVBgNKUP/LOKMKP84c7zU1UkRzERj8f859cda3jRi
-	 /YIwMgsr1L9BmIgMN+Znc9P5xt3FxN7M5ctSyPxKaccJrd6ZE0eAW9qZvHhPpUK+Pg
-	 tExnuGlkkNliXJL6DNxXKFiGqfynf+ACBW83UOs76ukndrixR4xxJhJ0xKzstPEHGo
-	 OxJzbd65TJn8e27QVi+sDbXxsXUaw3NaSP+DuzYA28eOfaTKJwSqfADPaWHCn+h2Hg
-	 Y5Py+3MZDAlfg==
-Date: Thu, 18 Sep 2025 12:20:36 -0700
+	b=vM4v5uEbCxukeJHiR3QoMkjkKuq+OVau7apCKsuAld/oMjKpAylB+/qEKIE53PxCg
+	 rAkiQL5UJK0p1EadI9+5KraBSlQdIwiXdNUaRARLPN8fBXcEKluh9FlhOk6RTobm/X
+	 TlgUcKpaoFixNSzLZ2VrOprwvMAFGWt6Z/8uM0xqeadieJbaFLS3Qr6YgfxG8AJnow
+	 05oxnmnWGGD7e5WhAloUfz4dfwOox4DVerYfjvECyiBOyPfvvpR21/dC8oH2fYrmI0
+	 wT5fxdUSXULbtCcb44YB7I4kYwd/htslocL11g1MhCuT+TjinUzqlk+owMiTHS+ceP
+	 aqRNPJM5xIcPg==
+Date: Thu, 18 Sep 2025 12:39:25 -0700
 From: Kees Cook <kees@kernel.org>
 To: Qing Zhao <qing.zhao@oracle.com>
 Cc: Andrew Pinski <pinskia@gmail.com>, Jakub Jelinek <jakub@redhat.com>,
@@ -52,138 +52,87 @@ Cc: Andrew Pinski <pinskia@gmail.com>, Jakub Jelinek <jakub@redhat.com>,
 	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
 Subject: Re: [PATCH v3 2/7] kcfi: Add core Kernel Control Flow Integrity
  infrastructure
-Message-ID: <202509181218.FA966DA8F0@keescook>
+Message-ID: <202509181229.FF689207B@keescook>
 References: <20250913231256.make.519-kees@kernel.org>
  <20250913232404.2690431-2-kees@kernel.org>
  <6F94A091-6948-4220-A972-236055C2440A@oracle.com>
  <202509171307.DC9740ABAB@keescook>
- <306E5909-C77F-415E-A2F4-6FAE3E5740DB@oracle.com>
- <202509181112.B39B490E@keescook>
- <1F77CFF9-9105-4F3A-A7AC-E3A0D2E95162@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1F77CFF9-9105-4F3A-A7AC-E3A0D2E95162@oracle.com>
+In-Reply-To: <202509171307.DC9740ABAB@keescook>
 
-On Thu, Sep 18, 2025 at 06:48:03PM +0000, Qing Zhao wrote:
-> 
-> 
-> > On Sep 18, 2025, at 14:20, Kees Cook <kees@kernel.org> wrote:
+On Wed, Sep 17, 2025 at 02:09:54PM -0700, Kees Cook wrote:
+> On Wed, Sep 17, 2025 at 01:42:32PM +0000, Qing Zhao wrote:
+> > > On Sep 13, 2025, at 19:23, Kees Cook <kees@kernel.org> wrote:
+> > > +- Keep indirect calls from being merged (see earlier example) by
+> > > +  checking the KCFI insn's typeid for equality.
 > > 
-> >>>>> +- External functions that are address-taken have a weak __kcfi_typeid_$func
-> >>>>> +  symbol added with the typeid value available so that the typeid can be
-> >>>>> +  referenced from assembly linkages, etc, where the typeid values cannot be
-> >>>>> +  calculated (i.e where C type information is missing):
-> >>>>> +
-> >>>>> +    .weak   __kcfi_typeid_$func
-> >>>>> +    .set    __kcfi_typeid_$func, $typeid
-> >>>>> +
-> >>>> 
-> >>>> From my previous understanding, the above weak symbol is emitted for external functions
-> >>>> that are address-taken AND does not have a definition in the compilation. So the weak symbols
-> >>>> Is emitted at the declaration site of the external function, is this true?
-> >>>> 
-> >>>> If so, could you please clarify this in the above?
-> >>> 
-> >>> Yes, this happens via assemble_external_real, which can be called under
-> >>> a few conditions in gcc/varasm.cc.
-> >> 
-> >> Okay. Please clarify this in the design doc.
+> > Is this resolved by the following code:
 > > 
-> > I mention it later in the "behavioral" section:
+> > rtlanal.cc
+> > index 63a1d08c46cf..5016fe93ccac 100644
+> > --- a/gcc/rtlanal.cc
+> > +++ b/gcc/rtlanal.cc
+> > @@ -1177,6 +1177,11 @@ reg_referenced_p (const_rtx x, const_rtx body)
+> >     case IF_THEN_ELSE:
+> >       return reg_overlap_mentioned_p (x, body);
 > > 
-> > - assemble_external_real calls kcfi_emit_typeid_symbol to add the
-> >  __kcfi_typeid_$func symbols.
-> > 
-> > I had left off implementation details (i.e. "called from
-> > assemble_external_real") in the "constraints" section. How would you
-> > like this arranged?
+> > +    case KCFI:
+> > +      /* For KCFI wrapper, check both the wrapped call and the type ID.  */
+> > +      return (reg_overlap_mentioned_p (x, XEXP (body, 0))
+> > +      || reg_overlap_mentioned_p (x, XEXP (body, 1)));
+> > +
 > 
-> The original arrangement is good. -:)
+> The above is needed for accurate register "liveness" checking. When the
+> above code is removed, the kcfi-move-preservation.c regression test
+> fails (since it doesn't see the clobbers).
 > 
-> I guess that I didn’t make myself clear in the beginning, the following is a modified version of 
-> your previous paragraph:
-> 
-> +- An external function that is address-taken but does not have a definition has
-> +  a weak __kcfi_typeid_$func symbol added at the declaration site. This weak
-> +  symbol has  the typeid value available so that the typeid can be
-> +  referenced from assembly linkages, etc, where the typeid values cannot be
-> +  calculated (i.e where C type information is missing):
-> +
-> +    .weak   __kcfi_typeid_$func
-> +    .set    __kcfi_typeid_$func, $typeid
-> +
-> 
-> Is the above the correct understanding? 
+> AFAICT, simply making it a new type of RTL (the DEF_RTL_EXPR), made it
+> unmergeable. I assume this is because whatever was doing the call
+> merging was looking strictly for "CALL" types, but I honestly don't know
+> where that was happening.
 
-Ah! I see, yes, that's correct. I will update it. :)
+Okay, I've found this. The pass that merged the regression test's calls
+is jump2. Specifically, the jump2 pass calls old_insns_match_p() which
+compares instruction patterns using rtx_equal_p(), and that is doing it
+naturally based on the RTL expression, i.e. matching RTL codes for KCFI,
+and then matching format (KCFI defines itself as "ee" format, i.e. 2
+expressions):
 
-> 
-> >>> 
-> >>>>> +static uint32_t
-> >>>>> +kcfi_get_type_id (tree fn_type)
-> >>>>> +{
-> >>>>> +  uint32_t type_id;
-> >>>>> +
-> >>>>> +  /* Cache the attribute identifier.  */
-> >>>>> +  if (!kcfi_type_id_attr)
-> >>>>> +    kcfi_type_id_attr = get_identifier ("kcfi_type_id");
-> >>>>> +
-> >>>>> +  tree attr = lookup_attribute (IDENTIFIER_POINTER (kcfi_type_id_attr),
-> >>>>> + TYPE_ATTRIBUTES (fn_type));
-> >>>> 
-> >>>> The above can be simplified as:
-> >>>> +  tree attr = lookup_attribute (“kcfi_type_id”, TYPE_ATTRIBUTES (fn_type));
-> >>> 
-> >>> Ugh, I totally misunderstood the examples I saw of this. I thought they
-> >>> were caching the string lookup, but now that I look more closely, I see:
-> >>> 
-> >>> #define IDENTIFIER_POINTER(NODE) \
-> >>> ((const char *) IDENTIFIER_NODE_CHECK (NODE)->identifier.id.str)
-> >>> 
-> >>> it's just returning the string!
-> >>> 
-> >>> I will throw away the "caching" I was doing. I thought it would actually
-> >>> look up the attribute using the tree returned by get_identifier, but I
-> >>> see there is no overloaded lookup_attribute that takes a tree argument.
-> >>> 
-> >>> *face palm*
-> >> 
-> >> -:)
-> > 
-> > Okay, so I tried to remove this and remembered that it's actually cached
-> > not for lookup_attribute, but for build_tree_list call case:
-> > 
-> >      tree attr = build_tree_list (kcfi_type_id_attr, type_id_tree);
-> > 
-> >      TYPE_ATTRIBUTES (fn_type) = chainon (TYPE_ATTRIBUTES (fn_type), attr);
-> > 
-> > For _that_, I need a "tree" argument. So instead of building it each
-> > time, I have it built already, and I can get at its string for
-> > lookup_attribute too. So I think this code is good as-is.
-> 
-> Right, the kcfi_type_id_attr is still needed for the purpose of new type_id attribute.
-> 
-> But, for the following
-> 
-> > +  tree attr = lookup_attribute (IDENTIFIER_POINTER (kcfi_type_id_attr),
-> > + TYPE_ATTRIBUTES (fn_type));
-> 
-> The above can be simplified as:
-> +  tree attr = lookup_attribute (“kcfi_type_id”, TYPE_ATTRIBUTES (fn_type));
-> 
-> No need to call IDENTIFIER_POINTER (kcfi_type_id_attr) as the first argument for the above call.
-> 
-> Hope this is clear.
+  code = GET_CODE (x);
+  /* Rtx's of different codes cannot be equal.  */
+  if (code != GET_CODE (y))
+    return false;
+...
+  fmt = GET_RTX_FORMAT (code);
+  for (i = GET_RTX_LENGTH (code) - 1; i >= 0; i--)
+    {
+      switch (fmt[i])
+        {
+...
+        case 'e':
+          if (!rtx_equal_p (XEXP (x, i), XEXP (y, i), cb))
+            return false;
+          break;
 
-Right, I did this because it seemed weird to me to open-code the same
-literal string twice.
+So if it's the same call and the same typeid, it'll get merged, otherwise
+it won't. And I've validated this now with an addition to the regression
+test. It now makes 3 calls, once with typeid A, and then 2 calls with
+typeid B, and the typeid B calls get merged.
+
+So there was no special handling for CALL, it's just that CALL didn't have
+the typeid associated with it, and KCFI does. RTL working as intended. ;)
+
+(But my new mystery is why my new KCFI matching typeid merging happens
+on all backend _except_ arm... I will investigate that.)
+
+-Kees
 
 -- 
 Kees Cook
