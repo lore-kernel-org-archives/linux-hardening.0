@@ -1,123 +1,67 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from cdmsr1.hinet.net (210-65-1-144.hinet-ip.hinet.net [210.65.1.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5BE2EC0A5;
-	Thu, 18 Sep 2025 08:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6D12E88A2
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Sep 2025 09:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.65.1.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758183813; cv=none; b=CT/Y/ImyFHd9ZYCtu4qgw/MzJWL6F9nPMppkbPGJpV9TTjgwbf+oGBkfEYIlRboeHwzUZ8CUloBc24P11s2DphIjMYh9pwq7bKNqEojVMvadzclXDn11/lDmumpQ3MF/NtCfRc0sUcTiRgX8lR9uCdSB7Nzi9qmoRxWZ6SsuGnU=
+	t=1758186144; cv=none; b=rKny1c9uQIVKqMAX65URqeW5E3gEbqVSbpWYgniLrua8nEbzdR6amdG80vvAIlosmaR7tqJXUKxHgQENUx5m6gXw17YMy4ra+hIjl99NEW6gfQMjTJm6AXiiv7ejUKQQ6B9SsNnkq1WnSkHLLY6xLthM110D9VilgTgQoiIwRKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758183813; c=relaxed/simple;
-	bh=dPFZQ/J95tFGsWzkbIWX1hhJmkV3E3HPGj+Ah84D+lQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=B5YBKUy7jfs36wOl1yE6OEhq4k1VeKAS+F8dEG2dzWpfrXjPsfzIJERWtUZWe359E9PNNX+QC1ZL/pgS44p8uulG5KE9qRGZdjZzNKHszqK5i0OvPfhyaNrIE2Z4lclj/czvbqLYr347x2DPOSAFAMMySeI717YAU0zrVPq8aVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3+bEKqPq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MqbntZVI; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1758186144; c=relaxed/simple;
+	bh=Xzu8lp7pRB0ASZDv0Sex6fMh1PIpZSXg49qbUYC5EEs=;
+	h=From:To:Subject:Message-ID:Date:MIME-Version:Content-Type; b=mAQLcODVzW3xKc7WnRYmSBuqfw2IYFl9lyKchYqQ9H+2xuFfeobwj0gpVozryorM76ZgTJeux/H2sSxmSxzB2kncfytK4PTRXgD6gLfAZHEOIu2v2g5nUSDpo3E3aS3RfvD9SQpG9Hs0gm7UKyBF7Hl2GadpTIgDDCUdQYkcpQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net; spf=pass smtp.mailfrom=ms29.hinet.net; dkim=pass (1024-bit key) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.b=RujpGko5; arc=none smtp.client-ip=210.65.1.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ms29.hinet.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3+bEKqPq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MqbntZVI"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1758183803;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dhEheeaLjj12Q7mtWCuLhPIe+EYJsdjTeuBePvxpVHI=;
-	b=3+bEKqPqOkUEh6yS9o4ChhOb1k52Ky5bVGvD9xyofVq2LCseV4zCUGvhpgXwjYxYsC5WQx
-	yGf7WKJhXXYD0Ru9gsJ2HhWSCvTY8ZssNzpV3GhTySt+XxFzO6qDcVtS4jpjLDDB0sp2CG
-	nZ7oWjZkVT/YcKju2TTXTEedsmjkptE8yCpJczw/jGJrnsU1+4R5P1g/EB6TKbndSV/0fJ
-	UFMSz+q/92de2si2SyyiSBpZf4y843jj/KRsTtTztTQ8QK6WmaGWMuuZhfDfANJZPWZkYg
-	VrBaCRba5VrbCfUUWBvx0YZ+UyvQoF7XZml/fh7TnM0nfgpAzfuBSlrL7Tr2HQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1758183803;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dhEheeaLjj12Q7mtWCuLhPIe+EYJsdjTeuBePvxpVHI=;
-	b=MqbntZVIqi5UZvsyX/yRC/8YSYRz4x5RYd09EJQ+DsufyRhtx9gmkUl8tFF7x7EneRFTin
-	SNeyNBFCRxEVhFAw==
-To: David Hildenbrand <david@redhat.com>, Eugen Hristev
- <eugen.hristev@linaro.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, andersson@kernel.org,
- pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net, mhocko@suse.com
-Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org
-Subject: Re: [RFC][PATCH v3 09/16] genirq/irqdesc: Have nr_irqs as non-static
-In-Reply-To: <f8d3c2d4-8399-4169-8527-3c87922f2ef1@redhat.com>
-References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
- <20250912150855.2901211-10-eugen.hristev@linaro.org> <87cy7q9k8y.ffs@tglx>
- <87a52u9jyl.ffs@tglx> <8df2cf28-c15e-4692-a127-6a5c966a965e@linaro.org>
- <2bd45749-e483-45ea-9c55-74c5ba15b012@redhat.com> <87v7lh891c.ffs@tglx>
- <95ff36c2-284a-46ba-984b-a3286402ebf8@redhat.com>
- <24d6a51d-f5f8-44d7-94cb-58b71ebf473a@linaro.org>
- <7f4aa4c6-7b77-422b-9f7a-d01530c54bff@redhat.com> <87segk9az5.ffs@tglx>
- <f8d3c2d4-8399-4169-8527-3c87922f2ef1@redhat.com>
-Date: Thu, 18 Sep 2025 10:23:21 +0200
-Message-ID: <87jz1w88zq.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.b="RujpGko5"
+Received: from cmsr8.hinet.net ([10.199.216.87])
+	by cdmsr1.hinet.net (8.15.2/8.15.2) with ESMTPS id 58I92AjG240846
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Sep 2025 17:02:15 +0800
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=ms29.hinet.net;
+	s=default; t=1758186135; bh=c8wZf5N8aNgl+b7EV1r5B/GUj08=;
+	h=From:To:Subject:Date;
+	b=RujpGko5pXGTF4tKt2xc3zCibQnUm0rkzX6Cv0tYEpZ42A376sE0RB4VPh2CrqtkK
+	 /DDilMDVrcjXB5s5ND1HV7yTEB9Q6OaO3OKcVhqcvqoEIIc/bVICmMLHm/Ha3R4f0K
+	 GW3QvSqPL+uGjkqB6c7staAP+ycuUFNUa1t7Dqj0=
+Received: from [127.0.0.1] (220-137-5-7.dynamic-ip.hinet.net [220.137.5.7])
+	by cmsr8.hinet.net (8.15.2/8.15.2) with ESMTPS id 58I8t9OZ102184
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Sep 2025 16:59:42 +0800
+From: "Info - Albinayah 143" <Linux-hardening@ms29.hinet.net>
+To: linux-hardening@vger.kernel.org
+Reply-To: "Info - Albinayah." <europe-sales@albinayah-group.com>
+Subject: =?UTF-8?B?TmV3IFNlcHRlbWJlciBPcmRlci4gMzIyMDcgVGh1cnNkYXksIFNlcHRlbWJlciAxOCwgMjAyNSBhdCAxMDo1OTo0MSBBTQ==?=
+Message-ID: <449e4ac9-f218-7ed9-8a40-b65aeaa83679@ms29.hinet.net>
+Content-Transfer-Encoding: 7bit
+Date: Thu, 18 Sep 2025 08:59:41 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+X-HiNet-Brightmail: Spam
+X-CMAE-Score: 100
+X-CMAE-Analysis: v=2.4 cv=LvQxyWdc c=0 sm=1 tr=0 ts=68cbc9ff
+	p=OrFXhexWvejrBOeqCD4A:9 a=PiZ31QbdlfLEIbo3Wqyrdw==:117 a=IkcTkHD0fZMA:10
+	a=5KLPUuaC_9wA:10
 
-On Wed, Sep 17 2025 at 21:03, David Hildenbrand wrote:
->> As this is specific for the compiled kernel version you can define an
->> extensible struct format for the table.
->> 
->> struct inspect_entry {
->> 	unsigned long	properties;
->>          unsigned int	type;
->>          unsigned int	id;
->>          const char	name[$MAX_NAME_LEN];
->> 	unsigned long	address;
->>          unsigned long	length;
->>          ....
->> };
->> 
->> @type
->>         refers either to a table with type information, which describes
->>         the struct in some way or just generate a detached compile time
->>         description.
->> 
->> @id
->>         a unique id created at compile time or via registration at
->>         runtime. Might not be required
->
-> We discussed that maybe one would want some kind of a "class" 
-> description. For example we might have to register one pgdat area per 
-> node. Giving each one a unique name might be impractical / unreasonable.
->
-> Still, someone would want to select / filter out all entries of the same 
-> "class".
->
-> Just a thought.
+Hi Linux-hardening,
 
-Right. As I said this was mostly a insta brain dump to start a
-discussion. Seems it worked :)
+Please provide a quote for your products:
 
->> @properties:
->> 
->>          A "bitfield", which allows to mark this entry as (in)valid for a
->>          particular consumer.
->> 
->>          That obviously requires to modify these properties when the
->>          requirements of a consumer change, new consumers arrive or new
->>          producers are added, but I think it's easier to do that at the
->>          producer side than maintaining filters on all consumer ends
->>          forever.
->
-> Question would be if that is not up to a consumer to decide ("allowlist" 
-> / filter) by class or id, stored elsewhere.
+Include:
+1.Pricing (per unit)
+2.Delivery cost & timeline
+3.Quote expiry date
 
-Yes, I looked at it the wrong way round. We should leave the filtering
-to the consumers. If you use allow lists, then a newly introduced class
-won't be automatically exposed everywhere.
+Deadline: September
 
-Thanks,
+Thanks!
 
-        tglx
+Kamal Prasad
+
+Albinayah Trading
