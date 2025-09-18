@@ -1,116 +1,103 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864B71643B;
-	Thu, 18 Sep 2025 18:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F0B27B357;
+	Thu, 18 Sep 2025 18:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758221011; cv=none; b=V2lpnQ7pZ2YJ6aZYzE2p48494Urtcoocy0fRqoAPTnZX2IvMzN+sQngTIfWzNeYj3k17F621raY7dFU7EO5R7nqJwv1AmZ38DP1INnQi0BzuyeJBAa/ZSKxSpRQRNKH91Sy1cPvr3citZSc1Za++qm84KDSB0AIZU/VVYqm1usU=
+	t=1758221398; cv=none; b=cby+UyM7UD/DSiFWSdtmE4La0P3Ce91BVjguGqERc5Sx9tWVNi6cMkl4a1cWP0sLI1n9/TlrA+n5o75+x9f8123+gDpYTmMsEJzbn1+M2HGK0QKG4WGCnasLAKe28X172tflnnDvKE2M1eaH4f1hB+YyWVRVmCrj3tTQTiXWHfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758221011; c=relaxed/simple;
-	bh=lOi4oPKaTPDoudyEXtbkS6QEa07mzTiiZ91A7/9u70E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VhpKb2c7Nw2G19Ov2pBdS9/rB4ga6jjKK9ePJDt/bLmSxXHQBH/vs1ZDGDg+8c52qE6+Vw/FEGZ6zzgxzm8SOAc31NFQj9l6WiZFAGJIWWGJeNty8208xk93Oy/aP9Y5DscqY+9GgRYj1Bskw+LEpUUg+ea5pVtGDqyaCsjS6TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=O9EVDpf5; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1758221398; c=relaxed/simple;
+	bh=YFvqcq/2EL5NjJ0I4Ow1yGNyZwdpiGWa5I9vDyoHhPM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aScE32gssX0u0rksk2iitkiYOahiNgsuCOcUYadc8PCkopzjpbE5Gcop7cjjSqD8ltEFces60SOj8xD4gqdLAE+H37L5u9lbZ4fd4yG8MCX+U9g4aKbhw0jr/tI2jem5DLAWBE3WCor5GJvqeD2I9gjh/CCd0Phmwbj2t2S2qwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Og/baEEG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O9EVDpf5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=liLJhgZknOFrb3ADlwKcsc/J07rUAwg/dZtDpx06Vic=; b=O9EVDpf5g7zgd/J126cLkxpokq
-	67CZ2pUYtUpJvmRk+WYzJi4DRPy27TOexm3lqamKDUh9IAlUGC03Lo2+0dFCanLLcxE4Mq1PqYmfD
-	zsG861c8Yr5xX5D52wzOhnO9imrDSEtHEzBeBr7ShxCDXCN7KUWzGlLz5OtEM/SgQI+7R701O6suA
-	cqJ61q2nppVq1TNR9wmWEcUpWFM/p7f1YIhX+ZAp278XRRDKeWyKepe8MLKNd1KkIFXmrisE/qJNF
-	AeU2q6OwccURPflquwzeQOYrJnhz8Z3QCRMH4kKvxK1qifV6WvifJnGULJgOXEDIPW+XnTMdlRxk4
-	KPFtZ1jw==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uzJbK-00000000t2F-3Pb9;
-	Thu, 18 Sep 2025 18:43:26 +0000
-Message-ID: <be6e146b-3429-4264-bf04-2ea15957f010@infradead.org>
-Date: Thu, 18 Sep 2025 11:43:25 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Og/baEEG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E1079C4CEE7;
+	Thu, 18 Sep 2025 18:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758221398;
+	bh=YFvqcq/2EL5NjJ0I4Ow1yGNyZwdpiGWa5I9vDyoHhPM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=Og/baEEG7RJIWsGueDpHJH38aV26kd+cei0lHMvj4xuiNJJ/EUHRWhGkpf+wsXzZY
+	 6AVErdVzIuyyvjB6h9w6JkeJqoOuFONih7ykIxjunInVSd6KjpKNvnhOY8fAH7xpCF
+	 l4odM4vXM772c6cdpNLBGXG6RP8cYUP0wOJ4Xd1rzcR8Rc/D4LFpal/Mwq5AUjLDrj
+	 bm1IsbXoHx6i/Dfb3immgF2oCpJdfILx423U6yEwxsatvq2ECS2kWqbGnKRo/KaQef
+	 x/zEdMl5HWXXB1ww6kxMqVTKHF9k3G0iIRjZHghjWJfLaJRSiGn0GjspvwpgxDOtVO
+	 kzvp0gRnXvapQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D029FCAC59A;
+	Thu, 18 Sep 2025 18:49:57 +0000 (UTC)
+From: Dang Huynh via B4 Relay <devnull+dang.huynh.mainlining.org@kernel.org>
+Date: Fri, 19 Sep 2025 01:48:41 +0700
+Subject: [PATCH 01/10] dt-bindings: gpio: rda: Make interrupts optional
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH v3 09/16] genirq/irqdesc: Have nr_irqs as non-static
-To: Eugen Hristev <eugen.hristev@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, David Hildenbrand <david@redhat.com>,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, andersson@kernel.org, pmladek@suse.com, corbet@lwn.net,
- mhocko@suse.com
-Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
- <20250912150855.2901211-10-eugen.hristev@linaro.org> <87cy7q9k8y.ffs@tglx>
- <87a52u9jyl.ffs@tglx> <8df2cf28-c15e-4692-a127-6a5c966a965e@linaro.org>
- <2bd45749-e483-45ea-9c55-74c5ba15b012@redhat.com> <87v7lh891c.ffs@tglx>
- <95ff36c2-284a-46ba-984b-a3286402ebf8@redhat.com>
- <24d6a51d-f5f8-44d7-94cb-58b71ebf473a@linaro.org>
- <7f4aa4c6-7b77-422b-9f7a-d01530c54bff@redhat.com> <87segk9az5.ffs@tglx>
- <f8d3c2d4-8399-4169-8527-3c87922f2ef1@redhat.com> <87jz1w88zq.ffs@tglx>
- <c3ab4a21-183f-495a-b3b5-cc74b392eebc@linaro.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <c3ab4a21-183f-495a-b3b5-cc74b392eebc@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250919-rda8810pl-mmc-v1-1-d4f08a05ba4d@mainlining.org>
+References: <20250919-rda8810pl-mmc-v1-0-d4f08a05ba4d@mainlining.org>
+In-Reply-To: <20250919-rda8810pl-mmc-v1-0-d4f08a05ba4d@mainlining.org>
+To: Manivannan Sadhasivam <mani@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+ dmaengine@vger.kernel.org, linux-mmc@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, Dang Huynh <dang.huynh@mainlining.org>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758221395; l=820;
+ i=dang.huynh@mainlining.org; s=20250917; h=from:subject:message-id;
+ bh=2bdyJSmNfA84cD9RwcJK/nl1FiNGvBo/u1np6F84KKc=;
+ b=DyZRaXM1kMO4Bvn2OOUEuGjeJosLpZO+vdO4EV+4Kzk2toTVfVMNwOFax9Lh/KERoSAaQrAAn
+ gTzEsgHiZT0Cc3CM6CRQ0mx/+FPllcXT0qx3PI+xw69zxFy6ReLEoiV
+X-Developer-Key: i=dang.huynh@mainlining.org; a=ed25519;
+ pk=RyzH4CL4YU/ItXYUurA51EVBidfx4lIy8/E4EKRJCUk=
+X-Endpoint-Received: by B4 Relay for dang.huynh@mainlining.org/20250917
+ with auth_id=526
+X-Original-From: Dang Huynh <dang.huynh@mainlining.org>
+Reply-To: dang.huynh@mainlining.org
 
+From: Dang Huynh <dang.huynh@mainlining.org>
 
+The GPIO controller from the modem does not have an interrupt.
 
-On 9/18/25 6:53 AM, Eugen Hristev wrote:
-> 
-> 
-> So, one direction to follow from this discussion is to have the
-> inspection entry and inspection table for all these entries.
-> Now, one burning question open for debate, is, should this reside into mm ?
-> mm/inspect.h would have to define the inspection entry struct, and some
-> macros to help everyone add an inspection entry.
-> E.g. INSPECTION_ENTRY(my ptr, my size);
-> and this would be used all over the kernel wherever folks want to
-> register something.
-> Now the second part is, where to keep all the inspection drivers ?
-> Would it make sense to have mm/inspection/inspection_helpers.h which
-> would keep the table start/end, some macros to traverse the tables, and
-> this would be included by the inspection drivers.
-> inspection drivers would then probe via any mechanism, and tap into the
-> inspection table.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
+---
+ Documentation/devicetree/bindings/gpio/gpio-rda.yaml | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Surely someone wants to inspect more than mm/ variables.
-I prefer kernel/inspect/ etc.
-
-> I am thinking that my model with a single backend can be enhanced by
-> allowing any inspection driver to access it. And further on, each
-> inspection driver would register a notifier to be called when an entry
-> is being created or not. This would mean N possible drivers connected to
-> the table at the same time. ( if that would make sense...)
-> Would it make sense for pstore to have an inspection driver that would
-> be connected here to get different kinds of stuff ?
-> Would it make sense to have some debugfs driver that would just expose
-> to user space different regions ? Perhaps something similar with
-> /proc/kcore but not the whole kernel memory rather only the exposed
-> inspection entries.
-> Now, for the dynamic memory, e.g. memblock_alloc and friends ,
-> would it be interesting to have a flag e.g. MEMBLOCK_INSPECT, that would
-> be used when calling it, and in the background, this would request an
-> inspection_entry being created ? Or it makes more sense to call some
-> function like inspect_register as a different call directly at the
-> allocation point ?
-> 
-> Feel free to throw your opinion at each of the above.
-> Thanks for helping out !
-
-In general I like the way that this is going.
-Thanks to all of you for this discussion.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-rda.yaml b/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
+index 6ece555f074f84b396537917d7149d4061724dcc..dbb73b4d33ed39aa65024376b1af0c4e2fb896db 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
+@@ -41,9 +41,6 @@ required:
+   - gpio-controller
+   - "#gpio-cells"
+   - ngpios
+-  - interrupt-controller
+-  - "#interrupt-cells"
+-  - interrupts
+ 
+ additionalProperties: false
+ 
 
 -- 
-~Randy
+2.51.0
+
 
