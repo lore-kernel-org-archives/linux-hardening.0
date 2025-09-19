@@ -1,46 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458A0241114;
-	Fri, 19 Sep 2025 11:56:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089E324DCE6;
+	Fri, 19 Sep 2025 12:17:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758282999; cv=none; b=rWbUKsV/yzcbIVynWsl8fscPpqXsQO3HzyT3XPvas8jKPELBjwOflCdfCq/j3LxGKFwy6e1iNkgdmrQB5xpxKX37UNkERsnLCBl9My0KimH/d4kmGofxXQMPRLVyCZjJ0GtGP1jDhWFQZOzD+QQeqs8njrD935V9BQIzFA7NHZ4=
+	t=1758284269; cv=none; b=iOx5RBBFyLlmLvPHKjwybFRIUy55DJV7ZWsHDuU31ezegSysIm6FbKadyPJr53ruOD4HDb5BGnM4A4vjPeJYX7hIcWqGeYjychOKCDD7Mx8ILdwZkL9dWpO862PhpamNuzO1IXiJOOjYFgYCImh1G8wdIiZUgWHyiuy660MOUZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758282999; c=relaxed/simple;
-	bh=XwTnZALbZwj44TjyhIuxH8YvKou6PHqTMKw/IZCxo3A=;
+	s=arc-20240116; t=1758284269; c=relaxed/simple;
+	bh=acum5vA1h8hlv/HmkYBnlzw3f4Rnyny5s1eA6qENy0Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QEQNuvXWEO1+UvdCe10tHVpDLnnPpyEeWSeNaAg4+/JYTT2PP994+xvoZqWC58DNQUXHwwpnU93Rha9ixIqE/IjbXPEq2HMoHGmJBY5WmOf3uKazriA/DZHPxeKh86V3t3p3ioa3pjunb+8V5/YDKBiedQuv4kWQ3OA6k3q0dpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=duMJq5ht; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=JZ9zjJdLeKCIiEm+OVnR+EEvpAvVdYpEL94BwADrfve0tT+y3wQS00HF76tauYi0yDmuRIzmKrw29L/G4t9MUr9TTpsme3bunqBc32D+Vwqny4zsNRAnomDClCsj+haKK0Q8itKizJzagQYFa9FU6kiDUj/cTFwxl+WoIH+8uRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CUc3ya5F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="duMJq5ht"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD43C4CEF0;
-	Fri, 19 Sep 2025 11:56:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUc3ya5F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86F4EC4CEF0;
+	Fri, 19 Sep 2025 12:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758282998;
-	bh=XwTnZALbZwj44TjyhIuxH8YvKou6PHqTMKw/IZCxo3A=;
+	s=k20201202; t=1758284268;
+	bh=acum5vA1h8hlv/HmkYBnlzw3f4Rnyny5s1eA6qENy0Y=;
 	h=Date:From:To:Cc:Subject:From;
-	b=duMJq5htnYGfa6pIzloPCsqjLvFbcBvKa/Ei4VH3UU6qESp4wzXOQjNFZD21AAqvB
-	 jNb3Fz9flf2FwD4mOaI/ITCYfhGCDagR/lDsTLY7ckPj5JZiJTucKq9Nuk9nR5t1AF
-	 IwNlTrcyRbD7AJWoAmAmr/9WoxbvF9gxK4rmdcv3IE3RvPHjrGJXHr8c/Be4nWDL7X
-	 MflvJ++WLPdh/MVZ3pSc70Z8t6dCK3p+36tAhvX7lAwGO6z8AZ2q/tIdB4we2k0FHo
-	 KA2erK1p760UfB+4x1HCi2wDxXRa7CMUuz2QUtkKH3PRhSPCEeMr8ma96fd9THP0I6
-	 undi/Z5TZfFkg==
-Date: Fri, 19 Sep 2025 13:56:29 +0200
+	b=CUc3ya5Fsze80m/mQcTGk3xd+C5xlwu9ryJZrkBoyCYgzj742uQJ8FYyNssK6Zq0Y
+	 GOnFBUxzUldJMFU5+7quejVNAbrc7qadJ+QVRPhpHQw03HkJYPgMBvpSDm8cWdjgiP
+	 e7Rjzr6ved5LQQBXSWs64VJ/NFye+NruHx//D9MMI/gMBeVTHDdHLKzFPTXFPf5tOJ
+	 sxWIUnlMR6FEqiBrSALTup0AUl9CuefYYGkVDZ08ZSss2m3bNHz7aRhc7nOMAvT8hI
+	 DV7K3KXHHJb85uAdZWCl2pySbwuMO+c5XQuHQ7F6hE+cziGPdnSlDcDOLwPouhDIAa
+	 /obY+Bq60Yi6g==
+Date: Fri, 19 Sep 2025 14:17:41 +0200
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-	Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+To: Yihang Li <liyihang9@h-partners.com>,
 	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
 	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] scsi: megaraid_sas: Avoid a couple
+Subject: [PATCH][next] scsi: hisi_sas: Avoid a couple
  -Wflex-array-member-not-at-end warnings
-Message-ID: <aM1E7Xa8qYdZ598N@kspp>
+Message-ID: <aM1J5UemZFgdso3F@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,72 +49,55 @@ Content-Disposition: inline
 -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
 getting ready to enable it, globally.
 
-Use the new TRAILING_OVERLAP() helper to fix the following warnings:
+Move the conflicting declarations to the end of the corresponding
+structures (and in a union). Notice that `struct ssp_command_iu`
+is a flexible structure, this is a structure that contains a
+flexible-array member.
 
-drivers/scsi/megaraid/megaraid_sas_fusion.h:1153:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/scsi/megaraid/megaraid_sas_fusion.h:1198:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+With these changes fix the following warnings:
 
-This helper creates a union between a flexible-array member (FAM)
-and a set of MEMBERS that would otherwise follow it --in this case
-`struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES_DYN]` and
-`struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES]` in the
-corresponding structures.
-
-This overlays the trailing members onto the FAM (struct MR_LD_SPAN_MAP
-ldSpanMap[];) while keeping the FAM and the start of MEMBERS aligned.
-
-The static_assert() ensures this alignment remains, and it's intentionally
-placed inmediately after the corresponding structures --no blank line in
-between.
+drivers/scsi/hisi_sas/hisi_sas.h:639:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/scsi/hisi_sas/hisi_sas.h:616:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
-Changes in v2:
- - Update changelog text --remove reference to unrelated structure.
+ drivers/scsi/hisi_sas/hisi_sas.h | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/aM1D4nPVH96DglfT@kspp/
-
- drivers/scsi/megaraid/megaraid_sas_fusion.h | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.h b/drivers/scsi/megaraid/megaraid_sas_fusion.h
-index b677d80e5874..ddeea0ee2834 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.h
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.h
-@@ -1150,9 +1150,13 @@ typedef struct LOG_BLOCK_SPAN_INFO {
- } LD_SPAN_INFO, *PLD_SPAN_INFO;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
+index 1323ed8aa717..55c638dd58b1 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas.h
++++ b/drivers/scsi/hisi_sas/hisi_sas.h
+@@ -613,8 +613,8 @@ struct hisi_sas_command_table_ssp {
+ 	struct ssp_frame_hdr hdr;
+ 	union {
+ 		struct {
+-			struct ssp_command_iu task;
+ 			u32 prot[PROT_BUF_SIZE];
++			struct ssp_command_iu task;
+ 		};
+ 		struct ssp_tmf_iu ssp_task;
+ 		struct xfer_rdy_iu xfer_rdy;
+@@ -636,13 +636,17 @@ struct hisi_sas_status_buffer {
  
- struct MR_FW_RAID_MAP_ALL {
--	struct MR_FW_RAID_MAP raidMap;
--	struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES];
+ struct hisi_sas_slot_buf_table {
+ 	struct hisi_sas_status_buffer status_buffer;
+-	union hisi_sas_command_table command_header;
+ 	struct hisi_sas_sge_page sge_page;
++
 +	/* Must be last --ends in a flexible-array member. */
-+	TRAILING_OVERLAP(struct MR_FW_RAID_MAP, raidMap, ldSpanMap,
-+		struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES];
-+	);
- } __attribute__ ((packed));
-+static_assert(offsetof(struct MR_FW_RAID_MAP_ALL, raidMap.ldSpanMap) ==
-+	      offsetof(struct MR_FW_RAID_MAP_ALL, ldSpanMap));
++	union hisi_sas_command_table command_header;
+ };
  
- struct MR_DRV_RAID_MAP {
- 	/* total size of this structure, including this field.
-@@ -1194,10 +1198,13 @@ struct MR_DRV_RAID_MAP {
-  * And it is mainly for code re-use purpose.
-  */
- struct MR_DRV_RAID_MAP_ALL {
--
--	struct MR_DRV_RAID_MAP raidMap;
--	struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES_DYN];
+ struct hisi_sas_slot_dif_buf_table {
+-	struct hisi_sas_slot_buf_table slot_buf;
+ 	struct hisi_sas_sge_dif_page sge_dif_page;
++
 +	/* Must be last --ends in a flexible-array member. */
-+	TRAILING_OVERLAP(struct MR_DRV_RAID_MAP, raidMap, ldSpanMap,
-+		struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES_DYN];
-+	);
- } __packed;
-+static_assert(offsetof(struct MR_DRV_RAID_MAP_ALL, raidMap.ldSpanMap) ==
-+	      offsetof(struct MR_DRV_RAID_MAP_ALL, ldSpanMap));
++	struct hisi_sas_slot_buf_table slot_buf;
+ };
  
- 
- 
+ extern struct scsi_transport_template *hisi_sas_stt;
 -- 
 2.43.0
 
