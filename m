@@ -1,156 +1,93 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309AC2BEC2A;
-	Fri, 19 Sep 2025 10:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758276572; cv=pass; b=RPVpnEssMfIZ+as1OmZ+XVx252sDPZYGwb0p2vst5RmlU3ZG78ZuBB/KZCsrKg6wf+Vr7H7dIsJw/bJEUSqsYGAmNgEVPcIgbOt2sb4tzZIqGc+5KGihcIVqh2EcTqyal9B6fvDbRDjhlRBMBwgX4qg/lw+fjELw1pGgwGqFQCw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758276572; c=relaxed/simple;
-	bh=hWIJFFgeIQPHspi4bQeADU9yEctBXMeZmyiinjylEpA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nG4MLcwEIFv+wxr66NWkRx5OXlrpnzu5V6kRs/H3fGLrQRZCsotPSv33cbp5qAoi73NsRuM0A7nlkcMXNIF6HORMa1DfTmqxE9fk57THIjj7RxASBlFUljacN+S0V8iJfQ5EkYNZ4E0bTdMMR9qJLrWyzDVjMhw4Bly1PkZVN6M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=PURFcqWF; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE40246795;
+	Fri, 19 Sep 2025 11:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758281078; cv=none; b=ekTdc90ZlLv6Q4/Q28OMdF4z4ML6xJrmn1hJorq9Kr1tsqnIo/QGzDz/lkwC1zdih0brrgTA2KyG9warDATyeH9oZRPZM7DYqLHI8PET8aMbwuuy2wK7E9b18NNt/Mkfs1pp0cZo8nopxd/5wA/g4ezb7jNjGnx2QvIDh4RJibM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758281078; c=relaxed/simple;
+	bh=eQh/fnW6AUU5yRkPsxlaV5lCpSBqXst9/XL6eG70HJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=VWug5tb1YZPHI1elLvMUkxLrqQ3vpGrnlepfxfm7dUHNA+d7Oq/1LEJIb7pNXIeiRkyiciVDrimMhZZH5X04izKooxIDWWjoipvQzJTvVUs6twoBpSQ/GKv+eU7e8f+JHa71fLwnPPO4CVRt/PjNBU33zFhDVHYf4zSgzOS0EsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uaFH0JtQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="PURFcqWF"
-ARC-Seal: i=1; a=rsa-sha256; t=1758276537; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=dicK+OMv5QSBObbMGKfy67NokELvGMR5Dt3pkAgFCwmR0HW+On81ioV7ohXumzVu/eaQM7UXvhHA7W4ZNe2BV4j1TpZuh0liTGx8qdsl5T9qvUKxhaEsRjWIGKa6aIqonpMrf1p4wECVjV9nfmHdkdh0XsC1p6gxjfSe1mMLeog=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1758276537; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=7bikftOXJFrKd3xRGDKSA0neTFb/TpOhRE/473mVa+k=; 
-	b=k7x7q+WrdnAYmBcNentlAQJjvI1RD35H4m7uNM+Cy16elyxAilArii+RRx0qMZbxWaiSZc26nJXty4iU/NNSWhUR2kJxfpjJ0EIDG92VjSXSY063L93Piu7wLot6YN3uG7UgWZWhsyyFumQF532RBWuA8ovV0c144ZYxLQJ0Bw8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1758276537;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=7bikftOXJFrKd3xRGDKSA0neTFb/TpOhRE/473mVa+k=;
-	b=PURFcqWFKfQGye1p389YNk/IIuiOGIj3TXvOyo0vc3xrmKkCfgrEwlwYhmtvcq+H
-	F9MIqfFjz87qRiLlB9XmBgGAv/7nDL78Ith2SlFaf+pRAQNbpFFpiTBlUajOZzuJroW
-	ylq0yngeWq6e8rOwe+JNbAJfbNFC4n5v9iy/sPIg=
-Received: by mx.zohomail.com with SMTPS id 1758276534307344.4153529447631;
-	Fri, 19 Sep 2025 03:08:54 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- MyungJoo Ham <myungjoo.ham@samsung.com>,
- Kyungmin Park <kyungmin.park@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Jassi Brar <jassisinghbrar@gmail.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>,
- kernel@collabora.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject:
- Re: [PATCH v3 01/10] dt-bindings: gpu: mali-valhall-csf: add
- mediatek,mt8196-mali variant
-Date: Fri, 19 Sep 2025 12:08:45 +0200
-Message-ID: <6970929.lOV4Wx5bFT@workhorse>
-In-Reply-To: <c210de74-6eb5-40a4-b87d-a4a5c3123e65@kernel.org>
-References:
- <20250917-mt8196-gpufreq-v3-0-c4ede4b4399e@collabora.com>
- <5749727.31r3eYUQgx@workhorse>
- <c210de74-6eb5-40a4-b87d-a4a5c3123e65@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uaFH0JtQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 072ECC4CEF0;
+	Fri, 19 Sep 2025 11:24:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758281077;
+	bh=eQh/fnW6AUU5yRkPsxlaV5lCpSBqXst9/XL6eG70HJQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=uaFH0JtQG0xYTc220Hs1ABxZiz9d0FLWHZs+m0oD86MNGKfXTi7qP9bz9duZimrX0
+	 isSDjkeL+A4vt4godEjaLyJZKxSQEo6rDqq+xhJSMty8B2JXbEx30sZyrzD2Cxr87q
+	 IZYiqgz+Wb7pH8ZewEAQgRNuWJbGbqPX1l27eYNilzh/4eilrV9PqzvxBjCMA0Jxmw
+	 jwf2hHSSZvNy3KuGLnFkTPGINWpZuwSdoh2Z84okQttYsbwTRauYS+0ibs/KTjupVm
+	 2VdxTKXD83pI/ZmYmj6GBvuT8I2ff5f2OnSHueGbkJtOks+pocqRSOheXIPxRGjvEQ
+	 GNaML1HKWVS0g==
+Date: Fri, 19 Sep 2025 13:24:30 +0200
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] scsi: isci: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <aM09bpl1xj9KZSZl@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Friday, 19 September 2025 06:28:54 Central European Summer Time Krzysztof Kozlowski wrote:
-> On 18/09/2025 23:01, Nicolas Frattaroli wrote:
-> > On Thursday, 18 September 2025 02:30:09 Central European Summer Time Krzysztof Kozlowski wrote:
-> >> On Wed, Sep 17, 2025 at 02:22:32PM +0200, Nicolas Frattaroli wrote:
-> >>> The Mali-based GPU on the MediaTek MT8196 SoC uses a separate MCU to
-> >>> control the power and frequency of the GPU.
-> >>>
-> >>> It lets us omit the OPP tables from the device tree, as those can now be
-> >>> enumerated at runtime from the MCU. It also means the mali GPU node
-> >>> described in this binding does not have any clocks in this case, as all
-> >>> clock control is delegated to the MCU.
-> >>>
-> >>> Add the mediatek,mt8196-mali compatible, and a performance-domains
-> >>> property which points to the MCU's device tree node in this case. It's
-> >>> required on mt8196 devices.
-> >>>
-> >>> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> >>> ---
-> >>>  .../bindings/gpu/arm,mali-valhall-csf.yaml         | 32 ++++++++++++++++++++--
-> >>>  1 file changed, 30 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
-> >>> index 7ad5a3ffc5f5c753322eda9e74cc65de89d11c73..ccab2dd0ea852187e3ab75923e19739622b2b3b8 100644
-> >>> --- a/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
-> >>> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
-> >>> @@ -38,7 +38,6 @@ properties:
-> >>>        - const: gpu
-> >>>  
-> >>>    clocks:
-> >>> -    minItems: 1
-> >>
-> >> I don't understand why.
-> >>
-> >> Best regards,
-> >> Krzysztof
-> >>
-> >>
-> > 
-> > I am executing a Convex hull algorithm on the 3D space of "dt-bindings
-> > maintainer opinions" to get a convex hull of acceptable dt-bindings
-> > choices where two different choices are functionally equivalent.
-> > 
-> > With this additional opinion on the krzk axis, I now know that having
-> > the base properties accurate for the general case is not required if
-> > the per-compatible case sets the property to false anyway.
-> > 
-> > I hope no two opinions are collinear, as this would surely be my
-> > undoing.
-> > 
-> > You get to pick which axis (X, Y, Z) you are. Right-hand rule, of
-> > course.
-> 
-> 
-> This piece of code is wrong and I could not deduce the reason. That's
-> why I asked why you need that change. If you intend to waste my time, I
-> will don't bother with this, but code is still wrong.
-> 
-> Best regards,
-> Krzysztof
-> 
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-The previous reply was in jest, I did not know that this was incorrect.
-That's because it has no effect; there is no option for a bare
-`arm,mali-valhall-csf` compatible with no other compatible preceding
-it right now as far as I can parse the binding (which in of itself
-seems wrong.) So minItems: 1 didn't do anything, because the RK3588
-compatible would override it anyway, and the mt8196 compatible would
-disable the property entirely.
+Move the conflicting declaration (which happens to be in a union,
+so we're moving the entire union) to the end of the corresponding
+structure. Notice that `struct ssp_response_iu` is a flexible
+structure, this is a structure that contains a flexible-array member.
 
-Hence, this piece of code is not wrong, as it's functionally
-equivalent to what was already there. Unless that is my reasoning
-is erroneous, in which case I'd appreciate an explanation for how
-it is wrong, rather than having to argue why I think you think
-wrongly that it is wrong.
+With these changes fix the following warning:
 
-Kind regards,
-Nicolas Frattaroli
+drivers/scsi/isci/task.h:92:11: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/scsi/isci/task.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/scsi/isci/task.h b/drivers/scsi/isci/task.h
+index f96633fa6939..d05d09c1263d 100644
+--- a/drivers/scsi/isci/task.h
++++ b/drivers/scsi/isci/task.h
+@@ -85,15 +85,17 @@ struct isci_tmf {
+ 
+ 	struct completion *complete;
+ 	enum sas_protocol proto;
++	unsigned char lun[8];
++	u16 io_tag;
++	enum isci_tmf_function_codes tmf_code;
++	int status;
++
++	/* Must be last --ends in a flexible-array member. */
+ 	union {
+ 		struct ssp_response_iu resp_iu;
+ 		struct dev_to_host_fis d2h_fis;
+ 		u8 rsp_buf[SSP_RESP_IU_MAX_SIZE];
+ 	} resp;
+-	unsigned char lun[8];
+-	u16 io_tag;
+-	enum isci_tmf_function_codes tmf_code;
+-	int status;
+ };
+ 
+ static inline void isci_print_tmf(struct isci_host *ihost, struct isci_tmf *tmf)
+-- 
+2.43.0
 
