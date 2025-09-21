@@ -1,84 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cdmsr2.hinet.net (210-65-1-144.hinet-ip.hinet.net [210.65.1.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D695636B;
-	Sat, 20 Sep 2025 23:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F961B85FD
+	for <linux-hardening@vger.kernel.org>; Sun, 21 Sep 2025 04:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.65.1.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758411927; cv=none; b=ky1Ive+Zb7UkGMtg8V4bYbjyXlTPk2wJOekIxX26YO2fIVawgjBHregkxFDJ9PmTfvkJ1GLp1jsTul6Z9qRaIWflM6nvhL7gw9vPIHe9C1n41drd0tS4DaQUxOZMbJ168EXxeelP0Nfy6HfJbh1JVEM0oWTnjxLdCjWB0seHRAU=
+	t=1758429112; cv=none; b=bZyS0X8qh5yCWvEInLYtCUcun1XmotJ7k8AhX/3rVkI3j6c7hQG+wyl1WBmjhVLjy/AbNvJ2Xsge2ZouY+xEQHwx0bRClWHUuXbe1UO/O4gcMkCoV/bkbjs8jY50nL2XlYkY9pjDd1f7mVsAcLZbxvG3PQwjf2NzDsXJe6ftA9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758411927; c=relaxed/simple;
-	bh=nPQYeWOqG0yaQ2jHVrf6PnxG9t5HqHsq6zQRyD1fYbo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dHfRQNfWgiDpcZnClX0c63QDGl8JnNnVkF4X7N1B73tGKnVchnTMGyShZLC5kE1qjAWb7q1znnq7Fk/Pt+qLmlsxFIy/HxsRnQKlBYw5tZ2MsyAdW+pYcDGtw8PUe61y89bRWwvFE0UGnOUzl2CFfj2SZLYLzTJImtYqA2OrCR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+knQZNU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758429112; c=relaxed/simple;
+	bh=Xzu8lp7pRB0ASZDv0Sex6fMh1PIpZSXg49qbUYC5EEs=;
+	h=From:To:Subject:Message-ID:Date:MIME-Version:Content-Type; b=ix2jVIXeAHMvjucQs+MjJu3Q+fKZ6D7Vi9TZuG9t+0WgiEmfjEw7xCSV690bxQfunGsc7SYjlWLcBuXBHO77y4RdeQCwUcBRC8hICpiPMRRwZbk7BuzWlfpG9Ym0eSOMC80iqs8oVt8UOM+bBmTTvfCRz63GifvZJmQSPMlkfZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net; spf=pass smtp.mailfrom=ms29.hinet.net; dkim=pass (1024-bit key) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.b=MBbgLhbH; arc=none smtp.client-ip=210.65.1.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ms29.hinet.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+knQZNU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 564EEC4CEEB;
-	Sat, 20 Sep 2025 23:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758411927;
-	bh=nPQYeWOqG0yaQ2jHVrf6PnxG9t5HqHsq6zQRyD1fYbo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=F+knQZNUyzxHa+n0GHFT8CBZk7th+H/BuDrBA4mfi6lss81kPFrL34oLSrwwXEJvk
-	 mXtrGzgYGtegbkDtl/EzARZ4Vgagv3QvDB/CNPeiRDw5XoQUCII3/5QETgOD1C/buc
-	 N8dLtck412Sr1O7ATgJsPlJ0YqQaCfAyuen3wEChdmisZ2IBbB9Ok9ef3y2jrx/7Bo
-	 +tunUqMWslIfgIROxxGBooyNadQkXua3wn4TUpxMieFlnZy9mwxL46PGOfaJ+QL5Wf
-	 PXA6TMreggMqY0Rs/n9rKJXLYDA0MF3PSGKTDaDyMfY0nhC9NIeChRd2oMoaEyuqXX
-	 y6goJxO2590Ug==
-From: Kees Cook <kees@kernel.org>
-To: linux-hardening@vger.kernel.org,
-	Christopher Fore <csfore@posteo.net>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] gcc-plugins: Remove TODO_verify_il for GCC >= 16
-Date: Sat, 20 Sep 2025 16:45:23 -0700
-Message-Id: <20250920234519.work.915-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.b="MBbgLhbH"
+Received: from cmsr5.hinet.net ([10.199.216.84])
+	by cdmsr2.hinet.net (8.15.2/8.15.2) with ESMTPS id 58L4VkGC196540
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
+	for <linux-hardening@vger.kernel.org>; Sun, 21 Sep 2025 12:31:48 +0800
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=ms29.hinet.net;
+	s=default; t=1758429108; bh=c8wZf5N8aNgl+b7EV1r5B/GUj08=;
+	h=From:To:Subject:Date;
+	b=MBbgLhbHmGKWC+In7xfDir+JtyPaNaJ5KggOimdyOhm2PZwaXRqF68lIYbj51ZWlh
+	 zo0OxsT/MVp5p5CK3dEVcYmv3Stnwb4xB1ylKjjlZBt/GE02NOrGDgFdaG0p4IOqsZ
+	 V7g8q/zxPWyPHE2UBBv1sdHQPBffs/G4iI+VJkg8=
+Received: from [127.0.0.1] (36-239-124-102.dynamic-ip.hinet.net [36.239.124.102])
+	by cmsr5.hinet.net (8.15.2/8.15.2) with ESMTPS id 58L4Nd29703088
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
+	for <linux-hardening@vger.kernel.org>; Sun, 21 Sep 2025 12:25:32 +0800
+From: "Info - Albinayah 554" <Linux-hardening@ms29.hinet.net>
+To: linux-hardening@vger.kernel.org
+Reply-To: "Info - Albinayah." <europe-sales@albinayah-group.com>
+Subject: =?UTF-8?B?TmV3IFNlcHRlbWJlciBPcmRlci4gNzc3NzMgU3VuZGF5LCBTZXB0ZW1iZXIgMjEsIDIwMjUgYXQgMDY6MjU6MzEgQU0=?=
+Message-ID: <79ca7595-35e7-3e7e-674b-7853f97ddbf3@ms29.hinet.net>
+Content-Transfer-Encoding: 7bit
+Date: Sun, 21 Sep 2025 04:25:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1243; i=kees@kernel.org; h=from:subject:message-id; bh=nPQYeWOqG0yaQ2jHVrf6PnxG9t5HqHsq6zQRyD1fYbo=; b=owGbwMvMwCVmps19z/KJym7G02pJDBnnbSaV39QrFzdalZ0aZfu54OyXRVfSJp13MayNqss73 WC6vWZqRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwES+ljMy7Baye7w4psNQ4Xe+ 8E/Xu9ef+5/ZrnLk/NZqt8/5J69MKWD4pzrx+vm1Fayf/90Ja/kQnZmXFBT3fsE7ufeB3QyuS7o vMgIA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+X-HiNet-Brightmail: Spam
+X-CMAE-Score: 100
+X-CMAE-Analysis: v=2.4 cv=X8PxK3Te c=0 sm=1 tr=0 ts=68cf7e3d
+	p=OrFXhexWvejrBOeqCD4A:9 a=uOCXUd7ZQqfqfYBohqtHNA==:117 a=IkcTkHD0fZMA:10
+	a=5KLPUuaC_9wA:10
 
-GCC now runs TODO_verify_il automatically[1], so it is no longer exposed to
-plugins. Only use the flag on GCC < 16.
+Hi Linux-hardening,
 
-Suggested-by: Christopher Fore <csfore@posteo.net>
-Link: https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=9739ae9384dd7cd3bb1c7683d6b80b7a9116eaf8
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-How about like this, so it'll still work on GCC <16?
-Cc: <linux-hardening@vger.kernel.org>
----
- scripts/gcc-plugins/gcc-common.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+Please provide a quote for your products:
 
-diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
-index 6cb6d1051815..8f1b3500f8e2 100644
---- a/scripts/gcc-plugins/gcc-common.h
-+++ b/scripts/gcc-plugins/gcc-common.h
-@@ -173,10 +173,17 @@ static inline opt_pass *get_pass_for_id(int id)
- 	return g->get_passes()->get_pass_for_id(id);
- }
- 
-+#if BUILDING_GCC_VERSION < 16000
- #define TODO_verify_ssa TODO_verify_il
- #define TODO_verify_flow TODO_verify_il
- #define TODO_verify_stmts TODO_verify_il
- #define TODO_verify_rtl_sharing TODO_verify_il
-+#else
-+#define TODO_verify_ssa 0
-+#define TODO_verify_flow 0
-+#define TODO_verify_stmts 0
-+#define TODO_verify_rtl_sharing 0
-+#endif
- 
- #define INSN_DELETED_P(insn) (insn)->deleted()
- 
--- 
-2.34.1
+Include:
+1.Pricing (per unit)
+2.Delivery cost & timeline
+3.Quote expiry date
 
+Deadline: September
+
+Thanks!
+
+Kamal Prasad
+
+Albinayah Trading
