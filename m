@@ -1,200 +1,72 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993DB1E5219
-	for <linux-hardening@vger.kernel.org>; Sun, 21 Sep 2025 05:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260F71E47CC
+	for <linux-hardening@vger.kernel.org>; Sun, 21 Sep 2025 16:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758430873; cv=none; b=F0BrcjC3iLT5QSzWO4YAfSXzqeRbXVvPsBOpI7rfxx+T9J43TQ3jIUSkrsRj0jlgClpZRZMeJlrMdUwEhie8ea8y2IgEUEYrefh9twA9cdmbFWP4FE2edoKK/6cO466/FoZL6PCDi107tv9N70s5C4n/vJ71T6b+TYosBrlZ3so=
+	t=1758472490; cv=none; b=TQbK/ww4azWRn/T62qn1wPKDuN+8P9ndxtEFLQZV5tZoP41vnhkyN12XoBqBqEcP2UfYwps1VHHNWyIZN/gN8UHSu04Dpx9kGzmNO5P8y1gL/Hdr+myazV1udhodMf0tO3zNw4c4L3nXrnPy6oeJTBmAUhfAvwDhwbGUd7lbBdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758430873; c=relaxed/simple;
-	bh=TFopHDySdmwff+2h+lbg0QewUPQXDyFQxFVBz2g2PD8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JWbsRXgg5sRuwcAghw4ti0kGJlaMvhGNodKAJno7kU6b2KvGaxd604AxC+TxTzw5NSSXLJIndhyCzf368A4jVD/qzXsmHe1AYqLRoPITJC2IcOFDwkF+5Hi0JjnI8c6wbz5E5KKpgsCfhKIv+gAYNRRoKmMGp2d00I/oNnzQYHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WROfXvwM; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758472490; c=relaxed/simple;
+	bh=77rmfH2+36RF3m4h8R4ZPYEVfeF61BXV0wsWEEOish0=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=cEZd+1tZz1G4b+TGtihnlvngfzLrPDYT3pFbXfm9D1yi00BsoNXmx2Vh89eCWGTV7RiV1dYZXK2oaKKtzNp8o9UCg4e454HZX15g1oCndabfUHC2fKq2d16tJRXPCjLLID0lDSNdagLlig996gFWXh9ub6Nvb34yJcy0nonv2Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=BoUUb58L; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WROfXvwM"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-331d60b0a37so1085702fac.0
-        for <linux-hardening@vger.kernel.org>; Sat, 20 Sep 2025 22:01:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758430871; x=1759035671; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IjfAWdx3qllN2H0M+sW0dm7oGyFJwrK43aFNVvYCDkE=;
-        b=WROfXvwM/Hc3IHkJACyQqmaUujIazDLvuv3RCYj2hW9FPYhKumADdws1gT15iolC/M
-         kKUJikst65yitt08vOqbsAm3FiNJCyn3L1u2pVp77jhW2OoGH1Fpt4bjRy4AI6upBYYB
-         iL3pAjGe1DuDdgSeBf7W/0kFvfaJnZjhfCaC/BUNY9CwSkhfrMcEtm0edd+Hrh3OZyjk
-         p4wkTap73LGzP3+8sUUHNYKl06Y6az3wNYSND58sZsj4fZTAGag6hLAEwVDoaZeOdoz9
-         IUy24sGVOcJPvZQfdPsceqMYTZpOHFUVQH2RWkRDGea18oo/Ya5x3DHQiM6pYF+mQibP
-         LmXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758430871; x=1759035671;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IjfAWdx3qllN2H0M+sW0dm7oGyFJwrK43aFNVvYCDkE=;
-        b=ZCBGE4O3UoKpkHRNIBHwJ9yg3LeOCNGEAO4CslXe0ztHMWIhZGf58BJuYjia1C1K+6
-         ehYsjuySGdAZUyfbjpCDgRwB9RtEQEUxoruqAjCqWAwkRZ14molLAdoi1FHXgxG80cKr
-         q3+FWfZQMOqvyRCb2UDjbk8fqoGSKV7dEKQkGTkKMek5OZegdcRR6+TiVWU4QZisNRe+
-         C3OP5ZT/fgM8QHR86J5AraN2Oet0CVeGS9GogcqpfeebGOE3sq6EN9HGD8dB7D2TeNNB
-         b38vpN7TkfkBBVQYZBUBTJ8KFrRwxRW+ZbepOEQNv8ulNhej6N8++UASTFe+wKeXlFcx
-         6OHg==
-X-Forwarded-Encrypted: i=1; AJvYcCXD/uhRIkhKT8/pT+Ltd6ByHj45GHiapFfXhmnYzcGr2ko1jie2KCkg9PVC7wUgH2oa+VPKP7GB4NVnD/NiprE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxO7t4SY+5NZNR8NTbhim1x0mAVeu35rbPb5lDmCucgyxHccchO
-	tygxoi1OssjX/2TZ9VnL66efMK5C5YAbRRfCsx4XFEz6aBU6hmLMoa/upQ9umtx6AsrxcANNnoF
-	0L5QPiRIC8d3H0ncsTk0HPCsEKJ7stf4=
-X-Gm-Gg: ASbGncs2+YxmjqYXCM2OPVXhd43jlyLZyPMR6DmnxbZ3hE/oUGkHlJtG79euFZDCgB9
-	dzDdtkzx6WK3uCT8VocCv/MdTsPyN+DDN5o042fGLUF2FY/0OmBBoRsjroPaFpwm4QsI2wzsitL
-	tIFuvLatSy/DgbbkZMDwoPRaqoRc7giS392dsxCKKI8FY/uBGnQ6iyB+nfzFWb2m9ibxSfEt/f+
-	fubMYXG
-X-Google-Smtp-Source: AGHT+IFKpKCb+G5+tP41Jly7b1/38Uvws70S97XKQpr/S5rzy7zAFBiiLMjEcsLoKodvfvth4fS5Yj3OP9ZLUPhO44s=
-X-Received: by 2002:a05:6870:6e83:b0:31d:718f:a09d with SMTP id
- 586e51a60fabf-33bb5c80cf2mr4292754fac.25.1758430870653; Sat, 20 Sep 2025
- 22:01:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="BoUUb58L"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id B6FAB240027
+	for <linux-hardening@vger.kernel.org>; Sun, 21 Sep 2025 18:34:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net; s=2017;
+	t=1758472479; bh=8BNHeNkmB7QvFsiJjJvL4UFVSn8BRJCK12XbcrTGhL0=;
+	h=MIME-Version:Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=BoUUb58LslUUa4cCfMJWWF9Emdv/qwmZp6Vm6NActKevh9gfoqrL879/2wptJmjkn
+	 jlSsBjc/D7gDru2PcdpviFs3KXN2/fE/FwOaKX/vbNfuTAAHFmcVwmNsGyvmWZV7en
+	 akCwmkgktUKPLUokY1asqfGk2r1x9TLwoolPWnrDSPaiG14d9DxPAUOahDIORpFuPj
+	 /hJEHWK2N5t3qcCyZOA1s5ZEHprWH6Ymi+dLwHTur5LzOrveLoLxi+RKuJnEbTuqjC
+	 dZjlerfr59pFW4tcvTSkQR9NIKOtDViKnNodVamDT6eEDaeRf2DWWtC2kSEBAYjiY5
+	 Qxt1ffiilGL9A==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4cVBfR1pRRz9rxK;
+	Sun, 21 Sep 2025 18:34:39 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250917-mt8196-gpufreq-v3-0-c4ede4b4399e@collabora.com> <20250917-mt8196-gpufreq-v3-5-c4ede4b4399e@collabora.com>
-In-Reply-To: <20250917-mt8196-gpufreq-v3-5-c4ede4b4399e@collabora.com>
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Date: Sun, 21 Sep 2025 00:00:59 -0500
-X-Gm-Features: AS18NWDK9SEswNrgx0QIzUV1feO9ul79WZJVBOk2Mw-YsP45swDD7fxXXq-LHKs
-Message-ID: <CABb+yY0_TZC0Dd3Rue=6Am4=Urs8hdkaa6RE=42t58SYUsLV0w@mail.gmail.com>
-Subject: Re: [PATCH v3 05/10] mailbox: add MediaTek GPUEB IPI mailbox
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Chia-I Wu <olvaffe@gmail.com>, 
-	Chen-Yu Tsai <wenst@chromium.org>, kernel@collabora.com, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Sep 17, 2025 at 7:23=E2=80=AFAM Nicolas Frattaroli
-<nicolas.frattaroli@collabora.com> wrote:
-....
-
-> +#define MBOX_CTL_TX_STS                0x0000
-> +#define MBOX_CTL_IRQ_SET       0x0004
-> +#define MBOX_CTL_IRQ_CLR       0x0074
-> +#define MBOX_CTL_RX_STS                0x0078
-> +
-1) Please don't pollute the global namespace. Make these something
-like MBOX_MTK_GPUEB_xxx. Here and elsewhere.
-2) You don't write short values, so maybe just 0x04, 0x04 0x74 and 0x78.
+Date: Sun, 21 Sep 2025 16:34:39 +0000
+From: csfore@posteo.net
+To: Kees Cook <kees@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] gcc-plugins: Remove =?UTF-8?Q?TODO=5Fverify=5Fil=20fo?=
+ =?UTF-8?Q?r=20GCC=20=3E=3D=20=31=36?=
+In-Reply-To: <20250920234519.work.915-kees@kernel.org>
+References: <20250920234519.work.915-kees@kernel.org>
+Message-ID: <7197a8084bece89e3eabeaded3a2741f@posteo.net>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-> +#define MBOX_FULL              BIT(0) /* i.e. we've received data */
-> +#define MBOX_CLOGGED           BIT(1) /* i.e. the channel is shutdown */
-> +
-This is confusing. CLOGGED usually means malfunction, but it seems you
-want to call it STOPPED or UNINIT?
 
+On 2025-09-20 19:45, Kees Cook wrote:
+> GCC now runs TODO_verify_il automatically[1], so it is no longer 
+> exposed to
+> plugins. Only use the flag on GCC < 16.
+> 
+> Suggested-by: Christopher Fore <csfore@posteo.net>
+> Link:
+> https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=9739ae9384dd7cd3bb1c7683d6b80b7a9116eaf8
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> How about like this, so it'll still work on GCC <16?
 
-> +#define MBOX_MAX_RX_SIZE       32 /* in bytes */
-> +
-> +struct mtk_gpueb_mbox {
-> +       struct device *dev;
-> +       struct clk *clk;
-> +       void __iomem *mbox_mmio;
-> +       void __iomem *mbox_ctl;
-> +       struct mbox_controller mbox;
-> +       struct mtk_gpueb_mbox_chan *ch;
-> +       int irq;
-> +       const struct mtk_gpueb_mbox_variant *v;
-> +};
-Other structures have kernel-doc, so why not here too?
-...
+Sounds good to me!
 
-> +
-> +static int mtk_gpueb_mbox_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +       struct mtk_gpueb_mbox_chan *ch =3D chan->con_priv;
-> +       int i;
-> +       u32 *values =3D data;
-> +
-maybe order in decreasing lengths ?
+-Christopher
 
-
-> +
-> +       /*
-> +        * We don't want any fancy nonsense, just write the 32-bit values=
- in
-> +        * order. memcpy_toio/__iowrite32_copy don't work here, because f=
-ancy.
-> +        */
->
-Please make the comment technical. Currently it just expresses your
-distaste for fancy :)
-
-> +       for (i =3D 0; i < ch->c->tx_len; i +=3D 4)
-> +               writel(values[i / 4], ch->ebm->mbox_mmio + ch->c->tx_offs=
-et + i);
-> +
-
-...
-> +
-> +static struct mbox_chan *
-> +mtk_gpueb_mbox_of_xlate(struct mbox_controller *mbox,
-> +                       const struct of_phandle_args *sp)
-> +{
-> +       struct mtk_gpueb_mbox *ebm =3D dev_get_drvdata(mbox->dev);
-> +
-> +       if (!sp->args_count)
-> +               return ERR_PTR(-EINVAL);
-> +
-> +       if (sp->args[0] >=3D ebm->v->num_channels)
-> +               return ERR_PTR(-ECHRNG);
-> +
-> +       return &mbox->chans[sp->args[0]];
-> +}
->
-Just use the default of_mbox_index_xlate()
-
-....
-> +
-> +       for (i =3D 0; i < ebm->v->num_channels; i++) {
-
-You make this block a bit cleaner by using a temporary variable
-        echan =3D &ebm->ch[i];
-and using echan instead of ebm->ch[i] a dozen times below.
-
-> +               ebm->ch[i].c =3D &ebm->v->channels[i];
-> +               if (ebm->ch[i].c->rx_len > MBOX_MAX_RX_SIZE) {
-> +                       dev_err(ebm->dev, "Channel %s RX size (%d) too la=
-rge\n",
-> +                               ebm->ch[i].c->name, ebm->ch[i].c->rx_len)=
-;
-> +                       return -EINVAL;
-> +               }
-> +               ebm->ch[i].full_name =3D devm_kasprintf(ebm->dev, GFP_KER=
-NEL, "%s:%s",
-> +                                                     dev_name(ebm->dev),=
- ebm->ch[i].c->name);
-> +               if (!ebm->ch[i].full_name)
-> +                       return -ENOMEM;
-> +
-> +               ebm->ch[i].ebm =3D ebm;
-> +               ebm->ch[i].num =3D i;
-> +               spin_lock_init(&ebm->mbox.chans[i].lock);
-> +               ebm->mbox.chans[i].con_priv =3D &ebm->ch[i];
-> +               atomic_set(&ebm->ch[i].rx_status, MBOX_CLOGGED);
-> +       }
-> +
-
-
--j
+> [...]
