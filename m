@@ -1,182 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC0E27A919;
-	Mon, 22 Sep 2025 18:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4BC1E9919
+	for <linux-hardening@vger.kernel.org>; Mon, 22 Sep 2025 21:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758564805; cv=none; b=L+kaudMK0UoXLI/rR8keSFMZRKdHaZvJ1pdOXAJ4uMwWZ9SsOJ7vERyHk51biyaFbTVbTClPBmstKD4G6W34xAc+EQWbKYZIFTY/rJooN3ckPaLb5RJmHsd9Igy91YXQlDBOFs+Z8+OTNg0uJXhvvy8QdisJRTh7iO7OPAZZfPI=
+	t=1758575138; cv=none; b=KU4T9ToMos3W+vySoQGDvd0kJ8uYufGhVt1w7Bk10BzVnom4UqxAqvQGxth6jFbdrUeWXPkToaa06m15yvSrrrZsp9xJJzDjleUlaakQgmj6VjoIdnbQZK5pJ3tMPGQEmHbSlzonIMxBlNRY9nH/Bu5rr3yVbqCrT/MCsNiC2v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758564805; c=relaxed/simple;
-	bh=ch3XJR3/J1ZY9eeHVCkTk3w1gXTPD/CTnWH+kKraEHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=puKWaC+jb+aHlo1ESPqwoKCkRx4RwmO5BymV2OcMS7fTTXdboQOhQemdW/8wt6sMlGHj33+Vxt1MCaG5/X1OEzSo1lVqPtDPzc/w0g5aoURlocx0sj1TXaxZTYZhPt3T0252eR6iNj52YYnGeZfloCEdFeMl6yw5GqSEGymHgJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yk6ob/OG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758575138; c=relaxed/simple;
+	bh=WAl5OuqroQdkdQI4Wd3qHEcTe93M5exvNPWBFvPsfw0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IMSk47ODcitzlxqKNyNLTmLI+cFGCIQ5Ux8AmSiRn4J4rEhtF6w8aFaMuoCYqGfIyJdoJ2RUD/RckZge1kr/2/8nAsWXN3iNzblIgkBle7bPZBIiv/EC61g/oA+jfj+C03wRduvd1L7WVzdnxxgkhwITfRR8y3bbphOipsCiPqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZdxwylqD; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yk6ob/OG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABED0C4CEF5;
-	Mon, 22 Sep 2025 18:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758564804;
-	bh=ch3XJR3/J1ZY9eeHVCkTk3w1gXTPD/CTnWH+kKraEHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yk6ob/OGAwkGwWAGBkC3qGsL386M31FRg5HYHcF6fPnimFhdojR95nWwH1ZyzM8So
-	 h7zcLzQJCGrZUbByHokQiq2rPXoQovFkjUIRLMWjh/C5NUAWvWT7r9jw+e6hVXqknQ
-	 v/gyeUsRx5+lyUGTRB4ay78pCyjW8zJsxawdOzJeJ9USmCKNyQChfKIqy54MA59FlL
-	 1CL0h2tfxpF4yPwQs6pFiHonmeFZIc1eK8syWFQeya/tghmGe8aRRHgEPqMyyDrhMe
-	 97Nhgnd0kWevlM6zF4bWz0Z9Fz4Rql+DkHFKCo/IXy/gL4hzqII5Izi3/JAu1UA1HN
-	 2b9fRV2dD7PDw==
-Date: Mon, 22 Sep 2025 13:13:23 -0500
-From: Rob Herring <robh@kernel.org>
-To: Dang Huynh <dang.huynh@mainlining.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-unisoc@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 04/10] dt-bindings: mmc: Add RDA SDMMC controller
-Message-ID: <20250922181323.GA556259-robh@kernel.org>
-References: <20250919-rda8810pl-mmc-v1-0-d4f08a05ba4d@mainlining.org>
- <20250919-rda8810pl-mmc-v1-4-d4f08a05ba4d@mainlining.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZdxwylqD"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1758575130;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wz2Qh6CCUAyXy2y7KZplScVX0TJVeLEXcg6HqXMpxrE=;
+	b=ZdxwylqDL5SfLBTOIJTaseeeDKrVEUiJsZ7gFQ4VmBzQEEYewVGzQ0ZNiyDCrYMO5jKYBf
+	MmnqqQMPNM5G54o3nFWZDMFEFkm1eyGMDZ1pQPVyO2cZYNryl5RSsKBLWWEO/IoGWIUQLJ
+	0n2DXm/aHRIbJVJcUUUBRhveODw32bQ=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: "David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	sparclinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/8] sparc: PCI: Replace deprecated strcpy with strscpy
+Date: Mon, 22 Sep 2025 23:03:50 +0200
+Message-ID: <20250922210408.1723452-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250919-rda8810pl-mmc-v1-4-d4f08a05ba4d@mainlining.org>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Sep 19, 2025 at 01:48:44AM +0700, Dang Huynh wrote:
-> Add documentation describing the SD/MMC controller in RDA Micro
-> RDA8810PL SoC.
-> 
-> Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
-> ---
->  Documentation/devicetree/bindings/mmc/rda,mmc.yaml | 92 ++++++++++++++++++++++
->  1 file changed, 92 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/rda,mmc.yaml b/Documentation/devicetree/bindings/mmc/rda,mmc.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..f3cda38abd66023ca9bc94d1c29df5ae9e211e7c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/rda,mmc.yaml
-> @@ -0,0 +1,92 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/rda,mmc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: RDA Micro SD/MMC Controller
-> +
-> +allOf:
-> +  - $ref: mmc-controller.yaml
-> +
-> +maintainers:
-> +  - Dang Huynh <dang.huynh@mainlining.org>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - rda,8810pl-mmc
-> +      - const: rda,mmc
+strcpy() is deprecated; use strscpy() instead.
 
-Drop the generic compatible.
+No functional changes intended.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: mclk
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    maxItems: 2
-> +
-> +  dma-names:
-> +    items:
-> +      - const: tx
-> +      - const: rx
-> +
-> +  rda,mclk-adj:
-> +    $ref: /schemas/types.yaml#/definitions/uint8
-> +    description:
-> +      Some board need MCLK output to be delayed for the card to work.
-> +      If not present, MCLK output is not delayed.
-> +    minimum: 0
-> +    maximum: 255
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/sparc/kernel/pcic.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-You can drop the constraints if they are not less than uint8 range.
+diff --git a/arch/sparc/kernel/pcic.c b/arch/sparc/kernel/pcic.c
+index 25fe0a061732..f894ae79e78a 100644
+--- a/arch/sparc/kernel/pcic.c
++++ b/arch/sparc/kernel/pcic.c
+@@ -16,6 +16,7 @@
+ #include <linux/init.h>
+ #include <linux/mm.h>
+ #include <linux/slab.h>
++#include <linux/string.h>
+ #include <linux/jiffies.h>
+ 
+ #include <asm/swift.h> /* for cache flushing. */
+@@ -352,7 +353,7 @@ int __init pcic_probe(void)
+ 	pbm = &pcic->pbm;
+ 	pbm->prom_node = node;
+ 	prom_getstring(node, "name", namebuf, 63);  namebuf[63] = 0;
+-	strcpy(pbm->prom_name, namebuf);
++	strscpy(pbm->prom_name, namebuf);
+ 
+ 	{
+ 		extern int pcic_nmi_trap_patch[4];
+@@ -477,7 +478,7 @@ static void pcic_map_pci_device(struct linux_pcic *pcic,
+ 	int j;
+ 
+ 	if (node == 0 || node == -1) {
+-		strcpy(namebuf, "???");
++		strscpy(namebuf, "???");
+ 	} else {
+ 		prom_getstring(node, "name", namebuf, 63); namebuf[63] = 0;
+ 	}
+@@ -536,7 +537,7 @@ pcic_fill_irq(struct linux_pcic *pcic, struct pci_dev *dev, int node)
+ 	char namebuf[64];
+ 
+ 	if (node == 0 || node == -1) {
+-		strcpy(namebuf, "???");
++		strscpy(namebuf, "???");
+ 	} else {
+ 		prom_getstring(node, "name", namebuf, sizeof(namebuf));
+ 	}
+-- 
+2.51.0
 
-What are the units? 
-
-I guess 'adj' means adjust. Just use 'rda,mclk-delay' to be more 
-precise.
-
-> +
-> +  rda,mclk-inv:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Some board need MCLK to be inverted for the card to work.
-> +      If not present, MCLK is not inverted.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - dmas
-> +  - dma-names
-> +  - vmmc-supply
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/clock/rda,8810pl-apclk.h>
-> +    #include <dt-bindings/dma/rda-ifc.h>
-> +    mmc@20950000 {
-> +      compatible = "rda,8810pl-mmc", "rda,mmc";
-> +      reg = <0x20950000 0x1000>;
-> +      interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&ap_syscon CLK_APB2>;
-> +      clock-names = "mclk";
-> +      resets = <&ap_syscon RST_APB2_SDMMC1>;
-> +      dmas = <&ifc IFC_SDMMC1_TX>, <&ifc IFC_SDMMC1_RX>;
-> +      dma-names = "tx", "rx";
-> +      vmmc-supply = <&vdd_sdmmc>;
-> +      rda,mclk-adj = /bits/ 8 <1>;
-> +      rda,mclk-inv;
-> +    };
-> +
-> +...
-> 
-> -- 
-> 2.51.0
-> 
