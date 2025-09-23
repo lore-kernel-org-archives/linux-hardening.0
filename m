@@ -1,116 +1,120 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5AE320A1F
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Sep 2025 09:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50D62750F6
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Sep 2025 09:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758620294; cv=none; b=QZs8YqE02qFNsDlxRALlMEpuOIPmNc3rre4pjF1Mz3qII4xx8IFDIT5Z4+tB2HRdE85umggZNQRngUR6uHC6oq93lJe/iAPD5gYZ+D9K0Gtq+lnrcxKjRA5oVhUESvhXs0dJVW8GmFtNp8Izr3TMAYiJfpNIy48fOGLgnn0DPb0=
+	t=1758621156; cv=none; b=HObbabf6Y/EQ8d+259LeSKlx1PcwxAxIOTi0OEhAWmckiFBg4Z5Ex+1NYTkmIZ5hQiYaa1kv4v4nwatiBMQz6aFNfnQgvoJ4h2a/rVVtmpZYytE0UFb6JWjf9Ljx9gNi2wxx6YX5Ou63C52x2uYTxPpQqU9M9vtfrWQ1hc57noQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758620294; c=relaxed/simple;
-	bh=ibQFUfWgjlrRh6K0i5rnkYWrfmjyVOaaxdim7ktNBj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m2iKpK3V+O5P5V7hTig83sahq9pWam3iUPouwKsQrOA1hCM4AIQ0pXZNUG9ieBW9iuloRxX2F7nPjSV5WB+27S53jUZnc8cAtRzN0+TPySowLuOn/JHopX5LS6IfUfHBjOL8St2Xg/YQ8ybIGSCLDjyk53Bb/9YFO8PlkZwViCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=cZcOBnsa; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1758621156; c=relaxed/simple;
+	bh=0BnOPQDELNokGZZYmpRQ1cd8xaZrosaBnpt3/XVY0Cg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OPGaoKnxluL9Ms/eRgpsyWEwAUX64wdTOdD7n9eLd21cZfEoImcl2GSUarEQNBJaq+RwnAvF7ZcZZrDQcmcac5lv9UvpmarJSUMDlh/LogFaD1WsS1PqlouJLoZFfu42CyaRsspDnNtHc1iqapj1RGn+/VgQb5uKOVUX625Y95U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gNIQYjoF; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cZcOBnsa"
-Received: from eig-obgw-6003b.ext.cloudfilter.net ([10.0.30.175])
-	by cmsmtp with ESMTPS
-	id 0jq6ve0f9v7240zTJvRCGt; Tue, 23 Sep 2025 09:38:06 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 0zTHvpqLGfhew0zTIvhqnD; Tue, 23 Sep 2025 09:38:04 +0000
-X-Authority-Analysis: v=2.4 cv=Q+TS452a c=1 sm=1 tr=0 ts=68d26a7c
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=YFVba0b8p+FN4MzmaWosng==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=7T7KSl7uo7wA:10
- a=8Vd6GBVApGGO7YSmZGYA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ZY1494lZCKLAGhYiwMqyD720As0K42qBB8WHh+Ldudk=; b=cZcOBnsa1Ssm9jkMVx+Vf6ZVBb
-	DA8xlpCFryl594CBOIOju0oLqGKOBzBpx0cQ9B0Xz1oXRME7A4p8zYNYhX889Rra5rDMwKPrazyQq
-	ItCZtRbV7nX4ICn2Dy66jhJn49ht4FePiJ39eU7BVxVn3hfSAAiYT1LcRJUS0qpiWP+Ox7+vGy+qK
-	6GoHa+Zz/ovS+rdzzTf9wLil0Sw11jBHZf6nYd7Xz4M2W+q2HgM9MJxtpHkfYF+9bKk+7DLrPWTsD
-	N2L7y4jqQ7HtvGF7pqibxfmkjii+lPTsgvA4ef9wDVcxx4K02fwOFQmNufShHBusxyXTSRs4kDZrq
-	76nqKYRw==;
-Received: from [83.214.156.71] (port=40424 helo=[192.168.1.104])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1v0zTE-00000000QEZ-3hjY;
-	Tue, 23 Sep 2025 04:38:01 -0500
-Message-ID: <c9cd2ebb-ecdb-4ba9-8d54-f01e3cd54929@embeddedor.com>
-Date: Tue, 23 Sep 2025 11:37:55 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNIQYjoF"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-46cbdf513d7so22346135e9.2
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Sep 2025 02:52:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758621153; x=1759225953; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LY0Z8Ik+ok4lx1moFpVF9A6wNG/8oeWUYiVAkRks1lI=;
+        b=gNIQYjoFKSf8E9eM/ivy9Vxl0llSXIQfUtr+3IVKU/htxQZyJILrCaJoCF5jiXNoOW
+         29SCLo6R5NK6YxhZYsj0iTKPIUXMlpYLMPojFqRSfHbpoGA6h2apoQ/hZ33c8L2WWTRr
+         5ctAnSIW7KthhtCUe9DsHHGPITcGd+Gvm+CfSjL3+1yh+wWA7wF9wB0uyOXUNS4j26Jj
+         QXfBE6DflSFY2mWlOLEEmmBs6HERGdZaX+tMKB28Pk4LyDcNAfTdTjfVD0inojmuz7KA
+         HN2Oq4oPbqnP14Y5l/RHRo9asGKF1OYN0j34JlEmlMSGawyZ5wqNqcbyp0llHyPmQ8n4
+         BdlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758621153; x=1759225953;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LY0Z8Ik+ok4lx1moFpVF9A6wNG/8oeWUYiVAkRks1lI=;
+        b=aH0jDLgbGgxvuxONoIpo2P+AQxG310xlAcjDLkMwcuqvH6Qs4ikXQWK9OWMaCg6RKS
+         2EeEsX06ZxYYnuVSHfCQZ4vo+Sce2VA75BAGJn4uw+X99exkL7jQKSV2WvXmmhSysu1c
+         6k4bfclEsw+KtyPqEqTsDbordC6dAaf31GUOq2aevq9O8lbH4Su2JEiahzJHp8f8rANG
+         4NUmdfgBDCkvV65teuxpkjEKtyzbIoaQiW3a5bnOykvz+6kChdqiTDW5S6JYOZ79Spsz
+         sfwjg+AJ37xgWgpBrLeGMfDtukp4PqVxrSrRK2k6Az7C7CQT80/6WMLuHMl+bYkcy1bT
+         u5fQ==
+X-Gm-Message-State: AOJu0YwYM0mpUXCD+ZQJ8BceHOX+9pit6z28YdzidtY8DSSmZotE2WDB
+	VDPtRCaiMjjN/rFYqsWdyAYpSlIRhaA3NzOeZSeWiHBwg0Qkfgac5CNm
+X-Gm-Gg: ASbGnct8r9MJK7PkAW0xPWg/y0NkJgwqOokyvfTBL2d0b6Sy7YNtT4jEwH1Wz5Wbz9G
+	p1dH0q9ondWZ20Xo0SiSPOwJcM2lDxFzqnBdJQfLVFYkaUIuhUBVL84LrIk4YnLmr69gtoqK6tY
+	dy1Y9x+z+Kwma8D629i6h8m2ATxh72bRObgQWECeGxRdT6gEQzc56VyvzzqgLHXATorp5/UFYMI
+	uMo+Krdn+VKLr+FxtoR0hSeYAmiR/Uc+gIFk0aUi3Q3qa3nEWP89yHZ94oUoFlFtHjLHdlhAXBb
+	VbSl4j7KuW3+Ki1Z3Cs9tBd+p0+nbpj+c2KP+1ryN3sAJVVgZgLQumTzWoQPScBhfisCJe4Cbwt
+	jndjx9RvxQ5aYlYTQlsyDMNbf7iGG69tF2cSImdtX5m1ufqoazJJB7vbpXQ==
+X-Google-Smtp-Source: AGHT+IFsjWmH1yjZS2/W9w+zjAbYKelnR5zFxdIn1q1xM5jD5x8f4Cm37BnIW0kg5YVrR17ICbU27Q==
+X-Received: by 2002:a05:600c:1907:b0:46e:1fb7:a1b3 with SMTP id 5b1f17b1804b1-46e1fb7ab54mr16883045e9.23.1758621153090;
+        Tue, 23 Sep 2025 02:52:33 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:a5d1:59f5:ca88:d11c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46d3ab09b27sm86882985e9.21.2025.09.23.02.52.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Sep 2025 02:52:32 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] lib/string_choices: Add str_assert_deassert() helper
+Date: Tue, 23 Sep 2025 10:52:29 +0100
+Message-ID: <20250923095229.2149740-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] tls: Avoid -Wflex-array-member-not-at-end warning
-To: Sabrina Dubroca <sd@queasysnail.net>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>,
- Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aNFfmBLEoDSBSLJe@kspp> <aNFpZ4zg5WIG6Rl6@krikkit>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <aNFpZ4zg5WIG6Rl6@krikkit>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 83.214.156.71
-X-Source-L: No
-X-Exim-ID: 1v0zTE-00000000QEZ-3hjY
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.104]) [83.214.156.71]:40424
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfA2BMJg+DqOqHIWJTInHAVvRiSwnszk3HjYw9ieZndsU2uNV8o5j12lHM9fnCedlat9XHiMbH/t9dEHt/qIdFMDkUujYtJG3dC6H/K4aufhWlJd4+B4o
- lGYsbtz0ASZiu9GEZMmCZ7fcCEOAewahmlbndS6yfp5a319kpqZhZ1lqx/pIOmYWbmA1hbkhYT3GM/JbSieBcLIZ+al5b6qhU/Vw0Xb+4kpwpPvPWktTSyDd
+Content-Transfer-Encoding: 8bit
 
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+Add str_assert_deassert() helper to return "assert" or "deassert"
+string literal depending on the boolean argument. Also add the
+inversed variant str_deassert_assert().
 
-On 9/22/25 17:21, Sabrina Dubroca wrote:
-> 2025-09-22, 16:39:20 +0200, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Use the new TRAILING_OVERLAP() helper to fix the following warning:
->>
->> net/tls/tls.h:131:29: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> This helper creates a union between a flexible-array member (FAM)
->> and a set of members that would otherwise follow it. This overlays
->> the trailing members onto the FAM while preserving the original
->> memory layout.
-> 
-> Do we need to keep aead_req_ctx in tls_rec? It doesn't seem to be
-> used, and I don't see it ever being used since it was introduced in
-> commit a42055e8d2c3 ("net/tls: Add support for async encryption of
-> records for performance").
+Suggested-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+Hi All,
+Note checkpatch complians about adding a new line before the macro
+definition. But this is the existing style in this file. So keeping
+it as is.
+Cheers, Prabhakar
+---
+ include/linux/string_choices.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-If this (flex array) is not going to be needed in the future, I'm
-happy to remove it. :)
+diff --git a/include/linux/string_choices.h b/include/linux/string_choices.h
+index a27c87c954ae..ee84087d4b26 100644
+--- a/include/linux/string_choices.h
++++ b/include/linux/string_choices.h
+@@ -17,6 +17,12 @@
+ 
+ #include <linux/types.h>
+ 
++static inline const char *str_assert_deassert(bool v)
++{
++	return v ? "assert" : "deassert";
++}
++#define str_deassert_assert(v)		str_assert_deassert(!(v))
++
+ static inline const char *str_enable_disable(bool v)
+ {
+ 	return v ? "enable" : "disable";
+-- 
+2.51.0
 
-Thanks
--Gustavo
