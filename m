@@ -1,89 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56FE2561D9;
-	Tue, 23 Sep 2025 20:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46024275AFA
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Sep 2025 20:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758660323; cv=none; b=A+uA21bPabQ/2863M+rKMwOE5+EOlThGfTpV9qGEZvfq7uAHcUBMhnZWy4FRl44NQaRmAEmNz5gnm9QGz7fGczioDV354Lk8K7gkZRmrSQmaCUnd2fA0Tn4lwU+LK2w75P7KoE7LKGz0ND5zOtL7sQOmGZkK8cruLNRHOLQ+ldw=
+	t=1758660813; cv=none; b=TFn8FJxk0nvShz0c3Mddcnmkg/bV36wrO6EIgUAt7guEVQu8AajUfidA2ZqG9jP15bQcIl93ZuXfqOLcPxmxnWzmBcQpIZ8dgmv4FL6lCdjRsbWr9nlOe2P4qPmIKA9XgiFxgQws9/oDrVNilxne4CcEXyHHAvp4eSKBnHKUFYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758660323; c=relaxed/simple;
-	bh=rvjOj88P6+x6qxE5cFZzBWFWooanWxpbJWxaiAu/qZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=EHKPJ3TRcRBigHE0Ht5f00vrjRRHBYg/6IfEsnJ9mycQ4N68AxAHVsm+4yEl+6rty6F6qTFxQiKVjg8/v388F4yIs23IJNmSN767MTomjeTANXn89NOj41EfDIi2MdKI+j5EYKb9g/m/QAzE33SIXWMY0Fg6K0VttwRqjCo8R58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HUucddk7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758660813; c=relaxed/simple;
+	bh=A9g20I8lseVKXlAh/tg+QgMk7GC67zftnbhm/6Ovfnk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ol85DhfYbFoEnpw+nuWWJX29OuEHUtR8Ys+84KvP2dSKudx5m5Tm/cZh4E74ooNQJCVMpWrbcO0xgFYrXdKyKIddoMHazwZf7EHL8ZaZi4RAg/T5E1uCp2zs4t/3M7kX0j/ZTri++KL9VPsJfUZl/bPxEDHccfgZ7IyvOH6VOq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=0FwvzxPh; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HUucddk7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9A49C4CEF5;
-	Tue, 23 Sep 2025 20:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758660322;
-	bh=rvjOj88P6+x6qxE5cFZzBWFWooanWxpbJWxaiAu/qZk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=HUucddk77m46pdgDq0PgqoBx8JxFOondK08zeHl2AiKOygiM8DihqR3oNfKt4Nq1x
-	 6icxltGB1LQ4T+EC0UXbhGMN3uReIHlQSJRM345IOub+cIMNhHcsSbMLMgmnbLITxL
-	 KfnIvFuh8qNmAd+y2HlhzzwpCMg9WYrcf2sgcEhFLjq4KpK5W2z3gep44z9yQLUpaC
-	 eDzzSZNdpBGecTroVN8e9AC94XzJD0om6G0maPZKB8S+nsy7JNP3w/z6PoeO/1hXxl
-	 yXwREe8ysowvXyoUYjUm3UjqM75UGN5faWVWbUX9iBrhZO6rHbeHjQDwrlXR5eJtsy
-	 tf/Vb7FrkUh5g==
-Date: Tue, 23 Sep 2025 22:45:10 +0200
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Sabrina Dubroca <sd@queasysnail.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] tls: Avoid -Wflex-array-member-not-at-end warning
-Message-ID: <aNMG1lyXw4XEAVaE@kspp>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="0FwvzxPh"
+Received: from eig-obgw-6004b.ext.cloudfilter.net ([10.0.30.210])
+	by cmsmtp with ESMTPS
+	id 16N6vZVXXKXDJ1A0wvIB8k; Tue, 23 Sep 2025 20:53:30 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 1A0vvfqnv25G71A0vvT2IR; Tue, 23 Sep 2025 20:53:29 +0000
+X-Authority-Analysis: v=2.4 cv=LuqSymdc c=1 sm=1 tr=0 ts=68d308c9
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=N332or4wHRcdzxpigiEmqg==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=gaVSdRgQbUJKjHIfkZ4A:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=xR+Ojw/IUQBpUZG1R+fgJRf6pEBM1UY4TV59RRigg/U=; b=0FwvzxPhR3boWRA2R2jjvhqYf6
+	Q+1uW31zrwDf2agKemJJdl1COGeQRKC0xFJWGjEkmdijHZDk9uT5cn03tRrO5IQ2SJWPFpmVloKDK
+	f0inm9STgU7QCFbrmeVmJrlAO7pp6hBBOWSpt15OZR5oC9gTxBXCzwS8u2FLsTd1aqx9uAr8DAS6F
+	rf0NBai9QZIr9gZThB+KniC3pLlxWJlaBaqi01oetGI2Pne+kxKdPZby7kqLUkdsaNVyOOj8v3iGc
+	zj6iiuajCRgkiqKxsqxGyKVSxLGqY1E0zE0lwS4qMaguxptZjfx6NRx/KlZwolb4lxqzYF7WdHrs+
+	xq2IPNsQ==;
+Received: from [83.214.155.155] (port=35596 helo=[192.168.1.104])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1v1A0r-00000003Mp0-2G1U;
+	Tue, 23 Sep 2025 15:53:26 -0500
+Message-ID: <a4b598a1-3ad6-4e42-9f48-21db966f0a34@embeddedor.com>
+Date: Tue, 23 Sep 2025 22:53:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] tls: Avoid -Wflex-array-member-not-at-end warning
+To: Sabrina Dubroca <sd@queasysnail.net>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, Jakub Kicinski <kuba@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aNFfmBLEoDSBSLJe@kspp> <aNFpZ4zg5WIG6Rl6@krikkit>
+ <c9cd2ebb-ecdb-4ba9-8d54-f01e3cd54929@embeddedor.com>
+ <aNMCznixxL2veGxK@krikkit>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <aNMCznixxL2veGxK@krikkit>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 83.214.155.155
+X-Source-L: No
+X-Exim-ID: 1v1A0r-00000003Mp0-2G1U
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.104]) [83.214.155.155]:35596
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfITpC3fe6HSisTXWZzv/9iC5IIhmV987GKrGonbNEz3T/euZggmCGokCi1mMssE0zuEFszjm5eBRwXzKact9Enl9HvZLSea2aeicMlBRiEKDTg9QLxYQ
+ Fi0FG62vpmApLDMbK4ZJYOUXW5YdgNxbwI8RyRGtaHufkFH9/y8Fss9RIUaACE4eMyDf8tayx/1ZFrr0KSXv3RMh3EyKvGwKBPja7qhBfEQ07APK9D/bwPo5
 
-Remove unused flexible-array member in struct tls_rec and, with this,
-fix the following warning:
 
-net/tls/tls.h:131:29: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Also, add a comment to prevent people from adding any members
-after struct aead_request, which is a flexible structure --this is
-a structure that ends in a flexible-array member.
+>>
+>> If this (flex array) is not going to be needed in the future, I'm
+>> happy to remove it. :)
+> 
+> I don't see what we'd use it for, aead_request.__ctx contains private
+> data from the crypto code (all accesses seem to be through
+> aead_request_ctx defined in include/crypto/internal/aead.h, see also
+> the kdoc: "Start of private context data").
+> And we haven't seen the author of a42055e8d2c3 in a while, so we can't
+> ask about the intention behind this field.
+> 
+> So IMO, tls_rec.aead_req_ctx can simply go away. Would you send the
+> patch?
+> 
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Remove unused flex array. (Sabrina Dubroca).
- - Update changelog text.
+Done: https://lore.kernel.org/linux-hardening/aNMG1lyXw4XEAVaE@kspp/
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/aNFfmBLEoDSBSLJe@kspp/
+Thank you for the feedback. :)
 
- net/tls/tls.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/net/tls/tls.h b/net/tls/tls.h
-index 4e077068e6d9..06d462c57284 100644
---- a/net/tls/tls.h
-+++ b/net/tls/tls.h
-@@ -128,8 +128,9 @@ struct tls_rec {
- 
- 	char aad_space[TLS_AAD_SPACE_SIZE];
- 	u8 iv_data[TLS_MAX_IV_SIZE];
-+
-+	/* Must be last --ends in a flexible-array member. */
- 	struct aead_request aead_req;
--	u8 aead_req_ctx[];
- };
- 
- int __net_init tls_proc_init(struct net *net);
--- 
-2.43.0
-
+-Gustavo
