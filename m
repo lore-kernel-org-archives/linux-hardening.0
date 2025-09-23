@@ -1,124 +1,126 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F63E2FD1B1
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Sep 2025 20:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF0218A6A5;
+	Tue, 23 Sep 2025 21:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758660993; cv=none; b=gAWyjOz6TaijUnMIuWrUiObWMTMNy8asJDjzXAe44YztpAA3sZCLAJZRE+0m7QJd0P6guTExfGhMkdXCeCUT56z1fE1TVqFT6r7bMh2/x/JZ+DDWED0s1bszEYEEtaz47gOt78peMciieKwV8EHv/q9hXb+Ey1pdFos2FTFshYE=
+	t=1758663263; cv=none; b=FoUlROkgwClEGAV91wDpoPoTefJ3zcNKxfY5TlZWwVQwV28bm8wQU2BDti1WdPeOju47K2+b1IzHe3XAUzqDIvHDDL3NLGIdGmVi4dljXJ1KsE+qiKzVii/rJniB6h2ypqfhxuxbMFexL0wHZcEo637/ec3q+ij5iIwf+Je/2Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758660993; c=relaxed/simple;
-	bh=slnItvOVZAE6Oav3Q8+E0oSeQYKvZKoMeqNmgYxE3s8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZTwcqg97RqpiHGTsfdNjqn3prKuEuL3HD7dzdaPr1ICIRqEl8DgMmx9wBcbxm1HO/bv5RRTpItPAqSv3REELxr+5i7uxjuCewavFEraaisxyg+X2v+EOS6NVGWEJi41p6E/IUOA9vJVkEzZGBNBrwBK5ES3LY0cjDcuJh6T7VqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=UWgMXUTL; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1758663263; c=relaxed/simple;
+	bh=kzLRw90VPtGstaLwMBEFrpjL2J3zR4RxvRjKU0B7Zxw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HeMkDZieKoPQStz7SDTLfLevLbavWeQyH1VD1PDXmUGYKf2zjfGxy4CnRCZLxMi+15OZF/m6ivR+l+yOmjmZTI2ZOoelLgRwk4fTxKha2zLG+NjAaLAWHhXEKipTD0PcTrlCg+Er1GSUlv1KgEHSwLf5PiZ/XvEQBx/RXBLaafo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bp2a7tV3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="UWgMXUTL"
-Received: from eig-obgw-6007b.ext.cloudfilter.net ([10.0.30.166])
-	by cmsmtp with ESMTPS
-	id 16NTvrI3YaPqL1A3rvza1n; Tue, 23 Sep 2025 20:56:31 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 1A3ov2x34p0Hq1A3ovqp8h; Tue, 23 Sep 2025 20:56:28 +0000
-X-Authority-Analysis: v=2.4 cv=H/nbw/Yi c=1 sm=1 tr=0 ts=68d3097c
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=N332or4wHRcdzxpigiEmqg==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=b_psskLWchTY9WQLhBIA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=R1xrpqBgU5VRolmF7QTk3y42QIWpKPlrjBX+KzL4FgQ=; b=UWgMXUTL32B3ppGQ/KieJsvITO
-	iVwEyvAE/fLiFemHW/d712vtKD/8quLIAqr8Ra04bZa80zyszwCpxABXejd3p2yp9m0GYxjBAJhLW
-	R+qZUeb4f7TU4uoAOzA3Z5bI/gwAAEg0B/Ttizir+kOEeBOJ+9yk1Lk1m0ylwUkXM+i7GIMVWJ+GH
-	4PE5qXTs2yjETMpNecS5LXOqCUnO4BZ5m0iJV2cOLRyeYmVyD3fFZjM/aPe6nT4qz0gVof7WQNW7o
-	kfW5HrPuleM/rjx15pKSguLzsQ/AsB1L3nnQWfR0dh7je8ojf6cGloMUttQvhRFUJobmCsYNhprcn
-	ep4BtMCA==;
-Received: from [83.214.155.155] (port=52914 helo=[192.168.1.104])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1v1A3k-00000003RJX-4Bcv;
-	Tue, 23 Sep 2025 15:56:25 -0500
-Message-ID: <e1c9e3e5-b04f-40d0-b05b-c119cf2d3cb3@embeddedor.com>
-Date: Tue, 23 Sep 2025 22:56:12 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bp2a7tV3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99DF8C4CEF5;
+	Tue, 23 Sep 2025 21:34:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758663262;
+	bh=kzLRw90VPtGstaLwMBEFrpjL2J3zR4RxvRjKU0B7Zxw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Bp2a7tV3auNRR0cOKrWID8tkO9If9Ml0qmHS7upNGwa6xCxAqHq7e4eTGzYptNwqz
+	 aVB++QhOTlS+MXPCAWSScOEODuZdP38AHU5VjMD0xkzo0qAgeipKbEp8L2pdjcfQRK
+	 eZutv4F9DBtgC6NOQp+1gCrptcuzQBj9l+T66bMgFY8yplacm57uSlmHphcCGxFICc
+	 3qpfjogn9JRTFVmh4D0a59hGtuenbbmfMHMC52PeWek+uHBEA+rPIuvYZhoHL8JHJP
+	 hJ9yC4lqn2PzHuMqGoiEKeFmOpjFvlyfmV5SXkoANxEYxRVYyVfATWKyoSk9ZsnXzm
+	 dTAlKMaHJSlYw==
+From: Kees Cook <kees@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kbuild@vger.kernel.org,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3 1/3] kconfig: Fix BrokenPipeError warnings in selftests
+Date: Tue, 23 Sep 2025 14:34:17 -0700
+Message-Id: <20250923213422.1105654-1-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250923213120.make.332-kees@kernel.org>
+References: <20250923213120.make.332-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] net: airoha: Avoid -Wflex-array-member-not-at-end
- warning
-To: Simon Horman <horms@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aNFYVYLXQDqm4yxb@kspp> <20250923185525.GL836419@horms.kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20250923185525.GL836419@horms.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 83.214.155.155
-X-Source-L: No
-X-Exim-ID: 1v1A3k-00000003RJX-4Bcv
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.104]) [83.214.155.155]:52914
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOlfo/LY/O8ILRkZ1LAdfK1zye/F7BCvtBLVDQbgTXDyvZKIzBpehv2GMlUy2bbXS+bdnyjmnhS5aQzsnJVNswxnhaMnL93VvkM0sJXs9n1nb4RULXjQ
- c7raVb543HbBdcnczJ+XVBaF35/85yNGM6VZNZ1HfL9HX/KpjG65G2E2t6szwYfhwfo+CWP5vGcLzqceSARkthHx7955LDRfxuW2/8gX1332bccnWd27p3Hr
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2658; i=kees@kernel.org; h=from:subject; bh=kzLRw90VPtGstaLwMBEFrpjL2J3zR4RxvRjKU0B7Zxw=; b=owGbwMvMwCVmps19z/KJym7G02pJDBmXhaLmbU677Gx3r3BlRY3E1i2aJeYuJ6yNZk6QWzHx6 DZT70NVHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABMx8GNkWGa/841DEceVLDGl KsmejA/a/9xdIibvSP6YrD5p618lZUaGdV3hzKoLrzxYb7iMY15L2Unf0/ExBSs3idQIbpnmtNa bDQA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
+The kconfig test harness ("make testconfig") was generating BrokenPipeError
+warnings when running interactive tests like oldaskconfig and oldconfig:
 
+  /usr/lib/python3/dist-packages/_pytest/unraisableexception.py:85: PytestUnraisableExceptionWarning: Exception ignored in: <_io.BufferedWriter name=12>
 
-On 9/23/25 20:55, Simon Horman wrote:
-> On Mon, Sep 22, 2025 at 04:08:21PM +0200, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Move the conflicting declaration to the end of the corresponding
->> structure. Notice that `struct airoha_foe_entry` is a flexible
->> structure, this is a structure that contains a flexible-array
->> member.
->>
->> Fix the following warning:
->>
->> drivers/net/ethernet/airoha/airoha_eth.h:474:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> FWIIW, I was able to reproduce this locally.
-> And it goes away with this patch applied.
-> 
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   drivers/net/ethernet/airoha/airoha_eth.h | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> Reviewed-by: Simon Horman <horms@kernel.org>
+  Traceback (most recent call last):
+    File "/srv/code/scripts/kconfig/tests/conftest.py", line 127, in oldaskconfig
+      return self._run_conf('--oldaskconfig', dot_config=dot_config,
+             ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            interactive=True, in_keys=in_keys)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  BrokenPipeError: [Errno 32] Broken pipe
 
-Thank you!
+The issue occurred when the test framework attempted to write to stdin
+after the conf subprocess had already exited.
 
--Gustavo
+Wrap stdin write operations in try/except to catch BrokenPipeError and
+stop sending more input. Add explicit flush() after writes so we can see
+delivery errors immediately. Ignore BrokenPipeError when closing stdin.
+Explicitly call wait() to validate subprocess termination.
 
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas.schier@linux.dev>
+Cc: Vegard Nossum <vegard.nossum@oracle.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: <linux-kbuild@vger.kernel.org>
+---
+ scripts/kconfig/tests/conftest.py | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/kconfig/tests/conftest.py b/scripts/kconfig/tests/conftest.py
+index 2a2a7e2da060..d94b79e012c0 100644
+--- a/scripts/kconfig/tests/conftest.py
++++ b/scripts/kconfig/tests/conftest.py
+@@ -81,7 +81,22 @@ class Conf:
+                 # For interactive modes such as oldaskconfig, oldconfig,
+                 # send 'Enter' key until the program finishes.
+                 if interactive:
+-                    ps.stdin.write(b'\n')
++                    try:
++                        ps.stdin.write(b'\n')
++                        ps.stdin.flush()
++                    except (BrokenPipeError, OSError):
++                        # Process has exited, stop sending input
++                        break
++
++            # Close stdin gracefully
++            try:
++                ps.stdin.close()
++            except (BrokenPipeError, OSError):
++                # Ignore broken pipe on close
++                pass
++
++            # Wait for process to complete
++            ps.wait()
+ 
+             self.retcode = ps.returncode
+             self.stdout = ps.stdout.read().decode()
+-- 
+2.34.1
 
