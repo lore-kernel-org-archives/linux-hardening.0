@@ -1,90 +1,131 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159C427B4F2
-	for <linux-hardening@vger.kernel.org>; Mon, 22 Sep 2025 21:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7247CAD24;
+	Tue, 23 Sep 2025 03:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758575488; cv=none; b=BEjgGIZaun901TIU+9Pak0YkTq8/RhXwWz/cYevqrhHugwl1CgBmQQ8SRpWY6FqX+VErrkKaaQ57elOg0hoDvTY2KWqkux68MqnMkyB8BfrmEiGHTKMElUtGUWYjA68AXr3u28g4N6HEytTz29Lxkx0m5DsocRUPNuYVCIxl6G8=
+	t=1758599150; cv=none; b=DiEgG/QxptoUILQf7LdeYU4iZJH6uREsVjMvxN1URBPav7igCAEyXisRxl/oClv9gxawt+oAgVEj+MYxsaU/b5Q0Bd5+mOB7Pjo5WeAutKA5lVPqqRH2c9DX+7JyqFjg6Fw0zLrhHCPVS6qS84OMQNefcdd708VyPA4xdYglqwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758575488; c=relaxed/simple;
-	bh=XzbjLdGwdorUgzFZNNHEJOdjHSCRBfkUY7BNS5tTsgU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=lMpCfLAoPt7pwOuzjdNA8beJZ5Dm+m0efYJdiIypLMlBKgBUFOgFdpAaLkSRzsCEPBgs15rV9VwL1GuhlhsOUzcscTERZ1/uQ/w7kJMa2Te9uednTHD6EpJux10moTQ7Yaqsd9EUNqtbYruC+LlQG4ljzDBleSddo+7omo78CA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tXLvEXO+; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1758599150; c=relaxed/simple;
+	bh=4CMWPtu95SpMo8DXVgcYovl8qzxoxMuizAwDQxBKMCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZYboDyGOGn7NU8j1A0pDBNpWwcUMVhnXcdti9wOuB/p+TsfaL3zcWskxpaoLyIdzGCYe7uGdWWP4SmEnqMYIIFRVOD34dd2DePi+91QSBbQKE+Fto+eOUPZAhdlU7o9HGDCgGJSTJgDKgb/BbKgIMYANhyXC4czmsXhSN01c7to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=sRjl/jZp; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=9iEveaNr; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tXLvEXO+"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1758575474;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XzbjLdGwdorUgzFZNNHEJOdjHSCRBfkUY7BNS5tTsgU=;
-	b=tXLvEXO+0G3oeMOAVCtE/toOx3oPlmimyv0uE412gaNkTB2AaVt2Cc3MGWaCvL6Vhfhz9H
-	ZF00ApxeA8gwQWXuJUgDEbTfTAhwPiRWCJ2ncpwo6s6rVgBfhn/zuCByW/TyqTAe1yDIOA
-	aBOxccPN0zk07+h6eKLoOQQnJrxRkKs=
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="sRjl/jZp";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="9iEveaNr"
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1758598846; bh=RBI2aJbB7n590+KcwgaegrR
+	fg5lM30jDW0OwGnQmBL8=; b=sRjl/jZpgu8H2CCD/bvJRFr84ayFxOWFDfefDY/9M3pPOybi5w
+	lN8kDaTaV+lvXaJWoXtRLjvYQ72ke1vagpeRzkLmj9xzTdjaUUtLIcp6kNbjDTXNuUvfRjvQBGt
+	Woc9cSOZGQZHgEaNee3rLueQ/MPOLBaxqT6muqnh0yj3vVswnT4V4BGRyE4Ws2+y357MwxLDDXc
+	5zFTwjV430W2yYKhlLvSxm38QBj54ZvsJjZT1yH1zbZBRM+RcSMjtjl+He7bYMNL0vx57AC8lhu
+	0O7vO1yhF2z5AGLZyIb+D6gLV+qf+KpGapgbQ6XnOJl9oKC0A7w8P/AWbWb8IuVnPSw==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1758598846; bh=RBI2aJbB7n590+KcwgaegrR
+	fg5lM30jDW0OwGnQmBL8=; b=9iEveaNrpfx+7EskGD80aKFQggG9+eDi7M/DmfHYjY9si7U0fL
+	1IgSpCtPfNEbyOVBCakFKmaRd5+VgsDV4/Ag==;
+Date: Tue, 23 Sep 2025 10:40:37 +0700
+From: Dang Huynh <dang.huynh@mainlining.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH 00/10] RDA8810PL SD/MMC support
+Message-ID: <2wwi3ktbcuyp7y7mqplndvawagae5hdhcx3hn375kycoqtows6@xcww2237rxpe>
+References: <20250919-rda8810pl-mmc-v1-0-d4f08a05ba4d@mainlining.org>
+ <CAMRc=Mc4hO1LDumxAfkB1W6miTJXR1NUVAKBVarkwiF2yGvSLA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH RESEND] sparc: PCI: Replace deprecated strcpy() with
- strscpy()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <d676606e-f448-434b-be26-c839dea4f5d1@gaisler.com>
-Date: Mon, 22 Sep 2025 23:11:01 +0200
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
- "David S. Miller" <davem@davemloft.net>,
- =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- linux-hardening@vger.kernel.org,
- sparclinux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <57FABB07-3C1B-4D33-A5BB-8D402A20487F@linux.dev>
-References: <20250917155038.GA1852582@bhelgaas>
- <d676606e-f448-434b-be26-c839dea4f5d1@gaisler.com>
-To: Andreas Larsson <andreas@gaisler.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mc4hO1LDumxAfkB1W6miTJXR1NUVAKBVarkwiF2yGvSLA@mail.gmail.com>
 
-Hi Andreas,
+On Mon, Sep 22, 2025 at 04:17:05PM +0200, Bartosz Golaszewski wrote:
+> On Thu, Sep 18, 2025 at 8:49 PM Dang Huynh via B4 Relay
+> <devnull+dang.huynh.mainlining.org@kernel.org> wrote:
+> >
+> > This patch series aims to add SDMMC driver and various drivers required
+> > for SDMMC controller to function.
+> >
+> > This also fixed a bug where all the GPIO switched from INPUT to OUTPUT
+> > after the GPIO driver probed or by reading the GPIO debugfs.
+> >
+> > This patch series is a split from [1] to ease the maintainers.
+> >
+> 
+> This is still targeting at least 4 subsystems and isn't making the
+> merging any easier. Are there any build-time dependencies here? If
+> not, then split it further into small chunks targeting individual
+> subsystems and the relevant ARM SoC tree.
+The MMC driver depends on both the clock and the DMA driver.
 
-On 19. Sep 2025, Andreas Larsson wrote:
->=20
->=20
-> On 2025-09-17 17:50, Bjorn Helgaas wrote:
->> On Wed, Sep 17, 2025 at 04:47:30PM +0200, Thorsten Blum wrote:
->>> strcpy() is deprecated; use strscpy() instead.
->>>=20
->>> No functional changes intended.
->>>=20
->>> Link: https://github.com/KSPP/linux/issues/88
->>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
->>=20
->> No objection from me, but no particular PCI core issue and I don't
->> maintain this file, so up to the sparc folks if they want it.
->>=20
->> I would consider making a single patch to address this issue
->> everywhere in arch/sparc so it can all be reviewed together.
->=20
-> Thank you and sorry for the late feedback. I agree with the above.
-> Thorsten, could you fix this for all occurrences of strcpy() in
-> arch/sparc?
-
-I just submitted a small series [1] replacing all occurrences of strcpy
-in arch/sparc.
-
-Thanks,
-Thorsten
-
-[1] =
-https://lore.kernel.org/lkml/20250922210408.1723452-1-thorsten.blum@linux.=
-dev/
+> 
+> Bartosz
+> 
+> > Tested on Orange Pi 2G-IOT using a Buildroot environment.
+> >
+> > [1]: https://lore.kernel.org/all/20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org/
+> >
+> > Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
+> > ---
+> > Dang Huynh (10):
+> >       dt-bindings: gpio: rda: Make interrupts optional
+> >       dt-bindings: clock: Add RDA Micro RDA8810PL clock/reset controller
+> >       dt-bindings: dma: Add RDA IFC DMA
+> >       dt-bindings: mmc: Add RDA SDMMC controller
+> >       gpio: rda: Make IRQ optional
+> >       gpio: rda: Make direction register unreadable
+> >       clk: Add Clock and Reset Driver for RDA Micro RDA8810PL SoC
+> >       dmaengine: Add RDA IFC driver
+> >       mmc: host: Add RDA Micro SD/MMC driver
+> >       ARM: dts: unisoc: rda8810pl: Add SDMMC controllers
+> >
+> >  .../bindings/clock/rda,8810pl-apsyscon.yaml        |  43 ++
+> >  Documentation/devicetree/bindings/dma/rda,ifc.yaml |  45 ++
+> >  .../devicetree/bindings/gpio/gpio-rda.yaml         |   3 -
+> >  Documentation/devicetree/bindings/mmc/rda,mmc.yaml |  92 +++
+> >  MAINTAINERS                                        |  18 +
+> >  .../boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts  |  20 +
+> >  .../arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts |  20 +
+> >  arch/arm/boot/dts/unisoc/rda8810pl.dtsi            |  47 +-
+> >  drivers/clk/Kconfig                                |   1 +
+> >  drivers/clk/Makefile                               |   1 +
+> >  drivers/clk/rda/Kconfig                            |  14 +
+> >  drivers/clk/rda/Makefile                           |   2 +
+> >  drivers/clk/rda/clk-rda8810.c                      | 769 +++++++++++++++++++
+> >  drivers/dma/Kconfig                                |  10 +
+> >  drivers/dma/Makefile                               |   1 +
+> >  drivers/dma/rda-ifc.c                              | 450 +++++++++++
+> >  drivers/gpio/gpio-rda.c                            |   4 +-
+> >  drivers/mmc/host/Kconfig                           |  12 +
+> >  drivers/mmc/host/Makefile                          |   1 +
+> >  drivers/mmc/host/rda-mmc.c                         | 853 +++++++++++++++++++++
+> >  include/dt-bindings/clock/rda,8810pl-apclk.h       |  70 ++
+> >  include/dt-bindings/dma/rda-ifc.h                  |  28 +
+> >  22 files changed, 2495 insertions(+), 9 deletions(-)
+> > ---
+> > base-commit: ae2d20002576d2893ecaff25db3d7ef9190ac0b6
+> > change-id: 20250918-rda8810pl-mmc-3f33b83c313d
+> >
+> > Best regards,
+> > --
+> > Dang Huynh <dang.huynh@mainlining.org>
+> >
+> >
 
