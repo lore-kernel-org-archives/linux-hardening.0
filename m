@@ -1,123 +1,203 @@
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E8D30BF55;
-	Wed, 24 Sep 2025 20:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AF732D5AF;
+	Wed, 24 Sep 2025 20:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758745096; cv=none; b=J+ugFa8FGQEHh/f8BVyxlGw7KiFafMD/t7L9cptQi3/VqUDdVMOdlREah05vvWQ8HC0irrezoWo0+ZEnyQBqgAgBIrZT81IIJTo3/5myee8JjbNSOttzvmuIBcl14UjULXaClzxp+kzxPLyaex1L4rOz6QwJH1KFuTzf6SmZnYA=
+	t=1758746132; cv=none; b=bdqOVxhFiLFNlpNaJajXcjfHpaXZ5hXIpK6CgS4Xq1elA8RSe0HyyNN752NVtcKSSJcYKHhrZFJcHXTi6u0pU4IUjk3FrIaKY79UKHZzfAujrLCuhGXRsGpheOrQesnimph/VA8oWz3A25K0ZXDMy2tleogo29pIikiIlvBkxUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758745096; c=relaxed/simple;
-	bh=EqYtmV7TAcM2X9vdFPDPz8hYQ+v6LDf37ftyviq9hac=;
+	s=arc-20240116; t=1758746132; c=relaxed/simple;
+	bh=yIIG1XirvNHRjmi8n5doZRkSjBLwdxxinyVL08mmVww=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AJNnZaq6DoqzXX1oQsIk71Q1ECbEr10xObYfEhBmVO1Hmr3Q9v84Dz2yVFKmSB6SBupVLW9J4oiDmIDNgoRj65fF9s8Gxq6otHsOXCJxne/OLWxvnWudlsWsGGSKJy0M8Ic7MY1hiOGKBeqE2kRQFmUbqYmexkuBWxTJMmjs1OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=NESutuBM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=I+Wi1wBs; arc=none smtp.client-ip=202.12.124.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=ey5eI7naemrEoKDZ4k4gXJmpZqVHGhhFqIjcr+oRIKkwc3z3tjTgEXjhaQ2x/QscBnrfCJaV7Q1TN2FQLe+gR4dzLwGemxwNf3TLYp9OfPiFfqhntnu5EM6tSPhP2c4WIJ0+HeTr0i6cLnHxxSM22IwLcvAXkiJOpxqKLh4SsyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cImYsZAx; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="NESutuBM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="I+Wi1wBs"
-Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
-	by mailfout.stl.internal (Postfix) with ESMTP id 2FCEE1D0016F;
-	Wed, 24 Sep 2025 16:18:11 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Wed, 24 Sep 2025 16:18:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1758745091; x=
-	1758831491; bh=qIL7VdXNc2rL1a7aBbmlZN+TWI2aTIAh5NhrmccsOLI=; b=N
-	ESutuBMKprzGKlasl7bB81yqy3kNgkqfZ/UrWV+AaOPeCVMUJdwZHbOfI91qWYmo
-	pxSPQNPTMFT2rsMuegkN/lo5eI3spvBa1jvkr3FmCn1HgsUkPRJmD2w9YQZJJpg/
-	pWlHu3m+revuwLWpcE7Sk2IHDS0xc6zFHxKYWJCzysPieOIMfcBqaYMx3iiSC010
-	JKxN8d2czIlZjc6OUagwa5eRw2qH8BYlt7P2aW9lIxhdiRW0DD3jrMXSNc5ja/S7
-	Vr0PabSaH4TOptfoJdh6m7ytatm2zT0fEk6G02ZIoMQKnxl3/knKRLswqGWYScLP
-	C2hsryEmMEqhs71BlNTcQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1758745091; x=1758831491; bh=qIL7VdXNc2rL1a7aBbmlZN+TWI2aTIAh5Nh
-	rmccsOLI=; b=I+Wi1wBsacBuJbno012P9WTIM0Cx3c71U2kTZGHV6/qcNvOFp3U
-	ASiCDQhgrjPYLulxT1oGNRR8YhKuT6Pe5t4jhzYw3F6rNztxNkAqiIxivOQbicLQ
-	ke/xUXK/TmUCuchdILH6DuMqQVKvE1yA0LJxBbvNHjmJN1HInJkN5H1rvkQNaf15
-	xNlJEXEjqceQrZi3pA4Jm7aPLJxanJ24P7xjdp66MLmIVmDMs6jdF+BSkM3E3yVd
-	z82mZ7oAkWyJnv0lmYiheRbOuSatpQQ7JGA11hMosVlPW54Crs8d/v/3UukTpVYm
-	HPP7aV/0RaMXmZ+xZXAuy3YXy43gxD3xYdw==
-X-ME-Sender: <xms:AlLUaGx5YXB7uYB5WWY8tRLHtkPWJJ-m3MxnVgtqVAMzSRJXlxIwMA>
-    <xme:AlLUaIQyKt10OPXJ57PRh0betJur52udFVb3cRphm5iLJC5esTxLdlgDasJ-Z6HwW
-    30a9qFehtFDmk8NNd9q12CtXzsySirVioZwFREo7OOIpL7j8Hgn9w>
-X-ME-Received: <xmr:AlLUaDKDyrFU71yvBdqch4Nan_xSbZaynVrsKiK2RFq_RX3Bc4GAPyjIS8nm>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeigeehgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttdejnecuhfhrohhmpefurggsrhhinhgr
-    ucffuhgsrhhotggruceoshgusehquhgvrghshihsnhgrihhlrdhnvghtqeenucggtffrrg
-    htthgvrhhnpeeuhffhfffgfffhfeeuiedugedtfefhkeegteehgeehieffgfeuvdeuffef
-    gfduffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hsugesqhhuvggrshihshhnrghilhdrnhgvthdpnhgspghrtghpthhtohepuddtpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopehguhhsthgrvhhorghrsheskhgvrhhnvghlrd
-    horhhgpdhrtghpthhtohepjhhohhhnrdhfrghsthgrsggvnhgusehgmhgrihhlrdgtohhm
-    pdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghvvg
-    hmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohho
-    ghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtg
-    hpthhtohephhhorhhmsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvthguvghv
-    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
-    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:AlLUaPXYorV4qVyqlw1XAr2VdhCvVVutANTxN-0EVoa2uwx_J1mvmQ>
-    <xmx:AlLUaHRAmaYAOa_CXD8gtWAVfVVtU3h44Hg1tfzaBMHn2fShAHr4wA>
-    <xmx:AlLUaHAvkQRlISgtDaalEozoftsNbfBPpI46sN2MSIBv2cafBHjntQ>
-    <xmx:AlLUaGIW_jSQWWfjv_0yquDg5o69PNOq2ryL-X1aKu7_n7tsRYQIfg>
-    <xmx:AlLUaEzfnFaENQof4-wtZVQc70sNIK-rZjLPViKWRULNAKMtDCzOvzh2>
-Feedback-ID: i934648bf:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 24 Sep 2025 16:18:09 -0400 (EDT)
-Date: Wed, 24 Sep 2025 22:18:08 +0200
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] tls: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <aNRSACsf_h3ePDhf@krikkit>
-References: <aNMG1lyXw4XEAVaE@kspp>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cImYsZAx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758746130; x=1790282130;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yIIG1XirvNHRjmi8n5doZRkSjBLwdxxinyVL08mmVww=;
+  b=cImYsZAxVyHhV/PeuE6AmvED8MkGu5EMy0N6jSJPah5jAwgSsbLfnUdO
+   ERkl5GdkZL7adenQAlozkjP+IHZUdG60MJpmL/0Oax4utRsaH9x12egNn
+   c0y5RwVjiewbxb5lw6agnABe4iqpoS0pl1zAzqhkEj7A8uE/Ht38kvibm
+   l2QqnmVXbPVaZg+7fS58rmoGW0aCWRWboJgOXWVz8l12e6/B0XzUo7VNJ
+   Krx2DRWGsYjTEAzAol84rqN1Aj73uwUYNw7/Mn9sgSq+e+WKKT2NXPQtv
+   T0GCaijmbgcVncTUbvGI4GLAuQEEJi5D71D7hnClXPtu8cre3810M/g4R
+   Q==;
+X-CSE-ConnectionGUID: FLB/VJYlS4K0lARshSDH3w==
+X-CSE-MsgGUID: 1DjhRa9dTSCd3Exu4e+mHg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11563"; a="61107250"
+X-IronPort-AV: E=Sophos;i="6.18,291,1751266800"; 
+   d="scan'208";a="61107250"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 13:35:29 -0700
+X-CSE-ConnectionGUID: fGvhU9vnSUqnQqd/QW8Okg==
+X-CSE-MsgGUID: kGVSi16kQa6u+aYiLlNf8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,291,1751266800"; 
+   d="scan'208";a="181405897"
+Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 24 Sep 2025 13:35:22 -0700
+Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v1WCt-0004Xt-1P;
+	Wed, 24 Sep 2025 20:35:19 +0000
+Date: Thu, 25 Sep 2025 04:34:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manikanta Guntupalli <manikanta.guntupalli@amd.com>, git@amd.com,
+	michal.simek@amd.com, alexandre.belloni@bootlin.com,
+	Frank.Li@nxp.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, pgaj@cadence.com,
+	wsa+renesas@sang-engineering.com, tommaso.merciai.xr@bp.renesas.com,
+	arnd@arndb.de, quic_msavaliy@quicinc.com, Shyam-sundar.S-k@amd.com,
+	sakari.ailus@linux.intel.com, billy_tsai@aspeedtech.com,
+	kees@kernel.org, gustavoars@kernel.org,
+	jarkko.nikula@linux.intel.com, jorge.marques@analog.com,
+	linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, radhey.shyam.pandey@amd.com,
+	srinivas.goud@amd.com, shubhrajyoti.datta@amd.com,
+	manion05gk@gmail.com,
+	Manikanta Guntupalli <manikanta.guntupalli@amd.com>
+Subject: Re: [PATCH V7 2/4] asm-generic/io.h: Add big-endian MMIO accessors
+Message-ID: <202509250413.sOTeU37m-lkp@intel.com>
+References: <20250923154551.2112388-3-manikanta.guntupalli@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aNMG1lyXw4XEAVaE@kspp>
+In-Reply-To: <20250923154551.2112388-3-manikanta.guntupalli@amd.com>
 
-Thanks for the updated patch.
+Hi Manikanta,
 
-A process nit: the correct subject prefix for this type of work within
-networking would be [PATCH net-next v2] (indicating it targets the
-"net-next" tree).
+kernel test robot noticed the following build warnings:
 
-2025-09-23, 22:45:10 +0200, Gustavo A. R. Silva wrote:
-> Remove unused flexible-array member in struct tls_rec and, with this,
-> fix the following warning:
-> 
-> net/tls/tls.h:131:29: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Also, add a comment to prevent people from adding any members
-> after struct aead_request, which is a flexible structure --this is
-> a structure that ends in a flexible-array member.
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on linus/master arnd-asm-generic/master v6.17-rc7 next-20250924]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Once that warning is enabled, re-adding a field after aead_req will
-not be allowed by the compiler, right?  The comment is probably not
-really needed, but since there are "must be first" comments all over
-include/net, I guess it's useful.
+url:    https://github.com/intel-lab-lkp/linux/commits/Manikanta-Guntupalli/dt-bindings-i3c-Add-AMD-I3C-master-controller-support/20250923-234944
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250923154551.2112388-3-manikanta.guntupalli%40amd.com
+patch subject: [PATCH V7 2/4] asm-generic/io.h: Add big-endian MMIO accessors
+config: sparc-allnoconfig (https://download.01.org/0day-ci/archive/20250925/202509250413.sOTeU37m-lkp@intel.com/config)
+compiler: sparc-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250925/202509250413.sOTeU37m-lkp@intel.com/reproduce)
 
-Reviewed-by: Sabrina Dubroca <sd@queasysnail.net>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509250413.sOTeU37m-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/io.h:12,
+                    from include/linux/irq.h:20,
+                    from include/asm-generic/hardirq.h:17,
+                    from arch/sparc/include/asm/hardirq_32.h:11,
+                    from arch/sparc/include/asm/hardirq.h:7,
+                    from include/linux/hardirq.h:11,
+                    from include/linux/interrupt.h:11,
+                    from include/linux/trace_recursion.h:5,
+                    from include/linux/ftrace.h:10,
+                    from include/linux/perf_event.h:43,
+                    from arch/sparc/mm/fault_32.c:22:
+>> arch/sparc/include/asm/io.h:16:9: warning: 'readw_be' redefined
+      16 | #define readw_be(__addr)        __raw_readw(__addr)
+         |         ^~~~~~~~
+   In file included from arch/sparc/include/asm/io_32.h:21,
+                    from arch/sparc/include/asm/io.h:7:
+   include/asm-generic/io.h:304:9: note: this is the location of the previous definition
+     304 | #define readw_be readw_be
+         |         ^~~~~~~~
+>> arch/sparc/include/asm/io.h:17:9: warning: 'readl_be' redefined
+      17 | #define readl_be(__addr)        __raw_readl(__addr)
+         |         ^~~~~~~~
+   include/asm-generic/io.h:319:9: note: this is the location of the previous definition
+     319 | #define readl_be readl_be
+         |         ^~~~~~~~
+>> arch/sparc/include/asm/io.h:19:9: warning: 'writel_be' redefined
+      19 | #define writel_be(__w, __addr)  __raw_writel(__w, __addr)
+         |         ^~~~~~~~~
+   include/asm-generic/io.h:363:9: note: this is the location of the previous definition
+     363 | #define writel_be writel_be
+         |         ^~~~~~~~~
+>> arch/sparc/include/asm/io.h:20:9: warning: 'writew_be' redefined
+      20 | #define writew_be(__l, __addr)  __raw_writew(__l, __addr)
+         |         ^~~~~~~~~
+   include/asm-generic/io.h:351:9: note: this is the location of the previous definition
+     351 | #define writew_be writew_be
+         |         ^~~~~~~~~
+--
+   In file included from include/linux/io.h:12,
+                    from include/linux/irq.h:20,
+                    from include/asm-generic/hardirq.h:17,
+                    from arch/sparc/include/asm/hardirq_32.h:11,
+                    from arch/sparc/include/asm/hardirq.h:7,
+                    from include/linux/hardirq.h:11,
+                    from include/linux/highmem.h:12,
+                    from include/linux/pagemap.h:11,
+                    from arch/sparc/mm/srmmu.c:15:
+>> arch/sparc/include/asm/io.h:16:9: warning: 'readw_be' redefined
+      16 | #define readw_be(__addr)        __raw_readw(__addr)
+         |         ^~~~~~~~
+   In file included from arch/sparc/include/asm/io_32.h:21,
+                    from arch/sparc/include/asm/io.h:7:
+   include/asm-generic/io.h:304:9: note: this is the location of the previous definition
+     304 | #define readw_be readw_be
+         |         ^~~~~~~~
+>> arch/sparc/include/asm/io.h:17:9: warning: 'readl_be' redefined
+      17 | #define readl_be(__addr)        __raw_readl(__addr)
+         |         ^~~~~~~~
+   include/asm-generic/io.h:319:9: note: this is the location of the previous definition
+     319 | #define readl_be readl_be
+         |         ^~~~~~~~
+>> arch/sparc/include/asm/io.h:19:9: warning: 'writel_be' redefined
+      19 | #define writel_be(__w, __addr)  __raw_writel(__w, __addr)
+         |         ^~~~~~~~~
+   include/asm-generic/io.h:363:9: note: this is the location of the previous definition
+     363 | #define writel_be writel_be
+         |         ^~~~~~~~~
+>> arch/sparc/include/asm/io.h:20:9: warning: 'writew_be' redefined
+      20 | #define writew_be(__l, __addr)  __raw_writew(__l, __addr)
+         |         ^~~~~~~~~
+   include/asm-generic/io.h:351:9: note: this is the location of the previous definition
+     351 | #define writew_be writew_be
+         |         ^~~~~~~~~
+   arch/sparc/mm/srmmu.c: In function 'poke_hypersparc':
+   arch/sparc/mm/srmmu.c:1074:32: warning: variable 'clear' set but not used [-Wunused-but-set-variable]
+    1074 |         volatile unsigned long clear;
+         |                                ^~~~~
+
+
+vim +/readw_be +16 arch/sparc/include/asm/io.h
+
+21dccddf45aae2 Jan Andersson 2011-05-10   9  
+21dccddf45aae2 Jan Andersson 2011-05-10  10  /*
+21dccddf45aae2 Jan Andersson 2011-05-10  11   * Defines used for both SPARC32 and SPARC64
+21dccddf45aae2 Jan Andersson 2011-05-10  12   */
+21dccddf45aae2 Jan Andersson 2011-05-10  13  
+21dccddf45aae2 Jan Andersson 2011-05-10  14  /* Big endian versions of memory read/write routines */
+21dccddf45aae2 Jan Andersson 2011-05-10  15  #define readb_be(__addr)	__raw_readb(__addr)
+21dccddf45aae2 Jan Andersson 2011-05-10 @16  #define readw_be(__addr)	__raw_readw(__addr)
+21dccddf45aae2 Jan Andersson 2011-05-10 @17  #define readl_be(__addr)	__raw_readl(__addr)
+21dccddf45aae2 Jan Andersson 2011-05-10  18  #define writeb_be(__b, __addr)	__raw_writeb(__b, __addr)
+21dccddf45aae2 Jan Andersson 2011-05-10 @19  #define writel_be(__w, __addr)	__raw_writel(__w, __addr)
+21dccddf45aae2 Jan Andersson 2011-05-10 @20  #define writew_be(__l, __addr)	__raw_writew(__l, __addr)
+21dccddf45aae2 Jan Andersson 2011-05-10  21  
 
 -- 
-Sabrina
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
