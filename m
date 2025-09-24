@@ -1,65 +1,67 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83ED9309F12
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Sep 2025 14:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2293093BF
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Sep 2025 14:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758725517; cv=none; b=dYqnjNlix7RBYArcb4hVNz5qDrXabTgIJYyk3/0SKNJkK0BRbzW1rmjOmWVlZWv0OCfObTFbDL5UOonOWH1TMxygb/K3fpRTX10YdhzkpHUT061uUlZgKO+KO3aUJKt+bdmdgEYB0mMv4o9+zDryaYsMQTDEfyHSICqzV3VMSGs=
+	t=1758725519; cv=none; b=M0Icp28pnfpaP4qQKoCpCPNmKyJ0v1XtNxfEaxaFPPksqPvQT5iMYB+uRNRew5gsSLeEl91RWunA4/qUcgC07QgiQVKf4Vkt2xYTcuCHWfoF/0kOUH+Gwi+Z4taHk1/nQ7VgpPxoBvbKnP5PzyqO798HpTrhPHxcnf44DOCHwJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758725517; c=relaxed/simple;
-	bh=84D0nu1o6zLXy7/rW3cCWSeFHZtjl2QkEFrkBynjieY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CrX0Rd0moNYma0usjJT1q5NqS2LgaIz+unYD/SDh4NziqJKX8nbJWA+vOMSvVhSiWZSNwTpiyfdQlb6xrwYkaDR6WJiZLAk3NAMEGr0aRx6tlehV4cZIyZ42BxG54btGDch9KUcFOFQycs06l4lzpdHjvUiMeDFqvoynHnBszu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=a2HYio+i; arc=none smtp.client-ip=209.85.221.46
+	s=arc-20240116; t=1758725519; c=relaxed/simple;
+	bh=L2kLAKhXcPRTSxYID5+lqGdmVixmb8cY89yQVUKyTsw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZR5CY+k/bDaaiG3xyYPu4EFfRXDRIywJPgpAzbWyeGVtRGXUCjl1h7UBYGcutS+11993iHLDtV1yWkajQm586lLQG3At4CwXqzHnlempX8ignntvQrwkyp2Ew6TGYwJiKPVKUHFLZEHt1QnX7AwhUJ99F3rCTsckO2yEE45bl6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=e0lxZtHL; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="a2HYio+i"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3ee15505cdeso846424f8f.0
-        for <linux-hardening@vger.kernel.org>; Wed, 24 Sep 2025 07:51:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="e0lxZtHL"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-46c889b310dso9405085e9.0
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Sep 2025 07:51:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1758725513; x=1759330313; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=q74mWuldAlo64ndeRNS24oI/Ec4V9vS4ecuV71IZKSE=;
-        b=a2HYio+iT1LETyOe9TWuQPLsLgj8918AHgxKBUedccgf5IU49jZDMIf+L7+PrxjUe/
-         WuBR3Ue6cWUZyHloGr5QPLasm9wWa6Faa69zU36xzPvklwjLSHAoBjGlcZSrAY1k5SHG
-         GBF1OaQq4z7P94dqcGFqjLyjdQWG8poelYUp46NAGl+Uubzj9gT4ZzJEKJV+Jx3udytQ
-         q0e5V/2/1BcDx8JxnlqaPswU1fIf/cIQfrdbG5yKHTjN49AfSVzpqfk3hX+MZ2QTKy0T
-         TI6SdUzHDGzAXL8MX4AtGnXqU4KIU1xNds0VPO0pAhmwtWzjOXoDSk+iGYdzQoCbfYnc
-         5DCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758725513; x=1759330313;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1758725515; x=1759330315; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=q74mWuldAlo64ndeRNS24oI/Ec4V9vS4ecuV71IZKSE=;
-        b=PmObRLzzqQHeCMKeGsP2z7UOHONHeXp3YjkwWdf8AuXlOxQsUa57zo4sQdYRTSIQj2
-         MTrenvvCw6aGzugxjR6YReCYYfGB4Flpu6wzeUbpZ5UuXeXnvT9Q6avvvUXyXqN5Z/wr
-         s7cSiApYMNi4E2fl3GksH3BScvdYhjjW10s2aiqhy4wUztPsLON6ErxBvuxuohTUOpFF
-         X+rGXttvcoQXje+htUuDxdYxfDIlcrrQo4RlJxyYFeNfhQt8f0zeUtV1w6Jtw9pc6Qyj
-         FGUgkz0Z1eQlp33WoZFx/i+0IA+GSQXvMuRKSxLRgBm+zdMAcjavNqIXE1IOHgnBSZ7J
-         aq1A==
-X-Gm-Message-State: AOJu0YzRTO3WKkN8vE7xiF9M8TJHgc9NJudenUwGqVwIokRc/RGLIblO
-	CSOfdTYvgEDW4Q3yaqASUchSWAQKHkohWh06NKDvq+s2qYLKDHXjL6zjdn/044VhX8gEhjnzdo6
-	5HsR5r7WOxQ==
-X-Gm-Gg: ASbGnctNGg2bKqgpOgKGqBtuaj1yQMlKMqi9/hq/hqjR+TnbyL9wXg8KJh3EEQR6u0t
-	FzBaiyQvecJkbRVO5SM5xt2CM1RXQ3Id/E9tRaS5zFdcdpePx1JsWrnfVfTYhUnhpv3Gs3/AlwO
-	xZ+Ff7r98wsQrZzd+ynWqE/brK2C+L3QRdhG3ev4hyzCd3aGxuErXjLnl5WW7XSiSwHf8w3KIoV
-	0b+gVEtlKQ5tnubfVBe9+E3Xo8okcy3IaSlx9AuRyB909mg/rmyjXpzhnZV1fnc/G9pjqFsVt3l
-	RMc4zSe2aEyiYC9mcofl4r1iMH1dSt4FbYva++Gcu7FIdH2M/F4b8Ele0oy885LwbFM2eM+PQHt
-	SyJy9hn0byRb/UkO9WQ==
-X-Google-Smtp-Source: AGHT+IFQeBCV46NXhKbKLlcmg+QGzwkfzCrC+Z1TfxjaOV8Luib9zmG856AySVQTu7v+7Px+UQrdaw==
-X-Received: by 2002:a05:6000:310f:b0:3e9:4fe4:2621 with SMTP id ffacd0b85a97d-40abdea7feemr2892437f8f.7.1758725512830;
-        Wed, 24 Sep 2025 07:51:52 -0700 (PDT)
+        bh=V0Q+Hgya9r+CWJ27IcqRYKkvlXmEyTvOuBCqoT3y8qw=;
+        b=e0lxZtHLY+v0rBmlEbUurgnddp5kvZvgYOJbyCrfZMJBKNV2jPOD+ZMWL/cVDu6alT
+         WVT22A7bGD+QsL73jovvMsZepws1MokS3LbFlQa7sIVtOMoBkMdyJ90fAeSy3uuLCV/z
+         9ITaMZW30GmCShAm508ips6VzY8JNchv53v78GjQpljyHTFZebMT9iurFw9kr2ii67oP
+         w89oqJJtsoWAO6k2LNQv7oJYOSUgvtzf09h18HGXCN2vzAPZTQlnEgwO6GTsmFzcYCFf
+         2OJ/zzFM7ssPpsuMXJX+1jcUTC6zep0t0pTj745K3uOrk0Acnk4qvGOWodyJm+WlZ1IG
+         sSRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758725515; x=1759330315;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V0Q+Hgya9r+CWJ27IcqRYKkvlXmEyTvOuBCqoT3y8qw=;
+        b=X05KiQd9rk7FNc5SnhXki3rJEv/49TYvh7CfnXmvXpnsdcqTaut5mI39hIiCthUeKO
+         18cFQ0S38K9cmLQEOIXkt8H9YuXXnghJPg8Phz6tYgb1vw9e8yGR3Wft2fe7xwGOsxoD
+         q/1W0EMunY+bP54DsYUCGPoFfcpzxUmK0M25exHghQ861fwHpthlbzcqMq+V+LGtbblQ
+         uMo6TNoRLU/VbP0Klw9LmRbn5yjZ5xZKO+4lfiP/IR0zTofH6MHoSmb/mExD009Nvmu4
+         1wvWhvpCII2bS8ZHTDTc7tc0Asg+YuX3TKg0P7bEg6emx8m1l2+GiXLE9OGQumsIUq1K
+         8rLw==
+X-Gm-Message-State: AOJu0YwbCzS4LRrYPGBcx7d6/xicDBt2gEsQwX9PJ5ntIzViJpcOcPfG
+	saMpuOIyV5ngzTkZe+7dwoOju7Fbp/LQW3AJcKKRi9YqTCDqWj07d4xsfpemzTqCxe2IjaEUp1Q
+	oBl8VMv5OMQ==
+X-Gm-Gg: ASbGncvlQ5qOUmhwtKS7n86lVL+VoemWxR8OXqWzu9HMd7YGwrq1ZRoU1CCvEMDV2xj
+	YW0a05xOHf/HcqYy4JbUL0sMvoXlYxXO22ect9LQaQtiflvQx3uKTRMXBWm1rnv7jCnJPxP+wbU
+	YtuI90COTDlSjxxq7A3DyzLdx88UXObmD91LV1phOLKcba8Gg9JvKgf9Yqhlz49QHlGgFfo6F5q
+	mtgRQLT2kIeping0c7WOXGRQjJsBUrTnuiWSu6iS9cl8YF3d0G3ZzUiqRgLdf80eNcWAJwvtTpM
+	o+KBOTVyA3XcflZh4VB8F8ufJ1sUtk3Pa+6N0Rt0bcR189IaqPk/whF6p6V2P5G88OmhZOGS8Be
+	3I06TqDj0yPFWqc19ZAFZdWDfE1Te
+X-Google-Smtp-Source: AGHT+IHqrlf5Iy0gafewEVEvZvdqGPtxzn/dahd6Ieio03KFz2MLsdyrnS63HEdvlLZHwR/e4CQuAg==
+X-Received: by 2002:a05:600c:c1c8:20b0:45d:5c71:769d with SMTP id 5b1f17b1804b1-46e2b52c35amr23884575e9.8.1758725514877;
+        Wed, 24 Sep 2025 07:51:54 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:1729:c9b6:7a46:b4a3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ee0fbc7188sm29514750f8f.37.2025.09.24.07.51.51
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ee0fbc7188sm29514750f8f.37.2025.09.24.07.51.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Sep 2025 07:51:51 -0700 (PDT)
+        Wed, 24 Sep 2025 07:51:53 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
-Date: Wed, 24 Sep 2025 16:51:28 +0200
-Message-Id: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
+Date: Wed, 24 Sep 2025 16:51:29 +0200
+Subject: [PATCH RFC 1/9] gpio: wcd934x: mark the GPIO controller as
+ sleeping
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,10 +70,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHAF1GgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDSwML3fSCzHzd4ozEotQUXTPz1GRjUyMLC5MkMyWgjoKi1LTMCrBp0Up
- Bbs5KsbW1AO4oTHxiAAAA
-X-Change-ID: 20250908-gpio-shared-67ec352884b6
+Message-Id: <20250924-gpio-shared-v1-1-775e7efeb1a3@linaro.org>
+References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
+In-Reply-To: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
 To: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
  Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
  Andrew Morton <akpm@linux-foundation.org>, 
@@ -90,104 +91,50 @@ Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4112;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=990;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=84D0nu1o6zLXy7/rW3cCWSeFHZtjl2QkEFrkBynjieY=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBo1AWFf+k+eImY9E3OI4PtgZTFadj9Fn4NB0Kxg
- s5bwRG+2vSJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaNQFhQAKCRARpy6gFHHX
- ctapEACFn/UkK7jIWi7jXPt0E5cF3KVi5VZGT73mQQW43dksQn1fyC2UVMk8XaulHFGwvLw+yZb
- wj4R9fv4Bo6siyXgTWKeyqcU9YM8RNpwLwG0YxHucWJkuiwTrz0H9sppVD8bf/hSinh/XXJlWQN
- 41hwSgWEw8weBI+Vf0uFpxVk6dVJ7dnKZdqW3m0l5Xqjod6Mkpwd+vGxfswA4LIT1viIxQQax/3
- fOQ8PacaVQm27KXJyr5zL3qdcwzLR8Gy5WL6sFED2g7RPJTaCDnGiWQTQh/XuKkScJ7U6Nl7fRL
- r5387UfAFhQXv/Ez2UX5FTlRnlLwZuMi3mKu0kZ3u1oAae7VfhaUh6f4RVx0WWhUjyNCgzRiVyy
- y2ZgIpPJWoQPH0m6oozMhINnl+z/Ulc/+s0119GRjmrIaxoqGz1i1elFN0pEojZzEQ8Yq2OF951
- lMh1H61C1bxS6r57/+Wa+NFeY8mboQx1b0hkUGmu5quMUqmunlrJ8NwpjUKxQ7+zyHvAODSefXK
- E/zxac+j4MtxBpwS26bGEfI4dZ/HhLZDy9c66naiSnKICVXDZf+cKKYeZEk8BE1fbddl98YP+13
- zRR6vzGIJe5aPsNExffDFrWtRGZswH8oIdIO23nOkLi/f9W6AEmsc1FVJU66sL6MF4dsBxfSafn
- AqEXD8rwqZdzNUA==
+ bh=+onLqCs+uky6KqRfHsDH/gKs++nVX/GXHjjSwDpjMnY=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBo1AWFZY+Dx2G8yimcnZUw4X/JDBSCEab4BzQX0
+ SEHR9ic5oyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaNQFhQAKCRARpy6gFHHX
+ csl7D/93a8AjEBhJdr57hZV94lQ6L3oHzmrrx5+I11yewNKQjKjTiq/Sv7simTbkw5LqRHTNOOk
+ QWOaGEuOezZILvfSLh1t7XubpcAX+zTbbff5+vb4ZdNe1XGw3g5MD5RLUzKZQ0hjOMJHU7L9tAJ
+ NoggHvBT3EnG8Ws9nzAODXZt5TqCAudVYwg8tTt59kKaEXKVyQUpgfYieAEBx3nstzHVwhBZMsN
+ PN/W57PhQSenmFgTdbS8wyVjzfM0yQvStz23TE80h/aC9XZT/OgLk/12DNudAF/HRKS5/Q3iuPS
+ 2HKCzPlKXS+fjOKXLiTomcVP8ARRmUp8VToNMHo4J4KYtNQXi08TC6HgRORLT/1wWctRhPuhb61
+ OkA0dqVJVQGYlOElCn2+hsp5eNzF6oKi/t/I3jiVl7XiGyw8uvkoTWCUnNLGmIHFco/iJoLw7Kt
+ sPE0BsweoKRZL6tWX9N9iebGP0cqbHMEsyPDeXu8SFvahdcdKtrNFDCksbyNqOKy+4aBmsmslUl
+ SuxtbhyvNcNsX/RjP5FpdoDfQkcDHmiWoTFQvz1YGeGNIJeCLCBmFu+3Gbu4uBalakSNLTq5T40
+ g+otJPzjjKDtCQ1tClpK7Ad+moqy7orLr6M64tCCWKk2ukhBIo+iwX0F9X3nRRLdISs6m/qIoR+
+ N1Boo054QFUaFwA==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Here's a functional RFC for improving the handling of shared GPIOs in
-linux.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Problem statement: GPIOs are implemented as a strictly exclusive
-resource in the kernel but there are lots of platforms on which single
-pin is shared by multiple devices which don't communicate so need some
-way of properly sharing access to a GPIO. What we have now is the
-GPIOD_FLAGS_BIT_NONEXCLUSIVE flag which was introduced as a hack and
-doesn't do any locking or arbitration of access - it literally just hand
-the same GPIO descriptor to all interested users.
+The slimbus regmap passed to the GPIO driver down from MFD does not use
+fast_io. This means a mutex is used for locking and thus this GPIO chip
+must not sleep. Change the can_sleep switch in struct gpio_chip to true.
 
-The proposed solution is composed of three major parts: the high-level,
-shared GPIO proxy driver that arbitrates access to the shared pin and
-exposes a regular GPIO chip interface to consumers, a low-level shared
-GPIOLIB module that scans firmware nodes and creates auxiliary devices
-that attach to the proxy driver and finally a set of core GPIOLIB
-changes that plug the former into the GPIO lookup path.
-
-The changes are implemented in a way that allows to seamlessly compile
-out any code related to sharing GPIOs for systems that don't need it.
-
-The practical use-case for this are the powerdown GPIOs shared by
-speakers on Qualcomm db845c platform, however I have also extensively
-tested it using gpio-virtuser on arm64 qemu with various DT
-configurations.
-
-I'm Cc'ing some people that may help with reviewing/be interested in
-this: OF maintainers (because the main target are OF systems initially),
-Mark Brown because most users of GPIOD_FLAGS_BIT_NONEXCLUSIVE live
-in audio or regulator drivers and one of the goals of this series is
-dropping the hand-crafted GPIO enable counting via struct
-regulator_enable_gpio in regulator core), Andy and Mika because I'd like
-to also cover ACPI (even though I don't know about any ACPI platform that
-would need this at the moment, I think it makes sense to make the
-solution complete), Dmitry (same thing but for software nodes), Mani
-(because you have a somewhat related use-case for the PERST# signal and
-I'd like to hear your input on whether this is something you can use or
-maybe it needs a separate, implicit gpio-perst driver similar to what
-Krzysztof did for reset-gpios) and Greg (because I mentioned this to you
-last week in person and I also use the auxiliary bus for the proxy
-devices).
-
-First patch in the series is a bugfix targetting stable, I'm surprised
-nobody noticed the lockdep splat yet. The second adds a library function
-I use in a later patch. All remaining patches implement or use the
-shared GPIO support.
-
+Fixes: 59c324683400 ("gpio: wcd934x: Add support to wcd934x gpio controller")
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
-Bartosz Golaszewski (9):
-      gpio: wcd934x: mark the GPIO controller as sleeping
-      string: provide strends()
-      gpiolib: define GPIOD_FLAG_SHARED
-      gpiolib: implement low-level, shared GPIO support
-      gpio: shared-proxy: implement the shared GPIO proxy driver
-      gpiolib: support shared GPIOs in core subsystem code
-      arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
-      ASoC: wsa881x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
-      ASoC: wsa883x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
+ drivers/gpio/gpio-wcd934x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/arm64/Kconfig.platforms     |   1 +
- drivers/gpio/Kconfig             |  17 ++
- drivers/gpio/Makefile            |   2 +
- drivers/gpio/gpio-shared-proxy.c | 328 ++++++++++++++++++++++++++
- drivers/gpio/gpio-wcd934x.c      |   2 +-
- drivers/gpio/gpiolib-shared.c    | 481 +++++++++++++++++++++++++++++++++++++++
- drivers/gpio/gpiolib-shared.h    |  71 ++++++
- drivers/gpio/gpiolib.c           |  50 +++-
- drivers/gpio/gpiolib.h           |   1 +
- include/linux/string.h           |   2 +
- lib/string.c                     |  19 ++
- lib/tests/string_kunit.c         |  13 ++
- sound/soc/codecs/wsa881x.c       |   3 +-
- sound/soc/codecs/wsa883x.c       |   7 +-
- 14 files changed, 980 insertions(+), 17 deletions(-)
----
-base-commit: b46f7370d4a0f0b55f05b854e73b2a90dff41e1b
-change-id: 20250908-gpio-shared-67ec352884b6
+diff --git a/drivers/gpio/gpio-wcd934x.c b/drivers/gpio/gpio-wcd934x.c
+index 4af504c23e6ff5ad2bad1d70a0c42e2fd91f0c7a..572b85e773700ea0740d3e4efc06d3538f7e368e 100644
+--- a/drivers/gpio/gpio-wcd934x.c
++++ b/drivers/gpio/gpio-wcd934x.c
+@@ -103,7 +103,7 @@ static int wcd_gpio_probe(struct platform_device *pdev)
+ 	chip->base = -1;
+ 	chip->ngpio = WCD934X_NPINS;
+ 	chip->label = dev_name(dev);
+-	chip->can_sleep = false;
++	chip->can_sleep = true;
+ 
+ 	return devm_gpiochip_add_data(dev, chip, data);
+ }
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.48.1
 
