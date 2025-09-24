@@ -1,190 +1,193 @@
-Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A86CA6F;
-	Wed, 24 Sep 2025 14:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83ED9309F12
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Sep 2025 14:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758722763; cv=none; b=gd2k7oN2gtJQBO1V0Yu5i4ZFnDi8tLQY600Y87feQ4kpF+5ZzTpY8UxRq2E/611HF0K7y0V1cwql8zubLtFuahG6KRWwfXHKikNZem10ZMmAcvkNZ+md3aY4Y6ftmbR7bjePrsvBd3rROmexlyPGCzWDauDZ8QIwOi8kAjBlBFM=
+	t=1758725517; cv=none; b=dYqnjNlix7RBYArcb4hVNz5qDrXabTgIJYyk3/0SKNJkK0BRbzW1rmjOmWVlZWv0OCfObTFbDL5UOonOWH1TMxygb/K3fpRTX10YdhzkpHUT061uUlZgKO+KO3aUJKt+bdmdgEYB0mMv4o9+zDryaYsMQTDEfyHSICqzV3VMSGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758722763; c=relaxed/simple;
-	bh=zE8BVg0hNz8YbyB+Ov7wTtVVUHqSXYRc38PH+U8cQ5k=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=MwpX9x5tGO5NlFWi6TIMYAzk7YSQraJI3pGEIUtswumlJKce3laYEgMD32IZTg3lW4cQsb8jRcHnWyXde+swjJ0dxMKV9TP3CjOOEAISUhrWHkTWG+TWrKloIEimVKcvUvWWn562aC5RHnqT4ybuDUtdbeMvUSAhog+0CNnOsXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=bRiuonoL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Rw73ToYF; arc=none smtp.client-ip=202.12.124.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1758725517; c=relaxed/simple;
+	bh=84D0nu1o6zLXy7/rW3cCWSeFHZtjl2QkEFrkBynjieY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CrX0Rd0moNYma0usjJT1q5NqS2LgaIz+unYD/SDh4NziqJKX8nbJWA+vOMSvVhSiWZSNwTpiyfdQlb6xrwYkaDR6WJiZLAk3NAMEGr0aRx6tlehV4cZIyZ42BxG54btGDch9KUcFOFQycs06l4lzpdHjvUiMeDFqvoynHnBszu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=a2HYio+i; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="bRiuonoL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Rw73ToYF"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id D6D6D1D00188;
-	Wed, 24 Sep 2025 10:05:58 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Wed, 24 Sep 2025 10:05:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1758722758;
-	 x=1758809158; bh=IBcStZeO9c1HBcH0rLSii4gME1fU0JXoiIWwS/KYvto=; b=
-	bRiuonoLSVsEJs3RW/1B2I+BS4PFriNl9YItil+iZmgo57iICRZyp45kyyLPHR8z
-	Bi/3+dy8sSZfcpV3+sgnWzI1lnoClT18RxBs4U3ckSXhQG1pGmY9dxCmVjlFIRdN
-	U+BT7adAZWC8JFcErWmoEwZbedXp2tHFQ21DkK6nz4qLvlptu31Q/B916LNPcGe+
-	F1sA6bGsXftk/0bSeM3/PTIo2DWs1rcSA+Zh9oFAq0LXqKuhjjq8gkjisf+H1Sdo
-	zWDSWX29MKyVqG8XMgK41K2/zsRIPhl+LLs5c2qbWoiU8fm7R/z7/dZNcNLMiysa
-	+c6ZRX2SzDoi3/w4TxaAkA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1758722758; x=
-	1758809158; bh=IBcStZeO9c1HBcH0rLSii4gME1fU0JXoiIWwS/KYvto=; b=R
-	w73ToYFF1cgeNtPC6j55Mmd8ZcV91EDe6BJ0Ofp3Q1A65N9wyLeXf7SJYYfnbX4F
-	NAYrvAAOWffhDh1Zc2oyEDWJbhc2rJj8GI9htSEyiGTtAWqEYGf+oNtgEa0oRxbi
-	LNnpToDE0o3Dw77xYcS5RzX8ojCgwUzyfA50l+7N6Z2ukoe1fvmzk2qAnWBD1pYA
-	fpW9ZSQ5ww1gimYApC6qFK6xAtvDGSCLMp3hMQyFmOtS/H9aVMnG0wYMQZlMEdO8
-	nxHNWRbVY49kVX9Ft8Mza28FlXNGkJIxlDmZpaocBhBMHqj2fFklczFgi4nxGHSg
-	MtO+VLvoZ7ru2uXl6Nu2Q==
-X-ME-Sender: <xms:xfrTaEvH2JuH3zfBHMcvH0AOVRBnmNXrVY9Eh4HV9s9HA7Jxf9QAvA>
-    <xme:xfrTaMQQDb2a-hr-7DKc13zwUgWCTuAjOb9OhA8azW4xWbb3bS61M-wthrkUDacNr
-    yYZz5U7uJrNgPmNNvN77nRzbqDjfyAEEAO-E-X513JvkpriHKCXa-k>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeifeektdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopedvkedpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepshhhhigrmhdqshhunhgurghrrdhsqdhksegrmhgurdgtohhmpdhrtg
-    hpthhtohepghhithesrghmugdrtghomhdprhgtphhtthhopehmrghnihhkrghnthgrrdhg
-    uhhnthhuphgrlhhlihesrghmugdrtghomhdprhgtphhtthhopehmihgthhgrlhdrshhimh
-    gvkhesrghmugdrtghomhdprhgtphhtthhopehrrgguhhgvhidrshhhhigrmhdrphgrnhgu
-    vgihsegrmhgurdgtohhmpdhrtghpthhtohepshhhuhgshhhrrghjhihothhirdgurghtth
-    grsegrmhgurdgtohhmpdhrtghpthhtohepshhrihhnihhvrghsrdhgohhuugesrghmugdr
-    tghomhdprhgtphhtthhopehjohhrghgvrdhmrghrqhhuvghssegrnhgrlhhoghdrtghomh
-    dprhgtphhtthhopegsihhllhihpghtshgrihesrghsphgvvgguthgvtghhrdgtohhm
-X-ME-Proxy: <xmx:xfrTaHMTci2rBtuNS1lbcZGzEzbsW-dDQ_hYT-ifE3U2jMVacYDixg>
-    <xmx:xfrTaEnZBBPjfaXaKALn4VNdfKJltVttlijWAGd9Bu2mHwSTh4C9lw>
-    <xmx:xfrTaFzIrWuCUJ33p3xnh6h2cFnL1l8obnni1aighpAo826wUprq2g>
-    <xmx:xfrTaNDqVidmfXjKGVsW5FdItMn5zQlrZw1UmmlH6kXv1RqueDi5Gw>
-    <xmx:xvrTaGqTlniruo7sjxK6HOJfcNsrasNg6OFcY1r7VI2gFQxwKOs6aaKL>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 1E25770006D; Wed, 24 Sep 2025 10:05:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="a2HYio+i"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3ee15505cdeso846424f8f.0
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Sep 2025 07:51:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1758725513; x=1759330313; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=q74mWuldAlo64ndeRNS24oI/Ec4V9vS4ecuV71IZKSE=;
+        b=a2HYio+iT1LETyOe9TWuQPLsLgj8918AHgxKBUedccgf5IU49jZDMIf+L7+PrxjUe/
+         WuBR3Ue6cWUZyHloGr5QPLasm9wWa6Faa69zU36xzPvklwjLSHAoBjGlcZSrAY1k5SHG
+         GBF1OaQq4z7P94dqcGFqjLyjdQWG8poelYUp46NAGl+Uubzj9gT4ZzJEKJV+Jx3udytQ
+         q0e5V/2/1BcDx8JxnlqaPswU1fIf/cIQfrdbG5yKHTjN49AfSVzpqfk3hX+MZ2QTKy0T
+         TI6SdUzHDGzAXL8MX4AtGnXqU4KIU1xNds0VPO0pAhmwtWzjOXoDSk+iGYdzQoCbfYnc
+         5DCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758725513; x=1759330313;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q74mWuldAlo64ndeRNS24oI/Ec4V9vS4ecuV71IZKSE=;
+        b=PmObRLzzqQHeCMKeGsP2z7UOHONHeXp3YjkwWdf8AuXlOxQsUa57zo4sQdYRTSIQj2
+         MTrenvvCw6aGzugxjR6YReCYYfGB4Flpu6wzeUbpZ5UuXeXnvT9Q6avvvUXyXqN5Z/wr
+         s7cSiApYMNi4E2fl3GksH3BScvdYhjjW10s2aiqhy4wUztPsLON6ErxBvuxuohTUOpFF
+         X+rGXttvcoQXje+htUuDxdYxfDIlcrrQo4RlJxyYFeNfhQt8f0zeUtV1w6Jtw9pc6Qyj
+         FGUgkz0Z1eQlp33WoZFx/i+0IA+GSQXvMuRKSxLRgBm+zdMAcjavNqIXE1IOHgnBSZ7J
+         aq1A==
+X-Gm-Message-State: AOJu0YzRTO3WKkN8vE7xiF9M8TJHgc9NJudenUwGqVwIokRc/RGLIblO
+	CSOfdTYvgEDW4Q3yaqASUchSWAQKHkohWh06NKDvq+s2qYLKDHXjL6zjdn/044VhX8gEhjnzdo6
+	5HsR5r7WOxQ==
+X-Gm-Gg: ASbGnctNGg2bKqgpOgKGqBtuaj1yQMlKMqi9/hq/hqjR+TnbyL9wXg8KJh3EEQR6u0t
+	FzBaiyQvecJkbRVO5SM5xt2CM1RXQ3Id/E9tRaS5zFdcdpePx1JsWrnfVfTYhUnhpv3Gs3/AlwO
+	xZ+Ff7r98wsQrZzd+ynWqE/brK2C+L3QRdhG3ev4hyzCd3aGxuErXjLnl5WW7XSiSwHf8w3KIoV
+	0b+gVEtlKQ5tnubfVBe9+E3Xo8okcy3IaSlx9AuRyB909mg/rmyjXpzhnZV1fnc/G9pjqFsVt3l
+	RMc4zSe2aEyiYC9mcofl4r1iMH1dSt4FbYva++Gcu7FIdH2M/F4b8Ele0oy885LwbFM2eM+PQHt
+	SyJy9hn0byRb/UkO9WQ==
+X-Google-Smtp-Source: AGHT+IFQeBCV46NXhKbKLlcmg+QGzwkfzCrC+Z1TfxjaOV8Luib9zmG856AySVQTu7v+7Px+UQrdaw==
+X-Received: by 2002:a05:6000:310f:b0:3e9:4fe4:2621 with SMTP id ffacd0b85a97d-40abdea7feemr2892437f8f.7.1758725512830;
+        Wed, 24 Sep 2025 07:51:52 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:1729:c9b6:7a46:b4a3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ee0fbc7188sm29514750f8f.37.2025.09.24.07.51.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Sep 2025 07:51:51 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
+Date: Wed, 24 Sep 2025 16:51:28 +0200
+Message-Id: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A0nVfrWCY5as
-Date: Wed, 24 Sep 2025 16:05:26 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Manikanta Guntupalli" <manikanta.guntupalli@amd.com>,
- "git (AMD-Xilinx)" <git@amd.com>, "Michal Simek" <michal.simek@amd.com>,
- "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
- "Frank Li" <Frank.Li@nxp.com>, "Rob Herring" <robh@kernel.org>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- =?UTF-8?Q?Przemys=C5=82aw_Gaj?= <pgaj@cadence.com>,
- "Wolfram Sang" <wsa+renesas@sang-engineering.com>,
- "tommaso.merciai.xr@bp.renesas.com" <tommaso.merciai.xr@bp.renesas.com>,
- "quic_msavaliy@quicinc.com" <quic_msavaliy@quicinc.com>, "S-k,
- Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
- "Sakari Ailus" <sakari.ailus@linux.intel.com>,
- "'billy_tsai@aspeedtech.com'" <billy_tsai@aspeedtech.com>,
- "Kees Cook" <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Jarkko Nikula" <jarkko.nikula@linux.intel.com>,
- "Jorge Marques" <jorge.marques@analog.com>,
- "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Cc: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
- "Goud, Srinivas" <srinivas.goud@amd.com>,
- "Datta, Shubhrajyoti" <shubhrajyoti.datta@amd.com>,
- "manion05gk@gmail.com" <manion05gk@gmail.com>
-Message-Id: <134c3a96-4023-47ab-8aa9-fd6ab75e5654@app.fastmail.com>
-In-Reply-To: 
- <DM4PR12MB6109E009DAC953525093FE808C1CA@DM4PR12MB6109.namprd12.prod.outlook.com>
-References: <20250923154551.2112388-1-manikanta.guntupalli@amd.com>
- <20250923154551.2112388-4-manikanta.guntupalli@amd.com>
- <13bbd85e-48d2-4163-b9f1-2a2a870d4322@app.fastmail.com>
- <DM4PR12MB61098EA538FCB7CED2E5C47B8C1CA@DM4PR12MB6109.namprd12.prod.outlook.com>
- <4199b1ca-c1c7-41ef-b053-415f0cd80468@app.fastmail.com>
- <DM4PR12MB6109E009DAC953525093FE808C1CA@DM4PR12MB6109.namprd12.prod.outlook.com>
-Subject: Re: [PATCH V7 3/4] i3c: master: Add endianness support for i3c_readl_fifo()
- and i3c_writel_fifo()
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHAF1GgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDSwML3fSCzHzd4ozEotQUXTPz1GRjUyMLC5MkMyWgjoKi1LTMCrBp0Up
+ Bbs5KsbW1AO4oTHxiAAAA
+X-Change-ID: 20250908-gpio-shared-67ec352884b6
+To: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4112;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=84D0nu1o6zLXy7/rW3cCWSeFHZtjl2QkEFrkBynjieY=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBo1AWFf+k+eImY9E3OI4PtgZTFadj9Fn4NB0Kxg
+ s5bwRG+2vSJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaNQFhQAKCRARpy6gFHHX
+ ctapEACFn/UkK7jIWi7jXPt0E5cF3KVi5VZGT73mQQW43dksQn1fyC2UVMk8XaulHFGwvLw+yZb
+ wj4R9fv4Bo6siyXgTWKeyqcU9YM8RNpwLwG0YxHucWJkuiwTrz0H9sppVD8bf/hSinh/XXJlWQN
+ 41hwSgWEw8weBI+Vf0uFpxVk6dVJ7dnKZdqW3m0l5Xqjod6Mkpwd+vGxfswA4LIT1viIxQQax/3
+ fOQ8PacaVQm27KXJyr5zL3qdcwzLR8Gy5WL6sFED2g7RPJTaCDnGiWQTQh/XuKkScJ7U6Nl7fRL
+ r5387UfAFhQXv/Ez2UX5FTlRnlLwZuMi3mKu0kZ3u1oAae7VfhaUh6f4RVx0WWhUjyNCgzRiVyy
+ y2ZgIpPJWoQPH0m6oozMhINnl+z/Ulc/+s0119GRjmrIaxoqGz1i1elFN0pEojZzEQ8Yq2OF951
+ lMh1H61C1bxS6r57/+Wa+NFeY8mboQx1b0hkUGmu5quMUqmunlrJ8NwpjUKxQ7+zyHvAODSefXK
+ E/zxac+j4MtxBpwS26bGEfI4dZ/HhLZDy9c66naiSnKICVXDZf+cKKYeZEk8BE1fbddl98YP+13
+ zRR6vzGIJe5aPsNExffDFrWtRGZswH8oIdIO23nOkLi/f9W6AEmsc1FVJU66sL6MF4dsBxfSafn
+ AqEXD8rwqZdzNUA==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Wed, Sep 24, 2025, at 14:22, Guntupalli, Manikanta wrote:
+Here's a functional RFC for improving the handling of shared GPIOs in
+linux.
 
->> @@ -55,7 +55,7 @@ static inline void i3c_readl_fifo(const void __iomem *addr, void
->> *buf,
->>       if (nbytes & 3) {
->>               u32 tmp;
->>
->> -             tmp = readl(addr);
->> +             readsl(addr, &tmp, 1);
->>               memcpy(buf + (nbytes & ~3), &tmp, nbytes & 3);
->>       }
->>  }
->
-> We have not observed any issue on little-endian systems in our testing 
-> so far (as I mentioned earlier in asm-generic/io.h: Add big-endian MMIO 
-> accessors).
+Problem statement: GPIOs are implemented as a strictly exclusive
+resource in the kernel but there are lots of platforms on which single
+pin is shared by multiple devices which don't communicate so need some
+way of properly sharing access to a GPIO. What we have now is the
+GPIOD_FLAGS_BIT_NONEXCLUSIVE flag which was introduced as a hack and
+doesn't do any locking or arbitration of access - it literally just hand
+the same GPIO descriptor to all interested users.
 
-Did you test the little-endian system with the 'endian' flag set
-to I3C_FIFO_BIG_ENDIAN though? Your v7 code will still work on
-little-endian kernels if that flag is set to I3C_FIFO_LITTLE_ENDIAN,
-and it will also work on big-endian kernels if the flag is
-set to I3C_FIFO_BIG_ENDIAN. But is broken for the other two:
+The proposed solution is composed of three major parts: the high-level,
+shared GPIO proxy driver that arbitrates access to the shared pin and
+exposes a regular GPIO chip interface to consumers, a low-level shared
+GPIOLIB module that scans firmware nodes and creates auxiliary devices
+that attach to the proxy driver and finally a set of core GPIOLIB
+changes that plug the former into the GPIO lookup path.
 
-- on little-endian kernels with I3C_FIFO_BIG_ENDIAN, the entire
-  data buffer is byteswapped in 32-bit chunks
+The changes are implemented in a way that allows to seamlessly compile
+out any code related to sharing GPIOs for systems that don't need it.
 
-- on big-endian kernels with I3C_FIFO_LITTLE_ENDIAN, you run into
-  the existing bug of the swapped tail word.
+The practical use-case for this are the powerdown GPIOs shared by
+speakers on Qualcomm db845c platform, however I have also extensively
+tested it using gpio-virtuser on arm64 qemu with various DT
+configurations.
 
-> That said, I understand your point about FIFO semantics being different 
-> from fixed-endian registers. To cover both cases, we considered using 
-> writesl() for little-endian and introducing a writesl_be() helper for 
-> big-endian, as shown below:
->
-> static inline void i3c_writel_fifo(void __iomem *addr, const void *buf,
->                                    int nbytes, enum i3c_fifo_endian endian)
-> {
->         if (endian)
->                 writesl_be(addr, buf, nbytes / 4);
->         else
->                 writesl(addr, buf, nbytes / 4);
->
->         if (nbytes & 3) {
->                 u32 tmp = 0;
->
->                 memcpy(&tmp, buf + (nbytes & ~3), nbytes & 3);
->
->                 if (endian)
->                         writesl_be(addr, &tmp, 1);
->                 else
->                         writesl(addr, &tmp, 1);
->         }
-> }
->
-> With this approach, both little-endian and big-endian cases works as expected.
+I'm Cc'ing some people that may help with reviewing/be interested in
+this: OF maintainers (because the main target are OF systems initially),
+Mark Brown because most users of GPIOD_FLAGS_BIT_NONEXCLUSIVE live
+in audio or regulator drivers and one of the goals of this series is
+dropping the hand-crafted GPIO enable counting via struct
+regulator_enable_gpio in regulator core), Andy and Mika because I'd like
+to also cover ACPI (even though I don't know about any ACPI platform that
+would need this at the moment, I think it makes sense to make the
+solution complete), Dmitry (same thing but for software nodes), Mani
+(because you have a somewhat related use-case for the PERST# signal and
+I'd like to hear your input on whether this is something you can use or
+maybe it needs a separate, implicit gpio-perst driver similar to what
+Krzysztof did for reset-gpios) and Greg (because I mentioned this to you
+last week in person and I also use the auxiliary bus for the proxy
+devices).
 
-This version should fix the cases where you have a big-endian
-kernel with either I3C_FIFO_BIG_ENDIAN or I3C_FIFO_LITTLE_ENDIAN,
-as neither combination does any byte swaps.
+First patch in the series is a bugfix targetting stable, I'm surprised
+nobody noticed the lockdep splat yet. The second adds a library function
+I use in a later patch. All remaining patches implement or use the
+shared GPIO support.
 
-However I'm fairly sure it's still broken for little-endian
-kernels when a driver asks for a I3C_FIFO_BIG_ENDIAN conversion,
-same as v7.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (9):
+      gpio: wcd934x: mark the GPIO controller as sleeping
+      string: provide strends()
+      gpiolib: define GPIOD_FLAG_SHARED
+      gpiolib: implement low-level, shared GPIO support
+      gpio: shared-proxy: implement the shared GPIO proxy driver
+      gpiolib: support shared GPIOs in core subsystem code
+      arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
+      ASoC: wsa881x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
+      ASoC: wsa883x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
 
-     Arnd
+ arch/arm64/Kconfig.platforms     |   1 +
+ drivers/gpio/Kconfig             |  17 ++
+ drivers/gpio/Makefile            |   2 +
+ drivers/gpio/gpio-shared-proxy.c | 328 ++++++++++++++++++++++++++
+ drivers/gpio/gpio-wcd934x.c      |   2 +-
+ drivers/gpio/gpiolib-shared.c    | 481 +++++++++++++++++++++++++++++++++++++++
+ drivers/gpio/gpiolib-shared.h    |  71 ++++++
+ drivers/gpio/gpiolib.c           |  50 +++-
+ drivers/gpio/gpiolib.h           |   1 +
+ include/linux/string.h           |   2 +
+ lib/string.c                     |  19 ++
+ lib/tests/string_kunit.c         |  13 ++
+ sound/soc/codecs/wsa881x.c       |   3 +-
+ sound/soc/codecs/wsa883x.c       |   7 +-
+ 14 files changed, 980 insertions(+), 17 deletions(-)
+---
+base-commit: b46f7370d4a0f0b55f05b854e73b2a90dff41e1b
+change-id: 20250908-gpio-shared-67ec352884b6
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
