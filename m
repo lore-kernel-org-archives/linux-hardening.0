@@ -1,66 +1,66 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624BF31B830
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Sep 2025 14:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE5330ACF8
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Sep 2025 14:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758725536; cv=none; b=Wpvz6LBL+fGjOK7I+1N9dDzmZIXAvvcXWAjF8+SgtQ+JcH5dhmGeo468wgAurzUZqH8y4Fc50ZgB2uryXEX+7Wkn9ZAxSYG8qmSKYoRnRugtPW+8Ws5SbivN0LuhqEqbBvhqfaT/dAjn7Pn+e6r1xamgY+wg0xTS0KH1hXNJ6Yo=
+	t=1758725537; cv=none; b=pKpFYO/BJvIf6gThPWSsP2bD05aQHfZ1j3V6NaCEZnBkmUknw0PG919wulBnv7UbygEuATV+9W+T0zWLRpbhoxc8bO3E+XcojKilXi3OFBXyvtVyfaf0+WXeRhex04HbfbtReVv90RYw7MMy2cmFHPqrOGTX9BRTHtytgI9HY2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758725536; c=relaxed/simple;
-	bh=o3clotEVXCzqMxW1qJk3uiRPSq6aP6WSAmpPzr7h58A=;
+	s=arc-20240116; t=1758725537; c=relaxed/simple;
+	bh=kA7iX9loqcR1iPNQOHLnQ9pDOo+AVwSl3LLk/F4br8U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kDY4BU91ucr2qn50fXtq06mKccsLPHGeCqvGg4Gj6XFHeZpTE2pr8cgLoA/uoXkE3W3sG1WAWdPRBPVN9ALxcQpAYzNRrrTNviW3ljfiHngk7vzgiSvj743B9FpZDp7m4xM65b9StA3/j7THbuxTyLi/UWA9qUxB4xjJ7Qz/gqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LX6tj7XB; arc=none smtp.client-ip=209.85.221.53
+	 In-Reply-To:To:Cc; b=VZuwNr8c3mWGsjC9KhbaGdUJr6pVfimko0IUiN2JljjuGJD9se9UE5O1p53oTDLYj7vxFRWNN3CAwdASFD2snH7u8fzYYjHMc3/ASIDe8n+ex49WH/ftSDTyr6cqKlq5VgcasKRHQ81vDINfaMckuGIlQ7GJyRbkCVBRDSUC23Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rkbIF0wW; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LX6tj7XB"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3ee13baf2e1so5210629f8f.3
-        for <linux-hardening@vger.kernel.org>; Wed, 24 Sep 2025 07:52:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rkbIF0wW"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3fa528f127fso875783f8f.1
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Sep 2025 07:52:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1758725530; x=1759330330; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1758725533; x=1759330333; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JSTA3g5ank1TH+h8Aobptwj96daqy8jbcBAobAq2Oqo=;
-        b=LX6tj7XBbF5A94cSXoUra3tvkYB/nhISdHqZajinQsqjWNgX1NCPsQ6I5XSIpUVoQH
-         VMPg4q7SPPujwN5mUrKvGoHSRUmtIG8+rI6oXDwWIjhWAYEWVyJN50nzKfwpWZ7Ou+TK
-         xsoARAANfZxb0l1+xIVzRglq7A7li646FL96KRzunURr4LJsBs5QcSlalj7rFjUBg42O
-         V4oazIwK5gPOQpjl0xz8Rw2mN/hv1kY5sNfb3Q9a6er8Es6aCEB4gde3F6sA5ZLR9ZC2
-         HQo56A7goh8MxExvMpfNMmTRYjgTa5E6g7WAIgywV79rsjAXNp8CctOsT9KLlIH4xou+
-         bIsA==
+        bh=ndMaJDazpE5vfGfuGA/DbEp6kihBYbJYnxWQMZaUODQ=;
+        b=rkbIF0wWiiVi3XAxja1+YxX81Ry7Rb3TCnWgON2cQ/qp0VfhvoZS0bdOIAqrNtC60t
+         s38zVQGwI4FIKdqzHuzD448DP7XYfsIUNzAITNDCdnEyq6VVNr5zGmVbugXuVIpXZ7NO
+         fJfmVRdPqDp/V43lq2E8AKMJh6dsyMkk611nxXhbrp9kBUNNdAlf0s3mYSC0p7R4bjer
+         Dq0+gki5JGmFw8iAg8498/c7gGR/b6gNhSjwDyQOom6pN5P19lm8Sxip8umjA6wIX1YG
+         ciM77BHJa6vqaI/BdbHuDvXBTZVbmkpS9IMIfBtfI8kVM95RRoGK5zA7ZPTlrosffUYW
+         bCqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758725530; x=1759330330;
+        d=1e100.net; s=20230601; t=1758725533; x=1759330333;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JSTA3g5ank1TH+h8Aobptwj96daqy8jbcBAobAq2Oqo=;
-        b=Vq9wnIyoHtWd865E5Tlbzg2BDnBkIQHqjCFtvZ12TC+CcHftmvFd7fmQJK2C/CQVgs
-         5YbuSw1MzxVcVoz8l5sf00ZEOvE3xC04jtGitEIFEO/hy72urEyHRD+MNmRBaY+DyT+S
-         WNg2P8j4JpCsAD8rhsg6RUiginjpYa45bnHuRAWGkdEH52i9OtbBcdG/8GT8IbBzN2ye
-         c6fS1JbOU0W97I2torNwQNrQU53zgLRnVK3y5pZT5z4tlTbl6R+6vegzwms/X8A+9CFV
-         g3W9cDLKBfeqmlztFJ7ZSCc8ZsTXXffBwgcurZRabJtCfEM3Fwo0WCO7MAo8kwH0ooqQ
-         VhKw==
-X-Gm-Message-State: AOJu0YxKfMcyyM7JW+kikdWV/PKrolWXnRg1TR7bSVzA5GbYwgeI8DVu
-	JZhdIT84IYVkUdiIyXVuSdFPeX171vjqxj4W7m6XWRE7l+wYm96gGFeddsGsxpUFWY8mj9QZkBS
-	64gDSHtGMHw==
-X-Gm-Gg: ASbGnctRnm0Txq/mY4MX7wl29Ic6Hznz4x3VTm+vXtR48pPSoLpXvu9KwZUnb/BTfTQ
-	W3xuGuRo/aebJUoB9AwEeR7Exmf74nAQdxVIDVgO/CoBaYUK97C17hDA7iqUB6kfHYsJxP2GRSf
-	ckmoB2YVhhZV9raWKNtEgu3LdHUrr+uVjZvbykhfEafEuDolQHtSdv44oaoV7Z7trN8rHatdUzQ
-	uo6R5FScjWlfOe1MVa4Mx3vCqhBSHJvarhCmX74wnee0zartoPzcqqWay7hhpiLjy+OKGUqT8RI
-	oo9ibGnw5jQ7ukEzH4WVl4jKXZUdD5mCUqSpQ5S35OHCE7n/C6cFGwyVPZVBWqOsRsKMu1HjM+u
-	t1RuFvLWFSVKw6hyPC6bvik21e+rd
-X-Google-Smtp-Source: AGHT+IHo7hPpbL4ZM5xq7bjjRM9vk1iuX0jyZL5Qov4depu+7BABKiS+a1RzqJgCrKv8lOkO/9BmkA==
-X-Received: by 2002:a05:6000:26ce:b0:3ee:15b4:8470 with SMTP id ffacd0b85a97d-40e4be0c962mr219796f8f.45.1758725530045;
-        Wed, 24 Sep 2025 07:52:10 -0700 (PDT)
+        bh=ndMaJDazpE5vfGfuGA/DbEp6kihBYbJYnxWQMZaUODQ=;
+        b=jqqohY/6SvYMTkeyFKCiQ/2C2Ls840wBfDS1XWMcCqY5VDFZkpiPKFJgUe+t6hoYxL
+         Zt6CA9wURmYcNPmE7w8SRQ/fguG54TLunOeWrhBGX/zWw+uDRjainjoRl5R+NaTr9bUv
+         mzqzuV2pGMGrUkRJKwT3/ANeblY2Q8diQ1ps51QxReM4IRY5lzUg7tI4fAYtRmuaZDX3
+         V9ZWrlhrb3u/pooYnzvRG/HgUntLXlr+PX3qqhuR01wdafYgyni/ElraFa78/ygNvLwr
+         n6MJ80WDhKoJxkZ6/3zYBjE1piYxT76/GdPhWzIwDGfXNFd8xzoVi99qJpHofRMKhySf
+         2kVA==
+X-Gm-Message-State: AOJu0Ywmr22epJdlLGTSc2MkG6IK8Jj+T28DZHBcO1blQyXKEgH1pDAC
+	Paslu4HGiWzvL3ByQaRHXaXBfUXHWyfiOpaWenEZzM8L4Qh7iqiVP0ZtgKuWf7IX5sqy5eZcyk+
+	/R53rk7jABw==
+X-Gm-Gg: ASbGncvmn4WzcijNFc2UWQ9RYYslJVAbEEzbvLZRFyJw8hbFbmgCHDJ1+ag7XkSGA/D
+	Bn7oifZCxLUxJtHQzfxYpximPf3JctPlJ47IbGbnAsLMvGImYDR/9HIApx3+uqDkiPN1wugmLA6
+	N6HSYcubrv5tB2KOyY1li7lkVTo9gmI0oQ7zSKiwEfyQr+XCfjBjFu8/p7MMuiKKH2ClMOwymP5
+	57Y4CPfQuBQQdRiwveCTEJrPNB9Wm5yWlaax/0IkUaacevwRPSitO6pzVXs1BQg3+eOU2oqzjdg
+	jw3bLLFX54hQvy9KfoHB6iYac01zjcNtJmDjm2MFfm/SOqXWpNoG6EGMRwjnqMTtXANtS8DskJ8
+	AM13sneOKB4z6K2BLJAmFnDqSRIsU
+X-Google-Smtp-Source: AGHT+IHNoygF5K6NbFZFn73ylgRAxtpGZVjEv4fnMw43TW4zazr6wr096y7fD1mLuRt7rZlC64ts9g==
+X-Received: by 2002:a05:6000:2010:b0:401:ae97:a1ab with SMTP id ffacd0b85a97d-40abe093fdbmr2608816f8f.10.1758725532824;
+        Wed, 24 Sep 2025 07:52:12 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:1729:c9b6:7a46:b4a3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ee0fbc7188sm29514750f8f.37.2025.09.24.07.52.08
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ee0fbc7188sm29514750f8f.37.2025.09.24.07.52.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Sep 2025 07:52:08 -0700 (PDT)
+        Wed, 24 Sep 2025 07:52:10 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 24 Sep 2025 16:51:36 +0200
-Subject: [PATCH RFC 8/9] ASoC: wsa881x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE
+Date: Wed, 24 Sep 2025 16:51:37 +0200
+Subject: [PATCH RFC 9/9] ASoC: wsa883x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE
  flag from GPIO lookup
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250924-gpio-shared-v1-8-775e7efeb1a3@linaro.org>
+Message-Id: <20250924-gpio-shared-v1-9-775e7efeb1a3@linaro.org>
 References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
 In-Reply-To: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
 To: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
@@ -91,21 +91,21 @@ Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=937;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1242;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=vspstOLquen8UYYEalfT4SF6xCukX3qfgdJchdoYapg=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBo1AWGMBU259VWbLUFQV6SPSQ1mCX0iBW23guMa
- VXKoI+zVNmJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaNQFhgAKCRARpy6gFHHX
- cvj7EADf10cfXI03PODvy6iln82xUiPu89UJlugKSbbUiWCkjYBUDIBAkVerwrnChTfbjHklBlo
- QUwiI+HkzY/nBc0LJyuNwptKpjTuk0LrX+T08cIKUntvoXc9WetrGMPVFQ321J1SApioK1TqDtN
- eoGSM3XqRfRMsDAVYZlSCbq80fpyJMFlhljP/c8+obGy4YZwce6bthnE3ybROshaTXJcP3gTINk
- 95vvtfxAr+pRCqipNgqPcbeX3oLJbZ/MVQZC5mEj+2xSCwkYJKXrkXHB2aae20UeTJZHfYaqSvC
- H2DOs/6NLW6ml/KfZjRvfjfaA+VTqD7cn4iV7/PtDDLkCvcamm/OA+lQ07D61TF1I8M9bUVbn5u
- A21uSs++ScVL6XfDunZtHE75ylZXpRIp6VZ866ltMYEjWd1FKnxDdDeTvZE1/CiZYywppWzayxV
- fHPPn8s+btRwJ/0TUj+czn2GFqIOzixzbELM9gw8Z+ULFwWN4LOOcwj2ZykbMa9VzR1DgAGnpw1
- Aq9Cni1x/fjU2gmiHPy4LNG6375hP+wT8EIGg6URIzJkQ6ljy/t2wMCfVww9AGfhEDzGonwAvxC
- Zo9kN9wOH6p0IRXa5eL/6tmPExvW+oMuBd9LOPTJFzWwtCL40ZujGTgOzuq5S20xvsaPQlcBnrW
- Z6DRjLjjbDf35Uw==
+ bh=xxM5DFs0HrWkdhU2lVlfFzKEyxjnJBr+LeYHk9Z5T9I=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBo1AWGsIAdL4UJeiMya3ALuTFpKjTN7aiOFeRzH
+ +UVHZT5JrCJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaNQFhgAKCRARpy6gFHHX
+ cphcEACKy+MOIGJFHlexGtoihY6/OLkWdmrBXTUoO645qSw8NQvk7z2y3yUjzvjBKr9hX81y36k
+ bi2ATgazhH2Y1qvRZLbCIyviBSlA/Ng/tlMWhAih3C07fcUG4xSkIpQmEvG11WfZbM1/JEdat4H
+ oD3+pxKwrYyGakphDygC2/1nRA6QdzY6faa2Z6Q1DULdAyY6UoySb7D4odXllJNuZyJCCtiqxWE
+ ubY3EMGOgrUzkIo5o17rtWlh6q+lU86nd59+duDIMpp6jgsUk/A1crptrmnhptqlh4HqNaUyHSS
+ rS+ejjtDOTT46Z1nSE5u86Pg8+VJOjulDbM+epJg7NwA8n/Nz4uSLBbYABdnCaq3kG4s4OYHoGW
+ 2EUoRTdUaKhnQOn2B/C8/W6zEkf+y6PjFboefj7wsslTNN7vlPo4vYmHA7jdCnDzWs4cW3AEdOZ
+ sMMbRrfmlrfPatsBaEL+HZH71qMXTu/zBucKIg58ZckX9wKRAS+FWVtm04JHuuqGgS1XtkMwu4p
+ Szr//k1rQp23kajM4IU5f9EUL1JLmpeoiDQEjUKcS1u0OiMeqkC+5RrMHwKd4uP6zPFkpkaQcLQ
+ VSogCIlRTTQ4/NIBHy7HHxQD5Ehky/V5JKlAuCEStvEZ/XxunMEiLV0qz5adX0fh3iAMdhZ8igI
+ MtfsM1m9NuzFvHw==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
@@ -116,23 +116,29 @@ HAVE_SHARED_GPIOS so this flag can be dropped.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- sound/soc/codecs/wsa881x.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/soc/codecs/wsa883x.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/codecs/wsa881x.c b/sound/soc/codecs/wsa881x.c
-index 636e59abc3772fc0b333873a329b65f4213c3ef3..92a1e3bb8371e178571a6c1ed6f1185fe6c2e757 100644
---- a/sound/soc/codecs/wsa881x.c
-+++ b/sound/soc/codecs/wsa881x.c
-@@ -1112,8 +1112,7 @@ static int wsa881x_probe(struct sdw_slave *pdev,
- 	if (!wsa881x)
- 		return -ENOMEM;
- 
--	wsa881x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
--						GPIOD_FLAGS_BIT_NONEXCLUSIVE);
-+	wsa881x->sd_n = devm_gpiod_get_optional(dev, "powerdown", 0);
- 	if (IS_ERR(wsa881x->sd_n))
- 		return dev_err_probe(dev, PTR_ERR(wsa881x->sd_n),
- 				     "Shutdown Control GPIO not found\n");
+diff --git a/sound/soc/codecs/wsa883x.c b/sound/soc/codecs/wsa883x.c
+index ca4520ade79aa2c9377449e29cdd33e9e8dd28c5..ba60b4de6cab7740cd8aa70c89f6e03e1dc2dd12 100644
+--- a/sound/soc/codecs/wsa883x.c
++++ b/sound/soc/codecs/wsa883x.c
+@@ -1572,13 +1572,10 @@ static int wsa883x_get_reset(struct device *dev, struct wsa883x_priv *wsa883x)
+ 	if (IS_ERR(wsa883x->sd_reset))
+ 		return dev_err_probe(dev, PTR_ERR(wsa883x->sd_reset),
+ 				     "Failed to get reset\n");
+-	/*
+-	 * if sd_reset: NULL, so use the backwards compatible way for powerdown-gpios,
+-	 * which does not handle sharing GPIO properly.
+-	 */
++
++	 /* if sd_reset: NULL, so use the backwards compatible way for powerdown-gpios */
+ 	if (!wsa883x->sd_reset) {
+ 		wsa883x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
+-							GPIOD_FLAGS_BIT_NONEXCLUSIVE |
+ 							GPIOD_OUT_HIGH);
+ 		if (IS_ERR(wsa883x->sd_n))
+ 			return dev_err_probe(dev, PTR_ERR(wsa883x->sd_n),
 
 -- 
 2.48.1
