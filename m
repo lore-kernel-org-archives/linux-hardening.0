@@ -1,370 +1,123 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15B33595C;
-	Wed, 24 Sep 2025 19:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758741142; cv=pass; b=Xn7LwTwWAOKE09WYVy9rqdOFKFyyP92de/9WDnQv2Uiz8Ia3ZFGnMU9GxKnbzGeLEOBp0UY5dFDCLDzCJzbiRHC2MTuZdLjKs0Hv6D6QvFjmjRGE6qs3ENNWG+MHzNfk+gnx1hAx1CByo3Lb9alHRz0IM2srLKpzj27c4iliOJ4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758741142; c=relaxed/simple;
-	bh=nVXvoXFNqpkJ6vG4WGjc4qDFGWcgAX/1g8ycsOZvLzE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sgUw0WkrEMAs7RgMAaon8+KzF2citVHaM+qK6GaKBBf2wquzAIIDVqvbUP50EipPUxnyjwA8Y607VcOXxAMGpNd2akPqELf/mG3UBW3hQ1hbMHSnNm+UM4cQxPexBqh47JVnkQnXwEUkzpTfI7kmJQHWM0cdA63cHCfR2tZTrzo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=gizke4Ey; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E8D30BF55;
+	Wed, 24 Sep 2025 20:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758745096; cv=none; b=J+ugFa8FGQEHh/f8BVyxlGw7KiFafMD/t7L9cptQi3/VqUDdVMOdlREah05vvWQ8HC0irrezoWo0+ZEnyQBqgAgBIrZT81IIJTo3/5myee8JjbNSOttzvmuIBcl14UjULXaClzxp+kzxPLyaex1L4rOz6QwJH1KFuTzf6SmZnYA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758745096; c=relaxed/simple;
+	bh=EqYtmV7TAcM2X9vdFPDPz8hYQ+v6LDf37ftyviq9hac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AJNnZaq6DoqzXX1oQsIk71Q1ECbEr10xObYfEhBmVO1Hmr3Q9v84Dz2yVFKmSB6SBupVLW9J4oiDmIDNgoRj65fF9s8Gxq6otHsOXCJxne/OLWxvnWudlsWsGGSKJy0M8Ic7MY1hiOGKBeqE2kRQFmUbqYmexkuBWxTJMmjs1OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=NESutuBM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=I+Wi1wBs; arc=none smtp.client-ip=202.12.124.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="gizke4Ey"
-ARC-Seal: i=1; a=rsa-sha256; t=1758741100; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=QaedpyvNWTm3ZyznWbct9XcTO3uyB+R10rhzjIfFZlOg7KJGXAJZZzEfBpfH+jG80Am+sQEvS9nCd1i1Ja0zm9jXFbOR83QP+rqGozhNhTL1cUAK2Qp3bSt4DHLSqdhR72GCR8JY3HTwfFWLSNNrVP7hwAbNmY6NulRfLMiORoM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1758741100; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=MP5auDUMxEYh7gEFpW+fTsgkWPRs0id0KEIy7AhJUyY=; 
-	b=Wj01iXE+yaT1qmASXvtr4YBqwc+M3+/wbukdfVD4VsA4otCqxQby7YRIlV7l+sCZHpoIagC/EWBVyVgBLnf3R+CAj+LVXu10NhowVdaOZvdDKMPwfmi/yik3p/gTe26bs83Rl04dP01yTfOPxWjgajSRo00WybIM8g5GMx+f53E=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1758741100;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=MP5auDUMxEYh7gEFpW+fTsgkWPRs0id0KEIy7AhJUyY=;
-	b=gizke4EylmQRwo1ox82aCREvOiJDAToCi9ZbGcQEgrGbRZEcyE0439huHBBt2Sqo
-	L4/TMMpxSx5Lqcz4me5aZQ0TwnmWUGBzJ9GRFa+TgZW+WxqbI6AFCHX8yuCd9wsEKUo
-	FTNb5CvC++cr/b3ciCE/g03i7JrtSDOHC1kJkjNU=
-Received: by mx.zohomail.com with SMTPS id 1758741097995233.96426730070766;
-	Wed, 24 Sep 2025 12:11:37 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>,
- Jassi Brar <jassisinghbrar@gmail.com>, Chia-I Wu <olvaffe@gmail.com>,
- Chen-Yu Tsai <wenst@chromium.org>, Steven Price <steven.price@arm.com>,
- Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-hardening@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 8/8] pmdomain: mediatek: Add support for MFlexGraphics
-Date: Wed, 24 Sep 2025 21:11:31 +0200
-Message-ID: <13851204.uLZWGnKmhe@workhorse>
-In-Reply-To: <673af008-04a8-432d-9517-ca2255e6b35f@collabora.com>
-References:
- <20250923-mt8196-gpufreq-v4-0-6cd63ade73d6@collabora.com>
- <20250923-mt8196-gpufreq-v4-8-6cd63ade73d6@collabora.com>
- <673af008-04a8-432d-9517-ca2255e6b35f@collabora.com>
+	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="NESutuBM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="I+Wi1wBs"
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+	by mailfout.stl.internal (Postfix) with ESMTP id 2FCEE1D0016F;
+	Wed, 24 Sep 2025 16:18:11 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Wed, 24 Sep 2025 16:18:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1758745091; x=
+	1758831491; bh=qIL7VdXNc2rL1a7aBbmlZN+TWI2aTIAh5NhrmccsOLI=; b=N
+	ESutuBMKprzGKlasl7bB81yqy3kNgkqfZ/UrWV+AaOPeCVMUJdwZHbOfI91qWYmo
+	pxSPQNPTMFT2rsMuegkN/lo5eI3spvBa1jvkr3FmCn1HgsUkPRJmD2w9YQZJJpg/
+	pWlHu3m+revuwLWpcE7Sk2IHDS0xc6zFHxKYWJCzysPieOIMfcBqaYMx3iiSC010
+	JKxN8d2czIlZjc6OUagwa5eRw2qH8BYlt7P2aW9lIxhdiRW0DD3jrMXSNc5ja/S7
+	Vr0PabSaH4TOptfoJdh6m7ytatm2zT0fEk6G02ZIoMQKnxl3/knKRLswqGWYScLP
+	C2hsryEmMEqhs71BlNTcQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1758745091; x=1758831491; bh=qIL7VdXNc2rL1a7aBbmlZN+TWI2aTIAh5Nh
+	rmccsOLI=; b=I+Wi1wBsacBuJbno012P9WTIM0Cx3c71U2kTZGHV6/qcNvOFp3U
+	ASiCDQhgrjPYLulxT1oGNRR8YhKuT6Pe5t4jhzYw3F6rNztxNkAqiIxivOQbicLQ
+	ke/xUXK/TmUCuchdILH6DuMqQVKvE1yA0LJxBbvNHjmJN1HInJkN5H1rvkQNaf15
+	xNlJEXEjqceQrZi3pA4Jm7aPLJxanJ24P7xjdp66MLmIVmDMs6jdF+BSkM3E3yVd
+	z82mZ7oAkWyJnv0lmYiheRbOuSatpQQ7JGA11hMosVlPW54Crs8d/v/3UukTpVYm
+	HPP7aV/0RaMXmZ+xZXAuy3YXy43gxD3xYdw==
+X-ME-Sender: <xms:AlLUaGx5YXB7uYB5WWY8tRLHtkPWJJ-m3MxnVgtqVAMzSRJXlxIwMA>
+    <xme:AlLUaIQyKt10OPXJ57PRh0betJur52udFVb3cRphm5iLJC5esTxLdlgDasJ-Z6HwW
+    30a9qFehtFDmk8NNd9q12CtXzsySirVioZwFREo7OOIpL7j8Hgn9w>
+X-ME-Received: <xmr:AlLUaDKDyrFU71yvBdqch4Nan_xSbZaynVrsKiK2RFq_RX3Bc4GAPyjIS8nm>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeigeehgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttdejnecuhfhrohhmpefurggsrhhinhgr
+    ucffuhgsrhhotggruceoshgusehquhgvrghshihsnhgrihhlrdhnvghtqeenucggtffrrg
+    htthgvrhhnpeeuhffhfffgfffhfeeuiedugedtfefhkeegteehgeehieffgfeuvdeuffef
+    gfduffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hsugesqhhuvggrshihshhnrghilhdrnhgvthdpnhgspghrtghpthhtohepuddtpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehguhhsthgrvhhorghrsheskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepjhhohhhnrdhfrghsthgrsggvnhgusehgmhgrihhlrdgtohhm
+    pdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghvvg
+    hmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohho
+    ghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtg
+    hpthhtohephhhorhhmsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvthguvghv
+    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
+    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:AlLUaPXYorV4qVyqlw1XAr2VdhCvVVutANTxN-0EVoa2uwx_J1mvmQ>
+    <xmx:AlLUaHRAmaYAOa_CXD8gtWAVfVVtU3h44Hg1tfzaBMHn2fShAHr4wA>
+    <xmx:AlLUaHAvkQRlISgtDaalEozoftsNbfBPpI46sN2MSIBv2cafBHjntQ>
+    <xmx:AlLUaGIW_jSQWWfjv_0yquDg5o69PNOq2ryL-X1aKu7_n7tsRYQIfg>
+    <xmx:AlLUaEzfnFaENQof4-wtZVQc70sNIK-rZjLPViKWRULNAKMtDCzOvzh2>
+Feedback-ID: i934648bf:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 24 Sep 2025 16:18:09 -0400 (EDT)
+Date: Wed, 24 Sep 2025 22:18:08 +0200
+From: Sabrina Dubroca <sd@queasysnail.net>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] tls: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <aNRSACsf_h3ePDhf@krikkit>
+References: <aNMG1lyXw4XEAVaE@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aNMG1lyXw4XEAVaE@kspp>
 
-On Tuesday, 23 September 2025 18:25:53 Central European Summer Time AngeloGioacchino Del Regno wrote:
-> Il 23/09/25 13:40, Nicolas Frattaroli ha scritto:
-> > Various MediaTek SoCs use GPU integration silicon named "MFlexGraphics"
-> > by MediaTek. On the MT8196 and MT6991 SoCs, interacting with this
-> > integration silicon is required to power on the GPU.
-> > 
-> > This glue silicon is in the form of an embedded microcontroller running
-> > special-purpose firmware, which autonomously adjusts clocks and
-> > regulators.
-> > 
-> > Implement a driver, modelled as a pmdomain driver with a
-> > set_performance_state operation, to support these SoCs.
-> > 
-> > The driver also exposes the actual achieved clock rate, as read back
-> > from the MCU, as common clock framework clocks, by acting as a clock
-> > provider as well.
-> > 
-> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> > ---
-> >   drivers/pmdomain/mediatek/Kconfig            |  16 +
-> >   drivers/pmdomain/mediatek/Makefile           |   1 +
-> >   drivers/pmdomain/mediatek/mtk-mfg-pmdomain.c | 928 +++++++++++++++++++++++++++
-> >   3 files changed, 945 insertions(+)
-> > 
-> > diff --git a/drivers/pmdomain/mediatek/Kconfig b/drivers/pmdomain/mediatek/Kconfig
-> > index 0e34a517ab7d5a867bebaab11c0d866282a15e45..2abf78c85d017b1e3526b41c81f274f78d581fd0 100644
-> > [ ... snip ...]
-> > +
-> > +/*
-> > + * This enum is part of the ABI of the GPUEB firmware. Don't change the
-> > + * numbering, as you would wreak havoc.
-> > + */
-> > +enum mtk_mfg_ipi_cmd {
-> > +	CMD_INIT_SHARED_MEM		= 0,
-> > +	CMD_GET_FREQ_BY_IDX		= 1,
-> > +	CMD_GET_POWER_BY_IDX		= 2,
-> > +	CMD_GET_OPPIDX_BY_FREQ		= 3,
-> > +	CMD_GET_LEAKAGE_POWER		= 4,
-> > +	CMD_SET_LIMIT			= 5,
-> > +	CMD_POWER_CONTROL		= 6,
-> > +	CMD_ACTIVE_SLEEP_CONTROL	= 7,
-> > +	CMD_COMMIT			= 8,
-> > +	CMD_DUAL_COMMIT			= 9,
-> > +	CMD_PDCA_CONFIG			= 10,
-> > +	CMD_UPDATE_DEBUG_OPP_INFO	= 11,
-> > +	CMD_SWITCH_LIMIT		= 12,
-> > +	CMD_FIX_TARGET_OPPIDX		= 13,
-> > +	CMD_FIX_DUAL_TARGET_OPPIDX	= 14,
-> > +	CMD_FIX_CUSTOM_FREQ_VOLT	= 15,
-> > +	CMD_FIX_DUAL_CUSTOM_FREQ_VOLT	= 16,
-> > +	CMD_SET_MFGSYS_CONFIG		= 17,
-> > +	CMD_MSSV_COMMIT			= 18,
-> > +	CMD_NUM				= 19,
-> 
-> I don't really like seeing index assignments to enumeration, especially when there
-> are no holes... and you have also clearly written that this is ABI-do-not-touch so
-> I'm not sure that having those numbers here is improving anything.
-> 
-> I also haven't got strong opinions about that, anyway.
+Thanks for the updated patch.
 
-My main worry is that someone comes by and alphabetically sorts them
-with either some style linter script and does not think to read the
-comment, and it's either an overworked maintainer or get acked by
-an overworked maintainer.
+A process nit: the correct subject prefix for this type of work within
+networking would be [PATCH net-next v2] (indicating it targets the
+"net-next" tree).
 
-> [... snip ...]
-> > +
-> > +static int mtk_mfg_eb_off(struct mtk_mfg *mfg)
-> > +{
-> > +	struct device *dev = &mfg->pdev->dev;
-> > +	struct mtk_mfg_ipi_sleep_msg msg = {
+2025-09-23, 22:45:10 +0200, Gustavo A. R. Silva wrote:
+> Remove unused flexible-array member in struct tls_rec and, with this,
+> fix the following warning:
 > 
-> Can this be constified?
+> net/tls/tls.h:131:29: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Also, add a comment to prevent people from adding any members
+> after struct aead_request, which is a flexible structure --this is
+> a structure that ends in a flexible-array member.
 
-No :( mbox_send_message's msg parameter is not const, so it'd discard
-the qualifier, and instead of explicitly discarding the qualifier
-(which would be a very stinky code smell) we would have to look into
-whether the mailbox subsystem is cool with const void* for messages,
-and whether all the mailbox drivers are fine with that too.
+Once that warning is enabled, re-adding a field after aead_req will
+not be allowed by the compiler, right?  The comment is probably not
+really needed, but since there are "must be first" comments all over
+include/net, I guess it's useful.
 
-> > +		.event = 0,
-> > +		.state = 0,
-> > +		.magic = GPUEB_SLEEP_MAGIC
-> > +	};
-> > +	u32 val;
-> > +	int ret;
-> > +
-> > +	ret = mbox_send_message(mfg->slp_mbox->ch, &msg);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "Cannot send sleep command: %pe\n", ERR_PTR(ret));
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = readl_poll_timeout(mfg->rpc + RPC_PWR_CON, val,
-> > +				 !(val & PWR_ACK_M), GPUEB_POLL_US,
-> > +				 GPUEB_TIMEOUT_US);
-> > +
-> > +	if (ret)
-> > +		dev_err(dev, "timed out waiting for EB to power off, val=0x%08X\n",
-> > +			val);
-> 
-> 90 columns is fine, one line please.
-> 
-> > +
-> > +	return ret;
-> > +}
-> > +
-> [... snip ...]
-> > +
-> > +static int mtk_mfg_attach_dev(struct generic_pm_domain *pd, struct device *dev)
-> > +{
-> > +	struct mtk_mfg *mfg = mtk_mfg_from_genpd(pd);
-> > +	struct dev_pm_opp_data *opps = mfg->gpu_opps;
-> > +	int i, ret;
-> > +
-> > +	for (i = mfg->num_opps - 1; i >= 0; i--) {
-> > +		if ((i == mfg->num_opps - 1) || (opps[i].freq != opps[i + 1].freq)) {
-> 
-> 		/* Add a comment here, because you're using a trick, and it's not
-> 		 * very fast to read, as in, if you skim through that, you're most
-> 		 * probably losing the fact that the first OPP is always added
-> 		 * regardless of anything.
-> 		 */
-> 		if ((i != mfg->num_opps - 1) || (opps[i].freq == opps[i + 1].freq))
-> 			continue;
-> 
-> 		/* Reduced indentation :-) */
-> 		ret = dev_pm_opp_add_dynamic(.....) etc
-> 
+Reviewed-by: Sabrina Dubroca <sd@queasysnail.net>
 
-Sure, but not before properly applying De Morgan's law here ;) It
-should be the following as far as I can tell:
-
-    if ((i != mfg->num_opps - 1) && (opps[i].freq == opps[i + 1].freq))
-			    continue;
-
-> > +			ret = dev_pm_opp_add_dynamic(dev, &opps[i]);
-> > +			if (ret) {
-> > +				dev_err(dev, "Failed to add OPP level %u from PD %s\n",
-> > +					opps[i].level, pd->name);
-> > +				dev_pm_opp_remove_all_dynamic(dev);
-> > +				return ret;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> [... snip ...]
-> > +
-> > +static int mtk_mfg_probe(struct platform_device *pdev)
-> > +{
-> [... snip ...]
-> > +
-> > +	ret = clk_prepare_enable(mfg->clk_eb);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "failed to turn on EB clock\n");
-> 
-> What happens if the `gpu_regs` regulator(s) is/are not enabled at boot?
-> 
-> I am guessing that the EB doesn't depend at all on these being enabled, as it
-> should be powered by the internal vscp or sspm - but still asking to make sure
-> that this wasn't an overlook.
-
-Yeah, the EB doesn't need those regulators on. After somewhat fixing module
-unload and reload on my side, I can now confirm that it doesn't appear to
-need them during probe.
-
-> 
-> > +	mfg->ipi_magic = readl(mfg->gpr + GPR_IPI_MAGIC);
-> > +	/* Downstream does this, don't know why. */
-> 
-> Preventing reinitialization?
-> Did you try to avoid that write? What happens in that case?
-> 
-> Also, if you unload this module and reload it, are you able to reinitialize the EB,
-> or are you reading zero in GPR_IPI_MAGIC (preventing you from correctly reinit this
-> driver again)?
-
-Okay so this led me down a deep rabbit hole and I realised that so far, we
-could only read the IPI magic because the bootloader helpfully left MFG on
-for us. So on second probe, we'd get a magic number of 0, and all IPI comms
-that use it would fail.
-
-Fix is simple though, just read the magic in power_on. I also left out the
-0 write but I might experimentally add it back in to see if it changes any
-of the other behaviour I'm currently chasing.
-
-> 
-> > +	writel(0x0, mfg->gpr + GPR_IPI_MAGIC);
-> > +
-> > +	ret = mtk_mfg_init_mbox(mfg);
-> > +	if (ret) {
-> > +		ret = dev_err_probe(dev, ret, "Couldn't initialise mailbox\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	mfg->last_opp = -1;
-> > +
-> > +	ret = mtk_mfg_power_on(&mfg->pd);
-> > +	clk_disable_unprepare(mfg->clk_eb);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "Failed to power on MFG\n");
-> > +
-> > +	ret = mtk_mfg_init_shared_mem(mfg);
-> > +	if (ret) {
-> > +		dev_err(dev, "Couldn't initialize EB SRAM: %pe\n", ERR_PTR(ret));
-> > +		goto out;
-> > +	}
-> > +
-> > +	ret = mtk_mfg_read_opp_tables(mfg);
-> > +	if (ret) {
-> > +		dev_err(dev, "Error reading OPP tables from EB: %pe\n",
-> > +			ERR_PTR(ret));
-> > +		goto out;
-> > +	}
-> > +
-> > +	ret = mtk_mfg_init_clk_provider(mfg);
-> > +	if (ret)
-> > +		goto out;
-> > +
-> > +	ret = of_genpd_add_provider_simple(pdev->dev.of_node, &mfg->pd);
-> > +	if (ret) {
-> > +		ret = dev_err_probe(dev, ret, "Failed to add pmdomain provider\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	return 0;
-> > +
-> > +out:
-> > +	mtk_mfg_power_off(&mfg->pd);
-> > +	return ret;
-> > +}
-> 
-> static void mtk_mfg_remove(struct platform_device *pdev)
-> {
-> 	struct mtk_mfg *mfg = dev_get_drvdata(&pdev->dev);
-> 
-> 	of_genpd_del_provider(....)
-> 
-> 	pm_genpd_remove(....)
-> 
-> 	mtk_mfg_power_off(...)
-
-Unconditional power_off will go poorly if the thing isn't powered
-on at removal time, so I need to figure out something more clever.
-
-Unfortunately, that something more clever isn't "dev_pm_genpd_is_on"
-because that has a case where it will return false and then devres
-kicks in and says hey you left your regulators on that's not cool.
-
-I'll have to spend another day at the debug print factory until
-I can figure out what's wrong there, and if I can't, then I guess
-we'll add our own pd_on counting.
-
-> 
-> 	mbox_free_channel(mfg->gf_mbox->ch);
-> 	mfg->gf_mbox->ch = NULL;
-> 
-> 	mbox_free_channel(mfg->slp_mbox->ch);
-> 	mfg->slp_mbox->ch = NULL;
-> 
-> 
-> }
-> 
-> > +
-> > +static struct platform_driver mtk_mfg_driver = {
-> > +	.driver = {
-> > +		.name = "mtk-mfg-pmdomain",
-> > +		.of_match_table = mtk_mfg_of_match,
-> > +	},
-> > +	.probe = mtk_mfg_probe,
-> 
-> 	.remove = mtk_mfg_remove,
-> 
-> > +};
-> > +module_platform_driver(mtk_mfg_driver);
-> > +
-> > +MODULE_AUTHOR("Nicolas Frattaroli <nicolas.frattaroli@collabora.com>");
-> > +MODULE_DESCRIPTION("MediaTek MFlexGraphics Power Domain Driver");
-> > +MODULE_LICENSE("GPL");
-> > 
-> 
-> There might be more, but for now, I'm done with this review round :-)
-> 
-> Cheers,
-> Angelo
-> 
-
-Thanks for the review. Assume all comments I didn't reply to (including
-the big one) are acknowledged and will be addressed.
-
-Kind regards,
-Nicolas Frattaroli
-
-
+-- 
+Sabrina
