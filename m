@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63091EB5D6;
-	Wed, 24 Sep 2025 01:08:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4C617C21B;
+	Wed, 24 Sep 2025 01:16:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758676138; cv=none; b=PLf68zpicJm1iflicbYeN5TXqnjJhkCjIUgkq8uRR60AR6GLA4cLc1okLg+CpCYZ3z2rzeO5ImmoWj+VV6L2tWPuTirfrDG8ouGbojH2aLu3aBL/Ims+348M+jYMobu9Lrq0MRnKwFOvKLtz4PEBzzcuPMRhVWpwwQYxnVmqHWc=
+	t=1758676601; cv=none; b=i2h52M6e+ZLQL2PD+r9b+jYcmNaEsgHHYaxTSjZJuMsESXn2z4qMUXK0VVEu00tFSzoxk7peTHxVc0h6dRvSSTcXXJw7ggJCqpPGn0mJ2g52/tm8rHUtmEvKfwoA3EjNyEPdOxnbMkftR9bz7XhWNfHOQ+UORrcGvMbpoDSsQzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758676138; c=relaxed/simple;
-	bh=wFeZ3JD6xZwZ0rVyUYmNQlQV4kdMRClxy4beWMxNXaY=;
+	s=arc-20240116; t=1758676601; c=relaxed/simple;
+	bh=8ePn7JLIUJhkEG1cge46lu2Tibuofo60ASXiwv4beHc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gTOV9gnXbUmK/kvmDqVArVlkQqXDP2mYlVxcnHSNS3trgWIB4ixXbNdheTYsFoj0nZgvKigWcasoke0Af9xnz/Q+LA5asYuVO/vHE5vRHk2YeJmm9y6+y48ph8p/YxXHUNK7Kt5LUYsP+PtU1Os4t4X5RypBuUs9fc43ADkUP38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TcQb/foT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=VXeMvYd1q33W6Z/N5+Qski7QfAeevyvbtlHidN40gR6uPu670eQK7VqZ1SeiCSWjb+NgPKj7l/pnaklZOdaUq5bnKEPJNkstxAmldt3vb1MYZ8MIpaMTYkR0b4Dgg1HcTtBpTmDZH1RiN4OAdjLYr1kv4N3J5eM39SeITXeCrNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pgUSeSfy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcQb/foT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6A1AC4CEF5;
-	Wed, 24 Sep 2025 01:08:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pgUSeSfy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20FFAC4CEF5;
+	Wed, 24 Sep 2025 01:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758676137;
-	bh=wFeZ3JD6xZwZ0rVyUYmNQlQV4kdMRClxy4beWMxNXaY=;
+	s=k20201202; t=1758676601;
+	bh=8ePn7JLIUJhkEG1cge46lu2Tibuofo60ASXiwv4beHc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TcQb/foTCK8IYTNMZJ8LsvduxkwSZNrVHkqZhHAF4a097KZHkt/ZdVfu5CRcnV85o
-	 QrgRc3iKO1Ss8fbQIK9byT8ZuuH7KCx0odwnToQuxMYUAaynAuV+CN+TwGZsY64HA7
-	 aP2MuFPn0OinY5BxzFa8Di/89hJ6injMyOmlMVMIMp71P8DHYDf6Le5xQWxeY7Lzqv
-	 ptembayki+YsqOSM3m5YsSrptY4ZPprnm9JsgG624xNGXGxhjMLLzBHxmrfu9zzsYD
-	 WeyZutoAibY4uCOV/qYHu6NMA2BzKPT/g5jmGE4QYubUW0mXd2/QO2rSdu2O6KsxNB
-	 ijRZ4soW55WJA==
-Date: Tue, 23 Sep 2025 18:08:54 -0700
+	b=pgUSeSfy4qTNW1wzGNQ7A1uIyj4oHbxQMPINBfaiGF7/SAWYKc0yBGSInBGo8JYYW
+	 orpOLNMItg3EenItCqQOiYmFzkk68nvMvY6a9bMP+qwIOGdjRlmX8QGPbikVHCHyb0
+	 yBhmhgmIFNqxCC6VXHRS7AbgtAgr3A71i6z0cTaoa1wRLjuHHhwcrySVyen6ZFf2gM
+	 jb6kRLTYmr5uUJ0XVrM4NLRS8Lx/bkelQma+ZtDqspkvtQB360ic8yE9DztK94obfL
+	 LMUPu4nEyltMFjId7HOmYQ5yENY8IUbAlWDDnZ8+aPigzyMzlYDUdiWHhBQ7F4vNFT
+	 66anFEe6NvLqw==
+Date: Tue, 23 Sep 2025 18:16:39 -0700
 From: Jakub Kicinski <kuba@kernel.org>
 To: Dong Yibo <dong100@mucse.com>
 Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
@@ -37,14 +37,12 @@ Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
  alexanderduyck@fb.com, richardcochran@gmail.com, kees@kernel.org,
  gustavoars@kernel.org, rdunlap@infradead.org, vadim.fedorenko@linux.dev,
  joerg@jo-so.de, netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Andrew Lunn
- <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v13 1/5] net: rnpgbe: Add build support for
- rnpgbe
-Message-ID: <20250923180854.46adc958@kernel.org>
-In-Reply-To: <20250922014111.225155-2-dong100@mucse.com>
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next v13 5/5] net: rnpgbe: Add register_netdev
+Message-ID: <20250923181639.6755cca4@kernel.org>
+In-Reply-To: <20250922014111.225155-6-dong100@mucse.com>
 References: <20250922014111.225155-1-dong100@mucse.com>
-	<20250922014111.225155-2-dong100@mucse.com>
+	<20250922014111.225155-6-dong100@mucse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,52 +52,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 22 Sep 2025 09:41:07 +0800 Dong Yibo wrote:
-> +===========================================================
-> +Linux Base Driver for MUCSE(R) Gigabit PCI Express Adapters
-> +===========================================================
-> +
-> +MUCSE Gigabit Linux driver.
+On Mon, 22 Sep 2025 09:41:11 +0800 Dong Yibo wrote:
+> +static const struct mucse_hw_operations rnpgbe_hw_ops = {
+> +	.reset_hw = rnpgbe_reset,
+> +	.get_perm_mac = rnpgbe_get_permanent_mac,
+> +	.mbx_send_notify = rnpgbe_mbx_send_notify,
 
-You already said that in the heading above
+Please don't add abstraction layers, you only have one set of ops right
+now call them directly. The abstractions layers make the code harder to
+follow.
 
-> +Copyright (c) 2020 - 2025 MUCSE Co.,Ltd.
+> +static netdev_tx_t rnpgbe_xmit_frame(struct sk_buff *skb,
+> +				     struct net_device *netdev)
+> +{
+> +	dev_kfree_skb_any(skb);
+> +	netdev->stats.tx_dropped++;
 
-copyright is metadata, it should not be part of the user-visible doc.
+Please add your own stats, the stats in struct net_device
+are deprecated and should not be used by new drivers.
 
-> +Identifying Your Adapter
-> +========================
-> +The driver is compatible with devices based on the following:
-> +
-> + * MUCSE(R) Ethernet Controller N500 series
-> + * MUCSE(R) Ethernet Controller N210 series
+>  	err = rnpgbe_init_hw(hw, board_type);
+>  	if (err) {
+>  		dev_err(&pdev->dev, "Init hw err %d\n", err);
+>  		goto err_free_net;
+>  	}
+> +	/* Step 1: Send power-up notification to firmware (no response expected)
+> +	 * This informs firmware to initialize hardware power state, but
+> +	 * firmware only acknowledges receipt without returning data. Must be
+> +	 * done before synchronization as firmware may be in low-power idle
+> +	 * state initially.
+> +	 */
+> +	err = hw->ops->mbx_send_notify(hw, true, mucse_fw_powerup);
+> +	if (err) {
 
-These are out of numeric sort order
-
-> +Support
-> +=======
-> + If you have problems with the software or hardware, please contact our
-> + customer support team via email at techsupport@mucse.com or check our
-> + website at https://www.mucse.com/en/
-
-Please don't add support statements. People can use a search engine if
-they want to find the corporate support. The kernel docs are for kernel
-topics, and "support" in the kernel is done on the mailing list.
-
-
-> +config MGBE
-> +	tristate "Mucse(R) 1GbE PCI Express adapters support"
-> +	depends on PCI
-> +	select PAGE_POOL
-
-you're not using page pool in this series
-
-> +MODULE_DEVICE_TABLE(pci, rnpgbe_pci_tbl);
-> +MODULE_AUTHOR("Mucse Corporation, <techsupport@mucse.com>");
-
-Only humans can author code, not corporations. Delete his AUTHOR entry
-or add yourself as the author.
-
-> +MODULE_DESCRIPTION("Mucse(R) 1 Gigabit PCI Express Network Driver");
-> +MODULE_LICENSE("GPL");
-
+Don't you have to power it down on errors later in this function?
+-- 
+pw-bot: cr
