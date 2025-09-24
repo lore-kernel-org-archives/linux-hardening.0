@@ -1,75 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A892259C92;
-	Tue, 23 Sep 2025 21:36:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523462D052;
+	Wed, 24 Sep 2025 00:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758663371; cv=none; b=A+CZEenoDdmH+3vakS6TUXoRqmsUHa8h+hkCsM4VL+wBdl3Eb+qKGLi4tW429vjm6DLHp2hayQn9GVd3VdCx9DLjWHZpnz71Ro9MECAYSFwqN3a+6BLTqpftuBV6Ed1Dv2AKjk7IHzxMnQGorWBU/yE9F6wWmbmAorZf9R0MfQM=
+	t=1758672036; cv=none; b=ciVdroBTLMvGIM4JWDzf6vpPS2BXvdNsPu2mzguAQ80weX0VcCOC5et+F2npYd/mO+d8NormHRzEeDSH6yXLTzQgmYLFnV6eI1azUZ7FtL8ZzSuTEzaaLO+W5ICyKdGBCOUzDq6PdNwfJTz4idEjcHS0rzjCkEQJRwuBArNPJGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758663371; c=relaxed/simple;
-	bh=re5d2GljFifEB9uiuOTiE2PVqVs8Tx9t8po0nVrChRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BXGuMX9AHog7fTIIeuEciRdvR1yFhtRxrAE3sX/FxdAXoV85Zv54gtIn5h2VB7pvMbCsBsV+ZFNssRC3Rs6jsnwQuzcEDIOhh7JuHyQ4Harsd8Uw24r5yQ6gZUY+pLJJOaX/9YfC1qgYjTeEx4hw5A+WTAEImHoCwJX6FlWOquU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mi3ruYtq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758672036; c=relaxed/simple;
+	bh=XQ5387VeiqYIFOjg5vsVPE0sAGAoAH+TzEKOi3G8ozg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ExEOp+uLV28Ze/h2NXHscOtWPXGfZiXuAhubb4FuZtRJWYeKL/VKsR56oe7UitjyeLNvkAbDe1yotI4X0oDfK5HzDkOauRp71KibRugt22z96OOhwgoMHZrxDMOAqD4XMpRCvM2sYlNYtKyKBmmVL9V+UY+2Evb11pDb2Q7GLD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MECXLCPM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mi3ruYtq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32213C4CEF5;
-	Tue, 23 Sep 2025 21:36:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MECXLCPM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D800DC4CEF5;
+	Wed, 24 Sep 2025 00:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758663371;
-	bh=re5d2GljFifEB9uiuOTiE2PVqVs8Tx9t8po0nVrChRY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mi3ruYtq47Xw4moUS5CkVWFyq55PAfFZ9zE4eiLC3+nV3NbQZ/k9YcmTL4fY3ei72
-	 olAWLEE6oCfPKSOhuXNNOmLjwOlnna5ZCQmQ04VmlKuULHoWP/z4CTonPEC1svY/XK
-	 fZPLu0toyWQEvsYR/Nli2NyMB67SVWHgZVQ+/+dUFOHEeP382WoWZwNLFxRqEn3Eke
-	 gi9LcbyZqoIEsehqyFMCleVh3DGTlBwmx1drjOGe4uMoyCT5OmdDAFVqQTSfNGs5+K
-	 uKiac9tJpCzqeLt8OW0+mXbKKaLKNYBXBnbKNxPgFyP1NMfYKMh29N/Y9Yn0BHhCeR
-	 0dOp/P7/uJXng==
-Date: Tue, 23 Sep 2025 14:36:10 -0700
-From: Kees Cook <kees@kernel.org>
-To: Vegard Nossum <vegard.nossum@oracle.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Marco Bonelli <marco@mebeim.net>, Petr Vorel <pvorel@suse.cz>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] kconfig: Add transitional symbol attribute for
- migration support
-Message-ID: <202509231435.4FF2032CE@keescook>
-References: <20250830020109.it.598-kees@kernel.org>
- <59c4f103-7f1b-4829-bd82-0d392047fea4@oracle.com>
- <202509010949.9A61A98@keescook>
- <d25b2c63-32e2-4a41-b982-da5131cffd2f@oracle.com>
- <202509011125.5879901C@keescook>
- <0d9ef42f-57c7-472b-89c1-4534f40991f7@oracle.com>
- <202509031949.375138FB13@keescook>
- <4cbc348d-02ca-4743-b8d4-21db2ebf4460@oracle.com>
- <202509050921.2398728EE2@keescook>
+	s=k20201202; t=1758672035;
+	bh=XQ5387VeiqYIFOjg5vsVPE0sAGAoAH+TzEKOi3G8ozg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=MECXLCPMCnMxpgLiTlcLvDpbfa0px1tjSHHTSFplWTRDBWeU3XsNU+1tF+K8mfjpq
+	 C+bbjQ/6Ui6sHDgbF9BoZQLSeo/VWyapteTvT7tZRW4VqfFyKw+0N/v8TaRkAZD3va
+	 DMHUfsP/3d36twR6tNdPWkt5nom+bnJZzZzyQHJJ4BQ084sGl/f+T074bpWv4DUSeP
+	 uOebdP6LYrC1RidXi6rVw7ZL9aRMyDgDPwKWeU4yk+JHOixHw7QK9OitEPV0+vEvkK
+	 PnEbiqpPOFDFl96zBshZtq+Fq3hYr6m81CEiwnN+l9CQvKGsDJsm7LGFGCR+nC9Qnj
+	 czB9EeMXWLMnA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB16839D0C20;
+	Wed, 24 Sep 2025 00:00:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202509050921.2398728EE2@keescook>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH][next] net: airoha: Avoid -Wflex-array-member-not-at-end
+ warning
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175867203251.1967235.16855989267443539182.git-patchwork-notify@kernel.org>
+Date: Wed, 24 Sep 2025 00:00:32 +0000
+References: <aNFYVYLXQDqm4yxb@kspp>
+In-Reply-To: <aNFYVYLXQDqm4yxb@kspp>
+To: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: lorenzo@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
-On Fri, Sep 05, 2025 at 09:23:55AM -0700, Kees Cook wrote:
-> I'll give it a spin!
+Hello:
 
-*one month later*
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-I've v3 now with your implementation and lots of selftests. :)
+On Mon, 22 Sep 2025 16:08:21 +0200 you wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Move the conflicting declaration to the end of the corresponding
+> structure. Notice that `struct airoha_foe_entry` is a flexible
+> structure, this is a structure that contains a flexible-array
+> member.
+> 
+> [...]
 
--Kees
+Here is the summary with links:
+  - [next] net: airoha: Avoid -Wflex-array-member-not-at-end warning
+    https://git.kernel.org/netdev/net-next/c/09630ab91d84
 
+You are awesome, thank you!
 -- 
-Kees Cook
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
