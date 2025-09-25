@@ -1,49 +1,44 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C6E291C11;
-	Thu, 25 Sep 2025 13:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758808585; cv=none; b=QkfoXlz6LEYu9c2bPHJDOsi+uecvznTUtujcBXgg7qtsTbZ9Czf6LvfxDQda7uCr8/lghtPpk9oMxm4rPiJZ9GgZx8VpOdjfoCh6gjHf2nlUp3O9chrJem9lyYShRrfZKJvWZ65ipPmk+LeSE7XSmrDWCQRRJ6WUKB9JHXSgq3w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758808585; c=relaxed/simple;
-	bh=slNJrvUvalJgEjRI/QEKcr3aGOrfhEydMGMtAVNpyJw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HPuegT9O1bC3sUb7ZZdBsREZUyicWerFUVqA0huwcPinL+qCTSvPOAsCCriMgxdqNQ1ghTyBGiqQr6RKH3vti/WuC2rHzFz2ZwPOEBOeDL0btiCuEnqrEVxxfBNBt1clsO9DjO+RAnPEBQwJ5mafI8BJgoNIpR4qVYiBoIfLIh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FT0zNm6C; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2A627A12D;
+	Thu, 25 Sep 2025 14:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758809144; cv=pass; b=gLBriCYyyCzziiV2m1tZwNJN+BzcqYf935L/+PaMzqDf7loDi3iS6m3ZiskL9MzIi3keEWJxJzFBFndoam/MyePKK9J96BdEARLPNeU3hMJMH6ra41mU+FxHtkcTykae8CRtJTQhBaMva6+5tVIagyhxjZOCSm6xSg9t2m1exwU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758809144; c=relaxed/simple;
+	bh=hTVILfN3Sn10gPcXrUEeaPunkq3YbuHplVwnyMjR6qU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tBipAHRUxqiX/9cSfrjn4QFCm+gi7uHAHlwQE0E6ITN6yU1LvMQbS0dTPMdVMI+ibBxR52oieZMYbIzJRJ1c9cHKjGX2A63oCUQYXo1qrCAy/nFkS+STejTqBfbxv6aSsDOnIQgrqXD55UfC98DcS5Lm5kgamRgANTQ70LgOX3g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=jEN2Ueeq; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FT0zNm6C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1758808581;
-	bh=slNJrvUvalJgEjRI/QEKcr3aGOrfhEydMGMtAVNpyJw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FT0zNm6Cs8dDXxwnnuxI31+IadOQgL7lnHkydqOVyqj3SQP3cOM/C24DaaY+cp4qc
-	 pPwxjcLKL3IwhPhH3G/nMeleevEm5JI0zEYV9GXy6zkEGbOxpkBq542U0A56ACw/iR
-	 h9zTEDTTc+Rghe0k1eWbqRxnQUuAingw9b+IKUpHQ2RK/lOuRL9WamARWubnKmwDuv
-	 68y31Sg1x2rsI/oIvabWpYcrhUUZQyq3grNscXkEUVsQS9sVu5lgku6M6HeZUOgG8h
-	 5/PeRvAD1IzfKxEBnW/uEa+Z401p5oEVdNuwNaYFvreZ4M06fvZ02CGe9r06Z8zGdr
-	 V9FEMKRD8irFA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5280E17E0FBA;
-	Thu, 25 Sep 2025 15:56:20 +0200 (CEST)
-Message-ID: <a8014179-14a9-41e1-b023-826b1d5dd8fc@collabora.com>
-Date: Thu, 25 Sep 2025 15:56:19 +0200
-Precedence: bulk
-X-Mailing-List: linux-hardening@vger.kernel.org
-List-Id: <linux-hardening.vger.kernel.org>
-List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 8/8] pmdomain: mediatek: Add support for MFlexGraphics
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="jEN2Ueeq"
+ARC-Seal: i=1; a=rsa-sha256; t=1758809109; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cQh9vCGaK7a5DYd7rza61JtUGEP0Vz18KvzIfciBZKzG7jXvEMAD3kDwZFw2F5BDouwKe689Bh/3vNB5tAOdJlDlY4j7kOda4ZAxDhcWIUgpOPd1S0CzZ14RnE5zeR1R+VlFouKW/hEIJ/efZXKXoTJV7CqVsZ2ukJiu/DmKZ38=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1758809109; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=OvzRWlr1AsAppW+7NbJb7lHmXfQyzadLNFuD+HINmpE=; 
+	b=UZ/VsNtpBrPjPmJ1vrfNmiu/+3MDkNII5l1JivYKK84zCKKOhWw+RVG1FbWXO1fdRAwh0LwLfKKy1yUI3U3uuq43dv84BC+6RDaURBDbrvt3dw1bOD/fRTjZuWucvmGQ9anhWBARMJef8dtvZk89F44coSgM3I5HXluDBTXVPQI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1758809109;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=OvzRWlr1AsAppW+7NbJb7lHmXfQyzadLNFuD+HINmpE=;
+	b=jEN2Ueeq3h2ncv9IpdvT6N+pBrPDythheciswAlgARWVQBrUiSGuf6Ms9FtpVs+b
+	rZd9U4lz0/vR19E1wqaDeX29hAehM/hu9xbvSuROcq0laF3jqv7a+D+KK4QrFzD8n5r
+	qRx9UVBEv3VRY01OlG/2GxUdW0wIUHtNtl0kpF2A=
+Received: by mx.zohomail.com with SMTPS id 1758809108075771.102720899719;
+	Thu, 25 Sep 2025 07:05:08 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
  Boris Brezillon <boris.brezillon@collabora.com>,
  Jassi Brar <jassisinghbrar@gmail.com>, Chia-I Wu <olvaffe@gmail.com>,
  Chen-Yu Tsai <wenst@chromium.org>, Steven Price <steven.price@arm.com>,
@@ -52,341 +47,161 @@ To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
  David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-hardening@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20250923-mt8196-gpufreq-v4-0-6cd63ade73d6@collabora.com>
+ Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org,
+ linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 8/8] pmdomain: mediatek: Add support for MFlexGraphics
+Date: Thu, 25 Sep 2025 16:04:59 +0200
+Message-ID: <2015216.PYKUYFuaPT@workhorse>
+In-Reply-To:
+ <CAPDyKFpLNJRRxWPm2Eye+Fs8go-LNwWGzPUPPKmNVJkyK5N3Dw@mail.gmail.com>
+References:
+ <20250923-mt8196-gpufreq-v4-0-6cd63ade73d6@collabora.com>
  <20250923-mt8196-gpufreq-v4-8-6cd63ade73d6@collabora.com>
- <673af008-04a8-432d-9517-ca2255e6b35f@collabora.com>
- <13851204.uLZWGnKmhe@workhorse>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <13851204.uLZWGnKmhe@workhorse>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <CAPDyKFpLNJRRxWPm2Eye+Fs8go-LNwWGzPUPPKmNVJkyK5N3Dw@mail.gmail.com>
+Precedence: bulk
+X-Mailing-List: linux-hardening@vger.kernel.org
+List-Id: <linux-hardening.vger.kernel.org>
+List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-Il 24/09/25 21:11, Nicolas Frattaroli ha scritto:
-> On Tuesday, 23 September 2025 18:25:53 Central European Summer Time AngeloGioacchino Del Regno wrote:
->> Il 23/09/25 13:40, Nicolas Frattaroli ha scritto:
->>> Various MediaTek SoCs use GPU integration silicon named "MFlexGraphics"
->>> by MediaTek. On the MT8196 and MT6991 SoCs, interacting with this
->>> integration silicon is required to power on the GPU.
->>>
->>> This glue silicon is in the form of an embedded microcontroller running
->>> special-purpose firmware, which autonomously adjusts clocks and
->>> regulators.
->>>
->>> Implement a driver, modelled as a pmdomain driver with a
->>> set_performance_state operation, to support these SoCs.
->>>
->>> The driver also exposes the actual achieved clock rate, as read back
->>> from the MCU, as common clock framework clocks, by acting as a clock
->>> provider as well.
->>>
->>> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
->>> ---
->>>    drivers/pmdomain/mediatek/Kconfig            |  16 +
->>>    drivers/pmdomain/mediatek/Makefile           |   1 +
->>>    drivers/pmdomain/mediatek/mtk-mfg-pmdomain.c | 928 +++++++++++++++++++++++++++
->>>    3 files changed, 945 insertions(+)
->>>
->>> diff --git a/drivers/pmdomain/mediatek/Kconfig b/drivers/pmdomain/mediatek/Kconfig
->>> index 0e34a517ab7d5a867bebaab11c0d866282a15e45..2abf78c85d017b1e3526b41c81f274f78d581fd0 100644
->>> [ ... snip ...]
->>> +
->>> +/*
->>> + * This enum is part of the ABI of the GPUEB firmware. Don't change the
->>> + * numbering, as you would wreak havoc.
->>> + */
->>> +enum mtk_mfg_ipi_cmd {
->>> +	CMD_INIT_SHARED_MEM		= 0,
->>> +	CMD_GET_FREQ_BY_IDX		= 1,
->>> +	CMD_GET_POWER_BY_IDX		= 2,
->>> +	CMD_GET_OPPIDX_BY_FREQ		= 3,
->>> +	CMD_GET_LEAKAGE_POWER		= 4,
->>> +	CMD_SET_LIMIT			= 5,
->>> +	CMD_POWER_CONTROL		= 6,
->>> +	CMD_ACTIVE_SLEEP_CONTROL	= 7,
->>> +	CMD_COMMIT			= 8,
->>> +	CMD_DUAL_COMMIT			= 9,
->>> +	CMD_PDCA_CONFIG			= 10,
->>> +	CMD_UPDATE_DEBUG_OPP_INFO	= 11,
->>> +	CMD_SWITCH_LIMIT		= 12,
->>> +	CMD_FIX_TARGET_OPPIDX		= 13,
->>> +	CMD_FIX_DUAL_TARGET_OPPIDX	= 14,
->>> +	CMD_FIX_CUSTOM_FREQ_VOLT	= 15,
->>> +	CMD_FIX_DUAL_CUSTOM_FREQ_VOLT	= 16,
->>> +	CMD_SET_MFGSYS_CONFIG		= 17,
->>> +	CMD_MSSV_COMMIT			= 18,
->>> +	CMD_NUM				= 19,
->>
->> I don't really like seeing index assignments to enumeration, especially when there
->> are no holes... and you have also clearly written that this is ABI-do-not-touch so
->> I'm not sure that having those numbers here is improving anything.
->>
->> I also haven't got strong opinions about that, anyway.
+On Tuesday, 23 September 2025 16:24:13 Central European Summer Time Ulf Hansson wrote:
+> On Tue, 23 Sept 2025 at 13:41, Nicolas Frattaroli
+> <nicolas.frattaroli@collabora.com> wrote:
+> >
+> > Various MediaTek SoCs use GPU integration silicon named "MFlexGraphics"
+> > by MediaTek. On the MT8196 and MT6991 SoCs, interacting with this
+> > integration silicon is required to power on the GPU.
+> >
+> > This glue silicon is in the form of an embedded microcontroller running
+> > special-purpose firmware, which autonomously adjusts clocks and
+> > regulators.
+> >
+> > Implement a driver, modelled as a pmdomain driver with a
+> > set_performance_state operation, to support these SoCs.
+> >
+> > The driver also exposes the actual achieved clock rate, as read back
+> > from the MCU, as common clock framework clocks, by acting as a clock
+> > provider as well.
+> >
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > ---
+> >  drivers/pmdomain/mediatek/Kconfig            |  16 +
+> >  drivers/pmdomain/mediatek/Makefile           |   1 +
+> >  drivers/pmdomain/mediatek/mtk-mfg-pmdomain.c | 928 +++++++++++++++++++++++++++
+> >  3 files changed, 945 insertions(+)
 > 
-> My main worry is that someone comes by and alphabetically sorts them
-> with either some style linter script and does not think to read the
-> comment, and it's either an overworked maintainer or get acked by
-> an overworked maintainer.
+> [...]
 > 
->> [... snip ...]
->>> +
->>> +static int mtk_mfg_eb_off(struct mtk_mfg *mfg)
->>> +{
->>> +	struct device *dev = &mfg->pdev->dev;
->>> +	struct mtk_mfg_ipi_sleep_msg msg = {
->>
->> Can this be constified?
+> > +
+> > +static int mtk_mfg_set_performance(struct generic_pm_domain *pd,
+> > +                                  unsigned int state)
+> > +{
+> > +       struct mtk_mfg *mfg = mtk_mfg_from_genpd(pd);
+> > +
+> > +       /*
+> > +        * Occasionally, we're asked to set OPPs when we're off. This will fail,
+> > +        * so don't do it at all. We do foo != GENPD_STATE_ON instead of !foo
+> > +        * as to not depend on the actual value of the enum.
+> > +        */
+> > +       if (mfg->pd.status != GENPD_STATE_ON)
+> > +               return 0;
 > 
-> No :( mbox_send_message's msg parameter is not const, so it'd discard
-> the qualifier, and instead of explicitly discarding the qualifier
-> (which would be a very stinky code smell) we would have to look into
-> whether the mailbox subsystem is cool with const void* for messages,
-> and whether all the mailbox drivers are fine with that too.
+> Returning 0 here, means that we may end up never restoring the
+> performance state for a device and its genpd, when the device is
+> getting runtime resumed. In genpd_runtime_resume() we are calling
+> genpd_restore_performance_state() before calling genpd_power_on().
+> This is deliberate, see commit ae8ac19655e0.
 > 
->>> +		.event = 0,
->>> +		.state = 0,
->>> +		.magic = GPUEB_SLEEP_MAGIC
->>> +	};
->>> +	u32 val;
->>> +	int ret;
->>> +
->>> +	ret = mbox_send_message(mfg->slp_mbox->ch, &msg);
->>> +	if (ret < 0) {
->>> +		dev_err(dev, "Cannot send sleep command: %pe\n", ERR_PTR(ret));
->>> +		return ret;
->>> +	}
->>> +
->>> +	ret = readl_poll_timeout(mfg->rpc + RPC_PWR_CON, val,
->>> +				 !(val & PWR_ACK_M), GPUEB_POLL_US,
->>> +				 GPUEB_TIMEOUT_US);
->>> +
->>> +	if (ret)
->>> +		dev_err(dev, "timed out waiting for EB to power off, val=0x%08X\n",
->>> +			val);
->>
->> 90 columns is fine, one line please.
->>
->>> +
->>> +	return ret;
->>> +}
->>> +
->> [... snip ...]
->>> +
->>> +static int mtk_mfg_attach_dev(struct generic_pm_domain *pd, struct device *dev)
->>> +{
->>> +	struct mtk_mfg *mfg = mtk_mfg_from_genpd(pd);
->>> +	struct dev_pm_opp_data *opps = mfg->gpu_opps;
->>> +	int i, ret;
->>> +
->>> +	for (i = mfg->num_opps - 1; i >= 0; i--) {
->>> +		if ((i == mfg->num_opps - 1) || (opps[i].freq != opps[i + 1].freq)) {
->>
->> 		/* Add a comment here, because you're using a trick, and it's not
->> 		 * very fast to read, as in, if you skim through that, you're most
->> 		 * probably losing the fact that the first OPP is always added
->> 		 * regardless of anything.
->> 		 */
->> 		if ((i != mfg->num_opps - 1) || (opps[i].freq == opps[i + 1].freq))
->> 			continue;
->>
->> 		/* Reduced indentation :-) */
->> 		ret = dev_pm_opp_add_dynamic(.....) etc
->>
-> 
-> Sure, but not before properly applying De Morgan's law here ;) It
-> should be the following as far as I can tell:
-
-WHOOOOOOPS! That was quite a bad typo :D
-(yes, of course it's &&)
-
-> 
->      if ((i != mfg->num_opps - 1) && (opps[i].freq == opps[i + 1].freq))
-> 			    continue;
-> 
->>> +			ret = dev_pm_opp_add_dynamic(dev, &opps[i]);
->>> +			if (ret) {
->>> +				dev_err(dev, "Failed to add OPP level %u from PD %s\n",
->>> +					opps[i].level, pd->name);
->>> +				dev_pm_opp_remove_all_dynamic(dev);
->>> +				return ret;
->>> +			}
->>> +		}
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->> [... snip ...]
->>> +
->>> +static int mtk_mfg_probe(struct platform_device *pdev)
->>> +{
->> [... snip ...]
->>> +
->>> +	ret = clk_prepare_enable(mfg->clk_eb);
->>> +	if (ret)
->>> +		return dev_err_probe(dev, ret, "failed to turn on EB clock\n");
->>
->> What happens if the `gpu_regs` regulator(s) is/are not enabled at boot?
->>
->> I am guessing that the EB doesn't depend at all on these being enabled, as it
->> should be powered by the internal vscp or sspm - but still asking to make sure
->> that this wasn't an overlook.
-> 
-> Yeah, the EB doesn't need those regulators on. After somewhat fixing module
-> unload and reload on my side, I can now confirm that it doesn't appear to
-> need them during probe.
-> 
->>
->>> +	mfg->ipi_magic = readl(mfg->gpr + GPR_IPI_MAGIC);
->>> +	/* Downstream does this, don't know why. */
->>
->> Preventing reinitialization?
->> Did you try to avoid that write? What happens in that case?
->>
->> Also, if you unload this module and reload it, are you able to reinitialize the EB,
->> or are you reading zero in GPR_IPI_MAGIC (preventing you from correctly reinit this
->> driver again)?
-> 
-> Okay so this led me down a deep rabbit hole and I realised that so far, we
-> could only read the IPI magic because the bootloader helpfully left MFG on
-> for us. So on second probe, we'd get a magic number of 0, and all IPI comms
-> that use it would fail.
-
-I had a hunch ;-)
-
-> 
-> Fix is simple though, just read the magic in power_on. I also left out the
-> 0 write but I might experimentally add it back in to see if it changes any
-> of the other behaviour I'm currently chasing.
+> That said, I think we need to manage the restore in the ->power_on()
+> callback. In principle, it means we should call
+> mtk_mfg_set_oppidx(mfg, genpd->performance_state) from there.
 > 
 
-Yeah, we don't know what this write is all about and it logically doesn't make
-much sense - so if it works without, let's just leave it out.
+Thanks for pointing this out, yeah setting the oppidx in power_on
+does look like the right choice.
 
->>
->>> +	writel(0x0, mfg->gpr + GPR_IPI_MAGIC);
->>> +
->>> +	ret = mtk_mfg_init_mbox(mfg);
->>> +	if (ret) {
->>> +		ret = dev_err_probe(dev, ret, "Couldn't initialise mailbox\n");
->>> +		goto out;
->>> +	}
->>> +
->>> +	mfg->last_opp = -1;
->>> +
->>> +	ret = mtk_mfg_power_on(&mfg->pd);
->>> +	clk_disable_unprepare(mfg->clk_eb);
->>> +	if (ret)
->>> +		return dev_err_probe(dev, ret, "Failed to power on MFG\n");
->>> +
->>> +	ret = mtk_mfg_init_shared_mem(mfg);
->>> +	if (ret) {
->>> +		dev_err(dev, "Couldn't initialize EB SRAM: %pe\n", ERR_PTR(ret));
->>> +		goto out;
->>> +	}
->>> +
->>> +	ret = mtk_mfg_read_opp_tables(mfg);
->>> +	if (ret) {
->>> +		dev_err(dev, "Error reading OPP tables from EB: %pe\n",
->>> +			ERR_PTR(ret));
->>> +		goto out;
->>> +	}
->>> +
->>> +	ret = mtk_mfg_init_clk_provider(mfg);
->>> +	if (ret)
->>> +		goto out;
->>> +
->>> +	ret = of_genpd_add_provider_simple(pdev->dev.of_node, &mfg->pd);
->>> +	if (ret) {
->>> +		ret = dev_err_probe(dev, ret, "Failed to add pmdomain provider\n");
->>> +		goto out;
->>> +	}
->>> +
->>> +	return 0;
->>> +
->>> +out:
->>> +	mtk_mfg_power_off(&mfg->pd);
->>> +	return ret;
->>> +}
->>
->> static void mtk_mfg_remove(struct platform_device *pdev)
->> {
->> 	struct mtk_mfg *mfg = dev_get_drvdata(&pdev->dev);
->>
->> 	of_genpd_del_provider(....)
->>
->> 	pm_genpd_remove(....)
->>
->> 	mtk_mfg_power_off(...)
+> > +
+> > +       return mtk_mfg_set_oppidx(mfg, state);
+> > +}
+> > +
+> > +static int mtk_mfg_power_on(struct generic_pm_domain *pd)
+> > +{
+> > +       struct mtk_mfg *mfg = mtk_mfg_from_genpd(pd);
+> > +       int ret;
+> > +
+> > +       ret = regulator_bulk_enable(mfg->variant->num_regulators,
+> > +                                   mfg->gpu_regs);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       ret = clk_prepare_enable(mfg->clk_eb);
+> > +       if (ret)
+> > +               goto err_disable_regulators;
+> > +
+> > +       ret = clk_bulk_prepare_enable(mfg->variant->num_clks, mfg->gpu_clks);
+> > +       if (ret)
+> > +               goto err_disable_eb_clk;
+> > +
+> > +       ret = mtk_mfg_eb_on(mfg);
+> > +       if (ret)
+> > +               goto err_disable_clks;
+> > +
+> > +       ret = mtk_mfg_power_control(mfg, true);
+> > +       if (ret)
+> > +               goto err_eb_off;
+> > +
+> > +       return 0;
+> > +
+> > +err_eb_off:
+> > +       mtk_mfg_eb_off(mfg);
+> > +err_disable_clks:
+> > +       clk_bulk_disable_unprepare(mfg->variant->num_clks, mfg->gpu_clks);
+> > +err_disable_eb_clk:
+> > +       clk_disable_unprepare(mfg->clk_eb);
+> > +err_disable_regulators:
+> > +       regulator_bulk_disable(mfg->variant->num_regulators, mfg->gpu_regs);
+> > +
+> > +       return ret;
+> > +}
 > 
-> Unconditional power_off will go poorly if the thing isn't powered
-> on at removal time, so I need to figure out something more clever.
+> [...]
 > 
-> Unfortunately, that something more clever isn't "dev_pm_genpd_is_on"
-> because that has a case where it will return false and then devres
-> kicks in and says hey you left your regulators on that's not cool.
-> 
-> I'll have to spend another day at the debug print factory until
-> I can figure out what's wrong there, and if I can't, then I guess
-> we'll add our own pd_on counting.
+> Note, I intend to have a bit closer look at this soon, but I just
+> observed the issue I pointed out above from my first quick look.
 
-I did suspect that unconditional poweroff could be possibly wreaking havoc, and
-I also knew that you'd see that in case, so I didn't write anything about my own
-suspects :-P
+I actually have a question about a mystery that has been puzzling
+me as I work on v5: when unloading the driver that uses the PD
+(panthor) and my driver using `modprobe -r panthor mtk_mfg_pmdomain`,
+I see that sometimes detach_dev is called with the pd status
+reportedly being off, but according to my own power-on/power-off
+counting I hacked in, it actually being on. It then proceeds to
+call my remove, which results in three splats from the regulator
+subsystem as the regulators weren't balanced with disables before
+they were freed, which isn't the main problem but more a symptom
+of the bigger problem that power_off and power_on calls don't
+appear to be balanced by the pmdomain subsystem when a driver is
+removed under certain circumstances.
 
-But then, good. Since we don't care about refcounting in this case, I guess that
-if there's no other way, eventually just a bool to track off/on state is enough.
-
-Cheers!
+Did I run into a core pmdomain bug here, or do I have to balance
+the power_on/off myself somehow in detach_dev? If the latter, I'm
+struggling to figure out how I can determine that the PD is still
+on without doing my own bookkeeping, as pmdomain core seems to clear
+these fields before my detach_dev gets to them :(
 
 > 
->>
->> 	mbox_free_channel(mfg->gf_mbox->ch);
->> 	mfg->gf_mbox->ch = NULL;
->>
->> 	mbox_free_channel(mfg->slp_mbox->ch);
->> 	mfg->slp_mbox->ch = NULL;
->>
->>
->> }
->>
->>> +
->>> +static struct platform_driver mtk_mfg_driver = {
->>> +	.driver = {
->>> +		.name = "mtk-mfg-pmdomain",
->>> +		.of_match_table = mtk_mfg_of_match,
->>> +	},
->>> +	.probe = mtk_mfg_probe,
->>
->> 	.remove = mtk_mfg_remove,
->>
->>> +};
->>> +module_platform_driver(mtk_mfg_driver);
->>> +
->>> +MODULE_AUTHOR("Nicolas Frattaroli <nicolas.frattaroli@collabora.com>");
->>> +MODULE_DESCRIPTION("MediaTek MFlexGraphics Power Domain Driver");
->>> +MODULE_LICENSE("GPL");
->>>
->>
->> There might be more, but for now, I'm done with this review round :-)
->>
->> Cheers,
->> Angelo
->>
+> Kind regards
+> Uffe
 > 
-> Thanks for the review. Assume all comments I didn't reply to (including
-> the big one) are acknowledged and will be addressed.
-> 
-> Kind regards,
-> Nicolas Frattaroli
-> 
-> 
+
+Kind regards,
+Nicolas Frattaroli
+
 
