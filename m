@@ -1,80 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FEE26E6E1;
-	Thu, 25 Sep 2025 13:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7443E18BC3D
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Sep 2025 13:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758807610; cv=none; b=qH5P+vwLPUZQRQhrcrDVu8trb2zIBAYkAy4/GLyEeINdbNdvBtWUbqYnugK628MDHh+pg2ANKa/cFrbt2iM92eCUXjObyySL15V7WTaSzQ0eWJOmyEp6W/Z45AzcpBWdU13JhZ39u45Pj1SNKMbw9sw0cecuJKpOFx8k5l6wYBo=
+	t=1758808021; cv=none; b=flRWqIsMZb/9HJiDPzFUev5CJ5HS8p8VF7dTn63Ml7AwmK499tWe9ODlXzNtpWxPU4j8b03vTwxh1PGT060CrSOHrXESoAz4DJitsrJlRPw+4ZD1xV8Is/gQmtcc/lzrQPUsVq13voN2B8qW8T9rPFeVeOKV8aw4/HQWDc7QbHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758807610; c=relaxed/simple;
-	bh=JnOwVIpGpVzxV4Y6Wdml0j81r/GFoPs26eqDZ9ooP6Q=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=UbPcJLHh8YPsG3oC+Y1Xnnea9Nad5bY5dph4hw6xwLosordqvJkQyhw3HZ2cbuHnsEoU7nwk+e23yW8pI2aFAzFZdn80NOFgU94Y/H7l4KJxP91lgcDzGEwbT27crD5uh9rPcX2znzVKhIpVkD6tCIk+mfgg0rFqlSasOlKljDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQP6B6mL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758808021; c=relaxed/simple;
+	bh=QaeuqU5IKDB5njifOO3nkb72eo9WDM+qBuUVP7jeOes=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=phZMkp2loSv5hD7PNfk29s8rnORjJOs5xOXI3mMXsTzPDsB8685DoSeM8E9oRetm+34X0L4scS+Wp6jlEkRYpDREhTu6+DfBXDIzyXgNVtDKU0Tf25xWND3Unn1BEcPnF0Z3tr9eV8h/979zT5fsnpQAwXxWL6Qn1SKcelFfHAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=vw0i9OJl; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQP6B6mL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43366C4CEF0;
-	Thu, 25 Sep 2025 13:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758807610;
-	bh=JnOwVIpGpVzxV4Y6Wdml0j81r/GFoPs26eqDZ9ooP6Q=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=SQP6B6mLiiOnGee5X4RiregiXVrJVROcuMAMU/yjJK/4Z8s6w5ZBfA+W4ktyWOyT1
-	 qWyKib5Sx9U8Ufqfunua1A1T9p0xrUVQZ83/OxIRJO32kIWMkT8ywyKTP33K8hhklx
-	 ko6idbSacmtrnYajNUP1od+TXaTcMPYBJvy/zsoxSVe9O3gFwZ/PyWWDFUsKvpTvOv
-	 q/+fXoRpldLw0drS6Bedvmbjspl2b6aZVRrMMra3AKTmDR7OgaBLLaZiGrvqlr+H7V
-	 9IV1mWn5wAhBTV5kPZj+gR894jLm1gJGITLznB3WOKJLi3uJjS2IqOqzk/w4VnmwVc
-	 oKKjH/zCrRskQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7111C39D0C21;
-	Thu, 25 Sep 2025 13:40:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vw0i9OJl"
+Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
+	by cmsmtp with ESMTPS
+	id 1f1Sv0c8waPqL1mJHvJvWM; Thu, 25 Sep 2025 13:47:00 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 1mJGv0xBsfjrX1mJGv7BiI; Thu, 25 Sep 2025 13:46:58 +0000
+X-Authority-Analysis: v=2.4 cv=ItcecK/g c=1 sm=1 tr=0 ts=68d547d2
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=TDP2S4RWD7HzL5QBIXWMeQ==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=QyXUC8HyAAAA:8 a=Ab0Lm24STF9_9LFwZLUA:9 a=QEXdDO2ut3YA:10 a=DY-CUodvXd4A:10
+ a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=wQH2YqZrAjDbl97Li4x21PKe2sTxB46h35TNYvK8pds=; b=vw0i9OJl5mtBvBE4C/EzxX87dD
+	ydfS5gFzKTek3rt2L9X1MMsJD9dFR3TQ7OYTLyCzTKNQ9cUtChg6y9eUxCWnzcDrqnXmiETB9mg7g
+	FzwGLriMpthnaMHSy/cz9jq3hS0q8C0yG/lzn8emnqnJYeXQNyyEZNUvSUKImI+QLCRAp7rVL21Fq
+	yL/ew+OGyWyW5LH940mUk4XMAiFwFlteMUTg+TrgvLUOBxrpUkT4kNidd13BLnEOlAMdChT2U0uBa
+	VNKuL4M/VPhh7kQTewN423cfHG31gBHWPk9F8DNLISY1Fi+wVfX1/ljxfQ8Cl5Ii1kt6XSyO1K0Zx
+	CSgSt/qw==;
+Received: from [83.214.222.209] (port=33238 helo=[192.168.1.104])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1v1mJC-00000004B6y-2Lzb;
+	Thu, 25 Sep 2025 08:46:55 -0500
+Message-ID: <92c454f7-9138-4de5-8857-92970a9cfcf0@embeddedor.com>
+Date: Thu, 25 Sep 2025 15:46:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2][next] Bluetooth: Avoid a couple dozen
  -Wflex-array-member-not-at-end warnings
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <175880760625.2984149.17268227498282852314.git-patchwork-notify@kernel.org>
-Date: Thu, 25 Sep 2025 13:40:06 +0000
-References: <aMAZ7wIeT1sDZ4_V@kspp>
-In-Reply-To: <aMAZ7wIeT1sDZ4_V@kspp>
-To: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+To: luiz.dentz@gmail.com, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aMAZ7wIeT1sDZ4_V@kspp>
+ <175880760625.2984149.17268227498282852314.git-patchwork-notify@kernel.org>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <175880760625.2984149.17268227498282852314.git-patchwork-notify@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 83.214.222.209
+X-Source-L: No
+X-Exim-ID: 1v1mJC-00000004B6y-2Lzb
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.104]) [83.214.222.209]:33238
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 17
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfIkWEw/w8UC8LNAnGbl5ONzb265BTsoFPM3T5Wih0o5DbtKEIzQbuxzTK7gRTCjrwHF2Mes8NvbDjCmQqQcL6arLZasaWOY7TpnDLQcAxbzjuhPS7PCx
+ vc9JI/AKbDZLy2w0/+dz+sihfmD99GKRi5zQ6OywgA2xZudOcHJI3AUkU6/GOr/V5oojQvv6BN8P/teJBP2rMHzl+c8I2AAEekbW+zKQpX4xcvLvlPCmASbN
 
-Hello:
 
-This patch was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
 
-On Tue, 9 Sep 2025 14:13:35 +0200 you wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
+On 9/25/25 15:40, patchwork-bot+bluetooth@kernel.org wrote:
+> Hello:
 > 
-> Use the __struct_group() helper to fix 31 instances of the following
-> type of warnings:
-> 
-> 30 net/bluetooth/mgmt_config.c:16:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 1 net/bluetooth/mgmt_config.c:22:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> [...]
+> This patch was applied to bluetooth/bluetooth-next.git (master)
+> by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
 
-Here is the summary with links:
-  - [v2,next] Bluetooth: Avoid a couple dozen -Wflex-array-member-not-at-end warnings
-    https://git.kernel.org/bluetooth/bluetooth-next/c/33c9dc51e8b4
+Thank you, Luiz!
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+-Gustavo
