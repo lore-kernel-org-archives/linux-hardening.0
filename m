@@ -1,52 +1,73 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB4D3148CD
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Sep 2025 18:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB9230CDBA
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Sep 2025 20:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758826652; cv=none; b=NLpHuyYI9A/KxWHl1ADp1883Wtaat1xhDG0EzEyrVALaE5Yq2ghgQvn60hFz5vX4dQZWJpVCn40ArR7EGCijjvu/77d5816oj+awfWuWEbapaWY8wgqU+/Nz7CRwnslTB8Z/76jr9w67TiJ1ENDPPVm26gPuAcxaqkxZ9hdoofE=
+	t=1758831120; cv=none; b=k3EkeNqAPWILqV6wYwPzDdYyMaQ6Ph70K0MkjczPVK7utI7SqM3j7rMRU7hGPRzQwZ3ZDgd+CkmqS0UYuL34VU/+R7rmHRvh2hQbQ7OSOEu2l9voLgnuRjbu01Vshhs8PP7/TrrvQJr9/g0qkMj22WtvFtB5EohErnMa/TnFj7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758826652; c=relaxed/simple;
-	bh=IT1T/CNTfmVdSh+PUFKd5FSqcVyO0aW3BPVmNwmdlxQ=;
+	s=arc-20240116; t=1758831120; c=relaxed/simple;
+	bh=h3RwPtc4sBXiMR1giqI+uaroN4r1V3AkFS5O//etA6o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FyZlxecfrQ6dGZfpkVHOKqmYueqCRljxumNlEI6M2YiB+/ZEua6s/Nq/cficJA4thXZBwlyK8ztjaKLegdANr3CdXKjOfG/n9+OxA+L4MHuGM1OV/KgDOuMEAvJDQF4g6mu327TkK0NSPEZWDDMBv/xVURStqu/ntviroW2OWlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=i5HQtdbH; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=oCxUaGmB6YiYT4I/jbZiIaLw+BZXHDmzpmjsXoQHe4ryNeLLVLwvfWkEd4DLbkx9XhdVM8JFzvntWtWrizxhUafRxNaIL5uGSLY7GGroWiuER266gGX6FVxwJ6p7gkiPpCItC05JEy1GCxmmG8t+/6qk7Wo0pQ3ADfXEwGv3abk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A9aFDeTF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="i5HQtdbH"
-Received: from eig-obgw-5004b.ext.cloudfilter.net ([10.0.29.208])
-	by cmsmtp with ESMTPS
-	id 1bHAv5TcMZx2i1r9mvw0aN; Thu, 25 Sep 2025 18:57:30 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 1r9kvH0boBc9y1r9kv1lXe; Thu, 25 Sep 2025 18:57:28 +0000
-X-Authority-Analysis: v=2.4 cv=ZcMdNtVA c=1 sm=1 tr=0 ts=68d59098
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=kbmabLdzh3uUJaiPGAIkPw==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8 a=EiXV_-hVxRXBCySLXD0A:9 a=QEXdDO2ut3YA:10
- a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=JyfJbOr4FPBdl+V+aO2gF9yBV+nlou8/xVouFbJmoYo=; b=i5HQtdbHdtH3vcVpqbjjn2ie8U
-	AWcvRl2YSGLCnC8cV6XqBsEJdnlpnAvjUrFErksi/KCc8KNonWXPxEwobhD9e8T2RlVjVMRT79lHk
-	oR4v5EqdjbxbONQge8+Xd3FNFf9UuKPvKu48QrCExjMQdSI8yeKRYYopGwUSnbjEH/fqqa1hPBEJB
-	dsb5oCZV8T/k9uBRwisgb3wSqr7jJKjhOgoouzJul35rNGpQSZb88dRjAIISc4dMVWGrp/SJBR6gp
-	h6IdV2vh7T6/zgTsGmZpy900iL7eBZkP2XOgLTyfiRpRm74h6iowDE6XmhlSMEv0Cbw146oLujSpt
-	P6+8+VBQ==;
-Received: from [83.214.221.223] (port=45832 helo=[192.168.1.104])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1v1r9g-00000000TKO-01Gd;
-	Thu, 25 Sep 2025 13:57:24 -0500
-Message-ID: <7b1342ce-0f30-4481-bf3b-ef3c92b9bcf8@embeddedor.com>
-Date: Thu, 25 Sep 2025 20:57:07 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A9aFDeTF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758831117;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BbdNHkZwL7Xvs1kb7Vz3lIvaavTg0vqw+U34Fq/laSM=;
+	b=A9aFDeTF4npcu3ZRqZTy+613499S5WTNvy4nASQbRz+C515ohjB3lRK4JD9k3sQsW5cOIU
+	bptpvS272pJMryW0WAasO91XCw1hdQEhxwEkN9zednC3ahmFBFi8ykBDccaOdssqdg12wi
+	cNapLtxhMEjxwgl7dLd1GSHAGFyHi+I=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-490-Z-cH-zJNPc2bBHM02a5pag-1; Thu, 25 Sep 2025 16:11:56 -0400
+X-MC-Unique: Z-cH-zJNPc2bBHM02a5pag-1
+X-Mimecast-MFC-AGG-ID: Z-cH-zJNPc2bBHM02a5pag_1758831115
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-45b990eb77cso8698885e9.0
+        for <linux-hardening@vger.kernel.org>; Thu, 25 Sep 2025 13:11:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758831114; x=1759435914;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BbdNHkZwL7Xvs1kb7Vz3lIvaavTg0vqw+U34Fq/laSM=;
+        b=ps8tYYiPsMeNghcAnC0HXCntSXepE3J8qqbTcCLDYEJQklPPehy1IPY9QP6j7q61JH
+         6JEZBikrn8Y89ryDIwUXIlrDpQDhWnNN9iEr68NIw274ZA0ZDUZL7H4ZjLzX7RNBSilG
+         vaBOtp27JBb4Zos//Dz9nmYVA12sUSDxSPXJkUWWjJPXG00wopXk+kRreGPD8e/GFw3v
+         3wvEICPnbh35ruOBVcZ4mgw/X8pg/5isTaJ7Fbcl55kMLZqQbLyKU0zHYquTyyRhBOpD
+         o5KubT1v/T9z0mwg2uY5VblXrRMZ0T4V9UervcuJ87rALVme1jw0bXB5QJX52MqEk8Lx
+         nVpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZNwTRIjkIUKAeqASZ/sHQ+gGKKOp3UFN2svXVTrDbeKAp6i6asMyBapFVY2VSZDEmAPy2rPUQwo9w+pYdc6I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxs8dEfy2Y6LbfSwmFttJq2Q/VWj20rHOhMixVwr0bxes7q/q/v
+	Kc09YetpCWITzrO7u5/puOQyHg6VfpuSOOzw6JIUNsGoRlUN9oWZo4cblP7rcOkrYxg0c5z/2nH
+	G4DJ5SjdJ3w3gL1ni3hZKV19eszW/lZ58LHxfartU7h9buH5mpoUA5vJNIqSWyj6GxaM6yQ==
+X-Gm-Gg: ASbGncuQlPJCy5Nkv6Gt4U9SGCCgN3Al4XUNT0xfbH+o2lmzg4Rg90676JWAT46t3Qd
+	G73326tVqp/5OOTVMs0Wbk7cQ3q3qts2LBzIX3XSo0AyTDERYktgctevPW/iQKO2C0H6By+efkF
+	7qgfd+o22gHrLm1urWyFg4W6yZHO+0/ArFZeosv1lgqpdjAF/7GeMVS5RJXcgbpqelgX+UyQeF8
+	yDjXwsnkFlnl6Vznk0cll1SDMNUUw1v+OKTYq+kxYsqtk+01oAhoU6ES8HUgNEFS0ZVo/TCvpva
+	fCndPUDLNP8R5+V1GEdKIljolYJbKmgPH68csWP36vTad8RGjtTz1wIUJ2cViFO0iOmOmpoyvZU
+	1Evwi15HAPjeWdWPMvdK9MnGcUF6Frv3EV3lykcs1ElGV0Qz7ZXqRWiBFWuc3RR+JOsUf
+X-Received: by 2002:a05:600c:4ecc:b0:46e:33ed:bca4 with SMTP id 5b1f17b1804b1-46e33edbe6fmr36930185e9.15.1758831114661;
+        Thu, 25 Sep 2025 13:11:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGEhVhCGcgmO1k+G3XLxgUOwBHZ0rAO9DXf37klvFdy0hgaj1Ui37fjLWrqz9lgbSvmF4VzUg==
+X-Received: by 2002:a05:600c:4ecc:b0:46e:33ed:bca4 with SMTP id 5b1f17b1804b1-46e33edbe6fmr36929885e9.15.1758831114203;
+        Thu, 25 Sep 2025 13:11:54 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f3f:f800:c101:5c9f:3bc9:3d08? (p200300d82f3ff800c1015c9f3bc93d08.dip0.t-ipconnect.de. [2003:d8:2f3f:f800:c101:5c9f:3bc9:3d08])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e2a996bf1sm90335925e9.1.2025.09.25.13.11.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Sep 2025 13:11:53 -0700 (PDT)
+Message-ID: <1497a41d-3e43-4654-a28a-2049ab4c4c0b@redhat.com>
+Date: Thu, 25 Sep 2025 22:11:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,57 +75,198 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "scsi: qla2xxx: Fix memcpy() field-spanning write
- issue"
-To: John Meneghini <jmeneghi@redhat.com>, bgurney@redhat.com,
- martin.petersen@oracle.com
-Cc: axboe@kernel.dk, emilne@redhat.com, gustavoars@kernel.org, hare@suse.de,
- hch@lst.de, james.smart@broadcom.com, kbusch@kernel.org, kees@kernel.org,
- linux-hardening@vger.kernel.org, linux-nvme@lists.infradead.org,
- linux-scsi@vger.kernel.org, njavali@marvell.com, sagi@grimberg.me
-References: <yq1zfajqpec.fsf@ca-mkp.ca.oracle.com>
- <20250925130729.776904-1-jmeneghi@redhat.com>
+Subject: Re: [RFC][PATCH v3 09/16] genirq/irqdesc: Have nr_irqs as non-static
+To: Eugen Hristev <eugen.hristev@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, andersson@kernel.org,
+ pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net, mhocko@suse.com
+Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+ jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
+ <20250912150855.2901211-10-eugen.hristev@linaro.org> <87cy7q9k8y.ffs@tglx>
+ <87a52u9jyl.ffs@tglx> <8df2cf28-c15e-4692-a127-6a5c966a965e@linaro.org>
+ <2bd45749-e483-45ea-9c55-74c5ba15b012@redhat.com> <87v7lh891c.ffs@tglx>
+ <95ff36c2-284a-46ba-984b-a3286402ebf8@redhat.com>
+ <24d6a51d-f5f8-44d7-94cb-58b71ebf473a@linaro.org>
+ <7f4aa4c6-7b77-422b-9f7a-d01530c54bff@redhat.com> <87segk9az5.ffs@tglx>
+ <f8d3c2d4-8399-4169-8527-3c87922f2ef1@redhat.com> <87jz1w88zq.ffs@tglx>
+ <c3ab4a21-183f-495a-b3b5-cc74b392eebc@linaro.org>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <c3ab4a21-183f-495a-b3b5-cc74b392eebc@linaro.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: e5i8DPexEbgW2zb_bVu2NRYIJ5CxMuVxy1HfpcbkpUc_1758831115
+X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20250925130729.776904-1-jmeneghi@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 83.214.221.223
-X-Source-L: No
-X-Exim-ID: 1v1r9g-00000000TKO-01Gd
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.104]) [83.214.221.223]:45832
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfAO/2aVS6lYRQ5IqiTRG4QuASx97C5NerD7sbH8lgNpRL+w0HEvwSpU7AsveQVvMQwA6d+suOapJVHI6w+c9bXfXQSUK+Tx1vQpjmpj6z7g2aqdOe9Jg
- ORxXxMqThC2kCSrPSEGxfxz5qb2lZTggxFp4hidLuKgbV8l8ONpi2cFc4Mxl6bz4aMjmNSNDZvejV6iztlMd8tusJgZV3mlciHMRAxNNt241t1wjZVuqo8q3
 
-
-
-On 9/25/25 15:07, John Meneghini wrote:
-> This reverts commit 6f4b10226b6b1e7d1ff3cdb006cf0f6da6eed71e.
+On 18.09.25 15:53, Eugen Hristev wrote:
 > 
-> We've been testing this patch and it turns out there is a significant
-> bug here. This leaks memory and causes a driver hang.
 > 
-> Link:
-> https://lore.kernel.org/linux-scsi/yq1zfajqpec.fsf@ca-mkp.ca.oracle.com/
+> On 9/18/25 11:23, Thomas Gleixner wrote:
+>> On Wed, Sep 17 2025 at 21:03, David Hildenbrand wrote:
+>>>> As this is specific for the compiled kernel version you can define an
+>>>> extensible struct format for the table.
+>>>>
+>>>> struct inspect_entry {
+>>>> 	unsigned long	properties;
+>>>>           unsigned int	type;
+>>>>           unsigned int	id;
+>>>>           const char	name[$MAX_NAME_LEN];
+>>>> 	unsigned long	address;
+>>>>           unsigned long	length;
+>>>>           ....
+>>>> };
+>>>>
+>>>> @type
+>>>>          refers either to a table with type information, which describes
+>>>>          the struct in some way or just generate a detached compile time
+>>>>          description.
+>>>>
+>>>> @id
+>>>>          a unique id created at compile time or via registration at
+>>>>          runtime. Might not be required
+>>>
+>>> We discussed that maybe one would want some kind of a "class"
+>>> description. For example we might have to register one pgdat area per
+>>> node. Giving each one a unique name might be impractical / unreasonable.
+>>>
+>>> Still, someone would want to select / filter out all entries of the same
+>>> "class".
+>>>
+>>> Just a thought.
+>>
+>> Right. As I said this was mostly a insta brain dump to start a
+>> discussion. Seems it worked :)
+>>
+>>>> @properties:
+>>>>
+>>>>           A "bitfield", which allows to mark this entry as (in)valid for a
+>>>>           particular consumer.
+>>>>
+>>>>           That obviously requires to modify these properties when the
+>>>>           requirements of a consumer change, new consumers arrive or new
+>>>>           producers are added, but I think it's easier to do that at the
+>>>>           producer side than maintaining filters on all consumer ends
+>>>>           forever.
+>>>
+>>> Question would be if that is not up to a consumer to decide ("allowlist"
+>>> / filter) by class or id, stored elsewhere.
+>>
+>> Yes, I looked at it the wrong way round. We should leave the filtering
+>> to the consumers. If you use allow lists, then a newly introduced class
+>> won't be automatically exposed everywhere.
+>>
+>> Thanks,
+>>
+>>          tglx
 > 
-> Signed-off-by: John Meneghini <jmeneghi@redhat.com>
+> 
+> So, one direction to follow from this discussion is to have the
+> inspection entry and inspection table for all these entries.
+> Now, one burning question open for debate, is, should this reside into mm ?
+> mm/inspect.h would have to define the inspection entry struct, and some
+> macros to help everyone add an inspection entry.
+> E.g. INSPECTION_ENTRY(my ptr, my size);
+> and this would be used all over the kernel wherever folks want to
+> register something.
 
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+If we're moving this to kernel/ or similar I'd suggest to not call this 
+only "inspect" but something that somehow contains the term "mem".
 
-Thanks!
--Gustavo
+"mem-inspect.h" ?
+
+
+> Now the second part is, where to keep all the inspection drivers ?
+> Would it make sense to have mm/inspection/inspection_helpers.h which
+> would keep the table start/end, some macros to traverse the tables, and
+> this would be included by the inspection drivers.
+> inspection drivers would then probe via any mechanism, and tap into the
+> inspection table.
+
+Good question. I think some examples of alternatives might help to 
+driver that discussion.
+
+> I am thinking that my model with a single backend can be enhanced by
+> allowing any inspection driver to access it. And further on, each
+> inspection driver would register a notifier to be called when an entry
+> is being created or not. This would mean N possible drivers connected to
+> the table at the same time. ( if that would make sense...)
+
+Yeah, I think some notifier mechanism is what we want.
+
+> Would it make sense for pstore to have an inspection driver that would
+> be connected here to get different kinds of stuff ?
+
+Something for the pstore folks to answer :)
+
+> Would it make sense to have some debugfs driver that would just expose
+> to user space different regions ? Perhaps something similar with
+> /proc/kcore but not the whole kernel memory rather only the exposed
+> inspection entries.
+
+Definetly, this is what I previously mentioned. Maybe we would only 
+indicate region metadata and actual access to regions would simply 
+happen through /proc/kcore if someone wants to dump data from user space.
+
+> Now, for the dynamic memory, e.g. memblock_alloc and friends ,
+> would it be interesting to have a flag e.g. MEMBLOCK_INSPECT, that would
+> be used when calling it, and in the background, this would request an
+> inspection_entry being created ? Or it makes more sense to call some
+> function like inspect_register as a different call directly at the
+> allocation point ?
+
+We'd probably want some interface to define the metadata 
+(name/class/whatever), a simple flag likely will not do, right?
+
+-- 
+Cheers
+
+David / dhildenb
 
