@@ -1,182 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BE686353;
-	Thu, 25 Sep 2025 12:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE4A1B4244
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Sep 2025 13:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758802952; cv=none; b=hhUEW/4dZQqD6QF73fgZnGZO00cJH1Ap8vH+2uYjKa/Y1b/aOtoGKm1FPmANT4r6aDumc6+cq88mpg7++lLSJ7FRmAbFmAS/0PqzCRTndu7n0EgGEuUxizLh7XepxkWN0w+CVOFsgB4g+fb9GcQ8e8j6VIlHNEKER2v/3ivvV54=
+	t=1758805666; cv=none; b=PxGR4t/g8cLLNeGeLYi4CDLP6DcQc9LneKQYU90pj9U37NdoAWmiOzfJWHjMZAlLTQjMOQ39sl3NhBN8W2elFCImnWvakNSoNwybHZum47K4zfeRthB4wLXb+8rlVC5fLf/sQrmkgWaInj3LeslRPRXTTggOIKOsThny5UOwVAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758802952; c=relaxed/simple;
-	bh=Tm+4joIsAVhoOGpHV0IfGhWDLFgBiLx2fFOsiG1Cw1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NTwrFXDNzHGb4BGasJ7H0zKCwGKx2SLQeA9p05Lo5AnahcN40iWZMsgvdE4LFlpW6ye7bMkHgrd9iLZI5m3D61P48FRgq2VxU5db2RsPfBNCx95rDconeAbeCQ2ROqqSbqASs8xtIQDAU8sRZbVoeCWDPSmbqeZDVmIGVg2h7CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kj3+QrXU; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1758805666; c=relaxed/simple;
+	bh=AXgg6aVQhrKS0z+6GonYS5IUww9XN7DP7viYWSWFnfU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-type; b=Dzx/c2xfaKt+6bJ/XPUop3yGQ8yRTTmEp9pixDTmX+zudj/uDKFKQUqhJDNZz/Y43CFK7FzEp1g8OFjCfKmBhOanj8m4+yVq2pKWMR1ZosoIR8tT62MJ1V6Jn7tmG7twQpnDP0eRQ5ssdGS3sW4npAX4oqzU30+z3F/iEXGqUuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BigewqUG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kj3+QrXU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758802951; x=1790338951;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Tm+4joIsAVhoOGpHV0IfGhWDLFgBiLx2fFOsiG1Cw1E=;
-  b=Kj3+QrXUjm4bP89idtM3S5Q9Jiaud8MXl/L9FX35Z3lVcJFRpCfai0BN
-   fcxR7wMpnsivkgzhLvYik2Mp5F0tR7PNsGweZjcrbh6Chbum1gp9A6Fwz
-   FdgUmlS5u2iPa1ILn26QSUd1JVFCnT+/Wd3Ew1UiqgrXNVaR/xCobQeLg
-   HMcxgy48rksewicC05vnhgehk1v9aDRhYjC0hEcTj018e72oIffzkZgyb
-   FjPw5hk3bwrdwqs5b7SmV+m5wnN6MUgMRGVEta33PD3g35qroaGsV9Qs1
-   XuQJbAjSIJ8uQPXGbhzlapQAh8orlQx/n0RBgfwLIxKs176oj/fiSYhBK
-   w==;
-X-CSE-ConnectionGUID: pjVdzTQYRuCgcNKFDjLcEA==
-X-CSE-MsgGUID: BYfgH5AXQHKuetF3jjCNLQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11563"; a="60330596"
-X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
-   d="scan'208";a="60330596"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 05:22:30 -0700
-X-CSE-ConnectionGUID: wREnvNLfTMWuWHu54WXTbw==
-X-CSE-MsgGUID: 2WHOhuASRYGVg79ikjlZhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
-   d="scan'208";a="181711175"
-Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 25 Sep 2025 05:22:24 -0700
-Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v1kzN-0005DB-2S;
-	Thu, 25 Sep 2025 12:22:21 +0000
-Date: Thu, 25 Sep 2025 20:22:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manikanta Guntupalli <manikanta.guntupalli@amd.com>, git@amd.com,
-	michal.simek@amd.com, alexandre.belloni@bootlin.com,
-	Frank.Li@nxp.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, pgaj@cadence.com,
-	wsa+renesas@sang-engineering.com, tommaso.merciai.xr@bp.renesas.com,
-	arnd@arndb.de, quic_msavaliy@quicinc.com, Shyam-sundar.S-k@amd.com,
-	sakari.ailus@linux.intel.com, billy_tsai@aspeedtech.com,
-	kees@kernel.org, gustavoars@kernel.org,
-	jarkko.nikula@linux.intel.com, jorge.marques@analog.com,
-	linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, radhey.shyam.pandey@amd.com,
-	srinivas.goud@amd.com, shubhrajyoti.datta@amd.com,
-	manion05gk@gmail.com,
-	Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-Subject: Re: [PATCH V7 3/4] i3c: master: Add endianness support for
- i3c_readl_fifo() and i3c_writel_fifo()
-Message-ID: <202509252022.QvbNmJil-lkp@intel.com>
-References: <20250923154551.2112388-4-manikanta.guntupalli@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BigewqUG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758805663;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MkQYmrCxrc8CnKCxeo6oVs5/RyiJjlpdil5P3w+AxXI=;
+	b=BigewqUG+UpsOO7yi08r2DdIoSN+LXM0xGI4AuJvkVUZTGurEKsVT2oSRMh4cbm/wDGKIz
+	BFnRLueICZncj9P20m7W9CPxM2L5HO07R5lgDIRtP+qK67qA3c+Wh9kST+Ntp4qv54DbdB
+	be/gpye2kiAH/wXm0AWE4xrUVY3tNHc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-263-ZYqVUPb8NOaGbku-hYrT1g-1; Thu,
+ 25 Sep 2025 09:07:40 -0400
+X-MC-Unique: ZYqVUPb8NOaGbku-hYrT1g-1
+X-Mimecast-MFC-AGG-ID: ZYqVUPb8NOaGbku-hYrT1g_1758805658
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9726E1800286;
+	Thu, 25 Sep 2025 13:07:37 +0000 (UTC)
+Received: from jmeneghi-thinkpadp1gen7.rmtusnh.csb (unknown [10.22.81.200])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E45BB180035C;
+	Thu, 25 Sep 2025 13:07:32 +0000 (UTC)
+From: John Meneghini <jmeneghi@redhat.com>
+To: martin.petersen@oracle.com
+Cc: axboe@kernel.dk,
+	bgurney@redhat.com,
+	emilne@redhat.com,
+	gustavoars@kernel.org,
+	hare@suse.de,
+	hch@lst.de,
+	james.smart@broadcom.com,
+	jmeneghi@redhat.com,
+	kbusch@kernel.org,
+	kees@kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
+	linux-scsi@vger.kernel.org,
+	njavali@marvell.com,
+	sagi@grimberg.me
+Subject: [PATCH] Revert "scsi: qla2xxx: Fix memcpy() field-spanning write issue"
+Date: Thu, 25 Sep 2025 09:07:29 -0400
+Message-ID: <20250925130729.776904-1-jmeneghi@redhat.com>
+In-Reply-To: <yq1zfajqpec.fsf@ca-mkp.ca.oracle.com>
+References: <yq1zfajqpec.fsf@ca-mkp.ca.oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250923154551.2112388-4-manikanta.guntupalli@amd.com>
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Hi Manikanta,
+This reverts commit 6f4b10226b6b1e7d1ff3cdb006cf0f6da6eed71e.
 
-kernel test robot noticed the following build warnings:
+We've been testing this patch and it turns out there is a significant
+bug here. This leaks memory and causes a driver hang.
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on linus/master arnd-asm-generic/master v6.17-rc7 next-20250924]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Link:
+https://lore.kernel.org/linux-scsi/yq1zfajqpec.fsf@ca-mkp.ca.oracle.com/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Manikanta-Guntupalli/dt-bindings-i3c-Add-AMD-I3C-master-controller-support/20250923-234944
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250923154551.2112388-4-manikanta.guntupalli%40amd.com
-patch subject: [PATCH V7 3/4] i3c: master: Add endianness support for i3c_readl_fifo() and i3c_writel_fifo()
-config: mips-randconfig-r123-20250925 (https://download.01.org/0day-ci/archive/20250925/202509252022.QvbNmJil-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project cafc064fc7a96b3979a023ddae1da2b499d6c954)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250925/202509252022.QvbNmJil-lkp@intel.com/reproduce)
+Signed-off-by: John Meneghini <jmeneghi@redhat.com>
+---
+ drivers/scsi/qla2xxx/qla_def.h  | 10 ++++------
+ drivers/scsi/qla2xxx/qla_isr.c  | 17 +++++++++--------
+ drivers/scsi/qla2xxx/qla_nvme.c |  2 +-
+ drivers/scsi/qla2xxx/qla_os.c   |  5 ++---
+ 4 files changed, 16 insertions(+), 18 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509252022.QvbNmJil-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
-   drivers/i3c/master/i3c-master-cdns.c: note: in included file:
->> drivers/i3c/master/../internals.h:53:25: sparse: sparse: incorrect type in argument 1 (different base types) @@     expected unsigned int [usertype] val @@     got restricted __be32 [usertype] @@
-   drivers/i3c/master/../internals.h:53:25: sparse:     expected unsigned int [usertype] val
-   drivers/i3c/master/../internals.h:53:25: sparse:     got restricted __be32 [usertype]
->> drivers/i3c/master/../internals.h:53:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
-   drivers/i3c/master/../internals.h:53:25: sparse:     expected void volatile [noderef] __iomem *mem
-   drivers/i3c/master/../internals.h:53:25: sparse:     got unsigned int *
->> drivers/i3c/master/../internals.h:78:31: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
-   drivers/i3c/master/../internals.h:78:31: sparse:     expected void const volatile [noderef] __iomem *mem
-   drivers/i3c/master/../internals.h:78:31: sparse:     got unsigned int *
->> drivers/i3c/master/../internals.h:78:31: sparse: sparse: cast to restricted __be32
->> drivers/i3c/master/../internals.h:78:31: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
-   drivers/i3c/master/../internals.h:78:31: sparse:     expected void const volatile [noderef] __iomem *mem
-   drivers/i3c/master/../internals.h:78:31: sparse:     got unsigned int *
->> drivers/i3c/master/../internals.h:78:31: sparse: sparse: cast to restricted __be32
-
-vim +53 drivers/i3c/master/../internals.h
-
-    31	
-    32	/**
-    33	 * i3c_writel_fifo - Write data buffer to 32bit FIFO
-    34	 * @addr: FIFO Address to write to
-    35	 * @buf: Pointer to the data bytes to write
-    36	 * @nbytes: Number of bytes to write
-    37	 * @endian: Endianness of FIFO write
-    38	 */
-    39	static inline void i3c_writel_fifo(void __iomem *addr, const void *buf,
-    40					   int nbytes, enum i3c_fifo_endian endian)
-    41	{
-    42		if (endian)
-    43			writesl_be(addr, buf, nbytes / 4);
-    44		else
-    45			writesl(addr, buf, nbytes / 4);
-    46	
-    47		if (nbytes & 3) {
-    48			u32 tmp = 0;
-    49	
-    50			memcpy(&tmp, buf + (nbytes & ~3), nbytes & 3);
-    51	
-    52			if (endian)
-  > 53				writel_be(tmp, addr);
-    54			else
-    55				writel(tmp, addr);
-    56		}
-    57	}
-    58	
-    59	/**
-    60	 * i3c_readl_fifo - Read data buffer from 32bit FIFO
-    61	 * @addr: FIFO Address to read from
-    62	 * @buf: Pointer to the buffer to store read bytes
-    63	 * @nbytes: Number of bytes to read
-    64	 * @endian: Endianness of FIFO read
-    65	 */
-    66	static inline void i3c_readl_fifo(const void __iomem *addr, void *buf,
-    67					  int nbytes, enum i3c_fifo_endian endian)
-    68	{
-    69		if (endian)
-    70			readsl_be(addr, buf, nbytes / 4);
-    71		else
-    72			readsl(addr, buf, nbytes / 4);
-    73	
-    74		if (nbytes & 3) {
-    75			u32 tmp;
-    76	
-    77			if (endian)
-  > 78				tmp = readl_be(addr);
-    79			else
-    80				tmp = readl(addr);
-    81	
-    82			memcpy(buf + (nbytes & ~3), &tmp, nbytes & 3);
-    83		}
-    84	}
-    85	
-
+diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
+index 604e66bead1e..cb95b7b12051 100644
+--- a/drivers/scsi/qla2xxx/qla_def.h
++++ b/drivers/scsi/qla2xxx/qla_def.h
+@@ -4890,7 +4890,9 @@ struct purex_item {
+ 			     struct purex_item *pkt);
+ 	atomic_t in_use;
+ 	uint16_t size;
+-	uint8_t iocb[] __counted_by(size);
++	struct {
++		uint8_t iocb[64];
++	} iocb;
+ };
+ 
+ #include "qla_edif.h"
+@@ -5099,6 +5101,7 @@ typedef struct scsi_qla_host {
+ 		struct list_head head;
+ 		spinlock_t lock;
+ 	} purex_list;
++	struct purex_item default_item;
+ 
+ 	struct name_list_extended gnl;
+ 	/* Count of active session/fcport */
+@@ -5127,11 +5130,6 @@ typedef struct scsi_qla_host {
+ #define DPORT_DIAG_IN_PROGRESS                 BIT_0
+ #define DPORT_DIAG_CHIP_RESET_IN_PROGRESS      BIT_1
+ 	uint16_t dport_status;
+-
+-	/* Must be last --ends in a flexible-array member. */
+-	TRAILING_OVERLAP(struct purex_item, default_item, iocb,
+-		uint8_t __default_item_iocb[QLA_DEFAULT_PAYLOAD_SIZE];
+-	);
+ } scsi_qla_host_t;
+ 
+ struct qla27xx_image_status {
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index 4559b490614d..c4c6b5c6658c 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -1077,17 +1077,17 @@ static struct purex_item *
+ qla24xx_alloc_purex_item(scsi_qla_host_t *vha, uint16_t size)
+ {
+ 	struct purex_item *item = NULL;
++	uint8_t item_hdr_size = sizeof(*item);
+ 
+ 	if (size > QLA_DEFAULT_PAYLOAD_SIZE) {
+-		item = kzalloc(struct_size(item, iocb, size), GFP_ATOMIC);
++		item = kzalloc(item_hdr_size +
++		    (size - QLA_DEFAULT_PAYLOAD_SIZE), GFP_ATOMIC);
+ 	} else {
+ 		if (atomic_inc_return(&vha->default_item.in_use) == 1) {
+ 			item = &vha->default_item;
+ 			goto initialize_purex_header;
+ 		} else {
+-			item = kzalloc(
+-				struct_size(item, iocb, QLA_DEFAULT_PAYLOAD_SIZE),
+-				GFP_ATOMIC);
++			item = kzalloc(item_hdr_size, GFP_ATOMIC);
+ 		}
+ 	}
+ 	if (!item) {
+@@ -1127,16 +1127,17 @@ qla24xx_queue_purex_item(scsi_qla_host_t *vha, struct purex_item *pkt,
+  * @vha: SCSI driver HA context
+  * @pkt: ELS packet
+  */
+-static struct purex_item *
+-qla24xx_copy_std_pkt(struct scsi_qla_host *vha, void *pkt)
++static struct purex_item
++*qla24xx_copy_std_pkt(struct scsi_qla_host *vha, void *pkt)
+ {
+ 	struct purex_item *item;
+ 
+-	item = qla24xx_alloc_purex_item(vha, QLA_DEFAULT_PAYLOAD_SIZE);
++	item = qla24xx_alloc_purex_item(vha,
++					QLA_DEFAULT_PAYLOAD_SIZE);
+ 	if (!item)
+ 		return item;
+ 
+-	memcpy(&item->iocb, pkt, QLA_DEFAULT_PAYLOAD_SIZE);
++	memcpy(&item->iocb, pkt, sizeof(item->iocb));
+ 	return item;
+ }
+ 
+diff --git a/drivers/scsi/qla2xxx/qla_nvme.c b/drivers/scsi/qla2xxx/qla_nvme.c
+index 065f9bcca26f..316594aa40cc 100644
+--- a/drivers/scsi/qla2xxx/qla_nvme.c
++++ b/drivers/scsi/qla2xxx/qla_nvme.c
+@@ -1308,7 +1308,7 @@ void qla2xxx_process_purls_iocb(void **pkt, struct rsp_que **rsp)
+ 
+ 	ql_dbg(ql_dbg_unsol, vha, 0x2121,
+ 	       "PURLS OP[%01x] size %d xchg addr 0x%x portid %06x\n",
+-	       item->iocb[3], item->size, uctx->exchange_address,
++	       item->iocb.iocb[3], item->size, uctx->exchange_address,
+ 	       fcport->d_id.b24);
+ 	/* +48    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+ 	 * ----- -----------------------------------------------
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 98a5c105fdfd..9a2f328200ab 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -6459,10 +6459,9 @@ void qla24xx_process_purex_rdp(struct scsi_qla_host *vha,
+ void
+ qla24xx_free_purex_item(struct purex_item *item)
+ {
+-	if (item == &item->vha->default_item) {
++	if (item == &item->vha->default_item)
+ 		memset(&item->vha->default_item, 0, sizeof(struct purex_item));
+-		memset(&item->vha->__default_item_iocb, 0, QLA_DEFAULT_PAYLOAD_SIZE);
+-	} else
++	else
+ 		kfree(item);
+ }
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.51.0
+
