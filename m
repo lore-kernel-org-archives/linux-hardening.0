@@ -1,122 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D38622D4F9
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Sep 2025 17:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7139930DEC4
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Sep 2025 17:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758819766; cv=none; b=PVbqZWBTG6z6lf899ggq7vEfK4R3Gpt7F70iLTXbBvK/yLFZJiLXK/YUsYm1agLtMF+RA8gnrmLl7e2w8rq3WddJloLnBkva/1bKtstgprN3YZ2NGINPl0CVDVRku5GAMohPedsiCaQrqepyCINEKvZWbdo6y7oDh6ko7Ev8ofI=
+	t=1758820999; cv=none; b=FQ5ArzOazoVxS9CD14u8m0d5xzqmnDOsY2m7p6T+02HjfdzTVOp7csyYvQCmzJJG7VAyZa8Ld9kNKtITCI5oECuM0XsMTX2Qtp0XePQK323l7UdDgQN2i7ZcLkVuSHEiiiFPj9yh+gwkGSEZkovcS8szu15RMcDc/hR2o9u8XlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758819766; c=relaxed/simple;
-	bh=eA0tUDThErSrjVbJGEhqmG2sB/xJpKZekH2BLeva/34=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OHkFBej39EZi+LDtSIJYtZ/IokxR9wJ1MwL8wQuOyu2+uhI0seWHLcZQNrWxsAWHdhdt/cCoyBCkhrYAmfcnm4/efSobjRlM2ZJ6duYeWZ88ZBFPWNjwq+8zmSu6VkpiUtRkMqU95FDTnlbyxixptQBuhFsO+UNpNPVqxfFX+w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eAGWfoOo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1758820999; c=relaxed/simple;
+	bh=qWVXhderdwzhwj5vUlHKhzn+3gXZQ/G0dJq0esuJVGs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hMZ9CcV24Nw9Scx+MTAACcHmFfaJ73/7uuQzplrNWDZyezNFDHUp/fhfG6M/nZIvSXuvkfe+ICap1srZgIc8p9IJDylYIf7X6Me9reZs5sjZNsTpmWbEsTkB3pWTLo01bku0pn2gVhw4A8AO9cTMebxOonH162tA736kA4fZi2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=e6yVtL5Q; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eAGWfoOo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758819764;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A2qJ3u9F3WYpp3Qx7MbbugDMzN7PLrs8CIX1/6KerXA=;
-	b=eAGWfoOoDkBAevqhPvS3oux+PU1iU5738OeT5LASUWgHQrP07U7tdlEUKRCUwf4h2U6rhY
-	JneGjhypzt7FUuTWxVmZXgH/wM/3viODaywsw3rqMG4lVXUnrTQ0BPBPPHe7wZEZQ45l1h
-	fi5Nn1JfmKGwlDDySRV78Gl9lW/sjOc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-137-hDWnK08sPC-P-6jFGEozZw-1; Thu,
- 25 Sep 2025 13:02:39 -0400
-X-MC-Unique: hDWnK08sPC-P-6jFGEozZw-1
-X-Mimecast-MFC-AGG-ID: hDWnK08sPC-P-6jFGEozZw_1758819758
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E6CA018002D1;
-	Thu, 25 Sep 2025 17:02:36 +0000 (UTC)
-Received: from bgurney-thinkpadp1gen5.remote.csb (unknown [10.44.32.119])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ABAD7300021A;
-	Thu, 25 Sep 2025 17:02:29 +0000 (UTC)
-From: Bryan Gurney <bgurney@redhat.com>
-To: linux-nvme@lists.infradead.org,
-	kbusch@kernel.org,
-	hch@lst.de,
-	sagi@grimberg.me,
-	axboe@kernel.dk
-Cc: james.smart@broadcom.com,
-	njavali@marvell.com,
-	linux-scsi@vger.kernel.org,
-	hare@suse.de,
-	linux-hardening@vger.kernel.org,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	bgurney@redhat.com,
-	jmeneghi@redhat.com,
-	emilne@redhat.com
-Subject: [PATCH RFC] scsi: qla2xxx: zero default_item last in qla24xx_free_purex_item
-Date: Thu, 25 Sep 2025 13:02:23 -0400
-Message-ID: <20250925170223.18238-1-bgurney@redhat.com>
-In-Reply-To: <fbbef12e-fc43-464f-b92d-f42f3692a46c@redhat.com>
-References: <fbbef12e-fc43-464f-b92d-f42f3692a46c@redhat.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="e6yVtL5Q"
+Received: from eig-obgw-6006b.ext.cloudfilter.net ([10.0.30.211])
+	by cmsmtp with ESMTPS
+	id 1nHvvkJx4KXDJ1pgavf1yt; Thu, 25 Sep 2025 17:23:16 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 1pgXvSs2PMem51pgXvOfGE; Thu, 25 Sep 2025 17:23:13 +0000
+X-Authority-Analysis: v=2.4 cv=bZtrUPPB c=1 sm=1 tr=0 ts=68d57a81
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=kbmabLdzh3uUJaiPGAIkPw==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=7T7KSl7uo7wA:10 a=20KFwNOVAAAA:8
+ a=mdcTwAhxuRZp_wTR5vIA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gpNl6QTJT5Qsxrumjuau4ijF3CrN0biir9a3RwmFtTg=; b=e6yVtL5Q4BgeXdy0385Xw8Xi9I
+	gT2TgH3h4qALRO4uCHi6jqE2AWLJsBsGQ2DhJz4VhUQZLx3YHljfuzV4qnFUzMC0Yp9KY9YRmHU+T
+	fLFSvoSQo/+g9NXsLsl8NPU0wAw8b0aIyarLbV7fdwrfO+g068WCkJsNOpXIRagOQ5HBuiifVTl/k
+	ImNZ2XnuMgSjlKQjeav9cAS2N1qWCxVs6OZdEwC4gY8mLl8nuZkupz7Srr4aTQTgLggF9O+bUBRrl
+	+NkB9akLsZqaLE7211hNjOYdjNffb81ePCivHJ+HYVgZXe+ddToiF2yml4BAdGicZd+AoJKOVorVi
+	tRJtTzsA==;
+Received: from [83.214.221.223] (port=33030 helo=[192.168.1.104])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1v1pgU-00000003CnH-1zXK;
+	Thu, 25 Sep 2025 12:23:10 -0500
+Message-ID: <e58d743b-a999-4e00-8f2e-31707744c5bb@embeddedor.com>
+Date: Thu, 25 Sep 2025 19:22:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] scsi: qla2xxx: zero default_item last in
+ qla24xx_free_purex_item
+To: Bryan Gurney <bgurney@redhat.com>, jmeneghi@redhat.com,
+ linux-nvme@lists.infradead.org, kbusch@kernel.org, hch@lst.de,
+ sagi@grimberg.me, axboe@kernel.dk
+Cc: james.smart@broadcom.com, njavali@marvell.com,
+ linux-scsi@vger.kernel.org, hare@suse.de, linux-hardening@vger.kernel.org,
+ kees@kernel.org, gustavoars@kernel.org, emilne@redhat.com
+References: <fbbef12e-fc43-464f-b92d-f42f3692a46c@redhat.com>
+ <20250925170223.18238-1-bgurney@redhat.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20250925170223.18238-1-bgurney@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 83.214.221.223
+X-Source-L: No
+X-Exim-ID: 1v1pgU-00000003CnH-1zXK
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.104]) [83.214.221.223]:33030
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfAYjHrnLQK40DNfbCa3ITdO5GJOdrsOEbD+zvm/Zo1ZZ5ZnJ/fnLxvqYgRjIWG0EDP6tkBv6qvbc0X/njEF/JkfBxEJ1akRwrmYkD9A4U9NG9sAm1Adc
+ cpezr4hyeDYIUsdBOrHm5i9/rkRX60aHuhx0h8HFUWsyd+xY4UFB60KqmKoOLrL4rEoI4OPRAvimtSyuANyuqWQ1tVata04uPxEFIymLf3LCGawzYiWSXKgO
 
-In order to avoid a null pointer dereference, the vha->default_item
-should be set to 0 last if the item pointer passed to the function
-matches.
 
-BUG: kernel NULL pointer dereference, address: 0000000000000936
-...
-RIP: 0010:qla24xx_free_purex_item+0x5e/0x90 [qla2xxx]
-...
-Call Trace:
- <TASK>
- qla24xx_process_purex_list+0xda/0x110 [qla2xxx]
- qla2x00_do_dpc+0x8ac/0xab0 [qla2xxx]
- ? __pfx_qla2x00_do_dpc+0x10/0x10 [qla2xxx]
- kthread+0xf9/0x240
- ? __pfx_kthread+0x10/0x10
- ret_from_fork+0xf1/0x110
- ? __pfx_kthread+0x10/0x10
 
-Also use a local variable to avoid multiple de-referencing of the item.
+On 9/25/25 19:02, Bryan Gurney wrote:
+> In order to avoid a null pointer dereference, the vha->default_item
+> should be set to 0 last if the item pointer passed to the function
+> matches.
+> 
+> BUG: kernel NULL pointer dereference, address: 0000000000000936
+> ...
+> RIP: 0010:qla24xx_free_purex_item+0x5e/0x90 [qla2xxx]
+> ...
+> Call Trace:
+>   <TASK>
+>   qla24xx_process_purex_list+0xda/0x110 [qla2xxx]
+>   qla2x00_do_dpc+0x8ac/0xab0 [qla2xxx]
+>   ? __pfx_qla2x00_do_dpc+0x10/0x10 [qla2xxx]
+>   kthread+0xf9/0x240
+>   ? __pfx_kthread+0x10/0x10
+>   ret_from_fork+0xf1/0x110
+>   ? __pfx_kthread+0x10/0x10
+> 
+> Also use a local variable to avoid multiple de-referencing of the item.
+> 
+> Fixes: 6f4b10226b6b ("scsi: qla2xxx: Fix memcpy() field-spanning write issue")
+> Signed-off-by: Bryan Gurney <bgurney@redhat.com>
+> ---
+>   drivers/scsi/qla2xxx/qla_os.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+> index 98a5c105fdfd..7e28c7e9aa60 100644
+> --- a/drivers/scsi/qla2xxx/qla_os.c
+> +++ b/drivers/scsi/qla2xxx/qla_os.c
+> @@ -6459,9 +6459,11 @@ void qla24xx_process_purex_rdp(struct scsi_qla_host *vha,
+>   void
+>   qla24xx_free_purex_item(struct purex_item *item)
+>   {
+> -	if (item == &item->vha->default_item) {
+> -		memset(&item->vha->default_item, 0, sizeof(struct purex_item));
+> -		memset(&item->vha->__default_item_iocb, 0, QLA_DEFAULT_PAYLOAD_SIZE);
+> +	scsi_qla_host_t *base_vha = item->vha;
+> +
+> +	if (item == &base_vha->default_item) {
+> +		memset(&base_vha->__default_item_iocb, 0, QLA_DEFAULT_PAYLOAD_SIZE);
+> +		memset(&base_vha->default_item, 0, sizeof(struct purex_item));
+>   	} else
+>   		kfree(item);
+>   }
 
-Fixes: 6f4b10226b6b ("scsi: qla2xxx: Fix memcpy() field-spanning write issue")
-Signed-off-by: Bryan Gurney <bgurney@redhat.com>
----
- drivers/scsi/qla2xxx/qla_os.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+I see. I think it's probably better to go ahead with the revert, and then apply
+the patch I proposed in my previous e-mail (it's more straightforward and introduces
+fewer changes).
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 98a5c105fdfd..7e28c7e9aa60 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -6459,9 +6459,11 @@ void qla24xx_process_purex_rdp(struct scsi_qla_host *vha,
- void
- qla24xx_free_purex_item(struct purex_item *item)
- {
--	if (item == &item->vha->default_item) {
--		memset(&item->vha->default_item, 0, sizeof(struct purex_item));
--		memset(&item->vha->__default_item_iocb, 0, QLA_DEFAULT_PAYLOAD_SIZE);
-+	scsi_qla_host_t *base_vha = item->vha;
-+
-+	if (item == &base_vha->default_item) {
-+		memset(&base_vha->__default_item_iocb, 0, QLA_DEFAULT_PAYLOAD_SIZE);
-+		memset(&base_vha->default_item, 0, sizeof(struct purex_item));
- 	} else
- 		kfree(item);
- }
--- 
-2.51.0
+If you agree with that, I can submit both the revert and the patch.
+
+Thanks
+-Gustavo
 
