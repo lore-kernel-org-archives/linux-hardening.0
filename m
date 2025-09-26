@@ -1,272 +1,245 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB9230CDBA
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Sep 2025 20:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7C11388
+	for <linux-hardening@vger.kernel.org>; Fri, 26 Sep 2025 00:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758831120; cv=none; b=k3EkeNqAPWILqV6wYwPzDdYyMaQ6Ph70K0MkjczPVK7utI7SqM3j7rMRU7hGPRzQwZ3ZDgd+CkmqS0UYuL34VU/+R7rmHRvh2hQbQ7OSOEu2l9voLgnuRjbu01Vshhs8PP7/TrrvQJr9/g0qkMj22WtvFtB5EohErnMa/TnFj7o=
+	t=1758844936; cv=none; b=GxdFt9PRvRyIrnJcxtJUFIEJD5GLjz4YvdxJTT9yiaZLCoMzuoM89KVg36wabGPdvJaojdnEC+JR++P+ihNjgALMEBcVhRPStUx20zmzH1I8nYdlgELmkAR6nppwbu6p2bRjtvtEblRAGAY0AaCDWbJ9/bCGEKiQwsi8jUjOwqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758831120; c=relaxed/simple;
-	bh=h3RwPtc4sBXiMR1giqI+uaroN4r1V3AkFS5O//etA6o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oCxUaGmB6YiYT4I/jbZiIaLw+BZXHDmzpmjsXoQHe4ryNeLLVLwvfWkEd4DLbkx9XhdVM8JFzvntWtWrizxhUafRxNaIL5uGSLY7GGroWiuER266gGX6FVxwJ6p7gkiPpCItC05JEy1GCxmmG8t+/6qk7Wo0pQ3ADfXEwGv3abk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A9aFDeTF; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1758844936; c=relaxed/simple;
+	bh=NcFIePYPN2VlgOMrbKjH4bG8J3oiwP992S06euFqlm4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=l0XR3NGFqcBQ0N+g+gwpB3P6qSaS4aFLz1OzL/TIXLNd/EALWSaKh7bhDWU7/OBoU4ZmR7Wo9lfJhe4mVfnTQzDslNWm2pI+YJaBrofUvyzLOYMjjgq8zPeKm6S9yk5kbh2A6MwtO7verJfgFfhwKdcjoPTSzbQ4xqnL6xfj4d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=adG57n1V; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A9aFDeTF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="adG57n1V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758831117;
+	s=mimecast20190719; t=1758844932;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=BbdNHkZwL7Xvs1kb7Vz3lIvaavTg0vqw+U34Fq/laSM=;
-	b=A9aFDeTF4npcu3ZRqZTy+613499S5WTNvy4nASQbRz+C515ohjB3lRK4JD9k3sQsW5cOIU
-	bptpvS272pJMryW0WAasO91XCw1hdQEhxwEkN9zednC3ahmFBFi8ykBDccaOdssqdg12wi
-	cNapLtxhMEjxwgl7dLd1GSHAGFyHi+I=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-490-Z-cH-zJNPc2bBHM02a5pag-1; Thu, 25 Sep 2025 16:11:56 -0400
-X-MC-Unique: Z-cH-zJNPc2bBHM02a5pag-1
-X-Mimecast-MFC-AGG-ID: Z-cH-zJNPc2bBHM02a5pag_1758831115
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-45b990eb77cso8698885e9.0
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Sep 2025 13:11:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758831114; x=1759435914;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BbdNHkZwL7Xvs1kb7Vz3lIvaavTg0vqw+U34Fq/laSM=;
-        b=ps8tYYiPsMeNghcAnC0HXCntSXepE3J8qqbTcCLDYEJQklPPehy1IPY9QP6j7q61JH
-         6JEZBikrn8Y89ryDIwUXIlrDpQDhWnNN9iEr68NIw274ZA0ZDUZL7H4ZjLzX7RNBSilG
-         vaBOtp27JBb4Zos//Dz9nmYVA12sUSDxSPXJkUWWjJPXG00wopXk+kRreGPD8e/GFw3v
-         3wvEICPnbh35ruOBVcZ4mgw/X8pg/5isTaJ7Fbcl55kMLZqQbLyKU0zHYquTyyRhBOpD
-         o5KubT1v/T9z0mwg2uY5VblXrRMZ0T4V9UervcuJ87rALVme1jw0bXB5QJX52MqEk8Lx
-         nVpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZNwTRIjkIUKAeqASZ/sHQ+gGKKOp3UFN2svXVTrDbeKAp6i6asMyBapFVY2VSZDEmAPy2rPUQwo9w+pYdc6I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxs8dEfy2Y6LbfSwmFttJq2Q/VWj20rHOhMixVwr0bxes7q/q/v
-	Kc09YetpCWITzrO7u5/puOQyHg6VfpuSOOzw6JIUNsGoRlUN9oWZo4cblP7rcOkrYxg0c5z/2nH
-	G4DJ5SjdJ3w3gL1ni3hZKV19eszW/lZ58LHxfartU7h9buH5mpoUA5vJNIqSWyj6GxaM6yQ==
-X-Gm-Gg: ASbGncuQlPJCy5Nkv6Gt4U9SGCCgN3Al4XUNT0xfbH+o2lmzg4Rg90676JWAT46t3Qd
-	G73326tVqp/5OOTVMs0Wbk7cQ3q3qts2LBzIX3XSo0AyTDERYktgctevPW/iQKO2C0H6By+efkF
-	7qgfd+o22gHrLm1urWyFg4W6yZHO+0/ArFZeosv1lgqpdjAF/7GeMVS5RJXcgbpqelgX+UyQeF8
-	yDjXwsnkFlnl6Vznk0cll1SDMNUUw1v+OKTYq+kxYsqtk+01oAhoU6ES8HUgNEFS0ZVo/TCvpva
-	fCndPUDLNP8R5+V1GEdKIljolYJbKmgPH68csWP36vTad8RGjtTz1wIUJ2cViFO0iOmOmpoyvZU
-	1Evwi15HAPjeWdWPMvdK9MnGcUF6Frv3EV3lykcs1ElGV0Qz7ZXqRWiBFWuc3RR+JOsUf
-X-Received: by 2002:a05:600c:4ecc:b0:46e:33ed:bca4 with SMTP id 5b1f17b1804b1-46e33edbe6fmr36930185e9.15.1758831114661;
-        Thu, 25 Sep 2025 13:11:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGEhVhCGcgmO1k+G3XLxgUOwBHZ0rAO9DXf37klvFdy0hgaj1Ui37fjLWrqz9lgbSvmF4VzUg==
-X-Received: by 2002:a05:600c:4ecc:b0:46e:33ed:bca4 with SMTP id 5b1f17b1804b1-46e33edbe6fmr36929885e9.15.1758831114203;
-        Thu, 25 Sep 2025 13:11:54 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f3f:f800:c101:5c9f:3bc9:3d08? (p200300d82f3ff800c1015c9f3bc93d08.dip0.t-ipconnect.de. [2003:d8:2f3f:f800:c101:5c9f:3bc9:3d08])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e2a996bf1sm90335925e9.1.2025.09.25.13.11.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Sep 2025 13:11:53 -0700 (PDT)
-Message-ID: <1497a41d-3e43-4654-a28a-2049ab4c4c0b@redhat.com>
-Date: Thu, 25 Sep 2025 22:11:51 +0200
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Wvu9uFFeJOFDOc53VVq5RN+mSYEcZ4WSKOSXb2ynPRM=;
+	b=adG57n1VdZ73iU7aI242mEwXuqvgVWrr7JWsPuzG+YOFAHU0eJwj9rkaeyh/H7j66dhFDO
+	b7EnlI/1MAFtw2kfo/OQy5AipX3UWgqs/S2Y2yTkgTZwFZ/OKhmD3Yz8DqfXrfq7nO7SBE
+	umfLQRLbtee/djeQSzp6KAgq2LqwUCo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-441-HynJ0YY2PzKJbxUkpHmGHA-1; Thu,
+ 25 Sep 2025 20:02:09 -0400
+X-MC-Unique: HynJ0YY2PzKJbxUkpHmGHA-1
+X-Mimecast-MFC-AGG-ID: HynJ0YY2PzKJbxUkpHmGHA_1758844928
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 27E7319774D4;
+	Fri, 26 Sep 2025 00:02:07 +0000 (UTC)
+Received: from jmeneghi-thinkpadp1gen7.rmtusnh.csb (unknown [10.22.81.200])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CD9631800579;
+	Fri, 26 Sep 2025 00:02:03 +0000 (UTC)
+From: John Meneghini <jmeneghi@redhat.com>
+To: hare@suse.de,
+	kbusch@kernel.org,
+	martin.petersen@oracle.com,
+	linux-nvme@lists.infradead.org,
+	linux-scsi@vger.kernel.org
+Cc: bgurney@redhat.com,
+	axboe@kernel.dk,
+	emilne@redhat.com,
+	gustavoars@kernel.org,
+	hch@lst.de,
+	james.smart@broadcom.com,
+	jmeneghi@redhat.com,
+	kees@kernel.org,
+	linux-hardening@vger.kernel.org,
+	njavali@marvell.com,
+	sagi@grimberg.me
+Subject: [PATCH v10 00/11] nvme-fc: FPIN link integrity handling 
+Date: Thu, 25 Sep 2025 20:01:49 -0400
+Message-ID: <20250926000200.837025-1-jmeneghi@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH v3 09/16] genirq/irqdesc: Have nr_irqs as non-static
-To: Eugen Hristev <eugen.hristev@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, andersson@kernel.org,
- pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net, mhocko@suse.com
-Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250912150855.2901211-1-eugen.hristev@linaro.org>
- <20250912150855.2901211-10-eugen.hristev@linaro.org> <87cy7q9k8y.ffs@tglx>
- <87a52u9jyl.ffs@tglx> <8df2cf28-c15e-4692-a127-6a5c966a965e@linaro.org>
- <2bd45749-e483-45ea-9c55-74c5ba15b012@redhat.com> <87v7lh891c.ffs@tglx>
- <95ff36c2-284a-46ba-984b-a3286402ebf8@redhat.com>
- <24d6a51d-f5f8-44d7-94cb-58b71ebf473a@linaro.org>
- <7f4aa4c6-7b77-422b-9f7a-d01530c54bff@redhat.com> <87segk9az5.ffs@tglx>
- <f8d3c2d4-8399-4169-8527-3c87922f2ef1@redhat.com> <87jz1w88zq.ffs@tglx>
- <c3ab4a21-183f-495a-b3b5-cc74b392eebc@linaro.org>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZoEEwEIAEQCGwMCF4ACGQEFCwkIBwICIgIG
- FQoJCAsCBBYCAwECHgcWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaJzangUJJlgIpAAKCRBN
- 3hD3AP+DWhAxD/9wcL0A+2rtaAmutaKTfxhTP0b4AAp1r/eLxjrbfbCCmh4pqzBhmSX/4z11
- opn2KqcOsueRF1t2ENLOWzQu3Roiny2HOU7DajqB4dm1BVMaXQya5ae2ghzlJN9SIoopTWlR
- 0Af3hPj5E2PYvQhlcqeoehKlBo9rROJv/rjmr2x0yOM8qeTroH/ZzNlCtJ56AsE6Tvl+r7cW
- 3x7/Jq5WvWeudKrhFh7/yQ7eRvHCjd9bBrZTlgAfiHmX9AnCCPRPpNGNedV9Yty2Jnxhfmbv
- Pw37LA/jef8zlCDyUh2KCU1xVEOWqg15o1RtTyGV1nXV2O/mfuQJud5vIgzBvHhypc3p6VZJ
- lEf8YmT+Ol5P7SfCs5/uGdWUYQEMqOlg6w9R4Pe8d+mk8KGvfE9/zTwGg0nRgKqlQXrWRERv
- cuEwQbridlPAoQHrFWtwpgYMXx2TaZ3sihcIPo9uU5eBs0rf4mOERY75SK+Ekayv2ucTfjxr
- Kf014py2aoRJHuvy85ee/zIyLmve5hngZTTe3Wg3TInT9UTFzTPhItam6dZ1xqdTGHZYGU0O
- otRHcwLGt470grdiob6PfVTXoHlBvkWRadMhSuG4RORCDpq89vu5QralFNIf3EysNohoFy2A
- LYg2/D53xbU/aa4DDzBb5b1Rkg/udO1gZocVQWrDh6I2K3+cCs7BTQRVy5+RARAA59fefSDR
- 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
- VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
- /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
- iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
- 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
- zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
- azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
- FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
- sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
- 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
- EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
- IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
- 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
- Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
- sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
- yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
- 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
- r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
- 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
- CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
- qIws/H2t
-In-Reply-To: <c3ab4a21-183f-495a-b3b5-cc74b392eebc@linaro.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: e5i8DPexEbgW2zb_bVu2NRYIJ5CxMuVxy1HfpcbkpUc_1758831115
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 18.09.25 15:53, Eugen Hristev wrote:
-> 
-> 
-> On 9/18/25 11:23, Thomas Gleixner wrote:
->> On Wed, Sep 17 2025 at 21:03, David Hildenbrand wrote:
->>>> As this is specific for the compiled kernel version you can define an
->>>> extensible struct format for the table.
->>>>
->>>> struct inspect_entry {
->>>> 	unsigned long	properties;
->>>>           unsigned int	type;
->>>>           unsigned int	id;
->>>>           const char	name[$MAX_NAME_LEN];
->>>> 	unsigned long	address;
->>>>           unsigned long	length;
->>>>           ....
->>>> };
->>>>
->>>> @type
->>>>          refers either to a table with type information, which describes
->>>>          the struct in some way or just generate a detached compile time
->>>>          description.
->>>>
->>>> @id
->>>>          a unique id created at compile time or via registration at
->>>>          runtime. Might not be required
->>>
->>> We discussed that maybe one would want some kind of a "class"
->>> description. For example we might have to register one pgdat area per
->>> node. Giving each one a unique name might be impractical / unreasonable.
->>>
->>> Still, someone would want to select / filter out all entries of the same
->>> "class".
->>>
->>> Just a thought.
->>
->> Right. As I said this was mostly a insta brain dump to start a
->> discussion. Seems it worked :)
->>
->>>> @properties:
->>>>
->>>>           A "bitfield", which allows to mark this entry as (in)valid for a
->>>>           particular consumer.
->>>>
->>>>           That obviously requires to modify these properties when the
->>>>           requirements of a consumer change, new consumers arrive or new
->>>>           producers are added, but I think it's easier to do that at the
->>>>           producer side than maintaining filters on all consumer ends
->>>>           forever.
->>>
->>> Question would be if that is not up to a consumer to decide ("allowlist"
->>> / filter) by class or id, stored elsewhere.
->>
->> Yes, I looked at it the wrong way round. We should leave the filtering
->> to the consumers. If you use allow lists, then a newly introduced class
->> won't be automatically exposed everywhere.
->>
->> Thanks,
->>
->>          tglx
-> 
-> 
-> So, one direction to follow from this discussion is to have the
-> inspection entry and inspection table for all these entries.
-> Now, one burning question open for debate, is, should this reside into mm ?
-> mm/inspect.h would have to define the inspection entry struct, and some
-> macros to help everyone add an inspection entry.
-> E.g. INSPECTION_ENTRY(my ptr, my size);
-> and this would be used all over the kernel wherever folks want to
-> register something.
+FPIN LI (link integrity) messages are received when the attached fabric
+detects hardware errors. In response to these messages I/O should be
+directed away from the affected ports, and only used if the 'optimized'
+paths are unavailable.  Upon port reset the paths should be put back in
+service as the affected hardware might have been replaced.  This patch
+adds a new controller flag 'NVME_CTRL_MARGINAL' which will be checked
+during multipath path selection, causing the path to be skipped when
+checking for 'optimized' paths. If no optimized paths are available the
+'marginal' paths are considered for path selection alongside the
+'non-optimized' paths.  It also introduces a new nvme-fc callback
+'nvme_fc_fpin_rcv()' to evaluate the FPIN LI TLV payload and set the
+'marginal' state on all affected rports.
 
-If we're moving this to kernel/ or similar I'd suggest to not call this 
-only "inspect" but something that somehow contains the term "mem".
+The testing for this patch set was performed by Bryan Gurney, using the
+process outlined by John Meneghini's presentation at LSFMM 2024, where
+the fibre channel switch sends an FPIN notification on a specific switch
+port, and the following is checked on the initiator:
 
-"mem-inspect.h" ?
+1. The controllers corresponding to the paths on the port that has
+received the notification are showing a set NVME_CTRL_MARGINAL flag.
+
+   \
+    +- nvme4 fc traddr=c,host_traddr=e live optimized
+    +- nvme5 fc traddr=8,host_traddr=e live non-optimized
+    +- nvme8 fc traddr=e,host_traddr=f marginal optimized
+    +- nvme9 fc traddr=a,host_traddr=f marginal non-optimized
+
+2. The I/O statistics of the test namespace show no I/O activity on the
+controllers with NVME_CTRL_MARGINAL set.
+
+   Device             tps    MB_read/s    MB_wrtn/s    MB_dscd/s
+   nvme4c4n1         0.00         0.00         0.00         0.00
+   nvme4c5n1     25001.00         0.00        97.66         0.00
+   nvme4c9n1     25000.00         0.00        97.66         0.00
+   nvme4n1       50011.00         0.00       195.36         0.00
 
 
-> Now the second part is, where to keep all the inspection drivers ?
-> Would it make sense to have mm/inspection/inspection_helpers.h which
-> would keep the table start/end, some macros to traverse the tables, and
-> this would be included by the inspection drivers.
-> inspection drivers would then probe via any mechanism, and tap into the
-> inspection table.
+   Device             tps    MB_read/s    MB_wrtn/s    MB_dscd/s
+   nvme4c4n1         0.00         0.00         0.00         0.00
+   nvme4c5n1     48360.00         0.00       188.91         0.00
+   nvme4c9n1      1642.00         0.00         6.41         0.00
+   nvme4n1       49981.00         0.00       195.24         0.00
 
-Good question. I think some examples of alternatives might help to 
-driver that discussion.
 
-> I am thinking that my model with a single backend can be enhanced by
-> allowing any inspection driver to access it. And further on, each
-> inspection driver would register a notifier to be called when an entry
-> is being created or not. This would mean N possible drivers connected to
-> the table at the same time. ( if that would make sense...)
+   Device             tps    MB_read/s    MB_wrtn/s    MB_dscd/s
+   nvme4c4n1         0.00         0.00         0.00         0.00
+   nvme4c5n1     50001.00         0.00       195.32         0.00
+   nvme4c9n1         0.00         0.00         0.00         0.00
+   nvme4n1       50016.00         0.00       195.38         0.00
 
-Yeah, I think some notifier mechanism is what we want.
+Link: https://people.redhat.com/jmeneghi/LSFMM_2024/LSFMM_2024_NVMe_Cancel_and_FPIN.pdf
 
-> Would it make sense for pstore to have an inspection driver that would
-> be connected here to get different kinds of stuff ?
+Testing has been performed by sending all FPIN LI ELS messages from the
+switch to the Host and verifying the proper nvme multi-pathing behavior
+is effected with each of the eight different FPIN link integrity events.
+Results were verified with iostat and with the nvme list-subsys command.
 
-Something for the pstore folks to answer :)
+These tests were run with all scenarios including where there were only
+non-optimized paths available, and where all paths were
+marginal/degraded. All multi-path io-policies were tested including:
+numa, round-robin and queue-depth. When all paths on the host are
+marginal/degraded, I/O continues on the optimized path that was most
+recently non-marginal.  If both of the optimized paths are down, I/O
+properly continues on one of the marginal/degraded non-optimized paths.
 
-> Would it make sense to have some debugfs driver that would just expose
-> to user space different regions ? Perhaps something similar with
-> /proc/kcore but not the whole kernel memory rather only the exposed
-> inspection entries.
+Testing has been complete with both Broadcom (lpfc) and Marvell (qla2xx)
+32GB HBAs.  Both HBAs successfully complete all tests.
 
-Definetly, this is what I previously mentioned. Maybe we would only 
-indicate region metadata and actual access to regions would simply 
-happen through /proc/kcore if someone wants to dump data from user space.
+For a complete description of the tests that were run, please see
+bugzilla 20329.
 
-> Now, for the dynamic memory, e.g. memblock_alloc and friends ,
-> would it be interesting to have a flag e.g. MEMBLOCK_INSPECT, that would
-> be used when calling it, and in the background, this would request an
-> inspection_entry being created ? Or it makes more sense to call some
-> function like inspect_register as a different call directly at the
-> allocation point ?
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220329
 
-We'd probably want some interface to define the metadata 
-(name/class/whatever), a simple flag likely will not do, right?
+New refactored implmentation enables administrators to manually control
+port marginal states via sysfs. For example:
+
+# Set remote port to marginal state
+echo "Marginal" > /sys/class/fc_remote_ports/rport-4:0-1/port_state
+
+# Clear marginal state (set to online)
+echo "Online" > /sys/class/fc_remote_ports/rport-4:0-1/port_state
+
+Changes to the original submission:
+- Changed flag name to 'marginal'
+- Do not block marginal path; influence path selection instead
+  to de-prioritize marginal paths
+
+Changes to v2:
+- Split off driver-specific modifications
+- Introduce 'union fc_tlv_desc' to avoid casts
+
+Changes to v3:
+- Include reviews from Justin Tee
+- Split marginal path handling patch
+
+Changes to v4:
+- Change 'u8' to '__u8' on fc_tlv_desc to fix a failure to build
+- Print 'marginal' instead of 'live' in the state of controllers
+  when they are marginal
+
+Changes to v5:
+- Minor spelling corrections to patch descriptions
+
+Changes to v6:
+- No code changes; added note about additional testing
+
+Changes to v7:
+- Split nvme core marginal flag addition into its own patch
+- Add patch for queue_depth marginal path support
+
+Changes to v8:
+- Rebased patch series to nvme-6.17.
+- Added patch from Gustavo Silva, "scsi: qla2xxx: Fix memcpy field-spanning
+  write issue", which resolves the field-spanning write issue
+- We decided to leave the "marginal" state as is, because the transport
+  driver uses the term "marginal".
+
+Changes to v9:
+- Rebased patch series to nvme-6.18.
+- Refactor and fix a patch from Gustavo Silva, "scsi: qla2xxx: Fix 2 memcpy
+  field-spanning write issue", which resolves the field-spanning write issue.
+  This new version of Gustavo's patch fixes a bug found in testing.
+- Refactored original implementation
+  New functions added:
+    nvme_fc_lport_from_wwpn() - Find local port by WWPN
+    nvme_fc_fpin_set_state() - Set marginal state on controllers
+    nvme_fc_modify_rport_fpin_state() - Main API function
+  Functions removed:
+    nvme_fc_fpin_li_lport_update() - FPIN processing logic
+    nvme_fc_fpin_rcv() - Direct FPIN message processing
+  Functions modified:
+    fc_rport_set_marginal_state - allows administrative control
+
+This patch series is based upon nvme-6.18.
+
+Bryan Gurney (2):
+  nvme: add NVME_CTRL_MARGINAL flag
+  nvme: sysfs: emit the marginal path state in show_state()
+
+Gustavo A. R. Silva (1):
+  scsi: qla2xxx: Fix 2 memcpy field-spanning write issue
+
+Hannes Reinecke (2):
+  fc_els: use 'union fc_tlv_desc'
+  nvme-fc: marginal path handling
+
+John Meneghini (6):
+  nvme-multipath: queue-depth support for marginal paths
+  nvme-fc: add nvme_fc_modify_rport_fpin_state()
+  scsi: scsi_transport_fc: add fc_host_fpin_set_nvme_rport_marginal()
+  scsi: lpfc: enable FPIN notification for NVMe
+  scsi: qla2xxx: enable FPIN notification for NVMe
+  scsi: scsi_transport_fc: user support for clearing NVME_CTRL_MARGINAL
+
+ drivers/nvme/host/core.c         |   1 +
+ drivers/nvme/host/fc.c           |  80 +++++++++++++++
+ drivers/nvme/host/multipath.c    |  24 +++--
+ drivers/nvme/host/nvme.h         |   6 ++
+ drivers/nvme/host/sysfs.c        |   4 +-
+ drivers/scsi/lpfc/lpfc_els.c     |  82 ++++++++-------
+ drivers/scsi/qla2xxx/qla_def.h   |  10 +-
+ drivers/scsi/qla2xxx/qla_isr.c   |  18 ++--
+ drivers/scsi/qla2xxx/qla_nvme.c  |   2 +-
+ drivers/scsi/qla2xxx/qla_os.c    |   9 +-
+ drivers/scsi/scsi_transport_fc.c | 154 ++++++++++++++++++++++++-----
+ include/linux/nvme-fc-driver.h   |   2 +
+ include/scsi/scsi_transport_fc.h |   1 +
+ include/uapi/scsi/fc/fc_els.h    | 165 +++++++++++++++++--------------
+ 14 files changed, 391 insertions(+), 167 deletions(-)
 
 -- 
-Cheers
-
-David / dhildenb
+2.51.0
 
