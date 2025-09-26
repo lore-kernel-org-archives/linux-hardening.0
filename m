@@ -1,80 +1,97 @@
-Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
+Received: from www3141.sakura.ne.jp (www3141.sakura.ne.jp [49.212.207.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507D71E573F;
-	Fri, 26 Sep 2025 15:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758900738; cv=none; b=Wz3YqG0Zqd2ENKbrrdeXmFU5TmaNUCNvplmgod3NhxsGZ+N7nAWXOBSElCYVm6xGW/JWHVW5GQ6P1Ot0dV1nl26rFxIs1SloTK9wW/np/Mi1gIPGuhj2JwltP5PS9feABHe+1VDiDaTaNWNrlQQRna7MPd1KoKfXgZcVTljLc88=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758900738; c=relaxed/simple;
-	bh=eO0B+v6M/eNh3DuU5RpKBdPh66sor4Xjm0Yg+ev6U/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VY7Y/WqjcPwCqFdMypb/gx4/LK5Gqw4VfRasMhCjg+3Ubl4CZTZW9gjdpfI1H1cD27S+LOy4YJrvPbcpXy5UrximgxB4cLc8EW8N/ziuvdGjfAR6gDHjgZ45Iu75APEdGGVk8qvaClRCiu+AXesCj6e0YPgP96yf1hNGWOiubwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=fail (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=TRnxadul reason="key not found in DNS"; arc=none smtp.client-ip=94.231.106.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0161F27B342;
+	Fri, 26 Sep 2025 18:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=49.212.207.181
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758912548; cv=pass; b=ZZSovRWwfE+/OhG7mRD6p3XCUeFLTtt7YM3oIhv/kgrZ/3hVziQB1E3ucer0g3SuaKHB1Lng4LMJfpkZTj52dlUEvozu3KT0FrfEuQdbLLyiD1vI05EqFIOthfVgUu36fawOOB3RNGTSGEuAXFObeOFdnDhFWy/IExeN9/kOu50=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758912548; c=relaxed/simple;
+	bh=nqhrpCPg22+qqPH/cP8awDrzjP62bZ1uCIVrWt7AZTA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lBxmfA/6Bmmgu3UjnUQgHu151EtSXX4BQxtEFos+A+iIOgHSvqzfabGbM/baYrgqsRTiMq9XVcqVs/MBnpGlLsEE77gm5RHueFkveO/51BZwzb620AdFrzkHsQxdTFLpGRP80bNoI0UIz7wQuYb/6FbXq8RId8kLOzlG2riKcMU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redadmin.org; spf=pass smtp.mailfrom=redadmin.org; dkim=pass (1024-bit key) header.d=redadmin.org header.i=@redadmin.org header.b=EOcGf0zP; arc=pass smtp.client-ip=49.212.207.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redadmin.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redadmin.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="TRnxadul"
+	dkim=pass (1024-bit key) header.d=redadmin.org header.i=@redadmin.org header.b="EOcGf0zP"
+Received: from www.redadmin.org (ag129037.ppp.asahi-net.or.jp [157.107.129.37])
+	(authenticated bits=0)
+	by www3141.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 58QImWfF080629
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Sat, 27 Sep 2025 03:48:32 +0900 (JST)
+	(envelope-from weibu@redadmin.org)
 Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4cYF254LpXz1FbZP;
-	Fri, 26 Sep 2025 17:32:13 +0200 (CEST)
-Received: from [10.10.15.8] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4cYF2522V7z1FbZk;
-	Fri, 26 Sep 2025 17:32:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
-	s=simplycom2; t=1758900733;
-	bh=kMAOghaSlf/haDulwk4dYNLPJhvXyLFotJUOiNAZa2Y=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=TRnxaduljc1Bj1P6Bvj0BD2v7c71W/qoKgdMebsAXx7fYUnmfUk2V+J+0MKObMgmw
-	 9F51cGRietoCVgnhuyslHENWSkyql2+B9zDlIFqAme1vLQU21ugPtrKQ2zq2uapmSr
-	 T5ouBkiYtkr79cYZL0noFN2DQSsLBiI/ekw/nMVSvqawsLTszHlBBi1VbpGfHbYuB+
-	 pKearusdURcf4LTQbLj+hOeeVM3IO/LCVkdPzvnMLy/SR2j4yHdHnZJTD9x4FYnLUZ
-	 gvAMtkG+42EYHmZNPwa9NVpRYtrK4DlP2iPmSb9tXsiCNo4JNjQ0K/RLRRvSZIOdTk
-	 oXam3BhFg+ckg==
-Message-ID: <00fedbfe-34ca-4ce3-8d7b-1ccfc86910b2@gaisler.com>
-Date: Fri, 26 Sep 2025 17:32:12 +0200
+	by www.redadmin.org (Postfix) with ESMTP id B388310A24946;
+	Sat, 27 Sep 2025 03:48:31 +0900 (JST)
+X-Virus-Scanned: amavis at redadmin.org
+Received: from www.redadmin.org ([127.0.0.1])
+ by localhost (redadmin.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id d0PbXkJIVm4R; Sat, 27 Sep 2025 03:48:27 +0900 (JST)
+Received: by www.redadmin.org (Postfix, from userid 1000)
+	id ACE58109D57DE; Sat, 27 Sep 2025 03:48:27 +0900 (JST)
+Authentication-Results: www.redadmin.org; arc=none smtp.remote-ip=127.0.0.1
+ARC-Seal: i=1; a=rsa-sha256; d=redadmin.org; s=20231208space; t=1758912507;
+	cv=none; b=ge4yeT6Nb0AAdFCMPWSh1TVc+kX067GdqxeZrVk9XzTD9Zu1ZjKh+oWlTPbyDvFU9A/AfFEUuinwJzzo2eMg5q/hZkBRluaYV64zhveATUOOEX+NMlhYAKxI54HXxa0Qcg05cIdEHBHecujpCdJZgLln5/ORsJnZC6nd3UFBKlQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; d=redadmin.org; s=20231208space;
+	t=1758912507; c=relaxed/relaxed;
+	bh=6skZ6w2rUgfzz1RrgmD9s09Pm7j+TCfwgPr5WI1M9tQ=;
+	h=DKIM-Filter:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding; b=Hp0nwbP9sKtH/50EwBvSOys0T7WV02V1IG5gxZfrZQMAQxZT91H2Dm9aVimK68rZvKw8JMjEN1arobLzFx82y++qf00BZjTJxQtYfF4t2taNrXOnES+V61HByWKkwbFEt84kj8GUSOxJdJq7wewCQuZFkjR+DAhSgwSqBuKAWh8=
+ARC-Authentication-Results: i=1; www.redadmin.org
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.redadmin.org ACE58109D57DE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redadmin.org;
+	s=20231208space; t=1758912507;
+	bh=6skZ6w2rUgfzz1RrgmD9s09Pm7j+TCfwgPr5WI1M9tQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EOcGf0zP4Bwpck96DttCu/e/RPDtVrxk6WEbpm6puMd66x75YikPENFSMhYzOBZ/m
+	 TmPrJtqSs/IWFEngLLYwpWVmOHRJZ0PvxEh92RbbjsUwdfRM1Dv3iMxPEZze0zxjwr
+	 zJlOg15V4LDBtky7AoxXR+vmPSHj2Gv3XpoJ3uJM=
+From: Akiyoshi Kurita <weibu@redadmin.org>
+To: Kees Cook <kees@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        linux-kernel@vger.kernel.org, Akiyoshi Kurita <weibu@redadmin.org>
+Subject: [PATCH] Documentation: admin-guide: Correct styling of MS-DOS
+Date: Sat, 27 Sep 2025 03:48:24 +0900
+Message-ID: <20250926184824.40270-1-weibu@redadmin.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] sparc: PCI: Replace deprecated strcpy with strscpy
-From: Andreas Larsson <andreas@gaisler.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>,
- "David S. Miller" <davem@davemloft.net>, Bjorn Helgaas
- <bhelgaas@google.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: linux-hardening@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250922210408.1723452-1-thorsten.blum@linux.dev>
- <bdef00f9-4e66-4984-9b39-85b485bdc2cb@gaisler.com>
-Content-Language: en-US
-In-Reply-To: <bdef00f9-4e66-4984-9b39-85b485bdc2cb@gaisler.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-09-26 16:44, Andreas Larsson wrote:
-> On 2025-09-22 23:03, Thorsten Blum wrote:
->> strcpy() is deprecated; use strscpy() instead.
->>
->> No functional changes intended.
->>
->> Link: https://github.com/KSPP/linux/issues/88
->> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> 
-> For the series:
-> 
-> Reviewed-by: Andreas Larsson <andreas@gaisler.com>
-> 
-> Picking this up to my for-next.
+"MS-DOS" with a hyphen is the official styling. Change the
+less common "MSDOS" to "MS-DOS" for correctness and consistency.
 
-...with some subject line clarifications.
+Signed-off-by: Akiyoshi Kurita <weibu@redadmin.org>
+---
+ Documentation/admin-guide/pstore-blk.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-Andreas
+diff --git a/Documentation/admin-guide/pstore-blk.rst b/Documentation/admin=
+-guide/pstore-blk.rst
+index 1bb2a1c292aa..1e2abb2ef500 100644
+--- a/Documentation/admin-guide/pstore-blk.rst
++++ b/Documentation/admin-guide/pstore-blk.rst
+@@ -59,7 +59,7 @@ When pstore/blk is built into the kernel, "blkdev" accept=
+s the following variant
+    with no leading 0x, for example b302.
+ #. PARTUUID=3D00112233-4455-6677-8899-AABBCCDDEEFF represents the unique i=
+d of
+    a partition if the partition table provides it. The UUID may be either =
+an
+-   EFI/GPT UUID, or refer to an MSDOS partition using the format SSSSSSSS-=
+PP,
++   EFI/GPT UUID, or refer to an MS-DOS partition using the format SSSSSSSS=
+-PP,
+    where SSSSSSSS is a zero-filled hex representation of the 32-bit
+    "NT disk signature", and PP is a zero-filled hex representation of the
+    1-based partition number.
+--=20
+2.47.3
+
