@@ -1,136 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailrelay.tugraz.at (mailrelay.tugraz.at [129.27.2.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF44E2D0600
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Sep 2025 09:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1151A9FBD
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Sep 2025 10:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.27.2.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759139969; cv=none; b=CmvZBpq7FbVT22W4pg51IjYKXCPL2wn9eRukpE9oQXPhDS/a9BI5pj7gXtQ5IM2/njZaRp9NB42pLURsg/iMJvv7pzp2zO9meevlSGciZiFvg4JAJ81iU9jTxbVVe90KZ5ndImfl2x/Li/6KWs/8FvuEYRjy6xz3p21ub8f1kCI=
+	t=1759142525; cv=none; b=bc+/nTXA0fJDcYhRFUWWT4TZE+pMZecWegpejca+sAKVgznqnlP1W76lH/a8ue/2Wm5udPDcLjA+CR1A9euZZJmAiyZNB5OK4wj9RklpvigokfGEgIJd8MKRz/sPdgSaQkVEbZO6Owmx6t2NMCvcaGItlgOa8cguqIuZWJ+5JOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759139969; c=relaxed/simple;
-	bh=DYBJPIBbMHafgcAN44nzOJoGRrFBL/WVkCVLx71eGis=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ir9Hqdq+bxs9kMdpWGgtX4qsmU765+dBNbMEGp7mTTeMqSw0TDrOEy7jCVaf8HtQymzQBEFDKoTQ0klIfGGBVkLA73Dl0V+/ezetqNp+xLAF+QRkkYvneRhtk7X/g8/XAyC6VC649O/X+chuL8YBsYmMl+2rn9F5suEv++TbIU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nzoa9paf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759142525; c=relaxed/simple;
+	bh=92nNF0MisSGO7XjJIOtSWw+upx9L/GfZzLWmQRLowF0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WFX5jGrisTXTwPiWqh5mFhw8pz/PUTDieq05Fc1zOwavrpYy1Lsvu7k5ymIOgut76NH+Cts9daVmvq7RIl7XO9RVO+c0+qLH2/UrQXKNJe5AzPQ4wVkgu+VJNGXnvk9kPqmVtQW4zsdxpWFJ85JTUysO9fGm7SG1jtdLVtlq6Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at; spf=pass smtp.mailfrom=tugraz.at; dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b=MZH1QuEW; arc=none smtp.client-ip=129.27.2.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tugraz.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nzoa9paf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D2A2C2BCB0
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Sep 2025 09:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759139968;
-	bh=DYBJPIBbMHafgcAN44nzOJoGRrFBL/WVkCVLx71eGis=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Nzoa9pafJSDzrhiJVc3GOIWx5Y3QKMjHeQHP0KNgv6XZAk6YfGWCLxpUsbevoMlPn
-	 5S2YuXVXDDDtUFTGA2Didr1OsAe2AiGb1ezNRYQQT9CgiPkURbMjxUE+PmyH2fIkTu
-	 sQwdKtu2f1LKP/ohbU5lKVMkudjXnf5Pyg5avwEbDriL59eZXWzXd/ikanRHDEqGOQ
-	 xhU7jR5b9qugYOZGgcN4aezRLbF8VDBHax+I9DsErwUVH5O0UlaUU1GsVshEYpV0qp
-	 q0QrdE/Mthte+TODczIE670YxAIqXXYZ7KL8ELBs1NzkZlWgDI4KsjVTyFeWnAVpqL
-	 2NZeuqJmvtoCA==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-36a53fe7ebdso40922321fa.1
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Sep 2025 02:59:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWSXl7WsfQSa1eYqTVWBtTErByaoup9CWRFZL3eG1P1cudbnLy9ZciGm0GMacS2o1HtNE4o5CkFXCr/AAHi0Z8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRidBKHOy+8QDQFZHWQ96oQAnfuFN92NpxUPyR55AUtKxtGXID
-	30WmRIo1EIk3NIfnAObHvjnqYZE09kVZL5Y1wu57BL1YtzIFD9ogu/lZ7maqa7/tjCy9BAF2ThC
-	Iphgs0f8RqG+EcpTTYnnLUbrEplm8gug=
-X-Google-Smtp-Source: AGHT+IH5PibK2BEglV95OeRjODJbfR64f3760++WT4suP3RRQZaHMmgALypPu7Nm1nRiO8F1GDIp61CbGgPxhEIiEos=
-X-Received: by 2002:a2e:be8d:0:b0:35f:246:a751 with SMTP id
- 38308e7fff4ca-36f7e29b533mr50398521fa.5.1759139966508; Mon, 29 Sep 2025
- 02:59:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b="MZH1QuEW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tugraz.at;
+	s=mailrelay; t=1759142045;
+	bh=/Oz0xNdsdc/CPxhjB2peQq4FepE8F6ixD5DkISHNqGc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=MZH1QuEWlj77tQVzLGmyo78Y1mhpGaX0Af7jKSV3rMhzlSGs+3AMl2xQGMPGeWm9t
+	 etx6W0D13kL8EIwYeZqDCVtg4IrO20cGWFZNr4FKGoelm5P/nXi8X+SU+nj0RcscbU
+	 3Sma1dnHE8Uof9I+siP6iBied12LAC1cqO4fBLV8=
+Received: from vra-174-12.tugraz.at (vra-174-12.tugraz.at [129.27.174.12])
+	by mailrelay.tugraz.at (Postfix) with ESMTPSA id 4cZyGf3kr6z9rwy;
+	Mon, 29 Sep 2025 12:34:02 +0200 (CEST)
+Message-ID: <def69866c55cfb9ae3b32cecec0ca667b6fc627d.camel@tugraz.at>
+Subject: Re: [PATCH v4 1/7] typeinfo: Introduce KCFI typeinfo mangling API
+From: Martin Uecker <uecker@tugraz.at>
+To: Kees Cook <kees@kernel.org>, Qing Zhao <qing.zhao@oracle.com>
+Cc: Andrew Pinski <pinskia@gmail.com>, Jakub Jelinek <jakub@redhat.com>, 
+ Richard Biener <rguenther@suse.de>, Joseph Myers <josmyers@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>,  Ard Biesheuvel	 <ardb@kernel.org>,
+ Jeff Law <jeffreyalaw@gmail.com>, Jan Hubicka <hubicka@ucw.cz>,  Richard
+ Earnshaw <richard.earnshaw@arm.com>, Richard Sandiford
+ <richard.sandiford@arm.com>, Marcus Shawcroft	 <marcus.shawcroft@arm.com>,
+ Kyrylo Tkachov <kyrylo.tkachov@arm.com>, Kito Cheng	
+ <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, Andrew
+ Waterman	 <andrew@sifive.com>, Jim Wilson <jim.wilson.gcc@gmail.com>, Dan
+ Li	 <ashimida.1990@gmail.com>, Sami Tolvanen <samitolvanen@google.com>,
+ Ramon de C Valle <rcvalle@google.com>, Joao Moreira
+ <joao@overdrivepizza.com>, Nathan Chancellor	 <nathan@kernel.org>, Bill
+ Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org, 
+	linux-hardening@vger.kernel.org
+Date: Mon, 29 Sep 2025 12:34:02 +0200
+In-Reply-To: <20250926030252.2387681-1-kees@kernel.org>
+References: <20250926023737.it.616-kees@kernel.org>
+	 <20250926030252.2387681-1-kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250926023737.it.616-kees@kernel.org> <20250926030252.2387681-6-kees@kernel.org>
-In-Reply-To: <20250926030252.2387681-6-kees@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 29 Sep 2025 11:59:15 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHQn0YEvpnwRigL_Mu61SGtGfmKVUJJgotGmm8S_BT8dA@mail.gmail.com>
-X-Gm-Features: AS18NWBz0QeU3nJjTbDl289pZA1oNXXRnd7AYbXix4O9zvUwW_ML-KHDXqd1kQc
-Message-ID: <CAMj1kXHQn0YEvpnwRigL_Mu61SGtGfmKVUJJgotGmm8S_BT8dA@mail.gmail.com>
-Subject: Re: [PATCH v4 6/7] arm: Add ARM 32-bit Kernel Control Flow Integrity implementation
-To: Kees Cook <kees@kernel.org>
-Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>, 
-	Jakub Jelinek <jakub@redhat.com>, Martin Uecker <uecker@tugraz.at>, Richard Biener <rguenther@suse.de>, 
-	Joseph Myers <josmyers@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Jeff Law <jeffreyalaw@gmail.com>, Jan Hubicka <hubicka@ucw.cz>, 
-	Richard Earnshaw <richard.earnshaw@arm.com>, Richard Sandiford <richard.sandiford@arm.com>, 
-	Marcus Shawcroft <marcus.shawcroft@arm.com>, Kyrylo Tkachov <kyrylo.tkachov@arm.com>, 
-	Kito Cheng <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Andrew Waterman <andrew@sifive.com>, Jim Wilson <jim.wilson.gcc@gmail.com>, 
-	Dan Li <ashimida.1990@gmail.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Ramon de C Valle <rcvalle@google.com>, Joao Moreira <joao@overdrivepizza.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-TUG-Backscatter-control: G/VXY7/6zeyuAY/PU2/0qw
+X-Spam-Scanner: SpamAssassin 3.003001 
+X-Spam-Score-relay: 0.0
+X-Scanned-By: MIMEDefang 2.74 on 129.27.10.117
 
-On Fri, 26 Sept 2025 at 05:02, Kees Cook <kees@kernel.org> wrote:
->
-> diff --git a/gcc/config/arm/arm.md b/gcc/config/arm/arm.md
-> index 422ae549b65b..c3b9f16ea872 100644
-> --- a/gcc/config/arm/arm.md
-> +++ b/gcc/config/arm/arm.md
-...
-> +/* Output the assembly for a KCFI checked call instruction.  INSN is the
-> +   RTL instruction being processed.  OPERANDS is the array of RTL operands
-> +   where operands[0] is the call target register, operands[2] is the KCFI
-> +   type ID constant.  Returns an empty string as all output is handled by
-> +   direct assembly generation.  */
-> +
-> +const char *
-> +arm_output_kcfi_insn (rtx_insn *insn, rtx *operands)
-> +{
-> +  /* KCFI type id.  */
-> +  uint32_t type_id = INTVAL (operands[2]);
-> +
-> +  /* Calculate typeid offset from call target.  */
-> +  HOST_WIDE_INT offset = -kcfi_typeid_offset;
-> +
-> +  /* Generate custom label names.  */
-> +  char trap_name[32];
-> +  char call_name[32];
-> +  ASM_GENERATE_INTERNAL_LABEL (trap_name, "Lkcfi_trap", kcfi_labelno);
-> +  ASM_GENERATE_INTERNAL_LABEL (call_name, "Lkcfi_call", kcfi_labelno);
-> +
-> +  /* Create memory operand for the type load.  */
-> +  rtx mem_op = gen_rtx_MEM (SImode,
-> +                           gen_rtx_PLUS (SImode, operands[0],
-> +                                         GEN_INT (offset)));
-> +  rtx temp_operands[6];
-> +
-> +  /* Normally we can use r12 as our scratch register.  */
-> +  unsigned scratch_reg_num = IP_REGNUM;
-> +  /* If register pressure has made r12 our target register, we need to pick
-> +     a different register.  We don't want to spill our target register
-> +     because on reload at the end of the KCFI check, we'd be producing
-> +     the very kind of call gadget we were trying to protect against:
-> +     "pop %target; call %target".  In this case, use r3 as our scratch
-> +     register.  But since r3 may be used for function arguments, we need
-> +     to check if it is being used for that and only spill/reload if that
-> +     happens.  Any spill/reload of r3 due to making a call will already
-> +     have been managed by the register allocator, so we only have to care
-> +     about not clobbering the argument value it may be carrying into the
-> +     call here.  Also use r3 when r12 is a fixed register.  */
-> +  if (REGNO (operands[0]) == scratch_reg_num
-> +      || fixed_regs[scratch_reg_num])
-> +    scratch_reg_num = LAST_ARG_REGNUM;
-> +  rtx scratch_reg = gen_rtx_REG (SImode, scratch_reg_num);
-> +
-> +  /* We only need to spill r3 if it's actually used by the call.  */
-> +  bool need_spill = (scratch_reg_num == LAST_ARG_REGNUM)
-> +                   && reg_overlap_mentioned_p (scratch_reg, insn);
-> +
-> +  /* Calculate trap immediate.  */
-> +  unsigned addr_reg_num = REGNO (operands[0]);
-> +  /* The scratch register is always clobbered by eor seq: use 0x1F.  */
-> +  unsigned udf_immediate = 0x8000 | (0x1F << 5) | (addr_reg_num & 31);
-> +
+Am Donnerstag, dem 25.09.2025 um 20:02 -0700 schrieb Kees Cook:
 
-I take it this means you still need to decode the instructions in the
-kernel to obtain the expected type id?
+>=20
+> An important aspect of the C++ typeinfo behavior that is retained here
+> is that typedefs are treated as pass-through except when the underlying
+> type lacks a tag (i.e. anonymous struct, union, or enum). This provides a
+> distinction between those typedefs and typedefs used to provide _aliases_
+> (u8, uint16_t).
+>=20
+> In the future, an additional "strict mode" builtin helper pair could
+> also be added to follow strict ISO C type equivalency instead of the
+> existing typeinfo used here, but that is out of scope for this patch.
 
-Can't you insert the actual register index here, and defer the reload
-until after the UDF? That way, the scratch register will always
-contain the XOR of the actual vs expected typeids when taking the
-trap.
+The ISO C mode would be *less* strict.  Or in other words,
+the current version would reject valid C programs at run-time.
+
+I try to point out the differences below.
+
+
+
+> +
+> +    /* Test pointer types */
+> +    TEST_STRING(char*, "Pc");
+> +    TEST_STRING(int*, "Pi");
+> +    TEST_STRING(void*, "Pv");
+> +    TEST_STRING(const char*, "PKc");
+
+> +
+> +    /* Test array types */
+> +    TEST_STRING(int[10],  "A10_i");
+> +    TEST_STRING(char[20], "A20_c");
+> +    TEST_STRING(short[],  "A_s");
+> +
+> +    /* Test basic function types */
+> +    extern void func_void(void);
+> +    extern void func_char(char x);
+> +    extern void func_short(short x);
+> +    extern void func_int(int x);
+> +    extern void func_long(long x);
+> +    TEST_STRING(func_void,  "FvvE");
+> +    TEST_STRING(func_char,  "FvcE");
+> +    TEST_STRING(func_short, "FvsE");
+> +    TEST_STRING(func_int,   "FviE");
+> +    TEST_STRING(func_long,  "FvlE");
+> +
+> +    /* Test functions with unsigned types */
+> +    extern void func_unsigned_char(unsigned char x);
+> +    extern void func_unsigned_short(unsigned short x);
+> +    extern void func_unsigned_int(unsigned int x);
+> +    TEST_STRING(func_unsigned_char,  "FvhE");
+> +    TEST_STRING(func_unsigned_short, "FvtE");
+> +    TEST_STRING(func_unsigned_int,   "FvjE");
+> +
+> +    /* Test functions with signed types */
+> +    extern void func_signed_char(signed char x);
+> +    extern void func_signed_short(signed short x);
+> +    extern void func_signed_int(signed int x);
+> +    TEST_STRING(func_signed_char,  "FvaE");
+> +    TEST_STRING(func_signed_short, "FvsE");
+> +    TEST_STRING(func_signed_int,   "FviE");
+> +
+> +    /* Test functions with pointer types */
+> +    extern void func_void_ptr(void *x);
+> +    extern void func_char_ptr(char *x);
+> +    extern void func_short_ptr(short *x);
+> +    extern void func_int_ptr(int *x);
+> +    extern void func_int_array(int arr[]); /* Decays to "int *".  */
+> +    extern void func_long_ptr(long *x);
+> +    TEST_STRING(func_void_ptr,  "FvPvE");
+> +    TEST_STRING(func_char_ptr,  "FvPcE");
+> +    TEST_STRING(func_short_ptr, "FvPsE");
+> +    TEST_STRING(func_int_ptr,   "FvPiE");
+> +    TEST_STRING(func_int_array, "FvPiE");
+> +    TEST_STRING(func_long_ptr,  "FvPlE");
+> +
+> +    /* Test functions with const qualifiers */
+> +    extern void func_const_void_ptr(const void *x);
+> +    extern void func_const_char_ptr(const char *x);
+> +    extern void func_const_short_ptr(const short *x);
+> +    extern void func_const_int_ptr(const int *x);
+> +    extern void func_const_long_ptr(const long *x);
+> +    TEST_STRING(func_const_void_ptr,  "FvPKvE");
+> +    TEST_STRING(func_const_char_ptr,  "FvPKcE");
+> +    TEST_STRING(func_const_short_ptr, "FvPKsE");
+> +    TEST_STRING(func_const_int_ptr,   "FvPKiE");
+> +    TEST_STRING(func_const_long_ptr,  "FvPKlE");
+
+
+This ok, but there is a proposal to relax the rules for
+qualifiers, so in the future preserving all qualifiers
+might be too strict for C.
+
+
+
+> +    /* Test 2D VLA with fixed dimension: should be all the same.  */
+> +    extern void func_vla_2d_first(int n, int arr[n][10]);
+> +    extern void func_vla_2d_empty(int n, int arr[][10]);
+> +    extern void func_vla_2d_ptr(int n, int (*arr)[10]);
+> +    TEST_STRING(func_vla_2d_first, "FviPA10_iE");
+> +    TEST_STRING(func_vla_2d_empty, "FviPA10_iE");
+> +    TEST_STRING(func_vla_2d_ptr,   "FviPA10_iE");
+> +
+> +    /* Test 2D VLA with both dimensions variable: should be all the same=
+.  */
+> +    extern void func_vla_2d_both(int rows, int cols, int arr[rows][cols]=
+);
+> +    extern void func_vla_2d_second(int rows, int cols, int arr[][cols]);
+> +    extern void func_vla_2d_star(int rows, int cols, int arr[*][cols]);
+> +    TEST_STRING(func_vla_2d_both,   "FviiPA_iE");
+> +    TEST_STRING(func_vla_2d_second, "FviiPA_iE");
+> +    TEST_STRING(func_vla_2d_star,   "FviiPA_iE");
+
+While the top-most decays to a pointer, the deeper arrays are stay but
+are compatible between the fixed and variable case.  So according to
+C rules, they would all need to be canonicalized to the same.
+
+Martin
+
