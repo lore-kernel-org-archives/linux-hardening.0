@@ -1,126 +1,136 @@
-Received: from mail-yx1-f54.google.com (mail-yx1-f54.google.com [74.125.224.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB7C2F0C71
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Sep 2025 09:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF44E2D0600
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Sep 2025 09:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759139959; cv=none; b=B2pmg9JPxwiFcqNBXP0Q4hlxT1iyJVC7skbcss98qHzWjE4A5RsGeQRosG+fWug3GfM7gErdzR9Mz4YsYRJ6tVaCdSi28MXVJZFDdX3tKUdlA5cKivuf5KU1Tt5qgAReI9mdtJ0dtY3wgOshk5LLIHPHv8TT5s+b7Qp3PtDs6DA=
+	t=1759139969; cv=none; b=CmvZBpq7FbVT22W4pg51IjYKXCPL2wn9eRukpE9oQXPhDS/a9BI5pj7gXtQ5IM2/njZaRp9NB42pLURsg/iMJvv7pzp2zO9meevlSGciZiFvg4JAJ81iU9jTxbVVe90KZ5ndImfl2x/Li/6KWs/8FvuEYRjy6xz3p21ub8f1kCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759139959; c=relaxed/simple;
-	bh=2KUdznDw5vZ05JufQlJyZkuSTNllnaQhlyyX0vFY+xA=;
+	s=arc-20240116; t=1759139969; c=relaxed/simple;
+	bh=DYBJPIBbMHafgcAN44nzOJoGRrFBL/WVkCVLx71eGis=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NAVEWiodMe5Gayza8fNybFxJ808tEA/R15CdQSTP8EHFeELoyxppYA0Oz8bZA/vDe8x19nCkURiRAyxT+sxh51Cg5mAUYSoDzE6gcwJAj80o8l/UgnHs6YmGYFgkMKjiSht0C8KboPB4uZ/zAG69hv9exvJl074rPXf43UpLBBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HmVmRk8M; arc=none smtp.client-ip=74.125.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=ir9Hqdq+bxs9kMdpWGgtX4qsmU765+dBNbMEGp7mTTeMqSw0TDrOEy7jCVaf8HtQymzQBEFDKoTQ0klIfGGBVkLA73Dl0V+/ezetqNp+xLAF+QRkkYvneRhtk7X/g8/XAyC6VC649O/X+chuL8YBsYmMl+2rn9F5suEv++TbIU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nzoa9paf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HmVmRk8M"
-Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-633b45fad1aso3026319d50.3
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Sep 2025 02:59:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1759139957; x=1759744757; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2KUdznDw5vZ05JufQlJyZkuSTNllnaQhlyyX0vFY+xA=;
-        b=HmVmRk8M2S2In+vPAyFQuEH0KPEsA7gftYVcwmCL6u0TexkZrTr6w4XB6SSOt6CrFk
-         jzK15dZ/vSDaNZGI6OxWA0jeWiUrDWm2sme03NLcAunOfQSalUKBkCjOfOeVScM0B7Mb
-         ilwAqFcyFziN3kDdAw/LsXRttOxXRem8wXSYA1EHX36ZG7jEgrEckroWfMzpmQNdxSVI
-         5UPUzSXuReAUGDJwtTof+Vdng7+7eXac5jNPvb36ihG1qJowi6wcHzCDPHcvikORsNCf
-         p2C8sNh5YF7wwhW587+/wrWaOG/sSE1p/+daSIsLuXlBkyZ+GA+e9OsbPqcfvQGvwVxv
-         y6cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759139957; x=1759744757;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2KUdznDw5vZ05JufQlJyZkuSTNllnaQhlyyX0vFY+xA=;
-        b=lQedhzPSg4yBhYrpbkXsVXM26LzNrwpcZECk4MzeVDI71xn0F2Z2mLX5qzeps5wS8S
-         ria0C8uWyHqF6UgQ0WRIXPNwHgo4pT6oqxIWL/iKOMWnz5fGAIYc21jM5J2hjPSqdWgM
-         zq56w3Zcnejz9CzwC4TkzW3KLZs+jsEJhoYosljYye+wnuuN1IiWrw5kZnVjPb+OuQjw
-         5/nWobRq/Wyuu0i8zjsc2h1322rLq1UEDn4HMKKgWWvnrGEl0tXep9isljT0huLM1C+4
-         l5bhdDZoFs8XySPb9K7jl8OvBz4EgzcSxzthuP0Pe1YjsaHx/JXJQXfAc0Sudwviyhan
-         FLhA==
-X-Forwarded-Encrypted: i=1; AJvYcCViBNzNXbbJERFNmRIzwfytyMaN532N9SM4eGVRT9+ZwwBdAewUGC5t0wkqX/vRstJert8ewAly5/sEnQk0jxY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1+WQ+rL+hcif9uA0LGQEOW72+PAjg1cl0tOW6KbhQIP0CxRve
-	mXMjb5zUqeAFZIYvlEJBpTJJ6k+dI1t+sFu3g6rhuCyqXIn5a03dRrUMdoBHhp2wuLI+jRr+Hlx
-	OOzq6E2V8bE8iaBD5ll+yH919rDXRMvsPyquSHVvfsg==
-X-Gm-Gg: ASbGncuGIzBv7pS1oHR59xRt8+hBnOI/oURgRaDqYWvJGrLKUfywxL/OiH23+f7IeFL
-	xLweY1mY+vb0k/VmCGV95GXJCFBfoKNYXZOLap+JgU3QqueorUSuDBFUKjneDEExhJgiyXDPVT3
-	L4n/KRbnnSEDAQQJmRESeB4xi1ccLi2hoCR0nyvq3BsCmdcNHOQZBmsOTe2O1qAJxmk+n5b1lyq
-	2fux0Bx
-X-Google-Smtp-Source: AGHT+IHKB6dZwmkkiRTmQMJ6qqV5u+Z5RUcKikaK+UuufgwTUJ8RoCQyTBvf2kQBGXi0WQ0jZXHoQTtqUIZWVWUBjSA=
-X-Received: by 2002:a05:690e:1a4f:b0:636:f1d:e26 with SMTP id
- 956f58d0204a3-6361a8734e7mr18613222d50.32.1759139956833; Mon, 29 Sep 2025
- 02:59:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nzoa9paf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D2A2C2BCB0
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Sep 2025 09:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759139968;
+	bh=DYBJPIBbMHafgcAN44nzOJoGRrFBL/WVkCVLx71eGis=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Nzoa9pafJSDzrhiJVc3GOIWx5Y3QKMjHeQHP0KNgv6XZAk6YfGWCLxpUsbevoMlPn
+	 5S2YuXVXDDDtUFTGA2Didr1OsAe2AiGb1ezNRYQQT9CgiPkURbMjxUE+PmyH2fIkTu
+	 sQwdKtu2f1LKP/ohbU5lKVMkudjXnf5Pyg5avwEbDriL59eZXWzXd/ikanRHDEqGOQ
+	 xhU7jR5b9qugYOZGgcN4aezRLbF8VDBHax+I9DsErwUVH5O0UlaUU1GsVshEYpV0qp
+	 q0QrdE/Mthte+TODczIE670YxAIqXXYZ7KL8ELBs1NzkZlWgDI4KsjVTyFeWnAVpqL
+	 2NZeuqJmvtoCA==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-36a53fe7ebdso40922321fa.1
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Sep 2025 02:59:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWSXl7WsfQSa1eYqTVWBtTErByaoup9CWRFZL3eG1P1cudbnLy9ZciGm0GMacS2o1HtNE4o5CkFXCr/AAHi0Z8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRidBKHOy+8QDQFZHWQ96oQAnfuFN92NpxUPyR55AUtKxtGXID
+	30WmRIo1EIk3NIfnAObHvjnqYZE09kVZL5Y1wu57BL1YtzIFD9ogu/lZ7maqa7/tjCy9BAF2ThC
+	Iphgs0f8RqG+EcpTTYnnLUbrEplm8gug=
+X-Google-Smtp-Source: AGHT+IH5PibK2BEglV95OeRjODJbfR64f3760++WT4suP3RRQZaHMmgALypPu7Nm1nRiO8F1GDIp61CbGgPxhEIiEos=
+X-Received: by 2002:a2e:be8d:0:b0:35f:246:a751 with SMTP id
+ 38308e7fff4ca-36f7e29b533mr50398521fa.5.1759139966508; Mon, 29 Sep 2025
+ 02:59:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250923-mt8196-gpufreq-v4-0-6cd63ade73d6@collabora.com>
- <20250923-mt8196-gpufreq-v4-8-6cd63ade73d6@collabora.com> <CAPDyKFpLNJRRxWPm2Eye+Fs8go-LNwWGzPUPPKmNVJkyK5N3Dw@mail.gmail.com>
- <2015216.PYKUYFuaPT@workhorse>
-In-Reply-To: <2015216.PYKUYFuaPT@workhorse>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 29 Sep 2025 11:58:40 +0200
-X-Gm-Features: AS18NWDi6KooeuuBdFZYN2-L6gygoxiX5visVgVu6hIAQ09WtQulOO0qEvr47Zc
-Message-ID: <CAPDyKFoCPkNsbq8s3d6cQXxfFhiYH1kjrocNdq8=v+g+LY8c6A@mail.gmail.com>
-Subject: Re: [PATCH v4 8/8] pmdomain: mediatek: Add support for MFlexGraphics
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Boris Brezillon <boris.brezillon@collabora.com>, Jassi Brar <jassisinghbrar@gmail.com>, 
-	Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>, 
-	Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, kernel@collabora.com, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org, 
-	linux-pm@vger.kernel.org
+References: <20250926023737.it.616-kees@kernel.org> <20250926030252.2387681-6-kees@kernel.org>
+In-Reply-To: <20250926030252.2387681-6-kees@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 29 Sep 2025 11:59:15 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHQn0YEvpnwRigL_Mu61SGtGfmKVUJJgotGmm8S_BT8dA@mail.gmail.com>
+X-Gm-Features: AS18NWBz0QeU3nJjTbDl289pZA1oNXXRnd7AYbXix4O9zvUwW_ML-KHDXqd1kQc
+Message-ID: <CAMj1kXHQn0YEvpnwRigL_Mu61SGtGfmKVUJJgotGmm8S_BT8dA@mail.gmail.com>
+Subject: Re: [PATCH v4 6/7] arm: Add ARM 32-bit Kernel Control Flow Integrity implementation
+To: Kees Cook <kees@kernel.org>
+Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>, 
+	Jakub Jelinek <jakub@redhat.com>, Martin Uecker <uecker@tugraz.at>, Richard Biener <rguenther@suse.de>, 
+	Joseph Myers <josmyers@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Jeff Law <jeffreyalaw@gmail.com>, Jan Hubicka <hubicka@ucw.cz>, 
+	Richard Earnshaw <richard.earnshaw@arm.com>, Richard Sandiford <richard.sandiford@arm.com>, 
+	Marcus Shawcroft <marcus.shawcroft@arm.com>, Kyrylo Tkachov <kyrylo.tkachov@arm.com>, 
+	Kito Cheng <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Andrew Waterman <andrew@sifive.com>, Jim Wilson <jim.wilson.gcc@gmail.com>, 
+	Dan Li <ashimida.1990@gmail.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Ramon de C Valle <rcvalle@google.com>, Joao Moreira <joao@overdrivepizza.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, gcc-patches@gcc.gnu.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-[...]
-
+On Fri, 26 Sept 2025 at 05:02, Kees Cook <kees@kernel.org> wrote:
 >
-> I actually have a question about a mystery that has been puzzling
-> me as I work on v5: when unloading the driver that uses the PD
-> (panthor) and my driver using `modprobe -r panthor mtk_mfg_pmdomain`,
-> I see that sometimes detach_dev is called with the pd status
-> reportedly being off, but according to my own power-on/power-off
-> counting I hacked in, it actually being on. It then proceeds to
+> diff --git a/gcc/config/arm/arm.md b/gcc/config/arm/arm.md
+> index 422ae549b65b..c3b9f16ea872 100644
+> --- a/gcc/config/arm/arm.md
+> +++ b/gcc/config/arm/arm.md
+...
+> +/* Output the assembly for a KCFI checked call instruction.  INSN is the
+> +   RTL instruction being processed.  OPERANDS is the array of RTL operands
+> +   where operands[0] is the call target register, operands[2] is the KCFI
+> +   type ID constant.  Returns an empty string as all output is handled by
+> +   direct assembly generation.  */
+> +
+> +const char *
+> +arm_output_kcfi_insn (rtx_insn *insn, rtx *operands)
+> +{
+> +  /* KCFI type id.  */
+> +  uint32_t type_id = INTVAL (operands[2]);
+> +
+> +  /* Calculate typeid offset from call target.  */
+> +  HOST_WIDE_INT offset = -kcfi_typeid_offset;
+> +
+> +  /* Generate custom label names.  */
+> +  char trap_name[32];
+> +  char call_name[32];
+> +  ASM_GENERATE_INTERNAL_LABEL (trap_name, "Lkcfi_trap", kcfi_labelno);
+> +  ASM_GENERATE_INTERNAL_LABEL (call_name, "Lkcfi_call", kcfi_labelno);
+> +
+> +  /* Create memory operand for the type load.  */
+> +  rtx mem_op = gen_rtx_MEM (SImode,
+> +                           gen_rtx_PLUS (SImode, operands[0],
+> +                                         GEN_INT (offset)));
+> +  rtx temp_operands[6];
+> +
+> +  /* Normally we can use r12 as our scratch register.  */
+> +  unsigned scratch_reg_num = IP_REGNUM;
+> +  /* If register pressure has made r12 our target register, we need to pick
+> +     a different register.  We don't want to spill our target register
+> +     because on reload at the end of the KCFI check, we'd be producing
+> +     the very kind of call gadget we were trying to protect against:
+> +     "pop %target; call %target".  In this case, use r3 as our scratch
+> +     register.  But since r3 may be used for function arguments, we need
+> +     to check if it is being used for that and only spill/reload if that
+> +     happens.  Any spill/reload of r3 due to making a call will already
+> +     have been managed by the register allocator, so we only have to care
+> +     about not clobbering the argument value it may be carrying into the
+> +     call here.  Also use r3 when r12 is a fixed register.  */
+> +  if (REGNO (operands[0]) == scratch_reg_num
+> +      || fixed_regs[scratch_reg_num])
+> +    scratch_reg_num = LAST_ARG_REGNUM;
+> +  rtx scratch_reg = gen_rtx_REG (SImode, scratch_reg_num);
+> +
+> +  /* We only need to spill r3 if it's actually used by the call.  */
+> +  bool need_spill = (scratch_reg_num == LAST_ARG_REGNUM)
+> +                   && reg_overlap_mentioned_p (scratch_reg, insn);
+> +
+> +  /* Calculate trap immediate.  */
+> +  unsigned addr_reg_num = REGNO (operands[0]);
+> +  /* The scratch register is always clobbered by eor seq: use 0x1F.  */
+> +  unsigned udf_immediate = 0x8000 | (0x1F << 5) | (addr_reg_num & 31);
+> +
 
-Yes, ->detach_dev() may be called for a device, when its corresponding
-PM domain is both on or off.
+I take it this means you still need to decode the instructions in the
+kernel to obtain the expected type id?
 
-> call my remove, which results in three splats from the regulator
-> subsystem as the regulators weren't balanced with disables before
-> they were freed, which isn't the main problem but more a symptom
-> of the bigger problem that power_off and power_on calls don't
-> appear to be balanced by the pmdomain subsystem when a driver is
-> removed under certain circumstances.
-
-If the callbacks aren't called in a properly balanced manner that
-would be a bug in genpd. Certainly.
-
->
-> Did I run into a core pmdomain bug here, or do I have to balance
-> the power_on/off myself somehow in detach_dev? If the latter, I'm
-> struggling to figure out how I can determine that the PD is still
-> on without doing my own bookkeeping, as pmdomain core seems to clear
-> these fields before my detach_dev gets to them :(
-
-When genpd_dev_pm_detach() is called, the device is being detached
-from its genpd and part of that procedure means calling the
-->detach_dev() callback.
-
-When the device has been detached, we may have the PM domain being
-powered-on for no good reason. That's why we also punt a work to check
-if we can turn it off (see the call to genpd_queue_power_off_work()).
-
-Kind regards
-Uffe
+Can't you insert the actual register index here, and defer the reload
+until after the UDF? That way, the scratch register will always
+contain the XOR of the actual vs expected typeids when taking the
+trap.
