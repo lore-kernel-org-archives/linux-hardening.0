@@ -1,86 +1,180 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5B22EBDF9
-	for <linux-hardening@vger.kernel.org>; Tue, 30 Sep 2025 10:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBDF303C9B;
+	Tue, 30 Sep 2025 14:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759227461; cv=none; b=YlcSW39BxXvd50BZ1sZzC7EX0r+dhXmYGNUo/NgTBzDwIIyLARru2slHN+AbfaSCHDSBxybYzjGskdrAJ4UMrLEe65f2OP2eB0L1hsR1RecXOtd+6H80E1VlgzILxOg1LziAIDqmvz942ohyEe0ru/5Tbl92l3uiwkVkFmWCbJM=
+	t=1759244193; cv=none; b=Hv5+0tUE/0EglXg35QcWu3XTNCG67Gq0zLdIh5GCJeJEFm5gKZCzsZgTkFgeEJVipa4iNGQhO3rIwqzDPdvgbywvE6gR4hilCf/tHWArqAaKVIYtdX35Ql5LEiDzXJ/upk+q68yhOLMXKZuAA6zPM9HYjYutmwr6Efuc5JLGrsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759227461; c=relaxed/simple;
-	bh=OgxsNCOG0Jgve0lCwcvadpF3pnhXsGtnVRE0S+mZi5A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AkBmois65VFwVfezoemI6jTMiww2XLc276S1mCRQ32NTD91xZUskKxBDRgV9WLzxowcuVYEY1j8GdfIP8M89St++b1Z2nunkCkvSVP2fmklAeieFi7XhlC6+5S1rYAbTLmeSsB53uOBC3wE1a4+qjzPi2S6p1fU7DSYPLsyv6Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EN3IiMfw; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1759244193; c=relaxed/simple;
+	bh=s1lYkbb+4CyWmvQY8AvrB88kdw5TrnIzjIYKm0N4Tlg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KdckguwWFjeyCI+ZQ1oxBmdLHpS89xbprdeTbx04l1EIPFKKnO442c6FaHpZ7lHMj8QKEIvSOeG/Ad6IN6QZqJKbv+edW0S3Ngpv3jZyn09F21DgFPbhp9B76ugnS3IWtf0sGK9XKzJV2Q/p2gUoeosW7gSMBscQQTj25t8uBxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FRp74jbw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EN3IiMfw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759227459;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LdJuTKOf/1oQDjnzdAFIGDSMiQQ/LUgyrgeX0PFVxss=;
-	b=EN3IiMfw2zu8IYtzdi/vqLFf+Fu/KyRpLXVxYDMdA2sNeVOGFHHMmkg33/+e2EADXIkRC8
-	OLU+C2Z1Z83jvOngXGk9/jg8O7jzv0NCNiM7CQ3PbvwdL4mR6qjtXNvkDpddSkSitGyJX/
-	nVu7K8SJDsQL+WwBkapGM7jmlYTd2BY=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-674-J7GdcnEpOwauqhdqpvL-Gg-1; Tue,
- 30 Sep 2025 06:17:35 -0400
-X-MC-Unique: J7GdcnEpOwauqhdqpvL-Gg-1
-X-Mimecast-MFC-AGG-ID: J7GdcnEpOwauqhdqpvL-Gg_1759227454
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A90951800378;
-	Tue, 30 Sep 2025 10:17:33 +0000 (UTC)
-Received: from [10.44.33.194] (unknown [10.44.33.194])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D16A2180035E;
-	Tue, 30 Sep 2025 10:17:27 +0000 (UTC)
-Message-ID: <eed2bd71-4938-47c9-a0b3-6d24f06a7361@redhat.com>
-Date: Tue, 30 Sep 2025 06:17:26 -0400
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FRp74jbw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC7E0C113D0;
+	Tue, 30 Sep 2025 14:56:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1759244193;
+	bh=s1lYkbb+4CyWmvQY8AvrB88kdw5TrnIzjIYKm0N4Tlg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FRp74jbwkfpajSXk9hwd0qLDn7agwdg+CmbLtbLbR1cOWZnHK2CPViw4yBgEAOTiz
+	 CAcijJHDtQPlb5RHpNL1GpM9RPX4cnPeGtL4rVV94mctn6FUktQ03oVvX3hL2nUtIe
+	 8o46zzE51jTDuVsz61NzzLoIpfCJYu6pc6ggLvt8=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	linux-hardening@vger.kernel.org,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	Eliav Farber <farbere@amazon.com>
+Subject: [PATCH 5.10 014/122] overflow: Allow mixed type arguments
+Date: Tue, 30 Sep 2025 16:45:45 +0200
+Message-ID: <20250930143823.574238011@linuxfoundation.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250930143822.939301999@linuxfoundation.org>
+References: <20250930143822.939301999@linuxfoundation.org>
+User-Agent: quilt/0.69
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 07/11] scsi: scsi_transport_fc: add
- fc_host_fpin_set_nvme_rport_marginal()
-To: Justin Tee <justintee8345@gmail.com>
-Cc: hare@suse.de, kbusch@kernel.org, martin.petersen@oracle.com,
- linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
- bgurney@redhat.com, axboe@kernel.dk, emilne@redhat.com,
- gustavoars@kernel.org, hch@lst.de, Justin Tee <justin.tee@broadcom.com>,
- james.smart@broadcom.com, kees@kernel.org, linux-hardening@vger.kernel.org,
- njavali@marvell.com, sagi@grimberg.me
-References: <20250926000200.837025-1-jmeneghi@redhat.com>
- <20250926000200.837025-8-jmeneghi@redhat.com>
- <CABPRKS9SkaGZjC_vEy-YdgYELffGLvub7DTFGCYXFW68ObWqYg@mail.gmail.com>
-Content-Language: en-US
-From: John Meneghini <jmeneghi@redhat.com>
-Organization: RHEL Core Storge Team
-In-Reply-To: <CABPRKS9SkaGZjC_vEy-YdgYELffGLvub7DTFGCYXFW68ObWqYg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
+5.10-stable review patch.  If anyone has any objections, please let me know.
 
-On 9/29/25 1:45 PM, Justin Tee wrote:
-> Hi John,
-> 
->> +       u64 local_wwpn = fc_host_port_name(shost);
-> If CONFIG_NVME_FC is not enabled, then the u64 local_wwpn variables
-> aren’t used anywhere.
+------------------
 
-Oops.  Thanks I will fix this in my V11 patch series.
+From: Kees Cook <keescook@chromium.org>
 
-/John
-  
+commit d219d2a9a92e39aa92799efe8f2aa21259b6dd82 upstream.
+
+When the check_[op]_overflow() helpers were introduced, all arguments
+were required to be the same type to make the fallback macros simpler.
+However, now that the fallback macros have been removed[1], it is fine
+to allow mixed types, which makes using the helpers much more useful,
+as they can be used to test for type-based overflows (e.g. adding two
+large ints but storing into a u8), as would be handy in the drm core[2].
+
+Remove the restriction, and add additional self-tests that exercise
+some of the mixed-type overflow cases, and double-check for accidental
+macro side-effects.
+
+[1] https://git.kernel.org/linus/4eb6bd55cfb22ffc20652732340c4962f3ac9a91
+[2] https://lore.kernel.org/lkml/20220824084514.2261614-2-gwan-gyeong.mun@intel.com
+
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: linux-hardening@vger.kernel.org
+Reviewed-by: Andrzej Hajda <andrzej.hajda@intel.com>
+Reviewed-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Tested-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+[ dropped the test portion of the commit as that doesn't apply to
+  5.15.y - gregkh]
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Eliav Farber <farbere@amazon.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/linux/overflow.h |   72 ++++++++++++++++++++++++++---------------------
+ 1 file changed, 41 insertions(+), 31 deletions(-)
+
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -51,40 +51,50 @@ static inline bool __must_check __must_c
+ 	return unlikely(overflow);
+ }
+ 
+-/*
+- * For simplicity and code hygiene, the fallback code below insists on
+- * a, b and *d having the same type (similar to the min() and max()
+- * macros), whereas gcc's type-generic overflow checkers accept
+- * different types. Hence we don't just make check_add_overflow an
+- * alias for __builtin_add_overflow, but add type checks similar to
+- * below.
++/** check_add_overflow() - Calculate addition with overflow checking
++ *
++ * @a: first addend
++ * @b: second addend
++ * @d: pointer to store sum
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted addition, but is not considered
++ * "safe for use" on a non-zero return value, which indicates that the
++ * sum has overflowed or been truncated.
+  */
+-#define check_add_overflow(a, b, d) __must_check_overflow(({	\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_add_overflow(__a, __b, __d);	\
+-}))
++#define check_add_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_add_overflow(a, b, d))
+ 
+-#define check_sub_overflow(a, b, d) __must_check_overflow(({	\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_sub_overflow(__a, __b, __d);	\
+-}))
++/** check_sub_overflow() - Calculate subtraction with overflow checking
++ *
++ * @a: minuend; value to subtract from
++ * @b: subtrahend; value to subtract from @a
++ * @d: pointer to store difference
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted subtraction, but is not considered
++ * "safe for use" on a non-zero return value, which indicates that the
++ * difference has underflowed or been truncated.
++ */
++#define check_sub_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_sub_overflow(a, b, d))
+ 
+-#define check_mul_overflow(a, b, d) __must_check_overflow(({	\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_mul_overflow(__a, __b, __d);	\
+-}))
++/** check_mul_overflow() - Calculate multiplication with overflow checking
++ *
++ * @a: first factor
++ * @b: second factor
++ * @d: pointer to store product
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted multiplication, but is not
++ * considered "safe for use" on a non-zero return value, which indicates
++ * that the product has overflowed or been truncated.
++ */
++#define check_mul_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_mul_overflow(a, b, d))
+ 
+ /** check_shl_overflow() - Calculate a left-shifted value and check overflow
+  *
+
 
