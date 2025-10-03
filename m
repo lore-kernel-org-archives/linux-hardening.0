@@ -1,36 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0504816F265;
-	Fri,  3 Oct 2025 13:03:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962161FC0E2;
+	Fri,  3 Oct 2025 14:11:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759496607; cv=none; b=XAxHuqxIjf1QnNP+DuzZ8S/ctxW6CT3P0HYd4ZRy+cfK1K1kLMtNR2dFvqU8zP1njo+bhYO+UQ13BenZx0mbGQy9F6iguNE4+IopVHAHv4OwaeV4IBnjOCpXjMgSiTDOfa/fUa5fnK95BdCig0B6Z/LdxZdb5PscZuQkL/nf81M=
+	t=1759500676; cv=none; b=bdSmf0+nsrBeD15uKQqkACdGIXcx4n7iNxOkz1qOIGmV3fZ6Zkauui9kdkRHabKhOFhjWu0fFoL6B5a+QBavzXmZRrAOeFTyuZvZLdbx1qLXJ2XoAXmpOEjZBRj1TR3YaONqO+qUphMOaPCNofXvuF1luxkczg9jQ2JLBfNPLhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759496607; c=relaxed/simple;
-	bh=D3n23xqYSXvSy/Naf1ERzsbmkFWo3vlQVCUkJAq6W4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F+D2cBCnlZKmxoo3CRpHi157p6xQCRbwAO3i813nq8y8PEYMH9xiI+gOYicxYBItFKknW5qfReINvVnei76NJZzJdwIiuHAVCGgNuYVdR8SVZpCyGj+Hni9RJo7B+Vjqq9p74jTf+kiO3jvb1m7c9Aopt+IttjsfqdOC/lkGxXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NwJQ/ASp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759500676; c=relaxed/simple;
+	bh=4vN1hEkmtmKRCkrSy9yEROR2zwPDFh6Z4FaS19nadUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Vhb+yKcDaLPTPAvlLHBDPwT88nhL2evq3SRqM/kS1BKbEBpiXXCOb/YImmV4Xg9qq0XYdetZ35t3p8XUDX9viZ+28+MvBLHin6PNqCjhUw3imOrbOyhlLbLY17kP7Xen8Q1+0wl2VCOBiIfrsP1jPuzlyBzsPMC58hzpLwrg3Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=useM9sfP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NwJQ/ASp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B687C4CEF5;
-	Fri,  3 Oct 2025 13:03:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1759496605;
-	bh=D3n23xqYSXvSy/Naf1ERzsbmkFWo3vlQVCUkJAq6W4M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NwJQ/ASpH0aCZB5rIlMLHJGZfggKUXkAysFA+lBJINMmJfVFx4QHZ5UfaaNquz+79
-	 nEy8SdlmVUXh+xd05s/2gJ5xE3F6p0GMcNJCr2IITGRE/j7AfJISwVmiQWem+9EV+Z
-	 pIb2cWs2HcFzIKRJREzJyzEa0C/NFXUUYW9NhZE4=
-Date: Fri, 3 Oct 2025 15:03:22 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Brahmajit Das <listout@listout.xyz>
-Cc: stable@vger.kernel.org, linux-hardening@vger.kernel.org,
-	kees@kernel.org, Christopher Fore <csfore@posteo.net>
-Subject: Re: [PATCH 6.16.y] gcc-plugins: Remove TODO_verify_il for GCC >= 16
-Message-ID: <2025100311-disparate-many-794c@gregkh>
-References: <20251001155040.26273-1-listout@listout.xyz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="useM9sfP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 423E9C4CEF5;
+	Fri,  3 Oct 2025 14:11:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759500674;
+	bh=4vN1hEkmtmKRCkrSy9yEROR2zwPDFh6Z4FaS19nadUk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=useM9sfP6F/GkKCi7h4t6GsMEIWewPJCvIFTHd0suV7ge5Ofkt2GJhIxYDVfZDcvl
+	 tuoEkYPzlPKID/+XwMkM4bO/aVqsXI2jcU1CrKMrinjGXfO2igPTrvtW4JEMBhx4lb
+	 93w9d5jj6cOAuofCB2zH4PLjff3VAWxg+bC1cSav1VNR5hVhwU30LEzZlO73i9JOYK
+	 oh+IswBQSd8wB7blxIKPjhRhlmYhz39R/ooqRNVd6lWdMcIWZJjgHPrS8SJDXqM9Nl
+	 PZFbb00O8Z5oZ7zTW/eeJfJm3u5oIDc8RSsly7jRN39jdsvICVgv+wbr+iQuoRlYNd
+	 nwRvs2PsbuZ6A==
+Date: Fri, 3 Oct 2025 15:11:06 +0100
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>
+Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] btrfs: Avoid -Wflex-array-member-not-at-end warning
+Message-ID: <aN_Zeo7JH9nogwwq@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,25 +42,46 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251001155040.26273-1-listout@listout.xyz>
 
-On Wed, Oct 01, 2025 at 09:20:40PM +0530, Brahmajit Das wrote:
-> From: Kees Cook <kees@kernel.org>
-> 
-> [ Upstream commit a40282dd3c48 ]
-> 
-> GCC now runs TODO_verify_il automatically[1], so it is no longer exposed to
-> plugins. Only use the flag on GCC < 16.
-> 
-> Link: https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=9739ae9384dd7cd3bb1c7683d6b80b7a9116eaf8 [1]
-> Suggested-by: Christopher Fore <csfore@posteo.net>
-> Link: https://lore.kernel.org/r/20250920234519.work.915-kees@kernel.org
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> Signed-off-by: Brahmajit Das <listout@listout.xyz>
-> ---
->  scripts/gcc-plugins/gcc-common.h | 7 +++++++
->  1 file changed, 7 insertions(+)
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Kees beat you to this, thanks!
+Move the conflicting declaration to the end of the corresponding
+structure. Notice that `struct fs_path` is a flexible structure,
+this is a structure that contains a flexible-array member (`char
+inline_buf[];` in this case).
 
-greg k-h
+Fix the following warning:
+
+fs/btrfs/send.c:181:24: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/btrfs/send.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/fs/btrfs/send.c b/fs/btrfs/send.c
+index 9230e5066fc6..2b7cf49a35bb 100644
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -178,7 +178,6 @@ struct send_ctx {
+ 	u64 cur_inode_rdev;
+ 	u64 cur_inode_last_extent;
+ 	u64 cur_inode_next_write_offset;
+-	struct fs_path cur_inode_path;
+ 	bool cur_inode_new;
+ 	bool cur_inode_new_gen;
+ 	bool cur_inode_deleted;
+@@ -305,6 +304,9 @@ struct send_ctx {
+ 
+ 	struct btrfs_lru_cache dir_created_cache;
+ 	struct btrfs_lru_cache dir_utimes_cache;
++
++	/* Must be last --ends in a flexible-array member. */
++	struct fs_path cur_inode_path;
+ };
+ 
+ struct pending_dir_move {
+-- 
+2.43.0
+
