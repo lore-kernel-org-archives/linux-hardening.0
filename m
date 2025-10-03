@@ -1,127 +1,138 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DAA19D880;
-	Fri,  3 Oct 2025 17:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8472E230BDF
+	for <linux-hardening@vger.kernel.org>; Fri,  3 Oct 2025 18:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759512736; cv=none; b=TwKmjlPoLSEFT18aX5X1QQ9NROcHVB0vYj6ZUR7xei8XUv8gkq7MtMiCCwvbqjEtOqJqmjcrmip5wpw9nPR6sGr0dh1qyJwS8wTd1JKex1dLn8I9PbmMUMUI4gbZGuNX158rqpyxFrFq5tW0B2CKFCC4t0q0HT5ogNCa7XTKToE=
+	t=1759515365; cv=none; b=gHe0iVtQXySovh+pX/CUlNUek0tEQAcKFIAbkfMC4oO12tw/elDnxUerTvtw96e//RXdrUuAqVPSSTT+vu5oDFyqn+8sxJ8jKTcxVBtgyEfaCbxn1LX+DrKR3QJfg6WBqzlesJdBkrvu+A+XnbL7YXNbLfl9Lu/GWsNbP+xdF3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759512736; c=relaxed/simple;
-	bh=KUXQDUaLpGTyUaeCV6NkTrwXChz9uX7wllKFZMxDMEs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Za4Jk5vUnWFrfQsvTWju7MqKlB1JokJXKvz5rsnuiIceFIEb9x1kMxWc23WJBfI+F6pugpayUdxaQgKY9dZgOICsM5DV8vpbrvVI4K13v4RBFaqgUEXTcpwbjhSrP7QaV+s6lQSlWhh/ENMdtJm9fo0AwNLHmG00DgPjQgNsN44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=mWU/sOY7; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1759515365; c=relaxed/simple;
+	bh=DWENI6DuXEJ8v7lUaZGvnNMdfDIGbQfCAclwdMGY22A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qI3eEDMzUWFrNbBprv1dIq0diQuy34oAk+PoFA4bjeLNGKK9vNK91NPCRkYXHc8dEoejqi+MIq4bE9Cv7gpErQ5SNSTlPr9zktEKWWyol8RUCSqO2+aqJ6f+ORf+A2kvM3eE+JwgOiW3zF7bzzYg+ly+z0y4XYFXm2TQpbu1Yak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HTogVdCm; arc=none smtp.client-ip=74.125.224.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="mWU/sOY7"
-Received: from eig-obgw-5001b.ext.cloudfilter.net ([10.0.29.181])
-	by cmsmtp with ESMTPS
-	id 4fOFvaOCGKXDJ4jdWvALPd; Fri, 03 Oct 2025 17:32:06 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 4jdVvl6csrMH54jdWvfJQX; Fri, 03 Oct 2025 17:32:06 +0000
-X-Authority-Analysis: v=2.4 cv=eaE9f6EH c=1 sm=1 tr=0 ts=68e00896
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=4oHATN8Nx7vVUZJYxp75bA==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=7T7KSl7uo7wA:10
- a=UzAz_WlB0G74hqp-NeEA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Wk/lJ0/YkwWz5LRniSBr0fOTkRttbOb5TobwP/F87mM=; b=mWU/sOY7n7kfeq+tXJdqvl4Vpb
-	QS6ivMrZU8yEKS+TsZAaKzMukht/960Bn9p3Kepari0pCP+L053Qfmz8j4spATH0ZGjYQWamLcER9
-	DrOaWnTJbxDBgaK+30+6xPtvKVOK/VJGRPwND7MEOaifd867NRTqTaWvplCA+OB/tpOECuy6nlC89
-	VGcJQjvNNzR+5IwbK+JB3vYC0sXYAi3QUcHKU4jkUmJfz2CkuJ6Vu2a/aXqcpbR975uV7MhyUVU6o
-	OP3+JRrTP/lZubY9tXCJUJHIlA76Qb4vRP9gMdlCGz7r+/KYWyI1HOD8ca5Nq/J0/WuWxYaRnlenr
-	5AZWa0og==;
-Received: from [185.134.146.81] (port=52182 helo=[10.21.53.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1v4hb3-00000002K6A-0MN0;
-	Fri, 03 Oct 2025 10:21:25 -0500
-Message-ID: <10762d3f-361a-48b7-8e46-5e5b8a9887fb@embeddedor.com>
-Date: Fri, 3 Oct 2025 16:21:17 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTogVdCm"
+Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-633bca5451cso2742721d50.1
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Oct 2025 11:16:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759515362; x=1760120162; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hA+2wesaVrYL13Ek9PytzgyCt01NNN1W3ZjSk7cfKyA=;
+        b=HTogVdCmeZbs/su7w+K8BnsdCVVsoGvhgVN4YfVlUSieWK5p1PQoMiWEUCj9h+saV0
+         SPZaf0LHkxsB8FG5ryuriE9z8L/dRF8g+2JInPpb1LTrl425ozWfdkYImxz3Yc3xG5Bc
+         bET4Dca9yz11TGw/u6Gvlb5vISzWzJ7tiLS0cVTIkhzrSkI/F9QtoyQWrHxIkGDgD4xh
+         cC3ILjpy0tbWT2UdavsL5I9XVgHWGAgKX5JA7XsQX81GdGgMNc5eTsUOG/aLcqUuYEa4
+         ILfZmClWS5pOUXFKMKMHfJdt73VMZH+qm6zOuiIhPNWIWbmCp3d+NbdkIkNkBLtgmp+d
+         6Frw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759515362; x=1760120162;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hA+2wesaVrYL13Ek9PytzgyCt01NNN1W3ZjSk7cfKyA=;
+        b=Yl9UIjjT5eDGkzeMo9JhmX6pe4Za6lh1vQPVawhR07jY7vKxobWEpCFcdOLf1x0n43
+         sPZ+AKgDl0P5DWC6Hbifwiv+sqUSVg9Y7cpHMDoynmO+nwaAD+NOkZLNBN4Ys524YMUF
+         O2ByZ/JdQd2BvQzhhStcCwa4+aYwDWLTEbH3XKgA0vCTgLVJqQ9syOSkzkF3XoG0BVHH
+         nDKYeQncVvYxnKDQxCVAkzLVwFTDyE9znbNIV9c+jLRGUFvUMujqCsQ/P6J0g0f1j68S
+         abWeKiPvH0Y8TArNnNtQKiKnOhsEGGEfi9/x3VnbjwUflxf95TtssECzdwi9uPN7FADD
+         3wJw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1tGZrxEACQOK41zSo1gK0HWwfEtfpBggfvFpNHhPVLdPagyffPqrC/ZvsVfo471renTKv8BiALvBbXITKPnY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwUouI56LqmKBSzZdxnnYcJfjlujujDYM4b7uxEKNfFkyQeQu8
+	IhfyNcbyCKNr4dCXSrMdrjumAKFcOq6KFBV5KUPfM4QMrytYemlU0nT4kCsO7zPGnFAKPj0vl9l
+	c7VNdojs8pd1rOjdvndibY8g1SCVWTMU=
+X-Gm-Gg: ASbGncv9+Xi6/OejuAU0upkcqUPr9iVoQh9DJKBGu7odYbIjQTQlPLL4JRN/sLAjsvN
+	OHTJ/6QUCUBgcenajj5fK7zjJWAOd26zdUcP46BsRAYS53QF5xk0Kk//WpSB2KvOqNR6KwhQZFf
+	AV77bpUJJ72q5PNQX3s8K7W2xBxna+ljHi5SrSkJoVArioeAQjuMA37N2X0X9/wSnGiKYJJYNgk
+	pB9rAIZCCc3R96pi1tt3VFV3BjOEP8lQuug+PJmJ7pImCtra+X/1DZUNgkAZFTjZCJpRAfliA4j
+	+pLeYNg6K+xdY7/5ehdB/1ZvFkkl9JLU
+X-Google-Smtp-Source: AGHT+IHcaFQJqVTztaB0e9RyZeNiAagOyj3g8KNYxpfdC0wTuijqki+QAQ/mSLPGzCBtgMgInYIWdXqQgPlyAlcpaNk=
+X-Received: by 2002:a05:690e:28d:b0:604:3849:89a8 with SMTP id
+ 956f58d0204a3-63b9a076118mr3027885d50.16.1759515362277; Fri, 03 Oct 2025
+ 11:16:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] btrfs: Avoid -Wflex-array-member-not-at-end warning
-To: dsterba@suse.cz
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Chris Mason <clm@fb.com>,
- David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aN_Zeo7JH9nogwwq@kspp> <20251003143502.GJ4052@suse.cz>
- <b59ed01f-d9d5-4de8-8a12-1e506962b2d9@embeddedor.com>
- <20251003151509.GK4052@suse.cz>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20251003151509.GK4052@suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 185.134.146.81
-X-Source-L: No
-X-Exim-ID: 1v4hb3-00000002K6A-0MN0
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([10.21.53.44]) [185.134.146.81]:52182
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfK4M9m0pbIowg9FlJnFFGQEUZ1OtocPOx4fqCdf1MmuES91rpOTIJ/lcXIfg7GnHA1Or97wRORieh8rn6mdA1F09CNT4mFeRy0WRKPHx7xviRLVhO7Ki
- azRIugbcBHctVzgjUD33JZUZR+hSii8mY/TfMQ6X1WqPKIBoZR2+EuAIp3ZqfrnmsxE6rTTk0UdGS153o5ZuT5Az737DGcYGVr9oOjDWYwrDLNl72tlL8fBi
- uJZIqdnp1U6IxrRAbrQjq4n4LCmgG/yf1vmQyzPWT2v5TzO60GYfXcX7xXxOut+gNNqK+7Wf1axs4JhsDV3J3Q==
+References: <20250929-mt8196-gpufreq-v5-0-3056e5ecf765@collabora.com> <20250929-mt8196-gpufreq-v5-4-3056e5ecf765@collabora.com>
+In-Reply-To: <20250929-mt8196-gpufreq-v5-4-3056e5ecf765@collabora.com>
+From: Chia-I Wu <olvaffe@gmail.com>
+Date: Fri, 3 Oct 2025 11:15:51 -0700
+X-Gm-Features: AS18NWBanN0MXtcDFrnukKn4J7dSEQIT7fLhFbzGJzYOporRHK4S0vyKzeHBSFc
+Message-ID: <CAPaKu7Tz9tw=fbz17kpPn1Pj_YsGRJZR9o28zkfiBgvxL3rdxg@mail.gmail.com>
+Subject: Re: [PATCH v5 4/7] mailbox: add MediaTek GPUEB IPI mailbox
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Boris Brezillon <boris.brezillon@collabora.com>, Jassi Brar <jassisinghbrar@gmail.com>, 
+	Chen-Yu Tsai <wenst@chromium.org>, Steven Price <steven.price@arm.com>, 
+	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, kernel@collabora.com, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 10/3/25 16:15, David Sterba wrote:
-> On Fri, Oct 03, 2025 at 03:51:24PM +0100, Gustavo A. R. Silva wrote:
->>>>
->>>> diff --git a/fs/btrfs/send.c b/fs/btrfs/send.c
->>>> index 9230e5066fc6..2b7cf49a35bb 100644
->>>> --- a/fs/btrfs/send.c
->>>> +++ b/fs/btrfs/send.c
->>>> @@ -178,7 +178,6 @@ struct send_ctx {
->>>>    	u64 cur_inode_rdev;
->>>>    	u64 cur_inode_last_extent;
->>>>    	u64 cur_inode_next_write_offset;
->>>> -	struct fs_path cur_inode_path;
->>>>    	bool cur_inode_new;
->>>>    	bool cur_inode_new_gen;
->>>>    	bool cur_inode_deleted;
->>>> @@ -305,6 +304,9 @@ struct send_ctx {
->>>>    
->>>>    	struct btrfs_lru_cache dir_created_cache;
->>>>    	struct btrfs_lru_cache dir_utimes_cache;
->>>> +
->>>> +	/* Must be last --ends in a flexible-array member. */
->>>                           ^^
->>>
->>> Is this an en dash?
->>
->> Not sure what you mean.
-> 
-> En dash is a punctuation mark not typically used in comments, nowadays
-> found in AI generated code/text. I was just curious.
-
-Ah yes, I've been using this punctuation mark for this sorts of comments,
-but this is not AI generated code/text.
-
--Gustavo
-
+On Mon, Sep 29, 2025 at 12:47=E2=80=AFAM Nicolas Frattaroli
+<nicolas.frattaroli@collabora.com> wrote:
+>
+> The MT8196 SoC uses an embedded MCU to control frequencies and power of
+> the GPU. This controller is referred to as "GPUEB".
+>
+> It communicates to the application processor, among other ways, through
+> a mailbox.
+>
+> The mailbox exposes one interrupt, which appears to only be fired when a
+> response is received, rather than a transaction is completed. For us,
+> this means we unfortunately need to poll for txdone.
+>
+> The mailbox also requires the EB clock to be on when touching any of the
+> mailbox registers.
+>
+> Add a simple driver for it based on the common mailbox framework.
+>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
+> ---
+>  drivers/mailbox/Kconfig             |  10 ++
+>  drivers/mailbox/Makefile            |   2 +
+>  drivers/mailbox/mtk-gpueb-mailbox.c | 318 ++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 330 insertions(+)
+[...]
+> +static irqreturn_t mtk_gpueb_mbox_thread(int irq, void *data)
+> +{
+> +       struct mtk_gpueb_mbox_chan *ch =3D data;
+> +       u8 buf[GPUEB_MBOX_MAX_RX_SIZE] =3D {};
+nit: move to inside the if-block below.
+> +       int status;
+> +
+> +       status =3D atomic_cmpxchg(&ch->rx_status, GPUEB_MBOX_FULL | GPUEB=
+_MBOX_BLOCKED,
+> +                               GPUEB_MBOX_FULL);
+> +       if (status =3D=3D (GPUEB_MBOX_FULL | GPUEB_MBOX_BLOCKED)) {
+> +               mtk_gpueb_mbox_read_rx(buf, ch);
+> +               writel(BIT(ch->num), ch->ebm->mbox_ctl + GPUEB_MBOX_CTL_I=
+RQ_CLR);
+> +               mbox_chan_received_data(&ch->ebm->mbox.chans[ch->num], bu=
+f);
+> +               atomic_set(&ch->rx_status, 0);
+> +               return IRQ_HANDLED;
+> +       }
+> +
+> +       return IRQ_NONE;
+> +}
