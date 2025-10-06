@@ -1,218 +1,130 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mx-relay04-hz1.antispameurope.com (mx-relay04-hz1.antispameurope.com [94.100.132.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA39920FA9C;
-	Mon,  6 Oct 2025 11:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A9126A0F8
+	for <linux-hardening@vger.kernel.org>; Mon,  6 Oct 2025 11:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=94.100.132.204
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759750870; cv=pass; b=A/x81WvCJDpQXQUdYZP08FKu0/xdxNl4mk+DdXRr2BV1gxeli9ZnQVNeIOXgiIE9CSTqDHTMyXrweqTtxiOGuHdeJhQh2qpFaE8LOBhTSQb+wDTGSLaCjrtOCovtNFWWOVgayce21lQqB4TXrmz18VYIbcSqZrN1n0zF1uyKxNY=
+	t=1759751406; cv=pass; b=Ah6B7Bs1+0apbLouhcR5gmHl+GpG97M8kYAsYscuGNQZh2a5PQ3/+dhfeogSSjl5asnsoJmll3qeCQu77wXqfmhyonukrbec4RYZxjl3BhLzk/2+/r5Vc+Ieht0X/TMgp2P2Gh1RfQ+m8cFeFHPxGnofgZGy5HD7L4HK3PmvDLI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759750870; c=relaxed/simple;
-	bh=wWYDZbK9DMCkFdjpojlafJmg76EjaUQOk7qvY/cZfa4=;
+	s=arc-20240116; t=1759751406; c=relaxed/simple;
+	bh=qarvGPIXqA4kc0VRJVXX2DsO6Wnlroa5YHsjyH+FLN4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R68cro2qFG07ZtW7jYiNEz7GgxS3oo5WMo3nNQfl9n9k7LHb29JV6RrrzxD/RDRciMrke2PBxU4FiUugiHzIsNxA5PL5LukyXw7d/FgMgRWBHsDoHj2bcZ2OGqMPBIu3drLwazbVlqfzq90acoQLAz6+y/6Mxv6HTMqYkIkrq6Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=MMZpYfqp; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 MIME-Version:Content-Type; b=YTBMkLj9RXFMwjFqwR62DVekDW83KCYWAt3Op708AdwNHjHP0noS+VqOW0jvhqULGSRAvBrYNvHYv/1+I4x3+gCRrIDheUrk8G5DelzugpKqlIVyaWf5Yc3yq8Fv50MX5CQpG0DKi2JXZ/goO3IEE0GUg/cm0XlAUIikc8aJuAk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=KPf+Dnax; arc=pass smtp.client-ip=94.100.132.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="MMZpYfqp"
-ARC-Seal: i=1; a=rsa-sha256; t=1759750843; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=C8pwcjsJ+qowHJ37zlXp12Ma1w0Ko/I/NzluVBpY+/82lmGqlPpQvMpphsi4l9HCJpYdFV3dIJotUDRoRbIzK1u6ioMrJtEmt2FeIWl9tKwOqWP9xOq11BwfRRCYCeYEGXkX8gE5YRTUJrf9FsmKfBnMPytChaMtIyvSFrXRggk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1759750843; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=2zSa8t0BLFbE2sFL8sEge/sB6GfievzXdAQnRQjaaHE=; 
-	b=npgMq/QsQ/ncrLWzA2MOJFVNkUM49rUnZfnuxYOiG++NPcP5dp0wk2W4d2JT/tcHCvch/mfY/S0OWF9kuMJn+j/C4pGf+UYoMPBPmGlIA9GsnOLlFulC9AVMVoXiifzsLZy5fTlu7FBrkE3xZCoVO3SnmPBdt1Y1q3JVC9oDafk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1759750843;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=2zSa8t0BLFbE2sFL8sEge/sB6GfievzXdAQnRQjaaHE=;
-	b=MMZpYfqpYfrc7dXHgD412byATIiTHhnz7W4rKmFMt2MG3Zl2+7d0+d0Ced8fa1W1
-	iBcyNF/oSgkohtiQC+CM3LAixL1bPSoHqFOaTAqQP+eHRAE4iMk2jsDArs+EnEt5AiJ
-	L4Jk/8QKvYFz2ARu1LgCLJ4C0C0B7pp+XYoUnv/o=
-Received: by mx.zohomail.com with SMTPS id 1759750841484642.2099292517786;
-	Mon, 6 Oct 2025 04:40:41 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Chia-I Wu <olvaffe@gmail.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Jassi Brar <jassisinghbrar@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org,
- linux-pm@vger.kernel.org
-Subject: Re: [PATCH v6 7/7] pmdomain: mediatek: Add support for MFlexGraphics
-Date: Mon, 06 Oct 2025 13:40:35 +0200
-Message-ID: <2323923.iZASKD2KPV@workhorse>
-In-Reply-To: <8586490.T7Z3S40VBb@workhorse>
-References:
- <20251003-mt8196-gpufreq-v6-0-76498ad61d9e@collabora.com>
- <CAPaKu7QWBShwr+YhFi+nUFo0kJ06k4PK3zggcCefWGjqUmTx5w@mail.gmail.com>
- <8586490.T7Z3S40VBb@workhorse>
+	dkim=pass (2048-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="KPf+Dnax"
+ARC-Authentication-Results: i=1; mx-gate04-hz1.hornetsecurity.com 1; spf=pass
+ reason=mailfrom (ip=94.100.132.6, headerfrom=ew.tq-group.com)
+ smtp.mailfrom=ew.tq-group.com
+ smtp.helo=hmail-p-smtp01-out04-hz1.hornetsecurity.com; dmarc=pass
+ header.from=ew.tq-group.com orig.disposition=pass
+ARC-Message-Signature: a=rsa-sha256;
+ bh=KYptHwQxYppzTfCWVdL/R5bMHuCmx/luf6VVt6namUI=; c=relaxed/relaxed;
+ d=hornetsecurity.com; h=from:to:date:subject:mime-version:; i=1; s=hse1;
+ t=1759751362;
+ b=BcfORPh31icY70H1K7KigT7SAtqsVDTsQjTqi5t445qQhJik/176SrNV5c1Em2eqEhH/GF5m
+ zP1sWdtn/3mrx0TkuS8VMii2KZ7d2HciFRtJpRIEaKBFVYOPtrnrfHxihGTi0qjMDgMNsrSM1MW
+ 8Y07bs08CgrEHnKUwUr2e4cQrR5q/XrRasS3Do9dL2oQ0Bnm/5dL6Mbs7PNy0yVnlFH7vja+/HU
+ UI6ET+oQZKNonxdF0CVf0krMGt/qfEfI12g2RQ2D8EVkfWRKv/pKfH8h9H+28XuEpm13CNSqFvr
+ xCZbExBl0PZxryPDbyLEuZiEY2DEf73f72xUCqnV82esA==
+ARC-Seal: a=rsa-sha256; cv=none; d=hornetsecurity.com; i=1; s=hse1;
+ t=1759751362;
+ b=fU+bnyk4ruRuyUKmEybm9IXoUI9mHEHbK1Or+qHNXT1xdOGsZIWeDFpnw+dX/Dgz0s3EJ+PV
+ uXw7sWY+GHa9JBtDGW+YwsuieuHsuSwcOJ6vv0mAiEYK9jA8GdWHKQU4ObfJwdTwCcSDfpu47lX
+ YU0WLwZMGmCNglM1JE4K/rY99o6j81jhmtT+9RBJ38DUNrpRTxkDzHVHqeTIwkxwbFQ9tCZSG7D
+ iKqYcfXosfuHD2jISdEubmLpESTpRzuyK9T5iqtqd/JFUR6rpcjAAY0C+vfSOHanlIIq86W2wkt
+ U/Rm8BHiS8iPofnKgRqsqW9HDz6Nvs6mQ50QSSCQXybtA==
+Received: from he-nlb01-hz1.hornetsecurity.com ([94.100.132.6]) by mx-relay04-hz1.antispameurope.com;
+ Mon, 06 Oct 2025 13:49:22 +0200
+Received: from schifferm-ubuntu.tq-net.de (host-82-135-125-110.customer.m-online.net [82.135.125.110])
+	(Authenticated sender: matthias.schiffer@ew.tq-group.com)
+	by hmail-p-smtp01-out04-hz1.hornetsecurity.com (Postfix) with ESMTPSA id 4F5EC220CF2;
+	Mon,  6 Oct 2025 13:49:03 +0200 (CEST)
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux@ew.tq-group.com,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH v3 1/2] dt-bindings: arm: ti: Add compatible for AM625-based TQMa62xx SOM family and carrier board
+Date: Mon,  6 Oct 2025 13:47:47 +0200
+Message-ID: <7691a2ca5ed49da6276d406e5dd986c91f221c9b.1759749553.git.matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <cover.1759749553.git.matthias.schiffer@ew.tq-group.com>
+References: <cover.1759749553.git.matthias.schiffer@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-cloud-security-sender:matthias.schiffer@ew.tq-group.com
+X-cloud-security-recipient:linux-hardening@vger.kernel.org
+X-cloud-security-crypt: load encryption module
+X-cloud-security-Mailarchiv: E-Mail archived for: matthias.schiffer@ew.tq-group.com
+X-cloud-security-Mailarchivtype:outbound
+X-cloud-security-Virusscan:CLEAN
+X-cloud-security-disclaimer: This E-Mail was scanned by E-Mailservice on mx-relay04-hz1.antispameurope.com with 4cgHc010rQzS0jY
+X-cloud-security-connect: he-nlb01-hz1.hornetsecurity.com[94.100.132.6], TLS=1, IP=94.100.132.6
+X-cloud-security-Digest:b8a1cefe5a1b3338a1f745c2baa9dc55
+X-cloud-security:scantime:2.278
+DKIM-Signature: a=rsa-sha256;
+ bh=KYptHwQxYppzTfCWVdL/R5bMHuCmx/luf6VVt6namUI=; c=relaxed/relaxed;
+ d=ew.tq-group.com;
+ h=content-type:mime-version:subject:from:to:message-id:date; s=hse1;
+ t=1759751361; v=1;
+ b=KPf+DnaxEUQFvW/TnLEXXcZbAcM9pgb7AjS2KswEib6PH40PiRQ2JfScuyQ+SmiaosZBsbW1
+ 87E0UsB17vwuV8csObrfFTo4cp7a3zqSWFoYXd0LJ+W8ifHqVOarV70fLgA+Lv8XXOPEb5F6XMz
+ OIv1ICG0eDt9SwkBeAehyVRYGX+MVwbLbIS7KEVZMHnXc8LXdhoU73GvBYGV/BU/0rbs2l2lG4o
+ XJcQ94PWArazjcQ9jmP8p8DgSvC+Ot4j2SJuWhE2QwbEYz3GCPMlhZlkVSHZAXQ8JH2McSYtjE7
+ /KjT0H73UG5mwOmd+BZoWqEsoB69yef/0coOXiLboqepw==
 
-On Monday, 6 October 2025 12:58:55 Central European Summer Time Nicolas Fra=
-ttaroli wrote:
-> On Friday, 3 October 2025 23:41:16 Central European Summer Time Chia-I Wu=
- wrote:
-> > On Fri, Oct 3, 2025 at 1:16=E2=80=AFPM Nicolas Frattaroli
-> > <nicolas.frattaroli@collabora.com> wrote:
-> > >
-> > > Various MediaTek SoCs use GPU integration silicon named "MFlexGraphic=
-s"
-> > > by MediaTek. On the MT8196 and MT6991 SoCs, interacting with this
-> > > integration silicon is required to power on the GPU.
-> > >
-> > > This glue silicon is in the form of an embedded microcontroller runni=
-ng
-> > > special-purpose firmware, which autonomously adjusts clocks and
-> > > regulators.
-> > >
-> > > Implement a driver, modelled as a pmdomain driver with a
-> > > set_performance_state operation, to support these SoCs.
-> [...]
-> > > +static int mtk_mfg_probe(struct platform_device *pdev)
-> > > +{
-> > > +       struct device_node *shmem __free(device_node);
-> > > +       struct mtk_mfg *mfg;
-> > > +       struct device *dev =3D &pdev->dev;
-> > > +       const struct mtk_mfg_variant *data =3D of_device_get_match_da=
-ta(dev);
-> > > +       struct resource res;
-> > > +       int ret, i;
-> > > +
-> > > +       mfg =3D devm_kzalloc(dev, sizeof(*mfg), GFP_KERNEL);
-> > > +       if (!mfg)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       mfg->pdev =3D pdev;
-> > > +       mfg->variant =3D data;
-> > > +
-> > > +       dev_set_drvdata(dev, mfg);
-> > > +
-> > > +       mfg->gpr =3D devm_platform_ioremap_resource(pdev, 0);
-> > > +       if (IS_ERR(mfg->gpr))
-> > > +               return dev_err_probe(dev, PTR_ERR(mfg->gpr),
-> > > +                                    "Couldn't retrieve GPR MMIO regi=
-sters\n");
-> > > +
-> > > +       mfg->rpc =3D devm_platform_ioremap_resource(pdev, 1);
-> > > +       if (IS_ERR(mfg->rpc))
-> > > +               return dev_err_probe(dev, PTR_ERR(mfg->rpc),
-> > > +                                    "Couldn't retrieve RPC MMIO regi=
-sters\n");
-> > > +
-> > > +       mfg->clk_eb =3D devm_clk_get(dev, "eb");
-> > > +       if (IS_ERR(mfg->clk_eb))
-> > > +               return dev_err_probe(dev, PTR_ERR(mfg->clk_eb),
-> > > +                                    "Couldn't get 'eb' clock\n");
-> > > +
-> > > +       mfg->gpu_clks =3D devm_kcalloc(dev, data->num_clks, sizeof(*m=
-fg->gpu_clks),
-> > > +                                    GFP_KERNEL);
-> > > +       if (!mfg->gpu_clks)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       for (i =3D 0; i < data->num_clks; i++)
-> > > +               mfg->gpu_clks[i].id =3D data->clk_names[i];
-> > > +
-> > > +       ret =3D devm_clk_bulk_get(dev, data->num_clks, mfg->gpu_clks);
-> > > +       if (ret)
-> > > +               return dev_err_probe(dev, ret, "Couldn't get GPU cloc=
-ks\n");
-> > > +
-> > > +       mfg->gpu_regs =3D devm_kcalloc(dev, data->num_regulators,
-> > > +                                    sizeof(*mfg->gpu_regs), GFP_KERN=
-EL);
-> > > +       if (!mfg->gpu_regs)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       for (i =3D 0; i < data->num_regulators; i++)
-> > > +               mfg->gpu_regs[i].supply =3D data->regulator_names[i];
-> > > +
-> > > +       ret =3D devm_regulator_bulk_get(dev, data->num_regulators, mf=
-g->gpu_regs);
-> > > +       if (ret)
-> > > +               return dev_err_probe(dev, ret, "Couldn't get GPU regu=
-lators\n");
-> > > +
-> > > +       ret =3D of_reserved_mem_region_to_resource(dev->of_node, 0, &=
-res);
-> > > +       if (ret)
-> > > +               return dev_err_probe(dev, ret, "Couldn't get GPUEB sh=
-ared memory\n");
-> > > +
-> > > +       mfg->shared_mem =3D devm_ioremap(dev, res.start, resource_siz=
-e(&res));
-> > > +       if (!mfg->shared_mem)
-> > > +               return dev_err_probe(dev, -ENOMEM, "Can't ioremap GPU=
-EB shared memory\n");
-> > > +       mfg->shared_mem_size =3D resource_size(&res);
-> > > +       mfg->shared_mem_phys =3D res.start;
-> > > +
-> > > +       if (data->init) {
-> > > +               ret =3D data->init(mfg);
-> > > +               if (ret)
-> > > +                       return dev_err_probe(dev, ret, "Variant init =
-failed\n");
-> > > +       }
-> > > +
-> > > +       mfg->pd.name =3D dev_name(dev);
-> > > +       mfg->pd.attach_dev =3D mtk_mfg_attach_dev;
-> > > +       mfg->pd.detach_dev =3D mtk_mfg_detach_dev;
-> > > +       mfg->pd.power_off =3D mtk_mfg_power_off;
-> > > +       mfg->pd.power_on =3D mtk_mfg_power_on;
-> > > +       mfg->pd.set_performance_state =3D mtk_mfg_set_performance;
-> > > +       mfg->pd.flags =3D GENPD_FLAG_OPP_TABLE_FW;
-> > > +
-> > > +       ret =3D pm_genpd_init(&mfg->pd, NULL, false);
-> > > +       if (ret)
-> > > +               return dev_err_probe(dev, ret, "Failed to initialise =
-power domain\n");
-> > We need to clean up mgf->md on errors from this point on. Maybe we can
-> > move this to a later point?
-> >=20
-> > > +
-> > > +       ret =3D mtk_mfg_init_mbox(mfg);
-> > > +       if (ret)
-> > > +               return dev_err_probe(dev, ret, "Couldn't initialise m=
-ailbox\n");
-> > We need to free the mboxes from this point on.
-> >=20
->=20
-> For this and the one above, does .remove not get called on probe failure?=
- If not,
-> I'll definitely do this. Otherwise it seems redundant, though with the ad=
-ded
-> concern that .remove does not check before calling those functions.
->=20
+The TQMa62xx is a SoM family with a pluggable connector. The MBa62xx is
+the matching reference/starterkit carrier board.
 
-Alright nevermind, I'm being confused by devres vs. remove callback.
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/ti/k3.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-=2Eremove does not get called if the probe function fails, but devres
-handlers still do get called.
-
-Sorry for the confusion, will fix things accordingly.
-
-
+diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+index 0105dcda6e04d..ed89a7a36e1f8 100644
+--- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
++++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+@@ -89,6 +89,13 @@ properties:
+           - const: toradex,verdin-am62          # Verdin AM62 Module
+           - const: ti,am625
+ 
++      - description: K3 AM625 SoC on TQ-Systems TQMa62xx SoM
++        items:
++          - enum:
++              - tq,am625-tqma6254-mba62xx # MBa62xx base board
++          - const: tq,am625-tqma6254
++          - const: ti,am625
++
+       - description: K3 AM62P5 SoC Toradex Verdin Modules and Carrier Boards
+         items:
+           - enum:
+-- 
+TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht München, HRB 105018
+Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
+https://www.tq-group.com/
 
