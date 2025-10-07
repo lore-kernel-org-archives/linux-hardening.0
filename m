@@ -1,108 +1,152 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF259214812
-	for <linux-hardening@vger.kernel.org>; Tue,  7 Oct 2025 18:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E7116E863;
+	Tue,  7 Oct 2025 19:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759861149; cv=none; b=X6N7WqQjyjd235/SE2YjXXkC+LtyEZjbdRZti/XtHzQg6NV8SqYYUEJCwDIkGFuaoUCBFYl+CXWZIj2rxzPqVxWTsVNQHlRYaLSR+6GDqXCxcFzoLPzzTWFjSXc1orOad2MSFkITnK7Sb8rtTEE+rxEtU9aWWhHONmJ2wHsRKpw=
+	t=1759866513; cv=none; b=fiTyRRTfHgvVMLTeNkjk+Zd+xaYokKc7FN2UDbi7If7vochLzAplZGFbRp30KuY3Qq36gMtNXeH4Kxay4J+bBSIqPG3x7NHV5acVgCTwnyJlNPWruOl9+vZ3YJuiZeegE4sR11ZEki/M0bDVPJR/YIgJy/htk7D35ODB5voPWLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759861149; c=relaxed/simple;
-	bh=1NYA5NXCfUNHGAMPIDINqsi5FPnYmleHEw4ndZr/cwc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NmDRJUgHjObgQgRjg4R0FmGNkx0xGVuZcsFmm16tWk5PWhfMghzjZydX7Ur/NnJ8rAr71Lc2w6L4/etYipB7+xj8CnkpCH1Lw+cCkCYptc1PrYh9RJge3Jug3v8FeBQ1/T6NGhOYit1mCsS2Y361TBs7OERiBMsvESV+1EzVJqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YplMvuy5; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1759866513; c=relaxed/simple;
+	bh=vMtXbq1KgnSFelCHvUhZ2kgM7oOGT+RSFcTakW+bbUQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=emFOB4agXJIKvKZ/IszM/orn0uPSNGP6zXcYi4d3IrchAB5QdjL0DIPHapdGyKOs1odT4wIm8jv/spSRbPb0p1uTF37lSrv4ioAczvbBwYsHcUquMHRzMZye+XuIGpZYbrJvnlARlm2pswl1tPid9uNzEtlL4fNeyYv7gTwB7/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=rq3ofEwu; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YplMvuy5"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-28e7cd34047so55250945ad.2
-        for <linux-hardening@vger.kernel.org>; Tue, 07 Oct 2025 11:19:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759861145; x=1760465945; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1NYA5NXCfUNHGAMPIDINqsi5FPnYmleHEw4ndZr/cwc=;
-        b=YplMvuy5kbPgDl3ljou9lJkcN9nLAcTVdVoIZT0CYuHmj57MIlNgwQJUJFqZOG8vl3
-         n8/da0iAS8m9YtuI4yt92wU9/BhDVytxfU2plfmVnJI5dgxYLpwRP/7hFKyPywzqNK6M
-         o4JdWuOHHslGYr1vdfGoWVMhNr+hGZ9lj0uyEcKgiOFDhdObG80DaSv6bDDvQxjVRwao
-         OIp7jG5LbYKkLN3ORVa69KSYxSiJ/EzmGcjWaKjZhJkyGbOyhukjASvH/tuMhjig0gI2
-         xJFsjU0ZeXzrA5tdDzi+b7TK0B9YhoroEIHAV11kuHok7087WUdpmkknz2GqwxSUB48d
-         /YKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759861145; x=1760465945;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1NYA5NXCfUNHGAMPIDINqsi5FPnYmleHEw4ndZr/cwc=;
-        b=dSlKKCLsOUDvI+4arZQ8afFss+Go0bw6FNGTfK9ZtkJM9BoT1+1q3VruZSNPd0MgEv
-         dFs7e3iE7R2kONKR6yAlXk6IWa6yCiT6lSpQ08dpvgEeRN4GuxojAVBFU3hCz7C3866Z
-         AufmRgRo9w5xI/pTja4mvg83Fv9R3JCG4g0Kp4+8alNI9lOxPW7IZxcg4bdZbEKnipbE
-         FhahAQaYVbQ5VdNX29gfekAhuyDZT+nMS7JY9YjjMT8w3tyDqDeoHk6rsjwPSHmu3WD/
-         s6qLcLurzSKIc01dY9IHwablRg4ASXIlCgIo2iqlyF0bh89lQc8enCfBirZZ6629G46p
-         a0dg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQsHCs7OmymeKcpwXPnWLYbxfvGCS4CPuRzKPkYjoCqCar1zlh+fUZEuzT8+50wZiD7osO6Sv1KNgCfN8DSQg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxldSBEubZbbGwXKuxVYElC0OMkbP+7rN3Lt5eKD5gkjJo2hnls
-	JgXPaQHgfKYfIS2d9uSksSoXwAh7dMtmw9s+4pDD3hWJ3n4wITrRfcMtii5p72m9KqXN6QsZ55D
-	uZowPEAZRTaYPuv/RI9virbuvRnQ6o35mPjztuAhN
-X-Gm-Gg: ASbGncsnGneJ3K6zAe6x+cBddHqj5YeZ8f5n5XS75f4Bv4HpbMB8o+poDi6lbDe4za1
-	CVwpeGSJWXE24vHorKFUvLRWkAnuTMATG6f5nwMPoKekg8RSLKlKqr79h1/E431+FdZRwPUMg4A
-	1CPJcFCG9aTJIcgbPpinYgOS1k2fl9GuLcyKXXbHnnDnEBgL+6aW70IVXTDArnzz5541MhEAyww
-	WcUdMzaQos3BzH2Pcam/G48mE1NI1isjUqCTGFsbv4H+qXiv/DmwRc6//YlrV/vxKU9681V2SUz
-	sZg=
-X-Google-Smtp-Source: AGHT+IHw6dFIKAHzPTv9mVtUGHjBlx7WlkdXf8MR1ZgGcxSTfN3zEfUpxsIIe3xlxd6CYLBEcLBlT5+Vp1Gkw1TXYKQ=
-X-Received: by 2002:a17:903:2343:b0:28e:7f50:5d80 with SMTP id
- d9443c01a7336-2902721336cmr7056975ad.7.1759861145158; Tue, 07 Oct 2025
- 11:19:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rq3ofEwu"
+Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
+	by cmsmtp with ESMTPS
+	id 6BR1vxE44KXDJ6DfcvpKpW; Tue, 07 Oct 2025 19:48:24 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 6DfbvD9cRfjrX6Dfbv0Zuc; Tue, 07 Oct 2025 19:48:23 +0000
+X-Authority-Analysis: v=2.4 cv=ItcecK/g c=1 sm=1 tr=0 ts=68e56e87
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=4oHATN8Nx7vVUZJYxp75bA==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=4e8un5K37ZRR6lRcyOEA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=LfPENtYO9yg3I6QdDZRxM3kYJOjt9kvB6+tlT/9JDY4=; b=rq3ofEwuaf/LsUbXFiBonuvEIq
+	RxMqKlBHPQKE0AuTVNDJsDVj75ymDtYqNiO3fAmFt23hkENte81TdQlr0GsFdMRMi+jxjh7V6kyQm
+	KcNtwlIx4JaWgVdTILImYMmfZi0n9Tcp2+NWz0buuxHBboNkW3OgHiBMWnrgIhfxRQXcxzTSDUg4E
+	7vD4ODepcDwimuFZSvt52p73eFkiipi/Od1bLKyXhZUrIYk44Mtqu8xE5JygdISuIbDsZXNRThfcK
+	wsCrSSbbFFBayQ02/LatGp5Lg7Zv4mVKo6SSOElviL/eO/ILdtdEUzs/OeSN7r8ZItL53YbdKnPd0
+	/qv0cLQQ==;
+Received: from [185.134.146.81] (port=48322 helo=[10.21.53.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1v65C3-00000000Luf-35FH;
+	Tue, 07 Oct 2025 05:45:19 -0500
+Message-ID: <9e0613bf-17ae-407a-a3ab-cbeac09c3a17@embeddedor.com>
+Date: Tue, 7 Oct 2025 11:45:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250315025852.it.568-kees@kernel.org> <20250315031550.473587-2-kees@kernel.org>
- <aOR15Xb6DfolYM0z@casper.infradead.org> <202510071001.11497F6708@keescook> <e019c59a-ba8b-ec04-dc5b-923cf9dd9d9c@gentwo.org>
-In-Reply-To: <e019c59a-ba8b-ec04-dc5b-923cf9dd9d9c@gentwo.org>
-From: Marco Elver <elver@google.com>
-Date: Tue, 7 Oct 2025 20:18:28 +0200
-X-Gm-Features: AS18NWCHLWcuBl7emRjgyAd7xCJevIo8qneqm5GOzEKlmO2F3nZsj3gxx6OmYQU
-Message-ID: <CANpmjNMsSGY+QEn=GV8S2sXuuQsioikPR+OhGa3+6EoTqYPkHQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] slab: Introduce kmalloc_obj() and family
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: Kees Cook <kees@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Pekka Enberg <penberg@kernel.org>, 
-	David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>, Yafang Shao <laoar.shao@gmail.com>, 
-	Tony Ambardar <tony.ambardar@gmail.com>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
-	Jan Hendrik Farr <kernel@jfarr.cc>, Alexander Potapenko <glider@google.com>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, 
-	llvm@lists.linux.dev, Matteo Rizzo <matteorizzo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] scsi: hisi_sas: Avoid a couple
+ -Wflex-array-member-not-at-end warnings
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Yihang Li <liyihang9@h-partners.com>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aM1J5UemZFgdso3F@kspp>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <aM1J5UemZFgdso3F@kspp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 185.134.146.81
+X-Source-L: No
+X-Exim-ID: 1v65C3-00000000Luf-35FH
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([10.21.53.44]) [185.134.146.81]:48322
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfNbSc0c0lJ7nQ1ngLk0019RGqvP+k6LOj9TRdVd/TY9QoFlp8hNAX6gfALSAzF4P2FwTb/3e/q7kexPAlqe54tLUMV8vfkcW49mz7pk3pbM/7FHaH7oA
+ yKXcuXr1Tu+nq3HcoNx90EAz/JsDxWUedtBghBVGa3aMy5K9NtJ0ZZLjVTNlmMtiEkIZZwJvNSVIbdUnnWpLAMVp4Cj0bRvh1Zrp3RHZRB/3hIa73uvhvn6c
+ Zb1Lik/Jmg3Q+GjHi6rC86gcIVcYcAmM22tULX6XLgI0uedIgAgqMTuG3Wed9+d+teesOM2+HXb8xD2jsKKN+A==
 
-On Tue, 7 Oct 2025 at 19:47, Christoph Lameter (Ampere) <cl@gentwo.org> wrote:
->
-> On Tue, 7 Oct 2025, Kees Cook wrote:
->
-> > But all of that is orthogonal to just _having_ the type info available.
->
-> iOS did go the path of creating basically one slab cache for each
-> "type" of kmalloc for security reasons.
->
-> See https://security.apple.com/blog/towards-the-next-generation-of-xnu-memory-safety/
+Hi all,
 
-We can get something similar to that with:
-https://lore.kernel.org/all/20250825154505.1558444-1-elver@google.com/
-Pending compiler support which is going to become available in a few
-months (probably).
-That version used the existing RANDOM_KMALLOC_CACHES choice of 16 slab
-caches, but there's no fundamental limitation to go higher.
-Note, this mitigation is likely not as strong as we'd like to without
-SLAB_VIRTUAL (or so I'm told): https://lwn.net/Articles/944647/
+Friendly ping: who can take this, please?
+
+Thanks!
+-Gustavo
+
+On 9/19/25 13:17, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Move the conflicting declarations to the end of the corresponding
+> structures (and in a union). Notice that `struct ssp_command_iu`
+> is a flexible structure, this is a structure that contains a
+> flexible-array member.
+> 
+> With these changes fix the following warnings:
+> 
+> drivers/scsi/hisi_sas/hisi_sas.h:639:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/scsi/hisi_sas/hisi_sas.h:616:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>   drivers/scsi/hisi_sas/hisi_sas.h | 10 +++++++---
+>   1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
+> index 1323ed8aa717..55c638dd58b1 100644
+> --- a/drivers/scsi/hisi_sas/hisi_sas.h
+> +++ b/drivers/scsi/hisi_sas/hisi_sas.h
+> @@ -613,8 +613,8 @@ struct hisi_sas_command_table_ssp {
+>   	struct ssp_frame_hdr hdr;
+>   	union {
+>   		struct {
+> -			struct ssp_command_iu task;
+>   			u32 prot[PROT_BUF_SIZE];
+> +			struct ssp_command_iu task;
+>   		};
+>   		struct ssp_tmf_iu ssp_task;
+>   		struct xfer_rdy_iu xfer_rdy;
+> @@ -636,13 +636,17 @@ struct hisi_sas_status_buffer {
+>   
+>   struct hisi_sas_slot_buf_table {
+>   	struct hisi_sas_status_buffer status_buffer;
+> -	union hisi_sas_command_table command_header;
+>   	struct hisi_sas_sge_page sge_page;
+> +
+> +	/* Must be last --ends in a flexible-array member. */
+> +	union hisi_sas_command_table command_header;
+>   };
+>   
+>   struct hisi_sas_slot_dif_buf_table {
+> -	struct hisi_sas_slot_buf_table slot_buf;
+>   	struct hisi_sas_sge_dif_page sge_dif_page;
+> +
+> +	/* Must be last --ends in a flexible-array member. */
+> +	struct hisi_sas_slot_buf_table slot_buf;
+>   };
+>   
+>   extern struct scsi_transport_template *hisi_sas_stt;
+
