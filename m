@@ -1,127 +1,171 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668B08488;
-	Tue,  7 Oct 2025 02:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6F735972;
+	Tue,  7 Oct 2025 11:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759802874; cv=none; b=oGBxv+2U+2CaJqt76uEDlX8VxhcJNDPdr8stJKTCwnb+59UAbr5y01dQeGbidhZC0rp4RCYj4wQYTZrGYN2WzF0sv/9pUqNQWNxplYRshlUoUPifkPlb9gN0sScuwr6FPuQ4G445st2/nxyTWuboVfjd5qCFBmr4UXlbBnZqEHs=
+	t=1759838035; cv=none; b=LKvJhtpAA1XYpj2yvp/EFq0pt5Ug9fgfywszdBQtBoEJXsaZMAvZyR7CwYyl7V/T4bWw65SWd0OISSyYKMM2IqgRJdqZHkdCoKslwNH4EKtKvCa9vOz6bFjQ5EAvAbnZLqpWDbOi26II90e+TGCbVWp8wLdGiJXNfmw66THqbyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759802874; c=relaxed/simple;
-	bh=vTd9S+B7Dx3MAbsT6utemI9fOi3cMISlPTKvVv3lPkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p14/joS6DYUkqyH98NFOayCzb88OsHPMbH3ExhBQx5x62Ix9D00K2WvhOx7CI0RTbvarIjCVcobuzy0FaKfbcU8XkPehPTvnZH2aYfAnSQQvshVGVzJJg4aJyfqsdR7MgLPsNGtJ1MJnxaoJTXbjxf3dVoU26WdOqzP7Do/eorA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZpMvRr7h; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1759838035; c=relaxed/simple;
+	bh=xAmtcSiYneGYrEA5MVX3I4DmoITVa1if+HoK67nb8iU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XAD4W3eMX+rnaLUdoSL+t3U/Yrujz+4bDrmzYmqRpJRC13fd4BJQU2TEz2Zan/E+Hu7j5W1iZ5q0KqHggg+20wT9Mcudl5uJEcFEnxdNf9zyV/8XTyBCm5ASdZeIJ+9PQ43RpZ7oDCBZiCjc5auzw/aP2u6//APRN3j22DQHz3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=wgfAny9c; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZpMvRr7h"
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="wgfAny9c"
+Received: from eig-obgw-6006b.ext.cloudfilter.net ([10.0.30.211])
+	by cmsmtp with ESMTPS
+	id 65QKvUJzyjzfw66GNvyVP4; Tue, 07 Oct 2025 11:53:51 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 66GLvKAikMem566GLvsC2L; Tue, 07 Oct 2025 11:53:50 +0000
+X-Authority-Analysis: v=2.4 cv=bZtrUPPB c=1 sm=1 tr=0 ts=68e4ff4f
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=4oHATN8Nx7vVUZJYxp75bA==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=23AC6A14qyjZoQxIM3kA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=xYX6OU9JNrHFPr8prv8u:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=OuPt71NmMidGtdlQykkoZsTnnRr+qx1jmb+5gKzLx+E=; b=ZpMvRr7hgj3fyfMUpCnXiyu4/D
-	x8r4JH14RaG1qEJLKdCABLMvvriTI+vQZvT5ij04S8iZT3GXt0L+XG651Fx7LpsVASxDcivvVTbP8
-	YX9Cd1yMkPPdqfzGKv90q2waA3MdXdYYC2ATriV8XHbSuvclbebqTngcLex2LHUHWOHy6CSmvUOFm
-	0d/crWkbRhEPGKh5fDOkBr2JTAlMceA6torGF2cCLlbXjYDen9/ou0pjW7rN0ak8yjCPBMeH/Dtx1
-	iEE2mcdzJN+h5wq3kqEUV6aW5JT77oyVCeSSdkyH9qvkLNn7oSK9yxanWKz6teiXupLlwMdiwh00B
-	cKrtDQKA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v5x6z-000000064Za-34GJ;
-	Tue, 07 Oct 2025 02:07:34 +0000
-Date: Tue, 7 Oct 2025 03:07:33 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Marco Elver <elver@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
-	Yafang Shao <laoar.shao@gmail.com>,
-	Tony Ambardar <tony.ambardar@gmail.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>,
-	Alexander Potapenko <glider@google.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-doc@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 2/2] slab: Introduce kmalloc_obj() and family
-Message-ID: <aOR15Xb6DfolYM0z@casper.infradead.org>
-References: <20250315025852.it.568-kees@kernel.org>
- <20250315031550.473587-2-kees@kernel.org>
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=GzqhRhaEEqzGyTEdmrMO2YaMzjaRRo6FU0EtpB0R+I4=; b=wgfAny9c9uHp2QMHZUmUBGzZtq
+	PJHE1aUvl6+rQqx3r+Zym55nNZFCcLQO/c/1weLQE3KmWS/Q5VSEl//4gWlU7jM8nLdEhgBvxACDJ
+	WgKRNkjTAfxk+DbFEHbK5Po41VNtJLEZu3e4pfVtI++mYc07kTRK/scNgAKo2KqatCg2i7gCROBj6
+	HZS6Bl6Qujyd7eZEL9jCNXJnD0EDWUke1J5Cr2BwFexI492W7PdWfzpfL/TpBr+IhOojnQeiNjBLo
+	HkZkXxP1Zk09AkyKQy2l5LWXIR1sWlS6av4D1LeKto9o2afVHs3pSB2+qMAA6rh9PZrrqQFHGhNSw
+	H/Fh5r6A==;
+Received: from [185.134.146.81] (port=42034 helo=[10.21.53.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1v65Ku-00000000WlI-05NZ;
+	Tue, 07 Oct 2025 05:54:28 -0500
+Message-ID: <0e46139a-bb80-4684-977d-aaacc653840b@embeddedor.com>
+Date: Tue, 7 Oct 2025 11:54:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250315031550.473587-2-kees@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] scsi: hisi_sas: Avoid a couple
+ -Wflex-array-member-not-at-end warnings
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Yihang Li <liyihang9@h-partners.com>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aM1J5UemZFgdso3F@kspp>
+ <9e0613bf-17ae-407a-a3ab-cbeac09c3a17@embeddedor.com>
+Content-Language: en-US
+In-Reply-To: <9e0613bf-17ae-407a-a3ab-cbeac09c3a17@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 185.134.146.81
+X-Source-L: No
+X-Exim-ID: 1v65Ku-00000000WlI-05NZ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([10.21.53.44]) [185.134.146.81]:42034
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfPnB0vJFVvvAWyWfTSQaBQ7nwBQ22x5ULp3zJlE9ziS/yRF8wdB6hh3VhoJPyjFJ/XZXEN441F+i1javQVNA2Zfq/KXhdxWFCFcO0WiZNFpQmsnYUgLh
+ 03WTo+nLHzol1NvWyYhu5rfnxO0IZ8xAoI8fnjkOBUfnjT919znifjtysB28BqRxYWVg9nwHOCf3Rf+lcKTkd1bAxan6cb4s0bAG9q8PUgds9JhKX7+BxNGE
+ yx53MU9vxbZelvhrZUpeVaRDWpmmjaoEC0vvhvtGk63sTYKqt/ILV7me6YHbBP7Kwnqn3ELfD0mj9z9trOZw1Q==
 
-On Fri, Mar 14, 2025 at 08:15:45PM -0700, Kees Cook wrote:
-> +Performing open-coded kmalloc()-family allocation assignments prevents
-> +the kernel (and compiler) from being able to examine the type of the
-> +variable being assigned, which limits any related introspection that
-> +may help with alignment, wrap-around, or additional hardening. The
-> +kmalloc_obj()-family of macros provide this introspection, which can be
-> +used for the common code patterns for single, array, and flexible object
-> +allocations. For example, these open coded assignments::
-> +
-> +	ptr = kmalloc(sizeof(*ptr), gfp);
-> +	ptr = kmalloc(sizeof(struct the_type_of_ptr_obj), gfp);
-> +	ptr = kzalloc(sizeof(*ptr), gfp);
-> +	ptr = kmalloc_array(count, sizeof(*ptr), gfp);
-> +	ptr = kcalloc(count, sizeof(*ptr), gfp);
-> +	ptr = kmalloc(struct_size(ptr, flex_member, count), gfp);
-> +
-> +become, respectively::
-> +
-> +	kmalloc_obj(ptr, gfp);
-> +	kzalloc_obj(ptr, gfp);
-> +	kmalloc_objs(ptr, count, gfp);
-> +	kzalloc_objs(ptr, count, gfp);
-> +	kmalloc_flex(ptr, flex_member, count, gfp);
 
-I'd like to propose a different approach for consideration.
 
-The first two are obvious.  If we now believe that object type is the
-important thing, well we have an API for that:
+On 10/7/25 11:45, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> Friendly ping: who can take this, please?
+> 
+> Thanks!
+> -Gustavo
+> 
+> On 9/19/25 13:17, Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>> getting ready to enable it, globally.
+>>
+>> Move the conflicting declarations to the end of the corresponding
+>> structures (and in a union). Notice that `struct ssp_command_iu`
+>> is a flexible structure, this is a structure that contains a
+>> flexible-array member.
+>>
+>> With these changes fix the following warnings:
+>>
+>> drivers/scsi/hisi_sas/hisi_sas.h:639:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member- 
+>> not-at-end]
+>> drivers/scsi/hisi_sas/hisi_sas.h:616:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member- 
+>> not-at-end]
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>   drivers/scsi/hisi_sas/hisi_sas.h | 10 +++++++---
+>>   1 file changed, 7 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
+>> index 1323ed8aa717..55c638dd58b1 100644
+>> --- a/drivers/scsi/hisi_sas/hisi_sas.h
+>> +++ b/drivers/scsi/hisi_sas/hisi_sas.h
+>> @@ -613,8 +613,8 @@ struct hisi_sas_command_table_ssp {
+>>       struct ssp_frame_hdr hdr;
+>>       union {
+>>           struct {
+>> -            struct ssp_command_iu task;
+>>               u32 prot[PROT_BUF_SIZE];
+>> +            struct ssp_command_iu task;
+>>           };
 
-struct buffer_head { ... };
+Actually, I have a question here:
 
-	bh_cache = KMEM_CACHE(buffer_head, SLAB_RECLAIM_ACCOUNT);
-...
-	ptr = kmem_cache_alloc(bh_cache, GFP_KERNEL);
+is u32 prot[PROT_BUF_SIZE]; intended to overlap flex array task.add_cdb[]
+at some point?
 
-It's a little more verbose than what you're suggesting, but it does give
-us the chance to specify SLAB_ flags.  It already does the alignment
-optimisation you're suggesting.  Maybe we can use some macro sugar to
-simplify this.
+if not, this change is just fine. Otherwise, I'd need to update this
+patch to account for the overlap.
 
-The array ones are a little tougher.  Let's set them aside for the
-moment and tackle the really hard one; kmalloc_flex.
+Could someone provide some feedback here? :)
 
-Slab is fundamentally built on all objects in the slab being the same
-size.  But maybe someone sufficiently enterprising could build a
-"variable sized" slab variant?  If we're saying that object type is
-more important a discriminator than object size, then perhaps grouping
-objects of the same size together isn't nearly as useful as grouping
-objects of the same type together, even if they're different sizes.
+Thanks!
+-Gustavo
 
-Might be a good GSoC/outreachy project?
+>>           struct ssp_tmf_iu ssp_task;
+>>           struct xfer_rdy_iu xfer_rdy;
+>> @@ -636,13 +636,17 @@ struct hisi_sas_status_buffer {
+>>   struct hisi_sas_slot_buf_table {
+>>       struct hisi_sas_status_buffer status_buffer;
+>> -    union hisi_sas_command_table command_header;
+>>       struct hisi_sas_sge_page sge_page;
+>> +
+>> +    /* Must be last --ends in a flexible-array member. */
+>> +    union hisi_sas_command_table command_header;
+>>   };
+>>   struct hisi_sas_slot_dif_buf_table {
+>> -    struct hisi_sas_slot_buf_table slot_buf;
+>>       struct hisi_sas_sge_dif_page sge_dif_page;
+>> +
+>> +    /* Must be last --ends in a flexible-array member. */
+>> +    struct hisi_sas_slot_buf_table slot_buf;
+>>   };
+>>   extern struct scsi_transport_template *hisi_sas_stt;
+> 
 
