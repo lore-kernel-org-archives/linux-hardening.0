@@ -1,110 +1,173 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4842E0B5C
-	for <linux-hardening@vger.kernel.org>; Tue,  7 Oct 2025 13:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B691734BA34;
+	Tue,  7 Oct 2025 17:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759843312; cv=none; b=HWNlS7Q+8LMSdFMe+42zZZR1pOLBDqI4pYw9a5F6HG+UUZivkwKzzMKRFTj1QRhiM1FXxXr+rsTEsWDiMYn2QBX+dAtFPY9HUb1V4+UR+jeTeoIZD0okxK4MiHXc8PMRobrbLZyyjlPOf+DrWOo3ELFqaimMCx6DeEjySR79IDg=
+	t=1759857403; cv=none; b=p7yHd4rvmORoE9l2nU4YOhE4JTFnf0CbHKBSEayqZzqI1NDghN8vgS7JLVAyRNOwd4/ccbB9gQxsVTF7yDZYTcXgxrG7GOiUpGXIXwGG4i3MvwUSZ2seW3KSNHhhJ9OpbzT15eotxypLzfiIpJ/Vdg1H5H9mP5buewKgD73/Dk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759843312; c=relaxed/simple;
-	bh=264X1qDN3aQAP8Oh7tuky79CRF6X9B+bbwWZ9c7oerg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fHIQmlgTWmdSwyZZjRF/BuLKBjt11XpV1FY0L9vSQ11Tha2XOXd0lemXcuSsmUBMRhAKkQmimalgnbzc/i7zRJzP6v9/p5fEagIuLYC/jYwNM56w/AF1PI7wBtLjO7R8NHT2yPNa0RV62eZbLuouHqOQQ6RSWjrwIV0ViMaDLrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DKBRTvtc; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1759857403; c=relaxed/simple;
+	bh=DJtZSdCijPbQbaB6CVjS9lgp06ac4tI/pgBmbGCdqLg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VZNGAFWTsMDztsj9jkQWI+VPUF83H9pj+FynYvHhpshEH8oX4AKmlUwnD5YZEzETSTkG7U/dqjxu7Nn9Fv9fmE2SczNp3ysM8Q7WMxFbtyLeLRW28xC1zfy9YFoTubpS4+ANmKg/nWvXpfuYBpn/uuGYF561b/g7W9TupkoFdUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=SgXeFwx1; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DKBRTvtc"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-371e4858f74so70606171fa.1
-        for <linux-hardening@vger.kernel.org>; Tue, 07 Oct 2025 06:21:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1759843309; x=1760448109; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=264X1qDN3aQAP8Oh7tuky79CRF6X9B+bbwWZ9c7oerg=;
-        b=DKBRTvtcDoAdupeGLvdKBjxsZOnuPORThx375SEX3c94jfX6Pffhx5xH3YCdcUktDk
-         8RtUgM4um/ZK/GRKugStNQkcV3NNh6+H4BhAdOqnnQ7MhWjaMligFBl6ArCo5HL+tODJ
-         LphZpd4ve9qyEq0Mo+b1iID54E/1c21MHj0Urpfj6/yjhpa0+RL401EJHDwmg8+/vn5E
-         KI05vXBgHusbGxk4mg6mf3W1JfiPIYmeDiT/Gd0N7DLhtLB0G6M1PZFl2ORfAIClUN0H
-         URVsOSBV6rAG17C9j5Z41C/vIw5+dJYPwpNtzBWy9i8KSLS2bZZbGo1LQdFPTzPDTR3+
-         STEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759843309; x=1760448109;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=264X1qDN3aQAP8Oh7tuky79CRF6X9B+bbwWZ9c7oerg=;
-        b=SHOlRnqbNiRCw0Vnx9qbZeGGkI2C08ClcKLfZgeZ0DVtF10UdryBTpm7JMy0HtI11X
-         VMcAQw/eZnxIL/nXAKYZu80YNdSpbg9Ln70PqYbogfyTLCVovvn0P8iR20oAghcyNiMB
-         L9fXF28jcKgo4AWLYEVG/WQTcXuXvP7VdKN/mT93rE3B4gSuZZrMN1vMdMgEGB8uFfXo
-         7Yh12P/klMRqyI45lE5m0MnOD2d7y6pJaXKcjGxevnMmHLZFn4kjN6jJq5msT1fzql8w
-         YZjdVLkPM6zDco7hRRw2Y1+0/v2VFjXeNGjH0pVmhwm0jy2A47eF//oTyqC1+uN+fQ7q
-         jhIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGz5JDQMQGLvH+nB2D4hqKU6zyVWk9gA4bcLYJ0fEkPxsCgqpKuqsEBOren+g17/gV6hdimiv1P3zu4izrKHc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ+BG7D/BWIww0fodWjk77EIMrkvCFAEd4deX8sPD802S0Hiqc
-	jr4rfihkUS859XMxZdQieV6fwR5BQeR/MT0x7Qlkp/TpioFfCtuZMBnj6qHljYDxgBJpSTLJe2B
-	9L2sAojPJ5IUBIsj24URdO2QCEBY3xyl5DiRoVfFoKw==
-X-Gm-Gg: ASbGncuJx5qI1kAVnEer/GrHdQldOiB4S3Ym4nRjt3slyC/5D/rsVbh7dnwZgsdIqK9
-	PzJcUA5liYMTC78iGjcFQW8Yefzz2UyOX5yhyBZL7VM8LtuijWee7g9fWJrw+HPOjBJjo8pDleK
-	mdx5PAolkBLQ1vCUvoyHxu27j2aVkStCIv1ZOEH8HiRgrjjlxkpVCTUVjNYa+LsT+0e15jKc3iX
-	sRQWPoTdVBCZzIKTt+1N01st2g6j0Pdp+FJFFulHmqDqkRIdY3bXZtCw6LFkqk=
-X-Google-Smtp-Source: AGHT+IE2+IZs52lFcgfooqKpv3k1qTzL2NCFC1USj9Z26FyDVKNO8SnLmrjpEF3qS87kcFqgJsuw+/Q2h1TIfSrcKYE=
-X-Received: by 2002:a05:651c:1504:b0:364:c083:2fec with SMTP id
- 38308e7fff4ca-375f516a094mr10405761fa.7.1759843309309; Tue, 07 Oct 2025
- 06:21:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="SgXeFwx1"
+Received: from eig-obgw-6005b.ext.cloudfilter.net ([10.0.30.162])
+	by cmsmtp with ESMTPS
+	id 692WvC42geNqi6BIgv7Q3V; Tue, 07 Oct 2025 17:16:34 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 6BIfvkA0uLidY6BIgvklnz; Tue, 07 Oct 2025 17:16:34 +0000
+X-Authority-Analysis: v=2.4 cv=bq1MBFai c=1 sm=1 tr=0 ts=68e54af2
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=4oHATN8Nx7vVUZJYxp75bA==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=7T7KSl7uo7wA:10
+ a=vrm2DYtl0a66eygLWCQA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=k/RQCbk5TNZtW25tKPudmPz+XPlOL4k+2HIoGg8Wmrs=; b=SgXeFwx1/TNoyhrIv/+05jHO4j
+	JOfaWjWYUSCsNofzRqCxyS3IYzkVypY3V3ulpnWUYXYsK2KanWd/Acl3t+NpMAT8nxuhHKpk0z7sZ
+	BlGiKkXpY/88lFgkadHkLp9gnkHBhISlVVu7E3xb/PeQtNaur/moLzBgBcSGb7ju1ScpKgJWS3V5g
+	Uh4JGuNBot+whOESBVoKTByOCZHPvChXQX8ta0qC0Kay6ucy366slpWUZKAeXivAS6mkb8FZdWvqw
+	5HTLoZ1zdi2WnyrNpTmeJ4ilmZil8uoapxbNpJu+8KtK+c/NBLzzlPi2OFZw9qhukr2/U5LwgXDey
+	hH+WW4Tg==;
+Received: from [185.134.146.81] (port=39130 helo=[10.21.53.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1v68WM-00000004Ij5-3a69;
+	Tue, 07 Oct 2025 09:18:31 -0500
+Message-ID: <5b23ae5a-bd47-49c7-bca7-7019abc631f7@embeddedor.com>
+Date: Tue, 7 Oct 2025 15:18:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
- <0b402bba-0399-4f93-873e-890a78570ff7@kernel.org> <CAMRc=MfwEHGV-HZQURR3JNg1HatAeWO17qbRmkWUXTSBWj5jSg@mail.gmail.com>
- <80347dcf-419b-489e-9b0e-d901fbacc71a@kernel.org> <CAMRc=McaZV=tUkzDGMYxXqkuEYw_KasKcv8QGdjw709UYZuGhg@mail.gmail.com>
- <a9a4f33f-b6c5-4c25-8321-7b08a2afb8a0@sirena.org.uk>
-In-Reply-To: <a9a4f33f-b6c5-4c25-8321-7b08a2afb8a0@sirena.org.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 7 Oct 2025 15:21:37 +0200
-X-Gm-Features: AS18NWAcsMukxeTYbTWMUg8zWpW3gx9qkOJvdBd4XuNGAXfy8hVOWJV-QYlmbI0
-Message-ID: <CAMRc=Mey+iRyKY7Ou=0LM1268r6_WuQDzYmLOU5MZbVoU1yugg@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
-To: Mark Brown <broonie@kernel.org>
-Cc: Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Mika Westerberg <westeri@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2][next] scsi: megaraid_sas: Avoid a couple
+ -Wflex-array-member-not-at-end warnings
+To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Kashyap Desai <kashyap.desai@broadcom.com>,
+ Sumit Saxena <sumit.saxena@broadcom.com>,
+ Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+ Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aM1E7Xa8qYdZ598N@kspp>
+ <3a80fd1d-5a05-4db3-9dda-3ad38bedfb38@embeddedor.com>
+ <4cf727c56c4fda8d28df920214b3824c9739bc8f.camel@HansenPartnership.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <4cf727c56c4fda8d28df920214b3824c9739bc8f.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 185.134.146.81
+X-Source-L: No
+X-Exim-ID: 1v68WM-00000004Ij5-3a69
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([10.21.53.44]) [185.134.146.81]:39130
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfGfy7KbgiuUIq3hS3QH+o6ct9JNHwov5sHq/kqKxxdb5fg+yXkDbV+xad4nsQqsMrNnQrZQ1xD9O6bP7hss5uk0GAXJHRqJtelNFENiBymZFwXhD44kA
+ XLlFMVgmWejL9KJDFmvCEpQOd3f7LXP43hzjYooeNFSI0cIpWYNRL8wFT9LglmWxth6bi+EcCheru6ltn2hariLgjFUnvXxonrYOmUpG7ZLOKu7Xi4pxFFHN
+ eDSWfrSZXT0XDcR2TrMeHv7HN1e1YVNaJsQcJkArsoo=
 
-On Tue, Oct 7, 2025 at 3:18=E2=80=AFPM Mark Brown <broonie@kernel.org> wrot=
-e:
->
-> On Tue, Oct 07, 2025 at 03:13:29PM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Oct 6, 2025 at 11:55=E2=80=AFPM Srinivas Kandagatla <srini@kern=
-el.org> wrote:
->
-> > > Yes, these codec drivers are due to be moved to use reset-gpios.
->
-> ...
->
-> > anything. And what about shared pins other than reset? 'dc-gpios' for
-> > display, other 'powerdown' instances, 'enable-gpios', all kinds of
-> > uncommon names like: `dlg,cs`, `wlf,ldo2ena`, `speaker-enable`,
-> > `maxim,enable`? It's not likely we will create a separate abstraction
->
-> Many of which, crucially, don't actually reset the device.
 
-That's my point. While the function of a `reset-gpios` is quite clear,
-these are not.
 
-Bartosz
+On 10/7/25 12:59, James Bottomley wrote:
+> On Tue, 2025-10-07 at 11:43 +0100, Gustavo A. R. Silva wrote:
+>> Hi all,
+>>
+>> Friendly ping: who can take this, please?
+> 
+> After what happened with the qla2xxx driver, everyone is a bit wary of
+> these changes, particularly when they affect structures shared with the
+> hardware. Megaraid is a broadcom acquisition so although maintained it
+> might take them a while to check this.
+
+I've been in constant communication with the people involved. So far,
+none of them has expressed any concerns about this to me. However, I
+appreciate your feedback.
+
+In any case, I promptly submitted a bugfix minutes after getting the
+report.
+
+> 
+> However, you could help us with this: as I understand it (there is a
+> bit of a no documentation problem here), the TRAILING_OVERLAP formalism
+> merely gets the compiler not to warn about the situation rather than
+> actually changing anything in the layout of the structure?  In which
+> case you should be able to demonstrate the binary produced before and
+> after this patch is the same, which would very much reduce the risk of
+> taking it.
+
+This is quite simple. Here you go the pahole output before and after
+changes.
+
+BEFORE CHANGES:
+
+pahole -C MR_FW_RAID_MAP_ALL drivers/scsi/megaraid/megaraid_sas_fp.o
+struct MR_FW_RAID_MAP_ALL {
+         struct MR_FW_RAID_MAP      raidMap;              /*     0 10408 */
+         /* --- cacheline 162 boundary (10368 bytes) was 40 bytes ago --- */
+         struct MR_LD_SPAN_MAP      ldSpanMap[64];        /* 10408 161792 */
+
+         /* size: 172200, cachelines: 2691, members: 2 */
+         /* last cacheline: 40 bytes */
+};
+
+AFTER CHANGES:
+
+pahole -C MR_FW_RAID_MAP_ALL drivers/scsi/megaraid/megaraid_sas_fp.o
+struct MR_FW_RAID_MAP_ALL {
+         union {
+                 struct MR_FW_RAID_MAP raidMap;           /*     0 10408 */
+                 struct {
+                         unsigned char __offset_to_FAM[10408]; /*     0 10408 */
+                         /* --- cacheline 162 boundary (10368 bytes) was 40 bytes ago --- */
+                         struct MR_LD_SPAN_MAP ldSpanMap[64]; /* 10408 161792 */
+                 };                                       /*     0 172200 */
+         };                                               /*     0 172200 */
+
+         /* size: 172200, cachelines: 2691, members: 1 */
+         /* last cacheline: 40 bytes */
+};
+
+As you can see, the size is exactly the same, as are the offsets for both
+members raidMap and ldSpanMap. The trick is that, thanks to the union and
+__offset_to_FAM, the flexible-array member raidMap.ldSpanMap[] now appears
+as the last member instead of somewhere in the middle.
+
+So both ldSpanMap and raidMap.ldSpanMap[] now cleanly overlap, as seems to
+have been intended.
+
+(Exactly the same applies for struct MR_DRV_RAID_MAP_ALL)
+
+I can include this explanation to the changelog text if you'd like.
+
+Thanks
+-Gustavo
+
+
