@@ -1,66 +1,52 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B462ED151
-	for <linux-hardening@vger.kernel.org>; Wed,  8 Oct 2025 09:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666C71758B;
+	Wed,  8 Oct 2025 12:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759917355; cv=none; b=dKs8eOgsl6eZa4h2iKUenmrSJ5PDoJXf6PocYHei9PRZkDX06jF6Qq7vkc2jFoukvQ9sbl+eD1Ox7PhBnjVD28pnrlkxcYW/r6x6bJUJNFBS96wiBsh86QGroeIGVdLeHjSpalL6GBgwEdGsO4g0oqxX9EOKdvmVm5ZR+qdtPw4=
+	t=1759925425; cv=none; b=IMQWC4VowIkMJllePPEXXPfTTK4UWwBD/L0Zm6p3BYepGyvt6+jFv3La0dUH7LXbnruxRSRLc4Z1WlEkzfyVCgoTAuneqDieGjFS5hYO8cmUIubXJpB5dxSrcs73q01AMv34I9ZAZWwoO5QepcGFlITqpOJ3JYHdcfw7cISSS9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759917355; c=relaxed/simple;
-	bh=SBhhP7SXQG5Q/AAGyt2uk8bwhpNPceu6ZTpziiTkWuk=;
+	s=arc-20240116; t=1759925425; c=relaxed/simple;
+	bh=jXnx8JiSjcT/CZMMwzNBjBGmLVfuIY1yxMSER2if6dM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MDE4pbHgSZcmpT4XgeIQjdHTrbIAEoogDhi7LqV1P3wpthWfTifTAOR+pNd1H2nqDzT9WyL2KNXnx/lrUrO11PI2RQwRz2KaOhkRrd1hyJVPnuuqduprh6C/FTNBK3rQ/r9mQwA1+EwXVhEbeJ+WXF0pzpAomHWJJh9ASDoalLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=C2UcNZSz; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=Ny9QqlM6MStjoh6PV3gO3iTPtXoK8g/M/xWAIQDfHKmHQ02ciQRglSCP5GMnOpSxARGKLzjhKMIt6fZG3sXbvraOfgiloiQlrh5jF5+qTFM56SFkDnzEYujOyekcRG0qAjLY+cn9gR+q/rEcADChkS9exMcvSa++EFEYF3lk/gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Jjm8kFud; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="C2UcNZSz"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-46b303f755aso56361095e9.1
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Oct 2025 02:55:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1759917351; x=1760522151; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yne+jRU6nBsNeGmX1XAlIZCbqK7n4+3fqzPsJe9q+qM=;
-        b=C2UcNZSzJaawPYrxXYBriTwgZ74acSEKfTtAw2sYAxOFJQib9f0E7C9iAmjsghC4pH
-         dbKkYVR2LC+FYvg/axWiaSMv+x/+QthkhRcXivnCE4/0c/mBoK4DI6NPjXYnoSu/ll6s
-         C9JW5Qn8AhV6IM5HaE/R0lgthMh/OoA/S/GPgqDNLIreeT91DJ9sAWHRh8Q9lrxfYqB1
-         2lP9EnGHRnJya68GFpY8krKJiGgh+nt8q44sBtPndm2LkoYWMYYbcUaL7fhU5yXtrxut
-         H2QLvzNNk52uqq7UiAwJKCVsfIGcdIXkHA8F9T95n2jxWRklKmXJXvGUf8sbc/CShejw
-         9tlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759917351; x=1760522151;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yne+jRU6nBsNeGmX1XAlIZCbqK7n4+3fqzPsJe9q+qM=;
-        b=lYLJXxRMFznyvKgvxGKRadDU1dzNzATfSToyI437GJF9yuNpCriUtehJe84nX9Sgb7
-         EtjedpzK2OLnQhKTMr2qB1HED1dpjq/nZS4vHPNqBIoK0C/9bK4KxgpjWxl/VeYDVyse
-         V+f7kRDCfDGxlH9DAdVgyyfVXVzAW9R7Ma2JJHmafAPkxnPVD+Qfxjjt5LcSf1JybDS3
-         Imv6R01sxtUl+NAmdJ1IbOzmYqlIggBkn7skEJTTLpnNhvPQnfSHLGzIFzTI9bMzHSrM
-         z6/neH7CqCfdPBFYd9k/DRyF/v8AUFnVGZr2sdggUk/QQRd0WJ8IIlB4M7szbW903Ceu
-         nmjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWVywj0fi0a2lOLmbkgMZBFntJCzrm2BM0c3KILhqFSUduvCaIiK7+jWeo6zlpid9GrBge0JKE66ATytqFYjHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylnKcHO1fcoQ1+JgccThGEXjyXzkAScoS+1c8mREladKnz6b7a
-	aUnwlUbwWeD1xCWeApLtPqC8mVMzyw7FzRo0O+CUNQeWsVVbfqhZ6QeGjq978I+4WkI=
-X-Gm-Gg: ASbGncuyFOfZSEamoBjeUrqd5sgGk+h2ya8i70pI3nx/Nz09IyaY0V8I6oypNLcXuCW
-	IbzKXAOPr9KMiOZQDHjndpPHzSBgUzqiSrjU1ZfLK7VmVsL+TjS5XYk3haTfLUnVKfFwwM4RlWh
-	A9yHAY6yIi6wYiL8b7sMc12eh7ofnUZ0/mJSjmZSTD2N/y7e3zbfinbMzM9/JNMDgid6ef5m4se
-	vZMRMWLMdD63W8FIoEN8vZ7Pzqm/D2X0al2v/7kcc+UmwlYuI7nw6YE3sEWEV51EyzxxXIhcgg7
-	wJSVEYzq4bc2e72diF8dNho5W+neeyAPTDJUHmQpM3Ves55U4Cb4icgVaqBX/tcDlJ+RvDPAxvj
-	thfRbyvTRnjaqAPn1AHYdvMRiBM+HTXi8Qw6QzG9qrfOvFeSEhu6YUBlOYgsivBEFlJ8evxM4Ys
-	U=
-X-Google-Smtp-Source: AGHT+IFMDg6Fk6FafbPBgND9d5KpnZqpexJ0kT9TISgotESBmLJE6QfVccac2v6Zvr/lpHkf/iDYqQ==
-X-Received: by 2002:a05:600c:8b11:b0:46e:48f9:a17c with SMTP id 5b1f17b1804b1-46fa9a98fd5mr20965895e9.9.1759917350933;
-        Wed, 08 Oct 2025 02:55:50 -0700 (PDT)
-Received: from [10.0.1.22] (109-81-1-107.rct.o2.cz. [109.81.1.107])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fa9d6fb41sm29907945e9.17.2025.10.08.02.55.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Oct 2025 02:55:50 -0700 (PDT)
-Message-ID: <ff0941d4-8499-4703-bdc3-4fbe2c0be50b@suse.com>
-Date: Wed, 8 Oct 2025 11:55:49 +0200
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Jjm8kFud"
+Received: from eig-obgw-6002b.ext.cloudfilter.net ([10.0.30.203])
+	by cmsmtp with ESMTPS
+	id 6Bf7vVYRxZx2i6SzovAB3F; Wed, 08 Oct 2025 12:10:16 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 6SzmvxVFZwoI26SznvkbEA; Wed, 08 Oct 2025 12:10:15 +0000
+X-Authority-Analysis: v=2.4 cv=PZX/hjhd c=1 sm=1 tr=0 ts=68e654a8
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=4oHATN8Nx7vVUZJYxp75bA==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=7T7KSl7uo7wA:10
+ a=EQC9fkTS1saQ4aXz80UA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Uhm8m3dm0cws/aSg7uFXy6zdQFIsZg9S5XN1svy4Fdc=; b=Jjm8kFud2QXOpJjo4z2+vsEsyj
+	5JibvFMUGXCvyd5kxn/H1LfbjfmLf5WApujShjuhZ0VzG+eAV1UtR3VaNP7iIu/ZBQu8fKm2e7YH5
+	Wy6hD5neDgAbQEi38PYqiRtGDKXjOG3XyPFq3XljmgBeprne01ZLKNcn/PbNZJzvZVkKfGgWPdm3c
+	Pyh0+rL7iFE3nkFfmzezLJ54px5sIL496OtzBO9cOVJBMDzs+JHrOiu46Gr3W4eah/8pJo5cADB7q
+	XfafQSVnDUItQOMv20ZGYWZvHS5RorE5ZGfnMhxCJkVrSlx8AN6Kza1eQCaGSyJ76ieTzj13X4KWj
+	7ZJPb/tA==;
+Received: from [185.134.146.81] (port=50916 helo=[10.21.53.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1v6QTp-00000001r6Z-1KKv;
+	Wed, 08 Oct 2025 04:29:06 -0500
+Message-ID: <a157b190-74f4-443b-b52f-1fe0280f9bb3@embeddedor.com>
+Date: Wed, 8 Oct 2025 10:28:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,95 +54,154 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] module: Add compile-time check for embedded NUL
- characters
-To: Kees Cook <kees@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
- Rusty Russell <rusty@rustcorp.com.au>, Daniel Gomez <da.gomez@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, linux-modules@vger.kernel.org,
- Malcolm Priestley <tvboxspy@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Hans Verkuil <hverkuil@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20251008033844.work.801-kees@kernel.org>
- <20251008035938.838263-3-kees@kernel.org>
+Subject: Re: [PATCH v2][next] scsi: megaraid_sas: Avoid a couple
+ -Wflex-array-member-not-at-end warnings
+To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Kashyap Desai <kashyap.desai@broadcom.com>,
+ Sumit Saxena <sumit.saxena@broadcom.com>,
+ Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+ Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aM1E7Xa8qYdZ598N@kspp>
+ <3a80fd1d-5a05-4db3-9dda-3ad38bedfb38@embeddedor.com>
+ <4cf727c56c4fda8d28df920214b3824c9739bc8f.camel@HansenPartnership.com>
+ <5b23ae5a-bd47-49c7-bca7-7019abc631f7@embeddedor.com>
+ <ca77643eab8e10319db31690baaf031b8bfd32ae.camel@HansenPartnership.com>
 Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20251008035938.838263-3-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <ca77643eab8e10319db31690baaf031b8bfd32ae.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 185.134.146.81
+X-Source-L: No
+X-Exim-ID: 1v6QTp-00000001r6Z-1KKv
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([10.21.53.44]) [185.134.146.81]:50916
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHIUrGjW2W/NYkwQQqEHn4Twd5RLi2aaug9otpg/Y9Pi38ogs8Xdo1DjY+dj6Sj1R48+Guc2GNVu3oSTXiLZhAfL8c1kWMCgQW2yPfIKrOnWtqw7qf6B
+ nMEyDqiBiyPqYkxfNmxSN4WAAlq/bpwj+tiopSVK1c3Vzn8e7PXgYsdTOWV92aWMHQugBxNgBMvGSFglfklyOG6Ag8JPmxdNISXbbaFXC9Mj3qjNhscs0sWG
+ DAZXV6/FYvRsk7zTtL1kYVgEG1ykQqLiYm6ZccKDw+8=
 
-On 10/8/25 5:59 AM, Kees Cook wrote:
-> Long ago, the kernel module license checks were bypassed by embedding a
-> NUL character in the MODULE_LICENSE() string[1]. By using a string like
-> "GPL\0proprietary text", the kernel would only read "GPL" due to C string
-> termination at the NUL byte, allowing proprietary modules to avoid kernel
-> tainting and access GPL-only symbols.
-> 
-> The MODULE_INFO() macro stores these strings in the .modinfo ELF
-> section, and get_next_modinfo() uses strcmp()-family functions
-> which stop at the first NUL. This split the embedded string into two
-> separate .modinfo entries, with only the first part being processed by
-> license_is_gpl_compatible().
-> 
-> Add a compile-time check using _Static_assert that compares the full
-> string length (sizeof - 1) against __builtin_strlen(), which stops at
-> the first NUL. If they differ, compilation fails with a clear error
-> message.
-> 
-> While this check can still be circumvented by modifying the ELF binary
-> post-compilation, it prevents accidental embedded NULs and forces
-> intentional abuse to require deliberate binary manipulation rather than
-> simple source-level tricks.
-> 
-> Build tested with test modules containing both valid and invalid license
-> strings. The check correctly rejects:
-> 
->     MODULE_LICENSE("GPL\0proprietary")
-> 
-> while accepting normal declarations:
-> 
->     MODULE_LICENSE("GPL")
-> 
-> Link: https://lwn.net/Articles/82305/ [1]
-> Suggested-by: Rusty Russell <rusty@rustcorp.com.au>
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: Petr Pavlu <petr.pavlu@suse.com>
-> Cc: Daniel Gomez <da.gomez@kernel.org>
-> Cc: Sami Tolvanen <samitolvanen@google.com>
-> Cc: <linux-modules@vger.kernel.org>
-> ---
->  include/linux/moduleparam.h | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-> index 6907aedc4f74..160f1678fafa 100644
-> --- a/include/linux/moduleparam.h
-> +++ b/include/linux/moduleparam.h
-> @@ -26,6 +26,9 @@
->  
->  /* Generic info of form tag = "info" */
->  #define MODULE_INFO(tag, info)					  \
-> +	_Static_assert(						  \
-> +		sizeof(info) - 1 == __builtin_strlen(info),	  \
-> +		"MODULE_INFO(" #tag ", ...) contains embedded NUL byte"); \
->  	static const char __UNIQUE_ID(modinfo)[]			  \
->  		__used __section(".modinfo") __aligned(1)		  \
->  		= __MODULE_INFO_PREFIX __stringify(tag) "=" info
 
-Nit: I think it is better to use static_assert() over _Static_assert()
-for consistency. Note also that C23 [1, 2] introduces static_assert()
-with the message being optional, which essentially matches the
-static_assert() macro in include/linux/build_bug.h, and deprecates
-_Static_assert().
 
-[1] https://en.cppreference.com/w/c/language/_Static_assert.html
-[2] https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3220.pdf (C23 similar draft)
+On 10/7/25 23:56, James Bottomley wrote:
+> On Tue, 2025-10-07 at 15:18 +0100, Gustavo A. R. Silva wrote:
+>>
+>>
+>> On 10/7/25 12:59, James Bottomley wrote:
+>>> On Tue, 2025-10-07 at 11:43 +0100, Gustavo A. R. Silva wrote:
+>>>> Hi all,
+>>>>
+>>>> Friendly ping: who can take this, please?
+>>>
+>>> After what happened with the qla2xxx driver, everyone is a bit wary
+>>> of these changes, particularly when they affect structures shared
+>>> with the hardware. Megaraid is a broadcom acquisition so although
+>>> maintained it might take them a while to check this.
+>>
+>> I've been in constant communication with the people involved. So far,
+>> none of them has expressed any concerns about this to me. However, I
+>> appreciate your feedback.
+>>
+>> In any case, I promptly submitted a bugfix minutes after getting the
+>> report.
+> 
+> I'm not criticizing the response, just saying that problems like this
+> cause me to think that someone who understands and can test the
+> hardware needs to look at this.  However ...
 
--- 
-Thanks,
-Petr
+That's true. I agree.
+
+> 
+>>> However, you could help us with this: as I understand it (there is
+>>> a bit of a no documentation problem here), the TRAILING_OVERLAP
+>>> formalism merely gets the compiler not to warn about the situation
+>>> rather than actually changing anything in the layout of the
+>>> structure?  In which case you should be able to demonstrate the
+>>> binary produced before and after this patch is the same, which
+>>> would very much reduce the risk of taking it.
+>>
+>> This is quite simple. Here you go the pahole output before and after
+>> changes.
+>>
+>> BEFORE CHANGES:
+>>
+>> pahole -C MR_FW_RAID_MAP_ALL drivers/scsi/megaraid/megaraid_sas_fp.o
+>> struct MR_FW_RAID_MAP_ALL {
+>>           struct MR_FW_RAID_MAP      raidMap;              /*     0
+>> 10408 */
+>>           /* --- cacheline 162 boundary (10368 bytes) was 40 bytes ago
+>> --- */
+>>           struct MR_LD_SPAN_MAP      ldSpanMap[64];        /* 10408
+>> 161792 */
+>>
+>>           /* size: 172200, cachelines: 2691, members: 2 */
+>>           /* last cacheline: 40 bytes */
+>> };
+>>
+>> AFTER CHANGES:
+>>
+>> pahole -C MR_FW_RAID_MAP_ALL drivers/scsi/megaraid/megaraid_sas_fp.o
+>> struct MR_FW_RAID_MAP_ALL {
+>>           union {
+>>                   struct MR_FW_RAID_MAP raidMap;           /*     0
+>> 10408 */
+>>                   struct {
+>>                           unsigned char __offset_to_FAM[10408]; /*
+>> 0 10408 */
+>>                           /* --- cacheline 162 boundary (10368 bytes)
+>> was 40 bytes ago --- */
+>>                           struct MR_LD_SPAN_MAP ldSpanMap[64]; /*
+>> 10408 161792 */
+>>                   };                                       /*     0
+>> 172200 */
+>>           };                                               /*     0
+>> 172200 */
+>>
+>>           /* size: 172200, cachelines: 2691, members: 1 */
+>>           /* last cacheline: 40 bytes */
+>> };
+>>
+>> As you can see, the size is exactly the same, as are the offsets for
+>> both members raidMap and ldSpanMap.
+> 
+> ... this is good enough to prove that the binary before and after is
+> identical and thus there's no change to the structures, which means the
+> risk of accepting the patch is significantly lower.
+> 
+>>   The trick is that, thanks to the union and __offset_to_FAM, the
+>> flexible-array member raidMap.ldSpanMap[] now appears as the last
+>> member instead of somewhere in the middle.
+>>
+>> So both ldSpanMap and raidMap.ldSpanMap[] now cleanly overlap, as
+>> seems to have been intended.
+>>
+>> (Exactly the same applies for struct MR_DRV_RAID_MAP_ALL)
+>>
+>> I can include this explanation to the changelog text if you'd like.
+> 
+> I'll leave it up to Martin, but I think going forwards it would be
+> helpful if you could indicate that you've checked that the binary
+> layout before and after is unchanged and thus the risk of merging the
+> patch is low.
+
+Absolutely. I'll do that.
+
+Thanks for the feedback.
+-Gustavo
+
