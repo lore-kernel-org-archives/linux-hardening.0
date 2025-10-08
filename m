@@ -1,77 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D46529E109
-	for <linux-hardening@vger.kernel.org>; Wed,  8 Oct 2025 03:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B188F2BDC25;
+	Wed,  8 Oct 2025 03:59:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759894142; cv=none; b=qh3jzHXHoW6hoRYP0waUI9/lSeyTnypStlvlzDrblP0w9O6E893+e55jSt4MHPtE4fOjRPbW0aA3X2osqz3zjdh1Ol6qcUYlaA1+jJJZgmBmdCD0rPfPBEsoLH+Qa1IRMj8pKIbS9C3PhumNl9AQTv4cuRd45nDDr78uaoIXFhg=
+	t=1759895978; cv=none; b=INDRoaLwgAjEq3AIIQ3LXrhjAwGYFEoTZXTAy1CA9nxkANN42iM5rOHGElbXLmjIec2lU4z66yi7QaNY6OHOOyrNUdR1JLgvJERBLMmkIN04geNjS+x9iXYBxhtfpxXF4xoj/aJ1qfGcIFbxZbIAHcGDSyT2niwHV3aXeRKOOMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759894142; c=relaxed/simple;
-	bh=X3PtXfwXh3bnh0BV+hO54AmoU/vmXWSCe6+m6M8aaCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=acNBCG1mMrGLYzMib1ZXcQSObZ7xxoP2aC/ECNJHbfzF0iUpRxkHn57AdzxDx8rv5SMm3RgInJe/x6ekeCjEDvQtVSuqASXBwqwSdn+6s2w+jnK/wcdVpLPcDcTJWvmnBaEsiD+ZOfjm8P+7DwjGs0PJRXE7ROBzpqpuwPSJZYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMwuZGXl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759895978; c=relaxed/simple;
+	bh=vPUzB/kedHLN1UiYunAi6GZuZ1A/GiYXuoHbDCB5M4o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=aLVzpR5kS//ICMWTlkjhopdd93l05ggclsgW+FYFijugTYKoILgruEa7KsIoOAWl6qgNaFJ+5TeosKL0+XbYhab4fi7YAkmuO40YSwn6AGrOjLQd2/Zp+7FZqCdBVAkGO/Hl+KgPJsMpSn3oSbamSnq8K/1UYcxkbA9p2DXzCPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qerGsF5l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMwuZGXl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C1A4C4CEF1;
-	Wed,  8 Oct 2025 03:29:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qerGsF5l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53779C4CEF4;
+	Wed,  8 Oct 2025 03:59:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759894141;
-	bh=X3PtXfwXh3bnh0BV+hO54AmoU/vmXWSCe6+m6M8aaCA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IMwuZGXlC98zEBLIeTMrDneaSV4l2Si9iuPfoC4E/3Artlc3Anc6ICeZ9/ubnmx/Q
-	 WnNQv+CVocBUhhfCqeNJ4n37L3e1LY8OaNegu88/bPohFAWmq/DB2dexJV1IFiB5Cd
-	 3fz59nOdwvEzYudcPoMYGADRnEJXkoNjG9CJJ4SUsqaEqvDGke23jpvI2EC8q74jAN
-	 OuzOzNNYwIatFV7EdrHYtj3mZfEwlr9tWe1xipphZv+TPh5l/BYUe8NdsYq/nfQ1nA
-	 Va8aJxFwKPlAojDH+ef1AgHqpTTwzZwKNQEBz9xmqPjIqg37d0xZlcgPmPotQcQMiS
-	 PQMcQzqRjSwSA==
-Date: Tue, 7 Oct 2025 20:29:01 -0700
+	s=k20201202; t=1759895978;
+	bh=vPUzB/kedHLN1UiYunAi6GZuZ1A/GiYXuoHbDCB5M4o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qerGsF5lf8DmJqYFBYDmf4IlURtKS0YXbmifDG984jebZyIHSFw9vs/ZjCeuQXpmn
+	 tDpQNiDUa1CcKuxJ9+TIaM4wYOk2j9RRUm+0svoDvAd1WarK1IPKLNy/B+E7cmEW57
+	 85W8Noz7TknIYF+kYHZcbs8fJKLXlrtX6T6A9uQ5t7HEWaZdsv8Ze4Pbh0dmU6qJwU
+	 +4iTKQ+lGCshOlmLAe+Y5AG1xb3wqSYbkCvPx65adrmUtEObISLVS4iuiZQ/6BAo78
+	 bsp4m2nHdfbnwQTFB3YbXeFpGofJUvZeKrMcXZ78/DzMatDD+7ppwmjpIB6rAPQrlZ
+	 xs9cXWx8xymQQ==
 From: Kees Cook <kees@kernel.org>
-To: Qing Zhao <qing.zhao@oracle.com>
-Cc: Claudiu Zissulescu <claziss@gmail.com>,
-	"gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] arc: Add const attribute support for mathematical ARC
- builtins
-Message-ID: <202510072026.568651EE@keescook>
-References: <20250826042212.work.202-kees@kernel.org>
- <1B081822-82F3-43A1-B3C3-B0B377F50CE6@oracle.com>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Malcolm Priestley <tvboxspy@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rusty Russell <rusty@rustcorp.com.au>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 0/3] module: Add compile-time check for embedded NUL characters
+Date: Tue,  7 Oct 2025 20:59:32 -0700
+Message-Id: <20251008033844.work.801-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2403; i=kees@kernel.org; h=from:subject:message-id; bh=vPUzB/kedHLN1UiYunAi6GZuZ1A/GiYXuoHbDCB5M4o=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlPHy7ljBR+Mv320ptmjW8KAibxM6zdHyC+8ax7DP/0C U8kZL9P7yhlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZhI6kZGhjurND948cqdkf5W /y0hbqLU7t1NlpnZcyf/P7P0RU63cx7D/9APS9/Vt3r/SVTmLYnb7SWmnfXpnOmDCm7TiQGeZaG 53AA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1B081822-82F3-43A1-B3C3-B0B377F50CE6@oracle.com>
 
-On Tue, Oct 07, 2025 at 09:02:21PM +0000, Qing Zhao wrote:
-> Hi, Kees,
-> 
-> I took a look at the patch today. 
-> Overall, I think the patch is good and should work well. 
+Hi,
+
+A long time ago we had an issue with embedded NUL bytes in MODULE_INFO
+strings[1]. While this stands out pretty strongly when you look at the
+code, and we can't do anything about a binary module that just plain lies,
+we never actually implemented the trivial compile-time check needed to
+detect it.
+
+Add this check (and fix 2 instances of needless trailing semicolons that
+this change exposed).
+
+Note that these patches were produced as part of another LLM exercise.
+This time I wanted to try "what happens if I ask an LLM to go read
+a specific LWN article and write a patch based on a discussion?" It
+pretty effortlessly chose and implemented a suggested solution, tested
+the change, and fixed new build warnings in the process.
+
+Since this was a relatively short session, here's an overview of the
+prompts involved as I guided it through a clean change and tried to see
+how it would reason about static_assert vs _Static_assert. (It wanted
+to use what was most common, not what was the current style -- we may
+want to update the comment above the static_assert macro to suggest
+using _Static_assert directly these days...)
+
+  I want to fix a weakness in the module info strings. Read about it
+  here: https://lwn.net/Articles/82305/
+
+  Since it's only "info" that we need to check, can you reduce the checks
+  to just that instead of all the other stuff?
+
+  I think the change to the comment is redundent, and that should be
+  in a commit log instead. Let's just keep the change to the static assert.
+
+  Is "static_assert" the idiomatic way to use a static assert in this
+  code base? I've seen _Static_assert used sometimes.
+
+  What's the difference between the two?
+
+  Does Linux use C11 by default now?
+
+  Then let's not use the wrapper any more.
+
+  Do an "allmodconfig all -s" build to verify this works for all modules
+  in the kernel.
+
 
 Thanks!
 
-> My major questions are:
-> 
-> 1. Are the five functions in the current list the only functions in __builtin_arc_*** that 
-> have const attribute?  
+-Kees
 
-They are the only ones I can safely assert are const attribute without
-doing additional work. I'm sure there are more, but I didn't feel
-comfortable marking others.
+[1] https://lwn.net/Articles/82305/
 
-> 2. In addition to “const” attribute, are there any other important attributes should be added for
-> the arc builtins to enable more optimizations?
+Kees Cook (3):
+  media: dvb-usb-v2: lmedm04: Fix firmware macro definitions
+  media: radio: si470x: Fix DRIVER_AUTHOR macro definition
+  module: Add compile-time check for embedded NUL characters
 
-Again, I'm not sure. But my goal here is to make it possible to add
-these going forward if people find stuff to add. Before this patch it
-wasn't possible at all -- the infrastructure to do so was missing, so
-that's what I wanted to add: the infrastructure and the first user. :)
+ include/linux/moduleparam.h                   |  3 +++
+ drivers/media/radio/si470x/radio-si470x-i2c.c |  2 +-
+ drivers/media/usb/dvb-usb-v2/lmedm04.c        | 12 ++++++------
+ 3 files changed, 10 insertions(+), 7 deletions(-)
 
 -- 
-Kees Cook
+2.34.1
+
