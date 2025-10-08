@@ -1,120 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3DC2BE036;
-	Wed,  8 Oct 2025 03:59:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB28C1DFFC;
+	Wed,  8 Oct 2025 04:20:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759895978; cv=none; b=QKNNI6lcPxlYpI/MSkHO2+UKoYCDJRRNNWJO0qoKJWwGccPq4CH9siOJQQLgmNINYzqIq0ksrhRsyfzET6BdKdHVm+6nCE16Cox+SzHSi4Plpkd+iO6Q5XapfXmOuNlr39ni9JWIaTKVg3EuggDPzBkYZJpoaywuBlaqawKS95o=
+	t=1759897218; cv=none; b=e7TymfbH+a5UzutNgEmZuZCdl4RgvlBzg4KfoQdV56Be39QHhw6UIPvsaNIjRBDiAHb2WmNOPiNhjPiGbTYSEk4N8m37NEg5pnl3+PVBCCZEyOMkabwGlEPQm5QnV4UwoGkSGYVzGuyj/avAhHrH1DDu3zzMKDla/jQXR5NFKyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759895978; c=relaxed/simple;
-	bh=/WAB5MfGBmvDQJ4UC5RStzDxPybbW2rZG0FUWgjN0gw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=htJMMPFPHhEjIrtlrMTR7cXRhXzF8t+dOEc8QNZHTi9Zx0Zrodzx8BrT0LDU+IBpB0VjpnIr2Kehze6RU0ZIgSDGI292SYUtvc6hw2/a3xMpSOwIV4bymjT+xz2zCAqhm/ctNr7PD0PwnzLA/oDOZWUeb9Su4VG6y76TQeYTwF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vv68HgJE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759897218; c=relaxed/simple;
+	bh=gIXJCsumt6skJ3sfqf5pbZAzlXWzbFT/QpJ0QJ0WoEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WADkLCgpC6hdYYJT8W6WEiPWYzKVtQ6FQ+NCz2s0oP+O0fIalWLA2fCmOVP+ddqn6P978w2VvA8qCvCPs9X2W8AzKQsUENvYhOgVLbtWjYGse7tKfkmgQ30j1F/YdMrhE6rPN2+Xa/Ph2W02DbQ4uEScJjyloHXiQ56zMbcphh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6CHq2N3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vv68HgJE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71941C4CEFF;
-	Wed,  8 Oct 2025 03:59:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6CHq2N3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E2A7C4CEF4;
+	Wed,  8 Oct 2025 04:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759895978;
-	bh=/WAB5MfGBmvDQJ4UC5RStzDxPybbW2rZG0FUWgjN0gw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vv68HgJEsyCeLlY8CO4rpXYMTZapQDaiwnzYkzOfGL29Dn3s6aStlzvCbpwhrBlL/
-	 CfWgaTDopGP1F6nXuYhlbbn41NqciR20Znai7B9MwubAibXGr9Dz/9EMD7IvkidBVK
-	 nwvVFT5cpF2QVG+TqTzqGmQ4zmxJGqi70XndFFiM2/f57IVFlUWLu8zk34X6LfMC9N
-	 HVsmL3cxSshslfXFudgva2eG15BipiayRAiWJseHZX04CifVTjVoWQ9Q/kCfGc4QXt
-	 nz08kCPJ07Wth2JBr/t8Haklzb4OxnTBZH/gOursbDQipObCMGg+dYGBMT4bpC0bEa
-	 8JBCa4fcAtArQ==
+	s=k20201202; t=1759897217;
+	bh=gIXJCsumt6skJ3sfqf5pbZAzlXWzbFT/QpJ0QJ0WoEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J6CHq2N3l4B147CgJt+zLqKYq2OtHwUWOsO4RanJM4icby3afXquF+ndgYR6fOYWP
+	 H6OZ/NXfzhSG3ZWIrXgmRzfzJY6TdzUbkHIqcFx9jRuywjXfZ30C/ThFcJTssakaHa
+	 8Pl8ETsSK4AyBuzZstrEd3Z+lNP+xUGQozD3xFAuMI7GnQHPjOrN8VoYC7s+PuJIdL
+	 Sl/LucC+GWoVX24kZ80gXhCu1Zs8uXu1c7fSbZPdvVAmGxtpf/98jY+G3TKds5KbWT
+	 ai2+dQBiC4bZTzbrfJnZsICkltmpxolSNNxBAdpghqjU9ZLCyE+8IndaxY2QfLJdx4
+	 9jMu/5qAYT2JA==
+Date: Tue, 7 Oct 2025 21:20:17 -0700
 From: Kees Cook <kees@kernel.org>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Rusty Russell <rusty@rustcorp.com.au>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	linux-modules@vger.kernel.org,
-	Malcolm Priestley <tvboxspy@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 3/3] module: Add compile-time check for embedded NUL characters
-Date: Tue,  7 Oct 2025 20:59:35 -0700
-Message-Id: <20251008035938.838263-3-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251008033844.work.801-kees@kernel.org>
-References: <20251008033844.work.801-kees@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: "Christoph Lameter (Ampere)" <cl@gentwo.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
+	Yafang Shao <laoar.shao@gmail.com>,
+	Tony Ambardar <tony.ambardar@gmail.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Alexander Potapenko <glider@google.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-doc@vger.kernel.org, llvm@lists.linux.dev,
+	Matteo Rizzo <matteorizzo@google.com>
+Subject: Re: [PATCH v4 2/2] slab: Introduce kmalloc_obj() and family
+Message-ID: <202510072114.52B93ED736@keescook>
+References: <20250315025852.it.568-kees@kernel.org>
+ <20250315031550.473587-2-kees@kernel.org>
+ <aOR15Xb6DfolYM0z@casper.infradead.org>
+ <202510071001.11497F6708@keescook>
+ <e019c59a-ba8b-ec04-dc5b-923cf9dd9d9c@gentwo.org>
+ <CANpmjNMsSGY+QEn=GV8S2sXuuQsioikPR+OhGa3+6EoTqYPkHQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2357; i=kees@kernel.org; h=from:subject; bh=/WAB5MfGBmvDQJ4UC5RStzDxPybbW2rZG0FUWgjN0gw=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlPHy7beiD4Ye+RjYysL/hj7gZ84zy1yMJs5jQdha1RK 7UXnZ0Z1lHKwiDGxSArpsgSZOce5+Lxtj3cfa4izBxWJpAhDFycAjCR7L2MDB8vy8zWENNNkJ6l kDW/8JyFxXLLUI5uj105ImpJyRc/7wCqEFluxNv3JOZG473PE7o1t+8W6/mkvqlCdoZ1xY9HiZV cAA==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNMsSGY+QEn=GV8S2sXuuQsioikPR+OhGa3+6EoTqYPkHQ@mail.gmail.com>
 
-Long ago, the kernel module license checks were bypassed by embedding a
-NUL character in the MODULE_LICENSE() string[1]. By using a string like
-"GPL\0proprietary text", the kernel would only read "GPL" due to C string
-termination at the NUL byte, allowing proprietary modules to avoid kernel
-tainting and access GPL-only symbols.
+On Tue, Oct 07, 2025 at 08:18:28PM +0200, Marco Elver wrote:
+> On Tue, 7 Oct 2025 at 19:47, Christoph Lameter (Ampere) <cl@gentwo.org> wrote:
+> >
+> > On Tue, 7 Oct 2025, Kees Cook wrote:
+> >
+> > > But all of that is orthogonal to just _having_ the type info available.
+> >
+> > iOS did go the path of creating basically one slab cache for each
+> > "type" of kmalloc for security reasons.
+> >
+> > See https://security.apple.com/blog/towards-the-next-generation-of-xnu-memory-safety/
+> 
+> We can get something similar to that with:
+> https://lore.kernel.org/all/20250825154505.1558444-1-elver@google.com/
+> Pending compiler support which is going to become available in a few
+> months (probably).
+> That version used the existing RANDOM_KMALLOC_CACHES choice of 16 slab
+> caches, but there's no fundamental limitation to go higher.
 
-The MODULE_INFO() macro stores these strings in the .modinfo ELF
-section, and get_next_modinfo() uses strcmp()-family functions
-which stop at the first NUL. This split the embedded string into two
-separate .modinfo entries, with only the first part being processed by
-license_is_gpl_compatible().
+Right -- having compiler support for dealing with types at compile time
+means we can create the slab caches statically (instead of any particular
+fixed number, even the 16 from RANDOM_KMALLOC_CACHES). Another compiler
+feature that might help here is getting a unique u32 for arbitrary type
+info, which is also how KCFI works:
+https://lore.kernel.org/linux-hardening/20250926030252.2387681-1-kees@kernel.org/
 
-Add a compile-time check using _Static_assert that compares the full
-string length (sizeof - 1) against __builtin_strlen(), which stops at
-the first NUL. If they differ, compilation fails with a clear error
-message.
+My main issue is that I prefer explicitly exposing the type instead of
+having the compiler have to guess. We want it for more than just slab
+isolation (e.g. examining alignment).
 
-While this check can still be circumvented by modifying the ELF binary
-post-compilation, it prevents accidental embedded NULs and forces
-intentional abuse to require deliberate binary manipulation rather than
-simple source-level tricks.
+> Note, this mitigation is likely not as strong as we'd like to without
+> SLAB_VIRTUAL (or so I'm told): https://lwn.net/Articles/944647/
 
-Build tested with test modules containing both valid and invalid license
-strings. The check correctly rejects:
+True, but both "halves" are needed -- SLAB_VIRTUAL isn't as robust
+without the type separation either.
 
-    MODULE_LICENSE("GPL\0proprietary")
+-Kees
 
-while accepting normal declarations:
-
-    MODULE_LICENSE("GPL")
-
-Link: https://lwn.net/Articles/82305/ [1]
-Suggested-by: Rusty Russell <rusty@rustcorp.com.au>
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Daniel Gomez <da.gomez@kernel.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: <linux-modules@vger.kernel.org>
----
- include/linux/moduleparam.h | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-index 6907aedc4f74..160f1678fafa 100644
---- a/include/linux/moduleparam.h
-+++ b/include/linux/moduleparam.h
-@@ -26,6 +26,9 @@
- 
- /* Generic info of form tag = "info" */
- #define MODULE_INFO(tag, info)					  \
-+	_Static_assert(						  \
-+		sizeof(info) - 1 == __builtin_strlen(info),	  \
-+		"MODULE_INFO(" #tag ", ...) contains embedded NUL byte"); \
- 	static const char __UNIQUE_ID(modinfo)[]			  \
- 		__used __section(".modinfo") __aligned(1)		  \
- 		= __MODULE_INFO_PREFIX __stringify(tag) "=" info
 -- 
-2.34.1
-
+Kees Cook
