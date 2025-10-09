@@ -1,126 +1,222 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955E52D0625
-	for <linux-hardening@vger.kernel.org>; Thu,  9 Oct 2025 12:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274282E7F11
+	for <linux-hardening@vger.kernel.org>; Thu,  9 Oct 2025 14:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760011670; cv=none; b=fNz4tb+/HjJOcUbkVRWh1URGlgVu3ofCgsMWX+xHoZUeHifIUwcNz+vhss+vbCj5obE0VNTKis+FNO6UZAbBeSqgfdEnPPDdLhKqQyeFGnAyN8liznQ9O+W3yaSbtUVWQ87JnnuXDODT1BCfxXNqY0tysqP1Cc1yNs5Vtyy9HUk=
+	t=1760018584; cv=none; b=h+EI8rxMhKMC1lIIu0lpynvbl5XLyb0fkhHp0X9yK0SXy8WWts77mP54zQa+ObxGcNz+a5mp4MRZNSc/v0mUAgr6STy+p7e8BW8XYQN0KVBkzjW0JQ3B/S6rJ7vfa27Cj90PSKCWsTw36yKNw7BAYun1u+IyMcseSs42kTw36ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760011670; c=relaxed/simple;
-	bh=+p3lQzk+If+FfstGkjdjKHCQavXIY1wiQDGCM90CDQo=;
+	s=arc-20240116; t=1760018584; c=relaxed/simple;
+	bh=sY/gtgf7NBozOjwc2EeRJ+KgsNPbK5kep4ypL81cuJQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TDwjHZTz7wg4pZTy72ShgVpKiLpPipWf00Hg5pNe2dT1vSiymyE8cFLR7zg/b0BWPT1gXTHB5iYerYNeHMQ4DQRL/HNowXHDu9/+hJhs1C/nQ54sFj+LgnH5CRKaAG1iXxx8eOVG0g7YqgU142BtE/nhEGUm+0CQ24wV04b5r28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ASnf2qxi; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=p2Q9QSBh+8rKDzj4BjhwrkHjuDrLa69Iz8yvTwvhSBFvDZuM+WAMbUZamINeZcW+BdN9N1ewq1ZCPrU+/mkf3TExN6w0uJQ6+y7zRq2b25Ss0+EesKCr6KJzJVMGQktAw1zersYOK0QSj3MOlW8Udx1jpbAO4w3yHxCD7DJZCqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hx1cpHeP; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ASnf2qxi"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b67684e2904so36214a12.2
-        for <linux-hardening@vger.kernel.org>; Thu, 09 Oct 2025 05:07:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hx1cpHeP"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-42d7ef9a402so7831915ab.0
+        for <linux-hardening@vger.kernel.org>; Thu, 09 Oct 2025 07:03:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760011668; x=1760616468; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+p3lQzk+If+FfstGkjdjKHCQavXIY1wiQDGCM90CDQo=;
-        b=ASnf2qxiZprtOG/sg3kmX5P98qy3e8qUf6RIjvbEPiHly8MQx1YktSRmlaPlFQHTIx
-         tkkpZ7hbEsyhTQv4vFT6oHXV4qyxdTTbG2NDmpZbVKa5uv9mqZYCJejduRI3QG3TseMX
-         Qm07zbwOHUT14hrDko9mzUmSkLJEtu9a+8Rj09/YKAerhFNMby0vOmFlLVU2HuutJXP8
-         ExVgEn6NURLMPamEiRNcl7A8F1OPu1yeputBi20UmDRrkVPG7JxBnNY9h6b0riPi2E65
-         RgAnTSqbpjLxuT3DnmhDBRbdpoM7ktBGv/VudT50zYMNtGvT+hQj8fDAxqfjYuCjRKXt
-         Q0Bw==
+        d=gmail.com; s=20230601; t=1760018580; x=1760623380; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lfk2bfyqFX2yPC1pilpdm6kUPU4T4/Dvd4LObp2un+E=;
+        b=hx1cpHeP97IWTfCT66W1ey8BmgdueE/D7jc6vp7ykfiYizvyc/GsfcLOSLM6TXLhgj
+         iWW0DwTWqTMlJQbjl0jgrp7SDTEQGQDXDURN1N6/+i/cZ5sXdwvJJkXzGVXOcfaOI2D7
+         36u8V4bRl1U6piKJ9JqjusCQcJlCOk32W3ITClBZCzYmr1q+2ZscngIlBzpnnLao2Qxr
+         vPwpCbLtuvfHpmE4G8DJOCiWi0vsOCKe8awit8HDZj9PoQVtjeB4SGuW7WoVVN8nJpl8
+         XRJQoC/m7LDM1puM9HBFRMuSMcRaRftNpF60Pmdoui9AVYvyztxWlOEBXpT6MTImiZmc
+         y8OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760011668; x=1760616468;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+p3lQzk+If+FfstGkjdjKHCQavXIY1wiQDGCM90CDQo=;
-        b=RDNTbTbI2+J0/sJqp/Hv322ppgqZ54Wkh8feMlwuF+Sze09AQzueGaU6VVyqjno+RJ
-         MFvb4KqbGBzXWePIVUJtjvzx+FgCaXwvxAVKn9cf8dyRLKRhfIiR6nZJHSmArpKhVIE9
-         YT9Zfy0Tyshw/T5h1n/nBHDlfaQavpuaLjLRFdK9agPUzb2zcgP+U9gMKdBWtgFf3MdB
-         sV1N7N+Apo319dis827G49mkxv6fAhRG8t8r3if9toUkh8P42Ikz8KFyk7UeVL1FXq5s
-         2e024hQln0PDoVmIful/UsVCsLTXFC2LUpqmdb+RZpg44GmkQMXHc+0Q1ni9MqruvGei
-         bsZg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0OIbvh9bEWmjv2nrY3FIAKI+oDTzj4JfSoVbMSIW2ZpiueHFrG9r6aEVXfmscn4Jbdc7jOM1aK0yKpWoExi8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkXrtDVUFyMkF1zCOnVuqvKZn5/rx7eImTeTabKlb0P/JIyZAG
-	TlV+yxWpO43t+qrMCM+vFutL5+SwIjGJhU9HOLl/ymGBvi978qmXioCQikn/bMwozY7cBzE4V5t
-	1tGDtDG69VRiiADCh5AIz3H/F3Yqj1LtkZzP8/Yfj
-X-Gm-Gg: ASbGncvctazo9ap8uGa1YbQ84ybPvp3BzM2wwtAybcPTyXx1k8uj0h2P24IKmKo/Xy5
-	5vNfxyahd4JiO4ZuTyoHrecL3VLvDIHk5BtpHhC6AOAv05bqEyCFRyhpoF7XW7QkeImZUZHmiSN
-	RRcuR23LyzGQM+WcLV0YJfSewRqMOelQDfsCYIEU6a9RJ82AFtua8BzLFqD/UNlQQc6aUxZAJej
-	kNofieirzPd6DGD6fBev1PIA8TuOPUTlGgfZziv9sqz+yP6uWLUQkvWDn4vdJT3eW6I
-X-Google-Smtp-Source: AGHT+IGK2999Kxnf1WRLkrVBgJlG2sfTe8NQQmLvAYHDshQ3OJDYVTnqzxr7Hq0u+SA2CL8Dip3ynt4DcSFfDVGoOE8=
-X-Received: by 2002:a17:903:2350:b0:27e:ef96:c153 with SMTP id
- d9443c01a7336-29027379a5cmr98765325ad.19.1760011667351; Thu, 09 Oct 2025
- 05:07:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1760018580; x=1760623380;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lfk2bfyqFX2yPC1pilpdm6kUPU4T4/Dvd4LObp2un+E=;
+        b=eFwWIDfqZwNGhB6Jp8CD62Uhm5+35wpnMnH5Av7IihMrPNvtmrG6lO+xJGIadK4uqE
+         pBDbqm/YtbI6b+AZqF+vEIPbGxa0f4l69cVe5kSEHBTu5wWqBfEXblLspHqTPKLzhwIi
+         DsP6t/YDCOUG7ZnwWGzLrBM7+jtlEqXbaSM4m1aqU1dp4ZGYArDp/Vyx285eDz9FYXHA
+         4stjBovaPxXI0K8Rs0YscKWnGFnOSzDpTOxaChkwGZRQVKeLvrdzu6wmfz4AX6b25xSr
+         OSqpkAore20UlXiShvTQ/ddbmDaiKoni/frwWHvia6eIw7ygD2sNM7UV8LZNGDgFADD6
+         OJGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVnwyx8JLrwWh7XeKPGZPWD6XVzbyqtl4hrdZB9dnJylBJg+LJ4K9/h5DK6Pl+nOTrHaQgHjRU/HaxI4Bx9Xfs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBzJWiTTmOnj6mjdSLSxBHdkkcTyT/z4QUQG6gbq3eL6UjXjew
+	9GWEV/+apaNbZDAhnEd5jlPuiCW+Ey1ErXN/7XVQsa+NqTuYSPyLJw/eAl91BGu5RDOp+HAkmG6
+	et/0o/BAnaPamnun7uAq8zY+n6qVUfQI=
+X-Gm-Gg: ASbGncucCT2Lu+Ccj9aA7JU96UCz4D0rlk2iOGEAfN3GolmQ4eUqEylI0hmsKKsiRXc
+	I+eNKl3KxMe7Bib7JeHZNJ+GREG7pnplyu1CogbOM2TCWGxK0SaMagnUYEgC8VtI9C/1IG4/vtM
+	ayIzfFQFbJKwcgmEAdPQn9jIjlWnOaUd2Y8BkfvzZibkk2Hc0jVecIve1GRAikmQU/3pJQEZiZ0
+	j4ZpMca5ga87Wwh0w36UDFNCkzqy+k=
+X-Google-Smtp-Source: AGHT+IGFUh+yxdaAwOY01QTdDPRzmkqga8JwC7gVQ8hdE1VZLzwP/yHjfQX0w+P+lGz62g/ohriduN1YX1Cx7jhB7TA=
+X-Received: by 2002:a05:6e02:4405:20b0:42f:9888:48f1 with SMTP id
+ e9e14a558f8ab-42f98884980mr2655225ab.1.1760018579842; Thu, 09 Oct 2025
+ 07:02:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250315025852.it.568-kees@kernel.org> <20250315031550.473587-2-kees@kernel.org>
- <aOR15Xb6DfolYM0z@casper.infradead.org> <202510071001.11497F6708@keescook>
- <e019c59a-ba8b-ec04-dc5b-923cf9dd9d9c@gentwo.org> <CANpmjNMsSGY+QEn=GV8S2sXuuQsioikPR+OhGa3+6EoTqYPkHQ@mail.gmail.com>
- <202510072114.52B93ED736@keescook> <b17ab23a-b0fb-4fab-afa9-41dfce65675a@oracle.com>
-In-Reply-To: <b17ab23a-b0fb-4fab-afa9-41dfce65675a@oracle.com>
-From: Marco Elver <elver@google.com>
-Date: Thu, 9 Oct 2025 14:07:09 +0200
-X-Gm-Features: AS18NWBVVE-SSQe4ScCSB1Ze0NxTS0A8p2TAsqA4RTj9KK9B9ZbDa15oefynRbc
-Message-ID: <CANpmjNN3UH9vL6x4P29MjSg5L7p3aBScGv5tY9ex7N-xYmqrPw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] slab: Introduce kmalloc_obj() and family
-To: Vegard Nossum <vegard.nossum@oracle.com>
-Cc: Kees Cook <kees@kernel.org>, "Christoph Lameter (Ampere)" <cl@gentwo.org>, Matthew Wilcox <willy@infradead.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Pekka Enberg <penberg@kernel.org>, 
-	David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>, Yafang Shao <laoar.shao@gmail.com>, 
-	Tony Ambardar <tony.ambardar@gmail.com>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
-	Jan Hendrik Farr <kernel@jfarr.cc>, Alexander Potapenko <glider@google.com>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, 
-	llvm@lists.linux.dev, Matteo Rizzo <matteorizzo@google.com>
+References: <20251008165659.4141318-1-aleksander.lobakin@intel.com>
+In-Reply-To: <20251008165659.4141318-1-aleksander.lobakin@intel.com>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Thu, 9 Oct 2025 22:02:23 +0800
+X-Gm-Features: AS18NWAnZSobSr21rzMet2NXYBsUZ-tOijH1hdSEoiMgzrgWiOgQX5AxwPD-zdc
+Message-ID: <CAL+tcoAWf4sNkQzCBTE8S7VgH12NPyqwiYDiig+jv0KGYAhFTA@mail.gmail.com>
+Subject: Re: [PATCH bpf] xsk: harden userspace-supplied &xdp_desc validation
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Magnus Karlsson <magnus.karlsson@intel.com>, 
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Kees Cook <kees@kernel.org>, nxne.cnse.osdt.itp.upstreaming@intel.com, 
+	bpf@vger.kernel.org, netdev@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	stable@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 8 Oct 2025 at 09:49, Vegard Nossum <vegard.nossum@oracle.com> wrote:
+On Thu, Oct 9, 2025 at 12:59=E2=80=AFAM Alexander Lobakin
+<aleksander.lobakin@intel.com> wrote:
 >
+> Turned out certain clearly invalid values passed in &xdp_desc from
+> userspace can pass xp_{,un}aligned_validate_desc() and then lead
+> to UBs or just invalid frames to be queued for xmit.
 >
-> On 08/10/2025 06:20, Kees Cook wrote:
-> > On Tue, Oct 07, 2025 at 08:18:28PM +0200, Marco Elver wrote:
-> >> On Tue, 7 Oct 2025 at 19:47, Christoph Lameter (Ampere) <cl@gentwo.org> wrote:
-> >>> On Tue, 7 Oct 2025, Kees Cook wrote:
-> >>> iOS did go the path of creating basically one slab cache for each
-> >>> "type" of kmalloc for security reasons.
-> >>>
-> >>> See https://security.apple.com/blog/towards-the-next-generation-of-xnu-memory-safety/
-> >
-> >> We can get something similar to that with:
-> >> https://lore.kernel.org/all/20250825154505.1558444-1-elver@google.com/
-> >> Pending compiler support which is going to become available in a few
-> >> months (probably).
-> >> That version used the existing RANDOM_KMALLOC_CACHES choice of 16 slab
-> >> caches, but there's no fundamental limitation to go higher.
-> >
-> > Right -- having compiler support for dealing with types at compile time
-> > means we can create the slab caches statically (instead of any particular
-> > fixed number, even the 16 from RANDOM_KMALLOC_CACHES).
+> desc->len close to ``U32_MAX`` with a non-zero pool->tx_metadata_len
+> can cause positive integer overflow and wraparound, the same way low
+> enough desc->addr with a non-zero pool->tx_metadata_len can cause
+> negative integer overflow. Both scenarios can then pass the
+> validation successfully.
+> This doesn't happen with valid XSk applications, but can be used
+> to perform attacks.
 >
-> Maybe I'm missing the point here, but I think we can already do per-
-> callsite static caches without specific new compiler support:
+> Always promote desc->len to ``u64`` first to exclude positive
+> overflows of it. Use explicit check_{add,sub}_overflow() when
+> validating desc->addr (which is ``u64`` already).
+>
+> bloat-o-meter reports a little growth of the code size:
+>
+> add/remove: 0/0 grow/shrink: 2/1 up/down: 60/-16 (44)
+> Function                                     old     new   delta
+> xskq_cons_peek_desc                          299     330     +31
+> xsk_tx_peek_release_desc_batch               973    1002     +29
+> xsk_generic_xmit                            3148    3132     -16
+>
+> but hopefully this doesn't hurt the performance much.
 
-What we want is not per-callsite but per-type caches, possibly with
-some smarter cache organization based on the properties of that type
-(does type contain/is pointer), where the latter is required if we
-cannot have as many caches as there are types. Per-callsite caches
-could be stronger than per-type caches (with the exception where a
-single callsite can allocate multiple types), but neither per-callsite
-and full per-type caches are likely feasible due to performance
-reasons. So we need some scheme that allows bounding the number of
-caches, and letting the compiler help us out with type introspection
-is probably the most reasonable approach.
+I don't see an evident point that might affect the performance. Since
+you said that, I tested by running './xdpsock -i eth1 -t -S -s 64' and
+didn't spot any degradation.
+
+>
+> Fixes: 341ac980eab9 ("xsk: Support tx_metadata_len")
+> Cc: stable@vger.kernel.org # 6.8+
+> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+
+Thanks for the fix!
+
+Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+
+> ---
+>  net/xdp/xsk_queue.h | 45 +++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 35 insertions(+), 10 deletions(-)
+>
+> diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
+> index f16f390370dc..1eb8d9f8b104 100644
+> --- a/net/xdp/xsk_queue.h
+> +++ b/net/xdp/xsk_queue.h
+> @@ -143,14 +143,24 @@ static inline bool xp_unused_options_set(u32 option=
+s)
+>  static inline bool xp_aligned_validate_desc(struct xsk_buff_pool *pool,
+>                                             struct xdp_desc *desc)
+>  {
+> -       u64 addr =3D desc->addr - pool->tx_metadata_len;
+> -       u64 len =3D desc->len + pool->tx_metadata_len;
+> -       u64 offset =3D addr & (pool->chunk_size - 1);
+> +       u64 len =3D desc->len;
+> +       u64 addr, offset;
+>
+> -       if (!desc->len)
+> +       if (!len)
+>                 return false;
+>
+> -       if (offset + len > pool->chunk_size)
+> +       /* Can overflow if desc->addr < pool->tx_metadata_len */
+> +       if (check_sub_overflow(desc->addr, pool->tx_metadata_len, &addr))
+> +               return false;
+> +
+> +       offset =3D addr & (pool->chunk_size - 1);
+> +
+> +       /*
+> +        * Can't overflow: @offset is guaranteed to be < ``U32_MAX``
+> +        * (pool->chunk_size is ``u32``), @len is guaranteed
+> +        * to be <=3D ``U32_MAX``.
+> +        */
+> +       if (offset + len + pool->tx_metadata_len > pool->chunk_size)
+>                 return false;
+>
+>         if (addr >=3D pool->addrs_cnt)
+> @@ -158,27 +168,42 @@ static inline bool xp_aligned_validate_desc(struct =
+xsk_buff_pool *pool,
+>
+>         if (xp_unused_options_set(desc->options))
+>                 return false;
+> +
+
+nit?
+
+>         return true;
+>  }
+>
+>  static inline bool xp_unaligned_validate_desc(struct xsk_buff_pool *pool=
+,
+>                                               struct xdp_desc *desc)
+>  {
+> -       u64 addr =3D xp_unaligned_add_offset_to_addr(desc->addr) - pool->=
+tx_metadata_len;
+> -       u64 len =3D desc->len + pool->tx_metadata_len;
+> +       u64 len =3D desc->len;
+> +       u64 addr, end;
+>
+> -       if (!desc->len)
+> +       if (!len)
+>                 return false;
+>
+> +       /* Can't overflow: @len is guaranteed to be <=3D ``U32_MAX`` */
+> +       len +=3D pool->tx_metadata_len;
+>         if (len > pool->chunk_size)
+>                 return false;
+>
+> -       if (addr >=3D pool->addrs_cnt || addr + len > pool->addrs_cnt ||
+> -           xp_desc_crosses_non_contig_pg(pool, addr, len))
+> +       /* Can overflow if desc->addr is close to 0 */
+> +       if (check_sub_overflow(xp_unaligned_add_offset_to_addr(desc->addr=
+),
+> +                              pool->tx_metadata_len, &addr))
+> +               return false;
+> +
+> +       if (addr >=3D pool->addrs_cnt)
+> +               return false;
+> +
+> +       /* Can overflow if pool->addrs_cnt is high enough */
+> +       if (check_add_overflow(addr, len, &end) || end > pool->addrs_cnt)
+> +               return false;
+> +
+> +       if (xp_desc_crosses_non_contig_pg(pool, addr, len))
+>                 return false;
+>
+>         if (xp_unused_options_set(desc->options))
+>                 return false;
+> +
+>         return true;
+>  }
+>
+> --
+> 2.51.0
+>
+>
