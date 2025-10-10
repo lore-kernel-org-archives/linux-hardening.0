@@ -1,87 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25352571A0;
-	Thu,  9 Oct 2025 19:27:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6892E1EB9F2;
+	Fri, 10 Oct 2025 03:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760038030; cv=none; b=TVIAVvzKXayKkhe/ObFqVtZY7kh5BmB45bk0YUTxOIzoR1ZJUq686Wfg4ty0M3u0NcQ3OoqroheAtvw7KFrTksYVCm7/ADSYFsUBZ/mdz9596hv2Sr2Urvc3jrtaao6U4/Xt4RJRTEOCUi+IvB1TUsqOjQ7kfNj1PzXVmG+6v7E=
+	t=1760065571; cv=none; b=DIznOgVTJ6tS8olQ+akR/VGcOV5y777keT3OAagMjTggCmQFXVU8Jln0xbSHhpxCPq2CvczlS7ZxWpcLtCkvVMSWlQXxB5u3VONpreoJAeB8tKG+Cu0Sz/32A5EMxqaZ4pt2FB5gulAqZFEbhhUKsVSr/zEbQozNlFyQXc7TGhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760038030; c=relaxed/simple;
-	bh=J7CUiWc0ADF5tenIxtE4W4RrkCaIIs7aFDIdrQb3yuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hqihMIat9Y//V9N+ATMmd+/GP9rem0zqSMjDxBRekhcOAP84z+p2IxdQv2nX6+kJxmLYp69o8fdXab6xKMemunxRYWFZLQWtWo7jMCmJCivRvJgF0V49Lx+h/l42hITCKDRNfVgjxthvGVjnx1Maque9MtztnycBPQmhjkou7I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocOfs+N7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760065571; c=relaxed/simple;
+	bh=lVfiq1OSL8S/sRpiegclboUq/wYdhhM+UXtqjZveTCI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=rouJRWusr72ccmiyG1HVGP/kovo6VXCupUAvoAJ5jz5bPIbf9L7m66ukoziRS5qeFUPT2lQQPImomT9+/FYGGOw1EGMS/96Y7QSUfH+R5//TGfRBtDv76asZbtxGPmECPCVuj9aG43JqfPzWYhLOBLaNUwvSRTq5CwTn5svvx+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFfugLm5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocOfs+N7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FEB6C116C6;
-	Thu,  9 Oct 2025 19:27:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFfugLm5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5E85C4CEF5;
+	Fri, 10 Oct 2025 03:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760038029;
-	bh=J7CUiWc0ADF5tenIxtE4W4RrkCaIIs7aFDIdrQb3yuA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ocOfs+N7rtJInE5RqP5OdMODSvcF4BMfHOQ/dcESFUUiWLWZAxbZaF5uNBcC7hENh
-	 qSwKlQWc7ueBC64kW2mHYeok0OYGmn9lyK+JRYDFeqfUUJL++YiR0VukEUdApGwZ4P
-	 06fxejW18TPzKsAf3FaJh5To8Xpr1/s8bqgN9DgXGr/z1ZXFBh272XQyfXUJXlKFAv
-	 4mF3dyXq7P/6ESbB3idH+ngJx9sPFTjCaHZ8861rBV4KfbYP+Zth70YDTTW0kAiNxW
-	 8QJP0JGvJcnnBDViirhzGPJdCFx3Ynf1ASJF8rtJ/rR02QsosocZbskOnujsGkzC/J
-	 /yWABoLKDafzg==
-Date: Thu, 9 Oct 2025 14:27:08 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Steven Price <steven.price@arm.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Simona Vetter <simona@ffwll.ch>, Kees Cook <kees@kernel.org>,
-	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, kernel@collabora.com,
-	Chia-I Wu <olvaffe@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	linux-hardening@vger.kernel.org,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Chen-Yu Tsai <wenst@chromium.org>
-Subject: Re: [PATCH v6 2/7] dt-bindings: power: Add MT8196 GPU frequency
- control binding
-Message-ID: <176003802776.3154911.16315672930945564696.robh@kernel.org>
-References: <20251003-mt8196-gpufreq-v6-0-76498ad61d9e@collabora.com>
- <20251003-mt8196-gpufreq-v6-2-76498ad61d9e@collabora.com>
+	s=k20201202; t=1760065570;
+	bh=lVfiq1OSL8S/sRpiegclboUq/wYdhhM+UXtqjZveTCI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XFfugLm5Njy/AiBfQr6jHPytsyF0w4NmutF3J1WVEhIWjUN1b5kXjyZyh0/sbT7Br
+	 EA5idOT9LpS7O46M8rKW73cBGsrzkOjJQ6VH/taa+Y16FJv1cKFaBDLhcmTQo2hx8o
+	 /uyAY/RGdLVpOJm7crL5yQpxajYs1dTZHS4R/UUXZ0DhCB74lF4CIo0+EvSCJ8/RoP
+	 pzNji/xA+ciySzqztWy4/aJGAHDD9mU/dLy9NPQie6S7Vc+ej2jZXo3OlA7oWfcva/
+	 gDR145I7hDaXZCxObkOMl1ygRjEs7t7iY88r4XdiODYtvuktTjtMnHcFAr0SKb5b5p
+	 mG/5tQV2zAjnA==
+From: Kees Cook <kees@kernel.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Hans Verkuil <hverkuil+cisco@kernel.org>,
+	Malcolm Priestley <tvboxspy@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rusty Russell <rusty@rustcorp.com.au>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 0/3] module: Add compile-time check for embedded NUL characters
+Date: Thu,  9 Oct 2025 20:06:06 -0700
+Message-Id: <20251010030348.it.784-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251003-mt8196-gpufreq-v6-2-76498ad61d9e@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2564; i=kees@kernel.org; h=from:subject:message-id; bh=lVfiq1OSL8S/sRpiegclboUq/wYdhhM+UXtqjZveTCI=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkvKuSNWrd2eD8/WLz4tHTS7bquST47nMOKVeY8irznW rfnnFxxRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwER2+zD8M73EsirbK8u8O25F 5OkF/x6Em3zwOMxrLXpZOdh6itAmXkaGKXoZP2Intqw+XP96noqUlNWBr1unx+dNOnVIp4/zbVc rMwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
+
+ v2:
+ - use static_assert instead of _Static_assert
+ - add Hans's Reviewed-by's
+ v1: https://lore.kernel.org/lkml/20251008033844.work.801-kees@kernel.org/
+
+Hi!
+
+A long time ago we had an issue with embedded NUL bytes in MODULE_INFO
+strings[1]. While this stands out pretty strongly when you look at the
+code, and we can't do anything about a binary module that just plain lies,
+we never actually implemented the trivial compile-time check needed to
+detect it.
+
+Add this check (and fix 2 instances of needless trailing semicolons that
+this change exposed).
+
+Note that these patches were produced as part of another LLM exercise.
+This time I wanted to try "what happens if I ask an LLM to go read
+a specific LWN article and write a patch based on a discussion?" It
+pretty effortlessly chose and implemented a suggested solution, tested
+the change, and fixed new build warnings in the process.
+
+Since this was a relatively short session, here's an overview of the
+prompts involved as I guided it through a clean change and tried to see
+how it would reason about static_assert vs _Static_assert. (It wanted
+to use what was most common, not what was the current style -- we may
+want to update the comment above the static_assert macro to suggest
+using _Static_assert directly these days...)
+
+  I want to fix a weakness in the module info strings. Read about it
+  here: https://lwn.net/Articles/82305/
+
+  Since it's only "info" that we need to check, can you reduce the checks
+  to just that instead of all the other stuff?
+
+  I think the change to the comment is redundent, and that should be
+  in a commit log instead. Let's just keep the change to the static assert.
+
+  Is "static_assert" the idiomatic way to use a static assert in this
+  code base? I've seen _Static_assert used sometimes.
+
+  What's the difference between the two?
+
+  Does Linux use C11 by default now?
+
+  Then let's not use the wrapper any more.
+
+  Do an "allmodconfig all -s" build to verify this works for all modules
+  in the kernel.
 
 
-On Fri, 03 Oct 2025 22:15:04 +0200, Nicolas Frattaroli wrote:
-> On the MT8196 and MT6991 SoCs, the GPU power and frequency is controlled
-> by some integration logic, referred to as "MFlexGraphics" by MediaTek,
-> which comes in the form of an embedded controller running
-> special-purpose firmware.
-> 
-> This controller takes care of the regulators and PLL clock frequencies
-> to squeeze the maximum amount of power out of the silicon.
-> 
-> Add a binding which models it as a power domain.
-> 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
->  .../bindings/power/mediatek,mt8196-gpufreq.yaml    | 117 +++++++++++++++++++++
->  1 file changed, 117 insertions(+)
-> 
+Thanks!
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+-Kees
+
+[1] https://lwn.net/Articles/82305/
+
+Kees Cook (3):
+  media: dvb-usb-v2: lmedm04: Fix firmware macro definitions
+  media: radio: si470x: Fix DRIVER_AUTHOR macro definition
+  module: Add compile-time check for embedded NUL characters
+
+ include/linux/moduleparam.h                   |  3 +++
+ drivers/media/radio/si470x/radio-si470x-i2c.c |  2 +-
+ drivers/media/usb/dvb-usb-v2/lmedm04.c        | 12 ++++++------
+ 3 files changed, 10 insertions(+), 7 deletions(-)
+
+-- 
+2.34.1
 
