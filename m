@@ -1,85 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F58842049;
-	Fri, 10 Oct 2025 17:10:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0F94A02;
+	Fri, 10 Oct 2025 17:44:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760116219; cv=none; b=MY7pgXs6lXgjUciayNsqxPKKqWEEDkuTr1cQwlZV6ymnbM1mPxVPZJ13u8yU/5d3N0UhuGmwgcK6texwEe04rrb3Xy8eNS3k2a3TuKwF0fzokQ/vOsB4bXUCpf+I3lK3bdt8ccSQkCsiZFnuzheromSS8BxJOR4rNzr1bs/+uNo=
+	t=1760118268; cv=none; b=EC+3l0KO+CyxNRxxs71ZaMdH5B4CqBn1pnpqIa+SYXGCJGRZRDx3WEbysAVcIohdxA01MIU7mppFby0zzHXzDmz+nL+AGBSxCplJ22HXjSbEM88Lcm3h6bCutlYMqqKSfdqz0s4Vw9SQIOiIlwEfhSq/Spf9k+UBeh/guj23KQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760116219; c=relaxed/simple;
-	bh=7N5j4MPGCNhqbzofGJ6iM7pLlyWv4XqbzW+i8bDy0VQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=i8jPQog1WkRLuJszdVcQBjS0tDW/0BXQTtnZRun6/2AfSbrN46qvyR/ZAMrpRvdQP2S08/+JJwR59PLssT/oNw5Wqi+S33umbJQyJqDtj67OddGuACAq+v01zKJVpvnOrPzHZs8d/WTQAiSfTAhmMql2iGM2QRQg2/HSSvPnfuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5uqWnVt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760118268; c=relaxed/simple;
+	bh=3PeR2izhMa19wiqx88PVC2lv0vrPdYQcJNh0la8Hf1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RjpXBf2hUeWoGs7JwY5uvFfee8N2NGcSqz1oKepCWKX9qVDxm7A9GsNHs6Zp0c/gqj3cr20YPSa3EKOP6oVp1c+QY1Yp+vgmbdcu6u7c7PTaDOv6LFNYEwWEBmew8ELZxbAKk7wpr1xcIF0nH+MpUht7U08gFRgip1MAakIiDcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+LfjjeS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5uqWnVt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BDE3C4CEF1;
-	Fri, 10 Oct 2025 17:10:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+LfjjeS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C661C4CEF5;
+	Fri, 10 Oct 2025 17:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760116219;
-	bh=7N5j4MPGCNhqbzofGJ6iM7pLlyWv4XqbzW+i8bDy0VQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=P5uqWnVt2YhV8yR6U0oE6I66EmWmGnEXLDTvOWY0j5tCcUkTkDfu7mG2rqsZ122kF
-	 3Jx226etWzqawljDd+vzOKRd1EeGR2ADlKDMPq79+pFkNY1XYBcsK3O3956fMfTKVk
-	 OVufiCAtHpwzx4kzV3kKN5RDfgFr2bXEsUAwNmPWgKGr7mg75Eeqc9mDs6AAvZbV25
-	 rlQIv7SoG7FZymaien3CIl/W6GtUHH8pyOuAD6EPG5DO78bMTiBDB4wiuTJUFCCDea
-	 uDnu3f2dWpIK2GNFhIFj7RzHFhEgEa03rOY85lR//GR/IsNJ2gqLAWkW7Uw1fxb+47
-	 5Vrpsx/Heijvg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE1543809A00;
-	Fri, 10 Oct 2025 17:10:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1760118267;
+	bh=3PeR2izhMa19wiqx88PVC2lv0vrPdYQcJNh0la8Hf1I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G+LfjjeSXdzVsa69Sw4hWqSZ3L2zHz2QTYvUcjz3hdzudl7yyvUGYLlnqQ0vklJsR
+	 fkuNrkfvhZcUJj5qKasiRKZ0v8TNA3bkDGqNM3i7FvzoVpERfUbSW2Db6BzuG0FoXi
+	 QLdY9KI8Yt27jeVKfH2LYOfSrzLtOKsgjfpqYG7Syh/qDhEcv1zRpu/oMMtK/LBE4j
+	 kbijnuQXLQSzJCRByowVYdLepQkbQgX90QDWTiAeB8Wb5XxRmORmB0hcCpHSESl+zl
+	 QpyAIdHFeyfkiuVds66D6A81XQ3L+QJP85QpkZn02GnFV4IfPSwRJ0jJ9jVT/QZRhH
+	 t+DdcuXCos/cQ==
+Date: Fri, 10 Oct 2025 20:44:24 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Kees Cook <kees@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	linux-hardening@vger.kernel.org, linux-integrity@vger.kernel.org,
+	keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] keys: Replace deprecated strncpy in
+ ecryptfs_fill_auth_tok
+Message-ID: <aOlF-FPoLVqmo1qS@kernel.org>
+References: <20251010161340.458707-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf] xsk: harden userspace-supplied &xdp_desc validation
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <176011620657.1050631.4250868223272428117.git-patchwork-notify@kernel.org>
-Date: Fri, 10 Oct 2025 17:10:06 +0000
-References: <20251008165659.4141318-1-aleksander.lobakin@intel.com>
-In-Reply-To: <20251008165659.4141318-1-aleksander.lobakin@intel.com>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: magnus.karlsson@intel.com, maciej.fijalkowski@intel.com, sdf@fomichev.me,
- ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
- john.fastabend@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, kees@kernel.org,
- nxne.cnse.osdt.itp.upstreaming@intel.com, bpf@vger.kernel.org,
- netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251010161340.458707-2-thorsten.blum@linux.dev>
 
-Hello:
-
-This patch was applied to bpf/bpf.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
-
-On Wed,  8 Oct 2025 18:56:59 +0200 you wrote:
-> Turned out certain clearly invalid values passed in &xdp_desc from
-> userspace can pass xp_{,un}aligned_validate_desc() and then lead
-> to UBs or just invalid frames to be queued for xmit.
+On Fri, Oct 10, 2025 at 06:13:41PM +0200, Thorsten Blum wrote:
+> strncpy() is deprecated for NUL-terminated destination buffers; use
+> strscpy_pad() instead to retain the zero-padding behavior of strncpy().
 > 
-> desc->len close to ``U32_MAX`` with a non-zero pool->tx_metadata_len
-> can cause positive integer overflow and wraparound, the same way low
-> enough desc->addr with a non-zero pool->tx_metadata_len can cause
-> negative integer overflow. Both scenarios can then pass the
-> validation successfully.
-> This doesn't happen with valid XSk applications, but can be used
-> to perform attacks.
+> strscpy_pad() automatically determines the size of the fixed-length
+> destination buffer via sizeof() when the optional size argument is
+> omitted, making an explicit size unnecessary.
 > 
-> [...]
+> In encrypted_init(), the source string 'key_desc' is validated by
+> valid_ecryptfs_desc() before calling ecryptfs_fill_auth_tok(), and is
+> therefore NUL-terminated and satisfies the __must_be_cstr() requirement
+> of strscpy_pad().
+> 
+> No functional changes.
 
-Here is the summary with links:
-  - [bpf] xsk: harden userspace-supplied &xdp_desc validation
-    https://git.kernel.org/bpf/bpf/c/07ca98f906a4
+It's a functional change (for better!) because it transforms to safer
+semantics ;-) And yeah as years pass by commit messages like these
+have more value than code changes themselves (as far backtracking
+and bisecting is concerned).
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+So if you don't mind, I'll delete the very last one sentence paragraph,
+and with that
 
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 
+Thank you.
+
+> 
+> Link: https://github.com/KSPP/linux/issues/90
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+> Changes in v2:
+> - Improve commit message as suggested by Jarkko and Kees
+> - Link to v1: https://lore.kernel.org/lkml/20251009180316.394708-3-thorsten.blum@linux.dev/
+> ---
+>  security/keys/encrypted-keys/ecryptfs_format.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/security/keys/encrypted-keys/ecryptfs_format.c b/security/keys/encrypted-keys/ecryptfs_format.c
+> index 8fdd76105ce3..2fc6f3a66135 100644
+> --- a/security/keys/encrypted-keys/ecryptfs_format.c
+> +++ b/security/keys/encrypted-keys/ecryptfs_format.c
+> @@ -54,8 +54,7 @@ int ecryptfs_fill_auth_tok(struct ecryptfs_auth_tok *auth_tok,
+>  	auth_tok->version = (((uint16_t)(major << 8) & 0xFF00)
+>  			     | ((uint16_t)minor & 0x00FF));
+>  	auth_tok->token_type = ECRYPTFS_PASSWORD;
+> -	strncpy((char *)auth_tok->token.password.signature, key_desc,
+> -		ECRYPTFS_PASSWORD_SIG_SIZE);
+> +	strscpy_pad(auth_tok->token.password.signature, key_desc);
+>  	auth_tok->token.password.session_key_encryption_key_bytes =
+>  		ECRYPTFS_MAX_KEY_BYTES;
+>  	/*
+> -- 
+> 2.51.0
+> 
+
+BR, Jarkko
