@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFA61A9FAE;
-	Fri, 10 Oct 2025 22:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B44B278771;
+	Fri, 10 Oct 2025 22:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760136529; cv=none; b=RbOcGsjulq/fJ7qc3mw96ZyEhITuIACCF8JJhi8waTlzFkYhXviU4QT8nsrGhVmlOqWv6FYDwlbX7sNgd9EBnoawrAoOWY5pHeHaFx9fR8Ohwrt/WHwaTCHbAHsTnTeqRx+RouXaoSZM92zxl7nhrDtM5hVSeoTtd1a9kWS9mo0=
+	t=1760137047; cv=none; b=gF34+TJLhoGGX/KaqeCQKXHZj0RuQstvK8hrhCuWrsfmlQwXVYctCIW2bcYDZn9+kXI+fOwwrcVypUBeTA7d8f/cCZE60N8Yn9pRi7te4bGBfducqe/hIownyASatj4JRav24s57EhMw+2xknSxAG2ronTBICJyZzI7/NOcqdFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760136529; c=relaxed/simple;
-	bh=NDaXxkg4WVnhjRIYtHKKMx/ePf8Uc1IZ0z3IkB9f5Qc=;
+	s=arc-20240116; t=1760137047; c=relaxed/simple;
+	bh=NPCnJm+glac6qNv/XVTi3HpMJ283abXEd2rPLQG0eqQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hDxiR3n8onX8Jyy8sjNEAmKcduRFxZLJCZovJl8nTOLf+TPudcXW+rTcijgrmpEZ4GvPhH6/LxWFM4PFT2xhRoEKHR3w/xykKHBQ3YPtQ2ctVSkYPFUReblJP4tabu6OrKVz8VP78bATs1fp4OyMKbxOR1DbKUowoHTYRJgHHWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bQsVZVQF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rTtSVU6nYZ8/Hd0tLRoTkn99zfRylXiHipMBgncu7mMyFOGdvF72RuHgE8JT1GwYhhO1F7lxaFFuRDiprNMIa9H+YaQ20rp4caH1+p9kKQDpmRRb189tmeYLf0RSr2kP4gbsXxRge9iEg4bUa+izWadcpueqGSd68/6eeuD/Gc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owy6loEA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQsVZVQF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C2CC4CEF1;
-	Fri, 10 Oct 2025 22:48:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owy6loEA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CEB0C4CEF1;
+	Fri, 10 Oct 2025 22:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760136529;
-	bh=NDaXxkg4WVnhjRIYtHKKMx/ePf8Uc1IZ0z3IkB9f5Qc=;
+	s=k20201202; t=1760137046;
+	bh=NPCnJm+glac6qNv/XVTi3HpMJ283abXEd2rPLQG0eqQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bQsVZVQF3BIMmkn2VPTcxeKY4FHr4qZ5GeZUkuuPmKFI+xil2tmWJydijUCDVzXAN
-	 4MOQSzOg5cJcACzDDHtEuq1vgKsep7YUbBOX+EXi49+CM6/F1oh/plh251Nqlb7b26
-	 BmL2alMcZdqJyfghVyP4IQMDl7JllD+whkRMDX1nnGNApJMFO904uVv8DO11Ppq7P0
-	 f+/+n3UTdDEl7axHe/ABMWChXBns0F3LCAvhzaptYGv8HDjOqB3yxsGXR340PE47WA
-	 NVoTb16R2NU2lzYX0Pcag5KQLAohTYSNI0bOnamfKYLnnICeqaEu33ofaeXPNg+Skl
-	 dYiS/J4Ruz0Jw==
-Date: Fri, 10 Oct 2025 15:48:48 -0700
+	b=owy6loEAjrNGDq93yL+08XL4RfvnUQNFlJqCljte3VLEzpuDUJFJc8tzQgMHnKfvk
+	 8ZXazvKs4NabIA5ZZTF+5MI0aDcE79iPOhEeRkwMt/G237jj7OHI/3IqsB1rp6WlnP
+	 jBr5sqWuKBw4cIxfAN6Qz4rN4BCRAU+KR50VYi4nn7p++SuZqStPI8YWeeu4Xlw2Ui
+	 pgTH4vhAlDlu1sws4muw36iMJbmjSVFv4TR72LrM96bvMFinHlf65hC8VLm/7x41AP
+	 bwKFmm59akzs5PrGkcd3ooo5uFOxSTo1oLreU0SvYWFYyRNvxvTzQ7cepdgUMKcmf9
+	 9MB+vx6CvrNAA==
+Date: Fri, 10 Oct 2025 15:57:26 -0700
 From: Kees Cook <kees@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-hardening@vger.kernel.org, linux-integrity@vger.kernel.org,
-	keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] keys: Replace deprecated strncpy in
- ecryptfs_fill_auth_tok
-Message-ID: <202510101543.80A1D4E3@keescook>
-References: <20251010161340.458707-2-thorsten.blum@linux.dev>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	syzbot+a9391462075ffb9f77c6@syzkaller.appspotmail.com,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] dma-buf: use SB_I_NOEXEC and SB_I_NODEV
+Message-ID: <202510101556.5C71F86@keescook>
+References: <20251008061027.work.515-kees@kernel.org>
+ <aOYBpY7jPx622xcz@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,46 +48,24 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251010161340.458707-2-thorsten.blum@linux.dev>
+In-Reply-To: <aOYBpY7jPx622xcz@infradead.org>
 
-On Fri, Oct 10, 2025 at 06:13:41PM +0200, Thorsten Blum wrote:
-> strncpy() is deprecated for NUL-terminated destination buffers; use
-> strscpy_pad() instead to retain the zero-padding behavior of strncpy().
+On Tue, Oct 07, 2025 at 11:16:05PM -0700, Christoph Hellwig wrote:
+> On Tue, Oct 07, 2025 at 11:10:32PM -0700, Kees Cook wrote:
+> > The dma-buf pseudo-filesystem should never have executable mappings nor
+> > device nodes. Set SB_I_NOEXEC and SB_I_NODEV on the superblock to enforce
+> > this at the filesystem level, similar to secretmem, commit 98f99394a104
+> > ("secretmem: use SB_I_NOEXEC").
+> > 
+> > Fix the syzbot-reported warning from the exec code to enforce this
+> > requirement:
 > 
-> strscpy_pad() automatically determines the size of the fixed-length
-> destination buffer via sizeof() when the optional size argument is
-> omitted, making an explicit size unnecessary.
+> Can you please just enforce this in init_pseudo?  If a file system
+> really wants to support devices or executable it can clear them,
+> but a quick grep suggests that none of them should.
 
-I would explicitly say that the old code was NUL terminating the buffer
-due to it being "ECRYPTFS_PASSWORD_SIG_SIZE + 1" sized with strncpy
-left to fill ECRYPTFS_PASSWORD_SIG_SIZE. And then you have to answer the
-question, "how was this initialized?" and trace it back to:
-
-        epayload = kzalloc(sizeof(*epayload) + payload_datalen +
-                           datablob_len + HASH_SIZE + 1, GFP_KERNEL);
-
-so the final byte was always being zeroed there, but now we're
-explicitly zeroing it (good). So there _is_ a functional change (we're
-writing 1 more byte here now), but it's more robust that way. There is
-no expected _logical_ change, though, yes.
-
-> 
-> In encrypted_init(), the source string 'key_desc' is validated by
-> valid_ecryptfs_desc() before calling ecryptfs_fill_auth_tok(), and is
-> therefore NUL-terminated and satisfies the __must_be_cstr() requirement
-> of strscpy_pad().
-> 
-> No functional changes.
-> 
-> Link: https://github.com/KSPP/linux/issues/90
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-
-With "ECRYPTFS_PASSWORD_SIG_SIZE + 1" and tracing of the destination
-buffer initialization added to the commit log:
-
-Reviewed-by: Kees Cook <kees@kernel.org>
-
--Kees
+I that that's a fine idea, but I defer to Christian -- I think the WARN
+was put in place to avoid doing that...
 
 -- 
 Kees Cook
