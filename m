@@ -1,50 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D66230274;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741D823958D;
 	Fri, 10 Oct 2025 03:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760065571; cv=none; b=AsGBwm7hxdhTSbIhd9zLKBnUUig09VXIEisgB8xk1hrTItHZWmqZxIrG0DeKjNoZt3KPCu252jcJ7vKJ2Ec6Oah8DJa0Dr6O1/YuY0QauVxNKsD1ZgICiOm34tc8bkODBs9EwyqSUDgaylqTejbRwIL50Gh8I49vpanhp3HE2lc=
+	t=1760065571; cv=none; b=nZFi1w5c3WdUe25PIwfEhDPbUfR2+rzkMMWcjLRvtxe+rZQpc4oGTrNmxiLOfZbAVBMiSAyAKaGlKDpMzmeSnYZKfh43VTURy4cPu+id8h8c2avJkfH7rjz6hmOFqvUHkvoxHuO4/VYrIcMk4USXgSC6PqSwfMT4pl5bp/sn4oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1760065571; c=relaxed/simple;
-	bh=Yk+IxpgFDi/O4uukQndL+6GJ8/MJq8TqjyKcdlLgPso=;
+	bh=buAk8wBnnxRKzIO9z4KvtvZ4fe13vVALntGgUa8V84U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YknOdfgdQRAhuXBMjijRB2iekd8E1A+UHTpOGS+QgSdPtj9pGzcp1C6aBq9d0ZE9snI2WddHDM3WemPjpeZzvDBtwoA3gIbTl4K6BvwH3oCRFQWGBie99xNogl3+jqruXqcAhuuRQ8vRBV3o7Ru5Ty8em3TQhnKsUuBZz4XolQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUnB4Lws; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Mn8KCApY2x/N29l6XoshDLGppgztMNd7CQQF120M//zuqjJ9py0iWo61DUkc5KefkaFFa3yMzdwn6H2ZBvtqrMZbUh8gQcJA8+KuKn1tJTKLUZtzFACioeKoU3pQHYOU5p3ZNp1jyKTSpe9vPepyB4Xy+JUf6Q+FhDqJZLWqGng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TzhaMnwi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUnB4Lws"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EAFAC19424;
-	Fri, 10 Oct 2025 03:06:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TzhaMnwi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8330C4CEF7;
+	Fri, 10 Oct 2025 03:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760065571;
-	bh=Yk+IxpgFDi/O4uukQndL+6GJ8/MJq8TqjyKcdlLgPso=;
+	s=k20201202; t=1760065570;
+	bh=buAk8wBnnxRKzIO9z4KvtvZ4fe13vVALntGgUa8V84U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eUnB4LwsHHoQnJRurWn0xGZ0JOWwXMwsuyTpBETy6XXPBd1nDZoKhKfpgyQJ2hkmn
-	 5okw5UYuWsfPmgq429Exx3CIU48s/psB4QPPkXafRIQ16ruimkrr8mYkdP+5tFvJCu
-	 TevM+ceO4ZEgE+4l88mWJne7Uko7T/+uPXlKJ8MoT2otJnS8I6DNAghV+iVHQTUuhR
-	 p7O28UvQ0s2FpYa5LYXax5d4dpWfQiTlQS4kLJ3HPQcKu7tsokp7kfDO8fbVDD4bVq
-	 dVE4FE8ae29cxKm4JA8NaCAO854lpySwre7lY/QkL1pc739F1/Prt0vDjVwLEr6ZC/
-	 7FblcJ5pHI8sA==
+	b=TzhaMnwi5aRCYhMaD90wY45c6oDbwSynC3DzmDcd2EhMbW+bwg+q+4X9fBSSGY1F2
+	 UCVKvmdzKVV7SEQFazNz4uOG+0TfFa5mYCvJFEC+eNsNuKunPAuuVxuLUbB5LfPC3C
+	 /e1qKqg/luyqhbw3P9iqPsWQwihFgWHW6kk08Ocu3nIlh+rRG4UqyW5pviUzTTpOfp
+	 n3Bp/NGJbd9NaqGKeN8Q7yt4ORDAokNot7/zqBCxszv8ZYxfp1gnXCjkbsEpyzDdN5
+	 nKN710g3qVhlsfkHZ+pBaJvc1xym5U6zxr27GPvg/zXDYqNQhBwVQt1fVzFLoXfP5m
+	 bPiTbNuPckfoQ==
 From: Kees Cook <kees@kernel.org>
 To: Luis Chamberlain <mcgrof@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
+	Hans Verkuil <hverkuil+cisco@kernel.org>,
+	Malcolm Priestley <tvboxspy@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	Hans Verkuil <hverkuil@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
 	Rusty Russell <rusty@rustcorp.com.au>,
 	Petr Pavlu <petr.pavlu@suse.com>,
 	Daniel Gomez <da.gomez@kernel.org>,
 	Sami Tolvanen <samitolvanen@google.com>,
-	linux-modules@vger.kernel.org,
-	Hans Verkuil <hverkuil+cisco@kernel.org>,
-	Malcolm Priestley <tvboxspy@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
 	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
+	linux-modules@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 3/3] module: Add compile-time check for embedded NUL characters
-Date: Thu,  9 Oct 2025 20:06:09 -0700
-Message-Id: <20251010030610.3032147-3-kees@kernel.org>
+Subject: [PATCH v2 1/3] media: dvb-usb-v2: lmedm04: Fix firmware macro definitions
+Date: Thu,  9 Oct 2025 20:06:07 -0700
+Message-Id: <20251010030610.3032147-1-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251010030348.it.784-kees@kernel.org>
 References: <20251010030348.it.784-kees@kernel.org>
@@ -54,68 +54,61 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2355; i=kees@kernel.org; h=from:subject; bh=Yk+IxpgFDi/O4uukQndL+6GJ8/MJq8TqjyKcdlLgPso=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkvKhRWrFv7qexHUptWlfF3/yhvZc33n59/WPLby+DFP hZR+07BjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIloCDL8dzv9IKGhZk3TRFfL 1XVPqzcoTL0Ve36tUmvrqc8rHv0/dJHhf7GmzO9Qw8DDmxWnZedkadR1puwJ2/Jz0puk399iO5O 1mAE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2029; i=kees@kernel.org; h=from:subject; bh=buAk8wBnnxRKzIO9z4KvtvZ4fe13vVALntGgUa8V84U=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkvKuSNRHNWmjXf/L5HymbpuzmXT1dvC5DbqfTMuo5B3 l4qc/eNjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgImsEWL4w3efx9RaQeHBDsEv U06efXncNIQ7eqJh6uZUuZKs7WuDgxj+5zHeU5Dzljx0Zff2vPyVxx9mh1aKiFvPPlf+Z8FFWb6 TrAA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Long ago, the kernel module license checks were bypassed by embedding a
-NUL character in the MODULE_LICENSE() string[1]. By using a string like
-"GPL\0proprietary text", the kernel would only read "GPL" due to C string
-termination at the NUL byte, allowing proprietary modules to avoid kernel
-tainting and access GPL-only symbols.
+The firmware filename macros incorrectly included semicolons in their
+string literal definitions. Right now, this wasn't causing any real
+problem, but coming changes to the MODULE_INFO() macro make this more
+sensitive. Specifically, when used with MODULE_FIRMWARE(), this
+created syntax errors during macro expansion:
 
-The MODULE_INFO() macro stores these strings in the .modinfo ELF
-section, and get_next_modinfo() uses strcmp()-family functions
-which stop at the first NUL. This split the embedded string into two
-separate .modinfo entries, with only the first part being processed by
-license_is_gpl_compatible().
+    MODULE_FIRMWARE(LME2510_C_S7395);
 
-Add a compile-time check using static_assert that compares the full
-string length (sizeof - 1) against __builtin_strlen(), which stops at
-the first NUL. If they differ, compilation fails with a clear error
-message.
+expands to:
 
-While this check can still be circumvented by modifying the ELF binary
-post-compilation, it prevents accidental embedded NULs and forces
-intentional abuse to require deliberate binary manipulation rather than
-simple source-level tricks.
+    MODULE_INFO(firmware, "dvb-usb-lme2510c-s7395.fw";)
+                                                     ^
+                                          syntax error
 
-Build tested with test modules containing both valid and invalid license
-strings. The check correctly rejects:
+Remove the trailing semicolons from all six firmware filename macro
+definitions. Semicolons should only appear at the point of use, not in
+the macro definition.
 
-    MODULE_LICENSE("GPL\0proprietary")
-
-while accepting normal declarations:
-
-    MODULE_LICENSE("GPL")
-
-Link: https://lwn.net/Articles/82305/ [1]
-Suggested-by: Rusty Russell <rusty@rustcorp.com.au>
+Reviewed-by: Hans Verkuil <hverkuil+cisco@kernel.org>
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Daniel Gomez <da.gomez@kernel.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: <linux-modules@vger.kernel.org>
+Cc: Malcolm Priestley <tvboxspy@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: <linux-media@vger.kernel.org>
 ---
- include/linux/moduleparam.h | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/usb/dvb-usb-v2/lmedm04.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-index 6907aedc4f74..915f32f7d888 100644
---- a/include/linux/moduleparam.h
-+++ b/include/linux/moduleparam.h
-@@ -26,6 +26,9 @@
+diff --git a/drivers/media/usb/dvb-usb-v2/lmedm04.c b/drivers/media/usb/dvb-usb-v2/lmedm04.c
+index 0c510035805b..05c18b6de5c6 100644
+--- a/drivers/media/usb/dvb-usb-v2/lmedm04.c
++++ b/drivers/media/usb/dvb-usb-v2/lmedm04.c
+@@ -70,12 +70,12 @@
+ #include "ts2020.h"
  
- /* Generic info of form tag = "info" */
- #define MODULE_INFO(tag, info)					  \
-+	static_assert(						  \
-+		sizeof(info) - 1 == __builtin_strlen(info),	  \
-+		"MODULE_INFO(" #tag ", ...) contains embedded NUL byte"); \
- 	static const char __UNIQUE_ID(modinfo)[]			  \
- 		__used __section(".modinfo") __aligned(1)		  \
- 		= __MODULE_INFO_PREFIX __stringify(tag) "=" info
+ 
+-#define LME2510_C_S7395	"dvb-usb-lme2510c-s7395.fw";
+-#define LME2510_C_LG	"dvb-usb-lme2510c-lg.fw";
+-#define LME2510_C_S0194	"dvb-usb-lme2510c-s0194.fw";
+-#define LME2510_C_RS2000 "dvb-usb-lme2510c-rs2000.fw";
+-#define LME2510_LG	"dvb-usb-lme2510-lg.fw";
+-#define LME2510_S0194	"dvb-usb-lme2510-s0194.fw";
++#define LME2510_C_S7395	"dvb-usb-lme2510c-s7395.fw"
++#define LME2510_C_LG	"dvb-usb-lme2510c-lg.fw"
++#define LME2510_C_S0194	"dvb-usb-lme2510c-s0194.fw"
++#define LME2510_C_RS2000 "dvb-usb-lme2510c-rs2000.fw"
++#define LME2510_LG	"dvb-usb-lme2510-lg.fw"
++#define LME2510_S0194	"dvb-usb-lme2510-s0194.fw"
+ 
+ /* debug */
+ static int dvb_usb_lme2510_debug;
 -- 
 2.34.1
 
