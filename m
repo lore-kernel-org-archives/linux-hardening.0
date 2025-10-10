@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0F94A02;
-	Fri, 10 Oct 2025 17:44:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFA61A9FAE;
+	Fri, 10 Oct 2025 22:48:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760118268; cv=none; b=EC+3l0KO+CyxNRxxs71ZaMdH5B4CqBn1pnpqIa+SYXGCJGRZRDx3WEbysAVcIohdxA01MIU7mppFby0zzHXzDmz+nL+AGBSxCplJ22HXjSbEM88Lcm3h6bCutlYMqqKSfdqz0s4Vw9SQIOiIlwEfhSq/Spf9k+UBeh/guj23KQ0=
+	t=1760136529; cv=none; b=RbOcGsjulq/fJ7qc3mw96ZyEhITuIACCF8JJhi8waTlzFkYhXviU4QT8nsrGhVmlOqWv6FYDwlbX7sNgd9EBnoawrAoOWY5pHeHaFx9fR8Ohwrt/WHwaTCHbAHsTnTeqRx+RouXaoSZM92zxl7nhrDtM5hVSeoTtd1a9kWS9mo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760118268; c=relaxed/simple;
-	bh=3PeR2izhMa19wiqx88PVC2lv0vrPdYQcJNh0la8Hf1I=;
+	s=arc-20240116; t=1760136529; c=relaxed/simple;
+	bh=NDaXxkg4WVnhjRIYtHKKMx/ePf8Uc1IZ0z3IkB9f5Qc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RjpXBf2hUeWoGs7JwY5uvFfee8N2NGcSqz1oKepCWKX9qVDxm7A9GsNHs6Zp0c/gqj3cr20YPSa3EKOP6oVp1c+QY1Yp+vgmbdcu6u7c7PTaDOv6LFNYEwWEBmew8ELZxbAKk7wpr1xcIF0nH+MpUht7U08gFRgip1MAakIiDcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+LfjjeS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hDxiR3n8onX8Jyy8sjNEAmKcduRFxZLJCZovJl8nTOLf+TPudcXW+rTcijgrmpEZ4GvPhH6/LxWFM4PFT2xhRoEKHR3w/xykKHBQ3YPtQ2ctVSkYPFUReblJP4tabu6OrKVz8VP78bATs1fp4OyMKbxOR1DbKUowoHTYRJgHHWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bQsVZVQF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+LfjjeS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C661C4CEF5;
-	Fri, 10 Oct 2025 17:44:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQsVZVQF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C2CC4CEF1;
+	Fri, 10 Oct 2025 22:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760118267;
-	bh=3PeR2izhMa19wiqx88PVC2lv0vrPdYQcJNh0la8Hf1I=;
+	s=k20201202; t=1760136529;
+	bh=NDaXxkg4WVnhjRIYtHKKMx/ePf8Uc1IZ0z3IkB9f5Qc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G+LfjjeSXdzVsa69Sw4hWqSZ3L2zHz2QTYvUcjz3hdzudl7yyvUGYLlnqQ0vklJsR
-	 fkuNrkfvhZcUJj5qKasiRKZ0v8TNA3bkDGqNM3i7FvzoVpERfUbSW2Db6BzuG0FoXi
-	 QLdY9KI8Yt27jeVKfH2LYOfSrzLtOKsgjfpqYG7Syh/qDhEcv1zRpu/oMMtK/LBE4j
-	 kbijnuQXLQSzJCRByowVYdLepQkbQgX90QDWTiAeB8Wb5XxRmORmB0hcCpHSESl+zl
-	 QpyAIdHFeyfkiuVds66D6A81XQ3L+QJP85QpkZn02GnFV4IfPSwRJ0jJ9jVT/QZRhH
-	 t+DdcuXCos/cQ==
-Date: Fri, 10 Oct 2025 20:44:24 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
+	b=bQsVZVQF3BIMmkn2VPTcxeKY4FHr4qZ5GeZUkuuPmKFI+xil2tmWJydijUCDVzXAN
+	 4MOQSzOg5cJcACzDDHtEuq1vgKsep7YUbBOX+EXi49+CM6/F1oh/plh251Nqlb7b26
+	 BmL2alMcZdqJyfghVyP4IQMDl7JllD+whkRMDX1nnGNApJMFO904uVv8DO11Ppq7P0
+	 f+/+n3UTdDEl7axHe/ABMWChXBns0F3LCAvhzaptYGv8HDjOqB3yxsGXR340PE47WA
+	 NVoTb16R2NU2lzYX0Pcag5KQLAohTYSNI0bOnamfKYLnnICeqaEu33ofaeXPNg+Skl
+	 dYiS/J4Ruz0Jw==
+Date: Fri, 10 Oct 2025 15:48:48 -0700
+From: Kees Cook <kees@kernel.org>
 To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Kees Cook <kees@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>,
-	David Howells <dhowells@redhat.com>,
+Cc: Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
 	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
 	"Serge E. Hallyn" <serge@hallyn.com>,
 	linux-hardening@vger.kernel.org, linux-integrity@vger.kernel.org,
@@ -38,7 +38,7 @@ Cc: Kees Cook <kees@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2] keys: Replace deprecated strncpy in
  ecryptfs_fill_auth_tok
-Message-ID: <aOlF-FPoLVqmo1qS@kernel.org>
+Message-ID: <202510101543.80A1D4E3@keescook>
 References: <20251010161340.458707-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -57,6 +57,20 @@ On Fri, Oct 10, 2025 at 06:13:41PM +0200, Thorsten Blum wrote:
 > strscpy_pad() automatically determines the size of the fixed-length
 > destination buffer via sizeof() when the optional size argument is
 > omitted, making an explicit size unnecessary.
+
+I would explicitly say that the old code was NUL terminating the buffer
+due to it being "ECRYPTFS_PASSWORD_SIG_SIZE + 1" sized with strncpy
+left to fill ECRYPTFS_PASSWORD_SIG_SIZE. And then you have to answer the
+question, "how was this initialized?" and trace it back to:
+
+        epayload = kzalloc(sizeof(*epayload) + payload_datalen +
+                           datablob_len + HASH_SIZE + 1, GFP_KERNEL);
+
+so the final byte was always being zeroed there, but now we're
+explicitly zeroing it (good). So there _is_ a functional change (we're
+writing 1 more byte here now), but it's more robust that way. There is
+no expected _logical_ change, though, yes.
+
 > 
 > In encrypted_init(), the source string 'key_desc' is validated by
 > valid_ecryptfs_desc() before calling ecryptfs_fill_auth_tok(), and is
@@ -64,46 +78,16 @@ On Fri, Oct 10, 2025 at 06:13:41PM +0200, Thorsten Blum wrote:
 > of strscpy_pad().
 > 
 > No functional changes.
-
-It's a functional change (for better!) because it transforms to safer
-semantics ;-) And yeah as years pass by commit messages like these
-have more value than code changes themselves (as far backtracking
-and bisecting is concerned).
-
-So if you don't mind, I'll delete the very last one sentence paragraph,
-and with that
-
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-
-Thank you.
-
 > 
 > Link: https://github.com/KSPP/linux/issues/90
 > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
-> Changes in v2:
-> - Improve commit message as suggested by Jarkko and Kees
-> - Link to v1: https://lore.kernel.org/lkml/20251009180316.394708-3-thorsten.blum@linux.dev/
-> ---
->  security/keys/encrypted-keys/ecryptfs_format.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/security/keys/encrypted-keys/ecryptfs_format.c b/security/keys/encrypted-keys/ecryptfs_format.c
-> index 8fdd76105ce3..2fc6f3a66135 100644
-> --- a/security/keys/encrypted-keys/ecryptfs_format.c
-> +++ b/security/keys/encrypted-keys/ecryptfs_format.c
-> @@ -54,8 +54,7 @@ int ecryptfs_fill_auth_tok(struct ecryptfs_auth_tok *auth_tok,
->  	auth_tok->version = (((uint16_t)(major << 8) & 0xFF00)
->  			     | ((uint16_t)minor & 0x00FF));
->  	auth_tok->token_type = ECRYPTFS_PASSWORD;
-> -	strncpy((char *)auth_tok->token.password.signature, key_desc,
-> -		ECRYPTFS_PASSWORD_SIG_SIZE);
-> +	strscpy_pad(auth_tok->token.password.signature, key_desc);
->  	auth_tok->token.password.session_key_encryption_key_bytes =
->  		ECRYPTFS_MAX_KEY_BYTES;
->  	/*
-> -- 
-> 2.51.0
-> 
 
-BR, Jarkko
+With "ECRYPTFS_PASSWORD_SIG_SIZE + 1" and tracing of the destination
+buffer initialization added to the commit log:
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+-Kees
+
+-- 
+Kees Cook
