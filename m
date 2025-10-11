@@ -1,71 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B44B278771;
-	Fri, 10 Oct 2025 22:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37DB34BA54
+	for <linux-hardening@vger.kernel.org>; Sat, 11 Oct 2025 00:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760137047; cv=none; b=gF34+TJLhoGGX/KaqeCQKXHZj0RuQstvK8hrhCuWrsfmlQwXVYctCIW2bcYDZn9+kXI+fOwwrcVypUBeTA7d8f/cCZE60N8Yn9pRi7te4bGBfducqe/hIownyASatj4JRav24s57EhMw+2xknSxAG2ronTBICJyZzI7/NOcqdFQ=
+	t=1760143695; cv=none; b=eCx9RHE0n/oPnVDRDuUN02OQp5LPNeZC98TUTDSIAEFcMDzvv9b3hhSswi5z2lgbevjBblhGn3mArb6XZBYbOX2fiH6pgP0MfG6xZ1RqSlcK/XRiFAZqSLcE+RVDTsruxklUrTNl3P8/HWU12XGCG/S11WMWrZVotD/sFhShI6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760137047; c=relaxed/simple;
-	bh=NPCnJm+glac6qNv/XVTi3HpMJ283abXEd2rPLQG0eqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rTtSVU6nYZ8/Hd0tLRoTkn99zfRylXiHipMBgncu7mMyFOGdvF72RuHgE8JT1GwYhhO1F7lxaFFuRDiprNMIa9H+YaQ20rp4caH1+p9kKQDpmRRb189tmeYLf0RSr2kP4gbsXxRge9iEg4bUa+izWadcpueqGSd68/6eeuD/Gc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owy6loEA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760143695; c=relaxed/simple;
+	bh=JrHO9wcpchpFOEQKduYp9JsrMS6ulK7V3M9OWMip5m8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HkOPWSgZN35giy5fXwZzArRKZqB9b55IFQpX1ARF515OoU36sX0C8ZH//m4akzAKtG8TMfPKvx/lSBWA5uLQ+PvxvsPjC8Xt5a+Ry7SPs0iWNu8djUv+NVS32YbGgQY69DhcxISGF+FZDa5D+EXqhQND0CHpLcNbgctWqpCuL30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wqIxp567; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owy6loEA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CEB0C4CEF1;
-	Fri, 10 Oct 2025 22:57:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760137046;
-	bh=NPCnJm+glac6qNv/XVTi3HpMJ283abXEd2rPLQG0eqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=owy6loEAjrNGDq93yL+08XL4RfvnUQNFlJqCljte3VLEzpuDUJFJc8tzQgMHnKfvk
-	 8ZXazvKs4NabIA5ZZTF+5MI0aDcE79iPOhEeRkwMt/G237jj7OHI/3IqsB1rp6WlnP
-	 jBr5sqWuKBw4cIxfAN6Qz4rN4BCRAU+KR50VYi4nn7p++SuZqStPI8YWeeu4Xlw2Ui
-	 pgTH4vhAlDlu1sws4muw36iMJbmjSVFv4TR72LrM96bvMFinHlf65hC8VLm/7x41AP
-	 bwKFmm59akzs5PrGkcd3ooo5uFOxSTo1oLreU0SvYWFYyRNvxvTzQ7cepdgUMKcmf9
-	 9MB+vx6CvrNAA==
-Date: Fri, 10 Oct 2025 15:57:26 -0700
-From: Kees Cook <kees@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	syzbot+a9391462075ffb9f77c6@syzkaller.appspotmail.com,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] dma-buf: use SB_I_NOEXEC and SB_I_NODEV
-Message-ID: <202510101556.5C71F86@keescook>
-References: <20251008061027.work.515-kees@kernel.org>
- <aOYBpY7jPx622xcz@infradead.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wqIxp567"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1760143680;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cji4z2er6pRmGYHI01Em2KoluPX1Q6shi/bLvXruyQg=;
+	b=wqIxp567kScmh0J2IFpMr8rZwffM2m/RoXY7EJfFR0Q22ZONddZP9MLhH4F8UZrDyE/O3i
+	gss7dAHbQtxQnpSI072N8sF71OhbVIVSPAuvJWxTfgyE5/w3DPkDvAfMGzs6uuuX1DMHIe
+	NvyVa4xfXt6MiCg/F3R+QnQo71nODUo=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	WangYuli <wangyuli@uniontech.com>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] riscv: KGDB: Replace deprecated strcpy in kgdb_arch_handle_qxfer_pkt
+Date: Sat, 11 Oct 2025 02:47:47 +0200
+Message-ID: <20251011004750.461954-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aOYBpY7jPx622xcz@infradead.org>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Oct 07, 2025 at 11:16:05PM -0700, Christoph Hellwig wrote:
-> On Tue, Oct 07, 2025 at 11:10:32PM -0700, Kees Cook wrote:
-> > The dma-buf pseudo-filesystem should never have executable mappings nor
-> > device nodes. Set SB_I_NOEXEC and SB_I_NODEV on the superblock to enforce
-> > this at the filesystem level, similar to secretmem, commit 98f99394a104
-> > ("secretmem: use SB_I_NOEXEC").
-> > 
-> > Fix the syzbot-reported warning from the exec code to enforce this
-> > requirement:
-> 
-> Can you please just enforce this in init_pseudo?  If a file system
-> really wants to support devices or executable it can clear them,
-> but a quick grep suggests that none of them should.
+strcpy() is deprecated because it can cause a buffer overflow when the
+sizes of the source and the destination are not known at compile time.
+Use strscpy() instead.
 
-I that that's a fine idea, but I defer to Christian -- I think the WARN
-was put in place to avoid doing that...
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/riscv/kernel/kgdb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/arch/riscv/kernel/kgdb.c b/arch/riscv/kernel/kgdb.c
+index 9f3db3503dab..15fec5d1e6de 100644
+--- a/arch/riscv/kernel/kgdb.c
++++ b/arch/riscv/kernel/kgdb.c
+@@ -265,10 +265,10 @@ void kgdb_arch_handle_qxfer_pkt(char *remcom_in_buffer,
+ {
+ 	if (!strncmp(remcom_in_buffer, gdb_xfer_read_target,
+ 		     sizeof(gdb_xfer_read_target)))
+-		strcpy(remcom_out_buffer, riscv_gdb_stub_target_desc);
++		strscpy(remcom_out_buffer, riscv_gdb_stub_target_desc, BUFMAX);
+ 	else if (!strncmp(remcom_in_buffer, gdb_xfer_read_cpuxml,
+ 			  sizeof(gdb_xfer_read_cpuxml)))
+-		strcpy(remcom_out_buffer, riscv_gdb_stub_cpuxml);
++		strscpy(remcom_out_buffer, riscv_gdb_stub_cpuxml, BUFMAX);
+ }
+ 
+ static inline void kgdb_arch_update_addr(struct pt_regs *regs,
 -- 
-Kees Cook
+2.51.0
+
