@@ -1,99 +1,95 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEF81509A0
-	for <linux-hardening@vger.kernel.org>; Sun, 12 Oct 2025 19:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2ABD1A08A3
+	for <linux-hardening@vger.kernel.org>; Mon, 13 Oct 2025 00:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760298982; cv=none; b=EnhXYP5jPMWIGy0hxYS1YGoOA442fu84+bpsIkW/ZunK/ReGUqG/MRLS4fx9k0T/TX5xheCwIdhlATBN0pzmwXYLsBRFUZQFrAGxKrdWURuCm7ZNSEB/xse5VWhxKGtuYmBg1aT7qNqiM2tGVRKAp4cdRberBr6VSAwaP0f6vOc=
+	t=1760314794; cv=none; b=m3gkALWAcki7c4QEp58znuGaTByzwX1mkMmMQUc2Snwidr7CyDQFY9QUuNm0IAEWp/NOXxGUbelRqXOADjbco5XmbdrQ7KR3b8gT/D2/rh08cARYMoKM7ChlWqAnqCNHxg0dnbjHrKb3SxFfXdhikpj/eIcJqTklYepckZbwfKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760298982; c=relaxed/simple;
-	bh=rLv/ZL2NBVvf9mLYXm9Of1NE2v/PPNOYA2cCKfAYuSE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sa7UmFnNZasU3QnluxGC/6FpylDenIT/bj2sfDTmrS2+NUmh+EIAcoHpNfcCfR6kTZulAkqsGV0rqQ9l2Jes4IL9j8XRDa3wQMjQdEmwkW8iGvPKDzVo4djvcBZL9i/pw19RDUqXKWCfJqmZhMRovIH+Djgkj796y/LEr2xz94E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lRmFaMe/; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1760314794; c=relaxed/simple;
+	bh=SV+DunIzUVTWBJ78hxKCfUSi2AinILUQvteKhxogjfQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=tyvIZh21yel3yTv2c0h73RbhzAHrNQYa/pmIRMp5DPHZ8EnJQ0D1ye9XWI4aq/KZEe2CDWhkE1TYMrfyAghvglA7t36CIoC1cyqMR2dTy4gQQBGZQlhwRl4pu2pa4CDhqZfBmlnVP/bJZ8Zl4NmqfMPIfaOoo7LTAY5MK/m8rts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IjRSj86W; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lRmFaMe/"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1760298968;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=nwPjdHOW4dMG1T40eFmU0S20/6YP0v1nsjLRSvlumqM=;
-	b=lRmFaMe/r96b5PSFLPOJlOmLetbJZ5sVbbBssHGRKkAyQv/yvLbnRCzsuX14hXf4VIeW68
-	injMi22daXCMaSkVYEwO0MpJJUwnNbVwLTQDBzwV21Xdf2XMKxxRg/EcnZHLjLplUFFD8B
-	JHNxIzUMnUusoY1mx9gg9/NAtYYNfgw=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Jason Andryuk <jason.andryuk@amd.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Cc: linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	xen-devel@lists.xenproject.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers/xen/xenbus: Replace deprecated strcpy in xenbus_transaction_end
-Date: Sun, 12 Oct 2025 21:55:09 +0200
-Message-ID: <20251012195514.39003-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IjRSj86W"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2699ef1b4e3so8053765ad.0
+        for <linux-hardening@vger.kernel.org>; Sun, 12 Oct 2025 17:19:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1760314792; x=1760919592; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iQ6yp3ug3gp30Xy0Uek/d5n0xvfYuEykldX/ZWgCn2g=;
+        b=IjRSj86WJBpp4yAV/Aujhr9g+cZU4jJvPIFSW+zrT+1pBzXknK4Y7xhdQmsAJped5f
+         LWFseisKttrkoGxvYmGQd5i68oZZFGPuo9A0uBUsXVDd37FQMumuLphFkqSBpp0cTG6R
+         uueUJ9A4MuB7zVk8/WjJ74Z/Q2XcvKujRrwfPVulXgb+3Vxdk522Qkw32qTBYA6HDNz0
+         ixCN4Fbq/Ngn8c/rvcVM1Fql8RFTImbSObKosx8wCVfaSzo6bscRDF24SaEoNb/6nf1u
+         APUsv4JeNaeeNDVJ/OE0QmiprRDu6WtgLOnSAHU4df9FpIIb/B7OJiaPAc2kU1o8zRpt
+         jJmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760314792; x=1760919592;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iQ6yp3ug3gp30Xy0Uek/d5n0xvfYuEykldX/ZWgCn2g=;
+        b=sZCDhEspgX0VyYn/nkKEKDXtPonPj7sRfJRwEcyzPnwGg/X7JyY2j0C8K+FyTQ+52W
+         2RmIxJMZMBgl0D0qb4mYXnTE+z3cC+6REvanzCU4b4v1WBRcew+U/pHeLQNeVX90jJPl
+         vOVt7WQM/JxbFMdxpO+LOQNgOxLNZBsVEsDL8oQCYy7a0b5AP2p3XJ04ZV7ughaBNgdO
+         5nFPM017MSBUeJB+BpZFlo2nF5RnerKqgRid/PWmveUQ8JprWsdLVBD2LtqxGmDhemAE
+         sQTSZECNFnYpSLdhC6KIKqPo4OFq1jTqshVnSfnSWVIeNYwrocZV1XPP/EIH/dBwdWpo
+         SWGw==
+X-Gm-Message-State: AOJu0YxcsH9Kh1CIEoKsYappHsUariBtxSNpAvUmY9BOzYC9nbTHisNi
+	Az8QG4fdByiJCmKHtX+Ufn6IUJvF42DISyIMoqmB2i0mir+0zVvJHf1EM6GjnSzhFxY=
+X-Gm-Gg: ASbGncvKi+8bpk2EtSrNenzq0Eux1W1IC+s0uYYjpd7EXtWoVyR0bD8PAincuKXYeij
+	9qA34iod1Utwk2KIik3xJhhezCtxfaX/MRHlyyJgtemUzmv6cyjXqoIZZFjXvhvsa1k14/qjWIs
+	Gby7LAI22NY1tOrIbpvM0jGGovvxrTmrzkk6JjYGQOvHnsnm74RlJKdi/so1fU+j7/FbZoKSbdH
+	+axLsBaYWcS8PxnprXipdR187pWXjku/IA4qZzzhueAlDvPGnjdzxtI6uz60/9ybMbtNnt9sEIO
+	O5o4k5jmBo/jBLJ0FUoOHyDnJ2uCyls/mfYq+6RWF4GOizwQl5lpjVlaw+3mSrjn9t8quNhemdG
+	8pFSEgOWNlAIXHIF/3KJ0/P7l3VLOvZcGFQmRNO1TcQuCpfpoZa2aKoO4YXMy
+X-Google-Smtp-Source: AGHT+IGjjx1VNGnCpiP5A3vgujtOdzuqPcwtN4vHp0jbvJabv/xK4Ctc4Ykk0OUHsRtI9e0/wZ3Nig==
+X-Received: by 2002:a17:90b:1c0d:b0:330:7a07:edb5 with SMTP id 98e67ed59e1d1-33b511172b2mr13409830a91.2.1760314791938;
+        Sun, 12 Oct 2025 17:19:51 -0700 (PDT)
+Received: from [127.0.1.1] ([121.134.152.93])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33b62645851sm9679057a91.9.2025.10.12.17.19.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Oct 2025 17:19:51 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, zhangheng <zhangheng@kylinos.cn>, 
+ Thorsten Blum <thorsten.blum@linux.dev>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20251009174519.393898-1-thorsten.blum@linux.dev>
+References: <20251009174519.393898-1-thorsten.blum@linux.dev>
+Subject: Re: [PATCH] w1: ds28e17: Replace deprecated strcpy + strcat in
+ w1_f19_add_slave
+Message-Id: <176031478797.9069.13007324007524782504.b4-ty@linaro.org>
+Date: Mon, 13 Oct 2025 02:19:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
 
-strcpy() is deprecated; use strscpy() instead. Fix the function comment
-and use bool instead of int while we're at it.
 
-Link: https://github.com/KSPP/linux/issues/88
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/xen/xenbus/xenbus_xs.c | 9 +++------
- include/xen/xenbus.h           | 2 +-
- 2 files changed, 4 insertions(+), 7 deletions(-)
+On Thu, 09 Oct 2025 19:45:12 +0200, Thorsten Blum wrote:
+> strcpy() is deprecated and using strcat() is discouraged. Replace them with
+> scnprintf().  No functional changes.
+> 
+> 
 
-diff --git a/drivers/xen/xenbus/xenbus_xs.c b/drivers/xen/xenbus/xenbus_xs.c
-index 528682bf0c7f..970302b3dcc6 100644
---- a/drivers/xen/xenbus/xenbus_xs.c
-+++ b/drivers/xen/xenbus/xenbus_xs.c
-@@ -546,16 +546,13 @@ int xenbus_transaction_start(struct xenbus_transaction *t)
- EXPORT_SYMBOL_GPL(xenbus_transaction_start);
- 
- /* End a transaction.
-- * If abandon is true, transaction is discarded instead of committed.
-+ * If abort is true, transaction is discarded instead of committed.
-  */
--int xenbus_transaction_end(struct xenbus_transaction t, int abort)
-+int xenbus_transaction_end(struct xenbus_transaction t, bool abort)
- {
- 	char abortstr[2];
- 
--	if (abort)
--		strcpy(abortstr, "F");
--	else
--		strcpy(abortstr, "T");
-+	strscpy(abortstr, abort ? "F" : "T");
- 
- 	return xs_error(xs_single(t, XS_TRANSACTION_END, abortstr, NULL));
- }
-diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
-index 7dab04cf4a36..c94caf852aea 100644
---- a/include/xen/xenbus.h
-+++ b/include/xen/xenbus.h
-@@ -158,7 +158,7 @@ int xenbus_exists(struct xenbus_transaction t,
- 		  const char *dir, const char *node);
- int xenbus_rm(struct xenbus_transaction t, const char *dir, const char *node);
- int xenbus_transaction_start(struct xenbus_transaction *t);
--int xenbus_transaction_end(struct xenbus_transaction t, int abort);
-+int xenbus_transaction_end(struct xenbus_transaction t, bool abort);
- 
- /* Single read and scanf: returns -errno or num scanned if > 0. */
- __scanf(4, 5)
+Applied, thanks!
+
+[1/1] w1: ds28e17: Replace deprecated strcpy + strcat in w1_f19_add_slave
+      https://git.kernel.org/krzk/linux-w1/c/f3c6353d801a9826e234ad477af08b09a98d888b
+
+Best regards,
 -- 
-2.51.0
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
