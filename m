@@ -1,84 +1,91 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F38327467E
-	for <linux-hardening@vger.kernel.org>; Sat, 18 Oct 2025 10:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7660F261B75;
+	Sat, 18 Oct 2025 17:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760784734; cv=none; b=EG1d796xQXuhnthwUzau+Yk6iK8VlqP3S1qJCWc7t68gszQf2DIaOV94k+0bVzkAwVrAo4uSsCvT+7IizgLhBJnhQ/N3F3Asv+xbgsDHM2r7EAYMV29NyPi62BOiGdB+FJgvrea9+JgUErH3+55GKlCgQVvoPBoGVs0TaWmHyf8=
+	t=1760808953; cv=none; b=LjkG6didrAGpCticdew/eb6dsGm4eD1CA6exjwnjZbDNFC/5dH8+BLIhBIQM81Bm07h1ll6Yrv8odIXQ+ZWTGJdpzlseb5AeKSwxopi+hcH8wpl2Ykv9eLznb3RW/lQNvK54GgkmRiJEIFL5DcMMQW+O/lKRRy7x9hEnolAGsVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760784734; c=relaxed/simple;
-	bh=eVuGej1F7GbwxRs83AcQkLvn0RZ4Chf3qynWyuJBy4E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oTVk8xRoU7k2a0Hx+v5jDJ8HBd9mdTDK2TJCfCGT9XdX/shihyCATkscYtCaTDjAmvleDFHqmDvqlzH4arBER1F735hk8DdIGS/u9JrBY/Dc/Rs+qnczng6DFmf79a9AZapDSSlZALYTb877Kxfl1P0DeoTZtinuPVRjv4zYJyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fb8CmiZ+; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1760808953; c=relaxed/simple;
+	bh=FH7kWsdToQ9dkDy3wa31Jvf5NV2Cp2hhNe4IzS9w3/M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ulUDSLodVZtLmtjZqiycdzo6Uc5ydQENUhJXh9YhG3MPOI/t7b0CBv1utxBZYMLY/qHZUCk5TmGC4i2T0MZfLHEhWq/Mi/0O+I4IV9YLyVCyz0/Jj3Unr7rYtSRR/hcAZMexiL9rsK7dJFBYrjRcrHt5R35Qx7vd9KPyky7tl/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R2Yr+rPg; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fb8CmiZ+"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1760784719;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dwuOdS0qb1orpbwmnxAji5E9pWF7ezIc/lU0GSMg9iY=;
-	b=fb8CmiZ+fJx/RpyClOtbMISTdiWqNPElQbtBBkupiyVYYafe5s50N+WDyUQjq7hXERzP8B
-	vjqzR49iLk9o6s3qTtI91PzgJTGAtCOf94FaNq3JZE1GDRBNXB2j8SQfPQZmFerWlGWCdd
-	h74l8pPFsEH6fc6giQsqAZfSVQ22J7k=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>
-Cc: linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-ide@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R2Yr+rPg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760808951; x=1792344951;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FH7kWsdToQ9dkDy3wa31Jvf5NV2Cp2hhNe4IzS9w3/M=;
+  b=R2Yr+rPgJ1E/ZA2Orxt9rYbBjwI4QMeOUp6ULIXrqrzXk2t7KTacTPox
+   6R0vxSy4JaXxKxyvnCyzBKm7wYkKolG7pKLmNFbyfyre4qV61s4gf4qIi
+   RPFFobivpnmJeGtEzKNLEkyU0f1jcNHktodUgayWVpo0BP91IDNhnlfUc
+   66Ohua7/ybodQ1wqPns7x5n7wE2hRxouZmN4f0wDZrqRms8xYF3rlqvpJ
+   ze201Z7Yw8v1R6QBOoZz6aXWbKaheVuboBG6YBqapPQajZxrZOheSvpBa
+   HBLQJ+XWOX9MUml4OS4cy6QCVW4G4VrlfnLLr0qTftpHr2AROr7tkltVy
+   w==;
+X-CSE-ConnectionGUID: 5XIDNclFQXC6oKHvoWZ9jA==
+X-CSE-MsgGUID: YsHSleeZQ5iqoRfA2M45yw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62029445"
+X-IronPort-AV: E=Sophos;i="6.19,239,1754982000"; 
+   d="scan'208";a="62029445"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2025 10:35:51 -0700
+X-CSE-ConnectionGUID: YFbJk/fUSPu1cRR9Tql/CA==
+X-CSE-MsgGUID: 2rIfw+45QYOkc89a/JO41g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,239,1754982000"; 
+   d="scan'208";a="188073036"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.194])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2025 10:35:50 -0700
+Received: from andy by ashevche-desk with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1v8PbI-000000002vp-2A6B;
+	Mon, 13 Oct 2025 23:57:00 +0300
+Date: Mon, 13 Oct 2025 23:57:00 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Helge Deller <deller@gmx.de>, Jens Axboe <axboe@kernel.dk>,
+	linux-hardening@vger.kernel.org, sparclinux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] ata: Replace deprecated strcpy with strscpy in it821x_display_disk
-Date: Sat, 18 Oct 2025 12:51:45 +0200
-Message-ID: <20251018105146.29808-1-thorsten.blum@linux.dev>
+Subject: Re: [PATCH 3/8] sparc: floppy: Replace deprecated strcpy with
+ strscpy in sun_floppy_init
+Message-ID: <aO1nnGiISsk9dNt2@smile.fi.intel.com>
+References: <20250922210408.1723452-1-thorsten.blum@linux.dev>
+ <20250922210408.1723452-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250922210408.1723452-3-thorsten.blum@linux.dev>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-strcpy() is deprecated; use strscpy() instead.
+On Mon, Sep 22, 2025 at 11:03:52PM +0200, Thorsten Blum wrote:
+> strcpy() is deprecated; use strscpy() instead.
+> 
+> No functional changes intended.
 
-Replace the hard-coded buffer size 8 with sizeof(mbuf) when using
-snprintf() while we're at it.
+Is this the only one place in floppy (arch) code?
 
-Link: https://github.com/KSPP/linux/issues/88
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/ata/pata_it821x.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+The change itself LGTM,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/drivers/ata/pata_it821x.c b/drivers/ata/pata_it821x.c
-index 042f6ad1f7c6..fc762dcc61bf 100644
---- a/drivers/ata/pata_it821x.c
-+++ b/drivers/ata/pata_it821x.c
-@@ -75,6 +75,7 @@
- #include <linux/blkdev.h>
- #include <linux/delay.h>
- #include <linux/slab.h>
-+#include <linux/string.h>
- #include <scsi/scsi_host.h>
- #include <linux/libata.h>
- 
-@@ -632,9 +633,9 @@ static void it821x_display_disk(struct ata_port *ap, int n, u8 *buf)
- 		cbl = "";
- 
- 	if (mode)
--		snprintf(mbuf, 8, "%5s%d", mtype, mode - 1);
-+		snprintf(mbuf, sizeof(mbuf), "%5s%d", mtype, mode - 1);
- 	else
--		strcpy(mbuf, "PIO");
-+		strscpy(mbuf, "PIO");
- 	if (buf[52] == 4)
- 		ata_port_info(ap, "%d: %-6s %-8s          %s %s\n",
- 				n, mbuf, types[buf[52]], id, cbl);
+
 -- 
-2.51.0
+With Best Regards,
+Andy Shevchenko
+
 
