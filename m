@@ -1,44 +1,47 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27821E8332
-	for <linux-hardening@vger.kernel.org>; Mon, 13 Oct 2025 13:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B995E3081C7
+	for <linux-hardening@vger.kernel.org>; Mon, 13 Oct 2025 15:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760363845; cv=none; b=LQTcAeFVxjpDxPKLJkd2+ufX78IQ2MAPQJMYiubraOBvKEhNcJaayzxDD0UGqiyZQ4BPJhmtJgKkRPjzoba/ndgo2eJ6uClTG2Mzs+ph63rxGKP8zVef8FrmoJTyRgFodHvE7x0shnCvKYHbg3q2lnEUuE7mw8S1wLdSAKgg98A=
+	t=1760369240; cv=none; b=r0TaWtybkZTnYLVcGxZwfcxjA6CwUk5bBXdLBmTpL2Jw1RACFVNlBUAlt/PsTrPINdwdtN/TjCaNLik4KrSatenO3ELA23y3ZHHQlnguihbUoi+p0LyuOrEf5NhQOc/lfecJdqGhf6p9OFAIUJvDNhA2fuWWQ77/XpMOZ4kiM1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760363845; c=relaxed/simple;
-	bh=Nqtn3oYMgYTCKsNSeGudcz9aSt5la9Fx3p9eDXXA4ao=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WWSt+DgC0/+jM2T5aE8DXl1QSGAPwPvSX2MyzWDUb2RXSE6OEvIKZD4CPeuBDKmXodnyuqimzG4T4wVHLoKhJIh1TpuriAogGUN0ueyIdlz+kWYq9OK7szzkJtTTR/Cz6JO14gannEVV79q30JdJZw8M5xKb+YWs6qaWO6Iy89Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FywpRp8N; arc=none smtp.client-ip=95.215.58.173
+	s=arc-20240116; t=1760369240; c=relaxed/simple;
+	bh=au5Zxa9P6vv155UjeHIJB4LFB8RaN28iXMoa0bi7Z1s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CPWr1abolfyQ6QMBbI+sQaNg7tbg1w51DCBcvi1jVKPeUc0omc/v55zSzLliOB/jfBe5JRe0CBWdUhxTp/zQH+1zkX/SS3oIvqMx7eFIhe+wszLZTQwr45pzvXREfn8FEX18qXNd5EF3RDNRuoUqaQwgN8YwFqKh4HTQvT0n3hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t5ud2BXl; arc=none smtp.client-ip=91.218.175.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FywpRp8N"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t5ud2BXl"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1760363840;
+	t=1760369226;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=uKCeVoplcSeU8bHZlk1TaSw0Kbvlf2fYQNyEbPJVu1Q=;
-	b=FywpRp8NBqUYnNzKAOFOcnOnhX1b4P2C5vwMnLxu+2RmWGmmRRP/NGEXHeHbnjLUSNGKeZ
-	z134yp+cqInNjJV9A4+pmcO2poKGw80v0v8pGT6u9VGlR5rfitm+UlFclLQnqWCf4NTB+I
-	++mpvlPEZ8Wa0fA4uMtrhAEuCooXnXQ=
+	bh=sUj9/fl0PKZckLy/y4eN1T39rCUtbYnu7ZJ7T8cVVSc=;
+	b=t5ud2BXlDCEPZ1pxV130zo3FndtMDDhLrfBFVwETd2jkIRR1vszPGNqa9Y27dW57tBOa9X
+	XEfAKBUILypXfYlBzR6R4k2A1J+XazEjleqQ8h6WxRmB3TrVuy5w4p9IwgfGpBPxziNp2t
+	G8lr4i8D1khM26NUONWpyHkUuCs5uDw=
 From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>
+To: Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>
 Cc: linux-hardening@vger.kernel.org,
 	Thorsten Blum <thorsten.blum@linux.dev>,
-	linuxppc-dev@lists.ozlabs.org,
+	Kees Cook <kees@kernel.org>,
+	linux-integrity@vger.kernel.org,
+	keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc/pseries/lparcfg: Replace deprecated strcpy in parse_system_parameter_string
-Date: Mon, 13 Oct 2025 15:57:02 +0200
-Message-ID: <20251013135703.97260-2-thorsten.blum@linux.dev>
+Subject: [PATCH v3] keys: Replace deprecated strncpy in ecryptfs_fill_auth_tok
+Date: Mon, 13 Oct 2025 17:26:28 +0200
+Message-ID: <20251013152627.98231-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,63 +51,57 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-strcpy() is deprecated; use strscpy() instead. Use the return value of
-strscpy() instead of calling strlen() again, and ignore any potential
-string truncation since both strings are much shorter than the buffer
-size SPLPAR_MAXLENGTH.
+strncpy() is deprecated for NUL-terminated destination buffers; use
+strscpy_pad() instead to retain the NUL-padding behavior of strncpy().
 
-Change both if conditions to silence the following checkpatch warnings:
+The destination buffer is initialized using kzalloc() with a 'signature'
+size of ECRYPTFS_PASSWORD_SIG_SIZE + 1. strncpy() then copies up to
+ECRYPTFS_PASSWORD_SIG_SIZE bytes from 'key_desc', NUL-padding any
+remaining bytes if needed, but expects the last byte to be zero.
 
-  Comparisons should place the constant on the right side of the test
+strscpy_pad() also copies the source string to 'signature', and NUL-pads
+the destination buffer if needed, but ensures it's always NUL-terminated
+without relying on it being zero-initialized.
 
-Link: https://github.com/KSPP/linux/issues/88
+strscpy_pad() automatically determines the size of the fixed-length
+destination buffer via sizeof() when the optional size argument is
+omitted, making an explicit size unnecessary.
+
+In encrypted_init(), the source string 'key_desc' is validated by
+valid_ecryptfs_desc() before calling ecryptfs_fill_auth_tok(), and is
+therefore NUL-terminated and satisfies the __must_be_cstr() requirement
+of strscpy_pad().
+
+Link: https://github.com/KSPP/linux/issues/90
+Reviewed-by: Kees Cook <kees@kernel.org>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- arch/powerpc/platforms/pseries/lparcfg.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+Changes in v3:
+- Improve commit message
+- Link to v2: https://lore.kernel.org/lkml/20251010161340.458707-2-thorsten.blum@linux.dev/
 
-diff --git a/arch/powerpc/platforms/pseries/lparcfg.c b/arch/powerpc/platforms/pseries/lparcfg.c
-index cc22924f159f..533a6edf2e03 100644
---- a/arch/powerpc/platforms/pseries/lparcfg.c
-+++ b/arch/powerpc/platforms/pseries/lparcfg.c
-@@ -22,6 +22,7 @@
- #include <asm/papr-sysparm.h>
- #include <linux/seq_file.h>
- #include <linux/slab.h>
-+#include <linux/string.h>
- #include <linux/uaccess.h>
- #include <linux/hugetlb.h>
- #include <asm/lppaca.h>
-@@ -420,17 +421,18 @@ static void parse_system_parameter_string(struct seq_file *m)
- 				w_idx = 0;
- 			} else if (local_buffer[idx] == '=') {
- 				/* code here to replace workbuffer contents
--				   with different keyword strings */
--				if (0 == strcmp(workbuffer, "MaxEntCap")) {
--					strcpy(workbuffer,
--					       "partition_max_entitled_capacity");
--					w_idx = strlen(workbuffer);
--				}
--				if (0 == strcmp(workbuffer, "MaxPlatProcs")) {
--					strcpy(workbuffer,
--					       "system_potential_processors");
--					w_idx = strlen(workbuffer);
--				}
-+				 * with different keyword strings. Truncation
-+				 * by strscpy is deliberately ignored because
-+				 * SPLPAR_MAXLENGTH >= maximum string size.
-+				 */
-+				if (!strcmp(workbuffer, "MaxEntCap"))
-+					w_idx = strscpy(workbuffer,
-+							"partition_max_entitled_capacity",
-+							SPLPAR_MAXLENGTH);
-+				if (!strcmp(workbuffer, "MaxPlatProcs"))
-+					w_idx = strscpy(workbuffer,
-+							"system_potential_processors",
-+							SPLPAR_MAXLENGTH);
- 			}
- 		}
- 		kfree(workbuffer);
+Changes in v2:
+- Improve commit message as suggested by Jarkko and Kees
+- Link to v1: https://lore.kernel.org/lkml/20251009180316.394708-3-thorsten.blum@linux.dev/
+---
+ security/keys/encrypted-keys/ecryptfs_format.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/security/keys/encrypted-keys/ecryptfs_format.c b/security/keys/encrypted-keys/ecryptfs_format.c
+index 8fdd76105ce3..2fc6f3a66135 100644
+--- a/security/keys/encrypted-keys/ecryptfs_format.c
++++ b/security/keys/encrypted-keys/ecryptfs_format.c
+@@ -54,8 +54,7 @@ int ecryptfs_fill_auth_tok(struct ecryptfs_auth_tok *auth_tok,
+ 	auth_tok->version = (((uint16_t)(major << 8) & 0xFF00)
+ 			     | ((uint16_t)minor & 0x00FF));
+ 	auth_tok->token_type = ECRYPTFS_PASSWORD;
+-	strncpy((char *)auth_tok->token.password.signature, key_desc,
+-		ECRYPTFS_PASSWORD_SIG_SIZE);
++	strscpy_pad(auth_tok->token.password.signature, key_desc);
+ 	auth_tok->token.password.session_key_encryption_key_bytes =
+ 		ECRYPTFS_MAX_KEY_BYTES;
+ 	/*
 -- 
 2.51.0
 
