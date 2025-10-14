@@ -1,90 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221C619F48D;
-	Tue, 14 Oct 2025 01:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09EEE2F5339;
+	Tue, 14 Oct 2025 14:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760404343; cv=none; b=PGwp97z2hwzOB7M8KRLH7QMQU6xqRuY8GGhHhhE5aT6GmNJz5/tIuA19uoCCpqEsORJAqYqUsPZgpfGCc+uU5GDD17MMqZyoiYJrEXBXaNZT3/KUTqPwG4o/f3ILYzD2ZA5TveacqCOfEJJvn5meQwsc/vsPrm+wjTGNK+fyBdQ=
+	t=1760453947; cv=none; b=ZtU9en8re0BkhPGpFJWN+hBYMsR1yRpI4OedBcCs4wYTefgdwASAvwjLopjlmmSM/OQuiTRCB+3nWyGSOwxhhuCPP11KYFrpH2KpzOWMYCIRtUG4f0BLMnbfI8lWBb+hHx8uW8QxHzqWNxYcI7fRlJFtnkDGLSXpu0+E4J9zCg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760404343; c=relaxed/simple;
-	bh=v1eh061b6dkek5M9HJLBkji6LBvb2K8CkWCnfAVgFRU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=nYt46O1RHc3ie5Ib901AClk3LOfqlFcvFt0uNvM4/7pn4+Gy91eh19Fgu+dcdsco52vNkidK77zkoSI+oU/29LNW8DxHl1frvgvGRScmZwW/st8j/AT/NDCQdrSSn0HcSP9SI+scieBpgua7H3Sm2hM/gtSrZkf4yHiQkHU//as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MvlkGI6Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760453947; c=relaxed/simple;
+	bh=lTpixwap7pMwPWpUbxJaULnTGt3DY5OsC+tHMRhEmFY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WTDMLMtrQzZWVqX0qZt+ghe2Qgb2KJRxDJfCDMqGRSOui2GuVysPUOtR2X+e/v967PdmCgCy8uuHrSmOfDv9cIkkWrmZLWWo7gkSH7+O9nZTZMHC9C6/7Q9DgRuLEXt8rNInAPUqPJqhyffr5AvYUprBynTssJ2EqQThGFjTx0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Ck6A73zk; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MvlkGI6Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1278C4CEE7;
-	Tue, 14 Oct 2025 01:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760404342;
-	bh=v1eh061b6dkek5M9HJLBkji6LBvb2K8CkWCnfAVgFRU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MvlkGI6Z2YTW1djrM0AQMX/ZnMuujXo3RFRqY6qbgf1EEsX2N1t830Khh849kvBzF
-	 5XsljbgJAS2NHJbFyF1cKlJhfnN1ZVZ/PAYxTTvdWTn0L1g/K0piBjFw/AzquP2mKp
-	 mHVJFtptmyIYe/JM+FEQvob7UIwecA+O9CFExGSCat4HrcwSbSokflIx2IqqWpXDni
-	 BGaDKMl0aXHjOHSUCQd1MSZTigEu3VtW5WFHx0pZQ+L4K+CunYhkS9tT99qBwuwm2J
-	 tEvNvig7VqXOi2COajpKaRKMotsvjloIm+Cnyb6meKSzOnr3W9jumwEB6nQ0uQwtHi
-	 U30g6rEx8OFoQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70DC6380A962;
-	Tue, 14 Oct 2025 01:12:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Ck6A73zk"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net E08B040B1E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1760453945; bh=yClp+s/hQ2rC4D75oi+tnkKw/aw3tj99GBVJki7e0nA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Ck6A73zkVgs43jbq7vL3OOrTSKSWoLEPCPShlau3DpnvNA1JMnEv5mNKFpqY4l+o9
+	 OE3v+sZBpFPeS5ZkNy11CMpN4awmufXzTw0imQdvwhWU3e1ah9saugr7zN7QSngcWi
+	 JgP5jBhMjjR0RxXe+YDhEONias/1VPctz/NCdYdkNaYUq+FaaK93T9eRq5oJPuojr5
+	 F4nt//39qZT5HZ2ZFZwFig65nUTpnuBOZqHxvu0YXzryOEPYqHzLaajsRvwI+kx7r5
+	 +FoyTt46t+OnwfhmJMnvb4l+cHpDMBskh5d8yH5yu9WClda/8P/0KrTiElJSG96MS1
+	 XIiSIgaZtjcrw==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id E08B040B1E;
+	Tue, 14 Oct 2025 14:59:04 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Akiyoshi Kurita <weibu@redadmin.org>, Kees Cook <kees@kernel.org>,
+ linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
+ <gpiccoli@igalia.com>, linux-kernel@vger.kernel.org, Akiyoshi Kurita
+ <weibu@redadmin.org>
+Subject: Re: [PATCH] Documentation: admin-guide: Correct styling of MS-DOS
+In-Reply-To: <20250926184824.40270-1-weibu@redadmin.org>
+References: <20250926184824.40270-1-weibu@redadmin.org>
+Date: Tue, 14 Oct 2025 08:59:04 -0600
+Message-ID: <87o6q9bkcn.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/5] kcfi: Prepare for GCC support
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <176040432799.3390136.12370033021047300981.git-patchwork-notify@kernel.org>
-Date: Tue, 14 Oct 2025 01:12:07 +0000
-References: <20250825141316.work.967-kees@kernel.org>
-In-Reply-To: <20250825141316.work.967-kees@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-riscv@lists.infradead.org, peterz@infradead.org,
- samitolvanen@google.com, dwmw2@infradead.org, linus.walleij@linaro.org,
- mark.rutland@arm.com, puranjay@kernel.org, corbet@lwn.net, nathan@kernel.org,
- x86@kernel.org, linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
- linux-hardening@vger.kernel.org
+Content-Type: text/plain
 
-Hello:
+Akiyoshi Kurita <weibu@redadmin.org> writes:
 
-This series was applied to riscv/linux.git (for-next)
-by Peter Zijlstra <peterz@infradead.org>:
+> "MS-DOS" with a hyphen is the official styling. Change the
+> less common "MSDOS" to "MS-DOS" for correctness and consistency.
+>
+> Signed-off-by: Akiyoshi Kurita <weibu@redadmin.org>
+> ---
+>  Documentation/admin-guide/pstore-blk.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/admin-guide/pstore-blk.rst b/Documentation/admin-guide/pstore-blk.rst
+> index 1bb2a1c292aa..1e2abb2ef500 100644
+> --- a/Documentation/admin-guide/pstore-blk.rst
+> +++ b/Documentation/admin-guide/pstore-blk.rst
+> @@ -59,7 +59,7 @@ When pstore/blk is built into the kernel, "blkdev" accepts the following variant
+>     with no leading 0x, for example b302.
+>  #. PARTUUID=00112233-4455-6677-8899-AABBCCDDEEFF represents the unique id of
+>     a partition if the partition table provides it. The UUID may be either an
+> -   EFI/GPT UUID, or refer to an MSDOS partition using the format SSSSSSSS-PP,
+> +   EFI/GPT UUID, or refer to an MS-DOS partition using the format SSSSSSSS-PP,
+>     where SSSSSSSS is a zero-filled hex representation of the 32-bit
 
-On Mon, 25 Aug 2025 07:25:47 -0700 you wrote:
-> Hi,
-> 
-> With KCFI support in GCC coming[1], we need to make some (relatively
-> small) changes in the kernel to deal with it:
-> 
-> - move __nocfi out of compilers-clang.h (so GCC can see it too)
-> - add cfi=debug so future Kees can find breakage easier
-> - remove problematic __noinitretpoline usage
-> - rename CONFIG_CFI_CLANG to CONFIG_CFI (otherwise is it quite confusing)
-> 
-> [...]
+A quick grep shows a lot of occurrences of "MSDOS" in the kernel source.
+I don't think the churn of fixing all of those is worth it...?
 
-Here is the summary with links:
-  - [1/5] compiler_types.h: Move __nocfi out of compiler-specific header
-    https://git.kernel.org/riscv/c/038c7dc66e27
-  - [2/5] x86/traps: Clarify KCFI instruction layout
-    https://git.kernel.org/riscv/c/628a15e0536a
-  - [3/5] x86/cfi: Add option for cfi=debug bootparam
-    (no matching commit)
-  - [4/5] x86/cfi: Remove __noinitretpoline and __noretpoline
-    https://git.kernel.org/riscv/c/0b815825b1b0
-  - [5/5] kcfi: Rename CONFIG_CFI_CLANG to CONFIG_CFI
-    (no matching commit)
+Thanks,
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+jon
