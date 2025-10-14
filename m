@@ -1,112 +1,90 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B3A2E7F1C;
-	Mon, 13 Oct 2025 16:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221C619F48D;
+	Tue, 14 Oct 2025 01:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760371961; cv=none; b=EDrRvuXiARTMkNY+EX9WOZYQoYDaUSEGn/yRzSM8kif3wIgfKGOD7PGCzYqvgcL2kKvA1x0vT4O7JC3fjVdTXkM1k8lBD6U2+HHwK3y3ow7JAk+LOgf262dYBo9XEVhGAcROZA/FZwsqsLaYHQCypL+VGI+h87x019os26ZAsZ8=
+	t=1760404343; cv=none; b=PGwp97z2hwzOB7M8KRLH7QMQU6xqRuY8GGhHhhE5aT6GmNJz5/tIuA19uoCCpqEsORJAqYqUsPZgpfGCc+uU5GDD17MMqZyoiYJrEXBXaNZT3/KUTqPwG4o/f3ILYzD2ZA5TveacqCOfEJJvn5meQwsc/vsPrm+wjTGNK+fyBdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760371961; c=relaxed/simple;
-	bh=PseHAGZYK1WKtHbtTtVXAxSraQA4gMJcLWscQyyUYJw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MyuH6BoMEd5/a+bGVzkRk1p/KHwTkoFGhRT7/1xiEmxcezh8wpeVey+aIhqy352c3/IIvovzId77BQK/7iOZz/MMiaYdjn5htgR1JyWO3RECVZObtpJWKbTrgDeey9M2N7fLzIi5B22YaueNuoNkOyzrP451qws+++Ei4Ivan6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [172.27.27.12] (unknown [195.37.142.75])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7E49C60288272;
-	Mon, 13 Oct 2025 18:11:39 +0200 (CEST)
-Message-ID: <b9246396-c9d9-4452-a16c-f2c8166a32ee@molgen.mpg.de>
-Date: Mon, 13 Oct 2025 18:11:38 +0200
+	s=arc-20240116; t=1760404343; c=relaxed/simple;
+	bh=v1eh061b6dkek5M9HJLBkji6LBvb2K8CkWCnfAVgFRU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=nYt46O1RHc3ie5Ib901AClk3LOfqlFcvFt0uNvM4/7pn4+Gy91eh19Fgu+dcdsco52vNkidK77zkoSI+oU/29LNW8DxHl1frvgvGRScmZwW/st8j/AT/NDCQdrSSn0HcSP9SI+scieBpgua7H3Sm2hM/gtSrZkf4yHiQkHU//as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MvlkGI6Z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MvlkGI6Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1278C4CEE7;
+	Tue, 14 Oct 2025 01:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760404342;
+	bh=v1eh061b6dkek5M9HJLBkji6LBvb2K8CkWCnfAVgFRU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=MvlkGI6Z2YTW1djrM0AQMX/ZnMuujXo3RFRqY6qbgf1EEsX2N1t830Khh849kvBzF
+	 5XsljbgJAS2NHJbFyF1cKlJhfnN1ZVZ/PAYxTTvdWTn0L1g/K0piBjFw/AzquP2mKp
+	 mHVJFtptmyIYe/JM+FEQvob7UIwecA+O9CFExGSCat4HrcwSbSokflIx2IqqWpXDni
+	 BGaDKMl0aXHjOHSUCQd1MSZTigEu3VtW5WFHx0pZQ+L4K+CunYhkS9tT99qBwuwm2J
+	 tEvNvig7VqXOi2COajpKaRKMotsvjloIm+Cnyb6meKSzOnr3W9jumwEB6nQ0uQwtHi
+	 U30g6rEx8OFoQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70DC6380A962;
+	Tue, 14 Oct 2025 01:12:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] keys: Replace deprecated strncpy in
- ecryptfs_fill_auth_tok
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>,
- Jarkko Sakkinen <jarkko@kernel.org>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>,
- linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251013152627.98231-2-thorsten.blum@linux.dev>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20251013152627.98231-2-thorsten.blum@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 0/5] kcfi: Prepare for GCC support
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <176040432799.3390136.12370033021047300981.git-patchwork-notify@kernel.org>
+Date: Tue, 14 Oct 2025 01:12:07 +0000
+References: <20250825141316.work.967-kees@kernel.org>
+In-Reply-To: <20250825141316.work.967-kees@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-riscv@lists.infradead.org, peterz@infradead.org,
+ samitolvanen@google.com, dwmw2@infradead.org, linus.walleij@linaro.org,
+ mark.rutland@arm.com, puranjay@kernel.org, corbet@lwn.net, nathan@kernel.org,
+ x86@kernel.org, linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+ linux-hardening@vger.kernel.org
 
-Dear Thorsten,
+Hello:
 
+This series was applied to riscv/linux.git (for-next)
+by Peter Zijlstra <peterz@infradead.org>:
 
-Thank you for the patch.
-
-Am 13.10.25 um 17:26 schrieb Thorsten Blum:
-> strncpy() is deprecated for NUL-terminated destination buffers; use
-> strscpy_pad() instead to retain the NUL-padding behavior of strncpy().
+On Mon, 25 Aug 2025 07:25:47 -0700 you wrote:
+> Hi,
 > 
-> The destination buffer is initialized using kzalloc() with a 'signature'
-> size of ECRYPTFS_PASSWORD_SIG_SIZE + 1. strncpy() then copies up to
-> ECRYPTFS_PASSWORD_SIG_SIZE bytes from 'key_desc', NUL-padding any
-> remaining bytes if needed, but expects the last byte to be zero.
+> With KCFI support in GCC coming[1], we need to make some (relatively
+> small) changes in the kernel to deal with it:
 > 
-> strscpy_pad() also copies the source string to 'signature', and NUL-pads
-> the destination buffer if needed, but ensures it's always NUL-terminated
-> without relying on it being zero-initialized.
+> - move __nocfi out of compilers-clang.h (so GCC can see it too)
+> - add cfi=debug so future Kees can find breakage easier
+> - remove problematic __noinitretpoline usage
+> - rename CONFIG_CFI_CLANG to CONFIG_CFI (otherwise is it quite confusing)
 > 
-> strscpy_pad() automatically determines the size of the fixed-length
-> destination buffer via sizeof() when the optional size argument is
-> omitted, making an explicit size unnecessary.
-> 
-> In encrypted_init(), the source string 'key_desc' is validated by
-> valid_ecryptfs_desc() before calling ecryptfs_fill_auth_tok(), and is
-> therefore NUL-terminated and satisfies the __must_be_cstr() requirement
-> of strscpy_pad().
-> 
-> Link: https://github.com/KSPP/linux/issues/90
-> Reviewed-by: Kees Cook <kees@kernel.org>
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
-> Changes in v3:
-> - Improve commit message
-> - Link to v2: https://lore.kernel.org/lkml/20251010161340.458707-2-thorsten.blum@linux.dev/
-> 
-> Changes in v2:
-> - Improve commit message as suggested by Jarkko and Kees
-> - Link to v1: https://lore.kernel.org/lkml/20251009180316.394708-3-thorsten.blum@linux.dev/
-> ---
->   security/keys/encrypted-keys/ecryptfs_format.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/security/keys/encrypted-keys/ecryptfs_format.c b/security/keys/encrypted-keys/ecryptfs_format.c
-> index 8fdd76105ce3..2fc6f3a66135 100644
-> --- a/security/keys/encrypted-keys/ecryptfs_format.c
-> +++ b/security/keys/encrypted-keys/ecryptfs_format.c
-> @@ -54,8 +54,7 @@ int ecryptfs_fill_auth_tok(struct ecryptfs_auth_tok *auth_tok,
->   	auth_tok->version = (((uint16_t)(major << 8) & 0xFF00)
->   			     | ((uint16_t)minor & 0x00FF));
->   	auth_tok->token_type = ECRYPTFS_PASSWORD;
-> -	strncpy((char *)auth_tok->token.password.signature, key_desc,
-> -		ECRYPTFS_PASSWORD_SIG_SIZE);
-> +	strscpy_pad(auth_tok->token.password.signature, key_desc);
->   	auth_tok->token.password.session_key_encryption_key_bytes =
->   		ECRYPTFS_MAX_KEY_BYTES;
->   	/*
+> [...]
 
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Here is the summary with links:
+  - [1/5] compiler_types.h: Move __nocfi out of compiler-specific header
+    https://git.kernel.org/riscv/c/038c7dc66e27
+  - [2/5] x86/traps: Clarify KCFI instruction layout
+    https://git.kernel.org/riscv/c/628a15e0536a
+  - [3/5] x86/cfi: Add option for cfi=debug bootparam
+    (no matching commit)
+  - [4/5] x86/cfi: Remove __noinitretpoline and __noretpoline
+    https://git.kernel.org/riscv/c/0b815825b1b0
+  - [5/5] kcfi: Rename CONFIG_CFI_CLANG to CONFIG_CFI
+    (no matching commit)
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Kind regards,
-
-Paul
