@@ -1,90 +1,127 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868BE31A07F;
-	Wed, 15 Oct 2025 08:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B05B31CA5E;
+	Wed, 15 Oct 2025 11:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760518769; cv=none; b=VcwNnOXJ0cy/x03LbdOukgtq3D1z+VZbKFVZQwDhmihzMCs3Fk1Ga/ptbW9nm686ty/tO5b8MWOp7C9qZXVZLh4QaUgTCp1lEwbYEuj9gjqHeYKmlaiEtWrp2pj7l4bVoxoY4nt/vdOnwiUVLMriV7Rn3aDTt9Aro9c0YeI0dME=
+	t=1760526380; cv=none; b=Fxn6yr6N+HU3xoWvrIgFU3e8BXaKh8ccvdvv8irXtUHiz7CbNViH5mFbIfUuv3qrOCdTvQZJqPCWASqWXHG5dS/up2zi2kXUGOI0r811D7vAOIRvxSRK/a/c8+d09AI+y1DJ93/amliixxETRf+TrZLHvkQAjY4ro4OQbrVRdNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760518769; c=relaxed/simple;
-	bh=XCOa6UKMhp1ANTY93PkNLWmuW4ZzjeRtQ3m+yYFujDQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pD+0Svu1HFVT9aKxa3rqNmRytfnrkWXqgUAH1K77td4HRLF+Nn7hxLHkQSAwp05wusFosaaWyb2qXKMuXRDwBr/m409pc2DB6/5L7xE0jtkF2JUdu/4JxJXW6yLf8oISAxHgXoi1PSW+g833eXMeWWHz76iRR155hbpjOxjyL94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fiHu5AEM; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1760526380; c=relaxed/simple;
+	bh=fTXvcK/lAXjVHIAq2Mwskl0w9FOm9oRJ609SvZs/uQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ACrM4L9f3csAWG1TfpyJDAwfzIoy521DgGs6VePbRy5EivXsVMalxFtHhR51Uy9ur7p0yq7K6D9Nq45phYgjGJpt4ZuHVy907sAkMKDRV+iDJOh8DhqPOyZpqEAZQbvoKFM2A5jpC1Sh2oIyQ+7VHLMvkqtNGh0pAOtT0pPPPZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sEham1AU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fiHu5AEM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1760518763;
-	bh=XCOa6UKMhp1ANTY93PkNLWmuW4ZzjeRtQ3m+yYFujDQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fiHu5AEM86zk+RnqhjIILNMO66Za6N7CHFpcg1o4H5JZ70pcbus27J6Hk7uv1BV0r
-	 pdK+20Ruz9ynZp9ZviI7augpG2ZJk2avc1+DiwyC2dYrrzHOPlx3VBod5e/NyNhusR
-	 eJJ5DtlBV4KrutK2/E7ckvjnsMMF2U1b/e0vVb4/hSPWUTwGhR03M/S/Tqm7zNB8El
-	 6LQjk/5UswIBswaDAaEZaiO2QflDq36Ibkv6VaSno5ZYSel72NsLp3lwZ/RI/werdw
-	 oPT/D6rGLLskHGoFMOAIkn2FKeZZmyL5WGq7/lUjCCRiKFAdxX47tccjXhiBxxmTSJ
-	 gBXIwzR7Lg2vg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id CE5B017E12EB;
-	Wed, 15 Oct 2025 10:59:22 +0200 (CEST)
-Message-ID: <da324c96-2cba-46cf-af69-c9eaf7ea697f@collabora.com>
-Date: Wed, 15 Oct 2025 10:59:22 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sEham1AU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2AB6C4CEFE;
+	Wed, 15 Oct 2025 11:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760526380;
+	bh=fTXvcK/lAXjVHIAq2Mwskl0w9FOm9oRJ609SvZs/uQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sEham1AUkuxN/0R72jL23MyC2xu9WiTFl/7wbePmfgRk33hHyz6lHDVmumWWhkm2X
+	 J75KGhprm7vQqzZQozbfmNEtxgvKsaGbhlH1wUGCH+v+Hjmai5YS23O8xO+taUwpPm
+	 JL8kCR5YcEjRiZo0Y/GEssB0xacWO1AcTxli4VSumq94Jqn1DygFd0idMfCAaQVHNd
+	 ka2QojkzJVr7NNBn03SGw1kpe0mFEFhDNYlCcp6uLXYz5385fXVTxtVMNuBEZWO4cS
+	 khy510Z5RWIga8IpJOt3ZrLeQpQ6usVMJMKm5t0kI/urrqQpb/w+hIjXNRYHigae5d
+	 haixsjgnlZ8dg==
+Date: Wed, 15 Oct 2025 14:06:16 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Paul Menzel <pmenzel@molgen.mpg.de>,
+	David Howells <dhowells@redhat.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>,
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] keys: Replace deprecated strncpy in
+ ecryptfs_fill_auth_tok
+Message-ID: <aO-AKMHUzTmACgwE@kernel.org>
+References: <20251013152627.98231-2-thorsten.blum@linux.dev>
+ <b9246396-c9d9-4452-a16c-f2c8166a32ee@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 5/5] pmdomain: mediatek: Add support for MFlexGraphics
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Jassi Brar <jassisinghbrar@gmail.com>, Chia-I Wu <olvaffe@gmail.com>,
- Chen-Yu Tsai <wenst@chromium.org>, Steven Price <steven.price@arm.com>,
- Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-hardening@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20251015-mt8196-gpufreq-v7-0-0a6435da2080@collabora.com>
- <20251015-mt8196-gpufreq-v7-5-0a6435da2080@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20251015-mt8196-gpufreq-v7-5-0a6435da2080@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b9246396-c9d9-4452-a16c-f2c8166a32ee@molgen.mpg.de>
 
-Il 15/10/25 10:50, Nicolas Frattaroli ha scritto:
-> Various MediaTek SoCs use GPU integration silicon named "MFlexGraphics"
-> by MediaTek. On the MT8196 and MT6991 SoCs, interacting with this
-> integration silicon is required to power on the GPU.
+On Mon, Oct 13, 2025 at 06:11:38PM +0200, Paul Menzel wrote:
+> Dear Thorsten,
 > 
-> This glue silicon is in the form of an embedded microcontroller running
-> special-purpose firmware, which autonomously adjusts clocks and
-> regulators.
 > 
-> Implement a driver, modelled as a pmdomain driver with a
-> set_performance_state operation, to support these SoCs.
+> Thank you for the patch.
 > 
-> The driver also exposes the actual achieved clock rate, as read back
-> from the MCU, as common clock framework clocks, by acting as a clock
-> provider as well.
+> Am 13.10.25 um 17:26 schrieb Thorsten Blum:
+> > strncpy() is deprecated for NUL-terminated destination buffers; use
+> > strscpy_pad() instead to retain the NUL-padding behavior of strncpy().
+> > 
+> > The destination buffer is initialized using kzalloc() with a 'signature'
+> > size of ECRYPTFS_PASSWORD_SIG_SIZE + 1. strncpy() then copies up to
+> > ECRYPTFS_PASSWORD_SIG_SIZE bytes from 'key_desc', NUL-padding any
+> > remaining bytes if needed, but expects the last byte to be zero.
+> > 
+> > strscpy_pad() also copies the source string to 'signature', and NUL-pads
+> > the destination buffer if needed, but ensures it's always NUL-terminated
+> > without relying on it being zero-initialized.
+> > 
+> > strscpy_pad() automatically determines the size of the fixed-length
+> > destination buffer via sizeof() when the optional size argument is
+> > omitted, making an explicit size unnecessary.
+> > 
+> > In encrypted_init(), the source string 'key_desc' is validated by
+> > valid_ecryptfs_desc() before calling ecryptfs_fill_auth_tok(), and is
+> > therefore NUL-terminated and satisfies the __must_be_cstr() requirement
+> > of strscpy_pad().
+> > 
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Reviewed-by: Kees Cook <kees@kernel.org>
+> > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> > ---
+> > Changes in v3:
+> > - Improve commit message
+> > - Link to v2: https://lore.kernel.org/lkml/20251010161340.458707-2-thorsten.blum@linux.dev/
+> > 
+> > Changes in v2:
+> > - Improve commit message as suggested by Jarkko and Kees
+> > - Link to v1: https://lore.kernel.org/lkml/20251009180316.394708-3-thorsten.blum@linux.dev/
+> > ---
+> >   security/keys/encrypted-keys/ecryptfs_format.c | 3 +--
+> >   1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/security/keys/encrypted-keys/ecryptfs_format.c b/security/keys/encrypted-keys/ecryptfs_format.c
+> > index 8fdd76105ce3..2fc6f3a66135 100644
+> > --- a/security/keys/encrypted-keys/ecryptfs_format.c
+> > +++ b/security/keys/encrypted-keys/ecryptfs_format.c
+> > @@ -54,8 +54,7 @@ int ecryptfs_fill_auth_tok(struct ecryptfs_auth_tok *auth_tok,
+> >   	auth_tok->version = (((uint16_t)(major << 8) & 0xFF00)
+> >   			     | ((uint16_t)minor & 0x00FF));
+> >   	auth_tok->token_type = ECRYPTFS_PASSWORD;
+> > -	strncpy((char *)auth_tok->token.password.signature, key_desc,
+> > -		ECRYPTFS_PASSWORD_SIG_SIZE);
+> > +	strscpy_pad(auth_tok->token.password.signature, key_desc);
+> >   	auth_tok->token.password.session_key_encryption_key_bytes =
+> >   		ECRYPTFS_MAX_KEY_BYTES;
+> >   	/*
 > 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Thanks for the review Paul.
 
+David: and also this is in my tree now.
+
+> 
+> 
+> Kind regards,
+> 
+> Paul
+
+BR, Jarkko
