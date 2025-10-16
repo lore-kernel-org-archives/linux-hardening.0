@@ -1,69 +1,95 @@
-Received: from cmsr-t-7.hinet.net (cmsr-t-7.hinet.net [203.69.209.166])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD2817C21E
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Oct 2025 03:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.69.209.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F5C343D9E
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Oct 2025 15:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760587031; cv=none; b=FaU9Eg7UizmltngnH6LbmbNiUer+qfNicNedgIF/YivuvyNZwD+dZqMo//VBs/MvqrbGIB+AtgXyFqeQgTHVobiDHe19nnWdhMKsA6VTGkmV8/sJl2ntCqXpVtCbr37LEg6wiCa4hAIXvw1RtwmIQZr8TXuoDNkVy9pFbJq1RrI=
+	t=1760629398; cv=none; b=M5SzN43GyZk2u7ULXB39LKVmnljrFQUSI9CTs+a0ymbjKF+pWRAdLbJEq0fOc7L8W9hgyanM2ejz4blNakCH+r6crjoI+eJrECU4ED6cH3Ty/feMJSRDAKZDfZV/XjlnZZ4FhNeHzJLi1outNayBhx1YsUXY+4VnSxxKNCzSaNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760587031; c=relaxed/simple;
-	bh=YWGstjDb9pX9GKSFo917eRziK+/M1C939Wvf2DwbZfk=;
-	h=From:To:Subject:Message-ID:Date:MIME-Version:Content-Type; b=QDkhr1Qc37FhTNxBT6GhC559JZKUd732C6c1G6SHTuXFtcryVa+Oj4DE2E7SYswj0aRwQZWci0QTS5PtB5D8GSJiL3sJ73tP6dP5+z0b/7ZAJgwT/R/gZYLvrZ0moEBxVq9khkx78nDj4f6khHFzaoZCY2+Sg3nR4r2Y0D5TesE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net; spf=pass smtp.mailfrom=ms29.hinet.net; dkim=pass (2048-bit key) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.b=rPGSadgq; arc=none smtp.client-ip=203.69.209.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ms29.hinet.net
+	s=arc-20240116; t=1760629398; c=relaxed/simple;
+	bh=6D/ISnDKBD4TnGiRHJ/boFfSs5DQwWVpdvgtgcKhPrc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UYhyRAUffC5Q78Ddk70feOREO017qOZKtfCSGluPL1KMSnIJICQwh76BGDPPBhkcDtX84omh0L85WQE9NPEfPvlNFZ9QoIac4wIxtC/yoQ95zIveLyibh7V/c0BCKm0uROmfhofmmH4ZQDNk5+xhpXc9OB+hQt3rkV0/QVvXZP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qIExFIw/; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.b="rPGSadgq"
-Received: from cmsr9.hinet.net ([10.199.216.88])
-	by cmsr-t-7.hinet.net (8.15.2/8.15.2) with ESMTPS id 59G3PDtL875318
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Oct 2025 11:25:14 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ms29.hinet.net;
-	s=s2; t=1760585114; bh=YWGstjDb9pX9GKSFo917eRziK+/M1C939Wvf2DwbZfk=;
-	h=From:To:Subject:Date;
-	b=rPGSadgqz+pFzzhf6nCIXTf65Mp4kNQbZlcgDVi/Reof/qGXJTLmhTQv5T/xmey84
-	 697XdXa7ze96p8UH8W41WKtnuwicJGPUgFhwvGprEkUDn4YallAQgDB3yTYqFC5S75
-	 aFYBVv76JR9hAOZynZxJA5IrEvk9dTtcA4/KA33bod84aivpTvtR/5baYzAcwgog57
-	 XWdKykGRTlii+9EAUhSdvNp2RLBXBdlxxLeej8Mn2R44KcKDAPXiNnHyrPgvk6uVd1
-	 glzSvw3Pl4fEGZwRrZUZfzK/KzAssG8FCjZ7aZ+ifxShVFu5VJxDa80X3+uBOj/bzF
-	 zsYab+3hJl7NQ==
-Received: from [127.0.0.1] (118-171-139-84.dynamic-ip.hinet.net [118.171.139.84])
-	by cmsr9.hinet.net (8.15.2/8.15.2) with ESMTPS id 59G3MbUa193244
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Oct 2025 11:25:12 +0800
-From: "Purchase - PathnSitu 304" <Linux-hardening@ms29.hinet.net>
-To: linux-hardening@vger.kernel.org
-Reply-To: "Purchase - PathnSitu." <purchase@pathnsithu.com>
-Subject: =?UTF-8?B?TmV3IE9jdG9iZXIgT3JkZXIuIDAwODkxIFRodXJzZGF5LCBPY3RvYmVyIDE2LCAyMDI1IGF0IDA1OjI1OjExIEFN?=
-Message-ID: <bc1e917a-eef4-26f9-d9b9-80386c687124@ms29.hinet.net>
-Content-Transfer-Encoding: 7bit
-Date: Thu, 16 Oct 2025 03:25:12 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qIExFIw/"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1760629393;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=yrDJGramIbWN35zytt17dHBV5bJqn1DeqiU025oaupE=;
+	b=qIExFIw/eD4UwrwAMnApg6TH3vcMgxzxvrafXIFl1Nq+tckXVFNRokP3b7FK/TUABX3CaT
+	ztlxNFitIElc9pOsPGfu/9VX0ccXWTlV2XkpHtdX8vjeuQ4J0m8SqIRgaM1svNn05h539c
+	NZxTd8yBZUyA68hUgznwo1dfYv/lb90=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>
+Cc: linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] apparmor: Replace deprecated strcpy with memcpy in gen_symlink_name
+Date: Thu, 16 Oct 2025 17:41:10 +0200
+Message-ID: <20251016154109.32343-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=fop/Z04f c=1 sm=1 tr=0 ts=68f06599
-	a=BuUpIdtoTYq2ASSGTr9POA==:117 a=IkcTkHD0fZMA:10 a=5KLPUuaC_9wA:10
-	a=sTUcEMTjFW7efRGAshQA:9 a=QEXdDO2ut3YA:10
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Linux-hardening,
+strcpy() is deprecated; use memcpy() instead. Unlike strcpy(), memcpy()
+does not copy the NUL terminator from the source string, which would be
+overwritten anyway on every iteration when using strcpy(). snprintf()
+then ensures that 'char *s' is NUL-terminated.
 
-Please provide a quote for your products:
+Replace the hard-coded path length to remove the magic number 6, and add
+a comment explaining the extra 11 bytes.
 
-Include:
-1.Pricing (per unit)
-2.Delivery cost & timeline
-3.Quote expiry date
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ security/apparmor/apparmorfs.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Deadline: October
+diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
+index 391a586d0557..4b2752200ce2 100644
+--- a/security/apparmor/apparmorfs.c
++++ b/security/apparmor/apparmorfs.c
+@@ -1602,16 +1602,20 @@ static char *gen_symlink_name(int depth, const char *dirname, const char *fname)
+ {
+ 	char *buffer, *s;
+ 	int error;
+-	int size = depth * 6 + strlen(dirname) + strlen(fname) + 11;
++	const char *path = "../../";
++	size_t path_len = strlen(path);
++	int size;
+ 
++	/* Extra 11 bytes: "raw_data" (9) + two slashes "//" (2) */
++	size = depth * path_len + strlen(dirname) + strlen(fname) + 11;
+ 	s = buffer = kmalloc(size, GFP_KERNEL);
+ 	if (!buffer)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	for (; depth > 0; depth--) {
+-		strcpy(s, "../../");
+-		s += 6;
+-		size -= 6;
++		memcpy(s, path, path_len);
++		s += path_len;
++		size -= path_len;
+ 	}
+ 
+ 	error = snprintf(s, size, "raw_data/%s/%s", dirname, fname);
+-- 
+2.51.0
 
-Thanks!
-
-Danny Peddinti
-
-PathnSitu Trading
