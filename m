@@ -1,30 +1,30 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F5C343D9E
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Oct 2025 15:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5C53346B6
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Oct 2025 17:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760629398; cv=none; b=M5SzN43GyZk2u7ULXB39LKVmnljrFQUSI9CTs+a0ymbjKF+pWRAdLbJEq0fOc7L8W9hgyanM2ejz4blNakCH+r6crjoI+eJrECU4ED6cH3Ty/feMJSRDAKZDfZV/XjlnZZ4FhNeHzJLi1outNayBhx1YsUXY+4VnSxxKNCzSaNM=
+	t=1760637057; cv=none; b=i7Bjun2LDKgrc8LRD2WTJuQnDdbtRQ0TOOyox6CdBSy5S6Ovtr+ouh1Tjc37Vhh/Qz/sgokOejWIVcxd3Xt0sYKgiotcyKDaL2iB70MujouXMXPlGOa1xbR4JiNzWvR+qDp2nO+vP+Mjq0GVyDLegCNq6/C/EFfcIwd5auTktn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760629398; c=relaxed/simple;
-	bh=6D/ISnDKBD4TnGiRHJ/boFfSs5DQwWVpdvgtgcKhPrc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UYhyRAUffC5Q78Ddk70feOREO017qOZKtfCSGluPL1KMSnIJICQwh76BGDPPBhkcDtX84omh0L85WQE9NPEfPvlNFZ9QoIac4wIxtC/yoQ95zIveLyibh7V/c0BCKm0uROmfhofmmH4ZQDNk5+xhpXc9OB+hQt3rkV0/QVvXZP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qIExFIw/; arc=none smtp.client-ip=91.218.175.180
+	s=arc-20240116; t=1760637057; c=relaxed/simple;
+	bh=8EhcO8P++WCMtd9d5jKiU6/xyxDWH2jKha/FUfKmz0U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RPy0rQB/6NiHKy8tWQGb2BSvLhac1J1tk6vWitfLDfHO/fqDYR8QcX9TfjeTUN0vx1xuPFLqV5hmbzluVYjavHa6nUIUx6Uj8B5I4DAluiS1ZZXuNSwmWtVP+kRhig/W4EjPOGEsirntQQ6mdS5iAX8ApymXKRcZQj3gNbKGa6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oJvdGaVf; arc=none smtp.client-ip=91.218.175.185
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qIExFIw/"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oJvdGaVf"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1760629393;
+	t=1760637043;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=yrDJGramIbWN35zytt17dHBV5bJqn1DeqiU025oaupE=;
-	b=qIExFIw/eD4UwrwAMnApg6TH3vcMgxzxvrafXIFl1Nq+tckXVFNRokP3b7FK/TUABX3CaT
-	ztlxNFitIElc9pOsPGfu/9VX0ccXWTlV2XkpHtdX8vjeuQ4J0m8SqIRgaM1svNn05h539c
-	NZxTd8yBZUyA68hUgznwo1dfYv/lb90=
+	bh=tPptTdvt0P/Pr1HimNZSP+ELp6j7Af0CWu9+zWYFYX0=;
+	b=oJvdGaVf1P7nt3yBU9MUXAsTFUduzn+mJaTJ/f/M19lnNzEc9jzlfFgU+RNoHRYsbEOiEi
+	KxPVsrAntVNCsFKqE2cPqlFkg3pUtPrX4XgxUV1N2xu/07dM3qelY43Y6ezWA0SpPCyIya
+	CPTFUDHXDWRq8dOi9Eh5T2FrsMHluCY=
 From: Thorsten Blum <thorsten.blum@linux.dev>
 To: John Johansen <john.johansen@canonical.com>,
 	Paul Moore <paul@paul-moore.com>,
@@ -35,9 +35,9 @@ Cc: linux-hardening@vger.kernel.org,
 	apparmor@lists.ubuntu.com,
 	linux-security-module@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] apparmor: Replace deprecated strcpy with memcpy in gen_symlink_name
-Date: Thu, 16 Oct 2025 17:41:10 +0200
-Message-ID: <20251016154109.32343-2-thorsten.blum@linux.dev>
+Subject: [PATCH] apparmor: Replace deprecated strcpy in d_namespace_path
+Date: Thu, 16 Oct 2025 19:49:15 +0200
+Message-ID: <20251016174914.80831-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,49 +47,43 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-strcpy() is deprecated; use memcpy() instead. Unlike strcpy(), memcpy()
-does not copy the NUL terminator from the source string, which would be
-overwritten anyway on every iteration when using strcpy(). snprintf()
-then ensures that 'char *s' is NUL-terminated.
+strcpy() is deprecated; replace it with a direct '/' assignment. The
+buffer is already NUL-terminated, so there is no need to copy an
+additional NUL terminator as strcpy() did.
 
-Replace the hard-coded path length to remove the magic number 6, and add
-a comment explaining the extra 11 bytes.
+Update the comment and add the local variable 'is_root' for clarity.
 
 Link: https://github.com/KSPP/linux/issues/88
 Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- security/apparmor/apparmorfs.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ security/apparmor/path.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
-index 391a586d0557..4b2752200ce2 100644
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -1602,16 +1602,20 @@ static char *gen_symlink_name(int depth, const char *dirname, const char *fname)
- {
- 	char *buffer, *s;
- 	int error;
--	int size = depth * 6 + strlen(dirname) + strlen(fname) + 11;
-+	const char *path = "../../";
-+	size_t path_len = strlen(path);
-+	int size;
- 
-+	/* Extra 11 bytes: "raw_data" (9) + two slashes "//" (2) */
-+	size = depth * path_len + strlen(dirname) + strlen(fname) + 11;
- 	s = buffer = kmalloc(size, GFP_KERNEL);
- 	if (!buffer)
- 		return ERR_PTR(-ENOMEM);
- 
- 	for (; depth > 0; depth--) {
--		strcpy(s, "../../");
--		s += 6;
--		size -= 6;
-+		memcpy(s, path, path_len);
-+		s += path_len;
-+		size -= path_len;
+diff --git a/security/apparmor/path.c b/security/apparmor/path.c
+index d6c74c357ffd..65a0ca5cc1bd 100644
+--- a/security/apparmor/path.c
++++ b/security/apparmor/path.c
+@@ -164,12 +164,15 @@ static int d_namespace_path(const struct path *path, char *buf, char **name,
  	}
  
- 	error = snprintf(s, size, "raw_data/%s/%s", dirname, fname);
+ out:
+-	/*
+-	 * Append "/" to the pathname.  The root directory is a special
+-	 * case; it already ends in slash.
++	/* Append "/" to directory paths, except for root "/" which
++	 * already ends in a slash.
+ 	 */
+-	if (!error && isdir && ((*name)[1] != '\0' || (*name)[0] != '/'))
+-		strcpy(&buf[aa_g_path_max - 2], "/");
++	if (!error && isdir) {
++		bool is_root = (*name)[0] == '/' && (*name)[1] == '\0';
++
++		if (!is_root)
++			buf[aa_g_path_max - 2] = '/';
++	}
+ 
+ 	return error;
+ }
 -- 
 2.51.0
 
