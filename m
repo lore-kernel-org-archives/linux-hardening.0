@@ -1,97 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607EA2F0C75;
-	Fri, 17 Oct 2025 17:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F38327467E
+	for <linux-hardening@vger.kernel.org>; Sat, 18 Oct 2025 10:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760722345; cv=none; b=dx8ey18a2Pb7KrDb4FozBAegjf0BYabTktikwfUHJfdnnI8xBHMb4OWZFCKVrmuRNZS2kX4NBZuqwcRaxhB/2by8T6CYyERbwwwQD5IvGRdagaCPltRDx3WYvsFQ0UYavVcyY01/LDrotIZEq0d3OqorqrDKL+E9ZxGPTK0ImWw=
+	t=1760784734; cv=none; b=EG1d796xQXuhnthwUzau+Yk6iK8VlqP3S1qJCWc7t68gszQf2DIaOV94k+0bVzkAwVrAo4uSsCvT+7IizgLhBJnhQ/N3F3Asv+xbgsDHM2r7EAYMV29NyPi62BOiGdB+FJgvrea9+JgUErH3+55GKlCgQVvoPBoGVs0TaWmHyf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760722345; c=relaxed/simple;
-	bh=mK3Fl2Pn6OcWYGOVgkej8ydEl/IKicHd6XlHsQq/EbU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J1739g6pMibdG3WCsXSyV6r5K+ENaPdxgE45nRslsGkfTcm8nT68JhxZoqgGby0l/+7dqci/JWmHH262ElcZ5rTm270tCEXSdmjTmD0ZX9kQClPn9P+cJAVPaiYG1EdZKZAWs2b/CrMF0Jx23EP3vPE7wA62sqS8a2xctO9lNDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UzLT64v5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760784734; c=relaxed/simple;
+	bh=eVuGej1F7GbwxRs83AcQkLvn0RZ4Chf3qynWyuJBy4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oTVk8xRoU7k2a0Hx+v5jDJ8HBd9mdTDK2TJCfCGT9XdX/shihyCATkscYtCaTDjAmvleDFHqmDvqlzH4arBER1F735hk8DdIGS/u9JrBY/Dc/Rs+qnczng6DFmf79a9AZapDSSlZALYTb877Kxfl1P0DeoTZtinuPVRjv4zYJyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fb8CmiZ+; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UzLT64v5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76ECFC4CEE7;
-	Fri, 17 Oct 2025 17:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760722345;
-	bh=mK3Fl2Pn6OcWYGOVgkej8ydEl/IKicHd6XlHsQq/EbU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UzLT64v5SSaSKewtscDNrZX0ED39JvTzLpjo/a779mwwFtcGjlfBn3DMgLvNFtAxZ
-	 lDVbIMDtirzCw/oAHZnzeFlu9RVbJxJLhbhWN/RjVRw4huh8Gm9sKACSVA1lhTu6hO
-	 7wQsD9UCXR1ATe4KJKkNG+8GWwkpLMyf6PFyP6+pohzQ4LiCP1ClR0918LJzTjXZwW
-	 yeo/PG9b1GAT1n57PrHQAPuJoJwj7FBGtzdZnL9MxQef7ZoLStWWyuaPaND8hWfJVe
-	 qv4LqXoWJGOXv53r4YpzmZ2rIxaVyBkFejAvaZV+dCPzLmUlfpj17UD3sm5BRzU0ab
-	 gUNbSCPx+az0g==
-Date: Fri, 17 Oct 2025 18:32:17 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Will Deacon <will@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
-Message-ID: <81bda56c-f18b-4bd9-abf9-9da7c2251f42@sirena.org.uk>
-References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
- <CAMRc=Me4Fh5pDOF8Z2XY4MG_DYqPRN+UJh_BzKvmULL96wciYw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fb8CmiZ+"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1760784719;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=dwuOdS0qb1orpbwmnxAji5E9pWF7ezIc/lU0GSMg9iY=;
+	b=fb8CmiZ+fJx/RpyClOtbMISTdiWqNPElQbtBBkupiyVYYafe5s50N+WDyUQjq7hXERzP8B
+	vjqzR49iLk9o6s3qTtI91PzgJTGAtCOf94FaNq3JZE1GDRBNXB2j8SQfPQZmFerWlGWCdd
+	h74l8pPFsEH6fc6giQsqAZfSVQ22J7k=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>
+Cc: linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ata: Replace deprecated strcpy with strscpy in it821x_display_disk
+Date: Sat, 18 Oct 2025 12:51:45 +0200
+Message-ID: <20251018105146.29808-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="KbGHBWGA+KCN6s9I"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Me4Fh5pDOF8Z2XY4MG_DYqPRN+UJh_BzKvmULL96wciYw@mail.gmail.com>
-X-Cookie: Androphobia:
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+strcpy() is deprecated; use strscpy() instead.
 
---KbGHBWGA+KCN6s9I
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Replace the hard-coded buffer size 8 with sizeof(mbuf) when using
+snprintf() while we're at it.
 
-On Fri, Oct 17, 2025 at 07:26:51PM +0200, Bartosz Golaszewski wrote:
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ drivers/ata/pata_it821x.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> Upon a closer inspection it turns out that this is not the case - the
-> ENABLE/DISABLE events are emitted when the *logical* regulator is
-> enabled/disabled even if this does not involve a change in the state
-> of the shared pin.
+diff --git a/drivers/ata/pata_it821x.c b/drivers/ata/pata_it821x.c
+index 042f6ad1f7c6..fc762dcc61bf 100644
+--- a/drivers/ata/pata_it821x.c
++++ b/drivers/ata/pata_it821x.c
+@@ -75,6 +75,7 @@
+ #include <linux/blkdev.h>
+ #include <linux/delay.h>
+ #include <linux/slab.h>
++#include <linux/string.h>
+ #include <scsi/scsi_host.h>
+ #include <linux/libata.h>
+ 
+@@ -632,9 +633,9 @@ static void it821x_display_disk(struct ata_port *ap, int n, u8 *buf)
+ 		cbl = "";
+ 
+ 	if (mode)
+-		snprintf(mbuf, 8, "%5s%d", mtype, mode - 1);
++		snprintf(mbuf, sizeof(mbuf), "%5s%d", mtype, mode - 1);
+ 	else
+-		strcpy(mbuf, "PIO");
++		strscpy(mbuf, "PIO");
+ 	if (buf[52] == 4)
+ 		ata_port_info(ap, "%d: %-6s %-8s          %s %s\n",
+ 				n, mbuf, types[buf[52]], id, cbl);
+-- 
+2.51.0
 
-It really should be the actual physical state change that triggers the
-event.
-
---KbGHBWGA+KCN6s9I
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmjyfaEACgkQJNaLcl1U
-h9BErQf/Z/sKUhSw6MAZ93yfrnBWym2QF5z8oMpsH7JQGCNPCw9xhi9ONVG3iIWO
-VmtCGqQumniEy8IL0mHp6No11tieFxS7lSjEg6IoAE1eoFvyPpGMBQ8cNDnuvV5E
-BYwaq8DfHvb6vzVp1eP9DJflPAX3sUePRz+Yg/mIS9yzcF/yUOzDD6JJUC6pMwfB
-K4idkg8y39S6TfnUi2k2btUj1xBzuYDn4/ep/Au7y0NiBrnkliUaxUU7MfF6MfJU
-6zM9mTj4Gbu4R5tb5b+6Q3CgPMMm9Kdjzi/oePlu1LQuCsctb0bBKrq5gn91h8q0
-ScTJfYoYMevt5u1QE0G5oL3mQAinUQ==
-=o7y1
------END PGP SIGNATURE-----
-
---KbGHBWGA+KCN6s9I--
