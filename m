@@ -1,87 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FA41EA7D2;
-	Sat, 18 Oct 2025 19:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038F6354AFF;
+	Sun, 19 Oct 2025 03:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760816335; cv=none; b=XcTOV+w6M7AkHZiazcjqhRgFv71RzpdyGCE2UOnR5rfyPOq9JrGeM+E/q2CjM+EjAPDdobKuoVsTrZHiB7K87CjT7n1KdYMAdAesd+FtC0VJK4+ExY6aqOh0in/p4TebzLZYjTNfTvLfYN4RTOqY6dh8vk6D9cpvtBHkdw77rX0=
+	t=1760845475; cv=none; b=ItbqOhuziULzISf2MNF90ky0f9hoVDGg2L5ol4IyQVyoWfwZAmZ6cRwsmepPQWyOU/v9AMCt31VHie3U8MXPpC8pwkbMnbLlaC0jWGo0Ig0I1PSUvlLe+8qjXvwZ6lNI07XnnpMVEjwdFUy346NQKVSrSE3jEmq8qTQpzNkH6hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760816335; c=relaxed/simple;
-	bh=dRgPhXbTYBGx2ER9ENOAL7OHytDME0q/959WH7mhaUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=gbgkYiADcSAxGeQa7HIaGx/7eIBCZBySr1CuH5yHu3x16tzLhankNHqTzJtK3bRppN/gowUK00AUbgCZl8DqcdMS+fAmY4syl8krbNyy8DExAHBVpxaqENGAs9bsssdKLTWWIFUGfmL+T/cGET07ydmAilnx5T2pFhX3CIUsmxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bdApy55k; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1760845475; c=relaxed/simple;
+	bh=USUFDGGqIwzjtisEmi5el5bWKI/V7ivepGgn/YYe28s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sFeAEf+FTvsoX55rNbFff2EB+okhDmqI6b6GJz+OnVIpUmHL/ov3H4bCyD0i3pgFfZG/PJweZOxO7RIq/hxKSCXEFfOvJESeQZQqTMMdXCLB+6xWruzmHuGO5hf1/zF7lO2rE+MeCZHlEUEYY5l75Tsjo3NI+lEztI2bFYkyQW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Idb0yPdn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bdApy55k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760816333; x=1792352333;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=dRgPhXbTYBGx2ER9ENOAL7OHytDME0q/959WH7mhaUc=;
-  b=bdApy55koKhdTXIK1H8UPDHyENu3zGilHl5PNPghhQJWSsXQq0lauKS+
-   ynkETAb/qezBwoUYXfSiDyFndwSDdS8jAT/2vMLZAk5efMBlbU0D6kImz
-   PacMMIeS1Cxt+X1iJCARTORhsks9YzKZf2FdCKhg8QTOSK4Pw6RMCZwZB
-   Wm3QMCEY/qiXxPwHWcTSon2AKwf0+hTEYeVrbGjLjPefJ56edRM8+BBbS
-   S04AJ8G61YwYxngcarvJ0Ar7xCaDUA5tR9j5smW9Dz3C1xn4Zj1qIw3Cz
-   kW2zCjhDVlHvN2rRN5SuLqUdjIRnYl7FIGvUet3KHzQic3IPXH6rj1qKG
-   g==;
-X-CSE-ConnectionGUID: Evt9i1zySoWoPLZINDDvlA==
-X-CSE-MsgGUID: eZ7SI3GgRV6Y0APMSBN30A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63144954"
-X-IronPort-AV: E=Sophos;i="6.19,239,1754982000"; 
-   d="scan'208";a="63144954"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2025 12:38:52 -0700
-X-CSE-ConnectionGUID: 5VD2tXH3Tz+X1c52sDcN7g==
-X-CSE-MsgGUID: HQD4fIA/R6eloRTFyTUddw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,239,1754982000"; 
-   d="scan'208";a="213610114"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.194])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2025 12:38:50 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vAClM-00000000xfn-0GtY;
-	Sat, 18 Oct 2025 22:38:48 +0300
-Date: Sat, 18 Oct 2025 22:38:47 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Helge Deller <deller@gmx.de>, Jens Axboe <axboe@kernel.dk>,
-	linux-hardening@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/8] sparc: floppy: Replace deprecated strcpy with
- strscpy in sun_floppy_init
-Message-ID: <aPPsx9cHwkF8MC1l@ashevche-desk.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Idb0yPdn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEFFCC4CEE7;
+	Sun, 19 Oct 2025 03:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760845474;
+	bh=USUFDGGqIwzjtisEmi5el5bWKI/V7ivepGgn/YYe28s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Idb0yPdnYY/JA/jhcSUmHVoTgj6qDo8ALWCRDQvk8qJ4uaK9wtmLLbVoEVklaWsqd
+	 wxnsuRIIBmczfmIjWDqcVqO+3fLSgfvNzg+NmQPfOWI1FjyMCUmplJOLnWdtCgssQU
+	 c/w3//NiZnpRwbQd+Fe004WQjNnGMxDvaxpZhSfprZa/Gi/+E7Yoe1daatQkRejcrP
+	 MbSIus1r+C/OVrrIuZS64JZnqcKH5c4kxF/Lzc8tjceeBxI9m3CCXhSRXvCTF8M/DJ
+	 wl67Qyhel7oi5ENHoo81AqP96sMn6rQqjwf+uAQQTXMk5xZ1p71TYgE0ygmP4xopLO
+	 18P4PQ6tI/Z5A==
+Message-ID: <f6fa3655-c0e3-4c49-a970-22b3c68a0555@kernel.org>
+Date: Sun, 19 Oct 2025 12:44:32 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ata: Replace deprecated strcpy with strscpy in
+ it821x_display_disk
+To: Thorsten Blum <thorsten.blum@linux.dev>, Niklas Cassel <cassel@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-ide@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20251018105146.29808-1-thorsten.blum@linux.dev>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20251018105146.29808-1-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-On Mon, Sep 22, 2025 at 11:03:52PM +0200, Thorsten Blum wrote:
+On 10/18/25 19:51, Thorsten Blum wrote:
 > strcpy() is deprecated; use strscpy() instead.
 > 
-> No functional changes intended.
+> Replace the hard-coded buffer size 8 with sizeof(mbuf) when using
+> snprintf() while we're at it.
+> 
+> Link: https://github.com/KSPP/linux/issues/88
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Is this the only one place in floppy (arch) code?
+Note: the patch title should be:
 
-The change itself LGTM,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+ata: pata_it821x: Replace deprecated strcpy with strscpy in it821x_display_disk
+
+Niklas can fix that when applying I think.
+
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Damien Le Moal
+Western Digital Research
