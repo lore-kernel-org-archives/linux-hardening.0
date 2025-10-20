@@ -1,104 +1,173 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F57D2F6936
-	for <linux-hardening@vger.kernel.org>; Mon, 20 Oct 2025 09:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760953331; cv=none; b=AnALmHlwqAkFg4pUHYT4vjai7b2wdnLrh57847C2ALt5utvYJfPfSeZPp4YxjUS+ka+56ktT/oIoforN4mgDBdxG5UGqwgmnxvLXGsyFwXUPw393PsxH+DkfNzhvQNZEIZMBt9zLd0wGflGuC50XXrF4/FCtwWBcjTQ6/0/6xUI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760953331; c=relaxed/simple;
-	bh=sjEUaWPd/Jj2ElIhymJE8eOmk6i+S46mwSJsA8AQ+EQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QIDwcWjhbX1uzgPcmB6FZi7MJ87M9AI1/N7yCgVLHwmTPaGvTQ/otkxpjJv/W4dm3zKvj/WqOy2uSCkrevPamheozShfxeNtk7u27KLslXHaUXOgxy/RWoZNW1IEzME9MGZy5HtqAqX5tM7umL0QOlvwq+Jj3p9lTBR+aRgCvKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IcO943AZ; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD012192F5;
+	Mon, 20 Oct 2025 11:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760961091; cv=pass; b=pLA0dM3pIEyqx9t1mQduThddAYRD6l7BEQDTN/NFfwai0HYJ1j1Ksr9Zbl/n3XrLqmIjusZBzynYTWiStgf2dA2Fg2kz/l+nKLpfnaX8YF4BtYlL6CuA/Vz5Uufh2DqCdXZCYehSGXHuNhXkuok8/ghBCX/KrptzptfTETbuHDo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760961091; c=relaxed/simple;
+	bh=6ynyZRXd+tVSkitkXZRJParXJVETR9hXhC8hUwlemlE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mafqbWr82DngRFCb7DTlAGeCxDWJAFM7WoikNw7eeIIOgG7cG2BMHbe9TyK0u8IjwU8R1moLaBeBG8A/AISEmden72W5RDOc/ZExj7C3iIP/SamRDaYdZeGQHQBiW///jPd61VHbHSUE/g012J5d1BQ381L7P0kFzdB5VGZXh2Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=PaL/OAYl; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IcO943AZ"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-57e36125e8aso4074251e87.2
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Oct 2025 02:42:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760953326; x=1761558126; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sjEUaWPd/Jj2ElIhymJE8eOmk6i+S46mwSJsA8AQ+EQ=;
-        b=IcO943AZ4slbeY23j1wnDAiVcwPBPLOz6p7nwR3LnKZ0EWyuxZ1NV7vh4gmJ/DIdyO
-         6NBnVnJLgA6olIiUyrFMdxASrH1QtEFiA7r/E1llGQVLoET/fsgSRnAyAnwR8NcWStjO
-         FuT2KFRZGMEzwuOaEhqAI6OZQRNQgcs9YKKrdrTKxlFK2oJm2XQIc6nDLunQhkol1mbb
-         d70GOBwY51A3Hb51gRUwQxAzlPvGos30Z0gp/Sy15aqIdUTTrOReoH1dy+wfcjOsfgCW
-         7aj159DIeTlPLFh0St4Zk1tpfonVqFPLXNmWZp8b1j/WnRZHVRVzd4hwU/lmZADNgoht
-         oLcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760953326; x=1761558126;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sjEUaWPd/Jj2ElIhymJE8eOmk6i+S46mwSJsA8AQ+EQ=;
-        b=W/SW2D70FgMM6LEmMAjHzM6pcKyP/Dgniar+ekPBNA+xXhiKH/wvMuSCbZZjPB9CKx
-         GBpYux5fzh3q7AsThBe8bpzREqnH8kV/3jPaqsgUY9WEhP9ljqbj3ApKI7qdHUBTOLH9
-         FjQrim3gm9LvyeoGRsAnRDQkQz3iU+oy22TSVGCKrrtGmO4W7tOJpLd3to5NIDzkH0v8
-         h1ZhiA2rN8jAjLy9uLukOynJAXKqLYBQIp/BmOlHvdGlS9mpn1/b1GKlXb1H+IKWf41l
-         OnTol6mN/i3UYa0YSPZ3ZGvwrev17pn0IC8FsQQ+YZZA8Ps9v+OyiuPg9Z2ZGvrGROY2
-         cz+Q==
-X-Gm-Message-State: AOJu0YxXCv5coj6G8RBgG7LwwYncUTQ4ngrZfin+tWCvFUUDABkWTF/o
-	dKUwNHBel3RbQ/a3dwBYdQXdKLd333SrcJ4JTj/Emoiw3D5U+UceNhA2NwwVumoYv/q+94m56Of
-	rd+Yxj8WsP4DATRWFVWNKZVbcPnKN4KsbviktLRJgqQ==
-X-Gm-Gg: ASbGncvY2IK+5eksm2VUflgoddUAkDhN4syb2FTktaPAojMVECFuQOC7ClHHYL/uUDS
-	2xNPa81AU2l7TqVKMMzcoOjWqyjrknXLSE42Tnr8NN5gFJhIQ7GAc0OXna9R6+tCG+LlZ+bH66Z
-	/jVl6UXuMr6MxcNitICMAnD5GG3+6UTrL/XkXzR6OMmEUnis2UCuB3+IccvuA/kwJK7WPsil8Ee
-	T7VEatzk3hr8qn1KC7zvURULIxegFG/jPe79HsQ2qmRn1oOVjozwx7PRwbpmmj451/a1pLIFY8k
-	3HTYmv+5pstwbEQS
-X-Google-Smtp-Source: AGHT+IHY1EdCIXYngUyFFwGvzEW0znpDl77em9pEnOCmJRoroDyoIZB7DiA520ogK1u8lsISe3niq2HVycioLER4ci8=
-X-Received: by 2002:a05:6512:1052:b0:578:ed03:7b70 with SMTP id
- 2adb3069b0e04-591d8589aedmr3757333e87.28.1760953326040; Mon, 20 Oct 2025
- 02:42:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="PaL/OAYl"
+ARC-Seal: i=1; a=rsa-sha256; t=1760961056; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=C6s9lTyHmYNGClzUwi70t4LJADX3+pHHK1XyNHdHK8pkqZ0ewDbfJbwIXWji+uiKKcmUeuBW6l+zGWUuO+03pxUuW4fSbebuqG/S8KLJ5DCvdHU667ISmBHyMLGiEhevq79+UUaFc7vwqAm5S5mMXdCMvSHVgcf314a5waiB5NI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1760961056; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=A/c/4oL8Z03NjnVaEgMnJiauD1mgyw2BMdnR11SbtOU=; 
+	b=iW82Q/ZctwRGQX/L9mOKuaimgoLOz0fVBR1M3TyCll3uEAfcdqH7w9UXuCqxDvtaM0ZJWtujTQtrBMFIsHz79mKsGlZlxVJUxxPgaOPiETDnmLnSSlwiQ6TTLdJq4ZGBBnB7YHbpk1mKNlRkRjCJStTnqRl8T1J3jkhSJ2wQsK0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1760961056;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=A/c/4oL8Z03NjnVaEgMnJiauD1mgyw2BMdnR11SbtOU=;
+	b=PaL/OAYlpW7pCWoX/nW8/r5Ars7ZMGegZ6sORd7Ra52eVXY8qtIgTV84a6OuCiti
+	f1QFLSFukxd6rYxUkCCtp1sRRNyjyBoz59JCtIF/7UUcfAFVo1cFMZUeeejGOl4n1WW
+	oo+B23a8e3D8+ZHnwIQTPwmfqEktI30JqVK/GOy4=
+Received: by mx.zohomail.com with SMTPS id 1760961055618931.097867690532;
+	Mon, 20 Oct 2025 04:50:55 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Jassi Brar <jassisinghbrar@gmail.com>, Chia-I Wu <olvaffe@gmail.com>,
+ Chen-Yu Tsai <wenst@chromium.org>, Steven Price <steven.price@arm.com>,
+ Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Karunika Choo <karunika.choo@arm.com>
+Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-hardening@vger.kernel.org, linux-pm@vger.kernel.org, nd@arm.com
+Subject: Re: [PATCH v8 4/5] drm/panthor: Use existing OPP table if present
+Date: Mon, 20 Oct 2025 13:50:47 +0200
+Message-ID: <12781303.O9o76ZdvQC@workhorse>
+In-Reply-To: <386ca96d-34b6-4aab-844d-ea720099cf6b@arm.com>
+References:
+ <20251017-mt8196-gpufreq-v8-0-98fc1cc566a1@collabora.com>
+ <20251017-mt8196-gpufreq-v8-4-98fc1cc566a1@collabora.com>
+ <386ca96d-34b6-4aab-844d-ea720099cf6b@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
- <CAMRc=Me4Fh5pDOF8Z2XY4MG_DYqPRN+UJh_BzKvmULL96wciYw@mail.gmail.com> <81bda56c-f18b-4bd9-abf9-9da7c2251f42@sirena.org.uk>
-In-Reply-To: <81bda56c-f18b-4bd9-abf9-9da7c2251f42@sirena.org.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 20 Oct 2025 11:41:52 +0200
-X-Gm-Features: AS18NWCTv8z2cF08OaIclAyR6BuSf6xIu18qyroHsfySyW-sq8vo6xUHsWKQB4s
-Message-ID: <CAMRc=MdOCHJEyPxN+-g71ux68=Mt_Q5P9611QO7Q8J9e8UJv_A@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Srinivas Kandagatla <srini@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Will Deacon <will@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Oct 17, 2025 at 7:32=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
->
-> On Fri, Oct 17, 2025 at 07:26:51PM +0200, Bartosz Golaszewski wrote:
->
-> > Upon a closer inspection it turns out that this is not the case - the
-> > ENABLE/DISABLE events are emitted when the *logical* regulator is
-> > enabled/disabled even if this does not involve a change in the state
-> > of the shared pin.
->
-> It really should be the actual physical state change that triggers the
-> event.
+On Monday, 20 October 2025 10:35:04 Central European Summer Time Karunika Choo wrote:
+> On 17/10/2025 16:31, Nicolas Frattaroli wrote:
+> > On SoCs where the GPU's power-domain is in charge of setting performance
+> > levels, the OPP table of the GPU node will have already been populated
+> > during said power-domain's attach_dev operation.
+> > 
+> > To avoid initialising an OPP table twice, only set the OPP regulator and
+> > the OPPs from DT if there's no OPP table present.
+> > 
+> > Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
+> > Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > ---
+> >  drivers/gpu/drm/panthor/panthor_devfreq.c | 32 ++++++++++++++++++++++---------
+> >  1 file changed, 23 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/panthor/panthor_devfreq.c b/drivers/gpu/drm/panthor/panthor_devfreq.c
+> > index a6dca599f0a5..ec63e27f4883 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_devfreq.c
+> > +++ b/drivers/gpu/drm/panthor/panthor_devfreq.c
+> > @@ -141,6 +141,7 @@ int panthor_devfreq_init(struct panthor_device *ptdev)
+> >  	struct thermal_cooling_device *cooling;
+> >  	struct device *dev = ptdev->base.dev;
+> >  	struct panthor_devfreq *pdevfreq;
+> > +	struct opp_table *table;
+> >  	struct dev_pm_opp *opp;
+> >  	unsigned long cur_freq;
+> >  	unsigned long freq = ULONG_MAX;
+> > @@ -152,17 +153,30 @@ int panthor_devfreq_init(struct panthor_device *ptdev)
+> >  
+> >  	ptdev->devfreq = pdevfreq;
+> >  
+> > -	ret = devm_pm_opp_set_regulators(dev, reg_names);
+> > -	if (ret && ret != -ENODEV) {
+> > -		if (ret != -EPROBE_DEFER)
+> > -			DRM_DEV_ERROR(dev, "Couldn't set OPP regulators\n");
+> > -		return ret;
+> > +	/*
+> > +	 * The power domain associated with the GPU may have already added an
+> > +	 * OPP table, complete with OPPs, as part of the platform bus
+> > +	 * initialization. If this is the case, the power domain is in charge of
+> > +	 * also controlling the performance, with a set_performance callback.
+> > +	 * Only add a new OPP table from DT if there isn't such a table present
+> > +	 * already.
+> > +	 */
+> > +	table = dev_pm_opp_get_opp_table(dev);
+> > +	if (IS_ERR_OR_NULL(table)) {
+> > +		ret = devm_pm_opp_set_regulators(dev, reg_names);
+> > +		if (ret && ret != -ENODEV) {
+> 
+> Is there a reason to not fail on -ENODEV? I would assume it is a valid 
+> failure path. 
 
-I guess so, but this would require some non-trivial rework of the
-regulator core. We'd need some list of deferred notifications stored
-in memory for when the physical state actually changes.
+Hi,
 
-Bartosz
+the -ENODEV logic wasn't added by me, it was added in
+Commit: a8cb5ca53690 ("drm/panthor: skip regulator setup if no such prop")
+
+with the justification
+
+  The regulator is optional, skip the setup instead of returning an
+  error if it is not present
+
+I will not be changing anything about this logic in this patch set,
+as it is not in scope for MT8196 enablement, since MT8196 does not
+use this code path at all.
+
+Kind regards,
+Nicolas Frattaroli
+
+> 
+> Kind regards,
+> Karunika Choo
+> 
+> > +			if (ret != -EPROBE_DEFER)
+> > +				DRM_DEV_ERROR(dev, "Couldn't set OPP regulators\n");
+> > +			return ret;
+> > +		}
+> > +
+> > +		ret = devm_pm_opp_of_add_table(dev);
+> > +		if (ret)
+> > +			return ret;
+> > +	} else {
+> > +		dev_pm_opp_put_opp_table(table);
+> >  	}
+> >  
+> > -	ret = devm_pm_opp_of_add_table(dev);
+> > -	if (ret)
+> > -		return ret;
+> > -
+> >  	spin_lock_init(&pdevfreq->lock);
+> >  
+> >  	panthor_devfreq_reset(pdevfreq);
+> > 
+> 
+> 
+
+
+
+
