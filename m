@@ -1,112 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDC3354AF9;
-	Mon, 20 Oct 2025 18:12:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A39C33374E;
+	Mon, 20 Oct 2025 21:26:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760983971; cv=none; b=OtDqFQffGNrDRsABahl/4UiW+mESwE2GZTimCcObDFWsBWMFN5o2huesRCClAVr9aLKi8njQsCyZidn/AGiNX0Q8pbTDauhf7lRXesfMhasNKqLnlV0Xvwg/ZrAzS1QldeqCqP8on7VpadeV8f5aRZO7fZ7xt0qgarO6f5Exqaw=
+	t=1760995600; cv=none; b=f2L5SNeYxpmxNlO0ipQA36nm7CI+z0fDueBaU5MjC0WD1VadoCG80+aklviu4/RlFdL7UWwEAmMsW3mTirfTi0uoo3lyc8iRX06qvAFDNR0vgO7k3wuNcRlSTwla64fbrqj7PoK7HuqNNCtr6vZvdotu7DtlGqkbr/bs8E62AsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760983971; c=relaxed/simple;
-	bh=y0Js1n+RgfK1HjkfoTzTBPaRF6A+v4l7TKrJErzr800=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DmO7z3qX5c2o56X7QPxENobOmrlLk8cQST/YhQY+w4Uo032JoS3XERAyYlp1wRLIsGAK3Ga9h7P5PBiRDQ5LaLMbgcwYi4XtxO2QNk1ejTiP7SF+F+jI47MqSbwtNWcfUcth1GzKQiIcyvHu+GQg6/6bJOHUJCHy9WqFSuQ7mcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+2Cawv0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760995600; c=relaxed/simple;
+	bh=LapY9CVctM9BRAvd8QjQH1ljjXM/ABSMR24t1Vu69IU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=m0n7jWsR/Rw/BglNyhtRf8Xbzy2C0/wqp2JXUTIy1kRdTgfhVy+YqW5HMsKyg7EOKJPUmd/IyEgvp7p6hjKgRKc0y9tRAMKKCqOaBzwt+Z7rSQ/7k+8pXTJYIuJhqDja/UlAXrlJZOXWXxaCe+31PePKEI2et58/03OriR/QLVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uikv6kM2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+2Cawv0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A87AFC4CEF9;
-	Mon, 20 Oct 2025 18:12:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uikv6kM2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7957C113D0;
+	Mon, 20 Oct 2025 21:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760983971;
-	bh=y0Js1n+RgfK1HjkfoTzTBPaRF6A+v4l7TKrJErzr800=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V+2Cawv0umyhAffaYYVfXUJJM5t1M+iOY9ueur0EeCXfyIGF3yf5cRIdw9jSkGfhm
-	 6iIEBIZUZp4JxvpUGgt8nVRAif+2/kdPwr+DSZexcoHqdy4EB2EUsaBHeGSf2E8XZ/
-	 dlp52QE02+D1077gJ//5NchMos+v65imNpwKd2ALyJXeapLozipBpJ9YcYDGTStteP
-	 9y1uI26C36tDU4hJFP8yZM+tla5GfLeLUNO4rORYQZbGh2cMdKs0QJm3xfPIYDgESN
-	 YAYyf5ptPN4setS8+NMbXCxfXJCIYjorRN+cxBHPlYVBRb1vO7RSa87XvOW3QinTKN
-	 DZ6UoIVrsV0bA==
-Date: Mon, 20 Oct 2025 11:12:51 -0700
+	s=k20201202; t=1760995599;
+	bh=LapY9CVctM9BRAvd8QjQH1ljjXM/ABSMR24t1Vu69IU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Uikv6kM2IsCr+p0iEr1+NpMNj8Pp3z+rOnlv+JPJu+on6Doo7CDMh/+HBr+LncMIl
+	 4rPJk2fv3CsNgg8V3Gl2KlM+jmr6Ptl/1s52duPHrogT2NoVJTgHVnrM7RORxSH+KS
+	 emCM9DJ+2mG910zL/AjhSYtrFlhiDJHGarsu2W5YyaYDFjhndPGYL2IoAtlaQnfWvw
+	 wMaZZYPlZp+3ZSnJER36OHqwJJk44lPggxSeQhQm+l2w+wXVF0+XptV4siFw7yT+l/
+	 KdQNhEPzgqvQ0VQ4OF9cgva002Tqo6YjMyaWX/KBRTsLWah/J7rNiMzJxWhxJeSZzc
+	 +oftgR0Gi49vA==
 From: Kees Cook <kees@kernel.org>
-To: Simon Horman <horms@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>,
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
 	Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
 	John Fastabend <john.fastabend@gmail.com>,
 	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
 	Kuniyuki Iwashima <kuniyu@google.com>,
-	Willem de Bruijn <willemb@google.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Willem de Bruijn <willemb@google.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 03/10] net: Convert proto_ops bind() callbacks to use
- sockaddr_unspec
-Message-ID: <202510201112.3BC3BFF@keescook>
-References: <20251014223349.it.173-kees@kernel.org>
- <20251014224334.2344521-3-kees@kernel.org>
- <aO-QV3kSxaYMaZqc@horms.kernel.org>
+Subject: [PATCH v3 2/9] net/l2tp: Add missing sa_family validation in pppol2tp_sockaddr_get_info
+Date: Mon, 20 Oct 2025 14:26:31 -0700
+Message-Id: <20251020212639.1223484-2-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251020212125.make.115-kees@kernel.org>
+References: <20251020212125.make.115-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aO-QV3kSxaYMaZqc@horms.kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1265; i=kees@kernel.org; h=from:subject; bh=LapY9CVctM9BRAvd8QjQH1ljjXM/ABSMR24t1Vu69IU=; b=owGbwMvMwCVmps19z/KJym7G02pJDBnfVnIfnjxLVegHi7yMHxfPDbn88oJ9nW+a1j6fssR+5 anvT65Vd5SyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAExEdAEjw40r15N3HZzZzfa2 +ofhgQCN50/ucW+fFu/xj/Nnr/Un/kyG/ymaO07zev6utlBU1ym3zb0/XVBvgf7kvaFFt1JObEn +xAEA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 15, 2025 at 01:15:19PM +0100, Simon Horman wrote:
-> On Tue, Oct 14, 2025 at 03:43:25PM -0700, Kees Cook wrote:
-> > Update all struct proto_ops bind() callback function prototypes from
-> > "struct sockaddr *" to "struct sockaddr_unspec *" to avoid lying to the
-> > compiler about object sizes. Calls into struct proto handlers gain casts
-> > that will be removed in the struct proto conversion patch.
-> > 
-> > No binary changes expected.
-> > 
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> 
-> ...
-> 
-> > diff --git a/net/mctp/af_mctp.c b/net/mctp/af_mctp.c
-> > index b99ba14f39d2..0a795901e4f2 100644
-> > --- a/net/mctp/af_mctp.c
-> > +++ b/net/mctp/af_mctp.c
-> > @@ -49,7 +49,7 @@ static bool mctp_sockaddr_ext_is_ok(const struct sockaddr_mctp_ext *addr)
-> >  	       !addr->__smctp_pad0[2];
-> >  }
-> >  
-> > -static int mctp_bind(struct socket *sock, struct sockaddr *addr, int addrlen)
-> > +static int mctp_bind(struct socket *sock, struct sockaddr_unspec *addr, int addrlen)
-> >  {
-> >  	struct sock *sk = sock->sk;
-> >  	struct mctp_sock *msk = container_of(sk, struct mctp_sock, sk);
-> > @@ -128,7 +128,7 @@ static int mctp_bind(struct socket *sock, struct sockaddr *addr, int addrlen)
-> >  /* Used to set a specific peer prior to bind. Not used for outbound
-> >   * connections (Tag Owner set) since MCTP is a datagram protocol.
-> >   */
-> > -static int mctp_connect(struct socket *sock, struct sockaddr *addr,
-> > +static int mctp_connect(struct socket *sock, struct sockaddr_unspec *addr,
-> >  			int addrlen, int flags)
-> >  {
-> >  	struct sock *sk = sock->sk;
-> 
-> Hi Kees,
-> 
-> The change to mctp_connect() results GCC 15.2.0 warning as follows:
-> 
-> net/mctp/af_mctp.c:632:27: error: initialization of 'int (*)(struct socket *, struct sockaddr *, int,  int)' from incompatible pointer type 'int (*)(struct socket *, struct sockaddr_unspec *, int,  int)' [-Wincompatible-pointer-types]
->   632 |         .connect        = mctp_connect,
->       |                           ^~~~~~~~~~~~
-> 
-> As I don't see other _connect functions updated in this patch,
-> perhaps it is out of place here and should be dropped from this patch.
+While reviewing the struct proto_ops connect() and bind() callback
+implementations, I noticed that there doesn't appear to be any
+validation that AF_PPPOX sockaddr structures actually have sa_family set
+to AF_PPPOX. The pppol2tp_sockaddr_get_info() checks only look at the
+sizes.
 
-Whoops, yes. Thank you! This should be part of the "connect" proto_ops
-patch. I'm not sure how it ended up in here. I will move it. :)
+I don't see any way that this might actually cause problems as specific
+info fields are being populated, for which the existing size checks are
+correct, but it stood out as a missing address family check.
 
--Kees
+Add the check and return -EAFNOSUPPORT on mismatch.
 
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ net/l2tp/l2tp_ppp.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
+index 5e12e7ce17d8..b7a9c224520f 100644
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -535,6 +535,13 @@ struct l2tp_connect_info {
+ static int pppol2tp_sockaddr_get_info(const void *sa, int sa_len,
+ 				      struct l2tp_connect_info *info)
+ {
++	const struct sockaddr_unspec *sockaddr = sa;
++
++	if (sa_len < offsetofend(struct sockaddr, sa_family))
++		return -EINVAL;
++	if (sockaddr->sa_family != AF_PPPOX)
++		return -EAFNOSUPPORT;
++
+ 	switch (sa_len) {
+ 	case sizeof(struct sockaddr_pppol2tp):
+ 	{
 -- 
-Kees Cook
+2.34.1
+
