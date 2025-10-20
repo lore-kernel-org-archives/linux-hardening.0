@@ -1,127 +1,112 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF6ED2C21F7;
-	Mon, 20 Oct 2025 13:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDC3354AF9;
+	Mon, 20 Oct 2025 18:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760968060; cv=none; b=nSg8Lijp8sLeEjWxEmaCyScYtv0gvEeHIx1OOc/0R/jQEdJK8anyVgSk9K+V646jMQWzxsCnHoNdlAgfIa05PRDbKlGADH2BsK1cx8L7ANQO4cVHjA+a8a0Fl/7N/hOkipfgi7gDXWqVQJz0fgZ5mtbarxjCpudqtSyVzEEhsL8=
+	t=1760983971; cv=none; b=OtDqFQffGNrDRsABahl/4UiW+mESwE2GZTimCcObDFWsBWMFN5o2huesRCClAVr9aLKi8njQsCyZidn/AGiNX0Q8pbTDauhf7lRXesfMhasNKqLnlV0Xvwg/ZrAzS1QldeqCqP8on7VpadeV8f5aRZO7fZ7xt0qgarO6f5Exqaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760968060; c=relaxed/simple;
-	bh=7xW28T3apWZwrY81wJCRu3IdXgTZGX/t1f963bLJQoo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eKYxnZVpuEFDxzFKkvmp6pHCSAdVQIkBCy8zmz/ZFhtqwhxLtr2ED3/u8ujrv6Eh148GgT4AcDmqF9y7FLO/v0ZNVZn291bWGd7NLlxK2+XjxtovGntzaN+eON7+WN1EdaqR1o3UU0Xw3Z8Fh8CMUKsUKnKMmQOmmBxcrOBJDoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FCBA16A3;
-	Mon, 20 Oct 2025 06:47:30 -0700 (PDT)
-Received: from [10.57.36.117] (unknown [10.57.36.117])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF81F3F66E;
-	Mon, 20 Oct 2025 06:47:32 -0700 (PDT)
-Message-ID: <ef6434a9-cde5-4d68-a3a3-1873ba7912d3@arm.com>
-Date: Mon, 20 Oct 2025 14:47:30 +0100
+	s=arc-20240116; t=1760983971; c=relaxed/simple;
+	bh=y0Js1n+RgfK1HjkfoTzTBPaRF6A+v4l7TKrJErzr800=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DmO7z3qX5c2o56X7QPxENobOmrlLk8cQST/YhQY+w4Uo032JoS3XERAyYlp1wRLIsGAK3Ga9h7P5PBiRDQ5LaLMbgcwYi4XtxO2QNk1ejTiP7SF+F+jI47MqSbwtNWcfUcth1GzKQiIcyvHu+GQg6/6bJOHUJCHy9WqFSuQ7mcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+2Cawv0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+2Cawv0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A87AFC4CEF9;
+	Mon, 20 Oct 2025 18:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760983971;
+	bh=y0Js1n+RgfK1HjkfoTzTBPaRF6A+v4l7TKrJErzr800=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V+2Cawv0umyhAffaYYVfXUJJM5t1M+iOY9ueur0EeCXfyIGF3yf5cRIdw9jSkGfhm
+	 6iIEBIZUZp4JxvpUGgt8nVRAif+2/kdPwr+DSZexcoHqdy4EB2EUsaBHeGSf2E8XZ/
+	 dlp52QE02+D1077gJ//5NchMos+v65imNpwKd2ALyJXeapLozipBpJ9YcYDGTStteP
+	 9y1uI26C36tDU4hJFP8yZM+tla5GfLeLUNO4rORYQZbGh2cMdKs0QJm3xfPIYDgESN
+	 YAYyf5ptPN4setS8+NMbXCxfXJCIYjorRN+cxBHPlYVBRb1vO7RSa87XvOW3QinTKN
+	 DZ6UoIVrsV0bA==
+Date: Mon, 20 Oct 2025 11:12:51 -0700
+From: Kees Cook <kees@kernel.org>
+To: Simon Horman <horms@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Willem de Bruijn <willemb@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 03/10] net: Convert proto_ops bind() callbacks to use
+ sockaddr_unspec
+Message-ID: <202510201112.3BC3BFF@keescook>
+References: <20251014223349.it.173-kees@kernel.org>
+ <20251014224334.2344521-3-kees@kernel.org>
+ <aO-QV3kSxaYMaZqc@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 4/5] drm/panthor: Use existing OPP table if present
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Jassi Brar <jassisinghbrar@gmail.com>, Chia-I Wu <olvaffe@gmail.com>,
- Chen-Yu Tsai <wenst@chromium.org>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-hardening@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20251017-mt8196-gpufreq-v8-0-98fc1cc566a1@collabora.com>
- <20251017-mt8196-gpufreq-v8-4-98fc1cc566a1@collabora.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20251017-mt8196-gpufreq-v8-4-98fc1cc566a1@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aO-QV3kSxaYMaZqc@horms.kernel.org>
 
-On 17/10/2025 16:31, Nicolas Frattaroli wrote:
-> On SoCs where the GPU's power-domain is in charge of setting performance
-> levels, the OPP table of the GPU node will have already been populated
-> during said power-domain's attach_dev operation.
+On Wed, Oct 15, 2025 at 01:15:19PM +0100, Simon Horman wrote:
+> On Tue, Oct 14, 2025 at 03:43:25PM -0700, Kees Cook wrote:
+> > Update all struct proto_ops bind() callback function prototypes from
+> > "struct sockaddr *" to "struct sockaddr_unspec *" to avoid lying to the
+> > compiler about object sizes. Calls into struct proto handlers gain casts
+> > that will be removed in the struct proto conversion patch.
+> > 
+> > No binary changes expected.
+> > 
+> > Signed-off-by: Kees Cook <kees@kernel.org>
 > 
-> To avoid initialising an OPP table twice, only set the OPP regulator and
-> the OPPs from DT if there's no OPP table present.
+> ...
 > 
-> Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > diff --git a/net/mctp/af_mctp.c b/net/mctp/af_mctp.c
+> > index b99ba14f39d2..0a795901e4f2 100644
+> > --- a/net/mctp/af_mctp.c
+> > +++ b/net/mctp/af_mctp.c
+> > @@ -49,7 +49,7 @@ static bool mctp_sockaddr_ext_is_ok(const struct sockaddr_mctp_ext *addr)
+> >  	       !addr->__smctp_pad0[2];
+> >  }
+> >  
+> > -static int mctp_bind(struct socket *sock, struct sockaddr *addr, int addrlen)
+> > +static int mctp_bind(struct socket *sock, struct sockaddr_unspec *addr, int addrlen)
+> >  {
+> >  	struct sock *sk = sock->sk;
+> >  	struct mctp_sock *msk = container_of(sk, struct mctp_sock, sk);
+> > @@ -128,7 +128,7 @@ static int mctp_bind(struct socket *sock, struct sockaddr *addr, int addrlen)
+> >  /* Used to set a specific peer prior to bind. Not used for outbound
+> >   * connections (Tag Owner set) since MCTP is a datagram protocol.
+> >   */
+> > -static int mctp_connect(struct socket *sock, struct sockaddr *addr,
+> > +static int mctp_connect(struct socket *sock, struct sockaddr_unspec *addr,
+> >  			int addrlen, int flags)
+> >  {
+> >  	struct sock *sk = sock->sk;
+> 
+> Hi Kees,
+> 
+> The change to mctp_connect() results GCC 15.2.0 warning as follows:
+> 
+> net/mctp/af_mctp.c:632:27: error: initialization of 'int (*)(struct socket *, struct sockaddr *, int,  int)' from incompatible pointer type 'int (*)(struct socket *, struct sockaddr_unspec *, int,  int)' [-Wincompatible-pointer-types]
+>   632 |         .connect        = mctp_connect,
+>       |                           ^~~~~~~~~~~~
+> 
+> As I don't see other _connect functions updated in this patch,
+> perhaps it is out of place here and should be dropped from this patch.
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+Whoops, yes. Thank you! This should be part of the "connect" proto_ops
+patch. I'm not sure how it ended up in here. I will move it. :)
 
-> ---
->  drivers/gpu/drm/panthor/panthor_devfreq.c | 32 ++++++++++++++++++++++---------
->  1 file changed, 23 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_devfreq.c b/drivers/gpu/drm/panthor/panthor_devfreq.c
-> index a6dca599f0a5..ec63e27f4883 100644
-> --- a/drivers/gpu/drm/panthor/panthor_devfreq.c
-> +++ b/drivers/gpu/drm/panthor/panthor_devfreq.c
-> @@ -141,6 +141,7 @@ int panthor_devfreq_init(struct panthor_device *ptdev)
->  	struct thermal_cooling_device *cooling;
->  	struct device *dev = ptdev->base.dev;
->  	struct panthor_devfreq *pdevfreq;
-> +	struct opp_table *table;
->  	struct dev_pm_opp *opp;
->  	unsigned long cur_freq;
->  	unsigned long freq = ULONG_MAX;
-> @@ -152,17 +153,30 @@ int panthor_devfreq_init(struct panthor_device *ptdev)
->  
->  	ptdev->devfreq = pdevfreq;
->  
-> -	ret = devm_pm_opp_set_regulators(dev, reg_names);
-> -	if (ret && ret != -ENODEV) {
-> -		if (ret != -EPROBE_DEFER)
-> -			DRM_DEV_ERROR(dev, "Couldn't set OPP regulators\n");
-> -		return ret;
-> +	/*
-> +	 * The power domain associated with the GPU may have already added an
-> +	 * OPP table, complete with OPPs, as part of the platform bus
-> +	 * initialization. If this is the case, the power domain is in charge of
-> +	 * also controlling the performance, with a set_performance callback.
-> +	 * Only add a new OPP table from DT if there isn't such a table present
-> +	 * already.
-> +	 */
-> +	table = dev_pm_opp_get_opp_table(dev);
-> +	if (IS_ERR_OR_NULL(table)) {
-> +		ret = devm_pm_opp_set_regulators(dev, reg_names);
-> +		if (ret && ret != -ENODEV) {
-> +			if (ret != -EPROBE_DEFER)
-> +				DRM_DEV_ERROR(dev, "Couldn't set OPP regulators\n");
-> +			return ret;
-> +		}
-> +
-> +		ret = devm_pm_opp_of_add_table(dev);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		dev_pm_opp_put_opp_table(table);
->  	}
->  
-> -	ret = devm_pm_opp_of_add_table(dev);
-> -	if (ret)
-> -		return ret;
-> -
->  	spin_lock_init(&pdevfreq->lock);
->  
->  	panthor_devfreq_reset(pdevfreq);
-> 
+-Kees
 
+-- 
+Kees Cook
