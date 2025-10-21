@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD29244693;
-	Tue, 21 Oct 2025 11:43:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2129833CEAA;
+	Tue, 21 Oct 2025 11:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761047016; cv=none; b=k/lPp82y1QL6yD06iH4S9WZ6KJlgKdaWRE/cjgIDDFjyvti+2Y4Rp3VBae0atHkYMdryZ7UF7EaV5u9PcDVf8qJbTdmO55a0veuLuTrelLB3IE8P/0YAsLi9XnbHBUWF0l/w2TKpqHit4VlxNW15k5D3otGcly1BW6pAfVr84JI=
+	t=1761047657; cv=none; b=QF+jx0OyJAlcnL+nKXve6oOQvumj1FZa3RacD83mHf7Ba0wa+PLaBs4am5PzbGLchEDtgKT6rm0zCsSom60T6e6HXoMUFBmEMPnrbjSXpFp6hte5c4K11utXQql7RfrBG/w15VB/jpxpQWDft6TSnHj/IwjdHQbI2H+rDxFzNvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761047016; c=relaxed/simple;
-	bh=jPD4ml6t5HKNxNOxwm2N8DznQdh6UR/72Xht9+nYrWY=;
+	s=arc-20240116; t=1761047657; c=relaxed/simple;
+	bh=uPZbpRtuUAGL7PXaUrKempyAjExOsq+OSZosdwkFDXc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Omprj7kSlmTyWkCXnjPNR18Ge028EbMpYYsy3/5+IDxYwJ498RPWwU7QY4LFviAvTiR5RsACRNhV4pxwIF2r5dowqg41cp/jk7icYjFlEa2nSY+/mPOwsgO3RLH9o01vG36yAnggRpvTLF4BB70Avf69dfeeOFpUHnvlJ3vnNf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F37qAdLy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=F1lZsJXssdcrGOZiJY3/MxoGab4ls0+pfCyqdzj44WizkOMihnNs2ggC8XLBKYgRsdy5hhHYRjy0o9N1skKpYCR4C5fFhhKZnElbGqrlDvNfcZ9B5oKsnL4VKooiPgQbN4HKfbzBmUGR4osb5hpvnRcXbd12R10ROXCzBb6d3lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fN7l/pOj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F37qAdLy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95A83C4CEF1;
-	Tue, 21 Oct 2025 11:43:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fN7l/pOj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C460C4CEF1;
+	Tue, 21 Oct 2025 11:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761047015;
-	bh=jPD4ml6t5HKNxNOxwm2N8DznQdh6UR/72Xht9+nYrWY=;
+	s=k20201202; t=1761047657;
+	bh=uPZbpRtuUAGL7PXaUrKempyAjExOsq+OSZosdwkFDXc=;
 	h=Date:From:To:Cc:Subject:From;
-	b=F37qAdLyaRUmSWWUBSwXMLLHY5btLVlFx2q8VdSASndaUDl8Fuyb4yYXHt4nsjN78
-	 8pGun7VkGM8kStSvAjmKn9EATy9FNXvTb/6xet/Meq8qJvG6NfQ7NUUKYSEGHKG+t+
-	 VUh8hOFsRxZsQwZTBNDizotYh5lqELfP8Nb+ZaBsCj10h3lXNPOknghVmaCHpaETxf
-	 IO6qpJbmFV5ED8CWTDMl8u4qCLJcuOZwq7uJEe1hA9sxRZVMyPsh729T46eJh4WMvQ
-	 4Ozi62DtdueRBqiu5fpLO90B3tIqsLK7Hf7OX93t65mPCdW2E5YfD2Yg50jb+5YXLI
-	 l98Bq2XygCTfA==
-Date: Tue, 21 Oct 2025 12:43:30 +0100
+	b=fN7l/pOj403MC/dOkqseufxCFbACPUg2lwxHFfFY5q4H9hqfuUlOPralnu4qGlMMP
+	 Yf8Y6gbDYv9gPMQoRJ+k9QtKGb8F1Zdy1ulks5cy7QOoLoCxpNKNSByBzSeWkrjs9s
+	 nTo5xpLi2DVSdgNtHyuhWGX5dVw8ZIfxUBLhicyM40KnkflGnvoaF22dt91B67OW94
+	 /PAeI2BPwTb971P1Xtu3W6F1BNiRBRMAnsyHk5Bt5ZWXBSLJguxpjl8giNlKonIKyw
+	 JvlHTZIGU3TX0MZs4EwizUxBkS1y5D2s+fJdv91HHCuriJ9KAep61/OM30zoj4kEYf
+	 vMOmklZ5sV+PA==
+Date: Tue, 21 Oct 2025 12:54:10 +0100
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: "David S. Miller" <davem@davemloft.net>,
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Yixun Lan <dlan@gentoo.org>
+Cc: netdev@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] net: inet_sock.h: Avoid thousands of
- -Wflex-array-member-not-at-end warnings
-Message-ID: <aPdx4iPK4-KIhjFq@kspp>
+Subject: [PATCH][next] net: spacemit: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <aPd0YjO-oP60Lgvj@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,53 +49,59 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Use the new TRAILING_OVERLAP() helper to fix 2600 of the following
-warnings:
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-2600 ./include/net/inet_sock.h:65:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Use regular arrays instead of flexible-array members (they're not
+really needed in this case) in a couple of unions, and fix the
+following warnings:
 
-This helper creates a union between a flexible-array member (FAM)
-and a set of members that would otherwise follow it (in this case
-`char data[40];) This overlays the trailing members (data) onto the FAM
-(__data) while keeping the FAM and the start of MEMBERS aligned.
-
-The static_assert() ensures this alignment remains, and it's
-intentionally placed inmediately after `struct ip_options_data`
-(no blank line in between).
+      1 drivers/net/ethernet/spacemit/k1_emac.c:122:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+      1 drivers/net/ethernet/spacemit/k1_emac.c:122:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+      1 drivers/net/ethernet/spacemit/k1_emac.c:121:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+      1 drivers/net/ethernet/spacemit/k1_emac.c:121:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
+ drivers/net/ethernet/spacemit/k1_emac.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-I think it's worth mentioning that the introduction of the new
-TRAILING_OVERLAP() helper saves us from making changes like the
-following, for this particular case:
-
-	https://lore.kernel.org/linux-hardening/ZzK-n_C2yl8mW2Tz@kspp/
-
-Thanks
-
- include/net/inet_sock.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/include/net/inet_sock.h b/include/net/inet_sock.h
-index 1086256549fa..a974588803af 100644
---- a/include/net/inet_sock.h
-+++ b/include/net/inet_sock.h
-@@ -62,9 +62,12 @@ struct ip_options_rcu {
+diff --git a/drivers/net/ethernet/spacemit/k1_emac.h b/drivers/net/ethernet/spacemit/k1_emac.h
+index 5a09e946a276..577efe66573e 100644
+--- a/drivers/net/ethernet/spacemit/k1_emac.h
++++ b/drivers/net/ethernet/spacemit/k1_emac.h
+@@ -363,7 +363,7 @@ struct emac_desc {
+ /* Keep stats in this order, index used for accessing hardware */
+ 
+ union emac_hw_tx_stats {
+-	struct {
++	struct individual_tx_stats {
+ 		u64 tx_ok_pkts;
+ 		u64 tx_total_pkts;
+ 		u64 tx_ok_bytes;
+@@ -378,11 +378,11 @@ union emac_hw_tx_stats {
+ 		u64 tx_pause_pkts;
+ 	} stats;
+ 
+-	DECLARE_FLEX_ARRAY(u64, array);
++	u64 array[sizeof(struct individual_tx_stats) / sizeof(u64)];
  };
  
- struct ip_options_data {
--	struct ip_options_rcu	opt;
--	char			data[40];
-+	TRAILING_OVERLAP(struct ip_options_rcu, opt, opt.__data,
-+			 char			data[40];
-+	);
- };
-+static_assert(offsetof(struct ip_options_data, opt.opt.__data) ==
-+	      offsetof(struct ip_options_data, data));
+ union emac_hw_rx_stats {
+-	struct {
++	struct individual_rx_stats {
+ 		u64 rx_ok_pkts;
+ 		u64 rx_total_pkts;
+ 		u64 rx_crc_err_pkts;
+@@ -410,7 +410,7 @@ union emac_hw_rx_stats {
+ 		u64 rx_truncate_fifo_full_pkts;
+ 	} stats;
  
- struct inet_request_sock {
- 	struct request_sock	req;
+-	DECLARE_FLEX_ARRAY(u64, array);
++	u64 array[sizeof(struct individual_rx_stats) / sizeof(u64)];
+ };
+ 
+ #endif /* _K1_EMAC_H_ */
 -- 
 2.43.0
 
