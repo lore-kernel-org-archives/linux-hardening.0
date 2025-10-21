@@ -1,40 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B90134F27C;
-	Tue, 21 Oct 2025 18:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CE8338903;
+	Tue, 21 Oct 2025 19:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761070383; cv=none; b=BYM3UElhZZPr7g4xI6S+mi7cKdp4DeWMdSH9jyxyyEvReKpQmZKuqvfWJBHew1YYPk7ZS0oKBRA/z0fjxJ3tAGRrtotdaWOW45edf3C83TIZVQvtW1hT0rePT28kD6QbqK/jnmszzQGHMbWYrqfQcBLLdfgkt4wT6unr0BYsfyk=
+	t=1761074646; cv=none; b=oB9ppqAjbTu0GmNId9dAM0fbiZcEK5p6I7EmF24t91aBLnrNEAva1oINHdkzlHgDZ4nsG12dXUIobIZ0Itsjv9azmMeIezas7j02kyLf62Sk/lS2/W4afDPPX4wyhKEki7PEUp7kgE7kCkyrjrLWglstRgstzRNmkTo08wHdqfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761070383; c=relaxed/simple;
-	bh=qEtRyFu2JyRfkeVJISTlGQJFGZB8HDaIGH3H4eIHZGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=H2U3QqniY5Zp9N+Mbq/Huja+gHdeLt+hmwTPHVmqgUN5wmaaNe60JDMXLHJs+DMWlyLcLheQewXYh2STeISDzRFidFy0G2r6zdRPhE+lajJd0VIcHKQGWBa8YzU11Mug7L8uTUVKCrmGb25lQKxbf/DdNsC8YmIwGx+JENlc3ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJktEg+v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761074646; c=relaxed/simple;
+	bh=E3LGhnnjVgNQvzdUA+dKvbHT5vkuigF/kle9qkfRNJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CPk0S5B4Cpj7aLcSs4BMjUlYfCSdy2F+G1g/NviG3rIZMt0Thz++jbbG2nyLMcVb+sMUsEYAN2pJTPVk8n2lkbyBeVWr5RzGxP2ZjVwgDWkaC1bDaKhm7Pf1m+w8UoQk/h/OaCS2oC7hLSQDhlkwiVH/dO4+xpqWV73kFhZd5Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LE5ecSBK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJktEg+v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DA51C4CEF1;
-	Tue, 21 Oct 2025 18:13:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LE5ecSBK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A887C4CEF1;
+	Tue, 21 Oct 2025 19:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761070382;
-	bh=qEtRyFu2JyRfkeVJISTlGQJFGZB8HDaIGH3H4eIHZGM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=mJktEg+venEXDoxzg7uNpbWr6Tdota/l/YUnHyQDd8UUtHFfnEXWD0qRhhqvi0nzD
-	 +qvzRayzCQrHIQCNqXVEFBI4dc4B0gExeSkhHVKMRBbNjZMH9ELwKAQQHxhWihePxV
-	 NTZOJOzEosnv8gbbFL8UoDYVokn4h4EEmqnKpT/A47ZYArdvCdfop6wT/PR8bhq1bT
-	 ENWNW1uYeAHgoNIgqO/6+7YFr70ZjwKdJgpb85kTqYHptTw8BaBo/JtnjY9t8j3Rn9
-	 mGuLGlnKnzifM1CRJ2Apz7qQy1nHX4vOZWY3o6UlEw1zz8eXKHanVA+AZakg8Yya8f
-	 0PdotYY5jyVOA==
-Date: Tue, 21 Oct 2025 19:12:57 +0100
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	s=k20201202; t=1761074646;
+	bh=E3LGhnnjVgNQvzdUA+dKvbHT5vkuigF/kle9qkfRNJk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LE5ecSBK83GkzI4Wj0VJBYE3yUZcsAyqzGy4/AgxqYwGy99uSaMSETMrytq3M8AuU
+	 WK6GyDqqQWMcsaMa/luqgFcpOoF1S5wB7sHWT7xNe0r8zG+owalEYFXov8teus/o22
+	 dG0dZyyQCs2m3hr5eUCMeHa70L3X/Tr+yvCjsCggxYgPPf3dWIGr906YwjKwliA1QF
+	 zHrNJBobcqoYjRC/NfXzE4kOp2RGKaIxBNA59pDfukTP5wVa2D0zpBt3YO/wuBqjc8
+	 7Wyc6gPsLjbhCyBq2jk2qADfhIlfUgsYvajgcTXSipNhXrl3hB0YXyPWhOfu19IcWR
+	 okJq8kAypmH/w==
+Date: Tue, 21 Oct 2025 12:24:05 -0700
+From: Kees Cook <kees@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Marco Elver <elver@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Johannes Weiner <hannes@cmpxchg.org>, llvm@lists.linux.dev,
+	Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Shuah Khan <shuah@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] KVM: Avoid a few dozen -Wflex-array-member-not-at-end
- warnings
-Message-ID: <aPfNKRpLfhmhYqfP@kspp>
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	kernel test robot <lkp@intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Uros Bizjak <ubizjak@gmail.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Yafang Shao <laoar.shao@gmail.com>,
+	Marc Herbert <Marc.Herbert@linux.intel.com>,
+	Christopher Ferris <cferris@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Paolo Abeni <pabeni@redhat.com>, Tejun Heo <tj@kernel.org>,
+	Jeff Xu <jeffxu@chromium.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Brian Gerst <brgerst@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/3] compiler_types: Introduce __counted_by_ptr()
+Message-ID: <202510211210.84D670D1C@keescook>
+References: <20251020220005.work.095-kees@kernel.org>
+ <20251020220118.1226740-1-kees@kernel.org>
+ <20251021095447.GL3245006@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,134 +77,56 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20251021095447.GL3245006@noisy.programming.kicks-ass.net>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Tue, Oct 21, 2025 at 11:54:47AM +0200, Peter Zijlstra wrote:
+> On Mon, Oct 20, 2025 at 03:01:15PM -0700, Kees Cook wrote:
+> > Introduce __counted_by_ptr(), which works like __counted_by(), but for
+> > pointer struct members:
+> > 
+> > struct foo {
+> > 	int a, b, c;
+> > 	char *buffer __counted_by_ptr(bytes);
+> > 	short nr_bars;
+> > 	struct bar *bars __counted_by_ptr(nr_bars);
+> > 	size_t bytes;
+> > };
+> > 
+> > Since "counted_by" can only be applied to pointer members in very recent
+> > compiler versions, its application ends up needing to be distinct from
+> > flexible array "counted_by" annotations, hence a separate macro.
+> > 
+> > Unfortunately, this annotation cannot be used for "void *" members
+> > (since such a member is considered a pointer to an incomplete type,
+> > and neither Clang nor GCC developers could be convinced otherwise[1],
+> > even in the face of the GNU extension that "void *" has size "1 byte"
+> > for pointer arithmetic). For "void *" members, we must use the coming
+> > "sized_by" attribute.
+> 
+> So why do we need both __counted_by_ptr() and this __sized_by(), won't
+> one be good enough?
 
-So, in order to avoid ending up with a flexible-array member in the
-middle of multiple other structs, we use the `__struct_group()` helper
-to separate the flexible array from the rest of the members in the
-flexible structure, and use the tagged `struct kvm_stats_desc_hdr`
-instead of `struct kvm_stats_desc`.
+I remain extraordinarily frustrated that counted_by can't be used with
+"void *". I hit a brick wall on this, though, and don't know how to
+convince either GCC or Clang devs to fix it. It's so obviously correct
+to me: "void *" uses a 1 byte iterator for arithmetic... so asking how
+big a given allocation is should be byte sized!
 
-So, with these changes, fix 51 instances of the following type of
-warning:
+Let me take another stab at it...
 
-49 ./include/linux/kvm_host.h:1923:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-1 .../include/linux/kvm_host.h:1923:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-1 +./include/linux/kvm_host.h:1923:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> Also, given the existing __counted_by() is really only usable with
+> >=19.1.3 and we're now at 22-ish, do we really need two of these?
+> 
+> That is, I'm really hating the idea we need 3 different annotations for
+> what is effectively the same thing and feel we should try *really* hard
+> to make it 1.
 
-Notice that, before and after the changes, struct sizes and member offsets
-remain unchanged:
+As for avoiding __counted_by_ptr(), we could just raise the minimum
+Clang and GCC versions to require this, but that means dropping existing
+coverage (e.g GCC 15 supports only flexible array counted_by).
 
-BEFORE
+Maybe we could do a global __counted_by_ptr -> __counted_by replacement
+once GCC 16 is released?
 
-struct kvm_stats_desc {
-        __u32                      flags;                /*     0     4 */
-        __s16                      exponent;             /*     4     2 */
-        __u16                      size;                 /*     6     2 */
-        __u32                      offset;               /*     8     4 */
-        __u32                      bucket_size;          /*    12     4 */
-        char                       name[];               /*    16     0 */
-
-        /* size: 16, cachelines: 1, members: 6 */
-        /* last cacheline: 16 bytes */
-};
-
-struct _kvm_stats_desc {
-        struct kvm_stats_desc      desc;                 /*     0    16 */
-        char                       name[48];             /*    16    48 */
-
-        /* size: 64, cachelines: 1, members: 2 */
-};
-
-AFTER:
-
-struct kvm_stats_desc {
-        union {
-                struct {
-                        __u32      flags;                /*     0     4 */
-                        __s16      exponent;             /*     4     2 */
-                        __u16      size;                 /*     6     2 */
-                        __u32      offset;               /*     8     4 */
-                        __u32      bucket_size;          /*    12     4 */
-                };                                       /*     0    16 */
-                struct kvm_stats_desc_hdr __hdr;         /*     0    16 */
-        };                                               /*     0    16 */
-        char                       name[];               /*    16     0 */
-
-        /* size: 16, cachelines: 1, members: 2 */
-        /* last cacheline: 16 bytes */
-};
-
-struct _kvm_stats_desc {
-        struct kvm_stats_desc_hdr  desc;                 /*     0    16 */
-        char                       name[48];             /*    16    48 */
-
-        /* size: 64, cachelines: 1, members: 2 */
-};
-
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/uapi/linux/kvm.h | 21 ++++++++++++++++-----
- include/linux/kvm_host.h |  2 +-
- 2 files changed, 17 insertions(+), 6 deletions(-)
-
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 6efa98a57ec1..99d13ebc5e82 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -14,6 +14,12 @@
- #include <linux/ioctl.h>
- #include <asm/kvm.h>
- 
-+#ifdef __KERNEL__
-+#include <linux/stddef.h>       /* for offsetof */
-+#else
-+#include <stddef.h>             /* for offsetof */
-+#endif
-+
- #define KVM_API_VERSION 12
- 
- /*
-@@ -1563,13 +1569,18 @@ struct kvm_stats_header {
-  *        &kvm_stats_header->name_size.
-  */
- struct kvm_stats_desc {
--	__u32 flags;
--	__s16 exponent;
--	__u16 size;
--	__u32 offset;
--	__u32 bucket_size;
-+	/* New members MUST be added within the __struct_group() macro below. */
-+	__struct_group(kvm_stats_desc_hdr, __hdr, /* no attrs */,
-+		__u32 flags;
-+		__s16 exponent;
-+		__u16 size;
-+		__u32 offset;
-+		__u32 bucket_size;
-+	);
- 	char name[];
- };
-+_Static_assert(offsetof(struct kvm_stats_desc, name) == sizeof(struct kvm_stats_desc_hdr),
-+	       "struct member likely outside of __struct_group()");
- 
- #define KVM_GET_STATS_FD  _IO(KVMIO,  0xce)
- 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index fa36e70df088..c630991f72be 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1920,7 +1920,7 @@ struct kvm_stat_data {
- };
- 
- struct _kvm_stats_desc {
--	struct kvm_stats_desc desc;
-+	struct kvm_stats_desc_hdr desc;
- 	char name[KVM_STATS_NAME_SIZE];
- };
- 
 -- 
-2.43.0
-
+Kees Cook
