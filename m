@@ -1,255 +1,112 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C448874C14
-	for <linux-hardening@vger.kernel.org>; Mon, 20 Oct 2025 22:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602677E105;
+	Tue, 21 Oct 2025 01:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761000856; cv=none; b=jDPmZF8HjzEx0fFgGICNQ7s6jpk3uvl9oXhOC5y52y7ZpoIRRvd0fDDYT0Jo3hOHPJifpP42xmxBNmSrlhuctvt/ynMb3M2JJkoTFSFQcFe2r8nQAy40eQ7LZVE7FQ99CtKXlFRmPU0Zcw7IaMiLlWeUz8OFNKsuLEzg2iXMzdU=
+	t=1761011633; cv=none; b=Nan5ivN2ygUsnQmNh87iyEGnH+wBLX79LXo4KkDNOJ/xETWHTK90lRjlNPlgb++OOY9nZirMtSz6p1ApsnOTk5CeNgga9HDy7Nwl3+xfQ6ozi9vtDaTLdsaTG+QjWccOUikv1F7sR/Bx4cgOe0sTYucgDuNwhbfAIlsVPnnUaHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761000856; c=relaxed/simple;
-	bh=8RWPc/J+gIMcQEFxOG6dFR+ohNHjmy+3waEaDz3hd8k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cYmAvqu1OGhxDoDhZV6pi7RUyokHN90u0xGHqaFlsRuYjDZgMzIjcx1AjnbT706xRRPK5aIGJjiGm7bqQKLRo+KDwip0hDI6LMFmDO8fCiWotKpEg8o1JsaDuInuGts2zGxg8cn0zP4yI0w5GJd6sNiTUsfPEAYyeeNuxMufIMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fZQlq7YN; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1761011633; c=relaxed/simple;
+	bh=gEFXq3ZbGcZ2wLt1kNCnmyzf7qCy7XGcSSRG5SuAU8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UsRvVCV9Ppb7irG60tSaY2kqpg1jfIMnGFwUrkBJug0Memnyr9qzVNH8zV2R0qJb2ZR5/GoMjwEUbaoKkbfVBO3CLqlIWk4OBUkO+zFJWiG2rm5x1PA4ZTyIha0cibcUYD7gpyfFZ2pbzGGJDEOxgCF5xuDIiEGOWRwxplFY33o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhSer6FA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fZQlq7YN"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b3ee18913c0so943506066b.3
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Oct 2025 15:54:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761000853; x=1761605653; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gXVpf+jOLhkP3YQQfTg59JZdjchGBwXlDGaLekMrenI=;
-        b=fZQlq7YNoYMHppESHlwQG5I3l7GO5ieUNhqKmfW11p9p8OvzR4xXelVLV4W83Alf6M
-         zUuZ+ii+K3diVyNTEv+0VX71jxoltsKcu5BQvCJI/mN6mymfYP+pjkrh5hznGTKzrJGA
-         l8aPhL0CVp/xzdmll1JX/2oiyWnagDm1a8e5hvc/Fvve+GPxPCedN3VAKlvdRohp/ueC
-         eJkg/wzZUGmIPbtYHwgY5nzOxFg6RdRfKDAYtOCQRHT3RvtlaDcnEHqyvWRfkKXx50q1
-         SyPUWy9/E2ZU1dW2QN1qvxts0gc6mUDonnWwoTXfL8FqW447jsBbd9Y5mltqxDOt3h8l
-         4Kyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761000853; x=1761605653;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gXVpf+jOLhkP3YQQfTg59JZdjchGBwXlDGaLekMrenI=;
-        b=HMi4WYGcgHKM8J40HPlZvFrLa7OasmF+wo2Za0y3JdOnBMn4UZ3OuZXLQwdc/BPE2/
-         dkr0CQrrbzhLU4bL/qa59Aro5owS2SzDshm5gNJpqGjoGqx4NkPm1sbWdin8vO1yPj8o
-         CYG4ODM7KF76id32kpHLEFSdYmvPsM5nMa6Xy4ndWZkfyIZKlMFQBYKH/JCsHIvx87fr
-         jFJAopIdIejd0o3MLAKaAjb7Q2KyIWVQHvmWy/JZgEOaHL4156h2Y5aqb3by5v28C2Xy
-         FV5PlDu/ToOLtYqB3cBT09BBx2NYYNVqyICuyZCUp1R1wPadK8alItMpDZzyEfThW0G+
-         it5g==
-X-Forwarded-Encrypted: i=1; AJvYcCVpwanWVvuGXuZE/tZk8NA9lpRut+URac+q87NatnSXoQhb03FM+/tA+A2dBVOVGIyTsUVYwXKi6693Gu8Kjl8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlNTL8TjqdKFC6cOnhHkLJ9XyrhP6dvo4ipjbQeUjCSOSBnE6/
-	R/BtAfYIZ7rMHIY/YIqMx27z2F6Qwk9ckl8YauvEtvMCN24yoPyIZ4iYRSr+a0ZODcISkUKzLwG
-	NAwOweOBhn7LQ0YEBSwr74xTv80aBII8ugFbINNc=
-X-Gm-Gg: ASbGncvQM6n+3fF3PvfG44IHHg23zoc/jLAYWNo43NoOvAYE8zSXjGj3qlHKU3w7p0c
-	l4F1T4QEHTnp768SJbOEo/pGg9VqtYz77ZAs1mqOeTHJyVq76neDXVB+JthaOEX9pbsUKcg9/x8
-	AmxSRsYDKJlZk4irGfzpO/GodM86iojGTVLxyTRSBuvqzyxKpUlDqZj/LjefQCy0d0I5a7AZI8Y
-	orr+tIbhHQvbIWDpmdmOEV3ZF10XP4L8Mmt2ZY2aoVzdEC3iMvPcHOh4fRGiluZn4dE
-X-Google-Smtp-Source: AGHT+IGxESvOLWCY5N66S/ojP/nYOYl3Tj24HBpCyNwp/S7zxilqgZUafQa2wCmwT4NmlDi/C89pR/VoaK4wOYRrO28=
-X-Received: by 2002:a17:907:1c82:b0:b4e:a47f:715d with SMTP id
- a640c23a62f3a-b6472a6a145mr1759951766b.17.1761000852713; Mon, 20 Oct 2025
- 15:54:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhSer6FA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58C0EC4CEFB;
+	Tue, 21 Oct 2025 01:53:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761011633;
+	bh=gEFXq3ZbGcZ2wLt1kNCnmyzf7qCy7XGcSSRG5SuAU8w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lhSer6FAbofHcgD61qoh5QzZYC4905I96PcCZWfI86ac1ynePuJi3fg0VrjU9ztAo
+	 XkR6dgKlCQnBR0dsVJeZNZPgnQB/RUGODC9QoLTYhQjR6KMtKOAmjqopw3rdEynIfH
+	 Vmbx1RjuwgnyFqnleQEZTrdFrVMapKDurCZ6J2JRxqY/dHT6Ar+xeS0eD68/DIOKvI
+	 Ysb7LH67G5pD87/ezpN+lEAEQPCuYRmpogqeTZbdxOD/3O1PmZOJawv0JS8N3wEeMx
+	 +kifMX87l6Y3ReoHxNohaM65naJhnkJwFJXQEKTfd9ZAYoODmDf/CaWQMRURoY0Bxa
+	 xbw5EKuNfqZIA==
+Date: Tue, 21 Oct 2025 07:23:38 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
+Message-ID: <rvsyll4u6v4tpaxs4z3k4pbusoktkaocq4o3g6rjt6d2zrzqst@raiuch3hu3ce>
+References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
+ <hyzzrjn7jzo3tt3oyg7azijouawe3zopfjzq6zfhoo6e6z2m4t@ssl5vl4g557e>
+ <zk4ea5cibrkp4vttuy4evrqybf76b3nop5lnyck4ws4nyf2yc4@ghj2eyswsoow>
+ <CAMRc=MdWmO4wvX6zpzN0-LZF1pF5Y2=sS8fBwr=CKMGWHg+shA@mail.gmail.com>
+ <rfr5cou6jr7wmtxixfgjxhnda6yywlsxsei7md7ne3qge7r3gk@xv6n5pvcjzrm>
+ <CAMRc=Me9Td5G9qZV8A98XkGROKw1D2UeQHpFzt8uApF8995MZw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251020220005.work.095-kees@kernel.org> <20251020220118.1226740-1-kees@kernel.org>
-In-Reply-To: <20251020220118.1226740-1-kees@kernel.org>
-From: Bill Wendling <morbo@google.com>
-Date: Mon, 20 Oct 2025 15:53:55 -0700
-X-Gm-Features: AS18NWAFS0u2q23JU9GZh3nxGXIAaxKW62Opi8L5p1adGFlg6Vwpq6L8QQr0HRw
-Message-ID: <CAGG=3QV7-W5vEPNtABghg=ktn6kKs45_e-PWBT9oCUzURod1bg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] compiler_types: Introduce __counted_by_ptr()
-To: Kees Cook <kees@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Marco Elver <elver@google.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Johannes Weiner <hannes@cmpxchg.org>, llvm@lists.linux.dev, 
-	Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Shuah Khan <shuah@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	Tamir Duberstein <tamird@gmail.com>, Michael Kelley <mhklinux@outlook.com>, 
-	kernel test robot <lkp@intel.com>, Heiko Carstens <hca@linux.ibm.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Jan Hendrik Farr <kernel@jfarr.cc>, Yafang Shao <laoar.shao@gmail.com>, 
-	Marc Herbert <Marc.Herbert@linux.intel.com>, Christopher Ferris <cferris@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Tejun Heo <tj@kernel.org>, Jeff Xu <jeffxu@chromium.org>, 
-	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Randy Dunlap <rdunlap@infradead.org>, 
-	Brian Gerst <brgerst@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Me9Td5G9qZV8A98XkGROKw1D2UeQHpFzt8uApF8995MZw@mail.gmail.com>
 
-On Mon, Oct 20, 2025 at 3:01=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
-> Introduce __counted_by_ptr(), which works like __counted_by(), but for
-> pointer struct members:
->
-> struct foo {
->         int a, b, c;
->         char *buffer __counted_by_ptr(bytes);
->         short nr_bars;
->         struct bar *bars __counted_by_ptr(nr_bars);
->         size_t bytes;
-> };
->
-> Since "counted_by" can only be applied to pointer members in very recent
-> compiler versions, its application ends up needing to be distinct from
-> flexible array "counted_by" annotations, hence a separate macro.
->
-> Unfortunately, this annotation cannot be used for "void *" members
-> (since such a member is considered a pointer to an incomplete type,
-> and neither Clang nor GCC developers could be convinced otherwise[1],
-> even in the face of the GNU extension that "void *" has size "1 byte"
-> for pointer arithmetic). For "void *" members, we must use the coming
-> "sized_by" attribute.
->
-I'm pretty sure that "sized_by" is available in Clang right now.
+On Tue, Oct 07, 2025 at 02:29:01PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Oct 7, 2025 at 12:09 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> >
+> > > >
+> > > > Not always... For something like shared reset line, consumers request the line
+> > > > as GPIO and expect gpiolib to do resource manangement.
+> > > >
+> > >
+> > > They could use the reset API and it would implicitly create a virtual
+> > > device that requests the reset GPIO and controls its enable count.
+> > > Except that some devices also do a specific reset sequence with delays
+> > > etc. That would require some additional logic in reset-gpio.
+> > >
+> >
+> > I was referring to the PCIe PERST# line, for which the 'reset-gpios' property
+> > already exist in the schema. Now, you want me to model this simple GPIO as a
+> > fake reset controller and use it the PCIe Bridge nodes through 'resets'
+> > property?
+> >
+> 
+> No, not at all. It's just that a shared `reset-gpios` property is
+> pretty common and Krzysztof implemented the reset-gpio driver[1] to
+> address it. Drivers that request a reset control via the OF interface
+> will notice that there's no `resets` property but if there's a
+> `reset-gpios`, the reset core will create a virtual device binding to
+> the reset-gpio driver which requests the GPIO in question (once!) and
+> registers with the reset subsystem providing shared reset control to
+> users. Basically the abstraction Srini mentioned minus any reset
+> sequence.
+> 
+> That only happens if the driver uses the reset API. If you go with the
+> GPIOLIB then none of this matters. I definitely don't want to change
+> the existing DT sources either but I want to find out if the code in
+> this series is suitable (with some modifications) for supporting the
+> PERST# line or if the logic behind it is more complex and possibly
+> requires separate, more fine-grained handling.
+> 
 
--bw
+All PCI controllers relied on '{reset/perst}-gpios' property for handling the
+PERST# signal. Now if we change it to a reset line, then the drivers have to
+first detect it as a reset line and use the reset APIs, if not fallback to gpiod
+APIs (for DT backwards compatibility), which will add unncessary churn IMO.
 
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2025-May/683136.html [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-> Cc: Bill Wendling <morbo@google.com>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: <llvm@lists.linux.dev>
-> ---
->  init/Kconfig                   | 11 +++++++++++
->  Makefile                       |  4 ++++
->  include/linux/compiler_types.h | 21 ++++++++++++++++++++-
->  include/uapi/linux/stddef.h    |  4 ++++
->  4 files changed, 39 insertions(+), 1 deletion(-)
->
-> diff --git a/init/Kconfig b/init/Kconfig
-> index cab3ad28ca49..54691b086bc6 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -139,6 +139,17 @@ config CC_HAS_COUNTED_BY
->         # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D108896
->         default y if CC_IS_GCC && GCC_VERSION >=3D 150100
->
-> +config CC_HAS_COUNTED_BY_PTR_BARE
-> +       def_bool $(success,echo 'struct foo { int *ptr __attribute__((__c=
-ounted_by__(count))); int count; };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /d=
-ev/null -Werror)
-> +
-> +config CC_HAS_COUNTED_BY_PTR_EXP
-> +       def_bool $(success,echo 'struct foo { int *ptr __attribute__((__c=
-ounted_by__(count))); int count; };' | $(CC) $(CLANG_FLAGS) -fexperimental-=
-late-parse-attributes -x c - -c -o /dev/null -Werror)
-> +       depends on !CC_HAS_COUNTED_BY_PTR_BARE
-> +
-> +config CC_HAS_COUNTED_BY_PTR
-> +       def_bool y
-> +       depends on CC_HAS_COUNTED_BY_PTR_BARE || CC_HAS_COUNTED_BY_PTR_EX=
-P
-> +
->  config CC_HAS_MULTIDIMENSIONAL_NONSTRING
->         def_bool $(success,echo 'char tag[][4] __attribute__((__nonstring=
-__)) =3D { };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /dev/null -Werror)
->
-> diff --git a/Makefile b/Makefile
-> index d14824792227..1b297dcbb0df 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -933,6 +933,10 @@ KBUILD_CFLAGS      +=3D $(CC_AUTO_VAR_INIT_ZERO_ENAB=
-LER)
->  endif
->  endif
->
-> +ifdef CONFIG_CC_HAS_COUNTED_BY_PTR_EXP
-> +KBUILD_CFLAGS  +=3D -fexperimental-late-parse-attributes
-> +endif
-> +
->  # Explicitly clear padding bits during variable initialization
->  KBUILD_CFLAGS +=3D $(call cc-option,-fzero-init-padding-bits=3Dall)
->
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_type=
-s.h
-> index 59288a2c1ad2..f197ea03b593 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -353,11 +353,14 @@ struct ftrace_likely_data {
->  #endif
->
->  /*
-> + * Runtime track number of flexible array member elements for use by
-> + * CONFIG_FORTIFY_SOURCE and CONFIG_UBSAN_BOUNDS.
-> + *
->   * Optional: only supported since gcc >=3D 15
->   * Optional: only supported since clang >=3D 18
->   *
->   *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D108896
-> - * clang: https://github.com/llvm/llvm-project/pull/76348
-> + * clang: https://clang.llvm.org/docs/AttributeReference.html#counted-by=
--counted-by-or-null-sized-by-sized-by-or-null
->   *
->   * __bdos on clang < 19.1.2 can erroneously return 0:
->   * https://github.com/llvm/llvm-project/pull/110497
-> @@ -371,6 +374,22 @@ struct ftrace_likely_data {
->  # define __counted_by(member)
->  #endif
->
-> +/*
-> + * Runtime track number of objects pointed to by a pointer member for
-> + * use by CONFIG_FORTIFY_SOURCE and CONFIG_UBSAN_BOUNDS.
-> + *
-> + * Optional: only supported since gcc >=3D 16
-> + * Optional: only supported since clang >=3D 20
-> + *
-> + *   gcc: https://gcc.gnu.org/pipermail/gcc-patches/2025-April/681727.ht=
-ml
-> + * clang: ...
-> + */
-> +#ifdef CONFIG_CC_HAS_COUNTED_BY_PTR
-> +# define __counted_by_ptr(member)      __attribute__((__counted_by__(mem=
-ber)))
-> +#else
-> +# define __counted_by_ptr(member)
-> +#endif
-> +
->  /*
->   * Optional: only supported since gcc >=3D 15
->   * Optional: not supported by Clang
-> diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
-> index 9a28f7d9a334..111b097ec00b 100644
-> --- a/include/uapi/linux/stddef.h
-> +++ b/include/uapi/linux/stddef.h
-> @@ -72,6 +72,10 @@
->  #define __counted_by_be(m)
->  #endif
->
-> +#ifndef __counted_by_ptr
-> +#define __counted_by_ptr(m)
-> +#endif
-> +
->  #ifdef __KERNEL__
->  #define __kernel_nonstring     __nonstring
->  #else
-> --
-> 2.34.1
->
+But if there is no way the GPIO subsystem is going to support shared GPIOs, then
+we have to live with it.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
