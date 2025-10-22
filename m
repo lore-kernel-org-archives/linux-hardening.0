@@ -1,158 +1,76 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281B931329E
-	for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 09:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CC03446A6
+	for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 12:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761125189; cv=none; b=uGtefOzdxMg7SJWMM+AUDbIN0w+iuQyg5ziOfp0mzE1NjaKJEyp/MkalpXRweXzAPu2yvocZM7ixEK5z+86AYcmmY6bBolpLaV0EmENU+TsKJa0opOE9eAtoF2HUlp0Tmsl8YU/hAtotuCNqkOMN8dNQq533p5JrRVWJQfeASiY=
+	t=1761137658; cv=none; b=U5P4OzEqTtuBKkWou5TSZ4UczbeUVUrSzhAqH1N5MC4enJ7QMuzYcqkeXTzi5VtJldZw6ybp4DhKP4Bq0uxinoQXg0d49sUi4Bvr7TKYL5VACUKXdTRflbQUQ5i0zVHKn+E3Zc6AMeKpMZyJ8LQ6zFexJ4q3Ynb6M9XZtu9bVYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761125189; c=relaxed/simple;
-	bh=fbLS6NRaqRZXt4IRUEO+unR+6g1lk+XTzy3wHnWXedU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XPYQjvlKEs+fpOEj1Y7lXOkI1qRXeJ3Lk9BfxE9yOOW2mDKwX6WFdA/D7f7RqTN4LtyOJL38DMObwwC2ivmNxAqdyttuyI0pnGti1QF5xuuoAIKb8KzLI/ykbzrYz/Oi8VRdaA1RVMRE+2Ic3xzgXAskd1EAVa3CHEZAOdSB6bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j3Squv42; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761137658; c=relaxed/simple;
+	bh=LIQ1I3bwkPK9HSkT2gM9nT1KlwVBVcZ8fBylRSbbmjI=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=PajJuIJ9/UKM3VHjAYe2hrHTxIJhimz3aQkqVanXum+90z+hHcSn++3Sr4sxJItOZ4pzlWJCplN9FSFHbbQ8CufT85Olk/rqopce3nq4PWU8ObPiWhL++TXVK1Aa48JUQWBb1Bpvlp01y6C8djxlsllqU/+Zm4Gmb+qBWpcdkUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XlMhUPTa; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3Squv42"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-471076f819bso52124825e9.3
-        for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 02:26:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761125186; x=1761729986; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=//C0wLViLyax0tzgYYWAuav1OQzS5yBkCfcAMr1bfAU=;
-        b=j3Squv42Ne6AF4NRGlqQBVf5IhyStAbHMElZfA9MiZ6qcUatHcB8W4Qo1EUrq6beu+
-         XmUWJMEMOtHw6wCHhjWurNLGOlgR5dF/Ey1TCxpllcZW0Oq57Uc3ZITpFGLO7+Yn9p0q
-         h5yiUR+CEbpPYSMQEoAbs3Os+nYcga8BXXFQVz+A23AEOMFqKwnlgJ9tNlvAcuXv1umt
-         NPWL8p9pWHfiERXwV/cBUb1qreZCBrk4BIIPLemsNfpr7jsihoyFhEluKPSbUPNW8R/8
-         VHJmJxCyMKldiGJG8fztp5Baw5fJNQhWuiwVnCIwhcPBBr8QGOfZF0TEeLPoyB2xF1eZ
-         /D0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761125186; x=1761729986;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=//C0wLViLyax0tzgYYWAuav1OQzS5yBkCfcAMr1bfAU=;
-        b=sZgIIfESpjPaw9wJ+1xWxcisBkeLt8abNzhHwDOjzYsz6r1C2hsTimEjPWvR3UrUJX
-         PGJfinF/fdLUpx5N2tjMxmP6tK5fmsMMlAArLcg1vXJ8+6t8zYjuckomrE3COxZLiy7Z
-         yLKypbmZFfX58TseKOsNrULp0kfVRLDW1DwFnTMUNFEEvvBj8siUgbH7d7nMc5uz2YdC
-         2MTKlTp34+SnuFXP7SA2Mf+ddu02gKlZRfRtWa7ostrqrRNx9WyhrsHDYoiyXgiUbvXF
-         M0bKEZ7jV9aAxW3uRNdVavr14fFWx8L1IDofaCAaC9Zwjb37XKpL46d+YPW07e0DidqT
-         rOSw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7sdC7UYmQ8ldg3X43K3oS1s8StzVGR7kGIJ3iD0VG4myaFnrVP1VRE48wQ20K9/waAQzNef/OWUGiTdF1gt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywr6ilNu8zggpOztOrzjzqIniHjPhswiNsest/bIVcKxASz5nr2
-	BV6WDPV+EwLNg6XMnqiiGQ1g8GwbDulRgbYgasHa3SND5kBfhDe7XKec
-X-Gm-Gg: ASbGncubD3KakGfP/tsZmW+56j3jkuVi4S5vevCHy1AXz59oQoIfvrKLcKaF22nGH4L
-	//3eRmgZW5uLCVTgH5U2p32Ii4YEis1oP7n/8l+35dIsuZ5n1StfUvZsuplvId3L3sern8j/vW/
-	akOwlDBviVSvGjcPxGIFcAhTT0lA1XgPsvegYQOFL+Z7j+56eOJ5eQO+MnZ+t4wjQ88HqbyPPxR
-	v0qLHUyBkVLgU27VjqklibkQk+VLpJs/pPJ1lBPfjm94gKAqe6500ypwwElU7qgzPuG7gQ+Ac8x
-	FnxyUEFTxtVoPYiRRzTXPWv+zCdC1COwfkwaHFys1aIuwLlBmEoIpu21hQZW1VVCcYGhyCa5OST
-	IfSLhebIXQXUwZww746mfP4+AHGjcvfq+pjhCBuYgmdh6p8umigg3IqOJfkpBO/1aZu50On8eVo
-	8khVE/y18JA12HvuUm31noB1vO/9lvgVbEN+PDbxHulnCTixzGAbPC
-X-Google-Smtp-Source: AGHT+IHrGA5T0AgWx+Lb6J0FhMN0AQHzVB5XwfYTdFFca9HjP/vMr81DyX12YfBDWtMAdWtJX6IJPg==
-X-Received: by 2002:a5d:5f49:0:b0:3ec:dd16:fc16 with SMTP id ffacd0b85a97d-42704e02995mr13060765f8f.43.1761125186340;
-        Wed, 22 Oct 2025 02:26:26 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427f00b988dsm24749957f8f.35.2025.10.22.02.26.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Oct 2025 02:26:25 -0700 (PDT)
-Date: Wed, 22 Oct 2025 10:26:24 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, "Gustavo A. R. Silva"
- <gustavo@embeddedor.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>, Willem de Bruijn
- <willemb@google.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 1/9] net: Add struct sockaddr_unspec for sockaddr of
- unknown length
-Message-ID: <20251022102624.18d2c6f7@pumpkin>
-In-Reply-To: <202510211232.77A0F8A@keescook>
-References: <20251020212125.make.115-kees@kernel.org>
-	<20251020212639.1223484-1-kees@kernel.org>
-	<20251021102600.2838d216@pumpkin>
-	<202510211232.77A0F8A@keescook>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XlMhUPTa"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1761137644;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ozlYXauUK0iPLj+FjL8XWy7Vz7jZGyn6q4O9waPn9ws=;
+	b=XlMhUPTacwxCkfXYFqc6K6bjMtrSuFnkUzwNU5oza4Bp4g/TvQZbGeMGWm/CGutAxb4CMp
+	LJ12wzvvZ4WYZgaZLsbI49POPtRPU96/VbK6sWBTxfxD0zaYZsu+Oa3oOkFNfP3R6eLXfG
+	VjW5aH2sn9007PPLX6gKzXzetk++H/c=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
+Subject: Re: [PATCH 3/8] sparc: floppy: Replace deprecated strcpy with strscpy
+ in sun_floppy_init
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <aPPsx9cHwkF8MC1l@ashevche-desk.local>
+Date: Wed, 22 Oct 2025 14:54:00 +0200
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Helge Deller <deller@gmx.de>,
+ Jens Axboe <axboe@kernel.dk>,
+ linux-hardening@vger.kernel.org,
+ sparclinux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: 7bit
+Message-Id: <40C3F1D4-8276-4AC2-B1D2-CCC3E1D9433D@linux.dev>
+References: <aPPsx9cHwkF8MC1l@ashevche-desk.local>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 21 Oct 2025 12:42:10 -0700
-Kees Cook <kees@kernel.org> wrote:
+Hi Andy,
 
-> On Tue, Oct 21, 2025 at 10:26:00AM +0100, David Laight wrote:
-> > On Mon, 20 Oct 2025 14:26:30 -0700
-> > Kees Cook <kees@kernel.org> wrote:
-> >   
-> > > Add flexible sockaddr structure to support addresses longer than the
-> > > traditional 14-byte struct sockaddr::sa_data limitation without
-> > > requiring the full 128-byte sa_data of struct sockaddr_storage. This
-> > > allows the network APIs to pass around a pointer to an object that
-> > > isn't lying to the compiler about how big it is, but must be accompanied
-> > > by its actual size as an additional parameter.
-> > > 
-> > > It's possible we may way to migrate to including the size with the
-> > > struct in the future, e.g.:
-> > > 
-> > > struct sockaddr_unspec {
-> > > 	u16 sa_data_len;
-> > > 	u16 sa_family;
-> > > 	u8  sa_data[] __counted_by(sa_data_len);
-> > > };  
-> > 
-> > One on the historic Unix implementations split the 'sa_family'
-> > field into two single byte fields - the second one containing the length.
-> > That might work - although care would be needed not to pass a length
-> > back to userspace.  
+On 18. Oct 2025, at 21:38, Andy Shevchenko wrote:
+> On Mon, Sep 22, 2025 at 11:03:52PM +0200, Thorsten Blum wrote:
+>> strcpy() is deprecated; use strscpy() instead.
+>> 
+>> No functional changes intended.
 > 
-> I think this is just asking for trouble -- leaving that inline could
-> be hard to track down places that needed filtering out.
+> Is this the only one place in floppy (arch) code?
 > 
-> It might be easier to move to a separate struct like I suggest above,
-> though maybe as:
-> 
-> struct sockaddr_sized {
->     u16 sa_data_len;
->     struct {
->         u16 sa_family;
->         u8  sa_data[] __counted_by(sa_data_len);
->     } sa_unspec;
-> };
-> 
-> (So it's easier to cast between implementation-specific sockaddr and the
-> "sa_unspec" member.)
-> 
-> And then pass that around. But I think that'll require a LOT of
-> refactoring. But that could happen separately from this change, which is
-> to just get us back to the existing state of passing around an unknown
-> sized object but now we're not lying to the compiler about its size.
+> The change itself LGTM,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-The problem with that is it misaligns things later on.
-And you really want to be using the length from the user,
-which includes sa_family.
+Thanks for the review. The whole series is already in master and removed
+all strcpy() calls from arch/sparc. I'm not sure about other floppy code
+elsewhere.
 
-I'm not sure it even works if the extra sa_data_len is u32 (or even u64).
-
-I did wonder if 'union casts' would help.
-They would require a union of pointers to all possible sockaddr formats.
-Annoyingly I don't think you can avoid the need for the cast on the
-call sites for a lot of the functions - unless they are renamed to have
-unique names (so a #define can add the cast).
-
-If you do add a #define, it can generate the size from that of the
-supplied address structure (and error things that are stupidly short).
-
-	David
-
+Best,
+Thorsten
 
