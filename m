@@ -1,122 +1,133 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD299221FBF
-	for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 15:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EDC1B7F4;
+	Wed, 22 Oct 2025 17:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761147414; cv=none; b=Mi8DQqkNs/y8KQm8JUBQ8xwebyyZBZql0eju3qMDgIqv6TFJsczdQT1/NL46uA6w6PTz1lbtWdRGU0XalqKNVxkLkFvzhcYoSRQfaHnCoTkFhOcu/hS7LRcsunmSTfnoFB63Lt8dnkGb1ruJEWnw5H9s4MUqxTreX4Jguhc0SJs=
+	t=1761153176; cv=none; b=s4UbSTRXdPqj2RJ6k7wOCD+wTorqNCo3486uHpfwTLS1WbWLmbps6EtgZeQdYKZ9OKGaSRTUXWM6k/wCjMm0px+zuISDkSDCHmvK2ZQbRfSYs6vCqBlOmLxaFJ7qsudYU5S8Swc3aP/LhgXMJZ7ZTxgzmT6F1iwCtNk4ce057h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761147414; c=relaxed/simple;
-	bh=voJSs7Hw3Wl/EZaQou3RkTgu4VdQyS/EVwb9Mp9QVNk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mz07klFj5Ck86ujm1F293XsKOIJDmLcldAtjQUUKRV4lyjgDx/5lFgBqqi3QJZh83hsA178kvdocOzpgesJaZO1k9FIrQR2HunLxYuZ6hvLQngDueL5Z+4BglXnx0gB6hmh9D+jB1bo3hQE9zM2gqbawDMxaBzSq5D/OWlXpbb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=L12t+1rE; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1761153176; c=relaxed/simple;
+	bh=CA2iL+o+DO6b320JfGgya3sZsmpPjkeP4srUuVWXJQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NGzv6ScLdzlQ82Y5jCh1MWrP2Ixe4fAXSKgj5Or2+l9bfiMCd69AFhvOKwFjhfX0NHbe8z8wNqZokvMIWq8GqxQt073WckWreVgl0p2YydmVsfdRogWH6nlb3nb7lURxVuDrvgeeY2ulSp+l2P/p2ZI07luUYuoMXEha5egP9wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B41w7bEg; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="L12t+1rE"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-57e36125e8aso6648620e87.2
-        for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 08:36:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761147406; x=1761752206; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sRzlJtgmeKcllMySQlFgaimNGUEcv2R+GqjiMHEJzN4=;
-        b=L12t+1rE+8f9f2Pii8C/PIdRs9UoviXh9nOuNQfciu+K6ySdJHYZaubI8Ar0qund4h
-         87cLYIm2isV0LihywDTjrUE33d2U+F+uSNel4OMVteAUWqf0NhsWuZGk//KVBBzthMBJ
-         W4fB8wRsqMKZBHbuNv4Rq3PwYFsdylxTWDHSw9FcnkCog+tqej7kEXIUGk9df1LSVmCO
-         srJ/y9tNCneiHfOQ4AUrXz6ZT4gF/cjiyLsErvxX4C2dZlZ/o3e9gTtiaz2Nyi7iuszQ
-         VuSLCt8QoP762tAXBhLqvElEO/Tszi67Dds/nmxWBVMdZeiozzYZ7buez5BkpisZTuFA
-         9tgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761147406; x=1761752206;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sRzlJtgmeKcllMySQlFgaimNGUEcv2R+GqjiMHEJzN4=;
-        b=WW0YBSm+ycHTCK1lRjWYyAjscCZlOPIVExTPjq1u0XP2Fi21v8ywekVbYMcZy8D10G
-         xp0e2ENosRISnWWHoKvedRx8pdtSPpO4piQiuf2o3ahVDoKNYsKyZS4lBq4cJMYvLnQ3
-         Kfw0gjagABeTydIHp0kLMowmfrRzKp2bErCC/zDFJvkRC45RhjMbfAQnkmNFOY4YU1cV
-         63RTCxU2MjjpzXCInGnlrg1lX6bAFrT+wG5c7vzZlIPHPmCizqUE9kJ0aPRhWSMQsJcb
-         V2ZL0m0tYNvBDN6a3EIejY8mwxgAcdJrah7a+C518cmtC3CKSCxLyiY1MQltKOX2iwgp
-         uUUg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKuv1RZ2UvCiW+amj/SpQuwYdrnlbUP0wIu2w2CwrINIenlItrYpNO6yVUQH4ujPjCp8O/RNguJlWg+gmFUY0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTa7puVbdVqVjFE/OZvsxlBfN6gP67CocwYv1mV64VdIxBnYxO
-	xSMQloJnhRMQLfOPJ40Td6k/R9GupDpPVVwmStAkRXoIVRLdQ8Sj9VtDRb8Q+yn74Uz3mKJYTXG
-	zeAjJM+TgEkpIBQq3YNRFi8wrH/AvCe6zMxL41i8xDg==
-X-Gm-Gg: ASbGncsOZchFJ31YPcZAbmCEb9Xbr3teW4DHPj+mB5KrAn8vHq56SlUWM7H/HgCkBG4
-	iiWa2UkVwFCdcm6honX7/V/81lCZlcNlN0MIo4O7GQQWC5ZgKFGeixcnVvUinSSzk2I+sQie8FY
-	CMyQTbb+/9ppcQcouNWEyMwx8szBrK6eO2WREFCP2ZL+vcC+AqwNq6Rf4v795EXYFKo8gzQsFoj
-	2VeNwbhgE56RnCbOx7sHzlGQ1fyXrY7HCIwO1Oq/OpwXfM6skHrKj1eoGlQ3hGj5KR8En952wqw
-	gAp5uVkWAAdldxQNpHGSr9jDuls=
-X-Google-Smtp-Source: AGHT+IEi/irswdy4VVxLlO1hAN0Zsc9fjvuDKRe+i2ePli5jYREx+Bc29gt/0YVceCmzNFvpblDZjtrVlJp1Cz69730=
-X-Received: by 2002:a05:6512:33d5:b0:58b:151:bc12 with SMTP id
- 2adb3069b0e04-591d85a4b54mr8169026e87.51.1761147405947; Wed, 22 Oct 2025
- 08:36:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B41w7bEg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761153174; x=1792689174;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=CA2iL+o+DO6b320JfGgya3sZsmpPjkeP4srUuVWXJQY=;
+  b=B41w7bEgqD5s3e35MhqURGJTvf3ssBWOwn9wRqeXuo+44HKrBz0cEdOa
+   XvqX3TqzNvxlfykRg6CH5rdfwcX/byiCILiMzdOFzwg18b7hwSg7edGSX
+   IWHXO8SSUXb80aAXF3QXZXNx4aBzfrzP+AF2bGKfclnvDxvGP38fovoTC
+   7S0/d0ku5E0JS+FWRqqpXMISyP5CdjJ/HeRA4DCKxCLS5BGX0JiAL0Abj
+   27Wj6Mg4UGxgglMFS6poDNWCpCqS137o1HLvuvqZVzbdZ9PwrcufJx7fV
+   NQSwjmcmmBjW0PsuLO2a1+Tfk6ZARf+dqkZwnhkiSBjqQSVm9x6KfCyaS
+   w==;
+X-CSE-ConnectionGUID: qaIzlhR6QJieEW9efHjqIA==
+X-CSE-MsgGUID: 2gcVVxGUTUCol42SV1wEUQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63014009"
+X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
+   d="scan'208";a="63014009"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 10:12:53 -0700
+X-CSE-ConnectionGUID: u2ERStFSS/aim79IAjV65A==
+X-CSE-MsgGUID: 3dwWDioCRDGoZpxlH9UaHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
+   d="scan'208";a="183146706"
+Received: from cpetruta-mobl1.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.83])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 10:12:46 -0700
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1vBcOB-00000001km0-2Hse;
+	Wed, 22 Oct 2025 20:12:43 +0300
+Date: Wed, 22 Oct 2025 20:12:43 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 01/10] string: provide strends()
+Message-ID: <aPkQi_Zn-17JKG0s@smile.fi.intel.com>
+References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
+ <20251022-gpio-shared-v2-1-d34aa1fbdf06@linaro.org>
+ <aPj3fCYj-NQdDSQT@smile.fi.intel.com>
+ <CAMRc=MeSFKRo1rHq5ENzKqws+gOAX=-nCsGtw5MXvsOwJr=XpQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
- <20251022-gpio-shared-v2-1-d34aa1fbdf06@linaro.org> <aPj3fCYj-NQdDSQT@smile.fi.intel.com>
-In-Reply-To: <aPj3fCYj-NQdDSQT@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 22 Oct 2025 17:36:33 +0200
-X-Gm-Features: AS18NWDr85-ZpXwSC6o2WrSo4j9nQyRJc99PDFWHduyckze-ToGPJ6wk6IRJ840
-Message-ID: <CAMRc=MeSFKRo1rHq5ENzKqws+gOAX=-nCsGtw5MXvsOwJr=XpQ@mail.gmail.com>
-Subject: Re: [PATCH v2 01/10] string: provide strends()
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeSFKRo1rHq5ENzKqws+gOAX=-nCsGtw5MXvsOwJr=XpQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Oct 22, 2025 at 5:25=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Wed, Oct 22, 2025 at 03:10:40PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Oct 22, 2025 at 05:36:33PM +0200, Bartosz Golaszewski wrote:
+> On Wed, Oct 22, 2025 at 5:25 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Wed, Oct 22, 2025 at 03:10:40PM +0200, Bartosz Golaszewski wrote:
+
+...
+
+> > > +static void string_test_strends(struct kunit *test)
+> > > +{
+> > > +     KUNIT_EXPECT_TRUE(test, strends("foo-bar", "bar"));
+> > > +     KUNIT_EXPECT_TRUE(test, strends("foo-bar", "-bar"));
+> > > +     KUNIT_EXPECT_TRUE(test, strends("foobar", "foobar"));
+> > > +     KUNIT_EXPECT_TRUE(test, strends("foobar", ""));
+> > > +     KUNIT_EXPECT_FALSE(test, strends("bar", "foobar"));
+> > > +     KUNIT_EXPECT_FALSE(test, strends("", "foo"));
+> > > +     KUNIT_EXPECT_FALSE(test, strends("foobar", "ba"));
+> > > +     KUNIT_EXPECT_TRUE(test, strends("", ""));
+> > > +}
 > >
-> > Implement a function for checking if a string ends with a different
-> > string and add its kunit test cases.
->
-> ...
->
-> > +static void string_test_strends(struct kunit *test)
-> > +{
-> > +     KUNIT_EXPECT_TRUE(test, strends("foo-bar", "bar"));
-> > +     KUNIT_EXPECT_TRUE(test, strends("foo-bar", "-bar"));
-> > +     KUNIT_EXPECT_TRUE(test, strends("foobar", "foobar"));
-> > +     KUNIT_EXPECT_TRUE(test, strends("foobar", ""));
-> > +     KUNIT_EXPECT_FALSE(test, strends("bar", "foobar"));
-> > +     KUNIT_EXPECT_FALSE(test, strends("", "foo"));
-> > +     KUNIT_EXPECT_FALSE(test, strends("foobar", "ba"));
-> > +     KUNIT_EXPECT_TRUE(test, strends("", ""));
-> > +}
->
-> Have you checked the binary file? If you want this to be properly impleme=
-nted,
-> generate the suffix. (Actually making the function static inline makes my=
- point
-> really visible)
->
+> > Have you checked the binary file? If you want this to be properly implemented,
+> > generate the suffix. (Actually making the function static inline makes my point
+> > really visible)
+> 
+> Andy, this is bikeshedding. This is literally the least important
+> piece of this series. It doesn't matter for the big picture whether
+> this is inlined or not.
 
-Andy, this is bikeshedding. This is literally the least important
-piece of this series. It doesn't matter for the big picture whether
-this is inlined or not.
+It's definitely not a bikeshedding. I try to keep a bit consistency here and
+I don't see the point of bloating a kernel (binary as well) for the function
+that just a couple of lines with simple basic calls.
 
-Bartosz
+Also note that with inlined version strlen() for string literals will be
+calculated at _compile-time_! This is clear benefit.
+
+Really, library code is not as simple as dropping something to somewhere...
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
