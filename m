@@ -1,173 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2873F8460;
-	Wed, 22 Oct 2025 18:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0166C336EC2
+	for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 18:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761156273; cv=none; b=GRZNKMw7XYxjWUzwYYSxefnmGH2CXHwq1M7WScrTEdzGS8f/C70RC7K3/3ZaQfUX0IZ2Yiod9afWh6D5qtnia1uchmgfROSThq3bo2um/lXpBlM0MbZVyZEdgv0vDq2BoO2SxKf7ar/G4jdLEEI52IrFanAQA5eSA/WjkEF6iX8=
+	t=1761157364; cv=none; b=VEPuykjV5/vFL5Dv83T0rn04ROjs/bmCbFEIH8m90+Px6BUOn5U34E8H0nwx20E4vVxEvkXLjwmOeKpGkpJuv4cFN6OKEu0aLLliE/CfPB5IJKiurHmmdf7B62zXL63Tim8GD34hb3iqyllXgApq9l+DPRhuDBWc0kJtYP98XwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761156273; c=relaxed/simple;
-	bh=LX84Ld6O6Uc5VIZ8xp7cMpdz1V/yl1HsOQOPlaYWJeQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D0/2PP3RqNr+KKRjzt/RuE0S4V8nSDnppUbma02L9VsUFFaSv2Qe2KEXR9j3f3HDRL9ElWFym3QqsTA1W7VPIQkwOBqY03U7XfE26sfddlzMgDB2ZwgoUiX/sNOenBzCjt8mZOfq2NA2kR6YmHqYwcVS0CYMBUTIKap7avP88bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hQUmVje4; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1761157364; c=relaxed/simple;
+	bh=g8MCTYQWZWO3boDhs94ShYXK9k9YCHqESryZ0BaaB34=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=nKh6EjuCN3f5+iY8C0fNu//ctt5hpJ/ZO34uV0GUHov7JGqSGSlk4xH0qtqsHgjwaJbQTOBlYKqg8rwSn02ANsILIph1nGkOJdCeVk7GNkbO/JhA638DV5K4mGBRpTKNM8iAPNa0gQ+L+o2DjFjNUN9JejLKmpynu88xWL1jGaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IzQBAUGL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hQUmVje4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761156271; x=1792692271;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LX84Ld6O6Uc5VIZ8xp7cMpdz1V/yl1HsOQOPlaYWJeQ=;
-  b=hQUmVje4FutHhmEWgwtJ4ZkH+30Ln4HptJSgMYVwOeJKlvutcKBiRzL7
-   zN6cf5tFcCAuFxzQJG8lveaa7hCHTr+8DUnP+nPNeK3M4MsSypWmoi/AI
-   9ISdT+oU9i3db5VTiHSEEca/oMH0nf4VmpJSgEJJW5XegVCPWFYbKSTHw
-   7p607vaWjLPuW4VpgUSj1cUyy1oEuVwHiq9GPUM2ZYo9Nj419TijPMQ2s
-   5sLqC6PNAKnlI89EXP20Yvb+XBpqFEnHR5VRAIfPWWTD71o6CTbPzlKPA
-   lBpOry1WZaJ9tQ7n7AfkpQD0zQf7BZTEfhF/7vgZQSu351xAmmD5Zcrv+
-   Q==;
-X-CSE-ConnectionGUID: g2b0eVLmRUus/PTbHexNPA==
-X-CSE-MsgGUID: cujWg+EjRKSzm3GeORaJoQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="73984419"
-X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="73984419"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 11:04:30 -0700
-X-CSE-ConnectionGUID: hQfoa2/xR6+4lGjcBV8xAQ==
-X-CSE-MsgGUID: ZsI4OgiDTWux522dWpJ23g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="184332231"
-Received: from cpetruta-mobl1.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.83])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 11:04:25 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1vBdC9-00000001lJ5-3WrO;
-	Wed, 22 Oct 2025 21:04:21 +0300
-Date: Wed, 22 Oct 2025 21:04:21 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 04/10] gpio: shared-proxy: implement the shared GPIO
- proxy driver
-Message-ID: <aPkcpTWfTb0HOF51@smile.fi.intel.com>
-References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
- <20251022-gpio-shared-v2-4-d34aa1fbdf06@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IzQBAUGL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED7EC4CEE7;
+	Wed, 22 Oct 2025 18:22:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761157363;
+	bh=g8MCTYQWZWO3boDhs94ShYXK9k9YCHqESryZ0BaaB34=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IzQBAUGL8E/C0RWIhMsltcjSWc+WhW2ACgvBGhD0OMuRiHXRF5KFvMMtS8o6cIKyf
+	 mME3t/o23iiwUFJBWwJpkTkcWL0YN21hhdgFGw38+l0i6OtZIM+H2LF59fp+SNSFPL
+	 axh9F7iIaMqPfSrJ291HYzDYNgtQZSn2eeknANAhl+6r+Gdl7vF+nXhLQgIsFfngFw
+	 PwVgdFx+TzywJAZfHzGZuYfoeXfEO5OFAxcQrwyAyZAwybnNXbPlAs6cuqx+c7dR1N
+	 /caUoRe2ZMW4RG384RTQJc24yWZmqos+bFNo7ee39il6WXI22vLftZd/2fr0eKRRmp
+	 /4OHwAYixIRuQ==
+From: Kees Cook <kees@kernel.org>
+To: Qing Zhao <qing.zhao@oracle.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Andrew Pinski <pinskia@gmail.com>,
+	Jakub Jelinek <jakub@redhat.com>,
+	Martin Uecker <uecker@tugraz.at>,
+	Richard Biener <rguenther@suse.de>,
+	Joseph Myers <josmyers@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jeff Law <jeffreyalaw@gmail.com>,
+	Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Dan Li <ashimida.1990@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ramon de C Valle <rcvalle@google.com>,
+	Joao Moreira <joao@overdrivepizza.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
+	"Constable, Scott D" <scott.d.constable@intel.com>,
+	gcc-patches@gcc.gnu.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v5 0/7] Introduce Kernel Control Flow Integrity ABI [PR107048]
+Date: Wed, 22 Oct 2025 11:22:34 -0700
+Message-Id: <20251022181345.do.256-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251022-gpio-shared-v2-4-d34aa1fbdf06@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8426; i=kees@kernel.org; h=from:subject:message-id; bh=g8MCTYQWZWO3boDhs94ShYXK9k9YCHqESryZ0BaaB34=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk/Fd5FsnTfnL/8qHyaYsl15YyZQWw8e30/rzzP4M15s SHUSNO2o5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCIBYgz/q3ZxxknWTG9PFpYr 2/0rke9V5E2J/Hc7ku4uUwma+/ACByPDi+1Sr3idEg+W10yRsbmgmDLxzgKPM1tqXF+brnWPaLn HAQA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 22, 2025 at 03:10:43PM +0200, Bartosz Golaszewski wrote:
-> 
-> Add a virtual GPIO proxy driver which arbitrates access to a single
-> shared GPIO by multiple users. It works together with the core shared
-> GPIO support from GPIOLIB and functions by acquiring a reference to a
-> shared GPIO descriptor exposed by gpiolib-shared and making sure that
-> the state of the GPIO stays consistent.
-> 
-> In general: if there's only one user at the moment: allow it to do
-> anything as if this was a normal GPIO (in essence: just propagate calls
-> to the underlying real hardware driver). If there are more users: don't
-> allow to change the direction set by the initial user, allow to change
-> configuration options but warn about possible conflicts and finally:
-> treat the output-high value as a reference counted, logical "GPIO
-> enabled" setting, meaning: the GPIO value is set to high when the first
-> user requests it to be high and back to low once the last user stops
-> "voting" for high.
+Hi,
 
-I have two Q:s about the design:
-1) why can't the value be counted on the struct gpio_desc level?
-2) can gpio-aggregator facilities be reused (to some extent)?
+This series implements[1][2] the Linux Kernel Control Flow Integrity
+ABI, which provides a function prototype based forward edge control flow
+integrity protection by instrumenting every indirect call to check for
+a hash value before the target function address. If the hash at the call
+site and the hash at the target do not match, execution will trap.
 
-...
+Changes since v4[3]:
 
-> +#include <linux/auxiliary_bus.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/device.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/module.h>
+- Use accessors instead of globals for label counter, typeid offset.
+- Avoid using IDENTIFIER_POINTER for lookup_attribute.
+- Generally improve comments all over.
+- Update "patchable_function_entry” attribute docs for -fsanitize=kcfi.
+- Add "arity" support, needed for FineIBT+BHI, thanks to Sebastian Osterlund.
+- Update commit logs.
+- Rebase to latest master.
 
-+ types.h
+Thanks!
 
-> +#include "gpiolib-shared.h"
+-Kees
 
-...
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=107048
+[2] https://github.com/KSPP/linux/issues/369
+[3] https://lore.kernel.org/linux-hardening/20250926023737.it.616-kees@kernel.org/
 
-> +out:
-> +	if (shared_desc->highcnt)
-> +		dev_dbg(proxy->dev,
-> +			"Voted for value '%s', effective value is 'high', number of votes for 'high': %u\n",
-> +			value ? "high" : "low", shared_desc->highcnt);
-> +	else
-> +		dev_dbg(proxy->dev, "Voted for value 'low', effective value is 'low'\n");
+Kees Cook (7):
+  typeinfo: Introduce KCFI typeinfo mangling API
+  kcfi: Add core Kernel Control Flow Integrity infrastructure
+  kcfi: Add regression test suite
+  x86: Add x86_64 Kernel Control Flow Integrity implementation
+  aarch64: Add AArch64 Kernel Control Flow Integrity implementation
+  arm: Add ARM 32-bit Kernel Control Flow Integrity implementation
+  riscv: Add RISC-V Kernel Control Flow Integrity implementation
 
-You can unify and maybe save a few bytes here and there by doing something like
-this:
-
-	const char *tmp; // name is a placeholder
-
-	tmp = str_high_low(shared_desc->highcnt);
-	dev_dbg(proxy->dev,
-		"Voted for value '%s', effective value is '%s', number of votes for '%s': %u\n",
-		str_high_low(value), tmp, tmp, shared_desc->highcnt);
-
-...
-
-> +		dev_dbg(proxy->dev,
-> +			"Only one user of this shared GPIO, allowing to set direction to output with value '%s'\n",
-> +			value ? "high" : "low");
-
-str_high_low() ?
-
-> +		ret = gpiod_direction_output(desc, value);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (value) {
-> +			proxy->voted_high = true;
-> +			shared_desc->highcnt = 1;
-> +		} else {
-> +			proxy->voted_high = false;
-> +			shared_desc->highcnt = 0;
-> +		}
-> +
-> +		return 0;
-> +	}
+ gcc/kcfi.h                                    |  56 ++
+ gcc/kcfi.cc                                   | 691 ++++++++++++++++++
+ gcc/config/aarch64/aarch64-protos.h           |   5 +
+ gcc/config/arm/arm-protos.h                   |   4 +
+ gcc/config/i386/i386-protos.h                 |   1 +
+ gcc/config/i386/i386.h                        |   3 +-
+ gcc/config/riscv/riscv-protos.h               |   3 +
+ gcc/config/aarch64/aarch64.md                 |  64 +-
+ gcc/config/arm/arm.md                         |  62 ++
+ gcc/config/i386/i386.md                       |  62 +-
+ gcc/config/riscv/riscv.md                     |  76 +-
+ gcc/config/aarch64/aarch64.cc                 | 111 +++
+ gcc/config/arm/arm.cc                         | 170 +++++
+ gcc/config/i386/i386-expand.cc                |  22 +-
+ gcc/config/i386/i386-options.cc               |  11 +
+ gcc/config/i386/i386.cc                       | 192 +++++
+ gcc/config/riscv/riscv.cc                     | 169 +++++
+ gcc/doc/extend.texi                           | 136 ++++
+ gcc/doc/invoke.texi                           | 127 ++++
+ gcc/doc/tm.texi                               |  32 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi.exp            |  42 ++
+ gcc/testsuite/lib/target-supports.exp         |  14 +
+ .../gcc.dg/builtin-typeinfo-errors.c          |  28 +
+ gcc/testsuite/gcc.dg/builtin-typeinfo.c       | 350 +++++++++
+ .../gcc.dg/kcfi/kcfi-aarch64-fixed-x16.c      |  17 +
+ .../gcc.dg/kcfi/kcfi-aarch64-fixed-x17.c      |  17 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c    | 114 +++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-arm-fixed-ip.c |  15 +
+ .../gcc.dg/kcfi/kcfi-arm-fixed-r12.c          |  15 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c       | 149 ++++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c |  90 +++
+ .../gcc.dg/kcfi/kcfi-cold-partition.c         | 126 ++++
+ .../gcc.dg/kcfi/kcfi-complex-addressing.c     | 203 +++++
+ .../gcc.dg/kcfi/kcfi-complex-addressing.s     |   0
+ .../gcc.dg/kcfi/kcfi-ipa-robustness.c         |  54 ++
+ .../gcc.dg/kcfi/kcfi-move-preservation.c      | 118 +++
+ .../gcc.dg/kcfi/kcfi-no-sanitize-inline.c     | 100 +++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c  |  39 +
+ .../gcc.dg/kcfi/kcfi-offset-validation.c      |  38 +
+ .../gcc.dg/kcfi/kcfi-patchable-entry-only.c   |  64 ++
+ .../gcc.dg/kcfi/kcfi-patchable-incompatible.c |   7 +
+ .../gcc.dg/kcfi/kcfi-patchable-large.c        |  54 ++
+ .../gcc.dg/kcfi/kcfi-patchable-medium.c       |  60 ++
+ .../gcc.dg/kcfi/kcfi-patchable-prefix-only.c  |  61 ++
+ .../gcc.dg/kcfi/kcfi-riscv-fixed-t1.c         |  17 +
+ .../gcc.dg/kcfi/kcfi-riscv-fixed-t2.c         |  17 +
+ .../gcc.dg/kcfi/kcfi-riscv-fixed-t3.c         |  17 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c      | 276 +++++++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c   | 140 ++++
+ .../gcc.dg/kcfi/kcfi-trap-encoding.c          |  69 ++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c |  29 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c    |  93 +++
+ .../gcc.dg/kcfi/kcfi-x86-fixed-r10.c          |  17 +
+ .../gcc.dg/kcfi/kcfi-x86-fixed-r11.c          |  17 +
+ .../gcc.dg/kcfi/kcfi-x86-retpoline-r11.c      |  40 +
+ gcc/Makefile.in                               |   2 +
+ gcc/c-family/c-common.h                       |   1 +
+ gcc/flag-types.h                              |   2 +
+ gcc/gimple.h                                  |  22 +
+ gcc/kcfi-typeinfo.h                           |  32 +
+ gcc/tree-pass.h                               |   1 +
+ gcc/c-family/c-attribs.cc                     |  17 +-
+ gcc/c-family/c-common.cc                      |   2 +
+ gcc/c/c-parser.cc                             |  72 ++
+ gcc/common.opt                                |   4 +
+ gcc/df-scan.cc                                |   7 +
+ gcc/doc/tm.texi.in                            |  12 +
+ gcc/final.cc                                  |   3 +
+ gcc/kcfi-typeinfo.cc                          | 485 ++++++++++++
+ gcc/opts.cc                                   |   2 +
+ gcc/passes.cc                                 |   1 +
+ gcc/passes.def                                |   1 +
+ gcc/rtl.def                                   |   6 +
+ gcc/rtlanal.cc                                |   5 +
+ gcc/target.def                                |  39 +
+ gcc/toplev.cc                                 |  10 +
+ gcc/tree-inline.cc                            |  10 +
+ gcc/varasm.cc                                 |  37 +-
+ 78 files changed, 5244 insertions(+), 33 deletions(-)
+ create mode 100644 gcc/kcfi.h
+ create mode 100644 gcc/kcfi.cc
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi.exp
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo-errors.c
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-aarch64-fixed-x16.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-aarch64-fixed-x17.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-arm-fixed-ip.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-arm-fixed-r12.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-cold-partition.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.s
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-ipa-robustness.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-incompatible.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t1.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t2.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t3.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-trap-encoding.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r10.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r11.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-retpoline-r11.c
+ create mode 100644 gcc/kcfi-typeinfo.h
+ create mode 100644 gcc/kcfi-typeinfo.cc
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
