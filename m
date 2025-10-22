@@ -1,66 +1,65 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF78D30FC2A
-	for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 13:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1365A34886C
+	for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 13:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761138677; cv=none; b=aLfl57B0JPutbk77OJ/zt4cR/+iPMNUijxFCLbf5ZcAdQjD5AY0i0MPvncCorD1BiOLtj6C2wi8s5tyaZu/WvY5p4lMynZmIncZNs5Xac26iwvxUGU9Sada3fjdJsaVcauqr/TqQP4x6hFzT62t8pJQ+iZZzmPfQ911ffwSiGCA=
+	t=1761138677; cv=none; b=bXtbfMWt+CMPE7m1bn67MmlfMBW5vaIhb7lN8yKsqr5oLHsV3XBu36BXzHlGWRo9h82s6e/TDJDCTFbc8aCmoSeOQFVooSdKU8EoZ8Zj+AZGLPlFLBuLtrmRneUP2Cx692zJOwxTzui5TiBKbBEPLzZy9PryBe4UE9FhTuVMx3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1761138677; c=relaxed/simple;
-	bh=LPm9YBzUQ4gQfPx8tMp97rKvgm+IC1c2b9DnnDCOC8U=;
+	bh=o3i7hzZy+G5XVTT/nrasUIRd9dxxVmZhC6vwJZuaTAA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SBeNiBDDru17K+1HOhX/4w1BuwJtcZHHOFUMCfmn8TNYO8HxHRicBZ66MV5E8urA/3uPj9ZgYd4W9oQE7iwzN1ezSyAuCToeMkbb8JRBPPH0OxWHi71nGmfIxWGsK1UiDZ/vYuMS5NFWU06Q4KCHkoGof0P3FnZW/a+oLlly2/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Gfi4QrAn; arc=none smtp.client-ip=209.85.128.53
+	 In-Reply-To:To:Cc; b=LHQLmL2xKXbWZ0oeF8ZI+vhmrpTHGXVLaL0b8WOfcNaLj9NlCgMiIBWkFjzv2Rr14S4qtzSXf66v6XBMgcjsmsBwUhW2p1/hH16siq139row4Gu+iqFDx/iB56qNp9iFEf+rsZ+g53rVtLCcAyx+6iRSst9UIBVo5rZ5MVFZli0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=l2ueCF4X; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Gfi4QrAn"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-47114a40161so26769085e9.3
-        for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 06:11:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="l2ueCF4X"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4710022571cso58219765e9.3
+        for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 06:11:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761138671; x=1761743471; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761138673; x=1761743473; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7JxC4wP5bi/PqrvaNLx4qtWBYafzvA8adhEOxdIGx4g=;
-        b=Gfi4QrAnssPfFlc8pR1BSuXZ1EpTExNqaLGYPZgcUy5g4e4iI4A14wO5mSBbcATMJh
-         7iiHEAWxWoRwkGLtdIJ0Z3rUWeo5ba0Aq/+RAxFT6PDBrUcqBJ1Qu9wNiJ4HGUjLo7gR
-         7BGnQMn1pvLab7aTPyFlyjPaqX9hJq0QoUb5+Ip3hnRwDQl8+MB0ELQdy98eob6LhyFf
-         E03NzoE/c3ONIt7TZ510pz/sJyYbsSEyvLsrFUf007UeT0RFIuhQ2aA92gD3dF9BfEUA
-         7VBBRLpxDczniy2/xzsP3VsfPtfr0sK0blhcK0VCVCH9o0lvChrJ/ORUjdNZGxLYAP/P
-         68Gg==
+        bh=NmyJwyGotfh3JyXhmJS/1rlzs+tHyJOuYkq2PFxtZmQ=;
+        b=l2ueCF4XM9Aqpc5JXNE5pziPjP4cP77Evs/POq4tQJMwgSUIY/ELByr+58FVS9THac
+         huwrNH9XkVNwYUAG3i33KrQ4ozEJSZbQdoRcLPxrYp2HkEo+FZ7uuxQgfYRXnUe1wfBK
+         uQ+Ik+ob8AzUkF8k4jeoE6xOrdo32IZR4WwlKkIWVgKs7qVykoTpnGV6RG/PZD7eRcpM
+         0Zw6JinzH2hgyrGP9MDRSSRxEJtPPVX35LOw4ZMqzbpZLIiyLiOGcii4NWf0B8EQTFJD
+         InLWa/7VWiRLyWQe3L9sXa4zEAx4U0HHHLd1J03XQhvRadRrnFXR6no6ywU5/1p2dmkv
+         vSnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761138671; x=1761743471;
+        d=1e100.net; s=20230601; t=1761138673; x=1761743473;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7JxC4wP5bi/PqrvaNLx4qtWBYafzvA8adhEOxdIGx4g=;
-        b=wLRfFwvA/HdmuCgOc9n/djjMWgnUIReDE/TmJhdDBcg0dGefQzPYk0rniDLCzGJvd6
-         svWW8sMoirTRF1dDTFfR0TvPo2VNC0awLrR5zH5QIx0XrysBeo0n4mBDrwTpIVrZC3ek
-         LqdJwQLMQhxFMbHEi06N8GkoQDh6JBbZnqHbVjvDNytyTlQhC5m/ER+dL3OlygbWG5TC
-         dn+VefqZCxR3nIf8RhYUd4CmvMaA8Iu0QP2UxEWiaqBumuPNSz4FqaK1SS7OCPwzXRg/
-         3CUqMyOjF+BYLDR4yP21ArgTIAF2l2UlGOTXww3Ty6L9rH4wyCnGvJEqhql2qU9psva0
-         53pw==
-X-Gm-Message-State: AOJu0YyYoiR7Z9a7dpgZmb+BG8wl2qXXWGM5xGi/OvoVRGnYOsD4NRCz
-	ohBFpM8grFTldXYZCkq84mnktZlssR9akGpNDcnpYm0aFxKd0N4rP589GqH00YaLFIA=
-X-Gm-Gg: ASbGnctfa63rsnn0frGdy+I+BVtiyv2dNs+itLdo0IPPoaeFyKYV3aRBY62l46zj2VN
-	iF5fUpjrsHKeyP6FFul3H9ExYwcue+CMAkjTeVPUjelockrNj4duv+yAFYpMWz/E5M8gFCpQmyW
-	5yeAFWW2pQJy358xTwcZkhnfWYsR1N2ErOiWy3JttDNH4nhmvhl0v0A+9HQKYkxNm8w0qFrwCzV
-	+CIqJbGNU2HF2pfq8Jv0D40v+8l61f3kfHDnRWWnyVr9rR1FcAyK7gJFWoQyrFX1xvfLB7g+j1N
-	lNXohfegniWA38R+hrfOeBiCpihZ1I2jYgfGi/Gui2Sm29FOZEv3JdXDDcWBR7cd8Oq2rjb06AD
-	6LjPKSL4ReRbdxV7o4OPAbcoIFdnuaq3rBiavsMbcZ0OFUPwhKhGkihvHZS3527PE7JvLILw=
-X-Google-Smtp-Source: AGHT+IHo7fpOJ7A4/PDFJApxVJPuvZ2+KhtSRrGrKQkN9hTz6RoVFtBwlxLDGySMMqM9OycqmRHnhw==
-X-Received: by 2002:a05:600c:3e07:b0:46e:450d:e037 with SMTP id 5b1f17b1804b1-4711786c560mr160425345e9.5.1761138671092;
-        Wed, 22 Oct 2025 06:11:11 -0700 (PDT)
+        bh=NmyJwyGotfh3JyXhmJS/1rlzs+tHyJOuYkq2PFxtZmQ=;
+        b=RrSS0iXr6LmUsuVPyLOESx7XZB3Zo4hf0V15039f3UBpRX7jnKYB9v4wuYWJ7ApxIA
+         tuSiGgkpZ95s7/r5DPlkQBf4d1EhojCfCtKSzQ2hpJ5jZHP5+Bu44h7dVg6TuCePnbCg
+         jPwTRJIqTUdcLwYSy2G70AdfJwCLmwspooFtOg5CO6hy09AE1hzPXrC6K0HR2AclJ1bX
+         P09obnBnKST137+WTYYtCF7s+YO84ejCiaPrulZQ4do+xdUMkYKFzvpOAPliWJUynQr8
+         lSc9NF5epqqpavhCNheCLufCsEGlhVyVwQeeUPRJLjkXrWfSzKewtNbvptV1EwO2CXyT
+         u1+w==
+X-Gm-Message-State: AOJu0Yx3tUXQTWs54bGz6pJ35wLDkR8I66+Px/YHo7eqB/+8DHWqnnnY
+	YwMfaMskKIgK5AStETszqReswG02qqj7/FBkL1lWjCTM3gRh9q0oLLSxQXGMUWD/YNc=
+X-Gm-Gg: ASbGncvJfBQ9bMSrkvWIMf3YTjatJwWxHORx5UGhutSp3vRyE0fnIxlyNF/WLDZhvFy
+	EPt2FXif/YIFQK2VfqyS2fdA9tMEif+OQuz5O/5f7OwzYqkZIIW/RaXbOO8AgTnjZ3YcVvrTmxF
+	RQNXOjZFYKydrCJT4G1IZ3sPEcadcJ8iiwRIjKbNemOdmwN8tfqYVhFMGscmTyuQqMvzpZAYnzI
+	t4epWYnLAt+naLQaXKziTj0HUJ//o2WmuFf55PZP8MPZUqugwOyeZZ2nF3lkkq+H5YrYv01Ob70
+	oB2nJLFW5KPclTiHSqKOsHhKW1FaB0n0+y9tzWVhOJ01RdlR92MBzfBZdvODF14MP0nhxcvwNbG
+	G2GQ8TE+zDcH8Z2g7ylpGOkuoOxC7p6FnFnWeRMqS6ZCBcnf32a749TYqdiAQWYYWlyMJ5IA=
+X-Google-Smtp-Source: AGHT+IFvKb3JoyG866nslJyNC3Ibg/oUQ/wlCU6/03uxa7bXbKsZVrSqlRlb8S4Ya6isf5ldIVuivg==
+X-Received: by 2002:a05:600d:14:b0:46e:4705:4958 with SMTP id 5b1f17b1804b1-471179174f4mr126289245e9.30.1761138673264;
+        Wed, 22 Oct 2025 06:11:13 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:69df:73af:f16a:eada])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47496afd459sm38839905e9.1.2025.10.22.06.11.08
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47496afd459sm38839905e9.1.2025.10.22.06.11.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Oct 2025 06:11:09 -0700 (PDT)
+        Wed, 22 Oct 2025 06:11:11 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 22 Oct 2025 15:10:44 +0200
-Subject: [PATCH v2 05/10] gpiolib: support shared GPIOs in core subsystem
- code
+Date: Wed, 22 Oct 2025 15:10:45 +0200
+Subject: [PATCH v2 06/10] gpio: provide gpiod_is_shared()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251022-gpio-shared-v2-5-d34aa1fbdf06@linaro.org>
+Message-Id: <20251022-gpio-shared-v2-6-d34aa1fbdf06@linaro.org>
 References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
 In-Reply-To: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
 To: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
@@ -90,141 +89,143 @@ Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4422;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4760;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=zqXCTaI+O2fDGRyRHcv5jGy43WgDG3dY8izHkuOqT+8=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBo+NfdN6WlD8MNTI0j9WttuM9GjMl2b/JJHHe5o
- KvW0ta3RKaJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaPjX3QAKCRARpy6gFHHX
- cqSuD/9q1cd7HMe1XSEd4nF6dgis0elTdxxSKaEEOn4CmMimW6BoSdKLxlhAjaUYHolIY3lso6q
- FvKuLQ2VYwRNhHYvR2ZyjsPNv1adhD8f9WaAD9qjMJX942vR9KW4DYf7u83G+fMRXTW01V0x4tA
- sYHA44FyHa5JRbjKnYc0AjlnS3Rj50FjhhJWALXcI3YWU/sqcu90aof58IAI3hZQ/35j9i++VAz
- KoON8D4dPHJONeZh5VpM4guVUN5GRz3scQtiUlqE7Zb+QkL5pjX8Y8K2XkdSVh5Qjr4jJwmI2f/
- FcHboakvuRX4D8eBfb6B3ctXaQN8gjBOjkBo316BiDVQAMdkyU8GyoKptnm4howzrP1El0SHW8L
- Yh57Q8C+nVmRnqpJE5h9gPsg3MLEpHp67bw+yEhHqjaOWt3uunDCEgE6+ckk3jNmWu/2JowcaJh
- ZIc28gzPMQTPRr+bKm/X+Bn6GkbKQIIckVPwWvKbv7RaI8xqxZrd4m6jGwiX3tYYMSNI49L56h8
- akFjclqSdu2sKUzNtYnNeCRjQVrMyGPQi862Eens6P6K8VJ6EfQbAwEaj0qwqwUn8i8bQb8/OJ1
- IASPaL60AFqsfMYYYX1IwD0mdykLKKhYJQjKZcpBakJxjaCtLNt16nsAVSj/FSsTbTwvMwZ3prk
- 4hqIq3rq17kDweA==
+ bh=x7L0RijU+LCdHfGCAJ/VkOYZp/t4v/DX9On78RPb0YU=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBo+NfdZs8MgTMizrWDvDv1UjUZTogiIeLTWekA/
+ YC4FrScCIGJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaPjX3QAKCRARpy6gFHHX
+ cnAgEADBzLwtXPh2XKMVjNVTb3+/+na90OoVl87WRHstD2bKhyf3X1zCGxWwdcpFH7ZAY3X5cj6
+ /QMO3st1TRPyuwvJjld52dtJWPYqkpxKokQOroUrZUNtkurk1CW87T3aGzO8lOZbo0Lfm23dQwO
+ sBkrJTztEWsGyJiq6ofdmzamQhN1EVEQJRWC/c2QY1lozPK2lp5Egdi0Z0tlhxeqpA/phf9Ncw7
+ Qe8kksbK1r5OO4SyBZZxCe9gNQYH04PEzWsgCI5oT0pKIyaFaQXAtEhUI8S70m+77npYxr8Mzz0
+ xBzSAFPuVIYx3RLeQFPnpxMpT5XgGTzD4knJaa0ONGXTZGLYvUg7VJK2tmwb1bhL3aShR73MpDv
+ MTeQjM7Ss/oksGzF5/Pt+VPnNBESFJ2cwYIuCP0S14CuOoqZwvMmrU4Afd8ZyS8CnQjfbzNkp/n
+ abe0kCW+B8VEJMnXQiboWKlmEvmOSpmPFAlv8e/jNV8e/JV9stT4bXTjKxHtoQBjC1Df4Va/24w
+ 0o/JgFDARBNyFVOM3GYNWuZjFv8lSd/Ux3+vFPnWEhyVDjDbAqoeZrJL3fbWfiCfZmlup58aZPA
+ PzJmNLr/bcmpc/+f4I4gy+TNt7c88z+qB7fnIdOPkbYuTBDtkrGpHMutGANHANOxN3C7Pt+Uy1f
+ 5DYXoQM9Pkhsz0Q==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-As the final step in adding official support for shared GPIOs, enable
-the previously added elements in core GPIO subsystem code. Set-up shared
-GPIOs when adding a GPIO chip, tear it down on removal and check if a
-GPIO descriptor looked up during the firmware-node stage is shared and
-fall-back to machine lookup in this case.
+Provide an interface allowing consumers to check if a GPIO descriptor
+represents a GPIO that can potentially be shared by multiple consumers
+at the same time. This is exposed to allow subsystems that already
+work around the limitations of the current non-exclusive GPIO handling
+in some ways, to gradually convert to relying on the new shared GPIO
+feature of GPIOLIB.
+
+Extend the gpiolib-shared module to mark the GPIO shared proxy
+descriptors with a flag checked by the new interface.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpiolib.c | 50 +++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 41 insertions(+), 9 deletions(-)
+ drivers/gpio/gpiolib-shared.c | 18 ++++++++++++++++++
+ drivers/gpio/gpiolib.c        | 20 ++++++++++++++++++++
+ drivers/gpio/gpiolib.h        |  1 +
+ include/linux/gpio/consumer.h |  9 +++++++++
+ 4 files changed, 48 insertions(+)
 
+diff --git a/drivers/gpio/gpiolib-shared.c b/drivers/gpio/gpiolib-shared.c
+index d2087d0df4ab7bcd23d3736e341c0f57cd748af4..b5c33bccff0765eb940fedd5d678c47a05f1a25d 100644
+--- a/drivers/gpio/gpiolib-shared.c
++++ b/drivers/gpio/gpiolib-shared.c
+@@ -309,6 +309,24 @@ int gpio_device_setup_shared(struct gpio_device *gdev)
+ 
+ 	guard(mutex)(&gpio_shared_lock);
+ 
++	list_for_each_entry(entry, &gpio_shared_list, list) {
++		list_for_each_entry(ref, &entry->refs, list) {
++			if (gdev->dev.parent == &ref->adev.dev) {
++				/*
++				 * This is a shared GPIO proxy. Mark its
++				 * descriptor as such and return here.
++				 */
++				set_bit(GPIOD_FLAG_SHARED_PROXY,
++					&gdev->descs[0].flags);
++				return 0;
++			}
++		}
++	}
++
++	/*
++	 * This is not a shared GPIO proxy but it still may be the device
++	 * exposing shared pins. Find them and create the proxy devices.
++	 */
+ 	list_for_each_entry(entry, &gpio_shared_list, list) {
+ 		if (!device_match_fwnode(&gdev->dev, entry->fwnode))
+ 			continue;
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index ba5df8a233fe75e16bae615f7f7c8591066c056e..03fd60e787fcf5846519fb2db9a701770ed15d6b 100644
+index 03fd60e787fcf5846519fb2db9a701770ed15d6b..d689065471a1269ac0671b964c67670df5c95dd7 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -37,6 +37,7 @@
- #include "gpiolib-acpi.h"
- #include "gpiolib-cdev.h"
- #include "gpiolib-of.h"
-+#include "gpiolib-shared.h"
- #include "gpiolib-swnode.h"
- #include "gpiolib-sysfs.h"
- #include "gpiolib.h"
-@@ -1200,6 +1201,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	if (ret)
- 		goto err_remove_irqchip_mask;
+@@ -3984,6 +3984,26 @@ int gpiod_set_consumer_name(struct gpio_desc *desc, const char *name)
+ }
+ EXPORT_SYMBOL_GPL(gpiod_set_consumer_name);
  
-+	ret = gpio_device_setup_shared(gdev);
-+	if (ret)
-+		goto err_remove_irqchip;
++/**
++ * gpiod_is_shared() - check if this GPIO can be shared by multiple consumers
++ * @desc: GPIO to inspect
++ *
++ * Returns:
++ * True if this GPIO can be shared by multiple consumers at once. False if it's
++ * a regular, exclusive GPIO.
++ *
++ * Note:
++ * This function returning true does not mean that this GPIO is currently being
++ * shared. It means the GPIO core has registered the fact that the firmware
++ * configuration indicates that it can be shared by multiple consumers and is
++ * in charge of arbitrating the access.
++ */
++bool gpiod_is_shared(const struct gpio_desc *desc)
++{
++	return test_bit(GPIOD_FLAG_SHARED_PROXY, &desc->flags);
++}
++EXPORT_SYMBOL_GPL(gpiod_is_shared);
 +
- 	/*
- 	 * By first adding the chardev, and then adding the device,
- 	 * we get a device node entry in sysfs under
-@@ -1211,10 +1216,13 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	if (gpiolib_initialized) {
- 		ret = gpiochip_setup_dev(gdev);
- 		if (ret)
--			goto err_remove_irqchip;
-+			goto err_teardown_shared;
- 	}
-+
- 	return 0;
+ /**
+  * gpiod_to_irq() - return the IRQ corresponding to a GPIO
+  * @desc: gpio whose IRQ will be returned (already requested)
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index ae9aa145ca055c08dad55a537567a27de57f7066..8deed8a7d1128f01f0696af040d06f5fe140c7f8 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -205,6 +205,7 @@ struct gpio_desc {
+ #define GPIOD_FLAG_EVENT_CLOCK_REALTIME	18 /* GPIO CDEV reports REALTIME timestamps in events */
+ #define GPIOD_FLAG_EVENT_CLOCK_HTE	19 /* GPIO CDEV reports hardware timestamps in events */
+ #define GPIOD_FLAG_SHARED		20 /* GPIO is shared by multiple consumers */
++#define GPIOD_FLAG_SHARED_PROXY		21 /* GPIO is a virtual proxy to a physically shared pin. */
  
-+err_teardown_shared:
-+	gpio_device_teardown_shared(gdev);
- err_remove_irqchip:
- 	gpiochip_irqchip_remove(gc);
- err_remove_irqchip_mask:
-@@ -1283,6 +1291,7 @@ void gpiochip_remove(struct gpio_chip *gc)
- 	/* Numb the device, cancelling all outstanding operations */
- 	rcu_assign_pointer(gdev->chip, NULL);
- 	synchronize_srcu(&gdev->srcu);
-+	gpio_device_teardown_shared(gdev);
- 	gpiochip_irqchip_remove(gc);
- 	acpi_gpiochip_remove(gc);
- 	of_gpiochip_remove(gc);
-@@ -4646,11 +4655,29 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
- 	scoped_guard(srcu, &gpio_devices_srcu) {
- 		desc = gpiod_fwnode_lookup(fwnode, consumer, con_id, idx,
- 					   &flags, &lookupflags);
-+		if (!IS_ERR_OR_NULL(desc) &&
-+		    test_bit(GPIOD_FLAG_SHARED, &desc->flags)) {
-+			/*
-+			 * We're dealing with a GPIO shared by multiple
-+			 * consumers. This is the moment to add the machine
-+			 * lookup table for the proxy device as previously
-+			 * we only knew the consumer's fwnode.
-+			 */
-+			ret = gpio_shared_add_proxy_lookup(consumer, lookupflags);
-+			if (ret)
-+				return ERR_PTR(ret);
-+
-+			/* Trigger platform lookup for shared GPIO proxy. */
-+			desc = ERR_PTR(-ENOENT);
-+			/* Trigger it even for fwnode-only gpiod_get(). */
-+			platform_lookup_allowed = true;
-+		}
-+
- 		if (gpiod_not_found(desc) && platform_lookup_allowed) {
- 			/*
- 			 * Either we are not using DT or ACPI, or their lookup
--			 * did not return a result. In that case, use platform
--			 * lookup as a fallback.
-+			 * did not return a result or this is a shared GPIO. In
-+			 * that case, use platform lookup as a fallback.
- 			 */
- 			dev_dbg(consumer,
- 				"using lookup tables for GPIO lookup\n");
-@@ -4673,14 +4700,19 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
- 			return ERR_PTR(ret);
+ 	/* Connection label */
+ 	struct gpio_desc_label __rcu *label;
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index 00df68c514051434e6fa67dc2307c6a8ce4ce3df..a8acb7c0b5af5066fd05e533468fc28616c68d78 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -167,6 +167,8 @@ int gpiod_cansleep(const struct gpio_desc *desc);
+ int gpiod_to_irq(const struct gpio_desc *desc);
+ int gpiod_set_consumer_name(struct gpio_desc *desc, const char *name);
  
- 		/*
--		 * This happens when there are several consumers for
--		 * the same GPIO line: we just return here without
--		 * further initialization. It is a bit of a hack.
--		 * This is necessary to support fixed regulators.
-+		 * This happens when there are several consumers for the same
-+		 * GPIO line: we just return here without further
-+		 * initialization. It's a hack introduced long ago to support
-+		 * fixed regulators. We now have a better solution with
-+		 * automated scanning where affected platforms just need to
-+		 * select the provided Kconfig option.
- 		 *
--		 * FIXME: Make this more sane and safe.
-+		 * FIXME: Remove the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag after
-+		 * making sure all platforms use the new mechanism.
- 		 */
--		dev_info(consumer, "nonexclusive access to GPIO for %s\n", name);
-+		dev_info(consumer,
-+			 "nonexclusive access to GPIO for %s, consider updating your code to using gpio-shared-proxy\n",
-+			 name);
- 		return desc;
- 	}
++bool gpiod_is_shared(const struct gpio_desc *desc);
++
+ /* Convert between the old gpio_ and new gpiod_ interfaces */
+ struct gpio_desc *gpio_to_desc(unsigned gpio);
+ int desc_to_gpio(const struct gpio_desc *desc);
+@@ -520,6 +522,13 @@ static inline int gpiod_set_consumer_name(struct gpio_desc *desc,
+ 	return -EINVAL;
+ }
  
++static inline bool gpiod_is_shared(const struct gpio_desc *desc)
++{
++	/* GPIO can never have been requested */
++	WARN_ON(desc);
++	return false;
++}
++
+ static inline struct gpio_desc *gpio_to_desc(unsigned gpio)
+ {
+ 	return NULL;
 
 -- 
 2.48.1
