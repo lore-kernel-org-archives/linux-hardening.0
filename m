@@ -1,53 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699682D0C60;
-	Wed, 22 Oct 2025 17:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2873F8460;
+	Wed, 22 Oct 2025 18:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761154458; cv=none; b=Mx0KvpaHNBLJkkfFoKF3KEDCAKeomD/IxtAwsl9z0dUWFNAZwLI8gJRbNG6582FYlTkKsRPt0om413lUsyuJ92d6crpa2lzT7Z9shWDobPsVEs6AWRKO9Ai1+2jSolAvuDTKuvamgp7fpcNjhIKxM8VEU9RSmJmSclVvbf5fAp0=
+	t=1761156273; cv=none; b=GRZNKMw7XYxjWUzwYYSxefnmGH2CXHwq1M7WScrTEdzGS8f/C70RC7K3/3ZaQfUX0IZ2Yiod9afWh6D5qtnia1uchmgfROSThq3bo2um/lXpBlM0MbZVyZEdgv0vDq2BoO2SxKf7ar/G4jdLEEI52IrFanAQA5eSA/WjkEF6iX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761154458; c=relaxed/simple;
-	bh=dV+5NKwJdbhUSGEqeN+AL+dVtPcIoMxzkpXqx3wMka4=;
+	s=arc-20240116; t=1761156273; c=relaxed/simple;
+	bh=LX84Ld6O6Uc5VIZ8xp7cMpdz1V/yl1HsOQOPlaYWJeQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fT93nrcVuTl7xHjYqjt0qxRT87QAKokUAS8WCbp1ZtiCJ/zE2fcHhkW1jXGQQPmWIKV3VTMJDfGS68GLSr22B3hTtzbQZFMaGsFMI/qfUG+KbW+cdWjuUI7q9YXtYCMUMTLYJ7EfZGeUDNsYeWOkEMYEFTbwGeHI+C25Uixuvl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iEpl5Qva; arc=none smtp.client-ip=198.175.65.12
+	 Content-Type:Content-Disposition:In-Reply-To; b=D0/2PP3RqNr+KKRjzt/RuE0S4V8nSDnppUbma02L9VsUFFaSv2Qe2KEXR9j3f3HDRL9ElWFym3QqsTA1W7VPIQkwOBqY03U7XfE26sfddlzMgDB2ZwgoUiX/sNOenBzCjt8mZOfq2NA2kR6YmHqYwcVS0CYMBUTIKap7avP88bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hQUmVje4; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iEpl5Qva"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hQUmVje4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761154456; x=1792690456;
+  t=1761156271; x=1792692271;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=dV+5NKwJdbhUSGEqeN+AL+dVtPcIoMxzkpXqx3wMka4=;
-  b=iEpl5QvagBe8QTi77Kos2/H0Rmqmq68hu6eaxCDXkCXdWgt9X5NQ9CrS
-   dbOYWAVNOPVg2N1y2AuKu15evlR6B5meW7fK/XVYpgQYkUlP1SK/cWe8F
-   BXveU2kmw/0ujkx9IadkeRA/CG+euedewavEBz8t1cJHm+60JnN0xS0Jj
-   gN5C5VFl0QVYZyfB/rD2svEYZBOFdNph9LQqgKjaDyMJX9a3JaHgcwFaY
-   If8RVdsCGOYn49Wp459fDvBJxOlu2rOwOuy9BThBJmM2rcil3zaO/Y2y6
-   j7doRg4iuHoQol18QN96b7PNq39awVlM/GAnV/I3cROciWyt3N7EIwWfO
-   A==;
-X-CSE-ConnectionGUID: 6vZEv/DNTliRjRehUvLAcA==
-X-CSE-MsgGUID: CeD4EQwPSM2kUaXP+if3rA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74751315"
+  bh=LX84Ld6O6Uc5VIZ8xp7cMpdz1V/yl1HsOQOPlaYWJeQ=;
+  b=hQUmVje4FutHhmEWgwtJ4ZkH+30Ln4HptJSgMYVwOeJKlvutcKBiRzL7
+   zN6cf5tFcCAuFxzQJG8lveaa7hCHTr+8DUnP+nPNeK3M4MsSypWmoi/AI
+   9ISdT+oU9i3db5VTiHSEEca/oMH0nf4VmpJSgEJJW5XegVCPWFYbKSTHw
+   7p607vaWjLPuW4VpgUSj1cUyy1oEuVwHiq9GPUM2ZYo9Nj419TijPMQ2s
+   5sLqC6PNAKnlI89EXP20Yvb+XBpqFEnHR5VRAIfPWWTD71o6CTbPzlKPA
+   lBpOry1WZaJ9tQ7n7AfkpQD0zQf7BZTEfhF/7vgZQSu351xAmmD5Zcrv+
+   Q==;
+X-CSE-ConnectionGUID: g2b0eVLmRUus/PTbHexNPA==
+X-CSE-MsgGUID: cujWg+EjRKSzm3GeORaJoQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="73984419"
 X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="74751315"
+   d="scan'208";a="73984419"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 10:34:15 -0700
-X-CSE-ConnectionGUID: X7hpJLYNShiXzOXB9nCdEA==
-X-CSE-MsgGUID: jAZp2GJASS2/Swqf9D3Xmg==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 11:04:30 -0700
+X-CSE-ConnectionGUID: hQfoa2/xR6+4lGjcBV8xAQ==
+X-CSE-MsgGUID: ZsI4OgiDTWux522dWpJ23g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="184326068"
+   d="scan'208";a="184332231"
 Received: from cpetruta-mobl1.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.83])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 10:34:10 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 11:04:25 -0700
 Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1vBcit-00000001l1m-0V63;
-	Wed, 22 Oct 2025 20:34:07 +0300
-Date: Wed, 22 Oct 2025 20:34:06 +0300
+	id 1vBdC9-00000001lJ5-3WrO;
+	Wed, 22 Oct 2025 21:04:21 +0300
+Date: Wed, 22 Oct 2025 21:04:21 +0300
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
@@ -71,11 +71,11 @@ Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
 	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 03/10] gpiolib: implement low-level, shared GPIO
- support
-Message-ID: <aPkVjoWkP04Q-2xP@smile.fi.intel.com>
+Subject: Re: [PATCH v2 04/10] gpio: shared-proxy: implement the shared GPIO
+ proxy driver
+Message-ID: <aPkcpTWfTb0HOF51@smile.fi.intel.com>
 References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
- <20251022-gpio-shared-v2-3-d34aa1fbdf06@linaro.org>
+ <20251022-gpio-shared-v2-4-d34aa1fbdf06@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -84,201 +84,87 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251022-gpio-shared-v2-3-d34aa1fbdf06@linaro.org>
+In-Reply-To: <20251022-gpio-shared-v2-4-d34aa1fbdf06@linaro.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Oct 22, 2025 at 03:10:42PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Oct 22, 2025 at 03:10:43PM +0200, Bartosz Golaszewski wrote:
 > 
-> This module scans the device tree (for now only OF nodes are supported
-> but care is taken to make other fwnode implementations easy to
-> integrate) and determines which GPIO lines are shared by multiple users.
-> It stores that information in memory. When the GPIO chip exposing shared
-> lines is registered, the shared GPIO descriptors it exposes are marked
-> as shared and virtual "proxy" devices that mediate access to the shared
-> lines are created. When a consumer of a shared GPIO looks it up, its
-> fwnode lookup is redirected to a just-in-time machine lookup that points
-> to this proxy device.
+> Add a virtual GPIO proxy driver which arbitrates access to a single
+> shared GPIO by multiple users. It works together with the core shared
+> GPIO support from GPIOLIB and functions by acquiring a reference to a
+> shared GPIO descriptor exposed by gpiolib-shared and making sure that
+> the state of the GPIO stays consistent.
 > 
-> This code can be compiled out on platforms which don't use shared GPIOs.
+> In general: if there's only one user at the moment: allow it to do
+> anything as if this was a normal GPIO (in essence: just propagate calls
+> to the underlying real hardware driver). If there are more users: don't
+> allow to change the direction set by the initial user, allow to change
+> configuration options but warn about possible conflicts and finally:
+> treat the output-high value as a reference counted, logical "GPIO
+> enabled" setting, meaning: the GPIO value is set to high when the first
+> user requests it to be high and back to low once the last user stops
+> "voting" for high.
+
+I have two Q:s about the design:
+1) why can't the value be counted on the struct gpio_desc level?
+2) can gpio-aggregator facilities be reused (to some extent)?
 
 ...
 
-> +		if (!strends(prop->name, "-gpios") &&
-> +		    !strends(prop->name, "-gpio") &&
+> +#include <linux/auxiliary_bus.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/device.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/module.h>
 
-> +		    strcmp(prop->name, "gpios") != 0 &&
-> +		    strcmp(prop->name, "gpio") != 0)
++ types.h
 
-We have gpio_suffixes for a reason (also refer to for_each_gpio_property_name()
-implementation, and yes I understand the difference, this is just a reference
-for an example of use of the existing list of suffixes).
-
-> +			continue;
-
-...
-
-> +			if (strends(prop->name, "gpios"))
-> +				suffix = "-gpios";
-> +			else if (strends(prop->name, "gpio"))
-> +				suffix = "-gpio";
-> +			else
-> +				suffix = NULL;
-> +			if (!suffix)
-> +				continue;
-
-In a similar way.
-
-> +			/* We only set con_id if there's actually one. */
-> +			if (strcmp(prop->name, "gpios") && strcmp(prop->name, "gpio")) {
-
-And again...
-
-> +				ref->con_id = kstrdup(prop->name, GFP_KERNEL);
-> +				if (!ref->con_id)
-> +					return -ENOMEM;
-> +
-> +				con_id_len = strlen(ref->con_id);
-> +				suffix_len = strlen(suffix);
-> +
-> +				ref->con_id[con_id_len - suffix_len] = '\0';
-> +			}
+> +#include "gpiolib-shared.h"
 
 ...
 
-> +	adev->dev.parent = gdev->dev.parent;
-> +	/* No need to dev->release() anything. */
+> +out:
+> +	if (shared_desc->highcnt)
+> +		dev_dbg(proxy->dev,
+> +			"Voted for value '%s', effective value is 'high', number of votes for 'high': %u\n",
+> +			value ? "high" : "low", shared_desc->highcnt);
+> +	else
+> +		dev_dbg(proxy->dev, "Voted for value 'low', effective value is 'low'\n");
 
-And is it okay?
+You can unify and maybe save a few bytes here and there by doing something like
+this:
 
-See drivers/base/core.c:2567
+	const char *tmp; // name is a placeholder
 
-WARN(1, KERN_ERR "Device '%s' does not have a release() function, it is broken and must be fixed. See Documentation/core-api/kobject.rst.\n",
-
-...
-
-> +	pr_debug("Created an auxiliary GPIO proxy %s for GPIO device %s\n",
-> +		 dev_name(&adev->dev), gpio_device_get_label(gdev));
-
-Are you expecting dev_name() to be NULL in some cases? Otherwise why is this
-not a dev_dbg() call?
-
-
-> +	return 0;
-> +}
+	tmp = str_high_low(shared_desc->highcnt);
+	dev_dbg(proxy->dev,
+		"Voted for value '%s', effective value is '%s', number of votes for '%s': %u\n",
+		str_high_low(value), tmp, tmp, shared_desc->highcnt);
 
 ...
 
-> +			char *key __free(kfree) =
-> +				kasprintf(GFP_KERNEL,
-> +					  KBUILD_MODNAME ".proxy.%u",
-> +					  ref->adev.id);
+> +		dev_dbg(proxy->dev,
+> +			"Only one user of this shared GPIO, allowing to set direction to output with value '%s'\n",
+> +			value ? "high" : "low");
 
-This looks awful. Just allow a bit longer line
+str_high_low() ?
 
-> +			if (!key)
-> +				return -ENOMEM;
-
-...
-
-> +static void gpio_shared_remove_adev(struct auxiliary_device *adev)
-> +{
-> +	lockdep_assert_held(&gpio_shared_lock);
+> +		ret = gpiod_direction_output(desc, value);
+> +		if (ret)
+> +			return ret;
 > +
-> +	auxiliary_device_uninit(adev);
-> +	auxiliary_device_delete(adev);
-
-_destroy() ? Esp. taking into account the (wrong?) ordering.
-
-> +}
-
-...
-
-> +		set_bit(GPIOD_FLAG_SHARED, flags);
-
-Do you need this to be atomic?
-
-> +		/*
-> +		 * Shared GPIOs are not requested via the normal path. Make
-> +		 * them inaccessible to anyone even before we register the
-> +		 * chip.
-> +		 */
-> +		set_bit(GPIOD_FLAG_REQUESTED, flags);
-
-Ditto.
-
-...
-
-> +struct gpio_shared_desc *devm_gpiod_shared_get(struct device *dev)
-> +{
-> +	struct auxiliary_device *adev = to_auxiliary_dev(dev);
-> +	struct gpio_shared_desc *shared_desc;
-> +	struct gpio_shared_entry *entry;
-> +	struct gpio_shared_ref *ref;
-> +	struct gpio_device *gdev;
-> +	int ret;
-
-> + +	scoped_guard(mutex, &gpio_shared_lock) {
-
-Much better to split the below to a helper and make it run under a
-scoped_guard() here or call a guard()() there.
-
-> +		list_for_each_entry(entry, &gpio_shared_list, list) {
-> +			list_for_each_entry(ref, &entry->refs, list) {
-> +				if (adev != &ref->adev)
-> +					continue;
-> +
-> +				if (entry->shared_desc) {
-> +					kref_get(&entry->ref);
-> +					shared_desc = entry->shared_desc;
-> +					break;
-> +				}
-> +
-> +				shared_desc = kzalloc(sizeof(*shared_desc), GFP_KERNEL);
-> +				if (!shared_desc)
-> +					return ERR_PTR(-ENOMEM);
-> +
-> +				gdev = gpio_device_find_by_fwnode(entry->fwnode);
-> +				if (!gdev) {
-> +					kfree(shared_desc);
-> +					return ERR_PTR(-EPROBE_DEFER);
-> +				}
-> +
-> +				shared_desc->desc = &gdev->descs[entry->offset];
-> +				shared_desc->can_sleep = gpiod_cansleep(shared_desc->desc);
-> +				if (shared_desc->can_sleep)
-> +					mutex_init(&shared_desc->mutex);
-> +				else
-> +					spin_lock_init(&shared_desc->spinlock);
-> +
-> +				kref_init(&entry->ref);
-> +				entry->shared_desc = shared_desc;
-> +
-> +				pr_debug("Device %s acquired a reference to the shared GPIO %u owned by %s\n",
-> +					 dev_name(dev), desc_to_gpio(shared_desc->desc),
-> +					 gpio_device_get_label(gdev));
-> +				break;
-> +			}
+> +		if (value) {
+> +			proxy->voted_high = true;
+> +			shared_desc->highcnt = 1;
+> +		} else {
+> +			proxy->voted_high = false;
+> +			shared_desc->highcnt = 0;
 > +		}
+> +
+> +		return 0;
 > +	}
-> +
-> +	ret = devm_add_action_or_reset(dev, gpiod_shared_put, entry);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	return shared_desc;
-> +}
-
-...
-
-> +/*
-> + * This is only called if gpio_shared_init() fails so it's in fact __init and
-> + * not __exit.
-> + */
-
-Fine. Have you checked if there are any section mismatch warnings during kernel
-(post)build?
 
 -- 
 With Best Regards,
