@@ -1,106 +1,76 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345892EBB9B
-	for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 05:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB482ED167;
+	Wed, 22 Oct 2025 05:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761111305; cv=none; b=DQNDO/k1jae+i6+Ljwrc0/JIv+FaYw3gqc0sk4IxK1ftc912ijAPsgOJHOwVdH6SN8UwUtZsa80g8twcnZ8luUYOZGT3OP+h99CbNAVyCtjot9mjAV/iBLf/Htx8xDQRps0rlNP+lPbXtb+WUdfOzRDCYH7xl/ZnW38aLs/Xjuw=
+	t=1761111655; cv=none; b=FLZJvSJ0Bqk3pqJDDiP+qhHef7r7BT9BK6d/a40tNpMvSFyrJ1uLOsSDdj2L7iM65AJFkaOG3RZOZ48KSIXAZ5vJg7xh3wVEwUi5LJ91UBQhuHnLgMwIvGtYfZJNUHfPWhLYiwMeIUYeocsQVXwOblXCmZbKP8KfsHehtBsqt1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761111305; c=relaxed/simple;
-	bh=Yfli7nrNGWAirNBDg6CXZHLXMoqOZK8KHRWfvR153kE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H+4NQZGVR65ndb/5iy7dVzuTpqcRss19CXYDU5hQTsu0jhh5EH3yKbVL7jAAACDl7E2mboE00j2eYgDwpicax1IEsArpWdvENSaajsgiWtWxCcNLVxQr8JCgYaNDb1YWe1PgRNUsC/XGO9wNjqZpDBA2sKQnTAUdawAUEsCOHIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EA4JWB16; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1761111655; c=relaxed/simple;
+	bh=Pt7ENDOTElsGzRjCQmIU+epszdp2zPZNAyCGcle9P3c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZqWl78AkRT7t3CIGKXABdIXtWCzyLKsNnLjXK8xboXkhQ3VmBPaCrCXeHPlTZ44EowEnWPk/4oIdnDm7Miufs8iNt4dObZItnzsMCsn9Ap5Hv2lWUS5ZfPTMVdIlqyZCNouqRrmW54VaLE5cw5U1e3ecEMLwU4t7Tk6Gw/YiJk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=JUIac36p; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=rDXZp0mE; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EA4JWB16"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-27d4d6b7ab5so84281215ad.2
-        for <linux-hardening@vger.kernel.org>; Tue, 21 Oct 2025 22:35:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761111302; x=1761716102; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=56ezGE6Ds9KP53wZYmYW6a4SSoZf29RYPFd4r32eFsg=;
-        b=EA4JWB16r+NXgjHMeMN9NN9KSu5R9Yy8KCxl56vrgzUuc27h1WpYbekyKs+ngvf9E6
-         YpCEaSjFsZqtKKfIR1Ue70YGGJ9nYuBDXFecfpdrhbxJdTQ+nn/VMC9oqoVsDd40p22f
-         Ez3Lq5AxcYC280OcvMweY60pM+McAPT2MaBL+pHBXNtixInkzvh2RpLuC5XkD2VlMgyC
-         pGgFj606MBeT3mQM8LTJ98jLyjvJi91wfE80JCFpjtcBMm5FgTYh3kOlK7x63zezL0UJ
-         EZf5ahL87tSLqOSuxv1gZAPCzM2mTMv5wiFvFHGJhvUJeFZwM0WYnmXHcnR/wulCKIfN
-         zDsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761111302; x=1761716102;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=56ezGE6Ds9KP53wZYmYW6a4SSoZf29RYPFd4r32eFsg=;
-        b=LPt85Wf5olocI7G2I5SvuTgkPnGDRovQKgUl0BzDo3mTDiqAsCgA/7vXNbcwRhV/PX
-         OcSorfbC0AS/lESfIk2FqLZBPrjO9iRuRUYVrjV2tMTvVO/9t9RM3Vw9IY/Dw2F96V4B
-         lUjNd+sriPoQ0t63CPPkXzdaY5GszhoHtc+v1j4+vXNP6B9rrsS9WelH9JZu7jUUlHuY
-         rvVS6MeieVHHlcN3dLutkOWSMZNC90gtXKeHd0lAWaRNmTdyfGubCZZZ9hxgtYob0vUN
-         Snr25JDmvFPLK4bCo67iQJuXKdwmGtWjpNjl76w/ARRo39X+3Tl2YmnjSg1gNEQlxdxY
-         tg2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXmAbwXK0JXFVnHARxbLteQHnt+7/VJ5YLsGrzJVnbyhyoeAdVrcUlLB62QhYk+WTvyby/vqYIPa6Wwk+Iwdew=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxeet0jQKVxoxmKWaPdLVyv6jH1BobgUM9OfWBHGfDJp+VbGOfR
-	EeFGGodg9CULhzjrvDyh91OZMBLVMVfeA+ub6I2CRNf8gElR9YSgBIwEvRozO63CzrM=
-X-Gm-Gg: ASbGncuy5azOTCzEgme6howV5Q/Zq+LpbHXGQZbpSjODF2XfNE7qx3/GQYESAsoExqe
-	pcxVv9roGLplxz92K2QLhawXCc+SmZh3+bTFlJEbKm0keK9bLUE5Wa9aSng1oC2MaN8s4p0iKS+
-	M0CKQ6JE417bHjKqvr6bmNxAa9jNP0Ug+ZwGD6Hsu+ADkclka5aP3w8XaMVPADmF6popmj2ZK+R
-	AZW6N2iRI51H1nyXqbcZwjNBY63o3GGI4qDQxVXfufNzqnvbOi3NZ8CVjM2LMyHgnQt/1n1uiOO
-	AW2b3Qzbs5KiEX8YJ2r/dqB1t5clUblgVEqqPQzTpseAA6GttToj3rhCDmS2iQNkhYZFYM/V9mB
-	coyDtBLDIX9aGUeMSronnq48GW4m4Wx7tqdnynPILUqxQ+nkT4YreuOGiWI+YgtSR3Z5NWYbp7I
-	cyQfj4eWMQ36+E
-X-Google-Smtp-Source: AGHT+IGnVjE3oW9jfoMl45fRu62Au+V7hXBYTBJW0Xz1osI8MZwsrdpeSGQan//AK1Laa1HoxY0dkg==
-X-Received: by 2002:a17:902:ce07:b0:290:a3b9:d4c7 with SMTP id d9443c01a7336-290ca121944mr241503655ad.30.1761111302331;
-        Tue, 21 Oct 2025 22:35:02 -0700 (PDT)
-Received: from localhost ([122.172.87.183])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6a766745dasm11961911a12.14.2025.10.21.22.35.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Oct 2025 22:35:01 -0700 (PDT)
-Date: Wed, 22 Oct 2025 11:04:59 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
-	linux-hardening@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: Replace deprecated strcpy in
- cpufreq_unregister_governor
-Message-ID: <rgk3oym7r2gkx4gjqsot3n55s4jtlgyl7vayutaneyuqegybzl@njlf3ohiykjq>
-References: <20251017153354.82009-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="JUIac36p";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="rDXZp0mE"
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Date:Subject:To:From; t=1761111641; bh=n432jT2vab/2MJW+ivXChWS
+	65PC55AaK360z0hhFACU=; b=JUIac36p0QxR3rBJNYWEi9s6vwTDtfKKaMVE8gvM8daDYRDdYu
+	7/hTp/ErDYmBrsy9u3NQZ5MdT3vICe/hbigS4Omvk2ivssucP16SvRsWzKop6kK0KnbbRFzES/k
+	jgd1o6GMWc/6Eqoipi45Li6eoEOcLPUEx1Eft3Mi3HkzNIKRZguEkwmiG5w0iz6lX62tCbTVnpf
+	V8VwNSsPLArO/09gp7W+c3g0oChCj+cs6bZZ7C6Fxm64Q+FW6BzoydIBtTUvA10WhM+0trqFb24
+	kVRWGEQLyH+WB74tEdtYG0FsHm+kl09KNM5sZS9pIjf4Uqh+c2sYIxWCKVJZiW6zPXA==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Date:Subject:To:From; t=1761111641; bh=n432jT2vab/2MJW+ivXChWS
+	65PC55AaK360z0hhFACU=; b=rDXZp0mE/9dL9vM50n8b9OWhIVEtOM1J09aGU4M9LnfMzpgock
+	IBkKdewyxKHGUV5weBqS2NHENSpvftg9BFCw==;
+From: Piyush Raj Chouhan <pc1598@mainlining.org>
+To: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	andersson@kernel.org,
+	konradybcio@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	Piyush Raj Chouhan <pc1598@mainlining.org>
+Subject: [PATCH 1/2] dt-bindings: arm: qcom: Add Xiaomi Redmi K20 Pro (Raphael)
+Date: Wed, 22 Oct 2025 11:10:23 +0530
+Message-ID: <20251022054026.22816-1-pc1598@mainlining.org>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251017153354.82009-2-thorsten.blum@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-On 17-10-25, 17:33, Thorsten Blum wrote:
-> strcpy() is deprecated; assign the NUL terminator directly instead.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  drivers/cpufreq/cpufreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 852e024facc3..0d3e77cf96a7 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -2550,7 +2550,7 @@ void cpufreq_unregister_governor(struct cpufreq_governor *governor)
->  	for_each_inactive_policy(policy) {
->  		if (!strcmp(policy->last_governor, governor->name)) {
->  			policy->governor = NULL;
-> -			strcpy(policy->last_governor, "\0");
-> +			policy->last_governor[0] = '\0';
->  		}
->  	}
->  	read_unlock_irqrestore(&cpufreq_driver_lock, flags);
+Document Xiaomi Redmi K20 Pro / Xiaomi Mi 9T Pro.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Piyush Raj Chouhan <pc1598@mainlining.org>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 18b5ed044f9f..b81930eec39c 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -983,6 +983,7 @@ properties:
+               - qcom,sm8150-mtp
+               - sony,bahamut-generic
+               - sony,griffin-generic
++              - xiaomi,raphael
+           - const: qcom,sm8150
+ 
+       - items:
 -- 
-viresh
+2.51.1
+
