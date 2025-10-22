@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F562E92B4
-	for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 19:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C012F83D8
+	for <linux-hardening@vger.kernel.org>; Wed, 22 Oct 2025 20:05:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761161949; cv=none; b=eaKjFaIbvr9+xqfXzYfU6YpYPyORWoxx7rKGVrxuEpfQRVq7NmQTtsAGULurS7LvnsQ0oy3DCdu2RlHSA52nkosNN5lEWFdXw4vz12RgcSay1ZfijS0qflkFlz52xtZ4lFLRkMOeEnamgKfC7T8L03MSw4VCY4/270iKjDsUwrY=
+	t=1761163550; cv=none; b=sOzW/4f/BQuxLUuMYmc8q7+bSGRRbKwhVAhZC4We6H92lamPkY8Kk86eLRTLZVFqwcHRqUM1F/Vu0DEXZ6sLtRgOWfXynQON7dO3BDzmW68bWBRQ9rOX7E7JO3yygUW2kjqWXPLejL/pDkEB201vgCrVhkbSFl1v/V9puHer5UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761161949; c=relaxed/simple;
-	bh=k7930PWVZrp71mXwwvk57VkUxiKt/Q9kRgvtbnYLCik=;
+	s=arc-20240116; t=1761163550; c=relaxed/simple;
+	bh=S1LiUzRVaADEKUnGpzULJLtqU+nrAwYs59I22H4xJoo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OHFStbr6AQ1Zc73MNjpdwSL697svTysZnXjZswcMFkRmRbf9LvM6YJzUJrWEvNtCokwarInWHEM5nGBzrIfNVfkkk5a8m41EIMZYqD+F+JqvXe/SjtfgpicFQHgCZwP9QABL/+WRDMmpV0AVeByrCy5lTTH+Y2hMA2uQmY06yhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vD0CzHRj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cUMG75ReZ8TH3syJtTjDja0eyI3GbDkq7ohSBaQCE2sqFdtsXMGdi3mybOk1eFIEHrRqB9/6HC4btNE+D2+c2uaEROoenQHLgPNGCKarth8bHuRA0g54NAMUzB9G9pngNZeSrxWQibu29VN9N/AYC5L8jDldOi4Ls4AWiQf2lms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKShQ167; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vD0CzHRj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93520C4CEE7;
-	Wed, 22 Oct 2025 19:39:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKShQ167"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15F5C4CEE7;
+	Wed, 22 Oct 2025 20:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761161948;
-	bh=k7930PWVZrp71mXwwvk57VkUxiKt/Q9kRgvtbnYLCik=;
+	s=k20201202; t=1761163549;
+	bh=S1LiUzRVaADEKUnGpzULJLtqU+nrAwYs59I22H4xJoo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vD0CzHRjRzB/4iuBNGZLrQkRzqNu6TFknh3AAaTSZ6VppxJbX8uHzq3MDxHBAzDZm
-	 rrrr+Q9XgRUrMZ+R7q3IbEpubksBUvFewtPWeGH6DZQ/Q5N5yLK74q2UGyMDXf36FH
-	 9njy9CF5ML7Xr6OdCYXm69EttP48XunkoBnN7EL3OU//EImAsd42YTwt1VTGx0p4MI
-	 1Q9iFoEngirBmF3vNEBICv/Ttly80paf/ADLGXsG/LH2so9mokFKN9vEDvw7SJBqOb
-	 IWCA92VrA3x/l2rBLpzCIMGUCeKSU5GmmNqXrgMXWEb4+rLszlhw3R2XXSkXhUNMrL
-	 +qcLnZDfRz04w==
-Date: Wed, 22 Oct 2025 12:39:08 -0700
+	b=TKShQ167pKoMw6lBcvbWAaFirLmIdVeyTi/p1pu3Y462xhhoSSS2P3Ql9rbEWS5tZ
+	 wpiXdhABSKwz8svuSTXbag7jyovL25hG9EFBjAGzDTYsa+W6MJnIc/972p2UHyni2r
+	 mXpRmoc45txDxho/UzCl9xnjQZYiG4RQZG8RSchp5k4eOssv/FHLzRhtBXyC04KEt/
+	 8kyab1bY1Y4iGnOCDnkUOVxWOgSzf/+mnBSbFtxdV6W7EctntftQKR2JoH39kFNW9/
+	 Jj5AQ588qcQbOc/TkUWWZSTJPXjiiGLhu+ENBR0iyecV3s6rQOkgivMEv4DL68YEXC
+	 /o3UjWHbJodPg==
+Date: Wed, 22 Oct 2025 13:05:49 -0700
 From: Kees Cook <kees@kernel.org>
 To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
 Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
@@ -55,12 +55,10 @@ Cc: Qing Zhao <qing.zhao@oracle.com>, Andrew Pinski <pinskia@gmail.com>,
 	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v5 5/7] aarch64: Add AArch64 Kernel Control Flow
  Integrity implementation
-Message-ID: <202510221238.F35859A@keescook>
+Message-ID: <202510221253.D6B51F950@keescook>
 References: <20251022181345.do.256-kees@kernel.org>
  <20251022182243.72085-5-kees@kernel.org>
- <CALvbMcA-MwhBd4y0+im5+xw8_sw3ut68fudwLoY6-nX5gmh0WA@mail.gmail.com>
- <202510221216.EA5EBB1@keescook>
- <CALvbMcAjVAW-YxLE+qcFLNXVKy0neDop0b1bi=_YfB=8JqBNDA@mail.gmail.com>
+ <CALvbMcBkGA_SpdskoABCYj2_9r=9SebgPa2fs5pWzLoNY5dbOg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,61 +68,45 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALvbMcAjVAW-YxLE+qcFLNXVKy0neDop0b1bi=_YfB=8JqBNDA@mail.gmail.com>
+In-Reply-To: <CALvbMcBkGA_SpdskoABCYj2_9r=9SebgPa2fs5pWzLoNY5dbOg@mail.gmail.com>
 
-On Wed, Oct 22, 2025 at 12:27:53PM -0700, Andrew Pinski wrote:
-> On Wed, Oct 22, 2025 at 12:21 PM Kees Cook <kees@kernel.org> wrote:
+On Wed, Oct 22, 2025 at 12:33:18PM -0700, Andrew Pinski wrote:
+> On Wed, Oct 22, 2025 at 11:27 AM Kees Cook <kees@kernel.org> wrote:
+> [...]
+> > @@ -11847,6 +11848,16 @@ aarch64_expand_call (rtx result, rtx mem, rtx cookie, bool sibcall)
 > >
-> > On Wed, Oct 22, 2025 at 12:14:32PM -0700, Andrew Pinski wrote:
-> > > On Wed, Oct 22, 2025 at 11:27 AM Kees Cook <kees@kernel.org> wrote:
-> > > >
-> > > > Implement AArch64-specific KCFI backend.
-> > > >
-> > > > - Trap debugging through ESR (Exception Syndrome Register) encoding
-> > > >   in BRK instruction immediate values.
-> > > >
-> > > > - Scratch register allocation using w16/w17 (x16/x17) following
-> > > >   AArch64 procedure call standard for intra-procedure-call registers,
-> > > >   which already makes x16/x17 available through existing clobbers.
-> > > >
-> > > > - Incompatible with -ffixed-x16 or -ffixed-x17.
-> > >
-> > > Can you explain why?
-> > > The documentation for `-ffixed-` says this:
-> > > ```
-> > > -ffixed-reg
-> > > Treat the register named reg as a fixed register; generated code
-> > > should never refer to it (except perhaps as a stack pointer, frame
-> > > pointer or in some other fixed role).
-> > > ```
-> > > In this case it is a `in some other fixed role`. Or is the problem you
-> > > are using the allocator to figure out which is free?
-> > > In the case of indirect tail calls, x17/x16 is always used for the
-> > > pointer (since r9-5291-g901e66e03e1cd8).
-> > > Which is the register class TAILCALL_ADDR_REGS.
-> > > I think it is compatible with doing -ffixed-x17 (or -ffixed-x16)
-> > > because it is a "fixed role" at this point.
-> > > Though If both are supplied GCC will fall over anyways (will file a
-> > > bug about that in a few minutes).
+> >    call = gen_rtx_CALL (VOIDmode, mem, const0_rtx);
 > >
-> > This was done based on feedback from the riscv patch in v2:
-> > https://lore.kernel.org/linux-hardening/dbf9a593-e19d-4f53-96d0-d067868f40b5@gmail.com/
-> >
-> > Jeff's interpretation of -ffixed-reg seemed to imply "GCC should not touch
-> > this register", which seemed sensible to me from the perspective of the
-> > "generated code should never refer to it" bit. How that interacts with
-> > the "except perhaps as ... some other fixed role" is totally unclear to
-> > me.
-> >
-> > Shall I drop all of the -ffixed-reg logic for all backends?
+> > +  /* Only indirect calls need KCFI instrumentation.  */
+> > +  bool is_direct_call = SYMBOL_REF_P (XEXP (mem, 0));
+> > +  rtx kcfi_type_rtx = is_direct_call ? NULL_RTX
+> > +    : kcfi_get_type_id_for_expanding_gimple_call ();
 > 
-> I cannot comment on other targets; they might still want it. For
-> aarch64, it does not make sense to check x16/x17 being fixed when
-> using KFCI. For aarch64, I suspect the check will be a generic check
-> that is not connected to KFCI for the reasons why I mentioned about.
+> I don't like kcfi_get_type_id_for_expanding_gimple_call call.
+> Does it make better sense to create a few new optabs for the kfci call
+> instead and pass this down instead of having this call?
 
-Okay, so for aarch64 KCFI, I should drop the -ffixed-reg conflict
-checking logic?
+Unless I'm misunderstanding how optabs work, I don't want to use
+that here. To use an optab, I think I'd need to create a separate
+"define_expand" RTL pattern for kcfi calls. I found this to be infeasible
+(I tried it somewhere back in around v2), as the calling conventions
+for most architectures are extraordinarily complex, and I'd have to
+duplicate all of that logic for kcfi expansion. Instead, I have KCFI
+just happen in late expansion, which seems the best fit.
+
+Just so I can understand better, why don't you like it? I assume it's
+the fact that we're basically in RTL and that function ends up reaching
+back up to GIMPLE? This seemed like a layering violation to me too, but
+I noticed that it's not uncommon for expansion code to use
+currently_expanding_gimple_stmt, so as a result it didn't end up seeming
+unreasonable to also use it for KCFI (it is, as it turns out, exactly
+what's needed at that moment in the expansion: "give me the kcfi
+typeid").
+
+Obviously, I could be missing something here, so if you see a way to do
+this better, I am happy to do so. :)
+
+-Kees
 
 -- 
 Kees Cook
