@@ -1,72 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5CB1804A
-	for <linux-hardening@vger.kernel.org>; Thu, 23 Oct 2025 10:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD083093CA
+	for <linux-hardening@vger.kernel.org>; Thu, 23 Oct 2025 10:47:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761216193; cv=none; b=NflfIkexqAYWAkteWG0RK2LcFsYXTIq8aZIgFK9diGCXOB5IyI9ydOKgQy0gbhgE4E469Q9u6wU3y5I3a3qE0Ut/TezYwIIf8p8kF/xZt4TduEvr7bqZ8ubBRKRk6OSapc67peVEqt1C9cvffLZwg9ka2OlnAGv56UFhvd+EFpw=
+	t=1761216461; cv=none; b=Ka1WAsxJ0f/ylKGBWL6bLWX8YIC3RUmMatZkeoWkYy2bye/nPEmuFDnwZusYTzgFHalYCtjxcNBynkfNYyZuJZBdr22N0P+Zt71sP0FUKElAiZutVK5K1Uw/95OzBPN6QzPdkB1sLqd89BPBG5ywp1h0CCDoNFwYMta5kEntCPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761216193; c=relaxed/simple;
-	bh=PSq4rzHsTZYmnPW7B8CFsP6cGQe5nHJwDQGMbKTQhlE=;
+	s=arc-20240116; t=1761216461; c=relaxed/simple;
+	bh=5ifU/Wvg+kVhHnF9BQP9B3foPYA5Ik7jwpTbYYS73os=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QfvDfRrn4Hp3Ze51t/3si78qvtFi91Z5kO8WFGU3ZWqXZG2E/XO3p5/v6rfL/rPy/TPDdQ44GloQcVwrUr/IwKzPV+vtjKRXpSeGlo3mb4kSleQC4poXCbm3I6Q3KndQb+bXXMfI3yjJU/uf6784vaAv9ErmWMVq4sp3atfYcYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=faeMJken; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=ohuYmPxpxpuIBw7eKwiIj+FChq0BDYeO2QQD283DwNftDQk4d5o4c1YWTdkeh6YinoNdSnC2lldzvkQ5evTdhhxpIyyWU9nPRnIqofRjmoib+g8x2ads8ISFGfJsl7M5FBvpCxX3QAxem++kQYon1VKFwIRJ3xEC3N7Gf3jUiqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NoiWO0M0; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="faeMJken"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NoiWO0M0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761216190;
+	s=mimecast20190719; t=1761216458;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2itfR4P5vWlnhxtQmgFjh+n2XUI3sGLIeHL7uzBaLr4=;
-	b=faeMJkenuiVG5UbIwru6FpNkyIvAFHukAyfXMevSRiu5Mg8CG4Ae3JoKPYe9uKZ9pG5jH4
-	y1CkenBd5v0f02TGQ9FXPaptGoElv2ZwBHM3Nswia7Rqq7elDEwM8qqZVdkNBB4dhZ97/p
-	I9PR5JfHyP/IhtJvTC1s8Rhb9AQyia8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=/7ZtrRY8Csd0mnWVAzPDxeW56oyxBNHzEHf6SjTpI9w=;
+	b=NoiWO0M0V38Vgxw1iwFmo6Sfol2RggixjIUsbBtd5MhyAGWKiFVVhfjUbaVXHySP//HYjx
+	xAcMwAFLDw9YrrCO5Y/mtjPFmo853aqQAhpCQfhtnN/8n4WED4CaC4EYuq4Li8ba5UJ21W
+	gCi4l9uIy50SqC1KYhit0qeuIjUUnVQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-681-o7oygs2oPru8mQiW2hwkXw-1; Thu, 23 Oct 2025 06:43:09 -0400
-X-MC-Unique: o7oygs2oPru8mQiW2hwkXw-1
-X-Mimecast-MFC-AGG-ID: o7oygs2oPru8mQiW2hwkXw_1761216189
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-475c422fd70so3870165e9.2
-        for <linux-hardening@vger.kernel.org>; Thu, 23 Oct 2025 03:43:09 -0700 (PDT)
+ us-mta-193-fuawRN5KPr-YqvI2eE95TQ-1; Thu, 23 Oct 2025 06:47:35 -0400
+X-MC-Unique: fuawRN5KPr-YqvI2eE95TQ-1
+X-Mimecast-MFC-AGG-ID: fuawRN5KPr-YqvI2eE95TQ_1761216455
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-47114d373d5so5243385e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 23 Oct 2025 03:47:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761216188; x=1761820988;
+        d=1e100.net; s=20230601; t=1761216454; x=1761821254;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2itfR4P5vWlnhxtQmgFjh+n2XUI3sGLIeHL7uzBaLr4=;
-        b=TMZHb2gM/n9AjgcrKf4SFfIFMArxTmooPx8UW0WyhJhEE9KBwttBqc/AKF6lnorwLA
-         UCOVXtZsCh0QhAD6IC0nR+AA8FS9O45LmCX2ZDeiazS7k/WuB1yXPaPNFpkxvfIHHLYT
-         NT3iY3hvCjxKlr8ikbjtHNtfbLPi9kLIyuSr7KaFrJoE3QXHZtGc3dVxSs/TlJFWQ/gG
-         nT4XcTYnkq6qFG3zkJTpUe6aXRjcKeLQvv15SEmT4KpslCE29JhcJV9ZSkzvNqZeSpX4
-         YlOwRbC5uDd0HchR/cUpQboxPo0pGaJzLLOS1O5cEoMCWkLn6swh/rQKS1vJ45gs1j7i
-         CnBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJicUED38YBodIx7JvWKPPn16NGyEA7EiuwYYFk3n81gNFiwMlNPV3yg1yODnXcdLPZ0Sx9biiVvxDnEy404k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygwfZl20CRe9YnTu10f+8/93q1IW26/04zg+pS0QK7B/WXMh5n
-	VfCiQIkehvZNVJxZ+l7KfN2+Q8Rkc6zmQIWhkJdE2MAQnnxN9H8NoAtu6r07C7yBPF3Zggy9AAk
-	/qhjKKelDnrC7BwM1U05ORwNArm393q9Ymh7JxrhtSItcs4J3lwVteA2Ovep5XqQE1oPaHA==
-X-Gm-Gg: ASbGncuuClD1cDc6hnAy24C0jZsAtYxNi5kpqlWq35M8xKjxga12LTS1J3Re2awC8ZO
-	ivQXC2jncfsHh7GLl6bD/lFki6LveQBnekh07B2NHnSys/Kb7OWXlOg9iUAfjuJjGHXZ8haWZgO
-	+ihcH5Pkb3gX6ff1opURcgBcH5EuiP/sMGLl5llzbpz8fnvQmxncgrH5R8aV0z3p7oVG+kvMEZ/
-	FQ2Isp0XuNb2Mhhy20uNAOnRgWZfbGI66LzpkeOPZ9Y+wTz4B3SIdRSk/5dSIVaGiE8PAbn+hzq
-	di5vmv6nPNru+qF/gQsKo812igfSR/c/qmvG0ipFMerr135uAm32m9JRNuX22W2wP+1hJgCYkqG
-	YNyfyS8ExCaD5BLSiYH7EieArVySF022KbT2XYE4pgvI+C34=
-X-Received: by 2002:a05:600c:3b83:b0:46e:3d41:6001 with SMTP id 5b1f17b1804b1-47117925171mr243744105e9.34.1761216188629;
-        Thu, 23 Oct 2025 03:43:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHeZ82VrSnvpK1c3qyzIXLRxmMNdmjxKL2P/cuqpRB9ovXOV8FGWqUSGpOdh0UCletrBUBh+w==
-X-Received: by 2002:a05:600c:3b83:b0:46e:3d41:6001 with SMTP id 5b1f17b1804b1-47117925171mr243743745e9.34.1761216188204;
-        Thu, 23 Oct 2025 03:43:08 -0700 (PDT)
+        bh=/7ZtrRY8Csd0mnWVAzPDxeW56oyxBNHzEHf6SjTpI9w=;
+        b=MpP0pgs953uPU2WYbQ+6UzDLflWm0d3s7Tlxg4UufEMUCsWJR6zDgEVrwLZOduQOJN
+         MBlJCLxQbFJvRQcLoCKtbFOHWRzLV7lrdTVOSJWxIVgHGhe8xtOT8I90HyenFmroJABg
+         073ci4pbWZYhQOHVDkFnbYYCxJy+7vIPJ9wLZ7MWhyhiLvR3/fYH4p86mWiJIS9nLRRk
+         gPr1QOdd/m5WJdIEFe3+qY6HNVJ0Y/KQdFjEBie7kTY0vZV74+u5D3MudU4t21HU7Mu6
+         QzbVswDph/aCC5QZPw7u5xWMo3znnZF4FEy7dkiuV2e9Hkaxdaxyd/yhPOXVbVMOJyCt
+         ZCnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV6Ijf4JyjJlbjViOeeSNf2GhmoR0nZvmiNX1Sltqh4DC7sFc+fCGY9f8Zgi1W7e3eacF2bPGunH1Ivwg63TgA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5eyYCfktHmlr+e6NtGy6evZ/CB+W9TX6zycvOxLDWOsL8nJVp
+	8VfM9QiZsP48LhpoQa34USE0NEZL19spo6/5gPr+5pKjYINFdCQlX3Ht/9cpxbbwPNiKD26PVXs
+	aCgZnHJ8c/locCKgrh5eOvh2RNdVXqaQWtNKnklKooI+UmT73D9xaEuW0PdtSnt8E4uOKTw==
+X-Gm-Gg: ASbGnct3BTYvlgSGiez2WQyu4nEx6JT7T0WV1zo3IJazikhkFfVo+i3f3GKIKp3gssS
+	mKY7ECduFN9lp+9sqrkqTLdhDz90vdVny39xxVs0AydHMXuDRc7D+oJHQGKhXpqJyXkjUSwJdFn
+	fS/3Eyi7nAYpRqYLjYBXEijXJ4Sft4IXEyvFHZmKoj2k8UZqsGxs3lqrBspsddlyCaBwThaorvh
+	C15kq8826kxHQ6D4/8/GckAZvgrYymK/B1jIT2YctzkDPoRsm04c5lIwKX+JVD5LNZPclNudiU8
+	IXz3g79LiazzQV1PRwGRlbsybLo//x6kivrObK3skeFMZzKSPxuyOmQ22E8MOjKLdhh6B/KSQRH
+	Q/dvlxYYb54+3euZ46+8yvFsS0yWWfCbNpVLfYnZGEYmAWR4=
+X-Received: by 2002:a05:600c:3e0a:b0:45d:d8d6:7fcc with SMTP id 5b1f17b1804b1-4711791c522mr177738605e9.27.1761216454577;
+        Thu, 23 Oct 2025 03:47:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEbCjAG6BFqWGtyFJWnnSCkQuOtRF7p6tj9Xo7x9KfV4P2z7kmIFxIZPQ6J9DI6KJJoMB+iuQ==
+X-Received: by 2002:a05:600c:3e0a:b0:45d:d8d6:7fcc with SMTP id 5b1f17b1804b1-4711791c522mr177738355e9.27.1761216454135;
+        Thu, 23 Oct 2025 03:47:34 -0700 (PDT)
 Received: from ?IPV6:2a0d:3344:2712:7e10:4d59:d956:544f:d65c? ([2a0d:3344:2712:7e10:4d59:d956:544f:d65c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475cae92067sm31140865e9.4.2025.10.23.03.43.06
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475caf4642fsm29122005e9.17.2025.10.23.03.47.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Oct 2025 03:43:07 -0700 (PDT)
-Message-ID: <268ee657-903a-4271-9e17-fcf1dc79b92c@redhat.com>
-Date: Thu, 23 Oct 2025 12:43:06 +0200
+        Thu, 23 Oct 2025 03:47:33 -0700 (PDT)
+Message-ID: <52c7bbac-da08-44d5-b1ec-315ce001b42a@redhat.com>
+Date: Thu, 23 Oct 2025 12:47:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -74,8 +74,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/9] net: Add struct sockaddr_unspec for sockaddr of
- unknown length
+Subject: Re: [PATCH v3 2/9] net/l2tp: Add missing sa_family validation in
+ pppol2tp_sockaddr_get_info
 To: Kees Cook <kees@kernel.org>, Jakub Kicinski <kuba@kernel.org>
 Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
  Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
@@ -86,38 +86,52 @@ Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
  linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
  linux-hardening@vger.kernel.org
 References: <20251020212125.make.115-kees@kernel.org>
- <20251020212639.1223484-1-kees@kernel.org>
+ <20251020212639.1223484-2-kees@kernel.org>
 From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20251020212639.1223484-1-kees@kernel.org>
+In-Reply-To: <20251020212639.1223484-2-kees@kernel.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: eM77dxCshmF_hi4Gmb5w5FM_bdeR8rk-hw0bALfeLzw_1761216189
+X-Mimecast-MFC-PROC-ID: IUmFrb_9LiohiikOy3pyHeYeOVQ3tpGViH_doSW7v9c_1761216455
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 10/20/25 11:26 PM, Kees Cook wrote:
-> Add flexible sockaddr structure to support addresses longer than the
-> traditional 14-byte struct sockaddr::sa_data limitation without
-> requiring the full 128-byte sa_data of struct sockaddr_storage. This
-> allows the network APIs to pass around a pointer to an object that
-> isn't lying to the compiler about how big it is, but must be accompanied
-> by its actual size as an additional parameter.
+> While reviewing the struct proto_ops connect() and bind() callback
+> implementations, I noticed that there doesn't appear to be any
+> validation that AF_PPPOX sockaddr structures actually have sa_family set
+> to AF_PPPOX. The pppol2tp_sockaddr_get_info() checks only look at the
+> sizes.
 > 
-> It's possible we may way to migrate to including the size with the
-> struct in the future, e.g.:
+> I don't see any way that this might actually cause problems as specific
+> info fields are being populated, for which the existing size checks are
+> correct, but it stood out as a missing address family check.
 > 
-> struct sockaddr_unspec {
-> 	u16 sa_data_len;
-> 	u16 sa_family;
-> 	u8  sa_data[] __counted_by(sa_data_len);
-> };
+> Add the check and return -EAFNOSUPPORT on mismatch.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+>  net/l2tp/l2tp_ppp.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
+> index 5e12e7ce17d8..b7a9c224520f 100644
+> --- a/net/l2tp/l2tp_ppp.c
+> +++ b/net/l2tp/l2tp_ppp.c
+> @@ -535,6 +535,13 @@ struct l2tp_connect_info {
+>  static int pppol2tp_sockaddr_get_info(const void *sa, int sa_len,
+>  				      struct l2tp_connect_info *info)
+>  {
+> +	const struct sockaddr_unspec *sockaddr = sa;
+> +
+> +	if (sa_len < offsetofend(struct sockaddr, sa_family))
+> +		return -EINVAL;
+> +	if (sockaddr->sa_family != AF_PPPOX)
+> +		return -EAFNOSUPPORT;
 
-Side note: sockaddr_unspec is possibly not the optimal name, as
-AF_UNSPEC has a specific meaning/semantic.
-
-Name-wise, I think 'sockaddr_sized' would be better, but I agree with
-David the struct may cause unaligned access problems.
+I fear we can't introduce this check, as it could break existing
+user-space application currently passing random data into sa_family but
+still able to connect successfully.
 
 /P
 
