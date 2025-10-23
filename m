@@ -1,119 +1,123 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604A92EA171;
-	Thu, 23 Oct 2025 08:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5CB1804A
+	for <linux-hardening@vger.kernel.org>; Thu, 23 Oct 2025 10:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761206518; cv=none; b=V8Lnxd42LPMGVDRutC2InuvdOTjRfKYxGhLBSxhK40KVpMDl7HUo3DMuo+0ODBM9DfWRBJBae7e+hHVe+4SkiP5Y3Yo4+EUjFtMvcr9qOUCQd9LTXy3TfBY5vVm0EUR/51pXY5rFxmdvzPP9AZdtPV654Uc4oRvAsZrWY2NHiJ0=
+	t=1761216193; cv=none; b=NflfIkexqAYWAkteWG0RK2LcFsYXTIq8aZIgFK9diGCXOB5IyI9ydOKgQy0gbhgE4E469Q9u6wU3y5I3a3qE0Ut/TezYwIIf8p8kF/xZt4TduEvr7bqZ8ubBRKRk6OSapc67peVEqt1C9cvffLZwg9ka2OlnAGv56UFhvd+EFpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761206518; c=relaxed/simple;
-	bh=qm3FpmvOJC8J7ygv+lQ1G0UYsoWDYZ6/QPeqvcPbSrg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pHjSEBhmZN4TeZehmDaHauUDPMT/OFMl7o90w4jP5RLscpLm3L8hiSsNIttcqs9O5k/iZiG2PeB507cKR/dRN+i9jZZQEFkv/sRcGZXyhHD05kQNumrz++4snxpFsbNCadKedqbjzgtf7Vdsblr8QisceJgWfENEcdmcKMwOizM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ib8RfyPK; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1761216193; c=relaxed/simple;
+	bh=PSq4rzHsTZYmnPW7B8CFsP6cGQe5nHJwDQGMbKTQhlE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QfvDfRrn4Hp3Ze51t/3si78qvtFi91Z5kO8WFGU3ZWqXZG2E/XO3p5/v6rfL/rPy/TPDdQ44GloQcVwrUr/IwKzPV+vtjKRXpSeGlo3mb4kSleQC4poXCbm3I6Q3KndQb+bXXMfI3yjJU/uf6784vaAv9ErmWMVq4sp3atfYcYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=faeMJken; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ib8RfyPK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0uRiRtjMBnl1I4Kw6RJyHI9dY+m7wLvqR6UCI8qoXds=; b=Ib8RfyPK0mNhsg+2sEx18TjMxr
-	Z5xkFrIUzX9WrYQGh6/N3AIejfS0QZrHM4sznBb2Uhsic1CGl/Hc2lmGE4PPt5Ih1ZWcaAE8ffZOz
-	m0cYOG6RjcIr4LCNtWIH1oDC1g8DM84ey/VhvQ1MIl7blZszOzzefbJE7Ip/1K46FRLmFZN1dbIQu
-	ueLUJm4VG1Et/KbDILe3KKoXuzewC+wrJy877fjb2wyIxGtMDuvY0k8oMDXdNaDOFB/NKPTATKYqy
-	X6KQueQWZHHsfv84ELzqqY/VQoMuwjI/75Eo8MFEii6dBgiSHTaa0KWyUyLGYGWgrIJv7lSCOrCi8
-	pI1uprTA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vBpOX-00000001Aev-1twR;
-	Thu, 23 Oct 2025 07:05:57 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 39D66300220; Thu, 23 Oct 2025 10:01:23 +0200 (CEST)
-Date: Thu, 23 Oct 2025 10:01:23 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Marco Elver <elver@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Johannes Weiner <hannes@cmpxchg.org>, llvm@lists.linux.dev,
-	Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Shuah Khan <shuah@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	kernel test robot <lkp@intel.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Uros Bizjak <ubizjak@gmail.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>,
-	Yafang Shao <laoar.shao@gmail.com>,
-	Marc Herbert <Marc.Herbert@linux.intel.com>,
-	Christopher Ferris <cferris@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Paolo Abeni <pabeni@redhat.com>, Tejun Heo <tj@kernel.org>,
-	Jeff Xu <jeffxu@chromium.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Brian Gerst <brgerst@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/3] compiler_types: Introduce __counted_by_ptr()
-Message-ID: <20251023080123.GU3245006@noisy.programming.kicks-ass.net>
-References: <20251020220005.work.095-kees@kernel.org>
- <20251020220118.1226740-1-kees@kernel.org>
- <20251021095447.GL3245006@noisy.programming.kicks-ass.net>
- <202510211210.84D670D1C@keescook>
- <202510221746.7C09BBE@keescook>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="faeMJken"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761216190;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2itfR4P5vWlnhxtQmgFjh+n2XUI3sGLIeHL7uzBaLr4=;
+	b=faeMJkenuiVG5UbIwru6FpNkyIvAFHukAyfXMevSRiu5Mg8CG4Ae3JoKPYe9uKZ9pG5jH4
+	y1CkenBd5v0f02TGQ9FXPaptGoElv2ZwBHM3Nswia7Rqq7elDEwM8qqZVdkNBB4dhZ97/p
+	I9PR5JfHyP/IhtJvTC1s8Rhb9AQyia8=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-o7oygs2oPru8mQiW2hwkXw-1; Thu, 23 Oct 2025 06:43:09 -0400
+X-MC-Unique: o7oygs2oPru8mQiW2hwkXw-1
+X-Mimecast-MFC-AGG-ID: o7oygs2oPru8mQiW2hwkXw_1761216189
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-475c422fd70so3870165e9.2
+        for <linux-hardening@vger.kernel.org>; Thu, 23 Oct 2025 03:43:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761216188; x=1761820988;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2itfR4P5vWlnhxtQmgFjh+n2XUI3sGLIeHL7uzBaLr4=;
+        b=TMZHb2gM/n9AjgcrKf4SFfIFMArxTmooPx8UW0WyhJhEE9KBwttBqc/AKF6lnorwLA
+         UCOVXtZsCh0QhAD6IC0nR+AA8FS9O45LmCX2ZDeiazS7k/WuB1yXPaPNFpkxvfIHHLYT
+         NT3iY3hvCjxKlr8ikbjtHNtfbLPi9kLIyuSr7KaFrJoE3QXHZtGc3dVxSs/TlJFWQ/gG
+         nT4XcTYnkq6qFG3zkJTpUe6aXRjcKeLQvv15SEmT4KpslCE29JhcJV9ZSkzvNqZeSpX4
+         YlOwRbC5uDd0HchR/cUpQboxPo0pGaJzLLOS1O5cEoMCWkLn6swh/rQKS1vJ45gs1j7i
+         CnBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJicUED38YBodIx7JvWKPPn16NGyEA7EiuwYYFk3n81gNFiwMlNPV3yg1yODnXcdLPZ0Sx9biiVvxDnEy404k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygwfZl20CRe9YnTu10f+8/93q1IW26/04zg+pS0QK7B/WXMh5n
+	VfCiQIkehvZNVJxZ+l7KfN2+Q8Rkc6zmQIWhkJdE2MAQnnxN9H8NoAtu6r07C7yBPF3Zggy9AAk
+	/qhjKKelDnrC7BwM1U05ORwNArm393q9Ymh7JxrhtSItcs4J3lwVteA2Ovep5XqQE1oPaHA==
+X-Gm-Gg: ASbGncuuClD1cDc6hnAy24C0jZsAtYxNi5kpqlWq35M8xKjxga12LTS1J3Re2awC8ZO
+	ivQXC2jncfsHh7GLl6bD/lFki6LveQBnekh07B2NHnSys/Kb7OWXlOg9iUAfjuJjGHXZ8haWZgO
+	+ihcH5Pkb3gX6ff1opURcgBcH5EuiP/sMGLl5llzbpz8fnvQmxncgrH5R8aV0z3p7oVG+kvMEZ/
+	FQ2Isp0XuNb2Mhhy20uNAOnRgWZfbGI66LzpkeOPZ9Y+wTz4B3SIdRSk/5dSIVaGiE8PAbn+hzq
+	di5vmv6nPNru+qF/gQsKo812igfSR/c/qmvG0ipFMerr135uAm32m9JRNuX22W2wP+1hJgCYkqG
+	YNyfyS8ExCaD5BLSiYH7EieArVySF022KbT2XYE4pgvI+C34=
+X-Received: by 2002:a05:600c:3b83:b0:46e:3d41:6001 with SMTP id 5b1f17b1804b1-47117925171mr243744105e9.34.1761216188629;
+        Thu, 23 Oct 2025 03:43:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHeZ82VrSnvpK1c3qyzIXLRxmMNdmjxKL2P/cuqpRB9ovXOV8FGWqUSGpOdh0UCletrBUBh+w==
+X-Received: by 2002:a05:600c:3b83:b0:46e:3d41:6001 with SMTP id 5b1f17b1804b1-47117925171mr243743745e9.34.1761216188204;
+        Thu, 23 Oct 2025 03:43:08 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2712:7e10:4d59:d956:544f:d65c? ([2a0d:3344:2712:7e10:4d59:d956:544f:d65c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475cae92067sm31140865e9.4.2025.10.23.03.43.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Oct 2025 03:43:07 -0700 (PDT)
+Message-ID: <268ee657-903a-4271-9e17-fcf1dc79b92c@redhat.com>
+Date: Thu, 23 Oct 2025 12:43:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202510221746.7C09BBE@keescook>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/9] net: Add struct sockaddr_unspec for sockaddr of
+ unknown length
+To: Kees Cook <kees@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Simon Horman <horms@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>,
+ Willem de Bruijn <willemb@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20251020212125.make.115-kees@kernel.org>
+ <20251020212639.1223484-1-kees@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20251020212639.1223484-1-kees@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: eM77dxCshmF_hi4Gmb5w5FM_bdeR8rk-hw0bALfeLzw_1761216189
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 22, 2025 at 05:47:43PM -0700, Kees Cook wrote:
-> On Tue, Oct 21, 2025 at 12:24:05PM -0700, Kees Cook wrote:
-> > On Tue, Oct 21, 2025 at 11:54:47AM +0200, Peter Zijlstra wrote:
-> > > > [...]
-> > > > Unfortunately, this annotation cannot be used for "void *" members
-> > > > (since such a member is considered a pointer to an incomplete type,
-> > > > and neither Clang nor GCC developers could be convinced otherwise[1],
-> > > > even in the face of the GNU extension that "void *" has size "1 byte"
-> > > > for pointer arithmetic). For "void *" members, we must use the coming
-> > > > "sized_by" attribute.
-> > > 
-> > > So why do we need both __counted_by_ptr() and this __sized_by(), won't
-> > > one be good enough?
-> > [...]
-> > Let me take another stab at it...
+On 10/20/25 11:26 PM, Kees Cook wrote:
+> Add flexible sockaddr structure to support addresses longer than the
+> traditional 14-byte struct sockaddr::sa_data limitation without
+> requiring the full 128-byte sa_data of struct sockaddr_storage. This
+> allows the network APIs to pass around a pointer to an object that
+> isn't lying to the compiler about how big it is, but must be accompanied
+> by its actual size as an additional parameter.
 > 
-> It seems this will be acceptable as long as it is gated by GNU
-> extensions.
+> It's possible we may way to migrate to including the size with the
+> struct in the future, e.g.:
+> 
+> struct sockaddr_unspec {
+> 	u16 sa_data_len;
+> 	u16 sa_family;
+> 	u8  sa_data[] __counted_by(sa_data_len);
+> };
 
-Excellent!
+Side note: sockaddr_unspec is possibly not the optimal name, as
+AF_UNSPEC has a specific meaning/semantic.
 
-> GCC patch in progress. Clang PR here:
-> https://github.com/llvm/llvm-project/pull/163698
+Name-wise, I think 'sockaddr_sized' would be better, but I agree with
+David the struct may cause unaligned access problems.
 
-I think you've got your link mixed up, this appears to be arm-kcfi (also
-good ofc). Either that, or I need copy/paste lessons.
+/P
 
-This one?
-
-  https://github.com/llvm/llvm-project/pull/164737
