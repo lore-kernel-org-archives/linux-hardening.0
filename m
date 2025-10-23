@@ -1,67 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F722571A5
-	for <linux-hardening@vger.kernel.org>; Thu, 23 Oct 2025 15:59:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C44326E718;
+	Thu, 23 Oct 2025 16:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761235156; cv=none; b=eMx8PZAr6mOSISpcOtzF+UVmQvhKkqC1OOnSLyNrgfKVbXGeohz9Q4lGmuYAZQd8D7f4fDEHB5z6JYNMhLggRLPLo0fUvpgH7fbAMEMh6Z0DHrNQIr0ete/HbyRSNk00Ky+s9ZwDGQeylWSUdD6UoYNaovZChTZBla+oefYIqjg=
+	t=1761235289; cv=none; b=bRumun6yZtMRth+c50W6yaG/zv3sw4zy7CBvmmNukrvrd6kFQYtHcSLl/AP40m9cif9Q3ZW8BCXdT293APnCJ89VZxU0KZ1eXgjv++81vv6ZKzJZPJiwOLRxVxyC4j21cG74v314jwfyIt+kJ17apSunsKKQ5eQly69ePqCjUbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761235156; c=relaxed/simple;
-	bh=IN34FN/3ED8v5YaYy2OzvWVsVz6VZbvyZZb7YeHfphQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CyukGhVHvGBH7bFtmuYlbNoKpwFzbWq/I+yIr/7VA2TKPRYT1HZspK8yfoMqZ8bMr4eTA+wC945+I4Fz9Uke2F0GAtsJu+gVqik+dZtjrVGi5R+XuDbPwx2hCbhIdT6i9o58q/iC0RewTRld0FZAjYVFDq1DesfduJvCq2mySi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p2fHF70X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761235289; c=relaxed/simple;
+	bh=QR0xo9kwz4C5B32D+8W39liiu/5N5EbAo7By0ltQ3So=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hWCbiXKZzbQHsUtcbpp9sVK7Bc6Kk9JU2IeIhwWgGW6eLr/LamLSVEjCh0QuEOA8t8x2sk/vdE5eYYNTn3CBqLmo/JzGj/XMFncmd1fI4PGwJG0ue4Dt15Np0LG8Y73DI3oSSwUrnKJy7dCPHbQIWJEYGcm99SkEwtNQAIEvl8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L5UmEEzd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p2fHF70X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6356C4CEFF;
-	Thu, 23 Oct 2025 15:59:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L5UmEEzd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37CDBC4CEFD;
+	Thu, 23 Oct 2025 16:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761235155;
-	bh=IN34FN/3ED8v5YaYy2OzvWVsVz6VZbvyZZb7YeHfphQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p2fHF70X9m3adcJveLq/B7G5GLHN34wJmkrWzz/Xqma+BMbtbYw6IocBn04Q0y3N/
-	 7Mvl1PZpYXRLmJ5dSUtJr5WeCvRtk9bYdwIfDlQG+zo+nlJJw2nVZRdGB5NAB+Pp4o
-	 ATtTe01W/AEOK9bP/9QSBbYWOC7pieTbIAUKvl91OuEfHuPUEWacWD8dIIEsStCPCI
-	 xx8oR6Xx/DwWopHGn4N5PvR31pHNLq1v19Y+4C7PWH3ZTQ3JRWTyiQi1+qrly0cGHm
-	 W9Y2HM1MkUYK2tkVkX0cNje20MKyaGJGuG0iQ9m6SuwwH9MYLnsPCS7o/2fho4X2TM
-	 d5Hu9XlDT8dMg==
+	s=k20201202; t=1761235289;
+	bh=QR0xo9kwz4C5B32D+8W39liiu/5N5EbAo7By0ltQ3So=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L5UmEEzdgVMM2s3DmIzIkfVrcjFHhMCeIXoKlqvXiVAI8ZwCCQuWsvYOr371c5XPw
+	 eGveeU5fB/WE/TmLBQx9GcrnCoNpGSBB8ZRyNw1PEfEeloWpcoVOFRS8J+VMveE4bJ
+	 jiZj2EOxzfExM667AaeSQ2ZJOweEGywkCrdmzLK9/eCtnAFnDA6NdXaJ1dUnh+viQP
+	 YaOcKd1iWUk6hUxjgeLPf/epNdnwdLVPCBsc/gXG3jPx8z1Iwi0JpOm9jfijj4VWM9
+	 eabJcM7Tc4kcSIdp07X08DhOq2UFUz+QjMMQx2c8OCSve+HVp3JJa2gzruZYXandds
+	 rF1Y2JB0GA7mA==
+Date: Thu, 23 Oct 2025 09:01:28 -0700
 From: Kees Cook <kees@kernel.org>
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Willem de Bruijn <willemb@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [RESEND PATCH] pstore/ram: Update module parameters from platform data
-Date: Thu, 23 Oct 2025 08:59:00 -0700
-Message-Id: <176123513678.805341.13041289609817372519.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251023143755.26204-1-tzungbi@kernel.org>
-References: <20251023143755.26204-1-tzungbi@kernel.org>
+Subject: Re: [PATCH v3 2/9] net/l2tp: Add missing sa_family validation in
+ pppol2tp_sockaddr_get_info
+Message-ID: <202510230900.5754A094@keescook>
+References: <20251020212125.make.115-kees@kernel.org>
+ <20251020212639.1223484-2-kees@kernel.org>
+ <52c7bbac-da08-44d5-b1ec-315ce001b42a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52c7bbac-da08-44d5-b1ec-315ce001b42a@redhat.com>
 
-On Thu, 23 Oct 2025 22:37:55 +0800, Tzung-Bi Shih wrote:
-> Update module parameters `mem_type` and `ramoops_ecc` from platform data
-> so that they are available through /sys/module/ramoops/parameters/.
+On Thu, Oct 23, 2025 at 12:47:32PM +0200, Paolo Abeni wrote:
+> On 10/20/25 11:26 PM, Kees Cook wrote:
+> > While reviewing the struct proto_ops connect() and bind() callback
+> > implementations, I noticed that there doesn't appear to be any
+> > validation that AF_PPPOX sockaddr structures actually have sa_family set
+> > to AF_PPPOX. The pppol2tp_sockaddr_get_info() checks only look at the
+> > sizes.
+> > 
+> > I don't see any way that this might actually cause problems as specific
+> > info fields are being populated, for which the existing size checks are
+> > correct, but it stood out as a missing address family check.
+> > 
+> > Add the check and return -EAFNOSUPPORT on mismatch.
+> > 
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> >  net/l2tp/l2tp_ppp.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
+> > index 5e12e7ce17d8..b7a9c224520f 100644
+> > --- a/net/l2tp/l2tp_ppp.c
+> > +++ b/net/l2tp/l2tp_ppp.c
+> > @@ -535,6 +535,13 @@ struct l2tp_connect_info {
+> >  static int pppol2tp_sockaddr_get_info(const void *sa, int sa_len,
+> >  				      struct l2tp_connect_info *info)
+> >  {
+> > +	const struct sockaddr_unspec *sockaddr = sa;
+> > +
+> > +	if (sa_len < offsetofend(struct sockaddr, sa_family))
+> > +		return -EINVAL;
+> > +	if (sockaddr->sa_family != AF_PPPOX)
+> > +		return -EAFNOSUPPORT;
 > 
-> `ramoops_dump_oops` isn't included as it has been deprecated.
-> 
-> 
+> I fear we can't introduce this check, as it could break existing
+> user-space application currently passing random data into sa_family but
+> still able to connect successfully.
 
-Applied to for-next/pstore, thanks, nice catch!
+Isn't sa_family kind of the critical determining factor on how the
+network stack decides to handle sockaddr stuff? I'll drop it for now,
+I guess, but that's surprising to me.
 
-[1/1] pstore/ram: Update module parameters from platform data
-      https://git.kernel.org/kees/c/b69255357368
-
-Take care,
+-Kees
 
 -- 
 Kees Cook
-
