@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C44326E718;
-	Thu, 23 Oct 2025 16:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691D12BD5AF;
+	Thu, 23 Oct 2025 16:20:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761235289; cv=none; b=bRumun6yZtMRth+c50W6yaG/zv3sw4zy7CBvmmNukrvrd6kFQYtHcSLl/AP40m9cif9Q3ZW8BCXdT293APnCJ89VZxU0KZ1eXgjv++81vv6ZKzJZPJiwOLRxVxyC4j21cG74v314jwfyIt+kJ17apSunsKKQ5eQly69ePqCjUbU=
+	t=1761236417; cv=none; b=IdADC3oZoMRiszgEjw3nMNFs/0326smlaMPaZlNPTrytfTKyCJo7td/GrI0U616xbty/IyOWkM2ge+yEgDHwjY6foSK9pPeR2lAJTsFeH1lSuKKDfXpWuLVHj6ehHd2w2czt0kcIUpXAlMLdcUh4S76Icl4IwbzGS22zMYU+V9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761235289; c=relaxed/simple;
-	bh=QR0xo9kwz4C5B32D+8W39liiu/5N5EbAo7By0ltQ3So=;
+	s=arc-20240116; t=1761236417; c=relaxed/simple;
+	bh=fFVUi40XDCK9B7HixvDHQwpkFgo3/dBfhOzbpBXTDTk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hWCbiXKZzbQHsUtcbpp9sVK7Bc6Kk9JU2IeIhwWgGW6eLr/LamLSVEjCh0QuEOA8t8x2sk/vdE5eYYNTn3CBqLmo/JzGj/XMFncmd1fI4PGwJG0ue4Dt15Np0LG8Y73DI3oSSwUrnKJy7dCPHbQIWJEYGcm99SkEwtNQAIEvl8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L5UmEEzd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YeJKmqlmIb5EP/YdtJ3Z6eNO2D4ArkG9w2Noil+MGxuYsucZ//btTMGEF1X6lzwvi6p89Ih+OolDI0SUGx/HvCgl6IRQpT+UmFOmvfuW53cskiVnGL69hk6CSuB6fR1R3OSaVGR2PbEX1+ZQDBpEXKohRQPxJgFfmraDW1JtxOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MY69QPay; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L5UmEEzd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37CDBC4CEFD;
-	Thu, 23 Oct 2025 16:01:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MY69QPay"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3260C4CEE7;
+	Thu, 23 Oct 2025 16:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761235289;
-	bh=QR0xo9kwz4C5B32D+8W39liiu/5N5EbAo7By0ltQ3So=;
+	s=k20201202; t=1761236417;
+	bh=fFVUi40XDCK9B7HixvDHQwpkFgo3/dBfhOzbpBXTDTk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L5UmEEzdgVMM2s3DmIzIkfVrcjFHhMCeIXoKlqvXiVAI8ZwCCQuWsvYOr371c5XPw
-	 eGveeU5fB/WE/TmLBQx9GcrnCoNpGSBB8ZRyNw1PEfEeloWpcoVOFRS8J+VMveE4bJ
-	 jiZj2EOxzfExM667AaeSQ2ZJOweEGywkCrdmzLK9/eCtnAFnDA6NdXaJ1dUnh+viQP
-	 YaOcKd1iWUk6hUxjgeLPf/epNdnwdLVPCBsc/gXG3jPx8z1Iwi0JpOm9jfijj4VWM9
-	 eabJcM7Tc4kcSIdp07X08DhOq2UFUz+QjMMQx2c8OCSve+HVp3JJa2gzruZYXandds
-	 rF1Y2JB0GA7mA==
-Date: Thu, 23 Oct 2025 09:01:28 -0700
+	b=MY69QPayrEeVsAOYAfDxnBHKtP4LY+mIEf+kykRLRh7UrmCItw9ch0v/IfnubidB3
+	 s+kE1VPjFfaUbpcfVYRMloqK1T89N0DGPN3sts5gjubAHfhcfasWlrnwYZ/5k+KvTq
+	 mx18RRSLyACPAY4NOAcn9CHoIJOuEprnSvtvco8f/jw9KZCYN/EGwEW9pzTQ/ZqNjq
+	 QYXzsVq/yfETa04aVZ04g67p6vXJVFUKrb7pVEeunSFQHnnkUfi0OOzgkOSE56OJ9l
+	 v/b9wZL6lmUWKVwMW5NdLKwINBfzlrUFZSWms9nq7nXIE7O4NWxJwZFatipEjGDmbQ
+	 gcg/+LfnF7w5g==
+Date: Thu, 23 Oct 2025 09:20:16 -0700
 From: Kees Cook <kees@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>
 Cc: Jakub Kicinski <kuba@kernel.org>,
@@ -40,12 +40,12 @@ Cc: Jakub Kicinski <kuba@kernel.org>,
 	Willem de Bruijn <willemb@google.com>, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/9] net/l2tp: Add missing sa_family validation in
- pppol2tp_sockaddr_get_info
-Message-ID: <202510230900.5754A094@keescook>
+Subject: Re: [PATCH v3 1/9] net: Add struct sockaddr_unspec for sockaddr of
+ unknown length
+Message-ID: <202510230918.AFE383F9E0@keescook>
 References: <20251020212125.make.115-kees@kernel.org>
- <20251020212639.1223484-2-kees@kernel.org>
- <52c7bbac-da08-44d5-b1ec-315ce001b42a@redhat.com>
+ <20251020212639.1223484-1-kees@kernel.org>
+ <980907a1-255d-4aa4-ad49-0fba79fe8edc@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,51 +54,38 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <52c7bbac-da08-44d5-b1ec-315ce001b42a@redhat.com>
+In-Reply-To: <980907a1-255d-4aa4-ad49-0fba79fe8edc@redhat.com>
 
-On Thu, Oct 23, 2025 at 12:47:32PM +0200, Paolo Abeni wrote:
+On Thu, Oct 23, 2025 at 12:59:59PM +0200, Paolo Abeni wrote:
 > On 10/20/25 11:26 PM, Kees Cook wrote:
-> > While reviewing the struct proto_ops connect() and bind() callback
-> > implementations, I noticed that there doesn't appear to be any
-> > validation that AF_PPPOX sockaddr structures actually have sa_family set
-> > to AF_PPPOX. The pppol2tp_sockaddr_get_info() checks only look at the
-> > sizes.
+> > Add flexible sockaddr structure to support addresses longer than the
+> > traditional 14-byte struct sockaddr::sa_data limitation without
+> > requiring the full 128-byte sa_data of struct sockaddr_storage. This
+> > allows the network APIs to pass around a pointer to an object that
+> > isn't lying to the compiler about how big it is, but must be accompanied
+> > by its actual size as an additional parameter.
 > > 
-> > I don't see any way that this might actually cause problems as specific
-> > info fields are being populated, for which the existing size checks are
-> > correct, but it stood out as a missing address family check.
+> > It's possible we may way to migrate to including the size with the
+> > struct in the future, e.g.:
 > > 
-> > Add the check and return -EAFNOSUPPORT on mismatch.
+> > struct sockaddr_unspec {
+> > 	u16 sa_data_len;
+> > 	u16 sa_family;
+> > 	u8  sa_data[] __counted_by(sa_data_len);
+> > };
 > > 
 > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> >  net/l2tp/l2tp_ppp.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
-> > index 5e12e7ce17d8..b7a9c224520f 100644
-> > --- a/net/l2tp/l2tp_ppp.c
-> > +++ b/net/l2tp/l2tp_ppp.c
-> > @@ -535,6 +535,13 @@ struct l2tp_connect_info {
-> >  static int pppol2tp_sockaddr_get_info(const void *sa, int sa_len,
-> >  				      struct l2tp_connect_info *info)
-> >  {
-> > +	const struct sockaddr_unspec *sockaddr = sa;
-> > +
-> > +	if (sa_len < offsetofend(struct sockaddr, sa_family))
-> > +		return -EINVAL;
-> > +	if (sockaddr->sa_family != AF_PPPOX)
-> > +		return -EAFNOSUPPORT;
 > 
-> I fear we can't introduce this check, as it could break existing
-> user-space application currently passing random data into sa_family but
-> still able to connect successfully.
+> Another side note: please include the 'net-next' subj prefix in next
+> submissions, otherwise patchwork could be fouled, and the patches will
+> not be picked by our CI - I guess we need all the possible testing done
+> here ;)
 
-Isn't sa_family kind of the critical determining factor on how the
-network stack decides to handle sockaddr stuff? I'll drop it for now,
-I guess, but that's surprising to me.
-
--Kees
+Okay, I've tweaked my workflow automation to attempt this now. I had a
+bit of a catch-22 in that I generated the CC list after "git
+format-patch" (and format-patch is what has the --prefix option, so I
+couldn't see if netdev@ was in the CC list yet...) Anyway, it should be
+part of my automation now...
 
 -- 
 Kees Cook
