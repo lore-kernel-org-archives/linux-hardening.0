@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691D12BD5AF;
-	Thu, 23 Oct 2025 16:20:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDCE313E0F;
+	Thu, 23 Oct 2025 16:31:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761236417; cv=none; b=IdADC3oZoMRiszgEjw3nMNFs/0326smlaMPaZlNPTrytfTKyCJo7td/GrI0U616xbty/IyOWkM2ge+yEgDHwjY6foSK9pPeR2lAJTsFeH1lSuKKDfXpWuLVHj6ehHd2w2czt0kcIUpXAlMLdcUh4S76Icl4IwbzGS22zMYU+V9g=
+	t=1761237077; cv=none; b=T041hfr0uVu8gFYOmyB9RRHUj1Iv0mMXPLZPeJhI0CKBeoV1OBK4fiqbiVj9bnYO8dMLzYuUelHtn51UZK9LDssg6S9v11nlXqgz6UbJ+UTeAM4iD/XXGkWyO257um9mgtfGhGhmwc5iXCurj1rIb4sATwIZv5FOruKkizTijSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761236417; c=relaxed/simple;
-	bh=fFVUi40XDCK9B7HixvDHQwpkFgo3/dBfhOzbpBXTDTk=;
+	s=arc-20240116; t=1761237077; c=relaxed/simple;
+	bh=WTHkrbGHGgyPalH7sKivguzU7HH6eKrxz8okjYAGo/4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YeJKmqlmIb5EP/YdtJ3Z6eNO2D4ArkG9w2Noil+MGxuYsucZ//btTMGEF1X6lzwvi6p89Ih+OolDI0SUGx/HvCgl6IRQpT+UmFOmvfuW53cskiVnGL69hk6CSuB6fR1R3OSaVGR2PbEX1+ZQDBpEXKohRQPxJgFfmraDW1JtxOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MY69QPay; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YzQJ2R4efAyjgCgZ7Kcc9QrlHhkhSCchIu1gxanV1sW6ec/BEsVfZ8eDaOgWyqtEl2WTsF8Ae4lOZ6Lc+BmDoIcqODl3j3f3fidGQkI/WnaD65wf0KHggOhebvDtzcXPZS8Qr/AGLPc+84rc0nyRLEX5JByFvz65ksZcnpJMBn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EDYU/mbK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MY69QPay"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3260C4CEE7;
-	Thu, 23 Oct 2025 16:20:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EDYU/mbK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C789C4CEE7;
+	Thu, 23 Oct 2025 16:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761236417;
-	bh=fFVUi40XDCK9B7HixvDHQwpkFgo3/dBfhOzbpBXTDTk=;
+	s=k20201202; t=1761237077;
+	bh=WTHkrbGHGgyPalH7sKivguzU7HH6eKrxz8okjYAGo/4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MY69QPayrEeVsAOYAfDxnBHKtP4LY+mIEf+kykRLRh7UrmCItw9ch0v/IfnubidB3
-	 s+kE1VPjFfaUbpcfVYRMloqK1T89N0DGPN3sts5gjubAHfhcfasWlrnwYZ/5k+KvTq
-	 mx18RRSLyACPAY4NOAcn9CHoIJOuEprnSvtvco8f/jw9KZCYN/EGwEW9pzTQ/ZqNjq
-	 QYXzsVq/yfETa04aVZ04g67p6vXJVFUKrb7pVEeunSFQHnnkUfi0OOzgkOSE56OJ9l
-	 v/b9wZL6lmUWKVwMW5NdLKwINBfzlrUFZSWms9nq7nXIE7O4NWxJwZFatipEjGDmbQ
-	 gcg/+LfnF7w5g==
-Date: Thu, 23 Oct 2025 09:20:16 -0700
+	b=EDYU/mbKNCY21ty803BPrcd8LU9AWr6FcmTTaRh2u/7pp7a6u4vqWmVILq+BNS3XR
+	 3wsMXL650V3Sk7LI5smLRsNmT5s+YxRo+lTCvD6/k1aBESXfr/IPEO/aPeLpsvHxF6
+	 CmAHQEb/zrvheH7WT9kGKEBsTvlNtkJMGHYJ1t/r2RO2vV95CDw2Q4jCe+d2giCPzc
+	 kR3Yn+Gt8oDhbqZKTaAcOS6JsFkKOrIKUGG5SW/wSXM+/MKw1Q347RuFzYGKQkX4Db
+	 F7kP3ZKtfl0AgI9N5P5StUModKQvp5CEM6eDYkA1cu5SVVyuvFydUKj7x3lDp+LpGk
+	 qcs7mFE0pB0GA==
+Date: Thu, 23 Oct 2025 09:31:17 -0700
 From: Kees Cook <kees@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>
 Cc: Jakub Kicinski <kuba@kernel.org>,
@@ -42,10 +42,10 @@ Cc: Jakub Kicinski <kuba@kernel.org>,
 	linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v3 1/9] net: Add struct sockaddr_unspec for sockaddr of
  unknown length
-Message-ID: <202510230918.AFE383F9E0@keescook>
+Message-ID: <202510230929.7425CE38C4@keescook>
 References: <20251020212125.make.115-kees@kernel.org>
  <20251020212639.1223484-1-kees@kernel.org>
- <980907a1-255d-4aa4-ad49-0fba79fe8edc@redhat.com>
+ <268ee657-903a-4271-9e17-fcf1dc79b92c@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,9 +54,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <980907a1-255d-4aa4-ad49-0fba79fe8edc@redhat.com>
+In-Reply-To: <268ee657-903a-4271-9e17-fcf1dc79b92c@redhat.com>
 
-On Thu, Oct 23, 2025 at 12:59:59PM +0200, Paolo Abeni wrote:
+On Thu, Oct 23, 2025 at 12:43:06PM +0200, Paolo Abeni wrote:
 > On 10/20/25 11:26 PM, Kees Cook wrote:
 > > Add flexible sockaddr structure to support addresses longer than the
 > > traditional 14-byte struct sockaddr::sa_data limitation without
@@ -73,19 +73,16 @@ On Thu, Oct 23, 2025 at 12:59:59PM +0200, Paolo Abeni wrote:
 > > 	u16 sa_family;
 > > 	u8  sa_data[] __counted_by(sa_data_len);
 > > };
-> > 
-> > Signed-off-by: Kees Cook <kees@kernel.org>
 > 
-> Another side note: please include the 'net-next' subj prefix in next
-> submissions, otherwise patchwork could be fouled, and the patches will
-> not be picked by our CI - I guess we need all the possible testing done
-> here ;)
+> Side note: sockaddr_unspec is possibly not the optimal name, as
+> AF_UNSPEC has a specific meaning/semantic.
+> 
+> Name-wise, I think 'sockaddr_sized' would be better, but I agree with
+> David the struct may cause unaligned access problems.
 
-Okay, I've tweaked my workflow automation to attempt this now. I had a
-bit of a catch-22 in that I generated the CC list after "git
-format-patch" (and format-patch is what has the --prefix option, so I
-couldn't see if netdev@ was in the CC list yet...) Anyway, it should be
-part of my automation now...
+I'll go with sockaddr_unsized -- doing the sockaddr_sized variant is a
+much more involved change. I just want to get us to where we are today
+but with no lying to the compiler about sizes. :)
 
 -- 
 Kees Cook
