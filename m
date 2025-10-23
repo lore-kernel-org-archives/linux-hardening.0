@@ -1,59 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D49313E0F;
-	Thu, 23 Oct 2025 12:28:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5A2274B44;
+	Thu, 23 Oct 2025 13:45:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761222504; cv=none; b=AEkEniMjsgX981UYQnLPw3I+kcAx7YZo9vPZdjZVSigtasuhTpIas15KAPEJyxXfxe7WYE/11rY0Y5m8ok22QfeIaBFngiO5xcGNrF2QK/DOOZqbc2qCMNC8TZJWv7C6ASY2/NEVpAyy1Vv4JnvumJU0RM3a0ODdDGSCm2tDfUE=
+	t=1761227134; cv=none; b=Cgp5gVp2i5SsHhJIficR8qHZgI1QS82yHlTZPqmBUzOLY3/BeRyLZP3Ql/YQfbKtCjzgXjOuVbNZRjAtyzOz9YTnw7yUcmxi/BX4zqcDav/muiov0bbOmcRPXSg1Gdr0XrsMeUXTNGad1LBO3coubvdEaaSRPqTOELjZS4T3dcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761222504; c=relaxed/simple;
-	bh=hKNzt+xgYZgDDCqY4vmhqUPnjY/TN1aVxfjLzHN8pF0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B/N6uzSIOX4U0oyXLAMrdmdzHpHLfrAXVkfc72chBNXaMZ4EZYKM738wCPZFEhIB+uKDWixFr9Ez/9/wAZNjr2B7K1xoU+B1F5ouxN5FbJZdvbZh+o0CmLNQOOM2X7vmtwXBP5QqkR3Yjtv2D58v5pP2jdg/mf7f6g0NuB7C3Vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=re6Kz3sS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761227134; c=relaxed/simple;
+	bh=Qt0yuLtw66ZCq3MNXemX3SqZ1fs/KSoTjGU3m7F/lGU=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Nz1Nds7wH4uRAkB/Y2qvCCLnAgsRAXfbcKAVjQh04crOcGSsUHK+66DVjwNd5ugGBVu8VOmQcOeu4exVLc0jBjEO2S8XwPLdzZ6d49yHVmU3I1jNgM6pzv3Ci6CcTPPSi5lhq9HaVHa1aTYgHOfQnRf78o26nttrSQzOGc6pcGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aqry/oZO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="re6Kz3sS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C58FC4CEFB;
-	Thu, 23 Oct 2025 12:28:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aqry/oZO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AAE1C4CEE7;
+	Thu, 23 Oct 2025 13:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761222503;
-	bh=hKNzt+xgYZgDDCqY4vmhqUPnjY/TN1aVxfjLzHN8pF0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=re6Kz3sSAUojREwJ5/qxeFAi1v4OQuB0xHEDuErOtYq2poFVRBSuIopjkgFe2EhoC
-	 s7ZM60Yoz81QRkyTq/WoadlTnTiWZlFm4TKmbJaKRLxF3r9hZXZ36w5FRvwUArzZgc
-	 lNYNTg+ufSGG/z3erHdsNbdB4u1YyG3bQXRQVlL2ySKJHhx1D4CtwVQUaUVmnIftyu
-	 7bv5Y4HC2tf4y6EhXhwVN1WidwRvYvWG/MFIRf7QnluGt23CC3bk6kO+XItT0za0/W
-	 RCSGd7f6CRtQADJ7s0pciV/I1zHMEfMak29wYlZ8G3KHuE6v8TfHitUZOxH4J1f5EM
-	 ZZzdoenuFwTXw==
-Date: Thu, 23 Oct 2025 14:28:19 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Damien Le Moal <dlemoal@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ata: Replace deprecated strcpy with strscpy in
- it821x_display_disk
-Message-ID: <aPofY8mWyRATm6T5@ryzen>
-References: <20251018105146.29808-1-thorsten.blum@linux.dev>
+	s=k20201202; t=1761227133;
+	bh=Qt0yuLtw66ZCq3MNXemX3SqZ1fs/KSoTjGU3m7F/lGU=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=aqry/oZOTZd9CJW0T1mbAjhDHMQymTpNckh+GWm7OhJL7taGKQO86I6R/hOMTvSLY
+	 SLQwYmdq9UC6n9K9AkFm+Nvyzxi5b8e+9+osbpQX5BShUU9QdcQ+v8F6pSpG9PniuG
+	 oUZk0Y+fHvu/ZNQFQ7nocyD6QlSowiSBs9S9N1g3hRNqx8RojGuIxfVNmm+geOuAr4
+	 2O+c9VqjUcEZ7HLlt0a2npyasTsyO0GEn9wPHaJtwJXzedJENFwyp2ryhKgSO04KCY
+	 OA+CjmtFBeClA+d+2GHP2VgmjDM0CFOQCgp2oFwtauWtxYiGPFgRl+dtL6VRkp9oMW
+	 UZyY2aff/AhLg==
+Date: Thu, 23 Oct 2025 06:45:31 -0700
+From: Kees Cook <kees@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+CC: Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Marco Elver <elver@google.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Masahiro Yamada <masahiroy@kernel.org>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Johannes Weiner <hannes@cmpxchg.org>, llvm@lists.linux.dev,
+ Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Nicolas Schier <nicolas.schier@linux.dev>, Shuah Khan <shuah@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ =?ISO-8859-1?Q?Thomas_Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+ Tamir Duberstein <tamird@gmail.com>, Michael Kelley <mhklinux@outlook.com>,
+ kernel test robot <lkp@intel.com>, Heiko Carstens <hca@linux.ibm.com>,
+ Uros Bizjak <ubizjak@gmail.com>, Jan Hendrik Farr <kernel@jfarr.cc>,
+ Yafang Shao <laoar.shao@gmail.com>,
+ Marc Herbert <Marc.Herbert@linux.intel.com>,
+ Christopher Ferris <cferris@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Paolo Abeni <pabeni@redhat.com>, Tejun Heo <tj@kernel.org>,
+ Jeff Xu <jeffxu@chromium.org>,
+ =?ISO-8859-1?Q?Michal_Koutn=FD?= <mkoutny@suse.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Randy Dunlap <rdunlap@infradead.org>,
+ Brian Gerst <brgerst@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/3] compiler_types: Introduce __counted_by_ptr()
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20251023080123.GU3245006@noisy.programming.kicks-ass.net>
+References: <20251020220005.work.095-kees@kernel.org> <20251020220118.1226740-1-kees@kernel.org> <20251021095447.GL3245006@noisy.programming.kicks-ass.net> <202510211210.84D670D1C@keescook> <202510221746.7C09BBE@keescook> <20251023080123.GU3245006@noisy.programming.kicks-ass.net>
+Message-ID: <1D53887A-B277-4813-A3E6-9367CCFC8759@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251018105146.29808-1-thorsten.blum@linux.dev>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Oct 18, 2025 at 12:51:45PM +0200, Thorsten Blum wrote:
-> strcpy() is deprecated; use strscpy() instead.
-> 
-> Replace the hard-coded buffer size 8 with sizeof(mbuf) when using
-> snprintf() while we're at it.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Applied, thank you!
 
-https://git.kernel.org/pub/scm/linux/kernel/git/libata/linux.git/commit/?h=for-6.19&id=4ea303d9e9862ff8bd3707f67b267646b8ffd3ec
+On October 23, 2025 1:01:23 AM PDT, Peter Zijlstra <peterz@infradead=2Eorg=
+> wrote:
+>On Wed, Oct 22, 2025 at 05:47:43PM -0700, Kees Cook wrote:
+>> On Tue, Oct 21, 2025 at 12:24:05PM -0700, Kees Cook wrote:
+>> > On Tue, Oct 21, 2025 at 11:54:47AM +0200, Peter Zijlstra wrote:
+>> > > > [=2E=2E=2E]
+>> > > > Unfortunately, this annotation cannot be used for "void *" member=
+s
+>> > > > (since such a member is considered a pointer to an incomplete typ=
+e,
+>> > > > and neither Clang nor GCC developers could be convinced otherwise=
+[1],
+>> > > > even in the face of the GNU extension that "void *" has size "1 b=
+yte"
+>> > > > for pointer arithmetic)=2E For "void *" members, we must use the =
+coming
+>> > > > "sized_by" attribute=2E
+>> > >=20
+>> > > So why do we need both __counted_by_ptr() and this __sized_by(), wo=
+n't
+>> > > one be good enough?
+>> > [=2E=2E=2E]
+>> > Let me take another stab at it=2E=2E=2E
+>>=20
+>> It seems this will be acceptable as long as it is gated by GNU
+>> extensions=2E
+>
+>Excellent!
+>
+>> GCC patch in progress=2E Clang PR here:
+>> https://github=2Ecom/llvm/llvm-project/pull/163698
+>
+>I think you've got your link mixed up, this appears to be arm-kcfi (also
+>good ofc)=2E Either that, or I need copy/paste lessons=2E
+>
+>This one?
+>
+>  https://github=2Ecom/llvm/llvm-project/pull/164737
+
+Whoops, yes, that's the one! Seems I'm the one needing those lessons=2E ;)
+
+
+--=20
+Kees Cook
