@@ -1,71 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313FBD515;
-	Thu, 23 Oct 2025 16:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AFD34B19E
+	for <linux-hardening@vger.kernel.org>; Thu, 23 Oct 2025 17:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761237201; cv=none; b=ghfPMvyhvCMBd17jyrdaivV7NjDpD9vkEwYEcSh++Ismq7Rq52wvp23lwt60XpsruAjaaX5pVTOmKfXhlfMVjQRdww63tw4nvIG2RyhL0iStf5fARA8C/pjWQz2H8qoTjOLSzKpk82EQlmsxOGXA4+Vo+kMpkpjQGNdKj7VTkL4=
+	t=1761241968; cv=none; b=PR4UzZMw1J5ZGKWUU0tCReyZrzZ99pJA1ajEZ3X6UvqQNbcqkcDLTItLO2zMWyMoxJgwTLMrbwy5iF5RfMIjVfDag1PmufP8AM2qhBk64HJmJYsgbep4CUbxXxAQI6lB1gy5S+ZoosYv5TwcnCfRl4yKpOE8jh9f7GN5GeUXnoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761237201; c=relaxed/simple;
-	bh=/6tHfvGZqUwcTLO1Eo5xqt/UNzXiyV7MfLFdbBzdmHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uK/vCw+PChyz8WscSWWafeht7Grg76z6xjKxzPqcuNpNz8oKII9gOJxau3NoN0dFuL/UPFtRe72MUc+YNrfZPnI5n+PxXVbFUG91vuivzMVOGmsiUcUVj5D4FvUKFa4ZXCuPNvYkspj3ykJVMx4MPcSLPO8C6G4iGqrWaAgBiR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p8w1qSUT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761241968; c=relaxed/simple;
+	bh=3/Hb62kc+NYq2C0hsOSogiX9/a2NhcysJRz/S17ajqo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rQ3fPrtvDmuWXpWZE8L9iQ/1YXLq1DyF6oRvlky1yAR2r49pFWh4r8m93mL9omghbG+CQ4tZnFkXaV7KzW6TEAEH4hA7HdkAyfp5y1D8Bhhnr3tLu5HGP8iNNuE1r5seNhghBS1tnGDuWsD647KUo0xp9kTYGNqclbEfkY1aRWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=J6jXXkXM; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p8w1qSUT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01533C4CEE7;
-	Thu, 23 Oct 2025 16:33:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761237201;
-	bh=/6tHfvGZqUwcTLO1Eo5xqt/UNzXiyV7MfLFdbBzdmHc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p8w1qSUTR/FyUhldaR6ZoysNRjirBiAdw5hF6KaHS6f6nt61Q7Tai7fu6R2mW0MYl
-	 hZ4dwfgA9pEokgLbjOFU5ZdoTjCRl26D8xY/Bp/EfYX+aGTa5HujE3/9m5ESnzKTF0
-	 J1dIXfwAA1C8d8/cA3sKjVNJ5qw0O59jKbCVABW+B7OfnGA7v8+D//ABvX1gESq0Ba
-	 0smW/d9WpekOUDet2oJRu1+9mOaADJ6x48kIlkaD+rDkGWhMbTond+C0wzcvfV0F5v
-	 Rb3N+XUDLNQSBZigELxpanCpd5xoRH9kNRsSoqeOS2Wgnv43no6wWTXT2ijkoGgRlB
-	 d8ZBX+r/X28Tw==
-Date: Thu, 23 Oct 2025 09:33:20 -0700
-From: Kees Cook <kees@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Willem de Bruijn <willemb@google.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="J6jXXkXM"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1761241963;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vENFCP7b3Pf6ElRkmq5+rmKi7BK0xmEqT+h7PKf7AdY=;
+	b=J6jXXkXMi8Ubq7RroFsuYEnRLp8rKwwL6hlNp0XDYItLFMdhPWHPb5Hn5PwIZhfMh/cdwb
+	NOPmbD/jd23Pk3v5Sbd7GPkIrW2MeVDMzak4b00jtpZ5ktFeMlxdVKsflh3kZBuFsiDCsw
+	/fsTnKEcza+D9bagRrMkNpLuzQUXQrI=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: David Howells <dhowells@redhat.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 1/9] net: Add struct sockaddr_unspec for sockaddr of
- unknown length
-Message-ID: <202510230932.25CE49FC8@keescook>
-References: <20251020212125.make.115-kees@kernel.org>
- <20251020212639.1223484-1-kees@kernel.org>
- <20251021102600.2838d216@pumpkin>
- <202510211232.77A0F8A@keescook>
- <20251022102624.18d2c6f7@pumpkin>
+Subject: [PATCH] keys: Annotate struct asymmetric_key_id with __counted_by
+Date: Thu, 23 Oct 2025 19:48:11 +0200
+Message-ID: <20251023174810.75805-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251022102624.18d2c6f7@pumpkin>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Oct 22, 2025 at 10:26:24AM +0100, David Laight wrote:
-> If you do add a #define, it can generate the size from that of the
-> supplied address structure (and error things that are stupidly short).
+Add the __counted_by() compiler attribute to the flexible array member
+'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-I have more patches coming that consolidate all the open-coded casting
-and size checking into a macro. So far, only a couple places weren't
-doing the full checking.
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ include/keys/asymmetric-type.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/include/keys/asymmetric-type.h b/include/keys/asymmetric-type.h
+index 69a13e1e5b2e..1b91c8f98688 100644
+--- a/include/keys/asymmetric-type.h
++++ b/include/keys/asymmetric-type.h
+@@ -49,7 +49,7 @@ enum asymmetric_payload_bits {
+  */
+ struct asymmetric_key_id {
+ 	unsigned short	len;
+-	unsigned char	data[];
++	unsigned char	data[] __counted_by(len);
+ };
+ 
+ struct asymmetric_key_ids {
 -- 
-Kees Cook
+2.51.0
+
