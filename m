@@ -1,119 +1,98 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9328302157;
-	Fri, 24 Oct 2025 15:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B911DC994;
+	Fri, 24 Oct 2025 15:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761320225; cv=none; b=Q00s8xv+9CMk8oDwVowYMSOZ4FgWkmsEwU7nasOcKPHl7KnkKBO+UCqS47QWXJTqpg4KVKyr3EO5tOVvPegLw1P8+sFaiW3/S0BVPJnGJ7gS/BuwoCGgMyrSLxRPo9DWcL7PAlzpGJkdeTzR8Z4Jlg6iDybwl+1/xvwG1U8aSlc=
+	t=1761320783; cv=none; b=X8KD5/faBY8epF3b47LAMSAnWK2LqxGagYqt9y9gkRDPi+22ChD0zb1OIdkPbl5yXF9SyozP4Pt57utSdo+2AZjReNy99RoAo09hdE+/PGmOxEyQbWlSOpiQCdJciDv6pQgrBW3zXsqH8mpGW1eMER8ozFYrgdC5hexvjnc5rg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761320225; c=relaxed/simple;
-	bh=AgYdT7YB2xxwLbJHg3/succLrKYoP/PPcqdqImF3crU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P26TWJEpNGWFavr/SH2ZgVpz1/IkeSlV12EsDL+Qw7XOL36XyXrhmyBwQxkaC/scdy82Y8wfanMp6R9rFOFyBW3SfHkp7mWANd2538XDXjfdIHPEYffi58Ei4Qvazkpha3e/jdMaM+roz90fZu7MD663Y45ezzD8JPyqu9fr+sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=s5KqXpOe; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1761320783; c=relaxed/simple;
+	bh=9PHQQmN7U58dEYd/jGpL7q3Dd+5cmWnn8PKw2g9U1rE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sw54C/mZUHM5jPEVHIWEncsBLcddqO/L8YzC6IZJCxRxhFvk2W8oEAlEUgy2JyoMAIvBmbsS3TOGlxNqyZoLpki4TEUkUSo090tbFEBXXqMH50sTxbAkxflqPe0QjMHW/Hpk/bN+sXso/Lh9A2qniel7UfTxz71z2x+W6xjb9UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKRl59ZM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="s5KqXpOe"
-Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
-	by cmsmtp with ESMTPS
-	id CIP5vStgcKXDJCJqav7P4d; Fri, 24 Oct 2025 15:36:56 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id CJqYvtRhZMoIXCJqZvGY41; Fri, 24 Oct 2025 15:36:55 +0000
-X-Authority-Analysis: v=2.4 cv=R7wDGcRX c=1 sm=1 tr=0 ts=68fb9d17
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=4oHATN8Nx7vVUZJYxp75bA==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=7T7KSl7uo7wA:10
- a=ejCFXqOAJi88KBG5-skA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=PYq2fPB27ReF2cDwOstKi/I5IpH5649wXvX+ugiEd8M=; b=s5KqXpOeJHb5Dr0aEkqViGiPzg
-	FQ+rJy88GCviZlxTWIyxFn0xaTPsHJ6pauvVftWGuc1a6ygfq8aOAguhbOD6Ltw2FM+fEtrvpQiR4
-	CHBPCrWD7LQK45LyEVpSCEKbgTzlrqBsIKYCxOWI6POPRqb9jicribi6irlSoe9ns8mEdQnxYaLlR
-	3g91QUKBEdmlXiFiXImqFFyTwFUw6AvkzO8Vbg9sEfBuG6Y//zKUxbZtub8XqH+auukrkX2kc4Yuu
-	fvQdw51LqtwcL20gogfx/ehMRFZ7yttL7mF097A1DI3J9Gn9ayRhKz7b3hrW2Y0lGhyDUK7B6Blip
-	jvia2CzQ==;
-Received: from [185.134.146.81] (port=60908 helo=[10.35.193.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vCFu8-00000000imq-29tU;
-	Fri, 24 Oct 2025 06:24:20 -0500
-Message-ID: <949f472c-baca-4c2f-af23-7ba76fff1ddc@embeddedor.com>
-Date: Fri, 24 Oct 2025 12:24:09 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MKRl59ZM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F18C4CEF1;
+	Fri, 24 Oct 2025 15:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761320782;
+	bh=9PHQQmN7U58dEYd/jGpL7q3Dd+5cmWnn8PKw2g9U1rE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MKRl59ZM8rvoik8ee2+FejsEO+8k2Pws6sZbZJr3HGruy4UjMw41/4LjEEaTlAZdZ
+	 2eYiUbjTZaC5lG3bVsFWss/d75BmaJRrEc2cxa0JfrHKJAK+dXzB73AGN6GRkrYRhJ
+	 eGcfcCCYwaC57ghc6HookvgrtC+jZF35r70CBLf3kvLcg5vx77KspeXbW/k5Alz8JS
+	 bpUIWd+d4T+CBs1nd2DClhQNuP9MG5OHfR74Ozy2Of2Fl49kJrMrtEHffrnxWVyfqU
+	 6AbtxMu0tElxF4Op0ohB5nlsSYTM3xDSrn0S83C6eDdFcVAnVxBzgZRRqF59rmINZs
+	 uRU9qJZc/Wy2w==
+Date: Fri, 24 Oct 2025 16:46:18 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 08/10] ASoC: wsa881x: drop
+ GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
+Message-ID: <aPufSoALA--iJeVn@finisterre.sirena.org.uk>
+References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
+ <20251022-gpio-shared-v2-8-d34aa1fbdf06@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] net: inet_sock.h: Avoid thousands of
- -Wflex-array-member-not-at-end warnings
-To: Jakub Kicinski <kuba@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aPdx4iPK4-KIhjFq@kspp> <20251023172518.3f370477@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20251023172518.3f370477@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 185.134.146.81
-X-Source-L: No
-X-Exim-ID: 1vCFu8-00000000imq-29tU
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([10.35.193.44]) [185.134.146.81]:60908
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfI592vB+X0lc0nkvl0to5DfCgGqLVUpbXbxw/w0lQZJwAEJ+8BVhi1Wk7bdqa7xWAfFRAHdJcwUy37JTp0NaeUx7oPGSu5cdZd9ivwHr31p3/Kk1tyoY
- VOpMYD6/ixqxhINHJmCrP6JxERopt2Qo4/1xz3zOgKFnOVAreG9nG8UCMIaFvcXyd2ryXqk/a5Ku1RWmFJ2AI3ePn2kA8PgZsBDzLax+81Q7aPmRyaU5tjRF
- 8ySFyTzUADBuKZwDygg7km6DGmOWrvitNgEoyzfKHog=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wsyROlqG9veSnDyd"
+Content-Disposition: inline
+In-Reply-To: <20251022-gpio-shared-v2-8-d34aa1fbdf06@linaro.org>
+X-Cookie: If in doubt, mumble.
 
 
+--wsyROlqG9veSnDyd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 10/24/25 01:25, Jakub Kicinski wrote:
-> On Tue, 21 Oct 2025 12:43:30 +0100 Gustavo A. R. Silva wrote:
->>   struct ip_options_data {
->> -	struct ip_options_rcu	opt;
->> -	char			data[40];
->> +	TRAILING_OVERLAP(struct ip_options_rcu, opt, opt.__data,
->> +			 char			data[40];
->> +	);
->>   };
-> 
-> Is there a way to reserve space for flexible length array on the stack
-> without resorting to any magic macros? This struct has total of 5 users.
+On Wed, Oct 22, 2025 at 03:10:47PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>=20
+> This driver is only used on Qualcomm platforms which now select
+> HAVE_SHARED_GPIOS so this flag can be dropped.
 
-Not that I know of. That's the reason why we had to implement macros like
-TRAILING_OVERLAP(), DEFINE_FLEX(), DEFINE_RAW_FLEX().
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Regarding these three macros, the simplest and least intrusive one to use is
-actually TRAILING_OVERLAP(), when the flex-array member is not annotated with
-the counted_by attribute (otherwise, DEFINE_FLEX() would be preferred).
+--wsyROlqG9veSnDyd
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Of course, the most straightforward alternative is to use fixed-size arrays
-if flex arrays are not actually needed.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks
--Gustavo
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmj7n0kACgkQJNaLcl1U
+h9A69wf/QahGbiw/YMV7UmAmFOQctvV/QPY8gXkwyoIILpibLbN8jzinWqQcLI4Y
+de3G0ouRnd6psYaxcoqdvmoSgcFRvdM3NH8egptFL4ZcJgKcrgLfh5Xv7oxXLTTe
+SSW6pYCv1+7tTttECErVE9y3UlTCj4iBgWeOkyUcidGg3iWSWDRXQMEhTD0CbxRx
+vHHHv4MincZyu88gM3aqZP001FrXnlAk3mh5tZ/qDntF6x+7EdBfTeZDs05SxXhM
+RwatgXTeynPOhxRrK05leI9bTXzkv5OOcNXU5Zt9AKhP4XvPHIBQp85TKA4fbvAT
+nUmf4H4/9/7OUkguARLdScin2yPciA==
+=5Wuo
+-----END PGP SIGNATURE-----
 
+--wsyROlqG9veSnDyd--
