@@ -1,110 +1,110 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66782303CB7
-	for <linux-hardening@vger.kernel.org>; Fri, 24 Oct 2025 23:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E08313277
+	for <linux-hardening@vger.kernel.org>; Sat, 25 Oct 2025 16:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761348779; cv=none; b=gMQq/fsRJfbjVoA9hEyqLzmge+rpqLV5SbcXRE+FkXQtg0ISmh+zWWt3iOprBctwdTjha0spMCYxrYQt+0ErXLhUrID3T5Pe5azjsbXuRd6/zLMOGjCm5nkkMDDxcOU/rWZ78bb4saeHDErBUG300u39RhOAfcpm1uEuuimIW9c=
+	t=1761410021; cv=none; b=VPQ68WdmA/GzQl8wxMr1Zcc6pdy9q2Th1C7rpXzd2S5o243xuZhWbBclWwwH4O9PdlPdcoLRlOXP0A+6ds7X2gEy6yZ/KNbtoPrmzRCNnl/RKA5K3NGvO4v2TVlyYhmmj0HZ/VpLTPN5MFkJvLuO3XOS0bu4LLnhVmfoRDb13c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761348779; c=relaxed/simple;
-	bh=uTAvhktvg0QkcPyr0Q0jFjF0psJGVFRyizayHmkabGk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=YIXCqTiqxEaNm3e8srUFWpZbqthoEfCFX6L874NFjjfo1Mna9nRby/lr0QUbjYncDNWCsb/Q2VCixIiurqAhMxbIS9S15XyxU5CkVLRBa12koVKiAFTWxs8qWPJS+4ESRde8fPjb1wCxGBG6zXdJbeJmk3Y21UtfHa7Xrm7c3VQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g6m6IVA8; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1761410021; c=relaxed/simple;
+	bh=7GwbfwFI4OnHwDpWdSIvynNWO47LZso8CXPD0pWl0FI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dbBYcxGyarLq3EMUeVwFfLs3E7G8mCm7gPhDBCiyiQcU42FItOM/wwyin5Yg6FXtdYR7M0bcaQdCFsALMF0O4iTfhnv0ZjOMAtJIK9p9LvjVFR64lICywOK4tsy9s6TdbOb7L06Fhjt1SQUZcG3eenk2hHWKnw3ZmLfwxRgXRLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k61x73+Y; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g6m6IVA8"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-47112a73785so16987695e9.3
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Oct 2025 16:32:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k61x73+Y"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-87c217f4aaaso37648186d6.0
+        for <linux-hardening@vger.kernel.org>; Sat, 25 Oct 2025 09:33:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761348776; x=1761953576; darn=vger.kernel.org;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1761410018; x=1762014818; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uTAvhktvg0QkcPyr0Q0jFjF0psJGVFRyizayHmkabGk=;
-        b=g6m6IVA87/GJJD3ajlCcB5mbco1inUtXBb29ngwEz+UlyLtfO7o1SDUOt7KRPkUN3d
-         xseovnqYPPnyZtl6eiSZsomtkBdydtDl6uW9JG9AsU8LLCs4DJdnTNyieJzPf+XQbxUg
-         eb8kLwiusjAqiJKvOMnr6hThcKURx7oTGYgUAYpVc7Ninf/LBC2ZqCeyQPSOg7NpVHqv
-         WtoShpKH3T/x9ThuF/6zDujqgusvu0Iw9SPjHJdePP7qugd/Lz7+gYcWUeupYzvd3LdH
-         0fBpwgsj6eskwRr+v5bW72PZPZbzw6Nfj+ZuaHecOcTfu/Mm6s4IeckmDqyeCCWpcQw9
-         lt7w==
+        bh=Cxuvcw+5BokTf5KtZwOgkWEs4upe9ufMvZQ/niv/DKU=;
+        b=k61x73+Y1RYjuUy31WY8Bh5vjekgdLShcM1zhnsOhVlzkYY6Nlm9ftAa5Q6NQ3MMw6
+         Q1OcUXhqeyV1iogg1y9xps6jNUErn75QVfXIfwBeFV980xGjDaLF+vFwUUb52Mw1toc+
+         SuyY9yls6ExAltaagEBPCInvdrjl4Nn3ECeS2AFA4+UW5OA3IR1fZXHge1fLoDczZHvD
+         mLbqiQRShAWLI/5e5Ygf5gjk7rcSWpDiSyHOYAX2hhauhSxB7bWYUfi+P0wI3T/r7XZW
+         16qEImeIIL4h+MB4wZRwh6gwAtulubNFg+sFy+4Cl/gnPoB0QVRDaeRieaKyF88rZ91j
+         G61w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761348776; x=1761953576;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uTAvhktvg0QkcPyr0Q0jFjF0psJGVFRyizayHmkabGk=;
-        b=jlLlfA1IwYLnVdKGJ3SyI6/L86ZIuUfixkpmmLJtPYVWVFXof03TEvjNoBcslgTXI4
-         ykD7EtChHKKu3ugKskZ1v3pZXVkGw5jZH3msoMFmyw1yWDanUM+CiMp+87k1bXU4Wj2t
-         ZE9NJhtdNGaTlNhpkGSDyZO60VQoWPKkreQzqhiYaJeNEoi+V8enggKSzxC148qfnQ/Y
-         RLlqiwk8UCJPEvxJAwnoZ+KliTG/1dEbFCzquC7HiNvIhmSs2EzI5maZ+9swIp/r+WQ4
-         NlUJtXDxHS+6hDlPEZYsvpPwwaB3zZnjT7txx45pJU1wJ9fGScoflLL7QGm2e3e6nvzB
-         EN7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWEbp1ccq2e0oSFrwevVFUuCnafVPDtYDAAfAZ/UbiBH4vmyEqX5TFJeefFsEVjVsw7QqVSxq5JkzKJdDiGxcM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzq+was/vBCco03ga0ETHDlyikEZJslD7Qmfr2rSOgTrJkWrNoT
-	MztrLVpt4wWCsET5jjCge0tgu5wnhV3S7dj59nGPW0uroyOxb6W2gl/b+UCZQ86xY+Y=
-X-Gm-Gg: ASbGnct9ou1myfBTId8IxOv2wQjYEfRPo1tsnZDyK5UQiLwkVuplDdlWLJAqOH2K8mX
-	EdnkhQsfw0vvkrLQ7EHUrKAL1jbH6sRIDpIZ7JDnXaMIIIfSffOldwHN3x1uMFzSX5cQLfkcZp7
-	+/YRQi0AaC1qfBKpdb/JAX4ufERrt5R9iyEk0LY/hb4/jhGxvK1QdCu6CiyBHr+9yqf/92Pu+8a
-	8wO/jEGOJb/cqCckhdngyXCrLq+NheiiO33ufZ8F60XzGCdB14o6oK18qt7kP+2AozNM7NKdYlz
-	lkGNWMNdVn1BUQ7+XwJ6eZAeNSKNATYwJbhHcU4BdTrFoqx3HbvyqXkqqU8/CIXAm2z3BW8DavP
-	Kb0a7DLkTBjAfnf8XoEaRpRGdXIQF64mT/B9QtbLJMXd+tFNWcpjZd9+nz3tpN5iiXOa77gNz/T
-	tndfEHzh1ZddfK9zY=
-X-Google-Smtp-Source: AGHT+IGpS+9bXxIYVkmYN3aYKTkh9rmryEYIUIEOWTNg7RqiVEj4YoqfyQVte/UCsJWhkp/A2ApwYQ==
-X-Received: by 2002:a05:600d:630a:b0:471:1b25:fa00 with SMTP id 5b1f17b1804b1-4711b25fd7cmr148300005e9.36.1761348775627;
-        Fri, 24 Oct 2025 16:32:55 -0700 (PDT)
-Received: from localhost ([2a02:c7c:7259:a00:7969:1fa8:db69:6159])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475dd47794asm6627875e9.1.2025.10.24.16.32.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Oct 2025 16:32:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761410018; x=1762014818;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cxuvcw+5BokTf5KtZwOgkWEs4upe9ufMvZQ/niv/DKU=;
+        b=VhDttW7N97phuuSWgsKZ4aGLawIUwIFE4TY0M4IwLoRokzcF9I+h3Jk8cRdXkojIrz
+         zow4CI+Pialu98T2AkFYvzAhATeB+T2nEMSx1WQKR2SMp+dNJZII7rLEyS7m26Yrtvd9
+         W++0SqnHQ0FLYogF0ym6CzpsOuEK1/hFLyAZU8/rQklfCyK18w1SxaKkWcvxTKnEciZM
+         ZcEbGvtPwjj/ywfYHciKHeMRd1kEpIDpUmm2Ky7OmrSHgreFnUDmlQdwx7fX1mMRzyYi
+         nvCtxy51KznSgtHnOgrOp3xuSsEoYIN7KfCA954u0Id3kiQRAVue1QCkFqjZL8xRtobF
+         iZzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVeKc48utF4s4rGO/AdZtNgxKsyf34QW0/P+oFOnbET6lGypwZ2Cp8xWP5xWSa8OWTR8IUXdFtj8fsULkgoQV8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRVttSx7bCC92+65Z2gQpPiDA1E1VTppMWdUqcFGJ2W3Y5Xx6T
+	a6KYM8vzebAr1yzCIGgn/zpDM1CaNow/aPvcOercP/3QC18BknWZqEdlYeTjWg==
+X-Gm-Gg: ASbGnct1KUtT3UEmX3o3YGuwaUEJSqk4cdNdaoA3sdimKLG8jcCc41/q8T4H9puombt
+	ki31fZl6PX8sMyGGGEzcLNZXYQi7/TWe65SMWTBgDpFqXZWz7Uu4S1d04mReMEv7k6dlUy8COFm
+	KUMwtq3mnGuPoe9TmdVBTaAU3gzpleFq7O6bAvY1zvfLni1Sxl+5iSpGLAJfR975phU2VnVpcSD
+	q2a4kaWP968AOWseYt/5QgosiJhOuUtp82J3WgxXOvzLWyYngNwYEVFiYQgCOIF57/5/EPNi/iI
+	UmQwmS+fcqqNZbNvLeyV/7gqoDVF3F4GlXWOOIG9b8j1YDJmsYlwW7jbYuTb4G7bNc3K6vtuHFT
+	REFQjaZ2+hDnd+9VtB+kN7HUivP9zyZ9NHMz0AzyWCBfkRZzce5SmbEi+ozbramVjOf/iobwjfW
+	4AYgbevaI=
+X-Google-Smtp-Source: AGHT+IHWOynP91XK0eWWEmP39+HpO2WIYG1FD6QWp9GErpLHI7PIM/nM4hfHX/dVKVXslC7yeirnSA==
+X-Received: by 2002:a05:6214:508f:b0:87c:27c2:2c0e with SMTP id 6a1803df08f44-87c27c22f10mr333708616d6.59.1761410018091;
+        Sat, 25 Oct 2025 09:33:38 -0700 (PDT)
+Received: from localhost ([12.22.141.131])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87fc48a8a1bsm16461146d6.8.2025.10.25.09.33.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Oct 2025 09:33:37 -0700 (PDT)
+From: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Lee Jones <lee@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org
+Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
+Subject: [PATCH 20/21] fortify-string: don't use GENMASK()
+Date: Sat, 25 Oct 2025 12:33:02 -0400
+Message-ID: <20251025163305.306787-13-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251025162858.305236-1-yury.norov@gmail.com>
+References: <20251025162858.305236-1-yury.norov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 25 Oct 2025 00:32:54 +0100
-Message-Id: <DDQY14HJJS8U.30QSLJ4PCYJQ@linaro.org>
-Subject: Re: [PATCH v2 08/10] ASoC: wsa881x: drop
- GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
-From: "Alexey Klimov" <alexey.klimov@linaro.org>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>
-Cc: "Kees Cook" <kees@kernel.org>, "Mika Westerberg" <westeri@kernel.org>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Manivannan Sadhasivam" <mani@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Saravana Kannan" <saravanak@google.com>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Andy Shevchenko"
- <andy@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Will
- Deacon" <will@kernel.org>, "Srinivas Kandagatla" <srini@kernel.org>, "Liam
- Girdwood" <lgirdwood@gmail.com>, "Mark Brown" <broonie@kernel.org>,
- "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
- <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-sound@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>, "Bartosz
- Golaszewski" <bartosz.golaszewski@linaro.org>
-X-Mailer: aerc 0.20.0
-References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
- <20251022-gpio-shared-v2-8-d34aa1fbdf06@linaro.org>
-In-Reply-To: <20251022-gpio-shared-v2-8-d34aa1fbdf06@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed Oct 22, 2025 at 2:10 PM BST, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> This driver is only used on Qualcomm platforms which now select
-> HAVE_SHARED_GPIOS so this flag can be dropped.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+GENMASK(high, low) notation is confusing. BITS(low, high) is more
+appropriate.
 
-I tested the whole series on db845 RB3 board, looks ok.
+Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+---
+ include/linux/fortify-string.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reviewed-and-tested-by: Alexey Klimov <alexey.klimov@linaro.org> # RB3
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index b3b53f8c1b28..0c95cdcca736 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -11,9 +11,9 @@
+ #define __RENAME(x) __asm__(#x)
+ 
+ #define FORTIFY_REASON_DIR(r)		FIELD_GET(BIT(0), r)
+-#define FORTIFY_REASON_FUNC(r)		FIELD_GET(GENMASK(7, 1), r)
++#define FORTIFY_REASON_FUNC(r)		FIELD_GET(BITS(1, 7), r)
+ #define FORTIFY_REASON(func, write)	(FIELD_PREP(BIT(0), write) | \
+-					 FIELD_PREP(GENMASK(7, 1), func))
++					 FIELD_PREP(BITS(1, 7), func))
+ 
+ /* Overridden by KUnit tests. */
+ #ifndef fortify_panic
+-- 
+2.43.0
 
-
-Thanks,
-Alexey
