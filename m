@@ -1,106 +1,286 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC81145B16;
-	Mon, 27 Oct 2025 11:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47342F3C23
+	for <linux-hardening@vger.kernel.org>; Mon, 27 Oct 2025 11:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761564500; cv=none; b=GaL6hjKU6vT6u2jeZFK3UMLFuV7JFoVU0BEJ/DreqvaXqRO2/SSW+XT3Cu84nVcPudSD70EwBjpsfaAwXoBwgJ4Nk975Tm7VltLUBiGdLrp8mPrOMoW1N3VxAIUOZyzHRVPjYAzGIm5axHE5/2DA+Alc0SJMlIUT9SFi4cm3/5w=
+	t=1761564951; cv=none; b=P07Y4lal6sHOkKS2/p+aI+7yH4cxiMKMvpKauIdsNstIYqIicHk/uUGyqeeJe2okXUqgDc2Od2kn3wyF+wPow9rSBFGb3oSxonHreUt0PLsA7VtsF8VCdyeNcjPbXnbolMCIaqzyPizKq/6xA2yAuHMQZcpQCd6L4v/ZTK2zCB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761564500; c=relaxed/simple;
-	bh=eD3lETxn/iz3FjZFZ/Zss/5C94rc+yleaXerSy//MiE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Jbw0H1KGvY1tZ2CVgk6DHeUEv3rB5tXg4qse2UpuxrJ/2ayvkeNjONsClSfjaZyQrGPzrWU+oQbWwzZjamlCSbEzSw7/bW9tCmNJUxdkLzsDcf/nd/pmtPksZdqLJWB9KxWqqZ74iGM23LGm0+twpO7t0KNEKZSdbPM+cEPz2Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9y15LV4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761564951; c=relaxed/simple;
+	bh=z8JMmtO5pPNwnHupK7VV8WcW+3BYrdml7mecpOldSXc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FMU9iVim9Me/8t1KhTVs+Qoo8aRqcpAmFkjQUaHeybbwiskjOCCn7wc4k8lh0T9GI/x/P5SP4LzPIsKo7Lz5h0Hp/bUiS29uKght9uP/wMU8ljFReaeimKLXcUq7H4wPDtlk5HhJ0t+8aBLDoQKP78j28jhIALdL6BRB+uUMf6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZQyQc2T2; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9y15LV4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8249BC4CEF1;
-	Mon, 27 Oct 2025 11:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761564499;
-	bh=eD3lETxn/iz3FjZFZ/Zss/5C94rc+yleaXerSy//MiE=;
-	h=From:Date:Subject:To:Cc:From;
-	b=B9y15LV4N+QIm1qy0Gip955F77qup5e6Hb+4iQwszchV8t2Mznf7hv6QuBkeEDy7Y
-	 BeutP7CXaVzZnDoDqaz83FzxmdHXq6cIJHAzQQ+azxNJLXg7Pb4q7wH1WprjG55yfX
-	 0lDZekh0U1DUPqsKx9Z7wy0JjPM1l8J7bljUE8XVojAV9lMlhH3vev5Pr2EsTjda11
-	 jkRT58p+4oa6VygjIkSu06jPeq/zOWNjMKp7qjKMzlmBnVEBN7GmQIL/72HB8iCU9Q
-	 eYWHO3HQ1RegmbuiSQFAnmdQgmm/B4gK0GEOyni28vSXI9fJ7ytqTUgey7JU1lCEXc
-	 XyfI1BbcfXhbw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5D9CCF9E5;
-	Mon, 27 Oct 2025 11:28:19 +0000 (UTC)
-From: Joel Granados <joel.granados@kernel.org>
-Date: Mon, 27 Oct 2025 12:28:15 +0100
-Subject: [PATCH] sysctl remove __user qualifier from stack_erasing_sysctl
- buffer argument
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZQyQc2T2"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 59RBK0Dp2546933
+	for <linux-hardening@vger.kernel.org>; Mon, 27 Oct 2025 11:35:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	TU1kj7nq4ocDun8TqNLhxKbF9wpc+NkFZouW7rYkBz0=; b=ZQyQc2T2h+tLoAgm
+	qVrNqEsapCOLmOefQnrDW29hYm4RtSy/thpCiCtKRfBzVHdXiaiEgvdutlY+Ejzu
+	yaZB7NQ7BME+hmTKQeaf21gEqWRmDlvTyZCnCzjX02PIANnul5Q3X2qpFBXrgPxB
+	/pwAyNibDmGh9lRQQMTVD1pVjAoea8QBRpz+uc4kKazHVfpZ9SnrYz3R2kF6XeWC
+	CJc0nQ3JYmBYz1Kq4wdonvPzZF+9ERQUSQ/IS/C7BMytg6SaZ2LPN7i37MwWXOIJ
+	E3Tze/89WmpLnx0jJ3/56yDIQ6fq3p2dRdq9m9FSr7YFab7rCLgWZwGt3rELKOOO
+	ln8SyQ==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4a27s2g13b-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Mon, 27 Oct 2025 11:35:48 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-87dfd456d01so13944386d6.1
+        for <linux-hardening@vger.kernel.org>; Mon, 27 Oct 2025 04:35:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761564948; x=1762169748;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TU1kj7nq4ocDun8TqNLhxKbF9wpc+NkFZouW7rYkBz0=;
+        b=hrqKm15jzULHbVhsOYzE2kYrPrGeRsLOj3bIHPveNxs8M76i/SaUQL+TBHbtXvEFha
+         7Sr76PkttkgNeFHbcg7QqW6WArkjxNU9d25bMQpAT8ELAn4e8SmaqLLrzZSRGRvHY7Rl
+         xW9mO/9oxeT9Hmk/VW1G8NsTDYm9k460uYlHehrNYILwEmPMnCdjwJY+dMGNaIlTbzzv
+         ZJwVSnda3TmB3fhWli5Q1x0oMCeD+89RggxDoMNbSkw/+59oNL9fhbFSb0n5D3Fdzdgd
+         lEqJ2RoqeL7iTT59P9wNIVqTPWXMiL7D66iSVTPojaqDqI9GQ9e3JX0r3+ZV0vA8mC8Y
+         q3hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBOMqCB3YjcYSm0dwmuPhdIMu6IOYZIfW0ds6Wbt9eiedxh2X3KIHV+gdhYBmJXnu/54TBywJ/b3u8DouBz7c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxygOSYI7jweEb3CGPcKOhKrrLcrJDrjAvKTXoNLdiO372231l
+	0DEOfl5AKv7l9oKwVHHn5/4AMkVM2inhApVD7zxXwasJTJ+rBMZGreIojA+X4+Omk3TrKxs5GgU
+	iMDPnHaJ+WsP1h6SAwJtyjUZXUntdh0LW1RebQG4QASa+kUuPzsWP8fenII+i3q1VGUzP4+A=
+X-Gm-Gg: ASbGncv8oTxc4Au170SDjG6Tu89ogeYukoaVc1xymWAGJ52sN1oUQZN09njbH77HN82
+	w8MYV+U1cC+6DWSJNtkxjPmy9F3NaX2NNjHJa7GUVQB2BLN6cSZvAgxPTi7m1n9usAEMSYE+vox
+	RfeTiUN1W491W5/+r+gnUg9vB19KTYLF0sVvMaBw9WrPRvPoM58mh/HjEPJHBufM6w729wGichD
+	aFEAxBxnvDL6QFI0czypY2XetWkyzHrU3IPMJZdI2MnZNbFBu82eCKqxipiOu9o7jlhRG1O13gX
+	eUnT39EGg0I/qtSE6qJ+uIHkYQrwjOT+WGFqCRb+DCs4UNpCQ52cLlvNXTMJdm2qH7gjZXioFFy
+	dDUA3+4mXQrUecCc6cbMxWUO6m9h1Xzf7ho/A7hvylpVvnp2+nMOnpNIX
+X-Received: by 2002:ad4:5de6:0:b0:87c:19b6:398e with SMTP id 6a1803df08f44-87de70b4724mr201372596d6.2.1761564947768;
+        Mon, 27 Oct 2025 04:35:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG1KFM9AHLmnI7IFMN2DcxC11NSgWpPMDkmEheNEQeOvudyiBGTHMvMjndvOo4TT8fYmLKjJA==
+X-Received: by 2002:ad4:5de6:0:b0:87c:19b6:398e with SMTP id 6a1803df08f44-87de70b4724mr201372356d6.2.1761564947284;
+        Mon, 27 Oct 2025 04:35:47 -0700 (PDT)
+Received: from [192.168.119.202] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-63e7ef6c0e9sm6005786a12.1.2025.10.27.04.35.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Oct 2025 04:35:46 -0700 (PDT)
+Message-ID: <ccdd5d44-2382-44e9-a56d-cbc5da23b13f@oss.qualcomm.com>
+Date: Mon, 27 Oct 2025 12:35:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251027-jag-sysctl-v1-1-1c14a8a939ae@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAE5X/2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1NDAyNz3azEdN3iyuLkkhzdRENTCzMzQzNj40QjJaCGgqLUtMwKsGHRsbW
- 1APfbjXxcAAAA
-X-Change-ID: 20251027-jag-sysctl-a158661633a2
-To: Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel test robot <lkp@intel.com>, Joel Granados <joel.granados@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1369;
- i=joel.granados@kernel.org; h=from:subject:message-id;
- bh=eD3lETxn/iz3FjZFZ/Zss/5C94rc+yleaXerSy//MiE=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGj/V1FXoKRGZaB2eLkB4Q6jFCQpUETPQF33z
- 3ZMj2EmStZ+KYkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJo/1dRAAoJELqXzVK3
- lkFPdYwL/3OKoew9eujeZPcfYgdJsY6TodMxQa4Vb50ZpHB1ZUCNVkNzl2fVlf0cngw9KWbsqur
- dlQJVBDQY7jOjp97s1ets7JdlYXiVHJOhwwC4baiCtiq6YtNV9vbUKXdBWfT75gxnJ1TgMzxUbb
- sluduw+Rl3amVE2tG1MJRQYRBHo3OAEFszhMah3zqr35Rba1r8/HmnT3GglNertdNqIpfkdVmJc
- qU9DUoFUyqL3inDeJOacuUd78eszUAv1FiuHLwi+EpTgpWJhVyVQGN97cNX41D0RCL36khxkcUR
- ui2C1FLHid8ql2/yyGcJkegCwWnq+eoGH5Ipd8+/Lp3MXGuS1B8FKUaolg2uh6NTDL2GYGtyYmU
- k+dsAKn4vyMZ2JhbH5ihz+4Wz85EzScDmYj710RM7rlxwUtKEBOWOUmtk7qVBEmcA6730NIZdwC
- IU20dT0RnIYELJx73UZp4G4/Qz4XBOQvJcFPpmdQAYyiGkag33Zk//tHPtP4v9yFJc6vkSok+07
- Ss=
-X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
- fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
-X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
- auth_id=239
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8150: Add support for Xiaomi
+ Redmi K20 Pro
+To: Piyush Raj Chouhan <pc1598@mainlining.org>, linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, andersson@kernel.org,
+        konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com
+References: <20251022054026.22816-1-pc1598@mainlining.org>
+ <20251022054026.22816-2-pc1598@mainlining.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20251022054026.22816-2-pc1598@mainlining.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: AzfdCHeSvOLbk7UjQhbpx4gEw3U1_Apo
+X-Proofpoint-GUID: AzfdCHeSvOLbk7UjQhbpx4gEw3U1_Apo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI3MDEwOCBTYWx0ZWRfX2ubFXTFOdkpT
+ 9fMQWleI6Q2WxtTiAsh4pU3vUy828K1JXEJ8OVMuqBZB0tcHj9MenHr3VeTZhGsrkL0IKxGom1A
+ jA+Aib1upt0cMgXJ3WaLXcVXWbCh0qdLLCOWq32YEgJZd1D0ARiTjDkr9qZTeE5Uss54enYISZN
+ 84XpdFojuEy4qAe76eoKHy9Sg/ZjuLYw3nN92AhFQ6ytX0VswtUbcNkcjPoMHDSN/cAEyQtjmBv
+ oKg+a4seOLPfEmdHWuh2BgZlc5XaTtlzNB6QQS91cluUvksuyu9xzsOd+zcKvJM0s6EzvQiOoWe
+ rIPqa/rLFefw9P0BweD0mgWMbJFlQFRcHZIeRCxpcprUcrnYFhHNw5ZpLvhysqF0cgt35z0NPiY
+ Y363UVw3bWu5upnXhDKcjDIdxQtGiQ==
+X-Authority-Analysis: v=2.4 cv=R60O2NRX c=1 sm=1 tr=0 ts=68ff5914 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=iRxBnbZjw3uyMlr8g3cA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-27_05,2025-10-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 lowpriorityscore=0 phishscore=0 bulkscore=0
+ impostorscore=0 clxscore=1015 spamscore=0 adultscore=0 malwarescore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510020000
+ definitions=main-2510270108
 
-The buffer arg in proc handler functions have been void* (no __user
-qualifier) since commit 32927393dc1c ("sysctl: pass kernel pointers to
-->proc_handler"). The __user qualifier was erroneously brought back in
-commit 0df8bdd5e3b3 ("stackleak: move stack_erasing sysctl to
-stackleak.c"). This fixes the error by remiving the __user qualifier.
+On 10/22/25 7:40 AM, Piyush Raj Chouhan wrote:
+> Add initial device tree support for the Xiaomi Redmi K20 Pro/ Xiaomi Mi 9T Pro
+> (codename raphael), based on the Qualcomm SM8150 (Snapdragon 855)
+> platform.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202510221719.3ggn070M-lkp@intel.com/
-Signed-off-by: Joel Granados <joel.granados@kernel.org>
----
- kernel/kstack_erase.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[...]
 
-diff --git a/kernel/kstack_erase.c b/kernel/kstack_erase.c
-index e49bb88b4f0a32eca192003f1995e2923d6a4afa..d4449884084c7d9e483d6980e4fa1e73f0305e9e 100644
---- a/kernel/kstack_erase.c
-+++ b/kernel/kstack_erase.c
-@@ -23,7 +23,7 @@ static DEFINE_STATIC_KEY_FALSE(stack_erasing_bypass);
- 
- #ifdef CONFIG_SYSCTL
- static int stack_erasing_sysctl(const struct ctl_table *table, int write,
--			void __user *buffer, size_t *lenp, loff_t *ppos)
-+			void *buffer, size_t *lenp, loff_t *ppos)
- {
- 	int ret = 0;
- 	int state = !static_branch_unlikely(&stack_erasing_bypass);
+> +		ramoops@a1600000 {
+> +			compatible = "ramoops";
+> +			reg = <0x0 0xa1600000 0x0 0x800000>;
+> +			console-size = <0x400000>;
+> +			pmsg-size = <0x200000>;
+> +			record-size = <0>;
+> +			ftrace-size = <0>;
+> +			ecc-size = <0>;
+> +			no-map;
 
----
-base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
-change-id: 20251027-jag-sysctl-a158661633a2
+You can probably remove the = 0 entries (although ECC is very useful
+to set to e.g. 8)
 
-Best regards,
--- 
-Joel Granados <joel.granados@kernel.org>
+[...]
+
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vol_up_n>;
+
+property-n
+property-names
+
+in this order, please, file-wide
 
 
+> +		/*
+> +		 * PM8150 LDO8 (L8A) — supplies vreg_l8a_0p75
+> +		 * Device spec: nominal 0.752 V, active min 0.752 V, active max 0.904 V, IRATED = 300 mA
+
+Hm?
+
+[...]
+
+> +&gpu {
+> +	zap-shader {
+> +		memory-region = <&gpu_mem>;
+> +		firmware-name = "qcom/sm8150/xiaomi/raphael/a640_zap.mbn";
+> +	};
+> +
+> +	status = "okay";
+
+This shouldn't compile
+
+[...]
+
+> +};
+> +
+> +&i2c19 {
+> +	/* goodix,gt9886 @5d  */
+
+I see there's driver support for the GT98*97* - is there a chance you can
+reuse some of it?
+
+> +};
+> +
+> +&mdss {
+> +	status = "okay";
+> +};
+> +
+> +&mdss_dsi0 {
+> +	vdda-supply = <&vdda_mipi_dsi0_1p2>;
+> +
+> +	status = "okay";
+
+Please add a newline between this property an the following subnode
+
+[...]
+
+> +&pm8150b_typec {
+> +	vdd-vbus-supply = <&pm8150b_vbus>;
+> +	vdd-pdphy-supply = <&vdda_usb_hs_3p1>;
+> +
+> +	status = "okay";
+
+ditto
+
+> +	connector {
+> +		compatible = "usb-c-connector";
+> +		power-role = "source";
+> +		data-role = "dual";
+> +		self-powered;
+> +
+> +		source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_DUAL_ROLE |
+> +					 PDO_FIXED_USB_COMM | PDO_FIXED_DATA_SWAP)>;
+
+Have you verified this is in line with your specific device's
+downstream kernel?
+
+[...]
+
+> +&pm8150l_flash {
+> +
+> +	status = "okay";
+
+ditto
+
+[...]
+
+> +&pm8150l_lpg {
+> +
+> +	status = "okay";
+
+ditto> +	led@1 {
+> +		reg = <1>;
+> +		color = <LED_COLOR_ID_WHITE>;
+> +		function = LED_FUNCTION_STATUS;
+> +
+> +		status = "disabled";
+
+?
+
+> +	};
+> +
+> +	led@2 {
+> +		reg = <2>;
+> +		color = <LED_COLOR_ID_RED>;
+> +		function = LED_FUNCTION_STATUS;
+> +		function-enumerator = <0>;
+> +	};
+> +
+> +	led@3 {
+> +		reg = <3>;
+> +		color = <LED_COLOR_ID_RED>;
+> +		function = LED_FUNCTION_STATUS;
+> +		function-enumerator = <1>;
+> +	};
+
+Are there really two separate red LEDs?
+
+[...]
+
+> +	/* GPIO 0..3 are NFC spi, gpios 126..129 are FP spi */
+> +	gpio-reserved-ranges = <0 4>, <126 4>;
+> +
+> +	/* Display panel pins */
+> +	panel_reset_pin: panel-reset-state {
+> +		pins = "gpio6";
+> +		function = "gpio";
+> +		drive-strength = <2>;
+> +		bias-disable;
+> +		output-low;
+
+Please drop output- properites from TLMM subnodes, these are controlled by
+the kernel's GPIO framework instead
+
+[...]
+
+> +&usb_1_dwc3 {
+> +	dr_mode = "otg";
+> +	maximum-speed = "high-speed";
+> +
+> +	/* Remove USB3 phy */
+> +	phys = <&usb_1_hsphy>;
+> +	phy-names = "usb2-phy";
+
+Is this a physical limitation, i.e. missing wires?
+
+> +
+> +	usb-role-switch;
+
+This property should be moved to the SoC DTSI
+
+Konrad
