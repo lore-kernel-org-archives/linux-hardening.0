@@ -1,79 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D1E308F35;
-	Mon, 27 Oct 2025 19:58:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3F81E9915;
+	Tue, 28 Oct 2025 06:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761595082; cv=none; b=IS1NrOR1B0AeznaiEywoV99npLSPNdc8rsb28k4dl0Txugi5nzOaA4NxoGUIaFwOTxl60JFAX3URKS9k+zOD5Pab33jIQbUBZ9n1+l0p6Vg6LaW/7AW+UFovQNe8gvQ5EX8KvrFEnxSy6blZDYmjnUGFSlnGLTswCwXLfdycxdc=
+	t=1761632499; cv=none; b=dNBwtAlgdXeZ0ceFcKg+rwZLp1P4M4n7avUsjNb6aH0pQSzO9D5dTB7ccCWHkXpMgw+F7pMlGRJvJRWAp06NXuAnwcqR8E5ZN7LMuhbVY+GhIMVC5jOCvNelodW8OBbqlyyDRMuWamJI1UKnmDqCn5ZLyUFOEGlzwlYMnIiMYik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761595082; c=relaxed/simple;
-	bh=Ng03B/maD6lMR0eaS2eBOidLYRkO4OlY8lz6H+r3S1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WhxyZCwentvhmtAAbZmw5bYEsJnpO/C/+AfRvv2tbKFx3qSFGlbek9M6LpCCnl6f/8Mm7eUS9NTAznB5VqGfEV76poRYAOQm6utUPW7F/Z8KbsHpGon8+V3GR3RHAkE+bdHsv5rxj9HNLEx6Px44GrqrcYHYUhXXYV5GpGWsDAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KJvqHj6e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761632499; c=relaxed/simple;
+	bh=cBb99/Rk/YrwDvp4oXeogz9Ml7yvcmAlg5Zf25ML1MM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ByB8QUcTmyaL7gh7oO83QoSNLUeEcUxas+SQ5eqKxbHNV/vVUtKOaOf8RwfYlByCru0QLEs8JVTW9s7lG1RjjwsE3Nm7GPTlM7+g3jTYoKSsdJyIqfF6e7dutjafhkiKYGDNqtC6vfzdvG3bVzxJ0rySGXLUljZwLRZmw8hqL/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JmHiXQ/l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KJvqHj6e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED466C4CEF1;
-	Mon, 27 Oct 2025 19:57:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JmHiXQ/l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22400C4CEE7;
+	Tue, 28 Oct 2025 06:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761595080;
-	bh=Ng03B/maD6lMR0eaS2eBOidLYRkO4OlY8lz6H+r3S1o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KJvqHj6eCZIvK/j801mk6loSMVFfz+73xGSV9F/6C5GACsNIvN8j9wVhlD5iU8Fwm
-	 GDuOZl4oKQHF0NxK2f9fjXBwhjIwFtJXuJ5EZbQufuYvythkjOczTP3fn422curGn8
-	 X3hkvN1HHHf8/6zAVoF4TTP2CLmh94wRcHqzTofN0YrdNcABmAMyKAPQtbcxd5jq/q
-	 E7YZmft5vKbQdd9pXln7+vgY18uSObfbUcFWFj2RPOYXP9sW4WEBcT/tW05nMDO9Z1
-	 JsgiU17LcIJW5gV+MPIwdnyhTx5ZtNCI8fu5dL4QIppKgcy4lAyOx5syLevlS2JvDV
-	 /VD3xjYfuoWkg==
-Date: Mon, 27 Oct 2025 21:57:56 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
+	s=k20201202; t=1761632499;
+	bh=cBb99/Rk/YrwDvp4oXeogz9Ml7yvcmAlg5Zf25ML1MM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=JmHiXQ/ljBFCx9GEA9sDwjA4WxE8Hb8Ui9zHWjkhnkj6SSgP8J6xqAV6u7RTeLIDQ
+	 PHAA45UCwq0lF4pzca245V8nfnXtQex3kwJTU/HhrGHeNBabj6Sl2A5NaMdQDtHnxo
+	 D0Vt5Ty20SVdQB1iFONXfPKUOd8VF/7R89peWeR47ZQ0GXyI1P8zOwC8RNefjraooC
+	 WlapMYEUHZ63G3CRwzF5+r2VBhyQtbhhM8DKxtStPLZdXkiaFJRFn5PaN4Kfy7MfRX
+	 phQIqfk61NQkjlS9SFaTQEG3sJ+PEssNGeNtbqxfy/0oFOWa3HkbQCeFm7ok1wdyKQ
+	 ndSOG9eQsW8ZA==
+Date: Tue, 28 Oct 2025 00:21:34 -0600 (MDT)
+From: Paul Walmsley <pjw@kernel.org>
 To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@cloudflare.com>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] keys: Annotate struct asymmetric_key_id with __counted_by
-Message-ID: <aP_OxDIHanHij4q2@kernel.org>
-References: <20251023174810.75805-2-thorsten.blum@linux.dev>
+cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+    Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+    WangYuli <wangyuli@uniontech.com>, Huacai Chen <chenhuacai@kernel.org>, 
+    linux-hardening@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>, 
+    linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: KGDB: Replace deprecated strcpy in
+ kgdb_arch_handle_qxfer_pkt
+In-Reply-To: <20251011004750.461954-1-thorsten.blum@linux.dev>
+Message-ID: <e5c98ef4-40a0-433f-b4e5-3f1bc62a0c21@kernel.org>
+References: <20251011004750.461954-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251023174810.75805-2-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, Oct 23, 2025 at 07:48:11PM +0200, Thorsten Blum wrote:
-> Add the __counted_by() compiler attribute to the flexible array member
-> 'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
+On Sat, 11 Oct 2025, Thorsten Blum wrote:
+
+> strcpy() is deprecated because it can cause a buffer overflow when the
+> sizes of the source and the destination are not known at compile time.
+> Use strscpy() instead.
 > 
+> Link: https://github.com/KSPP/linux/issues/88
 > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  include/keys/asymmetric-type.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/keys/asymmetric-type.h b/include/keys/asymmetric-type.h
-> index 69a13e1e5b2e..1b91c8f98688 100644
-> --- a/include/keys/asymmetric-type.h
-> +++ b/include/keys/asymmetric-type.h
-> @@ -49,7 +49,7 @@ enum asymmetric_payload_bits {
->   */
->  struct asymmetric_key_id {
->  	unsigned short	len;
-> -	unsigned char	data[];
-> +	unsigned char	data[] __counted_by(len);
->  };
->  
->  struct asymmetric_key_ids {
-> -- 
-> 2.51.0
-> 
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Thanks, queued for v6.18-rc fixes.
 
-BR, Jarkko
+- Paul
