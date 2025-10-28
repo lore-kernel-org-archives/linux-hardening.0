@@ -1,146 +1,160 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E82A33A024;
-	Tue, 28 Oct 2025 16:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D10D28DB56
+	for <linux-hardening@vger.kernel.org>; Tue, 28 Oct 2025 17:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761668062; cv=none; b=gPYWDXEzF1MjszI9ANPgBigmB1zeAkVRqg6VxTJ3ANENPvwBIzexHMgf42EeEAEazgyULicjvUyAmRQ/KYvGWwbeBro8viTu+tM9uG9Zcx+DL0qQU5sAu1SIJQsAbXFJHyph0iKFALJvGKipYzydw3dQYNY9fg7i/5IzKBAdl4c=
+	t=1761671586; cv=none; b=H0LwqD9kp66grxLfcid/FtMwK+CosHWVi3/9ymoTAQWUfyJqyBtDVwf+q4sAalZ3zZzNPq3ont/4RKM7/n9dHZgAaT60HUf3QUnPOdQI1qSyxeJ7qAdKGrtkpHnz9keMEOuLlkLxuRf/ohBwmH399691NzZJd0xVxrt2Y+K1MSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761668062; c=relaxed/simple;
-	bh=MUfAw+CEWCmi/k34obocl0dnwHMT1lqx/Pq21CoUC58=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=d59fS1lDWQg6AiDouJLQgnnWvq3KBet4/mmd7nqbk2PT3IbZ+/Zif0666sQ2V3emKwm9VoIHjuU8gw2ClXbU0iQNjgob+aO7qHOslV0In5JLDYrLLn/QvS7iffDo6F8i+5GL215fQWFQxHX046hI8TWyERIXyTIg5s4Z68U3iRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=NeHsIFwW; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=2vHSlY3r; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="NeHsIFwW";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="2vHSlY3r"
-DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1761668024; bh=UzHugUE4P/e8xKLy23qcD4u
-	xe9eMeMh43cCYTpyYyXk=; b=NeHsIFwW9HcKT0PR4KovvtWCrYAFj63P1CQq+KM0wBuwKHJ5YW
-	nWJktFL5JBL7S/76aXRnRV+3+KHAhknUa0QsFGp41XdcxXd+PlIi2JOKLcQvkLtNt4TDK2W+61X
-	xFL4gXZZesOUbuzj869KNplBcwIREFtXdtm2BLGIdxzn7F4u0GjzA1al33s8oAwleP/6yCRI0+Z
-	xkIVNNlnMgn2VBepKK1iS1Si1hg8OZJja2qJSjTLvTOZBv4ZVsv8Tdm/4qN3CZV306wvS0u7/YU
-	C6PTL18jNUjP7pe70oOtLDgrSsnACgfu7Bgy/liZQZ1b8zOXnWuD0L+Tx3JNRX4lSWw==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1761668024; bh=UzHugUE4P/e8xKLy23qcD4u
-	xe9eMeMh43cCYTpyYyXk=; b=2vHSlY3rAlhU8iqQUTFYwhYRHXGUycY6tXgFrOeMabXEq5stL0
-	eYM9qmvrDFltdpzU85Os568J2jbmN2K01QAA==;
-Date: Tue, 28 Oct 2025 21:43:43 +0530
-From: Piyush Raj Chouhan <pc1598@mainlining.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org
-CC: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, andersson@kernel.org,
- konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_2/2=5D_arm64=3A_dts=3A_qcom=3A_sm815?=
- =?US-ASCII?Q?0=3A_Add_support_for_Xiaomi_Redmi_K20_Pro?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <ccdd5d44-2382-44e9-a56d-cbc5da23b13f@oss.qualcomm.com>
-References: <20251022054026.22816-1-pc1598@mainlining.org> <20251022054026.22816-2-pc1598@mainlining.org> <ccdd5d44-2382-44e9-a56d-cbc5da23b13f@oss.qualcomm.com>
-Message-ID: <5C7DC3D9-8DBB-409C-8672-6388EE01C320@mainlining.org>
+	s=arc-20240116; t=1761671586; c=relaxed/simple;
+	bh=PRqV0NiMm5h805OFFkFFy8tFBxkOLM7y4i7v5n8aeXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q9K0PYbx90IrT1YRoN3G3AYrfWFnIacgQSLQ1UWZMvBaqMXnEXQKFAhpYd/HjVgc8UFIuqWNw0hrmStPHio7ETuVPgV5Vqq+J2+8k9YeqR9LkUPy2lZ9LJowLKLbye5P5GUznmF9XHooY9TBUDju2pWwMe1Fa1eW1S+YP7tzO/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6CB526BA
+	for <linux-hardening@vger.kernel.org>; Tue, 28 Oct 2025 10:12:56 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4D2783F673
+	for <linux-hardening@vger.kernel.org>; Tue, 28 Oct 2025 10:13:04 -0700 (PDT)
+Date: Tue, 28 Oct 2025 17:12:35 +0000
+From: Liviu Dudau <liviu.dudau@arm.com>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>,
+	Steven Price <steven.price@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>, kernel@collabora.com,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v8 1/5] dt-bindings: gpu: mali-valhall-csf: add
+ mediatek,mt8196-mali variant
+Message-ID: <aQD5gwByEmX6GQK9@e110455-lin.cambridge.arm.com>
+References: <20251017-mt8196-gpufreq-v8-0-98fc1cc566a1@collabora.com>
+ <20251017-mt8196-gpufreq-v8-1-98fc1cc566a1@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251017-mt8196-gpufreq-v8-1-98fc1cc566a1@collabora.com>
 
-Hi, konrad=20
+On Fri, Oct 17, 2025 at 05:31:08PM +0200, Nicolas Frattaroli wrote:
+> The Mali-based GPU on the MediaTek MT8196 SoC uses a separate MCU to
+> control the power and frequency of the GPU. This is modelled as a power
+> domain and clock provider.
+> 
+> It lets us omit the OPP tables from the device tree, as those can now be
+> enumerated at runtime from the MCU.
+> 
+> Add the necessary schema logic to handle what this SoC expects in terms
+> of clocks and power-domains.
+> 
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+>  .../bindings/gpu/arm,mali-valhall-csf.yaml         | 37 +++++++++++++++++++++-
+>  1 file changed, 36 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
+> index 613040fdb444..860691ce985e 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
+> @@ -45,7 +45,9 @@ properties:
+>      minItems: 1
+>      items:
+>        - const: core
+> -      - const: coregroup
+> +      - enum:
+> +          - coregroup
+> +          - stacks
+>        - const: stacks
 
+I'm not sure how to parse this part of the change. We're overwriting the property
+for mt8196-mali anyway so why do we need this? And if we do, should 'stacks'
+still remain as a const?
 
->> +
->> +&i2c19 {
->> +	/* goodix,gt9886 @5d  */
->
->I see there's driver support for the GT98*97* - is there a chance you can
->reuse some of it?
->
+Best regards,
+Liviu
 
-I am currently testing touch on gtx8 driver which currently is in lkml, on=
-ce its merged we could add support for it=2E
+>  
+>    mali-supply: true
+> @@ -110,6 +112,27 @@ allOf:
+>          power-domain-names: false
+>        required:
+>          - mali-supply
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: mediatek,mt8196-mali
+> +    then:
+> +      properties:
+> +        mali-supply: false
+> +        sram-supply: false
+> +        operating-points-v2: false
+> +        power-domains:
+> +          maxItems: 1
+> +        power-domain-names: false
+> +        clocks:
+> +          maxItems: 2
+> +        clock-names:
+> +          items:
+> +            - const: core
+> +            - const: stacks
+> +      required:
+> +        - power-domains
+>  
+>  examples:
+>    - |
+> @@ -145,5 +168,17 @@ examples:
+>              };
+>          };
+>      };
+> +  - |
+> +    gpu@48000000 {
+> +        compatible = "mediatek,mt8196-mali", "arm,mali-valhall-csf";
+> +        reg = <0x48000000 0x480000>;
+> +        clocks = <&gpufreq 0>, <&gpufreq 1>;
+> +        clock-names = "core", "stacks";
+> +        interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH 0>,
+> +                     <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH 0>,
+> +                     <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH 0>;
+> +        interrupt-names = "job", "mmu", "gpu";
+> +        power-domains = <&gpufreq>;
+> +    };
+>  
+>  ...
+> 
+> -- 
+> 2.51.0
+> 
 
-https://lore=2Ekernel=2Eorg/linux-input/20250918-gtx8-v1-0-cba879c84775@ma=
-inlining=2Eorg
-
-[=2E=2E=2E]
->> +	connector {
->> +		compatible =3D "usb-c-connector";
->> +		power-role =3D "source";
->> +		data-role =3D "dual";
->> +		self-powered;
->> +
->> +		source-pdos =3D <PDO_FIXED(5000, 3000, PDO_FIXED_DUAL_ROLE |
->> +					 PDO_FIXED_USB_COMM | PDO_FIXED_DATA_SWAP)>;
->
->Have you verified this is in line with your specific device's
->downstream kernel?
-
-Yes i have verified it=2E
-
-[=2E=2E=2E]
->> +&pm8150l_lpg {
->> +
->> +	status =3D "okay";
->
->ditto> +	led@1 {
->> +		reg =3D <1>;
->> +		color =3D <LED_COLOR_ID_WHITE>;
->> +		function =3D LED_FUNCTION_STATUS;
->> +
->> +		status =3D "disabled";
->
->?
-
-Raphael doesn=E2=80=99t have a white LED=2E I missed cleaning that=2E I=E2=
-=80=99ll remove it in the next revision=2E
-
->
->> +	};
->> +
->> +
->> +	led@2 {
->> +		reg =3D <2>;
->> +		color =3D <LED_COLOR_ID_RED>;
->> +		function =3D LED_FUNCTION_STATUS;
->> +		function-enumerator =3D <0>;
->> +	};
->> +
->> +	led@3 {
->> +		reg =3D <3>;
->> +		color =3D <LED_COLOR_ID_RED>;
->> +		function =3D LED_FUNCTION_STATUS;
->> +		function-enumerator =3D <1>;
->> +	};
->
->Are there really two separate red LEDs?
-
-Yes, it has popup camera with an LED on both side, i have verified functio=
-nality of both LEDs=2E=20
-
-
-[=2E=2E=2E]
->
->> +&usb_1_dwc3 {
->> +	dr_mode =3D "otg";
->> +	maximum-speed =3D "high-speed";
->> +
->> +	/* Remove USB3 phy */
->> +	phys =3D <&usb_1_hsphy>;
->> +	phy-names =3D "usb2-phy";
->
->Is this a physical limitation, i=2Ee=2E missing wires?
-
-Yes it is a physical limitation and downstream configured it similarly,
-
-[=2E=2E=2E]
-
-Thanks for all the rest of improvement suggestions=2E
-
-Best regards
-Piyush Raj Chouhan
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
