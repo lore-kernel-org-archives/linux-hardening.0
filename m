@@ -1,53 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1C8A2F6912
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Oct 2025 13:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A3C278E5D;
+	Wed, 29 Oct 2025 15:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761746176; cv=none; b=lg3Z5HGLt5bjupkXEr5ZU3VhVGJDO9gKlUxGGAIaLn2X746rbG1e9Y5pgjHoeGnUhGP7SSf4qhzLlwHfeSThbBpo4b7gYiVilaKVLumyXjX6tgCkpmX3X2wU2t8x7xjQFx2ukCELh5fV2MUu9jzv/xedSjWYqtWE9EvI+1PkJR4=
+	t=1761751141; cv=none; b=lTA4rCDOtjtB5GxncjesIVN9xjZnWZBj3ibLx7J2lhauYwZc3n0YxU4IvOfjf+M1Wifin9Nx7fK3z8zkUFi1xHLKyECuHGII0UXiYyUh0VHl6wR8+xa/JYp6u2iCij0vYgatulicag0GIb06nQPlXs1n47TFHIUVLmJDnryOmvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761746176; c=relaxed/simple;
-	bh=KubnLurAppQNnPOcx/MIihZ9+VYxUP4oaCZb0K//AZg=;
+	s=arc-20240116; t=1761751141; c=relaxed/simple;
+	bh=EpzLFVZD5xI2UDK/Ftwn8JnCSoKvTCCWS6Wjlz1OKXY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YIvoxYStwlvBgn6h9Mz9T975b4/VIjG2228g+mKuoUsm+KONGdc16UzLahVkEIkNPNeO36Kt6ejnB8VfbDY/YiBp2JZLDVvw4VOTWZUJv3sADKiqRa/4xSiztmdTTwtuaCmA+DW7raWBZHEqWjQUF6wmgw6NbqtRRXqC0ySNPO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22DCA1C2B
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Oct 2025 06:56:05 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B0EF53F66E
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Oct 2025 06:56:12 -0700 (PDT)
-Date: Wed, 29 Oct 2025 13:55:43 +0000
-From: Liviu Dudau <liviu.dudau@arm.com>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Rob Herring <robh@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Chia-I Wu <olvaffe@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>,
-	Steven Price <steven.price@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=MiU5d/YY7th/w6KU9f1urwE5FxOEcMqCNW8wIYVdhDGGHRT6qywz8RGpKS/U4pVJjOX+H+AzB7B3fRCB22cOgsVHdxiJCfkhbgmEcGYL1LERAt7rM/ZV2ME8uMUuccnUeG7T+UMq+5tfdHCVnXSlW2rJ213Qayzwmp/CGdCKNIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kU7KrFQn; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kU7KrFQn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761751140; x=1793287140;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=EpzLFVZD5xI2UDK/Ftwn8JnCSoKvTCCWS6Wjlz1OKXY=;
+  b=kU7KrFQnOUpSPJ0oUy9eQcnnB1U55j6T4I5hIyzsrvyJu7TNaYXvGOFV
+   8sJZdSjYdJhmB3eVT0GDspAfa4aGtQVNEXNRrv5QQhp5emdjUOgbAQXbd
+   CYXcPHULuCZoRegcXlUdy+6LabOQBNE/DvA6M4Vsk4XQ3RMaCuXLCXL5P
+   2kMV5ydA4Bbrf/HBFE5mtKyzsySCpMxASyUj8jPE5ZMp6IU6qjhMpd+Sb
+   ZjhemV4mN7YtpnGI+QMIJrj7tZZ0BgyHnlAi1tjgtX6H686MhqMEuxqmR
+   aALCYBHIyUtuikWAB6vEKdmMU/5dqkd3kfQyfB1exMjTyNlpLG/BYDD3J
+   A==;
+X-CSE-ConnectionGUID: rtHgMJJKRuS88bmw4JQ2/w==
+X-CSE-MsgGUID: P195PJxHR1yvlSjEk9MInA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11597"; a="63759830"
+X-IronPort-AV: E=Sophos;i="6.19,264,1754982000"; 
+   d="scan'208";a="63759830"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 08:18:59 -0700
+X-CSE-ConnectionGUID: KJvar1HiTFalTC2etZtyxQ==
+X-CSE-MsgGUID: 0IvhDGTqSICuASuA8EuEOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,264,1754982000"; 
+   d="scan'208";a="185391702"
+Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.248])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 08:18:52 -0700
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1vE7wn-00000003eOA-15u8;
+	Wed, 29 Oct 2025 17:18:49 +0200
+Date: Wed, 29 Oct 2025 17:18:49 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, kernel@collabora.com,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v8 1/5] dt-bindings: gpu: mali-valhall-csf: add
- mediatek,mt8196-mali variant
-Message-ID: <aQIc39c8MvU37G_q@e110455-lin.cambridge.arm.com>
-References: <20251017-mt8196-gpufreq-v8-0-98fc1cc566a1@collabora.com>
- <6599426.lOV4Wx5bFT@workhorse>
- <aQFoKoWIlf7xPzZX@e110455-lin.cambridge.arm.com>
- <3127655.ElGaqSPkdT@workhorse>
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Alexey Klimov <alexey.klimov@linaro.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v3 03/10] gpiolib: implement low-level, shared GPIO
+ support
+Message-ID: <aQIwWXM8BfjQs7kv@smile.fi.intel.com>
+References: <20251029-gpio-shared-v3-0-71c568acf47c@linaro.org>
+ <20251029-gpio-shared-v3-3-71c568acf47c@linaro.org>
+ <aQH-NcXry6_IlqXQ@smile.fi.intel.com>
+ <CAMRc=Me5qPS2PhLK5hpK8BbTS8b9q3T-+86mq6rVDpyKZZUfoA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,186 +88,60 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3127655.ElGaqSPkdT@workhorse>
+In-Reply-To: <CAMRc=Me5qPS2PhLK5hpK8BbTS8b9q3T-+86mq6rVDpyKZZUfoA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Oct 29, 2025 at 02:42:35PM +0100, Nicolas Frattaroli wrote:
-> On Wednesday, 29 October 2025 02:04:42 Central European Standard Time Liviu Dudau wrote:
-> > On Tue, Oct 28, 2025 at 09:51:43PM +0100, Nicolas Frattaroli wrote:
-> > > On Tuesday, 28 October 2025 18:12:35 Central European Standard Time Liviu Dudau wrote:
-> > > > On Fri, Oct 17, 2025 at 05:31:08PM +0200, Nicolas Frattaroli wrote:
-> > > > > The Mali-based GPU on the MediaTek MT8196 SoC uses a separate MCU to
-> > > > > control the power and frequency of the GPU. This is modelled as a power
-> > > > > domain and clock provider.
-> > > > > 
-> > > > > It lets us omit the OPP tables from the device tree, as those can now be
-> > > > > enumerated at runtime from the MCU.
-> > > > > 
-> > > > > Add the necessary schema logic to handle what this SoC expects in terms
-> > > > > of clocks and power-domains.
-> > > > > 
-> > > > > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> > > > > Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> > > > > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> > > > > ---
-> > > > >  .../bindings/gpu/arm,mali-valhall-csf.yaml         | 37 +++++++++++++++++++++-
-> > > > >  1 file changed, 36 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
-> > > > > index 613040fdb444..860691ce985e 100644
-> > > > > --- a/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
-> > > > > @@ -45,7 +45,9 @@ properties:
-> > > > >      minItems: 1
-> > > > >      items:
-> > > > >        - const: core
-> > > > > -      - const: coregroup
-> > > > > +      - enum:
-> > > > > +          - coregroup
-> > > > > +          - stacks
-> > > > >        - const: stacks
-> > > > 
-> > > > I'm not sure how to parse this part of the change. We're overwriting the property
-> > > > for mt8196-mali anyway so why do we need this? And if we do, should 'stacks'
-> > > > still remain as a const?
-> > > 
-> > > The properties section outside of the if branches outside here
-> > > specifies a pattern of properties that matches for all devices.
-> > > 
-> > > In this case, I changed it so that the second clock-names item
-> > > may either be "coregroup" or "stacks".
-> > 
-> > Why would we want to do that for non-MT8196 devices? It doesn't make sense to me.
-> > The overwrite in the if branch should be enough to give you want you want (i.e.
-> > core followed by stacks and only that).
+On Wed, Oct 29, 2025 at 01:39:34PM +0100, Bartosz Golaszewski wrote:
+> On Wed, Oct 29, 2025 at 12:45 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Wed, Oct 29, 2025 at 12:20:39PM +0100, Bartosz Golaszewski wrote:
+> > >
+> > > This module scans the device tree (for now only OF nodes are supported
+> > > but care is taken to make other fwnode implementations easy to
+> > > integrate) and determines which GPIO lines are shared by multiple users.
+> > > It stores that information in memory. When the GPIO chip exposing shared
+> > > lines is registered, the shared GPIO descriptors it exposes are marked
+> > > as shared and virtual "proxy" devices that mediate access to the shared
+> > > lines are created. When a consumer of a shared GPIO looks it up, its
+> > > fwnode lookup is redirected to a just-in-time machine lookup that points
+> > > to this proxy device.
+> > >
+> > > This code can be compiled out on platforms which don't use shared GPIOs.
+> >
+> > Besides strcmp_suffix() that already exists in OF core, there are also some
+> > existing pieces that seems being repeated here (again). Can we reduce amount
+> > of duplication?
 > 
-> I built my understanding of why on the same reason of why we specify
-> a minItems of 1 but require it to be 3 in the if branch of the only
-> other compatible (rk3588): it describes what may be found in those
-> properties, not what is required by the specific compatible preceding
-> the generic valhall compatible. arm,mali-valhall-csf is currently
-> not described as a compatible that's allowed to appear stand-alone
-> without some other compatible before it to specify further which SoC
-> it's on, so it really just is whatever RK3588 needs vs. whatever
-> MT8196 needs at the moment.
-> 
-> Arguably though, there's no functional difference here, and I'm not
-> aware on any rules regarding this. My change may be problematic
-> however, because of the whole double stacks thing.
+> I'm afraid you need to be more specific here.
 
-I think I'm saying the same thing. The "arm,mali-valhall-csf" is the most general
-compatible string and defines the common denominator if not overwritten. I'm
-not expecting anyone to use just that string for a compatible, but downstream
-we have additional compatible strings that don't have to update the schema at all.
-rk3588 has a specific setup that requires 3 clocks so you cannot have any optional,
-that's why it is overwriting the minItems. Your whole double stack thing is
-actually not needed if all you do is overwrite in the MT8196 case the clock
-names and maxItems to only need two clocks.
+You can simply browse the file, it's not long to find and think about it.
+I'm _thinking_ that it's possible to improve the situation overall by
+try our best of deduplicating (or rather not duplicating) things.
 
-> 
-> > > Yes, the third "stacks"
-> > > remains, though if you wanted to be extra precise you could
-> > > then specify in the non-MT8196 cases that we should not have
-> > > stacks followed by stacks, but I'd wager some checker for
-> > > duplicate names may already catch that.
-> > > 
-> > > However, I don't think it's a big enough deal to reroll this
-> > > series again.
-> > 
-> > I'm not asking you to re-roll the series but if you agree to drop that
-> > part I can make the edit when merging it.
-> 
-> If the other DT maintainers (especially Rob who gave it his R-b)
-> are okay with dropping it, then yes please do.
+...
 
-Rob, do you agree with dropping the change in the generic bindings?
+> > > +#if IS_ENABLED(CONFIG_OF)
+> > > +static int gpio_shared_of_traverse(struct device_node *curr)
+> > > +{
+> >
+> > I believe parts of this code may be resided somewhere in drivers/of/property.c
+> > or nearby as it has the similar parsing routines.
+> 
+> I don't think this is a good idea, I want to keep it within the
+> confines of drivers/gpio/ and the use-case is so specific, there's
+> really no point in putting parts of it under drivers/of/.
+> 
+> If I could only iterate over all properties of an fwnode, I'd have
+> skipped using OF-specific routines altogether.
 
-Best regards,
-Liviu
-
-> 
-> Kind regards,
-> Nicolas Frattaroli
-> 
-> > 
-> > Best regards,
-> > Liviu
-> > 
-> > > 
-> > > Kind regards,
-> > > Nicolas Frattaroli
-> > > 
-> > > > 
-> > > > Best regards,
-> > > > Liviu
-> > > > 
-> > > > >  
-> > > > >    mali-supply: true
-> > > > > @@ -110,6 +112,27 @@ allOf:
-> > > > >          power-domain-names: false
-> > > > >        required:
-> > > > >          - mali-supply
-> > > > > +  - if:
-> > > > > +      properties:
-> > > > > +        compatible:
-> > > > > +          contains:
-> > > > > +            const: mediatek,mt8196-mali
-> > > > > +    then:
-> > > > > +      properties:
-> > > > > +        mali-supply: false
-> > > > > +        sram-supply: false
-> > > > > +        operating-points-v2: false
-> > > > > +        power-domains:
-> > > > > +          maxItems: 1
-> > > > > +        power-domain-names: false
-> > > > > +        clocks:
-> > > > > +          maxItems: 2
-> > > > > +        clock-names:
-> > > > > +          items:
-> > > > > +            - const: core
-> > > > > +            - const: stacks
-> > > > > +      required:
-> > > > > +        - power-domains
-> > > > >  
-> > > > >  examples:
-> > > > >    - |
-> > > > > @@ -145,5 +168,17 @@ examples:
-> > > > >              };
-> > > > >          };
-> > > > >      };
-> > > > > +  - |
-> > > > > +    gpu@48000000 {
-> > > > > +        compatible = "mediatek,mt8196-mali", "arm,mali-valhall-csf";
-> > > > > +        reg = <0x48000000 0x480000>;
-> > > > > +        clocks = <&gpufreq 0>, <&gpufreq 1>;
-> > > > > +        clock-names = "core", "stacks";
-> > > > > +        interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH 0>,
-> > > > > +                     <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH 0>,
-> > > > > +                     <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH 0>;
-> > > > > +        interrupt-names = "job", "mmu", "gpu";
-> > > > > +        power-domains = <&gpufreq>;
-> > > > > +    };
-> > > > >  
-> > > > >  ...
-> > > > > 
-> > > > 
-> > > > 
-> > > 
-> > > 
-> > > 
-> > > 
-> > 
-> > 
-> 
-> 
-> 
-> 
+The problem is that every subsystem considers "it's not a good idea" or
+"historical reasons" or other excuses. Since you are adding OF-specific
+stuff that has something already done inside OF specific code, why to
+spread it over the kernel by duplicating in another place(s)?
 
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+With Best Regards,
+Andy Shevchenko
+
+
