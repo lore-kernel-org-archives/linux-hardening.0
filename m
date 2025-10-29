@@ -1,124 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB36F1C5D44;
-	Wed, 29 Oct 2025 15:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D377E325737
+	for <linux-hardening@vger.kernel.org>; Wed, 29 Oct 2025 15:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761751298; cv=none; b=qEITy7ZzH9Bc835QDfJeuFGDGUKeNQn+AI9iUBrk9ydY2JK3OzjHD+qWf+9MAvTY5qKzJkqd5s0cNSO7IVJTYHPyyDOlYgByfEyaFnMoC8GijJQ4BTSHFKTC2XVZIv4h0Q5NpKdhvXNbpPePGaoY5W96Pq9eFRcs2uGXjPe7X6M=
+	t=1761753438; cv=none; b=hpUE3I06oEx48t9GDNZDWxc8EEcXiTlzYNhijYqxVnkEx58EPdm7SF3MZv3amTrIQ72s+L062pPjgcxyzKS9ZVnP9DNcFxg5L3u5TMUeUkBBg5wmxjK9HtkydCWqLDj7tx1PlWG7zRbJ08E8qBpxw49zHAnBa/W9DllfjpjhfUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761751298; c=relaxed/simple;
-	bh=i8zZ/Az2AU7gAws4QhPWy+UIC3UsU5SjQYR63Fz7QG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ppiybPDcKDWjNlWyr1XV1S7PRy4OEdFdtRbSs+wayPslqe80hKRpnSlQT2FSqbKT728mlviXf70Dwt6e4GY5GzyO9yLUTkgErXlDlp+ZYbsyA6tz5xpUwIxyP5+lqhuQksWfFUZ/i1cooSfomf0WlhxCHyQaaSkJrFycMPlLjdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IW+X0DpF; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1761753438; c=relaxed/simple;
+	bh=YwDgrJ1PHv1+Z/jYYOmoTTQu/BLRyS0iXW4M5TIKQkY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oDf6Gzwn3EG6NLcd3BZV4N0M5vR3RqEwxCeFMhJtshTmHoNMntRafeLVVdqtKogq+0bl+XIwPb/ZSn/ZLF1WtmUmZYr6OkA7QEjwues6IwS9OkHF0Ce4AD35G5+IjgTfpAduUmBdBrbwfJPJPBwPrUq+qOhZDYrOF5/PvEK2IAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ThiVxIBM; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IW+X0DpF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761751297; x=1793287297;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=i8zZ/Az2AU7gAws4QhPWy+UIC3UsU5SjQYR63Fz7QG4=;
-  b=IW+X0DpFZBYVBDDuMggBGs+UQJY8+49YM7BPmzlgf3R4Du80+CnZHA1V
-   /MknELQZeXcg0A7pJjrYWsf33zg96IzmzA5tTnj6B5BQXkzIEXTI0OHLz
-   9ctjy5F74DYukZl9+Y/5B3OiaUM/D8Sw2NNKKQWPXQXb2pRFKxuxGU5/w
-   MBxL6Vq0FNCDiHX0KzUzri20e5qvy5eqSmeD6Q5ADTsuMb/q1mNifC0c/
-   9cCBNkN/QayLXabx53NiVJZleUBwpOPab5jtoTqGSax8bFy5r5nkuUA0j
-   1OilmOPameQstHHA6+dXmZvwg3kyy3VBl2tXLSKGXT5uGqXqv872PHmLL
-   g==;
-X-CSE-ConnectionGUID: Ldf6sa7ORr2OfFo5apCJMA==
-X-CSE-MsgGUID: YxtL4VCvQ96h3fnF66X2dg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11597"; a="63785032"
-X-IronPort-AV: E=Sophos;i="6.19,264,1754982000"; 
-   d="scan'208";a="63785032"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 08:21:36 -0700
-X-CSE-ConnectionGUID: VsQXzBaVQf6rqhBeifR3xg==
-X-CSE-MsgGUID: tGWyFCvWRma3haaaGIshVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,264,1754982000"; 
-   d="scan'208";a="216557885"
-Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.248])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 08:21:30 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1vE7zL-00000003ePq-2SlB;
-	Wed, 29 Oct 2025 17:21:27 +0200
-Date: Wed, 29 Oct 2025 17:21:27 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Alexey Klimov <alexey.klimov@linaro.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 10/10] regulator: make the subsystem aware of shared
- GPIOs
-Message-ID: <aQIw97qdO43NXHWi@smile.fi.intel.com>
-References: <20251029-gpio-shared-v3-0-71c568acf47c@linaro.org>
- <20251029-gpio-shared-v3-10-71c568acf47c@linaro.org>
- <aQIAXO1hUrw4Yp9V@smile.fi.intel.com>
- <CAMRc=McT+HinKvajHmBYPcQKoboapAf2E3ErJSP=2jXW9B0omA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ThiVxIBM"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-591ea9ccfc2so81518e87.1
+        for <linux-hardening@vger.kernel.org>; Wed, 29 Oct 2025 08:57:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761753434; x=1762358234; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YwDgrJ1PHv1+Z/jYYOmoTTQu/BLRyS0iXW4M5TIKQkY=;
+        b=ThiVxIBMYZM2FlNXtqxzVDlQv78F7l7LtYRw3PpWGAR1WKUWrw93sdUni+f9QNgKsm
+         dOJ6ONzdE8VSWuqFtIzf3AWEdnweJFJjx4DoaqOTQn4Toa4YKMJNjDhZd/TLjOYY+lik
+         yihMHqXipU6m9WWeDBq2rYLbrLFofCvHq5mDdLUYgZoNnOzbqR3uZ3dhpsMyB28s8FMb
+         TPZZVPj7q+fL6Wt5mD9SQB8gA0TJ0Ia2217hD0r1x7sgZ9q70NYHyF5YgOSaslpzhfvo
+         /t5hMqEW4pYdI7CdueNd7WDJyjulsrXSZCDQK9zBepsLxAbkg8sE0aW0m+1vOtTdX8id
+         0QoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761753434; x=1762358234;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YwDgrJ1PHv1+Z/jYYOmoTTQu/BLRyS0iXW4M5TIKQkY=;
+        b=a4tB/g48k4v6IOANFRrY0pumaNysZOBmpkepwIqBqnjZoNh9l6TMzPY8af9eCIAhKx
+         uhCA1qzPqkzv1o4I4vZ7RD4VRMDwK6dNE6tn6mYKTirLbFBPlcA4GLu5UVbduVDQu31G
+         LvWlpEvT2VNibiyugSxGqLzCgNje1dT48SMCr24sXI1w4aQbNrA45E9LvfTPjB6fLNfP
+         vJqhsOuNdGi7ArD/7vA9PDkaC0z/5wAFwUEPcd8rMk2Ucd7A3qUPwwlxUA11Nl4xrAyr
+         vzhupOF36McPH5QNN08sQh364HQHBLSZbl+YsVj6D1bQUqlQKY/vD1iNHAxM2NJy5SYd
+         alOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6VWnHYMBhTNf1JEPgK9Q57rSVW4W3T0gP0fzI04fNyRx2DM54+cswZuk03Gzw6Q04yBtfDwI+OIfX8Ua+sZ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxjy8uIUxerfFOFZs428XeXQmfFwG3cEthW3ApSIhqV3cULKEK6
+	U0gWpe4vmm2o1e4TPsXcoOkIZN5fVaKbRujcDePH4PdhYNSOboq72vgqADKTASiWF85qx3/nj5G
+	sLaWMYRFLAL3Nb894xXX983FTXL+f/VWDvOGwJ7ybyw==
+X-Gm-Gg: ASbGncuKt2FcQjDkg3V+bqRdctMNamBdyi8d0ji3vVOW/XsWX+C1E8g6h5alyocK6Ym
+	F5AhcFW068SE395nvHp1FeLwi12H2vbDT9hnKWd+PYgnatBIGcCaT4zqBKExR/YYxyVrfwJ78RR
+	IzyPLcCaVGOAhdY3imPujQFRuTINpTP8RM+b66kakNNGGuVv70QlH6/D00EwZctc7OKnlfpxmRq
+	N9Mkt/wcXcWWcVfb2MDE5E5nV8UbqFmhPxq9E2/605u9KBk+u3xYdGF7MklHZxN00deYFORLbJ9
+	3bW3BUUF6lal0vHU1n6g1bPzOh0=
+X-Google-Smtp-Source: AGHT+IFY1i/xx25cv6Ui/VCi3uSKIAy54H7ItoaBFtAYqTtPocNBBoyPi6yJvvk6xxRW45U/aC0bt+x56RpHt48kapg=
+X-Received: by 2002:a05:6512:3a8f:b0:592:f912:c890 with SMTP id
+ 2adb3069b0e04-59416d1b67bmr30458e87.7.1761753433905; Wed, 29 Oct 2025
+ 08:57:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McT+HinKvajHmBYPcQKoboapAf2E3ErJSP=2jXW9B0omA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20251029-gpio-shared-v3-0-71c568acf47c@linaro.org>
+ <20251029-gpio-shared-v3-3-71c568acf47c@linaro.org> <aQH-NcXry6_IlqXQ@smile.fi.intel.com>
+ <CAMRc=Me5qPS2PhLK5hpK8BbTS8b9q3T-+86mq6rVDpyKZZUfoA@mail.gmail.com> <aQIwWXM8BfjQs7kv@smile.fi.intel.com>
+In-Reply-To: <aQIwWXM8BfjQs7kv@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 29 Oct 2025 16:57:02 +0100
+X-Gm-Features: AWmQ_blmdCXVfDmCuctOcWac3U7ocspMQ35GR3eCIvgTpPWEqk3le8O9ZO4wqZM
+Message-ID: <CAMRc=Mfz+Se0Wq4cXjgP=DBOMkTqSBdoV-CcC-+Ma0hfELARzA@mail.gmail.com>
+Subject: Re: [PATCH v3 03/10] gpiolib: implement low-level, shared GPIO support
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 29, 2025 at 01:41:10PM +0100, Bartosz Golaszewski wrote:
-> On Wed, Oct 29, 2025 at 12:54 PM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > On Wed, Oct 29, 2025 at 12:20:46PM +0100, Bartosz Golaszewski wrote:
+On Wed, Oct 29, 2025 at 4:19=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Wed, Oct 29, 2025 at 01:39:34PM +0100, Bartosz Golaszewski wrote:
+> > On Wed, Oct 29, 2025 at 12:45=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@intel.com> wrote:
+> > > On Wed, Oct 29, 2025 at 12:20:39PM +0100, Bartosz Golaszewski wrote:
+> > > >
+> > > > This module scans the device tree (for now only OF nodes are suppor=
+ted
+> > > > but care is taken to make other fwnode implementations easy to
+> > > > integrate) and determines which GPIO lines are shared by multiple u=
+sers.
+> > > > It stores that information in memory. When the GPIO chip exposing s=
+hared
+> > > > lines is registered, the shared GPIO descriptors it exposes are mar=
+ked
+> > > > as shared and virtual "proxy" devices that mediate access to the sh=
+ared
+> > > > lines are created. When a consumer of a shared GPIO looks it up, it=
+s
+> > > > fwnode lookup is redirected to a just-in-time machine lookup that p=
+oints
+> > > > to this proxy device.
+> > > >
+> > > > This code can be compiled out on platforms which don't use shared G=
+PIOs.
 > > >
-> > > GPIOLIB is now aware of shared GPIOs and - for platforms where access to
-> > > such pins is managed internally - we don't need to keep track of the
-> > > enable count.
-> > >
-> > > Once all users in the kernel switch to using the new mechanism, we'll be
-> > > able to drop the internal counting of users from the regulator code.
+> > > Besides strcmp_suffix() that already exists in OF core, there are als=
+o some
+> > > existing pieces that seems being repeated here (again). Can we reduce=
+ amount
+> > > of duplication?
 > >
-> > I am wondering if you took into account the layering violation (or others
-> > put it as "transferring of ownership") in the regulator core for the platform
-> > based GPIO regulators? This popped up during the discussion of
-> > https://lore.kernel.org/platform-driver-x86/20251024050537.92440-1-qiuwenbo@gnome.org/
-> 
-> I am aware of this weird ownership transfer in regulator but these
-> changes don't affect it. The layering is still being violated though.
-> 
-> This should be fixed and I've looked into it but it's not trivial so
-> it's another big rework for the future.
+> > I'm afraid you need to be more specific here.
+>
+> You can simply browse the file, it's not long to find and think about it.
+> I'm _thinking_ that it's possible to improve the situation overall by
+> try our best of deduplicating (or rather not duplicating) things.
+>
 
-OK, thanks for clarifications!
+Sorry, but this is not how reviewing works. You can't just say: "I
+think this can be improved, go figure out what can and fix it, you can
+browse this file for reference". You need to specifically point out
+issues in code and propose alternatives.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> ...
+>
+> > > > +#if IS_ENABLED(CONFIG_OF)
+> > > > +static int gpio_shared_of_traverse(struct device_node *curr)
+> > > > +{
+> > >
+> > > I believe parts of this code may be resided somewhere in drivers/of/p=
+roperty.c
+> > > or nearby as it has the similar parsing routines.
+> >
+> > I don't think this is a good idea, I want to keep it within the
+> > confines of drivers/gpio/ and the use-case is so specific, there's
+> > really no point in putting parts of it under drivers/of/.
+> >
+> > If I could only iterate over all properties of an fwnode, I'd have
+> > skipped using OF-specific routines altogether.
+>
+> The problem is that every subsystem considers "it's not a good idea" or
+> "historical reasons" or other excuses. Since you are adding OF-specific
+> stuff that has something already done inside OF specific code, why to
+> spread it over the kernel by duplicating in another place(s)?
+>
 
+Well, point me to the things that have been done already and I'll see
+about reusing them.
 
+Bartosz
