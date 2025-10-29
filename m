@@ -1,60 +1,60 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23E334C149
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Oct 2025 12:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8503054D8
+	for <linux-hardening@vger.kernel.org>; Wed, 29 Oct 2025 12:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761741589; cv=none; b=U6+AV/37HL+snYPwwU37riGXl6l6kWq/BTE4dL4tXacPGpx5WiHPmo6jaghPCt+uBGYNbH/6i8srWnURsI3jnl/qtWHQjMD9d55OqKOXOh4hX8KFTQQsNof7rjA6mIM8ZvL1UjRRZF0JJoxLCg7O7bjmE/MHGH9qgThWk4vFgiE=
+	t=1761741688; cv=none; b=da0n5M/o7X8FtJXULDPrCOeRSqbEowzzlRWBnMkwq58aYKp3eg3efUc3eA9NZwDcQAeNaOrbr9avAwKQctwnyD55lVJ9ckW6oQLTN3Q/B1a34d92GOYdPRxj+cpotRvXxaqUKq3+5Giq2HLHTWEtsoKbzG0ldi2cKXHwnLla9q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761741589; c=relaxed/simple;
-	bh=vepLqSyPiapW1CscUULDIr1ukJTRIyuoFYsiHMuP74c=;
+	s=arc-20240116; t=1761741688; c=relaxed/simple;
+	bh=4GfXeQTTcxSpcQZ8VLho/amPI/XMfZn1ZR5wbT6W4Qw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MeZHHJ7zq9Vq0e1324rgbLcZJXy/DRxg4Dkzk0NjDR26Jz0R/RCyr++ws/GFVFhYvpW3k6K7dFHB12Q1VsSj7tp7pVmI3TDyfa5rkoXYnZdYq2ulxFdRguxv6D1AZlmfgjwi0MCwLapqMPQ1ISXc6UsiygM1roiKE4rBrzuFvBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zLaB1x6e; arc=none smtp.client-ip=209.85.167.49
+	 To:Cc:Content-Type; b=PdZggZFPbw7ZNIhbmB6IuK2A7kmTxoCd2zTStna2uc1NJ/3GunG0CfRX4i0WsFKJYywdRGltK1SPdM8fKFSoHUA6iUne3mPq4z8j2RleUzHOG37W9SyEzbjcOD9xUeCiG8rZ0LMuHrSwGZXI70kjZAJ7Z+gYP90BqajLH7e/uOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hyjqqwMK; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zLaB1x6e"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-592fa38fe60so8726722e87.3
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Oct 2025 05:39:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hyjqqwMK"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-592f600acb3so3973099e87.2
+        for <linux-hardening@vger.kernel.org>; Wed, 29 Oct 2025 05:41:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761741586; x=1762346386; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761741684; x=1762346484; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vepLqSyPiapW1CscUULDIr1ukJTRIyuoFYsiHMuP74c=;
-        b=zLaB1x6eVAZ9zfhQy6mSs3ecSMXcJ+JVEo1zGzm3hfwCYi/HQPwtjF72mbfH497Zos
-         xLTx+if13zunBkqctues7h4Vq6i8shg9uN1pakRywLuKUZer555LgPwgdcYeWKSo9Nmb
-         KDTgh0KR/tgB2EXzcoD0VHK1j8VR9nzrc3nG699wYLtd3oinPDd6FTFfJX10mLL4od5p
-         MqyNXtgOeAXut5OzP+7XwcQ0h+PaBKbGOH42g2TdWx3tkQB+YCqi8ddMEiH6MFK3jLjW
-         jutS4B1dSTvCuVY7MPgEAShWU3b0dnc4EG7I5u9Z744+QV9cYocrSEJhIhgvzQ/uBOAQ
-         nlqg==
+        bh=4GfXeQTTcxSpcQZ8VLho/amPI/XMfZn1ZR5wbT6W4Qw=;
+        b=hyjqqwMKlVbrsrlesNjru6EvotES6SrhMga7FgYCG0XewJxKvoiDPxx2ycrLRo3Lqe
+         IW40iMZQYr0LfAf6nSu/98u2A1l1wfVszqz7PPr1Z3SmTtUoBpSnRXdGf3L8Trs8SzPD
+         vSqunM7aZBP6O0ZpRLA36J4FFq+lBhpESQ8xn4Phlbf/BjTrcsYvHHRjczJAuzdWVTT0
+         xSMl4FkByJ2JulSrmfkn07inXE4sk5ineQaXOonfrrO/3dkTSmjfUTcG5xEWCCdY30RK
+         DJEm2NqnOzr8JM2CVjlNuf8s0E1aPlCyxoHfRPqXH+JJjhF6DdrwcpoC3rzKbnA9pIeU
+         wenw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761741586; x=1762346386;
+        d=1e100.net; s=20230601; t=1761741684; x=1762346484;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vepLqSyPiapW1CscUULDIr1ukJTRIyuoFYsiHMuP74c=;
-        b=U/iT9VZ/atP5thXlAcMs1WY+Gp6+KwoHqjiC67akf/xggLgD+DoryMWQdZphKHmbst
-         68eldqScGmffK76ZFeH4phxPFqWTI+Ucx9pjaZLcmIP5YlA0T1t5cT+3XTEYc6RAYvKU
-         LSjsHKR6DuM18f5WGELToC44gGZ1taLkZdM+GdILMX7YraHBwh+PuQFxpSu2rZbwaMe2
-         116o2pW+c/IzOpyEz2/NCwdiJHLebNirhE00uH9wiXOB6I+e+tM2p95Ov0CGO2DZaSxI
-         zgLA4PNX3t6OxYcknXRo9bh46tQnnf7ZTWUGrnd7G6xA4xZtOC5XHHONWSQATtwHECbJ
-         6hPg==
-X-Forwarded-Encrypted: i=1; AJvYcCV074/Z4Dc75Rfe+1x9cFckPNz/POR0Xm+QEJRMG9dz/B2KPP5zPaUHDcqfvnHn8/70ynWK7ISIvITe5W9+QPk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpJ3Q61hvinveFulRap0Saflk8w5hsrtgJdpxihAFNFBF4KCWJ
-	LbnheuMU2UFjd01lo8j/q9saUQRxRpnE+x2TZdctDBZ5TubMLQ8escICQPZv20KR82u1GI4a7pC
-	TFP39mrb2BktxJJgvJwFMdw7Z0Aq8/z/uoEPqUZtYqA==
-X-Gm-Gg: ASbGnctKHfvJpJ4LxT9YX2WEG/wk0K9X1srx4C0b0JAToqSRqJP3aKi5utX5A30+ghJ
-	JETGdX3qL771KKwcgt7h3paUoUCxcOTqp3hmFOvZcpekYMpXCSEEqcb1Cf/Jlh2t12uSSmEByn/
-	WkXvJPym3KBAVWvLZcvjgPsJTWbI4ygn1voqKI7CcDYWijm/RxN1mn/Mawzo4scqvM8HF687R8x
-	WYEI8PUw2i+djyxiQV4i/pm6r1odpPUaagWJ7Ffe3SURkZJP4ay8cpdxgNNWUAk0R+jGAw8EYn2
-	nQMzH+ubolKRjlLbEHjjDSVyojg=
-X-Google-Smtp-Source: AGHT+IEhlmDPn2tgHOCgKXhItr9HaCh2am9KNpwJ0IjxOJ3YFVumxgTyoy/YlwjIRIN8akgjhohEFSM52fM0JyvB8BA=
-X-Received: by 2002:a05:6512:1383:b0:592:f315:843 with SMTP id
- 2adb3069b0e04-594128f53f0mr1119595e87.50.1761741585982; Wed, 29 Oct 2025
- 05:39:45 -0700 (PDT)
+        bh=4GfXeQTTcxSpcQZ8VLho/amPI/XMfZn1ZR5wbT6W4Qw=;
+        b=F1Bj34eIxV2v6uZr+putGSb4hlWeA17nq/mnSptGcYRmoK1o/aag53SE/a4gqbJNl1
+         UYlw75CW93PInqrHxR2z2c1Z2PGl9MuveK/KmaFki2uEBAjOIYWYG77VwQfuRGdxIlyR
+         CE2K48eseR93NFECWUK+meNi5q6vFT8vPHb+SIbXYNxxGf5X4PUhmMgnxkBB1mcRkw6+
+         N/UHuUBvEpO8x+klWSrCVzUF3E4M2X5720d4whlEdGIjruIdHoBN6tFXMkkhuCAghCYI
+         0/OtQ0pyNveMzpQj0UNqJqTEdIhHinzDQpxrYzIIY6YCAIvSKEm2Taowwe15vADnwdOM
+         H7tw==
+X-Forwarded-Encrypted: i=1; AJvYcCW24iUQEDOAmi/jA3FW3z/EqjTHPxkcEPOJpLzyO+JsPA81bmJDCIdzDspStsoFh5LqWRqEOjQ/YhgiQVhGnho=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzgg5jM9jGWBQxm+eA5CQdmvlSO39BURkf83okQi2al8EGFY+dO
+	ZADCi4OeHWJKSVbGofG7z0aUBKFKcSqoX1QnDV7L67YOQuy0ta+CLQbJIy2MQ51iuBII9lPKcc/
+	qN6Jy+WNO0+5+b95LLkzKruzlntLAEMDhMVW0LuHLufUFLnwCXpcjHK4=
+X-Gm-Gg: ASbGncv+jwKKDzFxo9l+wBL8llzCLyp/bhKiD4FVdKn5b7q9dzrvKayWYTRVMiCLRU1
+	Se1Wl1xRH98w08BVU53rVSsGfPolYyt9jNtI3fDcK5WRt6tqQ93tPKBTVQiqhlrkVDvqxYpPCQT
+	sN3LWD9Y5jaiepVh9h5WsnwL8nVgfZJylq1gkAa/yMLF9Hc5sUvMCKnxCaWpzQvIa+gopGQOmjC
+	5A3rSjWUY5V+hXidWZo5anxOls0GI9KCJMu8owLo3rEcpwDkmdTptCvJsjOAWX8tZkzceHWR7pf
+	hKJzxDn/VLe2fh4c
+X-Google-Smtp-Source: AGHT+IHlRZvbfo/SYNZZ4o30tnBaAGKMcvTAo3NYRcGh1EJ9OHd3AuMhXHkwK8JOue6As+3lLZ2qXnJTw5y6BaOTrIQ=
+X-Received: by 2002:a05:6512:3d05:b0:580:dda2:5318 with SMTP id
+ 2adb3069b0e04-59412a36b93mr989969e87.8.1761741684202; Wed, 29 Oct 2025
+ 05:41:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -62,13 +62,13 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20251029-gpio-shared-v3-0-71c568acf47c@linaro.org>
- <20251029-gpio-shared-v3-3-71c568acf47c@linaro.org> <aQH-NcXry6_IlqXQ@smile.fi.intel.com>
-In-Reply-To: <aQH-NcXry6_IlqXQ@smile.fi.intel.com>
+ <20251029-gpio-shared-v3-10-71c568acf47c@linaro.org> <aQIAXO1hUrw4Yp9V@smile.fi.intel.com>
+In-Reply-To: <aQIAXO1hUrw4Yp9V@smile.fi.intel.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 29 Oct 2025 13:39:34 +0100
-X-Gm-Features: AWmQ_bmg8NCddAGmpteBxJYDcYFplccsm6nERfQwYpmUT3SY-Zt_nlxAn9CZjjE
-Message-ID: <CAMRc=Me5qPS2PhLK5hpK8BbTS8b9q3T-+86mq6rVDpyKZZUfoA@mail.gmail.com>
-Subject: Re: [PATCH v3 03/10] gpiolib: implement low-level, shared GPIO support
+Date: Wed, 29 Oct 2025 13:41:10 +0100
+X-Gm-Features: AWmQ_blYolUjn6HNVFswcXKBY7oowKsMMcCgguiaK5B1Up7lgJHjEAFObXA-S34
+Message-ID: <CAMRc=McT+HinKvajHmBYPcQKoboapAf2E3ErJSP=2jXW9B0omA@mail.gmail.com>
+Subject: Re: [PATCH v3 10/10] regulator: make the subsystem aware of shared GPIOs
 To: Andy Shevchenko <andriy.shevchenko@intel.com>
 Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
 	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
@@ -86,52 +86,32 @@ Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 29, 2025 at 12:45=E2=80=AFPM Andy Shevchenko
+On Wed, Oct 29, 2025 at 12:54=E2=80=AFPM Andy Shevchenko
 <andriy.shevchenko@intel.com> wrote:
 >
-> On Wed, Oct 29, 2025 at 12:20:39PM +0100, Bartosz Golaszewski wrote:
+> On Wed, Oct 29, 2025 at 12:20:46PM +0100, Bartosz Golaszewski wrote:
 > >
-> > This module scans the device tree (for now only OF nodes are supported
-> > but care is taken to make other fwnode implementations easy to
-> > integrate) and determines which GPIO lines are shared by multiple users=
-.
-> > It stores that information in memory. When the GPIO chip exposing share=
-d
-> > lines is registered, the shared GPIO descriptors it exposes are marked
-> > as shared and virtual "proxy" devices that mediate access to the shared
-> > lines are created. When a consumer of a shared GPIO looks it up, its
-> > fwnode lookup is redirected to a just-in-time machine lookup that point=
-s
-> > to this proxy device.
+> > GPIOLIB is now aware of shared GPIOs and - for platforms where access t=
+o
+> > such pins is managed internally - we don't need to keep track of the
+> > enable count.
 > >
-> > This code can be compiled out on platforms which don't use shared GPIOs=
-.
+> > Once all users in the kernel switch to using the new mechanism, we'll b=
+e
+> > able to drop the internal counting of users from the regulator code.
 >
-> Besides strcmp_suffix() that already exists in OF core, there are also so=
-me
-> existing pieces that seems being repeated here (again). Can we reduce amo=
-unt
-> of duplication?
->
-
-I'm afraid you need to be more specific here.
-
-> ...
->
-> > +#if IS_ENABLED(CONFIG_OF)
-> > +static int gpio_shared_of_traverse(struct device_node *curr)
-> > +{
->
-> I believe parts of this code may be resided somewhere in drivers/of/prope=
-rty.c
-> or nearby as it has the similar parsing routines.
+> I am wondering if you took into account the layering violation (or others
+> put it as "transferring of ownership") in the regulator core for the plat=
+form
+> based GPIO regulators? This popped up during the discussion of
+> https://lore.kernel.org/platform-driver-x86/20251024050537.92440-1-qiuwen=
+bo@gnome.org/
 >
 
-I don't think this is a good idea, I want to keep it within the
-confines of drivers/gpio/ and the use-case is so specific, there's
-really no point in putting parts of it under drivers/of/.
+I am aware of this weird ownership transfer in regulator but these
+changes don't affect it. The layering is still being violated though.
 
-If I could only iterate over all properties of an fwnode, I'd have
-skipped using OF-specific routines altogether.
+This should be fixed and I've looked into it but it's not trivial so
+it's another big rework for the future.
 
 Bart
