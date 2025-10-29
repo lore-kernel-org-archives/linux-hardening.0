@@ -1,110 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D592D47FD;
-	Wed, 29 Oct 2025 11:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229FD3587A5
+	for <linux-hardening@vger.kernel.org>; Wed, 29 Oct 2025 12:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761738855; cv=none; b=aWow6+ncgmVCT3oHx2SZMoGWD7lhBLkP2qbsn9FpCNXkVRchi+ITvPAkWwcDV8HPRP+lPJ4LuHH1k43KXcLVIIs8b1Pum8gWAUTbM5gBLpknPFZkgyPl3Lk9ppNAldx8PXUOMCZ0lzyWEAwFksWDim49rlaq/xkwUXDier+elcc=
+	t=1761741431; cv=none; b=ZVgbV1X2/BM3quPfrBZdPRE2dXU0wOcvhtRhOAakorvlwUWRkpZ0bGq4BmnjDtTZUa7Hg/rbvljegKNy75KbGugP7dh7FQ9rN83swJ3UkMqGN4pUafeh9nl35bBnwLTjoN1Zci+rPF6QCgkjGk3MnwBfzqNXX9Aks1rVfvVGHMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761738855; c=relaxed/simple;
-	bh=fuf1LfWN4j/837jd0hVGkh7BL7pxjiKOctcvPtmTalI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VZvmbkMy+YRAbQc9Y3YFhmyKdLov45WbW//KbePOP4aSdVP5+aqkX0BIzhOn7cri65zUVTwXbD45ABiRaU+JYIdo+xfIBxlgPz87+p84QmMM73neSH+X3oXaVXY1aZ8H9GR2LVGwyPfpbzc08+85EQ7IY9VIsZQu0CYJieWL65I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hAxze3cv; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1761741431; c=relaxed/simple;
+	bh=ni2P6AAAIna0hjFuAO82zYVMn0J7WfuU6b6IJiF1kKs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XXRXVjb9knIiiGpwOFnaQJSi4rNtNFLJs+DEvr+eZyg99H5CX731tChip56QMT2gTUZueGlTCbyF0DCQoQfvCv87Zpe0ffOjai1Vpp0CTAwPeaLhNeIBRZzEe6Jz8Pl0clcMpaKF15fToHdaUsHFZw0vFT+HIArwd71CZy9hsvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=F87I/2HK; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hAxze3cv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761738854; x=1793274854;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fuf1LfWN4j/837jd0hVGkh7BL7pxjiKOctcvPtmTalI=;
-  b=hAxze3cvHdSOJFwLIp37wK+P++/GVMZgrvzlZ1jQK4RcehSNEc54hs/5
-   H/et+wNbdKkT5rhQFxWV5OaGC5wRWr0mY9Ssrq4d5lh7sR1ZHko/cjkqg
-   FZ1xG/QnKwTZHRgxSdQ8BaHmfTVG1AxWUwrPpSqA4dRHFSQ5f7/7TgIYe
-   e3vFJ5pBlimnHT9yi6QGhADNkYt875bQwqCBVk+FT8HXZIDw+3Xp4jKJ4
-   +gxYBIR3P27Dc2FSPYqe6lSBTbNF6M+PXG+Vn0C87SFnmv9YdqwbxQ+MS
-   TfskKyBbKhjBgtMOxt6wAdeojXO8C+GY+QTmlqxq+raxR7QpBPzxV5GZb
-   g==;
-X-CSE-ConnectionGUID: tsKMYEY9RgioO/W/jQi7ZQ==
-X-CSE-MsgGUID: DmivzIm2TXaGOdb1U+dfEQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11596"; a="51430558"
-X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="51430558"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 04:54:13 -0700
-X-CSE-ConnectionGUID: 5r6AkawHSf6SHNTAxhpQGg==
-X-CSE-MsgGUID: 6g6unhV9Sm+rGyvN/M0+Tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="222855207"
-Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.248])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 04:54:07 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1vE4ke-00000003bMP-1GBg;
-	Wed, 29 Oct 2025 13:54:04 +0200
-Date: Wed, 29 Oct 2025 13:54:04 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Alexey Klimov <alexey.klimov@linaro.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 10/10] regulator: make the subsystem aware of shared
- GPIOs
-Message-ID: <aQIAXO1hUrw4Yp9V@smile.fi.intel.com>
-References: <20251029-gpio-shared-v3-0-71c568acf47c@linaro.org>
- <20251029-gpio-shared-v3-10-71c568acf47c@linaro.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="F87I/2HK"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-57e8e67aa3eso1500949e87.1
+        for <linux-hardening@vger.kernel.org>; Wed, 29 Oct 2025 05:37:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761741427; x=1762346227; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e7av6/+8iNuXmmgvTwlUka4Y7XmkOmuVd9YoxH52DeM=;
+        b=F87I/2HK8EHJQ7q4NQauRZSN2gkF3Pa6uWaxKT5wFbnJ02O9XJM9CVQa76aAk0TSaF
+         76edmu0GN4qf8O7hLOGmgl2m1E/wZWlSCbCwBKWravWbrzWOVNd2Wqlt7J+Ua6qOxZxV
+         Vo25gJ6FNxMMGcNYpCsgsF/Dew11WFweBBQN5b/PSxkUJYaDWPJMhjW8sS4ajHDy6GUk
+         UcOdOSnXu53Sjp2FtHMI3QAxxu+nHioY2KQfxl0H50DDrK7277Tkwx4zmGEf+2VqRYAC
+         XTokfkhjUfDrPSSnkP3OTTs8R08HxGteHAfjxqZNthOIwQp4OQb3FHhc2UN/G9S0PpM9
+         LdQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761741427; x=1762346227;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e7av6/+8iNuXmmgvTwlUka4Y7XmkOmuVd9YoxH52DeM=;
+        b=ZiJPVaC21CUk/6JJa4jBP7gnAJ5rBhYsSMa7RehMKBUgU1WZ1WuC1Z//eLsFCld31L
+         vyPXA57tC76U2BpEpjbWHwjdjnTdlFd7ddyJWarPCds8EeoqPErZWNiX99lTUiHC0woR
+         2t8ORPBR+zhmd0By+L7GIlaBaU4pWq17U9ZmFTKi3Ko04DTqmexiR6t0PGhnehUaamf2
+         zVy/0hMuUUuRD/mcgmsjMRoYHhhUYloj4VJpA9hqnQi1EBvSCYeCQKzjp6ORFKNMQNXW
+         QktTon+ZteCZfgY7hxfpr4rvh5E1AQraitk/fiTZXu3pkiLpQhkAUn9GYNg9kBZCRxI8
+         aVfA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmqbTbmtwqS/gwn5/+8PoYpgiWuk4l/LGCkswUidBqIc+hUDTpuSSfV+JMKo6csyryVhsNcElBTQs29KeUvqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb0QSDeKubgnTYbPESeyGuE/zlIBe1XI1vlOW24N4aUsF/zo3Q
+	JbWzj/W0bTc+5p2jkIEjOC7xcX7aQ8dBvNodWNQtKvWDagqnvoyDs4h4962va47yWMgcEPEfu14
+	ZV9SFfFYInin7i9UFx6kmO0O01nmGzmKoXqT23/phrA==
+X-Gm-Gg: ASbGncukVUhbt1E8/gfZXTFXcqc6UPPVnvH3SXQlqy9kRHguSEnBeKRK57eii1CN3bE
+	tNatxDifj6xfpcE3jpDIfkzw+KrOHeXBvlwKWNajyzcfbdzwj95N0Jd3bsIUcOBQDyataEKr9JG
+	t+DjUFbYGyLNcworfklJ05EMjvclPL3jIN3Xm7+63TMyMvknabMm1rGcm/Fecm5WmDwGhBhkU2S
+	pMLVM8jCr9teVJdvHCnKlz+7hMfBsgpDePViLKSZw40hf1qKaVvHfWoIAM73fq8quOkaiRAlcEb
+	4krYt+nSY3O+lPkS1kt7I/D2WBU=
+X-Google-Smtp-Source: AGHT+IEUmGu04036ormM4pltNB2Am321w2VXbEnKTAs3EJCIFCtIkYSiyRchfH1o5wZ/LZR6U90hsv4wZnUUYh2RdrI=
+X-Received: by 2002:a05:6512:31d5:b0:591:c763:78e5 with SMTP id
+ 2adb3069b0e04-5930ee00135mr2032537e87.23.1761741427164; Wed, 29 Oct 2025
+ 05:37:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251029-gpio-shared-v3-10-71c568acf47c@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20251029-gpio-shared-v3-0-71c568acf47c@linaro.org>
+ <20251029-gpio-shared-v3-1-71c568acf47c@linaro.org> <aQH9gE_fB119CW3l@smile.fi.intel.com>
+In-Reply-To: <aQH9gE_fB119CW3l@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 29 Oct 2025 13:36:55 +0100
+X-Gm-Features: AWmQ_blmOzETrnBiOxNQNAG3OMw6fz-E4Nx4SOD4Wgu8a41SpvuD7mJ9RHyBeG8
+Message-ID: <CAMRc=MdKfXJx-cxNr1uOCkifD6YVE2t5w4hkuYy7jcnidiid2Q@mail.gmail.com>
+Subject: Re: [PATCH v3 01/10] string: provide strends()
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 29, 2025 at 12:20:46PM +0100, Bartosz Golaszewski wrote:
-> 
-> GPIOLIB is now aware of shared GPIOs and - for platforms where access to
-> such pins is managed internally - we don't need to keep track of the
-> enable count.
-> 
-> Once all users in the kernel switch to using the new mechanism, we'll be
-> able to drop the internal counting of users from the regulator code.
+On Wed, Oct 29, 2025 at 12:42=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Wed, Oct 29, 2025 at 12:20:37PM +0100, Bartosz Golaszewski wrote:
+> >
+> > Implement a function for checking if a string ends with a different
+> > string and add its kunit test cases.
+>
+> ...
+>
+> > +/**
+> > + * strends - Check if a string ends with another string.
+> > + * @str - NULL-terminated string to check against @suffix
+> > + * @suffix - NULL-terminated string defining the suffix to look for in=
+ @str
+> > + *
+> > + * Returns:
+> > + * True if @str ends with @suffix. False in all other cases.
+> > + */
+> > +static inline bool strends(const char *str, const char *suffix)
+> > +{
+> > +     unsigned int str_len =3D strlen(str), suffix_len =3D strlen(suffi=
+x);
+> > +
+> > +     if (str_len < suffix_len)
+> > +             return false;
+> > +
+> > +     return !(strcmp(str + str_len - suffix_len, suffix));
+> > +}
+>
+> Can you rather re-use strcmp_suffix() from drivers/of/property.c?
+>
 
-I am wondering if you took into account the layering violation (or others
-put it as "transferring of ownership") in the regulator core for the platform
-based GPIO regulators? This popped up during the discussion of
-https://lore.kernel.org/platform-driver-x86/20251024050537.92440-1-qiuwenbo@gnome.org/
+I think that strends() and its boolean return value are a bit more
+intuitive to use than strcmp_suffix() and its integer return value,
+the meaning of which you typically have to look-up to figure out. If
+there are no objections, I'd like to keep it and - when it's upstream
+- convert property.c to using it instead. Also: the name
+strcmp_suffix() could use some improvement, seeing how I wasn't able
+to find it, even though I looked hard across the kernel source, while
+I easily stumbled upon a similar implementation of strends() already
+existing in dtc sources.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
