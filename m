@@ -1,104 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CC42E427B;
-	Thu, 30 Oct 2025 04:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C279518DB26;
+	Thu, 30 Oct 2025 09:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761797335; cv=none; b=RV2JIY9yAXO2CC/hYBOj12zOTyW7cV0cIyIYD2ZwqgkiOAno1FR2tOyr9qepwtfrxyNPG56BYIdQUpzJOZJhYDwPIX11KdB4F9BzU+3/Iy2xI/zvHv8Hfhju0m6CPtMrOjFu8BUll8ULmZC4KEGozv6LRRA7j1VPjFJ3hFKvxSk=
+	t=1761816663; cv=none; b=L9eTA97T3fx7289NjOcNXSUSyc0kxB8Bj1J1upYF2F1kNeMQlRjzcqX68ccmdyYVICOVzfDJJd+39mE550iCSu+cTiBSRNsnQjkIBeRdubzJZCkzx0MdfuF4LGButhp1KVfsmjN7Kaw1ea1uvMNpD7rch4qY8Fp1ViIYhGho904=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761797335; c=relaxed/simple;
-	bh=B+sOnqt8S6+E72VPgLNfKPsheBwDneDieIaq7l/8ieA=;
+	s=arc-20240116; t=1761816663; c=relaxed/simple;
+	bh=bf2Q132NqZ4zOHvgkziC0uP8Th7d9mOHbt28bTwZI1E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FMyL80ShjDPg9XwgwShXRbn4r+45wplPZD0ud7YD/LWquJoPxrGaTLwNoVZAwDrOXaLFGjdYs2ZqbtKF5qBTdi+vV7hE6bCY+bX8NdSg6/soAQf3VQgJ6DHo8j5xYO3aeuwilZ3rxUJaavEqAzuVvOKlq8O2cDV7QRIQvFOqjNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k+ur054I; arc=none smtp.client-ip=198.175.65.14
+	 Content-Type:Content-Disposition:In-Reply-To; b=DPLta3sWtafn66q1mCCnPaK44OBCkDLP7mBskjSndkrlMoR2O9UBZemdFS7X958Q0/4DVa81g/5nvaLOu3olXfd5JjmBMyucdG4hU9MYydbnDpzRCAa5swMs02tm8BKB/5lSt00SI64NR0WLXmGr9c1ph4YxlHircSmTqW/xKHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z5QbBZUZ; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k+ur054I"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z5QbBZUZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761797334; x=1793333334;
+  t=1761816662; x=1793352662;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=B+sOnqt8S6+E72VPgLNfKPsheBwDneDieIaq7l/8ieA=;
-  b=k+ur054INS8wQb+EF4IPiOgbl4/h8j0sd6Y0eh40wEQ5i2BLDGI5VgIK
-   rwRSmlhbtd/g31ha77nPs06NyBoRLOMq9BbQ9h2kPoZNwrJUDxbJ5Od1/
-   2UAcmOMr4RzEyu6wYsOzAjSaVuP6Au2TpIWz5dZPWqD++x6LnDrB34uGY
-   gbhN5lDF6Gsqm2okP3X+maF5QTu+nWuPk6XcjO5+QZa7h3XpRAddENddF
-   0Q6iXHcJ6l/gT29hEwkxYY2fQhoTZJn0DrfTicz3Xoug1l0lreLKXEA4b
-   OB2Nh9jLQVbu+kxA9LmHbDQ74ojfrqEwkhUFc1bYnYE0u6XZ5At9pJHlF
-   w==;
-X-CSE-ConnectionGUID: ktKBqzFETDC77P2e7csU3Q==
-X-CSE-MsgGUID: bkjJG8W3RUa4Z1viHNmQsw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="67764961"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="67764961"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 21:08:54 -0700
-X-CSE-ConnectionGUID: jqV37IabRP+Wt4VguqV4Jg==
-X-CSE-MsgGUID: XuQ0Lq6oS+aXu+ai9k06Fw==
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=bf2Q132NqZ4zOHvgkziC0uP8Th7d9mOHbt28bTwZI1E=;
+  b=Z5QbBZUZr7U84jOVgwhpDk1FPoXAjq7Zl5GRQyMHUxIlexeMpVZftFUT
+   voFcYMvmKiL8ONZhWAuJytMzsxkc7j873uVdX1RQsGJsFE7z0qfWN7ZyD
+   eU2hTiuW0NobBnZ8CZ34EzaUPFV9nvqx/TzONJ00jhK5mlwnULQ7PKd+0
+   Z0f/733MVhtPMdfGsr/JUTlmG8Oip6z5Tm2Cwe7c7WDq/l9x7KIsebgSI
+   c17MJgKyevnR12W0hCymKcyT9V/XdCbb7U0N05cop2jvtZma0EC+eMMNt
+   PdilvkJvAlJ7JJ3JeVVPGxIUK3Q/RM+83TIVwDRulvbb+HNRagMGFJ77K
+   A==;
+X-CSE-ConnectionGUID: o83Vl/5USGiN9H9tR/HPAQ==
+X-CSE-MsgGUID: TKbYHgqpRzGC2MaItIfCww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11597"; a="64048893"
+X-IronPort-AV: E=Sophos;i="6.19,266,1754982000"; 
+   d="scan'208";a="64048893"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 02:31:01 -0700
+X-CSE-ConnectionGUID: zSu7nv+DRgqFVKcwQIqyaQ==
+X-CSE-MsgGUID: nPzZm7POSO6Mw90VTnTUtA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,265,1754982000"; 
-   d="scan'208";a="189916728"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 29 Oct 2025 21:08:49 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vEJwy-000LRk-0o;
-	Thu, 30 Oct 2025 04:08:04 +0000
-Date: Thu, 30 Oct 2025 12:05:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Piyush Raj Chouhan <pc1598@mainlining.org>,
-	linux-arm-msm@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, andersson@kernel.org,
-	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com,
-	Piyush Raj Chouhan <pc1598@mainlining.org>
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8150: Add support for Xiaomi
- Redmi K20 Pro
-Message-ID: <202510301118.DYvzM3NK-lkp@intel.com>
-References: <20251022054026.22816-2-pc1598@mainlining.org>
+X-IronPort-AV: E=Sophos;i="6.19,266,1754982000"; 
+   d="scan'208";a="185165359"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.174])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 02:30:55 -0700
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1vEOzb-00000003rIo-3pF9;
+	Thu, 30 Oct 2025 11:30:51 +0200
+Date: Thu, 30 Oct 2025 11:30:51 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Alexey Klimov <alexey.klimov@linaro.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v3 03/10] gpiolib: implement low-level, shared GPIO
+ support
+Message-ID: <aQMwS5gyqVwYrGoS@smile.fi.intel.com>
+References: <20251029-gpio-shared-v3-0-71c568acf47c@linaro.org>
+ <20251029-gpio-shared-v3-3-71c568acf47c@linaro.org>
+ <aQH-NcXry6_IlqXQ@smile.fi.intel.com>
+ <CAMRc=Me5qPS2PhLK5hpK8BbTS8b9q3T-+86mq6rVDpyKZZUfoA@mail.gmail.com>
+ <aQIwWXM8BfjQs7kv@smile.fi.intel.com>
+ <CAMRc=Mfz+Se0Wq4cXjgP=DBOMkTqSBdoV-CcC-+Ma0hfELARzA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251022054026.22816-2-pc1598@mainlining.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mfz+Se0Wq4cXjgP=DBOMkTqSBdoV-CcC-+Ma0hfELARzA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Piyush,
+On Wed, Oct 29, 2025 at 04:57:02PM +0100, Bartosz Golaszewski wrote:
+> On Wed, Oct 29, 2025 at 4:19 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Wed, Oct 29, 2025 at 01:39:34PM +0100, Bartosz Golaszewski wrote:
+> > > On Wed, Oct 29, 2025 at 12:45 PM Andy Shevchenko
+> > > <andriy.shevchenko@intel.com> wrote:
+> > > > On Wed, Oct 29, 2025 at 12:20:39PM +0100, Bartosz Golaszewski wrote:
 
-kernel test robot noticed the following build errors:
+...
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.18-rc3 next-20251029]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > > > Besides strcmp_suffix() that already exists in OF core, there are also some
+> > > > existing pieces that seems being repeated here (again). Can we reduce amount
+> > > > of duplication?
+> > >
+> > > I'm afraid you need to be more specific here.
+> >
+> > You can simply browse the file, it's not long to find and think about it.
+> > I'm _thinking_ that it's possible to improve the situation overall by
+> > try our best of deduplicating (or rather not duplicating) things.
+> 
+> Sorry, but this is not how reviewing works. You can't just say: "I
+> think this can be improved, go figure out what can and fix it, you can
+> browse this file for reference". You need to specifically point out
+> issues in code and propose alternatives.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Piyush-Raj-Chouhan/arm64-dts-qcom-sm8150-Add-support-for-Xiaomi-Redmi-K20-Pro/20251022-134317
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20251022054026.22816-2-pc1598%40mainlining.org
-patch subject: [PATCH 2/2] arm64: dts: qcom: sm8150: Add support for Xiaomi Redmi K20 Pro
-config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20251030/202510301118.DYvzM3NK-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251030/202510301118.DYvzM3NK-lkp@intel.com/reproduce)
+Then consider this as a hint and not a review.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510301118.DYvzM3NK-lkp@intel.com/
+...
 
-All errors (new ones prefixed by >>):
+> > > > > +#if IS_ENABLED(CONFIG_OF)
+> > > > > +static int gpio_shared_of_traverse(struct device_node *curr)
+> > > > > +{
+> > > >
+> > > > I believe parts of this code may be resided somewhere in drivers/of/property.c
+> > > > or nearby as it has the similar parsing routines.
+> > >
+> > > I don't think this is a good idea, I want to keep it within the
+> > > confines of drivers/gpio/ and the use-case is so specific, there's
+> > > really no point in putting parts of it under drivers/of/.
+> > >
+> > > If I could only iterate over all properties of an fwnode, I'd have
+> > > skipped using OF-specific routines altogether.
+> >
+> > The problem is that every subsystem considers "it's not a good idea" or
+> > "historical reasons" or other excuses. Since you are adding OF-specific
+> > stuff that has something already done inside OF specific code, why to
+> > spread it over the kernel by duplicating in another place(s)?
+> 
+> Well, point me to the things that have been done already and I'll see
+> about reusing them.
 
-   Error: arch/arm64/boot/dts/qcom/sm8150-xiaomi-raphael.dts:514.2-18 Properties must precede subnodes
->> FATAL ERROR: Unable to parse input tree
+I already gave a direction, but if you think the duplication is okay, up to
+you. It can be addressed later, just a bit more of technical debt.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With Best Regards,
+Andy Shevchenko
+
+
