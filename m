@@ -1,170 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213C131B82C;
-	Wed, 29 Oct 2025 21:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CC42E427B;
+	Thu, 30 Oct 2025 04:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761774269; cv=none; b=mjKBQ9jtFqGD/oLq2Na84Hi9b7wgIfVuZFqIYH7DNy03eiIv1aNLVSwfMxgYsml9NHSsaCKpxokLy4A6Ev2s5Z1+FYvPpqOZ/PVth8AvUxBRhYYq6OZuSqRCtUmdJQ3eplpGEp7FZhsRYozfEwUxBFJ6DdSqMUEsUtiUfBZLBq8=
+	t=1761797335; cv=none; b=RV2JIY9yAXO2CC/hYBOj12zOTyW7cV0cIyIYD2ZwqgkiOAno1FR2tOyr9qepwtfrxyNPG56BYIdQUpzJOZJhYDwPIX11KdB4F9BzU+3/Iy2xI/zvHv8Hfhju0m6CPtMrOjFu8BUll8ULmZC4KEGozv6LRRA7j1VPjFJ3hFKvxSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761774269; c=relaxed/simple;
-	bh=7hHzjtV3nElDc0Uq7kbfJhhINXHrIBvwebgH5T/3+R8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q4mgi4Etf8ITWj1qVH4WwfkeYFFVyP/BBamaV0C38WSF6b5Rq45IyTW3/BmVIWs/9xguV8LWXgw0JZmA8BFS1V+j95NUqPzzekBg4z2m9bVU+qYQ4UPR3WEDdwyE93SbHfgn0DuOCIIZn6oVJyyDzs9A542rLgiKu9arukO1VH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XUeIXh/o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761797335; c=relaxed/simple;
+	bh=B+sOnqt8S6+E72VPgLNfKPsheBwDneDieIaq7l/8ieA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FMyL80ShjDPg9XwgwShXRbn4r+45wplPZD0ud7YD/LWquJoPxrGaTLwNoVZAwDrOXaLFGjdYs2ZqbtKF5qBTdi+vV7hE6bCY+bX8NdSg6/soAQf3VQgJ6DHo8j5xYO3aeuwilZ3rxUJaavEqAzuVvOKlq8O2cDV7QRIQvFOqjNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k+ur054I; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XUeIXh/o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A52F3C4AF11;
-	Wed, 29 Oct 2025 21:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761774268;
-	bh=7hHzjtV3nElDc0Uq7kbfJhhINXHrIBvwebgH5T/3+R8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XUeIXh/oMzwR5avVTWsWzBuQaMnPcqY6LYXO+FQ8Fh0tFf423Nir6BEFZs9uctQvj
-	 wdk2tWn5BLWUu2O0yQo6+LcB7MjcFbRZqAgWlu1GSHrYDBBk4aAf1kq4eb9UFP5yeR
-	 AjNSMfuEFcfRNDmOzkRVgyeDcP+/p8DNa75k2w7cTw9pEIztEZo4+e2lA1Z9w7RQvc
-	 qja4XwZQgeQ6rnqAqwK6VNbAiEh9a1Kdsrsc0SHYMeueknLAN3H7gzkRYmL0gCrGBE
-	 8uHCeELIvBGfsgEmlGDCFknP5acXIWf34Pk/ff7rqNV9MSkf+8AECI66Dvok7C7YVC
-	 sTALBrmhPTMDw==
-From: Kees Cook <kees@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Willem de Bruijn <willemb@google.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [net-next PATCH v4 5/7] bpf: Convert cgroup sockaddr filters to use sockaddr_unsized consistently
-Date: Wed, 29 Oct 2025 14:44:02 -0700
-Message-Id: <20251029214428.2467496-5-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251029214355.work.602-kees@kernel.org>
-References: <20251029214355.work.602-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k+ur054I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761797334; x=1793333334;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=B+sOnqt8S6+E72VPgLNfKPsheBwDneDieIaq7l/8ieA=;
+  b=k+ur054INS8wQb+EF4IPiOgbl4/h8j0sd6Y0eh40wEQ5i2BLDGI5VgIK
+   rwRSmlhbtd/g31ha77nPs06NyBoRLOMq9BbQ9h2kPoZNwrJUDxbJ5Od1/
+   2UAcmOMr4RzEyu6wYsOzAjSaVuP6Au2TpIWz5dZPWqD++x6LnDrB34uGY
+   gbhN5lDF6Gsqm2okP3X+maF5QTu+nWuPk6XcjO5+QZa7h3XpRAddENddF
+   0Q6iXHcJ6l/gT29hEwkxYY2fQhoTZJn0DrfTicz3Xoug1l0lreLKXEA4b
+   OB2Nh9jLQVbu+kxA9LmHbDQ74ojfrqEwkhUFc1bYnYE0u6XZ5At9pJHlF
+   w==;
+X-CSE-ConnectionGUID: ktKBqzFETDC77P2e7csU3Q==
+X-CSE-MsgGUID: bkjJG8W3RUa4Z1viHNmQsw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="67764961"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="67764961"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 21:08:54 -0700
+X-CSE-ConnectionGUID: jqV37IabRP+Wt4VguqV4Jg==
+X-CSE-MsgGUID: XuQ0Lq6oS+aXu+ai9k06Fw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,265,1754982000"; 
+   d="scan'208";a="189916728"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 29 Oct 2025 21:08:49 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vEJwy-000LRk-0o;
+	Thu, 30 Oct 2025 04:08:04 +0000
+Date: Thu, 30 Oct 2025 12:05:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Piyush Raj Chouhan <pc1598@mainlining.org>,
+	linux-arm-msm@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, andersson@kernel.org,
+	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com,
+	Piyush Raj Chouhan <pc1598@mainlining.org>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8150: Add support for Xiaomi
+ Redmi K20 Pro
+Message-ID: <202510301118.DYvzM3NK-lkp@intel.com>
+References: <20251022054026.22816-2-pc1598@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4356; i=kees@kernel.org; h=from:subject; bh=7hHzjtV3nElDc0Uq7kbfJhhINXHrIBvwebgH5T/3+R8=; b=owGbwMvMwCVmps19z/KJym7G02pJDJlMXYvalr8XP+xRxMmh8FKxJu1jaM3Bk/e7drtJvpqQe DeHN3J1RykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwES0PjP8U1/zPEPhzQzJlMZ9 OR5nQowuMHE6Sib8lM2P9r50RCHGmZHhov890RL+njNNXWxn2itrDx1Ytsx9otkpLveoxoN72xa yAQA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251022054026.22816-2-pc1598@mainlining.org>
 
-Update BPF cgroup sockaddr filtering infrastructure to use sockaddr_unsized
-consistently throughout the call chain, removing redundant explicit casts
-from callers.
+Hi Piyush,
 
-No binary changes expected.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- include/linux/bpf-cgroup.h | 17 ++++++++++-------
- kernel/bpf/cgroup.c        |  4 ++--
- net/ipv4/af_inet.c         |  4 ++--
- 3 files changed, 14 insertions(+), 11 deletions(-)
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on linus/master v6.18-rc3 next-20251029]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
-index a7fb4f46974f..d1eb5c7729cb 100644
---- a/include/linux/bpf-cgroup.h
-+++ b/include/linux/bpf-cgroup.h
-@@ -120,7 +120,7 @@ int __cgroup_bpf_run_filter_sk(struct sock *sk,
- 			       enum cgroup_bpf_attach_type atype);
- 
- int __cgroup_bpf_run_filter_sock_addr(struct sock *sk,
--				      struct sockaddr *uaddr,
-+				      struct sockaddr_unsized *uaddr,
- 				      int *uaddrlen,
- 				      enum cgroup_bpf_attach_type atype,
- 				      void *t_ctx,
-@@ -238,8 +238,9 @@ static inline bool cgroup_bpf_sock_enabled(struct sock *sk,
- ({									       \
- 	int __ret = 0;							       \
- 	if (cgroup_bpf_enabled(atype))					       \
--		__ret = __cgroup_bpf_run_filter_sock_addr(sk, (struct sockaddr *)uaddr, uaddrlen, \
--							  atype, NULL, NULL);  \
-+		__ret = __cgroup_bpf_run_filter_sock_addr(sk,		       \
-+				(struct sockaddr_unsized *)uaddr, uaddrlen,     \
-+				atype, NULL, NULL);			       \
- 	__ret;								       \
- })
- 
-@@ -248,8 +249,9 @@ static inline bool cgroup_bpf_sock_enabled(struct sock *sk,
- 	int __ret = 0;							       \
- 	if (cgroup_bpf_enabled(atype))	{				       \
- 		lock_sock(sk);						       \
--		__ret = __cgroup_bpf_run_filter_sock_addr(sk, (struct sockaddr *)uaddr, uaddrlen, \
--							  atype, t_ctx, NULL); \
-+		__ret = __cgroup_bpf_run_filter_sock_addr(sk,		       \
-+				(struct sockaddr_unsized *)uaddr, uaddrlen,     \
-+				atype, t_ctx, NULL);			       \
- 		release_sock(sk);					       \
- 	}								       \
- 	__ret;								       \
-@@ -266,8 +268,9 @@ static inline bool cgroup_bpf_sock_enabled(struct sock *sk,
- 	int __ret = 0;							       \
- 	if (cgroup_bpf_enabled(atype))	{				       \
- 		lock_sock(sk);						       \
--		__ret = __cgroup_bpf_run_filter_sock_addr(sk, (struct sockaddr *)uaddr, uaddrlen, \
--							  atype, NULL, &__flags); \
-+		__ret = __cgroup_bpf_run_filter_sock_addr(sk,		       \
-+				(struct sockaddr_unsized *)uaddr, uaddrlen,     \
-+				atype, NULL, &__flags);			       \
- 		release_sock(sk);					       \
- 		if (__flags & BPF_RET_BIND_NO_CAP_NET_BIND_SERVICE)	       \
- 			*bind_flags |= BIND_NO_CAP_NET_BIND_SERVICE;	       \
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index 248f517d66d0..497aedc9afa1 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -1665,7 +1665,7 @@ EXPORT_SYMBOL(__cgroup_bpf_run_filter_sk);
-  * returned value != 1 during execution. In all other cases, 0 is returned.
-  */
- int __cgroup_bpf_run_filter_sock_addr(struct sock *sk,
--				      struct sockaddr *uaddr,
-+				      struct sockaddr_unsized *uaddr,
- 				      int *uaddrlen,
- 				      enum cgroup_bpf_attach_type atype,
- 				      void *t_ctx,
-@@ -1673,7 +1673,7 @@ int __cgroup_bpf_run_filter_sock_addr(struct sock *sk,
- {
- 	struct bpf_sock_addr_kern ctx = {
- 		.sk = sk,
--		.uaddr = uaddr,
-+		.uaddr = (struct sockaddr *)uaddr,
- 		.t_ctx = t_ctx,
- 	};
- 	struct sockaddr_storage unspec;
-diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
-index 85aee1b18f89..efbdfd728515 100644
---- a/net/ipv4/af_inet.c
-+++ b/net/ipv4/af_inet.c
-@@ -813,7 +813,7 @@ int inet_getname(struct socket *sock, struct sockaddr *uaddr,
- 		}
- 		sin->sin_port = inet->inet_dport;
- 		sin->sin_addr.s_addr = inet->inet_daddr;
--		BPF_CGROUP_RUN_SA_PROG(sk, (struct sockaddr *)sin, &sin_addr_len,
-+		BPF_CGROUP_RUN_SA_PROG(sk, sin, &sin_addr_len,
- 				       CGROUP_INET4_GETPEERNAME);
- 	} else {
- 		__be32 addr = inet->inet_rcv_saddr;
-@@ -821,7 +821,7 @@ int inet_getname(struct socket *sock, struct sockaddr *uaddr,
- 			addr = inet->inet_saddr;
- 		sin->sin_port = inet->inet_sport;
- 		sin->sin_addr.s_addr = addr;
--		BPF_CGROUP_RUN_SA_PROG(sk, (struct sockaddr *)sin, &sin_addr_len,
-+		BPF_CGROUP_RUN_SA_PROG(sk, sin, &sin_addr_len,
- 				       CGROUP_INET4_GETSOCKNAME);
- 	}
- 	release_sock(sk);
+url:    https://github.com/intel-lab-lkp/linux/commits/Piyush-Raj-Chouhan/arm64-dts-qcom-sm8150-Add-support-for-Xiaomi-Redmi-K20-Pro/20251022-134317
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20251022054026.22816-2-pc1598%40mainlining.org
+patch subject: [PATCH 2/2] arm64: dts: qcom: sm8150: Add support for Xiaomi Redmi K20 Pro
+config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20251030/202510301118.DYvzM3NK-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251030/202510301118.DYvzM3NK-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510301118.DYvzM3NK-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   Error: arch/arm64/boot/dts/qcom/sm8150-xiaomi-raphael.dts:514.2-18 Properties must precede subnodes
+>> FATAL ERROR: Unable to parse input tree
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
