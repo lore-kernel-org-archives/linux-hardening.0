@@ -1,444 +1,63 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5690347BB1
-	for <linux-hardening@vger.kernel.org>; Fri, 31 Oct 2025 13:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48119635;
+	Sat,  1 Nov 2025 00:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761918971; cv=none; b=G8TyIKUQhHDKQdYhxn81n0P0OIyn+scOpX/8//FXp8ggb6i53Uniu1aKnBmz19IYkOAVp1L+X5r8s5t9wzuG4UD0Ej56w330a6QF2TYvS8WIrt11js/tBW6O8HF18ZGINQ4h8Z9SdGTlxR7X0vCTXHhq87DpFtue4OKvU2RNoR0=
+	t=1761955522; cv=none; b=mrFVqGAMZCZOlNaP8VfMpshUrozianqJ7Wf95wvb4j2rDl0ptXYmhD68qjX+cKsL+3z0iVg5gBYKdJ2UuvtULETarm2+ssC34Qw/j61SWs2bDxIXGgiKjoD1kRD/P1MgVa+HVgZPpPSR4zN1ptICv8XMqroiXlEEMylkI2vFtnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761918971; c=relaxed/simple;
-	bh=Vpbdj3bclO1IYf5ibUmMMs8iA77sDQKZSlUopeEmfHw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mIP7RtwKRUJrWMTCYJH6SG89nQQnXFedfjHDeyTAimKK20/tBFaDa6d8ld3AfjeyO5JZT4btvOLXfqNO6dTdT0Flp7Qv2A1FAvSzltNos9Y57EZKdMMT7cbThNhl9vHZgvLDCeqZ5WpY+fULLPNwkuHFZKet9GRT7spQoue7rFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m7Tkv0pl; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761955522; c=relaxed/simple;
+	bh=fE+D5VHaBMCyso+4WPiJDK8Yfqjxkb3GgzV/RQzuLZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z7fFrhABSvKsntFv8bBcSygLt+Q3ajNV5V7NjkGl2X2VkAl1ut5Qka9AEAErXlar4xL0zNwr6eUHIkdt2oeM2izAxUcYKfKIF1Zr6342hgPvDYjxhY2cDEMGY8XMN2wKrpKTqDO2zutMzDgGZsAvX1bY3nebqc25sWL+jYO+xXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8zNrg05; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m7Tkv0pl"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7a683385ad8so1822363b3a.3
-        for <linux-hardening@vger.kernel.org>; Fri, 31 Oct 2025 06:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761918969; x=1762523769; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w+qPp9Nom/qlgE9wBBXw5mrITYD+xlno6ZmzaHvYtAs=;
-        b=m7Tkv0pl8tW8nSITQmtzC8d48yur4AdAOr8CcrljG0J4R7jULS1L+4kd8gqT6zThnU
-         RfqNS2VxubeDb8ahpW+vRKwaE/K1Ax+YepfMhS86NbKRB3ZkZ6YmouzKAvDd8tgRmADZ
-         AYhZKhpvxhsVH8Q4h7ofCNws4nF1zTnnT78vYGkm1wDcp3wOaXzPoVd9mZj+bXZBW5yT
-         IRThTcDP5BqCCY8iAa0r1GHGstoDK8HPicjEFeQ94Bvodr3t/CnqQ7/IHLewFF7NsSmc
-         1Xv/yfCGOVDiU3XogQd/3nFU+WD1RXvqOLH61qwb1ifwtfPTspTcMSGcSYqPHkVGRFRX
-         Ns2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761918969; x=1762523769;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w+qPp9Nom/qlgE9wBBXw5mrITYD+xlno6ZmzaHvYtAs=;
-        b=gdxGQBjo7AN+9lvk1A6iIp6Hw7eG4psBYic+FvftaJZXv7d+jcnFNaQgzAr83pUuZl
-         YoOmrCYIXAnEkDt1m0UTxS6gKf7qHD6+C2+4VCsW6cE0y8m8kdOWFa8rcjYlV00SnztW
-         q4VB8x6ZYsBPwSKlQw2OZLprUBHrqqOuhD4V7G218fKHnN/PVJMnbOjSErqhZ7htFD2Y
-         lpaFLkqEz8Lb1ufTtT15kONf+Q3W4d9xjtsqKFaq90G257FGj8IwzYn2edTjyfjkhjsD
-         rSKMOwUFRakQh3UTVR3W8epq1/aLWNJJWm8e6bC4u5OzkSaWTowixauzcmHYnGdUgarC
-         1eQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpWCQXa5g6sBzyOPqrdoMQqtYjADw25D2CFwZngKPau7++3RFfc88aA1DPMQsJFrhwXIoJoA1cLKF0IGvSEMs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx55m+zsmUoQ7VUPBIL1oBb8OmoFr/F4Ky1NswWXQU5mpPm8NLQ
-	zc22TkMaQHN6mGLFSbSQsQvWdctMoqNqzO2bcfzBiFZvF0jeo+ogcNAj
-X-Gm-Gg: ASbGncvgydfvQ7XNgIHV+hjHJgNdwhSt4JbQiMcI3+474Ads44tlf86nwPmeXKynI5t
-	Il6ADGlyOQC7gbM0qZixKQhKatoB4PUMUEzPPuSoTU4mpa9OD6b2cEADE0bJ8visXKfM1eX795O
-	XHEvHr6RWOI1tjq3BuzkzcdIUNId1ZOyf6vcBMFqmGl8rb12AjIwcuJH7GkCYJGFDOH+crCpU1e
-	TOx/7RbsxCCITwhAQzzxMC8rMwMpsFKuuiSvB4/WQ2GDyLA2BgHAwwx1/h4bwAjKpTJPl3tFE2v
-	Qfg1+++0jMdjGDBOYpR90Ay/qUZ6RkTCGfh6/lU9D0sRcWktW1GrrNZmwxq5GRJO94oi57x7Vko
-	66IGd69b5yIGD10l2UxX/wTLvKbaoIP1JHOhQz67fwUYs7YLRxA3YRNSInF3XlIE2VrNz9ZD3Xj
-	eERSKvAS9t3VZelmAfhA==
-X-Google-Smtp-Source: AGHT+IF+yZo/HkELTu51zAdwi2VUvyhB5//L6qA8F720WmKyqbYb7Nsmp4i9vLNIhrwE8nThFxOgOA==
-X-Received: by 2002:aa7:8889:0:b0:7a2:7930:6857 with SMTP id d2e1a72fcca58-7a7794c4f7amr5471062b3a.17.1761918968909;
-        Fri, 31 Oct 2025 06:56:08 -0700 (PDT)
-Received: from archlinux ([103.189.130.36])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a7d8d72c5fsm2302271b3a.18.2025.10.31.06.56.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Oct 2025 06:56:08 -0700 (PDT)
-From: Raihan Ahamed <raihan1999ahamed@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Cc: Raihan Ahamed <raihan1999ahamed@gmail.com>
-Subject: [PATCH v4 2/2] arm64: dts: qcom: msm8953-lenovo-kuntao: Add initial device tree
-Date: Fri, 31 Oct 2025 19:21:21 +0530
-Message-ID: <20251031135506.214025-2-raihan1999ahamed@gmail.com>
-X-Mailer: git-send-email 2.51.2
-In-Reply-To: <20251031135506.214025-1-raihan1999ahamed@gmail.com>
-References: <20251031135506.214025-1-raihan1999ahamed@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8zNrg05"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E7C5C4CEE7;
+	Sat,  1 Nov 2025 00:05:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761955521;
+	bh=fE+D5VHaBMCyso+4WPiJDK8Yfqjxkb3GgzV/RQzuLZY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=U8zNrg05CpI9dSyR/5aCQfzJtZjteo0RCZMs+Hu7x7KptXgqIYHQKCaghTLfricev
+	 TPEHgDoCg/ezZOKeDUsAru0qAjTKDL0n2PwSL41aTYVhDZVolW1DasiZLcj2yKX4pm
+	 H+LlCriQfX8BmihG14MHJvMHYfyRih3NVBX6q3AgdyAedfvwR+TvU6THWYKtl6fPRu
+	 /JDGO7vMIit6209QeXGvd20LuL51XaAZvNxKqlPNbPf52VgvdeGaKWNmqOE8p1FsVe
+	 ATH/3KpTkL0AXnLJGo9xVyCYU2qGMODJcnF5pRt1B20d1Mf57kb8gA5XH6MrI83j8e
+	 IM5CVagA9Uc1Q==
+Date: Fri, 31 Oct 2025 17:05:20 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, "Gustavo A. R. Silva"
+ <gustavo@embeddedor.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Simon Horman <horms@kernel.org>, Kuniyuki Iwashima
+ <kuniyu@google.com>, Willem de Bruijn <willemb@google.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [net-next PATCH v4 1/7] net: Convert proto_ops bind() callbacks
+ to use sockaddr_unsized
+Message-ID: <20251031170520.0b8486cf@kernel.org>
+In-Reply-To: <20251029214428.2467496-1-kees@kernel.org>
+References: <20251029214355.work.602-kees@kernel.org>
+	<20251029214428.2467496-1-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Lenovo P2 is a handset using the MSM8953 SoC released in 2016
+On Wed, 29 Oct 2025 14:43:58 -0700 Kees Cook wrote:
+> Update all struct proto_ops bind() callback function prototypes from
+> "struct sockaddr *" to "struct sockaddr_unsized *" to avoid lying to the
+> compiler about object sizes. Calls into struct proto handlers gain casts
+> that will be removed in the struct proto conversion patch.
 
-Add a device tree with initial support for:
-
-- Enable accelerometer sensor
-- Enable pinctrl for GPIO keys
-- Enable gpu and add gpu_zap_shader
-- GPIO keys
-- SDHCI (internal and external storage)
-- USB Device Mode
-- WCNSS (WiFi/BT)
-- Regulators
-
-Signed-off-by: Raihan Ahamed <raihan1999ahamed@gmail.com>
----
-version 4
-- rebased on linux-next
-- enabled accelerometer sensor
-- enabled gpu and add gpu_zap_shader
-- add homescreen and one-key-low-power gpio-keys
-- enabled pinctrl for gpio-keys
-- removed explicily added tag
-
-version 3
-- sorry for explicitly adding tags
-linked-to v3: https://yhbt.net/lore/linux-devicetree/20240226195516.174737-1-raihan1999ahamed@gmail.com/
-
-version 2
-- document device compatible
-linked-to v2: https://yhbt.net/lore/linux-devicetree/20240226094256.5736-1-raihan1999ahamed@gmail.com/
-
-version 1
-- add initial device tree support
-linked-to v1: https://yhbt.net/lore/linux-devicetree/20240226055615.79195-1-raihan1999ahamed@gmail.com/
-
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/msm8953-lenovo-kuntao.dts   | 294 ++++++++++++++++++
- 2 files changed, 295 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
-
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 6f34d5ed331c4..fae8b337f4e74 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -83,6 +83,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-sony-xperia-kanuti-tulip.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-wingtech-wt82918.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-wingtech-wt82918hd.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-flipkart-rimob.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-lenovo-kuntao.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-motorola-potter.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-daisy.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-mido.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts b/arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
-new file mode 100644
-index 0000000000000..5e6f3a6213b3b
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
-@@ -0,0 +1,294 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024, Raihan Ahamed <raihan1999ahamed@gmail.com>
-+ */
-+/dts-v1/;
-+
-+#include "msm8953.dtsi"
-+#include "pm8953.dtsi"
-+#include "pmi8950.dtsi"
-+
-+/delete-node/ &qseecom_mem;
-+
-+/ {
-+	model = "Lenovo P2";
-+	compatible = "lenovo,kuntao", "qcom,msm8953";
-+	chassis-type = "handset";
-+	qcom,msm-id = <0x125 0x00>;
-+	qcom,board-id = <0x41 0x82b1 0x41 0x83b0>;
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_key_default>;
-+
-+		key-volume-up {
-+			label = "Volume Up";
-+			gpios = <&tlmm 85 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+			debounce-interval = <15>;
-+		};
-+
-+		one-key-low-power {
-+			label = "onekeylowpower";
-+			gpios = <&tlmm 86 GPIO_ACTIVE_LOW>;
-+			linux,code = <ABS_HAT1Y>;
-+			debounce-interval = <15>;
-+		};
-+
-+		homepage {
-+			label = "homepage";
-+			gpios = <&tlmm 132 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_HOMEPAGE>;
-+			debounce-interval = <15>;
-+			gpio-key,wakeup;
-+		};
-+	};
-+
-+	reserved-memory {
-+		qseecom_mem: qseecom@84a00000 {
-+			reg = <0x0 0x84a00000 0x0 0x1900000>;
-+			no-map;
-+		};
-+
-+		ramoops@8ee00000 {
-+			compatible = "ramoops";
-+			reg = <0x0 0x8ee00000 0x0 0x80000>;
-+			console-size = <0x40000>;
-+			ftrace-size = <0x15000>;
-+			record-size = <0x5000>;
-+			pmsg-size = <0x2000>;
-+		};
-+	};
-+
-+	/*
-+	 * We bitbang on &i2c_4 because BLSP is protected by TZ as sensors are
-+	 * normally proxied via ADSP firmware. GPIOs aren't protected.
-+	 */
-+
-+	i2c-sensors {
-+		compatible = "i2c-gpio";
-+		sda-gpios = <&tlmm 14 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-+		scl-gpios = <&tlmm 15 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-+		i2c-gpio,delay-us = <2>; /* ~100 kHz */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		imu@6a {
-+			compatible = "st,lsm6ds3";
-+			reg = <0x6a>;
-+			vdd-supply = <&pm8953_l22>;
-+			vddio-supply = <&pm8953_l6>;
-+			mount-matrix = "0", "-1", "0",
-+				       "-1", "0", "0",
-+				       "0", "0", "1";
-+		};
-+	};
-+
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&gpu {
-+	status = "okay";
-+};
-+
-+&gpu_zap_shader {
-+	firmware-name = "qcom/msm8953/lenovo/kuntao/a506_zap.mbn";
-+};
-+
-+&hsusb_phy {
-+	vdd-supply = <&pm8953_l3>;
-+	vdda-pll-supply = <&pm8953_l7>;
-+	vdda-phy-dpdm-supply = <&pm8953_l13>;
-+
-+	status = "okay";
-+};
-+
-+&pm8953_resin {
-+	linux,code = <KEY_VOLUMEDOWN>;
-+	status = "okay";
-+};
-+
-+&rpm_requests {
-+	regulators {
-+		compatible = "qcom,rpm-pm8953-regulators";
-+		vdd_s1-supply = <&vph_pwr>;
-+		vdd_s2-supply = <&vph_pwr>;
-+		vdd_s3-supply = <&vph_pwr>;
-+		vdd_s4-supply = <&vph_pwr>;
-+		vdd_s5-supply = <&vph_pwr>;
-+		vdd_s6-supply = <&vph_pwr>;
-+		vdd_s7-supply = <&vph_pwr>;
-+		vdd_l1-supply = <&pm8953_s3>;
-+		vdd_l2_l3-supply = <&pm8953_s3>;
-+		vdd_l4_l5_l6_l7_l16_l19-supply = <&pm8953_s4>;
-+		vdd_l8_l11_l12_l13_l14_l15-supply = <&vph_pwr>;
-+		vdd_l9_l10_l17_l18_l22-supply = <&vph_pwr>;
-+
-+		pm8953_s1: s1 {
-+			regulator-min-microvolt = <863000>;
-+			regulator-max-microvolt = <1152000>;
-+		};
-+
-+		pm8953_s3: s3 {
-+			regulator-min-microvolt = <1224000>;
-+			regulator-max-microvolt = <1224000>;
-+		};
-+
-+		pm8953_s4: s4 {
-+			regulator-min-microvolt = <1896000>;
-+			regulator-max-microvolt = <2048000>;
-+		};
-+
-+		pm8953_l1: l1 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1100000>;
-+		};
-+
-+		pm8953_l2: l2 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1000000>;
-+		};
-+
-+		pm8953_l3: l3 {
-+			regulator-min-microvolt = <925000>;
-+			regulator-max-microvolt = <925000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		pm8953_l5: l5 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8953_l6: l6 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8953_l7: l7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1900000>;
-+		};
-+
-+		pm8953_l8: l8 {
-+			regulator-min-microvolt = <2900000>;
-+			regulator-max-microvolt = <2900000>;
-+		};
-+
-+		pm8953_l9: l9 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8953_l10: l10 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8953_l11: l11 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <3000000>;
-+		};
-+
-+		pm8953_l12: l12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3000000>;
-+		};
-+
-+		pm8953_l13: l13 {
-+			regulator-min-microvolt = <3075000>;
-+			regulator-max-microvolt = <3125000>;
-+		};
-+
-+		pm8953_l15: l15 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8953_l16: l16 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8953_l17: l17 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <3000000>;
-+		};
-+
-+		pm8953_l19: l19 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1350000>;
-+		};
-+
-+		pm8953_l22: l22 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2850000>;
-+		};
-+
-+		pm8953_l23: l23 {
-+			regulator-min-microvolt = <975000>;
-+			regulator-max-microvolt = <1225000>;
-+		};
-+	};
-+};
-+
-+&sdhc_1 {
-+	vmmc-supply = <&pm8953_l8>;
-+	vqmmc-supply = <&pm8953_l5>;
-+
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	vmmc-supply = <&pm8953_l11>;
-+	vqmmc-supply = <&pm8953_l12>;
-+
-+	cd-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
-+
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_off>;
-+	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
-+
-+	status = "okay";
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <135 4>;
-+
-+	gpio_key_default: gpio-key-default-state {
-+		pins = "gpio85", "gpio86", "gpio132";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+};
-+
-+&usb3 {
-+	status = "okay";
-+};
-+
-+&usb3_dwc3 {
-+	dr_mode = "peripheral";
-+};
-+
-+&wcnss {
-+	vddpx-supply = <&pm8953_l5>;
-+
-+	status = "okay";
-+};
-+
-+&wcnss_iris {
-+	compatible = "qcom,wcn3660b";
-+
-+	vddxo-supply = <&pm8953_l7>;
-+	vddrfa-supply = <&pm8953_l19>;
-+	vddpa-supply = <&pm8953_l9>;
-+	vdddig-supply = <&pm8953_l5>;
-+};
--- 
-2.51.2
-
+I fail to spot whether the new type is defined :)
+Or is the new type not defined at all?
+If it is probably best to have that as a separate patch.
