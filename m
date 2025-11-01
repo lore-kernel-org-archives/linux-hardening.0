@@ -1,76 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36123635;
-	Sat,  1 Nov 2025 00:07:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722BE1E231E;
+	Sat,  1 Nov 2025 05:11:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761955641; cv=none; b=WZKMk4/NSLHKu5pecqjgWuM3qNM1Ppeqd0ZJ48QDOqIL+0aqhP7DiqMd5Qa0lxdiup+Bjd6FDKxkiojESgjNtDrqTKMJVpeHJqaj+ZaQugLlazNmK6HoFGRAM9Z3jFte3xFKDA2S+mSCPxGSLI1rIWXm6F7QOFNRbqhGZYH+bUQ=
+	t=1761973904; cv=none; b=PZCTlF6a1Yd/Mff1RXrIcTkyi+UoGtFqIsxhDjsy2VQi1Cj4WfMYZRa5/AhoIbN6DBbyH7WbanGZ0arWdbkONnNDiSutqUs4n/YQB91Jr4gy/IEGwTdM4UzR9J5nuFUec6zlcw4rxO10mbtjmXN5Y1png+M9Slqf/tiy0nKPg+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761955641; c=relaxed/simple;
-	bh=Fo1WINFuQMShbmvz9bMKJ+8UIVwRxjXiEVc+Pska/M4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dVYhyDOS5Ss02zJ0QbNAd//RCfa1szjXce7DfdPmNrpG07d3Qo7s5WfAkUVT70TI9ZqXdaMtDgIJpC+GN4ykKyt6+MmhBH+uU+mTaMuXjK8vEPhUysnzw5bOcl+PLJ9a/YlD7cM036r2vHC0zWTqX8pseBMweA2cB+NHEODHvbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMzV1Tof; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761973904; c=relaxed/simple;
+	bh=PzuIANretVlJ+/5XVSLxnTOpbgWbF/+fa/hXznRs/Xo=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=iolI0/JDVYFEkS4ZreOgy/shFRmGi1SkmfpUXl+wLwvcXcPbdug7luxSOSieCwS4PV9mKSjIpz0PVOd8rtlVZ0Eq/M6fvX0NA1vk+J6ZA+SwAfitjTH/S1IXmkwBGQm0cGnZX6O5VtCqutdaJzi1pZOzl3ai+Sy+VrfZWS9bz0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMtPtvso; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMzV1Tof"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F8B5C4CEE7;
-	Sat,  1 Nov 2025 00:07:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMtPtvso"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37687C4CEF1;
+	Sat,  1 Nov 2025 05:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761955640;
-	bh=Fo1WINFuQMShbmvz9bMKJ+8UIVwRxjXiEVc+Pska/M4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nMzV1TofbV9YcclehoK85/+kD8MuyWc9b6sHhb5Cr79oyo+CBVTz8c9nngjKxTcta
-	 CjdaDs0nnZZpSMeNwT22Dyet0FmhgMrEvH3nz/XmtVJ316M4BepuxDAyesmDvEVzJg
-	 WmVnNUhlnD9K2MxrIaKwjf9i8iFlYXVnyb5qGwldS2NlcHE8onTKwyS7A613qoQ76v
-	 oRv9yDjWOTMow6+JngLyXgOdGSQe9JXV/uxAVfmeGPIOvTTbLP3oe6xiEs8WARdWes
-	 OwpwExvIcxa1DxUlm8+UfVtdTD8eJIir8OlAtgDr4YdK05CBLF5ynmHVeBCFgYmKC8
-	 rJvKO/3ffaPSw==
-Date: Fri, 31 Oct 2025 17:07:19 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, "Gustavo A. R. Silva"
- <gustavo@embeddedor.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Simon Horman <horms@kernel.org>, Kuniyuki Iwashima
- <kuniyu@google.com>, Willem de Bruijn <willemb@google.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	s=k20201202; t=1761973904;
+	bh=PzuIANretVlJ+/5XVSLxnTOpbgWbF/+fa/hXznRs/Xo=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=CMtPtvso0cGt88NYNPdZKPHJ2B4r397VAX0M5cNNfIkcR2VSflXzBuwVHCAXVNo5d
+	 WGYYj5sw9xKxna1o7v8TSN6QWMOsFr75azwaqEck5eOBdkvpNRNMH+hdo4SM0/PgsY
+	 ngPjZ2hnmk21YrFv4scyju2nLStyI5mLr011DdK3MkUOcWa0WWJebfr8Mv0ykVd7Rn
+	 5TxngedR+++O655KgrAHMqHxx/PYlgZCg93mdH7PnA8dC6gloArfP61MxVkdogNAmv
+	 2LcKKXBrb+IpiIc1usSfzm6k+Vh5VQyT0HXFhvBiNYo+aUEYdsOso5toE8zYG2J3WK
+	 /Dq6ssZz4x8eg==
+Date: Fri, 31 Oct 2025 22:11:44 -0700
+From: Kees Cook <kees@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+CC: Paolo Abeni <pabeni@redhat.com>,
+ "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Simon Horman <horms@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>,
+ Willem de Bruijn <willemb@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
  linux-hardening@vger.kernel.org
-Subject: Re: [net-next PATCH v4 0/7] net: Introduce struct sockaddr_unsized
-Message-ID: <20251031170719.65fb8163@kernel.org>
-In-Reply-To: <20251029214355.work.602-kees@kernel.org>
-References: <20251029214355.work.602-kees@kernel.org>
+Subject: =?US-ASCII?Q?Re=3A_=5Bnet-next_PATCH_v4_1/7=5D_net=3A_Convert_prot?=
+ =?US-ASCII?Q?o=5Fops_bind=28=29_callbacks_to_use_sockaddr=5Funsized?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20251031170520.0b8486cf@kernel.org>
+References: <20251029214355.work.602-kees@kernel.org> <20251029214428.2467496-1-kees@kernel.org> <20251031170520.0b8486cf@kernel.org>
+Message-ID: <3BF4FE5C-376C-4FF5-8D1F-D5088D5DA6A1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 29 Oct 2025 14:43:57 -0700 Kees Cook wrote:
-> The historically fixed-size struct sockaddr is part of UAPI and embedded
-> in many existing structures. The kernel uses struct sockaddr extensively
-> within the kernel to represent arbitrarily sized sockaddr structures,
-> which caused problems with the compiler's ability to determine object
-> sizes correctly. The "temporary" solution was to make sockaddr explicitly
-> use a flexible array, but this causes problems for embedding struct
-> sockaddr in structures, where once again the compiler has to guess about
-> the size of such objects, and causes thousands of warnings under the
-> coming -Wflex-array-member-not-at-end warning.
-> 
-> Switching to sockaddr_storage internally everywhere wastes a lot of memory,
-> so we are left with needing two changes:
-> - introduction of an explicitly arbitrarily sized sockaddr struct
-> - switch struct sockaddr back to being fixed size
-> 
-> Doing the latter step requires all "arbitrarily sized" uses of struct
-> sockaddr to be replaced with the new struct from the first step.
-> 
-> So, introduce the new struct and do enough conversions that we can
-> switch sockaddr back to a fixed-size sa_data.
 
-This doesn't apply to net-next.. Now I kinda wondering if maybe you
-skipped a patch? The code itself LGTM.
+
+On October 31, 2025 5:05:20 PM PDT, Jakub Kicinski <kuba@kernel=2Eorg> wro=
+te:
+>On Wed, 29 Oct 2025 14:43:58 -0700 Kees Cook wrote:
+>> Update all struct proto_ops bind() callback function prototypes from
+>> "struct sockaddr *" to "struct sockaddr_unsized *" to avoid lying to th=
+e
+>> compiler about object sizes=2E Calls into struct proto handlers gain ca=
+sts
+>> that will be removed in the struct proto conversion patch=2E
+>
+>I fail to spot whether the new type is defined :)
+>Or is the new type not defined at all?
+>If it is probably best to have that as a separate patch=2E
+
+Arrrgh=2E Yeah, what should be patch 1 got skipped=2E I will try again! =
+=F0=9F=98=AD
+
+
+--=20
+Kees Cook
