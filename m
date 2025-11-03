@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB242C0261;
-	Mon,  3 Nov 2025 08:58:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854CBEEB3;
+	Mon,  3 Nov 2025 09:05:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762160303; cv=none; b=s28wTCaLxa/iPVoh8BdFEhcDW8Q+xViXRucwDfSNuOGZzrT9SbZ0h6jv1+Tdxqgq2oAZunQZqNMJqT9eJuFczxh8Bx00WWilBWdqQt8pBNLWLPlAnETcoUVefH5VbVtU4UuPrnEjnsj3KCQHVBuzNepbV/rmvklmRQtKSdp+yNM=
+	t=1762160731; cv=none; b=CbSb3O++Ws8K6z2+b2HQahCYkyTfjPvww0djLwsna3B+MiW8LIVAQaZ33KNkat30aZTFDoEF2D8gu0W60L8irRL8mQGmG6JjNjHNN+n4Z/+B0dxaD7HAnxKFz1ezTgQYk5iJKq9v2w8S+Zw/oK5tZgQquVYlT/OSc6v4RUwNuEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762160303; c=relaxed/simple;
-	bh=CRi6704MPvvIAXAC4rSvi6zCRtfM0lNB9IjeqMN27tA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O0LcOut+9hBGJGOAHAgBSMl44xgaCAXzZBOjIBbUa7Kn4lEMrTlhBX7LYTR8VQVDnQcf3ercbMHwffIiXsF8ZaOCL6SZh1UfCKmKgylO5bq46q7gFs8IT1X2QXSDY60EcJm07/hs0sAxRl2Spj2DeAH3iOirKdNKz7GK8bTihDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ua3C8sne; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762160731; c=relaxed/simple;
+	bh=UUbEsOe4Q4pwT5mEOpKxll+kgknMkwcSq5AQt9/VDPA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KnLvB/uo2c/RvgxTOeGiVEokZq2r2km9PJ0/O5LWdt01ao3cGFovCsRnVu/H2zYHHIYIx5TPwCbIzgY0ToUd3cg7RP3nSXV3iJ7s6ZlSuooM1x2yvCElx7OTx1xwGFOkvq5A8PENcFJ7TOXh5JTVHJMw0nYqlJ9Db0QuaWaK644=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilxhQtZG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ua3C8sne"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 198A1C4CEE7;
-	Mon,  3 Nov 2025 08:58:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilxhQtZG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AD7BC4CEE7;
+	Mon,  3 Nov 2025 09:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762160302;
-	bh=CRi6704MPvvIAXAC4rSvi6zCRtfM0lNB9IjeqMN27tA=;
-	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ua3C8sne8P4O2Z41/qFLqnFxrLlq5J0VITwu3QaJdvXT+JYV3oC3AvS3DSwt8DUxE
-	 5EWbBUaRJTYuSs4Vjk1fWVRx8Xj/1AXHgTqKRVvSZJAaIJ9wpOSCI+nUV6UX6RduVG
-	 8VQ9TC2isNwbFc/VgCFAnng05lzfmBY1xV0psNhRmA0Bw9ASB05X0U7SUN3bp13K/B
-	 JvEsQ951/9ggy7dKfbmCBjf2wprCYtxXnGgBCGWsfyr2pO8Zkqo0GwhdR2Yp3vA9+V
-	 P4ut4zcQHdfvAvZXgEoRV6MsQzrBmPbt+S+xsg3nsGWCYBBRP75Su5T/wZs8/aF91Z
-	 J1uwq5visn9ig==
-Message-ID: <1c3e9bc8-0d25-46b2-98a3-643157f78b21@kernel.org>
-Date: Mon, 3 Nov 2025 09:58:15 +0100
+	s=k20201202; t=1762160731;
+	bh=UUbEsOe4Q4pwT5mEOpKxll+kgknMkwcSq5AQt9/VDPA=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=ilxhQtZG2ZzCMz3K1Q7Asn/X9i0LQy6+ZkYWRA1Iv5jJXF8MqToYiHv5O9qTAO/1h
+	 PfHWmJlj2KA8IKwNvbXFuvIZXbJbbsQhDpeBCChU3M0h9x17VVYyweG/va0G+yPA3F
+	 xYa64zXIFeUmVEM+fo16wFH+Nf61X9TPNuywIBHXR0V5Ti0+cgranDoP5zgbl6FzUV
+	 3ZZCMCHtyZbO8k9giJvz7ASwR7jdX58EKpgsqDYsLBRHlJ0cC23pJU1rBcZrbwMER5
+	 Tww096h5svR+/UAVhc/fqEmtg7GIHTYKFSAXegQzrdvH8EBwbS5wOq6+onldiRCCZP
+	 MKWHGlG24hpFw==
+Message-ID: <14a57def-b2da-491b-ad97-19b784d0d594@kernel.org>
+Date: Mon, 3 Nov 2025 10:05:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,10 +35,10 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Daniel Gomez <da.gomez@kernel.org>
+From: Hans Verkuil <hverkuil+cisco@kernel.org>
 Subject: Re: [PATCH v2 3/3] module: Add compile-time check for embedded NUL
  characters
-To: Hans Verkuil <hverkuil+cisco@kernel.org>, Kees Cook <kees@kernel.org>,
+To: Daniel Gomez <da.gomez@kernel.org>, Kees Cook <kees@kernel.org>,
  Luis Chamberlain <mcgrof@kernel.org>
 Cc: Rusty Russell <rusty@rustcorp.com.au>, Petr Pavlu <petr.pavlu@suse.com>,
  Sami Tolvanen <samitolvanen@google.com>, linux-modules@vger.kernel.org,
@@ -51,63 +51,71 @@ Cc: Rusty Russell <rusty@rustcorp.com.au>, Petr Pavlu <petr.pavlu@suse.com>,
 References: <20251010030348.it.784-kees@kernel.org>
  <20251010030610.3032147-3-kees@kernel.org>
  <91866583-037f-4607-b148-4ddf38ffaf51@kernel.org>
-Content-Language: en-US
-From: Daniel Gomez <da.gomez@kernel.org>
-Organization: kernel.org
-In-Reply-To: <91866583-037f-4607-b148-4ddf38ffaf51@kernel.org>
+ <1c3e9bc8-0d25-46b2-98a3-643157f78b21@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <1c3e9bc8-0d25-46b2-98a3-643157f78b21@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 03/11/2025 09.54, Hans Verkuil wrote:
-> On 10/10/2025 05:06, Kees Cook wrote:
->> Long ago, the kernel module license checks were bypassed by embedding a
->> NUL character in the MODULE_LICENSE() string[1]. By using a string like
->> "GPL\0proprietary text", the kernel would only read "GPL" due to C string
->> termination at the NUL byte, allowing proprietary modules to avoid kernel
->> tainting and access GPL-only symbols.
+On 03/11/2025 09:58, Daniel Gomez wrote:
+> On 03/11/2025 09.54, Hans Verkuil wrote:
+>> On 10/10/2025 05:06, Kees Cook wrote:
+>>> Long ago, the kernel module license checks were bypassed by embedding a
+>>> NUL character in the MODULE_LICENSE() string[1]. By using a string like
+>>> "GPL\0proprietary text", the kernel would only read "GPL" due to C string
+>>> termination at the NUL byte, allowing proprietary modules to avoid kernel
+>>> tainting and access GPL-only symbols.
+>>>
+>>> The MODULE_INFO() macro stores these strings in the .modinfo ELF
+>>> section, and get_next_modinfo() uses strcmp()-family functions
+>>> which stop at the first NUL. This split the embedded string into two
+>>> separate .modinfo entries, with only the first part being processed by
+>>> license_is_gpl_compatible().
+>>>
+>>> Add a compile-time check using static_assert that compares the full
+>>> string length (sizeof - 1) against __builtin_strlen(), which stops at
+>>> the first NUL. If they differ, compilation fails with a clear error
+>>> message.
+>>>
+>>> While this check can still be circumvented by modifying the ELF binary
+>>> post-compilation, it prevents accidental embedded NULs and forces
+>>> intentional abuse to require deliberate binary manipulation rather than
+>>> simple source-level tricks.
+>>>
+>>> Build tested with test modules containing both valid and invalid license
+>>> strings. The check correctly rejects:
+>>>
+>>>     MODULE_LICENSE("GPL\0proprietary")
+>>>
+>>> while accepting normal declarations:
+>>>
+>>>     MODULE_LICENSE("GPL")
 >>
->> The MODULE_INFO() macro stores these strings in the .modinfo ELF
->> section, and get_next_modinfo() uses strcmp()-family functions
->> which stop at the first NUL. This split the embedded string into two
->> separate .modinfo entries, with only the first part being processed by
->> license_is_gpl_compatible().
+>> Who will take this series? I can take the first two media patches and
+>> someone else can take this last patch, or I can take all, or someone
+>> else can take all patches. The media patches already have my 'Reviewed-by'.
 >>
->> Add a compile-time check using static_assert that compares the full
->> string length (sizeof - 1) against __builtin_strlen(), which stops at
->> the first NUL. If they differ, compilation fails with a clear error
->> message.
->>
->> While this check can still be circumvented by modifying the ELF binary
->> post-compilation, it prevents accidental embedded NULs and forces
->> intentional abuse to require deliberate binary manipulation rather than
->> simple source-level tricks.
->>
->> Build tested with test modules containing both valid and invalid license
->> strings. The check correctly rejects:
->>
->>     MODULE_LICENSE("GPL\0proprietary")
->>
->> while accepting normal declarations:
->>
->>     MODULE_LICENSE("GPL")
+>> Any preferences?
 > 
-> Who will take this series? I can take the first two media patches and
-> someone else can take this last patch, or I can take all, or someone
-> else can take all patches. The media patches already have my 'Reviewed-by'.
-> 
-> Any preferences?
+> I will take patch 3 in modules' tree.
 
-I will take patch 3 in modules' tree.
+OK, then I'll take patches 1 and 2 in the media tree.
 
+Regards,
+
+	Hans
 
 > 
-> Regards,
-> 
-> 	Hans
 > 
 >>
->> Link: https://lwn.net/Articles/82305/ [1]
->> Suggested-by: Rusty Russell <rusty@rustcorp.com.au>
->> Signed-off-by: Kees Cook <kees@kernel.org>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>>
+>>> Link: https://lwn.net/Articles/82305/ [1]
+>>> Suggested-by: Rusty Russell <rusty@rustcorp.com.au>
+>>> Signed-off-by: Kees Cook <kees@kernel.org>
+> 
+> Reviewed-by: Daniel Gomez <da.gomez@samsung.com>
 
-Reviewed-by: Daniel Gomez <da.gomez@samsung.com>
