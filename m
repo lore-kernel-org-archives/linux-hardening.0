@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3115630FC36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3127A33343D
 	for <linux-hardening@vger.kernel.org>; Tue,  4 Nov 2025 16:54:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762275288; cv=none; b=PSRDjKL7R4tey8vWd22dsXSWp5GzuiDSXzABN66FSHH5L3zeb6JmOZg5TT5PrFjUrjzWDVHHROdfWDSItgeMG8V9jwEb9fr/OqPscB6hgJIYUHy8+f9pdNe+s100WhIJomC3gPZe0udUJp6EN8A/FuqJ4YJ7gGHT99oiudxEVRw=
+	t=1762275288; cv=none; b=Boe3eA7bi9dzNieF/S+Mui1MCjKkiTGFbNjQj2k/uFhyPSuCLhskPq+6vfiyMOuuhMomsasjge6OCkUEtYULSJW1g85oShrDoZdutVRW4PzwxkDNLXo4nAvTRrEA6fhJNGsFBjjeeHMY3Z3dNnzzdIX3bAmAIbsJaUEerkocF8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1762275288; c=relaxed/simple;
-	bh=pnewo85+/EuSbNN/sz79cXiOmzXmzu2pNCiusASzOHo=;
+	bh=6+Bcgxpo/vxlWLujUIuuGQEpKOMXS2CbdizDBJMGcXs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ukHgCKQmhHFLp58mluPZKZclno8yABPedRSr0KT4hP8oUJmiS9I5am0g3TMvzEg+RGocot7mdJj5ouLaK1HOP4bTouLhy9iVVB6LdAX1g2lkOTeoQ9XOUhoNsk8sSn+4Jk38Qt8tTRPAJBNADPdMp8yoRwrotTBCMRrtzy9nZZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oVCgDHO4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Zt3RhDX1aRzkbGvvQxWUDmX+jZCM9gxQ7GIag3DKt1NfubyY2zZFbdTB2ZgBBkhX+vim9HPW0ty14gwnmEFF1d7SSn+VpMRno7JrcnOKrbXk9CAhv4ilSbXOInPzuvlel4dpOx3AYqGzymLnEook4RRa1BX0O9jFdOaqXuMu/RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p5A2ukUL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oVCgDHO4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE922C19422;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5A2ukUL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1397C16AAE;
 	Tue,  4 Nov 2025 16:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1762275287;
-	bh=pnewo85+/EuSbNN/sz79cXiOmzXmzu2pNCiusASzOHo=;
+	bh=6+Bcgxpo/vxlWLujUIuuGQEpKOMXS2CbdizDBJMGcXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oVCgDHO4IK8bUY+HBHsuAsnTHYcaP08L/7NiEWdjsA+HO+1cDSkm0PJZeeQzXL/XA
-	 H/L0kMRZ2De3dB2n66Lsw4aHAt524t96pZgIshGcZcttEFZNiOCM7stV9CEdRTCGEK
-	 cDP2VDPTFXx0XT4HmoRrXF5RckKt5upVkdUbbpiZUmyRcXUm7V+Xai78k3IyPNcHqt
-	 LKSfAK3sZbobxEcyAMGEROysQq/DnufyqfYGqvAgTYzRpgEdYjOUR5LF1643CDWDKg
-	 Qk7KYzqshcVLgz/8mgmVS6uKL9lkdX/FpBZAefFuTrrVWmwf+OkhYHhsUSdtX3ZQhi
-	 4I66F2SOE/uPg==
+	b=p5A2ukUL8KYDV1eUKFQuApmIFHZ4gOtol0m9c6WIeNI/kgJDW8KTBWJGKImsg1I8S
+	 jsukQz25wrIpE8dDhzU+xbZK5X844nWlnEdDiI27nZ+BvxmdaYX/5KhSXZYTombERx
+	 2MRVUV5niEm7xCg9ALrRSCorc2rS9lsD/nJWuEkG0cKaLvacWbKNDz7X+vlVfMFFZ9
+	 4JVCXq+IfLsikCWJnqzHRHWBI8tKfbaSKFpA5h0WOpmUqLhy4vMJX3yghKFYpnpVHh
+	 f38s6sFlSQnOBxp5YtX5RHIILI/7agWhx3ROf56sC6czVYj5+z6fW+6icE1epAKv4O
+	 iZFNKba19MPbg==
 From: Kees Cook <kees@kernel.org>
 To: Qing Zhao <qing.zhao@oracle.com>
 Cc: Kees Cook <kees@kernel.org>,
@@ -57,9 +57,9 @@ Cc: Kees Cook <kees@kernel.org>,
 	"Constable, Scott D" <scott.d.constable@intel.com>,
 	gcc-patches@gcc.gnu.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v6 3/7] kcfi: Add regression test suite
-Date: Tue,  4 Nov 2025 08:54:33 -0800
-Message-Id: <20251104165447.2835584-3-kees@kernel.org>
+Subject: [PATCH v6 1/7] typeinfo: Introduce KCFI typeinfo mangling API
+Date: Tue,  4 Nov 2025 08:54:31 -0800
+Message-Id: <20251104165447.2835584-1-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251104165430.it.619-kees@kernel.org>
 References: <20251104165430.it.619-kees@kernel.org>
@@ -69,1354 +69,1226 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=48539; i=kees@kernel.org; h=from:subject; bh=pnewo85+/EuSbNN/sz79cXiOmzXmzu2pNCiusASzOHo=; b=owGbwMvMwCVmps19z/KJym7G02pJDJlc+qe5f+nN3DJdV7c9xe+hxVSZL27eGcIWvhJCL+PSP lVn1FV2lLIwiHExyIopsgTZuce5eLxtD3efqwgzh5UJZAgDF6cATES9nJHhl6dC3hH3NPfY44ve PDNNdtGRe22ozfdpKVd/2yeN4L4bjAyfJ0yszttgtKDhDUPQsWsqJT5fC5aW71b6pCHU2F9WsYw FAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=47181; i=kees@kernel.org; h=from:subject; bh=6+Bcgxpo/vxlWLujUIuuGQEpKOMXS2CbdizDBJMGcXs=; b=owGbwMvMwCVmps19z/KJym7G02pJDJlc+qdYNvItv7EzzrqvbcG/OMG4aef02tsnX/buk6gQk N0TYjSho5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCLeSxj+uz4s1Vr2crGijV6t dKvxHjXDnd39ln9eNH188j8ja/07F0aGK3+O2IRXvXKIffpj/y7e7ft+VaUzh13rW2Xy4KralR2 i/AA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Add test suite for KCFI (Kernel Control Flow Integrity) ABI, covering
-core functionality, optimization and code generation, addressing,
-architecture-specific KCFI sequence emission, and integration with
-patchable function entry.
+To support the KCFI typeid and future type-based allocators, which need
+to convert unique types into unique 32-bit values, add a mangling system
+based on the Itanium C++ mangling ABI, adapted for C types. Introduce
+__builtin_typeinfo_hash for the hash, and __builtin_typeinfo_name for
+testing and debugging (to see the human-readable mangling form). Add
+tests for typeinfo validation and error handling.
 
-The arch-specific patterns themselves are added with the subsequent
-architecture patches.
+An important aspect of the C++ typeinfo behavior that is retained here
+is that typedefs are treated as pass-through except when the underlying
+type lacks a tag (i.e. anonymous struct, union, or enum). This provides a
+distinction between those typedefs and typedefs used to provide _aliases_
+(u8, uint16_t).
 
-Tests can be run via:
-  make check-c RUNTESTFLAGS='kcfi.exp'
+In the future, an additional "strict mode" builtin helper pair could
+also be added to follow strict ISO C type equivalency instead of the
+existing typeinfo used here, but that is out of scope for this patch.
+
+gcc/ChangeLog:
+
+	* Makefile.in: Add kcfi-typeinfo.o.
+	* doc/extend.texi: Document typeinfo builtins.
+	* kcfi-typeinfo.h: New file, typeinfo mangling API.
+	* kcfi-typeinfo.cc: New file, implement typeinfo mangling.
+
+gcc/c-family/ChangeLog:
+
+	* c-common.h (enum rid): Add typeinfo builtins.
+	* c-common.cc: Add typeinfo builtins.
+
+gcc/c/ChangeLog:
+
+	* c-parser.cc (c_parser_get_builtin_type_arg): New function,
+	parse type.
+	(c_parser_postfix_expression): Add typeinfo builtins.
 
 gcc/testsuite/ChangeLog:
 
-	* lib/target-supports.exp: Add check_effective_target_kcfi.
-	* gcc.dg/kcfi/kcfi.exp: Add kcfi tests.
-	* gcc.dg/kcfi/kcfi-adjacency.c: New test.
-	* gcc.dg/kcfi/kcfi-basics.c: New test.
-	* gcc.dg/kcfi/kcfi-call-sharing.c: New test.
-	* gcc.dg/kcfi/kcfi-cold-partition.c: New test.
-	* gcc.dg/kcfi/kcfi-complex-addressing.c: New test.
-	* gcc.dg/kcfi/kcfi-ipa-robustness.c: New test.
-	* gcc.dg/kcfi/kcfi-move-preservation.c: New test.
-	* gcc.dg/kcfi/kcfi-no-sanitize-inline.c: New test.
-	* gcc.dg/kcfi/kcfi-no-sanitize.c: New test.
-	* gcc.dg/kcfi/kcfi-offset-validation.c: New test.
-	* gcc.dg/kcfi/kcfi-patchable-entry-only.c: New test.
-	* gcc.dg/kcfi/kcfi-patchable-incompatible.c: New test.
-	* gcc.dg/kcfi/kcfi-patchable-large.c: New test.
-	* gcc.dg/kcfi/kcfi-patchable-medium.c: New test.
-	* gcc.dg/kcfi/kcfi-patchable-prefix-only.c: New test.
-	* gcc.dg/kcfi/kcfi-runtime.c: New test.
-	* gcc.dg/kcfi/kcfi-tail-calls.c: New test.
-	* gcc.dg/kcfi/kcfi-trap-section.c: New test.
+	* gcc.dg/builtin-typeinfo-errors.c: New test, validate bad
+	arguments are rejected.
+	* gcc.dg/builtin-typeinfo.c: New test, typeinfo mangling.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- gcc/testsuite/gcc.dg/kcfi/kcfi.exp            |  42 +++
- gcc/testsuite/lib/target-supports.exp         |  14 +
- gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c    |  49 ++++
- gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c       |  74 +++++
- gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c |  61 ++++
- .../gcc.dg/kcfi/kcfi-cold-partition.c         | 126 ++++++++
- .../gcc.dg/kcfi/kcfi-complex-addressing.c     | 131 +++++++++
- .../gcc.dg/kcfi/kcfi-complex-addressing.s     |   0
- .../gcc.dg/kcfi/kcfi-ipa-robustness.c         |  54 ++++
- .../gcc.dg/kcfi/kcfi-move-preservation.c      |  41 +++
- .../gcc.dg/kcfi/kcfi-no-sanitize-inline.c     |  74 +++++
- gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c  |  31 ++
- .../gcc.dg/kcfi/kcfi-offset-validation.c      |  24 ++
- .../gcc.dg/kcfi/kcfi-patchable-entry-only.c   |  14 +
- .../gcc.dg/kcfi/kcfi-patchable-incompatible.c |   7 +
- .../gcc.dg/kcfi/kcfi-patchable-large.c        |  14 +
- .../gcc.dg/kcfi/kcfi-patchable-medium.c       |  14 +
- .../gcc.dg/kcfi/kcfi-patchable-prefix-only.c  |  14 +
- gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c      | 276 ++++++++++++++++++
- gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c   |  60 ++++
- gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c |  17 ++
- 21 files changed, 1137 insertions(+)
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi.exp
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-cold-partition.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.s
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-ipa-robustness.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-incompatible.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
+ gcc/doc/extend.texi                           |  94 ++++
+ .../gcc.dg/builtin-typeinfo-errors.c          |  28 +
+ gcc/testsuite/gcc.dg/builtin-typeinfo.c       | 350 +++++++++++++
+ gcc/Makefile.in                               |   1 +
+ gcc/c-family/c-common.h                       |   1 +
+ gcc/kcfi-typeinfo.h                           |  32 ++
+ gcc/c-family/c-common.cc                      |   2 +
+ gcc/c/c-parser.cc                             |  72 +++
+ gcc/kcfi-typeinfo.cc                          | 485 ++++++++++++++++++
+ 9 files changed, 1065 insertions(+)
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo-errors.c
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo.c
+ create mode 100644 gcc/kcfi-typeinfo.h
+ create mode 100644 gcc/kcfi-typeinfo.cc
 
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi.exp b/gcc/testsuite/gcc.dg/kcfi/kcfi.exp
-new file mode 100644
-index 000000000000..fdec4d2b8254
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi.exp
-@@ -0,0 +1,42 @@
-+#   Copyright (C) 2025 Free Software Foundation, Inc.
-+
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License as published by
-+# the Free Software Foundation; either version 3 of the License, or
-+# (at your option) any later version.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License
-+# along with GCC; see the file COPYING3.  If not see
-+# <http://www.gnu.org/licenses/>.
-+
-+# GCC testsuite for KCFI (Kernel Control Flow Integrity) tests.
-+
-+# Load support procs.
-+load_lib gcc-dg.exp
-+
-+# Skip tests if KCFI is not supported on this target
-+if { ![check_effective_target_kcfi] } {
-+    return
-+}
-+
-+# Add KCFI-specific flags to any existing DEFAULT_CFLAGS
-+global DEFAULT_CFLAGS
-+if ![info exists DEFAULT_CFLAGS] then {
-+    set DEFAULT_CFLAGS ""
-+}
-+set DEFAULT_CFLAGS "$DEFAULT_CFLAGS -fsanitize=kcfi"
-+
-+# Initialize `dg'.
-+dg-init
-+
-+# Main loop.
-+dg-runtest [lsort [glob -nocomplain $srcdir/$subdir/*.c]] \
-+	"" $DEFAULT_CFLAGS
-+
-+# All done.
-+dg-finish
-diff --git a/gcc/testsuite/lib/target-supports.exp b/gcc/testsuite/lib/target-supports.exp
-index f90cd26e6e66..da47069daa38 100644
---- a/gcc/testsuite/lib/target-supports.exp
-+++ b/gcc/testsuite/lib/target-supports.exp
-@@ -13947,6 +13947,20 @@ proc check_effective_target_no_fsanitize_address {} {
-     return 0;
- }
+diff --git a/gcc/doc/extend.texi b/gcc/doc/extend.texi
+index 742782582064..b09b7c3edec5 100644
+--- a/gcc/doc/extend.texi
++++ b/gcc/doc/extend.texi
+@@ -17669,6 +17669,100 @@ which will cause a @code{NULL} pointer to be used for the unsafe case.
  
-+# Return 1 if this target supports KCFI (Kernel Control Flow Integrity)
-+
-+proc check_effective_target_kcfi {} {
-+    # We don't need a full execuable to test this flag
-+    return [check_no_compiler_messages kcfi assembly {
-+	void func(void) {}
-+	int main(void) {
-+	    void (*ptr)(void) = func;
-+	    ptr();
-+	    return 0;
-+	}
-+    } "-fsanitize=kcfi"]
-+}
-+
- # Return 1 if this target supports 'R' flag in .section directive, 0
- # otherwise.  Cache the result.
+ @enddefbuiltin
  
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
++@defbuiltin{{unsigned int} __builtin_typeinfo_hash (@var{type})}
++
++The built-in function @code{__builtin_typeinfo_hash} returns a hash value
++for the given type @var{type} (which is a type, not an expression).  The hash
++is computed using the FNV-1a algorithm on the type's mangled name representation,
++which follows a subset of the Itanium C++ ABI conventions adapted for C types.
++(See @code{__buitin_typeinfo_name} for the string representation.)
++
++This built-in is primarily intended for kernel control flow integrity (KCFI)
++implementations and other type-aware runtime systems that need to generate
++consistent type identifiers.  The hash value is a 32-bit unsigned integer.
++
++Key characteristics of the hash:
++@itemize @bullet
++@item
++The hash is consistent for the same type across different translation units.
++@item
++Typedefs are recursively canonicalized down to integral type name or named
++struct, union, or enum tag name.
++@item
++Typedefs of anonymous structs, unions, and enums preserve the typedef name
++in the hash calculation (e.g., @code{typedef struct @{ int x; @} foo_t;}
++uses @code{foo_t} in the hash).
++@item
++Type qualifiers (@code{const}, @code{volatile}, @code{restrict}) affect
++the hash value.
++@item
++Function types include parameter types and variadic markers in the hash.
++@end itemize
++
++For example:
++@smallexample
++typedef struct @{ int x; @} mytype_t;
++unsigned int hash1 = __builtin_typeinfo_hash(mytype_t);
++unsigned int hash2 = __builtin_typeinfo_hash(struct @{ int x; @});
++/* hash1 != hash2 because the typedef name is preserved */
++
++void func(int x, char y);
++unsigned int hash3 = __builtin_typeinfo_hash(typeof(func));
++/* Returns hash for function type "void(int, char)" */
++@end smallexample
++
++@emph{Note:} This construct is only available for C@. For C++, see
++@code{std::type_info::hash_code}.
++
++@enddefbuiltin
++
++@defbuiltin{{const char *} __builtin_typeinfo_name (@var{type})}
++
++The built-in function @code{__builtin_typeinfo_name} returns a string
++containing the mangled name representation of the given type @var{type}
++(which is a type, not an expression).  The string follows a subset of the
++Itanium C++ ABI mangling conventions adapted for C types.  (See
++@code{__buitin_typeinfo_hash} for the unsigned 32-bit hash representation.)
++
++The returned string is a compile-time constant suitable for use in
++string comparisons, debugging output, or other type introspection needs.
++The string begins with @code{_ZTS} followed by the encoded type information.
++
++Mangling examples:
++@itemize @bullet
++@item
++@code{int} becomes @code{"_ZTSi"}
++@item
++@code{char *} becomes @code{"_ZTSPc"}
++@item
++@code{const int} becomes @code{"_ZTSKi"}
++@item
++@code{int[10]} becomes @code{"_ZTSA10_i"}
++@item
++@code{void (*)(int)} becomes @code{"_ZTSPFviE"}
++@item
++@code{struct foo} becomes @code{"_ZTS3foo"}
++@item
++@code{typedef struct @{ int x; @} bar_t;} becomes @code{"_ZTS5bar_t"}
++@end itemize
++
++The mangling preserves typedef names for anonymous compound types, which
++is particularly useful for distinguishing between different typedefs of
++structurally identical anonymous types:
++
++@smallexample
++typedef struct @{ int x; @} type_a;
++typedef struct @{ int x; @} type_b;
++const char *name_a = __builtin_typeinfo_name(type_a);  /* "_ZTS6type_a" */
++const char *name_b = __builtin_typeinfo_name(type_b);  /* "_ZTS6type_b" */
++/* name_a and name_b are different despite identical structure */
++@end smallexample
++
++@emph{Note:} This construct is only available for C@. For C++, see
++@code{std::type_info::name}.
++
++@enddefbuiltin
++
+ @defbuiltin{int __builtin_types_compatible_p (@var{type1}, @var{type2})}
+ 
+ You can use the built-in function @code{__builtin_types_compatible_p} to
+diff --git a/gcc/testsuite/gcc.dg/builtin-typeinfo-errors.c b/gcc/testsuite/gcc.dg/builtin-typeinfo-errors.c
 new file mode 100644
-index 000000000000..7c1cff986c01
+index 000000000000..71ad01337b4e
 --- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
-@@ -0,0 +1,49 @@
-+/* Test KCFI check/transfer adjacency - regression test for instruction
-+   insertion.  */
++++ b/gcc/testsuite/gcc.dg/builtin-typeinfo-errors.c
+@@ -0,0 +1,28 @@
++/* Test error handling for __builtin_typeinfo_name and __builtin_typeinfo_hash.  */
 +/* { dg-do compile } */
-+/* { dg-additional-options "-O2" } */
-+
-+/* This test ensures that KCFI security checks remain immediately adjacent
-+   to their corresponding indirect calls/jumps, with no executable instructions
-+   between the type ID check and the control flow transfer. */
-+
-+/* External function pointers to prevent optimization.  */
-+extern void (*complex_func_ptr)(int, int, int, int);
-+extern int (*return_func_ptr)(int, int);
-+
-+/* Function with complex argument preparation that could tempt
-+   the optimizer to insert instructions between KCFI check and call.  */
-+__attribute__((noinline)) void test_complex_args(int a, int b, int c, int d) {
-+    /* Complex argument expressions that might cause instruction scheduling.  */
-+    complex_func_ptr(a * 2, b + c, d - a, (a << 1) | b);
-+}
-+
-+/* Function with return value handling.  */
-+__attribute__((noinline)) int test_return_value(int x, int y) {
-+    /* Return value handling that shouldn't interfere with adjacency.  */
-+    int result = return_func_ptr(x + 1, y * 2);
-+    return result + 1;
-+}
-+
-+/* Test struct field access that caused issues in try-catch.c.  */
-+struct call_info {
-+    void (*handler)(void);
-+    int status;
-+    int data;
-+};
-+
-+extern struct call_info *global_call_info;
-+
-+__attribute__((noinline)) void test_struct_field_call(void) {
-+    /* This pattern caused adjacency issues before the fix.  */
-+    global_call_info->handler();
-+}
-+
-+/* Test conditional indirect call.  */
-+__attribute__((noinline)) void test_conditional_call(int flag) {
-+    if (flag) {
-+        global_call_info->handler();
-+    }
-+}
-+
-+/* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*|\.section|\.text} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
-new file mode 100644
-index 000000000000..ca833fed2971
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
-@@ -0,0 +1,74 @@
-+/* Test basic KCFI functionality - preamble generation.  */
-+/* { dg-do compile } */
-+
-+/* Extern function declarations - should NOT get KCFI preambles.  */
-+extern void external_func(void);
-+extern int external_func_int(int x);
-+
-+void regular_function(int x) {
-+    /* This should get KCFI preamble.  */
-+}
-+
-+void static_target_function(int x) {
-+    /* Target function that can be called indirectly.  */
-+}
-+
-+__attribute__((nocf_check))
-+void nocf_check_function(int x) {
-+    /* This function has nocf_check attribute - should NOT get KCFI preamble.  */
-+}
-+
-+static void static_caller(void) {
-+    /* Static function that makes an indirect call
-+       Should NOT get KCFI preamble (not address-taken)
-+       But must generate KCFI check for the indirect call.  */
-+    void (*local_ptr)(int) = static_target_function;
-+    local_ptr(42);  /* This should generate KCFI check.  */
-+}
-+
-+/* Make external_func address-taken.  */
-+void (*func_ptr)(int) = regular_function;
-+void (*ext_ptr)(void) = external_func;
-+void (__attribute__((nocf_check)) *nocf_ptr)(int) = nocf_check_function;
 +
 +int main() {
-+    func_ptr(42);
-+    ext_ptr();        /* Indirect call to external_func.  */
-+    external_func_int(10);  /* Direct call to external_func_int.  */
-+    static_caller();  /* Direct call to static function.  */
-+    return 0;
-+}
++    /* Test missing arguments */
++    const char *result1 = __builtin_typeinfo_name(); /* { dg-error "expected specifier-qualifier-list before '\\)'" } */
++    /* { dg-error "expected type name in '__builtin_typeinfo_name'" "" { target *-*-* } .-1 } */
++    unsigned int result2 = __builtin_typeinfo_hash(); /* { dg-error "expected specifier-qualifier-list before '\\)'" } */
++    /* { dg-error "expected type name in '__builtin_typeinfo_hash'" "" { target *-*-* } .-1 } */
 +
-+/* Verify KCFI preamble exists for regular_function.  */
-+/* { dg-final { scan-assembler {__cfi_regular_function:} } } */
++    /* Test wrong argument types (expressions instead of type names) */
++    const char *result3 = __builtin_typeinfo_name(42); /* { dg-error "expected specifier-qualifier-list before numeric constant" } */
++    /* { dg-error "expected type name in '__builtin_typeinfo_name'" "" { target *-*-* } .-1 } */
++    unsigned int result4 = __builtin_typeinfo_hash(42); /* { dg-error "expected specifier-qualifier-list before numeric constant" } */
++    /* { dg-error "expected type name in '__builtin_typeinfo_hash'" "" { target *-*-* } .-1 } */
 +
-+/* Verify KCFI preamble symbol comes before main function symbol.  */
-+/* { dg-final { scan-assembler {__cfi_regular_function:.*regular_function:} } } */
++    int x = 5;
++    const char *result5 = __builtin_typeinfo_name(x); /* { dg-error "expected specifier-qualifier-list before" } */
++    /* { dg-error "expected type name in '__builtin_typeinfo_name'" "" { target *-*-* } .-1 } */
++    unsigned int result6 = __builtin_typeinfo_hash(x); /* { dg-error "expected specifier-qualifier-list before" } */
++    /* { dg-error "expected type name in '__builtin_typeinfo_hash'" "" { target *-*-* } .-1 } */
 +
-+/* Target function should have preamble (address-taken).  */
-+/* { dg-final { scan-assembler {__cfi_static_target_function:} } } */
-+
-+/* Static caller should NOT have preamble (it's only called directly,
-+   not address-taken). */
-+/* { dg-final { scan-assembler-not {__cfi_static_caller:} } } */
-+
-+/* Function with nocf_check attribute should NOT have preamble.  */
-+/* { dg-final { scan-assembler-not {__cfi_nocf_check_function:} } } */
-+
-+/* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*|\.section|\.text} } } */
-+
-+/* Extern functions should NOT get KCFI preambles.  */
-+/* { dg-final { scan-assembler-not {__cfi_external_func:} } } */
-+/* { dg-final { scan-assembler-not {__cfi_external_func_int:} } } */
-+
-+/* Local functions should NOT get __kcfi_typeid_ symbols.  */
-+/* Only external declarations that are address-taken should get __kcfi_typeid_ */
-+/* { dg-final { scan-assembler-not {__kcfi_typeid_regular_function} } } */
-+/* { dg-final { scan-assembler-not {__kcfi_typeid_main} } } */
-+
-+/* External address-taken functions should get __kcfi_typeid_ symbols.  */
-+/* { dg-final { scan-assembler {__kcfi_typeid_external_func} } } */
-+
-+/* External functions that are only called directly should NOT get
-+   __kcfi_typeid_ symbols.  */
-+/* { dg-final { scan-assembler-not {__kcfi_typeid_external_func_int} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
-new file mode 100644
-index 000000000000..427b092fecb5
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
-@@ -0,0 +1,61 @@
-+/* Test KCFI check sharing bug - optimizer incorrectly shares KCFI checks
-+   between different function types.  */
-+/* { dg-do compile } */
-+/* { dg-additional-options "-O2" } */
-+
-+/* Reproduce the pattern from Linux kernel internal_create_group where:
-+   - Two different function pointer types (is_visible vs is_bin_visible).
-+   - Both get loaded into the same register (%rcx).
-+   - Optimizer creates shared KCFI check with wrong type ID.
-+   - This causes CFI failures in production kernel.  */
-+
-+struct kobject { int dummy; };
-+struct attribute { int dummy; };
-+struct bin_attribute { int dummy; };
-+
-+struct attribute_group {
-+    const char *name;
-+    // Type ID A
-+    int (*is_visible)(struct kobject *, struct attribute *, int);
-+    // Type ID B
-+    int (*is_bin_visible)(struct kobject *, const struct bin_attribute *, int);
-+    // Type ID B again
-+    int (*is_bin_visible_again)(struct kobject *, const struct bin_attribute *, int);
-+    struct attribute **attrs;
-+    const struct bin_attribute **bin_attrs;
-+};
-+
-+/* Function that mimics __first_visible from kernel - gets inlined into
-+   caller.  */
-+static int __first_visible(const struct attribute_group *grp, struct kobject *kobj)
-+{
-+    /* Path 1: Call is_visible function pointer.  */
-+    if (grp->attrs && grp->attrs[0] && grp->is_visible)
-+        return grp->is_visible(kobj, grp->attrs[0], 0);
-+
-+    /* Path 2: Call is_bin_visible function pointer.  */
-+    if (grp->bin_attrs && grp->bin_attrs[0] && grp->is_bin_visible)
-+        return grp->is_bin_visible(kobj, grp->bin_attrs[0], 0);
-+
-+    /* Path 3: Call is_bin_visible_again function pointer.  */
-+    if (grp->bin_attrs && grp->bin_attrs[0] && grp->is_bin_visible_again)
-+        return grp->is_bin_visible_again(kobj, grp->bin_attrs[0], 0);
++    /* Test too many arguments */
++    const char *result7 = __builtin_typeinfo_name(int, int); /* { dg-error "expected '\\)' before ','" } */
++    unsigned int result8 = __builtin_typeinfo_hash(int, int); /* { dg-error "expected '\\)' before ','" } */
 +
 +    return 0;
 +}
-+
-+/* Main function that triggers the optimization bug.  */
-+int test_kcfi_check_sharing(struct kobject *kobj, const struct attribute_group *grp)
-+{
-+    /* This should inline __first_visible and create the problematic pattern where:
-+       1. Both function pointers get loaded into same register.
-+       2. Optimizer shares KCFI check between them.
-+       3. Uses wrong type ID for one of the calls.  */
-+    return __first_visible(grp, kobj);
-+}
-+
-+/* Each indirect call should have its own KCFI check with correct type ID.
-+
-+   Should see:
-+   1. KCFI check for is_visible call with is_visible type ID A.
-+   2. KCFI check for is_bin_visible and is_bin_visible_again call with type ID B.  */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-cold-partition.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-cold-partition.c
+diff --git a/gcc/testsuite/gcc.dg/builtin-typeinfo.c b/gcc/testsuite/gcc.dg/builtin-typeinfo.c
 new file mode 100644
-index 000000000000..87ffdba1f0ae
+index 000000000000..307657310fec
 --- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-cold-partition.c
-@@ -0,0 +1,126 @@
-+/* Test KCFI cold function and cold partition behavior.  */
-+/* { dg-do compile } */
-+/* { dg-additional-options "-O2" } */
-+/* { dg-additional-options "-freorder-blocks-and-partition" { target freorder } } */
-+
-+void regular_function(void) {
-+    /* Regular function should get preamble.  */
-+}
-+
-+/* Cold-attributed function should STILL get preamble (it's a regular
-+   function, just marked cold).  */
-+__attribute__((cold))
-+void cold_attributed_function(void) {
-+    /* This function has cold attribute but should still get KCFI preamble.  */
-+}
-+
-+/* Hot-attributed function should get preamble.  */
-+__attribute__((hot))
-+void hot_attributed_function(void) {
-+    /* This function is explicitly hot and should get KCFI preamble.  */
-+}
-+
-+/* Global to prevent optimization from eliminating cold paths.  */
-+extern void abort(void);
-+
-+/* Additional function to test that normal functions still get preambles.  */
-+__attribute__((noinline))
-+int another_regular_function(int x) {
-+    return x + 42;
-+}
-+
-+/* Function designed to generate cold partitions under optimization.  */
-+__attribute__((noinline))
-+void function_with_cold_partition(int condition) {
-+    /* Hot path - very likely to execute.  */
-+    if (__builtin_expect(condition == 42, 1)) {
-+        /* Simple hot path that optimizer will keep inline.  */
-+        return;
-+    }
-+
-+    /* Cold paths that actually do something to prevent elimination.  */
-+    if (__builtin_expect(condition < 0, 0)) {
-+        /* Error path 1 - call abort to prevent elimination.  */
-+        abort();
-+    }
-+
-+    if (__builtin_expect(condition > 1000000, 0)) {
-+        /* Error path 2 - call abort to prevent elimination.  */
-+        abort();
-+    }
-+
-+    if (__builtin_expect(condition == 999999, 0)) {
-+        /* Error path 3 - more substantial cold code.  */
-+        volatile int sum = 0;
-+        for (volatile int i = 0; i < 100; i++) {
-+            sum += i * condition;
-+        }
-+        if (sum > 0)
-+            abort();
-+    }
-+
-+    /* More cold paths - switch with many unlikely cases.  */
-+    switch (condition) {
-+        case 1000001: case 1000002: case 1000003: case 1000004: case 1000005:
-+        case 1000006: case 1000007: case 1000008: case 1000009: case 1000010:
-+            /* Each case does some work before abort.  */
-+            volatile int work = condition * 2;
-+            if (work > 0) abort();
-+            break;
-+        default:
-+            if (condition != 42) {
-+                /* Fallback cold path - substantial work.  */
-+                volatile int result = 0;
-+                for (volatile int j = 0; j < condition % 50; j++) {
-+                    result += j;
-+                }
-+                if (result >= 0) abort();
-+            }
-+    }
-+}
-+
-+/* Test function pointers to ensure address-taken detection works.  */
-+void test_function_pointers(void) {
-+    void (*regular_ptr)(void) = regular_function;
-+    void (*cold_ptr)(void) = cold_attributed_function;
-+    void (*hot_ptr)(void) = hot_attributed_function;
-+
-+    regular_ptr();
-+    cold_ptr();
-+    hot_ptr();
-+}
-+
-+int main() {
-+    regular_function();
-+    cold_attributed_function();
-+    hot_attributed_function();
-+    function_with_cold_partition(42); /* Normal case - stay in hot path.  */
-+    another_regular_function(5);
-+    test_function_pointers();
-+    return 0;
-+}
-+
-+/* Regular function should have preamble.  */
-+/* { dg-final { scan-assembler "__cfi_regular_function:" } } */
-+
-+/* Cold-attributed function should STILL have preamble (it's a legitimate function) */
-+/* { dg-final { scan-assembler "__cfi_cold_attributed_function:" } } */
-+
-+/* Hot-attributed function should have preamble.  */
-+/* { dg-final { scan-assembler "__cfi_hot_attributed_function:" } } */
-+
-+/* Function that generates cold partitions should have preamble for main entry.  */
-+/* { dg-final { scan-assembler "__cfi_function_with_cold_partition:" } } */
-+
-+/* Address-taken functions should have preambles.  */
-+/* { dg-final { scan-assembler "__cfi_test_function_pointers:" } } */
-+
-+/* The function should generate a .cold partition (only on targets that support freorder) */
-+/* { dg-final { scan-assembler "function_with_cold_partition\\.cold:" { target freorder } } } */
-+
-+/* The .cold partition should NOT get a __cfi_ preamble since it's never
-+   reached via indirect calls.  */
-+/* { dg-final { scan-assembler-not "__cfi_function_with_cold_partition\\.cold:" { target freorder } } } */
-+
-+/* Additional regular function should get preamble.  */
-+/* { dg-final { scan-assembler "__cfi_another_regular_function:" } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
-new file mode 100644
-index 000000000000..c48b8d7ad552
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
-@@ -0,0 +1,131 @@
-+/* Test KCFI with complex addressing modes (structure members, array
-+   elements). This is a regression test for the change_address_1 RTL
-+   error that occurred when target_addr was PLUS(reg, offset) instead
-+   of a simple register.  */
-+/* { dg-do compile } */
-+/* { dg-additional-options "-O2" } */
-+
-+struct function_table {
-+    int (*callback1)(int);
-+    int (*callback2)(int, int);
-+    void (*callback3)(void);
-+    int (*callback4)(void *, void *, void *, void *, void *, void *);
-+    int data;
-+};
-+
-+static int handler1(int x) {
-+    return x * 2;
-+}
-+
-+static int handler2(int x, int y) {
-+    return x + y;
-+}
-+
-+static void handler3(void) {
-+    /* Empty handler.  */
-+}
-+
-+/* Test indirect calls through structure members - this creates
-+   PLUS(reg, offset) addressing.  */
-+__attribute__((noinline))
-+int test_struct_members(struct function_table *table) {
-+    int result = 0;
-+    int loop;
-+
-+    /* These indirect calls will generate complex addressing modes:
-+     * call *(%rdi)          - callback1 at offset 0
-+     * call *8(%rdi)         - callback2 at offset 8
-+     * call *16(%rdi)        - callback3 at offset 16
-+     * KCFI must handle PLUS(reg, struct_offset) + kcfi_offset.  */
-+
-+    for (loop = 0; loop < 16; loop++) {
-+        result += table->callback1(10);
-+        result += table->callback2(5, 7);
-+        table->callback3();
-+        result += table->callback4(handler1, handler2, handler3, &result, test_struct_members, table);
-+    }
-+
-+    return result;
-+}
-+
-+/* Test indirect calls through array elements - another source of
-+   complex addressing.  */
-+typedef int (*func_array_t)(int);
-+
-+int test_array_elements(func_array_t functions[], int index) {
-+    /* This creates addressing like MEM[PLUS(PLUS(reg, index*8), 0)]
-+       which should be simplified to MEM[PLUS(reg, index*8)].  */
-+    return functions[index](42);
-+}
-+
-+/* Test with global structure.  */
-+static struct function_table global_table = {
-+    .callback1 = handler1,
-+    .callback2 = handler2,
-+    .callback3 = handler3,
-+    .data = 100
-+};
-+
-+int test_global_struct(void) {
-+    /* Access through global structure - may generate different
-+       addressing patterns.  */
-+    return global_table.callback1(20) + global_table.callback2(3, 4);
-+}
-+
-+/* Test nested structure access.  */
-+struct nested_table {
-+    struct function_table inner;
-+    int extra_data;
-+};
-+
-+int test_nested_struct(struct nested_table *nested) {
-+    /* Even more complex addressing: nested structure member access.  */
-+    return nested->inner.callback1(15);
-+}
-+
-+int test_many_args(void *one, void *two, void *three, void *four, void *five, void *six)
-+{
-+    return (unsigned long)one + (unsigned long)two + (unsigned long)three
-+	   + (unsigned long)four + (unsigned long)five + (unsigned long)six;
-+}
-+
-+int target_func(int a, int b, int c, int d) { return a + b + c + d; }
-+
-+/* Function to force r3 spill/reload by using 4+ arguments in indirect call */
-+__attribute__((noinline))
-+int force_r3_spill(int (*fp)(int, int, int, int)) {
-+    int (*ip_reg)(int, int, int, int) = fp;
-+    volatile int val = 0;
-+    /* This should force r3 as scratch since ip is the target */
-+    return ip_reg(val, val, val, val) + 5;
-+}
-+
-+int main() {
-+    struct function_table local_table = {
-+        .callback1 = handler1,
-+        .callback2 = handler2,
-+        .callback3 = handler3,
-+        .callback4 = test_many_args,
-+        .data = 50
-+    };
-+
-+    func_array_t func_array[] = { handler1, handler1, handler1 };
-+
-+    int result = 0;
-+    result += test_struct_members(&local_table);
-+    result += test_array_elements(func_array, 1);
-+    result += test_global_struct();
-+
-+    struct nested_table nested = { .inner = local_table, .extra_data = 200 };
-+    result += test_nested_struct(&nested);
-+
-+    /* Force r3 spill/reload pattern in ARM32 KCFI */
-+    volatile int (*four_arg_ptr)(int, int, int, int) = target_func;
-+    result += force_r3_spill(four_arg_ptr);
-+
-+    result += local_table.callback4(handler1, handler2, handler3, &result, main, &local_table);
-+
-+    return result;
-+}
-+
-+/* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*|\.section|\.text} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.s b/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.s
-new file mode 100644
-index 000000000000..e69de29bb2d1
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-ipa-robustness.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-ipa-robustness.c
-new file mode 100644
-index 000000000000..a43bcd4f3e3f
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-ipa-robustness.c
-@@ -0,0 +1,54 @@
-+/* Test KCFI IPA pass robustness with compiler-generated constructs.  */
-+/* { dg-do compile } */
-+/* { dg-additional-options "-O2" } */
-+
-+#include <stddef.h>
-+
-+/* Test various compiler-generated constructs that could confuse IPA pass.  */
-+
-+/* static_assert - this was causing the original crash.  */
-+typedef struct {
-+    int field1;
-+    char field2;
-+} test_struct_t;
-+
-+static_assert(offsetof(test_struct_t, field1) == 0, "layout check 1");
-+static_assert(offsetof(test_struct_t, field2) == 4, "layout check 2");
-+static_assert(sizeof(test_struct_t) >= 5, "size check");
-+
-+/* Regular functions that should get KCFI analysis.  */
-+void regular_function(void) {
-+    /* Should get KCFI preamble.  */
-+}
-+
-+static void static_function(void) {
-+    /* With -O2: correctly identified as not address-taken, no preamble.  */
-+}
-+
-+void address_taken_function(void) {
-+    /* Should get KCFI preamble (address taken below) */
-+}
-+
-+/* Function pointer to create address-taken scenario.  */
-+void (*func_ptr)(void) = address_taken_function;
-+
-+/* More static_asserts mixed with function definitions.  */
-+static_assert(sizeof(void*) >= 4, "pointer size check");
-+
-+int main(void) {
-+    regular_function();    /* Direct call.  */
-+    static_function();     /* Direct call to static.  */
-+    func_ptr();            /* Indirect call.  */
-+
-+    static_assert(sizeof(int) == 4, "int size check");
-+
-+    return 0;
-+}
-+
-+/* Verify KCFI preambles are generated appropriately.  */
-+/* { dg-final { scan-assembler "__cfi_regular_function:" } } */
-+/* { dg-final { scan-assembler "__cfi_address_taken_function:" } } */
-+/* { dg-final { scan-assembler "__cfi_main:" } } */
-+
-+/* With -O2: static_function correctly identified as not address-taken.  */
-+/* { dg-final { scan-assembler-not "__cfi_static_function:" } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
-new file mode 100644
-index 000000000000..7d58fef3f920
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
-@@ -0,0 +1,41 @@
-+/* Test that KCFI preserves function pointer moves at -O2 optimization.
-+   This test ensures that the combine pass doesn't incorrectly optimize away
-+   the move instruction needed to transfer function pointers from argument
-+   registers to the target registers used by KCFI patterns.  */
-+
-+/* { dg-do compile } */
-+/* { dg-additional-options "-O2 -std=gnu11" } */
-+
-+static int called_count = 0;
-+
-+/* Function taking one argument, returning void.  */
-+static __attribute__((noinline)) void increment_void(int *counter)
-+{
-+    (*counter)++;
-+}
-+
-+/* Function taking one argument, returning int.  */
-+static __attribute__((noinline)) int increment_int(int *counter)
-+{
-+    (*counter)++;
-+    return *counter;
-+}
-+
-+/* Don't allow the compiler to inline the calls.  */
-+static __attribute__((noinline)) void indirect_call(void (*func)(int *))
-+{
-+    func(&called_count);
-+}
-+
-+int main(void)
-+{
-+    /* This should work - matching prototype.  */
-+    indirect_call(increment_void);
-+
-+    /* This should trap - mismatched prototype.  */
-+    indirect_call((void *)increment_int);
-+
-+    return 0;
-+}
-+
-+/* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*|\.section|\.text} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
-new file mode 100644
-index 000000000000..4a90390d1934
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
-@@ -0,0 +1,74 @@
-+/* Test that no_sanitize("kcfi") attribute is preserved during inlining.  */
-+/* { dg-do compile } */
-+/* { dg-additional-options "-O2" } */
-+
-+extern void external_side_effect(int value);
-+
-+/* Regular function (should get KCFI checks) */
-+__attribute__((noinline))
-+void normal_function(void (*callback)(int))
-+{
-+    /* This indirect call must generate KCFI checks.  */
-+    callback(300);
-+    external_side_effect(300);
-+}
-+
-+/* Regular function marked with no_sanitize("kcfi") (positive control) */
-+__attribute__((noinline, no_sanitize("kcfi")))
-+void sensitive_non_inline_function(void (*callback)(int))
-+{
-+    /* This indirect call should NOT generate KCFI checks.  */
-+    callback(100);
-+    external_side_effect(100);
-+}
-+
-+/* Function marked with both no_sanitize("kcfi") and always_inline.  */
-+__attribute__((always_inline, no_sanitize("kcfi")))
-+static inline void sensitive_inline_function(void (*callback)(int))
-+{
-+    /* This indirect call should NOT generate KCFI checks when inlined.  */
-+    callback(42);
-+    external_side_effect(42);
-+}
-+
-+/* Explicit wrapper for testing sensitive_inline_function behavior.  */
-+__attribute__((noinline))
-+void wrap_sensitive_inline(void (*callback)(int))
-+{
-+    sensitive_inline_function(callback);
-+}
-+
-+/* Function marked with only always_inline (should get KCFI checks) */
-+__attribute__((always_inline))
-+static inline void normal_inline_function(void (*callback)(int))
-+{
-+    /* This indirect call must generate KCFI checks when inlined.  */
-+    callback(200);
-+    external_side_effect(200);
-+}
-+
-+/* Explicit wrapper for testing normal_inline_function behavior.  */
-+__attribute__((noinline))
-+void wrap_normal_inline(void (*callback)(int))
-+{
-+    normal_inline_function(callback);
-+}
-+
-+void test_callback(int value)
-+{
-+    external_side_effect(value);
-+}
-+
-+static void (*volatile function_pointer)(int) = test_callback;
-+
-+int main(void)
-+{
-+    void (*fn_ptr)(int) = function_pointer;
-+
-+    normal_function(fn_ptr);
-+    wrap_normal_inline(fn_ptr);
-+    sensitive_non_inline_function(fn_ptr);
-+    wrap_sensitive_inline(fn_ptr);
-+
-+    return 0;
-+}
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
-new file mode 100644
-index 000000000000..124d26488635
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
-@@ -0,0 +1,31 @@
-+/* Test KCFI with no_sanitize attribute.  */
-+/* { dg-do compile } */
-+
-+void target_function(void) {
-+    /* This should get KCFI preamble.  */
-+}
-+
-+void caller_with_checks(void) {
-+    /* This function should generate KCFI checks.  */
-+    void (*func_ptr)(void) = target_function;
-+    func_ptr();
-+}
-+
-+__attribute__((no_sanitize("kcfi")))
-+void caller_no_checks(void) {
-+    /* This function should NOT generate KCFI checks due to no_sanitize.  */
-+    void (*func_ptr)(void) = target_function;
-+    func_ptr();
-+}
-+
-+int main() {
-+    caller_with_checks();    /* This should generate checks inside.  */
-+    caller_no_checks();      /* This should NOT generate checks inside.  */
-+    return 0;
-+}
-+
-+/* All functions should get preambles regardless of no_sanitize.  */
-+/* { dg-final { scan-assembler "__cfi_target_function:" } } */
-+/* { dg-final { scan-assembler "__cfi_caller_with_checks:" } } */
-+/* { dg-final { scan-assembler "__cfi_caller_no_checks:" } } */
-+/* { dg-final { scan-assembler "__cfi_main:" } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
-new file mode 100644
-index 000000000000..213a1a2892a5
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
-@@ -0,0 +1,24 @@
-+/* Test KCFI call-site offset validation across architectures.  */
-+/* { dg-do compile } */
-+
-+void target_func_a(void) { }
-+void target_func_b(int x) { }
-+void target_func_c(int x, int y) { }
-+
-+int main() {
-+    void (*ptr_a)(void) = target_func_a;
-+    void (*ptr_b)(int) = target_func_b;
-+    void (*ptr_c)(int, int) = target_func_c;
-+
-+    /* Multiple indirect calls.  */
-+    ptr_a();
-+    ptr_b(1);
-+    ptr_c(1, 2);
-+
-+    return 0;
-+}
-+
-+/* Should have KCFI preambles for all functions.  */
-+/* { dg-final { scan-assembler "__cfi_target_func_a:" } } */
-+/* { dg-final { scan-assembler "__cfi_target_func_b:" } } */
-+/* { dg-final { scan-assembler "__cfi_target_func_c:" } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
-new file mode 100644
-index 000000000000..a6a2f4816fef
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
-@@ -0,0 +1,14 @@
-+/* Test KCFI with patchable function entries - entry NOPs only.  */
-+/* { dg-do compile } */
-+/* { dg-additional-options "-fpatchable-function-entry=4,0" } */
-+
-+void test_function(void) {
-+}
-+
-+int main() {
-+    void (*func_ptr)(void) = test_function;
-+    func_ptr();
-+    return 0;
-+}
-+
-+/* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.word} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-incompatible.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-incompatible.c
-new file mode 100644
-index 000000000000..c6cf9ab720a3
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-incompatible.c
-@@ -0,0 +1,7 @@
-+/* The patchable_function_entry attribute is incompatible with KCFI.  */
-+/* { dg-do compile } */
-+
-+__attribute__((patchable_function_entry(4, 2)))
-+int test_function(void) { /* { dg-error "'patchable_function_entry' attribute cannot be used with '-fsanitize=kcfi'" } */
-+    return 42;
-+}
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
-new file mode 100644
-index 000000000000..8c4ec30cecc5
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
-@@ -0,0 +1,14 @@
-+/* Test KCFI with large patchable function entries.  */
-+/* { dg-do compile } */
-+/* { dg-additional-options "-fpatchable-function-entry=11,11" } */
-+
-+void test_function(void) {
-+}
-+
-+int main() {
-+    void (*func_ptr)(void) = test_function;
-+    func_ptr();
-+    return 0;
-+}
-+
-+/* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.word} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
-new file mode 100644
-index 000000000000..78a834ef2a97
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
-@@ -0,0 +1,14 @@
-+/* Test KCFI with medium patchable function entries.  */
-+/* { dg-do compile } */
-+/* { dg-additional-options "-fpatchable-function-entry=8,4" } */
-+
-+void test_function(void) {
-+}
-+
-+int main() {
-+    void (*func_ptr)(void) = test_function;
-+    func_ptr();
-+    return 0;
-+}
-+
-+/* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.word} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
-new file mode 100644
-index 000000000000..1a4d8269ed56
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
-@@ -0,0 +1,14 @@
-+/* Test KCFI with patchable function entries - prefix NOPs only.  */
-+/* { dg-do compile } */
-+/* { dg-additional-options "-fpatchable-function-entry=3,3" } */
-+
-+void test_function(void) {
-+}
-+
-+int main() {
-+    void (*func_ptr)(void) = test_function;
-+    func_ptr();
-+    return 0;
-+}
-+
-+/* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.word} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c
-new file mode 100644
-index 000000000000..7593a421a4c1
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c
-@@ -0,0 +1,276 @@
-+/* Test KCFI runtime behavior: working calls and type mismatch trapping.  */
-+/* { dg-do run { target native } } */
-+/* { dg-additional-options "-O2" } */
++++ b/gcc/testsuite/gcc.dg/builtin-typeinfo.c
+@@ -0,0 +1,350 @@
++/* Test KCFI type mangling using __builtin_typeinfo_name.  */
++/* { dg-do run } */
++/* { dg-options "-std=gnu99" } */
 +
 +#include <stdio.h>
-+#include <signal.h>
-+#include <setjmp.h>
-+#include <stdlib.h>
 +#include <string.h>
++#include <stdarg.h>
 +
-+/* Test functions with different signatures */
-+static int func_int_void(void)
-+{
-+    return 42;
-+}
++int pass, fail;
 +
-+__attribute__((nocf_check))
-+static int func_int_void_nocf_check(void)
-+{
-+    return 42;
-+}
-+
-+static int func_int_int(int x)
-+{
-+    return x * 4;
-+}
-+
-+/* Complex functions with many arguments to create register pressure */
-+static long complex_calc_8args(int a, long b, int c, long d,
-+                               int e, long f, int g, long h)
-+{
-+    /* Do actual work with all arguments to keep them live */
-+    /* Each calculation uses specific operations to ensure values are preserved */
-+    long result = (a * 2) + (b / 3) - (c * 4) + (d / 5) +
-+                  (e * 6) - (f / 7) + (g * 8) - (h / 9);
-+
-+    return result;
-+}
-+
-+static int complex_intermediate_6args(int x1, int x2, int x3,
-+                                      int x4, int x5, int x6)
-+{
-+    /* Keep variables live by using them in multiple calculations */
-+    int temp1 = x1 + x2;
-+    int temp2 = x3 * x4;
-+    int temp3 = x5 - x6;
-+
-+    /* Call another function with many args through pointer */
-+    typedef long (*calc_ptr)(int, long, int, long, int, long, int, long);
-+    volatile calc_ptr ptr = complex_calc_8args;
-+
-+    /* Pass derived values to force register preservation */
-+    long result = ptr(temp1, temp2, temp3, x1 * x2,
-+                      x3 + x4, x5 * x6, temp1 + temp2, temp3 - x1);
-+
-+    /* Use original args again to ensure they stayed live */
-+    return (int)(result + x1 - x2 + x3 - x4 + x5 - x6);
-+}
-+
-+static int complex_outer_4args(int a, int b, int c, int d)
-+{
-+    /* Create local variables that must be preserved */
-+    int local1 = a * a;
-+    int local2 = b * b;
-+    int local3 = c * c;
-+    int local4 = d * d;
-+    volatile int force_spill1 = local1 + local2;
-+    volatile int force_spill2 = local3 + local4;
-+
-+    /* Call through function pointer with many args */
-+    typedef int (*inter_ptr)(int, int, int, int, int, int);
-+    volatile inter_ptr ptr = complex_intermediate_6args;
-+
-+    /* Pass combinations that require preserving originals */
-+    int result = ptr(local1, local2, local3, local4,
-+                     a + b, c + d);
-+
-+    /* Force use of spilled values */
-+    result += force_spill1 + force_spill2;
-+
-+    /* Use original arguments again */
-+    return result + a - b + c - d;
-+}
-+
-+/* Entry point for complex call chain */
-+static int complex_entry_point(void)
-+{
-+    /* Start with many live values */
-+    int v1 = 10, v2 = 20, v3 = 30, v4 = 40;
-+    int v5 = 50, v6 = 60, v7 = 70, v8 = 80;
-+
-+    /* Keep them live with volatile stores */
-+    volatile int keep_live1 = v1 + v5;
-+    volatile int keep_live2 = v2 + v6;
-+    volatile int keep_live3 = v3 + v7;
-+    volatile int keep_live4 = v4 + v8;
-+
-+    /* Call through function pointer */
-+    typedef int (*outer_ptr)(int, int, int, int);
-+    volatile outer_ptr ptr = complex_outer_4args;
-+
-+    /* Use derived values to maintain register pressure */
-+    int result = ptr(v1 * v2, v3 * v4, v5 * v6, v7 * v8);
-+
-+    /* Force original values to stay live */
-+    result += keep_live1 + keep_live2 + keep_live3 + keep_live4;
-+    result += v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8;
-+
-+    /* Return the calculated result */
-+    return result;
-+}
-+
-+/* Global state for signal handling */
-+static volatile int trap_occurred = 0;
-+static jmp_buf trap_env;
-+
-+/* Signal handler for KCFI traps */
-+static void trap_handler(int sig)
-+{
-+    trap_occurred = 1;
-+    longjmp(trap_env, 1);
-+}
-+
-+/* Compatible indirect call should work - simple version */
-+static int test_compatible_call(void)
-+{
-+    typedef int (*int_void_ptr)(void);
-+    volatile int_void_ptr ptr = func_int_void;
-+
-+    fprintf(stderr, "Calling %s(0x%08x) through %s(0x%08x) ...\n",
-+	    __builtin_typeinfo_name(typeof(func_int_void)),
-+	    __builtin_typeinfo_hash(typeof(func_int_void)),
-+	    __builtin_typeinfo_name(typeof(*ptr)),
-+	    __builtin_typeinfo_hash(typeof(*ptr)));
-+
-+    trap_occurred = 0;
-+    /* This should work - same signature */
-+    int result = ptr();
-+
-+    return (trap_occurred == 0 && result == 42) ? 1 : 0;
-+}
-+
-+/* Compatible indirect call with complex register pressure */
-+static int test_compatible_call_complex(void)
-+{
-+    typedef int (*int_void_ptr)(void);
-+    volatile int_void_ptr ptr = complex_entry_point;
-+
-+    fprintf(stderr, "Calling complex chain %s(0x%08x) through %s(0x%08x) ...\n",
-+	    __builtin_typeinfo_name(typeof(complex_entry_point)),
-+	    __builtin_typeinfo_hash(typeof(complex_entry_point)),
-+	    __builtin_typeinfo_name(typeof(*ptr)),
-+	    __builtin_typeinfo_hash(typeof(*ptr)));
-+
-+    trap_occurred = 0;
-+
-+    /* This should work - complex call chain with register pressure */
-+    int result = ptr();
-+
-+    /* Verify the complete call chain computed correctly with all register
-+       values preserved through the high-pressure call sequence */
-+    if (result != 657383831) {
-+        fprintf(stderr, "ERROR: Incorrect final result %d (expected 657383831)\n", result);
-+        return 0;
-+    }
-+
-+    /* Check that no trap occurred and result is correct */
-+    return (trap_occurred == 0) ? 1 : 0;
-+}
-+
-+/* Compatible indirect call to nocf_check should not work */
-+static int test_nocf_check_trap(void)
-+{
-+    trap_occurred = 0;
-+
-+    if (setjmp(trap_env) == 0) {
-+      typedef int (__attribute__((nocf_check)) *int_void_ptr_nocf)(void);
-+      volatile int_void_ptr_nocf ptr = func_int_void_nocf_check;
-+
-+      fprintf(stderr, "Calling %s(0x%08x) through %s(0x%08x) ...\n",
-+	      __builtin_typeinfo_name(typeof(func_int_void_nocf_check)),
-+	      __builtin_typeinfo_hash(typeof(func_int_void_nocf_check)),
-+	      __builtin_typeinfo_name(typeof(*ptr)),
-+	      __builtin_typeinfo_hash(typeof(*ptr)));
-+
-+      int result = ptr();
-+
-+      fprintf(stderr, "Yikes! Survived nocf_check call\n");
-+
-+      /* If we get here, the trap didn't occur */
-+      return 0;
-+    } else {
-+      /* We caught the trap - this is expected */
-+      return trap_occurred;
-+    }
-+}
-+
-+/* Type mismatch should trap */
-+static int test_type_mismatch_trap(void)
-+{
-+    trap_occurred = 0;
-+
-+    if (setjmp(trap_env) == 0) {
-+      /* Cast func_int_void to incompatible void(*)(void) type */
-+      typedef void (*void_void_ptr)(void);
-+      volatile void_void_ptr ptr = (void_void_ptr)func_int_void;
-+
-+      fprintf(stderr, "Calling %s(0x%08x) through %s(0x%08x) ...\n",
-+	      __builtin_typeinfo_name(typeof(func_int_void)),
-+	      __builtin_typeinfo_hash(typeof(func_int_void)),
-+	      __builtin_typeinfo_name(typeof(*ptr)),
-+	      __builtin_typeinfo_hash(typeof(*ptr)));
-+
-+      /* This should trap because type IDs don't match:
-+         - func_int_void has type ID for int(void)
-+         - but we're calling through void(void) pointer type */
-+      ptr();
-+
-+      fprintf(stderr, "Yikes! Survived mismatched call\n");
-+
-+      /* If we get here, the trap didn't occur */
-+      return 0;
-+    } else {
-+      /* We caught the trap - this is expected */
-+      return trap_occurred;
-+    }
-+}
++#define TEST_STRING(expr, expected_string) \
++  do { \
++    const char *actual_string = __builtin_typeinfo_name(typeof(expr)); \
++    printf("Testing %s: ", #expr); \
++    if (strcmp(actual_string, expected_string) == 0) { \
++      printf("PASS (%s)\n", actual_string); \
++      pass ++; \
++    } else { \
++      printf("FAIL\n"); \
++      printf("  Expected: %s\n", expected_string); \
++      printf("  Actual:   %s\n", actual_string); \
++      fail ++; \
++    } \
++  } while (0)
 +
 +int main(void)
 +{
-+    struct sigaction sa = {
-+      .sa_handler = trap_handler,
-+      .sa_flags = SA_NODEFER,
-+    };
-+    int failed = 4;
++    printf("Testing KCFI Typeinfo Mangling\n");
++    printf("======================================================\n");
 +
-+    /* Install trap handler.  */
-+    if (sigaction(SIGILL, &sa, NULL)) {
-+      perror("sigaction");
-+      return 1;
-+    }
++    /* Test basic types */
++    TEST_STRING(void, "v");
++    TEST_STRING(char, "c");
++    TEST_STRING(int, "i");
++    TEST_STRING(short, "s");
++    TEST_STRING(long, "l");
++    TEST_STRING(float, "f");
++    TEST_STRING(double, "d");
 +
-+    /* Simple compatible call should work */
-+    if (test_compatible_call()) {
-+      printf("OK: simple matched indirect call succeeded\n");
-+      failed--;
-+    } else {
-+      printf("FAIL: simple matched call\n");
-+    }
++    /* Test qualified types */
++    TEST_STRING(const int, "Ki");
++    TEST_STRING(volatile int, "Vi");
 +
-+    /* Complex compatible call chain should work */
-+    if (test_compatible_call_complex()) {
-+      printf("OK: complex matched indirect call chain succeeded\n");
-+      failed--;
-+    } else {
-+      printf("FAIL: complex matched call chain\n");
-+    }
++    /* Test pointer types */
++    TEST_STRING(char*, "Pc");
++    TEST_STRING(int*, "Pi");
++    TEST_STRING(void*, "Pv");
++    TEST_STRING(const char*, "PKc");
 +
-+    /* Using nocf_check should trap */
-+    if (test_nocf_check_trap()) {
-+      printf("OK: indirect call to nocf_check correctly trapped\n");
-+      failed--;
-+    } else {
-+      printf("FAIL: nocf_check trap\n");
-+    }
++    /* Test array types */
++    TEST_STRING(int[10],  "A10_i");
++    TEST_STRING(char[20], "A20_c");
++    TEST_STRING(short[],  "A_s");
 +
-+    /* Type mismatch should trap */
-+    if (test_type_mismatch_trap()) {
-+      printf("OK: mismatched indirect call correctly trapped\n");
-+      failed--;
-+    } else {
-+      printf("FAIL: type mismatch trap\n");
-+    }
++    /* Test basic function types */
++    extern void func_void(void);
++    extern void func_char(char x);
++    extern void func_short(short x);
++    extern void func_int(int x);
++    extern void func_long(long x);
++    TEST_STRING(func_void,  "FvvE");
++    TEST_STRING(func_char,  "FvcE");
++    TEST_STRING(func_short, "FvsE");
++    TEST_STRING(func_int,   "FviE");
++    TEST_STRING(func_long,  "FvlE");
 +
-+    return failed;
++    /* Test functions with unsigned types */
++    extern void func_unsigned_char(unsigned char x);
++    extern void func_unsigned_short(unsigned short x);
++    extern void func_unsigned_int(unsigned int x);
++    TEST_STRING(func_unsigned_char,  "FvhE");
++    TEST_STRING(func_unsigned_short, "FvtE");
++    TEST_STRING(func_unsigned_int,   "FvjE");
++
++    /* Test functions with signed types */
++    extern void func_signed_char(signed char x);
++    extern void func_signed_short(signed short x);
++    extern void func_signed_int(signed int x);
++    TEST_STRING(func_signed_char,  "FvaE");
++    TEST_STRING(func_signed_short, "FvsE");
++    TEST_STRING(func_signed_int,   "FviE");
++
++    /* Test functions with pointer types */
++    extern void func_void_ptr(void *x);
++    extern void func_char_ptr(char *x);
++    extern void func_short_ptr(short *x);
++    extern void func_int_ptr(int *x);
++    extern void func_int_array(int arr[]); /* Decays to "int *".  */
++    extern void func_long_ptr(long *x);
++    TEST_STRING(func_void_ptr,  "FvPvE");
++    TEST_STRING(func_char_ptr,  "FvPcE");
++    TEST_STRING(func_short_ptr, "FvPsE");
++    TEST_STRING(func_int_ptr,   "FvPiE");
++    TEST_STRING(func_int_array, "FvPiE");
++    TEST_STRING(func_long_ptr,  "FvPlE");
++
++    /* Test functions with const qualifiers */
++    extern void func_const_void_ptr(const void *x);
++    extern void func_const_char_ptr(const char *x);
++    extern void func_const_short_ptr(const short *x);
++    extern void func_const_int_ptr(const int *x);
++    extern void func_const_long_ptr(const long *x);
++    TEST_STRING(func_const_void_ptr,  "FvPKvE");
++    TEST_STRING(func_const_char_ptr,  "FvPKcE");
++    TEST_STRING(func_const_short_ptr, "FvPKsE");
++    TEST_STRING(func_const_int_ptr,   "FvPKiE");
++    TEST_STRING(func_const_long_ptr,  "FvPKlE");
++
++    /* Test nested pointers */
++    extern void func_int_ptr_ptr(int **x);
++    extern void func_char_ptr_ptr(char **x);
++    TEST_STRING(func_int_ptr_ptr,  "FvPPiE");
++    TEST_STRING(func_char_ptr_ptr, "FvPPcE");
++
++    /* Test multiple parameters */
++    extern void func_int_char(int x, char y);
++    extern void func_char_int(char x, int y);
++    extern void func_two_int(int x, int y);
++    TEST_STRING(func_int_char, "FvicE");
++    TEST_STRING(func_char_int, "FvciE");
++    TEST_STRING(func_two_int,  "FviiE");
++
++    /* Test return types */
++    extern int func_return_int(void);
++    extern char func_return_char(void);
++    extern void* func_return_ptr(void);
++    TEST_STRING(func_return_int,  "FivE");
++    TEST_STRING(func_return_char, "FcvE");
++    TEST_STRING(func_return_ptr,  "FPvvE");
++
++    /* Test function pointer parameters */
++    extern void func_fptr_void(void (*fp)(void));
++    extern void func_fptr_int(void (*fp)(int));
++    extern void func_fptr_ret_int(int (*fp)(void));
++    TEST_STRING(func_fptr_void,    "FvPFvvEE");
++    TEST_STRING(func_fptr_int,     "FvPFviEE");
++    TEST_STRING(func_fptr_ret_int, "FvPFivEE");
++
++    /* Test variadic functions */
++    struct audit_context { int dummy; };
++    extern void func_variadic_simple(const char *fmt, ...);
++    extern void func_variadic_mixed(int x, const char *fmt, ...);
++    extern void func_variadic_multi(int x, char y, const char *fmt, ...);
++    extern void audit_log_pattern(struct audit_context *ctx, unsigned int gfp_mask,
++				  int type, const char *fmt, ...);
++    TEST_STRING(func_variadic_simple, "FvPKczE");
++    TEST_STRING(func_variadic_mixed,  "FviPKczE");
++    TEST_STRING(func_variadic_multi,  "FvicPKczE");
++    TEST_STRING(audit_log_pattern,    "FvP13audit_contextjiPKczE");
++
++    /* Test mixed const/non-const */
++    extern void func_const_mixed(int x, const char *fmt);
++    TEST_STRING(func_const_mixed,  "FviPKcE");
++
++    /* Test named struct types */
++    struct test_struct_a { int x; };
++    struct test_struct_b { char y; };
++    struct test_struct_c { void *ptr; };
++    TEST_STRING(struct test_struct_a, "13test_struct_a");
++    extern void func_struct_a_ptr(struct test_struct_a *x);
++    extern void func_struct_b_ptr(struct test_struct_b *x);
++    extern void func_struct_c_ptr(struct test_struct_c *x);
++    TEST_STRING(func_struct_a_ptr, "FvP13test_struct_aE");
++    TEST_STRING(func_struct_b_ptr, "FvP13test_struct_bE");
++    TEST_STRING(func_struct_c_ptr, "FvP13test_struct_cE");
++
++    /* Test const named struct types */
++    extern void func_const_struct_a_ptr(const struct test_struct_a *x);
++    extern void func_const_struct_b_ptr(const struct test_struct_b *x);
++    extern void func_const_struct_c_ptr(const struct test_struct_c *x);
++    TEST_STRING(func_const_struct_a_ptr, "FvPK13test_struct_aE");
++    TEST_STRING(func_const_struct_b_ptr, "FvPK13test_struct_bE");
++    TEST_STRING(func_const_struct_c_ptr, "FvPK13test_struct_cE");
++
++    /* Test named union types */
++    union test_union_a { int x; float y; };
++    union test_union_b { char a; void *b; };
++    TEST_STRING(union test_union_a,  "12test_union_a");
++    extern void func_union_a_ptr(union test_union_a *x);
++    extern void func_union_b_ptr(union test_union_b *x);
++    TEST_STRING(func_union_a_ptr, "FvP12test_union_aE");
++    TEST_STRING(func_union_b_ptr, "FvP12test_union_bE");
++
++    /* Test enum types: distinct from int */
++    enum test_enum_a { ENUM_A_VAL };
++    enum test_enum_b { ENUM_B_VAL };
++    TEST_STRING(enum test_enum_a, "11test_enum_a");
++    extern void func_enum_a_ptr(enum test_enum_a *x);
++    extern void func_enum_b_ptr(enum test_enum_b *x);
++    TEST_STRING(func_enum_a_ptr, "FvP11test_enum_aE");
++    TEST_STRING(func_enum_b_ptr, "FvP11test_enum_bE");
++
++    /* Test union member discrimination */
++    struct tasklet {
++        int state;
++        union {
++            void (*func)(unsigned long data);
++            void (*callback)(struct tasklet *t);
++        };
++        unsigned long data;
++    } tasklet_instance;
++    TEST_STRING(tasklet_instance, "7tasklet");
++    struct tasklet *p = &tasklet_instance;
++    extern void tasklet_callback_function(struct tasklet *t);
++    extern void tasklet_func_function(unsigned long data);
++    TEST_STRING(tasklet_func_function,     "FvmE");
++    TEST_STRING(*p->func,                  "FvmE");
++    TEST_STRING(tasklet_callback_function, "FvP7taskletE");
++    TEST_STRING(*p->callback,              "FvP7taskletE");
++
++    /* Test struct return pointers */
++    extern struct test_struct_a* func_ret_struct_a_ptr(void);
++    extern struct test_struct_b* func_ret_struct_b_ptr(void);
++    extern struct test_struct_c* func_ret_struct_c_ptr(void);
++    TEST_STRING(func_ret_struct_a_ptr, "FP13test_struct_avE");
++    TEST_STRING(func_ret_struct_b_ptr, "FP13test_struct_bvE");
++    TEST_STRING(func_ret_struct_c_ptr, "FP13test_struct_cvE");
++
++    /* Test struct by-value parameters */
++    extern void func_struct_a_val(struct test_struct_a x);
++    extern void func_struct_b_val(struct test_struct_b x);
++    extern void func_struct_c_val(struct test_struct_c x);
++    TEST_STRING(func_struct_a_val, "Fv13test_struct_aE");
++    TEST_STRING(func_struct_b_val, "Fv13test_struct_bE");
++    TEST_STRING(func_struct_c_val, "Fv13test_struct_cE");
++
++    /* Test struct return by-value */
++    extern struct test_struct_a func_ret_struct_a_val(void);
++    extern struct test_struct_b func_ret_struct_b_val(void);
++    extern struct test_struct_c func_ret_struct_c_val(void);
++    TEST_STRING(func_ret_struct_a_val, "F13test_struct_avE");
++    TEST_STRING(func_ret_struct_b_val, "F13test_struct_bvE");
++    TEST_STRING(func_ret_struct_c_val, "F13test_struct_cvE");
++
++    /* Test mixed struct parameters */
++    extern void func_struct_a_b(struct test_struct_a *a, struct test_struct_b *b);
++    extern void func_struct_b_a(struct test_struct_b *b, struct test_struct_a *a);
++    TEST_STRING(func_struct_a_b, "FvP13test_struct_aP13test_struct_bE");
++    TEST_STRING(func_struct_b_a, "FvP13test_struct_bP13test_struct_aE");
++
++    /* Test anonymous struct typedefs */
++    typedef struct { int x; } typedef_struct_x;
++    typedef struct { int y; } typedef_struct_y;
++    TEST_STRING(typedef_struct_x, "16typedef_struct_x");
++    extern void func_typedef_x_ptr(typedef_struct_x *x);
++    extern void func_typedef_y_ptr(typedef_struct_y *y);
++    TEST_STRING(func_typedef_x_ptr, "FvP16typedef_struct_xE");
++    TEST_STRING(func_typedef_y_ptr, "FvP16typedef_struct_yE");
++    extern void func_typedef_x(typedef_struct_x x);
++    TEST_STRING(func_typedef_x, "Fv16typedef_struct_xE");
++
++    /* Test anonymous union typedefs */
++    typedef union { int x; short a; } typedef_union_x;
++    typedef union { int y; short b; } typedef_union_y;
++    TEST_STRING(typedef_union_x, "15typedef_union_x");
++    extern void func_typedef_union_x_ptr(typedef_union_x *x);
++    extern void func_typedef_union_y_ptr(typedef_union_y *y);
++    TEST_STRING(func_typedef_union_x_ptr, "FvP15typedef_union_xE");
++    TEST_STRING(func_typedef_union_y_ptr, "FvP15typedef_union_yE");
++    extern void func_typedef_union_x(typedef_union_x x);
++    TEST_STRING(func_typedef_union_x, "Fv15typedef_union_xE");
++
++    /* Test anonymous enum typedefs */
++    typedef enum { STEP_1, STEP_2 } typedef_enum_x;
++    typedef enum { STEP_A, STEP_B } typedef_enum_y;
++    TEST_STRING(typedef_enum_x, "14typedef_enum_x");
++    extern void func_typedef_enum_x_ptr(typedef_enum_x *x);
++    extern void func_typedef_enum_y_ptr(typedef_enum_y *y);
++    TEST_STRING(func_typedef_enum_x_ptr, "FvP14typedef_enum_xE");
++    TEST_STRING(func_typedef_enum_y_ptr, "FvP14typedef_enum_yE");
++    extern void func_typedef_enum_x(typedef_enum_x x);
++    TEST_STRING(func_typedef_enum_x, "Fv14typedef_enum_xE");
++
++    /* Test basic typedef vs open-coded function types: should be the same.  */
++    typedef void (*func_type_typedef)(int, char);
++    TEST_STRING(func_type_typedef,           "PFvicE");
++    extern void func_with_typedef_param(func_type_typedef fp);
++    extern void func_with_opencoded_param(void (*fp)(int, char));
++    TEST_STRING(func_with_typedef_param,   "FvPFvicEE");
++    TEST_STRING(func_with_opencoded_param, "FvPFvicEE");
++
++    /* Test return function pointer types */
++    typedef int (*ret_func_type_typedef)(void);
++    TEST_STRING(ret_func_type_typedef,     "PFivE");
++    extern ret_func_type_typedef func_ret_typedef_param(void);
++    extern int (*func_ret_opencoded_param(void))(void);
++    TEST_STRING(func_ret_typedef_param,   "FPFivEvE");
++    TEST_STRING(func_ret_opencoded_param, "FPFivEvE");
++
++    /* Test additional type combos */
++    extern void func_float(float x);
++    extern void func_double_ptr(double *x);
++    extern void func_float_ptr(float *x);
++    extern void func_void_ptr_ptr(void **x);
++    extern void func_ptr_val(int *x, int y);
++    extern void func_val_ptr(int x, int *y);
++    extern float func_return_float(void);
++    extern double func_return_double(void);
++    TEST_STRING(func_float,         "FvfE");
++    TEST_STRING(func_double_ptr,    "FvPdE");
++    TEST_STRING(func_float_ptr,     "FvPfE");
++    TEST_STRING(func_void_ptr_ptr,  "FvPPvE");
++    TEST_STRING(func_ptr_val,       "FvPiiE");
++    TEST_STRING(func_val_ptr,       "FviPiE");
++    TEST_STRING(func_return_float,  "FfvE");
++    TEST_STRING(func_return_double, "FdvE");
++
++    /* Test VLA types: should be all the same.  */
++    extern void func_vla_1d(int n, int arr[n]);
++    extern void func_vla_empty(int n, int arr[]);
++    extern void func_vla_ptr(int n, int *arr);
++    TEST_STRING(func_vla_1d,    "FviPiE");
++    TEST_STRING(func_vla_empty, "FviPiE");
++    TEST_STRING(func_vla_ptr,   "FviPiE");
++
++    /* Test 2D VLA with fixed dimension: should be all the same.  */
++    extern void func_vla_2d_first(int n, int arr[n][10]);
++    extern void func_vla_2d_empty(int n, int arr[][10]);
++    extern void func_vla_2d_ptr(int n, int (*arr)[10]);
++    TEST_STRING(func_vla_2d_first, "FviPA10_iE");
++    TEST_STRING(func_vla_2d_empty, "FviPA10_iE");
++    TEST_STRING(func_vla_2d_ptr,   "FviPA10_iE");
++
++    /* Test 2D VLA with both dimensions variable: should be all the same.  */
++    extern void func_vla_2d_both(int rows, int cols, int arr[rows][cols]);
++    extern void func_vla_2d_second(int rows, int cols, int arr[][cols]);
++    extern void func_vla_2d_star(int rows, int cols, int arr[*][cols]);
++    TEST_STRING(func_vla_2d_both,   "FviiPA_iE");
++    TEST_STRING(func_vla_2d_second, "FviiPA_iE");
++    TEST_STRING(func_vla_2d_star,   "FviiPA_iE");
++
++    /* Test recursive typedef canonicalization */
++    struct recursive_struct_test { int field; };
++    typedef struct recursive_struct_test recursive_struct_typedef_1;
++    typedef recursive_struct_typedef_1 recursive_struct_typedef_2;
++    extern void func_recursive_struct_test(struct recursive_struct_test *x);
++    TEST_STRING(func_recursive_struct_test, "FvP21recursive_struct_testE");
++
++    /* Test anonymous struct, union, enum types */
++    struct { int a; short b; } anon_struct;
++    union { int x; float y; } anon_union;
++    enum { ANON_VAL1, ANON_VAL2 } anon_enum;
++    TEST_STRING(anon_struct, "3$_0"); // <length>$_<counter>
++    TEST_STRING(anon_union, "3$_1");  // <length>$_<counter>
++    TEST_STRING(anon_enum, "3$_2");   // <length>$_<counter>
++
++    printf("\n================================================================\n");
++    printf("Passed: %d Failed: %d (%d total tests)\n", pass, fail, pass + fail);
++    return fail;
 +}
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
+diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+index 5c24a9aab00a..c0c7b2ebdacb 100644
+--- a/gcc/Makefile.in
++++ b/gcc/Makefile.in
+@@ -1600,6 +1600,7 @@ OBJS = \
+ 	ira-emit.o \
+ 	ira-lives.o \
+ 	jump.o \
++	kcfi-typeinfo.o \
+ 	langhooks.o \
+ 	late-combine.o \
+ 	lcm.o \
+diff --git a/gcc/c-family/c-common.h b/gcc/c-family/c-common.h
+index bedbd4a94b0e..dacfd4738aa1 100644
+--- a/gcc/c-family/c-common.h
++++ b/gcc/c-family/c-common.h
+@@ -112,6 +112,7 @@ enum rid
+   RID_BUILTIN_SHUFFLEVECTOR,   RID_BUILTIN_CONVERTVECTOR,  RID_BUILTIN_TGMATH,
+   RID_BUILTIN_HAS_ATTRIBUTE,   RID_BUILTIN_ASSOC_BARRIER,  RID_BUILTIN_STDC,
+   RID_BUILTIN_COUNTED_BY_REF,
++  RID_BUILTIN_TYPEINFO_NAME,  RID_BUILTIN_TYPEINFO_HASH,
+   RID_DFLOAT32, RID_DFLOAT64, RID_DFLOAT128, RID_DFLOAT64X,
+ 
+   /* TS 18661-3 keywords, in the same sequence as the TI_* values.  */
+diff --git a/gcc/kcfi-typeinfo.h b/gcc/kcfi-typeinfo.h
 new file mode 100644
-index 000000000000..9ddf178aa2b1
+index 000000000000..805f9ebaeca4
 --- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
-@@ -0,0 +1,60 @@
-+/* Test KCFI protection when indirect calls get converted to tail calls.  */
-+/* { dg-do compile } */
-+/* { dg-additional-options "-O2" } */
++++ b/gcc/kcfi-typeinfo.h
+@@ -0,0 +1,32 @@
++/* KCFI-compatible type mangling, based on Itanium C++ ABI.
++   Copyright (C) 2025 Free Software Foundation, Inc.
 +
-+typedef int (*func_ptr_t)(int);
-+typedef void (*void_func_ptr_t)(void);
++This file is part of GCC.
 +
-+struct function_table {
-+    func_ptr_t process;
-+    void_func_ptr_t cleanup;
-+};
++GCC is free software; you can redistribute it and/or modify it under
++the terms of the GNU General Public License as published by the Free
++Software Foundation; either version 3, or (at your option) any later
++version.
 +
-+/* Target functions.  */
-+int process_data(int x) { return x * 2; }
-+void cleanup_data(void) {}
++GCC is distributed in the hope that it will be useful, but WITHOUT ANY
++WARRANTY; without even the implied warranty of MERCHANTABILITY or
++FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++for more details.
 +
-+/* Initialize function table.  */
-+volatile struct function_table vtable = {
-+    .process = &process_data,
-+    .cleanup = &cleanup_data
-+};
++You should have received a copy of the GNU General Public License
++along with GCC; see the file COPYING3.  If not see
++<http://www.gnu.org/licenses/>.  */
 +
-+/* Indirect call through struct member that should become tail call.  */
-+int test_struct_indirect_call(int x) {
-+    /* This is an indirect call that should be converted to tail call:
-+       Without -fno-optimize-sibling-calls should become "jmp *vtable+0(%rip)"
-+       With -fno-optimize-sibling-calls should become "call *vtable+0(%rip)"  */
-+    return vtable.process(x);
++#ifndef GCC_KCFI_TYPEINFO_H
++#define GCC_KCFI_TYPEINFO_H
++
++#include "tree.h"
++#include <string>
++
++/* Get the typeinfo mangled name string for any C type.  */
++extern std::string typeinfo_get_name (tree type);
++
++/* Get the typeinfo hash for any C type.  */
++extern uint32_t typeinfo_get_hash (tree type);
++
++#endif /* GCC_KCFI_TYPEINFO_H */
+diff --git a/gcc/c-family/c-common.cc b/gcc/c-family/c-common.cc
+index f2eed0337065..b2ec25d681f8 100644
+--- a/gcc/c-family/c-common.cc
++++ b/gcc/c-family/c-common.cc
+@@ -462,6 +462,8 @@ const struct c_common_resword c_common_reswords[] =
+   { "__builtin_stdc_trailing_zeros", RID_BUILTIN_STDC, D_CONLY },
+   { "__builtin_tgmath", RID_BUILTIN_TGMATH, D_CONLY },
+   { "__builtin_offsetof", RID_OFFSETOF, 0 },
++  { "__builtin_typeinfo_hash", RID_BUILTIN_TYPEINFO_HASH, D_CONLY },
++  { "__builtin_typeinfo_name", RID_BUILTIN_TYPEINFO_NAME, D_CONLY },
+   { "__builtin_types_compatible_p", RID_TYPES_COMPATIBLE_P, D_CONLY },
+   { "__builtin_c23_va_start", RID_C23_VA_START,	D_C23 | D_CXX26 },
+   { "__builtin_va_arg",	RID_VA_ARG,	0 },
+diff --git a/gcc/c/c-parser.cc b/gcc/c/c-parser.cc
+index 9b3a7861dfae..d812b969c863 100644
+--- a/gcc/c/c-parser.cc
++++ b/gcc/c/c-parser.cc
+@@ -77,6 +77,7 @@ along with GCC; see the file COPYING3.  If not see
+ #include "asan.h"
+ #include "c-family/c-ubsan.h"
+ #include "gcc-urlifier.h"
++#include "kcfi-typeinfo.h"
+ 
+ /* We need to walk over decls with incomplete struct/union/enum types
+    after parsing the whole translation unit.
+@@ -11053,6 +11054,38 @@ c_parser_has_attribute_expression (c_parser *parser)
+   return result;
+ }
+ 
++/* Parse the single type name argument of a builtin that takes a type name.
++   Returns true on success and stores the parsed type in *OUT_TYPE.
++   If successful, *OUT_CLOSE_PAREN_LOC is written with the location of
++   the closing parenthesis.  */
++
++static bool
++c_parser_get_builtin_type_arg (c_parser *parser, const char *bname,
++			       tree *out_type, location_t *out_close_paren_loc)
++{
++  matching_parens parens;
++  if (!parens.require_open (parser))
++    return false;
++
++  struct c_type_name *type_name = c_parser_type_name (parser);
++  if (type_name == NULL)
++    {
++      error_at (c_parser_peek_token (parser)->location,
++		"expected type name in %qs", bname);
++      return false;
++    }
++
++  *out_close_paren_loc = c_parser_peek_token (parser)->location;
++  parens.skip_until_found_close (parser);
++
++  tree type = groktypename (type_name, NULL, NULL);
++  if (type == error_mark_node)
++    return false;
++
++  *out_type = type;
++  return true;
 +}
 +
-+/* Indirect call through function pointer parameter.  */
-+int test_param_indirect_call(func_ptr_t handler, int x) {
-+    /* This is an indirect call that should be converted to tail call:
-+       Without -fno-optimize-sibling-calls should become "jmp *%rdi"
-+       With -fno-optimize-sibling-calls should be "call *%rdi"  */
-+    return handler(x);
-+}
+ /* Helper function to read arguments of builtins which are interfaces
+    for the middle-end nodes like COMPLEX_EXPR, VEC_PERM_EXPR and
+    others.  The name of the builtin is passed using BNAME parameter.
+@@ -12081,6 +12114,45 @@ c_parser_postfix_expression (c_parser *parser)
+ 	    set_c_expr_source_range (&expr, loc, close_paren_loc);
+ 	  }
+ 	  break;
++	case RID_BUILTIN_TYPEINFO_NAME:
++	  {
++	    c_parser_consume_token (parser);
++	    location_t close_paren_loc;
++	    tree type;
++	    if (!c_parser_get_builtin_type_arg (parser,
++						"__builtin_typeinfo_name",
++						&type, &close_paren_loc))
++	      {
++		expr.set_error ();
++		break;
++	      }
 +
-+/* Void indirect call through struct member.  */
-+void test_void_indirect_call(void) {
-+    /* This is an indirect call that should be converted to tail call:
-+     * Without -fno-optimize-sibling-calls: should become "jmp *vtable+8(%rip)"
-+     * With -fno-optimize-sibling-calls: should be "call *vtable+8(%rip)"  */
-+    vtable.cleanup();
-+}
++	    /* Call the typeinfo name function.  */
++	    std::string type_name = typeinfo_get_name (type);
++	    expr.value = build_string_literal (type_name.length () + 1,
++					       type_name.c_str ());
++	    set_c_expr_source_range (&expr, loc, close_paren_loc);
++	  }
++	  break;
++	case RID_BUILTIN_TYPEINFO_HASH:
++	  {
++	    c_parser_consume_token (parser);
++	    location_t close_paren_loc;
++	    tree type;
++	    if (!c_parser_get_builtin_type_arg (parser,
++						"__builtin_typeinfo_hash",
++						&type, &close_paren_loc))
++	      {
++		expr.set_error ();
++		break;
++	      }
 +
-+/* Non-tail call for comparison (should always be call).  */
-+int test_non_tail_indirect_call(func_ptr_t handler, int x) {
-+    /* This should never become a tail call - always "call *%rdi"  */
-+    int result = handler(x);
-+    return result + 1;  /* Prevents tail call optimization.  */
-+}
-+
-+/* Should have KCFI preambles for all functions.  */
-+/* { dg-final { scan-assembler-times "__cfi_process_data:" 1 } } */
-+/* { dg-final { scan-assembler-times "__cfi_cleanup_data:" 1 } } */
-+/* { dg-final { scan-assembler-times "__cfi_test_struct_indirect_call:" 1 } } */
-+/* { dg-final { scan-assembler-times "__cfi_test_param_indirect_call:" 1 } } */
-+/* { dg-final { scan-assembler-times "__cfi_test_void_indirect_call:" 1 } } */
-+/* { dg-final { scan-assembler-times "__cfi_test_non_tail_indirect_call:" 1 } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
++	    /* Call the typeinfo hash function.  */
++	    uint32_t type_hash = typeinfo_get_hash (type);
++	    expr.value = build_int_cst (unsigned_type_node, type_hash);
++	    set_c_expr_source_range (&expr, loc, close_paren_loc);
++	  }
++	  break;
+ 	case RID_BUILTIN_TGMATH:
+ 	  {
+ 	    vec<c_expr_t, va_gc> *cexpr_list;
+diff --git a/gcc/kcfi-typeinfo.cc b/gcc/kcfi-typeinfo.cc
 new file mode 100644
-index 000000000000..6d34ad6e1a0c
+index 000000000000..c9819d1f45ec
 --- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
-@@ -0,0 +1,17 @@
-+/* Test KCFI trap section generation.  */
-+/* { dg-do compile } */
++++ b/gcc/kcfi-typeinfo.cc
+@@ -0,0 +1,485 @@
++/* KCFI-compatible type mangling, based on Itanium C++ ABI.
++   Copyright (C) 2025 Free Software Foundation, Inc.
 +
-+void target_function(void) {}
++This file is part of GCC.
 +
-+int main() {
-+    void (*func_ptr)(void) = target_function;
++GCC is free software; you can redistribute it and/or modify it under
++the terms of the GNU General Public License as published by the Free
++Software Foundation; either version 3, or (at your option) any later
++version.
 +
-+    /* Multiple indirect calls to generate multiple trap entries.  */
-+    func_ptr();
-+    func_ptr();
++GCC is distributed in the hope that it will be useful, but WITHOUT ANY
++WARRANTY; without even the implied warranty of MERCHANTABILITY or
++FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++for more details.
 +
-+    return 0;
++You should have received a copy of the GNU General Public License
++along with GCC; see the file COPYING3.  If not see
++<http://www.gnu.org/licenses/>.  */
++
++/* Produces typeinfo mangling similar to Itanium C++ Mangling ABI, but
++   limited to types exposed within GCC for C language handling.  The
++   hashes are used by KCFI (and future type-aware allocator support).
++   The strings are used for testing and debugging.  */
++
++#include "config.h"
++#include "system.h"
++#include "coretypes.h"
++#include "tree.h"
++#include "diagnostic-core.h"
++#include "stringpool.h"
++#include "stor-layout.h"
++#include "print-tree.h"
++#include "kcfi-typeinfo.h"
++
++/* Helper to update FNV-1a hash with a single character.  HASH_STATE is
++   the hash accumulator to update.  C is the character to hash.  */
++
++static inline void
++fnv1a_hash_char (uint32_t *hash_state, unsigned char c)
++{
++  *hash_state ^= c;
++  *hash_state *= 16777619U; /* FNV-1a 32-bit prime.  */
 +}
 +
-+/* Should have KCFI preamble.  */
-+/* { dg-final { scan-assembler "__cfi_target_function:" } } */
++/* Helper to append character to optional string and update hash using
++   FNV-1a.  C is the character to append.  OUT_STR is the optional string
++   to append to (NULL if not needed).  HASH_STATE is the optional hash
++   accumulator to update (NULL if not needed).  */
++
++static void
++append_char (char c, std::string *out_str, uint32_t *hash_state)
++{
++  if (out_str)
++    *out_str += c;
++  if (!hash_state)
++    return;
++  fnv1a_hash_char (hash_state, (unsigned char) c);
++}
++
++/* Helper to append string to optional string and update hash using
++   FNV-1a.  STR is the string to append.  OUT_STR is the optional string
++   to append to (NULL if not needed).  HASH_STATE is the optional hash
++   accumulator to update (NULL if not needed).  */
++
++static void
++append_string (const char *str, std::string *out_str, uint32_t *hash_state)
++{
++  if (out_str)
++    *out_str += str;
++  if (!hash_state)
++    return;
++  for (const char *p = str; *p; p++)
++    fnv1a_hash_char (hash_state, (unsigned char) *p);
++}
++
++/* Forward declaration for recursive type mangling.  */
++
++static void mangle_type (tree type, std::string *out_str, uint32_t *hash_state);
++
++/* Mangle a builtin type following Itanium C++ ABI for C types.  TYPE is
++   the builtin type to mangle.  OUT_STR is the optional string to append
++   mangling to (NULL if not needed).  HASH_STATE is the optional hash
++   accumulator to update (NULL if not needed).  */
++
++static void
++mangle_builtin_type (tree type, std::string *out_str, uint32_t *hash_state)
++{
++  gcc_assert (type != NULL_TREE);
++
++  switch (TREE_CODE (type))
++    {
++    case VOID_TYPE:
++      append_char ('v', out_str, hash_state);
++      return;
++
++    case BOOLEAN_TYPE:
++      append_char ('b', out_str, hash_state);
++      return;
++
++    case INTEGER_TYPE:
++      if (type == char_type_node)
++	append_char ('c', out_str, hash_state);
++      else if (type == signed_char_type_node)
++	append_char ('a', out_str, hash_state);
++      else if (type == unsigned_char_type_node)
++	append_char ('h', out_str, hash_state);
++      else if (type == short_integer_type_node)
++	append_char ('s', out_str, hash_state);
++      else if (type == short_unsigned_type_node)
++	append_char ('t', out_str, hash_state);
++      else if (type == integer_type_node)
++	append_char ('i', out_str, hash_state);
++      else if (type == unsigned_type_node)
++	append_char ('j', out_str, hash_state);
++      else if (type == long_integer_type_node)
++	append_char ('l', out_str, hash_state);
++      else if (type == long_unsigned_type_node)
++	append_char ('m', out_str, hash_state);
++      else if (type == long_long_integer_type_node)
++	append_char ('x', out_str, hash_state);
++      else if (type == long_long_unsigned_type_node)
++	append_char ('y', out_str, hash_state);
++      else
++	{
++	  /* Fallback for other integer types - use precision-based
++	     encoding.  */
++	  append_char ('i', out_str, hash_state);
++	  append_string (std::to_string (TYPE_PRECISION (type)).c_str (),
++			 out_str, hash_state);
++	}
++      return;
++
++    case REAL_TYPE:
++      if (type == float_type_node)
++	append_char ('f', out_str, hash_state);
++      else if (type == double_type_node)
++	append_char ('d', out_str, hash_state);
++      else if (type == long_double_type_node)
++	append_char ('e', out_str, hash_state);
++      else
++	{
++	  /* Fallback for other real types.  */
++	  append_char ('f', out_str, hash_state);
++	  append_string (std::to_string (TYPE_PRECISION (type)).c_str (),
++			 out_str, hash_state);
++	}
++      return;
++
++    case VECTOR_TYPE:
++      {
++	/* Handle vector types:
++	   Dv<num-elements>_<element-type-encoding>
++	   Example: uint8x16_t -> Dv16_h (vector of 16 unsigned char)  */
++	tree vector_size = TYPE_SIZE_UNIT (type);
++	tree element_type = TREE_TYPE (type);
++	tree element_size = TYPE_SIZE_UNIT (element_type);
++
++	if (vector_size && element_size
++	    && TREE_CODE (vector_size) == INTEGER_CST
++	    && TREE_CODE (element_size) == INTEGER_CST)
++	  {
++	    append_char ('D', out_str, hash_state);
++	    append_char ('v', out_str, hash_state);
++
++	    unsigned HOST_WIDE_INT vec_bytes = tree_to_uhwi (vector_size);
++	    unsigned HOST_WIDE_INT elem_bytes = tree_to_uhwi (element_size);
++	    unsigned HOST_WIDE_INT num_elements = vec_bytes / elem_bytes;
++
++	    /* Append number of elements.  */
++	    append_string (std::to_string (num_elements).c_str (),
++			   out_str, hash_state);
++	    append_char ('_', out_str, hash_state);
++
++	    /* Recursively mangle the element type.  */
++	    mangle_type (element_type, out_str, hash_state);
++	    return;
++	  }
++	/* Fail for vectors with unknown size.  */
++      }
++      break;
++
++    default:
++      break;
++    }
++
++  /* Unknown builtin type: this should never happen in a well-formed C.  */
++  debug_tree (type);
++  internal_error ("mangle: Unknown builtin type - please report this as a bug");
++}
++
++/* Canonicalize typedef types to their underlying named struct/union types.
++   TYPE is the type to canonicalize.  Returns the canonicalized type.  */
++
++static tree
++canonicalize_typedef_type (tree type)
++{
++  /* Handle typedef types: canonicalize to named structs when possible.  */
++  if (TYPE_NAME (type) && TREE_CODE (TYPE_NAME (type)) == TYPE_DECL)
++    {
++      tree type_decl = TYPE_NAME (type);
++
++      /* Check if this is a typedef (not the original struct declaration) */
++      if (DECL_ORIGINAL_TYPE (type_decl))
++	{
++	  tree original_type = DECL_ORIGINAL_TYPE (type_decl);
++
++	  /* Handle struct/union/enum types.  */
++	  if (TREE_CODE (original_type) == RECORD_TYPE
++	      || TREE_CODE (original_type) == UNION_TYPE
++	      || TREE_CODE (original_type) == ENUMERAL_TYPE)
++	    {
++	      /* Preserve typedef of anonymous struct/union/enum types.  */
++	      if (!TYPE_NAME (original_type))
++		return type;
++
++	      /* Named compound type: canonicalize to it.  */
++	      return canonicalize_typedef_type (original_type);
++	    }
++
++	  /* For basic type typedefs (e.g., u8 -> unsigned char),
++	     canonicalize to original type.  */
++	  if (TREE_CODE (original_type) == INTEGER_TYPE
++	      || TREE_CODE (original_type) == REAL_TYPE
++	      || TREE_CODE (original_type) == POINTER_TYPE
++	      || TREE_CODE (original_type) == ARRAY_TYPE
++	      || TREE_CODE (original_type) == FUNCTION_TYPE
++	      || TREE_CODE (original_type) == METHOD_TYPE
++	      || TREE_CODE (original_type) == BOOLEAN_TYPE
++	      || TREE_CODE (original_type) == COMPLEX_TYPE
++	      || TREE_CODE (original_type) == VECTOR_TYPE)
++	    {
++	      /* Recursively canonicalize in case the original type is
++		 also a typedef.  */
++	      return canonicalize_typedef_type (original_type);
++	    }
++	}
++    }
++
++  return type;
++}
++
++/* Recursively mangle a C type following Itanium C++ ABI.  TYPE is the
++   type to mangle.  OUT_STR is the optional string to append mangling to
++   (NULL if not needed).  HASH_STATE is the optional hash accumulator to
++   update (NULL if not needed).  */
++
++static void
++mangle_type (tree type, std::string *out_str, uint32_t *hash_state)
++{
++  gcc_assert (type != NULL_TREE);
++
++  /* Canonicalize typedef types to their underlying named struct types.  */
++  type = canonicalize_typedef_type (type);
++
++  /* Save original qualified type for cases where we need typedef
++     information.  */
++  tree qualified_type = type;
++
++  /* Centralized qualifier handling: emit qualifiers for this type,
++     then continue with unqualified version.  */
++  if (TYPE_QUALS (type) != TYPE_UNQUALIFIED)
++    {
++      /* Emit qualifiers in Itanium ABI order: restrict, volatile, const.  */
++      if (TYPE_QUALS (type) & TYPE_QUAL_RESTRICT)
++	append_char ('r', out_str, hash_state);
++      if (TYPE_QUALS (type) & TYPE_QUAL_VOLATILE)
++	append_char ('V', out_str, hash_state);
++      if (TYPE_QUALS (type) & TYPE_QUAL_CONST)
++	append_char ('K', out_str, hash_state);
++
++      /* Get unqualified version for further processing.  */
++      type = TYPE_MAIN_VARIANT (type);
++    }
++
++  switch (TREE_CODE (type))
++    {
++    case POINTER_TYPE:
++      {
++	/* Pointer type: 'P' + pointed-to type.  */
++	append_char ('P', out_str, hash_state);
++
++	/* Recursively mangle the pointed-to type.  */
++	tree pointed_to_type = TREE_TYPE (type);
++	mangle_type (pointed_to_type, out_str, hash_state);
++	break;
++      }
++
++    case ARRAY_TYPE:
++      /* Array type: 'A' + size + '_' + element type (simplified).  */
++      append_char ('A', out_str, hash_state);
++      if (TYPE_DOMAIN (type) && TYPE_MAX_VALUE (TYPE_DOMAIN (type)))
++	{
++	  tree max_val = TYPE_MAX_VALUE (TYPE_DOMAIN (type));
++	  /* Check if array size is compile-time constant to handle VLAs. */
++	  if (TREE_CODE (max_val) == INTEGER_CST && tree_fits_shwi_p (max_val))
++	    {
++	      HOST_WIDE_INT size = tree_to_shwi (max_val) + 1;
++	      append_string (std::to_string ((long) size).c_str (),
++			     out_str, hash_state);
++	    }
++	  /* For VLAs or non-constant dimensions, emit empty size (A_).  */
++	  append_char ('_', out_str, hash_state);
++	}
++      else
++	{
++	  /* No domain or no max value: emit A_.  */
++	  append_char ('_', out_str, hash_state);
++	}
++      mangle_type (TREE_TYPE (type), out_str, hash_state);
++      break;
++
++    case REFERENCE_TYPE:
++      /* Reference type: 'R' + referenced type.
++	 Note: We must handle references to builtin types including compiler
++	 builtins like __builtin_va_list used in functions like va_start.  */
++      append_char ('R', out_str, hash_state);
++      mangle_type (TREE_TYPE (type), out_str, hash_state);
++      break;
++
++    case FUNCTION_TYPE:
++      {
++	/* Function type: 'F' + return type + parameter types + 'E' */
++	append_char ('F', out_str, hash_state);
++	mangle_type (TREE_TYPE (type), out_str, hash_state);
++
++	/* Add parameter types.  */
++	tree param_types = TYPE_ARG_TYPES (type);
++
++	if (param_types == NULL_TREE)
++	  {
++	    /* func () - no parameter list (could be variadic). */
++	  }
++	else
++	  {
++	    bool found_real_params = false;
++	    for (tree param = param_types; param; param = TREE_CHAIN (param))
++	      {
++		tree param_type = TREE_VALUE (param);
++		if (param_type == void_type_node)
++		  {
++		    /* Check if this is the first parameter (explicit void) or a
++		       sentinel.  */
++		    if (!found_real_params)
++		      {
++			/* func (void) - explicit empty parameter list.
++			   Mangle void to distinguish from variadic func (). */
++			mangle_type (void_type_node, out_str, hash_state);
++		      }
++		    /* If we found real params before this void, it's a sentinel
++		       so stop here.  */
++		    break;
++		  }
++
++		found_real_params = true;
++
++		/* For value parameters, ignore const/volatile qualifiers as
++		   they don't affect the calling convention.  "const int" and
++		   "int" are passed identically by value.  */
++		tree canonical_param_type = param_type;
++
++		if (TREE_CODE (param_type) != POINTER_TYPE
++		    && TREE_CODE (param_type) != REFERENCE_TYPE
++		    && TREE_CODE (param_type) != ARRAY_TYPE)
++		  {
++		    /* For non-pointer/reference value parameters, strip
++		       qualifiers by default.  */
++		    canonical_param_type = TYPE_MAIN_VARIANT (param_type);
++
++		    /* Exception: preserve typedef information for anonymous
++		       compound types.  */
++		    if (TYPE_NAME (param_type)
++			&& TREE_CODE (TYPE_NAME (param_type)) == TYPE_DECL
++			&& DECL_ORIGINAL_TYPE (TYPE_NAME (param_type)))
++		      {
++			tree original_type
++			  = DECL_ORIGINAL_TYPE (TYPE_NAME (param_type));
++			if ((TREE_CODE (original_type) == RECORD_TYPE
++			     || TREE_CODE (original_type) == UNION_TYPE
++			     || TREE_CODE (original_type) == ENUMERAL_TYPE)
++			    && !TYPE_NAME (original_type))
++			  {
++			    /* Preserve typedef of an anonymous
++			       struct/union/enum.  */
++			    canonical_param_type = param_type;
++			  }
++		      }
++		  }
++
++		mangle_type (canonical_param_type, out_str, hash_state);
++	      }
++	  }
++
++	/* Check if this is a variadic function and add 'z' marker.  */
++	if (stdarg_p (type))
++	  {
++	    append_char ('z', out_str, hash_state);
++	  }
++
++	append_char ('E', out_str, hash_state);
++	break;
++      }
++
++    case RECORD_TYPE:
++    case UNION_TYPE:
++    case ENUMERAL_TYPE:
++      {
++	/* Struct/union/enum: use simplified representation for C types.  */
++	const char *name = NULL;
++
++	/* For compound types, use the original qualified type to preserve
++	   typedef info.  */
++	if (TYPE_QUALS (qualified_type) != TYPE_UNQUALIFIED)
++	  {
++	    type = qualified_type;
++	  }
++
++	if (TYPE_NAME (type))
++	  {
++	    if (TREE_CODE (TYPE_NAME (type)) == TYPE_DECL)
++	      {
++		/* TYPE_DECL case: both named structs and typedef structs.  */
++		tree decl_name = DECL_NAME (TYPE_NAME (type));
++		if (decl_name && TREE_CODE (decl_name) == IDENTIFIER_NODE)
++		  {
++		    name = IDENTIFIER_POINTER (decl_name);
++		  }
++	      }
++	    else if (TREE_CODE (TYPE_NAME (type)) == IDENTIFIER_NODE)
++	      {
++		/* Direct identifier case.  */
++		name = IDENTIFIER_POINTER (TYPE_NAME (type));
++	      }
++	  }
++
++	if (name)
++	  {
++	    append_string (std::to_string (strlen (name)).c_str (),
++			   out_str, hash_state);
++	    append_string (name, out_str, hash_state);
++	    break;
++	  }
++
++	/* If no name found, use anonymous type format: <length>$_<counter>.  */
++	static unsigned anon_counter = 0;
++	std::string anon_name = "$_" + std::to_string (anon_counter++);
++
++	append_string (std::to_string (anon_name.length ()).c_str (),
++		       out_str, hash_state);
++	append_string (anon_name.c_str (), out_str, hash_state);
++	break;
++      }
++
++    default:
++      /* Handle builtin types.  */
++      mangle_builtin_type (type, out_str, hash_state);
++      break;
++    }
++}
++
++/* Get the typeinfo mangled name string for any C type.  TYPE is the type
++   to mangle.  Returns the mangled type string following Itanium C++ ABI
++   conventions.  */
++
++std::string
++typeinfo_get_name (tree type)
++{
++  gcc_assert (type != NULL_TREE);
++  std::string result = "";
++
++  mangle_type (type, &result, nullptr);
++  return result;
++}
++
++/* Get the typeinfo hash for any C type.  TYPE is the type to hash.
++   Returns the FNV-1a hash of the mangled type string.  */
++
++uint32_t
++typeinfo_get_hash (tree type)
++{
++  gcc_assert (type != NULL_TREE);
++  uint32_t hash_state = 2166136261U; /* FNV-1a 32-bit offset basis.  */
++
++  mangle_type (type, nullptr, &hash_state);
++  return hash_state;
++}
 -- 
 2.34.1
 
