@@ -1,142 +1,126 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B342D8379
-	for <linux-hardening@vger.kernel.org>; Tue,  4 Nov 2025 19:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD512E92D2;
+	Tue,  4 Nov 2025 20:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762284381; cv=none; b=ZfBDXeoxyKjeN23CPg5bVHJpK6bLd07Wyo/KeFnS7ilNGerfj9m4O/eiKJVuNpcUp6qGfN92yFym26mh+fuhsjQTPbCCk9vHcFuC09UGNScvywPYaaesDU2Osg+aUpfbkRKN9e0nbaYaGcQ4NQki0fyHyDDoIaVQuV+m/b4EJmE=
+	t=1762288520; cv=none; b=ixpAPPCtYpZRCuGV1SeGcyevo1ueNSelu2Vuge9HACA47ZumHQFzpuWu+bRRYSzgvTJlIUYSFuCdGBF2sIMcqrlmrYmo92sDdSlxJ76iTDbN25jSsdnGCOjXFs4Tp8IBgCvD4SD6VhDgrbAKbraANlxWp0ZLyGJaW1tYjdOpoYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762284381; c=relaxed/simple;
-	bh=cCkLeU8n/VC4gjMMSvE8Q9FQGCPzymEWRBS/d9chZc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GllDeyynUgLFU8/j9aHKtr27PaokeddHL9+wh0HqmKlqexd5lbxficMnLh8XyhHTGuz5XspWyq4wtr5BwqxcXqrvXbBexR5NOtuuTFMiZdxmapVVVTkncwjEK8sFPD3XT4KIe6lX5IFSRaj5UaH6SoK5cmzjX2v35WCT+XphIr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Br/CW/Tf; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1762288520; c=relaxed/simple;
+	bh=HgVhdxtFSyX9CccL6AbdASo63mTi6Wjb99T6AHS9VIM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=RO7h6WFzbhI+bIsbZVDRhqSOE7sCBbFhE9bVY1vKm5xDZ6vG7xgxkU9H42JZ0X2hLv7F2S6AALbAB8gdEEx1XSgtN0FMu9OYg2/WaDGREMEm2eovpvoftj1R/d9XfPVJ7jDkyQqD+ZYZB0KuMsv5IpaG37Hi43j9//FIOb1wPBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XCesmbE3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Br/CW/Tf"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-8909f01bd00so693334885a.0
-        for <linux-hardening@vger.kernel.org>; Tue, 04 Nov 2025 11:26:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1762284378; x=1762889178; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b3vZ52GkNsJGLOkvon3L18RWVKcEn1c510aPuA199YI=;
-        b=Br/CW/TflUHqW09MD8LVZEVmTCEpByqeZHXbQmDqLNS3W7/P5QMsLqXUYUPvpa00O/
-         NDbeKxURSRAOEgZlt4pyN7AoCusEuXP7xgt69+GEqYsa5zkF1QDghaXdoYgbz0DWHmSq
-         U9OeOmRjTDCIT0/cBPF/t3LUA1zcAtJYiTLN0gEIejp0Ov18P4I2koBnQy6dI54enVuc
-         QyQX43ev4/pqNhdtIzyRUoDdKf6k1sRujr/hJGrkQZGhZ3OH+U3yhJimlpvTSAlkgBve
-         sPmwUqWOuz/s/qZcYM4qKj2PZVpK1eQqqu4mmee1GT71ewrvnKTZdaqwowoBMd35XkLE
-         eoEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762284378; x=1762889178;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b3vZ52GkNsJGLOkvon3L18RWVKcEn1c510aPuA199YI=;
-        b=PGSI78Mnwdw4uO0i51XGz6bMYXqwfH2A4tZ7dLLexoE18/X8RlTb6PPTJ55J8GkPtK
-         N5sZwMD1aq5d4dlHDkOqZFeXHLu4elRnSV+knweqOurixk5GlJ4K9CDbtEf4qMY8qZQC
-         syjJzMIeX6yGphYFuBelKb4ls63wEH10ugjfIPabDT2xPpFEmqM6HbUSnusGQJ7jN4XI
-         c3JRXr09v5XJsAP+Kyq2ZcWHtCjmtOh6HrL9eUCoroNOkLMB6QSRjk57xxTGWzIwIW9/
-         WkHdY0JeYQXFmjFpdcyl7t+t1ltfcxaqphZMN5wrFYQXLGrcBFK0DWDFeN+XDzUIDIdc
-         c3bg==
-X-Forwarded-Encrypted: i=1; AJvYcCWKkbjAbLajQck7+U3+8OqcdQZi0XliQyKkr9nZKtKZlGbLWi7A6M1CN6wddUdDd5ld04IKeR1Gzp8sW+UuRuM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbNUKOHCHJjR1w3s/1pdZ99mGnFYa/ZP4r813KieFRy6sHQBEv
-	57RD3R/Wa1b5Dt3COM9FlJVnvfOioEgYTFvCVNU1VXqswqtx2Ix7lzjV+ziHrolwNaA=
-X-Gm-Gg: ASbGncvFEp0AybPabiXD9HWnAV3OriDIF+Ab0b/3JisE5aAptU6MJqchlPYzLe8sdxf
-	A7tYXPlGVHASo7G8qobV8LvR2Ii5YnlGcVrBX+rVL9J4eT9WQv9ae4lL7E18oAZiMDuo/2ILAUN
-	KFa8ushhCVKKrnhWDwDMgpuL7IeHfr1beuFvGWTKBj61LqR5oHDnjFE4BjmccgmXPkL4fA679DS
-	i4Jb2OfduWazAAcUsAqGMV+oL8vY7ppF9ZwQdD1uVf1zMCyJ3zhheuLGzH+ggj+yGJUfkCi5nzk
-	+gqYCI7zsdZsVwQFtF/PegDcJk2b1+uHX7uWEijqMqpcyTqXm862hzDshet8XVag7nqsGbWEwA8
-	be55hcxFnxM4CoR4vgQ+acQ1nwNY5q1P8HvIX9WweuFlymbe0eAkdus1f6oAwxgQITvtHVOAG6s
-	/hcXrQbYtUbJ5mPe7bXBJaDL4qegyE422BrpD5enrapdjcEA==
-X-Google-Smtp-Source: AGHT+IFUVGYM+r9VlnujjXwSiyntNScv3JSZn85Gft/uvY+ZvhCxVbalAnSefdp5Rhr2H4+z2gOTFg==
-X-Received: by 2002:a05:620a:2a06:b0:86f:aee8:fcbc with SMTP id af79cd13be357-8b220b9ef27mr103417385a.79.1762284377655;
-        Tue, 04 Nov 2025 11:26:17 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b0f7bb3e33sm250495385a.39.2025.11.04.11.26.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Nov 2025 11:26:16 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vGMfY-000000073Bk-1Ldv;
-	Tue, 04 Nov 2025 15:26:16 -0400
-Date: Tue, 4 Nov 2025 15:26:16 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>
-Subject: Re: [PATCH v6 00/11] vfio/pci: Allow MMIO regions to be exported
- through dma-buf
-Message-ID: <20251104192616.GJ1204670@ziepe.ca>
-References: <20251102-dmabuf-vfio-v6-0-d773cff0db9f@nvidia.com>
- <aQpRz74RurfhZK15@Asurada-Nvidia>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XCesmbE3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092F3C4CEF7;
+	Tue,  4 Nov 2025 20:35:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762288519;
+	bh=HgVhdxtFSyX9CccL6AbdASo63mTi6Wjb99T6AHS9VIM=;
+	h=Date:Reply-To:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=XCesmbE3crso4mSuje/BO1HGzPSNaMQClYjRG0UAdOWZfYuv1IgfbsTaUPDDfW/NG
+	 2VsAmHzlfx1tFtv6uwxBgAxwtOSmNuoGhVWkquz4E7oMg7co2Zm8gApKE3EGPnpTyX
+	 IYTbR5ma+w5KiGVsMNtDW8jRewjqERrCEB5PFaoI/5YQVI8h2Pt0VZPyXHjlP7psvA
+	 8L78NsFHnzmMWl3faKwaOOm8HaFaUvyMphP+obEeY6YsMDuVZfKANLaO60Xqanz7uI
+	 I359OKIoc/Y8rlPBqK8AjwN/qy2XpI73CG0jPywkAVz+3le8/4cvCJa3vptE866fUA
+	 b8h1Cg4xDmi5A==
+Message-ID: <1eecc666-ac73-425b-9d11-676fce70592a@kernel.org>
+Date: Tue, 4 Nov 2025 21:35:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aQpRz74RurfhZK15@Asurada-Nvidia>
+User-Agent: Mozilla Thunderbird
+Reply-To: Daniel Gomez <da.gomez@kernel.org>
+Subject: Re: [PATCH v2 0/3] module: Add compile-time check for embedded NUL
+ characters
+From: Daniel Gomez <da.gomez@kernel.org>
+To: Hans Verkuil <hverkuil+cisco@kernel.org>, Kees Cook <kees@kernel.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+ Malcolm Priestley <tvboxspy@gmail.com>, Hans Verkuil <hverkuil@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Rusty Russell <rusty@rustcorp.com.au>, Petr Pavlu <petr.pavlu@suse.com>,
+ Sami Tolvanen <samitolvanen@google.com>, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20251010030348.it.784-kees@kernel.org>
+ <176219902728.2668573.8447418880394997824.b4-ty@kernel.org>
+ <202511031612.8A05E2FD1C@keescook>
+ <ab56339a-8736-4d68-bf11-d27c8d591597@kernel.org>
+ <5dba319f-56bc-40bf-9137-acb90f3cc754@kernel.org>
+ <032ef71c-fcbd-42a9-98ea-b2568d663978@kernel.org>
+Content-Language: en-US
+Organization: kernel.org
+In-Reply-To: <032ef71c-fcbd-42a9-98ea-b2568d663978@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 04, 2025 at 11:19:43AM -0800, Nicolin Chen wrote:
-> On Sun, Nov 02, 2025 at 10:00:48AM +0200, Leon Romanovsky wrote:
-> > Changelog:
-> > v6:
-> >  * Fixed wrong error check from pcim_p2pdma_init().
-> >  * Documented pcim_p2pdma_provider() function.
-> >  * Improved commit messages.
-> >  * Added VFIO DMA-BUF selftest.
-> >  * Added __counted_by(nr_ranges) annotation to struct vfio_device_feature_dma_buf.
-> >  * Fixed error unwind when dma_buf_fd() fails.
-> >  * Document latest changes to p2pmem.
-> >  * Removed EXPORT_SYMBOL_GPL from pci_p2pdma_map_type.
-> >  * Moved DMA mapping logic to DMA-BUF.
-> >  * Removed types patch to avoid dependencies between subsystems.
-> >  * Moved vfio_pci_dma_buf_move() in err_undo block.
-> >  * Added nvgrace patch.
+
+
+On 04/11/2025 13.03, Daniel Gomez wrote:
 > 
-> I have verified this v6 using Jason's iommufd dmabuf branch:
-> https://github.com/jgunthorpe/linux/commits/iommufd_dmabuf/
 > 
-> by drafting a QEMU patch on top of Shameer's vSMMU v5 series:
-> https://github.com/nicolinc/qemu/commits/wip/iommufd_dmabuf/
+> On 04/11/2025 11.35, Hans Verkuil wrote:
+>> On 04/11/2025 07:35, Daniel Gomez wrote:
+>>>
+>>>
+>>> On 04/11/2025 01.13, Kees Cook wrote:
+>>>> On Mon, Nov 03, 2025 at 08:49:43PM +0100, Daniel Gomez wrote:
+>>>>>
+>>>>> On Thu, 09 Oct 2025 20:06:06 -0700, Kees Cook wrote:
+>>>>>>  v2:
+>>>>>>  - use static_assert instead of _Static_assert
+>>>>>>  - add Hans's Reviewed-by's
+>>>>>>  v1: https://lore.kernel.org/lkml/20251008033844.work.801-kees@kernel.org/
+>>>>>>
+>>>>>> Hi!
+>>>>>>
+>>>>>> [...]
+>>>>>
+>>>>> Applied patch 3, thanks!
+>>>>>
+>>>>> [3/3] module: Add compile-time check for embedded NUL characters
+>>>>>       commit: 913359754ea821c4d6f6a77e0449b29984099663
+>>>>
+>>>> I'm nervous about this going in alone -- it breaks allmodconfig builds
+>>>> without the media fixes. My intention was to have the media fixes land
+>>>> first...
+>>>>
+>>>> Should I send the media fixes to linus right away?
+>>>>
+>>>> -Kees
+>>>>
+>>>
+>>> I can take both patches. But I think it'd make sense to drop patch 3 first and
+>>> then, apply all 3.
+>>>
+>>> Please, Kees, Hans and Mauro, let me know if this is okay with you.
+>>
+>> I'm fine. If you take it, then I'll drop the media patches from our tree (I merged the
+>> media patches yesterday).
+>>
+>> Let me know if you take them.
 > 
-> with that, I see GPU BAR memory be correctly fetched in the QEMU:
-> vfio_region_dmabuf Device 0009:01:00.0, region "0009:01:00.0 BAR 0", offset: 0x0, size: 0x1000000
-> vfio_region_dmabuf Device 0009:01:00.0, region "0009:01:00.0 BAR 2", offset: 0x0, size: 0x44f00000
-> vfio_region_dmabuf Device 0009:01:00.0, region "0009:01:00.0 BAR 4", offset: 0x0, size: 0x17a0000000
+> Thanks, Hans. I merged patch 3 yesterday as well, but since patch order matters
+> in this case, it makes sense to take all of them through the modules tree.
+> 
+> Sorry for the trouble, and thanks Kees, for pointing this out.
 
-Great thanks! This means we finally have a solution to that follow_pfn
-lifetime problem in type 1! What a long journey :)
+Kees,
 
-For those following along this same flow will be used with KVM to
-allow it to map VFIO as well. Confidential Compute will require this
-because some arches can't put confidential MMIO (or RAM) into a VMA.
+FYI, I have dropped patch 3 from modules. My intention is to merge all 3 patches
+tomorrow.
 
-Jason
+I believe Hans has also dropped the patches from the media tree as I do not see
+them here: https://git.linuxtv.org/media.git/log/
+
+> 
+>>
+>> Regards,
+>>
+>> 	Hans
