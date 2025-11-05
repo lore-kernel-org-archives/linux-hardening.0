@@ -1,102 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D0619D093;
-	Wed,  5 Nov 2025 08:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762330628; cv=none; b=qhr3tPfZHEuKcPRm/c+nX2mLpjHlw5ldYu6VgIiR3FpyUFX1DO4WoklzsdCPMcM8Rmo4MmnXvZeA7t9ARjOyx3/RuCNTlvmdzkN9wIDRQXgXhdqCvaOUo7HRWmoemrzHfK1puPL/ch33XVEg5A5UXaRunbDaFqVrHpFTRIQrS3Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762330628; c=relaxed/simple;
-	bh=I+PyMO8FO2EK1xxh53hnQc6PLSI72+wbeSBrnWGdMZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XzI4p120MfU45Gz7+nOgc2mEP1g6hn1j3xEp/CMObxSOgpTW4DISmrPZxQdipFvCMJ6zkBde5tgUrDleFdP4csEjtM8j2S6kxaCAkoWpTBmYW5L6Gq+Hszj85s+/JfM7GqqTXsWEmUZmhXFmY2Sy/sMsaLUxomfDV6FKASve5pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zb+T55Yc; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3D52E2679;
+	Wed,  5 Nov 2025 08:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762332488; cv=pass; b=ejaU5rFH2sEiXj59BweK8BYUYojeHMUovt1Ckoxj6OqlkOZhyaxuMD672zMqZIxAGQKwjthhbeNK7lYpP8I395vNBYoAwGNYonY10MNcdLPZC2TdfRsML0F+w1AgClt2WhKoOpeTe21EBlIrMCF9+VrXTw8Yq3+t97Mst+xb9e4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762332488; c=relaxed/simple;
+	bh=HH5CD+ABj9c0/4cLQ0cEE3mbv7MXBlq3cBGimMKObKA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kfR5tE9HPURePMp6rkhyeaC+4UG4GSRPmrJbgjUPg6CwDA3jZiXGlcn3+nRJwc2rn0Q4w2AezZ2Fiw5bcA0mMVaLlWZJA1UDqdMtQaIachnANBOgu+TL4iUx4Tmbm3HFFUEZ/qMVtAvLknOekJh21n3MF8Dh6VPCmQk5bZysBxQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=Ktm/Qpme; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zb+T55Yc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBA46C4CEF8;
-	Wed,  5 Nov 2025 08:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762330627;
-	bh=I+PyMO8FO2EK1xxh53hnQc6PLSI72+wbeSBrnWGdMZ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zb+T55YcpTdB9AIBqOV3Tfmamiogsb9dfH66G5UFmsvyAaTjQwCqltsPnhHyyZY73
-	 nOFOU6WP1ft/xSqaEt/fxOYY34rSlR2Z7kZJZ2rbDDGT2htW8PuKNT7WyTlieODQ2k
-	 plYxGV3055zKvlQOpqNywGZpdXSL7V90rwPlEqkcB+Fr5kSmTRutn309z5RZ99K/Ju
-	 Qy5ihI41f0ozi/Asgk4c77bI9TE2m7zGEd4Zm7hcmxOJ2Ac8BiG00O/RgTJT/OiOJ6
-	 8jlwnQigCl72ejo1WwJNNSX9r2OE+z6ujbXlOVM0BZHNjqTh2DxRuz7XYwq0B/+2mq
-	 08Aom7/pRG6lw==
-Date: Wed, 5 Nov 2025 10:17:04 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="Ktm/Qpme"
+ARC-Seal: i=1; a=rsa-sha256; t=1762332465; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=oAyv/XMM/gHl2sgx2sIwFzaZKt+7nrHzMMttBwSLSfXSvL5yL6IGKegNGMC9q5RPjsd/oRdr7B+xVH34YZsYCequm2B1zOZXcsy/uvy/gpLPrFxx5BNrPawAmagFluxVlftAJVtUMiV3tfimcXninmzyerhQf7h4jJS2WBgJbDk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1762332465; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=K8HOkWwttrvijzQTji25uvp1UvEY1l+gmNnhNh8LP/w=; 
+	b=cXAYSQy2Y7oS2CTmJbWxuLCx4ddqLZDv8VRJoPVuLDzXi9HqhMJJFBt1vUrQETo3oO5Cld0UVI8Lhs3qMkgXAITsstfV8qI+NOrlGRklDeSTwDdeovV/pTn8qC+/T2Oa5Un4TWvEUlW0foBlElQaxXmo1sQhxzlUEUhcg0L1R90=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=linux.beauty;
+	spf=pass  smtp.mailfrom=me@linux.beauty;
+	dmarc=pass header.from=<me@linux.beauty>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1762332465;
+	s=zmail; d=linux.beauty; i=me@linux.beauty;
+	h=From:From:To:To:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=K8HOkWwttrvijzQTji25uvp1UvEY1l+gmNnhNh8LP/w=;
+	b=Ktm/QpmeLYCyu8Bc9zPlpj3JU5/OtuU83UvGAJElEHi6gLxn7abkwWDjwhiVGyz5
+	gI+tJ0Dbn2Mn22YVXbDEw+P/DoOUyhz9R7MN9Zu4poJSfPVvNTkJt3tQrrFjFqXVfTG
+	TSl1DhAwkn/z0Yt4v9qm2e8+p0+OlFp8zoBEAYDE=
+Received: by mx.zohomail.com with SMTPS id 1762332460647813.1105742017812;
+	Wed, 5 Nov 2025 00:47:40 -0800 (PST)
+From: Li Chen <me@linux.beauty>
+To: Kees Cook <kees@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>
-Subject: Re: [PATCH v6 00/11] vfio/pci: Allow MMIO regions to be exported
- through dma-buf
-Message-ID: <20251105081704.GB16832@unreal>
-References: <20251102-dmabuf-vfio-v6-0-d773cff0db9f@nvidia.com>
- <aQpRz74RurfhZK15@Asurada-Nvidia>
+	linux-kbuild@vger.kernel.org
+Subject: [PATCH 0/3] dm-pcache: built-in support and metadata hardening
+Date: Wed,  5 Nov 2025 16:46:51 +0800
+Message-ID: <20251105084733.3598704-1-me@linux.beauty>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aQpRz74RurfhZK15@Asurada-Nvidia>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Tue, Nov 04, 2025 at 11:19:43AM -0800, Nicolin Chen wrote:
-> On Sun, Nov 02, 2025 at 10:00:48AM +0200, Leon Romanovsky wrote:
-> > Changelog:
-> > v6:
-> >  * Fixed wrong error check from pcim_p2pdma_init().
-> >  * Documented pcim_p2pdma_provider() function.
-> >  * Improved commit messages.
-> >  * Added VFIO DMA-BUF selftest.
-> >  * Added __counted_by(nr_ranges) annotation to struct vfio_device_feature_dma_buf.
-> >  * Fixed error unwind when dma_buf_fd() fails.
-> >  * Document latest changes to p2pmem.
-> >  * Removed EXPORT_SYMBOL_GPL from pci_p2pdma_map_type.
-> >  * Moved DMA mapping logic to DMA-BUF.
-> >  * Removed types patch to avoid dependencies between subsystems.
-> >  * Moved vfio_pci_dma_buf_move() in err_undo block.
-> >  * Added nvgrace patch.
-> 
-> I have verified this v6 using Jason's iommufd dmabuf branch:
-> https://github.com/jgunthorpe/linux/commits/iommufd_dmabuf/
-> 
-> by drafting a QEMU patch on top of Shameer's vSMMU v5 series:
-> https://github.com/nicolinc/qemu/commits/wip/iommufd_dmabuf/
-> 
-> with that, I see GPU BAR memory be correctly fetched in the QEMU:
-> vfio_region_dmabuf Device 0009:01:00.0, region "0009:01:00.0 BAR 0", offset: 0x0, size: 0x1000000
-> vfio_region_dmabuf Device 0009:01:00.0, region "0009:01:00.0 BAR 2", offset: 0x0, size: 0x44f00000
-> vfio_region_dmabuf Device 0009:01:00.0, region "0009:01:00.0 BAR 4", offset: 0x0, size: 0x17a0000000
-> 
-> Tested-by: Nicolin Chen <nicolinc@nvidia.com>
+From: Li Chen <chenl311@chinatelecom.cn>
 
-Thanks a lot.
+This three-patch series tidies dm-pcache’s build glue and tightens the metadata scan.
+
+Patch 1 allow dm-pcache to be linked into vmlinux and avoids clashing with the sunrpc
+cache_flush() by using obj-$(CONFIG_DM_PCACHE) and renaming the helper across the tree.
+
+Patch 2 drops a redundant recomputation of the metadata slot pointer while walking headers.
+
+Patch 3 zero-allocates a temporary buffer so callers never see stale metadata,
+relies on __free(kvfree) for cleanup, and only copies back once a valid record is found.
+
+Thanks for your review.
+
+Li Chen (3):
+  dm-pcache: allow built-in build and rename flush helper
+  dm-pcache: reuse meta_addr in pcache_meta_find_latest
+  dm-pcache: avoid leaking invalid metadata in pcache_meta_find_latest()
+
+ drivers/md/dm-pcache/Makefile          |  2 +-
+ drivers/md/dm-pcache/cache.c           |  2 +-
+ drivers/md/dm-pcache/cache.h           |  2 +-
+ drivers/md/dm-pcache/cache_req.c       |  6 +++---
+ drivers/md/dm-pcache/pcache_internal.h | 15 ++++++++++-----
+ 5 files changed, 16 insertions(+), 11 deletions(-)
+
+-- 
+2.51.0
+
