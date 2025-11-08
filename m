@@ -1,227 +1,96 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF59527A10F
-	for <linux-hardening@vger.kernel.org>; Sat,  8 Nov 2025 09:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF15B22D9E9
+	for <linux-hardening@vger.kernel.org>; Sat,  8 Nov 2025 12:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762593580; cv=none; b=HjPla4k2+oHP9u4gu79AZAZVCGXVqRnLxLG7VQT9zpCdUSDYvghNpWjwxNVu7pNF1H6/bG0/yoPgyDG+q8EhBymqIndhwTygApKAgrA0hgNuPYwTws/q9aZGQPtd3VBZwa77r3ciEWxSPbcNweaooH7EzVr6O+d7C8LFTArWV4k=
+	t=1762603718; cv=none; b=g/AbrZ8jxo40viPYyCYSYX0wA9Xd0gpYzEtau7GW17RdwmGjBFubL/PHo/xZs/Xsh/HZvi3ox9Q2OfOVO1k02GSIlEGGDawCZaCbJnd6hd9xqGvD/WBtYTSU2avcA+zsYHx7cexk9Lz4W+l3BCL+kYhZj0VqGpJfYoKKsuOwEIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762593580; c=relaxed/simple;
-	bh=Y49FEVhEZCj60/+Ylnua7B5NNXsJ25LsdBXGXmWxbi8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RX172xQ6vhnd4DKPWvmSV8Fq4NsdK7f/pfeUY/UjtdHOwMD/5O4Z8YTXfLXDRRFrx69o2AVF+LDkBDN4ezm3fBaxC9NWRPyejYYbqHx/D0WLF+X7YJTFc3aaDWLinypgjMDTr7xOgX9B4v9ujDd/L2Jrk8NCHiygsoXiLdhFfhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XbCrXJqp; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762603718; c=relaxed/simple;
+	bh=UeAuYzp5w/kNpO2Y1lfqmjD+AzszZK30e4xHApd0hnw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AuvO6tqm2EqqMyZpdhw3c3p6hGcp3El5Ktn/49qsf6pb/L1UY6SwiE8gIz8btpSddJnRvNxLVJZ3yjenRlUDcyoWaXRR9E8VabmUqjnGdhd+G/m323UQkeaRDhlMXA1q7v7tTGIzMAg+N5ssUq4JOqygGE2q1D36dKmyRPMnJbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IbZqLFLJ; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbCrXJqp"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b98983baeacso703059a12.1
-        for <linux-hardening@vger.kernel.org>; Sat, 08 Nov 2025 01:19:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762593577; x=1763198377; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xMJJSbsWQXZcDWYlPD+q/sMKmcoPg7XO2KNCJJBRcPk=;
-        b=XbCrXJqpU5Fw1gS912IzNS7KgBmBpEzt7BjCmmVFTL8kHJTuGLWxxwgdaXCUg4CV2D
-         tKCOjl7wqtFqq2KqtRwQmCQoZ2kxqJrxqAaLSYbI9D+6BC6bJNEbr7E7KTvOL4UqahSf
-         w/QgA8EXXBEeLOZgkH/mm2j8/uswIitunMmgBdG766MxnsGJq42mTLMaDjXhzkm/zaEH
-         UtlB680jTq7xY0S9vzTnm9oN5yO7Du7xhiUuoHeQloIlgSzi/qSU8H/Y2rUf/XMJj6Bh
-         tzv4XdJ7tB0GUfU9Ij+3Tup68eVUiffb9PZoDl640BmypjzahazCqHEiCv+hciS4uHrF
-         TsZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762593577; x=1763198377;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xMJJSbsWQXZcDWYlPD+q/sMKmcoPg7XO2KNCJJBRcPk=;
-        b=vHPsuEiHDWQXB6ZEEPKpgV1nSQ5saCwWz9F8sYplIAjKrFv2Yt3fVsowSfBp4Qz7ij
-         0OtHqhEbEkh1UjNpEsn9ATk22gVz0fPV0uHUPG8EbvOfXs9Gj4BN7n65czX4x8N2HF+V
-         TwJuTOr0OHiWkVUsa2U8kO1l1WZhTwTsXST3aSRIFwy7QzRIMicXsH6fYyJPEBxhD+LW
-         WMUr92tVsuBIIlnK1TBJZIRnGldIdfaje6IOYYKuP6T1x4NjOw+lh4ip0HqEg/lX/qeB
-         d49Ch53wWmgw9Db5pCDRPP16hbnspXS/3R3SVk1dTFIKEAOx5BcXwPMJkAkDf779JYzD
-         HZQw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8J3CBeab2+B2PpF/9lauQ/1T2I54oUdvoIsTBoBIMc6+5BEsWGufjiLG1FzvGhtqLwaP42dem9M+xe1iNcrE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKifEHlAvLYpX9OB7odFGG/0AaXh7RrKw49jj5rzMEr/MndsVX
-	w5BBTZKVXTV7VmSO9AFDiub6Qz9gcTF46w+vGkwKJU+WpMES2UdG23O+
-X-Gm-Gg: ASbGncseijhS+cA5JekXB7nwQsm/rNfZ7Yhz15rhCYiupPwLNL0DU1NpH+BkgV+UKRI
-	qhx3f21mfXgjDDH7Y6cKbLuOQ+gy8q03EZ5OnzaB54/7Cp0yFDXxkdg4OFrovgl2OeiXDXWqyEV
-	ePy4F7huYOUTGqDJCAcBD9eAX7JAOH1JBvFA9c1/ch5lEbV269Ae9jxCST4qDT/7Jf31v8OzWOV
-	iEk8f9rpqRKFo1/pwLyzhM44Kaq50JgHh9stz8/efZJG4k+zF1aRQ0wAHs0zIMvSAyPQIAkUZRW
-	oJXIHYUkDkx+yxaFW9ic1Gmzxgz3hLd/1vJEw72md6dP0tfuEYxw/WrcUZ71XTGJZzht+47zTC8
-	ddBWHhjDz5+5JBpS3kgxmhpJ95LcNF0PxJ4oRSlOxk4BgT5nlpgOsT9jEXzZosGoS8H0eQhVwRI
-	UCHfeG2JG3oko=
-X-Google-Smtp-Source: AGHT+IGxcceL/cUmEO7hnoApXfEFPAPpQerRMJTCvaDgcasBmFqwVjXcVlI2/yGLIfmLK+orIB3gUw==
-X-Received: by 2002:a17:902:da84:b0:292:fc65:3584 with SMTP id d9443c01a7336-297e56f9b21mr24987685ad.50.1762593577039;
-        Sat, 08 Nov 2025 01:19:37 -0800 (PST)
-Received: from archie.me ([210.87.74.117])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29650c5c6b3sm82791745ad.24.2025.11.08.01.19.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Nov 2025 01:19:35 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 77412400200B; Sat, 08 Nov 2025 16:19:33 +0700 (WIB)
-Date: Sat, 8 Nov 2025 16:19:33 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Dominique Martinet <asmadeus@codewreck.org>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IbZqLFLJ"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1762603705;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iNDhGraN2FxVWRX/u8N3yNNBJFy+JEcFlHyTlUoRMYM=;
+	b=IbZqLFLJTEcf18ziOrKOLp2f38virq4Y5Te/y2vBm7fmLx+BfN04R1RPXPPivPXKKnzU5H
+	FMrgIcatDY2+7JNwAQYN32r9Pw7pSLWeBynxkg6pRMe/p2Ck+cEwLZZsXqgBoG1EPngkX4
+	BC//RJmpEjUdKZpeCX145RHDu5qD5wA=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nick Terrell <terrelln@fb.com>,
 	David Sterba <dsterba@suse.com>,
-	David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-	Chris Mason <clm@fb.com>, Xiubo Li <xiubli@redhat.com>,
-	Ilya Dryomov <idryomov@gmail.com>, Jan Harkes <jaharkes@cs.cmu.edu>,
-	coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>,
-	Jeremy Kerr <jk@ozlabs.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Sungjong Seo <sj1557.seo@samsung.com>,
-	Yuezhang Mo <yuezhang.mo@sony.com>, Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Andreas Gruenbacher <agruenba@redhat.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Yangtao Li <frank.li@vivo.com>, Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Dave Kleikamp <shaggy@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Bob Copeland <me@bobcopeland.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Steve French <sfrench@samba.org>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Bharath SM <bharathsm@microsoft.com>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	Hans de Goede <hansg@kernel.org>, Carlos Maiolino <cem@kernel.org>,
-	Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
 	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	NeilBrown <neilb@ownmail.net>, linux-kernel@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-afs@lists.infradead.org, linux-btrfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
-	ecryptfs@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	gfs2@lists.linux.dev, linux-um@lists.infradead.org,
-	linux-mm@kvack.org, linux-mtd@lists.infradead.org,
-	jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-	linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
-	ocfs2-devel@lists.linux.dev,
-	linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
-	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org, linux-xfs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2] vfs: remove the excl argument from the ->create()
- inode_operation
-Message-ID: <aQ8LJfKC0R-4ehLU@archie.me>
-References: <20251107-create-excl-v2-1-f678165d7f3f@kernel.org>
- <aQ7fOmknHIxcxuha@codewreck.org>
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] crypto: zstd - Annotate struct zstd_ctx with __counted_by
+Date: Sat,  8 Nov 2025 13:07:40 +0100
+Message-ID: <20251108120740.149799-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hTQgJTXrd9+JcPiP"
-Content-Disposition: inline
-In-Reply-To: <aQ7fOmknHIxcxuha@codewreck.org>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+Add the __counted_by() compiler attribute to the flexible array member
+'wksp' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
---hTQgJTXrd9+JcPiP
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Use struct_size(), which provides additional compile-time checks for
+structures with flexible array members (e.g., __must_be_array()), for
+the allocation size for a new 'zstd_ctx' while we're at it.
 
-On Sat, Nov 08, 2025 at 03:12:10PM +0900, Dominique Martinet wrote:
-> Jeff Layton wrote on Fri, Nov 07, 2025 at 10:05:03AM -0500:
-> > diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesyst=
-ems/vfs.rst
-> > index 4f13b01e42eb5e2ad9d60cbbce7e47d09ad831e6..7a55e491e0c87a0d18909bd=
-181754d6d68318059 100644
-> > --- a/Documentation/filesystems/vfs.rst
-> > +++ b/Documentation/filesystems/vfs.rst
-> > @@ -505,7 +505,10 @@ otherwise noted.
-> >  	if you want to support regular files.  The dentry you get should
-> >  	not have an inode (i.e. it should be a negative dentry).  Here
-> >  	you will probably call d_instantiate() with the dentry and the
-> > -	newly created inode
-> > +        newly created inode. This operation should always provide O_EX=
-CL
->=20
-> This and the block below change halfway from tab (old text) to spaces
-> (your patch)
->=20
-> Looks like the file has a few space-indented sections though so it won't
-> be the first if that goes in as is, the html-rendering doesn't seem to
-> care :)
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ crypto/zstd.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-FYI: I'm using Vim. My important settings (in ~/.vimrc) are:
+diff --git a/crypto/zstd.c b/crypto/zstd.c
+index ac318d333b68..ace7a82ea45a 100644
+--- a/crypto/zstd.c
++++ b/crypto/zstd.c
+@@ -10,6 +10,7 @@
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/net.h>
++#include <linux/overflow.h>
+ #include <linux/vmalloc.h>
+ #include <linux/zstd.h>
+ #include <crypto/internal/acompress.h>
+@@ -25,7 +26,7 @@ struct zstd_ctx {
+ 	zstd_dctx *dctx;
+ 	size_t wksp_size;
+ 	zstd_parameters params;
+-	u8 wksp[] __aligned(8);
++	u8 wksp[] __aligned(8) __counted_by(wksp_size);
+ };
+ 
+ static DEFINE_MUTEX(zstd_stream_lock);
+@@ -44,7 +45,7 @@ static void *zstd_alloc_stream(void)
+ 	if (!wksp_size)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	ctx = kvmalloc(sizeof(*ctx) + wksp_size, GFP_KERNEL);
++	ctx = kvmalloc(struct_size(ctx, wksp, wksp_size), GFP_KERNEL);
+ 	if (!ctx)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-- 
+2.51.1
 
-```
-set nojoinspaces
-set textwidth=3D0
-set backspace=3D2
-```
-
-However, ftplugin override these for each file type, so you have to essenti=
-ally
-"fork" the relevant ftplugin file for each type if you want for your settin=
-gs
-to take precedence. For example, in case of reST, copy
-/usr/share/vim/vim91/ftplugin/rst.vim to ~/.vim/ftplugin/rst and override t=
-he
-already defined options there:
-
-```
-=2E..
-" keep tabs as-is
-setlocal comments=3Dfb:.. commentstring=3D..\ %s noexpandtab
-=2E..
-if exists("g:rst_style") && g:rst_style !=3D 0
-    setlocal noexpandtab shiftwidth=3D8 softtabstop=3D0 tabstop=3D8
-endif
-=2E..
-```
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---hTQgJTXrd9+JcPiP
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaQ8LHwAKCRD2uYlJVVFO
-o2WVAPsFBRuUsYfWxAnWROgP/61sBqVYDc/UsPimcXm5dJJfgQD9ESTXpfxlpefS
-VKeWBneX6svZYShHE5RzrbcYO+G5GA0=
-=gW2v
------END PGP SIGNATURE-----
-
---hTQgJTXrd9+JcPiP--
