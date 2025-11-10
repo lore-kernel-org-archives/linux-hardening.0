@@ -1,86 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx-relay49-hz3.antispameurope.com (mx-relay49-hz3.antispameurope.com [94.100.134.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110501DDC1B;
-	Mon, 10 Nov 2025 11:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762775345; cv=none; b=deftgmgRHlCPmaTQbc5o0E+Rud4dOThRO/f67Dburbb7IYKZPxdjK8NkX3avdTl3kmqQgHWrVxA0WBtGPRxGpZWYAKxP7yvLhPrZ4xV+dspWdFtqiPhga0QNLjPmGvv8mbh4EPgBRjPWLBdrUK3iamYtitOcTtdCF/HuA3ZWLh8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762775345; c=relaxed/simple;
-	bh=rcVZnLgKUKjpRxx9J23FRkbwzvrxQ5r/s7h0k22IgVg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JivrXBEN+dTFvq7ARkkEVkgZWz5ErnuRrxv6W5yVV+fXgmrbc8XLDHjua6SvyBHcaSth16TkIfoFwQo/S2xYNXrcpEXB/AAYJBmeOSVKBxjmG2RhIFRQmsndSxvCkUIOK+FFKfSOmvQeKtzdSTMvJqIIXbkJ7bHqo477ZhXlJ9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EAj+BmGU; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934BB30AAC8
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Nov 2025 11:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=94.100.134.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762775466; cv=pass; b=P2eqAjUXA7hjjfUzig+xZ09/i+RA2C0TZLMoeEUjPXHFNMTkRamgYBZ7IuSoFq6FGoe8bEsKJhmSEh2PL+APPNulh4kwp/Wd6wiqxMFKDkhP9ugBTE2SPa58JxQrNbuLiigGjfzfKwJcp8W8DKxKiyc7ZbTWz85KPRrCJ7eDn08=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762775466; c=relaxed/simple;
+	bh=HXlBxqOb74Fg5Giay0IgvqZHwM52eaS13jG1nIa4SVk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NbKEV/mQvIu0XzRNPvTkDDaKyITwa9BRxjGi7+W8Phhh2uitn8YsxUXObr+438jP/r9GfZH4ALs9Qud14zNlsnavrywRRFu3x0d7E+LR6G5P3YRuIhaoIU4WaYo5BM0I/Bmj1RPCR+s5llHJZuE4BknqB1lnI15dC/iM19iT3+o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=sSMvFP9c; arc=pass smtp.client-ip=94.100.134.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EAj+BmGU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 337BAC16AAE;
-	Mon, 10 Nov 2025 11:48:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762775342;
-	bh=rcVZnLgKUKjpRxx9J23FRkbwzvrxQ5r/s7h0k22IgVg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=EAj+BmGUpgFBiqHdfEcxtFIzlBxEj4Cl1m9t/kCqoqsuknrAjo2SmTV5Y4zENYRQF
-	 joxSwP9IfxSMWRYqfnBzWdCW2C22NsDoX+KeLKtu/hFV0xaixmGsp79+RoMoT5gq0A
-	 bl7bXslMNcNFH9mxFHRkuHpiu15oT1rAKK/4fNrrYROF2ZUEsYRfOMJpA+H8P9aUa8
-	 dxbP1/AOG9i1IdVXUQ4+2AFZ/p8doqyu52HIDRJ7P6s6hR4NpR/NocYPgHDtcOaMrr
-	 vlYLK7LZojz8E1PhuoARO3CHzImcwU/VZ07TF013w2UWwbSwlmrl25oey7EV/B7gcL
-	 /QwMmTFHvD0gg==
-Date: Mon, 10 Nov 2025 20:48:55 +0900
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Bharath SM <bharathsm@microsoft.com>
-Cc: linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+	dkim=pass (2048-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="sSMvFP9c"
+ARC-Authentication-Results: i=1; mx-gate49-hz3.hornetsecurity.com 1; spf=pass
+ reason=mailfrom (ip=94.100.132.6, headerfrom=ew.tq-group.com)
+ smtp.mailfrom=ew.tq-group.com smtp.helo=smtp-out01-hz1.hornetsecurity.com;
+ dmarc=pass header.from=ew.tq-group.com orig.disposition=pass
+ARC-Message-Signature: a=rsa-sha256;
+ bh=EI3VncdrDlFCBHgHP23iIzteEuQaU2FWB5CYdMi6Jhs=; c=relaxed/relaxed;
+ d=hornetsecurity.com; h=from:to:date:subject:mime-version:; i=1; s=hse1;
+ t=1762775422;
+ b=cIg/tpq7q/AUaI3e1aMRFNWklJLKpB9T9SKthGYeSAXXNyoazPlDzPTdeX5FUvnMpUavO/FS
+ hjhUMWDBGRmNI/+POe3ttnctL0oDUYTQ49McoWJnyQvHFR+scA8iyRQDm2OZNpfLWGFC4lC6k/v
+ LNk/7WWOfjUdpvCYHAkrZQT+DreilG7xm+rztMSUYOq+T3xb3eb6ZH5mNDXvqsrDhdPKyn6FmBK
+ 9xHgKpY1mSpqh8VUycmg6xAE13iwdqMELXV6FAW76iCl84HBss97SNXvZw0q1kHpThnRvyPORA1
+ jp7kUhuL+oY0DyemKVBh1FcYDZ3UQEbhUFwtVxPWbjlsg==
+ARC-Seal: a=rsa-sha256; cv=none; d=hornetsecurity.com; i=1; s=hse1;
+ t=1762775422;
+ b=FBHzdQc85HxoXDaknX4otuPgpiVR2PNgNjwOjHXoU3QGJUJyiUo6t6fl8AqpP7oUUFf3zrgZ
+ 679qPu1G3VSeX1iSex7SjE8Z62i4yI1RK+X9w4y+qRx4VMel0AHVf5sIhexFVVti5AlyOOhqyY+
+ UVDkNw+tFw3JPd1DGEv4kPuSodzcZkAAO4brgjQIRKHgKq1z1Ww/zj0yXq9zR8plY3eNLwW6zqp
+ BrZfP+mN6dgl0tVYJZRD0+gZgYxWGNgDBrs+L1lgQVqpMxAYFJTneqfRTkK3OGaa3adrke8FHA+
+ SPNKvhofZszWpe2+318xGu2RGK0vzcACib6SMK6P9GMrw==
+Received: from he-nlb01-hz1.hornetsecurity.com ([94.100.132.6]) by mx-relay49-hz3.antispameurope.com;
+ Mon, 10 Nov 2025 12:50:22 +0100
+Received: from schifferm-ubuntu.tq-net.de (host-82-135-125-110.customer.m-online.net [82.135.125.110])
+	(Authenticated sender: matthias.schiffer@ew.tq-group.com)
+	by smtp-out01-hz1.hornetsecurity.com (Postfix) with ESMTPSA id 57E2FA40F9D;
+	Mon, 10 Nov 2025 12:50:06 +0100 (CET)
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] smb: client: Avoid a dozen
- -Wflex-array-member-not-at-end warnings
-Message-ID: <aRHRJ4y39-tUWkIU@kspp>
+	linux-hardening@vger.kernel.org,
+	linux@ew.tq-group.com,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH v4 1/2] dt-bindings: arm: ti: Add compatible for AM625-based TQMa62xx SOM family and carrier board
+Date: Mon, 10 Nov 2025 12:49:45 +0100
+Message-ID: <18471e4c907e8681248776e3674e22075e25a50a.1762775119.git.matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.51.2
+In-Reply-To: <cover.1762775119.git.matthias.schiffer@ew.tq-group.com>
+References: <cover.1762775119.git.matthias.schiffer@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-cloud-security-sender:matthias.schiffer@ew.tq-group.com
+X-cloud-security-recipient:linux-hardening@vger.kernel.org
+X-cloud-security-crypt: load encryption module
+X-cloud-security-Mailarchiv: E-Mail archived for: matthias.schiffer@ew.tq-group.com
+X-cloud-security-Mailarchivtype:outbound
+X-cloud-security-Virusscan:CLEAN
+X-cloud-security-disclaimer: This E-Mail was scanned by E-Mailservice on mx-relay49-hz3.antispameurope.com with 4d4nz31Pkkz3yYR4
+X-cloud-security-connect: he-nlb01-hz1.hornetsecurity.com[94.100.132.6], TLS=1, IP=94.100.132.6
+X-cloud-security-Digest:4ec77760357b01082a9b811132bbae09
+X-cloud-security:scantime:1.896
+DKIM-Signature: a=rsa-sha256;
+ bh=EI3VncdrDlFCBHgHP23iIzteEuQaU2FWB5CYdMi6Jhs=; c=relaxed/relaxed;
+ d=ew.tq-group.com;
+ h=content-type:mime-version:subject:from:to:message-id:date; s=hse1;
+ t=1762775421; v=1;
+ b=sSMvFP9cCutjLx+UcLtkSX3jhTjZZ/x5nhqxjJpt9H5OUUvHakB4fkNAJBAYn8nU69cSXilf
+ e0niCWkPuhaBua3Fl1Ac1CaGxMVmzTVoVH+cdwJruphiCtF8bfMSp3NPrf90Y+lvE3bm5887Qhf
+ sPzwTXsp4xYeMsJ83n5wIL5VkfRpugPaF+xEE0FaKRnmDKgGIitYASBH6Feia7i9gxhz+hJt+ek
+ 1LaPJxUr3DIePYS6+Y+Kv/72HdElr/D4Oxhoh9P7J25XYGjhSUKzmAKVy054cq/c46uVqirnEOw
+ jjFCniZDgiGn2k2rFJXejPtv7OnwTuBOO3WTFYylLZ7ng==
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+The TQMa62xx is a SoM family with a pluggable connector. The MBa62xx is
+the matching reference/starterkit carrier board.
 
-Move the conflicting declaration to the end of the corresponding
-structure. Notice that struct smb2_file_all_info is a flexible
-structure, this is a structure that contains a flexible-array
-member.
-
-Fix the following warnings:
-
-12 fs/smb/client/cached_dir.h:51:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- fs/smb/client/cached_dir.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/ti/k3.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/smb/client/cached_dir.h b/fs/smb/client/cached_dir.h
-index 1e383db7c337..bc70197bbfbd 100644
---- a/fs/smb/client/cached_dir.h
-+++ b/fs/smb/client/cached_dir.h
-@@ -48,8 +48,10 @@ struct cached_fid {
- 	struct dentry *dentry;
- 	struct work_struct put_work;
- 	struct work_struct close_work;
--	struct smb2_file_all_info file_all_info;
- 	struct cached_dirents dirents;
-+
-+	/* Must be last as it ends in a flexible-array member. */
-+	struct smb2_file_all_info file_all_info;
- };
+diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+index 2e15029dbc677..cfa158dfdc9cb 100644
+--- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
++++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+@@ -89,6 +89,13 @@ properties:
+           - const: toradex,verdin-am62          # Verdin AM62 Module
+           - const: ti,am625
  
- /* default MAX_CACHED_FIDS is 16 */
++      - description: K3 AM625 SoC on TQ-Systems TQMa62xx SoM
++        items:
++          - enum:
++              - tq,am625-tqma6254-mba62xx # MBa62xx base board
++          - const: tq,am625-tqma6254
++          - const: ti,am625
++
+       - description: K3 AM62P5 SoC Toradex Verdin Modules and Carrier Boards
+         items:
+           - enum:
 -- 
-2.43.0
+TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht München, HRB 105018
+Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
+https://www.tq-group.com/
 
