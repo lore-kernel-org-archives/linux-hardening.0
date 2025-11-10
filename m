@@ -1,43 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47EC2FDC22;
-	Mon, 10 Nov 2025 10:46:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230181DF72C;
+	Mon, 10 Nov 2025 10:59:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762771613; cv=none; b=kh2USFcSPxttxswddxXCpU0fI9qLszEODvrmtrmHCV7NS0nCxNNursEC/4IIgM4IiFflWTJoatJEMBVKAgElmMOKtz3W/7bwE0cpxj8CqGBiJJTqFPk00KCdM88gxSGwMxsQRWFNIPt/4to7OASreaZMOPx50GFs3akvQ+oJXpE=
+	t=1762772350; cv=none; b=I1Y2wsmOefVb41HSwEGVHENqBvp0pO+M5yImMfGpYdLAk2iVLr5ltdnglQh1H/uLIId6eRZAxvPldzJ6TZBCfaQvC6YWV7IZ1i5Ek5zqdQjVxkCuS6QY0xUQZFeQEt0TQkMMnxtnltjo2NuJTwhbMcZW4utfGDrHMAjIy2rVfWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762771613; c=relaxed/simple;
-	bh=hmsOoSU4/NyD8K12tsKeocZRd2jvpEFv35jpWVhC4/k=;
+	s=arc-20240116; t=1762772350; c=relaxed/simple;
+	bh=H1KCquvsgrEEnjmZA9EO1r7LzKOIv3jfOjS0aZILJ2k=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KOnI8CUy2mnk/7V6WoWIgR9znc0OIB38v7RScX4To3iqDV7mkwkldL+okmKAedt7M2mzMPLvLnBfoMXfZT3m8xV2aTBkhb7MdokD6txpK3ivJjEQLxYPL5dAgVvyPoIMhbH+qysMv8n3jdCFFDJE5pbGf8rkYfbMaH7/VJm52hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kv0Nf7Ec; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=iKrIep12pos1OlLmWspLFRjCR8+cY72QFgGJH0QaCXOR+lAQJjM6MJ0LkHaZ7QXk19Myo0Clds+ZQAFX9eq0GVTYBfv9N7r26ZgtDVy3uQGTKM6jbPeymypOp2qstydrlE1mTMqIlEj/fox2p1UZmxgCfWIXCS7Y8uFiLKxMsdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULyG0SvA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kv0Nf7Ec"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0383FC116D0;
-	Mon, 10 Nov 2025 10:46:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULyG0SvA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCCE8C116D0;
+	Mon, 10 Nov 2025 10:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762771612;
-	bh=hmsOoSU4/NyD8K12tsKeocZRd2jvpEFv35jpWVhC4/k=;
+	s=k20201202; t=1762772344;
+	bh=H1KCquvsgrEEnjmZA9EO1r7LzKOIv3jfOjS0aZILJ2k=;
 	h=Date:From:To:Cc:Subject:From;
-	b=Kv0Nf7EcD79x3wAwT3YwErE0roy1KfF7IYXZnNprfg7LHv3pt7kJie0I2JaF3VTG2
-	 qN5FCwKjWzJ5hrbPX3nqAyTcOyTmluMK1zyi6fkJ8jm0ksMVtfg8nor/moWKo2xaqy
-	 RPC9Pg5uRg8xIi3QUGbcjW6VTGsSJXDjvhWJLJpm8ULfD8g6MSo2Sn1pIuYQcCLcHU
-	 kFKHyvfweDVCbiQWdzkv6hcXZbBR2CMlCYecOsz8Ujbzcqj6384k2lrp7moO1CBAb/
-	 bgPNM+jSsE1d8axaFIngzShcNThgZZIn3oUqnlyKRZyy2RN0eWhaMfFiQwz2fPaS+X
-	 zWL9fdqcP+P2Q==
-Date: Mon, 10 Nov 2025 19:46:45 +0900
+	b=ULyG0SvAVnId7zgahBYhEKxlY5GLjXTO3HXMynN1QZK1UYmxo8bs1yYpgTWAFNsgP
+	 wEaWGCkXbgHszISgWAazEQJdjzCLijfRPQsRwbRlkaFAuL/G0CvfJc0Xu7kHoRl/EP
+	 STQ45AXBjweppvYfrkq6T/VmnzqXZ5huw9uSV/kFF1gLEZctclzaxQ3GBdOhKF4Thj
+	 MI2T5Zqd41uLQ0L55PpuOINrNH+/4XE6Otf4kgn4uevJsiJuQDzaVwetP67qyxPaqu
+	 nb3WZa4raCiDaEPJTC4E3ACr0+pQzAaBY9lYUuNXIBlPN1UjimXyHvIedvbP2j9Xl0
+	 fCf3/3UT6LVRA==
+Date: Mon, 10 Nov 2025 19:58:58 +0900
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@cloudflare.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>
-Cc: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+To: Coly Li <colyli@fnnas.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] KEYS: Avoid -Wflex-array-member-not-at-end warning
-Message-ID: <aRHClatB48XT_hap@kspp>
+Subject: [PATCH][next] bcache: Avoid -Wflex-array-member-not-at-end warning
+Message-ID: <aRHFchrO3BmVMH5c@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,13 +48,13 @@ getting ready to enable it, globally.
 
 Use the new TRAILING_OVERLAP() helper to fix the following warning:
 
-crypto/asymmetric_keys/restrict.c:20:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/md/bcache/bset.h:330:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 This helper creates a union between a flexible-array member (FAM) and a
 set of MEMBERS that would otherwise follow it.
 
-This overlays the trailing MEMBER unsigned char data[10]; onto the FAM
-struct asymmetric_key_id::data[], while keeping the FAM and the start
+This overlays the trailing MEMBER struct btree_iter_set stack_data[MAX_BSETS];
+onto the FAM struct btree_iter::data[], while keeping the FAM and the start
 of MEMBER aligned.
 
 The static_assert() ensures this alignment remains, and it's
@@ -67,28 +63,29 @@ blank line in between.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- crypto/asymmetric_keys/restrict.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/md/bcache/bset.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/crypto/asymmetric_keys/restrict.c b/crypto/asymmetric_keys/restrict.c
-index afcd4d101ac5..86292965f493 100644
---- a/crypto/asymmetric_keys/restrict.c
-+++ b/crypto/asymmetric_keys/restrict.c
-@@ -17,9 +17,12 @@ static struct asymmetric_key_id *ca_keyid;
+diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
+index 011f6062c4c0..6ee2c6a506a2 100644
+--- a/drivers/md/bcache/bset.h
++++ b/drivers/md/bcache/bset.h
+@@ -327,9 +327,13 @@ struct btree_iter {
+ /* Fixed-size btree_iter that can be allocated on the stack */
  
- #ifndef MODULE
- static struct {
--	struct asymmetric_key_id id;
--	unsigned char data[10];
+ struct btree_iter_stack {
+-	struct btree_iter iter;
+-	struct btree_iter_set stack_data[MAX_BSETS];
 +	/* Must be last as it ends in a flexible-array member. */
-+	TRAILING_OVERLAP(struct asymmetric_key_id, id, data,
-+		unsigned char data[10];
++	TRAILING_OVERLAP(struct btree_iter, iter, data,
++		struct btree_iter_set stack_data[MAX_BSETS];
 +	);
- } cakey;
-+static_assert(offsetof(typeof(cakey), id.data) == offsetof(typeof(cakey), data));
+ };
++static_assert(offsetof(struct btree_iter_stack, iter.data) ==
++	      offsetof(struct btree_iter_stack, stack_data));
  
- static int __init ca_keys_setup(char *str)
- {
+ typedef bool (*ptr_filter_fn)(struct btree_keys *b, const struct bkey *k);
+ 
 -- 
 2.43.0
 
