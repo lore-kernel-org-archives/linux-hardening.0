@@ -1,151 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A8E33F8D7;
-	Tue, 11 Nov 2025 09:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0652EDD63
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Nov 2025 10:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762855124; cv=none; b=bCjk+uyOdN1HqgoNfMsb8T7scy/D1vjGaelXHxiF6JNO/I/NTYd6w/fe/9hpbh1OtNWWJa1y0dParVJMXhzeYbwKevmvotOaHxMkL1rURYENB0zUUPK5FY+6fU1pLfsWGWMPqcKLUEKYWnJJ9e9yHNi4U2sFAOCKwWZqsjc80Fg=
+	t=1762857591; cv=none; b=IOoo+iuOEdGWGnAAJVfT8LWx9Kmgbjg65KYCn1oB+bTHnw1vFibDpxvHjTyBu5XnASyqXZsejDOSeJsX5SNphHNymoC2ZQCUDDY8ZP0YV85gAZe3Ab3ytXlHmKx3m7ekrjL9SUhBGawkRz0l80hJdTp955wyx6IP934xqiL2xAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762855124; c=relaxed/simple;
-	bh=RNhQRersDtpXI6Het2PRLPg6Pf8djhGeIyqap//L360=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IPjSQuzUrQqMk2P8JoPEH4twifhWHNRhjbNDk2xAcEYjwkNGiCJQTO01zuSYCfvKhkNM/95dOdR1HGojOUK9BrZ71VSimYzAml3LauQhD2qVKdQzM+ISgG9r/PJEMOByREsYBnGdgvzxqI9m7xhqwZNrkuxwBZEJySLCOawz2aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m91Cvs5L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762857591; c=relaxed/simple;
+	bh=uQN8C80XsI1DNcTbyZlxKBoQDlYbpinBS57HXqp89to=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nsMB9V90KHkDp8ie8Ljl63AUBI36KF3SlSAKMrVY3LFvGmhMipiKl8fjW1OYfAEiA74FdcrSPLpnNKl9q2vQpaf5snm1iaGCO2oFxy/so0+nfHyztPtRjU1UL6osAShA0AZbO8OipLeZeL/Tzv1ZNrHeLlVQ9/vsvqiz6ndbyTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rX39NeN2; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m91Cvs5L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF8DEC4AF0C;
-	Tue, 11 Nov 2025 09:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762855123;
-	bh=RNhQRersDtpXI6Het2PRLPg6Pf8djhGeIyqap//L360=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m91Cvs5LMEj+eGKN/zSGKHFgLn5OOKb6iBpr2HEAPuKEuOKnCutXDEc5JBoZrO3dp
-	 nX6pZtBqyo1gEDea8WYR/UY3E1b1aOvK9J4eK7Sh2Ip7fE9o07N1yzx0Nw2z5GjK3Z
-	 HJgPAsEptYiJPdaHwSLGVCZ20GpxOY76HvEh8MzXAIc3DmPRhCkeAtpy525bRKlimk
-	 C2aytYrId2LtUJW8EPhTIZ4E4Jw+gvI27B9jqMhKdjFxvv1gxRBqG5MKBDZQjAcvyt
-	 e2DJ4lzH4e3tl+6nlqXTZeHgMeor6n8DtPFTPJVpcFDxJR0fmhy90/cN2Z1HsDkssQ
-	 NcMMmjN0stnWw==
-From: Leon Romanovsky <leon@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>
-Cc: Krishnakant Jaju <kjaju@nvidia.com>,
-	Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: [PATCH v8 09/11] vfio/pci: Enable peer-to-peer DMA transactions by default
-Date: Tue, 11 Nov 2025 11:57:51 +0200
-Message-ID: <20251111-dmabuf-vfio-v8-9-fd9aa5df478f@nvidia.com>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rX39NeN2"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-7815092cd0bso38874237b3.2
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Nov 2025 02:39:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1762857588; x=1763462388; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uQN8C80XsI1DNcTbyZlxKBoQDlYbpinBS57HXqp89to=;
+        b=rX39NeN2PL/TgYFEBoIA2sPMSLu4q60y1Sa+C9R/8ZPxW6qJe0Dzx95viWXQz7cGgr
+         PH0grH2HrymuRTq8svDjQdovq93ZJ4mLlaKgcSTll7KfAhiiROr2GfO1+b7/MxlRgnT/
+         5YYNdrwHyqf9vhIur4rcrsQGCfCUZtDfSce/YCJs1a00tA3kOprneBPS8RHUzjtOc9JR
+         cbyc3eGbrRXkS8Pm716k0+wpv7u5F7YYgh0Wt+QbcWACSlaIIGEVZEEkS3sG8fQ8I96V
+         awB/NynSphoHhND6wLUZqoKVhqOJexO9Wq0NCuwitk89qlEDHzJLxIpdBsDcwTaHYejd
+         Y+4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762857588; x=1763462388;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uQN8C80XsI1DNcTbyZlxKBoQDlYbpinBS57HXqp89to=;
+        b=mbMEpBEWyQUPdfhoepAKto/6F9Al5p16o01ZBqyt2wMJOhVXt72atbXEJr3Qdi2FdW
+         erIT4kYt/FoG6XTArByoR1MiT6KvLY3jD/J6jkO7F6RhmxMGJCpJ2tqpJMzNfJwsffK3
+         eAR/CE3wUwybo6VfyNQaqg0VBEKO8ieGcuCuUhU/jTepZR6AaKOcRlxrnmb4Szbsqh85
+         LorW8sGDx4rEP3dh4azo1mWLqx4B5NNONt2CBaxwLON+hiI/idtLdga3FKZY7svPVE+q
+         9pxVwQvUPOh/+KTN8Sz5zSZgldtExEd2kh+t38McGTwwGIFW0HiZOwoKvI9kf6n+z9sv
+         hFyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFvzkAFBeUKRF1IgSd8mfnVbshdbz8ndZdoM1Z72fdKjjbATF3p5wxKyfOw7taxIfg+0E9s+4nzZNL6MsXF5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKOZdDc5P461bRdJLPeQUoLlgkhcoYXH+7wOnBTySxhs0g1BBM
+	uSwOOpt+9XXmFjrJAKtncZJjFvxE6N44HfbUOHOD3EML4PoYh3h8k4qUAdr46rbFgw/55yFaz/z
+	pfNXKXDTvj4K26o9ySTgIJxrXKTeQAvLniNRq5SSJbw==
+X-Gm-Gg: ASbGncvKvs5TJScjfEmTSAbWoRhRveRj4xz2oZ4wUTqNCcIDoo8BhWG6s/XZlqRi+m1
+	UGFIcvDmn/3VCpf8hBE4kvjcX/AASP92J2qwF4WCRUpWO4pHPx/f37phBBsg5sHCOjCyLSgrsBU
+	yqgyCOBy7vsoPX4mwo4W6Lw13mFJUcZ/QfsMsxpougBMgbUNkvlHDjcPE3j1fPRJGCOTL8tNa6V
+	HVdAVerU2okIDZVCDOYpPHD7Kz2jeD9OjIJZMvcglCPCQ8HQQzmf89Ixlu3PRo5ZmUA7eEdL10E
+	sOeHQg==
+X-Google-Smtp-Source: AGHT+IGdKr3biW2aMZhYy7DvL1RF+7Uz2kpvCtGXfJ2OgvOVwI6zfxqRAu2DSnJi2xHuqa0EQrFVKg9nUpOsh5XjgKI=
+X-Received: by 2002:a05:690c:55c2:10b0:787:deea:1ba8 with SMTP id
+ 00721157ae682-787deea2334mr150764527b3.50.1762857587612; Tue, 11 Nov 2025
+ 02:39:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.15-dev-3ae27
-Content-Transfer-Encoding: 8bit
+References: <20251029-gpio-shared-v3-0-71c568acf47c@linaro.org> <20251029-gpio-shared-v3-2-71c568acf47c@linaro.org>
+In-Reply-To: <20251029-gpio-shared-v3-2-71c568acf47c@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 11 Nov 2025 11:39:30 +0100
+X-Gm-Features: AWmQ_bk198TBC3PdqVd9Oowwqb_fFWVruyMz7Lubn4P_lvSkb0elFliKm8IlGq8
+Message-ID: <CACRpkdYRzuumaCv=a5UL_G8StQj10kBiRfkfrpWCk05zVfGYsA@mail.gmail.com>
+Subject: Re: [PATCH v3 02/10] gpiolib: define GPIOD_FLAG_SHARED
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Wed, Oct 29, 2025 at 12:21=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 
-Make sure that all VFIO PCI devices have peer-to-peer capabilities
-enables, so we would be able to export their MMIO memory through DMABUF,
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Define a new GPIO descriptor flag for marking pins that are shared by
+> multiple consumer. This flag will be used in several places so we need
+> to do it in advance and separately from other changes.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-VFIO has always supported P2P mappings with itself. VFIO type 1
-insecurely reads PFNs directly out of a VMA's PTEs and programs them
-into the IOMMU allowing any two VFIO devices to perform P2P to each
-other.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-All existing VMMs use this capability to export P2P into a VM where
-the VM could setup any kind of DMA it likes. Projects like DPDK/SPDK
-are also known to make use of this, though less frequently.
-
-As a first step to more properly integrating VFIO with the P2P
-subsystem unconditionally enable P2P support for VFIO PCI devices. The
-struct p2pdma_provider will act has a handle to the P2P subsystem to
-do things like DMA mapping.
-
-While real PCI devices have to support P2P (they can't even tell if an
-IOVA is P2P or not) there may be fake PCI devices that may trigger
-some kind of catastrophic system failure. To date VFIO has never
-tripped up on such a case, but if one is discovered the plan is to add
-a PCI quirk and have pcim_p2pdma_init() fail. This will fully block
-the broken device throughout any users of the P2P subsystem in the
-kernel.
-
-Thus P2P through DMABUF will follow the historical VFIO model and be
-unconditionally enabled by vfio-pci.
-
-Tested-by: Alex Mastro <amastro@fb.com>
-Tested-by: Nicolin Chen <nicolinc@nvidia.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- drivers/vfio/pci/vfio_pci_core.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index ca9a95716a85..142b84b3f225 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -28,6 +28,7 @@
- #include <linux/nospec.h>
- #include <linux/sched/mm.h>
- #include <linux/iommufd.h>
-+#include <linux/pci-p2pdma.h>
- #if IS_ENABLED(CONFIG_EEH)
- #include <asm/eeh.h>
- #endif
-@@ -2081,6 +2082,7 @@ int vfio_pci_core_init_dev(struct vfio_device *core_vdev)
- {
- 	struct vfio_pci_core_device *vdev =
- 		container_of(core_vdev, struct vfio_pci_core_device, vdev);
-+	int ret;
- 
- 	vdev->pdev = to_pci_dev(core_vdev->dev);
- 	vdev->irq_type = VFIO_PCI_NUM_IRQS;
-@@ -2090,6 +2092,9 @@ int vfio_pci_core_init_dev(struct vfio_device *core_vdev)
- 	INIT_LIST_HEAD(&vdev->dummy_resources_list);
- 	INIT_LIST_HEAD(&vdev->ioeventfds_list);
- 	INIT_LIST_HEAD(&vdev->sriov_pfs_item);
-+	ret = pcim_p2pdma_init(vdev->pdev);
-+	if (ret && ret != -EOPNOTSUPP)
-+		return ret;
- 	init_rwsem(&vdev->memory_lock);
- 	xa_init(&vdev->ctx);
- 
-
--- 
-2.51.1
-
+Yours,
+Linus Walleij
