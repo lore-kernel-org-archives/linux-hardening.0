@@ -1,51 +1,33 @@
-Received: from omta033.useast.a.cloudfilter.net (omta033.useast.a.cloudfilter.net [44.202.169.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1F82FF673
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Nov 2025 12:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9883AA1AB;
+	Tue, 11 Nov 2025 12:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762863259; cv=none; b=AGoUnO7dDZe0Lhuchj9lX/NBbhhCjs7/S2G4UCifsQoqD3udEWzWkIe1xuCLwu0ONayJ0vQfubd5TFpUeV/+RYolBjojfj6PQJugVfMBRNi7g6M8aQGkwCbFbmpBC4T8D1pjS65INiQF8NxH2lHY09yYT6zDNkEiycHfsanwzPs=
+	t=1762864502; cv=none; b=CWoWcbufpy4l6zRYIO4E4xwRYIJrNv/CfQiaIbmCUOeZbQgYzXhdD+ZeZUZlmxl2Zt2FLhlJcSAEb5JMai7o8/uaCDYVCGYcpooiETahgBEPE89Q6jeXvN5A0Q5ekhWcSTOlW3j52EWbPX4hXesEKioLM4MH7O05pRNfXF4IR5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762863259; c=relaxed/simple;
-	bh=7PE1Ra6Wd21DmBff64tqh3yjwSx+bptn3SGutDd7UGg=;
+	s=arc-20240116; t=1762864502; c=relaxed/simple;
+	bh=P9kSJYPFha9VBnjvxXS0Y2nT53KXisQsU5JE1jGqHp0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SiEfu29HHHAhVSUdIytymY9IUR83IbNpmlkUn6DfqB10UYy+kCoikP4aCKGTf1zSbX9HLERXBsvp9yUsFsC6LICeq+MGh9YaUIRM/DfCOHXJhEN32n0uBGrpDhyplhZk3rZpUGPuzUs9uT59EcfpmRgcCPRjarzM6xT8ctCNh0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=IIYDpcXV; arc=none smtp.client-ip=44.202.169.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=R0/qGOFIxkkHWTpZscK9pwDSxdbSM5/iFHo07gwbdGDtCR0BCtMxMegWJAvEasr7onEEWJK3KjN4N+O8ZHnoS5OyGUv0vBWIyl5PgbjSGJR5JikxH/zZk41W+fxCtegqrRVV9TKQR2kpCYJWPuq1QGACqMsvzJJtkqrqB5EFnQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e955swYi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="IIYDpcXV"
-Received: from eig-obgw-5003b.ext.cloudfilter.net ([10.0.29.155])
-	by cmsmtp with ESMTPS
-	id InGJvTTuJU1JTInGJvfG63; Tue, 11 Nov 2025 12:14:15 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id InGJvsQfuuWNOInGJv55YS; Tue, 11 Nov 2025 12:14:15 +0000
-X-Authority-Analysis: v=2.4 cv=N+gpF39B c=1 sm=1 tr=0 ts=69132897
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=F0GicbU7tRTSLTLZ85HXVw==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=oBrga82o3JoBcljm_xYA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=YHkNqbWnHwvdQg3BLnlc11EHlTVWBrg1MAlKIBmYEBw=; b=IIYDpcXV7hQM8CE6fsCi1jQkDs
-	zQgAvdaPn+V/l/ERdNXhMCVR7pD4QQR2a0L4afe6/QfHXjjlVAFd6rDK+6DVFykG7cfYVAoeKLMft
-	b0afW8alX4NRdXcsH9FnAxnbncQood2+s3rCiX7q2F5tp6RIrMPeSQcuw3p5tKOhqK6NRgnKqTGxm
-	BlC/+hiiKobes9wJx0d6mWvBeOOXACVV0dDLG3YyounnrH8wHPwz5XRLbkxJC7900Gc6buqym2ogT
-	MNR1G+nqmNV2sr86N2fWDfRg2wMDCVOwsjSYXxegSe6p4daNeGGip7cdCkDSxNDTTctzrpyMK0Gq8
-	cSsmprsQ==;
-Received: from m106072098064.v4.enabler.ne.jp ([106.72.98.64]:45116 helo=[10.221.86.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vInGI-00000002Z9Q-2mWK;
-	Tue, 11 Nov 2025 06:14:14 -0600
-Message-ID: <a9e5156b-2279-4ddd-992c-ca8ca7ab218a@embeddedor.com>
-Date: Tue, 11 Nov 2025 21:14:05 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e955swYi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93172C19425;
+	Tue, 11 Nov 2025 12:34:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762864501;
+	bh=P9kSJYPFha9VBnjvxXS0Y2nT53KXisQsU5JE1jGqHp0=;
+	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=e955swYiMNNYCa7VwRQlSOyFTTfCDSmSdI6bJgsUoU2yhrRFa1DdQu4RLICy+kYem
+	 sjrHJxwqY1uaIzocJnJFb5g0XGYJ4O9VQHKAHILWdLsFXBhZqgtuVDdw4WRqGAHOKB
+	 KOP4i2enGCjielpqLssCrG3oDgBHvsmlqYXEEe2jl7Ie1ThdZrmCbaH+5dJekpgWaP
+	 KKWTRYegj4o6a+C6hZoP5pfbfdk4JQKTFeVdwO02CEFo0a9WiiuzTozni/Oqzas7+p
+	 mHGLn4/d2ArGJ6y19mT0BBdwY3lTqIUlxKKM2iT04fITVrZGeTJEJyDtui736jtK98
+	 ZCobIORO1MfTA==
+Message-ID: <ded3ba14-d2d8-40be-8c0c-d41c4307347c@kernel.org>
+Date: Tue, 11 Nov 2025 13:34:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,159 +35,123 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Leon Romanovsky <leon@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Zhu Yanjun <zyjzyj2000@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+Reply-To: Daniel Gomez <da.gomez@kernel.org>
+Subject: Re: [PATCH v2 0/3] module: Add compile-time check for embedded NUL
+ characters
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ Hans Verkuil <hverkuil+cisco@kernel.org>,
+ Malcolm Priestley <tvboxspy@gmail.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Hans Verkuil <hverkuil@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Rusty Russell <rusty@rustcorp.com.au>, Petr Pavlu <petr.pavlu@suse.com>,
+ Sami Tolvanen <samitolvanen@google.com>, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-modules@vger.kernel.org,
  linux-hardening@vger.kernel.org
-References: <aRKu5lNV04Sq82IG@kspp> <20251111115621.GO15456@unreal>
+References: <20251010030348.it.784-kees@kernel.org>
+ <3dd1a00d-08f7-4801-a9f7-d6db61c0e0f3@kernel.org>
+ <aRMhLEs9NpGexL7B@black.igk.intel.com>
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20251111115621.GO15456@unreal>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Daniel Gomez <da.gomez@kernel.org>
+Organization: kernel.org
+In-Reply-To: <aRMhLEs9NpGexL7B@black.igk.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 106.72.98.64
-X-Source-L: No
-X-Exim-ID: 1vInGI-00000002Z9Q-2mWK
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: m106072098064.v4.enabler.ne.jp ([10.221.86.44]) [106.72.98.64]:45116
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKGhfxBB7elHhxN+4afeBW6AA7O9Kr4FbZDN3zvrew6RRyaUHwMt0yhT2vyyWs0RFZERtx2xsW8EkDH4h9gtA3nPOxP+HIrm45g9KrI71DFS9I4/RWxP
- rGFKAXOJkeJJwZLIE1lkc0p4QvXMARLsRBf7gIJRM6JoIFZe+2WSc4WbCjO7R3QN74tLiWFSRhlBY+7eR4K44tlPUpDhAqhVBMyJYOavUm2IT/uzZLtqRF9O
 
-
-
-On 11/11/25 20:56, Leon Romanovsky wrote:
-> On Tue, Nov 11, 2025 at 12:35:02PM +0900, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
+On 11/11/2025 12.42, Andy Shevchenko wrote:
+> On Wed, Nov 05, 2025 at 02:03:59PM +0100, Daniel Gomez wrote:
+>> On 10/10/2025 05.06, Kees Cook wrote:
+>>>  v2:
+>>>  - use static_assert instead of _Static_assert
+>>>  - add Hans's Reviewed-by's
+>>>  v1: https://lore.kernel.org/lkml/20251008033844.work.801-kees@kernel.org/
+>>>
+>>> Hi!
+>>>
+>>> A long time ago we had an issue with embedded NUL bytes in MODULE_INFO
+>>> strings[1]. While this stands out pretty strongly when you look at the
+>>> code, and we can't do anything about a binary module that just plain lies,
+>>> we never actually implemented the trivial compile-time check needed to
+>>> detect it.
+>>>
+>>> Add this check (and fix 2 instances of needless trailing semicolons that
+>>> this change exposed).
+>>>
+>>> Note that these patches were produced as part of another LLM exercise.
+>>> This time I wanted to try "what happens if I ask an LLM to go read
+>>> a specific LWN article and write a patch based on a discussion?" It
+>>> pretty effortlessly chose and implemented a suggested solution, tested
+>>> the change, and fixed new build warnings in the process.
+>>>
+>>> Since this was a relatively short session, here's an overview of the
+>>> prompts involved as I guided it through a clean change and tried to see
+>>> how it would reason about static_assert vs _Static_assert. (It wanted
+>>> to use what was most common, not what was the current style -- we may
+>>> want to update the comment above the static_assert macro to suggest
+>>> using _Static_assert directly these days...)
+>>>
+>>>   I want to fix a weakness in the module info strings. Read about it
+>>>   here: https://lwn.net/Articles/82305/
+>>>
+>>>   Since it's only "info" that we need to check, can you reduce the checks
+>>>   to just that instead of all the other stuff?
+>>>
+>>>   I think the change to the comment is redundent, and that should be
+>>>   in a commit log instead. Let's just keep the change to the static assert.
+>>>
+>>>   Is "static_assert" the idiomatic way to use a static assert in this
+>>>   code base? I've seen _Static_assert used sometimes.
+>>>
+>>>   What's the difference between the two?
+>>>
+>>>   Does Linux use C11 by default now?
+>>>
+>>>   Then let's not use the wrapper any more.
+>>>
+>>>   Do an "allmodconfig all -s" build to verify this works for all modules
+>>>   in the kernel.
+>>>
+>>>
+>>> Thanks!
+>>>
+>>> -Kees
+>>>
+>>> [1] https://lwn.net/Articles/82305/
+>>>
+>>> Kees Cook (3):
+>>>   media: dvb-usb-v2: lmedm04: Fix firmware macro definitions
+>>>   media: radio: si470x: Fix DRIVER_AUTHOR macro definition
+>>>   module: Add compile-time check for embedded NUL characters
+>>>
+>>>  include/linux/moduleparam.h                   |  3 +++
+>>>  drivers/media/radio/si470x/radio-si470x-i2c.c |  2 +-
+>>>  drivers/media/usb/dvb-usb-v2/lmedm04.c        | 12 ++++++------
+>>>  3 files changed, 10 insertions(+), 7 deletions(-)
+>>>
 >>
->> Use the new TRAILING_OVERLAP() helper to fix the following warning:
+>> Reviewed-by: Daniel Gomez <da.gomez@samsung.com>
 >>
->> 21 drivers/infiniband/sw/rxe/rxe_verbs.h:271:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>> I have also tested a build of v6.18-rc3 + patches using allmodconfig:
 >>
->> This helper creates a union between a flexible-array member (FAM) and a
->> set of MEMBERS that would otherwise follow it.
->>
->> This overlays the trailing MEMBER struct ib_sge sge[RXE_MAX_SGE]; onto
->> the FAM struct rxe_recv_wqe::dma.sge, while keeping the FAM and the
->> start of MEMBER aligned.
->>
->> The static_assert() ensures this alignment remains, and it's
->> intentionally placed inmediately after the related structure --no
->> blank line in between.
->>
->> Lastly, move the conflicting declaration struct rxe_resp_info resp;
->> to the end of the corresponding structure.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   drivers/infiniband/sw/rxe/rxe_verbs.h | 18 +++++++++++-------
->>   1 file changed, 11 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
->> index fd48075810dd..6498d61e8956 100644
->> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
->> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
->> @@ -219,12 +219,6 @@ struct rxe_resp_info {
->>   	u32			rkey;
->>   	u32			length;
->>   
->> -	/* SRQ only */
->> -	struct {
->> -		struct rxe_recv_wqe	wqe;
->> -		struct ib_sge		sge[RXE_MAX_SGE];
->> -	} srq_wqe;
->> -
->>   	/* Responder resources. It's a circular list where the oldest
->>   	 * resource is dropped first.
->>   	 */
->> @@ -232,7 +226,15 @@ struct rxe_resp_info {
->>   	unsigned int		res_head;
->>   	unsigned int		res_tail;
->>   	struct resp_res		*res;
->> +
->> +	/* SRQ only */
->> +	/* Must be last as it ends in a flexible-array member. */
->> +	TRAILING_OVERLAP(struct rxe_recv_wqe, wqe, dma.sge,
->> +		struct ib_sge		sge[RXE_MAX_SGE];
->> +	) srq_wqe;
+>> Tested-by: Daniel Gomez <da.gomez@samsung.com>
 > 
-> Will this change be enough?
+> Folks, are you aware that this change blown up the sparse?
+> Now there is a "bad constant expression" to each MODULE_*() macro line.
+
+Thanks for the heads up.
+
+I can see this thread:
+
+https://lore.kernel.org/all/D1CBCBE2-3A54-410A-B15C-F1C621F9F56B@kernel.org/#t
+
+And this:
+
+https://lore.kernel.org/linux-sparse/CACePvbVG2KrGQq4cNKV=wbO5h=jp3M0RO1SdfX8kV4OukjPG8A@mail.gmail.com/T/#t
+
 > 
-> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-> index fd48075810dd..9ab11421a585 100644
-> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-> @@ -219,12 +219,6 @@ struct rxe_resp_info {
->          u32                     rkey;
->          u32                     length;
->   
-> -       /* SRQ only */
-> -       struct {
-> -               struct rxe_recv_wqe     wqe;
-> -               struct ib_sge           sge[RXE_MAX_SGE];
-> -       } srq_wqe;
-> -
->          /* Responder resources. It's a circular list where the oldest
->           * resource is dropped first.
->           */
-> @@ -232,6 +226,12 @@ struct rxe_resp_info {
->          unsigned int            res_head;
->          unsigned int            res_tail;
->          struct resp_res         *res;
-> +
-> +       /* SRQ only */
-> +       struct {
-> +               struct ib_sge           sge[RXE_MAX_SGE];
-> +               struct rxe_recv_wqe     wqe;
-> +       } srq_wqe;
->   };
+> Nice that Uwe is in the Cc list, so IIRC he is Debian maintainer for sparse
+> and perhaps has an influence to it to some extent.
+> 
 
-The question is if this is really what you want?
-
-sge[RXE_MAX_SGE] is of the following type:
-
-struct ib_sge {
-         u64     addr;
-         u32     length;
-         u32     lkey;
-};
-
-and struct rxe_recv_wqe::dma.sge[] is of type:
-
-struct rxe_sge {
-         __aligned_u64 addr;
-         __u32   length;
-         __u32   lkey;
-};
-
-Both types are basically the same, and the original code looks
-pretty much like what people do when they want to pre-allocate
-a number of elements (of the same element type as the flex array)
-for a flexible-array member.
-
-Based on the above, the change you suggest seems a bit suspicious,
-and I'm not sure that's actually what you want?
-
-Thanks
--Gustavo
-
-
-
-
-
+Would it be better approach to postpone patch 3 from Kent until sparse is fixed?
