@@ -1,164 +1,127 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sg-1-19.ptr.blmpb.com (sg-1-19.ptr.blmpb.com [118.26.132.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31423AA195
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Nov 2025 13:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2E433AD82
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Nov 2025 13:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762867751; cv=none; b=JCxnjGlBpj35KkJF5JX6+EuEai8xuhUntFfKzYYwI1IMxb1TdgWyYR/8PtvmBlZKEWCVB7axgSD+0icDo0lXA6a96LYxOAO/Sd1mgyX2adH27uC5ZL4lNZhiUztRQQ39I6tMRoycZzjJYuvJqfhump544P1IsJhzWUe+PLj0VXg=
+	t=1762868597; cv=none; b=Gi+38zSaNKBuEUa/OeIOgjc5fe3UjEkfFAmF3yRLK3r6F9iod4o5dxWVcivRTF9uMbn6A8Q/2hYicfjesg7dBvQLbWKfxAu0RnVCyvAlndGeNJKxD0TaE8vNVLElKQyd8DoRoIKH4uLxMCPk+vgQuaumTPwYMV+h4zLczlrpEJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762867751; c=relaxed/simple;
-	bh=v0lSqiq2sWo3T0BJrMwy11NLOv/j2DiOsf7GTvaYqaA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NZfFmp4osxZDWW5wnmbTzLRDHoh5pQsbhDFE2JwPwDmIgzbOdDfV6+LWRgLJYgaxYt7+wEGpFZrozQc1g97A9kjq7/HGV6OxqZehTmpdagGBXbMohyw+TdstIgE8J1RSf88dOZ5Q5Apz5711tUHTrSZ4PONNeJWLCiz0/guuZqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=JGPrZC16; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1762868597; c=relaxed/simple;
+	bh=0H+Gerke8ppaRRjtigYGXTcaKIwDUqySBp2HGWMLq8o=;
+	h=In-Reply-To:To:Subject:Cc:Message-Id:From:Date:Mime-Version:
+	 Content-Disposition:References:Content-Type; b=T902EjWRpE5VyTfxiD+k621r1ShXXrSmN2aCOSND5YecTPUtQ9vEkE78AbzozBA765DqlAVfZFN864wLSf+9Ha1dhjDSCxyLF40jOzLRSAkJjmG4BUZyT5LUXhDakmarbg3fJl6dyflgYu7X5AaHoRIOhwGuFWu14JiILnYJX6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=none smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=nbhP1XHQ; arc=none smtp.client-ip=118.26.132.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fnnas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="JGPrZC16"
-Received: from eig-obgw-6004b.ext.cloudfilter.net ([10.0.30.210])
-	by cmsmtp with ESMTPS
-	id ImXSvXpeKSkcfIoQmv7Sre; Tue, 11 Nov 2025 13:29:08 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id IoQlvkQV2EQP9IoQmvF97J; Tue, 11 Nov 2025 13:29:08 +0000
-X-Authority-Analysis: v=2.4 cv=MpNS63ae c=1 sm=1 tr=0 ts=69133a24
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=F0GicbU7tRTSLTLZ85HXVw==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=xLSupZCTIYbk7TSy1gAA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
+	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="nbhP1XHQ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=2jv3T9IIY8maauDuJooEDt1SGO1tZAtuNsKX38mdNHc=; b=JGPrZC1615NoUm7gtzKIIF1KUm
-	rrGWTn+p4TOVknZ4HeAh3LLf6Cew9qfVW+wks3oWWnCbLCQZn554+g1E0msGJFuDgoqFV465QuFx6
-	O/RnzAiJlRPxwATGcvAi/FiGBWF66KtKmAZM1APPh8ESaURWjP7krDZoQiGDbFk3cMa2fgb6+Kg4U
-	MDsdHPYQrRpXznDesHfjH64y8eRZHTYAbBDb5W7soSFXTSaWt101UEEYE6EHXnpAXhwLD3gnV3BKw
-	wLD/gz0AakCkFD42AXlErqQaR92Fb28AcBLtcbRgOS3w8BPSPzTuexIM4hvCKONkpA7+oBD9X8zM7
-	Wbg0uk+A==;
-Received: from m106072098064.v4.enabler.ne.jp ([106.72.98.64]:32830 helo=[10.221.86.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vIoQl-00000000cju-1tgA;
-	Tue, 11 Nov 2025 07:29:07 -0600
-Message-ID: <a956504a-55af-4c2c-95a0-15663435624a@embeddedor.com>
-Date: Tue, 11 Nov 2025 22:28:57 +0900
+ s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1762868588;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=2b0zj8nz9IcPCTEaSOwNKpCL+oqq9pnCWEKq4tv2bec=;
+ b=nbhP1XHQBy9XRaPTLakTqzclZ6lAD6vkUC1Lqd0NGz8eHkJGPze8Ral2IOz0qTIUp7cE3A
+ e4rYzb7TjaQnAbjkPN8d5nVC39mxOqv41UleEBa5zSMk1adMOpNZPFOL0XcGIz1tQBt3go
+ GDxs90D3RoyCtI6npkMUNV5RKeFk85U+QvwcDClMcxeTljtIZlGNs82AK/oduwjkRXSf+A
+ j5b2kSj4y8HFwNAkbUwnH/wHCxND4adH7HMwZro/lgEZ0gPdLJ6YZS5QJO/Xi+IsQxUieN
+ tZ6s5BQQEpw6cXd7iNyZ2T1f2AXS0CqJydU5IDHKP7apcYUfrhjgRxk7tgo/7Q==
+In-Reply-To: <a956504a-55af-4c2c-95a0-15663435624a@embeddedor.com>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] bcache: Avoid -Wflex-array-member-not-at-end warning
+Received: from studio.coly ([120.245.64.178]) by smtp.feishu.cn with ESMTPS; Tue, 11 Nov 2025 21:43:06 +0800
+Content-Transfer-Encoding: 7bit
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"Andrew Morton" <akpm@linux-foundation.org>, 
+	<linux-bcache@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-hardening@vger.kernel.org>
+Message-Id: <7zweggwc6mkksyhxzbdsphachjj5pzlaebli6xitryfl4yiqdj@eziyaibeuhza>
+X-Lms-Return-Path: <lba+269133d6b+56f6ac+vger.kernel.org+colyli@fnnas.com>
+From: "Coly Li" <colyli@fnnas.com>
+Date: Tue, 11 Nov 2025 21:43:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] bcache: Avoid -Wflex-array-member-not-at-end
- warning
-To: Coly Li <colyli@fnnas.com>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aRHFchrO3BmVMH5c@kspp>
- <7g2dkwi2nzxe2luykodsknobzr5bkl23d5mbahkyo7adhg55oy@6uisoc7jzgy6>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <7g2dkwi2nzxe2luykodsknobzr5bkl23d5mbahkyo7adhg55oy@6uisoc7jzgy6>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 106.72.98.64
-X-Source-L: No
-X-Exim-ID: 1vIoQl-00000000cju-1tgA
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: m106072098064.v4.enabler.ne.jp ([10.221.86.44]) [106.72.98.64]:32830
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCMLY+J9zb9Bwe6fmQzTcACTTH1AALhKcjqVwvEPQP1ecQ+K6yHS58yRJLgtQGBBzwVifO+M7+DiRWnlDbmcpy4vgdUAP0bac1DZkbrNFx7grRokLxVi
- b4Niqwio4JgB4IIHcdneY/PcsqEj0HHK4ub/u08j/6iH/S99qRckjSxs5nPEd2AxsjRaiKu9e30X8jKMjmdZKTcv+52Io5C5HdnpyKfh/9e5Eyr2Rq7gvVAB
+Mime-Version: 1.0
+Content-Disposition: inline
+References: <aRHFchrO3BmVMH5c@kspp> <7g2dkwi2nzxe2luykodsknobzr5bkl23d5mbahkyo7adhg55oy@6uisoc7jzgy6> <a956504a-55af-4c2c-95a0-15663435624a@embeddedor.com>
+X-Original-From: Coly Li <colyli@fnnas.com>
+Content-Type: text/plain; charset=UTF-8
 
-
-
-On 11/11/25 22:17, Coly Li wrote:
-> On Mon, Nov 10, 2025 at 07:58:58PM +0800, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Use the new TRAILING_OVERLAP() helper to fix the following warning:
->>
->> drivers/md/bcache/bset.h:330:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> This helper creates a union between a flexible-array member (FAM) and a
->> set of MEMBERS that would otherwise follow it.
->>
->> This overlays the trailing MEMBER struct btree_iter_set stack_data[MAX_BSETS];
->> onto the FAM struct btree_iter::data[], while keeping the FAM and the start
->> of MEMBER aligned.
->>
->> The static_assert() ensures this alignment remains, and it's
->> intentionally placed inmediately after the corresponding structures --no
->> blank line in between.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   drivers/md/bcache/bset.h | 8 ++++++--
->>   1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
->> index 011f6062c4c0..6ee2c6a506a2 100644
->> --- a/drivers/md/bcache/bset.h
->> +++ b/drivers/md/bcache/bset.h
->> @@ -327,9 +327,13 @@ struct btree_iter {
->>   /* Fixed-size btree_iter that can be allocated on the stack */
->>   
->>   struct btree_iter_stack {
->> -	struct btree_iter iter;
->> -	struct btree_iter_set stack_data[MAX_BSETS];
->> +	/* Must be last as it ends in a flexible-array member. */
->> +	TRAILING_OVERLAP(struct btree_iter, iter, data,
->> +		struct btree_iter_set stack_data[MAX_BSETS];
->> +	);
->>   };
->> +static_assert(offsetof(struct btree_iter_stack, iter.data) ==
->> +	      offsetof(struct btree_iter_stack, stack_data));
->>
+On Tue, Nov 11, 2025 at 10:28:57PM +0800, Gustavo A. R. Silva wrote:
 > 
-> I have to say this is ugly. Not the patch, but the gcc 14 warning option
-> of such coding style. Look at TRAILING_OVERLAP() usage here, this is not
-> C, this is something to fix a gcc bug which cannot handle FAM properly.
-
-This is not a GCC bug.
-
 > 
-> Gustavo, this complain is not to you, just I feel a bit sad how GCC makes
-> the code comes to such an ugly way, and it makes things much complicated.
-> For anyone doesn't have deep understanding of TRAILING_OVERLAP(), I
-> highly suspect whether he or she can understand what happens here.
+> On 11/11/25 22:17, Coly Li wrote:
+> > On Mon, Nov 10, 2025 at 07:58:58PM +0800, Gustavo A. R. Silva wrote:
+> > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> > > getting ready to enable it, globally.
+> > > 
+> > > Use the new TRAILING_OVERLAP() helper to fix the following warning:
+> > > 
+> > > drivers/md/bcache/bset.h:330:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > > 
+> > > This helper creates a union between a flexible-array member (FAM) and a
+> > > set of MEMBERS that would otherwise follow it.
+> > > 
+> > > This overlays the trailing MEMBER struct btree_iter_set stack_data[MAX_BSETS];
+> > > onto the FAM struct btree_iter::data[], while keeping the FAM and the start
+> > > of MEMBER aligned.
+> > > 
+> > > The static_assert() ensures this alignment remains, and it's
+> > > intentionally placed inmediately after the corresponding structures --no
+> > > blank line in between.
+> > > 
+> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > > ---
+> > >   drivers/md/bcache/bset.h | 8 ++++++--
+> > >   1 file changed, 6 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
+> > > index 011f6062c4c0..6ee2c6a506a2 100644
+> > > --- a/drivers/md/bcache/bset.h
+> > > +++ b/drivers/md/bcache/bset.h
+> > > @@ -327,9 +327,13 @@ struct btree_iter {
+> > >   /* Fixed-size btree_iter that can be allocated on the stack */
+> > >   struct btree_iter_stack {
+> > > -	struct btree_iter iter;
+> > > -	struct btree_iter_set stack_data[MAX_BSETS];
+> > > +	/* Must be last as it ends in a flexible-array member. */
+> > > +	TRAILING_OVERLAP(struct btree_iter, iter, data,
+> > > +		struct btree_iter_set stack_data[MAX_BSETS];
+> > > +	);
+> > >   };
+> > > +static_assert(offsetof(struct btree_iter_stack, iter.data) ==
+> > > +	      offsetof(struct btree_iter_stack, stack_data));
+> > > 
+> > 
+> > I have to say this is ugly. Not the patch, but the gcc 14 warning option
+> > of such coding style. Look at TRAILING_OVERLAP() usage here, this is not
+> > C, this is something to fix a gcc bug which cannot handle FAM properly.
 > 
-> Andrew and Gustavo, is this a mandatary to fix FAM in such way? If yes
-> I take the patch and keep my own opinion. If not, I'd like to see gcc
-> fixes its bug, for the this code I don't see the author does things
-> wrong.
+> This is not a GCC bug.
+> 
+> > 
+> > Gustavo, this complain is not to you, just I feel a bit sad how GCC makes
+> > the code comes to such an ugly way, and it makes things much complicated.
+> > For anyone doesn't have deep understanding of TRAILING_OVERLAP(), I
+> > highly suspect whether he or she can understand what happens here.
+> > 
+> > Andrew and Gustavo, is this a mandatary to fix FAM in such way? If yes
+> > I take the patch and keep my own opinion. If not, I'd like to see gcc
+> > fixes its bug, for the this code I don't see the author does things
+> > wrong.
+> 
+> This is a false positive that needs to be addressed in some way in order to
+> enable -Wflex-array-member-not-at-end in mainline.
+> 
+> Here you can take a look at the patches I (and others) have submitted to
+> modify similar code over the last year:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/?qt=grep&q=-Wflex-array-member-not-at-end
+> 
 
-This is a false positive that needs to be addressed in some way in order to
-enable -Wflex-array-member-not-at-end in mainline.
+I see. I take this patch, with the above complain...
 
-Here you can take a look at the patches I (and others) have submitted to
-modify similar code over the last year:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/?qt=grep&q=-Wflex-array-member-not-at-end
-
-Thanks
--Gustavo
-
-
+Coly Li
