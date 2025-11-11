@@ -1,157 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sg-1-18.ptr.blmpb.com (sg-1-18.ptr.blmpb.com [118.26.132.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9883AA1AB;
-	Tue, 11 Nov 2025 12:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69859324712
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Nov 2025 13:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762864502; cv=none; b=CWoWcbufpy4l6zRYIO4E4xwRYIJrNv/CfQiaIbmCUOeZbQgYzXhdD+ZeZUZlmxl2Zt2FLhlJcSAEb5JMai7o8/uaCDYVCGYcpooiETahgBEPE89Q6jeXvN5A0Q5ekhWcSTOlW3j52EWbPX4hXesEKioLM4MH7O05pRNfXF4IR5Y=
+	t=1762867067; cv=none; b=QT223OtnzGqnNWQzxBdC0+X6+RWofmH4oTS060wj68ZYjn3ARyuF/Yvem1bVES7Yj4CpPuYzSTccLV/3hnzHQ2ZVUgJo94fJQKgkjjG4Dght9GnCwl/cd9ZxOzD/A5xcZ0sAu2HlySxQF/lFQspz878Hjh2Vy0lcAKSFoIpCrE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762864502; c=relaxed/simple;
-	bh=P9kSJYPFha9VBnjvxXS0Y2nT53KXisQsU5JE1jGqHp0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R0/qGOFIxkkHWTpZscK9pwDSxdbSM5/iFHo07gwbdGDtCR0BCtMxMegWJAvEasr7onEEWJK3KjN4N+O8ZHnoS5OyGUv0vBWIyl5PgbjSGJR5JikxH/zZk41W+fxCtegqrRVV9TKQR2kpCYJWPuq1QGACqMsvzJJtkqrqB5EFnQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e955swYi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762867067; c=relaxed/simple;
+	bh=awKwiwuSRCWT0kyJeo4gNkXWoOGLHXIgo4pDjHA1q20=;
+	h=Content-Type:Subject:Message-Id:Mime-Version:In-Reply-To:
+	 References:To:Cc:Date:From:Content-Disposition; b=tXwwEUNtJIRL8I4LUwEejE43hEJFEx8njW4+I7Sy6EzLI5TcyjrBX19D5Y3SwwigCegpPBdgF52mybhx7j/d1Hp7Cq5RHv5CjegWV8rT4a90u6tZwF5qxDHxCRamdI47q4npdbRHg62czSEbZZNJR8d+c5BQKo4WTVNejCQOpv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=fail smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=CEYcImm+; arc=none smtp.client-ip=118.26.132.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=fnnas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e955swYi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93172C19425;
-	Tue, 11 Nov 2025 12:34:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762864501;
-	bh=P9kSJYPFha9VBnjvxXS0Y2nT53KXisQsU5JE1jGqHp0=;
-	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e955swYiMNNYCa7VwRQlSOyFTTfCDSmSdI6bJgsUoU2yhrRFa1DdQu4RLICy+kYem
-	 sjrHJxwqY1uaIzocJnJFb5g0XGYJ4O9VQHKAHILWdLsFXBhZqgtuVDdw4WRqGAHOKB
-	 KOP4i2enGCjielpqLssCrG3oDgBHvsmlqYXEEe2jl7Ie1ThdZrmCbaH+5dJekpgWaP
-	 KKWTRYegj4o6a+C6hZoP5pfbfdk4JQKTFeVdwO02CEFo0a9WiiuzTozni/Oqzas7+p
-	 mHGLn4/d2ArGJ6y19mT0BBdwY3lTqIUlxKKM2iT04fITVrZGeTJEJyDtui736jtK98
-	 ZCobIORO1MfTA==
-Message-ID: <ded3ba14-d2d8-40be-8c0c-d41c4307347c@kernel.org>
-Date: Tue, 11 Nov 2025 13:34:56 +0100
+	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="CEYcImm+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1762867052;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=pKv8Nt8oRFQ94pEmzKvEJBVB1zRjVj1//CmenNLWeXM=;
+ b=CEYcImm+Dy90JNYfuqv/t5wwAjsgUIm75nMIZ0b56Z+bmvM+DLBygTiCnFO9E/zgN97yuq
+ yP5VDSzLw/R61qymd3sHlLziPZIKa3bm6RYkjLLNKqth+Mb1AeWLxiLGt50PUvlxPHMaK1
+ HiqFrz3Yjs+pJMO25PI7phIkdEJd3qwTewdD3ycU3eUO1zFTwgtdt3qoJ/NIn636OSaNz+
+ eWso5SqgzBhzkPMBQvtcc7ZDGRcdcZQlLegpZO6Z3GrWfp++iYDYq/n6pTi+UDzxFzd74Q
+ 3X686Uua446W6hg0XaFj+BrN2Jg6vUBIBnowax+yVwPW8JaRsLqwjBJ7iNp4nQ==
+Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH][next] bcache: Avoid -Wflex-array-member-not-at-end warning
+Message-Id: <7g2dkwi2nzxe2luykodsknobzr5bkl23d5mbahkyo7adhg55oy@6uisoc7jzgy6>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Daniel Gomez <da.gomez@kernel.org>
-Subject: Re: [PATCH v2 0/3] module: Add compile-time check for embedded NUL
- characters
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
- Hans Verkuil <hverkuil+cisco@kernel.org>,
- Malcolm Priestley <tvboxspy@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Hans Verkuil <hverkuil@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Rusty Russell <rusty@rustcorp.com.au>, Petr Pavlu <petr.pavlu@suse.com>,
- Sami Tolvanen <samitolvanen@google.com>, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-modules@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20251010030348.it.784-kees@kernel.org>
- <3dd1a00d-08f7-4801-a9f7-d6db61c0e0f3@kernel.org>
- <aRMhLEs9NpGexL7B@black.igk.intel.com>
-Content-Language: en-US
-From: Daniel Gomez <da.gomez@kernel.org>
-Organization: kernel.org
-In-Reply-To: <aRMhLEs9NpGexL7B@black.igk.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+In-Reply-To: <aRHFchrO3BmVMH5c@kspp>
+References: <aRHFchrO3BmVMH5c@kspp>
+X-Lms-Return-Path: <lba+26913376a+96212c+vger.kernel.org+colyli@fnnas.com>
 Content-Transfer-Encoding: 7bit
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"Andrew Morton" <akpm@linux-foundation.org>
+Cc: "Andrew Morton" <akpm@linux-foundation.org>, 
+	<linux-bcache@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-hardening@vger.kernel.org>
+Date: Tue, 11 Nov 2025 21:17:28 +0800
+X-Original-From: Coly Li <colyli@fnnas.com>
+Received: from studio.coly ([120.245.64.178]) by smtp.feishu.cn with ESMTPS; Tue, 11 Nov 2025 21:17:29 +0800
+From: "Coly Li" <colyli@fnnas.com>
+Content-Disposition: inline
 
-On 11/11/2025 12.42, Andy Shevchenko wrote:
-> On Wed, Nov 05, 2025 at 02:03:59PM +0100, Daniel Gomez wrote:
->> On 10/10/2025 05.06, Kees Cook wrote:
->>>  v2:
->>>  - use static_assert instead of _Static_assert
->>>  - add Hans's Reviewed-by's
->>>  v1: https://lore.kernel.org/lkml/20251008033844.work.801-kees@kernel.org/
->>>
->>> Hi!
->>>
->>> A long time ago we had an issue with embedded NUL bytes in MODULE_INFO
->>> strings[1]. While this stands out pretty strongly when you look at the
->>> code, and we can't do anything about a binary module that just plain lies,
->>> we never actually implemented the trivial compile-time check needed to
->>> detect it.
->>>
->>> Add this check (and fix 2 instances of needless trailing semicolons that
->>> this change exposed).
->>>
->>> Note that these patches were produced as part of another LLM exercise.
->>> This time I wanted to try "what happens if I ask an LLM to go read
->>> a specific LWN article and write a patch based on a discussion?" It
->>> pretty effortlessly chose and implemented a suggested solution, tested
->>> the change, and fixed new build warnings in the process.
->>>
->>> Since this was a relatively short session, here's an overview of the
->>> prompts involved as I guided it through a clean change and tried to see
->>> how it would reason about static_assert vs _Static_assert. (It wanted
->>> to use what was most common, not what was the current style -- we may
->>> want to update the comment above the static_assert macro to suggest
->>> using _Static_assert directly these days...)
->>>
->>>   I want to fix a weakness in the module info strings. Read about it
->>>   here: https://lwn.net/Articles/82305/
->>>
->>>   Since it's only "info" that we need to check, can you reduce the checks
->>>   to just that instead of all the other stuff?
->>>
->>>   I think the change to the comment is redundent, and that should be
->>>   in a commit log instead. Let's just keep the change to the static assert.
->>>
->>>   Is "static_assert" the idiomatic way to use a static assert in this
->>>   code base? I've seen _Static_assert used sometimes.
->>>
->>>   What's the difference between the two?
->>>
->>>   Does Linux use C11 by default now?
->>>
->>>   Then let's not use the wrapper any more.
->>>
->>>   Do an "allmodconfig all -s" build to verify this works for all modules
->>>   in the kernel.
->>>
->>>
->>> Thanks!
->>>
->>> -Kees
->>>
->>> [1] https://lwn.net/Articles/82305/
->>>
->>> Kees Cook (3):
->>>   media: dvb-usb-v2: lmedm04: Fix firmware macro definitions
->>>   media: radio: si470x: Fix DRIVER_AUTHOR macro definition
->>>   module: Add compile-time check for embedded NUL characters
->>>
->>>  include/linux/moduleparam.h                   |  3 +++
->>>  drivers/media/radio/si470x/radio-si470x-i2c.c |  2 +-
->>>  drivers/media/usb/dvb-usb-v2/lmedm04.c        | 12 ++++++------
->>>  3 files changed, 10 insertions(+), 7 deletions(-)
->>>
->>
->> Reviewed-by: Daniel Gomez <da.gomez@samsung.com>
->>
->> I have also tested a build of v6.18-rc3 + patches using allmodconfig:
->>
->> Tested-by: Daniel Gomez <da.gomez@samsung.com>
+On Mon, Nov 10, 2025 at 07:58:58PM +0800, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> Folks, are you aware that this change blown up the sparse?
-> Now there is a "bad constant expression" to each MODULE_*() macro line.
-
-Thanks for the heads up.
-
-I can see this thread:
-
-https://lore.kernel.org/all/D1CBCBE2-3A54-410A-B15C-F1C621F9F56B@kernel.org/#t
-
-And this:
-
-https://lore.kernel.org/linux-sparse/CACePvbVG2KrGQq4cNKV=wbO5h=jp3M0RO1SdfX8kV4OukjPG8A@mail.gmail.com/T/#t
-
+> Use the new TRAILING_OVERLAP() helper to fix the following warning:
 > 
-> Nice that Uwe is in the Cc list, so IIRC he is Debian maintainer for sparse
-> and perhaps has an influence to it to some extent.
+> drivers/md/bcache/bset.h:330:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> This helper creates a union between a flexible-array member (FAM) and a
+> set of MEMBERS that would otherwise follow it.
+> 
+> This overlays the trailing MEMBER struct btree_iter_set stack_data[MAX_BSETS];
+> onto the FAM struct btree_iter::data[], while keeping the FAM and the start
+> of MEMBER aligned.
+> 
+> The static_assert() ensures this alignment remains, and it's
+> intentionally placed inmediately after the corresponding structures --no
+> blank line in between.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/md/bcache/bset.h | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
+> index 011f6062c4c0..6ee2c6a506a2 100644
+> --- a/drivers/md/bcache/bset.h
+> +++ b/drivers/md/bcache/bset.h
+> @@ -327,9 +327,13 @@ struct btree_iter {
+>  /* Fixed-size btree_iter that can be allocated on the stack */
+>  
+>  struct btree_iter_stack {
+> -	struct btree_iter iter;
+> -	struct btree_iter_set stack_data[MAX_BSETS];
+> +	/* Must be last as it ends in a flexible-array member. */
+> +	TRAILING_OVERLAP(struct btree_iter, iter, data,
+> +		struct btree_iter_set stack_data[MAX_BSETS];
+> +	);
+>  };
+> +static_assert(offsetof(struct btree_iter_stack, iter.data) ==
+> +	      offsetof(struct btree_iter_stack, stack_data));
 > 
 
-Would it be better approach to postpone patch 3 from Kent until sparse is fixed?
+I have to say this is ugly. Not the patch, but the gcc 14 warning option
+of such coding style. Look at TRAILING_OVERLAP() usage here, this is not
+C, this is something to fix a gcc bug which cannot handle FAM properly.
+
+Gustavo, this complain is not to you, just I feel a bit sad how GCC makes
+the code comes to such an ugly way, and it makes things much complicated.
+For anyone doesn't have deep understanding of TRAILING_OVERLAP(), I
+highly suspect whether he or she can understand what happens here.
+
+Andrew and Gustavo, is this a mandatary to fix FAM in such way? If yes
+I take the patch and keep my own opinion. If not, I'd like to see gcc
+fixes its bug, for the this code I don't see the author does things
+wrong.
+
+Coly Li
