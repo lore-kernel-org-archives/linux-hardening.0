@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06032AD0D;
-	Tue, 11 Nov 2025 03:01:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C98F60B8A;
+	Tue, 11 Nov 2025 03:35:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762830085; cv=none; b=VrhfRh4s5577m7Y70DsB718VXqxVokxZ0+PsspSc0CbaZLBUH+DFoLh3iSy8ffX1fVnag8Ett3/MbAWl9G83fA2a2wXcXurOPGUyQJ7zMmHEXgwPqtkaOLAT+bex3SbwlaB7lg/n4ZkVa4BZqehJ4sZIb/VNTrFbKXa2ymfjbJM=
+	t=1762832107; cv=none; b=Gi4T+PwMju7CYyIEhebe7ICShVO6p/w8vtvImBQ58uY/T6POsA3bngkHXc2ele0VnJri+pJptqR0YIXibsoQ2Kml0VSJqJ3zDx/nWBsIPGY67Pfhn3uyberCs9byz5yZsi1Bl2vIc7eo3ItaX3T8//bYo+WHFuf52o+zF1HlUvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762830085; c=relaxed/simple;
-	bh=ffT4XRgc3gSzu/oLyQRC6VgHEbyS3+VNOYHJPEHQBhU=;
+	s=arc-20240116; t=1762832107; c=relaxed/simple;
+	bh=9zeEptkI8w6bdJjrk6CgIgbcm9k2lrjPlUN+bSaVvPA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=DxHgn1m2mQ0JgbTAzszSWhg/0od/YDzpJqpqI6inKcYCJX7lPP6Tq0dMXm1QO5ryQuuHgB2VLxk4hhrdWlTP0apViV57zHW7XtWw5L7jEWN6WUMxRrFpYbZ/7hiMC5eFHfiQQvAjbYCNvVIz0isXG9168CvUJn3sEB3kCtwEThw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVUwICY5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=Z2G9b2BrsPoCTfkkICqgowMlcWgTdh5a02amoog1KQLCKbhMOFGA4tU37IjCIbtSsSHttFWN+ihB7SqYdEYI2KuyXt2/wu1S6fWjCgcbSWY31fhScWHMyAgjmqeuDBZJnZeoyQKYF5R7gAUJ4IxllITx4F7l/vcRW3aRgkh0kTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O91AfSNV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVUwICY5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7713C113D0;
-	Tue, 11 Nov 2025 03:01:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O91AfSNV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82CA0C4CEF5;
+	Tue, 11 Nov 2025 03:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762830084;
-	bh=ffT4XRgc3gSzu/oLyQRC6VgHEbyS3+VNOYHJPEHQBhU=;
+	s=k20201202; t=1762832107;
+	bh=9zeEptkI8w6bdJjrk6CgIgbcm9k2lrjPlUN+bSaVvPA=;
 	h=Date:From:To:Cc:Subject:From;
-	b=iVUwICY50goymhKgmwYiHDyBVgytrpH8KVrWFHdL0Kd0zFdvm5i4wQfHVv5jlhzzC
-	 GgGpDaZXB0TEtnCtbc3cmVruYKOe182KYFh1/W5401K29VMB/Eso6gjJPDSxw7iP6Q
-	 yDoG0Fr+kDfP3oLLh03DTqHNF4yRLzzahP1hgJvOC0AukCFfck10DjfHUuPt513UCn
-	 sJBLby32K7041Lu92hL8i4Dl/ZN9SZ9rDgEVUF7NuSs2C7tfbrTpaFywNkRyto0cKv
-	 jJsfpneTspz5Sn3isDXvif+y1dzlXeNriIwJzgIWoVuMqWzwjDoRfceOXZEFnEaDEN
-	 5ivzKhHV5O7jQ==
-Date: Tue, 11 Nov 2025 12:01:19 +0900
+	b=O91AfSNVaR8bAIXL5Co8ZGbIkrDraCxUHQedhWXV0D/ggthut+IhW3JvUOU9aDmNM
+	 A6BuP1tkcXHtDi2NLeLoHoH0G8vBODwWWWt5OFzNgeCyWgiUL8wQ8XjNwk0irTRYgp
+	 v6UwtlCvPkGcJ0H56xMirmuGJFnwZ43QHH9V6gW3MFA+4DPsbW/UrbO1h2cw7bGiuL
+	 OlJZcks7kxkic9oTYL8whZt2aAsWcPwOCfewV9Ei6ZqTttExI4otvzNHJFUCPuKkQL
+	 DP4CsWBJyeITAdB4zV2MNNLSR88OivRo2MzbR/x586Q0OdQZs8KroFenYKq1SD/wTs
+	 NOiiVeOonOfHA==
+Date: Tue, 11 Nov 2025 12:35:02 +0900
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+To: Zhu Yanjun <zyjzyj2000@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>
+Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] ocfs2: Avoid -Wflex-array-member-not-at-end warning
-Message-ID: <aRKm_7aN7Smc3J5L@kspp>
+Subject: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end warnings
+Message-ID: <aRKu5lNV04Sq82IG@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,44 +49,78 @@ getting ready to enable it, globally.
 
 Use the new TRAILING_OVERLAP() helper to fix the following warning:
 
-fs/ocfs2/xattr.c:52:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+21 drivers/infiniband/sw/rxe/rxe_verbs.h:271:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 This helper creates a union between a flexible-array member (FAM) and a
 set of MEMBERS that would otherwise follow it.
 
-This overlays the trailing MEMBER struct ocfs2_extent_rec er; onto the
-FAM struct ocfs2_xattr_value_root::xr_list.l_recs[], while keeping the
-FAM and the start of MEMBER aligned.
+This overlays the trailing MEMBER struct ib_sge sge[RXE_MAX_SGE]; onto
+the FAM struct rxe_recv_wqe::dma.sge, while keeping the FAM and the
+start of MEMBER aligned.
 
 The static_assert() ensures this alignment remains, and it's
 intentionally placed inmediately after the related structure --no
 blank line in between.
 
+Lastly, move the conflicting declaration struct rxe_resp_info resp;
+to the end of the corresponding structure.
+
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- fs/ocfs2/xattr.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_verbs.h | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
-index d70a20d29e3e..09069defd7e1 100644
---- a/fs/ocfs2/xattr.c
-+++ b/fs/ocfs2/xattr.c
-@@ -49,9 +49,13 @@
- #include "ocfs2_trace.h"
+diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+index fd48075810dd..6498d61e8956 100644
+--- a/drivers/infiniband/sw/rxe/rxe_verbs.h
++++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+@@ -219,12 +219,6 @@ struct rxe_resp_info {
+ 	u32			rkey;
+ 	u32			length;
  
- struct ocfs2_xattr_def_value_root {
--	struct ocfs2_xattr_value_root	xv;
--	struct ocfs2_extent_rec		er;
+-	/* SRQ only */
+-	struct {
+-		struct rxe_recv_wqe	wqe;
+-		struct ib_sge		sge[RXE_MAX_SGE];
+-	} srq_wqe;
+-
+ 	/* Responder resources. It's a circular list where the oldest
+ 	 * resource is dropped first.
+ 	 */
+@@ -232,7 +226,15 @@ struct rxe_resp_info {
+ 	unsigned int		res_head;
+ 	unsigned int		res_tail;
+ 	struct resp_res		*res;
++
++	/* SRQ only */
 +	/* Must be last as it ends in a flexible-array member. */
-+	TRAILING_OVERLAP(struct ocfs2_xattr_value_root, xv, xr_list.l_recs,
-+		struct ocfs2_extent_rec		er;
-+	);
++	TRAILING_OVERLAP(struct rxe_recv_wqe, wqe, dma.sge,
++		struct ib_sge		sge[RXE_MAX_SGE];
++	) srq_wqe;
  };
-+static_assert(offsetof(struct ocfs2_xattr_def_value_root, xv.xr_list.l_recs) ==
-+	      offsetof(struct ocfs2_xattr_def_value_root, er));
++static_assert(offsetof(struct rxe_resp_info, srq_wqe.wqe.dma.sge) ==
++	      offsetof(struct rxe_resp_info, srq_wqe.sge));
  
- struct ocfs2_xattr_bucket {
- 	/* The inode these xattrs are associated with */
+ struct rxe_qp {
+ 	struct ib_qp		ibqp;
+@@ -269,7 +271,6 @@ struct rxe_qp {
+ 
+ 	struct rxe_req_info	req;
+ 	struct rxe_comp_info	comp;
+-	struct rxe_resp_info	resp;
+ 
+ 	atomic_t		ssn;
+ 	atomic_t		skb_out;
+@@ -289,6 +290,9 @@ struct rxe_qp {
+ 	spinlock_t		state_lock; /* guard requester and completer */
+ 
+ 	struct execute_work	cleanup_work;
++
++	/* Must be last as it ends in a flexible-array member. */
++	struct rxe_resp_info	resp;
+ };
+ 
+ enum {
 -- 
 2.43.0
 
