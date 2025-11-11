@@ -1,138 +1,133 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE48377E86
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Nov 2025 16:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9951835A14B
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Nov 2025 17:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762879928; cv=none; b=YLBWqEJK/UV3DWcmbydZzmQnhy/HqpYANFmAbNPpwHumHeUzJZmRoNNredm0xwpkFAcewFgAGax3M7afM76848mgGR5Ojb2KVy2G8FDKCNvwentwdKbWOSPmVQgNopkaIyrXzoxLj1/JPXV5flKtjEBKYkVp9724NfdlSvVcGkg=
+	t=1762883574; cv=none; b=U0YFdEYtglzrUBPNHUcq3c9P/yjrm46BUz6lGvNRHAt+kDeza+NJQR8h/nfWijUkwLrtMKBaf4YC7zD/ZZdA1lgMlGc0utzqM7jytwoeWPccfRDgq+Ziv0yFF91WXj4493WX/Ethxn9LS3wS+dcsBQtg/UPsyFBwyyeVelAy3XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762879928; c=relaxed/simple;
-	bh=HEIC2usiTHdfW1IJriTA3jOrfNUiVWrInSNqYkPBaGo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ev/PLY38Ml8tj3LjsmtyxDfPGSgT/MBIBDie+TkbMsX83WEFJ30dUbEn0FNhG1W4zXhgJp/itKB0EJW3ZUJ74KVX6fHlI7QYrfRxLddqEkV1jIaQqxe49I3jkH+pm5rm7CQZ/IZ2ZdFNbssO8SLEZUwNE0ZSOOsfFgc+gm8NT28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=V6vmHzIZ; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1762883574; c=relaxed/simple;
+	bh=46edM+lm/eIeFQfqmSHoHH2PCoG6egQvGXMvADmFIHY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rf8QKMbSL2gOAohj/Y9OfvzwK5CRJUvXY/WpLLN5zN+lq6FS9ax+pSzEqT0QSe/pMUSmuRGon4jLgfHGVowLzbWI8P2Tgpp4hhupCB3b7r2wCoI2Pes61QsI0WW9exH3kZoeZ1TqRD4d3XMatraJlPthzVKeQzEQeG3aIMPIPZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=j0uuJRWx; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="V6vmHzIZ"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8b25ed53fcbso443729085a.0
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Nov 2025 08:52:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="j0uuJRWx"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b7272012d30so4835466b.2
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Nov 2025 09:52:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1762879924; x=1763484724; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uaNFkqsjr5HqJ0U2z2rhHc1IR4euaoELq+Vuadxi0mU=;
-        b=V6vmHzIZ/0h7EG7IVdRdOaO4C+VQXmZpWkT533XH8PJbezQnyvbfR0oj+PHCbZgjYv
-         MM3U9dyu0ZjiX15PmEwMJf5+JndnDy1GL3RKUR+8XIVMP0ibr6hj4nseci/qvvFxaDqK
-         5VV0vdbPgLEaC498zwwEJUN22k87lH65Kc5805zrDSRMBwzZTSv1kftFRKcbq+3zF5hE
-         0qP5TfYV390B0zbi8X94lENmZElkbGgjI40s+Hq/TsUn0ZX3m9XUhVspaKc2+d4V2Huc
-         LE83yy8wrkxFyiyKxdOQrFSWnOuCzB/Ixk2uJRPM+pOOXEfemtiLVPwdy24UalKnQWJ5
-         +4Aw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1762883571; x=1763488371; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=46edM+lm/eIeFQfqmSHoHH2PCoG6egQvGXMvADmFIHY=;
+        b=j0uuJRWx4TCgzGcs0iQ/SY+Rz3bHmVL8AO9iaZEmEfl2Hvk3Rq1JTDY0Avo9eNwBF9
+         g4jcgzz2Zn+9VuQKLxQChIuYSGAHg2DDU10EHVRSc9HmVefDP7xf1duGH/mXH/ktm/B6
+         5XK+iNWb7ZvuvPqVV1hlGaSXhp5zZjJyCm6uhxM9HLcul0bmu+qr7hUpjpt8bI3Nkx6h
+         PU/5p3MDB2/pt2aS6Ud1UqOm3jJKyIPNDVeSWfH4j/id7I85JcnMm5qASHLEUkY3bhn6
+         /xfn1gOFI/5IhBVMBp2HuV5VZkX/9Y4U6qcJACFw8kOrcLTqKTvhn68SVt7tB9yd4EGn
+         XIGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762879924; x=1763484724;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=uaNFkqsjr5HqJ0U2z2rhHc1IR4euaoELq+Vuadxi0mU=;
-        b=ihcF6OTaStxxU4tVCFXy1aUVorsZzoO4jTlkNxN9gssobEEsl9Q2meHNjunHrZpCY9
-         Pe+5puglLXkr5TzxkF0NkitsGlLwdp/BvzsDBKjwWyBaGpcEM8qlGx9w8/j3+OH6zoRv
-         2KdS2Y1dutTeYbTD4Ne+Xtg1tErFprmvZ8q1hzELi2LuAce38UIdHqm55kSlv9rDdZvd
-         FSu5G8ggXJurgiLFiTF1S/rDj5iZooH3qqilGT3VdtfDso5V2+GrMHybjNXGRwCrJrlJ
-         iDTw8GxVSHjKGVVtBekFBHZYmF+P4rnMLxP7hyfphyX7PPklliABJ6Bu/s5DAmBNUp/X
-         5QPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkuc19K3OlWy3F+7HZHFE3GKKbCWpmm1l3s2TnpZMhZjhNfOGQTiGbthApFpIKl4srhqPvKj7FhHjKaFrumxE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWfNxaPn2Gm/c+cviZFD2E5ycX/9w+sxtXiuFSnnyMXSDagiV2
-	MeUCak11jwL9JoddCfGr6sEnSBs8cJy4TA/RFRmHy2TkfFFdt0tTUdVlj5BBdtNl3pu9ndr2clO
-	j02/hhqiSRWMi4ZXATKrEv/Ds3aju5OK6jRMQh8p59Q==
-X-Gm-Gg: ASbGncsBAfcJHN2ujjEMYz6I7Pp3PXe9jcnnTKV/+dkBIgnKzYMpQunA4aUJKmvIOzI
-	Lq2+KSIaOXNLjqcjujjRVN1CnEs+Ig7sCDYg51Oj1dIvf0tfR7ugidQyrvJB9zZS+rcRb/JpPsA
-	YgyTY0IoxJcVLj6ylf5qRuoJ2a7DhgWq7eFXEpyrAUrROAZylRZig2BNv9HiRjR3/zhsAxLCVC9
-	Ja+KrHAaZzXvMU8mW5rfjyz7IxJRtPvTLIZUaArKrboN2x5qjcOyWUapM6QaHfQ5MkleTVkKyIl
-	zsNr+XTND7H92L80xcYWb1SZ
-X-Google-Smtp-Source: AGHT+IEUkPPpBFSnV49PowujRgyHB8h3Cch3prLC6j+Nq7FI3gGEKIgq2OVf2cRR3rles90pF9EIZfNOPT3YwIjwQ28=
-X-Received: by 2002:a05:620a:31a4:b0:866:a24e:2eb5 with SMTP id
- af79cd13be357-8b257ef5b64mr1620026685a.34.1762879923750; Tue, 11 Nov 2025
- 08:52:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762883571; x=1763488371;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=46edM+lm/eIeFQfqmSHoHH2PCoG6egQvGXMvADmFIHY=;
+        b=tmXL6/Txf9st0Ds1HB3OJYqJKwNhpFKQvaNjo6Yv/f1oaiclj8p+ulv5Utl79699Xd
+         /BbnWjB2QVjv3va4Ze8ICVpdeAs+aDAUCwJ7EykSc5rZWGrhJIKYoQ2uctorNn74bdQ1
+         45jR9crHlVM0LXpYioQMsHjIB365uCXSV29XkzOS3Sg168TB664Q4a6uYNX7VuF7VFg6
+         dOELCToVWc2sqh1KGVHhjrii3NDDpMEIyIV0Of9damGwLDL1ewag/6MzwkDq70/Ffxp2
+         pasbocSZ4hWFr6jNX+P6f8OAXG8Ib3NhjdvaY23GoPYUdFfGxdMVkDbsYR7P7WjDckRh
+         j6Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCU/LvA5ZfzJovyRZphz9E+NuNn2dQsu3VAE49uswI1baekNxexX84rMBkhS+2Cloi4ND4pMZAS6BkfYtjZK2VE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywp5nXXgKsMxDK6lcO2VE4477xs8+5QcHHHAtz2sqwBwcr8yyWn
+	Wt0JDZgcHJ6uTTRoBQgeAMFOPGgF4VFHaDl6CQWDO5jsgUx8zyrTUCLYa1t5aWfN0Mw=
+X-Gm-Gg: ASbGncvTJnmwZfX6rKe//jECtovURUyZf5rEZMC3UOj66RNyM3dwPdhxSD363dZYGJg
+	7oqOpZr2qBmiCTYEmn3gGl9GuKuMB8wG4eeZtrdoOglQyZyPVulW777y4G3742w5yLBJoIAnOxo
+	2Gz1QNTDQqMbOqTpZYmpJxuYPJuPb2LazUmIc7zHjc+FR76haWkCcpME/J/qjSKwmeTdMBUiWCM
+	8/gMU4IKqKzYesq7dPKDBcOEie8mfbPXJRhKWP1CveLilppJPusdNEDGZnDtuHM/cJV7eRIxW81
+	ryqUYTK9G+rj7lTA+ZmzksGEvtpWSYq9LBe+ddJ7fujnz4TueAvzW7KJykfcMmQxRGy5NPazscO
+	va4CJuhaviofakXLIp9NP7Y3EZLUGOkRCTKO1n0SHDFUAzM3dpz7Dyj7lpCDcLOxGja/Inl3APX
+	VMRCMWd6aigjd8H7/Tge6r1+j/ipzaFz+QNS2i9u9JnKuaY6ta9Qlkx0iWafF6Tafg
+X-Google-Smtp-Source: AGHT+IGZ24gPwNf9yPCfR7VYmGLvGJvKsnhVnsEWjyP34dYxdAWzeTApGxpBX2H8vl8E9dV82whA7w==
+X-Received: by 2002:a17:907:7fab:b0:b72:d56f:3468 with SMTP id a640c23a62f3a-b7331aac316mr1013366b.50.1762883570945;
+        Tue, 11 Nov 2025 09:52:50 -0800 (PST)
+Received: from localhost (p200300f65f2353049e8cfcf6469e7c35.dip0.t-ipconnect.de. [2003:f6:5f23:5304:9e8c:fcf6:469e:7c35])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b732c87ccfcsm76547366b.9.2025.11.11.09.52.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Nov 2025 09:52:50 -0800 (PST)
+Date: Tue, 11 Nov 2025 18:52:49 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Daniel Gomez <da.gomez@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Hans Verkuil <hverkuil+cisco@kernel.org>, 
+	Malcolm Priestley <tvboxspy@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Hans Verkuil <hverkuil@kernel.org>, Rusty Russell <rusty@rustcorp.com.au>, 
+	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-modules@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] module: Add compile-time check for embedded NUL
+ characters
+Message-ID: <dvdu27leqnwvxgz6rcgsdbovw2576dtcbmxuaznevjvijdxp6s@t64lg6bckgkd>
+References: <20251010030348.it.784-kees@kernel.org>
+ <3dd1a00d-08f7-4801-a9f7-d6db61c0e0f3@kernel.org>
+ <aRMhLEs9NpGexL7B@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aRHClatB48XT_hap@kspp>
-In-Reply-To: <aRHClatB48XT_hap@kspp>
-From: Ignat Korchagin <ignat@cloudflare.com>
-Date: Tue, 11 Nov 2025 16:51:48 +0000
-X-Gm-Features: AWmQ_bnpjuyUMlKXkIQGvaXCW-KCOwGvfQY3esE3go312vitsho8JRzN-sru6wg
-Message-ID: <CALrw=nF_riH-aHJ6gpKBw59s0szrWhqT+QmdpYVH6d38Kc_rZA@mail.gmail.com>
-Subject: Re: [PATCH][next] KEYS: Avoid -Wflex-array-member-not-at-end warning
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mwbp63t7mxf4mfm7"
+Content-Disposition: inline
+In-Reply-To: <aRMhLEs9NpGexL7B@black.igk.intel.com>
+
+
+--mwbp63t7mxf4mfm7
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 0/3] module: Add compile-time check for embedded NUL
+ characters
+MIME-Version: 1.0
 
-On Mon, Nov 10, 2025 at 10:46=E2=80=AFAM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
->
-> Use the new TRAILING_OVERLAP() helper to fix the following warning:
->
-> crypto/asymmetric_keys/restrict.c:20:34: warning: structure containing a =
-flexible array member is not at the end of another structure [-Wflex-array-=
-member-not-at-end]
->
-> This helper creates a union between a flexible-array member (FAM) and a
-> set of MEMBERS that would otherwise follow it.
->
-> This overlays the trailing MEMBER unsigned char data[10]; onto the FAM
-> struct asymmetric_key_id::data[], while keeping the FAM and the start
-> of MEMBER aligned.
->
-> The static_assert() ensures this alignment remains, and it's
-> intentionally placed inmediately after the corresponding structures --no
-> blank line in between.
->
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Helo Andy,
 
-Reviewed-by: Ignat Korchagin <ignat@cloudflare.com>
+On Tue, Nov 11, 2025 at 12:42:36PM +0100, Andy Shevchenko wrote:
+> Folks, are you aware that this change blown up the sparse?
+> Now there is a "bad constant expression" to each MODULE_*() macro line.
+>=20
+> Nice that Uwe is in the Cc list, so IIRC he is Debian maintainer for spar=
+se
+> and perhaps has an influence to it to some extent.
 
-> ---
->  crypto/asymmetric_keys/restrict.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/crypto/asymmetric_keys/restrict.c b/crypto/asymmetric_keys/r=
-estrict.c
-> index afcd4d101ac5..86292965f493 100644
-> --- a/crypto/asymmetric_keys/restrict.c
-> +++ b/crypto/asymmetric_keys/restrict.c
-> @@ -17,9 +17,12 @@ static struct asymmetric_key_id *ca_keyid;
->
->  #ifndef MODULE
->  static struct {
-> -       struct asymmetric_key_id id;
-> -       unsigned char data[10];
-> +       /* Must be last as it ends in a flexible-array member. */
-> +       TRAILING_OVERLAP(struct asymmetric_key_id, id, data,
-> +               unsigned char data[10];
-> +       );
->  } cakey;
-> +static_assert(offsetof(typeof(cakey), id.data) =3D=3D offsetof(typeof(ca=
-key), data));
+To be honest, in the nearer past I'm very passive on the sparse
+maintainer side and even stopped using it as it fails on guard locking.
 
-The whole thing looks a bit convoluted to me just to declare a
-fixed-sized static buffer and call sizeof() in one place in the code.
-But I couldn't come up with a better refactor not introducing
-potential alignment side-effects. So LGTM.
+My impression is also that upstream isn't very active any more, but that
+might have been temporal and wrong as I stopped looking.
 
->  static int __init ca_keys_setup(char *str)
->  {
-> --
-> 2.43.0
->
+If there is an outcome and a patch to cherry-pick into the Debian
+packaging, give me a ping.
+
+Uwe
+
+--mwbp63t7mxf4mfm7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmkTd+4ACgkQj4D7WH0S
+/k6QXQf/WqP001zUT4Bxw/oC7trx3KqIhrnryL+Ih+OAu0LFHWKobNA3K556JcXQ
+YEoGffzJU/J7ODVixICet7Uv94oeQ/1Oqr/OSPXlUst2vEIgQrkAO5guB/DCoS6C
+c+aODonO57Ovlc834ylWPacex8K1XrSEC3bO3guctIxR+FLcfYyc6w8CI7pMRZ/0
+Kqaype/E9cFIvlGjyxnIZ28NKGuACVyiO6a4jrfnLtCiFsirGWww65tqhUg9hJx8
+sZ2RViIzMnMbl+Vqgoxm3JhpqsfgiA9k6069Ey0zw6JgBVH67N8IQs4v/AKqeBeB
+05CxLfZZIK/RlfUZfQ1d/EY78KJxOg==
+=qd7W
+-----END PGP SIGNATURE-----
+
+--mwbp63t7mxf4mfm7--
