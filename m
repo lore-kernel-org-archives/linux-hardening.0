@@ -1,65 +1,65 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F38C241CA2
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Nov 2025 13:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC47323EA96
+	for <linux-hardening@vger.kernel.org>; Wed, 12 Nov 2025 13:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762955744; cv=none; b=UVKQlrYSOc+Qc2fK71KuZ52VlIus7HJ03BzotMURLuiZEDP2R+pazsLtespnaXc2Cs8j5JRBXzS/F93VMK9knlJKzuZ/K3wlGPg7Vgbf6ht86caBvezyKpDfY/6ZXs/j0N/CIUbELRTxKKV55kQDo43xXAUtn+CFkYbhNjaMpkM=
+	t=1762955745; cv=none; b=fBKh+UTESOHO2EToKSZqF8U85+oEWzJS4Yz/o5rGXA9Ks12nx+ZAFqX19M8FLPrbGy++dC8hZt6KFBOhbpz0cbx/P8ELhxu4u9UHg6Nd4yzdmVC9y9uZogLCEeQqoCaOnaPyQpefFHcJOKV7ZnGqADfoYdsP9P+5fuE0DVK2SE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762955744; c=relaxed/simple;
-	bh=HgxG4lGvDqlW7/AsnynclQLHI/pvxu2uFzPRwebWT70=;
+	s=arc-20240116; t=1762955745; c=relaxed/simple;
+	bh=KN033bDXd68p0ygzAwO9lMJaY9FplVJ3RsK58yXEA24=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hxPI5rULUWW40UsjRhHqrmTGSz0ABj6iWm/AglJucypQb1s7iTSpIT3HSwo6d64BOKca+lSezLfLdSncCwhcB+tV12ryuJjGlSQHK2cwDq94v9rtMNjPOeapkSfpTpLCJ6ESti6w9HNFnVg94RUIh3143oPbKAtWglyaV36dB4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hX6YPTuX; arc=none smtp.client-ip=209.85.128.42
+	 In-Reply-To:To:Cc; b=qnBMNq1/FikNPTJgRW4WaHaBblU8RqFMcvQXbUGbhXrvOMvACayQb9b40AJFvIKLSaoIfzC5PXbx+Ulv8/fyisfmY/MFdx0lhIXITdfvA9cwgAsx7uIfRPcABWfK0Au8sfmS9YSyuM2w63n3bkDVHCSbZjDEDe8SC8P1cIOrKnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=WE6btBxV; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hX6YPTuX"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-47117f92e32so6892005e9.1
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Nov 2025 05:55:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="WE6btBxV"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4775ae5684fso4438455e9.1
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Nov 2025 05:55:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762955741; x=1763560541; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762955742; x=1763560542; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=e/PxI7IDG8K3Rp8aKLf0DGe+okm2zdYYk5VKmu5ka3A=;
-        b=hX6YPTuXwEpmt+pSLK442iSQ+ke5QDBSPAYKAUIZUZu2QItcGw7GyN6pr9+IlgDDxt
-         52ba7Sk30ByFd8/NAYSobaWI5A6Iey5bpZ+x0zY9MCAC8vJFDUMsyDPsozoAcMOPXk57
-         4ZJ4M2Atf8uchy7FmmPKw1f31dsgXZwEu76hFkKeZAEMOFjeASB+zg4Aa5ov2jA78fMY
-         A+GFnz3WlD/imVTFwFJWRyP5NAmgsavw6y43KSuA6l5e2gdzxxsZGDRDwgsXt41QrM8+
-         TZtByVp8HCbj2ArkKXS+gsCZCz+kl9nEvYMQzTPiD48P5KWFTsRwF/uhHqwqGnXxHljX
-         JNFg==
+        bh=2hgFs5jtdGYJBZ1LEdVbgHUHnMs4CKKuQJyrqRFEph4=;
+        b=WE6btBxVDTXx8n/dyWjbAKye7yMioyNQIy2em+DowK6RvO/+CgSaF3xiOwEpadP6J5
+         Yu8dO/6INKWUvsFR0NkfG3bXVYJKlP65eX8EbUhw838I+0Y5SpEzJVqlNOJFsoQ90+8K
+         g6H5v0ru/aiWVUtw53AV2066R+F8u5cLQSvrnFErvWu1tZye2n2zzZkCg09nwtaLa1l5
+         jXdMSzePO+XkhnI6u89UMZC52jNS8BGZqqerC/jyGIO5VLzWf4NhHu+Xyj6iBw1ZA5fE
+         2JClMCr1oPzngthmuIaW6WJjGBkx3dYFE11YvCjpQoRLvXin6W4bycFfslfmQGv0/REk
+         igig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762955741; x=1763560541;
+        d=1e100.net; s=20230601; t=1762955742; x=1763560542;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=e/PxI7IDG8K3Rp8aKLf0DGe+okm2zdYYk5VKmu5ka3A=;
-        b=nuwYG+i+j3Y4/oFkzAmRdZATsovXCdtxjc4Hg0RMA6tyzAyybJgptzxkIhiM1KtkR+
-         dW35PaUVDdqSEwCsfIqCZwyJDQkQI2R7RQfTgl0MQMNrD2C1xQBa4N8NwUlCdta0AY0N
-         9DcJc7/+vhen7fhmZEBXtiRJXFPZamDSss5/EikVc/eNg2jZoJCsvzKNjHX9QTNi/j6x
-         qDtYwTKEwIqwCQDJ9Vg8zgc9wY8t3qxMEJUTiSMF2bfIQliGgiLih1V0SRLnRw39aL6Y
-         9IAJzDdnHQyIgSBDeAUQZMN47KLjfWu93WD4widt9km7GWgVZobI/6MS6LRY9KwupQwK
-         EkJw==
-X-Gm-Message-State: AOJu0YwfeWWzhAs+j1Fn8fz4WYC2v5Z1S6KKvEE+tOCUVt9iWbxGSDXU
-	a22P9jnQz0evdQ4rNiQXEQTclyo3KTGCz42lJl92OgsQHc1CHex3fEsF/onawqTv4zk=
-X-Gm-Gg: ASbGncuSi1Rtyqfw9wfrStAoAmI0/npldChzYcMA+iXhVns1KW7t4+Ibl5u90lv91re
-	FdUt+M4jhcV4/7rD42Dvfu+YCZkwDYt0RvTr1lf2yYdU1eb+HdWUgmI+UyybJsniiQ51NkQcBk1
-	JbuOJZ9BOWmKNIj6m7y6+TlOsXUR4LEdKCP3xKZ8SrzTSxLrCcsaoTDn5eoTv9Yq1H0YhLxRUBH
-	FPXj4aE9jS5HRDz4gGaX4kPUtn3ayDkRkScD0gSPezkNS45KPV3SGyaK2wZ/S5iE3qaeAacf2su
-	jGuB+OGb3Yptg4Pkjv0W9b1V3Js0qbZNxilKe02pDp/IYk14nUeREeBXsB95N5QW47z9DEeV2Mg
-	3a1EHIkg/XbwA1891hf8u98DG0usAYNpC6UXduPWvGHWz6DJhiKUNGptGYb6ZMn7ALJI=
-X-Google-Smtp-Source: AGHT+IEkRu/791wAeVxaQxp1qqgS3vo3K65X5o46qGVaUvWLYsNeU5tcRsDz23Tdw5hX7vdTv1ja0A==
-X-Received: by 2002:a05:600c:560a:b0:477:8b2e:aa7d with SMTP id 5b1f17b1804b1-4778b2eabcfmr2794085e9.30.1762955740481;
-        Wed, 12 Nov 2025 05:55:40 -0800 (PST)
+        bh=2hgFs5jtdGYJBZ1LEdVbgHUHnMs4CKKuQJyrqRFEph4=;
+        b=jEPN5C/8ZVvOwdsmA/0zYyfwN1w47YlHp0xzLR9MvjsTQllbKp+9g5v1g7hGRMo/w8
+         SckKg4jCwb05prJe2BueM4HxRJRYVBrOcmbh1bh3fO7tnH/EzlSVjU7YwkTFD4XQgDub
+         swDnBUjjmWN68c8HjEfMG3NGKJ650l+nF1d266jFr7tQnV0XuOV5CIU6x9SlEQsx4dTn
+         haYbFiGVQBtlY3lwpUtP2OPWYQ2ceYsN8KCWdFjBSqx6NRNORoeGb2zuVx9MgafRnzfp
+         l9hdes+JHDixBrZXNF0uiLFmbxOsWZWIVFdbWZo8vsL9YsjAgd6cI4mERaQl2Mnqu3Kd
+         i1Ow==
+X-Gm-Message-State: AOJu0YyvrMN199MmLh4HcAiTTnFXj5wFWAUIxeQYfZoNLJGGQaC9htuP
+	pzqvFgN5X06kg167Jo4hkEKmEhRRZEacXcONzhNGmzqL6apRxNSz7KoW0+D7YjU0FIc=
+X-Gm-Gg: ASbGncso2vyIBK85xYzzU5sxRQRuL9x1t7uUoRzJDJfiAwTQ+PQm1w6Ho4jlbRCk0vb
+	c9L+WpLtPSOSwTejGXyauahlfX2MCzh78FnfE8unT3tZTweepOnAsZk1Li599N4CO2SG4ODVqw1
+	bZBuPYZRB93SmI4HlXUVpnGIJKG1tUOfSO4+986FmoPdRdMwKfvusNXfCaMjbKKDb8b7bn0j3pO
+	PkcSiwKdNKKSA+dZw+f12mzsfLBACUk+Pt1dSOszGYVde078eOjR0uU02hyjilUvobVP7/iBp2C
+	J2PQ+ZcWiUmAMcB6PKDYB6sSmNXCBxZq8C9TmEkWC2A4RBQWASxPo8RnW62UfqGQqgIb+yOEKTw
+	P95NRzqgQDVEtyigzJjikgP6dJ6nDbPGClUTtjtsKxUK+KOc4KlxyW1qao2HB75mkjI4=
+X-Google-Smtp-Source: AGHT+IGpKMpu73nkeB94rPHaIZutixTAdFFPa6qysCajDttSQ0OQGd/OBq10tj2PVKg3TstrN7uRIQ==
+X-Received: by 2002:a05:600c:4f91:b0:46e:4704:b01e with SMTP id 5b1f17b1804b1-477870708e1mr27099245e9.8.1762955742150;
+        Wed, 12 Nov 2025 05:55:42 -0800 (PST)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2a6:e453:42d3:11])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47787e2b835sm37711685e9.2.2025.11.12.05.55.38
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47787e2b835sm37711685e9.2.2025.11.12.05.55.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 05:55:38 -0800 (PST)
+        Wed, 12 Nov 2025 05:55:41 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 12 Nov 2025 14:55:30 +0100
-Subject: [PATCH v4 01/10] string: provide strends()
+Date: Wed, 12 Nov 2025 14:55:31 +0100
+Subject: [PATCH v4 02/10] gpiolib: define GPIOD_FLAG_SHARED
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251112-gpio-shared-v4-1-b51f97b1abd8@linaro.org>
+Message-Id: <20251112-gpio-shared-v4-2-b51f97b1abd8@linaro.org>
 References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
 In-Reply-To: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
 To: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
@@ -91,94 +91,49 @@ Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2522;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1141;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=NlwU7Iav+zXTXT3/fww0HPRb4T18AYGPoXkxkIX1TvQ=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpFJHULZbr/rzo1SGp+CZMmaM8LAFTvG2Phhgh/
- gXknU2GN96JAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaRSR1AAKCRAFnS7L/zaE
- w4llEACvO76e1Z+11Wt9stMT8nt5Xd7poTboTiqIpNa7/zy1Z0GEsEDf94lSJ/UH8LczyCwHVXD
- j8xWbDY0qNWkjv0JgLTClvjrOl85dQHdVvHxKeKP0ZLuiuscFQGpvZUTp8AsNWFQPEtlN3LLaiz
- ooYYDo77Ff8G5DbGYaDA7hpycv3vbEsD1pA1VlWzMOs03EN2jVs7ZP9LAwvujkEYtop2HO1fwXT
- +r4YkLwaHsGmCMgSxtwvslG3+H/fN6H/T0FuSIQTXrclWt39Gsxg2FxL1HxLPbu2zMWS0EL4pKD
- W5I7vww1qStuhvyBR1sf3bkf4Sm9pcvlpKLCJnmUxAAyzJOw+aoDvWajtnQua2DlqUy73VDuoJj
- UaitJ+CSofxBn+OMKBk3IsE20o5z7CsAdoa0S1wUK2dg8XxJqiryTzOT6zWJRYdCpauKD21/+E8
- f7SiuJZ7QyQkcDQBbpdQii6lD94oQFd8FMFNKaogV+/LBvE2FWUa4UbCfmYFcV/b+1xybajq6rV
- ZouVOU1i/FivCvcZfZtQ1akl9qZIMfaxB0czgHNdT3pajsiscNnqs929HQ5mORLG7SuNy3p586V
- hehheWhg7ZTbzJ/8FWiyOYgnKVprVvop3kDt5pBZIROAR7MXNCHZ93enl7OuPvUYhNKzAK9v5CO
- idZYiRwCMJSHIIw==
+ bh=fe01g4C6qCSbAEu6zmke8JCgZ5Eo9dDIwKAhmTSay1w=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpFJHVBTDDrvJHZ80xPG9a4F7QqcyJzJgbcSXHa
+ oo9SZzZ15CJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaRSR1QAKCRAFnS7L/zaE
+ w91FEACnpe+vPiO9uBC+BsokWIYfbDME+aBKEozY7SwP0GRthdoEWwpZO7sgtgsDqvbBiW27PQj
+ u3dNIE3sC+Xq4qVOYGD1CwpgZRYk+nWkm0G/rdY9Cdt3WkjzDjmRKQ6nfYxQ8QCUe3oWOHRD2aD
+ FIGPCTly2E8ANXYEWTCdTDIlSifKrLDkfDYoiYC4zvzVFh7yfTrfN3OorFzIpqoBDiFUdOF5v4R
+ kZXRmcAik8hp+cSw2IqltJYa0IpkM3fi35svUUVAiaLFemUnTXLwinqOdZXoAR3NUUIkg+yfyGT
+ Ng+kpi792Y0jFdeMbPRqb7Brix32Pi7kA6zS6AWsT36I9rQzC1uWHWh10ar6IO4g/0eihjuFPkq
+ lIUPxsIpKrOIaKFX5oLZFonmQNcTu/QgsBF3WvKDnb+soIUb4YRd94DdPk93QpQ+YX0A+xvfNvf
+ WxDOUFlr8mhOjvU+AbCZTnisyN6TBs1WfXYv2BMxjlOki2kzA6/hsumjEZ41oXWs/fNBeAOSZiV
+ uAFemOSTTwgXTlYdblMtR4YBxsA+hUnf62j8isuIFTVeDl04b/T9Q6CDK87kqWqQNOrJgJL27OE
+ djN1+y17ilgzoN87pxNZICYpjc2tighS0XY2870Hyn8BpJTZ2mwyf627na0bY0v18oddUykWYfU
+ xrHzssrVMLnGRhg==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Implement a function for checking if a string ends with a different
-string and add its kunit test cases.
+Define a new GPIO descriptor flag for marking pins that are shared by
+multiple consumer. This flag will be used in several places so we need
+to do it in advance and separately from other changes.
 
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- include/linux/string.h   | 18 ++++++++++++++++++
- lib/tests/string_kunit.c | 13 +++++++++++++
- 2 files changed, 31 insertions(+)
+ drivers/gpio/gpiolib.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index fdd3442c6bcbd786e177b6e87358e1065a0ffafc..929d05d1247c76eb9011fe34250b487834b2d3c9 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -562,4 +562,22 @@ static inline bool strstarts(const char *str, const char *prefix)
- 	return strncmp(str, prefix, strlen(prefix)) == 0;
- }
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index 14e6a9807a89da6d7c6594a0a2de5f5032c49e0d..c9de4bb10584206f4888c0f28468762a3680aae6 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -204,6 +204,7 @@ struct gpio_desc {
+ #define GPIOD_FLAG_EDGE_FALLING		17 /* GPIO CDEV detects falling edge events */
+ #define GPIOD_FLAG_EVENT_CLOCK_REALTIME	18 /* GPIO CDEV reports REALTIME timestamps in events */
+ #define GPIOD_FLAG_EVENT_CLOCK_HTE	19 /* GPIO CDEV reports hardware timestamps in events */
++#define GPIOD_FLAG_SHARED		20 /* GPIO is shared by multiple consumers */
  
-+/**
-+ * strends - Check if a string ends with another string.
-+ * @str - NULL-terminated string to check against @suffix
-+ * @suffix - NULL-terminated string defining the suffix to look for in @str
-+ *
-+ * Returns:
-+ * True if @str ends with @suffix. False in all other cases.
-+ */
-+static inline bool strends(const char *str, const char *suffix)
-+{
-+	unsigned int str_len = strlen(str), suffix_len = strlen(suffix);
-+
-+	if (str_len < suffix_len)
-+		return false;
-+
-+	return !(strcmp(str + str_len - suffix_len, suffix));
-+}
-+
- #endif /* _LINUX_STRING_H_ */
-diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index 0ed7448a26d3aa0fe9e2a6a894d4c49c2c0b86e0..f9a8e557ba7734c9848d58ff986407d8000f52ee 100644
---- a/lib/tests/string_kunit.c
-+++ b/lib/tests/string_kunit.c
-@@ -602,6 +602,18 @@ static void string_test_memtostr(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, dest[7], '\0');
- }
- 
-+static void string_test_strends(struct kunit *test)
-+{
-+	KUNIT_EXPECT_TRUE(test, strends("foo-bar", "bar"));
-+	KUNIT_EXPECT_TRUE(test, strends("foo-bar", "-bar"));
-+	KUNIT_EXPECT_TRUE(test, strends("foobar", "foobar"));
-+	KUNIT_EXPECT_TRUE(test, strends("foobar", ""));
-+	KUNIT_EXPECT_FALSE(test, strends("bar", "foobar"));
-+	KUNIT_EXPECT_FALSE(test, strends("", "foo"));
-+	KUNIT_EXPECT_FALSE(test, strends("foobar", "ba"));
-+	KUNIT_EXPECT_TRUE(test, strends("", ""));
-+}
-+
- static struct kunit_case string_test_cases[] = {
- 	KUNIT_CASE(string_test_memset16),
- 	KUNIT_CASE(string_test_memset32),
-@@ -623,6 +635,7 @@ static struct kunit_case string_test_cases[] = {
- 	KUNIT_CASE(string_test_strlcat),
- 	KUNIT_CASE(string_test_strtomem),
- 	KUNIT_CASE(string_test_memtostr),
-+	KUNIT_CASE(string_test_strends),
- 	{}
- };
- 
+ 	/* Connection label */
+ 	struct gpio_desc_label __rcu *label;
 
 -- 
 2.51.0
