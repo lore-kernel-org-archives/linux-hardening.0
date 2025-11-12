@@ -1,113 +1,249 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878952D97B5
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Nov 2025 08:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C691D2FDC4B
+	for <linux-hardening@vger.kernel.org>; Wed, 12 Nov 2025 08:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762934789; cv=none; b=VObsLcfKhs5rkJiocRyE0NOZMnIBRg5TPBXAMyOx57WiZJArYkGOGM+d7ea64jpEGoF71Nw6DUaEnbRpH/4WnQZ256UbhYLOJ7pheRD31cDdmBvmdJnAKekyyUiVhlBoKB+OMuIebr/9ld2wwqKOJlFbsLOViFUMYzR+GRjc5ys=
+	t=1762937365; cv=none; b=rvcJkjeWakt4I6DM2+Q5tqXFfDS0dycqYZdVzjtA9kVIO/aEg2uNswP04JDYD/pLwKxTzoyswOuQrx8QLPaq2qj9PfsxzS4e1YCJuI7d7b1+or4b/Fo4uC7UrBbi0iZloNDByonb6ylwLkpmkvmNtoldh5M0J8Mz6dKXXTHvj4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762934789; c=relaxed/simple;
-	bh=CsuCzn99HhVaXWmVpBege6OrJ/pMPiZ2yYvkZ7pOFR0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BBHj50i+NrX9kcB/Ut3V0PXUCIP+6cd7T7BXqAIM6V/0NP/08Bp9xlLFaa3BaDG/Mk3sTG4kIUqPJ46tZ9v2yCGwRv2ixdtXaHgdXNQujmS2NFfLqw8iQBaBRdhas6/YBRGVJciDTXOL+EAik7lOiOp0eZQO4zqnIavsYkvSjGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xDKk4dHE; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1762937365; c=relaxed/simple;
+	bh=KdwRxz0E4L6h+Tsu/Xs65J0K6pzrmFwN0OGt2cFh/UE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GOG/fjdLmbS7lP/2F+OK/c1fJhRNOnOYPf1NCje4CDphKrN6NR38uv0gVTNCr7nscdy6F7Zq69fSMhKxdfYcaqITuV6Np5xb7bFpm1Dq+7SLo2lD309IkExVSntPRfh2LWdP7G03eXYnZRxtMIEPkeqXoQMcAE8jHzRImRcMdi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=JRbVE0jL; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xDKk4dHE"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-592ff1d80feso592198e87.2
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Nov 2025 00:06:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762934786; x=1763539586; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CsuCzn99HhVaXWmVpBege6OrJ/pMPiZ2yYvkZ7pOFR0=;
-        b=xDKk4dHEe1YiZnUKxUz2ru/zaNKC8evp/f/YqNWi7rusRi1mfcv0LRunxxJoUfOmpI
-         rGFuvyz8x20C+U02FpQHSPX0RxxbyuJWUuupKuuWy/F6OFsUY1qjQwOrMvXUGnp68Fan
-         gMaOxY8N4kj+bRxxkTnQCRC6p8emi3Lgsf1lV0Rox1BBIIbr+5TOEjImrQbqwPyn7/4f
-         15JYsZyhdDMBe1JGNhwgHHmwqgbfvKkN5PKoVMNku1MpoA6c51ITcA9JtRR1Ua7xTvoB
-         ougtYVY2+tdxRtMfUZ+9MgunsHx3PFYBV/4MByM4hxmcRRQWKjbuSbW2gCe5QkXthoe2
-         19Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762934786; x=1763539586;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=CsuCzn99HhVaXWmVpBege6OrJ/pMPiZ2yYvkZ7pOFR0=;
-        b=Hnezu+vW9dUr/L5Bmr1wkLIT80063C8Ysd3WXP0J4cL0a9w40svkxRyvvWdEY4nJBV
-         JBsPdP4gTuW785GcWsZqbI3MVOk5Vs/FndkV0MxJRZqfXHCWdsdKM3slNKEaMGzSq3Ku
-         tPWiLQT6jKhHqgx0AYPikBq8nvepiL4NC8PZ7nASzuFhM4u+V+uXBwpWTnYBEMKxgOLt
-         bCGah3ilXyF+/z1iPKX5P0nAXT28tUhLhkjE6hGOlvLu1OsQ2e9hcvHywYufF/BbUhX6
-         Wun6YjcimyHlIxhIzE1H1bXuzVwgLOoX134WH6CkoZpSrBWtwG4IeT8saAM5+h05jj/n
-         kcmA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7YB6qA9AQV/1Q03hBz6PkcdgE+CU6GJEorbzfXwtMaI8+mBZnp8ZJMxr2WsieW8FGFUx+w4vO3s3QL8tJGMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUOHvWjyK8g40LpV7TjwfX6QWPvqWZClM+7IOap25cVLnTA1Ba
-	CPCmcNQLrTDKdq1MAMHbQWDt8BA/exvKn6aPNuV62rEopVLDqZRThqDq868fP82tegMXuAsQIEG
-	oRHSW11x8mVrHQfF7S3LskQXutqQvBCB3u3Xaz6dtFQ==
-X-Gm-Gg: ASbGnctiogu+rgRl3Irykc1NiC+2bD32POBPkj+MmE5JgTs5ZeENL26QDZElJhs+1rZ
-	oJW8/KIZ3cE5SDLLAH4Wo9SEZSfBOelA2AkbYM/vc8yLnTIRIJLknHPISLUD8VGrkDPg5Ds4nH2
-	6GD6KZF2X4U0AAuzbrFoLIWH+P6ROdlNFFZOi0qEcLj3AYdquXAxxgdSzMnkxnMf5Yv+z4Auf64
-	orKBHjl4mqwg+3qbqLbwwUPMalUaclHVp4pgnFFxMEBJqHvP3P2ZmKVuEFUapEIoCeE2CWyvr/M
-	bv0rT24MTcdDxg4=
-X-Google-Smtp-Source: AGHT+IFGOvlOzvk9piywId0UEm/LoEe92kaATxaPyyaUwvvWEVZS+cjBT7dXjw6jb/DtZt422ITz+COnEZi1kuHwxHY=
-X-Received: by 2002:a05:6512:3e1a:b0:594:3039:2d16 with SMTP id
- 2adb3069b0e04-59576e2ca55mr736184e87.32.1762934785669; Wed, 12 Nov 2025
- 00:06:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="JRbVE0jL"
+Received: from eig-obgw-6001b.ext.cloudfilter.net ([10.0.30.143])
+	by cmsmtp with ESMTPS
+	id IzDPvTNCQKXDJJ6XUvfm8F; Wed, 12 Nov 2025 08:49:17 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id J6XUv12ib9m9eJ6XUv97dW; Wed, 12 Nov 2025 08:49:16 +0000
+X-Authority-Analysis: v=2.4 cv=eMQTjGp1 c=1 sm=1 tr=0 ts=69144a0c
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=cM1T1WamysKh5OBvDc2ngA==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=wqs6Pu8S3n5vyb6ov2UA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=deQSiP9b3EF2jDqf/qhV6x7CE33isY6FNZMQ566O670=; b=JRbVE0jLHbMY3eRj93tVN9cwDu
+	hmjfKh/3IlyiiwWXsQ6p8lwOu/Tvxu+TY3128QO/D++GI2rzKUE6RwDQj6ckDsckShaoLdvEdwhqA
+	tcIpvHxo8zalrDgN19NoXM2CCFlI3nHtxn0GmOvVuyfzCgOYhrF3mJtVqRNsL/jHENN27N5wGZnQ/
+	cLBEHSr20l9jlvNQou3QdRs6DC89wpKutbHA3LILWs+rLGQvk2yAUJvB0OTGN5l9xpLKdqNne0VHa
+	ikfXQiVTi0quwuC+rgfgZeMn0LSyY5DVbTtoBQ8UFb1JHHS5GPMyUS+Oe/9xTSHcyX8gZBmgCA9qM
+	0ASwQBBA==;
+Received: from fp93c06c1b.tkyc210.ap.nuro.jp ([147.192.108.27]:47530 helo=[10.221.86.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vJ6XT-00000003qSB-2WKl;
+	Wed, 12 Nov 2025 02:49:15 -0600
+Message-ID: <d3336e9d-2b84-4698-a799-b49e3845f38f@embeddedor.com>
+Date: Wed, 12 Nov 2025 17:49:05 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
- <20251022-gpio-shared-v2-6-d34aa1fbdf06@linaro.org> <CACRpkdbqLyeaZx37yrKjDFWb=C5c=vK6aPgnW8cMQvwi_6Jiug@mail.gmail.com>
-In-Reply-To: <CACRpkdbqLyeaZx37yrKjDFWb=C5c=vK6aPgnW8cMQvwi_6Jiug@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 12 Nov 2025 09:06:13 +0100
-X-Gm-Features: AWmQ_bnmO8YFH80sSD6rPVFUgANGxGc1BYRZ0qoygt-PZMj9Pyi0gMYkuFaH7pA
-Message-ID: <CAMRc=McySdUtj4foEf5a2db8jUEa=CnPmVVms2nwHoO2UYChSg@mail.gmail.com>
-Subject: Re: [PATCH v2 06/10] gpio: provide gpiod_is_shared()
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
+ warnings
+To: Leon Romanovsky <leon@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Zhu Yanjun <zyjzyj2000@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aRKu5lNV04Sq82IG@kspp> <20251111115621.GO15456@unreal>
+ <a9e5156b-2279-4ddd-992c-ca8ca7ab218a@embeddedor.com>
+ <20251111141945.GQ15456@unreal>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20251111141945.GQ15456@unreal>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 147.192.108.27
+X-Source-L: No
+X-Exim-ID: 1vJ6XT-00000003qSB-2WKl
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: fp93c06c1b.tkyc210.ap.nuro.jp ([10.221.86.44]) [147.192.108.27]:47530
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfJ5NhQ5CnDW5viL0+pvH+F7peeha/v9Vp5A/fignQjVtKjUZ9zHT8LYpXJG6tUrDVJ8K++bYPi0LG2b0DugR4KrRm6E+nOiwpQ1KE8xzoew2RbLypQyf
+ ixgV1C1G+FDwY9gDGe/WQitidDKXdX+kZI+83V0kLu6MkthUwRs+Y8YMPK66txGz5QMGOP0oINMYxStcIhDdLoZNbVdlPq99Exlrs3qsyNDpYxZ9nyCrLfKX
 
-On Tue, Nov 11, 2025 at 11:44=E2=80=AFAM Linus Walleij <linus.walleij@linar=
-o.org> wrote:
->
-> On Wed, Oct 22, 2025 at 3:11=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
->
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Provide an interface allowing consumers to check if a GPIO descriptor
-> > represents a GPIO that can potentially be shared by multiple consumers
-> > at the same time. This is exposed to allow subsystems that already
-> > work around the limitations of the current non-exclusive GPIO handling
-> > in some ways, to gradually convert to relying on the new shared GPIO
-> > feature of GPIOLIB.
-> >
-> > Extend the gpiolib-shared module to mark the GPIO shared proxy
-> > descriptors with a flag checked by the new interface.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
 
-I think you wanted to leave this under v3?
 
-Bart
+On 11/11/25 23:19, Leon Romanovsky wrote:
+> On Tue, Nov 11, 2025 at 09:14:05PM +0900, Gustavo A. R. Silva wrote:
+>>
+>>
+>> On 11/11/25 20:56, Leon Romanovsky wrote:
+>>> On Tue, Nov 11, 2025 at 12:35:02PM +0900, Gustavo A. R. Silva wrote:
+>>>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>>>> getting ready to enable it, globally.
+>>>>
+>>>> Use the new TRAILING_OVERLAP() helper to fix the following warning:
+>>>>
+>>>> 21 drivers/infiniband/sw/rxe/rxe_verbs.h:271:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>>>
+>>>> This helper creates a union between a flexible-array member (FAM) and a
+>>>> set of MEMBERS that would otherwise follow it.
+>>>>
+>>>> This overlays the trailing MEMBER struct ib_sge sge[RXE_MAX_SGE]; onto
+>>>> the FAM struct rxe_recv_wqe::dma.sge, while keeping the FAM and the
+>>>> start of MEMBER aligned.
+>>>>
+>>>> The static_assert() ensures this alignment remains, and it's
+>>>> intentionally placed inmediately after the related structure --no
+>>>> blank line in between.
+>>>>
+>>>> Lastly, move the conflicting declaration struct rxe_resp_info resp;
+>>>> to the end of the corresponding structure.
+>>>>
+>>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>>> ---
+>>>>    drivers/infiniband/sw/rxe/rxe_verbs.h | 18 +++++++++++-------
+>>>>    1 file changed, 11 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+>>>> index fd48075810dd..6498d61e8956 100644
+>>>> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
+>>>> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+>>>> @@ -219,12 +219,6 @@ struct rxe_resp_info {
+>>>>    	u32			rkey;
+>>>>    	u32			length;
+>>>> -	/* SRQ only */
+>>>> -	struct {
+>>>> -		struct rxe_recv_wqe	wqe;
+>>>> -		struct ib_sge		sge[RXE_MAX_SGE];
+>>>> -	} srq_wqe;
+>>>> -
+>>>>    	/* Responder resources. It's a circular list where the oldest
+>>>>    	 * resource is dropped first.
+>>>>    	 */
+>>>> @@ -232,7 +226,15 @@ struct rxe_resp_info {
+>>>>    	unsigned int		res_head;
+>>>>    	unsigned int		res_tail;
+>>>>    	struct resp_res		*res;
+>>>> +
+>>>> +	/* SRQ only */
+>>>> +	/* Must be last as it ends in a flexible-array member. */
+>>>> +	TRAILING_OVERLAP(struct rxe_recv_wqe, wqe, dma.sge,
+>>>> +		struct ib_sge		sge[RXE_MAX_SGE];
+>>>> +	) srq_wqe;
+>>>
+>>> Will this change be enough?
+>>>
+>>> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+>>> index fd48075810dd..9ab11421a585 100644
+>>> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
+>>> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+>>> @@ -219,12 +219,6 @@ struct rxe_resp_info {
+>>>           u32                     rkey;
+>>>           u32                     length;
+>>> -       /* SRQ only */
+>>> -       struct {
+>>> -               struct rxe_recv_wqe     wqe;
+>>> -               struct ib_sge           sge[RXE_MAX_SGE];
+>>> -       } srq_wqe;
+>>> -
+>>>           /* Responder resources. It's a circular list where the oldest
+>>>            * resource is dropped first.
+>>>            */
+>>> @@ -232,6 +226,12 @@ struct rxe_resp_info {
+>>>           unsigned int            res_head;
+>>>           unsigned int            res_tail;
+>>>           struct resp_res         *res;
+>>> +
+>>> +       /* SRQ only */
+>>> +       struct {
+>>> +               struct ib_sge           sge[RXE_MAX_SGE];
+>>> +               struct rxe_recv_wqe     wqe;
+>>> +       } srq_wqe;
+>>>    };
+>>
+>> The question is if this is really what you want?
+>>
+>> sge[RXE_MAX_SGE] is of the following type:
+>>
+>> struct ib_sge {
+>>          u64     addr;
+>>          u32     length;
+>>          u32     lkey;
+>> };
+>>
+>> and struct rxe_recv_wqe::dma.sge[] is of type:
+>>
+>> struct rxe_sge {
+>>          __aligned_u64 addr;
+>>          __u32   length;
+>>          __u32   lkey;
+>> };
+>>
+>> Both types are basically the same, and the original code looks
+>> pretty much like what people do when they want to pre-allocate
+>> a number of elements (of the same element type as the flex array)
+>> for a flexible-array member.
+>>
+>> Based on the above, the change you suggest seems a bit suspicious,
+>> and I'm not sure that's actually what you want?
+> 
+> You wrote about this error: "warning: structure containing a flexible array
+> member is not at the end of another structure".
+> 
+> My suggestion was simply to move that flex array to be the last element
+> and save us from the need to have some complex, magic macro in RXE.
+
+Yep, but as I commented above, that doesn't seem to be the right change.
+
+Look at the following couple of lines:
+
+drivers/infiniband/sw/rxe/rxe_resp.c-286-       size = sizeof(*wqe) + wqe->dma.num_sge*sizeof(struct rxe_sge);
+drivers/infiniband/sw/rxe/rxe_resp.c-287-       memcpy(&qp->resp.srq_wqe, wqe, size);
+
+Notice that line 286 is the open-coded arithmetic (struct_size(wqe,
+dma.sge, wqe->dma.num_sge) is preferred) to get the number of bytes
+to allocate for a flexible structure, in this case struct rxe_recv_wqe,
+and its flexible-array member, in this case struct rxe_recv_wqe::dma.sge[].
+
+So, `size` bytes are written in qp->resp.srq_wqe, and the reason this works
+seems to be because of the pre-allocation of RXE_MAX_SGE number of elements
+for flex array struct rxe_recv_wqe::dma.sge[] given by:
+
+struct {
+	struct rxe_recv_wqe	wqe;
+	struct ib_sge		sge[RXE_MAX_SGE];
+} srq_wqe;
+
+So, unless I'm missing something, struct ib_sge sge[RXE_MAX_SGE];
+should be aligned with struct rxe_recv_wqe wqe::dma.sge[].
+
+The TRAILING_OVERLAP() macro is also designed to ensure alignment in these
+cases (and the static_assert() to preserve it). See this thread:
+
+https://lore.kernel.org/linux-hardening/aLiYrQGdGmaDTtLF@kspp/
+
+Thanks
+-Gustavo
+
+
+
+
