@@ -1,264 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2323148BE;
-	Wed, 12 Nov 2025 12:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CDB220F2A
+	for <linux-hardening@vger.kernel.org>; Wed, 12 Nov 2025 13:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762949209; cv=none; b=YouG2lpe7b7OvesU7Pch4GeAQ2uQX29q8hvQcnHumL23F/Ol7oCUOMzPi7Y1iX+noZcR9DQ24O5QDGA68o3WoIFzdSSm+LjLpoAgjXels886QF1I+4OGHNzx0zBpO4gRFFcS4Jx9XLsXla9ziZ8aBv8etSwZR4xNyNagv19pKyc=
+	t=1762955742; cv=none; b=pR58i0ERXlD+yVWWHlv4qwjehaYnq1CaOKTh540pHcAjhe2pntGUASp856BTQqjmNccWdMNcoEYpK4sS5LicFzr9WLYojx8J/yGDYX1KaylIj9ZQq3pqoGmDneS3fJBS4hP6iZ/SvKsHhRhktyqQ0TPVksgX30iBtZ6VkEvYHyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762949209; c=relaxed/simple;
-	bh=yVtS8pRP+adgg8sl6Md/aPafQ8QdghQXjnl9n6aUeFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ry7bojGUOKVJt13pQQt+kNNUG1d08TQFL31Sv1CZkiNCjwC9vqfMDB711+/PbBl6Gi7NZ80rjqpGlPEvvbrr3LRRdSmh5NWmd7REnsKHsJJbqFOyrJXROXpVUDQlGlxBJqvFfiE75IaeucFABvVOpeKdb1npxkQAT3F3O/kD77o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DqOm95zB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762955742; c=relaxed/simple;
+	bh=ml3z2pXKnumVWoVR4wBDLwJ0K3TTyVqmRXtK2nzVm5A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=n/FXJTw1hRc1ZsCuCqLr+AToAJBOp9kTPOJ5PAvoDPaK6PhnKpe4qy5iUEXtIR4rV9nrUiYj9ueDumVLvXgwkfwvMwJ5L2/aZ5cEBZq2kkjjxrnMFrnIlx4S0cePsm4KOj3Q3SWbfqcwmblIV8QjnRSg9GkfSRPu6MI0FTNjiWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FYMhWJun; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DqOm95zB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AC2BC4CEF5;
-	Wed, 12 Nov 2025 12:06:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762949209;
-	bh=yVtS8pRP+adgg8sl6Md/aPafQ8QdghQXjnl9n6aUeFI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DqOm95zBibddQtdO1bWejRsX26TZ3LUw737DGdw4PPYUxbrwkz+pJrVBnmkUXW7Jt
-	 A6IDEllCpCpAYQJBqRe0ddGfyGeChcV2QFmsImr7GZH1/RZ1cqPHVsnUjsBVTCjVgo
-	 AyFgT4BXP1pbqSfqzvulNIBxACVABxsQyKG/yrrPGg11bM8FAkMJjUU4PkUV2eWo4N
-	 /X8REycVGQhdPU8RLC2Ii9zcQphxLK2C1zxNfoyfjdONTTM4l3pRFlTY9ygOsG7mDq
-	 SG9VKSpPsnmKxKp+fXLySHCtbKoMfgh5w0DCazN7ACpIRiQY3aC7DTcRQVhXvUgKWu
-	 BKmrLG1v2kEcg==
-Date: Wed, 12 Nov 2025 14:06:44 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <20251112120644.GD17382@unreal>
-References: <aRKu5lNV04Sq82IG@kspp>
- <20251111115621.GO15456@unreal>
- <a9e5156b-2279-4ddd-992c-ca8ca7ab218a@embeddedor.com>
- <20251111141945.GQ15456@unreal>
- <d3336e9d-2b84-4698-a799-b49e3845f38f@embeddedor.com>
- <20251112093226.GA17382@unreal>
- <01dde656-f41f-48f1-944c-b69cf1c3543e@embeddedor.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FYMhWJun"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4774f41628bso4356835e9.0
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Nov 2025 05:55:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762955738; x=1763560538; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XBFAMrOJQxMwscqUKdzjpajXl7OxXxRyAGXjE2x3Poc=;
+        b=FYMhWJunB245ylKDnxfCQ3MPPBrSi3daQCeKtp2u9fAVliGAITs17iVZUms/ZdPwYc
+         3a9dv1YW5GM6sjXzLqbH3P2jFzCGUYki9UQAcm8SGxD3apD2sAXYDoHsZsGlao8aNbJ6
+         EbVlaoDFdTq2UgsBKiZwjWpOoPK7ymDwEU/thtkznb5n5ivFGLyPFJUBdZBhqOpYMiVf
+         68/lKbt/lY2GqOMgH6ry4DAzsxzX5PW3oSmR5GVNRNo2rVBVD2Oic6INPnAzG6PBhluT
+         fe70xVhuw/58ZYC+i9OqR0EycTy2TYyuqgNabfU9T7VSdaFJ6d9b9Fk9rmHMbxx+yaKQ
+         9CLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762955738; x=1763560538;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XBFAMrOJQxMwscqUKdzjpajXl7OxXxRyAGXjE2x3Poc=;
+        b=UB51m77vxr5AcDkxNAGTamsE51jWMyaeQrC/ETgqbkSMnO9WABRSfOBTFpQRV0UFSF
+         aO5nCshur8RmhoZSVLKWo7lzaq+elvlgZl+lBrbgilFc6h0t1m4qku1RI9DkjKZsrCkr
+         WcWfjhsrHLjNM1xRYKSubKIeaFXR1E+IG2GbK9CoIxB7SgXTwRDULdvsIjxd/Kua+mDL
+         w/fuvCN0fWcVIOSDQxdhmm2t3JEyhZ3Db57dSB6TQVLtWnW5CvSy7DtwZF4VPF2RMHZw
+         3HKRRSKRa/f3If/tDzw1G1q19LgKyoqCSvtJ9SPdgd0BtrlXYRltfnpVOdPdJXcvo15g
+         +QwQ==
+X-Gm-Message-State: AOJu0YzbWfC604rgeXyrNYScvj9JsDKAqY04qeSF79RXwiK7jfGqDmH0
+	9g4IQECs1y61aG50GAHzHWxj3Yin5lpfhT/NDj8ooInSCIQBMEyWlok4zAPpGYKfQu0=
+X-Gm-Gg: ASbGncvFgVeOaTI09cPZxIf+xrFWKsYGkIZoWtPF4Y9YZwM59uOISOm0S49e7XvPqZj
+	hKAzH5kyVZx6z5FWJrLvNQeN7Ub+f3iU2OMeLHAXVq/GRiLcG/eX055dsOLI/qc4e5kIyqZV+jt
+	gbj54hH7N9BEmV4ZbhmWlfO0fylo0RA3/s4SvlweLM5G4+CdV3dylQv3/gGhpVXuYotpteH4do5
+	BfxFkqMGutnmBu0P994/+OrqrRhbRJxbTdrpkKCgzEKMfM9Jhvkk63OZJAT4dtN3ri1bTLsaoVO
+	5WZMb7UwD9Q3zK6gGJAkb8KDDRLPUsc2XHccCu/vHRohy1GktbEsTM2SqCVHochhD0De+n8aTQF
+	OBRikF/VcfyUGnodKUdU1AIYzTD3BOfzou2ta8yxw7+mzJjFqVFjlnrPetsW+Vq9hXe1FMwenXa
+	nPrQ==
+X-Google-Smtp-Source: AGHT+IFKbQP8SOa1kCByQ4QNAMeH3OJkwfo0T2LCw/ncI1JxiJlrem/nOWVbpAKDdbocGkE7atAYEw==
+X-Received: by 2002:a7b:c3ca:0:b0:475:dadd:c474 with SMTP id 5b1f17b1804b1-477814424a6mr41685355e9.10.1762955737889;
+        Wed, 12 Nov 2025 05:55:37 -0800 (PST)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2a6:e453:42d3:11])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47787e2b835sm37711685e9.2.2025.11.12.05.55.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Nov 2025 05:55:37 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v4 00/10] gpio: improve support for shared GPIOs
+Date: Wed, 12 Nov 2025 14:55:29 +0100
+Message-Id: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01dde656-f41f-48f1-944c-b69cf1c3543e@embeddedor.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANGRFGkC/2XNTQrCMBCG4atI1kby27SuvIe4SNNJOyBNSSQop
+ Xc3LSIWl9/A885MEkSERM6HmUTImDCMZajjgbjBjj1Q7MomggnNGlbTfsJA02AjdLQy4KQWda3
+ aihQxRfD43GrXW9kDpkeIry2e+Xr9dITadTKnjBqjwYCHllt5ueNoYziF2JM1lMUXcybEHouCO
+ 6ms5b7tPKv+sPzFzR7L9TN3uqqt88q4HV6W5Q1O6cYmIQEAAA==
+X-Change-ID: 20250908-gpio-shared-67ec352884b6
+To: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Alexey Klimov <alexey.klimov@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5266;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=ml3z2pXKnumVWoVR4wBDLwJ0K3TTyVqmRXtK2nzVm5A=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpFJHUGKHmIdlssRyuI2zDM2oFpYK4thJPAm+An
+ vHpyc0KzgaJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaRSR1AAKCRAFnS7L/zaE
+ w33fD/4wxGJ2NszFom9FCtcgZxRPtXC4TIw0cdgBDpHnMlLRoRgOAjdfUJihy0bw6eS2jS7ljuF
+ xl+cvSgGjYZKuVQ9KhCVKpDSqiVJL04dSv+zJVRrShx7nRCM4wF3iMJ6CKgZcNw77haE9dlLp/m
+ YG4swj9fw7Huu/DrvNJYEVevDnUOWOUHcq8BBT3F31cqHz7nROXVUOQG72XkSv6qWDmth5+heLG
+ RQ4hzKrShyu9Uq6lEtmyGeW/WoCa1Cg2AM25q8a9TF+FxAjOc3lblwDpzJnUFwluqiYs57b60Cl
+ a19ONlSGyD43DGZ1PE+RxelEz21/fY/3ZOsVyoKRKs8FbKaJVpSPIJ9HoKEgSnbm6m2k02MGeVn
+ KtGdBzVa5LA9oIDJzoi4264FN2pzMc3lCcLDe3bht5K410FQxoMOEmWbPEOMvapBeMyNqC7YDi+
+ 89I2llq8RZt6kTdrtTsVbIJvUEq2MphlgBo7crobjaqWe4kjaodXe6FZK/UDZWi82s6g5f374Jf
+ YQE7UzlHuW0iJeFZjwocqK5NwOQiOen7mVIonjAGkQUGpoLYR1CpLzkEIBsTUm+n/P3QuEy2Ycw
+ ArR5jiJEL6GoiqMTZUtZ11BjOQg5A+/xtxylAdWow8iwqEymoQ1S2EreHkiy83bfB4vpkmE9g9G
+ HS6Gr22pXsrOo7Q==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Wed, Nov 12, 2025 at 06:50:16PM +0900, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 11/12/25 18:32, Leon Romanovsky wrote:
-> > On Wed, Nov 12, 2025 at 05:49:05PM +0900, Gustavo A. R. Silva wrote:
-> > > 
-> > > 
-> > > On 11/11/25 23:19, Leon Romanovsky wrote:
-> > > > On Tue, Nov 11, 2025 at 09:14:05PM +0900, Gustavo A. R. Silva wrote:
-> > > > > 
-> > > > > 
-> > > > > On 11/11/25 20:56, Leon Romanovsky wrote:
-> > > > > > On Tue, Nov 11, 2025 at 12:35:02PM +0900, Gustavo A. R. Silva wrote:
-> > > > > > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> > > > > > > getting ready to enable it, globally.
-> > > > > > > 
-> > > > > > > Use the new TRAILING_OVERLAP() helper to fix the following warning:
-> > > > > > > 
-> > > > > > > 21 drivers/infiniband/sw/rxe/rxe_verbs.h:271:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > > > > > 
-> > > > > > > This helper creates a union between a flexible-array member (FAM) and a
-> > > > > > > set of MEMBERS that would otherwise follow it.
-> > > > > > > 
-> > > > > > > This overlays the trailing MEMBER struct ib_sge sge[RXE_MAX_SGE]; onto
-> > > > > > > the FAM struct rxe_recv_wqe::dma.sge, while keeping the FAM and the
-> > > > > > > start of MEMBER aligned.
-> > > > > > > 
-> > > > > > > The static_assert() ensures this alignment remains, and it's
-> > > > > > > intentionally placed inmediately after the related structure --no
-> > > > > > > blank line in between.
-> > > > > > > 
-> > > > > > > Lastly, move the conflicting declaration struct rxe_resp_info resp;
-> > > > > > > to the end of the corresponding structure.
-> > > > > > > 
-> > > > > > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > > > > > > ---
-> > > > > > >     drivers/infiniband/sw/rxe/rxe_verbs.h | 18 +++++++++++-------
-> > > > > > >     1 file changed, 11 insertions(+), 7 deletions(-)
-> > > > > > > 
-> > > > > > > diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-> > > > > > > index fd48075810dd..6498d61e8956 100644
-> > > > > > > --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-> > > > > > > +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-> > > > > > > @@ -219,12 +219,6 @@ struct rxe_resp_info {
-> > > > > > >     	u32			rkey;
-> > > > > > >     	u32			length;
-> > > > > > > -	/* SRQ only */
-> > > > > > > -	struct {
-> > > > > > > -		struct rxe_recv_wqe	wqe;
-> > > > > > > -		struct ib_sge		sge[RXE_MAX_SGE];
-> > > > > > > -	} srq_wqe;
-> > > > > > > -
-> > > > > > >     	/* Responder resources. It's a circular list where the oldest
-> > > > > > >     	 * resource is dropped first.
-> > > > > > >     	 */
-> > > > > > > @@ -232,7 +226,15 @@ struct rxe_resp_info {
-> > > > > > >     	unsigned int		res_head;
-> > > > > > >     	unsigned int		res_tail;
-> > > > > > >     	struct resp_res		*res;
-> > > > > > > +
-> > > > > > > +	/* SRQ only */
-> > > > > > > +	/* Must be last as it ends in a flexible-array member. */
-> > > > > > > +	TRAILING_OVERLAP(struct rxe_recv_wqe, wqe, dma.sge,
-> > > > > > > +		struct ib_sge		sge[RXE_MAX_SGE];
-> > > > > > > +	) srq_wqe;
-> > > > > > 
-> > > > > > Will this change be enough?
-> > > > > > 
-> > > > > > diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-> > > > > > index fd48075810dd..9ab11421a585 100644
-> > > > > > --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-> > > > > > +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-> > > > > > @@ -219,12 +219,6 @@ struct rxe_resp_info {
-> > > > > >            u32                     rkey;
-> > > > > >            u32                     length;
-> > > > > > -       /* SRQ only */
-> > > > > > -       struct {
-> > > > > > -               struct rxe_recv_wqe     wqe;
-> > > > > > -               struct ib_sge           sge[RXE_MAX_SGE];
-> > > > > > -       } srq_wqe;
-> > > > > > -
-> > > > > >            /* Responder resources. It's a circular list where the oldest
-> > > > > >             * resource is dropped first.
-> > > > > >             */
-> > > > > > @@ -232,6 +226,12 @@ struct rxe_resp_info {
-> > > > > >            unsigned int            res_head;
-> > > > > >            unsigned int            res_tail;
-> > > > > >            struct resp_res         *res;
-> > > > > > +
-> > > > > > +       /* SRQ only */
-> > > > > > +       struct {
-> > > > > > +               struct ib_sge           sge[RXE_MAX_SGE];
-> > > > > > +               struct rxe_recv_wqe     wqe;
-> > > > > > +       } srq_wqe;
-> > > > > >     };
-> > > > > 
-> > > > > The question is if this is really what you want?
-> > > > > 
-> > > > > sge[RXE_MAX_SGE] is of the following type:
-> > > > > 
-> > > > > struct ib_sge {
-> > > > >           u64     addr;
-> > > > >           u32     length;
-> > > > >           u32     lkey;
-> > > > > };
-> > > > > 
-> > > > > and struct rxe_recv_wqe::dma.sge[] is of type:
-> > > > > 
-> > > > > struct rxe_sge {
-> > > > >           __aligned_u64 addr;
-> > > > >           __u32   length;
-> > > > >           __u32   lkey;
-> > > > > };
-> > > > > 
-> > > > > Both types are basically the same, and the original code looks
-> > > > > pretty much like what people do when they want to pre-allocate
-> > > > > a number of elements (of the same element type as the flex array)
-> > > > > for a flexible-array member.
-> > > > > 
-> > > > > Based on the above, the change you suggest seems a bit suspicious,
-> > > > > and I'm not sure that's actually what you want?
-> > > > 
-> > > > You wrote about this error: "warning: structure containing a flexible array
-> > > > member is not at the end of another structure".
-> > > > 
-> > > > My suggestion was simply to move that flex array to be the last element
-> > > > and save us from the need to have some complex, magic macro in RXE.
-> > > 
-> > > Yep, but as I commented above, that doesn't seem to be the right change.
-> > > 
-> > > Look at the following couple of lines:
-> > > 
-> > > drivers/infiniband/sw/rxe/rxe_resp.c-286-       size = sizeof(*wqe) + wqe->dma.num_sge*sizeof(struct rxe_sge);
-> > > drivers/infiniband/sw/rxe/rxe_resp.c-287-       memcpy(&qp->resp.srq_wqe, wqe, size);
-> > > 
-> > > Notice that line 286 is the open-coded arithmetic (struct_size(wqe,
-> > > dma.sge, wqe->dma.num_sge) is preferred) to get the number of bytes
-> > > to allocate for a flexible structure, in this case struct rxe_recv_wqe,
-> > > and its flexible-array member, in this case struct rxe_recv_wqe::dma.sge[].
-> > > 
-> > > So, `size` bytes are written in qp->resp.srq_wqe, and the reason this works
-> > > seems to be because of the pre-allocation of RXE_MAX_SGE number of elements
-> > > for flex array struct rxe_recv_wqe::dma.sge[] given by:
-> > > 
-> > > struct {
-> > > 	struct rxe_recv_wqe	wqe;
-> > > 	struct ib_sge		sge[RXE_MAX_SGE];
-> > > } srq_wqe;
-> > 
-> > So you are saying that it works because it is written properly, so what
-> > is the problem? Why do we need to fix properly working and written code
-> > to be less readable?
-> 
-> No one said the original code is not working as expected. The issue here is
-> that the FAM is not at the end, and this causes a -Wflex-array-member-not-at-end
-> warning. The change I propose places the FAM at the end, and the functionality
-> remains exactly the same.
-> 
-> You're probably not aware of the work we've been doing to enable
-> -Wflex-array-member-not-at-end in mainline. If you're interested, below you
-> can take a look at other similar changes I (and others) have been doing to
-> complete this work:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/?qt=grep&q=-Wflex-array-member-not-at-end
+Bjorn, Konrad: I should have Cc'ed you on v1 but I just went with what
+came out of b4 --auto-to-cc. It only gave me arm-msm. :( Patch 7 from
+this series however impacts Qualcomm platforms. It's a runtime dependency
+of patches 8 and 9. Would you mind Acking it so that I can take it into
+an immutable branch that I'll make available to Mark Brown for him to
+take patches 8-10 through the ASoC and regulator trees for v6.19?
 
-I'm aware of that work, just trying to find a simplest possible solution
-for this specific driver. RXE is a development driver which won't benefit
-from this hardening work at all.
+Problem statement: GPIOs are implemented as a strictly exclusive
+resource in the kernel but there are lots of platforms on which single
+pin is shared by multiple devices which don't communicate so need some
+way of properly sharing access to a GPIO. What we have now is the
+GPIOD_FLAGS_BIT_NONEXCLUSIVE flag which was introduced as a hack and
+doesn't do any locking or arbitration of access - it literally just hand
+the same GPIO descriptor to all interested users.
 
-> 
-> > 
-> > > 
-> > > So, unless I'm missing something, struct ib_sge sge[RXE_MAX_SGE];
-> > > should be aligned with struct rxe_recv_wqe wqe::dma.sge[].
-> > 
-> > It is and moving to the end of struct will continue to keep it aligned.
-> 
-> I think there is something you are missing here. The following pieces of
-> code are no equivalent:
-> 
-> struct {
-> 	struct rxe_recv_wqe	wqe;
->  	struct ib_sge		sge[RXE_MAX_SGE];
-> } srq_wqe;
-> 
-> struct {
->  	struct ib_sge		sge[RXE_MAX_SGE];
-> 	struct rxe_recv_wqe	wqe;
-> } srq_wqe;
-> 
-> What I'm understanding from your last couple of responses is that you think
-> the above are equivalent. My previous response tried to explain why that is
-> not the case.
+The proposed solution is composed of three major parts: the high-level,
+shared GPIO proxy driver that arbitrates access to the shared pin and
+exposes a regular GPIO chip interface to consumers, a low-level shared
+GPIOLIB module that scans firmware nodes and creates auxiliary devices
+that attach to the proxy driver and finally a set of core GPIOLIB
+changes that plug the former into the GPIO lookup path.
 
-Yes, I already forgot about change in srq_wqe.
+The changes are implemented in a way that allows to seamlessly compile
+out any code related to sharing GPIOs for systems that don't need it.
 
-Thanks
+The practical use-case for this are the powerdown GPIOs shared by
+speakers on Qualcomm db845c platform, however I have also extensively
+tested it using gpio-virtuser on arm64 qemu with various DT
+configurations.
 
-> 
-> > 
-> > > 
-> > > The TRAILING_OVERLAP() macro is also designed to ensure alignment in these
-> > > cases (and the static_assert() to preserve it). See this thread:
-> > > 
-> > > https://lore.kernel.org/linux-hardening/aLiYrQGdGmaDTtLF@kspp/
-> > > 
-> 
-> Thanks
-> -Gustavo
+I'm Cc'ing some people that may help with reviewing/be interested in
+this: OF maintainers (because the main target are OF systems initially),
+Mark Brown because most users of GPIOD_FLAGS_BIT_NONEXCLUSIVE live
+in audio or regulator drivers and one of the goals of this series is
+dropping the hand-crafted GPIO enable counting via struct
+regulator_enable_gpio in regulator core), Andy and Mika because I'd like
+to also cover ACPI (even though I don't know about any ACPI platform that
+would need this at the moment, I think it makes sense to make the
+solution complete), Dmitry (same thing but for software nodes), Mani
+(because you have a somewhat related use-case for the PERST# signal and
+I'd like to hear your input on whether this is something you can use or
+maybe it needs a separate, implicit gpio-perst driver similar to what
+Krzysztof did for reset-gpios) and Greg (because I mentioned this to you
+last week in person and I also use the auxiliary bus for the proxy
+devices).
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Changes in v4:
+- Collect tags
+- Extend Cc list
+- Link to v3: https://lore.kernel.org/r/20251029-gpio-shared-v3-0-71c568acf47c@linaro.org
+
+Changes in v3:
+- Make strends() a static inline function
+- Use an empty release() callback for auxiliary devices
+- Refactor the code for finding the shared descriptors in the GPIOLIB
+  shared module, split it into several smaller functions
+- Use str_high_low() where applicable
+- Use non-atomic bit ops where atomicity is not required
+- Link to v2: https://lore.kernel.org/r/20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org
+
+Changes in v2:
+- Fix a memory leak in error path in gpiolib-shared
+- Drop the gpio-wcd934x fix that already went upstream
+- Free resources used during scanning by GPIOs that turned out to be
+  unique
+- Rework the OF property scanning
+- Add patches making the regulator subsystem aware of shared GPIOs
+  managed by GPIOLIB
+- Link to v1: https://lore.kernel.org/r/20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org
+
+---
+Bartosz Golaszewski (10):
+      string: provide strends()
+      gpiolib: define GPIOD_FLAG_SHARED
+      gpiolib: implement low-level, shared GPIO support
+      gpio: shared-proxy: implement the shared GPIO proxy driver
+      gpiolib: support shared GPIOs in core subsystem code
+      gpio: provide gpiod_is_shared()
+      arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
+      ASoC: wsa881x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
+      ASoC: wsa883x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
+      regulator: make the subsystem aware of shared GPIOs
+
+ arch/arm64/Kconfig.platforms     |   1 +
+ drivers/gpio/Kconfig             |  17 ++
+ drivers/gpio/Makefile            |   2 +
+ drivers/gpio/gpio-shared-proxy.c | 333 +++++++++++++++++++++++
+ drivers/gpio/gpiolib-shared.c    | 558 +++++++++++++++++++++++++++++++++++++++
+ drivers/gpio/gpiolib-shared.h    |  71 +++++
+ drivers/gpio/gpiolib.c           |  70 ++++-
+ drivers/gpio/gpiolib.h           |   2 +
+ drivers/regulator/core.c         |   8 +
+ include/linux/gpio/consumer.h    |   9 +
+ include/linux/string.h           |  18 ++
+ lib/tests/string_kunit.c         |  13 +
+ sound/soc/codecs/wsa881x.c       |   3 +-
+ sound/soc/codecs/wsa883x.c       |   7 +-
+ 14 files changed, 1096 insertions(+), 16 deletions(-)
+---
+base-commit: 96bf1bb63977b67d1a3e4a3645f857bc3fa03f48
+change-id: 20250908-gpio-shared-67ec352884b6
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
