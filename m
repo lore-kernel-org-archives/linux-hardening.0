@@ -1,249 +1,220 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C691D2FDC4B
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Nov 2025 08:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389D42FF66C;
+	Wed, 12 Nov 2025 09:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762937365; cv=none; b=rvcJkjeWakt4I6DM2+Q5tqXFfDS0dycqYZdVzjtA9kVIO/aEg2uNswP04JDYD/pLwKxTzoyswOuQrx8QLPaq2qj9PfsxzS4e1YCJuI7d7b1+or4b/Fo4uC7UrBbi0iZloNDByonb6ylwLkpmkvmNtoldh5M0J8Mz6dKXXTHvj4U=
+	t=1762939951; cv=none; b=itu6HPUVlXydeTcoo7HM7MasQ3S9pR1rPu92ZLPWlC8ssrEjqY1i6FhIyEUb1zDKd8o049PhvVTbxsagn1cLYUW5j/DaI0CkLe8T9KmUymex6YI6R0OGM3kQjDkFJg52QoSvYbCassLgY0xi8i4PUUY/0msMZX8KjQCKqfewREk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762937365; c=relaxed/simple;
-	bh=KdwRxz0E4L6h+Tsu/Xs65J0K6pzrmFwN0OGt2cFh/UE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GOG/fjdLmbS7lP/2F+OK/c1fJhRNOnOYPf1NCje4CDphKrN6NR38uv0gVTNCr7nscdy6F7Zq69fSMhKxdfYcaqITuV6Np5xb7bFpm1Dq+7SLo2lD309IkExVSntPRfh2LWdP7G03eXYnZRxtMIEPkeqXoQMcAE8jHzRImRcMdi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=JRbVE0jL; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1762939951; c=relaxed/simple;
+	bh=uDgqiKTZnV4++p6VffHqEG3cTXU/PY5QmS5TDQiUCCM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sU89ENFEzNHrzTP2fAwygE7hLXd2f8x2qTZ3C+G8gDHNWrjSfmBXEfCwdijyo2WT18dmWwele3yhxsmWf8OmNSnZFtuDYv630brqDemwc59Bxxthukj8uR33vAcPY1sHUfgvrHrEfQV61a7s6X/IWjN44K8OcOFh34IXMJeVb8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k++Gdm2e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="JRbVE0jL"
-Received: from eig-obgw-6001b.ext.cloudfilter.net ([10.0.30.143])
-	by cmsmtp with ESMTPS
-	id IzDPvTNCQKXDJJ6XUvfm8F; Wed, 12 Nov 2025 08:49:17 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id J6XUv12ib9m9eJ6XUv97dW; Wed, 12 Nov 2025 08:49:16 +0000
-X-Authority-Analysis: v=2.4 cv=eMQTjGp1 c=1 sm=1 tr=0 ts=69144a0c
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=cM1T1WamysKh5OBvDc2ngA==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=wqs6Pu8S3n5vyb6ov2UA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=deQSiP9b3EF2jDqf/qhV6x7CE33isY6FNZMQ566O670=; b=JRbVE0jLHbMY3eRj93tVN9cwDu
-	hmjfKh/3IlyiiwWXsQ6p8lwOu/Tvxu+TY3128QO/D++GI2rzKUE6RwDQj6ckDsckShaoLdvEdwhqA
-	tcIpvHxo8zalrDgN19NoXM2CCFlI3nHtxn0GmOvVuyfzCgOYhrF3mJtVqRNsL/jHENN27N5wGZnQ/
-	cLBEHSr20l9jlvNQou3QdRs6DC89wpKutbHA3LILWs+rLGQvk2yAUJvB0OTGN5l9xpLKdqNne0VHa
-	ikfXQiVTi0quwuC+rgfgZeMn0LSyY5DVbTtoBQ8UFb1JHHS5GPMyUS+Oe/9xTSHcyX8gZBmgCA9qM
-	0ASwQBBA==;
-Received: from fp93c06c1b.tkyc210.ap.nuro.jp ([147.192.108.27]:47530 helo=[10.221.86.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vJ6XT-00000003qSB-2WKl;
-	Wed, 12 Nov 2025 02:49:15 -0600
-Message-ID: <d3336e9d-2b84-4698-a799-b49e3845f38f@embeddedor.com>
-Date: Wed, 12 Nov 2025 17:49:05 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k++Gdm2e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40793C16AAE;
+	Wed, 12 Nov 2025 09:32:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762939950;
+	bh=uDgqiKTZnV4++p6VffHqEG3cTXU/PY5QmS5TDQiUCCM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k++Gdm2e30hC1tal1dPHb3WlWUFviYvbuHsVtkLXDfmNBpiixKnRq6QBqy0C5gqzU
+	 mEtutMvS+8NbJLTf905fYFdJgHRgdbVSZELutn97XzKvV7yVSSuE3PG3VtKeIJ9BkP
+	 +KCbRTZitWzLNIebY1E5NxhMZ0RBiJkQlmX16/kyP/sjcpBh0ogLCMiA9Nq6BvtwfO
+	 hV8yPmILH8jJYqpP64zpFajGb4yJgC14bKeeTLXtxf2YbjVwWs0JC5eIpkUwgXgbuJ
+	 poefE/8d4qWuB6mFyqNBdyez/nG6tNYX3CyWAqpyIy30stQS7Ls+ZhKDmZhgtPCEyL
+	 oPxoOt97nym/Q==
+Date: Wed, 12 Nov 2025 11:32:26 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <20251112093226.GA17382@unreal>
+References: <aRKu5lNV04Sq82IG@kspp>
+ <20251111115621.GO15456@unreal>
+ <a9e5156b-2279-4ddd-992c-ca8ca7ab218a@embeddedor.com>
+ <20251111141945.GQ15456@unreal>
+ <d3336e9d-2b84-4698-a799-b49e3845f38f@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Leon Romanovsky <leon@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Zhu Yanjun <zyjzyj2000@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aRKu5lNV04Sq82IG@kspp> <20251111115621.GO15456@unreal>
- <a9e5156b-2279-4ddd-992c-ca8ca7ab218a@embeddedor.com>
- <20251111141945.GQ15456@unreal>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20251111141945.GQ15456@unreal>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 147.192.108.27
-X-Source-L: No
-X-Exim-ID: 1vJ6XT-00000003qSB-2WKl
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: fp93c06c1b.tkyc210.ap.nuro.jp ([10.221.86.44]) [147.192.108.27]:47530
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJ5NhQ5CnDW5viL0+pvH+F7peeha/v9Vp5A/fignQjVtKjUZ9zHT8LYpXJG6tUrDVJ8K++bYPi0LG2b0DugR4KrRm6E+nOiwpQ1KE8xzoew2RbLypQyf
- ixgV1C1G+FDwY9gDGe/WQitidDKXdX+kZI+83V0kLu6MkthUwRs+Y8YMPK66txGz5QMGOP0oINMYxStcIhDdLoZNbVdlPq99Exlrs3qsyNDpYxZ9nyCrLfKX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d3336e9d-2b84-4698-a799-b49e3845f38f@embeddedor.com>
 
-
-
-On 11/11/25 23:19, Leon Romanovsky wrote:
-> On Tue, Nov 11, 2025 at 09:14:05PM +0900, Gustavo A. R. Silva wrote:
->>
->>
->> On 11/11/25 20:56, Leon Romanovsky wrote:
->>> On Tue, Nov 11, 2025 at 12:35:02PM +0900, Gustavo A. R. Silva wrote:
->>>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->>>> getting ready to enable it, globally.
->>>>
->>>> Use the new TRAILING_OVERLAP() helper to fix the following warning:
->>>>
->>>> 21 drivers/infiniband/sw/rxe/rxe_verbs.h:271:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>>>
->>>> This helper creates a union between a flexible-array member (FAM) and a
->>>> set of MEMBERS that would otherwise follow it.
->>>>
->>>> This overlays the trailing MEMBER struct ib_sge sge[RXE_MAX_SGE]; onto
->>>> the FAM struct rxe_recv_wqe::dma.sge, while keeping the FAM and the
->>>> start of MEMBER aligned.
->>>>
->>>> The static_assert() ensures this alignment remains, and it's
->>>> intentionally placed inmediately after the related structure --no
->>>> blank line in between.
->>>>
->>>> Lastly, move the conflicting declaration struct rxe_resp_info resp;
->>>> to the end of the corresponding structure.
->>>>
->>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>> ---
->>>>    drivers/infiniband/sw/rxe/rxe_verbs.h | 18 +++++++++++-------
->>>>    1 file changed, 11 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
->>>> index fd48075810dd..6498d61e8956 100644
->>>> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
->>>> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
->>>> @@ -219,12 +219,6 @@ struct rxe_resp_info {
->>>>    	u32			rkey;
->>>>    	u32			length;
->>>> -	/* SRQ only */
->>>> -	struct {
->>>> -		struct rxe_recv_wqe	wqe;
->>>> -		struct ib_sge		sge[RXE_MAX_SGE];
->>>> -	} srq_wqe;
->>>> -
->>>>    	/* Responder resources. It's a circular list where the oldest
->>>>    	 * resource is dropped first.
->>>>    	 */
->>>> @@ -232,7 +226,15 @@ struct rxe_resp_info {
->>>>    	unsigned int		res_head;
->>>>    	unsigned int		res_tail;
->>>>    	struct resp_res		*res;
->>>> +
->>>> +	/* SRQ only */
->>>> +	/* Must be last as it ends in a flexible-array member. */
->>>> +	TRAILING_OVERLAP(struct rxe_recv_wqe, wqe, dma.sge,
->>>> +		struct ib_sge		sge[RXE_MAX_SGE];
->>>> +	) srq_wqe;
->>>
->>> Will this change be enough?
->>>
->>> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
->>> index fd48075810dd..9ab11421a585 100644
->>> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
->>> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
->>> @@ -219,12 +219,6 @@ struct rxe_resp_info {
->>>           u32                     rkey;
->>>           u32                     length;
->>> -       /* SRQ only */
->>> -       struct {
->>> -               struct rxe_recv_wqe     wqe;
->>> -               struct ib_sge           sge[RXE_MAX_SGE];
->>> -       } srq_wqe;
->>> -
->>>           /* Responder resources. It's a circular list where the oldest
->>>            * resource is dropped first.
->>>            */
->>> @@ -232,6 +226,12 @@ struct rxe_resp_info {
->>>           unsigned int            res_head;
->>>           unsigned int            res_tail;
->>>           struct resp_res         *res;
->>> +
->>> +       /* SRQ only */
->>> +       struct {
->>> +               struct ib_sge           sge[RXE_MAX_SGE];
->>> +               struct rxe_recv_wqe     wqe;
->>> +       } srq_wqe;
->>>    };
->>
->> The question is if this is really what you want?
->>
->> sge[RXE_MAX_SGE] is of the following type:
->>
->> struct ib_sge {
->>          u64     addr;
->>          u32     length;
->>          u32     lkey;
->> };
->>
->> and struct rxe_recv_wqe::dma.sge[] is of type:
->>
->> struct rxe_sge {
->>          __aligned_u64 addr;
->>          __u32   length;
->>          __u32   lkey;
->> };
->>
->> Both types are basically the same, and the original code looks
->> pretty much like what people do when they want to pre-allocate
->> a number of elements (of the same element type as the flex array)
->> for a flexible-array member.
->>
->> Based on the above, the change you suggest seems a bit suspicious,
->> and I'm not sure that's actually what you want?
+On Wed, Nov 12, 2025 at 05:49:05PM +0900, Gustavo A. R. Silva wrote:
 > 
-> You wrote about this error: "warning: structure containing a flexible array
-> member is not at the end of another structure".
 > 
-> My suggestion was simply to move that flex array to be the last element
-> and save us from the need to have some complex, magic macro in RXE.
+> On 11/11/25 23:19, Leon Romanovsky wrote:
+> > On Tue, Nov 11, 2025 at 09:14:05PM +0900, Gustavo A. R. Silva wrote:
+> > > 
+> > > 
+> > > On 11/11/25 20:56, Leon Romanovsky wrote:
+> > > > On Tue, Nov 11, 2025 at 12:35:02PM +0900, Gustavo A. R. Silva wrote:
+> > > > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> > > > > getting ready to enable it, globally.
+> > > > > 
+> > > > > Use the new TRAILING_OVERLAP() helper to fix the following warning:
+> > > > > 
+> > > > > 21 drivers/infiniband/sw/rxe/rxe_verbs.h:271:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > > > > 
+> > > > > This helper creates a union between a flexible-array member (FAM) and a
+> > > > > set of MEMBERS that would otherwise follow it.
+> > > > > 
+> > > > > This overlays the trailing MEMBER struct ib_sge sge[RXE_MAX_SGE]; onto
+> > > > > the FAM struct rxe_recv_wqe::dma.sge, while keeping the FAM and the
+> > > > > start of MEMBER aligned.
+> > > > > 
+> > > > > The static_assert() ensures this alignment remains, and it's
+> > > > > intentionally placed inmediately after the related structure --no
+> > > > > blank line in between.
+> > > > > 
+> > > > > Lastly, move the conflicting declaration struct rxe_resp_info resp;
+> > > > > to the end of the corresponding structure.
+> > > > > 
+> > > > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > > > > ---
+> > > > >    drivers/infiniband/sw/rxe/rxe_verbs.h | 18 +++++++++++-------
+> > > > >    1 file changed, 11 insertions(+), 7 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+> > > > > index fd48075810dd..6498d61e8956 100644
+> > > > > --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
+> > > > > +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+> > > > > @@ -219,12 +219,6 @@ struct rxe_resp_info {
+> > > > >    	u32			rkey;
+> > > > >    	u32			length;
+> > > > > -	/* SRQ only */
+> > > > > -	struct {
+> > > > > -		struct rxe_recv_wqe	wqe;
+> > > > > -		struct ib_sge		sge[RXE_MAX_SGE];
+> > > > > -	} srq_wqe;
+> > > > > -
+> > > > >    	/* Responder resources. It's a circular list where the oldest
+> > > > >    	 * resource is dropped first.
+> > > > >    	 */
+> > > > > @@ -232,7 +226,15 @@ struct rxe_resp_info {
+> > > > >    	unsigned int		res_head;
+> > > > >    	unsigned int		res_tail;
+> > > > >    	struct resp_res		*res;
+> > > > > +
+> > > > > +	/* SRQ only */
+> > > > > +	/* Must be last as it ends in a flexible-array member. */
+> > > > > +	TRAILING_OVERLAP(struct rxe_recv_wqe, wqe, dma.sge,
+> > > > > +		struct ib_sge		sge[RXE_MAX_SGE];
+> > > > > +	) srq_wqe;
+> > > > 
+> > > > Will this change be enough?
+> > > > 
+> > > > diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+> > > > index fd48075810dd..9ab11421a585 100644
+> > > > --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
+> > > > +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+> > > > @@ -219,12 +219,6 @@ struct rxe_resp_info {
+> > > >           u32                     rkey;
+> > > >           u32                     length;
+> > > > -       /* SRQ only */
+> > > > -       struct {
+> > > > -               struct rxe_recv_wqe     wqe;
+> > > > -               struct ib_sge           sge[RXE_MAX_SGE];
+> > > > -       } srq_wqe;
+> > > > -
+> > > >           /* Responder resources. It's a circular list where the oldest
+> > > >            * resource is dropped first.
+> > > >            */
+> > > > @@ -232,6 +226,12 @@ struct rxe_resp_info {
+> > > >           unsigned int            res_head;
+> > > >           unsigned int            res_tail;
+> > > >           struct resp_res         *res;
+> > > > +
+> > > > +       /* SRQ only */
+> > > > +       struct {
+> > > > +               struct ib_sge           sge[RXE_MAX_SGE];
+> > > > +               struct rxe_recv_wqe     wqe;
+> > > > +       } srq_wqe;
+> > > >    };
+> > > 
+> > > The question is if this is really what you want?
+> > > 
+> > > sge[RXE_MAX_SGE] is of the following type:
+> > > 
+> > > struct ib_sge {
+> > >          u64     addr;
+> > >          u32     length;
+> > >          u32     lkey;
+> > > };
+> > > 
+> > > and struct rxe_recv_wqe::dma.sge[] is of type:
+> > > 
+> > > struct rxe_sge {
+> > >          __aligned_u64 addr;
+> > >          __u32   length;
+> > >          __u32   lkey;
+> > > };
+> > > 
+> > > Both types are basically the same, and the original code looks
+> > > pretty much like what people do when they want to pre-allocate
+> > > a number of elements (of the same element type as the flex array)
+> > > for a flexible-array member.
+> > > 
+> > > Based on the above, the change you suggest seems a bit suspicious,
+> > > and I'm not sure that's actually what you want?
+> > 
+> > You wrote about this error: "warning: structure containing a flexible array
+> > member is not at the end of another structure".
+> > 
+> > My suggestion was simply to move that flex array to be the last element
+> > and save us from the need to have some complex, magic macro in RXE.
+> 
+> Yep, but as I commented above, that doesn't seem to be the right change.
+> 
+> Look at the following couple of lines:
+> 
+> drivers/infiniband/sw/rxe/rxe_resp.c-286-       size = sizeof(*wqe) + wqe->dma.num_sge*sizeof(struct rxe_sge);
+> drivers/infiniband/sw/rxe/rxe_resp.c-287-       memcpy(&qp->resp.srq_wqe, wqe, size);
+> 
+> Notice that line 286 is the open-coded arithmetic (struct_size(wqe,
+> dma.sge, wqe->dma.num_sge) is preferred) to get the number of bytes
+> to allocate for a flexible structure, in this case struct rxe_recv_wqe,
+> and its flexible-array member, in this case struct rxe_recv_wqe::dma.sge[].
+> 
+> So, `size` bytes are written in qp->resp.srq_wqe, and the reason this works
+> seems to be because of the pre-allocation of RXE_MAX_SGE number of elements
+> for flex array struct rxe_recv_wqe::dma.sge[] given by:
+> 
+> struct {
+> 	struct rxe_recv_wqe	wqe;
+> 	struct ib_sge		sge[RXE_MAX_SGE];
+> } srq_wqe;
 
-Yep, but as I commented above, that doesn't seem to be the right change.
+So you are saying that it works because it is written properly, so what
+is the problem? Why do we need to fix properly working and written code
+to be less readable?
 
-Look at the following couple of lines:
+> 
+> So, unless I'm missing something, struct ib_sge sge[RXE_MAX_SGE];
+> should be aligned with struct rxe_recv_wqe wqe::dma.sge[].
 
-drivers/infiniband/sw/rxe/rxe_resp.c-286-       size = sizeof(*wqe) + wqe->dma.num_sge*sizeof(struct rxe_sge);
-drivers/infiniband/sw/rxe/rxe_resp.c-287-       memcpy(&qp->resp.srq_wqe, wqe, size);
+It is and moving to the end of struct will continue to keep it aligned.
 
-Notice that line 286 is the open-coded arithmetic (struct_size(wqe,
-dma.sge, wqe->dma.num_sge) is preferred) to get the number of bytes
-to allocate for a flexible structure, in this case struct rxe_recv_wqe,
-and its flexible-array member, in this case struct rxe_recv_wqe::dma.sge[].
-
-So, `size` bytes are written in qp->resp.srq_wqe, and the reason this works
-seems to be because of the pre-allocation of RXE_MAX_SGE number of elements
-for flex array struct rxe_recv_wqe::dma.sge[] given by:
-
-struct {
-	struct rxe_recv_wqe	wqe;
-	struct ib_sge		sge[RXE_MAX_SGE];
-} srq_wqe;
-
-So, unless I'm missing something, struct ib_sge sge[RXE_MAX_SGE];
-should be aligned with struct rxe_recv_wqe wqe::dma.sge[].
-
-The TRAILING_OVERLAP() macro is also designed to ensure alignment in these
-cases (and the static_assert() to preserve it). See this thread:
-
-https://lore.kernel.org/linux-hardening/aLiYrQGdGmaDTtLF@kspp/
-
-Thanks
--Gustavo
-
-
-
-
+> 
+> The TRAILING_OVERLAP() macro is also designed to ensure alignment in these
+> cases (and the static_assert() to preserve it). See this thread:
+> 
+> https://lore.kernel.org/linux-hardening/aLiYrQGdGmaDTtLF@kspp/
+> 
+> Thanks
+> -Gustavo
+> 
+> 
+> 
+> 
