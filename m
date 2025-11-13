@@ -1,39 +1,46 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E7786352
-	for <linux-hardening@vger.kernel.org>; Thu, 13 Nov 2025 13:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407171F3D56
+	for <linux-hardening@vger.kernel.org>; Thu, 13 Nov 2025 13:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763039929; cv=none; b=N6gkdqB391j0vl6Zaes717sQbrot/StdX21+0v7kKFo3M9J79tTYuiHEKlPA6xnGp88rnyQvTHbsYf+ES32vpd8iWtRIJtkxJlAu7xCBMWk6kk1+L2RQHO3GLpx7vjXlkevuO28Ns6hx30OG3Y++kNCo8KoIMkc/M/viDehoHhY=
+	t=1763042336; cv=none; b=XbE+pDFjTA1gduqxHsOGVCUeu6vN/afeyHLfr0/0vDtzaervmwHHASqy/ya8Jh/DqACGS0CmJSISCV12aYd7p/pjtLzlwl326K1bStbApOvEYTEpGf7POHQz0PpFJ1G0hypw67tUAUA18/0qehyIuWUUQ/ZGW2iwvnq9L8odpHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763039929; c=relaxed/simple;
-	bh=BBpsJqxEP7v2OZJUgVFcvfvGE7g14MC4OgCuCg6mXEI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VKmOqSc7bNB7k65NG7cPiTDsW2wJGldMqZpiex/JBDtWfBfoNH5fJWc9c5Vv/5f1dmksaBs2CtbG8qJa7cyl7ppijf2RoSBn6BruK52vAtzsEnEKUk3qumQIJ52RqTqiNdngKMsxVyq/7jBsDLdNwTJ0yDjP93a/r4evqknl42Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dcQzanlO; arc=none smtp.client-ip=91.218.175.181
+	s=arc-20240116; t=1763042336; c=relaxed/simple;
+	bh=kfd3RyhY4DVWYu8nmIBTbsxRwtREU+3sF2ZT8G9U/3M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qSXQGruvNUd2LNh5+yXU5g6r7y9pcuA6r4JZD6yFV0R1ThNYSraefm+ow7vhTQIiJJWZKde8tAXUEJ6fDszZwur7U27BHoxnXZwhWoSSJKWDdvu9tNBiYVSWs7RAjwCTnw35pbe9B1hjCxAcXlXgs1o0l8D69nthkzJIxpAGnA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Hfx+M/ag; arc=none smtp.client-ip=95.215.58.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dcQzanlO"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Hfx+M/ag"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763039925;
+	t=1763042332;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=4tLLBDb3sXKAaGvQ1VyRAnDZc4+anqcIji71QoAU2NI=;
-	b=dcQzanlO/lJIJYmPY+xye8IcI/QJizffTHZpygExQyRaOVROhPs+qXfck5LxaOGqCcHkc6
-	+EJ12GmNF9e+ILnPWcK+VgdFY/c1lBUMu+Hhqdnry00mcx5lCNAwAh1kjt2G+quPkWK/b4
-	3/0D2uGO3Ib7Qdm2XIOAg9/gQ+2q7aQ=
+	bh=0MNWm6Lip8Ocum3HyzjrIKBsn/zjzGl1/AKODQ4rsM4=;
+	b=Hfx+M/agSYpYvlAwaquDtryNqbnRDrenQ3vOdWcwPWn9kCPPlQfx3+KfAJnj3C5yWw+5SY
+	GJmqz/17VpljQPZISfU5oU9AD9GYsL4TBscVVvTVquqwxUWNwdexEmXDdnnZ2Wp17eTWzW
+	FJsXvJeCmWNLWvhtMXMU5Bc9QzFgaec=
 From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Jens Axboe <axboe@kernel.dk>
+To: Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>
 Cc: linux-hardening@vger.kernel.org,
 	Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-block@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] block: Replace deprecated strcpy in devt_from_devname
-Date: Thu, 13 Nov 2025 14:18:33 +0100
-Message-ID: <20251113131834.45852-1-thorsten.blum@linux.dev>
+Subject: [PATCH] KEYS: encrypted: Replace deprecated strcpy and improve get_derived_key
+Date: Thu, 13 Nov 2025 14:58:31 +0100
+Message-ID: <20251113135831.98587-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,36 +50,67 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Use strnlen() and sizeof(s) instead of hard-coding 31 bytes.
+Determine 'key_name' before allocating memory for 'derived_buf' to only
+allocate as many bytes as needed. Currently, we potentially allocate one
+more byte than necessary when 'key_name' is "ENC_KEY".
 
 strcpy() is deprecated and uses an additional strlen() internally; use
-memcpy() directly since we already know the length of 'name' and that it
-is guaranteed to be NUL-terminated.
+memcpy() directly to copy 'key_name' since we already know its length
+and that it is guaranteed to be NUL-terminated.
+
+Also reuse 'key_name_len' when copying 'master_key' instead of calling
+strlen() again.
 
 Link: https://github.com/KSPP/linux/issues/88
 Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- block/early-lookup.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ security/keys/encrypted-keys/encrypted.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/block/early-lookup.c b/block/early-lookup.c
-index 3fb57f7d2b12..5c30a0cc85a0 100644
---- a/block/early-lookup.c
-+++ b/block/early-lookup.c
-@@ -155,10 +155,11 @@ static int __init devt_from_devname(const char *name, dev_t *devt)
- 	int part;
- 	char s[32];
- 	char *p;
-+	size_t name_len = strnlen(name, sizeof(s));
+diff --git a/security/keys/encrypted-keys/encrypted.c b/security/keys/encrypted-keys/encrypted.c
+index 15841466b5d4..b16a5b8b935b 100644
+--- a/security/keys/encrypted-keys/encrypted.c
++++ b/security/keys/encrypted-keys/encrypted.c
+@@ -12,6 +12,7 @@
+  */
  
--	if (strlen(name) > 31)
-+	if (name_len == sizeof(s))
- 		return -EINVAL;
--	strcpy(s, name);
-+	memcpy(s, name, name_len + 1);
- 	for (p = s; *p; p++) {
- 		if (*p == '/')
- 			*p = '!';
+ #include <linux/uaccess.h>
++#include <linux/minmax.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+@@ -330,23 +331,18 @@ static int get_derived_key(u8 *derived_key, enum derived_key_type key_type,
+ 			   const u8 *master_key, size_t master_keylen)
+ {
+ 	u8 *derived_buf;
+-	unsigned int derived_buf_len;
+-
+-	derived_buf_len = strlen("AUTH_KEY") + 1 + master_keylen;
+-	if (derived_buf_len < HASH_SIZE)
+-		derived_buf_len = HASH_SIZE;
++	size_t derived_buf_len;
++	const char *key_name;
++	size_t key_name_len;
+ 
++	key_name = key_type ? "AUTH_KEY" : "ENC_KEY";
++	key_name_len = strlen(key_name) + 1;
++	derived_buf_len = max(key_name_len + master_keylen, HASH_SIZE);
+ 	derived_buf = kzalloc(derived_buf_len, GFP_KERNEL);
+ 	if (!derived_buf)
+ 		return -ENOMEM;
+-
+-	if (key_type)
+-		strcpy(derived_buf, "AUTH_KEY");
+-	else
+-		strcpy(derived_buf, "ENC_KEY");
+-
+-	memcpy(derived_buf + strlen(derived_buf) + 1, master_key,
+-	       master_keylen);
++	memcpy(derived_buf, key_name, key_name_len);
++	memcpy(derived_buf + key_name_len, master_key, master_keylen);
+ 	sha256(derived_buf, derived_buf_len, derived_key);
+ 	kfree_sensitive(derived_buf);
+ 	return 0;
 -- 
 2.51.1
 
