@@ -1,117 +1,97 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C2C10E3
-	for <linux-hardening@vger.kernel.org>; Thu, 13 Nov 2025 00:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730B22C2356
+	for <linux-hardening@vger.kernel.org>; Thu, 13 Nov 2025 04:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762992584; cv=none; b=rWHgqqhR//krYyzoNn1vb9JZkDzwoVWqw3nnKIlcvGGV3oKGNVw7WaPifLK6gx2Cj6zjTfMzgJ27m8GvdMOWF/DXbYHyLZ2BDiJTEUNHkVL01cMG7B5D5ocSiurfAxAvJsO9ZN9ogsLhIBa0binYd9KC/20g1WlU4i4npc08eJs=
+	t=1763007878; cv=none; b=EjNn3zeKxUFGKGheS/j3y6vSk4BlSN1nbdE8K7CPmviTRk41Xd9z9u0YlsX6+Hw0EobQrg1OSmI8HexTfLxXOYvBBth5uVum8YnfVzotFuetbF6sR5EnauWj4rLUb5cSTz+FQIzg65/BpJRon8M3/rF34a/LG1WkzQSXQaB73Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762992584; c=relaxed/simple;
-	bh=PtnL9n9+dsPj9okOv9DE2Xnu9R8coLD6X43xU2icSGY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=We9uutL+DCCWRmAOr5bub6A3fPTn2UQJGNSdG4dlhN+kcV4rM6RykqHN1Z2RdXF+Ykb2e+k9whI1SBEyYM/MracWsSsxQd750tEPQeyytFuvz5Gzk+nVD9NZDsswA7YJ50nEGvivKcxtn36ct0zMO6DSzNo+wOP/+F4K3lD5uiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=H8FNNgr+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1763007878; c=relaxed/simple;
+	bh=cz9fUZd9C+zcNxpFo+3ei8tZ/Fv8mnTUymh+Lr7UieA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GOfWKfo+M/mHSKWZUJQAoGRuVgPs57jylkBySp7NuyYpx1aj3Kur0nOcCXpHifYqsZAtdsydCB6/tsk01JBmnNtesk23ST18iGtuRM7bQQeL1fG/REsDnySqiY9A5X6lU7H2Yt88ntUHbTfbeVQ4d0EWyHO63IeIyjyS/5RQIuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=hOE5YBNL; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H8FNNgr+"
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hOE5YBNL"
+Received: from eig-obgw-6005b.ext.cloudfilter.net ([10.0.30.162])
+	by cmsmtp with ESMTPS
+	id JLUBvr6V2Zx2iJOspvk1Sw; Thu, 13 Nov 2025 04:24:31 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id JOsovWCpOUBPCJOsoviFO3; Thu, 13 Nov 2025 04:24:30 +0000
+X-Authority-Analysis: v=2.4 cv=bspMBFai c=1 sm=1 tr=0 ts=69155d7e
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=7/VZz1X9DKOdr39w8NKiLQ==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=7T7KSl7uo7wA:10
+ a=nZAuQRfsK3Kgxp-xzsIA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=sc/kRw94YXpZ4S+oCdRqxdYA0RV/OiQatEvBHMPr30A=; b=H8FNNgr+oRIanasd5fks71b04f
-	6KjQojcQb0DFAu/IANQJDEBLz6cpsW+Tw3XsswpNk4rqN/eTQvPp0OxxWeYXsby8lddbAO1oOiuCi
-	9TTA6nhlbN0bFVrHudcqsUS0IhB15hZBT7Dgeef3NR4ZyjSfDjwMENfXwp5VkiGigmEB5PSC3F8k2
-	hLe9I35RZ5JwztfPnqleqyn2txxkatOYv/ci8Yw9ulnxyXlI41jwEmU6m8G6wzix/gfJtC+e2mOaL
-	LlduQQzP5hAQrF1VKN/w8ekloKzISyTUl670taf93/Yaq+t74dUsn9uombw/4PDbP6cxp2stYm/mZ
-	rLIti+5A==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJKu7-00000006fP8-2eem;
-	Thu, 13 Nov 2025 00:09:35 +0000
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: Vlastimil Babka <vbabka@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Christoph Lameter <cl@gentwo.org>,
-	David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	linux-mm@kvack.org,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v4 13/16] usercopy: Remove folio references from check_heap_object()
-Date: Thu, 13 Nov 2025 00:09:27 +0000
-Message-ID: <20251113000932.1589073-14-willy@infradead.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251113000932.1589073-1-willy@infradead.org>
-References: <20251113000932.1589073-1-willy@infradead.org>
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cz9fUZd9C+zcNxpFo+3ei8tZ/Fv8mnTUymh+Lr7UieA=; b=hOE5YBNLv9Pzty45Ab6fzepcbk
+	+7it13+t4mlR59HDxIYkjcTzKHD8tR7ydlw67jIpoXxOwVozG1VnHNBwSna83QIiBWLkc1xgUrv1W
+	u1zbSAWzG9DPc2L5oNImWpprHNn62rX7+qrH2/ACpnvBlx4AN2/5Vd1zpRhiacHA4z3sxnnLJ6Ans
+	fg1XsBSTG0DufErH/18xmbPoGSkRTallPxQ4E8dmO1VUAzFlVjQNmi8/G9S3dGRAVTXsUq2/FDCvV
+	carmSg/7h/iRf/f3ETsZx4ZM6agFsK2N4nwoL1XGHu8JzTYV7jx/kPFyRMebhOFHPaAkTV9WjxzlX
+	jP0aO8zQ==;
+Received: from [61.251.99.134] (port=3385 helo=[10.28.115.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vJOsn-00000003FES-3msd;
+	Wed, 12 Nov 2025 22:24:30 -0600
+Message-ID: <fbef561c-c470-47d0-9bc0-c565e10b2856@embeddedor.com>
+Date: Thu, 13 Nov 2025 13:24:09 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] bcache: Avoid -Wflex-array-member-not-at-end
+ warning
+To: Coly Li <colyli@fnnas.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-bcache@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aRHFchrO3BmVMH5c@kspp>
+ <7g2dkwi2nzxe2luykodsknobzr5bkl23d5mbahkyo7adhg55oy@6uisoc7jzgy6>
+ <a956504a-55af-4c2c-95a0-15663435624a@embeddedor.com>
+ <7zweggwc6mkksyhxzbdsphachjj5pzlaebli6xitryfl4yiqdj@eziyaibeuhza>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <7zweggwc6mkksyhxzbdsphachjj5pzlaebli6xitryfl4yiqdj@eziyaibeuhza>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 61.251.99.134
+X-Source-L: No
+X-Exim-ID: 1vJOsn-00000003FES-3msd
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([10.28.115.44]) [61.251.99.134]:3385
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfIKBYBXqNN9GguEm3fRZdhtMj4JtDbqkdt5CQDbTxmu1wpTb07XJJ3RKxRzDH26GaPiKd6mIrCgROytSf/nfBG754BYKzw6o8dM6ZCPHPDEdS1e/OSDq
+ qfx4rGlYDnMEMt5lxsfWoV+81xMnIUVAVvQNFTqLVtDMgyZif0bBGPIg/+vCJrjlMO+YMOKgmoIZ4WABVBpHbw/OuQdxjsBBmvCjl0RNpZl1bp6Os2XytQ04
 
-Use page_slab() instead of virt_to_folio() followed by folio_slab().
-We do end up calling compound_head() twice for non-slab copies, but that
-will not be a problem once we allocate memdescs separately.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: Kees Cook <kees@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-hardening@vger.kernel.org
----
- mm/usercopy.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+> I see. I take this patch, with the above complain...
 
-diff --git a/mm/usercopy.c b/mm/usercopy.c
-index dbdcc43964fb..5de7a518b1b1 100644
---- a/mm/usercopy.c
-+++ b/mm/usercopy.c
-@@ -164,7 +164,8 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
- {
- 	unsigned long addr = (unsigned long)ptr;
- 	unsigned long offset;
--	struct folio *folio;
-+	struct page *page;
-+	struct slab *slab;
- 
- 	if (is_kmap_addr(ptr)) {
- 		offset = offset_in_page(ptr);
-@@ -189,16 +190,23 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
- 	if (!virt_addr_valid(ptr))
- 		return;
- 
--	folio = virt_to_folio(ptr);
--
--	if (folio_test_slab(folio)) {
-+	page = virt_to_page(ptr);
-+	slab = page_slab(page);
-+	if (slab) {
- 		/* Check slab allocator for flags and size. */
--		__check_heap_object(ptr, n, folio_slab(folio), to_user);
--	} else if (folio_test_large(folio)) {
--		offset = ptr - folio_address(folio);
--		if (n > folio_size(folio) - offset)
-+		__check_heap_object(ptr, n, slab, to_user);
-+	} else if (PageCompound(page)) {
-+		page = compound_head(page);
-+		offset = ptr - page_address(page);
-+		if (n > page_size(page) - offset)
- 			usercopy_abort("page alloc", NULL, to_user, offset, n);
- 	}
-+
-+	/*
-+	 * We cannot check non-compound pages.  They might be part of
-+	 * a large allocation, in which case crossing a page boundary
-+	 * is fine.
-+	 */
- }
- 
- DEFINE_STATIC_KEY_MAYBE_RO(CONFIG_HARDENED_USERCOPY_DEFAULT_ON,
--- 
-2.47.2
+Thanks, Coly.
 
+-Gustavo
