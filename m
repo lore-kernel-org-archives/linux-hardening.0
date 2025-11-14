@@ -1,72 +1,95 @@
-Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C6330FC31;
-	Fri, 14 Nov 2025 10:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4D02FBDE9;
+	Fri, 14 Nov 2025 10:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763115871; cv=none; b=Cjp/hJXZabpUZaqzNVWmfjOtgZOIxQeBFK1PJHiCmCNomrC+IwOh9Udd7tFH8iPP18A9ipQqQy4LzXi/8eTN4TVPc/pnE1GV5W3R6oijjJGRvtK/wYuwBUMeKBvIxg9i92wd78JKB2HsQ7tKX++x1e+8fxRqdEk+TAop9hdyb3M=
+	t=1763116265; cv=none; b=VXX2AxL2kGNH1+FQm+oMgnANUgXeabc1ceNhT0dDX9CYcI3Ajf9/IIKV4n2U+3dqHXRmIydbFofBdac+5vPuJj0k5OON5djaUSnK7IDtHPo33h+GmTCQmrux65Madx3s5bwbkt0MstlwQw+xxhRJB01jHSq5cBsYU8pRWjfQ7XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763115871; c=relaxed/simple;
-	bh=L2znFfLlo19Ya/Q4qyF5INzpQfXSumiV/vZ9w6Jdumo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KDhScZBGmYsa2kS2ForPL6+YS4707QoMLvzKb72FIdNZHK1p7X08LhAJovFlXNOViN5Efj1q2q4AWSaeA6933U0WRAT1f6byvmhNY0tXk27ur6zeoooOeO9iGX+mUWjVKM67GlsPYz52BQTjBvhzxDQBBPRMJPI7bnjeab8rKxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=jixnp9Dj; arc=none smtp.client-ip=180.181.231.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1763116265; c=relaxed/simple;
+	bh=wN3/8RgeZcaLwmHshZdOIoQfrJtLJQkqD+OboamYqfk=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=NX0dFFtOh3S930VaC6kMlOolpBpTZYDvOmJFH0rr43AwEooHUF4Bi8rdnmJERV4Ug0vuhiYc7Ihss5ni8SmaI2VliIiiVAa/TnoezjEVjlg86jjlqhm5ESz3nV+w9WWzFULofxi/kfLCAWxmUN5jpSdEoBERCiqjNnOFGJSDVDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QaPy5p1e; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="jixnp9Dj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
-	from:content-type:reply-to; bh=8EAg98BYyKHe7EgrE3l9zD3sK3piwHgmRR9FV9NI7Ds=; 
-	b=jixnp9DjvvE/bDwBzVdplP9o9ik25RgeLZl/iStoDkR5NBffS8wAmsPUaUClX+XjiDGJ8SP1oeM
-	5CeQWcmdaRdKFtduSytHmc9qhQZB/19MGSBAatC5SqTp5bHusIKFT9f5lHpvnd3n1F2cHmCOCk0E0
-	9a60IbYSmJPocqqrOzhhhj5GJuiJ8jyk+fAIzEPXRAMr5RiINzCtXTLbdfaqP+wc8IDDYtribnkE5
-	LAcqkeh0Y3x3kPGZsnSwpAFrqlh+wnbT5nAiYgFQVbeeBZDrBNBMDXTDbQfjYsOy0nOI7ekwvuzCb
-	UhjkZUyBXkRCAmZ7rw6l3P23PjgrIjc7igyg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1vJqyN-002yRC-0c;
-	Fri, 14 Nov 2025 18:24:08 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 14 Nov 2025 18:24:07 +0800
-Date: Fri, 14 Nov 2025 18:24:07 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: "David S. Miller" <davem@davemloft.net>, Nick Terrell <terrelln@fb.com>,
-	David Sterba <dsterba@suse.com>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] crypto: zstd - Annotate struct zstd_ctx with __counted_by
-Message-ID: <aRcDR1OdNL293aem@gondor.apana.org.au>
-References: <20251108120740.149799-2-thorsten.blum@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QaPy5p1e"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1763116250;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z2qM6eDrcKqDXJMkFJ1xGKhxIyX3KERDuEZB9kx7Z/8=;
+	b=QaPy5p1ej8Xeg/mO/iCLz7Sizp3OiTY2mvGzJ3e6YRghD7lBDmnIbrYQht8Q8/T5NPcgBJ
+	8nkYkN1iatcMTB46IIcN+PcDS4MfI95juqw7Y6Uw2X203K0YPbeey4XHxncDuA82BLcba/
+	gqYixPF2QxRQKZ+89J191m0wlrUe8K4=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251108120740.149799-2-thorsten.blum@linux.dev>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
+Subject: Re: [PATCH v2] KEYS: encrypted: Replace deprecated strcpy and improve
+ get_derived_key
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <20251114093445.0ec74428@pumpkin>
+Date: Fri, 14 Nov 2025 11:30:15 +0100
+Cc: Eric Biggers <ebiggers@kernel.org>,
+ Mimi Zohar <zohar@linux.ibm.com>,
+ David Howells <dhowells@redhat.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>,
+ Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>,
+ linux-hardening@vger.kernel.org,
+ linux-integrity@vger.kernel.org,
+ keyrings@vger.kernel.org,
+ linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9F9F1AD7-135E-43F4-9A46-BD5A60DA0921@linux.dev>
+References: <20251113215546.136145-1-thorsten.blum@linux.dev>
+ <20251114093445.0ec74428@pumpkin>
+To: David Laight <david.laight.linux@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, Nov 08, 2025 at 01:07:40PM +0100, Thorsten Blum wrote:
-> Add the __counted_by() compiler attribute to the flexible array member
-> 'wksp' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
-> 
-> Use struct_size(), which provides additional compile-time checks for
-> structures with flexible array members (e.g., __must_be_array()), for
-> the allocation size for a new 'zstd_ctx' while we're at it.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  crypto/zstd.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+Hi David,
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On 14. Nov 2025, at 10:34, David Laight wrote:
+> On Thu, 13 Nov 2025 22:55:45 +0100
+> Thorsten Blum <thorsten.blum@linux.dev> wrote:
+>=20
+>> strcpy() is deprecated; use the safer strscpy() and use its return
+>> value, the number of bytes copied, instead of calling strlen() on the
+>> destination buffer again. String truncation can be ignored since
+>> 'derived_buf' is guaranteed to be large enough.
+>>=20
+>> Link: https://github.com/KSPP/linux/issues/88
+>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+>> ---
+>> [...]
+>=20
+> I'm not sure this is an improvement, but has this code ever been =
+correct?
+> The buffer passed to sha256 is either:
+> 	"AUTH_KEY"'\0'master_key
+> or
+> 	"ENC_KEY"'\0'master_key
+> For short master_key the buffer is HASH_SIZE bytes and padded with =
+zeros (ok).
+> However for long master_key the length is calculated using "AUTH_KEY" =
+so
+> there is an additional trailing '\0' in the "ENC_KEY" case.
+
+I removed the trailing '\0' in v1, but since Eric pointed out that it
+changes the sha256 hash, I reverted it in v2.
+
+Thanks,
+Thorsten
+
