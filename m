@@ -1,25 +1,25 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A1F25CC63;
-	Fri, 14 Nov 2025 15:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D19D32572D;
+	Fri, 14 Nov 2025 15:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763135272; cv=none; b=ND1ApAmi2mPEEEEfupyiXQpAFUXbpeI1mxJZDS6dAlBVHLwZ7GFcGdgFQEZh3/m5dDkL6OciH0xw1+40iP/cyIca/B1zH320qAIB9oTWpqc7XzZx8qO3hd9OLVfq5PWxaJT4ZG1HyDWdLVKyoFlYCp01F52Vy9DeEV5gyFedrKU=
+	t=1763135379; cv=none; b=n8O5HITs4LLY1/onjqpbP2XSN/CZuEgtXeLooxuoDAik50AV4Zu31HoTXHiygimOflGrmHOvxFQo2m4rd4dreeowjPYSII+7CLwj+h3PKUVWXN6K2yNQrWDafm8WD/DRRynDb+Wc1GAjp92NKYH2CAREytCRLdGTigJtG2AsCmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763135272; c=relaxed/simple;
-	bh=KDbByiGZSmqnZP69FNrRKl2VTaaojv1bgAQi1GcFQpA=;
+	s=arc-20240116; t=1763135379; c=relaxed/simple;
+	bh=oRnvW56+d0JQKK23m2G5B9y+/BodTl65wQX95ahIOCA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hMD6DbD/DQfLz53zhg3SoMX/4Nf9Xu0rhGpaJacAKhS4zdxVCFBBWIdgTxnw3FnV1qSiWar+7xkk9LJ4fchsUwOZZeRBP/ugEGayQwbszOdsWMuJ/xBudn9pR2QM5mR75pBUJHhmvA0eVFyeF9fq1ee7mLBIPjKuxHl7tQzFr1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=D83vK7ZJV4dE5pP65ECbeNac1E4UZuIg9WmL+gwflei0APf0Hbvi1SCTlr6oEfK/bK8ENHuj1LkCC2aFwmWw7Rwjps0HFK1OGSAAH3vYl44TNVcYkMf5gHJr/O2bxeZWmRMWZSOhmjDSgc8c2AOAaWEfaJ5yQeYqLTZZLIZUbQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 6A17A140412;
-	Fri, 14 Nov 2025 15:47:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 6404C20029;
-	Fri, 14 Nov 2025 15:47:46 +0000 (UTC)
-Date: Fri, 14 Nov 2025 10:48:04 -0500
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 0A4391603C8;
+	Fri, 14 Nov 2025 15:49:36 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 0C0FB20027;
+	Fri, 14 Nov 2025 15:49:33 +0000 (UTC)
+Date: Fri, 14 Nov 2025 10:49:52 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: David Laight <david.laight.linux@gmail.com>
 Cc: Thorsten Blum <thorsten.blum@linux.dev>, Josh Poimboeuf
@@ -28,12 +28,12 @@ Cc: Thorsten Blum <thorsten.blum@linux.dev>, Josh Poimboeuf
  linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] unwind deferred: Annotate struct unwind_cache with
  __counted_by
-Message-ID: <20251114104804.24b58b0f@gandalf.local.home>
-In-Reply-To: <20251114150209.27354ddd@pumpkin>
+Message-ID: <20251114104952.045805af@gandalf.local.home>
+In-Reply-To: <20251114095644.116a767d@gandalf.local.home>
 References: <20251114122748.222833-1-thorsten.blum@linux.dev>
 	<20251114084346.6469edc0@gandalf.local.home>
-	<20251114085332.396aff85@gandalf.local.home>
-	<20251114150209.27354ddd@pumpkin>
+	<20251114143104.0d1aead3@pumpkin>
+	<20251114095644.116a767d@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -43,32 +43,31 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: tespnoxeaf8pb8kqys9eg8rxnycfdq3s
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 6404C20029
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 0C0FB20027
+X-Stat-Signature: jsf9ntkq1o9ba47o4unu4z5drq1bopzs
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19wYKTOkzIRNYX0CGq7GS61NhjDrDEcYfk=
-X-HE-Tag: 1763135266-813555
-X-HE-Meta: U2FsdGVkX1/I5payVIFur9IdFZmupCOlpFZPqI2ixTgCtTJsHSmFsbGUuU7yUg8fdw0pOumYE2X9tkYS3r7Nj9YeneNYpX868+TYhu3rYbByg/qL/UiW6uvYcajoj3SO59WiZPZ93Pz7bVG0N3xIXYrxUUjrvnvFQYBE1QNlxswU7Z9eBs2N65wsbfnHRu9/apLGzfAAu7ekDXmE8PqYsItmGNuufL0uXo4XGcjMUB+iWuW4iXe/cey7c+FE2/PYpGW+tUrV1v1eWmzyhyHYNqnAKe5UcZv75OULB/tiPJ2PaMDjZavVkV5JeoJLUBAknSoBLfKTLYQSb6VKDOJUBpbow3+BsFEN
+X-Session-ID: U2FsdGVkX19/cxjDn4Vv7s3rFJr7hal0bIzO0trktHk=
+X-HE-Tag: 1763135373-170811
+X-HE-Meta: U2FsdGVkX1/R52Afbnazr7mfJ+wOUHDc/o4eKw5mn81ev+t1BKJ28efVUHd22Imvlwzd0YH1UKIBFXJIaTtkukoVYNgf98K/gPWP0kXBaeha5RHdlcPLJ2sILGsn8k38YUKgOPu97TA/vpQ6FesjhA6QJw7f1xHnNMPird34HhzGM7/Gk+88OiYHrk/kYfKwDmaFzDFpX/2Hco9b+9ce75Z0ixkdDkXTOdWPqiZtKIX4SAU3ZQY2m7B8pESqTWHfi1bvdffx5C8c/LfW4B6DeeMCWm83dW/0fkNMycYOOo3kBIoUWD0QzwTks7J+ibn+srn+2ZRNX6P2CExbl3Xv7JunTHSaoUJ+pxC8/CQvUlBGYZkUCupivyKHWIBE19Z6
 
-On Fri, 14 Nov 2025 15:02:09 +0000
-David Laight <david.laight.linux@gmail.com> wrote:
+On Fri, 14 Nov 2025 09:56:44 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > +/* Make the cache fit in a 4K page */
-> > +#define UNWIND_MAX_ENTRIES					\
-> > +	((SZ_4K - offset_of(struct unwind_cache, entries)) / sizeof(long))
-> > +
-> >  struct unwind_cache {
-> >  	unsigned long		unwind_completed;
-> >  	unsigned int		nr_entries;
-> > -	unsigned long		entries[];
-> > +	unsigned long		entries[UNWIND_MAX_ENTRIES];  
+> >   
+> > >  	unsigned int		nr_entries;
+> > > -	unsigned long		entries[];
+> > > +	unsigned long		entries[]; /* Fixed size, not bound by nr_entries */
+> > >  };    
+> > 
+> > Perhaps it should be:
+> > 	unsigned long entries[ /* MAX_UNWIND_ENTRIES */ ];  
 > 
-> That won't compile - I tried it.
-> 
-> You could add __aligned(4096) to force the structure to be padded to 4k,
-> and then define UNWIND_MAX_ENTRIES in terms of the structure size.
+> Whatever would keep the coccinelle folks from sending more patches.
 
-I rather not do more tricks than what a comment would solve.
+Thorsten,
+
+Which comment would you feel is more obvious that entries is not bound by
+nr_entries and prevent this patch from being sent again?
 
 -- Steve
