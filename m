@@ -1,117 +1,64 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B92632E6A2;
-	Fri, 14 Nov 2025 15:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C22325494
+	for <linux-hardening@vger.kernel.org>; Fri, 14 Nov 2025 16:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763135627; cv=none; b=PdQCGR/W54yKE0A05Fforr9bpldpo3EpWreRuENobKYCgx5czGISMMRjo4w8bTyeGLtdRdHZNvkwxc2xiG1ruxaDw29zr+wsfu3NBBnwfqC2zCFtdY2s6uSzgilp+vvGddOTMdppVxZ7e8PAt+AalLNXQGjIs3XkltBAEdPYJOo=
+	t=1763136908; cv=none; b=dNTV9ACoMFjaG97svSe+dfY2Z0YevZmySuUJrumDviHC/LudDRO8z5V/SqqytwK5yqz2NwadP/fG9hAnWvktAlq4abiwubpkJY23EP8qNtaKu+Jn++5FjAwI64b8PSo+Wi5zxUAXIzTqzMoz8We0RxodNLElsUpQDnbpqcMS5qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763135627; c=relaxed/simple;
-	bh=7K3SP1pUeSBBCp0KbFNwVIgHV9wBsi9VrPGMcMMrFhw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D/kAmkcqgmx9pst/7EkgeWfZWjP/tiWnmQgEN65cbjeeybsCv080n6xs63aTnBGHc3oyp9yv53p2xYLGMlFFk89IKy2CghDnxoZR8Hy/wLUrQ2Rxn3lhgt0CB8E6+MQVyt+igtqG2f0mzxuEJ84MpuDP89ge90DpTMdFSqcEIU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id BF713B91AF;
-	Fri, 14 Nov 2025 15:53:43 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id D9B3620024;
-	Fri, 14 Nov 2025 15:53:41 +0000 (UTC)
-Date: Fri, 14 Nov 2025 10:53:59 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] unwind deferred: Annotate struct unwind_cache with
- __counted_by
-Message-ID: <20251114105359.58512d84@gandalf.local.home>
-In-Reply-To: <20251114104952.045805af@gandalf.local.home>
-References: <20251114122748.222833-1-thorsten.blum@linux.dev>
-	<20251114084346.6469edc0@gandalf.local.home>
-	<20251114143104.0d1aead3@pumpkin>
-	<20251114095644.116a767d@gandalf.local.home>
-	<20251114104952.045805af@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1763136908; c=relaxed/simple;
+	bh=cdP+mVz3wzeJb8i6rc2+VIT7nAC5WdXD6lKv0ZSGh+U=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Ib7icpTsQeyLfYJtwglHRSsfm8XPML073dI7c/a7XgKHOJTsjwQEQa3n198T8ZHQBbDdAG9vE/nYwCgDzaop0X1rRUrsWACHl3ZBlSARdPEFBY+kk7jYh5khS2q1HlYtrrcp0QbLQuGCqsJBVgDZppLM+v9xDjcRK3oGPWKBCV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NJEVN19j; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NJEVN19j"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1763136905;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cdP+mVz3wzeJb8i6rc2+VIT7nAC5WdXD6lKv0ZSGh+U=;
+	b=NJEVN19jigGT1vREWH8FWJ+HUQCRGiLoF7N08ciybnr4V02V9g1COoq6Oj/kUlzplIgq99
+	X4jORsfyQT7q2wkCl13izRXdOtAkuMsslbcQ+OV628N1mTL0owoQik7rA+axltFIgBGcwE
+	4JMSlCRDw4hauHknbC01HCP244TGTa0=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
+Subject: Re: [PATCH] unwind deferred: Annotate struct unwind_cache with
+ __counted_by
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <20251114104952.045805af@gandalf.local.home>
+Date: Fri, 14 Nov 2025 17:15:01 +0100
+Cc: David Laight <david.laight.linux@gmail.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: D9B3620024
-X-Stat-Signature: t1gexbh7am8wrg9y4txrnzdj6azdsigt
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1//e7vtrf/uvd26T/qmRWbZ4HuxvehLS1I=
-X-HE-Tag: 1763135621-980771
-X-HE-Meta: U2FsdGVkX1/POr+EGOzEVlgOvRCC78uxBraCZc+hh8CTtHjlso1UvVz1gFs3KQGnAVzE0jHDFgmb3XDyF9f4fdUGxSa1aPYMTMlgXyea2Inck3zFfLwHQQseKY1IKOaDHtEFZ1zistZtHbsI5xcpwIV789x2K8unz2XLpT1deLV5oMJyS1yPGeviPsTC/KtU3xInG3bvixMQXGwrjWcsM4AvKtAjmjSh5E9AszXljxwCApZ0iSdUkp+ZUJCKMxnA6y1By/kWWJJjVqSNZi/TB24EDNdW5szS9UrOyhIv/Rp8M9VrLjDyHCknO8vwHlvgMScOcGJSDA9TBQS1yc6Og6A4ty7i21+6Mf1l76r8q/aLYyBkiL1mFl+kFM5QW7Y36cLIg8BFlF9Ioe8poqTBuZbezO6ygNtl
+Message-Id: <0EC77204-065B-442E-AD0A-B86B5CB3ABB2@linux.dev>
+References: <20251114122748.222833-1-thorsten.blum@linux.dev>
+ <20251114084346.6469edc0@gandalf.local.home>
+ <20251114143104.0d1aead3@pumpkin>
+ <20251114095644.116a767d@gandalf.local.home>
+ <20251114104952.045805af@gandalf.local.home>
+To: Steven Rostedt <rostedt@goodmis.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 14 Nov 2025 10:49:52 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Fri, 14 Nov 2025 09:56:44 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > >     
-> > > >  	unsigned int		nr_entries;
-> > > > -	unsigned long		entries[];
-> > > > +	unsigned long		entries[]; /* Fixed size, not bound by nr_entries */
-> > > >  };      
-> > > 
-> > > Perhaps it should be:
-> > > 	unsigned long entries[ /* MAX_UNWIND_ENTRIES */ ];    
-> > 
-> > Whatever would keep the coccinelle folks from sending more patches.  
-> 
-> Thorsten,
-> 
+On 14. Nov 2025, at 16:49, Steven Rostedt wrote:
 > Which comment would you feel is more obvious that entries is not bound by
 > nr_entries and prevent this patch from being sent again?
-> 
 
-Or we can simply move the macro to the header:
+Both seem fine to me.
 
-diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
-index 18fa3932f61c..0e43556b9710 100644
---- a/include/linux/unwind_deferred_types.h
-+++ b/include/linux/unwind_deferred_types.h
-@@ -5,10 +5,14 @@
- #include <linux/types.h>
- #include <linux/atomic.h>
- 
-+/* Make the cache fit in a 4K page */
-+#define UNWIND_MAX_ENTRIES					\
-+	((SZ_4K - sizeof(struct unwind_cache)) / sizeof(long))
-+
- struct unwind_cache {
- 	unsigned long		unwind_completed;
- 	unsigned int		nr_entries;
--	unsigned long		entries[];
-+	unsigned long		entries[ /* UNWIND_MAX_ENTRIES */ ];
- };
- 
- /*
-diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-index a88fb481c4a3..6ea7cb5f336d 100644
---- a/kernel/unwind/deferred.c
-+++ b/kernel/unwind/deferred.c
-@@ -37,10 +37,6 @@ static inline bool try_assign_cnt(struct unwind_task_info *info, u32 cnt)
- }
- #endif
- 
--/* Make the cache fit in a 4K page */
--#define UNWIND_MAX_ENTRIES					\
--	((SZ_4K - sizeof(struct unwind_cache)) / sizeof(long))
--
- /* Guards adding to or removing from the list of callbacks */
- static DEFINE_MUTEX(callback_mutex);
- static LIST_HEAD(callbacks);
-
-
--- Steve
