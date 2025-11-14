@@ -1,78 +1,39 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B54C326934
-	for <linux-hardening@vger.kernel.org>; Fri, 14 Nov 2025 14:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71060322C63;
+	Fri, 14 Nov 2025 14:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763130672; cv=none; b=qlc9mPja0rwT04DM0L8lxSL55M6fBuJ07Bdyv/V6GY2odCmSGW1PdNADhKFCyZxbLg/BR+qBJZ0PZuPGj9gceWMjWbWca9vpeJOWgTsQrlSQ7UWssUYQv1fW8qs5QMOjJs5+1IBrC4pKEn1NimTQsWGIGX+HyQqE47JLVGsh+GU=
+	t=1763132193; cv=none; b=Z0YVfbogdJvqtEpYiudeO+0wmbYdQe9Ugu0RMQnmesjDKM7Pwt6+/MVyDd7LOvnjGlF/ZZL4aofqJbDm1sJJcVpmp1WB8jWPw2DxSJlWTAmUXlCBKUyG17TA0zPUtioMhRHCyKJRVe8eCUoUhv+yMqmg0+3CyvRl3yfWgZn2LGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763130672; c=relaxed/simple;
-	bh=0Nd/5UcvGGQ3wMP5hcatUCUy3cHNlcIa0pLV8mrh2PI=;
+	s=arc-20240116; t=1763132193; c=relaxed/simple;
+	bh=xdSvwqEtlpvYE+sDW3Tr0Rs5yVrL+10AzEHsj/r1fdA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fVVwRZzDmXLJ1EB66E6sDgo9lcluYrUgU5NOGwycxviAjp9Q7KGazZY3Lh1W1vOswWa1bCwwNGsERf4jEP/DGTj0miREaL4BQ2BUPWzck1IkcWI7Z9wlKh5BKUV0782WP3O4hMqKVI2J2b2YsCsVUVCfCEMlVJ4Jwimx61zFT3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bvLIYH1o; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bvLIYH1o"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-47789cd2083so15579035e9.2
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Nov 2025 06:31:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763130669; x=1763735469; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u6MM5TkUOF6yH5fMK7JZqRWlPSfFjm0LYdpGBKMINJc=;
-        b=bvLIYH1o1IpNbLxVqQ6aKlD4aKiTsEHoZcqbtHJlN62d/tsdq3D/pHySBHF5h9P/XI
-         bmdrO2y30oLWn02fNg8A5qRtfd/oMOy+f7qXKetyTRHwDFNJm0OBzc81uE5vUE6BVP8/
-         WngbtDT3ygRygnxn8DG0aL22SXE+umYDi+B64iPwpXdczMpGoLXZsN3kLULNkvhUJJ1k
-         JQ7lmv7zMJQsHjHwn1jq7Vc9HOnNTCOdfpHrSZ9GzqHtt52sY0LkVdWtMoXfZXP94A9X
-         ELbJZ3lw5A0Q8chudyvVZaBCVsiMimU1f6bLSKIvMqdoM8YbeeO84NYFL9iXzLhUgqZu
-         Vx6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763130669; x=1763735469;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=u6MM5TkUOF6yH5fMK7JZqRWlPSfFjm0LYdpGBKMINJc=;
-        b=HRbLUxeypAZzHpLu8saE3s/qXMZQEWrd1aNxZo207Qd6ZaaImDiZ3G2wAUD7GHy8Tw
-         YZwfgeGdbzf9jYYHMwxh4Ndovp3IhIE15wJTAfgi3pVe+1LzRcfkdfpECgbB1UJbQzUj
-         s7yd0BIcI1FsDfD1DTF1ZrlqvPxQfvhZdt8s/S8a2Sm9xeadA3dtUTDHUoDo7PLKLOLF
-         FDis7Men93+uRBX4rTAgPzODyeN2RhJ4apGr71vYatV+cfx0aNwWPgDVsOgzE/M3/rj2
-         Li3UI17vpBkBWFHXzMIqjjknpT+R6/dIJBfOZX9m4IKUeN6rHScdWp5Bo7niUfE3igNs
-         kc8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUY2/mm8qcWKoO20VBjGn79jsghDHnNm0VaZ0DYE/8SwJ3CybwWQoXh3GXg0hGnRNgRPCivKVo6GLw7Wb5oJi0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoZfjRD2gED+pPsWQT4dYx11RrxJBH+8FTKozl7En9xnd7gfdN
-	SrLqbHQjz+g26M1aHk5MwvED687/XiAwvRvUlyyvzF2P7xuZhqPsBDfeEkQuRQ==
-X-Gm-Gg: ASbGncuVnbCq5zXV9yM/T5DNkwwuzwhMLeVeH2ieIjxN8a87fLF154C48NKPPYkJD6z
-	ZTAmOujbUNl89dZ05mG/t2ZYpjYa2PWYORQzUw3F4QtNH7WcCsckJpAQJXOdObPfYeeGS07aKVs
-	U3S6KKsovjyBEWz43TNfrgSy4naDCQNqpp6oIrGnbUX0zcYVFDCGl4BpV0R5xJp6IhxvWUJVGr7
-	VvaxzmhYl3c2HCTReHrbW5rc2sZyr4rmoNqNCqKTldNbrssnEKq6nFCS52O5QL6GOEemPGQWXmM
-	w9BOu2MFSwSerohv4VuCVp6aG9YFIEfKjpNtAAt46PVchS4xa8O1gxP3wSvQkkYcGRdAcm6EZm1
-	wkMHOtdizMpDdgLOfwxd4PBpxB1fqwHYcb15LzyAVbuUeRk5aaAoVxGifBlHf8x0S25vnOFjVOU
-	75XnXSx6XXllSZ5DfVTB4ojncCPtj2eQrhoCf9rJ2EzIkHJ1iHKarb
-X-Google-Smtp-Source: AGHT+IEHrDuoHFECjPf0CKJ/87IcJrAsvvtIb2nB8T6rg1oWoh16xlEJf+x0ICRT7Ao9WTxW06pbKQ==
-X-Received: by 2002:a05:600c:4513:b0:477:2f7c:314f with SMTP id 5b1f17b1804b1-4778fe5c820mr32213275e9.10.1763130668582;
-        Fri, 14 Nov 2025 06:31:08 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47795268e0asm9388645e9.6.2025.11.14.06.31.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Nov 2025 06:31:08 -0800 (PST)
-Date: Fri, 14 Nov 2025 14:31:04 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
+	 MIME-Version:Content-Type; b=VQsopoNinuNmuJfB6rmMofLVjR+QRrtJqxjVftL46JVBwWh7ENVd4ylZk+0nWxI/RSgIS+WM8D8mnXHzw/9IqEZt8HhU+l7yBa2/xWkvo8XheuHxUIHQoGWAKAFj92slsaJOE6vEuGZkplYxKdkVsNfe2FpQGxJgh4iF2rXlRew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id ED68A58D0E;
+	Fri, 14 Nov 2025 14:56:28 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 049CD60010;
+	Fri, 14 Nov 2025 14:56:26 +0000 (UTC)
+Date: Fri, 14 Nov 2025 09:56:44 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: David Laight <david.laight.linux@gmail.com>
 Cc: Thorsten Blum <thorsten.blum@linux.dev>, Josh Poimboeuf
  <jpoimboe@kernel.org>, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
  <gustavoars@kernel.org>, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] unwind deferred: Annotate struct unwind_cache with
  __counted_by
-Message-ID: <20251114143104.0d1aead3@pumpkin>
-In-Reply-To: <20251114084346.6469edc0@gandalf.local.home>
+Message-ID: <20251114095644.116a767d@gandalf.local.home>
+In-Reply-To: <20251114143104.0d1aead3@pumpkin>
 References: <20251114122748.222833-1-thorsten.blum@linux.dev>
 	<20251114084346.6469edc0@gandalf.local.home>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	<20251114143104.0d1aead3@pumpkin>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -81,69 +42,76 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: u9d8j9gqunin8t36wjox1tfachqywetf
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 049CD60010
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18temwqSHLqjxcKjtoiPzEuK6N7P/2/qxA=
+X-HE-Tag: 1763132186-585628
+X-HE-Meta: U2FsdGVkX1/Ht8r715N5++cI5hX0Z2zC2wc0sCn+xoef0CLuwJQf3oaK4dMZm3J9RqVthizD9VoOnAQIbdIdXgqJikc3HVb4rnGPmDqoMOCXbV1Pe6JTzti0gZP7HrzAm7LUjvjNflvglWseo+DxCnTBdPvwiQGwDAhGBR+Bssw01OtgFmpTTpqf37JZqBpBC/tgabksdgHhd/snonzS9Do+2DpK3vXgun9MzD8qQaTFhyFj65RDnIy+QIHVFtqivp9RLLp6U0t7vI5e9WaxSV/Hip8Fvt5+y5qEHcMPZ3/eS3BV2sp48DV0poGgpVPxeSEhfCz3PHaVdeNykoHV+ubK7FNM8yUUY7z+YrdSfglbAph9yRBP5NbjVQXkTeaLKNu1uB6N/w1FcAtpZ5LezYh2sqXOQdaOpWbXO5nHbBs=
 
-On Fri, 14 Nov 2025 08:43:46 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 14 Nov 2025 14:31:04 +0000
+David Laight <david.laight.linux@gmail.com> wrote:
 
-> On Fri, 14 Nov 2025 13:27:47 +0100
-> Thorsten Blum <thorsten.blum@linux.dev> wrote:
+> On Fri, 14 Nov 2025 08:43:46 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> > Add the __counted_by() compiler attribute to the flexible array member
-> > 'entries' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> > CONFIG_FORTIFY_SOURCE.
+> > On Fri, 14 Nov 2025 13:27:47 +0100
+> > Thorsten Blum <thorsten.blum@linux.dev> wrote:
+> >   
+> > > Add the __counted_by() compiler attribute to the flexible array member
+> > > 'entries' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> > > CONFIG_FORTIFY_SOURCE.
+> > > 
+> > > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> > > ---
+> > >  include/linux/unwind_deferred_types.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
+> > > index 33b62ac25c86..d4b67f0116f3 100644
+> > > --- a/include/linux/unwind_deferred_types.h
+> > > +++ b/include/linux/unwind_deferred_types.h
+> > > @@ -5,7 +5,7 @@
+> > >  struct unwind_cache {
+> > >  	unsigned long		unwind_completed;
+> > >  	unsigned int		nr_entries;
+> > > -	unsigned long		entries[];
+> > > +	unsigned long		entries[] __counted_by(nr_entries);
+> > >  };
+> > >  
+> > >  /*    
 > > 
-> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> > ---
-> >  include/linux/unwind_deferred_types.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > Wrong!
+> > 
+> > I need to add a comment here that entries is not bound by nr_entries.
+> > 
+> >    https://lore.kernel.org/all/20250730093249.4833be14@gandalf.local.home/
+> > 
+> > Maybe this?:
 > > 
 > > diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
-> > index 33b62ac25c86..d4b67f0116f3 100644
+> > index 33b62ac25c86..d05409bb14fa 100644
 > > --- a/include/linux/unwind_deferred_types.h
 > > +++ b/include/linux/unwind_deferred_types.h
 > > @@ -5,7 +5,7 @@
 > >  struct unwind_cache {
-> >  	unsigned long		unwind_completed;
+> >  	unsigned long		unwind_completed;  
+> 
+> Does that need to be 'long' - 'int' would fit in the padding on 64bit.
+
+We could make it 32 bit, then the number of tracers attached would be the
+same as it would be on 32 bit archs (which would be 30). Maybe that's enough.
+
+> 
 > >  	unsigned int		nr_entries;
 > > -	unsigned long		entries[];
-> > +	unsigned long		entries[] __counted_by(nr_entries);
-> >  };
-> >  
-> >  /*  
+> > +	unsigned long		entries[]; /* Fixed size, not bound by nr_entries */
+> >  };  
 > 
-> Wrong!
-> 
-> I need to add a comment here that entries is not bound by nr_entries.
-> 
->    https://lore.kernel.org/all/20250730093249.4833be14@gandalf.local.home/
-> 
-> Maybe this?:
-> 
-> diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
-> index 33b62ac25c86..d05409bb14fa 100644
-> --- a/include/linux/unwind_deferred_types.h
-> +++ b/include/linux/unwind_deferred_types.h
-> @@ -5,7 +5,7 @@
->  struct unwind_cache {
->  	unsigned long		unwind_completed;
+> Perhaps it should be:
+> 	unsigned long entries[ /* MAX_UNWIND_ENTRIES */ ];
 
-Does that need to be 'long' - 'int' would fit in the padding on 64bit.
+Whatever would keep the coccinelle folks from sending more patches.
 
->  	unsigned int		nr_entries;
-> -	unsigned long		entries[];
-> +	unsigned long		entries[]; /* Fixed size, not bound by nr_entries */
->  };
-
-Perhaps it should be:
-	unsigned long entries[ /* MAX_UNWIND_ENTRIES */ ];
-
-    David
-
->  
->  /*
-> 
-> 
-> 
-> -- Steve
-> 
-
+-- Steve
