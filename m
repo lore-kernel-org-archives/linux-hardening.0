@@ -1,47 +1,45 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F08322C63
-	for <linux-hardening@vger.kernel.org>; Thu, 13 Nov 2025 21:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9E717BB35
+	for <linux-hardening@vger.kernel.org>; Fri, 14 Nov 2025 00:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763070996; cv=none; b=RcREZ26jQfwqsztv3yGD8gdcqxsfrC6wi0Pja075I4Mjs3+d9e3Kg5K3HzBF6xHNaELzbX/1/5fehXozROV5JXsTkH3MKeQqjX5fiXdxYoX2rkgYLfTPn/qEy+3crZH67tgf+OvpRvCbIPMPjqN3odJTK4y02tZL+38t87Gg9Jc=
+	t=1763078552; cv=none; b=BDs+pjxTco/TnzzLMax1b0VpKWfmFesIci1EDggOhqHZqVkfWJ7Pm7BV37CoUOgb+2VVR3IdRb4THWMj3Bo8DIlKTXoxinOri/67XLsMWjyWqRscj2+ICojlAVdZLvWplRVhal+nr+YGdrpfmnuATQFad5DrbqZjEAB+Om1B6y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763070996; c=relaxed/simple;
-	bh=Hj/vGHJkGTDEUCDpd6JRPpsho1dl2+jAEyv7pA6d87E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bYLdTliIblqml4LYpLBIXhxwgRL2CzYbTyZFogHlHId/p+QzcSmZeGEIXA7p2ZpXCeednnlQhIgE8qQ4366VnPenr8/xrtaz8agwbSACeLf+HlCvzQyawZ7yfGkCu3prLEYpbt8o+kllRoeqcRNYOPlqdyboC/FtjnvVA8iy5i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hxtL6MJm; arc=none smtp.client-ip=95.215.58.181
+	s=arc-20240116; t=1763078552; c=relaxed/simple;
+	bh=YYn1QNldg/j8f7MEluaOq/sfg3Ag5Ezy21dLuxoykPY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C1f2lTU7H5H1zkJyrYOJqYSytAiVC0akK3bKFtZOeVUCFdGfIMHaD0S4xJuFiWQMIeSboQBCjGsJ6jIaMmlqJaoBFGkuwq4RA0Kl3FSSYrNlslzstuZfsqhCiFbiIyi/+R/P+2uNx7rREO6xRnunSB2xrjGZhdzVEb2ETL6u3/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vzuZzl2W; arc=none smtp.client-ip=95.215.58.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hxtL6MJm"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vzuZzl2W"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763070972;
+	t=1763078539;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=HqcCOeVHkjMug9T3azqzq6UC1S5Mba8UPr7MVprreyE=;
-	b=hxtL6MJmKMt9lIBsmDsAkAdKqG70sSThtNAGYQqC+f+fQHG0MtYgI5r1se925VckiEK+BS
-	wZhX2F5Yy97M1YPcTizFSw7THeNhUoyfDXOBN6cGJ0a+mMapVP9KHiQRGLcpfkB95vEUjU
-	CkIUYspqSEvGKNe6zY1T+r5qSRjOQ4A=
+	bh=DeLzK0AVkutEbiXaCDUp2PW5ApiEQmzw+19O+u5NMA4=;
+	b=vzuZzl2WfOpzYa3td/eH5uIXhfkM5U7IpVHw9y+EhDfTQlRO/dVZeoQ8cgzb5dkpeLBJ7m
+	p+qtK4928Nin00Wlnm72LdMq92/MJF3Wilr+ziaPp+SHGId24tF83zckbn5SgGKAwi1lJb
+	GZ30caCzdqVTW7Ra5oFvlYpUr/62Hno=
 From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Eric Biggers <ebiggers@kernel.org>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-integrity@vger.kernel.org,
-	keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] KEYS: encrypted: Replace deprecated strcpy and improve get_derived_key
-Date: Thu, 13 Nov 2025 22:55:45 +0100
-Message-ID: <20251113215546.136145-1-thorsten.blum@linux.dev>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] crypto: af_alg - Annotate struct af_alg_iv with __counted_by
+Date: Fri, 14 Nov 2025 01:01:54 +0100
+Message-ID: <20251114000155.163287-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,66 +49,28 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-strcpy() is deprecated; use the safer strscpy() and use its return
-value, the number of bytes copied, instead of calling strlen() on the
-destination buffer again. String truncation can be ignored since
-'derived_buf' is guaranteed to be large enough.
+Add the __counted_by() compiler attribute to the flexible array member
+'iv' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-Link: https://github.com/KSPP/linux/issues/88
 Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
-Changes in v2:
-- Revert some changes to include the trailing '\0' even if key_type == 0
-  since this would change the bytes passed to sha256() (Eric Biggers)
-- Use strscpy() and its return value instead
-- Link to v1: https://lore.kernel.org/lkml/20251113135831.98587-1-thorsten.blum@linux.dev/
----
- security/keys/encrypted-keys/encrypted.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ include/uapi/linux/if_alg.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/keys/encrypted-keys/encrypted.c b/security/keys/encrypted-keys/encrypted.c
-index 15841466b5d4..94408909f1dd 100644
---- a/security/keys/encrypted-keys/encrypted.c
-+++ b/security/keys/encrypted-keys/encrypted.c
-@@ -12,6 +12,7 @@
-  */
+diff --git a/include/uapi/linux/if_alg.h b/include/uapi/linux/if_alg.h
+index b35871cbeed7..4f51e198ac2e 100644
+--- a/include/uapi/linux/if_alg.h
++++ b/include/uapi/linux/if_alg.h
+@@ -42,7 +42,7 @@ struct sockaddr_alg_new {
  
- #include <linux/uaccess.h>
-+#include <linux/minmax.h>
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-@@ -330,23 +331,17 @@ static int get_derived_key(u8 *derived_key, enum derived_key_type key_type,
- 			   const u8 *master_key, size_t master_keylen)
- {
- 	u8 *derived_buf;
--	unsigned int derived_buf_len;
--
--	derived_buf_len = strlen("AUTH_KEY") + 1 + master_keylen;
--	if (derived_buf_len < HASH_SIZE)
--		derived_buf_len = HASH_SIZE;
-+	size_t derived_buf_len;
-+	const char *key_name;
-+	ssize_t len;
+ struct af_alg_iv {
+ 	__u32	ivlen;
+-	__u8	iv[];
++	__u8	iv[] __counted_by(ivlen);
+ };
  
-+	derived_buf_len = max(strlen("AUTH_KEY") + 1 + master_keylen, HASH_SIZE);
- 	derived_buf = kzalloc(derived_buf_len, GFP_KERNEL);
- 	if (!derived_buf)
- 		return -ENOMEM;
--
--	if (key_type)
--		strcpy(derived_buf, "AUTH_KEY");
--	else
--		strcpy(derived_buf, "ENC_KEY");
--
--	memcpy(derived_buf + strlen(derived_buf) + 1, master_key,
--	       master_keylen);
-+	key_name = key_type ? "AUTH_KEY" : "ENC_KEY";
-+	len = strscpy(derived_buf, key_name, derived_buf_len);
-+	memcpy(derived_buf + len + 1, master_key, master_keylen);
- 	sha256(derived_buf, derived_buf_len, derived_key);
- 	kfree_sensitive(derived_buf);
- 	return 0;
+ /* Socket options */
 -- 
 2.51.1
 
