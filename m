@@ -1,140 +1,153 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B230B325723
-	for <linux-hardening@vger.kernel.org>; Mon, 17 Nov 2025 09:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B727027280A;
+	Mon, 17 Nov 2025 15:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763371210; cv=none; b=HKWrRLVzcr8/jzziXfa6kzvpEm8yEcTFM9WyIMCrdkhudTFyHmsPSCcEYWF+3RkBroodfXzVS7NUhKOzltzUudLBI27hHgvNUypKO+DOh4AqyizTacCDr5msJjbu/vNIeFHO+RPk4yJVkgY9F8eAxlcIvgGsCh+rBGpRZGHUPVg=
+	t=1763393790; cv=none; b=aAoxtY3CTGDP933OoZ3oRBZZBgvuTdWTFR0QjvA679C4CZj0l1xw2Ms3+e5gTcafYTEAd54r7yecG2XHmfMRv21w1R3aKkDvriraqnxhSHKMCpv5mHlS+uw8yj4P6eV5/20o3YwLXR67XP6ZSAohz+AeehnfWgxjWcydqRGCAZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763371210; c=relaxed/simple;
-	bh=UK93JtZbd3Yrxl2pJfccXW8yYKcU+p5a1QXvaIrxJ9A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KoiO+vtTKLDpxSUWNuI8tvH5d4Lk2Q7wv7gP33U3mRRy5yaPwbyF1kHvN1+otgYQ/E/73cG2XP99bFbZz7bdz83p9xXGIPYYJJH5jquy7hIvSd1OQ0k0+S9qavGSdI6PI5inlOG4YcLkF/KZLiivesrhkO6/19bo1WUNu0U2RPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=uEUc2rlT; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1763393790; c=relaxed/simple;
+	bh=e4u3eYmUgkB0Kz0goGsy4ER6DXTGROhUPStI4UwkDYo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ozb81FXn+kkJiga9NZiPgvMZd27FZEXzh2QIDaxI4T5ufaR8NN9Eb51laINM1HZT3Q7KyBVmafKWyYq2nycYsRLdIPrDkUSSslrk/+8rT1dW0w1q7pj7BDuu75seInUsyhAV4PwX3UCzAZgm130QkqXI2MVvzFE7mQNgZy52nL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=bTgByaG4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=a3V3ZZ/H; arc=none smtp.client-ip=103.168.172.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uEUc2rlT"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-47774d3536dso33055115e9.0
-        for <linux-hardening@vger.kernel.org>; Mon, 17 Nov 2025 01:20:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763371206; x=1763976006; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y4iUdlkRYd5RVsH+I3fj6Ee7IjYrOIYZyxbLWxbpMgs=;
-        b=uEUc2rlT7AFWGdof00IjB3mtm5G26x5kZtxjkhP7iryUMKlgVqnikzKPXeqL6/i+PO
-         6hIbAhoV3q94ULjkHNNp04w7zUc0UNvCfLpiPYamb4zjLwJC+7XRf4gBxS4YkW2SqSsR
-         1pvShqh1O5iSKirwZ2u3CR44vH2gqfo3QZKgV8/g47KkvMCEJd7kT+cF55rs7TvWvIuT
-         kLsaJsDzeCGWkaIQH3DnJvkv+B0gxMfbLBkzZXTBWzCDSWJSvhUbtWhGrMt5CSVam2tZ
-         NTJ22gMAqg6jAXBSkxPlAlNnAJtCE2xFWPD+3z/ql741m9gN+uDVL/QuS7mRt133yGgq
-         OVzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763371206; x=1763976006;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=y4iUdlkRYd5RVsH+I3fj6Ee7IjYrOIYZyxbLWxbpMgs=;
-        b=pcRujsBKOlIVXDQmStjNvpMeiUZC1l7ngL7d6QIVme9DWGNXo/KXm5LLjZwCw2hzqr
-         EJKISRgNBF8XkKAgC9bTWwgFMWfUyh1XG92r4u8GGMU4aCzx2QtjlgQGfrhmlhvkajLM
-         g/M8oFEoJAVyja9ssiKjIImzTn59w8BEaKGTX+oH+uPAKtjsqHsjd9c4XI0bR3KVUVGg
-         bY8xNDaISyc+ZGUEeDcg2z7C/SWINEKygGi92nt16KXuTEwLc9czINlub0y33wIs0qjW
-         QSH5XKiyYtfm+LDhF+OLjqFLhOMEhgdUFIDBR5/LOtccjl/BQ/Q7ystHnuNYCdVmjRiq
-         bAqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbxn5r85HxL584vK26AUqnTwxdzmE9CRRQ1e/hwjM2+kT92QLvLMn3iHn4lvtu6mIgi2eKKLx/hF6mxWYrSyg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX1iuBHxBZSFL9WmE/33o2InsaXCADWYff18p/EE7JEJ88ep2p
-	XGmUI4ilbxCF+ky+x3soiGrU/T8FSR3/q1L0AZm/eA8duX+TdmdxY0XdQYbjvuiAWCs=
-X-Gm-Gg: ASbGncsVmdtUoxb6HPiEcsqSMp73vJeXo/A/dR+/ftXErrUxJN7DE6vQFRVzJiSiqv5
-	IkWDoWwt870gXOJWO3HanGg3zcyFL73hyLcnb2/b27r0WUJFv1UeeXDfgkptcbUuhcntDo7nkKk
-	dyohhJFL79XAlYTNDSvSXxwDCDZkfMOCCoyLHer9lTa9Ox/podsUeoX9DZ9uF43eherXcDvzaq6
-	kLhqJwFAhLqvyaQiWGDsVKsGT1RVFNuSkxuBxXTkIJEo6POHBiagGTuvL4uIy/a2JK1NoDA9Jl9
-	IyE3RT+X25EbOh0k3kjBTjkBmRDQzd2bcpUqQ4PD9p76kmmDT9gIudkIHjJ54KXTB75IapSaCGx
-	I+vGCP5hFo/8zsKwz8/CVU7zaTadQ15lRkU9wwgw5z5U7bXeXf/po2DGdVvUqWOzFhQ3N06uijk
-	FI0XdjgCTfx+C3BXIa
-X-Google-Smtp-Source: AGHT+IFM+sFTyB1K8S2Q7ocXsR+3CIJ4k6ZJKu+eA5woiTh9UsabhucUQnbw+fnLYaZmdpx0QUK3GA==
-X-Received: by 2002:a05:600c:190e:b0:471:665:e688 with SMTP id 5b1f17b1804b1-4778fdc3175mr126088235e9.17.1763371204858;
-        Mon, 17 Nov 2025 01:20:04 -0800 (PST)
-Received: from brgl-uxlite ([2a01:cb1d:dc:7e00:36dc:12ef:ca32:1a1c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e7b12asm25365943f8f.10.2025.11.17.01.20.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Nov 2025 01:20:04 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Kees Cook <kees@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Alexey Klimov <alexey.klimov@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: (subset) [PATCH v4 00/10] gpio: improve support for shared GPIOs
-Date: Mon, 17 Nov 2025 10:20:02 +0100
-Message-ID: <176337119246.32319.3276431687296122830.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="bTgByaG4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a3V3ZZ/H"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id AEDCD14001CD;
+	Mon, 17 Nov 2025 10:36:26 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Mon, 17 Nov 2025 10:36:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1763393786;
+	 x=1763480186; bh=dumULOFDFktDrAv/FEHp3FtDy5iDmeMi8WaBMWjFFc0=; b=
+	bTgByaG40HRwAAQHrZmUb1QxjoIKG692YfpeDBRFe9Iu6ybe//AfCHpW3mIPsM1M
+	WYnkzK8lh2vXojzl2+qseUFiMvxqQKr0IYjFET9zskLG20I8YPQxfkYQYgftEyWx
+	jeD3gXXQIl0ubwQsOnRCneY9Ee+d3+FyAnOe8/ZEXTNbJBdR9zsD/Uqm6CFnrieJ
+	60m+mV6mdpdJNLWAtv0sUtz2nkHnAVCeUhvAsXprKWeJ9SeFuthsuY3OGDw1Tpsw
+	ZMjmSiwEFqUDMvWqfBkZB2f2ikmXmb74OaRGArj1p0panyj3vvVWtNAew6f7EjEB
+	kku47rytqu0faY0bmEgdRA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763393786; x=
+	1763480186; bh=dumULOFDFktDrAv/FEHp3FtDy5iDmeMi8WaBMWjFFc0=; b=a
+	3V3ZZ/HrTsgG7BZQp9uEsbe6TdQbscGPUzzV1ucmE75P+RX148fjF6z3+eDtfxE/
+	+LIsnQGcry5t2eP9DsugDIxSRuHjQL4Pa48vQlCFL4Aj9/mvHNagLk5oliXqjZiN
+	P7d9HhnMs2X2J530B8bl9/HIJt7CTkAoGK83TiPn4Am8w3vpm2woXXyidHxnjDmy
+	AoDIYJqVBQO7kNTSKqZlkxYHdKM38pK6DV5BLhEpHopJc14gJ9bdwbzb1CECdFQ4
+	29UG0a8x0Qak4XNvR1lJ563e3TxaNlVHCoAPZmYQcpWw6cJWVjhYMw/XcXCtUO7+
+	0XyIT5kl1gHE9x0NMHR1g==
+X-ME-Sender: <xms:-EAbaWyQ-WAwnluLWHzIZSr0mg8fK4EjRWclwqn4UadFrYR9CFAq3A>
+    <xme:-EAbaYnO_OBUD04HGAVXLl5Y0sdGgCgZ0LkU9JWquhPnnfcmXV8ZdkOcf5KlVUEak
+    U9OYBBXPjLciDkkfhjTYgSLsu-_gFaVGAR6arDrg1_4BpjJyD5n4g>
+X-ME-Received: <xmr:-EAbaeV7CxOi5NsfI_0iHooQtOGJov1ufXfnaa1D97FrNVc9zEAX-2Uc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvudekkeegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkjghfgggtgfesthhqredttddtjeenucfhrhhomheptehlvgigucgh
+    ihhllhhirghmshhonhcuoegrlhgvgiesshhhrgiisghothdrohhrgheqnecuggftrfgrth
+    htvghrnhepgffggfegffffhffhhefftdeikedtueefkefghfehledtkedvvddtieehveej
+    fffgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlhgvgiesshhhrgiisghothdrohhrghdp
+    nhgspghrtghpthhtohepfeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegthh
+    hrihhsthhirghnrdhkohgvnhhighesrghmugdrtghomhdprhgtphhtthhopehlvghonhes
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtg
+    homhdprhgtphhtthhopehlohhgrghnghesuggvlhhtrghtvggvrdgtohhmpdhrtghpthht
+    oheprgigsghovgeskhgvrhhnvghlrdgukhdprhgtphhtthhopehrohgsihhnrdhmuhhrph
+    hhhiesrghrmhdrtghomhdprhgtphhtthhopehjohhroheskegshihtvghsrdhorhhgpdhr
+    tghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrdhsiiihph
+    hrohifshhkihesshgrmhhsuhhnghdrtghomh
+X-ME-Proxy: <xmx:-EAbaZ0fTJm_ATpV97jWOpcVupVrX5qYHi8qRNGt3G3rqeBOTipOKQ>
+    <xmx:-EAbaekY7TK2z-tERLv9vPNj8oV4GTGLaugTF_hEpglIkqI0gqjajw>
+    <xmx:-EAbaQEqElQCUqBqS26kmOTvil5W3KYOkdSQUnH2TTqyeLc7k0jBCw>
+    <xmx:-EAbabl0qbHJHfqmS6yt46qZ4Q6MuXUoWNyxiao6TOaw-x3l0mdFoA>
+    <xmx:-kAbaVsEtsMVur8JcMzBXoqZTmuBVUtCij-s3rV4asHdXPXnRrkBls7n>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 17 Nov 2025 10:36:22 -0500 (EST)
+Date: Mon, 17 Nov 2025 08:36:20 -0700
+From: Alex Williamson <alex@shazbot.org>
+To: Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Ankit Agrawal <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
+ Shameer Kolothum <skolothumtho@nvidia.com>,
+ Kevin Tian <kevin.tian@intel.com>, Krishnakant Jaju <kjaju@nvidia.com>,
+ Matt Ochs <mochs@nvidia.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ iommu@lists.linux.dev, linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
+ Nicolin Chen <nicolinc@nvidia.com>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>
+Subject: Re: [PATCH v7 00/11] vfio/pci: Allow MMIO regions to be exported
+ through dma-buf
+Message-ID: <20251117083620.4660081a.alex@shazbot.org>
+In-Reply-To: <da399efa-ad5b-4bdc-964d-b6cc4a4fc55d@amd.com>
+References: <20251106-dmabuf-vfio-v7-0-2503bf390699@nvidia.com>
+	<20251110134218.5e399b0f.alex@shazbot.org>
+	<da399efa-ad5b-4bdc-964d-b6cc4a4fc55d@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, 11 Nov 2025 09:54:22 +0100
+Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
+
+> On 11/10/25 21:42, Alex Williamson wrote:
+> > On Thu,  6 Nov 2025 16:16:45 +0200
+> > Leon Romanovsky <leon@kernel.org> wrote:
+> >  =20
+> >> Changelog:
+> >> v7:
+> >>  * Dropped restore_revoke flag and added vfio_pci_dma_buf_move
+> >>    to reverse loop.
+> >>  * Fixed spelling errors in documentation patch.
+> >>  * Rebased on top of v6.18-rc3.
+> >>  * Added include to stddef.h to vfio.h, to keep uapi header file indep=
+endent. =20
+> >=20
+> > I think we're winding down on review comments.  It'd be great to get
+> > p2pdma and dma-buf acks on this series.  Otherwise it's been posted
+> > enough that we'll assume no objections.  Thanks, =20
+>=20
+> Already have it on my TODO list to take a closer look, but no idea when t=
+hat will be.
+>=20
+> This patch set is on place 4 or 5 on a rather long list of stuff to revie=
+w/finish.
+
+Hi Christian,
+
+Gentle nudge.  Leon posted v8[1] last week, which is not drawing any
+new comments.  Do you foresee having time for review that I should
+still hold off merging for v6.19 a bit longer?  Thanks,
+
+Alex
 
 
-On Wed, 12 Nov 2025 14:55:29 +0100, Bartosz Golaszewski wrote:
-> Bjorn, Konrad: I should have Cc'ed you on v1 but I just went with what
-> came out of b4 --auto-to-cc. It only gave me arm-msm. :( Patch 7 from
-> this series however impacts Qualcomm platforms. It's a runtime dependency
-> of patches 8 and 9. Would you mind Acking it so that I can take it into
-> an immutable branch that I'll make available to Mark Brown for him to
-> take patches 8-10 through the ASoC and regulator trees for v6.19?
-> 
-> [...]
-
-Applied, thanks!
-
-[01/10] string: provide strends()
-        https://git.kernel.org/brgl/linux/c/197b3f3c70d61ff1c7ca24f66d567e06fe8ed3d9
-[02/10] gpiolib: define GPIOD_FLAG_SHARED
-        https://git.kernel.org/brgl/linux/c/d4340ff75eaa083f261e16d49f13191236bfad06
-[03/10] gpiolib: implement low-level, shared GPIO support
-        https://git.kernel.org/brgl/linux/c/a060b8c511abb0997381b397e52149a5e3e5259a
-[04/10] gpio: shared-proxy: implement the shared GPIO proxy driver
-        https://git.kernel.org/brgl/linux/c/e992d54c6f970b382ffeacd7c88f68b94a3c6caf
-[05/10] gpiolib: support shared GPIOs in core subsystem code
-        https://git.kernel.org/brgl/linux/c/1e4f6db614a310cc34d07ffbf031c76ea9581bcf
-[06/10] gpio: provide gpiod_is_shared()
-        https://git.kernel.org/brgl/linux/c/eb374f764a7012eda28019266a6d9191670c4fa5
-[07/10] arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
-        https://git.kernel.org/brgl/linux/c/e511d484cbe44fe48a1b9f621f6a947c72503f9e
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+[1]https://lore.kernel.org/all/20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidi=
+a.com/
