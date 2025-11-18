@@ -1,65 +1,66 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B3A24A066
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 10:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A496A3314D3
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 10:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763460267; cv=none; b=r0gNGx/En5Ily1GjH1hSJg5LkNdMMAA9OvZlZbdEOBJ9JwoTPWkwkhYM1naAQTQcRGcQS2sMMG2D+FrlE4mgXOhWuOsqsLc5CSGCsENJBp1wkGGUVqiwWkIz831NAYg4cOF3js+V4ny+0RbvC5UGBWpEbhWBCOUTGPrJwnoqjDE=
+	t=1763460267; cv=none; b=l8it0c0n0sSVlzTvqoYeHQVH4wEWwKm4qhnAyuLNCjvktbiVYcyGT54ivVKslEKuMjFUNCxrcEiN43h2ZZGFoYmw9jkVvWxG8rPf5vxWpup6kJ6lBklf2rs8U9lDVI8f1CcIgCgs9JiGG8Gy+jxPdTI50A+mfkgIxRqUsUcqsBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1763460267; c=relaxed/simple;
-	bh=ZmekuVWh9HwE0TpAn0cxQrAIBKXU655+phVVUhIIyEw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DoAdgwmAdDbUWwsK8oIDo8yKqQBbyz+m9Z+k17bwVGqebB0dYGZDQ01y7iveejwAXJC86B0U53MvI73WinqWrA8a+uudlhDSYIsCznILI6nh4sE98TkahjLo0dLuip8o5uhHknMRtKSd3nR1G191JI2UaftyCYCR3Hj6OUSPmOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zXLDEpR4; arc=none smtp.client-ip=209.85.221.43
+	bh=4r/SeoaCCIAi3JIULQdnjcmc9CqF8XFZH5sts6b00Vs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KGtUyDIfzIcWvXmmos0/jZl23wsJt14cX3pMa/6bakVZjtjIOQkFbFz1UzojxE6kYFCMW9Ejgkbc4TJFmS39NI5Z4dBcYMJJ74waNdRbRpRIseIWFLT1HahnAqMYba+2K7Rzja3/c73Je34zbpBYlPGLmdYQhWliDLUbJR9DQ8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pXFB5ilV; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zXLDEpR4"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-42b31c610fcso4585033f8f.0
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 02:04:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pXFB5ilV"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-42b3c965df5so3115252f8f.1
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 02:04:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763460263; x=1764065063; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=m4RjKjA/NnMP3ef/YL0bM59KAESzVxNux0nJstTB344=;
-        b=zXLDEpR4gzKJiNATHLUqpGEuMc6a8nVFOdHK9GL2jYMSNSkavzb3LA2Yk0oXSTY4cA
-         zvpyuUGTqgj5HInHKAH/pL47qxnYofRen+yLGl44RsN7orW7wxUrb4RjB6Wju94bitx+
-         IcnrroTYel6AHfARTM5ZWeH9ctZGRM8eFkWTS62VAxi2/sJ0Y1+4F1l6P8DXMXUzizQC
-         v41YPYkfchvNE2wlWVTyHiBtlC1MwK2ZuZCxw7kf056jBnrp4UoXJi1d9IPna66DZJDq
-         dNcxqXS3T1akNt0g6e9hTO9R2lfm/zfnLAlOztj3u08Zk2GnEbHl30XsMM/dHlLpyzzC
-         E/Aw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763460264; x=1764065064; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vq+Pft6402NloB6lH7I/UzA1MCeP7+OKx6S/AOvrUHk=;
+        b=pXFB5ilVwfJ+ASpPa9rDL4YHzBz/ohRYcKwuFdgJyMTHJWhavQCh4ejLfh2B8D5fT/
+         Y6BSmmXXYFW7WZt/2s6jBq+RaZoIjzUe/Bvtilnr/gcnMgaZL5f60P/bKJ4KHtv7TV7O
+         ifDce2rqqUuoxIhRenX2KWlU4APpH6+KPktDISF6iDy8lrbE17zCIZbGraO75hSdMbOy
+         XZkgvymXi7xr83KQxkhq/vi3ctKIEtENLvQW/LGzoCryFzadANZP3af55AQ6jSkyZOAa
+         re9p7lEH73b55dPuPD5Qjt1qnoWZ1YcSs0p3dcUXq4BotDH1PHJ+xcIvJWRgTGdmbBmM
+         euYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763460263; x=1764065063;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m4RjKjA/NnMP3ef/YL0bM59KAESzVxNux0nJstTB344=;
-        b=rKIipxsHP3jbpQezY0uQLNEIiDA3lMPbj1OVfsUtgGlCD+BDh88gnsuhuKHNY1l2n+
-         9/2stowqO+OvxPf/pJJc57OdCXH/74WRkbhxbHCx1RuclFtUrNM8zyUPDTDhxjE/R+tF
-         iLWLA4qyorhsyC3eWtBtyHyJ0tAYPu/M0JS3bKQ6JereEy/IIeY/vIL6w+NjCKFPgq4L
-         scFCrYm0leHXR5HkRSfYw6WPwKmsWinubaBca2KrKpDsilpsgZDwH0kovpDt8vsl/57M
-         r8zHDVbxp9QMxd/QGjE0t8UJjpsCGNWDV6ENsqltBHRJaiApbiFcTWi62ZILAIV7gFoW
-         xQqw==
-X-Gm-Message-State: AOJu0YyWXyXjTe7SCZe+2OzJO7VHDSMwzAsAxD+r6Kg9DBy19Z9dA54E
-	TZL4ZsnhZS93lPFi7sP2ebEa6yp2OJhXHPss3iNepAnGScO+VDMZaLqbrniK3pt6smU=
-X-Gm-Gg: ASbGncuRAoIBuKPgxDqJeNo5Jp2RM4Vo+p1hD69qewmhoU24eKbPyaEP7KQlziqENtS
-	J3WLT+W5LfdqEDVHMGN29Ud+qQ6eCtX4ubRRx4drlqxQ1eHxMBIgMOcJXEg5R4WCdSLoxqBaUBw
-	h2rcIKc+kjHOVfeRdS7zmtSRa1Mn3RRXP1JkIHVC3FZYOcVH8cu4ibzmbPGqppAsFYzMEW02rRH
-	/nWSzJdB0HABWiZjc+cq3x9+jSj98xziqrisj+4SjkxpW7AOe6I9qFdHf2R+Xvf5cMopOJyDCxx
-	uI2I/YR+tShpmq2mUZ6uv+2eTCpBVRQTpUWhGo0ONjwEL+BWr5mxOG/naZZ8pwdf6vFyYqdgJDK
-	bz/WAMX+D/d2BPz9FL2j2GDBhMiC0iiazBsL/cd/MmMIcnkkxz99NaQVrICc/khfzNLH5OUQoE0
-	orwMUqq4KKEsrWSA==
-X-Google-Smtp-Source: AGHT+IEoZDl5oz0L8tfjeFzBYv1IVQvY/ZUzx3b7D4fKQZDuRWPXFQnCnrL1l8cm0K9l/w7rFiPKfA==
-X-Received: by 2002:a05:6000:1849:b0:3e7:45c7:828e with SMTP id ffacd0b85a97d-42b59385bcemr15197234f8f.33.1763460262494;
-        Tue, 18 Nov 2025 02:04:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1763460264; x=1764065064;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vq+Pft6402NloB6lH7I/UzA1MCeP7+OKx6S/AOvrUHk=;
+        b=B9AYvcGjbgAa5o5BCulrCaTymH30ZrkcUs0LyYbJtSjNBoVq4nRtdxOoe4urgm+DUo
+         V4YJOALCcIkwwzrZcvY/hvOUP5VpNwzSjjA+h5njbpFAKv6aTuQPm9bnbUIZKa3joKe5
+         JgaIVbvPukD1j7zIZcKIEkKaYCjD7/m8rJe7leSN9S0QVUGTe74LvWsGGOY9+E6wd1lo
+         aGCnB0RujyErypJCZeVoNBht1FUtPeHdZ7D3XIrc8vnmkX1XiBPwspOe8I0fksXb5Mm1
+         lKu5//zWmltS9ryNOX02ejrmFlBNUI8H7c9lFstUbBxRHOG0CY56X06PWKLXtw13X3Fi
+         1qJg==
+X-Gm-Message-State: AOJu0Yy2aponU/sDoTAXm+wgZaBaM48F2VZXDY1fX+Kf8viUQgwQ+qgL
+	YhO0s5p6a56Y3S9kwQsdwcWIssCHSbEobm2LCj/u5wcoq2V1LVpP7bBgyu2ou06C3rA=
+X-Gm-Gg: ASbGncvrgdZUY98RB3Lhbx8+Dd3g+JPo0uSHKVgV+R2vileLO0dXTGzxOcBfBZToG4r
+	NE1J2UIgApUqRz89i/ajzlOSI4E2Kj+6VXdnVxmvBciyh//IaQnPs59cniSiUgpze1Zy/w8m5se
+	WO65jnDGVIsAGnZhcb7Lc8WyWDgDiH24p6RBXDlEMbNIIRG/SQmL5vS3pZoDD2JQrav0oyU+1dm
+	L/2kIfA9HUY8PmqvfYjtMfsA5HInogl1AuHSwbFMgU2+Dq8FT26u1ZtOw4uGw6H6OSfCPXtAnFA
+	wZ0WMeUm5aJajMKmMvT5b+Lyiy1z7b+6ZbGOcDoc4yNzhlb8u/2zNtg0jYHW0RtZNvKvb0tlG9r
+	9GUp5TndHArrdo63GQpmyjMAjjEY78EqHqzGqCjsGQkjcun6HsWb62OrClnFyDMiZhXVmBqUqs/
+	8kLctsQjzuTkO2+A==
+X-Google-Smtp-Source: AGHT+IEJsA70dq34ldti0Tx9GYflk+VhhZATrbEzqdEK1Hf4VJp35nu/NHn+Ba9k36nQF/Fxdj+jqw==
+X-Received: by 2002:a05:6000:40e0:b0:42b:39d0:63a4 with SMTP id ffacd0b85a97d-42b5938ad8bmr15157322f8f.29.1763460263819;
+        Tue, 18 Nov 2025 02:04:23 -0800 (PST)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:c283:3472:316:988d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e7aea7sm30999781f8f.1.2025.11.18.02.04.21
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e7aea7sm30999781f8f.1.2025.11.18.02.04.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 02:04:21 -0800 (PST)
+        Tue, 18 Nov 2025 02:04:22 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 0/2] string: strends() follow-ups
-Date: Tue, 18 Nov 2025 11:04:02 +0100
-Message-Id: <20251118-strends-follow-up-v1-0-d3f8ef750f59@linaro.org>
+Date: Tue, 18 Nov 2025 11:04:03 +0100
+Subject: [PATCH 1/2] string: fix kerneldoc formatting in strends()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,51 +69,62 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJJEHGkC/x3MSwqAMAwA0atI1gaMKBavIi6qjRqQVhp/IN7d4
- vItZh5QjsIKbfZA5FNUgk+gPINxsX5mFJcMZVHWRGRQ98jeKU5hXcOFx4ZNVTg71KYhayB1W+R
- J7v/Z9e/7ASZZZkxjAAAA
-X-Change-ID: 20251118-strends-follow-up-740dab5871a8
+Message-Id: <20251118-strends-follow-up-v1-1-d3f8ef750f59@linaro.org>
+References: <20251118-strends-follow-up-v1-0-d3f8ef750f59@linaro.org>
+In-Reply-To: <20251118-strends-follow-up-v1-0-d3f8ef750f59@linaro.org>
 To: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
  Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
  Stephen Rothwell <sfr@canb.auug.org.au>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=641;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1181;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=ZmekuVWh9HwE0TpAn0cxQrAIBKXU655+phVVUhIIyEw=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpHEShdOut83YeZzjJcabLUDfmeIfWS4Nh1rZly
- /fc80BmtnCJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaRxEoQAKCRAFnS7L/zaE
- wwaaEAChmpwM9nx7t8Lh37YAr4dyfzhcGdsLNtQI3pGO8cGUft/x+U+ArIdEu8b08LJtWbzd+KH
- pR1+cgLlGLeZZWZMMnZMls5Df7gEkHy1HbZuWC1Ak96Gn4KUhkcyyO0k3KGMHLNuKdbeUqVLGLg
- ++OqAlWScQdtiWp6ThWZh6wXtfp5O9YXv3wJQgrJaKH1IZcdr2vfEUN04b2WpgUn0loaTEnIV4n
- w9TnoiPP8CNnjLOFO6QcpkxFITRFt7ITmdFItWjOSLyPdSTm6wU01IagNXK1Uk/2R35Fhc5UY5p
- iuGRNg0CNiGIM/H7ZdXpFhBd4tVruIpQEEtdPCMoxFhFSXfavTKJanDENJX01yoMy9syn5Pi8KR
- msmppyESpVIcSOMd2UrwvCMFxSRy2ike4B9Se4GjB2LwrIULCQqd9YqNMMtKM97rQlRjYEy2xGb
- DKGvAg1ogCWazvaXxlOm8dsLoC+VHHkSEWE8rSzUhiBaGm45GdfCLM1PCshK6bIQ8z3EyE5j6Cb
- +vWoshQcn3SaimAQLPRvHD3dBjY9sBCajbtpVcyMt8tjRz7O7JQi4m+5R2yE6gU9mDJIFmxY5Ch
- YrB7LPsO9PSGBmewIc/1ao98kAAU8NIfa4Q96m9yvnyiJ7MmnAicaTz+ex3+Syvl3M/+gmOtCXf
- K4WWaE2i414L0wg==
+ bh=rFPRaj8noCZUimTcsPf1nVd9JEAQZsTXpBmPCdLeaQQ=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpHESkXfh+DXO8ryd7E3htoaJJ5aK+UaKBqB9Iu
+ WoHziP1dcSJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaRxEpAAKCRAFnS7L/zaE
+ wzCgD/wI98gzMhjAbmynBwZ8gFTPAMrmMe3OOY9/+tqPQ+mpw/ufNWn7OqnRMj4rYTPWB1R2TSO
+ 94rm08HPSIm53MgKf4+9mkF+LSIWyaadiA36lkZpYcqTDGB1v2W4hyhLRSHvEh8OppE8KLJ7E1Q
+ o4yOjRfvm3xlZ6YrMZDXOiGKdjEo1k1gobRiAdk4SuLb5iK5gcje/+4tw5IEaP9axPTGYkil+/Y
+ V7x0EUCr/s4BfF4ZX5+KjUItVwklWtU/JGzz0QIiTLOIQR8xETtDH7XVGdk8AfiqyPVGjhckav+
+ 38GqVqpj9sQwSRHrV1GEqpXyYI6F7vmQmwYyqoM6awelL4Zr8g7YE14QKf2KY8teGebokoikTBe
+ 2Z+wVQov/RjBVHmjEsHBCz6ONzMpWY6sGC63oNXaZRslP3sDk9cf86mzvnRUC5HY2MlYjC1XJDp
+ kKHgNFBKlHPv1oiiSxKBHb8dRC8VgXpELKpU1ayj6b6cKdIpFJYbTk00OTR8BdGsq+5IN+GcyvE
+ oyDTNIjoUeU7Mj6nhJPApUyQoDac13GlG3lpwNI5+W/JLZRPnd48RXKhg4S0+/GBPPnsOWFj5/j
+ 1ahvTRni3d4mMfrvnWYAvmsr4lpX3rGG5GzC4kdnCXgcUFRmzaSFZyAGucHCyGtdH4pGhfYyvvr
+ nkwUfC5xlQUOoUw==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-A couple follow-up changes to the new strends() string helper. This
-needs to go through the GPIO tree as this is where the strends()
-currently is.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+strends() kernel doc should have used `@str:` format for arguments
+instead of `@str -`.
+
+Fixes: 197b3f3c70d6 ("string: provide strends()")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes: https://lore.kernel.org/all/20251118134748.40f03b9c@canb.auug.org.au/
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
-Bartosz Golaszewski (2):
-      string: fix kerneldoc formatting in strends()
-      string: use __attribute__((nonnull())) in strends()
+ include/linux/string.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- include/linux/string.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
----
-base-commit: b32b526a0d034be69d115fae3051dda915d846ee
-change-id: 20251118-strends-follow-up-740dab5871a8
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 929d05d1247c76eb9011fe34250b487834b2d3c9..69e9256592f87e446d6f0be5034056aa7d0b78b0 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -564,8 +564,8 @@ static inline bool strstarts(const char *str, const char *prefix)
+ 
+ /**
+  * strends - Check if a string ends with another string.
+- * @str - NULL-terminated string to check against @suffix
+- * @suffix - NULL-terminated string defining the suffix to look for in @str
++ * @str: NULL-terminated string to check against @suffix
++ * @suffix: NULL-terminated string defining the suffix to look for in @str
+  *
+  * Returns:
+  * True if @str ends with @suffix. False in all other cases.
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.51.0
 
