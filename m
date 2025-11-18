@@ -1,165 +1,118 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C872D5C6E
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 09:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B3A24A066
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 10:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763459247; cv=none; b=cLLgX4P4AlNatjaDgc3vW8bNzwRLrRWd3tmnz2dUzM7WXaU8uQnWJhDdrG2a00A9CKmyrxgpNXOuUt7KR2alNYfnCN0pimXUQTkeJSwpylrxe45Lgs52QGakB0HfYLAvMhbKwoiCvw6lBRJHoCKFGqAaSlUyqdiQDgt9qeIoSY8=
+	t=1763460267; cv=none; b=r0gNGx/En5Ily1GjH1hSJg5LkNdMMAA9OvZlZbdEOBJ9JwoTPWkwkhYM1naAQTQcRGcQS2sMMG2D+FrlE4mgXOhWuOsqsLc5CSGCsENJBp1wkGGUVqiwWkIz831NAYg4cOF3js+V4ny+0RbvC5UGBWpEbhWBCOUTGPrJwnoqjDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763459247; c=relaxed/simple;
-	bh=NSDit/mHJlhkuZyhSitu2JvNgHl8gNj+Tf2PzvgTGRE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=msZ0WS+z4dwCmkG4mTokHeVzP78m5prfuxYnjrhIfm5md5b7bbR5A/0FHAkORmqgGnvLBwZ8+GS4GuwN9n9TuQTNaipAbeLNlv+cD671+fLUmjkstNK0BAwca0zUsSS6ZEakM9V+/mLtmE6d4NWHsN1ihMvLgatyGNgdI3DoH28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=opnsJPdm; arc=none smtp.client-ip=209.85.167.49
+	s=arc-20240116; t=1763460267; c=relaxed/simple;
+	bh=ZmekuVWh9HwE0TpAn0cxQrAIBKXU655+phVVUhIIyEw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DoAdgwmAdDbUWwsK8oIDo8yKqQBbyz+m9Z+k17bwVGqebB0dYGZDQ01y7iveejwAXJC86B0U53MvI73WinqWrA8a+uudlhDSYIsCznILI6nh4sE98TkahjLo0dLuip8o5uhHknMRtKSd3nR1G191JI2UaftyCYCR3Hj6OUSPmOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zXLDEpR4; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="opnsJPdm"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-594285c6509so5434954e87.0
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 01:47:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zXLDEpR4"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-42b31c610fcso4585033f8f.0
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 02:04:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763459242; x=1764064042; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VMVWh4fXZBKxZ6isW9HD5sLU8SwmoT7bOn5vyBPfKmg=;
-        b=opnsJPdmzhM5tdnQJbfSjsg0bFk0p8LPV66XHrp6enVsUH8qX6ziRRQl7HuZ92SzsV
-         V/RUf32TQuAJbpZ5fhfkKphvbG2g3OT0c06HLydsLCwXxcd/8FC4NxesAVTAIYjHGe11
-         57p4nQ3sLfAWX6HBI0Vkq5KTlgAr0UbhEMyCNX1EQby8Hp4xGr0eNHRkiGMv9yaXUx9+
-         Z9Yl7FuxTHEcbFZcSIENmFvabrxplOyodborRcWFDhwD0urfYzmT5/crdFlR4nUSI9ik
-         aKdnDFv6fx59R0jWhxbE+a8a6JFT8efPEANJeSUgRuEYs81jZ4KfWpJVZyfXGj+fHB0X
-         kEAA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763460263; x=1764065063; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m4RjKjA/NnMP3ef/YL0bM59KAESzVxNux0nJstTB344=;
+        b=zXLDEpR4gzKJiNATHLUqpGEuMc6a8nVFOdHK9GL2jYMSNSkavzb3LA2Yk0oXSTY4cA
+         zvpyuUGTqgj5HInHKAH/pL47qxnYofRen+yLGl44RsN7orW7wxUrb4RjB6Wju94bitx+
+         IcnrroTYel6AHfARTM5ZWeH9ctZGRM8eFkWTS62VAxi2/sJ0Y1+4F1l6P8DXMXUzizQC
+         v41YPYkfchvNE2wlWVTyHiBtlC1MwK2ZuZCxw7kf056jBnrp4UoXJi1d9IPna66DZJDq
+         dNcxqXS3T1akNt0g6e9hTO9R2lfm/zfnLAlOztj3u08Zk2GnEbHl30XsMM/dHlLpyzzC
+         E/Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763459242; x=1764064042;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VMVWh4fXZBKxZ6isW9HD5sLU8SwmoT7bOn5vyBPfKmg=;
-        b=ktx+Ihg6NPnqQmckB6bFBsGvkttUJ6dGvAlifKcxeWgV4CH3ZLyQd86nwET5FopqVK
-         05BZTVjuExo1YTOmQUNZbXpn1Go76ikMAfsIJeQbYwu3anbxUr3g1dgCGhCWUUa0MahO
-         yLo2G1IAlcndeIE1EHIFCYYUaTPDfENCMI7lvptYkIkMPHYYog+eUWtlbh7O03kBZmFX
-         QTQj1wEHl0uwITaT4sC/o1P+fXQk1xOY+pjFy0dqWyfQ6kaiFBo4huYakJtQGMaAfxW1
-         hVpGNB+h7v8fDSntyU+cyYf4tUOWRw6rABRJ0SbYP+qhpmByULzojzUSH7gT+mTIDznX
-         ycWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVPX5YCXmzYZ0AK+u6w9auIDUyuvZI+Z0z4QTlYEt7Jzx574PCMgZjo6L1wQtlyhW28QP1IIxyqjcPzDi/Jxsk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtZQt7XGalG/EBqk6px2tpWEg9hd4RYRB6EXOeCYQoIvWG3/Xx
-	6fcV1r316iQxe6l7JNTV2m2e6rD6FL9kQ31O1Yho0HHH3iOWvg8Tm9a/5JDIoDZU6s26vEzZ06y
-	dYmYDOT72WyQlAEl0sCVLZ0CBcYxpkJtP9CsKDIB4yQ==
-X-Gm-Gg: ASbGncuZ2upx2bqP9PPaWd5ruiUUN5BlehLHrnrrbpDcl+zTjodIgqoi16SXcAB9zdW
-	lxJuySo7XiZYqYfLjQvJvxcZ4e616mJtbAVGjC9kGqoos1Dj/3Vw2owP/qNfe7WpfvaEx1aS0Dn
-	sL+DC2yRzfGTRZiv2wKH8Wz3zTNXue3L2xlPp4qWmmeFiC3C+RmNTAPzfLxi/dlrEo+9a4zegHl
-	zrepcxEhRhGbF4YkW+hjTiG83Wbqo4cxrEelh2fXbQwyip7YUJ8bHW+XORSlFld3vCfm6t1LXtQ
-	d14VkVKVznaHaLbVJFv5+xCmZcfutZKnurpL
-X-Google-Smtp-Source: AGHT+IEKSj2qpQvKe0IfkTOGZF1jV6/WKVJLO2A/Txv4rPC3yDvwMdMydDTZhNC5mLXfB6q+qgnbPN4NmYCtJAA3Qgk=
-X-Received: by 2002:a05:6512:39cd:b0:594:4b55:d2dc with SMTP id
- 2adb3069b0e04-59584217be0mr5314684e87.47.1763459241858; Tue, 18 Nov 2025
- 01:47:21 -0800 (PST)
+        d=1e100.net; s=20230601; t=1763460263; x=1764065063;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m4RjKjA/NnMP3ef/YL0bM59KAESzVxNux0nJstTB344=;
+        b=rKIipxsHP3jbpQezY0uQLNEIiDA3lMPbj1OVfsUtgGlCD+BDh88gnsuhuKHNY1l2n+
+         9/2stowqO+OvxPf/pJJc57OdCXH/74WRkbhxbHCx1RuclFtUrNM8zyUPDTDhxjE/R+tF
+         iLWLA4qyorhsyC3eWtBtyHyJ0tAYPu/M0JS3bKQ6JereEy/IIeY/vIL6w+NjCKFPgq4L
+         scFCrYm0leHXR5HkRSfYw6WPwKmsWinubaBca2KrKpDsilpsgZDwH0kovpDt8vsl/57M
+         r8zHDVbxp9QMxd/QGjE0t8UJjpsCGNWDV6ENsqltBHRJaiApbiFcTWi62ZILAIV7gFoW
+         xQqw==
+X-Gm-Message-State: AOJu0YyWXyXjTe7SCZe+2OzJO7VHDSMwzAsAxD+r6Kg9DBy19Z9dA54E
+	TZL4ZsnhZS93lPFi7sP2ebEa6yp2OJhXHPss3iNepAnGScO+VDMZaLqbrniK3pt6smU=
+X-Gm-Gg: ASbGncuRAoIBuKPgxDqJeNo5Jp2RM4Vo+p1hD69qewmhoU24eKbPyaEP7KQlziqENtS
+	J3WLT+W5LfdqEDVHMGN29Ud+qQ6eCtX4ubRRx4drlqxQ1eHxMBIgMOcJXEg5R4WCdSLoxqBaUBw
+	h2rcIKc+kjHOVfeRdS7zmtSRa1Mn3RRXP1JkIHVC3FZYOcVH8cu4ibzmbPGqppAsFYzMEW02rRH
+	/nWSzJdB0HABWiZjc+cq3x9+jSj98xziqrisj+4SjkxpW7AOe6I9qFdHf2R+Xvf5cMopOJyDCxx
+	uI2I/YR+tShpmq2mUZ6uv+2eTCpBVRQTpUWhGo0ONjwEL+BWr5mxOG/naZZ8pwdf6vFyYqdgJDK
+	bz/WAMX+D/d2BPz9FL2j2GDBhMiC0iiazBsL/cd/MmMIcnkkxz99NaQVrICc/khfzNLH5OUQoE0
+	orwMUqq4KKEsrWSA==
+X-Google-Smtp-Source: AGHT+IEoZDl5oz0L8tfjeFzBYv1IVQvY/ZUzx3b7D4fKQZDuRWPXFQnCnrL1l8cm0K9l/w7rFiPKfA==
+X-Received: by 2002:a05:6000:1849:b0:3e7:45c7:828e with SMTP id ffacd0b85a97d-42b59385bcemr15197234f8f.33.1763460262494;
+        Tue, 18 Nov 2025 02:04:22 -0800 (PST)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:c283:3472:316:988d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e7aea7sm30999781f8f.1.2025.11.18.02.04.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Nov 2025 02:04:21 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/2] string: strends() follow-ups
+Date: Tue, 18 Nov 2025 11:04:02 +0100
+Message-Id: <20251118-strends-follow-up-v1-0-d3f8ef750f59@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <20251112-gpio-shared-v4-1-b51f97b1abd8@linaro.org> <202511171230.F83EE85D0@keescook>
-In-Reply-To: <202511171230.F83EE85D0@keescook>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 18 Nov 2025 10:47:09 +0100
-X-Gm-Features: AWmQ_bkhi1H3-46xEmuP3pqCgeKjE8VDjqsBb0GhCZL7ntExaLQpYRSDFU-8VEY
-Message-ID: <CAMRc=Mekr=xcGbSBD583nUqR43aLYO9iGakbOSSFEWYdbXW73Q@mail.gmail.com>
-Subject: Re: [PATCH v4 01/10] string: provide strends()
-To: Kees Cook <kees@kernel.org>
-Cc: Mika Westerberg <westeri@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJJEHGkC/x3MSwqAMAwA0atI1gaMKBavIi6qjRqQVhp/IN7d4
+ vItZh5QjsIKbfZA5FNUgk+gPINxsX5mFJcMZVHWRGRQ98jeKU5hXcOFx4ZNVTg71KYhayB1W+R
+ J7v/Z9e/7ASZZZkxjAAAA
+X-Change-ID: 20251118-strends-follow-up-740dab5871a8
+To: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Stephen Rothwell <sfr@canb.auug.org.au>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=641;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=ZmekuVWh9HwE0TpAn0cxQrAIBKXU655+phVVUhIIyEw=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpHEShdOut83YeZzjJcabLUDfmeIfWS4Nh1rZly
+ /fc80BmtnCJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaRxEoQAKCRAFnS7L/zaE
+ wwaaEAChmpwM9nx7t8Lh37YAr4dyfzhcGdsLNtQI3pGO8cGUft/x+U+ArIdEu8b08LJtWbzd+KH
+ pR1+cgLlGLeZZWZMMnZMls5Df7gEkHy1HbZuWC1Ak96Gn4KUhkcyyO0k3KGMHLNuKdbeUqVLGLg
+ ++OqAlWScQdtiWp6ThWZh6wXtfp5O9YXv3wJQgrJaKH1IZcdr2vfEUN04b2WpgUn0loaTEnIV4n
+ w9TnoiPP8CNnjLOFO6QcpkxFITRFt7ITmdFItWjOSLyPdSTm6wU01IagNXK1Uk/2R35Fhc5UY5p
+ iuGRNg0CNiGIM/H7ZdXpFhBd4tVruIpQEEtdPCMoxFhFSXfavTKJanDENJX01yoMy9syn5Pi8KR
+ msmppyESpVIcSOMd2UrwvCMFxSRy2ike4B9Se4GjB2LwrIULCQqd9YqNMMtKM97rQlRjYEy2xGb
+ DKGvAg1ogCWazvaXxlOm8dsLoC+VHHkSEWE8rSzUhiBaGm45GdfCLM1PCshK6bIQ8z3EyE5j6Cb
+ +vWoshQcn3SaimAQLPRvHD3dBjY9sBCajbtpVcyMt8tjRz7O7JQi4m+5R2yE6gU9mDJIFmxY5Ch
+ YrB7LPsO9PSGBmewIc/1ao98kAAU8NIfa4Q96m9yvnyiJ7MmnAicaTz+ex3+Syvl3M/+gmOtCXf
+ K4WWaE2i414L0wg==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Mon, Nov 17, 2025 at 9:33=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
-> On Wed, Nov 12, 2025 at 02:55:30PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Implement a function for checking if a string ends with a different
-> > string and add its kunit test cases.
-> >
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
+A couple follow-up changes to the new strends() string helper. This
+needs to go through the GPIO tree as this is where the strends()
+currently is.
 
-Hi Kees!
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (2):
+      string: fix kerneldoc formatting in strends()
+      string: use __attribute__((nonnull())) in strends()
 
-Thanks for the review. I already queued this for v6.19, so let me
-address the issues in a follow-up.
+ include/linux/string.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+---
+base-commit: b32b526a0d034be69d115fae3051dda915d846ee
+change-id: 20251118-strends-follow-up-740dab5871a8
 
-> >  include/linux/string.h   | 18 ++++++++++++++++++
-> >  lib/tests/string_kunit.c | 13 +++++++++++++
-> >  2 files changed, 31 insertions(+)
-> >
-> > diff --git a/include/linux/string.h b/include/linux/string.h
-> > index fdd3442c6bcbd786e177b6e87358e1065a0ffafc..929d05d1247c76eb9011fe3=
-4250b487834b2d3c9 100644
-> > --- a/include/linux/string.h
-> > +++ b/include/linux/string.h
-> > @@ -562,4 +562,22 @@ static inline bool strstarts(const char *str, cons=
-t char *prefix)
-> >       return strncmp(str, prefix, strlen(prefix)) =3D=3D 0;
-> >  }
-> >
-> > +/**
-> > + * strends - Check if a string ends with another string.
-> > + * @str - NULL-terminated string to check against @suffix
-> > + * @suffix - NULL-terminated string defining the suffix to look for in=
- @str
-> > + *
-> > + * Returns:
-> > + * True if @str ends with @suffix. False in all other cases.
->
-> Maybe added "empty strings never match"?
->
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-But they do, please see the test.
-
-> > + */
-> > +static inline bool strends(const char *str, const char *suffix)
->
-> These are required to be non-NULL, so we might want to consider marking
-> them as such with the "nonnull" attribute. We don't use it much in Linux
-> yet, but I do see a few places.
->
-> e.g.:
->
-> static inline bool __attribute__((nonnull(1,2)))
-> strends(const char *str, const char *suffix)
->
-
-Ok.
-
-> > +{
-> > +     unsigned int str_len =3D strlen(str), suffix_len =3D strlen(suffi=
-x);
-> > +
-> > +     if (str_len < suffix_len)
-> > +             return false;
-> > +
-> > +     return !(strcmp(str + str_len - suffix_len, suffix));
-> > +}
->
-> We should probably add it to strlen and strcmp as well. :)
->
-
-Sure but that's outside of the scope of this.
-
-Bart
