@@ -1,124 +1,107 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5313413AD26
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 18:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0C4126C03
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 19:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763491825; cv=none; b=mNKdt9UerXtwByjabA+vvi4765nnyClcCBN1Lh3rKrx6516mPciFPR+Ac5XDJ4+4D6sZrX8E8ikhMjwKX9unhSef6Qn7CXfKkgvewTdAO98uiGSDX5KWeEJuZzzwrBI6bAm4bWOJydFHYyvs37msGGTHRHvdO3ePy5jqzMMfC6M=
+	t=1763492499; cv=none; b=MV0rohL4zC3s14239HIHBH5Gh0yiXM8+A55kQGPXB7653+E1PxrUZZ/nlmFjkqe7pGVEtrHY7w8lLD3oeSvQkic//Zw7rF4im83lQ5rseikNEJcr9bGOszOJzGC3HO3a0O+7rmFyaVAZBsClODjvMCdQqOinjVIlExgfPLF8vWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763491825; c=relaxed/simple;
-	bh=AYPrrrYZBTxt5Qn9qGRaZZ1p1f5BM3fWOXxV3cGpShM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GOT3n8mhpTCyW3ay4u9AwfKGy9gTx9cHPWCR9cOTL0rNlMcGaQAKma+kz5ZL1o50PEmzECY1ZKdRR01+N7m4PxqQeVbCL+ZaewKB5S6nyWKmzu4s6m4kj4l13iy8HCGZw4lsnQOMEochBncCAsCxYEe/vFYXBLopAWzbePeFiJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S9LHAjAt; arc=none smtp.client-ip=209.85.210.177
+	s=arc-20240116; t=1763492499; c=relaxed/simple;
+	bh=HScNVG27Z3xvF/dML5mlBmrsnq+jXe0FjasO0A8oN8Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CJFsMohlEI6WsmjrFW3h6mt6MJ/QPTFG9XsPkBcSS1mz1DCw4dgWWvs4ET/k4FboqENpfTAaEG5k/nccOYHRsnnuT5IJ3XUdaSbsF4HYDwFaMcRfZ4ht1zR13exoJt6GZxoXd+rDdtx5SEKDU3aULsRAeUKochmwgqoAepcmDUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VBzSjZv8; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9LHAjAt"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7a9c64dfa8aso4662430b3a.3
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 10:50:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBzSjZv8"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b7636c96b9aso691666b.2
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 11:01:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763491824; x=1764096624; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YoGkWLSjBjO1ypEJKf7VcOJ66Mr7RGgnB+IVecGlhdQ=;
-        b=S9LHAjAtgU8vZGmuA+TnGihg82KRT7vKDld224XwtymMn4ATRS8EbfzqMG0R96a+j+
-         J1az/Bf1rUsJCCdUuUXdBGoI8tEilXwICEyVlJlz6VVjSbYNQq5D8F0P1iKmegW1nX9C
-         S4mVBZziCDH5FMafM/93OjFq13vMvnh1lUu+CZIUZ5zt+uY6MUCLGvLRD8PirWjzvBv9
-         aeqLifT3HBr1QYJzeIb3gXOkGvu/hL1jSzzl2UGJzlUVt0zwwXjbY3g7VRrIYO+5/SZx
-         CLyqB8NGqtJZn0pNSTag7UZI+UVABL31PVWTKFddLYPZz8i+9ACLbXaS0TbRFpot9+mo
-         UNsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763491824; x=1764096624;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1763492496; x=1764097296; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YoGkWLSjBjO1ypEJKf7VcOJ66Mr7RGgnB+IVecGlhdQ=;
-        b=Bru9fohr6x8OCnkDH+ddPlZJqQo9/ZRZBfCQPrLZ7Rr1GI5M9e0LINzmvAQVbhKtV1
-         jsDOMIemDGsboQn+odzmMW8mtmuwRd8ovw4mZQw/ajiF07smsKzMZfvw6MtgMhT5pJaw
-         2CG6S7skI0nZ9zbU2W/MiBc1IzlY+7FkiRlG8IOXNFT4BUhzwE4yZ6D7ZZzkZXP9N4tb
-         fQNc8j7zo6qi6GhqDaY/Y1hSgEHFFBisk2sqsJgbY50bqAsdpIAkQz2Imf3yd7iAE/yw
-         qd6wjIuPT0AxjaH9+VqstPETjD5/bHU1rFB9qFIdzShdFA8kZPWcgJaaJno46fqHLwp5
-         z3ng==
-X-Gm-Message-State: AOJu0YwU1hKEe/bBSPJOs8mpdk/P5kp1oBy3XH19y4RY2RKyj+x9p8iH
-	E5xQgBtT90xOrAzAl41XgpgUrqQLrzEHIycqG0vOzEVp5/oXx9l+n0MWV4VkMQ==
-X-Gm-Gg: ASbGncvAKMbS0BsJO8k0TPvtKRfcmuZFVNLMC6v5558WVyCegGHmYxcbA44fzqLYSP2
-	V2Av1T7cG5Z+u6j2W4v4eovcjx6Z6yNzdY+7MyC5UDAc1AMJKc1xX79zTxkI+sR9ItWp6OVSSvM
-	7K0Ww/SQ2Ph+bA4neBrGOyLz1ytW7zHW/qixYVtBhyXjtchFROOiU1XskII8ZQdFqSFL6CK3QHi
-	fTrf12zJm9zLIPDLU4qLtX54zNfQ5Z5ug0p4A2v+6kT52dWZ9KL7Uc/XrI1PmE2xRMsQ4li2Gpa
-	gxuuJ/Lw5e2ZAxCfEvdNhG1tGANqjQwGIoerZFjLMBNYkVvo/pKDh5BPU+b5CgRqkGGwAELhJ2c
-	vU70NpFjaP2zX+D4KLgXpRAad3kAmHD4Oo82tC/1zs1JG/jEb81W2aWFvu6kD1Ylidwf9dVd2XP
-	VZ8tP+h6STIYbFKFFVftBDFxWUdRg=
-X-Google-Smtp-Source: AGHT+IHKj0xN/ffzmo6eAaRuWy5yIRvqqs8XkJI07UqY7rBxfV+ZFN/LfvyZUCo2LwYW4KHQCYFyXg==
-X-Received: by 2002:a05:6a21:3381:b0:35d:ce99:cc23 with SMTP id adf61e73a8af0-35dce99ccc2mr14545942637.49.1763491823564;
-        Tue, 18 Nov 2025 10:50:23 -0800 (PST)
-Received: from crl-3.node2.local ([125.63.65.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b9250d24b9sm17197966b3a.17.2025.11.18.10.50.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 10:50:23 -0800 (PST)
-From: Kriish Sharma <kriish.sharma2006@gmail.com>
-To: kees@kernel.org,
-	andy@kernel.org
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kriish Sharma <kriish.sharma2006@gmail.com>
-Subject: [PATCH v2] string: Add missing kernel-doc return descriptions
-Date: Tue, 18 Nov 2025 18:48:28 +0000
-Message-Id: <20251118184828.2621595-1-kriish.sharma2006@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        bh=mZQSPFMUc/iR2j6wUuGRdvdyY2tCoFpgaZkwvlQe3PA=;
+        b=VBzSjZv83Pm7Y+Phy+ddoEZNxXdYxB8l2fDIe+AhmJncA1PV4gYfEH7VCXk2PuWy7U
+         8ltrSgnMU8bO8RrYHvcDXHWD899xuX1Qur7Sg35JeG9127G2tZaO4kahjz5lRCDIts/X
+         WjydkETNZq1kKUoGk0Thid2mttQvwma3P2Vh3J1zX+A4EnWht8NWEI/aGUrWh5IACnll
+         bu0oC18XDtTKf3f5yUjCVoAqZNzfn8Q4lVTWqHnNaKTYs8nq6EWoigXBQXihLcXS1O4C
+         GfO4riaMeTkXKbS7DOizNr8w57+uz+IQBCpff4gdrqaqN1ecTZTW2lwWAkUz4aup+nnK
+         gXDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763492496; x=1764097296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mZQSPFMUc/iR2j6wUuGRdvdyY2tCoFpgaZkwvlQe3PA=;
+        b=WzSjHK9AutEPTBiDyFz6Y+dt8QKHsl4qBTnc4S3YRZL/puH/+xJtdcbyzK0+sn/LZb
+         OMAgGgplH7Tlii5/IlPLhcXqe+9dp8tBZ9eraf4xcOTlIrKYN1tSZSv3KphFvkUsszsM
+         dmhlMEQpujeGmLZeQ16ThR6JkJz4o59Z/YSvJWb5O9gCXJvyi5uQmwoihdrzeJlix2g9
+         JofDgTIyAcYO0MCjhIIWiluXPTjLOtwUpTE3oyD/oJHAm30BY6Ama+QhRFk2FK3tOTCB
+         r6trGdl1QTbSQ+aLxSiS0/Zngg460aylYMhtZwGXf/I0XoX6LYgFqQvA+rl/YaW3fFDI
+         H4Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCW1Hu06AsHAt7niGSE2/9c7DePDXsRefvvLEqdCD8eZnOFsADWyeO9sSAiUMBlBevieJCEQJEOHeiUYNoJOdfk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZRVB5DjMJe+JBjvaBsE9Z5ZmW4SbIHL01oVNepSEtgF5BKP/X
+	bfFktl78+7k9miNUCVqqJYhGULOVoQvcqVPvwRFvFFHo6oQo/xvLk8FvUFesjztoZk3Hj7LQE/+
+	h+aOj7iLawvjAeBS/jvDrWXLTuO9MbOo=
+X-Gm-Gg: ASbGncsv4oIy4vk071xNAojbbGFh3XhJ5dYwM4FYIjYmoSgwIkNYlxLuGzndfA7/UoN
+	VxY3VnjRRqtoPP0kqyT+FzvCqO7vXBRJRmxfvAlSCtL3j0X409zYocIC7HkgBCXWjcFragi/SlR
+	Z4lVGnSBnDSNWYZokyiXObwCNh+yhDlVsQvLu6TxPOC2kN5aChMugmbPOLosml8m0a4c+dQKIaF
+	0UDm8SbXCIXwc/sLZCNuKy3Gi5T5JOpUysegOgBluVahDBEBj6+Ag/Jx/xkyKJ5sDTIfIxdFpwe
+	0KIaMwUYEh4+GgybZ2h9fQLG5kPvqhBBgwnZSYKbzxHsiu7iCEX9sex8KiztkjJrqMKs35ELNrI
+	RZqNaGw==
+X-Google-Smtp-Source: AGHT+IFyP+TG9MjJL23/m1prb10DhR3Unt1EdmWMuh8fKkrHBsUDo2385GqDYyCuCDUBq/cu/ng4p3LaukETb+bcQmI=
+X-Received: by 2002:a17:907:2d12:b0:b73:572d:3b07 with SMTP id
+ a640c23a62f3a-b736782d087mr1883358066b.28.1763492495812; Tue, 18 Nov 2025
+ 11:01:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251118184828.2621595-1-kriish.sharma2006@gmail.com>
+In-Reply-To: <20251118184828.2621595-1-kriish.sharma2006@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 18 Nov 2025 21:00:59 +0200
+X-Gm-Features: AWmQ_bnddVqXPK31tz6e9vAtlpuIK8CzEPRlTM9nkDL0aNtidlmuyu3e9_ix0wk
+Message-ID: <CAHp75VfEUL=BVVFX24hShev+LFPKNToDhpgHf4Z-C8KAG_UJmg@mail.gmail.com>
+Subject: Re: [PATCH v2] string: Add missing kernel-doc return descriptions
+To: Kriish Sharma <kriish.sharma2006@gmail.com>
+Cc: kees@kernel.org, andy@kernel.org, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-While running kernel-doc validation on linux-next, warnings were emitted
-for functions in include/linux/string.h due to missing return value
-documentation:
+On Tue, Nov 18, 2025 at 8:50=E2=80=AFPM Kriish Sharma
+<kriish.sharma2006@gmail.com> wrote:
+>
+> While running kernel-doc validation on linux-next, warnings were emitted
+> for functions in include/linux/string.h due to missing return value
+> documentation:
+>
+>     Warning: include/linux/string.h:375 No description found for return v=
+alue of 'kbasename'
+>     Warning: include/linux/string.h:560 No description found for return v=
+alue of 'strstarts'
+>
+> This patch adds the missing return value descriptions for both functions
+> and clears the related kernel-doc warnings.
 
-    Warning: include/linux/string.h:375 No description found for return value of 'kbasename'
-    Warning: include/linux/string.h:560 No description found for return value of 'strstarts'
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-This patch adds the missing return value descriptions for both functions
-and clears the related kernel-doc warnings.
+...
 
-Signed-off-by: Kriish Sharma <kriish.sharma2006@gmail.com>
----
-v2:
-  - Drop strends() changes.
+>   * kbasename - return the last part of a pathname.
+>   *
 
-v1: https://lore.kernel.org/all/20251118180008.2620929-1-kriish.sharma2006@gmail.com
+This blank line can be removed, while at it, but I leave it to you and
+maintainers.
 
- include/linux/string.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+>   * @path: path to extract the filename from.
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 929d05d1247c..0eba937f441c 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -371,6 +371,10 @@ static inline void memzero_explicit(void *s, size_t count)
-  * kbasename - return the last part of a pathname.
-  *
-  * @path: path to extract the filename from.
-+ *
-+ * Returns:
-+ * Pointer to the filename portion inside @path. If no '/' exists,
-+ * returns @path unchanged.
-  */
- static inline const char *kbasename(const char *path)
- {
-@@ -556,6 +560,9 @@ static __always_inline size_t str_has_prefix(const char *str, const char *prefix
-  * strstarts - does @str start with @prefix?
-  * @str: string to examine
-  * @prefix: prefix to look for.
-+ *
-+ * Returns:
-+ * True if @str begins with @prefix. False in all other cases.
-  */
- static inline bool strstarts(const char *str, const char *prefix)
- {
--- 
-2.34.1
-
+--=20
+With Best Regards,
+Andy Shevchenko
