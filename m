@@ -1,138 +1,242 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4FD35BDCD
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 14:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740CE35CB8F
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 14:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763476049; cv=none; b=hACTAcXo9zEgPHwLQMiiCwUXYA/Y9Z7hLVz/DOf8+bA1GKA1g7dcVcL0WQgIplhydDUip4Lsb0qFTZxgmFGmZkNsmINZcUJxDmTn+Kk8Uk4Ts4pmX/6Zm6eNNYuFcSIOXAKa9dWYNbYnqpj+fuGLy/XjDHAPMCK6/YYreHkfMuk=
+	t=1763476137; cv=none; b=mndOZjgj2GyyNrvk4Ks1xXbIfsAPD0UozVYvYKaB6+I+pq0RlsSFaO+WAwg6rdADJ6EnHnmURygNu65vHA5oZjh8avNOfR/vvcfPxCS1qvwDNHKLsmzMPru5oECAG6MoAYDnp1VPbgiiUYOkLNYviIK1wwMp/uTT87oD9G+VfOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763476049; c=relaxed/simple;
-	bh=c0U3618Vo7lc2qFgsoEiXWsByZFvKNbdECSQiI33/JE=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XBG3zCfxwAnIB3Hh85oXp4gUmRXcofeSOf7WBo7ptPRSlDVgjXhbrDvGPb7+tPccNcCIqaotmivklCFj9uNdhzQr6zEvhvDm+YewTVYKvpw2IsxfZ2R58kShI66eUEO/yEkUKELwFZ2TCxig4jtlaMRqByCNr8UdlgQ7vBfRsZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ivnqxogG; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1763476137; c=relaxed/simple;
+	bh=Vw+jMoLrz3CPi3RZadAUQ9OZDIQrFYnK7RrpZ+3jFFU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZA6zOM3+5EJEy9EtS/KnDVe7RqYRFRS1ltCi7r66xScSD+QSUYVnHbSdKTFQZe8HiwOkN3lG18QkFImbJcE2T7ijqssC3Zvsj9yx+xMlVR4OkrT98LQ6P9cTDFktvgaXepQ/CBDQtiSlGi1S4BkSU+ARR8expkE/PZL52rBir4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=jbgNlztq; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ivnqxogG"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-37a875e3418so39656741fa.1
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 06:27:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jbgNlztq"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-88051279e87so59456766d6.3
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 06:28:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763476046; x=1764080846; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hf2Cxv40+7yq8V71h6ANiFD+N1Zr8f5Q883U3V106Ak=;
-        b=ivnqxogG2kUbMlCGpAvOQIqlDiSceg3l+eOwSgM0c602mu3MeTeCr0tZaPAcjA9P5d
-         8GHywdC6yybQSJYXQqba9yRafiZJPTSSoxu78fW7PBelD782zc980PWdn7VrLSMqt3Ye
-         QCETqTaEHFfvhs3q00nFFGdTfOY+u2yXQwwiJjJCDj21v9/wQpuTc1vBjfcSGS9bs5U7
-         RBIBAu/02Pbg99TFqIEG2uEU/425lO67lUXC/++CpKiF7iMa3qgOa4r8litYKCaiaHuA
-         VfC6v5X2WjdutAj3TlYtpleLldPSx/Xc/XYhThAy6D7j5hXHI1hiYIn8v8ONzmenlSkG
-         JM2A==
+        d=ziepe.ca; s=google; t=1763476131; x=1764080931; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=35WpspOv1fAWFINmOzi0AcgEQL1oV2/QEYSJcrH4aSg=;
+        b=jbgNlztqEGj3WmXe7Jo3l8FaT1DvF8AaIYPg93dVoF6UZRCE01BN9/Pnq+azINjQid
+         LpaMmzcr/XUyOOp2ThaI47IxSCnWlvwIwG94wN+XZ7LGqOd6cdwVFXyTanROgMLBbQ/6
+         jzJ8MKocS/iXqpfC3Wey6NGpOtxYUOzxcm2sbBZdIsSp05BjVhevLq428KKvAXPl3xL5
+         8RIG9SSDGshJkAbsY3vW7n/jSgIOdS7J00+Bl+R1/qeSCQMNP5hD5M8oSOaDEz/Aheqg
+         FSaz76ZiLI+pEwl6Es2xp9bla/Vfo6GtgTw9bOQLBkvuDaGebbESWQ07NgaAWjGPJun8
+         9Ycw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763476046; x=1764080846;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Hf2Cxv40+7yq8V71h6ANiFD+N1Zr8f5Q883U3V106Ak=;
-        b=mhNNAyiiC5g1SzbJsixEdhqHooUPrN/2JDrmaDndQ4PESSQoaON5kvwtQrSdvjMpON
-         5UPUY59zpK2/4KCcwbNW/PltxawwHe/KefSuja5nbRNgtNxaKt0LreAemY8vQ0NzYbfI
-         j0ISIJ2AUGPr9QJ5b3FHzxvIgUzj3/G9ZAmEdqbPsi8qJ9ojFz+wja3KXx2UvFGblYPx
-         NvuiJNkWepdNUNXJecuAgCNzvCSs2BaUz+eMHU93ILOjVh5P+uSfu0QbiZeyZosq5xy8
-         sxkPgh2U5jYd9JJOfzp9/cKDljxp7d9b2OYEDe39JmKwdvaApCRYIeiAo2qK/2jeLGkc
-         FJBw==
-X-Forwarded-Encrypted: i=1; AJvYcCXS3E69d3hwG/UtxGXROpVhKjfFI7vh8ikUeHVio6p1d+YP7zHlLTb1+6S+KGsjhY8oFmwL2LXIqUXkH0CBF7E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz/Wa3SMwGj8SfpGE3eOuKOp1HHhvREmHFooJUErifMaX0oOED
-	CEB5VrJjPEt9AmDyyCsFPE3QQ3ANyEsy0lsUu1iXbYdHvhEUDjoHYtLODCd31UJSRb1WuecEUwq
-	g+rN+3RjVMmj8I4CoYb6oRWtgsR7PkkRmQ4yYNPbFow==
-X-Gm-Gg: ASbGncsxKOmFAFkPTIeb5Pi8tb0jOgqLW7T4e1uFyKwcHIAA0HY7Mm/LJFLjE9kZbm4
-	H/Oe3mpZqyeKfyoWZhHzG1JGOq6a1ZxM5VLgxhV5pJnQPqyXDXwMjlr/4nT4xtI1JXSkKosIE8a
-	XBjL97ar1UUjD4llEsmAwReUO8uiOYIizITd3JrwHWSlhwQTI2LXQd/elwUxSSjK/R9WzWSdsyV
-	s/gKyBu5/btcV6+SHXhOEsa9oXaSJsSfZr7ip5l8xsioLLKBRLCdyrda7XJu6sOS48WWJpRahHN
-	+UQpgtiHQR4LrE918q+Wf0qlHyN/PXd0QB3E
-X-Google-Smtp-Source: AGHT+IGoA5UBOXsJ5cVSmQ6gsh1S9Dtt4hgxp5RrgYNaDgN6xDaSj9cgZ5HgZ64YpoGqqFZp56SXUGYxduiY1NHaHGU=
-X-Received: by 2002:a2e:a00a:0:b0:37b:aaf7:f007 with SMTP id
- 38308e7fff4ca-37babd6ddb6mr36053731fa.31.1763476045857; Tue, 18 Nov 2025
- 06:27:25 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 18 Nov 2025 06:27:23 -0800
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 18 Nov 2025 06:27:23 -0800
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <ab0b2e6b-7d2a-43e6-b8e7-c97cb9763798@sirena.org.uk>
+        d=1e100.net; s=20230601; t=1763476131; x=1764080931;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=35WpspOv1fAWFINmOzi0AcgEQL1oV2/QEYSJcrH4aSg=;
+        b=WkriwVjnX+lHocDoqOA9Dz7Lbobwhl8YmYme2fRYvZGEQg5hAG/pCRIpciT2+8SzPj
+         WWRWTf4QO681huDmxOZU3WG455uaowG2XH1+kYrMKPJJKVCk3CdZHyy4J2AxtU7tWsK6
+         aZQ2Ysj5KIUbX+9z2Ar7BlD4D2NNUhAQ/Cbxf7VT9sbei8Sr72eBv2XOVERODI0oQBpa
+         PJ4MR/fED7CLC9XDgqB2Wgknb45mUOAY5T2gcPGxjqEN9lKeZid/5Tbe+L7E6Maapx22
+         HOGpFrdgYMjE/36itHeNfkuPW6cHlLfxQrbw9TjYCa1aEglTTqNIYTjdti3sjmJTjbkB
+         4YVA==
+X-Forwarded-Encrypted: i=1; AJvYcCXuh2jiwXAu82Rpvn/2YiRjFDKxsLtwh4pahoFoWS69dKIBRQSE54HmQigEZS1lVHErX9JB/9fFTUtyzZberPs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2xDXCfwUcflW2AaZtdC0RXFR79XiRULsQjiEbzlR7aW0Mj0X6
+	pT8hZk6uolkYOWEFhM4n2hpaWNuwmMb7wyHUF3NHhNQKopZ6+YX4p/ckqnfQjC6KfVI=
+X-Gm-Gg: ASbGnct4H/RuETYE+cpiYFSPb7Y33MobVJWL4+JQ9SBT7SsCKAC+zUIPv3hvNO4I16j
+	xBGW063oe8YH7GF9tyE8g9QVpotVyhf7sZ2TGad8hxC8gdfQhcLOT7pcvZTi5EcYT4p9ooxe9kv
+	ZpbZoCNMTfcWFzp3cXEylGAAMpzDoam7ys8bZt5VYtZPMcIIECSp8bw2N6gtIUVlnMvVLt4DFgp
+	22T1QQJeEhX2dB0XrHLigCaZ9LWetoeM32DwXFiQ3gthjUV03JmC3jz/4HKcFyvFERVGbt25xcq
+	psQGyZKKWNYyDklvYI5GPotDI71wI/yzw9g+8QvJvapoELXWnmuFzUeavyfI8N9jD8KXl3rnCHO
+	6iK6tTbHkqg9R6wKA6IptkECQdu2KV4OhmBnVb6jZZyOCE5TACYo+qvgPKqadJRF3PvYs55UyVZ
+	BO+K3VzV/SrS31+5cEbvROe/fwO3nVDcEb6kZ8UFy/Hsr5DrIf14Z2GsyOP4vvdZiPRWE=
+X-Google-Smtp-Source: AGHT+IF+NrfSbYwvwiNh+CC3YngHFJHpwzxC37jBlKkv0sHaTL3i1cld4gWS47y25QRA75BxBaWSvQ==
+X-Received: by 2002:a05:6214:62a:b0:81b:bf92:8df9 with SMTP id 6a1803df08f44-8829269e086mr234228876d6.43.1763476131063;
+        Tue, 18 Nov 2025 06:28:51 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8828652efa4sm114860276d6.39.2025.11.18.06.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Nov 2025 06:28:50 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1vLMhN-00000000NEc-3Dxs;
+	Tue, 18 Nov 2025 10:28:49 -0400
+Date: Tue, 18 Nov 2025 10:28:49 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <skolothumtho@nvidia.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"Kasireddy, Vivek" <vivek.kasireddy@intel.com>
+Subject: Re: [PATCH v8 10/11] vfio/pci: Add dma-buf export support for MMIO
+ regions
+Message-ID: <20251118142849.GG17968@ziepe.ca>
+References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
+ <20251111-dmabuf-vfio-v8-10-fd9aa5df478f@nvidia.com>
+ <BN9PR11MB527610F3240E677BE9720C2B8CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <20251112-gpio-shared-v4-7-b51f97b1abd8@linaro.org> <dbe20642-9662-40af-a593-c1263baea73b@sirena.org.uk>
- <CAMRc=MesD5HchG_hfvN3H5ayu8gX_OvSsZQ4UO4f27gx1rRzSA@mail.gmail.com> <ab0b2e6b-7d2a-43e6-b8e7-c97cb9763798@sirena.org.uk>
-Date: Tue, 18 Nov 2025 06:27:23 -0800
-X-Gm-Features: AWmQ_bmvuv0kqhmAyv1afKHnQoK_7YeLlaSbUZcYwoK2sDVs4c1RAgiSNxeeuyE
-Message-ID: <CAMRc=Mcafi6+kRX+9sVOLHCegdU33+omLg+aW4RqeiokymxPNQ@mail.gmail.com>
-Subject: Re: [PATCH v4 07/10] arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
-To: Mark Brown <broonie@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Aishwarya.TCV@arm.com, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB527610F3240E677BE9720C2B8CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
 
-On Tue, 18 Nov 2025 15:20:47 +0100, Mark Brown <broonie@kernel.org> said:
-> On Tue, Nov 18, 2025 at 03:13:49PM +0100, Bartosz Golaszewski wrote:
->
->> Thanks for the heads-up. I'll try to fix it ASAP to avoid a revert.
->
->> I can't open the link:
->
->> 500 Internal Server Error
->
->> FATAL: remaining connection slots are reserved for non-replication
->> superuser connections
->
->> Oops, something has gone wrong!
->
-> Retry, it's AI scrapers so those 500 responses are just glitches.
->
->> Any chance you could get the offending line out of this stack trace?
->
->    https://builds.sirena.org.uk/187dac290bfd0741b9d7d5490af825c33fd9baa4/arm64/defconfig/vmlinux.xz
->
-> /build/stage/linux/drivers/gpio/gpiolib-shared.c:87
->
+On Tue, Nov 18, 2025 at 07:33:23AM +0000, Tian, Kevin wrote:
+> > From: Leon Romanovsky <leon@kernel.org>
+> > Sent: Tuesday, November 11, 2025 5:58 PM
+> > 
+> > -		if (!new_mem)
+> > +		if (!new_mem) {
+> >  			vfio_pci_zap_and_down_write_memory_lock(vdev);
+> > -		else
+> > +			vfio_pci_dma_buf_move(vdev, true);
+> > +		} else {
+> >  			down_write(&vdev->memory_lock);
+> > +		}
+> 
+> shouldn't we notify move before zapping the bars? otherwise there is
+> still a small window in between where the exporter already has the
+> mapping cleared while the importer still keeps it...
 
-Oh, of_root may be NULL...
+zapping the VMA and moving/revoking the DMABUF are independent
+operations that can happen in any order. They effect different kinds
+of users. The VMA zap prevents CPU access from userspace, the DMABUF
+move prevents DMA access from devices.
 
-Could you try the following change please?
+The order has to be like the above because vfio_pci_dma_buf_move()
+must be called under the memory lock and
+vfio_pci_zap_and_down_write_memory_lock() gets the memory lock..
 
-diff --git a/drivers/gpio/gpiolib-shared.c b/drivers/gpio/gpiolib-shared.c
-index c22eaf05eef23..4ce574a21850b 100644
---- a/drivers/gpio/gpiolib-shared.c
-+++ b/drivers/gpio/gpiolib-shared.c
-@@ -205,7 +205,10 @@ static int gpio_shared_of_traverse(struct
-device_node *curr)
+> > +static void vfio_pci_dma_buf_release(struct dma_buf *dmabuf)
+> > +{
+> > +	struct vfio_pci_dma_buf *priv = dmabuf->priv;
+> > +
+> > +	/*
+> > +	 * Either this or vfio_pci_dma_buf_cleanup() will remove from the list.
+> > +	 * The refcount prevents both.
+> 
+> which refcount? I thought it's vdev->memory_lock preventing the race...
 
- static int gpio_shared_of_scan(void)
- {
--	return gpio_shared_of_traverse(of_root);
-+	if (of_root)
-+		return gpio_shared_of_traverse(of_root);
-+
-+	return 0;
- }
- #else
- static int gpio_shared_of_scan(void)
+Refcount on the dmabuf
 
-Bart
+> > +int vfio_pci_core_fill_phys_vec(struct dma_buf_phys_vec *phys_vec,
+> > +				struct vfio_region_dma_range *dma_ranges,
+> > +				size_t nr_ranges, phys_addr_t start,
+> > +				phys_addr_t len)
+> > +{
+> > +	phys_addr_t max_addr;
+> > +	unsigned int i;
+> > +
+> > +	max_addr = start + len;
+> > +	for (i = 0; i < nr_ranges; i++) {
+> > +		phys_addr_t end;
+> > +
+> > +		if (!dma_ranges[i].length)
+> > +			return -EINVAL;
+> 
+> Looks redundant as there is already a check in validate_dmabuf_input().
+
+Agree
+
+> > +int vfio_pci_core_feature_dma_buf(struct vfio_pci_core_device *vdev, u32
+> > flags,
+> > +				  struct vfio_device_feature_dma_buf __user
+> > *arg,
+> > +				  size_t argsz)
+> > +{
+> > +	struct vfio_device_feature_dma_buf get_dma_buf = {};
+> > +	struct vfio_region_dma_range *dma_ranges;
+> > +	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
+> > +	struct vfio_pci_dma_buf *priv;
+> > +	size_t length;
+> > +	int ret;
+> > +
+> > +	if (!vdev->pci_ops || !vdev->pci_ops->get_dmabuf_phys)
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	ret = vfio_check_feature(flags, argsz, VFIO_DEVICE_FEATURE_GET,
+> > +				 sizeof(get_dma_buf));
+> > +	if (ret != 1)
+> > +		return ret;
+> > +
+> > +	if (copy_from_user(&get_dma_buf, arg, sizeof(get_dma_buf)))
+> > +		return -EFAULT;
+> > +
+> > +	if (!get_dma_buf.nr_ranges || get_dma_buf.flags)
+> > +		return -EINVAL;
+> 
+> unknown flag bits get -EOPNOTSUPP.
+
+Agree
+
+> > +
+> > +void vfio_pci_dma_buf_cleanup(struct vfio_pci_core_device *vdev)
+> > +{
+> > +	struct vfio_pci_dma_buf *priv;
+> > +	struct vfio_pci_dma_buf *tmp;
+> > +
+> > +	down_write(&vdev->memory_lock);
+> > +	list_for_each_entry_safe(priv, tmp, &vdev->dmabufs, dmabufs_elm)
+> > {
+> > +		if (!get_file_active(&priv->dmabuf->file))
+> > +			continue;
+> > +
+> > +		dma_resv_lock(priv->dmabuf->resv, NULL);
+> > +		list_del_init(&priv->dmabufs_elm);
+> > +		priv->vdev = NULL;
+> > +		priv->revoked = true;
+> > +		dma_buf_move_notify(priv->dmabuf);
+> > +		dma_resv_unlock(priv->dmabuf->resv);
+> > +		vfio_device_put_registration(&vdev->vdev);
+> > +		fput(priv->dmabuf->file);
+> 
+> dma_buf_put(priv->dmabuf), consistent with other places.
+
+Someone else said this, I don't agree, the above got the get via
+
+get_file_active() instead of a dma_buf version..
+
+So we should pair with get_file_active() vs fput().
+
+Christian rejected the idea of adding a dmabuf wrapper for
+get_file_active(), oh well.
+
+> > +struct vfio_device_feature_dma_buf {
+> > +	__u32	region_index;
+> > +	__u32	open_flags;
+> > +	__u32   flags;
+> 
+> Usually the 'flags' field is put in the start (following argsz if existing).
+
+Yeah, but doesn't really matter.
+
+Thanks,
+Jason
