@@ -1,107 +1,106 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0C4126C03
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 19:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC2F1E3DE5;
+	Tue, 18 Nov 2025 19:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763492499; cv=none; b=MV0rohL4zC3s14239HIHBH5Gh0yiXM8+A55kQGPXB7653+E1PxrUZZ/nlmFjkqe7pGVEtrHY7w8lLD3oeSvQkic//Zw7rF4im83lQ5rseikNEJcr9bGOszOJzGC3HO3a0O+7rmFyaVAZBsClODjvMCdQqOinjVIlExgfPLF8vWc=
+	t=1763495220; cv=none; b=N/3U5HfG4kTe7U4yqjujwxENl9OFsuwS3MNSP7s6mbQ+wqYiMmGJf68cD0xUbe1dfiY+sfVLa6+t5Iw/Ocs1pNkVl4b3aYQPa+4V/XokTMByX9oDkq//dpGgzbB7vwldSmLrMGjZkGQipkXlF81/FZVR7lDxEAI/Vyp4xtOeMrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763492499; c=relaxed/simple;
-	bh=HScNVG27Z3xvF/dML5mlBmrsnq+jXe0FjasO0A8oN8Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CJFsMohlEI6WsmjrFW3h6mt6MJ/QPTFG9XsPkBcSS1mz1DCw4dgWWvs4ET/k4FboqENpfTAaEG5k/nccOYHRsnnuT5IJ3XUdaSbsF4HYDwFaMcRfZ4ht1zR13exoJt6GZxoXd+rDdtx5SEKDU3aULsRAeUKochmwgqoAepcmDUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VBzSjZv8; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1763495220; c=relaxed/simple;
+	bh=LLV5ulLhdVg2ftls0Im8pJBkD7VEtlgCURwkLWF5u+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UXW/6YHpwHH99wF1hurTzfLZpIi+AbBE7TJ1L51UmbjiavDALjuiLt06JPBhxPDeTmp8jumpjITYrS0a0UBXm4FFIAXtF2OTvMhZesMNTvbXEPA+7Q5VNHWCbhkQ8c9h756lRyEckuxETMtZNChLxjUhR/VkLwAk2FjdWbZdgws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uN0Ch6dJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBzSjZv8"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b7636c96b9aso691666b.2
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 11:01:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763492496; x=1764097296; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mZQSPFMUc/iR2j6wUuGRdvdyY2tCoFpgaZkwvlQe3PA=;
-        b=VBzSjZv83Pm7Y+Phy+ddoEZNxXdYxB8l2fDIe+AhmJncA1PV4gYfEH7VCXk2PuWy7U
-         8ltrSgnMU8bO8RrYHvcDXHWD899xuX1Qur7Sg35JeG9127G2tZaO4kahjz5lRCDIts/X
-         WjydkETNZq1kKUoGk0Thid2mttQvwma3P2Vh3J1zX+A4EnWht8NWEI/aGUrWh5IACnll
-         bu0oC18XDtTKf3f5yUjCVoAqZNzfn8Q4lVTWqHnNaKTYs8nq6EWoigXBQXihLcXS1O4C
-         GfO4riaMeTkXKbS7DOizNr8w57+uz+IQBCpff4gdrqaqN1ecTZTW2lwWAkUz4aup+nnK
-         gXDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763492496; x=1764097296;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mZQSPFMUc/iR2j6wUuGRdvdyY2tCoFpgaZkwvlQe3PA=;
-        b=WzSjHK9AutEPTBiDyFz6Y+dt8QKHsl4qBTnc4S3YRZL/puH/+xJtdcbyzK0+sn/LZb
-         OMAgGgplH7Tlii5/IlPLhcXqe+9dp8tBZ9eraf4xcOTlIrKYN1tSZSv3KphFvkUsszsM
-         dmhlMEQpujeGmLZeQ16ThR6JkJz4o59Z/YSvJWb5O9gCXJvyi5uQmwoihdrzeJlix2g9
-         JofDgTIyAcYO0MCjhIIWiluXPTjLOtwUpTE3oyD/oJHAm30BY6Ama+QhRFk2FK3tOTCB
-         r6trGdl1QTbSQ+aLxSiS0/Zngg460aylYMhtZwGXf/I0XoX6LYgFqQvA+rl/YaW3fFDI
-         H4Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCW1Hu06AsHAt7niGSE2/9c7DePDXsRefvvLEqdCD8eZnOFsADWyeO9sSAiUMBlBevieJCEQJEOHeiUYNoJOdfk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZRVB5DjMJe+JBjvaBsE9Z5ZmW4SbIHL01oVNepSEtgF5BKP/X
-	bfFktl78+7k9miNUCVqqJYhGULOVoQvcqVPvwRFvFFHo6oQo/xvLk8FvUFesjztoZk3Hj7LQE/+
-	h+aOj7iLawvjAeBS/jvDrWXLTuO9MbOo=
-X-Gm-Gg: ASbGncsv4oIy4vk071xNAojbbGFh3XhJ5dYwM4FYIjYmoSgwIkNYlxLuGzndfA7/UoN
-	VxY3VnjRRqtoPP0kqyT+FzvCqO7vXBRJRmxfvAlSCtL3j0X409zYocIC7HkgBCXWjcFragi/SlR
-	Z4lVGnSBnDSNWYZokyiXObwCNh+yhDlVsQvLu6TxPOC2kN5aChMugmbPOLosml8m0a4c+dQKIaF
-	0UDm8SbXCIXwc/sLZCNuKy3Gi5T5JOpUysegOgBluVahDBEBj6+Ag/Jx/xkyKJ5sDTIfIxdFpwe
-	0KIaMwUYEh4+GgybZ2h9fQLG5kPvqhBBgwnZSYKbzxHsiu7iCEX9sex8KiztkjJrqMKs35ELNrI
-	RZqNaGw==
-X-Google-Smtp-Source: AGHT+IFyP+TG9MjJL23/m1prb10DhR3Unt1EdmWMuh8fKkrHBsUDo2385GqDYyCuCDUBq/cu/ng4p3LaukETb+bcQmI=
-X-Received: by 2002:a17:907:2d12:b0:b73:572d:3b07 with SMTP id
- a640c23a62f3a-b736782d087mr1883358066b.28.1763492495812; Tue, 18 Nov 2025
- 11:01:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uN0Ch6dJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18DEDC4CEFB;
+	Tue, 18 Nov 2025 19:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763495218;
+	bh=LLV5ulLhdVg2ftls0Im8pJBkD7VEtlgCURwkLWF5u+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uN0Ch6dJWqu554qFfFd7advQobZNg1gWL0A+tf5iI8GT64lHAFsR4Rb7yZOLDwwIR
+	 Wyy067ong3ccLceG42iniJiAPmdfcJOuMdLNBreRnnqs2KbM1WmrZ27N7C5Y0fPukV
+	 B3RNrpTYlktLo4DEOIaEpBednhS/xZjoaArucvjlRo6clBrcah7SrvubrL+9kSmRxx
+	 PsVcBRIdEXK6N8y8Q8+UOUg6OgpEU3BJ1vRzZwtNsuG1lteFrtUrfdvlABA2ay9k72
+	 9WmYc+Mat9ZD/BPzjF8+6Ay2VtVA0kEtPTYyFhL4+yZy9FYspXxk01bRwDZyimM5VU
+	 DO3dXFJOFOkng==
+Date: Tue, 18 Nov 2025 19:46:47 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Alexey Klimov <alexey.klimov@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 07/10] arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
+Message-ID: <d567c3fa-2e50-4ef8-944a-da4222fb96af@sirena.org.uk>
+References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
+ <20251112-gpio-shared-v4-7-b51f97b1abd8@linaro.org>
+ <dbe20642-9662-40af-a593-c1263baea73b@sirena.org.uk>
+ <CAMRc=MesD5HchG_hfvN3H5ayu8gX_OvSsZQ4UO4f27gx1rRzSA@mail.gmail.com>
+ <ab0b2e6b-7d2a-43e6-b8e7-c97cb9763798@sirena.org.uk>
+ <CAMRc=Mcafi6+kRX+9sVOLHCegdU33+omLg+aW4RqeiokymxPNQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251118184828.2621595-1-kriish.sharma2006@gmail.com>
-In-Reply-To: <20251118184828.2621595-1-kriish.sharma2006@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 18 Nov 2025 21:00:59 +0200
-X-Gm-Features: AWmQ_bnddVqXPK31tz6e9vAtlpuIK8CzEPRlTM9nkDL0aNtidlmuyu3e9_ix0wk
-Message-ID: <CAHp75VfEUL=BVVFX24hShev+LFPKNToDhpgHf4Z-C8KAG_UJmg@mail.gmail.com>
-Subject: Re: [PATCH v2] string: Add missing kernel-doc return descriptions
-To: Kriish Sharma <kriish.sharma2006@gmail.com>
-Cc: kees@kernel.org, andy@kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="aM9xPQKM74VxiVWS"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mcafi6+kRX+9sVOLHCegdU33+omLg+aW4RqeiokymxPNQ@mail.gmail.com>
+X-Cookie: Protect from light.
+
+
+--aM9xPQKM74VxiVWS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 18, 2025 at 8:50=E2=80=AFPM Kriish Sharma
-<kriish.sharma2006@gmail.com> wrote:
->
-> While running kernel-doc validation on linux-next, warnings were emitted
-> for functions in include/linux/string.h due to missing return value
-> documentation:
->
->     Warning: include/linux/string.h:375 No description found for return v=
-alue of 'kbasename'
->     Warning: include/linux/string.h:560 No description found for return v=
-alue of 'strstarts'
->
-> This patch adds the missing return value descriptions for both functions
-> and clears the related kernel-doc warnings.
+On Tue, Nov 18, 2025 at 06:27:23AM -0800, Bartosz Golaszewski wrote:
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> Oh, of_root may be NULL...
+>=20
+> Could you try the following change please?
 
-...
+That seems to work on FVP, I've also seen the same failure on other
+platforms including Orion O6 and Graviton 3 but didn't test there.
 
->   * kbasename - return the last part of a pathname.
->   *
+--aM9xPQKM74VxiVWS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This blank line can be removed, while at it, but I leave it to you and
-maintainers.
+-----BEGIN PGP SIGNATURE-----
 
->   * @path: path to extract the filename from.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmkczSYACgkQJNaLcl1U
+h9BxCQf/TvcoYIbZXiH4sSxaTvyRmoYCCaWX0P5G0lauZn1wuaRwQwiWSl6G1ls2
+EO/JYc8hnMEWsVvnMEadMf3mce8so+hpfu3pNT1dE56mvdjtKi4hsgl1t4zdBGMh
+8KBUEU1T7p1w9yffhyhVEx6gMJSdqNptauuNhdGHTbjuvUf8mlEkLt6PibGiWIIc
+Apx0tuSDZ5Ukthzt1GKXXrgkeTDHCk3vN7ePQZcmiIkRkXN1keffSzVJDMyJWIT7
+WzLnN/33WACiMLJHKD60fg6oVljFVRdyul49K1exjVRY6smlU3Ia0X599uu5I+p+
+ACqJMb+YPN8x3OV0oSUTRByRCyO7wg==
+=jedi
+-----END PGP SIGNATURE-----
 
---=20
-With Best Regards,
-Andy Shevchenko
+--aM9xPQKM74VxiVWS--
