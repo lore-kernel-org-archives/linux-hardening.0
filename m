@@ -1,160 +1,133 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FAA361DB0
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 14:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738972D23B9
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 18:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763477980; cv=none; b=VEBcpqD5z3IkgG8kYEqfshmNmznpzg+ueNOULMfOh9Kg6kLv2iY9cXxvOkAsFCqnTXFrVtpuW87eDnMstYv5A/0HCpAje2Yyxmid2T0IkqI2IYy19mXK9y/Nx8uHM9Z3SUKjlswFWKOcuGtVwDD5ZzbNDBBVWalcuQd5bkYpg7I=
+	t=1763488931; cv=none; b=W5hOGosvMK2fDIlUwbR8VNAauPilpZdypQevmJXwE3Txlt0AdfoIPZr94TfIPM6+1U+JLwhPWdBXl67m9GGRML652Z8iaDTudVgJL/a3g0l2PI3td3E0sngvnLz+p9rrRXeJaHtGWTapNGx7zzLzfltRlYed9F6RVxYgSZLKAkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763477980; c=relaxed/simple;
-	bh=yCZWg4HDLfx+KlOFPmT2qV/mW2ZLzgnFX5/2HTcppS4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r14ro7gb3MJ/6mjTOaXzu9xP0A9QRheOnxyrmU6oKxFOcnvsGR2hkWoqPC0lTkSVlZnapVamjWNLlIjlzsmP9wLBWW8pWxfG4sYCp2OA8GEOnIVtYIaTJZtFGRZcCdOS54ER18Ubpcr3T666oam8kBTlntusjiYHk+EaMLy+XHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=er7kMnPx; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1763488931; c=relaxed/simple;
+	bh=MP5zEF0mz0wb93X/rIDUcTYdHjOJaAF4mJGNz5/sX9Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kaQdsbYcklCiDJJeOvodAi5Op4ga+guEqWe5iKDX97COidw4Ag06qTBj6CuIR9hyGljtgNs8xt5PtktvzYSdCIBUZUL9iJZKakX0tGgjNp/KN9A0V3tyR1o2xjRVZKfle08qd2YOnXCcsx5K+JkhUwGmhNXeNSqMA+7nm6FzFJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LrM6KNmg; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="er7kMnPx"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4edb7c8232aso80251831cf.3
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 06:59:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LrM6KNmg"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-34372216275so6370109a91.2
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 10:02:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1763477977; x=1764082777; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6zUAnqwUQ7mMEKfAAq0Pm8CCEggD/qceLgK2oNv/WhY=;
-        b=er7kMnPxEnnCHS03TpdmRNrOEitAyOOf8yVpFrYKaO+QdD8Th6DRFAFJNqEIuj+t69
-         i3f+yxOyp798g3jbaoQjk07GnCnqdj5omEQnf9sTu3i8ICNIXiITPWnZRwTO73YgkhSw
-         G+W8mmVFGfL7fxxdcjvsiduCOzpOyNVUc7SMCU0pEkmD5vMkSmVDG45JPMxihPOMmzHM
-         OghNRBvgE/XQ1m1fHbyXTiBlLMO83ID+CXl5vDLmGpVUpJ7SOqCmcJCx0T4Z19Wx4o/3
-         lpXsu1BmgEjN4bdCvRm5QYQrK+YyCz4CdL0yMNwjN88Fw3wxnC9nYPXagRHr7e3oo8Pj
-         OZzw==
+        d=gmail.com; s=20230601; t=1763488928; x=1764093728; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RDSqI1R4vRI3ysYIo080sf0JavtMkZgMqlZ1yIgknuw=;
+        b=LrM6KNmgGwgphcxgnn+OljAbEhAXf3m4MDkHLDIksSmTPHLx3MAn+GySHiiZyqOuHM
+         5eE/7a83lvKrrzBlgAUdV9Av+O+OuB/w4CHd7ITwBE2IRDDZV7dAz5He4L4FFaLiUm/K
+         GceFt2G0QSqgCQkS8xNdLWrbgwBdj9u1pTL6Ph+ENeBzwsYwAA9kK2Z6Ohl3M3PkPQSu
+         lzouFLgBoNagWu1YiHQAn1Qmp9qkMtc2d276l88tI1rzvzJpWYgFkAr08KF+VPUq7ZUX
+         KhkgEeY609WfizfRYOwo1TQuAxPMvPp3EjPLf8Q5gpk7MoLlyJcH8Q6yB72c/p+61KLL
+         sFzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763477977; x=1764082777;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6zUAnqwUQ7mMEKfAAq0Pm8CCEggD/qceLgK2oNv/WhY=;
-        b=XIczjySw3ptH4zyveFXJ944U1RI2akZK1c049gDN2H2X0g01Oi9YhSVkGYDbMGYMpQ
-         q6U/+REt1op47BuV2zhiBGqcdy4v5/p4csHQRshOdU3QJHvjdSlrCSMQMtaUx6OfdvTR
-         do8HIn6N7oo3IZYKVOf3XK4tVIfDstREjcIrKb4Yg4iTH1aIMDXwvTnEg32LY8hq8U+2
-         756lMEAwgNrY80HePh67UDxB6YSJaFi7q8Kvqazo4saJp7+XECoEayLcbEkpRSpwNAnX
-         z4eCSS4uEoIQ0yoxAH71KP3mJiuNiBlAKDaysgKTzDP0v7sbYeVRSGBJtZeHH0vrcKPZ
-         e4rA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqPyD4vUHbF5TqPP35doPHMqXXNABkJp0A1QqGhvE0yJbjBnZCO2nWTbocsVHKWOL+YBj4t3pFcyOXULpcIHU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTxHa+VnJmUlbMPvkQazPUHWtHxhfF9EWi7/JSgcb4wEVkFfPL
-	4IOYFnRABILH+urWTGwkF/90tT71hYKLlSU6EVG92Ng/KhZ3MSgC2JxjQxFG0rrpkts=
-X-Gm-Gg: ASbGncvFAGdeH/7riT8UxaZKrYSWIR4t5HXqpboTnj8sPLzPiQQBLlzElAz1B59PVQw
-	r+KFXxzMq8evG8n0qsaC6jG1kYisRc+Mr71uBgUg5gagQJv329GXUcvryjr0xTZevppvPcuSzuS
-	FFsNQe0SJyaE+s5KGCizt0MDhEKMK9x2kdNnpsmJpXzZabG8zG5e5KgRYbJBLBNFZ5a4p1Ra+Om
-	oLG6QddOaQdhc1bABdC94plfb1ydyApVXKlDT5zkMEUrbqwnFeRfVVkTWvwNoUSnePXT2eHDuN0
-	bq0n5Igz35JdiUIB4yit+jz93THIHuxF6bbOPcSRwL0XA3FzsJyiaXoed8CtYtdILTRDEFQLUNl
-	jQYO9tEOYS7bPG5gLImrFy88YBB2szbngwP/R0OpYbzWxJZ7uYsjDv/julaMiZrn3jnbzGZX1If
-	GFXvU0m3ObPRlLxSHPVlDyRk+NA7kcfe1DeWW3nipMyUKMOcPCt9iz0C2nKFCN9tGW3SE=
-X-Google-Smtp-Source: AGHT+IFmOGfhY23WsMGsPUUjQKfSR05e4XRcukJGt61kp9ViFdOBWiVKVUUuzQ+TB82GrGuUAmTsrw==
-X-Received: by 2002:a05:622a:1a08:b0:4ee:1563:2829 with SMTP id d75a77b69052e-4ee15632a6bmr144570871cf.72.1763477977218;
-        Tue, 18 Nov 2025 06:59:37 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ee275abad5sm34184941cf.14.2025.11.18.06.59.35
+        d=1e100.net; s=20230601; t=1763488928; x=1764093728;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RDSqI1R4vRI3ysYIo080sf0JavtMkZgMqlZ1yIgknuw=;
+        b=bvym8nYofcWjIBK44FBWJqgdUuKxoEdwDqs+Z527CsNuXByXJ48R0qMya0yhPdzvI5
+         YuFb72ygbWodomS3nC9mGb5te8lD2CoHsYFWuOzewkHSwHFc8eT8Xk2hsRKrVcF8sFR3
+         LNLokmqbZC3HX9aw1xqZgVv7h2flYvnQQu2gWXS6y5TIXi2p1iNf8XylUvsxZ63V6A1U
+         j+Ecqd6wcKf6SDiKKspgkTIvgZTZgaHK+VOeGLW2ewfTE0HRgFITBnwt/vvDZTSlgSfC
+         jYT264VpEmusga4Pmii0BupNi+FUX1mJmv2k4xEWdtFFXuMYR/8LczvBxrEUqGg7/IYk
+         lJ7w==
+X-Gm-Message-State: AOJu0YygpMn6oiZa5QAWOIWPcKaz5FRG8D+kmevSoZ+gVm4LfgbdENoO
+	tconNbkJjtKAOV9LezJfzI2h2lQpzEROmLCfvONzUZMo6KHVwmsE7dyiv8QoqQ==
+X-Gm-Gg: ASbGnctKfOOWo6tVsRQcCIUMZYt+JQYaKvvI9CKGK6AEllfAX+USQB/r0XVZSpdg05y
+	zQZTddT77v894UAGuKL6J6xkHkktQppiAzoiEIvd7QxpUY2wLclDOYH/ixwcCteOxMfj3GiDTvo
+	zMJA+JLOqjpNIGHWEPme5lJ3g5C6ZflZYgjz3EWPdnEoPGGLStE674JDF5jwWjwHgKJw6NwBbR7
+	1rSG1mskVcYavOlfxDuVhpDumWMUiCA7XdWeAcDzj7qMPqvFvom247uAFUpvIiulGajM0rCQgNz
+	FBVh48FTxw3Wfp8M0lGdHIxDZ3pERw4e3342+WTIKfmgAUo6mFXleKeAqEx113PcVPVBPwJCBOX
+	m+f1hpFUaRfuImlZT731j4ZevanjDknRif8tt/DTCfaJbgMle0vgvP+deNa8Y/CeJLW4Xrqy9d3
+	LukzZB787janTsjQ/IYAWZo4hKloSPqywkkp9eTNL9KVjwWBCa
+X-Google-Smtp-Source: AGHT+IETQQ/I8WB37aKOwJZ2GzuSvVlMT7g4UMuSCuKxzvCr4hGmo8cU/iNziuRs02ZXg1pvwnn/Pw==
+X-Received: by 2002:a17:90b:2d05:b0:32e:a10b:ce33 with SMTP id 98e67ed59e1d1-343fa6326e0mr18986629a91.21.1763488928250;
+        Tue, 18 Nov 2025 10:02:08 -0800 (PST)
+Received: from crl-3.node2.local ([125.63.65.162])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-345b053038fsm1349412a91.14.2025.11.18.10.02.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 06:59:36 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vLNB9-00000000NQI-239J;
-	Tue, 18 Nov 2025 10:59:35 -0400
-Date: Tue, 18 Nov 2025 10:59:35 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Cc: Alex Williamson <alex@shazbot.org>, Leon Romanovsky <leon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>
-Subject: Re: [PATCH v7 00/11] vfio/pci: Allow MMIO regions to be exported
- through dma-buf
-Message-ID: <20251118145935.GI17968@ziepe.ca>
-References: <20251106-dmabuf-vfio-v7-0-2503bf390699@nvidia.com>
- <20251110134218.5e399b0f.alex@shazbot.org>
- <da399efa-ad5b-4bdc-964d-b6cc4a4fc55d@amd.com>
- <20251117083620.4660081a.alex@shazbot.org>
- <20251117171619.GB17968@ziepe.ca>
- <3599880e-5b50-4bad-949b-0d3b1fb25f3f@amd.com>
+        Tue, 18 Nov 2025 10:02:07 -0800 (PST)
+From: Kriish Sharma <kriish.sharma2006@gmail.com>
+To: kees@kernel.org,
+	andy@kernel.org
+Cc: linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kriish Sharma <kriish.sharma2006@gmail.com>
+Subject: [PATCH] string: Fix missing kernel-doc descriptions in string.h
+Date: Tue, 18 Nov 2025 18:00:08 +0000
+Message-Id: <20251118180008.2620929-1-kriish.sharma2006@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3599880e-5b50-4bad-949b-0d3b1fb25f3f@amd.com>
 
-On Tue, Nov 18, 2025 at 03:37:41PM +0100, Christian König wrote:
+While running kernel-doc validation, several warnings were emitted for
+functions in include/linux/string.h due to missing return value
+documentation or missing parameter descriptions:
 
-> Skimming over it my only concern is patch #6 which adds the helper
-> to the common DMA-buf code and that in turn would need an in-deep
-> review which I currently don't have time for.
+    Warning: include/linux/string.h:375 No description found for return value of 'kbasename'
+    Warning: include/linux/string.h:560 No description found for return value of 'strstarts'
+    WARNING: include/linux/string.h:573 function parameter 'str' not described in 'strends'
+    WARNING: include/linux/string.h:573 function parameter 'suffix' not described in 'strends'
 
-I think you should trust Leon on the implementation. He knows what he
-is doing here when it comes to the DMA API, since he made all the
-patches so far to use it.
+This patch adds the missing "Returns:" sections for kbasename() and
+strstarts(), and provides parameter descriptions for strends().
+These changes resolve all kernel-doc warnings in this header.
 
-Please consider just reviewing the exported function signature:
+Signed-off-by: Kriish Sharma <kriish.sharma2006@gmail.com>
+---
+ include/linux/string.h | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-+struct sg_table *dma_buf_map(struct dma_buf_attachment *attach,
-+			     struct p2pdma_provider *provider,
-+			     struct dma_buf_phys_vec *phys_vec,
-+			     size_t nr_ranges, size_t size,
-+			     enum dma_data_direction dir)
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 929d05d1247c..3597e2801463 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -371,6 +371,10 @@ static inline void memzero_explicit(void *s, size_t count)
+  * kbasename - return the last part of a pathname.
+  *
+  * @path: path to extract the filename from.
++ *
++ * Returns:
++ * Pointer to the filename portion inside @path. If no '/' exists,
++ * returns @path unchanged.
+  */
+ static inline const char *kbasename(const char *path)
+ {
+@@ -556,6 +560,9 @@ static __always_inline size_t str_has_prefix(const char *str, const char *prefix
+  * strstarts - does @str start with @prefix?
+  * @str: string to examine
+  * @prefix: prefix to look for.
++ *
++ * Returns:
++ * True if @str begins with @prefix. False in all other cases.
+  */
+ static inline bool strstarts(const char *str, const char *prefix)
+ {
+@@ -564,8 +571,8 @@ static inline bool strstarts(const char *str, const char *prefix)
+ 
+ /**
+  * strends - Check if a string ends with another string.
+- * @str - NULL-terminated string to check against @suffix
+- * @suffix - NULL-terminated string defining the suffix to look for in @str
++ * @str: NULL-terminated string to check against @suffix
++ * @suffix: NULL-terminated string defining the suffix to look for in @str
+  *
+  * Returns:
+  * True if @str ends with @suffix. False in all other cases.
+-- 
+2.34.1
 
-If issues are discovered inside the implementation later on then Leon
-will be available to fix them.
-
-The code is intended to implement that basic function signature which
-can be thought of as dma_map_resource() done correctly for PCI
-devices.
-
-> So if we could keep those inside the VFIO driver for now I think
-> that should be good to go.
-
-That was several versions ago. Christoph is very strongly against
-this, he wants to see the new DMA API used by wrapper functions in
-subsytems related to how the subsystem's data structures work rather
-than proliferate into drivers. I agree with this, so we need to go in
-this direction.
-
-Other options, like put the code in the DMA API area, are also not
-going to be agreed because we really don't want this weird DMABUF use
-of no-struct page scatterlist to leak out beyond DMABUF.
-
-So, this is the start of a DMA mapping helper API for DMABUF related
-data structures, it introduces a simplified mapping entry point for
-drivers that only use MMIO.
-
-As I said I expect this API surface to progress as other DRM drivers
-are updated (hopefully DRM community will take on this), but there is
-nothing wrong with starting by having a basic entry point for a narrow
-use case.
-
-Thanks,
-Jason
