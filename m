@@ -1,126 +1,102 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0355F331A7E
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 10:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AF93314B9
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 10:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763460269; cv=none; b=MC1sfOVj2RhvKwWmWnT0LY4L1gBIbZUnFnUWqa/d/DPg2RrRVsJ+zwHIOiOFVqmnd7JCPy0DwmV5me/qGcXWSZbIg6E1ooeOhYzt2uDSFZ8N6QJApmVOAHwwqAixDBhrZtsTsXi8i3fIS5W+hD+QBD1A4GCFnjNChLIoAKKM5Nc=
+	t=1763460576; cv=none; b=J/YzZwcmt85ZXUWnWon9e8nlQo6y0uzX0PBaHsx5OibfYYB/55XGbIOEnK0SRo/f7lOSdJksw++ogjHIBICv2u8x/HgxWmO4KLDqhtF6vMuXsQyCKVXEMzgBSndvqzGoXuWQ8dv8boAOxqz6HPdwO5V+ir9T6LrHob/OPhVayKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763460269; c=relaxed/simple;
-	bh=rrzfcCvaja20NV3IfrF9uGjJwXmplFICHOFlmH1KiRo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Coubpr3rM39ngPyMsW8LwtHMyQ6h3ezp9sq5HfPvzryRtwryBTSunY56JO7adMmVeNxSBmLMtp/1Bzndk8qSAXr35WUCwMF9CSMWMUncvfo52LZE+DtivcfX6VQRe8ZBT+/CkhGOtV+BwDnfP07P7r32TYc/9Z7ohZ4AEhsPlxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=M29Pk756; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1763460576; c=relaxed/simple;
+	bh=SbPyduLoPzx9opbtMiJIjyE1+37l/+vY2Yi4LhP7law=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aotzfbqgAe1XRBQ1KWUnz9k4iucbMOg379HYNvORX19H88/RIhjwc3AmAvJRjo93Khjia1Z2emg9n9gcnTPW0z6ai9b7JWqA2wjzwyjW+/j4E1m0O/OqPg6idEYjBUNgxoNtte0TF+TKHvxyel/B17GXpUSLQX9dxw3/HoWk1uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BrmpGfG0; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="M29Pk756"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-429c8632fcbso3734978f8f.1
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 02:04:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BrmpGfG0"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b472842981fso659693066b.1
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 02:09:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763460266; x=1764065066; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6+f2V3N75t4meyL8QcQgkaDw7LMhWNEEXGJ+ed7Ez9k=;
-        b=M29Pk756eFRg070pAF+8xIwXfvAvP9AikoZScYvyP93MM/GRDosZpXIgIXm6IlLxtp
-         yJYodf6yQ/6z2zH5Ac8StUJspbAoBIbDFHeeUsevcRfSB0ar3KkcAi67UCdK3OCGNSbC
-         +qBsSUp2W6Um7YGyzYoPAvOOC7N84HqkejbAnHir8GqwVaBjPZ3jEYWazhCLK/IT6z+Y
-         /xBQmz3Syer7YJrUWjTBool5pIATRxgJY8Ou2kdH2Fgz6alZKBjEc1jacBUcYPDLQx/p
-         wqcRqkaxEXNQXm7PJHwIFeMVoDkPLy/IRs4CUK3MEJ611e/wFwXTG9FsDDMI/buisIYX
-         t6Rw==
+        d=gmail.com; s=20230601; t=1763460563; x=1764065363; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=99+L/a6BzGP2qjLygPVazLcaKWQLM0CEl5yv6VmRsaI=;
+        b=BrmpGfG09+KrBTCLFrA96vbj2aFmLFWgtHg8bWodcproATifcjnNuVP3C6ZhQgG2oS
+         jhifBYrlsSMdwY/AN89jZ9bm/MVr4QvvEVYBX/GJwCN1+kNeaw5yU4zU8ZRJC6JzQEA8
+         CThKMnhix+VMIK9Ayj+6kGsHMF7gtBael/biB1VPnAXo2516PUTf3wkksR1Glo9e70sj
+         XPwHlwNV2Km/6Ka//aoJO4qR51f0JuMDXjuX/2O3qQazxmko4ilYh9MD2P9U1ghNFjoO
+         U7JbQdKdH0jQqdPqdjicZdRwEkmeRTAOiT9SXiW/LmfS8OvT72WszrDIpv7dcFlmyrYu
+         qnNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763460266; x=1764065066;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6+f2V3N75t4meyL8QcQgkaDw7LMhWNEEXGJ+ed7Ez9k=;
-        b=oC9JQcc82EtgE511RlqnNFkjs2XoBKw/F2G0izUdSnDGWoQ5rxb+cNdCYTJh3cwxGF
-         lfJpTK4py9ls86XJrpQ+q86hsIgcvIzisEzBeZDn/RA0ZfifYJBrXx/jIj47MrK+lG29
-         CyQGN2VrtNb5E0sa5aT7ynL4w9hu1x0fQy8IwIQP1OU/BZNZw0xItCPx6xemtCL9Nu2R
-         V0+lkUV0EVHyC68LJRiUPsNI46cpDRQ7B9irRicNXEetYFeAqT/ZGl3Gqlvp3SWfmZiC
-         YDyf8xf+lx9JhjZArZcuF6o+FhoxI5qLcnQ+8J1eR7kSTXoMOxeQCsAFCKGoXbILPO2P
-         dSag==
-X-Gm-Message-State: AOJu0YyCiG1Re47pzu7z1ZrfpFCLYUHs4AH0F+WhyZ65jcqVHr54YSAD
-	DeSBWza9zyPCJd1nmgaTAraRLxTY50tCmeQaK+T0MKElIEbwRd6yxsjXSk+7vKohsRw=
-X-Gm-Gg: ASbGncuKIOOJqAP3lDSdpOwqViiyYIQJ7zssvwjVHADX5nMw1ONBMsOtzTGOA9i5GC/
-	FWO4qz8slVP//t4uMGoBNs/cIqS+6BpXlCP7OHnLq17w0eSoSuyHkJR7B7QSO+xHgE0zwBAfGq+
-	sW+W0hiXKxIZI5965K8FE30EXFDE0BtPK+pzirsqPpK5xdZ5KIeEkXaRmdwgaHNJQX0joydg3mF
-	n7QWqn9ECg0l9hfLiqN1K1SdIbwez34eZPcwqLtVxkXDpxiTyI0iK8+tj39q3eYNDcJJ40R7q/Z
-	KXuLOWQz0uK30nY7YCNs4/laoOr3vdCd1eSjoYzgdGXzPx2CzK2l9ImkYwc9AO+DPQ8LRWiwWKk
-	w9tCvC5nTQDcnBlwIdKPjNKdd9SYG3muLlR6MrQi+E56uHXdckKpZm3fI/JK4FAdfoqqQUFAZHS
-	aMtPY=
-X-Google-Smtp-Source: AGHT+IHz8mdQWqTyhmMB0ZG+8L6TVE19ty06ZAmXzeUhPHLnnpUiicbAZq6zHZQREbvQTz8dLW8DeA==
-X-Received: by 2002:a05:6000:420a:b0:429:d725:410c with SMTP id ffacd0b85a97d-42b59373658mr14506290f8f.44.1763460266248;
-        Tue, 18 Nov 2025 02:04:26 -0800 (PST)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:c283:3472:316:988d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e7aea7sm30999781f8f.1.2025.11.18.02.04.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 02:04:24 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 18 Nov 2025 11:04:04 +0100
-Subject: [PATCH 2/2] string: use __attribute__((nonnull())) in strends()
+        d=1e100.net; s=20230601; t=1763460563; x=1764065363;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=99+L/a6BzGP2qjLygPVazLcaKWQLM0CEl5yv6VmRsaI=;
+        b=M0AfJlYIRbGTofeh2HdDN6VmjSN4LzgcUtxF8wz2W1magwp9+rHk0hDz/mQPyPRDjt
+         ttc6s9mfYkkDgEcaLjZNEMViMmrar4c2JDA2krDifzSve0WwrxXV3GccdPdYByrLuGic
+         U0u2BZ/KykozyxoouERmOrXg1NHomqlEpyi+BzhPH4J9whwE3lpN4FKRXDB6YWXKpCtL
+         Ocg+cjqdDbM3NNm1+x/YhcJgmx8EzykYxGj63o2DJ3/F+rAJVChuNw0FHB+THDBP84Rp
+         AyGIXGSs4Z1DTUjyz3A+k0PKYKiq1hAiLqF12tjUg7L4pJuN3YPGbmrL+u/RGwMfR0+F
+         Dyyg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZDi6YtkhWjbFXsdLUTyvHCdG6RZQ2feYTS+2uSlludn93M9rFHJP0zdTg4m8V/dVhqbr2jlXU1JJ3vF+FUT0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysHoQWOptWRieCJ4B3qFkrQGA2xoyCrjLC7Ru00XUuQwPoNFVg
+	JShZnGUlXfwCXkSEKY6CTRcoVJdDRqHJMYxKFb4Lt2aLbNZc0MQHiYYI+i41NG9Onuut4bvzcvr
+	EaECK7elt6Qiyq7OJ2KHTjcMTopvlruc=
+X-Gm-Gg: ASbGncu0Q1/e5DYFdexj1cY35ejolXri9Z5ixBunVYBjQ3MaNsTUTBMxS/0xM92WEvv
+	MMQD2u23OMxZqc0kXJWbbfwprLAfkTHvt8ApzQmrkQt38ARq+uPrB4IwvSUrv9qRkmAAGOnKHun
+	l6oSt3UQ59NCeOrqTnWNgrG8OOVUBbrwJ1bvugwLmDa2o4KEmNBq9St8er/Ai14Weq9Sa0qa+vn
+	PVuQlpE31H5rGwKVE/X25UUul0CtUUepDZADN055skxL9QnMDb5mQQIJnrTHlBKl9NvUmzA7VMe
+	xSNeWhFeaC7hQOk+jmtu6PrGjADEm3q7IXHupipJ7F2OkrB8IYobGncEvAHk
+X-Google-Smtp-Source: AGHT+IHUzw6qWS2C+3JvSU6O95qqOlVKzGc5j8iqiIqr+BM+FKE5ftZJslXrugBbNo1/K7Q1yO4mVggA72cjjqNpJYo=
+X-Received: by 2002:a17:907:1c28:b0:b73:8f33:eee6 with SMTP id
+ a640c23a62f3a-b738f4336b3mr923645366b.23.1763460563397; Tue, 18 Nov 2025
+ 02:09:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251118-strends-follow-up-v1-2-d3f8ef750f59@linaro.org>
 References: <20251118-strends-follow-up-v1-0-d3f8ef750f59@linaro.org>
 In-Reply-To: <20251118-strends-follow-up-v1-0-d3f8ef750f59@linaro.org>
-To: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=946;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=sTUv/WTYwbSxtxmj4w6EABSPn9wDbZi3OeCAMwVKu+w=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpHESlaA5oQ1dBdh2HD7p0M4YzE5XmBxTtviBLA
- nPqkqgcqJmJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaRxEpQAKCRAFnS7L/zaE
- w2btD/wMFCNoXpG1HtZ45QSrpUnqTtWDLvAq+YMa8tbU2PO0Op1Z2H3K3V0Hi+u+5R8jU7RBH1D
- ckaCf2aWPQKb7fMb3wH5ox9BaGoY2tYSibDEaOv6J63EJYj0BzdaMeu2NISqYxlHRsHMDyNKST2
- VPmSh8WEY6DoHHWlNlS84SQ/al+LyOXlLOZ9L5hGVru9edAwE4+tAW2b5Pa/Uxpk0PaeAY1d3pL
- wbq8Dj0At6TgqnTRVxC9M5LQlwh/NCEDSa+Ji4MajNHm7k1bm9s/5aW7ubYFoXtpVS1/PZ/TL5L
- xa5oJYW0AQRtsrJsOerlEzAHsejxHHqYzY+Pk0p6lKrBvnQ1LDzhHHDqkiY3Q1mn4WdYupUjGJF
- 1WTgyUMZBldyF48vbsaVyL1o6TcwAAguMA2qFzHzKHpb5JnUmW3cjESzxnj6BRmMe5yW2nq+nI5
- fdXU1k0Kf8wVXwtEa0weejEj/BknlKi0rP2ZtKyHJUAg02yEe4la3+2IzPes0/kxynTOj2DM9T6
- crpnHlFthZLn++ulnCvC3ltA34v7Y3kk+XUDToY1pOpwTPzsHK77vQ97iUPNHculyP5+J94TPqa
- TgjMBsdS91PXkL7WUEpZrt1Lw80s/zGLt/7bdyghxsxHDXJ2Elib7BkSovdGuURZHA77QaShZAY
- Sf11aFe477B80pQ==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 18 Nov 2025 12:08:46 +0200
+X-Gm-Features: AWmQ_bn41l6WVTfFulu3CXwZPQ0PycjfmB7LHfrGBjV0GmD9Uk123GrjcR0rLv4
+Message-ID: <CAHp75VfhQ-pv5J-WAaTz+mRu8Yp4JhB5CxNxDPBMaoaOVJBdXA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] string: strends() follow-ups
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Nov 18, 2025 at 12:04=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 
-The arguments of strends() must not be NULL so annotate the function
-with the nonnull attribute.
+> A couple follow-up changes to the new strends() string helper. This
+> needs to go through the GPIO tree as this is where the strends()
+> currently is.
 
-Suggested-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- include/linux/string.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+It appears that due to some local issue my messages from the last 8
+days disappeared and seemed to never be delivered. I tried to review
+your v4 again and I have comments on this and patch 3. For the
+strends() I proposed to get rid of strlen() calls by
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 69e9256592f87e446d6f0be5034056aa7d0b78b0..0266dbdaa4cde7a388f1c1d5e8755d7f00335e42 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -570,7 +570,8 @@ static inline bool strstarts(const char *str, const char *prefix)
-  * Returns:
-  * True if @str ends with @suffix. False in all other cases.
-  */
--static inline bool strends(const char *str, const char *suffix)
-+static inline bool __attribute__((nonnull(1, 2)))
-+strends(const char *str, const char *suffix)
- {
- 	unsigned int str_len = strlen(str), suffix_len = strlen(suffix);
- 
+  char *p;
 
--- 
-2.51.0
+  p =3D strrchr(str, suffix[0[);
+  if (!p)
+    return false;
 
+  return strcmp(p, suffix) =3D=3D 0;
+
+
+--
+With Best Regards,
+Andy Shevchenko
