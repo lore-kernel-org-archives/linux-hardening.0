@@ -1,486 +1,227 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1031D88AC
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 04:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763440628; cv=none; b=VYZchzDcCa9fbd9oNlSpASP70AZDXxuRkEQEBr5satP4Hf24lePO3YspuTDtRqWE9LkkWzem4blLpGmZTSLt2aFMvnjsMPdKCV7OB/7YYGdyyyVB6tb3H4QtWuw2QRzcOoXJ00bm/chQbWmKcRgMElDYcsS3GCsvtJAw4yjdNoE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763440628; c=relaxed/simple;
-	bh=G67+YTjw0sQnL+oACtYynU1IHOogg5MDw5y6kZ5V6Qk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LfvEUSQLsjtjhJVoXpDU7/utOlBy9FRKncbKHa1jCFkz0f0AhD7e33Pukl5vzY6OMo4EZiWgrnGY/1chZAUj++sMPmGC4NKmDs89eUX0s1/42F7Vulwq4PTlMMgGqhAxzhb3rkX0BxlU7wzukW2u42QjupZWGj0+uItWBs7jvYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=M+00WVp1; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02062ECE9E;
+	Tue, 18 Nov 2025 07:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763449871; cv=fail; b=dOyyHnByN/IQmRgPXvjG0oRLcUjKvQDADFNupftJG2FdPi6LZRzIIVBLfgz4r8cqVnZmB8z71gzN7P7ysK2kTVsJeaA35OzmlLeYclxXZZBO8tXNY8ewf40yTMzOSi56fpnBItijFhtuRwPMe+RknZLZ9lVym+ZCJj+DjT6JEUA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763449871; c=relaxed/simple;
+	bh=Ac5FAQw0UUZSR0+QhqXokMpCYxXJnXxzLeafKx08K9E=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=tUirvnsJFDLGA8N1ebR/itWFHoRErHaXfkQxdXbjPAF6XHyLZhIvrmgLdA+sbg/soEnfPOF+yhkmRjYzj+pAeNttJNJeYCrARxEGK1xwHIt7f/OTVmVvt6fQYfbKowfxlE8mjgSLFBj41gDBg6I3TQHplTnwk2FstDZOqbwxJPI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=byT2o3Ph; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="M+00WVp1"
-Received: from eig-obgw-5001b.ext.cloudfilter.net ([10.0.29.181])
-	by cmsmtp with ESMTPS
-	id L9uovTGMAZx2iLDSjveNel; Tue, 18 Nov 2025 04:37:05 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id LDSivMBOqhv1iLDSjvE8lT; Tue, 18 Nov 2025 04:37:05 +0000
-X-Authority-Analysis: v=2.4 cv=A+xsP7WG c=1 sm=1 tr=0 ts=691bf7f1
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=4DtsFWJC70/ZxGj2xnZlig==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=HhfkYooplKnVZcu9EkYA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=X9cu/yQPTE6JW96XJYHNZ2eicJLxbGVq7vGSolX653w=; b=M+00WVp1KjspPaaQaVW2oOjGNc
-	YZa2jwyCBuMYZWTUI1f47KCF+v42Os2EjSDalbdLHYa4TVDSQKSsKAsxtJeSmnZxzkJU2E7oaLgcv
-	nIvHsoIdipsozyl4GhIxjws6s2i3YBhQAInnfWxylSN7o9+Ko6R/7GqP8olwon+U76/dhdPmLuNzw
-	+aDuVq8NLZlwCXMV/QkyZX+YLEM0EX1/KM+pKpkaqBzO+4dlLAjF3Flt/zcgww4+GW/lKiByVbU/1
-	bD/NSQkQe7KNXpJuKqIBwSJf9BAKo1IsrIQ9jfNviZH439fnFJD7sR89BhUd3aQLpCFCmQdCWBcKt
-	DGVqrQ8g==;
-Received: from softbank126126126075.bbtec.net ([126.126.126.75]:49808 helo=[10.221.86.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vLDSh-00000001mw4-2tNr;
-	Mon, 17 Nov 2025 22:37:04 -0600
-Message-ID: <bf9c2ceb-f80f-4fea-999d-4f46b2369721@embeddedor.com>
-Date: Tue, 18 Nov 2025 13:36:41 +0900
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="byT2o3Ph"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763449870; x=1794985870;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Ac5FAQw0UUZSR0+QhqXokMpCYxXJnXxzLeafKx08K9E=;
+  b=byT2o3PhD2lLax+uIQImtdj1OV2I9ghDIXL1jCWNAVwyXHUZ7qxoQCAx
+   yBwa1cASLSdRynmysG37UyAeaerEL0qIqK0fwYU5Jv1wHWYXYPmxDlmWe
+   BVFF0bmrNx2u78bWs+noLJojrJhjPBSoeVSZE2THKyIZzjGED9jwYbhob
+   8qo56hpYmGFUQByi+cpOnTmC2JRgc6TvdYuyBm7vTfxIXAi+GZQzifR5u
+   pFTCSZCl8uSb9AkBXOanPaV+MV/+5KvSGIHKsCIKFtaBkuGhI1NKGPiTN
+   S+7L6g1Y22FWrFlHsaaQaVUpB7lKwQrySgdCLC8/Cl2U2hvZe5q5HYY+o
+   A==;
+X-CSE-ConnectionGUID: n5Wf+ACzSnm7x0VbP159wg==
+X-CSE-MsgGUID: sgnJV5+5SnK0NTovAx+gRw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="88113968"
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="88113968"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 23:11:08 -0800
+X-CSE-ConnectionGUID: JHLj8fDFRyO2yg1jyTN9qg==
+X-CSE-MsgGUID: ATJYK7cWTg6Vx/XnTyGflQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="189942573"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 23:11:07 -0800
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Mon, 17 Nov 2025 23:11:06 -0800
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27 via Frontend Transport; Mon, 17 Nov 2025 23:11:06 -0800
+Received: from CH4PR04CU002.outbound.protection.outlook.com (40.107.201.67) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Mon, 17 Nov 2025 23:11:06 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CIICT8rFi4hrybfQrUc2McrsgL0Ngju3k5vL2rHmYeFk6AEZJu+hdWjbkRtOKFgERTGRcs+1wEbrHQtHFSCSk19Gp+S60TaXjPsGZnq31NaTlrmRHpfHce44quiAxXLS2V+kaUWJeJr+L5jDEHtpVuic+t50bc02bg+E0SV00AJz1w2L+/u9mvdnUZLtx+n7DLXzc2vrLaJm3bE+WUXbnvJo53Kn3EvVBq69SNkxdvfpU/O5CqUt7lJa8xOV/0LaQrRU0iV0+m2K5flr4UqLV/iJ+vWWm9CWLsANdszNDxQde1fFUrVdcGMIxpRbduEjzmSGYac5KRutaSY514kaxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ac5FAQw0UUZSR0+QhqXokMpCYxXJnXxzLeafKx08K9E=;
+ b=Cpc/lLCVz50BSTL6JJZ4IUQE0sbG/8AoXIBXoA3ccfgkTI9figwmX7fvtRu92XFAKq/aFhX0U3WWCRkBXGSnJrv70Yi2l3ZIClm2O58vjs1O9BoImmX96jaZvgUNpb45GKiwSFCRyouzSYwWl3dOdN4fLwsFP8dnuEpvrS+6PKADOCzQUUskONNoTKNILGV0JJpj8ks7SYsC97ULNqLHH5/806TZnmANv+eSYRhlkFjDSglCdQ1XLQmmfiOd0eR3YH0xzrA8JLeDP3Zel82g9Hmj3dkJVRiQ2XadNVJiMoJ6rfrKGkGFInuG1AyW7PQec0l5RhosEBlp7pxhIwFXwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by CO1PR11MB4980.namprd11.prod.outlook.com (2603:10b6:303:98::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.17; Tue, 18 Nov
+ 2025 07:10:59 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1%5]) with mapi id 15.20.9343.009; Tue, 18 Nov 2025
+ 07:10:58 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>, "Robin
+ Murphy" <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon
+	<will@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, "Jason
+ Gunthorpe" <jgg@ziepe.ca>, Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,
+	=?utf-8?B?Q2hyaXN0aWFuIEvDtm5pZw==?= <christian.koenig@amd.com>, Kees Cook
+	<kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, "Ankit
+ Agrawal" <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>, "Shameer
+ Kolothum" <skolothumtho@nvidia.com>, Alex Williamson <alex@shazbot.org>
+CC: Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-mm@kvack.org"
+	<linux-mm@kvack.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-media@vger.kernel.org"
+	<linux-media@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "linaro-mm-sig@lists.linaro.org"
+	<linaro-mm-sig@lists.linaro.org>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, "Kasireddy, Vivek"
+	<vivek.kasireddy@intel.com>, Alex Mastro <amastro@fb.com>, Nicolin Chen
+	<nicolinc@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>
+Subject: RE: [PATCH v8 07/11] vfio: Export vfio device get and put
+ registration helpers
+Thread-Topic: [PATCH v8 07/11] vfio: Export vfio device get and put
+ registration helpers
+Thread-Index: AQHcUvHChFxcVdm3dUei4Y3GBAL1Y7T4Dttw
+Date: Tue, 18 Nov 2025 07:10:58 +0000
+Message-ID: <BN9PR11MB52764795D6B6405785A2C5228CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
+ <20251111-dmabuf-vfio-v8-7-fd9aa5df478f@nvidia.com>
+In-Reply-To: <20251111-dmabuf-vfio-v8-7-fd9aa5df478f@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|CO1PR11MB4980:EE_
+x-ms-office365-filtering-correlation-id: 81d4fa21-5ddb-4175-fa34-08de26719f92
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|7416014|366016|1800799024|376014|38070700021|921020;
+x-microsoft-antispam-message-info: =?utf-8?B?Nk13aDBzamRCenp5TDNxbFpTSEZZN2NrNFY5ekZXNWNreHZ3Wkd1b2lQVGF3?=
+ =?utf-8?B?QmU5T3JiZVFnNEk4TEJKVDdlN0pKVmp6TkxMbkJPOEZSSEJac3ZOdTUwaFNT?=
+ =?utf-8?B?TnplbDBwMU8vWm5wZFFveWc4K1cyV2QzREovWGJlQXljZ05nNVRJOUhWZzVy?=
+ =?utf-8?B?RFd6QWM5R0pDZk51VjdPN2RGTWJZYXgyY0xPMnRrVXJhWW9FYm5DQkRaM0xY?=
+ =?utf-8?B?M01PWHBtcDVuc0NWUUNqWHRSTGZBdXhVRUpGT1dIZEtHUVgwL3hxM2hWWFVh?=
+ =?utf-8?B?dkhTOWpjRzdRVG1mOVk5YXpkMEFtM2paZjlEVmc0bEdyNnFMN2IyWmZUcmUv?=
+ =?utf-8?B?M2J5TG9FTFFTNTQ2YWhrUUR2MzZ0bFVkeXhCMm9PZkZ6ZTNCTE02aENMWXU4?=
+ =?utf-8?B?WVJkaXZQc3ZPZ29QdlRvWkRRRDNOOHpPaWF4Nm8zc1VzaGs1dm5VWlJ4YlhW?=
+ =?utf-8?B?ZFhOTitPZ29RdURvTWhzVWFvemc1SEhHd2lXZFVRZE5xaUdicWdQRmRyK2NL?=
+ =?utf-8?B?RHhSOURPa3BQa2dMVUk0YTNrTFF1TkhJMHhBVzlTN1N2ZlpmYzRBNjBzNExL?=
+ =?utf-8?B?UFlFbHdzbXR4NGhkWGZ2YkpMRjF1MUpBVlNFcnZCSU5TcjZGRUZEWG9jWXV0?=
+ =?utf-8?B?UXFqLzZlMjFjL3VTMEZoM3JIWkZzMFF4M3lrVm5ONWJadjFObHFjcVVlOFlj?=
+ =?utf-8?B?cDlBa0t6aFBFMjE5cWdEMExmV0RPYm9JMWxUUDdnUkRQZS9EZlg0K0VYWnFo?=
+ =?utf-8?B?MmpnL1RiVDhNVWR3eWFCb2lJVDI2ekl5ajBhb0J1NlA1SmpncHZCejhEUHp6?=
+ =?utf-8?B?YjFEK0dLSkMwVmRoY0lmZG9wYUZ0Wmx1amJNTHhrZDh5VG5udUkrcGNIZ1p2?=
+ =?utf-8?B?RHErZ1VNcUpXamZUa0NXWDZia0M5eEJ6enB6cklZd2JDQjFkbW5Na0tjVG5L?=
+ =?utf-8?B?QzRCK2NJbGhmOWpDYm80S0hoNXo0YVd4cmI0eHM4ZHFFN1NmNmZJTjZrZXBS?=
+ =?utf-8?B?VklmU0doUzQ2Y0tIemp4QlBxUk02RTdJMGE0d29wVmhrSzdDUUtGTHpGdHQ2?=
+ =?utf-8?B?QnRma2J1bUVmVlpZRzl6RElKaHpMc1AvK0wySkdKclM0akVlUTB5Y21nb1N3?=
+ =?utf-8?B?RHlHOG9lRWNDUGZieC9xYUx2aTFVbXY2Tms0MDA3RUZMOGNKNGlqME0yUUxM?=
+ =?utf-8?B?L3lsRjQxbzhXeiszdStkZWxMeVhmdFR3dzdDRGhZM1hUYXlIbHQrdkZFbEhH?=
+ =?utf-8?B?RjNOVk5hZEg2ODB5YnF4dHEzUllMT3EvcXFkM1Z5OGkzd2lONG15MUY2bEtx?=
+ =?utf-8?B?R2w4dVdyRHZDZHNNNXFadWlTWVhFTnNia255dHYyenNGbjkreCt0cG1GY3N3?=
+ =?utf-8?B?cDYwNXRzamtqcmRJdGF4VFluWm1SMHR3dHc5UkQ0NTRSOXFZam05MWhDeDJC?=
+ =?utf-8?B?ckFVRmh0TFJiZWZpamgwWTZhWHpmUnpuekJlbHFSR3NsVjRycFZuQXpMMVBz?=
+ =?utf-8?B?cTljRnd4ODhhaWVVVkpUVzFEYThCQlBwcVBJekllNVFEVS9IcUlVWWt2MDI3?=
+ =?utf-8?B?anVRcXhsZW5xSHdNUGhQT0RlVnA1MGRzREdxVjJTblk0eG1qTXZHMUI0T1Jh?=
+ =?utf-8?B?WGVwVTA4WDUvajZxNFR5Wk5DNnFYcVgxemFlYjVyMjlQRk1lSmNDWWMxYzRT?=
+ =?utf-8?B?SU9pdnBXcFY5cU1rdUlOOVdrY0FNSUZYR1BQaDFWSy9SKzVCUStKc1JTMGUx?=
+ =?utf-8?B?SDNocWhDSHNiMytmVjh3TURlSlAyenJzZXYrSzJmbEdkS1VrTnZxN05nZTBJ?=
+ =?utf-8?B?cWRTYVF4aDBkRXJ4WVhSWFptSjZ6M2pFNFU2bVk1OHk5Ync1V0dUKzFvWDJt?=
+ =?utf-8?B?UWpGVTJOWFIyYVU4UEQ3RDNaNlJSeXBWNDNSK284MksxRGEwSlF6Zlk5T25K?=
+ =?utf-8?B?UExibFRYaWlsUHBYWlBncGtTcnFhMFloWXpIL0UvSzZKalM3d0NubURvdmY2?=
+ =?utf-8?B?cnovS281V2svdC9yUW9aTThHYWZCVWxGMHFOUzFDbXE1Nnp0NU5DNXlPZ05U?=
+ =?utf-8?B?TXdBU0F5ZnVlcGRKT0ZBYlJnZkJLTEVsMUtBZz09?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014)(38070700021)(921020);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cXZpcE9oeTEzTjQxSlgwNHdQY3FQQU5ZMW0yRy9nUEt5WTBVeWZWbC83Wnp0?=
+ =?utf-8?B?bzZ4ZnVRRVM2VWpGMzhXakJDTzBwNmFrZVhmZjR1UDNxa25HUGlYZHNqTWtN?=
+ =?utf-8?B?MXd1NjNoTkdKTFY0Qm5kRU9zaCt5aTBDN0VOQ3lGeEtRbGI1d2VWVjgreWlR?=
+ =?utf-8?B?QUhUVGdwM2hCdlpOYXoyeXlVVTZuUHI3NS9GQ203cU9kbm5tcUpXcXBjL1Vp?=
+ =?utf-8?B?N2lvQ3RORUVPbVFUcHFzeW4rclJZdVVmbVRZL1VhOGtDcklTcEdNQWdtQzQv?=
+ =?utf-8?B?NmgzWmM4WTd4aEhMMmpJazM4cVR2VjdIUGZYend0WTFybzRpQk9vbEhPWWVN?=
+ =?utf-8?B?VE40ZVllZFFBbUt0U0dyT0YyV1o5bVBvTDNKaHFRajFiVno2WGFPVXZkdk9C?=
+ =?utf-8?B?MXZzQ1BSc1RIaHFRU0VhUG1mSEYxbW14SjVQYUtzeEhtWW8zdUFwL2xqajZv?=
+ =?utf-8?B?bW45cG81dlVhMi9HZkd3cCtRMFk1QnpMK2dQeEo3Ky8yOVVlc0lQTlJuUGda?=
+ =?utf-8?B?VUJVS0RBMllwMkY1NjBXa0xQNWQ2c2g2eGFCS3ZDN1FSbHNQWXd0YlU5cEdK?=
+ =?utf-8?B?NE9NNVF5Q0RSSElkbFBkaEtVdVF3ZjJPNnV6T2F2eEQra0l4LzRoTDNIT3l6?=
+ =?utf-8?B?S1B2OW9HMS8wbVQ3clVHdDY2VEFwUlBxK0RMWTFGbXJnRkdWdUlZbkhOZ2lE?=
+ =?utf-8?B?VTZFbjhjbTBtdVVMdExEdWFRSHV5UHNZWnkwMDQwbTVRam9QdDdRSG84eUQv?=
+ =?utf-8?B?R1FySmNBQTMvUGd0aTN1ZnYrNG8vOHp1SWp0VlNyaktyVlBQa0tkdFdScXJ0?=
+ =?utf-8?B?M1gvN2tUcm1ubEZ0VEpWZWpmVitvdWw4UU5VTTJnb1V6dllILzgvR1pIY0Vy?=
+ =?utf-8?B?QWhid3Q1N1ZnZmpqQUJ3UDNodTZ5bWgzdmtnWUFIeVI0dXVvUG5aNUdEWjNW?=
+ =?utf-8?B?MlJLbWJnUEJ4bk9tVVZLUXJOVU0vcE11em9BVWVvTENEcW5OUFNpN2RCS25y?=
+ =?utf-8?B?aXdKR210RG5ITG9PZ2w0UXN2dnlOOGFWRkw1Z2M2c2taaEMxb04rOGYwL0Fj?=
+ =?utf-8?B?d1A2RDhSOEw1MnFaOVBaZE05MVdMb24wcWZNakRGeTZhRGlWNG9Tb0kzNUwx?=
+ =?utf-8?B?UG5nVU9IL1BsZmM5Ym1PbzJFMEpzNWpzeUVITW4vbHNvVWY1L2dMYndMT0xO?=
+ =?utf-8?B?ZjdQKzZmeHdqQlJKcWs5dU45TWpOZHpEeXI2RHBFL1c4Uk5TZm51dFJNQ1Bz?=
+ =?utf-8?B?VTNQZDBJbjV2UnNvakxaVVMzMGhnSEcxakJLMmUxRUkxV3dJbk5vb0N2dHUy?=
+ =?utf-8?B?eGtGc0ZiMUxIK1NLRW0rZnpVejVlUE1aMjRzVVM5UUx3WFBhSEtXZ3c3dHUw?=
+ =?utf-8?B?THhsQzZ3UUxSNWJhekVTdzN3bmZlQ2dXcnpsRmp6SlhQNWxES3BGdlBkUzdr?=
+ =?utf-8?B?Q2p6ZElPbDI0akYydWZJdEpISHZmakpNZ3lYZ3hDdWdwRkYxZHRJcmw5R1Jk?=
+ =?utf-8?B?RDNzbjFVMUt3QUJraTkrQWRYeDB6NmI4dEdzV2o0VnpHSXpTR0NodFc0Ujho?=
+ =?utf-8?B?YUZheGxEZTdWTUhPKzNEV04zYjhrM0JHdUpIUnBJNjhlRDB3UDg4RSthb2JP?=
+ =?utf-8?B?c1dDQjBqNy9QVmNaVkdKeUxMYmp5blVYNWNMemlXYmcxeWc0WlNqVGdsYVg5?=
+ =?utf-8?B?YjlSd3R4RnNRYVdhVi9LaGxpZGZKU21KdnNJRFA2UVI3QVFPWVR2K1NIS3lJ?=
+ =?utf-8?B?NEpzOW5NRkZwSm52eFZSUXJWMHRFMFFCeWhpKzUzT0tmekdvSHBPdkY0STVD?=
+ =?utf-8?B?OXdkRTBHc1c2a09rQjNyd3FpMUJRVWl6aFlZcWk0N2x4MDduUENCbjNBUDN2?=
+ =?utf-8?B?cExlT016Wm03YkN3U3kxVkZ2Smk0aXZNY3VZRmsrY2lQa2dFUjBmVFJ5NXUy?=
+ =?utf-8?B?b1FZd0xxWVNVdTdudURaK1FieTA4MEp4VTF0RDNiVE1FWWhRSXY5akw5Z0dv?=
+ =?utf-8?B?U1BHQlk3QlFHN3RQcUlEaFFmcXFJVGJ0b0xCRDZ3TGJCOG1UanVWOFVkMmNm?=
+ =?utf-8?B?MHNrRFJOZlo5R2hHM052V1E4aExGT01oU0YwNG9lOHd5NDZjU2VnR05jWHRt?=
+ =?utf-8?Q?yy8JRwwA20VFhlqHLNjvfbYMw?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] net: inet_sock.h: Avoid thousands of
- -Wflex-array-member-not-at-end warnings
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-References: <aPdx4iPK4-KIhjFq@kspp> <20251023172518.3f370477@kernel.org>
- <949f472c-baca-4c2f-af23-7ba76fff1ddc@embeddedor.com>
- <20251024162354.0a94e4b1@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20251024162354.0a94e4b1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 126.126.126.75
-X-Source-L: No
-X-Exim-ID: 1vLDSh-00000001mw4-2tNr
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: softbank126126126075.bbtec.net ([10.221.86.44]) [126.126.126.75]:49808
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfI4mr270fs1ZMW9zpG1ibIlGz6euqo12EsmiItlIdCHOrJcEToHNPTvWh7C33UvqSfN0Fq1coiFXOk+Hiov2f4uJjni4b/NTGD3YPCiCCZDIc/93V+T+
- l24hOO58cg21XIovXQaUZo/F+MIzlz+Br3+tXpcasL6cXKfkYGoL47ROiZ9MuDtX8ENFPdIZuZB2AJKaY2lhrCgfhYFSe4cPDR8VnzXhYnEXCQGS5wduSlZ9
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81d4fa21-5ddb-4175-fa34-08de26719f92
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2025 07:10:58.3170
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BrWwLupX4PhjxI0esTDIAxUvxtCvwE7yW9IPml9Kt5g8VyXnzlPVjy13mt+IyrEdoLRW2bAPM6vWng+lG3hKrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4980
+X-OriginatorOrg: intel.com
 
-
-
-On 10/25/25 08:23, Jakub Kicinski wrote:
-> On Fri, 24 Oct 2025 12:24:09 +0100 Gustavo A. R. Silva wrote:
->> On 10/24/25 01:25, Jakub Kicinski wrote:
->>> On Tue, 21 Oct 2025 12:43:30 +0100 Gustavo A. R. Silva wrote:
->>>>    struct ip_options_data {
->>>> -	struct ip_options_rcu	opt;
->>>> -	char			data[40];
->>>> +	TRAILING_OVERLAP(struct ip_options_rcu, opt, opt.__data,
->>>> +			 char			data[40];
->>>> +	);
->>>>    };
->>>
->>> Is there a way to reserve space for flexible length array on the stack
->>> without resorting to any magic macros? This struct has total of 5 users.
->>
->> Not that I know of. That's the reason why we had to implement macros like
->> TRAILING_OVERLAP(), DEFINE_FLEX(), DEFINE_RAW_FLEX().
->>
->> Regarding these three macros, the simplest and least intrusive one to use is
->> actually TRAILING_OVERLAP(), when the flex-array member is not annotated with
->> the counted_by attribute (otherwise, DEFINE_FLEX() would be preferred).
->>
->> Of course, the most straightforward alternative is to use fixed-size arrays
->> if flex arrays are not actually needed.
-> 
-> Honestly, I'm tired of the endless, nasty macros for no clear benefit.
-> This patch is not happening.
-
-Not sure what you mean by "nasty" and "no clear benefit", but here is an
-alternative. See it as RFC:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=testing/wfamnae-next20251117&id=e0547082214e61b1db0f5068da0daa3d11f992a5
-
-[PATCH RFC][next] ipv4/inet_sock.h: Avoid thousands of -Wflex-array-member-not-at-end warnings
-
-Use DEFINE_RAW_FLEX() to avoid thousands of -Wflex-array-member-not-at-end
-warnings.
-
-Remove fixed-size array char data[40]; from struct ip_options_data, so
-that flexible-array member struct ip_options_rcu::opt.__data[] ends last
-in this (and other) structure(s).
-
-Compensate for this by using the DEFINE_RAW_FLEX() helper to declare each
-on-stack struct instance that contains struct ip_options_data as a member.
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-  include/net/inet_sock.h |  1 -
-  net/ipv4/icmp.c         | 88 +++++++++++++++++++++--------------------
-  net/ipv4/ip_output.c    | 12 +++---
-  net/ipv4/ping.c         |  6 +--
-  net/ipv4/raw.c          |  6 +--
-  net/ipv4/udp.c          |  6 +--
-  6 files changed, 60 insertions(+), 59 deletions(-)
-
-diff --git a/include/net/inet_sock.h b/include/net/inet_sock.h
-index ac1c75975908..3b5da5e54673 100644
---- a/include/net/inet_sock.h
-+++ b/include/net/inet_sock.h
-@@ -63,7 +63,6 @@ struct ip_options_rcu {
-
-  struct ip_options_data {
-  	struct ip_options_rcu	opt;
--	char			data[40];
-  };
-
-  struct inet_request_sock {
-diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-index 4abbec2f47ef..744d4e91cb9c 100644
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -353,9 +353,11 @@ void icmp_out_count(struct net *net, unsigned char type)
-  static int icmp_glue_bits(void *from, char *to, int offset, int len, int odd,
-  			  struct sk_buff *skb)
-  {
--	struct icmp_bxm *icmp_param = from;
-+	DEFINE_RAW_FLEX(struct icmp_bxm, icmp_param, replyopts.opt.opt.__data, 40);
-  	__wsum csum;
-
-+	icmp_param = from;
-+
-  	csum = skb_copy_and_csum_bits(icmp_param->skb,
-  				      icmp_param->offset + offset,
-  				      to, len);
-@@ -775,9 +777,9 @@ icmp_ext_append(struct net *net, struct sk_buff *skb_in, struct icmphdr *icmph,
-  void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
-  		 const struct inet_skb_parm *parm)
-  {
-+	DEFINE_RAW_FLEX(struct icmp_bxm, icmp_param, replyopts.opt.opt.__data, 40);
-  	struct iphdr *iph;
-  	int room;
--	struct icmp_bxm icmp_param;
-  	struct rtable *rt = skb_rtable(skb_in);
-  	bool apply_ratelimit = false;
-  	struct sk_buff *ext_skb;
-@@ -906,7 +908,7 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
-  					   iph->tos;
-  	mark = IP4_REPLY_MARK(net, skb_in->mark);
-
--	if (__ip_options_echo(net, &icmp_param.replyopts.opt.opt, skb_in,
-+	if (__ip_options_echo(net, &icmp_param->replyopts.opt.opt, skb_in,
-  			      &parm->opt))
-  		goto out_unlock;
-
-@@ -915,21 +917,21 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
-  	 *	Prepare data for ICMP header.
-  	 */
-
--	icmp_param.data.icmph.type	 = type;
--	icmp_param.data.icmph.code	 = code;
--	icmp_param.data.icmph.un.gateway = info;
--	icmp_param.data.icmph.checksum	 = 0;
--	icmp_param.skb	  = skb_in;
--	icmp_param.offset = skb_network_offset(skb_in);
-+	icmp_param->data.icmph.type	 = type;
-+	icmp_param->data.icmph.code	 = code;
-+	icmp_param->data.icmph.un.gateway = info;
-+	icmp_param->data.icmph.checksum	 = 0;
-+	icmp_param->skb	  = skb_in;
-+	icmp_param->offset = skb_network_offset(skb_in);
-  	ipcm_init(&ipc);
-  	ipc.tos = tos;
-  	ipc.addr = iph->saddr;
--	ipc.opt = &icmp_param.replyopts.opt;
-+	ipc.opt = &icmp_param->replyopts.opt;
-  	ipc.sockc.mark = mark;
-
-  	rt = icmp_route_lookup(net, &fl4, skb_in, iph, saddr,
-  			       inet_dsfield_to_dscp(tos), mark, type, code,
--			       &icmp_param);
-+			       icmp_param);
-  	if (IS_ERR(rt))
-  		goto out_unlock;
-
-@@ -942,7 +944,7 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
-  	room = dst_mtu(&rt->dst);
-  	if (room > 576)
-  		room = 576;
--	room -= sizeof(struct iphdr) + icmp_param.replyopts.opt.opt.optlen;
-+	room -= sizeof(struct iphdr) + icmp_param->replyopts.opt.opt.optlen;
-  	room -= sizeof(struct icmphdr);
-  	/* Guard against tiny mtu. We need to include at least one
-  	 * IP network header for this message to make any sense.
-@@ -950,15 +952,15 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
-  	if (room <= (int)sizeof(struct iphdr))
-  		goto ende;
-
--	ext_skb = icmp_ext_append(net, skb_in, &icmp_param.data.icmph, room,
-+	ext_skb = icmp_ext_append(net, skb_in, &icmp_param->data.icmph, room,
-  				  parm->iif);
-  	if (ext_skb)
--		icmp_param.skb = ext_skb;
-+		icmp_param->skb = ext_skb;
-
--	icmp_param.data_len = icmp_param.skb->len - icmp_param.offset;
--	if (icmp_param.data_len > room)
--		icmp_param.data_len = room;
--	icmp_param.head_len = sizeof(struct icmphdr);
-+	icmp_param->data_len = icmp_param->skb->len - icmp_param->offset;
-+	if (icmp_param->data_len > room)
-+		icmp_param->data_len = room;
-+	icmp_param->head_len = sizeof(struct icmphdr);
-
-  	/* if we don't have a source address at this point, fall back to the
-  	 * dummy address instead of sending out a packet with a source address
-@@ -969,7 +971,7 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
-
-  	trace_icmp_send(skb_in, type, code);
-
--	icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
-+	icmp_push_reply(sk, icmp_param, &fl4, &ipc, &rt);
-
-  	if (ext_skb)
-  		consume_skb(ext_skb);
-@@ -1206,7 +1208,7 @@ static enum skb_drop_reason icmp_redirect(struct sk_buff *skb)
-
-  static enum skb_drop_reason icmp_echo(struct sk_buff *skb)
-  {
--	struct icmp_bxm icmp_param;
-+	DEFINE_RAW_FLEX(struct icmp_bxm, icmp_param, replyopts.opt.opt.__data, 40);
-  	struct net *net;
-
-  	net = skb_dst_dev_net_rcu(skb);
-@@ -1214,18 +1216,18 @@ static enum skb_drop_reason icmp_echo(struct sk_buff *skb)
-  	if (READ_ONCE(net->ipv4.sysctl_icmp_echo_ignore_all))
-  		return SKB_NOT_DROPPED_YET;
-
--	icmp_param.data.icmph	   = *icmp_hdr(skb);
--	icmp_param.skb		   = skb;
--	icmp_param.offset	   = 0;
--	icmp_param.data_len	   = skb->len;
--	icmp_param.head_len	   = sizeof(struct icmphdr);
-+	icmp_param->data.icmph	   = *icmp_hdr(skb);
-+	icmp_param->skb		   = skb;
-+	icmp_param->offset	   = 0;
-+	icmp_param->data_len	   = skb->len;
-+	icmp_param->head_len	   = sizeof(struct icmphdr);
-
--	if (icmp_param.data.icmph.type == ICMP_ECHO)
--		icmp_param.data.icmph.type = ICMP_ECHOREPLY;
--	else if (!icmp_build_probe(skb, &icmp_param.data.icmph))
-+	if (icmp_param->data.icmph.type == ICMP_ECHO)
-+		icmp_param->data.icmph.type = ICMP_ECHOREPLY;
-+	else if (!icmp_build_probe(skb, &icmp_param->data.icmph))
-  		return SKB_NOT_DROPPED_YET;
-
--	icmp_reply(&icmp_param, skb);
-+	icmp_reply(icmp_param, skb);
-  	return SKB_NOT_DROPPED_YET;
-  }
-
-@@ -1353,7 +1355,7 @@ EXPORT_SYMBOL_GPL(icmp_build_probe);
-   */
-  static enum skb_drop_reason icmp_timestamp(struct sk_buff *skb)
-  {
--	struct icmp_bxm icmp_param;
-+	DEFINE_RAW_FLEX(struct icmp_bxm, icmp_param, replyopts.opt.opt.__data, 40);
-  	/*
-  	 *	Too short.
-  	 */
-@@ -1363,19 +1365,19 @@ static enum skb_drop_reason icmp_timestamp(struct sk_buff *skb)
-  	/*
-  	 *	Fill in the current time as ms since midnight UT:
-  	 */
--	icmp_param.data.times[1] = inet_current_timestamp();
--	icmp_param.data.times[2] = icmp_param.data.times[1];
--
--	BUG_ON(skb_copy_bits(skb, 0, &icmp_param.data.times[0], 4));
--
--	icmp_param.data.icmph	   = *icmp_hdr(skb);
--	icmp_param.data.icmph.type = ICMP_TIMESTAMPREPLY;
--	icmp_param.data.icmph.code = 0;
--	icmp_param.skb		   = skb;
--	icmp_param.offset	   = 0;
--	icmp_param.data_len	   = 0;
--	icmp_param.head_len	   = sizeof(struct icmphdr) + 12;
--	icmp_reply(&icmp_param, skb);
-+	icmp_param->data.times[1] = inet_current_timestamp();
-+	icmp_param->data.times[2] = icmp_param->data.times[1];
-+
-+	BUG_ON(skb_copy_bits(skb, 0, &icmp_param->data.times[0], 4));
-+
-+	icmp_param->data.icmph	   = *icmp_hdr(skb);
-+	icmp_param->data.icmph.type = ICMP_TIMESTAMPREPLY;
-+	icmp_param->data.icmph.code = 0;
-+	icmp_param->skb		   = skb;
-+	icmp_param->offset	   = 0;
-+	icmp_param->data_len	   = 0;
-+	icmp_param->head_len	   = sizeof(struct icmphdr) + 12;
-+	icmp_reply(icmp_param, skb);
-  	return SKB_NOT_DROPPED_YET;
-
-  out_err:
-diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
-index ff11d3a85a36..e0b20226b0b7 100644
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -1606,7 +1606,7 @@ void ip_send_unicast_reply(struct sock *sk, const struct sock *orig_sk,
-  			   const struct ip_reply_arg *arg,
-  			   unsigned int len, u64 transmit_time, u32 txhash)
-  {
--	struct ip_options_data replyopts;
-+	DEFINE_RAW_FLEX(struct ip_options_data, replyopts, opt.opt.__data, 40);
-  	struct ipcm_cookie ipc;
-  	struct flowi4 fl4;
-  	struct rtable *rt = skb_rtable(skb);
-@@ -1615,18 +1615,18 @@ void ip_send_unicast_reply(struct sock *sk, const struct sock *orig_sk,
-  	int err;
-  	int oif;
-
--	if (__ip_options_echo(net, &replyopts.opt.opt, skb, sopt))
-+	if (__ip_options_echo(net, &replyopts->opt.opt, skb, sopt))
-  		return;
-
-  	ipcm_init(&ipc);
-  	ipc.addr = daddr;
-  	ipc.sockc.transmit_time = transmit_time;
-
--	if (replyopts.opt.opt.optlen) {
--		ipc.opt = &replyopts.opt;
-+	if (replyopts->opt.opt.optlen) {
-+		ipc.opt = &replyopts->opt;
-
--		if (replyopts.opt.opt.srr)
--			daddr = replyopts.opt.opt.faddr;
-+		if (replyopts->opt.opt.srr)
-+			daddr = replyopts->opt.opt.faddr;
-  	}
-
-  	oif = arg->bound_dev_if;
-diff --git a/net/ipv4/ping.c b/net/ipv4/ping.c
-index ad56588107cc..ebc7d24a4a68 100644
---- a/net/ipv4/ping.c
-+++ b/net/ipv4/ping.c
-@@ -690,6 +690,7 @@ EXPORT_IPV6_MOD_GPL(ping_common_sendmsg);
-
-  static int ping_v4_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-  {
-+	DEFINE_RAW_FLEX(struct ip_options_data, opt_copy, opt.opt.__data, 40);
-  	struct net *net = sock_net(sk);
-  	struct flowi4 fl4;
-  	struct inet_sock *inet = inet_sk(sk);
-@@ -697,7 +698,6 @@ static int ping_v4_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-  	struct icmphdr user_icmph;
-  	struct pingfakehdr pfh;
-  	struct rtable *rt = NULL;
--	struct ip_options_data opt_copy;
-  	int free = 0;
-  	__be32 saddr, daddr, faddr;
-  	u8 scope;
-@@ -746,9 +746,9 @@ static int ping_v4_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-  		rcu_read_lock();
-  		inet_opt = rcu_dereference(inet->inet_opt);
-  		if (inet_opt) {
--			memcpy(&opt_copy, inet_opt,
-+			memcpy(opt_copy, inet_opt,
-  			       sizeof(*inet_opt) + inet_opt->opt.optlen);
--			ipc.opt = &opt_copy.opt;
-+			ipc.opt = &opt_copy->opt;
-  		}
-  		rcu_read_unlock();
-  	}
-diff --git a/net/ipv4/raw.c b/net/ipv4/raw.c
-index 5998c4cc6f47..802ebde0246d 100644
---- a/net/ipv4/raw.c
-+++ b/net/ipv4/raw.c
-@@ -481,6 +481,7 @@ static int raw_getfrag(void *from, char *to, int offset, int len, int odd,
-
-  static int raw_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-  {
-+	DEFINE_RAW_FLEX(struct ip_options_data, opt_copy, opt.opt.__data, 40);
-  	struct inet_sock *inet = inet_sk(sk);
-  	struct net *net = sock_net(sk);
-  	struct ipcm_cookie ipc;
-@@ -491,7 +492,6 @@ static int raw_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-  	__be32 daddr;
-  	__be32 saddr;
-  	int uc_index, err;
--	struct ip_options_data opt_copy;
-  	struct raw_frag_vec rfv;
-  	int hdrincl;
-
-@@ -561,9 +561,9 @@ static int raw_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-  		rcu_read_lock();
-  		inet_opt = rcu_dereference(inet->inet_opt);
-  		if (inet_opt) {
--			memcpy(&opt_copy, inet_opt,
-+			memcpy(opt_copy, inet_opt,
-  			       sizeof(*inet_opt) + inet_opt->opt.optlen);
--			ipc.opt = &opt_copy.opt;
-+			ipc.opt = &opt_copy->opt;
-  		}
-  		rcu_read_unlock();
-  	}
-diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index ffe074cb5865..fa2c4eeed55c 100644
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -1269,6 +1269,7 @@ EXPORT_IPV6_MOD_GPL(udp_cmsg_send);
-
-  int udp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-  {
-+	DEFINE_RAW_FLEX(struct ip_options_data, opt_copy, opt.opt.__data, 40);
-  	struct inet_sock *inet = inet_sk(sk);
-  	struct udp_sock *up = udp_sk(sk);
-  	DECLARE_SOCKADDR(struct sockaddr_in *, usin, msg->msg_name);
-@@ -1286,7 +1287,6 @@ int udp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-  	int corkreq = udp_test_bit(CORK, sk) || msg->msg_flags & MSG_MORE;
-  	int (*getfrag)(void *, char *, int, int, int, struct sk_buff *);
-  	struct sk_buff *skb;
--	struct ip_options_data opt_copy;
-  	int uc_index;
-
-  	if (len > 0xFFFF)
-@@ -1368,9 +1368,9 @@ int udp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-  		rcu_read_lock();
-  		inet_opt = rcu_dereference(inet->inet_opt);
-  		if (inet_opt) {
--			memcpy(&opt_copy, inet_opt,
-+			memcpy(opt_copy, inet_opt,
-  			       sizeof(*inet_opt) + inet_opt->opt.optlen);
--			ipc.opt = &opt_copy.opt;
-+			ipc.opt = &opt_copy->opt;
-  		}
-  		rcu_read_unlock();
-  	}
--- 
-2.43.0
-
-
-Thanks
--Gustavo
+PiBGcm9tOiBMZW9uIFJvbWFub3Zza3kgPGxlb25Aa2VybmVsLm9yZz4NCj4gU2VudDogVHVlc2Rh
+eSwgTm92ZW1iZXIgMTEsIDIwMjUgNTo1OCBQTQ0KPiANCj4gRnJvbTogVml2ZWsgS2FzaXJlZGR5
+IDx2aXZlay5rYXNpcmVkZHlAaW50ZWwuY29tPg0KPiANCj4gVGhlc2UgaGVscGVycyBhcmUgdXNl
+ZnVsIGZvciBtYW5hZ2luZyBhZGRpdGlvbmFsIHJlZmVyZW5jZXMgdGFrZW4NCj4gb24gdGhlIGRl
+dmljZSBmcm9tIG90aGVyIGFzc29jaWF0ZWQgVkZJTyBtb2R1bGVzLg0KPiANCj4gT3JpZ2luYWwt
+cGF0Y2gtYnk6IEphc29uIEd1bnRob3JwZSA8amdnQG52aWRpYS5jb20+DQo+IFNpZ25lZC1vZmYt
+Ynk6IFZpdmVrIEthc2lyZWRkeSA8dml2ZWsua2FzaXJlZGR5QGludGVsLmNvbT4NCj4gVGVzdGVk
+LWJ5OiBBbGV4IE1hc3RybyA8YW1hc3Ryb0BmYi5jb20+DQo+IFRlc3RlZC1ieTogTmljb2xpbiBD
+aGVuIDxuaWNvbGluY0BudmlkaWEuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBMZW9uIFJvbWFub3Zz
+a3kgPGxlb25yb0BudmlkaWEuY29tPg0KDQpSZXZpZXdlZC1ieTogS2V2aW4gVGlhbiA8a2V2aW4u
+dGlhbkBpbnRlbC5jb20+DQo=
