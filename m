@@ -1,133 +1,87 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738972D23B9
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 18:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00582773EC;
+	Tue, 18 Nov 2025 18:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763488931; cv=none; b=W5hOGosvMK2fDIlUwbR8VNAauPilpZdypQevmJXwE3Txlt0AdfoIPZr94TfIPM6+1U+JLwhPWdBXl67m9GGRML652Z8iaDTudVgJL/a3g0l2PI3td3E0sngvnLz+p9rrRXeJaHtGWTapNGx7zzLzfltRlYed9F6RVxYgSZLKAkA=
+	t=1763490450; cv=none; b=oT1T9pP2RnsemvMQV+vhzBytKXGSs4nxC1Qy5FbZXD3CbChdL9oP0V1xgOfPg9417S+kUu4kPaHWeF0l4Lspo1rxXQup67osnwRgyJS9BN+uhGb9EmG1Ywa5Z0REbXhLvVVmTjDPFJgTmeJoYIBpT2Jjb903ZhebUQELMVK6yTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763488931; c=relaxed/simple;
-	bh=MP5zEF0mz0wb93X/rIDUcTYdHjOJaAF4mJGNz5/sX9Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kaQdsbYcklCiDJJeOvodAi5Op4ga+guEqWe5iKDX97COidw4Ag06qTBj6CuIR9hyGljtgNs8xt5PtktvzYSdCIBUZUL9iJZKakX0tGgjNp/KN9A0V3tyR1o2xjRVZKfle08qd2YOnXCcsx5K+JkhUwGmhNXeNSqMA+7nm6FzFJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LrM6KNmg; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1763490450; c=relaxed/simple;
+	bh=mf2A4uVAyMMwo+CUEGxMYnNkPKDtt+P9HeZnK68CIVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CKifgr0/bYvueo1yE13VuM7gV1ZDusVStW/re7/a27hc3weRiEj/FB7o4jiZXrGsEMNqhD/XV6kdfZiPtpCurGamDHwISnpbs39Cofgjw5gjqntuaeZ9hHVafmNxc/1dHV0kL+nz4/bNpaMurjXs0redxR4Jf2Y0lWqICoUKehQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IxEt288S; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LrM6KNmg"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-34372216275so6370109a91.2
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Nov 2025 10:02:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763488928; x=1764093728; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RDSqI1R4vRI3ysYIo080sf0JavtMkZgMqlZ1yIgknuw=;
-        b=LrM6KNmgGwgphcxgnn+OljAbEhAXf3m4MDkHLDIksSmTPHLx3MAn+GySHiiZyqOuHM
-         5eE/7a83lvKrrzBlgAUdV9Av+O+OuB/w4CHd7ITwBE2IRDDZV7dAz5He4L4FFaLiUm/K
-         GceFt2G0QSqgCQkS8xNdLWrbgwBdj9u1pTL6Ph+ENeBzwsYwAA9kK2Z6Ohl3M3PkPQSu
-         lzouFLgBoNagWu1YiHQAn1Qmp9qkMtc2d276l88tI1rzvzJpWYgFkAr08KF+VPUq7ZUX
-         KhkgEeY609WfizfRYOwo1TQuAxPMvPp3EjPLf8Q5gpk7MoLlyJcH8Q6yB72c/p+61KLL
-         sFzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763488928; x=1764093728;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RDSqI1R4vRI3ysYIo080sf0JavtMkZgMqlZ1yIgknuw=;
-        b=bvym8nYofcWjIBK44FBWJqgdUuKxoEdwDqs+Z527CsNuXByXJ48R0qMya0yhPdzvI5
-         YuFb72ygbWodomS3nC9mGb5te8lD2CoHsYFWuOzewkHSwHFc8eT8Xk2hsRKrVcF8sFR3
-         LNLokmqbZC3HX9aw1xqZgVv7h2flYvnQQu2gWXS6y5TIXi2p1iNf8XylUvsxZ63V6A1U
-         j+Ecqd6wcKf6SDiKKspgkTIvgZTZgaHK+VOeGLW2ewfTE0HRgFITBnwt/vvDZTSlgSfC
-         jYT264VpEmusga4Pmii0BupNi+FUX1mJmv2k4xEWdtFFXuMYR/8LczvBxrEUqGg7/IYk
-         lJ7w==
-X-Gm-Message-State: AOJu0YygpMn6oiZa5QAWOIWPcKaz5FRG8D+kmevSoZ+gVm4LfgbdENoO
-	tconNbkJjtKAOV9LezJfzI2h2lQpzEROmLCfvONzUZMo6KHVwmsE7dyiv8QoqQ==
-X-Gm-Gg: ASbGnctKfOOWo6tVsRQcCIUMZYt+JQYaKvvI9CKGK6AEllfAX+USQB/r0XVZSpdg05y
-	zQZTddT77v894UAGuKL6J6xkHkktQppiAzoiEIvd7QxpUY2wLclDOYH/ixwcCteOxMfj3GiDTvo
-	zMJA+JLOqjpNIGHWEPme5lJ3g5C6ZflZYgjz3EWPdnEoPGGLStE674JDF5jwWjwHgKJw6NwBbR7
-	1rSG1mskVcYavOlfxDuVhpDumWMUiCA7XdWeAcDzj7qMPqvFvom247uAFUpvIiulGajM0rCQgNz
-	FBVh48FTxw3Wfp8M0lGdHIxDZ3pERw4e3342+WTIKfmgAUo6mFXleKeAqEx113PcVPVBPwJCBOX
-	m+f1hpFUaRfuImlZT731j4ZevanjDknRif8tt/DTCfaJbgMle0vgvP+deNa8Y/CeJLW4Xrqy9d3
-	LukzZB787janTsjQ/IYAWZo4hKloSPqywkkp9eTNL9KVjwWBCa
-X-Google-Smtp-Source: AGHT+IETQQ/I8WB37aKOwJZ2GzuSvVlMT7g4UMuSCuKxzvCr4hGmo8cU/iNziuRs02ZXg1pvwnn/Pw==
-X-Received: by 2002:a17:90b:2d05:b0:32e:a10b:ce33 with SMTP id 98e67ed59e1d1-343fa6326e0mr18986629a91.21.1763488928250;
-        Tue, 18 Nov 2025 10:02:08 -0800 (PST)
-Received: from crl-3.node2.local ([125.63.65.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-345b053038fsm1349412a91.14.2025.11.18.10.02.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 10:02:07 -0800 (PST)
-From: Kriish Sharma <kriish.sharma2006@gmail.com>
-To: kees@kernel.org,
-	andy@kernel.org
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kriish Sharma <kriish.sharma2006@gmail.com>
-Subject: [PATCH] string: Fix missing kernel-doc descriptions in string.h
-Date: Tue, 18 Nov 2025 18:00:08 +0000
-Message-Id: <20251118180008.2620929-1-kriish.sharma2006@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IxEt288S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763490449; x=1795026449;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mf2A4uVAyMMwo+CUEGxMYnNkPKDtt+P9HeZnK68CIVM=;
+  b=IxEt288SETUSsxIEiPP6MVDwFzEfGbq3HI/OeFfkoUuR3vWfxO7dLgDD
+   eIXDeD0y7wpEjTyFShdYmOzww2wLibsFgn8GKt++pzsqRt5StYNWiPhB6
+   BWS0k7Wh4G0c9MavY5OjarHcUckb7lrNRGC2ZhQ4FpSfpcBaR3J8HARRk
+   yfZ3kth7BxGtJOkfUMWP4i541K+0dBFx5HQ8kNBd4gp8Hl3++WEzd6CV3
+   6rJOR0AD74DUj2+kXRkdfW4akfoX8WBbAr0mLF6m5/+9zNghicgPzkABn
+   6yNluo+/Yuo2kpLj0KNfX2Gxw1sK2PHkiXa0AyyxV1cpsINgf+zp7aDDx
+   A==;
+X-CSE-ConnectionGUID: 5dG1jiagSHqLNBRgjOpSng==
+X-CSE-MsgGUID: 5NnwHF9fT1WrhqkSfnI6Fw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="69138837"
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="69138837"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 10:27:29 -0800
+X-CSE-ConnectionGUID: zB2Lbr9lQH+2gNyP6kd5ZQ==
+X-CSE-MsgGUID: OTldZ9g2TtassnA7j3GTcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="221736138"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 10:27:27 -0800
+Date: Tue, 18 Nov 2025 20:27:24 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Kriish Sharma <kriish.sharma2006@gmail.com>
+Cc: kees@kernel.org, andy@kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] string: Fix missing kernel-doc descriptions in string.h
+Message-ID: <aRy6jISBogIIT-0o@ashevche-desk.local>
+References: <20251118180008.2620929-1-kriish.sharma2006@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251118180008.2620929-1-kriish.sharma2006@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-While running kernel-doc validation, several warnings were emitted for
-functions in include/linux/string.h due to missing return value
-documentation or missing parameter descriptions:
+On Tue, Nov 18, 2025 at 06:00:08PM +0000, Kriish Sharma wrote:
+> While running kernel-doc validation, several warnings were emitted for
+> functions in include/linux/string.h due to missing return value
+> documentation or missing parameter descriptions:
+> 
+>     Warning: include/linux/string.h:375 No description found for return value of 'kbasename'
+>     Warning: include/linux/string.h:560 No description found for return value of 'strstarts'
+>     WARNING: include/linux/string.h:573 function parameter 'str' not described in 'strends'
+>     WARNING: include/linux/string.h:573 function parameter 'suffix' not described in 'strends'
+> 
+> This patch adds the missing "Returns:" sections for kbasename() and
+> strstarts(), and provides parameter descriptions for strends().
+> These changes resolve all kernel-doc warnings in this header.
 
-    Warning: include/linux/string.h:375 No description found for return value of 'kbasename'
-    Warning: include/linux/string.h:560 No description found for return value of 'strstarts'
-    WARNING: include/linux/string.h:573 function parameter 'str' not described in 'strends'
-    WARNING: include/linux/string.h:573 function parameter 'suffix' not described in 'strends'
+strends() fixes are in Bart's tree, will be soon in Linux Next I suppose.
+The rest seems good.
 
-This patch adds the missing "Returns:" sections for kbasename() and
-strstarts(), and provides parameter descriptions for strends().
-These changes resolve all kernel-doc warnings in this header.
-
-Signed-off-by: Kriish Sharma <kriish.sharma2006@gmail.com>
----
- include/linux/string.h | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 929d05d1247c..3597e2801463 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -371,6 +371,10 @@ static inline void memzero_explicit(void *s, size_t count)
-  * kbasename - return the last part of a pathname.
-  *
-  * @path: path to extract the filename from.
-+ *
-+ * Returns:
-+ * Pointer to the filename portion inside @path. If no '/' exists,
-+ * returns @path unchanged.
-  */
- static inline const char *kbasename(const char *path)
- {
-@@ -556,6 +560,9 @@ static __always_inline size_t str_has_prefix(const char *str, const char *prefix
-  * strstarts - does @str start with @prefix?
-  * @str: string to examine
-  * @prefix: prefix to look for.
-+ *
-+ * Returns:
-+ * True if @str begins with @prefix. False in all other cases.
-  */
- static inline bool strstarts(const char *str, const char *prefix)
- {
-@@ -564,8 +571,8 @@ static inline bool strstarts(const char *str, const char *prefix)
- 
- /**
-  * strends - Check if a string ends with another string.
-- * @str - NULL-terminated string to check against @suffix
-- * @suffix - NULL-terminated string defining the suffix to look for in @str
-+ * @str: NULL-terminated string to check against @suffix
-+ * @suffix: NULL-terminated string defining the suffix to look for in @str
-  *
-  * Returns:
-  * True if @str ends with @suffix. False in all other cases.
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
