@@ -1,87 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675F22F5A09;
-	Tue, 18 Nov 2025 20:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3993702EA;
+	Tue, 18 Nov 2025 20:27:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763497133; cv=none; b=PrcQYKssrnp0xvulveCyYeXju5TZSATElKZJVtAnFngskku1KB4I5yCRo67jAeFsDJH3Zq9j4sFnzCfksC+6B/W1kd9JOCB50tvPSEuPn24l95e0uH1gx/woB6btgfBsa+EDyXW6vV93hhjVAKRMbs54HwEVjy6O3VboXP4edek=
+	t=1763497640; cv=none; b=PtOngxeAH+RsbwuiSI+S1p63VusaFF1q+q9PbwqxUK0MYqG7mVus++JeQiPWFMrP2mQQiPt5VEF1ckUkgXdzeDhp+WTKjIJzZPqDbFGxxMHcXiMXnxajYMp+pINwuJGuewqcA2JqOzy6CajTWiTek8h+py8yGXPr00CzG54SZT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763497133; c=relaxed/simple;
-	bh=1gK/eOl0lFoJx/Qsgws6pSF6IokRCQEg1Ra5CF1IxTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DyAz4EJaMZTVcVlGGJXT/6+F/txgIqLpC1ZCNYwhnEU9DwE7kXmDCsJkJCDnU61Lt9zstkg9koojiD0cAanBHByamiCI1lSnj8zcguY/4RP1CIfDx+zppuIJpMXZqouZr1+QJVbY8PhFkBvtasPswJdnlT5DPefrgauuC0+ABTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQfDsn61; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763497640; c=relaxed/simple;
+	bh=diKlHOpjb5XVjO5TKNlve8x2PkW4wFI7hs+EFCpTFUI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ypi4r0d0w8zT/RK3tyIFoOFpraTkvVKoGHRVGLdC2C4bM7xp1VCcWKuIs9U3/wDxHKSebwEmQGZDlZvls6BxDgxYPoEKDi8nxas7lIbB7KweI2cgMKs0T/oTwZ/1RLfsEE8PunCFk15+1KPkDDlL9JMWd9Qi69trBw4XrkuCDy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2TdvWPL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQfDsn61"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D6C3C19423;
-	Tue, 18 Nov 2025 20:18:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2TdvWPL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3722C116D0;
+	Tue, 18 Nov 2025 20:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763497133;
-	bh=1gK/eOl0lFoJx/Qsgws6pSF6IokRCQEg1Ra5CF1IxTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jQfDsn61vufo6YOfQo79y+Ndb5/49pM+Kzub8NVaHCny22FBzQnFTrSLg2XdPo1s4
-	 q4Q7m4B585DTvH5HVWQ0DO/E2wa7u3fFCYB85WskqwPYKBTtnUrrPrWPRE5C2Ymwu9
-	 XI6NikQcB+qyFCqrr5w+MjHt0GyCFcaWHiNnpAZuQe+VtouSDZ9qJ1I29igbCkZOyV
-	 6JDMlf1DxIGJwl0KrKoWkLUy0geHXeEkVLKutwvuAT1n5/hnFBjFl+IVPa8640+D5j
-	 uK0n9LGxWeIjzuFUFMy16vZC128qAY115S6xdY8r0buoE9dRHyEPS8qfYYbszF8xDd
-	 vw0kkKc8fqFoQ==
-Date: Tue, 18 Nov 2025 13:18:46 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	Alex Mastro <amastro@fb.com>, Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [PATCH v8 09/11] vfio/pci: Enable peer-to-peer DMA transactions
- by default
-Message-ID: <aRzUpmUkDy-qN5c1@kbusch-mbp>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-9-fd9aa5df478f@nvidia.com>
- <BN9PR11MB52767F78317AF3AB94A5B7D38CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
+	s=k20201202; t=1763497640;
+	bh=diKlHOpjb5XVjO5TKNlve8x2PkW4wFI7hs+EFCpTFUI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=V2TdvWPL720koNYa00tZ4YyznHYvwz905UCU6J5/xcLIFBnBIfqTnh6C0qwDmnMLk
+	 UtpyORm6LfEzXmCi+hB5xU+oX/KRLZ4r3tcjX8Wd3kmylAz7oJsg5USlGXDgvDFRAX
+	 znSKQPQFK0WgrTWsk85pPQzdbUB6wxrGz4F91QSK6B2jkcCpOmA0rFXQ0urdnEEhjt
+	 f1kp9HECMl3o+TPZCA2N/O8RJsIMRk1mV78nhwWMFJF1ogVl72BZKomwGqKWTflI7g
+	 VO9EqJ0em4A+J93CWwrqY2Sbor5x+dfnPEvMwBJV62/5jV/sjOk74eErU3ZVw7Cs4s
+	 0ex2ZV4bhnbaw==
+Date: Tue, 18 Nov 2025 12:27:17 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH][next] net: inet_sock.h: Avoid thousands of
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <20251118122717.16b723fd@kernel.org>
+In-Reply-To: <bf9c2ceb-f80f-4fea-999d-4f46b2369721@embeddedor.com>
+References: <aPdx4iPK4-KIhjFq@kspp>
+	<20251023172518.3f370477@kernel.org>
+	<949f472c-baca-4c2f-af23-7ba76fff1ddc@embeddedor.com>
+	<20251024162354.0a94e4b1@kernel.org>
+	<bf9c2ceb-f80f-4fea-999d-4f46b2369721@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB52767F78317AF3AB94A5B7D38CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 18, 2025 at 07:18:36AM +0000, Tian, Kevin wrote:
-> > From: Leon Romanovsky <leon@kernel.org>
-> > Sent: Tuesday, November 11, 2025 5:58 PM
-> > 
-> > From: Leon Romanovsky <leonro@nvidia.com>
+On Tue, 18 Nov 2025 13:36:41 +0900 Gustavo A. R. Silva wrote:
+> Not sure what you mean by "nasty" and "no clear benefit", but here is an
+> alternative. See it as RFC:
+
+Meaning of the words per dictionary definition.
+
+> https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=testing/wfamnae-next20251117&id=e0547082214e61b1db0f5068da0daa3d11f992a5
 > 
-> not required with only your own s-o-b
+> [PATCH RFC][next] ipv4/inet_sock.h: Avoid thousands of -Wflex-array-member-not-at-end warnings
+> 
+> Use DEFINE_RAW_FLEX() to avoid thousands of -Wflex-array-member-not-at-end
+> warnings.
+> 
+> Remove fixed-size array char data[40]; from struct ip_options_data, so
+> that flexible-array member struct ip_options_rcu::opt.__data[] ends last
+> in this (and other) structure(s).
+> 
+> Compensate for this by using the DEFINE_RAW_FLEX() helper to declare each
+> on-stack struct instance that contains struct ip_options_data as a member.
 
-That's automatically appended when the sender and signer don't match.
-It's not uncommon for developers to send from a kernel.org email but
-sign off with a corporate account, or the other way around.
+This is much better, thanks!
