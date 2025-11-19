@@ -1,305 +1,399 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B24285CB6;
-	Wed, 19 Nov 2025 15:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0142E8B75
+	for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 15:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763566876; cv=none; b=InXmhKLKDbK/aW/YX5c3FR6NY1XmgQxSA2KSvdmNUs4wVT36fKCz/mRBRkAB86iJon2df1sWl0lu7WNjtb1OfsTrysqgvrsKACMQYuQZ67Lu3CjDvYFXrVQX7aylS2Fx+x2s8uKpdb9nrpTia+/2APWmT1gI4b7AI42KYn2cPkU=
+	t=1763567120; cv=none; b=UtF6nDDzf9KR4FvFGYDubliepAoPnGH6UD8X8jWTaPL+oNhdsgRbFTWpMyrxlPHgBmVx3rmMiNn0B1miS5vboMirl3nSr47yRFSwtmouqCQ7x70G4gzXSgxfERUUyA10l4PojdTijFpWk1vtfpEvI3CoQtstEAuKXFdOSRxrWZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763566876; c=relaxed/simple;
-	bh=+tu5xEE2csr5lj4QfalL/akMO0Iwzk3kuQR0JJgfkqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZW/os156ObB8wxAnA/7S1DtH9xEoiwkyEtRC34ghemRQXpx3IjdFkcsUE4ulLgN+eOB4ohWh7DgKyeRN63SeJDpaURtOWqr3wXBPdRQWm9m/or9NuThWuqKMmwvap0dbYTNLnut8GCsOSZHGEZMkA4198FmxCjF6DvMvb5TGHo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZA36zm5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763567120; c=relaxed/simple;
+	bh=VwJd0dB5uIeoe+JF1sZkCmAgjrAnXDLrVO/g1tTuMbU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XknqOL7+LOGkjoqljAMOBSxwGsm2q6fuqEZpNKoTfEPdZx3R2prcv5YB/XZOMqtD3FYUErxmz7NflK++MyYQRMVZWtYlzLc+TLkbNGqW4hZZJ96fXPbr+cieYy+M2c7JNOfPtF1M6zB1QB+0XN8vRLZ5sEaU4164l/QquMWt5Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pRhj278e; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZA36zm5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B957C2BCB2;
-	Wed, 19 Nov 2025 15:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763566873;
-	bh=+tu5xEE2csr5lj4QfalL/akMO0Iwzk3kuQR0JJgfkqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QZA36zm5JLd7o0QBgL/m337GXPzMm86iJP+sqGrJjj1yhmQahzCnAAdePGwI0czJ9
-	 rt4OUD/ZwcM93t/K+PUcYG/mPoxd3i5GXITekoSzYkf+zK+1puSkDtnkTCfXWs++0m
-	 M9zKcwUgAkxFOEXC/RFEX/wz1Iq7Syn6vdULPDfvt40zK7+wJ2eDruSfFEgrILevfv
-	 d1Sb/+sY9emGTM3ScYXG3ovMIORPEms7/vnPk+lNN/iOHrUpZto2zHikmZMZUuTeXw
-	 q5uBEXiMRpmdS+1CbaUYpBm+Kas3khufe9slupFE9daJ6PwQfcbycL8K+e+GM1qvBy
-	 uhz+0UV4rK9dw==
-Date: Wed, 19 Nov 2025 17:41:08 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
- scatter-gather mapping routine
-Message-ID: <20251119154108.GK18335@unreal>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
- <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
- <20251119134245.GD18335@unreal>
- <6714dc49-6b5c-4d58-9a43-95bb95873a97@amd.com>
- <20251119145007.GJ18335@unreal>
- <26d7ecab-33ed-4aab-82d5-954b0d1d1718@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pRhj278e"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-477a219db05so25820135e9.2
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 07:45:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1763567116; x=1764171916; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2CoM/ens8WWqPExecvbO2G6eVyAKF5jUf51yI4balEI=;
+        b=pRhj278erG0QYGZUJJjlTPlGvs/mDK41JmUeqza98iuKs+vBP59PnpDnfI+1x3Zf2Y
+         d4JRXZxcUaksephUym+GIDo7IPBhXqQCtx96KzniCtPIevmSZiSykHaFhAgFBa39zEuE
+         KRlBsFoDzVHJQCHE509asozKAV1AiLEe7XongygDoOJnqzRQ6XIrOXQwVyyTSdg+kxIk
+         n9HDRnZQphHHfBPUMMr35ZLskvSo3xTtUNT8daD9zfcr1c18K9c2WqhiSpiNdo7bVvkk
+         lqdQ18F0i3+AShklPCB8EpzxXulTJZeJnojZNQRIlqJuTfIUeJNo0LxP6uY6Oc9WxNjb
+         rzRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763567116; x=1764171916;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2CoM/ens8WWqPExecvbO2G6eVyAKF5jUf51yI4balEI=;
+        b=ty+wQF4l71Lu6dEBPdar4196s9Dv9Kvrcc6Sp0F5AJtgFtXpGX6jvTP4JnyBgG68gM
+         Z/vS+GQ1JM2u9Y67dKhWS3UzjAwbpQlFU3y+P5oxohi+z9eI+Y+lsUvLMtqg+SlpQ8eh
+         bt+8wurjKuaCa8/M/oWX7IHe8NGLH4XNz189+9SnK/6XZd/OhfJiOQdg5VBB0qalZX4M
+         Ws8fuQZxYxbsdMXIBlcqnVoAxoOwi6iZgKMxTcJkntYslL0Iw16sXQkYIvar4ZWBqJGA
+         wVTb4UGz23AFzDktgIqJUc2iDDPwFHCj2c7LGooTgfIg10pY8SCFHBWBKTqdXffV0IeK
+         HyIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBvzPxpFTxo6p41ykdl9wrUHL07E0n8Tsr1deWA4oJWn8SYPopafcSfoxfCjwuh4Y6E+CsS6smyTDm4EXCcCk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxfw/P+1olzHfJKiDjWA727JaSeocZtCFpeCizRb7HtKUiEtSWb
+	it9AhEbp9CBhdrTuVmWzyzMo7rjQkeoNiBoUa1QPTjwgxKiB+DZY3CLwq9w/1VOdMPA=
+X-Gm-Gg: ASbGncuI2CFJwYTYBzaU24HMofBRAfFozan8XtmB5gsHhxAAogvsJN/qJ200oAZo3tn
+	JjOxoU0WA9H8uiVwspRl3Yj2z8mIuHlmp6F7SxJjcoRc/szq3WIqTk4zx4x9RihRrjyvBza+3B9
+	lpVVtW/gnmE8cERxRiHN1C5RIRdcYAqY0yrLLIvDXHxAek78mE/ZjuCLtgt7OmauFVuzuJ/gtxi
+	JhvmwC+FaCwq6oA6VzMtDlnMPsysWZzCcqytRcF1D8Ja2kaM0sUOGfwI/mjLH6LLDMLCbqIY6N/
+	kpplEPdX1JDxjTjq81Ots8xEF9bRXMgs/vQyplHDaIefBIzRN//nKdSN5vbP1LcUWGDoSfvTbo0
+	0EIJ1tqk9RdI4waoPQaAr6MpgXn7uWNteSMKL/+ERPqrhFnRxPapcebCDbO38ufPzOcl15Y05YU
+	Ft1LVGnD0hwOw+hRj55En7BXf4np7bW+0T8e6vGGHO
+X-Google-Smtp-Source: AGHT+IFhpUd90PtBYipaTNuAgtosZy/Rxs0TcU1PR7yeoivrzB2NBo62Iu8MK8pJ9S+Pf5MRkbeoFA==
+X-Received: by 2002:a05:600c:1c1e:b0:477:aed0:f401 with SMTP id 5b1f17b1804b1-477aed0fb7emr55369745e9.23.1763567115726;
+        Wed, 19 Nov 2025 07:45:15 -0800 (PST)
+Received: from eugen-station.. ([82.76.24.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53dea1c9sm38765632f8f.0.2025.11.19.07.45.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Nov 2025 07:45:15 -0800 (PST)
+From: Eugen Hristev <eugen.hristev@linaro.org>
+To: linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	tglx@linutronix.de,
+	andersson@kernel.org,
+	pmladek@suse.com,
+	rdunlap@infradead.org,
+	corbet@lwn.net,
+	david@redhat.com,
+	mhocko@suse.com
+Cc: tudor.ambarus@linaro.org,
+	mukesh.ojha@oss.qualcomm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org,
+	jonechou@google.com,
+	rostedt@goodmis.org,
+	linux-doc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	tony.luck@intel.com,
+	kees@kernel.org,
+	Eugen Hristev <eugen.hristev@linaro.org>
+Subject: [PATCH 00/26] Introduce meminspect
+Date: Wed, 19 Nov 2025 17:44:01 +0200
+Message-ID: <20251119154427.1033475-1-eugen.hristev@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <26d7ecab-33ed-4aab-82d5-954b0d1d1718@amd.com>
 
-On Wed, Nov 19, 2025 at 03:53:30PM +0100, Christian König wrote:
-> 
-> 
-> On 11/19/25 15:50, Leon Romanovsky wrote:
-> > On Wed, Nov 19, 2025 at 03:11:01PM +0100, Christian König wrote:
-> >> On 11/19/25 14:42, Leon Romanovsky wrote:
-> >>> On Wed, Nov 19, 2025 at 02:16:57PM +0100, Christian König wrote:
-> >>>>
-> >>>>
-> >>>> On 11/11/25 10:57, Leon Romanovsky wrote:
-> >>>>> From: Leon Romanovsky <leonro@nvidia.com>
-> >>>>>
-> >>>>> Add dma_buf_map() and dma_buf_unmap() helpers to convert an array of
-> >>>>> MMIO physical address ranges into scatter-gather tables with proper
-> >>>>> DMA mapping.
-> >>>>>
-> >>>>> These common functions are a starting point and support any PCI
-> >>>>> drivers creating mappings from their BAR's MMIO addresses. VFIO is one
-> >>>>> case, as shortly will be RDMA. We can review existing DRM drivers to
-> >>>>> refactor them separately. We hope this will evolve into routines to
-> >>>>> help common DRM that include mixed CPU and MMIO mappings.
-> >>>>>
-> >>>>> Compared to the dma_map_resource() abuse this implementation handles
-> >>>>> the complicated PCI P2P scenarios properly, especially when an IOMMU
-> >>>>> is enabled:
-> >>>>>
-> >>>>>  - Direct bus address mapping without IOVA allocation for
-> >>>>>    PCI_P2PDMA_MAP_BUS_ADDR, using pci_p2pdma_bus_addr_map(). This
-> >>>>>    happens if the IOMMU is enabled but the PCIe switch ACS flags allow
-> >>>>>    transactions to avoid the host bridge.
-> >>>>>
-> >>>>>    Further, this handles the slightly obscure, case of MMIO with a
-> >>>>>    phys_addr_t that is different from the physical BAR programming
-> >>>>>    (bus offset). The phys_addr_t is converted to a dma_addr_t and
-> >>>>>    accommodates this effect. This enables certain real systems to
-> >>>>>    work, especially on ARM platforms.
-> >>>>>
-> >>>>>  - Mapping through host bridge with IOVA allocation and DMA_ATTR_MMIO
-> >>>>>    attribute for MMIO memory regions (PCI_P2PDMA_MAP_THRU_HOST_BRIDGE).
-> >>>>>    This happens when the IOMMU is enabled and the ACS flags are forcing
-> >>>>>    all traffic to the IOMMU - ie for virtualization systems.
-> >>>>>
-> >>>>>  - Cases where P2P is not supported through the host bridge/CPU. The
-> >>>>>    P2P subsystem is the proper place to detect this and block it.
-> >>>>>
-> >>>>> Helper functions fill_sg_entry() and calc_sg_nents() handle the
-> >>>>> scatter-gather table construction, splitting large regions into
-> >>>>> UINT_MAX-sized chunks to fit within sg->length field limits.
-> >>>>>
-> >>>>> Since the physical address based DMA API forbids use of the CPU list
-> >>>>> of the scatterlist this will produce a mangled scatterlist that has
-> >>>>> a fully zero-length and NULL'd CPU list. The list is 0 length,
-> >>>>> all the struct page pointers are NULL and zero sized. This is stronger
-> >>>>> and more robust than the existing mangle_sg_table() technique. It is
-> >>>>> a future project to migrate DMABUF as a subsystem away from using
-> >>>>> scatterlist for this data structure.
-> >>>>>
-> >>>>> Tested-by: Alex Mastro <amastro@fb.com>
-> >>>>> Tested-by: Nicolin Chen <nicolinc@nvidia.com>
-> >>>>> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> >>>>> ---
-> >>>>>  drivers/dma-buf/dma-buf.c | 235 ++++++++++++++++++++++++++++++++++++++++++++++
-> >>>>>  include/linux/dma-buf.h   |  18 ++++
-> >>>>>  2 files changed, 253 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> >>>>> index 2bcf9ceca997..cb55dff1dad5 100644
-> >>>>> --- a/drivers/dma-buf/dma-buf.c
-> >>>>> +++ b/drivers/dma-buf/dma-buf.c
-> >>>>> @@ -1254,6 +1254,241 @@ void dma_buf_unmap_attachment_unlocked(struct dma_buf_attachment *attach,
-> >>>>>  }
-> >>>>>  EXPORT_SYMBOL_NS_GPL(dma_buf_unmap_attachment_unlocked, "DMA_BUF");
-> >>>>>  
-> >>>>> +static struct scatterlist *fill_sg_entry(struct scatterlist *sgl, size_t length,
-> >>>>> +					 dma_addr_t addr)
-> >>>>> +{
-> >>>>> +	unsigned int len, nents;
-> >>>>> +	int i;
-> >>>>> +
-> >>>>> +	nents = DIV_ROUND_UP(length, UINT_MAX);
-> >>>>> +	for (i = 0; i < nents; i++) {
-> >>>>> +		len = min_t(size_t, length, UINT_MAX);
-> >>>>> +		length -= len;
-> >>>>> +		/*
-> >>>>> +		 * DMABUF abuses scatterlist to create a scatterlist
-> >>>>> +		 * that does not have any CPU list, only the DMA list.
-> >>>>> +		 * Always set the page related values to NULL to ensure
-> >>>>> +		 * importers can't use it. The phys_addr based DMA API
-> >>>>> +		 * does not require the CPU list for mapping or unmapping.
-> >>>>> +		 */
-> >>>>> +		sg_set_page(sgl, NULL, 0, 0);
-> >>>>> +		sg_dma_address(sgl) = addr + i * UINT_MAX;
-> >>>>> +		sg_dma_len(sgl) = len;
-> >>>>> +		sgl = sg_next(sgl);
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	return sgl;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static unsigned int calc_sg_nents(struct dma_iova_state *state,
-> >>>>> +				  struct dma_buf_phys_vec *phys_vec,
-> >>>>> +				  size_t nr_ranges, size_t size)
-> >>>>> +{
-> >>>>> +	unsigned int nents = 0;
-> >>>>> +	size_t i;
-> >>>>> +
-> >>>>> +	if (!state || !dma_use_iova(state)) {
-> >>>>> +		for (i = 0; i < nr_ranges; i++)
-> >>>>> +			nents += DIV_ROUND_UP(phys_vec[i].len, UINT_MAX);
-> >>>>> +	} else {
-> >>>>> +		/*
-> >>>>> +		 * In IOVA case, there is only one SG entry which spans
-> >>>>> +		 * for whole IOVA address space, but we need to make sure
-> >>>>> +		 * that it fits sg->length, maybe we need more.
-> >>>>> +		 */
-> >>>>> +		nents = DIV_ROUND_UP(size, UINT_MAX);
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	return nents;
-> >>>>> +}
-> >>>>> +
-> >>>>> +/**
-> >>>>> + * struct dma_buf_dma - holds DMA mapping information
-> >>>>> + * @sgt:    Scatter-gather table
-> >>>>> + * @state:  DMA IOVA state relevant in IOMMU-based DMA
-> >>>>> + * @size:   Total size of DMA transfer
-> >>>>> + */
-> >>>>> +struct dma_buf_dma {
-> >>>>> +	struct sg_table sgt;
-> >>>>> +	struct dma_iova_state *state;
-> >>>>> +	size_t size;
-> >>>>> +};
-> >>>>> +
-> >>>>> +/**
-> >>>>> + * dma_buf_map - Returns the scatterlist table of the attachment from arrays
-> >>>>> + * of physical vectors. This funciton is intended for MMIO memory only.
-> >>>>> + * @attach:	[in]	attachment whose scatterlist is to be returned
-> >>>>> + * @provider:	[in]	p2pdma provider
-> >>>>> + * @phys_vec:	[in]	array of physical vectors
-> >>>>> + * @nr_ranges:	[in]	number of entries in phys_vec array
-> >>>>> + * @size:	[in]	total size of phys_vec
-> >>>>> + * @dir:	[in]	direction of DMA transfer
-> >>>>> + *
-> >>>>> + * Returns sg_table containing the scatterlist to be returned; returns ERR_PTR
-> >>>>> + * on error. May return -EINTR if it is interrupted by a signal.
-> >>>>> + *
-> >>>>> + * On success, the DMA addresses and lengths in the returned scatterlist are
-> >>>>> + * PAGE_SIZE aligned.
-> >>>>> + *
-> >>>>> + * A mapping must be unmapped by using dma_buf_unmap().
-> >>>>> + */
-> >>>>> +struct sg_table *dma_buf_map(struct dma_buf_attachment *attach,
-> >>>>
-> >>>> That is clearly not a good name for this function. We already have overloaded the term *mapping* with something completely different.
-> >>>
-> >>> This function performs DMA mapping, so what name do you suggest instead of dma_buf_map()?
-> >>
-> >> Something like dma_buf_phys_vec_to_sg_table(). I'm not good at naming either.
-> > 
-> > Can I call it simply dma_buf_mapping() as I plan to put that function in dma_buf_mapping.c
-> > file per-your request.
-> 
-> No, just completely drop the term "mapping" here. This is about phys_vector to sg_table conversion and nothing else.
+meminspect is a mechanism which allows the kernel to mark specific memory
+areas for memory dumping or specific inspection, statistics, usage.
+Once regions are marked, meminspect keeps an internal list with the regions
+in a dedicated table.
+Further, these regions can be accessed using specific API by any interested driver.
+Regions being marked beforehand, when the system is up and running, there
+is no need nor dependency on a panic handler, or a working kernel that can
+dump the debug information.
+meminspect can be primarily used for debugging. The approach is feasible to work
+when pstore, kdump, or another mechanism do not.
+Pstore relies on persistent storage, a dedicated RAM area or flash, which
+has the disadvantage of having the memory reserved all the time, or another
+specific non volatile memory. Some devices cannot keep the RAM contents on
+reboot so ramoops does not work. Some devices do not allow kexec to run
+another kernel to debug the crashed one.
+For such devices, that have another mechanism to help debugging, like
+firmware, kmemdump is a viable solution.
 
-We have both map and unmap, so dma_buf_*_to_*() can be applicable to dma_buf_map() only.
-And it is not simple conversion, most of the logic is actually handles mapping:
+meminspect can create a core image, similar with /proc/vmcore, with only
+the registered regions included. This can be loaded into crash tool/gdb and
+analyzed. This happens if CRASH_DUMP=y.
+To have this working, specific information from the kernel is registered,
+and this is done at meminspect init time, no need for the meminspect users to
+do anything.
 
-  137         for (i = 0; i < nr_ranges; i++) {
-  138                 if (!dma->state) {
-  139                         addr = pci_p2pdma_bus_addr_map(provider,
-  140                                                        phys_vec[i].paddr);
-  141                 } else if (dma_use_iova(dma->state)) {
-  142                         ret = dma_iova_link(attach->dev, dma->state,
-  143                                             phys_vec[i].paddr, 0,
-  144                                             phys_vec[i].len, dir,
-  145                                             DMA_ATTR_MMIO);
-  146                         if (ret)
-  147                                 goto err_unmap_dma;
-  148
-  149                         mapped_len += phys_vec[i].len;
-  150                 } else {
-  151                         addr = dma_map_phys(attach->dev, phys_vec[i].paddr,
-  152                                             phys_vec[i].len, dir,
-  153                                             DMA_ATTR_MMIO);
-  154                         ret = dma_mapping_error(attach->dev, addr);
-  155                         if (ret)
-  156                                 goto err_unmap_dma;
-  157                 }
-  158
-  159                 if (!dma->state || !dma_use_iova(dma->state))
-  160                         sgl = fill_sg_entry(sgl, phys_vec[i].len, addr);
-  161         }
-  162
-  163         if (dma->state && dma_use_iova(dma->state)) {
-  164                 WARN_ON_ONCE(mapped_len != size);
-  165                 ret = dma_iova_sync(attach->dev, dma->state, 0, mapped_len);
-  166                 if (ret)
-  167                         goto err_unmap_dma;
-  168
-  169                 sgl = fill_sg_entry(sgl, mapped_len, dma->state->addr);
-  170         }
+This version of the meminspect patch series includes two drivers that make use of it:
+one is the Qualcomm Minidump, and the other one is the Debug Kinfo
+backend for Android devices, reworked from this source here:
+https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/drivers/android/debug_kinfo.c
+written originally by Jone Chou <jonechou@google.com>
 
-SG table conversion is only two lines (160 and 169) which are here
-because of DMABUF dependency on SG.
+*** History, motivation and available online resources ***
 
-What about dma_buf_phys_vec_mapping()/dma_buf_phys_vec_unmapping()?
+The patch series is based on both minidump and kmemdump previous implementations.
 
-> 
-> That we create an IOVA mapping when the access needs to go through the root complex is an implementation detail.
-> 
-> > 
-> > Regarding SG, the long term plan is to remove SG table completely, so at
-> > least external users of DMABUF shouldn't be exposed to internal implementation
-> > details (SG table).
-> 
-> Hui? Well I suggested to remove the sg_table, but that doesn't mean that implementations shouldn't be aware of that.
+After the three RFC kmemdump versions, considering the ML discussions, I decided to
+move this into kernel/ directory and rework it into naming it meminspect, as Thomas Gleixner
+suggested.
+I will present this version at Plumbers conference in Tokyo on December 13th:
+https://lpc.events/event/19/contributions/2080/
+I am eager to discuss it there face to face.
 
-VFIO which is first user of this interface. It doesn't care how
-internally DMABUF handles array of phys_vecs. Today, it is sg_table,
-tomorrow it will be something else.
+Initial version of kmemdump and discussion is available here:
+https://lore.kernel.org/lkml/20250422113156.575971-1-eugen.hristev@linaro.org/
 
-Thanks
+Kmemdump has been presented and discussed at Linaro Connect 2025,
+including motivation, scope, usability and feasability.
+Video of the recording is available here for anyone interested:
+https://www.youtube.com/watch?v=r4gII7MX9zQ&list=PLKZSArYQptsODycGiE0XZdVovzAwYNwtK&index=14
 
-> 
-> Regards,
-> Christian.
-> 
-> > 
-> > Thanks
-> 
+Linaro blog on kmemdump can be found here:
+https://www.linaro.org/blog/introduction-to-kmemdump/
+
+Linaro blog on kmemdump step by stem using minidump backend is available here:
+https://www.linaro.org/blog/kmemdump-step-by-step-on-qualcomm-automotive-platform/
+
+The implementation is based on the initial Pstore/directly mapped zones
+published as an RFC here:
+https://lore.kernel.org/all/20250217101706.2104498-1-eugen.hristev@linaro.org/
+
+The back-end implementation for qcom_minidump is based on the minidump
+patch series and driver written by Mukesh Ojha, thanks:
+https://lore.kernel.org/lkml/20240131110837.14218-1-quic_mojha@quicinc.com/
+
+The RFC v2 version with .section creation and macro annotation kmemdump
+is available here:
+https://lore.kernel.org/all/20250724135512.518487-1-eugen.hristev@linaro.org/
+
+The RFC v3 version with making everything static, which was pretty much rejected due to
+all reasons discussed on the public ML:
+https://lore.kernel.org/all/20250912150855.2901211-1-eugen.hristev@linaro.org/
+
+*** How to use meminspect with minidump backend on Qualcomm platform guide ***
+
+Prerequisites:
+Crash tool compiled with target=ARM64 and minor changes required for usual crash
+mode (minimal mode works without the patch)
+**A patch can be applied from here https://p.calebs.dev/1687bc **
+This patch will be eventually sent in a reworked way to crash tool.
+
+Target kernel must be built with :
+CONFIG_DEBUG_INFO_REDUCED=n ; this will have vmlinux include all the debugging
+information needed for crash tool.
+
+Also, the kernel requires these as well:
+CONFIG_MEMINSPECT,  CONFIG_CRASH_DUMP and the driver CONFIG_QCOM_MINIDUMP
+
+Kernel arguments:
+Kernel firmware must be set to mode 'mini' by kernel module parameter
+like this : qcom_scm.download_mode=mini
+
+After the kernel boots, and minidump module is loaded, everything is ready for
+a possible crash.
+
+Once the crash happens, the firmware will kick in and you will see on
+the console the message saying Sahara init, etc, that the firmware is
+waiting in download mode. (this is subject to firmware supporting this
+mode, I am using sa8775p-ride board)
+
+Example of log on the console:
+"
+[...]
+B -   1096414 - usb: init start
+B -   1100287 - usb: qusb_dci_platform , 0x19
+B -   1105686 - usb: usb3phy: PRIM success: lane_A , 0x60
+B -   1107455 - usb: usb2phy: PRIM success , 0x4
+B -   1112670 - usb: dci, chgr_type_det_err
+B -   1117154 - usb: ID:0x260, value: 0x4
+B -   1121942 - usb: ID:0x108, value: 0x1d90
+B -   1124992 - usb: timer_start , 0x4c4b40
+B -   1129140 - usb: vbus_det_pm_unavail
+B -   1133136 - usb: ID:0x252, value: 0x4
+B -   1148874 - usb: SUPER , 0x900e
+B -   1275510 - usb: SUPER , 0x900e
+B -   1388970 - usb: ID:0x20d, value: 0x0
+B -   1411113 - usb: ENUM success
+B -   1411113 - Sahara Init
+B -   1414285 - Sahara Open
+"
+
+Once the board is in download mode, you can use the qdl tool (I
+personally use edl , have not tried qdl yet), to get all the regions as
+separate files.
+The tool from the host computer will list the regions in the order they
+were downloaded.
+
+Once you have all the files simply use `cat` to put them all together,
+in the order of the indexes.
+For my kernel config and setup, here is my cat command : (you can use a script
+or something, I haven't done that so far):
+
+`cat memory/md_KELF1.BIN memory/md_Kvmcorein2.BIN memory/md_Kconfig3.BIN \
+memory/md_Ktotalram4.BIN memory/md_Kcpu_poss5.BIN memory/md_Kcpu_pres6.BIN \
+memory/md_Kcpu_onli7.BIN memory/md_Kcpu_acti8.BIN memory/md_Kmem_sect9.BIN \
+memory/md_Kjiffies10.BIN memory/md_Klinux_ba11.BIN memory/md_Knr_threa12.BIN \
+memory/md_Knr_irqs13.BIN memory/md_Ktainted_14.BIN memory/md_Ktaint_fl15.BIN \
+memory/md_Knode_sta16.BIN memory/md_K__per_cp17.BIN memory/md_Knr_swapf18.BIN \
+memory/md_Kinit_uts19.BIN memory/md_Kprintk_r20.BIN memory/md_Kprintk_r21.BIN \
+memory/md_Kprb22.BIN memory/md_Kprb_desc23.BIN memory/md_Kprb_info24.BIN \
+memory/md_Kprb_data25.BIN  memory/md_Khigh_mem26.BIN memory/md_Kinit_mm27.BIN \
+memory/md_Kunknown29.BIN memory/md_Kunknown30.BIN memory/md_Kunknown31.BIN \
+memory/md_Kunknown32.BIN memory/md_Kunknown33.BIN memory/md_Kunknown34.BIN \
+memory/md_Kunknown35.BIN memory/md_Kunknown36.BIN memory/md_Kunknown37.BIN \
+memory/md_Kunknown38.BIN memory/md_Kunknown39.BIN memory/md_Kunknown40.BIN \
+memory/md_Kunknown41.BIN memory/md_Kunknown42.BIN memory/md_Kunknown43.BIN \
+memory/md_Kunknown44.BIN memory/md_Kunknown45.BIN  memory/md_Kunknown46.BIN \
+memory/md_Kunknown47.BIN memory/md_Kunknown48.BIN memory/md_Kunknown49.BIN \
+memory/md_Kunknown50.BIN memory/md_Kunknown51.BIN memory/md_Kunknown52.BIN \
+memory/md_Kunknown53.BIN memory/md_Kunknown54.BIN memory/md_Kunknown55.BIN \
+memory/md_Kunknown56.BIN memory/md_Kunknown57.BIN > ~/minidump_image`
+
+Once you have the resulted file, use `crash` tool to load it, like this:
+`./crash --no_modules --no_panic --no_kmem_cache --zero_excluded vmlinux minidump_image`
+
+There is also a --minimal mode for ./crash that would work without any patch applied
+to crash tool, but you can't inspect symbols, etc.
+
+Once you load crash you will see something like this :
+      KERNEL: /home/eugen/linux-minidump/vmlinux  [TAINTED]
+    DUMPFILE: /home/eugen/a
+        CPUS: 8 [OFFLINE: 6]
+        DATE: Thu Jan  1 02:00:00 EET 1970
+      UPTIME: 00:00:25
+       TASKS: 0
+    NODENAME: qemuarm64
+     RELEASE: 6.18.0-rc2-00030-g65df2b8a0dde
+     VERSION: #33 SMP PREEMPT Mon Nov 17 13:30:54 EET 2025
+     MACHINE: aarch64  (unknown Mhz)
+      MEMORY: 0
+       PANIC: ""
+crash> log
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd4b2]
+[    0.000000] Linux version 6.18.0-rc2-00030-g65df2b8a0dde
+
+*** Debug Kinfo backend driver ***
+I don't have any device to actually test this. So I have not.
+I hacked the driver to just use a kmalloc'ed area to save things instead
+of the shared memory, and dumped everything there and checked whether it is identical
+with what the downstream driver would have saved.
+So this synthetic test passed and memories are identical.
+Anyone who actually wants to test this, feel free to reply to the patch.
+I have also written a simple DT binding for the driver.
+
+Thanks for everyone reviewing and bringing ideas into the discussion.
+
+Eugen
+
+Changelog for meminspect v1:
+- rename to meminspect
+- start on top of v2 actually, with the section and all.
+- remove the backend thing, change the API to access the table
+- move everything to kernel/
+- add dependency to CRASH_DUMP instead of a separate knob
+- move the minidump driver to soc/qcom
+- integrate the meminspect better into memblock by using a new memblock flag
+- minor fixes : use dev_err_probe everywhere, rearrange variable declarations,
+remove some useless code, etc.
+
+Changelog for RFC v3:
+- V2 available here : https://lore.kernel.org/all/20250724135512.518487-1-eugen.hristev@linaro.org/
+- Removed the .section as requested by David Hildenbrand.
+- Moved all kmemdump registration(when possible) to vmcoreinfo.
+- Because of this, some of the variables that I was registering had to be non-static
+so I had to modify this as per David Hildenbrand suggestion.
+- Fixed minor things in the Kinfo driver: one field was broken, fixed some
+compiler warnings, fixed the copyright and remove some useless includes.
+- Moved the whole kmemdump from drivers/debug into mm/ and Kconfigs into mm/Kconfig.debug
+and it's now available in kernel hacking, as per Randy Dunlap review
+- Reworked some of the Documentation as per review from Jon Corbet
+
+
+Changelog for RFC v2:
+- V1 available here: https://lore.kernel.org/lkml/20250422113156.575971-1-eugen.hristev@linaro.org/
+- Reworked the whole minidump implementation based on suggestions from Thomas Gleixner.
+This means new API, macros, new way to store the regions inside kmemdump
+(ditched the IDR, moved to static allocation, have a static default backend, etc)
+- Reworked qcom_minidump driver based on review from Bjorn Andersson
+- Reworked printk log buffer registration based on review from Petr Mladek
+
+I appologize if I missed any review comments.
+Patches are sent on top on 6.18-rc2
+
+Eugen Hristev (26):
+  kernel: Introduce meminspect
+  init/version: Annotate static information into meminspect
+  mm/percpu: Annotate static information into meminspect
+  cpu: Annotate static information into meminspect
+  genirq/irqdesc: Annotate static information into meminspect
+  timers: Annotate static information into meminspect
+  kernel/fork: Annotate static information into meminspect
+  mm/page_alloc: Annotate static information into meminspect
+  mm/show_mem: Annotate static information into meminspect
+  mm/swapfile: Annotate static information into meminspect
+  kernel/vmcore_info: Register dynamic information into meminspect
+  kernel/configs: Register dynamic information into meminspect
+  mm/init-mm: Annotate static information into meminspect
+  panic: Annotate static information into meminspect
+  kallsyms: Annotate static information into meminspect
+  mm/mm_init: Annotate static information into meminspect
+  sched/core: Annotate runqueues into meminspect
+  mm/memblock: Add MEMBLOCK_INSPECT flag
+  mm/numa: Register information into meminspect
+  mm/sparse: Register information into meminspect
+  printk: Register information into meminspect
+  remoteproc: qcom: Extract minidump definitions into a header
+  soc: qcom: Add minidump driver
+  soc: qcom: smem: Add minidump device
+  dt-bindings: reserved-memory: Add Google Kinfo Pixel reserved memory
+  meminspect: Add Kinfo compatible driver
+
+ Documentation/dev-tools/index.rst             |   1 +
+ Documentation/dev-tools/meminspect.rst        | 139 ++++++
+ .../reserved-memory/google,kinfo.yaml         |  49 ++
+ MAINTAINERS                                   |  13 +
+ drivers/remoteproc/qcom_common.c              |  56 +--
+ drivers/soc/qcom/Kconfig                      |  13 +
+ drivers/soc/qcom/Makefile                     |   1 +
+ drivers/soc/qcom/minidump.c                   | 272 ++++++++++
+ drivers/soc/qcom/smem.c                       |  10 +
+ include/asm-generic/vmlinux.lds.h             |  13 +
+ include/linux/memblock.h                      |   7 +
+ include/linux/meminspect.h                    | 261 ++++++++++
+ include/linux/soc/qcom/minidump.h             |  72 +++
+ init/Kconfig                                  |   2 +
+ init/version-timestamp.c                      |   3 +
+ init/version.c                                |   3 +
+ kernel/Makefile                               |   1 +
+ kernel/configs.c                              |   6 +
+ kernel/cpu.c                                  |   5 +
+ kernel/fork.c                                 |   2 +
+ kernel/irq/irqdesc.c                          |   2 +
+ kernel/kallsyms.c                             |  10 +
+ kernel/meminspect/Kconfig                     |  30 ++
+ kernel/meminspect/Makefile                    |   4 +
+ kernel/meminspect/kinfo.c                     | 289 +++++++++++
+ kernel/meminspect/meminspect.c                | 470 ++++++++++++++++++
+ kernel/panic.c                                |   4 +
+ kernel/printk/printk.c                        |  12 +
+ kernel/sched/core.c                           |   2 +
+ kernel/time/timer.c                           |   2 +
+ kernel/vmcore_info.c                          |   4 +
+ mm/init-mm.c                                  |  11 +
+ mm/memblock.c                                 |  36 ++
+ mm/mm_init.c                                  |   2 +
+ mm/numa.c                                     |   2 +
+ mm/page_alloc.c                               |   2 +
+ mm/percpu.c                                   |   2 +
+ mm/show_mem.c                                 |   2 +
+ mm/sparse.c                                   |   4 +
+ mm/swapfile.c                                 |   2 +
+ 40 files changed, 1766 insertions(+), 55 deletions(-)
+ create mode 100644 Documentation/dev-tools/meminspect.rst
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml
+ create mode 100644 drivers/soc/qcom/minidump.c
+ create mode 100644 include/linux/meminspect.h
+ create mode 100644 include/linux/soc/qcom/minidump.h
+ create mode 100644 kernel/meminspect/Kconfig
+ create mode 100644 kernel/meminspect/Makefile
+ create mode 100644 kernel/meminspect/kinfo.c
+ create mode 100644 kernel/meminspect/meminspect.c
+
+-- 
+2.43.0
+
