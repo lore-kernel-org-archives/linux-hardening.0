@@ -1,87 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C646372AA0;
-	Wed, 19 Nov 2025 20:54:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EAE2E6CB2;
+	Wed, 19 Nov 2025 22:40:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763585665; cv=none; b=GC5Xr6Tot1rI3sGBOxLxJRtImgKEUw5fEm5lwPoMksWI5XeQPLBRQT48Q5h/SKtIriEu4240LZ1ft+I2b4bJes/UWhDAbovyJsNh7d1q2TOSe9o7eDH0oeYUAYbbrxIC2iSw7hKFj3OxqyowsnHB0KWcSMEMP4HrLC0zZq+eUV0=
+	t=1763592007; cv=none; b=li8q+F1DZ4XkG3MzWaW8Ymv9N9JH5fYM2bM3YK8FWtDU1YXv81RbMickO8H/52cuEbFbhLqocewRi8u8f0NoswKb1Fxn3zP3olOqqxBPUrKzoMTSTj70utH7pzwd0sOTddAKtFHsdEbGjc/dNFWFqVapheftP1KGxPZzwuh65UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763585665; c=relaxed/simple;
-	bh=mwbqNvwrxL30F0hMKoNOTqnADhQUlj+4wIXlkWHn4Hs=;
+	s=arc-20240116; t=1763592007; c=relaxed/simple;
+	bh=nPEusvPgOAT/NwcTaXoVhxtHcPgLEuoF4hq8tl6Ym2M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nWbGNHPPWV/new0isFseSmfBecPVX4dJUxByXKMhhEhZ2ll8TERC1KryY1dSPLrasvThTSJ5co7zSY2MVTsAM5nUw+tIERZYfvQ5KH6LHFOUA0lMQqPprGlyKPBriMrqtO2x5r9nxZ5iWWG7cCD9bxrKFA5C0JbLBb5JhPeWDjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VIjVDXdy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kVZg8vhqumUJrKFkjU/zWq8AnldAZX/2Jcv7fzFsK5hTh00y85JKwnWjZO0Ftrdo8DqPhwyr0EQlK/2xEzt4poRFRTG8Yk0iKkrG0rwqTJ1DPIpgifV1Ez3NRsHTfjVp6HgLYgC4ChbC1SRWkGMeMnv0F0vELtlZcPE2W2JuuyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WSpLMKwu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VIjVDXdy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F01C5C116C6;
-	Wed, 19 Nov 2025 20:54:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WSpLMKwu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E70DC4CEF5;
+	Wed, 19 Nov 2025 22:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763585664;
-	bh=mwbqNvwrxL30F0hMKoNOTqnADhQUlj+4wIXlkWHn4Hs=;
+	s=k20201202; t=1763592005;
+	bh=nPEusvPgOAT/NwcTaXoVhxtHcPgLEuoF4hq8tl6Ym2M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VIjVDXdygEdThL6V5YLCW0xD9Bt9YdcnAcPcnfKFzoBPmHe9+VFePoeh5FMXypqGq
-	 V+S+LcEu8/NG3zTr4t6hmJUDNKfHgpg/5fKTjiz9WLK0hEzuCyuIhBVoCD4x4HGrUR
-	 PKeUcvq5/isvXCO/hBigGUthi/F5yOtPdPUa5qTDD1B7rl5YtLMNm+5eCtnIx/tYkK
-	 azw8wd+f0pUiG5a3AU2PQZjKxBRPnRZSceZC56Fjq2xd1k9ZVCcY0CJsQX1cbjmlTN
-	 ZYssUYKWJAULk3czXXwVxGWnbZ5TaxSbT8lqrNnJ8A9uIgw3EwVlIC7JZfCZdOkKHp
-	 VrP+1F9ywf3WQ==
-Date: Wed, 19 Nov 2025 22:54:21 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
+	b=WSpLMKwubKK/uuJ/ah6lCGsEP67W1mVEiB6oLXd1Oy+e3PDU5vcHAjc+umu7Khrjf
+	 pi22HF7KH5hmFgdWj1eWwYX+VVN7z4Op6yRM8o7JfBX2PXsCAmnpBNkIsr3EzDuyiL
+	 BdTQ64vQkVO0mcAicVT+tIeV8SxqOARHKbuLg50OyASau6FXheVDwcw2hfD6TbjE2u
+	 FaGrXzzthTNhQAkPsiw9Auq/eB6M5RO4bEWHronoGZlgaBljgpZzqF/BeJeQpVcTdC
+	 NvaTMH+aQVpqfpysQM2od4ehEQ+fiDLXNfVVPVfSsiBnu1uLpPBEt1ycSXSA2ozqNU
+	 oDgSAFjYj/c7A==
+Date: Wed, 19 Nov 2025 14:40:04 -0800
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
- scatter-gather mapping routine
-Message-ID: <20251119205421.GP18335@unreal>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
- <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
- <20251119132511.GK17968@ziepe.ca>
- <69436b2a-108d-4a5a-8025-c94348b74db6@amd.com>
- <20251119193114.GP17968@ziepe.ca>
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] net: inet_sock.h: Avoid thousands of
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <202511191439.C737EF792@keescook>
+References: <aPdx4iPK4-KIhjFq@kspp>
+ <20251023172518.3f370477@kernel.org>
+ <949f472c-baca-4c2f-af23-7ba76fff1ddc@embeddedor.com>
+ <20251024162354.0a94e4b1@kernel.org>
+ <bf9c2ceb-f80f-4fea-999d-4f46b2369721@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251119193114.GP17968@ziepe.ca>
+In-Reply-To: <bf9c2ceb-f80f-4fea-999d-4f46b2369721@embeddedor.com>
 
-On Wed, Nov 19, 2025 at 03:31:14PM -0400, Jason Gunthorpe wrote:
-> On Wed, Nov 19, 2025 at 02:42:18PM +0100, Christian König wrote:
+On Tue, Nov 18, 2025 at 01:36:41PM +0900, Gustavo A. R. Silva wrote:
+>  struct ip_options_data {
+>  	struct ip_options_rcu	opt;
+> -	char			data[40];
+>  };
 
-<...>
+If this just contains struct ip_options_rcu now, can ip_options_data
+just be removed entirely?
 
-> So thanks, we can take the Acked-by and progress here. Interested
-> parties can pick it up from this point when time allows.
+-Kees
 
-Christian,
-
-Can you please provide explicit Acked-by?
-
-Thanks
+-- 
+Kees Cook
