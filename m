@@ -1,64 +1,64 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF44C3A5E93
-	for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 15:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2748393DD6
+	for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 15:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763567168; cv=none; b=N/84fYNWxfe5TcEXGfSFsTaUndnJwDtGpfqX25oAPt6Xal50NYXf5yKUJ/p3fZ0VUSiJs/BYtYaLI9u8hJcga+0TU6aWlFgleHnkU4TXkIFi37XgtVcfXAAp+allvh7HpNF2XUj0fLHQjAp/SedFS0LbV+kEf9sR1dI2NZ0fsWA=
+	t=1763567171; cv=none; b=r714yo3DB2/o9PvWpUh+utU1y2cC5+BZ9VYdXkQVUWKYunHqqXMFgN9jlmyedMh99BQCoOM73qNuTrRe3rIoGvEpbSkxIgY1ExNAifCOEHjS7mVoy60ZOWfF8bc0NYbs+X7qHir7p7ucf7RZmBvqzIHZk7I0808r1pgGzCLxyNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763567168; c=relaxed/simple;
-	bh=f3ivw/X7k9GlCbiVs54CUIA/jWBXKlGJ8Yjl1U+AcTM=;
+	s=arc-20240116; t=1763567171; c=relaxed/simple;
+	bh=Vs8lQW7BawUxmkOmLvkVao/jUHVbMrAhKW0MzITmHHs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ayMWGYgCfZoeW4hDLmTRp3bquN1ljf3J596ABHXySPoxKxhHhwPNcNnxAhY6lqJttjlct4sNY7Entxo5K3Dc/idjgHZL+1ECh2DszCrvKU6wSiI3ufBa4xKOj/LslbbltVVP9+YXcH/ZxMWRLNa/rc87yEXEj7BDBR3Jqzlj0gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dCa/4hQ4; arc=none smtp.client-ip=209.85.221.47
+	 MIME-Version; b=JIg+0KVLT33OHm+qKBkJB/qChRlWYOG1NRZb1np51Xs+rFVCWkX33g2JJN4PVwrjJZgHOzGpswKd4KzWUyJ6qdivwpKewN6mOSXN5bSZ9YUmFcy3hoTRtnzhXOEpkcHapAK2waEI+N61q4fEaCwl7MX9X7gPh1bKzDB2LzCxc74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s5VN9gtA; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dCa/4hQ4"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-42b39d51dcfso3930917f8f.2
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 07:45:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5VN9gtA"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-42b2a0c18caso3706666f8f.1
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 07:46:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763567157; x=1764171957; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1763567161; x=1764171961; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aBNrwlYX8KQq53Dd2Ff7QORfdDzZbYxDqKu/vrV5PaM=;
-        b=dCa/4hQ48Hjq7BSjuCS1fi++8OazBBBghVqyAKOA5S5UMJACUxUIjGgU8rkqnEf+PH
-         PFmT4YhqkBIvw5DJz9t8mqnZ3+kVC14CitO6OaX2Uiesoqo0TgCl56HZZw0Rph7tBLZR
-         CTMulBFZnRvRXrGF0Z5RrStTF1d9wvCxDh5dW/ZUKeIrB12IOJizdkASRhEjp0UufNco
-         IjMN5Ym+14JJnsWmxeZNGjK3SQBufkLkYZXBIc+SRB3JEnN7cvnKrHOLhIZPSccN7BF1
-         WfueqgGUlNLk3kVSjyuw7CdifKIZJ/YvVnpG0CNhC9QLKcsEb8wsC1hhDZqPKUbDbQ55
-         dN0g==
+        bh=plmpXAswm1LBomkuKtBG6pEMvq3kPgWo3F0t41OaVKo=;
+        b=s5VN9gtA7BI7QEVyZFA8bNSEEtzGadJpV0n75+YSnEQFbezbHy0V9//G5xZOOBKNy9
+         w/dFXLVOJAGqEChl1FE9CuIi3WdPHYT0C7emqe3w5/eAxEPF4lTjCDpCOfPKuM1OxdxG
+         VfxOhSXpLpyvUFKSe4R6FXxwFt3xjVEq8fpT8vy3fSk2d0ethXkqeMBhlLKM3gBYnspH
+         /WaE3rgjBZi9tX1i2OjQR4fI8Ubqbk3BzV78jghkr3GTr/xiNPoZZNk1NgHpEXrLADPj
+         o0K8GM49h6Vz7yGMKgEq8moU5p/xGZwKTyQFzpwXbiDxSIbrsvD/4tAX7dBJ0XU0jvrB
+         JqMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763567157; x=1764171957;
+        d=1e100.net; s=20230601; t=1763567161; x=1764171961;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=aBNrwlYX8KQq53Dd2Ff7QORfdDzZbYxDqKu/vrV5PaM=;
-        b=h3bjmdXhacTLDrQPF+To9m9RK3eo93x8VNnBm5TRcKlZParqD9JaKCdT5BbVWptZZ5
-         REyPQlRokqUmgn+yXtnHyUD7nSXRTh+c6Wfhu8VfZGNTwf8r1Yox8jKfNXNwdofa71bA
-         wD4En3X9+u+8cuTL5veodndO8BTIf2RAR5eQflaohXYgFGCYt/fUH+FeQSq5lKnrrZLI
-         ltQvMhJxa8m1J2YWzJo+yimjCV4zZ2BY9ypelvdnyviATXiqGvLWNAFg34f/vJorv5uH
-         kSeu+i8J3dF/xjvDWaZHVrXoTiC1qDUpnDe8Bj3YekHS12oS59iSycZ1Yj1jT+J/wE2n
-         iI1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUDSDFL3cY9ka7EBeQpXNXQaZKKazC40hgawM8k8EgtjwtM3Sy+NZoNoBj/rq3LrC4r3ybpYQhGufY1BhpEpjo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/t1Hfhkp41S2X/JDrA6y6hBzt4kKbe7Ej1a1W7J1Njxd4w5uE
-	TTG9s3a3Ai9VzQRYSR+26YG15Pu9K/oCEUMhKNW//iUJfo3zFTB7HoXHwS07e3YZAzU=
-X-Gm-Gg: ASbGncv2qGnCUJYPLfsodKlP4eVx+lmOh1Ob3mkCb1xYDeDTrYWKTlyupOMIWTMATa9
-	Mrljo3Txysbecd+epQTufvSMXHacZlArpsKoT92qnYignAannCik8RzxPIwRCf1StAQveCAYU+f
-	7Wya//oFRTd+r+P7f+mKICeX2l4BPHgMlaWoYk7iFNBaLpvjXu79tIkFDzEB8YE0TdJV/xXfOe5
-	hJMC4BdOB32FbY8pEoaOi0071aTYqdmeJH4SDiLi1S33EDjo2dojtxsy45Y10s8+LfxzdM9EUM7
-	cheLmuOsRXQqNSLf4+I5XB6/M/7ZNaiuB93lhBm41inWvD0Mqb8btWuyuPcNWGyE//QHW0Ml5tj
-	EovNdq4mI53JAdPzDPi5QsdhY6xsg7fkGAk+ITnjepF9rYa292ZkNAF8JiVELQpFn63wp3skfCC
-	ExwpeUipWOwHYv6dZ1JXs=
-X-Google-Smtp-Source: AGHT+IHMsSbrwKXE/iT+c2iGpRnN+BNbOo3hGgZttZwiDhEyh5x/2x4kZMct8HS2b5hiT6bCYQDvdQ==
-X-Received: by 2002:a05:6000:2083:b0:42b:3867:b39c with SMTP id ffacd0b85a97d-42b593745c4mr20164142f8f.34.1763567157017;
-        Wed, 19 Nov 2025 07:45:57 -0800 (PST)
+        bh=plmpXAswm1LBomkuKtBG6pEMvq3kPgWo3F0t41OaVKo=;
+        b=xQeVvvq1LpGpsngI0PqvD5ULMUaD/E9WxdojuPXPgjT9vTGHQ7pqwDFYXXJw8ANqx7
+         ZIrqbZk5yFkZUUwAWrjXUe0Zh+PGR/YhpNeEZ2MgahU6W+sn1LlwdxpvO2qygqHYWfGt
+         a5big7vKkaIebXQWYe/5J0llQE2QUVJrcVMJtNEQnJBrc8lKhidgn2E/vQeWtkcg4Ltq
+         kWSMkdfLYI+P3XUOW7bWRz56/0HSkWsqBn3YYvinLZbCTMFzsh9tmmvm5mhZkgG25/RO
+         y+qPya2bfU8pAE4GtIU0hDpOKw9CgWBGtwVUKR5J6hYfejcRBYosEP4XfJEFHksGOgih
+         qzSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjngrEZ03GV9Xkot51rdiGnQgL+FfpZ1Svxka18skFgHc/7SqNNthjSZcMzWNlD86IEhd9OU3N5GzNrwe2Fis=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuzhQpTArCqkETBWzoyE+RczLuqWfYW35FDUke8moDhuPORICl
+	26251qe2J8fNkc00c4+F88l5UzLnfggN+5HcPKLQVVSTbfrv6gIPjBDzx/6wuW0dC0c=
+X-Gm-Gg: ASbGnctR2VOXPgudqvqlAaMqSUY47yB1FBtUzwsxT3w2kDJhuOW39scAYMuGTGVYp5x
+	zDBMdtiJqLp+D0Xytq4/o5jSglk931Wc0SNZxENvK6ooHrIiBUjXbHRaRgrHIEosftcasZBNprF
+	SLWjIGo76ILFNaBcggVVJcr+SqLomzWvoR34cIItbex2XKhzV1oM0tFhpjuS+KpktHDL9YvXOU5
+	b9Lis/2s4L7T7hrQVvXp/SffKlP3K64hXnY3qLRjKrtWHwylT3pd8SPGunOFHlh+n3iTwymBkPM
+	0YdxPtd6Nn49nwOIWoc/R7O3Z7pAn8nWcq52Htf8KnmNJ/hcBD4Pk5AW5Fu0c5sdVpuP22sqD47
+	XNK0ayszUiX/7vzMTVvFDghvRAyBC7M6ab8FCDjvws53/HvboMttgZqzHWUAIXUY7hep9Pk3wrm
+	Atb5sAXp03AXpJCcaxhdBWgDZoQPB5tSivjq4tzBwu
+X-Google-Smtp-Source: AGHT+IE/UWqNyS6htQwPVCsFX9f3Bqg52uzu0v0K2d2YIVRMOF1vqDQaElTCpee5ClbOZybd51PSbw==
+X-Received: by 2002:a5d:5d0e:0:b0:428:5673:11e0 with SMTP id ffacd0b85a97d-42b595a4ffbmr19851079f8f.40.1763567160526;
+        Wed, 19 Nov 2025 07:46:00 -0800 (PST)
 Received: from eugen-station.. ([82.76.24.202])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53dea1c9sm38765632f8f.0.2025.11.19.07.45.55
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53dea1c9sm38765632f8f.0.2025.11.19.07.45.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Nov 2025 07:45:56 -0800 (PST)
+        Wed, 19 Nov 2025 07:46:00 -0800 (PST)
 From: Eugen Hristev <eugen.hristev@linaro.org>
 To: linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -83,9 +83,9 @@ Cc: tudor.ambarus@linaro.org,
 	tony.luck@intel.com,
 	kees@kernel.org,
 	Eugen Hristev <eugen.hristev@linaro.org>
-Subject: [PATCH 23/26] soc: qcom: Add minidump driver
-Date: Wed, 19 Nov 2025 17:44:24 +0200
-Message-ID: <20251119154427.1033475-24-eugen.hristev@linaro.org>
+Subject: [PATCH 25/26] dt-bindings: reserved-memory: Add Google Kinfo Pixel reserved memory
+Date: Wed, 19 Nov 2025 17:44:26 +0200
+Message-ID: <20251119154427.1033475-26-eugen.hristev@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251119154427.1033475-1-eugen.hristev@linaro.org>
 References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
@@ -97,359 +97,86 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Qualcomm Minidump is a driver that manages the minidump shared memory
-table on Qualcomm platforms.
-It uses the meminspect table that it parses , in order to obtain inspection
-entries from the kernel, and convert them into regions.
-Regions are afterwards being registered into the shared memory
-and into the table of contents.
-Further, the firmware can read the table of contents and dump the memory
-accordingly, as per the firmware requirements.
+Add documentation for Google Kinfo Pixel reserved memory area.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 ---
- drivers/soc/qcom/Kconfig          |  13 ++
- drivers/soc/qcom/Makefile         |   1 +
- drivers/soc/qcom/minidump.c       | 272 ++++++++++++++++++++++++++++++
- include/linux/soc/qcom/minidump.h |   4 +
- 4 files changed, 290 insertions(+)
- create mode 100644 drivers/soc/qcom/minidump.c
+ .../reserved-memory/google,kinfo.yaml         | 49 +++++++++++++++++++
+ MAINTAINERS                                   |  5 ++
+ 2 files changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 2caadbbcf830..be768537528e 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -180,6 +180,19 @@ config QCOM_SMEM
- 	  The driver provides an interface to items in a heap shared among all
- 	  processors in a Qualcomm platform.
- 
-+config QCOM_MINIDUMP
-+	tristate "Qualcomm Minidump memory inspection driver"
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	depends on QCOM_SMEM
-+	help
-+	  Say y here to enable the Qualcomm Minidump memory inspection driver.
-+	  This driver uses memory inspection mechanism to register minidump
-+	  regions with the Qualcomm firmware, into the shared memory.
-+	  The registered regions are being linked into the minidump table
-+	  of contents.
-+	  Further on, the firmware will be able to read the table of contents
-+	  and extract the memory regions on case-by-case basis.
-+
- config QCOM_SMD_RPM
- 	tristate "Qualcomm Resource Power Manager (RPM) over SMD"
- 	depends on ARCH_QCOM || COMPILE_TEST
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index b7f1d2a57367..3e5a2cacccd4 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -25,6 +25,7 @@ qcom_rpmh-y			+= rpmh.o
- obj-$(CONFIG_QCOM_SMD_RPM)	+= rpm-proc.o smd-rpm.o
- obj-$(CONFIG_QCOM_SMEM) +=	smem.o
- obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
-+obj-$(CONFIG_QCOM_MINIDUMP)	+= minidump.o
- CFLAGS_smp2p.o := -I$(src)
- obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
- obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
-diff --git a/drivers/soc/qcom/minidump.c b/drivers/soc/qcom/minidump.c
+diff --git a/Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml b/Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml
 new file mode 100644
-index 000000000000..67ebbf09c171
+index 000000000000..12d0b2815c02
 --- /dev/null
-+++ b/drivers/soc/qcom/minidump.c
-@@ -0,0 +1,272 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Qualcomm Minidump kernel inspect driver
-+ * Copyright (C) 2016,2024-2025 Linaro Ltd
-+ * Copyright (C) 2015 Sony Mobile Communications Inc
-+ * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-+ */
++++ b/Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reserved-memory/google,kinfo.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/notifier.h>
-+#include <linux/sizes.h>
-+#include <linux/slab.h>
-+#include <linux/soc/qcom/smem.h>
-+#include <linux/soc/qcom/minidump.h>
-+#include <linux/meminspect.h>
++title: Google Pixel Kinfo reserved memory
 +
-+/**
-+ * struct minidump - Minidump driver data information
-+ *
-+ * @dev:	Minidump device struct.
-+ * @toc:	Minidump table of contents subsystem.
-+ * @regions:	Minidump regions array.
-+ * @nb:		Notifier block to register to meminspect.
-+ */
-+struct minidump {
-+	struct device			*dev;
-+	struct minidump_subsystem	*toc;
-+	struct minidump_region		*regions;
-+	struct notifier_block		nb;
-+};
++maintainers:
++  - Eugen Hristev <eugen.hristev@linaro.org>
 +
-+static const char * const meminspect_id_to_md_string[] = {
-+	"",
-+	"ELF",
-+	"vmcoreinfo",
-+	"config",
-+	"totalram",
-+	"cpu_possible",
-+	"cpu_present",
-+	"cpu_online",
-+	"cpu_active",
-+	"mem_section",
-+	"jiffies",
-+	"linux_banner",
-+	"nr_threads",
-+	"nr_irqs",
-+	"tainted_mask",
-+	"taint_flags",
-+	"node_states",
-+	"__per_cpu_offset",
-+	"nr_swapfiles",
-+	"init_uts_ns",
-+	"printk_rb_static",
-+	"printk_rb_dynamic",
-+	"prb",
-+	"prb_descs",
-+	"prb_infos",
-+	"prb_data",
-+	"high_memory",
-+	"init_mm",
-+	"init_mm_pgd",
-+};
++description:
++  This binding describes the Google Pixel Kinfo reserved memory, a region
++  of reserved-memory used to store data for firmware/bootloader on the Pixel
++  platform. The data stored is debugging information on the running kernel.
 +
-+/**
-+ * qcom_md_table_init() - Initialize the minidump table
-+ * @md: minidump data
-+ * @mdss_toc: minidump subsystem table of contents
-+ *
-+ * Return: On success, it returns 0 and negative error value on failure.
-+ */
-+static int qcom_md_table_init(struct minidump *md,
-+			      struct minidump_subsystem *mdss_toc)
-+{
-+	md->toc = mdss_toc;
-+	md->regions = devm_kcalloc(md->dev, MAX_NUM_REGIONS,
-+				   sizeof(*md->regions), GFP_KERNEL);
-+	if (!md->regions)
-+		return -ENOMEM;
++properties:
++  compatible:
++    items:
++      - const: google,kinfo
 +
-+	md->toc->regions_baseptr = cpu_to_le64(virt_to_phys(md->regions));
-+	md->toc->enabled = cpu_to_le32(MINIDUMP_SS_ENABLED);
-+	md->toc->status = cpu_to_le32(1);
-+	md->toc->region_count = cpu_to_le32(0);
++  memory-region:
++    maxItems: 1
++    description: Reference to the reserved-memory for the data
 +
-+	/* Tell bootloader not to encrypt the regions of this subsystem */
-+	md->toc->encryption_status = cpu_to_le32(MINIDUMP_SS_ENCR_DONE);
-+	md->toc->encryption_required = cpu_to_le32(MINIDUMP_SS_ENCR_NOTREQ);
++required:
++  - compatible
++  - memory-region
 +
-+	return 0;
-+}
++additionalProperties: true
 +
-+/**
-+ * qcom_md_get_region_index() - Lookup minidump region by id
-+ * @md: minidump data
-+ * @id: minidump region id
-+ *
-+ * Return: On success, it returns the internal region index, on failure,
-+ *	returns	negative error value
-+ */
-+static int qcom_md_get_region_index(struct minidump *md, int id)
-+{
-+	unsigned int count = le32_to_cpu(md->toc->region_count);
-+	unsigned int i;
++examples:
++  - |
++    reserved-memory {
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges;
 +
-+	for (i = 0; i < count; i++)
-+		if (md->regions[i].seq_num == id)
-+			return i;
++      kinfo_region: smem@fa00000 {
++          reg = <0xfa00000 0x1000>;
++          no-map;
++      };
++    };
 +
-+	return -ENOENT;
-+}
++    debug-kinfo {
++        compatible = "google,debug-kinfo";
 +
-+/**
-+ * register_md_region() - Register a new minidump region
-+ * @priv: private data
-+ * @e: pointer to inspect entry
-+ *
-+ * Return: None
-+ */
-+static void __maybe_unused register_md_region(void *priv,
-+					      const struct inspect_entry *e)
-+{
-+	unsigned int num_region, region_cnt;
-+	const char *name = "unknown";
-+	struct minidump_region *mdr;
-+	struct minidump *md = priv;
-+
-+	if (!(e->va || e->pa) || !e->size) {
-+		dev_dbg(md->dev, "invalid region requested\n");
-+		return;
-+	}
-+
-+	if (e->id < ARRAY_SIZE(meminspect_id_to_md_string))
-+		name = meminspect_id_to_md_string[e->id];
-+
-+	if (qcom_md_get_region_index(md, e->id) >= 0) {
-+		dev_dbg(md->dev, "%s:%d region is already registered\n",
-+			name, e->id);
-+		return;
-+	}
-+
-+	/* Check if there is a room for a new entry */
-+	num_region = le32_to_cpu(md->toc->region_count);
-+	if (num_region >= MAX_NUM_REGIONS) {
-+		dev_dbg(md->dev, "maximum region limit %u reached\n",
-+			num_region);
-+		return;
-+	}
-+
-+	region_cnt = le32_to_cpu(md->toc->region_count);
-+	mdr = &md->regions[region_cnt];
-+	scnprintf(mdr->name, MAX_REGION_NAME_LENGTH, "K%.8s", name);
-+	mdr->seq_num = e->id;
-+	if (e->pa)
-+		mdr->address = cpu_to_le64(e->pa);
-+	else if (e->va)
-+		mdr->address = cpu_to_le64(__pa(e->va));
-+	mdr->size = cpu_to_le64(ALIGN(e->size, 4));
-+	mdr->valid = cpu_to_le32(MINIDUMP_REGION_VALID);
-+	region_cnt++;
-+	md->toc->region_count = cpu_to_le32(region_cnt);
-+
-+	dev_dbg(md->dev, "%s:%d region registered %llx:%llx\n",
-+		mdr->name, mdr->seq_num, mdr->address, mdr->size);
-+}
-+
-+/**
-+ * unregister_md_region() - Unregister a previously registered minidump region
-+ * @priv: private data
-+ * @e: pointer to inspect entry
-+ *
-+ * Return: None
-+ */
-+static void __maybe_unused unregister_md_region(void *priv,
-+						const struct inspect_entry *e)
-+{
-+	struct minidump_region *mdr;
-+	struct minidump *md = priv;
-+	unsigned int region_cnt;
-+	unsigned int idx;
-+
-+	idx = qcom_md_get_region_index(md, e->id);
-+	if (idx < 0) {
-+		dev_dbg(md->dev, "%d region is not present\n", e->id);
-+		return;
-+	}
-+
-+	mdr = &md->regions[0];
-+	region_cnt = le32_to_cpu(md->toc->region_count);
-+
-+	/*
-+	 * Left shift one position all the regions located after the
-+	 * region being removed, in order to fill the gap.
-+	 * Then, zero out the last region at the end.
-+	 */
-+	memmove(&mdr[idx], &mdr[idx + 1], (region_cnt - idx - 1) * sizeof(*mdr));
-+	memset(&mdr[region_cnt - 1], 0, sizeof(*mdr));
-+	region_cnt--;
-+	md->toc->region_count = cpu_to_le32(region_cnt);
-+}
-+
-+static int qcom_md_notifier_cb(struct notifier_block *nb,
-+			       unsigned long code, void *entry)
-+{
-+	struct minidump *md = container_of(nb, struct minidump, nb);
-+
-+	if (code == MEMINSPECT_NOTIFIER_ADD)
-+		register_md_region(md, entry);
-+	else if (code == MEMINSPECT_NOTIFIER_REMOVE)
-+		unregister_md_region(md, entry);
-+
-+	return 0;
-+}
-+
-+static int qcom_md_probe(struct platform_device *pdev)
-+{
-+	struct minidump_global_toc *mdgtoc;
-+	struct device *dev = &pdev->dev;
-+	struct minidump *md;
-+	size_t size;
-+	int ret;
-+
-+	md = devm_kzalloc(dev, sizeof(*md), GFP_KERNEL);
-+	if (!md)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, md);
-+
-+	md->dev = dev;
-+	md->nb.notifier_call = qcom_md_notifier_cb;
-+
-+	mdgtoc = qcom_smem_get(QCOM_SMEM_HOST_ANY, SBL_MINIDUMP_SMEM_ID, &size);
-+	if (IS_ERR(mdgtoc)) {
-+		ret = PTR_ERR(mdgtoc);
-+		dev_err_probe(dev, ret, "Couldn't find minidump smem item\n");
-+	}
-+
-+	if (size < sizeof(*mdgtoc) || !mdgtoc->status)
-+		dev_err_probe(dev, -EINVAL, "minidump table not ready\n");
-+
-+	ret = qcom_md_table_init(md, &mdgtoc->subsystems[MINIDUMP_SUBSYSTEM_APSS]);
-+	if (ret)
-+		dev_err_probe(dev, ret, "Could not initialize table\n");
-+
-+	meminspect_notifier_register(&md->nb);
-+
-+	meminspect_lock_traverse(md, register_md_region);
-+	return 0;
-+}
-+
-+static void qcom_md_remove(struct platform_device *pdev)
-+{
-+	struct minidump *md = platform_get_drvdata(pdev);
-+
-+	meminspect_notifier_unregister(&md->nb);
-+	meminspect_lock_traverse(md, unregister_md_region);
-+}
-+
-+static struct platform_driver qcom_md_driver = {
-+	.probe = qcom_md_probe,
-+	.remove = qcom_md_remove,
-+	.driver  = {
-+		.name = "qcom-minidump",
-+	},
-+};
-+
-+module_platform_driver(qcom_md_driver);
-+
-+MODULE_AUTHOR("Eugen Hristev <eugen.hristev@linaro.org>");
-+MODULE_AUTHOR("Mukesh Ojha <quic_mojha@quicinc.com>");
-+MODULE_DESCRIPTION("Qualcomm minidump inspect driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/soc/qcom/minidump.h b/include/linux/soc/qcom/minidump.h
-index 25247a6216e2..f90b61feb550 100644
---- a/include/linux/soc/qcom/minidump.h
-+++ b/include/linux/soc/qcom/minidump.h
-@@ -10,12 +10,16 @@
- #ifndef __QCOM_MINIDUMP_H__
- #define __QCOM_MINIDUMP_H__
++        memory-region = <&kinfo_region>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2cb2cc427c90..8034940d0b1e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16164,6 +16164,11 @@ F:	Documentation/dev-tools/meminspect.rst
+ F:	include/linux/meminspect.h
+ F:	kernel/meminspect/*
  
-+#define MINIDUMP_SUBSYSTEM_APSS	0
- #define MAX_NUM_OF_SS           10
- #define MAX_REGION_NAME_LENGTH  16
- #define SBL_MINIDUMP_SMEM_ID	602
- #define MINIDUMP_REGION_VALID		('V' << 24 | 'A' << 16 | 'L' << 8 | 'I' << 0)
- #define MINIDUMP_SS_ENCR_DONE		('D' << 24 | 'O' << 16 | 'N' << 8 | 'E' << 0)
-+#define MINIDUMP_SS_ENCR_NOTREQ		(0 << 24 | 0 << 16 | 'N' << 8 | 'R' << 0)
- #define MINIDUMP_SS_ENABLED		('E' << 24 | 'N' << 16 | 'B' << 8 | 'L' << 0)
-+#define MAX_NUM_REGIONS		201
++MEMINSPECT KINFO DRIVER
++M:	Eugen Hristev <eugen.hristev@linaro.org>
++S:	Maintained
++F:	Documentation/devicetree/bindings/misc/google,kinfo.yaml
 +
- 
- /**
-  * struct minidump_region - Minidump region
+ MEMBLOCK AND MEMORY MANAGEMENT INITIALIZATION
+ M:	Mike Rapoport <rppt@kernel.org>
+ L:	linux-mm@kvack.org
 -- 
 2.43.0
 
