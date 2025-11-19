@@ -1,64 +1,64 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F697369976
-	for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 15:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B49C366566
+	for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 15:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763567144; cv=none; b=TZcSIk9wwzumdj7m9uS5IVkG1f/MjUdTtiowA8+p1YaOn06a/THSOoMzoaUqT0nVpMtbgzOljmtVAuPHeISY2xD74pEh4QOzLM08WjZjIiuOaC9ttYfjbnCe0su90OxWMt+TmqSpby88ShBRXbUZaTFJFsL9a9MmB1FDVeLkkTY=
+	t=1763567144; cv=none; b=jwRIRn19TzaZCM2Xa3WMp2S7J5VoKP4Edk+XQVXNQCZ2bPIVQCILTvUZaoUp/Jb54ooDFAejaVKaSOG/dtUh6G9hiQvH4z3gnkdbbw4wXyuBNZyjzg18EMNzUvTrh2hRujUKnuWSrLT/hwEVLL+zjCfliBIt6AN7uHNBFZnOfok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1763567144; c=relaxed/simple;
-	bh=+VK7KRl6+Lq6c3QG0QoLNUfpAYwW2X9fA09G/NfS6uk=;
+	bh=bdt5n2rAVI8cStNvPmdZt8oM87hfXgPy8mlP/xL4jOQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P7VA+EyKdiwPP33XfHAx0ZmgCs6okbFafEjUmwPdJg0Wfj/4iMXQBRsxqwyyJ4oXQspdJBp2H7JxsLswcNUHYmaNR6SwC8VguDi5/H4eYpPa/v3zm2muq5WlnF/sDe3wLYFZkl2jLBj0FwrXG2q32aSXvJRUCqhZXr1TmMff4qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j6sLEfh9; arc=none smtp.client-ip=209.85.221.48
+	 MIME-Version; b=MUWu8EVP60C5771frZVWPmau3glCo9SIAOQMx72dUZKgN0Exfv/0RLdFomuxmpB0pVzWTiX7knC2lGRAhTXNrzyU4BXlEqMi90zFk5+i2cezskOiGY0+KUv+JYZEVBDV0G1/aS4+pESTY1k7sYzzcVYUBiqltg+hLEMCoA1ClFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bz492DHl; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j6sLEfh9"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42b3c965cc4so606806f8f.0
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 07:45:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bz492DHl"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-429c82bf86bso4142867f8f.1
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 07:45:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763567134; x=1764171934; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1763567138; x=1764171938; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AuFAdi/dQ7TYcP6kPKC/D+o7MTxWjWW8Ku2RD10GvbQ=;
-        b=j6sLEfh9uv7+dsvFnDqDQa6anzRkocsy8dt+OoGqRNipZTLpbhM0kN8gp+hG0HbaBs
-         MMBo7xYfGVPH43vHvKGRCgch64x3w+5gOHyhKTn6HQ+sYqIorf4m52B2SrG4bBRx89Ci
-         k7s7HPQsG+hLYQe0dBWwwYUE3j83EEMt+amQKWLX6AugMw0fo3ZbbVB5M+piJ6Meo17+
-         DvU/V8qk2/79vb7SU4ODsNiDcw+a5f4qtSc80/uGNdJXinhamtY1cOT2Gtifllx8JCIq
-         7cY4R9Y0192OrEL58Af8mu4tpPfVY0/Be+sl7rGwPj7IfS35Td5zUv2USdiF44V8DV8K
-         PVjw==
+        bh=slnZKLktel7FGULom0AhklQ/3aJdt8tuo66g65NOCPI=;
+        b=bz492DHl5yOzE9yJqimKdlgCFvBmcsPkvDkuBNCriAVZnkeSAqY3nP7LGbyBZvdxbW
+         oc2HOPgDgVH18yyt6HjNfvydEL8GIuHXv2Pofai7w1UKXlmII3hPumvCXNOvOePSROSi
+         e/2BiBnIWC2n2sNn+FoRECLcoeEkoo+4CnwCEhpQwBpUULBVqNYLT4F1hgITIZqkJLqQ
+         bfeKsPz9KlTRqx2ZVlK2A6artCAtJV32H7NQpEOqVUMiDR1uo3umGlgdSfA+RVSV9ygb
+         zLmQSslT7dn9MaSqtfyzoxsSoi+0bpd+NdlBvr5Az29P7gmjqheUCt9rGNgINWi3WwuL
+         Kn/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763567134; x=1764171934;
+        d=1e100.net; s=20230601; t=1763567138; x=1764171938;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=AuFAdi/dQ7TYcP6kPKC/D+o7MTxWjWW8Ku2RD10GvbQ=;
-        b=Ttdz0K866Gl7p6Aj1CyFyEXvX84Q7Cq4gscSUlGKjudGvah/MErLXHDtSYJn/9itQz
-         M6nUmRjlQNdguIZCIaqc5+i+OnRGkAniJ/O8BjKW1LyQIEpQvYoztDRSW9kkdwqqnAyp
-         rhcTc3ALSAoaboRmw8gaKIS4qjni7jpDdA6y4fmmhEhNLUAwvZ/IxL8ouSOx946F/4da
-         FpFZmxf2iLkbQC+jrcPSJC69aFXGUrMa+acr/2kp90D4utU4Ex7mZwFjhiuG7jETzKVS
-         /SPzPmcJocYA+0F2OMk3mw9H0Cj0WotaVgGYI7fEcjsi1q4jO1Xmvzvczg1KdYPKSBGP
-         Akgg==
-X-Forwarded-Encrypted: i=1; AJvYcCW75i2vHHL5ZdmVgOaWKIAmClrmxofV4+R5igdC37hY+vwomC/DyKbDIvhZHKAJoVXvg/KAX00N8WyWMvyUCVk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoFXXJzybcnso9sA/aYG+spflGbXCyU+A5OsJm5pL8y6jh7xzT
-	bWMh+EvVW3Z5KZiqSzC418/MXPie4FahNiQeEM9Os8bAOUH91lTpSdsD7bT+6KC1Sxw=
-X-Gm-Gg: ASbGncvoIAOGjspBIVTFkEqhS1pTxxTSgTjHYL/kk9xeMclunKgG3imkdSnAzZTUADo
-	Sl5LLoaPACXn8kmbKoLEuapkWpwaRYir1jn/RqF6a59K95yc+bv4NKE+PJVJxYlfeUR818o2tUD
-	i5AV9wiwsjqCCx+dNR5cFJr8dJYN5kHH5C4Vt4qC62e95xIkces200JcJfjmSsJkS0lkYU/h51w
-	9tBb+OWLEVOsFq5QXmGj9BUXpNxLxYAPadTK+xc3U8I7HpS42IJXxRrcRptSixaE3aeEBICvKzk
-	gJqCL3nv/d6HyBDQVdyaOmGQZHKRY5OAYomcT6zWBw3wDzPmS8cPKKqPJhNoZgjxOJNY5Z9eCME
-	obQqpij3B4F/veE72xxRhH0Vj/8WBaxgNqgsuim4ypAKumiyqikq2RwRXT87k+i9v5prcO+Z0E2
-	BEilXa2W5F+qZQ1I6lr+fXhu+m81Hy/w==
-X-Google-Smtp-Source: AGHT+IEEW1UNe8+i9pRkQXcVi1K6qHmkkggtbzPn6ocK+c8Bp9XYSPJPKkUMg9h5XQagLem1rvsEdA==
-X-Received: by 2002:a05:6000:26d0:b0:429:eb80:11f5 with SMTP id ffacd0b85a97d-42cb20e4a02mr3468125f8f.26.1763567134112;
-        Wed, 19 Nov 2025 07:45:34 -0800 (PST)
+        bh=slnZKLktel7FGULom0AhklQ/3aJdt8tuo66g65NOCPI=;
+        b=StsK3Mpw3yjdXqz5h0nVuVK3z3tLU2qJ3qAoSEKYIH0hnS/HvLvjqTwbC/SadMQNvT
+         KgyCwuC/tw4tL8iFLt6MmnCoBKY/xYVyLr4fY991pvlOEheOtuRwgshO6euVj6jLmhkz
+         gscM1GJCnNuAKYUK0k2sEv3/wPaX/QF7MoShy+Hq3+2rTh0Xpyci1pWKXYzB/8jrblTr
+         5GBuJ7WT0tyiLxkW0eRZCsfp6+E87gmApOogOo2ZAFXxyIsyYmN9KlzGW16g7ykIEhM7
+         3UgsrviiEZxMUpw0iu43eShvGHTKiqmH7yO3FLtT7Diryf1vHSOVoSt3h6L/pHSBkQ8D
+         xsuw==
+X-Forwarded-Encrypted: i=1; AJvYcCXysUdB/wqbUt3KNghJJrkeA1Orw7xPsR1QzvQneAXmwVE/jClyqYn69FAGLuDiIa9LttacTPsxIX+jXAaFcRc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMbhzUcngHxWip/9PInUXx+tNUgVC/V2mU5KFIMz02ooBBDeyj
+	xiyXjePRx/SNSlrbo9Fq9xT3GY/d2jekJOIWVkjVYCUbwQ1XQFNBfdm+ntwuDJkKdWI=
+X-Gm-Gg: ASbGncteYCyIPAIXCHfS2H171VWndnbQZIocFIONh5rZY2SRo8CL137y9krrC+owRoh
+	KFUj/osw5v5Zepug0zM9q7Z/hsBYzAJgBRZcAn1lWlYuc3qf0OKpA6m0isByYshknJ1HgLzWtt0
+	fRlqMMIxz4Faz5vctcNGHSSSFeQvvHNW7gjmXq2mm/CeUOapzqOtv2sN2PRxeiFrNTYND1FxDx5
+	VynUmBWI0YGyaaGXIdF5rCmPMrNpwZOwk0dFyvJL1sZW9tSVb9OUwMdrVFupjvmMSiXm1gHkwQx
+	Xtfx0oVhGDX9JUzYm73FV20a/zW4hlz3zbe19FSQbTQpbY0JZ10X3t7s3TFNut/umz2IX/ohDhN
+	wFCOjTxcSEyBoAtuJwaq3bJ1sM7Axv/vBbmWoa7+KFz16HAV/U8cYDWh1Z788nPf09Yg5Uk5+M2
+	ybbE9eMT8E6n3xhARJH90snEti9+pHXAqfBp0IJIdW
+X-Google-Smtp-Source: AGHT+IH9XA5XKwB+eYd4P52AVjjtUkCjRx7TcK6UtIfvF/aP3IOPVELnIO3YhYk8yezAw62YpuQ83g==
+X-Received: by 2002:a5d:64e7:0:b0:42b:47da:c313 with SMTP id ffacd0b85a97d-42b593395a0mr22250899f8f.3.1763567137600;
+        Wed, 19 Nov 2025 07:45:37 -0800 (PST)
 Received: from eugen-station.. ([82.76.24.202])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53dea1c9sm38765632f8f.0.2025.11.19.07.45.32
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53dea1c9sm38765632f8f.0.2025.11.19.07.45.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Nov 2025 07:45:33 -0800 (PST)
+        Wed, 19 Nov 2025 07:45:37 -0800 (PST)
 From: Eugen Hristev <eugen.hristev@linaro.org>
 To: linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -83,9 +83,9 @@ Cc: tudor.ambarus@linaro.org,
 	tony.luck@intel.com,
 	kees@kernel.org,
 	Eugen Hristev <eugen.hristev@linaro.org>
-Subject: [PATCH 10/26] mm/swapfile: Annotate static information into meminspect
-Date: Wed, 19 Nov 2025 17:44:11 +0200
-Message-ID: <20251119154427.1033475-11-eugen.hristev@linaro.org>
+Subject: [PATCH 12/26] kernel/configs: Register dynamic information into meminspect
+Date: Wed, 19 Nov 2025 17:44:13 +0200
+Message-ID: <20251119154427.1033475-13-eugen.hristev@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251119154427.1033475-1-eugen.hristev@linaro.org>
 References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
@@ -97,36 +97,39 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Annotate vital static information into inspection table:
- - nr_swapfiles
-
-Information on these variables is stored into dedicated inspection section.
+Register kernel_config_data information into inspection table.
+Debugging tools look for the start and end markers, so we need to capture
+those as well into the region.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 ---
- mm/swapfile.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/configs.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 10760240a3a2..ee677be19041 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -42,6 +42,7 @@
- #include <linux/suspend.h>
- #include <linux/zswap.h>
- #include <linux/plist.h>
+diff --git a/kernel/configs.c b/kernel/configs.c
+index a28c79c5f713..139ecc74bcee 100644
+--- a/kernel/configs.c
++++ b/kernel/configs.c
+@@ -15,6 +15,7 @@
+ #include <linux/seq_file.h>
+ #include <linux/init.h>
+ #include <linux/uaccess.h>
 +#include <linux/meminspect.h>
  
- #include <asm/tlbflush.h>
- #include <linux/swapops.h>
-@@ -65,6 +66,7 @@ static void move_cluster(struct swap_info_struct *si,
- 
- static DEFINE_SPINLOCK(swap_lock);
- static unsigned int nr_swapfiles;
-+MEMINSPECT_SIMPLE_ENTRY(nr_swapfiles);
- atomic_long_t nr_swap_pages;
  /*
-  * Some modules use swappable objects and may try to swap them out under
+  * "IKCFG_ST" and "IKCFG_ED" are used to extract the config data from
+@@ -64,6 +65,11 @@ static int __init ikconfig_init(void)
+ 
+ 	proc_set_size(entry, &kernel_config_data_end - &kernel_config_data);
+ 
++	/* Register 8 bytes before and after, to catch the marker too */
++	meminspect_lock_register_id_va(MEMINSPECT_ID_CONFIG,
++			     (void *)&kernel_config_data - 8,
++			     &kernel_config_data_end - &kernel_config_data + 16);
++
+ 	return 0;
+ }
+ 
 -- 
 2.43.0
 
