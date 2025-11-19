@@ -1,153 +1,131 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E44F235C01
-	for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 08:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE2E2F49F1;
+	Wed, 19 Nov 2025 08:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763541656; cv=none; b=fnm3a2u6pYtCqFRAYsvuhb+KmoXMvRfekF/WghsT8FkWgeFJFiC04h9MUnBgF3hGpinoYtla/UC3F+lCxHiQnG/kYbhSW+pLc7fmHh6jQ5f2UOWzXuQGUXXyK6FF1IloOnyE5dU8QmFR9dpLXBuirMdeOLGJq85x+apPWhwLwEY=
+	t=1763541693; cv=none; b=maF/Zj699SFPpmLRDuPqRyf7Cm3aJORzJz4YQEDx/swWJ5509jdPL/NH8GZwrwGHDT4noAu6fWZgKBFyHYWFigUiyUvegdeVdQNc6/Oyx4kREpS9bfxtZDzVgJWVxkXSeh/KOfJhFj1MYS2pG0LfhTDG8d0r9tR2CKGK0Nhf/a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763541656; c=relaxed/simple;
-	bh=Dz2RNjo2Pw0XOcm+SGn1fEPdASUKESrZTRijPS7lbP4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NSCBocZ16bSFQHqjsLtQKoWBhyB4VkepGM6j3pB3y4uAzvdqRcnNarypBIDmJfdIQ1SWpvwoWAphp2AZEzpr2MMkUkqRymWfs6Cd9p1bUgVWhsBpptHuD9UM2vSjQFXQYXFNtoXQ8xexgSnFV/M6jZ9bYgxOVY3hL+i1oa6TQxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-5dfae681ff8so4132236137.1
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 00:40:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763541653; x=1764146453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=zKBmRJ4RypI8GAVhhXpGdOuKGmWr/ovhm00lN6IEqrs=;
-        b=vll8nQ4p6AG8asX1N29xNOd6Co5AlAglKOGnbz0tnLq3S4kHY9enVr0x7NFX5/pnoA
-         1941gorXHq/7CGqauUFH/UPppA+LlMHgShKRo8GMlWnEOV1zrzDtlyJTBtNl3FEKKV0k
-         27Mq/Fc8J5QJBaT/NaCEEn5yIuRr4Lch8ETBbq1gXtXeUJhyLodK/xBQD8vU6AXxRpi+
-         jZHsEcM4c+6txAaD/PLTDArOxZeWRsPbao/nPVEYWXoP6ZwjxNdkTCKMTpWPHLYltQ8q
-         /r+lmVdVsgsVPoVFBaW0CG7LWSlKOHww42E6+gbztXhgitsTcy/3PvtT/1JH3cNi36oi
-         sOxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHd5ePvnwaQeD8qUrBKOS5tFhrxtZZt+cZlrVZnNN3l87pUCOweyRz3P8Yr2ZfBE6rkUD0adFJPFxtm9yctuE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk+l+ArO1AyEq1kjOw5gKrY+/cqPbHTuiY7XK8Ps8m+jZYMDyL
-	R7q8m2eRMn5WTRibsMJkH8a/SIrvt+tZFitlycbYxYbpCIq6QX2ffmkOesOWvfd7
-X-Gm-Gg: ASbGncveLBhO6IxQ1aT4xG7qigvB+fcB7cGtNREXAON0l1Z8B79O4xkA8f6oroM6fvW
-	kkA8yTaeidySmZV4vVzm9RrhBIw9ayScQqWWeEorbWlZjBe37q81kJmxylZUR38YpBvt2negF7G
-	TrXdmxbKrXvt1oZg4wFZqN61+OGvckoxSIUSfQg28mzalPt/O59fEVVPyDR4V2ocGcDwnp8/Yag
-	d/czPngqX6/egbtDz7HQ0FoJMVG85Dy1uujLp5aRwfacpYbfpyjg8Bkxi8qeADX8r5LVBpTCRjJ
-	+vga0k2smHK3Q2ESAvQjqdJuzK+U9JBkfRF+pVy0MOLN7yXqEFw0TVrP6YG1+1MoFaMUoG1w8aT
-	5clgL1TptJjySY4GjKzxeVz8zs59SpMJ3ctno0aOZF85oJnMncZ0v3ihvR85piGRB9zxFxa7FbS
-	g2YL0MlqcUO3tQIYiiiXDHxtS0PNJ7+Dga5+Am869TwoMV9TnExRf2
-X-Google-Smtp-Source: AGHT+IES2t8kMAsV8wpZbqbpUS58lSPxk1yx8jRW9KM8ykt+ztEyfxZXXqj65lAw28BSAl6evYlwfQ==
-X-Received: by 2002:a05:6102:6442:b0:51c:77b:297c with SMTP id ada2fe7eead31-5dfc5b94071mr8112163137.27.1763541653229;
-        Wed, 19 Nov 2025 00:40:53 -0800 (PST)
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5dfb726ff96sm6466340137.14.2025.11.19.00.40.53
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Nov 2025 00:40:53 -0800 (PST)
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-55b24eedd37so3081453e0c.0
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 00:40:53 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWgxWqL7yi4o1pOwRyIMFpAlAqGFESS/NldOj2mqx7XfztIkcrzjv7bhuB3OTDVf90jU8lPRXBfwRRfRPQdas8=@vger.kernel.org
-X-Received: by 2002:a05:6102:c47:b0:5db:e179:1c21 with SMTP id
- ada2fe7eead31-5dfc5c0488dmr6881252137.41.1763541207113; Wed, 19 Nov 2025
- 00:33:27 -0800 (PST)
+	s=arc-20240116; t=1763541693; c=relaxed/simple;
+	bh=dksIa9QT6oEbWiAmLz25H8n5pzertf8zaOAbLvM1J0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=IvU+yBduhtjv2M0eRgrchXQfFZBPPH82+RUxw5wS5EBry16gSUJjMSM83nLy0/t4XdWybly6DRiKnADu8H5sI3fUqZ+Wzh5BzWj5LmyCdRZm5Xt+Ia7IMnMWDGWq+97Yhvw9+/LEQEm9RCCM2x72+OuL6KO/QGo8DZsx+QReSLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTXcESib; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTXcESib"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABC27C4CEF5;
+	Wed, 19 Nov 2025 08:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763541692;
+	bh=dksIa9QT6oEbWiAmLz25H8n5pzertf8zaOAbLvM1J0k=;
+	h=Date:From:To:Cc:Subject:From;
+	b=lTXcESiboV/AhVdMwTc5oSQdgg30Hlfpmy4Bk/LRPnoOLlkc8kZSCD6sYk7rRWWc/
+	 ixEyUXceUQt/v2z1ZQkRm7Plvb3pS0DrgXTqG8SaDnImgTq0Uh/3JyNBkFrdc/MqhO
+	 6rQkzUfBnj60A0ZbnaYIhVm0k1sARAz1TorUAJ0wqpIPTzZa7dew1t425adzcTkcpr
+	 o693kk4Cq5/iaesGeMEmBtQqGhPmn3eGQvg0Ak0QLCY3hnDJS1oUCVRzKVuLcdOUo8
+	 H03CpwsWFnIjdqkvjBV9fWqfRI+LO4DxOrA2AfNliRrs6F1YTPZxGzAj/KX4IQb1wG
+	 VomU+Qnr3sDQA==
+Date: Wed, 19 Nov 2025 17:41:26 +0900
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] iwlegacy: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <aR2CtqZI3atH0HmE@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <CAMuHMdVR9Z70+M-SqHYrHiC6H_yw=VRuDOOg=YnXSNKjPnx3WQ@mail.gmail.com> <CACRpkdZioOu9AEBdaNWX1njsVvFYR8SP8yJrY8MFMbJtL6YLJA@mail.gmail.com>
-In-Reply-To: <CACRpkdZioOu9AEBdaNWX1njsVvFYR8SP8yJrY8MFMbJtL6YLJA@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 19 Nov 2025 09:33:15 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUe64MdRL1qPRX3q_OGj287nK=MQTb7HUta51iJ+vP9Hw@mail.gmail.com>
-X-Gm-Features: AWmQ_bnsTpUUScnL6xOjY4S7f_b3_VnG_mVkF87eF8BY7eFC84gNc7MAR704Al0
-Message-ID: <CAMuHMdUe64MdRL1qPRX3q_OGj287nK=MQTb7HUta51iJ+vP9Hw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/10] gpio: improve support for shared GPIOs
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Linus,
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-On Wed, 19 Nov 2025 at 00:24, Linus Walleij <linus.walleij@linaro.org> wrot=
-e:
-> On Tue, Nov 18, 2025 at 12:15=E2=80=AFPM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > We have a long-standing use-case on various Renesas R-Car Gen3 boards
-> > (e.g. Salvator-X(S) and ULCB[1]), where GPIOs are shared by LEDs and
-> > key switches.  Basically, the GPIO is connected to:
-> >   1. A key switch connecting to GND when closed, with pull-up.
-> >   2. The gate of an N-channel MOSFET, turning on an LED when driven
-> >      high.
-> >
-> > Hence:
-> >   - In output mode, the LED can be controlled freely,
-> >   - In input mode, the LED is on, unless the key is pressed,
-> >   - Hence the switch state can only be read when the LED is turned on.
->
-> > If you have any idea how to handle this, feel free to reply ;-)
->
-> Isn't it pretty clear from the system-level DTS how the line
-> is used?
->
-> If it is connected to a gpio key it gets assigned for that usecase
-> and handled by that driver and if it is connected to a gpio LED
-> it is handled by that driver.
->
-> For the input usecase the status of the LED is a byproduct and
-> should not reflect in software I think. It surely should not be
-> controllable and possible to set into output mode because
-> that sounds like a recipe for HW damage if you drive it
-> actively high and press the key at the same time.
+Move the conflicting declarations (which in a couple of cases happens
+to be in a union, so we're moving the entire unions) to the end of the
+corresponding structures. Notice that `struct il_tx_beacon_cmd`,
+`struct il4965_tx_resp`, and `struct il3945_tx_beacon_cmd` are flexible
+structures, this is structures that contain a flexible-array member.
 
-Suitable resistors are present to prevent hardware damage.
+With these changes fix the following warnings:
 
-> gpio_keys {
->     compatible =3D "gpio-keys";
->
->     button-ok {
->         gpios =3D <&gpio 0 GPIO_OPEN_DRAIN | GPIO_PULL_UP>;
->     };
-> };
+11 drivers/net/wireless/intel/iwlegacy/common.h:526:11: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+11 drivers/net/wireless/intel/iwlegacy/commands.h:2667:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+4 drivers/net/wireless/intel/iwlegacy/3945.h:131:11: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-But only one of the gpio-keys and gpio-leds drivers can bind to the
-GPIO, or am I missing something?
-So I do think I need a new combined key-and-led driver, like Bartosz
-suggested:
-  - When the user turns the LED on, the GPIO is switched to input mode,
-    and the switch works,
-  - When the user turns the LED off, the GPIO is switched to output
-    and driven low, and the switch does not work.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/intel/iwlegacy/3945.h     | 4 +++-
+ drivers/net/wireless/intel/iwlegacy/commands.h | 4 +++-
+ drivers/net/wireless/intel/iwlegacy/common.h   | 4 +++-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
-Gr{oetje,eeting}s,
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945.h b/drivers/net/wireless/intel/iwlegacy/3945.h
+index fb1e33c89d0e..ed63b31fee9a 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945.h
++++ b/drivers/net/wireless/intel/iwlegacy/3945.h
+@@ -123,13 +123,15 @@ enum il3945_antenna {
+ #define IEEE80211_FRAME_LEN             (IEEE80211_DATA_LEN + IEEE80211_HLEN)
+ 
+ struct il3945_frame {
++	struct list_head list;
++
++	/* Must be last as it ends in a flexible-array member. */
+ 	union {
+ 		struct ieee80211_hdr frame;
+ 		struct il3945_tx_beacon_cmd beacon;
+ 		u8 raw[IEEE80211_FRAME_LEN];
+ 		u8 cmd[360];
+ 	} u;
+-	struct list_head list;
+ };
+ 
+ #define SUP_RATE_11A_MAX_NUM_CHANNELS  8
+diff --git a/drivers/net/wireless/intel/iwlegacy/commands.h b/drivers/net/wireless/intel/iwlegacy/commands.h
+index b61b8f377702..2e665072f6d3 100644
+--- a/drivers/net/wireless/intel/iwlegacy/commands.h
++++ b/drivers/net/wireless/intel/iwlegacy/commands.h
+@@ -2664,10 +2664,12 @@ struct il3945_beacon_notif {
+ } __packed;
+ 
+ struct il4965_beacon_notif {
+-	struct il4965_tx_resp beacon_notify_hdr;
+ 	__le32 low_tsf;
+ 	__le32 high_tsf;
+ 	__le32 ibss_mgr_status;
++
++	/* Must be last as it ends in a flexible-array member. */
++	struct il4965_tx_resp beacon_notify_hdr;
+ } __packed;
+ 
+ /*
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.h b/drivers/net/wireless/intel/iwlegacy/common.h
+index 4c9836ab11dd..21f1c7702add 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.h
++++ b/drivers/net/wireless/intel/iwlegacy/common.h
+@@ -518,13 +518,15 @@ struct il_channel_info {
+ #define IEEE80211_FRAME_LEN             (IEEE80211_DATA_LEN + IEEE80211_HLEN)
+ 
+ struct il_frame {
++	struct list_head list;
++
++	/* Must be last as it ends in a flexible-array member. */
+ 	union {
+ 		struct ieee80211_hdr frame;
+ 		struct il_tx_beacon_cmd beacon;
+ 		u8 raw[IEEE80211_FRAME_LEN];
+ 		u8 cmd[360];
+ 	} u;
+-	struct list_head list;
+ };
+ 
+ enum {
+-- 
+2.43.0
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
