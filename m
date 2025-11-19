@@ -1,95 +1,139 @@
-Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E311E1E1C;
-	Wed, 19 Nov 2025 04:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C19B2DF71B
+	for <linux-hardening@vger.kernel.org>; Wed, 19 Nov 2025 04:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763527123; cv=none; b=WUT1AoTEZg7G1yg8x8zkDIyketlnPKvRw1gjP6Ph6Y+JxotUgl8IeKivaHn1GL5OF2B/Nb9eBfKjh7U+2FU8UAuw+HsPEOzWyAb3UsW49oOFJBlMYaW/zhGUyrkOb5Ld82A3dCudzGC8qtheOZL1zwsWnD9Gypwp1kdsTqRrT0A=
+	t=1763527698; cv=none; b=PTlXpYWbbbFITSoS2uT77VC6FjJ0oQeobPuEfoRf+3JLW8NWm0B+RfWSLnR/fykRyzKbqBH9OJGZpW7pgxwRYuOd8Zyl3KkaNsZc0ZyEZ/4iMA4pfGOcLmCeP6ksdVZA0k3meJWKf1Vf9U778vRq0qGPKvIc5bZEnuAwIdtiOxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763527123; c=relaxed/simple;
-	bh=3iYnV2APAfKcWv3J6sIcxfy8P/u2uVbuCK+FxI4RvqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cWy+Cz63t42yQRtOxSeyHrHoTJRkrETUklJMSlH5McevBksfFfeO2tahulVRJnQHZDx9rPfq0SnlOoprsONtE9pymD5VJt6C8elGYXIqefrcRc9OcSB8vzmyOw0b46ft/kIRNmvceidOFtAHd0q/bhmx6cdy/N4WvT/9oBYk2L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=fBn/Ktyg; arc=none smtp.client-ip=180.181.231.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1763527698; c=relaxed/simple;
+	bh=dcFK95FpJ2wMf+Lav4AyTqxYmfR8aNHynkBneD65okw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kDOMsKrQte00cGH1LAWVBOpaPvHz1pajjbxn/GflWSOoLNOsjnN5obWoRcTkVs2w09QGEv/ENSUw5SZuFtIHDTUzf7zLUdOTPIuGnpYKvDNEjbCO+mmZKQX0yLYelThvXqgBJNhdcIyA6DZCGECURVQqsJ9+JECg3gF51ieZqUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=dRt8ZPmK; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="fBn/Ktyg"
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dRt8ZPmK"
+Received: from eig-obgw-5002b.ext.cloudfilter.net ([10.0.29.226])
+	by cmsmtp with ESMTPS
+	id LZl8vYRhEZx2iLa6zvsOPa; Wed, 19 Nov 2025 04:48:10 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id La6yvGo62ZaqULa6zvuAdS; Wed, 19 Nov 2025 04:48:09 +0000
+X-Authority-Analysis: v=2.4 cv=epPfzppX c=1 sm=1 tr=0 ts=691d4c09
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=4DtsFWJC70/ZxGj2xnZlig==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=FNyBlpCuAAAA:8 a=YypKmbBTrR_Cc7_ztO0A:9 a=QEXdDO2ut3YA:10
+ a=RlW-AWeGUCXs_Nkyno-6:22 a=xYX6OU9JNrHFPr8prv8u:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
-	from:content-type:reply-to; bh=O/97SlunYFZGuq7T38VDsyylG1LcCUBunsdRAcz52CE=; 
-	b=fBn/KtygmzSMxbtPbC4QrcLT4SWai8U9Aa+y0cA1f2wV2UjW0d12dtSi5JIu0XGxpTsTiDGhivB
-	yi2okr87eBgjijIN+TDlPXgjyA0cHcInFcuMEv/4sjZexRVzNCFA1/095SYpWHVI/BDLPJMW+JUAS
-	eTdL5thbjLe0HhTSAcUzIYuZqdtrFroPqtKatUjQnc2YnMA+2G7qA6n189WRkdBq5FAhh5ir7zj2i
-	ofQzNkK2nZFpSGwD8QWFvZWqTUkG0JPxE6q5c+IHi7rm/TeUUKGNcojsUahsU2fZ2TiRBIQN3XuIl
-	e1mpnzAfTf7y07sgH3u7DF4+BU2iuM2qq5NA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1vLZxW-004DyL-1p;
-	Wed, 19 Nov 2025 12:38:23 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 19 Nov 2025 12:38:22 +0800
-Date: Wed, 19 Nov 2025 12:38:22 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Stephan Mueller <smueller@chronox.de>
-Subject: [v2 PATCH] crypto: drbg - Delete unused ctx from struct sdesc
-Message-ID: <aR1JvnpTBomcKAMZ@gondor.apana.org.au>
-References: <aRHCKMGDbWkXIY8f@kspp>
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=SJijPNvHMzmT1QgOFCUxZj5jR0vgwz4FEve7AiL2/xk=; b=dRt8ZPmKb525jVTFuUALaDSNUp
+	7in23S8V/agXQmQ8Hi1kzV0763cPo9qy8RA6x0ZsCSp/0v9eON9eYyLextsJUWOelyxlLMlv7CuRl
+	J3nqqvdCLWkF5WLeD+mKSyQ00ykMb5JMmjqAlDNJZzPhKJTDoX4J1+geXRogz65DYAwcJlDrhzAK2
+	NLB0K1+9EW6puj0x8OXO+solZFF1igEZ7Y1xOduMBeSAQDWMLfsQ1v1y6OIsBSVagbCNDpHLJhdqb
+	1wHTSZYpDGRAPMnjRbb2IMua7rfXutKf81fnO7K1dTVw2y+yJGoddFiOjVB/tH29IdFqi0RvX/3L3
+	88/9RzSA==;
+Received: from softbank126126126075.bbtec.net ([126.126.126.75]:42132 helo=[10.221.86.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vLa6x-00000003mmW-2OwD;
+	Tue, 18 Nov 2025 22:48:08 -0600
+Message-ID: <587146e5-08fe-4983-b432-de600d700b14@embeddedor.com>
+Date: Wed, 19 Nov 2025 13:47:50 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aRHCKMGDbWkXIY8f@kspp>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2 PATCH] crypto: drbg - Delete unused ctx from struct sdesc
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Stephan Mueller <smueller@chronox.de>
+References: <aRHCKMGDbWkXIY8f@kspp> <aR1JvnpTBomcKAMZ@gondor.apana.org.au>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <aR1JvnpTBomcKAMZ@gondor.apana.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 126.126.126.75
+X-Source-L: No
+X-Exim-ID: 1vLa6x-00000003mmW-2OwD
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: softbank126126126075.bbtec.net ([10.221.86.44]) [126.126.126.75]:42132
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMSJ+lFUxKjHzIH/4XI0XRqbjQS5NXbMDT1EF/nFKxFvxJA3YSmUWnA0XS5a0TkkJveBG7EkGlSHFCx/MzSz0RFslxMkCwDqEUf2lWvp+UyPkZ8HRZAo
+ X/eH6HKYSv1KlPYp6Wn71Wt+XUaBt63khoXxo00uCw/8Uy4Bu95PzGnfNwqUrwbJP5eXNAxY/8eoErCwrZXGrJGe+AgC95/zShstBNIY7cY6M/MhH+/KOfrh
 
-On Mon, Nov 10, 2025 at 07:44:56PM +0900, Gustavo A. R. Silva wrote:
->
+
+
+On 11/19/25 13:38, Herbert Xu wrote:
+> On Mon, Nov 10, 2025 at 07:44:56PM +0900, Gustavo A. R. Silva wrote:
+>>
+>> diff --git a/crypto/drbg.c b/crypto/drbg.c
+>> index 511a27c91813..e9f9775c237f 100644
+>> --- a/crypto/drbg.c
+>> +++ b/crypto/drbg.c
+>> @@ -1442,9 +1442,12 @@ static void drbg_kcapi_set_entropy(struct crypto_rng *tfm,
+>>   
+>>   #if defined(CONFIG_CRYPTO_DRBG_HASH) || defined(CONFIG_CRYPTO_DRBG_HMAC)
+>>   struct sdesc {
+>> -	struct shash_desc shash;
+>> -	char ctx[];
+>> +	/* Must be last as it ends in a flexible-array member. */
+>> +	TRAILING_OVERLAP(struct shash_desc, shash, __ctx,
+>> +		char ctx[];
+>> +	);
+>>   };
+>> +static_assert(offsetof(struct sdesc, shash.__ctx) == offsetof(struct sdesc, ctx));
+> 
+> This isn't even used.  Just delete it:
+
+Awesome. :)
+
+Thanks!
+-Gustavo
+
+> 
+> ---8<---
+> The ctx array in struct sdesc is never used.  Delete it as it's
+> bogus since the previous member ends with a flexible array.
+> 
+> Reported-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> 
 > diff --git a/crypto/drbg.c b/crypto/drbg.c
-> index 511a27c91813..e9f9775c237f 100644
+> index 511a27c91813..1d433dae9955 100644
 > --- a/crypto/drbg.c
 > +++ b/crypto/drbg.c
-> @@ -1442,9 +1442,12 @@ static void drbg_kcapi_set_entropy(struct crypto_rng *tfm,
->  
->  #if defined(CONFIG_CRYPTO_DRBG_HASH) || defined(CONFIG_CRYPTO_DRBG_HMAC)
->  struct sdesc {
-> -	struct shash_desc shash;
+> @@ -1443,7 +1443,6 @@ static void drbg_kcapi_set_entropy(struct crypto_rng *tfm,
+>   #if defined(CONFIG_CRYPTO_DRBG_HASH) || defined(CONFIG_CRYPTO_DRBG_HMAC)
+>   struct sdesc {
+>   	struct shash_desc shash;
 > -	char ctx[];
-> +	/* Must be last as it ends in a flexible-array member. */
-> +	TRAILING_OVERLAP(struct shash_desc, shash, __ctx,
-> +		char ctx[];
-> +	);
->  };
-> +static_assert(offsetof(struct sdesc, shash.__ctx) == offsetof(struct sdesc, ctx));
+>   };
+>   
+>   static int drbg_init_hash_kernel(struct drbg_state *drbg)
 
-This isn't even used.  Just delete it:
-
----8<---
-The ctx array in struct sdesc is never used.  Delete it as it's
-bogus since the previous member ends with a flexible array.
-
-Reported-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/crypto/drbg.c b/crypto/drbg.c
-index 511a27c91813..1d433dae9955 100644
---- a/crypto/drbg.c
-+++ b/crypto/drbg.c
-@@ -1443,7 +1443,6 @@ static void drbg_kcapi_set_entropy(struct crypto_rng *tfm,
- #if defined(CONFIG_CRYPTO_DRBG_HASH) || defined(CONFIG_CRYPTO_DRBG_HMAC)
- struct sdesc {
- 	struct shash_desc shash;
--	char ctx[];
- };
- 
- static int drbg_init_hash_kernel(struct drbg_state *drbg)
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
