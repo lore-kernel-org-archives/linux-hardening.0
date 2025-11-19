@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE2E2F49F1;
-	Wed, 19 Nov 2025 08:41:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73E52E7F07;
+	Wed, 19 Nov 2025 09:08:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763541693; cv=none; b=maF/Zj699SFPpmLRDuPqRyf7Cm3aJORzJz4YQEDx/swWJ5509jdPL/NH8GZwrwGHDT4noAu6fWZgKBFyHYWFigUiyUvegdeVdQNc6/Oyx4kREpS9bfxtZDzVgJWVxkXSeh/KOfJhFj1MYS2pG0LfhTDG8d0r9tR2CKGK0Nhf/a8=
+	t=1763543292; cv=none; b=fK6MQRCbbXDY/+UtHgMx9Kl88u49VZ/5EQlCNCZnHfI3TRP6SW468NmEpudMN0gnGpJhNYO7a42gKRZ9kZe6taZFVvsjMztQmcFadXUHs6nPpaOSoLSek3d6I10X/yZcXwLnXdx/eoR3nfM3321QDxCoyXSADdK+AErjITNP4Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763541693; c=relaxed/simple;
-	bh=dksIa9QT6oEbWiAmLz25H8n5pzertf8zaOAbLvM1J0k=;
+	s=arc-20240116; t=1763543292; c=relaxed/simple;
+	bh=mF8bZikvWMcU6cjYLEICnPp3nb1+X3n/NUpUMI/AtSw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=IvU+yBduhtjv2M0eRgrchXQfFZBPPH82+RUxw5wS5EBry16gSUJjMSM83nLy0/t4XdWybly6DRiKnADu8H5sI3fUqZ+Wzh5BzWj5LmyCdRZm5Xt+Ia7IMnMWDGWq+97Yhvw9+/LEQEm9RCCM2x72+OuL6KO/QGo8DZsx+QReSLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTXcESib; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=NO6tLahdCWTSVxdYYWFvUyzA388Z00m9RD/VIE6ugetJ3vJ/oKz5KYB+g9mYjiCiHPYZHs6/PFx1ZjV3OiAsNIwtY3x7wEJW9dDfTusZ3awGjBzwOoEDI7CFb4BmK092Uhmote8TXsGxbDeX9MOJTanXzrZVh2aPmCB8MaWsnYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sGyXwTRW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTXcESib"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABC27C4CEF5;
-	Wed, 19 Nov 2025 08:41:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sGyXwTRW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0218C113D0;
+	Wed, 19 Nov 2025 09:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763541692;
-	bh=dksIa9QT6oEbWiAmLz25H8n5pzertf8zaOAbLvM1J0k=;
+	s=k20201202; t=1763543291;
+	bh=mF8bZikvWMcU6cjYLEICnPp3nb1+X3n/NUpUMI/AtSw=;
 	h=Date:From:To:Cc:Subject:From;
-	b=lTXcESiboV/AhVdMwTc5oSQdgg30Hlfpmy4Bk/LRPnoOLlkc8kZSCD6sYk7rRWWc/
-	 ixEyUXceUQt/v2z1ZQkRm7Plvb3pS0DrgXTqG8SaDnImgTq0Uh/3JyNBkFrdc/MqhO
-	 6rQkzUfBnj60A0ZbnaYIhVm0k1sARAz1TorUAJ0wqpIPTzZa7dew1t425adzcTkcpr
-	 o693kk4Cq5/iaesGeMEmBtQqGhPmn3eGQvg0Ak0QLCY3hnDJS1oUCVRzKVuLcdOUo8
-	 H03CpwsWFnIjdqkvjBV9fWqfRI+LO4DxOrA2AfNliRrs6F1YTPZxGzAj/KX4IQb1wG
-	 VomU+Qnr3sDQA==
-Date: Wed, 19 Nov 2025 17:41:26 +0900
+	b=sGyXwTRWT+seTmFxiw/EwuYPCXcb8CZhVQ3I4+9p52uAN8wnCZPUkwONU4tdUE9fd
+	 +aIcj4AStd2NSfrvNUVhTAuWlFBogVqXByo+H8GJl6QreSyJEqhL/+Y4ysPA2pp4oF
+	 XBYXd6FRQA6vkjyDoqDn73oj6+ZqbBWAE9n0YHjsS62k6vOjQK/GjAGl20sDxXgeVN
+	 RzoVhgC70jw0VEZJdT1xZWk0+xWbsqVaWkTQCQ3EsZmGWLKzZUiH60dLmETlpiqyB/
+	 gzgsg5YcRsS7ZqJXk74119tZIIbIIR25ckw1z8fgQXPVj4sAO/tc8pYQDxI5BZuMe0
+	 bst16PYeHWawQ==
+Date: Wed, 19 Nov 2025 18:08:05 +0900
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Stanislaw Gruszka <stf_xl@wp.pl>
+To: Jes Sorensen <Jes.Sorensen@gmail.com>
 Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] iwlegacy: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <aR2CtqZI3atH0HmE@kspp>
+Subject: [PATCH][next] wifi: rtl8xxxu: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <aR2I9Sere0W-4VZz@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,85 +47,46 @@ Content-Disposition: inline
 -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
 getting ready to enable it, globally.
 
-Move the conflicting declarations (which in a couple of cases happens
-to be in a union, so we're moving the entire unions) to the end of the
-corresponding structures. Notice that `struct il_tx_beacon_cmd`,
-`struct il4965_tx_resp`, and `struct il3945_tx_beacon_cmd` are flexible
-structures, this is structures that contain a flexible-array member.
+Move the conflicting declarations to the end of the corresponding
+structures. Notice that `struct urb` is a flexible structure, this
+is a structure that contains a flexible-array member.
 
 With these changes fix the following warnings:
 
-11 drivers/net/wireless/intel/iwlegacy/common.h:526:11: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-11 drivers/net/wireless/intel/iwlegacy/commands.h:2667:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-4 drivers/net/wireless/intel/iwlegacy/3945.h:131:11: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+9 drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h:1951:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+9 drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h:1945:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/wireless/intel/iwlegacy/3945.h     | 4 +++-
- drivers/net/wireless/intel/iwlegacy/commands.h | 4 +++-
- drivers/net/wireless/intel/iwlegacy/common.h   | 4 +++-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/3945.h b/drivers/net/wireless/intel/iwlegacy/3945.h
-index fb1e33c89d0e..ed63b31fee9a 100644
---- a/drivers/net/wireless/intel/iwlegacy/3945.h
-+++ b/drivers/net/wireless/intel/iwlegacy/3945.h
-@@ -123,13 +123,15 @@ enum il3945_antenna {
- #define IEEE80211_FRAME_LEN             (IEEE80211_DATA_LEN + IEEE80211_HLEN)
- 
- struct il3945_frame {
-+	struct list_head list;
-+
-+	/* Must be last as it ends in a flexible-array member. */
- 	union {
- 		struct ieee80211_hdr frame;
- 		struct il3945_tx_beacon_cmd beacon;
- 		u8 raw[IEEE80211_FRAME_LEN];
- 		u8 cmd[360];
- 	} u;
--	struct list_head list;
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+index f42463e595cc..48b598b06523 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+@@ -1942,15 +1942,19 @@ struct rtl8xxxu_vif {
  };
  
- #define SUP_RATE_11A_MAX_NUM_CHANNELS  8
-diff --git a/drivers/net/wireless/intel/iwlegacy/commands.h b/drivers/net/wireless/intel/iwlegacy/commands.h
-index b61b8f377702..2e665072f6d3 100644
---- a/drivers/net/wireless/intel/iwlegacy/commands.h
-+++ b/drivers/net/wireless/intel/iwlegacy/commands.h
-@@ -2664,10 +2664,12 @@ struct il3945_beacon_notif {
- } __packed;
- 
- struct il4965_beacon_notif {
--	struct il4965_tx_resp beacon_notify_hdr;
- 	__le32 low_tsf;
- 	__le32 high_tsf;
- 	__le32 ibss_mgr_status;
+ struct rtl8xxxu_rx_urb {
+-	struct urb urb;
+ 	struct ieee80211_hw *hw;
+ 	struct list_head list;
 +
 +	/* Must be last as it ends in a flexible-array member. */
-+	struct il4965_tx_resp beacon_notify_hdr;
- } __packed;
- 
- /*
-diff --git a/drivers/net/wireless/intel/iwlegacy/common.h b/drivers/net/wireless/intel/iwlegacy/common.h
-index 4c9836ab11dd..21f1c7702add 100644
---- a/drivers/net/wireless/intel/iwlegacy/common.h
-+++ b/drivers/net/wireless/intel/iwlegacy/common.h
-@@ -518,13 +518,15 @@ struct il_channel_info {
- #define IEEE80211_FRAME_LEN             (IEEE80211_DATA_LEN + IEEE80211_HLEN)
- 
- struct il_frame {
-+	struct list_head list;
-+
-+	/* Must be last as it ends in a flexible-array member. */
- 	union {
- 		struct ieee80211_hdr frame;
- 		struct il_tx_beacon_cmd beacon;
- 		u8 raw[IEEE80211_FRAME_LEN];
- 		u8 cmd[360];
- 	} u;
--	struct list_head list;
++	struct urb urb;
  };
  
- enum {
+ struct rtl8xxxu_tx_urb {
+-	struct urb urb;
+ 	struct ieee80211_hw *hw;
+ 	struct list_head list;
++
++	/* Must be last as it ends in a flexible-array member. */
++	struct urb urb;
+ };
+ 
+ struct rtl8xxxu_fileops {
 -- 
 2.43.0
 
