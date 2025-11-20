@@ -1,191 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335D6372AB6;
-	Thu, 20 Nov 2025 08:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E38372AD7
+	for <linux-hardening@vger.kernel.org>; Thu, 20 Nov 2025 08:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763626000; cv=none; b=mPHwMi7kFIx3eH5JDrOB0WVa1xEmKw/Ml/NX7FkeMC8LD6S6MTEUp2RmziW7630BeCNjX2WfB3XU5tVzh3SMdeussUb9/TKrXxT59Jtkn9S2UtEtueBTxBVy1c0DLCH+a0kE4LW+X44X+LfxyK/OJO1rGnD0DLS5G98n2hMxDNQ=
+	t=1763626652; cv=none; b=C/VeMPZfD+L2Yohiln9YfK/pyiWoha+oH2qwscNGN+Qe0q264Ys9YK2rGduY9urN4bKeQqRtoDSybsJfbXZWifkZ8HsfAxtr7yoJeEZDKVvFEvg6CNsbSFAxgK9mny7VqyenXgnnHuihyLXdUEF3z93o5cY7lD2s3JaDpgRtjWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763626000; c=relaxed/simple;
-	bh=mxT/rSlaqP+txsmWmS9/PssKwzGp7j3BhlaZuVwXZis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LKJVZSCXFLtQZaqK+/XQ1aLWr5XYa4X0huCO3MjuwXwLPyE9ewJERBVkY0CRkMdwlvYcHdxkz19TzHZt8lAIgCHYGobNFBMZAr1VYWCmwhdfo73mu1V6nyp9XYCPGN43TF0b4uTnIwRI9I6xs/IM0FOwubA6n/Z5T1kvEtPaxCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jyoe7Oe5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763626652; c=relaxed/simple;
+	bh=jSg+SjgNe59R18eQPCEufQeRLB5mrC0B/Yvf8NJlr6c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F3orAbsFOojnO+xCZw9uehsvr7fQ5CJi5zTVATr9Y9aZDWIQN2CEUMPVmMFMCWLvDqF1/qYEvB7z2tuY+IWun5hod4FYp8fctep3zaSxTTCT6JVXwxrMmIkpOhd4uk7ez+N+kvYDAVAqNEMBI2hkJSkiztfsLUHjHeTTMPmqcsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dT8hMGLi; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jyoe7Oe5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 124CEC4CEF1;
-	Thu, 20 Nov 2025 08:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763625999;
-	bh=mxT/rSlaqP+txsmWmS9/PssKwzGp7j3BhlaZuVwXZis=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jyoe7Oe5fQPJ/c3G0Y3Le2MuwLeYij5ETlxaQsfHH0IeCeAp4SV8sma9/p4puBfJd
-	 uSJLTrxHP3QFvgERIjsj/1tqk+X/okArVSEm8ZMhuoWrUm+nw49VGAhsvO+/F7roqB
-	 earNWu4MD42Xdka7K6xqmgczk8orzPbhqOIDxQD+/aKHXhBiOGA4RplKw1T/I2rQ6a
-	 ev9a2LBRLzTP1F+YYtsiwBQ2gNaHKtotSqd6c5JXDYnlHf0a974bbsQ8w3T/BC46cr
-	 IlYGcGcRRMayKQVYgRTSLxtDvYEu5tk34YIf2hUPYoKt2aPFZV53WId4koKue3AXLS
-	 Eq5b6O0Zpw2Lw==
-Date: Thu, 20 Nov 2025 10:06:35 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
- scatter-gather mapping routine
-Message-ID: <20251120080635.GT18335@unreal>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
- <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
- <20251119132511.GK17968@ziepe.ca>
- <69436b2a-108d-4a5a-8025-c94348b74db6@amd.com>
- <20251119193114.GP17968@ziepe.ca>
- <c115432c-b63d-4b99-be18-0bf96398e153@amd.com>
- <20251120074137.GR18335@unreal>
- <209499e2-6a06-4291-ad4c-77230926c665@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dT8hMGLi"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b983fbc731bso92338a12.2
+        for <linux-hardening@vger.kernel.org>; Thu, 20 Nov 2025 00:17:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763626649; x=1764231449; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jSg+SjgNe59R18eQPCEufQeRLB5mrC0B/Yvf8NJlr6c=;
+        b=dT8hMGLi16xbgK6SbqtPAuDtyqpKG4JWEwD+7vCw6/Pv0B4E2h2thgceUar38J0MCP
+         Z0Up9Uek03GchNFRTE7ik5Lsatl/4ei5+sQQc5KtBEB1kDgtIrg8Q4edfNTXrEv2PV1F
+         abmiLVFihYTVDIfCK7P6cZb6V8ysSv8bovZCSDK7l8YcWIapaJDPEmcnnHOf4w1m56yx
+         pVzbcRqaYxLa1OBcYXRWmjiJvGetWdy52iyuy08T8xnT+tBRZYjRpwNdvEUHYyt85MZB
+         ibd7T8xEJfYFL5qKBFdLs86gmJqn9lXVTogzFBbZMsMOkqfEQ0DuEIkFDR7Y1uA1iK9l
+         MPKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763626649; x=1764231449;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=jSg+SjgNe59R18eQPCEufQeRLB5mrC0B/Yvf8NJlr6c=;
+        b=WpWXHzldiywnr+qM0zlu66xX2j6z8znYFTVRDYDYqluTZOcuO/ELaTAitx7fkQ/EHL
+         tPGNsmppHuYVM8QouRbNh0bgFfYdfwJtzbgaUhEHN56pbvfgJ3ptZniwHg6i6QfnY2+Y
+         BfFHAX+UfrAqK6R/cOG4zBfgwDZ5ebSccLIw12ohzAWKQ1Ocd8ofwUCc8Xqi0krBiWX6
+         pY1owIoR8+wgmDfhEbDLy2R7IbfC40vv1710IeYnlENIoUYXIkKOd0VfjHbQkiAS1ZBI
+         1X7KGHZNvp6h4H9GjRIJvaPkOAXxd4BVaFVQpvg2ZhzSFpuv0wz5bFJuIvqcRpKJyXJJ
+         NUMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/4vsc1xgnNoP3DJ5Iziq0ZwdFVGQT6dXbjKtBMr/t3rM3Kv13AguvsFBPI5C5QiRv5en55Z9erdgnPkT3Ag0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6qCGTNT31y9pf59XNF/1OUvgwEPSdh199pZFJfgIlf8DfVJjZ
+	t9batQJFnvW1UDL2TlYFUtrqgkSYqz3pPh9sYYFRFzXmjqikyPXsjiwy26G9vSNbf5LRyJZzlwL
+	8L9Bwey8Ucd2RmjNZraVkNgZi6h1WzHw=
+X-Gm-Gg: ASbGncve7Vz2bzqp88d+FVuS3RxxM4LH7XM3NKs6mfaKqcFcIgy0RvHOgAcvJVVq0pB
+	T69oF/WsvgKQdOGisq1sqnuOYvnc13oHzZbdSLX4BWRYA0HulFOumbJ5Nl3jKhzVJbrnfiMFHgA
+	GvbbwtwvMkTfF0mR9b11gUk77p0+fl42JEn7x/blwepMb16/43iVkAtxgtW+f60AlNF7OnMEwSP
+	fjsh9fulHZYDfBI62pAtHNyl77AFmyWAjFD5Ncc9EeSsMwuCMVRM6P7vf30dv6tUOZUb/EvsAtJ
+	dHL4XmHtzml91Cx0C2iXH93GOcxtRJzSTpVhO2SRCrY05PV2cGWX/uEOZDdhxE45uZYHpXwP2Tg
+	qiaVp8VuJC4VC8g==
+X-Google-Smtp-Source: AGHT+IFSV3sHtvtqDssKB2tHpRHUhWWlo+eT4mIcaa6dljUhAh5xLV/SY3Emuw0RdaDjo7y7x6bkTKs/Knf+/gs8ERs=
+X-Received: by 2002:a05:7022:670c:b0:11a:344f:7a74 with SMTP id
+ a92af1059eb24-11c957b8c00mr390496c88.3.1763626649168; Thu, 20 Nov 2025
+ 00:17:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <209499e2-6a06-4291-ad4c-77230926c665@amd.com>
+References: <20251119224426.work.380-kees@kernel.org>
+In-Reply-To: <20251119224426.work.380-kees@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 20 Nov 2025 09:17:16 +0100
+X-Gm-Features: AWmQ_bnDAuYyVCt0sQ-SmVRcceof0nVsQqV57_bNcnOtwbEC3sZ09od5B_8jyf0
+Message-ID: <CANiq72=tzUPrDd2=GBnqxm_PmjF9nT3iVJ5ZT6AiZQqkjvdH_g@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Enable GCC diagnostic context for value-tracking warnings
+To: Kees Cook <kees@kernel.org>
+Cc: "Gustavo A . R . Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Tamir Duberstein <tamird@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 20, 2025 at 08:54:37AM +0100, Christian König wrote:
-> On 11/20/25 08:41, Leon Romanovsky wrote:
-> > On Thu, Nov 20, 2025 at 08:08:27AM +0100, Christian König wrote:
-> >> On 11/19/25 20:31, Jason Gunthorpe wrote:
-> >>> On Wed, Nov 19, 2025 at 02:42:18PM +0100, Christian König wrote:
-> >>>
-> >>>>>>> +	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-> >>>>>>> +		dma->state = kzalloc(sizeof(*dma->state), GFP_KERNEL);
-> >>>>>>> +		if (!dma->state) {
-> >>>>>>> +			ret = -ENOMEM;
-> >>>>>>> +			goto err_free_dma;
-> >>>>>>> +		}
-> >>>>>>> +
-> >>>>>>> +		dma_iova_try_alloc(attach->dev, dma->state, 0, size);
-> >>>>>>
-> >>>>>> Oh, that is a clear no-go for the core DMA-buf code.
-> >>>>>>
-> >>>>>> It's intentionally up to the exporter how to create the DMA
-> >>>>>> addresses the importer can work with.
-> >>>>>
-> >>>>> I can't fully understand this remark?
-> >>>>
-> >>>> The exporter should be able to decide if it actually wants to use
-> >>>> P2P when the transfer has to go through the host bridge (e.g. when
-> >>>> IOMMU/bridge routing bits are enabled).
-> >>>
-> >>> Sure, but this is a simplified helper for exporters that don't have
-> >>> choices where the memory comes from.
-> >>
-> >> That is extremely questionable as justification to put that in common DMA-buf code.
-> >>
-> >>> I fully expet to see changes to this to support more use cases,
-> >>> including the one above. We should do those changes along with users
-> >>> making use of them so we can evaluate what works best.
-> >>
-> >> Yeah, exactly that's my concern.
-> >>
-> >>>> But only take that as Acked-by, I would need at least a day (or
-> >>>> week) of free time to wrap my head around all the technical details
-> >>>> again. And that is something I won't have before January or even
-> >>>> later.
-> >>>
-> >>> Sure, it is alot, and I think DRM community in general should come up
-> >>> to speed on the new DMA API and how we are pushing to see P2P work
-> >>> within Linux.
-> >>>
-> >>> So thanks, we can take the Acked-by and progress here. Interested
-> >>> parties can pick it up from this point when time allows.
-> >>
-> >> Wait a second. After sleeping a night over it I think my initial take that we really should not put that into common DMA-buf code seems to hold true.
-> >>
-> >> This is the use case for VFIO, but I absolutely want to avoid other drivers from re-using this code until be have more experience with that.
-> >>
-> >> So to move forward I now strongly think we should keep that in VFIO until somebody else comes along and needs that helper.
-> > 
-> > It was put in VFIO at the beginning, but Christoph objected to it,
-> > because that will require exporting symbol for pci_p2pdma_map_type().
-> > which was universally agreed as not good idea.
-> 
-> Yeah, that is exactly what I object here :)
-> 
-> We can have the helper in DMA-buf *if* pci_p2pdma_map_type() is called by drivers or at least accessible. That's what I pointed out in the other mail before as well.
-> 
-> The exporter must be able to make decisions based on if the transaction would go over the host bridge or not.
-> 
-> Background is that in a lot of use cases you rather want to move the backing store into system memory instead of keeping it in local memory if the driver doesn't have direct access over a common upstream bridge.
-> 
-> Currently drivers decide that based on if IOMMU is enabled or not (and a few other quirks), but essentially you absolutely want a function which gives this information to exporters. For the VFIO use case it doesn't matter because you can't switch the BAR for system memory.
-> 
-> To unblock you, please add a big fat comment in the kerneldoc of the mapping explaining this and that it might be necessary for exporters to call pci_p2pdma_map_type() as well.
+On Wed, Nov 19, 2025 at 11:44=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> Enable GCC 16's coming "-fdiagnostics-show-context=3D2" option[1] to
+> provide enhanced diagnostic information for value-tracking warnings, whic=
+h
+> displays the control flow chain leading to the diagnostic. This covers ou=
+r
 
-Thanks,
+> existing use of -Wrestrict and -Wstringop-overread, and gets us closer to
+> enabling -Warray-bounds, -Wstringop-overflow, and -Wstringop-truncation.
 
-What do you think about it?
+I am probably missing some context, but in what sense gets us closer?
+Do you mean it will make it easier to understand those when we enable
+them? i.e. we still can't enable them until the minimum is upgraded,
+right?
 
-diff --git a/drivers/dma-buf/dma-buf-mapping.c b/drivers/dma-buf/dma-buf-mapping.c
-index a69bb73db86d..05ec84a0157b 100644
---- a/drivers/dma-buf/dma-buf-mapping.c
-+++ b/drivers/dma-buf/dma-buf-mapping.c
-@@ -84,6 +84,11 @@ struct dma_buf_dma {
-  * PAGE_SIZE aligned.
-  *
-  * A mapping must be unmapped by using dma_buf_free_sgt().
-+ *
-+ * NOTE: While this function is intended for DMA-buf importers, it is critical
-+ * that the DMA-buf exporter is capable of performing peer-to-peer (P2P) DMA
-+ * directly between PCI devices, without routing transactions through the host
-+ * bridge.
-  */
- struct sg_table *dma_buf_phys_vec_to_sgt(struct dma_buf_attachment *attach,
-                                         struct p2pdma_provider *provider,
-(END)
+Apart from that, it looks like a nice improvement on the output from
+the PR examples -- I didn't test it, but the patch itself looks fine
+of course:
 
+Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
 
-> 
-> Regards,
-> Christian.
-> 
-> > 
-> > https://lore.kernel.org/all/aPYrEroyWVOvAu-5@infradead.org/
-> > 
-> > Thanks
-> > 
-> >>
-> >> Regards,
-> >> Christian.
-> >>
-> >>>
-> >>> We can also have a mini-community call to give a summary/etc on these
-> >>> topics.
-> >>>
-> >>> Thanks,
-> >>> Jason
-> >>
-> 
+Thanks!
+
+Cheers,
+Miguel
