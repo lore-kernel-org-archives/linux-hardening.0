@@ -1,125 +1,104 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8281B33A707
-	for <linux-hardening@vger.kernel.org>; Thu, 20 Nov 2025 13:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677E12F6924
+	for <linux-hardening@vger.kernel.org>; Thu, 20 Nov 2025 13:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763644850; cv=none; b=D/Ez9ZU7Pf4shL56qSS9ch7dGPUR4V8kSVkAu7psPhZth02EZCcBCy/NAfdZ03WcyiGlcH4QI4DHb8LIOF/xQlmVFVfArfgGLcdFHBWxO9efXWvdaSYZI/34C+qZq2vZw8gWNUr0VaIpte3JHzZBWpfATA+2pEF1WnkE+LsVgHg=
+	t=1763645350; cv=none; b=cQo1STP4/fiStkDAyrs35+G0tKKtHk24xZjPrHedxAB/4ztdhL+zuF7ZsOwpoRcdLFwQfuCC1uYRIj/fhKxOsfFatgD3P8opRx3qbPiZKDNTxmOyIVMP3avy1zIH5KoZlyWHzUsxvhcImM/HXzg0WtJTICumrt4SBT0E4BszCKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763644850; c=relaxed/simple;
-	bh=FAIy2u4gJscDNGUshiInImCPqOKl3iOKQJH6e6Bc4JI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j73Is1L1y/hYZPTLGyM2b1FX5oE11NPoP8+GHXxjSWSqBJH27j8ZTcBuYQpTPxx8s89sj6hK9gFFbTcg/VLnnJyL8Sm+PsBYyh31534V6ZvDQGhhe6Qsa3um+YLkIJDjJAjQLj+dnsHS2VnMEcHVUFzESOclAKx5+ex52iYODVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=jMJVlNB8; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1763645350; c=relaxed/simple;
+	bh=SN7uq0k34glIRrAKT2+U3VbGa7fDeHa20jG2LCCXgF4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=leOHC62U06ZEwW9TUeDZDcEK88/txaETcicUxvKSEbuf/NNpumc8QRvQzLzIXOXsDizOB4nYCndfUjLYJMGAtI2dfwl0kPYWJaFLdEMecO4EN91e0qjMzXen8sJielvI8Vf5S0cqxS2fRB+5BUQYU/r43CIBU3P3p2JQwDE7/Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jxeK9uys; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jMJVlNB8"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-8b2627269d5so76733785a.2
-        for <linux-hardening@vger.kernel.org>; Thu, 20 Nov 2025 05:20:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jxeK9uys"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-477619f8ae5so5415615e9.3
+        for <linux-hardening@vger.kernel.org>; Thu, 20 Nov 2025 05:29:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1763644847; x=1764249647; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GaI8T1P9V7HUSR5GC1P83jhUObFww+4fRanAKkUJgJM=;
-        b=jMJVlNB8LyM4AYZyl088cBiSIlJ90Q1dm2hb+qOJix1EHdJs4siUbnVhSfjdoo+d8b
-         CpJ6KfO7u7JniZDhdoBs1zVrqavLhdwn31rKFf/kVN8vkyxieUH5wcPJTih/9lZw+PEX
-         fzdm1aYuxKCanV8/aYUVsuP51mR3HV9FaHggDK4qYX5m3Eht6ufYvvO9vptn0SOijTOl
-         cfmQgVoxaFFQaCv0MtR3VFkL7VdP7LsWZJMB5e2tkAY+4CqMtLl57rP2UzUjo5ld0ad3
-         Ew7cnRVtQJOT76Gc3wbQzgtVC/yQSTJ4MullMwUuBOCRwifmwR9JypsEhj+RRVt4akF1
-         VX3A==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763645346; x=1764250146; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EfxBIlU8bdjwS+AFQgoVox7qmz6MOKxlX/ZrAJzGib8=;
+        b=jxeK9uysLQBRlnFAd3VzoxzNUtzBDmcL0ttuQqTG+142jYz4Em3DJFz8HdTFaX1ZmY
+         6k02lDjDWMXW8pAuoUuDoyCy3zM9XCpeFfLpHYFNnAoqPSZqPBdr/WnWvKQu4vKWxiKS
+         MoIkijujgWctcZOFDn/BG8p9IFj7/ks/t2UtBDTnA48RduoiDlXcJbWBm+WEJLimiEwK
+         ayM54lov7hE0OJ1TC2YJ1aLehMBUW/yXKA+ad4Lqq0tmj4cEyWH8Pi2A/fHvxK7si+Or
+         UbuJtd4W64KjF5xwLINFS9ZSetQoLmHPPSgTs9fZcQXu/wzo4111DVgrOfHTbTdHmoOf
+         5OQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763644847; x=1764249647;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GaI8T1P9V7HUSR5GC1P83jhUObFww+4fRanAKkUJgJM=;
-        b=MqHF93aveM+sKCNWIJMG0zqhMQRc+h9nUEGONgItIAMN5utHjml5SPEY5i5vkxUAJy
-         uY9L4ZDh8OL/gZXmwLGFHM735UcZbGwG0Ujodak/SHVpmehuksOBPXvKGHQpJiRrwMAA
-         mc/d9Frm3wrLIT4k3qbKohXOuudBQu5gXftU3gdDjEAQmKmyqUwwkfIj7bLAVMmuL1En
-         L+FQsPKVJXk0Ue+Dg9wH5sbQBwx4EbK3HE5gG3gznFwkL8iKiH3kar406Avf+BcceTNI
-         rnHACvMkY3dRE+Vi8IZbVMLkVF0gmRRwS0oii7MndHkYqRdrBdlNq8ZWkQCgc4zs9Kq8
-         cbMw==
-X-Forwarded-Encrypted: i=1; AJvYcCX71kDXTA5wfxKE7KehjxRBYK86u/hQGdmFV1s7l4SPmohtjVKQjCTUI3qYhJdH4u/yPaSeCBQagVMh8fACwLI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnwXY+W91O8nJkJSsBXXNvZW26rTUSn6HarWQBLohU1iVEtZsR
-	9ULh10lQLQtY/GDsL1o2J6ET/O66ibDhAkwQ0b36Q3u+W+c/oslVBLgbwIXqN9DOq1k=
-X-Gm-Gg: ASbGncseUHwAUNFTHOIw0hBMNSBCyaDiAo6JmZAp8Qr46y7qhgqp0xI9vQ1jNB64D/y
-	GY5oHBLk5RJi6Ae+F3jgNplFmCfZH2ntFkaXSDxIJm5Bbfv0OPKFvVjuVntIgNS/SbA6OYsnlFo
-	H27frRCF/pRx5doJyuATmqa4L4Opy41LWDkata2CP6z0llOQB4fO5cfQcHZofb6If5JRY+PzXqf
-	lfZektEaX1srqM+w7dGsxPk9tE+bs0hGBIycr9bHJsL+DCL54oFLNdn5GyaOrQlVaIVZg1SphkL
-	3cryQ8Pgc2eTaID7gk4skUw4gD2XwtCMcZsQZ3f7aMlZk5HpkPd5APInWu+z8aQPXR41EuFCZ6g
-	0iwpXhK2B6Dav9FRQqLYkWWjIr2Ipsus9QNwCACZoLzJDFP3OOUykxOWcf6bBg1UUd2jqQMElAY
-	ZYcsjTKFiI70PCituTKnwros6oLIhc3XhVVSTyredbx461eFj6V5CzPk4I
-X-Google-Smtp-Source: AGHT+IHQ4fmxCAI4/D2tK1B8sYqUFbudidu6PckWMercsX/iRS90WBjHNHkg95yPWC8b179KW1QKQA==
-X-Received: by 2002:a05:620a:318a:b0:89f:27dc:6536 with SMTP id af79cd13be357-8b32a193b85mr303322785a.54.1763644847316;
-        Thu, 20 Nov 2025 05:20:47 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b3295c13ccsm148498285a.26.2025.11.20.05.20.46
+        d=1e100.net; s=20230601; t=1763645346; x=1764250146;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=EfxBIlU8bdjwS+AFQgoVox7qmz6MOKxlX/ZrAJzGib8=;
+        b=wQT1tgViOV8wsV3xXv8oZZMtBhjP96QWP6T9/alhboCqGOBN8xCvV8RKWPRFwZfm0W
+         crPrgL5Cyc80yKFhht00RX06vTETRYkKIG2mSnBBxzBsXoVKwwa69AADukKP+trNl2O2
+         zhV0PnwLK11hYk8Hrp5sFArx8IzA7gYh7O1VhH1ko2/z686YfpKRcMLVAjwSruOIsLfB
+         RqLJuoUbiWYIOSPN26aEN+pjKIeyY0KDYCK843ssw1ivivoJnM3EHBH7QY2dwdxNW+6r
+         QJhj4668jRHBQnOG1t4bNw2Ad67S35mNMnF+XzSq5ywrah9oClVP9kAhzMA6+iXVqdT8
+         W3gg==
+X-Forwarded-Encrypted: i=1; AJvYcCUOopK2Qy4h4t+yKPpsUZt95e3mkAwZMB6N0fIz4bQNmjpXqAjO8W8cUJpOV49PXmRWJl5qLh5zNdjl18Ey6K8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXKYOYE2NFfEvOLCFvIDVIZ2VLn0Qpp4oxzT3Q+7E5aUh8AECX
+	HOWrujWSy/yUywcIW7gW0bzJ9LxhDC1Ho0mcw17HiaP6Q2WSLWJQT1ekR8PNS7Rk1XM=
+X-Gm-Gg: ASbGncv+m+0DErELUkYFV1TnAWCBn4SMWbyNrLZzy10R+eAsF9BKbtpBwyKsr0z2YiA
+	pHxMltyUtFEhy3WaAy/oG977qwZf0qfAFiawql8ulHc/qOq0ck7YHRrHZOi9TP8ezP1bdmNczK+
+	ST5oA4DuKOY7OCiy7pihEAW8qxccHT0VWnHq1GWEJBOIycEIXUzbkyliXodpfcuVRP148bnWa0D
+	lB7ZD/k7sEkTSAEJw340eQ2FoSLYBvWxE2OjUUGePa6GM5r5KVnTxr5J5XevDeCB/NrUxV2XpWc
+	JSlc9jiD145XfOWdOiI2zNeZUb9LPDrgB9Vwa4YOosjb4fMNE36zPFBwP1qRAS2IWUN1QhFYtiN
+	pPBL5fRXxDBbz7gZse2iPbl8KKGtAH/yNqvsHo07sduKm04OaaTqqipmfELrN44QI+N+iA5fILL
+	rOw0tt5X0mbhkG+JE=
+X-Google-Smtp-Source: AGHT+IEZ4dJp89sRfUEbMEqx7SlPWA1KyD2vLcQzdk+DJs3uQ5K4nAW6e8v8RUcTQAioTqgzbfmi+A==
+X-Received: by 2002:a05:600c:4ec6:b0:46e:32dd:1b1a with SMTP id 5b1f17b1804b1-477babc1fcfmr22679845e9.7.1763645346170;
+        Thu, 20 Nov 2025 05:29:06 -0800 (PST)
+Received: from brgl-uxlite ([2a01:cb1d:dc:7e00:37af:6c1f:28a:47d2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477b102bc9csm108574055e9.8.2025.11.20.05.29.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Nov 2025 05:20:46 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vM4ac-00000000gLM-0tBz;
-	Thu, 20 Nov 2025 09:20:46 -0400
-Date: Thu, 20 Nov 2025 09:20:46 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
- scatter-gather mapping routine
-Message-ID: <20251120132046.GU17968@ziepe.ca>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
- <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
- <20251119132511.GK17968@ziepe.ca>
- <69436b2a-108d-4a5a-8025-c94348b74db6@amd.com>
- <20251119193114.GP17968@ziepe.ca>
- <c115432c-b63d-4b99-be18-0bf96398e153@amd.com>
+        Thu, 20 Nov 2025 05:29:04 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: (subset) [PATCH 0/2] string: strends() follow-ups
+Date: Thu, 20 Nov 2025 14:29:03 +0100
+Message-ID: <176364532053.31751.7963392559783583346.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251118-strends-follow-up-v1-0-d3f8ef750f59@linaro.org>
+References: <20251118-strends-follow-up-v1-0-d3f8ef750f59@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c115432c-b63d-4b99-be18-0bf96398e153@amd.com>
 
-On Thu, Nov 20, 2025 at 08:08:27AM +0100, Christian König wrote:
-> >> The exporter should be able to decide if it actually wants to use
-> >> P2P when the transfer has to go through the host bridge (e.g. when
-> >> IOMMU/bridge routing bits are enabled).
-> > 
-> > Sure, but this is a simplified helper for exporters that don't have
-> > choices where the memory comes from.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On Tue, 18 Nov 2025 11:04:02 +0100, Bartosz Golaszewski wrote:
+> A couple follow-up changes to the new strends() string helper. This
+> needs to go through the GPIO tree as this is where the strends()
+> currently is.
 > 
-> That is extremely questionable as justification to put that in common DMA-buf code.
+> 
 
-FWIW we already have patches for a RDMA exporter lined up to use it as
-well. That's two users already...
+Queuing this one to fix a warning in next. The other one can wait
+for reviews.
 
-Jason
+[1/2] string: fix kerneldoc formatting in strends()
+      https://git.kernel.org/brgl/linux/c/6f87b41303d3c4280a57b4f7360022a0951b43dd
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
