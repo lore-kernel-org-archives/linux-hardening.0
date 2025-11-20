@@ -1,213 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3CE372AA1;
-	Thu, 20 Nov 2025 07:21:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CC63043D3;
+	Thu, 20 Nov 2025 07:38:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763623272; cv=none; b=WOTjKHEDtbsE40zDET/KmtXgfPNXOG1LEWSgj4+hYYTNa9tdr8eEI/7MIu3VOMap/CdCbzzXYtprXPJNHNNKkIw6W9BSqwqKjYMfWKhffY2BJ9x+6y/DGXrUBIAaSLZvwnd2ABSHFO2WRdACc5/k1CFajmYSBxW/XzxikX+HOsc=
+	t=1763624295; cv=none; b=CWciEAI5lDlPaxfaZtG5g//iTiyd8FQkItW7tsKRr923/q2fPW4WsFX9kX+/whIuyNqdaV4aXh2+x/Uslt71uw4VX8HHix1eX8oXfzavZoWS/JQOLc+Pg2QPvztbnFrQENHCL0+0gVKI/bT6AF3fHOWleQf1dpIbCOBnAmkrJDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763623272; c=relaxed/simple;
-	bh=Q9x7pfr68ABlQkeGDOQXfTv4u0y1Q9ao0HbtlLeZBks=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G8G1KECx4JYF0ZzO1ftXXaDkqdQ+SagpOMeUrSavoPmI+BXaw7Z1S4NORPS/wlR4yvUM8PpgHraCSEcshQxSssVqxuGwCsCgUC4C70WpRWqh3OJ4aLoF1p8Uz8SxrBoQC6RFP9lHEOW5+Bh5jzUi3ctUl9QwD89CeQHxnsUDYM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nb6ActO4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763624295; c=relaxed/simple;
+	bh=TBmcKl0VoEim/6SAhgGNXn7s3ldHbwABAdg4lb6XQUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qvNN6Bjd5xcS+nG7QiqFHlcPGPCX9i18BDxTW9ANPLt/emeXNaV/WmKnFFGFkTBIs6tVUGiYd5Ob57Xh2ZSVfRzsZ5d/Li++CvQioXVzN49OyAB3Xni0Saj4htdhwGY24RL5Hsi2bsbm1pFYHiKK4lx4kcl2O2CCoJp1HKOhCRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fk1GOwXX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nb6ActO4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DED68C4CEF1;
-	Thu, 20 Nov 2025 07:21:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fk1GOwXX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B2CDC4CEF1;
+	Thu, 20 Nov 2025 07:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763623271;
-	bh=Q9x7pfr68ABlQkeGDOQXfTv4u0y1Q9ao0HbtlLeZBks=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Nb6ActO4kn5WR22MgZjBWnEhix29+SAXSkzvBaTiYlthZrhPeDL2UyotiI4/dFl3G
-	 CifRWjVgR+IJPR1LDUCi/XQzpU3AP2TnzTk7P0jgZwbG7vNm8sQquNWtMFl+/om2Tb
-	 LxYHzl8vQQELTJQb7NnXh80mV/vTTRhBUBxXHc7+lcavP0TtPpsXyKrQtj3bBODjAx
-	 +HgdU2zRDeqKOoI5hiFt9a9mKAt9tZ58Lp83ZEibBiIP16VJNgbSspvaUazIqEQESj
-	 87GBtLVfJZnjF+CR/0M18mx8sy7KXThc3JEI/6owWCwr6ZgohZQpRMi9pI15uksJ2M
-	 NQSikIjacL0WA==
-Message-ID: <c503061b-00cc-4d04-8380-3a0fe0a2c788@kernel.org>
-Date: Thu, 20 Nov 2025 08:21:04 +0100
+	s=k20201202; t=1763624294;
+	bh=TBmcKl0VoEim/6SAhgGNXn7s3ldHbwABAdg4lb6XQUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fk1GOwXX+8I2wrjVFUFCs8eOHzSYMIpbSRNsybaaYnqmR1hvk8o1qyzeHekcACEa7
+	 0yEVvvcB58TVkvjvuQ+g/DQOgZnEaPJs34D8Vdf/e9Zwg/WSSr8nANTFzZTxu1EY4w
+	 f+G77YPyofCyVfOqnqhJ1EEumdeOwl1cYYCiSj7kjTatwWqUljRJ6vu6RxqRHEAEU8
+	 HRAo+V91htNpmPP70IHNTW6yrAz7B8PMq5q1hNDWdzinzbtY3bxLpPYfEP2VVI+Xgm
+	 NiTNPnC07XH/GYQn22i+8qeLjGe/j0I0H3GmLnYmVwrnbgDp8dKA8f5MMMocC3fZuC
+	 Xf3HRBvJIpyCw==
+Date: Thu, 20 Nov 2025 09:38:10 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <skolothumtho@nvidia.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, iommu@lists.linux.dev,
+	linux-mm@kvack.org, linux-doc@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
+	Nicolin Chen <nicolinc@nvidia.com>
+Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
+ scatter-gather mapping routine
+Message-ID: <20251120073810.GQ18335@unreal>
+References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
+ <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
+ <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
+ <20251119134245.GD18335@unreal>
+ <6714dc49-6b5c-4d58-9a43-95bb95873a97@amd.com>
+ <20251119145007.GJ18335@unreal>
+ <26d7ecab-33ed-4aab-82d5-954b0d1d1718@amd.com>
+ <20251119163326.GL18335@unreal>
+ <3053398d-94d8-42fa-aedc-927746375521@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 25/26] dt-bindings: reserved-memory: Add Google Kinfo
- Pixel reserved memory
-To: Eugen Hristev <eugen.hristev@linaro.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, tglx@linutronix.de,
- andersson@kernel.org, pmladek@suse.com, rdunlap@infradead.org,
- corbet@lwn.net, david@redhat.com, mhocko@suse.com
-Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org
-References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
- <20251119154427.1033475-26-eugen.hristev@linaro.org>
- <e73bdb23-c27b-4a18-b7e3-942f2d40b726@kernel.org>
- <060e7412-8f1f-4d31-af39-79213c560e85@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <060e7412-8f1f-4d31-af39-79213c560e85@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3053398d-94d8-42fa-aedc-927746375521@amd.com>
 
-On 19/11/2025 17:19, Eugen Hristev wrote:
+On Thu, Nov 20, 2025 at 08:03:09AM +0100, Christian König wrote:
+> On 11/19/25 17:33, Leon Romanovsky wrote:
+> > On Wed, Nov 19, 2025 at 03:53:30PM +0100, Christian König wrote:
+> > 
+> > <...>
+> > 
+> >>>>>>> +struct sg_table *dma_buf_map(struct dma_buf_attachment *attach,
+> >>>>>>
+> >>>>>> That is clearly not a good name for this function. We already have overloaded the term *mapping* with something completely different.
+> >>>>>
+> >>>>> This function performs DMA mapping, so what name do you suggest instead of dma_buf_map()?
+> >>>>
+> >>>> Something like dma_buf_phys_vec_to_sg_table(). I'm not good at naming either.
+> >>>
+> >>> Can I call it simply dma_buf_mapping() as I plan to put that function in dma_buf_mapping.c
+> >>> file per-your request.
+> >>
+> >> No, just completely drop the term "mapping" here. This is about phys_vector to sg_table conversion and nothing else.
+> > 
+> > In order to progress, I renamed these functions to be
+> > dma_buf_phys_vec_to_sgt() and dma_buf_free_sgt(), and put everything in dma_buf_mapping.c file.
 > 
+> Yeah, the problem is I even thought more about it and came to the conclusion that this is still not sufficient for an rb or an Ack-by.
 > 
-> On 11/19/25 18:02, Krzysztof Kozlowski wrote:
->> On 19/11/2025 16:44, Eugen Hristev wrote:
->>> Add documentation for Google Kinfo Pixel reserved memory area.
->>
->> Above and commit msg describe something completely else than binding. In
->> the binding you described kinfo Linux driver, above you suggest this is
->> some sort of reserved memory.
->>
->>>
->>> Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
->>> ---
->>>  .../reserved-memory/google,kinfo.yaml         | 49 +++++++++++++++++++
->>>  MAINTAINERS                                   |  5 ++
->>>  2 files changed, 54 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml b/Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml
->>> new file mode 100644
->>> index 000000000000..12d0b2815c02
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml
->>> @@ -0,0 +1,49 @@
->>> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/reserved-memory/google,kinfo.yaml#
->>
->> Filename based on the compatible.
->>
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Google Pixel Kinfo reserved memory
->>> +
->>> +maintainers:
->>> +  - Eugen Hristev <eugen.hristev@linaro.org>
->>> +
->>> +description:
->>> +  This binding describes the Google Pixel Kinfo reserved memory, a region
->>
->> Don't use "This binding", but please describe here hardware.
->>
->>> +  of reserved-memory used to store data for firmware/bootloader on the Pixel
->>> +  platform. The data stored is debugging information on the running kernel.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    items:
->>> +      - const: google,kinfo
->>> +
->>> +  memory-region:
->>> +    maxItems: 1
->>> +    description: Reference to the reserved-memory for the data
->>
->> This does not match description. Unfortunately it looks like you added a
->> node just to instantiate Linux driver and this is not allowed.
->>
->> If this was some special reserved memory region, then it would be part
->> of reserved memory bindings - see reserved-memory directory.
+> A core concept of DMA-buf is that the exporter takes care of all the mappings and not the framework.
 > 
-> I sent this patch for reserved-memory directory, where all the
-> reserved-memory bindings reside. Or maybe I do not understand your
-> comment ?>
-
-There is no ref to reserved memory here. Please look first how reserved
-memory bindings are written,
-
->> Compatible suggests that it is purely Linux driver, so another hint.
+> Calling pci_p2pdma_bus_addr_map(), dma_map_phys() or dma_map_phys() from DMA-buf code is extremely questionable.
 > 
-> This reserved memory area is used by both Linux and firmware. Linux
-> stores some information into this reserved memory to be used by the
-> firmware/bootloader in some specific scenarios (e.g. crash or recovery
-> situations)
-> As the firmware reserves this memory for this specific purpose, it is
-> natural to inform Linux that the memory should not be used by another
-> purpose, but by the purpose it was reserved for.
+> That should really be inside VFIO and not DMA-buf code, so to move forward I strongly suggest to either move that into VFIO or the DMA API directly.
 
-But you did not write bindings for it. You wrote bindings for Linux
-device driver, I already explained that last time.
+We got the request to move to DMABUF and agreement a long time ago, in v5.
+https://lore.kernel.org/all/aPYrEroyWVOvAu-5@infradead.org/
 
-> Which would be the best way to have Linux understand where is this
-> memory area so it could be handled?
-
+Thanks
 
 > 
+> Regards,
+> Christian.
 > 
->>
->> Looks like this is a SoC specific thing, so maybe this should be folded
->> in some of the soc drivers.
->>
-> Not really soc specific. Any soc who implements this at firmware level
-> can use it. The firmware can reserve some memory for this specific
-> purpose and then pass it to Linux, so Linux can fill it up.
-> It just happens that the Pixel phone has this implemented right now, but
-> it is not constrained to Pixel only.
+> > 
+> > Thanks
 > 
-> Instantiating this driver with a call like platform_device_register_data
-> would make the driver unaware of where exactly the firmware looks for
-> the data. This is right now passed through the DT node. Do you have a
-> better suggestion on how to pass it ?
-
-I do not see how this question is relevant here. I don't care how you
-pass it to the driver, because we discuss bindings. You created bindings
-for Linux driver and that's a no. If you wanted that, I suggests that it
-could be instantiated by some other driver, but sure - we don't have to
-go that way, that was just an idea how to solve the problem bindings
-like this cannot be accepted.
-
-Best regards,
-Krzysztof
