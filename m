@@ -1,93 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53302DC77E;
-	Wed, 19 Nov 2025 22:54:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B099C1DFE12
+	for <linux-hardening@vger.kernel.org>; Thu, 20 Nov 2025 00:40:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763592885; cv=none; b=qXsPD1abUj3ZYrOquBU+9jJhRCX+0YYFnT2K25cFR3DIdF/BTzuHYLEB+oLR5xA/2T4dGcui8DrM9CQlqscaDma4TeLnUR0msuY5QfXtg1hN5ILecMUY3DeTTUEI0odUgnIo1+piHPfuszrJl+Qzj+kKaH/xt9/MC3FtTpcNGiA=
+	t=1763599228; cv=none; b=DJntfpn7JiWr/JjxoHzE9sZA/lGO0RycTH1q48AB8CTNnjsLgMZWc0cY3arvnPWIyZjukjl62JnN+0Tzyv9xDFWqFQwu39tXngAP36TP1bV12RhsCl44VhcCa4Pip24FhUidNk4pwjnrvyU2bifsca3msPJOBO7WAQ6zPVU+xr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763592885; c=relaxed/simple;
-	bh=evRf10KLlkgghicnG+ujSW3Il6OzrjlVgGjTINYs7IE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=B6dZGDJdHx7vmyaMoHIyUVQ55gY5Ib5AOqsuR8k7THYr2lgswj1Ui9rg+gwGX9r6u711CCAGZWCwROSWOJO2YHhNDXVsA8KEh1wnuAi13Wxdv0gLhVzHK6WlfkwmGcDR9wtw459iUm+gStIAWAv8wDeoufKNMIVLf114X4cCgYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JbVRDGgo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763599228; c=relaxed/simple;
+	bh=dujpYYkEAuhnVjwRXcOEFr/W68596+RK/2xaBEwTRfw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dHYu9sJW3Dmg5DLdTAVDmA3qREOJ5JzPzTeyLwxwjtCMUv3uhwfzHr8R61Dd1G4noxiXmQgOIbV2aOxzo/wGFmANrvx0GXe4HrJOYGPOZ5caffs9oitrzCo9FmjEzB0BQsNssO59do8yfAZcAOjZpuDG0E5lURgYEeqjRcOPc3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIAPHdg6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JbVRDGgo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F5E0C4CEF5;
-	Wed, 19 Nov 2025 22:54:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIAPHdg6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DD0DC4CEF5;
+	Thu, 20 Nov 2025 00:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763592885;
-	bh=evRf10KLlkgghicnG+ujSW3Il6OzrjlVgGjTINYs7IE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=JbVRDGgo6trdW+Oy1Pe9AfUgKOQLUOqf6UtEomcbq4I37ghBVV5tiBHk5cNEny42s
-	 AUQIc77HsaOlBaitldxEtQPlM/w8SPcZq8S0atHY3IpjCWyl+bxOACSkvqOjgSE8R6
-	 edOVOkVuqdiIWhx9f80y5j+jI6ZHv1+mJjtkud38pfq3m8f5IcuH/CRgeIjd/v/Ydy
-	 Zn+3JlRKAen7Y6GkL9oLIAQrFgjQkDCARGugcVo1OOh5D/eFQaEFyAPqfT9210FVWV
-	 PqDxyBCQYwLZ6NzHYf1NKKopkR0F40jkzr0c/Os8la32hbCuxkSvoJp5WulY4nHG94
-	 2iU46X2obOOxw==
+	s=k20201202; t=1763599228;
+	bh=dujpYYkEAuhnVjwRXcOEFr/W68596+RK/2xaBEwTRfw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FIAPHdg63xsA03+0xdtbaIu0VQ2lXc7juftLQKi2e0sZZBtRvAj//hcoPa0Uo4PwM
+	 lc2vr+hMHaXpAYsIGNa35FRChI3BB70zsoyhbJOuLyJB8efprmsJU6xfCDKDOCxyG9
+	 loEOCFtnj2i62QlfteKtQXesmbljRhN9IEMRWRSvSbuMyz46E+Iq3HqksPJ+M9rabs
+	 qfKRSeh6Kph15VvjaqTtv32BQm32JRySOpJgOtYmVoJKOVOh/XfNvUpEqRtXo5E8mt
+	 hMu6Zv1TOUUY9seSjZbfRsMdwUHAoDMw4z30xQLQpMX64mMu/mZxF0CxR8wMu26yPM
+	 Pe5n4uHm7k6FQ==
+Date: Wed, 19 Nov 2025 16:40:27 -0800
 From: Kees Cook <kees@kernel.org>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
+To: Jeff Law <jeffreyalaw@gmail.com>
+Cc: Qing Zhao <qing.zhao@oracle.com>, Uros Bizjak <ubizjak@gmail.com>,
+	Joseph Myers <josmyers@redhat.com>,
+	Richard Biener <rguenther@suse.de>,
+	Andrew Pinski <pinskia@gmail.com>, Jakub Jelinek <jakub@redhat.com>,
+	Martin Uecker <uecker@tugraz.at>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Dan Li <ashimida.1990@gmail.com>,
 	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	linux-modules@vger.kernel.org,
-	Daniel Gomez <da.gomez@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] module/decompress: Avoid open-coded kvrealloc()
-Date: Wed, 19 Nov 2025 14:54:43 -0800
-Message-Id: <20251119225439.work.741-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	Ramon de C Valle <rcvalle@google.com>,
+	Joao Moreira <joao@overdrivepizza.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
+	"Constable, Scott D" <scott.d.constable@intel.com>,
+	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v7 7/7] riscv: Add RISC-V Kernel Control Flow Integrity
+ implementation
+Message-ID: <202511191549.E163044@keescook>
+References: <20251117201219.makes.617-kees@kernel.org>
+ <20251117201231.2160039-7-kees@kernel.org>
+ <c8b5038c-222f-4215-84c4-3f0698ccf10e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1251; i=kees@kernel.org; h=from:subject:message-id; bh=evRf10KLlkgghicnG+ujSW3Il6OzrjlVgGjTINYs7IE=; b=owGbwMvMwCVmps19z/KJym7G02pJDJlyXpumVnfvffVkMe8EWZOL5qocLB+83G1vq24RnDxBr GPNqks8HaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABPR/sDI0PLbNKx5x5s7fz5o LrzUziNuJvhuZqPC8qdJqV829x1MuMzIsDT24lzOqQ6dQd0W+lZ6M+Q0XgZ1zV/lvGZGnu3PBp2 PHAA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c8b5038c-222f-4215-84c4-3f0698ccf10e@gmail.com>
 
-Replace open-coded allocate/copy with kvrealloc().
+On Wed, Nov 19, 2025 at 08:35:35AM -0700, Jeff Law wrote:
+> Note there's still review work to do on the RISC-V bits.  But it's worth
+> noting your patch triggers ICEs in the RISC-V testsuite.  See:
+> 
+> https://github.com/ewlu/gcc-precommit-ci/issues/4115#issuecomment-3543758441
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Daniel Gomez <da.gomez@samsung.com>
-Cc: <linux-modules@vger.kernel.org>
----
- kernel/module/decompress.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Ah thanks for the pointer -- I didn't know there were any CIs running on
+patch submission!
 
-diff --git a/kernel/module/decompress.c b/kernel/module/decompress.c
-index 474e68f0f063..36f52a232a12 100644
---- a/kernel/module/decompress.c
-+++ b/kernel/module/decompress.c
-@@ -17,16 +17,16 @@
- static int module_extend_max_pages(struct load_info *info, unsigned int extent)
- {
- 	struct page **new_pages;
-+	unsigned int new_max = info->max_pages + extent;
- 
--	new_pages = kvmalloc_array(info->max_pages + extent,
--				   sizeof(info->pages), GFP_KERNEL);
-+	new_pages = kvrealloc(info->pages,
-+			      size_mul(new_max, sizeof(*info->pages)),
-+			      GFP_KERNEL);
- 	if (!new_pages)
- 		return -ENOMEM;
- 
--	memcpy(new_pages, info->pages, info->max_pages * sizeof(info->pages));
--	kvfree(info->pages);
- 	info->pages = new_pages;
--	info->max_pages += extent;
-+	info->max_pages = new_max;
- 
- 	return 0;
- }
+I fixed a bunch of the lint issues and found a few more too. :)
+
+I'll get the test failures tracked down...
+
 -- 
-2.34.1
-
+Kees Cook
