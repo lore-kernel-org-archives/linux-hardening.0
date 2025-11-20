@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8346D2EDD69;
-	Thu, 20 Nov 2025 02:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6962B21A92F;
+	Thu, 20 Nov 2025 06:49:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763606386; cv=none; b=e1CI8OLPboe14z18MzYSdRX7oXou4BHKq+0qR70XrqAc7aWqgSKzdclqTk7Lw/0Z4Z5/GkuEnslavrZ/n7go7+FhddQIw0X4tnf0y6fHHUjrpfqxl/PAGJprqdcpf++qhbDJKToKUj+JYgEDOlazK/NLimEcWFOyp6ANUjC/zJ8=
+	t=1763621369; cv=none; b=i3fm3yf1xQW0dcfLX2WfJXosiApe5P7pkHl8Iqt8mA5HMBLVicR0AwLMlhfrjBT/IvkjmYw/RkvY16eP4HyUO2cF0vtd2xOAPFYIcsBnv0ZVtHA8u2eyBOO3841pe+vXBg3B8wnQIrJN+4XOgePbJv2JNytYmDynJ+ubntyoshg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763606386; c=relaxed/simple;
-	bh=ag3KdrZjmF6ADXE+bVUlfKrJnDxIyrzTACT01slDsC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=K4RH91PO9d+uHLSSNCCCXmQj/XiO4A02WD7Vo1bhZFzfQjuDKNq3Ae7dEabayUtwXFqCESlZmhjsW12UEtOJaPhx96OULx9XsgXPHyqluGLorTlt5dHUaH8HYi0Cfh8YyYd4yeCTfWVHsckES/x0MopbHZW0To64zvbnX2wvyZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YipncAi4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763621369; c=relaxed/simple;
+	bh=IBQKqyKmPu5Yhvj+bCIh3TYmG6TotfDN8gapcj6tfrI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WQlX1UyZ8P13YTaUkDwQKc/iKS36fV29ehLnwxYs56FSE+BSQRt1AxSpVNl5Wb074HJO6ZAjcXA75xALeH+iXAQlWvuv7LbNu0MV3uWP8yhuT8fmgnUtYAWK1t+zHK5jYCam9QZJvqO8NBwSGU7VU2leRKLdkqo0BpJyQdNwqrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwEgFf/S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YipncAi4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BBEEC4CEF5;
-	Thu, 20 Nov 2025 02:39:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwEgFf/S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B84D7C2BC86;
+	Thu, 20 Nov 2025 06:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763606386;
-	bh=ag3KdrZjmF6ADXE+bVUlfKrJnDxIyrzTACT01slDsC4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=YipncAi4Mh9Xt9E3+VnRGAyBFdKrI0CFPKSb6e7gv8JbZczC6l0A47whtRD0V2V5N
-	 IoPawsF2Oiro21oVFZdwdmNKhK8wjjeL1pNnRwhVBEQGTNOcel7bUk/g/4qlqKAEFG
-	 mZWrgAOLGI4mucXqfHhhZKoOJTkAMU4eYIsq7z5txBiBAsjuR3YTMMxSgmrBCCnKq+
-	 mM2BcixiowbBvoUcyOXvAeV4YvPS+vXYWdYa8j8HtoYUaXUQp2GShYsgkfK0wBr3te
-	 z3OHacfP3ZZdHJH/178x0NPx4JPk2Hr4HvnhUYXDdmJlP07gqa3PyJOwuixsXr8G2C
-	 d6nI7ik8kLPiA==
-Date: Thu, 20 Nov 2025 11:39:39 +0900
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: oss-drivers@corigine.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	s=k20201202; t=1763621368;
+	bh=IBQKqyKmPu5Yhvj+bCIh3TYmG6TotfDN8gapcj6tfrI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cwEgFf/Sc97CerTV18L0gBtOgvNN+Y4bON5UgDyx6SfIoWZzGqgft/QCJayp0+KNx
+	 iLl5djqmL2P7O5ywCRf5ao8qGndSw5JCCNJSvx93M7ZQYhu2bJUdVXE9CyW65QTTL6
+	 9jZD9eTcBDJZmPi6NEuPdkWMgBrf9BrKyg0MkzavLz2Q2z0CV6iWf4tP4Zgwf8SJ7K
+	 4yCl5Cq2fZqA3i3Khzbizv4r+JxFb3mkc/zvqMQuY5QmQuGHbSFBbkI3gv0LESz7pg
+	 yjPCnjlvL/Ng3XCezaVRLhONh9qPclCUh3bNqNYkFydCDO0FTT+aJCsunhlzoaowG9
+	 98ORhOPlkS3hA==
+Date: Wed, 19 Nov 2025 23:49:23 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Tamir Duberstein <tamird@gmail.com>, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] nfp: tls: Avoid -Wflex-array-member-not-at-end warnings
-Message-ID: <aR5_a1tD9KKp363I@kspp>
+Subject: Re: [PATCH] kbuild: Enable GCC diagnostic context for value-tracking
+ warnings
+Message-ID: <20251120064923.GA3320872@ax162>
+References: <20251119224426.work.380-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,115 +48,72 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20251119224426.work.380-kees@kernel.org>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Wed, Nov 19, 2025 at 02:44:31PM -0800, Kees Cook wrote:
+> Enable GCC 16's coming "-fdiagnostics-show-context=2" option[1] to
+> provide enhanced diagnostic information for value-tracking warnings, which
+> displays the control flow chain leading to the diagnostic. This covers our
+> existing use of -Wrestrict and -Wstringop-overread, and gets us closer to
+> enabling -Warray-bounds, -Wstringop-overflow, and -Wstringop-truncation.
+> 
+> The context depth of 2 provides the immediate decision path that led to
+> the problematic code location, showing conditional checks and branch
+> decisions that caused the warning. This will help us understand why
+> GCC's value-tracking analysis triggered the warning and makes it easier
+> to determine whether warnings are legitimate issues or false positives.
 
-So, in order to avoid ending up with flexible-array members in the
-middle of other structs, we use the `struct_group_tagged()` helper
-to separate the flexible array from the rest of the members in the
-flexible structure. We then use the newly created tagged `struct
-nfp_crypto_req_add_front_hdr` to replace the type of the objects
-causing trouble in a couple of structures.
+Would we ever want a depth more than 2? In other words, should this be
+customizable in case there is a warning that needs more context?
 
-We also want to ensure that when new members need to be added to the
-flexible structure, they are always included within the newly created
-tagged struct. For this, we use `static_assert()`. This ensures that the
-memory layout for both the flexible structure and the new tagged struct
-is the same after any changes.
+> For example, an array bounds warning will now show the conditional
+> statements (like "if (i >= 4)") that established the out-of-bounds access
+> range, directly connecting the control flow to the warning location.
+> This is particularly valuable when GCC's interprocedural analysis can
+> generate warnings that are difficult to understand without seeing the
+> inferred control flow.
 
-Lastly, use container_of() to retrieve a pointer to the flexible
-structure and, through that, access the flexible-array member when
-needed.
+Not that it is that different from what you describe here but having an
+actual example of the insight that this gives using a problematic case
+from the past (such as one that resulted in these various warnings
+getting disabled) might be useful for future travellers.
 
-So, with these changes, fix the following warnings:
+> Link: https://github.com/gcc-mirror/gcc/commit/6faa3cfe60ff9769d1bebfffdd2c7325217d7389 [1]
 
-drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:65:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/ethernet/netronome/nfp/nfdk/../crypto/fw.h:58:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:58:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/ethernet/netronome/nfp/nfd3/../crypto/fw.h:65:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+I have a small preference for using links that the project controls,
+i.e.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- .../net/ethernet/netronome/nfp/crypto/fw.h    | 24 ++++++++++++-------
- .../net/ethernet/netronome/nfp/crypto/tls.c   |  6 +++--
- 2 files changed, 19 insertions(+), 11 deletions(-)
+  https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=6faa3cfe60ff9769d1bebfffdd2c7325217d7389
 
-diff --git a/drivers/net/ethernet/netronome/nfp/crypto/fw.h b/drivers/net/ethernet/netronome/nfp/crypto/fw.h
-index dcb67c2b5e5e..1e869599febb 100644
---- a/drivers/net/ethernet/netronome/nfp/crypto/fw.h
-+++ b/drivers/net/ethernet/netronome/nfp/crypto/fw.h
-@@ -32,16 +32,22 @@ struct nfp_crypto_req_reset {
- #define NFP_NET_TLS_VLAN_UNUSED			4095
- 
- struct nfp_crypto_req_add_front {
--	struct nfp_ccm_hdr hdr;
--	__be32 ep_id;
--	u8 resv[3];
--	u8 opcode;
--	u8 key_len;
--	__be16 ipver_vlan __packed;
--	u8 l4_proto;
-+	/* New members MUST be added within the struct_group() macro below. */
-+	struct_group_tagged(nfp_crypto_req_add_front_hdr, __hdr,
-+		struct nfp_ccm_hdr hdr;
-+		__be32 ep_id;
-+		u8 resv[3];
-+		u8 opcode;
-+		u8 key_len;
-+		__be16 ipver_vlan __packed;
-+		u8 l4_proto;
-+	);
- #define NFP_NET_TLS_NON_ADDR_KEY_LEN	8
- 	u8 l3_addrs[];
- };
-+static_assert(offsetof(struct nfp_crypto_req_add_front, l3_addrs) ==
-+	      sizeof(struct nfp_crypto_req_add_front_hdr),
-+	      "struct member likely outside of struct_group_tagged()");
- 
- struct nfp_crypto_req_add_back {
- 	__be16 src_port;
-@@ -55,14 +61,14 @@ struct nfp_crypto_req_add_back {
- };
- 
- struct nfp_crypto_req_add_v4 {
--	struct nfp_crypto_req_add_front front;
-+	struct nfp_crypto_req_add_front_hdr front;
- 	__be32 src_ip;
- 	__be32 dst_ip;
- 	struct nfp_crypto_req_add_back back;
- };
- 
- struct nfp_crypto_req_add_v6 {
--	struct nfp_crypto_req_add_front front;
-+	struct nfp_crypto_req_add_front_hdr front;
- 	__be32 src_ip[4];
- 	__be32 dst_ip[4];
- 	struct nfp_crypto_req_add_back back;
-diff --git a/drivers/net/ethernet/netronome/nfp/crypto/tls.c b/drivers/net/ethernet/netronome/nfp/crypto/tls.c
-index f252ecdcd2cd..a6d6a334c84b 100644
---- a/drivers/net/ethernet/netronome/nfp/crypto/tls.c
-+++ b/drivers/net/ethernet/netronome/nfp/crypto/tls.c
-@@ -180,7 +180,8 @@ nfp_net_tls_set_ipv4(struct nfp_net *nn, struct nfp_crypto_req_add_v4 *req,
- 	req->front.key_len += sizeof(__be32) * 2;
- 
- 	if (direction == TLS_OFFLOAD_CTX_DIR_TX) {
--		nfp_net_tls_assign_conn_id(nn, &req->front);
-+		nfp_net_tls_assign_conn_id(nn,
-+			container_of(&req->front, struct nfp_crypto_req_add_front, __hdr));
- 	} else {
- 		req->src_ip = inet->inet_daddr;
- 		req->dst_ip = inet->inet_saddr;
-@@ -199,7 +200,8 @@ nfp_net_tls_set_ipv6(struct nfp_net *nn, struct nfp_crypto_req_add_v6 *req,
- 	req->front.key_len += sizeof(struct in6_addr) * 2;
- 
- 	if (direction == TLS_OFFLOAD_CTX_DIR_TX) {
--		nfp_net_tls_assign_conn_id(nn, &req->front);
-+		nfp_net_tls_assign_conn_id(nn,
-+			container_of(&req->front, struct nfp_crypto_req_add_front, __hdr));
- 	} else {
- 		memcpy(req->src_ip, &sk->sk_v6_daddr, sizeof(req->src_ip));
- 		memcpy(req->dst_ip, &np->saddr, sizeof(req->dst_ip));
--- 
-2.43.0
+but I am guessing that mirror is not going anywhere and we have the hash
+regardless so consider it a nit.
 
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+
+Should we take this via Kbuild or do you want to take it via the
+hardening tree?
+
+> ---
+>  Makefile | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Makefile b/Makefile
+> index d14824792227..d97452441cd0 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -940,6 +940,9 @@ KBUILD_CFLAGS += $(call cc-option,-fzero-init-padding-bits=all)
+>  # for the randomize_kstack_offset feature. Disable it for all compilers.
+>  KBUILD_CFLAGS	+= $(call cc-option, -fno-stack-clash-protection)
+>  
+> +# Get details on warnings generated due to GCC value tracking.
+> +KBUILD_CFLAGS	+= $(call cc-option, -fdiagnostics-show-context=2)
+> +
+>  # Clear used registers at func exit (to reduce data lifetime and ROP gadgets).
+>  ifdef CONFIG_ZERO_CALL_USED_REGS
+>  KBUILD_CFLAGS	+= -fzero-call-used-regs=used-gpr
+> -- 
+> 2.34.1
+> 
