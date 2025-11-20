@@ -1,93 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E582882D7;
-	Thu, 20 Nov 2025 10:03:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47125205E25;
+	Thu, 20 Nov 2025 10:40:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763632998; cv=none; b=UHB8sytnn18+I0cYSpYryeP5F9EUBSfhyaIwet1aoc5oTZpcfsJS3vdP5ANYHlqCFJkJ7YJY/g6j2obUkbIXGfcJCWTq6gyE9p2vEQVy04w2vEUHmOnWNTuExqzKOv9R7xjElwa2xGI1kq29zrYldIWATV/K1N7ocXXiqAVceLE=
+	t=1763635230; cv=none; b=l/mTujD6g0Km9a6YOzHNuChdFVNUif2lKS3kq/Wl8F2fWaGjlHHP539iQAPzHLRq7y11xcUZwPjnf5o3rj1cUDojYNO1v1NMd43Jsn570yRM5T2uPIJg4q/FGPuJK8ZPwqThN9tZy9uiEJqAi74f46mNlYhNdXFe3q36WeeAX9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763632998; c=relaxed/simple;
-	bh=nN18XypDEK4Xp2Uwyzn2CyI2CYU2LLHnqRbvcxN/MOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YkZKsxbjmzwFFsnCamzc3TQTNZcIWHIod9adUL8u3eAAIPMVgvjhbnuoBzAjwDVwJdaVwsgNT3AHq5+tPZab6YHJ9fRsLwXo2dQ4g48+vI55UCHla69HfynkA5o/DKyBUTv0OxP1Us5yF5Oft+fm8gtiiTBqiyNBqLQ6ffXguNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+hY+OMB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763635230; c=relaxed/simple;
+	bh=yg3PEBAK0vXSHiYm6Rwl7vMN6RwX4AdDjEWGlDFXv3o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TySTGOu7bF4tsQYGdG9fGKJpLopHmzx05wghC/4KhHPzkC0+Zkm/6w1XG2rsVafbyTitxNJsMzMY7ACfTYTjCDUTJignc3MeazFfy5Kru9u313Wyg+HD06hltt3Jjh5UFO2/8A3KhfKaGr8SfJHSCGYsgd+LGyUH01p0J9yLfVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Byxt52qN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+hY+OMB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FB98C4CEF1;
-	Thu, 20 Nov 2025 10:03:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Byxt52qN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EEB1C116D0;
+	Thu, 20 Nov 2025 10:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763632997;
-	bh=nN18XypDEK4Xp2Uwyzn2CyI2CYU2LLHnqRbvcxN/MOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G+hY+OMBFwxjvW/rHz3D9U5weCHQooOgK8MHfyA01kVMMV+A3AkZ438UHthcqeE9M
-	 /W8sa0sQXGzt/hW+GZKYO9qCVhuYOSwzWyvXmoHLLLXKCC71ccQychOWgBEc9/N4WR
-	 B4hzYRwhJYWOy/XMG9Ee6J/fv3T7TqpQvxDZRmSFypghKchjL3PUHlMTtC4LoafHEg
-	 8gc9esBn2NM5CJ6c+XmHXAeq018QsYls0PqZAWftuB8E+D1BJ3lzNPMBBHus01EitA
-	 yHaQJeOXigJlJYANOS70kHWQFawRWzvBrKbuTNC8S71WbHRGEk1IfIpBp5grsDiqGo
-	 BP3n3eU4f4VgA==
-Date: Thu, 20 Nov 2025 12:03:12 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Nicolin Chen <nicolinc@nvidia.com>,
-	Alex Mastro <amastro@fb.com>, Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v9 06/11] dma-buf: provide phys_vec to scatter-gather
- mapping routine
-Message-ID: <20251120100312.GV18335@unreal>
-References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
- <20251120-dmabuf-vfio-v9-6-d7f71607f371@nvidia.com>
- <57b8876f-1399-4e4d-a44b-1177787aa17d@amd.com>
+	s=k20201202; t=1763635229;
+	bh=yg3PEBAK0vXSHiYm6Rwl7vMN6RwX4AdDjEWGlDFXv3o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Byxt52qNfc+rni6YhmiS1E0PWNeqKXddN+uHkoToywxnuRWMrfF05sSOi87AWE2c6
+	 QaO82JC//B0IF/DPoI64FQUhoXp6gO0h4tnp4tWsAM0vI0CcWEC5vlFWejwbCPmF7s
+	 6bIRyAtpqpAWnpgUYTQ3f9R7olHksYYp/5QZmFTutWvxlnkPT2dBjNJcnEw0LzcAm4
+	 Wgwk3MuBBsZecV2FUPzKmGw5Lzj9cvE06e4V2Jgeu4Nmyl6fB/u4ZFgJHMkqV/ov9P
+	 C5Ow4Rbzy0ajYBNu+/m17T8QlYmzPE7+A1rQXq7WRtML8B+zoKWN2tHPTJqdoTBOLc
+	 VnWHvMV2rK3gA==
+From: Mark Brown <broonie@kernel.org>
+To: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Andy Shevchenko <andy@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Alexey Klimov <alexey.klimov@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+In-Reply-To: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
+References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
+Subject: Re: (subset) [PATCH v4 00/10] gpio: improve support for shared
+ GPIOs
+Message-Id: <176363516985.564017.16048857931060018581.b4-ty@kernel.org>
+Date: Thu, 20 Nov 2025 10:39:29 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <57b8876f-1399-4e4d-a44b-1177787aa17d@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-a6db3
 
-On Thu, Nov 20, 2025 at 10:33:36AM +0100, Christian König wrote:
-> On 11/20/25 10:28, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > Add dma_buf_phys_vec_to_sgt() and dma_buf_free_sgt() helpers to convert
-> > an array of MMIO physical address ranges into scatter-gather tables with
-> > proper DMA mapping.
-
-<...>
-
-> > Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> > Reviewed-by: Nicolin Chen <nicolinc@nvidia.com>
-> > Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> > Tested-by: Alex Mastro <amastro@fb.com>
-> > Tested-by: Nicolin Chen <nicolinc@nvidia.com>
-> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+On Wed, 12 Nov 2025 14:55:29 +0100, Bartosz Golaszewski wrote:
+> Bjorn, Konrad: I should have Cc'ed you on v1 but I just went with what
+> came out of b4 --auto-to-cc. It only gave me arm-msm. :( Patch 7 from
+> this series however impacts Qualcomm platforms. It's a runtime dependency
+> of patches 8 and 9. Would you mind Acking it so that I can take it into
+> an immutable branch that I'll make available to Mark Brown for him to
+> take patches 8-10 through the ASoC and regulator trees for v6.19?
 > 
-> Could be that this will backfire at some point, but I think we will never know without trying.
-> 
-> Acked-by: Christian König <christian.koenig@amd.com>
+> [...]
 
-Thanks a lot.
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+
+Thanks!
+
+[10/10] regulator: make the subsystem aware of shared GPIOs
+        commit: b871d9adffe5a64a1fd9edcb1aebbcc995b17901
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
