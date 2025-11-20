@@ -1,240 +1,213 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013043.outbound.protection.outlook.com [40.93.196.43])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DA42D46A1;
-	Thu, 20 Nov 2025 07:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763622521; cv=fail; b=af7EG3B5SyRAgw75PvtZ4ci3iP+r7aqvpHpZ1wEnkw0CrsYm2KND/N2kpYrpUznTHDxl0nYW2vGdGplOKBmAzo2X0COPwg84vxrPXuHljgEQ0FGU5qpXqbuEuQfq5Zsig+MCGbMzV0uJ4Ud2tGeT52HOUoh51WXmzHLKojowB6s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763622521; c=relaxed/simple;
-	bh=ac4ImsMXg+ybRUQcW32lVRMsRt4W1dskBMeJQPirN9U=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=RDBRBQypZvjeEsTqT8Wj9EzpgmDsqOFyC9SizqkSOHTzeovKxY9CMXE1C46n84DDgg2Hq1dzb+xrkpjD/QxbJXVgA4xAkUXpVcigXuTqzmRu9WNeLr34PzmdyhSA3LWl4XkON05Z6dzezmJgvL2+twML02S3CxPkTvnAowod/Vg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=f1btIFPV; arc=fail smtp.client-ip=40.93.196.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3CE372AA1;
+	Thu, 20 Nov 2025 07:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763623272; cv=none; b=WOTjKHEDtbsE40zDET/KmtXgfPNXOG1LEWSgj4+hYYTNa9tdr8eEI/7MIu3VOMap/CdCbzzXYtprXPJNHNNKkIw6W9BSqwqKjYMfWKhffY2BJ9x+6y/DGXrUBIAaSLZvwnd2ABSHFO2WRdACc5/k1CFajmYSBxW/XzxikX+HOsc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763623272; c=relaxed/simple;
+	bh=Q9x7pfr68ABlQkeGDOQXfTv4u0y1Q9ao0HbtlLeZBks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G8G1KECx4JYF0ZzO1ftXXaDkqdQ+SagpOMeUrSavoPmI+BXaw7Z1S4NORPS/wlR4yvUM8PpgHraCSEcshQxSssVqxuGwCsCgUC4C70WpRWqh3OJ4aLoF1p8Uz8SxrBoQC6RFP9lHEOW5+Bh5jzUi3ctUl9QwD89CeQHxnsUDYM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nb6ActO4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="f1btIFPV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Mja4SxtEqX8XhF9gnj0pedobt/9sX0qzYMVgFKlyRWDhZKDV1ylwXezS6gasbyTcBGLCtURRq0wqeFT/N8OAbIofRQwnCMdNBtq4QjYXyE5QzwX7EVdwji9DAWH9QW9J4IQ/VDlSwf8TZouA6ZPZfZey1nyzbbFVX7tVJGWOjir5pCUiGhsQn1mJegnu+b0KiKKjkXKsyp8wrjYmGfCilakMQKSxQF24lFJ2MA7TvxLzMTDAXN74w4Ac/07K9y4KfhBNMQ17q2FhEwx8O1CXmpKznRDH81dM1AW0rdiiGpQCZBX+xfSB2+y7JLFo8aXcsqqgbWjllxse6nhXcxmUgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0BqwNh0CMDN4tREUEZSXBR4jlSvz2FIn8iZxWVxqI0g=;
- b=f4GvykrX9LMftlNxpfA9LiPFu1oSPDNdKfwOYW62AfQGlN8DCWWdhn3sMBwC1jtA22WGNK53+TL/607Ov0OKqNyebrwguu3YN/ZlZVgRh3P83QdfSPaAlWEA4/Ph30EcgY7HiDDaEBRWRKni+1Uhmht+HVWjp9gTWvdcTsNkwtzMe1KAw8QP9zsGypu4w1o2x4R5YQgLjK1dqe31qXFtocaW0s01l4wh+neDSGVj0mOw93ZHOh3M1wlf5tKedQ0LKcUJn04+1EwwdZg+SMzUWNxSzJdm5QrtkRYrvzi7UnpLXrNuyC3iWBPQXmcNQB+PeofAtYlHHsK5M/rg5kfHow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0BqwNh0CMDN4tREUEZSXBR4jlSvz2FIn8iZxWVxqI0g=;
- b=f1btIFPVyxehKaZYtXYE+WaEt+JmwXfXrgE7VJTQ6TPuQ+9ng9Wl/Mv/v+P2Twk7XZTtnXtb1YMu5FhXDA5C8ToOohHgjD9WFpwxzPLLqGxJttDuYGMDqlWhMblPfewLW56bTb2tENnxi3Xl7yajiRjMQPiAuUYI6qS9Lmm/ekg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by CH3PR12MB8850.namprd12.prod.outlook.com (2603:10b6:610:167::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Thu, 20 Nov
- 2025 07:08:37 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%4]) with mapi id 15.20.9320.021; Thu, 20 Nov 2025
- 07:08:36 +0000
-Message-ID: <c115432c-b63d-4b99-be18-0bf96398e153@amd.com>
-Date: Thu, 20 Nov 2025 08:08:27 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
- scatter-gather mapping routine
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
- Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Ankit Agrawal <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
- Shameer Kolothum <skolothumtho@nvidia.com>, Kevin Tian
- <kevin.tian@intel.com>, Alex Williamson <alex@shazbot.org>,
- Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org, iommu@lists.linux.dev, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- kvm@vger.kernel.org, linux-hardening@vger.kernel.org,
- Alex Mastro <amastro@fb.com>, Nicolin Chen <nicolinc@nvidia.com>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
- <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
- <20251119132511.GK17968@ziepe.ca>
- <69436b2a-108d-4a5a-8025-c94348b74db6@amd.com>
- <20251119193114.GP17968@ziepe.ca>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20251119193114.GP17968@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR4P281CA0178.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b7::6) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nb6ActO4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DED68C4CEF1;
+	Thu, 20 Nov 2025 07:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763623271;
+	bh=Q9x7pfr68ABlQkeGDOQXfTv4u0y1Q9ao0HbtlLeZBks=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Nb6ActO4kn5WR22MgZjBWnEhix29+SAXSkzvBaTiYlthZrhPeDL2UyotiI4/dFl3G
+	 CifRWjVgR+IJPR1LDUCi/XQzpU3AP2TnzTk7P0jgZwbG7vNm8sQquNWtMFl+/om2Tb
+	 LxYHzl8vQQELTJQb7NnXh80mV/vTTRhBUBxXHc7+lcavP0TtPpsXyKrQtj3bBODjAx
+	 +HgdU2zRDeqKOoI5hiFt9a9mKAt9tZ58Lp83ZEibBiIP16VJNgbSspvaUazIqEQESj
+	 87GBtLVfJZnjF+CR/0M18mx8sy7KXThc3JEI/6owWCwr6ZgohZQpRMi9pI15uksJ2M
+	 NQSikIjacL0WA==
+Message-ID: <c503061b-00cc-4d04-8380-3a0fe0a2c788@kernel.org>
+Date: Thu, 20 Nov 2025 08:21:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CH3PR12MB8850:EE_
-X-MS-Office365-Filtering-Correlation-Id: 65b461c9-e10f-4c57-ddb4-08de28039fd7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SWYyMnpFL2c0aVRnL2Yxdmp4TFpWa0dMYzBtUmFKb0Q1TWNtQ1BFSGFQWm5w?=
- =?utf-8?B?MGNoajBUS0pPdnJMTDZjcVlvVTc3dXpWS0pMbnk2S3NNMlp0TjhXU0ZYK0Rs?=
- =?utf-8?B?NHE2NkZBK0pvOHlNZHh0eWY5a3d5dk0wdlpWTkxwdDFoTDUxckNBcjdMQVl6?=
- =?utf-8?B?MFI1VlVBL2xFRXY5d2dVUW1EdjFBQW01anBmM0FDUWRQbUFMKzl2Vis0R2VN?=
- =?utf-8?B?RjFjcTVSTEsxSWtiTi9lZjdub3YydkhWQ25OSCtadVBIYUExdEFKSjhuNVpp?=
- =?utf-8?B?RTVKdGs1a3hvOEF6N3FHOG12QlpvWDY3MGs3c1Z2dnNTUjBOU3lHTFVEVkRr?=
- =?utf-8?B?enFZa3N5WklNUmlkL1JmemtOV0VkdUFPRmQrbUI5Ym1TQ2hzclFCOXc1cGt2?=
- =?utf-8?B?eHlPS0FWWGhsbUowaEZLRkJkK3k3MHNtZ0JwZXNpZFJ6cGhPVjZrNEdrY3lU?=
- =?utf-8?B?bStlRllqVWJFbDhhSkw5bUVkUVN1cm5zeFdPNDlCU0s5QkpnZkNVTXpuTlNt?=
- =?utf-8?B?RWsydUVaR3Q2Z2d0VVdvUGFwWUYrT1FSY09hOU0xVHNTOUtDUUh3Z3U1R1p0?=
- =?utf-8?B?SURXV0x3VzhWTWVqTllEbFBWQ1o5NU1oczR1SEVUQkJSeXlZWFVpeGJjVHhV?=
- =?utf-8?B?U2MzU001NE56OHlxaWRucUYvWUxpNGVUWm84cDJVS1hwWmcwSzFNRmpNVTVz?=
- =?utf-8?B?U3ZTY3J3MkpXWkdnb0ZMdDA1SndHMCtseU5JY3QrcUtnOURGSGRFK1ltWWRn?=
- =?utf-8?B?VUM5QUxucStMVWpZelNDdXB3WHR6U2RSWlN3dWswNFl4L0g5ZXR5UFQwWjAv?=
- =?utf-8?B?MjNSSEttRWlUWUpKRmdoa1hBNy80ZHZmK3hpaVIxU1ZxTFJqU01qblpqbDVS?=
- =?utf-8?B?dTRXYXA3d2g3Vk5xRC9BYjlnaDd2eGRDSmNZWWE5QU5MTHo4M1VqcU5GbzBs?=
- =?utf-8?B?KzgzMnJTQ1ljVDZweXp1ckloYk0yL3JOT01vLzM5NkpVMTEvcHQyclo5VDdS?=
- =?utf-8?B?VHE4TFJoVnhVdEZ1RWE2aVZTcVpuVEJmd005SXNBNERzaEU0dHJDb0kxSWZ0?=
- =?utf-8?B?L2RIU3pvMFJGbUR3NGt6bi9vZElweTA4b0lZaGtrWkM3LzRva3NiaGRoOG00?=
- =?utf-8?B?bElvOUN2SVJKNmJTR1FrcURjTGR0VXBkTU9SQzkxbnlMbVpnQXdONDMrbmd4?=
- =?utf-8?B?d1lZcWhkampnelpkMVF2K3NjU3ovRFF6R09tSWY1MGV0dE4zQTFOeDZ5WWFQ?=
- =?utf-8?B?UU8yaUtXK0llZ01ncXlpQjk3VnYzVVpPa3hxRm9sNGxKTVEyRm9YYVVaeWN1?=
- =?utf-8?B?U3Boem9IUkFXVVdyeHRNVkh6ZmNIU1I2SFpVSUg4Y1VHaWtMYkJOOWh0aGtl?=
- =?utf-8?B?aTVnZ1ArVlF2M1VleVRCWnA5alpQMmpYMnRtRDMyM3BYYmNzU0JpUmJBZGlF?=
- =?utf-8?B?bW93a2ZVUEpuU3F5dlIrci9SRU8zN1NFRURyaDg3ZFJ0dTVkNlI4MGw1c1U3?=
- =?utf-8?B?LzN4LzkydWZXRVJRd3Z3RWhoY1FDc2tsa0RadjIvcW4rQ2s0VjFHN0Y4MHc0?=
- =?utf-8?B?RzRGMDhTQUttV1d4OHF3RnB5bUZ0KzVLalVLNG5qeUN5QTBNd05LU3FRei9r?=
- =?utf-8?B?NFB5SXBWZFErSkdkVlNsbnF2VERjTVV6ZVYvbHpDalRvOHp0cUx2SWpGM3RK?=
- =?utf-8?B?R3BTTVZQTC8yOEJlN05Mc0xnVEwyOE1lamNoalI5bUFpN3k0b3o1ekw0UExm?=
- =?utf-8?B?TThFc2V6NGxOOVp0SjFwY1l6Vjk1VUk3ZDhMRkFKRytzUEpSS2F6eDEyeW5q?=
- =?utf-8?B?ZTRKVnJXcXRFY2g4MmFwKzRoaXlXRWNJYkswTkd3aERVanFqTVFpRmQ5RHM0?=
- =?utf-8?B?NHZGbE5sQ21Wc0pjU0ZEUkwvc1cxTGF0N2RjRGFSZ3U0VEtaZFowa3BJZG9F?=
- =?utf-8?Q?mVZksCQ2XDqonEV1wvkJaXdVZot5RvHh?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K1FXQzBqdmc5ZGZXc3ZIVDErR2JqUTRmdmJVUnlENjhLMVJ5Qkl6MW1seDZU?=
- =?utf-8?B?RG52bTNXdDNCUGZuYStwaUQyeWhEczZMdThBdWRWRSttdnhTNXM1d0xHaFI2?=
- =?utf-8?B?YS8wR2k0eHRadnFrWkcyTEFDM045NjYvVlJNR0dlaENDenRpRHpwankrVXhT?=
- =?utf-8?B?cEpLUE00TXhnSUpnVHV4bHhsRlBObmFLQ0ZRb295TkNJa0VzRmRTRzZRQUZl?=
- =?utf-8?B?RDhLRWxUbldnckM4UjZWTjVHZG44cjBzN3k4RlJBdzFSVVp4b1ZDeWs3T0NX?=
- =?utf-8?B?c2lrMWpyN1grRE04YTNTVXVGK0Z6NFlRdUQ2c2FnUzg1Vi9tV3VMVVo4NU4v?=
- =?utf-8?B?a1VXODNvcWVCSnJSaHFmcG1TRG9XWnFNb3RSN2VBT0FPSHNVRUFXeEVKaWJy?=
- =?utf-8?B?VktDdFFtQTY3SXl2MnJZcnlxZ0xQbitQTEhDSVdsMktrUy9IajB5OHhrdVA5?=
- =?utf-8?B?ZDNQK29GSmIxQmQyWjhER0k1K1RSdWdiNjdLNkE1S00yMFZSWE5rbVprL1Qy?=
- =?utf-8?B?bGI3VGhjUUxsSXRTRmdadmxIUU1tc1VJZnlmSjYzVEFUbkFIZTVTTDNTdHM5?=
- =?utf-8?B?NVI1NEJsaWcyMyt2K2o4NVJpTlFtWU52UVUwbndNVnVidVR2RDhQeFkzMjdN?=
- =?utf-8?B?bmNYQXd5UG94aFE2dnpaM1V1SUtsR2VibFpmWWx2WVlQRTFMZEVLVzVBd2xY?=
- =?utf-8?B?U2w2eEtCVFgyRTRIYXRzZGhUY1RjeTBIZDhlU2xKRzhxbU94YnhDSGY0MWt2?=
- =?utf-8?B?OVpHb0tMVmtOeTVKcytqZjJZRkpXQkcrSisyV2F6c1dUL0NYaVRCcmNTeGFF?=
- =?utf-8?B?VCtwc3ZZRUVLcVlKYWdLY0dOamdhZEFlNnBRNmdMOS8zcnNYMHIrRHlaMVI1?=
- =?utf-8?B?NzRmWFp5aWRyQzlzaVJOWXBzNDlFRWFaQkl4NE13cjNTWVIrd3dINTVVc0Jo?=
- =?utf-8?B?am5qWHc0cEkxWnZQakZxNFl3SkgvcHJkQmhEYUZoWnBhcHlVVkJucXpqUldP?=
- =?utf-8?B?QUovS3pEb3V1VmpFbHcvSkR3OE90cGFqdVZFaEdQandWa3NTS0VFb3pGM1Nw?=
- =?utf-8?B?cGVIQTRUak1WQXNBcVU3QWtCTWx2bzRQUnRyL21EcjlvYnFIU1A2OWFobUND?=
- =?utf-8?B?RENSRWRkMnpsaDdaV0hqdHYvRGlNVzZhaHJocERtdU5TUVRZa0N2WFVqZjhK?=
- =?utf-8?B?Nnl5eVd4Wm5OSWN0aEQ3cnpnbzVxQW84MXNXWm5Xa01USFpHRFV6N2RPaWFn?=
- =?utf-8?B?Qm0zdUs3MUJTSXI4NUd6anNjbGtMNjdTTU9QbHczdWhkaG1mODFteWl4QTAy?=
- =?utf-8?B?VElJZk05Z3NPWEZPL2Y5czBObVR6a2pHK3lRNkk4OHhMMEtxT0RuaFYvZWdz?=
- =?utf-8?B?aytWQVAvZHF1K3luUkhwOWp1bldKSGk5ZEdsVklDdjBHaE1nREZsb3BEMWFJ?=
- =?utf-8?B?Y2d1QlQ5QkNRSElUOFpyKy9mU2FueEw3YlZmVjRlMDRJSFMrT2lTK0tpQU5R?=
- =?utf-8?B?YjFZM2tMZmtHQkc5eUx1MnNIRzNyVTVpTnU3TDdiQ2NlcVZQWHpEa1JaRVFB?=
- =?utf-8?B?R0pjME1HMmFDeVB4ZGhGN0tzUE5KTzc4SDhkUFdpRzNLVjN4a0k3Qi9wT01X?=
- =?utf-8?B?UUxJMkFSdDhjRzUzb0lCQnFaaDhwTFp2aXF2a3NuTjIzL0RrV09ydDl2YkhC?=
- =?utf-8?B?T0lvQStVbmNmYzBiVWFSdGpjZnNiZytWVDYxZmJ2clFuYTA4d3pKejZMY1NG?=
- =?utf-8?B?N0VqWVlkaWRmVEYxdmJ0MlArMXpxTTJnZlBkbmhrR2lDNU45WnRCZkF0Yjh5?=
- =?utf-8?B?NHdqWkJLMkEwd3lNMk51M3pPaDM3d3F1OUY1bXhSZ1hCdVlHeTAydW5SV3JY?=
- =?utf-8?B?WkJ2VW9NRkUyUTNGK1dCOEw5cm56YnhJbjRhT05mSm50WjUvc1BkdFBZbVA4?=
- =?utf-8?B?cTJWNkduN3lkWE52Y1dkMWNSWDBRbjhsQWt4RHlHWmJRZ1pTcWQyTC9HU016?=
- =?utf-8?B?K1cwdW45UUJyREYwNDFiVlBIek9NNUhqOW5XVHQ3UDFBRXdWSHhIRzdLYTdN?=
- =?utf-8?B?VXdqaDNNN3RIaUFzMitKYXc4N3VBaERCSFdyQ2pQR29kWEFSSEhLU08xbm5r?=
- =?utf-8?Q?VEjcGMmJFesxxmX26bIYFI/9W?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65b461c9-e10f-4c57-ddb4-08de28039fd7
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 07:08:36.7427
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nPLTc9lfo7pkt18Hd09ayYMLoygIREgU/2354NRtNPs4Jmxaj/r4/gbluVYsfTJK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8850
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 25/26] dt-bindings: reserved-memory: Add Google Kinfo
+ Pixel reserved memory
+To: Eugen Hristev <eugen.hristev@linaro.org>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, tglx@linutronix.de,
+ andersson@kernel.org, pmladek@suse.com, rdunlap@infradead.org,
+ corbet@lwn.net, david@redhat.com, mhocko@suse.com
+Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+ jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org
+References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
+ <20251119154427.1033475-26-eugen.hristev@linaro.org>
+ <e73bdb23-c27b-4a18-b7e3-942f2d40b726@kernel.org>
+ <060e7412-8f1f-4d31-af39-79213c560e85@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <060e7412-8f1f-4d31-af39-79213c560e85@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 11/19/25 20:31, Jason Gunthorpe wrote:
-> On Wed, Nov 19, 2025 at 02:42:18PM +0100, Christian König wrote:
+On 19/11/2025 17:19, Eugen Hristev wrote:
 > 
->>>>> +	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
->>>>> +		dma->state = kzalloc(sizeof(*dma->state), GFP_KERNEL);
->>>>> +		if (!dma->state) {
->>>>> +			ret = -ENOMEM;
->>>>> +			goto err_free_dma;
->>>>> +		}
->>>>> +
->>>>> +		dma_iova_try_alloc(attach->dev, dma->state, 0, size);
->>>>
->>>> Oh, that is a clear no-go for the core DMA-buf code.
->>>>
->>>> It's intentionally up to the exporter how to create the DMA
->>>> addresses the importer can work with.
->>>
->>> I can't fully understand this remark?
+> 
+> On 11/19/25 18:02, Krzysztof Kozlowski wrote:
+>> On 19/11/2025 16:44, Eugen Hristev wrote:
+>>> Add documentation for Google Kinfo Pixel reserved memory area.
 >>
->> The exporter should be able to decide if it actually wants to use
->> P2P when the transfer has to go through the host bridge (e.g. when
->> IOMMU/bridge routing bits are enabled).
+>> Above and commit msg describe something completely else than binding. In
+>> the binding you described kinfo Linux driver, above you suggest this is
+>> some sort of reserved memory.
+>>
+>>>
+>>> Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
+>>> ---
+>>>  .../reserved-memory/google,kinfo.yaml         | 49 +++++++++++++++++++
+>>>  MAINTAINERS                                   |  5 ++
+>>>  2 files changed, 54 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml b/Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml
+>>> new file mode 100644
+>>> index 000000000000..12d0b2815c02
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/reserved-memory/google,kinfo.yaml
+>>> @@ -0,0 +1,49 @@
+>>> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/reserved-memory/google,kinfo.yaml#
+>>
+>> Filename based on the compatible.
+>>
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Google Pixel Kinfo reserved memory
+>>> +
+>>> +maintainers:
+>>> +  - Eugen Hristev <eugen.hristev@linaro.org>
+>>> +
+>>> +description:
+>>> +  This binding describes the Google Pixel Kinfo reserved memory, a region
+>>
+>> Don't use "This binding", but please describe here hardware.
+>>
+>>> +  of reserved-memory used to store data for firmware/bootloader on the Pixel
+>>> +  platform. The data stored is debugging information on the running kernel.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    items:
+>>> +      - const: google,kinfo
+>>> +
+>>> +  memory-region:
+>>> +    maxItems: 1
+>>> +    description: Reference to the reserved-memory for the data
+>>
+>> This does not match description. Unfortunately it looks like you added a
+>> node just to instantiate Linux driver and this is not allowed.
+>>
+>> If this was some special reserved memory region, then it would be part
+>> of reserved memory bindings - see reserved-memory directory.
 > 
-> Sure, but this is a simplified helper for exporters that don't have
-> choices where the memory comes from.
+> I sent this patch for reserved-memory directory, where all the
+> reserved-memory bindings reside. Or maybe I do not understand your
+> comment ?>
 
-That is extremely questionable as justification to put that in common DMA-buf code.
+There is no ref to reserved memory here. Please look first how reserved
+memory bindings are written,
 
-> I fully expet to see changes to this to support more use cases,
-> including the one above. We should do those changes along with users
-> making use of them so we can evaluate what works best.
-
-Yeah, exactly that's my concern.
-
->> But only take that as Acked-by, I would need at least a day (or
->> week) of free time to wrap my head around all the technical details
->> again. And that is something I won't have before January or even
->> later.
+>> Compatible suggests that it is purely Linux driver, so another hint.
 > 
-> Sure, it is alot, and I think DRM community in general should come up
-> to speed on the new DMA API and how we are pushing to see P2P work
-> within Linux.
-> 
-> So thanks, we can take the Acked-by and progress here. Interested
-> parties can pick it up from this point when time allows.
+> This reserved memory area is used by both Linux and firmware. Linux
+> stores some information into this reserved memory to be used by the
+> firmware/bootloader in some specific scenarios (e.g. crash or recovery
+> situations)
+> As the firmware reserves this memory for this specific purpose, it is
+> natural to inform Linux that the memory should not be used by another
+> purpose, but by the purpose it was reserved for.
 
-Wait a second. After sleeping a night over it I think my initial take that we really should not put that into common DMA-buf code seems to hold true.
+But you did not write bindings for it. You wrote bindings for Linux
+device driver, I already explained that last time.
 
-This is the use case for VFIO, but I absolutely want to avoid other drivers from re-using this code until be have more experience with that.
+> Which would be the best way to have Linux understand where is this
+> memory area so it could be handled?
 
-So to move forward I now strongly think we should keep that in VFIO until somebody else comes along and needs that helper.
-
-Regards,
-Christian.
 
 > 
-> We can also have a mini-community call to give a summary/etc on these
-> topics.
 > 
-> Thanks,
-> Jason
+>>
+>> Looks like this is a SoC specific thing, so maybe this should be folded
+>> in some of the soc drivers.
+>>
+> Not really soc specific. Any soc who implements this at firmware level
+> can use it. The firmware can reserve some memory for this specific
+> purpose and then pass it to Linux, so Linux can fill it up.
+> It just happens that the Pixel phone has this implemented right now, but
+> it is not constrained to Pixel only.
+> 
+> Instantiating this driver with a call like platform_device_register_data
+> would make the driver unaware of where exactly the firmware looks for
+> the data. This is right now passed through the DT node. Do you have a
+> better suggestion on how to pass it ?
 
+I do not see how this question is relevant here. I don't care how you
+pass it to the driver, because we discuss bindings. You created bindings
+for Linux driver and that's a no. If you wanted that, I suggests that it
+could be instantiated by some other driver, but sure - we don't have to
+go that way, that was just an idea how to solve the problem bindings
+like this cannot be accepted.
+
+Best regards,
+Krzysztof
