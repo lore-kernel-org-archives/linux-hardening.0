@@ -1,152 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A132332C92E;
-	Thu, 20 Nov 2025 09:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BA82116E0;
+	Thu, 20 Nov 2025 09:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763630970; cv=none; b=N3uBw/qqIjsIhbWdd0G9OWxgtCO1pUnvnzhVGtvYRUg4TbHyTfI4GRpecX6BK7VkktTRLMeHp69RhHbzZBLSEEKnzD+kfTCOrrs84IA8aB8kWBHqK4F3h5P+PHQ2ZVzm2oH2MEr/RFHmEFqRbgFP2x73WCNKMQTIcxHGAn7Rjso=
+	t=1763631051; cv=none; b=T2G2zWhB+gODubcdCfWYW5imgbp4AMNbqdqB63idPxSwpbSXyH9BF+IUdWfK0gd3sG5IhCh8OX4j+VJM558jZXhQdvN2w+XTqBpCZ74QR9h7fSZ2ypORBJiYejoDwu+M7zeeHADp5NTKvgGLIgOtzhmnv7jEfMtmxPKPIG4fd4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763630970; c=relaxed/simple;
-	bh=TYZN/mvASZVK9qFe7+ikMiLynVdctM3LNTh3cHN7Nb0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HL8V8J/GEzNRdcufjCRoZO9RdbcGxmutcCAUfsChtSXLY7r6KmzmM6w1G8LCHyZfedN6Bi+JEW4yR9jalyl3pPuiPM/Sa8MSWKUeJA/iK8QIIubw6Ixu4aBFdjsqysBCMAq/CRBY/Vcaxn/Zqr0jefa48KXURrw7m7fU68zYNgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2l4BV16; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763631051; c=relaxed/simple;
+	bh=VZCryycMuuub8gwndXgz+NkhPDu+4Me43OruLIXPCYw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mFnWyDnix0KuKwmwnnMuRdOgwOmWqteEiisdUvG6lkw9EparOj7903VDiR0kSpIBorfAffe9ecrUb7piop8wXo6MRNr9IsSQpSka/9ANQJSBfPE0eKz9gprQYFwT67xdBvDbI2HMEBFeR/TPTNmEseirWp/gkapsbS558pjRn/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=jtpnrJQr; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2l4BV16"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DFDFC116C6;
-	Thu, 20 Nov 2025 09:29:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763630970;
-	bh=TYZN/mvASZVK9qFe7+ikMiLynVdctM3LNTh3cHN7Nb0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g2l4BV16UqpfJQIQxe53UwLkUgeclXpzgA/cFuTY0DizNIs8fLTtXdJjVUpcCJxar
-	 jYV+7Rsr8RLZ27pc+2tQmbQkwpqYzQcY2hgAizwcxswbLH3gP0GnGnqVLbKYaNBbJ7
-	 +DBpB0sc3mFOe0PaC727RO4U75ehgm3/Z36NQ0UHXkJ4Ftvnu24r1CdqkaGNwlIm2s
-	 v3QD76BVntv/d1+THDqKCNcH2pCEDO1lZVWqZFJ+2MvwmzOiUf9v1SommTLXWRQHWH
-	 CkiF6pX8hIM4+FTq/NCnd+b2iRvTsIkcDvy9a4+AduKgjEgdD632hrpgr3/2p0ABQJ
-	 kohkYric/6tNg==
-From: Leon Romanovsky <leon@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>
-Cc: Krishnakant Jaju <kjaju@nvidia.com>,
-	Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: [PATCH v9 09/11] vfio/pci: Enable peer-to-peer DMA transactions by default
-Date: Thu, 20 Nov 2025 11:28:28 +0200
-Message-ID: <20251120-dmabuf-vfio-v9-9-d7f71607f371@nvidia.com>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
-References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="jtpnrJQr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=SfNn2B6rncibV5kJ6sYUacOKlwMjZLOOtEbVuhSqGzI=;
+	t=1763631050; x=1764840650; b=jtpnrJQriuGfOxyLyKQD+0DI2kOI7jyX7XWMj/C2AXVnvwS
+	Bex5/bjdyAq0AVYP3I4f3V16jxlmWOG6QLUU2tK0hRtcbeyC4ofs6bcsPWNs7aePk/48zkgxjLZlF
+	Y0oX/YwC1TTdjg50SUlDFLEP8UREk0b4Wt/fQJC5cjd3Ig2HEfRi+DtB52J9Q9UbqbH7n9cpGx70d
+	I4P+AR2f7KT8ei02JyR30i0fewuEZQfSMIlFFBDPKIndavVP3hRxL4XWyWonz29ErHGM7dwQnthOm
+	g366Ghs1QX3CZ0+SOX4dqU0zyevGevHbB/0kZEW0f4xo0KtRzA4MTMXip9adc8jw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1vM103-00000004XYn-2taL;
+	Thu, 20 Nov 2025 10:30:47 +0100
+Message-ID: <1ac162bbcb11abdbb0b3c74df3bb1df02a5068ab.camel@sipsolutions.net>
+Subject: Re: [PATCH][next] iwlegacy: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+From: Johannes Berg <johannes@sipsolutions.net>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Stanislaw Gruszka
+	 <stf_xl@wp.pl>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Date: Thu, 20 Nov 2025 10:30:46 +0100
+In-Reply-To: <aR2CtqZI3atH0HmE@kspp>
+References: <aR2CtqZI3atH0HmE@kspp>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.15-dev-a6db3
-Content-Transfer-Encoding: 8bit
+X-malware-bazaar: not-scanned
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Wed, 2025-11-19 at 17:41 +0900, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 
-Make sure that all VFIO PCI devices have peer-to-peer capabilities
-enables, so we would be able to export their MMIO memory through DMABUF,
+Look, I honor your noble goals, but ... it'd be useful if the code
+actually worked after :)
 
-VFIO has always supported P2P mappings with itself. VFIO type 1
-insecurely reads PFNs directly out of a VMA's PTEs and programs them
-into the IOMMU allowing any two VFIO devices to perform P2P to each
-other.
 
-All existing VMMs use this capability to export P2P into a VM where
-the VM could setup any kind of DMA it likes. Projects like DPDK/SPDK
-are also known to make use of this, though less frequently.
+> --- a/drivers/net/wireless/intel/iwlegacy/commands.h
+> +++ b/drivers/net/wireless/intel/iwlegacy/commands.h
+> @@ -2664,10 +2664,12 @@ struct il3945_beacon_notif {
+>  } __packed;
+> =20
+>  struct il4965_beacon_notif {
+> -	struct il4965_tx_resp beacon_notify_hdr;
+>  	__le32 low_tsf;
+>  	__le32 high_tsf;
+>  	__le32 ibss_mgr_status;
+> +
+> +	/* Must be last as it ends in a flexible-array member. */
+> +	struct il4965_tx_resp beacon_notify_hdr;
+>  } __packed;
 
-As a first step to more properly integrating VFIO with the P2P
-subsystem unconditionally enable P2P support for VFIO PCI devices. The
-struct p2pdma_provider will act has a handle to the P2P subsystem to
-do things like DMA mapping.
+You can't just randomly rearrange firmware API. The __packed and __le32
+really ought to have given you a hint here.
 
-While real PCI devices have to support P2P (they can't even tell if an
-IOVA is P2P or not) there may be fake PCI devices that may trigger
-some kind of catastrophic system failure. To date VFIO has never
-tripped up on such a case, but if one is discovered the plan is to add
-a PCI quirk and have pcim_p2pdma_init() fail. This will fully block
-the broken device throughout any users of the P2P subsystem in the
-kernel.
-
-Thus P2P through DMABUF will follow the historical VFIO model and be
-unconditionally enabled by vfio-pci.
-
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Tested-by: Alex Mastro <amastro@fb.com>
-Tested-by: Nicolin Chen <nicolinc@nvidia.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- drivers/vfio/pci/vfio_pci_core.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index ca9a95716a85..142b84b3f225 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -28,6 +28,7 @@
- #include <linux/nospec.h>
- #include <linux/sched/mm.h>
- #include <linux/iommufd.h>
-+#include <linux/pci-p2pdma.h>
- #if IS_ENABLED(CONFIG_EEH)
- #include <asm/eeh.h>
- #endif
-@@ -2081,6 +2082,7 @@ int vfio_pci_core_init_dev(struct vfio_device *core_vdev)
- {
- 	struct vfio_pci_core_device *vdev =
- 		container_of(core_vdev, struct vfio_pci_core_device, vdev);
-+	int ret;
- 
- 	vdev->pdev = to_pci_dev(core_vdev->dev);
- 	vdev->irq_type = VFIO_PCI_NUM_IRQS;
-@@ -2090,6 +2092,9 @@ int vfio_pci_core_init_dev(struct vfio_device *core_vdev)
- 	INIT_LIST_HEAD(&vdev->dummy_resources_list);
- 	INIT_LIST_HEAD(&vdev->ioeventfds_list);
- 	INIT_LIST_HEAD(&vdev->sriov_pfs_item);
-+	ret = pcim_p2pdma_init(vdev->pdev);
-+	if (ret && ret != -EOPNOTSUPP)
-+		return ret;
- 	init_rwsem(&vdev->memory_lock);
- 	xa_init(&vdev->ctx);
- 
-
--- 
-2.51.1
-
+johannes
