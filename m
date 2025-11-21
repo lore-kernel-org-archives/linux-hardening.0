@@ -1,100 +1,62 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A38349B03;
-	Fri, 21 Nov 2025 11:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE29633F37C;
+	Fri, 21 Nov 2025 11:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763723584; cv=none; b=Rz+fs3jGgr+A6AYdGjXQGvKCch5w8BBOD/a2HcFRPSUUV4n3XmQk5fqxUW/k/VPbfLrjtxcYvSW89u7QIpxCbH4FX7YnyBOdr/uA4CjZUywrLtUrddKBXCbaKw6BhlViQQK95YmHTgJmQ4DRTAiCwXmKfDigoVEd9+Vs6qybwb0=
+	t=1763725454; cv=none; b=dGhDxnO281x4wL5x4gSy3WNZl43KvY3U1W6QngpMq1tXEOzD8/HvXQHR/rUzv/zaHFJFdoUTVKm0X+jXVfxCE1DHhYf7WmAqppM1SGgMgKPtNn6TWM4BiJF2lkQLVpZQ7K6Oavv1opzEsOryMX9j3TEXGW+fdK6X9iZQ/yXOrM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763723584; c=relaxed/simple;
-	bh=0mEWGPS5eTsTuZX5jEeHYWG/Gd99iHCmw8ReRd54iyU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=EW8KxJ6IUwOlHGQT0D/WU+nJyULCZ0VoadURYckouRKughmbMFanDHZpls9wqr9gM9TJ9zAkSbwF+n+vkXnf6YugmGhbmr+vwmDCOsJOxhoCj9m/JLaKP3Z2xfX18U2fyyI89u5VvOm/WDVzhUlAht7yKWx15lHbL1V0rrp0qTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=ib2r4r1a; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1763725454; c=relaxed/simple;
+	bh=QDaNBy6n2GSXYttwqRi0bNHxzfC+34gcSt70/cuC/T4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XTSkELqqRXGB5SUisK5rd9f9peiub8JFlA23Dt5uMXWWwvprZGZL93yXgGqfiHjVXzNDsMOR1yfZy6d+0PzQtquPo38aMUxYBLe0fS8NYhCIBjRyvIL8avLZ+ZEALll2sq0aXyB0QLEp6hAJufcJm4I4cyKAzPvFPENnlvyWeOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LPyfbnev; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="ib2r4r1a"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 5ALBCeSmA3461944, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1763723560; bh=0mEWGPS5eTsTuZX5jEeHYWG/Gd99iHCmw8ReRd54iyU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=ib2r4r1abF7j5UtFzRGOuBYsQDUbWjGj6+u0Yi4MF4OjOzE/2dLMkkEuZobSsWCw2
-	 tbgdS+KLXXewSIbgCANTArFFecUNSLqvah3gLsgJP/2WMj7CiFOBIZ0/FSahfyaCxZ
-	 7Xyffd2tnaC3PpsoXibHNppStPtknxDyvxlgzD28dFIB5JoYztUu4+97fVk0MfJNDs
-	 ER1IMkCambLcqEj/AoCxWTH8MDPp3YfbhlZHGjjweOwCRLyEB1q8ls3lh+i2h6pL25
-	 pUmaZi5AyW6oZa+cVBioIw2CUZjGijaE9sYQMPdR2+a77YWEDr16c9gbN+FjvjRWwO
-	 cL0xli2rOQlOQ==
-Received: from mail.realtek.com (rtkexhmbs03.realtek.com.tw[10.21.1.53])
-	by rtits2.realtek.com.tw (8.15.2/3.21/5.94) with ESMTPS id 5ALBCeSmA3461944
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Nov 2025 19:12:40 +0800
-Received: from RTKEXHMBS03.realtek.com.tw (10.21.1.53) by
- RTKEXHMBS03.realtek.com.tw (10.21.1.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.27; Fri, 21 Nov 2025 19:12:40 +0800
-Received: from RTKEXHMBS03.realtek.com.tw ([::1]) by
- RTKEXHMBS03.realtek.com.tw ([fe80::2514:51f7:92e3:7d6a%9]) with mapi id
- 15.02.1544.027; Fri, 21 Nov 2025 19:12:40 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Zenm Chen
-	<zenmchen@gmail.com>,
-        "gustavoars@kernel.org" <gustavoars@kernel.org>
-CC: "Jes.Sorensen@gmail.com" <Jes.Sorensen@gmail.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "rtl8821cerfe2@gmail.com" <rtl8821cerfe2@gmail.com>
-Subject: Re: [PATCH][next] wifi: rtl8xxxu: Avoid
- -Wflex-array-member-not-at-end warnings
-Thread-Topic: [PATCH][next] wifi: rtl8xxxu: Avoid
- -Wflex-array-member-not-at-end warnings
-Thread-Index: AQHcWTQWm+ekto8gdkOtuZTX88y/HbT8ZJsAgAADogCAAJNFUg==
-Date: Fri, 21 Nov 2025 11:12:40 +0000
-Message-ID: <884145e57dc640d3bed29922d352f658@realtek.com>
-References: <aR2I9Sere0W-4VZz@kspp>
- <20251121100654.9125-1-zenmchen@gmail.com>,<ff184c0e-17f2-445f-9339-f4db9943db86@embeddedor.com>
-In-Reply-To: <ff184c0e-17f2-445f-9339-f4db9943db86@embeddedor.com>
-Accept-Language: en-US, zh-TW
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LPyfbnev"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24DFBC4CEF1;
+	Fri, 21 Nov 2025 11:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763725452;
+	bh=QDaNBy6n2GSXYttwqRi0bNHxzfC+34gcSt70/cuC/T4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LPyfbnev2BwpFpk0kLaNy3z2O8qKYhxUutzsk0uya181bWkUWrEzrwCdIo1czVrnZ
+	 ebmpNJ9YqI7wLmg4o14uVHs220UEQWLxSCFGlZywHwE1qhrCF6RFVBQetPi/UZUEPa
+	 MeGxgKZV9SEtdKw9fC87l1h70BG/Q/Gdfw2/8YGliBR0uGnn+zUdqFJqJ2ujmtafii
+	 EK3q4t7j0r5FOdMiJDFY5ainVhcK4nRAonWYVLnHKVxVsfixcAkTdOykjN/RCrrl7b
+	 TLDc2zJuLYUpLNbslVSWe5Eb1t0/LtIz2YxMSUyzBC/fS1bop6xVEoI8dkaRX44wPL
+	 bA4ZTEkIYILXA==
+Date: Fri, 21 Nov 2025 11:44:07 +0000
+From: Simon Horman <horms@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] crypto: af_alg - Annotate struct af_alg_iv with
+ __counted_by
+Message-ID: <aSBQh8yznEgXOELM@horms.kernel.org>
+References: <20251114000155.163287-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251114000155.163287-1-thorsten.blum@linux.dev>
 
+On Fri, Nov 14, 2025 at 01:01:54AM +0100, Thorsten Blum wrote:
+> Add the __counted_by() compiler attribute to the flexible array member
+> 'iv' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Gustavo A. R. Silva <gustavo@embeddedor.com> wrote:
-> On 11/21/25 19:06, Zenm Chen wrote:
-> > Dear maintainers,
-> >
-> > With this patch applied, my system always freezes right after the rtl8x=
-xxu
-> > driver is loaded. is it normal?
->=20
-> I don't think so... It probably means that struct urb urb; cannot really =
-be
-> moved to the end of struct rtl8xxxu_rx_urb or struct rtl8xxxu_tx_urb?
->=20
-> It'd be great if you could share a log.
->=20
-> Thanks for the report!
-> -Gustavo
->=20
-> >
-> > OS: Arch Linux
-> > kernel: 6.17.8-arch1-1
-> > test devices: RTL8192{CU,EU,FU}
-> >
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-As my review, 'struct urb urb;' seems only a member data.
-No order problem.
-
-To have enough time to dig the problem, I'd drop this patch
-from my pull-request for now.
