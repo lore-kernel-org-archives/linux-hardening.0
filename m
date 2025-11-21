@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D74413774D;
-	Fri, 21 Nov 2025 22:21:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D6730E830;
+	Fri, 21 Nov 2025 23:25:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763763715; cv=none; b=FJ5ffMDIRSWsV7fgmyKqaeywyEoeeK0cHlQM4hblZG8c6jTAN3M1C48aFzORdAeLB1m5oR6s0gAhzeTllIQE8nH3fZKyi2CkcvSwDmLeznvQ7etCpDapICCW2HYgRWefy47P78XG9akyi0XO7TuUPLJtudE1Xe7Od9ePX3sGplg=
+	t=1763767531; cv=none; b=nSvn84ggHV8Qf/XTFbvZ7F6uCCach7ueFjumUMP6JRs81bZU2aUnuzTMSzoxhNTIhKbxFvXdpXIHIN7z/fmstaQDbc6jWeCP6M2McHMXDLtdYhOzPbhX9Ph0Uf38q/+BRqUK3WOEIjfTwcCoMi0ywHvQHOV0T2pii2ngxHca83w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763763715; c=relaxed/simple;
-	bh=nrKEAfJFM8tB3jN82XCz2XCaShxXuMRsaSt2iH3dNXM=;
+	s=arc-20240116; t=1763767531; c=relaxed/simple;
+	bh=DeIy4nTOVUhoKGECoJ4Ka0U0L5wQJ/YDvfV1MGby84s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eJdJCt8LualBLcm/Xz5kqiHoOAqYRMPmM0oPhAxls0riwgYXY8DBan2A1b0KZd1fJu3X4vNgDjIn9hIJrAhnDkbpdWysCl9JlZzmTkwnUZHte0ReUupOyvEYIiifem3GQEkD9pewAyRaSTd/71Rkxni8O/MoV9ZlCQkofU/4H/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwercHtx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LKRFIERujsJ28Ea0WhREZmpcEQjgJZz2OiBApbHcY9R1BGAb/X4zTsBv56hbFOL2IPnX2KTUQSPFYAGW0GYWZR8uTcUkfFfkwavYQytwZWfsTqoGwuSO8Nw0W1sM5QGBlhlXt+9tS4SBpVMUILkWOMCn7UadResIrPSGm6oMVYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJMY0mRr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwercHtx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45E74C4CEF1;
-	Fri, 21 Nov 2025 22:21:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJMY0mRr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0A1EC4CEF1;
+	Fri, 21 Nov 2025 23:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763763715;
-	bh=nrKEAfJFM8tB3jN82XCz2XCaShxXuMRsaSt2iH3dNXM=;
+	s=k20201202; t=1763767531;
+	bh=DeIy4nTOVUhoKGECoJ4Ka0U0L5wQJ/YDvfV1MGby84s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iwercHtxkp8wbdYm+qO4qMffpPJS8WWnMGSqyqjimFHHtIyONXHIzvWZj4db48Thh
-	 fomr0Lj4KJn8g5W8bTMqu84XJwd64tQUeB910mIoIYqW6zZAK/AWC+cWNXsWvoZWGF
-	 MNp6K6xvlOKRu5jfIo4D/7vhm6nYTs9wUibhwnndgKe78zZ92MfcgiG1hIDlqBFzFD
-	 dly/XuGwMfYsZkvgrrx6nd2hia+THec3Cv0sOFms+DTINhr7SOn7B1DMdQXPNAzSwI
-	 9Du73ubddeQ3HnXtPdS2OQR9sYfcEfQ/ao8Ahb/yK5TczNImWD7z9o8ViYxvIqZavl
-	 Rw04V7I3Y52Zg==
-Date: Fri, 21 Nov 2025 15:21:50 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Tamir Duberstein <tamird@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] kbuild: Enable GCC diagnostic context for
- value-tracking warnings
-Message-ID: <20251121222150.GB1674270@ax162>
-References: <20251121184342.it.626-kees@kernel.org>
+	b=RJMY0mRrfXv1zBwavr/5I9GFXHU6C/ewTO0LkeM5fO3podLvHhtPojXww990A3VrG
+	 BrCT2bF25VAaIlmTi1wIx59QcKZbUKbMK6BBVSdYmSQMErSPZn0EIqR2k5+Z7TEykh
+	 hRx6Qkl3NwoPKe5c0nCIAYvJBoZ2TNNABvcQEORLPFimYuRhmN+70I/wbGCX2iOi57
+	 7i+aDatAqXZIy7rNvXrC++ZW6nPWBwH5yiND5RJgfYC+uqzegDR4OfP7nIRlbKXplp
+	 x1+k3mIlpS/Ojmdn/tA3xwPUb0/wo6ii1G5PgV10XjP7oqhzuk77JHBSrKERDC382M
+	 nOF5Z/N9C8EWA==
+Date: Fri, 21 Nov 2025 15:25:30 -0800
+From: Kees Cook <kees@kernel.org>
+To: Bill Wendling <morbo@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH 0/2] Add __counted_by_ptr macro
+Message-ID: <202511211517.539CD58@keescook>
+References: <20251121193957.1655580-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,68 +46,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251121184342.it.626-kees@kernel.org>
+In-Reply-To: <20251121193957.1655580-1-morbo@google.com>
 
-On Fri, Nov 21, 2025 at 10:43:48AM -0800, Kees Cook wrote:
-> Enable GCC 16's coming "-fdiagnostics-show-context=N" option[1] to
-> provide enhanced diagnostic information for value-tracking warnings,
-> which displays the control flow chain leading to the diagnostic. This
-> covers our existing use of -Wrestrict and -Wstringop-overread, and
-> gets us closer to enabling -Warray-bounds, -Wstringop-overflow, and
-> -Wstringop-truncation, so we can track the rationale for the warning,
-> letting us more quickly identify actual issues vs what have looked in
-> the past like false positives. Fixes based on this work have already
-> been landing, e.g.:
+On Fri, Nov 21, 2025 at 07:39:42PM +0000, Bill Wendling wrote:
+> These patches add the __counted_by_ptr macro and then uses it in
+> mm/memblock.h. The name of the __counted_by_ptr attribute is the same as
+> __counted_by, but two different macros are needed, because of feature
+> skew in GCC and clang. Once the minmum versions of the compilers support
+> 'counted_by' on both flexible array members and pointers in structs,
+> this macro will become obsolete.
 > 
->   4a6f18f28627 ("net/mlx4_core: Avoid impossible mlx4_db_alloc() order value")
->   8a39f1c870e9 ("ovl: Check for NULL d_inode() in ovl_dentry_upper()")
->   e5f7e4e0a445 ("drm/amdgpu/atom: Work around vbios NULL offset false positive")
-> 
-> The context depth ("=N") provides the immediate decision path that led
-> to the problematic code location, showing conditional checks and branch
-> decisions that caused the warning. This will help us understand why
-> GCC's value-tracking analysis triggered the warning and makes it easier
-> to determine whether warnings are legitimate issues or false positives.
-> 
-> For example, an array bounds warning will now show the conditional
-> statements (like "if (i >= 4)") that established the out-of-bounds access
-> range, directly connecting the control flow to the warning location.
-> This is particularly valuable when GCC's interprocedural analysis can
-> generate warnings that are difficult to understand without seeing the
-> inferred control flow.
-> 
-> While my testing has shown that "=1" reports enough for finding
-> the origin of most bounds issues, I have used "=2" here just to be
-> conservative. Build time measurements with this option off, =1, and =2
-> are all with noise of each other, so there seems to be no harm in "turning
-> it up". If we need to, we can make this value configurable in the future.
-> 
-> Link: https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=6faa3cfe60ff9769d1bebfffdd2c7325217d7389 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
+> Bill Wendling (2):
+>   Compiler Attributes: Add __counted_by_ptr macro
+>   memblock: annotate struct memblock_type with __counted_by_ptr
 
-Thanks for the updates!
+Based on this[1] thread, I think we'll need to wait for GCC and Clang to
+release with the "void *" support first, and then push the counted_by up
+to that version to cover flexible arrays, pointers, and void *.
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+-Kees
 
-> ---
->  Makefile | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Makefile b/Makefile
-> index d14824792227..d97452441cd0 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -940,6 +940,9 @@ KBUILD_CFLAGS += $(call cc-option,-fzero-init-padding-bits=all)
->  # for the randomize_kstack_offset feature. Disable it for all compilers.
->  KBUILD_CFLAGS	+= $(call cc-option, -fno-stack-clash-protection)
->  
-> +# Get details on warnings generated due to GCC value tracking.
-> +KBUILD_CFLAGS	+= $(call cc-option, -fdiagnostics-show-context=2)
-> +
->  # Clear used registers at func exit (to reduce data lifetime and ROP gadgets).
->  ifdef CONFIG_ZERO_CALL_USED_REGS
->  KBUILD_CFLAGS	+= -fzero-call-used-regs=used-gpr
-> -- 
-> 2.34.1
-> 
+[1] https://lore.kernel.org/lkml/20251021095447.GL3245006@noisy.programming.kicks-ass.net/
+
+-Kees
+
+-- 
+Kees Cook
