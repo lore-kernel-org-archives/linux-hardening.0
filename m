@@ -1,171 +1,120 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6452E7F20
-	for <linux-hardening@vger.kernel.org>; Fri, 21 Nov 2025 19:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4670013A3F7
+	for <linux-hardening@vger.kernel.org>; Fri, 21 Nov 2025 21:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763754913; cv=none; b=ZDK6ZOXbW+4un2UMtNB+5Wyd8/0e7tKb4MNUI77BfZGPugiI8zjSn0u7uXrtcETXrzgL4JoayG14aRMgjgxr69cO+deR0gxfmcWjDnlAyeEiHOpPTUfH8o31GyJhG6G0DFf+/HyIXqrnbHPnyzMPk1nRIXBBvxWFJYJm1A9gAJI=
+	t=1763761682; cv=none; b=fojGg6WeD+ltGZrGqnTngfOtjLYMsmtvmejyPET9e9rU/P/mBNCoY3Pf3BsZpLXSf7Ed6S+ykqD/AGAnqtXc8ZmWxkk3r2rRExWtoYpcpvWCWalWI/IwSeAMUvwWTwAOKg64FP6ZMri7P/1P+1pUUppmt2bRKifWA0rHaD8xwzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763754913; c=relaxed/simple;
-	bh=FeBc3mz9++WhInS5DCc3/yvwNzCoBHeGSj4Nx5UNqAM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=o3jmOEIQjomjxXNItj8aaawnFwKnj9X6ydWnJHI8+E7MfGkhCYUiPjoVGWaFLkSz0HJp1/RAnORxmS3cGh11ikoDWKweAahW/3od72X1T+ia7621nTmGaRtPEkEVzXq2Gd4NKHO3i/jcLOIaV8lc1xyaUrLXPwt1+AyOTOvYB4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HEqL0X+5; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
+	s=arc-20240116; t=1763761682; c=relaxed/simple;
+	bh=+1chXuvjm9GlVaYLgfPyjC18yPzYgGx7MYfJjLnWvt4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ge5eoTaVSQgIfublvs/MR1aPs4+qqdqqaHz5+L556yQWCem2F/GJJ4NddxWYLBlvOvfRBFiadKU9QU01l9bBqHbWB90UK7oiLv9lYZqYmTb5ZEUbYeNnUrGM19zoA/GFzu4o/N7thx1t162sPRW7fMte437EyQE6WAsYv+MFLX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aU2cZxZP; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HEqL0X+5"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7a9fb6fcc78so2036882b3a.3
-        for <linux-hardening@vger.kernel.org>; Fri, 21 Nov 2025 11:55:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aU2cZxZP"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-bd2decde440so169143a12.0
+        for <linux-hardening@vger.kernel.org>; Fri, 21 Nov 2025 13:48:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763754911; x=1764359711; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OsLQEMyKEn/UE/LwUY0j1tuqWL3xiSmMEKB7wO01+Co=;
-        b=HEqL0X+50/jzNxD6HyVOiGtq2K/Jq967Ugm6tzyDjeO/EPz8HDLqelm1FaueL3euUM
-         QdmYUm3mJsXXTT/lxrBHO5V5MznUkKyoxFdSY6igxKLkuOJsOKZq2z4bwteGywm7xY5w
-         /ZmArkpFg3Yu8WlkEdMg2XW5bNpIts0dNzdVtDbu233coq7xGYP8JY2WpaKBTl5TL8Av
-         T8a5qbMgab6uwV7z1/mksYRVTGSffPRBY8UV7fV9gFgRTQuJJiOs1fdd1U+LSkIknmk/
-         b2LVmvsBgTOTDP3sfCTxxbxLU3XDWyzEyBZeWegGDVJqssl+o3qBsjod2pG9U46OkEAG
-         w1+w==
+        d=gmail.com; s=20230601; t=1763761680; x=1764366480; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ekM322G+PEin7yvRndAbrKvUWb4I0YPQ5GMMtTk3+Eo=;
+        b=aU2cZxZP4E+cBVSikk5qdQxHM7M4IKM4ycJyJEUCqNTMvKkRu/BZ29isA15/G/oqOF
+         ITudijlInCp9HabjfJoE+b6noRtRdfrv3rndQphWKrIeKBGqmv2VPZ/MGOIcjmxW40mm
+         CLDKZNbTLIFSqi2JGu6LlF9dQ1ZXInF9PeSOj4XHFAv6Ps1UAqx4Ew1LDF8f5fMcsd+4
+         IvsTyF7oYgFpJ7dJquoLiNUFXFKh8/ynVXGBFaUTu15t/y/eQJEkv5f5pSu3OVWILB3z
+         24NFV+guOrUHd08xBUizVsLQ2BszGCE9ZJ7JbsaGjotSVKSNelWKfPBX+2BgEa2jhaxs
+         AUuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763754911; x=1764359711;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OsLQEMyKEn/UE/LwUY0j1tuqWL3xiSmMEKB7wO01+Co=;
-        b=dkQL1xry3Lp0tYR6uoSaAfelG3G+CVDrWsRWiW3xMi8B04AXws6NZVP13+yuAzEier
-         5jyggUCby3AuCSeOl6bNhR0uwDzkL6fXTRIWTdHoySalJgmXiKI8fp+Q5fCxgSAuIC2W
-         Hx/0rNwElrg8UqbeZL1WidV/VQ71sE4bjC7xcBkhSqcnuXFTCBU1G+9OA/94g3pm92dF
-         6+GShKsKxI7ln3HoYO0Lp4S+oAWEWAmkh/a5JSlOfqBddfMMSt3608xnSmtMDxJeat/r
-         tpgLTDAm6VIphJvMpUYo+cQLktl8SiIhajqhgZg57vGsLUjexprlwE7jMyp6+4B6hhMQ
-         2Oiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUeLriKE7kC/+J5pE3QEGwGaOTp74zmIMspMdS5lTc4AHYCPOoyjB87rh6FLgts1MXp5N85QdWlaqYHfvVTE9s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQpzGytFlcKxI/jgOeegc8HZzsRVqtffIseSlXWg4pFOEp2BDT
-	dwDg8nHrWPoNst4jGvBpa70lbGCaPbtEDW1Raj01TfSSwzHcyI9+maH9mXUtvfAz2Sy7js1tbIV
-	k
-X-Google-Smtp-Source: AGHT+IGxGbZXuYRUV+1DBM1iC3d8Dgs2MaafPC2v4F8uQUYDIrUiNXJIpBlI3Tv92mLuGvfDyHJ2cMMikw==
-X-Received: from pgn1.prod.google.com ([2002:a63:d41:0:b0:b6c:b8e0:6988])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9184:b0:34e:cc0a:40b2
- with SMTP id adf61e73a8af0-3614eddf63fmr4914029637.30.1763754911092; Fri, 21
- Nov 2025 11:55:11 -0800 (PST)
-Date: Fri, 21 Nov 2025 19:54:33 +0000
-In-Reply-To: <20251121193957.1655580-2-morbo@google.com>
+        d=1e100.net; s=20230601; t=1763761680; x=1764366480;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ekM322G+PEin7yvRndAbrKvUWb4I0YPQ5GMMtTk3+Eo=;
+        b=Hflw0Vt/BVyTV6mw4rdcuWFOZhk5Obll3bI+OwjAwU78K2FTt25g67085N51Zh6Qgd
+         4XWG7RaZccj4lDwP+JXCmE8TcCBiL6XdTmkQvA6moNf0wGmXows+G7sxsUlaBiuNdGy2
+         hYZHYbium/I93sdd9z5wfFGxyWS/rybS+Gu4Q5Sa+QkquDduvqSJiT0McQxA9sWRGPy8
+         9kvIclrbZdUKBVQY50GBu98KT8HHYe3bQAT0bM8/Qc9xcPMNw+DaO8Gh+akBezWiTC77
+         V0fHueWeBEpx7geOc5P9crgnkkf3xFCvNi0sPsHBTMBY6ixfjSicMFNE5ECAqIimHxIS
+         D4PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYs+HzO41QMA/dee4Q4TpOw+k34j8f5NXpLtZ1WPThdS8NZA4SvGnFivD2Pq03gsSEK5E1pgyF7J/T6bocHhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuVy5LYeckKpMGmewgXUYfT3Xc0U5KPEe/XTVUUB8YkGawhotX
+	4+xX9xgg0H/pYBZf3OqangtcCpsoY4r4qeEO7j/U8aqDFlsSrNwf5K5MBAh3v1KfA4bFdMuiHAe
+	mvqE8+Y4VxXeIizjU4rYRgosGcKcipKw6T/+hmbY=
+X-Gm-Gg: ASbGncu4Iwyi2iwb/KUL8fdcLG0EyEzOoN63RUJ19PHNsKE02gXV6oCR8TBKS+egmv8
+	a6c3bG4muilyJ2Y/U+JFtSaunRLlEUFXp43hUNiXC4eOfzS2lJhgOzw8Mc159tfx+Zqb06FgJGu
+	q+Lja//1Ka9+EFzEiIfhEMAyT5fnKA4gBwNpjVVCy57QYD8ht2l/iWNiSAZNZsikv04AudvLIEx
+	8lUSY7yXpK4VtCzfVJqU9TGobxiALiHsE0EVSyRZejidXe6mHwKyzUzbLTqc1CJ/U993htGEAaS
+	tqsx0zWse2cIzn6+32K1SoWLVhAVrxWfrSvVApEkOpA33pT+rfm64u/2jEDrYu3HL/PqtcnlJ/d
+	DE2ZDTnSQaQQbjA==
+X-Google-Smtp-Source: AGHT+IG2D+cdh1NB4073zeVTaOivGEAbr3ZKYdLcyI3VJrGEJvRL6ka722J5H/M0mBobMWPmISQlxk8KY20YkPOqf9o=
+X-Received: by 2002:a05:7301:4084:b0:2a4:3592:cf8b with SMTP id
+ 5a478bee46e88-2a724bbea18mr1100277eec.2.1763761679587; Fri, 21 Nov 2025
+ 13:47:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251121193957.1655580-2-morbo@google.com>
-X-Mailer: git-send-email 2.52.0.rc2.455.g230fcf2819-goog
-Message-ID: <20251121195504.1661783-1-morbo@google.com>
-Subject: [PATCH v2 1/2] Compiler Attributes: Add __counted_by_ptr macro
-From: Bill Wendling <morbo@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>, Qing Zhao <qing.zhao@oracle.com>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Marc Herbert <Marc.Herbert@linux.intel.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Tejun Heo <tj@kernel.org>, Jeff Xu <jeffxu@chromium.org>, 
-	"=?UTF-8?q?Michal=20Koutn=C3=BD?=" <mkoutny@suse.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	"=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?=" <thomas.weissschuh@linutronix.de>, John Stultz <jstultz@google.com>, 
-	Christian Brauner <brauner@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Brian Gerst <brgerst@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev, 
-	Jan Hendrik Farr <kernel@jfarr.cc>
+MIME-Version: 1.0
+References: <20251121193957.1655580-2-morbo@google.com> <20251121195504.1661783-1-morbo@google.com>
+In-Reply-To: <20251121195504.1661783-1-morbo@google.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 21 Nov 2025 22:47:45 +0100
+X-Gm-Features: AWmQ_blZSawsk7jSjU9s-ayzPlxR-h3EgYVHr_sbGcneoHOjgFGGhmStKYwRrFg
+Message-ID: <CANiq72=kqJApbOJ0hmC_mAYe6DO8YqXSFaLJOsbPhkXfxmvJHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] Compiler Attributes: Add __counted_by_ptr macro
+To: Bill Wendling <morbo@google.com>
+Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>, 
+	Qing Zhao <qing.zhao@oracle.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Marc Herbert <Marc.Herbert@linux.intel.com>, 
+	Uros Bizjak <ubizjak@gmail.com>, Tejun Heo <tj@kernel.org>, Jeff Xu <jeffxu@chromium.org>, 
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	John Stultz <jstultz@google.com>, Christian Brauner <brauner@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Brian Gerst <brgerst@gmail.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, linux-hardening@vger.kernel.org, 
+	llvm@lists.linux.dev, Jan Hendrik Farr <kernel@jfarr.cc>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Clang and GCC are expanding the '__counted_by' attribute to support
-pointers in structs. Clang has support for it since version 21. This
-requires defining a separate macro, '__counted_by_ptr', because, while
-the attribute has the same name for both a pointer and a flexible array
-member, minimal compiler versions need to catch up.
+On Fri, Nov 21, 2025 at 8:55=E2=80=AFPM Bill Wendling <morbo@google.com> wr=
+ote:
+>
+> +/*
+> + * Optional: only supported since clang >=3D 21
+> + *
+> + * clang: https://github.com/llvm/llvm-project/pull/137250
+> + */
+> +#ifdef CONFIG_CC_HAS_COUNTED_BY_FOR_POINTER
+> +#define __counted_by_ptr(member)       __attribute__((__counted_by__(mem=
+ber)))
+> +#else
+> +#define __counted_by_ptr(member)
+> +#endif
 
-The effect of this feature is the same as for __counted_by on flexible
-array members. It provides hardening the ability to perform run-time
-bounds checking on otherwise unknown-size pointers.
+I guess there is a reason for this name, but it sounds to me a bit
+like the thing between parenthesis is a pointer, i.e. that perhaps it
+is the pointee that one that counts.
 
-Cc: Kees Cook <kees@kernel.org>
-Cc: Qing Zhao <qing.zhao@oracle.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Marc Herbert <Marc.Herbert@linux.intel.com>
-Cc: Uros Bizjak <ubizjak@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Jeff Xu <jeffxu@chromium.org>
-Cc: "Michal Koutn=C3=BD" <mkoutny@suse.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: "Thomas Wei=C3=9Fschuh" <thomas.weissschuh@linutronix.de>
-Cc: John Stultz <jstultz@google.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org
-Cc: llvm@lists.linux.dev
-Signed-off-by: Bill Wendling <morbo@google.com>
----
-v2 - Add support for GCC.
----
- include/linux/compiler_types.h | 11 +++++++++++
- init/Kconfig                   |  7 +++++++
- 2 files changed, 18 insertions(+)
+Hmm... what about `__ptr_counted_by`?
 
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.=
-h
-index 0a1b9598940d..2b0251bb951c 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -351,6 +351,17 @@ struct ftrace_likely_data {
- # define __assume(expr)
- #endif
-=20
-+/*
-+ * Optional: only supported since clang >=3D 21
-+ *
-+ * clang: https://github.com/llvm/llvm-project/pull/137250
-+ */
-+#ifdef CONFIG_CC_HAS_COUNTED_BY_FOR_POINTER
-+#define __counted_by_ptr(member)	__attribute__((__counted_by__(member)))
-+#else
-+#define __counted_by_ptr(member)
-+#endif
-+
- /*
-  * Optional: only supported since gcc >=3D 15
-  * Optional: only supported since clang >=3D 18
-diff --git a/init/Kconfig b/init/Kconfig
-index cab3ad28ca49..f947f242bca8 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -139,6 +139,13 @@ config CC_HAS_COUNTED_BY
- 	# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D108896
- 	default y if CC_IS_GCC && GCC_VERSION >=3D 150100
-=20
-+config CC_HAS_COUNTED_BY_ON_POINTERS
-+	bool
-+	# supported since clang 21.1.0
-+	default y if CC_IS_CLANG && CLANG_VERSION >=3D 210100
-+	# supported since gcc 16.0.0
-+	default y if CC_IS_GCC && GCC_VERSION >=3D 160000
-+
- config CC_HAS_MULTIDIMENSIONAL_NONSTRING
- 	def_bool $(success,echo 'char tag[][4] __attribute__((__nonstring__)) =3D=
- { };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /dev/null -Werror)
-=20
---=20
-2.52.0.rc2.455.g230fcf2819-goog
+In addition, could we please provide a bit of context in the
+documentation? i.e. links to the attribute docs in both Clang and GCC.
 
+And perhaps explaining why this cannot use `__has_attribute`, i.e.
+what the commit log mentions.
+
+Thanks!
+
+Cheers,
+Miguel
