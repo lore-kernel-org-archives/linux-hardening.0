@@ -1,164 +1,133 @@
-Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302154C97;
-	Fri, 21 Nov 2025 00:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FD61EB5CE
+	for <linux-hardening@vger.kernel.org>; Fri, 21 Nov 2025 00:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763683464; cv=none; b=lTcUXV1R8ICWYjV1OnCFqU6TE7eLspBIuW9m7tZ4wtBt9zSjhm8+EyXyxpwGrAFL++Xo2YdvzSpifuLjGqlyuTWOg7t5RgUfQEFfQukoNSeh4QT719K9n+LPwIzkoMrFyYKl2/mGyOMBhslCgI5MAd0alxTG8YgsrQT82BIin3c=
+	t=1763684314; cv=none; b=NsiaBuSUL839c5FcCwCsexPkD2VIJtAhRQS4d+rNg7AzzdF3bEOOOlWusS7Gz01oxmSJr5erXsDoR7zJ1H2IrVuhV8Ly59tlAXEsNFrw3xSZSmCo1AMkqyZHGir2UVuwUFnOuD94fyyC85rESvTsnRQw1hW8WIssIly+4ir3XmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763683464; c=relaxed/simple;
-	bh=kbWt00WptMFSusVetoE1KZTz3B5Wufm06tti5QpupYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YSRDkJbdUhRJ8L+uB7qSVVWrb0QBxb7wuimvaLfryNSaW1wFzJZvC8Z2oaD2NzF1rqT2NTFbCfdk4oC8J0+ON32uTrFTwVpWIuk1N8oIguQava9AHdKjWBNukhM02UjyT8Mp+joMU+UZV4YNPZTBF4CD3wv6Qg/0jg2dMaDW/ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=A4DQbQTO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DdwiK8V+; arc=none smtp.client-ip=202.12.124.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+	s=arc-20240116; t=1763684314; c=relaxed/simple;
+	bh=uIhWj+LRHpDIZtq6R0C4+7rQLH17LX0l+LTrExo9ZH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mmljpORdSz6JTi5fyvlKU+o9sfkLAR5iu4vdabiXkTE/NnZjeJS2uA5yXbYy0Fz6b0oPBWSME4bv7xDEgmTOqvtWIMjKEHY/IB3M4wWcrGr08xX4PI03w6+G+uAhqFclUn580pDd1d9eMyNdIVgwRFE13uGjMd3MyAPk6ydtoYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ktuMamIX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="A4DQbQTO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DdwiK8V+"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 879FA7A016A;
-	Thu, 20 Nov 2025 19:04:19 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Thu, 20 Nov 2025 19:04:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1763683459;
-	 x=1763769859; bh=HjvLzwzMxld1mKMp0zyef95cQ5dfE6rG/eqr2WGdSgw=; b=
-	A4DQbQTOyZxcwypC3+L5HNDKquu8alZqgjdhfxqZhbERLv0+0bVTi2URYY9SzrLO
-	cIA7+3vgf/rnkv+XeyQZkg532nvGvpUxuRuwx8L/Uic271UWSaf9xReKLuEuvY74
-	TXftCb/sHWzhJltogSGXj4K0/ZbPmRRaXRFkmo3sRy+Z4z8++d48fHWnyoTm5Rd9
-	aH/FdoWkLMRiNni0STbqvQYOU5pdxxsY7e52rmKgWsiBf8fqGFqAxCDG3kL1PeG2
-	7GxTPsfg7ei7jvBCMfCyaQh0d+BBQYxa1SY8i0Kfw7zj/+JdqdB22GSLh+Fs90K6
-	u32o+RuLRjdGGSIuhBj9Zg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763683459; x=
-	1763769859; bh=HjvLzwzMxld1mKMp0zyef95cQ5dfE6rG/eqr2WGdSgw=; b=D
-	dwiK8V+/jfQWiXQ4xfgr/qIY0MMzH+L4GlO/SbVTzukbW8v4IZsujct5M/7WHsGU
-	KJYRNfKXTpBUBZzevF7fYkXShA08TaKjEn7NKAD0fgTmLpjMlQw7jiuEY0bMZwZn
-	VccsOxjUPSrk4Ypi3Td2udeXQFCQSKbah3t7VMkpMgQAXlzIHM3l/phBNUmqAbsT
-	DpQzFdvi8RlbqpLR/grhmVmP/RW6ZfN97T+HzwghRhTZ8ofBo2MW2Y7y3xw+jjnc
-	vC3t58oLkrJxxKLSXx/zPq4Pu6J9ROujv6iqpDupZqdrM1VaUpFUxHq5MXTwkadv
-	zU0wpSwt6t6kGWO6qd5gg==
-X-ME-Sender: <xms:gawfaQpKfCI9uTs4scyVMdG0pHsQRE0PiBFHB_XYgFSu1KW_IQsjVA>
-    <xme:gawfaW2e_QMZXgkEpQ4dQAIhH754U_TcX65CFkHK4BzhBZeujWK2leqdh1rKUCtjh
-    4tLTjYQmkHsFx6m9HuoO30v226Seho2vROg9ws3UOb7QkFzwUN8>
-X-ME-Received: <xmr:gawfaX3HsXWu4ErPEmHODuiTinVc3SxzIhtZwD7cdqamrNVqEBbkCxqj>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdekgeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkjghfgggtgfesthejredttddtvdenucfhrhhomheptehlvgigucgh
-    ihhllhhirghmshhonhcuoegrlhgvgiesshhhrgiisghothdrohhrgheqnecuggftrfgrth
-    htvghrnhepteetudelgeekieegudegleeuvdffgeehleeivddtfeektdekkeehffehudet
-    hffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hlvgigsehshhgriigsohhtrdhorhhgpdhnsggprhgtphhtthhopeeffedpmhhouggvpehs
-    mhhtphhouhhtpdhrtghpthhtoheplhgvohhnsehkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhoghgrnhhg
-    seguvghlthgrthgvvgdrtghomhdprhgtphhtthhopegrgigsohgvsehkvghrnhgvlhdrug
-    hkpdhrtghpthhtoheprhhosghinhdrmhhurhhphhihsegrrhhmrdgtohhmpdhrtghpthht
-    ohepjhhorhhoseeksgihthgvshdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtohepmhdrshiihihprhhofihskhhisehsrghmshhunhhgrdgt
-    ohhmpdhrtghpthhtohepjhhgghesiihivghpvgdrtggr
-X-ME-Proxy: <xmx:gqwfaTc1qHnh0-i3KO6tJsUVtNtxTcxs3s7vL3whUFJvperGF6WN6g>
-    <xmx:gqwfaT4HBIK9hrr9a_hBvYAFnQ7rPa0nLaI-32DuwCrkmnxah0vROg>
-    <xmx:gqwfaQhMKw1KHBszqSGzGjVlPYaxt6EqZf0UcaWVJr34DnEzzh9nUg>
-    <xmx:gqwfaVrbusXEFt0RPAKnPhFRWA6SjT0BpwWPLXloz2sEwqtMNFS0HQ>
-    <xmx:g6wfae0YvvvtVTx0cpC_54SaFJugeR6HLLLdi1mavPKyN1Xc4JF--XDn>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 20 Nov 2025 19:04:15 -0500 (EST)
-Date: Thu, 20 Nov 2025 17:04:13 -0700
-From: Alex Williamson <alex@shazbot.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
- Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Jason Gunthorpe <jgg@ziepe.ca>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
- Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Ankit Agrawal <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
- Shameer Kolothum <skolothumtho@nvidia.com>,
- Kevin Tian <kevin.tian@intel.com>, Krishnakant Jaju <kjaju@nvidia.com>,
- Matt Ochs <mochs@nvidia.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- iommu@lists.linux.dev, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
- linux-hardening@vger.kernel.org,
- Vivek Kasireddy <vivek.kasireddy@intel.com>
-Subject: Re: [PATCH v9 10/11] vfio/pci: Add dma-buf export support for MMIO
- regions
-Message-ID: <20251120170413.050ccbb5.alex@shazbot.org>
-In-Reply-To: <20251120-dmabuf-vfio-v9-10-d7f71607f371@nvidia.com>
-References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
-	<20251120-dmabuf-vfio-v9-10-d7f71607f371@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ktuMamIX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29136C4CEF1;
+	Fri, 21 Nov 2025 00:18:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763684314;
+	bh=uIhWj+LRHpDIZtq6R0C4+7rQLH17LX0l+LTrExo9ZH8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ktuMamIXihGiL/1rdxiMcllMYJBwVwbzgkDUad9/FXhoNyjwhOqyvXn7vHWkiDNu1
+	 f0/AzuEmlXwXQ0HWwue16M0NiBv93aTo0JJTNSKX/giirzFLtZ/OO+c5SM00lDoKYI
+	 tQdydb/xPGaKpqEZXYEdtpZdyqPKSfQHhUj3RHRI22MXtKuqS4zeFsVeLOt02glrIE
+	 ubTfDKZ8hCCfr5A97ETJqIBtHeKvu0pY+SlwzZodWSPGeUGbTXX+LdY2UkrhF1l6y6
+	 Ob2eeCGQIiXAyyjuFXLNoX4JLZn9FiNcM+7PHAaSE6fhNlS3L1Uzn+F/NWnwKLDnjZ
+	 xs5WHCjp7JJmA==
+Date: Thu, 20 Nov 2025 16:18:33 -0800
+From: Kees Cook <kees@kernel.org>
+To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
+Cc: Qing Zhao <qing.zhao@oracle.com>, Uros Bizjak <ubizjak@gmail.com>,
+	Joseph Myers <josmyers@redhat.com>,
+	Richard Biener <rguenther@suse.de>,
+	Jeff Law <jeffreyalaw@gmail.com>, Andrew Pinski <pinskia@gmail.com>,
+	Jakub Jelinek <jakub@redhat.com>, Martin Uecker <uecker@tugraz.at>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Dan Li <ashimida.1990@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ramon de C Valle <rcvalle@google.com>,
+	Joao Moreira <joao@overdrivepizza.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
+	"Constable, Scott D" <scott.d.constable@intel.com>,
+	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 5/7] aarch64: Add AArch64 Kernel Control Flow
+ Integrity implementation
+Message-ID: <202511201606.079192C85@keescook>
+References: <20251120222105.us.687-kees@kernel.org>
+ <20251120222113.3318463-5-kees@kernel.org>
+ <CALvbMcCx+N=P+AkpTbwQBanDTRWi+VsouoxyMLPEfOfEmNZaow@mail.gmail.com>
+ <CALvbMcBmEi8bv2dAo2nj=6hTQSaH_-ym2VbAkx__j6XQ+w6eeA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALvbMcBmEi8bv2dAo2nj=6hTQSaH_-ym2VbAkx__j6XQ+w6eeA@mail.gmail.com>
 
-On Thu, 20 Nov 2025 11:28:29 +0200
-Leon Romanovsky <leon@kernel.org> wrote:
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index 142b84b3f225..51a3bcc26f8b 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-...
-> @@ -2487,8 +2500,11 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
->  
->  err_undo:
->  	list_for_each_entry_from_reverse(vdev, &dev_set->device_list,
-> -					 vdev.dev_set_list)
-> +					 vdev.dev_set_list) {
-> +		if (__vfio_pci_memory_enabled(vdev))
-> +			vfio_pci_dma_buf_move(vdev, false);
->  		up_write(&vdev->memory_lock);
-> +	}
+On Thu, Nov 20, 2025 at 03:10:41PM -0800, Andrew Pinski wrote:
+> On Thu, Nov 20, 2025 at 2:57 PM Andrew Pinski
+> <andrew.pinski@oss.qualcomm.com> wrote:
+> > Also I am still trying to figure out and understand the interaction
+> > between x16 and x17 in some cases.
+> > Because I thought indirect calls/jumps will be using x16/x17 for those
+> > to support BTI.
+> 
+> Oh yes:
+> (define_register_constraint "Ucr"
+>     "aarch64_harden_sls_blr_p () ? STUB_REGS : GENERAL_REGS"
+>   "@internal Registers to be used for an indirect call.
+>    This is usually the general registers, but when we are hardening against
+>    Straight Line Speculation we disallow x16, x17, and x30 so we can use
+>    indirection stubs.  These indirection stubs cannot use the above registers
+>    since they will be reached by a BL that may have to go through a linker
+>    veneer.")
+> 
+> But you don't change Ucr so in theory x16/x17 could be used for call_value_insn.
+> (I can't get that one using x16/x17 right now).
+> 
+> Oh and sibcall_insn uses Ucs which is defined as:
+> (define_register_constraint "Ucs" "TAILCALL_ADDR_REGS"
+>   "@internal Registers suitable for an indirect tail call")
+> TAILCALL_ADDR_REGS is a register class which just contains x16/x17.
 
-I ran into a bug here.  In the hot reset path we can have dev_sets
-where one or more devices are not opened by the user.  The vconfig
-buffer for the device is established on open.  However:
+Hm, I will need to study this more closely. I wonder if both kcfi and sls
+hardening end up being self-contained users of the scratch registers? I'll
+double check that my kernel test builds have SLS hardening enabled. (And
+I'll likely need to add some aarch64-specific sibcall tests with/without
+SLS hardening to see the resulting asm.)
 
-bool __vfio_pci_memory_enabled(struct vfio_pci_core_device *vdev)
-{
-        struct pci_dev *pdev = vdev->pdev;
-        u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
-	...
+> I don't see a testcase for indirect sibcall either.
+> 
+> ```
+> typedef void (*fptr)(void);
+> void f(fptr a)
+> {
+>   a();
+> }
+> ```
+> Is a testcase for the indirect sibcall case.
 
-Leads to a NULL pointer dereference.
+I did include basic tests for a variety of sibcalls in the patch that
+added the general tests; see gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
+(though I named it "tail calls"), and the fptr test includes an argument
+(the comment is x86-specific, but it should be a valid test for all archs):
 
-I think the most straightforward fix is simply to test the open_count
-on the vfio_device, which is also protected by the dev_set->lock that
-we already hold here:
++/* Indirect call through function pointer parameter.  */
++int test_param_indirect_call(func_ptr_t handler, int x) {
++    /* This is an indirect call that should be converted to tail call:
++       Without -fno-optimize-sibling-calls should become "jmp *%rdi"
++       With -fno-optimize-sibling-calls should be "call *%rdi"  */
++    return handler(x);
++}
 
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -2501,7 +2501,7 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
- err_undo:
-        list_for_each_entry_from_reverse(vdev, &dev_set->device_list,
-                                         vdev.dev_set_list) {
--               if (__vfio_pci_memory_enabled(vdev))
-+               if (vdev->vdev.open_count && __vfio_pci_memory_enabled(vdev))
-                        vfio_pci_dma_buf_move(vdev, false);
-                up_write(&vdev->memory_lock);
-        }
+-Kees
 
-Any other suggestions?  This should be the only reset path with this
-nuance of affecting non-opened devices.  Thanks,
-
-Alex
+-- 
+Kees Cook
