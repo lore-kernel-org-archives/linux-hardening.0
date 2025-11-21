@@ -1,125 +1,131 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1714C2472BB
-	for <linux-hardening@vger.kernel.org>; Fri, 21 Nov 2025 00:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF9D22A4F1
+	for <linux-hardening@vger.kernel.org>; Fri, 21 Nov 2025 00:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763684630; cv=none; b=swSvDekmfRo3cxKEB6hV3pROksoJdQwOvh/ydlX3J1MkbXOCBqRMsY6KR26vKx52ckIdiFZQhWfEA2rcdo6cZIppX86b4ds84Z8UQjr7mHFBLZxVXf061/rsHz56/Uep8SQ2h/qh5Qw3HY7c8XmSlQYQi5JA74XvzYiiEdPZU3Q=
+	t=1763684884; cv=none; b=pf+vI9WQ8Any/B7zB2Zpw83bQgKrIaEkH2FNGrJ6NyI7loahCot9Wxc1r2LEMSugxpanqt9vYXvrGzgPT8NtSbRt4WxGexkunFCOIbNG56YowTJyFyEdK6nvRUVWTyh/hpeWixtISBI6yZ0k/IIIuivW+JNuIKFJEzZzWxVEpdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763684630; c=relaxed/simple;
-	bh=rSFCVYBQGHYIVw4AaRKYw6Ay38HyAtjHDSJOWPLks+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jrqNAMWxzlgNpJFITNNSXhXD1j7GymbosHAo7qSZCbqkSm+xgjK6MlK85lvsWF0IbcYQzVYTPHF0sq4kEYdffrH4fl4xXviigmntkfZKFSTQ9O/SoCTEGYwyPsA907qoAKkf7iLK9znN1+XWdn1KvBxHp4wiQK81m2dRJlkY7l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=X0nsss1q; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1763684884; c=relaxed/simple;
+	bh=iAtyAHeFXno+x3emC1dduNajG8biFIGO/mpNi/3NyWo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T6INlt8oBFod6nDgqNm9EvVkNDi/d3njmgIY7J+xC3VP60ohCZ0IJE6GF1JGFZ2ShFoxy2zYjn6qsAfxJ8+D6Km68hpPmVMxzUtG/bEJfE76bQ9ub8uE5m1/Ube84eWRCMcIiDQFCoBvdofFiNVu2AD3yq+b4jo9RnpeKSbY7Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=u0pinqtH; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="X0nsss1q"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-8804650ca32so13105566d6.0
-        for <linux-hardening@vger.kernel.org>; Thu, 20 Nov 2025 16:23:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1763684626; x=1764289426; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HeoQ6A9zQA47pPVQ4WN0R1Mr0WB5BGBDvzJz+/SIjn4=;
-        b=X0nsss1q1dQAqvVQCjfcM7UUewWlBvLurLKTQOkoLVBJ11Zbv8ClxmGVsU1Bo6EF5b
-         qB1Gi2Yhtkul9cgel4Ab+PKL3kmhaxR19s/esS9Nary6n06TyegRG022N0a1RmQ8sFQJ
-         Ar/lOjV0WQuho9a2OOlwX2VRTf+i183+ahDzvYQdBGOKzztulAsjTqiXgnQP438u63kz
-         84HsJu/Oi7pdM7HSBpBL0ajrrzV4LFaclFsAjGqTlANxGvWpGEGC8h7B/dZ7yx5ZuK5v
-         9BQIRbH7CWDiUe1Y5XDQZyyKT8tkkQWxTuthpFeNHPLVryv7gw6vE+thgY7MLcr+xgTz
-         DZSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763684626; x=1764289426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HeoQ6A9zQA47pPVQ4WN0R1Mr0WB5BGBDvzJz+/SIjn4=;
-        b=mmdG1Lmze2Fa+e2AjJLCbUdZLdXdvPkHTy49JtvNWF8Z1S7DCVC4F+lZDTRX+9IuVK
-         DIPjA48dQ9+jtS4y5FV91cWsKFtX+P89KWsN5oRyHb/d6+VBWBc3n/51Q1fw/SJo5y29
-         xM2ucZ2PqfhRuMAEJy/4gdYPHova3jvLa8nEgCQzK1QXa49DJBXc8k1dqa5dJOegj7kQ
-         sIz7cJAA/O0m209EQ772P5rKBH4pVA5QdO9YjwNACmvxjPcQIL3eTtmNJOEM7pUUfqeL
-         Z1CcwoQGyIAyqmk9KZ2j6v6Tz0rlPYbar00Bb7g6vJFSDlvep97r5Ao5qxPKIPshS79f
-         lZTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVN4D5yoGrpsppHntX2LJlzYQ2dDhg4v1Wty7jglhmGRPy2IjJgtZUs3iA20CGe8pSjDBzPa76a6xj4KdlcSc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzL3I7KV0r7aHQuzAddB4vbr27y8lxmHcwcamih5lly0z3mYQiG
-	1pOVbV9NJ0Nke6qOKlbKUVUP7BjeTVBFbHq2OSR7A/vW63FgMy7rArhSKQU182cyw0E=
-X-Gm-Gg: ASbGnctHTE00PW/mO21wMB1TonBqJwquGZvAAKaVDwWHykMi1NKESmzlRFjXTCrS5+5
-	GiekTgaMsOGUu9cO97Jkc/iInUDOenBwDT/htCS+PoaXQk+5kLP9pUbQ2Q07B0TG+bic1KmFTr4
-	hhbh+1UnCdogeXrccp5CrG1R6dxFW3Vb2rlhAkKTzUuyhz0LN+Djuts/AoALERETFn6nCg9A5cV
-	eaH9r8ypeQzRJsqC8ID6arJyp2rJYqvIn2Egoq+O4cuX058Sa6UfPYGJ6vLSOzsV35qSjxXhcTI
-	5/l41ODJFYKOwY4lhg93RXxZcWAhUjXDwHCOBYPF498oirbJvSiidI2OlxpoR2LqxS6drdRZzGq
-	ezw2nmL8B8oYa7E5Bf17QqMCZ5GyIZR23dY01KOIG0ybezc5FlFE99IT415yTxqBexoegE1IYFc
-	O9sR3WuVJithiQvtlNqG3zbCVV8W1rrYo79yioiBbN84YQe0rERuECnw8P
-X-Google-Smtp-Source: AGHT+IF9fpUZC0KSEi60qYSTXqU5TN/0kv3Br6v+7st2smYcT5XQOEwOWy/F2amvDq4QuChbOli5Vg==
-X-Received: by 2002:ad4:5d42:0:b0:880:2c08:88e with SMTP id 6a1803df08f44-8847c5206f8mr8425876d6.45.1763684625945;
-        Thu, 20 Nov 2025 16:23:45 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8846e472ae1sm27645766d6.22.2025.11.20.16.23.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Nov 2025 16:23:45 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vMEwC-000000016i7-2ZE0;
-	Thu, 20 Nov 2025 20:23:44 -0400
-Date: Thu, 20 Nov 2025 20:23:44 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Alex Williamson <alex@shazbot.org>
-Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>
-Subject: Re: [PATCH v9 10/11] vfio/pci: Add dma-buf export support for MMIO
- regions
-Message-ID: <20251121002344.GC233636@ziepe.ca>
-References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
- <20251120-dmabuf-vfio-v9-10-d7f71607f371@nvidia.com>
- <20251120170413.050ccbb5.alex@shazbot.org>
+	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="u0pinqtH"
+Message-ID: <3b5d9df5-934d-4591-8827-6c9573a6f7ba@packett.cool>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
+	s=key1; t=1763684880;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AsdQVZDTYPb+WJU5W+qBd4HHdK8qY/Whv5lgvrY3/f4=;
+	b=u0pinqtH5K5gMsYy6NyVpNY8dBuXeK5wBOcc2uf8rR1UgTk27xhJcC4Hj3lRoUnQHyyesm
+	XtKuphT7jjVztBw5mmcMZ9nsEyPEge4LHLnbmkUQLmEipQwAeeARmAV3+Zv8F8MtMQR88H
+	GNm3VkgBHJQ34FpknGh5YM4A8fMJNFGWMepFqY8hmb0xGyu7BY2z+T5AwQ2baE3G+EwjI5
+	xuYD3tS3H1InSop+P0eI4NkXDdZy+A6VrV0ubA2Na1REKSrjDr+4HGe0jKa6mFVVoXOV5O
+	5qXieNcr64wSjFk/5s5DFjfb8eXE5bpDolBEKQ9+bAtF9O9D8BpiY3XdQPnwqA==
+Date: Thu, 20 Nov 2025 21:27:46 -0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251120170413.050ccbb5.alex@shazbot.org>
+Subject: Re: [PATCH v4 00/10] gpio: improve support for shared GPIOs
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
+ Mika Westerberg <westeri@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andy Shevchenko <andy@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Alexey Klimov <alexey.klimov@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Val Packett <val@packett.cool>
+In-Reply-To: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Nov 20, 2025 at 05:04:13PM -0700, Alex Williamson wrote:
+Hi,
 
-> @@ -2501,7 +2501,7 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
->  err_undo:
->         list_for_each_entry_from_reverse(vdev, &dev_set->device_list,
->                                          vdev.dev_set_list) {
-> -               if (__vfio_pci_memory_enabled(vdev))
-> +               if (vdev->vdev.open_count && __vfio_pci_memory_enabled(vdev))
->                         vfio_pci_dma_buf_move(vdev, false);
->                 up_write(&vdev->memory_lock);
->         }
-> 
-> Any other suggestions?  This should be the only reset path with this
-> nuance of affecting non-opened devices.  Thanks,
+On 11/12/25 10:55 AM, Bartosz Golaszewski wrote:
+> ---
+> Bartosz Golaszewski (10):
+>        string: provide strends()
+>        gpiolib: define GPIOD_FLAG_SHARED
+>        gpiolib: implement low-level, shared GPIO support
+>        gpio: shared-proxy: implement the shared GPIO proxy driver
+>        gpiolib: support shared GPIOs in core subsystem code
+>        gpio: provide gpiod_is_shared()
+>        arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
+>        ASoC: wsa881x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
+>        ASoC: wsa883x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
+>        regulator: make the subsystem aware of shared GPIOs
 
-Seems reasonable, but should it be in __vfio_pci_memory_enabled() just
-to be robust?
+this seems to actually have caused a regression for me, audio does not 
+initialize anymore on hamoa due to EBUSY since upgrading 
+from next-20251114 to next-20251118 or next-20251120:
 
-Jason
+[   11.748781] platform 
+6800000.remoteproc:glink-edge:gpr:service@1:dais: Adding to iommu group 30
+[   11.785864] wsa_macro 6aa0000.codec: using zero-initialized flat 
+cache, this may cause unexpected behavior
+[   11.796964] reset-gpio reset-gpio.0: error -EBUSY: Could not get 
+reset gpios
+[   11.796984] reset-gpio reset-gpio.0: probe with driver reset-gpio 
+failed with error -16
+[   11.894662] reset-gpio reset-gpio.1: error -EBUSY: Could not get 
+reset gpios
+[   11.894676] reset-gpio reset-gpio.1: probe with driver reset-gpio 
+failed with error -16
+[   12.006938] wcd938x_codec audio-codec: bound sdw:2:0:0217:010d:00:4 
+(ops wcd_sdw_component_ops [snd_soc_wcd_common])
+[   12.006964] wcd938x_codec audio-codec: bound sdw:3:0:0217:010d:00:3 
+(ops wcd_sdw_component_ops [snd_soc_wcd_common])
+[   15.424657] qcom-soundwire 6ab0000.soundwire: qcom_swrm_irq_handler: 
+SWR CMD error, fifo status 0x4e00c00f, flushing fifo
+[   21.994354] qcom-soundwire 6ab0000.soundwire: qcom_swrm_irq_handler: 
+SWR CMD error, fifo status 0xe00c000, flushing fifo
+[   21.996001] qcom-soundwire 6b10000.soundwire: qcom_swrm_irq_handler: 
+SWR CMD error, fifo status 0x4e00c00f, flushing fifo
+[   21.996239] platform sound: deferred probe pending: snd-x1e80100: WSA 
+Playback: codec dai not found
+[   21.996248] soundwire sdw:4:0:0217:0204:00:0: deferred probe pending: 
+wsa884x-codec: Failed to get reset
+[   21.996250] soundwire sdw:4:0:0217:0204:00:1: deferred probe pending: 
+wsa884x-codec: Failed to get reset
+[   21.996251] soundwire sdw:1:0:0217:0204:00:0: deferred probe pending: 
+wsa884x-codec: Failed to get reset
+[   21.996253] soundwire sdw:1:0:0217:0204:00:1: deferred probe pending: 
+wsa884x-codec: Failed to get reset
+
+gpio_shared_proxy, reset_gpio, pinctrl_sm8550_lpass_lpi are all built as 
+modules and were autoloaded fine.
+
+This is wsa884x (not wsa881x nor wsa883x), failing in 
+devm_reset_control_get_optional_shared..
+
+
+Thanks,
+~val
+
