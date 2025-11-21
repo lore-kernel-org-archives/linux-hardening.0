@@ -1,85 +1,127 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12309824BD;
-	Fri, 21 Nov 2025 06:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304E8339B4D;
+	Fri, 21 Nov 2025 07:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763705406; cv=none; b=PZVmnETjQq7EfSKaDC6RjH1pyr8ws2VZ4XB6/h9qA3zTRM8q2z5tVO1QRBpwGHi1iJFk1LdRsJpP+s+q9LNg9S3AH9lQCs/GG8zR8EAwmSW7ocnN3/W0vxsUwhom/Ulh6hVie1CeMskMQbTai/hdMuUwYYv/dTM9fhP3RY2FXoI=
+	t=1763710929; cv=none; b=u3jLKwWlKIUDqsiiQr672vfIiteEprNxmFtPeJXcQMHquCUyTpC7SHT5Sj2tX7UIgwP9ufdlWZvRjsofByKthMrdICh/t/txqQ/kZQz/DjqizFU60j1NeWRKoBsmzpIzinANSX3vTKlrxRrturLRrxRIIlBFs2rel6CODhnl0us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763705406; c=relaxed/simple;
-	bh=cVvMv9J7erBcRp6kA5IJc0Jgik/aMRU6KiRRVIGq3tk=;
-	h=From:To:CC:Subject:In-Reply-To:References:Message-ID:Date:
-	 MIME-Version:Content-Type; b=nhMb2uT7t/2Hz6vrnL6H8VSscNu0Fzdf2fhE611qJYEWXOkGqQQKTlXW6Vm5MiVITUW1HpgDHBfRivutvfpWP4tw/rWAwZr4pORtj+vQ0pZz1h/NFrJzzi8yX3EV6pZxwzQAeQKe3QzR5bCjfrnRZzJkp5+Pr5L3BYhrGyG8eco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=Hqik/Qvc; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1763710929; c=relaxed/simple;
+	bh=O/owrQ7LTAA9ZbRZu64BC64XoYmRo+uhZTzeo+Ew2jc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VqfAKVNQn6zUXKv+zTzr13JkffqvcsCDPWxFbaAtUgdesYHo+4ZvhD0vS+JfUmuofXGA42X3IU43gJVv7vhV5lwKvGac2txH/SvRZIGk8pi+usr4d+IdRilpUTVjBrzHf2iG3Ve7hm7JM038HxwUBwfxawpk7tCOyUQQ8Ep2BHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OCp8Vjg5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="Hqik/Qvc"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 5AL69uCT23039169, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1763705396; bh=WwluALrFamw11xO/dtpTJb5AgQu1/DEMiz2XN2kzNP0=;
-	h=From:To:CC:Subject:In-Reply-To:References:Message-ID:Date:
-	 MIME-Version:Content-Type;
-	b=Hqik/QvcchOS5F9486M4AVfHpkdQmqAZOuKtVmPOQU0zvLzocYHHIBAK2y9MC3O6R
-	 NBYZfFwdagcAF2GIMoYr98TzLI2pIJmpObUj5Gx+yEX9blecvzCHOiGJR2G6Z/e53h
-	 YBCSwCJiptwG8k744M1VT/ndLR5Siu0v9fLorIB2KZy9RmJaEMsFcKtJGS5oggcp2x
-	 vYCxLejVC3Y0rZsIFShD4DkLrVsDJkmscX7q7kOg13NhsaZ5qdo9tvBG9+EohZ6PIf
-	 U6tMPTap9Ral7GeXNiVyg6mMaKODxUYVm5StidvnYQVRVSNCNxOqQhxuSCxXMVWGwS
-	 bFshTtDesHLJA==
-Received: from mail.realtek.com (rtkexhmbs03.realtek.com.tw[10.21.1.53])
-	by rtits2.realtek.com.tw (8.15.2/3.21/5.94) with ESMTPS id 5AL69uCT23039169
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Nov 2025 14:09:56 +0800
-Received: from RTKEXHMBS03.realtek.com.tw (10.21.1.53) by
- RTKEXHMBS03.realtek.com.tw (10.21.1.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.27; Fri, 21 Nov 2025 14:09:56 +0800
-Received: from [127.0.1.1] (172.21.69.94) by RTKEXHMBS03.realtek.com.tw
- (10.21.1.53) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.27 via Frontend
- Transport; Fri, 21 Nov 2025 14:09:51 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jes Sorensen
-	<Jes.Sorensen@gmail.com>
-CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Gustavo
- A. R. Silva" <gustavoars@kernel.org>,
-        <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH][next] wifi: rtl8xxxu: Avoid -Wflex-array-member-not-at-end warnings
-In-Reply-To: <aR2I9Sere0W-4VZz@kspp>
-References: <aR2I9Sere0W-4VZz@kspp>
-Message-ID: <379c0915-4355-4ca4-b563-e62352528d1a@RTKEXHMBS03.realtek.com.tw>
-Date: Fri, 21 Nov 2025 14:09:51 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OCp8Vjg5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F4DC4CEF1;
+	Fri, 21 Nov 2025 07:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763710928;
+	bh=O/owrQ7LTAA9ZbRZu64BC64XoYmRo+uhZTzeo+Ew2jc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OCp8Vjg5oImfKWfN4GXv7kmUMrNS5krBORtVRTmwcB4DOZvoX+/g/t4vr9ZWu6UJl
+	 1Vj7sFNlUll1T9YUQc4xpzO6PKziNve8YmQzv8+oTDniJ8ihFor/4t6HDeETH7XPnh
+	 0qzUx+skWQwrxymzZd4yqSdRZyo5Qm9O91YykG/j5f61W+s9sbvi1j4nNmvR6DSrSr
+	 IkeXOC0kXEpJjmiSHsc4BSNizwXT4L6AL6eRN87ViuHkHSr6r++BESWVogPdAjx1dI
+	 qCWxiIBByOU5w/PZ6VKwrk97r6+SckIe4Pi/3ecdSozDC1fXrYtDiogYDbOS5uXIBj
+	 XbOkJYPROPYqA==
+Date: Fri, 21 Nov 2025 09:42:03 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Alex Williamson <alex@shazbot.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <skolothumtho@nvidia.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, iommu@lists.linux.dev,
+	linux-mm@kvack.org, linux-doc@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>
+Subject: Re: [PATCH v9 10/11] vfio/pci: Add dma-buf export support for MMIO
+ regions
+Message-ID: <20251121074203.GX18335@unreal>
+References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
+ <20251120-dmabuf-vfio-v9-10-d7f71607f371@nvidia.com>
+ <20251120170413.050ccbb5.alex@shazbot.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251120170413.050ccbb5.alex@shazbot.org>
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
-
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
+On Thu, Nov 20, 2025 at 05:04:13PM -0700, Alex Williamson wrote:
+> On Thu, 20 Nov 2025 11:28:29 +0200
+> Leon Romanovsky <leon@kernel.org> wrote:
+> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> > index 142b84b3f225..51a3bcc26f8b 100644
+> > --- a/drivers/vfio/pci/vfio_pci_core.c
+> > +++ b/drivers/vfio/pci/vfio_pci_core.c
+> ...
+> > @@ -2487,8 +2500,11 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
+> >  
+> >  err_undo:
+> >  	list_for_each_entry_from_reverse(vdev, &dev_set->device_list,
+> > -					 vdev.dev_set_list)
+> > +					 vdev.dev_set_list) {
+> > +		if (__vfio_pci_memory_enabled(vdev))
+> > +			vfio_pci_dma_buf_move(vdev, false);
+> >  		up_write(&vdev->memory_lock);
+> > +	}
 > 
-> Move the conflicting declarations to the end of the corresponding
-> structures. Notice that `struct urb` is a flexible structure, this
-> is a structure that contains a flexible-array member.
+> I ran into a bug here.  In the hot reset path we can have dev_sets
+> where one or more devices are not opened by the user.  The vconfig
+> buffer for the device is established on open.  However:
 > 
-> With these changes fix the following warnings:
+> bool __vfio_pci_memory_enabled(struct vfio_pci_core_device *vdev)
+> {
+>         struct pci_dev *pdev = vdev->pdev;
+>         u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
+> 	...
 > 
-> 9 drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h:1951:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 9 drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h:1945:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> Leads to a NULL pointer dereference.
 > 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> I think the most straightforward fix is simply to test the open_count
+> on the vfio_device, which is also protected by the dev_set->lock that
+> we already hold here:
+> 
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -2501,7 +2501,7 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
+>  err_undo:
+>         list_for_each_entry_from_reverse(vdev, &dev_set->device_list,
+>                                          vdev.dev_set_list) {
+> -               if (__vfio_pci_memory_enabled(vdev))
+> +               if (vdev->vdev.open_count && __vfio_pci_memory_enabled(vdev))
+>                         vfio_pci_dma_buf_move(vdev, false);
+>                 up_write(&vdev->memory_lock);
+>         }
+> 
+> Any other suggestions?  This should be the only reset path with this
+> nuance of affecting non-opened devices.  Thanks,
 
-1 patch(es) applied to rtw-next branch of rtw.git, thanks.
+It seems right to me.
 
-68dc70ca4dd4 wifi: rtl8xxxu: Avoid -Wflex-array-member-not-at-end warnings
+Thanks
 
----
-https://github.com/pkshih/rtw.git
-
+> 
+> Alex
