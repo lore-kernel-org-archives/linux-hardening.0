@@ -1,70 +1,45 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C3E2737F4;
-	Fri, 21 Nov 2025 22:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D74413774D;
+	Fri, 21 Nov 2025 22:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763763416; cv=none; b=aZr7qKfyAJzwInliofBkHXNZNESRPfw/SN1S+9yjQqSu8jy+P6ovNezg+WwymgRzwqfGmymNIU4ZNePGzRjoKSiQ62Oexdx1Lf2xYKnKPASq+OMqS708pXU3Dzki14kFIc50korRe+KkYBPw2cz8QrRTl/UMEuB/zkybEW7utc8=
+	t=1763763715; cv=none; b=FJ5ffMDIRSWsV7fgmyKqaeywyEoeeK0cHlQM4hblZG8c6jTAN3M1C48aFzORdAeLB1m5oR6s0gAhzeTllIQE8nH3fZKyi2CkcvSwDmLeznvQ7etCpDapICCW2HYgRWefy47P78XG9akyi0XO7TuUPLJtudE1Xe7Od9ePX3sGplg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763763416; c=relaxed/simple;
-	bh=IZWfBJDaHCe7l541lCMHfRRvdDcJ9cS7vOHixV9h5tc=;
+	s=arc-20240116; t=1763763715; c=relaxed/simple;
+	bh=nrKEAfJFM8tB3jN82XCz2XCaShxXuMRsaSt2iH3dNXM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jv0c5weW4w/D0iXKMsjbpyMqkpZaMIY7lf1cvUYOt0zYtmd1IfNe3PJtNXqig8c0Bq3FLrymImRxFNPALxCxBbDVVsmAu7P27ITk+XPcZkln5seHzaJ6SfZezPfiljb3WcbDjQfedv9uYOi2VfeMceWlAS7eibuW583Nc5qyeC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cGOKcdcl; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=eJdJCt8LualBLcm/Xz5kqiHoOAqYRMPmM0oPhAxls0riwgYXY8DBan2A1b0KZd1fJu3X4vNgDjIn9hIJrAhnDkbpdWysCl9JlZzmTkwnUZHte0ReUupOyvEYIiifem3GQEkD9pewAyRaSTd/71Rkxni8O/MoV9ZlCQkofU/4H/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwercHtx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cGOKcdcl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763763416; x=1795299416;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IZWfBJDaHCe7l541lCMHfRRvdDcJ9cS7vOHixV9h5tc=;
-  b=cGOKcdcl1fINBPXtRNWJgmOgmvIKEzbEJqHFJ7j1wxJdJ5GKS4Nu8w4l
-   cXosAIjUkYQKyQy+kiGPFlAxSXW4qCztbqbYHsPgHuwbn326L3RENMDks
-   Q8VLWJSy/kyfqXKNqD9eCHg5LSLWOJPy0W4ezN4U/xOxo+15/Us80d+CP
-   WCuxG/s25rX2VyZ894/H+2wiJqk8esaHCghfXOsEPt9viiXaztmQ3TpuI
-   MxTCv4ONwnG6W+p/NKfgsB8X2nF2NWtLQi65HnYjZtb3UHDm9SqTuOkv0
-   XDf7UmhawXIZn0971iVglxGeqzyAwBGaN8UWjwAscVuOezF/X/xJCxYot
-   w==;
-X-CSE-ConnectionGUID: s3ouSAZnSwq56Od/KUKvyg==
-X-CSE-MsgGUID: UeiYcK7cS3azNkFU46pZZA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11620"; a="88515029"
-X-IronPort-AV: E=Sophos;i="6.20,216,1758610800"; 
-   d="scan'208";a="88515029"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 14:16:55 -0800
-X-CSE-ConnectionGUID: TOehty9pSyCfviE3bYiNSw==
-X-CSE-MsgGUID: BIxr2Fa8QbCS5hbxVrvkJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,216,1758610800"; 
-   d="scan'208";a="192265938"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 21 Nov 2025 14:16:49 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vMZQs-0006vH-32;
-	Fri, 21 Nov 2025 22:16:46 +0000
-Date: Sat, 22 Nov 2025 06:16:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Eugen Hristev <eugen.hristev@linaro.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	tglx@linutronix.de, andersson@kernel.org, pmladek@suse.com,
-	rdunlap@infradead.org, corbet@lwn.net, david@redhat.com,
-	mhocko@suse.com
-Cc: oe-kbuild-all@lists.linux.dev, tudor.ambarus@linaro.org,
-	mukesh.ojha@oss.qualcomm.com, linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org, jonechou@google.com,
-	rostedt@goodmis.org, linux-doc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org,
-	Eugen Hristev <eugen.hristev@linaro.org>
-Subject: Re: [PATCH 12/26] kernel/configs: Register dynamic information into
- meminspect
-Message-ID: <202511220511.nMJSuw8H-lkp@intel.com>
-References: <20251119154427.1033475-13-eugen.hristev@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwercHtx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45E74C4CEF1;
+	Fri, 21 Nov 2025 22:21:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763763715;
+	bh=nrKEAfJFM8tB3jN82XCz2XCaShxXuMRsaSt2iH3dNXM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iwercHtxkp8wbdYm+qO4qMffpPJS8WWnMGSqyqjimFHHtIyONXHIzvWZj4db48Thh
+	 fomr0Lj4KJn8g5W8bTMqu84XJwd64tQUeB910mIoIYqW6zZAK/AWC+cWNXsWvoZWGF
+	 MNp6K6xvlOKRu5jfIo4D/7vhm6nYTs9wUibhwnndgKe78zZ92MfcgiG1hIDlqBFzFD
+	 dly/XuGwMfYsZkvgrrx6nd2hia+THec3Cv0sOFms+DTINhr7SOn7B1DMdQXPNAzSwI
+	 9Du73ubddeQ3HnXtPdS2OQR9sYfcEfQ/ao8Ahb/yK5TczNImWD7z9o8ViYxvIqZavl
+	 Rw04V7I3Y52Zg==
+Date: Fri, 21 Nov 2025 15:21:50 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Tamir Duberstein <tamird@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] kbuild: Enable GCC diagnostic context for
+ value-tracking warnings
+Message-ID: <20251121222150.GB1674270@ax162>
+References: <20251121184342.it.626-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -73,57 +48,68 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251119154427.1033475-13-eugen.hristev@linaro.org>
+In-Reply-To: <20251121184342.it.626-kees@kernel.org>
 
-Hi Eugen,
+On Fri, Nov 21, 2025 at 10:43:48AM -0800, Kees Cook wrote:
+> Enable GCC 16's coming "-fdiagnostics-show-context=N" option[1] to
+> provide enhanced diagnostic information for value-tracking warnings,
+> which displays the control flow chain leading to the diagnostic. This
+> covers our existing use of -Wrestrict and -Wstringop-overread, and
+> gets us closer to enabling -Warray-bounds, -Wstringop-overflow, and
+> -Wstringop-truncation, so we can track the rationale for the warning,
+> letting us more quickly identify actual issues vs what have looked in
+> the past like false positives. Fixes based on this work have already
+> been landing, e.g.:
+> 
+>   4a6f18f28627 ("net/mlx4_core: Avoid impossible mlx4_db_alloc() order value")
+>   8a39f1c870e9 ("ovl: Check for NULL d_inode() in ovl_dentry_upper()")
+>   e5f7e4e0a445 ("drm/amdgpu/atom: Work around vbios NULL offset false positive")
+> 
+> The context depth ("=N") provides the immediate decision path that led
+> to the problematic code location, showing conditional checks and branch
+> decisions that caused the warning. This will help us understand why
+> GCC's value-tracking analysis triggered the warning and makes it easier
+> to determine whether warnings are legitimate issues or false positives.
+> 
+> For example, an array bounds warning will now show the conditional
+> statements (like "if (i >= 4)") that established the out-of-bounds access
+> range, directly connecting the control flow to the warning location.
+> This is particularly valuable when GCC's interprocedural analysis can
+> generate warnings that are difficult to understand without seeing the
+> inferred control flow.
+> 
+> While my testing has shown that "=1" reports enough for finding
+> the origin of most bounds issues, I have used "=2" here just to be
+> conservative. Build time measurements with this option off, =1, and =2
+> are all with noise of each other, so there seems to be no harm in "turning
+> it up". If we need to, we can make this value configurable in the future.
+> 
+> Link: https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=6faa3cfe60ff9769d1bebfffdd2c7325217d7389 [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
 
-kernel test robot noticed the following build errors:
+Thanks for the updates!
 
-[auto build test ERROR on rppt-memblock/fixes]
-[also build test ERROR on linus/master v6.18-rc6]
-[cannot apply to akpm-mm/mm-everything rppt-memblock/for-next next-20251121]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Eugen-Hristev/kernel-Introduce-meminspect/20251119-235912
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git fixes
-patch link:    https://lore.kernel.org/r/20251119154427.1033475-13-eugen.hristev%40linaro.org
-patch subject: [PATCH 12/26] kernel/configs: Register dynamic information into meminspect
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20251122/202511220511.nMJSuw8H-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251122/202511220511.nMJSuw8H-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511220511.nMJSuw8H-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from kernel/configs.c:18:
-   kernel/configs.c: In function 'ikconfig_init':
->> include/linux/meminspect.h:144:39: error: implicit declaration of function 'virt_to_phys'; did you mean 'virt_to_page'? [-Wimplicit-function-declaration]
-     144 |         meminspect_register_id_pa(id, virt_to_phys(va), size, MEMINSPECT_TYPE_REGULAR)
-         |                                       ^~~~~~~~~~~~
-   include/linux/meminspect.h:170:17: note: in expansion of macro 'meminspect_register_id_va'
-     170 |                 meminspect_register_id_va(__VA_ARGS__); \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~
-   kernel/configs.c:69:9: note: in expansion of macro 'meminspect_lock_register_id_va'
-      69 |         meminspect_lock_register_id_va(MEMINSPECT_ID_CONFIG,
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +144 include/linux/meminspect.h
-
-184ddf27f54a0b Eugen Hristev 2025-11-19  139  
-184ddf27f54a0b Eugen Hristev 2025-11-19  140  #define meminspect_register_pa(...) \
-184ddf27f54a0b Eugen Hristev 2025-11-19  141  	meminspect_register_id_pa(MEMINSPECT_ID_DYNAMIC, __VA_ARGS__, MEMINSPECT_TYPE_REGULAR)
-184ddf27f54a0b Eugen Hristev 2025-11-19  142  
-184ddf27f54a0b Eugen Hristev 2025-11-19  143  #define meminspect_register_id_va(id, va, size) \
-184ddf27f54a0b Eugen Hristev 2025-11-19 @144  	meminspect_register_id_pa(id, virt_to_phys(va), size, MEMINSPECT_TYPE_REGULAR)
-184ddf27f54a0b Eugen Hristev 2025-11-19  145  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  Makefile | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Makefile b/Makefile
+> index d14824792227..d97452441cd0 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -940,6 +940,9 @@ KBUILD_CFLAGS += $(call cc-option,-fzero-init-padding-bits=all)
+>  # for the randomize_kstack_offset feature. Disable it for all compilers.
+>  KBUILD_CFLAGS	+= $(call cc-option, -fno-stack-clash-protection)
+>  
+> +# Get details on warnings generated due to GCC value tracking.
+> +KBUILD_CFLAGS	+= $(call cc-option, -fdiagnostics-show-context=2)
+> +
+>  # Clear used registers at func exit (to reduce data lifetime and ROP gadgets).
+>  ifdef CONFIG_ZERO_CALL_USED_REGS
+>  KBUILD_CFLAGS	+= -fzero-call-used-regs=used-gpr
+> -- 
+> 2.34.1
+> 
