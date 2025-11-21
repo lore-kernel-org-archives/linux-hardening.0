@@ -1,127 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304E8339B4D;
-	Fri, 21 Nov 2025 07:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610DA33BBAA
+	for <linux-hardening@vger.kernel.org>; Fri, 21 Nov 2025 09:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763710929; cv=none; b=u3jLKwWlKIUDqsiiQr672vfIiteEprNxmFtPeJXcQMHquCUyTpC7SHT5Sj2tX7UIgwP9ufdlWZvRjsofByKthMrdICh/t/txqQ/kZQz/DjqizFU60j1NeWRKoBsmzpIzinANSX3vTKlrxRrturLRrxRIIlBFs2rel6CODhnl0us=
+	t=1763715837; cv=none; b=K37VvahdKKKzG8J5kMiPz7EG+st4/ZTPm5k6q/q8S2ftgJktJZmkd9FyIeYf6zEQ99x07qtKFovhqqGtXit2N7LQkl/12RU4txar1XXIFMpemSCtCRb7hNnL/TSncwlD8Atkaphf2NpnoAlWXmVsJIgrIyQXneZog98GyTqdHcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763710929; c=relaxed/simple;
-	bh=O/owrQ7LTAA9ZbRZu64BC64XoYmRo+uhZTzeo+Ew2jc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VqfAKVNQn6zUXKv+zTzr13JkffqvcsCDPWxFbaAtUgdesYHo+4ZvhD0vS+JfUmuofXGA42X3IU43gJVv7vhV5lwKvGac2txH/SvRZIGk8pi+usr4d+IdRilpUTVjBrzHf2iG3Ve7hm7JM038HxwUBwfxawpk7tCOyUQQ8Ep2BHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OCp8Vjg5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763715837; c=relaxed/simple;
+	bh=7oJ3FzW76jvcvPZYZdFnXMjjUYeOTlfsS6uSULymDYU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YXq+YA5xkCWavEuwCJ1MjMWqewjywI865XVql/rJb0G++oWglQMNhMRgeYU1Ly///ISfCIGzN2kDWhV0t1eyYDfxf51tPyATQJ/jNdQoaadiPf1vOoYc2cn21J6oiiraHVSjihVfZHNyyD93PZqR76rM5k9FttWsCWHb+Cv15jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=crNDnz7J; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OCp8Vjg5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F4DC4CEF1;
-	Fri, 21 Nov 2025 07:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763710928;
-	bh=O/owrQ7LTAA9ZbRZu64BC64XoYmRo+uhZTzeo+Ew2jc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OCp8Vjg5oImfKWfN4GXv7kmUMrNS5krBORtVRTmwcB4DOZvoX+/g/t4vr9ZWu6UJl
-	 1Vj7sFNlUll1T9YUQc4xpzO6PKziNve8YmQzv8+oTDniJ8ihFor/4t6HDeETH7XPnh
-	 0qzUx+skWQwrxymzZd4yqSdRZyo5Qm9O91YykG/j5f61W+s9sbvi1j4nNmvR6DSrSr
-	 IkeXOC0kXEpJjmiSHsc4BSNizwXT4L6AL6eRN87ViuHkHSr6r++BESWVogPdAjx1dI
-	 qCWxiIBByOU5w/PZ6VKwrk97r6+SckIe4Pi/3ecdSozDC1fXrYtDiogYDbOS5uXIBj
-	 XbOkJYPROPYqA==
-Date: Fri, 21 Nov 2025 09:42:03 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Alex Williamson <alex@shazbot.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>
-Subject: Re: [PATCH v9 10/11] vfio/pci: Add dma-buf export support for MMIO
- regions
-Message-ID: <20251121074203.GX18335@unreal>
-References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
- <20251120-dmabuf-vfio-v9-10-d7f71607f371@nvidia.com>
- <20251120170413.050ccbb5.alex@shazbot.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="crNDnz7J"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5959b2f3fc9so1739218e87.2
+        for <linux-hardening@vger.kernel.org>; Fri, 21 Nov 2025 01:03:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763715833; x=1764320633; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qcWFlcuSs7Y0eO4oq2DsaroJj7DisvwmuRZnugA2UKI=;
+        b=crNDnz7JsKDrVf+c9ML/Yi+wl+7ATQVsTeDb7bd1ZUZ70TcLTwxSohtrwcY8zcZDE7
+         ebiP3Uph5U4pDL9jBv9CM9hmLkIqU+MRGi+0jwvV3MD52m6d09loKJvpDu7iZNQqNFZw
+         UnE55uyAv8afXzudxDdS0IGR+MROfaDgUDAJHZYHYOIKlh5sk1+KVSfoDyfiXAStHGkC
+         86niqR/buV09FsAgkYyVa2nRx5NqXW049/otL7pzrwneiSXiNCDwdSdEm7D5x0uo48T4
+         YLxJIvgfOON7gtGahs584M6LoOsUB2OrS6zD1Qg2YtV58G30k5B3aIujKzHFKxjWIIdH
+         v2Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763715833; x=1764320633;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=qcWFlcuSs7Y0eO4oq2DsaroJj7DisvwmuRZnugA2UKI=;
+        b=cggFnd2zNgevCA6kUM61aXb3QQf40vsPYilq+7yYyp+Br1uk6h2adRKiEViqM3ZOfh
+         DdN+3bC4tjdqabIWbCBAFJoaYlRCxantWKUSR8krnsk762vltJKiiC9iJZMSaQEq4VLa
+         JcLNFY6XC6N8uBznwKFh41H/a9dRS+n/gB1F/O+ii/px6FJOTIjtOmCFhcw98hEFMMVt
+         gFYLQWnYodeytaSbO8RfvcqF1PVSohaLPFWeizd7Sv/1W9FtIy1B3pJv84y8bgY5m+Vk
+         Ho4+fW7cVlhat4TrnFrjyxS2yrYom20uyOx7VkS37cmxRIOX5qkrFU64ET4DCZhikDjl
+         AJaA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+Nu9+8n+Zco3vPyceUwjjmqW5XHExo6PCVl/4jmiT3h/nlzhUtCty9gZP0zJ4s4Tlj7FXIiNd8EKOr+pcj28=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1ikaitFi7Kx5/rJLbi/kr6ufcp3k6g8fy5YKfk1Dpfjv1I1jU
+	aTrrWjqzLaIS+Pk5HSflcpVgX6jI6n26ZAu8mFIPakT45rbWhDyW4REhF+cCfJuoJRBtNREyGIC
+	T0akTIJFBg0t7guOQQGF1CWROKRvdejHCqOsdzkk71A==
+X-Gm-Gg: ASbGncsigW59vIGZEmOphleLw9b7HDf2aySpm4Lup2xzprvMuZw6W4rV6d4e1wwSydb
+	G/Wo0eSulDh/gM5p9TzWMWojIOPRKusYyrP1e2v0vWs2A4rOsBAVgvvCE0Ur5uj65JvPpiiHGfI
+	DYF3JDwHcqLoaDdg/QHpxnw+0g5qnrIzYrQWdcz0nKx92ltpl5OqvD4OJS3ESVHQUP2mNnc+OIV
+	/1h+t14bA+UfVVeOpcwqZojjdlhSuNuoZEN4RO1amVPiyFRO9jXbL/8uCp//Nh+ATdOYfR1nvxy
+	LRRNtl4bMV+8JOhWu3mJXSb1yuc=
+X-Google-Smtp-Source: AGHT+IG0xMLdX41Lvo7vBm08ZV8ZEpQ5JhaXD6X3/W4zoN34NhHz8H25fTpuCQYyNb+ut5xnYF/JFxp9/xuV++nbU+8=
+X-Received: by 2002:a05:6512:e8c:b0:594:2f72:2f7b with SMTP id
+ 2adb3069b0e04-596a3e9fd96mr603564e87.6.1763715833160; Fri, 21 Nov 2025
+ 01:03:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251120170413.050ccbb5.alex@shazbot.org>
+References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org> <3b5d9df5-934d-4591-8827-6c9573a6f7ba@packett.cool>
+In-Reply-To: <3b5d9df5-934d-4591-8827-6c9573a6f7ba@packett.cool>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 21 Nov 2025 10:03:40 +0100
+X-Gm-Features: AWmQ_bkRtfIm-ZUN8rNvHIz8drG7ooSNLpBN4-3cE0G66VIlgSyBd_sHX8YgQAA
+Message-ID: <CAMRc=McHCG8N0zeVUUvYF+rHqBrBKe52o+pf+Hjp5dnG3+NmjA@mail.gmail.com>
+Subject: Re: [PATCH v4 00/10] gpio: improve support for shared GPIOs
+To: Val Packett <val@packett.cool>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 20, 2025 at 05:04:13PM -0700, Alex Williamson wrote:
-> On Thu, 20 Nov 2025 11:28:29 +0200
-> Leon Romanovsky <leon@kernel.org> wrote:
-> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> > index 142b84b3f225..51a3bcc26f8b 100644
-> > --- a/drivers/vfio/pci/vfio_pci_core.c
-> > +++ b/drivers/vfio/pci/vfio_pci_core.c
-> ...
-> > @@ -2487,8 +2500,11 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
-> >  
-> >  err_undo:
-> >  	list_for_each_entry_from_reverse(vdev, &dev_set->device_list,
-> > -					 vdev.dev_set_list)
-> > +					 vdev.dev_set_list) {
-> > +		if (__vfio_pci_memory_enabled(vdev))
-> > +			vfio_pci_dma_buf_move(vdev, false);
-> >  		up_write(&vdev->memory_lock);
-> > +	}
-> 
-> I ran into a bug here.  In the hot reset path we can have dev_sets
-> where one or more devices are not opened by the user.  The vconfig
-> buffer for the device is established on open.  However:
-> 
-> bool __vfio_pci_memory_enabled(struct vfio_pci_core_device *vdev)
-> {
->         struct pci_dev *pdev = vdev->pdev;
->         u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
-> 	...
-> 
-> Leads to a NULL pointer dereference.
-> 
-> I think the most straightforward fix is simply to test the open_count
-> on the vfio_device, which is also protected by the dev_set->lock that
-> we already hold here:
-> 
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -2501,7 +2501,7 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
->  err_undo:
->         list_for_each_entry_from_reverse(vdev, &dev_set->device_list,
->                                          vdev.dev_set_list) {
-> -               if (__vfio_pci_memory_enabled(vdev))
-> +               if (vdev->vdev.open_count && __vfio_pci_memory_enabled(vdev))
->                         vfio_pci_dma_buf_move(vdev, false);
->                 up_write(&vdev->memory_lock);
->         }
-> 
-> Any other suggestions?  This should be the only reset path with this
-> nuance of affecting non-opened devices.  Thanks,
+On Fri, Nov 21, 2025 at 1:28=E2=80=AFAM Val Packett <val@packett.cool> wrot=
+e:
+>
+> Hi,
+>
+> On 11/12/25 10:55 AM, Bartosz Golaszewski wrote:
+> > ---
+> > Bartosz Golaszewski (10):
+> >        string: provide strends()
+> >        gpiolib: define GPIOD_FLAG_SHARED
+> >        gpiolib: implement low-level, shared GPIO support
+> >        gpio: shared-proxy: implement the shared GPIO proxy driver
+> >        gpiolib: support shared GPIOs in core subsystem code
+> >        gpio: provide gpiod_is_shared()
+> >        arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
+> >        ASoC: wsa881x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO =
+lookup
+> >        ASoC: wsa883x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO =
+lookup
+> >        regulator: make the subsystem aware of shared GPIOs
+>
+> this seems to actually have caused a regression for me, audio does not
+> initialize anymore on hamoa due to EBUSY since upgrading
+> from next-20251114 to next-20251118 or next-20251120:
+>
 
-It seems right to me.
+Thanks for the heads-up.
 
-Thanks
+> [   11.748781] platform
+> 6800000.remoteproc:glink-edge:gpr:service@1:dais: Adding to iommu group 3=
+0
+> [   11.785864] wsa_macro 6aa0000.codec: using zero-initialized flat
+> cache, this may cause unexpected behavior
+> [   11.796964] reset-gpio reset-gpio.0: error -EBUSY: Could not get
+> reset gpios
+> [   11.796984] reset-gpio reset-gpio.0: probe with driver reset-gpio
+> failed with error -16
+> [   11.894662] reset-gpio reset-gpio.1: error -EBUSY: Could not get
+> reset gpios
+> [   11.894676] reset-gpio reset-gpio.1: probe with driver reset-gpio
+> failed with error -16
 
-> 
-> Alex
+It seems like it's the reset-gpio driver, not shared GPIOLIB path?
+This driver has never used the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag.
+
+> [   12.006938] wcd938x_codec audio-codec: bound sdw:2:0:0217:010d:00:4
+> (ops wcd_sdw_component_ops [snd_soc_wcd_common])
+> [   12.006964] wcd938x_codec audio-codec: bound sdw:3:0:0217:010d:00:3
+> (ops wcd_sdw_component_ops [snd_soc_wcd_common])
+> [   15.424657] qcom-soundwire 6ab0000.soundwire: qcom_swrm_irq_handler:
+> SWR CMD error, fifo status 0x4e00c00f, flushing fifo
+> [   21.994354] qcom-soundwire 6ab0000.soundwire: qcom_swrm_irq_handler:
+> SWR CMD error, fifo status 0xe00c000, flushing fifo
+> [   21.996001] qcom-soundwire 6b10000.soundwire: qcom_swrm_irq_handler:
+> SWR CMD error, fifo status 0x4e00c00f, flushing fifo
+> [   21.996239] platform sound: deferred probe pending: snd-x1e80100: WSA
+> Playback: codec dai not found
+> [   21.996248] soundwire sdw:4:0:0217:0204:00:0: deferred probe pending:
+> wsa884x-codec: Failed to get reset
+> [   21.996250] soundwire sdw:4:0:0217:0204:00:1: deferred probe pending:
+> wsa884x-codec: Failed to get reset
+> [   21.996251] soundwire sdw:1:0:0217:0204:00:0: deferred probe pending:
+> wsa884x-codec: Failed to get reset
+> [   21.996253] soundwire sdw:1:0:0217:0204:00:1: deferred probe pending:
+> wsa884x-codec: Failed to get reset
+>
+> gpio_shared_proxy, reset_gpio, pinctrl_sm8550_lpass_lpi are all built as
+> modules and were autoloaded fine.
+>
+> This is wsa884x (not wsa881x nor wsa883x), failing in
+> devm_reset_control_get_optional_shared..
+>
+
+Can you enable DEBUG_GPIO in menuconfig and post the entire kernel log
+somewhere as well as the output of gpiodetect and gpioinfo after
+booting?
+
+Bartosz
