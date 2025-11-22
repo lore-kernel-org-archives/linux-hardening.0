@@ -1,43 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D6730E830;
-	Fri, 21 Nov 2025 23:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EC42AEE1;
+	Sat, 22 Nov 2025 00:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763767531; cv=none; b=nSvn84ggHV8Qf/XTFbvZ7F6uCCach7ueFjumUMP6JRs81bZU2aUnuzTMSzoxhNTIhKbxFvXdpXIHIN7z/fmstaQDbc6jWeCP6M2McHMXDLtdYhOzPbhX9Ph0Uf38q/+BRqUK3WOEIjfTwcCoMi0ywHvQHOV0T2pii2ngxHca83w=
+	t=1763769907; cv=none; b=qnUjtexUX92S5QI+dPfAOVTOrRQtObOnSizTp0K/Y6HrC5T5k5WWlvhLxLY8dbw7dHFt6T0IwFRzpN74/gtYJnz2raclaZFr5Vgh0z3rQhDvOPjGkaJrYy4wtpjBFFwjoodH1NJsFUDcuCevpVduTDbm5ytiVv8V5WtJtciQA2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763767531; c=relaxed/simple;
-	bh=DeIy4nTOVUhoKGECoJ4Ka0U0L5wQJ/YDvfV1MGby84s=;
+	s=arc-20240116; t=1763769907; c=relaxed/simple;
+	bh=lKk63OBIxTgAZL2BQA9bHbccK1TAmQ6Nota8WFvpBkg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LKRFIERujsJ28Ea0WhREZmpcEQjgJZz2OiBApbHcY9R1BGAb/X4zTsBv56hbFOL2IPnX2KTUQSPFYAGW0GYWZR8uTcUkfFfkwavYQytwZWfsTqoGwuSO8Nw0W1sM5QGBlhlXt+9tS4SBpVMUILkWOMCn7UadResIrPSGm6oMVYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJMY0mRr; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MnVjWz4bd1MD8ryOsqEO6tEbAny7EwmnlAH+Sr/o7amq2456er66QO/D3agsFmhtU1VS6CDAzuGxSeScx5TKcn7lmM6SIUWSHzyokjYbPdwDfOUNR8R4fyt3fPjB+kqUix6n+DFm5ow2TzmhTZvt6sdrD4eyIaS6phK6UaY9/M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lo+1hFAx; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJMY0mRr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0A1EC4CEF1;
-	Fri, 21 Nov 2025 23:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763767531;
-	bh=DeIy4nTOVUhoKGECoJ4Ka0U0L5wQJ/YDvfV1MGby84s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RJMY0mRrfXv1zBwavr/5I9GFXHU6C/ewTO0LkeM5fO3podLvHhtPojXww990A3VrG
-	 BrCT2bF25VAaIlmTi1wIx59QcKZbUKbMK6BBVSdYmSQMErSPZn0EIqR2k5+Z7TEykh
-	 hRx6Qkl3NwoPKe5c0nCIAYvJBoZ2TNNABvcQEORLPFimYuRhmN+70I/wbGCX2iOi57
-	 7i+aDatAqXZIy7rNvXrC++ZW6nPWBwH5yiND5RJgfYC+uqzegDR4OfP7nIRlbKXplp
-	 x1+k3mIlpS/Ojmdn/tA3xwPUb0/wo6ii1G5PgV10XjP7oqhzuk77JHBSrKERDC382M
-	 nOF5Z/N9C8EWA==
-Date: Fri, 21 Nov 2025 15:25:30 -0800
-From: Kees Cook <kees@kernel.org>
-To: Bill Wendling <morbo@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 0/2] Add __counted_by_ptr macro
-Message-ID: <202511211517.539CD58@keescook>
-References: <20251121193957.1655580-1-morbo@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lo+1hFAx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763769906; x=1795305906;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lKk63OBIxTgAZL2BQA9bHbccK1TAmQ6Nota8WFvpBkg=;
+  b=lo+1hFAxH06+sytQZxKbwsDz0D4+BSsgFqQn+9GNccChG+4jv4Mn5OHt
+   fK/gvRxyVI13LnIYqns1QtNh87sxMgAj3pfoQHY6JMRP8QQVEuiy7hb0P
+   05ZCLzPmyYifqbRErYklia0iA4h5QCek86ussYMTzmrKDwBQ4kgBNiyBF
+   +ZbUF+0Ldp70eI9mPN57stORcg1exZ+xWSjZnxHPRI9tXkVy3exhF5yJV
+   Mp72Yv03CgCCjJWcug/Yi+SJylt1vYGLEoqb7U5tm6T5JIXpDrIGGC2kW
+   TRp+QsrlFIk6I3ZS2EzUf1TbAjec22yRtgbtnefe8BNUsnjmWhfFWEUeD
+   A==;
+X-CSE-ConnectionGUID: eXdvH3xBROqRksv7Ny2OQA==
+X-CSE-MsgGUID: IUk3NfPXSqGA+N/kFaThdQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11620"; a="76980187"
+X-IronPort-AV: E=Sophos;i="6.20,217,1758610800"; 
+   d="scan'208";a="76980187"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 16:05:04 -0800
+X-CSE-ConnectionGUID: 0m1MqlNQSeC7xJO5WxDOzw==
+X-CSE-MsgGUID: PhKw3WinTWa2mGSgArHQNA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,217,1758610800"; 
+   d="scan'208";a="196760418"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 21 Nov 2025 16:04:59 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vMb7Y-0006zb-2u;
+	Sat, 22 Nov 2025 00:04:56 +0000
+Date: Sat, 22 Nov 2025 08:04:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Eugen Hristev <eugen.hristev@linaro.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	tglx@linutronix.de, andersson@kernel.org, pmladek@suse.com,
+	rdunlap@infradead.org, corbet@lwn.net, david@redhat.com,
+	mhocko@suse.com
+Cc: oe-kbuild-all@lists.linux.dev, tudor.ambarus@linaro.org,
+	mukesh.ojha@oss.qualcomm.com, linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org, jonechou@google.com,
+	rostedt@goodmis.org, linux-doc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org,
+	Eugen Hristev <eugen.hristev@linaro.org>
+Subject: Re: [PATCH 01/26] kernel: Introduce meminspect
+Message-ID: <202511220712.LEcYEMJx-lkp@intel.com>
+References: <20251119154427.1033475-2-eugen.hristev@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,29 +72,41 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251121193957.1655580-1-morbo@google.com>
+In-Reply-To: <20251119154427.1033475-2-eugen.hristev@linaro.org>
 
-On Fri, Nov 21, 2025 at 07:39:42PM +0000, Bill Wendling wrote:
-> These patches add the __counted_by_ptr macro and then uses it in
-> mm/memblock.h. The name of the __counted_by_ptr attribute is the same as
-> __counted_by, but two different macros are needed, because of feature
-> skew in GCC and clang. Once the minmum versions of the compilers support
-> 'counted_by' on both flexible array members and pointers in structs,
-> this macro will become obsolete.
-> 
-> Bill Wendling (2):
->   Compiler Attributes: Add __counted_by_ptr macro
->   memblock: annotate struct memblock_type with __counted_by_ptr
+Hi Eugen,
 
-Based on this[1] thread, I think we'll need to wait for GCC and Clang to
-release with the "void *" support first, and then push the counted_by up
-to that version to cover flexible arrays, pointers, and void *.
+kernel test robot noticed the following build warnings:
 
--Kees
+[auto build test WARNING on rppt-memblock/fixes]
+[also build test WARNING on linus/master v6.18-rc6]
+[cannot apply to akpm-mm/mm-everything rppt-memblock/for-next next-20251121]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-[1] https://lore.kernel.org/lkml/20251021095447.GL3245006@noisy.programming.kicks-ass.net/
+url:    https://github.com/intel-lab-lkp/linux/commits/Eugen-Hristev/kernel-Introduce-meminspect/20251119-235912
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git fixes
+patch link:    https://lore.kernel.org/r/20251119154427.1033475-2-eugen.hristev%40linaro.org
+patch subject: [PATCH 01/26] kernel: Introduce meminspect
+config: nios2-randconfig-r131-20251122 (https://download.01.org/0day-ci/archive/20251122/202511220712.LEcYEMJx-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251122/202511220712.LEcYEMJx-lkp@intel.com/reproduce)
 
--Kees
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511220712.LEcYEMJx-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> kernel/meminspect/meminspect.c:15:1: sparse: sparse: symbol 'meminspect_notifier_list' was not declared. Should it be static?
+
+vim +/meminspect_notifier_list +15 kernel/meminspect/meminspect.c
+
+    14	
+  > 15	ATOMIC_NOTIFIER_HEAD(meminspect_notifier_list);
+    16	
 
 -- 
-Kees Cook
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
