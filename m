@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7585E218AAD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DC129D28F;
 	Sat, 22 Nov 2025 01:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763775785; cv=none; b=hhvPjakf5Yg/l74ONpsMaXWmlNQ1VEtibSws5SNeH40iazqNWGpnp0GdeOHADHA/46gJZVQ1WE2shyRG/XRuFTGWCOo0k0hAdPoT8EUPPQla1bFkQbAJpKI1BuHzNSE1UdH7MXYkvJQfTmdzVjB1LkJY7qWsUdmRQUMZ8dSFbsw=
+	t=1763775785; cv=none; b=egQpV0FR55Wemfof2xbRWjFtzKiEoS5k2ekLDBJnzrpsAfxBuejCHoswX8Ldc2XsN7/nvOnR/LQTgl8eegwbQUCVdOSu0d3fZvo8l1v3EAnIMFw5dvsSqGfBoU74tLMKfpXkUyiCRunhV3XEIqv3vEZW8cNCtPhAQcpXR26hyb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1763775785; c=relaxed/simple;
-	bh=JxuvIO3718cS+Dvv5mnYaQfpRZs89bnBJgRU4fqHVhg=;
+	bh=+af9Qrl81jzQeC8vw0DiKskxnHYHklRLaViyotNOrs8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p1dEjtWwPA2gyCjz0W/gJIFjJb5MZAZdoBkt9j+41pSAgUeZgeDqQtfRUH7uDexAWPWj9xNfqO3UMZatRN8U7TOllQkeGkGruFpK8jqzWvIvM4s52WUCLy+Do6wF1T3TNX/LVv9lmG2xqLyb2l+aZX30RRc3v4vJ/dCvFxH6CZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMvlgijz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WxftCPycn6MdssRi8O7TB08FikM6qDDeFX23yD2B8p6yIqk21flly2ukoOIeZ14J0YAgnePvhjNiorb4rqEmgxLONj5SJ7LVggrLDth2KHUJOG8FP+VHieZauzAumYmCFwjLUtf1LRC4recNEU/p94NUtCL5R/uY5UUmv7Z45ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ut/vgIOd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMvlgijz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45596C116C6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ut/vgIOd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42879C4CEF1;
 	Sat, 22 Nov 2025 01:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1763775785;
-	bh=JxuvIO3718cS+Dvv5mnYaQfpRZs89bnBJgRU4fqHVhg=;
+	bh=+af9Qrl81jzQeC8vw0DiKskxnHYHklRLaViyotNOrs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WMvlgijzbmFNkfbnQVSo6QNnc2jbeN9HLvXWjQOD93VkbfHKnVlUY7eOKEBcuHc67
-	 6PayG7QOl6uN5Vz7SX/SjbnnvJVTQSEFclQ3E+RQMEN37u2gsLaJDrutd2UEd1hPKn
-	 eHktdbFsp5skk56TH79GEktt7iA/iT2S0Qrad486wiP+ow/jAeOAJNCJmRYglKwsM+
-	 9a0RORXbOB7nHKxtWvj/g0k5k++pY7QHTI9D4WK65u6qIM8mqN4C23qYwhkfzWSWS1
-	 eNUUfNb2zOrPMBidmcWKFrNloeo0lQC+OG0v99oD132px4tyS1RAxPzJgAcV2eS+tF
-	 wFnZ3vu36liyw==
+	b=ut/vgIOdn9MIzV/rf1IxTxbVnSgS9e4p/4JDkKH6Ttyw2xh8qWROfZrRa6re07wQB
+	 7SD8h59GPGZ3R4KcKAAkLFEsgbssGufG7lc+4/hU4MMThVIFJHAAs0QIjDHHVnq+JZ
+	 Kqj8mh4UTV6+9dKfeD6d++C+lU6CVK5vz/VK814AfArFk8VGTu6Is3xCVMB4WnVt8O
+	 J02kTYAhcLCYSzmh8XTvtt5M6GgGCpc0l5Myx0zPetaQ2ACat0Tihv2HyFBSUIRS9w
+	 9RdCWBP0aB08rzsv9lXKKukwLvyrCki4976g8/MPdUxc8EwnNLH3+d/2ScRwJQEAl8
+	 DowxFCRPFYzOA==
 From: Kees Cook <kees@kernel.org>
 To: Vlastimil Babka <vbabka@suse.cz>
 Cc: Kees Cook <kees@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	cocci@inria.fr,
+	Andy Whitcroft <apw@canonical.com>,
+	Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
 	Randy Dunlap <rdunlap@infradead.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
@@ -67,9 +68,9 @@ Cc: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH v5 4/4] coccinelle: Add kmalloc_objs conversion script
-Date: Fri, 21 Nov 2025 17:43:00 -0800
-Message-Id: <20251122014304.3417954-4-kees@kernel.org>
+Subject: [PATCH v5 3/4] checkpatch: Suggest kmalloc_obj family for sizeof allocations
+Date: Fri, 21 Nov 2025 17:42:59 -0800
+Message-Id: <20251122014304.3417954-3-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251122014258.do.018-kees@kernel.org>
 References: <20251122014258.do.018-kees@kernel.org>
@@ -79,197 +80,87 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5220; i=kees@kernel.org; h=from:subject; bh=JxuvIO3718cS+Dvv5mnYaQfpRZs89bnBJgRU4fqHVhg=; b=owGbwMvMwCVmps19z/KJym7G02pJDJmKoiovd0kEL2nM9vrWcEr0BrNDueiFSz1VT7Ynz/mxU HCv85o3HaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABORKWdkeMS4oWH2j/3ayy4U ntTmmnLqyr3eozWS3Heu/Np3OmE6822GP3wLym6t6qhK1xRnlXp2RrSzPrjMxZRN3oOxU9LE8eY tFgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3354; i=kees@kernel.org; h=from:subject; bh=+af9Qrl81jzQeC8vw0DiKskxnHYHklRLaViyotNOrs8=; b=owGbwMvMwCVmps19z/KJym7G02pJDJmKosp3epdrijLyCujd4PaQXXXunBN/fZo0p7z7gojn2 8se50/vKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmMimSkaGiYzhbomvJug35Ogl n12+4vI7AZuW9obj9xKOsNxu/jXVh5Hhf0E2e7Swoq/0hKn3vdeVOiq2NR9izjS7t9KnZePheXX 8AA==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Finds and converts sized kmalloc-family of allocations into the
-typed kmalloc_obj-family of allocations.
+To support shifting away from sized allocation towards typed
+allocations, suggest the kmalloc_obj family of macros when a sizeof() is
+present in the argument lists.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Julia Lawall <Julia.Lawall@inria.fr>
-Cc: Nicolas Palix <nicolas.palix@imag.fr>
-Cc: cocci@inria.fr
+Cc: Andy Whitcroft <apw@canonical.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: Dwaipayan Ray <dwaipayanray1@gmail.com>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
- scripts/coccinelle/api/kmalloc_objs.cocci | 168 ++++++++++++++++++++++
- 1 file changed, 168 insertions(+)
- create mode 100644 scripts/coccinelle/api/kmalloc_objs.cocci
+ scripts/checkpatch.pl | 39 +++++++++++++++++++++++++++++++++------
+ 1 file changed, 33 insertions(+), 6 deletions(-)
 
-diff --git a/scripts/coccinelle/api/kmalloc_objs.cocci b/scripts/coccinelle/api/kmalloc_objs.cocci
-new file mode 100644
-index 000000000000..39f82f014b17
---- /dev/null
-+++ b/scripts/coccinelle/api/kmalloc_objs.cocci
-@@ -0,0 +1,168 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/// Use kmalloc_obj family of macros for allocations
-+///
-+// Confidence: High
-+// Comments:
-+// Options: --include-headers-for-types --all-includes --include-headers --keep-comments
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index d58ca9655ab7..a8cdfb502ccc 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -7258,17 +7258,42 @@ sub process {
+ 			    "Prefer $3(sizeof(*$1)...) over $3($4...)\n" . $herecurr);
+ 		}
+ 
+-# check for (kv|k)[mz]alloc with multiplies that could be kmalloc_array/kvmalloc_array/kvcalloc/kcalloc
++# check for (kv|k)[mz]alloc that could be kmalloc_obj/kvmalloc_obj/kzalloc_obj/kvzalloc_obj
++		if ($perl_version_ok &&
++		    defined $stat &&
++		    $stat =~ /^\+\s*($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*,/) {
++			my $oldfunc = $3;
++			my $a1 = $4;
++			my $newfunc = "kmalloc_obj";
++			$newfunc = "kvmalloc_obj" if ($oldfunc eq "kvmalloc");
++			$newfunc = "kvzalloc_obj" if ($oldfunc eq "kvzalloc");
++			$newfunc = "kzalloc_obj" if ($oldfunc eq "kzalloc");
 +
-+virtual patch
++			if ($a1 =~ s/^sizeof\s*\S\(?([^\)]*)\)?$/$1/) {
++				my $cnt = statement_rawlines($stat);
++				my $herectx = get_stat_here($linenr, $cnt, $here);
 +
-+@initialize:python@
-+@@
-+import sys
++				if (WARN("ALLOC_WITH_SIZEOF",
++					 "Prefer $newfunc over $oldfunc with sizeof\n" . $herectx) &&
++				    $cnt == 1 &&
++				    $fix) {
++					$fixed[$fixlinenr] =~ s/\b($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*,/$1 = $newfunc($a1,/;
++				}
++			}
++		}
 +
-+def alloc_array(name):
-+	func = "FAILED_RENAME"
-+	if name == "kmalloc_array":
-+		func = "kmalloc_objs"
-+	elif name == "kvmalloc_array":
-+		func = "kvmalloc_objs"
-+	elif name == "kcalloc":
-+		func = "kzalloc_objs"
-+	elif name == "kvcalloc":
-+		func = "kvzalloc_objs"
-+	else:
-+		print(f"Unknown transform for {name}", file=sys.stderr)
-+	return func
 +
-+@assign_sizeof depends on patch && !(file in "tools") && !(file in "samples")@
-+type TYPE;
-+TYPE *P;
-+TYPE INST;
-+expression VAR;
-+expression GFP;
-+expression SIZE;
-+identifier ALLOC =~ "^kv?[mz]alloc$";
-+fresh identifier ALLOC_OBJ_SZ = ALLOC ## "_obj_sz";
-+@@
-+
-+(
-+-	SIZE = sizeof(*VAR);
-+	... when != SIZE
-+	VAR =
-+-	ALLOC(SIZE, GFP);
-++	ALLOC_OBJ_SZ(*VAR, GFP, &SIZE);
-+|
-+-	SIZE = (sizeof(TYPE));
-+	... when != SIZE
-+	P =
-+-	ALLOC(SIZE, GFP);
-++	ALLOC_OBJ_SZ(*P, GFP, &SIZE);
-+|
-+-	SIZE = (sizeof(INST));
-+	... when != SIZE
-+	P =
-+-	ALLOC(SIZE, GFP);
-++	ALLOC_OBJ_SZ(*P, GFP, &SIZE);
-+)
-+
-+@assign_struct_size depends on patch && !(file in "tools") && !(file in "samples")@
-+type TYPE;
-+TYPE *P;
-+expression VAR;
-+expression GFP;
-+expression SIZE;
-+expression FLEX;
-+expression COUNT;
-+identifier ALLOC =~ "^kv?[mz]alloc$";
-+fresh identifier ALLOC_FLEX_SZ = ALLOC ## "_flex_sz";
-+@@
-+
-+(
-+-	SIZE = struct_size(VAR, FLEX, COUNT);
-+	... when != SIZE
-+	VAR =
-+-	ALLOC(SIZE, GFP);
-++	ALLOC_FLEX_SZ(*VAR, FLEX, COUNT, GFP, &SIZE);
-+|
-+-	SIZE = struct_size_t(TYPE, FLEX, COUNT);
-+	... when != SIZE
-+	P =
-+-	ALLOC(SIZE, GFP);
-++	ALLOC_FLEX_SZ(*P, FLEX, COUNT, GFP, &SIZE);
-+)
-+
-+// This excludes anything that is assigning to or from integral types or
-+// string literals. Everything else gets the sizeof() extracted for the
-+// kmalloc_obj() type/var argument. sizeof(void *) is also excluded because
-+// it will need case-by-case double-checking to make sure the right type is
-+// being assigned.
-+@direct depends on patch && !(file in "tools") && !(file in "samples")@
-+typedef u8, u16, u32, u64;
-+typedef __u8, __u16, __u32, __u64;
-+typedef uint8_t, uint16_t, uint32_t, uint64_t;
-+typedef __le16, __le32, __le64;
-+typedef __be16, __be32, __be64;
-+type INTEGRAL = {u8,__u8,uint8_t,char,unsigned char,
-+		 u16,__u16,uint16_t,unsigned short,
-+		 u32,__u32,uint32_t,unsigned int,
-+		 u64,__u64,uint64_t,unsigned long,
-+		 __le16,__le32,__le64,__be16,__be32,__be64};
-+char [] STRING;
-+INTEGRAL *BYTES;
-+type TYPE;
-+expression VAR;
-+expression GFP;
-+expression COUNT;
-+expression FLEX;
-+expression E;
-+identifier ALLOC =~ "^kv?[mz]alloc$";
-+fresh identifier ALLOC_OBJ = ALLOC ## "_obj";
-+fresh identifier ALLOC_FLEX = ALLOC ## "_flex";
-+identifier ALLOC_ARRAY = {kmalloc_array,kvmalloc_array,kcalloc,kvcalloc};
-+fresh identifier ALLOC_OBJS = script:python(ALLOC_ARRAY) { alloc_array(ALLOC_ARRAY) };
-+@@
-+
-+(
-+-	VAR = ALLOC((sizeof(*VAR)), GFP)
-++	VAR = ALLOC_OBJ(*VAR, GFP)
-+|
-+	ALLOC((\(sizeof(STRING)\|sizeof(INTEGRAL)\|sizeof(INTEGRAL *)\)), GFP)
-+|
-+	BYTES = ALLOC((sizeof(E)), GFP)
-+|
-+	BYTES = ALLOC((sizeof(TYPE)), GFP)
-+|
-+	ALLOC((sizeof(void *)), GFP)
-+|
-+-	ALLOC((sizeof(E)), GFP)
-++	ALLOC_OBJ(E, GFP)
-+|
-+-	ALLOC((sizeof(TYPE)), GFP)
-++	ALLOC_OBJ(TYPE, GFP)
-+|
-+	ALLOC_ARRAY(COUNT, (\(sizeof(STRING)\|sizeof(INTEGRAL)\|sizeof(INTEGRAL *)\)), GFP)
-+|
-+	BYTES = ALLOC_ARRAY(COUNT, (sizeof(E)), GFP)
-+|
-+	BYTES = ALLOC_ARRAY(COUNT, (sizeof(TYPE)), GFP)
-+|
-+	ALLOC_ARRAY((\(sizeof(STRING)\|sizeof(INTEGRAL)\|sizeof(INTEGRAL *)\)), COUNT, GFP)
-+|
-+	BYTES = ALLOC_ARRAY((sizeof(E)), COUNT, GFP)
-+|
-+	BYTES = ALLOC_ARRAY((sizeof(TYPE)), COUNT, GFP)
-+|
-+	ALLOC_ARRAY(COUNT, (sizeof(void *)), GFP)
-+|
-+	ALLOC_ARRAY((sizeof(void *)), COUNT, GFP)
-+|
-+-	ALLOC_ARRAY(COUNT, (sizeof(E)), GFP)
-++	ALLOC_OBJS(E, COUNT, GFP)
-+|
-+-	ALLOC_ARRAY(COUNT, (sizeof(TYPE)), GFP)
-++	ALLOC_OBJS(TYPE, COUNT, GFP)
-+|
-+-	ALLOC_ARRAY((sizeof(E)), COUNT, GFP)
-++	ALLOC_OBJS(E, COUNT, GFP)
-+|
-+-	ALLOC_ARRAY((sizeof(TYPE)), COUNT, GFP)
-++	ALLOC_OBJS(TYPE, COUNT, GFP)
-+|
-+-	ALLOC(struct_size(VAR, FLEX, COUNT), GFP)
-++	ALLOC_FLEX(*VAR, FLEX, COUNT, GFP)
-+|
-+-	ALLOC(struct_size_t(TYPE, FLEX, COUNT), GFP)
-++	ALLOC_FLEX(TYPE, FLEX, COUNT, GFP)
-+)
-+
++# check for (kv|k)[mz]alloc with multiplies that could be kmalloc_objs/kvmalloc_objs/kzalloc_objs/kvzalloc_objs
+ 		if ($perl_version_ok &&
+ 		    defined $stat &&
+ 		    $stat =~ /^\+\s*($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)\s*,/) {
+ 			my $oldfunc = $3;
+ 			my $a1 = $4;
+ 			my $a2 = $10;
+-			my $newfunc = "kmalloc_array";
+-			$newfunc = "kvmalloc_array" if ($oldfunc eq "kvmalloc");
+-			$newfunc = "kvcalloc" if ($oldfunc eq "kvzalloc");
+-			$newfunc = "kcalloc" if ($oldfunc eq "kzalloc");
++			my $newfunc = "kmalloc_objs";
++			$newfunc = "kvmalloc_objs" if ($oldfunc eq "kvmalloc");
++			$newfunc = "kvzalloc_objs" if ($oldfunc eq "kvzalloc");
++			$newfunc = "kzalloc_objs" if ($oldfunc eq "kzalloc");
+ 			my $r1 = $a1;
+ 			my $r2 = $a2;
+ 			if ($a1 =~ /^sizeof\s*\S/) {
+@@ -7284,7 +7309,9 @@ sub process {
+ 					 "Prefer $newfunc over $oldfunc with multiply\n" . $herectx) &&
+ 				    $cnt == 1 &&
+ 				    $fix) {
+-					$fixed[$fixlinenr] =~ s/\b($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)/$1 . ' = ' . "$newfunc(" . trim($r1) . ', ' . trim($r2)/e;
++					my $sized = trim($r2);
++					$sized =~ s/^sizeof\s*\S\(?([^\)]*)\)?$/$1/;
++					$fixed[$fixlinenr] =~ s/\b($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)/$1 . ' = ' . "$newfunc(" . $sized . ', ' . trim($r1)/e;
+ 				}
+ 			}
+ 		}
 -- 
 2.34.1
 
