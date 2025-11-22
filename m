@@ -1,59 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3DD2C11E6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4522C11F1;
 	Sat, 22 Nov 2025 01:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763775786; cv=none; b=hOdIm349Y52FOD8ehcyKhOjkxlkITcYjN4zAJ+EJR9LCM6dsbaQDnuRPdoppXZ3OGZhz9hDeRKqGV7EqhRxY3H8JVvc/SSb6bpI7PhDjY/HBUtn1M2SMTojLaUKhqCCQ/cvhBmlLMKWNBdbf1V9e1PmmyE/RYA8JawM2QYoLpKM=
+	t=1763775786; cv=none; b=axXZDKMhIUsy3Ez/gg5+ClYQrWAMAgzfn9QcmWiWNP7zDumFf0tjgJ/GciDKvcZLEOCCgSJvc0FPp9FP4QOWf571WdwrJbC9+TFLowxOGH55YIZm1lgCRcTn1vSars6nE292BwCDU8x+un/ldlkbgGfwKL29KZiCbHXzvbXzvPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1763775786; c=relaxed/simple;
-	bh=Bm5UctH3mgw7LUjsKVnWiQeM2ZjrjWLRLpRvc3SOhQI=;
+	bh=FcVar3XxCqm2ZJVsBh/RSi2lBnjq1avyQFtaa1b+fYo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PXg9A29tfdGyvklARrtnBkM30XMtUtwshU3DvimTn7A69MpVvWNvaDash0VnzhNRgj/CnOqcfIA9LM5V1uNfIM43VE/DUECL1HOFzBpp+YoKcS6nJNtQ31tyElwvkSIZFTAMWqFSP9oe8GeCVIf5wWqvzzQStZYkIzelMrnN0M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bY5wuqa8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XjtfvM2j/XrbUY2KZ4oJinj+MR+aW8QphfBAE9mCFeUKSHYEV5fj4qMvxyBqsCdAeomCb6Y/wdBGj2y/v0kpqXDdLrn+aN0902JCnRy3SQ1DFO15wpHAUxXLv9ipQAEhkA43ocw9ymoEFVeX2M7lapsKoQnl0pwwVZFqYN9aq88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bf1Lrxck; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bY5wuqa8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A0EEC4AF0C;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bf1Lrxck"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47A2DC4AF0B;
 	Sat, 22 Nov 2025 01:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1763775785;
-	bh=Bm5UctH3mgw7LUjsKVnWiQeM2ZjrjWLRLpRvc3SOhQI=;
+	bh=FcVar3XxCqm2ZJVsBh/RSi2lBnjq1avyQFtaa1b+fYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bY5wuqa8a45W1HINfdbep5urhBZTK2k+WQTidy33+y0UlNS72H74z1CfoVuW3hv7V
-	 z5FUQMqtrQdtYTB9J+wYlts/dfP+OMaVtwEmnKQ6kVx9FZ+Jj9VFKVlUi5bpwWa1yd
-	 daQJRa28y6IKVTL3KGIVBArcTmb5up8agCLOny+j7E58LB1oMO3dTYEgfdSuQ2oUkV
-	 n+eST1UZDdTnzReF+ohecgxU/jd9p60qSWkqP83/sI0Z7fA7T8nEks1X9w75Qjwgcp
-	 HZMoDc4RKpnM3zWm1fQ4v2vyseKu/YgO/WKEiy7J8c+z03lL/NuR0nufzgSzx/C/HA
-	 lJSm+TzfJdi1w==
+	b=bf1LrxckvPXcFurZMJJlnfu5zjFswMMQGWAbumWk6UsfZ7OboCY4EhE7R+istWA1w
+	 TwcO39KJQSeOW+SvaWN0fgn6tHYgCC/Aete+PJ6RXDDOcJTUpefAfZAJa613DUJMMl
+	 ON4T9HItaqB1mnLwkCDphaEPucYYhzkV8wzII+OTARGClOijkyT/OgkqeZJ5ilwfOd
+	 y3uX+NjjYr/IKCtAV+v4+RyvU+WanfP3OL5wDsWQwMSY26I7/NcuLZ0OMsvHyZ+8PU
+	 rhSkmOk7hSp2azZSQKRQnxWn/im2hpmyJgHJ8rfeNa9uCqIRTn08JY7aWG/2MwDeyJ
+	 +JpVQ5+s8vTng==
 From: Kees Cook <kees@kernel.org>
 To: Vlastimil Babka <vbabka@suse.cz>
 Cc: Kees Cook <kees@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Marco Elver <elver@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-hardening@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
 	Christoph Lameter <cl@linux.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
 	Pekka Enberg <penberg@kernel.org>,
 	David Rientjes <rientjes@google.com>,
 	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	Jann Horn <jannh@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Marco Elver <elver@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
 	Jonathan Corbet <corbet@lwn.net>,
 	Jakub Kicinski <kuba@kernel.org>,
@@ -63,11 +62,12 @@ Cc: Kees Cook <kees@kernel.org>,
 	Jan Hendrik Farr <kernel@jfarr.cc>,
 	Alexander Potapenko <glider@google.com>,
 	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH v5 1/4] compiler_types: Introduce __flex_counter() and family
-Date: Fri, 21 Nov 2025 17:42:57 -0800
-Message-Id: <20251122014304.3417954-1-kees@kernel.org>
+Subject: [PATCH v5 2/4] slab: Introduce kmalloc_obj() and family
+Date: Fri, 21 Nov 2025 17:42:58 -0800
+Message-Id: <20251122014304.3417954-2-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251122014258.do.018-kees@kernel.org>
 References: <20251122014258.do.018-kees@kernel.org>
@@ -77,150 +77,402 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5209; i=kees@kernel.org; h=from:subject; bh=Bm5UctH3mgw7LUjsKVnWiQeM2ZjrjWLRLpRvc3SOhQI=; b=owGbwMvMwCVmps19z/KJym7G02pJDJmKoso7nm58EGTt81C0PG6jhZD/jO6pLRohBZOjykWLY zhERVk7SlkYxLgYZMUUWYLs3ONcPN62h7vPVYSZw8oEMoSBi1MAJvLPmpHhtnWqcu45r7Nt6RxR piEzpIWdq2qOP7DcfZlTa5bZAbadjAwPN/G4mYuxhbHdYPr2JoUnd9p5t+mHfkaHZvQWbL51NZQ FAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=17532; i=kees@kernel.org; h=from:subject; bh=FcVar3XxCqm2ZJVsBh/RSi2lBnjq1avyQFtaa1b+fYo=; b=owGbwMvMwCVmps19z/KJym7G02pJDJmKosq6MQ6SGdx72BP2qcurX1wkcPfhmZaMClUOLr9ak 89PIhd2lLIwiHExyIopsgTZuce5eLxtD3efqwgzh5UJZAgDF6cATOTnC0aG7VutnYSzSi1unp5p bv2z6+2Ovamt87Zd3b+47onLN/XLExkZNrT3Tp4cvsuyOU/bd/WshX7vQwLU2Sblb18afmK5jvJ WNgA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Introduce __flex_counter() which wraps __builtin_counted_by_ref(),
-as newly introduced by GCC[1] and Clang[2]. Use of __flex_counter()
-allows access to the counter member of a struct's flexible array member
-when it has been annotated with __counted_by().
+Introduce type-aware kmalloc-family helpers to replace the common
+idioms for single, array, and flexible object allocations:
 
-Introduce typeof_flex_counter(), can_set_flex_counter(), and
-set_flex_counter() to provide the needed _Generic() wrappers to get sane
-results out of __flex_counter().
+	ptr = kmalloc(sizeof(*ptr), gfp);
+	ptr = kmalloc(sizeof(struct some_obj_name), gfp);
+	ptr = kzalloc(sizeof(*ptr), gfp);
+	ptr = kmalloc_array(count, sizeof(*ptr), gfp);
+	ptr = kcalloc(count, sizeof(*ptr), gfp);
+	ptr = kmalloc(struct_size(ptr, flex_member, count), gfp);
 
-For example, with:
+These become, respectively:
 
-	struct foo {
-		int counter;
-		short array[] __counted_by(counter);
-	} *p;
+	ptr = kmalloc_obj(*ptr, gfp);
+	ptr = kmalloc_obj(*ptr, gfp);
+	ptr = kzalloc_obj(*ptr, gfp);
+	ptr = kmalloc_objs(*ptr, count, gfp);
+	ptr = kzalloc_objs(*ptr, count, gfp);
+	ptr = kmalloc_flex(*ptr, flex_member, count, gfp);
 
-__flex_counter(p->array) will resolve to: &p->counter
+Beyond the other benefits outlined below, the primary ergonomic benefit
+is the elimination of needing "sizeof" nor the type name, and the
+enforcement of assignment types (they do not return "void *", but rather
+a pointer to the type of the first argument). The type name _can_ be
+used, though, in the case where an assignment is indirect (e.g. via
+"return").
 
-typeof_flex_counter(p->array) will resolve to "int". (If p->array was not
-annotated, it would resolve to "size_t".)
+These each return the newly allocated pointer to the type (which may be
+NULL on failure). For cases where the total size of the allocation is
+needed, the kmalloc_obj_sz(), kmalloc_objs_sz(), and kmalloc_flex_sz()
+family of macros can be used. For example:
 
-can_set_flex_counter(p->array, COUNT) is the same as:
+	size = struct_size(ptr, flex_member, count);
+	ptr = kmalloc(size, gfp);
 
-	COUNT <= type_max(p->counter) && COUNT >= type_min(p->counter)
+becomes:
 
-(If p->array was not annotated it would return true since everything
-fits in size_t.)
+	ptr = kmalloc_flex_sz(*ptr, flex_member, count, gfp, &size);
 
-set_flex_counter(p->array, COUNT) is the same as:
+With the *_sz() helpers, it becomes possible to do bounds checking of
+the final size to make sure no arithmetic overflow has happened that
+exceeds the storage size of the target size variable. E.g. it was possible
+before to end up wrapping an allocation size and not noticing, there by
+allocating too small a size. (Most of Linux's exposure on that particular
+problem is via newly written code as we already did bulk conversions[1],
+but we continue to have a steady stream of patches catching additional
+cases[2] that would just go away with this API.)
 
-	p->counter = COUNT;
+Internal introspection of the allocated type now becomes possible,
+allowing for future alignment-aware choices to be made by the allocator
+and future hardening work that can be type sensitive. For example,
+adding __alignof(*ptr) as an argument to the internal allocators so that
+appropriate/efficient alignment choices can be made, or being able to
+correctly choose per-allocation offset randomization within a bucket
+that does not break alignment requirements.
 
-(It is a no-op if p->array is not annotated with __counted_by().)
+For the flexible array helpers, the internal use of __flex_counter()
+allows for automatically setting the counter member of a struct's flexible
+array member when it has been annotated with __counted_by(), avoiding
+any missed early size initializations while __counted_by() annotations
+are added to the kernel. Additionally, this also checks for "too large"
+allocations based on the type size of the counter variable. For example:
 
+	if (count > type_max(ptr->flex_count))
+		fail...;
+	size = struct_size(ptr, flex_member, count);
+	ptr = kmalloc(size, gfp);
+	ptr->flex_count = count;
+
+becomes (n.b. unchanged from earlier example):
+
+	ptr = kmalloc_flex_sz(*ptr, flex_member, count, gfp, &size);
+	ptr->flex_count = count;
+
+Note that manual initialization of the flexible array counter is still
+required (at some point) after allocation as not all compiler versions
+support the __counted_by annotation yet. But doing it internally makes
+sure they cannot be missed when __counted_by _is_ available, meaning
+that the bounds checker will not trip due to the lack of "early enough"
+initializations that used to work before enabling the stricter bounds
+checking. For example:
+
+	ptr = kmalloc_flex(*ptr, flex_member, count);
+	fill(ptr->flex, count);
+	ptr->flex_count = count;
+
+This works correctly before adding a __counted_by annotation (since
+nothing is checking ptr->flex accesses against ptr->flex_count). After
+adding the annotation, the bounds sanitizer would trip during fill()
+because ptr->flex_count wasn't set yet. But with kmalloc_flex() setting
+ptr->flex_count internally at allocation time, the existing code works
+without needing to move the ptr->flex_count assignment before the call
+to fill(). (This has been a stumbling block for __counted_by adoption.)
+
+Replacing all existing simple code patterns found via Coccinelle[3]
+shows what could be replaced immediately (also saving roughly 1000 lines):
+
+ 7863 files changed, 19639 insertions(+), 20692 deletions(-)
+
+This would take us from 24085 k*alloc assignments to 7467:
+
+$ git grep ' = kv\?[mzcv]alloc\(\|_array\)(' | wc -l
+24085
+$ git reset --hard HEAD^
+HEAD is now at 8bccc91e6cdf treewide: kmalloc_obj conversion
+$ git grep ' = kv\?[mzcv]alloc\(\|_array\)(' | wc -l
+7467
+
+This treewide change could be done at the end of the merge window just
+before -rc1 is released (as is common for treewide changes). Handling
+this API change in backports to -stable should be possible without much
+hassle by backporting the __flex_counter() patch and this patch, while
+taking conversions as-needed.
+
+The impact on my bootable testing image size (with the treewide patch
+applied) is tiny. With both GCC 13 (no __counted_by support) and GCC 15
+(with __counted_by) the images are actually very slightly smaller:
+
+$ size -G gcc-boot/vmlinux.gcc*
+      text       data        bss      total filename
+  29975593   21527689   16601200   68104482 gcc-boot/vmlinux.gcc13-before
+  29969263   21528663   16601112   68099038 gcc-boot/vmlinux.gcc13-after
+  30555626   21291299   17086620   68933545 gcc-boot/vmlinux.gcc15-before
+  30550144   21292039   17086540   68928723 gcc-boot/vmlinux.gcc15-after
+
+Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b08fc5277aaa1d8ea15470d38bf36f19dfb0e125 [1]
+Link: https://lore.kernel.org/all/?q=s%3Akcalloc+-s%3ARe%3A [2]
+Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/kmalloc_objs.cocci [3]
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Marco Elver <elver@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Bill Wendling <morbo@google.com>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: Jann Horn <jannh@google.com>
 Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: linux-hardening@vger.kernel.org
+Cc: Marco Elver <elver@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: linux-mm@kvack.org
 ---
- include/linux/compiler_types.h | 31 ++++++++++++++++++++++++++
- include/linux/overflow.h       | 40 ++++++++++++++++++++++++++++++++++
- 2 files changed, 71 insertions(+)
+ Documentation/process/deprecated.rst |  42 +++++++
+ include/linux/slab.h                 | 172 +++++++++++++++++++++++++++
+ 2 files changed, 214 insertions(+)
 
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index c46855162a8a..a31fe3dbf576 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -507,6 +507,37 @@ struct ftrace_likely_data {
- #define __annotated(var, attr)	__builtin_has_attribute(var, attr)
- #endif
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+index 1f7f3e6c9cda..eb72b75f5419 100644
+--- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -372,3 +372,45 @@ The helper must be used::
+ 			DECLARE_FLEX_ARRAY(struct type2, two);
+ 		};
+ 	};
++
++Open-coded kmalloc assignments for struct objects
++-------------------------------------------------
++Performing open-coded kmalloc()-family allocation assignments prevents
++the kernel (and compiler) from being able to examine the type of the
++variable being assigned, which limits any related introspection that
++may help with alignment, wrap-around, or additional hardening. The
++kmalloc_obj()-family of macros provide this introspection, which can be
++used for the common code patterns for single, array, and flexible object
++allocations. For example, these open coded assignments::
++
++	ptr = kmalloc(sizeof(*ptr), gfp);
++	ptr = kmalloc(sizeof(struct the_type_of_ptr_obj), gfp);
++	ptr = kzalloc(sizeof(*ptr), gfp);
++	ptr = kmalloc_array(count, sizeof(*ptr), gfp);
++	ptr = kcalloc(count, sizeof(*ptr), gfp);
++	ptr = kmalloc(struct_size(ptr, flex_member, count), gfp);
++
++become, respectively::
++
++	ptr = kmalloc_obj(*ptr, gfp);
++	ptr = kzalloc_obj(*ptr, gfp);
++	ptr = kmalloc_objs(*ptr, count, gfp);
++	ptr = kzalloc_objs(*ptr, count, gfp);
++	ptr = kmalloc_flex(*ptr, flex_member, count, gfp);
++
++For the cases where the total size of the allocation is also needed,
++the kmalloc_obj_sz(), kmalloc_objs_sz(), and kmalloc_flex_sz() family of
++macros can be used. For example, converting these assignments::
++
++	total_size = struct_size(ptr, flex_member, count);
++	ptr = kmalloc(total_size, gfp);
++
++becomes::
++
++	ptr = kmalloc_flex_sz(*ptr, flex_member, count, gfp, &total_size);
++
++If `ptr->flex_member` is annotated with __counted_by(), the allocation
++will automatically fail if `count` is larger than the maximum
++representable value that can be stored in the counter member associated
++with `flex_member`. Similarly, the allocation will fail if the total
++size of the allocation exceeds the maximum value `*total_size` can hold.
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index cf443f064a66..1c5219d79cf1 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -12,6 +12,7 @@
+ #ifndef _LINUX_SLAB_H
+ #define	_LINUX_SLAB_H
  
-+/*
-+ * Optional: only supported since gcc >= 15, clang >= 19
-+ *
-+ *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html#index-_005f_005fbuiltin_005fcounted_005fby_005fref
-+ * clang: https://clang.llvm.org/docs/LanguageExtensions.html#builtin-counted-by-ref
-+ */
-+#if __has_builtin(__builtin_counted_by_ref)
-+/**
-+ * __flex_counter() - Get pointer to counter member for the given
-+ *                    flexible array, if it was annotated with __counted_by()
-+ * @FAM: Pointer to flexible array member of an addressable struct instance
-+ *
-+ * For example, with:
-+ *
-+ *	struct foo {
-+ *		int counter;
-+ *		short array[] __counted_by(counter);
-+ *	} *p;
-+ *
-+ * __flex_counter(p->array) will resolve to &p->counter.
-+ *
-+ * Note that Clang may not allow this to be assigned to a separate
-+ * variable; it must be used directly.
-+ *
-+ * If p->array is unannotated, this returns (void *)NULL.
-+ */
-+#define __flex_counter(FAM)	__builtin_counted_by_ref(FAM)
-+#else
-+#define __flex_counter(FAM)	((void *)NULL)
-+#endif
-+
- /*
-  * Some versions of gcc do not mark 'asm goto' volatile:
-  *
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 725f95f7e416..12ca286c0f34 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -540,4 +540,44 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
- 	(__member_size((name)->array) / sizeof(*(name)->array) +			\
- 						__must_be_array((name)->array))
++#include <linux/bug.h>
+ #include <linux/cache.h>
+ #include <linux/gfp.h>
+ #include <linux/overflow.h>
+@@ -965,6 +966,177 @@ static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t f
+ void *kmalloc_nolock_noprof(size_t size, gfp_t gfp_flags, int node);
+ #define kmalloc_nolock(...)			alloc_hooks(kmalloc_nolock_noprof(__VA_ARGS__))
  
-+/**
-+ * typeof_flex_counter() - Return the type of the counter variable of a given
-+ *                         flexible array member annotated by __counted_by().
-+ * @FAM: Pointer to the flexible array member within a given struct.
-+ *
-+ * Returns: "size_t" if no annotation exists.
-+ */
-+#define typeof_flex_counter(FAM)				\
-+	typeof(_Generic(__flex_counter(FAM),			\
-+			void *: (size_t)0,			\
-+			default: *__flex_counter(FAM)))
-+
-+/**
-+ * __can_set_flex_counter() - Check if the counter associated with the given
-+ *                            flexible array member can represent a value.
-+ * @FAM: Pointer to the flexible array member within a given struct.
-+ * @COUNT: Value to check against the __counted_by annotated @FAM's counter.
-+ *
-+ * Returns: true if @COUNT can be represented in the @FAM counter. When
-+ * @FAM is not annotated with __counted_by(), always returns true.
-+ */
-+#define __can_set_flex_counter(FAM, COUNT)			\
-+	(!overflows_type(COUNT, typeof_flex_counter(FAM)))
-+
-+/**
-+ * __set_flex_counter() - Set the counter associated with the given flexible
-+ *                        array member that has been annoated by __counted_by().
-+ * @FAM: Pointer to the flexible array member within a given struct.
-+ * @COUNT: Value to store to the __counted_by annotated @FAM's counter.
-+ *
-+ * This is a no-op if no annotation exists. Count needs to be checked with
-+ * __can_set_flex_counter(@FAM, @COUNT) before using this function.
-+ */
-+#define __set_flex_counter(FAM, COUNT)				\
-+({								\
-+	*_Generic(__flex_counter(FAM),				\
-+		  void *:  &(size_t){ 0 },			\
-+		  default: __flex_counter(FAM)) = (COUNT);	\
++#define __alloc_objs(ALLOC, VAR, COUNT, SIZE)				\
++({									\
++	size_t __obj_size = size_mul(sizeof(VAR), COUNT);		\
++	const typeof(_Generic(SIZE,					\
++			void *: (size_t *)NULL,				\
++			default: SIZE)) __size_ptr = (SIZE);		\
++	typeof(VAR) *__obj_ptr = NULL;					\
++	/* Does the total size fit in the *SIZE variable? */		\
++	if (!WARN_ON_ONCE(__size_ptr && __obj_size > type_max(*__size_ptr))) \
++		__obj_ptr = ALLOC;					\
++	if (!__obj_ptr)							\
++		__obj_size = 0;						\
++	if (__size_ptr)							\
++		*__size_ptr = __obj_size;				\
++	__obj_ptr;							\
 +})
 +
- #endif /* __LINUX_OVERFLOW_H */
++#define __alloc_flex(ALLOC, VAR, FAM, COUNT, SIZE)			\
++({									\
++	const size_t __count = (COUNT);					\
++	size_t __obj_size = struct_size_t(typeof(VAR), FAM, __count);	\
++	/* "*SIZE = ...;" below is unbuildable when SIZE is "NULL" */	\
++	const typeof(_Generic(SIZE,					\
++			void *: (size_t *)NULL,				\
++			default: SIZE)) __size_ptr = (SIZE);		\
++	typeof(VAR) *__obj_ptr = NULL;					\
++	if (!WARN_ON_ONCE(!__can_set_flex_counter(__obj_ptr->FAM, __count)) && \
++	    !WARN_ON_ONCE(__size_ptr && __obj_size > type_max(*__size_ptr))) \
++		__obj_ptr = ALLOC;					\
++	if (__obj_ptr) {						\
++		__set_flex_counter(__obj_ptr->FAM, __count);		\
++	} else {							\
++		__obj_size = 0;						\
++	}								\
++	if (__size_ptr)							\
++		*__size_ptr = __obj_size;				\
++	__obj_ptr;							\
++})
++
++/**
++ * kmalloc_obj - Allocate a single instance of the given structure
++ * @VAR: Variable or type to allocate.
++ * @FLAGS: GFP flags for the allocation.
++ *
++ * Returns: newly allocated pointer to a @VAR on success, NULL on failure.
++ */
++#define kmalloc_obj(VAR, FLAGS)				\
++	__alloc_objs(kmalloc(__obj_size, FLAGS), VAR, 1, NULL)
++
++/**
++ * kmalloc_obj_sz - Allocate a single instance of the given structure and
++ *		 store total size
++ * @VAR: Variable or type to allocate.
++ * @FLAGS: GFP flags for the allocation.
++ * @SIZE: Pointer to variable to hold the total allocation size.
++ *
++ * Returns: newly allocated pointer to @VAR on success, NULL on failure.
++ * If @SIZE is non-NULL, the allocation will immediately fail if the total
++ * allocation size is larger than what the type of *@SIZE can represent.
++ * If @SIZE is non-NULL, *@SIZE is set to either allocation size on success,
++ * or 0 on failure.
++ */
++#define kmalloc_obj_sz(VAR, FLAGS, SIZE)		\
++	__alloc_objs(kmalloc(__obj_size, FLAGS), VAR, 1, SIZE)
++
++/**
++ * kmalloc_objs - Allocate an array of the given structure
++ * @VAR: Variable or type to allocate an array of.
++ * @COUNT: How many elements in the array.
++ * @FLAGS: GFP flags for the allocation.
++ *
++ * Returns: newly allocated pointer to array of @VAR on success, NULL on
++ * failure.
++ */
++#define kmalloc_objs(VAR, COUNT, FLAGS)			\
++	__alloc_objs(kmalloc(__obj_size, FLAGS), VAR, COUNT, NULL)
++
++/**
++ * kmalloc_objs_sz - Allocate an array of the given structure and store
++ *		     total size
++ * @VAR: Variable or type to allocate an array of.
++ * @COUNT: How many elements in the array.
++ * @FLAGS: GFP flags for the allocation.
++ * @SIZE: Pointer to variable to hold the total allocation size.
++ *
++ * Returns: newly allocated pointer to array of @VAR on success, NULL on
++ * failure. If @SIZE is non-NULL, the allocation will immediately fail if
++ * the total allocation size is larger than what the type of *@SIZE can
++ * represent. If @SIZE is non-NULL, *@SIZE is set to either allocation size
++ * on success, or 0 on failure.
++ */
++#define kmalloc_objs_sz(VAR, COUNT, FLAGS, SIZE)	\
++	__alloc_objs(kmalloc(__obj_size, FLAGS), VAR, COUNT, SIZE)
++
++/**
++ * kmalloc_flex - Allocate a single instance of the given flexible structure
++ * @VAR: Variable or type to allocate, along with its flexible array member.
++ * @FAM: The name of the flexible array member of the structure.
++ * @COUNT: How many flexible array member elements are desired.
++ * @FLAGS: GFP flags for the allocation.
++ *
++ * Returns: newly allocated pointer to @VAR on success, NULL on failure.
++ * If @FAM has been annotated with __counted_by(), the allocation will
++ * immediately fail if @COUNT is larger than what the type of the struct's
++ * counter variable can represent.
++ */
++#define kmalloc_flex(VAR, FAM, COUNT, FLAGS)		\
++	__alloc_flex(kmalloc(__obj_size, FLAGS), VAR, FAM, COUNT, NULL)
++
++/**
++ * kmalloc_flex_sz - Allocate a single instance of the given flexible
++ *		     structure and store total size
++ * @VAR: Variable or type to allocate, along with its flexible array member.
++ * @FAM: The name of the flexible array member of the structure.
++ * @COUNT: How many flexible array member elements are desired.
++ * @FLAGS: GFP flags for the allocation.
++ * @SIZE: Pointer to variable to hold the total allocation size.
++ *
++ * Returns: newly allocated pointer to @VAR on success, NULL on failure.
++ * If @FAM has been annotated with __counted_by(), the allocation will
++ * immediately fail if @COUNT is larger than what the type of the struct's
++ * counter variable can represent. If @SIZE is non-NULL, the allocation
++ * will immediately fail if the total allocation size is larger than what
++ * the type of *@SIZE can represent. If @SIZE is non-NULL, *@SIZE is set
++ * to either allocation size on success, or 0 on failure.
++ */
++#define kmalloc_flex_sz(VAR, FAM, COUNT, FLAGS, SIZE)	\
++	__alloc_flex(kmalloc(__obj_size, FLAGS), VAR, FAM, COUNT, SIZE)
++
++/* All kzalloc aliases for kmalloc_(obj|objs|fam)(|_sz). */
++#define kzalloc_obj(P, FLAGS)				\
++	__alloc_objs(kzalloc(__obj_size, FLAGS), P, 1, NULL)
++#define kzalloc_obj_sz(P, FLAGS, SIZE)			\
++	__alloc_objs(kzalloc(__obj_size, FLAGS), P, 1, SIZE)
++#define kzalloc_objs(P, COUNT, FLAGS)			\
++	__alloc_objs(kzalloc(__obj_size, FLAGS), P, COUNT, NULL)
++#define kzalloc_objs_sz(P, COUNT, FLAGS, SIZE)		\
++	__alloc_objs(kzalloc(__obj_size, FLAGS), P, COUNT, SIZE)
++#define kzalloc_flex(P, FAM, COUNT, FLAGS)		\
++	__alloc_flex(kzalloc(__obj_size, FLAGS), P, FAM, COUNT, NULL)
++#define kzalloc_flex_sz(P, FAM, COUNT, FLAGS, SIZE)	\
++	__alloc_flex(kzalloc(__obj_size, FLAGS), P, FAM, COUNT, SIZE)
++
++/* All kvmalloc aliases for kmalloc_(obj|objs|fam)(|_sz). */
++#define kvmalloc_obj(P, FLAGS)				\
++	__alloc_objs(kvmalloc(__obj_size, FLAGS), P, 1, NULL)
++#define kvmalloc_obj_sz(P, FLAGS, SIZE)			\
++	__alloc_objs(kvmalloc(__obj_size, FLAGS), P, 1, SIZE)
++#define kvmalloc_objs(P, COUNT, FLAGS)			\
++	__alloc_objs(kvmalloc(__obj_size, FLAGS), P, COUNT, NULL)
++#define kvmalloc_objs_sz(P, COUNT, FLAGS, SIZE)		\
++	__alloc_objs(kvmalloc(__obj_size, FLAGS), P, COUNT, SIZE)
++#define kvmalloc_flex(P, FAM, COUNT, FLAGS)		\
++	__alloc_flex(kvmalloc(__obj_size, FLAGS), P, FAM, COUNT, NULL)
++#define kvmalloc_flex_sz(P, FAM, COUNT, FLAGS, SIZE)	\
++	__alloc_flex(kvmalloc(__obj_size, FLAGS), P, FAM, COUNT, SIZE)
++
++/* All kvzalloc aliases for kmalloc_(obj|objs|fam)(|_sz). */
++#define kvzalloc_obj(P, FLAGS)				\
++	__alloc_objs(kvzalloc(__obj_size, FLAGS), P, 1, NULL)
++#define kvzalloc_obj_sz(P, FLAGS, SIZE)			\
++	__alloc_objs(kvzalloc(__obj_size, FLAGS), P, 1, SIZE)
++#define kvzalloc_objs(P, COUNT, FLAGS)			\
++	__alloc_objs(kvzalloc(__obj_size, FLAGS), P, COUNT, NULL)
++#define kvzalloc_objs_sz(P, COUNT, FLAGS, SIZE)		\
++	__alloc_objs(kvzalloc(__obj_size, FLAGS), P, COUNT, SIZE)
++#define kvzalloc_flex(P, FAM, COUNT, FLAGS)		\
++	__alloc_flex(kvzalloc(__obj_size, FLAGS), P, FAM, COUNT, NULL)
++#define kvzalloc_flex_sz(P, FAM, COUNT, FLAGS, SIZE)	\
++	__alloc_flex(kvzalloc(__obj_size, FLAGS), P, FAM, COUNT, SIZE)
++
+ #define kmem_buckets_alloc(_b, _size, _flags)	\
+ 	alloc_hooks(__kmalloc_node_noprof(PASS_BUCKET_PARAMS(_size, _b), _flags, NUMA_NO_NODE))
+ 
 -- 
 2.34.1
 
