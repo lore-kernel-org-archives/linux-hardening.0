@@ -1,134 +1,70 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461BA1BBBE5;
-	Sun, 23 Nov 2025 20:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D65F21CFFA;
+	Sun, 23 Nov 2025 20:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763930044; cv=none; b=EzCy3Y9KBVE1fc1EMotggrVHzGn8smAoFyEGtghvL/nJ7GcpcNtfRtGhPjrQqj0uxYrEEktihbNLmkvu91D9t4wng3uM3ZkebKd8iZZXW25R6bQnjMUIyW5f2dlTuJzs2Lkp3Q39qlXEUbIP+n9WHahrWeEW6/+bOaT+9hjCYzc=
+	t=1763930265; cv=none; b=Kc0W9u6oFNbTlIsSTz4GriEAIitLd3kofPaYIuLL/++2XIRZ0eIeWhRq9hZsUJuNDE4S8lLyPaHJmQBrcHniYYz+G+BkjCC6i/NnPa9xg3XPWUUc3kB8VGL0RpJE7vGRBLrWqJA0pYSpQRjSqvQLQjL2VKL3W1Kd9gjqoPru1xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763930044; c=relaxed/simple;
-	bh=DsPcWInfZ6GVQ99m1bNCsnMq1TkaF+RzApr7FO+cajs=;
+	s=arc-20240116; t=1763930265; c=relaxed/simple;
+	bh=ZVL7+ulqZ2NQz4aHHJ+fjTldZPRZrcObHzTyt/0ta/E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eFnirH26rDwJjJBjifmFCWSc0QcbAmn4xvxgMrXY/ONYGscIPyDkP5nroX0mZPQUvk4UqL1CKV5VKsTTFdoQ9zb9v6p/EVv6Zq7zGvMAOCtsOMMo2OGY3lAj67QT51DeZL8oF67QbOMHvdY5hBzA8NP87MqrPYj6fmf8RZDICqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=EUxLKgZv; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=u+EFly3TVL9Fz3iRNXd7nVXbm/7YA7kCVP0Q5ULN1gjHgl/cNHzJDfJqYn7pmRLRFzQUrJm37cRBK9VNV6U4CGPc1leePegxAmHRI9UygYepVlERG2Pg5wfXIFbcS90JMiJmzTgooHhPLVDX/GIrNivmGnBtKyyxQ7Yc5Oidupo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6Si6j+g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="EUxLKgZv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=CSgH1ZaYBrxKmSAB6ChlLxpJ6NUOOuEnqqcyJnSbdbw=; b=EUxLKgZvejQzA83OMk/dgKzdez
-	DtjkRGcx3Abo0/ozjfZ8XDtFsuqAclp5UUdY0DkSZ9jO0CXZZVgfDiVTfdLoZZMjREIJZr2qZWKaq
-	2c6Ll4p5qKdlEPyekY4XaJ7aDjx1wX3q7O6i5UMewlYPLPk/LelEW4njYFka7R5MX+GqfUWJgi79H
-	4J5bhbELxKUXt2CGBSv262saQhAXhF2PRV0uPwuVu8ciyq09Py9qM1ZZIcg1JN9L5SIolg76UWeBc
-	F4NCsDmZWODHMum0v8i+R/qBTIA8WVe/vKH+yBrgx+0KgnaoRMM1bA35UBRajWdcY/nalc/zSDXg5
-	SCrh9MNQ==;
-Received: from authenticated user
-	by stravinsky.debian.org with utf8esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <jspricke@debian.org>)
-	id 1vNGmL-0022dN-Vb; Sun, 23 Nov 2025 20:33:50 +0000
-Date: Sun, 23 Nov 2025 21:33:47 +0100
-From: Jochen Sprickerhof <jspricke@debian.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Salvatore Bonaccorso <carnil@debian.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, 1121211@bugs.debian.org,
-	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6Si6j+g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3ACEC113D0;
+	Sun, 23 Nov 2025 20:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763930264;
+	bh=ZVL7+ulqZ2NQz4aHHJ+fjTldZPRZrcObHzTyt/0ta/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m6Si6j+gOMlRn3PCx4wiBTfTYRVxFqx4Hr92jYfcnZ4RSMC2zdeIWysZxonz529oE
+	 879TeSEPhR/I51Rc5E3iebNpLda/pAVgCIZVCXbkcAMiKsb+mhURWeqOjmfQ0lrF0+
+	 EOoV2KI4vY/+oCrSXNBRk3Jo6YFKbX4eF15X1Bo2NBHKJ8zOZReMoai7B3kvmsH46Q
+	 cTjSFjNO8YRGrxrPuN1bcmLlGf/QdmcAjrFaCed6yRrzLLEIzCfkgRcNNxXgvqBlwo
+	 cHBCKvf3YZ44Gt3P5MGGvKrsRUdzSSY3mkDf2QUMza733CqcrNOKff3UMH08i+WTzt
+	 Q1jBZ7YZKtdyQ==
+Date: Sun, 23 Nov 2025 12:35:58 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
 	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: Re: Bug#1121211: UBSAN: array-index-out-of-bounds in
- /build/reproducible-path/linux-6.17.8/drivers/clk/samsung/clk-exynos-clkout.c:178:18
-Message-ID: <aSNvq-YjABITPQV5@vis>
-References: <176383554642.17713.6408785381758213911.reportbug@vis>
- <aSIYDN5eyKFKoXKL@eldamar.lan>
- <20251122203856.GA1099833@ax162>
+Subject: Re: [PATCH 0/6] lib/crypto: More at_least decorations
+Message-ID: <20251123203558.GD49083@sol>
+References: <20251122194206.31822-1-ebiggers@kernel.org>
+ <CAMj1kXFSL9=TWzv35mSwVMVaKAQ=3n=w93=1+VSfKyDe+0A+Ow@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="//E4p0t+s0jrCbp/"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251122203856.GA1099833@ax162>
-Organization: The Debian Project
-X-Debian-User: jspricke
+In-Reply-To: <CAMj1kXFSL9=TWzv35mSwVMVaKAQ=3n=w93=1+VSfKyDe+0A+Ow@mail.gmail.com>
 
+On Sun, Nov 23, 2025 at 09:31:19AM +0100, Ard Biesheuvel wrote:
+> On Sat, 22 Nov 2025 at 20:42, Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> > This series depends on the 'at_least' macro added by
+> > https://lore.kernel.org/r/20251122025510.1625066-4-Jason@zx2c4.com
+> > It can also be retrieved from
+> >
+> >     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git more-at-least-decorations-v1
+> >
+> > Add the at_least (i.e. 'static') decoration to the fixed-size array
+> > parameters of more of the crypto library functions.  This causes clang
+> > to generate a warning if a too-small array of known size is passed.
+> >
+> 
+> FTR GCC does so too.
 
---//E4p0t+s0jrCbp/
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+See https://lore.kernel.org/linux-crypto/20251115021430.GA2148@sol/
+Unfortunately gcc puts these warnings under -Wstringop-overflow which
+the kernel disables, so we don't see them.  clang works, though.
 
-Hi Nathan,
-
-* Nathan Chancellor <nathan@kernel.org> [2025-11-22 13:38]:
->I bet it is the same problem as the ones I fixed in
->
->  6dc445c19050 ("clk: bcm: rpi: Assign ->num before accessing ->hws")
->  9368cdf90f52 ("clk: bcm: dvp: Assign ->num before accessing ->hws")
->
->So something like this?
->
->Cheers,
->Nathan
->
->diff --git a/drivers/clk/samsung/clk-exynos-clkout.c b/drivers/clk/samsung/clk-exynos-clkout.c
->index 5f1a4f5e2e59..5b21025338bd 100644
->--- a/drivers/clk/samsung/clk-exynos-clkout.c
->+++ b/drivers/clk/samsung/clk-exynos-clkout.c
->@@ -175,6 +175,7 @@ static int exynos_clkout_probe(struct platform_device *pdev)
-> 	clkout->mux.shift = EXYNOS_CLKOUT_MUX_SHIFT;
-> 	clkout->mux.lock = &clkout->slock;
->
->+	clkout->data.num = EXYNOS_CLKOUT_NR_CLKS;
-> 	clkout->data.hws[0] = clk_hw_register_composite(NULL, "clkout",
-> 				parent_names, parent_count, &clkout->mux.hw,
-> 				&clk_mux_ops, NULL, NULL, &clkout->gate.hw,
->@@ -185,7 +186,6 @@ static int exynos_clkout_probe(struct platform_device *pdev)
-> 		goto err_unmap;
-> 	}
->
->-	clkout->data.num = EXYNOS_CLKOUT_NR_CLKS;
-> 	ret = of_clk_add_hw_provider(clkout->np, of_clk_hw_onecell_get, &clkout->data);
-> 	if (ret)
-> 		goto err_clk_unreg;
->
-
-This fixes it for me, feel free to add a
-
-Tested-by: Jochen Sprickerhof <jochen@sprickerhof.de>
-
-Thanks!
-
-Jochen
-
---//E4p0t+s0jrCbp/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEc7KZy9TurdzAF+h6W//cwljmlDMFAmkjb6cACgkQW//cwljm
-lDMoDg//WSStBBpXj6C9bzA/OXvHMMCtdAs1iFeSvljh/6z+MJLvZ1b4Vo5zok1/
-lbQHn5aM/rYeSKlCM4vEiIJdMEaDD8tYD0TLgGAwDirnB/GStWYVRClBiEyLlhmf
-0/9at7smuicoYDM6/5AMglwznd4Dqx8WzNjDfBFe5PzkDd41+/vQ+M9uc8ql9F0A
-KI4YpGrwXCo86y213ke/9EALuafdzI0iY3+/DVypdB5sp5dtwhvfY3T0B1Is4Ldh
-wBhZqz3f5eOn5U87MHEFmcRDr01z37Oyj8kRFwMPWy7WJ9wn5Xc8o4wC36oRgwBY
-5FpvRXTcoZL4V6fnL+9243yz2BOV6ZUtQ5PQEvtHcwGDn/COlU4Ibn6XO1pryRxO
-lEksJbWGN5c6wd+NwxaXdb+U3wABQY8r12RwhZHEXAgIdBBHnmJ5NVNQDR+OF/kX
-iSpW2QokVWpi/D6U5gjuSC+bkce0XLoKHawDV8eNDnLpW9hQU/1mhhbNZZGzp2Ur
-YBul0za2dSfSklh/bH/7PsIiQrKJvYD+14u6ZWOuF2bZLZ/mMr6bjYr6k/x4iC0J
-njfvrmxBMq0c8kYBaS+g7mOTGEON7vbnP0JK6BW/MfQjYZO/jKmu1MCUhIgKhwsq
-EcGRUeH+NeSuA1DUbVd4t/NbxzzQjhTH1jQFxj8jCHEFdtB/oMM=
-=txjC
------END PGP SIGNATURE-----
-
---//E4p0t+s0jrCbp/--
+- Eric
