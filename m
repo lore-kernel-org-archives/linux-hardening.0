@@ -1,83 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2BF18027;
-	Sat, 22 Nov 2025 22:16:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558D91F30C3;
+	Sun, 23 Nov 2025 04:02:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763849776; cv=none; b=in1UxZ5OuHrRUgq6YpoQPv+U7vJfLgofW5220GBvgtMWzzpwJFWe1r8zs39Qc/vUE88LSq50mQXmyZ8Osd5jFWsaos4wl+R8cfe7k6+CS+rPCv2rKCBtoHPBLIADFg9Qiz8VixUkNzhIgU9o+qm/CrORxyqqBudbrGipgubegsc=
+	t=1763870543; cv=none; b=pfn99+8DZhrm8HCaBgO3TSg7E+XRblHp+kMFAmwQRkbZH7+PwK02NbN8PeBDx5kKFkSih0v1Aa5opOT+/nU7GY/YqzJGCxhRKnCMS/fgHrSRKIle5inMCsbx/cWJhQeaibCT4/a6bF7hR+pvdYOnoduBVhu+p5d6MEF6SC7KBWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763849776; c=relaxed/simple;
-	bh=oJdmGsiGca/DIx/SjiqaVDSIgtR8inCTav2QsrGYsnI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=u/NrmRDGAkvCL6PKSbEL/jbMIlynIR7zEPKzHc9Pw4v4lQjsHaSDRvoY1MNmNukpEu4kWJ4FUF38OOlGTTygXLpbAYzUqZFJJbaYhitQr+/wnRTUmnKFBPD1dJh4tDJlbOplX9r4s83eklMYzA7z8Tj/6VZo7otWJMdHp7r2wNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=aP/XIbRp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763870543; c=relaxed/simple;
+	bh=OsF9dPiGydUb1fjm8xjTcrh4gguoIJyFvKzt3XGkjT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N567lTQ4gstVcYj7PfL+CgBaoBGdJpGsHaC5syYTQlGF0iy/CdEloqUIte4ZuHhrP7k13yG90rH+C0IAGvwg5nEt5SiczQX4clmSUrpI99lLytzCmdiwpa2t4jv9KeUgktMadTZPAfGbEdjEi7XsQfnK1idjssjJtg3FMvunrtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VIxtWAUE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="aP/XIbRp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FC8BC4CEF5;
-	Sat, 22 Nov 2025 22:16:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1763849775;
-	bh=oJdmGsiGca/DIx/SjiqaVDSIgtR8inCTav2QsrGYsnI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aP/XIbRpSAXDDN74W5EaeT79d59eTeWrpONNYbuJxY47A6IOURTJuJDS/lcOqDMFJ
-	 kLmg01OK1IHPznETCSTp6gTrZCInPoI9U3cnZCndSAEGo9eB/CuHQmvOeNt67yrPrZ
-	 ty04hbqr2KmmVv3VlLRbNS6ArXo29SI61ReubVpA=
-Date: Sat, 22 Nov 2025 14:16:14 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Heiko Carstens <hca@linux.ibm.com>,
- Marc Herbert <Marc.Herbert@linux.intel.com>, Uros Bizjak
- <ubizjak@gmail.com>, Tejun Heo <tj@kernel.org>, Jeff Xu
- <jeffxu@chromium.org>, Michal =?ISO-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
- <thomas.weissschuh@linutronix.de>, John Stultz <jstultz@google.com>,
- Christian Brauner <brauner@kernel.org>, Randy Dunlap
- <rdunlap@infradead.org>, Brian Gerst <brgerst@gmail.com>, Masahiro Yamada
- <masahiroy@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 2/2] memblock: annotate struct memblock_type with
- __counted_by_ptr
-Message-Id: <20251122141614.80f1a845cd694b1b470107ca@linux-foundation.org>
-In-Reply-To: <202511211525.05CB7E1AEC@keescook>
-References: <20251121193957.1655580-1-morbo@google.com>
-	<20251121193957.1655580-3-morbo@google.com>
-	<202511211525.05CB7E1AEC@keescook>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VIxtWAUE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90FCBC116B1;
+	Sun, 23 Nov 2025 04:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763870542;
+	bh=OsF9dPiGydUb1fjm8xjTcrh4gguoIJyFvKzt3XGkjT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VIxtWAUE0gjcsPieb3q8t7lfBREh+8Q3CBXR8fHcLDvW7MLMsr6f9M9RYZmkNjRVv
+	 gFNdnfuT6ydQoFIx2OmswbvDN8bmu+2BKYI5BoQIzwcHe1dkFQsmLrAqNNDVl2VXiM
+	 GheFMboiOQctW8RwSRkAk/0GLPBbUARnLwC6ZsnBrZKoc0iM+1zH8j4x4fxOe1TJso
+	 jQvVWGD2KaQ77rUINj63TusHzcv0oX7FrfjbZARL8CWrAShJbqXYTAcU4kpe6qFMcG
+	 1C3I56VijXpGOinoPtCbtlK+8YTHIOfLcv79S5joQBjuMxg5zKO8tJ2z2s/TtGI/aI
+	 mSztAOC48waoQ==
+Date: Sat, 22 Nov 2025 20:00:37 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 0/6] lib/crypto: More at_least decorations
+Message-ID: <20251123040037.GA42791@sol>
+References: <20251122194206.31822-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251122194206.31822-1-ebiggers@kernel.org>
 
-On Fri, 21 Nov 2025 16:30:43 -0800 Kees Cook <kees@kernel.org> wrote:
-
-> On Fri, Nov 21, 2025 at 07:39:44PM +0000, Bill Wendling wrote:
-> > Add the '__counted_by_ptr' attribute to the 'regions' field of 'struct
-> > memblock_type'. The 'regions' field is an array of 'struct
-> > memblock_region' and its size is tracked by the 'max' field, which
-> > represents the total number of allocated regions.
+On Sat, Nov 22, 2025 at 11:42:00AM -0800, Eric Biggers wrote:
+> This series depends on the 'at_least' macro added by
+> https://lore.kernel.org/r/20251122025510.1625066-4-Jason@zx2c4.com
+> It can also be retrieved from
 > 
-> As part of any counted_by annotation patch, there needs to be discussion
-> in the commit log about how it's been shown to be a safe annotation
-> to make. e.g. in this case, if all allocations of "regions" have a
-> corresponding "max" assignment, etc. If just "git grep" can't find them
-> all, using something like Coccinelle or CodeQL to search for struct
-> memblock_type::regions assignments can work.
+>     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git more-at-least-decorations-v1
+> 
+> Add the at_least (i.e. 'static') decoration to the fixed-size array
+> parameters of more of the crypto library functions.  This causes clang
+> to generate a warning if a too-small array of known size is passed.
+> 
+> Eric Biggers (6):
+>   lib/crypto: chacha: Add at_least decoration to fixed-size array params
+>   lib/crypto: curve25519: Add at_least decoration to fixed-size array
+>     params
+>   lib/crypto: md5: Add at_least decoration to fixed-size array params
+>   lib/crypto: poly1305: Add at_least decoration to fixed-size array
+>     params
+>   lib/crypto: sha1: Add at_least decoration to fixed-size array params
+>   lib/crypto: sha2: Add at_least decoration to fixed-size array params
+> 
+>  include/crypto/chacha.h     | 12 ++++-----
+>  include/crypto/curve25519.h | 24 ++++++++++-------
+>  include/crypto/md5.h        | 11 ++++----
+>  include/crypto/poly1305.h   |  2 +-
+>  include/crypto/sha1.h       | 12 +++++----
+>  include/crypto/sha2.h       | 53 ++++++++++++++++++++++---------------
 
-How is anyone to know these things?  I can't find anything about this
-in include/ or Documentation/ or in the relevant commits.
+It turns out this causes a build error when <crypto/poly1305.h>,
+<crypto/sha1.h>, or <crypto/sha2.h> is included before
+<linux/compiler.h>.
 
-There should be a comment at the __counted_by() definition site, please.
+Jason's patch to <crypto/chacha20poly1305.h> is okay, because that one
+indirectly includes <linux/compiler.h> by chance.
 
-And possibly write a Documentation/ file then change checkpatch to
-direct people to that file if they add a counted_by?
+I thought <linux/compiler.h> already got included in everything via the
+-include compiler flag.  But it's actually <linux/compiler_types.h>
+which works that way, not <linux/compiler.h> which is a regular header.
 
+We can make these crypto headers include <linux/compiler.h>.  But before
+we do that, should we perhaps consider putting the definition of
+'at_least' in <linux/compiler_types.h> instead of in <linux/compiler.h>,
+so that it becomes always available?  This is basically a core language
+feature.  Maybe it belongs next to the definition of __counted_by, which
+is another definition related to array bounds?
 
+- Eric
