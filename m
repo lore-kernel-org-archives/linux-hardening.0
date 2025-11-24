@@ -1,137 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6F525B311;
-	Mon, 24 Nov 2025 20:55:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720B1325483
+	for <linux-hardening@vger.kernel.org>; Mon, 24 Nov 2025 21:06:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764017708; cv=none; b=J6zL9NwRnq0/7vobqZfRFOcHnhnXnGZt2d5zCcuxPRw79Yvl3tomARjC8zavBpludMvhQ+Dqgvp7fyCQ7uQ9i7YQuhG+i7q8b9E8JkQqp14SsZA3lx2euqoP+8Dl5fZLsDAGEjIs2BbnM7+0w17I1GKr5Zay0b7Gfpt02fe83w4=
+	t=1764018388; cv=none; b=KO8i3XwskNnpjJmlzjRX2YWsVwb4Al9si5JPV9ykZhmVHhboLw1y/JeB6cZU2q+2f1iRIC0a/EVps/cAcfjQuuoA3VtWnaPXH4h/hA3XjLbRqW+tOauLzO8RizjCa3WSM7JtRs/QzoPcPBujnpQfKISPZwFPwRyJxgVK5xgKWW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764017708; c=relaxed/simple;
-	bh=PRNa9x1odFaBXlcSUnHQYYPhLcAMF+az4jN4dBzNRmw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R9i+avNJeUWDT9SgL6RXNkSaGwau9Q2L5NwZh109TmyC9Cq8upHmykHPg9dJw2EwKz0en4LpoU9h77/9YiUJ0GNLqUvHtff/Y1iKPisxP3MvEUNPLRRVczrsKgVtmn3vJXwzMj28g1FTztRrUNqCGVlH0nduEzS5RpubNZ1OoC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWhQ9t07; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764018388; c=relaxed/simple;
+	bh=5ZpbdBOEme5Ef7yD8vxuIFpt/rRhKUZ4HY8PVU4Fpo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mW2qFDseyhytgimD1jTRqHRJ7dbnVBpYvF501Eeefw9OmmplqQl3gJBjyQqkn/2ywhRmYMyu36ISx7qP9C0odRTUB1z6kEo5ubIuSpJ5YSeMxemeugF7KjrI/2ERLx9vDv5LTzCAv+XjX8ekZAl9kCj8AT2Y4t14QzMaieVBVws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MneGRE5Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWhQ9t07"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F630C4CEF1;
-	Mon, 24 Nov 2025 20:55:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MneGRE5Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44062C4CEF1;
+	Mon, 24 Nov 2025 21:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764017705;
-	bh=PRNa9x1odFaBXlcSUnHQYYPhLcAMF+az4jN4dBzNRmw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FWhQ9t07bpaMhIM4WWPDOvIe6sIkF0p1P4g9vtYg/lxrVOrdUEL9gO1uablH4W61o
-	 1vG2y+8XrZjUwI6uaw5z745ch7U44JSvW3Um+0PvNKXGtlpLBn1GMjcoDOBYbh+S/M
-	 11iYuPNnxqUGw/XHfsl+WnqjhOBy2kJcGzgzILFMGFzmg3WfOfQyqvpOed8cUl3Jt1
-	 atFknCpM0r3GhQ0UxJTLGIXkjUEGX9C5UsXNNBvoOqeVSdMnnxIyesBd+q1D4gFL+f
-	 1KTsJaC6ln2rIccGQtSvFh8zMYRssS5HIOm/Lp6haPyN6KQeaWKTroCtl622rx+eFo
-	 9KO6kgoq+Xe6A==
-Message-ID: <bbe07dc1-f77d-4dbd-9cd2-5efe8464f43b@kernel.org>
-Date: Mon, 24 Nov 2025 21:55:00 +0100
+	s=k20201202; t=1764018388;
+	bh=5ZpbdBOEme5Ef7yD8vxuIFpt/rRhKUZ4HY8PVU4Fpo8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MneGRE5YfqloYRWYJ2L43A3dMy6bQMkj7pqpMXSmicTWkMJ5kfBym8XFudRcYX1TZ
+	 dfrifPk9s8kNFw5Gz+tHGOuonOz6/ok9phUhrrW4aOY9LlVHuHTkSRSxH9HHWVDUvy
+	 9tBZPzDEnDB6d3cw3eCiCnxe67B43BAZK+x18CiXY+ZojbNPy6IMp5sWISMjryaT1Y
+	 i8SqeV+0wTyFb8ZLi5IMMmwCdScm7Yr7qFPSC6LjomBpY7Tyw3YY5ViZ1RtS42UwEC
+	 Rk9nmqQVVWF95lepBqNkbk0GAwPSgELQmPrUUxbH2ixDwrJbbn1lfxAo6L4L2nL8xR
+	 yivTaa1MknR8w==
+Date: Mon, 24 Nov 2025 13:06:27 -0800
+From: Kees Cook <kees@kernel.org>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>, linux-mm@kvack.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 13/16] usercopy: Remove folio references from
+ check_heap_object()
+Message-ID: <202511241306.525D3248@keescook>
+References: <20251113000932.1589073-1-willy@infradead.org>
+ <20251113000932.1589073-14-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: samsung: exynos-clkout: Assign .num before accessing
- .hws
-To: Nathan Chancellor <nathan@kernel.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Salvatore Bonaccorso <carnil@debian.org>,
- linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, stable@vger.kernel.org,
- Jochen Sprickerhof <jochen@sprickerhof.de>
-References: <20251124-exynos-clkout-fix-ubsan-bounds-error-v1-1-224a5282514b@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20251124-exynos-clkout-fix-ubsan-bounds-error-v1-1-224a5282514b@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251113000932.1589073-14-willy@infradead.org>
 
-On 24/11/2025 20:11, Nathan Chancellor wrote:
-> Commit f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with
-> __counted_by") annotated the hws member of 'struct clk_hw_onecell_data'
-> with __counted_by, which informs the bounds sanitizer (UBSAN_BOUNDS)
-> about the number of elements in .hws[], so that it can warn when .hws[]
-> is accessed out of bounds. As noted in that change, the __counted_by
-> member must be initialized with the number of elements before the first
-> array access happens, otherwise there will be a warning from each access
-> prior to the initialization because the number of elements is zero. This
-> occurs in exynos_clkout_probe() due to .num being assigned after .hws[]
-> has been accessed:
+On Thu, Nov 13, 2025 at 12:09:27AM +0000, Matthew Wilcox (Oracle) wrote:
+> Use page_slab() instead of virt_to_folio() followed by folio_slab().
+> We do end up calling compound_head() twice for non-slab copies, but that
+> will not be a problem once we allocate memdescs separately.
 > 
->   UBSAN: array-index-out-of-bounds in drivers/clk/samsung/clk-exynos-clkout.c:178:18
->   index 0 is out of range for type 'clk_hw *[*]'
-> 
-> Move the .num initialization to before the first access of .hws[],
-> clearing up the warning.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with __counted_by")
-> Reported-by: Jochen Sprickerhof <jochen@sprickerhof.de>
-> Closes: https://lore.kernel.org/aSIYDN5eyKFKoXKL@eldamar.lan/
-> Tested-by: Jochen Sprickerhof <jochen@sprickerhof.de>
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-@Stephen,
+Reviewed-by: Kees Cook <kees@kernel.org>
 
-Can you take this directly? You already pulled from me for next cycle,
-so that way might be easier.
-
-The fixed commit is from 2023, so does not really fit criteria for late
-RC fixes, thus I propose for next release.
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-
-Best regards,
-Krzysztof
+-- 
+Kees Cook
