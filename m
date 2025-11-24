@@ -1,162 +1,88 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F5427472
-	for <linux-hardening@vger.kernel.org>; Mon, 24 Nov 2025 08:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EC62F49EC;
+	Mon, 24 Nov 2025 09:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763973375; cv=none; b=OhczMlfMJHleiUKjn1pF1h5Zb31epAYDU8WwFxqj3ltGyXMQ+/0HyiB7BuHclmf7MJuilL1bXa9zn05OI0BNGSGHCCysdM+u34GLBx/bYl2APHcOj6QvcFW7JgMOXNZSpVAptdamqo5ZvNFG/wI0kcTAqoNNtiBorAStIDFSpLA=
+	t=1763975495; cv=none; b=AWeS5x8gPs+8w5Mz2PrlvK655EwImYNL1dEyMDiNXGfABACQmPZyW/9fLCA2FAgMUHe+10K+CEvVwKCdhPcK8E7Zh2nMeTl25iMed3mivHCpTijDOusdtLn2/0oscFLMb/EL9a1Ja1BNMMf4pvdh1VSlaDs/rVZdoXqvB4y2mtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763973375; c=relaxed/simple;
-	bh=cLynWp3+xRbU3X10UJgdhCMNeGKdopMbWlcvgCv0kK8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Slnhy05EuXzrej8sS7R27g8jDkqvLplNJc85Tn0j8QkPcLmJnXW7niTE7OImIGQU+pceYZgtuOe8cACxK3kHLiGZyr/E2xwKvOGfSIxMDiRrX0/5gQIsU0Nxsx8b++qkzg3sqmVMujE7BYWMmy6/0Ym0MsuCCkEAJNfyl99k4IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ymBZM06H; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1763975495; c=relaxed/simple;
+	bh=kxGpo/egBIFq7+bW7hMJPBwGl+t/HkgquWHWxMcBps0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Vg8ppLvA4mBv8PPyKYR2rSBp83bZh1QvIqiLBKdg3ShSUwVhtEuYFSTgsyamW1Tv68m7N0MMI2hV5v/k+5DMZine/VKTnROZu6xeKCgfN69q2R5yU+IpDSlPuhfBQnqITjVX4wclxeUMX4y4+eUkTNFCXTAuKiFwLXvjXYkatU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ebjjOIGG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ymBZM06H"
-Received: from eig-obgw-5001b.ext.cloudfilter.net ([10.0.29.181])
-	by cmsmtp with ESMTPS
-	id NQYOvSnBCipkCNS1tvCGvQ; Mon, 24 Nov 2025 08:34:37 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id NS1svDJZtzFaZNS1tvSKM1; Mon, 24 Nov 2025 08:34:37 +0000
-X-Authority-Analysis: v=2.4 cv=VK3dn8PX c=1 sm=1 tr=0 ts=6924189d
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=ujWNxKVE5dX343uAl30YYw==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=7T7KSl7uo7wA:10
- a=4vEMbUz4tjps1hWW7IUA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=SN6BtQodztQSJ+WhwDENZPRecE8rNPr6eSX8ZqFq7kM=; b=ymBZM06HiIfergUAs1DNdjxgrq
-	QYaU32Ae/Pze0iOrvVRYJyeDiwZ6Lj8u1LUDHOkdRqGkGmrzAoRVz8EoMMTfDejwn5gf4BHr/yN01
-	cxd29+g/uEvZZRv/fe9naB3uW4U2Rjz1LQvYY5ktDvko/B4yPcNu84nLC6aGhOuEiPaGf7+UlFFIX
-	XsfCWaLJ+Dir9UqtdpiQ/szPuC36FCOJe4nboegKLHQw/11k3xhPmWAIVw0nmGmd7s3tSfKRqBlt2
-	sYtVuxBjDBOKGh8Wrfn537Hi2kL+4xzjfI1bTEIY3gXIAr1KUQiy4/xcLBoO9OKvTmLyUYYtCTKKO
-	po2K6T1g==;
-Received: from i118-18-233-1.s41.a027.ap.plala.or.jp ([118.18.233.1]:63980 helo=[10.221.86.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vNS1r-00000003o5C-2gqj;
-	Mon, 24 Nov 2025 02:34:36 -0600
-Message-ID: <da074ecc-e688-493e-bd63-76cd88e1ff0f@embeddedor.com>
-Date: Mon, 24 Nov 2025 17:34:18 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ebjjOIGG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 218ABC4CEF1;
+	Mon, 24 Nov 2025 09:11:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763975495;
+	bh=kxGpo/egBIFq7+bW7hMJPBwGl+t/HkgquWHWxMcBps0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ebjjOIGGtmKWVy+EtYu4XZgPXZkbHhaEuF+1cCF7OYJPT3McEyBJRISrruMP4sO+r
+	 9YFgH4eIaDou+bCg2gfG+vBYtPu6GRSvYL/OfIT0+rGM5PZLsqPr8EwIBxzTt7wQLB
+	 PcFE+GkTDeyd4l/X5g968l00EL8JnJZfohYR+fguqP25XxZVa+5MhdeLzw+Hex8xJo
+	 y3U0TrC1lAyGNQB56PHSOfRcmT9qg8PMiRTu5k/nELgEiL+6ofbzJ53DKQWXEKUbP0
+	 LB7ziiPu2Eve/3UydhUfsC6vIGpfFB7AGhviGHSGN9m+CewCec0iNwtCclwr45V2/J
+	 Qm+HhPs6H5yOQ==
+Date: Mon, 24 Nov 2025 18:11:30 +0900
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Chen-Yu Tsai <wens@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>
+Cc: linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] crypto: sun8i-ss - Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <aSQhQh1xyp-zauPM@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] bcache: Avoid -Wflex-array-member-not-at-end
- warning
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To: Coly Li <colyli@fnnas.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-bcache@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aRHFchrO3BmVMH5c@kspp>
- <7g2dkwi2nzxe2luykodsknobzr5bkl23d5mbahkyo7adhg55oy@6uisoc7jzgy6>
- <a956504a-55af-4c2c-95a0-15663435624a@embeddedor.com>
- <7zweggwc6mkksyhxzbdsphachjj5pzlaebli6xitryfl4yiqdj@eziyaibeuhza>
- <fbef561c-c470-47d0-9bc0-c565e10b2856@embeddedor.com>
-Content-Language: en-US
-In-Reply-To: <fbef561c-c470-47d0-9bc0-c565e10b2856@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 118.18.233.1
-X-Source-L: No
-X-Exim-ID: 1vNS1r-00000003o5C-2gqj
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: i118-18-233-1.s41.a027.ap.plala.or.jp ([10.221.86.44]) [118.18.233.1]:63980
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJubpSlZr1u6lJ/BLD5d1sy8JpEn7lZtYcLGqXyTojZhe1TBq7BZEXXyMqIFOHhTpyH2qkkPKaTOZaD5wrhYotVX1WhqWrwXsqzz7H7V1AsJh1w6tSFD
- Osf9XQLXp+44TlJ9BF47SBbtld3MGJZz1hYZ8+XQoxy5l1KFAO9vwowyuQo78U7vHZvy22QBNZqzjVArIMAGmzW8VMxzlGw6Ay/Rxr7TiwlKc37bLkTCQdFf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
+Move the conflicting declaration to the end of the corresponding
+structure. Notice that `struct ahash_request` is a flexible structure,
+this is a structure that contains a flexible-array member.
 
-On 11/13/25 13:24, Gustavo A. R. Silva wrote:
-> 
->> I see. I take this patch, with the above complain...
-> 
-> Thanks, Coly.
+With these changes fix the following warning:
 
-BTW, I'm currently looking into the following struct, and I wonder if
-it's okay to move struct bkey end; to the end.
+drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h:251:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-drivers/md/bcache/bset.h:157:struct bset_tree {
-drivers/md/bcache/bset.h-158-   /*
-drivers/md/bcache/bset.h-159-    * We construct a binary tree in an array as if the array
-drivers/md/bcache/bset.h-160-    * started at 1, so that things line up on the same cachelines
-drivers/md/bcache/bset.h-161-    * better: see comments in bset.c at cacheline_to_bkey() for
-drivers/md/bcache/bset.h-162-    * details
-drivers/md/bcache/bset.h-163-    */
-drivers/md/bcache/bset.h-164-
-drivers/md/bcache/bset.h-165-   /* size of the binary tree and prev array */
-drivers/md/bcache/bset.h-166-   unsigned int            size;
-drivers/md/bcache/bset.h-167-
-drivers/md/bcache/bset.h-168-   /* function of size - precalculated for to_inorder() */
-drivers/md/bcache/bset.h-169-   unsigned int            extra;
-drivers/md/bcache/bset.h-170-
-drivers/md/bcache/bset.h-171-   /* copy of the last key in the set */
-drivers/md/bcache/bset.h-172-   struct bkey             end;
-drivers/md/bcache/bset.h-173-   struct bkey_float       *tree;
-drivers/md/bcache/bset.h-174-
-drivers/md/bcache/bset.h-175-   /*
-drivers/md/bcache/bset.h-176-    * The nodes in the bset tree point to specific keys - this
-drivers/md/bcache/bset.h-177-    * array holds the sizes of the previous key.
-drivers/md/bcache/bset.h-178-    *
-drivers/md/bcache/bset.h-179-    * Conceptually it's a member of struct bkey_float, but we want
-drivers/md/bcache/bset.h-180-    * to keep bkey_float to 4 bytes and prev isn't used in the fast
-drivers/md/bcache/bset.h-181-    * path.
-drivers/md/bcache/bset.h-182-    */
-drivers/md/bcache/bset.h-183-   uint8_t                 *prev;
-drivers/md/bcache/bset.h-184-
-drivers/md/bcache/bset.h-185-   /* The actual btree node, with pointers to each sorted set */
-drivers/md/bcache/bset.h-186-   struct bset             *data;
-drivers/md/bcache/bset.h-187-};
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Something like this:
-
-diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
-index 6ee2c6a506a2..e6daeb0edc02 100644
---- a/drivers/md/bcache/bset.h
-+++ b/drivers/md/bcache/bset.h
-@@ -169,7 +169,6 @@ struct bset_tree {
-         unsigned int            extra;
-
-         /* copy of the last key in the set */
--       struct bkey             end;
-         struct bkey_float       *tree;
-
-         /*
-@@ -184,6 +183,9 @@ struct bset_tree {
-
-         /* The actual btree node, with pointers to each sorted set */
-         struct bset             *data;
+diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
+index ae66eb45fb24..3fc86225edaf 100644
+--- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
++++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
+@@ -248,9 +248,11 @@ struct sun8i_ss_hash_tfm_ctx {
+ struct sun8i_ss_hash_reqctx {
+ 	struct sginfo t_src[MAX_SG];
+ 	struct sginfo t_dst[MAX_SG];
+-	struct ahash_request fallback_req;
+ 	u32 method;
+ 	int flow;
 +
-+       /* Must be last as it ends in a flexible-array member. */
-+       struct bkey             end;
-  };
++	/* Must be last as it ends in a flexible-array member. */
++	struct ahash_request fallback_req;
+ };
+ 
+ /*
+-- 
+2.43.0
 
-This would fix 15 more -Wflex-array-member-not-at-end warnings.
-
-Thanks
--Gustavo
