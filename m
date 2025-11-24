@@ -1,417 +1,213 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8215CE571
-	for <linux-hardening@vger.kernel.org>; Mon, 24 Nov 2025 03:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763953365; cv=none; b=p/BZEB63YUtAodLccsDfep9X2o5bo3Xj9OVOdrCXPENtnAJrVmUN6kPN9M2UwLXyo9Oux2lFfiwdn/Q5Gt93QeCCIYHCUtoBLH/ycSjSWkKVsENVzDWgjZGemdYj+wGAv+SrtSut3ocl2A89HsARcFbBrrPOUyF2swipwEMpekU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763953365; c=relaxed/simple;
-	bh=7lglDPhhscPmEKRf/7UQETmGZN6t/kqZ2e38UElfHN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dYhckDanG12hcriM4eCYbQN+FE5vFcbabiuFgwjfk/Y+hFPxh2fstarRm5p9gMhz9au9GMPHpa0dppaoYcandNCnXJ80T3h3huRToxNh2qc++KULdkwKYoajEiWSW7DPfGXpFN1cpY0NW+9KowipQbnxs7v4eU8WSWCZdOyHXAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MVAmXbmS; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5148C14A8E
+	for <linux-hardening@vger.kernel.org>; Mon, 24 Nov 2025 06:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763964990; cv=fail; b=EyYQMBONn56gQnqsKNj25YY9yT/Llrx28jTohSlQiKv3e31Tsdjq1XahW2bWsGGlIzkoc45kHnwbb3Nf8mvrjRN63Oe1L02cKaJOYzVFkmLNk+4a7Yc7cJUOsVFlXdqAAsziM3sWmC/6tbgy8D/dqj9rT8LrjSvm+1HXWHMVCjc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763964990; c=relaxed/simple;
+	bh=erAzwBWu87G2poGcpAfuyzaZnDJhzm7PGThHk7MH5sk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=YzIdwck3uDBdXH/YDMNhVi1OgeRqM2x6/D867MO0zEfemrtaW+PAHkZNTCCrkvveBSAlh93sEZe2LyH6f5992M1GmJj9ni8GIP8c/iGsifsha4aDAxUWI0QU7WJT9UBszfzLnwa4agKIXakJxiRxiu2uPcdDDCJMP7plGT2odsY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=QHol+YvI; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=tAXvExJ1; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MVAmXbmS"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-340ba29d518so2276849a91.3
-        for <linux-hardening@vger.kernel.org>; Sun, 23 Nov 2025 19:02:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QHol+YvI";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="tAXvExJ1"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AO0SSW54078586;
+	Mon, 24 Nov 2025 06:15:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=deGLfnqrZBmyazTHTh
+	7DAhi7ZQTtvvO/MudIosB6Lx4=; b=QHol+YvIOJrSfTTJJMzyWyl609Or9G0WB4
+	fsI/PtnOd/wtcJEKU3323wv0fxi2M9m+Cw9aL+jNLWWYc5gWBcKPdvYyeMQClfeS
+	lxG5e40lnnB/Rx7zjhvIsXrwvy7a2qDgUURGWQOhPqM4CjDMvok8+id4gz+I/SVs
+	ruvfYwiorcjMOmM/ERr4gcOPvg0I5KrqDtYr8n17uKWB66lIPnWqGxg6u8beV510
+	+4YLIzcPooNmqiqJMt9dhvgg6uSMZ1te12L8gPvtQhNNK0wDg5VqjjHFZxvYj4YM
+	NohZC1kCvzqpXl4kqMkLax68Bu/vceGIEU/F2NFuJb5/EWbkgoeA==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4ak8dd9ejh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 24 Nov 2025 06:15:06 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5AO6ECcr032703;
+	Mon, 24 Nov 2025 06:15:05 GMT
+Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazon11010041.outbound.protection.outlook.com [52.101.61.41])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4ak3m7qbg9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 24 Nov 2025 06:15:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=I+lAbnudjNkW1VUKbD1v2NDEUXJxL4lcO+PRbeY3p9S/nEJ6rUmwhbFEicz/BKw9Yf1uUylkEyeu9nsxwxE2MQTVKTadT6mDoKz8MnHuVgydCERMvsqcBZ9GG+/ZJgslTjL3vd1viIq4R8iscSRjuymjKzA7SAcMoW5XPj6hwcGk41yiRmmA/BpfWKMfjw/OivBojn8O8LNNGQ57CFaRipoka9KsKnEDVEA90H0k1f22inW3yjBAfSCYru9pwwDjwZ490v780Y4iiApeTBfMscc5bpF1DGdFgT2zN1YeZgy9baQz2f+X2XsiczYxhuKN0OtBgVWJtMl8aPEu/Ed3hQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=deGLfnqrZBmyazTHTh7DAhi7ZQTtvvO/MudIosB6Lx4=;
+ b=ahcnEZRAzRjUidvsmcV2DoguekEfSyCKbBNmH1t4TNC2y6cl0RjoK3wB76K77eK02ifWe/FP2AydgITQ6uhGZov9dZX10Jl/N94Zofs46PM8bg50+8gLZNHk51h0ztbdB3b5zU/IT3IFCK0byzPbRgTT3r4bXFnCljaoHkw8HMJW7BGTL1qSbxev6EYs99X0XBWGCf28DWxxhWEe2zkYx3I87CEI+yIqNpqi9Q7tdZF3EEjq1RR5wKV7tFiSPSFvWjs9Ibl6I5fk25fsJsAQDGiK/bn3iFWq5khGznF39eF/ngIe/WxBLbPBq04aMMUdIAQiPYZZtbFav7kVAS6O4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763953362; x=1764558162; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EThjVRtG3u91ThHtH8s7htB0Qt2hP8NHKg4Z/0u1oC4=;
-        b=MVAmXbmSW7Fd6KYzUTcIcWzZIVBJDYo7LcDY3hPwDsNA0jeRa+S4ogElHg98etyUQy
-         DPaufFik0PtlgjYMzycv2zaC1sNE1D4UWqg1MSMRPUrn92U58bXfghSsJajMIekGueB8
-         Z5tscZHPLrglDGRpzuU8SXKOOCuS9ogOCzyvaxZqqSrdCBKNiKqKFeopFU0RNrOgCbYZ
-         yTAkLLyTPofxrBkxqkLYGw0zoeic4R4gowdMXbpwcncKRGe/oWbbnK53xcm74YsEoxvs
-         uBCbj9ZMB3wAtFYl6evnzwEXcDp3P7IqKpl77522z+75VX/z31Uat2H6O7gJu0z49AKk
-         5tGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763953362; x=1764558162;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EThjVRtG3u91ThHtH8s7htB0Qt2hP8NHKg4Z/0u1oC4=;
-        b=J/Vwi28dg3Vv3qglK6Xxs5MQylNKPst1C2etHi3CXF7eXXZxIVlExeoNGMLb8C665v
-         CT9Pde5/vAHiWmXJH9WOfMCJTwCTS5TqUtDk90oYGjCJEQzsmQhDpUNFAZ8OtwCbPzxC
-         pZ2fOG4uMPfnjIontYj7gtisly5Qf+bOrxXayuiX0daMOuBGFhf5MDt5esdLzBZT6hbO
-         7AMG/miwJFSN0uzI40hcAfygvnRoNAZ/IPo7DM/0K/URHu84DOcLzx8e6ciWTSh66Phk
-         j+son3HGijbVJR2pF1OjBUZXtmbB9i1k8UKw9Z60GRSXGQj28bUg/xqH6PhxISIANwQj
-         Fnew==
-X-Forwarded-Encrypted: i=1; AJvYcCWnfIu3HKUeXZmIaxeurV+fBtMXoOTl30QfKbIwMGO/X/xNqLVnEYQxn6DhNW2siQuZ+SIaaAsCIligaLzBH00=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPOjL0ft++XZ1mVdqGa6ZVvD+HnJXVSXZNPerFkbmQio6BYMi2
-	PX2o2XPY9WsjL0VJjbmz0R6AJK0lvNrPZYdzXajP+jUk8CD/eMNbtID7
-X-Gm-Gg: ASbGnct3pSfu+bjv58ttcDbMaxYWZJ+9JPB2MvoAldY+5kV1hgkNfXGS5v/hj4njcBj
-	isXxqKt9/B0Tww0uAPMqOqFbOH6NN0/sc3g7tcR0a7R1YsUzoaoKVcx52F3JBwJzEOGLMxWgIKt
-	pV8inh4Md0DvR8oYSZQyMm2iKPpOdD4x3GXpVbvoGnD2Qjv0v4TLVXC8gL6ydcjj1/Rh6hrQ31r
-	Ipmuuqe5/D7IQHTpSNIsnTBJad2wP5Lt4jawMuO82YMZduYTuRAiyj93luLaHK9mo1nURWnGkGF
-	U8Yzov9IZ1zHjR3AHa04DIZppZjdECGOpaJo+8FIzyvA121hhkCUu1+VipWZzBS3L7zqBoQI+qj
-	cF8hx7OlkxX3w/UncQhgyZucvPSJhmpf4OpUYmTTH1etGndFiZcxYfrsyrp96lgLrQu89/5kpjs
-	UMta/GS7t2mSM=
-X-Google-Smtp-Source: AGHT+IEMt538xCkv+fqIIYil9IQfkAkpZOfttXOCrxqxU9ijd4Z/n1H3Gpy/X0jI7VxwtTCqcmNbzA==
-X-Received: by 2002:a17:90b:35cc:b0:341:194:5e7d with SMTP id 98e67ed59e1d1-34733f19c00mr11223472a91.24.1763953361678;
-        Sun, 23 Nov 2025 19:02:41 -0800 (PST)
-Received: from archie.me ([210.87.74.117])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34727d5178esm11869866a91.16.2025.11.23.19.02.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Nov 2025 19:02:40 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 8D1794209E72; Mon, 24 Nov 2025 10:02:37 +0700 (WIB)
-Date: Mon, 24 Nov 2025 10:02:37 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Eugen Hristev <eugen.hristev@linaro.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	tglx@linutronix.de, andersson@kernel.org, pmladek@suse.com,
-	rdunlap@infradead.org, corbet@lwn.net, david@redhat.com,
-	mhocko@suse.com
-Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org, jonechou@google.com,
-	rostedt@goodmis.org, linux-doc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org
-Subject: Re: [PATCH 01/26] kernel: Introduce meminspect
-Message-ID: <aSPKzcsFixn48edg@archie.me>
-References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
- <20251119154427.1033475-2-eugen.hristev@linaro.org>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=deGLfnqrZBmyazTHTh7DAhi7ZQTtvvO/MudIosB6Lx4=;
+ b=tAXvExJ1y77XB3jIBf3SbNUW/sk4c78HlMMFwV38CmC9RKzi1gxXwNT3RFQ/756ePddlBRBO9KKduXqSr7vTY1QJgNtg5BYRJSrQF6lZgxGG8BlfF23iymgDi9ziBZMvsIaPotRw59Q2ffk51zqFNXcZr+SSI+BNzv3v3fn7pSM=
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
+ by PH0PR10MB4534.namprd10.prod.outlook.com (2603:10b6:510:30::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.17; Mon, 24 Nov
+ 2025 06:15:01 +0000
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::c2a4:fdda:f0c2:6f71]) by CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::c2a4:fdda:f0c2:6f71%6]) with mapi id 15.20.9343.011; Mon, 24 Nov 2025
+ 06:15:01 +0000
+Date: Mon, 24 Nov 2025 15:14:52 +0900
+From: Harry Yoo <harry.yoo@oracle.com>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@gentwo.org>,
+        David Rientjes <rientjes@google.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
+        Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 13/16] usercopy: Remove folio references from
+ check_heap_object()
+Message-ID: <aSP33DLEKcCYxYqM@hyeyoo>
+References: <20251113000932.1589073-1-willy@infradead.org>
+ <20251113000932.1589073-14-willy@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251113000932.1589073-14-willy@infradead.org>
+X-ClientProxiedBy: SL2P216CA0142.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:1::21) To DS0PR10MB7341.namprd10.prod.outlook.com
+ (2603:10b6:8:f8::22)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jjzv1iO7GRx9l9vd"
-Content-Disposition: inline
-In-Reply-To: <20251119154427.1033475-2-eugen.hristev@linaro.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|PH0PR10MB4534:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3561047d-7500-44fa-8ba4-08de2b20cd1a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Ggsq2qQAlzmu9/Ljn8nK+v/NYWzCA2it9x3yHZHq1Bizht9hzUJPlGoZeGeR?=
+ =?us-ascii?Q?rJBucrMpHOaXxDi0xI2xTTObhlaI9HhSBke4wPA7ve2UL/4O68g9XpWt+gq+?=
+ =?us-ascii?Q?CqN31pccIyQ+fvNRifiwa7RPM3eHY7Z6LGlcUwDqf07pwgdiSVjLeD/9rJ9T?=
+ =?us-ascii?Q?9JQp4ze3+pYgMcb33gFCtvaxddwqQPshwelnPwH5hNbVvwwlznXxGQN9EoXT?=
+ =?us-ascii?Q?lEZOTJdSEcwOFy/m8olf2QXa1rZvKeRDGgUyFvEK7q7T9GrR4DAq0FTOTscl?=
+ =?us-ascii?Q?jNs8ZQ/dqrxU74pzEGOMmpx3NlLScJx1N0yw9+YT1hQwncMtlfZ0TV+1h3er?=
+ =?us-ascii?Q?k0xroGFBHxpRm4DeiSs7qnXg4TAZYffqNc+IJIq7WrHv2tHoU8HJJdtQgJVf?=
+ =?us-ascii?Q?RdlUhGLPyUs5ZWftyH3BOux6nriU6n2utuCjkC+PM1lkL9KZ/KKGRkJs12e0?=
+ =?us-ascii?Q?32rEZII2r07x376Vg9bRQtM7LUpYX+AFxi5yGNqUzk2sFBLwV3R7YMsFATwT?=
+ =?us-ascii?Q?MOP32EvD+5KfKJj/A+Y+XvnXkGhYteDgZSbn4gqeG4PSC4Z0aMijrGVVqrDl?=
+ =?us-ascii?Q?NonB3s8oFJLUPDnRLZDxDyXb6ukWbP44EIjTVxM0yg4xt0CIG+1ax3pmqWfG?=
+ =?us-ascii?Q?2FnOwu+trDBZFefN4pvKVtC7p5VQhMOfhcj4gIp12z7OvhlkpXZIl8JY2baN?=
+ =?us-ascii?Q?HP2LFGoXGTQUD7K+oQyNbef8wecbyRnFFwOWrJwO3nxAHzDGZBKMZEQ3cLsD?=
+ =?us-ascii?Q?vdUNiIEaZqH4DcNGkcshJI7086MDJ9Xw93JOR+cEfT1iwf6OyBMevtf0jk25?=
+ =?us-ascii?Q?Tr5369SAVQZOJBhy54CIcit/Vz2jLYq68GxJLBNxt8Rken7KYJbn9+DsZWLT?=
+ =?us-ascii?Q?rdyfVxmMLM5FNnxd1TFuZV6MW+OTbXs9jdEzFjaFQkxllxg9X7dNkLqVxYZe?=
+ =?us-ascii?Q?Y3GusqPPVuhbUqzvj9lcds4KUbONErE0jkpRAGsSuogRD3lGGX2QDM+ce56R?=
+ =?us-ascii?Q?w6xMX4zsDTaJI16ZuVCVyzVoE7c9Gpmy4oNuXmQD3YXK14Y3Q8ByViJY7mLh?=
+ =?us-ascii?Q?Ak9JhqkgY24SrxrEdzjnLvfJTofh5nPLg5yvRnyDkQYYCxWnSlUXA6zPbZSC?=
+ =?us-ascii?Q?y1zFOCoLVgwgwUvA5ZNbjVrDmnPC49HyY0ul5E8ivR2CcCR5T9O8iPrnyhj5?=
+ =?us-ascii?Q?J09KOK74q+IGpOx8p0g5ObqKqhvEXQ9K93i53ulPEQXRcD0DtHg2kblejHAj?=
+ =?us-ascii?Q?WnTvEfumaqSup1L74aeJF9mg++nGIOSrDhdAzkgjHkp4c/c/F48pnrzeSqe1?=
+ =?us-ascii?Q?zX9ExEllW25bq0aed7qfelf1ux6qMEcUvk0UXCQ/32P2mhsfzwP2zPh8c0i8?=
+ =?us-ascii?Q?lh8shmS0kvjqOVBihnteL5t0N8+S4kdsskIfTpac6yGNqAA/7+kBGARbSwyP?=
+ =?us-ascii?Q?7E7LNmKLnrhXWNfH3fi3RHNH+Mr9uxBT?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?MaqQG/ibbV+EJqO/hpgWjyzhYZHV71da/lxYCGdS+2OW878L5+f8TX2/RzJU?=
+ =?us-ascii?Q?QjUdmBNVH253pMMWCuyDmQVLW7zmjXx2P45LjPxFDcDAy4Wwdb5dfx/HtzRK?=
+ =?us-ascii?Q?dgLI+x6y/2d5t0HOAx/Fp+7ZOZRCm9Z/yBS2UjYL61hk77uOHoXUxMB//DfX?=
+ =?us-ascii?Q?UFRVAHthoiYOZnB6yoFvtt0VmxDKTt/4re7FSUQ0livNXtrc05gKN3FK3kxI?=
+ =?us-ascii?Q?ybbDgweRYl8Eo4u0bBU8u9AMnVMYSDyKz3FyaY5xp/mUDKN7wcWkXNGjMiFc?=
+ =?us-ascii?Q?qYlRdx2gxfqoQon4OIrlBQWdgwFYdrER3X19PK/UOTZCNfcXilsK1kFay/bb?=
+ =?us-ascii?Q?BLW8fi0D2tnLhycImE2hdPQsScszC+yBiHcDstD1nDReWSSuCH69CBoxrw/6?=
+ =?us-ascii?Q?ePMwqB3JU9y99E62TSKTXktycf2Y6xH1OtbPiAMYrgl0Wyc9888LjkUChlc+?=
+ =?us-ascii?Q?EAFpbWA/kMGaa1IvzahImVWku1+ctlg4xVOc9NC6SYBC50BrU4tZ9WsByL/e?=
+ =?us-ascii?Q?PiKJbczo+vbXlcXNI3Yf0qonXLq2VfAf5ptTg0upvwPuDdkAmIMU7pKoLwHt?=
+ =?us-ascii?Q?97ShqOWxz3R5oydFzKahPGXrpXL8D7ld0Xo105ir+RpvlFfC4jKC01cYNZ3w?=
+ =?us-ascii?Q?VC+oOAAJeYnXfBUNYUWUuh2C153Vb3f/G30JCi7lcozKs1JVgGCQjBpZFpvq?=
+ =?us-ascii?Q?ZddLZ3Ufjx/7ZJABx/wym+vQ8FjTFlrgPH9NMsE+6dF10D1u9Mz+wXLc0Y4E?=
+ =?us-ascii?Q?Ydzs+F6gyRWV/ZwSVCbXI3z+RRSLJZxYD2v2qV5dXgtWTPbpRmIkIn+LsCqE?=
+ =?us-ascii?Q?kNoty6LX8PGk/pzN1WmANnQKaLDOgaeIxATbVWf6ky44Gx5FWf3pWATRVs1X?=
+ =?us-ascii?Q?c5I9IolbnGT5kQdBPhFpdEQW2PB7YMC0z+FePd9O6xMoXH7Uig8Dt03ES+h5?=
+ =?us-ascii?Q?ZxhboqvEAasuhp0wuxwLDEA77HJ0+enA6KenRjUh0I2QwTNPUfNoSfBInI3T?=
+ =?us-ascii?Q?c3J/2Che484RtDeJplcAwU9Z5r/Gky/NZzWIlqjay0CF1Ov8zDVgSlyyv3bS?=
+ =?us-ascii?Q?V8e6tpR5KuvcYsgq5AXtfSxnOVwA7UYe3YEAVD8xBpOT9a3RmKSIUfcWkvPB?=
+ =?us-ascii?Q?lD/kYhagdthjdcRCx0E4zUBVoywKw9oe6Zx0y9PnSn5882sJYgmG/gFL1xWv?=
+ =?us-ascii?Q?RVlIVRrn9HjNnqgXblbIkq4endf8TpHLYRA/u3vdQqBj15Muu9qHEi5xFr6/?=
+ =?us-ascii?Q?pUywYJ2JFTeu4hG1UbJKPlq2eipH0kR/6rJLa4FTL3uZW0HQ4SJdLPyPr1nv?=
+ =?us-ascii?Q?QGDzEI4haqooR/wqq7W6SLUIQRak+/k5KVvCq0mOoBR574z67bRoxNEFEU8c?=
+ =?us-ascii?Q?FDtMTmIHN+bpgd2Zhgk6lEWpAvPRghCKIoiMX7T8hVA+nmsXEftT8c6Vwm4R?=
+ =?us-ascii?Q?koXA6b2K8H5Ba77m6JRyuC1EqmzGEujv3WKDMbSOFnY1d5v1NhQrzASjW73q?=
+ =?us-ascii?Q?Vs62mIZ29GUwvbcaOIZdRrKrcXlZGHfAD/an2okiYUIyk0rsYJ/xlucN+eEJ?=
+ =?us-ascii?Q?j7PxjZfSSKdlgC1LDjg5SgbhBezAqIaUBtkcGjPD?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	aVQ405Z8m8KxOPInb5JiTRXJ56dH3uS5p9ZERmf2a9GCZgvZVD/KaZseSPXOhJXiImEHwnWXPpu3fAYutP1RWZq6yEmiIW26zCpW30uZ6xyyDPrFJIDyA3UEImjog3BrXzj4nrP2KX2XURX3vV+sLC3twyAoPH1Yg3999aDhiDziJSnekDfxVmCISgWgC3OzlPAZmNcBH10gUDB92B29UI3xuxbbUwxH0dqQaYzmg5R3KmRhu7OSXoXebQTw0YjUpP6luirj66QQcrtKfeOW8TGufwyUv4mvjkphmtsrrr9bOsaLR1ZcNsT3O+w0K32pXLoW+9VlYjyyADLGE0wDFJLaoSLtadXLK5HXpoDBPLibnVl9X6lbjnvYsyv/lbqVgA1W94zsPeBLrVByWk50etgHQI0YjjiC8lEWpezfLvn02/q+RfUtb5GlBNdJ1KSahxw7M9RCHmFq0paqHFzqrLoJ3waJ1ML56sKaMuM6ozGJP38bHtUKfRNSyR/MPoQ4iKKfvkvfdN7/TdvT8+sA33uoSIrdnvL7G/u3McQa9q1xLloF1nsmgZn/FPYkzJnl56Ei6JUIpHf20ItVfsa3NtPLmxj6iOjooWLb3pEEdw0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3561047d-7500-44fa-8ba4-08de2b20cd1a
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7341.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Nov 2025 06:15:01.6674
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jwP9HuuLmiVVNMU7zyC5GnFvGe4hKaTdrrIxoTNN+ARcsd8fUKxNMxN0/MGFG5eTdKTRO4OQPrPfCeuI2RUIxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4534
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-24_02,2025-11-21_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
+ malwarescore=0 bulkscore=0 phishscore=0 mlxscore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2510240000 definitions=main-2511240053
+X-Proofpoint-GUID: Ytn7S9kPdpFmU2bDHivcDR2Mqx3fUs7W
+X-Authority-Analysis: v=2.4 cv=ObqVzxTY c=1 sm=1 tr=0 ts=6923f7ea cx=c_pps
+ a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=JfrnYn6hAAAA:8 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=s6f2M-gfu8gXJb6GzYcA:9
+ a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI0MDA1MyBTYWx0ZWRfX3fvLtvwGBkAr
+ wHG9dUpTebbR+2MCln2mopbDXX4Aq3ZGwBAWFo9Byql66+sC40BjWZidPJ4hl6RnkBQvs1ppQEI
+ OIuN74Dl3W4A7oSN43D1YI9/lA2i2Tq63yZXw8WKt8xmmBxoRKd53iGC/TXF9C+H/8iB5yqP1Y4
+ t6u9MW8Wwv5Zjjn9HC62PUtS46QGL4oCdvT3TixdHe/wJFqJ8P/Jpk6e4vVi36YTQRBgwA8GKHr
+ jEwXy1x5z25UfQJr7TUJc8+8vbyVomgRvkEMDjaZj+8sWgtyRp4K/Vi9AeHukKn5Aiez4+dPJSg
+ D45sORpF6+BMn2n6Aog+b/F2pZWGaDWoBGzMcJa++vYB5qZAPHcZBxX8ipHgk3ZsNKv8fbyR5DR
+ WhuIULU7VSdhNVcQGyt6x/I7jiLB2A==
+X-Proofpoint-ORIG-GUID: Ytn7S9kPdpFmU2bDHivcDR2Mqx3fUs7W
 
+On Thu, Nov 13, 2025 at 12:09:27AM +0000, Matthew Wilcox (Oracle) wrote:
+> Use page_slab() instead of virt_to_folio() followed by folio_slab().
+> We do end up calling compound_head() twice for non-slab copies, but that
+> will not be a problem once we allocate memdescs separately.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-hardening@vger.kernel.org
+> ---
 
---jjzv1iO7GRx9l9vd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks good to me,
+Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
 
-On Wed, Nov 19, 2025 at 05:44:02PM +0200, Eugen Hristev wrote:
-> diff --git a/Documentation/dev-tools/index.rst b/Documentation/dev-tools/=
-index.rst
-> index 4b8425e348ab..8ce605de8ee6 100644
-> --- a/Documentation/dev-tools/index.rst
-> +++ b/Documentation/dev-tools/index.rst
-> @@ -38,6 +38,7 @@ Documentation/process/debugging/index.rst
->     gpio-sloppy-logic-analyzer
->     autofdo
->     propeller
-> +   meminspect
-> =20
-> =20
->  .. only::  subproject and html
-> diff --git a/Documentation/dev-tools/meminspect.rst b/Documentation/dev-t=
-ools/meminspect.rst
-> new file mode 100644
-> index 000000000000..2a0bd4d6e448
-> --- /dev/null
-> +++ b/Documentation/dev-tools/meminspect.rst
-> @@ -0,0 +1,139 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +meminspect
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +This document provides information about the meminspect feature.
-> +
-> +Overview
-> +=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +meminspect is a mechanism that allows the kernel to register a chunk of
-> +memory into a table, to be used at a later time for a specific
-> +inspection purpose like debugging, memory dumping or statistics.
-> +
-> +meminspect allows drivers to traverse the inspection table on demand,
-> +or to register a notifier to be called whenever a new entry is being add=
-ed
-> +or removed.
-> +
-> +The reasoning for meminspect is also to minimize the required information
-> +in case of a kernel problem. For example a traditional debug method invo=
-lves
-> +dumping the whole kernel memory and then inspecting it. Meminspect allow=
-s the
-> +users to select which memory is of interest, in order to help this speci=
-fic
-> +use case in production, where memory and connectivity are limited.
-> +
-> +Although the kernel has multiple internal mechanisms, meminspect fits
-> +a particular model which is not covered by the others.
-> +
-> +meminspect Internals
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +API
-> +---
-> +
-> +Static memory can be registered at compile time, by instructing the comp=
-iler
-> +to create a separate section with annotation info.
-> +For each such annotated memory (variables usually), a dedicated struct
-> +is being created with the required information.
-> +To achieve this goal, some basic APIs are available:
-> +
-> +  MEMINSPECT_ENTRY(idx, sym, sz)
-> +is the basic macro that takes an ID, the symbol, and a size.
-> +
-> +To make it easier, some wrappers are also defined:
-> +  MEMINSPECT_SIMPLE_ENTRY(sym)
-> +will use the dedicated MEMINSPECT_ID_##sym with a size equal to sizeof(s=
-ym)
-> +
-> +  MEMINSPECT_NAMED_ENTRY(name, sym)
-> +will be a simple entry that has an id that cannot be derived from the sy=
-m,
-> +so a name has to be provided
-> +
-> +  MEMINSPECT_AREA_ENTRY(sym, sz)
-> +this will register sym, but with the size given as sz, useful for e.g.
-> +arrays which do not have a fixed size at compile time.
-> +
-> +For dynamically allocated memory, or for other cases, the following APIs
-> +are being defined:
-> +  meminspect_register_id_pa(enum meminspect_uid id, phys_addr_t zone,
-> +                            size_t size, unsigned int type);
-> +which takes the ID and the physical address.
-> +Similarly there are variations:
-> +  meminspect_register_pa() omits the ID
-> +  meminspect_register_id_va() requires the ID but takes a virtual address
-> +  meminspect_register_va() omits the ID and requires a virtual address
-> +
-> +If the ID is not given, the next avialable dynamic ID is allocated.
-> +
-> +To unregister a dynamic entry, some APIs are being defined:
-> +  meminspect_unregister_pa(phys_addr_t zone, size_t size);
-> +  meminspect_unregister_id(enum meminspect_uid id);
-> +  meminspect_unregister_va(va, size);
-> +
-> +All of the above have a lock variant that ensures the lock on the table
-> +is taken.
-> +
-> +
-> +meminspect drivers
-> +------------------
-> +
-> +Drivers are free to traverse the table by using a dedicated function
-> +meminspect_traverse(void *priv, MEMINSPECT_ITERATOR_CB cb)
-> +The callback will be called for each entry in the table.
-> +
-> +Drivers can also register a notifier with
-> +  meminspect_notifier_register()
-> +and unregister with
-> +  meminspect_notifier_unregister()
-> +to be called when a new entry is being added or removed.
-> +
-> +Data structures
-> +---------------
-> +
-> +The regions are being stored in a simple fixed size array. It avoids
-> +memory allocation overhead. This is not performance critical nor does
-> +allocating a few hundred entries create a memory consumption problem.
-> +
-> +The static variables registered into meminspect are being annotated into
-> +a dedicated .inspect_table memory section. This is then walked by memins=
-pect
-> +at a later time and each variable is then copied to the whole inspect ta=
-ble.
-> +
-> +meminspect Initialization
-> +-------------------------
-> +
-> +At any time, meminspect will be ready to accept region registration
-> +from any part of the kernel. The table does not require any initializati=
-on.
-> +In case CONFIG_CRASH_DUMP is enabled, meminspect will create an ELF head=
-er
-> +corresponding to a core dump image, in which each region is added as a
-> +program header. In this scenario, the first region is this ELF header, a=
-nd
-> +the second region is the vmcoreinfo ELF note.
-> +By using this mechanism, all the meminspect table, if dumped, can be
-> +concatenated to obtain a core image that is loadable with the `crash` to=
-ol.
-> +
-> +meminspect example
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +A simple scenario for meminspect is the following:
-> +The kernel registers the linux_banner variable into meminspect with
-> +a simple annotation like:
-> +
-> +  MEMINSPECT_SIMPLE_ENTRY(linux_banner);
-> +
-> +The meminspect late initcall will parse the compilation time created tab=
-le
-> +and copy the entry information into the inspection table.
-> +At a later point, any interested driver can call the traverse function to
-> +find out all entries in the table.
-> +A specific driver will then note into a specific table the address of the
-> +banner and the size of it.
-> +The specific table is then written to a shared memory area that can be
-> +read by upper level firmware.
-> +When the kernel freezes (hypothetically), the kernel will no longer feed
-> +the watchdog. The watchdog will trigger a higher exception level interru=
-pt
-> +which will be handled by the upper level firmware. This firmware will th=
-en
-> +read the shared memory table and find an entry with the start and size of
-> +the banner. It will then copy it for debugging purpose. The upper level
-> +firmware will then be able to provide useful debugging information,
-> +like in this example, the banner.
-> +
-> +As seen here, meminspect facilitates the interaction between the kernel
-> +and a specific firmware.
-
-Sphinx reports htmldocs warnings:
-
-Documentation/dev-tools/meminspect.rst:42: WARNING: Block quote ends withou=
-t a blank line; unexpected unindent. [docutils]
-Documentation/dev-tools/meminspect.rst:46: WARNING: Definition list ends wi=
-thout a blank line; unexpected unindent. [docutils]
-Documentation/dev-tools/meminspect.rst:49: WARNING: Block quote ends withou=
-t a blank line; unexpected unindent. [docutils]
-Documentation/dev-tools/meminspect.rst:53: WARNING: Block quote ends withou=
-t a blank line; unexpected unindent. [docutils]
-Documentation/dev-tools/meminspect.rst:58: ERROR: Unexpected indentation. [=
-docutils]
-Documentation/dev-tools/meminspect.rst:60: WARNING: Block quote ends withou=
-t a blank line; unexpected unindent. [docutils]
-Documentation/dev-tools/meminspect.rst:62: ERROR: Unexpected indentation. [=
-docutils]
-Documentation/dev-tools/meminspect.rst:80: WARNING: Inline emphasis start-s=
-tring without end-string. [docutils]
-Documentation/dev-tools/meminspect.rst:88: WARNING: Definition list ends wi=
-thout a blank line; unexpected unindent. [docutils]
-
-I have to fix them up:
-
----- >8 ----
-diff --git a/Documentation/dev-tools/meminspect.rst b/Documentation/dev-too=
-ls/meminspect.rst
-index 2a0bd4d6e4481e..d6a221b1169f04 100644
---- a/Documentation/dev-tools/meminspect.rst
-+++ b/Documentation/dev-tools/meminspect.rst
-@@ -38,37 +38,43 @@ For each such annotated memory (variables usually), a d=
-edicated struct
- is being created with the required information.
- To achieve this goal, some basic APIs are available:
-=20
--  MEMINSPECT_ENTRY(idx, sym, sz)
--is the basic macro that takes an ID, the symbol, and a size.
-+  * MEMINSPECT_ENTRY(idx, sym, sz)
-+    is the basic macro that takes an ID, the symbol, and a size.
-=20
- To make it easier, some wrappers are also defined:
--  MEMINSPECT_SIMPLE_ENTRY(sym)
--will use the dedicated MEMINSPECT_ID_##sym with a size equal to sizeof(sym)
-=20
--  MEMINSPECT_NAMED_ENTRY(name, sym)
--will be a simple entry that has an id that cannot be derived from the sym,
--so a name has to be provided
-+  * MEMINSPECT_SIMPLE_ENTRY(sym)
-+    will use the dedicated MEMINSPECT_ID_##sym with a size equal to sizeof=
-(sym)
-=20
--  MEMINSPECT_AREA_ENTRY(sym, sz)
--this will register sym, but with the size given as sz, useful for e.g.
--arrays which do not have a fixed size at compile time.
-+  * MEMINSPECT_NAMED_ENTRY(name, sym)
-+    will be a simple entry that has an id that cannot be derived from the =
-sym,
-+    so a name has to be provided
-+
-+  * MEMINSPECT_AREA_ENTRY(sym, sz)
-+    this will register sym, but with the size given as sz, useful for e.g.
-+    arrays which do not have a fixed size at compile time.
-=20
- For dynamically allocated memory, or for other cases, the following APIs
--are being defined:
-+are being defined::
-+
-   meminspect_register_id_pa(enum meminspect_uid id, phys_addr_t zone,
-                             size_t size, unsigned int type);
-+
- which takes the ID and the physical address.
-+
- Similarly there are variations:
--  meminspect_register_pa() omits the ID
--  meminspect_register_id_va() requires the ID but takes a virtual address
--  meminspect_register_va() omits the ID and requires a virtual address
-+
-+  * meminspect_register_pa() omits the ID
-+  * meminspect_register_id_va() requires the ID but takes a virtual address
-+  * meminspect_register_va() omits the ID and requires a virtual address
-=20
- If the ID is not given, the next avialable dynamic ID is allocated.
-=20
- To unregister a dynamic entry, some APIs are being defined:
--  meminspect_unregister_pa(phys_addr_t zone, size_t size);
--  meminspect_unregister_id(enum meminspect_uid id);
--  meminspect_unregister_va(va, size);
-+
-+  * meminspect_unregister_pa(phys_addr_t zone, size_t size);
-+  * meminspect_unregister_id(enum meminspect_uid id);
-+  * meminspect_unregister_va(va, size);
-=20
- All of the above have a lock variant that ensures the lock on the table
- is taken.
-@@ -77,15 +83,15 @@ is taken.
- meminspect drivers
- ------------------
-=20
--Drivers are free to traverse the table by using a dedicated function
--meminspect_traverse(void *priv, MEMINSPECT_ITERATOR_CB cb)
-+Drivers are free to traverse the table by using a dedicated function::
-+
-+  meminspect_traverse(void *priv, MEMINSPECT_ITERATOR_CB cb)
-+
- The callback will be called for each entry in the table.
-=20
--Drivers can also register a notifier with
--  meminspect_notifier_register()
--and unregister with
--  meminspect_notifier_unregister()
--to be called when a new entry is being added or removed.
-+Drivers can also register a notifier with meminspect_notifier_register()
-+and unregister with meminspect_notifier_unregister() to be called when a n=
-ew
-+entry is being added or removed.
-=20
- Data structures
- ---------------
-@@ -115,7 +121,7 @@ meminspect example
-=20
- A simple scenario for meminspect is the following:
- The kernel registers the linux_banner variable into meminspect with
--a simple annotation like:
-+a simple annotation like::
-=20
-   MEMINSPECT_SIMPLE_ENTRY(linux_banner);
-=20
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---jjzv1iO7GRx9l9vd
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaSPKyAAKCRD2uYlJVVFO
-o3X1AQDv/TE1tWTJ8ZXxzegUA8QbZl8nMDxfkacY7FNjZC/xRQD8DSFK9tPqxhS0
-Zf7jek/k/PHFmMUwkhTyDVy+lTogUgc=
-=cIN1
------END PGP SIGNATURE-----
-
---jjzv1iO7GRx9l9vd--
+-- 
+Cheers,
+Harry / Hyeonggon
