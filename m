@@ -1,37 +1,34 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554492566D3;
-	Mon, 24 Nov 2025 21:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315F523F431;
+	Mon, 24 Nov 2025 21:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764018757; cv=none; b=DpRiU6gIjO7Fd4XNvSFQ+TPUU8j96CDwl45yY+mXIy+KAkbuFg92SK8DU/lYkg58xcMl1Mg0dYSzQvnD/1HsfPDPHD9XeI+lQIy6uChvhAA574PdIy2PWYhwsTLOCUPvnVXeHuIdyzruz3Ka9b1Q5sQgxVTAhl0uk6gdO3VF1K0=
+	t=1764019222; cv=none; b=Y84NfC42+pNcSsN2tLqMbuIjXdxYHaNZGpv2m+LMj9lHy7CqXw4FvWbPsavH1dAq56GKBxx3DzsHrtMEHb6KOJtbxdk25obr6IOgWWV/4ADYcKv3/uRufhKK5LIGE0acJr8n024t8leBwkS29RF7jiKDI+Nvxgm3GM15puqmSz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764018757; c=relaxed/simple;
-	bh=1mdzdRBhx7oGWBUGON3UfVTAnXdL7Q1UJITjOyXRYlM=;
+	s=arc-20240116; t=1764019222; c=relaxed/simple;
+	bh=Y94JlBIHLA/laoTq4h3TEpMFWZb/beHXXRUBICAqz4c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MkT/9clFMlhFdeGjI1DCwBLlUotBNmK9T4b0ks6N8r2WQfxQdInCKnDJmHub43s8TLFKH0VIcq96PdDVqvebRFMDfFb+xpsMpTaijDqeKtoQcf72nOJHQu+3PH3U6IZpVL7+6uLPFNhnlxqRNwicU4jCaiAHSX+FOZ5uNK8nT9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=K3KqGjjZ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=tKqU/tpbEfx3MiTezGN8eenjnQ1sFHUxLlPcuIV67F9UFmsbu39AKxujOmwzH2Ymo3g76S1aaI9C83cptAZf2UoO0zV0t0fQwBEZGOmsGAHz6fh81V9KK1XOhFynNv3Wf/fSQ9+rl9xLos8Wz0kb2su1vFNZS9E2KOiYnnXhTUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekqcbge6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K3KqGjjZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=pbFLNQfa1lwkUj1c6wEBCQkuto/HQ8MD1t1w/QlDuKE=; b=K3KqGjjZfNg+chFeoY8EF1luJ8
-	yv4rmbRZFXywOqiF9wwHgnSWhuN8N77C5eYkvTUzeHAUDWisXjNcJbafeY58VPfjZoppu/SS94Vgg
-	tJYHvnI/3nFsQhOW7X1kZBfoqtz9IyMRGxTpeUWoD1dhtQiktCCCbNYjh3YA9ZBLd2n92EeOuuN7k
-	czcAXu14cYg0vNYEsb88MA8+J99yz0Z4sRVdVBfKQbr1tEsKSBb6IswrqYZPkGG9te6VYAM104e03
-	ZckhHCkk4bmC3f+NNjeAcr5KuiGAqYLX0qcqKi+YofXhWRgufo4XTN2v38rcP2OgelFfG6o6Yg38W
-	JvMf2AGQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vNdr4-00000007Xk7-3jr0;
-	Mon, 24 Nov 2025 21:12:14 +0000
-Date: Mon, 24 Nov 2025 21:12:14 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Kees Cook <kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekqcbge6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B34C4CEF1;
+	Mon, 24 Nov 2025 21:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764019221;
+	bh=Y94JlBIHLA/laoTq4h3TEpMFWZb/beHXXRUBICAqz4c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ekqcbge6rAcDI+vCK69msAZ9ML3+CijFroR0b3AHsruJPJSvQ3noWvLTMSnppkKFl
+	 qXFyify01DoKJErGd0BBVdT105e/DEHg+sxCdybxEwiR2mhdmrcxeWnKu5ccjRczsO
+	 DNtfhJTJTxDkZNpH/0Gld6cIW5pFWKnN+GJHBT63x7sNsg/owugYAg10Ujmsn2D2xJ
+	 GdWhpkUqmbvxF6CZxjW6wV+OjEvSJRer7UWpG8RrLHChBv/kQWP/+Lm33186vc87VV
+	 BJuqTDJYc92FShtapn0/rmaoXHEkZxZcEDW3BJt6KnC/vP3D5RSaW0qntmn7G/CvoJ
+	 vpDa8V0/Ngkmg==
+Date: Mon, 24 Nov 2025 13:20:21 -0800
+From: Kees Cook <kees@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
 	Pekka Enberg <penberg@kernel.org>,
@@ -63,11 +60,12 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
 	linux-doc@vger.kernel.org, llvm@lists.linux.dev
 Subject: Re: [PATCH v5 2/4] slab: Introduce kmalloc_obj() and family
-Message-ID: <aSTKLsRNiEKtDqPI@casper.infradead.org>
+Message-ID: <202511241317.516BDE7B@keescook>
 References: <20251122014258.do.018-kees@kernel.org>
  <20251122014304.3417954-2-kees@kernel.org>
  <CAHk-=wiNnECns4B3qxRsCykkHwzovT+3wG738fUhq5E+3Lxxbg@mail.gmail.com>
  <202511241119.C547DEF80@keescook>
+ <aSTKLsRNiEKtDqPI@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -76,31 +74,37 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202511241119.C547DEF80@keescook>
+In-Reply-To: <aSTKLsRNiEKtDqPI@casper.infradead.org>
 
-On Mon, Nov 24, 2025 at 12:38:57PM -0800, Kees Cook wrote:
-> For code like:
+On Mon, Nov 24, 2025 at 09:12:14PM +0000, Matthew Wilcox wrote:
+> On Mon, Nov 24, 2025 at 12:38:57PM -0800, Kees Cook wrote:
+> > For code like:
+> > 
+> > 	u8 size;
+> > 	...
+> > 	size = struct_size(ptr, flex_member, count);
+> > 	ptr = kmalloc(size, gfp);
+> > 
+> > While struct_size() is designed to deal with overflows beyond SIZE_MAX,
+> > it can't do anything about truncation of its return value since it has
+> > no visibility into the lvalue type. So this code pattern happily
+> > truncates, allocates too little memory, and then usually does stuff like
+> > runs a for-loop based on "count" instead of "size" and walks right off
+> > the end of the heap allocation, clobbering whatever follows it.
 > 
-> 	u8 size;
-> 	...
-> 	size = struct_size(ptr, flex_member, count);
-> 	ptr = kmalloc(size, gfp);
+> Have we investigated a compiler warning like
+> -Wimplicit-arithmetic-truncation that would complain about this kind of
+> thing and could be shut up by an explicit cast:
 > 
-> While struct_size() is designed to deal with overflows beyond SIZE_MAX,
-> it can't do anything about truncation of its return value since it has
-> no visibility into the lvalue type. So this code pattern happily
-> truncates, allocates too little memory, and then usually does stuff like
-> runs a for-loop based on "count" instead of "size" and walks right off
-> the end of the heap allocation, clobbering whatever follows it.
+> 	size = (u8)struct_size(ptr, flex_member, count);
+> 
+> or arithmetic that can be proven to not overflow:
+> 	size = struct_size(ptr, flex_member, count) & 0xff;
+> 
+> Maybe such a warning already exists and it's just too noisy to even
+> start thinking about turning it on?
 
-Have we investigated a compiler warning like
--Wimplicit-arithmetic-truncation that would complain about this kind of
-thing and could be shut up by an explicit cast:
+Yes, -Wconversion (W=3) is mind-blowingly noisy, unfortunately.
 
-	size = (u8)struct_size(ptr, flex_member, count);
-
-or arithmetic that can be proven to not overflow:
-	size = struct_size(ptr, flex_member, count) & 0xff;
-
-Maybe such a warning already exists and it's just too noisy to even
-start thinking about turning it on?
+-- 
+Kees Cook
