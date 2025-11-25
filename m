@@ -1,80 +1,81 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D40318152
-	for <linux-hardening@vger.kernel.org>; Tue, 25 Nov 2025 18:06:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57E6332EC4
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Nov 2025 18:56:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764094018; cv=none; b=NwfCZiWpRvKoDU3/sY4xA9TqW/Sm8A/ZPfQmzf2wh53KmbJ3SRy8uqdagHu5yIirG2Ff9wSmXT4uied9Zlz140fbqp3xt2D4Yf6YOIw2YZHCaYk/5i98o0Y7hKEXd3Kk3veSWFE7BjFrquswkQl43AyNFyD+xpuBP5h962rXAcA=
+	t=1764096980; cv=none; b=qhh7/Jm+L28gyAc283TYIneduU+Z7k10rCVGocvqD/wQGbEzrdnxDex7Cg/xnKdlVOrLdeEeDeOJ9I6wCwLumuaQ3TARgBueKB6EMtovys1q8nQREfSZ0F6EMTwo2WoCSB5gdBvFQeEBJs0kuefXUZHLvmm36tcX94OIlRpcuSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764094018; c=relaxed/simple;
-	bh=Wx/lSd0yU4CbJNiqGtmjdqvBSmBhckOpTpMpfQcb/zI=;
+	s=arc-20240116; t=1764096980; c=relaxed/simple;
+	bh=z/dmVJnR+J5VVo2vZu7kNybMBjEPOUc2PV9zOwiofZk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LXjvb1UEQsfFxBGLVKQKxyVNMmYYk+q6J0uBQpr985dQK58KgEqylWStNETO4OCj8Qvuvfp29ZIBITPNMs+FI+uwAG2majc4YZiI3lp7KpuM/Dgp2X6/4q5WxpgeU73F4ZUEZoDutWhHz/9+v6oj6B4cvdLj1MdpGwJYHZBPh0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=X/ZMQ81b; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pl1175js; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=X/ZMQ81b; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pl1175js; arc=none smtp.client-ip=195.135.223.131
+	 In-Reply-To:Content-Type; b=CYPkH3krpST9tbpzcslhOCCUKMrCry+z7q1u3BsUnUqACWfUYQ/vQOd0LpWUKyOr8ZiZ+MuXRNnqYe9uV7dWSstKHkw7zY9hBqjbgPdip1yvyMdQIQW/I1S2IkOWdBm2gSo5d7Aphzsf1d+nCRgDW7RYFblBFqqktWmDH+h+8mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VnkDbdow; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WI9x+Hjp; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VnkDbdow; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WI9x+Hjp; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="X/ZMQ81b";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pl1175js";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="X/ZMQ81b";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pl1175js"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VnkDbdow";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WI9x+Hjp";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VnkDbdow";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WI9x+Hjp"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7260E5BD12;
-	Tue, 25 Nov 2025 18:06:54 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9672F5BD0D;
+	Tue, 25 Nov 2025 18:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1764094014; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1764096976; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PoBMvtRuyPn1L+lx0oRz613sdrYJSSZTiHXSKjwJ2ec=;
-	b=X/ZMQ81bPp5YhNOurMGqN/N0QlLxCJrRYlRLfQbib3RsTTmFrv36HNtaJ3OVH1aAuE19A6
-	Z9ji4892mWP/7j5bFtWq/56pfcJFxitvL+GXG1VJLQMsLMPeuQl+YJgQL7LcBaAhJTFH6M
-	4dDZ7Y7cO8Aeuck7VTGFi+jN/Uoy5ZU=
+	bh=MZhxcSq9jz3i+YAFu/iNlBsFEWcEIog5kMoH5BURTNQ=;
+	b=VnkDbdowD8JfpomKJ+CQ55m5GyxNxjcZmaz1gbpHjxl6yn1XZCSMsjhdxQAeG/d6hm8cy+
+	QImqb7ZLaUcA0sD9xTMfxeY9PpunHAv9MxIrYNDWxAZAO3BqmeC+M9z3+JC7xe7hMr+91S
+	H474vubuLEJuJlLQvsdn3QRtJCXctiQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1764094014;
+	s=susede2_ed25519; t=1764096976;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PoBMvtRuyPn1L+lx0oRz613sdrYJSSZTiHXSKjwJ2ec=;
-	b=Pl1175jsbytc3e/eiXZdFdZQpmmwJMppWaaL68/X/K+eCTiXD9hEwT7PlgsK/jDsxZRihy
-	HHq0oPqjI5EuH6Ag==
+	bh=MZhxcSq9jz3i+YAFu/iNlBsFEWcEIog5kMoH5BURTNQ=;
+	b=WI9x+HjppKEWPgDdr58Zx3sHlpDWL0Ua0SFxNCYnrE2Aw1mbWBoE+xpwH/yYn+v5CrZjM0
+	tz/Y+JvHVGzsSqBg==
 Authentication-Results: smtp-out2.suse.de;
-	none
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=VnkDbdow;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=WI9x+Hjp
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1764094014; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1764096976; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PoBMvtRuyPn1L+lx0oRz613sdrYJSSZTiHXSKjwJ2ec=;
-	b=X/ZMQ81bPp5YhNOurMGqN/N0QlLxCJrRYlRLfQbib3RsTTmFrv36HNtaJ3OVH1aAuE19A6
-	Z9ji4892mWP/7j5bFtWq/56pfcJFxitvL+GXG1VJLQMsLMPeuQl+YJgQL7LcBaAhJTFH6M
-	4dDZ7Y7cO8Aeuck7VTGFi+jN/Uoy5ZU=
+	bh=MZhxcSq9jz3i+YAFu/iNlBsFEWcEIog5kMoH5BURTNQ=;
+	b=VnkDbdowD8JfpomKJ+CQ55m5GyxNxjcZmaz1gbpHjxl6yn1XZCSMsjhdxQAeG/d6hm8cy+
+	QImqb7ZLaUcA0sD9xTMfxeY9PpunHAv9MxIrYNDWxAZAO3BqmeC+M9z3+JC7xe7hMr+91S
+	H474vubuLEJuJlLQvsdn3QRtJCXctiQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1764094014;
+	s=susede2_ed25519; t=1764096976;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PoBMvtRuyPn1L+lx0oRz613sdrYJSSZTiHXSKjwJ2ec=;
-	b=Pl1175jsbytc3e/eiXZdFdZQpmmwJMppWaaL68/X/K+eCTiXD9hEwT7PlgsK/jDsxZRihy
-	HHq0oPqjI5EuH6Ag==
+	bh=MZhxcSq9jz3i+YAFu/iNlBsFEWcEIog5kMoH5BURTNQ=;
+	b=WI9x+HjppKEWPgDdr58Zx3sHlpDWL0Ua0SFxNCYnrE2Aw1mbWBoE+xpwH/yYn+v5CrZjM0
+	tz/Y+JvHVGzsSqBg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5D9F33EA63;
-	Tue, 25 Nov 2025 18:06:54 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 46C4F3EA63;
+	Tue, 25 Nov 2025 18:56:16 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Or8kFT7wJWnFPQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 25 Nov 2025 18:06:54 +0000
-Message-ID: <5d0c582f-7e1a-4623-90d9-1dd6db443473@suse.cz>
-Date: Tue, 25 Nov 2025 19:06:53 +0100
+	id KvzCD9D7JWnGawAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 25 Nov 2025 18:56:16 +0000
+Message-ID: <b7804333-6030-4bfd-8e0b-4479f87060ce@suse.cz>
+Date: Tue, 25 Nov 2025 19:56:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -82,18 +83,36 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mm/mm_init: decouple page checking and
- init_on_{alloc, free}
+Subject: Re: [PATCH v5 2/4] slab: Introduce kmalloc_obj() and family
 Content-Language: en-US
-To: Michal Hocko <mhocko@suse.com>, Joshua Hahn <joshua.hahnjy@gmail.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport
- <rppt@kernel.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel-team@meta.com
-References: <20251124225408.2243564-1-joshua.hahnjy@gmail.com>
- <20251124225408.2243564-2-joshua.hahnjy@gmail.com>
- <aSVssg5c8mNvyLou@tiehlicka>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Kees Cook <kees@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Jann Horn <jannh@google.com>, Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>, Marco Elver <elver@google.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
+ Randy Dunlap <rdunlap@infradead.org>, Miguel Ojeda <ojeda@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>,
+ Vegard Nossum <vegard.nossum@oracle.com>, Harry Yoo <harry.yoo@oracle.com>,
+ Nathan Chancellor <nathan@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
+ Yafang Shao <laoar.shao@gmail.com>, Tony Ambardar <tony.ambardar@gmail.com>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Jan Hendrik Farr <kernel@jfarr.cc>, Alexander Potapenko <glider@google.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-doc@vger.kernel.org, llvm@lists.linux.dev
+References: <20251122014258.do.018-kees@kernel.org>
+ <20251122014304.3417954-2-kees@kernel.org>
+ <CAHk-=wiNnECns4B3qxRsCykkHwzovT+3wG738fUhq5E+3Lxxbg@mail.gmail.com>
+ <CAHk-=wjxj---dy5haOvNXjg_Xz-mDQciGL7OnJnpJpjYD9Moog@mail.gmail.com>
 From: Vlastimil Babka <vbabka@suse.cz>
 Autocrypt: addr=vbabka@suse.cz; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
@@ -134,69 +153,108 @@ Autocrypt: addr=vbabka@suse.cz; keydata=
  rywqgzTUhHFKKF6/9L/lYtrNcHU8Z6Y4Ju/MLUiNYkmtrGIMnkjKCiRqlRrZE/v5YFHbayRD
  dJKXobXTtCBYpLJM4ZYRpGZXne/FAtWNe4KbNJJqxMvrTOrnIatPj8NhBVI0RSJRsbilh6TE
  m6M14QORSWTLRg==
-In-Reply-To: <aSVssg5c8mNvyLou@tiehlicka>
+In-Reply-To: <CAHk-=wjxj---dy5haOvNXjg_Xz-mDQciGL7OnJnpJpjYD9Moog@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
+X-Rspamd-Queue-Id: 9672F5BD0D
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FREEMAIL_TO(0.00)[suse.com,gmail.com,kernel.org,vger.kernel.org];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[37];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	FREEMAIL_ENVRCPT(0.00)[gmail.com];
 	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux.com,kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,intel.com,linuxfoundation.org,kvack.org,infradead.org,oracle.com,lwn.net,jfarr.cc,vger.kernel.org,lists.linux.dev];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
+	TAGGED_RCPT(0.00)[lkml];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	R_RATELIMIT(0.00)[to_ip_from(RLhc4kaujr6ihojcnjq7c1jwbi)];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
 X-Spam-Flag: NO
-X-Spam-Score: -2.80
+X-Spam-Score: -3.01
 X-Spam-Level: 
 
-On 11/25/25 09:45, Michal Hocko wrote:
-> On Mon 24-11-25 14:54:07, Joshua Hahn wrote:
->> init_on_alloc and init_on_free protect the kernel by initializing
->> allocated and freed pages to 0 on allocation time / deletion.
->> Commit 700d2e9a36b93601270c1e15550acde2521386c5 ("mm, page_alloc: reduce
->> page alloc/free sanity checks") removed page checking from hot pcp
->> drain and refill paths, and instead coupled it with CONFIG_DEBUG_VM,
->> debug_pagealloc, page poisoning, and init_on_{alloc, free}.
->> 
->> As the commit suggests, the first three turn the kernel into a debug
->> kernel, while the last hardens the kernel against leaking sensitive memory.
->> While enabling page checking is relatively low-cost and tying it
->> together with page initialization is not unreasonable, it does feel like
->> a bit of a side-effect, rather than an obvious consequence.
->> 
->> With page checking now pulled out as a boot time parameter that can be
->> set independently, let's decouple page checking and init_on_alloc and
->> init_on_free.
->> 
->> As a direct side effect, systems that have init_on_alloc or init_on_free
->> will no longer have page checking enabled by default; they will either
->> have to pass the check_pages boot parameter, build the kernel with
->> CONFIG_DEBUG_VM, or enable debug_pagealloc / page poisoning.
+On 11/22/25 21:54, Linus Torvalds wrote:
+> Btw, I realize that we don't have a good way to do the alignment with
+> the current kmalloc() interface (we do for some of the vmalloc
+> interfaces).
 > 
-> How come this will not break existing users? What is an actual upside to
-> get for the risk involved?
+> So for now, it should just have some static build-time warning if the
+> type of the object we allocate has a bigger alignment than the
+> guaranteed slab allocation alignment (ARCH_KMALLOC_MINALIGN or
+> whatever).
 
-+Cc hardening people for input if they are fine with the decoupling and if
-docs for hardening recommendations or something similar needs updating
+Note that these days we guarantee more than that, and it depends on size.
+From Documentation/core-api/memory-allocation.rst:
 
-The upside is mainly reducing the side effects i.e. being more explicit than
-implicit. In practice I'd however assume people running init_on_alloc/free
-and paying the cost also want to do page flags checking anyway. The more
-important patch here is 1/2.
+The address of a chunk allocated with `kmalloc` is aligned to at least
+ARCH_KMALLOC_MINALIGN bytes. For sizes which are a power of two, the
+alignment is also guaranteed to be at least the respective size. For other
+sizes, the alignment is guaranteed to be at least the largest power-of-two
+divisor of the size.
+
+> And I really think the first version should do the minimal thing that
+> actually matters, and strive to deal with the simple cases. The main
+> things that matter are
+> 
+>  - the return type should be a proper pointer type (so that you get
+> warnings for mis-uses, but also so that you can use automatic typing)
+> 
+>  - making the 'sizeof()' match the type
+> 
+> so honestly, I think 99% of the gain would come from something fairly
+> simple like
+> 
+>     #define kmalloc_verify(type) \
+>         BUILD_BUG_ON_ZERO(__alignof__(type) > ARCH_KMALLOC_MINALIGN)
+> 
+>     #define kmalloc_size(type) \
+>         (sizeof(type) + kmalloc_verify(type))
+> 
+>     #define allocator(name, type, size, ...) \
+>         (typeof(type) *)name(size, __VA_ARGS__)
+
+So AFAIU this would be too pessimistic. I'm not sure if the alignment rules
+can be sensibly encoded in build time checks. Perhaps yes, in a similar way
+that we have compile-time size bucket selection via __kmalloc_index().
+
+>     #define kmalloc_obj(type, gfp) \
+>         allocator(kmalloc, type, kmalloc_size(type), gfp)
+>     #define kzalloc_obj(type, gfp) \
+>         allocator(kzalloc, type, kmalloc_size(type), gfp)
+>     #define kzalloc_struct(type, member, count, gfp) \
+>         allocator(kzalloc, type, struct_size_t(typeof(type), member,
+> count), gfp)
+> 
+> The above macros are entirely untested. But they are simple enough
+> that even if they are buggy and I miscounted the parentheses or used
+> the wrong name somewhere, I think the idea is clear. No?
+> 
+> (And I made that "allocator()" macro use __VA_ARGS__ because
+> kzalloc_node() and friends would want that, but I think it's starting
+> to hit diminishing returns at that point)
+> 
+> Hmm?
+> 
+>                Linus
 
