@@ -1,144 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40FA284689;
-	Tue, 25 Nov 2025 04:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079462FE07B
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Nov 2025 08:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764044864; cv=none; b=meQS2+8YM13me+BNHDVmHJWVM3CvCtaVyRBmg8Y3jow4vSuUmFRRSB63cdHw2sy8gtLcji145ZaWROzieCop6Ekj5sgJLOGO0SSO+boPYbu+vksD/1hnCYRLuBdDKWa/CzvaWDfwNKIY4oXNNjPWQtdQUUyb5Xmod20dYcKYtJQ=
+	t=1764061093; cv=none; b=P6L/OGNL0c0D0RSfV3aKbvRux8HBZ3s/wUpNZv2H1Ub5CX7C7eP6oh4L2bApwdBrS31lmk9arpqNcAmeP0XoUqOtNZt0rEDhoRocmLOYQXjh5WHUfKfM2l5ln88qG1fI9gH8/iiqiT+dqT8nGBEgtzX9TQAhSz5CFtaH57U9Xoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764044864; c=relaxed/simple;
-	bh=dJz1VBLyE+1afRYMUHSehOjVIEK7YWP+3LTbyiNgxhg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=laQjqbiKj8ZWmAQAvOcYqxuizMMgp0TV64zD9sZisCif5cAYMyzkvNkaAuVkFEA8h//CNs45WfPvqnYm4t1VSm6TvdtDjjGVEpQa3kdEbhk1IBBSjZQsvnn7vKFkiRMr3Mg/hgQTVIxaK2dTFN/+pA+hqFfA+VlWXj//2EWbZr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHd5+0qB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764061093; c=relaxed/simple;
+	bh=3CkzgVToI8tAh4aqVjwhzkg+marDrkmywFCMriDDUTA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ECTG1SbUUzAf/uV03mDFdZ/kIrdV9DicWRes1P5r9RmFgmTOVjnSaYpPhiD4N1PbetFBwKpxEAW6bfQO5GS3ttnXHnFmWalB29w/NRmO/Nm2TCuuALEhueVvwMDx4U/GJCkJ2GRYVlXBT+FKyYj9v/bus8Swo7ZcaCYQkRn9Q5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XO6lU9G5; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=CBEYguBl; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHd5+0qB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCB5FC4CEF1;
-	Tue, 25 Nov 2025 04:27:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764044864;
-	bh=dJz1VBLyE+1afRYMUHSehOjVIEK7YWP+3LTbyiNgxhg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=cHd5+0qBYv/8Dk5RSM9tgM/Q0SGPiQH0vm5nrh7oxoBKXd0PvzVC1CJCWfPJlXZjm
-	 oGxykI1RMQp9E4C36lE5c9k5+37gZfKCifBSxC0TbIflhXqRtSe+tLm7XGOhCFD553
-	 z0CepCnKXi4+KbfJPIvb/Pqu9zxPmJBp5Db5mn+cEeq223i2tSZvGVE7rnez1aKjJt
-	 5iK2kCKniIvJh3ds1/aZme/+QkHfkA+lYm3XNIhgWrmJ/lxN/r2+lOAIvpDd9iuA0K
-	 cE+Vu3cvYxrVahhxEO9zB+ly+FKlS75bypjsGDqQ8Nsrk2wcBuWFwFjfL5MAuYN/+X
-	 NyPEGQR7629cA==
-Date: Tue, 25 Nov 2025 13:27:38 +0900
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Loic Poulain <loic.poulain@oss.qualcomm.com>,
-	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] net: wwan: mhi_wwan_mbim: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <aSUwOtiDMYA8aSC3@kspp>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XO6lU9G5";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="CBEYguBl"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AP2ggEQ1820701
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Nov 2025 08:58:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	n/ykNYYWp6SwDDQYYT1N/2x+yvjNjlWRoB5Io/QnAqQ=; b=XO6lU9G5QjN6Mwy5
+	m2jC2b+ZdrwCmP78XDYynYq/G42b1cEC4Mw5/zUMG4TZbMJgg6Jiw8a9PWJZ8qBU
+	4YUSf09TKzk8VvcohFNnGWWeFD05PS87PsHe8Xe8lO9EINO3cr5H5WI/a8DLOlo7
+	v/dcY4V6DXqTAKAL3ynXovPQ6sO4NC9ndHGB2z/rnpVXmoESWLxkPGHv5R1hez40
+	YPiIT6k198jD0d+spkEwhj2LDMzAUWrjxvqfq7pzLSYGGgq4aAuDw8MTLecyZaAe
+	+4hFhSP2C9yyBxLDLfBtqA2iaXD0zLd6uDuzFMdMVfQ4S/3SdzDb/S/gTw9YMp6C
+	9CyB2w==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4amp6h3f13-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Nov 2025 08:58:11 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8b30b6abb7bso1346127185a.1
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Nov 2025 00:58:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1764061090; x=1764665890; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n/ykNYYWp6SwDDQYYT1N/2x+yvjNjlWRoB5Io/QnAqQ=;
+        b=CBEYguBlC27xSICTMuUO1aNh6+ROiERyAZ2Wopair9I2WaWAX+sW7ho0xsJw1JIrIS
+         OWnRvE5NYPcEsUfDQqONxM5o8Fa0Kv7RUIBX2bXNryMnXsLuU+goTuHqbuxGWcTgaN5o
+         02OEkcHEbRargDd61TuAaEhMTYLsGIcrVlllzhvXm1hZbWl0FGAMfWhAm57R37tFtq21
+         24B9zjDxJhsKTMwY0KGDW4FNV5I0AJtd6qaQRRGy/IrUMycpusvYsU3PSyG6kym+9HfY
+         bgrNt9lDRymFrTGsQMKnrqZJWLEWofBJxqwWNRkUuEYqe2Wfl0XKM/cfj7qDhzz6ik4R
+         +yxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764061090; x=1764665890;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=n/ykNYYWp6SwDDQYYT1N/2x+yvjNjlWRoB5Io/QnAqQ=;
+        b=HD3HqMkBXdsEHAruPlGK+1I8er9rFa/MDLK5fOxU8IES6joMaVnJxYLtAysmpCbQXM
+         9RjfB5vTpowSHuRpnFcAb7hTWATLzajbYncsQ0m3r9KlhIrPlvDVbC/MK6bnwRPkVhDR
+         rhPTuJ+Tem8fKww3/9lhEqBHuU2DParvGCllaiUG7mRzT5jvoR9jfJ5DSJyW+ycXDVyr
+         8SlEE/9n5ejruzrUgnLppyzI6CAE2b7bcY3+VJnNNa+54CQ18bBBH5EhX8VY9A6EDY3i
+         km7pdjTD/BUP601nX3iYnO/fwaigdcZWDvCv6/wBBQHys/dyjFV69psi2QGjSMFYW+Kk
+         GEqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUafEAvnWNKRdgUUiUSlt+cF2ZruUIhM7MUkNXZ3QilLdsgXNGZoA2kV9H/05IgLXqagAor8KXH0d1AVjNMvVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWtooq7HTk+aiIawJ2MUTYPuCdUKzQL9NntUKcCaAN08Wgd/HQ
+	69iADzJcJW/eSB4yGNf07j7kABLjuVwtxtaYf/LKabGkprVaVdprUcdqbG/o55d2eZaPKDPDimW
+	5JPRV5ymx26YEJ2v4yKiKRnGEs9fIthT3ojbe44LpMVQWofQ4TXysHZnPlXgNIuJeyenTt8zhiW
+	VyrIRTmGfdU7daO8BrFofBqkbINNEd+O3moeZmgY6VRLQQzw==
+X-Gm-Gg: ASbGncvnLgjMT41vKGhdBJd0nX/t/JfiUUKw/MHfnuM+alCaFWb0OAGrVUvposkmIiO
+	cCHsTYX1yh1ztPb70S43lDqvRFUWcAApyAVpwjO3Q80M/YueVn4T66zwseJczDsz13hKUizMkVn
+	pPwOBVvqBlpby+qESp4Fc2sfxIisBJhMBjywB/65bW84UUkdJWoFLpJMq0VJ4hf4hN6HJEoFInv
+	5GaIEyNPT3MhacCpNrthzqPZCA=
+X-Received: by 2002:a05:620a:701a:b0:8b2:1568:82ce with SMTP id af79cd13be357-8b33d4680b0mr1753253685a.37.1764061090111;
+        Tue, 25 Nov 2025 00:58:10 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGjmwOo4q0j0FT01kB1fhXSU/eSAk+WF/NFlQD95PU4H5bKLPsKAN6ztRi99MIvSZ5Rr8JOCm6eNwgmg9rvIB8=
+X-Received: by 2002:a05:620a:701a:b0:8b2:1568:82ce with SMTP id
+ af79cd13be357-8b33d4680b0mr1753251785a.37.1764061089582; Tue, 25 Nov 2025
+ 00:58:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <aSUubvYfGJ-BIeDq@kspp>
+In-Reply-To: <aSUubvYfGJ-BIeDq@kspp>
+From: Loic Poulain <loic.poulain@oss.qualcomm.com>
+Date: Tue, 25 Nov 2025 09:57:57 +0100
+X-Gm-Features: AWmQ_bmTQcRkrlh5LC9CA4L2bhdCPeDV-xOAtBvRFXjiAj_Q-wt_cPxteId94bM
+Message-ID: <CAFEp6-2qCu-S3Fcw6k7pD_UMD3M2rZqJPKA458cTJ3vN66Ae9w@mail.gmail.com>
+Subject: Re: [PATCH][next] net: wwan: mhi_wwan_mbim: Avoid -Wflex-array-member-not-at-end
+ warning
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI1MDA3MSBTYWx0ZWRfX8DHQKUUwKbZj
+ n3yF5GEXH85ZBbFk570du6+YrAVqHK+VX9wDfgIQx38wa8HSCrfjN3UZmCA/qp484969rm6Ul6h
+ /E/pS+13YAHaakLywh9eiDA59g7/SGhJg5fEOymA34KMn7zhKfiqxED6GusZLQ2WWhYb/zsHGea
+ NgRHIzUyt61Xc/u+w+a3F4gtgcisFFyHzmrOTwGF/5yHEqqbCB8QYqeuAiRQPcs03UXuGNsRJYf
+ vIApJZyeeQvNFLrwb+S4gH3TMk7z6wZ7CFppHosJwHPmhz1eFF1iSlPq2g7C5GxUjLly3xmke7v
+ 0Q9IQVqrWqN2ulpadrnZGWWZlDYLcQYL7O6Gua/iFxQ9ygwAN48fMm5oEkv0IepK5F9Nd+2i2Eu
+ xXS9tPSNJr8DhPBS40Qcqa9fSAUcoQ==
+X-Proofpoint-GUID: qe3IMA6tc6kXqa9Q8KSzVcJkqSxM_Tkf
+X-Proofpoint-ORIG-GUID: qe3IMA6tc6kXqa9Q8KSzVcJkqSxM_Tkf
+X-Authority-Analysis: v=2.4 cv=GoFPO01C c=1 sm=1 tr=0 ts=69256fa3 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=ICYLl7Pk4l7hwN0V23EA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-25_02,2025-11-24_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 impostorscore=0 bulkscore=0 adultscore=0
+ phishscore=0 clxscore=1011 lowpriorityscore=0 priorityscore=1501 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511250071
 
-Use DEFINE_RAW_FLEX() to avoid a -Wflex-array-member-not-at-end warning.
+On Tue, Nov 25, 2025 at 5:20=E2=80=AFAM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> Use DEFINE_RAW_FLEX() to avoid a -Wflex-array-member-not-at-end warning.
+>
+> Remove fixed-size array struct usb_cdc_ncm_dpe16 dpe16[2]; from struct
+> mbim_tx_hdr, so that flex-array member struct mbim_tx_hdr::ndp16.dpe16[]
+> ends last in this structure.
+>
+> Compensate for this by using the DEFINE_RAW_FLEX() helper to declare the
+> on-stack struct instance that contains struct usb_cdc_ncm_ndp16 as a
+> member. Adjust the rest of the code, accordingly.
+>
+> So, with these changes fix the following warning:
+>
+> drivers/net/wwan/mhi_wwan_mbim.c:81:34: warning: structure containing a f=
+lexible array member is not at the end of another structure [-Wflex-array-m=
+ember-not-at-end]
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Remove fixed-size array struct usb_cdc_ncm_dpe16 dpe16[2]; from struct
-mbim_tx_hdr, so that flex-array member struct mbim_tx_hdr::ndp16.dpe16[]
-ends last in this structure.
+Reviewed-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
 
-Compensate for this by using the DEFINE_RAW_FLEX() helper to declare the
-on-stack struct instance that contains struct usb_cdc_ncm_ndp16 as a
-member. Adjust the rest of the code, accordingly.
-
-So, with these changes fix the following warning:
-
-drivers/net/wwan/mhi_wwan_mbim.c:81:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Add code comment to prevent people from adding new members after
-   flex struct member `struct usb_cdc_ncm_ndp16 ndp16;`
-
-v1:
- - Link: https://lore.kernel.org/linux-hardening/aSUubvYfGJ-BIeDq@kspp/
-
- drivers/net/wwan/mhi_wwan_mbim.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/wwan/mhi_wwan_mbim.c b/drivers/net/wwan/mhi_wwan_mbim.c
-index c814fbd756a1..313dc5207c93 100644
---- a/drivers/net/wwan/mhi_wwan_mbim.c
-+++ b/drivers/net/wwan/mhi_wwan_mbim.c
-@@ -78,8 +78,9 @@ struct mhi_mbim_context {
- 
- struct mbim_tx_hdr {
- 	struct usb_cdc_ncm_nth16 nth16;
-+
-+	/* Must be last as it ends in a flexible-array member. */
- 	struct usb_cdc_ncm_ndp16 ndp16;
--	struct usb_cdc_ncm_dpe16 dpe16[2];
- } __packed;
- 
- static struct mhi_mbim_link *mhi_mbim_get_link_rcu(struct mhi_mbim_context *mbim,
-@@ -107,20 +108,20 @@ static int mhi_mbim_get_link_mux_id(struct mhi_controller *cntrl)
- static struct sk_buff *mbim_tx_fixup(struct sk_buff *skb, unsigned int session,
- 				     u16 tx_seq)
- {
-+	DEFINE_RAW_FLEX(struct mbim_tx_hdr, mbim_hdr, ndp16.dpe16, 2);
- 	unsigned int dgram_size = skb->len;
- 	struct usb_cdc_ncm_nth16 *nth16;
- 	struct usb_cdc_ncm_ndp16 *ndp16;
--	struct mbim_tx_hdr *mbim_hdr;
- 
- 	/* Only one NDP is sent, containing the IP packet (no aggregation) */
- 
- 	/* Ensure we have enough headroom for crafting MBIM header */
--	if (skb_cow_head(skb, sizeof(struct mbim_tx_hdr))) {
-+	if (skb_cow_head(skb, __struct_size(mbim_hdr))) {
- 		dev_kfree_skb_any(skb);
- 		return NULL;
- 	}
- 
--	mbim_hdr = skb_push(skb, sizeof(struct mbim_tx_hdr));
-+	mbim_hdr = skb_push(skb, __struct_size(mbim_hdr));
- 
- 	/* Fill NTB header */
- 	nth16 = &mbim_hdr->nth16;
-@@ -133,12 +134,11 @@ static struct sk_buff *mbim_tx_fixup(struct sk_buff *skb, unsigned int session,
- 	/* Fill the unique NDP */
- 	ndp16 = &mbim_hdr->ndp16;
- 	ndp16->dwSignature = cpu_to_le32(USB_CDC_MBIM_NDP16_IPS_SIGN | (session << 24));
--	ndp16->wLength = cpu_to_le16(sizeof(struct usb_cdc_ncm_ndp16)
--					+ sizeof(struct usb_cdc_ncm_dpe16) * 2);
-+	ndp16->wLength = cpu_to_le16(struct_size(ndp16, dpe16, 2));
- 	ndp16->wNextNdpIndex = 0;
- 
- 	/* Datagram follows the mbim header */
--	ndp16->dpe16[0].wDatagramIndex = cpu_to_le16(sizeof(struct mbim_tx_hdr));
-+	ndp16->dpe16[0].wDatagramIndex = cpu_to_le16(__struct_size(mbim_hdr));
- 	ndp16->dpe16[0].wDatagramLength = cpu_to_le16(dgram_size);
- 
- 	/* null termination */
-@@ -584,7 +584,7 @@ static void mhi_mbim_setup(struct net_device *ndev)
- {
- 	ndev->header_ops = NULL;  /* No header */
- 	ndev->type = ARPHRD_RAWIP;
--	ndev->needed_headroom = sizeof(struct mbim_tx_hdr);
-+	ndev->needed_headroom = struct_size_t(struct mbim_tx_hdr, ndp16.dpe16, 2);
- 	ndev->hard_header_len = 0;
- 	ndev->addr_len = 0;
- 	ndev->flags = IFF_POINTOPOINT | IFF_NOARP;
--- 
-2.43.0
-
+> ---
+>  drivers/net/wwan/mhi_wwan_mbim.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/net/wwan/mhi_wwan_mbim.c b/drivers/net/wwan/mhi_wwan=
+_mbim.c
+> index c814fbd756a1..dd60e335ed8a 100644
+> --- a/drivers/net/wwan/mhi_wwan_mbim.c
+> +++ b/drivers/net/wwan/mhi_wwan_mbim.c
+> @@ -79,7 +79,6 @@ struct mhi_mbim_context {
+>  struct mbim_tx_hdr {
+>         struct usb_cdc_ncm_nth16 nth16;
+>         struct usb_cdc_ncm_ndp16 ndp16;
+> -       struct usb_cdc_ncm_dpe16 dpe16[2];
+>  } __packed;
+>
+>  static struct mhi_mbim_link *mhi_mbim_get_link_rcu(struct mhi_mbim_conte=
+xt *mbim,
+> @@ -107,20 +106,20 @@ static int mhi_mbim_get_link_mux_id(struct mhi_cont=
+roller *cntrl)
+>  static struct sk_buff *mbim_tx_fixup(struct sk_buff *skb, unsigned int s=
+ession,
+>                                      u16 tx_seq)
+>  {
+> +       DEFINE_RAW_FLEX(struct mbim_tx_hdr, mbim_hdr, ndp16.dpe16, 2);
+>         unsigned int dgram_size =3D skb->len;
+>         struct usb_cdc_ncm_nth16 *nth16;
+>         struct usb_cdc_ncm_ndp16 *ndp16;
+> -       struct mbim_tx_hdr *mbim_hdr;
+>
+>         /* Only one NDP is sent, containing the IP packet (no aggregation=
+) */
+>
+>         /* Ensure we have enough headroom for crafting MBIM header */
+> -       if (skb_cow_head(skb, sizeof(struct mbim_tx_hdr))) {
+> +       if (skb_cow_head(skb, __struct_size(mbim_hdr))) {
+>                 dev_kfree_skb_any(skb);
+>                 return NULL;
+>         }
+>
+> -       mbim_hdr =3D skb_push(skb, sizeof(struct mbim_tx_hdr));
+> +       mbim_hdr =3D skb_push(skb, __struct_size(mbim_hdr));
+>
+>         /* Fill NTB header */
+>         nth16 =3D &mbim_hdr->nth16;
+> @@ -133,12 +132,11 @@ static struct sk_buff *mbim_tx_fixup(struct sk_buff=
+ *skb, unsigned int session,
+>         /* Fill the unique NDP */
+>         ndp16 =3D &mbim_hdr->ndp16;
+>         ndp16->dwSignature =3D cpu_to_le32(USB_CDC_MBIM_NDP16_IPS_SIGN | =
+(session << 24));
+> -       ndp16->wLength =3D cpu_to_le16(sizeof(struct usb_cdc_ncm_ndp16)
+> -                                       + sizeof(struct usb_cdc_ncm_dpe16=
+) * 2);
+> +       ndp16->wLength =3D cpu_to_le16(struct_size(ndp16, dpe16, 2));
+>         ndp16->wNextNdpIndex =3D 0;
+>
+>         /* Datagram follows the mbim header */
+> -       ndp16->dpe16[0].wDatagramIndex =3D cpu_to_le16(sizeof(struct mbim=
+_tx_hdr));
+> +       ndp16->dpe16[0].wDatagramIndex =3D cpu_to_le16(__struct_size(mbim=
+_hdr));
+>         ndp16->dpe16[0].wDatagramLength =3D cpu_to_le16(dgram_size);
+>
+>         /* null termination */
+> @@ -584,7 +582,7 @@ static void mhi_mbim_setup(struct net_device *ndev)
+>  {
+>         ndev->header_ops =3D NULL;  /* No header */
+>         ndev->type =3D ARPHRD_RAWIP;
+> -       ndev->needed_headroom =3D sizeof(struct mbim_tx_hdr);
+> +       ndev->needed_headroom =3D struct_size_t(struct mbim_tx_hdr, ndp16=
+.dpe16, 2);
+>         ndev->hard_header_len =3D 0;
+>         ndev->addr_len =3D 0;
+>         ndev->flags =3D IFF_POINTOPOINT | IFF_NOARP;
+> --
+> 2.43.0
+>
