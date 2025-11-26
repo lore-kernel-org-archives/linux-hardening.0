@@ -1,162 +1,185 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A3733469C
-	for <linux-hardening@vger.kernel.org>; Wed, 26 Nov 2025 16:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A21433A024;
+	Wed, 26 Nov 2025 16:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764172822; cv=none; b=bNZKE8fJj8Z+HUJAmoZgNdCmY/G83L4msoG74PCFVeEXvP+FW+L0Lop/SOrGbud9GpBnql3K8imSg8m355ChjrFHlJUkPmfWXlJLyehuvGpFiPEu9cLM9SEW9b7s8AyZMrnArVIktK9aZ5bQr7JnM1BZJre3aJJqyD0ZkqhdBDs=
+	t=1764173352; cv=none; b=T0IR3WAeDcMtp2tFboSga4eHo4ALqWib3fvjprZs7i2fEBnRtgw8s2m7tNmxoeazYtK4OuXlhd0EAHH/JVBVbDJb0oLKdd7IYjW34vGV8UoqrQjiBzbm/+PIgZPTXvJAAE8r/yrTzDkUzd8SYAQET9rLkDOVTflaCzIWPY/zNFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764172822; c=relaxed/simple;
-	bh=9E4LZUqF4+RrmDwPg5Nf1aBB5ZvzocoQZTyPs+XXDOk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N6JlPTsi7LMaIzdiHRhtnXhuC62ToEmmS50BBTjCTtq6TWBn8zJ56Xb7ATCuTjEydBHbIAfqi3RAFNQS6aNVIh+iBmKPx9woUA+51ZU2Dh2bjLCUOjJnr1wmmDm3ulBS6NED7dVqWBkmrL52Gf9lCoJATHNtmlH5iKcuXVkVTOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sX53AFUk; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1764173352; c=relaxed/simple;
+	bh=rnuPj8l3nxRD30Mzwohmphj0ozjaGXooltYOoIP3XdE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S8ZtdDZnbqnfF9W2kG+StBWf+NSLiL09Tmgvh2QTCp6sl7t5B/K6spXo/XAKHAx6OApIuWx6WwQqO2+HiPbTfg+d2ALRSntjzEdQztsFs0DWNSbmkdKFsOC+Io/nZAA8PlIN9NoWmO7Ji0rESDmGPMg3eEBpZy+39+KUratymy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=CATY9ftr; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sX53AFUk"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-59577c4c7c1so996262e87.1
-        for <linux-hardening@vger.kernel.org>; Wed, 26 Nov 2025 08:00:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764172819; x=1764777619; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CKUmPojsBEaS1Fv5ikaphx/1DJX8hiMLHRzmJuvC1HY=;
-        b=sX53AFUkPrebVr+JYqcYgOg9/tVZBJBdETXhbH8Qj7qZk2sNOlZ7GLA8Z2cJapL8yC
-         WYTRzwAMStrt7FrW5Duq5Yd+lMmQ4t5LEp2QIF4Z4pu2P8f8aSIqjo5XJSGdNoWrXPT1
-         +v9lfCK18ej2k53NTVO/YW+xr+KaRt01ifAGAGt5bGc9+S8/s//vsJOT8Jyv8ZIIVqZ4
-         KmSNrHCLqM+DQEV3wtRCXx5uVIFd7EHnjUA8u4CnbgMehxX7g/E9tyzegkFQuBlGrQ97
-         lYjpS/zubBOthFvs0NzPr0nmzJEGDFQVt15vBDgtqkG8cw7Ze7/TpwaO5+OoU3naNERz
-         zT4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764172819; x=1764777619;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=CKUmPojsBEaS1Fv5ikaphx/1DJX8hiMLHRzmJuvC1HY=;
-        b=F/ngyLAnoAdt3FdDXAVs/mYydkC3fJP+KDv0hpqPcT58znf2sGpGDUtau7GY3sYiZv
-         kTQq/QhlZHxaa3ZqA42HAeOheVKNCyTZx0TQ8ZtThHGmvIJ6hwxyrBYhYne8gcXLbpDB
-         6fw76dwkfcyKIJRmgftxSHBopkrP8uoTDP/Q4AAqqVbi7vnHV3/Ka3ALsGBZONnF0iju
-         LZ25PoidT0qVCl3UCitWGpN89EcDObwt5UJmNfkQ8T6S187w1NyrS6PiP3vbo0mCk2u8
-         eE11WZgTGBLIpiv70MpJdIwI1/uY9I5rMmoVgUdtIWva7mpT1icFsI9JCi7BfYwcVPAJ
-         dW0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWxQJIeFfFxHtG85/C8D+rokRMfFgRG2SNCTD29ntftxEcNYTJfJT0ckuV/WM7ewf5ixUlQpD2UE1UZI9ENr8Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysYLWMUC+ADtNvfbQl/OmJylM0o/qipthvt+lxkNqL0J184ueB
-	EqN0HVAr9E7ekpmRu55fH2Z+z3/jldwP5ISZ5x9JEi5+0bQS7w6CQzAGFN7flfOp63F/ruabMt/
-	H0eFI/DozwZjrbmr8NMHrBGO9KiAYeyt8W/L1JJgaog==
-X-Gm-Gg: ASbGncvzpjeJaCpeL0wo0aJ/XaVyOELXnAhnETmbvlvTjubPnwuKjdQFrvG02Vin1x5
-	iQ0Lr4sPClIVKQXLl/C1nAxw3/bk3D66GSRmcLegI1GnqLqcx5aRqMElP8SCkfmQJuxCsGyb1Fu
-	HRhHjOOijtDKpC3qvXrTOk7YJUEz3WWVQORlYIyFD70LwKrZl8KHed34A8QQ5Rkk1SsJTgWK99t
-	wZlqRXLl2/AONDFwENa48bLHOH6UVX6QKKQe3wQMoy0LbF0hTq7bKggHJg1sOq6qoUbdvSVSzgJ
-	fWRAG1ShYdLj82Noh4GadR+h/og=
-X-Google-Smtp-Source: AGHT+IG/dq5r5WmQcoWn78HBF8tifFKLQkNqXoHsJ8uu05KTdYoqo/JzkNcCqS3q8x6xdOxAcwscTDG+CXZmPir3agk=
-X-Received: by 2002:a05:6512:33cc:b0:595:9929:c8a4 with SMTP id
- 2adb3069b0e04-5969ea35615mr7886071e87.22.1764172818843; Wed, 26 Nov 2025
- 08:00:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="CATY9ftr"
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+	by m0089730.ppops.net (8.18.1.11/8.18.1.11) with ESMTP id 5AQEPbd43733913;
+	Wed, 26 Nov 2025 08:08:31 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=s2048-2025-q2; bh=oZmYh6YpHcTCE9H3NEMw
+	SXw1R9ZP1diRqyx6ns/UxKM=; b=CATY9ftrmS7XqrrPh2Kw2+U4yOLTDIOhQo4t
+	fT++bE5QnXUTTDj1SISKs+UQWWlWXESUt4Vk/Uw4ZSdu3sXkySe9GBFHO/GtOEWQ
+	411l/Uycz4QsElZjqmNLTTOC03Bk3xrahRxGe2dTAYG3Xw8/u0qaXvlwf4Qf+gzA
+	RQRz/m6jwIWn7OkNdO9JgYCJ3G1u1eeNgwfmMCUjXO0Y/Z5VrkUOlbGe0Sigp71N
+	fPi2jhyinHmV7dk2u+LQ68tQs+O+aJ2d0sCNzYiAXKyb0pPsIXMYGocj6ADUHnCK
+	VMnCClf+dI7uC/6KbcFfIu8b90bADDeEXqso0Amh6UxzsGo6vA==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by m0089730.ppops.net (PPS) with ESMTPS id 4ap3a78uqy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 26 Nov 2025 08:08:31 -0800 (PST)
+Received: from devgpu015.cco6.facebook.com (2620:10d:c085:208::7cb7) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.29; Wed, 26 Nov 2025 16:08:29 +0000
+Date: Wed, 26 Nov 2025 08:08:24 -0800
+From: Alex Mastro <amastro@fb.com>
+To: Pranjal Shrivastava <praan@google.com>
+CC: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+        Robin
+ Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon
+	<will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jason
+ Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan
+ Corbet <corbet@lwn.net>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian
+ =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Kees Cook
+	<kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Ankit
+ Agrawal <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
+        Shameer
+ Kolothum <skolothumtho@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>, Alex
+ Williamson <alex@shazbot.org>,
+        Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs
+	<mochs@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <iommu@lists.linux.dev>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>, <kvm@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, Nicolin Chen <nicolinc@nvidia.com>,
+        Jason
+ Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v9 06/11] dma-buf: provide phys_vec to scatter-gather
+ mapping routine
+Message-ID: <aScl+LCPN2TiN7Pd@devgpu015.cco6.facebook.com>
+References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
+ <20251120-dmabuf-vfio-v9-6-d7f71607f371@nvidia.com>
+ <aSZHO6otK0Heh+Qj@devgpu015.cco6.facebook.com>
+ <aSb8yH6fSlwk1oZZ@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <20251112-gpio-shared-v4-7-b51f97b1abd8@linaro.org> <0829a21c-f97d-41b6-90bc-2acaec42caab@nvidia.com>
- <CAMRc=MdPvF+okfnRuwvAFG9UfyZ-araDsaaKMxKASEbc3rhyjQ@mail.gmail.com>
- <705186a9-a9db-46f0-bf2b-b499def050dd@nvidia.com> <CAMRc=MdQ8QgbdAd2sudZLgcDZu9DxBRJh5sfLeXwcTDEE0F7Uw@mail.gmail.com>
- <c4081961-0875-4a2d-ac84-40df128534e7@nvidia.com> <CAMRc=McSrKgL=q8xfH_Vndg7rCfy1TVgRh+dFRqFCiBwT_J2yw@mail.gmail.com>
- <b166f160-e4e2-43a2-866a-3341cc91a13e@nvidia.com>
-In-Reply-To: <b166f160-e4e2-43a2-866a-3341cc91a13e@nvidia.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 26 Nov 2025 17:00:05 +0100
-X-Gm-Features: AWmQ_blfhwNoOC_5q4Y6Ua8mUZE4gIa1ItGMpnk3IeLNBCFsJ0ovvbGWZGIVjOo
-Message-ID: <CAMRc=MfWi=cU1tK_AXW18A0X7K2TGp_u9Dwg4uSfW7Te83HvqQ@mail.gmail.com>
-Subject: Re: [PATCH v4 07/10] arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aSb8yH6fSlwk1oZZ@google.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI2MDEzMiBTYWx0ZWRfX3bFJkIqQfPcn
+ LWbsluc+XiO7FtO07pm/tzene/bBlAJbYXetaCM2lBsQPJ7MYrk9CERNphaL5xKMK0Fnvy9OfVQ
+ Y+bU9q7WY0Uh4Ys8J+otFMneIfwxv0xQluXqaIjHKTPEMVRe0iLSwQwQAHlspppJcXBPJ55pvJz
+ JZGujlxTRi2Y6L0eYmj2p7cT3nMIZvFmJX5h1nMX2rkgpOumcUuD7Oe2fNXk47TY9k+6i3mWPRm
+ +1gsqEAXdsAGhXv5RuZTmDTEo722fCpYhIfmTOQnzXGxfUvfRTUYuIHNc7jrvUJJ3yy8os7MmWa
+ fQzyxL3akPGWodtrtHsYmp6smX1T/MBPHuER3U7LA5bJUfQjB0xkE91sw0JPQLAlnjtXtOu0oRF
+ 6D5ufStP6OnrcDNfC66Kegl4bp3vwg==
+X-Authority-Analysis: v=2.4 cv=AJKKJ3lP c=1 sm=1 tr=0 ts=692725ff cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=kj9zAlcOel0A:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=B5NVPXpBE_52QoX4XTUA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: jOyqyM0SasvNGLs4etkYDuX4vfn-Z9b2
+X-Proofpoint-GUID: jOyqyM0SasvNGLs4etkYDuX4vfn-Z9b2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-25_02,2025-11-26_01,2025-10-01_01
 
-On Wed, Nov 26, 2025 at 4:47=E2=80=AFPM Jon Hunter <jonathanh@nvidia.com> w=
-rote:
->
->
->
-> On 26/11/2025 15:33, Bartosz Golaszewski wrote:
-> > On Wed, Nov 26, 2025 at 4:29=E2=80=AFPM Jon Hunter <jonathanh@nvidia.co=
-m> wrote:
-> >>
-> >>>>
-> >>>
-> >>> Is the device-tree used here upstream? Can you enable DEBUG_GPIO in
-> >>> Kconfig and post the entire kernel log on pastebin?
-> >>
-> >> The kernel log is here: https://pastebin.com/7rBh3T3T
+On Wed, Nov 26, 2025 at 01:12:40PM +0000, Pranjal Shrivastava wrote:
+> On Tue, Nov 25, 2025 at 04:18:03PM -0800, Alex Mastro wrote:
+> > On Thu, Nov 20, 2025 at 11:28:25AM +0200, Leon Romanovsky wrote:
+> > > +static struct scatterlist *fill_sg_entry(struct scatterlist *sgl, size_t length,
+> > > +					 dma_addr_t addr)
+> > > +{
+> > > +	unsigned int len, nents;
+> > > +	int i;
+> > > +
+> > > +	nents = DIV_ROUND_UP(length, UINT_MAX);
+> > > +	for (i = 0; i < nents; i++) {
+> > > +		len = min_t(size_t, length, UINT_MAX);
+> > > +		length -= len;
+> > > +		/*
+> > > +		 * DMABUF abuses scatterlist to create a scatterlist
+> > > +		 * that does not have any CPU list, only the DMA list.
+> > > +		 * Always set the page related values to NULL to ensure
+> > > +		 * importers can't use it. The phys_addr based DMA API
+> > > +		 * does not require the CPU list for mapping or unmapping.
+> > > +		 */
+> > > +		sg_set_page(sgl, NULL, 0, 0);
+> > > +		sg_dma_address(sgl) = addr + i * UINT_MAX;
+> > 
+> > (i * UINT_MAX) happens in 32-bit before being promoted to dma_addr_t for
+> > addition with addr. Overflows for i >=2 when length >= 8 GiB. Needs a cast:
+> > 
+> > 		sg_dma_address(sgl) = addr + (dma_addr_t)i * UINT_MAX;
+> > 
+> > Discovered this while debugging why dma-buf import was failing for
+> > an 8 GiB dma-buf using my earlier toy program [1]. It was surfaced by
+> > ib_umem_find_best_pgsz() returning 0 due to malformed scatterlist, which bubbles
+> > up as an EINVAL.
 > >
-> > This is not telling me much, can you try again with the printk() I
-> > posted earlier, please?
->
-> Yes, sorry I missed that before kicking off the last test. With
-> this print I see ...
->
-> [    0.120432] gpio_shared_of_traverse: /bus@0/ethernet@2490000 phy-reset=
--gpios
-> [    0.121407] gpio_shared_of_traverse: /bus@0/mmc@3400000 cd-gpios
-> [    0.121891] gpio_shared_of_traverse: /bus@0/host1x@13e00000/sor@15b800=
-00 nvidia,hpd-gpio
-> [    0.122035] gpio_shared_of_traverse: /bus@0/pcie-ep@141a0000 reset-gpi=
-os
-> [    0.122075] gpio_shared_of_traverse: /bus@0/pcie-ep@141a0000 nvidia,re=
-fclk-select-gpios
-> [    0.122342] gpio_shared_of_traverse: /regulator-vdd-hdmi gpio
-> [    0.122381] gpio_shared_of_traverse: /regulator-vdd-3v3-pcie gpio
-> [    0.122420] gpio_shared_of_traverse: /regulator-vdd-12v-pcie gpio
-> [    0.122453] gpio_shared_of_traverse: /regulator-vdd-5v0-sata gpio
-> [    0.122486] gpio_shared_of_traverse: /gpio-keys/key-force-recovery gpi=
-os
-> [    0.122551] gpio_shared_of_traverse: /gpio-keys/key-power gpios
-> [    0.122615] gpio_shared_of_traverse: /__symbols__ gpio
+> 
+> Thanks a lot for testing & reporting this!
+> 
+> However, I believe the casting approach is a little fragile (and
+> potentially prone to issues depending on how dma_addr_t is sized on
+> different platforms). Thus, approaching this with accumulation seems
+> better as it avoids the multiplication logic entirely, maybe something
+> like the following (untested) diff ?
 
-So I have no idea why the special __symbols__ node has a "gpio"
-property but as this is a special case, I think we should just
-explicitly ignore it.
+If the function input range is well-formed, then all values in
+[addr..addr+length) must be expressible by dma_addr_t, so I don't think overflow
+after casting is possible as long as nents is valid.
 
-Let me send a patch.
+That said, `nents = DIV_ROUND_UP(length, UINT_MAX)` is simply broken on any
+system where size_t is 32b. I don't know if that's a practical consideration for
+these code paths though.
 
-Bart
-
-> [    0.122672] OF: /__symbols__: could not find phandle 794981747
-> [    0.122701] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.18.0-rc=
-7-next-20251126-00002-g1cd98992c487-dirty #21 PREEMPT
-> [    0.122739] Hardware name: NVIDIA Jetson AGX Xavier Developer Kit (DT)
-> [    0.122747] Call trace:
-> [    0.122753]  show_stack+0x18/0x24 (C)
-> [    0.122772]  dump_stack_lvl+0x74/0x8c
-> [    0.122788]  dump_stack+0x18/0x24
-> [    0.122801]  of_phandle_iterator_next+0x18c/0x1c4
-> [    0.122819]  of_count_phandle_with_args+0xa0/0xc8
-> [    0.122832]  gpio_shared_of_traverse+0xd4/0x4c8
-> [    0.122848]  gpio_shared_of_traverse+0x178/0x4c8
-> [    0.122860]  gpio_shared_init+0x11c/0x1f8
-> [    0.122878]  do_one_initcall+0x7c/0x1c0
-> [    0.122892]  kernel_init_freeable+0x204/0x2e0
-> [    0.122908]  kernel_init+0x20/0x1d8
-> [    0.122923]  ret_from_fork+0x10/0x20
-> [    0.123055] gpiolib_shared: Finished scanning firmware nodes for share=
-d GPIOs
->
+> 
+> --- a/drivers/dma-buf/dma-buf-mapping.c
+> +++ b/drivers/dma-buf/dma-buf-mapping.c
+> @@ -252,14 +252,14 @@ static struct scatterlist *fill_sg_entry(struct scatterlist *sgl, size_t length,
+>  	nents = DIV_ROUND_UP(length, UINT_MAX);
+>  	for (i = 0; i < nents; i++) {
+>  		len = min_t(size_t, length, UINT_MAX);
+> -		length -= len;
+>  		/*
+>  		 * DMABUF abuses scatterlist to create a scatterlist
+>  		 * that does not have any CPU list, only the DMA list.
+>  		 * Always set the page related values to NULL to ensure
+>  		 * importers can't use it. The phys_addr based DMA API
+>  		 * does not require the CPU list for mapping or unmapping.
+>  		 */
+>  		sg_set_page(sgl, NULL, 0, 0);
+> -		sg_dma_address(sgl) = addr + i * UINT_MAX;
+> +		sg_dma_address(sgl) = addr;
+>  		sg_dma_len(sgl) = len;
+> +
+> +		addr += len;
+> +		length -= len;
+>  		sgl = sg_next(sgl);
+>  	}
+> 
+> Thanks,
+> Praan
