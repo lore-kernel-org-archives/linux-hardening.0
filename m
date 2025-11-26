@@ -1,301 +1,111 @@
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010057.outbound.protection.outlook.com [52.101.85.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096AC189F20;
-	Wed, 26 Nov 2025 00:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764118204; cv=fail; b=coyYK4DzedbqqHZs+3J3W7a02Sk0OBqTxfEayV2IwEZ1bZwywLBeirtkPPFrMTmq2kptR1PrQ+7d81qd14bB+7IGBwIUdDfKrdnjXcA9b4p14RZqyNDafV/9pBP2V/RTyMX4VBGrM5ZiuQ2tJ9eJ3nxuMu7ThLyj7DS7yzoj/ZY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764118204; c=relaxed/simple;
-	bh=fQqceDYv9/GP6MeaT9FYVd1fkV5spXOB7Ei5m+/el7U=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=A75rIkvGmJYB8wwslLF95Te7/cIR1WH9ti54YZrfIqm0UrW+N5lCqTLyYWZpQhax467xoZ7pwLWux0hnFRYgMlDUNukRwKTP3Gq2rsqThczK9aytO3nk570D7gsmHYgWvOK824NIJuaQlfPPpZwOV1vG9SAwtf1VALKpJ4E42eQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dCvvq2tB; arc=fail smtp.client-ip=52.101.85.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE1B30E0C3;
+	Wed, 26 Nov 2025 03:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764127622; cv=none; b=ETStB7mwBHHZ/um6ENoyywQBe5o16noV/yCyCH5DO0hkvOsIuzqiMsBAWiaoQ9lHADKD9eC8iSr5/bntsvNYEIucYfmnn+PVnzF7CNBBzTiHneK/GcXz9AYvKKh8Yvboh9uxhI3+rReaaqmUYkwdD1bKd8ftBHSs+kvmkfd7q9E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764127622; c=relaxed/simple;
+	bh=QvQWNTzAha/pjhXOIsexT1PVcm/R9MAVan25HFoMY7Q=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=eUrPpgbYFbyobufETaz84Zu3rNMz77gpPpoanz1CMNoDGQnqE23rzRaVt92SOhhhjYqoRqxvamNFJhjp5zQdUEUKPZGegH/LTpIJgSMJ0W79F1XoeKKh9VVo0DmFMW3LJgZ7gesqZXIg2WQIAEnQ8d+OyLUhL6JJaY1bl/Oq9/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=qOIlFFCj; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dCvvq2tB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v30qzTz65dPbVkdEVMezU8AuFpOwU/yoxbI6vCaoYadpLguP5Jza25udzGlGMBvVH2MroWCYeweIkrx2xdMRoGfEdd/faSj0+xSaBIWH+ukY6qrTOpApswqdu9Pxqhu4z9PMs4kchznMDfvcDibZvV2w8SqefRDN6VSQmAeEAaCBi6KIdQFPQwzdy9SaREM7dz1rP08gkx9KSz0omYVYRLVchPH2ISeh3m+F+ZQARSgpLDADATa+igNgEo2XRCc9JeTm50nMwo4QvQvfvxzlF/EgeOz15wltEm+FORofPcxYkWTtIafjml0QXURZPGL0AmuxIL/+G06+pzO0mwGYeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LIuCm8ryFyfbZUY6bVsEX8wN1WxZp9wbzzdhK7/hrPM=;
- b=Q2I0Vx8hubS67mQSvTqQJN3eDApxNucnWW0MBUAS3Oeojz+WzUEKXA3ZayKbMSQAtRNDHyAZJcSbJM3wm8TKvHnvY7mIih298z+MFWj4C9OV8fBIQbQ6Z562TaN7kvA7nJfGIiALkxkywj2lO2i2m1QgE5iuzncu7SgHMwvluRlTHkMlFkANEjLitzAfOYH3wOYzXsiVd9LYqCmkDA9Yn6uPgA+gF6R8ckkxmNRXj1usLVoN+Ko8X/owH+b2e+w44fQ2F+N1Hur7QwvxeMg9aGpj+UOQ8jX03zCFzmfluvcJMlKlAXG7pk+1lb+OuUDy80rlIBAiGgy+eyClbFXwjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LIuCm8ryFyfbZUY6bVsEX8wN1WxZp9wbzzdhK7/hrPM=;
- b=dCvvq2tBBJZ9f2/m7oD44N+jn3pyUb2Q7iOpqq2UuUjIcZX4eStH+QVjrfr62wf+wyxpa50kvO5f0ROp0x/zVVwjXZe5GK2OANnWAssm3yYIu4AbzBkIrugfFEzFwlb8x6k9fyvOqnYY1VDYHvRF2YSr7uwQP5OnSOEWAVXOF3x9MhdWOXnp6AXAk18iBKIt3nOmztkHmCmoKT/N9h7YwKQ0Krmm+BffC5l1ETdkXF7IZbrLYGkLEunMUXqe3IQu3jMjkAwLBriEYiLJhnPGVYSG0D52FJ5wuKNQbl+K00q2FrtWVReIdMEhbgTIgZdEr/fwE4KCKyiGugixUYKm/g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM3PR12MB9416.namprd12.prod.outlook.com (2603:10b6:0:4b::8) by
- CYYPR12MB9015.namprd12.prod.outlook.com (2603:10b6:930:c8::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9343.17; Wed, 26 Nov 2025 00:50:00 +0000
-Received: from DM3PR12MB9416.namprd12.prod.outlook.com
- ([fe80::8cdd:504c:7d2a:59c8]) by DM3PR12MB9416.namprd12.prod.outlook.com
- ([fe80::8cdd:504c:7d2a:59c8%7]) with mapi id 15.20.9343.016; Wed, 26 Nov 2025
- 00:50:00 +0000
-Message-ID: <861bca05-1964-4539-ac69-f3afc82bfe99@nvidia.com>
-Date: Tue, 25 Nov 2025 16:49:15 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/4] slab: Introduce kmalloc_obj() and family
-To: Matthew Wilcox <willy@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
- David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- "Gustavo A . R . Silva" <gustavoars@kernel.org>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Jann Horn <jannh@google.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, Marco Elver <elver@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
- Randy Dunlap <rdunlap@infradead.org>, Miguel Ojeda <ojeda@kernel.org>,
- Vegard Nossum <vegard.nossum@oracle.com>, Harry Yoo <harry.yoo@oracle.com>,
- Nathan Chancellor <nathan@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
- Yafang Shao <laoar.shao@gmail.com>, Tony Ambardar <tony.ambardar@gmail.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Jan Hendrik Farr <kernel@jfarr.cc>, Alexander Potapenko <glider@google.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-doc@vger.kernel.org, llvm@lists.linux.dev
-References: <20251122014258.do.018-kees@kernel.org>
- <20251122014304.3417954-2-kees@kernel.org>
- <CAHk-=wiNnECns4B3qxRsCykkHwzovT+3wG738fUhq5E+3Lxxbg@mail.gmail.com>
- <202511241119.C547DEF80@keescook> <aSTKLsRNiEKtDqPI@casper.infradead.org>
- <202511241317.516BDE7B@keescook> <aSTRsIUPeT5EC5An@casper.infradead.org>
- <CAHk-=wgn-2ieKtaHAXLLge1UFckLKa88vo3XOdLz+fP+DLpHGA@mail.gmail.com>
- <aSUB1qrfhXp3suGn@casper.infradead.org>
-Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <aSUB1qrfhXp3suGn@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0055.namprd03.prod.outlook.com
- (2603:10b6:a03:33e::30) To DM3PR12MB9416.namprd12.prod.outlook.com
- (2603:10b6:0:4b::8)
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="qOIlFFCj"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 5AQ3QaMhA107475, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1764127596; bh=QvQWNTzAha/pjhXOIsexT1PVcm/R9MAVan25HFoMY7Q=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=qOIlFFCjWZGiS8RXDqPig1idzUEoU9U3Fe3hvajmp12Yh+7Js2V74wTOGNgyk6Iz4
+	 CIxNj30cleJK94o84d7iQfxrYix7MTMOPlH098J8sSrbDMlpJGp585Ku5BvMQjcoJQ
+	 E7UG+0In8+C3Sv2sftBdO5Re4zXuJnMgjgs4bB2Ge0qA9AKDs9YyFe23ib8ahbCWKh
+	 0x6xOfFXjxtw5yilf322C1sFas36KQuwklT1ziSpwpKoxuRo3lJP3w7n2nXiIYE+Uk
+	 cEs1FNfTNlzyKBy7LeQm/mcXDMoGcMS+z1yKl/Y4UeXJEW7GJm3e7irCUclJU2i8Lu
+	 J7cK2lFvwfteg==
+Received: from mail.realtek.com (rtkexhmbs03.realtek.com.tw[10.21.1.53])
+	by rtits2.realtek.com.tw (8.15.2/3.21/5.94) with ESMTPS id 5AQ3QaMhA107475
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Nov 2025 11:26:36 +0800
+Received: from RTKEXHMBS01.realtek.com.tw (172.21.6.40) by
+ RTKEXHMBS03.realtek.com.tw (10.21.1.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.27; Wed, 26 Nov 2025 11:26:37 +0800
+Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
+ RTKEXHMBS01.realtek.com.tw (172.21.6.40) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.27; Wed, 26 Nov 2025 11:26:36 +0800
+Received: from RTKEXHMBS06.realtek.com.tw ([::1]) by
+ RTKEXHMBS06.realtek.com.tw ([fe80::744:4bc9:832c:9b7e%10]) with mapi id
+ 15.02.1544.027; Wed, 26 Nov 2025 11:26:36 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
+        Zenm Chen
+	<zenmchen@gmail.com>,
+        "gustavo@embeddedor.com" <gustavo@embeddedor.com>
+CC: "Jes.Sorensen@gmail.com" <Jes.Sorensen@gmail.com>,
+        "gustavoars@kernel.org"
+	<gustavoars@kernel.org>,
+        "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>
+Subject: RE: [PATCH][next] wifi: rtl8xxxu: Avoid
+ -Wflex-array-member-not-at-end warnings
+Thread-Topic: [PATCH][next] wifi: rtl8xxxu: Avoid
+ -Wflex-array-member-not-at-end warnings
+Thread-Index: AQHcWTQWm+ekto8gdkOtuZTX88y/HbT8ZJsAgAADogCAAA5sgIADwJWAgAQc65A=
+Date: Wed, 26 Nov 2025 03:26:36 +0000
+Message-ID: <c0d187d6fead4e5387db2a14129be96c@realtek.com>
+References: <ff184c0e-17f2-445f-9339-f4db9943db86@embeddedor.com>
+ <20251121111132.4435-1-zenmchen@gmail.com>
+ <475b4336-eed0-4fae-848f-aae26f109606@gmail.com>
+In-Reply-To: <475b4336-eed0-4fae-848f-aae26f109606@gmail.com>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM3PR12MB9416:EE_|CYYPR12MB9015:EE_
-X-MS-Office365-Filtering-Correlation-Id: bef19c01-0293-42cc-8b96-08de2c85ba28
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cTM5RVg3SUc1SGpJZHBHYWJkVmJSNUhJSElqTTN0QUZLUmtiMXdiRWlndklq?=
- =?utf-8?B?Zno0UzV4NmJvUWdBdU9vU3RxaGk0bzZPTzRlUTU3UlltenBMZ0Q0dC9oTmg1?=
- =?utf-8?B?d1dsSXVWbTVIK0UxQ3kzcFZSK1V4RlVQeURMT3kwYUVlQ1ZiVm04b29ZeVp1?=
- =?utf-8?B?RGkvbWJIRWxJUVg5cWtPM25VbkJSWmxuR3ZWRVlTVDN4NnNLNEx2WVQvY2Y3?=
- =?utf-8?B?WG90cWNuZVBOQTVtS1dBdFl3VHpjSVd3WjRVV3h5NXJiUktObnM1ZEFJMDNY?=
- =?utf-8?B?M25pZ0x3anNwaG5CdDBZQzRRSkJLYWRqbnJtSFZOcTFhM0F2c2U3RFJlaytY?=
- =?utf-8?B?RDlPdU4zaUJ2RlJTUktkVHNyL20ya3IxeUgzOVdwRkE5dGlTNmV1Qy9sU0or?=
- =?utf-8?B?SnBRUGhmYkNUZnU0RzkrZU84aXhaSUwzaTBOMExYeDN2RzBzc0NvUzBpd1pQ?=
- =?utf-8?B?eE1vT2w3Y1FtOVdqNVA4eUhBUDdzV054aFd6YjRzWVRmSUMxazA1N2lCcEFN?=
- =?utf-8?B?UExHSno1bVNjdEtDQjRiY1lhdjJWZW1VQ1VnUHkyZEdjZENtZDUyanFiZ3Vu?=
- =?utf-8?B?TmlHWjhhLzFna2xFZ200YXpteG1hdG9wWk9SYmEwSXU2ZTYxaEJsMWFtN3oz?=
- =?utf-8?B?bWJNUkhndWtMdVN3LzZ1MFd5MG9xcE9nZ3lnODFOTWR2NUJIOTgxVEpqLzF5?=
- =?utf-8?B?SDFqcFFyUUVPY2t6d0tMYW9ReXk1NlU2NE9rUVZIQ3pOQjlHOEMxdUZpLzhR?=
- =?utf-8?B?eUlpMEo2b0tWZkE4aktaOHp4dklkSWJLcHBnRjErcFYxMElZQ3g4d2wvWXg4?=
- =?utf-8?B?MCtzc3lzVHVpUWhReGtPTWZyUjluTVlQZVYwWGpEcVlMSEZ2TGZIdHRseERx?=
- =?utf-8?B?dFpiSGt4K2VuZXlHOUtaWXJ2dGxUeGo5Snp0T2JZRG50MFRmbzFDZTFXNEp1?=
- =?utf-8?B?RFN5TkpXMFpSSFVTZENDbTUxSG5tLzNkbmRMaHZRdHRiL29NTzBiR3U4UzBM?=
- =?utf-8?B?ZmRmaXJGQzBHQklYQjhHZ2pvQlZPYThPcVNBaUlLRW01eGdBaGJ5TXowZm1z?=
- =?utf-8?B?Qnp4QXlPY0N0dEF1eWVFTlV3ZWhucmVlN1h2dk11dFJFZys1YXZqb3pIeXpL?=
- =?utf-8?B?RzRpRFBxTkcxYkVUSEVoVit5T1pBS213bi83ME9ZNzBac1BGUDJWU2FwZWNz?=
- =?utf-8?B?cUJIczdyN000ZmFQK1ZiSG5qRHRaeEpjTkVwQ0RIVFhQcCtMUm9UdUY3OXVI?=
- =?utf-8?B?bnVEYUFmMkxVOHBnbnpoOEgwR1ZvNU8zRHdlV1cyMmg2UTJoQlhsUVZzUERT?=
- =?utf-8?B?Y0dFUjVOMW40eklNQk9vOGJaZUdSSkhNV2hRZEt5MnNkODYvLzhhNXdwWldC?=
- =?utf-8?B?S2NIWXQxWW5MbUo5MzNnZFNmTk9xSUtMYlV6cW9GMUMxT0tQVkhVZ1pYSVNR?=
- =?utf-8?B?MUswT1ZXaVFSdWFRWEVlOS80dXpIR3ljeHhnWUs0Q1cwa3hQMmQ0YVBhQ281?=
- =?utf-8?B?S0hnWUZNa3lmOEFmWUFiUWZuaW9PUW9hZWFBdzd2d0pQcUdYbnB4RTJVU2VZ?=
- =?utf-8?B?bnk3aXQ0MEE3R21tTElEWEhURHlYUjFRcXU2cjFNbHB6ZUYvcUYxNkpFWFZq?=
- =?utf-8?B?MTRtR2l2M2VXWGNZZVQyMElSZVVqMVBsUDNFRmF5SjJoL0lFd2RJZnBlbWMx?=
- =?utf-8?B?bFBmOHFQQWg5OEdNUTQzdDJJSzE3aFRjNW1hclhXZkQ1cGwvNHRyV1h5UUJZ?=
- =?utf-8?B?MWg1dDhnN0ludkVJTHhEajJoTWQyUjNjQ2JFdDZVcnRiZmx5UzByYS8rZ05Y?=
- =?utf-8?B?RnFLdWU3SEVQTm9HOVZSV0dNTG5CTFhmRE96VXZrak1CbE9WT01wUVIzWFpV?=
- =?utf-8?B?Z1VsMXE2WHNtMkdQUTdGMFhrZ3BxaHlqQUVMNzBNWmVVUXNrZVhLTVFTakRj?=
- =?utf-8?Q?gaqjEibINRFQVpppdPR0VgWnLYsnwRt+?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM3PR12MB9416.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZVhJaGJ3UUZBTHFJWGkxRmt3b1NTalBjNkhVcWJBZ2Z6Q0puY3h4enlCT2FP?=
- =?utf-8?B?ZmJYK3RPcTVhQ29RSFdVSUVhQzBtMzFyNzlQMG5Nb2pVK1VSY2tJYmZMV0ln?=
- =?utf-8?B?ekgxK2VuamEwbUladzZEQzNSYmRRWVhjbkFrTFo0K09ta3lYWmFyUFVYdWox?=
- =?utf-8?B?QVBxQ3ZoU0tIaTlJdXllSGlRbHRnWnJCZWkzamxRdWo3N21lUXdHbm45bUFR?=
- =?utf-8?B?L1FlNzlJVEx2S2VRK3pET2pwSzVIYldRS1cvbHZmMS9EZlJqYWlBZmRGbkp3?=
- =?utf-8?B?TU4zRDdyckE2a25Gd2tLb2ZIRHJKZ09KUFlSWUVOdy9wOUhHUjNicTg0WXgy?=
- =?utf-8?B?aXpUa2NXQk5vVUYrTHFaeHdRampoeEoxTVJqQ25DWktYd08vTk5XWHh4WDN5?=
- =?utf-8?B?aTNEdGZZUTM0NEdremt1R0RUcmNjQndQWGtUSE9FQ05MYW9KbHVLVXZIZUZi?=
- =?utf-8?B?c0dZbFF3ZmM5bzdRUTVkNUpPcEVRSndwZFBhYUtQV2Q0bVZyRmVUSXZ5aGhD?=
- =?utf-8?B?UFd2N0RORWNzV1VrbzB3WHBGbGh0N3c3VTlBL0RpNFpMRklKZ1NuNXBtbkQw?=
- =?utf-8?B?bGVvY1lWMXVuVmpRdVZKVGtxM1NDdEtFRFdsb21VNjJpNDNaRHllLzh2SVNJ?=
- =?utf-8?B?QkJUVE1TTDhhZzI2QjBFdzFvTFNDSHhGQnhOeGdNa0lQdGMvSy83bk15UXV4?=
- =?utf-8?B?MS95Q1ltUkpKZFprZXhXb2xINlN0QllpUFZHRnU1bTNsbUdkNzUyK2dWeXM4?=
- =?utf-8?B?UEdWcEpQa2luSzhQbEt3OExKbXdrdE9xRkphK2FnaXAyQlJRc1ZjeFFZTGg5?=
- =?utf-8?B?U0ZsRXdXZ3BaTHpiRUQ2QmlDWW91TEt5aFlHYzY0SjNJZDU0SUMrM21yTGxQ?=
- =?utf-8?B?VVJ5cEN3OUgyY2M4T3NSZ3ZwK2RWUTZHWHFxbE9UZ0FFYmlzbEo0R1Z0UVNy?=
- =?utf-8?B?SUJLdGUxekpDeVNDaVZrSldsT2ZhdWdhTmEwci8weXA0ZnRESU5Ba2dicUUz?=
- =?utf-8?B?a2FLamMxNmZYbmxHRXc5SXFRRVhXQndEaXMwYUxIVy8zYldqbDJKZXdCRmJP?=
- =?utf-8?B?aDJOK3YwSG1GRFI0Nk8yQ3FON3RiOFRWTUkzS3E3N0VDa3I3bWtnVHA2MVU2?=
- =?utf-8?B?SytKa3ByV2tUS3oxcDBaT1U5Q2hPM0pFUkV4N1Q4UEQrdjNMalNmejdNQ1Uz?=
- =?utf-8?B?K1NhaDNQTzVxaDJhSnVwVHB2algyZFFhZXZycVBJR2dUN0xEcDhaaktJQVZi?=
- =?utf-8?B?bng1ZWZKeGVnNFgzYWJmdDM4SjQ0SSs4cmxVNUFMY2E0cHBlVG9FajhoNDcv?=
- =?utf-8?B?N0FweTZQY0c5VkgyVWt4MEdTa0Q5Uk1FYzVzTTNtWVo3bis1WUFFc3p0b2hu?=
- =?utf-8?B?MjJ1bEs0RTVQN2MyaVROR2JhcFVFbUdUdWdpSCtVekF2cUZPOEtvbk5udUVs?=
- =?utf-8?B?NGJ3WkhxdXFLbHdvbDdlZ1EvOCtJMUlOSEQwUWhMcHNNSHBIdVFqbDBWcDNU?=
- =?utf-8?B?Z2xldFUrLzFCdkY1M3UyZ0Y1amgvQ3lsZlVTb3pjNFhOWExIRVRHWGVjNVpE?=
- =?utf-8?B?RW9zS0dhWnBzeWZNZVlJSWJrU3NGb21ieHpCd1FuUGpYNDUyVnVzSnNQQ2JJ?=
- =?utf-8?B?M1lDaEVaUjdGUTB2ZU91Nkw5N25GSnYxUVNzdHFSaGlEU0JoZUVYamJrZmZC?=
- =?utf-8?B?a2hONDJjYjJNUko0OGVrbmphTnMya3FScnYrcU15UldqdWwwQkVpZGpyQzJ3?=
- =?utf-8?B?K0FRUEVWbVFzTVM1eHVGTmZwbG15Z3h4cW9RTUxLeTZkdm5paW1vbUVEOGhw?=
- =?utf-8?B?bDY0eEhYU0ExalJ4dVZlOGdTcThha3c4eFp1d0gyREVtN2poSG5hWDJqM0Vk?=
- =?utf-8?B?WndNeTdmTGt4bU14MHVzTkg0OCt0clpEUjdzMG5WcGt3cDRJYno1RzBCdnNT?=
- =?utf-8?B?U0t5RkMwV0NkMnUyY2hMNEdTMTBxbG1LcEJzSVAxZHFaRE1YK3ZPdVRJb1d1?=
- =?utf-8?B?TnNWTHZLWkFpSytldlpkaXh3a1J3ZlRyeG16MHJsK1pyUDFsOFRmRHBUTWJE?=
- =?utf-8?B?ekxEQnlRS0dQditpM3g0YnVKZWJHVUY1bXdFVmJvTnVUMzNMQkdaWFFyeUlh?=
- =?utf-8?Q?Kur/aS/n8MEPoiRbkUbZbJx2/?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bef19c01-0293-42cc-8b96-08de2c85ba28
-X-MS-Exchange-CrossTenant-AuthSource: DM3PR12MB9416.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2025 00:50:00.1233
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VMLkwZQ+/hVcgOev5Pwawbscmn+TUK111Mp6kH3e+j3xsh2Y4DTdJ4PqMCRxoKqGj32rgETGmpsL6xSwIqHcUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB9015
 
-On 11/24/25 5:09 PM, Matthew Wilcox wrote:
-> On Mon, Nov 24, 2025 at 03:30:19PM -0800, Linus Torvalds wrote:
-...
->> Imagine how many other places you add integers to 'unsigned long'.
->> EVERY SINGLE ONE of those places involves sign-extending the integer
->> and then doing arithmetic in unsigned.
-> 
-> I have bad news.  Rust requires it.
-
-Well, yes.
-
-But the pain is front-loaded, so it's not like we have to go back and
-retrofit anything.
-
-And I also want to tweak the characterization of that, below, because
-I suspect this is unevenly understood, so far:
-
-> 
-> fn add(base: u64, off: i32) -> u64 {
->     base + off
-> }
-> 
-> error[E0308]: mismatched types
->  --> add.rs:2:12
->   |
-> 2 |     base + off
->   |            ^^^ expected `u64`, found `i32`
-> 
-> error[E0277]: cannot add `i32` to `u64`
->  --> add.rs:2:10
->   |
-> 2 |     base + off
->   |          ^ no implementation for `u64 + i32`
->   |
->   = help: the trait `Add<i32>` is not implemented for `u64`
->   = help: the following other types implement trait `Add<Rhs>`:
->             <u64 as Add>
->             <u64 as Add<&u64>>
->             <&'a u64 as Add<u64>>
->             <&u64 as Add<&u64>>
-> 
-> so the Rust language people have clearly decided that this is too
-> complicated for your average programmer to figure out, and you need
-> explicit casts to make it work.
-
-
-A couple of key points, though:
-
-a) There are many other, better options than casts (Rust's "as"
-keyword).
-
-In fact, Rust doesn't actually require casts here, but it does require
-something to explicitly declare the programmer's intentions.
-
-b) Rust doesn't do this because programmers are too dumb to figure it
-out. On the contrary, programmers are required to specify exactly what
-they want, in the first place.
-
-Some examples, using Matthew's example as a starting point:
-
-// u64 add operations:
-//   +                          - panics on overflow (debug), wraps (release)
-//   wrapping_add(u64)          - always wraps
-//   wrapping_add_signed(i64)   - always wraps, accepts signed offset
-//   checked_add(u64)           - returns Option, None on overflow
-//   checked_add_signed(i64)    - returns Option, None on overflow
-//   saturating_add(u64)        - clamps to u64::MAX
-//   saturating_add_signed(i64) - clamps to 0 or u64::MAX
-//   overflowing_add(u64)       - returns (result, bool)
-//   overflowing_add_signed(i64)- returns (result, bool)
-//   strict_add(u64)            - always panics on overflow (even release)
-//   unchecked_add(u64)         - UB on overflow (unsafe, for optimization)
-//   carrying_add(u64, bool)    - multi-word arithmetic, returns (result, carry)
-
-// 1. Wrapping: overflow/underflow wraps around (address arithmetic)
-fn add_wrapping(base: u64, off: i32) -> u64 {
-    base.wrapping_add_signed(i64::from(off))
-}
-
-// 2. Checked: returns None on overflow/underflow
-fn add_checked(base: u64, off: i32) -> Option<u64> {
-    base.checked_add_signed(i64::from(off))
-}
-
-// 3. Saturating: clamps to 0 or u64::MAX
-fn add_saturating(base: u64, off: i32) -> u64 {
-    base.saturating_add_signed(i64::from(off))
-}
-
-// 4. Overflowing: returns (result, did_overflow)
-fn add_overflowing(base: u64, off: i32) -> (u64, bool) {
-    base.overflowing_add_signed(i64::from(off))
-}
-
-fn main() {
-    let base: u64 = 0x100;
-    let off: i32 = -0x200;
-
-    println!("base=0x{:x}, off={} (underflow case)", base, off);
-    println!("wrapping:    0x{:x}", add_wrapping(base, off));
-    println!("checked:     {:?}", add_checked(base, off));
-    println!("saturating:  0x{:x}", add_saturating(base, off));
-    println!("overflowing: {:?}", add_overflowing(base, off));
-}
-
-// Output:
-base=0x100, off=-512 (underflow case)
-wrapping:    0xffffffffffffff00
-checked:     None
-saturating:  0x0
-overflowing: (18446744073709551360, true)
-
-
-thanks,
--- 
-John Hubbard
-
+SGkgQml0dGVyYmx1ZSwNCg0KQml0dGVyYmx1ZSBTbWl0aCA8cnRsODgyMWNlcmZlMkBnbWFpbC5j
+b20+IHdyb3RlOg0KPiBPbiAyMS8xMS8yMDI1IDEzOjExLCBaZW5tIENoZW4gd3JvdGU6DQo+ID4g
+R3VzdGF2byBBLiBSLiBTaWx2YSA8Z3VzdGF2b0BlbWJlZGRlZG9yLmNvbT4g5pa8IDIwMjXlubQx
+MeaciDIx5pelIOmAseS6lCDkuIvljYg2OjIw5a+r6YGT77yaDQo+ID4+DQo+ID4+IEhpLA0KPiA+
+Pg0KPiA+PiBPbiAxMS8yMS8yNSAxOTowNiwgWmVubSBDaGVuIHdyb3RlOg0KPiA+Pj4gRGVhciBt
+YWludGFpbmVycywNCj4gPj4+DQo+ID4+PiBXaXRoIHRoaXMgcGF0Y2ggYXBwbGllZCwgbXkgc3lz
+dGVtIGFsd2F5cyBmcmVlemVzIHJpZ2h0IGFmdGVyIHRoZSBydGw4eHh4dQ0KPiA+Pj4gZHJpdmVy
+IGlzIGxvYWRlZC4gaXMgaXQgbm9ybWFsPw0KPiA+Pg0KPiA+PiBJIGRvbid0IHRoaW5rIHNvLi4u
+IEl0IHByb2JhYmx5IG1lYW5zIHRoYXQgc3RydWN0IHVyYiB1cmI7IGNhbm5vdCByZWFsbHkgYmUN
+Cj4gPj4gbW92ZWQgdG8gdGhlIGVuZCBvZiBzdHJ1Y3QgcnRsOHh4eHVfcnhfdXJiIG9yIHN0cnVj
+dCBydGw4eHh4dV90eF91cmI/DQo+ID4+DQo+ID4+IEl0J2QgYmUgZ3JlYXQgaWYgeW91IGNvdWxk
+IHNoYXJlIGEgbG9nLg0KPiA+Pg0KPiA+DQo+ID4gSGksDQo+ID4NCj4gPiBOb3RoaW5nIGhlbHBm
+dWwgZm91bmQgZnJvbSB0aGUga2VybmVsIGxvZy4gTWF5YmUgUmVhbHRlayBkcml2ZXJzIG1haW50
+YWluZXINCj4gPiBQaW5nLUtlIGNvdWxkIHRha2UgYSBsb29rIHdoYXQgaXMgd3JvbmcgbmV4dCBN
+b25kYXkuDQo+ID4NCj4gWy4uLl0NCj4gDQo+IEkgZ290IHNvbWV0aGluZy4gSW4gbXkgY2FzZSBl
+dmVyeXRoaW5nIHNlZW1lZCBmaW5lIHVudGlsIEkgdW5wbHVnZ2VkIHRoZQ0KPiB3aWZpIGFkYXB0
+ZXIuIEFuZCB0aGVuIHRoZSBzeXN0ZW0gc3RpbGwgd29ya2VkIGZvciBhIGZldyBtaW51dGVzIGJl
+Zm9yZQ0KPiBpdCBmcm96ZS4NCj4gDQoNClplbm0gYW5kIEkgdGVzdGVkIGJlbG93IGNoYW5nZXMg
+d2hpY2ggY2FuIGFsc28gcmVwcm9kdWNlIHRoZSBzeW1wdG9tLCBzbw0KSSB3b25kZXIgZHJpdmVy
+IG1pZ2h0IGFzc3VtZSB1cmIgaXMgdGhlIGZpcnN0IG1lbWJlciBvZiBzdHJ1Y3QsIGJ1dCANCnVu
+Zm9ydHVuYXRlbHkgSSBjYW4ndCBmaW5kIHRoYXQuIENvdWxkIHlvdSBhbHNvIGhlbHAgdG8gcmV2
+aWV3IGlmIHNvbWV0aGluZw0KSSBtaXNzZWQ/IFRoYW5rcy4NCg0KDQotLS0gYS9kcml2ZXJzL25l
+dC93aXJlbGVzcy9yZWFsdGVrL3J0bDh4eHh1L3J0bDh4eHh1LmgNCisrKyBiL2RyaXZlcnMvbmV0
+L3dpcmVsZXNzL3JlYWx0ZWsvcnRsOHh4eHUvcnRsOHh4eHUuaA0KQEAgLTE5NDIsMTUgKzE5NDIs
+MTkgQEAgc3RydWN0IHJ0bDh4eHh1X3ZpZiB7DQogfTsNCg0KIHN0cnVjdCBydGw4eHh4dV9yeF91
+cmIgew0KKyAgICAgICB1OCBwYWRbMTI4XTsNCiAgICAgICAgc3RydWN0IHVyYiB1cmI7DQogICAg
+ICAgIHN0cnVjdCBpZWVlODAyMTFfaHcgKmh3Ow0KICAgICAgICBzdHJ1Y3QgbGlzdF9oZWFkIGxp
+c3Q7DQp9Ow0KDQogc3RydWN0IHJ0bDh4eHh1X3R4X3VyYiB7DQorICAgICAgIHU4IHBhZFsxMjhd
+Ow0KICAgICAgICBzdHJ1Y3QgdXJiIHVyYjsNCiAgICAgICAgc3RydWN0IGllZWU4MDIxMV9odyAq
+aHc7DQogICAgICAgIHN0cnVjdCBsaXN0X2hlYWQgbGlzdDsNCn07DQoNCiBzdHJ1Y3QgcnRsOHh4
+eHVfZmlsZW9wcyB7DQoNCg0K
