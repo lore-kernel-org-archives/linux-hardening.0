@@ -1,129 +1,202 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8CE3002A6
-	for <linux-hardening@vger.kernel.org>; Tue, 25 Nov 2025 22:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7273595D;
+	Wed, 26 Nov 2025 00:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764110505; cv=none; b=owd6JTZYl/V1Voxmh89+HVslurCuAE8Gpx30SO9cf/l/8vP71pi3eHHbDyJ/BMXN272UJ+ySF3uzZ1kny1OwjG049BbtpsrAT+no70CxMQi98tIBNIurpSwFMIXCXBfa96qRLjD7wcovKzkpSqR2ItomqWhQl4nAl8jYkQ2GYfE=
+	t=1764116337; cv=none; b=X0UpguotiXezDmp1gJAbu4PiLqw1tpt6O1y5L5piMnCIoBZeXXR2U5ZwpjbejDpeO+dYSJuEocwDQ6+yHpQdvOgDfnXcLDwhu0iuoEETujVdRHoA+1RsLHXww81YzRwTUPDewR1bMl+WazLlaeSzWrpgZhTnq95vw+Quv4RfMKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764110505; c=relaxed/simple;
-	bh=jsL4T2UPDPxhD8xl6D8pYITWdOgOn16n1Vvm+6LuL64=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e3oLyyntSnXGh33y8QfcguC7bbQzB1x0aqO0a6MxAFmQSLkrXcOi+vjbNYsiQuFyetgtHp9HicricmjtJzTjNS6UzivSV+x9AS6Rkza4PHWTN2T+ORX+vYY67jYZK5vapo6UuviDsG7liR8PCNqCsP67fd9SaGKyhskW4CLYp2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Zxi53khp; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1764116337; c=relaxed/simple;
+	bh=gwii+iVdBVKbWCyCdr/+zthLuTAXebNs8mhXSw/5DRY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uhYN7UrKDcWDvpjp3/K6SAxCcl3yX/XEguV7lgNTb0Fr4ebsDBAg6PNiZk+xVTk3UXFgimlzxhqG/fKj6G2A/ek4ZguPF4BBbrFvIz9N5VzLKXzRhxF/UU9Kk+42wJiA8cFfu6OABwK7jrDi5nUJ/3P6e02n/McHdMWOpKATu9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=W+AKvPIc; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Zxi53khp"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b727f452fffso46465366b.1
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Nov 2025 14:41:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1764110502; x=1764715302; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PICSSTOVtSfieJ36Y7geN1Ip3ZesP7jblQQJyY8Iec8=;
-        b=Zxi53khpN955CApQ6c1PR4I/If76l8fvMvT10BEVtikiTZpttKjVdvYai3iNchcb8M
-         MkTnfC275W1AO/kadLUv+Sbvsuo2s6Ij9qSsyJzQHgmJ0Nwg54SCnHPDiE7PtpFPKb+M
-         Eh6OGLLZKI3+QLIwebsKUkKFsOdVFUYOnMYEY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764110502; x=1764715302;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PICSSTOVtSfieJ36Y7geN1Ip3ZesP7jblQQJyY8Iec8=;
-        b=nCNIU+LYk9vxgs1J5Z/LHkCixB+D6Q6GTFA4vlG1WMTPvq1gV3fNSUuyCKU3H0Z0+U
-         Ua+wajx7RVybxuPB7jz2v+8DvAtnR4iXeLGP34FivEoWNnYQ4u3xG+rhJ2r5AyJ7geXS
-         TWhA01GF+gS4shw+hvnj2GVWSRyaxMmdOEwAv0AescURAyC4q4EclfnUsAUCPiqYfzZW
-         Ed+CXJCanF9ZlhmYtwRK0qIHiRUH2UzP4y3vKLMLnGxUC24tMS1f2Re2dB52Ok+dsRXM
-         VhPD666HJ7nVGdDOTiptVhtxgc/w4Z+HzuXX19Ow0PvmLICXp/H5K67KLIyGQAdtcu6M
-         Higg==
-X-Forwarded-Encrypted: i=1; AJvYcCWopEEOt99vvLmYg85s4S1xksNMkYZDGWDU2zVk2TLBVcCju3i2JWyXanJgdoUJ0lcsAt8I5KdjxW6bTfLKwNA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsrSISJkuIdmHGVzeJkh3nqoUVF8+yw/4mQUDpvSgS3j69Mzsl
-	OSvAdfCKXts+p2Ve+kxHDJ+kgVnltd+3nfppf01EdfC4jusmSVzWdnlodiva9kpCDETRwtILovB
-	+MoFE4LU=
-X-Gm-Gg: ASbGnctmrGMf616WkU6vpfAMO8BBazZkPWpuQDP5HFyIZeH+3mkiyLCfbCWecJZVKAI
-	ZLKf1io1QjO8L7YPY04HmYmYBcWwT5CQai4KSgURq37dtjTHxjj2+v8dQktACro/E22tsA37cO9
-	uHmGOcmFBueOCdpydhiwSU5AYQ7VWLHhul6KbtcznkBYcYVCktRmBv2QyTLeWq03JLS2tEgWNWh
-	QuP8mMxX6EpRlLsMrJCXcQBSHuhFCv856QGocbyL7aTWiCTnGLe8WbeW+4BY/ud/YKrDbQt61Jn
-	/odc4eWgKJ/NI/mjPOmuApxcmibQ01Yvnby+GT9hxTPeD5w9Wfmtug7W4DQ2HqZS4dcqmjZzeHe
-	O9ucbkomnBCqFMamcE9GbeQuMAHj9Q3APSQds8e1IkxCp+gOXLpe/Dl/aC5m43SDregBsheiqel
-	B/QB2l6qj1evNKf3UJ/9aj/xQKb+Nh75y1FI6/15V+qAcdrgSr2pywGa4PlrtB
-X-Google-Smtp-Source: AGHT+IGllC9vc0jb5kXc3z9y5VSEvznNmk1rdzzMOyZKhqqZ6PuuTAP+iFfR93+tltOHhT0IIhWVQw==
-X-Received: by 2002:a17:907:7f02:b0:b76:25fd:70e5 with SMTP id a640c23a62f3a-b7657172f39mr2348508666b.9.1764110501783;
-        Tue, 25 Nov 2025 14:41:41 -0800 (PST)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-645363b5e97sm16191887a12.9.2025.11.25.14.41.38
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Nov 2025 14:41:40 -0800 (PST)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-64165cd689eso470078a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Nov 2025 14:41:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUjmb7PuRQ+KgzEEis69HEqoxPNOB75vPEn31ioLTCcPpUuhEDH2H7fMdANFM1kXmrqLGsFgMTxI/pCQNzpvvg=@vger.kernel.org
-X-Received: by 2002:a17:906:d553:b0:b04:48b5:6ea5 with SMTP id
- a640c23a62f3a-b766ef1d27emr2056801766b.17.1764110497696; Tue, 25 Nov 2025
- 14:41:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="W+AKvPIc"
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5APKA97n1087396;
+	Tue, 25 Nov 2025 16:18:10 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
+	 bh=qGBFfom64ubwAcHLmi0kGY4idgptPgMMsGDiFpmxSnI=; b=W+AKvPIcq+Gs
+	i3tYYc6MNSXntK0NmrX6mDMiJh2f1He+waI1tJUFw9eep8toqFOiXcXgv1d9N8HG
+	PGdbn6/fGl6qS46R20vtpCyrMHLj0wH4JK9pXWvIXkrNgijhiczlYtlomrwOthSj
+	zml1ieuFYLYIUzuWZ91PR3D7DWCyaUSc0LCurvPCQxAzzat402xRMP4oyeWdz0ty
+	1EYyma4UMfnDB7SWN7UNyv49rng7qo94JM/vlLrbdULgh6NjCeHD1lakMZtk49rg
+	EGdIyMsuzoL8EN2ERVeIEmaZ0+aXHHcjPKQINfA5NEORkyA0TfReyUgtpSsOkjBL
+	M3cSvkYsxQ==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4ank8qsk46-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 25 Nov 2025 16:18:10 -0800 (PST)
+Received: from devgpu015.cco6.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.29; Wed, 26 Nov 2025 00:18:08 +0000
+Date: Tue, 25 Nov 2025 16:18:03 -0800
+From: Alex Mastro <amastro@fb.com>
+To: Leon Romanovsky <leon@kernel.org>
+CC: Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe
+	<logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+        Robin Murphy
+	<robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon
+	<will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jason
+ Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan
+ Corbet <corbet@lwn.net>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian
+ =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Kees Cook
+	<kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Ankit
+ Agrawal <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
+        Shameer
+ Kolothum <skolothumtho@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>, Alex
+ Williamson <alex@shazbot.org>,
+        Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs
+	<mochs@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <iommu@lists.linux.dev>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>, <kvm@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, Nicolin Chen <nicolinc@nvidia.com>,
+        Jason
+ Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v9 06/11] dma-buf: provide phys_vec to scatter-gather
+ mapping routine
+Message-ID: <aSZHO6otK0Heh+Qj@devgpu015.cco6.facebook.com>
+References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
+ <20251120-dmabuf-vfio-v9-6-d7f71607f371@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251122014258.do.018-kees@kernel.org> <20251122014304.3417954-2-kees@kernel.org>
- <CAHk-=wiNnECns4B3qxRsCykkHwzovT+3wG738fUhq5E+3Lxxbg@mail.gmail.com>
- <CAHk-=wjxj---dy5haOvNXjg_Xz-mDQciGL7OnJnpJpjYD9Moog@mail.gmail.com> <b7804333-6030-4bfd-8e0b-4479f87060ce@suse.cz>
-In-Reply-To: <b7804333-6030-4bfd-8e0b-4479f87060ce@suse.cz>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 25 Nov 2025 14:41:21 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi6nqPAveRPjrH_=ombtpz00G--RH9_MyC38PzsDHcb0A@mail.gmail.com>
-X-Gm-Features: AWmQ_bnHmATmDGg6MkJpXYuB1__YO7XbeBdtXEi7jxM1H4BelwLZXehOF1vhEBg
-Message-ID: <CAHk-=wi6nqPAveRPjrH_=ombtpz00G--RH9_MyC38PzsDHcb0A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/4] slab: Introduce kmalloc_obj() and family
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Kees Cook <kees@kernel.org>, Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
-	David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Marco Elver <elver@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org, 
-	Randy Dunlap <rdunlap@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Matthew Wilcox <willy@infradead.org>, Vegard Nossum <vegard.nossum@oracle.com>, 
-	Harry Yoo <harry.yoo@oracle.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>, Yafang Shao <laoar.shao@gmail.com>, 
-	Tony Ambardar <tony.ambardar@gmail.com>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
-	Jan Hendrik Farr <kernel@jfarr.cc>, Alexander Potapenko <glider@google.com>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251120-dmabuf-vfio-v9-6-d7f71607f371@nvidia.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI2MDAwMCBTYWx0ZWRfX4aU+4yoxvGRI
+ fn5uIgo4phoyJLcsXRpkIiEbPHjmDvXjee+0hL5hZTnMf7KiIbVFpuPgNNxmzJnPoXlqYrYFVCb
+ EPyFD9HoNuq9bFWOWGD9jm+tH6jYX1bWvVVFfP7wmtxUCfM6nyWp9RhEW4F3WyT2gvOl06d0Lit
+ II5EZrklZ4kZ6ZccZ6uI5fnA2fhf1sXF7BU/xkJ1DrQkkrbuth2BkU2ET85sZ92FJE5mmeSgTwT
+ 8QOBncjhE4/DUMlusLJDyljY4I1YOkD69BDnY6LZhPAqbK1Ws3OXJ/OhGSqPOvK63g6mktQG9A/
+ 4TjZvhvYG6pYNypXlNsc0JrFDrM/97nZlDYVEtn7wlUXLxFDOXnHdS+vQBslO6M76Dlb+/Whxi6
+ 97TQYdVHP7oL0xprhG3cL4XfcOc0nA==
+X-Proofpoint-ORIG-GUID: 5DCeEKEPh0Lq0c0QeLIVINEpDK6-Nmfl
+X-Proofpoint-GUID: 5DCeEKEPh0Lq0c0QeLIVINEpDK6-Nmfl
+X-Authority-Analysis: v=2.4 cv=VfT6/Vp9 c=1 sm=1 tr=0 ts=69264742 cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=3j4BkbkPAAAA:8 a=qThf3vN7FU90BnacfoAA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-25_02,2025-11-25_01,2025-10-01_01
 
-On Tue, 25 Nov 2025 at 10:56, Vlastimil Babka <vbabka@suse.cz> wrote:
->
-> >     #define kmalloc_verify(type) \
-> >         BUILD_BUG_ON_ZERO(__alignof__(type) > ARCH_KMALLOC_MINALIGN)
->
-> So AFAIU this would be too pessimistic. I'm not sure if the alignment rules
-> can be sensibly encoded in build time checks. Perhaps yes, in a similar way
-> that we have compile-time size bucket selection via __kmalloc_index().
+On Thu, Nov 20, 2025 at 11:28:25AM +0200, Leon Romanovsky wrote:
+> +static struct scatterlist *fill_sg_entry(struct scatterlist *sgl, size_t length,
+> +					 dma_addr_t addr)
+> +{
+> +	unsigned int len, nents;
+> +	int i;
+> +
+> +	nents = DIV_ROUND_UP(length, UINT_MAX);
+> +	for (i = 0; i < nents; i++) {
+> +		len = min_t(size_t, length, UINT_MAX);
+> +		length -= len;
+> +		/*
+> +		 * DMABUF abuses scatterlist to create a scatterlist
+> +		 * that does not have any CPU list, only the DMA list.
+> +		 * Always set the page related values to NULL to ensure
+> +		 * importers can't use it. The phys_addr based DMA API
+> +		 * does not require the CPU list for mapping or unmapping.
+> +		 */
+> +		sg_set_page(sgl, NULL, 0, 0);
+> +		sg_dma_address(sgl) = addr + i * UINT_MAX;
 
-So I wouldn't worry about it over-much: it's actually pretty unusual
-that we have any odd alignment rules for anything that we would
-allocate with kmalloc.
+(i * UINT_MAX) happens in 32-bit before being promoted to dma_addr_t for
+addition with addr. Overflows for i >=2 when length >= 8 GiB. Needs a cast:
 
-And I don't think a 'kmalloc_obj()' case needs to necessarily *handle*
-such unusual cases, I just want this to be *detected*.
+		sg_dma_address(sgl) = addr + (dma_addr_t)i * UINT_MAX;
 
-IOW, what I worry about would be people who use the simple object
-allocator mistakenly on auto-pilot.
+Discovered this while debugging why dma-buf import was failing for
+an 8 GiB dma-buf using my earlier toy program [1]. It was surfaced by
+ib_umem_find_best_pgsz() returning 0 due to malformed scatterlist, which bubbles
+up as an EINVAL.
 
-So if it errors out about "you're trying to use the simple model for
-an object that requires non-simple alignment", that is perfectly fine.
-Those cases can - and do - use more specialized allocators.
+$ ./test_dmabuf 0000:05:00.0 3 4 0 0x200000000
+opening 0000:05:00.0 via /dev/vfio/56
+allocating dma_buf bar_idx=4, bar_offset=0x0, size=0x200000000
+allocated dma_buf fd=6
+discovered 4 ibv devices: mlx5_0 mlx5_1 mlx5_2 mlx5_3
+opened ibv device 3: mlx5_3
+test_dmabuf.c:154 Condition failed: 'mr' (errno=22: Invalid argument)
 
-Yes, yes, in a perfect world we'd just handle that case automatically,
-but it really is fairly rare, so forcing people to then use some more
-involved interface for those cases is maybe not optimal, but it's
-perfectly ok.
+$ sudo retsnoop -e mlx5_ib_reg_user_mr_dmabuf -a 'mlx5*' -a 'ib_umem*' -a '*umr*' -a 'vfio_pci*' -a 'dma_buf_*' -x EINVAL -T
+Receiving data...
+13:56:22.257907 -> 13:56:22.258275 TID/PID 948895/948895 (test_dmabuf/test_dmabuf):
+FUNCTION CALLS                                 RESULT                 DURATION
+--------------------------------------------   --------------------  ---------
+→ mlx5_ib_reg_user_mr_dmabuf
+    ↔ mlx5r_umr_resource_init                  [0]                     2.224us
+    → ib_umem_dmabuf_get
+        → ib_umem_dmabuf_get_with_dma_device
+            ↔ dma_buf_get                      [0xff11012a6a098c00]    0.972us
+            → dma_buf_dynamic_attach
+                ↔ vfio_pci_dma_buf_attach      [0]                     2.003us
+            ← dma_buf_dynamic_attach           [0xff1100012793e400]   10.566us
+        ← ib_umem_dmabuf_get_with_dma_device   [0xff110127a6c74480]   15.794us
+    ← ib_umem_dmabuf_get                       [0xff110127a6c74480]   25.258us
+    → mlx5_ib_init_dmabuf_mr
+        → ib_umem_dmabuf_map_pages
+            → dma_buf_map_attachment
+                → vfio_pci_dma_buf_map
+                    ↔ dma_buf_map              [0xff1100012977f700]    4.918us
+                ← vfio_pci_dma_buf_map         [0xff1100012977f700]    8.362us
+            ← dma_buf_map_attachment           [0xff1100012977f700]   10.956us
+        ← ib_umem_dmabuf_map_pages             [0]                    17.336us
+        ↔ ib_umem_find_best_pgsz               [0]                     6.280us
+        → ib_umem_dmabuf_unmap_pages
+            → dma_buf_unmap_attachment
+                → vfio_pci_dma_buf_unmap
+                    ↔ dma_buf_unmap            [void]                  2.023us
+                ← vfio_pci_dma_buf_unmap       [void]                  6.700us
+            ← dma_buf_unmap_attachment         [void]                  8.142us
+        ← ib_umem_dmabuf_unmap_pages           [void]                 14.953us
+    ← mlx5_ib_init_dmabuf_mr                   [-EINVAL]              67.272us
+    → mlx5r_umr_revoke_mr
+        → mlx5r_umr_post_send_wait
+            → mlx5r_umr_post_send
+                ↔ mlx5r_begin_wqe              [0]                     1.703us
+                ↔ mlx5r_finish_wqe             [void]                  1.633us
+                ↔ mlx5r_ring_db                [void]                  1.312us
+            ← mlx5r_umr_post_send              [0]                    27.451us
+        ← mlx5r_umr_post_send_wait             [0]                   126.541us
+    ← mlx5r_umr_revoke_mr                      [0]                   141.925us
+    → ib_umem_release
+        → ib_umem_dmabuf_release
+            ↔ ib_umem_dmabuf_revoke            [void]                  1.582us
+            ↔ dma_buf_detach                   [void]                  3.765us
+            ↔ dma_buf_put                      [void]                  0.531us
+        ← ib_umem_dmabuf_release               [void]                 23.315us
+    ← ib_umem_release                          [void]                 40.301us
+← mlx5_ib_reg_user_mr_dmabuf                   [-EINVAL]             363.280us
 
-              Linus
+[1] https://lore.kernel.org/all/aQkLcAxEn4qmF3c4@devgpu015.cco6.facebook.com/
+
+Alex
