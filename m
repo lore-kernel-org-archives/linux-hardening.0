@@ -1,69 +1,72 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BF4327214
-	for <linux-hardening@vger.kernel.org>; Thu, 27 Nov 2025 09:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9553242C3
+	for <linux-hardening@vger.kernel.org>; Thu, 27 Nov 2025 09:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764235376; cv=none; b=L5ExfY1/DofanofSaJTgHjOn6Bs2p1Iz5tNW3I2pDmWSo9ToNEZ1K5VWeJZLmnlAYnjIDKa/5rRNXHujEqm9CP+H8oytVBwt3eeMmlwueW0XED0odLR5EUP++MU//kxEcidvG2BqGKq18CoSMwjW/hISgePBL3xRA6sL+wB+UqU=
+	t=1764235377; cv=none; b=qPOr6Pp1PgZS2winvYtu98Czq9yDPBRIGCoL7YGDuw4seCcWTzKrQCRaAwk/Tsv8ZXYQ9quIAMtveMRU6z8KNVEhjOUR0m/QX79vrs7fwhXCeRvW/YbsmfVXSnqESbR9WTugpPHG2E274G+m3NB/QNNm0+hEMnf1eYklF5jN3dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764235376; c=relaxed/simple;
-	bh=kXj2PCs7wQI8j3c8aaWqFV1r9CjN121+2Otk0ssMEb0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=QVjBwUXtni9NxouQLehH8V+Gjxg8fBNqZUxEyRtI0uBSBUR48A4hx68IP/gNGkbAo0aS4FpNyez0MNH8DjaEY7ioxE3pknaDqVqHzJmrnDtF9PT5+3gSWhAtDjlEE+4DfC4HS+nOiXapNi3EX5tVIdfpeAL+IlA/MWzuSD6uqrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xHYYsqlc; arc=none smtp.client-ip=209.85.128.73
+	s=arc-20240116; t=1764235377; c=relaxed/simple;
+	bh=5pU8T3R8EfCbCbbm9FQnjNIKnM4Oc0VA2KxjEL7tDKI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=av1ppr4Rd99hYrRcMIw+fDJL+HvC04mdDRoUIaeSyA3unHT0NgHD1oDs9d1mPUh3ansSOit6SHElU5PpO/sd3leuFJtTZlu6FMN+zDj3XtzEydxjVitQCce6SXM22DHntMF77ivbCEEvsebdwuCDISWKOWexRmdE4eG92EZkODo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UkA7+Gvy; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xHYYsqlc"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-47106720618so6195315e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 27 Nov 2025 01:22:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UkA7+Gvy"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-42b3b5ed793so410504f8f.2
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Nov 2025 01:22:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764235373; x=1764840173; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8k+F0GetRpiG4yeaeJZYzrwTgndZIgQnhjJYwqn3Z9M=;
-        b=xHYYsqlcrzFX0S1rY6Mi7iFAVumEipepy2LWlCaozmAsTWgkJd4BDzbv5gPyg0tGei
-         RXKXglt0JaLg8ud34869jBHNiXQIIHOvHy5w1rSh1ng2pEPf64U4Q9iMKHHEh5Y7XFFi
-         uJULGqMIY1cQ+776Ftu8Vpiqyeaoq9y7PgC+D2aS9+qQKUXi3C5iyjmyzs8jyfP+qXhU
-         GvoDLajUxY2L6QNjfp0AYX2DgsCXXrQ+YV4uiS27xh5VeJTve0uubYQmQLN6Lmdgqpmw
-         5bSCSAr/G6zVgk65cNlHb+IpdDxpaikp1ApGuL0pPmNLqxyLYGE+UY/f9gy1eayAxIe3
-         lVNw==
+        d=google.com; s=20230601; t=1764235374; x=1764840174; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lm8/PsD24JkqtJEBb/JHL05JmcK80K+YBsbDIDkSPDM=;
+        b=UkA7+GvyMvUjv3iPLCdYg8o+5CUVRL1ncq5gdLMjiOtbOthuiglXgfK+ydxFcJd3AC
+         lo6ER/rjiLjPGA07DsHTLzhAcZMc5tJsotFoJGEBHbun4e5AR1WwmdeagkfJ8OKDdUZe
+         CbCvC+lQdbg3oj2VJ/RHRFwmlupxKeqgOS/tCCm+uTTGBEFTkgLNlPPCySgrtXX/D4gZ
+         1Ohj3jhJv1/teyIpaGM0e4XtANKbQi7q0GhKia+eepsUIVvxL6zuheDHAxzZZ4QHJfvD
+         rKGdlEniApnNQ62L+LHpW+HwgUgJmdMx5sZcwcdYVVMirys0cqq37OgKnerKYZYwyVUu
+         PwSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764235373; x=1764840173;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8k+F0GetRpiG4yeaeJZYzrwTgndZIgQnhjJYwqn3Z9M=;
-        b=thfbMT4/FnDCsDSYgp0OSFGmMw97GTJHkzlttq6xlaRw36BroiuJF7fAS6yGqV9KBd
-         Cz3iSD+eIvyR4x/rFiaOLundO1o+7ggM8p7uY8tzyAfOz372DU11zH7tKel/AVknp4ua
-         Bl/NJ33lpDRF9fqZ3stCIZnXhGC7c8PpVyBLFGqzTJY6cS58CEH0PaPZ/V3rEM3KBhnQ
-         eORmz+oI0CEMIh0C4v2jItpbfKjHkoYZeyWZOELMgA1VuaR52why9ok0Yw6X7PF/ZGhJ
-         XZsjdZgfvNnEjgilxR8bRGI9/mc9Me9X2MyXV43Z2QOKiIhidZCT6mkBtEy92abVfpPI
-         m23Q==
-X-Gm-Message-State: AOJu0YwWuv7RUPHgp5v0OS8YkzBBWt1o/6I54CPKI3GoInyhIermwUcy
-	QDzxPdbtJzJTgHj7H7DJXnBWPFosgFTlKXQ0Vb1iDY7uG+6V9KSBi9/jmLI2T/djFd651MPomub
-	eL9GMICtLQnMlHKx2wnBh+v4DRZ/e4ZSZ8X7mYFapm6u8zqSZwjvbWnNgjPHuaiN+4NO+ssFIij
-	P4agYyzCoGrfgVUW58HYQ7yFh5TPzXBmS4jIRhBA==
-X-Google-Smtp-Source: AGHT+IGfvNKR+g9XaWkAB5dq4WcVViwMo8HeCBTI8nv+mxDAvIwxYs0Hqc92CpBwKzvNXIgLV5xTxErv
-X-Received: from wmbz27.prod.google.com ([2002:a05:600c:c09b:b0:477:9b53:8816])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:840f:b0:477:df3:1453
- with SMTP id 5b1f17b1804b1-477c01eea66mr213141915e9.28.1764235372847; Thu, 27
- Nov 2025 01:22:52 -0800 (PST)
-Date: Thu, 27 Nov 2025 10:22:27 +0100
+        d=1e100.net; s=20230601; t=1764235374; x=1764840174;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lm8/PsD24JkqtJEBb/JHL05JmcK80K+YBsbDIDkSPDM=;
+        b=gBaRMXA4rzRm+qiCljXfAjJ10ZvD3Wqbaci4oHcqH7mWSYx0azs7Lfj4n4vQ4Aew09
+         fsNpIjRsmyMOiIj2o3JEq7LY5lFnB85U8iTDpIO1xX/fZy0XpTmChqF8hAphz+jmXjIX
+         HpXhoswxZVDMoFcnSiIebyfPRCTo7YWogmgeXzScD42fJFiEHCl4WDKQBzyL9X7akVG/
+         pU5nSVdkfh9QQPehKXctmZpbFPxf5bBW/jAKsfrpKuOyZKkOQnkotzo25MAl6EcLF/ga
+         7Jd6WhdeGqLqJ1IWL4jslvXcv8DL2A1guccxqiy4hptns7lSkkVPdzMxBmud4viuZz88
+         00Sw==
+X-Gm-Message-State: AOJu0YwTZMi/YN2qHpiFu45/IvB6z7BbkOAYCTj5qZyUerzWoZ90DyOQ
+	Mx7Ch4BtkMy7Z0Kl47FK1IuG+MHjiYBH5YOKBYUmqBzJ5WcxXzLFhIGcYNVweXJtpWBc1CT/gB0
+	3ULf3FsUfFApGTWqRkYCAdrAo+XMJWIkjVUb9ScL1kC5LLeEAx0fSwuQ0XeKarY33IVHZ6AtvEa
+	TfIpgTp19rka4ymyp5GonVhPbQDJTw9xCpfjEfhA==
+X-Google-Smtp-Source: AGHT+IFiRUSTUyUmmDCfp9DRVB+ITplmlr8U1Vk596xaInsS5h9GpzAVehE1Ma2+bZO9lWJEhGAZ3DXo
+X-Received: from wrwt2.prod.google.com ([2002:a5d:6a42:0:b0:429:de3f:8280])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:1447:b0:42b:32c3:3948
+ with SMTP id ffacd0b85a97d-42cc1d0ce41mr23885901f8f.31.1764235374004; Thu, 27
+ Nov 2025 01:22:54 -0800 (PST)
+Date: Thu, 27 Nov 2025 10:22:28 +0100
+In-Reply-To: <20251127092226.1439196-8-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20251127092226.1439196-8-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1810; i=ardb@kernel.org;
- h=from:subject; bh=GVwhZRAgf3/OeRmqAQsplmNoFkzur4kYLnMaWMHGxBc=;
- b=owGbwMvMwCVmkMcZplerG8N4Wi2JIVNDIjjssTWzZKbJxK9fUrdHx0111Cq1Zn3gl7nMhI/B/
- jrbBt6OUhYGMS4GWTFFFoHZf9/tPD1RqtZ5lizMHFYmkCEMXJwCMJGwbEaG8zZViycp7mXK630g
- uzr8p1CxSAODFX8+z+fKR5P/rDf8wMjw1C1rXqkNQ0+GsmhXdWzjhsMPl7/6c0bz/cJr79OPnVz BBAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=875; i=ardb@kernel.org;
+ h=from:subject; bh=LXaoefJgP6t3V697yrG8QR6lNpOK4nbDq1CishfTlx0=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIVNDItRQuip5xYWJK0Jad7HG9b2/1b1Fii33VdirLhdnB
+ tc7m+w6SlkYxLgYZMUUWQRm/3238/REqVrnWbIwc1iZQIYwcHEKwEQ4mRn+aa9dL7tAoXn35YWy
+ QSLC104ZXX9x+MnM33/3+icp7VJvc2dk6Fganr6zP8NI1tT1wnbPW+tMZMK2Xolc17SUM+bHreX qDAA=
 X-Mailer: git-send-email 2.52.0.107.ga0afd4fd5b-goog
-Message-ID: <20251127092226.1439196-8-ardb+git@google.com>
-Subject: [RFC/RFT PATCH 0/6] Improve get_random_u8() for use in randomize kstack
+Message-ID: <20251127092226.1439196-9-ardb+git@google.com>
+Subject: [RFC/RFT PATCH 1/6] hexagon: Wire up cmpxchg64_local() to generic implementation
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-hardening@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
@@ -75,47 +78,34 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Ryan reports that get_random_u16() is dominant in the performance
-profiling of syscall entry when kstack randomization is enabled [0].
+Provide cmpxchg64_local() for hexagon so we can start using it in
+generic code.
 
-This is the reason many architectures rely on a counter instead, and
-that, in turn, is the reason for the convoluted way the (pseudo-)entropy
-is gathered and recorded in a per-CPU variable.
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ arch/hexagon/include/asm/cmpxchg.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Let's try to make the get_random_uXX() fast path faster, and switch to
-get_random_u8() so that we'll hit the slow path 2x less often. Then,
-wire it up in the syscall entry path, replacing the per-CPU variable,
-making the logic at syscall exit redundant.
-
-[0] https://lore.kernel.org/all/dd8c37bc-795f-4c7a-9086-69e584d8ab24@arm.com/
-
-Cc: Kees Cook <kees@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jeremy Linton <jeremy.linton@arm.com>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Jason A. Donenfeld <Jason@zx2c4.com>
-
-Ard Biesheuvel (6):
-  hexagon: Wire up cmpxchg64_local() to generic implementation
-  arc: Wire up cmpxchg64_local() to generic implementation
-  random: Use u32 to keep track of batched entropy generation
-  random: Use a lockless fast path for get_random_uXX()
-  random: Plug race in preceding patch
-  randomize_kstack: Use get_random_u8() at entry for entropy
-
- arch/Kconfig                       |  9 ++--
- arch/arc/include/asm/cmpxchg.h     |  3 ++
- arch/hexagon/include/asm/cmpxchg.h |  4 ++
- drivers/char/random.c              | 49 ++++++++++++++------
- include/linux/randomize_kstack.h   | 36 ++------------
- init/main.c                        |  1 -
- 6 files changed, 49 insertions(+), 53 deletions(-)
-
-
-base-commit: ac3fd01e4c1efce8f2c054cdeb2ddd2fc0fb150d
+diff --git a/arch/hexagon/include/asm/cmpxchg.h b/arch/hexagon/include/asm/cmpxchg.h
+index 9c58fb81f7fd..05e426475d2a 100644
+--- a/arch/hexagon/include/asm/cmpxchg.h
++++ b/arch/hexagon/include/asm/cmpxchg.h
+@@ -8,6 +8,8 @@
+ #ifndef _ASM_CMPXCHG_H
+ #define _ASM_CMPXCHG_H
+ 
++#include <asm-generic/cmpxchg-local.h>
++
+ /*
+  * __arch_xchg - atomically exchange a register and a memory location
+  * @x: value to swap
+@@ -72,4 +74,6 @@ __arch_xchg(unsigned long x, volatile void *ptr, int size)
+ 	__oldval;						\
+ })
+ 
++#define arch_cmpxchg64_local __generic_cmpxchg64_local
++
+ #endif /* _ASM_CMPXCHG_H */
 -- 
 2.52.0.107.ga0afd4fd5b-goog
 
