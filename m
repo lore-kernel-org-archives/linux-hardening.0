@@ -1,55 +1,55 @@
-Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91F1328B62
-	for <linux-hardening@vger.kernel.org>; Thu, 27 Nov 2025 09:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F6232936E
+	for <linux-hardening@vger.kernel.org>; Thu, 27 Nov 2025 09:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764235378; cv=none; b=QeIt/YySniF3kA7H+Na7XChPHp9Qky78sCoXSGNbPa6M+DOfXKq4Wk14PBbrxjyoQKieWgmx0v1aRQVKxNoTHCuBzvdZNCmOPxAoZd6uRFE9+lrwQenQNOXtBblc8ejBtR3oTs/w/XoBouEHp/E571kLNw3X/gnKsaT3QiVgQ00=
+	t=1764235380; cv=none; b=VEChbmRAV/0ydXLhZOEdshBXFhdiORkwwfsmt9fJzxQimO8ntFfyuc4tJ5pOl+0v5F5sz5zTN4jWhia2B8kWpRqvoG+fvqMFctYARMd8IxTJKd9aB6zbKd00WXt6f6du6LzsDe2YWUm1q7EAJl1mgs3QW5dxXY4xwhK4PILntfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764235378; c=relaxed/simple;
-	bh=Ue2OWN8dxl4S1oCDpiOXA5V1r7n4OPJH5dF2+7O1GlI=;
+	s=arc-20240116; t=1764235380; c=relaxed/simple;
+	bh=ICrszCMtJ1LPXNd7C0Ih5tX9jm2ajTy+fULG6068eLw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=u1jlzQSf9J6+yh5xp2elvGOVsdfngqONdmpGixxFungb5l0eT3U3HFIF0Z+WROkcX/2dqkpp78tnUAqcUVMK20JPPr1Guf6btW0oDmv3QAW0VdVL+tptnfUBqxCaVvNC+RRv6E0EZPbC8tooSD2TaEMfiXWfnclD3eZVVKn/jkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A93bpXOa; arc=none smtp.client-ip=209.85.218.73
+	 To:Cc:Content-Type; b=ZY/Fel9nJNqCPvgGSlbSYr8zNZvBOZvAreFaFFpykVYSf1aATaIJWXZ5vyPgsyh4jGAeiylXUDCnQuOhfRpGiRgyO3bRNxg6O++kwnu/rje6JZxZNJT4jrOI2TtM3UrWm5994ptV4UA58gM4Qd5QyV2b086ExCwBkNg51eecIaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s2ejCHsB; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A93bpXOa"
-Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-b764b80358bso59385866b.1
-        for <linux-hardening@vger.kernel.org>; Thu, 27 Nov 2025 01:22:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s2ejCHsB"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-47775585257so3819545e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Nov 2025 01:22:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764235375; x=1764840175; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764235376; x=1764840176; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nxY6K3VXBOtHUoqxNWrBAsAGxnWGhHRmDGILp9vXmzY=;
-        b=A93bpXOahsQgW+Vy8fvUntMEmJfgeMYfjDpj+zPji5/hYLF1B3XkncUIrWXZ/OSa6A
-         hwzyWDyNHeWssLS9f93I/QJmU8CDUtwVhFutQBgw0BttV4bY1L6ljGRI/MrdG/mM3bXV
-         w/TDhl5HrYCU5ciW3/fHfASaHPiiCfGFBThWs0uXx1DG6Si61xCi4akLXKs74yioD470
-         9oxd2+Zuyj0aZwP8C67bFUuu1RkEbaGNCotjqrXDem2XeYRabfwcGjuBrmO21dTMMIRm
-         4qV8UZRUEfjExMj/hIDF7WjMY7KZjReWFZrg9RufodtIza0v6gQu1ztT8NXImXDuIuJG
-         qnSg==
+        bh=G8PUYE65+35CiVgD1jp+ggIop/9/H10ihf2g4jePZBk=;
+        b=s2ejCHsBoK0nHEX0MpvjncNiNr7/MoflMgFd+uukCn9mClhqfERv5hqpbY85yejr0m
+         3z2by1Sp+1ng3A3mDm4HWKqtsG87lE002JTUCNbsQq7ESvuLspsAY1twreWya4ENid6R
+         r1HXcPQ8r9sjI0MOQrq9FXEoEme68dn8cpjjkPgP2Au4Xg+tLtRvZkwMDjQ03gwNh0+m
+         qHgms78BcXA7Ixopb3EpeLjEqddnhZxha7hLp2yrauONE9kFh/obOTxbZfQkDd+pB4oo
+         aM9my8px53pKdv+3u1Kqa76OBpPkxSSUGjJY9BCinXc9loS+oM46/N2ys3Pfmxoa93GT
+         xkcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764235375; x=1764840175;
+        d=1e100.net; s=20230601; t=1764235376; x=1764840176;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nxY6K3VXBOtHUoqxNWrBAsAGxnWGhHRmDGILp9vXmzY=;
-        b=a5mMcBAcclq57tcDn2XpIKEQHx8mN95ckcvzKSqm8FrjGG5ORXYV/U6x+HsGRh+6yE
-         aYYOgSOH74aC3XjoVt0g4RB3EOSZOHT+yhv7lkkB4uef03JX97S3N4hDhmAqHPH6AQ67
-         20BYblpEIOdjxDjZtjL+ukgVnBzuEnGj9UFFU5pZNEoSHJE3adSVEJdxWUi1tcSCIn8a
-         qGSCp2ni8L7ZFOHw6FUCiWqMIvaP07TMFxVfTDfW6WqVoD2b22TbKF5AXbsuGTNVHw0E
-         lcqLt4xziD0P06Qr0lJqdQ1q8c9+ScnZEoLZ6WKya6CRm8NN/A0+2L96r1zRw4X+piha
-         TLlw==
-X-Gm-Message-State: AOJu0Yx56SvDTJQ/rgi+q6Fu9DR7g+mbi59kAks7h93+mqCcUs4XS+S/
-	/9rBdYh150t5oDss2qdrselqdVxWf+LR+hBZnISLqE1dhtnJOguO0wPVa040EbJDLa+Wp3qTdsr
-	1m2f+TyK4tj2P9XmmnQScwiGCxdCTP/ARcAvT+noABlbB6oLPZ6LoQ43F2qsIZb6guQCPDka/aU
-	iMB7MRbPMU3XO6s2YyMknVJNgD6kt/X1hdcmn3TQ==
-X-Google-Smtp-Source: AGHT+IGFdDZxAqRvQLpZk6/eWvniWko12T2iQL0bdLzORuqHked+ojY3yfI07AtzD9o2ck5cQMXXIq6+
-X-Received: from ejcvv1.prod.google.com ([2002:a17:907:a681:b0:b73:36a1:4995])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:3d90:b0:b0e:d477:4972
- with SMTP id a640c23a62f3a-b76c54090f0mr967515866b.25.1764235375046; Thu, 27
- Nov 2025 01:22:55 -0800 (PST)
-Date: Thu, 27 Nov 2025 10:22:29 +0100
+        bh=G8PUYE65+35CiVgD1jp+ggIop/9/H10ihf2g4jePZBk=;
+        b=nA7vrklZI6CCW0ttjxa9lrOgk6HFIlShifRQWzr8WJLQCqGZOGxyt6jcuw9Cg5kcF3
+         B9J3Md5q0nyt6ybPqxflob1ML1JQHXJqUrgrAB5fCrlXhQ3DndxJXHIi4RbMpt6d8z+1
+         5JP0X1MuafIK6iqibaViZQ5LJjMu2vuLLMEMJx+XLsbmz0Ni6453JlaEXd7HRslXlog5
+         cTeVG+p8exnGVV1PZpDT+Ey2Xb70hTaHlqP49dEivwwWsIQvAK3EhMhm8P4k6t0aitcz
+         fZ6AXN9quQMIwd+tkdmZxKSoyHeDO09YkTNKYz3VNmYA+SpZQo0guJ2MR5gxCTRvelGe
+         dBmg==
+X-Gm-Message-State: AOJu0Yz0tNWZdAzC7FXXKNvuM0MnMW+rh20fyn901v6c9cd/Yh9+xZ0b
+	/37gvwP+koigTh9++gi3RrjiIe5XKvhETa3rv/zBFZt8NwYayOMOT+SArLxMUuRCy4V+rTYDh/L
+	r63S6stt5Kg1Np3E7nr7pDj2CBPzP9dFyNfIvkMECPw4jZgQTVj4hiPPCD2TBk2wxcba6cbVD/z
+	j7ExI09xzyQgYoPOdVMSQjbgdGqckdH1wxURmRGQ==
+X-Google-Smtp-Source: AGHT+IHGmStaBw0kw+zywe3YOqYeTN7JkzcsA1+VS2rjrhQpPUmECbRNT13sfo28k0MCm5UyvTanyD0N
+X-Received: from wmbh15.prod.google.com ([2002:a05:600c:a10f:b0:477:988a:7675])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1382:b0:477:a977:b8a7
+ with SMTP id 5b1f17b1804b1-477c1117956mr205200185e9.19.1764235376129; Thu, 27
+ Nov 2025 01:22:56 -0800 (PST)
+Date: Thu, 27 Nov 2025 10:22:30 +0100
 In-Reply-To: <20251127092226.1439196-8-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -59,14 +59,14 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251127092226.1439196-8-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=697; i=ardb@kernel.org;
- h=from:subject; bh=bPOIFl7qSFo8fyyP7vM3iVB+S1w+UZidjo3tNBxTCOI=;
- b=owGbwMvMwCVmkMcZplerG8N4Wi2JIVNDIkz65cQ92/8IPf/2+Omz95cLdJSj//5xu/T6vgODl
- 7BcJ49nRykLgxgXg6yYIovA7L/vdp6eKFXrPEsWZg4rE8gQBi5OAZjIxyyGfxY7e1+ncsRubd0+
- r/dYC9upMAneH5cXs1vfeyHuyNHMVc7IMOWVVNRJEeuexw86Pyaei/4Wy1X763/6xVc6DttPhKw q5gQA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1946; i=ardb@kernel.org;
+ h=from:subject; bh=39kBqCzlZF8SLfFJgWsjj400jCEDRYRkq2STbPbbenE=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIVNDIqI3ZHbml073v/KHdtpnHfpRm/Py3LMdqh9Sljd+f
+ rhn84cNHaUsDGJcDLJiiiwCs/++23l6olSt8yxZmDmsTCBDGLg4BWAi7oYM/0M7zlcnzJvAe846
+ 80bGvn+b3uxjbs5YvCouYfXjnXIBr/4yMixpPnD96cT+y7kXZlzTaJTelrqtrYVD1/PozHcXtNf yb2UEAA==
 X-Mailer: git-send-email 2.52.0.107.ga0afd4fd5b-goog
-Message-ID: <20251127092226.1439196-10-ardb+git@google.com>
-Subject: [RFC/RFT PATCH 2/6] arc: Wire up cmpxchg64_local() to generic implementation
+Message-ID: <20251127092226.1439196-11-ardb+git@google.com>
+Subject: [RFC/RFT PATCH 3/6] random: Use u32 to keep track of batched entropy generation
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-hardening@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
@@ -78,33 +78,53 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Provide cmpxchg64_local() for hexagon so we can start using it in
-generic code.
+The batched entropy containers each have a generation field, to keep
+track of the base_crng generation from which it was last reseeded.
+
+This use case does not require all bits of the unsigned long to be
+stored: storing only 32 bits is sufficient to determine whether or not
+we're at most 4 billion generations behind, which seems ample.
+
+So use an unsigned int instead: this will allow a future patch to treat
+the generation and position as a single 64-bit quantity, which can be
+used locklessly in a compare-and-exchange() operation.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arc/include/asm/cmpxchg.h | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/char/random.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arc/include/asm/cmpxchg.h b/arch/arc/include/asm/cmpxchg.h
-index 76f43db0890f..f2d55823645c 100644
---- a/arch/arc/include/asm/cmpxchg.h
-+++ b/arch/arc/include/asm/cmpxchg.h
-@@ -12,6 +12,7 @@
- 
- #include <asm/barrier.h>
- #include <asm/smp.h>
-+#include <asm-generic/cmpxchg-local.h>
- 
- #ifdef CONFIG_ARC_HAS_LLSC
- 
-@@ -142,4 +143,6 @@
- 
- #endif
- 
-+#define arch_cmpxchg64_local __generic_cmpxchg64_local
-+
- #endif
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index b8b24b6ed3fe..0e04bc60d034 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -507,7 +507,7 @@ struct batch_ ##type {								\
+ 	 */									\
+ 	type entropy[CHACHA_BLOCK_SIZE * 3 / (2 * sizeof(type))];		\
+ 	local_lock_t lock;							\
+-	unsigned long generation;						\
++	unsigned int generation;						\
+ 	unsigned int position;							\
+ };										\
+ 										\
+@@ -521,7 +521,7 @@ type get_random_ ##type(void)							\
+ 	type ret;								\
+ 	unsigned long flags;							\
+ 	struct batch_ ##type *batch;						\
+-	unsigned long next_gen;							\
++	unsigned int next_gen;							\
+ 										\
+ 	warn_unseeded_randomness();						\
+ 										\
+@@ -533,7 +533,7 @@ type get_random_ ##type(void)							\
+ 	local_lock_irqsave(&batched_entropy_ ##type.lock, flags);		\
+ 	batch = raw_cpu_ptr(&batched_entropy_##type);				\
+ 										\
+-	next_gen = READ_ONCE(base_crng.generation);				\
++	next_gen = (unsigned int)READ_ONCE(base_crng.generation);		\
+ 	if (batch->position >= ARRAY_SIZE(batch->entropy) ||			\
+ 	    next_gen != batch->generation) {					\
+ 		_get_random_bytes(batch->entropy, sizeof(batch->entropy));	\
 -- 
 2.52.0.107.ga0afd4fd5b-goog
 
