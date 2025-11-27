@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 649F4194AD7;
-	Thu, 27 Nov 2025 13:08:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F415A1FA859;
+	Thu, 27 Nov 2025 14:18:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764248932; cv=none; b=e4LUxFwzrHhCRSWqgsaIjfRERkEmnxfh63Y6tWKdyFG6KwcsF7nXguVLsO1UNKkSRs7uYXDC3lBoN7r3xh3oqDeklvKWdRvM9LZzNaj5D/GojvTMB3ciu6f/BuRfpuwtwT4NbAGjO1tVJ/+9Qqcz05/xUfUEU3nrOd1kflghYm4=
+	t=1764253104; cv=none; b=S/M3GON8cZkarG8y8T0k9n9PwahKx8dEWSKGU5+uLq22fi6CyHeWDl+vUjGjw7E2qFKp0OUIxnMdBHYFHRrzwNVUwGF6tLzTIUg3RaAq5fHR+7/cjqz8o5Llk2c5/izpa4Hh9cTDpgd+O50Gu71XHyQo4GNH0BNRIFuA1acBbDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764248932; c=relaxed/simple;
-	bh=36z0pPDslc0lCLvsbngXP6GFJ5uhiT3oilYGka5HRKw=;
+	s=arc-20240116; t=1764253104; c=relaxed/simple;
+	bh=pPFp+C2cwjO+LvPZIvlRoct3nNUNkGI+QSqqL1g2pvg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZddJeamCjx+eX4tBjWv7WdiGv9dY8suh5RttfmT/ZbProCeUoUiBTWXvtARZSIYaPd0ZnUNb0dieTQ6qsWlnxMf5XlnH/G/J+5qZevmfrJ/V2WPkPxnHKApsfNvN+ZgscJGwuc28KNrvEF3t4O2Xfz5AMIVZlu5mLO+czGYINeM=
+	 In-Reply-To:Content-Type; b=D5PHv0W0FimEiw6kKcAidk+YSO5O/230BZrwJ9Y+aVe/smzcnf8CA7BWxTI4pfF/Su5K+eTZEceYXSEMdgHxO9TfdAZpzmaPUT/IWCTNSufvl4PPQT6TC3WJHjb8fVC5BJgK6h9ybunxL8axTPktZAyEdG5ESgExpvZ3TtZbebE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 21AAC1477;
-	Thu, 27 Nov 2025 05:08:41 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0CFB176A;
+	Thu, 27 Nov 2025 06:18:14 -0800 (PST)
 Received: from [10.57.87.167] (unknown [10.57.87.167])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CF943F66E;
-	Thu, 27 Nov 2025 05:08:46 -0800 (PST)
-Message-ID: <c32f4289-8356-4dee-9256-03ab78184b20@arm.com>
-Date: Thu, 27 Nov 2025 13:08:44 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70FEE3F73B;
+	Thu, 27 Nov 2025 06:18:20 -0800 (PST)
+Message-ID: <e996fdd5-7113-4327-a884-336dd5f77c4d@arm.com>
+Date: Thu, 27 Nov 2025 14:18:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -95,13 +95,6 @@ On 27/11/2025 12:28, Ard Biesheuvel wrote:
 >>
 > 
 > What does the (R) mean?
-
-(R) is statistically significant regression
-(I) is statistically significant improvement
-
-Where "statistically significant" is where the 95% confidence intervals of the
-baseline and comparson do not overlap.
-
 > 
 >> So this fixes the tail problem. I guess get_random_u8() only takes the slow path
 >> every 768 calls, whereas get_random_u16() took it every 384 calls. I'm not sure
@@ -122,6 +115,6 @@ baseline and comparson do not overlap.
 > Would you mind repeating this experiment after changing the
 > put_cpu_var() to preempt_enable_no_resched(), to test this theory?
 
-Yep it's queued.
+This has no impact on performance.
 
 
