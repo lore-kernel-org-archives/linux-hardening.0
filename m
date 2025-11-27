@@ -1,58 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E67218FDDE;
-	Thu, 27 Nov 2025 01:19:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7761F224AF7;
+	Thu, 27 Nov 2025 03:12:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764206361; cv=none; b=fi9o/Tv8FnNmw0hMukcToplRnRktU4m6kHZNtneWxlXR4ku6S0NrkHuXActNQfXQ62ClXizffcSUPfIbfpaktIqcLMAPkcWGYTn6ZPQj+32Kum2zYsMAwVxt6kw+Oz0XW20mCgGJI12z8O6TUxno8eL0YJKAgVbt1l7hM6DW7JA=
+	t=1764213132; cv=none; b=E2uQgCrrn74fX0f9F+Jf5ng7ECH+Yvrb60WPTl8+g9BQ7AdV8eZWQjtakO3n+FT2rmgduEp504shwCVqeuwLjQ48xCeRHL0Tk4v44mlrvW834oY8KgLpHpVqMqSUyNkM/IuT129llYHMDf7Znc7tVZc6EISZ1MJ417JfMlW6jqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764206361; c=relaxed/simple;
-	bh=NtskDgL3o4fK36RmcEPOl9si5HKfR3Y3Gm0QNNLs7p4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iOHITlqqWdhdqaxKEmlOCtqqhsPIQNEe3LlUrKjAqcpRTo7bbJIBSMBKX8+S2HREd6tq63EudO8CWItcdjb43Y/6swlvjGm8khMwcLazW1wt4Hdcc4yjMhJ55yFIqNYq+lFgUiCZIj3v5RwfUJThSOWLgF3JUMy7BwfCgMBja8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=anE6CaJH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764213132; c=relaxed/simple;
+	bh=RiG8ocl+oskfHKP1fdxflSJbEMY4ORST7J8gciT7bkA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Q2Icv7MuhEMnvzSuBOzKr3tNDx38Yl7p4Q6LwtwH3DQbiUliD4slMjKc80TUxQZG5I1/8JbPwgTU9m0ExisGczOHyPBFdizxxUjEQnywKXXOcLP0SIxtffm6JKpdCEWWZeo5rio17Bt8Qelw3rA9QgLQH2rC+QNTuR76GhmtGpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mK0hwf7f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="anE6CaJH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CF9FC4CEF7;
-	Thu, 27 Nov 2025 01:19:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mK0hwf7f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DD0DC4CEF7;
+	Thu, 27 Nov 2025 03:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764206360;
-	bh=NtskDgL3o4fK36RmcEPOl9si5HKfR3Y3Gm0QNNLs7p4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=anE6CaJHz0T9sDt0vxxIX+if89MZsCo+NpM32P6Kw6Gj95hKJ78cHMchtHgut2nQ/
-	 qapUhoLo/WxupapdhvQphiTfQSxBIEw/PQG/IzCNEXvzD4BV25EvruDn/RBKWLI0aI
-	 S+gwCOiWLCMCwK4SI6FMb/xcK7DvH0Smi5bxn/ZW+OW+3njpzdE/R0CT7bj4A505J5
-	 xOf/xl7YIAhYDU2valVcH4UFsQoBiwreQMIN32imNfWMzzwWLryUN8vB62lP0ZNO81
-	 1etyVjjI7AifVT/FP9EVuRvZf1iVcV5gi4F3+wQxuINtSxqt0Ivc6iLefbryKmcwL9
-	 5+eYc2v3/cccA==
-Date: Wed, 26 Nov 2025 17:19:19 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Loic Poulain <loic.poulain@oss.qualcomm.com>, Sergey Ryazanov
- <ryazanov.s.a@gmail.com>, Johannes Berg <johannes@sipsolutions.net>, Andrew
- Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] net: wwan: mhi_wwan_mbim: Avoid
+	s=k20201202; t=1764213128;
+	bh=RiG8ocl+oskfHKP1fdxflSJbEMY4ORST7J8gciT7bkA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=mK0hwf7f8lFRIv5+es/aYemkjY0hb5VlC3ROc4uBKNtpTM7lR+DcDHn4XE9QhsbJe
+	 GSDVMQC68wkZQvBgDaS+10C2YKL398zPpBwuoQnmge1O+XxAlMPxJ4HVC2Ie11odCL
+	 sdMzOIcgPumd0+IZq4ec7nTU9gJTtUcyzK7l5ECYMEHhMkkUKwNxqo6kZT02OouHym
+	 W4Wvah0uEbGUge/A31k1ZK/JQAdDOeHLTOqZQoXHcOPovJZ5A1APL8ZUAxSWXlZgIa
+	 jQlGShAnqPXOx7gpS9Qiss+19Ad8LfAfl/jMvlkr1tK4Rs5rDHXln5sgfeCzY5MB/P
+	 YhTr/d5IMwULw==
+Date: Thu, 27 Nov 2025 12:12:03 +0900
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Loic Poulain <loic.poulain@oss.qualcomm.com>,
+	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3][next] net: wwan: mhi_wwan_mbim: Avoid
  -Wflex-array-member-not-at-end warning
-Message-ID: <20251126171919.15dbc430@kernel.org>
-In-Reply-To: <aSUwOtiDMYA8aSC3@kspp>
-References: <aSUwOtiDMYA8aSC3@kspp>
+Message-ID: <aSfBgwYhRvMe6ip7@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 25 Nov 2025 13:27:38 +0900 Gustavo A. R. Silva wrote:
-> -	ndev->needed_headroom = sizeof(struct mbim_tx_hdr);
-> +	ndev->needed_headroom = struct_size_t(struct mbim_tx_hdr, ndp16.dpe16, 2);
+Use DEFINE_RAW_FLEX() to avoid a -Wflex-array-member-not-at-end warning.
 
-wrap at 80 chars under drivers/net/ please
+Remove fixed-size array struct usb_cdc_ncm_dpe16 dpe16[2]; from struct
+mbim_tx_hdr, so that flex-array member struct mbim_tx_hdr::ndp16.dpe16[]
+ends last in this structure.
+
+Compensate for this by using the DEFINE_RAW_FLEX() helper to declare the
+on-stack struct instance that contains struct usb_cdc_ncm_ndp16 as a
+member. Adjust the rest of the code, accordingly.
+
+So, with these changes fix the following warning:
+
+drivers/net/wwan/mhi_wwan_mbim.c:81:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Reviewed-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v3:
+ - Avoid 80+ char line.
+ - Add RB tag.
+
+Changes in v2:
+ - Add code comment to prevent people from adding new members after
+   flex struct member `struct usb_cdc_ncm_ndp16 ndp16;`
+ - Link: https://lore.kernel.org/linux-hardening/aSUwOtiDMYA8aSC3@kspp/
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/aSUubvYfGJ-BIeDq@kspp/
+
+ drivers/net/wwan/mhi_wwan_mbim.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/wwan/mhi_wwan_mbim.c b/drivers/net/wwan/mhi_wwan_mbim.c
+index c814fbd756a1..daf07ef86b2b 100644
+--- a/drivers/net/wwan/mhi_wwan_mbim.c
++++ b/drivers/net/wwan/mhi_wwan_mbim.c
+@@ -78,8 +78,9 @@ struct mhi_mbim_context {
+ 
+ struct mbim_tx_hdr {
+ 	struct usb_cdc_ncm_nth16 nth16;
++
++	/* Must be last as it ends in a flexible-array member. */
+ 	struct usb_cdc_ncm_ndp16 ndp16;
+-	struct usb_cdc_ncm_dpe16 dpe16[2];
+ } __packed;
+ 
+ static struct mhi_mbim_link *mhi_mbim_get_link_rcu(struct mhi_mbim_context *mbim,
+@@ -107,20 +108,20 @@ static int mhi_mbim_get_link_mux_id(struct mhi_controller *cntrl)
+ static struct sk_buff *mbim_tx_fixup(struct sk_buff *skb, unsigned int session,
+ 				     u16 tx_seq)
+ {
++	DEFINE_RAW_FLEX(struct mbim_tx_hdr, mbim_hdr, ndp16.dpe16, 2);
+ 	unsigned int dgram_size = skb->len;
+ 	struct usb_cdc_ncm_nth16 *nth16;
+ 	struct usb_cdc_ncm_ndp16 *ndp16;
+-	struct mbim_tx_hdr *mbim_hdr;
+ 
+ 	/* Only one NDP is sent, containing the IP packet (no aggregation) */
+ 
+ 	/* Ensure we have enough headroom for crafting MBIM header */
+-	if (skb_cow_head(skb, sizeof(struct mbim_tx_hdr))) {
++	if (skb_cow_head(skb, __struct_size(mbim_hdr))) {
+ 		dev_kfree_skb_any(skb);
+ 		return NULL;
+ 	}
+ 
+-	mbim_hdr = skb_push(skb, sizeof(struct mbim_tx_hdr));
++	mbim_hdr = skb_push(skb, __struct_size(mbim_hdr));
+ 
+ 	/* Fill NTB header */
+ 	nth16 = &mbim_hdr->nth16;
+@@ -133,12 +134,11 @@ static struct sk_buff *mbim_tx_fixup(struct sk_buff *skb, unsigned int session,
+ 	/* Fill the unique NDP */
+ 	ndp16 = &mbim_hdr->ndp16;
+ 	ndp16->dwSignature = cpu_to_le32(USB_CDC_MBIM_NDP16_IPS_SIGN | (session << 24));
+-	ndp16->wLength = cpu_to_le16(sizeof(struct usb_cdc_ncm_ndp16)
+-					+ sizeof(struct usb_cdc_ncm_dpe16) * 2);
++	ndp16->wLength = cpu_to_le16(struct_size(ndp16, dpe16, 2));
+ 	ndp16->wNextNdpIndex = 0;
+ 
+ 	/* Datagram follows the mbim header */
+-	ndp16->dpe16[0].wDatagramIndex = cpu_to_le16(sizeof(struct mbim_tx_hdr));
++	ndp16->dpe16[0].wDatagramIndex = cpu_to_le16(__struct_size(mbim_hdr));
+ 	ndp16->dpe16[0].wDatagramLength = cpu_to_le16(dgram_size);
+ 
+ 	/* null termination */
+@@ -584,7 +584,8 @@ static void mhi_mbim_setup(struct net_device *ndev)
+ {
+ 	ndev->header_ops = NULL;  /* No header */
+ 	ndev->type = ARPHRD_RAWIP;
+-	ndev->needed_headroom = sizeof(struct mbim_tx_hdr);
++	ndev->needed_headroom =
++			struct_size_t(struct mbim_tx_hdr, ndp16.dpe16, 2);
+ 	ndev->hard_header_len = 0;
+ 	ndev->addr_len = 0;
+ 	ndev->flags = IFF_POINTOPOINT | IFF_NOARP;
 -- 
-pw-bot: cr
+2.43.0
+
