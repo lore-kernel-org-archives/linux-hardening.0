@@ -1,94 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC5D2609D0;
-	Fri, 28 Nov 2025 02:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C01283FF9;
+	Fri, 28 Nov 2025 02:23:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764295203; cv=none; b=dU4dcixgmFkvTePLric5UKVckwqtf3YjhRkIbfIsY1TpeCy+d6YZ1/Ab3SWEyo2djPa323vsKMCxe8oEqp7SyOIlomwfwy7WEDyRVwb/AVP4Rz/pHOCiLRiXpvrkXk/gRfabTdQ27Mukll8G3sykjG0HJswakaIU7XWQ/UfkEO4=
+	t=1764296606; cv=none; b=r1/BJCkJ4wkVvhrBdV9FcsVo9qkHzqMnb+Zl8j4qE4//WzqjNZIjyRyGH6kZ+qkxnbFJClcj9609kWT/gfiquD6iGwZIQE8vOGcXAt6uHhIS4iNrfixbogsVkKni8ylfQccFV1jilVraZZdQ/4n0ycYsTK55puk5k4GeuCUgWv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764295203; c=relaxed/simple;
-	bh=aX9+hkSdCiZ4G5yz81EIzz8MyiWs6MZTl+C8rieqgYw=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=T0XJfdBi5dtq5LJz9YbicQstXK+Dw2Ll3QKsGABXnvPzhF+UqY28dTUcoDRl+pKUw2doQ0v3WnxSL1zUc9EsitCuZYJ8zb/J6rc/QhMQ4cKOU/+mlvCXPeVVDoVK9ylThsUfWeab6h1nOeJrf1G0A0y+HqGbi7WqWcotg5tOoaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VIO5lpa+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764296606; c=relaxed/simple;
+	bh=ZVk6JuEZPmmQvkrKU0x8KmvuYrNiqT/j21f2UD7/Sb0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=USZf195gPV2YSv++bteoCmQwA64RWFAmyqjH91fpn6xYPkV3rxq+7E23XnQBT0rJhcZ365gkVR8wb5inxKZIW4F2Z9wK3wJWufGRnbv0MnzWImShOZnsILqAlFNfxxpaR8e5Za137/6xfZw5gl+ZiK8XkzmhwZpSdbOW7dkjvjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UxKNHnha; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VIO5lpa+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30A5BC4CEF8;
-	Fri, 28 Nov 2025 02:00:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UxKNHnha"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED2D1C4CEF8;
+	Fri, 28 Nov 2025 02:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764295203;
-	bh=aX9+hkSdCiZ4G5yz81EIzz8MyiWs6MZTl+C8rieqgYw=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=VIO5lpa+oLOHCjQzAE0J88sNpqYLKLIIbI2kJ5I5t+N5Tja3E74lMoQtzt11QyrR6
-	 SGZWDrwq30ENGXMIf3RKfLqMLShVyy8N3IWZLKReeFQrlEVUQprB9W6BYWEUvx7ZCQ
-	 cljeqRcgor8Sij9K98ZecLbBy2/FC9GXr9anP76n97Xsg7tG2AQ4mqnQqpo6izBFD+
-	 lijtYwRY9q6xeMwrPimBoUE0r0J8SayyqdaoWgKhMIf3VoU5cqrEpWydbuFmqPL36i
-	 nunsIjLv+Pka6AAPH69HHWjt27DnHPRJRjcHlUufJL+fMqZVgbO2UvVtyzLoXPq4sW
-	 OrIc3HxQ1SJbQ==
-Date: Thu, 27 Nov 2025 18:00:01 -0800
-From: Kees Cook <kees@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-CC: LKML <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_overflow=3A_Introduce_str?=
- =?US-ASCII?Q?uct=5Foffset=28=29_to_get_offset_of_member?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20251127204342.05fc985e@robin>
-References: <20251126145249.05b1770a@gandalf.local.home> <202511262356.6FE5084CB0@keescook> <20251127204342.05fc985e@robin>
-Message-ID: <6219BF5A-0EC3-4111-A329-D35244C9714A@kernel.org>
+	s=k20201202; t=1764296606;
+	bh=ZVk6JuEZPmmQvkrKU0x8KmvuYrNiqT/j21f2UD7/Sb0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=UxKNHnha6+Ym51fSzbHvvLiS2yNBPwiln1emklAl3rFhu/5o0eCTToYQo3HTvlt5l
+	 jWgBeNGQ2s29zM7yn4QDOtAZqHKb5gT/hCZMNq739pVXuIIaU2y6NC8/vIsIXmRPkx
+	 P0iBkh920LGdegxo6+XHvVLOTkaNFnRBi2CTCWaQgnbX0X/dqIhDjYqNQpZi6XV/71
+	 VMHd2RXcBSQgvzHbdXH5oR5hR8DBIT6H0jNMt+vptjqFRzD59tbEd+SNXirBKIotxW
+	 SrRu9JRfld4tVqRKKKgYSkb8m8rNPkEo0RcD1U5Vx6YomWHPXnMrcxm4MUusuBV6ey
+	 QR2Yq5PYaF6WQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7879A3808204;
+	Fri, 28 Nov 2025 02:20:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3][next] net: wwan: mhi_wwan_mbim: Avoid
+ -Wflex-array-member-not-at-end warning
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <176429642802.114872.7453197941812148270.git-patchwork-notify@kernel.org>
+Date: Fri, 28 Nov 2025 02:20:28 +0000
+References: <aSfBgwYhRvMe6ip7@kspp>
+In-Reply-To: <aSfBgwYhRvMe6ip7@kspp>
+To: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: loic.poulain@oss.qualcomm.com, ryazanov.s.a@gmail.com,
+ johannes@sipsolutions.net, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu, 27 Nov 2025 12:12:03 +0900 you wrote:
+> Use DEFINE_RAW_FLEX() to avoid a -Wflex-array-member-not-at-end warning.
+> 
+> Remove fixed-size array struct usb_cdc_ncm_dpe16 dpe16[2]; from struct
+> mbim_tx_hdr, so that flex-array member struct mbim_tx_hdr::ndp16.dpe16[]
+> ends last in this structure.
+> 
+> Compensate for this by using the DEFINE_RAW_FLEX() helper to declare the
+> on-stack struct instance that contains struct usb_cdc_ncm_ndp16 as a
+> member. Adjust the rest of the code, accordingly.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v3,next] net: wwan: mhi_wwan_mbim: Avoid -Wflex-array-member-not-at-end warning
+    https://git.kernel.org/netdev/net-next/c/eeecf5d3a3a4
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-
-On November 27, 2025 5:43:42 PM PST, Steven Rostedt <rostedt@goodmis=2Eorg=
-> wrote:
->On Wed, 26 Nov 2025 23:58:01 -0800
->Kees Cook <kees@kernel=2Eorg> wrote:
->
->> > +/**
->> > + * struct_offset() - Calculate the offset of a member within a struc=
-t
->> > + * @p: Pointer to the struct
->> > + * @member: Name of the member to get the offset of
->> > + *
->> > + * Calculates the offset of a particular @member of the structure po=
-inted
->> > + * to by @p=2E
->> > + *
->> > + * Return: number of bytes to the location of @member=2E
->> > + */
->> > +#define struct_offset(p, member) (offsetof(typeof(*(p)), member)) =
-=20
->>=20
->> I wonder if the kerndoc for this and offsetof() should reference each
->> other? "For a type instead of a pointer, use offsetof()" etc=2E=2E=2E
->
->I know I pushed this to my for-next branch already, but it's the top
->patch=2E Looking at my code, I actually have a lot of places that use the
->offsetof() for a structure variable and not a pointer to a structure=2E
->
->Thus, I wonder if it is better to have this as:
->
->#define struct_offset(s, member) (offsetof(typeof(s), member))
-
-I'd rather it keep the same API style as struct_size() if it's going to sh=
-are the naming style=2E
-
-If you have an instance and not a pointer, just slap on a & :)
-
-
---=20
-Kees Cook
