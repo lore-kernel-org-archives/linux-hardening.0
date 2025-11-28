@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A93334364;
-	Fri, 28 Nov 2025 19:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2083332C924;
+	Fri, 28 Nov 2025 19:28:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764358083; cv=none; b=YVvgnE8BEzdzoVN2oqYmKWDLAjvomKTvFFvE6iRHxr4nIQKaKtghO5eLquA0de1GKVYE0RV0cjQEeB1+htbj60xdvP0H1oRxGspwlNmbRGZGNDKH30x40rGw7KgsLk44Q9nRaTvGcOtWCBSCj3meBc9JPDGIZgQua4jg94r8K0k=
+	t=1764358086; cv=none; b=X1YhDg1qlvqCjcYaYBYLRoQ6Si4H+vH2dMRfVTkENOTNLgCO56as92TbB5dsEHY/BZI4NuHAgeFLEaqzFH5usUpAtI1aiRu5HrqfZTElCEkPWCZp220bzQjP8Y0iC2uUXmZKkqTjrcOJHBJiARFCGRXcQtD4ianoPncuVw1NClk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764358083; c=relaxed/simple;
-	bh=u7mv+L8Hil1fEqjKj3rPX5h+p4VHEGd5CboTCyaF/Vo=;
+	s=arc-20240116; t=1764358086; c=relaxed/simple;
+	bh=FjAtGK+0Lm9b/IbOJUCGSCWl/PrA21RK4TRffQOp9Co=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Pb0IE4JSfQC5AZwb94Ye3cviJQT36iZwZKXMoBsy82+HwcL8RudJ0GVISyrppedAs1yQX+gGSkT46ts1HsKJkjziYPBVzNhwCRX/C2p7bY66AQ0D7hZT47a4+En0djQDaL6aYHRO8/9Khrdi3MfnOqhSzVXQSzz3VnfllYSfDec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XojeJRqJ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=bMlpS5xBnd1Is8x7lK8EVNqn2eNA3KHeJ2AniDStuK6UBAzyDG7hF3g71kP2F2nbxEh5uwc5JjBCdkUsd4I5400n8aWuJVkgeOou4uOGvvb6Vj7/TD2nf/Uap+v8kVUMl0WICaGq+abMVc139T4jyoS9E5kXaDPkld+yf7MBjIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjvYmICV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XojeJRqJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B75B7C4CEFB;
-	Fri, 28 Nov 2025 19:27:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjvYmICV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 326A6C4CEF1;
+	Fri, 28 Nov 2025 19:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764358081;
-	bh=u7mv+L8Hil1fEqjKj3rPX5h+p4VHEGd5CboTCyaF/Vo=;
+	s=k20201202; t=1764358084;
+	bh=FjAtGK+0Lm9b/IbOJUCGSCWl/PrA21RK4TRffQOp9Co=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=XojeJRqJNCcqvgCT7Ip0yQdDJFXEXDyU9GlimN0vqFNR6wxh5nQyVZXjmr/xyQFTu
-	 Lksh4LEBAvXbJqtzrsAxaoHhD5+GGMQSKbGq0+5zUAzH4aEZgDzIXf4a0tdZNv+0EI
-	 87qc8t0kE+6INwr5o2x5Q50h7hiIzqnKgdBu/zk5DqV08HmZigU4IEXKUynDqEXKGr
-	 C9tH7PPeq09SzVR51ZJ57kvEidPSYSjF95vdB2Wy0cR1ZAtjJU5De96m1HPDdVkZKr
-	 IHWEnoffR0PwxWKc+pGLYWcDjgf9hbTNdSvM6Y82ZR8orqX2H7GbMTjqp3XXNt2QF6
-	 QWjoQeq32ZUkg==
+	b=RjvYmICV9iG0Sn7tuMwADzuKSj53aAdYl6h1B/zoYWZzeNQyYTvSZitd0RlQ2niTR
+	 0yv+4Jk0i0D+bKEf3MmmJvOpdG0J/6ZW/uNN5wZVMp5tTqppBvalQwifwRvi5AOOjc
+	 NHn+oyyEHviq46IXgDVPjQq5Zig4vPhj1nL64BAyTAEpyzQqLDRq85ayA0TkVrxRmZ
+	 /LzjhdHhlBUcR22lVXy5Nj4kAR9FwhEeSA8hh9UygHAMVDeL+GbDU3ZCfeSbg8O4wd
+	 Pf3KXrhucjxMr6BjrtjUjKjfaANXj44HXm5RER7dG6MtpEjE3rLOA3M40DGUZ+c7Tk
+	 T4xAQOlbXuuWw==
 From: Nicolas Schier <nsc@kernel.org>
-Date: Fri, 28 Nov 2025 20:27:57 +0100
-Subject: [PATCH 1/2] fortify: Rename temporary file to match ignore pattern
+Date: Fri, 28 Nov 2025 20:27:58 +0100
+Subject: [PATCH 2/2] fortify: Cleanup temp file also on non-successful exit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251128-fortify-improve-handling-of-tempfile-v1-1-a79d0d3abcac@kernel.org>
+Message-Id: <20251128-fortify-improve-handling-of-tempfile-v1-2-a79d0d3abcac@kernel.org>
 References: <20251128-fortify-improve-handling-of-tempfile-v1-0-a79d0d3abcac@kernel.org>
 In-Reply-To: <20251128-fortify-improve-handling-of-tempfile-v1-0-a79d0d3abcac@kernel.org>
 To: Kees Cook <kees@kernel.org>
@@ -47,19 +47,18 @@ Cc: WangYuli <wangyuli@aosc.io>, WangYuli <wangyl5933@chinaunicom.cn>,
  Nicolas Schier <nsc@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
  Nicolas Schier <nicolas.schier@linux.dev>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1764358080; l=862;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1764358080; l=875;
  i=nsc@kernel.org; s=20250924; h=from:subject:message-id;
- bh=O+zdSlEPApddaYsckN+liTk0XEWHJglUvDhVkj3Oedk=;
- b=obPKT23D9y9fCOmoSYqYL/nqYhnH00d9ophz6W1NNbpI3Yz0tLNj6KwPZ/k32OGzqw0AJu0YA
- 95XYT7xZL/SAeU2pH5B8mxt27CCkRRQt50vjSU3B9qfI+Em9U7ImzJ3
+ bh=Q/trCOsm/FZAEgVV8TAe4RUPlG6Km8Hh2CDuNFVNAqc=;
+ b=NKhu5kQpuFjJ2BWhOrnKeJUaIuYDjnLkZ/eAI6TQoTSoe/8qQ0eqJnsPUBprkzH7ygVQQJXBU
+ DnKKtcusOe5AdZXZ80KNak2QsyMveKD64XiAPt70zaQAThkk9p+N9pw
 X-Developer-Key: i=nsc@kernel.org; a=ed25519;
  pk=+0ar7sBdSzOoVoXxW8B+48yZbV4azT4joSEm8UyP7z4=
 
 From: Nicolas Schier <nicolas.schier@linux.dev>
 
-test_fortify.sh uses a temporary file that might appear as untracked
-file in some rare sitations.  Rename it to match one of top-level's
-gitignore patterns.
+Ensure cleanup of test_fortify.sh's temporary file also on script
+interruption, or some common signals.
 
 Reported-by: WangYuli <wangyuli@aosc.io>
 Closes: https://lore.kernel.org/linux-kbuild/20251112114725.287349-1-wangyuli@aosc.io/
@@ -69,18 +68,18 @@ Signed-off-by: Nicolas Schier <n.schier@avm.de>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/test_fortify/test_fortify.sh b/lib/test_fortify/test_fortify.sh
-index c2688ab8281d..368d07d9acbf 100644
+index 368d07d9acbf..ad6dd44fa31c 100644
 --- a/lib/test_fortify/test_fortify.sh
 +++ b/lib/test_fortify/test_fortify.sh
-@@ -17,7 +17,7 @@ WANT="__${FILE%%-*}"
- # Argument 2: Where to write the build log.
- OUT="$1"
- shift
--TMP="${OUT}.tmp"
-+TMP="${OUT%/*}/.${OUT##*/}.tmp"
+@@ -29,7 +29,7 @@ shift
+ __cleanup() {
+ 	rm -f "$TMP"
+ }
+-trap __cleanup EXIT
++trap __cleanup EXIT HUP INT QUIT TERM
  
- # Argument 3: Path to "nm" tool.
- NM="$1"
+ # Function names in warnings are wrapped in backticks under UTF-8 locales.
+ # Run the commands with LANG=C so that grep output will not change.
 
 -- 
 2.51.0
