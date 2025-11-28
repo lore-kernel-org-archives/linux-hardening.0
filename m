@@ -1,84 +1,128 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E025F22FF22;
-	Fri, 28 Nov 2025 17:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91592080C8;
+	Fri, 28 Nov 2025 19:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764350367; cv=none; b=F3uR1oRYhvtWaWpK6ZhVGzqm2gVMDBzA+dfD2nWQyy6l+50TID0+AonWSZAQrcq5npVhuzbINKTI0yLLZt0pFNxnsyhea+J6pgtR1ZT0DgOQN46Eyl7EvfmbVkPfTifmPOpNCjeyIF8UWpG+eG1NyEXnTjS0jtEiFb8OLz0ep7E=
+	t=1764357691; cv=none; b=eUjfOXJKB4AlElRANsJXfkuuh0enTM8bvGPf2AWYe+zVv/z7HDIleFzaF7S9i6cyeSQSiLY3BzA9u78CnOwEADqVXg8zym+e+OlhdEpPhMpOSOJMUKQbY5vtW2HAmiKDwhKN8M0SkgKqts7f3Mmiv7FqyLb3r9PTXPAjaF/Sm/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764350367; c=relaxed/simple;
-	bh=K2E1U3epY0iQxOIKwuNQPGRgZrhTX5b8hjszIeNOJxk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ujFcAv5oHI88ZPFM86gPBofJTY9Gz7G8l2A5Q4yWa8LUxIlXiaZ/8pvgsTSJfEyuH/xH28XYIeC5njLpBEMdBlDAltRApzQht1fBMsMyBcvA3s4ycifcPVh2AuZUjlNdlfhudlu2cwLUZYSLr7SyEY7bivUazte8zV5hg63B2I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 533055A20D;
-	Fri, 28 Nov 2025 17:19:23 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 3F48D20026;
-	Fri, 28 Nov 2025 17:19:21 +0000 (UTC)
-Date: Fri, 28 Nov 2025 12:19:19 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kees Cook <kees@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-hardening@vger.kernel.org, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH] overflow: Introduce struct_offset() to get offset of
- member
-Message-ID: <20251128121919.521ec9bf@robin>
-In-Reply-To: <CAHk-=wiF9-vf3zW8vXoFGk+bo0=dSoJMm_nmVzsTDCerZzhGaw@mail.gmail.com>
-References: <20251126145249.05b1770a@gandalf.local.home>
-	<202511262356.6FE5084CB0@keescook>
-	<20251127204342.05fc985e@robin>
-	<6219BF5A-0EC3-4111-A329-D35244C9714A@kernel.org>
-	<20251127222710.324357cf@robin>
-	<CAHk-=wiF9-vf3zW8vXoFGk+bo0=dSoJMm_nmVzsTDCerZzhGaw@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1764357691; c=relaxed/simple;
+	bh=ujNBqhHgTC2d4zMNped40gq7T94zujwsCwr9RoSwC9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=od0zdwiqIqTk7H0vaVQkjOV8FFvYzIS+6KNX8jHqApPRMfLQF1HH7ybx92zhEML+O017VdZISdaMFEB9zLh/7dlWgyuyWmg1T4Vq69xPoHvlJnpzpYIMlFZNd6CRrMbm6l5m9dvvzdq+obtP12QfmUZH2s4DWJXpbDwaXtGkzXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wox4VQoI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wox4VQoI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A30DDC4CEF1;
+	Fri, 28 Nov 2025 19:21:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764357691;
+	bh=ujNBqhHgTC2d4zMNped40gq7T94zujwsCwr9RoSwC9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wox4VQoIAb7Vi96kAKyujLSb7tgjRJ/oD+icwcobAfMCW25SyRjUTU8m2E1UIvtaA
+	 AlIGzkawPfto5rRsOs3waCfa53+VG7B9dYtx7KBoH60Sg6mQ5C7KNpBu0CULoLVGJE
+	 pUN+to+O+WzLvwbS63j8FsM7dXWUYBtiB/ZoP3IkS7xFUzCti+SmD4NF2TVZK5OYty
+	 K3/KIEYeIqKkDzVAeL1UinjMiDOGbusuSOrriCz0iTkjjL22vJcbgVuPMNcVDEDZyt
+	 qCoEQfuCDJjkbfCZJTEjCKUq+Lp3I4cs/Rgi/PI97Kx/LvfW2dSrHJPBCB61g1DCzc
+	 voCLvWsZr/dZQ==
+Date: Fri, 28 Nov 2025 20:21:26 +0100
+From: Nicolas Schier <nsc@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: WangYuli <wangyuli@aosc.io>, kees@kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, WangYuli <wangyl5933@chinaunicom.cn>
+Subject: Re: [PATCH] fortify: Ignore intermediate *.tmp files
+Message-ID: <aSn2NjaMqoyrP1k2@derry.ads.avm.de>
+References: <20251112114725.287349-1-wangyuli@aosc.io>
+ <20251112223606.GA3268585@ax162>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: zr11k9aw3mznh5purmm9fcfxsooxro5g
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 3F48D20026
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18tjifUlLmG56VnQe7OD5sNSWWDhKiQIQc=
-X-HE-Tag: 1764350361-388986
-X-HE-Meta: U2FsdGVkX19/MRDt2aaRwVbFj3c/tHqEG/UidBr5SeT/sX726m9pde2gZ1c+57IxFnDKYbsqfDsFM9NO0tvwevygsqtRRVgsoffB1dcYvs0r2qAtGjMIB8xyhIUEvvGtCyN7aY44oQO10r6GyS6cuPxjxCpX9Ov/2+mi0IL1eFzQIxQKoNlMRmn2UJRBwVMfCpZ8JiVFb+cQ/81RFcHq6MCLwLf/mvzcP28ydKfETU29Gcn/GCUjlpZadEaWozqOC/LiV2DfhRDzxyeZsA8eWQxgd3QjMQQttaZAKGKP5d1olsGpfJfNklK2jNVuIK7YzZH2shyCEeNmzcXI1WwbhH5HZxEdZ51CUkeCR1quOr97FOu4D2YQ0d7iJ0GYlj8G
-
-On Thu, 27 Nov 2025 21:35:35 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> So that 'xyz_t()' version then gets used for things where you
-> explicitly state the type, and it all looks fairly obvious, eg:
-> 
->         len = struct_size_t(struct pid, numbers, level + 1);
-> 
-> doesn't get that "WHAA?!??!" kind of reaction.
-> 
-> [ And so I actually think it's good that it only takes an explicit
-> type - if you really have an instance, I think it's better to use just
-> "struct_size(&instance, ...)" even if we _could_ easily make syntax
-> like "struct_size_t(instance, ...)" work. ]
-
-I was thinking about adding a struct_offset_t() but then I noticed that
-struct_size_t() requires adding the type as it is for just getting the
-size of the struct without using a variable. Whereas, I would have
-preferred the struct_offset_t() to use a variable that's not a pointer
-where typeof() is used.
-
-But for my use cases, I can just add a '&' to struct_offset(), as if
-struct_offset_t() were to take a type, it is no different than
-offsetof().
-
--- Steve
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7RPdinSB0eSATwvQ"
+Content-Disposition: inline
+In-Reply-To: <20251112223606.GA3268585@ax162>
 
 
+--7RPdinSB0eSATwvQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Nov 12, 2025 at 03:36:06PM -0700, Nathan Chancellor wrote:
+> On Wed, Nov 12, 2025 at 07:47:25PM +0800, WangYuli wrote:
+> > From: WangYuli <wangyl5933@chinaunicom.cn>
+> >=20
+> > The test_fortify.sh script generates logs of build-time warnings
+> > for string and memory functions. To ensure the final log file is
+> > updated atomically, the script first writes its output to a temporary
+> > file with a .log.tmp extension. Upon successful completion, this
+> > temporary file is renamed to the final .log file.
+
+Sounds good, but does not reflect the current implementation:
+
+The output log file may be written in several steps, and the temporary
+file is not renamed but simply used to read the buffered output.
+
+> >=20
+> > If the build process is interrupted before this rename operation,
+> > these *.log.tmp intermediate files will be left in the directory,
+> > creating a risk of them being accidentally added to the git repository.
+
+Instead of adding a directory specific ignore, I'd rather rename the
+temporary file to match a global ignore pattern (e.g. '.*.tmp').
+
+>=20
+> Shouldn't the cleanup trap in lib/test_fortify/test_fortify.sh be enough
+> to avoid leaving behind .log.tmp? Or does that only work for clean
+> exits? Would adding INT to the trap avoid the problem?
+
+Correct, the current 'EXIT' trap is only executed if test_fortify.sh
+exits with 'exit' or reaches its EOF.  We could add HUP, INT, QUIT, TERM
+and PIPE as well, as it is done in scripts/Kbuild.include; this may be a
+bit more than usually needed, but then we can expect the cleanup to
+happen, too, if the script is killed by typical signals (or due to 'set
+-e').
+
+>=20
+> > To prevent this from happening, add *.tmp to the .gitignore file to
+> > explicitly ignore these temporary files.
+> >=20
+> > Signed-off-by: WangYuli <wangyl5933@chinaunicom.cn>
+> > Signed-off-by: WangYuli <wangyuli@aosc.io>
+>=20
+> Regardless, this seems fine in the meantime.
+>=20
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+
+I am going to send an alternative approach.
+
+
+Kind regards,
+Nicolas
+
+--7RPdinSB0eSATwvQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmkp9jYACgkQB1IKcBYm
+EmlnfBAAsmANPqxVSIllT+KznQbPRycAVotxpx48HVSFEBDuwPS4oQEdwscDSXG2
+/u+xiZCdNsBFOXa3a8ZYAIWiEzJEhKWhnvTOVFiqm771utIPLmJr3/lbV8AjnNz4
+QD9w9E6CeRQS7AebPmUdvjd+T9xu9hFeKV/VsEgk+Rdk3CwDyLwbX8uuwteNV/dE
+9OSm0/mhsNfrpTmxEjcHXwl6+ZTx53z0k+UM+jYC8VzOgtkFHNg3N/Z0jsyVPDGa
+lDkRurZnbgwdGhY5V1TzLMJ72F69ZL1t+u9ELGFQqHgUXWl29lN0HOHJcwtDiN30
+4gVdYiZvqOhmiXr/9Yq933zU1ti/aRElQp+F438v4zLrFPKU390ZDBcO2ANX0HPH
+eUpKalkhW7JUK5d8kXonMACutlGhTQyamcarwUAbUM6n5bX5bOuKGU5+oWLk3M5B
+sCeILzQKd+KmPZlC3mW6869UaMl+HCLT3irTQZvOzFgdriG2fmMiU32mNAHVCpGP
+nIzJNgepTDNFVyKobA8plJn16QDW2rhyWZn7CvBr+pKnXmwc1clv8W1pCIKJwSvu
+WceCuZlo67kD0srYjGN0sdszC1XdeMG1Zt6w25XoYK0I4kO8pQ6QIf4oCIzMdcf3
+HVv/l7ntdpVRU8P/J5zw0LF08zsZnuAkHqf0zP9rqwRsxoyf/Ck=
+=dgcP
+-----END PGP SIGNATURE-----
+
+--7RPdinSB0eSATwvQ--
