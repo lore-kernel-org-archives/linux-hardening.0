@@ -1,82 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C01283FF9;
-	Fri, 28 Nov 2025 02:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FDC2AEE4;
+	Fri, 28 Nov 2025 03:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764296606; cv=none; b=r1/BJCkJ4wkVvhrBdV9FcsVo9qkHzqMnb+Zl8j4qE4//WzqjNZIjyRyGH6kZ+qkxnbFJClcj9609kWT/gfiquD6iGwZIQE8vOGcXAt6uHhIS4iNrfixbogsVkKni8ylfQccFV1jilVraZZdQ/4n0ycYsTK55puk5k4GeuCUgWv8=
+	t=1764300443; cv=none; b=SXijd4dYCHRY3WoXWGUJL6eWbLff0rw2+VR2eC7+AQp+hKT3tadXUzlFrm6SCYp8NlpHdDiN6xN1BHbY4DgnCwOVMNkGD+XFaiVwa47AQ1lsMyMiCLQqi0XvPiKs8sh478BjMuE1jUXHSRm6qxOF06woq4Q1pQaTpITy9hR/F9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764296606; c=relaxed/simple;
-	bh=ZVk6JuEZPmmQvkrKU0x8KmvuYrNiqT/j21f2UD7/Sb0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=USZf195gPV2YSv++bteoCmQwA64RWFAmyqjH91fpn6xYPkV3rxq+7E23XnQBT0rJhcZ365gkVR8wb5inxKZIW4F2Z9wK3wJWufGRnbv0MnzWImShOZnsILqAlFNfxxpaR8e5Za137/6xfZw5gl+ZiK8XkzmhwZpSdbOW7dkjvjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UxKNHnha; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UxKNHnha"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED2D1C4CEF8;
-	Fri, 28 Nov 2025 02:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764296606;
-	bh=ZVk6JuEZPmmQvkrKU0x8KmvuYrNiqT/j21f2UD7/Sb0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=UxKNHnha6+Ym51fSzbHvvLiS2yNBPwiln1emklAl3rFhu/5o0eCTToYQo3HTvlt5l
-	 jWgBeNGQ2s29zM7yn4QDOtAZqHKb5gT/hCZMNq739pVXuIIaU2y6NC8/vIsIXmRPkx
-	 P0iBkh920LGdegxo6+XHvVLOTkaNFnRBi2CTCWaQgnbX0X/dqIhDjYqNQpZi6XV/71
-	 VMHd2RXcBSQgvzHbdXH5oR5hR8DBIT6H0jNMt+vptjqFRzD59tbEd+SNXirBKIotxW
-	 SrRu9JRfld4tVqRKKKgYSkb8m8rNPkEo0RcD1U5Vx6YomWHPXnMrcxm4MUusuBV6ey
-	 QR2Yq5PYaF6WQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7879A3808204;
-	Fri, 28 Nov 2025 02:20:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1764300443; c=relaxed/simple;
+	bh=P10db3ts7PPUPNNn92Vlx3E8LzLg0pwbGLrEltdzHBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ibBbOKqlvCb+KqHYed7dBHHpBGPDU+qzMH+0RvRbyYoqbbPdTVxTIDbU7N3UG5b2HuSBhtUi8YtwC8UJ1G7/XpONKsTf/VghCs0e/yNB5RddRiRMWmjBu/lv+xlppL0NNjjEwmWsEYn33pe245S+PNP9QmUecHKDQbufkHpXwP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id F2CC61308C1;
+	Fri, 28 Nov 2025 03:27:13 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id E73842000D;
+	Fri, 28 Nov 2025 03:27:11 +0000 (UTC)
+Date: Thu, 27 Nov 2025 22:27:10 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kees Cook <kees@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>
+Subject: Re: [PATCH] overflow: Introduce struct_offset() to get offset of
+ member
+Message-ID: <20251127222710.324357cf@robin>
+In-Reply-To: <6219BF5A-0EC3-4111-A329-D35244C9714A@kernel.org>
+References: <20251126145249.05b1770a@gandalf.local.home>
+	<202511262356.6FE5084CB0@keescook>
+	<20251127204342.05fc985e@robin>
+	<6219BF5A-0EC3-4111-A329-D35244C9714A@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3][next] net: wwan: mhi_wwan_mbim: Avoid
- -Wflex-array-member-not-at-end warning
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <176429642802.114872.7453197941812148270.git-patchwork-notify@kernel.org>
-Date: Fri, 28 Nov 2025 02:20:28 +0000
-References: <aSfBgwYhRvMe6ip7@kspp>
-In-Reply-To: <aSfBgwYhRvMe6ip7@kspp>
-To: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: loic.poulain@oss.qualcomm.com, ryazanov.s.a@gmail.com,
- johannes@sipsolutions.net, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: py5iexwr5hpbaiwk6mbfbieygaqofhr5
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: E73842000D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+RmDkHZWFGs6lGl4zPjX2RATp304l1LcQ=
+X-HE-Tag: 1764300431-518083
+X-HE-Meta: U2FsdGVkX1+soda1kokO/cvLz18PzGqMCiC+lLSFcGQmCq6HNplI3L82wV+MTS59HmS7FgzpFyJCzrrkBqNQHp3tsWb0+WamBK+xGt6KZgjILPPKPx3h+kQDXThX/go+Xwk3rWrexGiyP+8750hQl5mzfKmEpEYFWf6DA6oxbxeiWf6PBFWJtzE8n0f8nyIjUGDRV9SFPqxUKZF8TCtCiAnaajqoTR3AsOml7Pb+xyM5mmw8lJmcgYSwYQkyEnyP0q73zxF1Eb4pAeiykXrvEUH9M8poYAVKPvwiBFZz5x71GvH8R26a6GWPRMhXN5Xh/DQNXBpeJ7X+p+d4OpiGkbtQPCq+MOEB
 
-Hello:
+On Thu, 27 Nov 2025 18:00:01 -0800
+Kees Cook <kees@kernel.org> wrote:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+> I'd rather it keep the same API style as struct_size() if it's going to share the naming style.
 
-On Thu, 27 Nov 2025 12:12:03 +0900 you wrote:
-> Use DEFINE_RAW_FLEX() to avoid a -Wflex-array-member-not-at-end warning.
+Fair enough. Then I won't change it.
+
 > 
-> Remove fixed-size array struct usb_cdc_ncm_dpe16 dpe16[2]; from struct
-> mbim_tx_hdr, so that flex-array member struct mbim_tx_hdr::ndp16.dpe16[]
-> ends last in this structure.
-> 
-> Compensate for this by using the DEFINE_RAW_FLEX() helper to declare the
-> on-stack struct instance that contains struct usb_cdc_ncm_ndp16 as a
-> member. Adjust the rest of the code, accordingly.
-> 
-> [...]
+> If you have an instance and not a pointer, just slap on a & :)
 
-Here is the summary with links:
-  - [v3,next] net: wwan: mhi_wwan_mbim: Avoid -Wflex-array-member-not-at-end warning
-    https://git.kernel.org/netdev/net-next/c/eeecf5d3a3a4
+:-p
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+I guess that would work. Although it will kinda look a bit strange.
+At least to me.
 
-
+-- Steve
