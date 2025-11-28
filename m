@@ -1,245 +1,84 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011070.outbound.protection.outlook.com [52.101.70.70])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B06261B9B;
-	Fri, 28 Nov 2025 16:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.70
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764348323; cv=fail; b=t4YgvJCEUIQ6s40XrwHIlgwZ5KFC5c1X7HFOkMhxwKnUvtP9mamHt1xK2IYTmkIv513OA066JAKeOftvWuMGJdQwSGs/2bweoAw+SvpCVWlhAKB5u0JwYbdCZe9a/z7RrKz3YWuQw2NjA8KhAd+2vZywcjRe4xKCxYr2KwJf9Ws=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764348323; c=relaxed/simple;
-	bh=829TX1bnN8uTyEsjpgrl7qMjd4Zxa/neV9wnkLitayQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=B+RmPrAjSWVqgnd3nJvyWfFAqdCAW2O2R9Bn6iQuL2N44p187+RXjsf1faedaJGGWQGLlyTWyjPTtmKRTdGFoBe7WWjcYZ2zXOI0TIUWEmK91Sd8AWvfdqAJAXJV3Iw0SRlxWks2pKLlzyKa6CWYp0ZbLRMTTwcDWlEkWhJinjE=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=XwkohJ66; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=XwkohJ66; arc=fail smtp.client-ip=52.101.70.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="XwkohJ66";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="XwkohJ66"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=JqnD9GsT5zssmie25SE6yk7VPjAHzOl+0V9AiSI+yCBeMDNHxVvhRXLvVS52cOySc8o/gpgUEQo7PM+J1uXiJDyD/iZI8iey3Krj9GfKA7PyhONQ0Txg7VF4+Ro6fold9jvZ4/kBsHV5zDXFsrhhNZfw5f7okehX+0iSYc8/5+u+WXZ0F6OxPIIKwE1OOymD4lkxo+QCXguG+dH/pDuxw16/Sb5rl1L15Dc2YnhPsEUgFX8ohtdSMR5v0hYBznpeVssM6BaShGwfcFXFoo4CVf+kZbrSNnQ2UOdn9oLYuyQavt0r0jGCH0Af+XGQ31JXwaXARCoX633Efsua6dskOw==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AdQO8hjipi5SpXiKWNCw3yilSj4Toh7rvCX0zkyivcM=;
- b=yZWiVGCw2d+vUgzNQo4LVm6qiD6qprEmKV6J2GiENg/SqBRPOKjO5fUaRjhkszuIGu2ucLwB0ceWJXyj+TvLpIfagC0+39360ANXinz6MLKFxBLRGHWH9v3RqY4IEyZR7AX/mTC22S11S1IYT6Nplw6UtwRPUFqg4NbhHxjsxVOV8N8ZMM/S06z886D/zu9hKiVZukQfUNTFXOR5nM1WtFctQC1NScAkCyR4FOydi5cIW7PVOBl2vgSNnIVGL+ZOqzqH2PontMTv0Yf3xHIAWpUibysf6PSc51I+ZJW+GvnYvMrWR3SKyfNb5uHB7TzrhnKXHU+4dUwvu8qResslwA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AdQO8hjipi5SpXiKWNCw3yilSj4Toh7rvCX0zkyivcM=;
- b=XwkohJ66mbwSLPxbb60urX+G0W39rTAmghPue8CoZ5qg+IciTNn4NzaI3bjRCJ3Nu8I4gTlTJLitF28X6LKXMks0O33ugkwFQhWshyFkfWkC6tHzWpEmO+A5iP9H/xwUFept0uCNtvCEGo8+jjiRbiy52O8Ege+US0FOiw65hZQ=
-Received: from DUZPR01CA0119.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4bc::19) by VI0PR08MB11295.eurprd08.prod.outlook.com
- (2603:10a6:800:306::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.12; Fri, 28 Nov
- 2025 16:45:16 +0000
-Received: from DU2PEPF00028D09.eurprd03.prod.outlook.com
- (2603:10a6:10:4bc:cafe::cd) by DUZPR01CA0119.outlook.office365.com
- (2603:10a6:10:4bc::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9366.17 via Frontend Transport; Fri,
- 28 Nov 2025 16:45:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DU2PEPF00028D09.mail.protection.outlook.com (10.167.242.169) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9388.8
- via Frontend Transport; Fri, 28 Nov 2025 16:45:15 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Co1wBy/iUK9ImIcAuyVbKPznwSBU8O/hiAjWP7aIX9BSAUTrzh0nLM24a7D12epopuW25U/ulaCU+jScgNmgCXB6kLFb5KDf3xIAs6HaNXAhr5YzUobYqfhg/jugBnSvUmgSlz1XaDePkhQSUDiBGyN+bosAP9SdN6D3iRi1+DSu68tZDXflGuoMrRnIS0ekBx4JKG5lLX7kHNUDH4DaJ/IWoYIepxRaqagkqMDw1FB7SkSraUkX6dXDhU3mP8YBBHS1Ka2IngHRi18D1V93dDF0q0Bqdvfv51F7sz07FojOb9ryphpILBICzbWHVyY7TSf2skrBELcsQsiGTS0dGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AdQO8hjipi5SpXiKWNCw3yilSj4Toh7rvCX0zkyivcM=;
- b=cA4+/CF/sVb4TeTVVjn5RzLmrBpcYhQrO4+PYAzc7UnRlkDNwNsoFSELzG9+OUh6Yd09CSjzu8Ua/QFqsaXb8QrjC+HeSJ1MHxTmoGWawMbIBXJ1TYrA1wXo1WDHsQXjHBmmqvWvrjqiarn1mBsOi8kROztNNTv0fcRo61/7J3gjOdAfLaOGinaphYkIkbuArSO/03hZMbDBzstWJHwc4t50DzqiNQ2fGpTU2hUjNZnBxcLkRLpU+0dq0fZir5JwjhXnWduiiBOxBnI59TzpXRHYkDIZuNnioGaxNA2xp96tqyhMx/EGyuWvxF6taiV+8JwWBiLuSdhMIlOh1PCV2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AdQO8hjipi5SpXiKWNCw3yilSj4Toh7rvCX0zkyivcM=;
- b=XwkohJ66mbwSLPxbb60urX+G0W39rTAmghPue8CoZ5qg+IciTNn4NzaI3bjRCJ3Nu8I4gTlTJLitF28X6LKXMks0O33ugkwFQhWshyFkfWkC6tHzWpEmO+A5iP9H/xwUFept0uCNtvCEGo8+jjiRbiy52O8Ege+US0FOiw65hZQ=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20) by GV1PR08MB8011.eurprd08.prod.outlook.com
- (2603:10a6:150:99::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.14; Fri, 28 Nov
- 2025 16:44:08 +0000
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739%3]) with mapi id 15.20.9366.012; Fri, 28 Nov 2025
- 16:44:07 +0000
-Date: Fri, 28 Nov 2025 16:44:04 +0000
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
-	Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
-	Kees Cook <kees@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Maxwell Bland <mbland@motorola.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pierre Langlois <pierre.langlois@arm.com>,
-	Quentin Perret <qperret@google.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	x86@kernel.org
-Subject: Re: [RFC PATCH v5 11/18] mm: Introduce kpkeys_hardened_pgtables
-Message-ID: <aSnRVJwuRWPmPxqN@e129823.arm.com>
-References: <20250815085512.2182322-1-kevin.brodsky@arm.com>
- <20250815085512.2182322-12-kevin.brodsky@arm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250815085512.2182322-12-kevin.brodsky@arm.com>
-X-ClientProxiedBy: LO4P123CA0641.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:296::7) To GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E025F22FF22;
+	Fri, 28 Nov 2025 17:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764350367; cv=none; b=F3uR1oRYhvtWaWpK6ZhVGzqm2gVMDBzA+dfD2nWQyy6l+50TID0+AonWSZAQrcq5npVhuzbINKTI0yLLZt0pFNxnsyhea+J6pgtR1ZT0DgOQN46Eyl7EvfmbVkPfTifmPOpNCjeyIF8UWpG+eG1NyEXnTjS0jtEiFb8OLz0ep7E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764350367; c=relaxed/simple;
+	bh=K2E1U3epY0iQxOIKwuNQPGRgZrhTX5b8hjszIeNOJxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ujFcAv5oHI88ZPFM86gPBofJTY9Gz7G8l2A5Q4yWa8LUxIlXiaZ/8pvgsTSJfEyuH/xH28XYIeC5njLpBEMdBlDAltRApzQht1fBMsMyBcvA3s4ycifcPVh2AuZUjlNdlfhudlu2cwLUZYSLr7SyEY7bivUazte8zV5hg63B2I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 533055A20D;
+	Fri, 28 Nov 2025 17:19:23 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 3F48D20026;
+	Fri, 28 Nov 2025 17:19:21 +0000 (UTC)
+Date: Fri, 28 Nov 2025 12:19:19 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH] overflow: Introduce struct_offset() to get offset of
+ member
+Message-ID: <20251128121919.521ec9bf@robin>
+In-Reply-To: <CAHk-=wiF9-vf3zW8vXoFGk+bo0=dSoJMm_nmVzsTDCerZzhGaw@mail.gmail.com>
+References: <20251126145249.05b1770a@gandalf.local.home>
+	<202511262356.6FE5084CB0@keescook>
+	<20251127204342.05fc985e@robin>
+	<6219BF5A-0EC3-4111-A329-D35244C9714A@kernel.org>
+	<20251127222710.324357cf@robin>
+	<CAHk-=wiF9-vf3zW8vXoFGk+bo0=dSoJMm_nmVzsTDCerZzhGaw@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	GV1PR08MB10521:EE_|GV1PR08MB8011:EE_|DU2PEPF00028D09:EE_|VI0PR08MB11295:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6c57e7ed-4725-411d-9458-08de2e9d8216
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?+fdjz6/vM+p+hXaavlWE5rOUlDYxjsAiS1G0hANpOccJdpIvHvvtDZnAU5/4?=
- =?us-ascii?Q?IpOYr98HY8HuorGUrw/edj1eHdkPrd7H4sB7YJvIuo0DRj9Pfz992vH1TYU3?=
- =?us-ascii?Q?wiPwLIrT1KvgwSE8xMEC+H1ujAr8Yzi+LZv6zAOT5y8gWH8CDDUiodjNgsqG?=
- =?us-ascii?Q?tI5QixffZQplOEIOYDt5OeoY+hRgiOsqK8GYeRiGjOqg39s5BbuHgvWGMy1t?=
- =?us-ascii?Q?pL5jbFEddeq2NtT9fzoQ4jmlWfDWeMPKL0iij6Q7RrKalLYYp48MmputW5zM?=
- =?us-ascii?Q?6hkVAUudxBz78n9IejzM36VIh1tGTxqPB1UvJN354gY2fu0wVRtSppmQtLfd?=
- =?us-ascii?Q?+4D39uoLalTrC29uoQ64E1C0N/VOAt41vqmINnI8RuN4cCSGPnB2Ltq5MER3?=
- =?us-ascii?Q?YLz49EtcpHjRpJcYQKarZBnR17GCx0YiGaCDRTwx3UZC47HfnQNRDwDGb1Gw?=
- =?us-ascii?Q?FOqcLcXYiN79oSbtbfI8itCI9Dj7/fJPTaTjx0avpj2HIMbov2k6nwsfVpPc?=
- =?us-ascii?Q?kwoJnJtSj6Gk57RTf1GX64eIbrRQ1zIltq9m0HB3PuDZnR3Zso26Ugt9cH57?=
- =?us-ascii?Q?KTNSupm6xS7qiBNWph3fyOjStr/IuU69vzbf0ATgPk3oBqhJZ5BNYTefqFre?=
- =?us-ascii?Q?ebxm/yMXe9K2X5YbGEszUfs3SSAymhDBr507s4Fk7pQnVI1oso5n4wQuIpwE?=
- =?us-ascii?Q?vAYTNLJq7veU7BBcCUGOIdIpktn1Zv00AzrdELxl+tt5ZMDUGPdWvfv7sz4/?=
- =?us-ascii?Q?zJbNZlVkYyFPyHm0dFCR75a5QQP57NdWnc92bPykX/E/AVd2y817HVbAKAph?=
- =?us-ascii?Q?SV/98IcKMHt8TUu+VERShhG6nhoSfXkQ7HBE4ZKMWFYECS4RWgHTl+JPnw7A?=
- =?us-ascii?Q?KjTYpL1K/SDQaDZKD08ZH+41OG6T6/5f26Cz6+bYz+jZsJY3DkV14Z1nbYGz?=
- =?us-ascii?Q?OyqShyX75FomRsekK31/3MXeHa0ACwQATq+8by73yJ7K1uoPkLrYvcUpbPFX?=
- =?us-ascii?Q?tq2eW4jnKIYPjC7jVv4MS4u4BtyxLgnEaBSrMQD3EppdkG8tCKm2fcocet+b?=
- =?us-ascii?Q?3Asxj4Ugu8yFozxaTtiY8EzwJdHejylTJaTRXozSTrgsk5LbhOXk9Kqaf5iw?=
- =?us-ascii?Q?3Jt9QRLLUv+LXsZ//Hh1Hoei8z72FZd4b0C3QEbOZZOdr7NztLEiMQhY+aYr?=
- =?us-ascii?Q?vY76VyjTFr/DGp9c74w9gRKlZfbbyqn2kaAbQNZ+BNwCwmmFRcL+ko6FxrlN?=
- =?us-ascii?Q?48BTC9426tByCcS/iaC6YtUjYb4xrAXS14C+FKTd1ugRyTLgn9GmiBPibWuw?=
- =?us-ascii?Q?M2NB3Q4QcxjEthF+U4njkO1nlV8vCE8OkXAv3gUgl+JFLg8Enu+3G9W+BdjQ?=
- =?us-ascii?Q?01FOBbIFPF+UVqGRQs4DJldCOSCCOoRRBx6v/cEURfnx96sh33guBq4NclX9?=
- =?us-ascii?Q?422C1sXC3HsMioGyy2KRIjqUDT0um1dO?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB8011
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DU2PEPF00028D09.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	6eff4374-f4c9-4326-4751-08de2e9d593a
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|14060799003|376014|7416014|36860700013|82310400026|35042699022|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2PFJVnnKzunr410LoKw2Im7eaBHrAgvFXBSXolu7fJj1exCwxX7mGu+7K5WS?=
- =?us-ascii?Q?75IlDK0iWAaVN0wZxf9lSY/cCO61Aa5xIWTmX06OEFJG84/hswIqoKhh/6Ge?=
- =?us-ascii?Q?WCdyuocYf7cWbd2L2VpRT+Ha8tADuPSBDgISwS2OiRMKwYw00WAN8kG/dT03?=
- =?us-ascii?Q?X0eA5mI47yNcRVPXBRKcZp1UTvVeIPuWRQKxzPxBO7KEIRc5AH0GBphRANbd?=
- =?us-ascii?Q?32dC1I2ZfiClR2lLy0b87Cuy8ow+Ooi4CjAb+sAmauE5YwQjYiNy2+sY8mgX?=
- =?us-ascii?Q?vvrIAuV1cgEow3aKXzw2BsmyePTQjmoOFsNSGRzVDOKm/WftRqzoilnGTDhD?=
- =?us-ascii?Q?I3EbnVUBotwNJIzbJJEtf0lltTOaJV23EWYtRo5jnphE8VxDVWTepowfVeSd?=
- =?us-ascii?Q?jkLaJeXiHQqOWVhq2SAd0NSY9RUYvk0vshCyl5GMuZz1LKa9cnjqcwYQAO7F?=
- =?us-ascii?Q?hZSDsKNje/YXzo8ZT3hB7UBKysmSNjPIjkjhVIf9KeX223xbRowUCaa/GCJl?=
- =?us-ascii?Q?eWxzWqKp582hGYCB1/t8irxxsOn2c1t4szbNLlcJczfRvmtfAmpouTvZKFkw?=
- =?us-ascii?Q?RN1/aWR0W6smQyZvbyUL+iZontadWpDX2lNY04Il9YuPTv9T2Ms8ts3iaNc+?=
- =?us-ascii?Q?eK8EMUZjTiJ+JnJx1rmlKXkvZIeNHP5GIjZbd9/aSj+raRsI073etyvKCYCc?=
- =?us-ascii?Q?P9R2qDT2weKkE4rLdFE/8d+qlgnujVlcj7VYNLdUwHa6iwIXFqErGufy9hgz?=
- =?us-ascii?Q?Y+yIJUySQLXUsSsLe2M1mT/7TDqUgew2D3YvC1024iYkwxdj7jv1Gz9N3nfV?=
- =?us-ascii?Q?ZYaHyGLSlVWH1x1xXYaJsykfaDA7sOAKkQuGUXQ9FzBbzalpT/1H7TinWE/n?=
- =?us-ascii?Q?Iyfjthzer5bCRMa3Qf61hTvVFuGALRrkdbLxkJGKGOaaMYV5PjRBkK9UOIoG?=
- =?us-ascii?Q?IVv/pBsqB4+N+6z4P2HIs9fT3e8+LTWd+AMYA9m61z2p71DGnMvXgGPpOHNV?=
- =?us-ascii?Q?YNZ79xjlSZSt4ejbmQOExAFxtwyFxgBP3sKwEJO2DMz7T39RZ0Dt1qbD+F3V?=
- =?us-ascii?Q?Js4hHK8DFwLB1gKSODwW74zTQUF5wWwIc6BDPeguCO3l0V8l2mk+I/bKXQ4E?=
- =?us-ascii?Q?IIQdPtWZWYuXgRm0ImJFdnb9U9DGpob2wExbHtTJlXC/E3zxy0s7xUYe2QNg?=
- =?us-ascii?Q?/GXTQXZ593zkhnOoOQRoWY6IKx3WHZ1soBfdkGqRKJyhFmqhQBx05jg2fpPV?=
- =?us-ascii?Q?W569NhCTYBNfGBdpHaQEUviZSqVA7/bYfGPHeLAovNj7gkUPZWs9ir7ZrC2z?=
- =?us-ascii?Q?O7hXneifrKVs6W1z9aAgWMLhwCwjbjU517NaVAzCOJlhBtkaw6O2wCYA1WmO?=
- =?us-ascii?Q?GA5v3VG/Z9JCm44eVGYWoA/M3uIcNKU8BBmminLFi5tG3eywLh5wPqs16Vbi?=
- =?us-ascii?Q?XEiwA6jN7hyzeDCk+lgXBAObYViHywmTxW0YE6pGnK7Wm7imsrxvvse830m2?=
- =?us-ascii?Q?g43jcs7Bod4m3xCdY+IDlFnNDBN3AL5XpDhfALddKH+0TIjs+5kB+yz7WiM/?=
- =?us-ascii?Q?tkIsVJqPVpbyEYe9GsE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(14060799003)(376014)(7416014)(36860700013)(82310400026)(35042699022)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2025 16:45:15.9348
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c57e7ed-4725-411d-9458-08de2e9d8216
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF00028D09.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR08MB11295
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: zr11k9aw3mznh5purmm9fcfxsooxro5g
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 3F48D20026
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18tjifUlLmG56VnQe7OD5sNSWWDhKiQIQc=
+X-HE-Tag: 1764350361-388986
+X-HE-Meta: U2FsdGVkX19/MRDt2aaRwVbFj3c/tHqEG/UidBr5SeT/sX726m9pde2gZ1c+57IxFnDKYbsqfDsFM9NO0tvwevygsqtRRVgsoffB1dcYvs0r2qAtGjMIB8xyhIUEvvGtCyN7aY44oQO10r6GyS6cuPxjxCpX9Ov/2+mi0IL1eFzQIxQKoNlMRmn2UJRBwVMfCpZ8JiVFb+cQ/81RFcHq6MCLwLf/mvzcP28ydKfETU29Gcn/GCUjlpZadEaWozqOC/LiV2DfhRDzxyeZsA8eWQxgd3QjMQQttaZAKGKP5d1olsGpfJfNklK2jNVuIK7YzZH2shyCEeNmzcXI1WwbhH5HZxEdZ51CUkeCR1quOr97FOu4D2YQ0d7iJ0GYlj8G
 
-Hi Kevin,
+On Thu, 27 Nov 2025 21:35:35 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-[...]
-> +
-> +int kpkeys_protect_pgtable_memory(struct folio *folio)
-> +{
-> +	unsigned long addr = (unsigned long)folio_address(folio);
+> So that 'xyz_t()' version then gets used for things where you
+> explicitly state the type, and it all looks fairly obvious, eg:
+> 
+>         len = struct_size_t(struct pid, numbers, level + 1);
+> 
+> doesn't get that "WHAA?!??!" kind of reaction.
+> 
+> [ And so I actually think it's good that it only takes an explicit
+> type - if you really have an instance, I think it's better to use just
+> "struct_size(&instance, ...)" even if we _could_ easily make syntax
+> like "struct_size_t(instance, ...)" work. ]
 
-I think it might need to use untagged_addr()?
+I was thinking about adding a struct_offset_t() but then I noticed that
+struct_size_t() requires adding the type as it is for just getting the
+size of the struct without using a variable. Whereas, I would have
+preferred the struct_offset_t() to use a variable that's not a pointer
+where typeof() is used.
 
-> +	unsigned int order = folio_order(folio);
-> +	int ret = 0;
-> +
-> +	if (kpkeys_hardened_pgtables_enabled())
-> +		ret = set_memory_pkey(addr, 1 << order, KPKEYS_PKEY_PGTABLES);
-> +
-> +	WARN_ON(ret);
-> +	return ret;
-> +}
-> +
-> +int kpkeys_unprotect_pgtable_memory(struct folio *folio)
-> +{
-> +	unsigned long addr = (unsigned long)folio_address(folio);
+But for my use cases, I can just add a '&' to struct_offset(), as if
+struct_offset_t() were to take a type, it is no different than
+offsetof().
 
-Same here.
+-- Steve
 
-[...]
 
-Thanks.
-
---
-Sincerely,
-Yeoreum Yun
