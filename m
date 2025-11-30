@@ -1,86 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2083332C924;
-	Fri, 28 Nov 2025 19:28:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1D4191;
+	Sun, 30 Nov 2025 02:51:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764358086; cv=none; b=X1YhDg1qlvqCjcYaYBYLRoQ6Si4H+vH2dMRfVTkENOTNLgCO56as92TbB5dsEHY/BZI4NuHAgeFLEaqzFH5usUpAtI1aiRu5HrqfZTElCEkPWCZp220bzQjP8Y0iC2uUXmZKkqTjrcOJHBJiARFCGRXcQtD4ianoPncuVw1NClk=
+	t=1764471117; cv=none; b=mPDpw43NFbavEppwVQPycekqrtGo/hOxPi2zUJdz0Lv6aBgk//81hYfnwHgRyWV50uvikWDIxVwQQfwiJoZrmn2/lOT/tN5c9Y+lxMjka7LCNSEiJSIi1coAhDFS8WJTaaSl7kdHjLBg7aQOEV1Ny4wSybMKv9WF/R/scD4+DGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764358086; c=relaxed/simple;
-	bh=FjAtGK+0Lm9b/IbOJUCGSCWl/PrA21RK4TRffQOp9Co=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bMlpS5xBnd1Is8x7lK8EVNqn2eNA3KHeJ2AniDStuK6UBAzyDG7hF3g71kP2F2nbxEh5uwc5JjBCdkUsd4I5400n8aWuJVkgeOou4uOGvvb6Vj7/TD2nf/Uap+v8kVUMl0WICaGq+abMVc139T4jyoS9E5kXaDPkld+yf7MBjIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjvYmICV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764471117; c=relaxed/simple;
+	bh=iP2nnz3SLsAsPXQaewl2x+7GiDsiPr1YKG7UmsnWKjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Asat4YFNE5AylqakabC1vW/QMx06fPzG3QtKe6owS5tWzDLJLLntPigUj68wnx6ZzELzPIFeKklZtF6c3LUqxJNJqzLaZsEABiX8S456OdR9RrcVZGb7J329r1m5rGvzsruC5xcKdagkmpktgSfg0/RDOixtLpEjcQOot/+jep0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FnAGRCRJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjvYmICV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 326A6C4CEF1;
-	Fri, 28 Nov 2025 19:28:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FnAGRCRJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60563C4CEF7;
+	Sun, 30 Nov 2025 02:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764358084;
-	bh=FjAtGK+0Lm9b/IbOJUCGSCWl/PrA21RK4TRffQOp9Co=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=RjvYmICV9iG0Sn7tuMwADzuKSj53aAdYl6h1B/zoYWZzeNQyYTvSZitd0RlQ2niTR
-	 0yv+4Jk0i0D+bKEf3MmmJvOpdG0J/6ZW/uNN5wZVMp5tTqppBvalQwifwRvi5AOOjc
-	 NHn+oyyEHviq46IXgDVPjQq5Zig4vPhj1nL64BAyTAEpyzQqLDRq85ayA0TkVrxRmZ
-	 /LzjhdHhlBUcR22lVXy5Nj4kAR9FwhEeSA8hh9UygHAMVDeL+GbDU3ZCfeSbg8O4wd
-	 Pf3KXrhucjxMr6BjrtjUjKjfaANXj44HXm5RER7dG6MtpEjE3rLOA3M40DGUZ+c7Tk
-	 T4xAQOlbXuuWw==
-From: Nicolas Schier <nsc@kernel.org>
-Date: Fri, 28 Nov 2025 20:27:58 +0100
-Subject: [PATCH 2/2] fortify: Cleanup temp file also on non-successful exit
+	s=k20201202; t=1764471116;
+	bh=iP2nnz3SLsAsPXQaewl2x+7GiDsiPr1YKG7UmsnWKjQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=FnAGRCRJlujYxId/hdAf2D47Xuf+jhGrsdG0oykmwZzwYIGT/rXEszWuTJmf0Tms2
+	 b4aeq5UVzUGGtziiERgnkXyhArDZr9Ny7pwM3YZn0F0we9IAPvZDIGqSQqJ/l2+yA1
+	 4zkzBm95kgq0lTh6JaXFXx4Vmt9JsQOc3UDFdsDSoERPPR4wxXthkEP+a5SqrINbN9
+	 mwrQi+wtWLFxqXiWK9wbldtxbSG/31ZGnuwt7Gtgi8dmd93NNyHryxwPn+73UdN67P
+	 kb8XXupYvIiNc2AKO1lU9+9v7zOaazI/G8B4Nn3oGqUAM2NajNS1dRzeRH8VwQDiHj
+	 o39czpT29jE8w==
+Date: Sat, 29 Nov 2025 18:50:06 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Kees Cook <kees@kernel.org>
+Subject: [GIT PULL] 'at_least' array sizes for 6.19
+Message-ID: <20251130025006.GE12664@sol>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251128-fortify-improve-handling-of-tempfile-v1-2-a79d0d3abcac@kernel.org>
-References: <20251128-fortify-improve-handling-of-tempfile-v1-0-a79d0d3abcac@kernel.org>
-In-Reply-To: <20251128-fortify-improve-handling-of-tempfile-v1-0-a79d0d3abcac@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: WangYuli <wangyuli@aosc.io>, WangYuli <wangyl5933@chinaunicom.cn>, 
- Nathan Chancellor <nathan@kernel.org>, linux-hardening@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
- Nicolas Schier <nsc@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
- Nicolas Schier <nicolas.schier@linux.dev>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1764358080; l=875;
- i=nsc@kernel.org; s=20250924; h=from:subject:message-id;
- bh=Q/trCOsm/FZAEgVV8TAe4RUPlG6Km8Hh2CDuNFVNAqc=;
- b=NKhu5kQpuFjJ2BWhOrnKeJUaIuYDjnLkZ/eAI6TQoTSoe/8qQ0eqJnsPUBprkzH7ygVQQJXBU
- DnKKtcusOe5AdZXZ80KNak2QsyMveKD64XiAPt70zaQAThkk9p+N9pw
-X-Developer-Key: i=nsc@kernel.org; a=ed25519;
- pk=+0ar7sBdSzOoVoXxW8B+48yZbV4azT4joSEm8UyP7z4=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Nicolas Schier <nicolas.schier@linux.dev>
+The following changes since commit dcb6fa37fd7bc9c3d2b066329b0d27dedf8becaa:
 
-Ensure cleanup of test_fortify.sh's temporary file also on script
-interruption, or some common signals.
+  Linux 6.18-rc3 (2025-10-26 15:59:49 -0700)
 
-Reported-by: WangYuli <wangyuli@aosc.io>
-Closes: https://lore.kernel.org/linux-kbuild/20251112114725.287349-1-wangyuli@aosc.io/
-Signed-off-by: Nicolas Schier <n.schier@avm.de>
----
- lib/test_fortify/test_fortify.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+are available in the Git repository at:
 
-diff --git a/lib/test_fortify/test_fortify.sh b/lib/test_fortify/test_fortify.sh
-index 368d07d9acbf..ad6dd44fa31c 100644
---- a/lib/test_fortify/test_fortify.sh
-+++ b/lib/test_fortify/test_fortify.sh
-@@ -29,7 +29,7 @@ shift
- __cleanup() {
- 	rm -f "$TMP"
- }
--trap __cleanup EXIT
-+trap __cleanup EXIT HUP INT QUIT TERM
- 
- # Function names in warnings are wrapped in backticks under UTF-8 locales.
- # Run the commands with LANG=C so that grep output will not change.
+  https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git tags/libcrypto-at-least-for-linus
 
--- 
-2.51.0
+for you to fetch changes up to 4f0382b0901b43552b600f8e5f806295778b0fb0:
 
+  lib/crypto: sha2: Add at_least decoration to fixed-size array params (2025-11-23 12:19:47 -0800)
+
+----------------------------------------------------------------
+
+C supports lower bounds on the sizes of array parameters, using the
+static keyword as follows: 'void f(int a[static 32]);'. This allows
+the compiler to warn about a too-small array being passed.
+
+As discussed, this reuse of the 'static' keyword, while standard, is a
+bit obscure. Therefore, add an alias 'at_least' to compiler_types.h.
+
+Then, add this 'at_least' annotation to the array parameters of
+various crypto library functions.
+
+----------------------------------------------------------------
+Eric Biggers (6):
+      lib/crypto: chacha: Add at_least decoration to fixed-size array params
+      lib/crypto: curve25519: Add at_least decoration to fixed-size array params
+      lib/crypto: md5: Add at_least decoration to fixed-size array params
+      lib/crypto: poly1305: Add at_least decoration to fixed-size array params
+      lib/crypto: sha1: Add at_least decoration to fixed-size array params
+      lib/crypto: sha2: Add at_least decoration to fixed-size array params
+
+Jason A. Donenfeld (3):
+      wifi: iwlwifi: trans: rename at_least variable to min_mode
+      compiler_types: introduce at_least parameter decoration pseudo keyword
+      lib/crypto: chacha20poly1305: Statically check fixed array lengths
+
+ drivers/net/wireless/intel/iwlwifi/iwl-trans.c |  8 ++--
+ include/crypto/chacha.h                        | 12 +++---
+ include/crypto/chacha20poly1305.h              | 19 ++++-----
+ include/crypto/curve25519.h                    | 24 +++++++-----
+ include/crypto/md5.h                           | 11 +++---
+ include/crypto/poly1305.h                      |  2 +-
+ include/crypto/sha1.h                          | 12 +++---
+ include/crypto/sha2.h                          | 53 +++++++++++++++-----------
+ include/linux/compiler_types.h                 | 15 ++++++++
+ lib/crypto/chacha20poly1305.c                  | 18 ++++-----
+ 10 files changed, 103 insertions(+), 71 deletions(-)
