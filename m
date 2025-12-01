@@ -1,75 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6553C17;
-	Sun, 30 Nov 2025 19:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176EA2628D;
+	Mon,  1 Dec 2025 01:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764531276; cv=none; b=B0Y/DOcrAxFYGEqFjKXK4Oa307RRxyb80GUPM4rXrGlIj69jVUUzpii2GKzHYP8HhbsEh4loSln+jd/ViX1i6ZUCvGjr8+dur9DJyuC0V8XdvLVvKofXg3zdaHp9DDtqRKVPaq0V4B2zUqIxIGDBHWcu2Mdfb+ezvgjdVBg4K8g=
+	t=1764554165; cv=none; b=SZskNOYUc6K0dJ5Pu+H20zyygQ/KxlQhw1CyeMmT0b4PdwU2POMeq43CNLVPVjMVjju6BEOc5rWCsdzej8/7cKMkSMfA2NGpvJxcw3OOXiZJkNu8DBe4cj/W6SXfol/bN6qR6JdEDnCH1/Wj3eAjg/ILespm02WHEpRIy3oAE48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764531276; c=relaxed/simple;
-	bh=fDk5Jal1lnccSK3N9WMpugaH0WztpLXYnlHQgtFU4zA=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=aSB7bqqJuzVFKARoO8efFRjv0QpbPFFjHfxJNcPvCrw3IYrGsWSh8tFbpuURH/Bhevy8zX/d28re+Jo8x/2NddG/qAd/h4y86W5ZCWcY9s5ZUhzCMN2lII2sAmioV7GYmtNEO5JrGmNysG/VcCBxQK2a5Xq2uL9dhPuf+Y2wG+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hW8SipWA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764554165; c=relaxed/simple;
+	bh=XCiwgZUQWQ8Bxet8CoxSVzbPR6fzmrLVRYpVLLvwDW0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jhp80MR242ucgsamNRTfzYL42DvenA0qJAcZ2lqlAZoGFxhRY5NzhnHcyGqrJXieVlAZJK9xNdsDLcHr6XR0jlx0hC9WNsDpL3cAuFoJTxCrsM3nw/bKAW5FIi86NIbY2/ZC21b1MIS+fQIPMFgWoBSOX4vwqkeyDmIiEr4++uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=jLNvm93O; arc=none smtp.client-ip=159.100.248.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hW8SipWA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08B7EC4CEF8;
-	Sun, 30 Nov 2025 19:34:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764531276;
-	bh=fDk5Jal1lnccSK3N9WMpugaH0WztpLXYnlHQgtFU4zA=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=hW8SipWAFM+89QshRWlSDcseWRuvJj+jQZUbCa2B18aMOhrANvfUOVuLIpF/EFj0r
-	 O4IiNK3mEMvA2d96o51OZMKjcJuM7VNhjDdarUmiBzCaL7dUF00/eDTzBhAciTy3SF
-	 HSlc32F59LlvSxNfTdJHZIVv9i6hKv4jHmx13TH8Xz5DHAatiQoqebZ2GJId17yVCW
-	 LuUhfthJfOxTSVvT0phgm9L8iWO4IWgLIxdewQwf+l/Ycrk+lB7xfWvhfidGtY5KB3
-	 wX3gn2+p9nZzJuwP7yzpmiMnHfX5DvK9/hc9RkGGfDG5t5+q7y1CfG6mA4oY8i3wdM
-	 y/mOQoMtaC8xA==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="jLNvm93O"
+Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.156])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id 6F18D260DB;
+	Mon,  1 Dec 2025 01:55:53 +0000 (UTC)
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay4.mymailcheap.com (Postfix) with ESMTPS id CE4EA20057;
+	Mon,  1 Dec 2025 01:55:44 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 9CC9640162;
+	Mon,  1 Dec 2025 01:55:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1764554142; bh=XCiwgZUQWQ8Bxet8CoxSVzbPR6fzmrLVRYpVLLvwDW0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jLNvm93OhPuDusAqyKd4AqC02lXXuES2ayRxPEQY6U5hMl0TLcr5BdnjM8+ye1gPr
+	 XEJIOu6m1rA1MuA2y6csMH0GfMWRXhmp1oni3oFZAHVbWiSVi3T/Bif+itBwMn/+k4
+	 fpHwFrGKYQYM9ObCEhEntvuAadraUQQWh6ZMCKf8=
+Received: from [192.168.0.64] (unknown [39.144.78.120])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 537F041283;
+	Mon,  1 Dec 2025 01:55:39 +0000 (UTC)
+Message-ID: <b804c3a8-a93a-4f91-8c89-e01357643eec@aosc.io>
+Date: Mon, 1 Dec 2025 09:55:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20251124-exynos-clkout-fix-ubsan-bounds-error-v1-1-224a5282514b@kernel.org>
-References: <20251124-exynos-clkout-fix-ubsan-bounds-error-v1-1-224a5282514b@kernel.org>
-Subject: Re: [PATCH] clk: samsung: exynos-clkout: Assign .num before accessing .hws
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, stable@vger.kernel.org, Jochen Sprickerhof <jochen@sprickerhof.de>, Nathan Chancellor <nathan@kernel.org>
-To: Alim Akhtar <alim.akhtar@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Gustavo A. R. Silva <gustavoars@kernel.org>, Kees Cook <kees@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Nathan Chancellor <nathan@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>
-Date: Sun, 30 Nov 2025 11:34:33 -0800
-Message-ID: <176453127378.11952.4906451561257794028@lazor>
-User-Agent: alot/0.11
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] fortify: Rename temporary file to match ignore
+ pattern
+To: Nicolas Schier <nsc@kernel.org>, Kees Cook <kees@kernel.org>
+Cc: WangYuli <wangyl5933@chinaunicom.cn>,
+ Nathan Chancellor <nathan@kernel.org>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ Nicolas Schier <nicolas.schier@linux.dev>
+References: <20251128-fortify-improve-handling-of-tempfile-v1-0-a79d0d3abcac@kernel.org>
+ <20251128-fortify-improve-handling-of-tempfile-v1-1-a79d0d3abcac@kernel.org>
+Content-Language: en-US
+From: WangYuli <wangyuli@aosc.io>
+In-Reply-To: <20251128-fortify-improve-handling-of-tempfile-v1-1-a79d0d3abcac@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 9CC9640162
+X-Rspamd-Server: nf2.mymailcheap.com
+X-Spamd-Result: default: False [-0.10 / 10.00];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[wangyuli.aosc.io:server fail,n.schier.avm.de:server fail,nicolas.schier.linux.dev:server fail];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Action: no action
 
-Quoting Nathan Chancellor (2025-11-24 11:11:06)
-> Commit f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with
-> __counted_by") annotated the hws member of 'struct clk_hw_onecell_data'
-> with __counted_by, which informs the bounds sanitizer (UBSAN_BOUNDS)
-> about the number of elements in .hws[], so that it can warn when .hws[]
-> is accessed out of bounds. As noted in that change, the __counted_by
-> member must be initialized with the number of elements before the first
-> array access happens, otherwise there will be a warning from each access
-> prior to the initialization because the number of elements is zero. This
-> occurs in exynos_clkout_probe() due to .num being assigned after .hws[]
-> has been accessed:
->=20
->   UBSAN: array-index-out-of-bounds in drivers/clk/samsung/clk-exynos-clko=
-ut.c:178:18
->   index 0 is out of range for type 'clk_hw *[*]'
->=20
-> Move the .num initialization to before the first access of .hws[],
-> clearing up the warning.
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with __cou=
-nted_by")
-> Reported-by: Jochen Sprickerhof <jochen@sprickerhof.de>
-> Closes: https://lore.kernel.org/aSIYDN5eyKFKoXKL@eldamar.lan/
-> Tested-by: Jochen Sprickerhof <jochen@sprickerhof.de>
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+On 2025/11/29 03:27, Nicolas Schier wrote:
+
+> From: Nicolas Schier <nicolas.schier@linux.dev>
+>
+> test_fortify.sh uses a temporary file that might appear as untracked
+> file in some rare sitations.  Rename it to match one of top-level's
+> gitignore patterns.
+>
+> Reported-by: WangYuli <wangyuli@aosc.io>
+> Closes: https://lore.kernel.org/linux-kbuild/20251112114725.287349-1-wangyuli@aosc.io/
+> Signed-off-by: Nicolas Schier <n.schier@avm.de>
 > ---
+>   lib/test_fortify/test_fortify.sh | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/lib/test_fortify/test_fortify.sh b/lib/test_fortify/test_fortify.sh
+> index c2688ab8281d..368d07d9acbf 100644
+> --- a/lib/test_fortify/test_fortify.sh
+> +++ b/lib/test_fortify/test_fortify.sh
+> @@ -17,7 +17,7 @@ WANT="__${FILE%%-*}"
+>   # Argument 2: Where to write the build log.
+>   OUT="$1"
+>   shift
+> -TMP="${OUT}.tmp"
+> +TMP="${OUT%/*}/.${OUT##*/}.tmp"
+>   
+>   # Argument 3: Path to "nm" tool.
+>   NM="$1"
+>
 
-Applied to clk-next
+Reviewed-by: WangYuli <wangyuli@aosc.io>
+
+Thans,
+
+--
+
+WangYuli
+
