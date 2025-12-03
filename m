@@ -1,63 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CA6242D6A;
-	Wed,  3 Dec 2025 03:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322B227057D
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Dec 2025 04:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764731690; cv=none; b=nCxW8+S3wOHWH/HLXCm1SAbCAYUZAi1UY9s30YdmRukz95FSA0LtG+LLgUPjlXlyQuvvIsWY3WTFLEs7NRiICcrYvnCLTy7/knNBA92lLFG7ctIE49LqDbmS4BhYyE0NXat8SzAleyaW+2cUDrMd+PAHE89SGDxTA1uP7fcGeuE=
+	t=1764736174; cv=none; b=HeKa5uCiPCKZ09MxgtWBd1+ODON8cpveDR3UynEPaOWRqJ9riCILdxfMoo5vmt59PJTrenm7zspv2zUucv1LhNXdGHuKBwToeDUXlhQlnoflHnDX1a6KBTQ09rZJB6HBmp8ROkH04kcSUsXJLccTQBQqXZg0EDtPB1RxJZtzHxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764731690; c=relaxed/simple;
-	bh=CmH9xGLeKbwAGZm74e9TZSo5bkmGGNnlbjDyRkgJFUg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ixTQtIJGvBUCDgDrPMv5DmW4Tzq2PD04KWt6OEKv2f/Sh3JQlQYZaBBcPopPXjNBeW1crolvzQybr3ObMhaci1unkTPRXe9LGShUOcvwLpv+teJ6MlpPeikSdEs4EcigZfkRA0eTyRnh3Bku5UsxxDu0xYCba8eWJHhVRk/hYDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5oqCFbu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764736174; c=relaxed/simple;
+	bh=PRKsoquST5llbW2p7IYcBfsRWWFkLjLhJ2QscrO59LM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q25TyhmrtLjoWDZEK1ySYxzhJyMkDYYe3yFsNVX0GbBl2VZYHcTMOWobaHRrZAw4Rx9c4z2UH2DRkkqR8eEgtAcb7FujUuGxFcuOvTfQdzchmEiLdptqdXNAoeILchd17Bx2y3Tp5hBbwIISq6TtUMmW4s9D8szwkVcazFmzKLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=u1KQvWd2; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5oqCFbu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E3A0C116C6;
-	Wed,  3 Dec 2025 03:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764731690;
-	bh=CmH9xGLeKbwAGZm74e9TZSo5bkmGGNnlbjDyRkgJFUg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Z5oqCFbuFokGoXlBjvBSGIsD5IQdTbybjgEgo8fFKFR7bU1AsvedHrsuJZxaiiC49
-	 W6gCOwHAFMHXHLoyUsH/QbiJIh4Z+iP2kscTHuQU0Gi2rQxh/clREMUsOqr/JuUrOs
-	 b4WOFV/ouolsyoUA0CNbVnnAGdpaOf/br2skjZy1NRH9ygIWaSLatPGMFIaInW03YR
-	 qXctpM1uIfxHvgguRfp+3Ii+flSOZRfpNogHo4CeMWh8GZql1DBLr7V5OiWuzdtWv2
-	 6U50pqmBa1IWEO1OwozljMBQT8DH6A+vwbG7O/KxKKv1n5r3FM673GhNBJBfDRM5D5
-	 ZKs9xYQB1ISEA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 788803A72A63;
-	Wed,  3 Dec 2025 03:11:50 +0000 (UTC)
-Subject: Re: [GIT PULL] 'at_least' array sizes for 6.19
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20251130025006.GE12664@sol>
-References: <20251130025006.GE12664@sol>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20251130025006.GE12664@sol>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git tags/libcrypto-at-least-for-linus
-X-PR-Tracked-Commit-Id: 4f0382b0901b43552b600f8e5f806295778b0fb0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 906003e15160642658358153e7598302d1b38166
-Message-Id: <176473150920.3498170.2716963658148999631.pr-tracker-bot@kernel.org>
-Date: Wed, 03 Dec 2025 03:11:49 +0000
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>, Herbert Xu <herbert@gondor.apana.org.au>, Miri Korenblit <miriam.rachel.korenblit@intel.com>, Kees Cook <kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="u1KQvWd2"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
+	s=key1; t=1764736168;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HPuG0LGeUpQwYmuvaU8Ip5v/4vYxot6m+IfFCu3J3gw=;
+	b=u1KQvWd24yzXZPkBz/vFdBoVCQ8o9oRsFBx2dajCx16QXA4SmncNE2rBBY62JzcNrAQR8V
+	BCZKM1dPOQpF7nNsr2v2ab3h53vOxd8/R1EUs8Tx3KMhHyeMimNy5fjDRTbXOpXnjHfzny
+	aLAH4oyii0phwKBdI0WrJ+GpP/AszUmiOF0thBIWaa3rGFLM3VtiV9M9e6y9m98OggeMrR
+	QvZMC9oEFoi3mjXUztMmjT/iF8GI9+kmag4SSLwcNKdigBfOF8DWgtebY53EVOY6K/66wT
+	JuCAHKADdtyfCjYQZbVxOff0KzE1jc9Ve/dTLYwxENTLSj2/g++NhQpvxsbqLA==
+From: Val Packett <val@packett.cool>
+To: Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Ard Biesheuvel <ardb@kernel.org>
+Cc: Val Packett <val@packett.cool>,
+	linux-hardening@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] efi: pstore: Support late setup with TEE-backed efivars ops
+Date: Wed,  3 Dec 2025 01:28:29 -0300
+Message-ID: <20251203042850.14210-1-val@packett.cool>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The pull request you sent on Sat, 29 Nov 2025 18:50:06 -0800:
+On some platforms, EFI variable services only become available when an
+appropriate TEE driver is initialized such as qseecom, gsmi or stmm.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git tags/libcrypto-at-least-for-linus
+This would work fine when efi_pstore was built as a module and loaded
+late by userspace, but with CONFIG_EFI_VARS_PSTORE=y this driver would
+quit due to non-writable efivars before the necessary driver had any
+chance to load.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/906003e15160642658358153e7598302d1b38166
+Listen to efivar_ops_nh notifications and retry the initialization when
+writable EFI variable ops become available.
 
-Thank you!
+Signed-off-by: Val Packett <val@packett.cool>
+---
+ drivers/firmware/efi/efi-pstore.c | 32 +++++++++++++++++++++++++++----
+ 1 file changed, 28 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
+index a253b6144945..ad5192d5892e 100644
+--- a/drivers/firmware/efi/efi-pstore.c
++++ b/drivers/firmware/efi/efi-pstore.c
+@@ -253,14 +253,11 @@ static struct pstore_info efi_pstore_info = {
+ 	.erase		= efi_pstore_erase,
+ };
+ 
+-static int efivars_pstore_init(void)
++static int efivars_pstore_setup(void)
+ {
+ 	if (!efivar_supports_writes())
+ 		return 0;
+ 
+-	if (pstore_disable)
+-		return 0;
+-
+ 	/*
+ 	 * Notice that 1024 is the minimum here to prevent issues with
+ 	 * decompression algorithms that were spotted during tests;
+@@ -285,8 +282,35 @@ static int efivars_pstore_init(void)
+ 	return 0;
+ }
+ 
++static int efivars_pstore_ops_notifier(struct notifier_block *nb,
++				 unsigned long event, void *data)
++{
++	if (event == EFIVAR_OPS_RDWR && !efi_pstore_info.bufsize)
++		efivars_pstore_setup();
++
++	return NOTIFY_OK;
++}
++
++static struct notifier_block efivars_pstore_ops_notifier_block = {
++	.notifier_call = efivars_pstore_ops_notifier,
++};
++
++static int efivars_pstore_init(void)
++{
++	if (pstore_disable)
++		return 0;
++
++	blocking_notifier_chain_register(&efivar_ops_nh,
++					&efivars_pstore_ops_notifier_block);
++
++	return efivars_pstore_setup();
++}
++
+ static void efivars_pstore_exit(void)
+ {
++	blocking_notifier_chain_unregister(&efivar_ops_nh,
++					&efivars_pstore_ops_notifier_block);
++
+ 	if (!efi_pstore_info.bufsize)
+ 		return;
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.51.0
+
