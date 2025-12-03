@@ -1,52 +1,52 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E4022B8CB
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Dec 2025 05:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373B6281504
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Dec 2025 05:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764738636; cv=none; b=u/jxzD7/7N0N4WFfnmz76S8+R4ABcWTaQIYqI8hIFzGVNtfuRg/l+TEho5ZpEuPgCKy5Myi4iyc0tlj36eEDu0n8rP6gB59kKupOKB4GLCNwF29DnQN9Jvys/SGSCWCD0nh9gH41Yk/9UXd3q3TSSTwmOEa+yrg80lUE/Sy2+TM=
+	t=1764738755; cv=none; b=i8OBue5m56XE/ynAdGo+F6zPKml24sBeJ4BeVK+huqFmPJKsIQTq30cEiOP85OgeyBldrJedYtYwgmAgJ9/g2ZGAHLt5a0r42brNMV4y5+204Eo7fcGfHVmJ0eoWQq5uCLg8Bokym/gJhafoCpixiHzqaG2RsEgRb956mjL5ei8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764738636; c=relaxed/simple;
-	bh=EZco+88Y78IvWrfrJZkr11uVXgBLNbqBKW/cA9HQDdw=;
+	s=arc-20240116; t=1764738755; c=relaxed/simple;
+	bh=cW07RvX8A2KPX3wtJ7XOqY5EO3LW/7VmvQ/tLUqcbvA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CIHQ96SRq1291t2lCIsh4IivbkwLQpDXYHGRpk6TxfqVO3hmqzfhXdP6GyvC+ZbI/94k3tBd7IwFhs4WhFvPi3kY2RglGhg6zLpXszxxpUsuTfeZIigKhg2Ba6Qtt8kvM1lIfIEKMIeN4brcZ9KLwk6EcvEDeWlIMFHhnNB5s/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=AHebzQJd; arc=none smtp.client-ip=35.89.44.33
+	 In-Reply-To:Content-Type; b=QcuWjJ07Aj6t733hRDkDr44PsAze7q5z4C7jFVA4Vc+OhJw/xpoa3JdWgdOLY4mokmTmAEOqxXkuQ9ISKL/BEeQ6pNhkDAUo/MiFPY1R1Xj+pRzvwRv0PQ6cZglnFkX6Emtluqfq0qVdIclWyoW/L4otxzNw2c6kEGBMcBrJWUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=hivpQeg6; arc=none smtp.client-ip=44.202.169.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="AHebzQJd"
-Received: from eig-obgw-6004b.ext.cloudfilter.net ([10.0.30.210])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hivpQeg6"
+Received: from eig-obgw-6007b.ext.cloudfilter.net ([10.0.30.166])
 	by cmsmtp with ESMTPS
-	id Qddjvu5deKjfoQf8GviHdG; Wed, 03 Dec 2025 05:10:28 +0000
+	id QXBav69MrSkcfQfAGv9Qn0; Wed, 03 Dec 2025 05:12:33 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id Qf8Fv8Mt4K8vzQf8GvT7Ar; Wed, 03 Dec 2025 05:10:28 +0000
-X-Authority-Analysis: v=2.4 cv=cJDgskeN c=1 sm=1 tr=0 ts=692fc644
+	id QfAGvVuSoh8QWQfAGv1vpO; Wed, 03 Dec 2025 05:12:32 +0000
+X-Authority-Analysis: v=2.4 cv=Mcdsu4/f c=1 sm=1 tr=0 ts=692fc6c0
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=ujWNxKVE5dX343uAl30YYw==:17
  a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=SYA4UEjrzyP_W4GMUF8A:9 a=QEXdDO2ut3YA:10 a=1ugCHEcPnPZfhCUW74ct:22
- a=xYX6OU9JNrHFPr8prv8u:22
+ a=iox4zFpeAAAA:8 a=5TVvHJhSY-PbQlZ89gMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=WzC6qhA0u3u7Ye7llzcV:22 a=xYX6OU9JNrHFPr8prv8u:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=EiJ/gpk8T6f2b1RgxrOw36SaHQRodGlXDyE2RAmZZ+M=; b=AHebzQJd7gj3ibRnOveD9UBu6L
-	eC22TZiO2ZS/2m4nkeX0yfBXkc1xb8XFF/qW51fq4k5g25RslWJvOzWYb46o+TZ1HcFHJAbWJx8Br
-	QW8rYAQmU092HZ9CT0FMim45Tdr92ox1z5nnTJDyJlXQwGPskqDrQ6tET8IgbNK1omJ+3c//IxOZm
-	HC8UM1iLEVgG0A/UFgFmjSk9RNtdYffv8YHMfyrtJ7NYMXknmb4EtZu0rpV/Oha61lCc86B+dBK2f
-	YUYpVXv8aKt0wXorZTBSpR55Nl+OXXscgq6oLgYpN6XE9N+BmwXVHl9CUubaXewcA1IMu17UNjhw2
-	MyMdu6hA==;
-Received: from i118-18-233-1.s41.a027.ap.plala.or.jp ([118.18.233.1]:60879 helo=[10.83.24.44])
+	bh=0koUy0HQ2Rv1Yb0+8qx3+2fqlAkYI73um7tplClDJDg=; b=hivpQeg6IQ9gufzK/kOaE/afSz
+	U75evQh9mhDmmJWaeO5QMLm9cFr3tbkezE7rt/mX4HOXhbImdGJOGLadq3WmGpW2bNDojgZiwFGHO
+	gmf4RvdP4Kj0Yh1subwBM8ZBXE9XeGcDibM6yNVYc1lVvd2kTlujS5tfLrBO8/0OZz/jZBsiCF915
+	PDw5z9Gat9S7SNaG27F4550mMBjJYDzljfUc+649kqoPyh2M7Ov8Wa+lub2mTi/wPc6n7KVbV1957
+	BShfAY7+k7+bnhjflOyy0mrkLqdL9IIcgey3wYUAJtUCEN7rSfW8JOywTZvudu882XztHMlBDXQuD
+	bSzCqWxA==;
+Received: from i118-18-233-1.s41.a027.ap.plala.or.jp ([118.18.233.1]:62867 helo=[10.83.24.44])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.98.1)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1vQf8F-00000001b6i-1OkI;
-	Tue, 02 Dec 2025 23:10:27 -0600
-Message-ID: <127bd529-45a0-47bd-8364-5e99144cb773@embeddedor.com>
-Date: Wed, 3 Dec 2025 14:10:19 +0900
+	id 1vQfAF-00000001d8m-2CCb;
+	Tue, 02 Dec 2025 23:12:31 -0600
+Message-ID: <918e665c-fb1a-430f-bb1c-b73ce2d67348@embeddedor.com>
+Date: Wed, 3 Dec 2025 14:12:27 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,18 +54,19 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] KVM: Avoid a few dozen
- -Wflex-array-member-not-at-end warnings
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aPfNKRpLfhmhYqfP@kspp>
+Subject: Re: [PATCH][next] ocfs2: Avoid -Wflex-array-member-not-at-end warning
+To: Heming Zhao <heming.zhao@suse.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, ocfs2-devel@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aRKm_7aN7Smc3J5L@kspp>
+ <7vsq3tvjuv3ppiot3lgithyp76r4jbbssoiiuni6zvj5pajsov@nketwax66jss>
 Content-Language: en-US
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <aPfNKRpLfhmhYqfP@kspp>
+In-Reply-To: <7vsq3tvjuv3ppiot3lgithyp76r4jbbssoiiuni6zvj5pajsov@nketwax66jss>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
 X-AntiAbuse: Original Domain - vger.kernel.org
@@ -74,152 +75,78 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 118.18.233.1
 X-Source-L: No
-X-Exim-ID: 1vQf8F-00000001b6i-1OkI
+X-Exim-ID: 1vQfAF-00000001d8m-2CCb
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: i118-18-233-1.s41.a027.ap.plala.or.jp ([10.83.24.44]) [118.18.233.1]:60879
+X-Source-Sender: i118-18-233-1.s41.a027.ap.plala.or.jp ([10.83.24.44]) [118.18.233.1]:62867
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
+X-Email-Count: 6
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfP+gackRDpnLmSEN0lCvZLg4H0uU6m9YbZFHD1xSa4fnDpUxA/kg7jVKbC9eBS1aeizKhtF2XumhRNhY6mOUemt1gSHLRk99xVu+RnTqVD3aLAhuKw+3
- 26/3dZPAFNulKPmh6klUKv6Ndo8uxBt1aEIzgyTgdy18mnmahbbGiYXzXC/9CcZc9hsaC++Gv9htAvz9aOyzjQHpXIzX5DOxAM5pb25iGQonFOQWX4Pe3tRX
+X-CMAE-Envelope: MS4xfL2vMd2d9HpmEdeFVXfwSmkMIOFng5v78CDjs9lsMVrR6fFrtqVllrYgpVBXgNShgTAhimmmt9A5xft5Q7xbPLqzo1J7rdnc6wIT4zDHErWGUodVV/ii
+ llpD4IVT8UMwrBFXSDVuvdy7Jih02izn0bBlt5wIu7+mXgUYSIH3srC84MVs3BGbPyCPUc0vqX6ugR3UhppoLHX9h/x14fxXmv73FcQnbYTYt4XJlAc/NAsu
 
 Hi all,
 
-Friendly ping: who can take this, please? :)
+Friendly ping: who can take this, please? 🙂
 
 Thanks!
 -Gustavo
 
-On 10/22/25 03:12, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
+On 11/17/25 14:32, Heming Zhao wrote:
+> On Tue, Nov 11, 2025 at 12:01:19PM +0900, Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>> getting ready to enable it, globally.
+>>
+>> Use the new TRAILING_OVERLAP() helper to fix the following warning:
+>>
+>> fs/ocfs2/xattr.c:52:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>
+>> This helper creates a union between a flexible-array member (FAM) and a
+>> set of MEMBERS that would otherwise follow it.
+>>
+>> This overlays the trailing MEMBER struct ocfs2_extent_rec er; onto the
+>> FAM struct ocfs2_xattr_value_root::xr_list.l_recs[], while keeping the
+>> FAM and the start of MEMBER aligned.
+>>
+>> The static_assert() ensures this alignment remains, and it's
+>> intentionally placed inmediately after the related structure --no
+>> blank line in between.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> So, in order to avoid ending up with a flexible-array member in the
-> middle of multiple other structs, we use the `__struct_group()` helper
-> to separate the flexible array from the rest of the members in the
-> flexible structure, and use the tagged `struct kvm_stats_desc_hdr`
-> instead of `struct kvm_stats_desc`.
+> LGTM.
+> Reviewed-by: Heming Zhao <heming.zhao@suse.com>
 > 
-> So, with these changes, fix 51 instances of the following type of
-> warning:
+>> ---
+>>   fs/ocfs2/xattr.c | 8 ++++++--
+>>   1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+>> index d70a20d29e3e..09069defd7e1 100644
+>> --- a/fs/ocfs2/xattr.c
+>> +++ b/fs/ocfs2/xattr.c
+>> @@ -49,9 +49,13 @@
+>>   #include "ocfs2_trace.h"
+>>   
+>>   struct ocfs2_xattr_def_value_root {
+>> -	struct ocfs2_xattr_value_root	xv;
+>> -	struct ocfs2_extent_rec		er;
+>> +	/* Must be last as it ends in a flexible-array member. */
+>> +	TRAILING_OVERLAP(struct ocfs2_xattr_value_root, xv, xr_list.l_recs,
+>> +		struct ocfs2_extent_rec		er;
+>> +	);
+>>   };
+>> +static_assert(offsetof(struct ocfs2_xattr_def_value_root, xv.xr_list.l_recs) ==
+>> +	      offsetof(struct ocfs2_xattr_def_value_root, er));
+>>   
+>>   struct ocfs2_xattr_bucket {
+>>   	/* The inode these xattrs are associated with */
+>> -- 
+>> 2.43.0
+>>
+>>
 > 
-> 49 ./include/linux/kvm_host.h:1923:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 1 .../include/linux/kvm_host.h:1923:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 1 +./include/linux/kvm_host.h:1923:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Notice that, before and after the changes, struct sizes and member offsets
-> remain unchanged:
-> 
-> BEFORE
-> 
-> struct kvm_stats_desc {
->          __u32                      flags;                /*     0     4 */
->          __s16                      exponent;             /*     4     2 */
->          __u16                      size;                 /*     6     2 */
->          __u32                      offset;               /*     8     4 */
->          __u32                      bucket_size;          /*    12     4 */
->          char                       name[];               /*    16     0 */
-> 
->          /* size: 16, cachelines: 1, members: 6 */
->          /* last cacheline: 16 bytes */
-> };
-> 
-> struct _kvm_stats_desc {
->          struct kvm_stats_desc      desc;                 /*     0    16 */
->          char                       name[48];             /*    16    48 */
-> 
->          /* size: 64, cachelines: 1, members: 2 */
-> };
-> 
-> AFTER:
-> 
-> struct kvm_stats_desc {
->          union {
->                  struct {
->                          __u32      flags;                /*     0     4 */
->                          __s16      exponent;             /*     4     2 */
->                          __u16      size;                 /*     6     2 */
->                          __u32      offset;               /*     8     4 */
->                          __u32      bucket_size;          /*    12     4 */
->                  };                                       /*     0    16 */
->                  struct kvm_stats_desc_hdr __hdr;         /*     0    16 */
->          };                                               /*     0    16 */
->          char                       name[];               /*    16     0 */
-> 
->          /* size: 16, cachelines: 1, members: 2 */
->          /* last cacheline: 16 bytes */
-> };
-> 
-> struct _kvm_stats_desc {
->          struct kvm_stats_desc_hdr  desc;                 /*     0    16 */
->          char                       name[48];             /*    16    48 */
-> 
->          /* size: 64, cachelines: 1, members: 2 */
-> };
-> 
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   include/uapi/linux/kvm.h | 21 ++++++++++++++++-----
->   include/linux/kvm_host.h |  2 +-
->   2 files changed, 17 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 6efa98a57ec1..99d13ebc5e82 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -14,6 +14,12 @@
->   #include <linux/ioctl.h>
->   #include <asm/kvm.h>
->   
-> +#ifdef __KERNEL__
-> +#include <linux/stddef.h>       /* for offsetof */
-> +#else
-> +#include <stddef.h>             /* for offsetof */
-> +#endif
-> +
->   #define KVM_API_VERSION 12
->   
->   /*
-> @@ -1563,13 +1569,18 @@ struct kvm_stats_header {
->    *        &kvm_stats_header->name_size.
->    */
->   struct kvm_stats_desc {
-> -	__u32 flags;
-> -	__s16 exponent;
-> -	__u16 size;
-> -	__u32 offset;
-> -	__u32 bucket_size;
-> +	/* New members MUST be added within the __struct_group() macro below. */
-> +	__struct_group(kvm_stats_desc_hdr, __hdr, /* no attrs */,
-> +		__u32 flags;
-> +		__s16 exponent;
-> +		__u16 size;
-> +		__u32 offset;
-> +		__u32 bucket_size;
-> +	);
->   	char name[];
->   };
-> +_Static_assert(offsetof(struct kvm_stats_desc, name) == sizeof(struct kvm_stats_desc_hdr),
-> +	       "struct member likely outside of __struct_group()");
->   
->   #define KVM_GET_STATS_FD  _IO(KVMIO,  0xce)
->   
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index fa36e70df088..c630991f72be 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -1920,7 +1920,7 @@ struct kvm_stat_data {
->   };
->   
->   struct _kvm_stats_desc {
-> -	struct kvm_stats_desc desc;
-> +	struct kvm_stats_desc_hdr desc;
->   	char name[KVM_STATS_NAME_SIZE];
->   };
->   
 
