@@ -1,125 +1,225 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322B227057D
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Dec 2025 04:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E4022B8CB
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Dec 2025 05:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764736174; cv=none; b=HeKa5uCiPCKZ09MxgtWBd1+ODON8cpveDR3UynEPaOWRqJ9riCILdxfMoo5vmt59PJTrenm7zspv2zUucv1LhNXdGHuKBwToeDUXlhQlnoflHnDX1a6KBTQ09rZJB6HBmp8ROkH04kcSUsXJLccTQBQqXZg0EDtPB1RxJZtzHxQ=
+	t=1764738636; cv=none; b=u/jxzD7/7N0N4WFfnmz76S8+R4ABcWTaQIYqI8hIFzGVNtfuRg/l+TEho5ZpEuPgCKy5Myi4iyc0tlj36eEDu0n8rP6gB59kKupOKB4GLCNwF29DnQN9Jvys/SGSCWCD0nh9gH41Yk/9UXd3q3TSSTwmOEa+yrg80lUE/Sy2+TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764736174; c=relaxed/simple;
-	bh=PRKsoquST5llbW2p7IYcBfsRWWFkLjLhJ2QscrO59LM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q25TyhmrtLjoWDZEK1ySYxzhJyMkDYYe3yFsNVX0GbBl2VZYHcTMOWobaHRrZAw4Rx9c4z2UH2DRkkqR8eEgtAcb7FujUuGxFcuOvTfQdzchmEiLdptqdXNAoeILchd17Bx2y3Tp5hBbwIISq6TtUMmW4s9D8szwkVcazFmzKLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=u1KQvWd2; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
+	s=arc-20240116; t=1764738636; c=relaxed/simple;
+	bh=EZco+88Y78IvWrfrJZkr11uVXgBLNbqBKW/cA9HQDdw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CIHQ96SRq1291t2lCIsh4IivbkwLQpDXYHGRpk6TxfqVO3hmqzfhXdP6GyvC+ZbI/94k3tBd7IwFhs4WhFvPi3kY2RglGhg6zLpXszxxpUsuTfeZIigKhg2Ba6Qtt8kvM1lIfIEKMIeN4brcZ9KLwk6EcvEDeWlIMFHhnNB5s/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=AHebzQJd; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="u1KQvWd2"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
-	s=key1; t=1764736168;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HPuG0LGeUpQwYmuvaU8Ip5v/4vYxot6m+IfFCu3J3gw=;
-	b=u1KQvWd24yzXZPkBz/vFdBoVCQ8o9oRsFBx2dajCx16QXA4SmncNE2rBBY62JzcNrAQR8V
-	BCZKM1dPOQpF7nNsr2v2ab3h53vOxd8/R1EUs8Tx3KMhHyeMimNy5fjDRTbXOpXnjHfzny
-	aLAH4oyii0phwKBdI0WrJ+GpP/AszUmiOF0thBIWaa3rGFLM3VtiV9M9e6y9m98OggeMrR
-	QvZMC9oEFoi3mjXUztMmjT/iF8GI9+kmag4SSLwcNKdigBfOF8DWgtebY53EVOY6K/66wT
-	JuCAHKADdtyfCjYQZbVxOff0KzE1jc9Ve/dTLYwxENTLSj2/g++NhQpvxsbqLA==
-From: Val Packett <val@packett.cool>
-To: Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Ard Biesheuvel <ardb@kernel.org>
-Cc: Val Packett <val@packett.cool>,
-	linux-hardening@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] efi: pstore: Support late setup with TEE-backed efivars ops
-Date: Wed,  3 Dec 2025 01:28:29 -0300
-Message-ID: <20251203042850.14210-1-val@packett.cool>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="AHebzQJd"
+Received: from eig-obgw-6004b.ext.cloudfilter.net ([10.0.30.210])
+	by cmsmtp with ESMTPS
+	id Qddjvu5deKjfoQf8GviHdG; Wed, 03 Dec 2025 05:10:28 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id Qf8Fv8Mt4K8vzQf8GvT7Ar; Wed, 03 Dec 2025 05:10:28 +0000
+X-Authority-Analysis: v=2.4 cv=cJDgskeN c=1 sm=1 tr=0 ts=692fc644
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=ujWNxKVE5dX343uAl30YYw==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=SYA4UEjrzyP_W4GMUF8A:9 a=QEXdDO2ut3YA:10 a=1ugCHEcPnPZfhCUW74ct:22
+ a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=EiJ/gpk8T6f2b1RgxrOw36SaHQRodGlXDyE2RAmZZ+M=; b=AHebzQJd7gj3ibRnOveD9UBu6L
+	eC22TZiO2ZS/2m4nkeX0yfBXkc1xb8XFF/qW51fq4k5g25RslWJvOzWYb46o+TZ1HcFHJAbWJx8Br
+	QW8rYAQmU092HZ9CT0FMim45Tdr92ox1z5nnTJDyJlXQwGPskqDrQ6tET8IgbNK1omJ+3c//IxOZm
+	HC8UM1iLEVgG0A/UFgFmjSk9RNtdYffv8YHMfyrtJ7NYMXknmb4EtZu0rpV/Oha61lCc86B+dBK2f
+	YUYpVXv8aKt0wXorZTBSpR55Nl+OXXscgq6oLgYpN6XE9N+BmwXVHl9CUubaXewcA1IMu17UNjhw2
+	MyMdu6hA==;
+Received: from i118-18-233-1.s41.a027.ap.plala.or.jp ([118.18.233.1]:60879 helo=[10.83.24.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vQf8F-00000001b6i-1OkI;
+	Tue, 02 Dec 2025 23:10:27 -0600
+Message-ID: <127bd529-45a0-47bd-8364-5e99144cb773@embeddedor.com>
+Date: Wed, 3 Dec 2025 14:10:19 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] KVM: Avoid a few dozen
+ -Wflex-array-member-not-at-end warnings
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aPfNKRpLfhmhYqfP@kspp>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <aPfNKRpLfhmhYqfP@kspp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 118.18.233.1
+X-Source-L: No
+X-Exim-ID: 1vQf8F-00000001b6i-1OkI
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: i118-18-233-1.s41.a027.ap.plala.or.jp ([10.83.24.44]) [118.18.233.1]:60879
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfP+gackRDpnLmSEN0lCvZLg4H0uU6m9YbZFHD1xSa4fnDpUxA/kg7jVKbC9eBS1aeizKhtF2XumhRNhY6mOUemt1gSHLRk99xVu+RnTqVD3aLAhuKw+3
+ 26/3dZPAFNulKPmh6klUKv6Ndo8uxBt1aEIzgyTgdy18mnmahbbGiYXzXC/9CcZc9hsaC++Gv9htAvz9aOyzjQHpXIzX5DOxAM5pb25iGQonFOQWX4Pe3tRX
 
-On some platforms, EFI variable services only become available when an
-appropriate TEE driver is initialized such as qseecom, gsmi or stmm.
+Hi all,
 
-This would work fine when efi_pstore was built as a module and loaded
-late by userspace, but with CONFIG_EFI_VARS_PSTORE=y this driver would
-quit due to non-writable efivars before the necessary driver had any
-chance to load.
+Friendly ping: who can take this, please? :)
 
-Listen to efivar_ops_nh notifications and retry the initialization when
-writable EFI variable ops become available.
+Thanks!
+-Gustavo
 
-Signed-off-by: Val Packett <val@packett.cool>
----
- drivers/firmware/efi/efi-pstore.c | 32 +++++++++++++++++++++++++++----
- 1 file changed, 28 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
-index a253b6144945..ad5192d5892e 100644
---- a/drivers/firmware/efi/efi-pstore.c
-+++ b/drivers/firmware/efi/efi-pstore.c
-@@ -253,14 +253,11 @@ static struct pstore_info efi_pstore_info = {
- 	.erase		= efi_pstore_erase,
- };
- 
--static int efivars_pstore_init(void)
-+static int efivars_pstore_setup(void)
- {
- 	if (!efivar_supports_writes())
- 		return 0;
- 
--	if (pstore_disable)
--		return 0;
--
- 	/*
- 	 * Notice that 1024 is the minimum here to prevent issues with
- 	 * decompression algorithms that were spotted during tests;
-@@ -285,8 +282,35 @@ static int efivars_pstore_init(void)
- 	return 0;
- }
- 
-+static int efivars_pstore_ops_notifier(struct notifier_block *nb,
-+				 unsigned long event, void *data)
-+{
-+	if (event == EFIVAR_OPS_RDWR && !efi_pstore_info.bufsize)
-+		efivars_pstore_setup();
-+
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block efivars_pstore_ops_notifier_block = {
-+	.notifier_call = efivars_pstore_ops_notifier,
-+};
-+
-+static int efivars_pstore_init(void)
-+{
-+	if (pstore_disable)
-+		return 0;
-+
-+	blocking_notifier_chain_register(&efivar_ops_nh,
-+					&efivars_pstore_ops_notifier_block);
-+
-+	return efivars_pstore_setup();
-+}
-+
- static void efivars_pstore_exit(void)
- {
-+	blocking_notifier_chain_unregister(&efivar_ops_nh,
-+					&efivars_pstore_ops_notifier_block);
-+
- 	if (!efi_pstore_info.bufsize)
- 		return;
- 
--- 
-2.51.0
+On 10/22/25 03:12, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> So, in order to avoid ending up with a flexible-array member in the
+> middle of multiple other structs, we use the `__struct_group()` helper
+> to separate the flexible array from the rest of the members in the
+> flexible structure, and use the tagged `struct kvm_stats_desc_hdr`
+> instead of `struct kvm_stats_desc`.
+> 
+> So, with these changes, fix 51 instances of the following type of
+> warning:
+> 
+> 49 ./include/linux/kvm_host.h:1923:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 1 .../include/linux/kvm_host.h:1923:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 1 +./include/linux/kvm_host.h:1923:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Notice that, before and after the changes, struct sizes and member offsets
+> remain unchanged:
+> 
+> BEFORE
+> 
+> struct kvm_stats_desc {
+>          __u32                      flags;                /*     0     4 */
+>          __s16                      exponent;             /*     4     2 */
+>          __u16                      size;                 /*     6     2 */
+>          __u32                      offset;               /*     8     4 */
+>          __u32                      bucket_size;          /*    12     4 */
+>          char                       name[];               /*    16     0 */
+> 
+>          /* size: 16, cachelines: 1, members: 6 */
+>          /* last cacheline: 16 bytes */
+> };
+> 
+> struct _kvm_stats_desc {
+>          struct kvm_stats_desc      desc;                 /*     0    16 */
+>          char                       name[48];             /*    16    48 */
+> 
+>          /* size: 64, cachelines: 1, members: 2 */
+> };
+> 
+> AFTER:
+> 
+> struct kvm_stats_desc {
+>          union {
+>                  struct {
+>                          __u32      flags;                /*     0     4 */
+>                          __s16      exponent;             /*     4     2 */
+>                          __u16      size;                 /*     6     2 */
+>                          __u32      offset;               /*     8     4 */
+>                          __u32      bucket_size;          /*    12     4 */
+>                  };                                       /*     0    16 */
+>                  struct kvm_stats_desc_hdr __hdr;         /*     0    16 */
+>          };                                               /*     0    16 */
+>          char                       name[];               /*    16     0 */
+> 
+>          /* size: 16, cachelines: 1, members: 2 */
+>          /* last cacheline: 16 bytes */
+> };
+> 
+> struct _kvm_stats_desc {
+>          struct kvm_stats_desc_hdr  desc;                 /*     0    16 */
+>          char                       name[48];             /*    16    48 */
+> 
+>          /* size: 64, cachelines: 1, members: 2 */
+> };
+> 
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>   include/uapi/linux/kvm.h | 21 ++++++++++++++++-----
+>   include/linux/kvm_host.h |  2 +-
+>   2 files changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 6efa98a57ec1..99d13ebc5e82 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -14,6 +14,12 @@
+>   #include <linux/ioctl.h>
+>   #include <asm/kvm.h>
+>   
+> +#ifdef __KERNEL__
+> +#include <linux/stddef.h>       /* for offsetof */
+> +#else
+> +#include <stddef.h>             /* for offsetof */
+> +#endif
+> +
+>   #define KVM_API_VERSION 12
+>   
+>   /*
+> @@ -1563,13 +1569,18 @@ struct kvm_stats_header {
+>    *        &kvm_stats_header->name_size.
+>    */
+>   struct kvm_stats_desc {
+> -	__u32 flags;
+> -	__s16 exponent;
+> -	__u16 size;
+> -	__u32 offset;
+> -	__u32 bucket_size;
+> +	/* New members MUST be added within the __struct_group() macro below. */
+> +	__struct_group(kvm_stats_desc_hdr, __hdr, /* no attrs */,
+> +		__u32 flags;
+> +		__s16 exponent;
+> +		__u16 size;
+> +		__u32 offset;
+> +		__u32 bucket_size;
+> +	);
+>   	char name[];
+>   };
+> +_Static_assert(offsetof(struct kvm_stats_desc, name) == sizeof(struct kvm_stats_desc_hdr),
+> +	       "struct member likely outside of __struct_group()");
+>   
+>   #define KVM_GET_STATS_FD  _IO(KVMIO,  0xce)
+>   
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index fa36e70df088..c630991f72be 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -1920,7 +1920,7 @@ struct kvm_stat_data {
+>   };
+>   
+>   struct _kvm_stats_desc {
+> -	struct kvm_stats_desc desc;
+> +	struct kvm_stats_desc_hdr desc;
+>   	char name[KVM_STATS_NAME_SIZE];
+>   };
+>   
 
