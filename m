@@ -1,79 +1,110 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8CF3612C0
-	for <linux-hardening@vger.kernel.org>; Thu,  4 Dec 2025 17:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D623398F98;
+	Thu,  4 Dec 2025 20:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764870548; cv=none; b=obtzPZmJZqwCQf3mc8m5MTOzzu4GMlry3Hjxr42cJBFD+zK9LLOGIvwK/WVtTzYd+IvJqC9wlTcLcXp1mxzeQMMzAzZ9Bpk6CHw1YhD+54mh5GHoReg8IuGuNHrXuX3p5PllpgQIlCca3eRgeTwH2Sk7LuF+zmif+g9Y/O2b1EQ=
+	t=1764879956; cv=none; b=HEHx97PQgskYvmJI2q0Y+aSZYNybWerl9xEGdPOOai+xqcJ3xq1Rn64G7zWdRZs0Y3Bb73Ge9H8dGKmZY+E4RVdN6cAnRHMPCwfun3AUntCY1wb0UVLijvXRe7m21ZuptkAI6JUQmryisNnSsHs7JmxHL1Ye/E865A/lZ9WfU3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764870548; c=relaxed/simple;
-	bh=WWqGeiNVPO9/Fp6GzYFs3pCYDJOi3lGQxCNY3A3lxlU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KFALUoY63t8IKrTkWLjha2JO1lXu6szJa+8HbzIAXUaqx9iq/vKWkbE0cDAk2827zU+k5eLBH4thesVJyYssRR+hNVvL3cnRSZQ/Ir7miwrBvW3CJlpboLpc21AV5G+6fpeF47JehNBl6xFEkE6r37k/aDSxYDSKCayoobuvkpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Wv/OQul5; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1764879956; c=relaxed/simple;
+	bh=kaPs0IQaF7S1VKck3FZz6uJuYv3S2JC1BT6Tky0WNBQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GVJ/dzPPekxNoW0Wcv1gspGq4sHQzVmz/foWCaDnl4ChjZACPgZWtGj2cSbyzqV+anLpC34VWZsDrMYOAqvgsTJ065bWobjxPGFULig5Ztwz1QXW8TGDn+uCPzhVdiReX+qiIiPgHTNAt9et+CbLCRPDsV0WQ/EUhmT3ZG9QDk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/ts9h1y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Wv/OQul5"
-Message-ID: <80620d09-8187-45b1-a490-07c52733ac21@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1764870542;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zJf4yU0EsoB5weGrFCwtOtM8v9dAPibH72MKj1BMOlU=;
-	b=Wv/OQul5buHvEmsn+ke04fCFNRkSqPnlsrYX7Al0SFRmAXzBAI9r24+PuDT2IiPB8TpaYX
-	OUFwJQbHaRIBTmtr0SfLF3pPyHBOsda9HtCg1Mk2Tizi+W9A53JJD27HGu4+9b0o2xV+8V
-	PKxfhH7WX63eEuain5/y6B0nzpXt4aw=
-Date: Thu, 4 Dec 2025 09:48:42 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/ts9h1y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0B6DC4CEFB;
+	Thu,  4 Dec 2025 20:25:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764879955;
+	bh=kaPs0IQaF7S1VKck3FZz6uJuYv3S2JC1BT6Tky0WNBQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J/ts9h1yO6KJK6fBmRkUgCRFbLgOKPgwRBpvdMm7W5xS9EmK5iebZlcKqTo2jyx2L
+	 Ro7nmWQaTVjDXmyjjNd4fzNLHtn2FfViF92pIX3od5R+vnopde+GbSHtdSLEleZvlv
+	 C55Q4kRI1a9rdPulSxXB9pH+qmBtWoX6blshzuG0183Dds+kO++CfJzx+Q+gddIv+y
+	 GSpM2wFbD8a7at6iSPH5GOL1iPEU05fJgs7oNext5Eu8eOUZjv6MEckThfwTYk4M4B
+	 acpwg74GxE5yNIOnQbi6acGvlFA0L7cCpweWRexjPD6c1KYUwqVo2N5saAJeqQhJ+3
+	 o9LATwSnjw1TA==
+Date: Thu, 4 Dec 2025 12:25:55 -0800
+From: Kees Cook <kees@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Miguel Ojeda <ojeda@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Marco Elver <elver@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-hardening@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	John Hubbard <jhubbard@nvidia.com>, Joe Perches <joe@perches.com>,
+	Christoph Lameter <cl@linux.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>, Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
+	Yafang Shao <laoar.shao@gmail.com>,
+	Tony Ambardar <tony.ambardar@gmail.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Alexander Potapenko <glider@google.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v6 3/5] compiler_types: Introduce __flex_counter() and
+ family
+Message-ID: <202512041215.44484FCACD@keescook>
+References: <20251203233029.it.641-kees@kernel.org>
+ <20251203233036.3212363-3-kees@kernel.org>
+ <20251204085435.GC2528459@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Zhu Yanjun <zyjzyj2000@gmail.com>, Leon Romanovsky <leon@kernel.org>,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aRKu5lNV04Sq82IG@kspp> <20251202181334.GA1162842@nvidia.com>
- <5ac954bb-ad4d-4b4c-b23b-47350b428404@linux.dev>
- <20251204130559.GA1219718@nvidia.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "yanjun.zhu" <yanjun.zhu@linux.dev>
-In-Reply-To: <20251204130559.GA1219718@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251204085435.GC2528459@noisy.programming.kicks-ass.net>
 
-On 12/4/25 5:05 AM, Jason Gunthorpe wrote:
-> On Wed, Dec 03, 2025 at 09:08:45PM -0800, Zhu Yanjun wrote:
->>>    	unsigned int		res_head;
->>>    	unsigned int		res_tail;
->>>    	struct resp_res		*res;
->>> +
->>> +	/* SRQ only. srq_wqe.dma.sge is a flex array */
->>> +	struct rxe_recv_wqe srq_wqe;
->>
->> drivers/infiniband/sw/rxe/rxe_resp.c: In function get_srq_wqe:
->> drivers/infiniband/sw/rxe/rxe_resp.c:289:41: error: struct rxe_recv_wqe has
->> no member named wqe
->>    289 |         qp->resp.wqe = &qp->resp.srq_wqe.wqe;
->>        |                                         ^
+On Thu, Dec 04, 2025 at 09:54:35AM +0100, Peter Zijlstra wrote:
+> On Wed, Dec 03, 2025 at 03:30:33PM -0800, Kees Cook wrote:
+> > Introduce __flex_counter() which wraps __builtin_counted_by_ref(),
+> > as newly introduced by GCC[1] and Clang[2]. Use of __flex_counter()
+> > allows access to the counter member of a struct's flexible array member
+> > when it has been annotated with __counted_by().
+> > 
+> > Introduce typeof_flex_counter(), overflows_flex_counter_type(), and
+> > __set_flex_counter() to provide the needed _Generic() wrappers to get
+> > sane results out of __flex_counter().
+> > 
+> > For example, with:
+> > 
+> > 	struct foo {
+> > 		int counter;
+> > 		short array[] __counted_by(counter);
+> > 	} *p;
+> > 
+> > __flex_counter(p->array) will resolve to: &p->counter
+> > 
+> > typeof_flex_counter(p->array) will resolve to "int". (If p->array was not
+> > annotated, it would resolve to "size_t".)
 > 
-> I didn't try to fix all the typos, you will need to do that.
+> Uhh, how will this interact with the proposed extension of
+> __counted_by() to normal pointer types?
 
-Exactly. I will fix this problem. This weekend, I will send out an 
-official commit.
+Good point -- at present __builtin_counted_by_ref() only works on flex
+arrays. I will ask the compiler devs their thoughts on expanding it to
+the pointer references too...
 
-Yanjun.Zhu
-
-> 
-> Jason
-
+-- 
+Kees Cook
