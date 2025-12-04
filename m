@@ -1,218 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1EB2FE045;
-	Wed,  3 Dec 2025 23:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8D314A8E
+	for <linux-hardening@vger.kernel.org>; Thu,  4 Dec 2025 05:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764804637; cv=none; b=tjQjEKBaBUljHmRHq5lNnArW8XSGgmHhL5moahi7hX9jkWw5FdmspZf59XfGupUwbToLao0WtsYWkJR1Vx+8zrM3EqwzybVL8WCkje/iPdJlMkfFCfQdXBO0eslpX8Kca3ObOAw+5akZc+V3qNQkHzZAGGDWEum1R0H2MBNn7PM=
+	t=1764824941; cv=none; b=dxTsTNaFIO/esO6nXLyjgRsQviNHzpjKOrbzrFwN44cEm89tiYp8ep/8bttFthx3JqJrVGdQgXy8EMbz5sN6sFvxcoRTwjiKGw1YCrBDD9w+BvhQVyEPua3w7bRptwTzaydXePk4x1BGENIPzPaipKsnAPuPsJvXGXnYDeu0rHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764804637; c=relaxed/simple;
-	bh=5dAQ4T//TVYvlDNMsV5Y6TSBwmCOXpo3qNaO4v8qX0A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hzNzNBCtK3GhHCTszc9xgjPsOg45P9kRgKTCLC+EWzYDXuN7dH0053z6TJnEbI7zoN+OK6MgzRR8lvZ3Riz0bOIfl2S1tyfdkGvqNPsWwmaldsRd92QMrC1fAj0l2Xjp2Y7XbrAU3xFUUr5a5b+P5+4LJ6Bq2lw08X5xpJqMS68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tb1QFnmr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764824941; c=relaxed/simple;
+	bh=rkysJBKmBWU5tRwSxMdxSTg8zC/sl2ShZrtcNcm3FOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PXJOe5zs9i4wdf8FCSUygsk6FxyRoU3/kogfJIpKizxr8OxPyzXy/9uZ5tzZWe9vfbdjwxEfSmEePWY6vNYQUqKTuD6w6oizD7JWk3l7FD5iNQ5CtjMBJ5DTfNz445vrDKxFEfkWLUfr7MQofmgNm4pKwAeUyek7C39tJO0+gqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=axeYvi3X; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tb1QFnmr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5515AC2BCB9;
-	Wed,  3 Dec 2025 23:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764804637;
-	bh=5dAQ4T//TVYvlDNMsV5Y6TSBwmCOXpo3qNaO4v8qX0A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tb1QFnmrmnR+zXH4fFBLmyxgcqpG4u3ZvwA7jcak8tIqWFqIsmYPPKVxGdTX8Ryvr
-	 R1Li+pHJWV1tAMBLLP3p+jTOEuYTJC+rO7oIZ4ejDqA1hne6lUoKesO8t7wxq6qoqz
-	 dGwtzcdHfbeL7AZLleyooLz5rSKKZZHmqOqNQT/gL2IqbrPdi1OGOn1CFy4tmYloBK
-	 ZP+6uTtqVaFhxeXwW8PA0tVDOwqLxJ/ruN46Fnaai8RPGeamw7sRh3iri3PFyf7QuU
-	 aqmZoLMDLVciN4vCgG365BnxUxt6oAmlIlK001XgapbBRngGvP07yXaJrao1Bu0yB+
-	 aS4CkB0gAXGhg==
-From: Kees Cook <kees@kernel.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Kees Cook <kees@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	cocci@inria.fr,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Joe Perches <joe@perches.com>,
-	Christoph Lameter <cl@linux.com>,
-	Marco Elver <elver@google.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Jann Horn <jannh@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-mm@kvack.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Yafang Shao <laoar.shao@gmail.com>,
-	Tony Ambardar <tony.ambardar@gmail.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>,
-	Alexander Potapenko <glider@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH v6 5/5] coccinelle: Add kmalloc_objs conversion script
-Date: Wed,  3 Dec 2025 15:30:35 -0800
-Message-Id: <20251203233036.3212363-5-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251203233029.it.641-kees@kernel.org>
-References: <20251203233029.it.641-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="axeYvi3X"
+Message-ID: <5ac954bb-ad4d-4b4c-b23b-47350b428404@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1764824936;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ne9RmrXxumOZj+MalhBuzRCKdFKIFcu4/kqNls92Qa4=;
+	b=axeYvi3XbS2IXBDgZ/Ye+tkJ0Klg93POR59ZcGejdoCaeS+Jhr3Zmh8Y6lOhvRz2p2Jik2
+	XPWaAm+n6Q/fNOa6iv3s72qwoNY4+c3ZnqJ/+PD0Xf1vl9jyhxYVTbFqGrw1KZZat9SbKB
+	rUS+JcQJysLaQp39XrmRsIpVFAPAnAQ=
+Date: Wed, 3 Dec 2025 21:08:45 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3968; i=kees@kernel.org; h=from:subject; bh=5dAQ4T//TVYvlDNMsV5Y6TSBwmCOXpo3qNaO4v8qX0A=; b=owGbwMvMwCVmps19z/KJym7G02pJDJkGJ6Sy9r13X/2Re2em+HFHS6vbrLaGdziDJu7dxrh1l R1vmPW3jlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIl4hzD8L6ve9u7a1VXb7Pz5 MjPFYksnmr7e9rF9fq7z04VTjtk3ejH84bQ9zWIc4xC+xfH9mXsPlN8nHDdq3WiycYLhz4VWbE2 qDAA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
+ warnings
+To: Jason Gunthorpe <jgg@nvidia.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Zhu Yanjun <zyjzyj2000@gmail.com>
+Cc: Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aRKu5lNV04Sq82IG@kspp> <20251202181334.GA1162842@nvidia.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20251202181334.GA1162842@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Finds and converts sized kmalloc-family of allocations into the
-typed kmalloc_obj-family of allocations.
+在 2025/12/2 10:13, Jason Gunthorpe 写道:
+> On Tue, Nov 11, 2025 at 12:35:02PM +0900, Gustavo A. R. Silva wrote:
+>> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+>> index fd48075810dd..6498d61e8956 100644
+>> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
+>> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+>> @@ -219,12 +219,6 @@ struct rxe_resp_info {
+>>   	u32			rkey;
+>>   	u32			length;
+>>   
+>> -	/* SRQ only */
+>> -	struct {
+>> -		struct rxe_recv_wqe	wqe;
+>> -		struct ib_sge		sge[RXE_MAX_SGE];
+>> -	} srq_wqe;
+> 
+> I think this existing is just a mess, can we fix it properly?
+> 
+> What this code wants to do is to have rxe_resp_info allocate a
+> rxe_recv_wqe and have a maximum size of its flex array pre-allocated.
+> 
+> Probably like this, though maybe we need a FLEX version of the
+> INIT_RDMA_OBJ_SIZE macro to make it safer.
+> 
+> Zhu, this seems like a good thing for you to look at?
+> 
+> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.c b/drivers/infiniband/sw/rxe/rxe_verbs.c
+> index 38d8c408320f11..189eaa59a5fb14 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_verbs.c
+> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.c
+> @@ -1524,7 +1524,8 @@ static const struct ib_device_ops rxe_dev_ops = {
+>   	INIT_RDMA_OBJ_SIZE(ib_ah, rxe_ah, ibah),
+>   	INIT_RDMA_OBJ_SIZE(ib_cq, rxe_cq, ibcq),
+>   	INIT_RDMA_OBJ_SIZE(ib_pd, rxe_pd, ibpd),
+> -	INIT_RDMA_OBJ_SIZE(ib_qp, rxe_qp, ibqp),
+> +	/* For resp.srq_wqe.dma.sge */
+> +	INIT_RDMA_OBJ_SIZE(ib_qp, rxe_qp, ibqp) + RXE_MAX_SGE*sizeof(struct ib_sge),
+>   	INIT_RDMA_OBJ_SIZE(ib_srq, rxe_srq, ibsrq),
+>   	INIT_RDMA_OBJ_SIZE(ib_ucontext, rxe_ucontext, ibuc),
+>   	INIT_RDMA_OBJ_SIZE(ib_mw, rxe_mw, ibmw),
+> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+> index fd48075810dd10..dda741ec3ac701 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
+> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+> @@ -219,12 +219,6 @@ struct rxe_resp_info {
+>   	u32			rkey;
+>   	u32			length;
+>   
+> -	/* SRQ only */
+> -	struct {
+> -		struct rxe_recv_wqe	wqe;
+> -		struct ib_sge		sge[RXE_MAX_SGE];
+> -	} srq_wqe;
+> -
+>   	/* Responder resources. It's a circular list where the oldest
+>   	 * resource is dropped first.
+>   	 */
+> @@ -232,6 +226,9 @@ struct rxe_resp_info {
+>   	unsigned int		res_head;
+>   	unsigned int		res_tail;
+>   	struct resp_res		*res;
+> +
+> +	/* SRQ only. srq_wqe.dma.sge is a flex array */
+> +	struct rxe_recv_wqe srq_wqe;
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Julia Lawall <Julia.Lawall@inria.fr>
-Cc: Nicolas Palix <nicolas.palix@imag.fr>
-Cc: cocci@inria.fr
----
- scripts/coccinelle/api/kmalloc_objs.cocci | 109 ++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 scripts/coccinelle/api/kmalloc_objs.cocci
+drivers/infiniband/sw/rxe/rxe_resp.c: In function get_srq_wqe:
+drivers/infiniband/sw/rxe/rxe_resp.c:289:41: error: struct rxe_recv_wqe 
+has no member named wqe
+   289 |         qp->resp.wqe = &qp->resp.srq_wqe.wqe;
+       |                                         ^
 
-diff --git a/scripts/coccinelle/api/kmalloc_objs.cocci b/scripts/coccinelle/api/kmalloc_objs.cocci
-new file mode 100644
-index 000000000000..916cc3a661b9
---- /dev/null
-+++ b/scripts/coccinelle/api/kmalloc_objs.cocci
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/// Use kmalloc_obj family of macros for allocations
-+///
-+// Confidence: High
-+// Options: --include-headers-for-types --all-includes --include-headers --keep-comments
-+
-+virtual patch
-+
-+@initialize:python@
-+@@
-+import sys
-+
-+def alloc_array(name):
-+	func = "FAILED_RENAME"
-+	if name == "kmalloc_array":
-+		func = "kmalloc_objs"
-+	elif name == "kvmalloc_array":
-+		func = "kvmalloc_objs"
-+	elif name == "kcalloc":
-+		func = "kzalloc_objs"
-+	elif name == "kvcalloc":
-+		func = "kvzalloc_objs"
-+	else:
-+		print(f"Unknown transform for {name}", file=sys.stderr)
-+	return func
-+
-+// This excludes anything that is assigning to or from integral types or
-+// string literals. Everything else gets the sizeof() extracted for the
-+// kmalloc_obj() type/var argument. sizeof(void *) is also excluded because
-+// it will need case-by-case double-checking to make sure the right type is
-+// being assigned.
-+@direct depends on patch && !(file in "tools") && !(file in "samples")@
-+typedef u8, u16, u32, u64;
-+typedef __u8, __u16, __u32, __u64;
-+typedef uint8_t, uint16_t, uint32_t, uint64_t;
-+typedef __le16, __le32, __le64;
-+typedef __be16, __be32, __be64;
-+type INTEGRAL = {u8,__u8,uint8_t,char,unsigned char,
-+		 u16,__u16,uint16_t,unsigned short,
-+		 u32,__u32,uint32_t,unsigned int,
-+		 u64,__u64,uint64_t,unsigned long,
-+		 __le16,__le32,__le64,__be16,__be32,__be64};
-+char [] STRING;
-+INTEGRAL *BYTES;
-+type TYPE;
-+expression VAR;
-+expression GFP;
-+expression COUNT;
-+expression FLEX;
-+expression E;
-+identifier ALLOC =~ "^kv?[mz]alloc$";
-+fresh identifier ALLOC_OBJ = ALLOC ## "_obj";
-+fresh identifier ALLOC_FLEX = ALLOC ## "_flex";
-+identifier ALLOC_ARRAY = {kmalloc_array,kvmalloc_array,kcalloc,kvcalloc};
-+fresh identifier ALLOC_OBJS = script:python(ALLOC_ARRAY) { alloc_array(ALLOC_ARRAY) };
-+@@
-+
-+(
-+-	VAR = ALLOC((sizeof(*VAR)), GFP)
-++	VAR = ALLOC_OBJ(*VAR, GFP)
-+|
-+	ALLOC((\(sizeof(STRING)\|sizeof(INTEGRAL)\|sizeof(INTEGRAL *)\)), GFP)
-+|
-+	BYTES = ALLOC((sizeof(E)), GFP)
-+|
-+	BYTES = ALLOC((sizeof(TYPE)), GFP)
-+|
-+	ALLOC((sizeof(void *)), GFP)
-+|
-+-	ALLOC((sizeof(E)), GFP)
-++	ALLOC_OBJ(E, GFP)
-+|
-+-	ALLOC((sizeof(TYPE)), GFP)
-++	ALLOC_OBJ(TYPE, GFP)
-+|
-+	ALLOC_ARRAY(COUNT, (\(sizeof(STRING)\|sizeof(INTEGRAL)\|sizeof(INTEGRAL *)\)), GFP)
-+|
-+	BYTES = ALLOC_ARRAY(COUNT, (sizeof(E)), GFP)
-+|
-+	BYTES = ALLOC_ARRAY(COUNT, (sizeof(TYPE)), GFP)
-+|
-+	ALLOC_ARRAY((\(sizeof(STRING)\|sizeof(INTEGRAL)\|sizeof(INTEGRAL *)\)), COUNT, GFP)
-+|
-+	BYTES = ALLOC_ARRAY((sizeof(E)), COUNT, GFP)
-+|
-+	BYTES = ALLOC_ARRAY((sizeof(TYPE)), COUNT, GFP)
-+|
-+	ALLOC_ARRAY(COUNT, (sizeof(void *)), GFP)
-+|
-+	ALLOC_ARRAY((sizeof(void *)), COUNT, GFP)
-+|
-+-	ALLOC_ARRAY(COUNT, (sizeof(E)), GFP)
-++	ALLOC_OBJS(E, COUNT, GFP)
-+|
-+-	ALLOC_ARRAY(COUNT, (sizeof(TYPE)), GFP)
-++	ALLOC_OBJS(TYPE, COUNT, GFP)
-+|
-+-	ALLOC_ARRAY((sizeof(E)), COUNT, GFP)
-++	ALLOC_OBJS(E, COUNT, GFP)
-+|
-+-	ALLOC_ARRAY((sizeof(TYPE)), COUNT, GFP)
-++	ALLOC_OBJS(TYPE, COUNT, GFP)
-+|
-+-	ALLOC(struct_size(VAR, FLEX, COUNT), GFP)
-++	ALLOC_FLEX(*VAR, FLEX, COUNT, GFP)
-+|
-+-	ALLOC(struct_size_t(TYPE, FLEX, COUNT), GFP)
-++	ALLOC_FLEX(TYPE, FLEX, COUNT, GFP)
-+)
--- 
-2.34.1
+struct {
+	struct rxe_recv_wqe	wqe;
+	struct ib_sge		sge[RXE_MAX_SGE];
+} srq_wqe;
+
+IMO, it is better to move this struct to the end of the struct 
+rxe_resp_info.
+
+Yanjun.Zhu
+
+>   };
+>   
+>   struct rxe_qp {
+> @@ -269,7 +266,6 @@ struct rxe_qp {
+>   
+>   	struct rxe_req_info	req;
+>   	struct rxe_comp_info	comp;
+> -	struct rxe_resp_info	resp;
+>   
+>   	atomic_t		ssn;
+>   	atomic_t		skb_out;
+> @@ -289,6 +285,7 @@ struct rxe_qp {
+>   	spinlock_t		state_lock; /* guard requester and completer */
+>   
+>   	struct execute_work	cleanup_work;
+> +	struct rxe_resp_info	resp;
+>   };
+>   
+>   enum {
 
