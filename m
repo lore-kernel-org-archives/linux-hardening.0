@@ -1,152 +1,81 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8D314A8E
-	for <linux-hardening@vger.kernel.org>; Thu,  4 Dec 2025 05:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E3D275111;
+	Thu,  4 Dec 2025 06:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764824941; cv=none; b=dxTsTNaFIO/esO6nXLyjgRsQviNHzpjKOrbzrFwN44cEm89tiYp8ep/8bttFthx3JqJrVGdQgXy8EMbz5sN6sFvxcoRTwjiKGw1YCrBDD9w+BvhQVyEPua3w7bRptwTzaydXePk4x1BGENIPzPaipKsnAPuPsJvXGXnYDeu0rHk=
+	t=1764828456; cv=none; b=kOiMfifjZDbYV4wRMN77Y517axKQilXcQu/ndGy/kYrzDRM7oQ9VaI6lNXXi7CXcej4XV9AoHA/Pk4mkDHz2s0kXJPn9qV6y9w3CL5s+g9BH72w4QyuVn5T7kJtnrW7KRnhM2XP3JH3fFPfkWtvy0piG5DDaj4QO3HqozpvDowM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764824941; c=relaxed/simple;
-	bh=rkysJBKmBWU5tRwSxMdxSTg8zC/sl2ShZrtcNcm3FOo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PXJOe5zs9i4wdf8FCSUygsk6FxyRoU3/kogfJIpKizxr8OxPyzXy/9uZ5tzZWe9vfbdjwxEfSmEePWY6vNYQUqKTuD6w6oizD7JWk3l7FD5iNQ5CtjMBJ5DTfNz445vrDKxFEfkWLUfr7MQofmgNm4pKwAeUyek7C39tJO0+gqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=axeYvi3X; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1764828456; c=relaxed/simple;
+	bh=oW9YKnJzWB2+6bhflZNJrm7g/KPV070xkxno6gjgYUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lvgvVGuKZ9Sa6S79+QJ42wOaz1CA2nClnshF8dYDOTnvhAUh+V+eZeVZpu1dXnW0foQ+pcQN0ebpaHkPyrWiEjnWs3mmw0C/CFxyknKSs0htsgspLLaRxPSOM/wJF1b6smJYjFqGAo5gTNJUE5zDQjy6038qahdrps2CWaUNuU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZlPO1jE4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="axeYvi3X"
-Message-ID: <5ac954bb-ad4d-4b4c-b23b-47350b428404@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1764824936;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ne9RmrXxumOZj+MalhBuzRCKdFKIFcu4/kqNls92Qa4=;
-	b=axeYvi3XbS2IXBDgZ/Ye+tkJ0Klg93POR59ZcGejdoCaeS+Jhr3Zmh8Y6lOhvRz2p2Jik2
-	XPWaAm+n6Q/fNOa6iv3s72qwoNY4+c3ZnqJ/+PD0Xf1vl9jyhxYVTbFqGrw1KZZat9SbKB
-	rUS+JcQJysLaQp39XrmRsIpVFAPAnAQ=
-Date: Wed, 3 Dec 2025 21:08:45 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlPO1jE4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A065BC113D0;
+	Thu,  4 Dec 2025 06:07:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764828455;
+	bh=oW9YKnJzWB2+6bhflZNJrm7g/KPV070xkxno6gjgYUk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZlPO1jE4+cXIEbXbrYgmI1LOZn4FWTmffO/oZULe8KxYnUHl9HGcFtfewnOWg1sVT
+	 sIYh97Lk+BAF8ZjuTTQar07UmTVtc5kBka1ROibQScS+3lduJMkBNTecSDfHtz4Qm/
+	 h61HX/Ed1WyJW6H9QfSasuIDq/T+Ci4L7jEYYosAqSkoulfvkurQeFjk3IU60wWk/e
+	 AMbRg/allsp9drBAGnL7GFJbtcge2ygnVUrC6+lXUrGBbqhpbrD/kUR1PjzE8xNQM9
+	 NzINl3oGv/K0tdXi8zWMEA2e+mHrNDJkQ9vV7GrN6E59gaux4HmKLK3Vs9soHxn4pe
+	 z/wrdO7FIhuUg==
+Date: Wed, 3 Dec 2025 22:07:35 -0800
+From: Kees Cook <kees@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	John Hubbard <jhubbard@nvidia.com>, Joe Perches <joe@perches.com>,
+	Christoph Lameter <cl@linux.com>, Marco Elver <elver@google.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>, Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
+	Yafang Shao <laoar.shao@gmail.com>,
+	Tony Ambardar <tony.ambardar@gmail.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Alexander Potapenko <glider@google.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-doc@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v6 0/5] asdf
+Message-ID: <202512032205.BCA3A5B1@keescook>
+References: <20251203233029.it.641-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Jason Gunthorpe <jgg@nvidia.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Zhu Yanjun <zyjzyj2000@gmail.com>
-Cc: Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aRKu5lNV04Sq82IG@kspp> <20251202181334.GA1162842@nvidia.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20251202181334.GA1162842@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251203233029.it.641-kees@kernel.org>
 
-在 2025/12/2 10:13, Jason Gunthorpe 写道:
-> On Tue, Nov 11, 2025 at 12:35:02PM +0900, Gustavo A. R. Silva wrote:
->> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
->> index fd48075810dd..6498d61e8956 100644
->> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
->> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
->> @@ -219,12 +219,6 @@ struct rxe_resp_info {
->>   	u32			rkey;
->>   	u32			length;
->>   
->> -	/* SRQ only */
->> -	struct {
->> -		struct rxe_recv_wqe	wqe;
->> -		struct ib_sge		sge[RXE_MAX_SGE];
->> -	} srq_wqe;
-> 
-> I think this existing is just a mess, can we fix it properly?
-> 
-> What this code wants to do is to have rxe_resp_info allocate a
-> rxe_recv_wqe and have a maximum size of its flex array pre-allocated.
-> 
-> Probably like this, though maybe we need a FLEX version of the
-> INIT_RDMA_OBJ_SIZE macro to make it safer.
-> 
-> Zhu, this seems like a good thing for you to look at?
-> 
-> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.c b/drivers/infiniband/sw/rxe/rxe_verbs.c
-> index 38d8c408320f11..189eaa59a5fb14 100644
-> --- a/drivers/infiniband/sw/rxe/rxe_verbs.c
-> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.c
-> @@ -1524,7 +1524,8 @@ static const struct ib_device_ops rxe_dev_ops = {
->   	INIT_RDMA_OBJ_SIZE(ib_ah, rxe_ah, ibah),
->   	INIT_RDMA_OBJ_SIZE(ib_cq, rxe_cq, ibcq),
->   	INIT_RDMA_OBJ_SIZE(ib_pd, rxe_pd, ibpd),
-> -	INIT_RDMA_OBJ_SIZE(ib_qp, rxe_qp, ibqp),
-> +	/* For resp.srq_wqe.dma.sge */
-> +	INIT_RDMA_OBJ_SIZE(ib_qp, rxe_qp, ibqp) + RXE_MAX_SGE*sizeof(struct ib_sge),
->   	INIT_RDMA_OBJ_SIZE(ib_srq, rxe_srq, ibsrq),
->   	INIT_RDMA_OBJ_SIZE(ib_ucontext, rxe_ucontext, ibuc),
->   	INIT_RDMA_OBJ_SIZE(ib_mw, rxe_mw, ibmw),
-> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-> index fd48075810dd10..dda741ec3ac701 100644
-> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-> @@ -219,12 +219,6 @@ struct rxe_resp_info {
->   	u32			rkey;
->   	u32			length;
->   
-> -	/* SRQ only */
-> -	struct {
-> -		struct rxe_recv_wqe	wqe;
-> -		struct ib_sge		sge[RXE_MAX_SGE];
-> -	} srq_wqe;
-> -
->   	/* Responder resources. It's a circular list where the oldest
->   	 * resource is dropped first.
->   	 */
-> @@ -232,6 +226,9 @@ struct rxe_resp_info {
->   	unsigned int		res_head;
->   	unsigned int		res_tail;
->   	struct resp_res		*res;
-> +
-> +	/* SRQ only. srq_wqe.dma.sge is a flex array */
-> +	struct rxe_recv_wqe srq_wqe;
+> Subject: Re: [PATCH v6 0/5] asdf
 
-drivers/infiniband/sw/rxe/rxe_resp.c: In function get_srq_wqe:
-drivers/infiniband/sw/rxe/rxe_resp.c:289:41: error: struct rxe_recv_wqe 
-has no member named wqe
-   289 |         qp->resp.wqe = &qp->resp.srq_wqe.wqe;
-       |                                         ^
+*sigh* Should have been:
 
-struct {
-	struct rxe_recv_wqe	wqe;
-	struct ib_sge		sge[RXE_MAX_SGE];
-} srq_wqe;
+[PATCH v6 0/5] slab: Introduce kmalloc_obj() and family
 
-IMO, it is better to move this struct to the end of the struct 
-rxe_resp_info.
-
-Yanjun.Zhu
-
->   };
->   
->   struct rxe_qp {
-> @@ -269,7 +266,6 @@ struct rxe_qp {
->   
->   	struct rxe_req_info	req;
->   	struct rxe_comp_info	comp;
-> -	struct rxe_resp_info	resp;
->   
->   	atomic_t		ssn;
->   	atomic_t		skb_out;
-> @@ -289,6 +285,7 @@ struct rxe_qp {
->   	spinlock_t		state_lock; /* guard requester and completer */
->   
->   	struct execute_work	cleanup_work;
-> +	struct rxe_resp_info	resp;
->   };
->   
->   enum {
-
+-- 
+Kees Cook
