@@ -1,70 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B3217A2E8;
-	Thu,  4 Dec 2025 23:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D143161BC
+	for <linux-hardening@vger.kernel.org>; Fri,  5 Dec 2025 10:27:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764891368; cv=none; b=pwqZglK07XBzRfxYggda0EFCDDVuRwycvzqvWi7pg02KZyZJglTEXgcMo2pKjFbr9M6nGc8Zc+LXS49BmDXXHWLJCZH0LvQr7ZH0lrZqOef7JMjLytWw29yYS/pdOdRbwT1jgkwl77FrUn6p47sdTK42abCmJIAFOpQ7wN8oF3o=
+	t=1764930451; cv=none; b=rDJviV80a2ot8ndjXFVWWFRXouFpj3lvTBXqEupNSxby6nDpU0qgEu2kRDGkEyCXGQwzCFHgTuinEIq0N51Q9MAxggcWlrVQK1AmDaQeOwfdg3DuoKOSvZ/PtvFi2AVsMLogJkEo4QuzrCNb9G7qx4CPJTZKqjWa9qiAwvMN3pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764891368; c=relaxed/simple;
-	bh=vEFVMwXj0lb+m0V04SQmg1RCYw7+L+EZrawwV/I0unk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hSgn2CpyNThBXzEG/DUU4YDwUGXlj5VUrp4jHVpW5ZaJnwpE07oxor/tdavMxd2aSthiXzI8gSQLhqiJ6wPzGDX2s7YZkbTLuSAy9G8/gdoPo+P0ggjPw0LSI/wmhozrgdi/XtWTRSyoJJ6q9vVBxOxRkFoZn9gv2NvKur8iP3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UhRqa8Z3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764930451; c=relaxed/simple;
+	bh=oPauTJAG0OsWliK/cuBiP4xMOV9W2mwGaanMw+u+3AM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NYsyUdRx61qZ4/yC3aZJ7+t5kWuKyEALe9zoIL9ScoGN0eA8rpbOu8L6BFmT5cvQulhTwPgjtzs/rRIA8lKJsPT2gK7KB3WDTGw3vqG5xjS6sNTzaASs/I4xTFZgF86iaIVBXJNDkvgqRl8eW0wXzlYy7DOahTpjiBQhzpMxlao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lDm0fIA2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UhRqa8Z3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6609FC4CEFB;
-	Thu,  4 Dec 2025 23:36:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lDm0fIA2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E834C113D0
+	for <linux-hardening@vger.kernel.org>; Fri,  5 Dec 2025 10:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764891368;
-	bh=vEFVMwXj0lb+m0V04SQmg1RCYw7+L+EZrawwV/I0unk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UhRqa8Z3xAOTiJZ3GBhTb6YZ2CEJVisi15c+G6PaoR85LyTpKNJbYAbl7AgIKF5Ao
-	 3/vjc3C42ttKJIAzMBi2JiWb0mM4p1cMZR4vZtgfU0b11Jevdm1pl/xH8t9dVOs9ki
-	 cuLVsPKn6PFOrZGolTGtVhqMCkbbgrrC4MvWnpatVEfGXe6DHl4/76Ae1U5DK6lIio
-	 SX1VywW7mlo0znEWprjrp6qK/G8Uc1LloSUsX8FB/VzGe4hH/wQ62Ka8IsXROyK+3w
-	 myoik1oU1ozXaE8I94ydL9gBDnk1yqwrA3KXDG6ZsebLvwxRzGaAYxFeG5ic2QpoNS
-	 YO3fsiyx9AlhA==
-Date: Thu, 4 Dec 2025 15:36:08 -0800
-From: Kees Cook <kees@kernel.org>
-To: Val Packett <val@packett.cool>
-Cc: Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] efi: pstore: Support late setup with TEE-backed efivars
- ops
-Message-ID: <202512041535.AA6065A38@keescook>
-References: <20251203042850.14210-1-val@packett.cool>
+	s=k20201202; t=1764930450;
+	bh=oPauTJAG0OsWliK/cuBiP4xMOV9W2mwGaanMw+u+3AM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=lDm0fIA2toaOm0B38aNrrWUF75e8+ayVn433D+bKNsTNzaJWCAxDvPhKXoj3tU51+
+	 UH1NUjOhfr+68beJUEFE4KlM/90nBzdRS6ubdxuIDesrcxpQP3n9nlIjZ6W54VQJuf
+	 LRXn1BXL+MU0rKcooPP+lHwb5WfVaFElGos5nYrMgGHCugA+pBOp1vFWCtA++70fYC
+	 h8wG6dGE8/bJGVWxat7YogOQDyKn0qnlLjZrpc6Tp9eI/ekl+2XZ70zNcoR/F5l1u0
+	 Uvk79iYTxIvkqaSuxylklemiQ0+dTjALiTXSuX1KDejQ3QI5D6bXA+nB0c3f0EX+Js
+	 J7Ki0s945wVSA==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-59431f57bf6so2279334e87.3
+        for <linux-hardening@vger.kernel.org>; Fri, 05 Dec 2025 02:27:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUouTHw7zcMUJj6XaC/IxZ9zkXaOCixqMSu7jU1ZADl4gUSZhXoJsQBbJRPDDSkcCXA2SyAJsfPATa1WoIgHHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJmIYExBpyib6D1f/sYF3jfgAwdgKWwmpEUCxnnVb7XHnAnEZM
+	HMqmIHdvi+u2WqLnrVFVHsBRJAM2A0Z80i20nfwdxjVp1e+6JVpAeetGHC4KCQewrnSUSkS5UA9
+	16McW8WmXvAzfrSBptdVyJ88ecMifceM=
+X-Google-Smtp-Source: AGHT+IExVT1yOlGN0G+2BrpmdQ9LrBNgxUY/CEw5mm2rznkgOAyUF+Tjlv9ZEX/HIU/eRjaEpkrnYqt85TpEFZaAt30=
+X-Received: by 2002:a05:6512:3e15:b0:597:d49f:2150 with SMTP id
+ 2adb3069b0e04-597d6683774mr2143831e87.7.1764930448866; Fri, 05 Dec 2025
+ 02:27:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251203042850.14210-1-val@packett.cool>
+References: <20251203042850.14210-1-val@packett.cool> <CAC_iWjKHO3BGdaK=8a1A3Ps3U5Cqt2urJqL8PPfGcaqsMw1Qgg@mail.gmail.com>
+ <2294ac5b-6977-4f46-964e-b3a30b88efbd@packett.cool>
+In-Reply-To: <2294ac5b-6977-4f46-964e-b3a30b88efbd@packett.cool>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 5 Dec 2025 11:27:17 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHCkrnKkFDbvJPS_ykdG_xic=OcvS7hXXwY6XT8oiqkEA@mail.gmail.com>
+X-Gm-Features: AWmQ_bmtsCwW-DJ7vzQlmEwHvCkcpLJ3440ExRb1YsnkPG1ouda4ILX9IC9myAs
+Message-ID: <CAMj1kXHCkrnKkFDbvJPS_ykdG_xic=OcvS7hXXwY6XT8oiqkEA@mail.gmail.com>
+Subject: Re: [PATCH] efi: pstore: Support late setup with TEE-backed efivars ops
+To: Val Packett <val@packett.cool>
+Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>, Kees Cook <kees@kernel.org>, 
+	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+	linux-hardening@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Dec 03, 2025 at 01:28:29AM -0300, Val Packett wrote:
-> On some platforms, EFI variable services only become available when an
-> appropriate TEE driver is initialized such as qseecom, gsmi or stmm.
-> 
-> This would work fine when efi_pstore was built as a module and loaded
-> late by userspace, but with CONFIG_EFI_VARS_PSTORE=y this driver would
-> quit due to non-writable efivars before the necessary driver had any
-> chance to load.
-> 
-> Listen to efivar_ops_nh notifications and retry the initialization when
-> writable EFI variable ops become available.
-> 
-> Signed-off-by: Val Packett <val@packett.cool>
+On Thu, 4 Dec 2025 at 21:57, Val Packett <val@packett.cool> wrote:
+>
+>
+> On 12/4/25 6:49 AM, Ilias Apalodimas wrote:
+> > Hi Val,
+> >
+> > On Wed, 3 Dec 2025 at 06:29, Val Packett <val@packett.cool> wrote:
+> >> On some platforms, EFI variable services only become available when an
+> >> appropriate TEE driver is initialized such as qseecom, gsmi or stmm.
+> >>
+> >> This would work fine when efi_pstore was built as a module and loaded
+> >> late by userspace, but with CONFIG_EFI_VARS_PSTORE=y this driver would
+> >> quit due to non-writable efivars before the necessary driver had any
+> >> chance to load.
+> > The problem, at least for OP-TEE/StMM, is that writing the variables
+> > to an RPMB depends on a userspace application If CONFIG_RPMB is not
+> > selected. We have no guarantees that the app will still be alive.
+> > I don't know how gsmi or qseecom deal with writing variables. We can
+> > probably allow it for StMM if CONFIG_RPMB is enabled, but we'll have
+> > the right trigger to do so.
+>
+> qseecom/uefisecapp does not have any userspace requirements and works
+> fine with efi_pstore.
+>
+> I don't think complicating efi_pstore with extra logic about which ops
+> are fine would be worth it..
+>
+> Either way, it currently *already* tries to use whatever ops that have
+> been registered if it's loaded late as a module by systemd! The only
+> thing this patch changes is the CONFIG_EFI_VARS_PSTORE=y case.
+>
 
-This seems fine to me, though I defer to Ard, who knows the EFI bits way
-better than I do. :)
+OP-TEE/StMM's implementation of tee_set_variable_nonblocking() just
+returns EFI_UNSUPPORTED, and so in practice, EFI pstore doesn't work
+at all there. I think this is fine, although it would be better to be
+upfront about this, and not expose the pstore FS at all in this case.
+And once we can provide an implementation (based on CONFIG_RPMB), it
+would be good to wire that up correctly as well.
 
-Acked-by: Kees Cook <kees@kernel.org>
+> +static int efivars_pstore_init(void)
+> +{
+> +       if (pstore_disable)
+> +               return 0;
+> +
+> +       blocking_notifier_chain_register(&efivar_ops_nh,
+> +                                       &efivars_pstore_ops_notifier_block);
+> +
+> +       return efivars_pstore_setup();
+> +}
+> +
 
--- 
-Kees Cook
+Better to do the registration last, so there is no way
+efivars_pstore_setup() might ever race with itself.
