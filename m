@@ -1,163 +1,159 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5AE21AAE28
-	for <linux-hardening@vger.kernel.org>; Sat,  6 Dec 2025 04:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FEBC2DA77E
+	for <linux-hardening@vger.kernel.org>; Sat,  6 Dec 2025 21:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764996139; cv=none; b=Q+ltvI8zwIBpILroqLdRdY1Zk4SiqBFfYmTO83NFD64JzLalNdy7xAyI2UhPWldF4PXXCxYQuP8vdxGZfVIIAJ8E7LZxQ6chBztofZ8HYEx3tis7Obwapv7mMimsyuq9RkMKKAioC54Ha6ASYimMD/CENEuK17Ts+6SAyvi0zMQ=
+	t=1765058026; cv=none; b=CBkS/zACEC4CvGlzJdFyqSn1JYEBeVbIdW6QjVuHNd4nzgcmZkfvgv0jgp/BIhXXhBZPN3ESmYJMYXmP1pHvUfQulSuCMurliq0qOea69iXnOf6lhXztvnFMTtFsqzmrS9gCSHCQGvw97LGToveXmdBuLkFl33bWgEjXvzzOKeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764996139; c=relaxed/simple;
-	bh=fZSCcJE/jHtRbn/JOrMnapqAYSNuYv6BeRIHONRe+rY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=NPCG7DMQVn+G28OarZ+2BIRUrMqFVpkrnbw6mIQHGvtmTLHSrec0pOGVrRCr9DB9eT1piZmEM76NL3xQJ4V0CUG+WTedoAFTbHN3j7xJT71+ZngbqpG/h9//iPJCQc8+uUWE3II9Y/9oZOuZbohzN/mxJcW3FfvxQEcLCOmcxZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C6UYuuJX; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1765058026; c=relaxed/simple;
+	bh=43TX5frqeFMefjQIw3xSaro6MZidnaNM32Znkp2b9JI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JdcOfvXvSONKEZC10W/ZuuTsOLfRma+7NKJ5j9b2Fmq99o6PaGbDjEQ1YAU3kzc6vjgN4hNnHrtEBUCCov5SPp355ChVbxHzxC+jowBb+InPnjLDJop3bI/rdqV9irLNNF1ofomQpggWXFfTOvfL3iOzs5Gi34q7+dL9j+y/5l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dKfllvQ6; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C6UYuuJX"
-Message-ID: <2191ee0f-a528-4187-ae5b-5aba18741701@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1764996123;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+zCrDLK95Dk01shngxPtJZXux1GwH3CbPaNNnxi3lGw=;
-	b=C6UYuuJXle/zuU/CDw9HiJ6vZO/cS3dD4s5ZQeZ3xVYEcunuc8Rh339kCJ7SzUJzt5kbLE
-	1aDoLRUIdTHH3sbaH8F8/aCrU3k+Uk3raPLtnHZGE0I6C7r3/kuBiI3bQrXtQKuLpwcZiN
-	xb5lcX0FNaz1xQ+aj6TQqMoBKRXkfnQ=
-Date: Fri, 5 Dec 2025 20:41:58 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKfllvQ6"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-477ba2c1ca2so41991305e9.2
+        for <linux-hardening@vger.kernel.org>; Sat, 06 Dec 2025 13:53:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765058023; x=1765662823; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZlSc46iEGMKsSwCu/roR86i2e0LFt7xxWxcFqpVt+ug=;
+        b=dKfllvQ6rOsLe51Hfikl9pIM1Q+bSFybpOGnLLagzzPx53FHNboQgbOxW9KMnHb2a3
+         lnbD2riOnlpritWbi5JfuRBYzG3AEUm1Pu2ce6EEw8fb5dlioeIzryOuo4HYg88SrZ6O
+         umrzPfewH8aIpD7zZtsSqahwxfjbmY5825VwfP+UejxrI7Pgh6xtYfEORLhnjJ9iV2Vl
+         24g4mK5QFoJK4cK8j0xCS9mRnKSsYCf/UEawBWcyzdyHxflYMJg2fIGQjZJZWUWd/dqr
+         f/PqNfOAIYQqVyGVyOWxTyVHadDVY77KOs8V8969POhZ67rMQl5CrQ4XHjT0VDSqyeEf
+         BGXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765058023; x=1765662823;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZlSc46iEGMKsSwCu/roR86i2e0LFt7xxWxcFqpVt+ug=;
+        b=FOFAVBnbuBVVRv7mXwb+7tmPO9BbCyXTH+8is9LTNeADw/PeYg5JlHK77ljHQWJ/0f
+         1zZthOcgRA7oFEGAbntD5LiWQ0rb0zO4oWeCdGyco+PkecsY+h00ohN6xPi0mCaT+z9c
+         DgBqp2Eb8hjJsg78F3WI1HIEEm2dtDi9VFNGUuGtOKn/feFXi8kvN7t/aPFnuGLlzuis
+         lblsjwpSi/sVua2PRB8AathxwsqUdFTml862vFucnKwH3QpKU0SILgIf3w6S/ttOYPuG
+         WlqlKr7sSWwTGAwqIaumNBS+Ps5S2ZQxBZYwHNWDVW06ZbIFpXD1ZlSanj/VwYC1LxB0
+         6pGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXg9wVVSz3zIaG0r5lG0wK17/CeP2eSaC1L6tgmAmoS84swiiAa8kYs8gDs4kil+2pjBpJf4jbpC2bR4berzJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXPBQjrZld6xjRAvcTRspFyOTrxEuVSgYQk0o5D15r+zNYdGuY
+	cuCAivfY0oWgp4sQa1MIY9GXZWi5APQXZJoiaATYRMJ1VWVzpQJFQz/0
+X-Gm-Gg: ASbGnctMYIui8AyQGN27ixVqE6oL8t8xXNOh1nrRLKVNglUmbebvv6yha+3PdoGC4uD
+	OXv8uc7+0LvrGnjnDsTbXw1HgLOVUTieURurnfZ7NCBjt2onN04FysoqehimgzDeiLGT3Z+Ag/v
+	qNbuecn/8hmNBf7HHq3SLLOLI33uL2p90h7JXlwKf8KRt8XtMHn3+wujo7h2YrHxUbfufJBXJOa
+	huiVQaLbptzEXygIDr1kDBial3xWJtf1PDe0fraqkhm4v1gqMzByVyFDhYHkZgthAxDR5j/QUo3
+	IUYfgVqdZCe7flM2TeOT7xQe2SOtEZgxlS5AWXE4j4RjJc0z82D43b2Sjj44w81jVG2BwwdK2cB
+	0+I6vY1xphBhcPDgWbxx5pwTI6BYDdUzskaKybW5eDjjjHVc5F3b4eaQSBl5N6iC5J5afCDEk0E
+	GxD2AgsxAPN42RxhMGbJiI
+X-Google-Smtp-Source: AGHT+IHbCGiQk3fsXEj22BoPr+p1X+aNsAMv3ycLRRhbH+uIBzuybMZ3eZdnq4HZjmb9nLBzlNXi4g==
+X-Received: by 2002:a5d:64e3:0:b0:42b:39ee:286f with SMTP id ffacd0b85a97d-42f89f53e46mr3097057f8f.48.1765058022382;
+        Sat, 06 Dec 2025 13:53:42 -0800 (PST)
+Received: from [192.168.1.50] ([79.119.240.187])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbff352sm16634775f8f.17.2025.12.06.13.53.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 06 Dec 2025 13:53:42 -0800 (PST)
+Message-ID: <44c9c325-14a8-4391-adce-4bbe8c68b446@gmail.com>
+Date: Sat, 6 Dec 2025 23:53:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
- warnings
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Zhu Yanjun <zyjzyj2000@gmail.com>, Leon Romanovsky <leon@kernel.org>,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aRKu5lNV04Sq82IG@kspp> <20251202181334.GA1162842@nvidia.com>
- <5ac954bb-ad4d-4b4c-b23b-47350b428404@linux.dev>
- <20251204130559.GA1219718@nvidia.com>
- <80620d09-8187-45b1-a490-07c52733ac21@linux.dev>
-In-Reply-To: <80620d09-8187-45b1-a490-07c52733ac21@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] wifi: rtl8xxxu: Avoid
+ -Wflex-array-member-not-at-end warnings
+To: Ping-Ke Shih <pkshih@realtek.com>, Zenm Chen <zenmchen@gmail.com>,
+ "gustavo@embeddedor.com" <gustavo@embeddedor.com>
+Cc: "Jes.Sorensen@gmail.com" <Jes.Sorensen@gmail.com>,
+ "gustavoars@kernel.org" <gustavoars@kernel.org>,
+ "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ linux-usb@vger.kernel.org
+References: <ff184c0e-17f2-445f-9339-f4db9943db86@embeddedor.com>
+ <20251121111132.4435-1-zenmchen@gmail.com>
+ <475b4336-eed0-4fae-848f-aae26f109606@gmail.com>
+ <c0d187d6fead4e5387db2a14129be96c@realtek.com>
+Content-Language: en-US
+From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+In-Reply-To: <c0d187d6fead4e5387db2a14129be96c@realtek.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-
-
-在 2025/12/4 9:48, yanjun.zhu 写道:
-> On 12/4/25 5:05 AM, Jason Gunthorpe wrote:
->> On Wed, Dec 03, 2025 at 09:08:45PM -0800, Zhu Yanjun wrote:
->>>>        unsigned int        res_head;
->>>>        unsigned int        res_tail;
->>>>        struct resp_res        *res;
->>>> +
->>>> +    /* SRQ only. srq_wqe.dma.sge is a flex array */
->>>> +    struct rxe_recv_wqe srq_wqe;
+On 26/11/2025 05:26, Ping-Ke Shih wrote:
+> Hi Bitterblue,
+> 
+> Bitterblue Smith <rtl8821cerfe2@gmail.com> wrote:
+>> On 21/11/2025 13:11, Zenm Chen wrote:
+>>> Gustavo A. R. Silva <gustavo@embeddedor.com> 於 2025年11月21日 週五 下午6:20寫道：
+>>>>
+>>>> Hi,
+>>>>
+>>>> On 11/21/25 19:06, Zenm Chen wrote:
+>>>>> Dear maintainers,
+>>>>>
+>>>>> With this patch applied, my system always freezes right after the rtl8xxxu
+>>>>> driver is loaded. is it normal?
+>>>>
+>>>> I don't think so... It probably means that struct urb urb; cannot really be
+>>>> moved to the end of struct rtl8xxxu_rx_urb or struct rtl8xxxu_tx_urb?
+>>>>
+>>>> It'd be great if you could share a log.
+>>>>
 >>>
->>> drivers/infiniband/sw/rxe/rxe_resp.c: In function get_srq_wqe:
->>> drivers/infiniband/sw/rxe/rxe_resp.c:289:41: error: struct 
->>> rxe_recv_wqe has
->>> no member named wqe
->>>    289 |         qp->resp.wqe = &qp->resp.srq_wqe.wqe;
->>>        |                                         ^
+>>> Hi,
+>>>
+>>> Nothing helpful found from the kernel log. Maybe Realtek drivers maintainer
+>>> Ping-Ke could take a look what is wrong next Monday.
+>>>
+>> [...]
 >>
->> I didn't try to fix all the typos, you will need to do that.
-> 
-> Exactly. I will fix this problem. This weekend, I will send out an 
-> official commit.
-Hi, Jason
-
-The followings are based on your commits and Leon's commits. And it can 
-pass the rdma-core tests.
-
-I am not sure if this commit is good or not.
-
-
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.c 
-b/drivers/infiniband/sw/rxe/rxe_verbs.c
-index 38d8c408320f..189eaa59a5fb 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.c
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.c
-@@ -1524,7 +1524,8 @@ static const struct ib_device_ops rxe_dev_ops = {
-         INIT_RDMA_OBJ_SIZE(ib_ah, rxe_ah, ibah),
-         INIT_RDMA_OBJ_SIZE(ib_cq, rxe_cq, ibcq),
-         INIT_RDMA_OBJ_SIZE(ib_pd, rxe_pd, ibpd),
--       INIT_RDMA_OBJ_SIZE(ib_qp, rxe_qp, ibqp),
-+       /* For resp.srq_wqe.dma.sge */
-+       INIT_RDMA_OBJ_SIZE(ib_qp, rxe_qp, ibqp) + 
-RXE_MAX_SGE*sizeof(struct ib_sge),
-         INIT_RDMA_OBJ_SIZE(ib_srq, rxe_srq, ibsrq),
-         INIT_RDMA_OBJ_SIZE(ib_ucontext, rxe_ucontext, ibuc),
-         INIT_RDMA_OBJ_SIZE(ib_mw, rxe_mw, ibmw),
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h 
-b/drivers/infiniband/sw/rxe/rxe_verbs.h
-index fd48075810dd..8c17f5f4e318 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-@@ -219,12 +219,6 @@ struct rxe_resp_info {
-         u32                     rkey;
-         u32                     length;
-
--       /* SRQ only */
--       struct {
--               struct rxe_recv_wqe     wqe;
--               struct ib_sge           sge[RXE_MAX_SGE];
--       } srq_wqe;
--
-         /* Responder resources. It's a circular list where the oldest
-          * resource is dropped first.
-          */
-@@ -232,6 +226,12 @@ struct rxe_resp_info {
-         unsigned int            res_head;
-         unsigned int            res_tail;
-         struct resp_res         *res;
-+
-+       /* SRQ only. srq_wqe.dma.sge is a flex array */
-+       struct {
-+               struct rxe_recv_wqe     wqe;
-+               struct ib_sge           sge[RXE_MAX_SGE];
-+       } srq_wqe;
-  };
-
-  struct rxe_qp {
-@@ -269,7 +269,6 @@ struct rxe_qp {
-
-         struct rxe_req_info     req;
-         struct rxe_comp_info    comp;
--       struct rxe_resp_info    resp;
-
-         atomic_t                ssn;
-         atomic_t                skb_out;
-@@ -289,6 +288,7 @@ struct rxe_qp {
-         spinlock_t              state_lock; /* guard requester and 
-completer */
-
-         struct execute_work     cleanup_work;
-+       struct rxe_resp_info    resp;
-  };
-
-  enum {
-
-Yanjun.Zhu
-
-> 
-> Yanjun.Zhu
-> 
+>> I got something. In my case everything seemed fine until I unplugged the
+>> wifi adapter. And then the system still worked for a few minutes before
+>> it froze.
 >>
->> Jason
+> 
+> Zenm and I tested below changes which can also reproduce the symptom, so
+> I wonder driver might assume urb is the first member of struct, but 
+> unfortunately I can't find that. Could you also help to review if something
+> I missed? Thanks.
 > 
 
--- 
-Best Regards,
-Yanjun.Zhu
+Sorry, I didn't find anything either. Maybe someone from linux-usb
+has an idea? The errors I got are here:
+
+https://lore.kernel.org/linux-wireless/475b4336-eed0-4fae-848f-aae26f109606@gmail.com/
+
+> 
+> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+> @@ -1942,15 +1942,19 @@ struct rtl8xxxu_vif {
+>  };
+> 
+>  struct rtl8xxxu_rx_urb {
+> +       u8 pad[128];
+>         struct urb urb;
+>         struct ieee80211_hw *hw;
+>         struct list_head list;
+> };
+> 
+>  struct rtl8xxxu_tx_urb {
+> +       u8 pad[128];
+>         struct urb urb;
+>         struct ieee80211_hw *hw;
+>         struct list_head list;
+> };
+> 
+>  struct rtl8xxxu_fileops {
+> 
+> 
 
