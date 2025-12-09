@@ -1,118 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4553B8D64;
-	Tue,  9 Dec 2025 08:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BB83321A3
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Dec 2025 13:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765268290; cv=none; b=HKQ6vpKap++Npj3YZKKiHN6qbd7ZDVqAICi29DhWUJz+VQxOf6wiNr1AdXUCldqy6PiSX8Hzrgo92S1BqQnPIs3S+NnV0hk0HHpVfo7BlOgRpY3g0kjlyXv6Pg37vsoD8Cf3PS9gT0c6Gc/1anK9DWTFoTteSVWIZtc19scjgtk=
+	t=1765285566; cv=none; b=Fp9iAsTb/+sP0b+TAlPBb201MUVtaV3JkMs9Ry2PqPRi+CXzBvvc2nt2o1SWo0v3msjHlD7iVztuqeopPATp5i/CZQAHGTFFr/dfWVE+D3jrJI7bU231db23k16MIBB613Q7subNA/aECgRdm/jT3Rscj56TJM/fFpENaERPEFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765268290; c=relaxed/simple;
-	bh=YYRkFbNBvY+E+VoDEW6wqCwcGJed8jDsdLj4NyqhSiE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qw5KC4Ed1WmGYiQYbB0vJjLUqP2K3RypZGSheyghXlMzGmSmeFn1TAEvDphKTpaLAuVJAsHGMpY9ysnFHK2o1BgBvTL1LTthSggK0gCSv2G3J9RmyWBEZM/pvL1OLOuJg0EGyny0PUS8Cj6W7i2MifLNTM7qRYiZouIQJpn9Dvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1QCJCBi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765285566; c=relaxed/simple;
+	bh=5bEfNbrVrbCSOM4MufNJJgr8UqeswnkNURaK3gVvleE=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fu+dpXvbZajfCMFSI5l1gRNUGqwyC3LzbCTuXbi93OWk+3qQECzbm9GKVcdyeE/XVR0Qnw+TlEBZrji0xAmcE8Nr23hO/HT0HEN1ksYGBabB6rLtKl0N/3bMayyMZDeaSMYkUNIBSjN+d1SquWGfqg78wEaAZ5AIuZKg2ILIPWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a28xa3eg; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1QCJCBi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83ACFC4CEF5;
-	Tue,  9 Dec 2025 08:18:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765268289;
-	bh=YYRkFbNBvY+E+VoDEW6wqCwcGJed8jDsdLj4NyqhSiE=;
-	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i1QCJCBiftvnxRtLR0gIEZAUzmwhlP/85Pz1AWR+QM9cixDYu0OrGxGvZqsn6L26y
-	 qUKYnJgZelRcVJRUZ5yLguakMH7p1ME6pJ08g/6yxIx45BZWjOO4WLtYhbImD2CS9u
-	 X5OQIe/Q53TEU8zAklGKdz8I/3U3H3x4kZzMo/4V3ZcFQhE/E6Byz/G4FJqS+Q71Qu
-	 7n44/nHnKM3PaXc1HR9h/Tz+KTTCpabFdpjSwnonqy8Slrn4bJgow4z3lR+DVLDYIz
-	 84Ahk83dPGYriGtE9CtjPsEtKZYKczhPyUE6ZbMdvek8kaFSpclTIqfZ0C5q0nP9wU
-	 nQFD1t/KqjUGw==
-Message-ID: <d3dd8fc8-ab46-4cf1-87a9-0324685ba2e0@kernel.org>
-Date: Tue, 9 Dec 2025 17:18:03 +0900
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a28xa3eg"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-47118259fd8so45786515e9.3
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Dec 2025 05:06:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1765285563; x=1765890363; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=C5XfE5K4iEaC0LFtxMogcKT/LpGujZVN83mgtnotves=;
+        b=a28xa3egKrOXRlGRaJ4GHLjpAsUTUBOVleDdVG25w3h7EBUZk4dimziOjkmL/ZyY7E
+         sluJ9D6NJhNtiht27JSuqSwYKWDpKvQIzyLEvC99pKkf/J4lJ+IY0GCSZx0JEFIP97gv
+         Ig3aMCz6OHrUYHbPDRnofSFOhUCPDEeEXSBU28+GH8MgxYRdrPlXL700fQrocKvm2sjW
+         GKQB+BG2qoD13/40qBRTy4aA4uE1C0Wk+u0/8Bcn9eAqtjvlznGOHhbspL80mUgvq4ke
+         pSAjKF6IUTPIf3Um7NB7Cv1+tM0J5zeXDc198moj4qX9kd5XMquvi96s05btRj5sbeQZ
+         1ryA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765285563; x=1765890363;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C5XfE5K4iEaC0LFtxMogcKT/LpGujZVN83mgtnotves=;
+        b=TKzxqbqHywHkbpN0f/xEPh/TQgUbQvXglqWl3jhwDdXvI5c0p/2LYsC+crkuCjy84R
+         ti+E6XD40vMOF3QjgL/qhJtYjJmUf2v32vLKi+0GLwIlK1vbhBJa1zlDi0FBktGNh1fS
+         C7OmsMnLvOrcMDLHwxH0FGUit1zVH9wwGkiFTsjoJr3FhZzO8Q7OROwRjbeeaD3Uc5uh
+         UzKlTLMaclWc2HlnYmNjE9/qAAAZaxKs7kCBGiGd7r2bN6CHnMed8K4izQ1TI3rn1Rnx
+         0FyrKcJ6EcopnV/B+jSPgT12fg+ADkV3fF5ubbVk8BcpDZFW6lXcR5tDXC71yQlB7a1S
+         lGNA==
+X-Gm-Message-State: AOJu0YxEYk0+xjWrFzwiJTh1ufpkC7wcpWL8KR99BctS+BNwx5NUqffJ
+	97Wvt4xZgjcjBL+bS4tF5soHIWSGsuNmG6FXE4Rik2ZLsuoxjk7myk9XAoXaphTwN/5GkfxGu95
+	WFLJT
+X-Gm-Gg: ASbGncugtL262GjUlX5l4oEkFw3Ua14CbQRJUmFPcHH8W82kDn6HBocwFtfApGyhoFJ
+	giBf/zoolQFHoGO2p4xHi1d8QZz9txZ8V5XY+9s5Jae+zrgHSYvY4QH1MgYpRRH7LotHi7hla74
+	G0/JfBSb6RrEPr/oFQN9Ib2ZL+38qvsRKoM1ykreXw1y0ishJFWw01Q88MRpCbrKVlx+/UX49lt
+	8uiCrsP1jRAS4G5srBnMHney7K+o0DlJTsFjdM6YRza1rqXzQ1mF33gMgRYRp/IS7Zs4Nnw8Abf
+	W2MCpCsowJKK11Npgjj/D5rjxY0p36el4CCP2FE0S30c/EQ5TLq99lI5S6SHHb2AyrxtMWiPrwj
+	ZdVBlkeBewMUqARdmVTpvoX+AugdcdNkNz8IZ2gdNEWcD5IUUNn4npBfNB5phst39ODT8k/j0vD
+	j73R/WyjkD98h9rjuH
+X-Google-Smtp-Source: AGHT+IHWmUePB12RnPZIMlyymiQnecyOrGf54NEwAysFPvL4/oTjTx6tdoRiHeSlPVbl55vaudVk/w==
+X-Received: by 2002:a05:600c:8b52:b0:470:fe3c:a3b7 with SMTP id 5b1f17b1804b1-47939df3089mr90298785e9.5.1765285562509;
+        Tue, 09 Dec 2025 05:06:02 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47a7d58609esm39608895e9.0.2025.12.09.05.06.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Dec 2025 05:06:02 -0800 (PST)
+Date: Tue, 9 Dec 2025 16:05:58 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: linux-hardening@vger.kernel.org,
+	Nobuhiro Iwamatsu <nobuhiro.iwamatsu.x90@mail.toshiba>,
+	llvm@lists.linux.dev
+Subject: [bug report] clk: visconti: Add support common clock driver and
+ reset driver
+Message-ID: <aTgetqy8BGerPGTl@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Daniel Gomez <da.gomez@kernel.org>
-Subject: Re: [PATCH 3/3] module: Add compile-time check for embedded NUL
- characters
-To: Eric Biggers <ebiggers@kernel.org>, "Luck, Tony" <tony.luck@intel.com>
-Cc: Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
- Rusty Russell <rusty@rustcorp.com.au>, Petr Pavlu <petr.pavlu@suse.com>,
- Sami Tolvanen <samitolvanen@google.com>, linux-modules@vger.kernel.org,
- Malcolm Priestley <tvboxspy@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Hans Verkuil <hverkuil@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20251008033844.work.801-kees@kernel.org>
- <20251008035938.838263-3-kees@kernel.org> <aTc9s210am0YqMV4@agluck-desk3>
- <20251209001139.GA7982@quark>
-Content-Language: en-US
-From: Daniel Gomez <da.gomez@kernel.org>
-Organization: kernel.org
-In-Reply-To: <20251209001139.GA7982@quark>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hello Kernel Hardenning developers,
 
+Commit b4cbe606dc36 ("clk: visconti: Add support common clock driver
+and reset driver") from Oct 25, 2021 (linux-next), leads to the
+question:
 
-On 09/12/2025 09.11, Eric Biggers wrote:
-> On Mon, Dec 08, 2025 at 01:05:55PM -0800, Luck, Tony wrote:
->> On Tue, Oct 07, 2025 at 08:59:35PM -0700, Kees Cook wrote:
->>> Long ago, the kernel module license checks were bypassed by embedding a
->>> NUL character in the MODULE_LICENSE() string[1]. By using a string like
->>> "GPL\0proprietary text", the kernel would only read "GPL" due to C string
->>> termination at the NUL byte, allowing proprietary modules to avoid kernel
->>> tainting and access GPL-only symbols.
->>>
->>> The MODULE_INFO() macro stores these strings in the .modinfo ELF
->>> section, and get_next_modinfo() uses strcmp()-family functions
->>> which stop at the first NUL. This split the embedded string into two
->>> separate .modinfo entries, with only the first part being processed by
->>> license_is_gpl_compatible().
->>>
->>> Add a compile-time check using _Static_assert that compares the full
->>> string length (sizeof - 1) against __builtin_strlen(), which stops at
->>> the first NUL. If they differ, compilation fails with a clear error
->>> message.
->>>
->>> While this check can still be circumvented by modifying the ELF binary
->>> post-compilation, it prevents accidental embedded NULs and forces
->>> intentional abuse to require deliberate binary manipulation rather than
->>> simple source-level tricks.
->>>
->>> Build tested with test modules containing both valid and invalid license
->>> strings. The check correctly rejects:
->>>
->>>     MODULE_LICENSE("GPL\0proprietary")
->>>
->>> while accepting normal declarations:
->>>
->>>     MODULE_LICENSE("GPL")
->>
->>  
->> I did a "make W=1 C=1" and found that sparse is now unhappy with all MODULE_LICENSE(),
->> MODULE_PARM_DESC(), MODULE_DESCRIPTION(), MODULE_AUTHOR() defintions (with no NUL byte).
->>
->> I see:
->>
->> error: bad integer constant expression
->> error: static assertion failed: "MODULE_INFO(parmtype, ...) contains embedded NUL byte"
->>
->> for every use.
-> 
-> Likewise, I just got the following kernel test robot report sent to me,
-> where it's warning about MODULE_LICENSE("GPL"):
-> https://lore.kernel.org/all/202512090359.7BkUaiC9-lkp@intel.com/
+drivers/clk/visconti/clkc.c
+    187 struct visconti_clk_provider *visconti_init_clk(struct device *dev,
+    188                                                 struct regmap *regmap,
+    189                                                 unsigned long nr_clks)
+    190 {
+    191         struct visconti_clk_provider *ctx;
+    192         int i;
+    193 
+    194         ctx = devm_kzalloc(dev, struct_size(ctx, clk_data.hws, nr_clks), GFP_KERNEL);
+    195         if (!ctx)
+    196                 return ERR_PTR(-ENOMEM);
+    197 
+    198         for (i = 0; i < nr_clks; ++i)
+--> 199                 ctx->clk_data.hws[i] = ERR_PTR(-ENOENT);
+    200         ctx->clk_data.num = nr_clks;
 
-Can you both confirm which version of sparse are you using?
+ctx->clk_data.hws[] is __counted_by() ctx->clk_data.num.  Don't we have to
+set the .num before we fill initialize the array?  Or does the checker
+code allow us to access the array when the counted by variable is zero?
+I seem to remember this used to be a common false positive with the counted
+by checking.
 
-My understanding was that this patch fixed that problem:
-https://lore.kernel.org/linux-sparse/CACePvbVG2KrGQq4cNKV=wbO5h=jp3M0RO1SdfX8kV4OukjPG8A@mail.gmail.com/T/#mf838b3e2e3245d88c30a801ea7473d5a5c0eb121
+    201 
+    202         ctx->dev = dev;
+    203         ctx->regmap = regmap;
+    204 
+    205         return ctx;
+    206 }
 
-The patch is already merged into the sparse tree, and I was not able to
-reproduce the issue.
+regards,
+dan carpenter
