@@ -1,211 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E8727510B
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Dec 2025 04:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EEC21CC4F
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Dec 2025 08:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765426204; cv=none; b=E/tP+I1ItsQnX6CIduK7NUNWsCVOl8gq3OME3VjMXHsV1ihxQ2jI+Wx1gU23I6s3t3mPJ4XwBe8iVK9jwSE3ctpTf8xncsBrgn/F70r+kV28vrxmTKulFRrhaJjG+Wx/D3HPs+8MbQqqhEUqnkNa9k277BzPUkbe1RGEc6r1lO8=
+	t=1765441740; cv=none; b=mcLFUs9TE/U5sJEBzj0QXGrSPgtYZffIL6s5+CIuCrKLBrsdwGdbeubx1DCTPABFjdZxvk7179Th7vVDhGIabeThjOvzSZGmOzACZDqKPx8hnkENLsln+n4+DRdXdaVPB+q4qQMkXjqfsEVALLfi62Lm3p+YEmale1a679bcJmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765426204; c=relaxed/simple;
-	bh=oxGZLAoYraEnTaqd4KcbBYAZ3MpFudos0PelzD7Ngyg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kFrKpS3t7TlWHkRowB6bdhoTWk2a2y11eHcC5C7LOwq0YCls+S1jCl6sCTykl1adwqsHb5X7kG3MTJ0Yrs9guzrjDD3Tjff6P9RupRZpNRgrU5avox8qcct+o5Zb/1fdCW9otFKhlRFasPOWqBXaPNnsKIT6glKozsa6rjibpFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8I+GWKb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765441740; c=relaxed/simple;
+	bh=djjr9+IAia3N6sWGx6zJjpQoQTmY5N42PCLnoR0yZyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jc9Xr/lhnAP0O8XX1yoQgaHzR5G61Z7P5pJcUfu83Z/T8RUk5KNEu4wLWAdjrEFGoowVPjQsVGAUELyWFZbhCyXVhxUEwqrCfBfefLqawzkhnQ9qZA19HRHCUcWsakg4/tgfWvcqzNk5vCcjVs+Fhm/36mmimktBOWQ8Jt88DQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eAt4k5n+; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8I+GWKb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23FB7C4CEFB;
-	Thu, 11 Dec 2025 04:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765426203;
-	bh=oxGZLAoYraEnTaqd4KcbBYAZ3MpFudos0PelzD7Ngyg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=N8I+GWKbRrm4CHAdNG6zcb9eUvUBiSY9fEsUbqbHAUcD9cR2jVM4aO9UFOK957kVe
-	 5WtBLOx8lsq2kj2bZJvFkPPmDaMxKDch++Skzh4+hCqGJJHBGSbMMQqGgr0mUaTNHr
-	 4SLXGCgVYCh8aWpIcBEBCuYOpLLsvgO9xUhZCHtRBqjgVjiSURVaoxPbvi8smIilCX
-	 Ec4Ue8IRmrrApbyQRZuJg7IkOegeYF9FO9cQXOHhHkwxK1zlSU+JiU8ApOznHBgYQ8
-	 34lRFpKnWHfVcuuzNYOAAIctkE5dcwpVI60KlwXywUn+v2Vv3TJhHS2eiRCBuzrDex
-	 du3jjMNx3dgtQ==
-From: Ard Biesheuvel <ardb@kernel.org>
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-hardening@vger.kernel.org,
-	mark.rutland@arm.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	kees@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Liz Prucka <lizprucka@google.com>,
-	Seth Jenkins <sethjenkins@google.com>
-Subject: [RFC PATCH] arm64: Bring back linear map randomization using PArange override
-Date: Thu, 11 Dec 2025 05:09:36 +0100
-Message-ID: <20251211040935.1288349-2-ardb@kernel.org>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eAt4k5n+"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-42e2b90ad22so208619f8f.2
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Dec 2025 00:28:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1765441737; x=1766046537; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yhOVP0Qk4QJBwZMBL87OrBgZcGud1+QQm5cvOUQeo/M=;
+        b=eAt4k5n+JRFJwicM+0Uo0KHutKyRY0bQJjO05nR/ESPLuWWFqbkc0hUWLV3zQ+5qAr
+         2TFUzA6fVtW9aI95GWe3BtMRSZRgNBYSujxuoy7B8C3+sSzS8ztL0DoM9kFyo0PAr5R/
+         88ex/FKdoaAr/cSz0dyPBE9g27mKszTX15Xdl9pQKWA8Mg4Sn9GwWR/WS9MLFfzpSYi2
+         hC4vC7iY8gxQhPmUuomMTbMPv/naRJKbelNVtVf1ymvKTAt9I3doic4yihYRmJe8BSKa
+         PKccPg3o/5rhA8zmzLwZnmcWANb38sesxBaJkBN+XLK1h34HjOtlMFVkcJT4AU/2j0oF
+         fSrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765441737; x=1766046537;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yhOVP0Qk4QJBwZMBL87OrBgZcGud1+QQm5cvOUQeo/M=;
+        b=XvEozvX51Mnxsqw52SPIZRqDfp+dJtgDz+bw3zCbCjqFD5CsU/I6wR0phXMjbODCKU
+         At5q95MhBFJcRZ4pcbVcPPo8xELEl4ag+bsM9jxZDdnAQVULvfI1v2p5P7uY2DyWfFUX
+         WjKhmt5ADnJHHGyMlZGskLnnkXtQI6G1/dtKova6Ej3vNxKe5AgV0Uiq34ayDHAQeqxR
+         B0n8Fz7wB+JbWS91Xykd/cg8XVKr1+kO6BH39BflA7DPYoOZbLr6bEjf1c8f++ShNax4
+         4UWApp19h0YxvzgQiM6NMC++x9ELNM1Bgn41bLrhnT9Yb3iBdgCK5ASXGFrVeHHWxz9D
+         siXw==
+X-Forwarded-Encrypted: i=1; AJvYcCUha8wqIUqzTcRkb+dZKH3NST6lFqCepMiUCLyz0ehuRBdBLLkMQBthlOYx0Kxae5YACnJK3T8/v6WAa8KvEck=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/YYUclWNyPhSKbOWWu6rMhd8pePOD763Ow8m3Zh2BiLCI/6o3
+	YEJBAtWf8VdUxBQ9W+LxxBbKQRbfWKlMMzybpiHr3iIdyojnp0K9ZP7Iz6VKeZOmthc=
+X-Gm-Gg: AY/fxX5RBvoOfAEv4VI46cZXiAWAu/og799vFGuk6MupdWDHJix4C5Wi/IKXNB3BH4Z
+	BQnig6Mn1Nc+Cq5ix+v3+/ETQSIsdItlVipUCfCO4+fsx1fJxQqFkEljbe/kIs7XUxZqMlmeEq+
+	aS7+ldlt3xuM5QUxNaovjipF8GddOc8X7iM5Y5JIVjYbjCtoKss10jyhvkGRzfoVKCgHY7UgPgr
+	cdCNzN6AqZwfgnhVAloJcfra/jwoI/AckLVimte8mG3r0wIG82tsiVZhkDArH0ZRi/q7KwWjNBo
+	oMwZ2cuUtdQtpjl1sVNhq5r0MHty01D/bwaZzjQDzFyCwg7vTx1LcchTCUUpnWKYc7oeo7JcBMc
+	XnArykjXzXSexx8v3UK5RYW12rWPm2CzIa0KhFjzXRtryF39m+Kv1vwgvQdIRbHJFdqCMgu+Vsn
+	s1pDpY457jF5zAjRTq
+X-Google-Smtp-Source: AGHT+IFgxdBy65p84fy65/fyiYE3miPmWBnt1+Te9NK6eCwaQurMoPZNR3/Cq1AwdP418CtOTItATQ==
+X-Received: by 2002:a05:6000:2309:b0:429:c711:22d8 with SMTP id ffacd0b85a97d-42fa39d2ef1mr5723924f8f.15.1765441737154;
+        Thu, 11 Dec 2025 00:28:57 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42fa8b9b1f1sm4079889f8f.39.2025.12.11.00.28.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Dec 2025 00:28:56 -0800 (PST)
+Date: Thu, 11 Dec 2025 11:28:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>, Chris Li <sparse@chrisli.org>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Eric Biggers <ebiggers@kernel.org>, Kees Cook <kees@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Rusty Russell <rusty@rustcorp.com.au>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	"linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
+	Malcolm Priestley <tvboxspy@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH 3/3] module: Add compile-time check for embedded NUL
+ characters
+Message-ID: <aTqAxfiVCR2ch4I5@stanley.mountain>
+References: <20251008033844.work.801-kees@kernel.org>
+ <20251008035938.838263-3-kees@kernel.org>
+ <aTc9s210am0YqMV4@agluck-desk3>
+ <20251209001139.GA7982@quark>
+ <d3dd8fc8-ab46-4cf1-87a9-0324685ba2e0@kernel.org>
+ <SJ1PR11MB6083C6D97484ED4E4710268EFCA3A@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <aThSGiKwJRYOB6kx@agluck-desk3>
+ <aThqcq0iGge1pQCr@agluck-desk3>
+ <20251210010020.GA2522829@google.com>
+ <aTn0WdVv-S_EpQmS@agluck-desk3>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5568; i=ardb@kernel.org; h=from:subject; bh=oxGZLAoYraEnTaqd4KcbBYAZ3MpFudos0PelzD7Ngyg=; b=owGbwMvMwCVmkMcZplerG8N4Wi2JIdPKhSlUtKtiadtSpqCtBzk/+3E+ups/a9bjue1z6l/OP 7796LukjlIWBjEuBlkxRRaB2X/f7Tw9UarWeZYszBxWJpAhDFycAjCRokqGf+Y3T/3IYdsYdyD7 ZN0an+Jyl6ZPO/Q3Pj/w1fervvWSsr8M/0MjuqLsznk8u3H28IZ1zXERj9eG8W2VOnBH3PfbjxU RzzkA
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aTn0WdVv-S_EpQmS@agluck-desk3>
 
-Commit
+On Wed, Dec 10, 2025 at 02:29:45PM -0800, Luck, Tony wrote:
+> > diff --git a/expand.c b/expand.c
+> > index f14e7181..71221d35 100644
+> > --- a/expand.c
+> > +++ b/expand.c
+> > @@ -535,6 +535,8 @@ static int expand_compare(struct expression *expr)
+> >  			expr->taint = 0;
+> >  			return 0;
+> >  		}
+> > +		if (left->flags & CEF_ICE && right->flags & CEF_ICE)
+> > +			expr->flags |= CEF_SET_ICE;
+> >  		if (simplify_cmp_binop(expr, left->ctype))
+> >  			return 0;
+> >  		if (simplify_float_cmp(expr, left->ctype))
 
-  1db780bafa4ce ("arm64/mm: Remove randomization of the linear map")
+I'm not an expert in the C standard, but this feels correct to me.
 
-removed linear map randomization from the arm64 port, on the basis that
-a prior change to the logic rendered it non-functional on the majority
-of relevant CPU implementations.
-
-As has been reported numerous times now, the upshot of this is that the
-virtual addresses of statically allocated kernel data structures are
-highly predictable if the kernel is loaded at a known physical address.
-Any bootloader that still adheres to the original arm64 boot protocol,
-which stipulated that the kernel should be loaded at the lowest
-available physical address, is affected by this.
-
-So bring back the most recent version of linear map randomization, which
-is based on the CPU's physical address range, but this time, allow this
-PA range to be overridden on the kernel command line.
-
-E.g., by passing
-
-  id_aa64mmfr0.parange=1 # 36 bits
-  id_aa64mmfr0.parange=2 # 40 bits
-
-the CPU's supported physical range can be reduced to the point where
-linear map randomization becomes feasible again. It also means that
-nothing else is permitted to appear in that physical window, i.e.,
-hotplug memory but also non-memory peripherals, or stage-2 mappings on
-behalf of KVM guests.
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
-Cc: Liz Prucka <lizprucka@google.com>
-Cc: Seth Jenkins <sethjenkins@google.com>
-
-This is posted as an RFC because there are obvious shortcomings to this
-approach. However, before I spend more time on this, I'd like to gauge
-if there is any consensus that bringing this back is a good idea.
-
- arch/arm64/include/asm/cpufeature.h   | 13 +++++++++++++
- arch/arm64/kernel/image-vars.h        |  1 +
- arch/arm64/kernel/kaslr.c             |  2 ++
- arch/arm64/kernel/pi/idreg-override.c |  1 +
- arch/arm64/kernel/pi/kaslr_early.c    |  4 ++++
- arch/arm64/mm/init.c                  | 16 ++++++++++++++++
- 6 files changed, 37 insertions(+)
-
-diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-index 4de51f8d92cb..fdb1331c406d 100644
---- a/arch/arm64/include/asm/cpufeature.h
-+++ b/arch/arm64/include/asm/cpufeature.h
-@@ -1078,6 +1078,19 @@ static inline bool cpu_has_lpa2(void)
- #endif
- }
- 
-+static inline u64 cpu_get_phys_range(void)
-+{
-+	u64 mmfr0 = read_sysreg(id_aa64mmfr0_el1);
-+
-+	mmfr0 &= ~id_aa64mmfr0_override.mask;
-+	mmfr0 |= id_aa64mmfr0_override.val;
-+
-+	int parange = cpuid_feature_extract_unsigned_field(mmfr0,
-+						ID_AA64MMFR0_EL1_PARANGE_SHIFT);
-+
-+	return BIT(id_aa64mmfr0_parange_to_phys_shift(parange));
-+}
-+
- #endif /* __ASSEMBLER__ */
- 
- #endif
-diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-index 85bc629270bd..263543ad6155 100644
---- a/arch/arm64/kernel/image-vars.h
-+++ b/arch/arm64/kernel/image-vars.h
-@@ -58,6 +58,7 @@ PI_EXPORT_SYM(id_aa64zfr0_override);
- PI_EXPORT_SYM(arm64_sw_feature_override);
- PI_EXPORT_SYM(arm64_use_ng_mappings);
- PI_EXPORT_SYM(_ctype);
-+PI_EXPORT_SYM(memstart_offset_seed);
- 
- PI_EXPORT_SYM(swapper_pg_dir);
- 
-diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
-index c9503ed45a6c..1da3e25f9d9e 100644
---- a/arch/arm64/kernel/kaslr.c
-+++ b/arch/arm64/kernel/kaslr.c
-@@ -10,6 +10,8 @@
- #include <asm/cpufeature.h>
- #include <asm/memory.h>
- 
-+u16 __initdata memstart_offset_seed;
-+
- bool __ro_after_init __kaslr_is_enabled = false;
- 
- void __init kaslr_init(void)
-diff --git a/arch/arm64/kernel/pi/idreg-override.c b/arch/arm64/kernel/pi/idreg-override.c
-index bc57b290e5e7..a8351ba70300 100644
---- a/arch/arm64/kernel/pi/idreg-override.c
-+++ b/arch/arm64/kernel/pi/idreg-override.c
-@@ -43,6 +43,7 @@ static const struct ftr_set_desc mmfr0 __prel64_initconst = {
- 	.override	= &id_aa64mmfr0_override,
- 	.fields		= {
- 		FIELD("ecv", ID_AA64MMFR0_EL1_ECV_SHIFT, NULL),
-+		FIELD("parange", ID_AA64MMFR0_EL1_PARANGE_SHIFT, NULL),
- 		{}
- 	},
- };
-diff --git a/arch/arm64/kernel/pi/kaslr_early.c b/arch/arm64/kernel/pi/kaslr_early.c
-index e0e018046a46..0257b43819db 100644
---- a/arch/arm64/kernel/pi/kaslr_early.c
-+++ b/arch/arm64/kernel/pi/kaslr_early.c
-@@ -18,6 +18,8 @@
- 
- #include "pi.h"
- 
-+extern u16 memstart_offset_seed;
-+
- static u64 __init get_kaslr_seed(void *fdt, int node)
- {
- 	static char const seed_str[] __initconst = "kaslr-seed";
-@@ -51,6 +53,8 @@ u64 __init kaslr_early_init(void *fdt, int chosen)
- 			return 0;
- 	}
- 
-+	memstart_offset_seed = seed & U16_MAX;
-+
- 	/*
- 	 * OK, so we are proceeding with KASLR enabled. Calculate a suitable
- 	 * kernel image offset from the seed. Let's place the kernel in the
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 524d34a0e921..6c55eca6ccad 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -275,6 +275,22 @@ void __init arm64_memblock_init(void)
- 		}
- 	}
- 
-+	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
-+		extern u16 memstart_offset_seed;
-+		s64 range = linear_region_size - cpu_get_phys_range();
-+
-+		/*
-+		 * If the size of the linear region exceeds, by a sufficient
-+		 * margin, the size of the region that the physical memory can
-+		 * span, randomize the linear region as well.
-+		 */
-+		if (memstart_offset_seed > 0 && range >= (s64)ARM64_MEMSTART_ALIGN) {
-+			range /= ARM64_MEMSTART_ALIGN;
-+			memstart_addr -= ARM64_MEMSTART_ALIGN *
-+					 ((range * memstart_offset_seed) >> 16);
-+		}
-+	}
-+
- 	/*
- 	 * Register the kernel text, kernel data, initrd, and initial
- 	 * pagetables with memblock.
--- 
-2.47.3
-
+regards,
+dan carpenter
