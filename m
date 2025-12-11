@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2FB2DAFA1;
-	Thu, 11 Dec 2025 22:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054A119C54F;
+	Thu, 11 Dec 2025 22:02:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765490404; cv=none; b=Iv4OnXv7bgD0Lyvtw27u5qzVH7DIMecV/5jLvbZhgFFGNkIF3AKNH/uN7fMG9JJvhsLql6TTZes1t9qyNdqUxyh7cldO91/J38dLSvyowd+1jdl32UKQQ9ceXZOfRzGANt73+1BDbYLhRxvNlF/z54XMGsxT35cox0Az2J4LP1o=
+	t=1765490551; cv=none; b=pjtLz2orF+hIn+83itr/w9V5xNQkQwGxNjF6WKCB/hGwsjsuaBwIBy8rBEjbMXmbRPB2oVuboA3kPOhQHm3p7G0uk3I2EhD2o/GcbhNVgHV239pzCyuTG44Q0anHAzSpeIeeE0stN/a8tzy6h2qReJa1HNL8ICTFFWSHMaZm4KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765490404; c=relaxed/simple;
-	bh=UvpgNVZQBWlxwITboFxyD5AfPO8Qk05RYT6bTgKrZ7Q=;
+	s=arc-20240116; t=1765490551; c=relaxed/simple;
+	bh=1jUgFRDwVLlPWU+cRYkz5ms19z7NWJCY23qeUoAcv8E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mmeU+s4L353uqbpOxSY7QAw1BvXlDF8XP2ssx0FnG6pCViedZBbIFOeuBu9za0iwXUwoVPhhmFYTH+AV9FDKKoTmvy7BZc3Nfl3A7WXioUJGutb5JwpMKyczD2Rj8E6C4oY7QQ7ybpouXTHQoY/ccNHLYLExGSRwFmKfh/nh/F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLgG52d2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=awwFXFKyUIQwB1dVHhcwYJw0r91E8JYZHrG6+H7W9f/Q/8DmnK22oZnD2UxoUOtAa8dh9Z7aP6gVm/whzNdYoJR8LrCxaIEzEMiiV+kS4wZwcq9qkTBkHpdnk1fdJzzC+lgUjjgXz2Gg03jbAjhA/i3VOCJV+AYsYolbPoJLTx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P765zWgb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLgG52d2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F1F1C4CEF7;
-	Thu, 11 Dec 2025 22:00:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P765zWgb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00344C4CEF7;
+	Thu, 11 Dec 2025 22:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765490403;
-	bh=UvpgNVZQBWlxwITboFxyD5AfPO8Qk05RYT6bTgKrZ7Q=;
+	s=k20201202; t=1765490550;
+	bh=1jUgFRDwVLlPWU+cRYkz5ms19z7NWJCY23qeUoAcv8E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NLgG52d2/iqu1sxj7GYeS2a/Sxw8ThW6asIItsBe4kdxmkTf8muRLSxBmDfDUTeAF
-	 guQJFMWlzhh11fUv6sxEdcmn/B9+GrK0YpJUOqE7A5THK68fja/llOeE22CgM8PLgo
-	 56ivDIlpPa8XuqMLyAPrOmA07fT29ybf+hXS1MRhbIdq0+qLFMIPntyOA4br2g9nha
-	 PCNZe03aSRsb04tEgRdKfNkcDlc01Uvwi75gsu7SDAFpyCQM+3hd9aroWHh5f8wiXU
-	 VShVo5/xMhwkWswOD6iQteeJ7JE/5mZy7VLpW5MosqnduOK9I0Bm6h1O7oc4PJK2lY
-	 5X0kyKCamIa6A==
-Date: Thu, 11 Dec 2025 14:00:02 -0800
+	b=P765zWgbp4XZhTszJMCeeDUVNp10Rd3K8KYKkwkNcXitSFm5Wh3gK2hkGiYR/ZVsB
+	 FmAa2JgHELGwNTiEre/bcZF9ZAGyj/ycg7TK1LwCcU6yZfgJhGDYBQg/fqTqZZlnfu
+	 QWprdOkdYHOQBhSAK/PqaLXJ9wfCJr5mJ77yqxB5plHt8nb/lBctR+ymX2osMGBDDs
+	 J6+sbTCUPcxDE01wOymOruBEgfAHfi8zW4v0+u9m5cAqGOM0PbSGFtCcId1PC9nOxu
+	 +GSqoovogCnNL+zXwsi+73UATSs8J+b0f9+SK5YiGb1TW7wNZz1/bNqIPphNOHKkSv
+	 zCJMLNUHPW3VQ==
+Date: Thu, 11 Dec 2025 14:02:29 -0800
 From: Kees Cook <kees@kernel.org>
 To: Markus Elfring <Markus.Elfring@web.de>
 Cc: cocci@inria.fr, linux-hardening@vger.kernel.org, linux-mm@kvack.org,
 	Julia Lawall <Julia.Lawall@inria.fr>,
 	Nicolas Palix <nicolas.palix@imag.fr>,
+	Vlastimil Babka <vbabka@suse.cz>,
 	LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Alexander Lobakin <aleksander.lobakin@intel.com>,
@@ -60,94 +61,34 @@ Cc: cocci@inria.fr, linux-hardening@vger.kernel.org, linux-mm@kvack.org,
 	Sasha Levin <sashal@kernel.org>,
 	Tony Ambardar <tony.ambardar@gmail.com>,
 	Vegard Nossum <vegard.nossum@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
 	Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [cocci] [PATCH v5 4/4] coccinelle: Add kmalloc_objs conversion
- script
-Message-ID: <202512111352.387A339CE@keescook>
-References: <20251122014304.3417954-4-kees@kernel.org>
- <71d406fb-9fb1-44a9-912a-7a0d270b9577@web.de>
+Subject: Re: [PATCH v6 5/5] coccinelle: Add kmalloc_objs conversion script
+Message-ID: <202512111400.135295C20@keescook>
+References: <20251203233036.3212363-5-kees@kernel.org>
+ <22e31f45-55fc-43c6-bede-fee1c829aefc@web.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <71d406fb-9fb1-44a9-912a-7a0d270b9577@web.de>
+In-Reply-To: <22e31f45-55fc-43c6-bede-fee1c829aefc@web.de>
 
-On Mon, Nov 24, 2025 at 01:50:23PM +0100, Markus Elfring wrote:
+On Thu, Dec 11, 2025 at 03:15:08PM +0100, Markus Elfring wrote:
 > > Finds and converts sized kmalloc-family of allocations into the
 > > typed kmalloc_obj-family of allocations.
 > 
-> See also:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.18-rc7#n94
+> Can previous patch review concerns get more development attention anyhow?
+> https://lore.kernel.org/cocci/71d406fb-9fb1-44a9-912a-7a0d270b9577@web.de/
+> https://sympa.inria.fr/sympa/arc/cocci/2025-11/msg00066.html
 
-"Describe your changes in imperative mood"
+I've replied there now. tl;dr: I already dropped the empty Comments line
+for this v5, and didn't want to make other changes to the .cocci without
+a better rationale. I'm open to suggestions, though!
 
-I guess I can try rewording this, but it is describing the behavior of
-the script. Normally the imperative language for a patch is about what
-the patch accomplishes. In this case, I've added a script and it does a
-thing itself.
-
-> …
-> > +++ b/scripts/coccinelle/api/kmalloc_objs.cocci
-> > @@ -0,0 +1,168 @@
-> …
-> > +// Comments:
-> …
-> 
-> * Please omit such an empty information line.
-
-Agreed; I removed this in v5.
-
-> 
-> * Would a field like “Keywords” become helpful?
-
-I only see a few using this -- what benefit is there to adding it? It
-seems redundant to the rest of the file, its opening comment, etc.
-
-> > +virtual patch
-> 
-> Will additional operation modes become relevant after clarification of implementation details?
-
-I am not interested in other modes; if people want to contribute them,
-they are welcome. :)
-
-> 
-> 
-> …
-> > +def alloc_array(name):
-> > +	func = "FAILED_RENAME"
-> > +	if name == "kmalloc_array":
-> > +		func = "kmalloc_objs"
-> …
-> 
-> * I suggest to avoid duplicate variable assignments.
-> 
-> * How do you think about to collaborate with the Python data structure “dictionary”?
-
-I wanted the stderr warning when there was no match, but to return
-"FAILED_RENAME" in such a case. Using a dictionary was basically the
-same length as the elif stack. If you have an alternative, I'm happy to
-replace it with what you come up with.
-
-> 
-> 
-> …
-> > +type TYPE;
-> > +TYPE *P;
-> > +TYPE INST;
-> > +expression VAR;
-> > +expression GFP;
-> …
-> 
-> Such repetition of SmPL key words can eventually be also avoided.
-
-That is true, but I like having them separated -- I find it more
-readable that way.
+-Kees
 
 -- 
 Kees Cook
