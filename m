@@ -1,93 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4AE272803;
-	Fri, 12 Dec 2025 06:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23228308F00
+	for <linux-hardening@vger.kernel.org>; Fri, 12 Dec 2025 08:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765521895; cv=none; b=tSy29qRktkA5le94MHZZpKOUEoYQHQBh+oL50hAXr1cpSzPuWHqWaAlqplNxKp0WJ+1ij6TlmyyJxUYbiD+KUwfPJRwZGxwPXW2eLkC2jhFFxteD8tCCi2hoyJOSEcwtf2ZfX/v6ehl+7stVijbcWYa0vUGgpdudgKsQPAcJ2pQ=
+	t=1765529398; cv=none; b=qKbwh5eFES5vfY1swBfvFX6wPfFdWHkLHd0KVJu1Hwtsr1i48A1fBrCCZpxxFuAGFieP/9V1ps3yGEFIpLF+9Nb/aizMZP7C8A3458250zxZrA65gyGKTtBb2tFj+JrALIN8tNhKe86oEj02gm0AHJSkSVYL++Uw81+tkQtTVdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765521895; c=relaxed/simple;
-	bh=dWhA5QFgq3iyHkTDshDNefjIA53nUnedjKtEf1pDEhM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=LYXSh6bWR9OSzBucpMhSU0LN0EGozzmXEmg/euuQhgDOOnKkm5y0W/DMkxjYmOJHjTdPTsAKvfF0EPSLxWpyVPG4o1g95mEh23dOdNY48Wi66guzzMGcqHa4JlrTr3vfZj4KGjfnsvmqJz0RxzjlHPjDcbHp6pqoBEcvrx8LU4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aI306TVe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765529398; c=relaxed/simple;
+	bh=uEXD+fl1VaMsAi+rOzB/qKb7cAebaa0SHJ9PEe/VNO8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=q9ubG5U03TDxGtw5Tkm6tYfkX8K4GDrd6kbV7LHZC1up81XD3z74lUsXxZL8QMAmjBoz/NDNADKdevanpRVZKPICLmzBvOyzFvq7PV5dMbTVaS+u2uND3iJ0NYWXn8zu7OD16eGxtriw8vhqhdcNL6qcU0gZd08V0JNIvmL5Xdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EsNNWqc4; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aI306TVe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 373DFC4CEF1;
-	Fri, 12 Dec 2025 06:44:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765521895;
-	bh=dWhA5QFgq3iyHkTDshDNefjIA53nUnedjKtEf1pDEhM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=aI306TVetaP8qpyYbr6dvVaBK0wp0hJA4IV8S+A5FsMGEivSmM7Q9/DCIe/qaHY18
-	 qxgZPpIV22R8rqhyfHDvlOQCTBN5PQDrOT2GxIkjCsMlmhiQUgl9iTKfLd3hY8Yqv3
-	 iFbDJPTLBViFlLgMzEsiwZIhnlqRv9J7m2zLOuu136TMcPdSkKt9GtP02R9ggjy493
-	 4i1HzrUNguPy0uy+jtkQ1ENYt802FEQEpRUzKwJUsZr88GyIIXz06kbVCHkBvMrfHO
-	 QOU5ucZVAx9zeRrfwpOySsErLZKnil8aP9jyMk+MQiU+zUPs0Jc0D6hWs1gzdII1O8
-	 BNevnveCJrcFg==
-Date: Fri, 12 Dec 2025 15:44:50 +0900
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] hyperv: Avoid -Wflex-array-member-not-at-end warning
-Message-ID: <aTu54qH2iHLKScRW@kspp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EsNNWqc4"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-37a33b06028so9079301fa.2
+        for <linux-hardening@vger.kernel.org>; Fri, 12 Dec 2025 00:49:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765529395; x=1766134195; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uEXD+fl1VaMsAi+rOzB/qKb7cAebaa0SHJ9PEe/VNO8=;
+        b=EsNNWqc4433YvIgkkhRTrFG8awpVof2pFounGRHC6xorCUftsOvD+j3tQ7Ibkg0Lkt
+         Y2/y0DX+/BTKuCiYnPIl0psG0SiuzxBv2etdHlWW/0Sll7CTLncZYfB5a9JLXEYvPklC
+         eB85tNDmr+xSvvNS/pAjp9K9nojEfsvbpnxNfaRIIfrSUw4Z+74Ks1yHGkfhYxtW7L44
+         ljHSRf8ufwxjjLKmzqCCrUUkkdLDTKTAnlo8G9nd7/ANUVIzY2FSzrLLGT6cvlZI90IA
+         QfSxL090R+Z5v6LmVXZAJjv3i7Nvslg6LwWFYqAoNuZN4pdWsk6NQzrA4ZezqAsZNkyF
+         K8XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765529395; x=1766134195;
+        h=cc:to:subject:message-id:date:from:reply-to:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uEXD+fl1VaMsAi+rOzB/qKb7cAebaa0SHJ9PEe/VNO8=;
+        b=wAwV5CjyeAstLfA+WlI00SuvMklxJOCHJtdU6ICK80xlyF5twxP/HdhwO7coV7Bn9o
+         NMAHB2wkHD3anhGomHk1AuikwDlMrKqO9Hd1klcuXDjzJTiE64kxa9XCPSzDzh3jcnm/
+         ZGZAcL8x/TGKBNgqKSSYsW4sI8woOQ/Jc1yEVnHJwMozLL9e+yLv1lY7LOuEgoz4jX7m
+         DClwZfBgoX7WXHBZgeQ7WFsU03YwWL2l7KiMzsAU2WZfuXf2j+lJpvnHheu/oNkILVmk
+         Qp2PjI2IQWiydwagyklITJVKOz014awBOeEZLDidI7psUpEcfFAnHMpW7Qa5b6V/SvmX
+         YKEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDdVsIeW190AEQfexpZ+5zFzBXOoXfa+Y4o4jOVxn9ZQuODrPerU+PECCnRtRmvjfQ1I5YpyTeJkcqLT0ssFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbfS7bCygoi7EjHeTZZv9By4LuupP54DoiFz+z6IgZG1VtUh3/
+	cH9Vad4ohVaZYkN3CGwKN8PlBM51gfJH6q60o7t1265CdZ8KMzWU4i6tOfM71o7uAKUYV/RQ0og
+	sc9r44WN39UC1YmfkJdhCaaVDWbx1kDg=
+X-Gm-Gg: AY/fxX5rfyW14K0BkbIH/ik7vdgcfGdoqNWtZkPBDGSA3Cd2IJTlv/2w4RkSQdOQFAN
+	AGGXwvuV+k5AqsMDFq4yyOVUjfNOHAS+za03kC6hWN+WBhqYGxmklZfcvbchC5/ZMLvEy3hXArM
+	2e3xpREiDrDq4J1Xlivb+ErV9LojpRpiUF+ITMyKFyqSLuDkvR8wrOKl9/WOHI/hVIKOjFnrqEK
+	/nXrXsWgyGD1sPe3c0h2BIxqk2G9TcRcmrWqplI+RYuNGdyCkgBNj8r7OZ8X1voM5XVCgYFP++Q
+	GkLGw3yZefYN0jFCX3mJ0uU942LB
+X-Google-Smtp-Source: AGHT+IHtqUZX4vVesa0t6KZet3L60PV7SBPibR53J9EHZRf/1SiaQqpFxmCqV4+n1A+BVBTgbyu/4Hy3MbflM61OujA=
+X-Received: by 2002:a05:651c:210e:b0:37f:cac3:c280 with SMTP id
+ 38308e7fff4ca-37fd08a22a0mr5090041fa.33.1765529394838; Fri, 12 Dec 2025
+ 00:49:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reply-To: sedat.dilek@gmail.com
+From: Sedat Dilek <sedat.dilek@gmail.com>
+Date: Fri, 12 Dec 2025 09:49:17 +0100
+X-Gm-Features: AQt7F2ohWplDOv5RTh-KQQ3ppyn50BBO-Ap-Pz1SuupVjkC3VOvw6eMVkUMhsfI
+Message-ID: <CA+icZUXPcT0gQbp+oXiRNE0yBSvLGWWvP93kMPGdcFJjW52n2A@mail.gmail.com>
+Subject: [PATCH] media: solo6x10: Check for out of bounds chip_id
+To: Kees Cook <kees@kernel.org>, Bluecherry Maintainers <maintainers@bluecherrydvr.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Andrey Utkin <andrey_utkin@fastmail.com>, 
+	Ismael Luceno <ismael@iodev.co.uk>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Hi Kees,
 
-Use the new __TRAILING_OVERLAP() helper to fix the following warning:
+Thanks for the patch.
 
-include/hyperv/hvgdk_mini.h:581:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Feel free to add:
 
-This helper creates a union between a flexible-array member (FAM) and a
-set of MEMBERS that would otherwise follow it.
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com> # LLVM/Clang v21.1.7 x86-64
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # LLVM/Clang v21.1.7 x86-64
 
-This overlays the trailing MEMBER u64 gva_list[]; onto the FAM
-struct hv_tlb_flush_ex::hv_vp_set.bank_contents[], while keeping
-the FAM and the start of MEMBER aligned.
+More details here:
 
-The static_assert() ensures this alignment remains, and it's
-intentionally placed inmediately after the related structure --no
-blank line in between.
+https://github.com/ClangBuiltLinux/linux/issues/2144#issuecomment-3645456824
+https://github.com/ClangBuiltLinux/linux/issues/2144#issuecomment-3645492492
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/hyperv/hvgdk_mini.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-index 04b18d0e37af..30fbbde81c5c 100644
---- a/include/hyperv/hvgdk_mini.h
-+++ b/include/hyperv/hvgdk_mini.h
-@@ -578,9 +578,12 @@ struct hv_tlb_flush {	 /* HV_INPUT_FLUSH_VIRTUAL_ADDRESS_LIST */
- struct hv_tlb_flush_ex {
- 	u64 address_space;
- 	u64 flags;
--	struct hv_vpset hv_vp_set;
--	u64 gva_list[];
-+	__TRAILING_OVERLAP(struct hv_vpset, hv_vp_set, bank_contents, __packed,
-+		u64 gva_list[];
-+	);
- } __packed;
-+static_assert(offsetof(struct hv_tlb_flush_ex, hv_vp_set.bank_contents) ==
-+	      offsetof(struct hv_tlb_flush_ex, gva_list));
- 
- struct ms_hyperv_tsc_page {	 /* HV_REFERENCE_TSC_PAGE */
- 	volatile u32 tsc_sequence;
--- 
-2.43.0
-
+Best regards,
+-Sedat-
