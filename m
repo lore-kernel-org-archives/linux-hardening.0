@@ -1,501 +1,1015 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013060.outbound.protection.outlook.com [40.107.162.60])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA86531354C;
-	Fri, 12 Dec 2025 22:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765578400; cv=fail; b=okticBPGoemdsGMsh93K/mM35v7Cv/Pxa/hSWfd9TrIvkBlyq23O9vceUzNYmoyzijezBUagc9ya3kaJeWbUUiXUWoJTh39B4YGW9npyVzthKWdxGEjjs7KSDGQadYicS1N0+heCWB+3bVESfWLB8umruYMLMeJhTYvFhHj5Mv0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765578400; c=relaxed/simple;
-	bh=grgZWDePbKHYJWs6lWhByzYgpraNSyzEXJBhc1iz1ug=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=i9VdSpG55WxIAeusI1YhJpYfJJaca7gohvuMKrC6gfRBx3qho9ZHtXNW2bh3l5uCTf4CaHj867IRoeVSaLh99Vbv4I+VvJ5HFEcqXvb7YiyCJVifW7u4KPVa1YBl7MAAI/F6DhK5koSoirXx62z6SVIyjTi5wVs7twsnAYYLPGs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=BcnCyThX; arc=fail smtp.client-ip=40.107.162.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D455E3B8D4B
+	for <linux-hardening@vger.kernel.org>; Fri, 12 Dec 2025 22:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765579694; cv=none; b=jRAQTmPDSoMAXc9CLUA8AuKM8T+X0xF/7RCweUQBrHi9auU472knqgPNW3u+Iy7mHCmfT+8goyFEjCXalpXqN1VKeXZ7ltPkgCQpo6lj9DoGDKH4k1dmV2qqVqK4ZY+/gZ0ftj+vnJzRiOGksM6XQeiZFgRS9bV+cVTYIx+wVuo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765579694; c=relaxed/simple;
+	bh=Jek+o6VFawpiaQoDmiToojwZXavTJ2koErAa8mWNgPg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nz2rDH4NhRkmJfQE2+kSaGA8Y4kaNCXqve00fWYLUjzO+7pWi74gK6yFBkmD2I2M1pHBJuPPL1rVNwQGXrQTNyidQtftim/vk+J6dFsE+cOqNPZRJN1DvqwvdsG7Lgl+3ceEKfOXF9Fuf1S3WMuNxXEG15sBHSqpS1MXGOpP+X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Cqwbq2+s; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=IYW+AqNL; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="BcnCyThX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lUzgpbmQZM/Wf+L1JhdDt4fg4vFqUqtZpDk12na6CCOdMbo0b/F6rVMh1QIpr4j1X3a73okCB/ysx9zwUzficBmlV439QqaDq76Q91REEoZVgv6acpGiaMxGgHa0i2V/ZRtDvt0v8ALvBU533PhQOryr27sQyuylSmfU6ud02MkSVUnGIJ3BKf2Zffb0QGSWjJiomZx4SUVwAfQVohoxYTG/KpWbL+dv577oPl0i4CA17EOssE5XcFS2Aj2RZ5MUW5pVbQpdoU8Uq6j5g4NoE+0zKY4lg1CjQX6Emg+NOMcRxaYXi5lwWhqNN+k15MU8tzA09fgKVSKpv2M0sAullg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yjg6gd+Z27nl4MszKT1BenNo2vwOSfKobBs5JAcLtVc=;
- b=eojDHvMry+mmZFgiSmQwvRL763BxZrfR3q5IR+8LNOB0K73nRqPc0NcLenXVr9qBLO8AtFrl9OUmL+VG7OMAmnB5i6yT0SAdp26bvYVG/XSFvaiOQV7fjjeCyl20lG6bSTnze6qNuhHYWOVsDf6FpEE/yaQQ5lmJmSKaUQ4BoIAOBb3HYPTEEmdk9pjF5NF042KXOdkSkexVRHavTLWaSrXisxrlLZ44jS5qZUpOpTpXlgkoWWywmwkMBZ0NfRM+iG2jV6tTVUuLik36zsMmr8pn5LHNbozeFsYTL0EGKORLgHHJ2/sjwupzVPQbrm60215DdeoDOr/cjE4NMM5c7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yjg6gd+Z27nl4MszKT1BenNo2vwOSfKobBs5JAcLtVc=;
- b=BcnCyThXXs60xs7bs1ZzfuAkhFqIteorKGrV7fpxx8CnsP6fL4hF0nPHi09y7fzdd4QQrA5sLKjXnI0HGAL7qt/Dk0QFUKBFuMBZA8z/YY3B/ORtD6yjAG9giZax4xmMdFtmjip7I7R4E/eygOVq76u1Xt6yr9GWDVFNYyOgokQxwxvUHJwRqN0WrA7c8b4OUrihmbkuioxI1Pz4jFMCyaPyQGYnferUCNVlt69n4IuwDPnsFaqXpCYvYNFE4qqIWMv6islDg7zS+zTIpfeY1anyvcGdvCrM1GtmKiJ5fPiana3xNi8cTAnmUVQa/O/1YB5HDSBmoAHfq+fcIPn8NA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
- by GV1PR04MB9053.eurprd04.prod.outlook.com (2603:10a6:150:1c::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.12; Fri, 12 Dec
- 2025 22:25:46 +0000
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9412.011; Fri, 12 Dec 2025
- 22:25:46 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Fri, 12 Dec 2025 17:24:50 -0500
-Subject: [PATCH 11/11] dmaengine: dw-edma: Remove struct dw_edma_chunk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20251212-edma_ll-v1-11-fc863d9f5ca3@nxp.com>
-References: <20251212-edma_ll-v1-0-fc863d9f5ca3@nxp.com>
-In-Reply-To: <20251212-edma_ll-v1-0-fc863d9f5ca3@nxp.com>
-To: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
- Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>, 
- Niklas Cassel <cassel@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-nvme@lists.infradead.org, imx@lists.linux.dev, 
- Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1765578298; l=9633;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=grgZWDePbKHYJWs6lWhByzYgpraNSyzEXJBhc1iz1ug=;
- b=Osa5lYF1WTBGxM+iJW5jF6x0Jodbd+Pcd0M6owWzcqD97tloqU15eI4bJaIWA3wjjpARUZfH3
- 0NsljCPckvsAzUOo7h1pGkwCaAdU9y76qsWKMTYGPr4c3flCvkpE3vg
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: BY5PR20CA0025.namprd20.prod.outlook.com
- (2603:10b6:a03:1f4::38) To DU2PR04MB8951.eurprd04.prod.outlook.com
- (2603:10a6:10:2e2::22)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Cqwbq2+s";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="IYW+AqNL"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BC8SbUk3432731
+	for <linux-hardening@vger.kernel.org>; Fri, 12 Dec 2025 22:48:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	5CQ9q7V1phyZE4+bf4HRIIa8vBmDda6xQ4HvJwIzS0g=; b=Cqwbq2+sijPOj+MM
+	byDvW5SiqyOe6c+1yN94aYHTau3M0/fDEg+qj7SCVE2FdnX894uJH+4GvDl0BHyp
+	O3MyTivEh/QSDdOyhFT+XzkhkZnyMRmO1TgPi9hCmhxYhZxRBzS2DTqj1+iwaDwX
+	kKGQbqMBz8qGmaaRnAzAQl4TgFGH6xpz2Hvv0D+/bePOlxK6q6m8HVeKX7h6Wbqj
+	2V8fUPV1bGuA6nxSqE3dYwBEF4SJ3o3oKl28XK1nHqVnfhpN7giz+NTLzkqexzn6
+	BoU/8PtyIeeIuhVVyNEdOYW8km6uN7wMIJOQAGBcnufH8b+cpoVLIcJGRlOKTjtk
+	LyhLyQ==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b0fjt9kt3-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Fri, 12 Dec 2025 22:48:10 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-298535ef0ccso20585885ad.3
+        for <linux-hardening@vger.kernel.org>; Fri, 12 Dec 2025 14:48:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1765579690; x=1766184490; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5CQ9q7V1phyZE4+bf4HRIIa8vBmDda6xQ4HvJwIzS0g=;
+        b=IYW+AqNLFIFoDH7Pt2R1bvP9BqjbFeI1gjFu9SOoFbu+d+ECW8SyfIgD5j/1sFjnk6
+         WhBfdiOqz6f/l1iOP/gz180SuRuYrCxAhQ70WLJ7ZrDzij5KfDKdo9x64MuW83o5MfWI
+         mC1rJ5UlprFXLNy7iiRNCL3GLAGt4ktZu8W5McI8MRizqZwXpDYuuNcduTKKYlj8pAMd
+         YnKsuMZg6rm+CNYBrUF8+6wlbKAeRoXBnWIFinhOLJeVJY/wE2oDgkn/ia5jLVw1QK5z
+         4ozJGPFnraxd5nJ+K7b5vtUfe6u3dnpcoOFy9ZBbagJ8t0sYOUQaaBD/TjIYlh+mZ7Li
+         YB0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765579690; x=1766184490;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5CQ9q7V1phyZE4+bf4HRIIa8vBmDda6xQ4HvJwIzS0g=;
+        b=vpUQb7Bzdu8+4xakiCUg8IbEAp3ZVt4TMxrmFHnt7g77oq9xt1LpX/ViPye0B7nb+r
+         r6hQMfts+NnHRPS22U/qNDDh/g5LolsaLS0INpYdLJNU+5n72bKanuL+Wq+hSIJujFXs
+         uvL4RGcST6VzCu7vRwugp9rT9SC9OglGwR/ErPj0q6OJOcwsgKGkfmm+tJAwHsk4Vtk7
+         YSXh0CizP61GGZr+UkicWHG1Wi0u/QGCJlrVw20cgrgabWY73U4eQf/mSPpuhwLEu3kZ
+         m9SYc3QjG6o/f1DywaLeUSBdeGMO7M+3T547ZV5taV5YbtolqytxXESNgqugtch6nyrE
+         rfrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsTtke1L5khxmiJUWjWy+MIg1h/t+JwTerO/5LUEnq+NbzJe2DwUTBjujVLtX5w/7+Q9tfVrHy1cSOvha/XKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9E9nv9r9tVfkUiPscs/RdrMN0qMYixSBWiUTbczzjNOOasO/h
+	e+ljI0KWAODPhtlTFmQ+O+9BqQ77DaICBoSg7rmSOwX03hqfX1MTVzYdlx0aTcGv0mCSWjknk1u
+	/y0sc8FrWpr1fTELqjNe4wTRx1J6F8M/2UTyjXBI7fNg0fu4cVWZT1M3YK8Lmh8lYiI71A/kj88
+	T4v9UWhGMDGu8K2hhOfZMf0rbbrqX+1gitiNjSbBFLvhjEog==
+X-Gm-Gg: AY/fxX49JXM3X09XF6M/8koPfV5u2rdHKXfr16xp93v6IP7V4qHyeQ9PpDjHAono/bw
+	QBLEOvDbYjJXyjH0x9QvWuctDhxVut8intcjpIAUwT5FrTnN9p/iQggmEnoQSyVWsJ68fKYI2r/
+	shwe0XgWQx9jt6VLW0URSjqsNe1P4Gp12t5czTTwP1A3E3iLXxi5BO7b8pFqFs1fY0
+X-Received: by 2002:a05:7300:5723:b0:2a6:a0f0:d7c1 with SMTP id 5a478bee46e88-2ac301f9627mr2081108eec.12.1765579689198;
+        Fri, 12 Dec 2025 14:48:09 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE9RqUUgchpeiiUkzVwefhk1qcLwlt1kAdGFMdzsB9C2o6+9gmcdMxaCmR+bspBDavWwVqNzfUvLPKZkTk+9po=
+X-Received: by 2002:a05:7300:5723:b0:2a6:a0f0:d7c1 with SMTP id
+ 5a478bee46e88-2ac301f9627mr2081069eec.12.1765579688356; Fri, 12 Dec 2025
+ 14:48:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|GV1PR04MB9053:EE_
-X-MS-Office365-Filtering-Correlation-Id: 06c36bc6-fda0-4f60-4e8d-08de39cd6550
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|19092799006|366016|376014|7416014|52116014|1800799024|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SlZVbUVrb2ZJTTE0ckd3akVRY2h0SXlnaVJkU1RRMGlwUVFYTXRyUkRHaERE?=
- =?utf-8?B?L3ZaV2oxTncxSE9nd3Izb1ZTUGR5cnpKNHd4WkNDdzJ6ZnR6ZlFlNGJia29x?=
- =?utf-8?B?Vnh4N3hpdTZLOER5RmNJcTBQaldqa3FBV2xJNTJiMjk5dmRKNzBSWGtLNlJv?=
- =?utf-8?B?cWUxTjJ1MmgyMGc4ZHBaK1NpbFVKLzVuNnJhUnZ3SkJlV2JkaGZlV3UzZFgw?=
- =?utf-8?B?dmQ5NWVkcmxhUkVkQWlyNzk0TVNyampicFZKbjEyYzJzaTVodTZsR2MvbHVj?=
- =?utf-8?B?dDZ1MzFPQmhYYUFQd1FTbHBmV1FpeFcrbEowNWZxTEdNMHk5YnJOZ2JwRE9j?=
- =?utf-8?B?UGNkSFlxa1Zpd0RMb2NZeWJXZ1YwR05sV1dvV1dsYk0waWdZQjhxRktYa25R?=
- =?utf-8?B?bTdzM256TkVKUHFSczM5VEo2cGc3VU5sNjBPVmF4czFRUUdMbDJkWEU2bkpL?=
- =?utf-8?B?ZzdURXVGNisrcmE3RlRyVmJkQ3gwR0tlNm1hcnNKQTN1Ti9lblJlY25nbGpu?=
- =?utf-8?B?bXQrTlFRckRwakxQQ2hjNG5CY0lKdXVpNStXeGJoNzgvNS9CenlYdk1NSjBK?=
- =?utf-8?B?cFFRaE05NzIzbE94S05BNjZjVlhISkxTSzZMajdNWnRJeWtoWTZhNlg2Mnpy?=
- =?utf-8?B?dm9rUkVnZWRMTWE3RDYxb09MRUplTXBTVDN2WWR0VWFuN01Jc0VaQ05IZHFM?=
- =?utf-8?B?NTM2Wk45a1FaODBTQTMxc0ZTNVViSGt6WTBqWWw2OVlLd2owaGJRSmFLSGxR?=
- =?utf-8?B?aWtNRjliVkVoc0ZncVBpenlmeU1jaFViQnliNHBFVHN0Qm5QSDBZZzRzeVQw?=
- =?utf-8?B?UjhtTUNRVkZUOFVzbVJWejZCUTVVRUgxdTVhaW9CZDgwWWIrbUc5Y3NYb3ly?=
- =?utf-8?B?MEJhS1dmbTFsZEJuVzhXSDEvWDJwRk12Z1U0S3BWMEJSNlM2SUlBRmlDWWMx?=
- =?utf-8?B?VWExYUdDbGtwT2hoTExIVG0vblNRZnp0ZVhLYXliaWpDS0x2NjBtS1paV3A0?=
- =?utf-8?B?SzVlcDRRWi9JZFhxeFlVVFR2blNibFJ2MjFUSHBzZzdKR0Jma2NoNzBrdTVl?=
- =?utf-8?B?MGZ4UDEwMWo0R3pUaTNtdC9jdjZsbzdacThJZUMwenQ1c1hFRmp5R085bDVn?=
- =?utf-8?B?RXNudEVvMGhSY2tIQS95MlNCR0UwekhyWWpNUVVJb09HUHV3dktZY0RWVGkv?=
- =?utf-8?B?TFBGcnNMdHMvSmZIVTNkcEoyTUc3eDBoM25yYi9iL2hrcisxN3VaZ3U2aWVV?=
- =?utf-8?B?WnNQdDVYVWZoSWxCa2hmRlVBcW9XZ1hOaTVuT05hRTFXY3BhK1dsZXJubWZi?=
- =?utf-8?B?Q2Q2Mi92dEpzREdzR3M2WnRrb2YrSE9LYmVXYk90b1lqMlRqVDZ3R0Q4cklZ?=
- =?utf-8?B?UlF3NzE1eDNkUTZnd3dDNWNocXlDTkJWWGl6anhpOGpnQjhpRWlxTzRoUnVh?=
- =?utf-8?B?YnAzL0ZuNUZqSSt1d0RFY2dNK0dQZnJUSWh1RUpPSlNYaFVmcmZ1SDNxa0Nl?=
- =?utf-8?B?UG5JTmVVZ2lSbCtldGFPQ3ZhM0wxRGFtQ2RKZS9LdU1Cby9GZlE1TGVpeW9P?=
- =?utf-8?B?aURjQm1nSm9xenkrYUY3Z2tSeHo1czZxd1N0RWdlTXZlU2tyYXZJbmY0dStu?=
- =?utf-8?B?NmJSQmYyeldhdkVSNjdMYjNhV2xUVGV3dndzTjFwMm9WYWdScGw2dGtxN09a?=
- =?utf-8?B?T2htT05BRzcxWWU5WFpjc1hNdnM1SUVUZFlSSnNDZ3FWaEwwSVlrNGZnQUZC?=
- =?utf-8?B?RXkxWG13eWxKdy8vN3poWnVyd3g1WXF6TWNkNnh2Y3NzS3JjTDRUNkV3bTZr?=
- =?utf-8?B?amJhN1F4OG42cHl0Sm53SHdRZWFhb3Y3Zko4UFNpTnhsQXJ0bVltT0F1dmtJ?=
- =?utf-8?B?L0FoeU03dDIydDNYZGRTTHBQa1JGMlQydld4MnVDRldSMEZqREtjaC9ZNzNy?=
- =?utf-8?B?UDV2QWVwWWhjaFpUcmhpeWtpNmw0MGwwczVwTkZ5Mkg1enVKSHBFMDZRemQz?=
- =?utf-8?B?NURBRzc2Tzdadk1aYkFiczRiNFBNR3JYRklkcUZTOFJweUE2UHI4UW1Dc3dR?=
- =?utf-8?B?THoybnJWT1ZIZmEwM0t6dytpS3htc2MySGs5dz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(376014)(7416014)(52116014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZThyMkRIM1VtaFcrRldXZ0pZZ0xVTEtoSnUyUlZxRVlOanlxL0NqRUMvcisx?=
- =?utf-8?B?WmlvaTJJem1mQWZnYW8zVXpheTYxUi93dGowb1JNYVBpSEhBeWY3NFB3RHdw?=
- =?utf-8?B?R1hLN1JXcnovRUw3emE3bTNIUWlzVWFweDJubnArUWcrQy9HZmFpU0Q4WXd6?=
- =?utf-8?B?VlZDNXpJWURLSkJ2a1BKOGJXb1Exd2JXVi9MeWxGc2k1L1Q1bDI2d0Uwei9h?=
- =?utf-8?B?ZlFGVWErQ1k2b0pXRVlYYW9ERlRoUjErVFF2UHRBUy85dkNNc2VlNmRSMmpn?=
- =?utf-8?B?MHV4UVVISzRQSHVIUjdjb2F6YWRTeU1oYU9QaCtTdzA1aDQ1V1lsYisxTHJR?=
- =?utf-8?B?aytkdGlub1JYV1JES0lBMEd6WERVMVI3OVJQNmdFcUlhU1VTbmhRT2tXT3li?=
- =?utf-8?B?ZmlrQXRhTEpYUFFBUVk5SGk4dzVUUHlKNUY4WTVXVGtscUdpeTFtNkFRaS84?=
- =?utf-8?B?dXp3ZUU4eHo3cllZdUxwalNlR09JcTY2TmFwNU1wbllMdlNURkd1bWpMM3o2?=
- =?utf-8?B?Wmh2bXpoWVc1S0tjOWY1RC9ZYlVjSGJjemJkdlJpcndqY3pqc3dnQWRGUlp5?=
- =?utf-8?B?RnZTKzhkUVRZbDNGZ1NsdXlWUnJmcTFzUzdneWxyaU92SzBLdkZaaE5weTNH?=
- =?utf-8?B?SlExMzdsTHZSRE56c3lYbFhrOGY1SWZvYXJqcHJuMzdwQkltT1VXaUxSbTBJ?=
- =?utf-8?B?SUF1VzJmV2NJZTcrUFFDem85UkdtVGVvZHIwaUN6NTltMVJQWVNaSklnWEk4?=
- =?utf-8?B?cXIxcEFIRHlkbTFqM2VteEtacWxzako2bW5saFJTbnlVYkg3K05vWUxTbjdi?=
- =?utf-8?B?eVVXZVRXbGtvVU1aaW5VZDJ3cURWbzY5cmQxMWRzcmVWTFVCMmt3K2FnODQx?=
- =?utf-8?B?L2dBcVRoQ2d0aEVoelQ2T1FjNENKUzlJZSt4UGRYL25WNGtwTzQ4dE4xRFlR?=
- =?utf-8?B?Z3dGbDMxZGlxSjI0eXN6L3VkYm5TT0xxdWZHRTd2MVRZbUVucWxzTVA3UDQv?=
- =?utf-8?B?VWQzdGkvU0hvaXNINVNVUjZ3TnQ5M0lScTV4OUEzcW8zRG9sUDN3NmR1TS96?=
- =?utf-8?B?Snd2alVjRHdwVWd6TjNwUlFyaHRpaHM1bUJDY29YSHBKODR5NnVDKzFHSGJs?=
- =?utf-8?B?Y2dKUkxsZms5WUkzN1BLYjlQRDk2SWRpREZpMjhPNFNGVzhUY1AreUtwMzlP?=
- =?utf-8?B?SG55bFUrVGxMcmI1REtYQ2xkSXp4RkxubUVWSFR5TjFPOHN0UFBia1M2Sm82?=
- =?utf-8?B?dSt2cE01bTJsWHZyYWl1eEFKN1hGaXI4akJjdWRuTjZTdThkb2lvdnlZWTJm?=
- =?utf-8?B?S2krbmw3bVFFYXlUcTIxOUpOZGpTajdFOUdqMktucThTbFo0RWxJYWtteEFK?=
- =?utf-8?B?RHdtZzV3VEd0cVRaU2lKaTNMN2JWR09HQ29UN2xLNDQrM2tsRmVFYU5oTWZ4?=
- =?utf-8?B?clNicG9uYUk5ZWs4b1B1d25VNE5LRnNjWXVzQ1BmYmhBa2gzampvMEVBWVlW?=
- =?utf-8?B?QWRRb01OcG05V2R2WFBGaFdXK2xxSVNsY0lzSlN6VERnY0lMVUVFVkdNUitC?=
- =?utf-8?B?ckNHZFlGaGVTdHM2bHUvUndXeW1LRkVGWlVsYzE3WVI0Mk1sVVFpZmNHTXVP?=
- =?utf-8?B?cjRsdFZEVHh0SkdtVTUyeWlPZzFpUllZdUJaZjNPSW5nNUZ0QkdzaW55WmJU?=
- =?utf-8?B?dUZwWlQrSmdTcnhrV1pKOFBzays2Y25aeG1iNEhWa0tsaUdOUENZMVIxNUJF?=
- =?utf-8?B?dU5sNkpiRTJEZUpmWVcvbm90U3lWTURVRWxJcDJPSmEwMW9QV1hiVVRESzZD?=
- =?utf-8?B?MkxaK0EwM0tlMm13RHNsNm1aYiszOVhQS1FsRnpNTzFDbHpKS0R5Q2pLZXNp?=
- =?utf-8?B?NkVuSTk5S3hzNVNOanNHaitkUEtGc0licS9pNjVvWmFPWDczT0N1NUpvYTRZ?=
- =?utf-8?B?aWJaTTFuZ21iVWJ2aE92U3F1NXgweHBEdEFtT3NjdnZOWWVEZXRrZE1sQjZN?=
- =?utf-8?B?MTljNnI0YVNpTkxUV2ZCMUFqOGh5WHlXelg4OEswRUk2Z0o2ZXlvNWdPMHZF?=
- =?utf-8?B?Vkh0bkViblBTdGxzcHNvZnA1YVVmbVo2YWh0dDczVFUrZ1o4dGVqcnR3ZXhC?=
- =?utf-8?Q?SxSs=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06c36bc6-fda0-4f60-4e8d-08de39cd6550
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2025 22:25:46.5376
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /jthNLHyNSz89ySV0WPcjVPODMQMXo7AgCPNoq4W8FOAJSLKeZ4zQVzgwBsP8Nv6JhbsopLu4EZN+IivtIw2oQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB9053
+References: <20251210022025.harder.803-kees@kernel.org> <20251210022035.331892-5-kees@kernel.org>
+In-Reply-To: <20251210022035.331892-5-kees@kernel.org>
+From: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
+Date: Fri, 12 Dec 2025 14:47:57 -0800
+X-Gm-Features: AQt7F2owWJWz97fvX13C104vCSNz1ZSBRgeII03ufizHxlaWJfD_JtSEu4IP1vw
+Message-ID: <CALvbMcCFQbBO2McnTfWVHEcVvZfy+U6FSM7jMPyG-1-N9RP14A@mail.gmail.com>
+Subject: Re: [PATCH v9 5/7] aarch64: Add AArch64 Kernel Control Flow Integrity implementation
+To: Kees Cook <kees@kernel.org>
+Cc: Qing Zhao <qing.zhao@oracle.com>, Uros Bizjak <ubizjak@gmail.com>,
+        Joseph Myers <josmyers@redhat.com>, Richard Biener <rguenther@suse.de>,
+        Jeff Law <jeffreyalaw@gmail.com>, Andrew Pinski <pinskia@gmail.com>,
+        Jakub Jelinek <jakub@redhat.com>, Martin Uecker <uecker@tugraz.at>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
+        Richard Earnshaw <richard.earnshaw@arm.com>,
+        Richard Sandiford <richard.sandiford@arm.com>,
+        Marcus Shawcroft <marcus.shawcroft@arm.com>,
+        Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+        Kito Cheng <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Waterman <andrew@sifive.com>,
+        Jim Wilson <jim.wilson.gcc@gmail.com>,
+        Dan Li <ashimida.1990@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ramon de C Valle <rcvalle@google.com>,
+        Joao Moreira <joao@overdrivepizza.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Bill Wendling <morbo@google.com>,
+        "Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
+        "Constable, Scott D" <scott.d.constable@intel.com>,
+        gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-ORIG-GUID: 7sJ_uFCBu1wb6LmlZV4s3_awRUMp2JHG
+X-Proofpoint-GUID: 7sJ_uFCBu1wb6LmlZV4s3_awRUMp2JHG
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjEyMDE4NCBTYWx0ZWRfX5IvSEA72ynuJ
+ LqiSiFD/5NqHSnaEVX5dufDJCK+AuzP1aSf7Kr+fjuI/1IjY8J0fuVkFlhIaDXyJJEij/N8SmdW
+ jMyBxMKMAQ+jXNJLcxbImDWjjgS/i7Yx0EFXZKaSnnEAnX6SPL+4jC6vtUvTCmcU/k1Zo9NpNBF
+ JYFX5Rgt4u8yRoMK319m1kdv9Sdjpl6j4tEHliQumj4XH9NgjzELinegbQJqF9miB+wEwlKnhkI
+ NHmqD4ekzBg2HE/QndKfs0vSnrkcanTBVnY5hO7VGw10m3cOrFJrT1VxyuPFNt5Wnl8w7E5CEUt
+ wcVSpnwEyRZFH6vNbpX0MX2cZ7Ox3HLoTxOqDW6SmT9tcQr19VDkpN9YS2deeO/LuvJi4r7R4O5
+ K+nmCZ707pThg3+Qc/py76bSbUI7Yg==
+X-Authority-Analysis: v=2.4 cv=GrpPO01C c=1 sm=1 tr=0 ts=693c9baa cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8
+ a=4X85NrQx50rkFQG2anEA:9 a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-12_06,2025-12-11_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ adultscore=0 suspectscore=0 priorityscore=1501 impostorscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512120184
 
-The current descriptor layout is:
+On Tue, Dec 9, 2025 at 6:23=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> Implement AArch64-specific KCFI backend.
+>
+> - Trap debugging through ESR (Exception Syndrome Register) encoding
+>   in BRK instruction immediate values.
+>
+> - Scratch register allocation using w16/w17 (x16/x17) following
+>   AArch64 procedure call standard for intra-procedure-call registers,
+>   which already makes x16/x17 available through existing clobbers.
+>
+>   Note that BTI uses x16/x17 AT the call site, and KCFI uses w16/w17
+>   BEFORE the call (for the type hash comparison). These don't conflict
+>   because:
+>   - KCFI clobbers w16/w17 with hash values.
+>   - Then the actual call happens via blr %target_reg (whatever
+>     register the target is in).
+>   - If SLS hardening is enabled, aarch64_indirect_call_asm will
+>     create a thunk that moves target into x16 and does br x16.
+>   - By the time the SLS thunk uses x16, KCFI is already done with it.
+>
+> - Does not interfere with SME, which uses attributes not function
+>   prototypes for distinguishing functions.
+>
+> Assembly Code Pattern for AArch64:
+>   ldur w16, [target, #-4]       ; Load actual type ID from preamble
+>   mov  w17, #type_id_low        ; Load expected type (lower 16 bits)
+>   movk w17, #type_id_high, lsl #16  ; Load upper 16 bits if needed
+>   cmp  w16, w17                 ; Compare type IDs directly
+>   b.eq .Lpass                   ; Branch if types match
+>   .Ltrap: brk #esr_value        ; Enhanced trap with register info
+>   .Lpass: blr/br target         ; Execute validated indirect transfer
+>
+> ESR (Exception Syndrome Register) Integration:
+> - BRK instruction immediate encoding format:
+>   0x8000 | ((TypeIndex & 31) << 5) | (AddrIndex & 31)
+>   - TypeIndex indicates which W register contains expected type (W17 =3D =
+17)
+>   - AddrIndex indicates which X register contains target address (0-30)
+>   - Example: brk #33313 (0x8221) =3D expected type in W17, target address=
+ in X1
+>
+> Build and run tested with Linux kernel ARCH=3Darm64.
+>
+> gcc/ChangeLog:
+>
+>         config/aarch64/aarch64-protos.h: Declare aarch64_indirect_branch_=
+asm,
+>         and KCFI helpers.
+>         config/aarch64/aarch64.cc (aarch64_expand_call): Wrap CALLs in
+>         KCFI, with clobbers.
+>         (aarch64_indirect_branch_asm): New function, extract common
+>         logic for branch asm, like existing call asm helper.
+>         (aarch64_output_kcfi_insn): Emit KCFI assembly.
+>         config/aarch64/aarch64.md: Add KCFI RTL patterns and replace
+>         open-coded branch emission with aarch64_indirect_branch_asm.
+>         doc/invoke.texi: Document aarch64 nuances.
 
-  struct dw_edma_desc *desc
-   └─ chunk list
-        └─ burst[]
+From an aarch64 point of view this is ok (except for a few minor
+things [see below in the patch itself] which can be bundled up with
+the fixes for the review of the middle-end parts and don't need an
+extra approval).
 
-Creating a DMA descriptor requires at least two kzalloc() calls because
-each chunk is allocated as a linked-list node. Since the number of bursts
-is already known when the descriptor is created, this linked-list layer is
-unnecessary.
 
-Move the burst array directly into struct dw_edma_desc and remove the
-struct dw_edma_chunk layer entirely.
+The only open question with the aarch64 side of things (and other
+targets) is how to represent the kfci calls, should there be wrapping
+or not.
+Right now I am ok with the wrapping but I am not a fan of it because
+it introduces complexity to the call patterns. It is definitely
+something that should be looked into but I am not going to block this
+set of patches for it.
+And using define_subst/define_subst_attr if we decide to stay with the
+wrapping with the kfci rtl, is something to look into but that can
+wait too.
 
-Use start_burst and done_burst to track the current bursts, which current
-are in the DMA link list.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/dma/dw-edma/dw-edma-core.c | 130 ++++++++++++-------------------------
- drivers/dma/dw-edma/dw-edma-core.h |  24 ++++---
- 2 files changed, 57 insertions(+), 97 deletions(-)
+>
+> gcc/testsuite/ChangeLog:
+>
+>         * gcc.dg/kcfi/kcfi-aarch64-ilp32.c: New test.
+>         * gcc.dg/kcfi/kcfi-adjacency.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-basics.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-call-sharing.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-complex-addressing.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-move-preservation.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-no-sanitize-inline.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-no-sanitize.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-offset-validation.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-patchable-entry-only.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-patchable-large.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-patchable-medium.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-patchable-prefix-only.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-tail-calls.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-trap-section.c: Add aarch64 patterns.
+>         * gcc.dg/kcfi/kcfi-trap-encoding.c: New test.
+>
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+>  gcc/config/aarch64/aarch64-protos.h           |  4 +
+>  gcc/config/aarch64/aarch64.md                 | 56 +++++++++++
+>  gcc/config/aarch64/aarch64.cc                 | 93 +++++++++++++++++++
+>  gcc/doc/invoke.texi                           | 14 +++
+>  .../gcc.dg/kcfi/kcfi-aarch64-ilp32.c          |  7 ++
+>  gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c    | 15 +++
+>  gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c       | 21 +++++
+>  gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c |  4 +
+>  .../gcc.dg/kcfi/kcfi-complex-addressing.c     | 16 ++++
+>  .../gcc.dg/kcfi/kcfi-move-preservation.c      | 20 ++++
+>  .../gcc.dg/kcfi/kcfi-no-sanitize-inline.c     |  5 +
+>  gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c  |  1 +
+>  .../gcc.dg/kcfi/kcfi-offset-validation.c      |  3 +
+>  .../gcc.dg/kcfi/kcfi-patchable-entry-only.c   | 12 +++
+>  .../gcc.dg/kcfi/kcfi-patchable-large.c        | 12 +++
+>  .../gcc.dg/kcfi/kcfi-patchable-medium.c       | 12 +++
+>  .../gcc.dg/kcfi/kcfi-patchable-prefix-only.c  | 12 +++
+>  gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c   | 19 ++++
+>  .../gcc.dg/kcfi/kcfi-trap-encoding.c          | 41 ++++++++
+>  gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c |  4 +
+>  20 files changed, 371 insertions(+)
+>  create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-aarch64-ilp32.c
+>  create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-trap-encoding.c
+>
+> diff --git a/gcc/config/aarch64/aarch64-protos.h b/gcc/config/aarch64/aar=
+ch64-protos.h
+> index da1d734a689f..6e5eeb203e28 100644
+> --- a/gcc/config/aarch64/aarch64-protos.h
+> +++ b/gcc/config/aarch64/aarch64-protos.h
+> @@ -1296,4 +1296,8 @@ extern unsigned aarch64_stack_alignment (const_tree=
+ exp, unsigned align);
+>  extern rtx aarch64_gen_compare_zero_and_branch (rtx_code code, rtx x,
+>                                                 rtx_code_label *label);
+>
+> +/* KCFI support.  */
+> +extern void kcfi_emit_trap_with_section (FILE *file, rtx trap_label_rtx)=
+;
+> +extern const char *aarch64_output_kcfi_insn (rtx_insn *insn, rtx *operan=
+ds);
+> +
+>  #endif /* GCC_AARCH64_PROTOS_H */
+> diff --git a/gcc/config/aarch64/aarch64.md b/gcc/config/aarch64/aarch64.m=
+d
+> index 8beeefca65ee..5c0ec73d79cd 100644
+> --- a/gcc/config/aarch64/aarch64.md
+> +++ b/gcc/config/aarch64/aarch64.md
+> @@ -1509,6 +1509,19 @@
+>    }"
+>  )
+>
+> +;; KCFI indirect call
+> +(define_insn "*call_insn"
+> +  [(kcfi (call (mem:DI (match_operand:DI 0 "aarch64_call_insn_operand" "=
+Ucr"))
+> +              (match_operand 1 "" ""))
+> +        (match_operand 3 "const_int_operand"))
+> +   (unspec:DI [(match_operand:DI 2 "const_int_operand")] UNSPEC_CALLEE_A=
+BI)
+> +   (clobber (reg:DI LR_REGNUM))]
+> +  "!SIBLING_CALL_P (insn)"
+> +{
+> +  return aarch64_output_kcfi_insn (insn, operands);
+> +}
+> +  [(set_attr "type" "call")])
+> +
+>  (define_insn "*call_insn"
+>    [(call (mem:DI (match_operand:DI 0 "aarch64_call_insn_operand"))
+>          (match_operand 1 "" ""))
+> @@ -1536,6 +1549,21 @@
+>    }"
+>  )
+>
+> +;; KCFI call with return value
+> +(define_insn "*call_value_insn"
+> +  [(set (match_operand 0 "" "")
+> +       (kcfi (call (mem:DI (match_operand:DI 1 "aarch64_call_insn_operan=
+d"
+> +                            "Ucr"))
+> +                   (match_operand 2 "" ""))
+> +             (match_operand 4 "const_int_operand")))
+> +   (unspec:DI [(match_operand:DI 3 "const_int_operand")] UNSPEC_CALLEE_A=
+BI)
+> +   (clobber (reg:DI LR_REGNUM))]
+> +  "!SIBLING_CALL_P (insn)"
+> +{
+> +  return aarch64_output_kcfi_insn (insn, &operands[1]);
+> +}
+> +  [(set_attr "type" "call")])
+> +
+>  (define_insn "*call_value_insn"
+>    [(set (match_operand 0 "" "")
+>         (call (mem:DI (match_operand:DI 1 "aarch64_call_insn_operand"))
+> @@ -1576,6 +1604,19 @@
+>    }
+>  )
+>
+> +;; KCFI sibling call
+> +(define_insn "*sibcall_insn"
+> +  [(kcfi (call (mem:DI (match_operand:DI 0 "aarch64_call_insn_operand" "=
+Ucs"))
+> +              (match_operand 1 ""))
+> +        (match_operand 3 "const_int_operand"))
+> +   (unspec:DI [(match_operand:DI 2 "const_int_operand")] UNSPEC_CALLEE_A=
+BI)
+> +   (return)]
+> +  "SIBLING_CALL_P (insn)"
+> +{
+> +  return aarch64_output_kcfi_insn (insn, operands);
+> +}
+> +  [(set_attr "type" "branch")])
+> +
+>  (define_insn "*sibcall_insn"
+>    [(call (mem:DI (match_operand:DI 0 "aarch64_call_insn_operand" "Ucs, U=
+sf"))
+>          (match_operand 1 ""))
+> @@ -1591,6 +1632,21 @@
+>     (set_attr "sls_length" "retbr,none")]
+>  )
+>
+> +;; KCFI sibling call with return value
+> +(define_insn "*sibcall_value_insn"
+> +  [(set (match_operand 0 "")
+> +       (kcfi (call (mem:DI (match_operand:DI 1 "aarch64_call_insn_operan=
+d"
+> +                            "Ucs"))
+> +                   (match_operand 2 ""))
+> +             (match_operand 4 "const_int_operand")))
+> +   (unspec:DI [(match_operand:DI 3 "const_int_operand")] UNSPEC_CALLEE_A=
+BI)
+> +   (return)]
+> +  "SIBLING_CALL_P (insn)"
+> +{
+> +  return aarch64_output_kcfi_insn (insn, &operands[1]);
+> +}
+> +  [(set_attr "type" "branch")])
+> +
+>  (define_insn "*sibcall_value_insn"
+>    [(set (match_operand 0 "")
+>         (call (mem:DI
+> diff --git a/gcc/config/aarch64/aarch64.cc b/gcc/config/aarch64/aarch64.c=
+c
+> index 0ef22e8e52c8..89c6c60c91ff 100644
+> --- a/gcc/config/aarch64/aarch64.cc
+> +++ b/gcc/config/aarch64/aarch64.cc
+> @@ -98,6 +98,7 @@
+>  #include "ipa-cp.h"
+>  #include "ipa-prop.h"
+>  #include "ipa-fnsummary.h"
+> +#include "kcfi.h"
+>  #include "hash-map.h"
+>  #include "aarch64-sched-dispatch.h"
+>  #include "aarch64-json-tunings-printer.h"
+> @@ -12069,6 +12070,16 @@ aarch64_expand_call (rtx result, rtx mem, rtx co=
+okie, bool sibcall)
+>
+>    call =3D gen_rtx_CALL (VOIDmode, mem, const0_rtx);
+>
+> +  /* Only indirect calls need KCFI instrumentation.  */
+> +  bool is_direct_call =3D SYMBOL_REF_P (XEXP (mem, 0));
+> +  rtx kcfi_type_rtx =3D is_direct_call ? NULL_RTX
+> +    : kcfi_get_type_id_for_expanding_gimple_call ();
+> +  if (kcfi_type_rtx)
+> +    {
+> +      /* Wrap call in KCFI.  */
+> +      call =3D gen_rtx_KCFI (VOIDmode, call, kcfi_type_rtx);
+> +    }
+> +
+>    if (result !=3D NULL_RTX)
+>      call =3D gen_rtx_SET (result, call);
+>
+> @@ -33329,6 +33340,88 @@ aarch64_libgcc_floating_mode_supported_p
+>  #undef TARGET_DOCUMENTATION_NAME
+>  #define TARGET_DOCUMENTATION_NAME "AArch64"
+>
+> +/* Output the assembly for a KCFI checked call instruction.  INSN is the
+> +   RTL instruction being processed.  OPERANDS is the array of RTL operan=
+ds
+> +   where operands[0] is the call target register, operands[3] is the KCF=
+I
+> +   type ID constant.  Returns the appropriate call instruction string.  =
+*/
+> +
+> +const char *
+> +aarch64_output_kcfi_insn (rtx_insn *insn, rtx *operands)
+> +{
+> +  /* Target register is operands[0].  */
+> +  rtx target_reg =3D operands[0];
+> +  gcc_assert (REG_P (target_reg));
+> +
+> +  /* Get KCFI type ID from operand[3].  */
+> +  uint32_t type_id =3D (uint32_t) INTVAL (operands[3]);
 
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 9e65155fd93d69ddbc8235fad671fad4dc120979..6e7b7ee99aaf6e1c3e354d36ca058813dc95b8dd 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -40,76 +40,45 @@ u64 dw_edma_get_pci_address(struct dw_edma_chan *chan, phys_addr_t cpu_addr)
- 	return cpu_addr;
- }
- 
--static struct dw_edma_chunk *dw_edma_alloc_chunk(struct dw_edma_desc *desc, u32 nburst)
--{
--	struct dw_edma_chan *chan = desc->chan;
--	struct dw_edma_chunk *chunk;
--
--	chunk = kzalloc(struct_size(chunk, burst, nburst), GFP_NOWAIT);
--	if (unlikely(!chunk))
--		return NULL;
--
--	chunk->chan = chan;
--	/* Toggling change bit (CB) in each chunk, this is a mechanism to
--	 * inform the eDMA HW block that this is a new linked list ready
--	 * to be consumed.
--	 *  - Odd chunks originate CB equal to 0
--	 *  - Even chunks originate CB equal to 1
--	 */
--	chunk->cb = !(desc->chunks_alloc % 2);
--
--	chunk->nburst = nburst;
--
--	list_add_tail(&chunk->list, &desc->chunk_list);
--	desc->chunks_alloc++;
--
--	return chunk;
--}
--
--static struct dw_edma_desc *dw_edma_alloc_desc(struct dw_edma_chan *chan)
-+static struct dw_edma_desc *
-+dw_edma_alloc_desc(struct dw_edma_chan *chan, u32 nburst)
- {
- 	struct dw_edma_desc *desc;
- 
--	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
-+	desc = kzalloc(struct_size(desc, burst, nburst), GFP_NOWAIT);
- 	if (unlikely(!desc))
- 		return NULL;
- 
- 	desc->chan = chan;
--
--	INIT_LIST_HEAD(&desc->chunk_list);
-+	desc->nburst = nburst;
-+	desc->cb = true;
- 
- 	return desc;
- }
- 
--static void dw_edma_free_desc(struct dw_edma_desc *desc)
--{
--	struct dw_edma_chunk *child, *_next;
--
--	/* Remove all the list elements */
--	list_for_each_entry_safe(child, _next, &desc->chunk_list, list) {
--		list_del(&child->list);
--		kfree(child);
--		desc->chunks_alloc--;
--	}
--
--	kfree(desc);
--}
--
- static void vchan_free_desc(struct virt_dma_desc *vdesc)
- {
--	dw_edma_free_desc(vd2dw_edma_desc(vdesc));
-+	kfree(vd2dw_edma_desc(vdesc));
- }
- 
--static void dw_edma_core_start(struct dw_edma_chunk *chunk, bool first)
-+static void dw_edma_core_start(struct dw_edma_desc *desc, bool first)
- {
--	struct dw_edma_chan *chan = chunk->chan;
-+	struct dw_edma_chan *chan = desc->chan;
- 	u32 i = 0;
- 
--	for (i = 0; i < chunk->nburst; i++)
--		dw_edma_core_ll_data(chan, &chunk->burst[i], i, chunk->cb,
--				     i == chunk->nburst - 1);
-+	for (i = 0; i < desc->nburst; i++) {
-+		if (i == chan->ll_max - 1)
-+			break;
-+
-+		dw_edma_core_ll_data(chan, &desc->burst[i + desc->start_burst],
-+				     i, desc->cb,
-+				     i == desc->nburst - 1 || i == chan->ll_max - 2);
-+	}
- 
--	dw_edma_core_ll_link(chan, i, chunk->cb, chan->ll_region.paddr);
-+	desc->done_burst = desc->start_burst;
-+	desc->start_burst += i;
-+
-+	dw_edma_core_ll_link(chan, i, desc->cb, chan->ll_region.paddr);
- 
- 	if (first)
- 		dw_edma_core_ch_enable(chan);
-@@ -119,7 +88,6 @@ static void dw_edma_core_start(struct dw_edma_chunk *chunk, bool first)
- 
- static int dw_edma_start_transfer(struct dw_edma_chan *chan)
- {
--	struct dw_edma_chunk *child;
- 	struct dw_edma_desc *desc;
- 	struct virt_dma_desc *vd;
- 
-@@ -131,16 +99,9 @@ static int dw_edma_start_transfer(struct dw_edma_chan *chan)
- 	if (!desc)
- 		return 0;
- 
--	child = list_first_entry_or_null(&desc->chunk_list,
--					 struct dw_edma_chunk, list);
--	if (!child)
--		return 0;
-+	dw_edma_core_start(desc, !desc->start_burst);
- 
--	dw_edma_core_start(child, !desc->xfer_sz);
--	desc->xfer_sz += child->xfer_sz;
--	list_del(&child->list);
--	kfree(child);
--	desc->chunks_alloc--;
-+	desc->cb = !desc->cb;
- 
- 	return 1;
- }
-@@ -289,8 +250,10 @@ dw_edma_device_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
- 	vd = vchan_find_desc(&chan->vc, cookie);
- 	if (vd) {
- 		desc = vd2dw_edma_desc(vd);
--		if (desc)
--			residue = desc->alloc_sz - desc->xfer_sz;
-+
-+		residue = desc->alloc_sz;
-+		if (desc && desc->done_burst)
-+			residue -= desc->burst[desc->done_burst].xfer_sz;
- 	}
- 	spin_unlock_irqrestore(&chan->vc.lock, flags);
- 
-@@ -307,7 +270,6 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
- 	struct dw_edma_chan *chan = dchan2dw_edma_chan(xfer->dchan);
- 	enum dma_transfer_direction dir = xfer->direction;
- 	struct scatterlist *sg = NULL;
--	struct dw_edma_chunk *chunk = NULL;
- 	struct dw_edma_burst *burst;
- 	struct dw_edma_desc *desc;
- 	u64 src_addr, dst_addr;
-@@ -369,10 +331,6 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
- 		return NULL;
- 	}
- 
--	desc = dw_edma_alloc_desc(chan);
--	if (unlikely(!desc))
--		goto err_alloc;
--
- 	if (xfer->type == EDMA_XFER_INTERLEAVED) {
- 		src_addr = xfer->xfer.il->src_start;
- 		dst_addr = xfer->xfer.il->dst_start;
-@@ -396,19 +354,15 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
- 		fsz = xfer->xfer.il->frame_size;
- 	}
- 
-+	desc = dw_edma_alloc_desc(chan, cnt);
-+	if (unlikely(!desc))
-+		return NULL;
-+
- 	for (i = 0; i < cnt; i++) {
- 		if (xfer->type == EDMA_XFER_SCATTER_GATHER && !sg)
- 			break;
- 
--		if (!(i % chan->ll_max)) {
--			u32 n = min(cnt - i, chan->ll_max);
--
--			chunk = dw_edma_alloc_chunk(desc, n);
--			if (unlikely(!chunk))
--				goto err_alloc;
--		}
--
--		burst = chunk->burst + (i % chan->ll_max);
-+		burst = desc->burst + i;
- 
- 		if (xfer->type == EDMA_XFER_CYCLIC)
- 			burst->sz = xfer->xfer.cyclic.len;
-@@ -417,8 +371,8 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
- 		else if (xfer->type == EDMA_XFER_INTERLEAVED)
- 			burst->sz = xfer->xfer.il->sgl[i % fsz].size;
- 
--		chunk->xfer_sz += burst->sz;
- 		desc->alloc_sz += burst->sz;
-+		burst->xfer_sz = desc->alloc_sz;
- 
- 		if (dir == DMA_DEV_TO_MEM) {
- 			burst->sar = src_addr;
-@@ -473,12 +427,6 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
- 	}
- 
- 	return vchan_tx_prep(&chan->vc, &desc->vd, xfer->flags);
--
--err_alloc:
--	if (desc)
--		dw_edma_free_desc(desc);
--
--	return NULL;
- }
- 
- static struct dma_async_tx_descriptor *
-@@ -551,8 +499,14 @@ static void dw_hdma_set_callback_result(struct virt_dma_desc *vd,
- 		return;
- 
- 	desc = vd2dw_edma_desc(vd);
--	if (desc)
--		residue = desc->alloc_sz - desc->xfer_sz;
-+	residue = desc->alloc_sz;
-+
-+	if (desc) {
-+		if (result == DMA_TRANS_NOERROR)
-+			residue -= desc->burst[desc->start_burst - 1].xfer_sz;
-+		else if (desc->done_burst)
-+			residue -= desc->burst[desc->done_burst - 1].xfer_sz;
-+	}
- 
- 	res = &vd->tx_result;
- 	res->result = result;
-@@ -571,7 +525,7 @@ static void dw_edma_done_interrupt(struct dw_edma_chan *chan)
- 		switch (chan->request) {
- 		case EDMA_REQ_NONE:
- 			desc = vd2dw_edma_desc(vd);
--			if (!desc->chunks_alloc) {
-+			if (desc->start_burst >= desc->nburst) {
- 				dw_hdma_set_callback_result(vd,
- 							    DMA_TRANS_NOERROR);
- 				list_del(&vd->node);
-@@ -936,7 +890,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 		goto err_irq_free;
- 
- 	/* Turn debugfs on */
--	dw_edma_core_debugfs_on(dw);
-+	//dw_edma_core_debugfs_on(dw);
- 
- 	chip->dw = dw;
- 
-diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-index 1930c3bce2bf33fdfbf4e8d99002483a4565faed..ba83c42dee5224dccdf34cec6481e9404a607702 100644
---- a/drivers/dma/dw-edma/dw-edma-core.h
-+++ b/drivers/dma/dw-edma/dw-edma-core.h
-@@ -46,15 +46,8 @@ struct dw_edma_burst {
- 	u64				sar;
- 	u64				dar;
- 	u32				sz;
--};
--
--struct dw_edma_chunk {
--	struct list_head		list;
--	struct dw_edma_chan		*chan;
--	u8				cb;
-+	/* precalulate summary of previous burst total size */
- 	u32				xfer_sz;
--	u32                             nburst;
--	struct dw_edma_burst            burst[] __counted_by(nburst);
- };
- 
- struct dw_edma_desc {
-@@ -66,6 +59,12 @@ struct dw_edma_desc {
- 
- 	u32				alloc_sz;
- 	u32				xfer_sz;
-+
-+	u32				done_burst;
-+	u32				start_burst;
-+	u8				cb;
-+	u32				nburst;
-+	struct dw_edma_burst            burst[] __counted_by(nburst);
- };
- 
- struct dw_edma_chan {
-@@ -126,7 +125,6 @@ struct dw_edma_core_ops {
- 	void (*ll_link)(struct dw_edma_chan *chan, u32 idx, bool cb, u64 addr);
- 	void (*ch_doorbell)(struct dw_edma_chan *chan);
- 	void (*ch_enable)(struct dw_edma_chan *chan);
--
- 	void (*ch_config)(struct dw_edma_chan *chan);
- 	void (*debugfs_on)(struct dw_edma *dw);
- };
-@@ -166,6 +164,14 @@ struct dw_edma_chan *dchan2dw_edma_chan(struct dma_chan *dchan)
- 	return vc2dw_edma_chan(to_virt_chan(dchan));
- }
- 
-+static inline u64 dw_edma_core_get_ll_paddr(struct dw_edma_chan *chan)
-+{
-+	if (chan->dir == EDMA_DIR_WRITE)
-+		return chan->dw->chip->ll_region_wr[chan->id].paddr;
-+
-+	return chan->dw->chip->ll_region_rd[chan->id].paddr;
-+}
-+
- static inline
- void dw_edma_core_off(struct dw_edma *dw)
- {
+Use UINTVAL .
 
--- 
-2.34.1
+> +
+> +  /* Calculate typeid offset from call target.  */
+> +  HOST_WIDE_INT offset =3D -kcfi_get_typeid_offset ();
+> +
+> +  /* Get unique label number for this KCFI check.  */
+> +  int labelno =3D kcfi_next_labelno ();
+> +
+> +  /* Generate custom label names.  */
+> +  char trap_name[32];
+> +  char call_name[32];
+> +  ASM_GENERATE_INTERNAL_LABEL (trap_name, "Lkcfi_trap", labelno);
+> +  ASM_GENERATE_INTERNAL_LABEL (call_name, "Lkcfi_call", labelno);
+> +
+> +  /* Load actual type into w16 from memory at offset using ldur.  */
+> +  rtx temp_operands[2];
+> +  temp_operands[0] =3D target_reg;
+> +  temp_operands[1] =3D GEN_INT (offset);
+> +  output_asm_insn ("ldur\tw16, [%0, #%1]", temp_operands);
+> +
+> +  /* Load expected type into w17 using mov/movk sequence.  */
+> +  fprintf (asm_out_file, "\tmov\tw17, #%u\n", type_id & 0xFFFF);
+> +  fprintf (asm_out_file, "\tmovk\tw17, #%u, lsl #16\n", (type_id >> 16) =
+& 0xFFFF);
+> +
+> +  /* Compare types.  */
+> +  fprintf (asm_out_file, "\tcmp\tw16, w17\n");
+> +
+> +  /* Output conditional branch to call label.  */
+> +  fputs ("\tb.eq\t", asm_out_file);
+> +  assemble_name (asm_out_file, call_name);
+> +  fputc ('\n', asm_out_file);
+> +
+> +  /* Output trap label and BRK instruction.  */
+> +  ASM_OUTPUT_LABEL (asm_out_file, trap_name);
+> +
+> +  /* Calculate and emit BRK with ESR encoding.  */
+> +  unsigned type_index =3D R17_REGNUM;
+> +  unsigned addr_index =3D REGNO (target_reg) - R0_REGNUM;
+> +  unsigned esr_value =3D 0x8000 | ((type_index & 31) << 5) | (addr_index=
+ & 31);
+> +
+> +  fprintf (asm_out_file, "\tbrk\t#%u\n", esr_value);
 
+It might be useful to print the hex instead of the decimal here.
+Either way is ok.
+
+> +
+> +  /* Output call label.  */
+> +  ASM_OUTPUT_LABEL (asm_out_file, call_name);
+> +
+> +  /* Return appropriate call instruction based on SIBLING_CALL_P.  */
+> +  if (SIBLING_CALL_P (insn))
+> +    return aarch64_indirect_branch_asm (target_reg);
+> +  else
+> +    return aarch64_indirect_call_asm (target_reg);
+> +}
+> +
+> +/* Return true if the target supports KCFI.
+> +   KCFI is not supported for ILP32 due to pointer size requirements.  */
+> +
+> +static bool
+> +aarch64_kcfi_supported_p (void)
+> +{
+> +  if (TARGET_ILP32)
+> +    {
+> +      error ("%<-fsanitize=3Dkcfi%> is not supported for %<-mabi=3Dilp32=
+%>");
+> +      return false;
+> +    }
+> +  return true;
+> +}
+> +
+> +#undef TARGET_KCFI_SUPPORTED
+> +#define TARGET_KCFI_SUPPORTED aarch64_kcfi_supported_p
+> +
+>  struct gcc_target targetm =3D TARGET_INITIALIZER;
+>
+>  #include "gt-aarch64.h"
+> diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
+> index e7443b10b754..d93e6b4bb3f4 100644
+> --- a/gcc/doc/invoke.texi
+> +++ b/gcc/doc/invoke.texi
+> @@ -18761,6 +18761,20 @@ header MOVri instruction would become something =
+like this:
+>
+>  @code{movl    $199571451, %ebx # hash of foo's type =3D 0xBE537FB}
+>
+> +On AArch64, KCFI type identifiers are emitted as a @code{.word ID}
+> +directive (a 32-bit constant) before the function entry.  AArch64's
+> +natural 4-byte instruction alignment eliminates the need for additional
+> +alignment NOPs.  When used with @option{-fpatchable-function-entry}, the
+> +type identifier is placed before any prefix NOPs.  The runtime check
+> +uses @code{x16} and @code{x17} as scratch registers.  Type mismatches
+> +trigger a @code{brk} instruction with an immediate value that encodes
+> +both the expected type register index and the target address register
+> +index in the format @code{0x8000 | (type_reg << 5) | addr_reg}.  This
+> +encoding is captured in the ESR (Exception Syndrome Register) when the
+> +trap is taken, allowing the kernel to identify both the KCFI violation
+> +and the involved registers for detailed diagnostics (eliminating the nee=
+d
+> +for a separate @code{.kcfi_traps} section as used on x86_64).
+> +
+>  KCFI is intended primarily for kernel code and may not be suitable
+>  for user-space applications that rely on techniques incompatible
+>  with strict type checking of indirect calls.
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-aarch64-ilp32.c b/gcc/testsui=
+te/gcc.dg/kcfi/kcfi-aarch64-ilp32.c
+> new file mode 100644
+> index 000000000000..aff560020c7e
+> --- /dev/null
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-aarch64-ilp32.c
+> @@ -0,0 +1,7 @@
+> +/* Test that KCFI is rejected for AArch64 ILP32.  */
+> +/* { dg-do compile { target aarch64*-*-* } } */
+> +/* { dg-additional-options "-mabi=3Dilp32 -Wno-deprecated" } */
+> +/* { dg-error ".-fsanitize=3Dkcfi. is not supported for .-mabi=3Dilp32."=
+ "" { target *-*-* } 0 } */
+> +/* { dg-message "sorry, unimplemented: .-fsanitize=3Dkcfi. not supported=
+" "" { target *-*-* } 0 } */
+> +
+> +void foo (void) { }
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c b/gcc/testsuite/g=
+cc.dg/kcfi/kcfi-adjacency.c
+> index 7c59921e630c..f3d7d23e6af2 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
+> @@ -63,4 +63,19 @@ __attribute__((noinline)) void test_conditional_call(i=
+nt flag) {
+>  ** ...
+>  */
+>
+> +/*
+> +** test_complex_args: { target aarch64*-*-* }
+> +** ...
+> +** ldur        w16, \[(x[0-9]+), #-4\]
+> +** mov w17, #[0-9]+
+> +** movk        w17, #[0-9]+, lsl #16
+> +** cmp w16, w17
+> +** b.eq        .Lkcfi_call([0-9]+)
+> +** .Lkcfi_trap[0-9]+:
+> +** brk #[0-9]+
+> +** .Lkcfi_call\2:
+> +** br  \1
+> +** ...
+> +*/
+> +
+>  /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*=
+|\.section|\.text} } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c b/gcc/testsuite/gcc.=
+dg/kcfi/kcfi-basics.c
+> index fe0a21d26df9..6eac946f7abf 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
+> @@ -59,6 +59,9 @@ int main() {
+>  /* x86_64: Verify type ID in preamble (after NOPs, before function label=
+) */
+>  /* { dg-final { scan-assembler {__cfi_regular_function:\n\t+nop\n.*\n\t+=
+movl\t+\$0x[0-9a-f]+, %eax} { target x86_64-*-* } } } */
+>
+> +/* AArch64: Verify type ID word in preamble.  */
+> +/* { dg-final { scan-assembler {__cfi_regular_function:\n\t\.word\t0x[0-=
+9a-f]+} { target aarch64*-*-* } } } */
+> +
+>  /*
+>  ** static_caller: { target x86_64-*-* }
+>  ** ...
+> @@ -76,6 +79,21 @@ int main() {
+>  ** ...
+>  */
+>
+> +/*
+> +** static_caller: { target aarch64*-*-* }
+> +** ...
+> +** ldur        w16, \[(x[0-9]+), #-4\]
+> +** mov w17, #[0-9]+
+> +** movk        w17, #[0-9]+, lsl #16
+> +** cmp w16, w17
+> +** b.eq        .Lkcfi_call([0-9]+)
+> +** .Lkcfi_trap[0-9]+:
+> +** brk #[0-9]+
+> +** .Lkcfi_call\2:
+> +** blr \1
+> +** ...
+> +*/
+> +
+>  /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*=
+|\.section|\.text} } } */
+>
+>  /* Extern functions should NOT get KCFI preambles.  */
+> @@ -93,3 +111,6 @@ int main() {
+>  /* External functions that are only called directly should NOT get
+>     __kcfi_typeid_ symbols.  */
+>  /* { dg-final { scan-assembler-not {__kcfi_typeid_external_func_int} } }=
+ */
+> +
+> +/* AArch64 should NOT have trap section (use immediate instructions inst=
+ead).  */
+> +/* { dg-final { scan-assembler-not {\.kcfi_traps} { target aarch64*-*-* =
+} } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c b/gcc/testsuit=
+e/gcc.dg/kcfi/kcfi-call-sharing.c
+> index 05165f0e2851..6062d74ef62a 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
+> @@ -63,14 +63,18 @@ int test_kcfi_check_sharing(struct kobject *kobj, con=
+st struct attribute_group *
+>  /* Verify we have TWO different KCFI check sequences.  */
+>  /* Each check should have different type ID constants.  */
+>  /* x86: { dg-final { scan-assembler-times {movl\s+\$-?[0-9]+,\s+%r10d} 2=
+ { target i?86-*-* x86_64-*-* } } } */
+> +/* AArch64: { dg-final { scan-assembler-times {mov\s+w17, #[0-9]+} 2 { t=
+arget aarch64*-*-* } } } */
+>
+>  /* Verify the checks use DIFFERENT type IDs (not shared).
+>     We should NOT see the same type ID used twice - that would indicate
+>     unmerged sharing.  */
+>  /* x86: { dg-final { scan-assembler-not {movl\s+\$(-?[0-9]+),\s+%r10d.*m=
+ovl\s+\$\1,\s+%r10d} { target i?86-*-* x86_64-*-* } } } */
+> +/* AArch64: { dg-final { scan-assembler-not {mov\s+w17, #([0-9]+).*mov\s=
++w17, #\1} { target aarch64*-*-* } } } */
+>
+>  /* Verify expected number of traps.  */
+>  /* x86: { dg-final { scan-assembler-times {ud2} 2 { target i?86-*-* x86_=
+64-*-* } } } */
+> +/* AArch64: { dg-final { scan-assembler-times {brk\s+#[0-9]+} 2 { target=
+ aarch64*-*-* } } } */
+>
+>  /* Verify 2 separate call sites.  */
+>  /* x86: { dg-final { scan-assembler-times {jmp\s+\*%[a-z0-9]+} 2 { targe=
+t i?86-*-* x86_64-*-* } } } */
+> +/* AArch64: { dg-final { scan-assembler-times {br\tx[0-9]+} 2 { target a=
+arch64*-*-* } } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c b/gcc/te=
+stsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
+> index ed415033c5c9..3ffbd408a69e 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
+> @@ -146,4 +146,20 @@ int main() {
+>  ** ...
+>  */
+>
+> +/* Standard KCFI handling.  */
+> +/*
+> +** main: { target aarch64*-*-* }
+> +** ...
+> +** ldur        w16, \[(x[0-9]+), #-4\]
+> +** mov w17, #[0-9]+
+> +** movk        w17, #[0-9]+, lsl #16
+> +** cmp w16, w17
+> +** b.eq        .Lkcfi_call([0-9]+)
+> +** .Lkcfi_trap[0-9]+:
+> +** brk #[0-9]+
+> +** .Lkcfi_call\2:
+> +** blr \1
+> +** ...
+> +*/
+> +
+>  /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*=
+|\.section|\.text} } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c b/gcc/tes=
+tsuite/gcc.dg/kcfi/kcfi-move-preservation.c
+> index 5553ff47174b..df39b7f0a8a3 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
+> @@ -57,4 +57,24 @@ int main(void)
+>  ** ...
+>  */
+>
+> +/*
+> +** indirect_call: { target aarch64*-*-* }
+> +** ...
+> +** mov (x[0-9]+), x0
+> +** ...
+> +** ldur        w16, \[\1, #-4\]
+> +** mov w17, #[0-9]+
+> +** movk        w17, #[0-9]+, lsl #16
+> +** cmp w16, w17
+> +** b.eq        .Lkcfi_call([0-9]+)
+> +** .Lkcfi_trap[0-9]+:
+> +** brk #[0-9]+
+> +** .Lkcfi_call\2:
+> +** br  \1
+> +** ...
+> +*/
+> +
+>  /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*=
+|\.section|\.text} } } */
+> +
+> +/* AArch64 should NOT have trap section (use immediate instructions inst=
+ead).  */
+> +/* { dg-final { scan-assembler-not {\.kcfi_traps} { target aarch64*-*-* =
+} } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c b/gcc/te=
+stsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
+> index 9ed7e21fe8eb..cdeb202ffd12 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
+> @@ -75,11 +75,16 @@ int main(void)
+>
+>  /* Verify correct number of KCFI checks: exactly 2 */
+>  /* { dg-final { scan-assembler-times {ud2} 2 { target x86_64-*-* } } } *=
+/
+> +/* { dg-final { scan-assembler-times {brk\s+#[0-9]+} 2 { target aarch64*=
+-*-* } } } */
+>
+>  /* Positive controls: these should have KCFI checks.  */
+>  /* { dg-final { scan-assembler {normal_function:.*ud2.*\.size\s+normal_f=
+unction} { target x86_64-*-* } } } */
+>  /* { dg-final { scan-assembler {wrap_normal_inline:.*ud2.*\.size\s+wrap_=
+normal_inline} { target x86_64-*-* } } } */
+> +/* { dg-final { scan-assembler {normal_function:.*brk\s+#[0-9]+.*\.size\=
+s+normal_function} { target aarch64*-*-* } } } */
+> +/* { dg-final { scan-assembler {wrap_normal_inline:.*brk\s+#[0-9]+.*\.si=
+ze\s+wrap_normal_inline} { target aarch64*-*-* } } } */
+>
+>  /* Negative controls: these should NOT have KCFI checks.  */
+>  /* { dg-final { scan-assembler-not {sensitive_non_inline_function:.*ud2.=
+*\.size\s+sensitive_non_inline_function} { target x86_64-*-* } } } */
+>  /* { dg-final { scan-assembler-not {wrap_sensitive_inline:.*ud2.*\.size\=
+s+wrap_sensitive_inline} { target x86_64-*-* } } } */
+> +/* { dg-final { scan-assembler-not {sensitive_non_inline_function:.*brk\=
+s+#[0-9]+.*\.size\s+sensitive_non_inline_function} { target aarch64*-*-* } =
+} } */
+> +/* { dg-final { scan-assembler-not {wrap_sensitive_inline:.*brk\s+#[0-9]=
++.*\.size\s+wrap_sensitive_inline} { target aarch64*-*-* } } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c b/gcc/testsuite=
+/gcc.dg/kcfi/kcfi-no-sanitize.c
+> index 95a8e8419e00..af6d86803576 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
+> @@ -34,3 +34,4 @@ int main() {
+>     caller_no_checks() should NOT generate KCFI check (no_sanitize).
+>     So a total of exactly 1 KCFI check in the entire program.  */
+>  /* { dg-final { scan-assembler-times {addl\t-4\(%r[ad]x\), %r1[01]d} 1 {=
+ target x86_64-*-* } } } */
+> +/* { dg-final { scan-assembler-times {ldur\tw16, \[x[0-9]+, #-4\]} 1 { t=
+arget aarch64-*-* } } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c b/gcc/tes=
+tsuite/gcc.dg/kcfi/kcfi-offset-validation.c
+> index 97d964feebd3..0ced5c43ae92 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
+> @@ -27,3 +27,6 @@ int main() {
+>  /* x86_64: All call sites should use -4 offset for KCFI type ID loads, e=
+ven
+>     with -falign-functions=3D16 (we're not using patchable entries here).=
+  */
+>  /* { dg-final { scan-assembler {movl\t\$-?[0-9]+, %r10d\n\taddl\t-4\(%r[=
+a-z0-9]+\), %r10d} { target x86_64-*-* } } } */
+> +
+> +/* AArch64: All call sites should use -4 offset.  */
+> +/* { dg-final { scan-assembler {ldur\tw16, \[x[0-9]+, #-4\]} { target aa=
+rch64*-*-* } } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c b/gcc/=
+testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
+> index 379356385a16..7a251cbdee3b 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
+> @@ -28,6 +28,11 @@ int main() {
+>  ** movl        \$0x[0-9a-f]+, %eax
+>  */
+>
+> +/*
+> +** __cfi_test_function: { target aarch64*-*-* }
+> +** .word       0x[0-9a-f]+
+> +*/
+> +
+>  /*
+>  ** main: { target x86_64-*-* }
+>  ** ...
+> @@ -35,4 +40,11 @@ int main() {
+>  ** ...
+>  */
+>
+> +/*
+> +** main: { target aarch64*-*-* }
+> +** ...
+> +** ldur        w16, \[x[0-9]+, #-4\]
+> +** ...
+> +*/
+> +
+>  /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.wor=
+d} } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c b/gcc/tests=
+uite/gcc.dg/kcfi/kcfi-patchable-large.c
+> index 06df3495bb23..3ed5d16c8e91 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
+> @@ -17,6 +17,11 @@ int main() {
+>  ** movl        \$0x[0-9a-f]+, %eax
+>  */
+>
+> +/*
+> +** __cfi_test_function: { target aarch64*-*-* }
+> +** .word       0x[0-9a-f]+
+> +*/
+> +
+>  /*
+>  ** main: { target x86_64-*-* }
+>  ** ...
+> @@ -24,4 +29,11 @@ int main() {
+>  ** ...
+>  */
+>
+> +/*
+> +** main: { target aarch64*-*-* }
+> +** ...
+> +** ldur        w16, \[x[0-9]+, #-48\]
+> +** ...
+> +*/
+> +
+>  /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.wor=
+d} } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c b/gcc/test=
+suite/gcc.dg/kcfi/kcfi-patchable-medium.c
+> index ef87b135934b..e354914209e9 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
+> @@ -24,6 +24,11 @@ int main() {
+>  ** movl        \$0x[0-9a-f]+, %eax
+>  */
+>
+> +/*
+> +** __cfi_test_function: { target aarch64*-*-* }
+> +** .word       0x[0-9a-f]+
+> +*/
+> +
+>  /*
+>  ** main: { target x86_64-*-* }
+>  ** ...
+> @@ -31,4 +36,11 @@ int main() {
+>  ** ...
+>  */
+>
+> +/*
+> +** main: { target aarch64*-*-* }
+> +** ...
+> +** ldur        w16, \[x[0-9]+, #-20\]
+> +** ...
+> +*/
+> +
+>  /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.wor=
+d} } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c b/gcc=
+/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
+> index 872814aa4171..7a1dc4fa0e07 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
+> @@ -25,6 +25,11 @@ int main() {
+>  ** movl        \$0x[0-9a-f]+, %eax
+>  */
+>
+> +/*
+> +** __cfi_test_function: { target aarch64*-*-* }
+> +** .word       0x[0-9a-f]+
+> +*/
+> +
+>  /*
+>  ** main: { target x86_64-*-* }
+>  ** ...
+> @@ -32,4 +37,11 @@ int main() {
+>  ** ...
+>  */
+>
+> +/*
+> +** main: { target aarch64*-*-* }
+> +** ...
+> +** ldur        w16, \[x[0-9]+, #-16\]
+> +** ...
+> +*/
+> +
+>  /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.wor=
+d} } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c b/gcc/testsuite/=
+gcc.dg/kcfi/kcfi-tail-calls.c
+> index 04a9eb1fd206..1a7cc4aa167f 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
+> @@ -78,3 +78,22 @@ int test_non_tail_indirect_call(func_ptr_t handler, in=
+t x) {
+>
+>  /* Should have exactly 1 regular call (non-tail call case).  */
+>  /* { dg-final { scan-assembler-times {call\t\*%[a-z0-9]+} 1 { target x86=
+_64-*-* } } } */
+> +
+> +/* Should have exactly 4 KCFI checks for indirect calls (load type ID fr=
+om
+> +   -4 offset + compare).  */
+> +/* { dg-final { scan-assembler-times {ldur\tw16, \[x[0-9]+, #-4\]} 4 { t=
+arget aarch64-*-* } } } */
+> +/* { dg-final { scan-assembler-times {cmp\tw16, w17} 4 { target aarch64-=
+*-* } } } */
+> +
+> +/* Should have exactly 4 trap instructions.  */
+> +/* { dg-final { scan-assembler-times {brk\t#[0-9]+} 4 { target aarch64-*=
+-* } } } */
+> +
+> +/* Should have exactly 3 protected tail calls (br through register after
+> +   KCFI check).  */
+> +/* { dg-final { scan-assembler-times {br\tx[0-9]+} 3 { target aarch64-*-=
+* } } } */
+> +
+> +/* Should have exactly 1 regular call (non-tail call case).  */
+> +/* { dg-final { scan-assembler-times {blr\tx[0-9]+} 1 { target aarch64-*=
+-* } } } */
+> +
+> +/* Type ID loading should use mov + movk pattern for 32-bit constants.  =
+*/
+> +/* { dg-final { scan-assembler {mov\tw17, #[0-9]+} { target aarch64-*-* =
+} } } */
+> +/* { dg-final { scan-assembler {movk\tw17, #[0-9]+, lsl #16} { target aa=
+rch64-*-* } } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-encoding.c b/gcc/testsui=
+te/gcc.dg/kcfi/kcfi-trap-encoding.c
+> new file mode 100644
+> index 000000000000..0c257565c9e8
+> --- /dev/null
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-encoding.c
+> @@ -0,0 +1,41 @@
+> +/* Test AArch64 and ARM32 KCFI trap encoding in BRK/UDF instructions.  *=
+/
+> +/* { dg-do compile { target aarch64*-*-* } } */
+> +
+> +void target_function(int x, char y) {
+> +}
+> +
+> +int main() {
+> +    void (*func_ptr)(int, char) =3D target_function;
+> +
+> +    /* This should generate trap with immediate encoding.  */
+> +    func_ptr(42, 'a');
+> +
+> +    return 0;
+> +}
+> +
+> +/* Should have KCFI preamble.  */
+> +/* { dg-final { scan-assembler "__cfi_target_function:" } } */
+> +
+> +/* AArch64 specific: Should have BRK instruction with proper ESR encodin=
+g
+> +   ESR format: 0x8000 | ((type_reg & 31) << 5) | (addr_reg & 31)
+> +
+> +   Test the ESR encoding by checking for the expected value.
+> +   Since we know this test uses x2, we expect ESR =3D 0x8000 | (17<<5) |=
+ 2 =3D 33314
+> +   */
+> +
+> +/*
+> +** main: { target aarch64*-*-* }
+> +** ...
+> +** ldur        w16, \[x[0-9]+, #-4\]
+> +** mov w17, #[0-9]+
+> +** movk        w17, #[0-9]+, lsl #16
+> +** cmp w16, w17
+> +** b\.eq       .Lkcfi_call[0-9]+
+> +** .Lkcfi_trap[0-9]+:
+> +** brk #33314
+> +** .Lkcfi_call[0-9]+:
+> +** blr x2
+> +** ...
+> +*/
+> +
+> +/* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*=
+} } } */
+> diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c b/gcc/testsuit=
+e/gcc.dg/kcfi/kcfi-trap-section.c
+> index 55c0829ccd7b..e92873e51321 100644
+> --- a/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
+> +++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
+> @@ -18,6 +18,10 @@ int main() {
+>
+>  /* Should have exactly 2 trap labels in code.  */
+>  /* { dg-final { scan-assembler-times {\.L[^:]+:\n\s*ud2} 2 { target x86_=
+64-*-* } } } */
+> +/* { dg-final { scan-assembler-times {\.L[^:]+:\n\s*brk} 2 { target aarc=
+h64*-*-* } } } */
+>
+>  /* x86_64 should exactly 2 .kcfi_traps sections.  */
+>  /* { dg-final { scan-assembler-times {\.section\t\.kcfi_traps,"ao",@prog=
+bits,\.text} 2 { target x86_64-*-* } } } */
+> +
+> +/* AArch64 should NOT have .kcfi_traps section.  */
+> +/* { dg-final { scan-assembler-not {\.section\t+\.kcfi_traps} { target a=
+arch64*-*-* } } } */
+> --
+> 2.34.1
+>
