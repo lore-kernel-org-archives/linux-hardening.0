@@ -1,94 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054A119C54F;
-	Thu, 11 Dec 2025 22:02:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A701122083;
+	Fri, 12 Dec 2025 03:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765490551; cv=none; b=pjtLz2orF+hIn+83itr/w9V5xNQkQwGxNjF6WKCB/hGwsjsuaBwIBy8rBEjbMXmbRPB2oVuboA3kPOhQHm3p7G0uk3I2EhD2o/GcbhNVgHV239pzCyuTG44Q0anHAzSpeIeeE0stN/a8tzy6h2qReJa1HNL8ICTFFWSHMaZm4KY=
+	t=1765508463; cv=none; b=SlhkX2ireHXtEck+F5bwEU9kmFQDpZe/SgLRBUojEFi751A3l+/opF49/vU18hff8uk9LrzIgwbTtjLEj/ebYN5k6GpMgTc9kSM0/BMU3YGm0awxMd8WqtX9b7vkfY4cU3iC2e0zwkiVrQ5jz7Qb+t/FXv+YuiABJPHOjfpsHvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765490551; c=relaxed/simple;
-	bh=1jUgFRDwVLlPWU+cRYkz5ms19z7NWJCY23qeUoAcv8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=awwFXFKyUIQwB1dVHhcwYJw0r91E8JYZHrG6+H7W9f/Q/8DmnK22oZnD2UxoUOtAa8dh9Z7aP6gVm/whzNdYoJR8LrCxaIEzEMiiV+kS4wZwcq9qkTBkHpdnk1fdJzzC+lgUjjgXz2Gg03jbAjhA/i3VOCJV+AYsYolbPoJLTx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P765zWgb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765508463; c=relaxed/simple;
+	bh=MRVJ17cxjJ/1xqcJyZvQADUaV2QTkzL7dFTtiTT0rNc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DBhAaSw2Vh8jfEdt061ixAdbUXxN5Qc4XpPwY99Ym6FdSpoqtVb/V7Y2n6mkptWYJsWCpW7TWfrSBQtw3ikNa+RT9RMDypfP6vmTzhHxM0NycMBGLpoqj95upbswX6gYtC7v/Q/eWMp2MqU4HzNySOpERkZEpvUZlTqwE8RfMo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UjtQhNgh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P765zWgb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00344C4CEF7;
-	Thu, 11 Dec 2025 22:02:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UjtQhNgh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31830C4CEF7;
+	Fri, 12 Dec 2025 03:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765490550;
-	bh=1jUgFRDwVLlPWU+cRYkz5ms19z7NWJCY23qeUoAcv8E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P765zWgbp4XZhTszJMCeeDUVNp10Rd3K8KYKkwkNcXitSFm5Wh3gK2hkGiYR/ZVsB
-	 FmAa2JgHELGwNTiEre/bcZF9ZAGyj/ycg7TK1LwCcU6yZfgJhGDYBQg/fqTqZZlnfu
-	 QWprdOkdYHOQBhSAK/PqaLXJ9wfCJr5mJ77yqxB5plHt8nb/lBctR+ymX2osMGBDDs
-	 J6+sbTCUPcxDE01wOymOruBEgfAHfi8zW4v0+u9m5cAqGOM0PbSGFtCcId1PC9nOxu
-	 +GSqoovogCnNL+zXwsi+73UATSs8J+b0f9+SK5YiGb1TW7wNZz1/bNqIPphNOHKkSv
-	 zCJMLNUHPW3VQ==
-Date: Thu, 11 Dec 2025 14:02:29 -0800
+	s=k20201202; t=1765508463;
+	bh=MRVJ17cxjJ/1xqcJyZvQADUaV2QTkzL7dFTtiTT0rNc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UjtQhNghZMAAuMJiqLhLDHiXRPTmVMKOpejBYlSdfKKvVqvGaLyFagJETYxCqKDuY
+	 B1n3z8HOwJ/dqtHENSG7qWUmFiGlLzqgaEz8qHmJzjh5aSdMVnXO5XQzF5mZnEFjtm
+	 kMQnzJ8KJ6i0IT10D38Sfhs3+xM022CR7NFwUjeXvdHwzpZcpB/x/vKcAlyKTGXzfU
+	 vKsgWd3kBu1IuKYIFdbV2Ga8o+f4X19/dHeahuehfba2f/mbHIsE5vYEJ5/3ue5UBD
+	 9Bp/YX0EXxz3MZvuboFA3hLZaWtnhcTuMMUCb569wukXUh01hLjFCtofV4YUej16ml
+	 h9ISLBLWrReLA==
 From: Kees Cook <kees@kernel.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: cocci@inria.fr, linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
-	llvm@lists.linux.dev,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bill Wendling <morbo@google.com>, Christoph Lameter <cl@linux.com>,
-	David Rientjes <rientjes@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Harry Yoo <harry.yoo@oracle.com>, Jakub Kicinski <kuba@kernel.org>,
-	Jan Hendrik Farr <kernel@jfarr.cc>, Jann Horn <jannh@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Marco Elver <elver@google.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
+To: Bluecherry Maintainers <maintainers@bluecherrydvr.com>
+Cc: Kees Cook <kees@kernel.org>,
 	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Sasha Levin <sashal@kernel.org>,
-	Tony Ambardar <tony.ambardar@gmail.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v6 5/5] coccinelle: Add kmalloc_objs conversion script
-Message-ID: <202512111400.135295C20@keescook>
-References: <20251203233036.3212363-5-kees@kernel.org>
- <22e31f45-55fc-43c6-bede-fee1c829aefc@web.de>
+	Andrey Utkin <andrey_utkin@fastmail.com>,
+	Ismael Luceno <ismael@iodev.co.uk>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] media: solo6x10: Check for out of bounds chip_id
+Date: Thu, 11 Dec 2025 19:00:35 -0800
+Message-Id: <20251212030030.work.534-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <22e31f45-55fc-43c6-bede-fee1c829aefc@web.de>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2342; i=kees@kernel.org; h=from:subject:message-id; bh=MRVJ17cxjJ/1xqcJyZvQADUaV2QTkzL7dFTtiTT0rNc=; b=owGbwMvMwCVmps19z/KJym7G02pJDJnWrUFCTv6BhY++G7huc+eQ7k9LclwQdndNmNcE93e+f z6EWy3vKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmEhlIsM/vcN7z/b2cfenPjxh kV52J3bO+a8/085XTMl6Ljj7mmjic4Y/vDK1J9cHvJ8vVfa9IGgLo/7vgK9aOj8ucPh/fZbq/fw wDwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 11, 2025 at 03:15:08PM +0100, Markus Elfring wrote:
-> > Finds and converts sized kmalloc-family of allocations into the
-> > typed kmalloc_obj-family of allocations.
-> 
-> Can previous patch review concerns get more development attention anyhow?
-> https://lore.kernel.org/cocci/71d406fb-9fb1-44a9-912a-7a0d270b9577@web.de/
-> https://sympa.inria.fr/sympa/arc/cocci/2025-11/msg00066.html
+Clang with CONFIG_UBSAN_SHIFT=y noticed a condition where a signed type
+(literal "1" is an "int") could end up being shifted beyond 32 bits,
+so instrumentation was added (and due to the double is_tw286x() call
+seen via inlining), Clang decides the second one must now be undefined
+behavior and elides the rest of the function[1]. This is a known problem
+with Clang (that is still being worked on), but we can avoid the entire
+problem by actually checking the existing max chip ID, and now there is
+no runtime instrumentation added at all since everything is known to be
+within bounds.
 
-I've replied there now. tl;dr: I already dropped the empty Comments line
-for this v5, and didn't want to make other changes to the .cocci without
-a better rationale. I'm open to suggestions, though!
+Additionally use an unsigned value for the shift to remove the
+instrumentation even without the explicit bounds checking.
 
--Kees
+Link: https://github.com/ClangBuiltLinux/linux/issues/2144 [1]
+Suggested-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Bluecherry Maintainers <maintainers@bluecherrydvr.com>
+Cc: Andrey Utkin <andrey_utkin@fastmail.com>
+Cc: Ismael Luceno <ismael@iodev.co.uk>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: <linux-media@vger.kernel.org>
+---
+ drivers/media/pci/solo6x10/solo6x10-tw28.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/media/pci/solo6x10/solo6x10-tw28.c b/drivers/media/pci/solo6x10/solo6x10-tw28.c
+index 1b7c22a9bc94..da7b45dea5bc 100644
+--- a/drivers/media/pci/solo6x10/solo6x10-tw28.c
++++ b/drivers/media/pci/solo6x10/solo6x10-tw28.c
+@@ -166,7 +166,7 @@ static const u8 tbl_tw2865_pal_template[] = {
+ 	0x64, 0x51, 0x40, 0xaf, 0xFF, 0xF0, 0x00, 0xC0,
+ };
+ 
+-#define is_tw286x(__solo, __id) (!(__solo->tw2815 & (1 << __id)))
++#define is_tw286x(__solo, __id) (!(__solo->tw2815 & (1U << __id)))
+ 
+ static u8 tw_readbyte(struct solo_dev *solo_dev, int chip_id, u8 tw6x_off,
+ 		      u8 tw_off)
+@@ -686,6 +686,9 @@ int tw28_set_ctrl_val(struct solo_dev *solo_dev, u32 ctrl, u8 ch,
+ 	chip_num = ch / 4;
+ 	ch %= 4;
+ 
++	if (chip_num >= TW_NUM_CHIP)
++		return -EINVAL;
++
+ 	if (val > 255 || val < 0)
+ 		return -ERANGE;
+ 
+@@ -758,6 +761,9 @@ int tw28_get_ctrl_val(struct solo_dev *solo_dev, u32 ctrl, u8 ch,
+ 	chip_num = ch / 4;
+ 	ch %= 4;
+ 
++	if (chip_num >= TW_NUM_CHIP)
++		return -EINVAL;
++
+ 	switch (ctrl) {
+ 	case V4L2_CID_SHARPNESS:
+ 		/* Only 286x has sharpness */
 -- 
-Kees Cook
+2.34.1
+
